@@ -88,6 +88,7 @@
 		0B1D5AAB2AB414600010DDF2 /* MediaPlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaPlayerManager.swift; sourceTree = "<group>"; };
 		0B4E1AB22AC3C239005CCB0F /* PlayListManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayListManager.swift; sourceTree = "<group>"; };
 		0B4E1AB42AC3D022005CCB0F /* PlayList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayList.swift; sourceTree = "<group>"; };
+		0B5CF1E12BAED88C00A975B6 /* READEME.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = READEME.md; sourceTree = "<group>"; };
 		0B5E51E42AD912B5000650CF /* DebugCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugCommand.swift; sourceTree = "<group>"; };
 		0B604AE72AD6384300929DD8 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		0B718F0B2AB4349900569762 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
@@ -215,6 +216,7 @@
 		0B9C1C342AAF18FE001A26AF = {
 			isa = PBXGroup;
 			children = (
+				0B5CF1E12BAED88C00A975B6 /* READEME.md */,
 				0BB5871C2AD820FA0071AEBD /* Assets.xcassets */,
 				0B1D5A5D2AB3025E0010DDF2 /* Signing.entitlements */,
 				0B1D5A8B2AB305D70010DDF2 /* Info.plist */,
