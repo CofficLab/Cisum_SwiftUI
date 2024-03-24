@@ -57,7 +57,7 @@ class DBManager: ObservableObject {
         os_log("DBManager 刷新数据")
         AppConfig.bgQueue.async {
             let files = self.dbModel.getFiles()
-            let audios = files.map { AudioModel($0) }
+            let audios = self.dbModel.getAudioModels()
             
             AppConfig.mainQueue.async {
                 self.files = files

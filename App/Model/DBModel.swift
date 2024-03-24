@@ -29,8 +29,10 @@ class DBModel {
 
     /// 删除多个文件
     func delete(urls: Set<URL>) async {
+        os_log("DBModel::delete")
         queue.async {
             for url in urls {
+                self.deleteCache(url)
                 CloudFile(url: url).delete()
             }
         }
@@ -70,12 +72,11 @@ class DBModel {
         // 处理得到的文件
         //  排序
         //  只需要音频文件
-        //  是否缓存了，如果已经缓存，替换成缓存的URL
         let sortedFiles = fileNames.sorted {
             $0.lastPathComponent.localizedCaseInsensitiveCompare($1.lastPathComponent) == .orderedAscending
         }.filter {
             FileHelper.isAudioFile(url: $0) || $0.pathExtension == "downloading"
-        }.map({ ifCached($0) })
+        }
 
         os_log("文件\(fileNames.count)，有效\(sortedFiles.count)")
 
@@ -99,6 +100,7 @@ class DBModel {
 
 extension DBModel {
     var cacheDirName: String { AppConfig.cacheDirName }
+    
     var cacheDir: URL? {
         guard let localDisk = localDisk else {
             return nil
@@ -152,7 +154,30 @@ extension DBModel {
             return false
         }
         
-        return fileManager.fileExists(atPath: cachePath.absoluteString)
+        os_log("DBModel::isCached -> \(cachePath.absoluteString)")
+        return fileManager.fileExists(atPath: cachePath.path)
+    }
+    
+    func deleteCache(_ url: URL) {
+        os_log("DBModel::deleteCache")
+        if isCached(url), let cachedPath = getCachePath(url) {
+            os_log("DBModel::deleteCache -> delete")
+            try? fileManager.removeItem(at: cachedPath)
+        }
+    }
+}
+
+// MARK: AudioModel 操作
+
+extension DBModel {
+    func getAudioModels() -> [AudioModel] {
+        self.getFiles().map{
+            if isCached($0) {
+                return AudioModel($0, cacheURL: getCachePath($0))
+            }
+            
+            return AudioModel($0)
+        }
     }
 }
 

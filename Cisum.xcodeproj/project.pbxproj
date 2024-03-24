@@ -189,10 +189,10 @@
 		0B1D5A702AB302600010DDF2 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				0BFDCE522BAFF279009198DD /* database */,
+				0BB889D32AC04600004788D5 /* Buttons */,
+				0BFDCE522BAFF279009198DD /* Database */,
 				0BBA422C2AC2AD0A00C0B977 /* Pages */,
 				0BBA422D2AC2BA7900C0B977 /* Widgets */,
-				0BB889D32AC04600004788D5 /* Buttons */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -314,13 +314,13 @@
 			path = Config;
 			sourceTree = "<group>";
 		};
-		0BFDCE522BAFF279009198DD /* database */ = {
+		0BFDCE522BAFF279009198DD /* Database */ = {
 			isa = PBXGroup;
 			children = (
 				0BBC157F2AB854A8006E82C4 /* DBView.swift */,
 				0BBA422E2AC2BAE300C0B977 /* AlbumView.swift */,
 			);
-			path = database;
+			path = Database;
 			sourceTree = "<group>";
 		};
 		0BFDCE532BAFFA80009198DD /* Contracts */ = {

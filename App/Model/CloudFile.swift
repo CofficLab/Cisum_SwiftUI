@@ -16,7 +16,7 @@ class CloudFile {
             if fileManager.fileExists(atPath: url.path) {
                 try fileManager.removeItem(at: url)
             } else {
-                os_log("删除时发现文件不存在，忽略\n\(self.url.lastPathComponent)")
+                os_log("删除时发现文件不存在，忽略 -> \(self.url.lastPathComponent)")
             }
         } catch {
             os_log(.error, "删除文件失败\n\(error)")

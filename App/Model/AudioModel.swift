@@ -6,6 +6,7 @@ import SwiftUI
 class AudioModel {
     let fileManager = FileManager.default
     let url: URL
+    var cacheURL: URL? = nil
     var title = "[空白]"
     var artist = ""
     var description = ""
@@ -20,9 +21,10 @@ class AudioModel {
         var uiImage: UIImage = UIImage(imageLiteralResourceName: "DefaultAlbum")
     #endif
 
-    init(_ url: URL, delegate: SuperAudioDelegate = SuperAudioDelegateSample()) {
+    init(_ url: URL, cacheURL: URL? = nil, delegate: SuperAudioDelegate = SuperAudioDelegateSample()) {
         os_log("🚩 AudioModel::init -> \(url.lastPathComponent)")
         self.url = url
+        self.cacheURL = cacheURL
         self.delegate = delegate
         self.title = url.deletingPathExtension().lastPathComponent
         
@@ -113,6 +115,22 @@ extension AudioModel {
             default:
                 return "未知状态"
             }
+        }
+    }
+}
+
+// MARK: 删除
+
+extension AudioModel {
+    func delete() {
+        do {
+            if fileManager.fileExists(atPath: url.path) {
+                try fileManager.removeItem(at: url)
+            } else {
+                os_log("删除时发现文件不存在，忽略 -> \(self.url.lastPathComponent)")
+            }
+        } catch {
+            os_log(.error, "删除文件失败\n\(error)")
         }
     }
 }
