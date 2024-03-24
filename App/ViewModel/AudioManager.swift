@@ -30,7 +30,7 @@ class AudioManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
     @Published private(set) var isLooping: Bool = false
     @Published private(set) var duration: TimeInterval = 0
     @Published private(set) var audios: [AudioModel] = []
-    @Published var audio: AudioModel = emptyAudioModel
+    @Published var audio = AudioModel.empty
     @Published var playMode: PlayMode = .Random
 
     static var preview = AudioManager(databaseManager: DatabaseManager.preview)
@@ -262,7 +262,7 @@ class AudioManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
     private func updatePlayer() {
         AppConfig.bgQueue.async {
             var player = AVAudioPlayer()
-            if self.audio == emptyAudioModel {
+            if self.audio == AudioModel.empty {
                 player = self.makeEmptyPlayer()
             } else {
                 player = self.makePlayer(url: self.audio.url)
@@ -323,7 +323,7 @@ class AudioManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
         }
 
         // 列表不空，当前 AudioModel 却为空
-        if !audios.isEmpty && audio == emptyAudioModel {
+        if !audios.isEmpty && audio == AudioModel.empty {
             return false
         }
 
@@ -337,7 +337,7 @@ class AudioManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
 
     private func reset() {
         stop()
-        audio = emptyAudioModel
+        audio = AudioModel.empty
         player = AVAudioPlayer()
     }
 

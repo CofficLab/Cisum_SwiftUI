@@ -2,53 +2,19 @@ import AVFoundation
 import Foundation
 import SwiftUI
 
-let emptyAudioModel = AudioModel(AppConfig.documentsDir)
-
-enum iCloudState {
-    case Downloaded
-    case InCloud
-    case Downloading
-    case Uploading
-    case Unknown
-
-    var description: String {
-        switch self {
-        case .Downloaded:
-            return "已下载"
-        case .InCloud:
-            return "在iCloud中"
-        case .Downloading:
-            return "下载中"
-        case .Unknown:
-            return "未知状态"
-        default:
-            return "未知状态"
-        }
-    }
-}
-
-struct AudioModel: Equatable, Identifiable {
-    var id: URL {
-        url
-    }
-
+struct AudioModel {
     let url: URL
-    var title: String = "[空白]"
-    var artist: String = ""
-    var description: String = ""
-    var track: String = ""
-    var albumName: String = ""
-    var isEmpty: Bool = false
-    var isDownloading: Bool = false
-    var audioMeta: AudioMeta = AudioMeta()
+    var title = "[空白]"
+    var artist = ""
+    var description = ""
+    var track = ""
+    var albumName = ""
+    var isDownloading = false
+    var audioMeta = AudioMeta()
 
     init(_ url: URL) {
         self.url = url
         title = url.deletingPathExtension().lastPathComponent
-    }
-
-    static func == (lhs: AudioModel, rhs: AudioModel) -> Bool {
-        return lhs.url == rhs.url
     }
 
     func getiCloudState() -> iCloudState {
@@ -89,5 +55,55 @@ struct AudioModel: Equatable, Identifiable {
         AudioMeta.fromUrl(url, completion: { audioMeta in
             completion(audioMeta)
         })
+    }
+}
+
+extension AudioModel {
+    static var emptyId = AppConfig.documentsDir
+    static var empty = AudioModel(emptyId)
+    
+    func isEmpty() -> Bool {
+        self.id == AudioModel.emptyId
+    }
+}
+
+extension AudioModel: Equatable {
+    static func == (lhs: AudioModel, rhs: AudioModel) -> Bool {
+        return lhs.url == rhs.url
+    }
+}
+
+extension AudioModel: Identifiable {
+    var id: URL { url }
+}
+
+extension AudioModel {
+    enum iCloudState {
+        case Downloaded
+        case InCloud
+        case Downloading
+        case Uploading
+        case Unknown
+
+        var description: String {
+            switch self {
+            case .Downloaded:
+                return "已下载"
+            case .InCloud:
+                return "在iCloud中"
+            case .Downloading:
+                return "下载中"
+            case .Unknown:
+                return "未知状态"
+            default:
+                return "未知状态"
+            }
+        }
+    }
+}
+
+#Preview("App") {
+    RootView {
+        ContentView(play: false)
     }
 }

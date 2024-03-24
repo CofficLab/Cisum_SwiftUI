@@ -175,14 +175,14 @@ struct DatabaseView: View {
         }
 
         return VStack {
-            ButtonPlay(url: selected.first ?? emptyAudioModel.id)
+            ButtonPlay(url: selected.first ?? AudioModel.empty.id)
                 .disabled(selected.count != 1)
 
-            ButtonDownload(url: selected.first ?? emptyAudioModel.id)
+            ButtonDownload(url: selected.first ?? AudioModel.empty.id)
                 .disabled(selected.count != 1)
 
             #if DEBUG && os(macOS)
-                ButtonShowInFinder(url: selected.first ?? emptyAudioModel.id)
+            ButtonShowInFinder(url: selected.first ?? AudioModel.empty.id)
                     .disabled(selected.count != 1)
             #endif
 
