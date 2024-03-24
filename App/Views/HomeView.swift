@@ -19,14 +19,13 @@ struct HomeView: View {
         #if os(macOS)
             GeometryReader { geo in
                 VStack {
-                    ControlView()
-                        .frame(height: AppManager.controlViewHeight)
+                    ControlView().frame(height: AppManager.controlViewHeight)
 
-                    if appManager.showDatabase {
+                    if appManager.showDB {
                         DBView()
                     }
                 }
-                .onChange(of: appManager.showDatabase, perform: { _ in resize(geo) })
+                .onChange(of: appManager.showDB, perform: { _ in resize(geo) })
                 .onChange(of: geo.size.height, perform: onHeightChange)
                 .onAppear {
                     onHeightChange(geo.size.height)
@@ -43,7 +42,7 @@ struct HomeView: View {
                         .padding(.horizontal, geo.size.width > 100 ? 20 : 0)
                 }
             }
-            .sheet(isPresented: $appManager.showDatabase) {
+            .sheet(isPresented: $appManager.showDB) {
                 DBView()
             }
         #endif
@@ -51,7 +50,7 @@ struct HomeView: View {
 
     private func onHeightChange(_ height: CGFloat) {
         if height > AppManager.controlViewHeight {
-            appManager.showDatabase = true
+            appManager.showDB = true
             databaseViewHeight = height - AppManager.controlViewHeight
             if databaseViewHeight < databaseViewHeightMin {
                 databaseViewHeight = databaseViewHeightMin
@@ -61,13 +60,13 @@ struct HomeView: View {
 
     #if os(macOS)
         private func resize(_ geo: GeometryProxy) {
-            AppConfig.logger.app.debug("appManager.showDatabase 变为 \(appManager.showDatabase)")
+            AppConfig.logger.app.debug("appManager.showDatabase 变为 \(appManager.showDB)")
             let window = NSApplication.shared.windows.first!
             var frame = window.frame
             let oldY = frame.origin.y
             let height = frame.size.height
 
-            if appManager.showDatabase {
+            if appManager.showDB {
                 if geo.size.height <= AppManager.controlViewHeight {
                     AppConfig.logger.app.debug("增加 Height 以展开数据库视图")
                     frame.origin.y = oldY - databaseViewHeight

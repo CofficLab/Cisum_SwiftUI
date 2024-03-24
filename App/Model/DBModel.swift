@@ -38,20 +38,6 @@ class DBModel {
         }
     }
 
-    /// 往数据库添加文件
-    func add(_ urls: [URL], completionAll: @escaping () -> Void, completionOne: @escaping (_ sourceUrl: URL) -> Void = { _ in }) {
-        queue.async {
-            for url in urls {
-                self.saveToCache(url)
-                CloudFile(url: url).copyTo(to: self.cloudDisk.appendingPathComponent(url.lastPathComponent), completion: { url in
-                    completionOne(url)
-                })
-            }
-
-            completionAll()
-        }
-    }
-
     func downloadOne(_ url: URL) -> Bool {
         CloudFile(url: url).download {
         }
@@ -96,6 +82,40 @@ class DBModel {
     }
 }
 
+// MARK: 增删改查
+
+extension DBModel {
+    /// 往数据库添加文件
+    func add(_ urls: [URL], completionAll: @escaping () -> Void, completionOne: @escaping (_ sourceUrl: URL) -> Void = { _ in }) {
+        queue.async {
+            for url in urls {
+                self.saveToCache(url)
+                CloudFile(url: url).copyTo(to: self.cloudDisk.appendingPathComponent(url.lastPathComponent), completion: { url in
+                    completionOne(url)
+                })
+            }
+
+            completionAll()
+        }
+    }
+    
+    func destroy() {
+        if let localDisk = localDisk {
+            do {
+                try fileManager.removeItem(at: localDisk)
+            } catch let e {
+                os_log("\(e.localizedDescription)")
+            }
+        }
+        
+        do {
+            try fileManager.removeItem(at: cloudDisk)
+        } catch let e {
+            os_log("\(e.localizedDescription)")
+        }
+    }
+}
+
 // MARK: 缓存
 
 extension DBModel {
@@ -129,6 +149,7 @@ extension DBModel {
     }
 
     func saveToCache(_ url: URL) {
+        os_log("DBModel::saveToCache")
         guard let cachePath = getCachePath(url) else {
             return
         }

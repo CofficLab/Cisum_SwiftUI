@@ -29,7 +29,7 @@ class AudioModel {
         self.title = url.deletingPathExtension().lastPathComponent
         
         Task {
-            await makeMeta();
+            await updateMeta();
         }
     }
 
@@ -154,8 +154,8 @@ extension AudioModel {
             .appendingPathExtension("jpeg")
     }
     
-    func makeMeta() async {
-        let asset = AVAsset(url: url)
+    func updateMeta() async {
+        let asset = AVAsset(url: cacheURL ?? url)
         do {
             let metadata = try await asset.load(.commonMetadata)
 
@@ -166,7 +166,7 @@ extension AudioModel {
                     switch item.commonKey?.rawValue {
                     case "title":
                         if let title = value as? String {
-                            os_log("从meta中读取的title: \(title, privacy: .public)")
+                            os_log("🍋 AudioModel::updateMeta -> title: \(title)")
                             self.title = title
                         } else {
                             os_log("meta提供了title，但value不能转成string")
@@ -183,6 +183,7 @@ extension AudioModel {
                         if let image = makeImage(try await item.load(.value), saveTo: coverPath) {
                             self.cover = image
                             delegate.onCoverUpdated();
+                            os_log("🍋 AudioModel::updateMeta -> cover updated")
                         }
                     default:
                         break

@@ -48,7 +48,7 @@ struct DBView: View {
 
             // 仓库为空
             if databaseManager.isEmpty && appManager.flashMessage.isEmpty {
-                EmptyDatabaseView()
+                EmptyDBView()
             }
         }
         #endif
@@ -168,6 +168,8 @@ struct DBView: View {
         }
     }
 
+    // MARK: 右键菜单
+    
     private func getContextMenuItems(_ audio: AudioModel? = nil) -> some View {
         var selected: Set<AudioModel.ID> = selectedAudioModels
         if audio != nil {
@@ -181,8 +183,8 @@ struct DBView: View {
             ButtonDownload(url: selected.first ?? AudioModel.empty.id)
                 .disabled(selected.count != 1)
 
-            #if DEBUG && os(macOS)
-            ButtonShowInFinder(url: selected.first ?? AudioModel.empty.id)
+            #if os(macOS)
+            BtnShowInFinder(url: selected.first ?? AudioModel.empty.id)
                     .disabled(selected.count != 1)
             #endif
 
@@ -196,6 +198,7 @@ struct DBView: View {
             ButtonDeleteSelected(audios: selected, callback: {
                 selectedAudioModels = []
             }).disabled(selected.count == 0)
+            BtnDestroy()
         }
     }
 }

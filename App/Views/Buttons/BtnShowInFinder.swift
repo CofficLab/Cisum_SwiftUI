@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct ButtonShowInFinder: View {
+struct BtnShowInFinder: View {
     @EnvironmentObject var databaseManager: DBManager
     
     var url: URL

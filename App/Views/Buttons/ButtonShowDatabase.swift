@@ -17,7 +17,7 @@ struct ButtonShowDatabase: View {
         .background(hovered ? Color.gray.opacity(0.4) : .clear)
         .clipShape(RoundedRectangle(cornerRadius: 8.0))
         .onTapGesture {
-            appManager.showDatabase = true
+            appManager.showDB = true
         }
         .onHover(perform: { hovering in
             withAnimation(.easeInOut) {

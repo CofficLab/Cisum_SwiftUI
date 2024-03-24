@@ -15,7 +15,7 @@ struct ButtonToggleDatabase: View {
         .background(hovered ? Color.gray.opacity(0.4) : .clear)
         .clipShape(RoundedRectangle(cornerRadius: 8.0))
         .onTapGesture {
-            appManager.showDatabase.toggle()
+            appManager.showDB.toggle()
 //            if appManager.showDatabase {
 //                appManager.flashMessage = "展示数据库"
 //            } else {

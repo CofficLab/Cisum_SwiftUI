@@ -5,7 +5,7 @@ struct ButtonAdd: View {
 
     var body: some View {
         Button("添加", systemImage: "plus.circle") {
-            appManager.showDatabase = true
+            appManager.showDB = true
             appManager.isImporting = true
         }
     }

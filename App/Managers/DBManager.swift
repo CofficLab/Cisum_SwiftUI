@@ -52,6 +52,11 @@ class DBManager: ObservableObject {
     func downloadOne(_ url: URL) -> Bool {
         dbModel.downloadOne(url)
     }
+    
+    func destroy() {
+        dbModel.destroy()
+        refresh()
+    }
 
     private func refresh() {
         os_log("DBManager 刷新数据")

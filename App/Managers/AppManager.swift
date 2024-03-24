@@ -26,7 +26,7 @@ class AppManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
     
     @Published var appMode: AppMode = .Normal
     @Published var showAlert: Bool = false
-    @Published var showDatabase: Bool = false
+    @Published var showDB: Bool = false
     @Published var alertMessage: String = ""
     @Published var flashMessage: String = ""
     @Published var stateMessage: String = ""
@@ -53,7 +53,7 @@ class AppManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
     }
 
     static func prepareCloudDocuments(_ callback: @escaping (_ result: PrepareCloudDocumentsResult) -> Void) {
-        AppConfig.logger.cloudKit.info("初始化 iCloud Documents")
+        AppConfig.logger.cloudKit.info("🚩 初始化 iCloud Documents")
         
         if !iCloudHelper.iCloudEnabled() {
             AppConfig.logger.wild.warning("iCloud 未启用，使用本地目录")
@@ -67,7 +67,7 @@ class AppManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
         DispatchQueue.global().async {
             if let url = FileManager.default.url(forUbiquityContainerIdentifier: AppConfig.container) {
                 DispatchQueue.main.async {
-                    AppConfig.logger.cloudKit.info("初始化 iCloud Documents 成功")
+                    AppConfig.logger.cloudKit.info("🚩 初始化 iCloud Documents 成功")
 
                     iCloudDocumentsUrl = url.appendingPathComponent("Documents")
                     callback(.success(iCloudDocumentsUrl!))
