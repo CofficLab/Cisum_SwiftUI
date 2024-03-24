@@ -7,6 +7,7 @@ struct AppConfig {
     static let documentsDir = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
     static let coversDirName = "covers"
     static let audiosDirName = "audios"
+    static let cacheDirName = "audios_cache"
     static let container = "iCloud.yueyi.cisum"
     static let logger = Logger.self
     static let mainQueue = DispatchQueue.main

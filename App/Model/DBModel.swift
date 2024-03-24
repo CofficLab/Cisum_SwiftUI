@@ -1,36 +1,29 @@
 import Foundation
 import OSLog
 
-class DatabaseModel {
+class DBModel {
+    var fileManager = FileManager.default
+    var queue = DispatchQueue.global()
     var rootDir: URL
     var timer: Timer?
 
     init(rootDir: URL) {
-        AppConfig.logger.databaseModel.info("初始化 DatabaseModel")
+        os_log("初始化 DatabaseModel")
         
         self.rootDir = rootDir.appendingPathComponent(AppConfig.audiosDirName)
         do {
-            try FileManager.default.createDirectory(at: self.rootDir, withIntermediateDirectories: true)
+            try fileManager.createDirectory(at: self.rootDir, withIntermediateDirectories: true)
             AppConfig.logger.databaseModel.info("创建 Audios 目录成功")
         } catch {
             AppConfig.logger.databaseModel.error("创建 Audios 目录失败\n\(error.localizedDescription)")
         }
     }
 
-    func delete(urls: Set<URL>, callback: @escaping () -> Void) {
-        DispatchQueue.global().async {
-            if urls.count == 1 {
-                AppConfig.logger.databaseModel.info("删除 \(urls.first!.lastPathComponent, privacy: .public)")
-            } else {
-                AppConfig.logger.databaseModel.info("删除 \(urls.count, privacy: .public) 个文件")
-            }
-
+    /// 删除多个文件
+    func delete(urls: Set<URL>) async {
+        queue.async {
             for url in urls {
                 CloudFile(url: url).delete()
-            }
-
-            DispatchQueue.main.async {
-                callback()
             }
         }
     }

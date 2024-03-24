@@ -40,7 +40,7 @@
 		0BB889D52AC04638004788D5 /* ButtonPlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB889D42AC04638004788D5 /* ButtonPlay.swift */; };
 		0BB889D72AC046B5004788D5 /* ButtonShowInFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB889D62AC046B5004788D5 /* ButtonShowInFinder.swift */; };
 		0BB889D92AC047B3004788D5 /* ButtonDelete.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB889D82AC047B3004788D5 /* ButtonDelete.swift */; };
-		0BB889DB2AC06C54004788D5 /* DatabaseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB889DA2AC06C54004788D5 /* DatabaseModel.swift */; };
+		0BB889DB2AC06C54004788D5 /* DBModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB889DA2AC06C54004788D5 /* DBModel.swift */; };
 		0BBA420C2ABBD79600C0B977 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA420B2ABBD79600C0B977 /* Errors.swift */; };
 		0BBA42132ABC137A00C0B977 /* StatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA42122ABC137A00C0B977 /* StatusView.swift */; };
 		0BBA42172ABC1AE700C0B977 /* StatusBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA42162ABC1AE700C0B977 /* StatusBarView.swift */; };
@@ -104,7 +104,7 @@
 		0BB889D42AC04638004788D5 /* ButtonPlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonPlay.swift; sourceTree = "<group>"; };
 		0BB889D62AC046B5004788D5 /* ButtonShowInFinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonShowInFinder.swift; sourceTree = "<group>"; };
 		0BB889D82AC047B3004788D5 /* ButtonDelete.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonDelete.swift; sourceTree = "<group>"; };
-		0BB889DA2AC06C54004788D5 /* DatabaseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseModel.swift; sourceTree = "<group>"; };
+		0BB889DA2AC06C54004788D5 /* DBModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBModel.swift; sourceTree = "<group>"; };
 		0BBA420B2ABBD79600C0B977 /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
 		0BBA42122ABC137A00C0B977 /* StatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusView.swift; sourceTree = "<group>"; };
 		0BBA42162ABC1AE700C0B977 /* StatusBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarView.swift; sourceTree = "<group>"; };
@@ -158,7 +158,7 @@
 			isa = PBXGroup;
 			children = (
 				0B1D5A672AB3025F0010DDF2 /* AudioModel.swift */,
-				0BB889DA2AC06C54004788D5 /* DatabaseModel.swift */,
+				0BB889DA2AC06C54004788D5 /* DBModel.swift */,
 				0B0A2B812AC1CCDC00DA085C /* CloudFile.swift */,
 				0B0A2B832AC31AEF00DA085C /* AudioMeta.swift */,
 				0B4E1AB42AC3D022005CCB0F /* PlayList.swift */,
@@ -216,11 +216,11 @@
 		0B9C1C342AAF18FE001A26AF = {
 			isa = PBXGroup;
 			children = (
+				0BEBCBAB2B35285100F2116E /* App */,
 				0B5CF1E12BAED88C00A975B6 /* READEME.md */,
 				0BB5871C2AD820FA0071AEBD /* Assets.xcassets */,
 				0B1D5A5D2AB3025E0010DDF2 /* Signing.entitlements */,
 				0B1D5A8B2AB305D70010DDF2 /* Info.plist */,
-				0BEBCBAB2B35285100F2116E /* App */,
 				0B9C1C3E2AAF18FE001A26AF /* Products */,
 			);
 			sourceTree = "<group>";
@@ -422,7 +422,7 @@
 				0B1165E92ABBC6C0005C5CBB /* LaunchView.swift in Sources */,
 				0B1D5A8A2AB302610010DDF2 /* AppConfig.swift in Sources */,
 				0BBA420C2ABBD79600C0B977 /* Errors.swift in Sources */,
-				0BB889DB2AC06C54004788D5 /* DatabaseModel.swift in Sources */,
+				0BB889DB2AC06C54004788D5 /* DBModel.swift in Sources */,
 				0BBC15862AB99BD2006E82C4 /* MyFileManagerDelegate.swift in Sources */,
 				0BBA42192ABD5D9200C0B977 /* ButtonPlayMode.swift in Sources */,
 				0B11262C2AC719B70093DFFA /* ImageHelper.swift in Sources */,

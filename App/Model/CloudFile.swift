@@ -2,6 +2,7 @@ import Foundation
 import OSLog
 
 class CloudFile {
+    var fileManager = FileManager.default
     var url: URL
     var timer: Timer?
 
@@ -9,15 +10,16 @@ class CloudFile {
         self.url = url
     }
 
+    /// 从 iCloud 删除
     func delete() {
         do {
-            if FileManager.default.fileExists(atPath: url.path) {
-                try FileManager.default.removeItem(at: url)
+            if fileManager.fileExists(atPath: url.path) {
+                try fileManager.removeItem(at: url)
             } else {
-                AppConfig.logger.databaseModel.warning("删除时发现文件不存在，忽略\n\(self.url.lastPathComponent)")
+                os_log("删除时发现文件不存在，忽略\n\(self.url.lastPathComponent)")
             }
         } catch {
-            AppConfig.logger.databaseModel.error("删除文件失败\n\(error)")
+            os_log(.error, "删除文件失败\n\(error)")
         }
     }
 

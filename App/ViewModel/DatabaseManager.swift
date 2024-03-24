@@ -16,25 +16,23 @@ class DatabaseManager: ObservableObject {
 
     static var preview: DatabaseManager = DatabaseManager(rootDir: iCloudHelper.getiCloudDocumentsUrl())
 
-    private var databaseModel: DatabaseModel
+    private var dbModel: DBModel
 
     init(rootDir: URL) {
         AppConfig.logger.databaseManager.info("初始化 DatabaseManager")
-        databaseModel = DatabaseModel(rootDir: rootDir)
+        dbModel = DBModel(rootDir: rootDir)
         isCloudStorage = iCloudHelper.isCloudPath(url: rootDir)
 
         refresh()
     }
 
-    func delete(urls: Set<URL>, callback: @escaping () -> Void) {
-        databaseModel.delete(urls: urls, callback: {
-            self.refresh()
-            callback()
-        })
+    func delete(urls: Set<URL>) async {
+        await dbModel.delete(urls: urls)
+        self.refresh()
     }
 
     func add(_ urls: [URL], completionAll: @escaping () -> Void = {}, completionOne: @escaping (_ url:URL) -> Void = {_ in}) {
-        databaseModel.add(
+        dbModel.add(
             urls,
             completionAll: {
                 self.refresh()
@@ -51,13 +49,13 @@ class DatabaseManager: ObservableObject {
     }
 
     func downloadOne(_ url: URL) -> Bool {
-        databaseModel.downloadOne(url)
+        dbModel.downloadOne(url)
     }
 
     private func refresh() {
         AppConfig.logger.databaseManager.debug("DatabaseManager 刷新数据")
         AppConfig.bgQueue.async {
-            let files = self.databaseModel.getFiles()
+            let files = self.dbModel.getFiles()
             let audios = files.map { AudioModel($0) }
             
             AppConfig.mainQueue.async {
