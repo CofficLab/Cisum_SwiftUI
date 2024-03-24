@@ -6,7 +6,7 @@ import OSLog
 import SwiftUI
 
 // 管理播放器的播放、暂停、上一曲、下一曲等操作
-class AudioManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
+class AudioManager: NSObject, ObservableObject {
     @ObservedObject var databaseManager: DBManager
 
     @Published private(set) var isPlaying: Bool = false
@@ -14,40 +14,42 @@ class AudioManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
     @Published private(set) var duration: TimeInterval = 0
     @Published private(set) var audios: [AudioModel] = []
     @Published var audio = AudioModel.empty
-    @Published var playMode: PlayMode = .Random
+    @Published var list = PlayList([])
 
     static var preview = AudioManager(databaseManager: DBManager.preview)
     private var player: AVAudioPlayer = AVAudioPlayer()
     private var listener: AnyCancellable?
 
     init(databaseManager: DBManager) {
-        AppConfig.logger.audioManager.info("初始化 AudioManager")
+        os_log("初始化 AudioManager")
 
         self.databaseManager = databaseManager
         audios = databaseManager.audios
 
         super.init()
-
+        
+        list = PlayList(audios)
         listener = databaseManager.$audios.sink { newValue in
-            AppConfig.logger.audioManager.notice("检测到 DatabaseManger.audios 变了，数量变成了 \(newValue.count)")
+            os_log("检测到 DatabaseManger.audios 变了，数量变成了 \(newValue.count)")
             self.audios = newValue
-            AppConfig.logger.audioManager.notice("当前曲目数量：\(self.audios.count)")
+            self.list = PlayList(self.audios)
+            os_log("当前曲目数量：\(self.audios.count)")
 
             if !self.isValid() && self.audios.count > 0 {
-                AppConfig.logger.audioManager.info("当前播放的已经无效，切换到下一曲")
+                os_log("当前播放的已经无效，切换到下一曲")
                 self.next({ _ in })
             }
 
             if self.audios.count == 0 {
-                AppConfig.logger.audioManager.info("列表已经空了，重置播放器")
+                os_log("列表已经空了，重置播放器")
                 self.reset()
             }
         }
 
         if audios.count > 0 {
-            AppConfig.logger.audioManager.info("初始化Player")
+            os_log("初始化Player")
             audio = audios.first!
-            AppConfig.logger.audioManager.info("初始化的曲目：\(self.audio.title, privacy: .public)")
+            os_log("初始化的曲目：\(self.audio.title, privacy: .public)")
             updatePlayer()
         }
     }
@@ -82,7 +84,7 @@ class AudioManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
 
     func play() {
         os_log("🔊 AudioManager::play")
-        if audios.count == 0 {
+        if list.audios.count == 0 {
             os_log("列表为空，忽略")
             return
         }
@@ -126,86 +128,28 @@ class AudioManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
         }
     }
 
-    func switchPlayMode(_ callback: @escaping (_ mode: PlayMode) -> Void) {
-        switch playMode {
-        case .Order:
-            playMode = .Random
-        case .Loop:
-            playMode = .Order
-        case .Random:
-            playMode = .Loop
-        }
-
-        callback(playMode)
-    }
-
     func toggleLoop() {
         player.numberOfLoops = player.numberOfLoops == 0 ? -1 : 0
         isLooping = player.numberOfLoops != 0
     }
 
     func prev(_ callback: @escaping (_ message: String) -> Void) {
-        AppConfig.logger.audioManager.info("上一曲")
-
-        if audios.count == 0 {
-            callback("播放列表为空")
-        } else {
-            switch playMode {
-            case .Loop:
-                let index = audios.firstIndex(of: audio)!
-                audio = audios[index - 1 >= 0 ? index - 1 : audios.count - 1]
-                AppConfig.logger.audioManager.debug("单曲循环模式手动触发上一曲，上一曲是: \(self.audio.title, privacy: .public)")
-            case .Random:
-                audio = randomExcludeCurrent()
-                AppConfig.logger.audioManager.debug("随机模式，上一曲是: \(self.audio.title, privacy: .public)")
-                break
-            case .Order:
-                let index = audios.firstIndex(of: audio)!
-                audio = audios[index - 1 >= 0 ? index - 1 : audios.count - 1]
-                AppConfig.logger.audioManager.debug("顺序模式，上一曲是: \(self.audio.title, privacy: .public)")
-                break
-            }
-
-            updatePlayer()
-//            callback("上一曲：\(audio.title)")
-            callback("")
-        }
+        os_log("上一曲")
+        
+        audio = list.prev()
+        updatePlayer()
+        callback("上一曲：\(audio.title)")
     }
 
     func next(_ callback: @escaping (_ message: String) -> Void, manual: Bool = true) {
         os_log("下一曲")
-
-        if audios.count == 0 {
-            AppConfig.logger.audioManager.warning("列表为空")
-            callback("播放列表为空")
-        } else {
-            switch playMode {
-            case .Loop:
-                if manual {
-                    let index = audios.firstIndex(of: audio)!
-                    audio = audios[index + 1 >= audios.count ? 0 : index + 1]
-                    AppConfig.logger.audioManager.debug("单曲循环模式手动触发下一曲，下一曲是: \(self.audio.title, privacy: .public)")
-                } else {
-                    AppConfig.logger.audioManager.debug("单曲循环模式自动触发下一曲，下一曲是: 不变")
-                }
-            case .Random:
-                audio = randomExcludeCurrent()
-                os_log("🔊 随机模式，下一曲是: \(self.audio.title)")
-                break
-            case .Order:
-                let index = audios.firstIndex(of: audio)!
-                audio = audios[index + 1 >= audios.count ? 0 : index + 1]
-                AppConfig.logger.audioManager.debug("顺序模式，下一曲是: \(self.audio.title, privacy: .public)")
-                break
-            }
-
-            updatePlayer()
-            callback("下一曲：\(audio.title)")
-        }
+        audio = list.next()
+        updatePlayer()
+        callback("下一曲：\(audio.title)")
     }
 
     func play(_ audio: AudioModel) {
-        if audios.contains([audio]) {
+        if list.audios.contains([audio]) {
             os_log("曲库中包含要播放的：\(audio.title)")
             self.audio = audio
             updatePlayer()
@@ -264,6 +208,34 @@ class AudioManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
         }
     }
 
+    // 当前的 AudioModel 是否有效
+    private func isValid() -> Bool {
+        // 列表为空
+        if audios.isEmpty {
+            return false
+        }
+
+        // 列表不空，当前 AudioModel 却为空
+        if !audios.isEmpty && audio == AudioModel.empty {
+            return false
+        }
+
+        // 已经不在列表中了
+        if !audios.contains(where: { $0 == self.audio }) {
+            return false
+        }
+
+        return true
+    }
+
+    private func reset() {
+        stop()
+        audio = AudioModel.empty
+        player = AVAudioPlayer()
+    }
+}
+
+extension AudioManager: AVAudioPlayerDelegate {
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         // 没有播放完，被打断了
         if !flag {
@@ -294,64 +266,5 @@ class AudioManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
     func audioPlayerEndInterruption(_ player: AVAudioPlayer, withOptions flags: Int) {
         AppConfig.logger.audioManager.info("audioPlayerEndInterruption")
         play()
-    }
-
-    // 当前的 AudioModel 是否有效
-    private func isValid() -> Bool {
-        // 列表为空
-        if audios.isEmpty {
-            return false
-        }
-
-        // 列表不空，当前 AudioModel 却为空
-        if !audios.isEmpty && audio == AudioModel.empty {
-            return false
-        }
-
-        // 已经不在列表中了
-        if !audios.contains(where: { $0 == self.audio }) {
-            return false
-        }
-
-        return true
-    }
-
-    private func reset() {
-        stop()
-        audio = AudioModel.empty
-        player = AVAudioPlayer()
-    }
-
-    private func randomExcludeCurrent() -> AudioModel {
-        if audios.count == 1 {
-            os_log("只有一条，随机选一条就是第一条")
-            return audios.first!
-        }
-
-        let result = (audios.filter { $0 != audio }).randomElement()!
-        os_log("共 \(self.audios.count) 条，随机选一条: \(result.title)")
-
-        return result
-    }
-}
-
-// MARK: 播放模式
-
-extension AudioManager {
-    enum PlayMode {
-        case Order
-        case Loop
-        case Random
-
-        var description: String {
-            switch self {
-            case .Order:
-                return "顺序播放"
-            case .Loop:
-                return "单曲循环"
-            case .Random:
-                return "随机播放"
-            }
-        }
     }
 }

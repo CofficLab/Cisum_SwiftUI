@@ -15,7 +15,7 @@ struct RootView<Content>: View where Content: View {
     @State private var mediaPlayerManger: MediaPlayerManager? = nil
     @State private var windowManager: WindowManager = WindowManager()
     @State private var appManager: AppManager = AppManager()
-    @State private var playListManager: PlayListManager = PlayListManager()
+//    @State private var playListManager: PlayListManager = PlayListManager()
 
     init(@ViewBuilder content: () -> Content) {
         self.content = content()
@@ -32,7 +32,7 @@ struct RootView<Content>: View where Content: View {
                     .environmentObject(mediaPlayerManger!)
                     .environmentObject(windowManager)
                     .environmentObject(appManager)
-                    .environmentObject(playListManager)
+//                    .environmentObject(playListManager)
                 #if os(macOS)
                     .frame(minWidth: 350, minHeight: AppManager.controlViewHeight)
                     .blendMode(.normal)
