@@ -1,4 +1,5 @@
 import SwiftUI
+import OSLog
 
 struct RootView<Content>: View where Content: View {
     private var content: Content
@@ -39,7 +40,7 @@ struct RootView<Content>: View where Content: View {
             } else {
                 LanuchView(errorMessage: errorMessage)
                     .onAppear {
-                        AppConfig.logger.app.info("初始化环境变量")
+                        os_log("🚩 初始化环境变量")
                         AppManager.prepare({ result in
                             switch result {
                             case let .failure(error):

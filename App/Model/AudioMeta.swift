@@ -1,8 +1,10 @@
 import AVFoundation
 import Foundation
 import SwiftUI
+import OSLog
 
 struct AudioMeta {
+    var fileManager = FileManager.default
     var title: String = ""
     var artist: String = ""
     var albumName: String = ""
@@ -27,10 +29,10 @@ struct AudioMeta {
                         switch item.commonKey?.rawValue {
                         case "title":
                             if let title = value as? String {
-                                AppConfig.logger.audioManager.debug("从meta中读取的title: \(title, privacy: .public)")
+                                os_log("从meta中读取的title: \(title, privacy: .public)")
                                 audioMeta.title = title
                             } else {
-                                AppConfig.logger.audioManager.debug("meta提供了title，但value不能转成string")
+                                os_log("meta提供了title，但value不能转成string")
                             }
                         case "artist":
                             if let artist = value as? String {
@@ -48,7 +50,7 @@ struct AudioMeta {
                             break
                         }
                     } catch {
-                        AppConfig.logger.audioManager.error("读取 Meta 出错\n\(error)")
+                        os_log("读取 Meta 出错\n\(error)")
                     }
                 }
 

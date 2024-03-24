@@ -60,7 +60,7 @@ struct ControlView: View {
                     .font(.title2)
                     .opacity(databaseManager.audios.isEmpty ? 0 : 1)
 
-                Text(audioManager.audio.audioMeta.artist).foregroundStyle(.white).opacity(databaseManager.audios.isEmpty ? 0 : 1)
+                Text(audioManager.audio.artist).foregroundStyle(.white).opacity(databaseManager.audios.isEmpty ? 0 : 1)
             }
         }
     }

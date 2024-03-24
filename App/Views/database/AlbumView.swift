@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct AlbumView: View {
-    @EnvironmentObject var appManager: AppManager
     @State private var image: Image? = nil
 
     @Binding var audio: AudioModel
@@ -17,14 +16,10 @@ struct AlbumView: View {
             }
         }
         .onAppear {
-            audio.getAudioMeta({ audioMeata in
-                image = audioMeata.image
-            })
+            image = audio.cover
         }
         .onChange(of: audio, perform: { audio in
-            audio.getAudioMeta({ audioMeata in
-                image = audioMeata.image
-            })
+            image = audio.cover
         })
     }
 }

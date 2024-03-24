@@ -32,15 +32,13 @@ class MediaPlayerManager: ObservableObject {
                 ]
             }
         #else
-            audio.getAudioMeta { _ in
-                center.playbackState = audioManager.isPlaying ? .playing : .paused
-                center.nowPlayingInfo = [
-                    MPMediaItemPropertyTitle: audioManager.audio.title,
-                    MPMediaItemPropertyArtist: "乐音APP",
-                    MPMediaItemPropertyPlaybackDuration: audioManager.duration,
-                    MPNowPlayingInfoPropertyElapsedPlaybackTime: audioManager.currentTime(),
-                ]
-            }
+            center.playbackState = audioManager.isPlaying ? .playing : .paused
+            center.nowPlayingInfo = [
+                MPMediaItemPropertyTitle: audioManager.audio.title,
+                MPMediaItemPropertyArtist: "乐音APP",
+                MPMediaItemPropertyPlaybackDuration: audioManager.duration,
+                MPNowPlayingInfoPropertyElapsedPlaybackTime: audioManager.currentTime(),
+            ]
         #endif
     }
 

@@ -57,22 +57,27 @@ class DBModel {
         return true
     }
 
+    /// 获取目录里的文件列表
     func getFiles() -> [URL] {
         var fileNames: [URL] = []
 
         do {
-            try fileNames = AppConfig.fileManager.contentsOfDirectory(at: cloudDisk, includingPropertiesForKeys: nil)
+            try fileNames = fileManager.contentsOfDirectory(at: cloudDisk, includingPropertiesForKeys: nil)
         } catch let error {
-            AppConfig.logger.databaseModel.error("读取目录发生错误，目录是\n\(self.cloudDisk)\n\(error)")
+            os_log("读取目录发生错误，目录是\n\(self.cloudDisk)\n\(error)")
         }
 
+        // 处理得到的文件
+        //  排序
+        //  只需要音频文件
+        //  是否缓存了，如果已经缓存，替换成缓存的URL
         let sortedFiles = fileNames.sorted {
             $0.lastPathComponent.localizedCaseInsensitiveCompare($1.lastPathComponent) == .orderedAscending
         }.filter {
             FileHelper.isAudioFile(url: $0) || $0.pathExtension == "downloading"
-        }
+        }.map({ ifCached($0) })
 
-        AppConfig.logger.databaseModel.info("文件\(fileNames.count)，有效\(sortedFiles.count)")
+        os_log("文件\(fileNames.count)，有效\(sortedFiles.count)")
 
         // 如果是 iCloud 文件，触发下载
         let iCloudAudioFiles = fileNames.filter { FileHelper.isAudioiCloudFile(url: $0) }
@@ -131,6 +136,15 @@ extension DBModel {
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
         }
+    }
+    
+    /// 如果缓存了，返回缓存的URL，否则返回原来的
+    func ifCached(_ url: URL) -> URL {
+        if isCached(url) {
+            return getCachePath(url) ?? url
+        }
+        
+        return url
     }
 
     func isCached(_ url: URL) -> Bool {

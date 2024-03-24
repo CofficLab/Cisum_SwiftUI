@@ -54,7 +54,7 @@ class DBManager: ObservableObject {
     }
 
     private func refresh() {
-        AppConfig.logger.databaseManager.debug("DatabaseManager 刷新数据")
+        os_log("DBManager 刷新数据")
         AppConfig.bgQueue.async {
             let files = self.dbModel.getFiles()
             let audios = files.map { AudioModel($0) }
@@ -63,7 +63,7 @@ class DBManager: ObservableObject {
                 self.files = files
                 self.audios = audios
                 self.isReady = true
-                AppConfig.logger.databaseManager.debug("DataseManager 刷新完成")
+                os_log("DataseManager 刷新完成")
             }
         }
     }
