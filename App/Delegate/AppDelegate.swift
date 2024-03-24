@@ -19,7 +19,7 @@ import SwiftUI
 #else
     class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         func applicationDidFinishLaunching(_ notification: Notification) {
-            AppConfig.logger.app.debug("applicationDidFinishLaunching")
+            os_log("🚩 applicationDidFinishLaunching")
         }
 
         func windowDidMove(_ notification: Notification) {

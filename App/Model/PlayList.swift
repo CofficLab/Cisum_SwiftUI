@@ -5,66 +5,60 @@ import OSLog
 
 class PlayList {
     var title: String = "[空白]"
-    var audio: AudioModel = AudioModel.empty
     var audios: [AudioModel]
     var playMode: PlayMode = .Random
     var list: [AudioModel] = []
+    var current: Int = 0
+    var audio: AudioModel { list[current] }
     
     init(_ audios: [AudioModel]) {
         os_log("🚩 PlayList::init -> audios.count = \(audios.count)")
         self.audios = audios
         self.list = audios
-        if self.list.count > 0 {
-            self.audio = self.list.first!
-        }
     }
+    
+    // MARK: 获取下一曲
     
     func getNext() -> AudioModel {
         if list.count == 0 {
             return AudioModel.empty
         }
         
-        if audio.isEmpty() {
-            return list.first!
-        }
+        let nextIndex = current + 1 >= list.count ? 0 : current + 1
+        let nextAudio = list[nextIndex]
+        os_log("🔊 PlayList::列表中下一曲是: \(nextAudio.title)")
         
-        let index = list.firstIndex(of: audio)!
-        let audio = list[index + 1 >= list.count ? 0 : index + 1]
-        self.audio = audio
-        os_log("下一曲是: \(audio.title)")
+        nextAudio.download()
         
-        return audio
+        return nextAudio
     }
     
+    // MARK: 跳到上一曲
     
     func prev() -> AudioModel {
-        os_log("获取上一曲")
+        os_log("跳到上一曲")
 
         if audios.count == 0 {
             return AudioModel.empty
         }
         
-        let index = list.firstIndex(of: audio)!
-        audio = list[index - 1 >= 0 ? index - 1 : list.count - 1]
-        os_log("顺序模式，上一曲是: \(self.audio.title)")
+        self.current = current - 1 >= 0 ? current - 1 : list.count - 1
+        os_log("上一曲是: \(self.audio.title)")
         return audio
     }
     
+    // MARK: 跳到下一曲
+    
     func next(manual: Bool = true) -> AudioModel {
-        os_log("PlayList::next，当前为 -> \(self.audio.title)")
+        os_log("🔊 PlayList::next 当前 -> \(self.audio.title)")
 
         if list.count == 0 {
             os_log("列表为空")
             return AudioModel.empty
         }
         
-        if audio.isEmpty() {
-            return list.first!
-        }
-        
-        let index = list.firstIndex(of: audio)!
-        audio = list[index + 1 >= list.count ? 0 : index + 1]
-        os_log("下一曲是: \(self.audio.title)")
+        self.current = current + 1 >= list.count ? 0 : current + 1
+        os_log("🔊 PlayList::next 跳到 -> \(self.audio.title)")
         
         return audio
     }

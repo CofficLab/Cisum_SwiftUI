@@ -107,17 +107,6 @@ extension DBModel {
 
         os_log("文件\(fileNames.count)，有效\(sortedFiles.count)")
 
-        // 如果是 iCloud 文件，触发下载
-        let iCloudAudioFiles = fileNames.filter { FileHelper.isAudioiCloudFile(url: $0) }
-        for iCloudAudioFile in iCloudAudioFiles {
-            AppConfig.logger.databaseModel.info("下载 iCloud 文件：\n\(iCloudAudioFile.lastPathComponent)")
-            do {
-                try AppConfig.fileManager.startDownloadingUbiquitousItem(at: iCloudAudioFile)
-            } catch {
-                AppConfig.logger.databaseModel.error("下载 iCloud 文件错误\n\(error)")
-            }
-        }
-
         AppConfig.logger.databaseModel.debug("获取文件完成，共 \(sortedFiles.count) 个")
         return sortedFiles
     }

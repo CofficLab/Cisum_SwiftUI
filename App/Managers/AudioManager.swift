@@ -142,7 +142,7 @@ class AudioManager: NSObject, ObservableObject {
     }
 
     func next(_ callback: @escaping (_ message: String) -> Void, manual: Bool = true) {
-        os_log("下一曲")
+        os_log("🔊 AudioManager::跳到下一曲")
         audio = list.next()
         updatePlayer()
         callback("下一曲：\(audio.title)")

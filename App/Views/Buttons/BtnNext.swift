@@ -15,8 +15,8 @@ struct BtnNext: View {
         .background(hovered ? Color.gray.opacity(0.4) : .clear)
         .clipShape(RoundedRectangle(cornerRadius: 8.0))
         .onTapGesture {
-            audioManager.next({ message in
-                appManager.setFlashMessage(message)
+            audioManager.next({message in 
+//                appManager.setFlashMessage(message)
             })
         }
         .onHover(perform: { hovering in

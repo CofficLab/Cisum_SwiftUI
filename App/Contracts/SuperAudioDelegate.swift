@@ -9,7 +9,7 @@ protocol SuperAudioDelegate {
 
 extension SuperAudioDelegate {
     func onCoverUpdated() {
-        os_log("onCoverUpdated")
+//        os_log("🍋 SuperAudioDelegate::onCoverUpdated")
     }
 }
 

@@ -4,7 +4,6 @@ struct StateView: View {
     @EnvironmentObject var appManager: AppManager
     @EnvironmentObject var audioManager: AudioManager
     @EnvironmentObject var databaseManager: DBManager
-//    @EnvironmentObject var playListManager: PlayListManager
     
     private var audio: AudioModel { audioManager.audio }
     private var isDownloading: Bool { audio.isDownloading }

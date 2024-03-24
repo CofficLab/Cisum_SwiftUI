@@ -6,7 +6,7 @@ import SwiftUI
 class AudioModel {
     let fileManager = FileManager.default
     private let url: URL
-    private var cacheURL: URL? = nil
+    private var cacheURL: URL?
     var title = "[空白]"
     var artist = ""
     var description = ""
@@ -22,14 +22,14 @@ class AudioModel {
     #endif
 
     init(_ url: URL, cacheURL: URL? = nil, delegate: SuperAudioDelegate = SuperAudioDelegateSample()) {
-        os_log("🚩 AudioModel::init -> \(url.lastPathComponent)")
+        // os_log("🚩 AudioModel::init -> \(url.lastPathComponent)")
         self.url = url
         self.cacheURL = cacheURL
         self.delegate = delegate
-        self.title = url.deletingPathExtension().lastPathComponent
-        
+        title = url.deletingPathExtension().lastPathComponent
+
         Task {
-            await updateMeta();
+            await updateMeta()
         }
     }
 
@@ -49,7 +49,7 @@ class AudioModel {
             return Image(systemName: "icloud")
         }
     }
-    
+
     func getURL() -> URL {
         cacheURL ?? url
     }
@@ -78,7 +78,7 @@ extension AudioModel: Identifiable {
 
 extension AudioModel {
     var isCached: Bool { cacheURL != nil }
-    
+
     func getiCloudState() -> iCloudState {
         if url.pathExtension == "downloading" {
             return .Downloading
@@ -148,18 +148,18 @@ extension AudioModel {
         let fileName = url.lastPathComponent
         let imageName = fileName
         let coversDir = AppConfig.coverDir
-        
+
         do {
-          try fileManager.createDirectory(at: coversDir, withIntermediateDirectories: true, attributes: nil)
+            try fileManager.createDirectory(at: coversDir, withIntermediateDirectories: true, attributes: nil)
         } catch {
-          print(error.localizedDescription)
+            print(error.localizedDescription)
         }
 
         return coversDir
             .appendingPathComponent(imageName)
             .appendingPathExtension("jpeg")
     }
-    
+
     func updateMeta() async {
         let asset = AVAsset(url: cacheURL ?? url)
         do {
@@ -172,7 +172,7 @@ extension AudioModel {
                     switch item.commonKey?.rawValue {
                     case "title":
                         if let title = value as? String {
-                            os_log("🍋 AudioModel::updateMeta -> title: \(title)")
+//                            os_log("🍋 AudioModel::updateMeta -> title: \(title)")
                             self.title = title
                         } else {
                             os_log("meta提供了title，但value不能转成string")
@@ -187,9 +187,9 @@ extension AudioModel {
                         }
                     case "artwork":
                         if let image = makeImage(try await item.load(.value), saveTo: coverPath) {
-                            self.cover = image
-                            delegate.onCoverUpdated();
-                            os_log("🍋 AudioModel::updateMeta -> cover updated")
+                            cover = image
+                            delegate.onCoverUpdated()
+//                            os_log("🍋 AudioModel::updateMeta -> cover updated")
                         }
                     default:
                         break
@@ -220,6 +220,22 @@ extension AudioModel {
         #endif
 
         return nil
+    }
+}
+
+extension AudioModel {
+    func download() {
+        if !FileHelper.isAudioiCloudFile(url: url) {
+            return os_log("☁️ AudioModel::无需下载 -> \(self.title)")
+        }
+
+        os_log("☁️ AudioModel::下载 -> \(self.title)")
+        
+        do {
+            try AppConfig.fileManager.startDownloadingUbiquitousItem(at: url)
+        } catch {
+            os_log("下载 iCloud 文件错误\n\(error)")
+        }
     }
 }
 

@@ -93,17 +93,15 @@ struct DBTableView: View {
         }
     }
 
+    // MARK: 歌曲的主要信息
+    
     private func getTitleColumn(_ audio: AudioModel) -> some View {
         HStack {
-            if audio == audioManager.audio {
-                Image(systemName: "signpost.right").frame(width: 16)
-            } else {
-                audio.getIcon()
-            }
+            audio.getIcon()
 
             AlbumView(audio: Binding.constant(audio)).frame(width: 24, height: 24)
 
-            Text(audio.title)
+            DBTitle(audio: audio)
         }
         // MARK: 双击播放
         .onTapGesture(count: 2, perform: {
@@ -111,6 +109,8 @@ struct DBTableView: View {
         })
     }
 
+    // MARK: 行
+    
     private func getRows() -> some TableRowContent<AudioModel> {
         ForEach(dbManager.audios) { audio in
             if !selectedAudioModels.contains([audio.id]) || (selectedAudioModels.contains([audio.id]) && selectedAudioModels.count == 1) {

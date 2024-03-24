@@ -73,7 +73,7 @@ struct ControlView: View {
 //    }
 
     private var buttons: some View {
-        HStack(spacing: 0, content: {
+        HStack(spacing: 1, content: {
             ButtonToggleDatabase()
             ButtonPrev()
             ButtonPlayPause()
