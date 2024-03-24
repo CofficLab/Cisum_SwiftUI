@@ -17,9 +17,10 @@ struct ControlView: View {
                 HStack {
                     VStack {
                         Spacer()
-                        title
+                        TitleView()
                         buttons
                         slider
+                        StateView()
                         Spacer()
                     }
 
@@ -49,22 +50,6 @@ struct ControlView: View {
         #endif
     }
 
-    private var title: some View {
-        VStack {
-            if databaseManager.isEmpty {
-                Label("无可播放的文件", systemImage: "info.circle")
-                    .foregroundStyle(.white)
-                    .opacity(databaseManager.audios.isEmpty ? 1 : 0)
-            } else {
-                Text(audioManager.audio.title).foregroundStyle(.white)
-                    .font(.title2)
-                    .opacity(databaseManager.audios.isEmpty ? 0 : 1)
-
-                Text(audioManager.audio.artist).foregroundStyle(.white).opacity(databaseManager.audios.isEmpty ? 0 : 1)
-            }
-        }
-    }
-
     private var slider: some View {
         SliderView()
     }
@@ -92,7 +77,7 @@ struct ControlView: View {
             ButtonToggleDatabase()
             ButtonPrev()
             ButtonPlayPause()
-            ButtonNext()
+            BtnNext()
             ButtonPlayMode()
         })
         .foregroundStyle(.white)

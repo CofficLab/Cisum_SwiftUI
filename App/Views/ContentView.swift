@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    var play: Bool
+    var play: Bool = false
 
     @EnvironmentObject var appManager: AppManager
     @EnvironmentObject var databaseManager: DBManager

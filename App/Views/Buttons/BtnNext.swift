@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct ButtonNext: View {
+struct BtnNext: View {
     @EnvironmentObject var audioManager: AudioManager
     @EnvironmentObject var appManager: AppManager
 
@@ -30,7 +30,7 @@ struct ButtonNext: View {
 #Preview {
     RootView(content: {
         Centered {
-            ButtonNext()
+            BtnNext()
         }
     })
 }

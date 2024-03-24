@@ -5,11 +5,8 @@ import UniformTypeIdentifiers
 
 struct DBView: View {
     @EnvironmentObject var dbManager: DBManager
-    @EnvironmentObject var audioManager: AudioManager
     @EnvironmentObject var appManager: AppManager
 
-    @State private var selectedAudioModel: AudioModel? = nil
-    @State private var selectedAudioModels = Set<AudioModel.ID>()
     @State private var dropping: Bool = false
     
     var db: DBModel { dbManager.dbModel }
@@ -47,7 +44,6 @@ struct DBView: View {
         ZStack {
             DBTableView()
 
-            // 仓库为空
             if dbManager.isEmpty && appManager.flashMessage.isEmpty {
                 DBEmptyView()
             }
@@ -81,14 +77,14 @@ struct DBView: View {
     }
 }
 
-// MARK: DROP
+// MARK: 操作
 
 extension DBView {
     func copy(_ files: [URL]) {
         appManager.stateMessage = "正在复制 \(files.count) 个文件"
         db.add(files,
             completionAll: {
-                appManager.setFlashMessage("拖动的文件已添加")
+                appManager.setFlashMessage("已添加 \(files.count) 个文件")
                 appManager.cleanStateMessage()
             },
             completionOne: { url in

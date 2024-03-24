@@ -5,8 +5,8 @@ import SwiftUI
 
 class AudioModel {
     let fileManager = FileManager.default
-    let url: URL
-    var cacheURL: URL? = nil
+    private let url: URL
+    private var cacheURL: URL? = nil
     var title = "[空白]"
     var artist = ""
     var description = ""
@@ -49,6 +49,10 @@ class AudioModel {
             return Image(systemName: "icloud")
         }
     }
+    
+    func getURL() -> URL {
+        cacheURL ?? url
+    }
 }
 
 extension AudioModel {
@@ -73,6 +77,8 @@ extension AudioModel: Identifiable {
 // MARK: iCloud 相关
 
 extension AudioModel {
+    var isCached: Bool { cacheURL != nil }
+    
     func getiCloudState() -> iCloudState {
         if url.pathExtension == "downloading" {
             return .Downloading

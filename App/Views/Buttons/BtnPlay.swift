@@ -3,11 +3,11 @@ import SwiftUI
 struct BtnPlay: View {
     @EnvironmentObject var audioManager: AudioManager
     
-    var url: URL
+    var audio: AudioModel
         
     var body: some View {
         Button {
-            audioManager.playFile(url: url)
+            audioManager.play(audio)
         } label: {
             Label("播放", systemImage: getImageName())
                 .font(.system(size: 24))

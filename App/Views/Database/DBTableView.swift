@@ -11,8 +11,7 @@ struct DBTableView: View {
     @State private var selectedAudioModel: AudioModel? = nil
     @State private var selectedAudioModels = Set<AudioModel.ID>()
     @State private var sortOrder = [KeyPathComparator(\AudioModel.title)]
-    @State private var dropping: Bool = false
-    
+
     var db: DBModel { dbManager.dbModel }
 
     var body: some View {
@@ -47,22 +46,27 @@ struct DBTableView: View {
     }
 
     // MARK: 右键菜单
-    
+
     private func getContextMenuItems(_ audio: AudioModel? = nil) -> some View {
         var selected: Set<AudioModel.ID> = selectedAudioModels
+        var firstAudio = AudioModel.empty
         if audio != nil {
             selected.insert(audio!.id)
         }
+        
+        if let firstURL = selected.first {
+            firstAudio = AudioModel(firstURL)
+        }
 
         return VStack {
-            BtnPlay(url: selected.first ?? AudioModel.empty.id)
+            BtnPlay(audio: firstAudio)
                 .disabled(selected.count != 1)
 
             ButtonDownload(url: selected.first ?? AudioModel.empty.id)
                 .disabled(selected.count != 1)
 
             #if os(macOS)
-            BtnShowInFinder(url: selected.first ?? AudioModel.empty.id)
+                BtnShowInFinder(url: selected.first ?? AudioModel.empty.id)
                     .disabled(selected.count != 1)
             #endif
 
@@ -79,19 +83,40 @@ struct DBTableView: View {
             BtnDestroy()
         }
     }
-}
 
-extension DBTableView {
-    private func getTitleColumn(_ audio: AudioModel) -> some View {
-        DBCell(audio)
+    private func playNow(_ audio: AudioModel) {
+        if audio.isDownloading {
+            appManager.alertMessage = "正在下载，不能播放"
+            appManager.showAlert = true
+        } else {
+            audioManager.play(audio)
+        }
     }
-    
+
+    private func getTitleColumn(_ audio: AudioModel) -> some View {
+        HStack {
+            if audio == audioManager.audio {
+                Image(systemName: "signpost.right").frame(width: 16)
+            } else {
+                audio.getIcon()
+            }
+
+            AlbumView(audio: Binding.constant(audio)).frame(width: 24, height: 24)
+
+            Text(audio.title)
+        }
+        // MARK: 双击播放
+        .onTapGesture(count: 2, perform: {
+            playNow(audio)
+        })
+    }
+
     private func getRows() -> some TableRowContent<AudioModel> {
         ForEach(dbManager.audios) { audio in
-            if !selectedAudioModels.contains([audio.url]) || (selectedAudioModels.contains([audio.url]) && selectedAudioModels.count == 1) {
+            if !selectedAudioModels.contains([audio.id]) || (selectedAudioModels.contains([audio.id]) && selectedAudioModels.count == 1) {
                 TableRow(audio)
                     .itemProvider { // enable Drap
-                        NSItemProvider(object: audio.url as NSItemProviderWriting)
+                        NSItemProvider(object: audio.getURL() as NSItemProviderWriting)
                     }
                     .contextMenu {
                         getContextMenuItems(audio)
@@ -103,38 +128,8 @@ extension DBTableView {
     }
 }
 
-#Preview {
+#Preview("APP") {
     RootView {
-        DBView()
-    }
-}
-
-#Preview {
-    RootView {
-        DBView().frame(width: 300)
-    }
-}
-
-#Preview {
-    RootView {
-        DBView().frame(width: 350)
-    }
-}
-
-#Preview {
-    RootView {
-        DBView().frame(width: 400)
-    }
-}
-
-#Preview {
-    RootView {
-        DBView().frame(width: 500)
-    }
-}
-
-#Preview {
-    RootView {
-        DBView().frame(width: 600)
+        ContentView(play: false)
     }
 }
