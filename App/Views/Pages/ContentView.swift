@@ -4,7 +4,7 @@ struct ContentView: View {
     var play: Bool
 
     @EnvironmentObject var appManager: AppManager
-    @EnvironmentObject var databaseManager: DatabaseManager
+    @EnvironmentObject var databaseManager: DBManager
 
     var body: some View {
         ZStack {

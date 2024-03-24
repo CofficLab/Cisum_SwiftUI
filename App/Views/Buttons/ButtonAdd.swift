@@ -18,7 +18,7 @@ struct ButtonAdd: View {
             ButtonAdd().buttonStyle(.borderedProminent)
             ButtonAdd().labelStyle(.iconOnly)
             
-            DatabaseView()
+            DBView()
         }
     }
 }

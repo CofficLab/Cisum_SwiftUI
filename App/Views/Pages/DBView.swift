@@ -3,8 +3,8 @@ import OSLog
 import SwiftUI
 import UniformTypeIdentifiers
 
-struct DatabaseView: View {
-    @EnvironmentObject var databaseManager: DatabaseManager
+struct DBView: View {
+    @EnvironmentObject var databaseManager: DBManager
     @EnvironmentObject var audioManager: AudioManager
     @EnvironmentObject var appManager: AppManager
 
@@ -77,7 +77,7 @@ struct DatabaseView: View {
 
                 dispatchGroup.notify(queue: .main) {
                     // 等待所有异步操作完成
-                    AppConfig.logger.ui.debug("Drop 了 \(dropedFiles.count) 个文件")
+                    os_log("Drop 了 \(dropedFiles.count) 个文件")
 
                     appManager.stateMessage = "正在复制 \(dropedFiles.count) 个文件"
                     databaseManager.add(
@@ -202,36 +202,36 @@ struct DatabaseView: View {
 
 #Preview {
     RootView {
-        DatabaseView()
+        DBView()
     }
 }
 
 #Preview {
     RootView {
-        DatabaseView().frame(width: 300)
+        DBView().frame(width: 300)
     }
 }
 
 #Preview {
     RootView {
-        DatabaseView().frame(width: 350)
+        DBView().frame(width: 350)
     }
 }
 
 #Preview {
     RootView {
-        DatabaseView().frame(width: 400)
+        DBView().frame(width: 400)
     }
 }
 
 #Preview {
     RootView {
-        DatabaseView().frame(width: 500)
+        DBView().frame(width: 500)
     }
 }
 
 #Preview {
     RootView {
-        DatabaseView().frame(width: 600)
+        DBView().frame(width: 600)
     }
 }

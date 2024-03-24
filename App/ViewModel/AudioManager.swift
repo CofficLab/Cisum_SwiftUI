@@ -24,7 +24,7 @@ enum PlayMode {
 
 // 管理播放器的播放、暂停、上一曲、下一曲等操作
 class AudioManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
-    @ObservedObject var databaseManager: DatabaseManager
+    @ObservedObject var databaseManager: DBManager
 
     @Published private(set) var isPlaying: Bool = false
     @Published private(set) var isLooping: Bool = false
@@ -33,11 +33,11 @@ class AudioManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
     @Published var audio = AudioModel.empty
     @Published var playMode: PlayMode = .Random
 
-    static var preview = AudioManager(databaseManager: DatabaseManager.preview)
+    static var preview = AudioManager(databaseManager: DBManager.preview)
     private var player: AVAudioPlayer = AVAudioPlayer()
     private var listener: AnyCancellable?
 
-    init(databaseManager: DatabaseManager) {
+    init(databaseManager: DBManager) {
         AppConfig.logger.audioManager.info("初始化 AudioManager")
 
         self.databaseManager = databaseManager

@@ -35,6 +35,6 @@ struct EmptyDatabaseView: View {
 
 #Preview {
     RootView {
-        DatabaseView()
+        DBView()
     }
 }

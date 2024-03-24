@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct ButtonDownload: View {
-    @EnvironmentObject var databaseManager: DatabaseManager
+    @EnvironmentObject var databaseManager: DBManager
     
     var url: URL
         

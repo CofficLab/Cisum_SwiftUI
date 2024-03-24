@@ -1,18 +1,26 @@
 import Foundation
 import OSLog
+import SwiftUI
 
 class DBModel {
     var fileManager = FileManager.default
     var queue = DispatchQueue.global()
-    var rootDir: URL
     var timer: Timer?
+    
+    /// 云盘目录，用来同步
+    var cloudDisk: URL
+    
+    /// 本地磁盘目录，用来存放缓存
+    var localDisk: URL?
 
-    init(rootDir: URL) {
+    init(cloudDisk: URL, localDisk: URL? = nil) {
         os_log("初始化 DatabaseModel")
+
+        self.cloudDisk = cloudDisk.appendingPathComponent(AppConfig.audiosDirName)
+        self.localDisk = localDisk
         
-        self.rootDir = rootDir.appendingPathComponent(AppConfig.audiosDirName)
         do {
-            try fileManager.createDirectory(at: self.rootDir, withIntermediateDirectories: true)
+            try fileManager.createDirectory(at: self.cloudDisk, withIntermediateDirectories: true)
             AppConfig.logger.databaseModel.info("创建 Audios 目录成功")
         } catch {
             AppConfig.logger.databaseModel.error("创建 Audios 目录失败\n\(error.localizedDescription)")
@@ -28,27 +36,17 @@ class DBModel {
         }
     }
 
+    /// 往数据库添加文件
     func add(_ urls: [URL], completionAll: @escaping () -> Void, completionOne: @escaping (_ sourceUrl: URL) -> Void = { _ in }) {
-        AppConfig.bgQueue.async {
-            if urls.count == 1 {
-                AppConfig.logger.databaseModel.info("复制 \(urls.first!.lastPathComponent, privacy: .public)")
-            } else {
-                AppConfig.logger.databaseModel.info("复制 \(urls.count, privacy: .public) 个文件")
-            }
-
-//            let dispatchGroup = DispatchGroup()
+        queue.async {
             for url in urls {
-//                dispatchGroup.enter()
-                CloudFile(url: url).copyTo(to: self.rootDir.appendingPathComponent(url.lastPathComponent), completion: { url in
-//                    dispatchGroup.leave()
+                self.saveToCache(url)
+                CloudFile(url: url).copyTo(to: self.cloudDisk.appendingPathComponent(url.lastPathComponent), completion: { url in
                     completionOne(url)
                 })
             }
 
-//            dispatchGroup.notify(queue: .main) {
-            // 这里的代码会在全部copyFile完成后执行
             completionAll()
-//            }
         }
     }
 
@@ -63,9 +61,9 @@ class DBModel {
         var fileNames: [URL] = []
 
         do {
-            try fileNames = AppConfig.fileManager.contentsOfDirectory(at: rootDir, includingPropertiesForKeys: nil)
+            try fileNames = AppConfig.fileManager.contentsOfDirectory(at: cloudDisk, includingPropertiesForKeys: nil)
         } catch let error {
-            AppConfig.logger.databaseModel.error("读取目录发生错误，目录是\n\(self.rootDir)\n\(error)")
+            AppConfig.logger.databaseModel.error("读取目录发生错误，目录是\n\(self.cloudDisk)\n\(error)")
         }
 
         let sortedFiles = fileNames.sorted {
@@ -89,5 +87,63 @@ class DBModel {
 
         AppConfig.logger.databaseModel.debug("获取文件完成，共 \(sortedFiles.count) 个")
         return sortedFiles
+    }
+}
+
+// MARK: 缓存
+
+extension DBModel {
+    var cacheDirName: String { AppConfig.cacheDirName }
+    var cacheDir: URL? {
+        guard let localDisk = localDisk else {
+            return nil
+        }
+        
+        let url = localDisk.appending(component: cacheDirName)
+        
+        var isDirectory: ObjCBool = true
+        if !fileManager.fileExists(atPath: url.path, isDirectory: &isDirectory) {
+            do {
+                try fileManager.createDirectory(at: url, withIntermediateDirectories: true)
+                os_log("创建缓存目录成功")
+            } catch {
+                os_log(.error, "创建缓存目录失败\n\(error.localizedDescription)")
+            }
+            
+        }
+        
+        //os_log("缓存目录 -> \(url.absoluteString)")
+
+        return url
+    }
+
+    func getCachePath(_ url: URL) -> URL? {
+        cacheDir?.appendingPathComponent(url.lastPathComponent)
+    }
+
+    func saveToCache(_ url: URL) {
+        guard let cachePath = getCachePath(url) else {
+            return
+        }
+        
+        do {
+            try fileManager.copyItem(at: url, to: cachePath)
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
+    }
+
+    func isCached(_ url: URL) -> Bool {
+        guard let cachePath = getCachePath(url) else {
+            return false
+        }
+        
+        return fileManager.fileExists(atPath: cachePath.absoluteString)
+    }
+}
+
+#Preview {
+    RootView {
+        ContentView(play: false)
     }
 }

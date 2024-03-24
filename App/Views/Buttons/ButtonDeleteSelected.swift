@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct ButtonDeleteSelected: View {
-    @EnvironmentObject var dbManager: DatabaseManager
+    @EnvironmentObject var dbManager: DBManager
     @EnvironmentObject var appManager: AppManager
     
     var audios: Set<URL>

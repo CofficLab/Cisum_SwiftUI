@@ -3,7 +3,7 @@ import SwiftUI
 struct ControlView: View {
     @EnvironmentObject var appManager: AppManager
     @EnvironmentObject var audioManager: AudioManager
-    @EnvironmentObject var databaseManager: DatabaseManager
+    @EnvironmentObject var databaseManager: DBManager
     @EnvironmentObject var playListManager: PlayListManager
 
     @State private var selectedList: String = ""

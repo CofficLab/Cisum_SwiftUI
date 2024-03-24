@@ -2,7 +2,7 @@ import Foundation
 import OSLog
 import SwiftUI
 
-class DatabaseManager: ObservableObject {
+class DBManager: ObservableObject {
     @EnvironmentObject var appManager: AppManager
 
     @Published private(set) var files: [URL] = []
@@ -14,13 +14,13 @@ class DatabaseManager: ObservableObject {
         self.isReady && self.audios.isEmpty
     }
 
-    static var preview: DatabaseManager = DatabaseManager(rootDir: iCloudHelper.getiCloudDocumentsUrl())
+    static var preview: DBManager = DBManager(rootDir: iCloudHelper.getiCloudDocumentsUrl())
 
     private var dbModel: DBModel
 
     init(rootDir: URL) {
         AppConfig.logger.databaseManager.info("初始化 DatabaseManager")
-        dbModel = DBModel(rootDir: rootDir)
+        dbModel = DBModel(cloudDisk: rootDir, localDisk: AppConfig.documentsDir)
         isCloudStorage = iCloudHelper.isCloudPath(url: rootDir)
 
         refresh()
@@ -31,6 +31,7 @@ class DatabaseManager: ObservableObject {
         self.refresh()
     }
 
+    /// 往数据库添加文件
     func add(_ urls: [URL], completionAll: @escaping () -> Void = {}, completionOne: @escaping (_ url:URL) -> Void = {_ in}) {
         dbModel.add(
             urls,
@@ -65,5 +66,11 @@ class DatabaseManager: ObservableObject {
                 AppConfig.logger.databaseManager.debug("DataseManager 刷新完成")
             }
         }
+    }
+}
+
+#Preview {
+    RootView {
+        ContentView(play: false)
     }
 }

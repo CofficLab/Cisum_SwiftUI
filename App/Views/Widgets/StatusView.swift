@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct StatusView: View {
-    @EnvironmentObject var databaseManager: DatabaseManager
+    @EnvironmentObject var databaseManager: DBManager
     @EnvironmentObject var appManager: AppManager
 
     var body: some View {

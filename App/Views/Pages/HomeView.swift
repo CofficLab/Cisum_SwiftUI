@@ -9,7 +9,7 @@ struct HomeView: View {
     @EnvironmentObject var windowManager: WindowManager
     @EnvironmentObject var appManager: AppManager
     @EnvironmentObject var playListManager: PlayListManager
-    @EnvironmentObject var databaseManager: DatabaseManager
+    @EnvironmentObject var databaseManager: DBManager
 
     @State private var databaseViewHeight: CGFloat = 300
 
@@ -23,7 +23,7 @@ struct HomeView: View {
                         .frame(height: AppManager.controlViewHeight)
 
                     if appManager.showDatabase {
-                        DatabaseView()
+                        DBView()
                     }
                 }
                 .onChange(of: appManager.showDatabase, perform: { _ in resize(geo) })
@@ -44,7 +44,7 @@ struct HomeView: View {
                 }
             }
             .sheet(isPresented: $appManager.showDatabase) {
-                DatabaseView()
+                DBView()
             }
         #endif
     }

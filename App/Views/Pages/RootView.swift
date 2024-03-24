@@ -9,7 +9,7 @@ struct RootView<Content>: View where Content: View {
     @State private var isReady: Bool = false
     @State private var errorMessage: String? = nil
     @State private var iCloudDocumentsUrl: URL? = nil
-    @State private var databaseManager: DatabaseManager? = nil
+    @State private var databaseManager: DBManager? = nil
     @State private var audioManager: AudioManager? = nil
     @State private var mediaPlayerManger: MediaPlayerManager? = nil
     @State private var windowManager: WindowManager = WindowManager()
@@ -45,7 +45,7 @@ struct RootView<Content>: View where Content: View {
                             case let .failure(error):
                                 errorMessage = error.localizedDescription
                             case let .success(url):
-                                databaseManager = DatabaseManager(rootDir: url)
+                                databaseManager = DBManager(rootDir: url)
                                 audioManager = AudioManager(databaseManager: databaseManager!)
                                 mediaPlayerManger = MediaPlayerManager(audioManager: audioManager!)
 

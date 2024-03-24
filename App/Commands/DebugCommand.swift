@@ -11,7 +11,8 @@ struct DebugCommand: Commands {
 
         #if os(macOS)
         CommandMenu("调试") {
-            Button("打开数据库文件夹") {
+            Button("打开文档文件夹") {
+                NSWorkspace.shared.open(AppConfig.documentsDir)
             }
             .keyboardShortcut("f", modifiers: [.shift, .option])
             
