@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct EmptyDBView: View {
+struct DBEmptyView: View {
     @EnvironmentObject var appManager: AppManager
 
     var body: some View {
@@ -30,7 +30,7 @@ struct EmptyDBView: View {
 }
 
 #Preview {
-    EmptyDBView()
+    DBEmptyView()
 }
 
 #Preview {

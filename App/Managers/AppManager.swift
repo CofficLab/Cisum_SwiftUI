@@ -33,6 +33,14 @@ class AppManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
     @Published var fixedMessage: String = ""
     @Published var isImporting: Bool = false
     
+    func cleanStateMessage() {
+        stateMessage = ""
+    }
+    
+    func cleanFlashMessage() {
+        flashMessage = ""
+    }
+    
     func setFlashMessage(_ message: String) {
         flashMessage = message
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {

@@ -4,14 +4,15 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct DBView: View {
-    @EnvironmentObject var databaseManager: DBManager
+    @EnvironmentObject var dbManager: DBManager
     @EnvironmentObject var audioManager: AudioManager
     @EnvironmentObject var appManager: AppManager
 
     @State private var selectedAudioModel: AudioModel? = nil
     @State private var selectedAudioModels = Set<AudioModel.ID>()
-    @State private var sortOrder = [KeyPathComparator(\AudioModel.title)]
     @State private var dropping: Bool = false
+    
+    var db: DBModel { dbManager.dbModel }
 
     var body: some View {
         #if os(iOS)
@@ -44,162 +45,59 @@ struct DBView: View {
                 })
         #else
         ZStack {
-            table
+            DBTableView()
 
             // 仓库为空
-            if databaseManager.isEmpty && appManager.flashMessage.isEmpty {
-                EmptyDBView()
+            if dbManager.isEmpty && appManager.flashMessage.isEmpty {
+                DBEmptyView()
             }
+        }
+        .onChange(of: dropping, perform: { v in
+            appManager.setFlashMessage(v ? "松开可添加文件" : "")
+        })
+        .onDrop(of: [UTType.fileURL], isTargeted: $dropping) { providers -> Bool in
+            let dispatchGroup = DispatchGroup()
+            var dropedFiles: [URL] = []
+            for provider in providers {
+                dispatchGroup.enter()
+                // 这是异步操作
+                _ = provider.loadObject(ofClass: URL.self) { object, _ in
+                    if let url = object {
+                        os_log("添加 \(url.lastPathComponent) 到复制队列")
+                        dropedFiles.append(url)
+                    }
+
+                    dispatchGroup.leave()
+                }
+            }
+
+            dispatchGroup.notify(queue: .main) {
+                copy(dropedFiles)
+            }
+
+            return true
         }
         #endif
     }
+}
 
-    private var table: some View {
-        tableView
-            .onChange(of: dropping, perform: { v in
-                appManager.setFlashMessage(v ? "松开可添加文件" : "")
-            })
-            .onDrop(of: [UTType.fileURL], isTargeted: $dropping) { providers -> Bool in
-                let dispatchGroup = DispatchGroup()
-                var dropedFiles: [URL] = []
-                for provider in providers {
-                    dispatchGroup.enter()
-                    // 这是异步操作
-                    _ = provider.loadObject(ofClass: URL.self) { object, _ in
-                        if let url = object {
-                            // AppConfig.logger.ui.debug("添加 \(url.lastPathComponent, privacy: .public)")
-                            dropedFiles.append(url)
-                        }
+// MARK: DROP
 
-                        dispatchGroup.leave()
-                    }
-                }
-
-                dispatchGroup.notify(queue: .main) {
-                    // 等待所有异步操作完成
-                    os_log("Drop 了 \(dropedFiles.count) 个文件")
-
-                    appManager.stateMessage = "正在复制 \(dropedFiles.count) 个文件"
-                    databaseManager.add(
-                        dropedFiles,
-                        completionAll: {
-                            appManager.setFlashMessage("拖动的文件已添加")
-                            appManager.stateMessage = ""
-                        },
-                        completionOne: { url in
-                            appManager.setFlashMessage("已添加 \(url.lastPathComponent)")
-                        }
-                    )
-                }
-
-                return true
+extension DBView {
+    func copy(_ files: [URL]) {
+        appManager.stateMessage = "正在复制 \(files.count) 个文件"
+        db.add(files,
+            completionAll: {
+                appManager.setFlashMessage("拖动的文件已添加")
+                appManager.cleanStateMessage()
+            },
+            completionOne: { url in
+                appManager.setFlashMessage("完成复制 \(url.lastPathComponent)")
+            },
+            onStart: {
+                appManager.stateMessage = "正在复制 \($0.lastPathComponent)"
             }
-            .onChange(of: sortOrder) { newOrder in
-                databaseManager.audios.sort(using: newOrder)
-            }
-            .contextMenu {
-                getContextMenuItems()
-            }
-    }
-
-    private var tableView: some View {
-        GeometryReader { geo in
-            VStack(spacing: 0) {
-                if geo.size.width <= 500 {
-                    // 一列模式
-                    Table(of: AudioModel.self, selection: $selectedAudioModels, sortOrder: $sortOrder, columns: {
-                        TableColumn("歌曲", value: \.title, content: getTitleColumn)
-                    }, rows: getRows)
-                } else if geo.size.width <= 700 {
-                    // 两列模式
-                    Table(of: AudioModel.self, selection: $selectedAudioModels, sortOrder: $sortOrder, columns: {
-                        TableColumn("歌曲", value: \.title, content: getTitleColumn)
-                        TableColumn("艺人", value: \.artist)
-                    }, rows: getRows)
-                } else {
-                    // 三列模式
-                    Table(of: AudioModel.self, selection: $selectedAudioModels, sortOrder: $sortOrder, columns: {
-                        TableColumn("歌曲", value: \.title, content: getTitleColumn)
-                        TableColumn("艺人", value: \.artist)
-                        TableColumn("专辑", value: \.albumName)
-                    }, rows: getRows)
-                }
-            }
-        }
-    }
-
-    private func getTitleColumn(_ audio: AudioModel) -> some View {
-        HStack {
-            if audio == audioManager.audio {
-                Image(systemName: "signpost.right").frame(width: 16)
-            } else {
-                audio.getIcon()
-            }
-
-            AlbumView(audio: Binding.constant(audio)).frame(width: 24, height: 24)
-
-            Text(audio.title)
-        }
-        .onTapGesture(count: 2, perform: { playNow(audio: audio) })
-    }
-
-    private func getRows() -> some TableRowContent<AudioModel> {
-        ForEach(databaseManager.audios) { audio in
-            if !selectedAudioModels.contains([audio.url]) || (selectedAudioModels.contains([audio.url]) && selectedAudioModels.count == 1) {
-                TableRow(audio)
-                    .itemProvider { // enable Drap
-                        NSItemProvider(object: audio.url as NSItemProviderWriting)
-                    }
-                    .contextMenu {
-                        getContextMenuItems(audio)
-                    }
-            } else {
-                TableRow(audio)
-            }
-        }
-    }
-
-    private func playNow(audio: AudioModel) {
-        if audio.isDownloading {
-            appManager.alertMessage = "正在下载，不能播放"
-            appManager.showAlert = true
-        } else {
-            audioManager.playFile(url: audio.url)
-        }
-    }
-
-    // MARK: 右键菜单
-    
-    private func getContextMenuItems(_ audio: AudioModel? = nil) -> some View {
-        var selected: Set<AudioModel.ID> = selectedAudioModels
-        if audio != nil {
-            selected.insert(audio!.id)
-        }
-
-        return VStack {
-            ButtonPlay(url: selected.first ?? AudioModel.empty.id)
-                .disabled(selected.count != 1)
-
-            ButtonDownload(url: selected.first ?? AudioModel.empty.id)
-                .disabled(selected.count != 1)
-
-            #if os(macOS)
-            BtnShowInFinder(url: selected.first ?? AudioModel.empty.id)
-                    .disabled(selected.count != 1)
-            #endif
-
-            Divider()
-            ButtonAdd()
-            ButtonCancelSelected(action: {
-                selectedAudioModels.removeAll()
-            }).disabled(selected.count == 0)
-
-            Divider()
-            ButtonDeleteSelected(audios: selected, callback: {
-                selectedAudioModels = []
-            }).disabled(selected.count == 0)
-            BtnDestroy()
-        }
+        )
     }
 }
 

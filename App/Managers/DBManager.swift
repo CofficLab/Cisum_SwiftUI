@@ -16,7 +16,7 @@ class DBManager: ObservableObject {
 
     static var preview: DBManager = DBManager(rootDir: iCloudHelper.getiCloudDocumentsUrl())
 
-    private var dbModel: DBModel
+    var dbModel: DBModel
 
     init(rootDir: URL) {
         AppConfig.logger.databaseManager.info("初始化 DatabaseManager")
@@ -31,24 +31,6 @@ class DBManager: ObservableObject {
         self.refresh()
     }
 
-    /// 往数据库添加文件
-    func add(_ urls: [URL], completionAll: @escaping () -> Void = {}, completionOne: @escaping (_ url:URL) -> Void = {_ in}) {
-        dbModel.add(
-            urls,
-            completionAll: {
-                self.refresh()
-                AppConfig.mainQueue.async {
-                    completionAll()
-                }
-            },
-            completionOne: { url in
-                AppConfig.mainQueue.async {
-                    completionOne(url)
-                }
-            }
-        )
-    }
-
     func downloadOne(_ url: URL) -> Bool {
         dbModel.downloadOne(url)
     }
@@ -58,7 +40,7 @@ class DBManager: ObservableObject {
         refresh()
     }
 
-    private func refresh() {
+    func refresh() {
         os_log("DBManager 刷新数据")
         AppConfig.bgQueue.async {
             let files = self.dbModel.getFiles()

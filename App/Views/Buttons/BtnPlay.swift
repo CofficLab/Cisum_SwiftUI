@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct ButtonPlay: View {
+struct BtnPlay: View {
     @EnvironmentObject var audioManager: AudioManager
     
     var url: URL

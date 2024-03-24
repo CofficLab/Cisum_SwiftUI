@@ -27,6 +27,54 @@ class DBModel {
         }
     }
 
+    func downloadOne(_ url: URL) -> Bool {
+        CloudFile(url: url).download {
+        }
+
+        return true
+    }
+}
+
+// MARK: 增删改查
+
+extension DBModel {
+    /// 往数据库添加文件
+    func add(
+        _ urls: [URL],
+        completionAll: @escaping () -> Void,
+        completionOne: @escaping (_ sourceUrl: URL) -> Void,
+        onStart: @escaping (_ url: URL) -> Void
+    ) {
+        queue.async {
+            for url in urls {
+                onStart(url)
+                self.saveToCache(url)
+                CloudFile(url: url).copyTo(to: self.cloudDisk.appendingPathComponent(url.lastPathComponent), completion: { url in
+                    completionOne(url)
+                })
+            }
+
+            completionAll()
+        }
+    }
+    
+    /// 清空数据库、清空缓存
+    func destroy() {
+        if let localDisk = localDisk {
+            do {
+                try fileManager.removeItem(at: localDisk)
+            } catch let e {
+                os_log("\(e.localizedDescription)")
+            }
+        }
+        
+        do {
+            try fileManager.removeItem(at: cloudDisk)
+        } catch let e {
+            os_log("\(e.localizedDescription)")
+        }
+    }
+
     /// 删除多个文件
     func delete(urls: Set<URL>) async {
         os_log("DBModel::delete")
@@ -37,14 +85,7 @@ class DBModel {
             }
         }
     }
-
-    func downloadOne(_ url: URL) -> Bool {
-        CloudFile(url: url).download {
-        }
-
-        return true
-    }
-
+    
     /// 获取目录里的文件列表
     func getFiles() -> [URL] {
         var fileNames: [URL] = []
@@ -79,40 +120,6 @@ class DBModel {
 
         AppConfig.logger.databaseModel.debug("获取文件完成，共 \(sortedFiles.count) 个")
         return sortedFiles
-    }
-}
-
-// MARK: 增删改查
-
-extension DBModel {
-    /// 往数据库添加文件
-    func add(_ urls: [URL], completionAll: @escaping () -> Void, completionOne: @escaping (_ sourceUrl: URL) -> Void = { _ in }) {
-        queue.async {
-            for url in urls {
-                self.saveToCache(url)
-                CloudFile(url: url).copyTo(to: self.cloudDisk.appendingPathComponent(url.lastPathComponent), completion: { url in
-                    completionOne(url)
-                })
-            }
-
-            completionAll()
-        }
-    }
-    
-    func destroy() {
-        if let localDisk = localDisk {
-            do {
-                try fileManager.removeItem(at: localDisk)
-            } catch let e {
-                os_log("\(e.localizedDescription)")
-            }
-        }
-        
-        do {
-            try fileManager.removeItem(at: cloudDisk)
-        } catch let e {
-            os_log("\(e.localizedDescription)")
-        }
     }
 }
 
