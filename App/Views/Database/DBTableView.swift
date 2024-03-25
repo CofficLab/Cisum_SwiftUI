@@ -86,15 +86,6 @@ struct DBTableView: View {
         }
     }
 
-    private func playNow(_ audio: AudioModel) {
-        if audio.isDownloading {
-            appManager.alertMessage = "正在下载，不能播放"
-            appManager.showAlert = true
-        } else {
-            audioManager.play(audio)
-        }
-    }
-
     // MARK: 歌曲的主要信息
     
     private func getTitleColumn(_ audio: AudioModel) -> some View {
@@ -107,7 +98,7 @@ struct DBTableView: View {
         }
         // MARK: 双击播放
         .onTapGesture(count: 2, perform: {
-            playNow(audio)
+            BtnPlay(audioManager: _audioManager, appManager: _appManager, audio: audio).play()
         })
     }
 

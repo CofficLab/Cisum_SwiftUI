@@ -20,7 +20,7 @@ struct ControlView: View {
                         TitleView()
                         buttons
                         slider
-                        StateView()
+//                        StateView()
                         Spacer()
                     }
 

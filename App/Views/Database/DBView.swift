@@ -87,6 +87,7 @@ extension DBView {
                    AppConfig.mainQueue.sync {
                        appManager.setFlashMessage("已添加 \(files.count) 个文件")
                        appManager.cleanStateMessage()
+                       dbManager.refresh()
                    }
                },
                completionOne: { url in
