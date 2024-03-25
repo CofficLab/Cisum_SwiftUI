@@ -28,18 +28,18 @@ class CloudFile {
     //  先在目的地创建一个临时文件
     //  下载并复制完后删除临时文件
     func copyTo(to: URL, completion: @escaping (_ sourceUrl:URL) -> Void = {url in }) {
-        os_log("☁️ CloudFile:: copy \(self.url.lastPathComponent) -> \(to.lastPathComponent)")
+        os_log("☁️ CloudFile::copy \(self.url.lastPathComponent) -> \(to.lastPathComponent)")
         createTempFile(to)
         download(completion: {
             do {
                 // 获取授权
                 if self.url.startAccessingSecurityScopedResource() {
-                    // AppConfig.logger.databaseModel.info("获取授权后复制 \(url.lastPathComponent, privacy: .public)")
+                    os_log("☁️ CloudFile::copy获取授权后复制 \(self.url.lastPathComponent, privacy: .public)")
                     try FileManager.default.copyItem(at: self.url, to: to)
                     self.url.stopAccessingSecurityScopedResource()
                 } else {
                     // 获取授权失败，可能不是用户选择的文件，直接复制
-                    // AppConfig.logger.databaseModel.info("直接复制 \(url.lastPathComponent, privacy: .public)")
+                    os_log("☁️ CloudFile::copy直接复制 \(self.url.lastPathComponent, privacy: .public)")
                     try FileManager.default.copyItem(at: self.url, to: to)
                 }
             } catch {
@@ -54,7 +54,7 @@ class CloudFile {
     func download(completion: @escaping () -> Void) {
         os_log("☁️ CloudFile::下载文件 -> \(self.url.lastPathComponent)")
         if iCloudHelper.isDownloaded(url: url) {
-            os_log("☁️ CloudFile::已经下载了")
+            os_log("☁️ CloudFile::已经下载了 🎉🎉🎉")
             completion()
             return
         }
@@ -97,7 +97,7 @@ class CloudFile {
         do {
             try content.write(to: tempFileUrl, atomically: true, encoding: .utf8)
         } catch {
-            AppConfig.logger.app.debug("写入临时文件失败\n\(error)")
+            os_log("☁️ CloudFile::写入临时文件失败\n\(error)")
         }
     }
 

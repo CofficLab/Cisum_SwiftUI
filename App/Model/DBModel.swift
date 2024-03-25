@@ -49,10 +49,19 @@ extension DBModel {
     
     /// 清空数据库
     func destroy() {
+        clearFolderContents(atPath: cloudDisk.path)
+    }
+    
+    func clearFolderContents(atPath path: String) {
+        let fileManager = FileManager.default
         do {
-            try fileManager.removeItem(at: cloudDisk)
-        } catch let e {
-            os_log("\(e.localizedDescription)")
+            let contents = try fileManager.contentsOfDirectory(atPath: path)
+            for item in contents {
+                let itemPath = URL(fileURLWithPath: path).appendingPathComponent(item).path
+                try fileManager.removeItem(atPath: itemPath)
+            }
+        } catch {
+            print("Error: \(error)")
         }
     }
     
