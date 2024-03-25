@@ -5,3 +5,4 @@ xcuserdata/
 *.xcscmblueprint
 *.xccheckout
 *.xcuserstate 
+.DS_Store
