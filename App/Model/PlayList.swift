@@ -30,7 +30,7 @@ class PlayList {
         
         let nextIndex = current + offset >= list.count ? 0 : current + offset
         let nextAudio = list[nextIndex]
-        os_log("🔊 PlayList::next \(offset) -> \(nextAudio.title)")
+        //os_log("🔊 PlayList::next \(offset) -> \(nextAudio.title)")
         
         return nextAudio
     }
@@ -162,9 +162,11 @@ extension PlayList {
     func prepare() {
         for i in 1...10 {
             let nextAudio = getNext(i)
-            os_log("🔊 PlayList::prepare next \(i) -> \(nextAudio.title)")
+            //os_log("🔊 PlayList::prepare next \(i) -> \(nextAudio.title)")
             nextAudio.prepare()
         }
+        
+        os_log("🔊 PlayList::prepare next 10 ready 🎉")
     }
 
     func getCachePath(_ url: URL) -> URL? {

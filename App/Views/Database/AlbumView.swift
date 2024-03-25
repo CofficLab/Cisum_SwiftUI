@@ -26,6 +26,6 @@ struct AlbumView: View {
 
 #Preview("APP") {
     RootView {
-        HomeView(play: false)
+        ContentView()
     }
 }

@@ -3,11 +3,7 @@ import SwiftUI
 struct ControlView: View {
     @EnvironmentObject var appManager: AppManager
     @EnvironmentObject var audioManager: AudioManager
-    @EnvironmentObject var databaseManager: DBManager
-//    @EnvironmentObject var playListManager: PlayListManager
-
-    @State private var selectedList: String = ""
-    @State private var popoverDisplay: Bool = false
+    @EnvironmentObject var dbManager: DBManager
 
     var playNow: Bool? = false
 
@@ -18,9 +14,9 @@ struct ControlView: View {
                     VStack {
                         Spacer()
                         TitleView()
-                        buttons
-                        slider
-//                        StateView()
+                        ButtonsView()
+                        SliderView()
+                        //StateView()
                         Spacer()
                     }
 
@@ -33,64 +29,22 @@ struct ControlView: View {
             }.foregroundStyle(.white)
         #else
             VStack {
-                title
-                    .padding(.vertical, 20)
-
+                TitleView().padding(.vertical, 20)
                 AlbumView(audio: $audioManager.audio)
-                    .opacity(databaseManager.audios.isEmpty ? 0 : 1)
-
-                if databaseManager.isEmpty {
-                    EmptyDatabaseView()
-                        .padding(.vertical, 40)
+                    .opacity(dbManager.audios.isEmpty ? 0 : 1)
+                if dbManager.isEmpty {
+                    DBEmptyView().padding(.vertical, 40)
                 }
-
                 SliderView().padding(.vertical, 20)
-                buttons.padding(.vertical, 30)
+                ButtonsView().padding(.vertical, 30)
             }.foregroundStyle(.white)
-        #endif
-    }
-
-    private var slider: some View {
-        SliderView()
-    }
-
-//    private var playList: some View {
-//        HStack {
-//            Text(playListManager.current.title)
-//                .font(.title2)
-//                .foregroundStyle(.white)
-//                .onTapGesture {
-//                    popoverDisplay.toggle()
-//                }
-//        }
-//        .popover(isPresented: $popoverDisplay, arrowEdge: .bottom) {
-//            List {
-//                ForEach(playListManager.items) { item in
-//                    Text(item.title)
-//                }
-//            }
-//        }
-//    }
-
-    private var buttons: some View {
-        HStack(spacing: 1, content: {
-            ButtonToggleDatabase()
-            ButtonPrev()
-            ButtonPlayPause()
-            BtnNext()
-            ButtonPlayMode()
-        })
-        .foregroundStyle(.white)
-        .labelStyle(.iconOnly)
-        #if os(iOS)
-            .scaleEffect(1.2)
         #endif
     }
 }
 
-#Preview("HomeView") {
+#Preview("APP") {
     RootView {
-        HomeView(play: false)
+        ContentView(play: false)
     }
 }
 

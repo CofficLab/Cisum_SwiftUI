@@ -4,7 +4,6 @@ struct TitleView: View {
     @EnvironmentObject var appManager: AppManager
     @EnvironmentObject var audioManager: AudioManager
     @EnvironmentObject var databaseManager: DBManager
-//    @EnvironmentObject var playListManager: PlayListManager
     
     var body: some View {
         VStack {

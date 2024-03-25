@@ -21,7 +21,7 @@ class AudioManager: NSObject, ObservableObject {
     private var listener: AnyCancellable?
 
     init(databaseManager: DBManager) {
-        os_log("初始化 AudioManager")
+        os_log("🚩 初始化 AudioManager")
 
         self.databaseManager = databaseManager
         audios = databaseManager.audios
@@ -33,7 +33,7 @@ class AudioManager: NSObject, ObservableObject {
             os_log("检测到 DatabaseManger.audios 变了，数量变成了 \(newValue.count)")
             self.audios = newValue
             self.list = PlayList(self.audios)
-            os_log("当前曲目数量：\(self.audios.count)")
+            os_log("🔊 当前曲目数量：\(self.audios.count)")
 
             if !self.isValid() && self.audios.count > 0 {
                 os_log("当前播放的已经无效，切换到下一曲")
@@ -142,7 +142,7 @@ class AudioManager: NSObject, ObservableObject {
     }
 
     func next(_ callback: @escaping (_ message: String) -> Void, manual: Bool = true) {
-        os_log("🔊 AudioManager::跳到下一曲")
+        os_log("🔊 AudioManager::next ⬇️")
         audio = list.next()
         updatePlayer()
         callback("下一曲：\(audio.title)")

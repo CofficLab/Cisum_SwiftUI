@@ -18,23 +18,21 @@ class MediaPlayerManager: ObservableObject {
         let center = MPNowPlayingInfoCenter.default()
 
         #if os(iOS)
-            audio.getAudioMeta { metaData in
-                let image = metaData.uiImage
+            let image = audio.uiImage
 
-                center.nowPlayingInfo = [
-                    MPMediaItemPropertyTitle: audioManager.audio.title,
-                    MPMediaItemPropertyArtwork: MPMediaItemArtwork(boundsSize: image.size) { _ -> UIImage in
-                        image
-                    },
-                    MPMediaItemPropertyArtist: "乐音APP",
-                    MPMediaItemPropertyPlaybackDuration: audioManager.duration,
-                    MPNowPlayingInfoPropertyElapsedPlaybackTime: audioManager.currentTime(),
-                ]
-            }
+            center.nowPlayingInfo = [
+                MPMediaItemPropertyTitle: audioManager.audio.title,
+                MPMediaItemPropertyArtwork: MPMediaItemArtwork(boundsSize: image.size) { _ -> UIImage in
+                    image
+                },
+                MPMediaItemPropertyArtist: "乐音APP",
+                MPMediaItemPropertyPlaybackDuration: audioManager.duration,
+                MPNowPlayingInfoPropertyElapsedPlaybackTime: audioManager.currentTime(),
+            ]
         #else
             center.playbackState = audioManager.isPlaying ? .playing : .paused
             center.nowPlayingInfo = [
-                MPMediaItemPropertyTitle: audioManager.audio.title,
+                MPMediaItemPropertyTitle: audio.title,
                 MPMediaItemPropertyArtist: "乐音APP",
                 MPMediaItemPropertyPlaybackDuration: audioManager.duration,
                 MPNowPlayingInfoPropertyElapsedPlaybackTime: audioManager.currentTime(),

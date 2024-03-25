@@ -15,11 +15,11 @@ struct DBView: View {
         #if os(iOS)
             NavigationView {
                 ZStack {
-                    if databaseManager.isEmpty {
+                    if dbManager.isEmpty {
                         BackgroundView.type1
-                        EmptyDatabaseView()
+                        DBEmptyView()
                     } else {
-                        table
+                        DBTableView()
                     }
                 }
                 .toolbar {
@@ -33,9 +33,7 @@ struct DBView: View {
                 onCompletion: { result in
                     switch result {
                     case let .success(urls):
-                        databaseManager.add(urls, completionAll: {
-                            appManager.setFlashMessage("添加成功")
-                        })
+                        copy(urls)
                     case let .failure(error):
                         print("导入文件失败Error: \(error)")
                     }
@@ -105,7 +103,7 @@ extension DBView {
     }
 }
 
-#Preview {
+#Preview("APP") {
     RootView {
         DBView()
     }

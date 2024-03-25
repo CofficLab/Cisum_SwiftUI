@@ -17,6 +17,7 @@ class DBManager: ObservableObject {
     static var preview: DBManager = DBManager(rootDir: iCloudHelper.getiCloudDocumentsUrl())
 
     var dbModel: DBModel
+    var queue = AppConfig.bgQueue
 
     init(rootDir: URL) {
         os_log("🚩 初始化 DBManager")
@@ -37,8 +38,7 @@ class DBManager: ObservableObject {
     }
 
     func refresh() {
-        os_log("DBManager 刷新数据")
-        AppConfig.bgQueue.async {
+        queue.async {
             let files = self.dbModel.getFiles()
             let audios = self.dbModel.getAudioModels()
             
@@ -46,7 +46,7 @@ class DBManager: ObservableObject {
                 self.files = files
                 self.audios = audios
                 self.isReady = true
-                os_log("DataseManager 刷新完成")
+                os_log("🍋 DataseManager 刷新完成")
             }
         }
     }

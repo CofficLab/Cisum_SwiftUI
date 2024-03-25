@@ -17,7 +17,7 @@ class AudioModel {
     #if os(macOS)
         var cover = Image(nsImage: NSImage(imageLiteralResourceName: "DefaultAlbum"))
     #else
-        var image: Image = Image(uiImage: UIImage(imageLiteralResourceName: "DefaultAlbum"))
+        var cover: Image = Image(uiImage: UIImage(imageLiteralResourceName: "DefaultAlbum"))
         var uiImage: UIImage = UIImage(imageLiteralResourceName: "DefaultAlbum")
     #endif
 
@@ -81,7 +81,7 @@ extension AudioModel {
     
     /// 准备好文件
     func prepare() {
-        os_log("🔊 AudioModel::prepare -> \(self.title)")
+        //os_log("🔊 AudioModel::prepare -> \(self.title)")
         let url = getURL()
         // 如果是 iCloud 文件，触发下载
         if FileHelper.isAudioiCloudFile(url: url) {
@@ -92,7 +92,7 @@ extension AudioModel {
                 os_log("🔊 AudioModel::prepare 下载 iCloud 文件错误\n\(error)")
             }
         } else {
-            os_log("🔊 AudioModel::prepare 准备完成 🎉🎉🎉 -> \(self.title)")
+            //os_log("🔊 AudioModel::prepare 准备完成 🎉🎉🎉 -> \(self.title)")
         }
     }
 

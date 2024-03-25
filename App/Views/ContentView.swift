@@ -45,7 +45,7 @@ struct ContentView: View {
 }
 
 #Preview {
-    RootView(content: {
-        ContentView(play: false)
-    })
+    RootView {
+        ContentView()
+    }
 }

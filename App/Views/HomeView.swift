@@ -8,7 +8,6 @@ struct HomeView: View {
     @EnvironmentObject var audioManager: AudioManager
     @EnvironmentObject var windowManager: WindowManager
     @EnvironmentObject var appManager: AppManager
-//    @EnvironmentObject var playListManager: PlayListManager
     @EnvironmentObject var databaseManager: DBManager
 
     @State private var databaseViewHeight: CGFloat = 300

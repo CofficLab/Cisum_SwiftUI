@@ -11,7 +11,11 @@ struct DBTitle: View {
 
         if audio == audioManager.audio {
             if #available(macOS 14.0, *) {
-                text = text.foregroundStyle(.secondary)
+                if #available(iOS 17.0, *) {
+                    text = text.foregroundStyle(.secondary)
+                } else {
+                    // Fallback on earlier versions
+                }
             } else {
                 // Fallback on earlier versions
             }
