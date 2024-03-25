@@ -78,6 +78,23 @@ extension AudioModel: Identifiable {
 
 extension AudioModel {
     var isCached: Bool { cacheURL != nil }
+    
+    /// 准备好文件
+    func prepare() {
+        os_log("🔊 AudioModel::prepare -> \(self.title)")
+        let url = getURL()
+        // 如果是 iCloud 文件，触发下载
+        if FileHelper.isAudioiCloudFile(url: url) {
+            os_log("🔊 AudioModel::prepare 下载 iCloud 文件：\n\(self.title)")
+            do {
+                try fileManager.startDownloadingUbiquitousItem(at: url)
+            } catch {
+                os_log("🔊 AudioModel::prepare 下载 iCloud 文件错误\n\(error)")
+            }
+        } else {
+            os_log("🔊 AudioModel::prepare 准备完成 🎉🎉🎉 -> \(self.title)")
+        }
+    }
 
     func getiCloudState() -> iCloudState {
         if url.pathExtension == "downloading" {
@@ -128,10 +145,21 @@ extension AudioModel {
 // MARK: 删除
 
 extension AudioModel {
+    /// 删除多个文件
+     static   func delete(urls: Set<URL>) async {
+        os_log("🏠 AudioModel::delete")
+         AppConfig.mainQueue.async {
+                for url in urls {
+                    AudioModel(url).delete()
+                }
+            }
+        }
+    
     func delete() {
         do {
             if fileManager.fileExists(atPath: url.path) {
                 try fileManager.removeItem(at: url)
+                CloudFile(url: url).delete()
             } else {
                 os_log("删除时发现文件不存在，忽略 -> \(self.url.lastPathComponent)")
             }
@@ -222,22 +250,6 @@ extension AudioModel {
         return nil
     }
 }
-
-//extension AudioModel {
-//    func download() {
-//        if !FileHelper.isAudioiCloudFile(url: url) {
-//            return os_log("☁️ AudioModel::无需下载 -> \(self.title)")
-//        }
-//
-//        os_log("☁️ AudioModel::下载 -> \(self.title)")
-//        
-//        do {
-//            try AppConfig.fileManager.startDownloadingUbiquitousItem(at: url)
-//        } catch {
-//            os_log("下载 iCloud 文件错误\n\(error)")
-//        }
-//    }
-//}
 
 #Preview("App") {
     RootView {

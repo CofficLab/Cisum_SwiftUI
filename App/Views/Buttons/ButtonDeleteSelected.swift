@@ -4,7 +4,7 @@ struct ButtonDeleteSelected: View {
     @EnvironmentObject var dbManager: DBManager
     @EnvironmentObject var appManager: AppManager
     
-    var audios: Set<URL>
+    var audios: Set<AudioModel.ID>
     var callback: ()->Void = {}
         
     var body: some View {

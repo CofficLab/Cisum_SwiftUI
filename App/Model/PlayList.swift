@@ -30,7 +30,7 @@ class PlayList {
         
         let nextIndex = current + offset >= list.count ? 0 : current + offset
         let nextAudio = list[nextIndex]
-        os_log("🔊 PlayList::接下来的第 \(offset) 曲是: \(nextAudio.title)")
+        os_log("🔊 PlayList::next \(offset) -> \(nextAudio.title)")
         
         return nextAudio
     }
@@ -162,19 +162,8 @@ extension PlayList {
     func prepare() {
         for i in 1...10 {
             let nextAudio = getNext(i)
-            os_log("🔊 PlayList::prepare 准备接下来的第 \(i) 首 -> \(nextAudio.title)")
-            let url = nextAudio.getURL()
-            // 如果是 iCloud 文件，触发下载
-            if FileHelper.isAudioiCloudFile(url: url) {
-                os_log("🔊 PlayList::prepare 下载 iCloud 文件：\n\(url.lastPathComponent)")
-                do {
-                    try fileManager.startDownloadingUbiquitousItem(at: url)
-                } catch {
-                    os_log("🔊 PlayList::prepare 下载 iCloud 文件错误\n\(error)")
-                }
-            } else {
-                os_log("🔊 PlayList::prepare 准备接下来的第 \(i) 首 -> 🎉🎉🎉")
-            }
+            os_log("🔊 PlayList::prepare next \(i) -> \(nextAudio.title)")
+            nextAudio.prepare()
         }
     }
 

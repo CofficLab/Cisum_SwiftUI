@@ -19,20 +19,16 @@ class DBManager: ObservableObject {
     var dbModel: DBModel
 
     init(rootDir: URL) {
-        AppConfig.logger.databaseManager.info("初始化 DatabaseManager")
-        dbModel = DBModel(cloudDisk: rootDir, localDisk: AppConfig.documentsDir)
+        os_log("🚩 初始化 DBManager")
+        dbModel = DBModel(cloudDisk: rootDir)
         isCloudStorage = iCloudHelper.isCloudPath(url: rootDir)
 
         refresh()
     }
 
     func delete(urls: Set<URL>) async {
-        await dbModel.delete(urls: urls)
+        await AudioModel.delete(urls: urls)
         self.refresh()
-    }
-
-    func downloadOne(_ url: URL) -> Bool {
-        dbModel.downloadOne(url)
     }
     
     func destroy() {

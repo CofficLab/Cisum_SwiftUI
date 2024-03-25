@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct ButtonDelete: View {
+struct BtnDelete: View {
     @EnvironmentObject var databaseManager: DBManager
     @EnvironmentObject var appManager: AppManager
     

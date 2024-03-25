@@ -59,7 +59,7 @@ struct DBView: View {
                     // 这是异步操作
                     _ = provider.loadObject(ofClass: URL.self) { object, _ in
                         if let url = object {
-                            os_log("添加 \(url.lastPathComponent) 到复制队列")
+                            os_log("🖥️ DBView::添加 \(url.lastPathComponent) 到复制队列")
                             dropedFiles.append(url)
                         }
 
@@ -81,7 +81,7 @@ struct DBView: View {
 
 extension DBView {
     func copy(_ files: [URL]) {
-        appManager.stateMessage = "正在复制 \(files.count) 个文件"
+        appManager.stateMessage = "🖥️ DBView::正在复制 \(files.count) 个文件"
         db.add(files,
                completionAll: {
                    appManager.setFlashMessage("已添加 \(files.count) 个文件")

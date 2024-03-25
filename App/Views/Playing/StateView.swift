@@ -12,9 +12,9 @@ struct StateView: View {
     
     var body: some View {
         HStack(spacing: 2) {
-            Text(isDownloading ? "下载中" : "已下载")
-            Text(isCached ? "已缓存" : "未缓存")
-            Text(next.title)
+//            Text(isDownloading ? "下载中" : "已下载")
+//            Text(isCached ? "已缓存" : "未缓存")
+            Text("下一首：\(next.title)")
         }
     }
 }

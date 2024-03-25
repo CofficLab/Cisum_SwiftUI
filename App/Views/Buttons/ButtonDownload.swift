@@ -7,7 +7,7 @@ struct ButtonDownload: View {
         
     var body: some View {
         Button {
-            _ = databaseManager.downloadOne(url)
+//            _ = databaseManager.downloadOne(url)
         } label: {
             Label("下载", systemImage: getImageName())
                 .font(.system(size: 24))

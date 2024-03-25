@@ -43,7 +43,7 @@
 		0BB889D22AC042EC004788D5 /* ButtonDownload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB889D12AC042EC004788D5 /* ButtonDownload.swift */; };
 		0BB889D52AC04638004788D5 /* BtnPlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB889D42AC04638004788D5 /* BtnPlay.swift */; };
 		0BB889D72AC046B5004788D5 /* BtnShowInFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB889D62AC046B5004788D5 /* BtnShowInFinder.swift */; };
-		0BB889D92AC047B3004788D5 /* ButtonDelete.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB889D82AC047B3004788D5 /* ButtonDelete.swift */; };
+		0BB889D92AC047B3004788D5 /* BtnDelete.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB889D82AC047B3004788D5 /* BtnDelete.swift */; };
 		0BB889DB2AC06C54004788D5 /* DBModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB889DA2AC06C54004788D5 /* DBModel.swift */; };
 		0BBA420C2ABBD79600C0B977 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA420B2ABBD79600C0B977 /* Errors.swift */; };
 		0BBA42132ABC137A00C0B977 /* StatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA42122ABC137A00C0B977 /* StatusView.swift */; };
@@ -113,7 +113,7 @@
 		0BB889D12AC042EC004788D5 /* ButtonDownload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonDownload.swift; sourceTree = "<group>"; };
 		0BB889D42AC04638004788D5 /* BtnPlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnPlay.swift; sourceTree = "<group>"; };
 		0BB889D62AC046B5004788D5 /* BtnShowInFinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnShowInFinder.swift; sourceTree = "<group>"; };
-		0BB889D82AC047B3004788D5 /* ButtonDelete.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonDelete.swift; sourceTree = "<group>"; };
+		0BB889D82AC047B3004788D5 /* BtnDelete.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnDelete.swift; sourceTree = "<group>"; };
 		0BB889DA2AC06C54004788D5 /* DBModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBModel.swift; sourceTree = "<group>"; };
 		0BBA420B2ABBD79600C0B977 /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
 		0BBA42122ABC137A00C0B977 /* StatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusView.swift; sourceTree = "<group>"; };
@@ -254,7 +254,7 @@
 				0BB889D62AC046B5004788D5 /* BtnShowInFinder.swift */,
 				0BBA42262AC2A8B800C0B977 /* ButtonAdd.swift */,
 				0BBA42202AC1802C00C0B977 /* ButtonCancelSelected.swift */,
-				0BB889D82AC047B3004788D5 /* ButtonDelete.swift */,
+				0BB889D82AC047B3004788D5 /* BtnDelete.swift */,
 				0BBA42242AC1813D00C0B977 /* ButtonDeleteSelected.swift */,
 				0BAB7C402AD3D25200C5AEB5 /* ButtonDismiss.swift */,
 				0BB889D12AC042EC004788D5 /* ButtonDownload.swift */,
@@ -440,7 +440,7 @@
 				0BBA42132ABC137A00C0B977 /* StatusView.swift in Sources */,
 				0BB5871B2AD81AFA0071AEBD /* ViewHelper.swift in Sources */,
 				0BAB7C3F2AD3BBAA00C5AEB5 /* DBEmptyView.swift in Sources */,
-				0BB889D92AC047B3004788D5 /* ButtonDelete.swift in Sources */,
+				0BB889D92AC047B3004788D5 /* BtnDelete.swift in Sources */,
 				0B1D5A882AB302610010DDF2 /* ContentView.swift in Sources */,
 				0B718F0C2AB4349900569762 /* CardView.swift in Sources */,
 				0BFDCB802AB86AF300B0D1C8 /* MenuTile.swift in Sources */,
