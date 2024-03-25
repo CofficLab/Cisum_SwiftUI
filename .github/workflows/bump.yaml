@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - pre
+      - main
 
 permissions:
   contents: write
@@ -39,11 +39,11 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: dev
-      - name: 拉取 pre 分支
-        run: git fetch origin pre
-      - name: Rebase dev on pre
+      - name: 拉取 main 分支
+        run: git fetch origin main
+      - name: Rebase dev on main
         continue-on-error: true
-        run: git rebase origin/pre
+        run: git rebase origin/main
       - name: Push the rebased dev branch
         continue-on-error: true
         run: git push origin dev
