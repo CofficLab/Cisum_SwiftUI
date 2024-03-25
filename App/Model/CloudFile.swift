@@ -28,6 +28,7 @@ class CloudFile {
     //  先在目的地创建一个临时文件
     //  下载并复制完后删除临时文件
     func copyTo(to: URL, completion: @escaping (_ sourceUrl:URL) -> Void = {url in }) {
+        os_log("☁️ CloudFile:: copy \(self.url.lastPathComponent) -> \(to.lastPathComponent)")
         createTempFile(to)
         download(completion: {
             do {
@@ -42,7 +43,7 @@ class CloudFile {
                     try FileManager.default.copyItem(at: self.url, to: to)
                 }
             } catch {
-                AppConfig.logger.databaseModel.error("复制文件发生错误\n\(error)")
+                os_log("☁️ CloudFile::复制文件发生错误\n\(error)")
             }
 
             completion(self.url)
@@ -51,9 +52,9 @@ class CloudFile {
     }
 
     func download(completion: @escaping () -> Void) {
-        // AppConfig.logger.databaseModel.info("下载文件")
+        os_log("☁️ CloudFile::下载文件 -> \(self.url.lastPathComponent)")
         if iCloudHelper.isDownloaded(url: url) {
-            // AppConfig.logger.databaseManager.info("已经下载了")
+            os_log("☁️ CloudFile::已经下载了")
             completion()
             return
         }
@@ -61,24 +62,24 @@ class CloudFile {
         do {
             try FileManager.default.startDownloadingUbiquitousItem(at: url)
         } catch {
-            AppConfig.logger.databaseModel.error("下载文件出现错误\n\(error)")
+            os_log("☁️ CloudFile::下载文件出现错误\n\(error)")
 
             completion()
             return
         }
 
-//        DispatchQueue.main.async {
+        DispatchQueue.main.async {
             self.timer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true) { [self] _ in
-                AppConfig.logger.databaseModel.debug("\(self.url.lastPathComponent, privacy: .public) 现在状态是:\n\(iCloudHelper.getDownloadingStatus(url: self.url).rawValue, privacy: .public)")
+                os_log("\(self.url.lastPathComponent) 现在状态是:\(iCloudHelper.getDownloadingStatus(url: self.url).rawValue)")
 
                 if iCloudHelper.isDownloaded(url: url) {
-                    AppConfig.logger.databaseModel.info("\(self.url.lastPathComponent, privacy: .public) 下载完成")
+                    os_log("\(self.url.lastPathComponent) 下载完成")
 
                     self.timer?.invalidate()
                     completion()
                 }
             }
-//        }
+        }
     }
     
     private func deleteTempFile(_ url: URL) {

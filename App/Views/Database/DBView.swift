@@ -84,12 +84,16 @@ extension DBView {
         appManager.stateMessage = "🖥️ DBView::正在复制 \(files.count) 个文件"
         db.add(files,
                completionAll: {
-                   appManager.setFlashMessage("已添加 \(files.count) 个文件")
-                   appManager.cleanStateMessage()
+                   AppConfig.mainQueue.sync {
+                       appManager.setFlashMessage("已添加 \(files.count) 个文件")
+                       appManager.cleanStateMessage()
+                   }
                },
                completionOne: { url in
-                   appManager.setFlashMessage("完成复制 \(url.lastPathComponent)")
-                   dbManager.refresh()
+                   AppConfig.mainQueue.async {
+                       appManager.setFlashMessage("完成复制 \(url.lastPathComponent)")
+                       dbManager.refresh()
+                   }
                },
                onStart: { url in
                    AppConfig.mainQueue.sync {
