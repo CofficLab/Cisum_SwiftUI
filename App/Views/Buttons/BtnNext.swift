@@ -1,4 +1,5 @@
 import SwiftUI
+import OSLog
 
 struct BtnNext: View {
     @EnvironmentObject var audioManager: AudioManager
@@ -16,7 +17,8 @@ struct BtnNext: View {
         .clipShape(RoundedRectangle(cornerRadius: 8.0))
         .onTapGesture {
             do {
-                try appManager.setFlashMessage(audioManager.next())
+                let message = try audioManager.next()
+                os_log("BtnNext::\(message)")
             } catch let e {
                 appManager.setFlashMessage(e.localizedDescription)
             }
