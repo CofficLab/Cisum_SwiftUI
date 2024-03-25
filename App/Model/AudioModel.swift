@@ -223,21 +223,21 @@ extension AudioModel {
     }
 }
 
-extension AudioModel {
-    func download() {
-        if !FileHelper.isAudioiCloudFile(url: url) {
-            return os_log("☁️ AudioModel::无需下载 -> \(self.title)")
-        }
-
-        os_log("☁️ AudioModel::下载 -> \(self.title)")
-        
-        do {
-            try AppConfig.fileManager.startDownloadingUbiquitousItem(at: url)
-        } catch {
-            os_log("下载 iCloud 文件错误\n\(error)")
-        }
-    }
-}
+//extension AudioModel {
+//    func download() {
+//        if !FileHelper.isAudioiCloudFile(url: url) {
+//            return os_log("☁️ AudioModel::无需下载 -> \(self.title)")
+//        }
+//
+//        os_log("☁️ AudioModel::下载 -> \(self.title)")
+//        
+//        do {
+//            try AppConfig.fileManager.startDownloadingUbiquitousItem(at: url)
+//        } catch {
+//            os_log("下载 iCloud 文件错误\n\(error)")
+//        }
+//    }
+//}
 
 #Preview("App") {
     RootView {

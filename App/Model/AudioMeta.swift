@@ -107,3 +107,9 @@ struct AudioMeta {
             .appendingPathExtension("jpeg")
     }
 }
+
+#Preview("APP") {
+    RootView {
+        ContentView()
+    }
+}

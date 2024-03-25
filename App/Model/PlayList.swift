@@ -4,12 +4,15 @@ import SwiftUI
 import OSLog
 
 class PlayList {
+    var fileManager = FileManager.default
     var title: String = "[空白]"
     var audios: [AudioModel]
     var playMode: PlayMode = .Random
     var list: [AudioModel] = []
     var current: Int = 0
     var audio: AudioModel { list[current] }
+    /// 本地磁盘目录，用来存放缓存
+    var localDisk: URL?
     
     init(_ audios: [AudioModel]) {
         os_log("🚩 PlayList::init -> audios.count = \(audios.count)")
@@ -17,18 +20,17 @@ class PlayList {
         self.list = audios
     }
     
-    // MARK: 获取下一曲
+    // MARK: 获取下{offset}曲，仅获取，不改变播放状态
     
-    func getNext() -> AudioModel {
+    /// 获取下{offset}曲，仅获取，不改变播放状态
+    func getNext(_ offset: Int = 1) -> AudioModel {
         if list.count == 0 {
             return AudioModel.empty
         }
         
-        let nextIndex = current + 1 >= list.count ? 0 : current + 1
+        let nextIndex = current + offset >= list.count ? 0 : current + offset
         let nextAudio = list[nextIndex]
-        os_log("🔊 PlayList::列表中下一曲是: \(nextAudio.title)")
-        
-        nextAudio.download()
+        os_log("🔊 PlayList::接下来的第 \(offset) 曲是: \(nextAudio.title)")
         
         return nextAudio
     }
@@ -59,6 +61,9 @@ class PlayList {
         
         self.current = current + 1 >= list.count ? 0 : current + 1
         os_log("🔊 PlayList::next 跳到 -> \(self.audio.title)")
+        
+        // 同时准备下一首
+        Task { prepare() }
         
         return audio
     }
@@ -125,7 +130,99 @@ extension PlayList {
     }
 }
 
-#Preview {
+// MARK: 缓存
+
+extension PlayList {
+    var cacheDirName: String { AppConfig.cacheDirName }
+    
+    var cacheDir: URL? {
+        guard let localDisk = localDisk else {
+            return nil
+        }
+        
+        let url = localDisk.appending(component: cacheDirName)
+        
+        var isDirectory: ObjCBool = true
+        if !fileManager.fileExists(atPath: url.path, isDirectory: &isDirectory) {
+            do {
+                try fileManager.createDirectory(at: url, withIntermediateDirectories: true)
+                os_log("创建缓存目录成功")
+            } catch {
+                os_log(.error, "创建缓存目录失败\n\(error.localizedDescription)")
+            }
+            
+        }
+        
+        //os_log("缓存目录 -> \(url.absoluteString)")
+
+        return url
+    }
+    
+    /// 准备接下来的歌曲
+    func prepare() {
+        for i in 1...10 {
+            let nextAudio = getNext(i)
+            os_log("🔊 PlayList::prepare 准备接下来的第 \(i) 首 -> \(nextAudio.title)")
+            let url = nextAudio.getURL()
+            // 如果是 iCloud 文件，触发下载
+            if FileHelper.isAudioiCloudFile(url: url) {
+                os_log("🔊 PlayList::prepare 下载 iCloud 文件：\n\(url.lastPathComponent)")
+                do {
+                    try fileManager.startDownloadingUbiquitousItem(at: url)
+                } catch {
+                    os_log("🔊 PlayList::prepare 下载 iCloud 文件错误\n\(error)")
+                }
+            } else {
+                os_log("🔊 PlayList::prepare 准备接下来的第 \(i) 首 -> 🎉🎉🎉")
+            }
+        }
+    }
+
+    func getCachePath(_ url: URL) -> URL? {
+        cacheDir?.appendingPathComponent(url.lastPathComponent)
+    }
+
+    func saveToCache(_ url: URL) {
+        os_log("DBModel::saveToCache")
+        guard let cachePath = getCachePath(url) else {
+            return
+        }
+        
+        do {
+            try fileManager.copyItem(at: url, to: cachePath)
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
+    }
+    
+    /// 如果缓存了，返回缓存的URL，否则返回原来的
+    func ifCached(_ url: URL) -> URL {
+        if isCached(url) {
+            return getCachePath(url) ?? url
+        }
+        
+        return url
+    }
+
+    func isCached(_ url: URL) -> Bool {
+        guard let cachePath = getCachePath(url) else {
+            return false
+        }
+        
+        os_log("DBModel::isCached -> \(cachePath.absoluteString)")
+        return fileManager.fileExists(atPath: cachePath.path)
+    }
+    
+    func deleteCache(_ url: URL) {
+        os_log("DBModel::deleteCache")
+        if isCached(url), let cachedPath = getCachePath(url) {
+            os_log("DBModel::deleteCache -> delete")
+            try? fileManager.removeItem(at: cachedPath)
+        }
+    }
+}
+
+#Preview("APP") {
     RootView {
         ContentView()
     }

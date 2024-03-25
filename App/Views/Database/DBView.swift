@@ -8,7 +8,7 @@ struct DBView: View {
     @EnvironmentObject var appManager: AppManager
 
     @State private var dropping: Bool = false
-    
+
     var db: DBModel { dbManager.dbModel }
 
     var body: some View {
@@ -41,38 +41,38 @@ struct DBView: View {
                     }
                 })
         #else
-        ZStack {
-            DBTableView()
+            ZStack {
+                DBTableView()
 
-            if dbManager.isEmpty && appManager.flashMessage.isEmpty {
-                DBEmptyView()
-            }
-        }
-        .onChange(of: dropping, perform: { v in
-            appManager.setFlashMessage(v ? "松开可添加文件" : "")
-        })
-        .onDrop(of: [UTType.fileURL], isTargeted: $dropping) { providers -> Bool in
-            let dispatchGroup = DispatchGroup()
-            var dropedFiles: [URL] = []
-            for provider in providers {
-                dispatchGroup.enter()
-                // 这是异步操作
-                _ = provider.loadObject(ofClass: URL.self) { object, _ in
-                    if let url = object {
-                        os_log("添加 \(url.lastPathComponent) 到复制队列")
-                        dropedFiles.append(url)
-                    }
-
-                    dispatchGroup.leave()
+                if dbManager.isEmpty && appManager.flashMessage.isEmpty {
+                    DBEmptyView()
                 }
             }
+            .onChange(of: dropping, perform: { v in
+                appManager.setFlashMessage(v ? "松开可添加文件" : "")
+            })
+            .onDrop(of: [UTType.fileURL], isTargeted: $dropping) { providers -> Bool in
+                let dispatchGroup = DispatchGroup()
+                var dropedFiles: [URL] = []
+                for provider in providers {
+                    dispatchGroup.enter()
+                    // 这是异步操作
+                    _ = provider.loadObject(ofClass: URL.self) { object, _ in
+                        if let url = object {
+                            os_log("添加 \(url.lastPathComponent) 到复制队列")
+                            dropedFiles.append(url)
+                        }
 
-            dispatchGroup.notify(queue: .main) {
-                copy(dropedFiles)
+                        dispatchGroup.leave()
+                    }
+                }
+
+                dispatchGroup.notify(queue: .main) {
+                    copy(dropedFiles)
+                }
+
+                return true
             }
-
-            return true
-        }
         #endif
     }
 }
@@ -83,16 +83,19 @@ extension DBView {
     func copy(_ files: [URL]) {
         appManager.stateMessage = "正在复制 \(files.count) 个文件"
         db.add(files,
-            completionAll: {
-                appManager.setFlashMessage("已添加 \(files.count) 个文件")
-                appManager.cleanStateMessage()
-            },
-            completionOne: { url in
-                appManager.setFlashMessage("完成复制 \(url.lastPathComponent)")
-            },
-            onStart: {
-                appManager.stateMessage = "正在复制 \($0.lastPathComponent)"
-            }
+               completionAll: {
+                   appManager.setFlashMessage("已添加 \(files.count) 个文件")
+                   appManager.cleanStateMessage()
+               },
+               completionOne: { url in
+                   appManager.setFlashMessage("完成复制 \(url.lastPathComponent)")
+                   dbManager.refresh()
+               },
+               onStart: { url in
+                   AppConfig.mainQueue.sync {
+                       appManager.stateMessage = "正在复制 \(url.lastPathComponent)"
+                   }
+               }
         )
     }
 }
