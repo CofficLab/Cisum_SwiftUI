@@ -25,7 +25,12 @@ class AudioDelegate: NSObject, ObservableObject, AVAudioPlayerDelegate {
         }
         
         AppConfig.logger.audioManager.info("播放完成，自动播放下一曲")
-        audioManager.next({_ in})
+        do {
+            let message = try audioManager.next()
+            os_log("AudioDelegate::\(message)")
+        } catch let e {
+            os_log("AudioDelegate::\(e.localizedDescription)")
+        }
     }
     
     func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {

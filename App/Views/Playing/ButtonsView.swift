@@ -4,7 +4,7 @@ struct ButtonsView: View {
     var body: some View {
         HStack(spacing: 1, content: {
             ButtonToggleDatabase()
-            ButtonPrev()
+            BtnPrev()
             ButtonPlayPause()
             BtnNext()
             ButtonPlayMode()

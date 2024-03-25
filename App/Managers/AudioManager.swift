@@ -30,18 +30,23 @@ class AudioManager: NSObject, ObservableObject {
         
         list = PlayList(audios)
         listener = databaseManager.$audios.sink { newValue in
-            os_log("检测到 DatabaseManger.audios 变了，数量变成了 \(newValue.count)")
+            os_log("🍋 AudioManager::DatabaseManger.audios changed to \(newValue.count)")
             self.audios = newValue
             self.list = PlayList(self.audios)
             os_log("🔊 当前曲目数量：\(self.audios.count)")
 
             if !self.isValid() && self.audios.count > 0 {
-                os_log("当前播放的已经无效，切换到下一曲")
-                self.next({ _ in })
+                os_log("🍋 AudioManager::当前播放的已经无效，切换到下一曲")
+                do {
+                    let message = try self.next()
+                    os_log("🍋 AudioManager::\(message)")
+                } catch let e {
+                    os_log("‼️ AudioManager::\(e.localizedDescription)")
+                }
             }
 
             if self.audios.count == 0 {
-                os_log("列表已经空了，重置播放器")
+                os_log("🍋 AudioManager::列表已经空了，重置播放器")
                 self.reset()
             }
         }
@@ -102,7 +107,7 @@ class AudioManager: NSObject, ObservableObject {
     }
 
     func stop() {
-        AppConfig.logger.audioManager.info("stop()")
+        os_log("AudioManager::stop")
         player.stop()
         player.currentTime = 0
         isPlaying = false
@@ -133,19 +138,28 @@ class AudioManager: NSObject, ObservableObject {
         isLooping = player.numberOfLoops != 0
     }
 
-    func prev(_ callback: @escaping (_ message: String) -> Void) {
-        os_log("上一曲")
+    func prev() -> String {
+        do {
+            try audio = list.prev()
+        } catch let e {
+            return e.localizedDescription
+        }
         
-        audio = list.prev()
         updatePlayer()
-        callback("上一曲：\(audio.title)")
+        return "上一曲：\(audio.title)"
     }
 
-    func next(_ callback: @escaping (_ message: String) -> Void, manual: Bool = true) {
+    func next(manual: Bool = true) throws -> String {
         os_log("🔊 AudioManager::next ⬇️")
-        audio = list.next()
+        
+        do {
+            try audio = list.next()
+        } catch let e {
+            throw e
+        }
+        
         updatePlayer()
-        callback("下一曲：\(audio.title)")
+        return "下一曲：\(audio.title)"
     }
 
     func play(_ audio: AudioModel) {
@@ -250,8 +264,13 @@ extension AudioManager: AVAudioPlayerDelegate {
             return
         }
 
-        AppConfig.logger.audioManager.info("播放完成，自动播放下一曲")
-        next({ _ in }, manual: false)
+        os_log("🍋 AudioManager::播放完成，自动播放下一曲")
+        do {
+            let message = try next(manual: false)
+            os_log("🍋 AudioManager::\(message)")
+        } catch let e {
+            os_log("‼️ AudioManager::\(e.localizedDescription)")
+        }
     }
 
     func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {

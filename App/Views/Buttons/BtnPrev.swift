@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct ButtonPrev: View {
+struct BtnPrev: View {
     @EnvironmentObject var appManager: AppManager
     @EnvironmentObject var audioManager: AudioManager
     
@@ -15,9 +15,7 @@ struct ButtonPrev: View {
         .background(hovered ? Color.gray.opacity(0.4) : .clear)
         .clipShape(RoundedRectangle(cornerRadius: 8.0))
         .onTapGesture {
-            audioManager.prev({ message in
-                appManager.setFlashMessage(message)
-            })
+            appManager.setFlashMessage(audioManager.prev())
         }
         .onHover(perform: { hovering in
             withAnimation(.easeInOut) {
@@ -30,7 +28,7 @@ struct ButtonPrev: View {
 #Preview {
     RootView(content: {
         Centered {
-            ButtonPrev()
+            BtnPrev()
         }
     })
 }

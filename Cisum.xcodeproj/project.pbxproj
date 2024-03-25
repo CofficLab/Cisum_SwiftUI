@@ -28,6 +28,7 @@
 		0B220F6F2BB051F50077255A /* TitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B220F6E2BB051F50077255A /* TitleView.swift */; };
 		0B220F712BB070D20077255A /* DBTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B220F702BB070D20077255A /* DBTitle.swift */; };
 		0B220F732BB1A3D70077255A /* ButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B220F722BB1A3D70077255A /* ButtonsView.swift */; };
+		0B220F752BB1BBDB0077255A /* SmartError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B220F742BB1BBDB0077255A /* SmartError.swift */; };
 		0B4E1AB32AC3C239005CCB0F /* PlayListManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4E1AB22AC3C239005CCB0F /* PlayListManager.swift */; };
 		0B4E1AB52AC3D022005CCB0F /* PlayList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4E1AB42AC3D022005CCB0F /* PlayList.swift */; };
 		0B5E51E52AD912B5000650CF /* DebugCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B5E51E42AD912B5000650CF /* DebugCommand.swift */; };
@@ -64,7 +65,7 @@
 		0BBC158A2AB9AB7F006E82C4 /* FileHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC15892AB9AB7F006E82C4 /* FileHelper.swift */; };
 		0BBC158D2ABAC0C7006E82C4 /* ButtonPlayPause.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC158C2ABAC0C7006E82C4 /* ButtonPlayPause.swift */; };
 		0BBC158F2ABAC146006E82C4 /* BtnNext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC158E2ABAC146006E82C4 /* BtnNext.swift */; };
-		0BBC15912ABAC19F006E82C4 /* ButtonPrev.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC15902ABAC19F006E82C4 /* ButtonPrev.swift */; };
+		0BBC15912ABAC19F006E82C4 /* BtnPrev.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC15902ABAC19F006E82C4 /* BtnPrev.swift */; };
 		0BBC159A2ABAD5DB006E82C4 /* SliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC15992ABAD5DB006E82C4 /* SliderView.swift */; };
 		0BFDCB7C2AB5D6D000B0D1C8 /* AudioDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFDCB7B2AB5D6D000B0D1C8 /* AudioDelegate.swift */; };
 		0BFDCB802AB86AF300B0D1C8 /* MenuTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFDCB7F2AB86AF300B0D1C8 /* MenuTile.swift */; };
@@ -97,6 +98,7 @@
 		0B220F6E2BB051F50077255A /* TitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleView.swift; sourceTree = "<group>"; };
 		0B220F702BB070D20077255A /* DBTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBTitle.swift; sourceTree = "<group>"; };
 		0B220F722BB1A3D70077255A /* ButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonsView.swift; sourceTree = "<group>"; };
+		0B220F742BB1BBDB0077255A /* SmartError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmartError.swift; sourceTree = "<group>"; };
 		0B4E1AB22AC3C239005CCB0F /* PlayListManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayListManager.swift; sourceTree = "<group>"; };
 		0B4E1AB42AC3D022005CCB0F /* PlayList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayList.swift; sourceTree = "<group>"; };
 		0B5CF1E12BAED88C00A975B6 /* READEME.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = READEME.md; sourceTree = "<group>"; };
@@ -134,7 +136,7 @@
 		0BBC15892AB9AB7F006E82C4 /* FileHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileHelper.swift; sourceTree = "<group>"; };
 		0BBC158C2ABAC0C7006E82C4 /* ButtonPlayPause.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonPlayPause.swift; sourceTree = "<group>"; };
 		0BBC158E2ABAC146006E82C4 /* BtnNext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnNext.swift; sourceTree = "<group>"; };
-		0BBC15902ABAC19F006E82C4 /* ButtonPrev.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonPrev.swift; sourceTree = "<group>"; };
+		0BBC15902ABAC19F006E82C4 /* BtnPrev.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnPrev.swift; sourceTree = "<group>"; };
 		0BBC15992ABAD5DB006E82C4 /* SliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderView.swift; sourceTree = "<group>"; };
 		0BFDCB7B2AB5D6D000B0D1C8 /* AudioDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioDelegate.swift; sourceTree = "<group>"; };
 		0BFDCB7F2AB86AF300B0D1C8 /* MenuTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTile.swift; sourceTree = "<group>"; };
@@ -263,7 +265,7 @@
 				0B7F558A2AD2636B0000D72E /* ButtonPlayList.swift */,
 				0BBA42182ABD5D9200C0B977 /* ButtonPlayMode.swift */,
 				0BBC158C2ABAC0C7006E82C4 /* ButtonPlayPause.swift */,
-				0BBC15902ABAC19F006E82C4 /* ButtonPrev.swift */,
+				0BBC15902ABAC19F006E82C4 /* BtnPrev.swift */,
 				0BBA422A2AC2ABAD00C0B977 /* ButtonShowDatabase.swift */,
 				0B1126292AC6F7B20093DFFA /* ButtonToggleDatabase.swift */,
 			);
@@ -297,9 +299,9 @@
 				0BEBCBAC2B352A2D00F2116E /* Config */,
 				0B1D5A8E2AB3EF050010DDF2 /* Delegate */,
 				0B1D5A6B2AB302600010DDF2 /* Helpers */,
+				0B1D5A5E2AB3025E0010DDF2 /* Managers */,
 				0B1D5A652AB3025F0010DDF2 /* Model */,
 				0B1D5A702AB302600010DDF2 /* Views */,
-				0B1D5A5E2AB3025E0010DDF2 /* Managers */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -308,6 +310,7 @@
 			isa = PBXGroup;
 			children = (
 				0B1D5A752AB302600010DDF2 /* AppConfig.swift */,
+				0B220F742BB1BBDB0077255A /* SmartError.swift */,
 			);
 			path = Config;
 			sourceTree = "<group>";
@@ -425,7 +428,7 @@
 				0BFDCB7C2AB5D6D000B0D1C8 /* AudioDelegate.swift in Sources */,
 				0B4E1AB32AC3C239005CCB0F /* PlayListManager.swift in Sources */,
 				0BBA42172ABC1AE700C0B977 /* StatusBarView.swift in Sources */,
-				0BBC15912ABAC19F006E82C4 /* ButtonPrev.swift in Sources */,
+				0BBC15912ABAC19F006E82C4 /* BtnPrev.swift in Sources */,
 				0B604AE82AD6384300929DD8 /* RootView.swift in Sources */,
 				0B1D5A822AB302610010DDF2 /* CommonHelp.swift in Sources */,
 				0B220F6D2BB051140077255A /* StateView.swift in Sources */,
@@ -458,6 +461,7 @@
 				0B1165E92ABBC6C0005C5CBB /* LaunchView.swift in Sources */,
 				0B1D5A8A2AB302610010DDF2 /* AppConfig.swift in Sources */,
 				0BBA420C2ABBD79600C0B977 /* Errors.swift in Sources */,
+				0B220F752BB1BBDB0077255A /* SmartError.swift in Sources */,
 				0BB889DB2AC06C54004788D5 /* DBModel.swift in Sources */,
 				0BBC15862AB99BD2006E82C4 /* MyFileManagerDelegate.swift in Sources */,
 				0BBA42192ABD5D9200C0B977 /* ButtonPlayMode.swift in Sources */,

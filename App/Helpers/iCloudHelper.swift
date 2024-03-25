@@ -1,4 +1,5 @@
 import SwiftUI
+import OSLog
 
 class iCloudHelper {
     static func iCloudEnabled() -> Bool {
@@ -26,6 +27,10 @@ class iCloudHelper {
     
     static func isOnDisk(url: URL) -> Bool {
         return FileManager.default.fileExists(atPath: url.absoluteString)
+    }
+    
+    static func isNotOnDisk(_ url: URL) -> Bool {
+        !isOnDisk(url: url)
     }
     
     static func isCloudPath(url: URL) -> Bool {

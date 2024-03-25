@@ -55,7 +55,7 @@ struct RootView<Content>: View where Content: View {
                                 #endif
 
                                 FileManager.default.delegate = fileManagerDelegate
-                                AppConfig.logger.app.info("初始化环境变量完成")
+                                os_log("🚩 RootView::初始化环境变量完成")
 
                                 isReady = true
                             }

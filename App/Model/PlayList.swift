@@ -35,37 +35,57 @@ class PlayList {
         return nextAudio
     }
     
-    // MARK: 跳到上一曲
+    // MARK: 跳到上{offset}曲
     
-    func prev() -> AudioModel {
-        os_log("跳到上一曲")
-
-        if audios.count == 0 {
-            return AudioModel.empty
-        }
-        
-        self.current = current - 1 >= 0 ? current - 1 : list.count - 1
-        os_log("上一曲是: \(self.audio.title)")
-        return audio
-    }
-    
-    // MARK: 跳到下一曲
-    
-    func next(manual: Bool = true) -> AudioModel {
-        os_log("🔊 PlayList::next 当前 -> \(self.audio.title)")
+    func prev(_ offset: Int = 1, manual: Bool = true) throws -> AudioModel {
+        let index = offset%list.count
+        os_log("🔊 PlayList::prev \(offset) -> \(self.audio.title)")
 
         if list.count == 0 {
             os_log("列表为空")
             return AudioModel.empty
         }
         
-        self.current = current + 1 >= list.count ? 0 : current + 1
-        os_log("🔊 PlayList::next 跳到 -> \(self.audio.title)")
+        for i in index...list.count-1 {
+            let target = getNext(i)
+            if target.isDownloaded {
+                self.current = (current - i + list.count)%list.count
+                os_log("🔊 PlayList::goto -> \(self.audio.title)")
+                
+                return audio
+            }
+        }
         
-        // 同时准备下一首
-        Task { prepare() }
+        os_log("🐢 接下来的全部都没下载好")
+        throw SmartError.NoDownloadedAudio
+    }
+    
+    // MARK: 跳到下{offset}曲
+    
+    func next(_ offset: Int = 1, manual: Bool = true) throws -> AudioModel {
+        let index = offset%list.count
+        os_log("🔊 PlayList::next \(offset) -> \(self.audio.title)")
+
+        if list.count == 0 {
+            os_log("列表为空")
+            return AudioModel.empty
+        }
         
-        return audio
+        for i in index...list.count-1 {
+            let target = getNext(i)
+            if target.isDownloaded {
+                self.current = (current + i)%list.count
+                os_log("🔊 PlayList::goto -> \(self.audio.title)")
+                
+                // 同时准备下一首
+                Task { prepare() }
+                
+                return audio
+            }
+        }
+        
+        os_log("🐢 接下来的全部都没下载好")
+        throw SmartError.NoDownloadedAudio
     }
     
     func switchPlayMode(_ callback: @escaping (_ mode: PlayMode) -> Void) {
@@ -166,7 +186,8 @@ extension PlayList {
             nextAudio.prepare()
         }
         
-        os_log("🔊 PlayList::prepare next 10 ready 🎉")
+        // 只是触发了下载，并不代表文件已经下载完成了
+        os_log("🔊 PlayList::prepare next 10 preparing")
     }
 
     func getCachePath(_ url: URL) -> URL? {

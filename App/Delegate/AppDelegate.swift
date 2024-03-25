@@ -7,11 +7,11 @@ import SwiftUI
 #if os(iOS)
     class AppDelegate: NSObject, UIApplicationDelegate {
         func applicationWillTerminate(_ application: UIApplication) {
-            AppConfig.logger.app.debug("Will  terminate")
+            AppConfig.logger.app.debug("🚩 Will  terminate")
         }
 
         func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
-            AppConfig.logger.app.debug("DidFinishLaunchingWithOptions")
+            AppConfig.logger.app.debug("🚩 DidFinishLaunchingWithOptions")
 
             return true
         }

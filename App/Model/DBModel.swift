@@ -15,9 +15,9 @@ class DBModel {
         
         do {
             try fileManager.createDirectory(at: self.cloudDisk, withIntermediateDirectories: true)
-            AppConfig.logger.databaseModel.info("创建 Audios 目录成功")
+            os_log("🍋 DBModel::创建 Audios 目录成功")
         } catch {
-            AppConfig.logger.databaseModel.error("创建 Audios 目录失败\n\(error.localizedDescription)")
+            os_log("创建 Audios 目录失败\n\(error.localizedDescription)")
         }
     }
 }

@@ -66,36 +66,6 @@
             endingLineNumber = "22"
             landmarkName = "previews"
             landmarkType = "24">
-            <Locations>
-               <Location
-                  uuid = "45247E4E-8398-421E-B5C8-0DDA1BB8A8F1 - c53b8260b0ebe07b"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Cisum.CardView_Previews.init() -&gt; Cisum.CardView_Previews"
-                  moduleName = "Cisum"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/angel/Code/Yueyi/Cisum/Util_Views/CardView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "22"
-                  endingLineNumber = "22">
-               </Location>
-               <Location
-                  uuid = "45247E4E-8398-421E-B5C8-0DDA1BB8A8F1 - bd0e56e5952af642"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "static Cisum.CardView_Previews.previews.getter : some"
-                  moduleName = "Cisum"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/angel/Code/Yueyi/Cisum/Util_Views/CardView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "23"
-                  endingLineNumber = "23">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

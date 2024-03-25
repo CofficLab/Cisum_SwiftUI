@@ -1,4 +1,5 @@
 import Foundation
+import OSLog
 #if os(macOS)
     import AppKit
 #endif
@@ -30,6 +31,8 @@ class FileHelper {
 
     static func isAudioiCloudFile(url: URL) -> Bool {
         let ex = url.pathExtension.lowercased()
+        
+        os_log("🔧 FileHelper::isAudioiCloudFile -> \(ex)")
         
         return ex == "icloud" && isAudioFile(url: url.deletingPathExtension())
     }

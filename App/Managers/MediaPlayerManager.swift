@@ -45,15 +45,20 @@ class MediaPlayerManager: ObservableObject {
         let commandCenter = MPRemoteCommandCenter.shared()
 
         commandCenter.nextTrackCommand.addTarget { _ in
-            AppConfig.logger.mediaPlayerManager.info("下一首")
-            self.audioManager.next({ _ in })
-
-            return .success
+            os_log("MediaPlayerManager::下一首")
+            do {
+                let message = try self.audioManager.next()
+                os_log("MediaPlayerManager::\(message)")
+                return .success
+            } catch let e {
+                os_log("MediaPlayerManager::\(e.localizedDescription)")
+                return .noActionableNowPlayingItem
+            }
         }
 
         commandCenter.previousTrackCommand.addTarget { _ in
             AppConfig.logger.mediaPlayerManager.info("上一首")
-            self.audioManager.prev({ _ in })
+            self.audioManager.prev()
 
             return .success
         }

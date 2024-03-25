@@ -15,9 +15,11 @@ struct BtnNext: View {
         .background(hovered ? Color.gray.opacity(0.4) : .clear)
         .clipShape(RoundedRectangle(cornerRadius: 8.0))
         .onTapGesture {
-            audioManager.next({message in 
-//                appManager.setFlashMessage(message)
-            })
+            do {
+                try appManager.setFlashMessage(audioManager.next())
+            } catch let e {
+                appManager.setFlashMessage(e.localizedDescription)
+            }
         }
         .onHover(perform: { hovering in
             withAnimation(.easeInOut) {
