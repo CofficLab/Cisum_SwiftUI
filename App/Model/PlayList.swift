@@ -20,6 +20,21 @@ class PlayList {
         self.list = audios
     }
     
+    // MARK: 获取上{offset}曲，仅获取，不改变播放状态
+    
+    /// 获取上{offset}曲，仅获取，不改变播放状态
+    func getPre(_ offset: Int = 1) -> AudioModel {
+        if list.count == 0 {
+            return AudioModel.empty
+        }
+        
+        let preIndex = (current - offset + list.count)%list.count
+        let preAudio = list[preIndex]
+        //os_log("🔊 PlayList::next \(offset) -> \(nextAudio.title)")
+        
+        return preAudio
+    }
+    
     // MARK: 获取下{offset}曲，仅获取，不改变播放状态
     
     /// 获取下{offset}曲，仅获取，不改变播放状态
@@ -47,7 +62,7 @@ class PlayList {
         }
         
         for i in index...list.count-1 {
-            let target = getNext(i)
+            let target = getPre(i)
             if target.isDownloaded {
                 self.current = (current - i + list.count)%list.count
                 os_log("🔊 PlayList::goto -> \(self.audio.title)")

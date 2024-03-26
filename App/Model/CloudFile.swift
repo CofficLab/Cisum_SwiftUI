@@ -70,7 +70,7 @@ class CloudFile {
 
         DispatchQueue.main.async {
             self.timer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true) { [self] _ in
-                os_log("☁️ CloudFile::\(self.url.lastPathComponent) 现在状态是:\(iCloudHelper.getStatus(self.url))")
+                //os_log("☁️ CloudFile::\(self.url.lastPathComponent) 现在状态是:\(iCloudHelper.getStatus(self.url))")
 
                 if iCloudHelper.isDownloaded(url: url) {
                     os_log("☁️ CloudFile::\(self.url.lastPathComponent) 下载完成 🎉🎉🎉")

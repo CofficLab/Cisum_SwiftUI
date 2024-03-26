@@ -77,24 +77,31 @@ extension DBModel {
     /// 获取目录里的文件列表
     func getFiles() -> [URL] {
         var fileNames: [URL] = []
+        var downloaded: [URL] = []
+        var downloading: [URL] = []
 
         do {
             try fileNames = fileManager.contentsOfDirectory(at: cloudDisk, includingPropertiesForKeys: nil)
         } catch let error {
             os_log("读取目录发生错误，目录是\n\(self.cloudDisk)\n\(error)")
         }
-
-        // 处理得到的文件
-        //  排序
-        //  只需要音频文件
-        let sortedFiles = fileNames.sorted {
+        
+        // 排序
+        fileNames = fileNames.sorted {
             $0.lastPathComponent.localizedCaseInsensitiveCompare($1.lastPathComponent) == .orderedAscending
-        }.filter {
+        }
+        
+        //  只需要音频文件
+        let sortedFiles = fileNames.filter {
             FileHelper.isAudioFile(url: $0) || $0.pathExtension == "downloading"
         }
+        
+        // 分类
+        downloaded = fileNames.filter{ $0.pathExtension != "downloading" }
+        downloading = fileNames.filter{ $0.pathExtension == "downloading"}
 
-        os_log("🏠 DBModel::total \(fileNames.count)，valid \(sortedFiles.count)")
-        return sortedFiles
+        os_log("🏠 DBModel::total \(fileNames.count) downloaded \(downloaded.count) downloading \(downloading.count)")
+        return downloaded + downloading
     }
 }
 
