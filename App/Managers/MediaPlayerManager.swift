@@ -57,7 +57,7 @@ class MediaPlayerManager: ObservableObject {
         }
 
         commandCenter.previousTrackCommand.addTarget { _ in
-            AppConfig.logger.mediaPlayerManager.info("上一首")
+            os_log("上一首")
             do {
                 let message = try self.audioManager.prev()
                 os_log("MediaPlayerManager::\(message)")
@@ -69,21 +69,21 @@ class MediaPlayerManager: ObservableObject {
         }
 
         commandCenter.pauseCommand.addTarget { _ in
-            AppConfig.logger.mediaPlayerManager.info("暂停")
+            os_log("暂停")
             self.audioManager.pause()
 
             return .success
         }
 
         commandCenter.playCommand.addTarget { _ in
-            AppConfig.logger.mediaPlayerManager.info("播放")
+            os_log("播放")
             self.audioManager.play()
 
             return .success
         }
 
         commandCenter.stopCommand.addTarget { _ in
-            AppConfig.logger.mediaPlayerManager.info("停止")
+            os_log("停止")
 
             self.audioManager.stop()
 
@@ -91,19 +91,34 @@ class MediaPlayerManager: ObservableObject {
         }
 
         commandCenter.likeCommand.addTarget { _ in
-            AppConfig.logger.mediaPlayerManager.info("喜欢")
+            os_log("喜欢")
 
             return .success
         }
 
         commandCenter.ratingCommand.addTarget { _ in
-            AppConfig.logger.mediaPlayerManager.info("评分")
+            os_log("评分")
 
             return .success
         }
 
         commandCenter.changeRepeatModeCommand.addTarget { _ in
-            AppConfig.logger.mediaPlayerManager.info("changeRepeatModeCommand")
+            os_log("changeRepeatModeCommand")
+
+            return .success
+        }
+
+        commandCenter.changePlaybackPositionCommand.addTarget { e in
+            os_log("🍎 changePlaybackPositionCommand")
+            guard let event = e as? MPChangePlaybackPositionCommandEvent else {
+                return .commandFailed
+            }
+
+            let positionTime = event.positionTime // 获取当前的播放进度时间
+
+            // 在这里处理当前的播放进度时间
+            print("Current playback position: \(positionTime)")
+            self.audioManager.gotoTime(time: positionTime)
 
             return .success
         }
