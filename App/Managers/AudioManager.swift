@@ -126,6 +126,7 @@ class AudioManager: NSObject, ObservableObject {
         }
 
         if player.isPlaying {
+            pause()
             return ""
         } else {
             play()
@@ -139,16 +140,29 @@ class AudioManager: NSObject, ObservableObject {
         isLooping = player.numberOfLoops != 0
     }
 
-    func prev() throws -> String {
+    /// 跳到上一首，manual=true表示由用户触发
+    func prev(manual: Bool = false) throws -> String {
         os_log("🔊 AudioManager::prev ⬆️")
+        
+        // 用户触发，但曲库仅一首，发出提示
+        if list.audios.count == 1 && manual {
+            throw SmartError.NoPrevAudio
+        }
+        
         try audio = list.prev()
         
         updatePlayer()
         return "上一曲：\(audio.title)"
     }
 
-    func next(manual: Bool = true) throws -> String {
+    /// 跳到下一首，manual=true表示由用户触发
+    func next(manual: Bool = false) throws -> String {
         os_log("🔊 AudioManager::next ⬇️")
+        
+        // 用户触发，但曲库仅一首，发出提示
+        if list.audios.count == 1 && manual {
+            throw SmartError.NoNextAudio
+        }
         
         try audio = list.next()
         

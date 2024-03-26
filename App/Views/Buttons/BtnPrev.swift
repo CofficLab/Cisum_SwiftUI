@@ -17,7 +17,7 @@ struct BtnPrev: View {
         .clipShape(RoundedRectangle(cornerRadius: 8.0))
         .onTapGesture {
             do {
-                let message = try audioManager.prev()
+                let message = try audioManager.prev(manual: true)
                 os_log("BtnPrev::\(message)")
             } catch let e {
                 appManager.setFlashMessage(e.localizedDescription)

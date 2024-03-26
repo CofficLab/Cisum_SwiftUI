@@ -26,7 +26,7 @@ struct BtnToggle: View {
         .onTapGesture {
             do {
                 let message = try audioManager.togglePlayPause()
-                os_log("BtnToggle::\(message)")
+                os_log("🖥️ BtnToggle::\(message)")
             } catch let e {
                 appManager.setFlashMessage(e.localizedDescription)
             }

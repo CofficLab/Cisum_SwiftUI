@@ -17,7 +17,7 @@ struct BtnNext: View {
         .clipShape(RoundedRectangle(cornerRadius: 8.0))
         .onTapGesture {
             do {
-                let message = try audioManager.next()
+                let message = try audioManager.next(manual: true)
                 os_log("BtnNext::\(message)")
             } catch let e {
                 appManager.setFlashMessage(e.localizedDescription)
