@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0B0A2B822AC1CCDC00DA085C /* CloudFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0A2B812AC1CCDC00DA085C /* CloudFile.swift */; };
+		0B0A2B822AC1CCDC00DA085C /* SmartFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0A2B812AC1CCDC00DA085C /* SmartFile.swift */; };
 		0B0A2B842AC31AEF00DA085C /* AudioMeta.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0A2B832AC31AEF00DA085C /* AudioMeta.swift */; };
 		0B11262A2AC6F7B20093DFFA /* ButtonToggleDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1126292AC6F7B20093DFFA /* ButtonToggleDatabase.swift */; };
 		0B11262C2AC719B70093DFFA /* ImageHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B11262B2AC719B70093DFFA /* ImageHelper.swift */; };
@@ -73,7 +73,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0B0A2B812AC1CCDC00DA085C /* CloudFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudFile.swift; sourceTree = "<group>"; };
+		0B0A2B812AC1CCDC00DA085C /* SmartFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmartFile.swift; sourceTree = "<group>"; };
 		0B0A2B832AC31AEF00DA085C /* AudioMeta.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioMeta.swift; sourceTree = "<group>"; };
 		0B1126292AC6F7B20093DFFA /* ButtonToggleDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonToggleDatabase.swift; sourceTree = "<group>"; };
 		0B11262B2AC719B70093DFFA /* ImageHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageHelper.swift; sourceTree = "<group>"; };
@@ -171,7 +171,7 @@
 			children = (
 				0B1D5A672AB3025F0010DDF2 /* AudioModel.swift */,
 				0BB889DA2AC06C54004788D5 /* DBModel.swift */,
-				0B0A2B812AC1CCDC00DA085C /* CloudFile.swift */,
+				0B0A2B812AC1CCDC00DA085C /* SmartFile.swift */,
 				0B0A2B832AC31AEF00DA085C /* AudioMeta.swift */,
 				0B4E1AB42AC3D022005CCB0F /* PlayList.swift */,
 			);
@@ -474,7 +474,7 @@
 				0BBA42252AC1813D00C0B977 /* ButtonDeleteSelected.swift in Sources */,
 				0B7F558B2AD2636B0000D72E /* ButtonPlayList.swift in Sources */,
 				0BBC157C2AB84C21006E82C4 /* HomeView.swift in Sources */,
-				0B0A2B822AC1CCDC00DA085C /* CloudFile.swift in Sources */,
+				0B0A2B822AC1CCDC00DA085C /* SmartFile.swift in Sources */,
 				0BAB7C412AD3D25200C5AEB5 /* ButtonDismiss.swift in Sources */,
 				0B220F732BB1A3D70077255A /* ButtonsView.swift in Sources */,
 				0B220F6F2BB051F50077255A /* TitleView.swift in Sources */,

@@ -37,9 +37,8 @@ extension DBModel {
         queue.async {
             for url in urls {
                 onStart(url)
-                CloudFile(url: url).copyTo(to: self.cloudDisk.appendingPathComponent(url.lastPathComponent), completion: { url in
-                    completionOne(url)
-                })
+                SmartFile(url: url).copyTo(destnation: self.cloudDisk.appendingPathComponent(url.lastPathComponent))
+                completionOne(url)
             }
 
             completionAll()

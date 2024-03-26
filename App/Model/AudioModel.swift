@@ -79,7 +79,7 @@ extension AudioModel {
     /// 准备好文件
     func prepare() {
         // os_log("🔊 AudioModel::prepare -> \(self.title)")
-        CloudFile(url: getURL()).download {
+        SmartFile(url: getURL()).download {
             os_log("🔊 AudioModel::downloaded 🎉🎉🎉 -> \(self.title)")
         }
     }
@@ -147,7 +147,7 @@ extension AudioModel {
         do {
             if fileManager.fileExists(atPath: url.path) {
                 try fileManager.removeItem(at: url)
-                CloudFile(url: url).delete()
+                SmartFile(url: url).delete()
             } else {
                 os_log("删除时发现文件不存在，忽略 -> \(self.url.lastPathComponent)")
             }

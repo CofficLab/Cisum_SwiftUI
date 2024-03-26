@@ -11,6 +11,7 @@ class iCloudHelper {
     }
     
     static func getDownloadingStatus(url: URL) -> URLUbiquitousItemDownloadingStatus {
+        //os_log("🔧 iCloudHelper::getDownloadingStatus -> \(url.absoluteString)")
         do {
             let values = try url.resourceValues(forKeys:[.ubiquitousItemDownloadingStatusKey])
             let status = values.ubiquitousItemDownloadingStatus
