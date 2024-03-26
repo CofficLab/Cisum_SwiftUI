@@ -13,7 +13,7 @@ class MediaPlayerManager: ObservableObject {
     }
 
     static func setNowPlayingInfo(audioManager: AudioManager) {
-        AppConfig.logger.mediaPlayerManager.info("🍋 更新 MediaPlayer")
+        os_log("🍋 MediaPlayerManager::Update")
         let audio = audioManager.audio
         let center = MPNowPlayingInfoCenter.default()
 

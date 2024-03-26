@@ -6,6 +6,10 @@ class iCloudHelper {
         return FileManager.default.ubiquityIdentityToken != nil
     }
     
+    static func getStatus(_ url: URL) -> String {
+        getDownloadingStatus(url: url).rawValue
+    }
+    
     static func getDownloadingStatus(url: URL) -> URLUbiquitousItemDownloadingStatus {
         do {
             let values = try url.resourceValues(forKeys:[.ubiquitousItemDownloadingStatusKey])
@@ -23,6 +27,10 @@ class iCloudHelper {
     
     static func isDownloaded(url: URL)-> Bool {
         return [URLUbiquitousItemDownloadingStatus.current, URLUbiquitousItemDownloadingStatus.downloaded].contains(getDownloadingStatus(url: url))
+    }
+    
+    static func isNotDownloaded(_ url: URL) -> Bool {
+        !isDownloaded(url: url)
     }
     
     static func isOnDisk(url: URL) -> Bool {

@@ -47,7 +47,7 @@ struct RootView<Content>: View where Content: View {
                                 errorMessage = error.localizedDescription
                             case let .success(url):
                                 databaseManager = DBManager(rootDir: url)
-                                audioManager = AudioManager(databaseManager: databaseManager!)
+                                audioManager = AudioManager(dbManager: databaseManager!)
                                 mediaPlayerManger = MediaPlayerManager(audioManager: audioManager!)
 
                                 #if os(iOS)

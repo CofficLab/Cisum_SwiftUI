@@ -77,7 +77,7 @@ struct HomeView: View {
                 frame.size.height = AppManager.controlViewHeight
             }
 
-            os_log("🖥️ 自动调整窗口 oldY:\(oldY) y:\(frame.origin.y))")
+            os_log("🖥️ HomeView::自动调整窗口 oldY:\(oldY) y:\(frame.origin.y))")
             window.setFrame(frame, display: true)
         }
     #endif

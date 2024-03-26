@@ -86,10 +86,10 @@ extension AudioModel {
         //os_log("🔊 AudioModel::prepare -> \(self.title)")
         let url = getURL()
         // 如果是 iCloud 文件，触发下载
-        if iCloudHelper.isNotOnDisk(url) {
+        if iCloudHelper.isNotDownloaded(url) {
             download()
         } else {
-            os_log("🔊 AudioModel::ready 🎉🎉🎉 because it's not iCloud file -> \(self.title)")
+            os_log("🔊 AudioModel::already on disk 🎉🎉🎉 -> \(self.title)")
         }
     }
     

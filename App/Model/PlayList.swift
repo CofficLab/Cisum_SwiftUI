@@ -64,7 +64,7 @@ class PlayList {
     
     func next(_ offset: Int = 1, manual: Bool = true) throws -> AudioModel {
         let index = offset%list.count
-        os_log("🔊 PlayList::next \(offset) -> \(self.audio.title)")
+        os_log("🔊 PlayList::next \(offset) ⬇️ \(self.audio.title)")
 
         if list.count == 0 {
             os_log("列表为空")
@@ -75,7 +75,7 @@ class PlayList {
             let target = getNext(i)
             if target.isDownloaded {
                 self.current = (current + i)%list.count
-                os_log("🔊 PlayList::goto -> \(self.audio.title)")
+                os_log("🔊 PlayList::goto ⬇️ \(self.audio.title)")
                 
                 // 同时准备下一首
                 Task { prepare() }
@@ -84,7 +84,7 @@ class PlayList {
             }
         }
         
-        os_log("🐢 接下来的全部都没下载好")
+        os_log("🐢 PlayList::next 接下来的全部都没下载好")
         throw SmartError.NoDownloadedAudio
     }
     
@@ -180,14 +180,14 @@ extension PlayList {
     
     /// 准备接下来的歌曲
     func prepare() {
-        for i in 1...10 {
-            let nextAudio = getNext(i)
-            //os_log("🔊 PlayList::prepare next \(i) -> \(nextAudio.title)")
-            nextAudio.prepare()
+        let count = min(list.count-1, 10)
+        os_log("🔊 PlayList::prepare next \(count) ⏬")
+        for i in 1...count {
+            getNext(i).prepare()
         }
         
         // 只是触发了下载，并不代表文件已经下载完成了
-        os_log("🔊 PlayList::prepare next 10 preparing")
+        //os_log("🔊 PlayList::prepare next 10 preparing")
     }
 
     func getCachePath(_ url: URL) -> URL? {

@@ -39,7 +39,7 @@ class CloudFile {
                     self.url.stopAccessingSecurityScopedResource()
                 } else {
                     // 获取授权失败，可能不是用户选择的文件，直接复制
-                    os_log("☁️ CloudFile::copy直接复制 \(self.url.lastPathComponent, privacy: .public)")
+                    os_log("☁️ CloudFile::copy \(self.url.lastPathComponent)")
                     try FileManager.default.copyItem(at: self.url, to: to)
                 }
             } catch {
@@ -70,10 +70,10 @@ class CloudFile {
 
         DispatchQueue.main.async {
             self.timer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true) { [self] _ in
-                os_log("\(self.url.lastPathComponent) 现在状态是:\(iCloudHelper.getDownloadingStatus(url: self.url).rawValue)")
+                os_log("☁️ CloudFile::\(self.url.lastPathComponent) 现在状态是:\(iCloudHelper.getStatus(self.url))")
 
                 if iCloudHelper.isDownloaded(url: url) {
-                    os_log("\(self.url.lastPathComponent) 下载完成")
+                    os_log("☁️ CloudFile::\(self.url.lastPathComponent) 下载完成 🎉🎉🎉")
 
                     self.timer?.invalidate()
                     completion()

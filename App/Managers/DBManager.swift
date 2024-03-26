@@ -20,7 +20,7 @@ class DBManager: ObservableObject {
     var queue = AppConfig.bgQueue
 
     init(rootDir: URL) {
-        os_log("🚩 初始化 DBManager")
+        os_log("🚩 DBManager::Init")
         dbModel = DBModel(cloudDisk: rootDir)
         isCloudStorage = iCloudHelper.isCloudPath(url: rootDir)
 
@@ -46,7 +46,7 @@ class DBManager: ObservableObject {
                 self.files = files
                 self.audios = audios
                 self.isReady = true
-                os_log("🍋 DataseManager 刷新完成")
+                os_log("🍋 DBManager::Refreshed")
             }
         }
     }

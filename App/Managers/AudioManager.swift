@@ -30,23 +30,22 @@ class AudioManager: NSObject, ObservableObject {
         
         list = PlayList(audios)
         listener = dbManager.$audios.sink { newValue in
-            os_log("🍋 AudioManager::DatabaseManger.audios changed to \(newValue.count)")
+            os_log("🍋 AudioManager::DatabaseManger.audios.count changed to \(newValue.count)")
             self.audios = newValue
             self.list = PlayList(self.audios)
-            os_log("🔊 当前曲目数量：\(self.audios.count)")
 
             if !self.isValid() && self.audios.count > 0 {
                 os_log("🍋 AudioManager::当前播放的已经无效，切换到下一曲")
                 do {
                     let message = try self.next()
-                    os_log("🍋 AudioManager::\(message)")
+                    os_log("🍋 AudioManager:: ⬇️ \(message)")
                 } catch let e {
                     os_log("‼️ AudioManager::\(e.localizedDescription)")
                 }
             }
 
             if self.audios.count == 0 {
-                os_log("🍋 AudioManager::列表已经空了，重置播放器")
+                os_log("🍋 AudioManager::no audio, reset")
                 self.reset()
             }
         }
@@ -107,7 +106,7 @@ class AudioManager: NSObject, ObservableObject {
     }
 
     func stop() {
-        os_log("🍋 AudioManager::stop")
+        os_log("🍋 AudioManager::Stop")
         player.stop()
         player.currentTime = 0
         isPlaying = false
@@ -174,7 +173,7 @@ class AudioManager: NSObject, ObservableObject {
     }
 
     private func makePlayer(url: URL) -> AVAudioPlayer {
-        os_log("🚩 初始化播放器")
+        os_log("🚩 AudioManager::初始化播放器")
         do {
             #if os(iOS)
                 try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
@@ -208,7 +207,7 @@ class AudioManager: NSObject, ObservableObject {
             }
 
             AppConfig.mainQueue.async {
-                os_log("🍋 在主进程更新 AudioManager 数据")
+                os_log("🍋 AudioManager::Update")
                 self.player = player
                 self.player.delegate = self
                 self.duration = self.player.duration
