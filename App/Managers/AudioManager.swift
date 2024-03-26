@@ -7,7 +7,7 @@ import SwiftUI
 
 // 管理播放器的播放、暂停、上一曲、下一曲等操作
 class AudioManager: NSObject, ObservableObject {
-    @ObservedObject var databaseManager: DBManager
+    @ObservedObject var dbManager: DBManager
 
     @Published private(set) var isPlaying: Bool = false
     @Published private(set) var isLooping: Bool = false
@@ -16,20 +16,20 @@ class AudioManager: NSObject, ObservableObject {
     @Published var audio = AudioModel.empty
     @Published var list = PlayList([])
 
-    static var preview = AudioManager(databaseManager: DBManager.preview)
+    static var preview = AudioManager(dbManager: DBManager.preview)
     private var player: AVAudioPlayer = AVAudioPlayer()
     private var listener: AnyCancellable?
 
-    init(databaseManager: DBManager) {
+    init(dbManager: DBManager) {
         os_log("🚩 初始化 AudioManager")
 
-        self.databaseManager = databaseManager
-        audios = databaseManager.audios
+        self.dbManager = dbManager
+        audios = dbManager.audios
 
         super.init()
         
         list = PlayList(audios)
-        listener = databaseManager.$audios.sink { newValue in
+        listener = dbManager.$audios.sink { newValue in
             os_log("🍋 AudioManager::DatabaseManger.audios changed to \(newValue.count)")
             self.audios = newValue
             self.list = PlayList(self.audios)
