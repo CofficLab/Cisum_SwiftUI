@@ -79,21 +79,8 @@ extension AudioModel {
     /// 准备好文件
     func prepare() {
         // os_log("🔊 AudioModel::prepare -> \(self.title)")
-        let url = getURL()
-        // 如果是 iCloud 文件，触发下载
-        if iCloudHelper.isNotDownloaded(url) {
-            download()
-        } else {
-            os_log("🔊 AudioModel::already on disk 🎉🎉🎉 -> \(self.title)")
-        }
-    }
-
-    func download() {
-        os_log("🔊 AudioModel::download \(self.title)")
-        do {
-            try fileManager.startDownloadingUbiquitousItem(at: url)
-        } catch {
-            os_log("🔊 AudioModel::prepare download error \(error)")
+        CloudFile(url: getURL()).download {
+            os_log("🔊 AudioModel::downloaded 🎉🎉🎉 -> \(self.title)")
         }
     }
 

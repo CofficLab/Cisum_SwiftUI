@@ -92,7 +92,7 @@ extension DBModel {
         }
         
         //  只需要音频文件
-        let sortedFiles = fileNames.filter {
+        fileNames = fileNames.filter {
             FileHelper.isAudioFile(url: $0) || $0.pathExtension == "downloading"
         }
         

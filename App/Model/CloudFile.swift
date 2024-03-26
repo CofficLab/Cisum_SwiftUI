@@ -27,9 +27,9 @@ class CloudFile {
     //  如果文件尚未下载到磁盘
     //  先在目的地创建一个临时文件
     //  下载并复制完后删除临时文件
-    func copyTo(to: URL, completion: @escaping (_ sourceUrl:URL) -> Void = {url in }) {
+    func copyTo(to: URL, completion: @escaping (_ sourceUrl: URL) -> Void = { _ in }) {
         os_log("☁️ CloudFile::copy \(self.url.lastPathComponent) -> \(to.lastPathComponent)")
-        createTempFile(to)
+        createTempFile(url)
         download(completion: {
             do {
                 // 获取授权
@@ -53,6 +53,19 @@ class CloudFile {
 
     func download(completion: @escaping () -> Void) {
         os_log("☁️ CloudFile::下载文件 -> \(self.url.lastPathComponent)")
+        
+        if isTempFile(url) {
+            let originalURL = loadURLFromFile(filePath: getURLFromTempFile(url))
+            if let originalURL = originalURL {
+                return CloudFile(url: originalURL).download {
+                    completion()
+                }
+            } else {
+                try? fileManager.removeItem(at: url)
+                return
+            }
+        }
+        
         if iCloudHelper.isDownloaded(url: url) {
             os_log("☁️ CloudFile::已经下载了 🎉🎉🎉")
             completion()
@@ -70,7 +83,7 @@ class CloudFile {
 
         DispatchQueue.main.async {
             self.timer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true) { [self] _ in
-                //os_log("☁️ CloudFile::\(self.url.lastPathComponent) 现在状态是:\(iCloudHelper.getStatus(self.url))")
+                // os_log("☁️ CloudFile::\(self.url.lastPathComponent) 现在状态是:\(iCloudHelper.getStatus(self.url))")
 
                 if iCloudHelper.isDownloaded(url: url) {
                     os_log("☁️ CloudFile::\(self.url.lastPathComponent) 下载完成 🎉🎉🎉")
@@ -81,7 +94,7 @@ class CloudFile {
             }
         }
     }
-    
+
     private func deleteTempFile(_ url: URL) {
         do {
             try FileManager.default.removeItem(at: getTempFileUrl(url))
@@ -93,7 +106,7 @@ class CloudFile {
     private func createTempFile(_ url: URL) {
         let content = url.absoluteString
         let tempFileUrl = getTempFileUrl(url)
-        
+
         do {
             try content.write(to: tempFileUrl, atomically: true, encoding: .utf8)
         } catch {
@@ -103,5 +116,31 @@ class CloudFile {
 
     private func getTempFileUrl(_ url: URL) -> URL {
         return url.appendingPathExtension("downloading")
+    }
+
+    private func getURLFromTempFile(_ url: URL) -> String {
+        do {
+            let text = try String(contentsOf: url, encoding: .utf8)
+            return text
+        } catch {
+            print("Error reading file: \(error)")
+            return ""
+        }
+    }
+    
+    func loadURLFromFile(filePath: String) -> URL? {
+        do {
+            let urlString = try String(contentsOfFile: filePath, encoding: .utf8)
+            if let url = URL(string: urlString) {
+                return url
+            }
+        } catch {
+            print("Error loading URL from file: \(error)")
+        }
+        return nil
+    }
+    
+    private func isTempFile(_ url: URL) -> Bool {
+        url.pathExtension == "downloading"
     }
 }
