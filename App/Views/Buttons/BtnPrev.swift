@@ -1,4 +1,5 @@
 import SwiftUI
+import OSLog
 
 struct BtnPrev: View {
     @EnvironmentObject var appManager: AppManager
@@ -15,7 +16,8 @@ struct BtnPrev: View {
         .background(hovered ? Color.gray.opacity(0.4) : .clear)
         .clipShape(RoundedRectangle(cornerRadius: 8.0))
         .onTapGesture {
-            appManager.setFlashMessage(audioManager.prev())
+            let message = audioManager.prev()
+            os_log("🍋 BtnPrev::\(message)")
         }
         .onHover(perform: { hovering in
             withAnimation(.easeInOut) {
