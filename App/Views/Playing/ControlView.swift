@@ -30,7 +30,7 @@ struct ControlView: View {
         #else
             VStack {
                 TitleView().padding(.vertical, 20)
-                AlbumView(audio: $audioManager.audio)
+                AlbumView($audioManager.audio)
                     .opacity(dbManager.audios.isEmpty ? 0 : 1)
                 if dbManager.isEmpty {
                     DBEmptyView().padding(.vertical, 40)

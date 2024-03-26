@@ -22,7 +22,7 @@ class AudioModel {
     #endif
 
     init(_ url: URL, cacheURL: URL? = nil, delegate: SuperAudioDelegate = SuperAudioDelegateSample()) {
-        // os_log("🚩 AudioModel::init -> \(url.lastPathComponent)")
+         os_log("🚩 AudioModel::init -> \(url.lastPathComponent)")
         self.url = url
         self.cacheURL = cacheURL
         self.delegate = delegate
@@ -223,7 +223,7 @@ extension AudioModel {
                         if let image = makeImage(try await item.load(.value), saveTo: coverPath) {
                             cover = image
                             delegate.onCoverUpdated()
-//                            os_log("🍋 AudioModel::updateMeta -> cover updated")
+                            os_log("🍋 AudioModel::updateMeta -> cover updated")
                         }
                     default:
                         break

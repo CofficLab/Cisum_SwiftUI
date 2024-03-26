@@ -53,7 +53,7 @@ struct DBTableView: View {
         if audio != nil {
             selected.insert(audio!.id)
         }
-        
+
         if let firstURL = selected.first {
             firstAudio = AudioModel(firstURL)
         }
@@ -77,8 +77,9 @@ struct DBTableView: View {
             }).disabled(selected.count == 0)
 
             Divider()
-            
+
             // MARK: 删除
+
             ButtonDeleteSelected(audios: selected, callback: {
                 selectedAudioModels = []
             }).disabled(selected.count == 0)
@@ -86,24 +87,23 @@ struct DBTableView: View {
         }
     }
 
-    // MARK: 歌曲的主要信息
-    
+    // MARK: 歌曲的主要信息，即第一列
+
     private func getTitleColumn(_ audio: AudioModel) -> some View {
         HStack {
-            audio.getIcon()
-
-            AlbumView(audio: Binding.constant(audio)).frame(width: 24, height: 24)
-
-            DBTitle(audio: audio)
+            audio.cover.resizable().scaledToFit().frame(width: 24, height: 24)
+            Text(audio.title)
         }
+
         // MARK: 双击播放
+
         .onTapGesture(count: 2, perform: {
             BtnPlay(audioManager: _audioManager, appManager: _appManager, audio: audio).play()
         })
     }
 
     // MARK: 行
-    
+
     private func getRows() -> some TableRowContent<AudioModel> {
         ForEach(dbManager.audios) { audio in
             if !selectedAudioModels.contains([audio.id]) || (selectedAudioModels.contains([audio.id]) && selectedAudioModels.count == 1) {
@@ -118,6 +118,10 @@ struct DBTableView: View {
                 TableRow(audio)
             }
         }
+    }
+    
+    init() {
+        os_log("🚩 DBTableView::Init")
     }
 }
 

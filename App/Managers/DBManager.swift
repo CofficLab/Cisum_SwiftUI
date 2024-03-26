@@ -9,6 +9,7 @@ class DBManager: ObservableObject {
     @Published var audios: [AudioModel] = []
     @Published var isReady: Bool = false
     @Published var isCloudStorage: Bool = false
+    @Published var updatedAt: Date = .now
     
     var isEmpty: Bool {
         self.isReady && self.audios.isEmpty
@@ -46,6 +47,7 @@ class DBManager: ObservableObject {
                 self.files = files
                 self.audios = audios
                 self.isReady = true
+                self.updatedAt = .now
                 os_log("🍋 DBManager::Refreshed")
             }
         }

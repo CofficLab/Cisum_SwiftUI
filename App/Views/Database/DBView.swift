@@ -73,6 +73,10 @@ struct DBView: View {
             }
         #endif
     }
+    
+    init() {
+        os_log("🚩 DBView::Init")
+    }
 }
 
 // MARK: 操作
@@ -86,12 +90,14 @@ extension DBView {
                        appManager.setFlashMessage("已添加 \(files.count) 个文件")
                        appManager.cleanStateMessage()
                        dbManager.refresh()
+                       os_log("🖥️ DBView::添加完成 🎉🎉🎉")
                    }
                },
                completionOne: { url in
                    AppConfig.mainQueue.async {
                        appManager.setFlashMessage("完成复制 \(url.lastPathComponent)")
                        dbManager.refresh()
+                       os_log("🖥️ DBView::添加完成 🎉🎉🎉 -> \(url.lastPathComponent)")
                    }
                },
                onStart: { url in
