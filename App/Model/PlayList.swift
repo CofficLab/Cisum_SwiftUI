@@ -43,7 +43,7 @@ class PlayList {
             return AudioModel.empty
         }
         
-        let nextIndex = current + offset >= list.count ? 0 : current + offset
+        let nextIndex = (current + offset)%list.count
         let nextAudio = list[nextIndex]
         //os_log("🔊 PlayList::next \(offset) -> \(nextAudio.title)")
         
@@ -86,21 +86,21 @@ class PlayList {
             return AudioModel.empty
         }
         
+        // 同时准备接下来的歌曲
+        Task { prepare() }
+        
         for i in index...list.count-1 {
             let target = getNext(i)
             if target.isDownloaded {
                 self.current = (current + i)%list.count
                 os_log("🔊 PlayList::goto ⬇️ \(self.audio.title)")
-                
-                // 同时准备接下来的歌曲
-                Task { prepare() }
-                
+
                 return audio
             }
         }
         
         os_log("🐢 PlayList::next 接下来的全部都没下载好")
-        throw SmartError.NoDownloadedAudio
+        throw SmartError.NoNextDownloadedAudio
     }
     
     func switchPlayMode(_ callback: @escaping (_ mode: PlayMode) -> Void) {

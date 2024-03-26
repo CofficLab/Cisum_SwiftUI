@@ -58,9 +58,14 @@ class MediaPlayerManager: ObservableObject {
 
         commandCenter.previousTrackCommand.addTarget { _ in
             AppConfig.logger.mediaPlayerManager.info("上一首")
-            self.audioManager.prev()
-
-            return .success
+            do {
+                let message = try self.audioManager.prev()
+                os_log("MediaPlayerManager::\(message)")
+                return .success
+            } catch let e {
+                os_log("MediaPlayerManager::\(e.localizedDescription)")
+                return .noActionableNowPlayingItem
+            }
         }
 
         commandCenter.pauseCommand.addTarget { _ in

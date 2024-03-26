@@ -112,23 +112,25 @@ class AudioManager: NSObject, ObservableObject {
         isPlaying = false
     }
 
-    func togglePlayPause(_ callback: @escaping (_ message: String) -> Void) {
+    func togglePlayPause() throws -> String {
         if audios.count == 0 {
-            callback("播放列表为空")
-            return
+            return "播放列表为空"
         }
 
         if audio.getiCloudState() == .Downloading {
-            callback("正在从 iCloud 下载")
-            return
+            return "正在从 iCloud 下载"
+        }
+        
+        if audio.isEmpty() {
+            return try next()
         }
 
         if player.isPlaying {
-            callback("")
-            pause()
+            return ""
         } else {
-            callback("")
             play()
+            
+            return ""
         }
     }
 
@@ -137,12 +139,9 @@ class AudioManager: NSObject, ObservableObject {
         isLooping = player.numberOfLoops != 0
     }
 
-    func prev() -> String {
-        do {
-            try audio = list.prev()
-        } catch let e {
-            return e.localizedDescription
-        }
+    func prev() throws -> String {
+        os_log("🔊 AudioManager::prev ⬆️")
+        try audio = list.prev()
         
         updatePlayer()
         return "上一曲：\(audio.title)"
@@ -151,11 +150,7 @@ class AudioManager: NSObject, ObservableObject {
     func next(manual: Bool = true) throws -> String {
         os_log("🔊 AudioManager::next ⬇️")
         
-        do {
-            try audio = list.next()
-        } catch let e {
-            throw e
-        }
+        try audio = list.next()
         
         updatePlayer()
         return "下一曲：\(audio.title)"

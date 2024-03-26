@@ -1,6 +1,7 @@
 import SwiftUI
+import OSLog
 
-struct ButtonPlayPause: View {
+struct BtnToggle: View {
     var play: Bool? = true
     
     @EnvironmentObject var audioManager: AudioManager
@@ -23,9 +24,12 @@ struct ButtonPlayPause: View {
         .background(hovered ? Color.gray.opacity(0.4) : .clear)
         .clipShape(RoundedRectangle(cornerRadius: 8.0))
         .onTapGesture {
-            audioManager.togglePlayPause({ message in
-                appManager.setFlashMessage(message)
-            })
+            do {
+                let message = try audioManager.togglePlayPause()
+                os_log("BtnToggle::\(message)")
+            } catch let e {
+                appManager.setFlashMessage(e.localizedDescription)
+            }
         }
         .onHover(perform: { hovering in
             withAnimation(.easeInOut) {
@@ -38,7 +42,7 @@ struct ButtonPlayPause: View {
 #Preview {
     RootView(content: {
         Centered {
-            ButtonPlayPause()
+            BtnToggle()
         }
         
         ControlView()

@@ -62,7 +62,7 @@
 		0BBC15862AB99BD2006E82C4 /* MyFileManagerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC15852AB99BD2006E82C4 /* MyFileManagerDelegate.swift */; };
 		0BBC15882AB9A473006E82C4 /* iCloudHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC15872AB9A473006E82C4 /* iCloudHelper.swift */; };
 		0BBC158A2AB9AB7F006E82C4 /* FileHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC15892AB9AB7F006E82C4 /* FileHelper.swift */; };
-		0BBC158D2ABAC0C7006E82C4 /* ButtonPlayPause.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC158C2ABAC0C7006E82C4 /* ButtonPlayPause.swift */; };
+		0BBC158D2ABAC0C7006E82C4 /* BtnToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC158C2ABAC0C7006E82C4 /* BtnToggle.swift */; };
 		0BBC158F2ABAC146006E82C4 /* BtnNext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC158E2ABAC146006E82C4 /* BtnNext.swift */; };
 		0BBC15912ABAC19F006E82C4 /* BtnPrev.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC15902ABAC19F006E82C4 /* BtnPrev.swift */; };
 		0BBC159A2ABAD5DB006E82C4 /* SliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC15992ABAD5DB006E82C4 /* SliderView.swift */; };
@@ -132,7 +132,7 @@
 		0BBC15852AB99BD2006E82C4 /* MyFileManagerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFileManagerDelegate.swift; sourceTree = "<group>"; };
 		0BBC15872AB9A473006E82C4 /* iCloudHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iCloudHelper.swift; sourceTree = "<group>"; };
 		0BBC15892AB9AB7F006E82C4 /* FileHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileHelper.swift; sourceTree = "<group>"; };
-		0BBC158C2ABAC0C7006E82C4 /* ButtonPlayPause.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonPlayPause.swift; sourceTree = "<group>"; };
+		0BBC158C2ABAC0C7006E82C4 /* BtnToggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnToggle.swift; sourceTree = "<group>"; };
 		0BBC158E2ABAC146006E82C4 /* BtnNext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnNext.swift; sourceTree = "<group>"; };
 		0BBC15902ABAC19F006E82C4 /* BtnPrev.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnPrev.swift; sourceTree = "<group>"; };
 		0BBC15992ABAD5DB006E82C4 /* SliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderView.swift; sourceTree = "<group>"; };
@@ -262,7 +262,7 @@
 				0BB889D42AC04638004788D5 /* BtnPlay.swift */,
 				0B7F558A2AD2636B0000D72E /* ButtonPlayList.swift */,
 				0BBA42182ABD5D9200C0B977 /* ButtonPlayMode.swift */,
-				0BBC158C2ABAC0C7006E82C4 /* ButtonPlayPause.swift */,
+				0BBC158C2ABAC0C7006E82C4 /* BtnToggle.swift */,
 				0BBC15902ABAC19F006E82C4 /* BtnPrev.swift */,
 				0BBA422A2AC2ABAD00C0B977 /* ButtonShowDatabase.swift */,
 				0B1126292AC6F7B20093DFFA /* ButtonToggleDatabase.swift */,
@@ -466,7 +466,7 @@
 				0B11262C2AC719B70093DFFA /* ImageHelper.swift in Sources */,
 				0BBC159A2ABAD5DB006E82C4 /* SliderView.swift in Sources */,
 				0BBC15882AB9A473006E82C4 /* iCloudHelper.swift in Sources */,
-				0BBC158D2ABAC0C7006E82C4 /* ButtonPlayPause.swift in Sources */,
+				0BBC158D2ABAC0C7006E82C4 /* BtnToggle.swift in Sources */,
 				0B11262A2AC6F7B20093DFFA /* ButtonToggleDatabase.swift in Sources */,
 				0B5E51E52AD912B5000650CF /* DebugCommand.swift in Sources */,
 				0B1D5A7F2AB302610010DDF2 /* AudioModel.swift in Sources */,

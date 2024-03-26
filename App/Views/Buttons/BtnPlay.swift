@@ -1,4 +1,5 @@
 import SwiftUI
+import OSLog
 
 struct BtnPlay: View {
     @EnvironmentObject var audioManager: AudioManager
@@ -16,6 +17,17 @@ struct BtnPlay: View {
     }
     
     func play() {
+        if audio.isEmpty() {
+            do {
+                let message = try audioManager.next()
+                os_log("BtnPlay::\(message)")
+            } catch let e {
+                appManager.setFlashMessage(e.localizedDescription)
+            }
+            
+            return
+        }
+        
         if audio.getiCloudState() == .Downloading {
             return appManager.setFlashMessage("正在从 iCloud 下载")
         }

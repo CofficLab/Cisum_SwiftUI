@@ -16,8 +16,12 @@ struct BtnPrev: View {
         .background(hovered ? Color.gray.opacity(0.4) : .clear)
         .clipShape(RoundedRectangle(cornerRadius: 8.0))
         .onTapGesture {
-            let message = audioManager.prev()
-            os_log("🍋 BtnPrev::\(message)")
+            do {
+                let message = try audioManager.prev()
+                os_log("BtnPrev::\(message)")
+            } catch let e {
+                appManager.setFlashMessage(e.localizedDescription)
+            }
         }
         .onHover(perform: { hovering in
             withAnimation(.easeInOut) {

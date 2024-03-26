@@ -16,7 +16,7 @@ struct ControlView: View {
                         TitleView()
                         ButtonsView()
                         SliderView()
-                        //StateView()
+                        // StateView()
                         Spacer()
                     }
 
@@ -30,7 +30,7 @@ struct ControlView: View {
         #else
             VStack {
                 TitleView().padding(.vertical, 20)
-                AlbumView($audioManager.audio)
+                AlbumView(audio: $audioManager.audio)
                     .opacity(dbManager.audios.isEmpty ? 0 : 1)
                 if dbManager.isEmpty {
                     DBEmptyView().padding(.vertical, 40)
