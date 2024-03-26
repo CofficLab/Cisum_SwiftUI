@@ -59,7 +59,7 @@ struct HomeView: View {
 
     #if os(macOS)
         private func resize(_ geo: GeometryProxy) {
-            AppConfig.logger.app.debug("appManager.showDatabase 变为 \(appManager.showDB)")
+            os_log("🖥️ HomeView::appManager.showDatabase 变为 \(appManager.showDB)")
             let window = NSApplication.shared.windows.first!
             var frame = window.frame
             let oldY = frame.origin.y
@@ -77,7 +77,7 @@ struct HomeView: View {
                 frame.size.height = AppManager.controlViewHeight
             }
 
-            AppConfig.logger.app.debug("自动调整窗口\noldY:\(oldY)\ny:\(frame.origin.y))")
+            os_log("🖥️ 自动调整窗口 oldY:\(oldY) y:\(frame.origin.y))")
             window.setFrame(frame, display: true)
         }
     #endif

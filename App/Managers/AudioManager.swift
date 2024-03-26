@@ -107,7 +107,7 @@ class AudioManager: NSObject, ObservableObject {
     }
 
     func stop() {
-        os_log("AudioManager::stop")
+        os_log("🍋 AudioManager::stop")
         player.stop()
         player.currentTime = 0
         isPlaying = false

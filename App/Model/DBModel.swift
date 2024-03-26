@@ -92,9 +92,7 @@ extension DBModel {
             FileHelper.isAudioFile(url: $0) || $0.pathExtension == "downloading"
         }
 
-        os_log("文件\(fileNames.count)，有效\(sortedFiles.count)")
-
-        AppConfig.logger.databaseModel.debug("获取文件完成，共 \(sortedFiles.count) 个")
+        os_log("🏠 DBModel::total \(fileNames.count)，valid \(sortedFiles.count)")
         return sortedFiles
     }
 }
