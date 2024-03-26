@@ -99,6 +99,12 @@ struct DBTableView: View {
             Text(audio.title).foregroundStyle(audioManager.audio == audio && !selectedAudioModels.contains(audio.id) ? .blue : .primary)
             Spacer()
         }.frame(maxWidth: .infinity).background(.red.opacity(0))
+        
+        // MARK: 单击选择
+        
+        .onTapGesture(count: 1, perform: {
+            selectedAudioModels = [audio.id]
+        })
 
         // MARK: 双击播放
 
@@ -115,6 +121,13 @@ struct DBTableView: View {
             Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity).background(.red.opacity(0))
+        
+        // MARK: 单击选择
+        
+        .onTapGesture(count: 1, perform: {
+            selectedAudioModels = [audio.id]
+        })
+        
         // MARK: 双击第2列播放
         .onTapGesture(count: 2, perform: {
             BtnPlay(audioManager: _audioManager, appManager: _appManager, audio: audio).play()
@@ -125,7 +138,15 @@ struct DBTableView: View {
 
     private func getAlbumColumn(_ audio: AudioModel) -> some View {
         Text(audio.albumName).foregroundStyle(audioManager.audio == audio && !selectedAudioModels.contains(audio.id) ? .blue : .primary)
+        
+        // MARK: 单击选择
+        
+        .onTapGesture(count: 1, perform: {
+            selectedAudioModels = [audio.id]
+        })
+        
         // MARK: 双击第3列播放
+        
         .onTapGesture(count: 2, perform: {
             BtnPlay(audioManager: _audioManager, appManager: _appManager, audio: audio).play()
         })
