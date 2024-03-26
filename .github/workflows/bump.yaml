@@ -8,6 +8,9 @@ permissions:
 
 name: Bump
 
+env:
+  tag: ${{ github.event.head_commit.id }}
+
 jobs:
   bump:
     runs-on: macos-latest
@@ -17,6 +20,26 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: 更新构建号
         uses: yanamura/ios-bump-version@v1
+      - name: 更新版本号
+        run: |
+          # 读取文件中的版本号
+          version=$(xcodebuild -showBuildSettings -quiet | grep -m 1 MARKETING_VERSION | cut -d= -f2)
+          version=${version# }
+
+          # 将版本号拆分为数组
+          IFS='.' read -r -a versionArray <<< "$version"
+
+          # 递增最后一位数字
+          ((versionArray[2]++))
+
+          # 重新组合版本号
+          newVersion="${versionArray[0]}.${versionArray[1]}.${versionArray[2]}"
+
+          echo $newVersion
+
+          # 新版本号写入文件
+          file=$(find . -type f -name "*.pbxproj" | head -n 1)
+          sed -i '' 's/MARKETING_VERSION = $version/MARKETING_VERSION = $newVersion/' "$file"
       - name: 生成标签
         run: |
           version=$(xcodebuild -showBuildSettings -quiet | grep -m 1 MARKETING_VERSION | cut -d= -f2)
