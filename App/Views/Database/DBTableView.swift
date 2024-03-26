@@ -26,14 +26,14 @@ struct DBTableView: View {
                     // 两列模式
                     Table(of: AudioModel.self, selection: $selectedAudioModels, sortOrder: $sortOrder, columns: {
                         TableColumn("歌曲", value: \.title, content: getTitleColumn)
-                        TableColumn("艺人", value: \.artist)
+                        TableColumn("艺人", value: \.artist, content: getArtistColumn)
                     }, rows: getRows)
                 } else {
                     // 三列模式
                     Table(of: AudioModel.self, selection: $selectedAudioModels, sortOrder: $sortOrder, columns: {
                         TableColumn("歌曲", value: \.title, content: getTitleColumn)
-                        TableColumn("艺人", value: \.artist)
-                        TableColumn("专辑", value: \.albumName)
+                        TableColumn("艺人", value: \.artist, content: getArtistColumn)
+                        TableColumn("专辑", value: \.albumName, content: getAlbumColumn)
                     }, rows: getRows)
                 }
             }
@@ -87,16 +87,45 @@ struct DBTableView: View {
         }
     }
 
-    // MARK: 歌曲的主要信息，即第一列
+    // MARK: 歌曲的第1列
 
     private func getTitleColumn(_ audio: AudioModel) -> some View {
         HStack {
-            audio.cover.resizable().scaledToFit().frame(width: 24, height: 24)
-            Text(audio.title)
-        }
+            audio.getCover()
+                .resizable()
+                .scaledToFit()
+                .frame(width: 24, height: 24)
+                .border(audioManager.audio == audio ? .clear : .clear)
+            Text(audio.title).foregroundStyle(audioManager.audio == audio && !selectedAudioModels.contains(audio.id) ? .blue : .primary)
+            Spacer()
+        }.frame(maxWidth: .infinity).background(.red.opacity(0))
 
         // MARK: 双击播放
 
+        .onTapGesture(count: 2, perform: {
+            BtnPlay(audioManager: _audioManager, appManager: _appManager, audio: audio).play()
+        })
+    }
+    
+    // MARK: 歌曲的第2列
+
+    private func getArtistColumn(_ audio: AudioModel) -> some View {
+        HStack {
+            Text(audio.artist).foregroundStyle(audioManager.audio == audio && !selectedAudioModels.contains(audio.id) ? .blue : .primary)
+            Spacer()
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity).background(.red.opacity(0))
+        // MARK: 双击第2列播放
+        .onTapGesture(count: 2, perform: {
+            BtnPlay(audioManager: _audioManager, appManager: _appManager, audio: audio).play()
+        })
+    }
+    
+    // MARK: 歌曲的第3列
+
+    private func getAlbumColumn(_ audio: AudioModel) -> some View {
+        Text(audio.albumName).foregroundStyle(audioManager.audio == audio && !selectedAudioModels.contains(audio.id) ? .blue : .primary)
+        // MARK: 双击第3列播放
         .onTapGesture(count: 2, perform: {
             BtnPlay(audioManager: _audioManager, appManager: _appManager, audio: audio).play()
         })

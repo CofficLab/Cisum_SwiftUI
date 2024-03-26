@@ -182,6 +182,10 @@ extension PlayList {
     func prepare() {
         let count = min(list.count-1, 10)
         os_log("🔊 PlayList::prepare next \(count) ⏬")
+        guard count > 0 else {
+            return
+        }
+        
         for i in 1...count {
             getNext(i).prepare()
         }

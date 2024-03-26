@@ -14,15 +14,10 @@ class AudioModel {
     var albumName = ""
     var isDownloading = false
     var delegate: SuperAudioDelegate
-    #if os(macOS)
-        var cover = Image(nsImage: NSImage(imageLiteralResourceName: "DefaultAlbum"))
-    #else
-        var cover: Image = Image(uiImage: UIImage(imageLiteralResourceName: "DefaultAlbum"))
-        var uiImage: UIImage = UIImage(imageLiteralResourceName: "DefaultAlbum")
-    #endif
+    var cover: Image? = nil
 
     init(_ url: URL, cacheURL: URL? = nil, delegate: SuperAudioDelegate = SuperAudioDelegateSample()) {
-         os_log("🚩 AudioModel::init -> \(url.lastPathComponent)")
+        os_log("🚩 AudioModel::init -> \(url.lastPathComponent)")
         self.url = url
         self.cacheURL = cacheURL
         self.delegate = delegate
@@ -80,10 +75,10 @@ extension AudioModel {
     var isCached: Bool { cacheURL != nil }
     var isDownloaded: Bool { getiCloudState() == .Downloaded }
     var isNotDownloaded: Bool { !isDownloaded }
-    
+
     /// 准备好文件
     func prepare() {
-        //os_log("🔊 AudioModel::prepare -> \(self.title)")
+        // os_log("🔊 AudioModel::prepare -> \(self.title)")
         let url = getURL()
         // 如果是 iCloud 文件，触发下载
         if iCloudHelper.isNotDownloaded(url) {
@@ -92,7 +87,7 @@ extension AudioModel {
             os_log("🔊 AudioModel::already on disk 🎉🎉🎉 -> \(self.title)")
         }
     }
-    
+
     func download() {
         os_log("🔊 AudioModel::download \(self.title)")
         do {
@@ -152,15 +147,15 @@ extension AudioModel {
 
 extension AudioModel {
     /// 删除多个文件
-     static   func delete(urls: Set<URL>) async {
+    static func delete(urls: Set<URL>) async {
         os_log("🏠 AudioModel::delete")
-         AppConfig.mainQueue.async {
-                for url in urls {
-                    AudioModel(url).delete()
-                }
+        AppConfig.mainQueue.async {
+            for url in urls {
+                AudioModel(url).delete()
             }
         }
-    
+    }
+
     func delete() {
         do {
             if fileManager.fileExists(atPath: url.path) {
@@ -220,7 +215,7 @@ extension AudioModel {
                             self.albumName = albumName
                         }
                     case "artwork":
-                        if let image = makeImage(try await item.load(.value), saveTo: coverPath) {
+                        if let image = try makeImage(await item.load(.value), saveTo: coverPath) {
                             cover = image
                             delegate.onCoverUpdated()
                             os_log("🍋 AudioModel::updateMeta -> cover updated")
@@ -232,12 +227,11 @@ extension AudioModel {
                     os_log("读取 Meta 出错\n\(error)")
                 }
             }
-        } catch {
-        }
+        } catch {}
     }
 
     func makeImage(_ data: (any NSCopying & NSObjectProtocol)?, saveTo: URL) -> Image? {
-        //os_log("AudioModel::makeImage -> \(saveTo.path)")
+        // os_log("AudioModel::makeImage -> \(saveTo.path)")
         #if os(iOS)
             if let data = data as? Data, let image = UIImage(data: data) {
                 return Image(uiImage: image)
@@ -256,6 +250,36 @@ extension AudioModel {
 
         return nil
     }
+}
+
+// MARK: Cover
+
+extension AudioModel {
+    func getCover() -> Image {
+        if isDownloading || isNotDownloaded {
+            return downloadingCover
+        }
+        
+        return cover ?? defaultCover
+    }
+    
+    var downloadingCover: Image {
+        Image(systemName: "arrow.down.circle.dotted")
+    }
+    
+    var defaultCover: Image {
+        #if os(macOS)
+            Image(nsImage: NSImage(imageLiteralResourceName: "DefaultAlbum"))
+        #else
+            Image(uiImage: UIImage(imageLiteralResourceName: "DefaultAlbum"))
+        #endif
+    }
+
+    #if os(iOS)
+        var uiImage: UIImage {
+            UIImage(imageLiteralResourceName: "DefaultAlbum")
+        }
+    #endif
 }
 
 #Preview("App") {
