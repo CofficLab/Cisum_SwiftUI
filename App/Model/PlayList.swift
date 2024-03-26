@@ -92,7 +92,7 @@ class PlayList {
                 self.current = (current + i)%list.count
                 os_log("🔊 PlayList::goto ⬇️ \(self.audio.title)")
                 
-                // 同时准备下一首
+                // 同时准备接下来的歌曲
                 Task { prepare() }
                 
                 return audio
