@@ -6,7 +6,6 @@ struct StateView: View {
     @EnvironmentObject var databaseManager: DBManager
     
     private var audio: AudioModel { audioManager.audio }
-    private var isDownloading: Bool { audio.isDownloading }
     private var isCached: Bool { audio.isCached }
     private var next: AudioModel { audioManager.list.getNext() }
     

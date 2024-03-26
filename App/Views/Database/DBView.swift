@@ -102,7 +102,11 @@ extension DBView {
                },
                onStart: { url in
                    AppConfig.mainQueue.sync {
-                       appManager.stateMessage = "正在复制 \(url.lastPathComponent)"
+                       if AudioModel(url).isNotDownloaded {
+                           appManager.stateMessage = "正在从 iCloud 下载 \(url.lastPathComponent)"
+                       } else {
+                           appManager.stateMessage = "正在复制 \(url.lastPathComponent)"
+                       }
                    }
                }
         )

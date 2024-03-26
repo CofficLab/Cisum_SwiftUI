@@ -12,7 +12,6 @@ class AudioModel {
     var description = ""
     var track = ""
     var albumName = ""
-    var isDownloading = false
     var delegate: SuperAudioDelegate
     var cover: Image? = nil
 
@@ -243,7 +242,7 @@ extension AudioModel {
 
 extension AudioModel {
     func getCover() -> Image {
-        if isDownloading || isNotDownloaded {
+        if isNotDownloaded {
             return downloadingCover
         }
         
