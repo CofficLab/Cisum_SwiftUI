@@ -13,17 +13,22 @@ class AudioModel {
     var track = ""
     var albumName = ""
     var delegate: SuperAudioDelegate
-    var cover: Image? = nil
+    var cover: Image?
 
     init(_ url: URL, cacheURL: URL? = nil, delegate: SuperAudioDelegate = SuperAudioDelegateSample()) {
-        //os_log("🚩 AudioModel::init -> \(url.lastPathComponent)")
+        // os_log("🚩 AudioModel::init -> \(url.lastPathComponent)")
         self.url = url
         self.cacheURL = cacheURL
         self.delegate = delegate
         title = url.deletingPathExtension().lastPathComponent
 
         Task {
-            await updateMeta()
+            self.cover = getCover()
+            
+            // 如果有大量的歌曲，就会产生大量的 updateMeta 操作，占内存较多
+            if self.getCoverFromDisk() == nil {
+                await updateMeta()
+            }
         }
     }
 
@@ -68,10 +73,6 @@ extension AudioModel: Identifiable {
     var id: URL { url }
 }
 
-//extension AudioModel: Codable {
-//    
-//}
-
 // MARK: iCloud 相关
 
 extension AudioModel {
@@ -81,7 +82,7 @@ extension AudioModel {
 
     /// 准备好文件
     func prepare() {
-        //os_log("🔊 AudioModel::prepare -> \(self.title)")
+        // os_log("🔊 AudioModel::prepare -> \(self.title)")
         SmartFile(url: getURL()).download {
             os_log("🔊 AudioModel::downloaded 🎉🎉🎉 -> \(self.title)")
         }
@@ -205,10 +206,13 @@ extension AudioModel {
                             self.albumName = albumName
                         }
                     case "artwork":
+
+                        // MARK: 得到了封面图
+
                         if let image = try makeImage(await item.load(.value), saveTo: coverPath) {
                             cover = image
                             delegate.onCoverUpdated()
-                            //os_log("🍋 AudioModel::updateMeta -> cover updated")
+                            os_log("🍋 AudioModel::updateMeta -> cover updated")
                         }
                     default:
                         break
@@ -220,6 +224,7 @@ extension AudioModel {
         } catch {}
     }
 
+    /// 将封面图存到磁盘
     func makeImage(_ data: (any NSCopying & NSObjectProtocol)?, saveTo: URL) -> Image? {
         // os_log("AudioModel::makeImage -> \(saveTo.path)")
         #if os(iOS)
@@ -246,17 +251,33 @@ extension AudioModel {
 
 extension AudioModel {
     func getCover() -> Image {
+        if let cover = getCoverFromDisk() {
+            return cover
+        }
+
         if isNotDownloaded {
             return downloadingCover
         }
-        
+
         return cover ?? defaultCover
     }
-    
+
     var downloadingCover: Image {
         Image(systemName: "arrow.down.circle.dotted")
     }
-    
+
+    func getCoverFromDisk() -> Image? {
+        if fileManager.fileExists(atPath: coverPath.path) {
+            #if os(macOS)
+                return Image(nsImage: NSImage(contentsOf: coverPath)!)
+            #else
+                return Image(uiImage: UIImage(contentsOfFile: coverPath.path())!)
+            #endif
+        }
+
+        return nil
+    }
+
     var defaultCover: Image {
         #if os(macOS)
             Image(nsImage: NSImage(imageLiteralResourceName: "DefaultAlbum"))
