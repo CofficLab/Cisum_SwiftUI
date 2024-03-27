@@ -40,9 +40,9 @@ jobs:
           # 新版本号写入文件
           file=$(find . -type f -name "*.pbxproj" | head -n 1)
 
-          echo "新版本号将要写入文件\n$file"
+          echo "新版本号将要写入文件->$file"
 
-          sed -i '' 's/MARKETING_VERSION = $version/MARKETING_VERSION = $newVersion/g' "$file"
+          sed -i 's/MARKETING_VERSION = $version/MARKETING_VERSION = $newVersion/g' $file
 
           updatedVersion=$(xcodebuild -showBuildSettings -quiet | grep -m 1 MARKETING_VERSION | cut -d= -f2)
           echo "更新后的版本号->$updatedVersion"
