@@ -46,11 +46,18 @@ class SmartFile {
     /// 下载文件
     func download(completion: @escaping () -> Void) {
         //os_log("☁️ CloudFile::下载文件 -> \(self.url.lastPathComponent)")
-                
+        
         if iCloudHelper.isDownloaded(url: url) {
-            //os_log("☁️ CloudFile::已经下载了 🎉🎉🎉")
+//            os_log("☁️ CloudFile::已经下载了 🎉🎉🎉")
             completion()
             return
+        }
+        
+        if iCloudHelper.isDownloading(url) {
+            os_log("☁️ CloudFile::已在下载 \(self.url.lastPathComponent)")
+            return
+        } else {
+            os_log("☁️ CloudFile::触发下载 \(self.url.lastPathComponent)")
         }
 
         do {

@@ -17,7 +17,7 @@ class AudioManager: NSObject, ObservableObject {
     @Published var list = PlayList([])
 
     static var preview = AudioManager(dbManager: DBManager.preview)
-    private var player: AVAudioPlayer = AVAudioPlayer()
+    private var player: AVAudioPlayer = .init()
     private var listener: AnyCancellable?
 
     init(dbManager: DBManager) {
@@ -27,7 +27,7 @@ class AudioManager: NSObject, ObservableObject {
         audios = dbManager.audios
 
         super.init()
-        
+
         list = PlayList(audios)
         listener = dbManager.$audios.sink { newValue in
             os_log("🍋 AudioManager::DatabaseManger.audios.count changed to \(newValue.count)")
@@ -120,7 +120,7 @@ class AudioManager: NSObject, ObservableObject {
         if audio.getiCloudState() == .Downloading {
             return "正在从 iCloud 下载"
         }
-        
+
         if audio.isEmpty() {
             return try next()
         }
@@ -130,7 +130,7 @@ class AudioManager: NSObject, ObservableObject {
             return ""
         } else {
             play()
-            
+
             return ""
         }
     }
@@ -143,14 +143,14 @@ class AudioManager: NSObject, ObservableObject {
     /// 跳到上一首，manual=true表示由用户触发
     func prev(manual: Bool = false) throws -> String {
         os_log("🔊 AudioManager::prev ⬆️")
-        
+
         // 用户触发，但曲库仅一首，发出提示
         if list.audios.count == 1 && manual {
             throw SmartError.NoPrevAudio
         }
-        
+
         try audio = list.prev()
-        
+
         updatePlayer()
         return "上一曲：\(audio.title)"
     }
@@ -158,14 +158,14 @@ class AudioManager: NSObject, ObservableObject {
     /// 跳到下一首，manual=true表示由用户触发
     func next(manual: Bool = false) throws -> String {
         os_log("🔊 AudioManager::next ⬇️")
-        
+
         // 用户触发，但曲库仅一首，发出提示
         if list.audios.count == 1 && manual {
             throw SmartError.NoNextAudio
         }
-        
+
         try audio = list.next()
-        
+
         updatePlayer()
         return "下一曲：\(audio.title)"
     }
@@ -181,8 +181,13 @@ class AudioManager: NSObject, ObservableObject {
         }
     }
 
-    private func makePlayer(url: URL) -> AVAudioPlayer {
+    private func makePlayer(url: URL?) -> AVAudioPlayer {
         os_log("🚩 AudioManager::初始化播放器")
+        
+        guard let url = url else {
+            return AVAudioPlayer()
+        }
+        
         do {
             #if os(iOS)
                 try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
@@ -192,14 +197,10 @@ class AudioManager: NSObject, ObservableObject {
 
             return player
         } catch {
-            AppConfig.logger.audioManager.error("初始化播放器失败 \n\(error)")
+            os_log("初始化播放器失败 \n\(error)")
 
             return AVAudioPlayer()
         }
-    }
-
-    private func makeEmptyPlayer() -> AVAudioPlayer {
-        return AVAudioPlayer()
     }
 
     private func updateMediaPlayer() {
@@ -207,25 +208,16 @@ class AudioManager: NSObject, ObservableObject {
     }
 
     private func updatePlayer() {
-        AppConfig.bgQueue.async {
-            var player = AVAudioPlayer()
-            if self.audio == AudioModel.empty {
-                player = self.makeEmptyPlayer()
-            } else {
-                player = self.makePlayer(url: self.audio.getURL())
-            }
+        AppConfig.mainQueue.async {
+            os_log("🍋 AudioManager::Update")
+            self.player = self.makePlayer(url: self.audio.getURL())
+            self.player.delegate = self
+            self.duration = self.player.duration
 
-            AppConfig.mainQueue.async {
-                os_log("🍋 AudioManager::Update")
-                self.player = player
-                self.player.delegate = self
-                self.duration = self.player.duration
+            self.updateMediaPlayer()
 
-                self.updateMediaPlayer()
-
-                if self.isPlaying {
-                    self.player.play()
-                }
+            if self.isPlaying {
+                self.player.play()
             }
         }
     }

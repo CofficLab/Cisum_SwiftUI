@@ -30,6 +30,23 @@ class iCloudHelper {
         return [URLUbiquitousItemDownloadingStatus.current, URLUbiquitousItemDownloadingStatus.downloaded].contains(getDownloadingStatus(url: url))
     }
     
+    static func isDownloading(_ url: URL) -> Bool {
+        //os_log("🔧 iCloudHelper::getDownloadingStatus -> \(url.absoluteString)")
+        var isDownloading = false
+        do {
+            let values = try url.resourceValues(forKeys:[.ubiquitousItemIsDownloadingKey])
+            values.allValues.forEach {
+                if $0.key == .ubiquitousItemIsDownloadingKey && $0.value as! Bool {
+                    isDownloading = true
+                }
+            }
+        } catch {
+            fatalError("\(error)")
+        }
+        
+        return isDownloading
+    }
+    
     static func isNotDownloaded(_ url: URL) -> Bool {
         !isDownloaded(url: url)
     }

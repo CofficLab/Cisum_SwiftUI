@@ -195,7 +195,7 @@ extension PlayList {
     
     /// 准备接下来的歌曲
     func prepare() {
-        let count = min(list.count-1, 10)
+        let count = min(list.count-1, 3)
         os_log("🔊 PlayList::prepare next \(count) ⏬")
         guard count > 0 else {
             return

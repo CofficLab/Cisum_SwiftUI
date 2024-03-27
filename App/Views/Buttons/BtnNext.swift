@@ -18,7 +18,7 @@ struct BtnNext: View {
         .onTapGesture {
             do {
                 let message = try audioManager.next(manual: true)
-                os_log("BtnNext::\(message)")
+                os_log("🖥️ BtnNext::\(message)")
             } catch let e {
                 appManager.setFlashMessage(e.localizedDescription)
             }
