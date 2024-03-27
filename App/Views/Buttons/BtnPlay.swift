@@ -11,7 +11,7 @@ struct BtnPlay: View {
         Button {
             play()
         } label: {
-            Label("播放", systemImage: getImageName())
+            Label("播放 「\(audio.title)」", systemImage: getImageName())
                 .font(.system(size: 24))
         }
     }

@@ -16,17 +16,15 @@ struct DBTableView: View {
 
     var body: some View {
         GeometryReader { geo in
-            Table(dbManager.audios, selection: $selectedAudioModels, sortOrder: $sortOrder) {
-                TableColumn("歌曲 \(dbManager.audios.count)") { getTitleColumn($0) }
-                TableColumn("艺人") { getArtistColumn($0) }.defaultVisibility(geo.size.width >= 500 ? .visible : .hidden)
-                TableColumn("专辑") { getAlbumColumn($0) }.defaultVisibility(geo.size.width >= 700 ? .visible : .hidden)
-            }
+            Table(of: AudioModel.self, selection: $selectedAudioModels, sortOrder: $sortOrder, columns: {
+                // value 参数用于排序
+                TableColumn("歌曲 \(dbManager.audios.count)", value: \.title, content: getTitleColumn)
+                TableColumn("艺人", value: \.artist, content: getArtistColumn).defaultVisibility(geo.size.width >= 500 ? .visible : .hidden)
+                TableColumn("专辑", value: \.albumName, content: getAlbumColumn).defaultVisibility(geo.size.width >= 700 ? .visible : .hidden)
+            }, rows: getRows)
         }
         .onChange(of: sortOrder) {
             dbManager.audios.sort(using: sortOrder)
-        }
-        .contextMenu {
-            getContextMenuItems()
         }
     }
 
@@ -44,8 +42,7 @@ struct DBTableView: View {
         }
 
         return VStack {
-            BtnPlay(audio: firstAudio)
-                .disabled(selected.count != 1)
+            BtnPlay(audio: audio!).disabled(audio == nil)
 
             ButtonDownload(url: selected.first ?? AudioModel.empty.id)
                 .disabled(selected.count != 1)
@@ -84,6 +81,8 @@ struct DBTableView: View {
             Text(audio.title).foregroundStyle(audioManager.audio == audio && !selectedAudioModels.contains(audio.id) ? .blue : .primary)
             Spacer()
         }
+
+        // 如果在这里定义了tap事件，会影响table的单击选择功能
     }
 
     // MARK: 歌曲的第2列
@@ -105,17 +104,13 @@ struct DBTableView: View {
 
     private func getRows() -> some TableRowContent<AudioModel> {
         ForEach(dbManager.audios) { audio in
-            if !selectedAudioModels.contains([audio.id]) || (selectedAudioModels.contains([audio.id]) && selectedAudioModels.count == 1) {
-                TableRow(audio)
-                    .itemProvider { // enable Drap
-                        NSItemProvider(object: audio.getURL() as NSItemProviderWriting)
-                    }
-                    .contextMenu {
-                        getContextMenuItems(audio)
-                    }
-            } else {
-                TableRow(audio)
-            }
+            TableRow(audio)
+                .itemProvider { // enable Drap
+                    NSItemProvider(object: audio.getURL() as NSItemProviderWriting)
+                }
+                .contextMenu {
+                    getContextMenuItems(audio)
+                }
         }
     }
 
