@@ -1,9 +1,9 @@
 name: Release
 
 on:
-  push:
-    tags:
-      - '*'
+  # push:
+  #   tags:
+  #     - '*'
   workflow_run:
     workflows:
       - 'Bump'
@@ -14,7 +14,7 @@ permissions:
   contents: write
 
 env:
-  tag: ${{ github.event.head_commit.id }}
+  tag: '-'
 
 jobs:
   release:

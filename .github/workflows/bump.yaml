@@ -38,7 +38,7 @@ jobs:
           echo "新版本号->$newVersion"
 
           # 新版本号写入文件
-          file=$(find . -type f -name "*.pbxproj" | head -n 1)
+          file=$(find $(pwd) -type f -name "*.pbxproj" | head -n 1)
 
           echo "新版本号将要写入文件->$file"
 
