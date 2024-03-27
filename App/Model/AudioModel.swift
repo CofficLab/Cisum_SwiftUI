@@ -212,7 +212,7 @@ extension AudioModel {
                         if let image = try makeImage(await item.load(.value), saveTo: coverPath) {
                             cover = image
                             delegate.onCoverUpdated()
-                            os_log("🍋 AudioModel::updateMeta -> cover updated")
+                            os_log("🍋 AudioModel::updateMeta -> cover updated -> \(self.title)")
                         }
                     default:
                         break
