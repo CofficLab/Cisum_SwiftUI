@@ -39,7 +39,12 @@ jobs:
 
           # 新版本号写入文件
           file=$(find . -type f -name "*.pbxproj" | head -n 1)
+
+          echo $file
+
           sed -i '' 's/MARKETING_VERSION = $version/MARKETING_VERSION = $newVersion/' "$file"
+
+          git status
       - name: 生成标签
         run: |
           version=$(xcodebuild -showBuildSettings -quiet | grep -m 1 MARKETING_VERSION | cut -d= -f2)
