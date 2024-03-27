@@ -18,9 +18,7 @@ struct AlbumView: View {
         .onAppear {
             image = audio.getCover()
         }
-        .onChange(of: audio, perform: { audio in
-            image = audio.getCover()
-        })
+        .onChange(of: audio) { image = audio.getCover() }
     }
 }
 

@@ -46,9 +46,9 @@ struct DBView: View {
                     DBEmptyView()
                 }
             }
-            .onChange(of: dropping, perform: { v in
-                appManager.setFlashMessage(v ? "松开可添加文件" : "")
-            })
+            .onChange(of: dropping) {
+                appManager.setFlashMessage(dropping ? "松开可添加文件" : "")
+            }
             .onDrop(of: [UTType.fileURL], isTargeted: $dropping) { providers -> Bool in
                 let dispatchGroup = DispatchGroup()
                 var dropedFiles: [URL] = []

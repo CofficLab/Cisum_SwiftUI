@@ -24,8 +24,8 @@ struct HomeView: View {
                         DBView()
                     }
                 }
-                .onChange(of: appManager.showDB, perform: { _ in resize(geo) })
-                .onChange(of: geo.size.height, perform: onHeightChange)
+                .onChange(of: appManager.showDB) { resize(geo) }
+                .onChange(of: geo.size.height) { onHeightChange(geo.size.height) }
                 .onAppear {
                     onHeightChange(geo.size.height)
                 }
