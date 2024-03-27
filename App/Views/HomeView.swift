@@ -72,7 +72,7 @@ struct HomeView: View {
                     frame.size.height = height + databaseViewHeight
                 }
             } else {
-                AppConfig.logger.app.debug("减少 Height 以折叠数据库视图")
+                AppConfig.logger.app.debug("🖥️ HomeView::减少 Height 以折叠数据库视图")
                 frame.origin.y = oldY + (frame.size.height - AppManager.controlViewHeight)
                 frame.size.height = AppManager.controlViewHeight
             }

@@ -12,9 +12,9 @@ class AudioManager: NSObject, ObservableObject {
     @Published private(set) var isPlaying: Bool = false
     @Published private(set) var isLooping: Bool = false
     @Published private(set) var duration: TimeInterval = 0
-    @Published private(set) var audios: [AudioModel] = []
+//    @Published private(set) var audios: [AudioModel] = []
     @Published var audio = AudioModel.empty
-    @Published var list = PlayList([])
+    @Published var playlist = PlayList([])
 
     static var preview = AudioManager(dbManager: DBManager.preview)
     private var player: AVAudioPlayer = .init()
@@ -24,17 +24,17 @@ class AudioManager: NSObject, ObservableObject {
         os_log("🚩 初始化 AudioManager")
 
         self.dbManager = dbManager
-        audios = dbManager.audios
+//        audios = dbManager.audios
 
         super.init()
 
-        list = PlayList(audios)
+        self.playlist = PlayList([])
         listener = dbManager.$audios.sink { newValue in
             os_log("🍋 AudioManager::DatabaseManger.audios.count changed to \(newValue.count)")
-            self.audios = newValue
-            self.list = PlayList(self.audios)
+//            self.audios = newValue
+            self.playlist = PlayList(newValue.map { $0.getURL() })
 
-            if !self.isValid() && self.audios.count > 0 {
+            if !self.isValid() && self.playlist.list.count > 0 {
                 os_log("🍋 AudioManager::当前播放的已经无效，切换到下一曲")
                 do {
                     let message = try self.next()
@@ -44,15 +44,15 @@ class AudioManager: NSObject, ObservableObject {
                 }
             }
 
-            if self.audios.count == 0 {
+            if self.playlist.list.count == 0 {
                 os_log("🍋 AudioManager::no audio, reset")
                 self.reset()
             }
         }
 
-        if audios.count > 0 {
+        if playlist.list.count > 0 {
             os_log("初始化Player")
-            audio = audios.first!
+            audio = playlist.audio
             os_log("初始化的曲目：\(self.audio.title, privacy: .public)")
             updatePlayer()
         }
@@ -80,7 +80,7 @@ class AudioManager: NSObject, ObservableObject {
     }
 
     func replay() {
-        AppConfig.logger.audioManager.info("replay()")
+        os_log("🍋 AudioManager::replay()")
 
         updatePlayer()
         play()
@@ -88,7 +88,7 @@ class AudioManager: NSObject, ObservableObject {
 
     func play() {
         os_log("🔊 AudioManager::play")
-        if list.audios.count == 0 {
+        if playlist.list.count == 0 {
             os_log("列表为空，忽略")
             return
         }
@@ -113,7 +113,7 @@ class AudioManager: NSObject, ObservableObject {
     }
 
     func togglePlayPause() throws -> String {
-        if audios.count == 0 {
+        if playlist.list.count == 0 {
             return "播放列表为空"
         }
 
@@ -145,11 +145,11 @@ class AudioManager: NSObject, ObservableObject {
         os_log("🔊 AudioManager::prev ⬆️")
 
         // 用户触发，但曲库仅一首，发出提示
-        if list.audios.count == 1 && manual {
+        if playlist.list.count == 1 && manual {
             throw SmartError.NoPrevAudio
         }
 
-        try audio = list.prev()
+        try audio = playlist.prev()
 
         updatePlayer()
         return "上一曲：\(audio.title)"
@@ -160,18 +160,18 @@ class AudioManager: NSObject, ObservableObject {
         os_log("🔊 AudioManager::next ⬇️")
 
         // 用户触发，但曲库仅一首，发出提示
-        if list.audios.count == 1 && manual {
+        if playlist.list.count == 1 && manual {
             throw SmartError.NoNextAudio
         }
 
-        try audio = list.next()
+        try audio = playlist.next()
 
         updatePlayer()
         return "下一曲：\(audio.title)"
     }
 
     func play(_ audio: AudioModel) {
-        if list.audios.contains([audio]) {
+        if playlist.list.contains([audio.id]) {
             os_log("曲库中包含要播放的：\(audio.title)")
             self.audio = audio
             updatePlayer()
@@ -225,17 +225,17 @@ class AudioManager: NSObject, ObservableObject {
     // 当前的 AudioModel 是否有效
     private func isValid() -> Bool {
         // 列表为空
-        if audios.isEmpty {
+        if playlist.list.isEmpty {
             return false
         }
 
         // 列表不空，当前 AudioModel 却为空
-        if !audios.isEmpty && audio == AudioModel.empty {
+        if !playlist.list.isEmpty && audio == AudioModel.empty {
             return false
         }
 
         // 已经不在列表中了
-        if !audios.contains(where: { $0 == self.audio }) {
+        if !playlist.list.contains(where: { $0 == self.audio.id }) {
             return false
         }
 

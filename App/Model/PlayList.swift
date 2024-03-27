@@ -6,18 +6,16 @@ import OSLog
 class PlayList {
     var fileManager = FileManager.default
     var title: String = "[空白]"
-    var audios: [AudioModel]
     var playMode: PlayMode = .Random
-    var list: [AudioModel] = []
+    var list: [AudioModel.ID] = []
     var current: Int = 0
-    var audio: AudioModel { list[current] }
+    var audio: AudioModel { AudioModel(list[current]) }
     /// 本地磁盘目录，用来存放缓存
     var localDisk: URL?
     
-    init(_ audios: [AudioModel]) {
-        os_log("🚩 PlayList::init -> audios.count = \(audios.count)")
-        self.audios = audios
-        self.list = audios
+    init(_ urls: [URL]) {
+        os_log("🚩 PlayList::init -> audios.count = \(urls.count)")
+        self.list = urls
     }
     
     // MARK: 获取上{offset}曲，仅获取，不改变播放状态
@@ -29,7 +27,7 @@ class PlayList {
         }
         
         let preIndex = (current - offset + list.count)%list.count
-        let preAudio = list[preIndex]
+        let preAudio = AudioModel(list[preIndex])
         //os_log("🔊 PlayList::next \(offset) -> \(nextAudio.title)")
         
         return preAudio
@@ -44,7 +42,7 @@ class PlayList {
         }
         
         let nextIndex = (current + offset)%list.count
-        let nextAudio = list[nextIndex]
+        let nextAudio = AudioModel(list[nextIndex])
         //os_log("🔊 PlayList::next \(offset) -> \(nextAudio.title)")
         
         return nextAudio
@@ -119,22 +117,22 @@ class PlayList {
     private func refreshList() {
         switch playMode {
         case .Order:
-            list = audios
+            break
         case .Loop:
-            list = audios
+            break
         case .Random:
-            list = audios.shuffled()
+            list = list.shuffled()
         }
     }
 
     private func randomExcludeCurrent() -> AudioModel {
-        if audios.count == 1 {
+        if list.count == 1 {
             os_log("只有一条，随机选一条就是第一条")
-            return audios.first!
+            return AudioModel(list.first!)
         }
 
-        let result = (audios.filter { $0 != audio }).randomElement()!
-        os_log("共 \(self.audios.count) 条，随机选一条: \(result.title)")
+        let result = AudioModel((list.filter { $0 != audio.id }).randomElement()!)
+        os_log("共 \(self.list.count) 条，随机选一条: \(result.title)")
 
         return result
     }

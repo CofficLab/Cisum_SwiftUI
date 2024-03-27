@@ -83,7 +83,7 @@ struct DBTableView: View {
             ButtonDeleteSelected(audios: selected, callback: {
                 selectedAudioModels = []
             }).disabled(selected.count == 0)
-            BtnDestroy()
+            //BtnDestroy()
         }
     }
 

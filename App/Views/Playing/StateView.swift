@@ -7,7 +7,7 @@ struct StateView: View {
     
     private var audio: AudioModel { audioManager.audio }
     private var isCached: Bool { audio.isCached }
-    private var next: AudioModel { audioManager.list.getNext() }
+    private var next: AudioModel { audioManager.playlist.getNext() }
     
     var body: some View {
         HStack(spacing: 2) {

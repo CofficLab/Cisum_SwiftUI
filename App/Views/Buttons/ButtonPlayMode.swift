@@ -15,7 +15,7 @@ struct ButtonPlayMode: View {
         .background(hovered ? Color.gray.opacity(0.4) : .clear)
         .clipShape(RoundedRectangle(cornerRadius: 8.0))
         .onTapGesture {
-            audioManager.list.switchPlayMode({ mode in
+            audioManager.playlist.switchPlayMode({ mode in
                 appManager.setFlashMessage("\(mode.description)")
             })
         }
@@ -27,7 +27,7 @@ struct ButtonPlayMode: View {
     }
 
     private func getImageName() -> String {
-        switch audioManager.list.playMode {
+        switch audioManager.playlist.playMode {
         case .Order:
             return "repeat"
         case .Loop:
