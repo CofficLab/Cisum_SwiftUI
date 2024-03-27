@@ -39,7 +39,7 @@ class SmartFile {
                 try FileManager.default.copyItem(at: self.url, to: destnation)
             }
         } catch {
-            os_log("☁️ CloudFile::复制文件发生错误\n\(error)")
+            os_log("☁️ SmartFile::复制文件发生错误 -> \(error.localizedDescription)")
         }
     }
 

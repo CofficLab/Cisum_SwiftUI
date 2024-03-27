@@ -3,7 +3,7 @@ import OSLog
 import SwiftUI
 
 struct HomeView: View {
-    var play: Bool
+    var play: Bool = false
 
     @EnvironmentObject var audioManager: AudioManager
     @EnvironmentObject var windowManager: WindowManager
@@ -81,10 +81,14 @@ struct HomeView: View {
             window.setFrame(frame, display: true)
         }
     #endif
+    
+    init() {
+        os_log("🚩 HomeView::Init")
+    }
 }
 
 #Preview("普通") {
     RootView {
-        HomeView(play: false)
+        HomeView()
     }
 }

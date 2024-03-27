@@ -8,7 +8,7 @@ struct ContentView: View {
 
     var body: some View {
         ZStack {
-            HomeView(play: true)
+            HomeView()
                 .alert(isPresented: $appManager.showAlert, content: {
                     Alert(title: Text(appManager.alertMessage))
                 })
