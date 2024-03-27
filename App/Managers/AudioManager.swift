@@ -12,7 +12,6 @@ class AudioManager: NSObject, ObservableObject {
     @Published private(set) var isPlaying: Bool = false
     @Published private(set) var isLooping: Bool = false
     @Published private(set) var duration: TimeInterval = 0
-//    @Published private(set) var audios: [AudioModel] = []
     @Published var audio = AudioModel.empty
     @Published var playlist = PlayList([])
 
@@ -24,14 +23,12 @@ class AudioManager: NSObject, ObservableObject {
         os_log("🚩 初始化 AudioManager")
 
         self.dbManager = dbManager
-//        audios = dbManager.audios
 
         super.init()
 
         self.playlist = PlayList([])
         listener = dbManager.$audios.sink { newValue in
             os_log("🍋 AudioManager::DatabaseManger.audios.count changed to \(newValue.count)")
-//            self.audios = newValue
             self.playlist = PlayList(newValue.map { $0.getURL() })
 
             if !self.isValid() && self.playlist.list.count > 0 {
@@ -253,15 +250,13 @@ extension AudioManager: AVAudioPlayerDelegate {
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         // 没有播放完，被打断了
         if !flag {
-            AppConfig.logger.audioManager.info("播放被打断，更新为暂停状态")
-            pause()
-            return
+            os_log("🍋 AudioManager::播放被打断，更新为暂停状态")
+            return pause()
         }
 
         if isLooping {
-            AppConfig.logger.audioManager.info("播放完成，再次播放当前曲目")
-            play()
-            return
+            os_log("🍋 AudioManager::播放完成，再次播放当前曲目")
+            return play()
         }
 
         os_log("🍋 AudioManager::播放完成，自动播放下一曲")
@@ -274,16 +269,16 @@ extension AudioManager: AVAudioPlayerDelegate {
     }
 
     func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {
-        AppConfig.logger.audioManager.info("audioPlayerDecodeErrorDidOccur")
+        os_log("audioPlayerDecodeErrorDidOccur")
     }
 
     func audioPlayerBeginInterruption(_ player: AVAudioPlayer) {
-        AppConfig.logger.audioManager.info("audioPlayerBeginInterruption")
+        os_log("🍋 AudioManager::audioPlayerBeginInterruption")
         pause()
     }
 
     func audioPlayerEndInterruption(_ player: AVAudioPlayer, withOptions flags: Int) {
-        AppConfig.logger.audioManager.info("audioPlayerEndInterruption")
+        os_log("🍋 AudioManager::audioPlayerEndInterruption")
         play()
     }
 }

@@ -30,19 +30,11 @@ struct DBTableView: View {
 
     // MARK: 右键菜单
 
-    private func getContextMenuItems(_ audio: AudioModel? = nil) -> some View {
-        var selected: Set<AudioModel.ID> = selectedAudioModels
-        var firstAudio = AudioModel.empty
-        if audio != nil {
-            selected.insert(audio!.id)
-        }
-
-        if let firstURL = selected.first {
-            firstAudio = AudioModel(firstURL)
-        }
+    private func getContextMenuItems(_ audio: AudioModel) -> some View {
+        let selected: Set<AudioModel.ID> = selectedAudioModels
 
         return VStack {
-            BtnPlay(audio: audio!).disabled(audio == nil)
+            BtnPlay(audio: audio)
 
             ButtonDownload(url: selected.first ?? AudioModel.empty.id)
                 .disabled(selected.count != 1)
