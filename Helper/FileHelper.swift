@@ -2,39 +2,78 @@ import Foundation
 import OSLog
 
 #if os(macOS)
-  import AppKit
+    import AppKit
 #endif
 
 class FileHelper {
-  static func getSize(url: URL) -> Int {
-    let resourceValues = try? url.resourceValues(forKeys: [.fileSizeKey])
-    let size = resourceValues?.fileSize ?? 0
-    print("File size: \(size) bytes")
+    static var fileManager = FileManager.default
+    
+    static func getSize(url: URL) -> Int {
+        let resourceValues = try? url.resourceValues(forKeys: [.fileSizeKey])
+        let size = resourceValues?.fileSize ?? 0
+        print("File size: \(size) bytes")
 
-    return size
-  }
+        return size
+    }
 
-  static func showInFinder(url: URL) {
-    #if os(macOS)
-      NSWorkspace.shared.activateFileViewerSelecting([url])
-    #endif
-  }
+    static func showInFinder(url: URL) {
+        #if os(macOS)
+            NSWorkspace.shared.activateFileViewerSelecting([url])
+        #endif
+    }
 
-  static func openFolder(url: URL) {
-    #if os(macOS)
-      NSWorkspace.shared.open(url)
-    #endif
-  }
+    static func openFolder(url: URL) {
+        #if os(macOS)
+            NSWorkspace.shared.open(url)
+        #endif
+    }
 
-  static func isAudioFile(url: URL) -> Bool {
-    return ["mp3", "wav", "m4a"].contains(url.pathExtension.lowercased())
-  }
+    static func isAudioFile(url: URL) -> Bool {
+        return ["mp3", "wav", "m4a"].contains(url.pathExtension.lowercased())
+    }
 
-  static func isAudioiCloudFile(url: URL) -> Bool {
-    let ex = url.pathExtension.lowercased()
+    static func isAudioiCloudFile(url: URL) -> Bool {
+        let ex = url.pathExtension.lowercased()
 
-    os_log("\(Logger.isMain)🔧 FileHelper::isAudioiCloudFile -> \(ex)")
+        os_log("\(Logger.isMain)🔧 FileHelper::isAudioiCloudFile -> \(ex)")
 
-    return ex == "icloud" && isAudioFile(url: url.deletingPathExtension())
-  }
+        return ex == "icloud" && isAudioFile(url: url.deletingPathExtension())
+    }
+
+    static func getFileSize(_ url: URL) -> Int64 {
+        do {
+            let attributes = try fileManager.attributesOfItem(atPath: url.path)
+            if let fileSize = attributes[.size] as? Int64 {
+                return fileSize
+            } else {
+                print("Failed to retrieve file size.")
+                return 0
+            }
+        } catch {
+            print("Error: \(error)")
+            return 0
+        }
+    }
+
+    static func getFileSizeReadable(_ url: URL) -> String {
+        let byteCountFormatter: ByteCountFormatter = {
+            let formatter = ByteCountFormatter()
+            formatter.allowedUnits = [.useMB, .useGB, .useTB]
+            formatter.countStyle = .file
+            return formatter
+        }()
+
+        do {
+            let attributes = try fileManager.attributesOfItem(atPath: url.path)
+            if let fileSize = attributes[.size] as? Int64 {
+                return byteCountFormatter.string(fromByteCount: fileSize)
+            } else {
+                print("Failed to retrieve file size.")
+                return "-"
+            }
+        } catch {
+            print("Error: \(error)")
+            return "-"
+        }
+    }
 }

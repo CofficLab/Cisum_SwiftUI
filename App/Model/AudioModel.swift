@@ -58,40 +58,11 @@ class AudioModel {
   }
     
     func getFileSize() -> Int64 {
-        do {
-            let attributes = try fileManager.attributesOfItem(atPath: getURL().path)
-            if let fileSize = attributes[.size] as? Int64 {
-                return fileSize
-            } else {
-                print("Failed to retrieve file size.")
-                return 0
-            }
-        } catch {
-            print("Error: \(error)")
-            return 0
-        }
+        FileHelper.getFileSize(url)
     }
     
     func getFileSizeReadable() -> String {
-        let byteCountFormatter: ByteCountFormatter = {
-            let formatter = ByteCountFormatter()
-            formatter.allowedUnits = [.useMB, .useGB, .useTB]
-            formatter.countStyle = .file
-            return formatter
-        }()
-        
-        do {
-            let attributes = try fileManager.attributesOfItem(atPath: url.path)
-            if let fileSize = attributes[.size] as? Int64 {
-                return byteCountFormatter.string(fromByteCount: fileSize)
-            } else {
-                print("Failed to retrieve file size.")
-                return "-"
-            }
-        } catch {
-            print("Error: \(error)")
-            return "-"
-        }
+        FileHelper.getFileSizeReadable(url)
     }
 }
 
