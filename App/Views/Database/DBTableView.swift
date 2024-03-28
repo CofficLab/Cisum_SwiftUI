@@ -25,6 +25,8 @@ struct DBTableView: View {
                         geo.size.width >= 500 ? .visible : .hidden)
                     TableColumn("专辑", value: \.albumName, content: getAlbumColumn).defaultVisibility(
                         geo.size.width >= 700 ? .visible : .hidden)
+                    TableColumn("文件大小", value: \.size, content: getSizeColumn).defaultVisibility(
+                        geo.size.width >= 700 ? .visible : .hidden)
                 }, rows: getRows)
         }
         .onChange(of: sortOrder) {
@@ -100,6 +102,13 @@ struct DBTableView: View {
         Text(audio.albumName).foregroundStyle(
             audioManager.audio == audio && !selectedAudioModels.contains(audio.id) ? .blue : .primary)
     }
+    
+    // MARK: 歌曲的第4列
+
+    private func getSizeColumn(_ audio: AudioModel) -> some View {
+        Text(audio.getFileSizeReadable()).foregroundStyle(
+            audioManager.audio == audio && !selectedAudioModels.contains(audio.id) ? .blue : .primary)
+    }
 
     // MARK: 行
 
@@ -123,5 +132,5 @@ struct DBTableView: View {
 #Preview("APP") {
     RootView {
         ContentView()
-    }
+    }.frame(width: 1200)
 }

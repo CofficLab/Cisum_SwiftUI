@@ -14,6 +14,9 @@ class AudioModel {
   var albumName = ""
   var delegate: SuperAudioDelegate
   var cover: Image?
+    var size: Int64 {
+        getFileSize()
+    }
 
   init(_ url: URL, cacheURL: URL? = nil, delegate: SuperAudioDelegate = SuperAudioDelegateSample())
   {
@@ -53,6 +56,43 @@ class AudioModel {
   func getURL() -> URL {
     cacheURL ?? url
   }
+    
+    func getFileSize() -> Int64 {
+        do {
+            let attributes = try fileManager.attributesOfItem(atPath: getURL().path)
+            if let fileSize = attributes[.size] as? Int64 {
+                return fileSize
+            } else {
+                print("Failed to retrieve file size.")
+                return 0
+            }
+        } catch {
+            print("Error: \(error)")
+            return 0
+        }
+    }
+    
+    func getFileSizeReadable() -> String {
+        let byteCountFormatter: ByteCountFormatter = {
+            let formatter = ByteCountFormatter()
+            formatter.allowedUnits = [.useMB, .useGB, .useTB]
+            formatter.countStyle = .file
+            return formatter
+        }()
+        
+        do {
+            let attributes = try fileManager.attributesOfItem(atPath: url.path)
+            if let fileSize = attributes[.size] as? Int64 {
+                return byteCountFormatter.string(fromByteCount: fileSize)
+            } else {
+                print("Failed to retrieve file size.")
+                return "-"
+            }
+        } catch {
+            print("Error: \(error)")
+            return "-"
+        }
+    }
 }
 
 extension AudioModel {
