@@ -113,8 +113,8 @@ extension DBModel {
         }
 
         // 分类
-        downloaded = fileNames.filter { $0.pathExtension != "downloading" }
-        downloading = fileNames.filter { $0.pathExtension == "downloading" }
+        downloaded = fileNames.filter { iCloudHelper.isDownloaded(url: $0) }
+        downloading = fileNames.filter { iCloudHelper.isNotOnDisk($0) }
 
         os_log(
             "\(Logger.isMain)🏠 DBModel::total \(fileNames.count) downloaded \(downloaded.count) downloading \(downloading.count)"

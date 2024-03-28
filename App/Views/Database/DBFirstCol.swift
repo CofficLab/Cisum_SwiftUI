@@ -7,19 +7,24 @@ struct DBFirstCol: View {
     
     var body: some View {
             HStack {
-                audio.getCover()
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 24, height: 24)
-                    .border(audioManager.audio == audio ? .clear : .clear)
-                Text(audio.title).foregroundStyle(selected ? .blue : .primary)
-                Spacer()
-//                Text("\(audio.downloadingPercent)").font(.footnote)
-                
                 if audio.downloadingPercent < 100 {
                     ProgressView(value: audio.downloadingPercent/100)
-                        .progressViewStyle(CircularProgressViewStyle(size: 8))
-                            .controlSize(.regular)
+                        .progressViewStyle(CircularProgressViewStyle(size: 14))
+                        .controlSize(.regular)
+                        .scaledToFit()
+                        .frame(width: 24, height: 24)
+                } else {
+                    audio.getCover()
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 24, height: 24)
+                        .border(audioManager.audio == audio ? .clear : .clear)
+                }
+                
+                Text(audio.title).foregroundStyle(selected ? .blue : .primary)
+                Spacer()
+                if audio.downloadingPercent < 100 {
+                    Text("\(String(format: "%.2f", audio.downloadingPercent/100))%").font(.footnote)
                 }
             }
 

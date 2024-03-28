@@ -279,22 +279,25 @@ extension AudioManager {
     func onUpdate() {
         os_log("\(Logger.isMain)🍋 AudioManager::onUpdate")
 //        if self.db.getAudioModels("AudioManager::onUpdate").count != self.audios.count {
-            os_log("\(Logger.isMain)🍋 AudioManager::Refresh 🐛 db.onUpdate")
-            refresh()
+//            os_log("\(Logger.isMain)🍋 AudioManager::Refresh 🐛 db.onUpdate")
+//            refresh()
 //        }
     }
     
     func onDownloading(_ url: URL, _ percent: Double) {
         bg.async {
 //            os_log("\(Logger.isMain)🍋 AudioManager::onDownloading -> \(url.lastPathComponent) -> \(percent)")
-            self.audios.map {
+            let newAudios = self.audios.map {
                 if $0.getURL() == url {
                     $0.downloadingPercent = percent
                 }
                 
                 return $0
             }
+            
+            self.main.async {
+                self.audios = newAudios
+            }
         }
-        
     }
 }

@@ -47,8 +47,7 @@ struct DBTableView: View {
                 .disabled(selected.count != 1)
 
             #if os(macOS)
-                BtnShowInFinder(url: selected.first ?? AudioModel.empty.id)
-                    .disabled(selected.count != 1)
+            BtnShowInFinder(url: audio.getURL())
             #endif
 
             Divider()

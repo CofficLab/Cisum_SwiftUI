@@ -101,10 +101,6 @@ extension AudioModel {
     }
 
     func getiCloudState() -> iCloudState {
-        if url.pathExtension == "downloading" {
-            return .Downloading
-        }
-
         let status = iCloudHelper.getDownloadingStatus(url: url)
 
         switch status {
