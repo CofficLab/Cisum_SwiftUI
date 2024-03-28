@@ -13,12 +13,22 @@ struct DBTableView: View {
     @State private var sortOrder = [KeyPathComparator(\AudioModel.title)]
 
     var db: DBModel { dbManager.dbModel }
+    var mode: String {
+        switch audioManager.playlist.playMode {
+        case .Order:
+            "顺序播放"
+        case .Loop:
+            "单曲循环"
+        case .Random:
+            "随机模式"
+        }
+    }
 
     var body: some View {
         GeometryReader { geo in
             Table(of: AudioModel.self, selection: $selectedAudioModels, sortOrder: $sortOrder, columns: {
                 // value 参数用于排序
-                TableColumn("歌曲 \(dbManager.audios.count)", value: \.title, content: getTitleColumn)
+                TableColumn("歌曲 \(dbManager.audios.count) \(mode)", value: \.title, content: getTitleColumn)
                 TableColumn("艺人", value: \.artist, content: getArtistColumn).defaultVisibility(geo.size.width >= 500 ? .visible : .hidden)
                 TableColumn("专辑", value: \.albumName, content: getAlbumColumn).defaultVisibility(geo.size.width >= 700 ? .visible : .hidden)
             }, rows: getRows)
@@ -113,6 +123,6 @@ struct DBTableView: View {
 
 #Preview("APP") {
     RootView {
-        ContentView(play: false)
+        ContentView()
     }
 }

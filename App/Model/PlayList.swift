@@ -15,7 +15,7 @@ class PlayList {
     
     init(_ urls: [URL]) {
         os_log("🚩 PlayList::init -> audios.count = \(urls.count)")
-        self.list = urls
+        self.list = urls.shuffled()
     }
     
     func find(_ id: AudioModel.ID) -> AudioModel {
