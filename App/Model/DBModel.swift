@@ -111,6 +111,6 @@ extension DBModel {
 
 #Preview {
   RootView {
-    ContentView(play: false)
+    ContentView()
   }
 }

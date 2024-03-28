@@ -56,6 +56,6 @@ class DBManager: ObservableObject {
 
 #Preview {
   RootView {
-    ContentView(play: false)
+    ContentView()
   }
 }

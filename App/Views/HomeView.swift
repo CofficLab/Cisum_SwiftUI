@@ -5,10 +5,8 @@ import SwiftUI
 struct HomeView: View {
   var play: Bool = false
 
-  @EnvironmentObject var audioManager: AudioManager
   @EnvironmentObject var windowManager: WindowManager
   @EnvironmentObject var appManager: AppManager
-  @EnvironmentObject var databaseManager: DBManager
 
   @State private var databaseViewHeight: CGFloat = 300
 
@@ -26,9 +24,7 @@ struct HomeView: View {
         }
         .onChange(of: appManager.showDB) { resize(geo) }
         .onChange(of: geo.size.height) { onHeightChange(geo.size.height) }
-        .onAppear {
-          onHeightChange(geo.size.height)
-        }
+        .onAppear { onHeightChange(geo.size.height) }
       }
     #endif
 

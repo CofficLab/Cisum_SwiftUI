@@ -43,7 +43,7 @@ struct ControlView: View {
 
 #Preview("APP") {
     RootView {
-        ContentView(play: false)
+        ContentView()
     }
 }
 

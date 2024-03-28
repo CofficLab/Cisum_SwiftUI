@@ -298,6 +298,6 @@ extension AudioModel {
 
 #Preview("App") {
   RootView {
-    ContentView(play: false)
+    ContentView()
   }
 }

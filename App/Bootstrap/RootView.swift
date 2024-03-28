@@ -3,7 +3,6 @@ import SwiftUI
 
 struct RootView<Content>: View where Content: View {
   private var content: Content
-  private var fileManagerDelegate = MyFileManagerDelegate()
   private var noLaunchView = false
 
   @State private var snapshotImage: Image? = nil
@@ -54,7 +53,6 @@ struct RootView<Content>: View where Content: View {
                   UIApplication.shared.beginReceivingRemoteControlEvents()
                 #endif
 
-                FileManager.default.delegate = fileManagerDelegate
                 os_log("\(Logger.isMain)🚩 RootView::初始化环境变量完成")
 
                 isReady = true
@@ -83,9 +81,9 @@ struct RootView<Content>: View where Content: View {
   }
 }
 
-#Preview("ContentView") {
+#Preview("App") {
   RootView {
-    ContentView(play: false)
+    ContentView()
   }
 }
 

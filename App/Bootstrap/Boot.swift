@@ -12,7 +12,7 @@ struct Boot: App {
         #if os(macOS)
             Window("", id: "Cisum") {
                 RootView{
-                    ContentView(play: false)
+                    ContentView()
                 }
             }
             .windowStyle(.hiddenTitleBar)
