@@ -25,8 +25,7 @@ struct BtnToggle: View {
         .clipShape(RoundedRectangle(cornerRadius: 8.0))
         .onTapGesture {
             do {
-                let message = try audioManager.togglePlayPause()
-                os_log("\(Logger.isMain)🖥️ BtnToggle::\(message)")
+                try audioManager.togglePlayPause()
             } catch let e {
                 appManager.setFlashMessage(e.localizedDescription)
             }

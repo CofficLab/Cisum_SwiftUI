@@ -107,27 +107,23 @@ class AudioManager: NSObject, ObservableObject {
         isPlaying = false
     }
 
-    func togglePlayPause() throws -> String {
+    func togglePlayPause() throws {
         if playlist.list.count == 0 {
             throw SmartError.NoAudioInList
         }
 
         if audio.getiCloudState() == .Downloading {
-            return "正在从 iCloud 下载"
+            throw SmartError.Downloading
         }
 
         if audio.isEmpty() {
             try next()
-            return ""
         }
 
         if player.isPlaying {
             pause()
-            return ""
         } else {
             play()
-
-            return ""
         }
     }
 
