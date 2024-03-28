@@ -8,11 +8,18 @@ class DBModel {
     var timer: Timer?
     var cloudDisk: URL
     var onUpdate: () -> Void = { os_log("🍋 DBModel::onUpdate") }
+    var onDownloading: (_ url: URL, _ percent: Double) -> Void = {url,percent in
+        os_log("🍋 DBModel::onDownloading -> \(url.lastPathComponent) -> \(percent)")
+    }
 
-    init(cloudDisk: URL, onUpdate: (() -> Void)? = nil) {
+    init(cloudDisk: URL, 
+         onUpdate: (() -> Void)? = nil,
+         onDownloading: ((_ url: URL, _ percent: Double) -> Void)? = nil
+    ) {
         os_log("\(Logger.isMain)🚩 初始化 DBModel")
 
         self.onUpdate = onUpdate ?? self.onUpdate
+        self.onDownloading = onDownloading ?? self.onDownloading
         self.cloudDisk = cloudDisk.appendingPathComponent(AppConfig.audiosDirName)
 
         do {
@@ -128,12 +135,30 @@ extension DBModel {
         query.searchScopes = [
             NSMetadataQueryUbiquitousDocumentsScope
         ]
-        query.predicate = NSPredicate(format: "%K == %@", NSMetadataItemPathKey, cloudDisk.path)
+        query.predicate = NSPredicate(format: "%K BEGINSWITH %@", NSMetadataItemPathKey, cloudDisk.path)
 
         n.addObserver(forName: NSNotification.Name.NSMetadataQueryDidUpdate, object: query, queue: nil) { _ in
             if let items = query.results as? [NSMetadataItem] {
-                // os_log("🍋 DBModel::变动的items个数 \(items.count)")
+                os_log("🍋 DBModel::变动的items个数 \(items.count)")
                 self.onUpdate()
+
+                for item in items {
+                    let downloadingStatus = item.value(forAttribute: NSMetadataUbiquitousItemDownloadingStatusKey) as? String
+                    let percentDownloaded = item.value(forAttribute: NSMetadataUbiquitousItemPercentDownloadedKey) as? Double
+                    let isDownloading = item.value(forAttribute: NSMetadataUbiquitousItemIsDownloadingKey) as? String
+                    let url = item.value(forAttribute: NSMetadataItemURLKey) as? URL
+                    
+                    
+                    
+                    if isDownloading != nil {
+                        print("isDownloading -> \(url!.lastPathComponent)")
+                    }
+                    
+                    if url != nil, percentDownloaded != nil, percentDownloaded! <= 100.0 {
+                        print("Percent downloaded -> \(String(describing: percentDownloaded))")
+                        self.onDownloading(url!, percentDownloaded!)
+                    }
+                }
             }
         }
 
@@ -147,17 +172,3 @@ extension DBModel {
         ContentView()
     }
 }
-
-// for item in items {
-//    let downloadingStatus = item.value(forAttribute: NSMetadataUbiquitousItemDownloadingStatusKey) as? String
-//    let percentDownloaded = item.value(forAttribute: NSMetadataUbiquitousItemPercentDownloadedKey) as? Double
-//    let isDownloading = item.value(forAttribute: NSMetadataUbiquitousItemIsDownloadingKey) as? String
-//
-//    if let x = item.value(forAttribute: NSMetadataItemURLKey) as? URL {
-//        print("URL -> \(x.path)")
-//    }
-//
-//    if isDownloading != nil, downloadingStatus != nil, percentDownloaded != nil {
-//        print("downloadingStatus -> \(String(describing: downloadingStatus)) Percent downloaded -> \(String(describing: percentDownloaded))")
-//    }
-// }

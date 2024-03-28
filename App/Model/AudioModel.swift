@@ -14,6 +14,7 @@ class AudioModel {
     var albumName = ""
     var delegate: SuperAudioDelegate
     var cover: Image?
+    var downloadingPercent: Double = 100.0
     var size: Int64 {
         getFileSize()
     }
@@ -248,7 +249,10 @@ extension AudioModel {
 
         #if os(macOS)
             if fileManager.fileExists(atPath: saveTo.path) {
-                return Image(nsImage: NSImage(contentsOfFile: saveTo.path)!)
+                guard let nsImage = NSImage(contentsOfFile: saveTo.path) else {
+                    return nil
+                }
+                return Image(nsImage:  nsImage)
             }
             if let data = data as? Data, let image = NSImage(data: data) {
                 ImageHelper.toJpeg(image: image, saveTo: saveTo)

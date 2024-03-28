@@ -20,7 +20,9 @@ struct DBTableView: View {
                 of: AudioModel.self, selection: $selectedAudioModels, sortOrder: $sortOrder,
                 columns: {
                     // value 参数用于排序
-                    TableColumn("歌曲 \(dbManager.audios.count)", value: \.title, content: getTitleColumn)
+                    TableColumn("歌曲 \(dbManager.audios.count)", value: \.title, content: {
+                        DBFirstCol(audio:$0).environmentObject(audioManager)
+                    })
                     TableColumn("艺人", value: \.artist, content: getArtistColumn).defaultVisibility(
                         geo.size.width >= 500 ? .visible : .hidden)
                     TableColumn("专辑", value: \.albumName, content: getAlbumColumn).defaultVisibility(
@@ -67,23 +69,6 @@ struct DBTableView: View {
                 }).disabled(selected.count == 0)
             // BtnDestroy()
         }
-    }
-
-    // MARK: 歌曲的第1列
-
-    private func getTitleColumn(_ audio: AudioModel) -> some View {
-        HStack {
-            audio.getCover()
-                .resizable()
-                .scaledToFit()
-                .frame(width: 24, height: 24)
-                .border(audioManager.audio == audio ? .clear : .clear)
-            Text(audio.title).foregroundStyle(
-                audioManager.audio == audio && !selectedAudioModels.contains(audio.id) ? .blue : .primary)
-            Spacer()
-        }
-
-        // 如果在这里定义了tap事件，会影响table的单击选择功能
     }
 
     // MARK: 歌曲的第2列

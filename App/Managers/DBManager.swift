@@ -23,7 +23,8 @@ class DBManager: ObservableObject {
     init(rootDir: URL) {
         os_log("\(Logger.isMain)🚩 DBManager::Init")
         self.dbModel = DBModel(cloudDisk: rootDir)
-        dbModel.onUpdate = refresh
+        dbModel.onUpdate = onUpdate
+        dbModel.onDownloading = onDownloading
         self.isCloudStorage = iCloudHelper.isCloudPath(url: rootDir)
 
         refresh()
@@ -51,6 +52,24 @@ class DBManager: ObservableObject {
                 self.updatedAt = .now
                 os_log("\(Logger.isMain)🍋 DBManager::Refreshed")
             }
+        }
+    }
+    
+    func onUpdate() {
+        if self.dbModel.getAudioModels().count != self.audios.count {
+            refresh()
+        }
+    }
+    
+    func onDownloading(_ url: URL, _ percent: Double) {
+        print(url.lastPathComponent)
+        print(percent)
+        audios = audios.map {
+            if $0.getURL() == url {
+                $0.downloadingPercent = percent
+            }
+            
+            return $0
         }
     }
 }
