@@ -99,9 +99,12 @@ extension DBView {
             },
             completionOne: { url in
                 bg.async {
-//          appManager.setFlashMessage("完成复制 \(url.lastPathComponent)")
-//          dbManager.refresh()
                     os_log("\(Logger.isMain)🖥️ DBView::添加完成 🎉🎉🎉 -> \(url.lastPathComponent)")
+                }
+                
+                main.async {
+//                    appManager.setFlashMessage("完成复制 \(url.lastPathComponent)")
+//                    dbManager.refresh()
                 }
             },
             onStart: { url in
