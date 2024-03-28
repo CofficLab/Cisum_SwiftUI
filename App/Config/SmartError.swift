@@ -5,6 +5,7 @@ enum SmartError: Error, LocalizedError {
     case NoNextDownloadedAudio
     case NoNextAudio
     case NoPrevAudio
+    case NoAudioInList
     
     var errorDescription: String? {
         switch self {
@@ -16,6 +17,8 @@ enum SmartError: Error, LocalizedError {
             "曲库仅此一首，无下一首"
         case .NoPrevAudio:
             "曲库仅此一首，无上一首"
+        case .NoAudioInList:
+            "无可播放的歌曲"
         }
     }
 }

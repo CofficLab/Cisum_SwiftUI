@@ -23,7 +23,7 @@ struct Boot: App {
         #else
             WindowGroup {
                 RootView {
-                    ContentView(play: false)
+                    ContentView()
                 }
             }
         #endif
