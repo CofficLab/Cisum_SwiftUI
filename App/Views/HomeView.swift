@@ -18,7 +18,7 @@ struct HomeView: View {
         #if os(macOS)
             GeometryReader { geo in
                 VStack {
-                    ControlView().frame(height: AppManager.controlViewHeight)
+                    ControlView().frame(height: AppConfig.controlViewHeight)
 
                     if appManager.showDB {
                         DBView()
@@ -48,9 +48,9 @@ struct HomeView: View {
     }
 
     private func onHeightChange(_ height: CGFloat) {
-        if height > AppManager.controlViewHeight {
+        if height > AppConfig.controlViewHeight {
             appManager.showDB = true
-            databaseViewHeight = height - AppManager.controlViewHeight
+            databaseViewHeight = height - AppConfig.controlViewHeight
             if databaseViewHeight < databaseViewHeightMin {
                 databaseViewHeight = databaseViewHeightMin
             }
@@ -66,15 +66,15 @@ struct HomeView: View {
             let height = frame.size.height
 
             if appManager.showDB {
-                if geo.size.height <= AppManager.controlViewHeight {
+                if geo.size.height <= AppConfig.controlViewHeight {
                     AppConfig.logger.app.debug("增加 Height 以展开数据库视图")
                     frame.origin.y = oldY - databaseViewHeight
                     frame.size.height = height + databaseViewHeight
                 }
             } else {
                 AppConfig.logger.app.debug("🖥️ HomeView::减少 Height 以折叠数据库视图")
-                frame.origin.y = oldY + (frame.size.height - AppManager.controlViewHeight)
-                frame.size.height = AppManager.controlViewHeight
+                frame.origin.y = oldY + (frame.size.height - AppConfig.controlViewHeight)
+                frame.size.height = AppConfig.controlViewHeight
             }
 
             os_log("🖥️ HomeView::自动调整窗口 oldY:\(oldY) y:\(frame.origin.y))")

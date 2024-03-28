@@ -34,7 +34,7 @@ struct RootView<Content>: View where Content: View {
                     .environmentObject(appManager)
 //                    .environmentObject(playListManager)
                 #if os(macOS)
-                    .frame(minWidth: 350, minHeight: AppManager.controlViewHeight)
+                    .frame(minWidth: 350, minHeight: AppConfig.controlViewHeight)
                     .blendMode(.normal)
                 #endif
             } else {

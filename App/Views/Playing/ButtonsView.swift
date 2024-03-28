@@ -2,12 +2,12 @@ import SwiftUI
 
 struct ButtonsView: View {
     var body: some View {
-        HStack(spacing: 1, content: {
-            ButtonToggleDatabase()
+        HStack(spacing: 2, content: {
+            ButtonToggleDatabase().padding(.trailing, 20)
             BtnPrev()
             BtnToggle()
             BtnNext()
-            BtnMode()
+            BtnMode().padding(.leading, 20)
         })
         .foregroundStyle(.white)
         .labelStyle(.iconOnly)
@@ -20,5 +20,5 @@ struct ButtonsView: View {
 #Preview {
     RootView {
         ContentView()
-    }
+    }.frame(width: 350)
 }

@@ -12,12 +12,11 @@ struct ControlView: View {
             GeometryReader { geo in
                 HStack {
                     VStack {
-                        Spacer()
                         TitleView()
-                        ButtonsView()
-                        SliderView()
-                        // StateView()
                         Spacer()
+                        ButtonsView().frame(height: 60)
+                        SliderView().frame(height: 30)
+                        // StateView()
                     }
 
                     if geo.size.width > 500 {
@@ -57,31 +56,31 @@ struct ControlView: View {
 
                 HStack(content: {
                     ControlView()
-                }).frame(width: 350, height: AppManager.controlViewHeight + 100).border(.red)
+                }).frame(width: 350, height: AppConfig.controlViewHeight + 100).border(.red)
 
                 HStack(content: {
                     ControlView()
-                }).frame(width: 350, height: AppManager.controlViewHeight).border(.red)
+                }).frame(width: 350, height: AppConfig.controlViewHeight).border(.red)
 
                 HStack(content: {
                     ControlView()
-                }).frame(width: 400, height: AppManager.controlViewHeight).border(.red)
+                }).frame(width: 400, height: AppConfig.controlViewHeight).border(.red)
 
                 HStack(content: {
                     ControlView()
-                }).frame(width: 500, height: AppManager.controlViewHeight).border(.red)
+                }).frame(width: 500, height: AppConfig.controlViewHeight).border(.red)
 
                 HStack(content: {
                     ControlView()
-                }).frame(width: 600, height: AppManager.controlViewHeight).border(.red)
+                }).frame(width: 600, height: AppConfig.controlViewHeight).border(.red)
 
                 HStack(content: {
                     ControlView()
-                }).frame(width: 700, height: AppManager.controlViewHeight).border(.red)
+                }).frame(width: 700, height: AppConfig.controlViewHeight).border(.red)
 
                 HStack(content: {
                     ControlView()
-                }).frame(width: 800, height: AppManager.controlViewHeight).border(.red)
+                }).frame(width: 800, height: AppConfig.controlViewHeight).border(.red)
                 Spacer()
             })
             Spacer()

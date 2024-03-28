@@ -22,7 +22,6 @@ enum AppMode {
 
 class AppManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
     static var iCloudDocumentsUrl: URL? = nil
-    static var controlViewHeight: CGFloat = 150
     
     @Published var appMode: AppMode = .Normal
     @Published var showAlert: Bool = false
