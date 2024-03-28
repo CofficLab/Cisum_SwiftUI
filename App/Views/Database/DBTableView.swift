@@ -16,12 +16,16 @@ struct DBTableView: View {
 
     var body: some View {
         GeometryReader { geo in
-            Table(of: AudioModel.self, selection: $selectedAudioModels, sortOrder: $sortOrder, columns: {
-                // value 参数用于排序
-                TableColumn("歌曲 \(dbManager.audios.count)", value: \.title, content: getTitleColumn)
-                TableColumn("艺人", value: \.artist, content: getArtistColumn).defaultVisibility(geo.size.width >= 500 ? .visible : .hidden)
-                TableColumn("专辑", value: \.albumName, content: getAlbumColumn).defaultVisibility(geo.size.width >= 700 ? .visible : .hidden)
-            }, rows: getRows)
+            Table(
+                of: AudioModel.self, selection: $selectedAudioModels, sortOrder: $sortOrder,
+                columns: {
+                    // value 参数用于排序
+                    TableColumn("歌曲 \(dbManager.audios.count)", value: \.title, content: getTitleColumn)
+                    TableColumn("艺人", value: \.artist, content: getArtistColumn).defaultVisibility(
+                        geo.size.width >= 500 ? .visible : .hidden)
+                    TableColumn("专辑", value: \.albumName, content: getAlbumColumn).defaultVisibility(
+                        geo.size.width >= 700 ? .visible : .hidden)
+                }, rows: getRows)
         }
         .onChange(of: sortOrder) {
             dbManager.audios.sort(using: sortOrder)
@@ -45,7 +49,7 @@ struct DBTableView: View {
             #endif
 
             Divider()
-//            ButtonAdd()
+            //            ButtonAdd()
             ButtonCancelSelected(action: {
                 selectedAudioModels.removeAll()
             }).disabled(selected.count == 0)
@@ -54,9 +58,11 @@ struct DBTableView: View {
 
             // MARK: 删除
 
-            ButtonDeleteSelected(audios: selected, callback: {
-                selectedAudioModels = []
-            }).disabled(selected.count == 0)
+            ButtonDeleteSelected(
+                audios: selected,
+                callback: {
+                    selectedAudioModels = []
+                }).disabled(selected.count == 0)
             // BtnDestroy()
         }
     }
@@ -70,7 +76,8 @@ struct DBTableView: View {
                 .scaledToFit()
                 .frame(width: 24, height: 24)
                 .border(audioManager.audio == audio ? .clear : .clear)
-            Text(audio.title).foregroundStyle(audioManager.audio == audio && !selectedAudioModels.contains(audio.id) ? .blue : .primary)
+            Text(audio.title).foregroundStyle(
+                audioManager.audio == audio && !selectedAudioModels.contains(audio.id) ? .blue : .primary)
             Spacer()
         }
 
@@ -81,7 +88,8 @@ struct DBTableView: View {
 
     private func getArtistColumn(_ audio: AudioModel) -> some View {
         HStack {
-            Text(audio.artist).foregroundStyle(audioManager.audio == audio && !selectedAudioModels.contains(audio.id) ? .blue : .primary)
+            Text(audio.artist).foregroundStyle(
+                audioManager.audio == audio && !selectedAudioModels.contains(audio.id) ? .blue : .primary)
             Spacer()
         }
     }
@@ -89,7 +97,8 @@ struct DBTableView: View {
     // MARK: 歌曲的第3列
 
     private func getAlbumColumn(_ audio: AudioModel) -> some View {
-        Text(audio.albumName).foregroundStyle(audioManager.audio == audio && !selectedAudioModels.contains(audio.id) ? .blue : .primary)
+        Text(audio.albumName).foregroundStyle(
+            audioManager.audio == audio && !selectedAudioModels.contains(audio.id) ? .blue : .primary)
     }
 
     // MARK: 行
@@ -107,7 +116,7 @@ struct DBTableView: View {
     }
 
     init() {
-        os_log("🚩 DBTableView::Init")
+        os_log("\(Logger.isMain)🚩 DBTableView::Init")
     }
 }
 

@@ -33,6 +33,7 @@
 		0B5E51E52AD912B5000650CF /* DebugCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B5E51E42AD912B5000650CF /* DebugCommand.swift */; };
 		0B604AE82AD6384300929DD8 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B604AE72AD6384300929DD8 /* RootView.swift */; };
 		0B718F0C2AB4349900569762 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B718F0B2AB4349900569762 /* CardView.swift */; };
+		0B73275F2BB5138200DBD922 /* LoggerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B73275E2BB5138200DBD922 /* LoggerHelper.swift */; };
 		0B7F558B2AD2636B0000D72E /* ButtonPlayList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7F558A2AD2636B0000D72E /* ButtonPlayList.swift */; };
 		0BAB300E2AB814F70012D837 /* Boot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAB300D2AB814F70012D837 /* Boot.swift */; };
 		0BAB7C3F2AD3BBAA00C5AEB5 /* DBEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAB7C3E2AD3BBAA00C5AEB5 /* DBEmptyView.swift */; };
@@ -102,6 +103,7 @@
 		0B5E51E42AD912B5000650CF /* DebugCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugCommand.swift; sourceTree = "<group>"; };
 		0B604AE72AD6384300929DD8 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		0B718F0B2AB4349900569762 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
+		0B73275E2BB5138200DBD922 /* LoggerHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerHelper.swift; sourceTree = "<group>"; };
 		0B7F558A2AD2636B0000D72E /* ButtonPlayList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonPlayList.swift; sourceTree = "<group>"; };
 		0BAB300D2AB814F70012D837 /* Boot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Boot.swift; sourceTree = "<group>"; };
 		0BAB7C3E2AD3BBAA00C5AEB5 /* DBEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBEmptyView.swift; sourceTree = "<group>"; };
@@ -179,6 +181,7 @@
 		0B1D5A6B2AB302600010DDF2 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				0B1D5A722AB302600010DDF2 /* BackgroundView.swift */,
 				0B718F0B2AB4349900569762 /* CardView.swift */,
 				0B1165E82ABBC6C0005C5CBB /* LaunchView.swift */,
 				0BFDCB7F2AB86AF300B0D1C8 /* MenuTile.swift */,
@@ -190,6 +193,7 @@
 				0B11262B2AC719B70093DFFA /* ImageHelper.swift */,
 				0BB587162AD815770071AEBD /* TimeHelper.swift */,
 				0BB5871A2AD81AF90071AEBD /* ViewHelper.swift */,
+				0B73275E2BB5138200DBD922 /* LoggerHelper.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -202,7 +206,6 @@
 				0BB889D32AC04600004788D5 /* Buttons */,
 				0BFDCE562BB013AC009198DD /* Playing */,
 				0BFDCE522BAFF279009198DD /* Database */,
-				0BBA422D2AC2BA7900C0B977 /* Widgets */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -275,14 +278,6 @@
 				0B604AE72AD6384300929DD8 /* RootView.swift */,
 			);
 			path = Bootstrap;
-			sourceTree = "<group>";
-		};
-		0BBA422D2AC2BA7900C0B977 /* Widgets */ = {
-			isa = PBXGroup;
-			children = (
-				0B1D5A722AB302600010DDF2 /* BackgroundView.swift */,
-			);
-			path = Widgets;
 			sourceTree = "<group>";
 		};
 		0BEBCBAB2B35285100F2116E /* App */ = {
@@ -447,6 +442,7 @@
 				0B0A2B842AC31AEF00DA085C /* AudioMeta.swift in Sources */,
 				0BB587172AD815770071AEBD /* TimeHelper.swift in Sources */,
 				0BFDCE582BB01884009198DD /* BtnDestroy.swift in Sources */,
+				0B73275F2BB5138200DBD922 /* LoggerHelper.swift in Sources */,
 				0BB889D22AC042EC004788D5 /* ButtonDownload.swift in Sources */,
 				0B1D5A792AB302610010DDF2 /* AudioManager.swift in Sources */,
 				0BBA421B2ABD67D600C0B977 /* WindowManager.swift in Sources */,

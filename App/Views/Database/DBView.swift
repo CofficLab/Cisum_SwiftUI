@@ -10,6 +10,8 @@ struct DBView: View {
     @State private var dropping: Bool = false
 
     var db: DBModel { dbManager.dbModel }
+    var main: DispatchQueue { AppConfig.mainQueue }
+    var bg: DispatchQueue { AppConfig.bgQueue }
 
     var body: some View {
         #if os(iOS)
@@ -37,12 +39,13 @@ struct DBView: View {
                     case let .failure(error):
                         print("导入文件失败Error: \(error)")
                     }
-                })
+                }
+            )
         #else
             ZStack {
                 DBTableView()
 
-                if dbManager.isEmpty && appManager.flashMessage.isEmpty {
+                if dbManager.isEmpty, appManager.flashMessage.isEmpty {
                     DBEmptyView()
                 }
             }
@@ -57,7 +60,7 @@ struct DBView: View {
                     // 这是异步操作
                     _ = provider.loadObject(ofClass: URL.self) { object, _ in
                         if let url = object {
-                            os_log("🖥️ DBView::添加 \(url.lastPathComponent) 到复制队列")
+                            os_log("\(Logger.isMain)🖥️ DBView::添加 \(url.lastPathComponent) 到复制队列")
                             dropedFiles.append(url)
                         }
 
@@ -73,9 +76,9 @@ struct DBView: View {
             }
         #endif
     }
-    
+
     init() {
-        os_log("🚩 DBView::Init")
+        os_log("\(Logger.isMain)🚩 DBView::Init")
     }
 }
 
@@ -84,31 +87,32 @@ struct DBView: View {
 extension DBView {
     func copy(_ files: [URL]) {
         appManager.stateMessage = "🖥️ DBView::正在复制 \(files.count) 个文件"
-        db.add(files,
-               completionAll: {
-                   AppConfig.mainQueue.sync {
-                       appManager.setFlashMessage("已添加 \(files.count) 个文件")
-                       appManager.cleanStateMessage()
-                       dbManager.refresh()
-                       os_log("🖥️ DBView::添加完成 🎉🎉🎉")
-                   }
-               },
-               completionOne: { url in
-                   AppConfig.mainQueue.async {
-                       appManager.setFlashMessage("完成复制 \(url.lastPathComponent)")
-                       dbManager.refresh()
-                       os_log("🖥️ DBView::添加完成 🎉🎉🎉 -> \(url.lastPathComponent)")
-                   }
-               },
-               onStart: { url in
-                   AppConfig.mainQueue.sync {
-                       if AudioModel(url).isNotDownloaded {
-                           appManager.stateMessage = "正在从 iCloud 下载 \(url.lastPathComponent)"
-                       } else {
-                           appManager.stateMessage = "正在复制 \(url.lastPathComponent)"
-                       }
-                   }
-               }
+        db.add(
+            files,
+            completionAll: {
+                AppConfig.mainQueue.sync {
+                    appManager.setFlashMessage("已添加 \(files.count) 个文件")
+                    appManager.cleanStateMessage()
+                    dbManager.refresh()
+                    os_log("\(Logger.isMain)🖥️ DBView::添加完成 🎉🎉🎉")
+                }
+            },
+            completionOne: { url in
+                bg.async {
+//          appManager.setFlashMessage("完成复制 \(url.lastPathComponent)")
+//          dbManager.refresh()
+                    os_log("\(Logger.isMain)🖥️ DBView::添加完成 🎉🎉🎉 -> \(url.lastPathComponent)")
+                }
+            },
+            onStart: { url in
+                AppConfig.mainQueue.sync {
+                    if AudioModel(url).isNotDownloaded {
+                        appManager.stateMessage = "正在从 iCloud 下载 \(url.lastPathComponent)"
+                    } else {
+                        appManager.stateMessage = "正在复制 \(url.lastPathComponent)"
+                    }
+                }
+            }
         )
     }
 }
