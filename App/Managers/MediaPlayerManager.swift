@@ -45,10 +45,9 @@ class MediaPlayerManager: ObservableObject {
         let commandCenter = MPRemoteCommandCenter.shared()
 
         commandCenter.nextTrackCommand.addTarget { _ in
-            os_log("MediaPlayerManager::下一首")
+            os_log("🍋 MediaPlayerManager::下一首")
             do {
-                let message = try self.audioManager.next()
-                os_log("MediaPlayerManager::\(message)")
+                try self.audioManager.next()
                 return .success
             } catch let e {
                 os_log("MediaPlayerManager::\(e.localizedDescription)")
@@ -69,7 +68,7 @@ class MediaPlayerManager: ObservableObject {
         }
 
         commandCenter.pauseCommand.addTarget { _ in
-            os_log("暂停")
+            os_log("🍋 MediaPlayerManger::暂停")
             self.audioManager.pause()
 
             return .success

@@ -48,7 +48,7 @@
 		0BBA420C2ABBD79600C0B977 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA420B2ABBD79600C0B977 /* Errors.swift */; };
 		0BBA42132ABC137A00C0B977 /* StatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA42122ABC137A00C0B977 /* StatusView.swift */; };
 		0BBA42172ABC1AE700C0B977 /* StatusBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA42162ABC1AE700C0B977 /* StatusBarView.swift */; };
-		0BBA42192ABD5D9200C0B977 /* ButtonPlayMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA42182ABD5D9200C0B977 /* ButtonPlayMode.swift */; };
+		0BBA42192ABD5D9200C0B977 /* BtnMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA42182ABD5D9200C0B977 /* BtnMode.swift */; };
 		0BBA421B2ABD67D600C0B977 /* WindowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA421A2ABD67D600C0B977 /* WindowManager.swift */; };
 		0BBA421F2AC1397F00C0B977 /* Centered.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA421E2AC1397F00C0B977 /* Centered.swift */; };
 		0BBA42212AC1802C00C0B977 /* ButtonCancelSelected.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA42202AC1802C00C0B977 /* ButtonCancelSelected.swift */; };
@@ -66,7 +66,6 @@
 		0BBC158F2ABAC146006E82C4 /* BtnNext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC158E2ABAC146006E82C4 /* BtnNext.swift */; };
 		0BBC15912ABAC19F006E82C4 /* BtnPrev.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC15902ABAC19F006E82C4 /* BtnPrev.swift */; };
 		0BBC159A2ABAD5DB006E82C4 /* SliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC15992ABAD5DB006E82C4 /* SliderView.swift */; };
-		0BFDCB7C2AB5D6D000B0D1C8 /* AudioDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFDCB7B2AB5D6D000B0D1C8 /* AudioDelegate.swift */; };
 		0BFDCB802AB86AF300B0D1C8 /* MenuTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFDCB7F2AB86AF300B0D1C8 /* MenuTile.swift */; };
 		0BFDCE552BAFFAA3009198DD /* SuperAudioDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFDCE542BAFFAA3009198DD /* SuperAudioDelegate.swift */; };
 		0BFDCE582BB01884009198DD /* BtnDestroy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFDCE572BB01884009198DD /* BtnDestroy.swift */; };
@@ -118,7 +117,7 @@
 		0BBA420B2ABBD79600C0B977 /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
 		0BBA42122ABC137A00C0B977 /* StatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusView.swift; sourceTree = "<group>"; };
 		0BBA42162ABC1AE700C0B977 /* StatusBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarView.swift; sourceTree = "<group>"; };
-		0BBA42182ABD5D9200C0B977 /* ButtonPlayMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonPlayMode.swift; sourceTree = "<group>"; };
+		0BBA42182ABD5D9200C0B977 /* BtnMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnMode.swift; sourceTree = "<group>"; };
 		0BBA421A2ABD67D600C0B977 /* WindowManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowManager.swift; sourceTree = "<group>"; };
 		0BBA421E2AC1397F00C0B977 /* Centered.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Centered.swift; sourceTree = "<group>"; };
 		0BBA42202AC1802C00C0B977 /* ButtonCancelSelected.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonCancelSelected.swift; sourceTree = "<group>"; };
@@ -136,7 +135,6 @@
 		0BBC158E2ABAC146006E82C4 /* BtnNext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnNext.swift; sourceTree = "<group>"; };
 		0BBC15902ABAC19F006E82C4 /* BtnPrev.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnPrev.swift; sourceTree = "<group>"; };
 		0BBC15992ABAD5DB006E82C4 /* SliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderView.swift; sourceTree = "<group>"; };
-		0BFDCB7B2AB5D6D000B0D1C8 /* AudioDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioDelegate.swift; sourceTree = "<group>"; };
 		0BFDCB7F2AB86AF300B0D1C8 /* MenuTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTile.swift; sourceTree = "<group>"; };
 		0BFDCE542BAFFAA3009198DD /* SuperAudioDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperAudioDelegate.swift; sourceTree = "<group>"; };
 		0BFDCE572BB01884009198DD /* BtnDestroy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnDestroy.swift; sourceTree = "<group>"; };
@@ -213,7 +211,6 @@
 			isa = PBXGroup;
 			children = (
 				0B1D5A8C2AB3E8290010DDF2 /* AppDelegate.swift */,
-				0BFDCB7B2AB5D6D000B0D1C8 /* AudioDelegate.swift */,
 				0BBC15852AB99BD2006E82C4 /* MyFileManagerDelegate.swift */,
 			);
 			path = Delegate;
@@ -261,7 +258,7 @@
 				0BBC158E2ABAC146006E82C4 /* BtnNext.swift */,
 				0BB889D42AC04638004788D5 /* BtnPlay.swift */,
 				0B7F558A2AD2636B0000D72E /* ButtonPlayList.swift */,
-				0BBA42182ABD5D9200C0B977 /* ButtonPlayMode.swift */,
+				0BBA42182ABD5D9200C0B977 /* BtnMode.swift */,
 				0BBC158C2ABAC0C7006E82C4 /* BtnToggle.swift */,
 				0BBC15902ABAC19F006E82C4 /* BtnPrev.swift */,
 				0BBA422A2AC2ABAD00C0B977 /* ButtonShowDatabase.swift */,
@@ -422,7 +419,6 @@
 				0BBC15842AB95272006E82C4 /* ControlView.swift in Sources */,
 				0BBA42272AC2A8B800C0B977 /* ButtonAdd.swift in Sources */,
 				0B1D5AAC2AB414600010DDF2 /* MediaPlayerManager.swift in Sources */,
-				0BFDCB7C2AB5D6D000B0D1C8 /* AudioDelegate.swift in Sources */,
 				0B4E1AB32AC3C239005CCB0F /* PlayListManager.swift in Sources */,
 				0BBA42172ABC1AE700C0B977 /* StatusBarView.swift in Sources */,
 				0BBC15912ABAC19F006E82C4 /* BtnPrev.swift in Sources */,
@@ -461,7 +457,7 @@
 				0B220F752BB1BBDB0077255A /* SmartError.swift in Sources */,
 				0BB889DB2AC06C54004788D5 /* DBModel.swift in Sources */,
 				0BBC15862AB99BD2006E82C4 /* MyFileManagerDelegate.swift in Sources */,
-				0BBA42192ABD5D9200C0B977 /* ButtonPlayMode.swift in Sources */,
+				0BBA42192ABD5D9200C0B977 /* BtnMode.swift in Sources */,
 				0B220F692BB039DC0077255A /* DBTableView.swift in Sources */,
 				0B11262C2AC719B70093DFFA /* ImageHelper.swift in Sources */,
 				0BBC159A2ABAD5DB006E82C4 /* SliderView.swift in Sources */,

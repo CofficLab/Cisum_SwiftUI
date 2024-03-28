@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct ButtonPlayMode: View {
+struct BtnMode: View {
     @EnvironmentObject var appManager: AppManager
     @EnvironmentObject var audioManager: AudioManager
 
@@ -15,7 +15,7 @@ struct ButtonPlayMode: View {
         .background(hovered ? Color.gray.opacity(0.4) : .clear)
         .clipShape(RoundedRectangle(cornerRadius: 8.0))
         .onTapGesture {
-            audioManager.playlist.switchPlayMode({ mode in
+            audioManager.playlist.switchMode({ mode in
                 appManager.setFlashMessage("\(mode.description)")
             })
         }
@@ -41,7 +41,7 @@ struct ButtonPlayMode: View {
 #Preview {
     RootView {
         Centered {
-            ButtonPlayMode()
+            BtnMode()
         }
     }
 }

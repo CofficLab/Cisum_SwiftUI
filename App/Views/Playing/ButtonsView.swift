@@ -7,7 +7,7 @@ struct ButtonsView: View {
             BtnPrev()
             BtnToggle()
             BtnNext()
-            ButtonPlayMode()
+            BtnMode()
         })
         .foregroundStyle(.white)
         .labelStyle(.iconOnly)

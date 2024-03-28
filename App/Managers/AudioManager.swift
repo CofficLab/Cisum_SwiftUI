@@ -5,17 +5,15 @@ import MediaPlayer
 import OSLog
 import SwiftUI
 
-// 管理播放器的播放、暂停、上一曲、下一曲等操作
+/// 管理播放器的播放、暂停、上一曲、下一曲等操作
 class AudioManager: NSObject, ObservableObject {
     @ObservedObject var dbManager: DBManager
 
     @Published private(set) var isPlaying: Bool = false
-    @Published private(set) var isLooping: Bool = false
     @Published private(set) var duration: TimeInterval = 0
     @Published var audio = AudioModel.empty
     @Published var playlist = PlayList([])
 
-    static var preview = AudioManager(dbManager: DBManager.preview)
     private var player: AVAudioPlayer = .init()
     private var listener: AnyCancellable?
 
@@ -34,8 +32,7 @@ class AudioManager: NSObject, ObservableObject {
             if !self.isValid() && self.playlist.list.count > 0 {
                 os_log("🍋 AudioManager::当前播放的已经无效，切换到下一曲")
                 do {
-                    let message = try self.next()
-                    os_log("🍋 AudioManager:: ⬇️ \(message)")
+                    try self.next()
                 } catch let e {
                     os_log("‼️ AudioManager::\(e.localizedDescription)")
                 }
@@ -119,7 +116,8 @@ class AudioManager: NSObject, ObservableObject {
         }
 
         if audio.isEmpty() {
-            return try next()
+            try next()
+            return ""
         }
 
         if player.isPlaying {
@@ -134,7 +132,7 @@ class AudioManager: NSObject, ObservableObject {
 
     func toggleLoop() {
         player.numberOfLoops = player.numberOfLoops == 0 ? -1 : 0
-        isLooping = player.numberOfLoops != 0
+        playlist.playMode = player.numberOfLoops != 0 ? .Order : .Loop
     }
 
     /// 跳到上一首，manual=true表示由用户触发
@@ -153,29 +151,17 @@ class AudioManager: NSObject, ObservableObject {
     }
 
     /// 跳到下一首，manual=true表示由用户触发
-    func next(manual: Bool = false) throws -> String {
-        os_log("🔊 AudioManager::next ⬇️")
+    func next(manual: Bool = false) throws {
+        os_log("🔊 AudioManager::next ⬇️ \(manual ? "手动触发" : "自动触发")")
 
-        // 用户触发，但曲库仅一首，发出提示
-        if playlist.list.count == 1 && manual {
-            throw SmartError.NoNextAudio
-        }
-
-        try audio = playlist.next()
-
+        try audio = playlist.next(manual: manual)
         updatePlayer()
-        return "下一曲：\(audio.title)"
     }
 
-    func play(_ audio: AudioModel) {
-        if playlist.list.contains([audio.id]) {
-            os_log("曲库中包含要播放的：\(audio.title)")
-            self.audio = audio
-            updatePlayer()
-            play()
-        } else {
-            os_log("曲库中不包含要播放的：\(audio.title)")
-        }
+    func play(_ id: AudioModel.ID) {
+        self.audio = playlist.find(id)
+        updatePlayer()
+        play()
     }
 
     private func makePlayer(url: URL?) -> AVAudioPlayer {
@@ -254,15 +240,9 @@ extension AudioManager: AVAudioPlayerDelegate {
             return pause()
         }
 
-        if isLooping {
-            os_log("🍋 AudioManager::播放完成，再次播放当前曲目")
-            return play()
-        }
-
         os_log("🍋 AudioManager::播放完成，自动播放下一曲")
         do {
-            let message = try next(manual: false)
-            os_log("🍋 AudioManager::\(message)")
+            try next(manual: false)
         } catch let e {
             os_log("‼️ AudioManager::\(e.localizedDescription)")
         }

@@ -19,8 +19,7 @@ struct BtnPlay: View {
     func play() {
         if audio.isEmpty() {
             do {
-                let message = try audioManager.next()
-                os_log("BtnPlay::\(message)")
+                try audioManager.next()
             } catch let e {
                 appManager.setFlashMessage(e.localizedDescription)
             }
@@ -32,7 +31,7 @@ struct BtnPlay: View {
             return appManager.setFlashMessage("正在从 iCloud 下载")
         }
         
-        audioManager.play(audio)
+        audioManager.play(audio.id)
     }
     
     private func getImageName() -> String {

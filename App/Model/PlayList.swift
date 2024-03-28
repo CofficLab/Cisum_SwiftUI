@@ -18,6 +18,11 @@ class PlayList {
         self.list = urls
     }
     
+    func find(_ id: AudioModel.ID) -> AudioModel {
+        self.current = list.firstIndex(of: id)!
+        return audio
+    }
+    
     // MARK: 获取上{offset}曲，仅获取，不改变播放状态
     
     /// 获取上{offset}曲，仅获取，不改变播放状态
@@ -43,7 +48,7 @@ class PlayList {
         
         let nextIndex = (current + offset)%list.count
         let nextAudio = AudioModel(list[nextIndex])
-        //os_log("🔊 PlayList::next \(offset) -> \(nextAudio.title)")
+        os_log("🔊 PlayList::getNext \(offset) -> \(nextAudio.title)")
         
         return nextAudio
     }
@@ -77,11 +82,22 @@ class PlayList {
     
     func next(_ offset: Int = 1, manual: Bool = true) throws -> AudioModel {
         let index = offset%list.count
-        os_log("🔊 PlayList::next \(offset) ⬇️ \(self.audio.title)")
+        os_log("🔊 PlayList::next \(offset) ⬇️ \(manual ? "手动触发" : "自动触发")")
 
         if list.count == 0 {
             os_log("列表为空")
             return AudioModel.empty
+        }
+        
+        // 用户触发，但曲库仅一首，发出提示
+        if list.count == 1 && manual {
+            throw SmartError.NoNextAudio
+        }
+        
+        // 不是用户触发的，且处于单曲循环模式，重复播放当前歌曲
+        if playMode == .Loop && manual == false {
+            os_log("🔊 PlayList::next -> Auto Loop")
+            return getNext(0)
         }
         
         // 同时准备接下来的歌曲
@@ -101,12 +117,18 @@ class PlayList {
         throw SmartError.NoNextDownloadedAudio
     }
     
-    func switchPlayMode(_ callback: @escaping (_ mode: PlayMode) -> Void) {
+    // MARK: 切换播放模式
+    
+    func switchMode(_ callback: @escaping (_ mode: PlayMode) -> Void) {
         switch playMode {
         case .Order:
             playMode = .Random
+            list = list.shuffled()
         case .Loop:
             playMode = .Order
+            list = list.sorted {
+                $0.lastPathComponent.localizedCaseInsensitiveCompare($1.lastPathComponent) == .orderedAscending
+            }
         case .Random:
             playMode = .Loop
         }
