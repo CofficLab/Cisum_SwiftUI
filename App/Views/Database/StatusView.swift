@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct StatusView: View {
-    @EnvironmentObject var databaseManager: DBManager
+    @EnvironmentObject var audioManager: AudioManager
     @EnvironmentObject var appManager: AppManager
 
     var body: some View {
@@ -9,7 +9,7 @@ struct StatusView: View {
             Color.primary.opacity(0.2)
 
             HStack {
-                if databaseManager.isCloudStorage {
+                if audioManager.isCloudStorage {
                     Image(systemName: "icloud")
                         .onHover(perform: { hovering in
                             if hovering {

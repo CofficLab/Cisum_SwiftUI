@@ -1,7 +1,9 @@
 import SwiftUI
 
 struct BtnDestroy: View {
-    @EnvironmentObject var db: DBManager
+    @EnvironmentObject var audioManager: AudioManager
+    
+    private var db: DBModel { audioManager.db }
     
     var body: some View {
         Button {

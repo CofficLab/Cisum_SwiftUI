@@ -4,7 +4,6 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct DBTableView: View {
-    @EnvironmentObject var dbManager: DBManager
     @EnvironmentObject var audioManager: AudioManager
     @EnvironmentObject var appManager: AppManager
 
@@ -12,7 +11,7 @@ struct DBTableView: View {
     @State private var selectedAudioModels = Set<AudioModel.ID>()
     @State private var sortOrder = [KeyPathComparator(\AudioModel.title)]
 
-    var db: DBModel { dbManager.dbModel }
+    var db: DBModel { audioManager.db }
 
     var body: some View {
         GeometryReader { geo in
@@ -20,7 +19,7 @@ struct DBTableView: View {
                 of: AudioModel.self, selection: $selectedAudioModels, sortOrder: $sortOrder,
                 columns: {
                     // value 参数用于排序
-                    TableColumn("歌曲 \(dbManager.audios.count)", value: \.title, content: {
+                    TableColumn("歌曲 \(audioManager.audios.count)", value: \.title, content: {
                         DBFirstCol(audio:$0).environmentObject(audioManager)
                     })
                     TableColumn("艺人", value: \.artist, content: getArtistColumn).defaultVisibility(
@@ -32,7 +31,7 @@ struct DBTableView: View {
                 }, rows: getRows)
         }
         .onChange(of: sortOrder) {
-            dbManager.audios.sort(using: sortOrder)
+            audioManager.audios.sort(using: sortOrder)
         }
     }
 
@@ -98,7 +97,7 @@ struct DBTableView: View {
     // MARK: 行
 
     private func getRows() -> some TableRowContent<AudioModel> {
-        ForEach(dbManager.audios) { audio in
+        ForEach(audioManager.audios) { audio in
             TableRow(audio)
                 .itemProvider { // enable Drap
                     NSItemProvider(object: audio.getURL() as NSItemProviderWriting)

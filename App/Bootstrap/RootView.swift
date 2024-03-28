@@ -9,7 +9,6 @@ struct RootView<Content>: View where Content: View {
   @State private var isReady: Bool = false
   @State private var errorMessage: String? = nil
   @State private var iCloudDocumentsUrl: URL? = nil
-  @State private var databaseManager: DBManager? = nil
   @State private var audioManager: AudioManager? = nil
   @State private var mediaPlayerManger: MediaPlayerManager? = nil
   @State private var windowManager: WindowManager = WindowManager()
@@ -27,7 +26,6 @@ struct RootView<Content>: View where Content: View {
       if isReady {
         content
           .environmentObject(audioManager!)
-          .environmentObject(databaseManager!)
           .environmentObject(mediaPlayerManger!)
           .environmentObject(windowManager)
           .environmentObject(appManager)
@@ -45,8 +43,7 @@ struct RootView<Content>: View where Content: View {
               case let .failure(error):
                 errorMessage = error.localizedDescription
               case let .success(url):
-                databaseManager = DBManager(rootDir: url)
-                audioManager = AudioManager(dbManager: databaseManager!)
+                audioManager = AudioManager(rootDir: url)
                 mediaPlayerManger = MediaPlayerManager(audioManager: audioManager!)
 
                 #if os(iOS)

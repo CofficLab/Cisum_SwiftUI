@@ -7,44 +7,35 @@ import SwiftUI
 
 /// 管理播放器的播放、暂停、上一曲、下一曲等操作
 class AudioManager: NSObject, ObservableObject {
-    @ObservedObject var dbManager: DBManager
-
     @Published private(set) var isPlaying: Bool = false
     @Published private(set) var duration: TimeInterval = 0
     @Published var audio = AudioModel.empty
     @Published var playlist = PlayList([])
+    @Published var audios: [AudioModel] = []
+    @Published var updatedAt: Date = .now
 
     private var player: AVAudioPlayer = .init()
     private var listener: AnyCancellable?
+    private var bg = AppConfig.bgQueue
+    private var main = AppConfig.mainQueue
+    private var rootDir: URL
+    
+    var db: DBModel
+    var isEmpty: Bool { audios.isEmpty }
+    var isCloudStorage:Bool { iCloudHelper.isCloudPath(url: rootDir) }
 
-    init(dbManager: DBManager) {
+    init(rootDir: URL) {
         os_log("\(Logger.isMain)🚩 初始化 AudioManager")
 
-        self.dbManager = dbManager
-
+        self.db = DBModel(cloudDisk: rootDir)
+        self.rootDir = rootDir
         super.init()
+        
+        self.db.onUpdate = onUpdate
+        self.db.onDownloading = onDownloading
+        self.audios = self.db.getAudioModels("AudioManager::init")
 
-        playlist = PlayList([])
-        listener = dbManager.$audios.sink { newValue in
-            os_log(
-                "\(Logger.isMain)🍋 AudioManager::DatabaseManger.audios.count changed to \(newValue.count)")
-            self.playlist = PlayList(newValue.map { $0.getURL() })
-
-            if !self.isValid() && self.playlist.list.count > 0 {
-                os_log("\(Logger.isMain)🍋 AudioManager::当前播放的已经无效，切换到下一曲")
-                do {
-                    try self.next()
-                } catch let e {
-                    os_log("\(Logger.isMain)‼️ AudioManager::\(e.localizedDescription)")
-                }
-            }
-
-            if self.playlist.list.count == 0 {
-                os_log("\(Logger.isMain)🍋 AudioManager::no audio, reset")
-                self.reset()
-            }
-        }
-
+        playlist = PlayList(self.audios.map {$0.getURL()})
         if playlist.list.count > 0 {
             os_log("\(Logger.isMain)初始化Player")
             audio = playlist.audio
@@ -257,5 +248,54 @@ extension AudioManager: AVAudioPlayerDelegate {
     func audioPlayerEndInterruption(_ player: AVAudioPlayer, withOptions flags: Int) {
         os_log("\(Logger.isMain)🍋 AudioManager::audioPlayerEndInterruption")
         play()
+    }
+    
+    
+
+    func refresh() {
+        bg.async {
+            let audios = self.db.getAudioModels("AudioManager::refresh")
+
+            self.main.async {
+                self.audios = audios
+                self.updatedAt = .now
+                os_log("\(Logger.isMain)🍋 DBManager::Refreshed")
+            }
+        }
+    }
+}
+
+// MARK: 当数据库发生变化时
+
+extension AudioManager {
+    func delete(urls: Set<URL>) async {
+        await AudioModel.delete(urls: urls)
+        refresh()
+    }
+
+    func destroy() {
+        db.destroy()
+        refresh()
+    }
+    
+    func onUpdate() {
+//        if self.db.getAudioModels("AudioManager::onUpdate").count != self.audios.count {
+//            os_log("\(Logger.isMain)🍋 AudioManager::Refresh 🐛 db.onUpdate")
+//            refresh()
+//        }
+    }
+    
+    func onDownloading(_ url: URL, _ percent: Double) {
+        bg.async {
+//            os_log("\(Logger.isMain)🍋 AudioManager::onDownloading -> \(url.lastPathComponent) -> \(percent)")
+            let newAudios = self.audios.map {
+                if $0.getURL() == url {
+                    $0.downloadingPercent = percent
+                }
+                
+                return $0
+            }
+        }
+        
     }
 }

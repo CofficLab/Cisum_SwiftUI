@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct BtnDelete: View {
-    @EnvironmentObject var databaseManager: DBManager
+    @EnvironmentObject var audioManager: AudioManager
     @EnvironmentObject var appManager: AppManager
     
     var url: URL
@@ -9,7 +9,7 @@ struct BtnDelete: View {
     var body: some View {
         Button {
             Task {
-                await databaseManager.delete(urls: [url])
+                await audioManager.delete(urls: [url])
                 appManager.setFlashMessage("\(url.lastPathComponent) 已经删除")
             }
         } label: {

@@ -4,12 +4,12 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct DBView: View {
-    @EnvironmentObject var dbManager: DBManager
+    @EnvironmentObject var audioManager: AudioManager
     @EnvironmentObject var appManager: AppManager
 
     @State private var dropping: Bool = false
 
-    var db: DBModel { dbManager.dbModel }
+    var db: DBModel { audioManager.db }
     var main: DispatchQueue { AppConfig.mainQueue }
     var bg: DispatchQueue { AppConfig.bgQueue }
 
@@ -45,7 +45,7 @@ struct DBView: View {
             ZStack {
                 DBTableView()
 
-                if dbManager.isEmpty, appManager.flashMessage.isEmpty {
+                if audioManager.isEmpty, appManager.flashMessage.isEmpty {
                     DBEmptyView()
                 }
             }
@@ -93,7 +93,7 @@ extension DBView {
                 AppConfig.mainQueue.sync {
                     appManager.setFlashMessage("已添加 \(files.count) 个文件")
                     appManager.cleanStateMessage()
-                    dbManager.refresh()
+                    audioManager.refresh()
                     os_log("\(Logger.isMain)🖥️ DBView::添加完成 🎉🎉🎉")
                 }
             },

@@ -3,7 +3,6 @@ import SwiftUI
 struct ButtonPlayList: View {
     @EnvironmentObject var appManager: AppManager
     @EnvironmentObject var audioManager: AudioManager
-    @EnvironmentObject var databaseManager: DBManager
 //    @EnvironmentObject var playListManager: PlayListManager
 
     @State private var selectedList: String = ""

@@ -3,7 +3,6 @@ import SwiftUI
 struct StateView: View {
     @EnvironmentObject var appManager: AppManager
     @EnvironmentObject var audioManager: AudioManager
-    @EnvironmentObject var databaseManager: DBManager
     
     private var audio: AudioModel { audioManager.audio }
     private var isCached: Bool { audio.isCached }

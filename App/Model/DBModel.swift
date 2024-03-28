@@ -79,14 +79,16 @@ extension DBModel {
 
     // MARK: 查询
 
-    func getAudioModels() -> [AudioModel] {
-        getFiles().map {
+    func getAudioModels(_ reason: String) -> [AudioModel] {
+        getFiles(reason).map {
             AudioModel($0)
         }
     }
 
     /// 获取目录里的文件列表
-    func getFiles() -> [URL] {
+    func getFiles(_ reason: String) -> [URL] {
+        os_log(
+            "\(Logger.isMain)🏠 DBModel::getFiles 🐛 \(reason)")
         var fileNames: [URL] = []
         var downloaded: [URL] = []
         var downloading: [URL] = []
@@ -147,15 +149,13 @@ extension DBModel {
                     let percentDownloaded = item.value(forAttribute: NSMetadataUbiquitousItemPercentDownloadedKey) as? Double
                     let isDownloading = item.value(forAttribute: NSMetadataUbiquitousItemIsDownloadingKey) as? String
                     let url = item.value(forAttribute: NSMetadataItemURLKey) as? URL
-                    
-                    
+
                     
                     if isDownloading != nil {
                         print("isDownloading -> \(url!.lastPathComponent)")
                     }
                     
                     if url != nil, percentDownloaded != nil, percentDownloaded! <= 100.0 {
-                        print("Percent downloaded -> \(String(describing: percentDownloaded))")
                         self.onDownloading(url!, percentDownloaded!)
                     }
                 }

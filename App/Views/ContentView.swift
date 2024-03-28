@@ -5,7 +5,6 @@ struct ContentView: View {
     var play: Bool = false
 
     @EnvironmentObject var appManager: AppManager
-    @EnvironmentObject var databaseManager: DBManager
     
     init() {
         os_log("\(Logger.isMain)🚩 ContentView::init")

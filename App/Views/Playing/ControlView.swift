@@ -3,7 +3,6 @@ import SwiftUI
 struct ControlView: View {
     @EnvironmentObject var appManager: AppManager
     @EnvironmentObject var audioManager: AudioManager
-    @EnvironmentObject var dbManager: DBManager
 
     var playNow: Bool? = false
 

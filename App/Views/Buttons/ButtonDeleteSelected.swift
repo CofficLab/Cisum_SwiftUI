@@ -1,8 +1,8 @@
 import SwiftUI
 
 struct ButtonDeleteSelected: View {
-    @EnvironmentObject var dbManager: DBManager
     @EnvironmentObject var appManager: AppManager
+    @EnvironmentObject var audioManager: AudioManager
     
     var audios: Set<AudioModel.ID>
     var callback: ()->Void = {}
@@ -11,7 +11,7 @@ struct ButtonDeleteSelected: View {
         Button {
             Task {
                 appManager.stateMessage = "正在删除 \(audios.count) 个"
-                await dbManager.delete(urls: audios)
+                await audioManager.delete(urls: audios)
                 appManager.stateMessage = ""
                 appManager.setFlashMessage("已删除")
                 callback()
