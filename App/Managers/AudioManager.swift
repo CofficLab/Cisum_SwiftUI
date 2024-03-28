@@ -12,7 +12,6 @@ class AudioManager: NSObject, ObservableObject {
     @Published var audio = AudioModel.empty
     @Published var playlist = PlayList([])
     @Published var audios: [AudioModel] = []
-    @Published var updatedAt: Date = .now
 
     private var player: AVAudioPlayer = .init()
     private var listener: AnyCancellable?
@@ -258,7 +257,6 @@ extension AudioManager: AVAudioPlayerDelegate {
 
             self.main.async {
                 self.audios = audios
-                self.updatedAt = .now
                 os_log("\(Logger.isMain)🍋 DBManager::Refreshed")
             }
         }
@@ -279,16 +277,17 @@ extension AudioManager {
     }
     
     func onUpdate() {
+        os_log("\(Logger.isMain)🍋 AudioManager::onUpdate")
 //        if self.db.getAudioModels("AudioManager::onUpdate").count != self.audios.count {
-//            os_log("\(Logger.isMain)🍋 AudioManager::Refresh 🐛 db.onUpdate")
-//            refresh()
+            os_log("\(Logger.isMain)🍋 AudioManager::Refresh 🐛 db.onUpdate")
+            refresh()
 //        }
     }
     
     func onDownloading(_ url: URL, _ percent: Double) {
         bg.async {
 //            os_log("\(Logger.isMain)🍋 AudioManager::onDownloading -> \(url.lastPathComponent) -> \(percent)")
-            let newAudios = self.audios.map {
+            self.audios.map {
                 if $0.getURL() == url {
                     $0.downloadingPercent = percent
                 }
