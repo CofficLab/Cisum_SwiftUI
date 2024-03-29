@@ -33,6 +33,9 @@ class AudioManager: NSObject, ObservableObject {
         db.onUpdate = onUpdate
         db.onDownloading = onDownloading
         db.getAudioModels("AudioManager::init", onUpdate: { audios in
+            if audios.count == self.audios.count {
+                return
+            }
             self.playlist = PlayList(audios.map { $0.getURL() })
             self.audios = self.playlist.list.map { AudioModel($0) }
             if self.playlist.list.count > 0 {

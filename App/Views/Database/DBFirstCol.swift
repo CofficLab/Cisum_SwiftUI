@@ -26,7 +26,7 @@ struct DBFirstCol: View {
                 Text(audio.title).foregroundStyle(selected ? .blue : .primary)
                 Spacer()
                 if audio.downloadingPercent < 100 {
-                    Text("\(String(format: "%.2f", audio.downloadingPercent/100))%").font(.footnote)
+                    Text("\(String(format: "%.2f", audio.downloadingPercent))%").font(.footnote)
                 }
             }
 
