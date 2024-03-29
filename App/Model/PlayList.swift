@@ -18,6 +18,12 @@ class PlayList {
     init(_ urls: [URL]) {
         os_log("\(Logger.isMain)🚩 PlayList::init -> audios.count = \(urls.count)")
         self.list = makeList(urls).shuffled()
+        self.updateCurrent()
+    }
+    
+    func updateCurrent() {
+        self.current = self.list.firstIndex(where: { AudioModel($0).isDownloaded }) ?? 0
+        os_log("🍋 Playlist::updateCurrent to \(self.current)")
     }
 
     func find(_ id: AudioModel.ID) -> AudioModel {
@@ -27,10 +33,20 @@ class PlayList {
 
     func merge(_ urls: [URL]) -> PlayList {
         let playlist = self
-        var shouldShuffle = false
         
-        if self.isEmpty && playMode == .Random {
-            shouldShuffle = true
+        if self.isEmpty {
+            os_log("🍋 Playlist::merge while current is empty")
+            switch playlist.playMode {
+            case .Order:
+                playlist.list = makeList(urls)
+            case .Loop:
+                playlist.list = makeList(urls)
+            case .Random:
+                playlist.list = makeList(urls, shouldShuffle: true)
+            }
+            
+            playlist.updateCurrent()
+            return playlist
         }
         
         for url in urls {
@@ -39,9 +55,7 @@ class PlayList {
             }
         }
         
-        if shouldShuffle {
-            playlist.list = playlist.list.shuffled()
-        }
+        playlist.updateCurrent()
         
         return playlist
     }
@@ -71,7 +85,8 @@ class PlayList {
 
         let nextIndex = (current + offset) % list.count
         let nextAudio = AudioModel(list[nextIndex])
-        os_log("\(Logger.isMain)🔊 PlayList::getNext \(offset) -> \(nextAudio.title)")
+        
+        os_log("\(Logger.isMain)🔊 PlayList::getNext \(offset) while current -> \(self.current) -> \(nextAudio.title)")
 
         return nextAudio
     }
@@ -104,6 +119,7 @@ class PlayList {
     // MARK: 跳到下{offset}曲
 
     func next(_ offset: Int = 1, manual: Bool = true) throws -> AudioModel {
+        os_log("🍋 Playlist::next, current is \(self.current)")
         if list.count == 0 {
             os_log("\(Logger.isMain)列表为空")
             throw SmartError.NoAudioInList
@@ -149,10 +165,7 @@ class PlayList {
             list = list.shuffled()
         case .Loop:
             playMode = .Order
-            list = list.sorted {
-                $0.lastPathComponent.localizedCaseInsensitiveCompare($1.lastPathComponent)
-                    == .orderedAscending
-            }
+            self.sortList()
         case .Random:
             playMode = .Loop
         }
@@ -179,14 +192,14 @@ extension PlayList: Identifiable {
 // MARK: 播放列表
 
 extension PlayList {
-    func makeList(_ urls: [URL]) -> [URL] {
-        var downloaded: Set<URL> = []
+    func makeList(_ urls: [URL], shouldShuffle: Bool? = false) -> [URL] {
+        var downloaded: [URL] = []
         var downloading: Set<URL> = []
         var notDownloaded: Set<URL> = []
         
         urls.forEach({
-            if iCloudHelper.isOnDisk(url: $0) {
-                downloaded.insert($0)
+            if iCloudHelper.isDownloaded(url: $0) {
+                downloaded.append($0)
             } else if iCloudHelper.isDownloading($0) {
                 downloading.insert($0)
             } else {
@@ -194,7 +207,42 @@ extension PlayList {
             }
         })
         
-        return Array(downloaded) + Array(downloading) + Array(notDownloaded)
+        if shouldShuffle == true {
+            downloaded = downloaded.shuffled()
+        }
+        
+        os_log("🍋 Playlist::makeList downloaded \(downloaded.count) downloading \(downloading.count) notDownloaded \(notDownloaded.count)")
+        
+        return downloaded + Array(downloading) + Array(notDownloaded)
+    }
+    
+    func sortList() {
+        var downloaded: [URL] = []
+        var downloading: [URL] = []
+        var notDownloaded: [URL] = []
+        
+        self.list.forEach({
+            if iCloudHelper.isDownloaded(url: $0) {
+                downloaded.append($0)
+            } else if iCloudHelper.isDownloading($0) {
+                downloading.append($0)
+            } else {
+                notDownloaded.append($0)
+            }
+        })
+        
+        downloaded = sortUrls(downloaded)
+        downloading = sortUrls(downloading)
+        notDownloaded = sortUrls(notDownloaded)
+        
+        self.list = downloaded + downloading + notDownloaded
+    }
+    
+    func sortUrls(_ urls: [URL]) -> [URL]{
+        urls.sorted {
+            $0.lastPathComponent.localizedCaseInsensitiveCompare($1.lastPathComponent)
+            == .orderedAscending
+        }
     }
 }
 

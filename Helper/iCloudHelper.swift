@@ -53,12 +53,12 @@ class iCloudHelper {
     !isDownloaded(url: url)
   }
 
-  static func isOnDisk(url: URL) -> Bool {
+  static func fileExists(url: URL) -> Bool {
     return FileManager.default.fileExists(atPath: url.absoluteString)
   }
 
-  static func isNotOnDisk(_ url: URL) -> Bool {
-    !isOnDisk(url: url)
+  static func isNotExists(_ url: URL) -> Bool {
+    !fileExists(url: url)
   }
 
   static func isCloudPath(url: URL) -> Bool {

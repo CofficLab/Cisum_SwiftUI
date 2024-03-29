@@ -249,7 +249,7 @@ extension AudioManager {
 
     func onUpdate(_ audios: [AudioModel]) {
         bg.async {
-            //os_log("\(Logger.isMain)🍋 AudioManager::onUpdate \(audios.count)")
+            os_log("\(Logger.isMain)🍋 AudioManager::onUpdate \(audios.count)")
             let playlist = self.playlist.merge(audios.map {$0.getURL()})
             self.main.sync {
                 self.playlist = playlist
