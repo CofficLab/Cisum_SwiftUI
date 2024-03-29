@@ -17,7 +17,7 @@ class PlayList {
 
     init(_ urls: [URL]) {
         os_log("\(Logger.isMain)🚩 PlayList::init -> audios.count = \(urls.count)")
-        self.list = urls.shuffled()
+        self.list = makeList(urls.shuffled())
     }
 
     func find(_ id: AudioModel.ID) -> AudioModel {
@@ -25,12 +25,15 @@ class PlayList {
         return audio
     }
 
-    func merge(_ urls: [URL]) {
+    func merge(_ urls: [URL]) -> PlayList {
+        var playlist = self
         for url in urls {
-            if !list.contains(url) {
-                list.append(url)
+            if !playlist.list.contains(url) {
+                playlist.list.append(url)
             }
         }
+        
+        return playlist
     }
 
     // MARK: 获取上{offset}曲，仅获取，不改变播放状态
@@ -161,6 +164,28 @@ class PlayList {
 
 extension PlayList: Identifiable {
     var id: String { title }
+}
+
+// MARK: 播放列表
+
+extension PlayList {
+    func makeList(_ urls: [URL]) -> [URL] {
+        var downloaded: Set<URL> = []
+        var downloading: Set<URL> = []
+        var notDownloaded: Set<URL> = []
+        
+        urls.forEach({
+            if iCloudHelper.isOnDisk(url: $0) {
+                downloaded.insert($0)
+            } else if iCloudHelper.isDownloading($0) {
+                downloading.insert($0)
+            } else {
+                notDownloaded.insert($0)
+            }
+        })
+        
+        return Array(downloaded) + Array(downloading) + Array(notDownloaded)
+    }
 }
 
 // MARK: 播放模式
