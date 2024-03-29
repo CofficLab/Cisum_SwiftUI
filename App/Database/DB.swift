@@ -10,6 +10,7 @@ class DB {
     var queryUpdateWorkItem: DispatchWorkItem?
     var onDownloadingWorkItem: DispatchWorkItem?
     var onUpdate: ([AudioModel]) -> Void = { _ in os_log("🍋 DB::onUpdate") }
+    var onGet: ([AudioModel]) -> Void = { _ in os_log("🍋 DB::onGet") }
 
     init(cloudDisk: URL) {
         os_log("\(Logger.isMain)🚩 初始化 DB")
@@ -97,14 +98,14 @@ extension DB {
                     //os_log("\(Logger.isMain)🏠 DB::QueryDidUpdate")
                     self.onUpdate(self.getAudiosFromQuery(query))
                 }
-                DispatchQueue.global().asyncAfter(deadline: .now() + 1, execute: self.queryUpdateWorkItem!)
+                DispatchQueue.global().asyncAfter(deadline: .now() + 0.12, execute: self.queryUpdateWorkItem!)
             }
         }
 
         n.addObserver(forName: NSNotification.Name.NSMetadataQueryDidFinishGathering, object: query, queue: nil) { _ in
             self.bg.async {
                 os_log("\(Logger.isMain)🏠 DB::DidFinishGathering")
-                self.onUpdate(self.getAudiosFromQuery(query))
+                self.onGet(self.getAudiosFromQuery(query))
             }
         }
 
@@ -128,8 +129,14 @@ extension DB {
 //                    os_log("\(Logger.isMain)🍋 DB::变动 \(u.lastPathComponent)")
                     let audio = AudioModel(u)
                     if let p = percentDownloaded, p < 100 && p >  0 {
-                        //os_log("\(Logger.isMain)🍋 DB::变动 \(p) 🐛 \(u.lastPathComponent) 🐛 \(p)")
+                        //os_log("\(Logger.isMain)🍋 DB::变动 🐛 \(u.lastPathComponent) 🐛 \(p)")
                         audio.downloadingPercent = p
+                        audio.isDownloading = true
+                    }
+                    
+                    if iCloudHelper.isDownloaded(url: u) {
+                        audio.downloadingPercent = 100
+                        audio.isDownloading = false
                     }
                     
                     audios.append(audio)

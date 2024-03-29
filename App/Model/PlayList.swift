@@ -6,34 +6,34 @@ import SwiftUI
 class PlayList {
     var fileManager = FileManager.default
     var playMode: PlayMode = .Random
-    var fileList: FileList = FileList([])
-    var list: [AudioModel.ID] { self.fileList.collection.map { AudioModel($0).id }}
+    var audioList: AudioList = AudioList([])
+    var list: [AudioModel] { self.audioList.collection }
     var current: Int = 0
-    var audio: AudioModel { list.isEmpty ? AudioModel.empty : AudioModel(list[current]) }
+    var audio: AudioModel { list.isEmpty ? AudioModel.empty : list[current] }
     var title: String { self.audio.title }
     var isEmpty: Bool { list.isEmpty }
     var count: Int { self.list.count }
     /// 本地磁盘目录，用来存放缓存
     var localDisk: URL?
 
-    init(_ urls: [URL]) {
-        os_log("\(Logger.isMain)🚩 PlayList::init -> audios.count = \(urls.count)")
-        self.fileList = FileList(urls)
+    init(_ audios: [AudioModel]) {
+        os_log("\(Logger.isMain)🚩 PlayList::init -> audios.count = \(audios.count)")
+        self.audioList = AudioList(audios)
         self.updateCurrent()
     }
     
     func updateCurrent() {
-        self.current = self.list.firstIndex(where: { AudioModel($0).isDownloaded }) ?? 0
+        self.current = self.list.firstIndex(where: { $0.isDownloaded }) ?? 0
         os_log("🍋 Playlist::updateCurrent to \(self.current)")
     }
 
     func find(_ id: AudioModel.ID) -> AudioModel {
-        current = list.firstIndex(of: id)!
+        current = list.firstIndex(where: { $0.id == id})!
         return audio
     }
 
-    func merge(_ urls: [URL]) {
-        fileList.merge(urls)
+    func merge(_ audios: [AudioModel]) {
+        audioList.merge(audios)
     }
 
     // MARK: 获取上{offset}曲，仅获取，不改变播放状态
@@ -45,7 +45,7 @@ class PlayList {
         }
 
         let preIndex = (current - offset + list.count) % list.count
-        let preAudio = AudioModel(list[preIndex])
+        let preAudio = list[preIndex]
         // os_log("\(Logger.isMain)🔊 PlayList::next \(offset) -> \(nextAudio.title)")
 
         return preAudio
@@ -60,7 +60,7 @@ class PlayList {
         }
 
         let nextIndex = (current + offset) % list.count
-        let nextAudio = AudioModel(list[nextIndex])
+        let nextAudio = list[nextIndex]
         
         os_log("\(Logger.isMain)🔊 PlayList::getNext \(offset) while current -> \(self.current) -> \(nextAudio.title)")
 
@@ -138,10 +138,10 @@ class PlayList {
         switch playMode {
         case .Order:
             playMode = .Random
-            fileList.shuffle()
+            audioList.shuffle()
         case .Loop:
             playMode = .Order
-            fileList.sort()
+            audioList.sort()
         case .Random:
             playMode = .Loop
         }

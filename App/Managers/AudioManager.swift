@@ -30,6 +30,7 @@ class AudioManager: NSObject, ObservableObject {
         self.rootDir = rootDir
         super.init()
 
+        db.onGet = onGet
         db.onUpdate = onUpdate
     }
 
@@ -195,7 +196,7 @@ class AudioManager: NSObject, ObservableObject {
         }
 
         // 已经不在列表中了
-        if !playlist.list.contains(where: { $0 == self.audio.id }) {
+        if !playlist.list.contains(self.audio) {
             return false
         }
 
@@ -246,15 +247,27 @@ extension AudioManager {
     func delete(urls: Set<URL>) async {
         await AudioModel.delete(urls: urls)
     }
+    
+    func onGet(_ audios: [AudioModel]) {
+        bg.async {
+            os_log("\(Logger.isMain)🍋 AudioManager::onGet \(audios.count)")
+            self.main.sync {
+                self.playlist = PlayList(audios)
+                self.audios = self.playlist.list
+                self.audio = self.playlist.audio
+                self.updatePlayer()
+            }
+        }
+    }
 
     func onUpdate(_ audios: [AudioModel]) {
         bg.async {
             os_log("\(Logger.isMain)🍋 AudioManager::onUpdate \(audios.count)")
             self.main.sync {
-                self.playlist.merge(audios.map {$0.getURL()})
+                self.playlist.merge(audios)
+                self.audios = self.playlist.list
                 if self.audio.isEmpty() {
                     self.audio = self.playlist.audio
-                    self.audios = self.playlist.list.map { AudioModel($0)}
                     self.updatePlayer()
                 }
             }

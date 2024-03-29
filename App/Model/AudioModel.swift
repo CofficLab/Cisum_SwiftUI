@@ -14,7 +14,8 @@ class AudioModel {
     var albumName = ""
     var delegate: SuperAudioDelegate
     var cover: Image?
-    var downloadingPercent: Double = 100.0
+    var downloadingPercent: Double = 0
+    var isDownloading: Bool = false
     var size: Int64 {
         getFileSize()
     }
@@ -93,7 +94,7 @@ extension AudioModel: Identifiable {
 
 extension AudioModel {
     var isCached: Bool { cacheURL != nil }
-    var isDownloaded: Bool { getiCloudState() == .Downloaded }
+    var isDownloaded: Bool { downloadingPercent == 100.0 }
     var isNotDownloaded: Bool { !isDownloaded }
 
     /// 准备好文件
