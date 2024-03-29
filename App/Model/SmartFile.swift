@@ -4,7 +4,6 @@ import OSLog
 class SmartFile {
     var fileManager = FileManager.default
     var url: URL
-    var timer: Timer?
 
     init(url: URL) {
         self.url = url
@@ -38,9 +37,8 @@ class SmartFile {
                 try FileManager.default.copyItem(at: self.url, to: destnation)
                 self.url.stopAccessingSecurityScopedResource()
             } else {
-                os_log("\(Logger.isMain)☁️ CloudFile::copy 获取授权失败，可能不是用户选择的文件，直接复制")
-                os_log("\(Logger.isMain)☁️ CloudFile::copy \(self.url.lastPathComponent)")
-                try FileManager.default.copyItem(at: self.url, to: destnation)
+                os_log("\(Logger.isMain)☁️ CloudFile::copy 获取授权失败，可能不是用户选择的文件，直接复制 \(self.url.lastPathComponent)")
+                try fileManager.copyItem(at: self.url, to: destnation)
             }
         } catch {
             os_log("\(Logger.isMain)☁️ SmartFile::复制文件发生错误 -> \(error.localizedDescription)")
@@ -48,12 +46,10 @@ class SmartFile {
     }
 
     /// 下载文件
-    func download(completion: @escaping () -> Void) {
+    func download() {
         // os_log("\(Logger.isMain)☁️ CloudFile::下载文件 -> \(self.url.lastPathComponent)")
 
         if iCloudHelper.isDownloaded(url: self.url) {
-            //            os_log("\(Logger.isMain)☁️ CloudFile::已经下载了 🎉🎉🎉")
-            completion()
             return
         }
 
@@ -68,24 +64,6 @@ class SmartFile {
             try FileManager.default.startDownloadingUbiquitousItem(at: self.url)
         } catch {
             os_log("\(Logger.isMain)☁️ CloudFile::下载文件出现错误\n\(error)")
-
-            completion()
-            return
-        }
-
-        DispatchQueue.main.async {
-            self.timer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true) { [self] _ in
-                if iCloudHelper.isDownloading(self.url) {
-                    os_log("\(Logger.isMain)☁️ CloudFile::downloading \(self.url.lastPathComponent)")
-                }
-
-                if iCloudHelper.isDownloaded(url: self.url) {
-                    // os_log("\(Logger.isMain)☁️ CloudFile::\(self.url.lastPathComponent) 下载完成 🎉🎉🎉")
-
-                    self.timer?.invalidate()
-                    completion()
-                }
-            }
         }
     }
 }

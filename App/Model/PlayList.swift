@@ -8,7 +8,7 @@ class PlayList {
     var playMode: PlayMode = .Random
     var list: [AudioModel.ID] = []
     var current: Int = 0
-    var audio: AudioModel { AudioModel(list[current]) }
+    var audio: AudioModel { list.isEmpty ? AudioModel.empty : AudioModel(list[current]) }
     var title: String { self.audio.title }
     var isEmpty: Bool { list.isEmpty }
     var count: Int { self.list.count }

@@ -12,6 +12,7 @@ struct DBTableView: View {
     @State private var sortOrder = [KeyPathComparator(\AudioModel.title)]
 
     var db: DB { audioManager.db }
+    var audios: [AudioModel] { audioManager.audios }
 
     var body: some View {
         GeometryReader { geo in
@@ -20,9 +21,29 @@ struct DBTableView: View {
                 columns: {
                     // value 参数用于排序
                     TableColumn(
-                        "歌曲 \(audioManager.audios.count)", value: \.title,
-                        content: {
-                            DBFirstCol(audio: $0).environmentObject(audioManager)
+                        "歌曲 \(audioManager.audios.count) \(audioManager.lastUpdatedAt)", value: \.title,
+                        content: { audio in
+                            HStack {
+                                if audio.downloadingPercent < 100 || audio.downloadingPercent > 100 {
+                                    ProgressView(value: audio.downloadingPercent/100)
+                                        .progressViewStyle(CircularProgressViewStyle(size: 14))
+                                        .controlSize(.regular)
+                                        .scaledToFit()
+                                        .frame(width: 24, height: 24)
+                                } else {
+                                    audio.getCover()
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 24, height: 24)
+                                        .border(audioManager.audio == audio ? .clear : .clear)
+                                }
+                                
+                                Text(audio.title).foregroundStyle(audioManager.audio == audio ? .blue : .primary)
+                                Spacer()
+                                if audio.downloadingPercent < 100 {
+                                    Text("\(String(format: "%.2f", audio.downloadingPercent))%").font(.footnote)
+                                }
+                            }
                         })
                     TableColumn("艺人", value: \.artist, content: getArtistColumn).defaultVisibility(
                         geo.size.width >= 500 ? .visible : .hidden)
@@ -45,8 +66,7 @@ struct DBTableView: View {
         return VStack {
             BtnPlay(audio: audio)
 
-            ButtonDownload(url: selected.first ?? AudioModel.empty.id)
-                .disabled(selected.count != 1)
+            BtnDownload(audio: audio)
 
             #if os(macOS)
                 BtnShowInFinder(url: audio.getURL())
@@ -62,11 +82,11 @@ struct DBTableView: View {
 
             // MARK: 删除
 
-            ButtonDeleteSelected(
-                audios: selected,
-                callback: {
-                    selectedAudioModels = []
-                }).disabled(selected.count == 0)
+//            ButtonDeleteSelected(
+//                audios: selected,
+//                callback: {
+//                    selectedAudioModels = []
+//                }).disabled(selected.count == 0)
             // BtnDestroy()
         }
     }
@@ -98,7 +118,7 @@ struct DBTableView: View {
     // MARK: 行
 
     private func getRows() -> some TableRowContent<AudioModel> {
-        return ForEach(audioManager.audios) { audio in
+        return ForEach(audios) { audio in
             TableRow(audio)
                 .itemProvider { // enable Drap
                     NSItemProvider(object: audio.getURL() as NSItemProviderWriting)
@@ -110,7 +130,7 @@ struct DBTableView: View {
     }
 
     init() {
-//        os_log("\(Logger.isMain)🚩 DBTableView::Init")
+        os_log("\(Logger.isMain)🚩 DBTableView::Init")
     }
 }
 

@@ -86,26 +86,16 @@ struct DBView: View {
 
 extension DBView {
     func copy(_ files: [URL]) {
-        appManager.stateMessage = "🖥️ DBView::正在复制 \(files.count) 个文件"
+        appManager.stateMessage = "正在复制 \(files.count) 个文件"
         db.add(
             files,
             completionAll: {
                 AppConfig.mainQueue.sync {
                     appManager.setFlashMessage("已添加 \(files.count) 个文件")
                     appManager.cleanStateMessage()
-                    //os_log("\(Logger.isMain)🖥️ DBView::添加完成 🎉🎉🎉")
                 }
             },
-            completionOne: { url in
-                bg.async {
-                    os_log("\(Logger.isMain)🖥️ DBView::添加完成 🎉🎉🎉 -> \(url.lastPathComponent)")
-                }
-
-                main.async {
-                    //                    appManager.setFlashMessage("完成复制 \(url.lastPathComponent)")
-                    //                    dbManager.refresh()
-                }
-            },
+            completionOne: { url in },
             onStart: { url in
                 AppConfig.mainQueue.sync {
                     if AudioModel(url).isNotDownloaded {

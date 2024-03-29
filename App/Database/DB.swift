@@ -7,10 +7,9 @@ class DB {
     var bg = AppConfig.bgQueue
     var timer: Timer?
     var cloudDisk: URL
-    var onUpdate: ([URL]) -> Void = { _ in os_log("🍋 DB::onUpdate") }
-    var onDownloading: (_ url: URL, _ percent: Double) -> Void = { url, percent in
-        os_log("🍋 DB::onDownloading -> \(url.lastPathComponent) -> \(percent)")
-    }
+    var queryUpdateWorkItem: DispatchWorkItem?
+    var onDownloadingWorkItem: DispatchWorkItem?
+    var onUpdate: ([AudioModel]) -> Void = { _ in os_log("🍋 DB::onUpdate") }
 
     init(cloudDisk: URL) {
         os_log("\(Logger.isMain)🚩 初始化 DB")
@@ -29,7 +28,7 @@ class DB {
             try fileManager.createDirectory(at: cloudDisk, withIntermediateDirectories: true)
             os_log("\(Logger.isMain)🍋 DB::创建 Audios 目录成功")
         } catch {
-            os_log("\(Logger.isMain)创建 Audios 目录失败\(error.localizedDescription)")
+            os_log("\(Logger.isMain)创建 Audios 目录失败\n\(error.localizedDescription)")
         }
     }
 }
@@ -93,24 +92,28 @@ extension DB {
 
         n.addObserver(forName: NSNotification.Name.NSMetadataQueryDidUpdate, object: query, queue: nil) { _ in
             self.bg.async {
-                os_log("\(Logger.isMain)🍋 DB::QueryDidUpdate")
-                self.getFilesFromQuery(query)
+                self.queryUpdateWorkItem?.cancel()
+                self.queryUpdateWorkItem = DispatchWorkItem {
+                    os_log("\(Logger.isMain)🏠 DB::QueryDidUpdate")
+                    self.onUpdate(self.getAudiosFromQuery(query))
+                }
+                DispatchQueue.global().asyncAfter(deadline: .now() + 1, execute: self.queryUpdateWorkItem!)
             }
         }
 
         n.addObserver(forName: NSNotification.Name.NSMetadataQueryDidFinishGathering, object: query, queue: nil) { _ in
             self.bg.async {
-                os_log("\(Logger.isMain)🍋 DB::DidFinishGathering")
-                self.getFilesFromQuery(query)
+                os_log("\(Logger.isMain)🏠 DB::DidFinishGathering")
+                self.onUpdate(self.getAudiosFromQuery(query))
             }
         }
 
         // query.enableUpdates()
         query.start()
     }
-
-    private func getFilesFromQuery(_ query: NSMetadataQuery) {
-        var files: Set<URL> = []
+    
+    private func getAudiosFromQuery(_ query: NSMetadataQuery) -> [AudioModel] {
+        var audios: [AudioModel] = []
         if let items = query.results as? [NSMetadataItem] {
             os_log("\(Logger.isMain)🍋 DB::变动的items个数 \(items.count)")
 
@@ -121,17 +124,22 @@ extension DB {
                     item.value(forAttribute: NSMetadataUbiquitousItemIsDownloadingKey) as? String
                 let url = item.value(forAttribute: NSMetadataItemURLKey) as? URL
 
-                if url != nil, percentDownloaded != nil, percentDownloaded! <= 100.0 {
-                    onDownloading(url!, percentDownloaded!)
-                }
-
                 if let u = url {
-                    files.insert(u)
+//                    os_log("\(Logger.isMain)🍋 DB::变动 \(u.lastPathComponent)")
+                    let audio = AudioModel(u)
+                    if let p = percentDownloaded, p < 100 && p >  0 {
+                        //os_log("\(Logger.isMain)🍋 DB::变动 \(p) 🐛 \(u.lastPathComponent) 🐛 \(p)")
+                        audio.downloadingPercent = p
+                    }
+                    
+                    audios.append(audio)
                 }
             }
         }
+        
+        os_log("\(Logger.isMain)🍋 DB::变动的audios个数 \(audios.count)")
 
-        self.onUpdate(Array(files))
+        return audios
     }
 }
 

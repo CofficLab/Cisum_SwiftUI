@@ -1,16 +1,15 @@
 import SwiftUI
 
-struct ButtonDownload: View {
-    var url: URL
+struct BtnDownload: View {
+    var audio: AudioModel
         
     var body: some View {
         Button {
-//            _ = databaseManager.downloadOne(url)
+            audio.download()
         } label: {
             Label("下载", systemImage: getImageName())
                 .font(.system(size: 24))
         }
-        .disabled(iCloudHelper.isDownloaded(url: url))
     }
     
     private func getImageName() -> String {

@@ -12,6 +12,7 @@ class AudioManager: NSObject, ObservableObject {
     @Published var audio = AudioModel.empty
     @Published var playlist = PlayList([])
     @Published var audios: [AudioModel] = []
+    @Published var lastUpdatedAt: Date = .now
 
     private var player: AVAudioPlayer = .init()
     private var listener: AnyCancellable?
@@ -31,22 +32,6 @@ class AudioManager: NSObject, ObservableObject {
         super.init()
 
         db.onUpdate = onUpdate
-        db.onDownloading = onDownloading
-//        db.getAudioModels("AudioManager::init", onUpdate: { audios in
-//            os_log("\(Logger.isMain)🍋 AudioManager::\(audios.count)")
-//            if audios.count == self.audios.count {
-//                return
-//            }
-
-//            self.main.async {
-//                self.playlist.merge(audios.map { $0.getURL() })
-//                self.audios = self.playlist.list.map { AudioModel($0) }
-//                if self.audio.isEmpty() {
-//                    self.audio = self.playlist.audio
-//                    self.updatePlayer()
-//                }
-//            }
-//        })
     }
 
     func currentTime() -> TimeInterval {
@@ -263,31 +248,16 @@ extension AudioManager {
         await AudioModel.delete(urls: urls)
     }
 
-    func onUpdate(_ files: [URL]) {
-        bg.async {
-            os_log("\(Logger.isMain)🍋 AudioManager::onUpdate \(files.count)")
-            let playlist = self.playlist.merge(files)
-            let audios = playlist.list.map { AudioModel($0) }
+    func onUpdate(_ audios: [AudioModel]) {
+//        bg.async {
+            os_log("\(Logger.isMain)🍋 AudioManager::onUpdate \(audios.count)")
+            let playlist = self.playlist.merge(audios.map {$0.getURL()})
             self.main.sync {
                 self.playlist = playlist
                 self.audios = audios
                 self.audio = playlist.audio
+                self.lastUpdatedAt = .now
             }
-        }
-    }
-
-    func onDownloading(_ url: URL, _ percent: Double) {
-        //os_log("\(Logger.isMain)🍋 AudioManager::onDownloading -> \(url.lastPathComponent) -> \(percent)")
-        let newAudios = self.audios.map {
-            if $0.getURL() == url {
-                $0.downloadingPercent = percent
-            }
-
-            return $0
-        }
-
-        self.main.sync {
-            self.audios = newAudios
-        }
+//        }
     }
 }

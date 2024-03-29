@@ -26,14 +26,14 @@ class AudioModel {
         self.delegate = delegate
         title = url.deletingPathExtension().lastPathComponent
 
-        Task {
-            self.cover = getCover()
-
-            // 如果有大量的歌曲，就会产生大量的 updateMeta 操作，占内存较多
-            if self.getCoverFromDisk() == nil {
-                await updateMeta()
-            }
-        }
+//        Task {
+//            self.cover = getCover()
+//
+//            // 如果有大量的歌曲，就会产生大量的 updateMeta 操作，占内存较多
+//            if self.getCoverFromDisk() == nil {
+//                await updateMeta()
+//            }
+//        }
     }
 
     func getIcon() -> Image {
@@ -63,6 +63,10 @@ class AudioModel {
 
     func getFileSizeReadable() -> String {
         FileHelper.getFileSizeReadable(url)
+    }
+    
+    func download() {
+        SmartFile(url: url).download()
     }
 }
 
@@ -94,10 +98,8 @@ extension AudioModel {
 
     /// 准备好文件
     func prepare() {
-        // os_log("\(Logger.isMain)🔊 AudioModel::prepare -> \(self.title)")
-        SmartFile(url: getURL()).download {
-            os_log("\(Logger.isMain)🔊 AudioModel::downloaded 🎉🎉🎉 -> \(self.title)")
-        }
+        os_log("\(Logger.isMain)🔊 AudioModel::prepare -> \(self.title)")
+        SmartFile(url: getURL()).download()
     }
 
     func getiCloudState() -> iCloudState {
@@ -248,7 +250,7 @@ extension AudioModel {
                 guard let nsImage = NSImage(contentsOfFile: saveTo.path) else {
                     return nil
                 }
-                return Image(nsImage:  nsImage)
+                return Image(nsImage: nsImage)
             }
             if let data = data as? Data, let image = NSImage(data: data) {
                 ImageHelper.toJpeg(image: image, saveTo: saveTo)
