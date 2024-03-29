@@ -6,7 +6,8 @@ import SwiftUI
 class PlayList {
     var fileManager = FileManager.default
     var playMode: PlayMode = .Random
-    var list: [AudioModel.ID] = []
+    var fileList: FileList = FileList([])
+    var list: [AudioModel.ID] { self.fileList.collection.map { AudioModel($0).id }}
     var current: Int = 0
     var audio: AudioModel { list.isEmpty ? AudioModel.empty : AudioModel(list[current]) }
     var title: String { self.audio.title }
@@ -17,7 +18,7 @@ class PlayList {
 
     init(_ urls: [URL]) {
         os_log("\(Logger.isMain)🚩 PlayList::init -> audios.count = \(urls.count)")
-        self.list = makeList(urls).shuffled()
+        self.fileList = FileList(urls)
         self.updateCurrent()
     }
     
@@ -31,33 +32,8 @@ class PlayList {
         return audio
     }
 
-    func merge(_ urls: [URL]) -> PlayList {
-        let playlist = self
-        
-        if self.isEmpty {
-            os_log("🍋 Playlist::merge while current is empty")
-            switch playlist.playMode {
-            case .Order:
-                playlist.list = makeList(urls)
-            case .Loop:
-                playlist.list = makeList(urls)
-            case .Random:
-                playlist.list = makeList(urls, shouldShuffle: true)
-            }
-            
-            playlist.updateCurrent()
-            return playlist
-        }
-        
-        for url in urls {
-            if !playlist.list.contains(url) {
-                playlist.list.append(url)
-            }
-        }
-        
-        playlist.updateCurrent()
-        
-        return playlist
+    func merge(_ urls: [URL]) {
+        fileList.merge(urls)
     }
 
     // MARK: 获取上{offset}曲，仅获取，不改变播放状态
@@ -162,88 +138,20 @@ class PlayList {
         switch playMode {
         case .Order:
             playMode = .Random
-            list = list.shuffled()
+            fileList.shuffle()
         case .Loop:
             playMode = .Order
-            self.sortList()
+            fileList.sort()
         case .Random:
             playMode = .Loop
         }
 
         callback(playMode)
     }
-
-    private func refreshList() {
-        switch playMode {
-        case .Order:
-            break
-        case .Loop:
-            break
-        case .Random:
-            list = list.shuffled()
-        }
-    }
 }
 
 extension PlayList: Identifiable {
     var id: String { title }
-}
-
-// MARK: 播放列表
-
-extension PlayList {
-    func makeList(_ urls: [URL], shouldShuffle: Bool? = false) -> [URL] {
-        var downloaded: [URL] = []
-        var downloading: Set<URL> = []
-        var notDownloaded: Set<URL> = []
-        
-        urls.forEach({
-            if iCloudHelper.isDownloaded(url: $0) {
-                downloaded.append($0)
-            } else if iCloudHelper.isDownloading($0) {
-                downloading.insert($0)
-            } else {
-                notDownloaded.insert($0)
-            }
-        })
-        
-        if shouldShuffle == true {
-            downloaded = downloaded.shuffled()
-        }
-        
-        os_log("🍋 Playlist::makeList downloaded \(downloaded.count) downloading \(downloading.count) notDownloaded \(notDownloaded.count)")
-        
-        return downloaded + Array(downloading) + Array(notDownloaded)
-    }
-    
-    func sortList() {
-        var downloaded: [URL] = []
-        var downloading: [URL] = []
-        var notDownloaded: [URL] = []
-        
-        self.list.forEach({
-            if iCloudHelper.isDownloaded(url: $0) {
-                downloaded.append($0)
-            } else if iCloudHelper.isDownloading($0) {
-                downloading.append($0)
-            } else {
-                notDownloaded.append($0)
-            }
-        })
-        
-        downloaded = sortUrls(downloaded)
-        downloading = sortUrls(downloading)
-        notDownloaded = sortUrls(notDownloaded)
-        
-        self.list = downloaded + downloading + notDownloaded
-    }
-    
-    func sortUrls(_ urls: [URL]) -> [URL]{
-        urls.sorted {
-            $0.lastPathComponent.localizedCaseInsensitiveCompare($1.lastPathComponent)
-            == .orderedAscending
-        }
-    }
 }
 
 // MARK: 播放模式
