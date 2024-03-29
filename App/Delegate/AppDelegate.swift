@@ -22,7 +22,9 @@ import SwiftUI
 #else
   class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
-      os_log("\(Logger.isMain)🚩 applicationDidFinishLaunching")
+        AppConfig.bgQueue.async {
+            os_log("\(Logger.isMain)🚩 applicationDidFinishLaunching")
+        }
     }
 
     func windowDidMove(_ notification: Notification) {

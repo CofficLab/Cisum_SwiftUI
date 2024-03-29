@@ -4,7 +4,7 @@ import SwiftUI
 
 class DB {
     var fileManager = FileManager.default
-    var queue = DispatchQueue.global()
+    var queue = AppConfig.bgQueue
     var timer: Timer?
     var cloudDisk: URL
     var onUpdate: () -> Void = { os_log("🍋 DB::onUpdate") }
@@ -18,19 +18,27 @@ class DB {
         onDownloading: ((_ url: URL, _ percent: Double) -> Void)? = nil
     ) {
         os_log("\(Logger.isMain)🚩 初始化 DB")
-
-        self.onUpdate = onUpdate ?? self.onUpdate
-        self.onDownloading = onDownloading ?? self.onDownloading
+        
         self.cloudDisk = cloudDisk.appendingPathComponent(AppConfig.audiosDirName)
-
+        self.createAudiosFolder()
+        Task {
+            self.onUpdate = onUpdate ?? self.onUpdate
+            self.onDownloading = onDownloading ?? self.onDownloading
+            self.onAudiosFolderUpdate()
+        }
+    }
+    
+    func createAudiosFolder() {
+        if fileManager.fileExists(atPath: self.cloudDisk.path) {
+            return
+        }
+        
         do {
             try fileManager.createDirectory(at: self.cloudDisk, withIntermediateDirectories: true)
             os_log("\(Logger.isMain)🍋 DB::创建 Audios 目录成功")
         } catch {
             os_log("\(Logger.isMain)创建 Audios 目录失败\n\(error.localizedDescription)")
         }
-
-        startWatch()
     }
 }
 
@@ -148,10 +156,6 @@ extension DB {
 
 extension DB {
     var n: NotificationCenter { NotificationCenter.default }
-
-    func startWatch() {
-        onAudiosFolderUpdate()
-    }
 
     func onAudiosFolderUpdate() {
         let query = NSMetadataQuery()

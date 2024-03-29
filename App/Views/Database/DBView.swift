@@ -78,7 +78,7 @@ struct DBView: View {
     }
 
     init() {
-        os_log("\(Logger.isMain)🚩 DBView::Init")
+//        os_log("\(Logger.isMain)🚩 DBView::Init")
     }
 }
 
@@ -93,7 +93,7 @@ extension DBView {
                 AppConfig.mainQueue.sync {
                     appManager.setFlashMessage("已添加 \(files.count) 个文件")
                     appManager.cleanStateMessage()
-                    os_log("\(Logger.isMain)🖥️ DBView::添加完成 🎉🎉🎉")
+                    //os_log("\(Logger.isMain)🖥️ DBView::添加完成 🎉🎉🎉")
                 }
             },
             completionOne: { url in

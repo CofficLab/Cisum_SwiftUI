@@ -36,9 +36,10 @@ class AudioManager: NSObject, ObservableObject {
             if audios.count == self.audios.count {
                 return
             }
-            self.playlist = PlayList(audios.map { $0.getURL() })
+
+            self.playlist.merge(audios.map { $0.getURL() })
             self.audios = self.playlist.list.map { AudioModel($0) }
-            if self.playlist.list.count > 0 {
+            if self.audio.isEmpty() {
                 self.audio = self.playlist.audio
                 self.updatePlayer()
             }
@@ -81,7 +82,7 @@ class AudioManager: NSObject, ObservableObject {
         }
         player.play()
         isPlaying = true
-
+        
         updateMediaPlayer()
     }
 
@@ -180,8 +181,8 @@ class AudioManager: NSObject, ObservableObject {
     }
 
     private func updatePlayer() {
-        AppConfig.mainQueue.async {
-            os_log("\(Logger.isMain)🍋 AudioManager::Update")
+        main.async {
+            os_log("\(Logger.isMain)🍋 AudioManager::UpdatePlayer")
             self.player = self.makePlayer(url: self.audio.getURL())
             self.player.delegate = self
             self.duration = self.player.duration
@@ -259,16 +260,8 @@ extension AudioManager {
         await AudioModel.delete(urls: urls)
     }
 
-    func destroy() {
-        db.destroy()
-    }
-
     func onUpdate() {
         os_log("\(Logger.isMain)🍋 AudioManager::onUpdate")
-        //        if self.db.getAudioModels("AudioManager::onUpdate").count != self.audios.count {
-        //            os_log("\(Logger.isMain)🍋 AudioManager::Refresh 🐛 db.onUpdate")
-        //            refresh()
-        //        }
     }
 
     func onDownloading(_ url: URL, _ percent: Double) {

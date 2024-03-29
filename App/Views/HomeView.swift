@@ -79,7 +79,7 @@ struct HomeView: View {
   #endif
 
   init() {
-    os_log("\(Logger.isMain)🚩 HomeView::Init")
+//    os_log("\(Logger.isMain)🚩 HomeView::Init")
   }
 }
 
