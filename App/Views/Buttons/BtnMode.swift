@@ -17,6 +17,7 @@ struct BtnMode: View {
         .onTapGesture {
             audioManager.playlist.switchMode({ mode in
                 appManager.setFlashMessage("\(mode.description)")
+                audioManager.audios = audioManager.playlist.list.map({AudioModel($0)})
             })
         }
         .onHover(perform: { hovering in

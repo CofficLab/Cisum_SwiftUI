@@ -17,7 +17,7 @@ class PlayList {
 
     init(_ urls: [URL]) {
         os_log("\(Logger.isMain)🚩 PlayList::init -> audios.count = \(urls.count)")
-        self.list = makeList(urls.shuffled())
+        self.list = makeList(urls).shuffled()
     }
 
     func find(_ id: AudioModel.ID) -> AudioModel {
@@ -26,11 +26,21 @@ class PlayList {
     }
 
     func merge(_ urls: [URL]) -> PlayList {
-        var playlist = self
+        let playlist = self
+        var shouldShuffle = false
+        
+        if self.isEmpty && playMode == .Random {
+            shouldShuffle = true
+        }
+        
         for url in urls {
             if !playlist.list.contains(url) {
                 playlist.list.append(url)
             }
+        }
+        
+        if shouldShuffle {
+            playlist.list = playlist.list.shuffled()
         }
         
         return playlist

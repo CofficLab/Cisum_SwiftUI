@@ -253,9 +253,9 @@ extension AudioManager {
             let playlist = self.playlist.merge(audios.map {$0.getURL()})
             self.main.sync {
                 self.playlist = playlist
-                self.audios = audios
                 if self.audio.isEmpty() {
                     self.audio = playlist.audio
+                    self.audios = self.playlist.list.map { AudioModel($0)}
                     self.updatePlayer()
                 }
             }
