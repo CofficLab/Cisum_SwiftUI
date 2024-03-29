@@ -257,6 +257,7 @@ extension AudioManager {
                 self.audios = audios
                 self.audio = playlist.audio
                 self.lastUpdatedAt = .now
+                self.updatePlayer()
             }
 //        }
     }
