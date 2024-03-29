@@ -21,7 +21,7 @@ struct DBTableView: View {
                 columns: {
                     // value 参数用于排序
                     TableColumn(
-                        "歌曲 \(audioManager.audios.count) \(audioManager.lastUpdatedAt)", value: \.title,
+                        "歌曲 \(audioManager.audios.count)", value: \.title,
                         content: { audio in
                             HStack {
                                 if audio.downloadingPercent < 100 || audio.downloadingPercent > 100 {

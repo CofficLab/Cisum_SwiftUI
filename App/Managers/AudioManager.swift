@@ -12,7 +12,6 @@ class AudioManager: NSObject, ObservableObject {
     @Published var audio = AudioModel.empty
     @Published var playlist = PlayList([])
     @Published var audios: [AudioModel] = []
-    @Published var lastUpdatedAt: Date = .now
 
     private var player: AVAudioPlayer = .init()
     private var listener: AnyCancellable?
@@ -249,16 +248,17 @@ extension AudioManager {
     }
 
     func onUpdate(_ audios: [AudioModel]) {
-//        bg.async {
+        bg.async {
             //os_log("\(Logger.isMain)🍋 AudioManager::onUpdate \(audios.count)")
             let playlist = self.playlist.merge(audios.map {$0.getURL()})
             self.main.sync {
                 self.playlist = playlist
                 self.audios = audios
-                self.audio = playlist.audio
-                self.lastUpdatedAt = .now
-                self.updatePlayer()
+                if self.audio.isEmpty() {
+                    self.audio = playlist.audio
+                    self.updatePlayer()
+                }
             }
-//        }
+        }
     }
 }
