@@ -130,7 +130,7 @@ struct DBTableView: View {
     }
 
     init() {
-        os_log("\(Logger.isMain)🚩 DBTableView::Init")
+        //os_log("\(Logger.isMain)🚩 DBTableView::Init")
     }
 }
 

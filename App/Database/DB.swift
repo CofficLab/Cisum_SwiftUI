@@ -88,13 +88,13 @@ extension DB {
     func onAudiosFolderUpdate() {
         let query = NSMetadataQuery()
         query.searchScopes = [NSMetadataQueryUbiquitousDocumentsScope]
-        query.predicate = NSPredicate(format: "%K BEGINSWITH %@", NSMetadataItemPathKey, cloudDisk.path)
+        query.predicate = NSPredicate(format: "%K BEGINSWITH %@", NSMetadataItemPathKey, cloudDisk.path + "/")
 
         n.addObserver(forName: NSNotification.Name.NSMetadataQueryDidUpdate, object: query, queue: nil) { _ in
             self.bg.async {
                 self.queryUpdateWorkItem?.cancel()
                 self.queryUpdateWorkItem = DispatchWorkItem {
-                    os_log("\(Logger.isMain)🏠 DB::QueryDidUpdate")
+                    //os_log("\(Logger.isMain)🏠 DB::QueryDidUpdate")
                     self.onUpdate(self.getAudiosFromQuery(query))
                 }
                 DispatchQueue.global().asyncAfter(deadline: .now() + 1, execute: self.queryUpdateWorkItem!)
@@ -115,7 +115,7 @@ extension DB {
     private func getAudiosFromQuery(_ query: NSMetadataQuery) -> [AudioModel] {
         var audios: [AudioModel] = []
         if let items = query.results as? [NSMetadataItem] {
-            os_log("\(Logger.isMain)🍋 DB::变动的items个数 \(items.count)")
+            //os_log("\(Logger.isMain)🍋 DB::变动的items个数 \(items.count)")
 
             for item in items {
                 let percentDownloaded =
@@ -136,8 +136,6 @@ extension DB {
                 }
             }
         }
-        
-        os_log("\(Logger.isMain)🍋 DB::变动的audios个数 \(audios.count)")
 
         return audios
     }
