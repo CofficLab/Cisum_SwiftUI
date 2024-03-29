@@ -3,7 +3,9 @@ import SwiftUI
 struct DBFirstCol: View {
     @EnvironmentObject var audioManager: AudioManager
     var audio: AudioModel
-    var selected: Bool = false
+    var selected: Bool {
+        audioManager.audio == audio
+    }
     
     var body: some View {
             HStack {
