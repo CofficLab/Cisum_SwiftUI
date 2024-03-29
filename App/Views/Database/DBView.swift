@@ -9,7 +9,7 @@ struct DBView: View {
 
     @State private var dropping: Bool = false
 
-    var db: DBModel { audioManager.db }
+    var db: DB { audioManager.db }
     var main: DispatchQueue { AppConfig.mainQueue }
     var bg: DispatchQueue { AppConfig.bgQueue }
 
@@ -93,7 +93,6 @@ extension DBView {
                 AppConfig.mainQueue.sync {
                     appManager.setFlashMessage("已添加 \(files.count) 个文件")
                     appManager.cleanStateMessage()
-                    audioManager.refresh()
                     os_log("\(Logger.isMain)🖥️ DBView::添加完成 🎉🎉🎉")
                 }
             },
@@ -101,10 +100,10 @@ extension DBView {
                 bg.async {
                     os_log("\(Logger.isMain)🖥️ DBView::添加完成 🎉🎉🎉 -> \(url.lastPathComponent)")
                 }
-                
+
                 main.async {
-//                    appManager.setFlashMessage("完成复制 \(url.lastPathComponent)")
-//                    dbManager.refresh()
+                    //                    appManager.setFlashMessage("完成复制 \(url.lastPathComponent)")
+                    //                    dbManager.refresh()
                 }
             },
             onStart: { url in

@@ -18,29 +18,28 @@ class AudioManager: NSObject, ObservableObject {
     private var bg = AppConfig.bgQueue
     private var main = AppConfig.mainQueue
     private var rootDir: URL
-    
-    var db: DBModel
+
+    var db: DB
     var isEmpty: Bool { audios.isEmpty }
-    var isCloudStorage:Bool { iCloudHelper.isCloudPath(url: rootDir) }
+    var isCloudStorage: Bool { iCloudHelper.isCloudPath(url: rootDir) }
 
     init(rootDir: URL) {
         os_log("\(Logger.isMain)🚩 初始化 AudioManager")
 
-        self.db = DBModel(cloudDisk: rootDir)
+        db = DB(cloudDisk: rootDir)
         self.rootDir = rootDir
         super.init()
-        
-        self.db.onUpdate = onUpdate
-        self.db.onDownloading = onDownloading
-        self.audios = self.db.getAudioModels("AudioManager::init")
 
-        playlist = PlayList(self.audios.map {$0.getURL()})
-        if playlist.list.count > 0 {
-            os_log("\(Logger.isMain)初始化Player")
-            audio = playlist.audio
-            os_log("\(Logger.isMain)初始化的曲目：\(self.audio.title, privacy: .public)")
-            updatePlayer()
-        }
+        db.onUpdate = onUpdate
+        db.onDownloading = onDownloading
+        db.getAudioModels("AudioManager::init", onUpdate: {
+            self.audios = $0
+            self.playlist = PlayList(self.audios.map { $0.getURL() })
+            if self.playlist.list.count > 0 {
+                self.audio = self.playlist.audio
+                self.updatePlayer()
+            }
+        })
     }
 
     func currentTime() -> TimeInterval {
@@ -248,19 +247,6 @@ extension AudioManager: AVAudioPlayerDelegate {
         os_log("\(Logger.isMain)🍋 AudioManager::audioPlayerEndInterruption")
         play()
     }
-    
-    
-
-    func refresh() {
-        bg.async {
-            let audios = self.db.getAudioModels("AudioManager::refresh")
-
-            self.main.async {
-                self.audios = audios
-                os_log("\(Logger.isMain)🍋 DBManager::Refreshed")
-            }
-        }
-    }
 }
 
 // MARK: 当数据库发生变化时
@@ -268,33 +254,31 @@ extension AudioManager: AVAudioPlayerDelegate {
 extension AudioManager {
     func delete(urls: Set<URL>) async {
         await AudioModel.delete(urls: urls)
-        refresh()
     }
 
     func destroy() {
         db.destroy()
-        refresh()
     }
-    
+
     func onUpdate() {
         os_log("\(Logger.isMain)🍋 AudioManager::onUpdate")
-//        if self.db.getAudioModels("AudioManager::onUpdate").count != self.audios.count {
-//            os_log("\(Logger.isMain)🍋 AudioManager::Refresh 🐛 db.onUpdate")
-//            refresh()
-//        }
+        //        if self.db.getAudioModels("AudioManager::onUpdate").count != self.audios.count {
+        //            os_log("\(Logger.isMain)🍋 AudioManager::Refresh 🐛 db.onUpdate")
+        //            refresh()
+        //        }
     }
-    
+
     func onDownloading(_ url: URL, _ percent: Double) {
         bg.async {
-//            os_log("\(Logger.isMain)🍋 AudioManager::onDownloading -> \(url.lastPathComponent) -> \(percent)")
+            //            os_log("\(Logger.isMain)🍋 AudioManager::onDownloading -> \(url.lastPathComponent) -> \(percent)")
             let newAudios = self.audios.map {
                 if $0.getURL() == url {
                     $0.downloadingPercent = percent
                 }
-                
+
                 return $0
             }
-            
+
             self.main.async {
                 self.audios = newAudios
             }

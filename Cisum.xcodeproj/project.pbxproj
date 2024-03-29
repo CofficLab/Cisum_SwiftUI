@@ -43,7 +43,7 @@
 		0BB889D52AC04638004788D5 /* BtnPlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB889D42AC04638004788D5 /* BtnPlay.swift */; };
 		0BB889D72AC046B5004788D5 /* BtnShowInFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB889D62AC046B5004788D5 /* BtnShowInFinder.swift */; };
 		0BB889D92AC047B3004788D5 /* BtnDelete.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB889D82AC047B3004788D5 /* BtnDelete.swift */; };
-		0BB889DB2AC06C54004788D5 /* DBModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB889DA2AC06C54004788D5 /* DBModel.swift */; };
+		0BB889DB2AC06C54004788D5 /* DB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB889DA2AC06C54004788D5 /* DB.swift */; };
 		0BBA420C2ABBD79600C0B977 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA420B2ABBD79600C0B977 /* Errors.swift */; };
 		0BBA42132ABC137A00C0B977 /* StatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA42122ABC137A00C0B977 /* StatusView.swift */; };
 		0BBA42172ABC1AE700C0B977 /* StatusBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA42162ABC1AE700C0B977 /* StatusBarView.swift */; };
@@ -110,7 +110,7 @@
 		0BB889D42AC04638004788D5 /* BtnPlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnPlay.swift; sourceTree = "<group>"; };
 		0BB889D62AC046B5004788D5 /* BtnShowInFinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnShowInFinder.swift; sourceTree = "<group>"; };
 		0BB889D82AC047B3004788D5 /* BtnDelete.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnDelete.swift; sourceTree = "<group>"; };
-		0BB889DA2AC06C54004788D5 /* DBModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBModel.swift; sourceTree = "<group>"; };
+		0BB889DA2AC06C54004788D5 /* DB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DB.swift; sourceTree = "<group>"; };
 		0BBA420B2ABBD79600C0B977 /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
 		0BBA42122ABC137A00C0B977 /* StatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusView.swift; sourceTree = "<group>"; };
 		0BBA42162ABC1AE700C0B977 /* StatusBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarView.swift; sourceTree = "<group>"; };
@@ -162,7 +162,6 @@
 			isa = PBXGroup;
 			children = (
 				0B1D5A672AB3025F0010DDF2 /* AudioModel.swift */,
-				0BB889DA2AC06C54004788D5 /* DBModel.swift */,
 				0B0A2B812AC1CCDC00DA085C /* SmartFile.swift */,
 				0B4E1AB42AC3D022005CCB0F /* PlayList.swift */,
 			);
@@ -207,6 +206,14 @@
 				0B1D5A8C2AB3E8290010DDF2 /* AppDelegate.swift */,
 			);
 			path = Delegate;
+			sourceTree = "<group>";
+		};
+		0B22158A2BB66D0C000EB36F /* Database */ = {
+			isa = PBXGroup;
+			children = (
+				0BB889DA2AC06C54004788D5 /* DB.swift */,
+			);
+			path = Database;
 			sourceTree = "<group>";
 		};
 		0B5E51E32AD912A5000650CF /* Commands */ = {
@@ -275,9 +282,10 @@
 			isa = PBXGroup;
 			children = (
 				0BBA42112ABC116300C0B977 /* Bootstrap */,
-				0BFDCE532BAFFA80009198DD /* Contracts */,
 				0B5E51E32AD912A5000650CF /* Commands */,
 				0BEBCBAC2B352A2D00F2116E /* Config */,
+				0BFDCE532BAFFA80009198DD /* Contracts */,
+				0B22158A2BB66D0C000EB36F /* Database */,
 				0B1D5A8E2AB3EF050010DDF2 /* Delegate */,
 				0B1D5A5E2AB3025E0010DDF2 /* Managers */,
 				0B1D5A652AB3025F0010DDF2 /* Model */,
@@ -440,7 +448,7 @@
 				0B1D5A8A2AB302610010DDF2 /* AppConfig.swift in Sources */,
 				0BBA420C2ABBD79600C0B977 /* Errors.swift in Sources */,
 				0B220F752BB1BBDB0077255A /* SmartError.swift in Sources */,
-				0BB889DB2AC06C54004788D5 /* DBModel.swift in Sources */,
+				0BB889DB2AC06C54004788D5 /* DB.swift in Sources */,
 				0BBA42192ABD5D9200C0B977 /* BtnMode.swift in Sources */,
 				0B220F692BB039DC0077255A /* DBTableView.swift in Sources */,
 				0B11262C2AC719B70093DFFA /* ImageHelper.swift in Sources */,
