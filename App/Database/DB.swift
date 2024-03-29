@@ -122,21 +122,21 @@ extension DB {
                 let percentDownloaded =
                     item.value(forAttribute: NSMetadataUbiquitousItemPercentDownloadedKey) as? Double
                 let isDownloading =
-                    item.value(forAttribute: NSMetadataUbiquitousItemIsDownloadingKey) as? String
+                    item.value(forAttribute: NSMetadataUbiquitousItemIsDownloadingKey) as? Bool
                 let url = item.value(forAttribute: NSMetadataItemURLKey) as? URL
 
                 if let u = url {
-//                    os_log("\(Logger.isMain)🍋 DB::变动 \(u.lastPathComponent)")
+                    //os_log("\(Logger.isMain)🍋 DB::变动 \(u.lastPathComponent)")
                     let audio = AudioModel(u)
-                    if let p = percentDownloaded, p < 100 && p >  0 {
-                        //os_log("\(Logger.isMain)🍋 DB::变动 🐛 \(u.lastPathComponent) 🐛 \(p)")
-                        audio.downloadingPercent = p
-                        audio.isDownloading = true
-                    }
                     
                     if iCloudHelper.isDownloaded(url: u) {
                         audio.downloadingPercent = 100
                         audio.isDownloading = false
+                    }
+                    
+                    if isDownloading == true,let p = percentDownloaded {
+                        os_log("\(Logger.isMain)🍋 DB::变动 🐛 \(u.lastPathComponent) 🐛 isDownloading ⬇️⬇️⬇️ \(p)")
+                        audio.isDownloading = true
                     }
                     
                     audios.append(audio)

@@ -46,6 +46,10 @@ class AudioList {
             if let i = notDownloaded.firstIndex(where: {$0.id == audio.id}) {
                 notDownloaded[i] = audio
             }
+            
+            if let i = downloaded.firstIndex(where: {$0.id == audio.id}) {
+                downloaded[i] = audio
+            }
         }
     }
     

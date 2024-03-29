@@ -24,7 +24,7 @@ struct DBTableView: View {
                         "歌曲 \(audioManager.audios.count)", value: \.title,
                         content: { audio in
                             HStack {
-                                if audio.downloadingPercent > 0 && audio.downloadingPercent < 100 {
+                                if audio.isDownloading {
                                     ProgressView(value: audio.downloadingPercent/100)
                                         .progressViewStyle(CircularProgressViewStyle(size: 14))
                                         .controlSize(.regular)
@@ -40,7 +40,7 @@ struct DBTableView: View {
                                 
                                 Text(audio.title).foregroundStyle(audioManager.audio == audio ? .blue : .primary)
                                 Spacer()
-                                if audio.downloadingPercent > 0 && audio.downloadingPercent < 100 {
+                                if audio.isDownloading {
                                     Text("\(String(format: "%.2f", audio.downloadingPercent))%").font(.footnote)
                                 }
                             }

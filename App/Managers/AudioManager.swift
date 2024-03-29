@@ -266,6 +266,11 @@ extension AudioManager {
             self.main.sync {
                 self.playlist.merge(audios)
                 self.audios = self.playlist.list
+//                self.audios.forEach({
+//                    if $0.isDownloading {
+//                        os_log("\(Logger.isMain)🍋 AudioManager::onUpdate 2 \($0.title) \($0.downloadingPercent)")
+//                    }
+//                })
                 if self.audio.isEmpty() {
                     self.audio = self.playlist.audio
                     self.updatePlayer()
