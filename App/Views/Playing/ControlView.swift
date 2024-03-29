@@ -5,6 +5,7 @@ struct ControlView: View {
     @EnvironmentObject var audioManager: AudioManager
 
     var playNow: Bool? = false
+    var audios: [AudioModel] {audioManager.audios}
 
     var body: some View {
         #if os(macOS)
@@ -29,8 +30,8 @@ struct ControlView: View {
             VStack {
                 TitleView().padding(.vertical, 20)
                 AlbumView(audio: $audioManager.audio)
-                    .opacity(dbManager.audios.isEmpty ? 0 : 1)
-                if dbManager.isEmpty {
+                    .opacity(audios.isEmpty ? 0 : 1)
+                if audioManager.playlist.isEmpty {
                     DBEmptyView().padding(.vertical, 40)
                 }
                 SliderView().padding(.vertical, 20)
