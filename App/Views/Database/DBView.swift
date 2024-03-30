@@ -43,7 +43,10 @@ struct DBView: View {
             )
         #else
             ZStack {
-                DBTableView()
+                VStack {
+                    DBTableView()
+                    DemoView()
+                }
 
                 if audioManager.isEmpty, appManager.flashMessage.isEmpty {
                     DBEmptyView()

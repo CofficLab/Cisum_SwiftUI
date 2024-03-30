@@ -75,7 +75,7 @@ class iCloudHelper {
     if AppConfig.fileManager.ubiquityIdentityToken != nil {
       AppConfig.logger.cloudKit.debug("支持 iCloud")
 
-      return AppConfig.fileManager.url(forUbiquityContainerIdentifier: AppConfig.container)!
+      return AppConfig.fileManager.url(forUbiquityContainerIdentifier: AppConfig.containerIdentifier)!
         .appendingPathComponent("Documents")
     } else {
       AppConfig.logger.cloudKit.debug("不支持 iCloud，使用本地目录")

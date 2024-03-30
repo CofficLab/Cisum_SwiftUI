@@ -3,7 +3,7 @@ import CloudKit
 
 struct DebugCommand: Commands {
     private var container: String {
-        AppConfig.container
+        AppConfig.containerIdentifier
     }
     
     var body: some Commands {
@@ -17,9 +17,7 @@ struct DebugCommand: Commands {
             .keyboardShortcut("f", modifiers: [.shift, .option])
             
             Button("打开iCloud Documents") {
-                let folderPath = FileManager.default.url(forUbiquityContainerIdentifier: container)?.appendingPathComponent("Documents")
-
-                NSWorkspace.shared.open(folderPath!)
+                NSWorkspace.shared.open(AppConfig.documentsDir)
             }
         }
         #endif

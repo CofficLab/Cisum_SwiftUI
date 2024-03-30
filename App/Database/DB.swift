@@ -86,7 +86,7 @@ extension DB {
 extension DB {
     var n: NotificationCenter { NotificationCenter.default }
 
-    func onAudiosFolderUpdate() {
+    func onAudiosFolderUpdate() {        
         let query = NSMetadataQuery()
         query.searchScopes = [NSMetadataQueryUbiquitousDocumentsScope]
         query.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [

@@ -8,5 +8,17 @@
 	<array>
 		<string>audio</string>
 	</array>
+	<key>NSUbiquitousContainers</key>
+	<dict>
+		<key>iCloud.yueyi.cisum</key>
+		<dict>
+			<key>NSUbiquitousContainerName</key>
+			<string>Cisum</string>
+			<key>NSUbiquitousContainerIsDocumentScopePublic</key>
+			<true/>
+			<key>NSUbiquitousContainerSupportedFolderLevels</key>
+			<string>ANY</string>
+		</dict>
+	</dict>
 </dict>
 </plist>

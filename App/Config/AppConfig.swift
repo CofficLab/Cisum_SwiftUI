@@ -7,7 +7,7 @@ struct AppConfig {
     static let coversDirName = "covers"
     static let audiosDirName = "audios"
     static let cacheDirName = "audios_cache"
-    static let container = "iCloud.yueyi.cisum"
+    static let containerIdentifier = "iCloud.yueyi.cisum"
     static let logger = Logger.self
 }
 
@@ -28,7 +28,7 @@ extension AppConfig {
 // MARK: 路径配置
 
 extension AppConfig {
-    static let documentsDir = fileManager.url(forUbiquityContainerIdentifier: container)!
+    static let documentsDir = fileManager.url(forUbiquityContainerIdentifier: containerIdentifier)!.appending(component: "Documents")
     static var coverDir: URL {
         documentsDir.appendingPathComponent(coversDirName)
     }

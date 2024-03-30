@@ -72,7 +72,7 @@ class AppManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
         // Dispatch to a global queue because url(forUbiquityContainerIdentifier:) might take a nontrivial
         // amount of time to set up iCloud and return the requested URL
         DispatchQueue.global().async {
-            if let url = FileManager.default.url(forUbiquityContainerIdentifier: AppConfig.container) {
+            if let url = FileManager.default.url(forUbiquityContainerIdentifier: AppConfig.containerIdentifier) {
                 DispatchQueue.main.async {
                     AppConfig.logger.cloudKit.info("🚩 初始化 iCloud Documents 成功")
 
@@ -90,7 +90,7 @@ class AppManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
     }
     
     static func getCloudDocumentsUrl() -> URL {
-        if let url = FileManager.default.url(forUbiquityContainerIdentifier: AppConfig.container) {
+        if let url = FileManager.default.url(forUbiquityContainerIdentifier: AppConfig.containerIdentifier) {
             return url
         } else {
             return AppConfig.documentsDir
