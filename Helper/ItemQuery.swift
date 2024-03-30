@@ -1,10 +1,3 @@
-//
-//  Query.swift
-//  iCloudDocumentsDemo
-//
-//  Created by Yang Xu on 2023/12/4.
-//
-
 import AsyncAlgorithms
 import Foundation
 

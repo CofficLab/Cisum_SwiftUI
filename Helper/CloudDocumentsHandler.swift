@@ -1,4 +1,5 @@
 import Foundation
+import OSLog
 
 actor CloudDocumentsHandler {
     let coordinator = NSFileCoordinator()
@@ -60,8 +61,12 @@ actor CloudDocumentsHandler {
         return data
     }
 
-    func startMonitoringFile(at url: URL) {
+    func startMonitoringFile(at url: URL, onDidChange: (() -> Void)? = nil) {
+        let defaultOnDidChange: () -> Void = {
+            os_log("🍋 CloudDocumentsHelper::onDidChange")
+        }
         let presenter = FilePresenter(fileURL: url)
+        presenter.onDidChange = onDidChange ?? defaultOnDidChange
         filePresenters[url] = presenter
     }
 

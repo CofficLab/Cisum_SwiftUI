@@ -2,18 +2,8 @@ import SwiftUI
 
 struct DemoView: View {
     @State var handler = CloudDocumentsHandler()
-    var containerURL: URL? {
-        let containerIdentifier = AppConfig.containerIdentifier
-        guard let containerURL = FileManager.default.url(forUbiquityContainerIdentifier: containerIdentifier) else {
-            return nil
-        }
-        return containerURL
-    }
 
-    var documentURL: URL? {
-        let documentsFolderURL = containerURL?.appendingPathComponent("Documents")
-        return documentsFolderURL
-    }
+    var documentURL = AppConfig.documentsDir
     
     var body: some View {
         List {
@@ -21,7 +11,6 @@ struct DemoView: View {
                 Button("Create File in Documents") {
                     Task.detached {
                         let hander = self.handler
-                        guard let documentURL else { fatalError() }
                         let fileURL = documentURL.appending(path: "hello.txt")
                         do {
                             try await hander.write(targetURL: fileURL, data: "hello world".data(using: .utf8)!)
@@ -33,7 +22,6 @@ struct DemoView: View {
                 Button("Read Hello world from Documents") {
                     Task {
                         let hander = self.handler
-                        guard let documentURL else { fatalError() }
                         let fileURL = documentURL.appending(path: "hello.txt")
                         do {
                             let data = try await hander.read(url: fileURL)
@@ -46,7 +34,6 @@ struct DemoView: View {
                 Button("Read File & Monitor") {
                     Task {
                         let hander = self.handler
-                        guard let documentURL else { fatalError() }
                         let fileURL = documentURL.appending(path: "hello.txt")
                         print(fileURL)
                         do {
@@ -61,7 +48,6 @@ struct DemoView: View {
                 Button("Stop Monitor") {
                     Task {
                         let hander = self.handler
-                        guard let documentURL else { fatalError() }
                         let fileURL = documentURL.appending(path: "hello.txt")
                         await hander.stopMonitoringFile(at: fileURL)
                     }
@@ -69,14 +55,12 @@ struct DemoView: View {
                 Button("Monitor Directory") {
                     Task {
                         let hander = self.handler
-                        guard let documentURL else { fatalError() }
                         await hander.startMonitoringFile(at: documentURL)
                     }
                 }
                 Button("Stop Monitor Directory") {
                     Task {
                         let hander = self.handler
-                        guard let documentURL else { fatalError() }
                         await hander.stopMonitoringFile(at: documentURL)
                     }
                 }
@@ -86,14 +70,17 @@ struct DemoView: View {
                     let query = ItemQuery()
                     for await items in query.searchMetadataItems() {
                         items.forEach {
-                            print($0.fileName ?? "", ":",
-                                  $0.isDirectory, $0.url ?? "url",
+                            print($0.fileName ?? ""
+//                                  ":",
+//                                  $0.isDirectory,
+//                                  $0.url ?? "url"
 //                                  $0.directoryURL ?? "dirURL",
 //                                  $0.contentType ?? "type",
-                                  "placeHolder:", $0.isPlaceholder,
-                                  "isDownloading:", $0.isDownloading,
-                                  "progress:", $0.downloadProgress,
-                                  "upLoaded:", $0.uploaded)
+//                                  "placeHolder:", $0.isPlaceholder,
+//                                  "isDownloading:", $0.isDownloading,
+//                                  "progress:", $0.downloadProgress,
+//                                  "upLoaded:", $0.uploaded
+                            )
                         }
                     }
                 }
@@ -120,6 +107,25 @@ struct DemoView: View {
                     }
                 }
             }
+        }.onAppear {
+//            Task {
+//                let query = ItemQuery()
+//                for await items in query.searchMetadataItems() {
+//                    items.forEach {
+//                        print($0.fileName ?? ""
+////                                  ":",
+////                                  $0.isDirectory,
+////                                  $0.url ?? "url"
+////                                  $0.directoryURL ?? "dirURL",
+////                                  $0.contentType ?? "type",
+////                                  "placeHolder:", $0.isPlaceholder,
+////                                  "isDownloading:", $0.isDownloading,
+////                                  "progress:", $0.downloadProgress,
+////                                  "upLoaded:", $0.uploaded
+//                        )
+//                    }
+//                }
+//            }
         }
     }
 }

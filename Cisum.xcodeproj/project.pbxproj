@@ -35,8 +35,8 @@
 		0B73275F2BB5138200DBD922 /* LoggerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B73275E2BB5138200DBD922 /* LoggerHelper.swift */; };
 		0B7F558B2AD2636B0000D72E /* ButtonPlayList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7F558A2AD2636B0000D72E /* ButtonPlayList.swift */; };
 		0B8DBEF42BB6F7B10029D1EF /* AudioList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8DBEF32BB6F7B10029D1EF /* AudioList.swift */; };
-		0B901D862BB83BA2003AC253 /* Handler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B901D852BB83BA2003AC253 /* Handler.swift */; };
-		0B901D882BB83BC3003AC253 /* Presenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B901D872BB83BC3003AC253 /* Presenter.swift */; };
+		0B901D862BB83BA2003AC253 /* CloudDocumentsHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B901D852BB83BA2003AC253 /* CloudDocumentsHandler.swift */; };
+		0B901D882BB83BC3003AC253 /* FilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B901D872BB83BC3003AC253 /* FilePresenter.swift */; };
 		0B901D8A2BB83E28003AC253 /* ItemQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B901D892BB83E28003AC253 /* ItemQuery.swift */; };
 		0B901D912BB83ECF003AC253 /* DemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B901D902BB83ECF003AC253 /* DemoView.swift */; };
 		0B901D932BB83F38003AC253 /* CloudKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B901D922BB83F38003AC253 /* CloudKit.swift */; };
@@ -108,8 +108,8 @@
 		0B73275E2BB5138200DBD922 /* LoggerHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerHelper.swift; sourceTree = "<group>"; };
 		0B7F558A2AD2636B0000D72E /* ButtonPlayList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonPlayList.swift; sourceTree = "<group>"; };
 		0B8DBEF32BB6F7B10029D1EF /* AudioList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioList.swift; sourceTree = "<group>"; };
-		0B901D852BB83BA2003AC253 /* Handler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Handler.swift; sourceTree = "<group>"; };
-		0B901D872BB83BC3003AC253 /* Presenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Presenter.swift; sourceTree = "<group>"; };
+		0B901D852BB83BA2003AC253 /* CloudDocumentsHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudDocumentsHandler.swift; sourceTree = "<group>"; };
+		0B901D872BB83BC3003AC253 /* FilePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilePresenter.swift; sourceTree = "<group>"; };
 		0B901D892BB83E28003AC253 /* ItemQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemQuery.swift; sourceTree = "<group>"; };
 		0B901D902BB83ECF003AC253 /* DemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoView.swift; sourceTree = "<group>"; };
 		0B901D922BB83F38003AC253 /* CloudKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudKit.swift; sourceTree = "<group>"; };
@@ -186,6 +186,10 @@
 		0B1D5A6B2AB302600010DDF2 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
+				0B901D892BB83E28003AC253 /* ItemQuery.swift */,
+				0B901D922BB83F38003AC253 /* CloudKit.swift */,
+				0B901D852BB83BA2003AC253 /* CloudDocumentsHandler.swift */,
+				0B901D872BB83BC3003AC253 /* FilePresenter.swift */,
 				0B1D5A722AB302600010DDF2 /* BackgroundView.swift */,
 				0B718F0B2AB4349900569762 /* CardView.swift */,
 				0B1165E82ABBC6C0005C5CBB /* LaunchView.swift */,
@@ -227,11 +231,7 @@
 		0B22158A2BB66D0C000EB36F /* Database */ = {
 			isa = PBXGroup;
 			children = (
-				0B901D922BB83F38003AC253 /* CloudKit.swift */,
 				0BB889DA2AC06C54004788D5 /* DB.swift */,
-				0B901D852BB83BA2003AC253 /* Handler.swift */,
-				0B901D872BB83BC3003AC253 /* Presenter.swift */,
-				0B901D892BB83E28003AC253 /* ItemQuery.swift */,
 			);
 			path = Database;
 			sourceTree = "<group>";
@@ -483,14 +483,14 @@
 				0B11262C2AC719B70093DFFA /* ImageHelper.swift in Sources */,
 				0BBC159A2ABAD5DB006E82C4 /* SliderView.swift in Sources */,
 				0BBC15882AB9A473006E82C4 /* iCloudHelper.swift in Sources */,
-				0B901D862BB83BA2003AC253 /* Handler.swift in Sources */,
+				0B901D862BB83BA2003AC253 /* CloudDocumentsHandler.swift in Sources */,
 				0BBC158D2ABAC0C7006E82C4 /* BtnToggle.swift in Sources */,
 				0B11262A2AC6F7B20093DFFA /* ButtonToggleDatabase.swift in Sources */,
 				0B5E51E52AD912B5000650CF /* DebugCommand.swift in Sources */,
 				0B1D5A7F2AB302610010DDF2 /* AudioModel.swift in Sources */,
 				0B1165F02ABBCCB0005C5CBB /* AppManager.swift in Sources */,
 				0BBA42252AC1813D00C0B977 /* ButtonDeleteSelected.swift in Sources */,
-				0B901D882BB83BC3003AC253 /* Presenter.swift in Sources */,
+				0B901D882BB83BC3003AC253 /* FilePresenter.swift in Sources */,
 				0B7F558B2AD2636B0000D72E /* ButtonPlayList.swift in Sources */,
 				0BBC157C2AB84C21006E82C4 /* HomeView.swift in Sources */,
 				0B901D8A2BB83E28003AC253 /* ItemQuery.swift in Sources */,

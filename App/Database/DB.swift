@@ -18,6 +18,7 @@ class DB {
         self.cloudDisk = cloudDisk.appendingPathComponent(AppConfig.audiosDirName)
         self.createAudiosFolder()
         self.onAudiosFolderUpdate()
+        Task {await self.get()}
     }
 
     func createAudiosFolder() {
@@ -79,6 +80,28 @@ extension DB {
     }
 
     // MARK: 查询
+    
+    @MainActor
+    func get() {
+        Task {
+            let query = ItemQuery()
+            for await items in query.searchMetadataItems() {
+                items.forEach {
+                    print($0.fileName ?? "",
+//                                  ":",
+//                                  $0.isDirectory,
+//                                  $0.url ?? "url"
+//                                  $0.directoryURL ?? "dirURL",
+//                                  $0.contentType ?? "type",
+//                                  "placeHolder:", $0.isPlaceholder,
+//                                  "isDownloading:", $0.isDownloading,
+                                  "progress:", $0.downloadProgress
+//                                  "upLoaded:", $0.uploaded
+                    )
+                }
+            }
+        }
+    }
 }
 
 // MARK: 监听变化

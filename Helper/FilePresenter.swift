@@ -1,8 +1,10 @@
 import Foundation
+import OSLog
 
 class FilePresenter: NSObject, NSFilePresenter {
     let fileURL: URL
     var presentedItemOperationQueue: OperationQueue = .main
+    var onDidChange: () -> Void = { os_log("🍋 FilePresenter::changed") }
 
     init(fileURL: URL) {
         self.fileURL = fileURL
@@ -23,6 +25,6 @@ class FilePresenter: NSObject, NSFilePresenter {
     func presentedItemDidChange() {
         // 当文件发生变化时，执行相关操作
         // 例如，重新加载文件或通知其他组件
-        print("file changed")
+        self.onDidChange()
     }
 }
