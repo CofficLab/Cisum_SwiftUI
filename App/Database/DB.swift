@@ -89,7 +89,12 @@ extension DB {
     func onAudiosFolderUpdate() {
         let query = NSMetadataQuery()
         query.searchScopes = [NSMetadataQueryUbiquitousDocumentsScope]
-        query.predicate = NSPredicate(format: "%K BEGINSWITH %@", NSMetadataItemPathKey, cloudDisk.path + "/")
+        query.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
+            NSPredicate(format: "%K BEGINSWITH %@", NSMetadataItemPathKey, cloudDisk.path + "/"),
+//            NSPredicate(format: "%K ENDSWITH %@", NSMetadataItemFSNameKey, ".mp3")
+        ])
+        
+        
 
         n.addObserver(forName: NSNotification.Name.NSMetadataQueryDidUpdate, object: query, queue: nil) { _ in
             self.bg.async {
