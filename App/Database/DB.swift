@@ -17,14 +17,22 @@ class DB {
         os_log("\(Logger.isMain)🚩 初始化 DB")
 
         self.cloudDisk = cloudDisk.appendingPathComponent(AppConfig.audiosDirName)
-        self.createAudiosFolder()
-        self.onAudiosFolderUpdate()
-        
+        createAudiosFolder()
+        onAudiosFolderUpdate()
+
+        Task {
+            await self.getAudios({
+                self.onGet($0)
+            })
+        }
+
         Task {
             os_log("🚩 DB::监听数据库文件夹")
             await self.handler.startMonitoringFile(at: cloudDisk, onDidChange: {
                 Task {
-                    await self.get()
+                    await self.getAudios({
+                        self.onUpdate($0)
+                    })
                 }
             })
         }
@@ -89,14 +97,21 @@ extension DB {
     }
 
     // MARK: 查询
-    
+
     @MainActor
-    func get() {
+    func getAudios(_ callback: @escaping ([AudioModel]) -> Void) {
+        var audios: [AudioModel] = []
         Task {
             let query = ItemQuery()
             for await items in query.searchMetadataItems() {
-                items.forEach {
-                    print($0.fileName ?? "",
+                items.forEach { item in
+                    if let u = item.url {
+                        var audio = AudioModel(u)
+                        audio.downloadingPercent = item.downloadProgress
+                        audio.isDownloading = item.isDownloading
+                        audios.append(audio)
+                    }
+//                    print(item.fileName ?? "",
 //                                  ":",
 //                                  $0.isDirectory,
 //                                  $0.url ?? "url"
@@ -104,10 +119,12 @@ extension DB {
 //                                  $0.contentType ?? "type",
 //                                  "placeHolder:", $0.isPlaceholder,
 //                                  "isDownloading:", $0.isDownloading,
-                                  "progress:", $0.downloadProgress
+//                                  "progress:", item.downloadProgress
 //                                  "upLoaded:", $0.uploaded
-                    )
+//                    )
                 }
+                
+                callback(audios)
             }
         }
     }
@@ -118,21 +135,19 @@ extension DB {
 extension DB {
     var n: NotificationCenter { NotificationCenter.default }
 
-    func onAudiosFolderUpdate() {        
+    func onAudiosFolderUpdate() {
         let query = NSMetadataQuery()
         query.searchScopes = [NSMetadataQueryUbiquitousDocumentsScope]
         query.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
             NSPredicate(format: "%K BEGINSWITH %@", NSMetadataItemPathKey, cloudDisk.path + "/"),
 //            NSPredicate(format: "%K ENDSWITH %@", NSMetadataItemFSNameKey, ".mp3")
         ])
-        
-        
 
         n.addObserver(forName: NSNotification.Name.NSMetadataQueryDidUpdate, object: query, queue: nil) { _ in
             self.bg.async {
                 self.queryUpdateWorkItem?.cancel()
                 self.queryUpdateWorkItem = DispatchWorkItem {
-                    //os_log("\(Logger.isMain)🏠 DB::QueryDidUpdate")
+                    // os_log("\(Logger.isMain)🏠 DB::QueryDidUpdate")
                     self.onUpdate(self.getAudiosFromQuery(query))
                 }
                 DispatchQueue.global().asyncAfter(deadline: .now() + 0.12, execute: self.queryUpdateWorkItem!)
@@ -149,11 +164,11 @@ extension DB {
         // query.enableUpdates()
         query.start()
     }
-    
+
     private func getAudiosFromQuery(_ query: NSMetadataQuery) -> [AudioModel] {
         var audios: [AudioModel] = []
         if let items = query.results as? [NSMetadataItem] {
-            //os_log("\(Logger.isMain)🍋 DB::变动的items个数 \(items.count)")
+            // os_log("\(Logger.isMain)🍋 DB::变动的items个数 \(items.count)")
 
             for item in items {
                 let percentDownloaded =
@@ -163,19 +178,19 @@ extension DB {
                 let url = item.value(forAttribute: NSMetadataItemURLKey) as? URL
 
                 if let u = url {
-                    //os_log("\(Logger.isMain)🍋 DB::变动 \(u.lastPathComponent)")
+                    // os_log("\(Logger.isMain)🍋 DB::变动 \(u.lastPathComponent)")
                     let audio = AudioModel(u)
-                    
+
                     if iCloudHelper.isDownloaded(url: u) {
                         audio.downloadingPercent = 100
                         audio.isDownloading = false
                     }
-                    
-                    if isDownloading == true,let p = percentDownloaded {
+
+                    if isDownloading == true, let p = percentDownloaded {
                         os_log("\(Logger.isMain)🍋 DB::变动 🐛 \(u.lastPathComponent) 🐛 isDownloading ⬇️⬇️⬇️ \(p)")
                         audio.isDownloading = true
                     }
-                    
+
                     audios.append(audio)
                 }
             }
