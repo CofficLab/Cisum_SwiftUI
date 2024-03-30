@@ -28,7 +28,7 @@ extension AppConfig {
 // MARK: 路径配置
 
 extension AppConfig {
-    static let documentsDir = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
+    static let documentsDir = fileManager.url(forUbiquityContainerIdentifier: container)!
     static var coverDir: URL {
         documentsDir.appendingPathComponent(coversDirName)
     }
