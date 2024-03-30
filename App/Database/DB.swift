@@ -7,6 +7,7 @@ class DB {
     var bg = AppConfig.bgQueue
     var timer: Timer?
     var cloudDisk: URL
+    var handler = CloudDocumentsHandler()
     var queryUpdateWorkItem: DispatchWorkItem?
     var onDownloadingWorkItem: DispatchWorkItem?
     var onUpdate: ([AudioModel]) -> Void = { _ in os_log("🍋 DB::onUpdate") }
@@ -18,7 +19,15 @@ class DB {
         self.cloudDisk = cloudDisk.appendingPathComponent(AppConfig.audiosDirName)
         self.createAudiosFolder()
         self.onAudiosFolderUpdate()
-        Task {await self.get()}
+        
+        Task {
+            os_log("🚩 DB::监听数据库文件夹")
+            await self.handler.startMonitoringFile(at: cloudDisk, onDidChange: {
+                Task {
+                    await self.get()
+                }
+            })
+        }
     }
 
     func createAudiosFolder() {
