@@ -4,7 +4,7 @@ struct ButtonDeleteSelected: View {
     @EnvironmentObject var appManager: AppManager
     @EnvironmentObject var audioManager: AudioManager
     
-    var audios: Set<AudioModel.ID>
+    var audios: Set<Audio.ID>
     var callback: ()->Void = {}
         
     var body: some View {

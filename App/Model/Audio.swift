@@ -3,7 +3,7 @@ import Foundation
 import OSLog
 import SwiftUI
 
-class AudioModel {
+class Audio {
     let fileManager = FileManager.default
     private let url: URL
     private var cacheURL: URL?
@@ -27,14 +27,14 @@ class AudioModel {
         self.delegate = delegate
         title = url.deletingPathExtension().lastPathComponent
 
-//        Task {
-//            self.cover = getCover()
-//
-//            // 如果有大量的歌曲，就会产生大量的 updateMeta 操作，占内存较多
-//            if self.getCoverFromDisk() == nil {
-//                await updateMeta()
-//            }
-//        }
+        Task {
+            self.cover = getCover()
+
+            // 如果有大量的歌曲，就会产生大量的 updateMeta 操作，占内存较多
+            if self.getCoverFromDisk() == nil {
+                await updateMeta()
+            }
+        }
     }
 
     func getIcon() -> Image {
@@ -71,28 +71,28 @@ class AudioModel {
     }
 }
 
-extension AudioModel {
+extension Audio {
     static var emptyId = AppConfig.documentsDir
-    static var empty = AudioModel(emptyId)
+    static var empty = Audio(emptyId)
 
     func isEmpty() -> Bool {
-        id == AudioModel.emptyId
+        id == Audio.emptyId
     }
 }
 
-extension AudioModel: Equatable {
-    static func == (lhs: AudioModel, rhs: AudioModel) -> Bool {
+extension Audio: Equatable {
+    static func == (lhs: Audio, rhs: Audio) -> Bool {
         return lhs.url == rhs.url
     }
 }
 
-extension AudioModel: Identifiable {
+extension Audio: Identifiable {
     var id: URL { url }
 }
 
 // MARK: iCloud 相关
 
-extension AudioModel {
+extension Audio {
     var isCached: Bool { cacheURL != nil }
     var isDownloaded: Bool { downloadingPercent == 100.0 }
     var isNotDownloaded: Bool { !isDownloaded }
@@ -147,13 +147,13 @@ extension AudioModel {
 
 // MARK: 删除
 
-extension AudioModel {
+extension Audio {
     /// 删除多个文件
     static func delete(urls: Set<URL>) async {
         os_log("\(Logger.isMain)🏠 AudioModel::delete")
         AppConfig.mainQueue.async {
             for url in urls {
-                AudioModel(url).delete()
+                Audio(url).delete()
             }
         }
     }
@@ -174,7 +174,7 @@ extension AudioModel {
 
 // MARK: Meta
 
-extension AudioModel {
+extension Audio {
     var coverPath: URL {
         let fileName = url.lastPathComponent
         let imageName = fileName
@@ -265,7 +265,7 @@ extension AudioModel {
 
 // MARK: Cover
 
-extension AudioModel {
+extension Audio {
     func getCover() -> Image {
         if let cover = getCoverFromDisk() {
             return cover

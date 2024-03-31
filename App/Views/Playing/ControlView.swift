@@ -5,7 +5,7 @@ struct ControlView: View {
     @EnvironmentObject var audioManager: AudioManager
 
     var playNow: Bool? = false
-    var audios: [AudioModel] {audioManager.audios}
+    var audios: [Audio] {audioManager.audios}
 
     var body: some View {
         #if os(macOS)

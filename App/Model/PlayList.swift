@@ -7,16 +7,16 @@ class PlayList {
     var fileManager = FileManager.default
     var playMode: PlayMode = .Random
     var audioList: AudioList = AudioList([])
-    var list: [AudioModel] { self.audioList.collection }
+    var list: [Audio] { self.audioList.collection }
     var current: Int = 0
-    var audio: AudioModel { list.isEmpty ? AudioModel.empty : list[current] }
+    var audio: Audio { list.isEmpty ? Audio.empty : list[current] }
     var title: String { self.audio.title }
     var isEmpty: Bool { list.isEmpty }
     var count: Int { self.list.count }
     /// 本地磁盘目录，用来存放缓存
     var localDisk: URL?
 
-    init(_ audios: [AudioModel]) {
+    init(_ audios: [Audio]) {
         os_log("\(Logger.isMain)🚩 PlayList::init -> audios.count = \(audios.count)")
         self.audioList = AudioList(audios)
         self.updateCurrent()
@@ -27,21 +27,21 @@ class PlayList {
         os_log("🍋 Playlist::updateCurrent to \(self.current)")
     }
 
-    func find(_ id: AudioModel.ID) -> AudioModel {
+    func find(_ id: Audio.ID) -> Audio {
         current = list.firstIndex(where: { $0.id == id})!
         return audio
     }
 
-    func merge(_ audios: [AudioModel]) {
+    func merge(_ audios: [Audio]) {
         audioList.merge(audios)
     }
 
     // MARK: 获取上{offset}曲，仅获取，不改变播放状态
 
     /// 获取上{offset}曲，仅获取，不改变播放状态
-    func getPre(_ offset: Int = 1) -> AudioModel {
+    func getPre(_ offset: Int = 1) -> Audio {
         if list.count == 0 {
-            return AudioModel.empty
+            return Audio.empty
         }
 
         let preIndex = (current - offset + list.count) % list.count
@@ -54,9 +54,9 @@ class PlayList {
     // MARK: 获取下{offset}曲，仅获取，不改变播放状态
 
     /// 获取下{offset}曲，仅获取，不改变播放状态
-    func getNext(_ offset: Int = 1) -> AudioModel {
+    func getNext(_ offset: Int = 1) -> Audio {
         if list.count == 0 {
-            return AudioModel.empty
+            return Audio.empty
         }
 
         let nextIndex = (current + offset) % list.count
@@ -69,7 +69,7 @@ class PlayList {
 
     // MARK: 跳到上{offset}曲
 
-    func prev(_ offset: Int = 1, manual: Bool = true) throws -> AudioModel {
+    func prev(_ offset: Int = 1, manual: Bool = true) throws -> Audio {
         if list.count == 0 {
             os_log("\(Logger.isMain)列表为空")
             throw SmartError.NoAudioInList
@@ -94,7 +94,7 @@ class PlayList {
 
     // MARK: 跳到下{offset}曲
 
-    func next(_ offset: Int = 1, manual: Bool = true) throws -> AudioModel {
+    func next(_ offset: Int = 1, manual: Bool = true) throws -> Audio {
         os_log("🍋 Playlist::next, current is \(self.current)")
         if list.count == 0 {
             os_log("\(Logger.isMain)列表为空")

@@ -7,17 +7,17 @@ struct DBTableView: View {
     @EnvironmentObject var audioManager: AudioManager
     @EnvironmentObject var appManager: AppManager
 
-    @State private var selectedAudioModel: AudioModel? = nil
-    @State private var selectedAudioModels = Set<AudioModel.ID>()
-    @State private var sortOrder = [KeyPathComparator(\AudioModel.title)]
+    @State private var selectedAudioModel: Audio? = nil
+    @State private var selectedAudioModels = Set<Audio.ID>()
+    @State private var sortOrder = [KeyPathComparator(\Audio.title)]
 
     var db: DB { audioManager.db }
-    var audios: [AudioModel] { audioManager.audios }
+    var audios: [Audio] { audioManager.audios }
 
     var body: some View {
         GeometryReader { geo in
             Table(
-                of: AudioModel.self, selection: $selectedAudioModels, sortOrder: $sortOrder,
+                of: Audio.self, selection: $selectedAudioModels, sortOrder: $sortOrder,
                 columns: {
                     // value 参数用于排序
                     TableColumn(
@@ -60,8 +60,8 @@ struct DBTableView: View {
 
     // MARK: 右键菜单
 
-    private func getContextMenuItems(_ audio: AudioModel) -> some View {
-        let selected: Set<AudioModel.ID> = selectedAudioModels
+    private func getContextMenuItems(_ audio: Audio) -> some View {
+        let selected: Set<Audio.ID> = selectedAudioModels
 
         return VStack {
             BtnPlay(audio: audio)
@@ -93,7 +93,7 @@ struct DBTableView: View {
 
     // MARK: 歌曲的第2列
 
-    private func getArtistColumn(_ audio: AudioModel) -> some View {
+    private func getArtistColumn(_ audio: Audio) -> some View {
         HStack {
             Text(audio.artist).foregroundStyle(
                 audioManager.audio == audio && !selectedAudioModels.contains(audio.id) ? .blue : .primary)
@@ -103,21 +103,21 @@ struct DBTableView: View {
 
     // MARK: 歌曲的第3列
 
-    private func getAlbumColumn(_ audio: AudioModel) -> some View {
+    private func getAlbumColumn(_ audio: Audio) -> some View {
         Text(audio.albumName).foregroundStyle(
             audioManager.audio == audio && !selectedAudioModels.contains(audio.id) ? .blue : .primary)
     }
 
     // MARK: 歌曲的第4列
 
-    private func getSizeColumn(_ audio: AudioModel) -> some View {
+    private func getSizeColumn(_ audio: Audio) -> some View {
         Text(audio.getFileSizeReadable()).foregroundStyle(
             audioManager.audio == audio && !selectedAudioModels.contains(audio.id) ? .blue : .primary)
     }
 
     // MARK: 行
 
-    private func getRows() -> some TableRowContent<AudioModel> {
+    private func getRows() -> some TableRowContent<Audio> {
         return ForEach(audios) { audio in
             TableRow(audio)
                 .itemProvider { // enable Drap

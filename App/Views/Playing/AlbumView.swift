@@ -1,24 +1,12 @@
 import SwiftUI
 
 struct AlbumView: View {
-    @State private var image: Image? = nil
-
-    @Binding var audio: AudioModel
+    @Binding var audio: Audio
 
     var body: some View {
         ZStack {
-            if let i = image {
-                i.resizable().scaledToFit()
-            } else {
-                ProgressView()
-                    .progressViewStyle(CircularProgressViewStyle())
-                    .scaleEffect(0.5)
-            }
+            audio.getCover().resizable().scaledToFit()
         }
-        .onAppear {
-            image = audio.getCover()
-        }
-        .onChange(of: audio) { image = audio.getCover() }
     }
 }
 

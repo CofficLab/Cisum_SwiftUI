@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct BtnDownload: View {
-    var audio: AudioModel
+    var audio: Audio
         
     var body: some View {
         Button {

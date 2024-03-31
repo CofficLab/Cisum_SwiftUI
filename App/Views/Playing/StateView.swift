@@ -4,9 +4,9 @@ struct StateView: View {
     @EnvironmentObject var appManager: AppManager
     @EnvironmentObject var audioManager: AudioManager
     
-    private var audio: AudioModel { audioManager.audio }
+    private var audio: Audio { audioManager.audio }
     private var isCached: Bool { audio.isCached }
-    private var next: AudioModel { audioManager.playlist.getNext() }
+    private var next: Audio { audioManager.playlist.getNext() }
     
     var body: some View {
         HStack(spacing: 2) {

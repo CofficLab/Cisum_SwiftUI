@@ -7,7 +7,7 @@ class DB {
     var bg = AppConfig.bgQueue
     var audiosDir: URL = AppConfig.audiosDir
     var handler = CloudDocumentsHandler()
-    var onGet: ([AudioModel]) -> Void = { _  in os_log("🍋 DB::onGet") }
+    var onGet: ([Audio]) -> Void = { _  in os_log("🍋 DB::onGet") }
 
     init() {
         os_log("\(Logger.isMain)🚩 初始化 DB")
@@ -68,12 +68,12 @@ extension DB {
 
     /// 查询数据，当查到或有更新时会调用回调函数
     @MainActor
-    func getAudios(_ callback: @escaping ([AudioModel]) -> Void) {
+    func getAudios(_ callback: @escaping ([Audio]) -> Void) {
         Task {
             let query = ItemQuery(url: self.audiosDir)
             for await items in query.searchMetadataItems() {
                 let audios = items.filter({ $0.url != nil}).map { item in
-                    let audio = AudioModel(item.url!)
+                    let audio = Audio(item.url!)
                     audio.downloadingPercent = item.downloadProgress
                     audio.isDownloading = item.isDownloading
                     return audio

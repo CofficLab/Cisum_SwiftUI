@@ -9,9 +9,9 @@ import SwiftUI
 class AudioManager: NSObject, ObservableObject {
     @Published private(set) var isPlaying: Bool = false
     @Published private(set) var duration: TimeInterval = 0
-    @Published var audio = AudioModel.empty
+    @Published var audio = Audio.empty
     @Published var playlist = PlayList([])
-    @Published var audios: [AudioModel] = []
+    @Published var audios: [Audio] = []
 
     private var player: AVAudioPlayer = .init()
     private var listener: AnyCancellable?
@@ -135,7 +135,7 @@ class AudioManager: NSObject, ObservableObject {
         updatePlayer()
     }
 
-    func play(_ id: AudioModel.ID) {
+    func play(_ id: Audio.ID) {
         audio = playlist.find(id)
         updatePlayer()
         play()
@@ -190,7 +190,7 @@ class AudioManager: NSObject, ObservableObject {
         }
 
         // 列表不空，当前 AudioModel 却为空
-        if !playlist.list.isEmpty && audio == AudioModel.empty {
+        if !playlist.list.isEmpty && audio == Audio.empty {
             return false
         }
 
@@ -204,7 +204,7 @@ class AudioManager: NSObject, ObservableObject {
 
     private func reset() {
         stop()
-        audio = AudioModel.empty
+        audio = Audio.empty
         player = AVAudioPlayer()
     }
 }
@@ -244,10 +244,10 @@ extension AudioManager: AVAudioPlayerDelegate {
 
 extension AudioManager {
     func delete(urls: Set<URL>) async {
-        await AudioModel.delete(urls: urls)
+        await Audio.delete(urls: urls)
     }
     
-    func onGet(_ audios: [AudioModel]) {
+    func onGet(_ audios: [Audio]) {
         bg.async {
             os_log("\(Logger.isMain)🍋 AudioManager::onGet \(audios.count)")
             self.main.sync {

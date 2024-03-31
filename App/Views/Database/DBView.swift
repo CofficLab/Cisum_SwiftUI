@@ -98,7 +98,7 @@ extension DBView {
             completionOne: { url in },
             onStart: { url in
                 AppConfig.mainQueue.sync {
-                    if AudioModel(url).isNotDownloaded {
+                    if Audio(url).isNotDownloaded {
                         appManager.stateMessage = "正在从 iCloud 下载 \(url.lastPathComponent)"
                     } else {
                         appManager.stateMessage = "正在复制 \(url.lastPathComponent)"
