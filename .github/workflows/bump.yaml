@@ -20,9 +20,12 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: 更新版本号
         run: |
+
+          # 读取配置文件路径
+          projectFile=$(find $(pwd) -type f -name "*.pbxproj" | head -n 1)
+
           # 读取文件中的版本号
-          version=$(xcodebuild -showBuildSettings -quiet | grep -m 1 MARKETING_VERSION | cut -d= -f2)
-          version=${version# }
+          version=$(grep -o 'MARKETING_VERSION = [^"]*' $projectFile | head -n 1 | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+')
 
           echo "旧版本号->$version"
 
@@ -38,11 +41,9 @@ jobs:
           echo "新版本号->$newVersion"
 
           # 新版本号写入文件
-          file=$(find $(pwd) -type f -name "*.pbxproj" | head -n 1)
+          echo "新版本号将要写入文件->$projectFile"
 
-          echo "新版本号将要写入文件->$file"
-
-          sed -i '' "s/MARKETING_VERSION = $version/MARKETING_VERSION = $newVersion/" "$file"
+          sed -i '' "s/MARKETING_VERSION = $version/MARKETING_VERSION = $newVersion/" "$projectFile"
 
           updatedVersion=$(xcodebuild -showBuildSettings -quiet | grep -m 1 MARKETING_VERSION | cut -d= -f2)
           echo "更新后的版本号->$updatedVersion"
@@ -52,8 +53,15 @@ jobs:
         uses: yanamura/ios-bump-version@v1
       - name: 生成标签
         run: |
-          version=$(xcodebuild -showBuildSettings -quiet | grep -m 1 MARKETING_VERSION | cut -d= -f2)
-          version=${version# }
+
+          # 读取配置文件路径
+          projectFile=$(find $(pwd) -type f -name "*.pbxproj" | head -n 1)
+
+          # 读取文件中的版本号
+          version=$(grep -o 'MARKETING_VERSION = [^"]*' $projectFile | head -n 1 | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+')
+
+          echo "版本号->$version"
+
           build=$(agvtool what-version -terse)
 
           echo "tag=v$version($build)" >> $GITHUB_ENV
