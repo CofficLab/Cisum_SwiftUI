@@ -33,24 +33,41 @@ class AudioList {
     }
     
     func merge(_ audios: [AudioModel], shouldShuffle: Bool? = false) {
+        os_log("🍋 AudioList::merge \(audios.count)")
         if self.isEmpty {
             os_log("🍋 AudioList::merge while current is empty")
             return makeCollection(audios, shouldShuffle: shouldShuffle)
         }
         
-        audios.forEach { audio in
+        for audio in audios {
             if let i = downloading.firstIndex(where: {$0.id == audio.id}) {
                 downloading[i] = audio
+                //os_log("🍋 AudioList::merge \(audio.title) into downloading, index=\(i)")
+                continue
             }
             
             if let i = notDownloaded.firstIndex(where: {$0.id == audio.id}) {
                 notDownloaded[i] = audio
+                //os_log("🍋 AudioList::merge \(audio.title) into notDownloaded, index=\(i)")
+                continue
             }
             
             if let i = downloaded.firstIndex(where: {$0.id == audio.id}) {
                 downloaded[i] = audio
+                //os_log("🍋 AudioList::merge \(audio.title) into downloaded, index=\(i)")
+                continue
+            }
+            
+            if audio.isDownloaded {
+                downloaded.append(audio)
+            } else if audio.isDownloading {
+                downloading.append(audio)
+            } else {
+                notDownloaded.append(audio)
             }
         }
+        
+        os_log("🍋 AudioList::merge done 🎉🎉🎉 \(self.collection.count)")
     }
     
     func sort() {

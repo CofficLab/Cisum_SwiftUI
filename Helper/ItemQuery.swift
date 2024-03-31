@@ -4,9 +4,11 @@ import Foundation
 class ItemQuery {
     let query = NSMetadataQuery()
     let queue: OperationQueue
+    let url: URL
 
-    init(queue: OperationQueue = .main) {
+    init(queue: OperationQueue = .main, url: URL) {
         self.queue = queue
+        self.url = url
     }
 
     func searchMetadataItems(
@@ -16,19 +18,8 @@ class ItemQuery {
     ) -> AsyncStream<[MetadataItemWrapper]> {
         query.searchScopes = scopes
         query.sortDescriptors = sortDescriptors
-        // 获取 iCloud Ubiquity Container URL
-        if let containerURL = FileManager.default.url(forUbiquityContainerIdentifier: nil)?.appendingPathComponent("Documents") {
-            // 构建指向 Documents 目录的路径
-            let documentsPath = containerURL.path
-
-            // 使用动态路径创建谓词
-            let defaultPredicate = NSPredicate(format: "%K BEGINSWITH %@", NSMetadataItemPathKey, documentsPath)
-            query.predicate = predicate ?? defaultPredicate
-        } else {
-            // 如果无法获取路径，可以选择一个合适的默认行为
-            query.predicate = predicate ?? NSPredicate(value: true)
-        }
-
+        query.predicate = NSPredicate(format: "%K BEGINSWITH %@", NSMetadataItemPathKey, url.path + "/")
+        
         return AsyncStream { continuation in
             NotificationCenter.default.addObserver(
                 forName: .NSMetadataQueryDidFinishGathering,

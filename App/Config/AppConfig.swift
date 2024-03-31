@@ -29,7 +29,23 @@ extension AppConfig {
 
 extension AppConfig {
     static let documentsDir = fileManager.url(forUbiquityContainerIdentifier: containerIdentifier)!.appending(component: "Documents")
+    
     static var coverDir: URL {
         documentsDir.appendingPathComponent(coversDirName)
+    }
+    
+    static var audiosDir: URL {
+        let url = AppConfig.documentsDir.appendingPathComponent(AppConfig.audiosDirName)
+        
+        if !fileManager.fileExists(atPath: url.path) {
+            do {
+                try fileManager.createDirectory(at: url, withIntermediateDirectories: true)
+                os_log("\(Logger.isMain)🍋 DB::创建 Audios 目录成功")
+            } catch {
+                os_log("\(Logger.isMain)创建 Audios 目录失败\n\(error.localizedDescription)")
+            }
+        }
+        
+        return url
     }
 }

@@ -67,7 +67,7 @@ struct DemoView: View {
             }
             Button("Get Document File List") {
                 Task {
-                    let query = ItemQuery()
+                    let query = ItemQuery(url: AppConfig.documentsDir)
                     for await items in query.searchMetadataItems() {
                         items.forEach {
                             print($0.fileName ?? ""
@@ -88,7 +88,7 @@ struct DemoView: View {
             Button("Get StartWith H and in Root") {
                 Task {
                     print("start")
-                    let query = ItemQuery()
+                    let query = ItemQuery(url: AppConfig.documentsDir)
                     let containerIdentifier = "iCloud.yueyi.demo.1"
                     guard let containerURL = FileManager.default.url(forUbiquityContainerIdentifier: containerIdentifier) else {
                         return
