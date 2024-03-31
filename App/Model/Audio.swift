@@ -267,12 +267,12 @@ extension Audio {
 
 extension Audio {
     func getCover() -> Image {
-        if let cover = getCoverFromDisk() {
-            return cover
-        }
-
         if isNotDownloaded {
             return downloadingCover
+        }
+        
+        if let cover = getCoverFromDisk() {
+            return cover
         }
 
         return cover ?? defaultCover
@@ -287,7 +287,7 @@ extension Audio {
             #if os(macOS)
                 return Image(nsImage: NSImage(contentsOf: coverPath)!)
             #else
-                return Image(uiImage: UIImage(contentsOfFile: coverPath.path())!)
+                return Image(uiImage: UIImage(contentsOfFile: coverPath.path)!)
             #endif
         }
 
