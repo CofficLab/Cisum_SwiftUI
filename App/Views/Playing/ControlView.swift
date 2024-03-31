@@ -1,11 +1,7 @@
 import SwiftUI
 
 struct ControlView: View {
-    @EnvironmentObject var appManager: AppManager
     @EnvironmentObject var audioManager: AudioManager
-
-    var playNow: Bool? = false
-    var audios: [Audio] {audioManager.audios}
 
     var body: some View {
         #if os(macOS)
@@ -28,7 +24,7 @@ struct ControlView: View {
             }.foregroundStyle(.white)
         #else
             VStack {
-                AlbumView(audio: $audioManager.audio)
+                AlbumView(audio: audioManager.audio)
                 if audioManager.playlist.isEmpty {
                     DBEmptyView().padding(.vertical, 40)
                 }

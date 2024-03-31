@@ -48,7 +48,7 @@ class Audio {
     func getFileSizeReadable() -> String {
         FileHelper.getFileSizeReadable(url)
     }
-    
+
     func download() {
         SmartFile(url: url).download()
     }
@@ -208,25 +208,29 @@ extension Audio {
 // MARK: Cover
 
 extension Audio {
-    func saveDefaultCoverToDisk() {
-        
-    }
-    
+    #if os(iOS)
+        var uiImage: UIImage {
+            UIImage(contentsOfFile: coverPath.path) ??
+                UIImage(imageLiteralResourceName: "DefaultAlbum")
+        }
+    #endif
+
     func isCoverOnDisk() -> Bool {
         fileManager.fileExists(atPath: coverPath.path)
     }
-    
+
     func getCover() -> URL? {
         if isNotDownloaded {
             return nil
         }
-        
+
         if isCoverOnDisk() {
             return coverPath
         }
 
         return nil
-    }}
+    }
+}
 
 #Preview("App") {
     RootView {

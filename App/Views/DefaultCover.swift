@@ -28,7 +28,7 @@ struct DefaultCover: View {
             if rotate {
                 Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
                     withAnimation {
-                        rotationAngle += 0.3
+                        rotationAngle += 0.2
                     }
                 }
             }
@@ -38,9 +38,10 @@ struct DefaultCover: View {
     var background: some View {
         ZStack {
             if withBackground {
-                BackgroundView.type2.opacity(0.7)
-                Color.black.opacity(0.3)
-                Color.white.opacity(0.3)
+                BackgroundView.type2
+                BackgroundView.type1
+                BackgroundView.type3
+                Color.black.opacity(0.1)
             } else {
                 Color.clear
             }

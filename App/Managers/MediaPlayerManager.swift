@@ -22,9 +22,7 @@ class MediaPlayerManager: ObservableObject {
 
       center.nowPlayingInfo = [
         MPMediaItemPropertyTitle: audioManager.audio.title,
-        MPMediaItemPropertyArtwork: MPMediaItemArtwork(boundsSize: image.size) { _ -> UIImage in
-          image
-        },
+        MPMediaItemPropertyArtwork: MPMediaItemArtwork(image: image),
         MPMediaItemPropertyArtist: "乐音APP",
         MPMediaItemPropertyPlaybackDuration: audioManager.duration,
         MPNowPlayingInfoPropertyElapsedPlaybackTime: audioManager.currentTime(),
