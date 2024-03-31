@@ -40,6 +40,7 @@ struct DefaultCover: View {
             if withBackground {
                 BackgroundView.type2.opacity(0.7)
                 Color.black.opacity(0.3)
+                Color.white.opacity(0.3)
             } else {
                 Color.clear
             }
