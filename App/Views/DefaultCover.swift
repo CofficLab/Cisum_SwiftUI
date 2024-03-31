@@ -11,7 +11,7 @@ struct DefaultCover: View {
                     .resizable()
                     .scaledToFit()
                     .background(background)
-            }
+            }.scaleEffect(1.25)
         }
         .rotationEffect(.degrees(-90))
 
@@ -38,7 +38,8 @@ struct DefaultCover: View {
     var background: some View {
         ZStack {
             if withBackground {
-                BackgroundView.type1
+                BackgroundView.type2.opacity(0.7)
+                Color.black.opacity(0.3)
             } else {
                 Color.clear
             }
