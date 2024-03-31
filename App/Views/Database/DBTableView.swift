@@ -24,20 +24,8 @@ struct DBTableView: View {
                         "歌曲 \(audioManager.audios.count)", value: \.title,
                         content: { audio in
                             HStack {
-                                if audio.isDownloading {
-                                    ProgressView(value: audio.downloadingPercent/100)
-                                        .progressViewStyle(CircularProgressViewStyle(size: 14))
-                                        .controlSize(.regular)
-                                        .scaledToFit()
-                                        .frame(width: 24, height: 24)
-                                } else {
-                                    audio.getCover()
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(width: 24, height: 24)
-                                        .border(audioManager.audio == audio ? .clear : .clear)
-                                }
-                                
+                                AlbumView(audio: audio, downloadingPercent: audio.downloadingPercent, withBackground: true)
+                                    .frame(width: 24, height: 24)
                                 Text(audio.title).foregroundStyle(audioManager.audio == audio ? .blue : .primary)
                                 Spacer()
                                 if audio.isDownloading {
@@ -130,7 +118,7 @@ struct DBTableView: View {
     }
 
     init() {
-        //os_log("\(Logger.isMain)🚩 DBTableView::Init")
+        // os_log("\(Logger.isMain)🚩 DBTableView::Init")
     }
 }
 

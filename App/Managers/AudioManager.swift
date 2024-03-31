@@ -91,7 +91,7 @@ class AudioManager: NSObject, ObservableObject {
             throw SmartError.NoAudioInList
         }
 
-        if audio.getiCloudState() == .Downloading {
+        if audio.isDownloading {
             throw SmartError.Downloading
         }
 

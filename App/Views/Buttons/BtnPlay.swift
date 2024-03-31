@@ -27,7 +27,7 @@ struct BtnPlay: View {
             return
         }
         
-        if audio.getiCloudState() == .Downloading {
+        if audio.isDownloading {
             return appManager.setFlashMessage("正在从 iCloud 下载")
         }
         

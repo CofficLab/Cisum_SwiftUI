@@ -20,7 +20,7 @@ struct ControlView: View {
                     }
 
                     if geo.size.width > 500 {
-                        AlbumView(audio: $audioManager.audio)
+                        AlbumView(audio: audioManager.audio)
                     }
                 }
                 .padding(.bottom, 10)

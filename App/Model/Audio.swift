@@ -13,7 +13,7 @@ class Audio {
     var track = ""
     var albumName = ""
     var delegate: SuperAudioDelegate
-    var cover: Image?
+    var cover: URL?
     var downloadingPercent: Double = 0
     var isDownloading: Bool = false
     var size: Int64 {
@@ -31,26 +31,9 @@ class Audio {
             self.cover = getCover()
 
             // 如果有大量的歌曲，就会产生大量的 updateMeta 操作，占内存较多
-            if self.getCoverFromDisk() == nil {
+            if !isCoverOnDisk() {
                 await updateMeta()
             }
-        }
-    }
-
-    func getIcon() -> Image {
-        switch getiCloudState() {
-        case .Downloaded:
-            return Image(systemName: "icloud")
-        case .Downloading:
-            return Image(systemName: "square.and.arrow.down")
-        case .InCloud:
-            return Image(systemName: "icloud.and.arrow.down")
-        case .Uploading:
-            return Image(systemName: "icloud.and.arrow.up")
-        case .Unknown:
-            return Image(systemName: "music.note")
-        case .Cached:
-            return Image(systemName: "icloud")
         }
     }
 
@@ -101,47 +84,6 @@ extension Audio {
     func prepare() {
         os_log("\(Logger.isMain)🔊 AudioModel::prepare -> \(self.title)")
         SmartFile(url: getURL()).download()
-    }
-
-    func getiCloudState() -> iCloudState {
-        let status = iCloudHelper.getDownloadingStatus(url: url)
-
-        switch status {
-        case .current:
-            return .Downloaded
-        case .downloaded:
-            return .Downloaded
-        case .notDownloaded:
-            return .Downloading
-        default:
-            return .Unknown
-        }
-    }
-
-    enum iCloudState {
-        case Downloaded
-        case InCloud
-        case Downloading
-        case Uploading
-        case Unknown
-        case Cached
-
-        var description: String {
-            switch self {
-            case .Downloaded:
-                return "已下载"
-            case .InCloud:
-                return "在iCloud中"
-            case .Downloading:
-                return "下载中"
-            case .Unknown:
-                return "未知状态"
-            case .Cached:
-                return "已缓存"
-            default:
-                return "未知状态"
-            }
-        }
     }
 }
 
@@ -222,8 +164,8 @@ extension Audio {
 
                         // MARK: 得到了封面图
 
-                        if let image = try makeImage(await item.load(.value), saveTo: coverPath) {
-                            cover = image
+                        if (try makeImage(await item.load(.value), saveTo: coverPath)) != nil {
+                            cover = coverPath
                             delegate.onCoverUpdated()
                             os_log("\(Logger.isMain)🍋 AudioModel::updateMeta -> cover updated -> \(self.title)")
                         }
@@ -266,48 +208,25 @@ extension Audio {
 // MARK: Cover
 
 extension Audio {
-    func getCover() -> Image {
+    func saveDefaultCoverToDisk() {
+        
+    }
+    
+    func isCoverOnDisk() -> Bool {
+        fileManager.fileExists(atPath: coverPath.path)
+    }
+    
+    func getCover() -> URL? {
         if isNotDownloaded {
-            return downloadingCover
+            return nil
         }
         
-        if let cover = getCoverFromDisk() {
-            return cover
-        }
-
-        return cover ?? defaultCover
-    }
-
-    var downloadingCover: Image {
-        Image(systemName: "arrow.down.circle.dotted")
-    }
-
-    func getCoverFromDisk() -> Image? {
-        if fileManager.fileExists(atPath: coverPath.path) {
-            #if os(macOS)
-                return Image(nsImage: NSImage(contentsOf: coverPath)!)
-            #else
-                return Image(uiImage: UIImage(contentsOfFile: coverPath.path)!)
-            #endif
+        if isCoverOnDisk() {
+            return coverPath
         }
 
         return nil
-    }
-
-    var defaultCover: Image {
-        #if os(macOS)
-            Image(nsImage: NSImage(imageLiteralResourceName: "DefaultAlbum"))
-        #else
-            Image(uiImage: UIImage(imageLiteralResourceName: "DefaultAlbum"))
-        #endif
-    }
-
-    #if os(iOS)
-        var uiImage: UIImage {
-            UIImage(imageLiteralResourceName: "DefaultAlbum")
-        }
-    #endif
-}
+    }}
 
 #Preview("App") {
     RootView {
