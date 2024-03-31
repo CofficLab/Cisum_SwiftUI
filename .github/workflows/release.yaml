@@ -1,14 +1,14 @@
 name: Release
 
 on:
-  # push:
-  #   tags:
-  #     - '*'
-  workflow_run:
-    workflows:
-      - 'Bump'
-    types:
-      - completed
+  push:
+    tags:
+      - '*'
+  # workflow_run:
+  #   workflows:
+  #     - 'Bump'
+  #   types:
+  #     - completed
 
 permissions:
   contents: write
@@ -22,18 +22,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v3
-      - run: ls -alhR
-      - name: 读取版本号
-        run: |
-          version=$(xcodebuild -showBuildSettings -quiet | grep -m 1 MARKETING_VERSION | cut -d= -f2)
-          version=${version# }
-          build=$(agvtool what-version -terse)
-          echo "tag=v$version($build)" >> $GITHUB_ENV
       - name: Generate Changelog
         run: echo 'macOS、iOS版本在这里：[前往App Store](https://apps.apple.com/cn/app/cisum/id6466401036)'> ${{ github.workspace }}-CHANGELOG.txt
       - uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ env.tag }}
           body_path: ${{ github.workspace }}-CHANGELOG.txt
           files: |
             ./**/*.dmg
