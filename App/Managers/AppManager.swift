@@ -47,48 +47,6 @@ class AppManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
         }
     }
     
-    // 负责所有的初始化操作
-    static func prepare(_ callback: @escaping (_ result: PrepareResult) -> Void) {
-        prepareCloudDocuments({ result in
-            switch result {
-            case .success(let url):
-                callback(.success(iCloudDocumentsUrl: url))
-            case .failure(let error):
-                callback(.failure(error))
-            }
-        })
-    }
-
-    static func prepareCloudDocuments(_ callback: @escaping (_ result: PrepareCloudDocumentsResult) -> Void) {
-        AppConfig.logger.cloudKit.info("🚩 初始化 iCloud Documents")
-        
-        if !iCloudHelper.iCloudEnabled() {
-            AppConfig.logger.wild.warning("iCloud 未启用，使用本地目录")
-            
-            callback(.success(AppConfig.documentsDir))
-            return
-        }
-
-        // Dispatch to a global queue because url(forUbiquityContainerIdentifier:) might take a nontrivial
-        // amount of time to set up iCloud and return the requested URL
-        DispatchQueue.global().async {
-            if let url = FileManager.default.url(forUbiquityContainerIdentifier: AppConfig.containerIdentifier) {
-                DispatchQueue.main.async {
-                    AppConfig.logger.cloudKit.info("🚩 初始化 iCloud Documents 成功")
-
-                    iCloudDocumentsUrl = url.appendingPathComponent("Documents")
-                    callback(.success(iCloudDocumentsUrl!))
-                }
-            } else {
-                DispatchQueue.main.async {
-                    AppConfig.logger.cloudKit.fault("⛔️ 初始化 iCloud Documents 失败\n因为: url==nil")
-
-                    callback(.failure(CloudDocsError.failedToInitialize))
-                }
-            }
-        }
-    }
-    
     static func getCloudDocumentsUrl() -> URL {
         if let url = FileManager.default.url(forUbiquityContainerIdentifier: AppConfig.containerIdentifier) {
             return url

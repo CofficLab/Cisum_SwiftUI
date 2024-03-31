@@ -4,8 +4,10 @@ struct AlbumView: View {
     @Binding var audio: Audio
 
     var body: some View {
-        ZStack {
+        VStack {
+            Spacer()
             audio.getCover().resizable().scaledToFit()
+            Spacer()
         }
     }
 }

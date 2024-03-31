@@ -28,12 +28,11 @@ struct ControlView: View {
             }.foregroundStyle(.white)
         #else
             VStack {
-                TitleView().padding(.vertical, 20)
                 AlbumView(audio: $audioManager.audio)
-                    .opacity(audios.isEmpty ? 0 : 1)
                 if audioManager.playlist.isEmpty {
                     DBEmptyView().padding(.vertical, 40)
                 }
+                TitleView().padding(.vertical, 20)
                 SliderView().padding(.vertical, 20)
                 ButtonsView().padding(.vertical, 30)
             }.foregroundStyle(.white)

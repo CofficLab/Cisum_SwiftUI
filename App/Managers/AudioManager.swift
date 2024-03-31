@@ -17,17 +17,16 @@ class AudioManager: NSObject, ObservableObject {
     private var listener: AnyCancellable?
     private var bg = AppConfig.bgQueue
     private var main = AppConfig.mainQueue
-    private var rootDir: URL
+    private var rootDir: URL = AppConfig.documentsDir
 
     var db: DB
     var isEmpty: Bool { audios.isEmpty }
     var isCloudStorage: Bool { iCloudHelper.isCloudPath(url: rootDir) }
 
-    init(rootDir: URL) {
+    override init() {
         os_log("\(Logger.isMain)🚩 初始化 AudioManager")
 
         db = DB()
-        self.rootDir = rootDir
         super.init()
 
         db.onGet = onGet
