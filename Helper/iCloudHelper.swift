@@ -80,7 +80,7 @@ class iCloudHelper {
         } else {
             AppConfig.logger.cloudKit.debug("不支持 iCloud，使用本地目录")
 
-            return AppConfig.documentsDir
+            return AppConfig.cloudDocumentsDir
         }
     }
 

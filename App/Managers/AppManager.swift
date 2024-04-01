@@ -51,7 +51,7 @@ class AppManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
         if let url = FileManager.default.url(forUbiquityContainerIdentifier: AppConfig.containerIdentifier) {
             return url
         } else {
-            return AppConfig.documentsDir
+            return AppConfig.cloudDocumentsDir
         }
     }
 }

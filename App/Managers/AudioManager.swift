@@ -17,7 +17,7 @@ class AudioManager: NSObject, ObservableObject {
     private var listener: AnyCancellable?
     private var bg = AppConfig.bgQueue
     private var main = AppConfig.mainQueue
-    private var rootDir: URL = AppConfig.documentsDir
+    private var rootDir: URL = AppConfig.cloudDocumentsDir
 
     var db: DB
     var isEmpty: Bool { audios.isEmpty }

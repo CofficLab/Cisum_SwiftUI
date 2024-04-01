@@ -32,6 +32,7 @@ class Audio {
 
             // 如果有大量的歌曲，就会产生大量的 updateMeta 操作，占内存较多
             if isDownloaded && !isCoverOnDisk() {
+//                os_log("\(Logger.isMain)🍋 Audio::init 获取Meta \(self.title)")
                 await updateMeta()
             }
         }
@@ -55,7 +56,7 @@ class Audio {
 }
 
 extension Audio {
-    static var emptyId = AppConfig.documentsDir
+    static var emptyId = AppConfig.cloudDocumentsDir
     static var empty = Audio(emptyId)
 
     func isEmpty() -> Bool {

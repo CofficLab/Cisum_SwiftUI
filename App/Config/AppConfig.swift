@@ -30,7 +30,7 @@ extension AppConfig {
 extension AppConfig {
     static let localDocumentsDir = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first
     static let containerDir = fileManager.url(forUbiquityContainerIdentifier: containerIdentifier)
-    static var documentsDir: URL {
+    static var cloudDocumentsDir: URL {
         if let c  = containerDir {
             return c.appending(component: "Documents")
         }
@@ -43,11 +43,15 @@ extension AppConfig {
     }
     
     static var coverDir: URL {
-        documentsDir.appendingPathComponent(coversDirName)
+        if let localDocumentsDir = AppConfig.localDocumentsDir {
+            return localDocumentsDir.appendingPathComponent(coversDirName)
+        }
+        
+        fatalError()
     }
     
     static var audiosDir: URL {
-        let url = AppConfig.documentsDir.appendingPathComponent(AppConfig.audiosDirName)
+        let url = AppConfig.cloudDocumentsDir.appendingPathComponent(AppConfig.audiosDirName)
         
         if !fileManager.fileExists(atPath: url.path) {
             do {
