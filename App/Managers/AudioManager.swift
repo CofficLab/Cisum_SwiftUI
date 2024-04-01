@@ -175,7 +175,7 @@ class AudioManager: NSObject, ObservableObject {
 
             return player
         } catch {
-            os_log("\(Logger.isMain)初始化播放器失败 \(error)")
+            os_log("\(Logger.isMain)初始化播放器失败 ->\(url.lastPathComponent)->\(error)")
 
             throw SmartError.FormatNotSupported(url.pathExtension)
         }
