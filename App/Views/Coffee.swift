@@ -12,29 +12,45 @@ struct Coffee: View {
                 ZStack {
                     // 盘子
                     Circle()
-                        .frame(width: 150, height: 150)
+                        .frame(width: 1500, height: 1500)
                         .foregroundColor(.white.opacity(0.6))
                         .scaleEffect(0.8)
 
                     // 把手
-                    RoundedRectangle(cornerRadius: 10)
-                        .frame(width: 10, height: 40)
-                        .foregroundColor(.gray.opacity(0.8))
-                        .rotationEffect(.degrees(45))
-                        .offset(x: 30, y: -25)
+//                    RoundedRectangle(cornerRadius: 10)
+//                        .frame(width: 100, height: 500)
+//                        .foregroundColor(.gray.opacity(0.8))
+//                        .rotationEffect(.degrees(90))
+//                        .offset(x: 300, y: 0)
 
+                    // 咖啡杯边框
+                    Capsule()
+                        .stroke(Color.cyan, lineWidth: 1)
+                        .frame(width: 750, height: 750)
+                    
                     // 咖啡杯
                     Capsule()
-                        .frame(width: 80, height: 80)
+                        .frame(width: 750, height: 750)
                         .foregroundColor(.gray.opacity(1))
 
                     // 咖啡
                     Circle()
-                        .frame(width: 70, height: 70)
-                        .foregroundColor(.brown)
+                        .frame(width: 630, height: 630)
+                        .overlay(content: {
+                            ZStack(content: {
+                                Color.black.opacity(0.2)
+                                Color.brown.opacity(0.5)
+                            }).clipShape(Circle())
+                        })
+                    
+                    bubble(100, 100)
+                    bubble(-100, 100)
+                    bubble(100, -100)
+                    bubble(-100, -100)
+                    bubble(0, 0, size: 110)
                 }
                 .frame(maxWidth: min(geo.size.width, geo.size.height), maxHeight: min(geo.size.width, geo.size.height))
-                .scaleEffect(min(geo.size.width, geo.size.height) / 150)
+                .scaleEffect(min(geo.size.width, geo.size.height) / 1500)
                 .background(background)
                 .rotationEffect(.degrees(rotationAngle))
                 .onTapGesture {
@@ -53,6 +69,18 @@ struct Coffee: View {
             }
             }.frame(maxWidth: .infinity, maxHeight: .infinity)
         }
+    }
+    
+    func bubble(_ x: CGFloat, _ y: CGFloat, size: CGFloat = 160) -> some View {
+        Circle()
+            .frame(width: size, height: size)
+            .overlay(content: {
+                ZStack(content: {
+                    Color.black.opacity(0.5)
+                    Color.brown.opacity(0.2)
+                }).clipShape(Circle())
+            })
+            .offset(x: x, y: y)
     }
     
     var background: some View {
