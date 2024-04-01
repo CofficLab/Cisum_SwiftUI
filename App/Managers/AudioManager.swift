@@ -12,6 +12,7 @@ class AudioManager: NSObject, ObservableObject {
     @Published var audio = Audio.empty
     @Published var playlist = PlayList([])
     @Published var audios: [Audio] = []
+    @Published var playerError: Error? = nil
 
     private var player: AVAudioPlayer = .init()
     private var listener: AnyCancellable?
@@ -56,16 +57,39 @@ class AudioManager: NSObject, ObservableObject {
     func replay() {
         os_log("\(Logger.isMain)🍋 AudioManager::replay()")
 
-        updatePlayer()
+        do {
+            try updatePlayer()
+        } catch let e {
+            self.playerError = e
+            return
+        }
+
         play()
     }
 
+    // MARK: 播放
+
+    /// 播放指定的
+    func play(_ id: Audio.ID) {
+        audio = playlist.find(id)
+
+        play()
+    }
+
+    /// 播放当前的
     func play() {
         os_log("\(Logger.isMain)🔊 AudioManager::play")
         if playlist.list.count == 0 {
             os_log("\(Logger.isMain)列表为空，忽略")
             return
         }
+
+        do {
+            try updatePlayer()
+        } catch let e {
+            return
+        }
+
         player.play()
         isPlaying = true
 
@@ -122,7 +146,7 @@ class AudioManager: NSObject, ObservableObject {
 
         try audio = playlist.prev()
 
-        updatePlayer()
+        try updatePlayer()
         return "上一曲：\(audio.title)"
     }
 
@@ -131,16 +155,10 @@ class AudioManager: NSObject, ObservableObject {
         os_log("\(Logger.isMain)🔊 AudioManager::next ⬇️ \(manual ? "手动触发" : "自动触发")")
 
         try audio = playlist.next(manual: manual)
-        updatePlayer()
+        try updatePlayer()
     }
 
-    func play(_ id: Audio.ID) {
-        audio = playlist.find(id)
-        updatePlayer()
-        play()
-    }
-
-    private func makePlayer(url: URL?) -> AVAudioPlayer {
+    private func makePlayer(url: URL?) throws -> AVAudioPlayer {
         os_log("\(Logger.isMain)🚩 AudioManager::初始化播放器")
 
         guard let url = url else {
@@ -156,9 +174,9 @@ class AudioManager: NSObject, ObservableObject {
 
             return player
         } catch {
-            os_log("\(Logger.isMain)初始化播放器失败 \n\(error)")
+            os_log("\(Logger.isMain)初始化播放器失败 \(error)")
 
-            return AVAudioPlayer()
+            throw SmartError.FormatNotSupported(url.pathExtension)
         }
     }
 
@@ -166,18 +184,34 @@ class AudioManager: NSObject, ObservableObject {
         MediaPlayerManager.setNowPlayingInfo(audioManager: self)
     }
 
-    private func updatePlayer() {
-        main.async {
-            os_log("\(Logger.isMain)🍋 AudioManager::UpdatePlayer")
-            self.player = self.makePlayer(url: self.audio.getURL())
-            self.player.delegate = self
-            self.duration = self.player.duration
+    private func updatePlayer() throws {
+        do {
+            playerError = nil
+            let player = try makePlayer(url: audio.getURL())
+            bg.async {
+                os_log("\(Logger.isMain)🍋 AudioManager::UpdatePlayer")
+                player.delegate = self
+                let duration = self.player.duration
 
-            self.updateMediaPlayer()
+                self.updateMediaPlayer()
 
-            if self.isPlaying {
-                self.player.play()
+                self.main.async {
+                    self.player = player
+                    self.duration = duration
+
+                    if self.isPlaying {
+                        self.player.play()
+                    }
+                }
             }
+        } catch let e {
+            withAnimation {
+                self.playerError = nil
+                main.asyncAfter(deadline: .now() + 0.3) {
+                    self.playerError = e
+                }
+            }
+            throw e
         }
     }
 
@@ -194,7 +228,7 @@ class AudioManager: NSObject, ObservableObject {
         }
 
         // 已经不在列表中了
-        if !playlist.list.contains(self.audio) {
+        if !playlist.list.contains(audio) {
             return false
         }
 
@@ -221,6 +255,7 @@ extension AudioManager: AVAudioPlayerDelegate {
             try next(manual: false)
         } catch let e {
             os_log("\(Logger.isMain)‼️ AudioManager::\(e.localizedDescription)")
+            self.playerError = e
         }
     }
 
@@ -245,7 +280,7 @@ extension AudioManager {
     func delete(urls: Set<URL>) async {
         await Audio.delete(urls: urls)
     }
-    
+
     func onGet(_ audios: [Audio]) {
         bg.async {
             os_log("\(Logger.isMain)🍋 AudioManager::onGet \(audios.count)")
@@ -255,7 +290,12 @@ extension AudioManager {
                 if self.audio.isEmpty() {
                     os_log("\(Logger.isMain)🍋 AudioManager::audio is empty, update")
                     self.audio = self.playlist.audio
-                    self.updatePlayer()
+
+                    do {
+                        try self.updatePlayer()
+                    } catch let e {
+                        self.playerError = e
+                    }
                 }
             }
         }

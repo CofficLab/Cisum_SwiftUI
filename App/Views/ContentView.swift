@@ -5,6 +5,7 @@ struct ContentView: View {
     var play: Bool = false
 
     @EnvironmentObject var appManager: AppManager
+    @EnvironmentObject var audioManager: AudioManager
     
     init() {
         os_log("\(Logger.isMain)🚩 ContentView::init")
@@ -32,6 +33,15 @@ struct ContentView: View {
             if !appManager.fixedMessage.isEmpty {
                 CardView(background: BackgroundView.type4) {
                     Text(appManager.fixedMessage)
+                        .font(.title)
+                        .foregroundStyle(.white)
+                }
+            }
+            
+            // 播放过程中出现的错误
+            if let e = audioManager.playerError {
+                CardView(background: BackgroundView.type4) {
+                    Text(e.localizedDescription)
                         .font(.title)
                         .foregroundStyle(.white)
                 }
