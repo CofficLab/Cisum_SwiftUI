@@ -86,7 +86,7 @@ class AudioManager: NSObject, ObservableObject {
 
         do {
             try updatePlayer()
-        } catch let e {
+        } catch {
             return
         }
 
