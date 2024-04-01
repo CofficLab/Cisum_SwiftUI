@@ -9,6 +9,10 @@ struct AppConfig {
     static let cacheDirName = "audios_cache"
     static let containerIdentifier = "iCloud.yueyi.cisum"
     static let logger = Logger.self
+    static let supportedExtensions = [
+        "mp3",
+        "m4a",
+    ]
 }
 
 // MARK: 视图配置

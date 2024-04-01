@@ -165,6 +165,11 @@ class AudioManager: NSObject, ObservableObject {
         guard let url = url else {
             return AVAudioPlayer()
         }
+        
+        let ext = url.pathExtension
+        if !AppConfig.supportedExtensions.contains(ext) {
+            throw SmartError.FormatNotSupported(ext)
+        }
 
         do {
             #if os(iOS)
@@ -177,7 +182,7 @@ class AudioManager: NSObject, ObservableObject {
         } catch {
             os_log("\(Logger.isMain)初始化播放器失败 ->\(url.lastPathComponent)->\(error)")
 
-            throw SmartError.FormatNotSupported(url.pathExtension)
+            throw SmartError.PlayFailed
         }
     }
 

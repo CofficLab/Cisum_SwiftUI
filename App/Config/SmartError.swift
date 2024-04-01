@@ -8,6 +8,7 @@ enum SmartError: Error, LocalizedError {
     case NoAudioInList
     case Downloading
     case FormatNotSupported(_ format: String)
+    case PlayFailed
     
     var errorDescription: String? {
         switch self {
@@ -25,6 +26,8 @@ enum SmartError: Error, LocalizedError {
             "正在从 iCloud 下载"
         case .FormatNotSupported(let format):
             "不支持这个格式： \(format)"
+        case .PlayFailed:
+            "出现系统错误，播放失败"
         }
     }
 }
