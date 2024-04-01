@@ -21,7 +21,7 @@ struct SliderView: View {
                     if !editing {
                         audioManager.gotoTime(time: value)
                     }
-                }.disabled(audioManager.playlist.list.isEmpty)
+                }.disabled(audioManager.playlist.isEmpty)
             } else {
                 GeometryReader { geo in
                     ZStack {

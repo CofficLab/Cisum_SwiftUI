@@ -71,7 +71,7 @@ class AudioManager: NSObject, ObservableObject {
 
     /// 播放指定的
     func play(_ id: Audio.ID) {
-        audio = playlist.find(id)
+        audio = playlist.switchTo(id)
 
         play()
     }
@@ -79,7 +79,7 @@ class AudioManager: NSObject, ObservableObject {
     /// 播放当前的
     func play() {
         os_log("\(Logger.isMain)🔊 AudioManager::play")
-        if playlist.list.count == 0 {
+        if playlist.isEmpty {
             os_log("\(Logger.isMain)列表为空，忽略")
             return
         }
@@ -112,7 +112,7 @@ class AudioManager: NSObject, ObservableObject {
     }
 
     func togglePlayPause() throws {
-        if playlist.list.count == 0 {
+        if playlist.isEmpty {
             throw SmartError.NoAudioInList
         }
 
@@ -141,7 +141,7 @@ class AudioManager: NSObject, ObservableObject {
         os_log("\(Logger.isMain)🔊 AudioManager::prev ⬆️")
 
         // 用户触发，但曲库仅一首，发出提示
-        if playlist.list.count == 1 && manual {
+        if playlist.isEmpty && manual {
             throw SmartError.NoPrevAudio
         }
 
@@ -225,17 +225,17 @@ class AudioManager: NSObject, ObservableObject {
     // 当前的 AudioModel 是否有效
     private func isValid() -> Bool {
         // 列表为空
-        if playlist.list.isEmpty {
+        if playlist.isEmpty {
             return false
         }
 
         // 列表不空，当前 AudioModel 却为空
-        if !playlist.list.isEmpty && audio == Audio.empty {
+        if !playlist.isEmpty && audio == Audio.empty {
             return false
         }
 
         // 已经不在列表中了
-        if !playlist.list.contains(audio) {
+        if playlist.contains(audio.id) {
             return false
         }
 
@@ -293,7 +293,7 @@ extension AudioManager {
             os_log("\(Logger.isMain)🍋 AudioManager::onGet \(audios.count)")
             self.playlist.merge(audios)
             self.main.sync {
-                self.audios = self.playlist.list
+                self.audios = self.playlist.audios
                 if self.audio.isEmpty() {
                     os_log("\(Logger.isMain)🍋 AudioManager::audio is empty, update")
                     self.audio = self.playlist.audio
@@ -306,5 +306,11 @@ extension AudioManager {
                 }
             }
         }
+    }
+}
+
+#Preview {
+    RootView {
+        ContentView()
     }
 }

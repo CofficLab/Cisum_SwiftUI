@@ -6,10 +6,28 @@ class AudioList {
     var downloading: [Audio] = []
     var notDownloaded: [Audio] = []
     var collection: [Audio] { downloaded + downloading + notDownloaded }
+    var count: Int { collection.count }
     var isEmpty: Bool { collection.isEmpty }
     
     init(_ audios: [Audio]) {
         makeCollection(audios)
+    }
+    
+    func find(_ audioId: Audio.ID) -> Audio? {
+        let i = collection.firstIndex(where: {audioId == $0.id}) ?? -1
+        return collection[i]
+    }
+    
+    func find(_ audioId: Audio.ID) -> Int? {
+        collection.firstIndex(where: {audioId == $0.id})
+    }
+    
+    func get(_ index: Int) -> Audio {
+        collection[index]
+    }
+    
+    func firstDownloaded() -> Int? {
+        downloaded.firstIndex(where: { $0.isDownloaded})
     }
     
     func shuffle() {

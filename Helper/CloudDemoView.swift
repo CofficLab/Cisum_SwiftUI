@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct DemoView: View {
+struct CloudDemoView: View {
     @State var handler = CloudDocumentsHandler()
 
     var documentURL = AppConfig.cloudDocumentsDir
@@ -131,5 +131,5 @@ struct DemoView: View {
 }
 
 #Preview {
-    DemoView()
+    CloudDemoView()
 }

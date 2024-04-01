@@ -7,12 +7,12 @@ class PlayList {
     var fileManager = FileManager.default
     var playMode: PlayMode = .Random
     var audioList: AudioList = AudioList([])
-    var list: [Audio] { self.audioList.collection }
     var current: Int = 0
-    var audio: Audio { list.isEmpty ? Audio.empty : list[current] }
+    var audio: Audio { audioList.isEmpty ? Audio.empty : audioList.get(current) }
+    var audios: [Audio] { audioList.collection }
     var title: String { self.audio.title }
-    var isEmpty: Bool { list.isEmpty }
-    var count: Int { self.list.count }
+    var isEmpty: Bool { audioList.isEmpty }
+    var count: Int { self.audioList.count }
     /// 本地磁盘目录，用来存放缓存
     var localDisk: URL?
 
@@ -23,12 +23,20 @@ class PlayList {
     }
     
     func updateCurrent() {
-        self.current = self.list.firstIndex(where: { $0.isDownloaded }) ?? 0
+        self.current = self.audioList.firstDownloaded() ?? 0
         os_log("🍋 Playlist::updateCurrent to \(self.current)")
     }
+    
+    func find(_ audioId: Audio.ID) -> Audio? {
+        audioList.find(audioId)
+    }
+    
+    func contains(_ audioId: Audio.ID) -> Bool {
+        find(audioId) != nil
+    }
 
-    func find(_ id: Audio.ID) -> Audio {
-        current = list.firstIndex(where: { $0.id == id})!
+    func switchTo(_ id: Audio.ID) -> Audio {
+        current = audioList.find(id) ?? 0
         return audio
     }
 
@@ -40,12 +48,12 @@ class PlayList {
 
     /// 获取上{offset}曲，仅获取，不改变播放状态
     func getPre(_ offset: Int = 1) -> Audio {
-        if list.count == 0 {
+        if isEmpty {
             return Audio.empty
         }
 
-        let preIndex = (current - offset + list.count) % list.count
-        let preAudio = list[preIndex]
+        let preIndex = (current - offset + self.count) % self.count
+        let preAudio = audioList.get(preIndex)
         // os_log("\(Logger.isMain)🔊 PlayList::next \(offset) -> \(nextAudio.title)")
 
         return preAudio
@@ -55,12 +63,12 @@ class PlayList {
 
     /// 获取下{offset}曲，仅获取，不改变播放状态
     func getNext(_ offset: Int = 1) -> Audio {
-        if list.count == 0 {
+        if isEmpty {
             return Audio.empty
         }
 
-        let nextIndex = (current + offset) % list.count
-        let nextAudio = list[nextIndex]
+        let nextIndex = (current + offset) % self.count
+        let nextAudio = audioList.get(nextIndex)
         
         os_log("\(Logger.isMain)🔊 PlayList::getNext \(offset) while current -> \(self.current) -> \(nextAudio.title)")
 
@@ -70,18 +78,18 @@ class PlayList {
     // MARK: 跳到上{offset}曲
 
     func prev(_ offset: Int = 1, manual: Bool = true) throws -> Audio {
-        if list.count == 0 {
+        if isEmpty {
             os_log("\(Logger.isMain)列表为空")
             throw SmartError.NoAudioInList
         }
 
-        let index = offset % list.count
+        let index = offset % self.count
         os_log("\(Logger.isMain)🔊 PlayList::prev \(offset) -> \(self.audio.title)")
 
-        for i in index...list.count - 1 {
+        for i in index...self.count - 1 {
             let target = getPre(i)
             if target.isDownloaded {
-                current = (current - i + list.count) % list.count
+                current = (current - i + self.count) % self.count
                 os_log("\(Logger.isMain)🔊 PlayList::goto -> \(self.audio.title)")
 
                 return audio
@@ -96,16 +104,16 @@ class PlayList {
 
     func next(_ offset: Int = 1, manual: Bool = true) throws -> Audio {
         os_log("🍋 Playlist::next, current is \(self.current)")
-        if list.count == 0 {
+        if isEmpty {
             os_log("\(Logger.isMain)列表为空")
             throw SmartError.NoAudioInList
         }
 
-        let index = offset % list.count
+        let index = offset % self.count
         os_log("\(Logger.isMain)🔊 PlayList::next \(offset) ⬇️ \(manual ? "手动触发" : "自动触发")")
 
         // 用户触发，但曲库仅一首，发出提示
-        if list.count == 1 && manual {
+        if self.count == 1 && manual {
             throw SmartError.NoNextAudio
         }
 
@@ -118,10 +126,10 @@ class PlayList {
         // 同时准备接下来的歌曲
         Task { prepare() }
 
-        for i in index...list.count - 1 {
+        for i in index...self.count - 1 {
             let target = getNext(i)
             if target.isDownloaded {
-                current = (current + i) % list.count
+                current = (current + i) % self.count
                 os_log("\(Logger.isMain)🔊 PlayList::goto ⬇️ \(self.audio.title)")
 
                 return audio
@@ -204,7 +212,7 @@ extension PlayList {
 
     /// 准备接下来的歌曲
     func prepare() {
-        let count = min(list.count - 1, 3)
+        let count = min(self.count - 1, 3)
         os_log("\(Logger.isMain)🔊 PlayList::prepare next \(count) ⏬")
         guard count > 0 else {
             return

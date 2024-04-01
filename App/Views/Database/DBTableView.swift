@@ -7,8 +7,7 @@ struct DBTableView: View {
     @EnvironmentObject var audioManager: AudioManager
     @EnvironmentObject var appManager: AppManager
 
-    @State private var selectedAudioModel: Audio? = nil
-    @State private var selectedAudioModels = Set<Audio.ID>()
+    @State private var selections = Set<Audio.ID>()
     @State private var sortOrder = [KeyPathComparator(\Audio.title)]
 
     var db: DB { audioManager.db }
@@ -16,20 +15,19 @@ struct DBTableView: View {
     var downloaded: [Audio] { audios.filter { $0.isDownloaded } }
     var description: String {
         if downloaded.count == audios.count {
-            return ""
+            return "歌曲"
         }
         
-        return "\(downloaded.count)/\(audios.count) 已下载 "
+        return "歌曲 \(downloaded.count)/\(audios.count) 已下载 "
     }
 
     var body: some View {
         GeometryReader { geo in
             Table(
-                of: Audio.self, selection: $selectedAudioModels, sortOrder: $sortOrder,
+                of: Audio.self, selection: $selections, sortOrder: $sortOrder,
                 columns: {
                     // value 参数用于排序
-                    TableColumn(
-                        "歌曲 \(description)", value: \.title,
+                    TableColumn(description, value: \.title,
                         content: { audio in
                             HStack {
                                 AlbumView(audio: audio, downloadingPercent: audio.downloadingPercent, withBackground: true,rotate: false)
@@ -57,7 +55,7 @@ struct DBTableView: View {
     // MARK: 右键菜单
 
     private func getContextMenuItems(_ audio: Audio) -> some View {
-        let selected: Set<Audio.ID> = selectedAudioModels
+        let selected: Set<Audio.ID> = selections
 
         return VStack {
             BtnPlay(audio: audio)
@@ -71,7 +69,7 @@ struct DBTableView: View {
             Divider()
             //            ButtonAdd()
             ButtonCancelSelected(action: {
-                selectedAudioModels.removeAll()
+                selections.removeAll()
             }).disabled(selected.count == 0)
 
             Divider()
@@ -92,7 +90,7 @@ struct DBTableView: View {
     private func getArtistColumn(_ audio: Audio) -> some View {
         HStack {
             Text(audio.artist).foregroundStyle(
-                audioManager.audio == audio && !selectedAudioModels.contains(audio.id) ? .blue : .primary)
+                audioManager.audio == audio && !selections.contains(audio.id) ? .blue : .primary)
             Spacer()
         }
     }
@@ -101,14 +99,14 @@ struct DBTableView: View {
 
     private func getAlbumColumn(_ audio: Audio) -> some View {
         Text(audio.albumName).foregroundStyle(
-            audioManager.audio == audio && !selectedAudioModels.contains(audio.id) ? .blue : .primary)
+            audioManager.audio == audio && !selections.contains(audio.id) ? .blue : .primary)
     }
 
     // MARK: 歌曲的第4列
 
     private func getSizeColumn(_ audio: Audio) -> some View {
         Text(audio.getFileSizeReadable()).foregroundStyle(
-            audioManager.audio == audio && !selectedAudioModels.contains(audio.id) ? .blue : .primary)
+            audioManager.audio == audio && !selections.contains(audio.id) ? .blue : .primary)
     }
 
     // MARK: 行
