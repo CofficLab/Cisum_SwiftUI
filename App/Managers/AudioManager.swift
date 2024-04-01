@@ -107,6 +107,7 @@ class AudioManager: NSObject, ObservableObject {
         os_log("\(Logger.isMain)🍋 AudioManager::Stop")
         player.stop()
         player.currentTime = 0
+        duration = 0
         isPlaying = false
     }
 
@@ -206,6 +207,7 @@ class AudioManager: NSObject, ObservableObject {
             }
         } catch let e {
             withAnimation {
+                self.stop()
                 self.playerError = nil
                 main.asyncAfter(deadline: .now() + 0.3) {
                     self.playerError = e
