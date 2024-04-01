@@ -31,7 +31,7 @@ class Audio {
             self.cover = getCover()
 
             // 如果有大量的歌曲，就会产生大量的 updateMeta 操作，占内存较多
-            if !isCoverOnDisk() {
+            if isDownloaded && !isCoverOnDisk() {
                 await updateMeta()
             }
         }
