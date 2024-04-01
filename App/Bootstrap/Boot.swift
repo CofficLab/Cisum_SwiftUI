@@ -29,3 +29,9 @@ struct Boot: App {
         #endif
     }
 }
+
+#Preview {
+    RootView {
+        ContentView()
+    }
+}

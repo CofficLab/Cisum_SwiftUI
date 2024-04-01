@@ -7,22 +7,10 @@ struct BtnMode: View {
     @State private var hovered: Bool = false
 
     var body: some View {
-        HStack {
-            Label("模式", systemImage: getImageName())
-                .font(.system(size: 24))
-        }
-        .padding(8)
-        .background(hovered ? Color.gray.opacity(0.4) : .clear)
-        .clipShape(RoundedRectangle(cornerRadius: 8.0))
-        .onTapGesture {
-            audioManager.playlist.switchMode({ mode in
+        ControlButton(title:"模式",size:24,systemImage: getImageName(), onTap: {
+            audioManager.playlist.switchMode { mode in
                 appManager.setFlashMessage("\(mode.description)")
                 audioManager.audios = audioManager.playlist.list
-            })
-        }
-        .onHover(perform: { hovering in
-            withAnimation(.easeInOut) {
-                hovered = hovering
             }
         })
     }
@@ -36,6 +24,12 @@ struct BtnMode: View {
         case .Random:
             return "shuffle"
         }
+    }
+}
+
+#Preview {
+    RootView {
+        ContentView()
     }
 }
 

@@ -28,7 +28,7 @@ struct DBTableView: View {
                         "歌曲 \(description)", value: \.title,
                         content: { audio in
                             HStack {
-                                AlbumView(audio: audio, downloadingPercent: audio.downloadingPercent, withBackground: true)
+                                AlbumView(audio: audio, downloadingPercent: audio.downloadingPercent, withBackground: true,rotate: false)
                                     .frame(width: 24, height: 24)
                                 Text(audio.title).foregroundStyle(audioManager.audio == audio ? .blue : .primary)
                                 Spacer()
@@ -129,5 +129,11 @@ struct DBTableView: View {
 #Preview("APP") {
     RootView {
         ContentView()
-    }.frame(width: 1200)
+    }.frame(width: 700)
+}
+
+#Preview("APP") {
+    RootView {
+        ContentView()
+    }.frame(width: 350)
 }

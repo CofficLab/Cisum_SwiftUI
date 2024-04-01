@@ -6,22 +6,30 @@ struct ControlView: View {
     var body: some View {
         #if os(macOS)
             GeometryReader { geo in
-                HStack {
-                    VStack {
+                HStack(spacing: 0) {
+                    VStack(spacing: 0) {
+                        Spacer()
                         TitleView()
                         Spacer()
-                        ButtonsView().frame(height: 60)
+                        BtnsView().frame(height: 60)
                         SliderView().frame(height: 30)
                         // StateView()
                     }
 
                     if geo.size.width > 500 {
-                        AlbumView(audio: audioManager.audio)
+                        // 最大宽度=控制栏的高度+系统标题栏高度
+                        HStack {
+                            Spacer()
+                            AlbumView(audio: audioManager.audio)
+                        }.frame(maxWidth:geo.size.height*1.1)
                     }
                 }
-                .padding(.bottom, 10)
-                .padding(.horizontal, 10)
-            }.foregroundStyle(.white)
+//                .background(.red)
+                .padding(.bottom, 0)
+                .padding(.horizontal, 0)
+            }
+            .foregroundStyle(.white)
+            .ignoresSafeArea()
         #else
             VStack {
                 AlbumView(audio: audioManager.audio)
@@ -30,7 +38,7 @@ struct ControlView: View {
                 }
                 TitleView().padding(.vertical, 20)
                 SliderView().padding(.vertical, 20)
-                ButtonsView().padding(.vertical, 30)
+                BtnsView().padding(.vertical, 30)
             }.foregroundStyle(.white)
         #endif
     }

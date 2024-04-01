@@ -1,11 +1,11 @@
 import SwiftUI
 
-struct ButtonsView: View {
+struct BtnsView: View {
     var body: some View {
         HStack(spacing: 2, content: {
-            ButtonToggleDatabase().padding(.trailing, 20)
+            BtnToggleDB().padding(.trailing, 20)
             BtnPrev()
-            BtnToggle()
+            BtnToggle().padding(.horizontal, 10)
             BtnNext()
             BtnMode().padding(.leading, 20)
         })

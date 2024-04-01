@@ -6,6 +6,7 @@ struct AlbumView: View {
     var downloadingPercent: Double = 100.0
     var fileManager = FileManager.default
     var withBackground = false
+    var rotate = true
     var image: Image? { getCoverFromDisk() }
 
     var body: some View {
@@ -21,10 +22,11 @@ struct AlbumView: View {
                 if let image = image {
                     image.resizable().scaledToFit()
                 } else {
-                    DefaultCover(withBackground: withBackground, rotate: withBackground == false)
+                    Coffee(rotate: rotate, withBackground: withBackground)
                 }
             }
         }
+//        .background(.green)
     }
 
     func getCoverFromDisk() -> Image? {

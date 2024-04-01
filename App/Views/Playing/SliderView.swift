@@ -44,6 +44,13 @@ struct SliderView: View {
                 value = audioManager.currentTime()
             }
         }
+        .padding(.horizontal, 10)
+    }
+}
+
+#Preview {
+    RootView {
+        ContentView()
     }
 }
 

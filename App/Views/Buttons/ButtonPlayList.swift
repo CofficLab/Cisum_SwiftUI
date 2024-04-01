@@ -30,6 +30,12 @@ struct ButtonPlayList: View {
 
 #Preview {
     RootView(content: {
+        ContentView()
+    })
+}
+
+#Preview {
+    RootView(content: {
         Centered {
             ButtonPlayList()
         }
