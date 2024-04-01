@@ -19,7 +19,8 @@ struct AppConfig {
 
 extension AppConfig {
     /// 上半部分播放控制的高度
-    static var controlViewHeight: CGFloat = 160
+    static var controlViewHeight: CGFloat = 180
+    static var databaseViewHeightMin: CGFloat = 200
 }
 
 // MARK: 队列配置

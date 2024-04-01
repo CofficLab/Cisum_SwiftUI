@@ -10,8 +10,7 @@ struct ControlView: View {
                     VStack(spacing: 0) {
                         Spacer()
                         TitleView()
-                        Spacer()
-                        BtnsView().frame(height: 60)
+                        BtnsView().frame(height: 100)
                         SliderView().frame(height: 30)
                         // StateView()
                     }

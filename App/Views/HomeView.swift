@@ -10,7 +10,7 @@ struct HomeView: View {
 
     @State private var databaseViewHeight: CGFloat = 300
 
-    var databaseViewHeightMin: CGFloat = 200
+    var databaseViewHeightMin = AppConfig.databaseViewHeightMin
 
     var body: some View {
         #if os(macOS)
