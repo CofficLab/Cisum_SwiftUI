@@ -2,6 +2,10 @@ import SwiftUI
 
 struct DBEmptyView: View {
     @EnvironmentObject var appManager: AppManager
+    
+    var supportedFormats: String {
+        AppConfig.supportedExtensions.joined(separator: ",")
+    }
 
     var body: some View {
         CardView(background: BackgroundView.type3) {
@@ -16,13 +20,16 @@ struct DBEmptyView: View {
                 #endif
 
                 #if os(macOS)
+                VStack {
                     HStack {
-                        Image(systemName: "info.circle.fill")
-                            .foregroundStyle(.brown)
-                        Text("将音乐文件拖到这里")
-                            .font(.subheadline)
-                            .foregroundStyle(.white)
+                            Image(systemName: "info.circle.fill")
+                                .foregroundStyle(.brown)
+                            Text("将音乐文件拖到这里")
+                                .font(.subheadline)
+                                .foregroundStyle(.white)
                     }
+                    Text("支持的格式：\(supportedFormats)").font(.subheadline)
+                }
                 #endif
             }
         }
