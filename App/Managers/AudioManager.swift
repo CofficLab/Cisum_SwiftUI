@@ -286,8 +286,8 @@ extension AudioManager {
     func onGet(_ audios: [Audio]) {
         bg.async {
             os_log("\(Logger.isMain)🍋 AudioManager::onGet \(audios.count)")
+            self.playlist.merge(audios)
             self.main.sync {
-                self.playlist.merge(audios)
                 self.audios = self.playlist.list
                 if self.audio.isEmpty() {
                     os_log("\(Logger.isMain)🍋 AudioManager::audio is empty, update")

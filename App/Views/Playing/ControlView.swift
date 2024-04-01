@@ -21,7 +21,7 @@ struct ControlView: View {
                         HStack {
                             Spacer()
                             AlbumView(audio: audioManager.audio)
-                        }.frame(maxWidth:geo.size.height*1.1)
+                        }.frame(maxWidth:geo.size.height*1.3)
                     }
                 }
 //                .background(.red)

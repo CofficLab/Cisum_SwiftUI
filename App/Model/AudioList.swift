@@ -41,18 +41,30 @@ class AudioList {
         
         for audio in audios {
             if let i = downloading.firstIndex(where: {$0.id == audio.id}) {
+                if downloading[i] == audio {
+                    continue
+                }
+                
                 downloading[i] = audio
                 //os_log("🍋 AudioList::merge \(audio.title) into downloading, index=\(i)")
                 continue
             }
             
             if let i = notDownloaded.firstIndex(where: {$0.id == audio.id}) {
+                if notDownloaded[i] == audio {
+                    continue
+                }
+                
                 notDownloaded[i] = audio
                 //os_log("🍋 AudioList::merge \(audio.title) into notDownloaded, index=\(i)")
                 continue
             }
             
             if let i = downloaded.firstIndex(where: {$0.id == audio.id}) {
+                if downloaded[i] == audio {
+                    continue
+                }
+                
                 downloaded[i] = audio
                 //os_log("🍋 AudioList::merge \(audio.title) into downloaded, index=\(i)")
                 continue

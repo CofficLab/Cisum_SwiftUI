@@ -64,11 +64,17 @@ extension Audio {
     }
 }
 
+// MARK: 比较
+
 extension Audio: Equatable {
     static func == (lhs: Audio, rhs: Audio) -> Bool {
-        return lhs.url == rhs.url
+        return lhs.url == rhs.url &&
+        lhs.isDownloading == rhs.isDownloading &&
+        lhs.downloadingPercent == rhs.downloadingPercent
     }
 }
+
+// MAKR: ID
 
 extension Audio: Identifiable {
     var id: URL { url }
