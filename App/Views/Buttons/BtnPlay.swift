@@ -13,7 +13,7 @@ struct BtnPlay: View {
         } label: {
             Label("播放 「\(audio.title)」", systemImage: getImageName())
                 .font(.system(size: 24))
-        }
+        }.disabled(audio.isNotDownloaded)
     }
     
     func play() {
