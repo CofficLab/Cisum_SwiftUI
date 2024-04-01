@@ -16,9 +16,7 @@ class Audio {
     var cover: URL?
     var downloadingPercent: Double = 0
     var isDownloading: Bool = false
-    var size: Int64 {
-        getFileSize()
-    }
+    var size: Int64 { getFileSize() }
 
     init(_ url: URL, cacheURL: URL? = nil, delegate: SuperAudioDelegate = SuperAudioDelegateSample()) {
         // os_log("\(Logger.isMain)🚩 AudioModel::init -> \(url.lastPathComponent)")
@@ -70,7 +68,8 @@ extension Audio: Equatable {
     static func == (lhs: Audio, rhs: Audio) -> Bool {
         return lhs.url == rhs.url &&
         lhs.isDownloading == rhs.isDownloading &&
-        lhs.downloadingPercent == rhs.downloadingPercent
+        lhs.downloadingPercent == rhs.downloadingPercent &&
+        lhs.cover == rhs.cover
     }
 }
 
