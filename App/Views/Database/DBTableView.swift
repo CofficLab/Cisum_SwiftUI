@@ -35,7 +35,7 @@ struct DBTableView: View {
                                 Text(audio.title).foregroundStyle(audioManager.audio == audio ? .blue : .primary)
                                 Spacer()
                                 if audio.isDownloading {
-                                    Text("\(String(format: "%.2f", audio.downloadingPercent))%").font(.footnote)
+                                    Text("\(String(format: "%.0f", audio.downloadingPercent))%").font(.footnote)
                                 }
                             }
                         })
