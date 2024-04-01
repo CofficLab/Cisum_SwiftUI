@@ -15,7 +15,11 @@ struct DBTableView: View {
     var audios: [Audio] { audioManager.audios }
     var downloaded: [Audio] { audios.filter { $0.isDownloaded } }
     var description: String {
-        "共 \(audios.count), 已下载 \(downloaded.count)"
+        if downloaded.count == audios.count {
+            return ""
+        }
+        
+        return "\(downloaded.count)/\(audios.count) 已下载 "
     }
 
     var body: some View {
