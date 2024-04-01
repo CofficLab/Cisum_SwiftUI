@@ -13,6 +13,10 @@ struct DBTableView: View {
 
     var db: DB { audioManager.db }
     var audios: [Audio] { audioManager.audios }
+    var downloaded: [Audio] { audios.filter { $0.isDownloaded } }
+    var description: String {
+        "共 \(audios.count), 已下载 \(downloaded.count)"
+    }
 
     var body: some View {
         GeometryReader { geo in
@@ -21,7 +25,7 @@ struct DBTableView: View {
                 columns: {
                     // value 参数用于排序
                     TableColumn(
-                        "歌曲 \(audioManager.audios.count)", value: \.title,
+                        "歌曲 \(description)", value: \.title,
                         content: { audio in
                             HStack {
                                 AlbumView(audio: audio, downloadingPercent: audio.downloadingPercent, withBackground: true)
