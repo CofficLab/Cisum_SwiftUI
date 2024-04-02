@@ -11,7 +11,6 @@ class AudioManager: NSObject, ObservableObject {
     @Published private(set) var duration: TimeInterval = 0
     @Published var audio: Audio?
     @Published var playerError: Error? = nil
-    @Published var audios: [Audio] = []
     @Published var list: AudioList = AudioList([])
     @Published var mode: PlayMode = .Order
 
@@ -23,7 +22,7 @@ class AudioManager: NSObject, ObservableObject {
     private var rootDir: URL = AppConfig.cloudDocumentsDir
     
     var db: DB
-    var isEmpty: Bool { audios.isEmpty }
+    var isEmpty: Bool { list.isEmpty }
     var isCloudStorage: Bool { iCloudHelper.isCloudPath(url: rootDir) }
 
     override init() {
@@ -348,7 +347,6 @@ extension AudioManager {
     
     func onGet(_ audios: [Audio]) {
         os_log("\(Logger.isMain)🍋 AudioManager::onGet \(audios.count)")
-        self.audios = audios
         self.list = AudioList(audios)
     }
 }
