@@ -18,14 +18,29 @@ env:
 
 jobs:
   release:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v3
+      - run: ls -alhR
+      - name: 读取版本号
+        run: |
+          # 读取配置文件路径
+          projectFile=$(find $(pwd) -type f -name "*.pbxproj" | head -n 1)
+
+          # 读取文件中的版本号
+          version=$(grep -o 'MARKETING_VERSION = [^"]*' $projectFile | head -n 1 | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+')
+
+          echo "版本号->$version"
+
+          build=$(agvtool what-version -terse)
+
+          echo "tag=v$version($build)" >> $GITHUB_ENV
       - name: Generate Changelog
         run: echo 'macOS、iOS版本在这里：[前往App Store](https://apps.apple.com/cn/app/cisum/id6466401036)'> ${{ github.workspace }}-CHANGELOG.txt
       - uses: softprops/action-gh-release@v1
         with:
+          tag_name: ${{ env.tag }}
           body_path: ${{ github.workspace }}-CHANGELOG.txt
           files: |
             ./**/*.dmg
