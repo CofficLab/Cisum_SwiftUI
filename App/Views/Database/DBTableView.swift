@@ -17,7 +17,7 @@ struct DBTableView: View {
         if downloaded.count == audios.count {
             return "歌曲"
         }
-        
+
         return "歌曲 \(downloaded.count)/\(audios.count) 已下载 "
     }
 
@@ -28,17 +28,18 @@ struct DBTableView: View {
                 columns: {
                     // value 参数用于排序
                     TableColumn(description, value: \.title,
-                        content: { audio in
-                            HStack {
-                                AlbumView(audio: audio, withBackground: true, rotate: false)
-                                    .frame(width: 24, height: 24)
-                                Text(audio.title).foregroundStyle(audioManager.audio == audio ? .blue : .primary)
-                                Spacer()
-                                if audio.isDownloading {
-                                    Text("\(String(format: "%.0f", audio.downloadingPercent))%").font(.footnote)
-                                }
-                            }
-                        })
+                                content: { audio in
+                                    HStack {
+                                        AlbumView(audio: audio, withBackground: true, rotate: false)
+                                            .frame(width: 24, height: 24)
+                                        Text(audio.title)
+                                            .foregroundStyle(shouldHighlight(audio) ? .blue : .primary)
+                                        Spacer()
+                                        if audio.isDownloading {
+                                            Text("\(String(format: "%.0f", audio.downloadingPercent))%").font(.footnote)
+                                        }
+                                    }
+                                })
                     TableColumn("艺人", value: \.artist, content: getArtistColumn).defaultVisibility(
                         geo.size.width >= 500 ? .visible : .hidden)
                     TableColumn("专辑", value: \.albumName, content: getAlbumColumn).defaultVisibility(
@@ -121,6 +122,10 @@ struct DBTableView: View {
                     getContextMenuItems(audio)
                 }
         }
+    }
+
+    private func shouldHighlight(_ audio: Audio) -> Bool {
+        !selections.contains(audio.id) && audioManager.audio == audio
     }
 
     init() {
