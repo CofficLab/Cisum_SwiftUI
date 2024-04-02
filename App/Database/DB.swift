@@ -91,8 +91,11 @@ extension DB {
     /// 查询数据，当查到或有更新时会调用回调函数
     @MainActor
     func getAudios(_ callback: @escaping ([Audio]) -> Void) {
+        // 创建一个后台队列
+        let backgroundQueue = OperationQueue()
+        
         Task {
-            let query = ItemQuery(url: self.audiosDir)
+            let query = ItemQuery(queue: backgroundQueue,url: self.audiosDir)
             for await items in query.searchMetadataItems() {
                 let audios = items.filter({ $0.url != nil}).map { item in
                     let audio = Audio(item.url!, db: self)
@@ -101,7 +104,7 @@ extension DB {
                     return audio
                 }
                 
-                os_log("🍋 DB::getAudios with \(audios.count)")
+                os_log("\(Logger.isMain)🍋 DB::getAudios with \(audios.count)")
                 callback(audios)
             }
         }

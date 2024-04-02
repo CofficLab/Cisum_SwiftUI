@@ -36,13 +36,16 @@ struct AlbumView: View {
         }
         .onChange(of: downloadings, {
             if let a = audio, let newAudio = downloadings.first(where: {$0.id == a.id}) {
+                os_log("🍋 AlbumView::downloading \(a.title) \(a.downloadingPercent)")
                 self.audio = newAudio
             }
         })
         .onChange(of: downloaded, {
-            AppConfig.mainQueue.async {
+            AppConfig.bgQueue.async {
                 if let a = audio, let newAudio = downloaded.first(where: {$0.id == a.id}) {
-                    self.audio = newAudio
+                    AppConfig.mainQueue.async {
+                        self.audio = newAudio
+                    }
                 }
             }
         })

@@ -1,5 +1,6 @@
 import AsyncAlgorithms
 import Foundation
+import OSLog
 
 class ItemQuery {
     let query = NSMetadataQuery()
@@ -7,6 +8,7 @@ class ItemQuery {
     let url: URL
 
     init(queue: OperationQueue = .main, url: URL) {
+        os_log("\(Logger.isMain) 初始化itemquery")
         self.queue = queue
         self.url = url
     }
@@ -103,6 +105,7 @@ class ItemQuery {
         sortDescriptors: [NSSortDescriptor] = [],
         scopes: [Any] = [NSMetadataQueryUbiquitousDocumentsScope]
     ) -> AsyncStream<[MetadataItemWrapper]> {
+        os_log("\(Logger.isMain)🍋 searchMetadataItems")
         query.searchScopes = scopes
         query.sortDescriptors = sortDescriptors
         query.predicate = NSPredicate(format: "%K BEGINSWITH %@", NSMetadataItemPathKey, url.path + "/")
@@ -113,13 +116,16 @@ class ItemQuery {
                 object: query,
                 queue: queue
             ) { _ in
-                let result = self.query.results.compactMap { item -> MetadataItemWrapper? in
-                    guard let metadataItem = item as? NSMetadataItem else {
-                        return nil
+                AppConfig.bgQueue.async {
+                os_log("\(Logger.isMain)🍋 searchMetadataItems.NSMetadataQueryDidFinishGathering")
+                    let result = self.query.results.compactMap { item -> MetadataItemWrapper? in
+                        guard let metadataItem = item as? NSMetadataItem else {
+                            return nil
+                        }
+                        return MetadataItemWrapper(metadataItem: metadataItem)
                     }
-                    return MetadataItemWrapper(metadataItem: metadataItem)
+                    continuation.yield(result)
                 }
-                continuation.yield(result)
             }
 
             NotificationCenter.default.addObserver(
@@ -127,6 +133,7 @@ class ItemQuery {
                 object: query,
                 queue: queue
             ) { _ in
+                os_log("\(Logger.isMain)🍋 searchMetadataItems.NSMetadataQueryDidUpdate")
                 let result = self.query.results.compactMap { item -> MetadataItemWrapper? in
                     guard let metadataItem = item as? NSMetadataItem else {
                         return nil
@@ -136,9 +143,11 @@ class ItemQuery {
                 continuation.yield(result)
             }
 
+            os_log("\(Logger.isMain)🍋 searchMetadataItems.start")
             query.start()
 
             continuation.onTermination = { @Sendable _ in
+                os_log("\(Logger.isMain) onTermination")
                 self.query.stop()
                 NotificationCenter.default.removeObserver(self, name: .NSMetadataQueryDidFinishGathering, object: self.query)
                 NotificationCenter.default.removeObserver(self, name: .NSMetadataQueryDidUpdate, object: self.query)

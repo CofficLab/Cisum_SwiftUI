@@ -356,8 +356,10 @@ extension AudioManager {
                 if Set(self.list.all.map { $0.id }) != Set(newlist.all.map { $0.id }) {
                     self.list = newlist
                 }
+                
                 self.downloadingItems = newlist.downloading
                 self.downloadedItems = newlist.downloaded
+                
             }
         }
     }

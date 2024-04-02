@@ -32,7 +32,7 @@ struct ControlView: View {
         #else
             VStack {
                 AlbumView(audio: audioManager.audio)
-                if audioManager.playlist.isEmpty {
+                if audioManager.isEmpty {
                     DBEmptyView().padding(.vertical, 40)
                 }
                 TitleView().padding(.vertical, 20)

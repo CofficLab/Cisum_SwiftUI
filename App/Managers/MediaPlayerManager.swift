@@ -25,7 +25,7 @@ class MediaPlayerManager: ObservableObject {
             let image = audio.uiImage
 
             center.nowPlayingInfo = [
-                MPMediaItemPropertyTitle: audioManager.audio.title,
+                MPMediaItemPropertyTitle: audio.title,
                 MPMediaItemPropertyArtwork: MPMediaItemArtwork(image: image),
                 MPMediaItemPropertyArtist: "乐音APP",
                 MPMediaItemPropertyPlaybackDuration: audioManager.duration,

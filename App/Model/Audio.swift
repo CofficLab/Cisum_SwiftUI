@@ -142,7 +142,7 @@ extension Audio {
                         // MARK: 得到了封面图
                         if (try makeImage(await item.load(.value), saveTo: coverPath)) != nil {
                             cover = coverPath
-                            os_log("\(Logger.isMain)🍋 AudioModel::updateMeta -> cover updated -> \(self.title)")
+                            //os_log("\(Logger.isMain)🍋 AudioModel::updateMeta -> cover updated -> \(self.title)")
                         }
                     default:
                         break
