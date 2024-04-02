@@ -31,7 +31,7 @@ struct AlbumView: View {
                     }
                 }
             } else {
-                Coffee(rotate: rotate, withBackground: withBackground)
+//                Coffee(rotate: rotate, withBackground: withBackground)
             }
         }
         .onChange(of: downloadings, {
@@ -52,15 +52,15 @@ struct AlbumView: View {
     }
 
     func getCoverFromDisk() -> Image? {
-        guard let audio = audio, let coverPath = audio.cover else {
+        guard let audio = audio, let coverURL = audio.coverURL else {
             return nil
         }
 
-        if fileManager.fileExists(atPath: coverPath.path) {
+        if fileManager.fileExists(atPath: coverURL.path) {
             #if os(macOS)
                 return Image(nsImage: NSImage(contentsOf: coverPath)!)
             #else
-                return Image(uiImage: UIImage(contentsOfFile: coverPath.path)!)
+                return Image(uiImage: UIImage(contentsOfFile: coverURL.path)!)
             #endif
         }
 

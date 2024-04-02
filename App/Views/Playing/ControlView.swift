@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ControlView: View {
     @EnvironmentObject var audioManager: AudioManager
+    @EnvironmentObject var appManager: AppManager
 
     var body: some View {
         #if os(macOS)
@@ -19,11 +20,10 @@ struct ControlView: View {
                         // 最大宽度=控制栏的高度+系统标题栏高度
                         HStack {
                             Spacer()
-                            AlbumView(audio: audioManager.audio)
+                            PlayingAlbum()
                         }.frame(maxWidth:geo.size.height*1.3)
                     }
                 }
-//                .background(.red)
                 .padding(.bottom, 0)
                 .padding(.horizontal, 0)
             }
@@ -31,9 +31,8 @@ struct ControlView: View {
             .ignoresSafeArea()
         #else
             VStack {
-                AlbumView(audio: audioManager.audio)
-                if audioManager.isEmpty {
-                    DBEmptyView().padding(.vertical, 40)
+                if !appManager.showDB {
+                    PlayingAlbum()
                 }
                 TitleView().padding(.vertical, 20)
                 SliderView().padding(.vertical, 20)

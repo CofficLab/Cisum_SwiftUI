@@ -101,6 +101,7 @@ extension DB {
                     let audio = Audio(item.url!, db: self)
                     audio.downloadingPercent = item.downloadProgress
                     audio.isDownloading = item.isDownloading
+                    audio.isPlaceholder = item.isPlaceholder
                     return audio
                 }
                 

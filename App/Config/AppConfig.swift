@@ -22,6 +22,11 @@ extension AppConfig {
     /// 上半部分播放控制的高度
     static var controlViewHeight: CGFloat = 180
     static var databaseViewHeightMin: CGFloat = 200
+    #if os(macOS)
+    static var canResize = true
+    #else
+    static var canResize = false
+    #endif
 }
 
 // MARK: 队列配置

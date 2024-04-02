@@ -18,7 +18,7 @@ struct DBView: View {
             NavigationView {
                 ZStack {
                     if audioManager.isEmpty {
-                        BackgroundView.type1
+                        BackgroundView.type2A
                         DBEmptyView()
                     } else {
                         DBTableView()

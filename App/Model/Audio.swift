@@ -14,9 +14,10 @@ class Audio {
     var description = ""
     var track = ""
     var albumName = ""
-    var cover: URL?
+    var coverURL: URL?
     var downloadingPercent: Double = 0
     var isDownloading: Bool = false
+    var isPlaceholder: Bool = false
     var size: Int64 { getFileSize() }
     var db: DB
 
@@ -24,14 +25,13 @@ class Audio {
         // os_log("\(Logger.isMain)🚩 AudioModel::init -> \(url.lastPathComponent)")
         self.url = url
         self.db = db
-        title = url.deletingPathExtension().lastPathComponent
+        self.title = url.deletingPathExtension().lastPathComponent
+        self.coverURL = getCover()
 
         Task {
-            self.cover = getCover()
-
             // 如果有大量的歌曲，就会产生大量的 updateMeta 操作，占内存较多
             if isDownloaded && !isCoverOnDisk() {
-//                os_log("\(Logger.isMain)🍋 Audio::init 获取Meta \(self.title)")
+                //os_log("\(Logger.isMain)🍋 Audio::init 获取Meta \(self.title)")
                 await updateMeta()
             }
         }
@@ -57,7 +57,7 @@ extension Audio: Equatable {
         return lhs.url == rhs.url &&
         lhs.isDownloading == rhs.isDownloading &&
         lhs.downloadingPercent == rhs.downloadingPercent &&
-        lhs.cover == rhs.cover
+        lhs.coverURL == rhs.coverURL
     }
 }
 
@@ -70,7 +70,7 @@ extension Audio: Identifiable {
 // MARK: iCloud 相关
 
 extension Audio {
-    var isDownloaded: Bool { downloadingPercent == 100.0 }
+    var isDownloaded: Bool { downloadingPercent == 100.0 || !isPlaceholder }
     var isNotDownloaded: Bool { !isDownloaded }
 
     /// 准备好文件
@@ -95,7 +95,7 @@ extension Audio {
 // MARK: Meta
 
 extension Audio {
-    var coverPath: URL {
+    var coverCacheURL: URL {
         let fileName = url.lastPathComponent
         let imageName = fileName
         let coversDir = AppConfig.coverDir
@@ -107,8 +107,7 @@ extension Audio {
             print(error.localizedDescription)
         }
 
-        return
-            coversDir
+        return coversDir
                 .appendingPathComponent(imageName)
                 .appendingPathExtension("jpeg")
     }
@@ -140,9 +139,9 @@ extension Audio {
                         }
                     case "artwork":
                         // MARK: 得到了封面图
-                        if (try makeImage(await item.load(.value), saveTo: coverPath)) != nil {
-                            cover = coverPath
-                            //os_log("\(Logger.isMain)🍋 AudioModel::updateMeta -> cover updated -> \(self.title)")
+                        if (try makeImage(await item.load(.value), saveTo: coverCacheURL)) != nil {
+                            coverURL = coverCacheURL
+//                            os_log("\(Logger.isMain)🍋 AudioModel::updateMeta -> cover updated -> \(self.title)")
                         }
                     default:
                         break
@@ -156,22 +155,25 @@ extension Audio {
 
     /// 将封面图存到磁盘
     func makeImage(_ data: (any NSCopying & NSObjectProtocol)?, saveTo: URL) -> Image? {
-        // os_log("\(Logger.isMain)AudioModel::makeImage -> \(saveTo.path)")
+        //os_log("\(Logger.isMain)AudioModel::makeImage -> \(saveTo.path)")
+        guard let data = data as? Data else {
+            return nil
+        }
+        
+        do {
+            try data.write(to: saveTo)
+        } catch let e {
+            print(e)
+        }
+        
         #if os(iOS)
-            if let data = data as? Data, let image = UIImage(data: data) {
+            if let image = UIImage(data: data) {
                 return Image(uiImage: image)
             }
         #endif
 
         #if os(macOS)
-            if fileManager.fileExists(atPath: saveTo.path) {
-                guard let nsImage = NSImage(contentsOfFile: saveTo.path) else {
-                    return nil
-                }
-                return Image(nsImage: nsImage)
-            }
             if let data = data as? Data, let image = NSImage(data: data) {
-                ImageHelper.toJpeg(image: image, saveTo: saveTo)
                 return Image(nsImage: image)
             }
         #endif
@@ -185,13 +187,17 @@ extension Audio {
 extension Audio {
     #if os(iOS)
         var uiImage: UIImage {
-            UIImage(contentsOfFile: coverPath.path) ??
-                UIImage(imageLiteralResourceName: "DefaultAlbum")
+            var i = UIImage(imageLiteralResourceName: "DefaultAlbum")
+            if isCoverOnDisk() {
+                i = UIImage(contentsOfFile: coverCacheURL.path) ?? i
+            }
+            
+            return i
         }
     #endif
 
     func isCoverOnDisk() -> Bool {
-        fileManager.fileExists(atPath: coverPath.path)
+        fileManager.fileExists(atPath: coverCacheURL.path)
     }
 
     func getCover() -> URL? {
@@ -200,7 +206,7 @@ extension Audio {
         }
 
         if isCoverOnDisk() {
-            return coverPath
+            return coverCacheURL
         }
 
         return nil
