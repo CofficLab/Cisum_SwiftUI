@@ -72,6 +72,7 @@ class AudioManager: NSObject, ObservableObject {
     func play(_ id: Audio.ID) {
         do {
             try playlist.switchTo(id)
+            self.audio = playlist.audio
             play()
         } catch let e {
             self.playerError = e

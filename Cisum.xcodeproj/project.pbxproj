@@ -213,11 +213,11 @@
 		0B1D5A702AB302600010DDF2 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				0BBAD0702BBBDC22005834A3 /* Component */,
-				0BBAD06F2BBBDC0B005834A3 /* Layout */,
 				0BB889D32AC04600004788D5 /* Buttons */,
-				0BFDCE562BB013AC009198DD /* Playing */,
+				0BBAD0702BBBDC22005834A3 /* Component */,
 				0BFDCE522BAFF279009198DD /* Database */,
+				0BBAD06F2BBBDC0B005834A3 /* Layout */,
+				0BFDCE562BB013AC009198DD /* Playing */,
 			);
 			path = Views;
 			sourceTree = "<group>";
