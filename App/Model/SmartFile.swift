@@ -47,21 +47,8 @@ class SmartFile {
 
     /// 下载文件
     func download() {
-        // os_log("\(Logger.isMain)☁️ CloudFile::下载文件 -> \(self.url.lastPathComponent)")
-//
-//        if iCloudHelper.isDownloaded(url: self.url) {
-//            return
-//        }
-//
-//        if iCloudHelper.isDownloading(self.url) {
-//            os_log("\(Logger.isMain)☁️ CloudFile::已在下载 \(self.url.lastPathComponent)")
-//            return
-//        } else {
-//            os_log("\(Logger.isMain)☁️ CloudFile::触发下载 \(self.url.lastPathComponent)")
-//        }
-
         do {
-            try FileManager.default.startDownloadingUbiquitousItem(at: self.url)
+            try fileManager.startDownloadingUbiquitousItem(at: self.url)
             os_log("\(Logger.isMain)☁️ CloudFile::已触发下载 \(self.url.lastPathComponent)")
         } catch {
             os_log("\(Logger.isMain)☁️ CloudFile::下载文件出现错误\n\(error)")

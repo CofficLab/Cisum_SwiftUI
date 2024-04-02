@@ -14,27 +14,13 @@ struct SliderView: View {
     var body: some View {
         HStack {
             Text(audioManager.currentTimeDisplay())
-            
-            if appManager.appMode == .Normal {
-                Slider(value: $value, in: 0 ... audioManager.duration) { editing in
-                    isEditing = editing
-                    if !editing {
-                        audioManager.gotoTime(time: value)
-                    }
-                }.disabled(audioManager.playlist.isEmpty)
-            } else {
-                GeometryReader { geo in
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 10)
-                            .foregroundColor(Color.gray.opacity(0.3))
-                            .frame(height: 8)
-                        
-                        Circle()
-                            .foregroundColor(.white)
-                            .frame(height: geo.size.height/10)
-                    }}
-            }
-            
+
+            Slider(value: $value, in: 0 ... audioManager.duration) { editing in
+                isEditing = editing
+                if !editing {
+                    audioManager.gotoTime(time: value)
+                }
+            }.disabled(audioManager.playlist.isEmpty)
 
             Text(audioManager.leftTimeDisplay())
         }

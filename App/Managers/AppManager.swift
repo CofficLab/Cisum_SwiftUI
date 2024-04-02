@@ -15,15 +15,9 @@ enum PrepareResult {
   case failure(Error)
 }
 
-enum AppMode {
-    case Normal
-    case Static
-}
-
 class AppManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
     static var iCloudDocumentsUrl: URL? = nil
-    
-    @Published var appMode: AppMode = .Normal
+
     @Published var showAlert: Bool = false
     @Published var showDB: Bool = false
     @Published var alertMessage: String = ""
@@ -44,14 +38,6 @@ class AppManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
         flashMessage = message
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
             self.flashMessage = ""
-        }
-    }
-    
-    static func getCloudDocumentsUrl() -> URL {
-        if let url = FileManager.default.url(forUbiquityContainerIdentifier: AppConfig.containerIdentifier) {
-            return url
-        } else {
-            return AppConfig.cloudDocumentsDir
         }
     }
 }

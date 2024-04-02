@@ -40,9 +40,9 @@ class MediaPlayerManager: ObservableObject {
 
   // 接收控制中心的指令
   private func onCommand() {
-    let commandCenter = MPRemoteCommandCenter.shared()
+    let c = MPRemoteCommandCenter.shared()
 
-    commandCenter.nextTrackCommand.addTarget { _ in
+    c.nextTrackCommand.addTarget { _ in
       os_log("\(Logger.isMain)🍋 MediaPlayerManager::下一首")
       do {
         try self.audioManager.next()
@@ -53,7 +53,7 @@ class MediaPlayerManager: ObservableObject {
       }
     }
 
-    commandCenter.previousTrackCommand.addTarget { _ in
+    c.previousTrackCommand.addTarget { _ in
       os_log("\(Logger.isMain)上一首")
       do {
         let message = try self.audioManager.prev()
@@ -65,21 +65,21 @@ class MediaPlayerManager: ObservableObject {
       }
     }
 
-    commandCenter.pauseCommand.addTarget { _ in
+    c.pauseCommand.addTarget { _ in
       os_log("\(Logger.isMain)🍋 MediaPlayerManger::暂停")
       self.audioManager.pause()
 
       return .success
     }
 
-    commandCenter.playCommand.addTarget { _ in
+    c.playCommand.addTarget { _ in
       os_log("\(Logger.isMain)播放")
       self.audioManager.play()
 
       return .success
     }
 
-    commandCenter.stopCommand.addTarget { _ in
+    c.stopCommand.addTarget { _ in
       os_log("\(Logger.isMain)停止")
 
       self.audioManager.stop()
@@ -87,25 +87,25 @@ class MediaPlayerManager: ObservableObject {
       return .success
     }
 
-    commandCenter.likeCommand.addTarget { _ in
+    c.likeCommand.addTarget { _ in
       os_log("\(Logger.isMain)喜欢")
 
       return .success
     }
 
-    commandCenter.ratingCommand.addTarget { _ in
+    c.ratingCommand.addTarget { _ in
       os_log("\(Logger.isMain)评分")
 
       return .success
     }
 
-    commandCenter.changeRepeatModeCommand.addTarget { _ in
+    c.changeRepeatModeCommand.addTarget { _ in
       os_log("\(Logger.isMain)changeRepeatModeCommand")
 
       return .success
     }
 
-    commandCenter.changePlaybackPositionCommand.addTarget { e in
+    c.changePlaybackPositionCommand.addTarget { e in
       os_log("\(Logger.isMain)🍎 changePlaybackPositionCommand")
       guard let event = e as? MPChangePlaybackPositionCommandEvent else {
         return .commandFailed

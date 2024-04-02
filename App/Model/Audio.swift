@@ -12,17 +12,15 @@ class Audio {
     var description = ""
     var track = ""
     var albumName = ""
-    var delegate: SuperAudioDelegate
     var cover: URL?
     var downloadingPercent: Double = 0
     var isDownloading: Bool = false
     var size: Int64 { getFileSize() }
 
-    init(_ url: URL, cacheURL: URL? = nil, delegate: SuperAudioDelegate = SuperAudioDelegateSample()) {
+    init(_ url: URL, cacheURL: URL? = nil) {
         // os_log("\(Logger.isMain)🚩 AudioModel::init -> \(url.lastPathComponent)")
         self.url = url
         self.cacheURL = cacheURL
-        self.delegate = delegate
         title = url.deletingPathExtension().lastPathComponent
 
         Task {
@@ -172,7 +170,6 @@ extension Audio {
 
                         if (try makeImage(await item.load(.value), saveTo: coverPath)) != nil {
                             cover = coverPath
-                            delegate.onCoverUpdated()
                             os_log("\(Logger.isMain)🍋 AudioModel::updateMeta -> cover updated -> \(self.title)")
                         }
                     default:

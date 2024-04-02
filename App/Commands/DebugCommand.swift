@@ -2,10 +2,6 @@ import SwiftUI
 import CloudKit
 
 struct DebugCommand: Commands {
-    private var container: String {
-        AppConfig.containerIdentifier
-    }
-    
     var body: some Commands {
         SidebarCommands()
 
