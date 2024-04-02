@@ -84,7 +84,7 @@ extension Audio {
 
 extension Audio {
     func delete() {
-        self.db.delete(url)
+        self.db.delete(self)
     }
 }
 

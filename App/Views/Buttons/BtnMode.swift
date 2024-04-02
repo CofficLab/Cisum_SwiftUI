@@ -15,7 +15,7 @@ struct BtnMode: View {
     }
 
     private func getImageName() -> String {
-        switch audioManager.playlist.playMode {
+        switch audioManager.mode {
         case .Order:
             return "repeat"
         case .Loop:

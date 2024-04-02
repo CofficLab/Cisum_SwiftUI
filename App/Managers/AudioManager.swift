@@ -10,17 +10,20 @@ class AudioManager: NSObject, ObservableObject {
     @Published private(set) var isPlaying: Bool = false
     @Published private(set) var duration: TimeInterval = 0
     @Published var audio: Audio?
-    @Published var playlist = PlayList([])
     @Published var playerError: Error? = nil
+    @Published var audios: [Audio] = []
+    @Published var list: AudioList = AudioList([])
+    @Published var mode: PlayMode = .Order
 
     private var player: AVAudioPlayer = .init()
     private var listener: AnyCancellable?
     private var bg = AppConfig.bgQueue
     private var main = AppConfig.mainQueue
+    private var title: String { audio?.title ?? "[无]"}
     private var rootDir: URL = AppConfig.cloudDocumentsDir
-
+    
     var db: DB
-    var isEmpty: Bool { playlist.isEmpty }
+    var isEmpty: Bool { audios.isEmpty }
     var isCloudStorage: Bool { iCloudHelper.isCloudPath(url: rootDir) }
 
     override init() {
@@ -30,6 +33,7 @@ class AudioManager: NSObject, ObservableObject {
         super.init()
 
         db.onGet = onGet
+        db.onDelete = onDelete
     }
 
     func currentTime() -> TimeInterval {
@@ -70,19 +74,21 @@ class AudioManager: NSObject, ObservableObject {
 
     /// 播放指定的
     func play(_ id: Audio.ID) {
-        do {
-            try playlist.switchTo(id)
-            self.audio = playlist.audio
-            play()
-        } catch let e {
-            self.playerError = e
+        os_log("\(Logger.isMain)🔊 AudioManager::play \(id)")
+        
+        if let target: Audio = list.find(id) {
+            self.audio = target
+        } else {
+            self.playerError = SmartError.NoAudioInList
         }
+        
+        play()
     }
 
     /// 播放当前的
     func play() {
         os_log("\(Logger.isMain)🔊 AudioManager::play")
-        if playlist.isEmpty {
+        if isEmpty {
             os_log("\(Logger.isMain)列表为空，忽略")
             return
         }
@@ -98,7 +104,7 @@ class AudioManager: NSObject, ObservableObject {
 
         updateMediaPlayer()
     }
-    
+
     // MARK: 暂停
 
     func pause() {
@@ -107,7 +113,7 @@ class AudioManager: NSObject, ObservableObject {
 
         updateMediaPlayer()
     }
-    
+
     // MARK: 停止
 
     func stop() {
@@ -117,15 +123,15 @@ class AudioManager: NSObject, ObservableObject {
         duration = 0
         isPlaying = false
     }
-    
+
     // MARK: 切换
 
     func togglePlayPause() throws {
         guard let audio = audio else {
             throw SmartError.NoAudioInList
         }
-        
-        if playlist.isEmpty {
+
+        if isEmpty {
             throw SmartError.NoAudioInList
         }
 
@@ -139,20 +145,31 @@ class AudioManager: NSObject, ObservableObject {
             play()
         }
     }
-    
+
     // MARK: 播放模式
 
     func toggleLoop() {
         player.numberOfLoops = player.numberOfLoops == 0 ? -1 : 0
-        playlist.playMode = player.numberOfLoops != 0 ? .Order : .Loop
+        mode = player.numberOfLoops != 0 ? .Order : .Loop
     }
 
-    func switchMode(_ callback: @escaping (_ mode: PlayList.PlayMode) -> Void) {
-        self.playlist.switchMode({ mode in
-            callback(mode)
-        })
+    // MARK: 切换播放模式
+
+    func switchMode(_ callback: @escaping (_ mode: PlayMode) -> Void) {
+        switch mode {
+        case .Order:
+            mode = .Random
+            list.shuffle()
+        case .Loop:
+            mode = .Order
+            list.sort()
+        case .Random:
+            mode = .Loop
+        }
+
+        callback(mode)
     }
-    
+
     // MARK: Prev
 
     /// 跳到上一首，manual=true表示由用户触发
@@ -160,27 +177,36 @@ class AudioManager: NSObject, ObservableObject {
         os_log("\(Logger.isMain)🔊 AudioManager::prev ⬆️")
 
         // 用户触发，但曲库仅一首，发出提示
-        if playlist.isEmpty && manual {
+        if isEmpty && manual {
             throw SmartError.NoPrevAudio
         }
-
-        try audio = playlist.prev()
         
-        guard let audio = audio else {
-            throw SmartError.NoPrevAudio
+        if let audio = audio {
+            self.audio = list.prevOf(audio.id)
+        } else {
+            self.audio = list.downloaded[0]
         }
-
+        
         try updatePlayer()
-        return "上一曲：\(audio.title)"
+        return "上一曲：\(self.title)"
     }
-    
+
     // MARK: Next
 
     /// 跳到下一首，manual=true表示由用户触发
     func next(manual: Bool = false) throws {
         os_log("\(Logger.isMain)🔊 AudioManager::next ⬇️ \(manual ? "手动触发" : "自动触发")")
+        
+        if mode == .Loop && manual == false {
+            return
+        }
+        
+        if let audio = audio {
+            self.audio = list.nextOf(audio.id)
+        } else {
+            self.audio = list.downloaded[0]
+        }
 
-        try audio = playlist.next(manual: manual)
         try updatePlayer()
     }
 
@@ -190,7 +216,7 @@ class AudioManager: NSObject, ObservableObject {
         guard let url = url else {
             return AVAudioPlayer()
         }
-        
+
         let ext = url.pathExtension
         if !AppConfig.supportedExtensions.contains(ext) {
             throw SmartError.FormatNotSupported(ext)
@@ -219,7 +245,7 @@ class AudioManager: NSObject, ObservableObject {
         guard let audio = audio else {
             return
         }
-        
+
         do {
             playerError = nil
             let player = try makePlayer(url: audio.url)
@@ -254,16 +280,16 @@ class AudioManager: NSObject, ObservableObject {
     // 当前的 Audio 是否有效
     private func isValid() -> Bool {
         // 列表为空
-        if playlist.isEmpty {
+        if isEmpty {
             return false
         }
-        
+
         guard let audio = audio else {
             return false
         }
 
         // 已经不在列表中了
-        if playlist.contains(audio.id) {
+        if list.notHas(audio.id) {
             return false
         }
 
@@ -312,21 +338,35 @@ extension AudioManager: AVAudioPlayerDelegate {
 // MARK: 当数据库发生变化时
 
 extension AudioManager {
-    func onGet(_ audios: [Audio]) {
-        bg.async {
-            os_log("\(Logger.isMain)🍋 AudioManager::onGet \(audios.count)")
-            self.playlist.merge(audios)
-            self.main.sync {
-                if self.audio == nil {
-                    os_log("\(Logger.isMain)🍋 AudioManager::audio is empty, update")
-                    self.audio = self.playlist.audio
+    func onDelete(_ audios: [Audio]) {
+        os_log("\(Logger.isMain)🍋 AudioManager::onDelete \(audios.count)")
 
-                    do {
-                        try self.updatePlayer()
-                    } catch let e {
-                        self.playerError = e
-                    }
-                }
+        audios.forEach({ audio in
+            self.list = self.list.delete(audio.id)
+        })
+    }
+    
+    func onGet(_ audios: [Audio]) {
+        os_log("\(Logger.isMain)🍋 AudioManager::onGet \(audios.count)")
+        self.audios = audios
+        self.list = AudioList(audios)
+    }
+}
+
+extension AudioManager {
+    enum PlayMode {
+        case Order
+        case Loop
+        case Random
+
+        var description: String {
+            switch self {
+            case .Order:
+                return "顺序播放"
+            case .Loop:
+                return "单曲循环"
+            case .Random:
+                return "随机播放"
             }
         }
     }

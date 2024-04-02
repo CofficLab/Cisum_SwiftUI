@@ -13,6 +13,16 @@ class AudioList {
         makeCollection(audios)
     }
     
+    // MARK: 查找
+    
+    func notHas(_ audioId: Audio.ID) -> Bool {
+        !has(audioId)
+    }
+    
+    func has(_ audioId: Audio.ID) -> Bool {
+        (all.firstIndex(where: {audioId == $0.id}) != nil)
+    }
+    
     func find(_ audioId: Audio.ID) -> Audio? {
         let i = all.firstIndex(where: {audioId == $0.id}) ?? -1
         return all[i]
@@ -24,6 +34,22 @@ class AudioList {
     
     func get(_ index: Int) -> Audio {
         all[index]
+    }
+    
+    func prevOf(_ audioId: Audio.ID) -> Audio {
+        if let i: Int = find(audioId) {
+            return downloaded[(i-1+downloaded.count)%downloaded.count]
+        } else {
+            return downloaded[0]
+        }
+    }
+    
+    func nextOf(_ audioId: Audio.ID) -> Audio {
+        if let i: Int = find(audioId) {
+            return downloaded[(i+1)%downloaded.count]
+        } else {
+            return downloaded[0]
+        }
     }
     
     func firstDownloaded() -> Int? {
@@ -122,5 +148,13 @@ class AudioList {
         }
         
         return newAudios
+    }
+    
+    func delete(_ id: Audio.ID) -> Self {
+        downloaded.removeAll(where: { $0.id == id})
+        downloading.removeAll(where: { $0.id == id})
+        notDownloaded.removeAll(where: { $0.id == id})
+        
+        return self
     }
 }

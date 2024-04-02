@@ -6,6 +6,7 @@ struct AppConfig {
     static let fileManager = FileManager.default
     static let coversDirName = "covers"
     static let audiosDirName = "audios"
+    static let trashDirName = "trash"
     static let cacheDirName = "audios_cache"
     static let containerIdentifier = "iCloud.yueyi.cisum"
     static let logger = Logger.self
@@ -64,6 +65,21 @@ extension AppConfig {
                 os_log("\(Logger.isMain)🍋 DB::创建 Audios 目录成功")
             } catch {
                 os_log("\(Logger.isMain)创建 Audios 目录失败\n\(error.localizedDescription)")
+            }
+        }
+        
+        return url
+    }
+    
+    static var trashDir: URL {
+        let url = AppConfig.cloudDocumentsDir.appendingPathComponent(AppConfig.trashDirName)
+        
+        if !fileManager.fileExists(atPath: url.path) {
+            do {
+                try fileManager.createDirectory(at: url, withIntermediateDirectories: true)
+                os_log("\(Logger.isMain)🍋 DB::创建回收站目录成功")
+            } catch {
+                os_log("\(Logger.isMain)创建回收站目录失败\n\(error.localizedDescription)")
             }
         }
         

@@ -10,10 +10,12 @@ import SwiftUI
  */
 class DB {
     var fileManager = FileManager.default
+    var cloudHandler = CloudHandler()
     var bg = AppConfig.bgQueue
     var audiosDir: URL = AppConfig.audiosDir
     var handler = CloudHandler()
     var onGet: ([Audio]) -> Void = { _  in os_log("🍋 DB::onGet") }
+    var onDelete: ([Audio]) -> Void = { _  in os_log("🍋 DB::onDelete") }
 
     init() {
         os_log("\(Logger.isMain)🚩 初始化 DB")
@@ -21,6 +23,10 @@ class DB {
         Task {
             await self.getAudios({
                 self.onGet($0)
+            })
+            
+            await self.getDeleted({
+                self.onDelete($0)
             })
         }
     }
@@ -52,16 +58,12 @@ extension DB {
 
     // MARK: 删除
     
-    func delete(_ url: URL) {
-        do {
-            if fileManager.fileExists(atPath: url.path) {
-                try fileManager.removeItem(at: url)
-                SmartFile(url: url).delete()
-            } else {
-                os_log("\(Logger.isMain)删除时发现文件不存在，忽略 -> \(url.lastPathComponent)")
-            }
-        } catch {
-            os_log(.error, "删除文件失败\n\(error)")
+    func delete(_ audio: Audio) {
+        let url = audio.url
+        let trashUrl = AppConfig.trashDir.appendingPathComponent(url.lastPathComponent)
+        
+        Task {
+            try await cloudHandler.moveFile(at: audio.url, to: trashUrl)
         }
     }
 
@@ -99,6 +101,26 @@ extension DB {
                 }
                 
                 os_log("🍋 DB::getAudios with \(audios.count)")
+                callback(audios)
+            }
+        }
+    }
+    
+    @MainActor
+    func getDeleted(_ callback: @escaping ([Audio]) -> Void) {
+        Task {
+            let query = ItemQuery(url: self.audiosDir)
+            for await items in query.searchDeletedMetadataItems() {
+                let audios = items.filter({ $0.url != nil}).map { item in
+                    let audio = Audio(item.url!, db: self)
+                    audio.downloadingPercent = item.downloadProgress
+                    audio.isDownloading = item.isDownloading
+                    return audio
+                }
+                
+                audios.forEach({
+                    os_log("🍋 DB::getDeleted 已删除 \($0.title)")
+                })
                 callback(audios)
             }
         }

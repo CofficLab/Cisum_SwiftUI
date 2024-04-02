@@ -11,7 +11,7 @@ struct DBTableView: View {
     @State private var sortOrder = [KeyPathComparator(\Audio.title)]
 
     var db: DB { audioManager.db }
-    var audios: [Audio] { audioManager.playlist.audios }
+    var audios: [Audio] { audioManager.list.all }
     var downloaded: [Audio] { audios.filter { $0.isDownloaded } }
     var description: String {
         if downloaded.count == audios.count {
@@ -76,6 +76,8 @@ struct DBTableView: View {
             Divider()
 
             // MARK: 删除
+            
+            BtnDel(audio: audio)
 
 //            ButtonDeleteSelected(
 //                audios: selected,

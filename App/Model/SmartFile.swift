@@ -9,19 +9,6 @@ class SmartFile {
         self.url = url
     }
 
-    /// 删除
-    func delete() {
-        do {
-            if self.fileManager.fileExists(atPath: self.url.path) {
-                try self.fileManager.removeItem(at: self.url)
-            } else {
-                os_log("\(Logger.isMain)删除时发现文件不存在，忽略 -> \(self.url.lastPathComponent)")
-            }
-        } catch {
-            os_log(.error, "删除文件失败\n\(error)")
-        }
-    }
-
     // 将文件复制到目的地
     func copyTo(destnation: URL) {
         os_log(

@@ -4,16 +4,14 @@ struct BtnDel: View {
     @EnvironmentObject var audioManager: AudioManager
     @EnvironmentObject var appManager: AppManager
     
-    var url: URL
+    var audio: Audio
         
     var body: some View {
         Button {
-            Task {
-//                await audioManager.delete(urls: [url])
-                appManager.setFlashMessage("\(url.lastPathComponent) 已经删除")
-            }
+            audio.delete()
+            appManager.setFlashMessage("\(audio.title) 已经删除")
         } label: {
-            Label("删除", systemImage: getImageName())
+            Label("删除「\(audio.title)」", systemImage: getImageName())
                 .font(.system(size: 24))
         }
     }

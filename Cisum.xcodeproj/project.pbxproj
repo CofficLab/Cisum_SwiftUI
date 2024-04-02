@@ -28,7 +28,6 @@
 		0B220F732BB1A3D70077255A /* BtnsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B220F722BB1A3D70077255A /* BtnsView.swift */; };
 		0B220F752BB1BBDB0077255A /* SmartError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B220F742BB1BBDB0077255A /* SmartError.swift */; };
 		0B22158E2BB6BC8F000EB36F /* SmartProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B22158D2BB6BC8F000EB36F /* SmartProgress.swift */; };
-		0B4E1AB52AC3D022005CCB0F /* PlayList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4E1AB42AC3D022005CCB0F /* PlayList.swift */; };
 		0B5E51E52AD912B5000650CF /* DebugCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B5E51E42AD912B5000650CF /* DebugCommand.swift */; };
 		0B604AE82AD6384300929DD8 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B604AE72AD6384300929DD8 /* RootView.swift */; };
 		0B6B8B992BBA39F500F65B23 /* ControlButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6B8B982BBA39F500F65B23 /* ControlButton.swift */; };
@@ -101,7 +100,6 @@
 		0B220F722BB1A3D70077255A /* BtnsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnsView.swift; sourceTree = "<group>"; };
 		0B220F742BB1BBDB0077255A /* SmartError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmartError.swift; sourceTree = "<group>"; };
 		0B22158D2BB6BC8F000EB36F /* SmartProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmartProgress.swift; sourceTree = "<group>"; };
-		0B4E1AB42AC3D022005CCB0F /* PlayList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayList.swift; sourceTree = "<group>"; };
 		0B5E51E42AD912B5000650CF /* DebugCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugCommand.swift; sourceTree = "<group>"; };
 		0B604AE72AD6384300929DD8 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		0B6B8B982BBA39F500F65B23 /* ControlButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlButton.swift; sourceTree = "<group>"; };
@@ -178,8 +176,6 @@
 			children = (
 				0B1D5A672AB3025F0010DDF2 /* Audio.swift */,
 				0B0A2B812AC1CCDC00DA085C /* SmartFile.swift */,
-				0B4E1AB42AC3D022005CCB0F /* PlayList.swift */,
-				0B8DBEF32BB6F7B10029D1EF /* AudioList.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -234,6 +230,7 @@
 			isa = PBXGroup;
 			children = (
 				0BB889DA2AC06C54004788D5 /* DB.swift */,
+				0B8DBEF32BB6F7B10029D1EF /* AudioList.swift */,
 			);
 			path = Database;
 			sourceTree = "<group>";
@@ -271,6 +268,7 @@
 			isa = PBXGroup;
 			children = (
 				0BB889D82AC047B3004788D5 /* BtnDel.swift */,
+				0BBA42242AC1813D00C0B977 /* BtnDelSome.swift */,
 				0BFDCE572BB01884009198DD /* BtnDestroy.swift */,
 				0BB889D12AC042EC004788D5 /* BtnDownload.swift */,
 				0BBA42182ABD5D9200C0B977 /* BtnMode.swift */,
@@ -282,7 +280,6 @@
 				0B1126292AC6F7B20093DFFA /* BtnToggleDB.swift */,
 				0BBA42262AC2A8B800C0B977 /* ButtonAdd.swift */,
 				0BBA42202AC1802C00C0B977 /* ButtonCancelSelected.swift */,
-				0BBA42242AC1813D00C0B977 /* BtnDelSome.swift */,
 				0BAB7C402AD3D25200C5AEB5 /* ButtonDismiss.swift */,
 				0B7F558A2AD2636B0000D72E /* ButtonPlayList.swift */,
 				0BBA422A2AC2ABAD00C0B977 /* ButtonShowDatabase.swift */,
@@ -460,7 +457,6 @@
 				0BBC15802AB854A8006E82C4 /* DBView.swift in Sources */,
 				0B901D932BB83F38003AC253 /* CloudKit.swift in Sources */,
 				0BB889D72AC046B5004788D5 /* BtnShowInFinder.swift in Sources */,
-				0B4E1AB52AC3D022005CCB0F /* PlayList.swift in Sources */,
 				0B22158E2BB6BC8F000EB36F /* SmartProgress.swift in Sources */,
 				0BBA42132ABC137A00C0B977 /* StatusView.swift in Sources */,
 				0BB5871B2AD81AFA0071AEBD /* ViewHelper.swift in Sources */,
