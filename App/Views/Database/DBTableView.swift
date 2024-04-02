@@ -13,6 +13,7 @@ struct DBTableView: View {
     var db: DB { audioManager.db }
     var audios: [Audio] { audioManager.list.all }
     var downloaded: [Audio] { audios.filter { $0.isDownloaded } }
+    var downloadings: [Audio] { audioManager.downloadingItems }
     var description: String {
         if downloaded.count == audios.count {
             return "歌曲"
@@ -29,16 +30,7 @@ struct DBTableView: View {
                     // value 参数用于排序
                     TableColumn(description, value: \.title,
                                 content: { audio in
-                                    HStack {
-                                        AlbumView(audio: audio, withBackground: true, rotate: false)
-                                            .frame(width: 24, height: 24)
-                                        Text(audio.title)
-                                            .foregroundStyle(shouldHighlight(audio) ? .blue : .primary)
-                                        Spacer()
-                                        if audio.isDownloading {
-                                            Text("\(String(format: "%.0f", audio.downloadingPercent))%").font(.footnote)
-                                        }
-                                    }
+                        DBFirstCol(audio: audio).environmentObject(audioManager)
                                 })
                     TableColumn("艺人", value: \.artist, content: getArtistColumn).defaultVisibility(
                         geo.size.width >= 500 ? .visible : .hidden)

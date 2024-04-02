@@ -13,6 +13,7 @@ class AudioManager: NSObject, ObservableObject {
     @Published var playerError: Error? = nil
     @Published var list: AudioList = AudioList([])
     @Published var mode: PlayMode = .Order
+    @Published var downloadingItems: [Audio] = []
 
     private var player: AVAudioPlayer = .init()
     private var listener: AnyCancellable?
@@ -33,6 +34,7 @@ class AudioManager: NSObject, ObservableObject {
 
         db.onGet = onGet
         db.onDelete = onDelete
+        db.onDownloading = onDownloading
     }
 
     func currentTime() -> TimeInterval {
@@ -348,6 +350,11 @@ extension AudioManager {
     func onGet(_ audios: [Audio]) {
         os_log("\(Logger.isMain)🍋 AudioManager::onGet \(audios.count)")
         self.list = AudioList(audios)
+    }
+    
+    func onDownloading(_ audios: [Audio]) {
+        os_log("\(Logger.isMain)🍋 AudioManager::onDownloading \(audios.count)")
+        self.downloadingItems = audios
     }
 }
 

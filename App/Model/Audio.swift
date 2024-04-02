@@ -44,6 +44,10 @@ class Audio {
     func getFileSizeReadable() -> String {
         FileHelper.getFileSizeReadable(url)
     }
+    
+    func refresh() {
+        
+    }
 }
 
 // MARK: 比较

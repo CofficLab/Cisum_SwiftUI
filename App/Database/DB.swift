@@ -15,6 +15,7 @@ class DB {
     var audiosDir: URL = AppConfig.audiosDir
     var handler = CloudHandler()
     var onGet: ([Audio]) -> Void = { _  in os_log("🍋 DB::onGet") }
+    var onDownloading: ([Audio]) -> Void = { _  in os_log("🍋 DB::onDownloading") }
     var onDelete: ([Audio]) -> Void = { _  in os_log("🍋 DB::onDelete") }
 
     init() {
@@ -27,6 +28,10 @@ class DB {
             
             await self.getDeleted({
                 self.onDelete($0)
+            })
+            
+            await self.getDownloading({
+                self.onDownloading($0)
             })
         }
     }
@@ -120,6 +125,26 @@ extension DB {
                 
                 audios.forEach({
                     os_log("🍋 DB::getDeleted 已删除 \($0.title)")
+                })
+                callback(audios)
+            }
+        }
+    }
+    
+    @MainActor
+    func getDownloading(_ callback: @escaping ([Audio]) -> Void) {
+        Task {
+            let query = ItemQuery(url: self.audiosDir)
+            for await items in query.searchDownloadingMetadataItems() {
+                let audios = items.filter({ $0.url != nil}).map { item in
+                    let audio = Audio(item.url!, db: self)
+                    audio.downloadingPercent = item.downloadProgress
+                    audio.isDownloading = item.isDownloading
+                    return audio
+                }
+                
+                audios.forEach({
+                    os_log("🍋 DB::getDownloading 在下载 \($0.title) \($0.downloadingPercent)")
                 })
                 callback(audios)
             }

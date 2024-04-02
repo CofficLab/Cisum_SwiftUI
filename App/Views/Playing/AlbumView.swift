@@ -2,8 +2,11 @@ import OSLog
 import SwiftUI
 
 struct AlbumView: View {
-    var audio: Audio?
-    var downloadingPercent: Double = 100.0
+    @EnvironmentObject var audioManager: AudioManager
+    
+    @State var audio: Audio?
+    
+    var downloadings: [Audio] { audioManager.downloadingItems }
     var fileManager = FileManager.default
     var withBackground = false
     var rotate = true
@@ -30,6 +33,13 @@ struct AlbumView: View {
                 Coffee(rotate: rotate, withBackground: withBackground)
             }
         }
+        .onChange(of: downloadings, {
+            if let a = audio, let newAudio = downloadings.first(where: {$0.id == a.id}) {
+                self.audio = newAudio
+            } else {
+                self.audio?.isDownloading = false
+            }
+        })
 //        .background(.green)
     }
 
