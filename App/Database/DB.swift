@@ -29,10 +29,6 @@ class DB {
             await self.getDeleted({
                 self.onDelete($0)
             })
-            
-            await self.getDownloading({
-                self.onDownloading($0)
-            })
         }
     }
 }

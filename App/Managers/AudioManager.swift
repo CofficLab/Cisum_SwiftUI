@@ -14,6 +14,7 @@ class AudioManager: NSObject, ObservableObject {
     @Published var list: AudioList = AudioList([])
     @Published var mode: PlayMode = .Order
     @Published var downloadingItems: [Audio] = []
+    @Published var downloadedItems: [Audio] = []
 
     private var player: AVAudioPlayer = .init()
     private var listener: AnyCancellable?
@@ -34,7 +35,6 @@ class AudioManager: NSObject, ObservableObject {
 
         db.onGet = onGet
         db.onDelete = onDelete
-        db.onDownloading = onDownloading
     }
 
     func currentTime() -> TimeInterval {
@@ -348,13 +348,18 @@ extension AudioManager {
     }
     
     func onGet(_ audios: [Audio]) {
-        os_log("\(Logger.isMain)🍋 AudioManager::onGet \(audios.count)")
-        self.list = AudioList(audios)
-    }
-    
-    func onDownloading(_ audios: [Audio]) {
-        os_log("\(Logger.isMain)🍋 AudioManager::onDownloading \(audios.count)")
-        self.downloadingItems = audios
+        bg.async {
+            os_log("\(Logger.isMain)🍋 AudioManager::onGet \(audios.count)")
+            let newlist = AudioList(audios)
+            
+            self.main.sync {
+                if Set(self.list.all.map { $0.id }) != Set(newlist.all.map { $0.id }) {
+                    self.list = newlist
+                }
+                self.downloadingItems = newlist.downloading
+                self.downloadedItems = newlist.downloaded
+            }
+        }
     }
 }
 

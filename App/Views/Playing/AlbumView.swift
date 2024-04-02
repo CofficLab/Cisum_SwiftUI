@@ -7,6 +7,7 @@ struct AlbumView: View {
     @State var audio: Audio?
     
     var downloadings: [Audio] { audioManager.downloadingItems }
+    var downloaded: [Audio] { audioManager.downloadedItems }
     var fileManager = FileManager.default
     var withBackground = false
     var rotate = true
@@ -36,11 +37,13 @@ struct AlbumView: View {
         .onChange(of: downloadings, {
             if let a = audio, let newAudio = downloadings.first(where: {$0.id == a.id}) {
                 self.audio = newAudio
-            } else {
-                self.audio?.isDownloading = false
             }
         })
-//        .background(.green)
+        .onChange(of: downloaded, {
+            if let a = audio, let newAudio = downloaded.first(where: {$0.id == a.id}) {
+                self.audio = newAudio
+            }
+        })
     }
 
     func getCoverFromDisk() -> Image? {

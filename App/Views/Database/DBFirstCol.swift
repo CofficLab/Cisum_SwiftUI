@@ -1,9 +1,12 @@
 import SwiftUI
+import OSLog
 
 struct DBFirstCol: View {
     @EnvironmentObject var audioManager: AudioManager
+    
+    @State var audio: Audio
+    
     var downloadings: [Audio] { audioManager.downloadingItems }
-    var audio: Audio
     
     var body: some View {
         HStack {

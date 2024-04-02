@@ -95,6 +95,8 @@ class ItemQuery {
             }
         }
     }
+    
+    // MARK: 监听某个目录的变化
 
     func searchMetadataItems(
         predicate: NSPredicate? = nil,
@@ -120,19 +122,69 @@ class ItemQuery {
                 continuation.yield(result)
             }
 
-//            NotificationCenter.default.addObserver(
-//                forName: .NSMetadataQueryDidUpdate,
-//                object: query,
-//                queue: queue
-//            ) { _ in
-//                let result = self.query.results.compactMap { item -> MetadataItemWrapper? in
-//                    guard let metadataItem = item as? NSMetadataItem else {
-//                        return nil
-//                    }
-//                    return MetadataItemWrapper(metadataItem: metadataItem)
-//                }
-//                continuation.yield(result)
-//            }
+            NotificationCenter.default.addObserver(
+                forName: .NSMetadataQueryDidUpdate,
+                object: query,
+                queue: queue
+            ) { _ in
+                let result = self.query.results.compactMap { item -> MetadataItemWrapper? in
+                    guard let metadataItem = item as? NSMetadataItem else {
+                        return nil
+                    }
+                    return MetadataItemWrapper(metadataItem: metadataItem)
+                }
+                continuation.yield(result)
+            }
+
+            query.start()
+
+            continuation.onTermination = { @Sendable _ in
+                self.query.stop()
+                NotificationCenter.default.removeObserver(self, name: .NSMetadataQueryDidFinishGathering, object: self.query)
+                NotificationCenter.default.removeObserver(self, name: .NSMetadataQueryDidUpdate, object: self.query)
+            }
+        }
+    }
+    
+    // MARK: 监听某个URL的变化
+
+    func searchMetadataItem(
+        predicate: NSPredicate? = nil,
+        sortDescriptors: [NSSortDescriptor] = [],
+        scopes: [Any] = [NSMetadataQueryUbiquitousDocumentsScope]
+    ) -> AsyncStream<[MetadataItemWrapper]> {
+        query.searchScopes = scopes
+        query.sortDescriptors = sortDescriptors
+        query.predicate = NSPredicate(format: "%K == %@", NSMetadataItemPathKey, url.path)
+
+        return AsyncStream { continuation in
+            NotificationCenter.default.addObserver(
+                forName: .NSMetadataQueryDidFinishGathering,
+                object: query,
+                queue: queue
+            ) { _ in
+                let result = self.query.results.compactMap { item -> MetadataItemWrapper? in
+                    guard let metadataItem = item as? NSMetadataItem else {
+                        return nil
+                    }
+                    return MetadataItemWrapper(metadataItem: metadataItem)
+                }
+                continuation.yield(result)
+            }
+
+            NotificationCenter.default.addObserver(
+                forName: .NSMetadataQueryDidUpdate,
+                object: query,
+                queue: queue
+            ) { _ in
+                let result = self.query.results.compactMap { item -> MetadataItemWrapper? in
+                    guard let metadataItem = item as? NSMetadataItem else {
+                        return nil
+                    }
+                    return MetadataItemWrapper(metadataItem: metadataItem)
+                }
+                continuation.yield(result)
+            }
 
             query.start()
 
