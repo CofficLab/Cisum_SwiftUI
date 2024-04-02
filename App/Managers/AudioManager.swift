@@ -11,7 +11,6 @@ class AudioManager: NSObject, ObservableObject {
     @Published private(set) var duration: TimeInterval = 0
     @Published var audio = Audio.empty
     @Published var playlist = PlayList([])
-    @Published var audios: [Audio] = []
     @Published var playerError: Error? = nil
 
     private var player: AVAudioPlayer = .init()
@@ -21,7 +20,7 @@ class AudioManager: NSObject, ObservableObject {
     private var rootDir: URL = AppConfig.cloudDocumentsDir
 
     var db: DB
-    var isEmpty: Bool { audios.isEmpty }
+    var isEmpty: Bool { playlist.isEmpty }
     var isCloudStorage: Bool { iCloudHelper.isCloudPath(url: rootDir) }
 
     override init() {
@@ -146,7 +145,6 @@ class AudioManager: NSObject, ObservableObject {
 
     func switchMode(_ callback: @escaping (_ mode: PlayList.PlayMode) -> Void) {
         self.playlist.switchMode({ mode in
-            self.audios = self.playlist.audios
             callback(mode)
         })
     }
@@ -312,7 +310,6 @@ extension AudioManager {
             os_log("\(Logger.isMain)🍋 AudioManager::onGet \(audios.count)")
             self.playlist.merge(audios)
             self.main.sync {
-                self.audios = self.playlist.audios
                 if self.audio.isEmpty() {
                     os_log("\(Logger.isMain)🍋 AudioManager::audio is empty, update")
                     self.audio = self.playlist.audio

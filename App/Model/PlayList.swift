@@ -5,7 +5,7 @@ import SwiftUI
 
 class PlayList {
     var fileManager = FileManager.default
-    var playMode: PlayMode = .Order
+    var playMode: PlayMode = .Random
     var audioList: AudioList = AudioList([])
     var current: Int = 0
     var audio: Audio { audioList.isEmpty ? Audio.empty : audioList.get(current) }
@@ -19,6 +19,7 @@ class PlayList {
     init(_ audios: [Audio]) {
         os_log("\(Logger.isMain)🚩 PlayList::init -> audios.count = \(audios.count)")
         self.audioList = AudioList(audios)
+        self.audioList.shuffle()
         self.updateCurrent()
     }
     

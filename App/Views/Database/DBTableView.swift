@@ -11,7 +11,7 @@ struct DBTableView: View {
     @State private var sortOrder = [KeyPathComparator(\Audio.title)]
 
     var db: DB { audioManager.db }
-    var audios: [Audio] { audioManager.audios }
+    var audios: [Audio] { audioManager.playlist.audios }
     var downloaded: [Audio] { audios.filter { $0.isDownloaded } }
     var description: String {
         if downloaded.count == audios.count {
@@ -47,9 +47,9 @@ struct DBTableView: View {
                         geo.size.width >= 700 ? .visible : .hidden)
                 }, rows: getRows)
         }
-        .onChange(of: sortOrder) {
-            audioManager.audios.sort(using: sortOrder)
-        }
+//        .onChange(of: sortOrder) {
+//            audioManager.audios.sort(using: sortOrder)
+//        }
     }
 
     // MARK: 右键菜单
