@@ -28,7 +28,7 @@ struct DBEmptyView: View {
                                 .font(.subheadline)
                                 .foregroundStyle(.white)
                     }
-                    Text("支持的格式：\(supportedFormats)").font(.subheadline)
+                    Text("支持的格式：\(supportedFormats)").font(.subheadline).foregroundStyle(.white)
                 }
                 #endif
             }

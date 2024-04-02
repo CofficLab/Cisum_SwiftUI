@@ -8,9 +8,8 @@ struct BtnMode: View {
 
     var body: some View {
         ControlButton(title:"模式",size:24,systemImage: getImageName(), onTap: {
-            audioManager.playlist.switchMode { mode in
+            audioManager.switchMode { mode in
                 appManager.setFlashMessage("\(mode.description)")
-                audioManager.audios = audioManager.audios
             }
         })
     }

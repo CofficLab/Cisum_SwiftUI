@@ -95,6 +95,8 @@ class AudioManager: NSObject, ObservableObject {
 
         updateMediaPlayer()
     }
+    
+    // MARK: 暂停
 
     func pause() {
         player.pause()
@@ -102,6 +104,8 @@ class AudioManager: NSObject, ObservableObject {
 
         updateMediaPlayer()
     }
+    
+    // MARK: 停止
 
     func stop() {
         os_log("\(Logger.isMain)🍋 AudioManager::Stop")
@@ -110,6 +114,8 @@ class AudioManager: NSObject, ObservableObject {
         duration = 0
         isPlaying = false
     }
+    
+    // MARK: 切换
 
     func togglePlayPause() throws {
         if playlist.isEmpty {
@@ -130,11 +136,22 @@ class AudioManager: NSObject, ObservableObject {
             play()
         }
     }
+    
+    // MARK: 播放模式
 
     func toggleLoop() {
         player.numberOfLoops = player.numberOfLoops == 0 ? -1 : 0
         playlist.playMode = player.numberOfLoops != 0 ? .Order : .Loop
     }
+
+    func switchMode(_ callback: @escaping (_ mode: PlayList.PlayMode) -> Void) {
+        self.playlist.switchMode({ mode in
+            self.audios = self.playlist.audios
+            callback(mode)
+        })
+    }
+    
+    // MARK: Prev
 
     /// 跳到上一首，manual=true表示由用户触发
     func prev(manual: Bool = false) throws -> String {
@@ -150,6 +167,8 @@ class AudioManager: NSObject, ObservableObject {
         try updatePlayer()
         return "上一曲：\(audio.title)"
     }
+    
+    // MARK: Next
 
     /// 跳到下一首，manual=true表示由用户触发
     func next(manual: Bool = false) throws {

@@ -5,11 +5,11 @@ import SwiftUI
 
 class PlayList {
     var fileManager = FileManager.default
-    var playMode: PlayMode = .Random
+    var playMode: PlayMode = .Order
     var audioList: AudioList = AudioList([])
     var current: Int = 0
     var audio: Audio { audioList.isEmpty ? Audio.empty : audioList.get(current) }
-    var audios: [Audio] { audioList.collection }
+    var audios: [Audio] { audioList.all }
     var title: String { self.audio.title }
     var isEmpty: Bool { audioList.isEmpty }
     var count: Int { self.audioList.count }
