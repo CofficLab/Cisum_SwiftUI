@@ -40,8 +40,10 @@ struct AlbumView: View {
             }
         })
         .onChange(of: downloaded, {
-            if let a = audio, let newAudio = downloaded.first(where: {$0.id == a.id}) {
-                self.audio = newAudio
+            AppConfig.mainQueue.async {
+                if let a = audio, let newAudio = downloaded.first(where: {$0.id == a.id}) {
+                    self.audio = newAudio
+                }
             }
         })
     }

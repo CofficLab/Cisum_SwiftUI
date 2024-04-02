@@ -352,7 +352,7 @@ extension AudioManager {
             os_log("\(Logger.isMain)🍋 AudioManager::onGet \(audios.count)")
             let newlist = AudioList(audios)
             
-            self.main.sync {
+            self.main.async {
                 if Set(self.list.all.map { $0.id }) != Set(newlist.all.map { $0.id }) {
                     self.list = newlist
                 }
