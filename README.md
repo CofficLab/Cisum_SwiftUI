@@ -3,8 +3,8 @@
 把音频文件放进去，让 Cisum 为你播放和管理。
 
 <div style="overflow-x: scroll; white-space: nowrap;">
-    <img src="./docs/2.png"  height="600" style="display: inline-block; margin-right: 10px;" />
-    <img src="./docs/1.png" style="display: inline-block; margin-right: 10px;" />
+    <img src="./docs/p2.png"  height="600" style="display: inline-block; margin-right: 10px;" />
+    <img src="./docs/p1.png" style="display: inline-block; margin-right: 10px;" />
 </div>
 
 <hr>
