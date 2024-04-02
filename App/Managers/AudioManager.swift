@@ -9,7 +9,7 @@ import SwiftUI
 class AudioManager: NSObject, ObservableObject {
     @Published private(set) var isPlaying: Bool = false
     @Published private(set) var duration: TimeInterval = 0
-    @Published var audio = Audio.empty
+    @Published var audio: Audio?
     @Published var playlist = PlayList([])
     @Published var playerError: Error? = nil
 
@@ -70,9 +70,12 @@ class AudioManager: NSObject, ObservableObject {
 
     /// 播放指定的
     func play(_ id: Audio.ID) {
-        audio = playlist.switchTo(id)
-
-        play()
+        do {
+            try playlist.switchTo(id)
+            play()
+        } catch let e {
+            self.playerError = e
+        }
     }
 
     /// 播放当前的
@@ -117,16 +120,16 @@ class AudioManager: NSObject, ObservableObject {
     // MARK: 切换
 
     func togglePlayPause() throws {
+        guard let audio = audio else {
+            throw SmartError.NoAudioInList
+        }
+        
         if playlist.isEmpty {
             throw SmartError.NoAudioInList
         }
 
         if audio.isDownloading {
             throw SmartError.Downloading
-        }
-
-        if audio.isEmpty() {
-            try next()
         }
 
         if player.isPlaying {
@@ -161,6 +164,10 @@ class AudioManager: NSObject, ObservableObject {
         }
 
         try audio = playlist.prev()
+        
+        guard let audio = audio else {
+            throw SmartError.NoPrevAudio
+        }
 
         try updatePlayer()
         return "上一曲：\(audio.title)"
@@ -208,9 +215,13 @@ class AudioManager: NSObject, ObservableObject {
     }
 
     private func updatePlayer() throws {
+        guard let audio = audio else {
+            return
+        }
+        
         do {
             playerError = nil
-            let player = try makePlayer(url: audio.getURL())
+            let player = try makePlayer(url: audio.url)
             bg.async {
                 os_log("\(Logger.isMain)🍋 AudioManager::UpdatePlayer")
                 player.delegate = self
@@ -239,15 +250,14 @@ class AudioManager: NSObject, ObservableObject {
         }
     }
 
-    // 当前的 AudioModel 是否有效
+    // 当前的 Audio 是否有效
     private func isValid() -> Bool {
         // 列表为空
         if playlist.isEmpty {
             return false
         }
-
-        // 列表不空，当前 AudioModel 却为空
-        if !playlist.isEmpty && audio == Audio.empty {
+        
+        guard let audio = audio else {
             return false
         }
 
@@ -261,7 +271,7 @@ class AudioManager: NSObject, ObservableObject {
 
     private func reset() {
         stop()
-        audio = Audio.empty
+        audio = nil
         player = AVAudioPlayer()
     }
 }
@@ -301,16 +311,12 @@ extension AudioManager: AVAudioPlayerDelegate {
 // MARK: 当数据库发生变化时
 
 extension AudioManager {
-    func delete(urls: Set<URL>) async {
-        await Audio.delete(urls: urls)
-    }
-
     func onGet(_ audios: [Audio]) {
         bg.async {
             os_log("\(Logger.isMain)🍋 AudioManager::onGet \(audios.count)")
             self.playlist.merge(audios)
             self.main.sync {
-                if self.audio.isEmpty() {
+                if self.audio == nil {
                     os_log("\(Logger.isMain)🍋 AudioManager::audio is empty, update")
                     self.audio = self.playlist.audio
 

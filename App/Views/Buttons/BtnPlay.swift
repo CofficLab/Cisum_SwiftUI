@@ -17,16 +17,6 @@ struct BtnPlay: View {
     }
     
     func play() {
-        if audio.isEmpty() {
-            do {
-                try audioManager.next()
-            } catch let e {
-                appManager.setFlashMessage(e.localizedDescription)
-            }
-            
-            return
-        }
-        
         if audio.isDownloading {
             return appManager.setFlashMessage("正在从 iCloud 下载")
         }

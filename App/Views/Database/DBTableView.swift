@@ -63,7 +63,7 @@ struct DBTableView: View {
             BtnDownload(audio: audio)
 
             #if os(macOS)
-                BtnShowInFinder(url: audio.getURL())
+                BtnShowInFinder(url: audio.url)
             #endif
 
             Divider()
@@ -115,7 +115,7 @@ struct DBTableView: View {
         return ForEach(audios) { audio in
             TableRow(audio)
                 .itemProvider { // enable Drap
-                    NSItemProvider(object: audio.getURL() as NSItemProviderWriting)
+                    NSItemProvider(object: audio.url as NSItemProviderWriting)
                 }
                 .contextMenu {
                     getContextMenuItems(audio)

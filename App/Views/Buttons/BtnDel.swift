@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct BtnDelete: View {
+struct BtnDel: View {
     @EnvironmentObject var audioManager: AudioManager
     @EnvironmentObject var appManager: AppManager
     
@@ -9,7 +9,7 @@ struct BtnDelete: View {
     var body: some View {
         Button {
             Task {
-                await audioManager.delete(urls: [url])
+//                await audioManager.delete(urls: [url])
                 appManager.setFlashMessage("\(url.lastPathComponent) 已经删除")
             }
         } label: {

@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct CloudDemoView: View {
-    @State var handler = CloudDocumentsHandler()
+    @State var handler = CloudHandler()
 
     var documentURL = AppConfig.cloudDocumentsDir
     

@@ -6,6 +6,7 @@ enum SmartError: Error, LocalizedError {
     case NoNextAudio
     case NoPrevAudio
     case NoAudioInList
+    case TargetNotFoundInPlaylist
     case Downloading
     case FormatNotSupported(_ format: String)
     case PlayFailed
@@ -28,6 +29,8 @@ enum SmartError: Error, LocalizedError {
             "不支持这个格式： \(format)"
         case .PlayFailed:
             "出现系统错误，播放失败"
+        case .TargetNotFoundInPlaylist:
+            "播放列表中找不到这个音频"
         }
     }
 }

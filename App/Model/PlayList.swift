@@ -8,9 +8,9 @@ class PlayList {
     var playMode: PlayMode = .Random
     var audioList: AudioList = AudioList([])
     var current: Int = 0
-    var audio: Audio { audioList.isEmpty ? Audio.empty : audioList.get(current) }
+    var audio: Audio? { audioList.get(current) }
     var audios: [Audio] { audioList.all }
-    var title: String { self.audio.title }
+    var title: String { self.audio?.title ?? "[播放列表中当前歌曲为空]" }
     var isEmpty: Bool { audioList.isEmpty }
     var count: Int { self.audioList.count }
     /// 本地磁盘目录，用来存放缓存
@@ -36,9 +36,12 @@ class PlayList {
         find(audioId) != nil
     }
 
-    func switchTo(_ id: Audio.ID) -> Audio {
-        current = audioList.find(id) ?? 0
-        return audio
+    func switchTo(_ id: Audio.ID) throws {
+        if let i: Int = audioList.find(id) {
+            current = i
+        } else {
+            throw SmartError.TargetNotFoundInPlaylist
+        }
     }
 
     func merge(_ audios: [Audio]) {
@@ -48,9 +51,9 @@ class PlayList {
     // MARK: 获取上{offset}曲，仅获取，不改变播放状态
 
     /// 获取上{offset}曲，仅获取，不改变播放状态
-    func getPre(_ offset: Int = 1) -> Audio {
+    func getPre(_ offset: Int = 1) -> Audio? {
         if isEmpty {
-            return Audio.empty
+            return nil
         }
 
         let preIndex = (current - offset + self.count) % self.count
@@ -63,9 +66,9 @@ class PlayList {
     // MARK: 获取下{offset}曲，仅获取，不改变播放状态
 
     /// 获取下{offset}曲，仅获取，不改变播放状态
-    func getNext(_ offset: Int = 1) -> Audio {
+    func getNext(_ offset: Int = 1) -> Audio? {
         if isEmpty {
-            return Audio.empty
+            return nil
         }
 
         let nextIndex = (current + offset) % self.count
@@ -78,20 +81,20 @@ class PlayList {
 
     // MARK: 跳到上{offset}曲
 
-    func prev(_ offset: Int = 1, manual: Bool = true) throws -> Audio {
+    func prev(_ offset: Int = 1, manual: Bool = true) throws -> Audio? {
         if isEmpty {
             os_log("\(Logger.isMain)列表为空")
             throw SmartError.NoAudioInList
         }
 
         let index = offset % self.count
-        os_log("\(Logger.isMain)🔊 PlayList::prev \(offset) -> \(self.audio.title)")
+        os_log("\(Logger.isMain)🔊 PlayList::prev \(offset) -> \(self.title)")
 
         for i in index...self.count - 1 {
             let target = getPre(i)
-            if target.isDownloaded {
+            if let target = target, target.isDownloaded {
                 current = (current - i + self.count) % self.count
-                os_log("\(Logger.isMain)🔊 PlayList::goto -> \(self.audio.title)")
+                os_log("\(Logger.isMain)🔊 PlayList::goto -> \(self.title)")
 
                 return audio
             }
@@ -103,7 +106,7 @@ class PlayList {
 
     // MARK: 跳到下{offset}曲
 
-    func next(_ offset: Int = 1, manual: Bool = true) throws -> Audio {
+    func next(_ offset: Int = 1, manual: Bool = true) throws -> Audio? {
         os_log("🍋 Playlist::next, current is \(self.current)")
         if isEmpty {
             os_log("\(Logger.isMain)列表为空")
@@ -129,9 +132,9 @@ class PlayList {
 
         for i in index...self.count - 1 {
             let target = getNext(i)
-            if target.isDownloaded {
+            if let target = target, target.isDownloaded {
                 current = (current + i) % self.count
-                os_log("\(Logger.isMain)🔊 PlayList::goto ⬇️ \(self.audio.title)")
+                os_log("\(Logger.isMain)🔊 PlayList::goto ⬇️ \(self.title)")
 
                 return audio
             }
@@ -220,7 +223,7 @@ extension PlayList {
         }
 
         for i in 1...count {
-            getNext(i).prepare()
+            getNext(i)?.prepare()
         }
 
         // 只是触发了下载，并不代表文件已经下载完成了

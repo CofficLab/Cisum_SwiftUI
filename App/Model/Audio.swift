@@ -3,10 +3,12 @@ import Foundation
 import OSLog
 import SwiftUI
 
+/**
+ Audio 来自 DB，代表一个可播放的个体
+ */
 class Audio {
     let fileManager = FileManager.default
-    private let url: URL
-    private var cacheURL: URL?
+    var url: URL
     var title = "[空白]"
     var artist = ""
     var description = ""
@@ -16,11 +18,12 @@ class Audio {
     var downloadingPercent: Double = 0
     var isDownloading: Bool = false
     var size: Int64 { getFileSize() }
+    var db: DB
 
-    init(_ url: URL, cacheURL: URL? = nil) {
+    init(_ url: URL,db: DB) {
         // os_log("\(Logger.isMain)🚩 AudioModel::init -> \(url.lastPathComponent)")
         self.url = url
-        self.cacheURL = cacheURL
+        self.db = db
         title = url.deletingPathExtension().lastPathComponent
 
         Task {
@@ -34,29 +37,12 @@ class Audio {
         }
     }
 
-    func getURL() -> URL {
-        cacheURL ?? url
-    }
-
     func getFileSize() -> Int64 {
         FileHelper.getFileSize(url)
     }
 
     func getFileSizeReadable() -> String {
         FileHelper.getFileSizeReadable(url)
-    }
-
-    func download() {
-        SmartFile(url: url).download()
-    }
-}
-
-extension Audio {
-    static var emptyId = AppConfig.cloudDocumentsDir
-    static var empty = Audio(emptyId)
-
-    func isEmpty() -> Bool {
-        id == Audio.emptyId
     }
 }
 
@@ -71,7 +57,7 @@ extension Audio: Equatable {
     }
 }
 
-// MAKR: ID
+// MARK: ID
 
 extension Audio: Identifiable {
     var id: URL { url }
@@ -80,41 +66,25 @@ extension Audio: Identifiable {
 // MARK: iCloud 相关
 
 extension Audio {
-    var isCached: Bool { cacheURL != nil }
     var isDownloaded: Bool { downloadingPercent == 100.0 }
     var isNotDownloaded: Bool { !isDownloaded }
 
     /// 准备好文件
     func prepare() {
         os_log("\(Logger.isMain)🔊 AudioModel::prepare -> \(self.title)")
-        SmartFile(url: getURL()).download()
+        download()
+    }
+
+    func download() {
+        self.db.download(url)
     }
 }
 
 // MARK: 删除
 
 extension Audio {
-    /// 删除多个文件
-    static func delete(urls: Set<URL>) async {
-        os_log("\(Logger.isMain)🏠 AudioModel::delete")
-        AppConfig.mainQueue.async {
-            for url in urls {
-                Audio(url).delete()
-            }
-        }
-    }
-
     func delete() {
-        do {
-            if fileManager.fileExists(atPath: url.path) {
-                try fileManager.removeItem(at: url)
-                SmartFile(url: url).delete()
-            } else {
-                os_log("\(Logger.isMain)删除时发现文件不存在，忽略 -> \(self.url.lastPathComponent)")
-            }
-        } catch {
-            os_log(.error, "删除文件失败\n\(error)")
-        }
+        self.db.delete(url)
     }
 }
 
@@ -140,7 +110,7 @@ extension Audio {
     }
 
     func updateMeta() async {
-        let asset = AVAsset(url: cacheURL ?? url)
+        let asset = AVAsset(url: url)
         do {
             let metadata = try await asset.load(.commonMetadata)
 
@@ -151,7 +121,7 @@ extension Audio {
                     switch item.commonKey?.rawValue {
                     case "title":
                         if let title = value as? String {
-                            //                            os_log("\(Logger.isMain)🍋 AudioModel::updateMeta -> title: \(title)")
+                            // os_log("\(Logger.isMain)🍋 AudioModel::updateMeta -> title: \(title)")
                             self.title = title
                         } else {
                             os_log("\(Logger.isMain)meta提供了title，但value不能转成string")
@@ -165,9 +135,7 @@ extension Audio {
                             self.albumName = albumName
                         }
                     case "artwork":
-
                         // MARK: 得到了封面图
-
                         if (try makeImage(await item.load(.value), saveTo: coverPath)) != nil {
                             cover = coverPath
                             os_log("\(Logger.isMain)🍋 AudioModel::updateMeta -> cover updated -> \(self.title)")

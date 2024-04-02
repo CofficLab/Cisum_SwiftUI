@@ -96,12 +96,12 @@ extension DBView {
                 }
             },
             completionOne: { url in },
-            onStart: { url in
+            onStart: { audio in
                 AppConfig.mainQueue.sync {
-                    if Audio(url).isNotDownloaded {
-                        appManager.stateMessage = "正在从 iCloud 下载 \(url.lastPathComponent)"
+                    if audio.isNotDownloaded {
+                        appManager.stateMessage = "正在从 iCloud 下载 \(audio.title)"
                     } else {
-                        appManager.stateMessage = "正在复制 \(url.lastPathComponent)"
+                        appManager.stateMessage = "正在复制 \(audio.title)"
                     }
                 }
             }
