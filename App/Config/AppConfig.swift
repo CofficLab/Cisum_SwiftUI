@@ -1,4 +1,5 @@
 import Foundation
+import SwiftData
 import OSLog
 
 struct AppConfig {
@@ -29,6 +30,31 @@ extension AppConfig {
     #endif
 }
 
+// MARK: 数据库配置
+
+extension AppConfig {
+    static var sharedModelContainer: ModelContainer = {
+        guard let url = AppConfig.localDocumentsDir?.appendingPathComponent("database.db") else {
+            fatalError("Could not create ModelContainer")
+        }
+        
+        let schema = Schema([
+            Audio.self,
+        ])
+        let modelConfiguration = ModelConfiguration(
+            schema: schema,
+            url: url,
+            cloudKitDatabase: .none
+        )
+
+        do {
+            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+        } catch {
+            fatalError("Could not create ModelContainer: \(error)")
+        }
+    }()
+}
+
 // MARK: 队列配置
 
 extension AppConfig {
@@ -39,6 +65,8 @@ extension AppConfig {
 // MARK: 路径配置
 
 extension AppConfig {
+    static let appDir = URL.applicationDirectory
+    static let appSupportDir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).last
     static let localDocumentsDir = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first
     static let containerDir = fileManager.url(forUbiquityContainerIdentifier: containerIdentifier)
     static var cloudDocumentsDir: URL {

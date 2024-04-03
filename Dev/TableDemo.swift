@@ -23,7 +23,7 @@ struct TableDemo: View {
     
     private func getRows() -> some TableRowContent<Audio> {
         print("🐛 DBTableView::getRows")
-        return ForEach([Audio(AppConfig.coverDir, db: DB())]) { audio in
+        return ForEach([Audio(AppConfig.coverDir)]) { audio in
             TableRow(audio)
         }
     }

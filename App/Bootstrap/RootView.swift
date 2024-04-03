@@ -4,12 +4,15 @@ import SwiftUI
 struct RootView<Content>: View where Content: View {
     private var content: Content
 
+    @Environment(\.modelContext) private var modelContext
+
     @State private var isReady: Bool = false
     @State private var errorMessage: String? = nil
     @State private var audioManager: AudioManager? = nil
     @State private var mediaPlayerManger: MediaPlayerManager? = nil
-    @State private var windowManager: WindowManager = WindowManager()
-    @State private var appManager: AppManager = AppManager()
+    @State private var windowManager: WindowManager = .init()
+    @State private var appManager: AppManager = .init()
+    @State private var db: DB? = nil
 
     init(@ViewBuilder content: () -> Content) {
         self.content = content()
@@ -35,6 +38,7 @@ struct RootView<Content>: View where Content: View {
                         os_log("\(Logger.isMain)🚩 初始化环境变量")
                         audioManager = AudioManager()
                         mediaPlayerManger = MediaPlayerManager(audioManager: audioManager!)
+                        self.db = DB(modelContext)
 
                         #if os(iOS)
                             UIApplication.shared.beginReceivingRemoteControlEvents()

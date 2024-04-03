@@ -1,22 +1,17 @@
 import SwiftUI
+import SwiftData
 
 struct DBListView: View {
     @EnvironmentObject var audioManager: AudioManager
-
-    var total: Int { audioManager.total }
-    var maxIndex: Int { max(0, total - 1) }
-    var audios: [Audio] { audioManager.list.all }
-    var downloaded: [Audio] { audioManager.list.downloaded }
-    var description: String {
-        if downloaded.count == total {
-            return "共 \(total)"
-        }
-
-        return "\(downloaded.count)/\(total) 已下载 "
-    }
+    @Environment(\.modelContext) private var modelContext
+    @Query private var audios: [Audio]
 
     var body: some View {
-        lazy
+        lazy.toolbar(content: {
+            Button("添加", action: {
+                addItem()
+            })
+        })
     }
 
     var list: some View {
@@ -33,7 +28,7 @@ struct DBListView: View {
 
     var lazyList: some View {
         List {
-            ForEach(0...maxIndex, id: \.self) { i in
+            ForEach(0...12, id: \.self) { i in
                 if let audio = audioManager.list.get(i) {
                     Cell(audio)
                         .contextMenu(ContextMenu(menuItems: {
@@ -51,7 +46,7 @@ struct DBListView: View {
         VStack {
             ScrollView {
                 LazyVStack {
-                    ForEach(0...maxIndex, id: \.self) { i in
+                    ForEach(0...12, id: \.self) { i in
                         if let audio = audioManager.list.get(i) {
                             Cell(audio)
                                 .contextMenu(ContextMenu(menuItems: {
@@ -68,15 +63,22 @@ struct DBListView: View {
             }
             .background(.background)
 
-            if total > 0 {
-                VStack {
-                    Spacer()
-                    Text(description)
-                        .font(.footnote)
-                        .foregroundStyle(.white)
-                    Spacer()
-                }.frame(height: 10)
-            }
+//            if total > 0 {
+//                VStack {
+//                    Spacer()
+//                    Text(description)
+//                        .font(.footnote)
+//                        .foregroundStyle(.white)
+//                    Spacer()
+//                }.frame(height: 10)
+//            }
+        }
+    }
+    
+    private func addItem() {
+        withAnimation {
+            let newItem = Audio(AppConfig.appDir)
+            modelContext.insert(newItem)
         }
     }
 }

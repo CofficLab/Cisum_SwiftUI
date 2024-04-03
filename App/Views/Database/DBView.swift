@@ -9,7 +9,6 @@ struct DBView: View {
 
     @State private var dropping: Bool = false
 
-    var db: DB { audioManager.db }
     var main = AppConfig.mainQueue
     var bg = AppConfig.bgQueue 
 
@@ -44,7 +43,7 @@ struct DBView: View {
         #else
             ZStack {
 //                DBTable()
-                DBListView()
+                DBLazyVStack()
 
                 if audioManager.isEmpty, appManager.flashMessage.isEmpty {
                     DBEmptyView()
@@ -88,25 +87,25 @@ struct DBView: View {
 extension DBView {
     func copy(_ files: [URL]) {
         appManager.stateMessage = "正在复制 \(files.count) 个文件"
-        db.add(
-            files,
-            completionAll: {
-                AppConfig.mainQueue.sync {
-                    appManager.setFlashMessage("已添加 \(files.count) 个文件")
-                    appManager.cleanStateMessage()
-                }
-            },
-            completionOne: { url in },
-            onStart: { audio in
-                AppConfig.mainQueue.sync {
-                    if audio.isNotDownloaded {
-                        appManager.stateMessage = "正在从 iCloud 下载 \(audio.title)"
-                    } else {
-                        appManager.stateMessage = "正在复制 \(audio.title)"
-                    }
-                }
-            }
-        )
+//        db.add(
+//            files,
+//            completionAll: {
+//                AppConfig.mainQueue.sync {
+//                    appManager.setFlashMessage("已添加 \(files.count) 个文件")
+//                    appManager.cleanStateMessage()
+//                }
+//            },
+//            completionOne: { url in },
+//            onStart: { audio in
+//                AppConfig.mainQueue.sync {
+//                    if audio.isNotDownloaded {
+//                        appManager.stateMessage = "正在从 iCloud 下载 \(audio.title)"
+//                    } else {
+//                        appManager.stateMessage = "正在复制 \(audio.title)"
+//                    }
+//                }
+//            }
+//        )
     }
 }
 

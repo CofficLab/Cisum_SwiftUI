@@ -1,6 +1,7 @@
 import Foundation
 import OSLog
 import SwiftUI
+import SwiftData
 
 /**
  DB 负责
@@ -14,17 +15,16 @@ class DB {
     var bg = AppConfig.bgQueue
     var audiosDir: URL = AppConfig.audiosDir
     var handler = CloudHandler()
+    var context: ModelContext
     var onGet: ([Audio]) -> Void = { _  in os_log("🍋 DB::onGet") }
     var onDownloading: ([Audio]) -> Void = { _  in os_log("🍋 DB::onDownloading") }
     var onDelete: ([Audio]) -> Void = { _  in os_log("🍋 DB::onDelete") }
 
-    init() {
+    init(_ context: ModelContext) {
         os_log("\(Logger.isMain)🚩 初始化 DB")
-
+        self.context = context
         Task {
-            await self.getAudios({
-                self.onGet($0)
-            })
+            await self.getAudios()
             
             await self.getDeleted({
                 self.onDelete($0)
@@ -46,12 +46,12 @@ extension DB {
         onStart: @escaping (_ audio: Audio) -> Void
     ) {
         bg.async {
-            for url in urls {
-                onStart(Audio(url, db: self))
-                SmartFile(url: url).copyTo(
-                    destnation: self.audiosDir.appendingPathComponent(url.lastPathComponent))
-                completionOne(url)
-            }
+//            for url in urls {
+//                onStart(Audio(url, db: self))
+//                SmartFile(url: url).copyTo(
+//                    destnation: self.audiosDir.appendingPathComponent(url.lastPathComponent))
+//                completionOne(url)
+//            }
 
             completionAll()
         }
@@ -90,7 +90,7 @@ extension DB {
 
     /// 查询数据，当查到或有更新时会调用回调函数
     @MainActor
-    func getAudios(_ callback: @escaping ([Audio]) -> Void) {
+    func getAudios() {
         Task {
             // 创建一个后台队列
             let backgroundQueue = OperationQueue()
@@ -98,15 +98,32 @@ extension DB {
             for await items in query.searchMetadataItems() {
                 AppConfig.bgQueue.async {
                     os_log("\(Logger.isMain)🍋 DB::getAudios")
-                    let audios = items.filter({ $0.url != nil}).map { item in
-                        let audio = Audio(item.url!, db: self)
-                        audio.downloadingPercent = item.downloadProgress
-                        audio.isDownloading = item.isDownloading
-                        audio.isPlaceholder = item.isPlaceholder
-                        return audio
+                    items.filter({ $0.url != nil}).forEach { item in
+                        do {
+                            let url = item.url!
+                            let predicate = #Predicate<Audio> {
+                                $0.url == url
+                            }
+                            let descriptor = FetchDescriptor(predicate: predicate)
+                            let dbItems = try self.context.fetch(descriptor)
+                            
+                            if let f = dbItems.first {
+                                f.downloadingPercent = item.downloadProgress
+                                f.isDownloading = item.isDownloading
+                                f.isPlaceholder = item.isPlaceholder
+                                os_log("\(Logger.isMain)🍋 DB::getAudios 更新 \(f.title)")
+                            } else {
+                                let audio = Audio(url)
+                                audio.downloadingPercent = item.downloadProgress
+                                audio.isDownloading = item.isDownloading
+                                audio.isPlaceholder = item.isPlaceholder
+                                self.context.insert(audio)
+                                os_log("\(Logger.isMain)🍋 DB::getAudios 入库 \(audio.title)")
+                            }
+                        } catch let e {
+                            print(e)
+                        }
                     }
-                    os_log("\(Logger.isMain)🍋 DB::getAudios with \(audios.count)")
-                    callback(audios)
                 }
             }
         }
@@ -118,7 +135,7 @@ extension DB {
             let query = ItemQuery(url: self.audiosDir)
             for await items in query.searchDeletedMetadataItems() {
                 let audios = items.filter({ $0.url != nil}).map { item in
-                    let audio = Audio(item.url!, db: self)
+                    let audio = Audio(item.url!)
                     audio.downloadingPercent = item.downloadProgress
                     audio.isDownloading = item.isDownloading
                     return audio
@@ -138,7 +155,7 @@ extension DB {
             let query = ItemQuery(url: self.audiosDir)
             for await items in query.searchDownloadingMetadataItems() {
                 let audios = items.filter({ $0.url != nil}).map { item in
-                    let audio = Audio(item.url!, db: self)
+                    let audio = Audio(item.url!)
                     audio.downloadingPercent = item.downloadProgress
                     audio.isDownloading = item.isDownloading
                     return audio

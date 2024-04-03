@@ -67,6 +67,8 @@
 		0BBAD0722BBC05C6005834A3 /* Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBAD0712BBC05C6005834A3 /* Cell.swift */; };
 		0BBAD0742BBCDC26005834A3 /* DBListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBAD0732BBCDC26005834A3 /* DBListView.swift */; };
 		0BBAD0772BBCF9CE005834A3 /* TableDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBAD0762BBCF9CE005834A3 /* TableDemo.swift */; };
+		0BBAD09C2BBD28D3005834A3 /* SongAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBAD09B2BBD28D3005834A3 /* SongAlbum.swift */; };
+		0BBAD09E2BBD33F6005834A3 /* DBLazyVStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBAD09D2BBD33F6005834A3 /* DBLazyVStack.swift */; };
 		0BBC157C2AB84C21006E82C4 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC157B2AB84C21006E82C4 /* HomeView.swift */; };
 		0BBC15802AB854A8006E82C4 /* DBView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC157F2AB854A8006E82C4 /* DBView.swift */; };
 		0BBC15842AB95272006E82C4 /* ControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC15832AB95272006E82C4 /* ControlView.swift */; };
@@ -143,6 +145,8 @@
 		0BBAD0712BBC05C6005834A3 /* Cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cell.swift; sourceTree = "<group>"; };
 		0BBAD0732BBCDC26005834A3 /* DBListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBListView.swift; sourceTree = "<group>"; };
 		0BBAD0762BBCF9CE005834A3 /* TableDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableDemo.swift; sourceTree = "<group>"; };
+		0BBAD09B2BBD28D3005834A3 /* SongAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongAlbum.swift; sourceTree = "<group>"; };
+		0BBAD09D2BBD33F6005834A3 /* DBLazyVStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBLazyVStack.swift; sourceTree = "<group>"; };
 		0BBC157B2AB84C21006E82C4 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		0BBC157F2AB854A8006E82C4 /* DBView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBView.swift; sourceTree = "<group>"; };
 		0BBC15832AB95272006E82C4 /* ControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlView.swift; sourceTree = "<group>"; };
@@ -366,6 +370,8 @@
 				0BBC157F2AB854A8006E82C4 /* DBView.swift */,
 				0BBA42162ABC1AE700C0B977 /* StatusBarView.swift */,
 				0BBA42122ABC137A00C0B977 /* StatusView.swift */,
+				0BBAD09B2BBD28D3005834A3 /* SongAlbum.swift */,
+				0BBAD09D2BBD33F6005834A3 /* DBLazyVStack.swift */,
 			);
 			path = Database;
 			sourceTree = "<group>";
@@ -463,6 +469,7 @@
 			files = (
 				0BBA422F2AC2BAE300C0B977 /* AlbumView.swift in Sources */,
 				0B1D5A872AB302610010DDF2 /* BackgroundView.swift in Sources */,
+				0BBAD09C2BBD28D3005834A3 /* SongAlbum.swift in Sources */,
 				0B8FC2702BBC559500839C75 /* PlayingAlbum.swift in Sources */,
 				0BBC15842AB95272006E82C4 /* ControlView.swift in Sources */,
 				0BBA42272AC2A8B800C0B977 /* ButtonAdd.swift in Sources */,
@@ -475,6 +482,7 @@
 				0B220F6D2BB051140077255A /* StateView.swift in Sources */,
 				0B1D5A8D2AB3E8290010DDF2 /* AppDelegate.swift in Sources */,
 				0BBC158F2ABAC146006E82C4 /* BtnNext.swift in Sources */,
+				0BBAD09E2BBD33F6005834A3 /* DBLazyVStack.swift in Sources */,
 				0BBC15802AB854A8006E82C4 /* DBView.swift in Sources */,
 				0B901D932BB83F38003AC253 /* CloudKit.swift in Sources */,
 				0BB889D72AC046B5004788D5 /* BtnShowInFinder.swift in Sources */,

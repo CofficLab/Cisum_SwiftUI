@@ -2,16 +2,18 @@ import AVFoundation
 import Foundation
 import OSLog
 import SwiftUI
+import SwiftData
 
 /**
  Audio 来自 DB，代表一个可播放的个体
  */
+
+@Model
 class Audio {
-    let fileManager = FileManager.default
+    @Transient let fileManager = FileManager.default
     var url: URL
     var title = "[空白]"
     var artist = ""
-    var description = ""
     var track = ""
     var albumName = ""
     var coverURL: URL?
@@ -19,12 +21,10 @@ class Audio {
     var isDownloading: Bool = false
     var isPlaceholder: Bool = false
     var size: Int64 { getFileSize() }
-    var db: DB
 
-    init(_ url: URL, db: DB) {
+    init(_ url: URL) {
         // os_log("\(Logger.isMain)🚩 AudioModel::init -> \(url.lastPathComponent)")
         self.url = url
-        self.db = db
         self.title = url.deletingPathExtension().lastPathComponent
         self.coverURL = getCover()
 
@@ -78,7 +78,7 @@ extension Audio {
     }
 
     func download() {
-        db.download(url)
+//        db.download(url)
     }
 }
 
@@ -86,7 +86,7 @@ extension Audio {
 
 extension Audio {
     func delete() {
-        db.delete(self)
+//        db.delete(self)
     }
 }
 
@@ -220,7 +220,6 @@ extension Audio {
         print("url: \(url)")
         print("title: \(title)")
         print("artist: \(artist)")
-        print("description: \(description)")
         print("track: \(track)")
         print("albumName: \(albumName)")
         print("coverURL: \(String(describing: coverURL))")

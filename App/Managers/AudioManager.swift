@@ -1,4 +1,5 @@
 import AVKit
+import SwiftData
 import Combine
 import Foundation
 import MediaPlayer
@@ -24,18 +25,11 @@ class AudioManager: NSObject, ObservableObject {
     private var title: String { audio?.title ?? "[无]"}
     private var rootDir: URL = AppConfig.cloudDocumentsDir
     
-    var db: DB
     var isEmpty: Bool { list.isEmpty }
     var isCloudStorage: Bool { iCloudHelper.isCloudPath(url: rootDir) }
 
     override init() {
         os_log("\(Logger.isMain)🚩 初始化 AudioManager")
-
-        db = DB()
-        super.init()
-
-        db.onGet = onGet
-        db.onDelete = onDelete
     }
 
     func currentTime() -> TimeInterval {

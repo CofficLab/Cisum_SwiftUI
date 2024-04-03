@@ -3,11 +3,11 @@ import SwiftUI
 struct BtnDestroy: View {
   @EnvironmentObject var audioManager: AudioManager
 
-  private var db: DB { audioManager.db }
+//  private var db: DB { audioManager.db }
 
   var body: some View {
     Button {
-      db.destroy()
+//      db.destroy()
     } label: {
       Label("清空", systemImage: getImageName())
         .font(.system(size: 24))

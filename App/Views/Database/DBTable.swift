@@ -10,7 +10,7 @@ struct DBTable: View {
     @State private var selections = Set<Audio.ID>()
     @State private var sortOrder = [KeyPathComparator(\Audio.title)]
 
-    var db: DB { audioManager.db }
+//    var db: DB { audioManager.db }
     var audios: [Audio] { audioManager.list.all }
     var downloaded: [Audio] { audios.filter { $0.isDownloaded } }
     var downloadings: [Audio] { audioManager.downloadingItems }
