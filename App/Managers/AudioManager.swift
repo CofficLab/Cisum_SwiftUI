@@ -13,7 +13,6 @@ class AudioManager: NSObject, ObservableObject {
     @Published var audio: Audio?
     @Published var playItem: PlayItem?
     @Published var playerError: Error? = nil
-    @Published var list: AudioList = AudioList([])
     @Published var mode: PlayMode = .Order
     @Published var downloadingItems: [Audio] = []
     @Published var downloadedItems: [Audio] = []
@@ -35,10 +34,6 @@ class AudioManager: NSObject, ObservableObject {
         os_log("\(Logger.isMain)🚩 初始化 AudioManager")
         self.context = context
         self.db = DB(context: context)
-        super.init()
-
-        db.onGet = onGet
-        db.onDelete = onDelete
     }
     
     func setCurrent(_ item: PlayItem) {
@@ -87,19 +82,6 @@ class AudioManager: NSObject, ObservableObject {
         os_log("\(Logger.isMain)🔊 AudioManager::play")
         
         self.audio = Audio(url)
-        
-        play()
-    }
-
-    /// 播放指定的
-    func play(_ id: Audio.ID) {
-        os_log("\(Logger.isMain)🔊 AudioManager::play \(id)")
-        
-        if let target: Audio = list.find(id) {
-            self.audio = target
-        } else {
-            self.playerError = SmartError.NoAudioInList
-        }
         
         play()
     }
@@ -174,10 +156,8 @@ class AudioManager: NSObject, ObservableObject {
         switch mode {
         case .Order:
             mode = .Random
-            list.shuffle()
         case .Loop:
             mode = .Order
-            list.sort()
         case .Random:
             mode = .Loop
         }
@@ -190,17 +170,6 @@ class AudioManager: NSObject, ObservableObject {
     /// 跳到上一首，manual=true表示由用户触发
     func prev(manual: Bool = false) throws -> String {
         os_log("\(Logger.isMain)🔊 AudioManager::prev ⬆️")
-
-        // 用户触发，但曲库仅一首，发出提示
-        if isEmpty && manual {
-            throw SmartError.NoPrevAudio
-        }
-        
-        if let audio = audio {
-            self.audio = list.prevOf(audio.id)
-        } else {
-            self.audio = list.downloaded[0]
-        }
         
         try updatePlayer()
         return "上一曲：\(self.title)"
@@ -305,11 +274,6 @@ class AudioManager: NSObject, ObservableObject {
             return false
         }
 
-        // 已经不在列表中了
-        if list.notHas(audio.id) {
-            return false
-        }
-
         return true
     }
 
@@ -349,37 +313,6 @@ extension AudioManager: AVAudioPlayerDelegate {
     func audioPlayerEndInterruption(_ player: AVAudioPlayer, withOptions flags: Int) {
         os_log("\(Logger.isMain)🍋 AudioManager::audioPlayerEndInterruption")
         play()
-    }
-}
-
-// MARK: 当数据库发生变化时
-
-extension AudioManager {
-    func onDelete(_ audios: [Audio]) {
-        os_log("\(Logger.isMain)🍋 AudioManager::onDelete \(audios.count)")
-
-        audios.forEach({ audio in
-            self.list = self.list.delete(audio.id)
-        })
-    }
-    
-    func onGet(_ audios: [Audio]) {
-        bg.async {
-            os_log("\(Logger.isMain)🍋 AudioManager::onGet \(audios.count)")
-            let newlist = AudioList(audios)
-            let shouldUpdate = Set(self.list.all.map { $0.id }) != Set(newlist.all.map { $0.id })
-            
-            self.main.async {
-                if shouldUpdate {
-                    os_log("\(Logger.isMain)🍋 AudioManager::update list")
-                    self.list = newlist
-                }
-                
-                self.downloadingItems = newlist.downloading
-                self.downloadedItems = newlist.downloaded
-                self.total = self.list.count
-            }
-        }
     }
 }
 

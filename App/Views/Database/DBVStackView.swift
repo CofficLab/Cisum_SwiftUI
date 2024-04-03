@@ -45,7 +45,7 @@ struct DBVStackView: View {
     }
     
     func makeRow(_ i: Int) -> some View {
-        os_log("🖥️ 渲染 \(i)")
+//        os_log("🖥️ 渲染 \(i)")
         return ZStack {
             if let item = getItemFromDB(i) {
                 Cell(Audio(item.url))
@@ -78,11 +78,5 @@ struct DBVStackView: View {
 #Preview {
     RootView {
         ContentView()
-    }
-}
-
-#Preview {
-    RootView {
-        DBListView()
     }
 }
