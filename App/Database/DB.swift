@@ -101,7 +101,7 @@ extension DB {
                             let dbItems = try self.context.fetch(descriptor)
 
                             if let f = dbItems.first {
-                                //os_log("\(Logger.isMain)🍋 DB::getAudios 更新 \(f.title)")
+                                os_log("\(Logger.isMain)🍋 DB::getAudios 更新 \(f.title)")
                             } else {
                                 let playItem = PlayItem(url)
                                 self.context.insert(playItem)
