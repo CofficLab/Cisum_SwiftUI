@@ -27,7 +27,7 @@ class AudioManager: NSObject, ObservableObject {
     private var context: ModelContext
     
     var db: DB
-    var isEmpty: Bool { list.isEmpty }
+    var isEmpty: Bool { audio == nil }
     var isCloudStorage: Bool { iCloudHelper.isCloudPath(url: rootDir) }
 
     init(context: ModelContext) {
@@ -38,6 +38,11 @@ class AudioManager: NSObject, ObservableObject {
 
         db.onGet = onGet
         db.onDelete = onDelete
+    }
+    
+    func setCurrentAudio(_ audio: Audio) {
+        self.audio = audio
+        try? updatePlayer()
     }
 
     func currentTime() -> TimeInterval {

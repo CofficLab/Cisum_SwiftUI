@@ -4,9 +4,7 @@ import OSLog
 
 struct DBVStackView: View {
     @EnvironmentObject var audioManager: AudioManager
-
     @Environment(\.modelContext) private var modelContext
-    @Query private var items: [PlayItem]
     
     var total: Int {
         let predicate = #Predicate<PlayItem> {
@@ -22,7 +20,13 @@ struct DBVStackView: View {
     }
 
     var body: some View {
-        lazy
+        lazy.onAppear {
+            if total > 0 && audioManager.isEmpty {
+                if let audio = getItemFromDB(0) {
+                    audioManager.setCurrentAudio(Audio(audio.url))
+                }
+            }
+        }
     }
 
     var lazy: some View {

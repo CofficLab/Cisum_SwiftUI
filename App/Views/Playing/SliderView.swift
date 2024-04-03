@@ -20,7 +20,7 @@ struct SliderView: View {
                 if !editing {
                     audioManager.gotoTime(time: value)
                 }
-            }.disabled(audioManager.audio == nil)
+            }
 
             Text(audioManager.leftTimeDisplay())
         }
