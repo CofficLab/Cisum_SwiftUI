@@ -75,6 +75,14 @@ class AudioManager: NSObject, ObservableObject {
     }
 
     // MARK: 播放
+    
+    func play(url: URL) {
+        os_log("\(Logger.isMain)🔊 AudioManager::play")
+        
+        self.audio = Audio(url)
+        
+        play()
+    }
 
     /// 播放指定的
     func play(_ id: Audio.ID) {
@@ -92,10 +100,6 @@ class AudioManager: NSObject, ObservableObject {
     /// 播放当前的
     func play() {
         os_log("\(Logger.isMain)🔊 AudioManager::play")
-        if isEmpty {
-            os_log("\(Logger.isMain)列表为空，忽略")
-            return
-        }
 
         do {
             try updatePlayer()

@@ -6,10 +6,7 @@ struct TitleView: View {
     
     var body: some View {
         VStack {
-            if audioManager.isEmpty {
-                Label("无可播放的文件", systemImage: "info.circle")
-                    .foregroundStyle(.white)
-            } else if audioManager.audio == nil {
+            if audioManager.audio == nil {
                 Label("无可播放的文件", systemImage: "info.circle")
                     .foregroundStyle(.white)
             } else if let audio = audioManager.audio {
