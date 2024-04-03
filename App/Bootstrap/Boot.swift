@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 
 @main
 struct Boot: App {
@@ -17,6 +18,7 @@ struct Boot: App {
             }
             .windowStyle(.hiddenTitleBar)
             .defaultSize(width: 350, height: 500)
+            .modelContainer(AppConfig.sharedModelContainer)
             .commands {
                 DebugCommand()
             }
