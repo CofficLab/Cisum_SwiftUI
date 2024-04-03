@@ -48,7 +48,7 @@ struct DBVStackView: View {
 //        os_log("🖥️ 渲染 \(i)")
         return ZStack {
             if let item = getItemFromDB(i) {
-                Cell(Audio(item.url))
+                Row(Audio(item.url))
             } else {
                 Text("\(i)")
             }

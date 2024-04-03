@@ -5,8 +5,6 @@ struct PlayingAlbum: View {
     @EnvironmentObject var audioManager: AudioManager
     
     var audio: Audio? { audioManager.audio }
-    var downloadings: [Audio] { audioManager.downloadingItems }
-    var downloaded: [Audio] { audioManager.downloadedItems }
     var fileManager = FileManager.default
     var withBackground = false
     var rotate = true

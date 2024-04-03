@@ -14,9 +14,6 @@ class AudioManager: NSObject, ObservableObject {
     @Published var playItem: PlayItem?
     @Published var playerError: Error? = nil
     @Published var mode: PlayMode = .Order
-    @Published var downloadingItems: [Audio] = []
-    @Published var downloadedItems: [Audio] = []
-    @Published var total: Int = 0
 
     private var player: AVAudioPlayer = .init()
     private var listener: AnyCancellable?
@@ -24,17 +21,9 @@ class AudioManager: NSObject, ObservableObject {
     private var main = AppConfig.mainQueue
     private var title: String { audio?.title ?? "[无]"}
     private var rootDir: URL = AppConfig.cloudDocumentsDir
-    private var context: ModelContext
     
-    var db: DB
     var isEmpty: Bool { audio == nil }
     var isCloudStorage: Bool { iCloudHelper.isCloudPath(url: rootDir) }
-
-    init(context: ModelContext) {
-        os_log("\(Logger.isMain)🚩 初始化 AudioManager")
-        self.context = context
-        self.db = DB(context: context)
-    }
     
     func setCurrent(_ item: PlayItem) {
         self.playItem = item
@@ -185,13 +174,13 @@ class AudioManager: NSObject, ObservableObject {
             return
         }
         
-        if let item = playItem, let i = PlayItem.nextOf(context, item: item) {
-            self.audio = Audio(i.url)
-            self.playItem = i
-        } else {
-            self.audio = nil
-            self.playItem = nil
-        }
+//        if let item = playItem, let i = PlayItem.nextOf(context, item: item) {
+//            self.audio = Audio(i.url)
+//            self.playItem = i
+//        } else {
+//            self.audio = nil
+//            self.playItem = nil
+//        }
 
         try updatePlayer()
     }

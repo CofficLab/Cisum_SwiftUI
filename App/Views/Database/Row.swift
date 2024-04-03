@@ -1,12 +1,10 @@
 import SwiftUI
 import OSLog
 
-struct Cell: View {
+struct Row: View {
     @EnvironmentObject var audioManager: AudioManager
     
     var audio: Audio
-    
-    var downloadings: [Audio] { audioManager.downloadingItems }
     
     var body: some View {
         HStack {
@@ -15,8 +13,8 @@ struct Cell: View {
                 .environmentObject(audioManager)
             Text(audio.title)
             Spacer()
-            if let d = downloadings.first(where: { $0.id == audio.id }) {
-                Text("\(String(format: "%.0f", d.downloadingPercent))%").font(.footnote)
+            if audio.isDownloading {
+                Text("\(String(format: "%.0f", audio.downloadingPercent))%").font(.footnote)
             }
         }.contextMenu(ContextMenu(menuItems: {
             BtnPlay(audio: audio)

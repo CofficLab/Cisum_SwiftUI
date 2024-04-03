@@ -62,7 +62,7 @@
 		0BBA42272AC2A8B800C0B977 /* ButtonAdd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA42262AC2A8B800C0B977 /* ButtonAdd.swift */; };
 		0BBA422B2AC2ABAD00C0B977 /* ButtonShowDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA422A2AC2ABAD00C0B977 /* ButtonShowDatabase.swift */; };
 		0BBA422F2AC2BAE300C0B977 /* AlbumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA422E2AC2BAE300C0B977 /* AlbumView.swift */; };
-		0BBAD0722BBC05C6005834A3 /* Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBAD0712BBC05C6005834A3 /* Cell.swift */; };
+		0BBAD0722BBC05C6005834A3 /* Row.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBAD0712BBC05C6005834A3 /* Row.swift */; };
 		0BBAD0A02BBD3FE1005834A3 /* PlayItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBAD09F2BBD3FE1005834A3 /* PlayItem.swift */; };
 		0BBAD0A22BBD413B005834A3 /* DBVStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBAD0A12BBD413B005834A3 /* DBVStackView.swift */; };
 		0BBC157C2AB84C21006E82C4 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC157B2AB84C21006E82C4 /* HomeView.swift */; };
@@ -136,7 +136,7 @@
 		0BBA42262AC2A8B800C0B977 /* ButtonAdd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonAdd.swift; sourceTree = "<group>"; };
 		0BBA422A2AC2ABAD00C0B977 /* ButtonShowDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonShowDatabase.swift; sourceTree = "<group>"; };
 		0BBA422E2AC2BAE300C0B977 /* AlbumView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumView.swift; sourceTree = "<group>"; };
-		0BBAD0712BBC05C6005834A3 /* Cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cell.swift; sourceTree = "<group>"; };
+		0BBAD0712BBC05C6005834A3 /* Row.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Row.swift; sourceTree = "<group>"; };
 		0BBAD09F2BBD3FE1005834A3 /* PlayItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayItem.swift; sourceTree = "<group>"; };
 		0BBAD0A12BBD413B005834A3 /* DBVStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBVStackView.swift; sourceTree = "<group>"; };
 		0BBC157B2AB84C21006E82C4 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -354,7 +354,7 @@
 			isa = PBXGroup;
 			children = (
 				0BBA422E2AC2BAE300C0B977 /* AlbumView.swift */,
-				0BBAD0712BBC05C6005834A3 /* Cell.swift */,
+				0BBAD0712BBC05C6005834A3 /* Row.swift */,
 				0BAB7C3E2AD3BBAA00C5AEB5 /* DBEmptyView.swift */,
 				0BBC157F2AB854A8006E82C4 /* DBView.swift */,
 				0BBA42162ABC1AE700C0B977 /* StatusBarView.swift */,
@@ -492,7 +492,7 @@
 				0BBA421B2ABD67D600C0B977 /* WindowManager.swift in Sources */,
 				0B6B8B992BBA39F500F65B23 /* ControlButton.swift in Sources */,
 				0B1D5A842AB302610010DDF2 /* Extensions.swift in Sources */,
-				0BBAD0722BBC05C6005834A3 /* Cell.swift in Sources */,
+				0BBAD0722BBC05C6005834A3 /* Row.swift in Sources */,
 				0B1165E92ABBC6C0005C5CBB /* LaunchView.swift in Sources */,
 				0B1D5A8A2AB302610010DDF2 /* AppConfig.swift in Sources */,
 				0B220F752BB1BBDB0077255A /* SmartError.swift in Sources */,
