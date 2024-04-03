@@ -77,7 +77,7 @@ struct DBView: View {
     }
 
     init() {
-        os_log("\(Logger.isMain)🚩 DBView::Init")
+        //os_log("\(Logger.isMain)🚩 DBView::Init")
     }
 }
 
