@@ -10,8 +10,8 @@ struct DBView: View {
     @State private var dropping: Bool = false
 
     var db: DB { audioManager.db }
-    var main: DispatchQueue { AppConfig.mainQueue }
-    var bg: DispatchQueue { AppConfig.bgQueue }
+    var main = AppConfig.mainQueue
+    var bg = AppConfig.bgQueue 
 
     var body: some View {
         #if os(iOS)
@@ -21,7 +21,7 @@ struct DBView: View {
                         BackgroundView.type2A
                         DBEmptyView()
                     } else {
-                        DBTableView()
+                        DBTable()
                     }
                 }
                 .toolbar {
@@ -43,7 +43,8 @@ struct DBView: View {
             )
         #else
             ZStack {
-                DBTableView()
+                DBTable()
+//                DBListView()
 
                 if audioManager.isEmpty, appManager.flashMessage.isEmpty {
                     DBEmptyView()
@@ -78,7 +79,7 @@ struct DBView: View {
     }
 
     init() {
-//        os_log("\(Logger.isMain)🚩 DBView::Init")
+        os_log("\(Logger.isMain)🚩 DBView::Init")
     }
 }
 
@@ -111,7 +112,7 @@ extension DBView {
 
 #Preview("APP") {
     RootView {
-        DBView()
+        ContentView()
     }
 }
 

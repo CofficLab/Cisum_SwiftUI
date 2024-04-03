@@ -32,8 +32,12 @@ class AudioList {
         all.firstIndex(where: {audioId == $0.id})
     }
     
-    func get(_ index: Int) -> Audio {
-        all[index]
+    func get(_ index: Int) -> Audio? {
+        if index < 0 || index > count - 1 {
+            return nil
+        }
+        
+        return all[index]
     }
     
     func prevOf(_ audioId: Audio.ID) -> Audio {

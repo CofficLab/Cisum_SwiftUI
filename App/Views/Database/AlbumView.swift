@@ -58,7 +58,7 @@ struct AlbumView: View {
 
         if fileManager.fileExists(atPath: coverURL.path) {
             #if os(macOS)
-                return Image(nsImage: NSImage(contentsOf: coverPath)!)
+            return Image(nsImage: NSImage(contentsOf: coverURL)!)
             #else
                 return Image(uiImage: UIImage(contentsOfFile: coverURL.path)!)
             #endif

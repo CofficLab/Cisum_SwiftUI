@@ -21,7 +21,7 @@ class Audio {
     var size: Int64 { getFileSize() }
     var db: DB
 
-    init(_ url: URL,db: DB) {
+    init(_ url: URL, db: DB) {
         // os_log("\(Logger.isMain)🚩 AudioModel::init -> \(url.lastPathComponent)")
         self.url = url
         self.db = db
@@ -44,10 +44,8 @@ class Audio {
     func getFileSizeReadable() -> String {
         FileHelper.getFileSizeReadable(url)
     }
-    
-    func refresh() {
-        
-    }
+
+    func refresh() {}
 }
 
 // MARK: 比较
@@ -55,9 +53,9 @@ class Audio {
 extension Audio: Equatable {
     static func == (lhs: Audio, rhs: Audio) -> Bool {
         return lhs.url == rhs.url &&
-        lhs.isDownloading == rhs.isDownloading &&
-        lhs.downloadingPercent == rhs.downloadingPercent &&
-        lhs.coverURL == rhs.coverURL
+            lhs.isDownloading == rhs.isDownloading &&
+            lhs.downloadingPercent == rhs.downloadingPercent &&
+            lhs.coverURL == rhs.coverURL
     }
 }
 
@@ -80,7 +78,7 @@ extension Audio {
     }
 
     func download() {
-        self.db.download(url)
+        db.download(url)
     }
 }
 
@@ -88,7 +86,7 @@ extension Audio {
 
 extension Audio {
     func delete() {
-        self.db.delete(self)
+        db.delete(self)
     }
 }
 
@@ -108,8 +106,8 @@ extension Audio {
         }
 
         return coversDir
-                .appendingPathComponent(imageName)
-                .appendingPathExtension("jpeg")
+            .appendingPathComponent(imageName)
+            .appendingPathExtension("jpeg")
     }
 
     func updateMeta() async {
@@ -138,8 +136,10 @@ extension Audio {
                             self.albumName = albumName
                         }
                     case "artwork":
+
                         // MARK: 得到了封面图
-                        if (try makeImage(await item.load(.value), saveTo: coverCacheURL)) != nil {
+
+                        if try (makeImage(await item.load(.value), saveTo: coverCacheURL)) != nil {
                             coverURL = coverCacheURL
 //                            os_log("\(Logger.isMain)🍋 AudioModel::updateMeta -> cover updated -> \(self.title)")
                         }
@@ -155,17 +155,17 @@ extension Audio {
 
     /// 将封面图存到磁盘
     func makeImage(_ data: (any NSCopying & NSObjectProtocol)?, saveTo: URL) -> Image? {
-        //os_log("\(Logger.isMain)AudioModel::makeImage -> \(saveTo.path)")
+        // os_log("\(Logger.isMain)AudioModel::makeImage -> \(saveTo.path)")
         guard let data = data as? Data else {
             return nil
         }
-        
+
         do {
             try data.write(to: saveTo)
         } catch let e {
             print(e)
         }
-        
+
         #if os(iOS)
             if let image = UIImage(data: data) {
                 return Image(uiImage: image)
@@ -173,7 +173,7 @@ extension Audio {
         #endif
 
         #if os(macOS)
-            if let data = data as? Data, let image = NSImage(data: data) {
+            if let image = NSImage(data: data) {
                 return Image(nsImage: image)
             }
         #endif
@@ -191,7 +191,7 @@ extension Audio {
             if isCoverOnDisk() {
                 i = UIImage(contentsOfFile: coverCacheURL.path) ?? i
             }
-            
+
             return i
         }
     #endif
@@ -210,6 +210,24 @@ extension Audio {
         }
 
         return nil
+    }
+}
+
+// MARK: Print
+
+extension Audio {
+    func debugPrint() {
+        print("url: \(url)")
+        print("title: \(title)")
+        print("artist: \(artist)")
+        print("description: \(description)")
+        print("track: \(track)")
+        print("albumName: \(albumName)")
+        print("coverURL: \(String(describing: coverURL))")
+        print("downloadingPercent: \(downloadingPercent)")
+        print("isDownloading: \(isDownloading)")
+        print("isPlaceholder: \(isPlaceholder)")
+        print("size: \(size)")
     }
 }
 

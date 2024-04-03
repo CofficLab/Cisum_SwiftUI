@@ -3,7 +3,7 @@ import OSLog
 import SwiftUI
 import UniformTypeIdentifiers
 
-struct DBTableView: View {
+struct DBTable: View {
     @EnvironmentObject var audioManager: AudioManager
     @EnvironmentObject var appManager: AppManager
 
@@ -29,9 +29,7 @@ struct DBTableView: View {
                 columns: {
                     // value 参数用于排序
                     TableColumn(description, value: \.title,
-                                content: { audio in
-                        DBFirstCol(audio: audio).environmentObject(audioManager)
-                                })
+                                content: { Cell($0)})
                     TableColumn("艺人", value: \.artist, content: getArtistColumn).defaultVisibility(
                         geo.size.width >= 500 ? .visible : .hidden)
                     TableColumn("专辑", value: \.albumName, content: getAlbumColumn).defaultVisibility(
@@ -107,6 +105,7 @@ struct DBTableView: View {
     // MARK: 行
 
     private func getRows() -> some TableRowContent<Audio> {
+        os_log("🐛 DBTableView::getRows")
         return ForEach(audios) { audio in
             TableRow(audio)
                 .itemProvider { // enable Drap
@@ -123,7 +122,7 @@ struct DBTableView: View {
     }
 
     init() {
-        // os_log("\(Logger.isMain)🚩 DBTableView::Init")
+         os_log("\(Logger.isMain)🚩 DBTableView::Init")
     }
 }
 
