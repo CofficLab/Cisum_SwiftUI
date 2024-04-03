@@ -6,7 +6,9 @@ class PlayItem {
     var url: URL
     var order: Int = 0
     
-    init(url: URL, order: Int) {
+    var title: String { url.lastPathComponent }
+    
+    init(_ url: URL, order: Int = 0) {
         self.url = url
         self.order = order
     }

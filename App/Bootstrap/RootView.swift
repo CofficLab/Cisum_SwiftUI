@@ -1,8 +1,11 @@
 import OSLog
+import SwiftData
 import SwiftUI
 
 struct RootView<Content>: View where Content: View {
     private var content: Content
+    
+    @Environment(\.modelContext) var context: ModelContext
 
     @State private var isReady: Bool = false
     @State private var errorMessage: String? = nil
@@ -33,7 +36,7 @@ struct RootView<Content>: View where Content: View {
                 LanuchView(errorMessage: errorMessage)
                     .onAppear {
                         os_log("\(Logger.isMain)🚩 初始化环境变量")
-                        audioManager = AudioManager()
+                        audioManager = AudioManager(context: context)
                         mediaPlayerManger = MediaPlayerManager(audioManager: audioManager!)
 
                         #if os(iOS)

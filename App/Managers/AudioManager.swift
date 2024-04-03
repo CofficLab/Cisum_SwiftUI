@@ -4,6 +4,7 @@ import Foundation
 import MediaPlayer
 import OSLog
 import SwiftUI
+import SwiftData
 
 /// 管理播放器的播放、暂停、上一曲、下一曲等操作
 class AudioManager: NSObject, ObservableObject {
@@ -23,15 +24,16 @@ class AudioManager: NSObject, ObservableObject {
     private var main = AppConfig.mainQueue
     private var title: String { audio?.title ?? "[无]"}
     private var rootDir: URL = AppConfig.cloudDocumentsDir
+    private var context: ModelContext
     
     var db: DB
     var isEmpty: Bool { list.isEmpty }
     var isCloudStorage: Bool { iCloudHelper.isCloudPath(url: rootDir) }
 
-    override init() {
+    init(context: ModelContext) {
         os_log("\(Logger.isMain)🚩 初始化 AudioManager")
-
-        db = DB()
+        self.context = context
+        self.db = DB(context: context)
         super.init()
 
         db.onGet = onGet

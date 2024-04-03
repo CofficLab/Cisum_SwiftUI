@@ -19,12 +19,10 @@ class Audio {
     var isDownloading: Bool = false
     var isPlaceholder: Bool = false
     var size: Int64 { getFileSize() }
-    var db: DB
 
-    init(_ url: URL, db: DB) {
+    init(_ url: URL) {
         // os_log("\(Logger.isMain)🚩 AudioModel::init -> \(url.lastPathComponent)")
         self.url = url
-        self.db = db
         self.title = url.deletingPathExtension().lastPathComponent
         self.coverURL = getCover()
 
@@ -78,7 +76,7 @@ extension Audio {
     }
 
     func download() {
-        db.download(url)
+//        db.download(url)
     }
 }
 
@@ -86,7 +84,7 @@ extension Audio {
 
 extension Audio {
     func delete() {
-        db.delete(self)
+//        db.delete(self)
     }
 }
 

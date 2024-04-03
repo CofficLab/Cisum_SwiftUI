@@ -18,7 +18,12 @@ struct Cell: View {
             if let d = downloadings.first(where: { $0.id == audio.id }) {
                 Text("\(String(format: "%.0f", d.downloadingPercent))%").font(.footnote)
             }
-        }
+        }.contextMenu(ContextMenu(menuItems: {
+            BtnPlay(audio: audio)
+            BtnDownload(audio: audio)
+            Divider()
+            BtnDel(audio: audio)
+        }))
     }
     
     init(_ audio: Audio) {
