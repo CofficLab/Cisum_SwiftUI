@@ -12,12 +12,10 @@ enum PrepareCloudDocumentsResult {
 
 enum PrepareResult {
     case success(iCloudDocumentsUrl: URL)
-  case failure(Error)
+    case failure(Error)
 }
 
 class AppManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
-    static var iCloudDocumentsUrl: URL? = nil
-
     @Published var showAlert: Bool = false
     @Published var showDB: Bool = false
     @Published var alertMessage: String = ""

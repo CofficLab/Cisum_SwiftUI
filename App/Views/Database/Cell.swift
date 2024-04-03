@@ -4,8 +4,6 @@ import OSLog
 struct Cell: View {
     @EnvironmentObject var audioManager: AudioManager
     
-    static var count = 0
-    
     var audio: Audio
     
     var downloadings: [Audio] { audioManager.downloadingItems }
@@ -24,9 +22,8 @@ struct Cell: View {
     }
     
     init(_ audio: Audio) {
-        Self.count += 1
         self.audio = audio
-        os_log("\(Logger.isMain)🚩 初始化 \(audio.title) -> \(Self.count)")
+//        os_log("\(Logger.isMain)🚩 🖥️ 初始化 \(audio.title)")
     }
     
     private func shouldHighlight(_ audio: Audio) -> Bool {

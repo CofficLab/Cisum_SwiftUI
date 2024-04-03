@@ -24,9 +24,9 @@ struct DBView: View {
                         DBTable()
                     }
                 }
-                .toolbar {
-                    ButtonAdd()
-                }
+//                .toolbar {
+//                    ButtonAdd()
+//                }
             }
             .fileImporter(
                 isPresented: $appManager.isImporting,
@@ -43,8 +43,8 @@ struct DBView: View {
             )
         #else
             ZStack {
-                DBTable()
-//                DBListView()
+//                DBTable()
+                DBListView()
 
                 if audioManager.isEmpty, appManager.flashMessage.isEmpty {
                     DBEmptyView()

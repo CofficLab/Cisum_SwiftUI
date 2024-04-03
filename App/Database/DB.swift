@@ -97,6 +97,7 @@ extension DB {
             let query = ItemQuery(queue: backgroundQueue,url: self.audiosDir)
             for await items in query.searchMetadataItems() {
                 AppConfig.bgQueue.async {
+                    os_log("\(Logger.isMain)🍋 DB::getAudios")
                     let audios = items.filter({ $0.url != nil}).map { item in
                         let audio = Audio(item.url!, db: self)
                         audio.downloadingPercent = item.downloadProgress

@@ -8,7 +8,7 @@ class ItemQuery {
     let url: URL
 
     init(queue: OperationQueue = .main, url: URL) {
-        os_log("\(Logger.isMain) 初始化itemquery")
+        os_log("\(Logger.isMain) 初始化itemquery -> \(url.path)")
         self.queue = queue
         self.url = url
     }
@@ -85,7 +85,7 @@ class ItemQuery {
                     }
                     return MetadataItemWrapper(metadataItem: metadataItem)
                 }
-                
+
                 continuation.yield(result.filter { $0.isDownloading })
             }
 
@@ -97,7 +97,7 @@ class ItemQuery {
             }
         }
     }
-    
+
     // MARK: 监听某个目录的变化
 
     func searchMetadataItems(
@@ -117,7 +117,7 @@ class ItemQuery {
                 queue: queue
             ) { _ in
                 AppConfig.bgQueue.async {
-                os_log("\(Logger.isMain)🍋 searchMetadataItems.NSMetadataQueryDidFinishGathering")
+                    os_log("\(Logger.isMain)🍋 searchMetadataItems.NSMetadataQueryDidFinishGathering")
                     let result = self.query.results.compactMap { item -> MetadataItemWrapper? in
                         guard let metadataItem = item as? NSMetadataItem else {
                             return nil
@@ -128,20 +128,22 @@ class ItemQuery {
                 }
             }
 
-            NotificationCenter.default.addObserver(
-                forName: .NSMetadataQueryDidUpdate,
-                object: query,
-                queue: queue
-            ) { _ in
-                os_log("\(Logger.isMain)🍋 searchMetadataItems.NSMetadataQueryDidUpdate")
-                let result = self.query.results.compactMap { item -> MetadataItemWrapper? in
-                    guard let metadataItem = item as? NSMetadataItem else {
-                        return nil
-                    }
-                    return MetadataItemWrapper(metadataItem: metadataItem)
-                }
-                continuation.yield(result)
-            }
+//            NotificationCenter.default.addObserver(
+//                forName: .NSMetadataQueryDidUpdate,
+//                object: query,
+//                queue: queue
+//            ) { _ in
+//                AppConfig.bgQueue.async {
+//                    os_log("\(Logger.isMain)🍋 searchMetadataItems.NSMetadataQueryDidUpdate")
+//                    let result = self.query.results.compactMap { item -> MetadataItemWrapper? in
+//                        guard let metadataItem = item as? NSMetadataItem else {
+//                            return nil
+//                        }
+//                        return MetadataItemWrapper(metadataItem: metadataItem)
+//                    }
+//                    continuation.yield(result)
+//                }
+//            }
 
             os_log("\(Logger.isMain)🍋 searchMetadataItems.start")
             query.start()
@@ -154,7 +156,7 @@ class ItemQuery {
             }
         }
     }
-    
+
     // MARK: 监听某个URL的变化
 
     func searchMetadataItem(

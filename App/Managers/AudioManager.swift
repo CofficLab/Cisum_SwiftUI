@@ -15,6 +15,7 @@ class AudioManager: NSObject, ObservableObject {
     @Published var mode: PlayMode = .Order
     @Published var downloadingItems: [Audio] = []
     @Published var downloadedItems: [Audio] = []
+    @Published var total: Int = 0
 
     private var player: AVAudioPlayer = .init()
     private var listener: AnyCancellable?
@@ -361,6 +362,7 @@ extension AudioManager {
                 
                 self.downloadingItems = newlist.downloading
                 self.downloadedItems = newlist.downloaded
+                self.total = self.list.count
             }
         }
     }
