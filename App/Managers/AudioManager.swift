@@ -11,6 +11,7 @@ class AudioManager: NSObject, ObservableObject {
     @Published private(set) var isPlaying: Bool = false
     @Published private(set) var duration: TimeInterval = 0
     @Published var audio: Audio?
+    @Published var playItem: PlayItem?
     @Published var playerError: Error? = nil
     @Published var list: AudioList = AudioList([])
     @Published var mode: PlayMode = .Order
@@ -40,8 +41,9 @@ class AudioManager: NSObject, ObservableObject {
         db.onDelete = onDelete
     }
     
-    func setCurrentAudio(_ audio: Audio) {
-        self.audio = audio
+    func setCurrent(_ item: PlayItem) {
+        self.playItem = item
+        self.audio = Audio(item.url)
         try? updatePlayer()
     }
 
@@ -214,10 +216,12 @@ class AudioManager: NSObject, ObservableObject {
             return
         }
         
-        if let audio = audio {
-            self.audio = list.nextOf(audio.id)
+        if let item = playItem, let i = PlayItem.nextOf(context, item: item) {
+            self.audio = Audio(i.url)
+            self.playItem = i
         } else {
-            self.audio = list.downloaded[0]
+            self.audio = nil
+            self.playItem = nil
         }
 
         try updatePlayer()
