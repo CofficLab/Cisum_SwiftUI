@@ -35,7 +35,6 @@
 		0B718F0C2AB4349900569762 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B718F0B2AB4349900569762 /* CardView.swift */; };
 		0B73275F2BB5138200DBD922 /* LoggerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B73275E2BB5138200DBD922 /* LoggerHelper.swift */; };
 		0B7F558B2AD2636B0000D72E /* ButtonPlayList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7F558A2AD2636B0000D72E /* ButtonPlayList.swift */; };
-		0B8DBEF42BB6F7B10029D1EF /* AudioList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8DBEF32BB6F7B10029D1EF /* AudioList.swift */; };
 		0B8FC2702BBC559500839C75 /* PlayingAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8FC26F2BBC559500839C75 /* PlayingAlbum.swift */; };
 		0B901D862BB83BA2003AC253 /* CloudHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B901D852BB83BA2003AC253 /* CloudHandler.swift */; };
 		0B901D882BB83BC3003AC253 /* FilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B901D872BB83BC3003AC253 /* FilePresenter.swift */; };
@@ -110,7 +109,6 @@
 		0B718F0B2AB4349900569762 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		0B73275E2BB5138200DBD922 /* LoggerHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerHelper.swift; sourceTree = "<group>"; };
 		0B7F558A2AD2636B0000D72E /* ButtonPlayList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonPlayList.swift; sourceTree = "<group>"; };
-		0B8DBEF32BB6F7B10029D1EF /* AudioList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioList.swift; sourceTree = "<group>"; };
 		0B8FC26F2BBC559500839C75 /* PlayingAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayingAlbum.swift; sourceTree = "<group>"; };
 		0B901D852BB83BA2003AC253 /* CloudHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudHandler.swift; sourceTree = "<group>"; };
 		0B901D872BB83BC3003AC253 /* FilePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilePresenter.swift; sourceTree = "<group>"; };
@@ -237,7 +235,6 @@
 			isa = PBXGroup;
 			children = (
 				0BB889DA2AC06C54004788D5 /* DB.swift */,
-				0B8DBEF32BB6F7B10029D1EF /* AudioList.swift */,
 			);
 			path = Database;
 			sourceTree = "<group>";
@@ -479,7 +476,6 @@
 				0BBA42132ABC137A00C0B977 /* StatusView.swift in Sources */,
 				0BB5871B2AD81AFA0071AEBD /* ViewHelper.swift in Sources */,
 				0BAB7C3F2AD3BBAA00C5AEB5 /* DBEmptyView.swift in Sources */,
-				0B8DBEF42BB6F7B10029D1EF /* AudioList.swift in Sources */,
 				0BB889D92AC047B3004788D5 /* BtnDel.swift in Sources */,
 				0B1D5A882AB302610010DDF2 /* ContentView.swift in Sources */,
 				0B718F0C2AB4349900569762 /* CardView.swift in Sources */,
