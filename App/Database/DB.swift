@@ -19,14 +19,16 @@ actor DB: ModelActor {
     var audiosDir: URL = AppConfig.audiosDir
     var handler = CloudHandler()
     var context: ModelContext
+    var onUpdated: () -> Void = { os_log("🍋 DB::updated") }
 
-    init(_ container: ModelContainer) {
+    init(_ container: ModelContainer, onUpdated: @escaping () -> Void) {
         os_log("\(Logger.isMain)🚩 初始化 DB")
 
-        modelContainer = container
-        context = ModelContext(container)
-        context.autosaveEnabled = false
-        modelExecutor = DefaultSerialModelExecutor(
+        self.modelContainer = container
+        self.context = ModelContext(container)
+        self.onUpdated = onUpdated
+        self.context.autosaveEnabled = false
+        self.modelExecutor = DefaultSerialModelExecutor(
             modelContext: context
         )
 

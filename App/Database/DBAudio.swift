@@ -147,6 +147,7 @@ extension DB {
             if context.hasChanges {
                 os_log("\(Logger.isMain)🍋 DB::保存")
                 try? context.save()
+                await self.onUpdated()
             }
         }
     }

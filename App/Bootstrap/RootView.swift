@@ -10,7 +10,6 @@ struct RootView<Content>: View where Content: View {
     @State private var isReady: Bool = false
     @State private var errorMessage: String? = nil
     @State private var audioManager: AudioManager? = nil
-    @State private var db: DB? = nil
     @State private var mediaPlayerManger: MediaPlayerManager? = nil
     @State private var windowManager: WindowManager = WindowManager()
     @State private var appManager: AppManager = AppManager()
@@ -38,7 +37,6 @@ struct RootView<Content>: View where Content: View {
                         
                         audioManager = AudioManager()
                         mediaPlayerManger = MediaPlayerManager(audioManager: audioManager!)
-                        db = DB(AppConfig.sharedModelContainer)
 
                         #if os(iOS)
                             UIApplication.shared.beginReceivingRemoteControlEvents()

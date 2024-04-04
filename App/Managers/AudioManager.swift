@@ -3,8 +3,8 @@ import Combine
 import Foundation
 import MediaPlayer
 import OSLog
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 /// 管理播放器的播放、暂停、上一曲、下一曲等操作
 class AudioManager: NSObject, ObservableObject {
@@ -13,17 +13,28 @@ class AudioManager: NSObject, ObservableObject {
     @Published var audio: Audio?
     @Published var playerError: Error? = nil
     @Published var mode: PlayMode = .Order
+    @Published var lastUpdatedAt: Date = .now
 
     private var player: AVAudioPlayer = .init()
     private var listener: AnyCancellable?
     private var bg = AppConfig.bgQueue
     private var main = AppConfig.mainQueue
-    private var title: String { audio?.title ?? "[无]"}
+    private var title: String { audio?.title ?? "[无]" }
     private var rootDir: URL = AppConfig.cloudDocumentsDir
-    
+
+    var db: DB?
     var isEmpty: Bool { audio == nil }
     var isCloudStorage: Bool { iCloudHelper.isCloudPath(url: rootDir) }
-    
+
+    override init() {
+        super.init()
+        db = DB(AppConfig.sharedModelContainer, onUpdated: {
+            self.main.async {
+                self.lastUpdatedAt = .now
+            }
+        })
+    }
+
     func setCurrent(_ audio: Audio) {
         self.audio = audio
         try? updatePlayer()
@@ -64,12 +75,12 @@ class AudioManager: NSObject, ObservableObject {
     }
 
     // MARK: 播放
-    
+
     func play(url: URL) {
         os_log("\(Logger.isMain)🔊 AudioManager::play")
-        
-        self.audio = Audio(url)
-        
+
+        audio = Audio(url)
+
         play()
     }
 
@@ -157,9 +168,9 @@ class AudioManager: NSObject, ObservableObject {
     /// 跳到上一首，manual=true表示由用户触发
     func prev(manual: Bool = false) throws -> String {
         os_log("\(Logger.isMain)🔊 AudioManager::prev ⬆️")
-        
+
         try updatePlayer()
-        return "上一曲：\(self.title)"
+        return "上一曲：\(title)"
     }
 
     // MARK: Next
@@ -167,11 +178,11 @@ class AudioManager: NSObject, ObservableObject {
     /// 跳到下一首，manual=true表示由用户触发
     func next(manual: Bool = false) throws {
         os_log("\(Logger.isMain)🔊 AudioManager::next ⬇️ \(manual ? "手动触发" : "自动触发")")
-        
+
         if mode == .Loop && manual == false {
             return
         }
-        
+
 //        if let item = playItem, let i = PlayItem.nextOf(context, item: item) {
 //            self.audio = Audio(i.url)
 //            self.playItem = i

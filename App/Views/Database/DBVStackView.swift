@@ -7,6 +7,7 @@ struct DBVStackView: View {
     @Environment(\.modelContext) private var modelContext
     
     @State var total: Int = 0
+    @State var updatedAt: Date = .now
 
     var body: some View {
         VStack {
@@ -22,7 +23,10 @@ struct DBVStackView: View {
             .background(.background)
         }.onAppear {
             refresh()
-        }
+        }.onChange(of: audioManager.lastUpdatedAt, {
+            os_log("🖥️ DBVStackView:需要刷新")
+            updatedAt = .now
+        })
     }
     
     func refresh() {

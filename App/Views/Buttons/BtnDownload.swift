@@ -1,11 +1,15 @@
 import SwiftUI
 
 struct BtnDownload: View {
+    @EnvironmentObject var audioManager: AudioManager
+    
     var audio: Audio
         
     var body: some View {
         Button {
-            audio.download()
+            Task {
+                await audioManager.db?.download(audio.url)
+            }
         } label: {
             Label("下载", systemImage: getImageName())
                 .font(.system(size: 24))
