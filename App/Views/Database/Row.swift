@@ -41,10 +41,10 @@ struct Row: View {
     
     private func getBackground() -> Color {
         if audioManager.audio == audio {
-            return Color(.controlBackgroundColor).opacity(0.5)
+            return AppConfig.getBackground.opacity(0.5)
         }
         
-        return hovered ? Color(.controlBackgroundColor).opacity(0.9) : Color(.controlBackgroundColor)
+        return hovered ? AppConfig.getBackground.opacity(0.9) : AppConfig.getBackground
     }
     
     private func shouldHighlight(_ audio: Audio) -> Bool {

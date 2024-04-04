@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 import SwiftData
 import OSLog
 
@@ -28,6 +29,13 @@ extension AppConfig {
     #else
     static var canResize = false
     #endif
+    static var getBackground: Color {
+        #if os(macOS)
+        Color(.controlBackgroundColor)
+        #else
+        Color(.systemBackground)
+        #endif
+    }
 }
 
 // MARK: 数据库配置

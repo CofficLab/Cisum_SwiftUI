@@ -28,6 +28,7 @@ struct Boot: App {
                     ContentView()
                 }
             }
+            .modelContainer(AppConfig.sharedModelContainer)
         #endif
     }
 }
