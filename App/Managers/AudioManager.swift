@@ -138,19 +138,25 @@ class AudioManager: NSObject, ObservableObject {
     // MARK: 切换播放模式
 
     func switchMode(_ callback: @escaping (_ mode: PlayMode) -> Void) {
+        switch mode {
+        case .Order:
+            mode = .Random
+        case .Loop:
+            mode = .Order
+        case .Random:
+            mode = .Loop
+        }
+
+        callback(mode)
+
         Task {
-            switch mode {
-            case .Order:
-                mode = .Random
+            if mode == .Random {
                 await self.db?.sortRandom()
-            case .Loop:
-                mode = .Order
-                await self.db?.sort()
-            case .Random:
-                mode = .Loop
             }
 
-            callback(mode)
+            if mode == .Order {
+                await db?.sort()
+            }
         }
     }
 
@@ -159,7 +165,7 @@ class AudioManager: NSObject, ObservableObject {
     /// 跳到上一首，manual=true表示由用户触发
     func prev(manual: Bool = false) throws {
         os_log("\(Logger.isMain)🔊 AudioManager::prev ⬆️")
-        
+
         if mode == .Loop && manual == false {
             return
         }
@@ -198,6 +204,8 @@ class AudioManager: NSObject, ObservableObject {
                     self.audio = i
                     try? updatePlayer()
                 }
+
+                await self.db?.downloadNext(i)
             }
         }
     }

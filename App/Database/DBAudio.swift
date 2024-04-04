@@ -256,12 +256,26 @@ extension DB {
     }
 }
 
-// MARK: 修改
+// MARK: 修改与下载
 
 extension DB {
-    func download(_ url: URL) {
+    func download(_ audio: Audio) {
         Task {
-            try? await CloudHandler().download(url: url)
+            try? await CloudHandler().download(url: audio.url)
+        }
+    }
+    
+    func downloadNext(_ audio: Audio) {
+        let count = 5
+        var currentIndex = 0
+        var currentAudio: Audio = audio
+        
+        while currentIndex < count {
+            currentIndex = currentIndex + 1
+            if let next = nextOf(currentAudio) {
+                self.download(next)
+                currentAudio = next
+            }
         }
     }
 

@@ -8,7 +8,7 @@ struct BtnDownload: View {
     var body: some View {
         Button {
             Task {
-                await audioManager.db?.download(audio.url)
+                await audioManager.db?.download(audio)
             }
         } label: {
             Label("下载", systemImage: getImageName())

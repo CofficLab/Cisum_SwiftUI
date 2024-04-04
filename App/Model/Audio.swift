@@ -66,7 +66,7 @@ extension Audio: Identifiable {
 // MARK: iCloud 相关
 
 extension Audio {
-    var isDownloaded: Bool { downloadingPercent == 100.0 || !isPlaceholder }
+    var isDownloaded: Bool { downloadingPercent == 100 }
     var isNotDownloaded: Bool { !isDownloaded }
 
     /// 准备好文件
