@@ -8,7 +8,6 @@ class ItemQuery {
     let url: URL
 
     init(queue: OperationQueue = .main, url: URL) {
-        os_log("\(Logger.isMain) 初始化itemquery -> \(url.path)")
         self.queue = queue
         self.url = url
     }

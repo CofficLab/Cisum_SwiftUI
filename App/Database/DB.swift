@@ -30,7 +30,7 @@ actor DB: ModelActor {
             modelContext: context
         )
 
-        Task(priority: .background) {
+        Task {
             await getAudios()
         }
     }
@@ -95,19 +95,32 @@ extension DB {
 extension DB {
     /// 查询数据，当查到或有更新时会调用回调函数
     func getAudios() {
-        DispatchQueue.global().sync {
-            let query = ItemQuery(queue: OperationQueue(), url: self.audiosDir)
-            Task {
-                for try await items in query.searchMetadataItems() {
-                    items.filter { $0.url != nil }.forEach {
-                        self.upsert($0)
-                    }
-                }
+        os_log("\(Logger.isMain)🍋 DB::getAudios")
+        let query = ItemQuery(queue: OperationQueue(), url: audiosDir)
+        Task {
+            for try await items in query.searchMetadataItems() {
+                self.upsert(items.filter { $0.url != nil })
             }
         }
     }
 
     func find(_ url: URL) -> PlayItem? {
+        let predicate = #Predicate<PlayItem> {
+            $0.url == url
+        }
+        var descriptor = FetchDescriptor<PlayItem>(predicate: predicate)
+        descriptor.fetchLimit = 1
+        do {
+            let result = try context.fetch(descriptor)
+            return result.first
+        } catch let e {
+            print(e)
+        }
+
+        return nil
+    }
+    
+    static func find(_ context: ModelContext,_ url: URL) -> PlayItem? {
         let predicate = #Predicate<PlayItem> {
             $0.url == url
         }
@@ -133,20 +146,27 @@ extension DB {
         }
     }
 
-    func upsert(_ item: MetadataItemWrapper) {
-        if let current = find(item.url!) {
-            os_log("\(Logger.isMain)🍋 DB::更新 \(current.title)")
-            current.isDownloading = item.isDownloading
-            current.downloadingPercent = item.downloadProgress
-        } else {
-            os_log("\(Logger.isMain)🍋 DB::插入")
-            let playItem = PlayItem(item.url!)
-            playItem.isDownloading = item.isDownloading
-            playItem.downloadingPercent = item.downloadProgress
-            context.insert(playItem)
-        }
+    nonisolated func upsert(_ items: [MetadataItemWrapper]) {
+        Task.detached {
+            let context = ModelContext(self.modelContainer)
+            context.autosaveEnabled = false
+            for item in items {
+                if let current = Self.find(context, item.url!) {
+                    os_log("\(Logger.isMain)🍋 DB::更新 \(current.title)")
+                    current.isDownloading = item.isDownloading
+                    current.downloadingPercent = item.downloadProgress
+                } else {
+                    os_log("\(Logger.isMain)🍋 DB::插入")
+                    let playItem = PlayItem(item.url!)
+                    playItem.isDownloading = item.isDownloading
+                    playItem.downloadingPercent = item.downloadProgress
+                    context.insert(playItem)
+                }
+            }
 
-        try? context.save()
+            os_log("\(Logger.isMain)🍋 DB::保存")
+            try? context.save()
+        }
     }
 }
 

@@ -6,8 +6,6 @@ struct DBVStackView: View {
     @EnvironmentObject var audioManager: AudioManager
     @Environment(\.modelContext) private var modelContext
     
-    @Query var items: [PlayItem]
-    
     @State var total: Int = 0
 
     var body: some View {
@@ -24,10 +22,7 @@ struct DBVStackView: View {
             .background(.background)
         }.onAppear {
             refresh()
-        }.onChange(of: items, {
-            os_log("🖥️ 刷新")
-            refresh()
-        })
+        }
     }
     
     func refresh() {
