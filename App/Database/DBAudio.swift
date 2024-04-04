@@ -122,6 +122,7 @@ extension DB {
         var descriptor = FetchDescriptor<Audio>()
         descriptor.fetchLimit = 1
         descriptor.fetchOffset = i
+        descriptor.sortBy.append(.init(\.downloadingPercent, order: .reverse))
         descriptor.sortBy.append(.init(\.order))
         
         do {
