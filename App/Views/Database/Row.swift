@@ -7,16 +7,21 @@ struct Row: View {
     var audio: Audio
     
     var body: some View {
-        HStack {
-            AlbumView(audio: audio, withBackground: true, rotate: false)
-                .frame(width: 24, height: 24)
-                .environmentObject(audioManager)
-            Text(audio.title)
-            Spacer()
-            if audio.isDownloading {
-                Text("\(String(format: "%.0f", audio.downloadingPercent))%").font(.footnote)
+        ZStack {
+            HStack {
+                AlbumView(audio: audio, withBackground: true, rotate: false)
+                    .frame(width: 24, height: 24)
+                    .environmentObject(audioManager)
+                Text(audio.title)
+                Spacer()
+                if audio.isDownloading {
+                    Text("\(String(format: "%.0f", audio.downloadingPercent))%").font(.footnote)
+                }
             }
-        }.contextMenu(ContextMenu(menuItems: {
+        }
+        .frame(maxWidth: .infinity)
+        .background(.background)
+        .contextMenu(ContextMenu(menuItems: {
             BtnPlay(audio: audio)
             BtnDownload(audio: audio)
             Divider()

@@ -20,7 +20,7 @@ struct DBView: View {
                         BackgroundView.type2A
                         DBEmptyView()
                     } else {
-                        DBVStackView()
+                        DBList()
                     }
                 }
             }
@@ -39,7 +39,7 @@ struct DBView: View {
             )
         #else
             ZStack {
-                DBVStackView()
+                DBList()
 
                 if audioManager.isEmpty, appManager.flashMessage.isEmpty {
                     DBEmptyView()

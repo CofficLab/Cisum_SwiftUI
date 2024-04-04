@@ -2,7 +2,7 @@ import SwiftUI
 import SwiftData
 import OSLog
 
-struct DBVStackView: View {
+struct DBList: View {
     @EnvironmentObject var audioManager: AudioManager
     @Environment(\.modelContext) private var modelContext
     
@@ -10,7 +10,7 @@ struct DBVStackView: View {
     @State var updatedAt: Date = .now
 
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             ScrollView {
                 LazyVStack {
                     ForEach(0...max(0, total-1), id: \.self) { i in
@@ -21,11 +21,14 @@ struct DBVStackView: View {
                 .padding(.vertical)
             }
             .background(.background)
+            
+            Text("共 \(total)")
         }.onAppear {
             refresh()
         }.onChange(of: audioManager.lastUpdatedAt, {
             os_log("🖥️ DBVStackView:需要刷新")
             updatedAt = .now
+            refresh()
         })
     }
     
