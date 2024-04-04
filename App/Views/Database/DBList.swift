@@ -12,17 +12,15 @@ struct DBList: View {
     var body: some View {
         VStack(spacing: 0) {
             ScrollView {
-                LazyVStack {
+                LazyVStack(spacing:0) {
                     ForEach(0...max(0, total-1), id: \.self) { i in
-                        makeRow(i).padding(.horizontal)
-                        Divider()
+                        makeRow(i)
+                        Divider().background(.background)
                     }
                 }
-                .padding(.vertical)
             }
-            .background(.background)
             
-            Text("共 \(total)")
+            Text("共 \(total.description)")
         }.onAppear {
             refresh()
         }.onChange(of: audioManager.lastUpdatedAt, {

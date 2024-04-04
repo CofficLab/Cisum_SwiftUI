@@ -4,6 +4,8 @@ import OSLog
 struct Row: View {
     @EnvironmentObject var audioManager: AudioManager
     
+    @State var hovered = false
+    
     var audio: Audio
     
     var body: some View {
@@ -18,15 +20,17 @@ struct Row: View {
                     Text("\(String(format: "%.0f", audio.downloadingPercent))%").font(.footnote)
                 }
             }
+            .padding(.horizontal)
+            .padding(.vertical, 4)
         }
-        .frame(maxWidth: .infinity)
-        .background(.background)
-        .contextMenu(ContextMenu(menuItems: {
+        .background(hovered ? Color(.controlBackgroundColor).opacity(0.9) : Color(.controlBackgroundColor))
+        .onHover(perform: { hovered = $0 })
+        .contextMenu(menuItems: {
             BtnPlay(audio: audio)
             BtnDownload(audio: audio)
             Divider()
             BtnDel(audio: audio)
-        }))
+        })
     }
     
     init(_ audio: Audio) {
@@ -36,5 +40,11 @@ struct Row: View {
     
     private func shouldHighlight(_ audio: Audio) -> Bool {
         audioManager.audio == audio
+    }
+}
+
+#Preview {
+    RootView {
+        ContentView()
     }
 }
