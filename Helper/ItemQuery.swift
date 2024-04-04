@@ -116,7 +116,7 @@ class ItemQuery {
                 object: query,
                 queue: queue
             ) { _ in
-                AppConfig.bgQueue.async {
+                DispatchQueue.global().async {
                     os_log("\(Logger.isMain)🍋 searchMetadataItems.NSMetadataQueryDidFinishGathering")
                     let result = self.query.results.compactMap { item -> MetadataItemWrapper? in
                         guard let metadataItem = item as? NSMetadataItem else {
@@ -128,22 +128,22 @@ class ItemQuery {
                 }
             }
 
-//            NotificationCenter.default.addObserver(
-//                forName: .NSMetadataQueryDidUpdate,
-//                object: query,
-//                queue: queue
-//            ) { _ in
-//                AppConfig.bgQueue.async {
-//                    os_log("\(Logger.isMain)🍋 searchMetadataItems.NSMetadataQueryDidUpdate")
-//                    let result = self.query.results.compactMap { item -> MetadataItemWrapper? in
-//                        guard let metadataItem = item as? NSMetadataItem else {
-//                            return nil
-//                        }
-//                        return MetadataItemWrapper(metadataItem: metadataItem)
-//                    }
-//                    continuation.yield(result)
-//                }
-//            }
+            NotificationCenter.default.addObserver(
+                forName: .NSMetadataQueryDidUpdate,
+                object: query,
+                queue: queue
+            ) { _ in
+                DispatchQueue.global().async {
+                    os_log("\(Logger.isMain)🍋 searchMetadataItems.NSMetadataQueryDidUpdate")
+                    let result = self.query.results.compactMap { item -> MetadataItemWrapper? in
+                        guard let metadataItem = item as? NSMetadataItem else {
+                            return nil
+                        }
+                        return MetadataItemWrapper(metadataItem: metadataItem)
+                    }
+                    continuation.yield(result)
+                }
+            }
 
             os_log("\(Logger.isMain)🍋 searchMetadataItems.start")
             query.start()

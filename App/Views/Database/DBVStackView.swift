@@ -6,30 +6,11 @@ struct DBVStackView: View {
     @EnvironmentObject var audioManager: AudioManager
     @Environment(\.modelContext) private var modelContext
     
-    var total: Int {
-        let predicate = #Predicate<PlayItem> {
-            $0.order != -1
-        }
-        let descriptor = FetchDescriptor(predicate: predicate)
-        do {
-            let result = try modelContext.fetchCount(descriptor)
-            return result
-        } catch {
-            return 0
-        }
-    }
+    @Query var items: [PlayItem]
+    
+    @State var total: Int = 0
 
     var body: some View {
-        lazy.onAppear {
-            if total > 0 && audioManager.isEmpty {
-                if let audio = getItemFromDB(0) {
-                    audioManager.setCurrent(audio)
-                }
-            }
-        }
-    }
-
-    var lazy: some View {
         VStack {
             ScrollView {
                 LazyVStack {
@@ -41,6 +22,33 @@ struct DBVStackView: View {
                 .padding(.vertical)
             }
             .background(.background)
+        }.onAppear {
+            refresh()
+        }.onChange(of: items, {
+            os_log("🖥️ 刷新")
+            refresh()
+        })
+    }
+    
+    func refresh() {
+        getTotal()
+        if total > 0 && audioManager.isEmpty {
+            if let audio = getItemFromDB(0) {
+                audioManager.setCurrent(audio)
+            }
+        }
+    }
+    
+    func getTotal() {
+        let predicate = #Predicate<PlayItem> {
+            $0.order != -1
+        }
+        let descriptor = FetchDescriptor(predicate: predicate)
+        do {
+            let result = try modelContext.fetchCount(descriptor)
+            total = result
+        } catch {
+            total = 0
         }
     }
     
@@ -49,8 +57,6 @@ struct DBVStackView: View {
         return ZStack {
             if let item = getItemFromDB(i) {
                 Row(Audio(item.url))
-            } else {
-                Text("\(i)")
             }
         }
     }

@@ -9,7 +9,10 @@ import SwiftUI
  - 提供 Audio
  - 操作 Audio
  */
-class DB {
+actor DB: ModelActor {
+    let modelContainer: ModelContainer
+    let modelExecutor: any ModelExecutor
+
     var fileManager = FileManager.default
     var cloudHandler = CloudHandler()
     var bg = AppConfig.bgQueue
@@ -17,21 +20,25 @@ class DB {
     var handler = CloudHandler()
     var context: ModelContext
 
-    init(context: ModelContext) {
+    init(_ container: ModelContainer) {
         os_log("\(Logger.isMain)🚩 初始化 DB")
 
-        self.context = context
-        Task {
-            await self.getAudios()
+        modelContainer = container
+        context = ModelContext(container)
+        context.autosaveEnabled = false
+        modelExecutor = DefaultSerialModelExecutor(
+            modelContext: context
+        )
+
+        Task(priority: .background) {
+            await getAudios()
         }
     }
 }
 
-// MARK: 增删改查
+// MARK: 增加
 
 extension DB {
-    // MARK: 增加
-
     /// 往数据库添加文件
     func add(
         _ urls: [URL],
@@ -50,9 +57,11 @@ extension DB {
             completionAll()
         }
     }
+}
 
-    // MARK: 删除
+// MARK: 删除
 
+extension DB {
     func delete(_ audio: Audio) {
         let url = audio.url
         let trashUrl = AppConfig.trashDir.appendingPathComponent(url.lastPathComponent)
@@ -79,49 +88,65 @@ extension DB {
             print("Error: \(error)")
         }
     }
+}
 
-    // MARK: 查询
+// MARK: 查询
 
+extension DB {
     /// 查询数据，当查到或有更新时会调用回调函数
-    @MainActor
     func getAudios() {
-        Task {
-            // 创建一个后台队列
-            let backgroundQueue = OperationQueue()
-            let query = ItemQuery(queue: backgroundQueue, url: self.audiosDir)
-            for await items in query.searchMetadataItems() {
-                AppConfig.bgQueue.async {
-                    items.filter { $0.url != nil }.forEach { item in
-                        do {
-                            let url = item.url!
-                            let predicate = #Predicate<PlayItem> {
-                                $0.url == url
-                            }
-                            let descriptor = FetchDescriptor(predicate: predicate)
-                            let dbItems = try self.context.fetch(descriptor)
-
-                            if let f = dbItems.first {
-                                os_log("\(Logger.isMain)🍋 DB::getAudios 更新 \(f.title)")
-                            } else {
-                                let playItem = PlayItem(url)
-                                self.context.insert(playItem)
-                                //os_log("\(Logger.isMain)🍋 DB::getAudios 入库 \(playItem.title)")
-                            }
-                        } catch let e {
-                            print(e)
-                        }
+        DispatchQueue.global().sync {
+            let query = ItemQuery(queue: OperationQueue(), url: self.audiosDir)
+            Task {
+                for try await items in query.searchMetadataItems() {
+                    items.filter { $0.url != nil }.forEach {
+                        self.upsert($0)
                     }
                 }
             }
         }
     }
 
-    // MARK: 修改
+    func find(_ url: URL) -> PlayItem? {
+        let predicate = #Predicate<PlayItem> {
+            $0.url == url
+        }
+        var descriptor = FetchDescriptor<PlayItem>(predicate: predicate)
+        descriptor.fetchLimit = 1
+        do {
+            let result = try context.fetch(descriptor)
+            return result.first
+        } catch let e {
+            print(e)
+        }
 
+        return nil
+    }
+}
+
+// MARK: 修改
+
+extension DB {
     func download(_ url: URL) {
         Task {
             try? await CloudHandler().download(url: url)
         }
+    }
+
+    func upsert(_ item: MetadataItemWrapper) {
+        if let current = find(item.url!) {
+            os_log("\(Logger.isMain)🍋 DB::更新 \(current.title)")
+            current.isDownloading = item.isDownloading
+            current.downloadingPercent = item.downloadProgress
+        } else {
+            os_log("\(Logger.isMain)🍋 DB::插入")
+            let playItem = PlayItem(item.url!)
+            playItem.isDownloading = item.isDownloading
+            playItem.downloadingPercent = item.downloadProgress
+            context.insert(playItem)
+        }
+
+        try? context.save()
     }
 }
 

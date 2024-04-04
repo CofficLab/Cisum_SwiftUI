@@ -39,7 +39,6 @@
 		0B901D862BB83BA2003AC253 /* CloudHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B901D852BB83BA2003AC253 /* CloudHandler.swift */; };
 		0B901D882BB83BC3003AC253 /* FilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B901D872BB83BC3003AC253 /* FilePresenter.swift */; };
 		0B901D8A2BB83E28003AC253 /* ItemQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B901D892BB83E28003AC253 /* ItemQuery.swift */; };
-		0B901D912BB83ECF003AC253 /* CloudDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B901D902BB83ECF003AC253 /* CloudDemoView.swift */; };
 		0B901D932BB83F38003AC253 /* CloudKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B901D922BB83F38003AC253 /* CloudKit.swift */; };
 		0B92ACCA2BBA80F300F1A74F /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 0B92ACC92BBA80F300F1A74F /* README.md */; };
 		0BAB300E2AB814F70012D837 /* Boot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAB300D2AB814F70012D837 /* Boot.swift */; };
@@ -113,7 +112,6 @@
 		0B901D852BB83BA2003AC253 /* CloudHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudHandler.swift; sourceTree = "<group>"; };
 		0B901D872BB83BC3003AC253 /* FilePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilePresenter.swift; sourceTree = "<group>"; };
 		0B901D892BB83E28003AC253 /* ItemQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemQuery.swift; sourceTree = "<group>"; };
-		0B901D902BB83ECF003AC253 /* CloudDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudDemoView.swift; sourceTree = "<group>"; };
 		0B901D922BB83F38003AC253 /* CloudKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudKit.swift; sourceTree = "<group>"; };
 		0B92ACC92BBA80F300F1A74F /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		0BAB300D2AB814F70012D837 /* Boot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Boot.swift; sourceTree = "<group>"; };
@@ -205,7 +203,6 @@
 				0BB587162AD815770071AEBD /* TimeHelper.swift */,
 				0BB5871A2AD81AF90071AEBD /* ViewHelper.swift */,
 				0B73275E2BB5138200DBD922 /* LoggerHelper.swift */,
-				0B901D902BB83ECF003AC253 /* CloudDemoView.swift */,
 				0B22158D2BB6BC8F000EB36F /* SmartProgress.swift */,
 			);
 			path = Helper;
@@ -250,7 +247,6 @@
 		0B9C1C342AAF18FE001A26AF = {
 			isa = PBXGroup;
 			children = (
-				0BBAD0752BBCF9C0005834A3 /* Dev */,
 				0B1D5A6B2AB302600010DDF2 /* Helper */,
 				0BEBCBAB2B35285100F2116E /* App */,
 				0BB5871C2AD820FA0071AEBD /* Assets.xcassets */,
@@ -317,13 +313,6 @@
 				0B6B8B982BBA39F500F65B23 /* ControlButton.swift */,
 			);
 			path = Component;
-			sourceTree = "<group>";
-		};
-		0BBAD0752BBCF9C0005834A3 /* Dev */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Dev;
 			sourceTree = "<group>";
 		};
 		0BEBCBAB2B35285100F2116E /* App */ = {
@@ -465,7 +454,6 @@
 				0BBC15912ABAC19F006E82C4 /* BtnPrev.swift in Sources */,
 				0B604AE82AD6384300929DD8 /* RootView.swift in Sources */,
 				0B1D5A822AB302610010DDF2 /* CommonHelp.swift in Sources */,
-				0B901D912BB83ECF003AC253 /* CloudDemoView.swift in Sources */,
 				0B220F6D2BB051140077255A /* StateView.swift in Sources */,
 				0B1D5A8D2AB3E8290010DDF2 /* AppDelegate.swift in Sources */,
 				0BBC158F2ABAC146006E82C4 /* BtnNext.swift in Sources */,
@@ -536,7 +524,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 129;
-				DEVELOPMENT_ASSET_PATHS = Dev;
+				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = Y6HZ9JJYV6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -578,7 +566,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 129;
-				DEVELOPMENT_ASSET_PATHS = Dev;
+				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = Y6HZ9JJYV6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;

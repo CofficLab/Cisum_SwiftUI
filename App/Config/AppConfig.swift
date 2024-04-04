@@ -44,6 +44,7 @@ extension AppConfig {
         let modelConfiguration = ModelConfiguration(
             schema: schema,
             url: url,
+            allowsSave: true,
             cloudKitDatabase: .none
         )
 
