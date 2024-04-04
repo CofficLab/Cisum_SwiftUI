@@ -46,16 +46,14 @@ extension DB {
         completionOne: @escaping (_ sourceUrl: URL) -> Void,
         onStart: @escaping (_ audio: Audio) -> Void
     ) {
-        bg.async {
-            for url in urls {
-                onStart(Audio(url))
-                SmartFile(url: url).copyTo(
-                    destnation: self.audiosDir.appendingPathComponent(url.lastPathComponent))
-                completionOne(url)
-            }
-
-            completionAll()
+        for url in urls {
+            onStart(Audio(url))
+            SmartFile(url: url).copyTo(
+                destnation: audiosDir.appendingPathComponent(url.lastPathComponent))
+            completionOne(url)
         }
+
+        completionAll()
     }
 }
 
@@ -99,6 +97,7 @@ extension DB {
         let query = ItemQuery(queue: OperationQueue(), url: audiosDir)
         Task {
             for try await items in query.searchMetadataItems() {
+                os_log("\(Logger.isMain)🍋 DB::getAudios \(items.count)")
                 self.upsert(items.filter { $0.url != nil })
             }
         }
@@ -119,8 +118,8 @@ extension DB {
 
         return nil
     }
-    
-    static func find(_ context: ModelContext,_ url: URL) -> PlayItem? {
+
+    static func find(_ context: ModelContext, _ url: URL) -> PlayItem? {
         let predicate = #Predicate<PlayItem> {
             $0.url == url
         }
@@ -152,7 +151,7 @@ extension DB {
             context.autosaveEnabled = false
             for item in items {
                 if let current = Self.find(context, item.url!) {
-                    os_log("\(Logger.isMain)🍋 DB::更新 \(current.title)")
+                    //os_log("\(Logger.isMain)🍋 DB::更新 \(current.title)")
                     current.isDownloading = item.isDownloading
                     current.downloadingPercent = item.downloadProgress
                 } else {

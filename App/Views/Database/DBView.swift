@@ -20,7 +20,7 @@ struct DBView: View {
                         BackgroundView.type2A
                         DBEmptyView()
                     } else {
-                        DBTable()
+                        DBVStackView()
                     }
                 }
 //                .toolbar {
