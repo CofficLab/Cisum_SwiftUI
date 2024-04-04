@@ -182,16 +182,19 @@ class AudioManager: NSObject, ObservableObject {
         if mode == .Loop && manual == false {
             return
         }
-
-//        if let item = playItem, let i = PlayItem.nextOf(context, item: item) {
-//            self.audio = Audio(i.url)
-//            self.playItem = i
-//        } else {
-//            self.audio = nil
-//            self.playItem = nil
-//        }
-
-        try updatePlayer()
+        
+        guard let audio = audio else {
+            return
+        }
+        
+        Task {
+            if let i = await self.db!.nextOf(audio) {
+                main.sync {
+                    self.audio = i
+                }
+                try updatePlayer()
+            }
+        }
     }
 
     private func makePlayer(url: URL?) throws -> AVAudioPlayer {

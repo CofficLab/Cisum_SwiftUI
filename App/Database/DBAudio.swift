@@ -102,6 +102,27 @@ extension DB {
 
         return nil
     }
+
+    func nextOf(_ audio: Audio) -> Audio? {
+        let id = audio.persistentModelID
+        let predicate = #Predicate<Audio> {
+            $0.persistentModelID > id
+        }
+        var descriptor = FetchDescriptor<Audio>(predicate: predicate)
+        descriptor.fetchLimit = 1
+        do {
+            let result = try context.fetch(descriptor)
+            if let first = result.first {
+                return first
+            } else {
+                print("not found")
+            }
+        } catch let e {
+            print(e)
+        }
+
+        return nil
+    }
 }
 
 // MARK: 修改
@@ -135,7 +156,7 @@ extension DB {
                         os_log("\(Logger.isMain)🍋 DB::更新 \(current.title) \(updated)")
                     }
                 } else {
-                    //os_log("\(Logger.isMain)🍋 DB::插入")
+                    // os_log("\(Logger.isMain)🍋 DB::插入")
                     let audio = Audio(item.url!)
                     audio.isDownloading = item.isDownloading
                     audio.downloadingPercent = item.downloadProgress
