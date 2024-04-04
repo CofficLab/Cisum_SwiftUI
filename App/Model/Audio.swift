@@ -2,18 +2,18 @@ import AVFoundation
 import Foundation
 import OSLog
 import SwiftUI
+import SwiftData
 
-/**
- Audio 来自 DB，代表一个可播放的个体
- */
+@Model
 class Audio {
-    let fileManager = FileManager.default
+    @Transient let fileManager = FileManager.default
+    
     var url: URL
     var title = "[空白]"
     var artist = ""
-    var description = ""
     var track = ""
     var albumName = ""
+    var order: Int = 0
     var coverURL: URL?
     var downloadingPercent: Double = 0
     var isDownloading: Bool = false
@@ -30,7 +30,7 @@ class Audio {
             // 如果有大量的歌曲，就会产生大量的 updateMeta 操作，占内存较多
             if isDownloaded && !isCoverOnDisk() {
                 //os_log("\(Logger.isMain)🍋 Audio::init 获取Meta \(self.title)")
-                await updateMeta()
+//                await updateMeta()
             }
         }
     }
@@ -218,7 +218,6 @@ extension Audio {
         print("url: \(url)")
         print("title: \(title)")
         print("artist: \(artist)")
-        print("description: \(description)")
         print("track: \(track)")
         print("albumName: \(albumName)")
         print("coverURL: \(String(describing: coverURL))")

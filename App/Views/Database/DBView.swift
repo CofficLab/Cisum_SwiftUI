@@ -23,9 +23,6 @@ struct DBView: View {
                         DBVStackView()
                     }
                 }
-//                .toolbar {
-//                    ButtonAdd()
-//                }
             }
             .fileImporter(
                 isPresented: $appManager.isImporting,

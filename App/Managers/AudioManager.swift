@@ -11,7 +11,6 @@ class AudioManager: NSObject, ObservableObject {
     @Published private(set) var isPlaying: Bool = false
     @Published private(set) var duration: TimeInterval = 0
     @Published var audio: Audio?
-    @Published var playItem: PlayItem?
     @Published var playerError: Error? = nil
     @Published var mode: PlayMode = .Order
 
@@ -25,9 +24,8 @@ class AudioManager: NSObject, ObservableObject {
     var isEmpty: Bool { audio == nil }
     var isCloudStorage: Bool { iCloudHelper.isCloudPath(url: rootDir) }
     
-    func setCurrent(_ item: PlayItem) {
-        self.playItem = item
-        self.audio = Audio(item.url)
+    func setCurrent(_ audio: Audio) {
+        self.audio = audio
         try? updatePlayer()
     }
 

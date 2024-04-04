@@ -39,7 +39,7 @@ extension AppConfig {
         }
 
         let schema = Schema([
-            PlayItem.self,
+            Audio.self
         ])
         let modelConfiguration = ModelConfiguration(
             schema: schema,

@@ -97,17 +97,19 @@ extension DB {
         let query = ItemQuery(queue: OperationQueue(), url: audiosDir)
         Task {
             for try await items in query.searchMetadataItems() {
-                os_log("\(Logger.isMain)🍋 DB::getAudios \(items.count)")
-                self.upsert(items.filter { $0.url != nil })
+                Task.detached {
+                    os_log("\(Logger.isMain)🍋 DB::getAudios \(items.count)")
+                    self.upsert(items.filter { $0.url != nil })
+                }
             }
         }
     }
 
-    func find(_ url: URL) -> PlayItem? {
-        let predicate = #Predicate<PlayItem> {
+    func find(_ url: URL) -> Audio? {
+        let predicate = #Predicate<Audio> {
             $0.url == url
         }
-        var descriptor = FetchDescriptor<PlayItem>(predicate: predicate)
+        var descriptor = FetchDescriptor<Audio>(predicate: predicate)
         descriptor.fetchLimit = 1
         do {
             let result = try context.fetch(descriptor)
@@ -119,11 +121,11 @@ extension DB {
         return nil
     }
 
-    static func find(_ context: ModelContext, _ url: URL) -> PlayItem? {
-        let predicate = #Predicate<PlayItem> {
+    static func find(_ context: ModelContext, _ url: URL) -> Audio? {
+        let predicate = #Predicate<Audio> {
             $0.url == url
         }
-        var descriptor = FetchDescriptor<PlayItem>(predicate: predicate)
+        var descriptor = FetchDescriptor<Audio>(predicate: predicate)
         descriptor.fetchLimit = 1
         do {
             let result = try context.fetch(descriptor)
@@ -147,24 +149,39 @@ extension DB {
 
     nonisolated func upsert(_ items: [MetadataItemWrapper]) {
         Task.detached {
+            os_log("\(Logger.isMain)🍋 DB::upsert with count=\(items.count)")
             let context = ModelContext(self.modelContainer)
             context.autosaveEnabled = false
             for item in items {
                 if let current = Self.find(context, item.url!) {
-                    //os_log("\(Logger.isMain)🍋 DB::更新 \(current.title)")
-                    current.isDownloading = item.isDownloading
-                    current.downloadingPercent = item.downloadProgress
+                    var updated: String = ""
+                    if current.isDownloading != item.isDownloading {
+                        updated += "🐛isDownloading[\(current.isDownloading)->\(item.isDownloading)]"
+                        current.isDownloading = item.isDownloading
+                    }
+
+                    if current.downloadingPercent != item.downloadProgress {
+                        updated += "🐛downloadingPercent[\(current.downloadingPercent)->\(item.downloadProgress)]"
+                        current.downloadingPercent = item.downloadProgress
+                    }
+
+                    if updated.count > 0 {
+                        os_log("\(Logger.isMain)🍋 DB::更新 \(current.title) \(updated)")
+                    }
                 } else {
-                    os_log("\(Logger.isMain)🍋 DB::插入")
-                    let playItem = PlayItem(item.url!)
-                    playItem.isDownloading = item.isDownloading
-                    playItem.downloadingPercent = item.downloadProgress
-                    context.insert(playItem)
+                    //os_log("\(Logger.isMain)🍋 DB::插入")
+                    let audio = Audio(item.url!)
+                    audio.isDownloading = item.isDownloading
+                    audio.downloadingPercent = item.downloadProgress
+                    audio.isPlaceholder = item.isPlaceholder
+                    context.insert(audio)
                 }
             }
 
-            os_log("\(Logger.isMain)🍋 DB::保存")
-            try? context.save()
+            if context.hasChanges {
+                os_log("\(Logger.isMain)🍋 DB::保存")
+                try? context.save()
+            }
         }
     }
 }

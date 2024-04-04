@@ -28,14 +28,14 @@ struct DBVStackView: View {
     func refresh() {
         getTotal()
         if total > 0 && audioManager.isEmpty {
-            if let audio = getItemFromDB(0) {
+            if let audio = getAudioFromDB(0) {
                 audioManager.setCurrent(audio)
             }
         }
     }
     
     func getTotal() {
-        let predicate = #Predicate<PlayItem> {
+        let predicate = #Predicate<Audio> {
             $0.order != -1
         }
         let descriptor = FetchDescriptor(predicate: predicate)
@@ -50,15 +50,15 @@ struct DBVStackView: View {
     func makeRow(_ i: Int) -> some View {
 //        os_log("🖥️ 渲染 \(i)")
         return ZStack {
-            if let item = getItemFromDB(i) {
-                Row(Audio(item.url))
+            if let item = getAudioFromDB(i) {
+                Row(item)
             }
         }
     }
     
-    func getItemFromDB(_ i: Int) -> PlayItem? {
+    func getAudioFromDB(_ i: Int) -> Audio? {
         // 创建一个 FetchDescriptor 查询特定行
-        var descriptor = FetchDescriptor<PlayItem>()
+        var descriptor = FetchDescriptor<Audio>()
         descriptor.fetchLimit = 1 // 限制查询结果为1条记录
         descriptor.fetchOffset = i // 设置偏移量，从0开始
         do {
