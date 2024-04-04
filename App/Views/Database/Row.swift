@@ -11,6 +11,7 @@ struct Row: View {
     var body: some View {
         ZStack {
             HStack {
+                Text("[\(audio.order.description)]")
                 AlbumView(audio: audio, withBackground: true, rotate: false)
                     .frame(width: 24, height: 24)
                     .environmentObject(audioManager)

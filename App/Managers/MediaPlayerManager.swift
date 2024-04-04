@@ -60,8 +60,8 @@ class MediaPlayerManager: ObservableObject {
         c.previousTrackCommand.addTarget { _ in
             os_log("\(Logger.isMain)上一首")
             do {
-                let message = try self.audioManager.prev()
-                os_log("\(Logger.isMain)MediaPlayerManager::\(message)")
+                try self.audioManager.prev()
+                os_log("\(Logger.isMain)MediaPlayerManager::pre")
                 return .success
             } catch let e {
                 os_log("\(Logger.isMain)MediaPlayerManager::\(e.localizedDescription)")

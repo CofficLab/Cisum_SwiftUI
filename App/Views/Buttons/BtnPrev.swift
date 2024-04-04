@@ -8,8 +8,7 @@ struct BtnPrev: View {
     var body: some View {
         ControlButton(title: "上一曲",size: 28, systemImage: "backward.fill", onTap: {
             do {
-                let message = try audioManager.prev(manual: true)
-                os_log("\(Logger.isMain)BtnPrev::\(message)")
+                try audioManager.prev(manual: true)
             } catch let e {
                 appManager.setFlashMessage(e.localizedDescription)
             }

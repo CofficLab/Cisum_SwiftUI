@@ -76,16 +76,15 @@ class AudioManager: NSObject, ObservableObject {
 
         do {
             try updatePlayer()
-            self.player.play()
-            self.isPlaying = true
-            self.updateMediaPlayer()
+            player.play()
+            isPlaying = true
+            updateMediaPlayer()
         } catch {
             return
         }
     }
-    
+
     func resume() {
-        
     }
 
     // MARK: 暂停
@@ -139,30 +138,44 @@ class AudioManager: NSObject, ObservableObject {
     // MARK: 切换播放模式
 
     func switchMode(_ callback: @escaping (_ mode: PlayMode) -> Void) {
-        switch mode {
-        case .Order:
-            mode = .Random
-        case .Loop:
-            mode = .Order
-        case .Random:
-            mode = .Loop
-        }
-        
         Task {
-            await self.db?.sort()
-        }
+            switch mode {
+            case .Order:
+                mode = .Random
+                await self.db?.sortRandom()
+            case .Loop:
+                mode = .Order
+                await self.db?.sort()
+            case .Random:
+                mode = .Loop
+            }
 
-        callback(mode)
+            callback(mode)
+        }
     }
 
     // MARK: Prev
 
     /// 跳到上一首，manual=true表示由用户触发
-    func prev(manual: Bool = false) throws -> String {
+    func prev(manual: Bool = false) throws {
         os_log("\(Logger.isMain)🔊 AudioManager::prev ⬆️")
+        
+        if mode == .Loop && manual == false {
+            return
+        }
 
-        try updatePlayer()
-        return "上一曲：\(title)"
+        guard let audio = audio else {
+            return
+        }
+
+        Task {
+            if let i = await self.db!.preOf(audio) {
+                main.sync {
+                    self.audio = i
+                    try? updatePlayer()
+                }
+            }
+        }
     }
 
     // MARK: Next
@@ -174,11 +187,11 @@ class AudioManager: NSObject, ObservableObject {
         if mode == .Loop && manual == false {
             return
         }
-        
+
         guard let audio = audio else {
             return
         }
-        
+
         Task {
             if let i = await self.db!.nextOf(audio) {
                 main.sync {

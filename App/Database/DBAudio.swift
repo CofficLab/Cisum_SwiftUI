@@ -137,19 +137,46 @@ extension DB {
         
         return nil
     }
-
-    func nextOf(_ audio: Audio) -> Audio? {
-        os_log("🍋 DBAudio::nextOf \(audio.title)")
-        let id = audio.persistentModelID
-        let predicate = #Predicate<Audio> {
-            $0.persistentModelID > id
-        }
-        var descriptor = FetchDescriptor<Audio>(predicate: predicate)
+    
+    func preOf(_ audio: Audio) -> Audio? {
+        os_log("🍋 DBAudio::preOf [\(audio.order)] \(audio.title)")
+        let order = audio.order
+        var descriptor = FetchDescriptor<Audio>()
+        descriptor.sortBy.append(.init(\.order, order: .reverse))
         descriptor.fetchLimit = 1
+        descriptor.predicate = #Predicate {
+            $0.order < order
+        }
         
         do {
             let result = try context.fetch(descriptor)
             if let first = result.first {
+                os_log("🍋 DBAudio::preOf [\(audio.order)] \(audio.title) -> \(first.title)")
+                return first
+            } else {
+                print("not found")
+            }
+        } catch let e {
+            print(e)
+        }
+
+        return nil
+    }
+
+    func nextOf(_ audio: Audio) -> Audio? {
+        os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title)")
+        let order = audio.order
+        var descriptor = FetchDescriptor<Audio>()
+        descriptor.sortBy.append(.init(\.order, order: .forward))
+        descriptor.fetchLimit = 1
+        descriptor.predicate = #Predicate {
+            $0.order > order
+        }
+        
+        do {
+            let result = try context.fetch(descriptor)
+            if let first = result.first {
+                os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title) -> \(first.title)")
                 return first
             } else {
                 print("not found")
@@ -165,7 +192,7 @@ extension DB {
 // MARK: 排序
 
 extension DB {
-    func sort() {
+    func sortRandom() {
         let pageSize = 100 // 每页数据条数
         var offset = 0
 
@@ -173,6 +200,37 @@ extension DB {
             while true {
                 var descriptor = FetchDescriptor<Audio>()
                 descriptor.sortBy.append(.init(\.title, order: .reverse))
+                descriptor.fetchLimit = pageSize
+                descriptor.fetchOffset = offset
+                let audioArray = try context.fetch(descriptor)
+                
+                if audioArray.isEmpty {
+                    break
+                }
+                
+                for audio in audioArray {
+                    audio.order = Int.random(in: 0...500000000)
+                }
+                
+                try context.save()
+                
+                offset += pageSize
+            }
+            
+            self.onUpdated()
+        } catch let e {
+            print(e)
+        }
+    }
+    
+    func sort() {
+        let pageSize = 100 // 每页数据条数
+        var offset = 0
+
+        do {
+            while true {
+                var descriptor = FetchDescriptor<Audio>()
+                descriptor.sortBy.append(.init(\.title, order: .forward))
                 descriptor.fetchLimit = pageSize
                 descriptor.fetchOffset = offset
                 let audioArray = try context.fetch(descriptor)
