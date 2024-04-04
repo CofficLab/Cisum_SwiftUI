@@ -21,7 +21,7 @@ struct BtnPlay: View {
             return appManager.setFlashMessage("正在从 iCloud 下载")
         }
         
-        audioManager.play(url: audio.url)
+        audioManager.play(audio)
     }
     
     private func getImageName() -> String {

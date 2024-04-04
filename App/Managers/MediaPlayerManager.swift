@@ -78,7 +78,7 @@ class MediaPlayerManager: ObservableObject {
 
         c.playCommand.addTarget { _ in
             os_log("\(Logger.isMain)播放")
-            self.audioManager.play()
+            self.audioManager.resume()
 
             return .success
         }

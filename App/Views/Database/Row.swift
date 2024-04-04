@@ -23,11 +23,12 @@ struct Row: View {
             .padding(.horizontal)
             .padding(.vertical, 4)
         }
-        .background(hovered ? Color(.controlBackgroundColor).opacity(0.9) : Color(.controlBackgroundColor))
+        .background(getBackground())
         .onHover(perform: { hovered = $0 })
         .contextMenu(menuItems: {
             BtnPlay(audio: audio)
             BtnDownload(audio: audio)
+            BtnShowInFinder(url: audio.url)
             Divider()
             BtnDel(audio: audio)
         })
@@ -36,6 +37,14 @@ struct Row: View {
     init(_ audio: Audio) {
         self.audio = audio
 //        os_log("\(Logger.isMain)🚩 🖥️ 初始化 \(audio.title)")
+    }
+    
+    private func getBackground() -> Color {
+        if audioManager.audio == audio {
+            return Color.blue.opacity(0.3)
+        }
+        
+        return hovered ? Color(.controlBackgroundColor).opacity(0.9) : Color(.controlBackgroundColor)
     }
     
     private func shouldHighlight(_ audio: Audio) -> Bool {

@@ -64,40 +64,28 @@ class AudioManager: NSObject, ObservableObject {
     func replay() {
         os_log("\(Logger.isMain)🍋 AudioManager::replay()")
 
-        do {
-            try updatePlayer()
-        } catch let e {
-            self.playerError = e
-            return
-        }
-
-        play()
+        play(audio!)
     }
 
     // MARK: 播放
 
-    func play(url: URL) {
+    func play(_ audio: Audio) {
         os_log("\(Logger.isMain)🔊 AudioManager::play")
 
-        audio = Audio(url)
-
-        play()
-    }
-
-    /// 播放当前的
-    func play() {
-        os_log("\(Logger.isMain)🔊 AudioManager::play")
+        self.audio = audio
 
         do {
             try updatePlayer()
+            self.player.play()
+            self.isPlaying = true
+            self.updateMediaPlayer()
         } catch {
             return
         }
-
-        player.play()
-        isPlaying = true
-
-        updateMediaPlayer()
+    }
+    
+    func resume() {
+        
     }
 
     // MARK: 暂停
@@ -137,7 +125,7 @@ class AudioManager: NSObject, ObservableObject {
         if player.isPlaying {
             pause()
         } else {
-            play()
+            play(audio)
         }
     }
 
@@ -158,6 +146,10 @@ class AudioManager: NSObject, ObservableObject {
             mode = .Order
         case .Random:
             mode = .Loop
+        }
+        
+        Task {
+            await self.db?.sort()
         }
 
         callback(mode)
@@ -191,8 +183,8 @@ class AudioManager: NSObject, ObservableObject {
             if let i = await self.db!.nextOf(audio) {
                 main.sync {
                     self.audio = i
+                    try? updatePlayer()
                 }
-                try updatePlayer()
             }
         }
     }
@@ -313,7 +305,7 @@ extension AudioManager: AVAudioPlayerDelegate {
 
     func audioPlayerEndInterruption(_ player: AVAudioPlayer, withOptions flags: Int) {
         os_log("\(Logger.isMain)🍋 AudioManager::audioPlayerEndInterruption")
-        play()
+        resume()
     }
 }
 

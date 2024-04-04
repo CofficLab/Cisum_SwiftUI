@@ -102,14 +102,51 @@ extension DB {
 
         return nil
     }
+    
+    nonisolated func getTotal() -> Int {
+        let context = ModelContext(modelContainer)
+        let predicate = #Predicate<Audio> {
+            $0.order != -1
+        }
+        let descriptor = FetchDescriptor(predicate: predicate)
+        do {
+            let result = try context.fetchCount(descriptor)
+            return result
+        } catch {
+            return 0
+        }
+    }
+    
+    nonisolated func get(_ i: Int) -> Audio? {
+        let context = ModelContext(modelContainer)
+        var descriptor = FetchDescriptor<Audio>()
+        descriptor.fetchLimit = 1
+        descriptor.fetchOffset = i
+        descriptor.sortBy.append(.init(\.order))
+        
+        do {
+            let result = try context.fetch(descriptor)
+            if let first = result.first {
+                return first
+            } else {
+                print("not found")
+            }
+        } catch let e{
+            print(e)
+        }
+        
+        return nil
+    }
 
     func nextOf(_ audio: Audio) -> Audio? {
+        os_log("🍋 DBAudio::nextOf \(audio.title)")
         let id = audio.persistentModelID
         let predicate = #Predicate<Audio> {
             $0.persistentModelID > id
         }
         var descriptor = FetchDescriptor<Audio>(predicate: predicate)
         descriptor.fetchLimit = 1
+        
         do {
             let result = try context.fetch(descriptor)
             if let first = result.first {
@@ -122,6 +159,41 @@ extension DB {
         }
 
         return nil
+    }
+}
+
+// MARK: 排序
+
+extension DB {
+    func sort() {
+        let pageSize = 100 // 每页数据条数
+        var offset = 0
+
+        do {
+            while true {
+                var descriptor = FetchDescriptor<Audio>()
+                descriptor.sortBy.append(.init(\.title, order: .reverse))
+                descriptor.fetchLimit = pageSize
+                descriptor.fetchOffset = offset
+                let audioArray = try context.fetch(descriptor)
+                
+                if audioArray.isEmpty {
+                    break
+                }
+                
+                for (index, audio) in audioArray.enumerated() {
+                    audio.order = offset + index + 1
+                }
+                
+                try context.save()
+                
+                offset += pageSize
+            }
+            
+            self.onUpdated()
+        } catch let e {
+            print(e)
+        }
     }
 }
 
