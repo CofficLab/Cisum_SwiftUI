@@ -168,7 +168,7 @@ extension DB {
         descriptor.sortBy.append(.init(\.order, order: .reverse))
         descriptor.fetchLimit = 1
         descriptor.predicate = #Predicate {
-            $0.order < order
+            $0.order < order && $0.downloadingPercent == 100
         }
         
         do {
@@ -193,7 +193,7 @@ extension DB {
         descriptor.sortBy.append(.init(\.order, order: .forward))
         descriptor.fetchLimit = 1
         descriptor.predicate = #Predicate {
-            $0.order > order
+            $0.order > order && $0.downloadingPercent == 100
         }
         
         do {
