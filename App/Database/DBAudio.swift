@@ -210,6 +210,32 @@ extension DB {
 
         return nil
     }
+    
+    func nextNotDownloadedOf(_ audio: Audio) -> Audio? {
+        os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title)")
+        let order = audio.order
+        var descriptor = FetchDescriptor<Audio>()
+        descriptor.sortBy.append(.init(\.order, order: .forward))
+        descriptor.fetchLimit = 1
+        descriptor.predicate = #Predicate {
+            $0.order > order && $0.downloadingPercent < 100
+        }
+        
+        do {
+            let result = try context.fetch(descriptor)
+            if let first = result.first {
+                os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title) -> \(first.title)")
+                return first
+            } else {
+                print("not found")
+            }
+        } catch let e {
+            print(e)
+        }
+
+        return nil
+    }
+
 }
 
 // MARK: 排序
@@ -294,7 +320,7 @@ extension DB {
         
         while currentIndex < count {
             currentIndex = currentIndex + 1
-            if let next = nextOf(currentAudio) {
+            if let next = nextNotDownloadedOf(currentAudio) {
                 self.download(next)
                 currentAudio = next
             }
