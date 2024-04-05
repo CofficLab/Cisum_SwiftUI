@@ -33,13 +33,27 @@ class AudioManager: NSObject, ObservableObject {
                 self.lastUpdatedAt = .now
             }
         })
+        
+        if let currentAudioId = AppConfig.currentAudio {
+            Task {
+                if let currentAudio = await self.db!.find(currentAudioId) {
+                    self.setCurrent(currentAudio)
+                }
+            }
+        }
     }
     
     // MARK: 播放指定的
 
     func setCurrent(_ audio: Audio) {
-        self.audio = audio
-        try? updatePlayer()
+        AppConfig.mainQueue.async {
+            self.audio = audio
+            try? self.updatePlayer()
+        }
+        
+        Task {
+            AppConfig.setCurrentAudio(audio)
+        }
     }
 
     func currentTime() -> TimeInterval {
@@ -75,6 +89,7 @@ class AudioManager: NSObject, ObservableObject {
         os_log("\(Logger.isMain)🔊 AudioManager::play")
 
         self.audio = audio
+        self.setCurrent(audio)
 
         do {
             try updatePlayer()

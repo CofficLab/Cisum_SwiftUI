@@ -18,6 +18,18 @@ enum AppConfig {
     ]
 }
 
+// MARK: APP状态
+
+extension AppConfig {
+    @AppStorage("App.CurrentAudio")
+    static var currentAudio: Audio.ID?
+    
+    static func setCurrentAudio(_ audio: Audio) {
+        os_log("\(Logger.isMain)🍋 AppConfig::setCurrentAudio \(audio.title)")
+        AppConfig.currentAudio = audio.id
+    }
+}
+
 // MARK: 视图配置
 
 extension AppConfig {

@@ -179,8 +179,8 @@
 			isa = PBXGroup;
 			children = (
 				0B1D5A672AB3025F0010DDF2 /* Audio.swift */,
-				0B0A2B812AC1CCDC00DA085C /* SmartFile.swift */,
 				0B8FC2712BBE7ED800839C75 /* AudioMeta.swift */,
+				0B0A2B812AC1CCDC00DA085C /* SmartFile.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
