@@ -25,6 +25,9 @@ struct Row: View {
         }
         .background(getBackground())
         .onHover(perform: { hovered = $0 })
+        .onTapGesture(count: 2, perform: {
+            audioManager.play(audio)
+        })
         .contextMenu(menuItems: {
             BtnPlay(audio: audio)
             BtnDownload(audio: audio)
