@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct BtnsView: View {
+    @EnvironmentObject var audioManager: AudioManager
+    
     var body: some View {
         HStack(spacing: 2, content: {
             BtnToggleDB().padding(.trailing, 20)

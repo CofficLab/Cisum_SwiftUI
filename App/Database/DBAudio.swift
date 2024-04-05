@@ -70,6 +70,28 @@ extension DB {
             }
         }
     }
+    
+    /// 查询第一个有效的
+    nonisolated func getFirstValid() -> Audio? {
+        let context = ModelContext(modelContainer)
+        let predicate = #Predicate<Audio> {
+            $0.downloadingPercent == 100
+        }
+        var descriptor = FetchDescriptor<Audio>(predicate: predicate)
+        descriptor.fetchLimit = 1
+        do {
+            let result = try context.fetch(descriptor)
+            return result.first
+        } catch let e {
+            print(e)
+        }
+
+        return nil
+    }
+    
+    nonisolated func isAllInCloud() -> Bool {
+        self.getTotal() > 0 && self.getFirstValid() == nil
+    }
 
     func find(_ url: URL) -> Audio? {
         let predicate = #Predicate<Audio> {

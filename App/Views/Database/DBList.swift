@@ -33,7 +33,7 @@ struct DBList: View {
     func refresh() {
         self.total = audioManager.db?.getTotal() ?? 0
         if total > 0 && audioManager.isEmpty {
-            if let audio = audioManager.db?.get(0) {
+            if let audio = audioManager.db?.getFirstValid() {
                 audioManager.setCurrent(audio)
             }
         }

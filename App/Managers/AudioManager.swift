@@ -34,6 +34,8 @@ class AudioManager: NSObject, ObservableObject {
             }
         })
     }
+    
+    // MARK: 播放指定的
 
     func setCurrent(_ audio: Audio) {
         self.audio = audio
@@ -128,38 +130,6 @@ class AudioManager: NSObject, ObservableObject {
         }
     }
 
-    // MARK: 播放模式
-
-    func toggleLoop() {
-        player.numberOfLoops = player.numberOfLoops == 0 ? -1 : 0
-        mode = player.numberOfLoops != 0 ? .Order : .Loop
-    }
-
-    // MARK: 切换播放模式
-
-    func switchMode(_ callback: @escaping (_ mode: PlayMode) -> Void) {
-        switch mode {
-        case .Order:
-            mode = .Random
-        case .Loop:
-            mode = .Order
-        case .Random:
-            mode = .Loop
-        }
-
-        callback(mode)
-
-        Task {
-            if mode == .Random {
-                await self.db?.sortRandom()
-            }
-
-            if mode == .Order {
-                await db?.sort()
-            }
-        }
-    }
-
     // MARK: Prev
 
     /// 跳到上一首，manual=true表示由用户触发
@@ -210,38 +180,11 @@ class AudioManager: NSObject, ObservableObject {
         }
     }
 
-    private func makePlayer(url: URL?) throws -> AVAudioPlayer {
-        os_log("\(Logger.isMain)🚩 AudioManager::初始化播放器")
-
-        guard let url = url else {
-            return AVAudioPlayer()
-        }
-
-        let ext = url.pathExtension
-        if !AppConfig.supportedExtensions.contains(ext) {
-            throw SmartError.FormatNotSupported(ext)
-        }
-
-        do {
-            #if os(iOS)
-                try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
-                try AVAudioSession.sharedInstance().setActive(true)
-            #endif
-            let player = try AVAudioPlayer(contentsOf: url)
-
-            return player
-        } catch {
-            os_log("\(Logger.isMain)初始化播放器失败 ->\(url.lastPathComponent)->\(error)")
-
-            throw SmartError.PlayFailed
-        }
-    }
-
     private func updateMediaPlayer() {
         MediaPlayerManager.setNowPlayingInfo(audioManager: self)
     }
 
-    private func updatePlayer() throws {
+    func updatePlayer() throws {
         guard let audio = audio else {
             return
         }
@@ -284,7 +227,7 @@ class AudioManager: NSObject, ObservableObject {
             return false
         }
 
-        guard let audio = audio else {
+        guard audio != nil else {
             return false
         }
 
@@ -297,6 +240,85 @@ class AudioManager: NSObject, ObservableObject {
         player = AVAudioPlayer()
     }
 }
+
+// MARK: 播放模式
+
+extension AudioManager {
+    enum PlayMode {
+        case Order
+        case Loop
+        case Random
+
+        var description: String {
+            switch self {
+            case .Order:
+                return "顺序播放"
+            case .Loop:
+                return "单曲循环"
+            case .Random:
+                return "随机播放"
+            }
+        }
+    }
+    
+    // MARK: 切换播放模式
+
+    func switchMode(_ callback: @escaping (_ mode: PlayMode) -> Void) {
+        switch mode {
+        case .Order:
+            mode = .Random
+        case .Loop:
+            mode = .Order
+        case .Random:
+            mode = .Loop
+        }
+
+        callback(mode)
+
+        Task {
+            if mode == .Random {
+                await self.db?.sortRandom()
+            }
+
+            if mode == .Order {
+                await db?.sort()
+            }
+        }
+    }
+}
+
+// MARK: 控制系统播放器
+
+extension AudioManager {
+    func makePlayer(url: URL?) throws -> AVAudioPlayer {
+        os_log("\(Logger.isMain)🚩 AudioManager::初始化播放器")
+
+        guard let url = url else {
+            return AVAudioPlayer()
+        }
+
+        let ext = url.pathExtension
+        if !AppConfig.supportedExtensions.contains(ext) {
+            throw SmartError.FormatNotSupported(ext)
+        }
+
+        do {
+            #if os(iOS)
+                try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+                try AVAudioSession.sharedInstance().setActive(true)
+            #endif
+            let player = try AVAudioPlayer(contentsOf: url)
+
+            return player
+        } catch {
+            os_log("\(Logger.isMain)初始化播放器失败 ->\(url.lastPathComponent)->\(error)")
+
+            throw SmartError.PlayFailed
+        }
+    }
+}
+
+// MARK: 接收系统事件
 
 extension AudioManager: AVAudioPlayerDelegate {
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
@@ -327,25 +349,6 @@ extension AudioManager: AVAudioPlayerDelegate {
     func audioPlayerEndInterruption(_ player: AVAudioPlayer, withOptions flags: Int) {
         os_log("\(Logger.isMain)🍋 AudioManager::audioPlayerEndInterruption")
         resume()
-    }
-}
-
-extension AudioManager {
-    enum PlayMode {
-        case Order
-        case Loop
-        case Random
-
-        var description: String {
-            switch self {
-            case .Order:
-                return "顺序播放"
-            case .Loop:
-                return "单曲循环"
-            case .Random:
-                return "随机播放"
-            }
-        }
     }
 }
 
