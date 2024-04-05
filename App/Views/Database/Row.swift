@@ -33,7 +33,7 @@ struct Row: View {
             BtnDownload(audio: audio)
             BtnShowInFinder(url: audio.url)
             Divider()
-            BtnDel(audio: audio)
+            BtnTrash(audio: audio)
         })
     }
     

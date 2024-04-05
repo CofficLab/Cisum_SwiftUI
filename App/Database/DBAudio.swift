@@ -26,10 +26,9 @@ extension DB {
 // MARK: 删除
 
 extension DB {
-    func delete(_ audio: Audio) {
+    func trash(_ audio: Audio) {
         let url = audio.url
         let trashUrl = AppConfig.trashDir.appendingPathComponent(url.lastPathComponent)
-
         Task {
             try await cloudHandler.moveFile(at: audio.url, to: trashUrl)
         }
@@ -358,6 +357,11 @@ extension DB {
             context.autosaveEnabled = false
             for item in items {
                 if let current = Self.find(context, item.url!) {
+                    if item.isDeleted {
+                        context.delete(current)
+                        continue
+                    }
+                    
                     var updated: String = ""
                     if current.isDownloading != item.isDownloading {
                         updated += "🐛isDownloading[\(current.isDownloading)->\(item.isDownloading)]"

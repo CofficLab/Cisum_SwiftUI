@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct BtnDel: View {
+struct BtnTrash: View {
     @EnvironmentObject var audioManager: AudioManager
     @EnvironmentObject var appManager: AppManager
     
@@ -8,10 +8,11 @@ struct BtnDel: View {
         
     var body: some View {
         Button {
-            audio.delete()
-            appManager.setFlashMessage("\(audio.title) 已经删除")
+            Task {
+                await audioManager.db?.trash(audio)
+            }
         } label: {
-            Label("删除「\(audio.title)」", systemImage: getImageName())
+            Label("将「\(audio.title)」放入回收站", systemImage: getImageName())
                 .font(.system(size: 24))
         }
     }

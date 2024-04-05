@@ -12,91 +12,6 @@ class ItemQuery {
         self.url = url
     }
 
-    // MARK: 监听文件夹中文件被删除的事件
-
-    func searchDeletedMetadataItems(
-        predicate: NSPredicate? = nil,
-        sortDescriptors: [NSSortDescriptor] = [],
-        scopes: [Any] = [NSMetadataQueryUbiquitousDocumentsScope]
-    ) -> AsyncStream<[MetadataItemWrapper]> {
-        query.searchScopes = scopes
-        query.sortDescriptors = sortDescriptors
-        query.predicate = NSPredicate(format: "%K BEGINSWITH %@", NSMetadataItemPathKey, url.path + "/")
-
-        return AsyncStream { continuation in
-            NotificationCenter.default.addObserver(
-                forName: .NSMetadataQueryDidUpdate,
-                object: query,
-                queue: queue
-            ) { notification in
-                if let deletedItems = notification.userInfo?[NSMetadataQueryUpdateRemovedItemsKey] as? [NSMetadataItem] {
-                    let result = deletedItems.compactMap { item -> MetadataItemWrapper? in
-                        MetadataItemWrapper(metadataItem: item)
-                    }
-                    continuation.yield(result)
-                }
-            }
-
-            query.start()
-
-            continuation.onTermination = { @Sendable _ in
-                self.query.stop()
-                NotificationCenter.default.removeObserver(self, name: .NSMetadataQueryDidUpdate, object: self.query)
-            }
-        }
-    }
-
-    // MARK: 监听文件夹中文件正在下载的事件
-
-    func searchDownloadingMetadataItems(
-        predicate: NSPredicate? = nil,
-        sortDescriptors: [NSSortDescriptor] = [],
-        scopes: [Any] = [NSMetadataQueryUbiquitousDocumentsScope]
-    ) -> AsyncStream<[MetadataItemWrapper]> {
-        query.searchScopes = scopes
-        query.sortDescriptors = sortDescriptors
-        query.predicate = NSPredicate(format: "%K BEGINSWITH %@", NSMetadataItemPathKey, url.path + "/")
-
-        return AsyncStream { continuation in
-            NotificationCenter.default.addObserver(
-                forName: .NSMetadataQueryDidFinishGathering,
-                object: query,
-                queue: queue
-            ) { _ in
-                let result = self.query.results.compactMap { item -> MetadataItemWrapper? in
-                    guard let metadataItem = item as? NSMetadataItem else {
-                        return nil
-                    }
-                    return MetadataItemWrapper(metadataItem: metadataItem)
-                }
-
-                continuation.yield(result.filter { $0.isDownloading })
-            }
-
-            NotificationCenter.default.addObserver(
-                forName: .NSMetadataQueryDidUpdate,
-                object: query,
-                queue: queue
-            ) { _ in
-                let result = self.query.results.compactMap { item -> MetadataItemWrapper? in
-                    guard let metadataItem = item as? NSMetadataItem else {
-                        return nil
-                    }
-                    return MetadataItemWrapper(metadataItem: metadataItem)
-                }
-
-                continuation.yield(result.filter { $0.isDownloading })
-            }
-
-            query.start()
-
-            continuation.onTermination = { @Sendable _ in
-                self.query.stop()
-                NotificationCenter.default.removeObserver(self, name: .NSMetadataQueryDidUpdate, object: self.query)
-            }
-        }
-    }
-
     // MARK: 监听某个目录的变化
 
     func searchMetadataItems(
@@ -131,7 +46,7 @@ class ItemQuery {
                 forName: .NSMetadataQueryDidUpdate,
                 object: query,
                 queue: queue
-            ) { _ in
+            ) { notification in
                 DispatchQueue.global().async {
                     os_log("\(Logger.isMain)🍋 searchMetadataItems.NSMetadataQueryDidUpdate")
                     let result = self.query.results.compactMap { item -> MetadataItemWrapper? in
@@ -139,6 +54,13 @@ class ItemQuery {
                             return nil
                         }
                         return MetadataItemWrapper(metadataItem: metadataItem)
+                    }
+                    continuation.yield(result)
+                }
+                
+                if let deletedItems = notification.userInfo?[NSMetadataQueryUpdateRemovedItemsKey] as? [NSMetadataItem] {
+                    let result = deletedItems.compactMap { item -> MetadataItemWrapper? in
+                        MetadataItemWrapper(metadataItem: item, isDeleted: true)
                     }
                     continuation.yield(result)
                 }
@@ -155,56 +77,6 @@ class ItemQuery {
             }
         }
     }
-
-    // MARK: 监听某个URL的变化
-
-    func searchMetadataItem(
-        predicate: NSPredicate? = nil,
-        sortDescriptors: [NSSortDescriptor] = [],
-        scopes: [Any] = [NSMetadataQueryUbiquitousDocumentsScope]
-    ) -> AsyncStream<[MetadataItemWrapper]> {
-        query.searchScopes = scopes
-        query.sortDescriptors = sortDescriptors
-        query.predicate = NSPredicate(format: "%K == %@", NSMetadataItemPathKey, url.path)
-
-        return AsyncStream { continuation in
-            NotificationCenter.default.addObserver(
-                forName: .NSMetadataQueryDidFinishGathering,
-                object: query,
-                queue: queue
-            ) { _ in
-                let result = self.query.results.compactMap { item -> MetadataItemWrapper? in
-                    guard let metadataItem = item as? NSMetadataItem else {
-                        return nil
-                    }
-                    return MetadataItemWrapper(metadataItem: metadataItem)
-                }
-                continuation.yield(result)
-            }
-
-            NotificationCenter.default.addObserver(
-                forName: .NSMetadataQueryDidUpdate,
-                object: query,
-                queue: queue
-            ) { _ in
-                let result = self.query.results.compactMap { item -> MetadataItemWrapper? in
-                    guard let metadataItem = item as? NSMetadataItem else {
-                        return nil
-                    }
-                    return MetadataItemWrapper(metadataItem: metadataItem)
-                }
-                continuation.yield(result)
-            }
-
-            query.start()
-
-            continuation.onTermination = { @Sendable _ in
-                self.query.stop()
-                NotificationCenter.default.removeObserver(self, name: .NSMetadataQueryDidFinishGathering, object: self.query)
-                NotificationCenter.default.removeObserver(self, name: .NSMetadataQueryDidUpdate, object: self.query)
-            }
-        }
-    }
 }
 
 struct MetadataItemWrapper: Sendable {
@@ -215,10 +87,12 @@ struct MetadataItemWrapper: Sendable {
     let url: URL?
     let isPlaceholder: Bool
     let isDownloading: Bool
+    let isDeleted: Bool
     let downloadProgress: Double
     let uploaded: Bool
 
-    init(metadataItem: NSMetadataItem) {
+    init(metadataItem: NSMetadataItem, isDeleted: Bool = false) {
+        self.isDeleted = isDeleted
         fileName = metadataItem.value(forAttribute: NSMetadataItemFSNameKey) as? String
         fileSize = metadataItem.value(forAttribute: NSMetadataItemFSSizeKey) as? Int
         contentType = metadataItem.value(forAttribute: NSMetadataItemContentTypeKey) as? String
