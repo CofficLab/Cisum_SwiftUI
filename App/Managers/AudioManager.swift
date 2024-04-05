@@ -175,7 +175,7 @@ class AudioManager: NSObject, ObservableObject {
                     try? updatePlayer()
                 }
 
-                await self.db?.downloadNext(i)
+                await self.db?.downloadNext(i, reason: "触发了下一首")
             }
         }
     }

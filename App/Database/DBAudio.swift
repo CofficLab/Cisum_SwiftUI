@@ -239,7 +239,7 @@ extension DB {
         do {
             let result = try context.fetch(descriptor)
             if let first = result.first {
-                os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title) -> \(first.title)")
+                //os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title) -> \(first.title)")
                 return first
             } else {
                 print("not found")
@@ -327,16 +327,17 @@ extension DB {
             return
         }
         
-        downloadNext(first)
+        downloadNext(first, reason: "DB::prepare")
     }
     
-    func download(_ audio: Audio) {
+    func download(_ audio: Audio, reason: String) {
         Task {
+            os_log("\(Logger.isMain)⬇️ DB::download \(audio.title) 🐛 \(reason)")
             try? await CloudHandler().download(url: audio.url)
         }
     }
     
-    func downloadNext(_ audio: Audio) {
+    func downloadNext(_ audio: Audio, reason: String) {
         let count = 5
         var currentIndex = 0
         var currentAudio: Audio = audio
@@ -344,7 +345,7 @@ extension DB {
         while currentIndex < count {
             currentIndex = currentIndex + 1
             if let next = nextNotDownloadedOf(currentAudio) {
-                self.download(next)
+                self.download(next, reason: "downloadNext 🐛 \(reason)")
                 currentAudio = next
             }
         }
@@ -352,7 +353,7 @@ extension DB {
 
     nonisolated func upsert(_ items: [MetadataItemWrapper]) {
         Task.detached {
-            os_log("\(Logger.isMain)🍋 DB::upsert with count=\(items.count)")
+            //os_log("\(Logger.isMain)🍋 DB::upsert with count=\(items.count)")
             let context = ModelContext(self.modelContainer)
             context.autosaveEnabled = false
             for item in items {
@@ -369,7 +370,7 @@ extension DB {
                     }
 
                     if updated.count > 0 {
-                        os_log("\(Logger.isMain)🍋 DB::更新 \(current.title) \(updated)")
+                        //os_log("\(Logger.isMain)🍋 DB::更新 \(current.title) \(updated)")
                     }
                 } else {
                     // os_log("\(Logger.isMain)🍋 DB::插入")
@@ -382,7 +383,7 @@ extension DB {
             }
 
             if context.hasChanges {
-                os_log("\(Logger.isMain)🍋 DB::保存")
+                //os_log("\(Logger.isMain)🍋 DB::保存")
                 try? context.save()
                 await self.onUpdated()
             }

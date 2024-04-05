@@ -24,7 +24,7 @@ struct DBList: View {
         }.onAppear {
             refresh()
         }.onChange(of: audioManager.lastUpdatedAt, {
-            os_log("🖥️ DBVStackView:需要刷新")
+            //os_log("🖥️ DBVStackView:需要刷新")
             updatedAt = .now
             refresh()
         })
