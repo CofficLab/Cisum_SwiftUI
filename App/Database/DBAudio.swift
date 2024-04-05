@@ -139,6 +139,21 @@ extension DB {
         }
     }
     
+    nonisolated func getTotalOfDownloaded() -> Int {
+        let context = ModelContext(modelContainer)
+        let predicate = #Predicate<Audio> {
+            $0.downloadingPercent == 100
+        }
+        let descriptor = FetchDescriptor(predicate: predicate)
+        do {
+            let result = try context.fetchCount(descriptor)
+            return result
+        } catch {
+            return 0
+        }
+    }
+
+    
     nonisolated func get(_ i: Int) -> Audio? {
         let context = ModelContext(modelContainer)
         var descriptor = FetchDescriptor<Audio>()
@@ -307,6 +322,14 @@ extension DB {
 // MARK: 修改与下载
 
 extension DB {
+    func prepare() {
+        guard let first = get(0) else {
+            return
+        }
+        
+        downloadNext(first)
+    }
+    
     func download(_ audio: Audio) {
         Task {
             try? await CloudHandler().download(url: audio.url)

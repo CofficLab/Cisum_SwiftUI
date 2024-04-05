@@ -34,6 +34,7 @@ actor DB: ModelActor {
 
         Task {
             await getAudios()
+            await prepare()
         }
     }
 }
