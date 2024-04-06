@@ -24,11 +24,11 @@ struct PlayingAlbum: View {
                     if let image = image {
                         image.resizable().scaledToFit()
                     } else {
-                        Coffee(rotate: rotate, withBackground: withBackground)
+                        Image("PlayingAlbum").resizable().scaledToFit()
                     }
                 }
             } else {
-                Coffee(rotate: rotate, withBackground: withBackground)
+                Image("PlayingAlbum").resizable().scaledToFit()
             }
         }
     }

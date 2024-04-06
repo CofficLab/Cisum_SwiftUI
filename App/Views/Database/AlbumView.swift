@@ -37,7 +37,7 @@ struct AlbumView: View {
         if let image = image {
             return AnyView(image.resizable().scaledToFit())
         } else {
-            return AnyView(Coffee(rotate: false))
+            return AnyView(Image("DefaultAlbum").resizable().scaledToFit())
         }
     }
 

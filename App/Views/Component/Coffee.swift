@@ -2,9 +2,8 @@ import SwiftUI
 
 struct Coffee: View {
     @State private var rotationAngle: Double = 0
-
-    var rotate = false
-    var withBackground = false
+    
+    var rotate = true
 
     var body: some View {
         GeometryReader { geo in
@@ -12,46 +11,46 @@ struct Coffee: View {
                 ZStack {
                     // 盘子
                     Circle()
-                        .frame(width: 1500, height: 1500)
+                        .stroke(lineWidth: 270)
+                        .frame(width: 1200, height: 1200)
                         .foregroundColor(.white.opacity(0.6))
                         .scaleEffect(0.8)
-
+                    
                     // 把手
-//                    RoundedRectangle(cornerRadius: 10)
-//                        .frame(width: 100, height: 500)
-//                        .foregroundColor(.gray.opacity(0.8))
-//                        .rotationEffect(.degrees(90))
-//                        .offset(x: 300, y: 0)
+                    RoundedRectangle(cornerRadius: 0)
+                        .frame(width: 120, height: 110)
+                        .foregroundColor(.brown)
+                        .rotationEffect(.degrees(90))
+                        .offset(x: 430, y: 0)
+                    RoundedRectangle(cornerRadius: 70, style: .continuous)
+                        .frame(width: 120, height: 130)
+                        .foregroundColor(.brown)
+                        .rotationEffect(.degrees(90))
+                        .offset(x: 470, y: 0)
 
                     // 咖啡杯边框
                     Capsule()
-                        .stroke(Color.cyan, lineWidth: 1)
+                        .stroke(Color.brown, lineWidth: 20)
                         .frame(width: 750, height: 750)
-                    
-                    // 咖啡杯
-                    Capsule()
-                        .frame(width: 750, height: 750)
-                        .foregroundColor(.gray.opacity(1))
 
                     // 咖啡
                     Circle()
                         .frame(width: 630, height: 630)
                         .overlay(content: {
                             ZStack(content: {
-                                Color.black.opacity(0.2)
+                                Color.black.opacity(0.8)
                                 Color.brown.opacity(0.5)
                             }).clipShape(Circle())
                         })
-                    
+
                     bubble(100, 100)
                     bubble(-100, 100)
                     bubble(100, -100)
                     bubble(-100, -100)
-                    bubble(0, 0, size: 110)
+                    bubble(0, 0, size: 50)
                 }
                 .frame(maxWidth: min(geo.size.width, geo.size.height), maxHeight: min(geo.size.width, geo.size.height))
                 .scaleEffect(min(geo.size.width, geo.size.height) / 1500)
-                .background(background)
                 .rotationEffect(.degrees(rotationAngle))
                 .onTapGesture {
                     withAnimation {
@@ -66,31 +65,16 @@ struct Coffee: View {
                             }
                         }
                     }
-            }
+                }
             }.frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
-    
+
     func bubble(_ x: CGFloat, _ y: CGFloat, size: CGFloat = 160) -> some View {
         Circle()
+            .fill(Color.white.opacity(0.1))
             .frame(width: size, height: size)
-            .overlay(content: {
-                ZStack(content: {
-                    Color.black.opacity(0.5)
-                    Color.brown.opacity(0.2)
-                }).clipShape(Circle())
-            })
             .offset(x: x, y: y)
-    }
-    
-    var background: some View {
-        ZStack {
-            if withBackground {
-                BackgroundView.type1.clipShape(RoundedRectangle(cornerSize: CGSize(width: 4, height: 4)))
-            } else {
-                Color.clear
-            }
-        }
     }
 }
 
