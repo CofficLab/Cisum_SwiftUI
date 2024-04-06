@@ -24,7 +24,7 @@ struct PlayingAlbum: View {
                     if let image = image {
                         image.resizable().scaledToFit()
                     } else {
-                        Image("PlayingAlbum").resizable().scaledToFit()
+                        Image("PlayingAlbum").resizable().scaledToFit().rotationEffect(.degrees(-90))
                     }
                 }
             } else {
