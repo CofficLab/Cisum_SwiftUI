@@ -20,7 +20,7 @@ struct TitleView: View {
                 Text(audio.title).foregroundStyle(.white)
                     .font(.title2)
 
-                Text(audio.artist).foregroundStyle(.white)
+//                Text(audio.artist).foregroundStyle(.white)
             } else {
                 Label("状态未知", systemImage: "info.circle")
                     .foregroundStyle(.white)

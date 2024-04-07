@@ -4,11 +4,12 @@ import SwiftUI
 struct PlayingAlbum: View {
     @EnvironmentObject var audioManager: AudioManager
     
+    @State var image: Image? = nil
+    
     var audio: Audio? { audioManager.audio }
     var fileManager = FileManager.default
     var withBackground = false
     var rotate = true
-    var image: Image? { getCoverFromDisk() }
 
     var body: some View {
         ZStack {
@@ -30,23 +31,11 @@ struct PlayingAlbum: View {
             } else {
                 Image("PlayingAlbum").resizable().scaledToFit()
             }
+        }.onAppear {
+            Task {
+                self.image = await audio?.getCoverImage()
+            }
         }
-    }
-
-    func getCoverFromDisk() -> Image? {
-        guard let audio = audio, let coverURL = audio.coverURL else {
-            return nil
-        }
-
-        if fileManager.fileExists(atPath: coverURL.path) {
-            #if os(macOS)
-            return Image(nsImage: NSImage(contentsOf: coverURL)!)
-            #else
-                return Image(uiImage: UIImage(contentsOfFile: coverURL.path)!)
-            #endif
-        }
-
-        return nil
     }
 }
 

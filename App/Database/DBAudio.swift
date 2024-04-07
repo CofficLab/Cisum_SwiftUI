@@ -444,9 +444,6 @@ extension DB {
                     audio.isDownloading = item.isDownloading
                     audio.downloadingPercent = item.downloadProgress
                     audio.isPlaceholder = item.isPlaceholder
-                    audio.onUpdated = {
-                        self.update($0)
-                    }
                     context.insert(audio)
                 }
             }
