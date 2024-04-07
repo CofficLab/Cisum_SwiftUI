@@ -37,15 +37,6 @@ struct ContentView: View {
                         .foregroundStyle(.white)
                 }
             }
-            
-            // 播放过程中出现的错误
-            if let e = audioManager.playerError {
-                CardView(background: BackgroundView.type4) {
-                    Text(e.localizedDescription)
-                        .font(.title)
-                        .foregroundStyle(.white)
-                }
-            }
 
             // 底部的状态栏
             #if os(macOS)

@@ -25,6 +25,13 @@ struct TitleView: View {
                 Label("状态未知", systemImage: "info.circle")
                     .foregroundStyle(.white)
             }
+            
+            // 播放过程中出现的错误
+            if let e = audioManager.playerError {
+                Label(e.localizedDescription, systemImage: "info.circle")
+                    .font(.callout)
+                    .foregroundStyle(.white)
+            }
         }
     }
 }

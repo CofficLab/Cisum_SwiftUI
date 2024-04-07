@@ -1,13 +1,13 @@
 import AVFoundation
 import Foundation
 import OSLog
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 @Model
 class Audio {
     @Transient let fileManager = FileManager.default
-    
+
     var url: URL
     var title = "[空白]"
     var artist = ""
@@ -20,16 +20,20 @@ class Audio {
     var isPlaceholder: Bool = false
     var size: Int64 { getFileSize() }
 
+    var ext: String { url.pathExtension }
+    var isSupported: Bool { AppConfig.supportedExtensions.contains(ext) }
+    var isNotSupported: Bool { !isSupported }
+
     init(_ url: URL) {
         // os_log("\(Logger.isMain)🚩 AudioModel::init -> \(url.lastPathComponent)")
         self.url = url
-        self.title = url.deletingPathExtension().lastPathComponent
-        self.coverURL = getCover()
+        title = url.deletingPathExtension().lastPathComponent
+        coverURL = getCover()
 
         Task {
             // 如果有大量的歌曲，就会产生大量的 updateMeta 操作，占内存较多
             if isDownloaded && !isCoverOnDisk() {
-                //os_log("\(Logger.isMain)🍋 Audio::init 获取Meta \(self.title)")
+                // os_log("\(Logger.isMain)🍋 Audio::init 获取Meta \(self.title)")
 //                await updateMeta()
             }
         }

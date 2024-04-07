@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 
 enum SmartError: Error, LocalizedError {
     case NoDownloadedAudio
@@ -6,6 +7,7 @@ enum SmartError: Error, LocalizedError {
     case NoNextAudio
     case NoPrevAudio
     case NoAudioInList
+    case NotDownloaded
     case TargetNotFoundInPlaylist
     case Downloading
     case FormatNotSupported(_ format: String)
@@ -31,6 +33,14 @@ enum SmartError: Error, LocalizedError {
             "出现系统错误，播放失败"
         case .TargetNotFoundInPlaylist:
             "播放列表中找不到这个音频"
+        case .NotDownloaded:
+            "当前歌曲未下载"
         }
+    }
+}
+
+#Preview {
+    RootView {
+        ContentView()
     }
 }

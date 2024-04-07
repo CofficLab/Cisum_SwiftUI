@@ -32,25 +32,26 @@ class AudioManager: NSObject, ObservableObject {
             self.main.async {
                 self.lastUpdatedAt = .now
             }
-        })
-        
-        if let currentAudioId = AppConfig.currentAudio {
-            Task {
-                if let currentAudio = await self.db!.find(currentAudioId) {
-                    self.setCurrent(currentAudio)
+
+            if let currentAudioId = AppConfig.currentAudio, self.audio == nil {
+                Task {
+                    if let currentAudio = await self.db!.find(currentAudioId) {
+                        self.setCurrent(currentAudio, reason: "初始化，恢复上次播放的")
+                    }
                 }
             }
-        }
+        })
     }
-    
-    // MARK: 播放指定的
 
-    func setCurrent(_ audio: Audio) {
-        AppConfig.mainQueue.async {
+    // MARK: 设置当前的
+
+    func setCurrent(_ audio: Audio, reason: String) {
+        os_log("\(Logger.isMain)🍋 ✨ AudioManager::setCurrent to \(audio.title) 🐛 \(reason)")
+        main.async {
             self.audio = audio
             try? self.updatePlayer()
         }
-        
+
         Task {
             AppConfig.setCurrentAudio(audio)
         }
@@ -77,28 +78,29 @@ class AudioManager: NSObject, ObservableObject {
         updateMediaPlayer()
     }
 
-    func replay() {
-        os_log("\(Logger.isMain)🍋 AudioManager::replay()")
+//    func replay() {
+//        os_log("\(Logger.isMain)🍋 AudioManager::replay()")
+//
+//        play(audio!)
+//    }
 
-        play(audio!)
-    }
+    // MARK: 播放指定的
 
-    // MARK: 播放
+    func play(_ audio: Audio, reason: String) {
+        os_log("\(Logger.isMain)🔊 AudioManager::play \(audio.title)")
 
-    func play(_ audio: Audio) {
-        os_log("\(Logger.isMain)🔊 AudioManager::play")
-
-        self.audio = audio
-        self.setCurrent(audio)
-
-        do {
-            try updatePlayer()
-            player.play()
-            isPlaying = true
-            updateMediaPlayer()
-        } catch {
+        if audio.isNotDownloaded {
+            playerError = SmartError.NotDownloaded
+            Task {
+                await self.db?.download(audio, reason: "Play")
+            }
             return
         }
+
+        playerError = nil
+        setCurrent(audio, reason: reason)
+        player.play()
+        isPlaying = true
     }
 
     func resume() {
@@ -141,7 +143,7 @@ class AudioManager: NSObject, ObservableObject {
         if player.isPlaying {
             pause()
         } else {
-            play(audio)
+            play(audio, reason: "Toggle")
         }
     }
 
@@ -199,42 +201,6 @@ class AudioManager: NSObject, ObservableObject {
         MediaPlayerManager.setNowPlayingInfo(audioManager: self)
     }
 
-    func updatePlayer() throws {
-        guard let audio = audio else {
-            return
-        }
-
-        do {
-            playerError = nil
-            let player = try makePlayer(url: audio.url)
-            bg.async {
-                os_log("\(Logger.isMain)🍋 AudioManager::UpdatePlayer")
-                player.delegate = self
-                let duration = self.player.duration
-
-                self.updateMediaPlayer()
-
-                self.main.async {
-                    self.player = player
-                    self.duration = duration
-
-                    if self.isPlaying {
-                        self.player.play()
-                    }
-                }
-            }
-        } catch let e {
-            withAnimation {
-                self.stop()
-                self.playerError = nil
-                main.asyncAfter(deadline: .now() + 0.3) {
-                    self.playerError = e
-                }
-            }
-            throw e
-        }
-    }
-
     // 当前的 Audio 是否有效
     private func isValid() -> Bool {
         // 列表为空
@@ -275,7 +241,7 @@ extension AudioManager {
             }
         }
     }
-    
+
     // MARK: 切换播放模式
 
     func switchMode(_ callback: @escaping (_ mode: PlayMode) -> Void) {
@@ -305,28 +271,60 @@ extension AudioManager {
 // MARK: 控制系统播放器
 
 extension AudioManager {
-    func makePlayer(url: URL?) throws -> AVAudioPlayer {
+    func updatePlayer() throws {
+        guard let audio = audio else {
+            os_log("\(Logger.isMain)🍋 AudioManager::UpdatePlayer cancel because audio=nil")
+            return
+        }
+
+        os_log("\(Logger.isMain)🍋 AudioManager::UpdatePlayer \(audio.title)")
+
+        do {
+            playerError = nil
+            player = try makePlayer()
+            player.delegate = self
+            duration = player.duration
+
+            updateMediaPlayer()
+        } catch let e {
+            withAnimation {
+                self.stop()
+                self.playerError = e
+            }
+
+            throw e
+        }
+    }
+
+    func makePlayer() throws -> AVAudioPlayer {
         os_log("\(Logger.isMain)🚩 AudioManager::初始化播放器")
 
-        guard let url = url else {
+        guard let audio = audio else {
+            os_log("\(Logger.isMain)🚩 AudioManager::初始化播放器失败，因为当前Audio=nil")
             return AVAudioPlayer()
         }
 
-        let ext = url.pathExtension
-        if !AppConfig.supportedExtensions.contains(ext) {
-            throw SmartError.FormatNotSupported(ext)
+        if audio.isNotDownloaded {
+            os_log("\(Logger.isMain)🚩 AudioManager::初始化播放器失败，因为未下载")
+            throw SmartError.NotDownloaded
         }
+
+        if audio.isNotSupported {
+            throw SmartError.FormatNotSupported(audio.ext)
+        }
+
+        os_log("\(Logger.isMain)🚩 AudioManager::初始化播放器开始")
 
         do {
             #if os(iOS)
                 try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
                 try AVAudioSession.sharedInstance().setActive(true)
             #endif
-            let player = try AVAudioPlayer(contentsOf: url)
+            let player = try AVAudioPlayer(contentsOf: audio.url)
 
             return player
         } catch {
-            os_log("\(Logger.isMain)初始化播放器失败 ->\(url.lastPathComponent)->\(error)")
+            os_log("\(Logger.isMain)初始化播放器失败 ->\(audio.title)->\(error)")
 
             throw SmartError.PlayFailed
         }

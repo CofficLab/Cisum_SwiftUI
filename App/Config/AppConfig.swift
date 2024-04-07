@@ -140,3 +140,9 @@ extension AppConfig {
         return url
     }
 }
+
+#Preview {
+    RootView {
+        ContentView()
+    }
+}

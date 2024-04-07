@@ -20,7 +20,9 @@ struct DBList: View {
                 }
             }
             
-            Text("共 \(total.description)")
+            if total > 0 {
+                Text("共 \(total.description)")
+            }
         }.onAppear {
             refresh()
         }.onChange(of: audioManager.lastUpdatedAt, {

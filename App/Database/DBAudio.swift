@@ -2,6 +2,29 @@ import Foundation
 import OSLog
 import SwiftData
 
+// MARK: 初始化
+
+extension DB {
+    /// 将数据库内容设置为items
+    func setAudios(_ items: [MetadataItemWrapper]) {
+        context.autosaveEnabled = false
+        do {
+            try context.delete(model: Audio.self)
+            items.forEach({ item in
+                let audio = Audio(item.url!)
+                audio.isDownloading = item.isDownloading
+                audio.downloadingPercent = item.downloadProgress
+                audio.isPlaceholder = item.isPlaceholder
+                context.insert(audio)
+            })
+            
+            try context.save()
+        } catch let e {
+            print(e)
+        }
+    }
+}
+
 // MARK: 增加
 
 extension DB {
@@ -84,14 +107,14 @@ extension DB {
         } catch let e {
             print(e)
         }
-
+        
         return nil
     }
     
     nonisolated func isAllInCloud() -> Bool {
         self.getTotal() > 0 && self.getFirstValid() == nil
     }
-
+    
     func find(_ url: URL) -> Audio? {
         let predicate = #Predicate<Audio> {
             $0.url == url
@@ -104,10 +127,10 @@ extension DB {
         } catch let e {
             print(e)
         }
-
+        
         return nil
     }
-
+    
     static func find(_ context: ModelContext, _ url: URL) -> Audio? {
         let predicate = #Predicate<Audio> {
             $0.url == url
@@ -120,7 +143,7 @@ extension DB {
         } catch let e {
             print(e)
         }
-
+        
         return nil
     }
     
@@ -151,14 +174,14 @@ extension DB {
             return 0
         }
     }
-
     
+    /// 查询数据库中的按照order排序的第x个
     nonisolated func get(_ i: Int) -> Audio? {
         let context = ModelContext(modelContainer)
         var descriptor = FetchDescriptor<Audio>()
         descriptor.fetchLimit = 1
         descriptor.fetchOffset = i
-        descriptor.sortBy.append(.init(\.downloadingPercent, order: .reverse))
+        //descriptor.sortBy.append(.init(\.downloadingPercent, order: .reverse))
         descriptor.sortBy.append(.init(\.order))
         
         do {
@@ -196,6 +219,33 @@ extension DB {
         } catch let e {
             print(e)
         }
+        
+        return nil
+    }
+    
+    // MARK: 下一个
+    
+    func nextDownloaded(_ audio: Audio) -> Audio? {
+        os_log("🍋 DBAudio::nextDownloaded of [\(audio.order)] \(audio.title)")
+        let order = audio.order
+        var descriptor = FetchDescriptor<Audio>()
+        descriptor.sortBy.append(.init(\.order, order: .forward))
+        descriptor.fetchLimit = 1
+        descriptor.predicate = #Predicate {
+            $0.order > order && $0.downloadingPercent == 100
+        }
+        
+        do {
+            let result = try context.fetch(descriptor)
+            if let first = result.first {
+                os_log("🍋 DBAudio::nextDownloaded of [\(audio.order)] \(audio.title) -> \(first.title)")
+                return first
+            } else {
+                print("not found")
+            }
+        } catch let e {
+            print(e)
+        }
 
         return nil
     }
@@ -207,7 +257,7 @@ extension DB {
         descriptor.sortBy.append(.init(\.order, order: .forward))
         descriptor.fetchLimit = 1
         descriptor.predicate = #Predicate {
-            $0.order > order && $0.downloadingPercent == 100
+            $0.order > order
         }
         
         do {
@@ -374,7 +424,7 @@ extension DB {
                     }
 
                     if updated.count > 0 {
-                        //os_log("\(Logger.isMain)🍋 DB::更新 \(current.title) \(updated)")
+                        os_log("\(Logger.isMain)🍋 DB::更新 \(current.title) \(updated)")
                     }
                 } else {
                     // os_log("\(Logger.isMain)🍋 DB::插入")
