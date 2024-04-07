@@ -47,11 +47,11 @@ class AudioManager: NSObject, ObservableObject {
 
     func setCurrent(_ audio: Audio, reason: String) {
         os_log("\(Logger.isMain)🍋 ✨ AudioManager::setCurrent to \(audio.title) 🐛 \(reason)")
-        main.async {
-            self.audio = audio
-            try? self.updatePlayer()
-        }
 
+        self.audio = audio
+        try? self.updatePlayer()
+
+        // 将当前播放的歌曲存储下来，下次打开继续
         Task {
             AppConfig.setCurrentAudio(audio)
         }
@@ -97,10 +97,10 @@ class AudioManager: NSObject, ObservableObject {
             return
         }
 
-        playerError = nil
-        setCurrent(audio, reason: reason)
-        player.play()
-        isPlaying = true
+        self.playerError = nil
+        self.setCurrent(audio, reason: reason)
+        self.player.play()
+        self.isPlaying = true
     }
 
     func resume() {
@@ -198,7 +198,9 @@ class AudioManager: NSObject, ObservableObject {
     }
 
     private func updateMediaPlayer() {
-        MediaPlayerManager.setNowPlayingInfo(audioManager: self)
+        Task {
+            MediaPlayerManager.setNowPlayingInfo(audioManager: self)
+        }
     }
 
     // 当前的 Audio 是否有效

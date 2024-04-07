@@ -16,11 +16,11 @@ struct DBList: View {
                         makeRow(i)
                         Divider().background(.background)
                     }
+                    
+                    if total > 0 {
+                        Text("共 \(total.description)").foregroundStyle(.white)
+                    }
                 }
-            }
-            
-            if total > 0 {
-                Text("共 \(total.description)")
             }
         }.onAppear {
             refresh()

@@ -402,7 +402,7 @@ extension DB {
 
     nonisolated func upsert(_ items: [MetadataItemWrapper]) {
         Task.detached {
-            //os_log("\(Logger.isMain)🍋 DB::upsert with count=\(items.count)")
+            os_log("\(Logger.isMain)🍋 DB::upsert with count=\(items.count)")
             let context = ModelContext(self.modelContainer)
             context.autosaveEnabled = false
             for item in items {
