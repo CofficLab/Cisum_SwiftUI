@@ -400,6 +400,29 @@ extension DB {
             }
         }
     }
+    
+    nonisolated func update(_ audio: Audio) {
+        Task.detached {
+            os_log("\(Logger.isMain)🍋 DB::update \(audio.title)")
+            let context = ModelContext(self.modelContainer)
+            context.autosaveEnabled = false
+                if var current = Self.find(context, audio.url) {
+                    if audio.isDeleted {
+                        context.delete(current)
+                    } else {
+                        current = audio
+                    }
+                }
+
+            if context.hasChanges {
+                os_log("\(Logger.isMain)🍋 DB::update 保存")
+                try? context.save()
+                await self.onUpdated()
+            } else {
+                os_log("\(Logger.isMain)🍋 DB::update nothing changed 👌")
+            }
+        }
+    }
 
     nonisolated func upsert(_ items: [MetadataItemWrapper]) {
         Task.detached {
@@ -413,26 +436,17 @@ extension DB {
                         continue
                     }
                     
-                    var updated: String = ""
-                    if current.isDownloading != item.isDownloading {
-                        updated += "🐛isDownloading[\(current.isDownloading)->\(item.isDownloading)]"
-                        current.isDownloading = item.isDownloading
-                    }
-
-                    if current.downloadingPercent != item.downloadProgress {
-                        updated += "🐛downloadingPercent[\(current.downloadingPercent)->\(item.downloadProgress)]"
-                        current.downloadingPercent = item.downloadProgress
-                    }
-
-                    if updated.count > 0 {
-                        os_log("\(Logger.isMain)🍋 DB::更新 \(current.title) \(updated)")
-                    }
+                    current.isDownloading = item.isDownloading
+                    current.downloadingPercent = item.downloadProgress
                 } else {
                     // os_log("\(Logger.isMain)🍋 DB::插入")
                     let audio = Audio(item.url!)
                     audio.isDownloading = item.isDownloading
                     audio.downloadingPercent = item.downloadProgress
                     audio.isPlaceholder = item.isPlaceholder
+                    audio.onUpdated = {
+                        self.update($0)
+                    }
                     context.insert(audio)
                 }
             }

@@ -7,6 +7,7 @@ import SwiftUI
 @Model
 class Audio {
     @Transient let fileManager = FileManager.default
+    @Transient var onUpdated: (Audio) -> Void = { _ in os_log("Audio.onUpdated") }
 
     var url: URL
     var title = "[空白]"
@@ -18,8 +19,8 @@ class Audio {
     var downloadingPercent: Double = 0
     var isDownloading: Bool = false
     var isPlaceholder: Bool = false
+    
     var size: Int64 { getFileSize() }
-
     var ext: String { url.pathExtension }
     var isSupported: Bool { AppConfig.supportedExtensions.contains(ext) }
     var isNotSupported: Bool { !isSupported }
@@ -29,13 +30,9 @@ class Audio {
         self.url = url
         title = url.deletingPathExtension().lastPathComponent
         coverURL = getCover()
-
+        
         Task {
-            // 如果有大量的歌曲，就会产生大量的 updateMeta 操作，占内存较多
-            if isDownloaded && !isCoverOnDisk() {
-                // os_log("\(Logger.isMain)🍋 Audio::init 获取Meta \(self.title)")
-//                await updateMeta()
-            }
+            await updateMeta()
         }
     }
     
@@ -50,19 +47,6 @@ class Audio {
     func getFileSizeReadable() -> String {
         FileHelper.getFileSizeReadable(url)
     }
-
-    func refresh() {}
-}
-
-// MARK: 比较
-
-extension Audio: Equatable {
-    static func == (lhs: Audio, rhs: Audio) -> Bool {
-        return lhs.url == rhs.url &&
-            lhs.isDownloading == rhs.isDownloading &&
-            lhs.downloadingPercent == rhs.downloadingPercent &&
-            lhs.coverURL == rhs.coverURL
-    }
 }
 
 // MARK: ID
@@ -76,24 +60,6 @@ extension Audio: Identifiable {
 extension Audio {
     var isDownloaded: Bool { downloadingPercent == 100 }
     var isNotDownloaded: Bool { !isDownloaded }
-
-    /// 准备好文件
-    func prepare() {
-        os_log("\(Logger.isMain)🔊 AudioModel::prepare -> \(self.title)")
-        download()
-    }
-
-    func download() {
-//        db.download(url)
-    }
-}
-
-// MARK: 删除
-
-extension Audio {
-    func delete() {
-//        db.delete(self)
-    }
 }
 
 // MARK: Meta
@@ -117,6 +83,82 @@ extension Audio {
     }
 }
 
+// MARK: Meta
+
+extension Audio {
+    func updateMeta() async {
+        let asset = AVAsset(url: url)
+        do {
+            let metadata = try await asset.load(.commonMetadata)
+
+            for item in metadata {
+                do {
+                    let value = try await item.load(.value)
+
+                    switch item.commonKey?.rawValue {
+                    case "title":
+                        if let title = value as? String {
+                             os_log("\(Logger.isMain)🍋 AudioModel::updateMeta -> title: \(title)")
+                        } else {
+                            os_log("\(Logger.isMain)meta提供了title，但value不能转成string")
+                        }
+                    case "artist":
+                        if let artist = value as? String {
+                            os_log("\(Logger.isMain)🍋 AudioModel::updateMeta -> artist: \(artist)")
+                        }
+                    case "albumName":
+                        if let albumName = value as? String {
+                            os_log("\(Logger.isMain)🍋 AudioModel::updateMeta -> albumName: \(albumName)")
+                        }
+                    case "artwork":
+
+                        // MARK: 得到了封面图
+
+                        if try (makeImage(await item.load(.value), saveTo: coverCacheURL)) != nil {
+                            self.coverURL = coverCacheURL
+                            os_log("\(Logger.isMain)🍋 AudioModel::updateMeta -> cover updated -> \(self.title)")
+                        }
+                    default:
+                        break
+                    }
+                    
+                    self.onUpdated(self)
+                } catch {
+                    os_log("\(Logger.isMain)读取 Meta 出错\n\(error)")
+                }
+            }
+        } catch {}
+    }
+
+    /// 将封面图存到磁盘
+    func makeImage(_ data: (any NSCopying & NSObjectProtocol)?, saveTo: URL) -> Image? {
+        // os_log("\(Logger.isMain)AudioModel::makeImage -> \(saveTo.path)")
+        guard let data = data as? Data else {
+            return nil
+        }
+
+        do {
+            try data.write(to: saveTo)
+        } catch let e {
+            print(e)
+        }
+
+        #if os(iOS)
+            if let image = UIImage(data: data) {
+                return Image(uiImage: image)
+            }
+        #endif
+
+        #if os(macOS)
+            if let image = NSImage(data: data) {
+                return Image(nsImage: image)
+            }
+        #endif
+
+        return nil
+    }
+}
+
 // MARK: Cover
 
 extension Audio {
@@ -131,37 +173,16 @@ extension Audio {
         }
     #endif
 
-    func isCoverOnDisk() -> Bool {
-        fileManager.fileExists(atPath: coverCacheURL.path)
-    }
-
     func getCover() -> URL? {
         if isNotDownloaded {
             return nil
         }
 
-        if isCoverOnDisk() {
+        if fileManager.fileExists(atPath: coverCacheURL.path) {
             return coverCacheURL
         }
 
         return nil
-    }
-}
-
-// MARK: Print
-
-extension Audio {
-    func debugPrint() {
-        print("url: \(url)")
-        print("title: \(title)")
-        print("artist: \(artist)")
-        print("track: \(track)")
-        print("albumName: \(albumName)")
-        print("coverURL: \(String(describing: coverURL))")
-        print("downloadingPercent: \(downloadingPercent)")
-        print("isDownloading: \(isDownloading)")
-        print("isPlaceholder: \(isPlaceholder)")
-        print("size: \(size)")
     }
 }
 
