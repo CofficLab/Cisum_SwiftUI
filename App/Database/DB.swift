@@ -33,8 +33,8 @@ actor DB: ModelActor {
         )
 
         Task {
-            await getAudios()
-            await prepare()
+//            await getAudios()
+//            await prepare()
         }
     }
 }

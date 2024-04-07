@@ -2,7 +2,7 @@ import SwiftUI
 import OSLog
 
 struct Row: View {
-    @EnvironmentObject var audioManager: AudioManager
+//    @EnvironmentObject var audioManager: AudioManager
     
     @State var hovered = false
     
@@ -25,9 +25,9 @@ struct Row: View {
         }
         .background(getBackground())
         .onHover(perform: { hovered = $0 })
-        .onTapGesture(count: 2, perform: {
-            audioManager.play(audio, reason: "Double Tap")
-        })
+//        .onTapGesture(count: 2, perform: {
+//            audioManager.play(audio, reason: "Double Tap")
+//        })
         .contextMenu(menuItems: {
             BtnPlay(audio: audio)
             BtnDownload(audio: audio)
@@ -43,9 +43,9 @@ struct Row: View {
     }
     
     private func getBackground() -> Color {
-        if let current = audioManager.audio, current.id == audio.id {
-            return AppConfig.getBackground.opacity(0.5)
-        }
+//        if let current = audioManager.audio, current.id == audio.id {
+//            return AppConfig.getBackground.opacity(0.5)
+//        }
         
         return hovered ? AppConfig.getBackground.opacity(0.9) : AppConfig.getBackground
     }

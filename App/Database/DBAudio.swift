@@ -79,6 +79,15 @@ extension DB {
 // MARK: 查询
 
 extension DB {
+    func emitUpdate(_ items: [MetadataItemWrapper]) {
+        NotificationCenter.default.post(
+            name: NSNotification.Name("Updated"),
+            object: nil,
+            userInfo: [
+                "items": items
+            ]
+        )
+    }
     /// 查询数据，当查到或有更新时会调用回调函数
     func getAudios() {
         os_log("\(Logger.isMain)🍋 DB::getAudios")
@@ -86,8 +95,9 @@ extension DB {
         Task {
             for try await items in query.searchMetadataItems() {
                 Task.detached {
-                    //os_log("\(Logger.isMain)🍋 DB::getAudios \(items.count)")
-                    self.upsert(items.filter { $0.url != nil })
+                    os_log("\(Logger.isMain)🍋 DB::getAudios \(items.count)")
+                    //self.upsert(items.filter { $0.url != nil })
+                    await self.emitUpdate(items)
                 }
             }
         }

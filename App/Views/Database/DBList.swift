@@ -10,9 +10,14 @@ struct DBList: View {
     var body: some View {
         VStack(spacing: 0) {
             ScrollView {
-                LazyVStack(spacing:0) {
+            LazyVStack(spacing:0) {
                     ForEach(0...max(0, total-1), id: \.self) { i in
-                        makeRow(i)
+                        ZStack {
+                            if let item = audioManager.db?.get(i) {
+//                                Row(item)
+                                Text("\(i) \(item.title)")
+                            }
+                        }
                         Divider().background(.background)
                     }
                     
@@ -22,14 +27,22 @@ struct DBList: View {
                 }
             }
         }
-    }
-    
-    func makeRow(_ i: Int) -> some View {
-        return ZStack {
-            if let item = audioManager.db?.get(i) {
-                Row(item)
-            }
-        }
+//        .onAppear {
+//            NotificationCenter.default.addObserver(
+//                forName: NSNotification.Name("Updated"),
+//                object: nil,
+//                queue: .main,
+//                using: { notification in
+//                    AppConfig.bgQueue.async {
+//                        let data = notification.userInfo as! [String: [MetadataItemWrapper]]
+//                        let items = data["items"]!
+//                        os_log("\(Logger.isMain)🖥️ Row::detect updated of count=\(items.count)")
+//                    }
+//                })
+//        }
+//        .onDisappear {
+//            NotificationCenter.default.removeObserver(self)
+//        }
     }
 }
 
