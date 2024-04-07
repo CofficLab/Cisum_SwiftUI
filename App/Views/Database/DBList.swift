@@ -35,7 +35,7 @@ struct DBList: View {
         self.total = audioManager.db?.getTotal() ?? 0
         if total > 0 && audioManager.isEmpty {
             if let audio = audioManager.db?.getFirstValid() {
-//                audioManager.setCurrent(audio)
+                audioManager.setCurrent(audio, reason: "DBList Refresh")
             }
         }
     }

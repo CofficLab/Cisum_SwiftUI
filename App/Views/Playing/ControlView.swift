@@ -11,8 +11,8 @@ struct ControlView: View {
                     VStack(spacing: 0) {
                         Spacer()
                         TitleView()
-                        BtnsView().frame(height: 100)
-                        SliderView().frame(height: 30)
+                        BtnsView().frame(height: 90)
+                        SliderView().frame(height: 30).padding(.bottom, 10)
                         // StateView()
                     }
 

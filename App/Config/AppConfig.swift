@@ -10,6 +10,7 @@ enum AppConfig {
     static let audiosDirName = "audios"
     static let trashDirName = "trash"
     static let cacheDirName = "audios_cache"
+    /// iCloud容器的ID
     static let containerIdentifier = "iCloud.yueyi.cisum"
     static let logger = Logger.self
     static let supportedExtensions = [
@@ -86,8 +87,8 @@ extension AppConfig {
 // MARK: 路径配置
 
 extension AppConfig {
-    static let appDir = URL.applicationDirectory
     static let appSupportDir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).last
+    static let localContainer = localDocumentsDir?.deletingLastPathComponent()
     static let localDocumentsDir = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first
     static let containerDir = fileManager.url(forUbiquityContainerIdentifier: containerIdentifier)
     static var cloudDocumentsDir: URL {
