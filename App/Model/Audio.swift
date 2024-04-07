@@ -149,6 +149,8 @@ extension Audio {
     }
 
     func getCover() async -> URL? {
+        //os_log("\(Logger.isMain)🍋 Audio::getCover for \(self.title)")
+        
         if isNotDownloaded {
             return nil
         }
@@ -175,7 +177,7 @@ extension Audio {
                 }
             }
         } catch {
-            os_log("\(Logger.isMain)⚠️ 读取 Meta 出错\n\(error)")
+            //os_log("\(Logger.isMain)⚠️ 读取 Meta 出错\(error)")
         }
 
         return nil
