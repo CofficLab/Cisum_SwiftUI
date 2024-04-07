@@ -10,13 +10,13 @@ extension DB {
         context.autosaveEnabled = false
         do {
             try context.delete(model: Audio.self)
-            items.forEach({ item in
+            for item in items {
                 let audio = Audio(item.url!)
                 audio.isDownloading = item.isDownloading
                 audio.downloadingPercent = item.downloadProgress
                 audio.isPlaceholder = item.isPlaceholder
                 context.insert(audio)
-            })
+            }
             
             try context.save()
         } catch let e {
@@ -59,7 +59,7 @@ extension DB {
 
     /// 清空数据库
     func destroy() {
-        clearFolderContents(atPath: audiosDir.path)
+        self.clearFolderContents(atPath: audiosDir.path)
     }
 
     func clearFolderContents(atPath path: String) {
@@ -181,7 +181,7 @@ extension DB {
         var descriptor = FetchDescriptor<Audio>()
         descriptor.fetchLimit = 1
         descriptor.fetchOffset = i
-        //descriptor.sortBy.append(.init(\.downloadingPercent, order: .reverse))
+        // descriptor.sortBy.append(.init(\.downloadingPercent, order: .reverse))
         descriptor.sortBy.append(.init(\.order))
         
         do {
@@ -191,7 +191,7 @@ extension DB {
             } else {
                 print("not found")
             }
-        } catch let e{
+        } catch let e {
             print(e)
         }
         
@@ -289,7 +289,7 @@ extension DB {
         do {
             let result = try context.fetch(descriptor)
             if let first = result.first {
-                //os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title) -> \(first.title)")
+                // os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title) -> \(first.title)")
                 return first
             } else {
                 os_log("🍋 DBAudio::nextNotDownloadedOf [\(audio.order)] \(audio.title) -> nil 🎉🎉🎉")
@@ -300,7 +300,6 @@ extension DB {
 
         return nil
     }
-
 }
 
 // MARK: 排序
@@ -377,7 +376,7 @@ extension DB {
             return
         }
         
-        downloadNext(first, reason: "DB::prepare")
+        self.downloadNext(first, reason: "DB::prepare")
     }
     
     func download(_ audio: Audio, reason: String) {
@@ -406,13 +405,13 @@ extension DB {
             os_log("\(Logger.isMain)🍋 DB::update \(audio.title)")
             let context = ModelContext(self.modelContainer)
             context.autosaveEnabled = false
-                if var current = Self.find(context, audio.url) {
-                    if audio.isDeleted {
-                        context.delete(current)
-                    } else {
-                        current = audio
-                    }
+            if var current = Self.find(context, audio.url) {
+                if audio.isDeleted {
+                    context.delete(current)
+                } else {
+                    current = audio
                 }
+            }
 
             if context.hasChanges {
                 os_log("\(Logger.isMain)🍋 DB::update 保存")

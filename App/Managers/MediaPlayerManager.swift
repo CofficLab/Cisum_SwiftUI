@@ -25,13 +25,13 @@ class MediaPlayerManager: ObservableObject {
         }
 
         #if os(iOS)
-            let image = audio.uiImage
+            let image = audio.getUIImage()
 
             center.nowPlayingInfo = [
                 MPMediaItemPropertyTitle: audio.title,
                 MPMediaItemPropertyArtwork: MPMediaItemArtwork(image: image),
                 MPMediaItemPropertyArtist: "乐音APP",
-                MPMediaItemPropertyPlaybackDuration: audioManager.duration,
+                MPMediaItemPropertyPlaybackDuration: duration,
                 MPNowPlayingInfoPropertyElapsedPlaybackTime: audioManager.currentTime(),
             ]
         #else
