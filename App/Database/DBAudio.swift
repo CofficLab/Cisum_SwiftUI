@@ -450,7 +450,7 @@ extension DB {
                 try? context.save()
                 await self.onUpdated()
             } else {
-                os_log("\(Logger.isMain)🍋 DB::upsert nothing changed 👌")
+                //os_log("\(Logger.isMain)🍋 DB::upsert nothing changed 👌")
             }
         }
     }
