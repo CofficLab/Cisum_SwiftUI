@@ -8,14 +8,12 @@ import SwiftUI
 
 /// 管理播放器的播放、暂停、上一曲、下一曲等操作
 class AudioManager: NSObject, ObservableObject {
-    @Published private(set) var isPlaying: Bool = false
-    @Published private(set) var duration: TimeInterval = 0
     @Published var audio: Audio?
     @Published var playerError: Error? = nil
     @Published var mode: PlayMode = .Order
     @Published var lastUpdatedAt: Date = .now
-
-    private var player: AVAudioPlayer = .init()
+    @Published var player: AVAudioPlayer = .init()
+    
     private var listener: AnyCancellable?
     private var bg = AppConfig.bgQueue
     private var main = AppConfig.mainQueue
@@ -28,19 +26,27 @@ class AudioManager: NSObject, ObservableObject {
 
     override init() {
         super.init()
-        db = DB(AppConfig.getContainer(), onUpdated: {
+        os_log("🚩 AudioManager::初始化")
+        
+        self.db = DB(AppConfig.getContainer(), onUpdated: {
             self.main.async {
                 self.lastUpdatedAt = .now
             }
-
-            if let currentAudioId = AppConfig.currentAudio, self.audio == nil {
-                Task {
-                    if let currentAudio = await self.db!.find(currentAudioId) {
-                        self.setCurrent(currentAudio, reason: "初始化，恢复上次播放的")
-                    }
+            
+            self.restore()
+        })
+        
+        self.restore()
+    }
+    
+    func restore() {
+        if let currentAudioId = AppConfig.currentAudio, self.audio == nil {
+            Task {
+                if let currentAudio = await self.db!.find(currentAudioId) {
+                    self.setCurrent(currentAudio, reason: "初始化，恢复上次播放的")
                 }
             }
-        })
+        }
     }
 
     // MARK: 设置当前的
@@ -48,12 +54,14 @@ class AudioManager: NSObject, ObservableObject {
     func setCurrent(_ audio: Audio, reason: String) {
         os_log("\(Logger.isMain)🍋 ✨ AudioManager::setCurrent to \(audio.title) 🐛 \(reason)")
 
-        self.audio = audio
-        try? self.updatePlayer()
-
-        // 将当前播放的歌曲存储下来，下次打开继续
-        Task {
-            AppConfig.setCurrentAudio(audio)
+        self.main.async {
+            self.audio = audio
+            try? self.updatePlayer()
+            
+            // 将当前播放的歌曲存储下来，下次打开继续
+            Task {
+                AppConfig.setCurrentAudio(audio)
+            }
         }
     }
 
@@ -78,12 +86,6 @@ class AudioManager: NSObject, ObservableObject {
         updateMediaPlayer()
     }
 
-//    func replay() {
-//        os_log("\(Logger.isMain)🍋 AudioManager::replay()")
-//
-//        play(audio!)
-//    }
-
     // MARK: 播放指定的
 
     func play(_ audio: Audio, reason: String) {
@@ -100,7 +102,6 @@ class AudioManager: NSObject, ObservableObject {
         self.playerError = nil
         self.setCurrent(audio, reason: reason)
         self.player.play()
-        self.isPlaying = true
     }
 
     func resume() {
@@ -110,7 +111,6 @@ class AudioManager: NSObject, ObservableObject {
 
     func pause() {
         player.pause()
-        isPlaying = false
 
         updateMediaPlayer()
     }
@@ -121,8 +121,6 @@ class AudioManager: NSObject, ObservableObject {
         os_log("\(Logger.isMain)🍋 AudioManager::Stop")
         player.stop()
         player.currentTime = 0
-        duration = 0
-        isPlaying = false
     }
 
     // MARK: 切换
@@ -282,10 +280,13 @@ extension AudioManager {
         os_log("\(Logger.isMain)🍋 AudioManager::UpdatePlayer \(audio.title)")
 
         do {
+            let shouldPlay = self.player.isPlaying
             playerError = nil
             player = try makePlayer()
             player.delegate = self
-            duration = player.duration
+            if shouldPlay {
+                player.play()
+            }
 
             updateMediaPlayer()
         } catch let e {

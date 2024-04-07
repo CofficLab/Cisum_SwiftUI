@@ -13,7 +13,7 @@ class Audio {
     var artist = ""
     var track = ""
     var albumName = ""
-    var order: Int = 0
+    var order: Int = Int.random(in: 0...500000000)
     var coverURL: URL?
     var downloadingPercent: Double = 0
     var isDownloading: Bool = false
@@ -37,6 +37,10 @@ class Audio {
 //                await updateMeta()
             }
         }
+    }
+    
+    func makeRandomOrder() {
+        self.order = Int.random(in: 0...500000000)
     }
 
     func getFileSize() -> Int64 {

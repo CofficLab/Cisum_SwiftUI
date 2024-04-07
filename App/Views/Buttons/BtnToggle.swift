@@ -1,5 +1,6 @@
 import OSLog
 import SwiftUI
+import AVKit
 
 struct BtnToggle: View {
     var play: Bool? = true
@@ -8,9 +9,12 @@ struct BtnToggle: View {
     @EnvironmentObject var appManager: AppManager
     @State private var hovered: Bool = false
     
-    var title: String { audioManager.isPlaying ? "播放" : "暂停"}
+    var player: AVAudioPlayer { audioManager.player }
+    var title: String { player.isPlaying ? "播放" : "暂停"}
+    var isPlaying: Bool { player.isPlaying }
+    
     var systemImage: String {
-        if !audioManager.isPlaying {
+        if !isPlaying {
             "play.fill"
         } else {
             "pause.fill"

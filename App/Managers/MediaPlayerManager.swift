@@ -15,6 +15,9 @@ class MediaPlayerManager: ObservableObject {
     static func setNowPlayingInfo(audioManager: AudioManager) {
         os_log("\(Logger.isMain)🍋 MediaPlayerManager::Update")
         let audio = audioManager.audio
+        let player = audioManager.player
+        let isPlaying = player.isPlaying
+        let duration = player.duration
         let center = MPNowPlayingInfoCenter.default()
 
         guard let audio = audio else {
@@ -32,11 +35,11 @@ class MediaPlayerManager: ObservableObject {
                 MPNowPlayingInfoPropertyElapsedPlaybackTime: audioManager.currentTime(),
             ]
         #else
-            center.playbackState = audioManager.isPlaying ? .playing : .paused
+            center.playbackState = isPlaying ? .playing : .paused
             center.nowPlayingInfo = [
                 MPMediaItemPropertyTitle: audio.title,
                 MPMediaItemPropertyArtist: "乐音APP",
-                MPMediaItemPropertyPlaybackDuration: audioManager.duration,
+                MPMediaItemPropertyPlaybackDuration: duration,
                 MPNowPlayingInfoPropertyElapsedPlaybackTime: audioManager.currentTime(),
             ]
         #endif

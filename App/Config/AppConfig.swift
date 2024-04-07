@@ -25,7 +25,7 @@ extension AppConfig {
     static var currentAudio: Audio.ID?
     
     static func setCurrentAudio(_ audio: Audio) {
-        os_log("\(Logger.isMain)🍋 AppConfig::setCurrentAudio \(audio.title)")
+        os_log("\(Logger.isMain)⚙️ AppConfig::setCurrentAudio \(audio.title)")
         AppConfig.currentAudio = audio.id
     }
 }

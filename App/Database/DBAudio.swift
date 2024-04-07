@@ -253,11 +253,12 @@ extension DB {
     func nextOf(_ audio: Audio) -> Audio? {
         os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title)")
         let order = audio.order
+        let url = audio.url
         var descriptor = FetchDescriptor<Audio>()
         descriptor.sortBy.append(.init(\.order, order: .forward))
         descriptor.fetchLimit = 1
         descriptor.predicate = #Predicate {
-            $0.order > order
+            $0.order >= order && $0.url != url
         }
         
         do {
@@ -266,7 +267,7 @@ extension DB {
                 os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title) -> \(first.title)")
                 return first
             } else {
-                print("not found")
+                os_log("⚠️ DBAudio::nextOf [\(audio.order)] \(audio.title) not found")
             }
         } catch let e {
             print(e)
@@ -276,7 +277,7 @@ extension DB {
     }
     
     func nextNotDownloadedOf(_ audio: Audio) -> Audio? {
-        os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title)")
+        os_log("🍋 DBAudio::nextNotDownloadedOf [\(audio.order)] \(audio.title)")
         let order = audio.order
         var descriptor = FetchDescriptor<Audio>()
         descriptor.sortBy.append(.init(\.order, order: .forward))
@@ -291,7 +292,7 @@ extension DB {
                 //os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title) -> \(first.title)")
                 return first
             } else {
-                print("not found")
+                os_log("🍋 DBAudio::nextNotDownloadedOf [\(audio.order)] \(audio.title) -> nil 🎉🎉🎉")
             }
         } catch let e {
             print(e)
@@ -322,7 +323,7 @@ extension DB {
                 }
                 
                 for audio in audioArray {
-                    audio.order = Int.random(in: 0...500000000)
+                    audio.makeRandomOrder()
                 }
                 
                 try context.save()
@@ -437,9 +438,11 @@ extension DB {
             }
 
             if context.hasChanges {
-                //os_log("\(Logger.isMain)🍋 DB::保存")
+                os_log("\(Logger.isMain)🍋 DB::保存")
                 try? context.save()
                 await self.onUpdated()
+            } else {
+                os_log("\(Logger.isMain)🍋 DB::upsert nothing changed 👌")
             }
         }
     }

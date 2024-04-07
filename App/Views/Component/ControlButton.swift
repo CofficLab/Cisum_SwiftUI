@@ -22,7 +22,7 @@ struct ControlButton: View {
             }
         }, label: {
             Label(title, systemImage: systemImage)
-                .font(.system(size: size)).frame(width: size * 1.1)
+                .font(.system(size: size)).frame(width: size * 1.2)
         })
         .buttonStyle(MyButtonStyle())
         .background(hovered ? Color.gray.opacity(0.4) : .clear)

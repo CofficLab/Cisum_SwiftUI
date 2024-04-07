@@ -15,7 +15,7 @@ struct SliderView: View {
         HStack {
             Text(audioManager.currentTimeDisplay())
 
-            Slider(value: $value, in: 0 ... audioManager.duration) { editing in
+            Slider(value: $value, in: 0 ... audioManager.player.duration) { editing in
                 isEditing = editing
                 if !editing {
                     audioManager.gotoTime(time: value)
@@ -26,7 +26,7 @@ struct SliderView: View {
         }
         .font(.caption)
         .onReceive(timer) { _ in
-            if audioManager.duration > 0 && !isEditing {
+            if audioManager.player.duration > 0 && !isEditing {
                 value = audioManager.currentTime()
             }
         }
