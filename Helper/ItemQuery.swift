@@ -49,11 +49,9 @@ class ItemQuery {
             ) { notification in
                 DispatchQueue.global().async {
                     os_log("\(Logger.isMain)🍋 searchMetadataItems.NSMetadataQueryDidUpdate")
-                    let result = self.query.results.compactMap { item -> MetadataItemWrapper? in
-                        guard let metadataItem = item as? NSMetadataItem else {
-                            return nil
-                        }
-                        return MetadataItemWrapper(metadataItem: metadataItem)
+                    let changedItems = notification.userInfo?[NSMetadataQueryUpdateChangedItemsKey] as? [NSMetadataItem] ?? []
+                    let result = changedItems.compactMap { item -> MetadataItemWrapper? in
+                        return MetadataItemWrapper(metadataItem: item)
                     }
                     continuation.yield(result)
                 }
