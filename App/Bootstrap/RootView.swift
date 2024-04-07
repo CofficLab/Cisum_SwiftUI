@@ -1,11 +1,8 @@
 import OSLog
-import SwiftData
 import SwiftUI
 
 struct RootView<Content>: View where Content: View {
     private var content: Content
-
-    @Environment(\.modelContext) var context: ModelContext
 
     @State private var isReady: Bool = false
     @State private var errorMessage: String? = nil

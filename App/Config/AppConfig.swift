@@ -53,7 +53,7 @@ extension AppConfig {
 // MARK: 数据库配置
 
 extension AppConfig {
-    static var sharedModelContainer: ModelContainer = {
+    static func getContainer() -> ModelContainer {
         guard let url = AppConfig.localDocumentsDir?.appendingPathComponent("database.db") else {
             fatalError("Could not create ModelContainer")
         }
@@ -73,7 +73,7 @@ extension AppConfig {
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }
-    }()
+    }
 }
 
 // MARK: 队列配置

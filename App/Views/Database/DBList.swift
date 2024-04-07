@@ -4,7 +4,6 @@ import OSLog
 
 struct DBList: View {
     @EnvironmentObject var audioManager: AudioManager
-    @Environment(\.modelContext) private var modelContext
     
     @State var total: Int = 0
     @State var updatedAt: Date = .now

@@ -28,7 +28,7 @@ class AudioManager: NSObject, ObservableObject {
 
     override init() {
         super.init()
-        db = DB(AppConfig.sharedModelContainer, onUpdated: {
+        db = DB(AppConfig.getContainer(), onUpdated: {
             self.main.async {
                 self.lastUpdatedAt = .now
             }
