@@ -86,7 +86,7 @@ extension DB {
         Task {
             for try await items in query.searchMetadataItems() {
                 Task.detached {
-                    os_log("\(Logger.isMain)🍋 DB::getAudios \(items.count)")
+                    //os_log("\(Logger.isMain)🍋 DB::getAudios \(items.count)")
                     self.upsert(items.filter { $0.url != nil })
                 }
             }
@@ -429,21 +429,19 @@ extension DB {
             let context = ModelContext(self.modelContainer)
             context.autosaveEnabled = false
             for item in items {
-                if let current = Self.find(context, item.url!) {
+                if var current = Self.find(context, item.url!) {
                     if item.isDeleted {
                         context.delete(current)
                         continue
                     }
                     
-                    current.isDownloading = item.isDownloading
-                    current.downloadingPercent = item.downloadProgress
+                    //os_log("\(Logger.isMain)🍋 DB::更新 \(current.title)")
+                    current = current.mergeWith(item)
                 } else {
                     // os_log("\(Logger.isMain)🍋 DB::插入")
-                    let audio = Audio(item.url!)
-                    audio.isDownloading = item.isDownloading
-                    audio.downloadingPercent = item.downloadProgress
-                    audio.isPlaceholder = item.isPlaceholder
-                    context.insert(audio)
+                    if let audio = Audio.fromMetaItem(item) {
+                        context.insert(audio)
+                    }
                 }
             }
 

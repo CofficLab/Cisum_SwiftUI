@@ -36,6 +36,24 @@ class Audio {
     func getFileSizeReadable() -> String {
         FileHelper.getFileSizeReadable(url)
     }
+    
+    func mergeWith(_ item: MetadataItemWrapper) -> Audio {
+        self.downloadingPercent = item.downloadProgress
+        self.isDownloading = item.isDownloading
+        self.isPlaceholder = item.isPlaceholder
+        
+        return self
+    }
+    
+    static func fromMetaItem(_ item: MetadataItemWrapper) -> Audio? {
+        guard let url = item.url else {
+            return nil
+        }
+        
+        let audio = Audio(url)
+        
+        return audio.mergeWith(item)
+    }
 }
 
 // MARK: ID
