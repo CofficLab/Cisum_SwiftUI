@@ -18,6 +18,7 @@ class MediaPlayerManager: ObservableObject {
         let player = audioManager.player
         let isPlaying = player.isPlaying
         let duration = player.duration
+        let currentTime = player.currentTime
         let center = MPNowPlayingInfoCenter.default()
 
         guard let audio = audio else {
@@ -32,7 +33,7 @@ class MediaPlayerManager: ObservableObject {
                 MPMediaItemPropertyArtwork: MPMediaItemArtwork(image: image),
                 MPMediaItemPropertyArtist: "乐音APP",
                 MPMediaItemPropertyPlaybackDuration: duration,
-                MPNowPlayingInfoPropertyElapsedPlaybackTime: audioManager.currentTime(),
+                MPNowPlayingInfoPropertyElapsedPlaybackTime: currentTime,
             ]
         #else
             center.playbackState = isPlaying ? .playing : .paused
@@ -40,7 +41,7 @@ class MediaPlayerManager: ObservableObject {
                 MPMediaItemPropertyTitle: audio.title,
                 MPMediaItemPropertyArtist: "乐音APP",
                 MPMediaItemPropertyPlaybackDuration: duration,
-                MPNowPlayingInfoPropertyElapsedPlaybackTime: audioManager.currentTime(),
+                MPNowPlayingInfoPropertyElapsedPlaybackTime: currentTime,
             ]
         #endif
     }

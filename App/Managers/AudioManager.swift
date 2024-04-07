@@ -39,6 +39,8 @@ class AudioManager: NSObject, ObservableObject {
         self.restore()
     }
     
+    // MARK: 恢复上次播放的
+    
     func restore() {
         if let currentAudioId = AppConfig.currentAudio, self.audio == nil {
             Task {
@@ -51,12 +53,12 @@ class AudioManager: NSObject, ObservableObject {
 
     // MARK: 设置当前的
 
-    func setCurrent(_ audio: Audio, reason: String) {
+    func setCurrent(_ audio: Audio, play: Bool = false, reason: String) {
         os_log("\(Logger.isMain)🍋 ✨ AudioManager::setCurrent to \(audio.title) 🐛 \(reason)")
 
         self.main.async {
             self.audio = audio
-            try? self.updatePlayer()
+            try? self.updatePlayer(play: play)
             
             // 将当前播放的歌曲存储下来，下次打开继续
             Task {
@@ -65,22 +67,8 @@ class AudioManager: NSObject, ObservableObject {
         }
     }
 
-    func currentTime() -> TimeInterval {
-        return player.currentTime
-    }
-
-    func currentTimeDisplay() -> String {
-        return DateComponentsFormatter.positional.string(from: currentTime()) ?? "0:00"
-    }
-
-    func leftTime() -> TimeInterval {
-        return player.duration - player.currentTime
-    }
-
-    func leftTimeDisplay() -> String {
-        return DateComponentsFormatter.positional.string(from: leftTime()) ?? "0:00"
-    }
-
+    // MARK: 跳转到某个时间
+    
     func gotoTime(time: TimeInterval) {
         player.currentTime = time
         updateMediaPlayer()
@@ -100,8 +88,7 @@ class AudioManager: NSObject, ObservableObject {
         }
 
         self.playerError = nil
-        self.setCurrent(audio, reason: reason)
-        self.player.play()
+        self.setCurrent(audio, play: true, reason: reason)
     }
 
     func resume() {
@@ -111,7 +98,6 @@ class AudioManager: NSObject, ObservableObject {
 
     func pause() {
         player.pause()
-
         updateMediaPlayer()
     }
 
@@ -125,7 +111,7 @@ class AudioManager: NSObject, ObservableObject {
 
     // MARK: 切换
 
-    func togglePlayPause() throws {
+    func toggle() throws {
         guard let audio = audio else {
             throw SmartError.NoAudioInList
         }
@@ -163,7 +149,7 @@ class AudioManager: NSObject, ObservableObject {
             if let i = await self.db!.preOf(audio) {
                 main.sync {
                     self.audio = i
-                    try? updatePlayer()
+                    try? updatePlayer(play: player.isPlaying)
                 }
             }
         }
@@ -187,7 +173,7 @@ class AudioManager: NSObject, ObservableObject {
             if let i = await self.db!.nextOf(audio) {
                 main.sync {
                     self.audio = i
-                    try? updatePlayer()
+                    try? updatePlayer(play: player.isPlaying || manual == false)
                 }
 
                 await self.db?.downloadNext(i, reason: "触发了下一首")
@@ -199,26 +185,6 @@ class AudioManager: NSObject, ObservableObject {
         Task {
             MediaPlayerManager.setNowPlayingInfo(audioManager: self)
         }
-    }
-
-    // 当前的 Audio 是否有效
-    private func isValid() -> Bool {
-        // 列表为空
-        if isEmpty {
-            return false
-        }
-
-        guard audio != nil else {
-            return false
-        }
-
-        return true
-    }
-
-    private func reset() {
-        stop()
-        audio = nil
-        player = AVAudioPlayer()
     }
 }
 
@@ -271,7 +237,7 @@ extension AudioManager {
 // MARK: 控制系统播放器
 
 extension AudioManager {
-    func updatePlayer() throws {
+    func updatePlayer(play: Bool = false) throws {
         guard let audio = audio else {
             os_log("\(Logger.isMain)🍋 AudioManager::UpdatePlayer cancel because audio=nil")
             return
@@ -280,11 +246,10 @@ extension AudioManager {
         os_log("\(Logger.isMain)🍋 AudioManager::UpdatePlayer \(audio.title)")
 
         do {
-            let shouldPlay = self.player.isPlaying
             playerError = nil
             player = try makePlayer()
             player.delegate = self
-            if shouldPlay {
+            if play {
                 player.play()
             }
 

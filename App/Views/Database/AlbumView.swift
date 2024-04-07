@@ -37,7 +37,7 @@ struct AlbumView: View {
             }
         }.onAppear {
             Task.detached {
-                os_log("\(Logger.isMain)📷 AlbumView::getCover")
+                //os_log("\(Logger.isMain)📷 AlbumView::getCover")
                 let image = await audio.getCoverImage()
                 DispatchQueue.main.async {
                     self.image = image
