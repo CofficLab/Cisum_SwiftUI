@@ -83,6 +83,8 @@ class AudioManager: NSObject, ObservableObject {
         Task {
             // 下载当前的
             await self.db.download(audio, reason: "SetCurrent")
+            // 下载接下来的
+            await db.downloadNext(audio, reason: "触发了下一首")
             
             // 将当前播放的歌曲存储下来，下次打开继续
             AppConfig.setCurrentAudio(audio)
@@ -199,7 +201,6 @@ class AudioManager: NSObject, ObservableObject {
         Task {
             if let i = db.nextOf(audio) {
                 await setCurrent(i, play: player.isPlaying || manual == false, reason: "触发了下一首")
-                await db.downloadNext(i, reason: "触发了下一首")
             }
         }
     }
