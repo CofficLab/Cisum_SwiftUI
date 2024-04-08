@@ -7,6 +7,8 @@ struct SliderView: View {
     
     @State private var value: Double = 0.0
     @State private var isEditing: Bool = false
+    @State private var shouldDisable = false
+    @State private var duration: TimeInterval = 0
     
     let timer = Timer
         .publish(every: 0.5, on: .main, in: .common)
@@ -17,7 +19,7 @@ struct SliderView: View {
     var currentTimeDisplay: String {
         DateComponentsFormatter.positional.string(from: currentTime) ?? "0:00"
     }
-    var leftTime: TimeInterval { player.duration - player.currentTime }
+    var leftTime: TimeInterval { duration - value }
     var leftTimeDisplay: String {
         DateComponentsFormatter.positional.string(from: leftTime) ?? "0:00"
     }
@@ -26,22 +28,49 @@ struct SliderView: View {
         HStack {
             Text(currentTimeDisplay)
 
-            Slider(value: $value, in: 0 ... player.duration) { editing in
+            Slider(value: $value, in: 0 ... duration) { editing in
                 isEditing = editing
                 if !editing {
                     audioManager.gotoTime(time: value)
                 }
-            }
+            }.disabled(shouldDisable)
 
             Text(leftTimeDisplay)
         }
         .font(.caption)
+        .onAppear {
+            self.duration = audioManager.player.duration
+        }
         .onReceive(timer) { _ in
+            if audioManager.isEmpty {
+                return disable()
+            }
+            
+            if let audio = audioManager.audio, audio.isDownloading {
+                return disable()
+            }
+            
+            if let audio = audioManager.audio, audio.isNotDownloaded {
+                return disable()
+            }
+            
             if audioManager.player.duration > 0 && !isEditing {
-                value = currentTime
+                return enable()
             }
         }
         .padding(.horizontal, 10)
+    }
+    
+    func enable() {
+        value = currentTime
+        shouldDisable = false
+        duration = player.duration
+    }
+    
+    func disable() {
+        value = 0
+        shouldDisable = true
+        duration = 0
     }
 }
 

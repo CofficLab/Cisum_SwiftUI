@@ -23,11 +23,7 @@ struct BtnToggle: View {
 
     var body: some View {        
         ControlButton(title: title, size: 48, systemImage: systemImage, onTap: {
-            do {
-                try audioManager.toggle()
-            } catch let e {
-                appManager.setFlashMessage(e.localizedDescription)
-            }
+            audioManager.toggle()
         })
     }
 }

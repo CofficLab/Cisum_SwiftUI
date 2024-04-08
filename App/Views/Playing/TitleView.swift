@@ -31,7 +31,26 @@ struct TitleView: View {
                 Label(e.localizedDescription, systemImage: "info.circle")
                     .font(.callout)
                     .foregroundStyle(.white)
+                    .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("Updated")), perform: {
+                        notification in
+                           AppConfig.bgQueue.async {
+                               let data = notification.userInfo as! [String: [MetadataItemWrapper]]
+                               let items = data["items"]!
+                               for item in items {
+                                   if item.url == audioManager.audio?.url {
+                                       clearError(item)
+                                       return
+                                   }
+                               }
+                           }
+                    })
             }
+        }
+    }
+    
+    @MainActor func clearError(_ metaItem: MetadataItemWrapper) {
+        if metaItem.downloadProgress == 100 {
+            audioManager.playerError = nil
         }
     }
 }

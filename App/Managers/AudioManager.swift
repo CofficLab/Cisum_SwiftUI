@@ -92,15 +92,6 @@ class AudioManager: NSObject, ObservableObject {
     @MainActor func play(_ audio: Audio, reason: String) {
         os_log("\(Logger.isMain)🔊 AudioManager::play \(audio.title)")
 
-        if audio.isNotDownloaded {
-            playerError = SmartError.NotDownloaded
-            Task {
-                await self.db.download(audio, reason: "Play")
-            }
-            return
-        }
-
-        playerError = nil
         setCurrent(audio, play: true, reason: reason)
     }
 
@@ -127,17 +118,23 @@ class AudioManager: NSObject, ObservableObject {
 
     // MARK: 切换
 
-    @MainActor func toggle() throws {
+    @MainActor func toggle() {
+        self.playerError = nil
+        
         guard let audio = audio else {
-            throw SmartError.NoAudioInList
+            return self.playerError = SmartError.NoAudioInList
         }
 
         if isEmpty {
-            throw SmartError.NoAudioInList
+            return self.playerError = SmartError.NoAudioInList
         }
 
         if audio.isDownloading {
-            throw SmartError.Downloading
+            return self.playerError = SmartError.Downloading
+        }
+        
+        if audio.isNotDownloaded {
+            return self.playerError = SmartError.NotDownloaded
         }
 
         if player.isPlaying {
