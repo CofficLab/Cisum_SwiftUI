@@ -5,7 +5,16 @@ struct Row: View {
     @EnvironmentObject var audioManager: AudioManager
     
     @State var hovered = false
-    @State var audio: Audio
+    
+    var audio: Audio
+    var current: Audio? { audioManager.audio }
+    var background: Color {
+        if current?.url == audio.url {
+            return AppConfig.getBackground.opacity(0.5)
+        }
+        
+        return hovered ? AppConfig.getBackground.opacity(0.9) : AppConfig.getBackground
+    }
     
     var body: some View {
         ZStack {
@@ -21,7 +30,7 @@ struct Row: View {
                 Divider()
             }
         }
-        .background(getBackground())
+        .background(background)
         .onHover(perform: { hovered = $0 })
         .onTapGesture(count: 2, perform: {
             audioManager.play(audio, reason: "Double Tap")
@@ -38,14 +47,6 @@ struct Row: View {
     init(_ audio: Audio) {
         self.audio = audio
         //os_log("\(Logger.isMain)🚩 🖥️ 初始化 \(audio.title)")
-    }
-    
-    private func getBackground() -> Color {
-        if let current = audioManager.audio, current.id == audio.id {
-            return AppConfig.getBackground.opacity(0.5)
-        }
-        
-        return hovered ? AppConfig.getBackground.opacity(0.9) : AppConfig.getBackground
     }
 }
 

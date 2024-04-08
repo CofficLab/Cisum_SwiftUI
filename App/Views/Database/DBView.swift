@@ -38,13 +38,7 @@ struct DBView: View {
                 }
             )
         #else
-            ZStack {
-                DBList()
-
-                if audioManager.db.getTotal() == 0, appManager.flashMessage.isEmpty {
-                    DBEmptyView()
-                }
-            }
+            DBList()
             .onChange(of: dropping) {
                 appManager.setFlashMessage(dropping ? "松开可添加文件" : "")
             }

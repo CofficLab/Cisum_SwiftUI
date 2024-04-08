@@ -29,13 +29,13 @@ class AudioManager: NSObject, ObservableObject {
         super.init()
         restore()
 
-        self.dbPrepare()
+        dbPrepare()
     }
 
     func dbPrepare() {
         Task.detached {
             os_log("\(Logger.isMain)🚩 AudioManager::准备数据库")
-            await self.db.setOnUpdated { 
+            await self.db.setOnUpdated {
                 self.main.async {
                     self.lastUpdatedAt = .now
                 }
@@ -61,12 +61,13 @@ class AudioManager: NSObject, ObservableObject {
 
     // MARK: 设置当前的
 
-    func setCurrent(_ audio: Audio, play: Bool = false, reason: String) {
+    func setCurrent(_ audio: Audio, play: Bool? = nil, reason: String) {
         os_log("\(Logger.isMain)🍋 ✨ AudioManager::setCurrent to \(audio.title) 🐛 \(reason)")
+        
 
         main.async {
             self.audio = audio
-            try? self.updatePlayer(play: play)
+            try? self.updatePlayer(play: play ?? self.player.isPlaying)
 
             // 将当前播放的歌曲存储下来，下次打开继续
             Task {
@@ -155,8 +156,7 @@ class AudioManager: NSObject, ObservableObject {
         Task {
             if let i = await self.db.preOf(audio) {
                 main.sync {
-                    self.audio = i
-                    try? updatePlayer(play: player.isPlaying)
+                    self.setCurrent(i, reason: "触发了上一首")
                 }
             }
         }
@@ -176,14 +176,10 @@ class AudioManager: NSObject, ObservableObject {
             return
         }
 
-        Task {
-            if let i = await self.db.nextOf(audio) {
-                main.sync {
-                    self.audio = i
-                    try? updatePlayer(play: player.isPlaying || manual == false)
-                }
-
-                await self.db.downloadNext(i, reason: "触发了下一首")
+        if let i = db.nextOf(audio) {
+            setCurrent(i, play: player.isPlaying || manual == false, reason: "触发了下一首")
+            Task {
+                await db.downloadNext(i, reason: "触发了下一首")
             }
         }
     }

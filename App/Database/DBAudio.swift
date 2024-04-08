@@ -99,7 +99,7 @@ extension DB {
             let query = ItemQuery(queue: OperationQueue(), url: self.getAudioDir())
             for try await items in query.searchMetadataItems() {
                 //os_log("\(Logger.isMain)🍋 DB::getAudios \(items.count)")
-//                self.upsert(items.filter { $0.url != nil })
+                self.upsert(items.filter { $0.url != nil })
                 self.emitUpdate(items)
             }
         }
@@ -228,8 +228,9 @@ extension DB {
     
     // MARK: 下一个
 
-    func nextOf(_ audio: Audio) -> Audio? {
+    nonisolated func nextOf(_ audio: Audio) -> Audio? {
         //os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title)")
+        let context = ModelContext(modelContainer)
         let order = audio.order
         let url = audio.url
         var descriptor = FetchDescriptor<Audio>()
@@ -242,7 +243,7 @@ extension DB {
         do {
             let result = try context.fetch(descriptor)
             if let first = result.first {
-                os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title) -> \(first.title)")
+                //os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title) -> \(first.title)")
                 return first
             } else {
                 os_log("⚠️ DBAudio::nextOf [\(audio.order)] \(audio.title) not found")
