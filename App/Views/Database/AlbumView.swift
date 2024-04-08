@@ -35,49 +35,41 @@ struct AlbumView: View {
                     }
             }
         }
-        .task {
+        .onAppear {
             isDownloaded = audio.isDownloaded
             isDownloading = iCloudHelper.isDownloading(audio.url)
-            await CloudHandler().startMonitoringFile(at: audio.url, onDidChange: {
-                isDownloaded = iCloudHelper.isDownloaded(url: audio.url)
-                isDownloading = iCloudHelper.isDownloading(audio.url)
-            })
-            self.listen()
+            Task {
+                await CloudHandler().startMonitoringFile(at: audio.url, onDidChange: {
+                    isDownloaded = iCloudHelper.isDownloaded(url: audio.url)
+                    isDownloading = iCloudHelper.isDownloading(audio.url)
+                })
+            }
         }.onDisappear {
             Task {
                 await CloudHandler().stopMonitoringFile(at: audio.url)
-                NotificationCenter.default.removeObserver(self, name: NSNotification.Name("Updated"), object: nil)
             }
         }
+        .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("Updated")), perform: {
+            notification in
+               AppConfig.bgQueue.async {
+                   let data = notification.userInfo as! [String: [MetadataItemWrapper]]
+                   let items = data["items"]!
+                   for item in items {
+                       if item.url == audio.url {
+                           self.downloadingPercent = item.downloadProgress
+                           self.isDownloading = item.isDownloading
+                           self.isDownloaded = item.downloadProgress == 100
+                           return
+                       }
+                   }
+               }
+        })
     }
 
     func updateCover() async {
         // os_log("\(Logger.isMain)📷 AlbumView::getCover")
         let image = await audio.getCoverImage()
         self.image = image
-    }
-
-    func listen() {
-        NotificationCenter.default.addObserver(
-            forName: NSNotification.Name("Updated"),
-            object: nil,
-            queue: .main,
-            using: { notification in
-                AppConfig.bgQueue.async {
-                    let data = notification.userInfo as! [String: [MetadataItemWrapper]]
-                    let items = data["items"]!
-                    for item in items {
-                        if item.url == audio.url {
-                            //os_log("\(Logger.isMain)🖥️ Row::detect updated of \(audio.title) -> \(audio.downloadingPercent)")
-                            self.downloadingPercent = item.downloadProgress
-                            self.isDownloading = item.isDownloading
-                            self.isDownloaded = item.downloadProgress == 100
-                            return
-                        }
-                    }
-                }
-            }
-        )
     }
 }
 

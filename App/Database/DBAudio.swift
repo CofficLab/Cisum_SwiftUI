@@ -99,7 +99,7 @@ extension DB {
         Task {
             let query = ItemQuery(queue: OperationQueue(), url: self.getAudioDir())
             for try await items in query.searchMetadataItems() {
-                os_log("\(Logger.isMain)🍋 DB::getAudios \(items.count)")
+                //os_log("\(Logger.isMain)🍋 DB::getAudios \(items.count)")
 //                self.upsert(items.filter { $0.url != nil })
                 self.emitUpdate(items)
             }
@@ -129,19 +129,7 @@ extension DB {
     }
     
     func find(_ id: PersistentIdentifier) -> Audio? {
-        let predicate = #Predicate<Audio> {
-            $0.id == id
-        }
-        var descriptor = FetchDescriptor<Audio>(predicate: predicate)
-        descriptor.fetchLimit = 1
-        do {
-            let result = try context.fetch(descriptor)
-            return result.first
-        } catch let e {
-            print(e)
-        }
-        
-        return nil
+        context.model(for: id) as? Audio
     }
     
     func find(_ url: URL) -> Audio? {
