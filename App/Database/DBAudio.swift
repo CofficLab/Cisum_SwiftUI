@@ -49,7 +49,20 @@ extension DB {
 extension DB {
     func trash(_ audio: Audio) {
         let url = audio.url
-        let trashUrl = AppConfig.trashDir.appendingPathComponent(url.lastPathComponent)
+        let ext = audio.ext
+        let fileName = audio.title
+        let trashDir = AppConfig.trashDir
+        var trashUrl = trashDir.appendingPathComponent(url.lastPathComponent)
+        var times = 1
+        
+        // 回收站已经存在同名文件
+        while fileManager.fileExists(atPath: trashUrl.path) {
+            trashUrl = trashUrl.deletingLastPathComponent()
+                .appendingPathComponent("\(fileName)-\(times)")
+                .appendingPathExtension(ext)
+            times += 1
+        }
+        
         Task {
             do {
                 try await cloudHandler.moveFile(at: audio.url, to: trashUrl)
