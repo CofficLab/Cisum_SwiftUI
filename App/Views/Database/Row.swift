@@ -9,8 +9,7 @@ struct Row: View {
     
     var body: some View {
         ZStack {
-            VStack {
-                Spacer()
+            VStack(spacing: 0) {
                 HStack {
                     //Text("[\(audio.order)]")
                     AlbumView(audio).frame(width: 24, height: 24)
