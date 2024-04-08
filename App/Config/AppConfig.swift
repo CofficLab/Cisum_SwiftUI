@@ -23,11 +23,11 @@ enum AppConfig {
 
 extension AppConfig {
     @AppStorage("App.CurrentAudio")
-    static var currentAudio: Audio.ID?
+    static var currentAudio: URL?
     
     static func setCurrentAudio(_ audio: Audio) {
         //os_log("\(Logger.isMain)⚙️ AppConfig::setCurrentAudio \(audio.title)")
-        AppConfig.currentAudio = audio.id
+        AppConfig.currentAudio = audio.url
     }
 }
 

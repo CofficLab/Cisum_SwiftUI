@@ -12,7 +12,7 @@ class AudioManager: NSObject, ObservableObject {
     @Published var playerError: Error? = nil
     @Published var mode: PlayMode = .Order
     @Published var lastUpdatedAt: Date = .now
-    @Published var player: AVAudioPlayer = .init()
+    @Published var isPlaying = false
 
     private var listener: AnyCancellable?
     private var bg = AppConfig.bgQueue
@@ -22,6 +22,7 @@ class AudioManager: NSObject, ObservableObject {
 
     var db: DB = .init(AppConfig.getContainer())
     var isEmpty: Bool { audio == nil }
+    var player: AVAudioPlayer = .init()
     var isCloudStorage: Bool { iCloudHelper.isCloudPath(url: rootDir) }
 
     override init() {
@@ -53,7 +54,7 @@ class AudioManager: NSObject, ObservableObject {
         if let currentAudioId = AppConfig.currentAudio, audio == nil {
             Task {
                 if let currentAudio = await self.db.find(currentAudioId) {
-                    self.setCurrent(currentAudio, reason: "初始化，恢复上次播放的")
+                    await self.setCurrent(currentAudio, reason: "初始化，恢复上次播放的")
                 }
             }
         }
@@ -61,18 +62,18 @@ class AudioManager: NSObject, ObservableObject {
 
     // MARK: 设置当前的
 
-    func setCurrent(_ audio: Audio, play: Bool? = nil, reason: String) {
+    @MainActor func setCurrent(_ audio: Audio, play: Bool? = nil, reason: String) {
         os_log("\(Logger.isMain)🍋 ✨ AudioManager::setCurrent to \(audio.title) 🐛 \(reason)")
-        
 
-        main.async {
-            self.audio = audio
-            try? self.updatePlayer(play: play ?? self.player.isPlaying)
+        self.audio = audio
+        try? updatePlayer(play: play ?? player.isPlaying)
 
+        Task {
+            // 下载当前的
+            await self.db.download(audio, reason: "SetCurrent")
+            
             // 将当前播放的歌曲存储下来，下次打开继续
-            Task {
-                AppConfig.setCurrentAudio(audio)
-            }
+            AppConfig.setCurrentAudio(audio)
         }
     }
 
@@ -85,7 +86,7 @@ class AudioManager: NSObject, ObservableObject {
 
     // MARK: 播放指定的
 
-    func play(_ audio: Audio, reason: String) {
+    @MainActor func play(_ audio: Audio, reason: String) {
         os_log("\(Logger.isMain)🔊 AudioManager::play \(audio.title)")
 
         if audio.isNotDownloaded {
@@ -100,12 +101,16 @@ class AudioManager: NSObject, ObservableObject {
         setCurrent(audio, play: true, reason: reason)
     }
 
-    func resume() {}
+    func resume() {
+        player.play()
+        self.isPlaying = player.isPlaying
+    }
 
     // MARK: 暂停
 
     func pause() {
         player.pause()
+        isPlaying = player.isPlaying
         updateMediaPlayer()
     }
 
@@ -119,7 +124,7 @@ class AudioManager: NSObject, ObservableObject {
 
     // MARK: 切换
 
-    func toggle() throws {
+    @MainActor func toggle() throws {
         guard let audio = audio else {
             throw SmartError.NoAudioInList
         }
@@ -135,7 +140,7 @@ class AudioManager: NSObject, ObservableObject {
         if player.isPlaying {
             pause()
         } else {
-            play(audio, reason: "Toggle")
+            resume()
         }
     }
 
@@ -165,7 +170,7 @@ class AudioManager: NSObject, ObservableObject {
     // MARK: Next
 
     /// 跳到下一首，manual=true表示由用户触发
-    func next(manual: Bool = false) throws {
+    @MainActor func next(manual: Bool = false) throws {
         os_log("\(Logger.isMain)🔊 AudioManager::next ⬇️ \(manual ? "手动触发" : "自动触发")")
 
         if mode == .Loop && manual == false {
@@ -256,6 +261,7 @@ extension AudioManager {
                 player.play()
             }
 
+            self.isPlaying = player.isPlaying
             updateMediaPlayer()
         } catch let e {
             withAnimation {
@@ -303,7 +309,7 @@ extension AudioManager {
 // MARK: 接收系统事件
 
 extension AudioManager: AVAudioPlayerDelegate {
-    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+    @MainActor func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         // 没有播放完，被打断了
         if !flag {
             os_log("\(Logger.isMain)🍋 AudioManager::播放被打断，更新为暂停状态")
