@@ -88,17 +88,21 @@ extension DB {
             ]
         )
     }
+    
+    func getAudioDir() -> URL {
+        self.audiosDir
+    }
+    
     /// 查询数据，当查到或有更新时会调用回调函数
     func getAudios() {
         os_log("\(Logger.isMain)🍋 DB::getAudios")
-        let query = ItemQuery(queue: OperationQueue(), url: audiosDir)
+
         Task {
+            let query = ItemQuery(queue: OperationQueue(), url: self.getAudioDir())
             for try await items in query.searchMetadataItems() {
-                Task.detached {
-                    os_log("\(Logger.isMain)🍋 DB::getAudios \(items.count)")
-                    //self.upsert(items.filter { $0.url != nil })
-                    await self.emitUpdate(items)
-                }
+                os_log("\(Logger.isMain)🍋 DB::getAudios \(items.count)")
+                self.upsert(items.filter { $0.url != nil })
+//                    await self.emitUpdate(items)
             }
         }
     }
@@ -288,7 +292,7 @@ extension DB {
     }
     
     func nextNotDownloadedOf(_ audio: Audio) -> Audio? {
-        os_log("🍋 DBAudio::nextNotDownloadedOf [\(audio.order)] \(audio.title)")
+        // os_log("🍋 DBAudio::nextNotDownloadedOf [\(audio.order)] \(audio.title)")
         let order = audio.order
         var descriptor = FetchDescriptor<Audio>()
         descriptor.sortBy.append(.init(\.order, order: .forward))
@@ -392,7 +396,7 @@ extension DB {
     
     func download(_ audio: Audio, reason: String) {
         Task {
-            os_log("\(Logger.isMain)⬇️ DB::download \(audio.title) 🐛 \(reason)")
+            // os_log("\(Logger.isMain)⬇️ DB::download \(audio.title) 🐛 \(reason)")
             try? await CloudHandler().download(url: audio.url)
         }
     }
@@ -446,7 +450,7 @@ extension DB {
                         continue
                     }
                     
-                    //os_log("\(Logger.isMain)🍋 DB::更新 \(current.title)")
+                    // os_log("\(Logger.isMain)🍋 DB::更新 \(current.title)")
                     current = current.mergeWith(item)
                 } else {
                     // os_log("\(Logger.isMain)🍋 DB::插入")
@@ -461,7 +465,7 @@ extension DB {
                 try? context.save()
                 await self.onUpdated()
             } else {
-                //os_log("\(Logger.isMain)🍋 DB::upsert nothing changed 👌")
+                os_log("\(Logger.isMain)🍋 DB::upsert nothing changed 👌")
             }
         }
     }

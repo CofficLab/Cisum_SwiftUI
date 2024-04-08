@@ -9,7 +9,7 @@ struct BtnTrash: View {
     var body: some View {
         Button {
             Task {
-                await audioManager.db?.trash(audio)
+                await audioManager.db.trash(audio)
             }
         } label: {
             Label("将「\(audio.title)」放入回收站", systemImage: getImageName())

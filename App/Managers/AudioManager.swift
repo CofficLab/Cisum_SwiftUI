@@ -13,38 +13,46 @@ class AudioManager: NSObject, ObservableObject {
     @Published var mode: PlayMode = .Order
     @Published var lastUpdatedAt: Date = .now
     @Published var player: AVAudioPlayer = .init()
-    
+
     private var listener: AnyCancellable?
     private var bg = AppConfig.bgQueue
     private var main = AppConfig.mainQueue
     private var title: String { audio?.title ?? "[无]" }
     private var rootDir: URL = AppConfig.cloudDocumentsDir
 
-    var db: DB?
+    var db: DB = .init(AppConfig.getContainer())
     var isEmpty: Bool { audio == nil }
     var isCloudStorage: Bool { iCloudHelper.isCloudPath(url: rootDir) }
 
     override init() {
-        super.init()
         os_log("🚩 AudioManager::初始化")
-        
-        self.db = DB(AppConfig.getContainer(), onUpdated: {
-//            self.main.async {
-//                self.lastUpdatedAt = .now
-//            }
-            
-//            self.restore()
-        })
-        
-//        self.restore()
+        super.init()
+        restore()
+
+//        self.dbPrepare()
     }
-    
+
+    func dbPrepare() {
+        Task.detached {
+            os_log("\(Logger.isMain)🚩 AudioManager::准备数据库")
+            await self.db.setOnUpdated {
+                self.main.async {
+                    self.lastUpdatedAt = .now
+                }
+
+                self.restore()
+            }
+            await self.db.getAudios()
+            await self.db.prepare()
+        }
+    }
+
     // MARK: 恢复上次播放的
-    
+
     func restore() {
-        if let currentAudioId = AppConfig.currentAudio, self.audio == nil {
+        if let currentAudioId = AppConfig.currentAudio, audio == nil {
             Task {
-                if let currentAudio = await self.db!.find(currentAudioId) {
+                if let currentAudio = await self.db.find(currentAudioId) {
                     self.setCurrent(currentAudio, reason: "初始化，恢复上次播放的")
                 }
             }
@@ -56,10 +64,10 @@ class AudioManager: NSObject, ObservableObject {
     func setCurrent(_ audio: Audio, play: Bool = false, reason: String) {
         os_log("\(Logger.isMain)🍋 ✨ AudioManager::setCurrent to \(audio.title) 🐛 \(reason)")
 
-        self.main.async {
+        main.async {
             self.audio = audio
             try? self.updatePlayer(play: play)
-            
+
             // 将当前播放的歌曲存储下来，下次打开继续
             Task {
                 AppConfig.setCurrentAudio(audio)
@@ -68,7 +76,7 @@ class AudioManager: NSObject, ObservableObject {
     }
 
     // MARK: 跳转到某个时间
-    
+
     func gotoTime(time: TimeInterval) {
         player.currentTime = time
         updateMediaPlayer()
@@ -82,17 +90,16 @@ class AudioManager: NSObject, ObservableObject {
         if audio.isNotDownloaded {
             playerError = SmartError.NotDownloaded
             Task {
-                await self.db?.download(audio, reason: "Play")
+                await self.db.download(audio, reason: "Play")
             }
             return
         }
 
-        self.playerError = nil
-        self.setCurrent(audio, play: true, reason: reason)
+        playerError = nil
+        setCurrent(audio, play: true, reason: reason)
     }
 
-    func resume() {
-    }
+    func resume() {}
 
     // MARK: 暂停
 
@@ -146,7 +153,7 @@ class AudioManager: NSObject, ObservableObject {
         }
 
         Task {
-            if let i = await self.db!.preOf(audio) {
+            if let i = await self.db.preOf(audio) {
                 main.sync {
                     self.audio = i
                     try? updatePlayer(play: player.isPlaying)
@@ -170,13 +177,13 @@ class AudioManager: NSObject, ObservableObject {
         }
 
         Task {
-            if let i = await self.db!.nextOf(audio) {
+            if let i = await self.db.nextOf(audio) {
                 main.sync {
                     self.audio = i
                     try? updatePlayer(play: player.isPlaying || manual == false)
                 }
 
-                await self.db?.downloadNext(i, reason: "触发了下一首")
+                await self.db.downloadNext(i, reason: "触发了下一首")
             }
         }
     }
@@ -224,11 +231,11 @@ extension AudioManager {
 
         Task {
             if mode == .Random {
-                await self.db?.sortRandom()
+                await self.db.sortRandom()
             }
 
             if mode == .Order {
-                await db?.sort()
+                await db.sort()
             }
         }
     }

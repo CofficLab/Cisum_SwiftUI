@@ -41,7 +41,7 @@ struct DBView: View {
             ZStack {
                 DBList()
 
-                if audioManager.db?.getTotal() == 0, appManager.flashMessage.isEmpty {
+                if audioManager.db.getTotal() == 0, appManager.flashMessage.isEmpty {
                     DBEmptyView()
                 }
             }

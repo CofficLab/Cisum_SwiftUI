@@ -40,7 +40,7 @@ struct AlbumView: View {
     }
 
     func updateCover() async {
-        os_log("\(Logger.isMain)📷 AlbumView::getCover")
+        //os_log("\(Logger.isMain)📷 AlbumView::getCover")
         let image = await audio.getCoverImage()
         self.image = image
     }

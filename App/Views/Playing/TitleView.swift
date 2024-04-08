@@ -7,7 +7,7 @@ struct TitleView: View {
     var body: some View {
         VStack {
             if audioManager.audio == nil {
-                if audioManager.db?.isAllInCloud() ?? false {
+                if audioManager.db.isAllInCloud() ?? false {
                     Label("所有文件都在 iCloud 中", systemImage: "info.circle")
                         .font(.title2)
                         .foregroundStyle(.white)

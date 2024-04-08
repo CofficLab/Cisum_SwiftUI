@@ -21,21 +21,19 @@ actor DB: ModelActor {
     var context: ModelContext
     var onUpdated: () -> Void = { os_log("🍋 DB::updated") }
 
-    init(_ container: ModelContainer, onUpdated: @escaping () -> Void) {
+    init(_ container: ModelContainer) {
         os_log("\(Logger.isMain)🚩 初始化 DB")
 
         self.modelContainer = container
         self.context = ModelContext(container)
-        self.onUpdated = onUpdated
         self.context.autosaveEnabled = false
         self.modelExecutor = DefaultSerialModelExecutor(
             modelContext: context
         )
-
-        Task {
-            await getAudios()
-            await prepare()
-        }
+    }
+    
+    func setOnUpdated(_ callback: @escaping () -> Void) {
+        self.onUpdated = callback
     }
 }
 

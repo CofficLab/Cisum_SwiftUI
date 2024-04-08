@@ -150,7 +150,7 @@ extension Audio {
     }
 
     func getCover() async -> URL? {
-        os_log("\(Logger.isMain)🍋 Audio::getCover for \(self.title)")
+        //os_log("\(Logger.isMain)🍋 Audio::getCover for \(self.title)")
         
         if isNotDownloaded {
             return nil
