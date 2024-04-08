@@ -10,7 +10,6 @@ class Audio {
 
     var url: URL
     var order: Int = Int.random(in: 0...500000000)
-    var downloadingPercent: Double = 0
     var isPlaceholder: Bool = false
     var title: String = ""
 
@@ -38,7 +37,6 @@ class Audio {
     }
     
     func mergeWith(_ item: MetadataItemWrapper) -> Audio {
-        self.downloadingPercent = item.downloadProgress
         self.isPlaceholder = item.isPlaceholder
         
         return self

@@ -12,7 +12,6 @@ extension DB {
             try context.delete(model: Audio.self)
             for item in items {
                 let audio = Audio(item.url!)
-                audio.downloadingPercent = item.downloadProgress
                 audio.isPlaceholder = item.isPlaceholder
                 context.insert(audio)
             }
@@ -110,7 +109,7 @@ extension DB {
     nonisolated func getFirstValid() -> Audio? {
         let context = ModelContext(modelContainer)
         let predicate = #Predicate<Audio> {
-            $0.downloadingPercent == 100
+            $0.title != ""
         }
         var descriptor = FetchDescriptor<Audio>(predicate: predicate)
         descriptor.fetchLimit = 1
@@ -179,20 +178,6 @@ extension DB {
         }
     }
     
-    nonisolated func getTotalOfDownloaded() -> Int {
-        let context = ModelContext(modelContainer)
-        let predicate = #Predicate<Audio> {
-            $0.downloadingPercent == 100
-        }
-        let descriptor = FetchDescriptor(predicate: predicate)
-        do {
-            let result = try context.fetchCount(descriptor)
-            return result
-        } catch {
-            return 0
-        }
-    }
-    
     /// 查询数据库中的按照order排序的第x个
     nonisolated func get(_ i: Int) -> Audio? {
         let context = ModelContext(modelContainer)
@@ -223,7 +208,7 @@ extension DB {
         descriptor.sortBy.append(.init(\.order, order: .reverse))
         descriptor.fetchLimit = 1
         descriptor.predicate = #Predicate {
-            $0.order < order && $0.downloadingPercent == 100
+            $0.order < order
         }
         
         do {
@@ -242,31 +227,6 @@ extension DB {
     }
     
     // MARK: 下一个
-    
-    func nextDownloaded(_ audio: Audio) -> Audio? {
-        os_log("🍋 DBAudio::nextDownloaded of [\(audio.order)] \(audio.title)")
-        let order = audio.order
-        var descriptor = FetchDescriptor<Audio>()
-        descriptor.sortBy.append(.init(\.order, order: .forward))
-        descriptor.fetchLimit = 1
-        descriptor.predicate = #Predicate {
-            $0.order > order && $0.downloadingPercent == 100
-        }
-        
-        do {
-            let result = try context.fetch(descriptor)
-            if let first = result.first {
-                os_log("🍋 DBAudio::nextDownloaded of [\(audio.order)] \(audio.title) -> \(first.title)")
-                return first
-            } else {
-                print("not found")
-            }
-        } catch let e {
-            print(e)
-        }
-
-        return nil
-    }
 
     func nextOf(_ audio: Audio) -> Audio? {
         os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title)")
@@ -286,31 +246,6 @@ extension DB {
                 return first
             } else {
                 os_log("⚠️ DBAudio::nextOf [\(audio.order)] \(audio.title) not found")
-            }
-        } catch let e {
-            print(e)
-        }
-
-        return nil
-    }
-    
-    func nextNotDownloadedOf(_ audio: Audio) -> Audio? {
-        // os_log("🍋 DBAudio::nextNotDownloadedOf [\(audio.order)] \(audio.title)")
-        let order = audio.order
-        var descriptor = FetchDescriptor<Audio>()
-        descriptor.sortBy.append(.init(\.order, order: .forward))
-        descriptor.fetchLimit = 1
-        descriptor.predicate = #Predicate {
-            $0.order > order && $0.downloadingPercent < 100
-        }
-        
-        do {
-            let result = try context.fetch(descriptor)
-            if let first = result.first {
-                // os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title) -> \(first.title)")
-                return first
-            } else {
-                os_log("🍋 DBAudio::nextNotDownloadedOf [\(audio.order)] \(audio.title) -> nil 🎉🎉🎉")
             }
         } catch let e {
             print(e)
@@ -411,7 +346,7 @@ extension DB {
         
         while currentIndex < count {
             currentIndex = currentIndex + 1
-            if let next = nextNotDownloadedOf(currentAudio) {
+            if let next = nextOf(currentAudio) {
                 self.download(next, reason: "downloadNext 🐛 \(reason)")
                 currentAudio = next
             }
