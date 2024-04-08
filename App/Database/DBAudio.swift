@@ -52,6 +52,16 @@ extension DB {
         let trashUrl = AppConfig.trashDir.appendingPathComponent(url.lastPathComponent)
         Task {
             try await cloudHandler.moveFile(at: audio.url, to: trashUrl)
+            guard let a = context.model(for: audio.id) as? Audio else {
+                return
+            }
+            
+            do {
+                context.delete(a)
+                try context.save()
+            } catch let e {
+                print(e)
+            }
         }
     }
 
