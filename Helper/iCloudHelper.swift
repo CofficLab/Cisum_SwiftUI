@@ -126,4 +126,39 @@ class iCloudHelper {
             }
         }
     }
+    
+    static func watchDownloading(_ url: URL) {
+        // 创建一个后台队列
+        let backgroundQueue = DispatchQueue(label: "com.example.backgroundQueue", qos: .background)
+
+        // iCloud 文件的路径
+        let iCloudFilePath = url.path
+
+        // 在后台队列中执行获取 iCloud 文件下载进度的操作
+        backgroundQueue.async {
+            let query = NSMetadataQuery()
+            query.searchScopes = [NSMetadataQueryUbiquitousDocumentsScope]
+            query.predicate = NSPredicate(format: "%K == %@", NSMetadataItemPathKey, iCloudFilePath)
+
+            NotificationCenter.default.addObserver(
+                forName: .NSMetadataQueryDidUpdate,
+                object: query,
+                queue: nil
+            ) { notification in
+                if let updatedItems = notification.userInfo?[NSMetadataQueryUpdateChangedItemsKey] as? [NSMetadataItem] {
+                    for item in updatedItems {
+                        if let percentDownloaded = item.value(forAttribute: NSMetadataUbiquitousItemPercentDownloadedKey) as? Double {
+                            print("Download progress: \(percentDownloaded * 100)%")
+                        }
+                    }
+                }
+            }
+
+            query.start()
+
+            // Run the run loop to keep the query running
+            RunLoop.current.run()
+        }
+
+    }
 }

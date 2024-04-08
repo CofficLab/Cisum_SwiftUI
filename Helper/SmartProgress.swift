@@ -2,7 +2,7 @@ import SwiftUI
 
 public struct CircularProgressViewStyle: ProgressViewStyle {
     var size: CGFloat = 20
-    private let lineWidth: CGFloat = 8
+    private let lineWidth: CGFloat = 2
     private let defaultProgress = 0.0
     private let gradient = LinearGradient(colors: [.purple, .blue], startPoint: .leading, endPoint: .trailing)
     

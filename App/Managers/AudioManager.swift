@@ -29,7 +29,7 @@ class AudioManager: NSObject, ObservableObject {
         super.init()
         restore()
 
-//        self.dbPrepare()
+        self.dbPrepare()
     }
 
     func dbPrepare() {

@@ -100,8 +100,8 @@ extension DB {
             let query = ItemQuery(queue: OperationQueue(), url: self.getAudioDir())
             for try await items in query.searchMetadataItems() {
                 os_log("\(Logger.isMain)🍋 DB::getAudios \(items.count)")
-                self.upsert(items.filter { $0.url != nil })
-//                    await self.emitUpdate(items)
+//                self.upsert(items.filter { $0.url != nil })
+                self.emitUpdate(items)
             }
         }
     }

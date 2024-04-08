@@ -10,13 +10,9 @@ struct Row: View {
     var body: some View {
         ZStack {
             HStack {
-//                Text("[\(audio.order.description)]")
                 AlbumView(audio).frame(width: 24, height: 24)
                 Text(audio.title)
                 Spacer()
-                if audio.isDownloading {
-                    Text("\(String(format: "%.0f", audio.downloadingPercent))%").font(.footnote)
-                }
             }
         }
         .background(getBackground())
@@ -31,36 +27,7 @@ struct Row: View {
             Divider()
             BtnTrash(audio: audio)
         })
-//        .task(priority: .low) {
-//            watchFile()
-//        }
-//        .onDisappear {
-//            Task {
-//                await CloudHandler().stopMonitoringFile(at: audio.url)
-//            }
-//            NotificationCenter.default.removeObserver(self)
-//        }
     }
-    
-//    private func watchFile() {
-//        NotificationCenter.default.addObserver(
-//            forName: NSNotification.Name("Updated"),
-//            object: nil,
-//            queue: .main,
-//            using: { notification in
-//                AppConfig.bgQueue.async {
-//                    let data = notification.userInfo as! [String: [MetadataItemWrapper]]
-//                    let items = data["items"]!
-//                    items.forEach({ item in
-//                        if item.url == audio.url {
-//                            os_log("\(Logger.isMain)🖥️ Row::detect updated of \(audio.title)")
-//                            self.audio = self.audio.mergeWith(item)
-//                            return
-//                        }
-//                    })
-//                }
-//            })
-//    }
     
     init(_ audio: Audio) {
         self.audio = audio
