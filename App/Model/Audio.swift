@@ -162,8 +162,6 @@ extension Audio {
             let metadata = try await asset.load(.commonMetadata)
 
             for item in metadata {
-                let value = try await item.load(.value)
-
                 switch item.commonKey?.rawValue {
                 case "artwork":
                     if try (makeImage(await item.load(.value), saveTo: coverCacheURL)) != nil {

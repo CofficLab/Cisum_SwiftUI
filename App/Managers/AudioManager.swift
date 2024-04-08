@@ -171,7 +171,7 @@ class AudioManager: NSObject, ObservableObject {
     // MARK: Next
 
     /// 跳到下一首，manual=true表示由用户触发
-    @MainActor func next(manual: Bool = false) throws {
+    func next(manual: Bool = false) throws {
         os_log("\(Logger.isMain)🔊 AudioManager::next ⬇️ \(manual ? "手动触发" : "自动触发")")
 
         if mode == .Loop && manual == false {
@@ -182,9 +182,9 @@ class AudioManager: NSObject, ObservableObject {
             return
         }
 
-        if let i = db.nextOf(audio) {
-            setCurrent(i, play: player.isPlaying || manual == false, reason: "触发了下一首")
-            Task {
+        Task {
+            if let i = db.nextOf(audio) {
+                await setCurrent(i, play: player.isPlaying || manual == false, reason: "触发了下一首")
                 await db.downloadNext(i, reason: "触发了下一首")
             }
         }
