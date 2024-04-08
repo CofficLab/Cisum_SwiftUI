@@ -129,6 +129,22 @@ extension DB {
         self.getTotal() > 0 && self.getFirstValid() == nil
     }
     
+    func find(_ id: PersistentIdentifier) -> Audio? {
+        let predicate = #Predicate<Audio> {
+            $0.id == id
+        }
+        var descriptor = FetchDescriptor<Audio>(predicate: predicate)
+        descriptor.fetchLimit = 1
+        do {
+            let result = try context.fetch(descriptor)
+            return result.first
+        } catch let e {
+            print(e)
+        }
+        
+        return nil
+    }
+    
     func find(_ url: URL) -> Audio? {
         let predicate = #Predicate<Audio> {
             $0.url == url
@@ -376,7 +392,7 @@ extension DB {
                 offset += pageSize
             }
             
-            self.onUpdated()
+//            self.onUpdated()
         } catch let e {
             print(e)
         }
@@ -463,7 +479,7 @@ extension DB {
             if context.hasChanges {
                 os_log("\(Logger.isMain)🍋 DB::保存")
                 try? context.save()
-                await self.onUpdated()
+//                await self.onUpdated()
             } else {
                 os_log("\(Logger.isMain)🍋 DB::upsert nothing changed 👌")
             }

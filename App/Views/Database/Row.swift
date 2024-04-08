@@ -18,8 +18,6 @@ struct Row: View {
                     Text("\(String(format: "%.0f", audio.downloadingPercent))%").font(.footnote)
                 }
             }
-            .padding(.horizontal)
-            .padding(.vertical, 4)
         }
         .background(getBackground())
         .onHover(perform: { hovered = $0 })

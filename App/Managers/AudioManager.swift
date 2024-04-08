@@ -35,7 +35,7 @@ class AudioManager: NSObject, ObservableObject {
     func dbPrepare() {
         Task.detached {
             os_log("\(Logger.isMain)🚩 AudioManager::准备数据库")
-            await self.db.setOnUpdated {
+            await self.db.setOnUpdated { 
                 self.main.async {
                     self.lastUpdatedAt = .now
                 }

@@ -60,7 +60,7 @@ class Audio {
 // MARK: ID
 
 extension Audio: Identifiable {
-    var id: URL { url }
+    var id: PersistentIdentifier { self.persistentModelID }
 }
 
 // MARK: iCloud 相关
@@ -170,7 +170,7 @@ extension Audio {
                 switch item.commonKey?.rawValue {
                 case "artwork":
                     if try (makeImage(await item.load(.value), saveTo: coverCacheURL)) != nil {
-                        os_log("\(Logger.isMain)🍋 AudioModel::updateMeta -> cover updated -> \(self.title)")
+                        //os_log("\(Logger.isMain)🍋 AudioModel::updateMeta -> cover updated -> \(self.title)")
                         return coverCacheURL
                     }
                 default:
