@@ -13,16 +13,17 @@ class Audio {
     var downloadingPercent: Double = 0
     var isDownloading: Bool = false
     var isPlaceholder: Bool = false
+    var title: String = ""
 
     var size: Int64 { getFileSize() }
     var ext: String { url.pathExtension }
     var isSupported: Bool { AppConfig.supportedExtensions.contains(ext) }
     var isNotSupported: Bool { !isSupported }
-    var title: String { url.deletingPathExtension().lastPathComponent }
 
     init(_ url: URL) {
         // os_log("\(Logger.isMain)🚩 AudioModel::init -> \(url.lastPathComponent)")
         self.url = url
+        self.title = url.deletingPathExtension().lastPathComponent
     }
 
     func makeRandomOrder() {
@@ -149,7 +150,7 @@ extension Audio {
     }
 
     func getCover() async -> URL? {
-        //os_log("\(Logger.isMain)🍋 Audio::getCover for \(self.title)")
+        os_log("\(Logger.isMain)🍋 Audio::getCover for \(self.title)")
         
         if isNotDownloaded {
             return nil

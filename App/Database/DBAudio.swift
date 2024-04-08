@@ -141,7 +141,8 @@ extension DB {
         return nil
     }
     
-    static func find(_ context: ModelContext, _ url: URL) -> Audio? {
+    static func find(_ container: ModelContainer, _ url: URL) -> Audio? {
+        let context = ModelContext(container)
         let predicate = #Predicate<Audio> {
             $0.url == url
         }
@@ -415,7 +416,7 @@ extension DB {
             os_log("\(Logger.isMain)🍋 DB::update \(audio.title)")
             let context = ModelContext(self.modelContainer)
             context.autosaveEnabled = false
-            if var current = Self.find(context, audio.url) {
+            if var current = Self.find(self.modelContainer, audio.url) {
                 if audio.isDeleted {
                     context.delete(current)
                 } else {
@@ -439,7 +440,7 @@ extension DB {
             let context = ModelContext(self.modelContainer)
             context.autosaveEnabled = false
             for item in items {
-                if var current = Self.find(context, item.url!) {
+                if var current = Self.find(self.modelContainer, item.url!) {
                     if item.isDeleted {
                         context.delete(current)
                         continue

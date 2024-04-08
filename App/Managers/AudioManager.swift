@@ -29,14 +29,14 @@ class AudioManager: NSObject, ObservableObject {
         os_log("🚩 AudioManager::初始化")
         
         self.db = DB(AppConfig.getContainer(), onUpdated: {
-            self.main.async {
-                self.lastUpdatedAt = .now
-            }
+//            self.main.async {
+//                self.lastUpdatedAt = .now
+//            }
             
-            self.restore()
+//            self.restore()
         })
         
-        self.restore()
+//        self.restore()
     }
     
     // MARK: 恢复上次播放的
@@ -280,8 +280,6 @@ extension AudioManager {
         if audio.isNotSupported {
             throw SmartError.FormatNotSupported(audio.ext)
         }
-
-        os_log("\(Logger.isMain)🚩 AudioManager::初始化播放器开始")
 
         do {
             #if os(iOS)

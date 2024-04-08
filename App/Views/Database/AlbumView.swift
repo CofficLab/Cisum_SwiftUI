@@ -2,13 +2,11 @@ import OSLog
 import SwiftUI
 
 struct AlbumView: View {
-    @EnvironmentObject var audioManager: AudioManager
-    
     @State var image: Image? = nil
 
     var audio: Audio
     var fileManager = FileManager.default
-    
+
     init(_ audio: Audio) {
         self.audio = audio
     }
@@ -33,18 +31,18 @@ struct AlbumView: View {
             if let image = image {
                 return AnyView(image.resizable().scaledToFit())
             } else {
-                return AnyView(Image("DefaultAlbum").resizable().scaledToFit())
+                return AnyView(Image("DefaultAlbum").resizable().scaledToFit()
+                    .task(priority: .utility) {
+                        await updateCover()
+                    })
             }
         }
-//        .onAppear {
-//            Task.detached {
-//                //os_log("\(Logger.isMain)📷 AlbumView::getCover")
-//                let image = await audio.getCoverImage()
-//                DispatchQueue.main.async {
-//                    self.image = image
-//                }
-//            }
-//        }
+    }
+
+    func updateCover() async {
+        os_log("\(Logger.isMain)📷 AlbumView::getCover")
+        let image = await audio.getCoverImage()
+        self.image = image
     }
 }
 

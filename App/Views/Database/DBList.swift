@@ -1,48 +1,30 @@
-import SwiftUI
-import SwiftData
 import OSLog
+import SwiftData
+import SwiftUI
 
 struct DBList: View {
     @EnvironmentObject var audioManager: AudioManager
-    
-    var total: Int {audioManager.db?.getTotal() ?? 0}
+
+    var total: Int { audioManager.db?.getTotal() ?? 0 }
+    var audio: Audio? { audioManager.audio }
 
     var body: some View {
         VStack(spacing: 0) {
             ScrollView {
-            LazyVStack(spacing:0) {
-                    ForEach(0...max(0, total-1), id: \.self) { i in
-                        ZStack {
-                            if let item = audioManager.db?.get(i) {
-//                                Row(item)
-                                Text("\(i) \(item.title)")
-                            }
+                LazyVStack(spacing: 0) {
+                    ForEach(0 ... max(0, total - 1), id: \.self) { i in
+                        if let audio = audioManager.db?.get(i) {
+                            Row(audio)
                         }
                         Divider().background(.background)
                     }
-                    
+
                     if total > 0 {
                         Text("共 \(total.description)").foregroundStyle(.white)
                     }
                 }
             }
         }
-//        .onAppear {
-//            NotificationCenter.default.addObserver(
-//                forName: NSNotification.Name("Updated"),
-//                object: nil,
-//                queue: .main,
-//                using: { notification in
-//                    AppConfig.bgQueue.async {
-//                        let data = notification.userInfo as! [String: [MetadataItemWrapper]]
-//                        let items = data["items"]!
-//                        os_log("\(Logger.isMain)🖥️ Row::detect updated of count=\(items.count)")
-//                    }
-//                })
-//        }
-//        .onDisappear {
-//            NotificationCenter.default.removeObserver(self)
-//        }
     }
 }
 

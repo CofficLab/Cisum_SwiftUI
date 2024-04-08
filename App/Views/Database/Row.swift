@@ -2,11 +2,10 @@ import SwiftUI
 import OSLog
 
 struct Row: View {
-//    @EnvironmentObject var audioManager: AudioManager
+    @EnvironmentObject var audioManager: AudioManager
     
     @State var hovered = false
-    
-    var audio: Audio
+    @State var audio: Audio
     
     var body: some View {
         ZStack {
@@ -25,9 +24,9 @@ struct Row: View {
         }
         .background(getBackground())
         .onHover(perform: { hovered = $0 })
-//        .onTapGesture(count: 2, perform: {
-//            audioManager.play(audio, reason: "Double Tap")
-//        })
+        .onTapGesture(count: 2, perform: {
+            audioManager.play(audio, reason: "Double Tap")
+        })
         .contextMenu(menuItems: {
             BtnPlay(audio: audio)
             BtnDownload(audio: audio)
@@ -35,17 +34,46 @@ struct Row: View {
             Divider()
             BtnTrash(audio: audio)
         })
+        .task(priority: .low) {
+            watchFile()
+        }
+        .onDisappear {
+            Task {
+                await CloudHandler().stopMonitoringFile(at: audio.url)
+            }
+            NotificationCenter.default.removeObserver(self)
+        }
+    }
+    
+    private func watchFile() {
+        NotificationCenter.default.addObserver(
+            forName: NSNotification.Name("Updated"),
+            object: nil,
+            queue: .main,
+            using: { notification in
+                AppConfig.bgQueue.async {
+                    let data = notification.userInfo as! [String: [MetadataItemWrapper]]
+                    let items = data["items"]!
+                    items.forEach({ item in
+                        if item.url == audio.url {
+                            os_log("\(Logger.isMain)🖥️ Row::detect updated of \(audio.title)")
+                            self.audio = self.audio.mergeWith(item)
+                            return
+                        }
+                    })
+                }
+            })
     }
     
     init(_ audio: Audio) {
         self.audio = audio
-//        os_log("\(Logger.isMain)🚩 🖥️ 初始化 \(audio.title)")
+        //os_log("\(Logger.isMain)🚩 🖥️ 初始化 \(audio.title)")
     }
     
     private func getBackground() -> Color {
-//        if let current = audioManager.audio, current.id == audio.id {
-//            return AppConfig.getBackground.opacity(0.5)
-//        }
+        if let current = audioManager.audio, current.id == audio.id {
+            return AppConfig.getBackground.opacity(0.5)
+        }
         
         return hovered ? AppConfig.getBackground.opacity(0.9) : AppConfig.getBackground
     }
