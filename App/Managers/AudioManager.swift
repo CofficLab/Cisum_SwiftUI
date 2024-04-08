@@ -51,6 +51,9 @@ class AudioManager: NSObject, ObservableObject {
     // MARK: 恢复上次播放的
 
     func restore() {
+        let currentMode = PlayMode(rawValue: AppConfig.currentMode)
+        self.mode = currentMode ?? self.mode
+        
         if let currentAudioId = AppConfig.currentAudio, audio == nil {
             Task {
                 if let currentAudio = await self.db.find(currentAudioId) {
@@ -160,9 +163,7 @@ class AudioManager: NSObject, ObservableObject {
 
         Task {
             if let i = await self.db.preOf(audio) {
-                main.sync {
-                    self.setCurrent(i, reason: "触发了上一首")
-                }
+                await self.setCurrent(i, reason: "触发了上一首")
             }
         }
     }
@@ -199,7 +200,7 @@ class AudioManager: NSObject, ObservableObject {
 // MARK: 播放模式
 
 extension AudioManager {
-    enum PlayMode {
+    enum PlayMode:String {
         case Order
         case Loop
         case Random
@@ -229,6 +230,7 @@ extension AudioManager {
         }
 
         callback(mode)
+        AppConfig.setCurrentMode(mode)
 
         Task {
             if mode == .Random {

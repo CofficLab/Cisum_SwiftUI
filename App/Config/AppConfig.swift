@@ -25,10 +25,19 @@ extension AppConfig {
     @AppStorage("App.CurrentAudio")
     static var currentAudio: URL?
     
+    @AppStorage("App.CurrentMode")
+    static var currentMode: String = AudioManager.PlayMode.Order.rawValue
+    
     static func setCurrentAudio(_ audio: Audio) {
         //os_log("\(Logger.isMain)⚙️ AppConfig::setCurrentAudio \(audio.title)")
         AppConfig.currentAudio = audio.url
     }
+    
+    static func setCurrentMode(_ mode: AudioManager.PlayMode) {
+        //os_log("\(Logger.isMain)⚙️ AppConfig::setCurrentAudio \(audio.title)")
+        AppConfig.currentMode = mode.rawValue
+    }
+
 }
 
 // MARK: 视图配置
