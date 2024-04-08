@@ -71,19 +71,6 @@ class iCloudHelper {
         }
     }
 
-    static func getiCloudDocumentsUrl() -> URL {
-        if AppConfig.fileManager.ubiquityIdentityToken != nil {
-            AppConfig.logger.cloudKit.debug("支持 iCloud")
-
-            return AppConfig.fileManager.url(forUbiquityContainerIdentifier: AppConfig.containerIdentifier)!
-                .appendingPathComponent("Documents")
-        } else {
-            AppConfig.logger.cloudKit.debug("不支持 iCloud，使用本地目录")
-
-            return AppConfig.cloudDocumentsDir
-        }
-    }
-
     static func checkiCloudStorage1() {
         // 获取当前iCloud容量
         let fileManager = FileManager.default

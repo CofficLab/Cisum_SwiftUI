@@ -12,7 +12,6 @@ extension DB {
             try context.delete(model: Audio.self)
             for item in items {
                 let audio = Audio(item.url!)
-                audio.isDownloading = item.isDownloading
                 audio.downloadingPercent = item.downloadProgress
                 audio.isPlaceholder = item.isPlaceholder
                 context.insert(audio)

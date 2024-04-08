@@ -11,7 +11,6 @@ class Audio {
     var url: URL
     var order: Int = Int.random(in: 0...500000000)
     var downloadingPercent: Double = 0
-    var isDownloading: Bool = false
     var isPlaceholder: Bool = false
     var title: String = ""
 
@@ -40,7 +39,6 @@ class Audio {
     
     func mergeWith(_ item: MetadataItemWrapper) -> Audio {
         self.downloadingPercent = item.downloadProgress
-        self.isDownloading = item.isDownloading
         self.isPlaceholder = item.isPlaceholder
         
         return self
@@ -66,8 +64,9 @@ extension Audio: Identifiable {
 // MARK: iCloud 相关
 
 extension Audio {
-    var isDownloaded: Bool { downloadingPercent == 100 }
+    var isDownloaded: Bool { iCloudHelper.isDownloaded(url: url) }
     var isNotDownloaded: Bool { !isDownloaded }
+    var isDownloading: Bool { iCloudHelper.isDownloading(url) }
 }
 
 // MARK: Meta
