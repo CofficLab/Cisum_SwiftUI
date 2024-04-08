@@ -5,6 +5,7 @@ import MediaPlayer
 import OSLog
 import SwiftData
 import SwiftUI
+import Network
 
 /// 管理播放器的播放、暂停、上一曲、下一曲等操作
 class AudioManager: NSObject, ObservableObject {
@@ -13,6 +14,7 @@ class AudioManager: NSObject, ObservableObject {
     @Published var mode: PlayMode = .Order
     @Published var lastUpdatedAt: Date = .now
     @Published var isPlaying = false
+    @Published var networkOK = true
 
     private var listener: AnyCancellable?
     private var bg = AppConfig.bgQueue
@@ -31,6 +33,7 @@ class AudioManager: NSObject, ObservableObject {
         restore()
 
         dbPrepare()
+        checkNetworkStatus()
     }
 
     func dbPrepare() {
@@ -45,6 +48,12 @@ class AudioManager: NSObject, ObservableObject {
             }
             await self.db.getAudios()
             await self.db.prepare()
+        }
+    }
+    
+    func clearError() {
+        main.async {
+            self.playerError = nil
         }
     }
 
@@ -134,6 +143,14 @@ class AudioManager: NSObject, ObservableObject {
         }
         
         if audio.isNotDownloaded {
+            Task {
+                if networkOK == false {
+                    return self.playerError = SmartError.NetworkError
+                }
+                
+                await db.download(audio, reason: "Toggle")
+            }
+            
             return self.playerError = SmartError.NotDownloaded
         }
 
@@ -237,6 +254,32 @@ extension AudioManager {
             if mode == .Order {
                 await db.sort()
             }
+        }
+    }
+    
+    func checkNetworkStatus() {
+            let monitor = NWPathMonitor()
+            monitor.pathUpdateHandler = { path in
+                DispatchQueue.main.async {
+                    if path.status == .satisfied {
+                        self.networkOK = true
+                    } else {
+                        self.networkOK = false
+                    }
+                    
+                    self.errorCheck()
+                }
+            }
+            
+            let queue = DispatchQueue(label: "NetworkMonitor")
+            monitor.start(queue: queue)
+        }
+    
+    func errorCheck() {
+        self.playerError = nil
+        
+        if let audio = audio, audio.isNotDownloaded {
+            return self.playerError = SmartError.NotDownloaded
         }
     }
 }

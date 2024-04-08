@@ -336,7 +336,11 @@ extension DB {
     func download(_ audio: Audio, reason: String) {
         Task {
             // os_log("\(Logger.isMain)⬇️ DB::download \(audio.title) 🐛 \(reason)")
-            try? await CloudHandler().download(url: audio.url)
+            do {
+                try await CloudHandler().download(url: audio.url)
+            } catch let e {
+                print(e)
+            }
         }
     }
     

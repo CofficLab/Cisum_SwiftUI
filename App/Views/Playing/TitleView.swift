@@ -3,7 +3,7 @@ import SwiftUI
 struct TitleView: View {
     @EnvironmentObject var appManager: AppManager
     @EnvironmentObject var audioManager: AudioManager
-    
+
     var body: some View {
         VStack {
             if audioManager.audio == nil {
@@ -25,7 +25,7 @@ struct TitleView: View {
                 Label("状态未知", systemImage: "info.circle")
                     .foregroundStyle(.white)
             }
-            
+
             // 播放过程中出现的错误
             if let e = audioManager.playerError {
                 Label(e.localizedDescription, systemImage: "info.circle")
@@ -33,24 +33,24 @@ struct TitleView: View {
                     .foregroundStyle(.white)
                     .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("Updated")), perform: {
                         notification in
-                           AppConfig.bgQueue.async {
-                               let data = notification.userInfo as! [String: [MetadataItemWrapper]]
-                               let items = data["items"]!
-                               for item in items {
-                                   if item.url == audioManager.audio?.url {
-                                       clearError(item)
-                                       return
-                                   }
-                               }
-                           }
+                        AppConfig.bgQueue.async {
+                            let data = notification.userInfo as! [String: [MetadataItemWrapper]]
+                            let items = data["items"]!
+                            for item in items {
+                                if item.url == audioManager.audio?.url {
+                                    clearError(item)
+                                    return
+                                }
+                            }
+                        }
                     })
             }
         }
     }
-    
-    @MainActor func clearError(_ metaItem: MetadataItemWrapper) {
+
+    func clearError(_ metaItem: MetadataItemWrapper) {
         if metaItem.downloadProgress == 100 {
-            audioManager.playerError = nil
+            audioManager.clearError()
         }
     }
 }
