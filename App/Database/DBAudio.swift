@@ -229,7 +229,7 @@ extension DB {
     // MARK: 下一个
 
     func nextOf(_ audio: Audio) -> Audio? {
-        os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title)")
+        //os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title)")
         let order = audio.order
         let url = audio.url
         var descriptor = FetchDescriptor<Audio>()

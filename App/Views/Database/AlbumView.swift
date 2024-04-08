@@ -36,13 +36,9 @@ struct AlbumView: View {
             }
         }
         .onAppear {
-            isDownloaded = audio.isDownloaded
-            isDownloading = iCloudHelper.isDownloading(audio.url)
+            refresh()
             Task {
-                await CloudHandler().startMonitoringFile(at: audio.url, onDidChange: {
-                    isDownloaded = iCloudHelper.isDownloaded(url: audio.url)
-                    isDownloading = iCloudHelper.isDownloading(audio.url)
-                })
+                await CloudHandler().startMonitoringFile(at: audio.url, onDidChange: refresh)
             }
         }.onDisappear {
             Task {
@@ -64,6 +60,15 @@ struct AlbumView: View {
                    }
                }
         })
+        .onChange(of: audio, {
+            print("CHangeddsfafsdf")
+            refresh()
+        })
+    }
+    
+    func refresh() {
+        isDownloaded = audio.isDownloaded
+        isDownloading = iCloudHelper.isDownloading(audio.url)
     }
 
     func updateCover() async {
