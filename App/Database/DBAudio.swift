@@ -64,13 +64,21 @@ extension DB {
         }
         
         Task {
-            do {
-                try await cloudHandler.moveFile(at: audio.url, to: trashUrl)
-                guard let a = context.model(for: audio.id) as? Audio else {
-                    return
+            // 移动到回收站
+            if audio.isExists {
+                do {
+                    try await cloudHandler.moveFile(at: audio.url, to: trashUrl)
+                } catch let e {
+                    print(e)
                 }
-                context.delete(a)
-                try context.save()
+            }
+        
+            // 从数据库删除
+            do {
+                if let a = context.model(for: audio.id) as? Audio {
+                    context.delete(a)
+                    try context.save()
+                }
             } catch let e {
                 print(e)
             }
@@ -120,7 +128,7 @@ extension DB {
         Task {
             let query = ItemQuery(queue: OperationQueue(), url: self.getAudioDir())
             for try await items in query.searchMetadataItems() {
-                //os_log("\(Logger.isMain)🍋 DB::getAudios \(items.count)")
+                os_log("\(Logger.isMain)🍋 DB::getAudios \(items.count)")
                 self.upsert(items.filter { $0.url != nil })
                 self.emitUpdate(items)
             }
@@ -135,6 +143,7 @@ extension DB {
         }
         var descriptor = FetchDescriptor<Audio>(predicate: predicate)
         descriptor.fetchLimit = 1
+        descriptor.sortBy.append(SortDescriptor(\.order, order: .forward))
         do {
             let result = try context.fetch(descriptor)
             return result.first
@@ -251,7 +260,7 @@ extension DB {
     // MARK: 下一个
 
     nonisolated func nextOf(_ audio: Audio) -> Audio? {
-        //os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title)")
+        // os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title)")
         let context = ModelContext(modelContainer)
         let order = audio.order
         let url = audio.url
@@ -265,7 +274,7 @@ extension DB {
         do {
             let result = try context.fetch(descriptor)
             if let first = result.first {
-                //os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title) -> \(first.title)")
+                // os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title) -> \(first.title)")
                 return first
             } else {
                 os_log("⚠️ DBAudio::nextOf [\(audio.order)] \(audio.title) not found")
@@ -356,6 +365,10 @@ extension DB {
     }
     
     func download(_ audio: Audio, reason: String) {
+        if audio.isNotExists {
+            return
+        }
+        
         Task {
             // os_log("\(Logger.isMain)⬇️ DB::download \(audio.title) 🐛 \(reason)")
             do {

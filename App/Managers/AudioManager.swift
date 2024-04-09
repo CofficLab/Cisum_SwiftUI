@@ -54,6 +54,7 @@ class AudioManager: NSObject, ObservableObject {
     // MARK: 恢复上次播放的
 
     func restore() {
+        os_log("\(Logger.isMain)🚩 AudioManager::restore")
         let currentMode = PlayMode(rawValue: AppConfig.currentMode)
         self.mode = currentMode ?? self.mode
 
@@ -61,6 +62,10 @@ class AudioManager: NSObject, ObservableObject {
             Task {
                 if let currentAudio = await self.db.find(currentAudioId) {
                     await self.setCurrent(currentAudio, reason: "初始化，恢复上次播放的")
+                } else if let current = self.db.getFirstValid() {
+                    await self.setCurrent(current, reason: "初始化，播放第一个")
+                } else {
+                    os_log("\(Logger.isMain)🚩 AudioManager::restore nothing t o play")
                 }
             }
         }

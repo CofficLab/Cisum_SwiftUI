@@ -17,17 +17,19 @@ struct AlbumView: View {
 
     var body: some View {
         ZStack {
-            if isDownloading {
-                    ProgressView(value: downloadingPercent / 100)
-                        .progressViewStyle(CircularProgressViewStyle(size: 22))
-                        .controlSize(.regular)
-                        .scaledToFit()
-                
-                Text("\(String(format: "%.0f",downloadingPercent))").scaleEffect(0.8)
+            if audio.isNotExists {
+                Image(systemName: "minus.circle").resizable().scaledToFit()
+            } else if isDownloading {
+                ProgressView(value: downloadingPercent / 100)
+                    .progressViewStyle(CircularProgressViewStyle(size: 22))
+                    .controlSize(.regular)
+                    .scaledToFit()
+
+                Text("\(String(format: "%.0f", downloadingPercent))").scaleEffect(0.8)
             } else if isNotDownloaded {
                 Image(systemName: "arrow.down.circle.dotted").resizable().scaledToFit()
             } else if let image = image {
-               image.resizable().scaledToFit()
+                image.resizable().scaledToFit()
             } else {
                 Image("DefaultAlbum").resizable().scaledToFit()
                     .task(priority: .utility) {
@@ -47,32 +49,41 @@ struct AlbumView: View {
         }
         .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("Updated")), perform: {
             notification in
-               AppConfig.bgQueue.async {
-                   let data = notification.userInfo as! [String: [MetadataItemWrapper]]
-                   let items = data["items"]!
-                   for item in items {
-                       if item.url == audio.url {
-                           self.downloadingPercent = item.downloadProgress
-                           self.isDownloading = item.isDownloading
-                           self.isDownloaded = item.downloadProgress == 100
-                           return
-                       }
-                   }
-               }
+            AppConfig.bgQueue.async {
+                let data = notification.userInfo as! [String: [MetadataItemWrapper]]
+                let items = data["items"]!
+                for item in items {
+                    if item.url == audio.url {
+                        self.downloadingPercent = item.downloadProgress
+                        self.isDownloading = item.isDownloading
+                        self.isDownloaded = item.downloadProgress == 100
+                        return
+                    }
+                }
+            }
         })
-        .onChange(of: audio, {
+        .onChange(of: audio) {
             print("CHangeddsfafsdf")
             refresh()
-        })
+        }
     }
-    
+
     func refresh() {
+        if audio.isNotExists {
+            isDownloaded = false
+            return
+        }
+
         isDownloaded = audio.isDownloaded
         isDownloading = iCloudHelper.isDownloading(audio.url)
     }
 
     func updateCover() async {
         // os_log("\(Logger.isMain)📷 AlbumView::getCover")
+        if audio.isNotExists {
+            return
+        }
+
         let image = await audio.getCoverImage()
         self.image = image
     }
