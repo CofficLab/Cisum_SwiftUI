@@ -15,7 +15,7 @@ struct BtnToggle: View {
     var isPlaying: Bool { player.isPlaying }
 
     var body: some View {        
-        ControlButton(title: title, size: 48, systemImage: systemImage, onTap: {
+        ControlButton(title: title, size: 32, systemImage: systemImage, onTap: {
             audioManager.toggle()
             refresh()
         })
