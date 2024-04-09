@@ -182,6 +182,18 @@ class AudioManager: NSObject, ObservableObject {
             }
         }
     }
+    
+    func trash(_ audio: Audio) throws {
+        os_log("\(Logger.isMain)🔊 AudioManager::trash 🗑️ \(audio.title)")
+        
+        if self.audio?.url == audio.url {
+            try next(manual: true)
+        }
+        
+        Task {
+            await db.trash(audio)
+        }
+    }
 
     private func updateMediaPlayer() {
         Task {

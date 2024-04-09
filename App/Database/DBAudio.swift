@@ -48,14 +48,16 @@ extension DB {
 
 extension DB {
     nonisolated func delete(_ audio: Audio) {
+        os_log("\(Logger.isMain)🗑️ 数据库删除 \(audio.title)")
         let context = ModelContext(modelContainer)
         guard let audio = context.model(for: audio.id) as? Audio else {
-            return
+            return os_log("\(Logger.isMain)🗑️ 删除时数据库找不到 \(audio.title)")
         }
         
         do {
             context.delete(audio)
             try context.save()
+            os_log("\(Logger.isMain)🗑️ 删除成功 \(audio.title)")
         } catch let e {
             print(e)
         }
@@ -82,19 +84,12 @@ extension DB {
             if audio.isExists {
                 do {
                     try await cloudHandler.moveFile(at: audio.url, to: trashUrl)
+                    
+                    // 从数据库删除
+                    self.delete(audio)
                 } catch let e {
                     print(e)
                 }
-            }
-        
-            // 从数据库删除
-            do {
-                if let a = context.model(for: audio.id) as? Audio {
-                    context.delete(a)
-                    try context.save()
-                }
-            } catch let e {
-                print(e)
             }
         }
     }
@@ -460,6 +455,10 @@ extension DB {
                     // os_log("\(Logger.isMain)🍋 DB::更新 \(current.title)")
                     current = current.mergeWith(item)
                 } else {
+                    if item.isDeleted {
+                        continue
+                    }
+                    
                     // os_log("\(Logger.isMain)🍋 DB::插入")
                     if let audio = Audio.fromMetaItem(item) {
                         context.insert(audio)

@@ -8,8 +8,10 @@ struct BtnTrash: View {
         
     var body: some View {
         Button {
-            Task {
-                await audioManager.db.trash(audio)
+            do {
+                try audioManager.trash(audio)
+            } catch let e {
+                appManager.flashMessage = e.localizedDescription
             }
         } label: {
             Label("将「\(audio.title)」放入回收站", systemImage: getImageName())
