@@ -35,6 +35,7 @@ struct ControlView: View {
                     PlayingAlbum()
                 }
                 TitleView().padding(.vertical, 20)
+                Spacer()
                 SliderView().padding(.vertical, 20)
                 BtnsView().padding(.vertical, 30)
             }.foregroundStyle(.white)
