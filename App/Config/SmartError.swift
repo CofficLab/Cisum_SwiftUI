@@ -13,6 +13,7 @@ enum SmartError: Error, LocalizedError {
     case FormatNotSupported(_ format: String)
     case PlayFailed
     case NetworkError
+    case NotExists
     
     var errorDescription: String? {
         switch self {
@@ -38,6 +39,8 @@ enum SmartError: Error, LocalizedError {
             "当前歌曲未下载"
         case .NetworkError:
             "网络未连接"
+        case .NotExists:
+            "文件不存在"
         }
     }
 }

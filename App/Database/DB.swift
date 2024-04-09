@@ -40,5 +40,5 @@ actor DB: ModelActor {
 #Preview {
     RootView {
         ContentView()
-    }
+    }.modelContainer(AppConfig.getContainer())
 }

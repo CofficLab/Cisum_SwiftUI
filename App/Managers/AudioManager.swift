@@ -2,10 +2,10 @@ import AVKit
 import Combine
 import Foundation
 import MediaPlayer
+import Network
 import OSLog
 import SwiftData
 import SwiftUI
-import Network
 
 /// 管理播放器的播放、暂停、上一曲、下一曲等操作
 class AudioManager: NSObject, ObservableObject {
@@ -50,19 +50,13 @@ class AudioManager: NSObject, ObservableObject {
             await self.db.prepare()
         }
     }
-    
-    func clearError() {
-        main.async {
-            self.playerError = nil
-        }
-    }
 
     // MARK: 恢复上次播放的
 
     func restore() {
         let currentMode = PlayMode(rawValue: AppConfig.currentMode)
         self.mode = currentMode ?? self.mode
-        
+
         if let currentAudioId = AppConfig.currentAudio, audio == nil {
             Task {
                 if let currentAudio = await self.db.find(currentAudioId) {
@@ -79,13 +73,16 @@ class AudioManager: NSObject, ObservableObject {
 
         self.audio = audio
         try? updatePlayer(play: play ?? player.isPlaying)
+        self.errorCheck()
 
         Task {
             // 下载当前的
             await self.db.download(audio, reason: "SetCurrent")
+            self.errorCheck()
+
             // 下载接下来的
             await db.downloadNext(audio, reason: "触发了下一首")
-            
+
             // 将当前播放的歌曲存储下来，下次打开继续
             AppConfig.setCurrentAudio(audio)
         }
@@ -130,31 +127,7 @@ class AudioManager: NSObject, ObservableObject {
     // MARK: 切换
 
     @MainActor func toggle() {
-        self.playerError = nil
-        
-        guard let audio = audio else {
-            return self.playerError = SmartError.NoAudioInList
-        }
-
-        if isEmpty {
-            return self.playerError = SmartError.NoAudioInList
-        }
-
-        if audio.isDownloading {
-            return self.playerError = SmartError.Downloading
-        }
-        
-        if audio.isNotDownloaded {
-            Task {
-                if networkOK == false {
-                    return self.playerError = SmartError.NetworkError
-                }
-                
-                await db.download(audio, reason: "Toggle")
-            }
-            
-            return self.playerError = SmartError.NotDownloaded
-        }
+        self.errorCheck()
 
         if player.isPlaying {
             pause()
@@ -215,37 +188,12 @@ class AudioManager: NSObject, ObservableObject {
 // MARK: 播放模式
 
 extension AudioManager {
-    enum PlayMode:String {
-        case Order
-        case Loop
-        case Random
-
-        var description: String {
-            switch self {
-            case .Order:
-                return "顺序播放"
-            case .Loop:
-                return "单曲循环"
-            case .Random:
-                return "随机播放"
-            }
-        }
-    }
-
     // MARK: 切换播放模式
 
     func switchMode(_ callback: @escaping (_ mode: PlayMode) -> Void) {
-        switch mode {
-        case .Order:
-            mode = .Random
-        case .Loop:
-            mode = .Order
-        case .Random:
-            mode = .Loop
-        }
+        self.mode = self.mode.switchMode()
 
         callback(mode)
-        AppConfig.setCurrentMode(mode)
 
         Task {
             if mode == .Random {
@@ -257,30 +205,58 @@ extension AudioManager {
             }
         }
     }
-    
+
     func checkNetworkStatus() {
-            let monitor = NWPathMonitor()
-            monitor.pathUpdateHandler = { path in
-                DispatchQueue.main.async {
-                    if path.status == .satisfied {
-                        self.networkOK = true
-                    } else {
-                        self.networkOK = false
-                    }
-                    
-                    self.errorCheck()
+        let monitor = NWPathMonitor()
+        monitor.pathUpdateHandler = { path in
+            DispatchQueue.main.async {
+                if path.status == .satisfied {
+                    self.networkOK = true
+                } else {
+                    self.networkOK = false
                 }
+
+                self.errorCheck()
             }
-            
-            let queue = DispatchQueue(label: "NetworkMonitor")
-            monitor.start(queue: queue)
         }
-    
+
+        let queue = DispatchQueue(label: "NetworkMonitor")
+        monitor.start(queue: queue)
+    }
+
+    // MARK: 检查错误
+
+    func clearError() {
+        main.async {
+            self.playerError = nil
+        }
+    }
+
     func errorCheck() {
         self.playerError = nil
-        
-        if let audio = audio, audio.isNotDownloaded {
+
+        guard let audio = audio else {
+            return self.playerError = SmartError.NoAudioInList
+        }
+
+        if audio.isNotExists {
+            return self.playerError = SmartError.NotExists
+        }
+
+        if audio.isNotDownloaded {
+            Task {
+                if networkOK == false {
+                    return self.playerError = SmartError.NetworkError
+                }
+
+                await db.download(audio, reason: "errorCheck")
+            }
+
             return self.playerError = SmartError.NotDownloaded
+        }
+
+        if audio.isDownloading {
+            return self.playerError = SmartError.Downloading
         }
     }
 }
@@ -386,5 +362,5 @@ extension AudioManager: AVAudioPlayerDelegate {
 #Preview {
     RootView {
         ContentView()
-    }
+    }.modelContainer(AppConfig.getContainer())
 }

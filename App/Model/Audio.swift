@@ -17,6 +17,8 @@ class Audio {
     var ext: String { url.pathExtension }
     var isSupported: Bool { AppConfig.supportedExtensions.contains(ext) }
     var isNotSupported: Bool { !isSupported }
+    var isExists: Bool { fileManager.fileExists(atPath: url.path) }
+    var isNotExists: Bool { !isExists }
 
     init(_ url: URL) {
         // os_log("\(Logger.isMain)🚩 AudioModel::init -> \(url.lastPathComponent)")
@@ -35,20 +37,20 @@ class Audio {
     func getFileSizeReadable() -> String {
         FileHelper.getFileSizeReadable(url)
     }
-    
+
     func mergeWith(_ item: MetadataItemWrapper) -> Audio {
-        self.isPlaceholder = item.isPlaceholder
-        
+        isPlaceholder = item.isPlaceholder
+
         return self
     }
-    
+
     static func fromMetaItem(_ item: MetadataItemWrapper) -> Audio? {
         guard let url = item.url else {
             return nil
         }
-        
+
         let audio = Audio(url)
-        
+
         return audio.mergeWith(item)
     }
 }
@@ -56,7 +58,7 @@ class Audio {
 // MARK: ID
 
 extension Audio: Identifiable {
-    var id: PersistentIdentifier { self.persistentModelID }
+    var id: PersistentIdentifier { persistentModelID }
 }
 
 // MARK: iCloud 相关
@@ -147,8 +149,8 @@ extension Audio {
     }
 
     func getCover() async -> URL? {
-        //os_log("\(Logger.isMain)🍋 Audio::getCover for \(self.title)")
-        
+        // os_log("\(Logger.isMain)🍋 Audio::getCover for \(self.title)")
+
         if isNotDownloaded {
             return nil
         }
@@ -165,7 +167,7 @@ extension Audio {
                 switch item.commonKey?.rawValue {
                 case "artwork":
                     if try (makeImage(await item.load(.value), saveTo: coverCacheURL)) != nil {
-                        //os_log("\(Logger.isMain)🍋 AudioModel::updateMeta -> cover updated -> \(self.title)")
+                        // os_log("\(Logger.isMain)🍋 AudioModel::updateMeta -> cover updated -> \(self.title)")
                         return coverCacheURL
                     }
                 default:
@@ -173,7 +175,7 @@ extension Audio {
                 }
             }
         } catch {
-            //os_log("\(Logger.isMain)⚠️ 读取 Meta 出错\(error)")
+            // os_log("\(Logger.isMain)⚠️ 读取 Meta 出错\(error)")
         }
 
         return nil
