@@ -7,10 +7,12 @@ struct AlbumView: View {
     @State var isDownloading: Bool = false
     @State var downloadingPercent: Double = 0
 
+    var main = AppConfig.mainQueue
+    var bg = AppConfig.bgQueue
     var audio: Audio
     var forPlaying: Bool = false
     var fileManager = FileManager.default
-    var isNotDownloaded: Bool { !isDownloaded && !isDownloading }
+    var isNotDownloaded: Bool { !isDownloaded }
 
     /// forPlaying表示显示在正在播放界面
     init(_ audio: Audio, forPlaying: Bool = false) {
@@ -22,7 +24,7 @@ struct AlbumView: View {
         ZStack {
             if audio.isNotExists {
                 Image(systemName: "minus.circle").resizable().scaledToFit()
-            } else if isDownloading && downloadingPercent < 100 {
+            } else if isDownloading {
                 Self.makeProgressView(downloadingPercent / 100)
             } else if isNotDownloaded {
                 Self.getNotDownloadedAlbum(forPlaying: forPlaying)
@@ -32,61 +34,51 @@ struct AlbumView: View {
                 Self.getDefaultAlbum(forPlaying: forPlaying)
             }
         }
-        .task(priority: .utility) {
-            await updateCover()
-        }
         .onAppear {
             refresh()
-            Task {
-                await CloudHandler().startMonitoringFile(at: audio.url, onDidChange: refresh)
-            }
-        }.onDisappear {
-            Task {
-                await CloudHandler().stopMonitoringFile(at: audio.url)
-            }
         }
         .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("Updated")), perform: {
             notification in
-            AppConfig.bgQueue.async {
+            bg.async {
                 let data = notification.userInfo as! [String: [MetadataItemWrapper]]
                 let items = data["items"]!
                 for item in items {
                     if item.url == audio.url {
-                        self.downloadingPercent = item.downloadProgress
-                        withAnimation {
-                            self.isDownloading = item.isDownloading
-                            self.isDownloaded = item.downloadProgress == 100
-                        }
-                        return
+                        return refresh(item)
                     }
                 }
             }
         })
-        .onChange(of: audio) {
-            refresh()
-        }
     }
 
-    func refresh() {
-        if audio.isNotExists {
-            isDownloaded = false
-            return
+    func refresh(_ item: MetadataItemWrapper? = nil) {
+        var percent = ""
+        if let item = item {
+            percent = "\(item.downloadProgress)"
         }
+        
+        os_log("\(Logger.isMain)🍋 AlbumView::refresh -> \(audio.title) \(percent)")
 
         isDownloaded = audio.isDownloaded
         isDownloading = iCloudHelper.isDownloading(audio.url)
+        downloadingPercent = item?.downloadProgress ?? 0
+        updateCover()
     }
 
-    func updateCover() async {
+    func updateCover() {
         // os_log("\(Logger.isMain)📷 AlbumView::getCover")
         if audio.isNotExists {
             return
         }
 
-        let image = await audio.getCoverImage()
-        self.image = image
+        Task {
+            let image = await audio.getCoverImage()
+            main.async {
+                self.image = image
+            }
+        }
     }
-    
+
     static func getNotDownloadedAlbum(forPlaying: Bool = false) -> some View {
         ZStack {
             if forPlaying {
@@ -130,8 +122,10 @@ struct AlbumView: View {
             ZStack {
                 ProgressView(value: value)
                     .progressViewStyle(CircularProgressViewStyle(size: min(geo.size.width, geo.size.height) * 0.8))
-                Text("\(String(format: "%.0f", value * 100))")
-                    .font(.system(size: min(geo.size.width, geo.size.height) * 0.56))
+                if value < 1 {
+                    Text("\(String(format: "%.0f", value * 100))")
+                        .font(.system(size: min(geo.size.width, geo.size.height) * 0.56))
+                }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }

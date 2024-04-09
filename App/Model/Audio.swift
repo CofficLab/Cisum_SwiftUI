@@ -144,7 +144,11 @@ extension Audio {
         }
 
         #if os(macOS)
-            return Image(nsImage: NSImage(contentsOf: coverURL)!)
+        if let nsImage = NSImage(contentsOf: coverURL) {
+            return Image(nsImage: nsImage)
+        } else {
+            return nil
+        }
         #else
             return Image(uiImage: UIImage(contentsOfFile: coverURL.path)!)
         #endif
