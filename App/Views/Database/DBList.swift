@@ -10,21 +10,13 @@ struct DBList: View {
     @Query(sort: \Audio.order, animation: .default) var audios: [Audio]
 
     var total: Int { audioManager.db.getTotal() }
+    var db: DB {audioManager.db}
     var audio: Audio? { audioManager.audio }
-    var validAudios: [Audio] { audios.filter { audio in
-        let isExists = audio.isExists
-        if isExists == false {
-            Task {
-                await audioManager.db.trash(audio)
-            }
-        }
-        return isExists
-    } }
 
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
-                List(validAudios) { audio in
+                List(audios) { audio in
                     Row(audio)
                         .listRowInsets(EdgeInsets(top: -0, leading: -20, bottom: 0, trailing: -20))
                         .listRowSeparator(.visible)

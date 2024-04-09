@@ -30,6 +30,10 @@ actor DB: ModelActor {
         self.modelExecutor = DefaultSerialModelExecutor(
             modelContext: context
         )
+        
+        Task {
+            DeleteInvalid(db: self).run()
+        }
     }
     
     func setOnUpdated(_ callback: @escaping () -> Void) {

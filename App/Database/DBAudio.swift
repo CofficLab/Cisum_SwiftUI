@@ -47,6 +47,20 @@ extension DB {
 // MARK: 删除
 
 extension DB {
+    nonisolated func delete(_ audio: Audio) {
+        let context = ModelContext(modelContainer)
+        guard let audio = context.model(for: audio.id) as? Audio else {
+            return
+        }
+        
+        do {
+            context.delete(audio)
+            try context.save()
+        } catch let e {
+            print(e)
+        }
+    }
+    
     func trash(_ audio: Audio) {
         let url = audio.url
         let ext = audio.ext
@@ -115,6 +129,21 @@ extension DB {
                 "items": items
             ]
         )
+    }
+    
+    nonisolated func countOfURL(_ url: URL) -> Int {
+        let context = ModelContext(modelContainer)
+        let predicate = #Predicate<Audio> {
+            $0.url == url
+        }
+        var descriptor = FetchDescriptor<Audio>(predicate: predicate)
+        do {
+            let result = try context.fetchCount(descriptor)
+            return result
+        } catch let e {
+            print(e)
+            return 0
+        }
     }
     
     func getAudioDir() -> URL {
@@ -223,7 +252,7 @@ extension DB {
             if let first = result.first {
                 return first
             } else {
-                print("not found")
+                os_log("\(Logger.isMain) ⚠️ DBAudio::get not found")
             }
         } catch let e {
             print(e)
