@@ -22,15 +22,10 @@ struct AlbumView: View {
         ZStack {
             if audio.isNotExists {
                 Image(systemName: "minus.circle").resizable().scaledToFit()
-            } else if isDownloading {
-                ProgressView(value: downloadingPercent / 100)
-                    .progressViewStyle(CircularProgressViewStyle(size: UIConfig.isDesktop ? 22 : 36))
-                    .controlSize(.regular)
-                    .scaledToFit()
-
-                Text("\(String(format: "%.0f", downloadingPercent))").scaleEffect(0.8)
+            } else if isDownloading && downloadingPercent < 100 {
+                Self.makeProgressView(downloadingPercent / 100)
             } else if isNotDownloaded {
-                Image(systemName: "arrow.down.circle.dotted").resizable().scaledToFit()
+                Self.getNotDownloadedAlbum(forPlaying: forPlaying)
             } else if let image = image {
                 image.resizable().scaledToFit()
             } else {
@@ -58,8 +53,10 @@ struct AlbumView: View {
                 for item in items {
                     if item.url == audio.url {
                         self.downloadingPercent = item.downloadProgress
-                        self.isDownloading = item.isDownloading
-                        self.isDownloaded = item.downloadProgress == 100
+                        withAnimation {
+                            self.isDownloading = item.isDownloading
+                            self.isDownloaded = item.downloadProgress == 100
+                        }
                         return
                     }
                 }
@@ -90,17 +87,53 @@ struct AlbumView: View {
         self.image = image
     }
     
+    static func getNotDownloadedAlbum(forPlaying: Bool = false) -> some View {
+        ZStack {
+            if forPlaying {
+                HStack {
+                    Spacer()
+                    Image(systemName: "arrow.down.circle.dotted")
+                        .resizable()
+                        .scaledToFit()
+                    Spacer()
+                }
+            } else {
+                Image(systemName: "arrow.down.circle.dotted")
+                    .resizable()
+                    .scaledToFit()
+            }
+        }
+    }
+
     static func getDefaultAlbum(forPlaying: Bool = false) -> some View {
-        if forPlaying {
-            Image("PlayingAlbum")
-                .resizable()
-                .scaledToFit()
-                .rotationEffect(.degrees(-90))
-        } else {
-            Image("DefaultAlbum")
-                .resizable()
-                .scaledToFit()
-                .rotationEffect(.degrees(-90))
+        ZStack {
+            if forPlaying {
+                HStack {
+                    Spacer()
+                    Image("PlayingAlbum")
+                        .resizable()
+                        .scaledToFit()
+                        .rotationEffect(.degrees(-90))
+                    Spacer()
+                }
+            } else {
+                Image("DefaultAlbum")
+                    .resizable()
+                    .scaledToFit()
+                    .rotationEffect(.degrees(-90))
+            }
+        }
+    }
+
+    static func makeProgressView(_ value: CGFloat = 0.5) -> some View {
+        GeometryReader { geo in
+            ZStack {
+                ProgressView(value: value)
+                    .progressViewStyle(CircularProgressViewStyle(size: min(geo.size.width, geo.size.height) * 0.8))
+                Text("\(String(format: "%.0f", value * 100))")
+                    .font(.system(size: min(geo.size.width, geo.size.height) * 0.56))
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
 }
@@ -108,5 +141,30 @@ struct AlbumView: View {
 #Preview("APP") {
     RootView {
         ContentView()
-    }
+    }.modelContainer(AppConfig.getContainer())
+}
+
+#Preview("ProgressView") {
+    AlbumView.makeProgressView()
+        .frame(width: 300, height: 300)
+        .background(BackgroundView.type2)
+}
+
+#Preview("List") {
+    List {
+        HStack {
+            AlbumView.makeProgressView()
+            Text("1")
+        }.frame(
+            width: UIConfig.isDesktop ? 36 : 36,
+            height: UIConfig.isDesktop ? 36 : 36
+        ).background(.red.opacity(0.2))
+        HStack {
+            AlbumView.makeProgressView().frame(
+                width: UIConfig.isDesktop ? 48 : 36,
+                height: UIConfig.isDesktop ? 36 : 36
+            )
+            Text("2")
+        }.background(.blue.opacity(0.2))
+    }.background(BackgroundView.type4)
 }
