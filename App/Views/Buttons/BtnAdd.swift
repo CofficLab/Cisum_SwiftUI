@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct ButtonAdd: View {
+struct BtnAdd: View {
     @EnvironmentObject var appManager: AppManager
 
     var body: some View {
@@ -14,9 +14,9 @@ struct ButtonAdd: View {
 #Preview {
     RootView {
         VStack {
-            ButtonAdd()
-            ButtonAdd().buttonStyle(.borderedProminent)
-            ButtonAdd().labelStyle(.iconOnly)
+            BtnAdd()
+            BtnAdd().buttonStyle(.borderedProminent)
+            BtnAdd().labelStyle(.iconOnly)
             
             DBView()
         }

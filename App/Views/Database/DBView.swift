@@ -15,16 +15,7 @@ struct DBView: View {
 
     var body: some View {
         #if os(iOS)
-            NavigationView {
-                ZStack {
-                    if audioManager.isEmpty {
-                        BackgroundView.type2A
-                        DBEmptyView()
-                    } else {
-                        DBList()
-                    }
-                }
-            }
+            DBList()
             .fileImporter(
                 isPresented: $appManager.isImporting,
                 allowedContentTypes: [.audio],

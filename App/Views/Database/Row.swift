@@ -1,35 +1,41 @@
-import SwiftUI
 import OSLog
+import SwiftUI
 
 struct Row: View {
     @EnvironmentObject var audioManager: AudioManager
-    
+
     @State var hovered = false
-    
+
     var audio: Audio
     var current: Audio? { audioManager.audio }
     var background: Color {
         if current?.url == audio.url {
             return AppConfig.getBackground.opacity(0.5)
         }
-        
+
         return hovered ? AppConfig.getBackground.opacity(0.9) : AppConfig.getBackground
     }
-    
+
     var body: some View {
-        ZStack {
-            VStack(spacing: 0) {
-                HStack {
-                    //Text("[\(audio.order)]")
-                    AlbumView(audio).frame(width: 24, height: 24)
+        VStack(spacing: 0) {
+            HStack(alignment: .center) {
+                // Text("[\(audio.order)]")
+                AlbumView(audio)
+                    .frame(
+                        width: UIConfig.isDesktop ? 24 : 36,
+                        height: UIConfig.isDesktop ? 24 : 36
+                    )
+                VStack(content: {
                     Text(audio.title)
-                    Spacer()
-                }
-                .padding(.leading, 20)
-                .padding(.vertical, 1)
-                Divider()
+                })
+                Spacer()
             }
+            .padding(.leading, UIConfig.isDesktop ? 20 : 30)
+            .padding(.vertical, 1)
+            .frame(maxHeight: .infinity)
+            Divider()
         }
+        .frame(maxHeight: .infinity)
         .background(background)
         .onHover(perform: { hovered = $0 })
         .onTapGesture(count: 2, perform: {
@@ -38,15 +44,17 @@ struct Row: View {
         .contextMenu(menuItems: {
             BtnPlay(audio: audio)
             BtnDownload(audio: audio)
-            BtnShowInFinder(url: audio.url)
+            if UIConfig.isDesktop {
+                BtnShowInFinder(url: audio.url)
+            }
             Divider()
             BtnTrash(audio: audio)
         })
     }
-    
+
     init(_ audio: Audio) {
         self.audio = audio
-        //os_log("\(Logger.isMain)🚩 🖥️ 初始化 \(audio.title)")
+        // os_log("\(Logger.isMain)🚩 🖥️ 初始化 \(audio.title)")
     }
 }
 

@@ -17,11 +17,17 @@ struct DBList: View {
         ZStack {
             VStack(spacing: 0) {
                 List {
-                    Section("共 \(total.description)", content: {
+                    Section(header: HStack {
+                        Text("共 \(total.description)")
+                        Spacer()
+                        if UIConfig.isNotDesktop {
+                            BtnAdd().labelStyle(.iconOnly)
+                        }
+                    }, content: {
                         ForEach(audios) { audio in
                             Row(audio)
-                                .listRowInsets(EdgeInsets(top: -0, leading: -20, bottom: 0, trailing: -20))
-                                .listRowSeparator(.visible)
+                                .listRowInsets(EdgeInsets(top: 0, leading: -20, bottom: 0, trailing: -20))
+                                .listRowSeparator(.hidden)
                         }
                     })
                 }

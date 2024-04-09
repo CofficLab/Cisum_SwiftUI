@@ -16,7 +16,7 @@ struct DBEmptyView: View {
                         .foregroundColor(.white)
                         .padding(.vertical, 20)
 
-                ButtonAdd().buttonStyle(.bordered).foregroundStyle(.white)
+                BtnAdd().buttonStyle(.bordered).foregroundStyle(.white)
                 #endif
 
                 #if os(macOS)

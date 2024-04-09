@@ -32,7 +32,7 @@ actor DB: ModelActor {
         )
         
         Task {
-            DeleteInvalid(db: self).run()
+            //DeleteInvalid(db: self).run()
         }
     }
     

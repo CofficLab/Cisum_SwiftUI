@@ -21,7 +21,7 @@ struct AlbumView: View {
                 Image(systemName: "minus.circle").resizable().scaledToFit()
             } else if isDownloading {
                 ProgressView(value: downloadingPercent / 100)
-                    .progressViewStyle(CircularProgressViewStyle(size: 22))
+                    .progressViewStyle(CircularProgressViewStyle(size: UIConfig.isDesktop ? 22 : 36))
                     .controlSize(.regular)
                     .scaledToFit()
 
