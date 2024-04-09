@@ -8,11 +8,14 @@ struct AlbumView: View {
     @State var downloadingPercent: Double = 0
 
     var audio: Audio
+    var forPlaying: Bool = false
     var fileManager = FileManager.default
     var isNotDownloaded: Bool { !isDownloaded && !isDownloading }
 
-    init(_ audio: Audio) {
+    /// forPlaying表示显示在正在播放界面
+    init(_ audio: Audio, forPlaying: Bool = false) {
         self.audio = audio
+        self.forPlaying = forPlaying
     }
 
     var body: some View {
@@ -31,11 +34,11 @@ struct AlbumView: View {
             } else if let image = image {
                 image.resizable().scaledToFit()
             } else {
-                Image("DefaultAlbum").resizable().scaledToFit()
-                    .task(priority: .utility) {
-                        await updateCover()
-                    }
+                Self.getDefaultAlbum(forPlaying: forPlaying)
             }
+        }
+        .task(priority: .utility) {
+            await updateCover()
         }
         .onAppear {
             refresh()
@@ -63,7 +66,6 @@ struct AlbumView: View {
             }
         })
         .onChange(of: audio) {
-            print("CHangeddsfafsdf")
             refresh()
         }
     }
@@ -86,6 +88,20 @@ struct AlbumView: View {
 
         let image = await audio.getCoverImage()
         self.image = image
+    }
+    
+    static func getDefaultAlbum(forPlaying: Bool = false) -> some View {
+        if forPlaying {
+            Image("PlayingAlbum")
+                .resizable()
+                .scaledToFit()
+                .rotationEffect(.degrees(-90))
+        } else {
+            Image("DefaultAlbum")
+                .resizable()
+                .scaledToFit()
+                .rotationEffect(.degrees(-90))
+        }
     }
 }
 

@@ -7,9 +7,9 @@ struct PlayingAlbum: View {
     var body: some View {
         ZStack {
             if let audio = audioManager.audio {
-                AlbumView(audio).scaledToFit().id(audio.id)
+                AlbumView(audio, forPlaying: true).id(audio.id)
             } else {
-                Image("PlayingAlbum").resizable().scaledToFit()
+                AlbumView.getDefaultAlbum(forPlaying: true)
             }
         }
     }
@@ -18,5 +18,5 @@ struct PlayingAlbum: View {
 #Preview("APP") {
     RootView {
         ContentView()
-    }
+    }.modelContainer(AppConfig.getContainer())
 }

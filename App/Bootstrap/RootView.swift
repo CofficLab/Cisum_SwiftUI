@@ -50,4 +50,5 @@ struct RootView<Content>: View where Content: View {
     RootView {
         ContentView()
     }
+    .modelContainer(AppConfig.getContainer())
 }

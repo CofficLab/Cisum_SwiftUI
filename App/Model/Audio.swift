@@ -128,6 +128,7 @@ extension Audio {
 extension Audio {
     #if os(iOS)
         func getUIImage() -> UIImage {
+            // 要放一张正方形的图，否则会自动加上白色背景
             var i = UIImage(imageLiteralResourceName: "DefaultAlbum")
             if fileManager.fileExists(atPath: coverCacheURL.path) {
                 i = UIImage(contentsOfFile: coverCacheURL.path) ?? i
@@ -187,4 +188,5 @@ extension Audio {
     RootView {
         ContentView()
     }
+    .modelContainer(AppConfig.getContainer())
 }
