@@ -5,16 +5,6 @@ import MediaPlayer
 import OSLog
 import SwiftUI
 
-enum PrepareCloudDocumentsResult {
-  case success(URL)
-  case failure(Error)
-}
-
-enum PrepareResult {
-    case success(iCloudDocumentsUrl: URL)
-    case failure(Error)
-}
-
 class AppManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
     @Published var showAlert: Bool = false
     @Published var showDB: Bool = false
