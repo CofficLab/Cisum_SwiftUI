@@ -10,10 +10,23 @@ actor DBSync {
     }
     
     func run(_ items: [MetadataItemWrapper]) {
-        var filtered = items.filter { $0.url != nil }
+        let filtered = items.filter { $0.url != nil }
         if filtered.count > 0 {
-            self.sync(items)
+//            self.sync(items)
+            Task {
+                await self.emitUpdate(items)
+            }
         }
+    }
+    
+    @MainActor func emitUpdate(_ items: [MetadataItemWrapper]) {
+        NotificationCenter.default.post(
+            name: NSNotification.Name("Updated"),
+            object: nil,
+            userInfo: [
+                "items": items
+            ]
+        )
     }
     
     func sync(_ items: [MetadataItemWrapper]) {

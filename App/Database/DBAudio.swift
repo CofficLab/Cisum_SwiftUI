@@ -26,23 +26,6 @@ extension DB {
 // MARK: 增加
 
 extension DB {
-    /// 往数据库添加文件
-    func add(
-        _ urls: [URL],
-        completionAll: @escaping () -> Void,
-        completionOne: @escaping (_ sourceUrl: URL) -> Void,
-        onStart: @escaping (_ audio: Audio) -> Void
-    ) {
-        for url in urls {
-            onStart(Audio(url))
-            SmartFile(url: url).copyTo(
-                destnation: audiosDir.appendingPathComponent(url.lastPathComponent))
-            completionOne(url)
-        }
-
-        completionAll()
-    }
-    
     func insert(_ audio: Audio) {
         context.insert(audio)
         try? context.save()
@@ -109,16 +92,6 @@ extension DB {
 // MARK: 查询
 
 extension DB {
-    func emitUpdate(_ items: [MetadataItemWrapper]) {
-        NotificationCenter.default.post(
-            name: NSNotification.Name("Updated"),
-            object: nil,
-            userInfo: [
-                "items": items
-            ]
-        )
-    }
-    
     nonisolated func countOfURL(_ url: URL) -> Int {
         let context = ModelContext(modelContainer)
         let predicate = #Predicate<Audio> {
@@ -146,7 +119,6 @@ extension DB {
             let query = ItemQuery(queue: OperationQueue(), url: self.getAudioDir())
             for try await items in query.searchMetadataItems() {
                 os_log("\(Logger.isMain)🍋 DB::getAudios \(items.count)")
-                //self.emitUpdate(items)
                 await DBSync(db: self).run(items)
             }
         }

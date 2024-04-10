@@ -44,6 +44,7 @@ struct Row: View {
         .contextMenu(menuItems: {
             BtnPlay(audio: audio)
             BtnDownload(audio: audio)
+            BtnEvict(audio: audio)
             if UIConfig.isDesktop {
                 BtnShowInFinder(url: audio.url)
             }

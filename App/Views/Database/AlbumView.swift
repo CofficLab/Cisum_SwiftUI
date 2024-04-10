@@ -60,8 +60,14 @@ struct AlbumView: View {
         os_log("\(Logger.isMain)🍋 AlbumView::refresh -> \(audio.title) \(percent)")
 
         isDownloaded = audio.isDownloaded
-        downloadingPercent = item?.downloadProgress ?? 100
-        isDownloading = iCloudHelper.isDownloading(audio.url) && downloadingPercent != 100
+        isDownloading = iCloudHelper.isDownloading(audio.url)
+        
+        if let item = item {
+            isDownloaded = item.downloadProgress == 100
+            isDownloading = item.isDownloading
+            downloadingPercent = item.downloadProgress
+        }
+        
         updateCover()
     }
 

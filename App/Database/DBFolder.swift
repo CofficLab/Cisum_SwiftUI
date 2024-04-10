@@ -1,4 +1,5 @@
 import Foundation
+import OSLog
 
 class DBFolder: ObservableObject {
     var fileManager = FileManager.default
@@ -14,12 +15,29 @@ class DBFolder: ObservableObject {
     ) {
         for url in urls {
             onStart(Audio(url))
-            SmartFile(url: url).copyTo(
-                destnation: audiosDir.appendingPathComponent(url.lastPathComponent))
-            completionOne(url)
+            
+            add(url, completion: {
+                completionOne(url)
+            })
         }
 
         completionAll()
+    }
+    
+    /// 往目录添加文件
+    func add(
+        _ url: URL,
+        completion: @escaping () -> Void
+    ) {
+        if iCloudHelper.isCloudPath(url: url) {
+            copyTo(url: url,
+                   destnation: audiosDir.appendingPathComponent(url.lastPathComponent))
+        } else {
+            copyTo(url: url,
+                   destnation: audiosDir.appendingPathComponent(url.lastPathComponent))
+        }
+            
+        completion()
     }
     
     func clearFolderContents(atPath path: String) {
@@ -60,6 +78,36 @@ class DBFolder: ObservableObject {
                     print(e)
                 }
             }
+        }
+    }
+    
+    // 将文件复制到目的地
+    func copyTo(url: URL, destnation: URL) {
+        os_log(
+            "\(Logger.isMain)☁️ CloudFile::copy \(url.lastPathComponent) -> \(destnation.lastPathComponent)"
+        )
+
+        do {
+            // 获取授权
+            if url.startAccessingSecurityScopedResource() {
+                os_log(
+                    "\(Logger.isMain)☁️ CloudFile::copy 获取授权后复制 \(url.lastPathComponent, privacy: .public)"
+                )
+                try FileManager.default.copyItem(at: url, to: destnation)
+                url.stopAccessingSecurityScopedResource()
+            } else {
+                os_log("\(Logger.isMain)☁️ CloudFile::copy 获取授权失败，可能不是用户选择的文件，直接复制 \(url.lastPathComponent)")
+                try fileManager.copyItem(at: url, to: destnation)
+            }
+        } catch {
+            os_log("\(Logger.isMain)☁️ SmartFile::复制文件发生错误 -> \(error.localizedDescription)")
+        }
+    }
+    
+    // MARK: 移除下载
+    func evict(_ url: URL) {
+        Task {
+            try? await cloudHandler.evict(url: url)
         }
     }
 }
