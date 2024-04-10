@@ -51,14 +51,16 @@ class ItemQuery {
                     os_log("\(Logger.isMain)🍋 searchMetadataItems.NSMetadataQueryDidUpdate")
                     let changedItems = notification.userInfo?[NSMetadataQueryUpdateChangedItemsKey] as? [NSMetadataItem] ?? []
                     let result = changedItems.compactMap { item -> MetadataItemWrapper? in
-                        return MetadataItemWrapper(metadataItem: item)
+                        return MetadataItemWrapper(metadataItem: item, isUpdated: true)
                     }
-                    continuation.yield(result)
+                    if result.isEmpty == false {
+                        continuation.yield(result)
+                    }
                 }
                 
                 if let deletedItems = notification.userInfo?[NSMetadataQueryUpdateRemovedItemsKey] as? [NSMetadataItem] {
                     let result = deletedItems.compactMap { item -> MetadataItemWrapper? in
-                        MetadataItemWrapper(metadataItem: item, isDeleted: true)
+                        MetadataItemWrapper(metadataItem: item, isDeleted: true, isUpdated: true)
                     }
                     continuation.yield(result)
                 }
@@ -77,6 +79,11 @@ class ItemQuery {
     }
 }
 
+struct MetadataItemCollection: Sendable {
+    var isUpdated = false
+    var items: [MetadataItemWrapper] = []
+}
+
 struct MetadataItemWrapper: Sendable {
     let fileName: String?
     let fileSize: Int?
@@ -86,11 +93,14 @@ struct MetadataItemWrapper: Sendable {
     let isPlaceholder: Bool
     let isDownloading: Bool
     let isDeleted: Bool
+    /// 发生了变动
+    let isUpdated: Bool
     let downloadProgress: Double
     let uploaded: Bool
 
-    init(metadataItem: NSMetadataItem, isDeleted: Bool = false) {
+    init(metadataItem: NSMetadataItem, isDeleted: Bool = false, isUpdated: Bool = false) {
         self.isDeleted = isDeleted
+        self.isUpdated = isUpdated
         fileName = metadataItem.value(forAttribute: NSMetadataItemFSNameKey) as? String
         fileSize = metadataItem.value(forAttribute: NSMetadataItemFSSizeKey) as? Int
         contentType = metadataItem.value(forAttribute: NSMetadataItemContentTypeKey) as? String

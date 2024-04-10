@@ -70,13 +70,17 @@ class DBFolder: ObservableObject {
         }
         
         Task {
+            // 文件不存在
+            if !fileManager.fileExists(atPath: audio.url.path) {
+                return
+            }
+            
             // 移动到回收站
-            if audio.isExists {
-                do {
-                    try await cloudHandler.moveFile(at: audio.url, to: trashUrl)
-                } catch let e {
-                    print(e)
-                }
+            do {
+                try await cloudHandler.moveFile(at: audio.url, to: trashUrl)
+            } catch let e {
+                print(e)
+                os_log("\(Logger.isMain)☁️⚠️ CloudFile::trash \(e.localizedDescription)")
             }
         }
     }

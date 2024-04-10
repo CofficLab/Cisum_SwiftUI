@@ -30,11 +30,50 @@ extension DB {
         context.insert(audio)
         try? context.save()
     }
+    
+    func insertIfNotIn(_ urls: [URL]) {
+        let dbURLs = self.getAllURLs()
+        urls.forEach({
+            if dbURLs.contains($0) == false {
+                context.insert(Audio($0))
+            }
+        })
+        
+        self.save()
+    }
 }
 
 // MARK: 删除
 
 extension DB {
+    func deleteIfNotIn(_ urls: [URL]) {
+            try?  self.context.delete(model: Audio.self, where: #Predicate{
+                urls.contains($0.url) == false
+            })
+            
+            self.save()
+    }
+    
+    nonisolated func delete(_ url: URL) {
+        os_log("\(Logger.isMain)🗑️ 数据库删除 \(url.lastPathComponent)")
+        Task {
+            let context = ModelContext(modelContainer)
+            guard let audio = await self.find(url) else {
+                return os_log("\(Logger.isMain)🗑️ 删除时数据库找不到 \(url.lastPathComponent)")
+            }
+            
+            do {
+                try context.delete(model: Audio.self, where: #Predicate<Audio> {
+                    $0.url == url
+                })
+                try context.save()
+                os_log("\(Logger.isMain)🗑️ 删除成功 \(audio.title)")
+            } catch let e {
+                print(e)
+            }
+        }
+    }
+    
     nonisolated func delete(_ audio: Audio) {
         os_log("\(Logger.isMain)🗑️ 数据库删除 \(audio.title)")
         let context = ModelContext(modelContainer)
@@ -109,6 +148,18 @@ extension DB {
     
     func getAudioDir() -> URL {
         self.audiosDir
+    }
+    
+    func getAllURLs() -> [URL] {
+        let predicate = #Predicate<Audio> {
+            $0.title != ""
+        }
+        var descriptor = FetchDescriptor<Audio>(predicate: predicate)
+        do {
+            return try context.fetch(descriptor).map {$0.url}
+        } catch let e {
+            return []
+        }
     }
     
     /// 查询数据，当查到或有更新时会调用回调函数
