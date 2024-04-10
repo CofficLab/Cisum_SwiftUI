@@ -7,12 +7,11 @@ struct DBView: View {
     @EnvironmentObject var audioManager: AudioManager
     @EnvironmentObject var appManager: AppManager
 
-    @State private var dropping: Bool = false
-
     var main = AppConfig.mainQueue
     var bg = AppConfig.bgQueue
     var db: DB { audioManager.db }
     var dbFolder: DBFolder = DBFolder()
+    var dropping: Bool { appManager.isDropping }
 
     var body: some View {
         #if os(iOS)
@@ -32,10 +31,7 @@ struct DBView: View {
             )
         #else
             DBList()
-                .onChange(of: dropping) {
-                    appManager.setFlashMessage(dropping ? "松开可添加文件" : "")
-                }
-                .onDrop(of: [UTType.fileURL], isTargeted: $dropping) { providers -> Bool in
+                .onDrop(of: [UTType.fileURL], isTargeted: $appManager.isDropping) { providers -> Bool in
                     let dispatchGroup = DispatchGroup()
                     var dropedFiles: [URL] = []
                     for provider in providers {

@@ -16,6 +16,7 @@ enum AppConfig {
     static let supportedExtensions = [
         "mp3",
         "m4a",
+        "flac"
     ]
 }
 

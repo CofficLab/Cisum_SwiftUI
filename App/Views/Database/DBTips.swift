@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct DBEmptyView: View {
+struct DBTips: View {
     @EnvironmentObject var appManager: AppManager
     
     var supportedFormats: String {
@@ -24,7 +24,7 @@ struct DBEmptyView: View {
                     HStack {
                             Image(systemName: "info.circle.fill")
                                 .foregroundStyle(.yellow)
-                            Text("将音乐文件拖到这里")
+                            Text("将音乐文件拖到这里可添加")
                                 .font(.title3)
                                 .foregroundStyle(.white)
                     }
@@ -39,7 +39,7 @@ struct DBEmptyView: View {
 }
 
 #Preview {
-    DBEmptyView()
+    DBTips()
         .frame(width: 300, height: 300)
         .background(BackgroundView.type1)
 }

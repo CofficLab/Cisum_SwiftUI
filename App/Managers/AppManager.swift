@@ -13,6 +13,7 @@ class AppManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
     @Published var stateMessage: String = ""
     @Published var fixedMessage: String = ""
     @Published var isImporting: Bool = false
+    @Published var isDropping: Bool = false
     
     func cleanStateMessage() {
         stateMessage = ""

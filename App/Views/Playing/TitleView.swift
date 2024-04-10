@@ -3,7 +3,7 @@ import SwiftUI
 struct TitleView: View {
     @EnvironmentObject var appManager: AppManager
     @EnvironmentObject var audioManager: AudioManager
-    
+
     var audio: Audio? { audioManager.audio }
 
     var body: some View {
@@ -17,9 +17,14 @@ struct TitleView: View {
 
             // 播放过程中出现的错误
             if let e = audioManager.playerError {
-                Label(e.localizedDescription, systemImage: "info.circle")
+                CardView(background: BackgroundView.type3, paddingVertical: 2) {
+                    HStack {
+                        Image(systemName: "info.circle")
+                            .foregroundStyle(.white)
+                        Text(e.localizedDescription)
+                            .foregroundStyle(.white)
+                    }
                     .font(audio == nil ? .title3 : .callout)
-                    .foregroundStyle(.white)
                     .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("Updated")), perform: {
                         notification in
                         AppConfig.bgQueue.async {
@@ -33,6 +38,7 @@ struct TitleView: View {
                             }
                         }
                     })
+                }
             }
         }
     }

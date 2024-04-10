@@ -12,6 +12,13 @@ struct DBList: View {
     var total: Int { db.getTotal() }
     var db: DB { audioManager.db }
     var audio: Audio? { audioManager.audio }
+    var showTips: Bool {
+        if appManager.isDropping {
+            return true
+        }
+        
+        return appManager.flashMessage.isEmpty && total == 0
+    }
 
     var body: some View {
         ZStack {
@@ -35,8 +42,8 @@ struct DBList: View {
                 .listStyle(.plain)
             }
             
-            if audios.count == 0, appManager.flashMessage.isEmpty {
-                DBEmptyView()
+            if showTips {
+                DBTips()
             }
         }
     }

@@ -251,30 +251,41 @@ extension AudioManager {
     }
 
     func errorCheck() {
-        self.playerError = nil
+        setError(nil)
 
         guard let audio = audio else {
-            return self.playerError = SmartError.NoAudioInList
+            return setError(SmartError.NoAudioInList)
         }
 
         if audio.isNotExists {
-            return self.playerError = SmartError.NotExists
+            return setError(SmartError.NotExists)
         }
 
         if audio.isNotDownloaded {
             Task {
                 if networkOK == false {
-                    return self.playerError = SmartError.NetworkError
+                    return setError(SmartError.NetworkError)
                 }
 
                 await db.download(audio, reason: "errorCheck")
             }
 
-            return self.playerError = SmartError.NotDownloaded
+            return setError(SmartError.NotDownloaded)
         }
 
         if audio.isDownloading {
-            return self.playerError = SmartError.Downloading
+            return setError(SmartError.Downloading)
+        }
+        
+        if audio.isNotSupported {
+            return setError(SmartError.FormatNotSupported(audio.ext))
+        }
+    }
+    
+    
+    func setError(_ e: Error?) {
+        main.async {
+            self.playerError = e
         }
     }
 }
