@@ -28,7 +28,9 @@ struct Row: View {
                 VStack(content: {
                     Text(audio.title)
                 })
+//                Text("---\(audio.playCount)")
                 Spacer()
+
             }
             .padding(.leading, UIConfig.isDesktop ? 20 : 30)
             .padding(.vertical, 1)

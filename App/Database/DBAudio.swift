@@ -398,6 +398,13 @@ extension DB {
 // MARK: 修改与下载
 
 extension DB {
+    func increasePlayCount(_ audio: Audio) {
+        if let a = self.find(audio.id) {
+            a.playCount += 1
+            self.save()
+        }
+    }
+    
     func prepare() {
         guard let first = get(0) else {
             return
