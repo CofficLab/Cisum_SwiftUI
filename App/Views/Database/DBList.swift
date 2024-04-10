@@ -43,7 +43,7 @@ struct DBList: View {
             }
             
             if showTips {
-                DBTips()
+                DBTips().shadow(radius: 8)
             }
         }
     }
