@@ -12,7 +12,7 @@ struct BtnToggle: View {
     
     var player: AVAudioPlayer { audioManager.player }
     var title: String { player.isPlaying ? "播放" : "暂停"}
-    var isPlaying: Bool { player.isPlaying }
+    var isPlaying: Bool { audioManager.isPlaying }
 
     var body: some View {        
         ControlButton(title: title, size: 32, systemImage: systemImage, onTap: {
