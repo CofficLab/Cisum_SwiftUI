@@ -13,7 +13,7 @@ struct BtnDownload: View {
         } label: {
             Label("下载", systemImage: getImageName())
                 .font(.system(size: 24))
-        }.disabled(audio.isDownloaded)
+        }
     }
     
     private func getImageName() -> String {

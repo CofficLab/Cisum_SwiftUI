@@ -43,6 +43,7 @@ struct Row: View {
         })
         .contextMenu(menuItems: {
             BtnPlay(audio: audio)
+            Divider()
             BtnDownload(audio: audio)
             BtnEvict(audio: audio)
             if UIConfig.isDesktop {

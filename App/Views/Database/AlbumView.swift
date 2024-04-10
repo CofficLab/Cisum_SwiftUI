@@ -68,14 +68,16 @@ struct AlbumView: View {
             downloadingPercent = item.downloadProgress
         }
         
-        updateCover()
+        if isDownloaded {
+            updateCover()
+        }
     }
 
     func updateCover() {
         // os_log("\(Logger.isMain)📷 AlbumView::getCover")
-        if audio.isNotExists {
-            return
-        }
+//        if audio.isNotExists {
+//            return
+//        }
 
         Task {
             let image = await audio.getCoverImage()

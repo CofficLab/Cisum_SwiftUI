@@ -126,8 +126,8 @@
             filePath = "App/Views/Database/AlbumView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "77"
-            endingLineNumber = "77"
+            startingLineNumber = "79"
+            endingLineNumber = "79"
             landmarkName = "updateCover()"
             landmarkType = "7">
          </BreakpointContent>
