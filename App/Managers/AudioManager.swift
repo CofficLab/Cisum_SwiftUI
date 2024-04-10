@@ -170,7 +170,7 @@ class AudioManager: NSObject, ObservableObject {
         os_log("\(Logger.isMain)🔊 AudioManager::next ⬇️ \(manual ? "手动触发" : "自动触发")")
 
         if mode == .Loop && manual == false {
-            return
+            return self.resume()
         }
 
         guard let audio = audio else {
