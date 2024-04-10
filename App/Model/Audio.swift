@@ -12,6 +12,7 @@ class Audio {
     var order: Int = Int.random(in: 0...500000000)
     var isPlaceholder: Bool = false
     var title: String = ""
+    var playCount: Int = 0
 
     var size: Int64 { getFileSize() }
     var ext: String { url.pathExtension }

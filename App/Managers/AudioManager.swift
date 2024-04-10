@@ -91,6 +91,9 @@ class AudioManager: NSObject, ObservableObject {
 
             // 将当前播放的歌曲存储下来，下次打开继续
             AppConfig.setCurrentAudio(audio)
+            
+            // 播放次数增加
+            await db.increasePlayCount(audio)
         }
     }
 
