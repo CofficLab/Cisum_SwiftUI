@@ -317,7 +317,9 @@ extension DB {
                 // os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title) -> \(first.title)")
                 return first
             } else {
-                os_log("⚠️ DBAudio::nextOf [\(audio.order)] \(audio.title) not found")
+                //os_log("⚠️ DBAudio::nextOf [\(audio.order)] \(audio.title) not found")
+                // 找不到下一个，则返回第一个
+                return self.getFirstValid()
             }
         } catch let e {
             print(e)

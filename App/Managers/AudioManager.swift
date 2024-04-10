@@ -180,17 +180,19 @@ class AudioManager: NSObject, ObservableObject {
         Task {
             if let i = db.nextOf(audio) {
                 await setCurrent(i, play: player.isPlaying || manual == false, reason: "触发了下一首")
+            } else {
+                self.stop()
             }
         }
     }
-    
+
     func trash(_ audio: Audio) throws {
         os_log("\(Logger.isMain)🔊 AudioManager::trash 🗑️ \(audio.title)")
-        
+
         if self.audio?.url == audio.url {
             try next(manual: true)
         }
-        
+
         Task {
             await db.trash(audio)
         }
@@ -276,13 +278,12 @@ extension AudioManager {
         if audio.isDownloading {
             return setError(SmartError.Downloading)
         }
-        
+
         if audio.isNotSupported {
             return setError(SmartError.FormatNotSupported(audio.ext))
         }
     }
-    
-    
+
     func setError(_ e: Error?) {
         main.async {
             self.playerError = e
@@ -329,14 +330,7 @@ extension AudioManager {
             return AVAudioPlayer()
         }
 
-        if audio.isNotDownloaded {
-            os_log("\(Logger.isMain)🚩 AudioManager::初始化播放器失败，因为未下载")
-            throw SmartError.NotDownloaded
-        }
-
-        if audio.isNotSupported {
-            throw SmartError.FormatNotSupported(audio.ext)
-        }
+        self.errorCheck()
 
         do {
             #if os(iOS)
