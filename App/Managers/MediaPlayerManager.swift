@@ -53,7 +53,7 @@ class MediaPlayerManager: ObservableObject {
         c.nextTrackCommand.addTarget { _ in
             os_log("\(Logger.isMain)🍋 MediaPlayerManager::下一首")
             do {
-                try self.audioManager.next()
+                try self.audioManager.next(manual: true)
                 return .success
             } catch let e {
                 os_log("\(Logger.isMain)MediaPlayerManager::\(e.localizedDescription)")
