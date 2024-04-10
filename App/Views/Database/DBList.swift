@@ -36,6 +36,11 @@ struct DBList: View {
                                 .listRowInsets(EdgeInsets(top: 0, leading: -20, bottom: 0, trailing: -20))
                                 .listRowSeparator(.hidden)
                         }
+                        .onDelete(perform: { indexSet in
+                            for i in indexSet {
+                                audioManager.dbFolder.trash(audios[i])
+                            }
+                        })
                     })
                 }
                 .scrollContentBackground(.hidden)
