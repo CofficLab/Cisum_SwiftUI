@@ -310,7 +310,7 @@ extension AudioManager {
             player = try makePlayer()
             player.delegate = self
             if play {
-                player.play()
+                self.player.play()
             }
 
             self.isPlaying = player.isPlaying

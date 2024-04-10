@@ -8,6 +8,8 @@ struct DBList: View {
     @Environment(\.modelContext) private var modelContext
 
     @Query(sort: \Audio.order, animation: .default) var audios: [Audio]
+    
+    @State var selection: Audio.ID? = nil
 
     var total: Int { db.getTotal() }
     var db: DB { audioManager.db }
@@ -23,18 +25,20 @@ struct DBList: View {
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
-                List {
+                List(selection: $selection) {
                     Section(header: HStack {
                         Text("共 \(total.description)")
                         Spacer()
                         if UIConfig.isNotDesktop {
-                            BtnAdd().labelStyle(.iconOnly)
+                            BtnAdd()
+                                .font(.title2)
+                                .labelStyle(.iconOnly)
                         }
                     }, content: {
                         ForEach(audios) { audio in
                             Row(audio)
-                                .listRowInsets(EdgeInsets(top: 0, leading: -20, bottom: 0, trailing: -20))
-                                .listRowSeparator(.hidden)
+//                                .listRowInsets(EdgeInsets(top: 0, leading: -20, bottom: 0, trailing: -20))
+//                                .listRowSeparator(.hidden)
                         }
                         .onDelete(perform: { indexSet in
                             for i in indexSet {
@@ -43,8 +47,8 @@ struct DBList: View {
                         })
                     })
                 }
-                .scrollContentBackground(.hidden)
-                .listStyle(.plain)
+//                .scrollContentBackground(.hidden)
+//                .listStyle(.plain)
             }
             
             if showTips {
