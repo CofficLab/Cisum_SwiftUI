@@ -19,7 +19,7 @@ class SmartFile {
             // 获取授权
             if self.url.startAccessingSecurityScopedResource() {
                 os_log(
-                    "\(Logger.isMain)☁️ CloudFile::copy获取授权后复制 \(self.url.lastPathComponent, privacy: .public)"
+                    "\(Logger.isMain)☁️ CloudFile::copy 获取授权后复制 \(self.url.lastPathComponent, privacy: .public)"
                 )
                 try FileManager.default.copyItem(at: self.url, to: destnation)
                 self.url.stopAccessingSecurityScopedResource()

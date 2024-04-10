@@ -20,15 +20,17 @@ struct DBEmptyView: View {
                 #endif
 
                 #if os(macOS)
-                VStack {
+                VStack(spacing: 20) {
                     HStack {
                             Image(systemName: "info.circle.fill")
-                                .foregroundStyle(.brown)
+                                .foregroundStyle(.yellow)
                             Text("将音乐文件拖到这里")
-                                .font(.subheadline)
+                                .font(.title3)
                                 .foregroundStyle(.white)
                     }
-                    Text("支持的格式：\(supportedFormats)").font(.subheadline).foregroundStyle(.white)
+                    Text("支持的格式：\(supportedFormats)")
+                        .font(.subheadline)
+                        .foregroundStyle(.white)
                 }
                 #endif
             }
@@ -38,10 +40,12 @@ struct DBEmptyView: View {
 
 #Preview {
     DBEmptyView()
+        .frame(width: 300, height: 300)
+        .background(BackgroundView.type1)
 }
 
 #Preview {
     RootView {
         DBView()
-    }
+    }.modelContainer(AppConfig.getContainer())
 }

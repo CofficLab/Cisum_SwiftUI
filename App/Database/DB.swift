@@ -30,14 +30,22 @@ actor DB: ModelActor {
         self.modelExecutor = DefaultSerialModelExecutor(
             modelContext: context
         )
-        
-        Task {
-            //DeleteInvalid(db: self).run()
-        }
     }
     
     func setOnUpdated(_ callback: @escaping () -> Void) {
         self.onUpdated = callback
+    }
+    
+    func hasChanges() -> Bool {
+        context.hasChanges
+    }
+    
+    func save() {
+        do {
+            try self.context.save()
+        } catch let e {
+            print(e)
+        }
     }
 }
 

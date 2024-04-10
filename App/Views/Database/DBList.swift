@@ -34,10 +34,10 @@ struct DBList: View {
                 .scrollContentBackground(.hidden)
                 .listStyle(.plain)
             }
-        }
-
-        if audios.count == 0, appManager.flashMessage.isEmpty {
-            DBEmptyView()
+            
+            if audios.count == 0, appManager.flashMessage.isEmpty {
+                DBEmptyView()
+            }
         }
     }
 }

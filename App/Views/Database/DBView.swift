@@ -12,6 +12,7 @@ struct DBView: View {
     var main = AppConfig.mainQueue
     var bg = AppConfig.bgQueue
     var db: DB { audioManager.db }
+    var dbFolder: DBFolder = DBFolder()
 
     var body: some View {
         #if os(iOS)
@@ -70,7 +71,7 @@ extension DBView {
     func copy(_ files: [URL]) {
         appManager.stateMessage = "正在复制 \(files.count) 个文件"
         Task {
-            await db.add(
+            dbFolder.add(
                 files,
                 completionAll: {
                     self.setFlashMessage("已添加 \(files.count) 个文件")

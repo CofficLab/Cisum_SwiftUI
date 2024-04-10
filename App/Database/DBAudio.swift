@@ -42,6 +42,11 @@ extension DB {
 
         completionAll()
     }
+    
+    func insert(_ audio: Audio) {
+        context.insert(audio)
+        try? context.save()
+    }
 }
 
 // MARK: 删除
@@ -96,20 +101,8 @@ extension DB {
 
     /// 清空数据库
     func destroy() {
-        self.clearFolderContents(atPath: audiosDir.path)
-    }
-
-    func clearFolderContents(atPath path: String) {
-        let fileManager = FileManager.default
-        do {
-            let contents = try fileManager.contentsOfDirectory(atPath: path)
-            for item in contents {
-                let itemPath = URL(fileURLWithPath: path).appendingPathComponent(item).path
-                try fileManager.removeItem(atPath: itemPath)
-            }
-        } catch {
-            print("Error: \(error)")
-        }
+        try? context.delete(model: Audio.self)
+        try? context.save()
     }
 }
 
@@ -131,7 +124,7 @@ extension DB {
         let predicate = #Predicate<Audio> {
             $0.url == url
         }
-        var descriptor = FetchDescriptor<Audio>(predicate: predicate)
+        let descriptor = FetchDescriptor<Audio>(predicate: predicate)
         do {
             let result = try context.fetchCount(descriptor)
             return result
@@ -153,8 +146,8 @@ extension DB {
             let query = ItemQuery(queue: OperationQueue(), url: self.getAudioDir())
             for try await items in query.searchMetadataItems() {
                 os_log("\(Logger.isMain)🍋 DB::getAudios \(items.count)")
-                self.upsert(items.filter { $0.url != nil })
-                self.emitUpdate(items)
+                //self.emitUpdate(items)
+                await DBSync(db: self).run(items)
             }
         }
     }
@@ -436,42 +429,6 @@ extension DB {
                 await self.onUpdated()
             } else {
                 os_log("\(Logger.isMain)🍋 DB::update nothing changed 👌")
-            }
-        }
-    }
-
-    nonisolated func upsert(_ items: [MetadataItemWrapper]) {
-        Task.detached {
-            os_log("\(Logger.isMain)🍋 DB::upsert with count=\(items.count)")
-            let context = ModelContext(self.modelContainer)
-            context.autosaveEnabled = false
-            for item in items {
-                if var current = Self.find(self.modelContainer, item.url!) {
-                    if item.isDeleted {
-                        context.delete(current)
-                        continue
-                    }
-                    
-                    // os_log("\(Logger.isMain)🍋 DB::更新 \(current.title)")
-                    current = current.mergeWith(item)
-                } else {
-                    if item.isDeleted {
-                        continue
-                    }
-                    
-                    // os_log("\(Logger.isMain)🍋 DB::插入")
-                    if let audio = Audio.fromMetaItem(item) {
-                        context.insert(audio)
-                    }
-                }
-            }
-
-            if context.hasChanges {
-                os_log("\(Logger.isMain)🍋 DB::保存")
-                try? context.save()
-//                await self.onUpdated()
-            } else {
-                os_log("\(Logger.isMain)🍋 DB::upsert nothing changed 👌")
             }
         }
     }
