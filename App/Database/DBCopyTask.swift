@@ -10,30 +10,17 @@ extension DB {
         try? context.save()
     }
 
-    func add(_ urls: [URL],
-             completionAll: @escaping () -> Void,
-             completionOne: @escaping (_ sourceUrl: URL) -> Void,
-             onStart: @escaping (_ audio: Audio) -> Void)
+    func add(_ urls: [URL])
     {
         for url in urls {
-            onStart(Audio(url))
-
-            add(url, completion: {
-                completionOne(url)
-            })
+            add(url)
         }
-
-        completionAll()
     }
 
-    func add(
-        _ url: URL,
-        completion: @escaping () -> Void
-    ) {
+    func add(_ url: URL) {
         let task = CopyTask(url: url)
         context.insert(task)
         self.save()
-        completion()
     }
 }
 

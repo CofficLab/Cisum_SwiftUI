@@ -53,7 +53,7 @@ struct DBView: View {
     }
 
     init() {
-        os_log("\(Logger.isMain)🚩 DBView::Init")
+        //os_log("\(Logger.isMain)🚩 DBView::Init")
     }
 }
 
@@ -61,22 +61,8 @@ struct DBView: View {
 
 extension DBView {
     func copy(_ files: [URL]) {
-        appManager.stateMessage = "正在复制 \(files.count) 个文件"
-        bg.async {
-            db.add(
-                files,
-                completionAll: {
-                    self.setFlashMessage("已添加 \(files.count) 个文件")
-                },
-                completionOne: { _ in },
-                onStart: { audio in
-                    if audio.isNotDownloaded {
-                        self.setStateMessage("正在从 iCloud 下载 \(audio.title)")
-                    } else {
-                        self.setStateMessage("正在复制 \(audio.title)")
-                    }
-                }
-            )
+        Task {
+            await db.add(files)
         }
     }
 

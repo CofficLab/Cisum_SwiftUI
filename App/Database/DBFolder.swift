@@ -7,33 +7,6 @@ class DBFolder: ObservableObject {
     var audiosDir: URL = AppConfig.audiosDir
     var bg = AppConfig.bgQueue
     
-    /// 往目录添加文件
-    func add(
-        _ urls: [URL],
-        completionAll: @escaping () -> Void,
-        completionOne: @escaping (_ sourceUrl: URL) -> Void,
-        onStart: @escaping (_ audio: Audio) -> Void
-    ) {
-        for url in urls {
-            onStart(Audio(url))
-            
-            add(url, completion: {
-                completionOne(url)
-            })
-        }
-
-        completionAll()
-    }
-    
-    /// 往目录添加文件
-    func add(
-        _ url: URL,
-        completion: @escaping () -> Void
-    ) {
-        CopyFiles().run(url,audiosDir.appendingPathComponent(url.lastPathComponent))
-        completion()
-    }
-    
     func clearFolderContents(atPath path: String) {
         let fileManager = FileManager.default
         do {

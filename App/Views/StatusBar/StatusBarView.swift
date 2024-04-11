@@ -1,7 +1,12 @@
 import SwiftUI
+import SwiftData
 
 struct StatusBarView: View {
     @EnvironmentObject var appManager: AppManager
+    
+    @Query var tasks: [CopyTask]
+    
+    var taskCount: Int { tasks.count }
     
     var body: some View {
         ZStack {
@@ -15,7 +20,7 @@ struct StatusBarView: View {
             
             CopyTaskView()
         }
-//        .opacity(appManager.stateMessage.isEmpty ? 0 : 1)
+        .opacity(appManager.stateMessage.isEmpty && taskCount == 0 ? 0 : 1)
         .frame(height: 20)
     }
 }
@@ -27,5 +32,5 @@ struct StatusBarView: View {
             
             StatusBarView()
         }).background(Color.white).padding(30)
-    }
+    }.modelContainer(AppConfig.getContainer())
 }
