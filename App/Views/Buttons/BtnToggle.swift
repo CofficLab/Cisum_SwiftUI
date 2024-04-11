@@ -13,6 +13,11 @@ struct BtnToggle: View {
     var audio: Audio? { audioManager.audio }
     var player: AVAudioPlayer { audioManager.player }
     var title: String { player.isPlaying ? "播放" : "暂停" }
+    var showAlbum: Bool {
+        UIConfig.isNotDesktop && 
+        appManager.showDB == false &&
+        audioManager.audio?.isNotDownloaded ?? false
+    }
     var image: String {
         if audioManager.audio?.isNotDownloaded ?? false {
             "icloud.and.arrow.down"
@@ -24,34 +29,21 @@ struct BtnToggle: View {
     }
 
     var body: some View {
-        if let audio = audio, audio.isNotDownloaded {
-            AlbumView(audio, forPlaying: false)
+        if showAlbum,let a = audioManager.audio {
+            AlbumView(a, forPlaying: false)
         } else {
             ControlButton(title: title, size: 32, systemImage: image, onTap: {
                 audioManager.toggle()
             })
         }
-        
-//        .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("Updated")), perform: {
-//            notification in
-//            AppConfig.bgQueue.async {
-//                let data = notification.userInfo as! [String: [MetadataItemWrapper]]
-//                let items = data["items"]!
-//                for item in items {
-//                    if item.url == audioManager.audio?.url {
-////                        refresh()
-//                        return
-//                    }
-//                }
-//            }
-//        })
     }
 }
 
-#Preview {
+#Preview("APP") {
     RootView(content: {
         ContentView()
     })
+    .modelContainer(AppConfig.getContainer())
 }
 
 #Preview {

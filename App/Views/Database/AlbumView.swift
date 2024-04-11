@@ -36,7 +36,7 @@ struct AlbumView: View {
             } else if isDownloading {
                 Self.makeProgressView(downloadingPercent / 100)
             } else if isNotDownloaded {
-                Self.getNotDownloadedAlbum(forPlaying: forPlaying).onTapGesture {
+                NotDownloadedAlbum(forPlaying: forPlaying).onTapGesture {
                     Task {
                         await audioManager.db.download(self.audio, reason: "点击了Album")
                     }
@@ -44,32 +44,23 @@ struct AlbumView: View {
             } else if let image = image {
                 image.resizable().scaledToFit()
             } else {
-                Self.getDefaultAlbum(forPlaying: forPlaying)
+                DefaultAlbum(forPlaying: forPlaying)
             }
         }
         .clipShape(shape)
         .onAppear {
             refresh()
-        }
-        .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("Updated")), perform: {
-            notification in
-            bg.async {
-                let data = notification.userInfo as! [String: [MetadataItemWrapper]]
-                let items = data["items"]!
+            EventManager().onUpdated({ items in
                 for item in items {
                     if item.url == audio.url {
                         return refresh(item)
                     }
                 }
-            }
-        })
+            })
+        }
     }
 
     func refresh(_ item: MetadataItemWrapper? = nil) {
-        var percent = ""
-        if let item = item {
-            percent = "\(item.downloadProgress)"
-        }
         
         //os_log("\(Logger.isMain)🍋 AlbumView::refresh -> \(audio.title) \(percent)")
 
@@ -95,47 +86,9 @@ struct AlbumView: View {
 
         Task {
             let image = await audio.getCoverImage()
-            main.async {
+//            main.sync {
                 self.image = image
-            }
-        }
-    }
-
-    static func getNotDownloadedAlbum(forPlaying: Bool = false) -> some View {
-        ZStack {
-            if forPlaying {
-                HStack {
-                    Spacer()
-                    Image(systemName: "arrow.down.circle.dotted")
-                        .resizable()
-                        .scaledToFit()
-                    Spacer()
-                }
-            } else {
-                Image(systemName: "arrow.down.circle.dotted")
-                    .resizable()
-                    .scaledToFit()
-            }
-        }
-    }
-
-    static func getDefaultAlbum(forPlaying: Bool = false) -> some View {
-        ZStack {
-            if forPlaying {
-                HStack {
-                    Spacer()
-                    Image("PlayingAlbum")
-                        .resizable()
-                        .scaledToFit()
-                        .rotationEffect(.degrees(-90))
-                    Spacer()
-                }
-            } else {
-                Image("DefaultAlbum")
-                    .resizable()
-                    .scaledToFit()
-                    .rotationEffect(.degrees(-90))
-            }
+//            }
         }
     }
 

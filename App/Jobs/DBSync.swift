@@ -1,9 +1,11 @@
 import Foundation
 import OSLog
+import SwiftUI
 
 actor DBSync {
     var db: DB
     var queue = DispatchQueue.global(qos: .background)
+    var eventManager = EventManager()
     
     init(db: DB) {
         self.db = db
@@ -13,20 +15,7 @@ actor DBSync {
         let filtered = items.filter { $0.url != nil }
         if filtered.count > 0 {
             self.sync(items)
-            Task {
-                await self.emitUpdate(items)
-            }
         }
-    }
-    
-    @MainActor func emitUpdate(_ items: [MetadataItemWrapper]) {
-        NotificationCenter.default.post(
-            name: NSNotification.Name("Updated"),
-            object: nil,
-            userInfo: [
-                "items": items
-            ]
-        )
     }
     
     func sync(_ items: [MetadataItemWrapper]) {
@@ -45,7 +34,7 @@ actor DBSync {
             }
             
             // 更新查到的item，发出更新事件让UI更新
-            await self.emitUpdate(itemsForUpdate)
+            await self.eventManager.emitUpdate(itemsForUpdate)
             
             // 如有必要，将更新的插入数据库
             await self.insertIfNotIn(itemsForUpdate)
@@ -79,4 +68,10 @@ actor DBSync {
             await self.db.insertIfNotIn(items.map { $0.url! })
         }
     }
+}
+
+#Preview {
+    RootView {
+        ContentView()
+    }.modelContainer(AppConfig.getContainer())
 }

@@ -155,10 +155,11 @@ extension DB {
         let predicate = #Predicate<Audio> {
             $0.title != ""
         }
-        var descriptor = FetchDescriptor<Audio>(predicate: predicate)
+        let descriptor = FetchDescriptor<Audio>(predicate: predicate)
         do {
             return try context.fetch(descriptor).map {$0.url}
         } catch let e {
+            print(e)
             return []
         }
     }

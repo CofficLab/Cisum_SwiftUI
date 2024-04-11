@@ -11,6 +11,40 @@ class MediaPlayerManager: ObservableObject {
         self.audioManager = audioManager
         onCommand()
     }
+    
+    static func setPlayingInfo(_ smartPlayer: SmartPlayer) {
+        os_log("\(Logger.isMain)🍋 MediaPlayerManager::Update")
+        let audio = smartPlayer.audio
+        let player = smartPlayer.player
+        let isPlaying = player.isPlaying
+        let duration = player.duration
+        let currentTime = player.currentTime
+        let center = MPNowPlayingInfoCenter.default()
+
+        guard let audio = audio else {
+            return
+        }
+
+        #if os(iOS)
+            let image = audio.getUIImage()
+
+            center.nowPlayingInfo = [
+                MPMediaItemPropertyTitle: audio.title,
+                MPMediaItemPropertyArtwork: MPMediaItemArtwork(image: image),
+                MPMediaItemPropertyArtist: "乐音APP",
+                MPMediaItemPropertyPlaybackDuration: duration,
+                MPNowPlayingInfoPropertyElapsedPlaybackTime: currentTime,
+            ]
+        #else
+            center.playbackState = isPlaying ? .playing : .paused
+            center.nowPlayingInfo = [
+                MPMediaItemPropertyTitle: audio.title,
+                MPMediaItemPropertyArtist: "乐音APP",
+                MPMediaItemPropertyPlaybackDuration: duration,
+                MPNowPlayingInfoPropertyElapsedPlaybackTime: currentTime,
+            ]
+        #endif
+    }
 
     static func setNowPlayingInfo(audioManager: AudioManager) {
         os_log("\(Logger.isMain)🍋 MediaPlayerManager::Update")

@@ -78,12 +78,12 @@ class AudioManager: NSObject, ObservableObject {
 
         self.audio = audio
         try? updatePlayer(play: play ?? player.isPlaying)
-        self.errorCheck()
+        self.checkError()
 
         Task {
             // 下载当前的
             await self.db.download(audio, reason: "SetCurrent")
-            self.errorCheck()
+            self.checkError()
 
             // 下载接下来的
             await db.downloadNext(audio, reason: "触发了下一首")
@@ -207,7 +207,7 @@ class AudioManager: NSObject, ObservableObject {
     
     func updateState() {
         self.lastUpdatedAt = .now
-        self.errorCheck()
+        self.checkError()
         
         Task {
             MediaPlayerManager.setNowPlayingInfo(audioManager: self)

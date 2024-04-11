@@ -44,6 +44,10 @@
 		0B901D8A2BB83E28003AC253 /* ItemQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B901D892BB83E28003AC253 /* ItemQuery.swift */; };
 		0B901D932BB83F38003AC253 /* CloudKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B901D922BB83F38003AC253 /* CloudKit.swift */; };
 		0B92ACCA2BBA80F300F1A74F /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 0B92ACC92BBA80F300F1A74F /* README.md */; };
+		0B9FA2972BC80E51007B235A /* EventManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9FA2962BC80E51007B235A /* EventManager.swift */; };
+		0B9FA2992BC81EFF007B235A /* NotDownloadedAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9FA2982BC81EFF007B235A /* NotDownloadedAlbum.swift */; };
+		0B9FA29B2BC81F53007B235A /* DefaultAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9FA29A2BC81F53007B235A /* DefaultAlbum.swift */; };
+		0B9FA29D2BC823A1007B235A /* SmartPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9FA29C2BC823A1007B235A /* SmartPlayer.swift */; };
 		0BAABEAF2BC787A200DF4A31 /* CopyFiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAABEAE2BC787A200DF4A31 /* CopyFiles.swift */; };
 		0BAABEB12BC79C4E00DF4A31 /* CopyTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAABEB02BC79C4E00DF4A31 /* CopyTask.swift */; };
 		0BAABEB32BC79C9F00DF4A31 /* DBCopyTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAABEB22BC79C9F00DF4A31 /* DBCopyTask.swift */; };
@@ -128,6 +132,10 @@
 		0B901D892BB83E28003AC253 /* ItemQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemQuery.swift; sourceTree = "<group>"; };
 		0B901D922BB83F38003AC253 /* CloudKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudKit.swift; sourceTree = "<group>"; };
 		0B92ACC92BBA80F300F1A74F /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		0B9FA2962BC80E51007B235A /* EventManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventManager.swift; sourceTree = "<group>"; };
+		0B9FA2982BC81EFF007B235A /* NotDownloadedAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotDownloadedAlbum.swift; sourceTree = "<group>"; };
+		0B9FA29A2BC81F53007B235A /* DefaultAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultAlbum.swift; sourceTree = "<group>"; };
+		0B9FA29C2BC823A1007B235A /* SmartPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmartPlayer.swift; sourceTree = "<group>"; };
 		0BAABEAE2BC787A200DF4A31 /* CopyFiles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyFiles.swift; sourceTree = "<group>"; };
 		0BAABEB02BC79C4E00DF4A31 /* CopyTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyTask.swift; sourceTree = "<group>"; };
 		0BAABEB22BC79C9F00DF4A31 /* DBCopyTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBCopyTask.swift; sourceTree = "<group>"; };
@@ -207,6 +215,7 @@
 			children = (
 				0B1165EF2ABBCCB0005C5CBB /* AppManager.swift */,
 				0B1D5A5F2AB3025E0010DDF2 /* AudioManager.swift */,
+				0B9FA2962BC80E51007B235A /* EventManager.swift */,
 				0B1D5AAB2AB414600010DDF2 /* MediaPlayerManager.swift */,
 				0BBA421A2ABD67D600C0B977 /* WindowManager.swift */,
 			);
@@ -219,6 +228,7 @@
 				0B1D5A672AB3025F0010DDF2 /* Audio.swift */,
 				0BD056922BC636D600EBC7C4 /* AudioCover.swift */,
 				0BAABEB02BC79C4E00DF4A31 /* CopyTask.swift */,
+				0B9FA29C2BC823A1007B235A /* SmartPlayer.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -367,6 +377,8 @@
 			children = (
 				0B6B8B9C2BBA4D0600F65B23 /* Coffee.swift */,
 				0B6B8B982BBA39F500F65B23 /* ControlButton.swift */,
+				0B9FA2982BC81EFF007B235A /* NotDownloadedAlbum.swift */,
+				0B9FA29A2BC81F53007B235A /* DefaultAlbum.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -533,9 +545,11 @@
 				0BBA421F2AC1397F00C0B977 /* Centered.swift in Sources */,
 				0BAB300E2AB814F70012D837 /* Boot.swift in Sources */,
 				0BBA42212AC1802C00C0B977 /* ButtonCancelSelected.swift in Sources */,
+				0B9FA29D2BC823A1007B235A /* SmartPlayer.swift in Sources */,
 				0BBA422B2AC2ABAD00C0B977 /* ButtonShowDatabase.swift in Sources */,
 				0BAABEB12BC79C4E00DF4A31 /* CopyTask.swift in Sources */,
 				0BB587172AD815770071AEBD /* TimeHelper.swift in Sources */,
+				0B9FA2972BC80E51007B235A /* EventManager.swift in Sources */,
 				0BAABEAF2BC787A200DF4A31 /* CopyFiles.swift in Sources */,
 				0BFDCE582BB01884009198DD /* BtnDestroy.swift in Sources */,
 				0B73275F2BB5138200DBD922 /* LoggerHelper.swift in Sources */,
@@ -544,6 +558,7 @@
 				0BD0568B2BC6202900EBC7C4 /* DBFolder.swift in Sources */,
 				0B51F1762BC50A6200B86CB1 /* UIConfig.swift in Sources */,
 				0B1D5A792AB302610010DDF2 /* AudioManager.swift in Sources */,
+				0B9FA29B2BC81F53007B235A /* DefaultAlbum.swift in Sources */,
 				0BBA421B2ABD67D600C0B977 /* WindowManager.swift in Sources */,
 				0B1498742BC4C5CB0075DA61 /* PlayMode.swift in Sources */,
 				0B6B8B992BBA39F500F65B23 /* ControlButton.swift in Sources */,
@@ -560,6 +575,7 @@
 				0BBC15882AB9A473006E82C4 /* iCloudHelper.swift in Sources */,
 				0B901D862BB83BA2003AC253 /* CloudHandler.swift in Sources */,
 				0B8FC2762BBE817200839C75 /* DBAudio.swift in Sources */,
+				0B9FA2992BC81EFF007B235A /* NotDownloadedAlbum.swift in Sources */,
 				0BBC158D2ABAC0C7006E82C4 /* BtnToggle.swift in Sources */,
 				0B11262A2AC6F7B20093DFFA /* BtnToggleDB.swift in Sources */,
 				0B6B8B9B2BBA420700F65B23 /* BtnPlay.swift in Sources */,

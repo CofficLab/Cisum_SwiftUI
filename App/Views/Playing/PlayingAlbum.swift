@@ -9,7 +9,7 @@ struct PlayingAlbum: View {
             if let audio = audioManager.audio {
                 AlbumView(audio, forPlaying: true).id(audio.id)
             } else {
-                AlbumView.getDefaultAlbum(forPlaying: true)
+                DefaultAlbum(forPlaying: true)
             }
         }
     }
