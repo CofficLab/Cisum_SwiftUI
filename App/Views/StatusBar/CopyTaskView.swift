@@ -12,7 +12,6 @@ struct CopyTaskView: View {
     var body: some View {
         if tasks.count > -10 {
             HStack {
-                Spacer()
                 Text("正在复制 \(tasks.count) 个文件")
                     .font(.footnote)
                 Button(action: {
@@ -40,15 +39,8 @@ struct CopyTaskView: View {
                     })
                     .frame(width: 800)
                 })
-                Spacer()
-                Button(action: {
-                    try? modelContext.delete(model: CopyTask.self)
-                }, label: {
-                    Image(systemName: "trash")
-                })
-                .labelStyle(.iconOnly)
-                .buttonStyle(PlainButtonStyle())
-                .padding(.trailing, 4)
+                
+                BtnDelTask().padding(.leading, 24)
             }
         }
     }
