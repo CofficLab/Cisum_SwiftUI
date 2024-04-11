@@ -23,11 +23,9 @@ extension DB {
         self.save()
         
         do {
-            try CopyFiles().run(task, context: context)
+            try CopyFiles().run(task, db: self)
         } catch let e {
             task.error = e.localizedDescription
-            task.succeed = false
-            task.finished = true
         }
         
         try? context.save()
@@ -44,8 +42,39 @@ extension DB {
 
         self.save()
     }
+    
+    nonisolated func delete(_ task: CopyTask) {
+        os_log("\(Logger.isMain)🗑️ 数据库删除任务 \(task.title)")
+        let context = ModelContext(modelContainer)
+        guard let t = context.model(for: task.id) as? CopyTask else {
+            return os_log("\(Logger.isMain)🗑️ 删除时数据库找不到 \(task.title)")
+        }
+        
+        do {
+            context.delete(t)
+            try context.save()
+        } catch let e {
+            print(e)
+        }
+    }
 }
 
 // MARK: 查询
 
 extension DB {}
+
+// MARK: 更新
+
+extension DB {
+    func setTaskRunning(_ task: CopyTask) {
+        task.isRunning = true
+        task.error = ""
+        self.save()
+    }
+    
+    func setTaskError(_ task: CopyTask, _ e: Error) {
+        task.isRunning = false
+        task.error = e.localizedDescription
+        self.save()
+    }
+}

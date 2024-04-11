@@ -7,21 +7,21 @@ class CopyFiles {
     var queue = DispatchQueue.global(qos: .background)
     var audiosDir = AppConfig.audiosDir
     
-    func run(_ task: CopyTask, context: ModelContext) throws {
+    func run(_ task: CopyTask, db: DB) throws {
         queue.async {
-            do {
-                task.isRunning = true
-                try context.save()
-                try self.copyTo(url: task.url)
-                context.delete(task)
-            } catch let e {
-                task.isRunning = false
-                task.error = e.localizedDescription
-                task.finished = true
-                task.succeed = false
+            Task {
+                if task.isRunning {
+                    return
+                }
+                
+                do {
+                    await db.setTaskRunning(task)
+                    try self.copyTo(url: task.url)
+                    db.delete(task)
+                } catch let e {
+                    await db.setTaskError(task, e)
+                }
             }
-            
-            try? context.save()
         }
     }
     

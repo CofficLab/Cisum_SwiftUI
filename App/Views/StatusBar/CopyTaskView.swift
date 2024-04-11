@@ -3,6 +3,7 @@ import SwiftUI
 
 struct CopyTaskView: View {
     @Environment(\.modelContext) private var modelContext
+    @EnvironmentObject var audioManager: AudioManager
 
     @Query(sort: \CopyTask.createdAt, animation: .default) var tasks: [CopyTask]
 
@@ -11,6 +12,7 @@ struct CopyTaskView: View {
     var body: some View {
         if tasks.count > -10 {
             HStack {
+                Spacer()
                 Text("正在复制 \(tasks.count) 个文件")
                     .font(.footnote)
                 Button(action: {
@@ -22,6 +24,7 @@ struct CopyTaskView: View {
                 .buttonStyle(PlainButtonStyle())
                 .popover(isPresented: $showList, content: {
                     Table(tasks, columns: {
+                        TableColumn("时间", value: \.time)
                         TableColumn("文件", value: \.title)
                         TableColumn("结果", value: \.message)
                         TableColumn("操作") { task in
@@ -35,27 +38,27 @@ struct CopyTaskView: View {
                             }
                         }
                     })
-                    .frame(width: 600)
+                    .frame(width: 800)
                 })
-            }
-            .onAppear {
-                for task in tasks {
-                    copy(task)
-                }
+                Spacer()
+                Button(action: {
+                    try? modelContext.delete(model: CopyTask.self)
+                }, label: {
+                    Image(systemName: "trash")
+                })
+                .labelStyle(.iconOnly)
+                .buttonStyle(PlainButtonStyle())
+                .padding(.trailing, 4)
             }
         }
     }
-    
+
     func delete(_ task: CopyTask) {
         modelContext.delete(task)
     }
-    
+
     func copy(_ task: CopyTask) {
-        if task.isRunning {
-            return
-        }
-        
-        try? CopyFiles().run(task, context: modelContext)
+        try? CopyFiles().run(task, db: audioManager.db)
     }
 }
 

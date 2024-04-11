@@ -6,21 +6,16 @@ class CopyTask {
     var url: URL
     var createdAt: Date
     var error: String = ""
-    var succeed: Bool = false
-    var finished: Bool = false
     var isRunning: Bool = false
     
     var title: String { url.lastPathComponent }
+    var time: String { TimeHelper.getTimeString() }
     var message: String {
-        if finished == false {
+        if isRunning {
             return "进行中"
         }
-        
-        if succeed == false {
-            return error
-        }
-        
-        return "成功"
+    
+        return error
     }
     
     init(url: URL) {
