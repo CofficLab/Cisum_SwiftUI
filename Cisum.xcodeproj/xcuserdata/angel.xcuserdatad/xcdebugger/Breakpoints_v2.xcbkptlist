@@ -158,8 +158,8 @@
             filePath = "App/Managers/AudioManager.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "77"
-            endingLineNumber = "77"
+            startingLineNumber = "76"
+            endingLineNumber = "76"
             landmarkName = "setCurrent(_:play:reason:)"
             landmarkType = "7">
          </BreakpointContent>

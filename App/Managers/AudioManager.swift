@@ -13,7 +13,6 @@ class AudioManager: NSObject, ObservableObject {
     @Published var playerError: Error? = nil
     @Published var mode: PlayMode = .Order
     @Published var lastUpdatedAt: Date = .now
-    @Published var isPlaying = false
     @Published var networkOK = true
 
     private var listener: AnyCancellable?
@@ -101,7 +100,7 @@ class AudioManager: NSObject, ObservableObject {
 
     func gotoTime(time: TimeInterval) {
         player.currentTime = time
-        updateMediaPlayer()
+        updateState()
     }
 
     // MARK: 播放指定的
@@ -114,15 +113,14 @@ class AudioManager: NSObject, ObservableObject {
 
     func resume() {
         player.play()
-        self.isPlaying = player.isPlaying
+        updateState()
     }
 
     // MARK: 暂停
 
     func pause() {
         player.pause()
-        isPlaying = player.isPlaying
-        updateMediaPlayer()
+        updateState()
     }
 
     // MARK: 停止
@@ -131,6 +129,7 @@ class AudioManager: NSObject, ObservableObject {
         os_log("\(Logger.isMain)🍋 AudioManager::Stop")
         player.stop()
         player.currentTime = 0
+        updateState()
     }
 
     // MARK: 切换
@@ -200,8 +199,13 @@ class AudioManager: NSObject, ObservableObject {
             await db.trash(audio)
         }
     }
-
-    private func updateMediaPlayer() {
+    
+    // MARK: 更新状态
+    
+    func updateState() {
+        self.lastUpdatedAt = .now
+        self.errorCheck()
+        
         Task {
             MediaPlayerManager.setNowPlayingInfo(audioManager: self)
         }
@@ -310,11 +314,11 @@ extension AudioManager {
             player = try makePlayer()
             player.delegate = self
             if play {
+                os_log("\(Logger.isMain)🍋 🔊 AudioManager::UpdatePlayer play")
                 self.player.play()
             }
-
-            self.isPlaying = player.isPlaying
-            updateMediaPlayer()
+            
+            self.updateState()
         } catch let e {
             withAnimation {
                 self.stop()

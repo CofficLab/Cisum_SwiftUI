@@ -38,6 +38,13 @@ struct Row: View {
                 }
             }
             Spacer()
+            if hovered {
+                Button(action: {
+                    audioManager.play(audio, reason: "列表的播放按钮")
+                }, label: {
+                    Label("播放", systemImage: "play")
+                })
+            }
         }
         .frame(maxHeight: .infinity)
         .onHover(perform: { hovered = $0 })
