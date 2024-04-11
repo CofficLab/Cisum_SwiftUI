@@ -70,7 +70,8 @@ extension AppConfig {
         }
 
         let schema = Schema([
-            Audio.self
+            Audio.self,
+            CopyTask.self
         ])
         let modelConfiguration = ModelConfiguration(
             schema: schema,
@@ -155,5 +156,5 @@ extension AppConfig {
 #Preview {
     RootView {
         ContentView()
-    }
+    }.modelContainer(AppConfig.getContainer())
 }

@@ -12,8 +12,10 @@ struct StatusBarView: View {
             HStack {
                 Text(appManager.stateMessage).foregroundStyle(.white)
             }
+            
+            CopyTaskView()
         }
-        .opacity(appManager.stateMessage.isEmpty ? 0 : 1)
+//        .opacity(appManager.stateMessage.isEmpty ? 0 : 1)
         .frame(height: 20)
     }
 }

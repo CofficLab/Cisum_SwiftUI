@@ -67,7 +67,7 @@ extension DBView {
     func copy(_ files: [URL]) {
         appManager.stateMessage = "正在复制 \(files.count) 个文件"
         bg.async {
-            dbFolder.add(
+            db.add(
                 files,
                 completionAll: {
                     self.setFlashMessage("已添加 \(files.count) 个文件")
@@ -107,35 +107,35 @@ extension DBView {
 #Preview("APP") {
     RootView {
         ContentView()
-    }
+    }.modelContainer(AppConfig.getContainer())
 }
 
 #Preview {
     RootView {
         DBView().frame(width: 300)
-    }
+    }.modelContainer(AppConfig.getContainer())
 }
 
 #Preview {
     RootView {
         DBView().frame(width: 350)
-    }
+    }.modelContainer(AppConfig.getContainer())
 }
 
 #Preview {
     RootView {
         DBView().frame(width: 400)
-    }
+    }.modelContainer(AppConfig.getContainer())
 }
 
 #Preview {
     RootView {
         DBView().frame(width: 500)
-    }
+    }.modelContainer(AppConfig.getContainer())
 }
 
 #Preview {
     RootView {
         DBView().frame(width: 600)
-    }
+    }.modelContainer(AppConfig.getContainer())
 }

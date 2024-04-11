@@ -33,11 +33,19 @@ class Audio {
     }
 
     func getFileSize() -> Int64 {
-        FileHelper.getFileSize(url)
+        if self.isNotExists {
+            return 0
+        }
+        
+        return FileHelper.getFileSize(url)
     }
 
     func getFileSizeReadable() -> String {
-        FileHelper.getFileSizeReadable(url)
+        if self.isNotExists {
+            return "-"
+        }
+        
+        return FileHelper.getFileSizeReadable(url)
     }
 
     func mergeWith(_ item: MetadataItemWrapper) -> Audio {

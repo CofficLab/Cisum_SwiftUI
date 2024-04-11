@@ -44,6 +44,7 @@ class CopyFiles {
             }
         } catch {
             os_log("\(Logger.isMain)☁️ SmartFile::复制文件发生错误 -> \(error.localizedDescription)")
+            print(error)
         }
     }
 }
