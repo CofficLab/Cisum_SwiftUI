@@ -73,13 +73,7 @@ extension Logger {
 
 extension View {
     func takeScreenshot(frame: CGRect, afterScreenUpdates: Bool) -> Image {
-        #if os(iOS)
-            let hosting = UIHostingController(rootView: self)
-            hosting.overrideUserInterfaceStyle = UIApplication.shared.currentUIWindow()?.overrideUserInterfaceStyle ?? .unspecified
-            hosting.view.frame = frame
-            let uiImage = hosting.view.takeScreenshot(afterScreenUpdates: afterScreenUpdates)
-            return Image(uiImage: uiImage)
-        #else
+        #if os(macOS)
             let controller = NSHostingController(rootView: self)
             let targetSize = controller.view.intrinsicContentSize
             let contentRect = NSRect(origin: .zero, size: targetSize)
@@ -101,6 +95,13 @@ extension View {
             let image = NSImage(size: bitmapRep.size)
             image.addRepresentation(bitmapRep)
             return Image(nsImage: image)
+        #else
+//            let hosting = UIHostingController(rootView: self)
+//            hosting.overrideUserInterfaceStyle = UIApplication.shared.currentUIWindow()?.overrideUserInterfaceStyle ?? .unspecified
+//            hosting.view.frame = frame
+//            let uiImage = hosting.view.takeScreenshot(afterScreenUpdates: afterScreenUpdates)
+//            return Image(uiImage: uiImage)
+        return Image(systemName: "apple")
         #endif
     }
 }

@@ -2,16 +2,16 @@ import SwiftUI
 
 @main
 struct Boot: App {
-    #if os(iOS)
-        @UIApplicationDelegateAdaptor var appDelegate: AppDelegate
-    #else
+    #if os(macOS)
         @NSApplicationDelegateAdaptor var appDelegate: AppDelegate
+    #else
+        @UIApplicationDelegateAdaptor var appDelegate: AppDelegate
     #endif
 
     var body: some Scene {
         #if os(macOS)
             Window("", id: "Cisum") {
-                RootView{
+                RootView {
                     ContentView()
                 }
             }

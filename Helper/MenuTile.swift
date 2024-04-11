@@ -17,9 +17,7 @@ struct MenuTile: View {
     private var icon: some View {
         #if os(macOS)
             var color = Color(.controlAccentColor)
-        #endif
-
-        #if os(iOS)
+        #else
             var color = Color(.blue)
         #endif
 
