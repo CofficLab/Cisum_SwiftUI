@@ -9,8 +9,19 @@ class CopyFiles {
     
     func run(_ task: CopyTask, context: ModelContext) throws {
         queue.async {
-            try? self.copyTo(url: task.url)
-            context.delete(task)
+            do {
+                task.isRunning = true
+                try context.save()
+                try self.copyTo(url: task.url)
+                context.delete(task)
+            } catch let e {
+                task.isRunning = false
+                task.error = e.localizedDescription
+                task.finished = true
+                task.succeed = false
+            }
+            
+            try? context.save()
         }
     }
     

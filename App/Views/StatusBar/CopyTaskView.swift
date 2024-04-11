@@ -9,15 +9,14 @@ struct CopyTaskView: View {
     @State var showList = false
 
     var body: some View {
-        if tasks.count > 0 {
+        if tasks.count > -10 {
             HStack {
                 Text("正在复制 \(tasks.count) 个文件")
                     .font(.footnote)
-                    .foregroundStyle(.white)
                 Button(action: {
                     showList = true
                 }, label: {
-                    Image(systemName: "list.bullet").foregroundStyle(.white)
+                    Image(systemName: "list.bullet")
                 })
                 .labelStyle(.iconOnly)
                 .buttonStyle(PlainButtonStyle())
@@ -52,15 +51,11 @@ struct CopyTaskView: View {
     }
     
     func copy(_ task: CopyTask) {
-        do {
-            try CopyFiles().run(task, context: modelContext)
-        } catch let e {
-            task.error = e.localizedDescription
-            task.succeed = false
-            task.finished = true
+        if task.isRunning {
+            return
         }
         
-        try? modelContext.save()
+        try? CopyFiles().run(task, context: modelContext)
     }
 }
 

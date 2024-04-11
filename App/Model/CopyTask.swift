@@ -8,6 +8,7 @@ class CopyTask {
     var error: String = ""
     var succeed: Bool = false
     var finished: Bool = false
+    var isRunning: Bool = false
     
     var title: String { url.lastPathComponent }
     var message: String {

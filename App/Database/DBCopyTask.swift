@@ -21,6 +21,16 @@ extension DB {
         let task = CopyTask(url: url)
         context.insert(task)
         self.save()
+        
+        do {
+            try CopyFiles().run(task, context: context)
+        } catch let e {
+            task.error = e.localizedDescription
+            task.succeed = false
+            task.finished = true
+        }
+        
+        try? context.save()
     }
 }
 

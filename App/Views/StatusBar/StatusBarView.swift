@@ -7,22 +7,42 @@ struct StatusBarView: View {
     @Query var tasks: [CopyTask]
     
     var taskCount: Int { tasks.count }
+    var showStateMessage: Bool { appManager.stateMessage.count > 0 }
+    var showCopyMessage: Bool { tasks.count > 0 }
     
     var body: some View {
-        ZStack {
-            BackgroundView()
-            
-            Color.primary.opacity(0.9)
-            
-            HStack {
-                Text(appManager.stateMessage).foregroundStyle(.white)
+        VStack {
+            if showStateMessage {
+                HStack {
+                    Text(appManager.stateMessage)
+                }.frame(height: 20)
             }
             
-            CopyTaskView()
+            if showStateMessage && showCopyMessage {
+                Divider()
+            }
+            
+            if showCopyMessage {
+                VStack(spacing: 0) {
+                    Spacer()
+                    CopyTaskView()
+                    Spacer()
+                }
+                .frame(height: 20)
+            }
         }
-        .opacity(appManager.stateMessage.isEmpty && taskCount == 0 ? 0 : 1)
-        .frame(height: 20)
+        .frame(maxWidth: .infinity)
+        .background(ZStack {
+            AppConfig.getBackground
+            BackgroundView()
+        })
     }
+}
+
+#Preview {
+    RootView {
+        ContentView()
+    }.modelContainer(AppConfig.getContainer())
 }
 
 #Preview {
@@ -31,6 +51,6 @@ struct StatusBarView: View {
             Spacer()
             
             StatusBarView()
-        }).background(Color.white).padding(30)
+        }).background(.background).padding(30)
     }.modelContainer(AppConfig.getContainer())
 }
