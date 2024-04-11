@@ -1,4 +1,5 @@
 import Foundation
+import SwiftData
 import OSLog
 
 class CopyFiles {
@@ -6,9 +7,10 @@ class CopyFiles {
     var queue = DispatchQueue.global(qos: .background)
     var audiosDir = AppConfig.audiosDir
     
-    func run(_ from: URL) throws {
-        try queue.sync {
-           try copyTo(url: from)
+    func run(_ task: CopyTask, context: ModelContext) throws {
+        queue.async {
+            try? self.copyTo(url: task.url)
+            context.delete(task)
         }
     }
     

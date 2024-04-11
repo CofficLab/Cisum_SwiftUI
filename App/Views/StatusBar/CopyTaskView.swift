@@ -53,12 +53,7 @@ struct CopyTaskView: View {
     
     func copy(_ task: CopyTask) {
         do {
-            try CopyFiles().run(task.url)
-            task.error = ""
-            task.succeed = true
-            task.finished = true
-            
-            delete(task)
+            try CopyFiles().run(task, context: modelContext)
         } catch let e {
             task.error = e.localizedDescription
             task.succeed = false
