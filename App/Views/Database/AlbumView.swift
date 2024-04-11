@@ -2,6 +2,8 @@ import OSLog
 import SwiftUI
 
 struct AlbumView: View {
+    @EnvironmentObject var audioManager: AudioManager
+    
     @State var image: Image? = nil
     @State var isDownloaded: Bool = true
     @State var isDownloading: Bool = false
@@ -34,7 +36,11 @@ struct AlbumView: View {
             } else if isDownloading {
                 Self.makeProgressView(downloadingPercent / 100)
             } else if isNotDownloaded {
-                Self.getNotDownloadedAlbum(forPlaying: forPlaying)
+                Self.getNotDownloadedAlbum(forPlaying: forPlaying).onTapGesture {
+                    Task {
+                        await audioManager.db.download(self.audio, reason: "点击了Album")
+                    }
+                }
             } else if let image = image {
                 image.resizable().scaledToFit()
             } else {

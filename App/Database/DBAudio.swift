@@ -429,7 +429,7 @@ extension DB {
         }
         
         Task {
-            // os_log("\(Logger.isMain)⬇️ DB::download \(audio.title) 🐛 \(reason)")
+             os_log("\(Logger.isMain)⬇️ DB::download \(audio.title) 🐛 \(reason)")
             do {
                 try await CloudHandler().download(url: audio.url)
             } catch let e {

@@ -135,7 +135,10 @@ class AudioManager: NSObject, ObservableObject {
     // MARK: 切换
 
     @MainActor func toggle() {
-        self.checkError()
+        if self.getError() != nil {
+            os_log("\(Logger.isMain)🍋 AudioManager::Toggle 取消，因为存在PlayError")
+            return
+        }
 
         if player.isPlaying {
             pause()

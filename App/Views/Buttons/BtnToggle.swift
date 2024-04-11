@@ -10,6 +10,7 @@ struct BtnToggle: View {
     @State private var hovered: Bool = false
     @State private var systemImage = "play.fill"
 
+    var audio: Audio? { audioManager.audio }
     var player: AVAudioPlayer { audioManager.player }
     var title: String { player.isPlaying ? "播放" : "暂停" }
     var image: String {
@@ -23,9 +24,14 @@ struct BtnToggle: View {
     }
 
     var body: some View {
-        ControlButton(title: title, size: 32, systemImage: image, onTap: {
-            audioManager.toggle()
-        })
+        if let audio = audio, audio.isNotDownloaded {
+            AlbumView(audio, forPlaying: false)
+        } else {
+            ControlButton(title: title, size: 32, systemImage: image, onTap: {
+                audioManager.toggle()
+            })
+        }
+        
 //        .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("Updated")), perform: {
 //            notification in
 //            AppConfig.bgQueue.async {
