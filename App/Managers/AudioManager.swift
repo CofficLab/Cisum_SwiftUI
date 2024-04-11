@@ -348,7 +348,7 @@ extension AudioManager {
         }
 
         if self.errorCheck() != nil {
-            os_log("\(Logger.isMain)🚩 AudioManager::初始化播放器失败，因为存在错误")
+            os_log("\(Logger.isMain)🚩 AudioManager::初始化空播放器，因为存在PlayError")
             return AVAudioPlayer()
         }
 
