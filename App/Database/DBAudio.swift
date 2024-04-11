@@ -332,7 +332,7 @@ extension DB {
 // MARK: 排序
 
 extension DB {
-    func sortRandom() {
+    func sortRandom(_ sticky: Audio?) {
         let pageSize = 100 // 每页数据条数
         var offset = 0
 
@@ -349,7 +349,11 @@ extension DB {
                 }
                 
                 for audio in audioArray {
-                    audio.makeRandomOrder()
+                    audio.randomOrder()
+                }
+                
+                if let s = sticky {
+                    s.order = 0
                 }
                 
                 try context.save()
@@ -363,9 +367,10 @@ extension DB {
         }
     }
     
-    func sort() {
+    func sort(_ sticky: Audio?) {
         let pageSize = 100 // 每页数据条数
-        var offset = 0
+        // 前100留给特殊用途
+        var offset = 100
 
         do {
             while true {
@@ -380,7 +385,11 @@ extension DB {
                 }
                 
                 for (index, audio) in audioArray.enumerated() {
-                    audio.order = offset + index + 1
+                    if let s = sticky, s == audio {
+                        audio.order = 0
+                    } else {
+                        audio.order = offset + index + 1
+                    }
                 }
                 
                 try context.save()
