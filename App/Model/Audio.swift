@@ -9,7 +9,7 @@ class Audio {
     @Transient let fileManager = FileManager.default
 
     var url: URL
-    var order: Int = Int.random(in: 0...500000000)
+    var order: Int
     var isPlaceholder: Bool = false
     var title: String = ""
     var playCount: Int = 0
@@ -26,10 +26,15 @@ class Audio {
         // os_log("\(Logger.isMain)🚩 AudioModel::init -> \(url.lastPathComponent)")
         self.url = url
         self.title = url.deletingPathExtension().lastPathComponent
+        self.order = Self.makeRandomOrder()
     }
 
-    func makeRandomOrder() {
-        order = Int.random(in: 0...500000000)
+    static func makeRandomOrder() -> Int {
+        Int.random(in: 101...500000000)
+    }
+    
+    func randomOrder() {
+        self.order = Self.makeRandomOrder()
     }
 
     func getFileSize() -> Int64 {

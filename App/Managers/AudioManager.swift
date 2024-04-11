@@ -224,11 +224,11 @@ extension AudioManager {
 
         Task {
             if mode == .Random {
-                await self.db.sortRandom()
+                await self.db.sortRandom(audio)
             }
 
             if mode == .Order {
-                await db.sort()
+                await db.sort(audio)
             }
         }
     }
