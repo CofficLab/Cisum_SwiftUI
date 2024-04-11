@@ -66,7 +66,7 @@ struct DBView: View {
 extension DBView {
     func copy(_ files: [URL]) {
         appManager.stateMessage = "正在复制 \(files.count) 个文件"
-        Task {
+        bg.async {
             dbFolder.add(
                 files,
                 completionAll: {
@@ -85,16 +85,22 @@ extension DBView {
     }
 
     func setFlashMessage(_ m: String) {
-        appManager.setFlashMessage(m)
-        self.cleanStateMessage()
+        main.async {
+            appManager.setFlashMessage(m)
+            self.cleanStateMessage()
+        }
     }
 
     func setStateMessage(_ m: String) {
-        appManager.stateMessage = m
+        main.async {
+            appManager.stateMessage = m
+        }
     }
     
     func cleanStateMessage() {
-        appManager.cleanStateMessage()
+        main.async {
+            appManager.cleanStateMessage()
+        }
     }
 }
 

@@ -46,11 +46,11 @@ class FileHelper {
             if let fileSize = attributes[.size] as? Int64 {
                 return fileSize
             } else {
-                print("Failed to retrieve file size.")
+                os_log("Failed to retrieve file size.")
                 return 0
             }
         } catch {
-            print("Error: \(error)")
+            os_log("Error: \(error.localizedDescription)")
             return 0
         }
     }

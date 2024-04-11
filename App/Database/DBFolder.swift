@@ -5,6 +5,7 @@ class DBFolder: ObservableObject {
     var fileManager = FileManager.default
     var cloudHandler = CloudHandler()
     var audiosDir: URL = AppConfig.audiosDir
+    var bg = AppConfig.bgQueue
     
     /// 往目录添加文件
     func add(
@@ -29,14 +30,7 @@ class DBFolder: ObservableObject {
         _ url: URL,
         completion: @escaping () -> Void
     ) {
-        if iCloudHelper.isCloudPath(url: url) {
-            copyTo(url: url,
-                   destnation: audiosDir.appendingPathComponent(url.lastPathComponent))
-        } else {
-            copyTo(url: url,
-                   destnation: audiosDir.appendingPathComponent(url.lastPathComponent))
-        }
-            
+        CopyFiles().run(url,audiosDir.appendingPathComponent(url.lastPathComponent))
         completion()
     }
     
@@ -85,78 +79,10 @@ class DBFolder: ObservableObject {
         }
     }
     
-    // 将文件复制到目的地
-    func copyTo(url: URL, destnation: URL) {
-        os_log(
-            "\(Logger.isMain)☁️ CloudFile::copy \(url.lastPathComponent) -> \(destnation.lastPathComponent)"
-        )
-        
-        // 目的地已经存在同名文件
-        var d = destnation
-        var times = 1
-        var fileName = url.deletingPathExtension().lastPathComponent
-        var ext = url.pathExtension
-        while fileManager.fileExists(atPath: d.path) {
-            d = d.deletingLastPathComponent()
-                .appendingPathComponent("\(fileName)-\(times)")
-                .appendingPathExtension(ext)
-            times += 1
-            os_log("\(Logger.isMain)☁️ CloudFile::copy  -> \(d.lastPathComponent)")
-        }
-        
-        if iCloudHelper.isCloudPath(url: url) {
-            os_log("\(Logger.isMain)☁️ CloudFile::copy 是iCloud文件")
-            return copyCloudFile(url: url, destination: d)
-        }
-
-        do {
-            // 获取授权
-            if url.startAccessingSecurityScopedResource() {
-                os_log(
-                    "\(Logger.isMain)☁️ CloudFile::copy 获取授权后复制 \(url.lastPathComponent, privacy: .public)"
-                )
-                try FileManager.default.copyItem(at: url, to: d)
-                url.stopAccessingSecurityScopedResource()
-            } else {
-                os_log("\(Logger.isMain)☁️ CloudFile::copy 获取授权失败，可能不是用户选择的文件，直接复制 \(url.lastPathComponent)")
-                try fileManager.copyItem(at: url, to: d)
-            }
-        } catch {
-            os_log("\(Logger.isMain)☁️ SmartFile::复制文件发生错误 -> \(error.localizedDescription)")
-        }
-    }
-    
     // MARK: 移除下载
     func evict(_ url: URL) {
         Task {
             try? await cloudHandler.evict(url: url)
         }
     }
-    
-    func copyCloudFile(url: URL, destination: URL) {
-        // 假设 sourceURL 是要复制的文件在 iCloud 云盘中的 URL
-        let sourceURL = url
-
-        // 假设 destinationURL 是要复制到的目标目录在 iCloud 云盘中的 URL
-        let destinationURL = destination
-
-        let fileCoordinator = NSFileCoordinator(filePresenter: nil)
-        var error: NSError?
-
-        fileCoordinator.coordinate(writingItemAt: destinationURL, options: .forMoving, error: &error) { newURL in
-            do {
-                // 复制文件
-                try FileManager.default.copyItem(at: sourceURL, to: newURL)
-                
-                print("File copied successfully")
-            } catch {
-                print("Error copying file: \(error)")
-            }
-        }
-
-        if let error = error {
-            print("File coordination error: \(error)")
-        }
-    }
-
 }
