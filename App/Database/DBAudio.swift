@@ -1,6 +1,7 @@
 import Foundation
 import OSLog
 import SwiftData
+import SwiftUI
 
 // MARK: 初始化
 
@@ -473,4 +474,10 @@ extension DB {
             }
         }
     }
+}
+
+#Preview {
+    RootView {
+        ContentView()
+    }.modelContainer(AppConfig.getContainer())
 }

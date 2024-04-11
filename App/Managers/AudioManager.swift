@@ -135,7 +135,7 @@ class AudioManager: NSObject, ObservableObject {
     // MARK: 切换
 
     @MainActor func toggle() {
-        self.errorCheck()
+        self.checkError()
 
         if player.isPlaying {
             pause()
@@ -243,7 +243,7 @@ extension AudioManager {
                     self.networkOK = false
                 }
 
-                self.errorCheck()
+                self.checkError()
             }
         }
 
@@ -258,10 +258,16 @@ extension AudioManager {
             self.playerError = nil
         }
     }
+    
+    func checkError() {
+        _ = errorCheck()
+    }
+    
+    func getError() -> Error? {
+        errorCheck()
+    }
 
-    func errorCheck() {
-        setError(nil)
-
+    func errorCheck() -> Error? {
         guard let audio = audio else {
             return setError(SmartError.NoAudioInList)
         }
@@ -273,10 +279,10 @@ extension AudioManager {
         if audio.isNotDownloaded {
             Task {
                 if networkOK == false {
-                    return setError(SmartError.NetworkError)
+                    _ = setError(SmartError.NetworkError)
+                } else {
+                    await db.download(audio, reason: "errorCheck")
                 }
-
-                await db.download(audio, reason: "errorCheck")
             }
 
             return setError(SmartError.NotDownloaded)
@@ -289,12 +295,16 @@ extension AudioManager {
         if audio.isNotSupported {
             return setError(SmartError.FormatNotSupported(audio.ext))
         }
+        
+        return setError(nil)
     }
 
-    func setError(_ e: Error?) {
+    func setError(_ e: Error?) -> Error? {
         main.async {
             self.playerError = e
         }
+        
+        return e
     }
 }
 
@@ -337,7 +347,10 @@ extension AudioManager {
             return AVAudioPlayer()
         }
 
-        self.errorCheck()
+        if self.errorCheck() != nil {
+            os_log("\(Logger.isMain)🚩 AudioManager::初始化播放器失败，因为存在错误")
+            return AVAudioPlayer()
+        }
 
         do {
             #if os(iOS)
