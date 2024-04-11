@@ -37,8 +37,6 @@ struct DBList: View {
                     }, content: {
                         ForEach(audios) { audio in
                             Row(audio)
-//                                .listRowInsets(EdgeInsets(top: 0, leading: -20, bottom: 0, trailing: -20))
-//                                .listRowSeparator(.hidden)
                         }
                         .onDelete(perform: { indexSet in
                             for i in indexSet {
@@ -47,8 +45,6 @@ struct DBList: View {
                         })
                     })
                 }
-//                .scrollContentBackground(.hidden)
-//                .listStyle(.plain)
             }
             
             if showTips {
