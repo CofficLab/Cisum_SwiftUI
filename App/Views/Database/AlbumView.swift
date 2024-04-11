@@ -13,6 +13,13 @@ struct AlbumView: View {
     var forPlaying: Bool = false
     var fileManager = FileManager.default
     var isNotDownloaded: Bool { !isDownloaded }
+    var shape: RoundedRectangle {
+        if forPlaying {
+            RoundedRectangle(cornerSize: CGSize(width: 0, height: 0))
+        } else {
+            RoundedRectangle(cornerSize: CGSize(width: 20, height: 10))
+        }
+    }
 
     /// forPlaying表示显示在正在播放界面
     init(_ audio: Audio, forPlaying: Bool = false) {
@@ -34,6 +41,7 @@ struct AlbumView: View {
                 Self.getDefaultAlbum(forPlaying: forPlaying)
             }
         }
+        .clipShape(shape)
         .onAppear {
             refresh()
         }
