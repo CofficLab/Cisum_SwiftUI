@@ -26,6 +26,8 @@ class SmartPlayer: NSObject {
                 } catch {
                     os_log("\(Logger.isMain)初始化播放器失败 ->\(audio.title)->\(error)")
                 }
+            } else {
+                player = AVAudioPlayer()
             }
 
             Task {
