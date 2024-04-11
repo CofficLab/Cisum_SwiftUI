@@ -11,7 +11,7 @@ struct BtnToggle: View {
     @State private var systemImage = "play.fill"
 
     var audio: Audio? { audioManager.audio }
-    var player: AVAudioPlayer { audioManager.player }
+    var player: SmartPlayer { audioManager.player }
     var title: String { player.isPlaying ? "播放" : "暂停" }
     var showAlbum: Bool {
         UIConfig.isNotDesktop && 

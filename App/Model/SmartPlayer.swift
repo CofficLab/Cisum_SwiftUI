@@ -4,21 +4,59 @@ import OSLog
 import SwiftUI
 
 class SmartPlayer: NSObject {
+    // MARK: 成员
+
+    static var emoji = "💿"
     var player = AVAudioPlayer()
-    var audio: Audio?
-    var state: State = .Stopped {
+    var audio: Audio? {
         didSet {
-            self.onStateChange(self.state)
+            guard let audio = audio else {
+                return player = AVAudioPlayer()
+            }
+
+            onAudioChange(audio)
+
+            if audio.isDownloaded {
+                do {
+                    #if os(iOS)
+                        try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+                        try AVAudioSession.sharedInstance().setActive(true)
+                    #endif
+                    player = try AVAudioPlayer(contentsOf: audio.url)
+                } catch {
+                    os_log("\(Logger.isMain)初始化播放器失败 ->\(audio.title)->\(error)")
+                }
+            }
+
             Task {
                 MediaPlayerManager.setPlayingInfo(self)
             }
         }
     }
-    
+
+    // MARK: 状态
+
+    var state: State = .Stopped {
+        didSet {
+            onStateChange(state)
+            Task {
+                MediaPlayerManager.setPlayingInfo(self)
+            }
+        }
+    }
+
+    var isPlaying: Bool { state == .Playing }
+    var duration: TimeInterval { player.duration }
+    var currentTime: TimeInterval { player.currentTime }
+
     // MARK: 对外传递事件
-    
-    var onStateChange: (_ state: State)->Void = { state in
-        os_log("🍋 🎵 SmartPlayer::播放器状态已变为 \(state.des)")
+
+    var onStateChange: (_ state: State) -> Void = { state in
+        os_log("\(SmartPlayer.emoji) SmartPlayer::播放器状态已变为 \(state.des)")
+    }
+
+    var onAudioChange: (_ audio: Audio) -> Void = { audio in
+        os_log("\(SmartPlayer.emoji) SmartPlayer::播放器歌曲已变为 \(audio.title)")
     }
 
     // MARK: 设置当前的
@@ -43,16 +81,20 @@ class SmartPlayer: NSObject {
         setCurrent(audio, play: true, reason: reason)
     }
 
+    func play() {
+        resume()
+    }
+
     func resume() {
         player.play()
-        self.state = .Playing
+        state = .Playing
     }
 
     // MARK: 暂停
 
     func pause() {
         player.pause()
-        self.state = .Paused
+        state = .Paused
     }
 
     // MARK: 停止
@@ -61,7 +103,7 @@ class SmartPlayer: NSObject {
         os_log("\(Logger.isMain)🍋 AudioManager::Stop")
         player.stop()
         player.currentTime = 0
-        self.state = .Stopped
+        state = .Stopped
     }
 
     // MARK: 切换
@@ -101,7 +143,7 @@ extension SmartPlayer: AVAudioPlayerDelegate {
         }
 
         os_log("\(Logger.isMain)🍋 AudioManager::播放完成")
-        self.state = .Finished
+        state = .Finished
     }
 
     func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {

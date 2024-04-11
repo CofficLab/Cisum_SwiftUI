@@ -14,7 +14,7 @@ struct SliderView: View {
         .publish(every: 0.5, on: .main, in: .common)
         .autoconnect()
     
-    var player: AVAudioPlayer { audioManager.player }
+    var player: SmartPlayer { audioManager.player }
     var currentTime: TimeInterval { player.currentTime }
     var currentTimeDisplay: String {
         DateComponentsFormatter.positional.string(from: currentTime) ?? "0:00"

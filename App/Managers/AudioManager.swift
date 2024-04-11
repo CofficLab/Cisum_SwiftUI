@@ -24,7 +24,7 @@ class AudioManager: NSObject, ObservableObject {
     var db: DB = .init(AppConfig.getContainer())
     var dbFolder = DBFolder()
     var isEmpty: Bool { audio == nil }
-    var player: AVAudioPlayer = .init()
+    var player = SmartPlayer()
     var isCloudStorage: Bool { iCloudHelper.isCloudPath(url: rootDir) }
 
     override init() {
@@ -34,6 +34,9 @@ class AudioManager: NSObject, ObservableObject {
 
         dbPrepare()
         checkNetworkStatus()
+            player.onAudioChange={
+                self.audio = $0
+            }
     }
 
     func dbPrepare() {
@@ -76,8 +79,10 @@ class AudioManager: NSObject, ObservableObject {
     @MainActor func setCurrent(_ audio: Audio, play: Bool? = nil, reason: String) {
         os_log("\(Logger.isMain)🍋 ✨ AudioManager::setCurrent to \(audio.title) 🐛 \(reason)")
 
-        self.audio = audio
-        try? updatePlayer(play: play ?? player.isPlaying)
+        self.player.audio = audio
+        if play == true {
+            self.player.play()
+        }
         self.checkError()
 
         Task {
@@ -99,8 +104,7 @@ class AudioManager: NSObject, ObservableObject {
     // MARK: 跳转到某个时间
 
     func gotoTime(time: TimeInterval) {
-        player.currentTime = time
-        updateState()
+        player.gotoTime(time: time)
     }
 
     // MARK: 播放指定的
@@ -112,24 +116,19 @@ class AudioManager: NSObject, ObservableObject {
     }
 
     func resume() {
-        player.play()
-        updateState()
+        player.resume()
     }
 
     // MARK: 暂停
 
     func pause() {
         player.pause()
-        updateState()
     }
 
     // MARK: 停止
 
     func stop() {
-        os_log("\(Logger.isMain)🍋 AudioManager::Stop")
         player.stop()
-        player.currentTime = 0
-        updateState()
     }
 
     // MARK: 切换
@@ -140,11 +139,7 @@ class AudioManager: NSObject, ObservableObject {
             return
         }
 
-        if player.isPlaying {
-            pause()
-        } else {
-            resume()
-        }
+        player.toggle()
     }
 
     // MARK: Prev
@@ -200,17 +195,6 @@ class AudioManager: NSObject, ObservableObject {
 
         Task {
             await db.trash(audio)
-        }
-    }
-    
-    // MARK: 更新状态
-    
-    func updateState() {
-        self.lastUpdatedAt = .now
-        self.checkError()
-        
-        Task {
-            MediaPlayerManager.setNowPlayingInfo(audioManager: self)
         }
     }
 }
@@ -308,100 +292,6 @@ extension AudioManager {
         }
         
         return e
-    }
-}
-
-// MARK: 控制系统播放器
-
-extension AudioManager {
-    func updatePlayer(play: Bool = false) throws {
-        guard let audio = audio else {
-            os_log("\(Logger.isMain)🍋 AudioManager::UpdatePlayer cancel because audio=nil")
-            return
-        }
-
-        os_log("\(Logger.isMain)🍋 AudioManager::UpdatePlayer \(audio.title)")
-
-        do {
-            playerError = nil
-            player = try makePlayer()
-            player.delegate = self
-            if play {
-                os_log("\(Logger.isMain)🍋 🔊 AudioManager::UpdatePlayer play")
-                self.player.play()
-            }
-            
-            self.updateState()
-        } catch let e {
-            withAnimation {
-                self.stop()
-                self.playerError = e
-            }
-
-            throw e
-        }
-    }
-
-    func makePlayer() throws -> AVAudioPlayer {
-        os_log("\(Logger.isMain)🚩 AudioManager::初始化播放器")
-
-        guard let audio = audio else {
-            os_log("\(Logger.isMain)🚩 AudioManager::初始化播放器失败，因为当前Audio=nil")
-            return AVAudioPlayer()
-        }
-
-        if self.errorCheck() != nil {
-            os_log("\(Logger.isMain)🚩 AudioManager::初始化空播放器，因为存在PlayError")
-            return AVAudioPlayer()
-        }
-
-        do {
-            #if os(iOS)
-                try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
-                try AVAudioSession.sharedInstance().setActive(true)
-            #endif
-            let player = try AVAudioPlayer(contentsOf: audio.url)
-
-            return player
-        } catch {
-            os_log("\(Logger.isMain)初始化播放器失败 ->\(audio.title)->\(error)")
-
-            throw SmartError.PlayFailed
-        }
-    }
-}
-
-// MARK: 接收系统事件
-
-extension AudioManager: AVAudioPlayerDelegate {
-    @MainActor func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        // 没有播放完，被打断了
-        if !flag {
-            os_log("\(Logger.isMain)🍋 AudioManager::播放被打断，更新为暂停状态")
-            return pause()
-        }
-
-        os_log("\(Logger.isMain)🍋 AudioManager::播放完成，自动播放下一曲")
-        do {
-            try next(manual: false)
-        } catch let e {
-            os_log("\(Logger.isMain)‼️ AudioManager::\(e.localizedDescription)")
-            self.playerError = e
-        }
-    }
-
-    func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {
-        os_log("\(Logger.isMain)audioPlayerDecodeErrorDidOccur")
-    }
-
-    func audioPlayerBeginInterruption(_ player: AVAudioPlayer) {
-        os_log("\(Logger.isMain)🍋 AudioManager::audioPlayerBeginInterruption")
-        pause()
-    }
-
-    func audioPlayerEndInterruption(_ player: AVAudioPlayer, withOptions flags: Int) {
-        os_log("\(Logger.isMain)🍋 AudioManager::audioPlayerEndInterruption")
-        resume()
     }
 }
 

@@ -46,40 +46,6 @@ class MediaPlayerManager: ObservableObject {
         #endif
     }
 
-    static func setNowPlayingInfo(audioManager: AudioManager) {
-        os_log("\(Logger.isMain)🍋 MediaPlayerManager::Update")
-        let audio = audioManager.audio
-        let player = audioManager.player
-        let isPlaying = player.isPlaying
-        let duration = player.duration
-        let currentTime = player.currentTime
-        let center = MPNowPlayingInfoCenter.default()
-
-        guard let audio = audio else {
-            return
-        }
-
-        #if os(iOS)
-            let image = audio.getUIImage()
-
-            center.nowPlayingInfo = [
-                MPMediaItemPropertyTitle: audio.title,
-                MPMediaItemPropertyArtwork: MPMediaItemArtwork(image: image),
-                MPMediaItemPropertyArtist: "乐音APP",
-                MPMediaItemPropertyPlaybackDuration: duration,
-                MPNowPlayingInfoPropertyElapsedPlaybackTime: currentTime,
-            ]
-        #else
-            center.playbackState = isPlaying ? .playing : .paused
-            center.nowPlayingInfo = [
-                MPMediaItemPropertyTitle: audio.title,
-                MPMediaItemPropertyArtist: "乐音APP",
-                MPMediaItemPropertyPlaybackDuration: duration,
-                MPNowPlayingInfoPropertyElapsedPlaybackTime: currentTime,
-            ]
-        #endif
-    }
-
     // 接收控制中心的指令
     private func onCommand() {
         let c = MPRemoteCommandCenter.shared()
