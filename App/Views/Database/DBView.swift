@@ -10,12 +10,11 @@ struct DBView: View {
     var main = AppConfig.mainQueue
     var bg = AppConfig.bgQueue
     var db: DB { audioManager.db }
-    var dbFolder: DBFolder = DBFolder()
+    var dbFolder: DBFolder = .init()
     var dropping: Bool { appManager.isDropping }
 
     var body: some View {
-        #if os(iOS)
-            DBList()
+        DBList()
             .fileImporter(
                 isPresented: $appManager.isImporting,
                 allowedContentTypes: [.audio],
@@ -29,31 +28,28 @@ struct DBView: View {
                     }
                 }
             )
-        #else
-            DBList()
-                .onDrop(of: [UTType.fileURL], isTargeted: $appManager.isDropping) { providers -> Bool in
-                    let dispatchGroup = DispatchGroup()
-                    var dropedFiles: [URL] = []
-                    for provider in providers {
-                        dispatchGroup.enter()
-                        // 这是异步操作
-                        _ = provider.loadObject(ofClass: URL.self) { object, _ in
-                            if let url = object {
-                                os_log("\(Logger.isMain)🖥️ DBView::添加 \(url.lastPathComponent) 到复制队列")
-                                dropedFiles.append(url)
-                            }
-
-                            dispatchGroup.leave()
+            .onDrop(of: [UTType.fileURL], isTargeted: $appManager.isDropping) { providers -> Bool in
+                let dispatchGroup = DispatchGroup()
+                var dropedFiles: [URL] = []
+                for provider in providers {
+                    dispatchGroup.enter()
+                    // 这是异步操作
+                    _ = provider.loadObject(ofClass: URL.self) { object, _ in
+                        if let url = object {
+                            os_log("\(Logger.isMain)🖥️ DBView::添加 \(url.lastPathComponent) 到复制队列")
+                            dropedFiles.append(url)
                         }
-                    }
 
-                    dispatchGroup.notify(queue: .main) {
-                        copy(dropedFiles)
+                        dispatchGroup.leave()
                     }
-
-                    return true
                 }
-        #endif
+
+                dispatchGroup.notify(queue: .main) {
+                    copy(dropedFiles)
+                }
+
+                return true
+            }
     }
 
     init() {
@@ -96,7 +92,7 @@ extension DBView {
             appManager.stateMessage = m
         }
     }
-    
+
     func cleanStateMessage() {
         main.async {
             appManager.cleanStateMessage()
