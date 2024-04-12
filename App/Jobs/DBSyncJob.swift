@@ -24,6 +24,7 @@ actor DBSyncJob {
         os_log("\(Logger.isMain)\(self.label)watchAudiosFolder")
 
         let queue = OperationQueue()
+        queue.maxConcurrentOperationCount = 1
         let query = await ItemQuery(queue: queue, url: self.db.getAudioDir())
         let result = query.searchMetadataItems()
         for try await items in result {
