@@ -34,11 +34,11 @@ extension DB {
     
     func insertIfNotIn(_ urls: [URL]) {
         let dbURLs = self.getAllURLs()
-        urls.forEach({
-            if dbURLs.contains($0) == false {
-                context.insert(Audio($0))
+        for url in urls {
+            if dbURLs.contains(url) == false {
+                context.insert(Audio(url))
             }
-        })
+        }
         
         self.save()
     }
@@ -48,11 +48,11 @@ extension DB {
 
 extension DB {
     func deleteIfNotIn(_ urls: [URL]) {
-            try?  self.context.delete(model: Audio.self, where: #Predicate{
-                urls.contains($0.url) == false
-            })
+        try? self.context.delete(model: Audio.self, where: #Predicate {
+            urls.contains($0.url) == false
+        })
             
-            self.save()
+        self.save()
     }
     
     nonisolated func delete(_ url: URL) {
@@ -157,23 +157,10 @@ extension DB {
         }
         let descriptor = FetchDescriptor<Audio>(predicate: predicate)
         do {
-            return try context.fetch(descriptor).map {$0.url}
+            return try context.fetch(descriptor).map { $0.url }
         } catch let e {
             print(e)
             return []
-        }
-    }
-    
-    /// 查询数据，当查到或有更新时会调用回调函数
-    func getAudios() {
-        os_log("\(Logger.isMain)🍋 DB::getAudios")
-
-        Task {
-            let query = ItemQuery(queue: OperationQueue(), url: self.getAudioDir())
-            for try await items in query.searchMetadataItems() {
-                os_log("\(Logger.isMain)🍋 DB::getAudios \(items.count)")
-                await DBSync(db: self).run(items)
-            }
         }
     }
     
@@ -319,7 +306,7 @@ extension DB {
                 // os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title) -> \(first.title)")
                 return first
             } else {
-                //os_log("⚠️ DBAudio::nextOf [\(audio.order)] \(audio.title) not found")
+                // os_log("⚠️ DBAudio::nextOf [\(audio.order)] \(audio.title) not found")
                 // 找不到下一个，则返回第一个
                 return self.getFirstValid()
             }
@@ -416,26 +403,9 @@ extension DB {
         }
     }
     
-    func prepare() {
-        guard let first = get(0) else {
-            return
-        }
-        
-        self.downloadNext(first, reason: "DB::prepare")
-    }
-    
     func download(_ audio: Audio, reason: String) {
-        if audio.isNotExists {
-            return
-        }
-        
         Task {
-             os_log("\(Logger.isMain)⬇️ DB::download \(audio.title) 🐛 \(reason)")
-            do {
-                try await CloudHandler().download(url: audio.url)
-            } catch let e {
-                print(e)
-            }
+            await DBDownloadJob(db: self).run(audio)
         }
     }
     

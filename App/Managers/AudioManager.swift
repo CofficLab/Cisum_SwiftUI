@@ -32,32 +32,15 @@ class AudioManager: NSObject, ObservableObject {
         super.init()
         restore()
 
-        dbPrepare()
         checkNetworkStatus()
-            player.onAudioChange={
-                self.audio = $0
-            }
-    }
-
-    func dbPrepare() {
-        Task.detached {
-            os_log("\(Logger.isMain)🚩 AudioManager::准备数据库")
-            await self.db.setOnUpdated {
-                self.main.async {
-                    self.lastUpdatedAt = .now
-                }
-
-                self.restore()
-            }
-            await self.db.getAudios()
-            await self.db.prepare()
+        player.onAudioChange = {
+            self.audio = $0
         }
     }
 
     // MARK: 恢复上次播放的
 
     func restore() {
-        os_log("\(Logger.isMain)🚩 AudioManager::restore")
         let currentMode = PlayMode(rawValue: AppConfig.currentMode)
         self.mode = currentMode ?? self.mode
 
@@ -68,7 +51,7 @@ class AudioManager: NSObject, ObservableObject {
                 } else if let current = self.db.getFirstValid() {
                     await self.setCurrent(current, reason: "初始化，播放第一个")
                 } else {
-                    os_log("\(Logger.isMain)🚩 AudioManager::restore nothing t o play")
+                    os_log("\(Logger.isMain)🚩 AudioManager::restore nothing to play")
                 }
             }
         }
@@ -95,16 +78,10 @@ class AudioManager: NSObject, ObservableObject {
 
             // 将当前播放的歌曲存储下来，下次打开继续
             AppConfig.setCurrentAudio(audio)
-            
+
             // 播放次数增加
             await db.increasePlayCount(audio)
         }
-    }
-
-    // MARK: 跳转到某个时间
-
-    func gotoTime(time: TimeInterval) {
-        player.gotoTime(time: time)
     }
 
     // MARK: 播放指定的
@@ -113,22 +90,6 @@ class AudioManager: NSObject, ObservableObject {
         os_log("\(Logger.isMain)🔊 AudioManager::play \(audio.title)")
 
         setCurrent(audio, play: true, reason: reason)
-    }
-
-    func resume() {
-        player.resume()
-    }
-
-    // MARK: 暂停
-
-    func pause() {
-        player.pause()
-    }
-
-    // MARK: 停止
-
-    func stop() {
-        player.stop()
     }
 
     // MARK: 切换
@@ -170,7 +131,7 @@ class AudioManager: NSObject, ObservableObject {
         os_log("\(Logger.isMain)🔊 AudioManager::next ⬇️ \(manual ? "手动触发" : "自动触发")")
 
         if mode == .Loop && manual == false {
-            return self.resume()
+            return self.player.resume()
         }
 
         guard let audio = audio else {
@@ -181,7 +142,7 @@ class AudioManager: NSObject, ObservableObject {
             if let i = db.nextOf(audio) {
                 await setCurrent(i, play: player.isPlaying || manual == false, reason: "触发了下一首")
             } else {
-                self.stop()
+                self.player.stop()
             }
         }
     }
@@ -245,11 +206,11 @@ extension AudioManager {
             self.playerError = nil
         }
     }
-    
+
     func checkError() {
         _ = errorCheck()
     }
-    
+
     func getError() -> Error? {
         errorCheck()
     }
@@ -282,7 +243,7 @@ extension AudioManager {
         if audio.isNotSupported {
             return setError(SmartError.FormatNotSupported(audio.ext))
         }
-        
+
         return setError(nil)
     }
 
@@ -290,7 +251,7 @@ extension AudioManager {
         main.async {
             self.playerError = e
         }
-        
+
         return e
     }
 }

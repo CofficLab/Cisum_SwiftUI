@@ -31,7 +31,7 @@ struct SliderView: View {
             Slider(value: $value, in: 0 ... duration) { editing in
                 isEditing = editing
                 if !editing {
-                    audioManager.gotoTime(time: value)
+                    player.gotoTime(time: value)
                 }
             }.disabled(shouldDisable)
 

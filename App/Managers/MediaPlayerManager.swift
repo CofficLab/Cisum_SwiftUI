@@ -6,6 +6,8 @@ import SwiftUI
 
 class MediaPlayerManager: ObservableObject {
     var audioManager: AudioManager
+    
+    var player: SmartPlayer { audioManager.player }
 
     init(audioManager: AudioManager) {
         self.audioManager = audioManager
@@ -75,14 +77,14 @@ class MediaPlayerManager: ObservableObject {
 
         c.pauseCommand.addTarget { _ in
             os_log("\(Logger.isMain)🍋 MediaPlayerManger::暂停")
-            self.audioManager.pause()
+            self.player.pause()
 
             return .success
         }
 
         c.playCommand.addTarget { _ in
             os_log("\(Logger.isMain)播放")
-            self.audioManager.resume()
+            self.player.resume()
 
             return .success
         }
@@ -90,7 +92,7 @@ class MediaPlayerManager: ObservableObject {
         c.stopCommand.addTarget { _ in
             os_log("\(Logger.isMain)停止")
 
-            self.audioManager.stop()
+            self.player.stop()
 
             return .success
         }
@@ -123,7 +125,7 @@ class MediaPlayerManager: ObservableObject {
 
             // 在这里处理当前的播放进度时间
             print("Current playback position: \(positionTime)")
-            self.audioManager.gotoTime(time: positionTime)
+            self.player.gotoTime(time: positionTime)
 
             return .success
         }

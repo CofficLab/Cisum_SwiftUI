@@ -64,7 +64,7 @@ extension Audio {
     func getCoverImage() async -> Image? {
          //os_log("\(Logger.isMain)🍋 Audio::getCoverImage for \(self.title)")
         guard let coverURL = await getCover() else {
-            os_log("\(Logger.isMain)🍋 Audio::getCoverImage for \(self.title) coverURL=nil give up")
+            //os_log("\(Logger.isMain)🍋 Audio::getCoverImage for \(self.title) coverURL=nil give up")
             return nil
         }
 

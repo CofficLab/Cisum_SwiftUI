@@ -16,6 +16,7 @@ actor DB: ModelActor {
     var fileManager = FileManager.default
     var cloudHandler = CloudHandler()
     var bg = AppConfig.bgQueue
+    var queue = DispatchQueue(label: "DB")
     var audiosDir: URL = AppConfig.audiosDir
     var handler = CloudHandler()
     var context: ModelContext
@@ -30,16 +31,24 @@ actor DB: ModelActor {
         self.modelExecutor = DefaultSerialModelExecutor(
             modelContext: context
         )
+
+        Task.detached(operation: {
+            await DBSyncJob(db: self).run()
+        })
+        
+        Task.detached(operation: {
+            await DBPrepareJob(db: self).run()
+        })
     }
-    
+
     func setOnUpdated(_ callback: @escaping () -> Void) {
         self.onUpdated = callback
     }
-    
+
     func hasChanges() -> Bool {
         context.hasChanges
     }
-    
+
     func save() {
         do {
             try self.context.save()

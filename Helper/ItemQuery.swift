@@ -19,7 +19,7 @@ class ItemQuery {
         sortDescriptors: [NSSortDescriptor] = [],
         scopes: [Any] = [NSMetadataQueryUbiquitousDocumentsScope]
     ) -> AsyncStream<[MetadataItemWrapper]> {
-        os_log("\(Logger.isMain)🍋 searchMetadataItems")
+        //os_log("\(Logger.isMain)🍋 searchMetadataItems")
         query.searchScopes = scopes
         query.sortDescriptors = sortDescriptors
         query.predicate = NSPredicate(format: "%K BEGINSWITH %@", NSMetadataItemPathKey, url.path + "/")
@@ -31,7 +31,7 @@ class ItemQuery {
                 queue: queue
             ) { _ in
                 DispatchQueue.global().async {
-                    os_log("\(Logger.isMain)🍋 searchMetadataItems.NSMetadataQueryDidFinishGathering")
+                    //os_log("\(Logger.isMain)🍋 searchMetadataItems.NSMetadataQueryDidFinishGathering")
                     let result = self.query.results.compactMap { item -> MetadataItemWrapper? in
                         guard let metadataItem = item as? NSMetadataItem else {
                             return nil
@@ -48,7 +48,7 @@ class ItemQuery {
                 queue: queue
             ) { notification in
                 DispatchQueue.global().async {
-                    os_log("\(Logger.isMain)🍋 searchMetadataItems.NSMetadataQueryDidUpdate")
+                    //os_log("\(Logger.isMain)🍋 searchMetadataItems.NSMetadataQueryDidUpdate")
                     let changedItems = notification.userInfo?[NSMetadataQueryUpdateChangedItemsKey] as? [NSMetadataItem] ?? []
                     let result = changedItems.compactMap { item -> MetadataItemWrapper? in
                         return MetadataItemWrapper(metadataItem: item, isUpdated: true)
@@ -66,8 +66,11 @@ class ItemQuery {
                 }
             }
 
-            os_log("\(Logger.isMain)🍋 searchMetadataItems.start")
-            query.start()
+            query.operationQueue = queue
+            query.operationQueue?.addOperation {
+                os_log("\(Logger.isMain)🍋 searchMetadataItems.start")
+                self.query.start()
+            }
 
             continuation.onTermination = { @Sendable _ in
                 os_log("\(Logger.isMain) onTermination")
