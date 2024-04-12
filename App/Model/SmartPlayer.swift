@@ -13,11 +13,11 @@ class SmartPlayer: NSObject {
         didSet {
             let isPlaying = self.isPlaying
             
+            onAudioChange(audio)
             guard let audio = audio else {
+                self.state = .Finished
                 return player = AVAudioPlayer()
             }
-
-            onAudioChange(audio)
 
             if audio.isDownloaded {
                 do {
@@ -66,8 +66,8 @@ class SmartPlayer: NSObject {
         os_log("\(SmartPlayer.label)播放器状态已变为 \(state.des)")
     }
 
-    var onAudioChange: (_ audio: Audio) -> Void = { audio in
-        os_log("\(SmartPlayer.label)播放器歌曲已变为 \(audio.title)")
+    var onAudioChange: (_ audio: Audio?) -> Void = { audio in
+        os_log("\(SmartPlayer.label)播放器歌曲已变为 \(audio?.title ?? "nil")")
     }
 
     // MARK: 设置当前的

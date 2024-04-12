@@ -72,28 +72,30 @@ class AudioManager: NSObject, ObservableObject {
 
     // MARK: 设置当前的
 
-    @MainActor func setCurrent(_ audio: Audio, play: Bool? = nil, reason: String) {
-        os_log("\(Logger.isMain)\(self.label)setCurrent to \(audio.title) 🐛 \(reason)")
+    @MainActor func setCurrent(_ audio: Audio?, play: Bool? = nil, reason: String) {
+        os_log("\(Logger.isMain)\(self.label)setCurrent to \(audio?.title ?? "nil") 🐛 \(reason)")
 
         self.player.audio = audio
         if play == true {
             self.player.play()
         }
+        
         self.checkError()
 
         Task {
-            // 下载当前的
-            await self.db.download(audio, reason: "SetCurrent")
-            self.checkError()
+            if let a = audio {
+                // 下载当前的
+                await self.db.download(a, reason: "SetCurrent")
+                
+                // 下载接下来的
+                await db.downloadNext(a, reason: "触发了下一首")
 
-            // 下载接下来的
-            await db.downloadNext(audio, reason: "触发了下一首")
+                // 将当前播放的歌曲存储下来，下次打开继续
+                AppConfig.setCurrentAudio(a)
 
-            // 将当前播放的歌曲存储下来，下次打开继续
-            AppConfig.setCurrentAudio(audio)
-
-            // 播放次数增加
-            await db.increasePlayCount(audio)
+                // 播放次数增加
+                await db.increasePlayCount(a)
+            }
         }
     }
 
@@ -155,6 +157,7 @@ class AudioManager: NSObject, ObservableObject {
             if let i = db.nextOf(audio) {
                 await setCurrent(i, play: player.isPlaying || manual == false, reason: "触发了下一首")
             } else {
+                self.checkError()
                 self.player.stop()
             }
         }
