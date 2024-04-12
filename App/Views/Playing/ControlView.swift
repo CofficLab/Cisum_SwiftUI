@@ -10,7 +10,8 @@ struct ControlView: View {
                 HStack(spacing: 0) {
                     VStack(spacing: 0) {
                         Spacer()
-                        TitleView()
+                        TitleView().padding()
+                        ErrorView().padding()
                         BtnsView().frame(height: 90)
                         SliderView().frame(height: 30).padding(.bottom, 10)
                         // StateView()
@@ -21,7 +22,7 @@ struct ControlView: View {
                         HStack {
                             Spacer()
                             PlayingAlbum()
-                        }.frame(maxWidth:geo.size.height*1.3)
+                        }.frame(maxWidth: geo.size.height * 1.3)
                     }
                 }
                 .padding(.bottom, 0)
@@ -30,15 +31,24 @@ struct ControlView: View {
             .foregroundStyle(.white)
             .ignoresSafeArea()
         #else
-            VStack {
-                if !appManager.showDB {
-                    PlayingAlbum()
+            GeometryReader { geo in
+                VStack(spacing: 0) {
+                    VStack {
+                        if !appManager.showDB {
+                            PlayingAlbum().frame(maxHeight: .infinity)
+                        }
+                        TitleView().padding()
+                        ErrorView().padding()
+                    }
+
+                    Spacer()
+
+                    VStack {
+                        SliderView().padding()
+                        BtnsView().padding()
+                    }.frame(height: geo.size.height / (appManager.showDB ? 2 : 3))
                 }
-                TitleView().padding(.vertical, 20)
-                Spacer()
-                SliderView().padding(.vertical, 20)
-                BtnsView().padding(.vertical, 30)
-            }.foregroundStyle(.white)
+            }
         #endif
     }
 }
@@ -46,7 +56,7 @@ struct ControlView: View {
 #Preview("APP") {
     RootView {
         ContentView()
-    }
+    }.modelContainer(AppConfig.getContainer())
 }
 
 #Preview("响应式") {
@@ -87,5 +97,5 @@ struct ControlView: View {
             })
             Spacer()
         }
-    })
+    }).modelContainer(AppConfig.getContainer())
 }

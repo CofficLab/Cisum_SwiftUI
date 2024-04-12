@@ -239,6 +239,10 @@ extension AudioManager {
         if audio.isNotExists {
             return setError(SmartError.NotExists)
         }
+        
+        if audio.isDownloading {
+            return setError(SmartError.Downloading)
+        }
 
         if audio.isNotDownloaded {
             Task {
@@ -250,10 +254,6 @@ extension AudioManager {
             }
 
             return setError(SmartError.NotDownloaded)
-        }
-
-        if audio.isDownloading {
-            return setError(SmartError.Downloading)
         }
 
         if audio.isNotSupported {
