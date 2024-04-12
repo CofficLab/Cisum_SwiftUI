@@ -20,9 +20,15 @@ class ItemQuery {
         scopes: [Any] = [NSMetadataQueryUbiquitousDocumentsScope]
     ) -> AsyncStream<[MetadataItemWrapper]> {
         //os_log("\(Logger.isMain)🍋 searchMetadataItems")
+        let predicates = [
+            NSPredicate(format: "%K BEGINSWITH %@", NSMetadataItemPathKey, url.path + "/"),
+            NSPredicate(format: "NOT %K ENDSWITH %@", NSMetadataItemFSNameKey, ".DS_Store"),
+            NSPredicate(format: "NOT %K ENDSWITH %@", NSMetadataItemFSNameKey, ".zip"),
+            NSPredicate(format: "NOT %K ENDSWITH %@", NSMetadataItemFSNameKey, ".plist"),
+        ]
         query.searchScopes = scopes
         query.sortDescriptors = sortDescriptors
-        query.predicate = NSPredicate(format: "%K BEGINSWITH %@", NSMetadataItemPathKey, url.path + "/")
+        query.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
 
         return AsyncStream { continuation in
             NotificationCenter.default.addObserver(
