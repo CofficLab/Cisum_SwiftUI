@@ -14,9 +14,10 @@ struct Boot: App {
                 RootView {
                     ContentView()
                 }
+                .frame(minWidth: AppConfig.minWidth, minHeight: AppConfig.minHeight)
             }
             .windowStyle(.hiddenTitleBar)
-            .defaultSize(width: 350, height: 500)
+            .defaultSize(width: AppConfig.minWidth, height: AppConfig.defaultHeight)
             .modelContainer(AppConfig.getContainer())
             .commands {
                 DebugCommand()

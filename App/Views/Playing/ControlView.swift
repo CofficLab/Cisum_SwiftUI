@@ -5,97 +5,70 @@ struct ControlView: View {
     @EnvironmentObject var appManager: AppManager
 
     var body: some View {
-        #if os(macOS)
-            GeometryReader { geo in
-                HStack(spacing: 0) {
-                    VStack(spacing: 0) {
+        GeometryReader { geo in
+            HStack(spacing: 0) {
+                VStack {
+                    VStack {
+                        if shouldShowTopAlbum(geo) {
+                            PlayingAlbum()
+                        }
                         Spacer()
                         TitleView().padding()
-                        ErrorView().padding()
-                        BtnsView().frame(height: 90)
-                        SliderView().frame(height: 30).padding(.bottom, 10)
-                        // StateView()
+                        ErrorView()
                     }
-
-                    if geo.size.width > 500 {
-                        // 最大宽度=控制栏的高度+系统标题栏高度
-                        HStack {
-                            Spacer()
-                            PlayingAlbum()
-                        }.frame(maxWidth: geo.size.height * 1.3)
-                    }
-                }
-                .padding(.bottom, 0)
-                .padding(.horizontal, 0)
-            }
-            .foregroundStyle(.white)
-            .ignoresSafeArea()
-        #else
-            GeometryReader { geo in
-                VStack(spacing: 0) {
-                    VStack {
-                        if !appManager.showDB {
-                            PlayingAlbum().frame(maxHeight: .infinity)
-                        }
-                        TitleView().padding()
-                        ErrorView().padding()
-                    }
-
-                    Spacer()
+                    //.background(.red.opacity(0.1))
+                    
+//                    Spacer(minLength: 0)
 
                     VStack {
+//                        Spacer(minLength: 0)
                         SliderView().padding()
                         BtnsView().padding()
-                    }.frame(height: geo.size.height / (appManager.showDB ? 2 : 3))
+                    }
+                    // StateView()
+                }
+                //.background(.red.opacity(0.1))
+
+                // MARK: 横向的封面图
+                
+                if shouldShowRightAlbum(geo) {
+                    // 最大宽度=控制栏的高度+系统标题栏高度
+                    HStack {
+                        Spacer()
+                        PlayingAlbum()
+                    }.frame(maxWidth: geo.size.height * 1.3)
                 }
             }
-        #endif
+            .padding(.bottom, 0)
+            .padding(.horizontal, 0)
+            .frame(maxHeight: .infinity)
+        }
+        .foregroundStyle(.white)
+        .ignoresSafeArea()
+        .frame(minHeight: AppConfig.controlViewMinHeight)
+    }
+    
+    private func shouldShowRightAlbum(_ geo: GeometryProxy) -> Bool {
+        geo.size.width > 500
+    }
+    
+    private func shouldShowTopAlbum(_ geo: GeometryProxy) -> Bool {
+        !shouldShowRightAlbum(geo) && geo.size.height > 500
     }
 }
 
-#Preview("APP") {
-    RootView {
-        ContentView()
-    }.modelContainer(AppConfig.getContainer())
+#Preview("1") {
+    LayoutPreview(width: AppConfig.minWidth, height: AppConfig.minHeight)
 }
 
-#Preview("响应式") {
-    RootView(content: {
-        HStack {
-            Spacer()
-            VStack(content: {
-                Spacer()
+#Preview("2") {
+    LayoutPreview(width: AppConfig.minWidth + 100, height: AppConfig.minHeight)
+}
 
-                HStack(content: {
-                    ControlView()
-                }).frame(width: 350, height: AppConfig.controlViewHeight + 100).border(.red)
+#Preview("3") {
+    LayoutPreview(width: AppConfig.minWidth+200, height: AppConfig.minHeight)
+}
 
-                HStack(content: {
-                    ControlView()
-                }).frame(width: 350, height: AppConfig.controlViewHeight).border(.red)
-
-                HStack(content: {
-                    ControlView()
-                }).frame(width: 400, height: AppConfig.controlViewHeight).border(.red)
-
-                HStack(content: {
-                    ControlView()
-                }).frame(width: 500, height: AppConfig.controlViewHeight).border(.red)
-
-                HStack(content: {
-                    ControlView()
-                }).frame(width: 600, height: AppConfig.controlViewHeight).border(.red)
-
-                HStack(content: {
-                    ControlView()
-                }).frame(width: 700, height: AppConfig.controlViewHeight).border(.red)
-
-                HStack(content: {
-                    ControlView()
-                }).frame(width: 800, height: AppConfig.controlViewHeight).border(.red)
-                Spacer()
-            })
-            Spacer()
-        }
-    }).modelContainer(AppConfig.getContainer())
+#Preview("4") {
+    LayoutPreview(width: AppConfig.minWidth+300, height: AppConfig.minHeight)
 }

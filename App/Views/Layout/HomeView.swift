@@ -8,41 +8,28 @@ struct HomeView: View {
 
     @State private var databaseViewHeight: CGFloat = 300
 
-    var showDB: Bool {appManager.showDB}
+    var showDB: Bool { appManager.showDB }
     var databaseViewHeightMin = AppConfig.databaseViewHeightMin
 
     var body: some View {
         GeometryReader { geo in
             VStack(spacing: 0) {
                 ControlView()
-                    .frame(height: getControlViewHeight(geo))
 
                 if showDB {
                     DBView()
                 }
             }
-            .onChange(of: showDB) { if AppConfig.canResize {resize(geo)} }
+            .onChange(of: showDB) { if AppConfig.canResize { resize(geo) } }
             .onChange(of: geo.size.height) { onHeightChange(geo.size.height) }
             .onAppear { onHeightChange(geo.size.height) }
         }
     }
-    
-    private func getControlViewHeight(_ geo: GeometryProxy) -> Double {
-            if AppConfig.canResize {
-                return AppConfig.controlViewHeight
-            }
-            
-            if showDB {
-                return geo.size.height * 0.4
-            }
-        
-        return geo.size.height
-    }
 
     private func onHeightChange(_ height: CGFloat) {
-        if height > AppConfig.controlViewHeight {
+        if height > AppConfig.controlViewMinHeight {
             appManager.showDB = true
-            databaseViewHeight = height - AppConfig.controlViewHeight
+            databaseViewHeight = height - AppConfig.controlViewMinHeight
             if databaseViewHeight < databaseViewHeightMin {
                 databaseViewHeight = databaseViewHeightMin
             }
@@ -58,15 +45,15 @@ struct HomeView: View {
         let height = frame.size.height
 
         if appManager.showDB {
-            if geo.size.height <= AppConfig.controlViewHeight {
+            if geo.size.height <= AppConfig.controlViewMinHeight {
                 AppConfig.logger.app.debug("增加 Height 以展开数据库视图")
                 frame.origin.y = oldY - databaseViewHeight
                 frame.size.height = height + databaseViewHeight
             }
         } else {
             AppConfig.logger.app.debug("🖥️ HomeView::减少 Height 以折叠数据库视图")
-            frame.origin.y = oldY + (frame.size.height - AppConfig.controlViewHeight)
-            frame.size.height = AppConfig.controlViewHeight
+            frame.origin.y = oldY + (frame.size.height - AppConfig.controlViewMinHeight)
+            frame.size.height = AppConfig.controlViewMinHeight
         }
 
         os_log("\(Logger.isMain)🖥️ HomeView::自动调整窗口 oldY:\(oldY) y:\(frame.origin.y))")
@@ -79,8 +66,18 @@ struct HomeView: View {
     }
 }
 
-#Preview("普通") {
-    RootView {
-        HomeView()
-    }
+#Preview("1") {
+    LayoutPreview(width: AppConfig.minWidth, height: AppConfig.minHeight)
+}
+
+#Preview("2") {
+    LayoutPreview(width: AppConfig.minWidth + 100, height: AppConfig.minHeight)
+}
+
+#Preview("3") {
+    LayoutPreview(width: AppConfig.minWidth+200, height: AppConfig.minHeight)
+}
+
+#Preview("4") {
+    LayoutPreview(width: AppConfig.minWidth+300, height: AppConfig.minHeight)
 }

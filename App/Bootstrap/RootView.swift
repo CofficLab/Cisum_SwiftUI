@@ -26,7 +26,7 @@ struct RootView<Content>: View where Content: View {
                     .environmentObject(mediaPlayerManger!)
                     .environmentObject(windowManager)
                     .environmentObject(appManager)
-                    .frame(minWidth: 350, minHeight: AppConfig.controlViewHeight)
+                    .frame(minWidth: AppConfig.minWidth, minHeight: AppConfig.minHeight)
                     .blendMode(.normal)
             } else {
                 LanuchView(errorMessage: errorMessage)

@@ -44,9 +44,12 @@ extension AppConfig {
 // MARK: 视图配置
 
 extension AppConfig {
-    /// 上半部分播放控制的高度
-    static var controlViewHeight: CGFloat = 180
+    /// 上半部分播放控制的最小高度
+    static var controlViewMinHeight: CGFloat = Self.minHeight
     static var databaseViewHeightMin: CGFloat = 200
+    static var minWidth: CGFloat = 350
+    static var minHeight: CGFloat = 250
+    static var defaultHeight: CGFloat = 500
     #if os(macOS)
     static var canResize = true
     #else
