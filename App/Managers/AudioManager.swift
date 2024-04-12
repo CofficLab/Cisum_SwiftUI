@@ -9,10 +9,11 @@ import SwiftUI
 
 /// 管理播放器的播放、暂停、上一曲、下一曲等操作
 class AudioManager: NSObject, ObservableObject {
+    static var label: String = "🔊 AudioManager::"
+    
     @Published var audio: Audio?
     @Published var playerError: Error? = nil
     @Published var mode: PlayMode = .Order
-    @Published var lastUpdatedAt: Date = .now
     @Published var networkOK = true
 
     private var listener: AnyCancellable?
@@ -20,6 +21,7 @@ class AudioManager: NSObject, ObservableObject {
     private var main = AppConfig.mainQueue
     private var title: String { audio?.title ?? "[无]" }
     private var rootDir: URL = AppConfig.cloudDocumentsDir
+    private var label: String { AudioManager.label }
 
     var db: DB = .init(AppConfig.getContainer())
     var dbFolder = DBFolder()
@@ -28,13 +30,24 @@ class AudioManager: NSObject, ObservableObject {
     var isCloudStorage: Bool { iCloudHelper.isCloudPath(url: rootDir) }
 
     override init() {
-        os_log("🚩 AudioManager::初始化")
+        os_log("\(Logger.isMain)\(AudioManager.label)初始化")
         super.init()
         restore()
 
         checkNetworkStatus()
         player.onAudioChange = {
             self.audio = $0
+        }
+        player.onStateChange = { state in
+            os_log("\(Logger.isMain)\(AudioManager.label)播放状态变了 \(state.des)")
+            switch state {
+            case .Finished:
+                self.next()
+            case .Stopped:
+                break
+            default:
+                break
+            }
         }
     }
 
@@ -60,7 +73,7 @@ class AudioManager: NSObject, ObservableObject {
     // MARK: 设置当前的
 
     @MainActor func setCurrent(_ audio: Audio, play: Bool? = nil, reason: String) {
-        os_log("\(Logger.isMain)🍋 ✨ AudioManager::setCurrent to \(audio.title) 🐛 \(reason)")
+        os_log("\(Logger.isMain)\(self.label)setCurrent to \(audio.title) 🐛 \(reason)")
 
         self.player.audio = audio
         if play == true {
@@ -87,7 +100,7 @@ class AudioManager: NSObject, ObservableObject {
     // MARK: 播放指定的
 
     @MainActor func play(_ audio: Audio, reason: String) {
-        os_log("\(Logger.isMain)🔊 AudioManager::play \(audio.title)")
+        os_log("\(Logger.isMain)\(self.label)play \(audio.title)")
 
         setCurrent(audio, play: true, reason: reason)
     }
@@ -96,7 +109,7 @@ class AudioManager: NSObject, ObservableObject {
 
     @MainActor func toggle() {
         if self.getError() != nil {
-            os_log("\(Logger.isMain)🍋 AudioManager::Toggle 取消，因为存在PlayError")
+            os_log("\(Logger.isMain)\(self.label)Toggle 取消，因为存在PlayError")
             return
         }
 
@@ -107,7 +120,7 @@ class AudioManager: NSObject, ObservableObject {
 
     /// 跳到上一首，manual=true表示由用户触发
     func prev(manual: Bool = false) throws {
-        os_log("\(Logger.isMain)🔊 AudioManager::prev ⬆️")
+        os_log("\(Logger.isMain)\(self.label)prev ⬆️")
 
         if mode == .Loop && manual == false {
             return
@@ -127,8 +140,8 @@ class AudioManager: NSObject, ObservableObject {
     // MARK: Next
 
     /// 跳到下一首，manual=true表示由用户触发
-    func next(manual: Bool = false) throws {
-        os_log("\(Logger.isMain)🔊 AudioManager::next ⬇️ \(manual ? "手动触发" : "自动触发")")
+    func next(manual: Bool = false) {
+        os_log("\(Logger.isMain)\(self.label)next ⬇️ \(manual ? "手动触发" : "自动触发")")
 
         if mode == .Loop && manual == false {
             return self.player.resume()
@@ -148,10 +161,10 @@ class AudioManager: NSObject, ObservableObject {
     }
 
     func trash(_ audio: Audio) throws {
-        os_log("\(Logger.isMain)🔊 AudioManager::trash 🗑️ \(audio.title)")
+        os_log("\(Logger.isMain)\(self.label)trash 🗑️ \(audio.title)")
 
         if self.audio?.url == audio.url {
-            try next(manual: true)
+            next(manual: true)
         }
 
         Task {

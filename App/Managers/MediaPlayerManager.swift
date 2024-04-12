@@ -5,24 +5,27 @@ import OSLog
 import SwiftUI
 
 class MediaPlayerManager: ObservableObject {
+    static var label = "📱 MediaPlayerManager::"
+
+    var label: String { MediaPlayerManager.label }
     var audioManager: AudioManager
-    
     var player: SmartPlayer { audioManager.player }
 
     init(audioManager: AudioManager) {
         self.audioManager = audioManager
         onCommand()
     }
-    
+
     static func setPlayingInfo(_ smartPlayer: SmartPlayer) {
-        os_log("\(Logger.isMain)🍋 MediaPlayerManager::Update")
         let audio = smartPlayer.audio
         let player = smartPlayer.player
         let isPlaying = player.isPlaying
         let duration = player.duration
         let currentTime = player.currentTime
         let center = MPNowPlayingInfoCenter.default()
-
+        
+        os_log("\(Logger.isMain)\(MediaPlayerManager.label)Update -> \(smartPlayer.state.des) -> \(audio?.title ?? "-")")
+        
         guard let audio = audio else {
             return
         }
@@ -53,14 +56,9 @@ class MediaPlayerManager: ObservableObject {
         let c = MPRemoteCommandCenter.shared()
 
         c.nextTrackCommand.addTarget { _ in
-            os_log("\(Logger.isMain)🍋 MediaPlayerManager::下一首")
-            do {
-                try self.audioManager.next(manual: true)
-                return .success
-            } catch let e {
-                os_log("\(Logger.isMain)MediaPlayerManager::\(e.localizedDescription)")
-                return .noActionableNowPlayingItem
-            }
+            os_log("\(Logger.isMain)\(self.label)下一首")
+            self.audioManager.next(manual: true)
+            return .success
         }
 
         c.previousTrackCommand.addTarget { _ in
@@ -76,7 +74,7 @@ class MediaPlayerManager: ObservableObject {
         }
 
         c.pauseCommand.addTarget { _ in
-            os_log("\(Logger.isMain)🍋 MediaPlayerManger::暂停")
+            os_log("\(Logger.isMain)\(self.label)暂停")
             self.player.pause()
 
             return .success
@@ -116,7 +114,7 @@ class MediaPlayerManager: ObservableObject {
         }
 
         c.changePlaybackPositionCommand.addTarget { e in
-            os_log("\(Logger.isMain)🍎 changePlaybackPositionCommand")
+            os_log("\(Logger.isMain)\(self.label)changePlaybackPositionCommand")
             guard let event = e as? MPChangePlaybackPositionCommandEvent else {
                 return .commandFailed
             }

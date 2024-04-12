@@ -20,6 +20,10 @@ actor DBDownloadJob {
             return
         }
         
+        if audio.isDownloaded {
+            return
+        }
+        
         Task {
             os_log("\(Logger.isMain)\(self.label)\(audio.title)")
             do {

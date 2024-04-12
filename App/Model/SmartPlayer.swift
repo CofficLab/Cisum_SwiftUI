@@ -6,10 +6,13 @@ import SwiftUI
 class SmartPlayer: NSObject {
     // MARK: 成员
 
-    static var emoji = "💿"
+    static var label = "💿 SmartPlayer::"
+    var label: String { SmartPlayer.label }
     var player = AVAudioPlayer()
     var audio: Audio? {
         didSet {
+            let isPlaying = self.isPlaying
+            
             guard let audio = audio else {
                 return player = AVAudioPlayer()
             }
@@ -29,6 +32,11 @@ class SmartPlayer: NSObject {
             } else {
                 player = AVAudioPlayer()
             }
+            
+            player.delegate = self
+            if isPlaying {
+                player.play()
+            }
 
             Task {
                 MediaPlayerManager.setPlayingInfo(self)
@@ -41,6 +49,7 @@ class SmartPlayer: NSObject {
     var state: State = .Stopped {
         didSet {
             onStateChange(state)
+
             Task {
                 MediaPlayerManager.setPlayingInfo(self)
             }
@@ -54,18 +63,16 @@ class SmartPlayer: NSObject {
     // MARK: 对外传递事件
 
     var onStateChange: (_ state: State) -> Void = { state in
-        os_log("\(SmartPlayer.emoji) SmartPlayer::播放器状态已变为 \(state.des)")
+        os_log("\(SmartPlayer.label)播放器状态已变为 \(state.des)")
     }
 
     var onAudioChange: (_ audio: Audio) -> Void = { audio in
-        os_log("\(SmartPlayer.emoji) SmartPlayer::播放器歌曲已变为 \(audio.title)")
+        os_log("\(SmartPlayer.label)播放器歌曲已变为 \(audio.title)")
     }
 
     // MARK: 设置当前的
 
     @MainActor func setCurrent(_ audio: Audio, play: Bool? = nil, reason: String) {
-        os_log("\(Logger.isMain)🍋 ✨ AudioManager::setCurrent to \(audio.title) 🐛 \(reason)")
-
         self.audio = audio
     }
 
@@ -78,7 +85,7 @@ class SmartPlayer: NSObject {
     // MARK: 播放指定的
 
     @MainActor func play(_ audio: Audio, reason: String) {
-        os_log("\(Logger.isMain)🔊 AudioManager::play \(audio.title)")
+        os_log("\(Logger.isMain)\(self.label)play \(audio.title)")
 
         setCurrent(audio, play: true, reason: reason)
     }
@@ -102,7 +109,7 @@ class SmartPlayer: NSObject {
     // MARK: 停止
 
     func stop() {
-        os_log("\(Logger.isMain)🍋 AudioManager::Stop")
+        os_log("\(Logger.isMain)\(self.label)Stop")
         player.stop()
         player.currentTime = 0
         state = .Stopped
@@ -137,28 +144,28 @@ extension SmartPlayer {
 // MARK: 接收系统事件
 
 extension SmartPlayer: AVAudioPlayerDelegate {
-    @MainActor func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         // 没有播放完，被打断了
         if !flag {
-            os_log("\(Logger.isMain)🍋 AudioManager::播放被打断，更新为暂停状态")
+            os_log("\(Logger.isMain)\(self.label)播放被打断，更新为暂停状态")
             return pause()
         }
 
-        os_log("\(Logger.isMain)🍋 AudioManager::播放完成")
+        os_log("\(Logger.isMain)\(self.label)播放完成")
         state = .Finished
     }
 
     func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {
-        os_log("\(Logger.isMain)audioPlayerDecodeErrorDidOccur")
+        os_log("\(Logger.isMain)\(self.label)audioPlayerDecodeErrorDidOccur")
     }
 
     func audioPlayerBeginInterruption(_ player: AVAudioPlayer) {
-        os_log("\(Logger.isMain)🍋 AudioManager::audioPlayerBeginInterruption")
+        os_log("\(Logger.isMain)\(self.label)audioPlayerBeginInterruption")
         pause()
     }
 
     func audioPlayerEndInterruption(_ player: AVAudioPlayer, withOptions flags: Int) {
-        os_log("\(Logger.isMain)🍋 AudioManager::audioPlayerEndInterruption")
+        os_log("\(Logger.isMain)\(self.label)audioPlayerEndInterruption")
         resume()
     }
 }
