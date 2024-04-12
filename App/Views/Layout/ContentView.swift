@@ -49,6 +49,12 @@ struct ContentView: View {
     }
 }
 
+#Preview("App") {
+    RootView {
+        ContentView()
+    }.modelContainer(AppConfig.getContainer())
+}
+
 #Preview("1") {
     LayoutPreview(width: AppConfig.minWidth, height: AppConfig.minHeight)
 }

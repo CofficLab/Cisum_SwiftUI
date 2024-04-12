@@ -46,6 +46,7 @@ struct ControlView: View {
         .foregroundStyle(.white)
         .ignoresSafeArea()
         .frame(minHeight: AppConfig.controlViewMinHeight)
+        .frame(maxHeight: AppConfig.canResize ? AppConfig.controlViewMinHeight : .infinity)
     }
     
     private func shouldShowRightAlbum(_ geo: GeometryProxy) -> Bool {
@@ -55,6 +56,12 @@ struct ControlView: View {
     private func shouldShowTopAlbum(_ geo: GeometryProxy) -> Bool {
         !shouldShowRightAlbum(geo) && geo.size.height > 500
     }
+}
+
+#Preview("App") {
+    RootView {
+        ContentView()
+    }.modelContainer(AppConfig.getContainer())
 }
 
 #Preview("1") {
