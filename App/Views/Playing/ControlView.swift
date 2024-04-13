@@ -27,7 +27,7 @@ struct ControlView: View {
                     }
                     // StateView()
                 }
-                //.background(.red.opacity(0.1))
+                .background(.red.opacity(0.6))
 
                 // MARK: 横向的封面图
                 
@@ -46,7 +46,7 @@ struct ControlView: View {
         .foregroundStyle(.white)
         .ignoresSafeArea()
         .frame(minHeight: AppConfig.controlViewMinHeight)
-        .frame(maxHeight: AppConfig.canResize ? AppConfig.controlViewMinHeight : .infinity)
+//        .frame(maxHeight: AppConfig.canResize ? AppConfig.controlViewMinHeight : .infinity)
     }
     
     private func shouldShowRightAlbum(_ geo: GeometryProxy) -> Bool {
@@ -62,20 +62,4 @@ struct ControlView: View {
     RootView {
         ContentView()
     }.modelContainer(AppConfig.getContainer())
-}
-
-#Preview("1") {
-    LayoutPreview(width: AppConfig.minWidth, height: AppConfig.minHeight)
-}
-
-#Preview("2") {
-    LayoutPreview(width: AppConfig.minWidth + 100, height: AppConfig.minHeight)
-}
-
-#Preview("3") {
-    LayoutPreview(width: AppConfig.minWidth+200, height: AppConfig.minHeight)
-}
-
-#Preview("4") {
-    LayoutPreview(width: AppConfig.minWidth+300, height: AppConfig.minHeight)
 }

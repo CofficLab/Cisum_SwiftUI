@@ -57,3 +57,7 @@ struct ErrorView: View {
         ContentView()
     }.modelContainer(AppConfig.getContainer())
 }
+
+#Preview("Layout") {
+    LayoutPreview()
+}
