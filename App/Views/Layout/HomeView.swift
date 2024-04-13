@@ -20,7 +20,7 @@ struct HomeView: View {
                     DBView()
                 }
             }
-            .onChange(of: showDB) { if AppConfig.canResize { resize(geo) } }
+            .onChange(of: showDB) { if AppConfig.canResize && false { resize(geo) } }
             .onChange(of: geo.size.height) { onHeightChange(geo.size.height) }
             .onAppear { onHeightChange(geo.size.height) }
         }
@@ -86,4 +86,12 @@ struct HomeView: View {
 
 #Preview("4") {
     LayoutPreview(width: AppConfig.minWidth+300, height: AppConfig.minHeight)
+}
+
+#Preview("5") {
+    LayoutPreview(width: AppConfig.minWidth+400, height: AppConfig.minHeight)
+}
+
+#Preview("6") {
+    LayoutPreview(width: AppConfig.minWidth+500, height: AppConfig.minHeight)
 }
