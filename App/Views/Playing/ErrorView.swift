@@ -12,6 +12,13 @@ struct ErrorView: View {
     var audio: Audio? { audioManager.audio }
     var db: DB { audioManager.db }
     var count: Int { audios.count }
+    var font: Font {
+        if audio == nil {
+            return .title3
+        }
+        
+        return .callout
+    }
 
     var body: some View {
         VStack {
@@ -24,7 +31,7 @@ struct ErrorView: View {
                         Text(e.localizedDescription)
                             .foregroundStyle(.white)
                     }
-                    .font(audio == nil ? .title3 : .callout)
+                    .font(font)
                 }
             }
         }

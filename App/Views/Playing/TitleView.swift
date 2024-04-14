@@ -6,32 +6,21 @@ struct TitleView: View {
 
     var audio: Audio? { audioManager.audio }
     var characterCount: Int { audio?.title.count ?? 0 }
+    var geo: GeometryProxy
 
     var body: some View {
-        GeometryReader { geo in
-            VStack {
-                Spacer()
-                HStack {
-                    Spacer()
-                    if let audio = audio {
-                        Text(audio.title)
-                            .foregroundStyle(.white)
-                            .font(getFont(geo))
-                    }
-                    Spacer()
-                }
-                Spacer()
-            }
+        if let audio = audio {
+            Text(audio.title)
+                .foregroundStyle(.white)
+                .font(getFont())
         }
-        .frame(maxHeight: .infinity)
-//        .background(.blue)
     }
 
-    func getFont(_ geo: GeometryProxy) -> Font {
+    func getFont() -> Font {
         if geo.size.height < 100 {
             return .title3
         }
-        
+
         if geo.size.height < 200 {
             return .title2
         }

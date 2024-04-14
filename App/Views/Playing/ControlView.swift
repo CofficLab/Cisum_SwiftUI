@@ -7,30 +7,33 @@ struct ControlView: View {
     var body: some View {
         GeometryReader { geo in
             HStack(spacing: 0) {
-                VStack {
-                    VStack {
-                        if shouldShowTopAlbum(geo) {
-                            PlayingAlbum()
-                        }
-                        Spacer()
-                        TitleView().padding()
-                        ErrorView()
+                VStack(spacing: 0) {
+                    if shouldShowTopAlbum(geo) {
+                        PlayingAlbum()
+                            .frame(height: getAlbumHeight(geo))
+                            .background(.red.opacity(0.0))
                     }
-                    //.background(.red.opacity(0.1))
-                    
-//                    Spacer(minLength: 0)
 
-                    VStack {
-//                        Spacer(minLength: 0)
-                        SliderView().padding()
-                        BtnsView().padding()
-                    }
+                    TitleView(geo: geo)
+                        .frame(height: getTitleHeight(geo))
+                        .background(.red.opacity(0.0))
+
+                    ErrorView()
+                        .frame(height: getErrorsHeight(geo))
+                        .background(.red.opacity(0.0))
+
+                    SliderView()
+                        .frame(height: getSliderHeight(geo))
+                        .background(.red.opacity(0.0))
+                    BtnsView()
+//                        .frame(height: getButtonsHeight(geo))
+                        .background(.red.opacity(0.0))
                     // StateView()
                 }
                 .background(.red.opacity(0.0))
 
                 // MARK: 横向的封面图
-                
+
                 if shouldShowRightAlbum(geo) {
                     // 最大宽度=控制栏的高度+系统标题栏高度
                     HStack {
@@ -48,13 +51,56 @@ struct ControlView: View {
         .frame(minHeight: AppConfig.controlViewMinHeight)
 //        .frame(maxHeight: AppConfig.canResize ? AppConfig.controlViewMinHeight : .infinity)
     }
-    
-    private func shouldShowRightAlbum(_ geo: GeometryProxy) -> Bool {
-        geo.size.width > 500
+
+    // MARK: 封面图的高度
+
+    private func getAlbumHeight(_ geo: GeometryProxy) -> CGFloat {
+        if !shouldShowTopAlbum(geo) {
+            return 0
+        }
+
+        return geo.size.width
     }
-    
+
+    // MARK: 标题的高度
+
+    private func getTitleHeight(_ geo: GeometryProxy) -> CGFloat {
+        geo.size.height
+            - getAlbumHeight(geo)
+            - getErrorsHeight(geo)
+            - getSliderHeight(geo)
+            - getButtonsHeight(geo)
+    }
+
+    // MARK: 错误提示的高度
+
+    private func getErrorsHeight(_ geo: GeometryProxy) -> CGFloat {
+        geo.size.height / 10
+    }
+
+    // MARK: 进度条的高度
+
+    private func getSliderHeight(_ geo: GeometryProxy) -> CGFloat {
+        geo.size.height / 10
+    }
+
+    // MARK: 控制按钮的高度
+
+    private func getButtonsHeight(_ geo: GeometryProxy) -> CGFloat {
+        geo.size.width / 5
+    }
+
+    private func shouldShowRightAlbum(_ geo: GeometryProxy) -> Bool {
+        geo.size.width > 1500
+    }
+
     private func shouldShowTopAlbum(_ geo: GeometryProxy) -> Bool {
-        !shouldShowRightAlbum(geo) && geo.size.height > 500
+        !shouldShowRightAlbum(geo) &&
+            geo.size.height
+            - getButtonsHeight(geo)
+            - getErrorsHeight(geo)
+            - getSliderHeight(geo)
+            > geo.size.width
     }
 }
 

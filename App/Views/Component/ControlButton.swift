@@ -28,7 +28,7 @@ struct ControlButton: View {
                     }, label: {
                         Label(title, systemImage: systemImage)
                             .font(.system(size: getSize(geo)))
-                            .frame(width: getSize(geo) * 1.2, height: getSize(geo) * 1.2)
+//                            .frame(width: getSize(geo) * 1.2, height: getSize(geo) * 1.2)
                     })
                     .buttonStyle(MyButtonStyle())
                     .background(hovered ? Color.gray.opacity(0.4) : .clear)
@@ -43,11 +43,11 @@ struct ControlButton: View {
                 Spacer()
             }
         }
-        .background(.yellow)
+        .background(.yellow.opacity(0))
     }
     
     func getSize(_ geo: GeometryProxy) -> Double {
-        return min(geo.size.height, geo.size.width)*0.5
+        return min(geo.size.height, geo.size.width)*0.45
     }
 }
 

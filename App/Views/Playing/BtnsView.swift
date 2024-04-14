@@ -19,8 +19,8 @@ struct BtnsView: View {
                 })
                 .foregroundStyle(.white)
                 .labelStyle(.iconOnly)
-                .background(.blue)
-                
+//                .background(.blue)
+
                 if showRow2(geo) {
                     HStack(spacing: 0, content: {
                         BtnToggleDB()
@@ -28,16 +28,18 @@ struct BtnsView: View {
                     })
                     .foregroundStyle(.white)
                     .labelStyle(.iconOnly)
-                    .background(.blue)
+//                    .background(.blue)
                 }
             }
+//            .frame(maxHeight: .infinity)
+            .background(.blue.opacity(0))
         }
     }
-    
+
     func showRow2(_ geo: GeometryProxy) -> Bool {
-        geo.size.height > AppConfig.minHeight + 100
+        geo.size.height > AppConfig.minHeight + 10000
     }
-    
+
     func getHeight(_ geo: GeometryProxy) -> CGFloat {
         return geo.size.height
     }

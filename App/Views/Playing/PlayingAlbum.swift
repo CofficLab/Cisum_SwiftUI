@@ -7,7 +7,8 @@ struct PlayingAlbum: View {
     var body: some View {
         ZStack {
             if let audio = audioManager.audio {
-                AlbumView(audio, forPlaying: true).id(audio.id)
+                AlbumView(audio, forPlaying: true)
+                    .id(audio.id)
             } else {
                 DefaultAlbum(forPlaying: true)
             }
@@ -16,7 +17,9 @@ struct PlayingAlbum: View {
 }
 
 #Preview("APP") {
-    RootView {
-        ContentView()
-    }.modelContainer(AppConfig.getContainer())
+    AppPreview()
+}
+
+#Preview("Layout") {
+    LayoutView()
 }
