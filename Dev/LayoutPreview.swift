@@ -1,20 +1,29 @@
 import SwiftUI
 
 struct LayoutPreview: View {
+    var width: CGFloat? = 0
+
+    init(_ width: CGFloat? = nil) {
+        self.width = width
+    }
+
     var body: some View {
-        RootView {
+        if let width = width {
+            makeItem(width: AppConfig.minWidth + width)
+        } else {
             TabView(content: {
-//                ForEach([0, 100], id: \.self) { v in
+                ForEach([
+                    0,
+                    100,
+//                    200,
+//                    300
+                ], id: \.self) { v in
                     makeItem(width: AppConfig.minWidth)
-                    .id("0")
-                        .tabItem { Label("1", systemImage: "apple") }
-                makeItem(width: AppConfig.minWidth)
-                    .id("100")
-                    .tabItem { Label("100", systemImage: "apple") }
-//                }
+                        .id("\(v)")
+                        .tabItem { Label("\(v)", systemImage: "apple") }
+                }
             })
         }
-        .modelContainer(AppConfig.getContainer())
     }
 
     func makeItem(width: CGFloat = 500) -> some View {
@@ -23,29 +32,49 @@ struct LayoutPreview: View {
 //            100,
 //            200,
 //            300,
-//            400, 500, 600,
-//            700, 800, 900,
-//            1000
+//            400, 
+//            500,
+//            600,
+//            700, 
+//            800,
+//            900,
+//            1000,
         ]
 
         return ScrollView {
             Spacer(minLength: 20)
             ForEach(variables, id: \.self) { v in
-                HomeView()
-                    .frame(width: width)
-                    .frame(height: AppConfig.minHeight + v)
+                RootView {
+                    ContentView()
+                }
+                .frame(width: width)
+                .frame(height: AppConfig.minHeight + v)
                 Spacer(minLength: 30)
                 Divider()
             }
 
             Spacer()
         }
-//        .frame(minWidth: width)
-//        .frame(minHeight: AppConfig.minHeight)
-//        .frame(height: 600)
+        .modelContainer(AppConfig.getContainer())
+        .frame(minWidth: width)
+        .frame(minHeight: AppConfig.minHeight)
+        .frame(height: 800)
+        .background(BackgroundView.type2)
     }
 }
 
 #Preview("Layout") {
     LayoutPreview()
+}
+
+#Preview("100") {
+    LayoutPreview(100)
+}
+
+#Preview("200") {
+    LayoutPreview(200)
+}
+
+#Preview("300") {
+    LayoutPreview(300)
 }
