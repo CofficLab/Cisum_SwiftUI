@@ -50,5 +50,5 @@ struct ContentView: View {
 }
 
 #Preview("App") {
-    LayoutPreview()
+    LayoutView()
 }

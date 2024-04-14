@@ -26,5 +26,5 @@ struct BtnToggleDB: View {
 }
 
 #Preview("Layout") {
-    LayoutPreview()
+    LayoutView()
 }

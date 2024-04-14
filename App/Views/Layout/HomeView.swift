@@ -20,9 +20,6 @@ struct HomeView: View {
                     DBView()
                 }
             }
-//            .onChange(of: showDB) { if AppConfig.canResize && false { resize(geo) } }
-//            .onChange(of: geo.size.height) { onHeightChange(geo.size.height) }
-//            .onAppear { onHeightChange(geo.size.height) }
         }
     }
 
@@ -67,5 +64,5 @@ struct HomeView: View {
 }
 
 #Preview("Layout") {
-    LayoutPreview()
+    LayoutView()
 }

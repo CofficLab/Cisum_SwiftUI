@@ -44,5 +44,5 @@ struct BtnsView: View {
 }
 
 #Preview("Layout") {
-    LayoutPreview()
+    LayoutView()
 }

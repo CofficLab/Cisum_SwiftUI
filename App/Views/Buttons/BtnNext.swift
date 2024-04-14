@@ -13,5 +13,5 @@ struct BtnNext: View {
 }
 
 #Preview {
-    LayoutPreview()
+    LayoutView()
 }

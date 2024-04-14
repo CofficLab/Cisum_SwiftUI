@@ -15,5 +15,5 @@ struct AppPreview: View {
 }
 
 #Preview("Layout") {
-    LayoutPreview()
+    LayoutView()
 }

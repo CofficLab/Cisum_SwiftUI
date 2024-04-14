@@ -66,5 +66,5 @@ struct MyButtonStyle: ButtonStyle {
 }
 
 #Preview("Layout") {
-    LayoutPreview()
+    LayoutView()
 }

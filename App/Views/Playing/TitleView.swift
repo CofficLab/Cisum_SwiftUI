@@ -47,5 +47,5 @@ struct TitleView: View {
 }
 
 #Preview("Layout") {
-    LayoutPreview()
+    LayoutView()
 }

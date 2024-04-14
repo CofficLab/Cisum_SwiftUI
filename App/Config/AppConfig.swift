@@ -157,5 +157,5 @@ extension AppConfig {
 }
 
 #Preview {
-    LayoutPreview()
+    LayoutView()
 }

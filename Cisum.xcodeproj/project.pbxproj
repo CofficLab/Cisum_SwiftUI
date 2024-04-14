@@ -30,6 +30,7 @@
 		0B22158E2BB6BC8F000EB36F /* SmartProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B22158D2BB6BC8F000EB36F /* SmartProgress.swift */; };
 		0B4E246F2BCAB8020033CC07 /* AppPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4E246E2BCAB8020033CC07 /* AppPreview.swift */; };
 		0B51F1762BC50A6200B86CB1 /* UIConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B51F1752BC50A6200B86CB1 /* UIConfig.swift */; };
+		0B5786342BCB8DC00064F66A /* PlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B5786332BCB8DC00064F66A /* PlayView.swift */; };
 		0B5E51E52AD912B5000650CF /* DebugCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B5E51E42AD912B5000650CF /* DebugCommand.swift */; };
 		0B604AE82AD6384300929DD8 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B604AE72AD6384300929DD8 /* RootView.swift */; };
 		0B6B8B992BBA39F500F65B23 /* ControlButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6B8B982BBA39F500F65B23 /* ControlButton.swift */; };
@@ -57,7 +58,7 @@
 		0BAABEBA2BC8C5CB00DF4A31 /* DBPrepareJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAABEB92BC8C5CB00DF4A31 /* DBPrepareJob.swift */; };
 		0BAABEBC2BC8C9F700DF4A31 /* DBDownloadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAABEBB2BC8C9F700DF4A31 /* DBDownloadJob.swift */; };
 		0BAABEBE2BC920F600DF4A31 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAABEBD2BC920F600DF4A31 /* ErrorView.swift */; };
-		0BAABEC32BC939D000DF4A31 /* LayoutPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAABEC22BC939D000DF4A31 /* LayoutPreview.swift */; };
+		0BAABEC32BC939D000DF4A31 /* LayoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAABEC22BC939D000DF4A31 /* LayoutView.swift */; };
 		0BAB300E2AB814F70012D837 /* Boot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAB300D2AB814F70012D837 /* Boot.swift */; };
 		0BAB7C3F2AD3BBAA00C5AEB5 /* DBTips.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAB7C3E2AD3BBAA00C5AEB5 /* DBTips.swift */; };
 		0BAB7C412AD3D25200C5AEB5 /* ButtonDismiss.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAB7C402AD3D25200C5AEB5 /* ButtonDismiss.swift */; };
@@ -123,6 +124,7 @@
 		0B22158D2BB6BC8F000EB36F /* SmartProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmartProgress.swift; sourceTree = "<group>"; };
 		0B4E246E2BCAB8020033CC07 /* AppPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppPreview.swift; sourceTree = "<group>"; };
 		0B51F1752BC50A6200B86CB1 /* UIConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIConfig.swift; sourceTree = "<group>"; };
+		0B5786332BCB8DC00064F66A /* PlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayView.swift; sourceTree = "<group>"; };
 		0B5E51E42AD912B5000650CF /* DebugCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugCommand.swift; sourceTree = "<group>"; };
 		0B604AE72AD6384300929DD8 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		0B6B8B982BBA39F500F65B23 /* ControlButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlButton.swift; sourceTree = "<group>"; };
@@ -150,7 +152,7 @@
 		0BAABEB92BC8C5CB00DF4A31 /* DBPrepareJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBPrepareJob.swift; sourceTree = "<group>"; };
 		0BAABEBB2BC8C9F700DF4A31 /* DBDownloadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBDownloadJob.swift; sourceTree = "<group>"; };
 		0BAABEBD2BC920F600DF4A31 /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
-		0BAABEC22BC939D000DF4A31 /* LayoutPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutPreview.swift; sourceTree = "<group>"; };
+		0BAABEC22BC939D000DF4A31 /* LayoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutView.swift; sourceTree = "<group>"; };
 		0BAB300D2AB814F70012D837 /* Boot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Boot.swift; sourceTree = "<group>"; };
 		0BAB7C3E2AD3BBAA00C5AEB5 /* DBTips.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBTips.swift; sourceTree = "<group>"; };
 		0BAB7C402AD3D25200C5AEB5 /* ButtonDismiss.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonDismiss.swift; sourceTree = "<group>"; };
@@ -345,8 +347,9 @@
 		0BAABEC12BC939BF00DF4A31 /* Dev */ = {
 			isa = PBXGroup;
 			children = (
-				0BAABEC22BC939D000DF4A31 /* LayoutPreview.swift */,
+				0BAABEC22BC939D000DF4A31 /* LayoutView.swift */,
 				0B4E246E2BCAB8020033CC07 /* AppPreview.swift */,
+				0B5786332BCB8DC00064F66A /* PlayView.swift */,
 			);
 			path = Dev;
 			sourceTree = "<group>";
@@ -546,7 +549,7 @@
 				0BBA42172ABC1AE700C0B977 /* StatusBarView.swift in Sources */,
 				0BBC15912ABAC19F006E82C4 /* BtnPrev.swift in Sources */,
 				0B604AE82AD6384300929DD8 /* RootView.swift in Sources */,
-				0BAABEC32BC939D000DF4A31 /* LayoutPreview.swift in Sources */,
+				0BAABEC32BC939D000DF4A31 /* LayoutView.swift in Sources */,
 				0BAABEB52BC79E0000DF4A31 /* CopyTaskView.swift in Sources */,
 				0BAABEB32BC79C9F00DF4A31 /* DBCopyTask.swift in Sources */,
 				0B1D5A822AB302610010DDF2 /* CommonHelp.swift in Sources */,
@@ -562,6 +565,7 @@
 				0BB5871B2AD81AFA0071AEBD /* ViewHelper.swift in Sources */,
 				0BAB7C3F2AD3BBAA00C5AEB5 /* DBTips.swift in Sources */,
 				0BB889D92AC047B3004788D5 /* BtnTrash.swift in Sources */,
+				0B5786342BCB8DC00064F66A /* PlayView.swift in Sources */,
 				0B1D5A882AB302610010DDF2 /* ContentView.swift in Sources */,
 				0B718F0C2AB4349900569762 /* CardView.swift in Sources */,
 				0BFDCB802AB86AF300B0D1C8 /* MenuTile.swift in Sources */,

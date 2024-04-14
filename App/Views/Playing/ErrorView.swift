@@ -59,5 +59,5 @@ struct ErrorView: View {
 }
 
 #Preview("Layout") {
-    LayoutPreview()
+    LayoutView()
 }

@@ -1,44 +1,46 @@
 import SwiftUI
 
-struct LayoutPreview: View {
+struct LayoutView: View {
     var width: CGFloat? = 0
 
     init(_ width: CGFloat? = nil) {
-        self.width = width
+        self.width = width ?? nil
     }
 
     var body: some View {
-        if let width = width {
-            makeItem(width: AppConfig.minWidth + width)
-        } else {
-            TabView(content: {
-                ForEach([
-                    0,
-                    100,
-//                    200,
-//                    300
-                ], id: \.self) { v in
-                    makeItem(width: AppConfig.minWidth)
-                        .id("\(v)")
-                        .tabItem { Label("\(v)", systemImage: "apple") }
-                }
-            })
+        VStack {
+            if let width = width {
+                makeItem(width: AppConfig.minWidth + width)
+            } else {
+                TabView(content: {
+                    ForEach([
+                        0,
+                        100,
+                        200,
+                        300
+                    ], id: \.self) { v in
+                        makeItem(width: AppConfig.minWidth + v)
+                            .id("\(v)")
+                            .tabItem { Label("\(Int(v))", systemImage: "apple") }
+                    }
+                })
+            }
         }
     }
 
     func makeItem(width: CGFloat = 500) -> some View {
         let variables: [CGFloat] = [
             0,
-//            100,
-//            200,
-//            300,
-//            400, 
-//            500,
-//            600,
-//            700, 
-//            800,
-//            900,
-//            1000,
+            100,
+            200,
+            300,
+            400, 
+            500,
+            600,
+            700, 
+            800,
+            900,
+            1000,
         ]
 
         return ScrollView {
@@ -64,17 +66,17 @@ struct LayoutPreview: View {
 }
 
 #Preview("Layout") {
-    LayoutPreview()
+    LayoutView()
 }
 
 #Preview("100") {
-    LayoutPreview(100)
+    LayoutView(100)
 }
 
 #Preview("200") {
-    LayoutPreview(200)
+    LayoutView(200)
 }
 
 #Preview("300") {
-    LayoutPreview(300)
+    LayoutView(300)
 }

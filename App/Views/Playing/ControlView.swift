@@ -27,7 +27,7 @@ struct ControlView: View {
                     }
                     // StateView()
                 }
-                .background(.red.opacity(0.6))
+                .background(.red.opacity(0.0))
 
                 // MARK: 横向的封面图
                 
@@ -63,5 +63,5 @@ struct ControlView: View {
 }
 
 #Preview("Layout") {
-    LayoutPreview()
+    LayoutView()
 }
