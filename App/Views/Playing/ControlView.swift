@@ -59,7 +59,9 @@ struct ControlView: View {
 }
 
 #Preview("App") {
-    RootView {
-        ContentView()
-    }.modelContainer(AppConfig.getContainer())
+    AppPreview()
+}
+
+#Preview("Layout") {
+    LayoutPreview()
 }

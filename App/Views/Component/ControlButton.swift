@@ -9,30 +9,45 @@ struct ControlButton: View {
     @State private var isButtonTapped = false
 
     var title: String = "标题"
-    var size: Double = 36
+    var size: Double = 48
     var systemImage: String = "home"
     var onTap: () -> Void = {
         os_log("点击了button")
     }
 
     var body: some View {
-        Button(action: {
-            withAnimation(.default) {
-                onTap()
+        GeometryReader { geo in
+            HStack {
+                Spacer()
+                VStack {
+                    Spacer()
+                    Button(action: {
+                        withAnimation(.default) {
+                            onTap()
+                        }
+                    }, label: {
+                        Label(title, systemImage: systemImage)
+                            .font(.system(size: getSize(geo)))
+                            .frame(width: getSize(geo) * 1.2, height: getSize(geo) * 1.2)
+                    })
+                    .buttonStyle(MyButtonStyle())
+                    .background(hovered ? Color.gray.opacity(0.4) : .clear)
+                    .clipShape(RoundedRectangle(cornerRadius: 10.0))
+                    .onHover(perform: { hovering in
+                        withAnimation(.easeInOut) {
+                            hovered = hovering
+                        }
+                    })
+                    Spacer()
+                }
+                Spacer()
             }
-        }, label: {
-            Label(title, systemImage: systemImage)
-                .font(.system(size: size))
-                .frame(width: size * 1.2, height: size * 1.2)
-        })
-        .buttonStyle(MyButtonStyle())
-        .background(hovered ? Color.gray.opacity(0.4) : .clear)
-        .clipShape(RoundedRectangle(cornerRadius: 10.0))
-        .onHover(perform: { hovering in
-            withAnimation(.easeInOut) {
-                hovered = hovering
-            }
-        })
+        }
+        .background(.yellow)
+    }
+    
+    func getSize(_ geo: GeometryProxy) -> Double {
+        return min(geo.size.height, geo.size.width)*0.5
     }
 }
 
@@ -46,25 +61,10 @@ struct MyButtonStyle: ButtonStyle {
     }
 }
 
-#Preview {
-    RootView {
-        ContentView()
-    }
+#Preview("App") {
+    AppPreview()
 }
 
-#Preview {
-    RootView {
-        VStack {
-            HStack {
-                BtnPrev()
-                BtnToggle()
-                BtnNext()
-            }
-
-            HStack {
-                BtnToggleDB()
-                BtnMode()
-            }
-        }
-    }
+#Preview("Layout") {
+    LayoutPreview()
 }

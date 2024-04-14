@@ -11,7 +11,7 @@ struct Boot: App {
     var body: some Scene {
         #if os(macOS)
             Window("", id: "Cisum") {
-                RootView {
+                RootView{
                     ContentView()
                 }
                 .frame(minWidth: AppConfig.minWidth, minHeight: AppConfig.minHeight)
@@ -34,8 +34,5 @@ struct Boot: App {
 }
 
 #Preview {
-    RootView {
-        ContentView()
-    }
-    .modelContainer(AppConfig.getContainer())
+    LayoutPreview()
 }

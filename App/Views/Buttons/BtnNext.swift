@@ -1,31 +1,17 @@
-import SwiftUI
 import OSLog
+import SwiftUI
 
 struct BtnNext: View {
     @EnvironmentObject var audioManager: AudioManager
     @EnvironmentObject var appManager: AppManager
 
     var body: some View {
-        ControlButton(title: "下一曲",size: 28, systemImage: "forward.fill", onTap: {
-            do {
-                try audioManager.next(manual: true)
-            } catch let e {
-                appManager.setFlashMessage(e.localizedDescription)
-            }
+        ControlButton(title: "下一曲", size: 28, systemImage: "forward.fill", onTap: {
+            audioManager.next(manual: true)
         })
     }
 }
 
 #Preview {
-    RootView(content: {
-        ContentView()
-    })
-}
-
-#Preview {
-    RootView(content: {
-        Centered {
-            BtnNext()
-        }
-    })
+    LayoutPreview()
 }

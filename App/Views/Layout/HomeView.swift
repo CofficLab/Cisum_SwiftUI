@@ -66,8 +66,6 @@ struct HomeView: View {
     }
 }
 
-#Preview("App") {
-    RootView {
-        ContentView()
-    }.modelContainer(AppConfig.getContainer())
+#Preview("Layout") {
+    LayoutPreview()
 }

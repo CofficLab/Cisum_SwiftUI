@@ -5,16 +5,15 @@ struct BtnToggleDB: View {
     @EnvironmentObject var appManager: AppManager
 
     var body: some View {
-        GeometryReader { geo in
-            VStack {
-                Spacer()
-                ControlButton(title: "仓库", size: getSize(geo), systemImage: "music.note.list", onTap: {
+//        GeometryReader { geo in
+//            VStack {
+//                Spacer()
+                ControlButton(title: "仓库", size: 23, systemImage: "music.note.list", onTap: {
                     appManager.showDB.toggle()
                 })
-                Spacer()
-            }
-        }
-        .background(.yellow)
+//                Spacer()
+//            }
+//        }
     }
     
     func getSize(_ geo: GeometryProxy) -> CGFloat {
