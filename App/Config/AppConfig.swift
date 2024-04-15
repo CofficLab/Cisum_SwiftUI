@@ -32,8 +32,8 @@ extension AppConfig {
         #endif
     }
     
-    static func makeBackground() -> Color {
-        debug ? Color.red.opacity(0.3) : Color.clear
+    static func makeBackground(_ color: Color = .red) -> Color {
+        debug ? color.opacity(0.3) : Color.clear
     }
 }
 

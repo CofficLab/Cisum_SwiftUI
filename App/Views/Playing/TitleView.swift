@@ -13,6 +13,7 @@ struct TitleView: View {
             Text(audio.title)
                 .foregroundStyle(.white)
                 .font(getFont())
+                .background(AppConfig.makeBackground(.blue))
         }
     }
 

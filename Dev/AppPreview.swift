@@ -6,7 +6,6 @@ struct AppPreview: View {
             ContentView()
         }
         .modelContainer(AppConfig.getContainer())
-        .frame(width: AppConfig.minWidth, height: AppConfig.minHeight)
     }
 }
 
