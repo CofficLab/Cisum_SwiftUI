@@ -13,9 +13,9 @@ struct ControlView: View {
                             .frame(height: getAlbumHeight(geo))
                             .background(AppConfig.makeBackground())
                     }
-                    
+
                     Spacer()
-                    
+
                     TitleView(geo: geo)
                         .frame(height: getTitleHeight(geo))
                         .background(AppConfig.makeBackground())
@@ -98,7 +98,7 @@ struct ControlView: View {
     // MARK: 操作栏的高度
 
     private func getOperationHeight(_ geo: GeometryProxy) -> CGFloat {
-        getButtonsHeight(geo) / 1.3
+        getButtonsHeight(geo) / 1.4
     }
 
     // MARK: 错误提示的高度
@@ -110,13 +110,21 @@ struct ControlView: View {
     // MARK: 进度条的高度
 
     private func getSliderHeight(_ geo: GeometryProxy) -> CGFloat {
-        30
+        if geo.size.height <= AppConfig.minHeight {
+            return 32
+        }
+
+        if geo.size.height <= AppConfig.minWidth + 100 {
+            return 48
+        }
+
+        return 56
     }
 
     // MARK: 控制按钮的高度
 
     private func getButtonsHeight(_ geo: GeometryProxy) -> CGFloat {
-        geo.size.width / 5
+        min(geo.size.width / 5, geo.size.height / 6.5)
     }
 
     // MARK: 播放状态的高度
@@ -140,9 +148,12 @@ struct ControlView: View {
     private func shouldShowTopAlbum(_ geo: GeometryProxy) -> Bool {
         !shouldShowRightAlbum(geo) &&
             geo.size.height
-            - getButtonsHeight(geo)
+            - getTitleHeight(geo)
             - getErrorsHeight(geo)
+            - getOperationHeight(geo)
             - getSliderHeight(geo)
+            - getButtonsHeight(geo)
+            - getStateHeight(geo)
             > geo.size.width
     }
 }

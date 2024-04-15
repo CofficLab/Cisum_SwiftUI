@@ -20,6 +20,7 @@ actor DB: ModelActor {
     var audiosDir: URL = AppConfig.audiosDir
     var handler = CloudHandler()
     var context: ModelContext
+    var dbFolder: DBFolder = DBFolder()
     var onUpdated: () -> Void = { os_log("🍋 DB::updated") }
 
     init(_ container: ModelContainer) {

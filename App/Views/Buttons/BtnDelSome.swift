@@ -6,20 +6,23 @@ struct BtnDelSome: View {
     
     var audios: Set<Audio.ID>
     var callback: ()->Void = {}
-        
+    
     var body: some View {
-        Button {
+        ControlButton(
+            title: "删除 \(audios.count) 个",
+            size: 28,
+            tips: "彻底删除，不可恢复",
+            systemImage: getImageName(),
+            onTap: {
             Task {
                 appManager.stateMessage = "正在删除 \(audios.count) 个"
-//                await audioManager.delete(urls: audios)
+                await audioManager.db.delete(Array(audios))
                 appManager.stateMessage = ""
                 appManager.setFlashMessage("已删除")
+                audioManager.next(manual: true)
                 callback()
             }
-        } label: {
-            Label("删除 \(audios.count) 个", systemImage: getImageName())
-                .font(.system(size: 24))
-        }
+        })
     }
     
     private func getImageName() -> String {

@@ -16,7 +16,8 @@ struct OperationView: View {
                     if let audio = audio {
                         BtnLike(audio: audio)
                         BtnShowInFinder(url: audio.url)
-                        BtnTrash(audio: audio)
+                        //BtnTrash(audio: audio)
+                        BtnDelSome(audios: [audio.id])
                     }
                     Spacer()
                 })

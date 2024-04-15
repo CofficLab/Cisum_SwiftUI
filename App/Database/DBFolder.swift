@@ -20,6 +20,11 @@ class DBFolder: ObservableObject {
         }
     }
     
+    func deleteFile(_ audio: Audio) throws {
+        os_log("删除 \(audio.url)")
+        try fileManager.removeItem(at: audio.url)
+    }
+    
     @MainActor func trash(_ audio: Audio) {
         let url = audio.url
         let ext = audio.ext
@@ -53,6 +58,7 @@ class DBFolder: ObservableObject {
     }
     
     // MARK: 移除下载
+
     func evict(_ url: URL) {
         Task {
             try? await cloudHandler.evict(url: url)

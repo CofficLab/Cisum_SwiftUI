@@ -7,9 +7,11 @@ struct ControlButton: View {
 
     @State private var hovered: Bool = false
     @State private var isButtonTapped = false
+    @State private var showTips: Bool = false
 
     var title: String = "标题"
     var size: Double = 48
+    var tips: String = ""
     var systemImage: String = "home"
     var onTap: () -> Void = {
         os_log("点击了button")
@@ -36,12 +38,16 @@ struct ControlButton: View {
                     .onHover(perform: { hovering in
                         withAnimation(.easeInOut) {
                             hovered = hovering
+                            showTips = tips.count > 0 && hovered
                         }
                     })
                     Spacer()
                 }
                 Spacer()
             }
+            .popover(isPresented: $showTips, content: {
+                Text(tips).padding()
+            })
         }
         .background(.yellow.opacity(0))
     }

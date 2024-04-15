@@ -75,6 +75,35 @@ extension DB {
         }
     }
     
+    nonisolated func delete(_ audios: [Audio]) {
+        for audio in audios {
+            delete(audio)
+        }
+    }
+    
+    func delete(_ audios: [Audio.ID]) {
+        for audio in audios {
+            delete(audio)
+        }
+    }
+    
+    func delete(_ id: Audio.ID) {
+        os_log("\(Logger.isMain)🗑️ 数据库删除")
+        let context = ModelContext(modelContainer)
+        guard let audio = context.model(for: id) as? Audio else {
+            return os_log("\(Logger.isMain)🗑️ 删除时数据库找不到")
+        }
+        
+        do {
+            try self.dbFolder.deleteFile(audio)
+            context.delete(audio)
+            try context.save()
+            os_log("\(Logger.isMain)🗑️ 删除成功 \(audio.title)")
+        } catch let e {
+            print(e)
+        }
+    }
+    
     nonisolated func delete(_ audio: Audio) {
         os_log("\(Logger.isMain)🗑️ 数据库删除 \(audio.title)")
         let context = ModelContext(modelContainer)
