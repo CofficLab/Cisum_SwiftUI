@@ -14,6 +14,7 @@ struct OperationView: View {
                 HStack(spacing: 0, content: {
                     Spacer()
                     if let audio = audio {
+                        BtnLike(audio: audio)
                         BtnShowInFinder(url: audio.url)
                         BtnTrash(audio: audio)
                     }

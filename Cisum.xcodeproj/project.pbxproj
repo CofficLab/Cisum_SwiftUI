@@ -95,6 +95,7 @@
 		0BD056912BC6340800EBC7C4 /* BtnEvict.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD056902BC6340800EBC7C4 /* BtnEvict.swift */; };
 		0BD056932BC636D600EBC7C4 /* AudioCover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD056922BC636D600EBC7C4 /* AudioCover.swift */; };
 		0BFB38832BCCCC780055E38B /* OperationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFB38822BCCCC780055E38B /* OperationView.swift */; };
+		0BFB38852BCCD26F0055E38B /* BtnLike.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFB38842BCCD26F0055E38B /* BtnLike.swift */; };
 		0BFDCB802AB86AF300B0D1C8 /* MenuTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFDCB7F2AB86AF300B0D1C8 /* MenuTile.swift */; };
 		0BFDCE582BB01884009198DD /* BtnDestroy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFDCE572BB01884009198DD /* BtnDestroy.swift */; };
 /* End PBXBuildFile section */
@@ -190,6 +191,7 @@
 		0BD056902BC6340800EBC7C4 /* BtnEvict.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnEvict.swift; sourceTree = "<group>"; };
 		0BD056922BC636D600EBC7C4 /* AudioCover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioCover.swift; sourceTree = "<group>"; };
 		0BFB38822BCCCC780055E38B /* OperationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationView.swift; sourceTree = "<group>"; };
+		0BFB38842BCCD26F0055E38B /* BtnLike.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnLike.swift; sourceTree = "<group>"; };
 		0BFDCB7F2AB86AF300B0D1C8 /* MenuTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTile.swift; sourceTree = "<group>"; };
 		0BFDCE572BB01884009198DD /* BtnDestroy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnDestroy.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -361,9 +363,11 @@
 			children = (
 				0BBA42262AC2A8B800C0B977 /* BtnAdd.swift */,
 				0BBA42242AC1813D00C0B977 /* BtnDelSome.swift */,
+				0BAABEB72BC7D4B600DF4A31 /* BtnDelTask.swift */,
 				0BFDCE572BB01884009198DD /* BtnDestroy.swift */,
 				0BB889D12AC042EC004788D5 /* BtnDownload.swift */,
 				0BD056902BC6340800EBC7C4 /* BtnEvict.swift */,
+				0BFB38842BCCD26F0055E38B /* BtnLike.swift */,
 				0BBA42182ABD5D9200C0B977 /* BtnMode.swift */,
 				0BBC158E2ABAC146006E82C4 /* BtnNext.swift */,
 				0B6B8B9A2BBA420600F65B23 /* BtnPlay.swift */,
@@ -376,7 +380,6 @@
 				0BAB7C402AD3D25200C5AEB5 /* ButtonDismiss.swift */,
 				0B7F558A2AD2636B0000D72E /* ButtonPlayList.swift */,
 				0BBA422A2AC2ABAD00C0B977 /* ButtonShowDatabase.swift */,
-				0BAABEB72BC7D4B600DF4A31 /* BtnDelTask.swift */,
 			);
 			path = Buttons;
 			sourceTree = "<group>";
@@ -607,6 +610,7 @@
 				0B11262C2AC719B70093DFFA /* ImageHelper.swift in Sources */,
 				0BFB38832BCCCC780055E38B /* OperationView.swift in Sources */,
 				0BBC159A2ABAD5DB006E82C4 /* SliderView.swift in Sources */,
+				0BFB38852BCCD26F0055E38B /* BtnLike.swift in Sources */,
 				0BBC15882AB9A473006E82C4 /* iCloudHelper.swift in Sources */,
 				0BAABEBA2BC8C5CB00DF4A31 /* DBPrepareJob.swift in Sources */,
 				0B901D862BB83BA2003AC253 /* CloudHandler.swift in Sources */,

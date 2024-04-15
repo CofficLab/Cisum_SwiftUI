@@ -423,6 +423,20 @@ extension DB {
         }
     }
     
+    func like(_ audio: Audio) {
+        if let dbAudio = self.find(audio.id) {
+            dbAudio.like = true
+            self.save()
+        }
+    }
+    
+    func dislike(_ audio: Audio) {
+        if let dbAudio = self.find(audio.id) {
+            dbAudio.like = false
+            self.save()
+        }
+    }
+    
     nonisolated func update(_ audio: Audio) {
         Task.detached {
             os_log("\(Logger.isMain)🍋 DB::update \(audio.title)")

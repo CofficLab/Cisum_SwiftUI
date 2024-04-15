@@ -11,6 +11,7 @@ class Audio {
     var url: URL
     var order: Int
     var isPlaceholder: Bool = false
+    var like: Bool = false
     var title: String = ""
     var playCount: Int = 0
 
