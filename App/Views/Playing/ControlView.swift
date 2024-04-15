@@ -33,8 +33,10 @@ struct ControlView: View {
 //                        .frame(height: getButtonsHeight(geo))
                         .background(.red.opacity(0.0))
 
+                    // MARK: 播放控制底部的状态栏
+                    
                     StateView()
-                        .background(.red.opacity(0.6))
+                        .background(.red.opacity(0.0))
                         .frame(height: getStateHeight(geo))
                 }
                 .background(.red.opacity(0.0))
@@ -107,7 +109,7 @@ struct ControlView: View {
     // MARK: 播放状态的高度
 
     private func getStateHeight(_ geo: GeometryProxy) -> CGFloat {
-        20
+        24
     }
 
     private func shouldShowRightAlbum(_ geo: GeometryProxy) -> Bool {

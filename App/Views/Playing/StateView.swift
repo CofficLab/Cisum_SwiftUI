@@ -11,7 +11,6 @@ struct StateView: View {
         ZStack {
             if let audio = audio {
                 HStack(spacing: 2) {
-                    Text(audio.isDownloading ? "下载中" : "已下载")
                     if let n = next {
                         Text("下一首：\(n.title)")
                     } else {
