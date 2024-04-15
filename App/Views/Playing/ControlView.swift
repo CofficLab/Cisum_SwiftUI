@@ -17,10 +17,10 @@ struct ControlView: View {
                     TitleView(geo: geo)
                         .frame(height: getTitleHeight(geo))
                         .background(.red.opacity(0.0))
-                    
-//                    OperationView(geo: geo)
-//                        .frame(height: getOperationHeight(geo))
-//                        .background(.red.opacity(0.0))
+
+                    OperationView(geo: geo)
+                        .frame(height: getOperationHeight(geo))
+                        .background(.red.opacity(0.0))
 
                     ErrorView()
                         .frame(height: getErrorsHeight(geo))
@@ -32,7 +32,9 @@ struct ControlView: View {
                     BtnsView()
 //                        .frame(height: getButtonsHeight(geo))
                         .background(.red.opacity(0.0))
-                    // StateView()
+
+                    StateView()
+                        .background(.red.opacity(0.6))
                 }
                 .background(.red.opacity(0.0))
 
@@ -74,14 +76,13 @@ struct ControlView: View {
             - getErrorsHeight(geo)
             - getSliderHeight(geo)
             - getButtonsHeight(geo)
-            - getOperationHeight(geo)
-        )
+            - getOperationHeight(geo))
     }
-    
+
     // MARK: 操作栏的高度
 
     private func getOperationHeight(_ geo: GeometryProxy) -> CGFloat {
-        getButtonsHeight(geo)/1.3
+        getButtonsHeight(geo) / 1.3
     }
 
     // MARK: 错误提示的高度

@@ -132,6 +132,14 @@ extension DB {
 // MARK: 查询
 
 extension DB {
+    func refresh(_ audio: Audio) -> Audio {
+        if let a = self.find(audio.id) {
+            return a
+        } else {
+            return audio
+        }
+    }
+    
     nonisolated func countOfURL(_ url: URL) -> Int {
         let context = ModelContext(modelContainer)
         let predicate = #Predicate<Audio> {

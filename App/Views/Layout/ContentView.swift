@@ -39,12 +39,12 @@ struct ContentView: View {
             }
 
             // 底部的状态栏
-            #if os(macOS)
+            if UIConfig.isDesktop {
                 VStack {
                     Spacer()
                     StatusBarView()
                 }
-            #endif
+            }
         }
     }
 }

@@ -53,7 +53,7 @@ struct DBView: View {
     }
 
     init() {
-        //os_log("\(Logger.isMain)🚩 DBView::Init")
+        // os_log("\(Logger.isMain)🚩 DBView::Init")
     }
 }
 
@@ -87,37 +87,9 @@ extension DBView {
 }
 
 #Preview("APP") {
-    RootView {
-        ContentView()
-    }.modelContainer(AppConfig.getContainer())
+    AppPreview()
 }
 
-#Preview {
-    RootView {
-        DBView().frame(width: 300)
-    }.modelContainer(AppConfig.getContainer())
-}
-
-#Preview {
-    RootView {
-        DBView().frame(width: 350)
-    }.modelContainer(AppConfig.getContainer())
-}
-
-#Preview {
-    RootView {
-        DBView().frame(width: 400)
-    }.modelContainer(AppConfig.getContainer())
-}
-
-#Preview {
-    RootView {
-        DBView().frame(width: 500)
-    }.modelContainer(AppConfig.getContainer())
-}
-
-#Preview {
-    RootView {
-        DBView().frame(width: 600)
-    }.modelContainer(AppConfig.getContainer())
+#Preview("Layout") {
+    LayoutView()
 }

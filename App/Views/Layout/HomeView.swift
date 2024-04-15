@@ -12,7 +12,7 @@ struct HomeView: View {
     var databaseViewHeightMin = AppConfig.databaseViewHeightMin
 
     var body: some View {
-        GeometryReader { geo in
+        GeometryReader { _ in
             VStack(spacing: 0) {
                 ControlView()
 
