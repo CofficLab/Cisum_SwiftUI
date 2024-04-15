@@ -15,7 +15,9 @@ struct OperationView: View {
                     Spacer()
                     if let audio = audio {
                         BtnLike(audio: audio)
-                        BtnShowInFinder(url: audio.url)
+                        if UIConfig.isDesktop {
+                            BtnShowInFinder(url: audio.url)
+                        }
                         //BtnTrash(audio: audio)
                         BtnDelSome(audios: [audio.id])
                     }
