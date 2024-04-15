@@ -81,18 +81,26 @@ extension DB {
         }
     }
     
-    func delete(_ audios: [Audio.ID]) {
+    func delete(_ audios: [Audio.ID]) -> Audio? {
+        var next: Audio? = nil
+        
         for audio in audios {
-            delete(audio)
+            next = delete(audio)
         }
+        
+        return next
     }
     
-    func delete(_ id: Audio.ID) {
+    func delete(_ id: Audio.ID) -> Audio? {
         os_log("\(Logger.isMain)🗑️ 数据库删除")
         let context = ModelContext(modelContainer)
         guard let audio = context.model(for: id) as? Audio else {
-            return os_log("\(Logger.isMain)🗑️ 删除时数据库找不到")
+            os_log("\(Logger.isMain)🗑️ 删除时数据库找不到")
+            return nil
         }
+        
+        // 找出下一个
+        let next = self.nextOf(audio)
         
         do {
             try self.dbFolder.deleteFile(audio)
@@ -102,6 +110,8 @@ extension DB {
         } catch let e {
             print(e)
         }
+        
+        return next
     }
     
     nonisolated func delete(_ audio: Audio) {

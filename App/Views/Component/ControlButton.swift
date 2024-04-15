@@ -30,8 +30,10 @@ struct ControlButton: View {
                     }, label: {
                         Label(title, systemImage: systemImage)
                             .font(.system(size: getSize(geo)))
-//                            .frame(width: getSize(geo) * 1.2, height: getSize(geo) * 1.2)
                     })
+//                    .popover(isPresented: $showTips, content: {
+//                        Text(tips).padding()
+//                    })
                     .buttonStyle(MyButtonStyle())
                     .background(hovered ? Color.gray.opacity(0.4) : .clear)
                     .clipShape(RoundedRectangle(cornerRadius: 10.0))
@@ -45,15 +47,12 @@ struct ControlButton: View {
                 }
                 Spacer()
             }
-            .popover(isPresented: $showTips, content: {
-                Text(tips).padding()
-            })
         }
         .background(.yellow.opacity(0))
     }
-    
+
     func getSize(_ geo: GeometryProxy) -> Double {
-        return min(geo.size.height, geo.size.width)*0.45
+        return min(geo.size.height, geo.size.width) * 0.45
     }
 }
 
