@@ -18,9 +18,9 @@ struct ControlView: View {
                         .frame(height: getTitleHeight(geo))
                         .background(.red.opacity(0.0))
                     
-                    OperationView(geo: geo)
-                        .frame(height: getOperationHeight(geo))
-                        .background(.red.opacity(0.0))
+//                    OperationView(geo: geo)
+//                        .frame(height: getOperationHeight(geo))
+//                        .background(.red.opacity(0.0))
 
                     ErrorView()
                         .frame(height: getErrorsHeight(geo))
