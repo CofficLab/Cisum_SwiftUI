@@ -28,6 +28,7 @@ class AudioManager: NSObject, ObservableObject {
     var isEmpty: Bool { audio == nil }
     var player = SmartPlayer()
     var isCloudStorage: Bool { iCloudHelper.isCloudPath(url: rootDir) }
+    var showErrorView: Bool { self.playerError != nil}
 
     override init() {
         os_log("\(Logger.isMain)\(AudioManager.label)初始化")

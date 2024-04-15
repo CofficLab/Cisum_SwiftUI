@@ -21,6 +21,22 @@ enum AppConfig {
     ]
 }
 
+// MARK: 开发调试
+
+extension AppConfig {
+    static var debug: Bool {
+        #if DEBUG
+        true
+        #else
+        false
+        #endif
+    }
+    
+    static func makeBackground() -> Color {
+        debug ? Color.red.opacity(0.3) : Color.clear
+    }
+}
+
 // MARK: APP状态
 
 extension AppConfig {

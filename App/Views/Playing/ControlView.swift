@@ -11,35 +11,44 @@ struct ControlView: View {
                     if shouldShowTopAlbum(geo) {
                         PlayingAlbum()
                             .frame(height: getAlbumHeight(geo))
-                            .background(.red.opacity(0.0))
+                            .background(AppConfig.makeBackground())
                     }
-
+                    
+                    Spacer()
+                    
                     TitleView(geo: geo)
                         .frame(height: getTitleHeight(geo))
-                        .background(.red.opacity(0.0))
+                        .background(AppConfig.makeBackground())
+
+                    if audioManager.showErrorView {
+                        ErrorView()
+                            .frame(height: getErrorsHeight(geo))
+                            .background(AppConfig.makeBackground())
+                    }
+
+                    Spacer()
 
                     OperationView(geo: geo)
                         .frame(height: getOperationHeight(geo))
-                        .background(.red.opacity(0.0))
-
-                    ErrorView()
-                        .frame(height: getErrorsHeight(geo))
-                        .background(.red.opacity(0.0))
+                        .background(AppConfig.makeBackground())
 
                     SliderView()
                         .frame(height: getSliderHeight(geo))
-                        .background(.red.opacity(0.0))
+                        .background(AppConfig.makeBackground())
+
+                    Spacer()
+
                     BtnsView()
-//                        .frame(height: getButtonsHeight(geo))
-                        .background(.red.opacity(0.0))
+                        .frame(height: getButtonsHeight(geo))
+                        .background(AppConfig.makeBackground())
 
                     // MARK: 播放控制底部的状态栏
-                    
+
                     StateView()
                         .background(.red.opacity(0.0))
                         .frame(height: getStateHeight(geo))
                 }
-                .background(.red.opacity(0.0))
+                .background(AppConfig.makeBackground())
 
                 // MARK: 横向的封面图
 
@@ -64,22 +73,26 @@ struct ControlView: View {
     // MARK: 封面图的高度
 
     private func getAlbumHeight(_ geo: GeometryProxy) -> CGFloat {
+        // 默认不显示，当空间充足再显示
+
         if !shouldShowTopAlbum(geo) {
             return 0
         }
 
-        return geo.size.width
+        return min(max(0, geo.size.height
+                - getTitleHeight(geo)
+                - getErrorsHeight(geo)
+                - getOperationHeight(geo)
+                - getSliderHeight(geo)
+                - getButtonsHeight(geo)
+                - getStateHeight(geo)
+                - 20), geo.size.width)
     }
 
     // MARK: 标题的高度
 
     private func getTitleHeight(_ geo: GeometryProxy) -> CGFloat {
-        max(0, geo.size.height
-            - getAlbumHeight(geo)
-            - getErrorsHeight(geo)
-            - getSliderHeight(geo)
-            - getButtonsHeight(geo)
-            - getOperationHeight(geo))
+        30
     }
 
     // MARK: 操作栏的高度
@@ -91,13 +104,13 @@ struct ControlView: View {
     // MARK: 错误提示的高度
 
     private func getErrorsHeight(_ geo: GeometryProxy) -> CGFloat {
-        geo.size.height / 10
+        audioManager.showErrorView ? geo.size.height / 10 : 0
     }
 
     // MARK: 进度条的高度
 
     private func getSliderHeight(_ geo: GeometryProxy) -> CGFloat {
-        geo.size.height / 10
+        30
     }
 
     // MARK: 控制按钮的高度
@@ -105,11 +118,19 @@ struct ControlView: View {
     private func getButtonsHeight(_ geo: GeometryProxy) -> CGFloat {
         geo.size.width / 5
     }
-    
+
     // MARK: 播放状态的高度
 
     private func getStateHeight(_ geo: GeometryProxy) -> CGFloat {
-        24
+        if geo.size.height <= AppConfig.minHeight {
+            return 24
+        }
+
+        if geo.size.height <= AppConfig.minWidth + 100 {
+            return 36
+        }
+
+        return 48
     }
 
     private func shouldShowRightAlbum(_ geo: GeometryProxy) -> Bool {
