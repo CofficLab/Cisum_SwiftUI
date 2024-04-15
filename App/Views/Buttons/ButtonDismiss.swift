@@ -30,3 +30,7 @@ struct ButtonDismiss: View {
 #Preview {
     ButtonDismiss()
 }
+
+#Preview("Layout") {
+    LayoutView()
+}

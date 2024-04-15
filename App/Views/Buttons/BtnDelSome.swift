@@ -26,3 +26,7 @@ struct BtnDelSome: View {
         return "trash"
     }
 }
+
+#Preview("Layout") {
+    LayoutView()
+}

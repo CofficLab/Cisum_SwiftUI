@@ -24,3 +24,7 @@ struct BtnDelTask: View {
 #Preview {
     BtnDelTask()
 }
+
+#Preview("Layout") {
+    LayoutView()
+}

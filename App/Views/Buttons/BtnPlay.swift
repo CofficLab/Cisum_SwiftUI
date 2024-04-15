@@ -25,3 +25,7 @@ struct BtnPlay: View {
         return "play.fill"
     }
 }
+
+#Preview("Layout") {
+    LayoutView()
+}

@@ -16,3 +16,7 @@ struct ButtonCancelSelected: View {
         return "clipboard.fill"
     }
 }
+
+#Preview("Layout") {
+    LayoutView()
+}

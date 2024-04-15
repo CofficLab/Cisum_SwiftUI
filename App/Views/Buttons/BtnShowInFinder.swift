@@ -4,15 +4,16 @@ struct BtnShowInFinder: View {
     var url: URL
         
     var body: some View {
-        Button {
+        ControlButton(title: "在访达中显示", size: 28, systemImage: getImageName(), onTap: {
             FileHelper.showInFinder(url: url)
-        } label: {
-            Label("在访达中显示", systemImage: getImageName())
-                .font(.system(size: 24))
-        }
+        })
     }
     
     private func getImageName() -> String {
         return "doc.text.fill.viewfinder"
     }
+}
+
+#Preview("Layout") {
+    LayoutView()
 }

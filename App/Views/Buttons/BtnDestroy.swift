@@ -17,3 +17,7 @@ struct BtnDestroy: View {
     return "icloud.and.arrow.down.fill"
   }
 }
+
+#Preview("Layout") {
+    LayoutView()
+}
