@@ -65,11 +65,11 @@ struct ControlView: View {
     // MARK: 标题的高度
 
     private func getTitleHeight(_ geo: GeometryProxy) -> CGFloat {
-        geo.size.height
+        max(0, geo.size.height
             - getAlbumHeight(geo)
             - getErrorsHeight(geo)
             - getSliderHeight(geo)
-            - getButtonsHeight(geo)
+            - getButtonsHeight(geo))
     }
 
     // MARK: 错误提示的高度
