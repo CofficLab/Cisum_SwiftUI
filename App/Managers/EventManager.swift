@@ -19,9 +19,33 @@ class EventManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
         )
     }
     
+    func emitDelete(_ items: [MetadataItemWrapper]) {
+        NotificationCenter.default.post(
+            name: NSNotification.Name(Event.Delete.name),
+            object: nil,
+            userInfo: [
+                "items": items
+            ]
+        )
+    }
+    
     func onUpdated(_ callback: @escaping (_ items: [MetadataItemWrapper]) -> Void) {
         n.addObserver(
             forName: NSNotification.Name(Event.Updated.name),
+            object: nil,
+            queue: .main,
+            using: { notification in
+                self.queue.async {
+                    let data = notification.userInfo as! [String: [MetadataItemWrapper]]
+                    let items = data["items"]!
+                    callback(items)
+                }
+            })
+    }
+    
+    func onDelete(_ callback: @escaping (_ items: [MetadataItemWrapper]) -> Void) {
+        n.addObserver(
+            forName: NSNotification.Name(Event.Delete.name),
             object: nil,
             queue: .main,
             using: { notification in
@@ -39,6 +63,7 @@ class EventManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
     
     enum Event {
         case Updated
+        case Delete
         
         var name: String {
             String(describing: self)
