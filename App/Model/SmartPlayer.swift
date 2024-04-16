@@ -12,10 +12,10 @@ class SmartPlayer: NSObject {
     var audio: Audio? {
         didSet {
             let isPlaying = self.isPlaying
-            
+
             onAudioChange(audio)
             guard let audio = audio else {
-                self.state = .Finished
+                state = .Finished
                 return player = AVAudioPlayer()
             }
 
@@ -32,7 +32,7 @@ class SmartPlayer: NSObject {
             } else {
                 player = AVAudioPlayer()
             }
-            
+
             player.delegate = self
             if isPlaying {
                 player.play()
@@ -72,8 +72,11 @@ class SmartPlayer: NSObject {
 
     // MARK: 设置当前的
 
-    @MainActor func setCurrent(_ audio: Audio, play: Bool? = nil, reason: String) {
+    func setCurrent(_ audio: Audio, play: Bool? = nil, reason: String) {
         self.audio = audio
+        if play == true {
+            player.play()
+        }
     }
 
     // MARK: 跳转到某个时间
@@ -84,24 +87,37 @@ class SmartPlayer: NSObject {
 
     // MARK: 播放指定的
 
-    @MainActor func play(_ audio: Audio, reason: String) {
+    func play(_ audio: Audio, reason: String) {
         os_log("\(Logger.isMain)\(self.label)play \(audio.title)")
 
         setCurrent(audio, play: true, reason: reason)
     }
 
     func play() {
+        os_log("\(Logger.isMain)\(self.label)Play")
         resume()
     }
 
     func resume() {
-        player.play()
+        os_log("\(Logger.isMain)\(self.label)Resume")
+        switch state {
+        case .Playing:
+            break
+        case .Paused:
+            player.play()
+        case .Stopped, .Finished:
+            if let audio = audio {
+                self.play(audio, reason: "Resume")
+            }
+        }
+
         state = .Playing
     }
 
     // MARK: 暂停
 
     func pause() {
+        os_log("\(Logger.isMain)\(self.label)Pause")
         player.pause()
         state = .Paused
     }
@@ -117,7 +133,7 @@ class SmartPlayer: NSObject {
 
     // MARK: 切换
 
-    @MainActor func toggle() {
+    func toggle() {
         if player.isPlaying {
             pause()
         } else {

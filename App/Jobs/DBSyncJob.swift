@@ -41,7 +41,7 @@ class DBSyncJob {
     }
     
     private func sync(_ items: [MetadataItemWrapper]) async {
-        os_log("\(Logger.isMain)\(self.label)sync with count=\(items.count)")
+        //os_log("\(Logger.isMain)\(self.label)sync with count=\(items.count)")
             
         let itemsForSync = items.filter { $0.isUpdated == false }
         let itemsForUpdate = items.filter { $0.isUpdated && $0.isDeleted == false }
@@ -65,7 +65,7 @@ class DBSyncJob {
     }
     
     private func delete(_ items: [MetadataItemWrapper]) {
-        os_log("\(Logger.isMain)\(self.label)delete with count=\(items.count)")
+        //os_log("\(Logger.isMain)\(self.label)delete with count=\(items.count)")
         
         for item in items {
             self.db.delete(item.url!)
