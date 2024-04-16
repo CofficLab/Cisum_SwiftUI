@@ -15,6 +15,10 @@ struct Row: View {
 
         return hovered ? AppConfig.getBackground.opacity(0.9) : .clear
     }
+    
+    init(_ audio: Audio) {
+        self.audio = audio
+    }
 
     var body: some View {
         ZStack {
@@ -63,13 +67,8 @@ struct Row: View {
                 BtnShowInFinder(url: audio.url, dynamicSize: false)
             }
             Divider()
-            BtnTrash(audio: audio, dynamicSize: false)
+            BtnDelSome(audios: [audio.id], dynamicSize: false)
         })
-    }
-
-    init(_ audio: Audio) {
-        self.audio = audio
-        // os_log("\(Logger.isMain)🚩 🖥️ 初始化 \(audio.title)")
     }
 }
 

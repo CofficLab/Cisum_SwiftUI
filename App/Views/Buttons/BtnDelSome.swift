@@ -6,6 +6,7 @@ struct BtnDelSome: View {
     
     var audios: Set<Audio.ID>
     var callback: () -> Void = {}
+    var dynamicSize = false
     
     var body: some View {
         ControlButton(
@@ -13,6 +14,7 @@ struct BtnDelSome: View {
             size: 28,
             tips: "彻底删除，不可恢复",
             systemImage: getImageName(),
+            dynamicSize: dynamicSize,
             onTap: {
                 Task {
                     appManager.stateMessage = "正在删除 \(audios.count) 个"
