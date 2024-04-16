@@ -95,6 +95,7 @@
 		0BD056932BC636D600EBC7C4 /* AudioCover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD056922BC636D600EBC7C4 /* AudioCover.swift */; };
 		0BFB38832BCCCC780055E38B /* OperationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFB38822BCCCC780055E38B /* OperationView.swift */; };
 		0BFB38852BCCD26F0055E38B /* BtnLike.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFB38842BCCD26F0055E38B /* BtnLike.swift */; };
+		0BFB38ED2BCE779B0055E38B /* DeviceConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFB38EC2BCE779B0055E38B /* DeviceConfig.swift */; };
 		0BFDCB802AB86AF300B0D1C8 /* MenuTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFDCB7F2AB86AF300B0D1C8 /* MenuTile.swift */; };
 		0BFDCE582BB01884009198DD /* BtnDestroy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFDCE572BB01884009198DD /* BtnDestroy.swift */; };
 /* End PBXBuildFile section */
@@ -190,6 +191,7 @@
 		0BD056922BC636D600EBC7C4 /* AudioCover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioCover.swift; sourceTree = "<group>"; };
 		0BFB38822BCCCC780055E38B /* OperationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationView.swift; sourceTree = "<group>"; };
 		0BFB38842BCCD26F0055E38B /* BtnLike.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnLike.swift; sourceTree = "<group>"; };
+		0BFB38EC2BCE779B0055E38B /* DeviceConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceConfig.swift; sourceTree = "<group>"; };
 		0BFDCB7F2AB86AF300B0D1C8 /* MenuTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTile.swift; sourceTree = "<group>"; };
 		0BFDCE572BB01884009198DD /* BtnDestroy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnDestroy.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -434,6 +436,7 @@
 				0B1D5A752AB302600010DDF2 /* AppConfig.swift */,
 				0B220F742BB1BBDB0077255A /* SmartError.swift */,
 				0B51F1752BC50A6200B86CB1 /* UIConfig.swift */,
+				0BFB38EC2BCE779B0055E38B /* DeviceConfig.swift */,
 			);
 			path = Config;
 			sourceTree = "<group>";
@@ -617,6 +620,7 @@
 				0B6B8B9B2BBA420700F65B23 /* BtnPlay.swift in Sources */,
 				0B5E51E52AD912B5000650CF /* DebugCommand.swift in Sources */,
 				0B1D5A7F2AB302610010DDF2 /* Audio.swift in Sources */,
+				0BFB38ED2BCE779B0055E38B /* DeviceConfig.swift in Sources */,
 				0BBAD0A22BBD413B005834A3 /* DBList.swift in Sources */,
 				0B1165F02ABBCCB0005C5CBB /* AppManager.swift in Sources */,
 				0BBA42252AC1813D00C0B977 /* BtnDelSome.swift in Sources */,

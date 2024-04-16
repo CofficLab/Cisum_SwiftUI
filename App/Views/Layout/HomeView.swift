@@ -42,7 +42,7 @@ struct HomeView: View {
             .onChange(of: geo.size.height) {
                 if autoResizing == false {
                     // 说明是用户主动调整
-                    self.height = getWindowHeight()
+                    self.height = DeviceConfig.getWindowHeight()
                     os_log("\(Logger.isMain)\(self.label)Height=\(self.height)")
                 }
 
@@ -55,41 +55,17 @@ struct HomeView: View {
             .onAppear {
                 if autoResizing == false {
                     // 说明是用户主动调整
-                    self.height = getWindowHeight()
+                    self.height = DeviceConfig.getWindowHeight()
                     os_log("\(Logger.isMain)\(self.label)Height=\(self.height)")
                 }
             }
         }
     }
+}
 
-    private func resetHeight() {
-        #if os(macOS)
-        os_log("\(Logger.isMain)\(self.label)减少 Height 以折叠数据库视图")
-        let window = NSApplication.shared.windows.first!
-        var frame = window.frame
-        let height = frame.size.height
-
-        os_log("\(Logger.isMain)\(self.label)调整窗口前 Y:\(frame.origin.y) self.height=\(self.height)")
-
-        self.autoResizing = true
-        frame.origin.y = frame.origin.y + (frame.size.height - self.height)
-        frame.size.height = self.height
-
-        os_log("\(Logger.isMain)\(self.label)调整窗口后 Y:\(frame.origin.y) self.eight=\(self.height)")
-        window.setFrame(frame, display: true)
-        #endif
-    }
-
+extension HomeView {
     private func increseHeightToShowDB(_ geo: GeometryProxy) {
-        #if os(macOS)
         os_log("\(Logger.isMain)\(self.label)增加 Height 以展开数据库视图")
-        let window = NSApplication.shared.windows.first!
-        var frame = window.frame
-        let oldY = frame.origin.y
-        let height = frame.size.height
-
-        os_log("\(Logger.isMain)\(self.label)调整窗口前 Y=\(oldY) self.height=\(self.height)")
-
         let space = geo.size.height - controlViewHeightMin
 
         if space >= databaseViewHeightMin {
@@ -97,22 +73,13 @@ struct HomeView: View {
         }
 
         self.autoResizing = true
-        if geo.size.height <= controlViewHeightMin {
-            frame.origin.y = oldY - databaseViewHeight
-            frame.size.height = height + databaseViewHeight - space
-        }
-
-        os_log("\(Logger.isMain)\(self.label)调整窗口后 Y=\(frame.origin.y) self.height=\(self.height)")
-        window.setFrame(frame, display: true)
-        #endif
+        DeviceConfig.increseHeight(databaseViewHeight - space)
     }
-    
-    private func getWindowHeight() -> CGFloat {
-        let window = NSApplication.shared.windows.first!
-        var frame = window.frame
-        let height = frame.size.height
-        
-        return height
+
+    private func resetHeight() {
+        os_log("\(Logger.isMain)\(self.label)减少 Height 以折叠数据库视图")
+        self.autoResizing = true
+        DeviceConfig.setHeight(self.height)
     }
 }
 
