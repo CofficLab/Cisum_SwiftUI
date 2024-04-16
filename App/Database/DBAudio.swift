@@ -508,8 +508,10 @@ extension DB {
     }
 }
 
-#Preview {
-    RootView {
-        ContentView()
-    }.modelContainer(AppConfig.getContainer())
+#Preview("App") {
+    AppPreview()
+}
+
+#Preview("Layout") {
+    LayoutView()
 }
