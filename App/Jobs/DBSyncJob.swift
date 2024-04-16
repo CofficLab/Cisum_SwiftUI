@@ -30,7 +30,7 @@ class DBSyncJob {
             let query = await ItemQuery(queue: queue, url: self.db.getAudioDir())
             let result = query.searchMetadataItems()
             for try await items in result {
-                os_log("\(Logger.isMain)\(self.label)getAudios \(items.count)")
+                //os_log("\(Logger.isMain)\(self.label)getAudios \(items.count)")
                 
                 let filtered = items.filter { $0.url != nil }
                 if filtered.count > 0 {
@@ -81,7 +81,7 @@ class DBSyncJob {
     }
     
     private func insertIfNotIn(_ items: [MetadataItemWrapper]) async {
-        os_log("\(Logger.isMain)\(self.label)insertIfNotIn with count=\(items.count)")
+        //os_log("\(Logger.isMain)\(self.label)insertIfNotIn with count=\(items.count)")
         if items.isEmpty {
             return
         }
