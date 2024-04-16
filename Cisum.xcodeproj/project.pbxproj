@@ -53,7 +53,6 @@
 		0BAABEAF2BC787A200DF4A31 /* CopyFiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAABEAE2BC787A200DF4A31 /* CopyFiles.swift */; };
 		0BAABEB12BC79C4E00DF4A31 /* CopyTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAABEB02BC79C4E00DF4A31 /* CopyTask.swift */; };
 		0BAABEB32BC79C9F00DF4A31 /* DBCopyTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAABEB22BC79C9F00DF4A31 /* DBCopyTask.swift */; };
-		0BAABEB52BC79E0000DF4A31 /* CopyTaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAABEB42BC79E0000DF4A31 /* CopyTaskView.swift */; };
 		0BAABEB82BC7D4B600DF4A31 /* BtnDelTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAABEB72BC7D4B600DF4A31 /* BtnDelTask.swift */; };
 		0BAABEBA2BC8C5CB00DF4A31 /* DBPrepareJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAABEB92BC8C5CB00DF4A31 /* DBPrepareJob.swift */; };
 		0BAABEBC2BC8C9F700DF4A31 /* DBDownloadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAABEBB2BC8C9F700DF4A31 /* DBDownloadJob.swift */; };
@@ -69,7 +68,6 @@
 		0BB889D92AC047B3004788D5 /* BtnTrash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB889D82AC047B3004788D5 /* BtnTrash.swift */; };
 		0BB889DB2AC06C54004788D5 /* DB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB889DA2AC06C54004788D5 /* DB.swift */; };
 		0BBA42132ABC137A00C0B977 /* StatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA42122ABC137A00C0B977 /* StatusView.swift */; };
-		0BBA42172ABC1AE700C0B977 /* StatusBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA42162ABC1AE700C0B977 /* StatusBarView.swift */; };
 		0BBA42192ABD5D9200C0B977 /* BtnMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA42182ABD5D9200C0B977 /* BtnMode.swift */; };
 		0BBA421B2ABD67D600C0B977 /* WindowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA421A2ABD67D600C0B977 /* WindowManager.swift */; };
 		0BBA421F2AC1397F00C0B977 /* Centered.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA421E2AC1397F00C0B977 /* Centered.swift */; };
@@ -149,7 +147,6 @@
 		0BAABEAE2BC787A200DF4A31 /* CopyFiles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyFiles.swift; sourceTree = "<group>"; };
 		0BAABEB02BC79C4E00DF4A31 /* CopyTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyTask.swift; sourceTree = "<group>"; };
 		0BAABEB22BC79C9F00DF4A31 /* DBCopyTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBCopyTask.swift; sourceTree = "<group>"; };
-		0BAABEB42BC79E0000DF4A31 /* CopyTaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyTaskView.swift; sourceTree = "<group>"; };
 		0BAABEB72BC7D4B600DF4A31 /* BtnDelTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnDelTask.swift; sourceTree = "<group>"; };
 		0BAABEB92BC8C5CB00DF4A31 /* DBPrepareJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBPrepareJob.swift; sourceTree = "<group>"; };
 		0BAABEBB2BC8C9F700DF4A31 /* DBDownloadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBDownloadJob.swift; sourceTree = "<group>"; };
@@ -165,7 +162,6 @@
 		0BB889D82AC047B3004788D5 /* BtnTrash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnTrash.swift; sourceTree = "<group>"; };
 		0BB889DA2AC06C54004788D5 /* DB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DB.swift; sourceTree = "<group>"; };
 		0BBA42122ABC137A00C0B977 /* StatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusView.swift; sourceTree = "<group>"; };
-		0BBA42162ABC1AE700C0B977 /* StatusBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarView.swift; sourceTree = "<group>"; };
 		0BBA42182ABD5D9200C0B977 /* BtnMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnMode.swift; sourceTree = "<group>"; };
 		0BBA421A2ABD67D600C0B977 /* WindowManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowManager.swift; sourceTree = "<group>"; };
 		0BBA421E2AC1397F00C0B977 /* Centered.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Centered.swift; sourceTree = "<group>"; };
@@ -279,7 +275,6 @@
 		0B1D5A702AB302600010DDF2 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				0BAABEB62BC7A18500DF4A31 /* StatusBar */,
 				0BB889D32AC04600004788D5 /* Buttons */,
 				0BBAD0702BBBDC22005834A3 /* Component */,
 				0BFDCE522BAFF279009198DD /* Database */,
@@ -336,16 +331,6 @@
 				0B1D5A4B2AB301AD0010DDF2 /* Cisum.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		0BAABEB62BC7A18500DF4A31 /* StatusBar */ = {
-			isa = PBXGroup;
-			children = (
-				0BBA42122ABC137A00C0B977 /* StatusView.swift */,
-				0BBA42162ABC1AE700C0B977 /* StatusBarView.swift */,
-				0BAABEB42BC79E0000DF4A31 /* CopyTaskView.swift */,
-			);
-			path = StatusBar;
 			sourceTree = "<group>";
 		};
 		0BAABEC12BC939BF00DF4A31 /* Dev */ = {
@@ -462,6 +447,7 @@
 				0B8FC26F2BBC559500839C75 /* PlayingAlbum.swift */,
 				0BBC15992ABAD5DB006E82C4 /* SliderView.swift */,
 				0B220F6C2BB051140077255A /* StateView.swift */,
+				0BBA42122ABC137A00C0B977 /* StatusView.swift */,
 				0B220F6E2BB051F50077255A /* TitleView.swift */,
 			);
 			path = Playing;
@@ -551,11 +537,9 @@
 				0BBC15842AB95272006E82C4 /* ControlView.swift in Sources */,
 				0BBA42272AC2A8B800C0B977 /* BtnAdd.swift in Sources */,
 				0B1D5AAC2AB414600010DDF2 /* MediaPlayerManager.swift in Sources */,
-				0BBA42172ABC1AE700C0B977 /* StatusBarView.swift in Sources */,
 				0BBC15912ABAC19F006E82C4 /* BtnPrev.swift in Sources */,
 				0B604AE82AD6384300929DD8 /* RootView.swift in Sources */,
 				0BAABEC32BC939D000DF4A31 /* LayoutView.swift in Sources */,
-				0BAABEB52BC79E0000DF4A31 /* CopyTaskView.swift in Sources */,
 				0BAABEB32BC79C9F00DF4A31 /* DBCopyTask.swift in Sources */,
 				0B1D5A822AB302610010DDF2 /* CommonHelp.swift in Sources */,
 				0B220F6D2BB051140077255A /* StateView.swift in Sources */,

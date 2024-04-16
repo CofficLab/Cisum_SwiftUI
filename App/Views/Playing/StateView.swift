@@ -6,17 +6,17 @@ struct StateView: View {
     @EnvironmentObject var audioManager: AudioManager
     @Environment(\.modelContext) private var modelContext
 
+    @Query(sort: \CopyTask.createdAt, animation: .default) var tasks: [CopyTask]
     @Query(sort: \Audio.order, animation: .default) var audios: [Audio]
 
+    @State var showList = false
     @State private var next: Audio?
 
-    var showState = false
-    var totalStorage: String { iCloudHelper.getTotalStorageReadable() }
-    var availableStorage: String { iCloudHelper.getAvailableStorageReadable() }
+    var taskCount: Int { tasks.count }
+    var showCopyMessage: Bool { tasks.count > 0 }
     var audio: Audio? { audioManager.audio }
     var db: DB { audioManager.db }
     var count: Int { audios.count }
-    var hasError: Bool {audioManager.playerError != nil}
     var font: Font {
         if audio == nil {
             return .title3
@@ -27,64 +27,46 @@ struct StateView: View {
 
     var body: some View {
         VStack {
-            if showState || hasError {
-                Spacer()
+            if appManager.stateMessage.count > 0 {
+                makeInfoView(appManager.stateMessage)
             }
-            
-            if showState {
-                stateView
-            }
-            
-            if hasError {
-                errorView
-            }
-            
-            if showState || hasError {
-                Spacer()
-            }
-        }
-    }
-    
-    var stateView: some View {
-        ZStack {
-            if let audio = audio {
-                HStack(spacing: 2) {
-                    if let n = next {
-                        Text("下一首：\(n.title)")
-                    } else {
-                        Text("无下一首")
-                    }
 
-                    Text("共 \(totalStorage)")
-                    Text("余 \(availableStorage)")
-                }
-                .onAppear {
-                    Task {
-                        self.next = await audioManager.db.nextOf(audio)
-                        iCloudHelper.checkiCloudStorage1()
-                    }
-                }
-                .onChange(of: audio) {
-                    Task {
-                        self.next = await audioManager.db.nextOf(audio)
-                    }
-                }
-            }
-        }
-    }
-
-    var errorView: some View {
-        VStack {
             // 播放过程中出现的错误
             if let e = audioManager.playerError {
-                CardView(background: BackgroundView.type3, paddingVertical: 6) {
-                    HStack {
-                        Image(systemName: "info.circle")
-                            .foregroundStyle(.white)
-                        Text(e.localizedDescription)
-                            .foregroundStyle(.white)
-                    }
-                    .font(font)
+                makeErrorView(e)
+            }
+            
+            // 正在复制
+            if tasks.count > 0 {
+                HStack {
+                    Text("正在复制 \(tasks.count) 个文件")
+                    Button(action: {
+                        showList = true
+                    }, label: {
+                        Image(systemName: "list.bullet")
+                    })
+                    .labelStyle(.iconOnly)
+                    .buttonStyle(PlainButtonStyle())
+                    .popover(isPresented: $showList, content: {
+                        Table(tasks, columns: {
+                            TableColumn("时间", value: \.time)
+                            TableColumn("文件", value: \.title)
+                            TableColumn("结果", value: \.message)
+                            TableColumn("操作") { task in
+                                HStack {
+                                    Button("复制", action: {
+                                        copy(task)
+                                    })
+                                    Button("删除", action: {
+                                        delete(task)
+                                    })
+                                }
+                            }
+                        })
+                        .frame(width: 800)
+                    })
+                    
+                    BtnDelTask().padding(.leading, 24)
                 }
             }
         }
@@ -109,6 +91,37 @@ struct StateView: View {
 
             audioManager.checkError()
         }
+    }
+    
+    func makeInfoView(_ i: String) -> some View {
+        CardView(background: BackgroundView.type3, paddingVertical: 6) {
+            HStack {
+                Image(systemName: "info.circle")
+                    .foregroundStyle(.white)
+                Text(i)
+                    .foregroundStyle(.white)
+            }
+            .font(font)
+        }
+    }
+
+    func makeErrorView(_ e: Error) -> some View {
+        CardView(background: BackgroundView.type3, paddingVertical: 6) {
+            HStack {
+                Image(systemName: "info.circle")
+                    .foregroundStyle(.white)
+                Text(e.localizedDescription)
+                    .foregroundStyle(.white)
+            }
+            .font(font)
+        }
+    }
+    func delete(_ task: CopyTask) {
+        modelContext.delete(task)
+    }
+
+    func copy(_ task: CopyTask) {
+        try? CopyFiles().run(task, db: audioManager.db)
     }
 }
 

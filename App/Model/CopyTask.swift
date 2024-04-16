@@ -9,7 +9,7 @@ class CopyTask {
     var isRunning: Bool = false
     
     var title: String { url.lastPathComponent }
-    var time: String { TimeHelper.getTimeString() }
+    var time: String { TimeHelper.getTimeString2() }
     var message: String {
         if isRunning {
             return "进行中"

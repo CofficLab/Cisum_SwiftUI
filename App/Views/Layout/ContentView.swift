@@ -37,14 +37,6 @@ struct ContentView: View {
                         .foregroundStyle(.white)
                 }
             }
-
-            // 底部的状态栏
-            if UIConfig.isDesktop {
-                VStack {
-                    Spacer()
-                    StatusBarView()
-                }
-            }
         }
     }
 }

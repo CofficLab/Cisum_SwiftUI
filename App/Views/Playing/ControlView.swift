@@ -1,10 +1,19 @@
 import SwiftUI
+import SwiftData
 
 struct ControlView: View {
     @EnvironmentObject var audioManager: AudioManager
     @EnvironmentObject var appManager: AppManager
-
+    
+    @Query var tasks: [CopyTask]
+    
+    var taskCount: Int { tasks.count }
     var showOperationView = false
+    var showStateMessage: Bool { appManager.stateMessage.count > 0 }
+    var showCopyMessage: Bool { tasks.count > 0 }
+    var showStateView: Bool {
+        audioManager.showErrorView || showStateMessage || showCopyMessage
+    }
 
     @State var topAlbumVisible = false
     @State var topAlbumHeight: CGFloat = 0
@@ -24,7 +33,7 @@ struct ControlView: View {
                             .background(AppConfig.makeBackground(.red))
                     }
 
-                    if audioManager.showErrorView {
+                    if showStateView {
                         StateView()
                             .frame(height: getStateHeight(geo))
                             .frame(maxHeight: .infinity)
@@ -99,11 +108,11 @@ struct ControlView: View {
     private func getTitleHeight(_ geo: GeometryProxy) -> CGFloat {
         audioManager.showTitleView ? 50 : 0
     }
-    
-    // MARK: 播放状态的高度
+
+    // MARK: 状态栏的高度
 
     private func getStateHeight(_ geo: GeometryProxy) -> CGFloat {
-        if audioManager.showErrorView == false {
+        if showStateView == false {
             return 0
         }
 
@@ -152,14 +161,14 @@ struct ControlView: View {
                 - getSliderHeight(geo)
         ))
     }
-    
+
     // MARK: 底部Padding的高度
-    
+
     private func getBottomHeight(_ geo: GeometryProxy) -> CGFloat {
         if UIConfig.isNotDesktop {
             return 50
         }
-        
+
         return 0
     }
 
@@ -174,6 +183,7 @@ struct ControlView: View {
             - getOperationHeight(geo)
             - getSliderHeight(geo)
             - getButtonsHeight(geo)
+            - getBottomHeight(geo)
             - getStateHeight(geo)
             > geo.size.width
     }
