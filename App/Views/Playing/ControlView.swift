@@ -4,7 +4,6 @@ struct ControlView: View {
     @EnvironmentObject var audioManager: AudioManager
     @EnvironmentObject var appManager: AppManager
 
-    var showStateView = false
     var showOperationView = false
 
     @State var topAlbumVisible = false
@@ -18,14 +17,18 @@ struct ControlView: View {
                         .frame(height: getAlbumHeight(geo))
                         //.background(AppConfig.makeBackground(.red))
 
-                    TitleView(geo: geo)
-                        .frame(height: getTitleHeight(geo))
-                        .frame(maxHeight: .infinity)
-                        //.background(AppConfig.makeBackground(.red))
+                    if audioManager.showTitleView {
+                        TitleView(geo: geo)
+                            .frame(height: getTitleHeight(geo))
+                            .frame(maxHeight: .infinity)
+                            .background(AppConfig.makeBackground(.red))
+                    }
 
-                    if showStateView {
+                    if audioManager.showErrorView {
                         StateView()
                             .frame(height: getStateHeight(geo))
+                            .frame(maxHeight: .infinity)
+                            .background(AppConfig.makeBackground(.red))
                     }
 
                     if showOperationView {
@@ -93,7 +96,7 @@ struct ControlView: View {
     // MARK: 标题的高度
 
     private func getTitleHeight(_ geo: GeometryProxy) -> CGFloat {
-        return 50
+        audioManager.showTitleView ? 50 : 0
     }
 
     // MARK: 操作栏的高度
@@ -134,10 +137,10 @@ struct ControlView: View {
     // MARK: 播放状态的高度
 
     private func getStateHeight(_ geo: GeometryProxy) -> CGFloat {
-        if showStateView == false {
+        if audioManager.showErrorView == false {
             return 0
         }
-
+        
         if geo.size.height <= AppConfig.minHeight {
             return 24
         }

@@ -10,11 +10,13 @@ struct StateView: View {
 
     @State private var next: Audio?
 
+    var showState = false
     var totalStorage: String { iCloudHelper.getTotalStorageReadable() }
     var availableStorage: String { iCloudHelper.getAvailableStorageReadable() }
     var audio: Audio? { audioManager.audio }
     var db: DB { audioManager.db }
     var count: Int { audios.count }
+    var hasError: Bool {audioManager.playerError != nil}
     var font: Font {
         if audio == nil {
             return .title3
@@ -25,33 +27,49 @@ struct StateView: View {
 
     var body: some View {
         VStack {
-            ZStack {
-                if let audio = audio {
-                    HStack(spacing: 2) {
-                        if let n = next {
-                            Text("下一首：\(n.title)")
-                        } else {
-                            Text("无下一首")
-                        }
+            if showState || hasError {
+                Spacer()
+            }
+            
+            if showState {
+                stateView
+            }
+            
+            if hasError {
+                errorView
+            }
+            
+            if showState || hasError {
+                Spacer()
+            }
+        }
+    }
+    
+    var stateView: some View {
+        ZStack {
+            if let audio = audio {
+                HStack(spacing: 2) {
+                    if let n = next {
+                        Text("下一首：\(n.title)")
+                    } else {
+                        Text("无下一首")
+                    }
 
-                        Text("共 \(totalStorage)")
-                        Text("余 \(availableStorage)")
+                    Text("共 \(totalStorage)")
+                    Text("余 \(availableStorage)")
+                }
+                .onAppear {
+                    Task {
+                        self.next = await audioManager.db.nextOf(audio)
+                        iCloudHelper.checkiCloudStorage1()
                     }
-                    .onAppear {
-                        Task {
-                            self.next = await audioManager.db.nextOf(audio)
-                            iCloudHelper.checkiCloudStorage1()
-                        }
-                    }
-                    .onChange(of: audio) {
-                        Task {
-                            self.next = await audioManager.db.nextOf(audio)
-                        }
+                }
+                .onChange(of: audio) {
+                    Task {
+                        self.next = await audioManager.db.nextOf(audio)
                     }
                 }
             }
-
-            errorView
         }
     }
 

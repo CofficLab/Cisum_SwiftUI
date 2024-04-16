@@ -10,7 +10,7 @@ import SwiftUI
 /// 管理播放器的播放、暂停、上一曲、下一曲等操作
 class AudioManager: NSObject, ObservableObject {
     static var label: String = "🔊 AudioManager::"
-    
+
     @Published var audio: Audio?
     @Published var playerError: Error? = nil
     @Published var mode: PlayMode = .Order
@@ -28,7 +28,8 @@ class AudioManager: NSObject, ObservableObject {
     var isEmpty: Bool { audio == nil }
     var player = SmartPlayer()
     var isCloudStorage: Bool { iCloudHelper.isCloudPath(url: rootDir) }
-    var showErrorView: Bool { self.playerError != nil}
+    var showErrorView: Bool { self.playerError != nil }
+    var showTitleView: Bool { self.audio != nil }
 
     override init() {
         os_log("\(Logger.isMain)\(AudioManager.label)初始化")
@@ -80,14 +81,14 @@ class AudioManager: NSObject, ObservableObject {
         if play == true {
             self.player.play()
         }
-        
+
         self.checkError()
 
         Task {
             if let a = audio {
                 // 下载当前的
                 await self.db.download(a, reason: "SetCurrent")
-                
+
                 // 下载接下来的
                 await db.downloadNext(a, reason: "触发了下一首")
 
@@ -240,7 +241,7 @@ extension AudioManager {
         if audio.isNotExists {
             return setError(SmartError.NotExists)
         }
-        
+
         if audio.isDownloading {
             return setError(SmartError.Downloading)
         }

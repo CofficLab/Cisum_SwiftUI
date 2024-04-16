@@ -60,7 +60,7 @@ extension DB {
         Task {
             let context = ModelContext(modelContainer)
             guard let audio = await self.find(url) else {
-                return os_log("\(Logger.isMain)\(DB.label) 删除时数据库找不到 \(url.lastPathComponent)")
+                return os_log("\(Logger.isMain)\(DB.label)删除时数据库找不到 \(url.lastPathComponent)")
             }
             
             do {

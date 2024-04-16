@@ -8,12 +8,34 @@ struct TitleView: View {
     var characterCount: Int { audio?.title.count ?? 0 }
     var geo: GeometryProxy
 
+    @State var url: URL? = nil
+
     var body: some View {
-        if let audio = audio {
-            Text(audio.title)
-                .foregroundStyle(.white)
-                .font(getFont())
-                //.background(AppConfig.makeBackground(.blue))
+        ZStack {
+            if let audio = audio {
+                Text(audio.title)
+                    .foregroundStyle(.white)
+                    .font(getFont())
+                // .background(AppConfig.makeBackground(.blue))
+            }
+        }
+        .onAppear {
+            if let audio = audioManager.audio {
+                self.url = audio.url
+            }
+
+            // 监听到了事件，注意要考虑audio已经被删除了的情况
+            EventManager().onUpdated { items in
+                for item in items {
+                    if item.isDeleted && item.url == self.url {
+                        audioManager.audio = nil
+                        continue
+                    }
+                }
+            }
+        }
+        .onChange(of: audio) {
+            self.url = audio?.url ?? nil
         }
     }
 
