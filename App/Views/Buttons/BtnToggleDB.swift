@@ -7,7 +7,7 @@ struct BtnToggleDB: View {
     var size: CGFloat = 24
 
     var body: some View {
-        ControlButton(title: "仓库", size: size, systemImage: "music.note.list", onTap: {
+        ControlButton(title: "仓库", size: size, systemImage: "list.bullet", onTap: {
             appManager.showDB.toggle()
         })
     }

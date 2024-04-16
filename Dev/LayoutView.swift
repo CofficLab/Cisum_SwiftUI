@@ -61,7 +61,7 @@ struct LayoutView: View {
         .frame(minWidth: width)
         .frame(minHeight: AppConfig.minHeight)
         .frame(height: 800)
-        .background(BackgroundView.type2)
+        .background(BackgroundView.type4)
     }
 }
 

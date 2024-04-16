@@ -181,8 +181,6 @@ extension iCloudHelper {
             throw iCloudError.NoAccess
         }
 
-        print("iCloud Accessible \(currentiCloudToken)")
-
         guard let iCloudContainerURL = fileManager.url(forUbiquityContainerIdentifier: nil) else {
             throw iCloudError.CanNotGetContainer
         }
@@ -191,8 +189,7 @@ extension iCloudHelper {
         do {
             let values = try iCloudContainerURL.resourceValues(forKeys: [.volumeAvailableCapacityForImportantUsageKey, .volumeTotalCapacityKey])
 
-            if let availableCapacity = values.volumeAvailableCapacityForImportantUsage,
-               let totalCapacity = values.volumeTotalCapacity
+            if let availableCapacity = values.volumeAvailableCapacityForImportantUsage
             {
                 return availableCapacity
             } else {
@@ -203,7 +200,7 @@ extension iCloudHelper {
             throw error
         }
     }
-    
+
     // MARK: 获取总容量
 
     static func getTotalStorage() throws -> Int {
@@ -214,8 +211,6 @@ extension iCloudHelper {
             throw iCloudError.NoAccess
         }
 
-        print("iCloud Accessible \(currentiCloudToken)")
-
         guard let iCloudContainerURL = fileManager.url(forUbiquityContainerIdentifier: nil) else {
             throw iCloudError.CanNotGetContainer
         }
@@ -224,9 +219,7 @@ extension iCloudHelper {
         do {
             let values = try iCloudContainerURL.resourceValues(forKeys: [.volumeAvailableCapacityForImportantUsageKey, .volumeTotalCapacityKey])
 
-            if let availableCapacity = values.volumeAvailableCapacityForImportantUsage,
-               let totalCapacity = values.volumeTotalCapacity
-            {
+            if let totalCapacity = values.volumeTotalCapacity {
                 return totalCapacity
             } else {
                 throw iCloudError.CanNotGetCapacity
@@ -236,29 +229,29 @@ extension iCloudHelper {
             throw error
         }
     }
-    
+
     // MARK: 获取总容量Readable
 
-    static func getTotalStorageReadable()-> String {
+    static func getTotalStorageReadable() -> String {
         do {
-            return formatBytes(try getTotalStorage())
+            return try formatBytes(getTotalStorage())
         } catch let e {
             print(e)
             return ""
         }
     }
-    
+
     // MARK: 获取剩余容量Readable
 
     static func getAvailableStorageReadable() -> String {
         do {
-            return formatBytes(Int(try getAvailableStorage()))
+            return try formatBytes(Int(getAvailableStorage()))
         } catch let e {
             print(e)
             return ""
         }
     }
-    
+
     static func formatBytes(_ bytes: Int) -> String {
         let byteUnits = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
         var index = 0

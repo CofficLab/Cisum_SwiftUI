@@ -4,57 +4,43 @@ struct ControlView: View {
     @EnvironmentObject var audioManager: AudioManager
     @EnvironmentObject var appManager: AppManager
 
+    var showStateView = false
+    var showOperationView = false
+
+    @State var topAlbumVisible = false
+    @State var topAlbumHeight: CGFloat = 0
+
     var body: some View {
         GeometryReader { geo in
             HStack(spacing: 0) {
                 VStack(spacing: 0) {
-                    Spacer()
-                    if shouldShowTopAlbum(geo) {
-                        PlayingAlbum()
-                            .frame(height: getAlbumHeight(geo))
-                            .background(AppConfig.makeBackground())
-                    }
+                    PlayingAlbum()
+                        .frame(height: getAlbumHeight(geo))
+                        //.background(AppConfig.makeBackground(.red))
 
                     TitleView(geo: geo)
                         .frame(height: getTitleHeight(geo))
-                        .background(AppConfig.makeBackground(.cyan))
+                        .frame(maxHeight: .infinity)
+                        //.background(AppConfig.makeBackground(.red))
 
-                    if audioManager.showErrorView {
-                        ErrorView()
-                            .frame(height: getErrorsHeight(geo))
-                            .background(AppConfig.makeBackground())
+                    if showStateView {
+                        StateView()
+                            .frame(height: getStateHeight(geo))
                     }
 
-//                    Spacer()
+                    if showOperationView {
+                        OperationView(geo: geo)
+                            .frame(height: getOperationHeight(geo))
+                    }
 
-                    OperationView(geo: geo)
-                        .frame(height: getOperationHeight(geo))
-                        .background(AppConfig.makeBackground())
+                    Spacer()
 
                     SliderView()
                         .frame(height: getSliderHeight(geo))
-                        .background(AppConfig.makeBackground())
-
-                    Spacer().frame(height: getGapHeightBetweenSliderAndButtons(geo))
 
                     BtnsView()
                         .frame(height: getButtonsHeight(geo))
-                        .background(AppConfig.makeBackground())
-
-                    // MARK: 播放控制底部的状态栏
-
-                    if UIConfig.isDesktop {
-                        StateView()
-                            .frame(height: getStateHeight(geo))
-                            .background(AppConfig.makeBackground(.brown))
-                    }
-
-                    // MARK: 底部的空白
-
-                    VStack {
-                    }.frame(minHeight: getBottomPaddingHeight(geo))
                 }
-                .background(AppConfig.makeBackground(.yellow))
 
                 // MARK: 横向的封面图
 
@@ -63,6 +49,7 @@ struct ControlView: View {
                     HStack {
                         Spacer()
                         PlayingAlbum()
+                            //.background(AppConfig.makeBackground(.yellow))
                     }.frame(maxWidth: geo.size.height * 1.3)
                 }
             }
@@ -73,7 +60,6 @@ struct ControlView: View {
         .foregroundStyle(.white)
         .ignoresSafeArea()
         .frame(minHeight: AppConfig.controlViewMinHeight)
-//        .frame(maxHeight: AppConfig.canResize ? AppConfig.controlViewMinHeight : .infinity)
     }
 
     // MARK: 封面图的高度
@@ -82,70 +68,76 @@ struct ControlView: View {
         // 默认不显示，当空间充足再显示
 
         if !shouldShowTopAlbum(geo) {
+            AppConfig.mainQueue.async {
+                topAlbumVisible = false
+                topAlbumHeight = 0
+            }
             return 0
         }
 
-        return min(max(0, geo.size.height
+        let height = min(max(0, geo.size.height
                 - getTitleHeight(geo)
-                - getErrorsHeight(geo)
+                - getStateHeight(geo)
                 - getOperationHeight(geo)
                 - getSliderHeight(geo)
-                - getButtonsHeight(geo)
-                - getStateHeight(geo)
-        ), geo.size.width)
+                - getButtonsHeight(geo)), geo.size.width)
+
+        AppConfig.mainQueue.async {
+            topAlbumVisible = true
+            topAlbumHeight = height
+        }
+
+        return height
     }
 
     // MARK: 标题的高度
 
     private func getTitleHeight(_ geo: GeometryProxy) -> CGFloat {
-        return 80
-//        geo.size.height
-//            - getErrorsHeight(geo)
-//            - getOperationHeight(geo)
-//            - getSliderHeight(geo)
-//            - getButtonsHeight(geo)
-//            - getStateHeight(geo)
+        return 50
     }
 
     // MARK: 操作栏的高度
 
     private func getOperationHeight(_ geo: GeometryProxy) -> CGFloat {
-        getButtonsHeight(geo) / 1.4
-    }
+        if showOperationView == false {
+            return 0
+        }
 
-    // MARK: 错误提示的高度
-
-    private func getErrorsHeight(_ geo: GeometryProxy) -> CGFloat {
-        audioManager.showErrorView ? geo.size.height / 10 : 0
+        return getButtonsHeight(geo) / 1.4
     }
 
     // MARK: 进度条的高度
 
     private func getSliderHeight(_ geo: GeometryProxy) -> CGFloat {
-        if geo.size.height <= AppConfig.minHeight {
-            return 32
-        }
-
-        if geo.size.height <= AppConfig.minWidth + 100 {
-            return 48
-        }
-
-        return 56
-    }
-
-    private func getGapHeightBetweenSliderAndButtons(_ geo: GeometryProxy) -> CGFloat {
-        return 1
+        return 36
     }
 
     // MARK: 控制按钮的高度
 
     private func getButtonsHeight(_ geo: GeometryProxy) -> CGFloat {
-        min(geo.size.width / 5, geo.size.height / 6.5)
+        if topAlbumVisible {
+            return min(geo.size.width / 5, geo.size.height
+                - getTitleHeight(geo)
+                - topAlbumHeight
+                - getSliderHeight(geo))
+        }
+
+        return min(
+            geo.size.width / 5,
+            geo.size.height / 2,
+            geo.size.height
+                - getTitleHeight(geo)
+                - getSliderHeight(geo)
+        )
     }
 
     // MARK: 播放状态的高度
 
     private func getStateHeight(_ geo: GeometryProxy) -> CGFloat {
+        if showStateView == false {
+            return 0
+        }
+
         if geo.size.height <= AppConfig.minHeight {
             return 24
         }
@@ -157,25 +149,14 @@ struct ControlView: View {
         return 48
     }
 
-    // MARK: 底部的空白的高度
-
-    private func getBottomPaddingHeight(_ geo: GeometryProxy) -> CGFloat {
-        if appManager.showDB || UIConfig.isDesktop {
-            return 0
-        }
-
-        return 30
-    }
-
     private func shouldShowRightAlbum(_ geo: GeometryProxy) -> Bool {
-        geo.size.width > 1500
+        geo.size.width > 1200
     }
 
     private func shouldShowTopAlbum(_ geo: GeometryProxy) -> Bool {
         !shouldShowRightAlbum(geo) &&
             geo.size.height
             - getTitleHeight(geo)
-            - getErrorsHeight(geo)
             - getOperationHeight(geo)
             - getSliderHeight(geo)
             - getButtonsHeight(geo)
@@ -190,4 +171,14 @@ struct ControlView: View {
 
 #Preview("Layout") {
     LayoutView()
+}
+
+#Preview("Layout-500") {
+    LayoutView(500)
+        .frame(width: AppConfig.minWidth + 500)
+}
+
+#Preview("Layout-1500") {
+    LayoutView(1500)
+        .frame(width: AppConfig.minWidth + 1500)
 }

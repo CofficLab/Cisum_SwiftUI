@@ -64,8 +64,8 @@ extension AppConfig {
     static var controlViewMinHeight: CGFloat = Self.minHeight
     static var databaseViewHeightMin: CGFloat = 200
     static var minWidth: CGFloat = 350
-    static var minHeight: CGFloat = 350
-    static var defaultHeight: CGFloat = 500
+    static var minHeight: CGFloat = 250
+    static var defaultHeight: CGFloat = 360
     #if os(macOS)
     static var canResize = true
     #else

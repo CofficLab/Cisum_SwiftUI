@@ -26,12 +26,9 @@ struct OperationView: View {
                 .frame(maxWidth: .infinity)
                 .foregroundStyle(.white)
                 .labelStyle(.iconOnly)
-                .background(AppConfig.makeBackground(.red))
             }
             .frame(maxWidth: .infinity)
-            .background(AppConfig.makeBackground(.yellow))
         }
-        .background(AppConfig.makeBackground(.blue))
     }
 
     func getFont() -> Font {
