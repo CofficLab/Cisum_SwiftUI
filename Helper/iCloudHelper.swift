@@ -71,6 +71,50 @@ class iCloudHelper {
         }
     }
 
+    static func watchDownloading(_ url: URL) {
+        // 创建一个后台队列
+        let backgroundQueue = DispatchQueue(label: "com.example.backgroundQueue", qos: .background)
+
+        // iCloud 文件的路径
+        let iCloudFilePath = url.path
+
+        // 在后台队列中执行获取 iCloud 文件下载进度的操作
+        backgroundQueue.async {
+            let query = NSMetadataQuery()
+            query.searchScopes = [NSMetadataQueryUbiquitousDocumentsScope]
+            query.predicate = NSPredicate(format: "%K == %@", NSMetadataItemPathKey, iCloudFilePath)
+
+            NotificationCenter.default.addObserver(
+                forName: .NSMetadataQueryDidUpdate,
+                object: query,
+                queue: nil
+            ) { notification in
+                if let updatedItems = notification.userInfo?[NSMetadataQueryUpdateChangedItemsKey] as? [NSMetadataItem] {
+                    for item in updatedItems {
+                        if let percentDownloaded = item.value(forAttribute: NSMetadataUbiquitousItemPercentDownloadedKey) as? Double {
+                            print("Download progress: \(percentDownloaded * 100)%")
+                        }
+                    }
+                }
+            }
+
+            query.start()
+
+            // Run the run loop to keep the query running
+            RunLoop.current.run()
+        }
+    }
+}
+
+// MARK: 容量相关
+
+extension iCloudHelper {
+    enum iCloudError: Error {
+        case NoAccess
+        case CanNotGetCapacity
+        case CanNotGetContainer
+    }
+
     static func checkiCloudStorage1() {
         // 获取当前iCloud容量
         let fileManager = FileManager.default
@@ -126,39 +170,111 @@ class iCloudHelper {
             }
         }
     }
-    
-    static func watchDownloading(_ url: URL) {
-        // 创建一个后台队列
-        let backgroundQueue = DispatchQueue(label: "com.example.backgroundQueue", qos: .background)
 
-        // iCloud 文件的路径
-        let iCloudFilePath = url.path
+    // MARK: 获取剩余容量
 
-        // 在后台队列中执行获取 iCloud 文件下载进度的操作
-        backgroundQueue.async {
-            let query = NSMetadataQuery()
-            query.searchScopes = [NSMetadataQueryUbiquitousDocumentsScope]
-            query.predicate = NSPredicate(format: "%K == %@", NSMetadataItemPathKey, iCloudFilePath)
+    static func getAvailableStorage() throws -> Int64 {
+        // 获取当前iCloud容量
+        let fileManager = FileManager.default
 
-            NotificationCenter.default.addObserver(
-                forName: .NSMetadataQueryDidUpdate,
-                object: query,
-                queue: nil
-            ) { notification in
-                if let updatedItems = notification.userInfo?[NSMetadataQueryUpdateChangedItemsKey] as? [NSMetadataItem] {
-                    for item in updatedItems {
-                        if let percentDownloaded = item.value(forAttribute: NSMetadataUbiquitousItemPercentDownloadedKey) as? Double {
-                            print("Download progress: \(percentDownloaded * 100)%")
-                        }
-                    }
-                }
-            }
-
-            query.start()
-
-            // Run the run loop to keep the query running
-            RunLoop.current.run()
+        guard let currentiCloudToken = fileManager.ubiquityIdentityToken else {
+            throw iCloudError.NoAccess
         }
 
+        print("iCloud Accessible \(currentiCloudToken)")
+
+        guard let iCloudContainerURL = fileManager.url(forUbiquityContainerIdentifier: nil) else {
+            throw iCloudError.CanNotGetContainer
+        }
+
+        // 使用URLForResourceValues方法获取iCloud的容量信息
+        do {
+            let values = try iCloudContainerURL.resourceValues(forKeys: [.volumeAvailableCapacityForImportantUsageKey, .volumeTotalCapacityKey])
+
+            if let availableCapacity = values.volumeAvailableCapacityForImportantUsage,
+               let totalCapacity = values.volumeTotalCapacity
+            {
+                print("Total iCloud capacity: \(totalCapacity) bytes")
+                print("Available iCloud capacity: \(availableCapacity) bytes")
+
+                return availableCapacity
+            } else {
+                throw iCloudError.CanNotGetCapacity
+            }
+        } catch {
+            print("Error retrieving iCloud storage information: \(error)")
+            throw error
+        }
+    }
+    
+    // MARK: 获取总容量
+
+    static func getTotalStorage() throws -> Int {
+        // 获取当前iCloud容量
+        let fileManager = FileManager.default
+
+        guard let currentiCloudToken = fileManager.ubiquityIdentityToken else {
+            throw iCloudError.NoAccess
+        }
+
+        print("iCloud Accessible \(currentiCloudToken)")
+
+        guard let iCloudContainerURL = fileManager.url(forUbiquityContainerIdentifier: nil) else {
+            throw iCloudError.CanNotGetContainer
+        }
+
+        // 使用URLForResourceValues方法获取iCloud的容量信息
+        do {
+            let values = try iCloudContainerURL.resourceValues(forKeys: [.volumeAvailableCapacityForImportantUsageKey, .volumeTotalCapacityKey])
+
+            if let availableCapacity = values.volumeAvailableCapacityForImportantUsage,
+               let totalCapacity = values.volumeTotalCapacity
+            {
+                print("Total iCloud capacity: \(totalCapacity) bytes")
+                print("Available iCloud capacity: \(availableCapacity) bytes")
+
+                return totalCapacity
+            } else {
+                throw iCloudError.CanNotGetCapacity
+            }
+        } catch {
+            print("Error retrieving iCloud storage information: \(error)")
+            throw error
+        }
+    }
+    
+    // MARK: 获取总容量Readable
+
+    static func getTotalStorageReadable()-> String {
+        do {
+            return formatBytes(try getTotalStorage())
+        } catch let e {
+            print(e)
+            return ""
+        }
+    }
+    
+    // MARK: 获取剩余容量Readable
+
+    static func getAvailableStorageReadable() -> String {
+        do {
+            return formatBytes(Int(try getAvailableStorage()))
+        } catch let e {
+            print(e)
+            return ""
+        }
+    }
+    
+    static func formatBytes(_ bytes: Int) -> String {
+        let byteUnits = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
+        var index = 0
+        var bytes = Double(bytes)
+
+        while bytes >= 1024 {
+            bytes /= 1024
+            index += 1
+        }
+
+        return String(format: "%.2f %@", bytes, byteUnits[index])
     }
 }

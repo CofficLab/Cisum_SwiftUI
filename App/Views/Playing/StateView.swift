@@ -7,6 +7,9 @@ struct StateView: View {
     private var audio: Audio? { audioManager.audio }
     @State private var next: Audio?
 
+    var totalStorage: String { iCloudHelper.getTotalStorageReadable() }
+    var availableStorage: String { iCloudHelper.getAvailableStorageReadable() }
+
     var body: some View {
         ZStack {
             if let audio = audio {
@@ -16,17 +19,21 @@ struct StateView: View {
                     } else {
                         Text("无下一首")
                     }
+
+                    Text("共 \(totalStorage)")
+                    Text("余 \(availableStorage)")
                 }
                 .onAppear {
                     Task {
                         self.next = audioManager.db.nextOf(audio)
+                        iCloudHelper.checkiCloudStorage1()
                     }
                 }
-                .onChange(of: audio, {
+                .onChange(of: audio) {
                     Task {
                         self.next = audioManager.db.nextOf(audio)
                     }
-                })
+                }
             }
         }
     }
