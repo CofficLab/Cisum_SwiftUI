@@ -24,11 +24,14 @@ struct TitleView: View {
                 self.url = audio.url
             }
 
-            // 监听到了事件，注意要考虑audio已经被删除了的情况
-            EventManager().onUpdated { items in
+            EventManager().onDelete { items in
                 for item in items {
                     if item.isDeleted && item.url == self.url {
-                        audioManager.audio = nil
+                        AppConfig.mainQueue.async {
+                            audioManager.audio = nil
+                            audioManager.player.stop()
+                            audioManager.checkError()
+                        }
                         continue
                     }
                 }
