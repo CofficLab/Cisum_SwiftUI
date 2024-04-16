@@ -3,10 +3,11 @@ import OSLog
 import SwiftUI
 
 /// 监听存储Audio文件的目录的变化，同步到数据库
-actor DBSyncJob {
+class DBSyncJob {
     var db: DB
     var eventManager = EventManager()
     var label = "🧮 DBSyncJob::"
+    var queue = DispatchQueue(label: "DBSyncJob")
     
     init(db: DB) {
         self.db = db
@@ -14,25 +15,27 @@ actor DBSyncJob {
     
     /// 入口，用来保证任务在后台运行
     func run() {
-        Task.detached {
-            await self.watchAudiosFolder()
+        queue.async {
+            self.watchAudiosFolder()
         }
     }
     
     /// 监听存储Audio文件的文件夹
-    private func watchAudiosFolder() async {
-        os_log("\(Logger.isMain)\(self.label)watchAudiosFolder")
+    private func watchAudiosFolder() {
+        Task {
+            os_log("\(Logger.isMain)\(self.label)watchAudiosFolder")
 
-        let queue = OperationQueue()
-        queue.maxConcurrentOperationCount = 1
-        let query = await ItemQuery(queue: queue, url: self.db.getAudioDir())
-        let result = query.searchMetadataItems()
-        for try await items in result {
-            os_log("\(Logger.isMain)\(self.label)getAudios \(items.count)")
-            
-            let filtered = items.filter { $0.url != nil }
-            if filtered.count > 0 {
-                await self.sync(items)
+            let queue = OperationQueue()
+            queue.maxConcurrentOperationCount = 1
+            let query = await ItemQuery(queue: queue, url: self.db.getAudioDir())
+            let result = query.searchMetadataItems()
+            for try await items in result {
+                os_log("\(Logger.isMain)\(self.label)getAudios \(items.count)")
+                
+                let filtered = items.filter { $0.url != nil }
+                if filtered.count > 0 {
+                    await self.sync(items)
+                }
             }
         }
     }
@@ -41,7 +44,7 @@ actor DBSyncJob {
         os_log("\(Logger.isMain)\(self.label)sync with count=\(items.count)")
             
         let itemsForSync = items.filter { $0.isUpdated == false }
-        let itemsForUpdate = items.filter { $0.isUpdated }
+        let itemsForUpdate = items.filter { $0.isUpdated && $0.isDeleted == false }
         let itemsForDelete = items.filter { $0.isDeleted }
             
         // items.isEmpty 说明本来就是空的，需要将数据库全部删除

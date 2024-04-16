@@ -17,47 +17,53 @@ struct Row: View {
     }
 
     var body: some View {
-        HStack(alignment: .center) {
-            AlbumView(audio)
-                .frame(
-                    width: UIConfig.isDesktop ? 36 : 36,
-                    height: UIConfig.isDesktop ? 36 : 36
-                )
-            VStack(spacing: 0) {
-                HStack {
-                    Text(audio.title)
-                    if current?.url == audio.url {
-                        Image(systemName: "speaker.wave.2")
+        ZStack {
+            HStack(alignment: .center) {
+                AlbumView(audio)
+                    .frame(
+                        width: UIConfig.isDesktop ? 36 : 36,
+                        height: UIConfig.isDesktop ? 36 : 36
+                    )
+                VStack(spacing: 0) {
+                    HStack {
+                        Text(audio.title)
+                        if current?.url == audio.url {
+                            Image(systemName: "speaker.wave.2")
+                        }
+                        Spacer()
                     }
-                    Spacer()
+                    HStack {
+                        Text(audio.getFileSizeReadable())
+                            .foregroundStyle(.secondary)
+                        Spacer()
+                    }
                 }
-                HStack {
-                    Text(audio.getFileSizeReadable())
-                        .foregroundStyle(.secondary)
-                    Spacer()
-                }
+                Spacer()
             }
-            Spacer()
+
             if hovered {
-                Button(action: {
-                    audioManager.play(audio, reason: "列表的播放按钮")
-                }, label: {
-                    Label("播放", systemImage: "play")
-                })
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        audioManager.play(audio, reason: "列表的播放按钮")
+                    }, label: {
+                        Label("播放", systemImage: "play")
+                    })
+                }
             }
         }
-        .frame(maxHeight: .infinity)
         .onHover(perform: { hovered = $0 })
+        .frame(maxHeight: .infinity)
         .contextMenu(menuItems: {
             BtnPlay(audio: audio)
             Divider()
             BtnDownload(audio: audio)
             BtnEvict(audio: audio)
             if UIConfig.isDesktop {
-                BtnShowInFinder(url: audio.url)
+                BtnShowInFinder(url: audio.url, dynamicSize: false)
             }
             Divider()
-            BtnTrash(audio: audio)
+            BtnTrash(audio: audio, dynamicSize: false)
         })
     }
 

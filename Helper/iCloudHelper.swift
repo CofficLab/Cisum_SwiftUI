@@ -194,9 +194,6 @@ extension iCloudHelper {
             if let availableCapacity = values.volumeAvailableCapacityForImportantUsage,
                let totalCapacity = values.volumeTotalCapacity
             {
-                print("Total iCloud capacity: \(totalCapacity) bytes")
-                print("Available iCloud capacity: \(availableCapacity) bytes")
-
                 return availableCapacity
             } else {
                 throw iCloudError.CanNotGetCapacity
@@ -230,9 +227,6 @@ extension iCloudHelper {
             if let availableCapacity = values.volumeAvailableCapacityForImportantUsage,
                let totalCapacity = values.volumeTotalCapacity
             {
-                print("Total iCloud capacity: \(totalCapacity) bytes")
-                print("Available iCloud capacity: \(availableCapacity) bytes")
-
                 return totalCapacity
             } else {
                 throw iCloudError.CanNotGetCapacity

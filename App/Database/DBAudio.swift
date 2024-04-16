@@ -56,11 +56,11 @@ extension DB {
     }
     
     nonisolated func delete(_ url: URL) {
-        os_log("\(Logger.isMain)🗑️ 数据库删除 \(url.lastPathComponent)")
+        os_log("\(Logger.isMain)\(DB.label)数据库删除 \(url.lastPathComponent)")
         Task {
             let context = ModelContext(modelContainer)
             guard let audio = await self.find(url) else {
-                return os_log("\(Logger.isMain)🗑️ 删除时数据库找不到 \(url.lastPathComponent)")
+                return os_log("\(Logger.isMain)\(DB.label) 删除时数据库找不到 \(url.lastPathComponent)")
             }
             
             do {
@@ -68,7 +68,7 @@ extension DB {
                     $0.url == url
                 })
                 try context.save()
-                os_log("\(Logger.isMain)🗑️ 删除成功 \(audio.title)")
+                os_log("\(Logger.isMain)\(DB.label) 删除成功 \(audio.title)")
             } catch let e {
                 print(e)
             }
@@ -92,10 +92,10 @@ extension DB {
     }
     
     func delete(_ id: Audio.ID) -> Audio? {
-        os_log("\(Logger.isMain)🗑️ 数据库删除")
+        os_log("\(Logger.isMain)\(DB.label)数据库删除")
         let context = ModelContext(modelContainer)
         guard let audio = context.model(for: id) as? Audio else {
-            os_log("\(Logger.isMain)🗑️ 删除时数据库找不到")
+            os_log("\(Logger.isMain)\(DB.label)删除时数据库找不到")
             return nil
         }
         
@@ -103,10 +103,15 @@ extension DB {
         let next = self.nextOf(audio)
         
         do {
+            // 从磁盘删除
             try self.dbFolder.deleteFile(audio)
+            
+            // 从磁盘删除后，因为数据库监听了磁盘的变动，会自动删除
+            // 但自动删除可能不及时，所以这里及时删除
             context.delete(audio)
+            
             try context.save()
-            os_log("\(Logger.isMain)🗑️ 删除成功 \(audio.title)")
+            os_log("\(Logger.isMain)\(DB.label)删除成功 \(audio.title)")
         } catch let e {
             print(e)
         }
@@ -115,16 +120,16 @@ extension DB {
     }
     
     nonisolated func delete(_ audio: Audio) {
-        os_log("\(Logger.isMain)🗑️ 数据库删除 \(audio.title)")
+        os_log("\(Logger.isMain)\(DB.label)数据库删除 \(audio.title)")
         let context = ModelContext(modelContainer)
         guard let audio = context.model(for: audio.id) as? Audio else {
-            return os_log("\(Logger.isMain)🗑️ 删除时数据库找不到 \(audio.title)")
+            return os_log("\(Logger.isMain)\(DB.label)删除时数据库找不到 \(audio.title)")
         }
         
         do {
             context.delete(audio)
             try context.save()
-            os_log("\(Logger.isMain)🗑️ 删除成功 \(audio.title)")
+            os_log("\(Logger.isMain)\(DB.label)删除成功 \(audio.title)")
         } catch let e {
             print(e)
         }
@@ -335,7 +340,7 @@ extension DB {
     
     // MARK: 下一个
 
-    nonisolated func nextOf(_ audio: Audio) -> Audio? {
+    func nextOf(_ audio: Audio) -> Audio? {
         // os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title)")
         let context = ModelContext(modelContainer)
         let order = audio.order

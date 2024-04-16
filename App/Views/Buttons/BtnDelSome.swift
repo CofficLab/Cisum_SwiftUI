@@ -16,7 +16,8 @@ struct BtnDelSome: View {
             onTap: {
                 Task {
                     appManager.stateMessage = "正在删除 \(audios.count) 个"
-                    audioManager.setCurrent(await audioManager.db.delete(Array(audios)), reason: "删除了")
+                    let next = await audioManager.db.delete(Array(audios))
+                    audioManager.setCurrent(next, reason: "删除了")
                     appManager.setFlashMessage("已删除")
                     appManager.cleanStateMessage()
                     callback()

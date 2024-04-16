@@ -25,13 +25,13 @@ struct StateView: View {
                 }
                 .onAppear {
                     Task {
-                        self.next = audioManager.db.nextOf(audio)
+                        self.next = await audioManager.db.nextOf(audio)
                         iCloudHelper.checkiCloudStorage1()
                     }
                 }
                 .onChange(of: audio) {
                     Task {
-                        self.next = audioManager.db.nextOf(audio)
+                        self.next = await audioManager.db.nextOf(audio)
                     }
                 }
             }

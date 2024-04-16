@@ -33,6 +33,10 @@ class EventManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
             })
     }
     
+    func removeListener(_ observer: Any) {
+        n.removeObserver(observer)
+    }
+    
     enum Event {
         case Updated
         

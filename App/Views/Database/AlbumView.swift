@@ -50,13 +50,22 @@ struct AlbumView: View {
         .clipShape(shape)
         .onAppear {
             refresh()
+            
+            // 监听到了事件，注意要考虑audio已经被删除了的情况
             EventManager().onUpdated({ items in
                 for item in items {
+                    if item.isDeleted {
+                        continue
+                    }
+                    
                     if item.url == audio.url {
                         return refresh(item)
                     }
                 }
             })
+        }
+        .onDisappear {
+            EventManager().removeListener(self)
         }
     }
 

@@ -3,21 +3,13 @@ import SwiftUI
 struct BtnToggleDB: View {
     @EnvironmentObject var audioManager: AudioManager
     @EnvironmentObject var appManager: AppManager
+    
+    var size: CGFloat = 24
 
     var body: some View {
-//        GeometryReader { geo in
-//            VStack {
-//                Spacer()
-                ControlButton(title: "仓库", size: 23, systemImage: "music.note.list", onTap: {
-                    appManager.showDB.toggle()
-                })
-//                Spacer()
-//            }
-//        }
-    }
-    
-    func getSize(_ geo: GeometryProxy) -> CGFloat {
-        return min(geo.size.height, geo.size.width)/1.5
+        ControlButton(title: "仓库", size: size, systemImage: "music.note.list", onTap: {
+            appManager.showDB.toggle()
+        })
     }
 }
 

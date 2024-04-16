@@ -7,6 +7,7 @@ struct BtnsView: View {
         GeometryReader { geo in
             VStack {
                 HStack(spacing: 0, content: {
+                    Spacer()
                     if showRow2(geo) == false {
                         BtnToggleDB()
                     }
@@ -16,6 +17,7 @@ struct BtnsView: View {
                     if showRow2(geo) == false {
                         BtnMode()
                     }
+                    Spacer()
                 })
                 .foregroundStyle(.white)
                 .labelStyle(.iconOnly)

@@ -23,11 +23,15 @@ struct OperationView: View {
                     }
                     Spacer()
                 })
+                .frame(maxWidth: .infinity)
                 .foregroundStyle(.white)
                 .labelStyle(.iconOnly)
+                .background(AppConfig.makeBackground(.red))
             }
+            .frame(maxWidth: .infinity)
+            .background(AppConfig.makeBackground(.yellow))
         }
-        .background(.blue.opacity(0.0))
+        .background(AppConfig.makeBackground(.blue))
     }
 
     func getFont() -> Font {

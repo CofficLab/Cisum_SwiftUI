@@ -6,6 +6,7 @@ class DBFolder: ObservableObject {
     var cloudHandler = CloudHandler()
     var audiosDir: URL = AppConfig.audiosDir
     var bg = AppConfig.bgQueue
+    var label = "🗄️ DBFolder::"
     
     func clearFolderContents(atPath path: String) {
         let fileManager = FileManager.default
@@ -21,7 +22,7 @@ class DBFolder: ObservableObject {
     }
     
     func deleteFile(_ audio: Audio) throws {
-        os_log("删除 \(audio.url)")
+        os_log("\(Logger.isMain)\(self.label)删除 \(audio.url)")
         try fileManager.removeItem(at: audio.url)
     }
     

@@ -155,7 +155,7 @@ class AudioManager: NSObject, ObservableObject {
         }
 
         Task {
-            if let i = db.nextOf(audio) {
+            if let i = await db.nextOf(audio) {
                 await setCurrent(i, play: player.isPlaying || manual == false, reason: "触发了下一首")
             } else {
                 self.checkError()
