@@ -7,7 +7,6 @@ struct BtnShowInFinder: View {
     var body: some View {
         ControlButton(
             title: "在访达中显示",
-            size: 28,
             systemImage: getImageName(),
             dynamicSize: dynamicSize,
             onTap: {

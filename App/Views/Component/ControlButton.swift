@@ -10,7 +10,6 @@ struct ControlButton: View {
     @State private var showTips: Bool = false
 
     var title: String = "标题"
-    var size: Double = 48
     var tips: String = ""
     var systemImage: String = "home"
     var dynamicSize = true
@@ -46,7 +45,7 @@ struct ControlButton: View {
             }
         }, label: {
             Label(title, systemImage: systemImage)
-                .font(.system(size: getSize(geo)))
+                .font(getSize(geo))
         })
 //                    .popover(isPresented: $showTips, content: {
 //                        Text(tips).padding()
@@ -62,12 +61,16 @@ struct ControlButton: View {
         })
     }
 
-    func getSize(_ geo: GeometryProxy?) -> Double {
-        guard let geo = geo else {
-            return 24
+    func getSize(_ geo: GeometryProxy?) -> Font {
+        if dynamicSize == false {
+            return .body
         }
         
-        return min(geo.size.height, geo.size.width) * 0.45
+        guard let geo = geo else {
+            return .system(size: 24)
+        }
+        
+        return .system(size: min(geo.size.height, geo.size.width) * 0.45)
     }
 }
 

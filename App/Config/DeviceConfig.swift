@@ -50,12 +50,12 @@ extension DeviceConfig {
         let oldY = frame.origin.y
         let height = frame.size.height
         
-        os_log("\(Logger.isMain)\(self.label) 设置前 Y=\(oldY) height=\(height)")
+        os_log("\(Logger.isMain)\(self.label)设置前 Y=\(oldY) height=\(height)")
 
         frame.origin.y = oldY + height - h
         frame.size.height = h
         
-        os_log("\(Logger.isMain)\(self.label) 设置后 Y=\(frame.origin.y) height=\(frame.size.height)")
+        os_log("\(Logger.isMain)\(self.label)设置后 Y=\(frame.origin.y) height=\(frame.size.height)")
 
         window.setFrame(frame, display: true)
         #endif

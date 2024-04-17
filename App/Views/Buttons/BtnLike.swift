@@ -11,7 +11,7 @@ struct BtnLike: View {
     }
         
     var body: some View {
-        ControlButton(title: title, size: 28, systemImage: getImageName(), onTap: {
+        ControlButton(title: title, systemImage: getImageName(), onTap: {
             Task {
                 if audio.like {
                     await audioManager.db.dislike(audio)

@@ -11,7 +11,6 @@ struct BtnDelSome: View {
     var body: some View {
         ControlButton(
             title: "删除 \(audios.count) 个",
-            size: 28,
             tips: "彻底删除，不可恢复",
             systemImage: getImageName(),
             dynamicSize: dynamicSize,

@@ -4,10 +4,10 @@ struct BtnToggleDB: View {
     @EnvironmentObject var audioManager: AudioManager
     @EnvironmentObject var appManager: AppManager
     
-    var size: CGFloat = 24
+    var autoResize = false
 
     var body: some View {
-        ControlButton(title: "仓库", size: size, systemImage: "list.bullet", onTap: {
+        ControlButton(title: "仓库", systemImage: "list.bullet", dynamicSize: autoResize, onTap: {
             appManager.showDB.toggle()
         })
     }

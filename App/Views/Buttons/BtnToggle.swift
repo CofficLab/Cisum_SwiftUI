@@ -13,6 +13,7 @@ struct BtnToggle: View {
     var audio: Audio? { audioManager.audio }
     var player: SmartPlayer { audioManager.player }
     var title: String { player.isPlaying ? "播放" : "暂停" }
+    var autoResize = false
 
     var image: String {
         if audioManager.audio?.isNotDownloaded ?? false {
@@ -25,7 +26,7 @@ struct BtnToggle: View {
     }
 
     var body: some View {
-        ControlButton(title: title, size: 32, systemImage: image, onTap: {
+        ControlButton(title: title, systemImage: image, dynamicSize: autoResize, onTap: {
             audioManager.toggle()
         })
     }

@@ -17,8 +17,7 @@ struct RootView<Content>: View where Content: View {
 
     var body: some View {
         ZStack {
-            Color.black.opacity(0.5).ignoresSafeArea()
-            BackgroundView.type2A
+            AppConfig.rootBackground
 
             if isReady {
                 content

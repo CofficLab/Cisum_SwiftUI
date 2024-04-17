@@ -9,13 +9,13 @@ struct BtnsView: View {
                 HStack(spacing: 0, content: {
                     Spacer()
                     if showRow2(geo) == false {
-                        BtnToggleDB()
+                        BtnToggleDB(autoResize: true)
                     }
-                    BtnPrev()
-                    BtnToggle()
-                    BtnNext()
+                    BtnPrev(autoResize: true)
+                    BtnToggle(autoResize: true)
+                    BtnNext(autoResize: true)
                     if showRow2(geo) == false {
-                        BtnMode()
+                        BtnMode(autoResize: true)
                     }
                     Spacer()
                 })

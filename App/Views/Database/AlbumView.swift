@@ -3,7 +3,7 @@ import SwiftUI
 
 struct AlbumView: View {
     @EnvironmentObject var audioManager: AudioManager
-    
+
     @State var image: Image? = nil
     @State var isDownloaded: Bool = true
     @State var isDownloading: Bool = false
@@ -27,7 +27,7 @@ struct AlbumView: View {
     /// forPlaying表示显示在正在播放界面
     init(_ audio: Audio, forPlaying: Bool = false) {
         self.audio = audio
-        self.url = audio.url
+        url = audio.url
         self.forPlaying = forPlaying
     }
 
@@ -52,14 +52,14 @@ struct AlbumView: View {
         .clipShape(shape)
         .onAppear {
             refresh()
-            
+
             // 监听到了事件，注意要考虑audio已经被删除了的情况
             EventManager().onUpdated({ items in
                 for item in items {
                     if item.isDeleted {
                         continue
                     }
-                    
+
                     if item.url == self.url {
                         return refresh(item)
                     }
@@ -72,34 +72,26 @@ struct AlbumView: View {
     }
 
     func refresh(_ item: MetadataItemWrapper? = nil) {
-        
-        //os_log("\(Logger.isMain)🍋 AlbumView::refresh -> \(audio.title) \(percent)")
+        // os_log("\(Logger.isMain)🍋 AlbumView::refresh -> \(audio.title) \(percent)")
 
         isDownloaded = audio.isDownloaded
         isDownloading = iCloudHelper.isDownloading(audio.url)
-        
+
         if let item = item {
             isDownloaded = item.downloadProgress == 100
             isDownloading = item.isDownloading
             downloadingPercent = item.downloadProgress
         }
-        
+
         if isDownloaded {
             updateCover()
         }
     }
 
     func updateCover() {
-        // os_log("\(Logger.isMain)📷 AlbumView::getCover")
-//        if audio.isNotExists {
-//            return
-//        }
-
         Task {
             let image = await audio.getCoverImage()
-//            main.sync {
-                self.image = image
-//            }
+            self.image = image
         }
     }
 
@@ -119,9 +111,7 @@ struct AlbumView: View {
 }
 
 #Preview("APP") {
-    RootView {
-        ContentView()
-    }.modelContainer(AppConfig.getContainer())
+    AppPreview()
 }
 
 #Preview("ProgressView") {

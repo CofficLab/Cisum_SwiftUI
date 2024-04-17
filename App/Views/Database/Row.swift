@@ -48,11 +48,10 @@ struct Row: View {
             if hovered {
                 HStack {
                     Spacer()
-                    Button(action: {
-                        audioManager.play(audio, reason: "列表的播放按钮")
-                    }, label: {
-                        Label("播放", systemImage: "play")
-                    })
+                    BtnShowInFinder(url: audio.url, dynamicSize: false)
+                        .labelStyle(.iconOnly)
+                    BtnPlay(audio: audio, dynamicSize: false)
+                        .labelStyle(.iconOnly)
                 }
             }
         }

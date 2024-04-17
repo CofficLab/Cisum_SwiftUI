@@ -6,8 +6,10 @@ struct BtnMode: View {
 
     @State private var hovered: Bool = false
 
+    var autoResize = false
+
     var body: some View {
-        ControlButton(title:"模式",size:24,systemImage: getImageName(), onTap: {
+        ControlButton(title: "模式", systemImage: getImageName(), dynamicSize: autoResize, onTap: {
             audioManager.switchMode { mode in
                 appManager.setFlashMessage("\(mode.description)")
             }
