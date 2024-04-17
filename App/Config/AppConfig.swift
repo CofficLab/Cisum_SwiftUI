@@ -7,7 +7,7 @@ enum AppConfig {
     static let id = "com.yueyi.cisum"
     static let fileManager = FileManager.default
     static let coversDirName = "covers"
-    static let audiosDirName = "audios"
+    static let audiosDirName = debug ? "audios_debug" : "audios"
     static let trashDirName = "trash"
     static let cacheDirName = "audios_cache"
     /// iCloud容器的ID
@@ -83,8 +83,9 @@ extension AppConfig {
 // MARK: 数据库配置
 
 extension AppConfig {
+    static var dbFileName = debug ? "database_debug.db" : "database.db"
     static func getContainer() -> ModelContainer {
-        guard let url = AppConfig.localDocumentsDir?.appendingPathComponent("database.db") else {
+        guard let url = AppConfig.localDocumentsDir?.appendingPathComponent(dbFileName) else {
             fatalError("Could not create ModelContainer")
         }
 
