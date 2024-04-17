@@ -15,6 +15,12 @@ class AppManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
     @Published var isImporting: Bool = false
     @Published var isDropping: Bool = false
     
+    func showDBView() {
+        withAnimation {
+            self.showDB = true
+        }
+    }
+    
     func cleanStateMessage() {
         stateMessage = ""
     }

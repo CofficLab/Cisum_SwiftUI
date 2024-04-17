@@ -31,14 +31,14 @@ struct ControlView: View {
                         TitleView(geo: geo)
                             .frame(height: getTitleHeight(geo))
                             .frame(maxHeight: .infinity)
-                            .background(AppConfig.makeBackground(.red))
+                            //.background(AppConfig.makeBackground(.red))
                     }
 
                     if showStateView {
                         StateView()
                             .frame(height: getStateHeight(geo))
                             .frame(maxHeight: .infinity)
-                            .background(AppConfig.makeBackground(.red))
+                            //.background(AppConfig.makeBackground(.red))
                     }
 
                     if showOperationView {

@@ -51,10 +51,6 @@ struct DBView: View {
                 return true
             }
     }
-
-    init() {
-        // os_log("\(Logger.isMain)🚩 DBView::Init")
-    }
 }
 
 // MARK: 操作

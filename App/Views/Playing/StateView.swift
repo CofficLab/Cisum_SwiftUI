@@ -35,6 +35,11 @@ struct StateView: View {
             // 播放过程中出现的错误
             if let e = error {
                 makeErrorView(e)
+                    .onAppear {
+                        if audios.count == 0 {
+                            appManager.showDBView()
+                        }
+                    }
             }
 
             // 正在复制

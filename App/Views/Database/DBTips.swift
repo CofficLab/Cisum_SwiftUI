@@ -10,29 +10,22 @@ struct DBTips: View {
     var body: some View {
         CardView(background: BackgroundView.type3) {
             VStack {
-                #if os(iOS)
-                    Text("仓库中没有音乐文件")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding(.vertical, 20)
-
-                BtnAdd().buttonStyle(.bordered).foregroundStyle(.white)
-                #endif
-
-                #if os(macOS)
                 VStack(spacing: 20) {
                     HStack {
                             Image(systemName: "info.circle.fill")
                                 .foregroundStyle(.yellow)
-                            Text("将音乐文件拖到这里可添加")
+                        Text(UIConfig.isDesktop ? "将音乐文件拖到这里可添加" : "仓库为空")
                                 .font(.title3)
                                 .foregroundStyle(.white)
                     }
                     Text("支持的格式：\(supportedFormats)")
                         .font(.subheadline)
                         .foregroundStyle(.white)
+                    
+                    if UIConfig.isNotDesktop {
+                        BtnAdd().buttonStyle(.bordered).foregroundStyle(.white)
+                    }
                 }
-                #endif
             }
         }
     }

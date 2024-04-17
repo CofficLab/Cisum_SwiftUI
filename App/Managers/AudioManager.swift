@@ -36,28 +36,36 @@ class AudioManager: NSObject, ObservableObject {
 
         checkNetworkStatus()
         player.onStateChange = { state in
-            os_log("\(Logger.isMain)\(AudioManager.label)播放状态变了 \(state.des)")
+            self.onStateChanged(state)
+        }
+        
+        Task {
+            prepare(nil, reason: "AudioManager初始化")
+        }
+    }
+    
+    func onStateChanged(_ state: SmartPlayer.State) {
+        os_log("\(Logger.isMain)\(AudioManager.label)播放状态变了 \(state.des)")
+        self.main.async {
+            self.audio = self.player.audio
+            self.error = nil
+        }
+        
+        switch state {
+        case .Playing(let audio):
+             Task {
+                 await self.db.increasePlayCount(audio)
+             }
+             case .Finished:
+            self.next()
+        case .Stopped:
+            break
+        case .Error(let error):
             self.main.async {
-                self.audio = self.player.audio
-                self.error = nil
+                self.error = error
             }
-            
-            switch state {
-            case .Playing(let audio):
-                 Task {
-                     await self.db.increasePlayCount(audio)
-                 }
-                 case .Finished:
-                self.next()
-            case .Stopped:
-                break
-            case .Error(let error):
-                self.main.sync {
-                    self.error = error
-                }
-            default:
-                break
-            }
+        default:
+            break
         }
     }
 

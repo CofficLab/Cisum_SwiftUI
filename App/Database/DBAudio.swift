@@ -117,7 +117,7 @@ extension DB {
             try context.save()
             os_log("\(Logger.isMain)\(DB.label)删除成功 \(audio.title)")
         } catch let e {
-            os_log("\(Logger.isMain)\(DB.label)删除出错 \(e.localizedDescription)")
+            os_log("\(Logger.isMain)\(DB.label)删除出错 \(e)")
         }
         
         return next

@@ -5,8 +5,13 @@ struct BtnAdd: View {
 
     var body: some View {
         Button("添加", systemImage: "plus.circle") {
-            appManager.showDB = true
-            appManager.isImporting = true
+            withAnimation {
+                if appManager.showDB {
+                    appManager.isImporting = true
+                } else {
+                    appManager.showDB = true
+                }
+            }
         }
     }
 }

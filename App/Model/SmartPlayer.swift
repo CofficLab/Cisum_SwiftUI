@@ -26,11 +26,11 @@ class SmartPlayer: NSObject {
                         try self.player = makePlayer(audio)
                         self.player.prepareToPlay()
                     } catch {
-                        setError(error)
-                        return
+                        return setError(error)
                     }
                 } else {
                     self.audio = audio
+                    return setError(SmartError.NoAudioInList)
                 }
             case .Playing(let audio):
                 self.audio = audio
