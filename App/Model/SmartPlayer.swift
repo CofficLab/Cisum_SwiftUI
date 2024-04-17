@@ -11,44 +11,40 @@ class SmartPlayer: NSObject {
     var player = AVAudioPlayer()
     var audio: Audio? {
         didSet {
-            let isPlaying = self.isPlaying
-
             onAudioChange(audio)
-            guard let audio = audio else {
-                state = .Finished
-                return player = AVAudioPlayer()
-            }
-
-            if audio.isDownloaded {
-                do {
-                    #if os(iOS)
-                        try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
-                        try AVAudioSession.sharedInstance().setActive(true)
-                    #endif
-                    player = try AVAudioPlayer(contentsOf: audio.url)
-                } catch {
-                    os_log("\(Logger.isMain)初始化播放器失败 ->\(audio.title)->\(error)")
-                }
-            } else {
-                player = AVAudioPlayer()
-            }
-
-            player.delegate = self
-            if isPlaying {
-                player.play()
-            }
-
-            Task {
-                MediaPlayerManager.setPlayingInfo(self)
-            }
         }
     }
 
-    // MARK: 状态
+    // MARK: 状态改变时
 
     var state: State = .Stopped {
         didSet {
             onStateChange(state)
+            
+            switch self.state {
+            case .Ready(let audio):
+                if let audio = audio {
+                    self.audio = audio
+                    self.player = makePlayer(audio)
+                    self.player.prepareToPlay()
+                } else {
+                    self.audio = audio
+                    self.player = makePlayer(audio)
+                }
+            case .Playing(let audio):
+                self.audio = audio
+                self.player = makePlayer(audio)
+                self.player.play()
+            case .Paused:
+                self.player.pause()
+            case .Stopped:
+                player.stop()
+                player.currentTime = 0
+            case .Finished:
+                player.stop()
+            case .Error(let string):
+                player.stop()
+            }
 
             Task {
                 MediaPlayerManager.setPlayingInfo(self)
@@ -56,9 +52,16 @@ class SmartPlayer: NSObject {
         }
     }
 
-    var isPlaying: Bool { state == .Playing }
     var duration: TimeInterval { player.duration }
     var currentTime: TimeInterval { player.currentTime }
+    var leftTime: TimeInterval { duration - currentTime }
+    var currentTimeDisplay: String {
+        DateComponentsFormatter.positional.string(from: currentTime) ?? "0:00"
+    }
+
+    var leftTimeDisplay: String {
+        DateComponentsFormatter.positional.string(from: leftTime) ?? "0:00"
+    }
 
     // MARK: 对外传递事件
 
@@ -69,28 +72,26 @@ class SmartPlayer: NSObject {
     var onAudioChange: (_ audio: Audio?) -> Void = { audio in
         os_log("\(SmartPlayer.label)播放器歌曲已变为 \(audio?.title ?? "nil")")
     }
+}
 
-    // MARK: 设置当前的
+// MARK: 播放控制
 
-    func setCurrent(_ audio: Audio, play: Bool? = nil, reason: String) {
-        self.audio = audio
-        if play == true {
-            player.play()
+extension SmartPlayer {
+    func goto(_ time: TimeInterval) {
+        player.currentTime = time
+    }
+    
+    func prepare(_ audio: Audio?, play: Bool = false) {
+        state = .Ready(audio)
+        
+        if let a = audio, play {
+            resume()
         }
     }
 
-    // MARK: 跳转到某个时间
-
-    func gotoTime(time: TimeInterval) {
-        player.currentTime = time
-    }
-
-    // MARK: 播放指定的
-
     func play(_ audio: Audio, reason: String) {
-        os_log("\(Logger.isMain)\(self.label)play \(audio.title)")
-
-        setCurrent(audio, play: true, reason: reason)
+        os_log("\(Logger.isMain)\(self.label)play \(audio.title) 🐛 \(reason)")
+        state = .Playing(audio)
     }
 
     func play() {
@@ -99,46 +100,63 @@ class SmartPlayer: NSObject {
     }
 
     func resume() {
-        os_log("\(Logger.isMain)\(self.label)Resume")
+        os_log("\(Logger.isMain)\(self.label)Resume while current is \(self.state.des)")
         switch state {
-        case .Playing:
+        case .Playing, .Error:
             break
-        case .Paused:
-            player.play()
-        case .Stopped, .Finished:
-            if let audio = audio {
-                self.play(audio, reason: "Resume")
-            }
+        case .Ready, .Paused, .Stopped, .Finished:
+            state = .Playing(self.audio!)
         }
-
-        state = .Playing
     }
-
-    // MARK: 暂停
 
     func pause() {
         os_log("\(Logger.isMain)\(self.label)Pause")
-        player.pause()
         state = .Paused
     }
 
-    // MARK: 停止
-
     func stop() {
         os_log("\(Logger.isMain)\(self.label)Stop")
-        player.stop()
-        player.currentTime = 0
         state = .Stopped
     }
 
-    // MARK: 切换
-
     func toggle() {
-        if player.isPlaying {
-            pause()
-        } else {
-            resume()
+        isPlaying ? pause() : resume()
+    }
+}
+
+// MARK: 控制 AVAudioPlayer
+
+extension SmartPlayer {
+    func makePlayer(_ audio: Audio?) -> AVAudioPlayer {
+        guard let audio = audio else {
+            return AVAudioPlayer()
         }
+        
+        // 未下载的情况
+        guard audio.isDownloaded else {
+            return AVAudioPlayer()
+        }
+
+        // 格式不支持
+        guard audio.isSupported else {
+            os_log("\(Logger.isMain)\(SmartPlayer.label)Stop 格式不支持 \(audio.title) \(audio.ext)")
+            return AVAudioPlayer()
+        }
+
+        do {
+            #if os(iOS)
+                try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+                try AVAudioSession.sharedInstance().setActive(true)
+            #endif
+            player = try AVAudioPlayer(contentsOf: audio.url)
+        } catch {
+            os_log("\(Logger.isMain)初始化播放器失败 ->\(audio.title)->\(error)")
+            player = AVAudioPlayer()
+        }
+
+        player.delegate = self
+        
+        return player
     }
 }
 
@@ -146,13 +164,23 @@ class SmartPlayer: NSObject {
 
 extension SmartPlayer {
     enum State {
-        case Playing
+        case Ready(Audio?)
+        case Playing(Audio)
         case Paused
         case Stopped
         case Finished
+        case Error(String)
 
         var des: String {
             String(describing: self)
+        }
+    }
+
+    var isPlaying: Bool {
+        if case .Playing = state {
+            return true
+        } else {
+            return false
         }
     }
 }

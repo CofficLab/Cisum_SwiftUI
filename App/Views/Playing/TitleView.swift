@@ -28,7 +28,7 @@ struct TitleView: View {
                 for item in items {
                     if item.isDeleted && item.url == self.url {
                         AppConfig.mainQueue.async {
-                            audioManager.audio = nil
+                            audioManager.prepare(nil, reason: "TitleView")
                             audioManager.player.stop()
                             audioManager.checkError()
                         }

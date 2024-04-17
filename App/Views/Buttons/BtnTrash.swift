@@ -14,9 +14,11 @@ struct BtnTrash: View {
             systemImage: getImageName(),
             dynamicSize: dynamicSize,
             onTap: {
-            audioManager.dbFolder.trash(audio)
-            audioManager.next(manual: true)
-        })
+                Task {
+                    await audioManager.db.trash(audio)
+                    audioManager.next(manual: true)
+                }
+            })
     }
 
     private func getImageName() -> String {

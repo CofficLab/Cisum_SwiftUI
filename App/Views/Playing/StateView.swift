@@ -81,12 +81,12 @@ struct StateView: View {
             }
         }
         .onChange(of: count) {
-            if audioManager.audio == nil, let first = db.getFirstValid() {
-                audioManager.setCurrent(first, reason: "自动设置为第一首")
+            if audioManager.audio == nil, let first = db.first() {
+                audioManager.prepare(first, reason: "自动设置为第一首")
             }
 
             if count == 0 {
-                audioManager.setCurrent(nil, reason: "数据库个数变成了0")
+                audioManager.prepare(nil, reason: "数据库个数变成了0")
             }
 
             audioManager.checkError()

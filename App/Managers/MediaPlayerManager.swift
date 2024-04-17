@@ -132,7 +132,7 @@ class MediaPlayerManager: ObservableObject {
 
             // 在这里处理当前的播放进度时间
             print("Current playback position: \(positionTime)")
-            self.player.gotoTime(time: positionTime)
+            self.player.goto(positionTime)
 
             return .success
         }

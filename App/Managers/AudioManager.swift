@@ -11,7 +11,6 @@ import SwiftUI
 class AudioManager: NSObject, ObservableObject {
     static var label: String = "🔊 AudioManager::"
 
-    @Published var audio: Audio?
     @Published var playerError: Error? = nil
     @Published var mode: PlayMode = .Order
     @Published var networkOK = true
@@ -19,12 +18,11 @@ class AudioManager: NSObject, ObservableObject {
     private var listener: AnyCancellable?
     private var bg = AppConfig.bgQueue
     private var main = AppConfig.mainQueue
-    private var title: String { audio?.title ?? "[无]" }
     private var rootDir: URL = AppConfig.cloudDocumentsDir
     private var label: String { AudioManager.label }
 
+    var audio: Audio? { self.player.audio }
     var db: DB = .init(AppConfig.getContainer())
-    var dbFolder = DBFolder()
     var isEmpty: Bool { audio == nil }
     var player = SmartPlayer()
     var isCloudStorage: Bool { iCloudHelper.isCloudPath(url: rootDir) }
@@ -37,13 +35,14 @@ class AudioManager: NSObject, ObservableObject {
         restore()
 
         checkNetworkStatus()
-        player.onAudioChange = {
-            self.audio = $0
-        }
         player.onStateChange = { state in
             os_log("\(Logger.isMain)\(AudioManager.label)播放状态变了 \(state.des)")
             switch state {
-            case .Finished:
+            case .Playing(let audio):
+                 Task {
+                     await self.db.increasePlayCount(audio)
+                 }
+                 case .Finished:
                 self.next()
             case .Stopped:
                 break
@@ -62,9 +61,9 @@ class AudioManager: NSObject, ObservableObject {
         if let currentAudioId = AppConfig.currentAudio, audio == nil {
             Task {
                 if let currentAudio = await self.db.find(currentAudioId) {
-                    await self.setCurrent(currentAudio, reason: "初始化，恢复上次播放的")
-                } else if let current = self.db.getFirstValid() {
-                    await self.setCurrent(current, reason: "初始化，播放第一个")
+                    self.prepare(currentAudio, reason: "初始化，恢复上次播放的")
+                } else if let current = self.db.first() {
+                    self.prepare(current, reason: "初始化，播放第一个")
                 } else {
                     os_log("\(Logger.isMain)🚩 AudioManager::restore nothing to play")
                 }
@@ -72,41 +71,31 @@ class AudioManager: NSObject, ObservableObject {
         }
     }
 
-    // MARK: 设置当前的
+    // MARK: 准备播放
 
-    @MainActor func setCurrent(_ audio: Audio?, play: Bool? = nil, reason: String) {
-        os_log("\(Logger.isMain)\(self.label)setCurrent to \(audio?.title ?? "nil") 🐛 \(reason)")
+    func prepare(_ audio: Audio?, play: Bool = false, reason: String) {
+        os_log("\(Logger.isMain)\(self.label)Prepare \(audio?.title ?? "nil") 🐛 \(reason)")
 
-        self.player.audio = audio
-        if play == true {
-            self.player.play()
-        }
-
+        self.player.prepare(audio, play: play)
         self.checkError()
 
         Task {
             if let a = audio {
-                // 下载当前的
-                await self.db.download(a, reason: "SetCurrent")
-
-                // 下载接下来的
+                // 下载当前的和接下来的
                 await db.downloadNext(a, reason: "触发了下一首")
 
                 // 将当前播放的歌曲存储下来，下次打开继续
                 AppConfig.setCurrentAudio(a)
-
-                // 播放次数增加
-                await db.increasePlayCount(a)
             }
         }
     }
 
     // MARK: 播放指定的
 
-    @MainActor func play(_ audio: Audio, reason: String) {
+    func play(_ audio: Audio, reason: String) {
         os_log("\(Logger.isMain)\(self.label)play \(audio.title)")
 
-        setCurrent(audio, play: true, reason: reason)
+        prepare(audio, play: true, reason: reason)
     }
 
     // MARK: 切换
@@ -130,13 +119,9 @@ class AudioManager: NSObject, ObservableObject {
             return
         }
 
-        guard let audio = audio else {
-            return
-        }
-
         Task {
-            if let i = await self.db.preOf(audio) {
-                await self.setCurrent(i, reason: "触发了上一首")
+            if let i = await self.db.pre(audio) {
+                self.prepare(i, reason: "触发了上一首")
             }
         }
     }
@@ -157,23 +142,11 @@ class AudioManager: NSObject, ObservableObject {
 
         Task {
             if let i = await db.nextOf(audio) {
-                await setCurrent(i, play: player.isPlaying || manual == false, reason: "触发了下一首")
+                prepare(i, play: player.isPlaying || manual == false, reason: "触发了下一首")
             } else {
                 self.checkError()
                 self.player.stop()
             }
-        }
-    }
-
-    func trash(_ audio: Audio) throws {
-        os_log("\(Logger.isMain)\(self.label)trash 🗑️ \(audio.title)")
-
-        if self.audio?.url == audio.url {
-            next(manual: true)
-        }
-
-        Task {
-            await db.trash(audio)
         }
     }
 }
@@ -198,7 +171,11 @@ extension AudioManager {
             }
         }
     }
+}
 
+// MARK: 检查错误
+
+extension AudioManager {
     func checkNetworkStatus() {
         let monitor = NWPathMonitor()
         monitor.pathUpdateHandler = { path in
@@ -216,8 +193,6 @@ extension AudioManager {
         let queue = DispatchQueue(label: "NetworkMonitor")
         monitor.start(queue: queue)
     }
-
-    // MARK: 检查错误
 
     func clearError() {
         main.async {

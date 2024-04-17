@@ -7,7 +7,9 @@ struct BtnEvict: View {
         
     var body: some View {
         Button {
-            audioManager.dbFolder.evict(audio.url)
+            Task {
+                await audioManager.db.evict(audio)
+            }
         } label: {
             Label("移除下载项", systemImage: getImageName())
                 .font(.system(size: 24))

@@ -1,93 +1,60 @@
-import SwiftUI
 import AVKit
+import SwiftUI
 
 struct SliderView: View {
     @EnvironmentObject var audioManager: AudioManager
     @EnvironmentObject var appManager: AppManager
-    
-    @State private var value: Double = 0.0
+
+    @State private var value: Double = 0
     @State private var isEditing: Bool = false
     @State private var shouldDisable = false
-    @State private var duration: TimeInterval = 0
-    
+
     let timer = Timer
         .publish(every: 0.5, on: .main, in: .common)
         .autoconnect()
-    
+
     var player: SmartPlayer { audioManager.player }
-    var currentTime: TimeInterval { player.currentTime }
-    var currentTimeDisplay: String {
-        DateComponentsFormatter.positional.string(from: currentTime) ?? "0:00"
-    }
-    var leftTime: TimeInterval { duration - value }
-    var leftTimeDisplay: String {
-        DateComponentsFormatter.positional.string(from: leftTime) ?? "0:00"
-    }
+    var duration: TimeInterval { player.duration }
+    var current: String { player.currentTimeDisplay }
+    var left: String { player.leftTimeDisplay }
 
     var body: some View {
         HStack {
-            Text(currentTimeDisplay)
+            Text(current)
 
             Slider(value: $value, in: 0 ... duration) { editing in
                 isEditing = editing
                 if !editing {
-                    player.gotoTime(time: value)
+                    player.goto(value)
                 }
             }.disabled(shouldDisable)
 
-            Text(leftTimeDisplay)
+            Text(left)
         }
         .font(.caption)
-        .onAppear {
-            self.duration = audioManager.player.duration
-        }
         .onReceive(timer) { _ in
-            if audioManager.isEmpty {
+            if audioManager.playerError != nil {
                 return disable()
             }
-            
-            if let audio = audioManager.audio, audio.isDownloading {
-                return disable()
-            }
-            
-            if let audio = audioManager.audio, audio.isNotDownloaded {
-                return disable()
-            }
-            
+
             if audioManager.player.duration > 0 && !isEditing {
                 return enable()
             }
         }
         .padding(.horizontal, 10)
     }
-    
+
     func enable() {
-        value = currentTime
+        value = player.currentTime
         shouldDisable = false
-        duration = player.duration
     }
-    
+
     func disable() {
         value = 0
         shouldDisable = true
-        duration = 0
     }
 }
 
 #Preview {
-    RootView {
-        ContentView()
-    }
-}
-
-#Preview {
-    VStack {
-        RootView(content: {
-            SliderView()
-        })
-
-        RootView {
-            SliderView()
-        }
-    }
+    AppPreview()
 }

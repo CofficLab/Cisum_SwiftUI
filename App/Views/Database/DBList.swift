@@ -40,7 +40,7 @@ struct DBList: View {
                         }
                         .onDelete(perform: { indexSet in
                             for i in indexSet {
-                                audioManager.dbFolder.trash(audios[i])
+                                db.delete(audios[i])
                             }
                         })
                     })
