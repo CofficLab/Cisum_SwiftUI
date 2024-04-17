@@ -26,9 +26,7 @@ class MediaPlayerManager: ObservableObject {
         var title = ""
         var duration: TimeInterval = 0
         var currentTime: TimeInterval = 0
-        #if os(iOS)
-        var image = Audio.defaultUIImage
-        #endif
+        var image = Audio.defaultImage
 
         os_log("\(Logger.isMain)\(MediaPlayerManager.label)Update -> \(smartPlayer.state.des) -> \(audio?.title ?? "-")")
 
@@ -36,28 +34,23 @@ class MediaPlayerManager: ObservableObject {
             title = audio.title
             duration = player.duration
             currentTime = player.currentTime
-            #if os(iOS)
-            var image = audio.getUIImage()
-            #endif
+            image = audio.getImage()
         }
 
-        #if os(iOS)
-        center.nowPlayingInfo = [
-            MPMediaItemPropertyTitle: title,
-            MPMediaItemPropertyArtwork: MPMediaItemArtwork(image: image),
-            MPMediaItemPropertyArtist: artist,
-            MPMediaItemPropertyPlaybackDuration: duration,
-            MPNowPlayingInfoPropertyElapsedPlaybackTime: currentTime,
-        ]
-        #else
         center.playbackState = isPlaying ? .playing : .paused
         center.nowPlayingInfo = [
             MPMediaItemPropertyTitle: title,
             MPMediaItemPropertyArtist: artist,
             MPMediaItemPropertyPlaybackDuration: duration,
             MPNowPlayingInfoPropertyElapsedPlaybackTime: currentTime,
+            MPMediaItemPropertyArtwork: MPMediaItemArtwork(boundsSize: image.size, requestHandler: { size in
+                #if os(macOS)
+                    image.size = size
+                #endif
+
+                return image
+            }),
         ]
-        #endif
     }
 
     // 接收控制中心的指令
