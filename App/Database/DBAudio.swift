@@ -100,7 +100,11 @@ extension DB {
         }
         
         // 找出下一个
-        let next = self.nextOf(audio)
+        var next = self.nextOf(audio)
+        if next?.url == audio.url {
+            os_log("\(Logger.isMain)\(DB.label)删除时next==current")
+            next = nil
+        }
         
         do {
             // 从磁盘删除
@@ -113,7 +117,7 @@ extension DB {
             try context.save()
             os_log("\(Logger.isMain)\(DB.label)删除成功 \(audio.title)")
         } catch let e {
-            print(e)
+            os_log("\(Logger.isMain)\(DB.label)删除出错 \(e.localizedDescription)")
         }
         
         return next
@@ -131,7 +135,7 @@ extension DB {
             try context.save()
             os_log("\(Logger.isMain)\(DB.label)删除成功 \(audio.title)")
         } catch let e {
-            print(e)
+            os_log("\(Logger.isMain)\(DB.label)删除出错 \(e.localizedDescription)")
         }
     }
     
@@ -160,7 +164,7 @@ extension DB {
                     // 从数据库删除
                     self.delete(audio)
                 } catch let e {
-                    print(e)
+                    os_log("\(Logger.isMain)\(DB.label)回收站出错 \(e.localizedDescription)")
                 }
             }
         }

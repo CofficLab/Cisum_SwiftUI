@@ -43,7 +43,7 @@ struct HomeView: View {
                 if autoResizing == false {
                     // 说明是用户主动调整
                     self.height = DeviceConfig.getWindowHeight()
-                    os_log("\(Logger.isMain)\(self.label)Height=\(self.height)")
+                    //os_log("\(Logger.isMain)\(self.label)Height=\(self.height)")
                 }
 
                 autoResizing = false

@@ -12,6 +12,7 @@ struct AlbumView: View {
     var main = AppConfig.mainQueue
     var bg = AppConfig.bgQueue
     var audio: Audio
+    var url: URL
     var forPlaying: Bool = false
     var fileManager = FileManager.default
     var isNotDownloaded: Bool { !isDownloaded }
@@ -26,6 +27,7 @@ struct AlbumView: View {
     /// forPlaying表示显示在正在播放界面
     init(_ audio: Audio, forPlaying: Bool = false) {
         self.audio = audio
+        self.url = audio.url
         self.forPlaying = forPlaying
     }
 
@@ -58,7 +60,7 @@ struct AlbumView: View {
                         continue
                     }
                     
-                    if item.url == audio.url {
+                    if item.url == self.url {
                         return refresh(item)
                     }
                 }

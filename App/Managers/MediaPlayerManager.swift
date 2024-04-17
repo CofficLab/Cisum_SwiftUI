@@ -20,34 +20,43 @@ class MediaPlayerManager: ObservableObject {
         let audio = smartPlayer.audio
         let player = smartPlayer.player
         let isPlaying = player.isPlaying
-        let duration = player.duration
-        let currentTime = player.currentTime
         let center = MPNowPlayingInfoCenter.default()
-        
+
+        var artist = "乐音APP"
+        var title = ""
+        var duration: TimeInterval = 0
+        var currentTime: TimeInterval = 0
+        #if os(iOS)
+        var image = Audio.defaultUIImage
+        #endif
+
         os_log("\(Logger.isMain)\(MediaPlayerManager.label)Update -> \(smartPlayer.state.des) -> \(audio?.title ?? "-")")
-        
-        guard let audio = audio else {
-            return
+
+        if let audio = audio {
+            title = audio.title
+            duration = player.duration
+            currentTime = player.currentTime
+            #if os(iOS)
+            var image = audio.getUIImage()
+            #endif
         }
 
         #if os(iOS)
-            let image = audio.getUIImage()
-
-            center.nowPlayingInfo = [
-                MPMediaItemPropertyTitle: audio.title,
-                MPMediaItemPropertyArtwork: MPMediaItemArtwork(image: image),
-                MPMediaItemPropertyArtist: "乐音APP",
-                MPMediaItemPropertyPlaybackDuration: duration,
-                MPNowPlayingInfoPropertyElapsedPlaybackTime: currentTime,
-            ]
+        center.nowPlayingInfo = [
+            MPMediaItemPropertyTitle: title,
+            MPMediaItemPropertyArtwork: MPMediaItemArtwork(image: image),
+            MPMediaItemPropertyArtist: artist,
+            MPMediaItemPropertyPlaybackDuration: duration,
+            MPNowPlayingInfoPropertyElapsedPlaybackTime: currentTime,
+        ]
         #else
-            center.playbackState = isPlaying ? .playing : .paused
-            center.nowPlayingInfo = [
-                MPMediaItemPropertyTitle: audio.title,
-                MPMediaItemPropertyArtist: "乐音APP",
-                MPMediaItemPropertyPlaybackDuration: duration,
-                MPNowPlayingInfoPropertyElapsedPlaybackTime: currentTime,
-            ]
+        center.playbackState = isPlaying ? .playing : .paused
+        center.nowPlayingInfo = [
+            MPMediaItemPropertyTitle: title,
+            MPMediaItemPropertyArtist: artist,
+            MPMediaItemPropertyPlaybackDuration: duration,
+            MPNowPlayingInfoPropertyElapsedPlaybackTime: currentTime,
+        ]
         #endif
     }
 

@@ -7,6 +7,7 @@ import OSLog
 
 class FileHelper {
     static var fileManager = FileManager.default
+    static var label = "📃 FileHelper::"
     
     static func getSize(url: URL) -> Int {
         let resourceValues = try? url.resourceValues(forKeys: [.fileSizeKey])
@@ -62,6 +63,10 @@ class FileHelper {
             formatter.countStyle = .file
             return formatter
         }()
+        
+        if !fileManager.fileExists(atPath: url.path) {
+            return "-"
+        }
 
         do {
             let attributes = try fileManager.attributesOfItem(atPath: url.path)
@@ -72,7 +77,7 @@ class FileHelper {
                 return "-"
             }
         } catch {
-            print("Error: \(error)")
+            os_log("Error: \(error.localizedDescription)")
             return "-"
         }
     }

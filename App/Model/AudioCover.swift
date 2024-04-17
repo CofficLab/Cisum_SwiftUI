@@ -1,9 +1,14 @@
-import Foundation
-import SwiftUI
-import OSLog
 import AVKit
+import Foundation
+import OSLog
+import SwiftUI
 
 extension Audio {
+    #if os(iOS)
+        // 要放一张正方形的图，否则会自动加上白色背景
+        static var defaultUIImage = UIImage(imageLiteralResourceName: "DefaultAlbum")
+    #endif
+
     var coverCacheURL: URL {
         let fileName = url.lastPathComponent
         let imageName = fileName
@@ -52,7 +57,7 @@ extension Audio {
     #if os(iOS)
         func getUIImage() -> UIImage {
             // 要放一张正方形的图，否则会自动加上白色背景
-            var i = UIImage(imageLiteralResourceName: "DefaultAlbum")
+            var i = Audio.defaultUIImage
             if fileManager.fileExists(atPath: coverCacheURL.path) {
                 i = UIImage(contentsOfFile: coverCacheURL.path) ?? i
             }
@@ -62,18 +67,18 @@ extension Audio {
     #endif
 
     func getCoverImage() async -> Image? {
-         //os_log("\(Logger.isMain)🍋 Audio::getCoverImage for \(self.title)")
+        // os_log("\(Logger.isMain)🍋 Audio::getCoverImage for \(self.title)")
         guard let coverURL = await getCover() else {
-            //os_log("\(Logger.isMain)🍋 Audio::getCoverImage for \(self.title) coverURL=nil give up")
+            // os_log("\(Logger.isMain)🍋 Audio::getCoverImage for \(self.title) coverURL=nil give up")
             return nil
         }
 
         #if os(macOS)
-        if let nsImage = NSImage(contentsOf: coverURL) {
-            return Image(nsImage: nsImage)
-        } else {
-            return nil
-        }
+            if let nsImage = NSImage(contentsOf: coverURL) {
+                return Image(nsImage: nsImage)
+            } else {
+                return nil
+            }
         #else
             return Image(uiImage: UIImage(contentsOfFile: coverURL.path)!)
         #endif

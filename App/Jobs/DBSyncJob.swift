@@ -76,7 +76,7 @@ class DBSyncJob {
     }
     
     private func deleteIfNotIn(_ items: [MetadataItemWrapper]) async {
-        os_log("\(Logger.isMain)\(self.label)deleteIfNotIn with count=\(items.count)")
+        //os_log("\(Logger.isMain)\(self.label)deleteIfNotIn with count=\(items.count)")
         await self.db.deleteIfNotIn(items.map { $0.url! })
     }
     

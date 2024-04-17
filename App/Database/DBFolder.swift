@@ -17,7 +17,7 @@ class DBFolder: ObservableObject {
                 try fileManager.removeItem(atPath: itemPath)
             }
         } catch {
-            print("Error: \(error)")
+            os_log("\(Logger.isMain)\(self.label)clearFolderContents error: \(error.localizedDescription)")
         }
     }
     
