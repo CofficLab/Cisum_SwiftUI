@@ -30,7 +30,6 @@ struct TitleView: View {
                         AppConfig.mainQueue.async {
                             audioManager.prepare(nil, reason: "TitleView")
                             audioManager.player.stop()
-                            audioManager.checkError()
                         }
                         continue
                     }

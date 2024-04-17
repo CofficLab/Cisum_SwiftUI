@@ -11,9 +11,10 @@ import SwiftUI
 class AudioManager: NSObject, ObservableObject {
     static var label: String = "🔊 AudioManager::"
 
-    @Published var playerError: Error? = nil
+    @Published var error: Error? = nil
     @Published var mode: PlayMode = .Order
     @Published var networkOK = true
+    @Published var audio: Audio? = nil
 
     private var listener: AnyCancellable?
     private var bg = AppConfig.bgQueue
@@ -21,12 +22,11 @@ class AudioManager: NSObject, ObservableObject {
     private var rootDir: URL = AppConfig.cloudDocumentsDir
     private var label: String { AudioManager.label }
 
-    var audio: Audio? { self.player.audio }
     var db: DB = .init(AppConfig.getContainer())
     var isEmpty: Bool { audio == nil }
     var player = SmartPlayer()
     var isCloudStorage: Bool { iCloudHelper.isCloudPath(url: rootDir) }
-    var showErrorView: Bool { self.playerError != nil }
+    var showErrorView: Bool { self.error != nil }
     var showTitleView: Bool { self.audio != nil }
 
     override init() {
@@ -37,6 +37,11 @@ class AudioManager: NSObject, ObservableObject {
         checkNetworkStatus()
         player.onStateChange = { state in
             os_log("\(Logger.isMain)\(AudioManager.label)播放状态变了 \(state.des)")
+            self.main.async {
+                self.audio = self.player.audio
+                self.error = nil
+            }
+            
             switch state {
             case .Playing(let audio):
                  Task {
@@ -46,6 +51,10 @@ class AudioManager: NSObject, ObservableObject {
                 self.next()
             case .Stopped:
                 break
+            case .Error(let error):
+                self.main.sync {
+                    self.error = error
+                }
             default:
                 break
             }
@@ -77,7 +86,6 @@ class AudioManager: NSObject, ObservableObject {
         os_log("\(Logger.isMain)\(self.label)Prepare \(audio?.title ?? "nil") 🐛 \(reason)")
 
         self.player.prepare(audio, play: play)
-        self.checkError()
 
         Task {
             if let a = audio {
@@ -101,11 +109,6 @@ class AudioManager: NSObject, ObservableObject {
     // MARK: 切换
 
     func toggle() {
-        if self.getError() != nil {
-            os_log("\(Logger.isMain)\(self.label)Toggle 取消，因为存在PlayError")
-            return
-        }
-
         player.toggle()
     }
 
@@ -144,7 +147,6 @@ class AudioManager: NSObject, ObservableObject {
             if let i = await db.nextOf(audio) {
                 prepare(i, play: player.isPlaying || manual == false, reason: "触发了下一首")
             } else {
-                self.checkError()
                 self.player.stop()
             }
         }
@@ -185,67 +187,11 @@ extension AudioManager {
                 } else {
                     self.networkOK = false
                 }
-
-                self.checkError()
             }
         }
 
         let queue = DispatchQueue(label: "NetworkMonitor")
         monitor.start(queue: queue)
-    }
-
-    func clearError() {
-        main.async {
-            self.playerError = nil
-        }
-    }
-
-    func checkError() {
-        _ = errorCheck()
-    }
-
-    func getError() -> Error? {
-        errorCheck()
-    }
-
-    func errorCheck() -> Error? {
-        guard let audio = audio else {
-            return setError(SmartError.NoAudioInList)
-        }
-
-        if audio.isNotExists {
-            return setError(SmartError.NotExists)
-        }
-
-        if audio.isDownloading {
-            return setError(SmartError.Downloading)
-        }
-
-        if audio.isNotDownloaded {
-            Task {
-                if networkOK == false {
-                    _ = setError(SmartError.NetworkError)
-                } else {
-                    await db.download(audio, reason: "errorCheck")
-                }
-            }
-
-            return setError(SmartError.NotDownloaded)
-        }
-
-        if audio.isNotSupported {
-            return setError(SmartError.FormatNotSupported(audio.ext))
-        }
-
-        return setError(nil)
-    }
-
-    func setError(_ e: Error?) -> Error? {
-        main.async {
-            self.playerError = e
-        }
-
-        return e
     }
 }
 

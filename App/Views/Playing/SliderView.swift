@@ -33,7 +33,7 @@ struct SliderView: View {
         }
         .font(.caption)
         .onReceive(timer) { _ in
-            if audioManager.playerError != nil {
+            if audioManager.error != nil {
                 return disable()
             }
 

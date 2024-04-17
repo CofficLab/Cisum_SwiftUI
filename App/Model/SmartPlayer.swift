@@ -9,32 +9,39 @@ class SmartPlayer: NSObject {
     static var label = "💿 SmartPlayer::"
     var label: String { SmartPlayer.label }
     var player = AVAudioPlayer()
-    var audio: Audio? {
-        didSet {
-            onAudioChange(audio)
-        }
-    }
+    var audio: Audio?
 
     // MARK: 状态改变时
 
     var state: State = .Stopped {
         didSet {
+            os_log("\(Logger.isMain)\(self.label)State changed \(self.state.des)")
             onStateChange(state)
-            
+
             switch self.state {
             case .Ready(let audio):
                 if let audio = audio {
-                    self.audio = audio
-                    self.player = makePlayer(audio)
-                    self.player.prepareToPlay()
+                    do {
+                        self.audio = audio
+                        try self.player = makePlayer(audio)
+                        self.player.prepareToPlay()
+                    } catch {
+                        setError(error)
+                        return
+                    }
                 } else {
                     self.audio = audio
-                    self.player = makePlayer(audio)
                 }
             case .Playing(let audio):
                 self.audio = audio
-                self.player = makePlayer(audio)
-                self.player.play()
+                do {
+                    self.audio = audio
+                    try self.player = makePlayer(audio)
+                    self.player.prepareToPlay()
+                    self.player.play()
+                } catch {
+                    self.state = .Error(error)
+                }
             case .Paused:
                 self.player.pause()
             case .Stopped:
@@ -42,8 +49,8 @@ class SmartPlayer: NSObject {
                 player.currentTime = 0
             case .Finished:
                 player.stop()
-            case .Error(let string):
-                player.stop()
+            case .Error:
+                player = makeEmptyPlayer()
             }
 
             Task {
@@ -68,10 +75,6 @@ class SmartPlayer: NSObject {
     var onStateChange: (_ state: State) -> Void = { state in
         os_log("\(SmartPlayer.label)播放器状态已变为 \(state.des)")
     }
-
-    var onAudioChange: (_ audio: Audio?) -> Void = { audio in
-        os_log("\(SmartPlayer.label)播放器歌曲已变为 \(audio?.title ?? "nil")")
-    }
 }
 
 // MARK: 播放控制
@@ -80,11 +83,11 @@ extension SmartPlayer {
     func goto(_ time: TimeInterval) {
         player.currentTime = time
     }
-    
+
     func prepare(_ audio: Audio?, play: Bool = false) {
         state = .Ready(audio)
-        
-        if let a = audio, play {
+
+        if audio != nil, play, self.isReady {
             resume()
         }
     }
@@ -127,20 +130,32 @@ extension SmartPlayer {
 // MARK: 控制 AVAudioPlayer
 
 extension SmartPlayer {
-    func makePlayer(_ audio: Audio?) -> AVAudioPlayer {
+    func makeEmptyPlayer() -> AVAudioPlayer {
+        AVAudioPlayer()
+    }
+
+    func makePlayer(_ audio: Audio?) throws -> AVAudioPlayer {
         guard let audio = audio else {
             return AVAudioPlayer()
         }
-        
+
+        if audio.isNotExists {
+            throw SmartError.NotExists
+        }
+
+        if audio.isDownloading {
+            throw SmartError.Downloading
+        }
+
         // 未下载的情况
         guard audio.isDownloaded else {
-            return AVAudioPlayer()
+            throw SmartError.NotDownloaded
         }
 
         // 格式不支持
         guard audio.isSupported else {
-            os_log("\(Logger.isMain)\(SmartPlayer.label)Stop 格式不支持 \(audio.title) \(audio.ext)")
-            return AVAudioPlayer()
+            os_log("\(Logger.isMain)\(SmartPlayer.label)格式不支持 \(audio.title) \(audio.ext)")
+            throw SmartError.FormatNotSupported(audio.ext)
         }
 
         do {
@@ -155,7 +170,7 @@ extension SmartPlayer {
         }
 
         player.delegate = self
-        
+
         return player
     }
 }
@@ -169,10 +184,29 @@ extension SmartPlayer {
         case Paused
         case Stopped
         case Finished
-        case Error(String)
+        case Error(Error)
 
         var des: String {
-            String(describing: self)
+            switch self {
+            case .Ready(let audio):
+                "准备播放 \(audio?.title ?? "nil")"
+            case .Error(let error):
+                "错误：\(error.localizedDescription)"
+            default:
+                String(describing: self)
+            }
+        }
+    }
+
+    func setError(_ e: Error) {
+        self.state = .Error(e)
+    }
+
+    var isReady: Bool {
+        if case .Ready = state {
+            return true
+        } else {
+            return false
         }
     }
 

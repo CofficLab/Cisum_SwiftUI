@@ -12,6 +12,7 @@ struct StateView: View {
     @State var showList = false
     @State private var next: Audio?
 
+    var error: Error? { audioManager.error }
     var taskCount: Int { tasks.count }
     var showCopyMessage: Bool { tasks.count > 0 }
     var audio: Audio? { audioManager.audio }
@@ -32,10 +33,10 @@ struct StateView: View {
             }
 
             // 播放过程中出现的错误
-            if let e = audioManager.playerError {
+            if let e = error {
                 makeErrorView(e)
             }
-            
+
             // 正在复制
             if tasks.count > 0 {
                 HStack {
@@ -65,7 +66,7 @@ struct StateView: View {
                         })
                         .frame(width: 800)
                     })
-                    
+
                     BtnDelTask().padding(.leading, 24)
                 }
             }
@@ -74,7 +75,6 @@ struct StateView: View {
             EventManager().onUpdated { items in
                 for item in items {
                     if item.url == audioManager.audio?.url {
-                        audioManager.checkError()
                         return
                     }
                 }
@@ -88,11 +88,9 @@ struct StateView: View {
             if count == 0 {
                 audioManager.prepare(nil, reason: "数据库个数变成了0")
             }
-
-            audioManager.checkError()
         }
     }
-    
+
     func makeInfoView(_ i: String) -> some View {
         CardView(background: BackgroundView.type3, paddingVertical: 6) {
             HStack {
@@ -116,6 +114,7 @@ struct StateView: View {
             .font(font)
         }
     }
+
     func delete(_ task: CopyTask) {
         modelContext.delete(task)
     }
