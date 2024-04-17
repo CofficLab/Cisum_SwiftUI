@@ -9,6 +9,7 @@ struct ControlView: View {
     
     var taskCount: Int { tasks.count }
     var showOperationView = false
+    var showDB: Bool { appManager.showDB}
     var showStateMessage: Bool { appManager.stateMessage.count > 0 }
     var showCopyMessage: Bool { tasks.count > 0 }
     var showStateView: Bool {
@@ -165,7 +166,7 @@ struct ControlView: View {
     // MARK: 底部Padding的高度
 
     private func getBottomHeight(_ geo: GeometryProxy) -> CGFloat {
-        if UIConfig.isNotDesktop {
+        if UIConfig.isNotDesktop && showDB == false {
             return 50
         }
 
