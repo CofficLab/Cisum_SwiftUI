@@ -9,9 +9,7 @@ struct StateView: View {
     @Query(sort: \CopyTask.createdAt, animation: .default) var tasks: [CopyTask]
     @Query(sort: \Audio.order, animation: .default) var audios: [Audio]
 
-    @State var showList = false
-    @State private var next: Audio?
-
+    var e = EventManager()
     var error: Error? { audioManager.error }
     var taskCount: Int { tasks.count }
     var showCopyMessage: Bool { tasks.count > 0 }
@@ -35,36 +33,28 @@ struct StateView: View {
             // 播放过程中出现的错误
             if let e = error {
                 makeErrorView(e)
-                    .onAppear {
-                        if audios.count == 0 {
-                            appManager.showDBView()
-                        }
-                    }
             }
 
             // 正在复制
             if tasks.count > 0 {
                 HStack {
-                    Text("正在复制 \(tasks.count) 个文件")
-                    if appManager.showDB == false {
-                        Button(action: {
-                            appManager.showDBView()
-                        }, label: {
-                            Image(systemName: "list.bullet")
-                        })
-                        .labelStyle(.iconOnly)
-                        .buttonStyle(PlainButtonStyle())
-                    }
+                    makeCopyView("正在复制 \(tasks.count) 个文件")
                 }.onAppear {
-                    try? CopyFiles().run(tasks, db: db)
+                    try? CopyFiles().run(db: db)
                 }
             }
         }
         .onAppear {
-            EventManager().onUpdated { items in
+            if audios.count == 0 {
+                appManager.showDBView()
+            }
+            
+            e.onUpdated { items in
                 for item in items {
                     if item.url == audioManager.audio?.url {
-                        return
+                        if item.downloadProgress == 100 {
+                            audioManager.prepare(audioManager.audio, reason: "StateView Detected Update")
+                        }
                     }
                 }
             }
@@ -77,6 +67,20 @@ struct StateView: View {
             if count == 0 {
                 audioManager.prepare(nil, reason: "数据库个数变成了0")
             }
+        }
+    }
+    
+    func makeCopyView(_ i: String, buttons: some View = EmptyView()) -> some View {
+        CardView(background: BackgroundView.type3, paddingVertical: 6) {
+            HStack {
+                Image(systemName: "info.circle")
+                    .foregroundStyle(.white)
+                Text(i)
+                    .foregroundStyle(.white)
+                BtnToggleDB()
+                    .labelStyle(.iconOnly)
+            }
+            .font(font)
         }
     }
 
@@ -95,7 +99,7 @@ struct StateView: View {
     func makeErrorView(_ e: Error) -> some View {
         CardView(background: BackgroundView.type3, paddingVertical: 6) {
             HStack {
-                Image(systemName: "info.circle")
+                Image(systemName: "")
                     .foregroundStyle(.white)
                 Text(e.localizedDescription)
                     .foregroundStyle(.white)

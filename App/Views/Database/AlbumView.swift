@@ -9,6 +9,7 @@ struct AlbumView: View {
     @State var isDownloading: Bool = false
     @State var downloadingPercent: Double = 0
 
+    var e = EventManager()
     var main = AppConfig.mainQueue
     var bg = AppConfig.bgQueue
     var audio: Audio
@@ -50,11 +51,14 @@ struct AlbumView: View {
             }
         }
         .clipShape(shape)
+        .onHover(perform: {_ in 
+            refresh()
+        })
         .onAppear {
             refresh()
 
             // 监听到了事件，注意要考虑audio已经被删除了的情况
-            EventManager().onUpdated({ items in
+            e.onUpdated({ items in
                 for item in items {
                     if item.isDeleted {
                         continue
@@ -67,7 +71,7 @@ struct AlbumView: View {
             })
         }
         .onDisappear {
-            EventManager().removeListener(self)
+            e.removeListener(self)
         }
     }
 

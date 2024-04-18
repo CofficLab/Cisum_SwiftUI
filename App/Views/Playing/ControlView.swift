@@ -1,23 +1,23 @@
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct ControlView: View {
     @EnvironmentObject var audioManager: AudioManager
     @EnvironmentObject var appManager: AppManager
-    
+
     @Query var tasks: [CopyTask]
-    
-    var taskCount: Int { tasks.count }
-    var showOperationView = true
-    var showDB: Bool { appManager.showDB}
-    var showStateMessage: Bool { appManager.stateMessage.count > 0 }
-    var showCopyMessage: Bool { tasks.count > 0 }
-    var showStateView: Bool {
-        audioManager.showErrorView || showStateMessage || showCopyMessage
-    }
 
     @State var topAlbumVisible = false
     @State var topAlbumHeight: CGFloat = 0
+
+    var taskCount: Int { tasks.count }
+
+    // MARK: 子视图是否展示
+
+    var showOperationView = true
+    var showDB: Bool { appManager.showDB }
+    var showStateMessage: Bool { appManager.stateMessage.count > 0 }
+    var showCopyMessage: Bool { tasks.count > 0 }
 
     var body: some View {
         GeometryReader { geo in
@@ -31,15 +31,13 @@ struct ControlView: View {
                         TitleView(geo: geo)
                             .frame(height: getTitleHeight(geo))
                             .frame(maxHeight: .infinity)
-                            //.background(AppConfig.makeBackground(.red))
+                        // .background(AppConfig.makeBackground(.red))
                     }
 
-                    if showStateView {
-                        StateView()
-                            .frame(height: getStateHeight(geo))
-                            .frame(maxHeight: .infinity)
-                            //.background(AppConfig.makeBackground(.red))
-                    }
+                    StateView()
+                        .frame(height: getStateHeight(geo))
+                        .frame(maxHeight: .infinity)
+                    // .background(AppConfig.makeBackground(.red))
 
                     if showOperationView {
                         OperationView(geo: geo)
@@ -113,10 +111,6 @@ struct ControlView: View {
     // MARK: 状态栏的高度
 
     private func getStateHeight(_ geo: GeometryProxy) -> CGFloat {
-        if showStateView == false {
-            return 0
-        }
-
         if geo.size.height <= AppConfig.minHeight {
             return 24
         }

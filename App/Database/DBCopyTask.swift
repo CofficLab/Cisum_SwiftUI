@@ -10,26 +10,21 @@ extension DB {
         try? context.save()
     }
 
-    func add(_ urls: [URL])
-    {
+    func add(_ urls: [URL]) {
         for url in urls {
-            copy(url)
+            newCopyTask(url)
         }
     }
 
     /// 将文件从外部复制到应用中
-    func copy(_ url: URL) {
+    func newCopyTask(_ url: URL) {
+        if (self.findCopyTask(url) != nil) {
+            return
+        }
+
         let task = CopyTask(url: url)
         context.insert(task)
         self.save()
-        
-        do {
-            try CopyFiles().run([task], db: self)
-        } catch let e {
-            task.error = e.localizedDescription
-        }
-        
-        try? context.save()
     }
 }
 
@@ -43,17 +38,17 @@ extension DB {
             os_log("\(Logger.isMain)\(DB.label)删除时数据库找不到")
             return
         }
-        
+
         do {
             context.delete(task)
-            
+
             try context.save()
             os_log("\(Logger.isMain)\(DB.label)删除成功")
         } catch let e {
             os_log("\(Logger.isMain)\(DB.label)删除出错 \(e)")
         }
     }
-    
+
     func deleteCopyTasks(_ urls: [URL]) {
         try? self.context.delete(model: CopyTask.self, where: #Predicate {
             urls.contains($0.url)
@@ -61,14 +56,14 @@ extension DB {
 
         self.save()
     }
-    
+
     nonisolated func delete(_ task: CopyTask) {
         os_log("\(Logger.isMain)🗑️ 删除复制任务 \(task.title)")
         let context = ModelContext(modelContainer)
         guard let t = context.model(for: task.id) as? CopyTask else {
             return os_log("\(Logger.isMain)🗑️ 删除时数据库找不到 \(task.title)")
         }
-        
+
         do {
             context.delete(t)
             try context.save()
@@ -80,7 +75,34 @@ extension DB {
 
 // MARK: 查询
 
-extension DB {}
+extension DB {
+    func allCopyTasks() -> [CopyTask] {
+        var descriptor = FetchDescriptor<CopyTask>()
+        do {
+            return try context.fetch(descriptor)
+        } catch let e {
+            print(e)
+        }
+
+        return []
+    }
+    
+    func findCopyTask(_ url: URL) -> CopyTask? {
+        let predicate = #Predicate<CopyTask> {
+            $0.url == url
+        }
+        var descriptor = FetchDescriptor<CopyTask>(predicate: predicate)
+        descriptor.fetchLimit = 1
+        do {
+            let result = try context.fetch(descriptor)
+            return result.first
+        } catch let e {
+            print(e)
+        }
+
+        return nil
+    }
+}
 
 // MARK: 更新
 
@@ -90,7 +112,7 @@ extension DB {
         task.error = ""
         self.save()
     }
-    
+
     func setTaskError(_ task: CopyTask, _ e: Error) {
         task.isRunning = false
         task.error = e.localizedDescription

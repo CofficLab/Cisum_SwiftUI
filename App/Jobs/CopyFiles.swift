@@ -7,19 +7,19 @@ class CopyFiles {
     var queue = DispatchQueue.global(qos: .background)
     var audiosDir = AppConfig.audiosDir
     
-    func run(_ tasks: [CopyTask], db: DB) throws {
-        queue.async {
-            for task in tasks {
-                Task {
-//                if task.isRunning {
-//                    return
-//                }
-                    do {
-                        await db.setTaskRunning(task)
-                        try self.copyTo(url: task.url)
-                        db.delete(task)
-                    } catch let e {
-                        await db.setTaskError(task, e)
+    func run(db: DB) throws {
+        Task {
+            let tasks = await db.allCopyTasks()
+            queue.async {
+                for task in tasks {
+                    Task {
+                        do {
+                            await db.setTaskRunning(task)
+                            try self.copyTo(url: task.url)
+                            db.delete(task)
+                        } catch let e {
+                            await db.setTaskError(task, e)
+                        }
                     }
                 }
             }
@@ -59,7 +59,6 @@ class CopyFiles {
             }
         } catch {
             os_log("\(Logger.isMain)📁 CopyFiles::复制文件发生错误 -> \(error.localizedDescription)")
-            print(error)
             throw error
         }
     }
