@@ -48,7 +48,7 @@ struct Row: View {
             if hovered {
                 HStack {
                     Spacer()
-                    BtnShowInFinder(url: audio.url, dynamicSize: false)
+                    BtnShowInFinder(url: audio.url, autoResize: false)
                         .labelStyle(.iconOnly)
                     BtnPlay(audio: audio, dynamicSize: false)
                         .labelStyle(.iconOnly)
@@ -63,10 +63,10 @@ struct Row: View {
             BtnDownload(audio: audio)
             BtnEvict(audio: audio)
             if UIConfig.isDesktop {
-                BtnShowInFinder(url: audio.url, dynamicSize: false)
+                BtnShowInFinder(url: audio.url, autoResize: false)
             }
             Divider()
-            BtnDelSome(audios: [audio.id], dynamicSize: false)
+            BtnDel(audios: [audio.id], autoResize: false)
         })
     }
 }

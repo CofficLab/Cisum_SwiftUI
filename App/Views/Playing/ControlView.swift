@@ -8,7 +8,7 @@ struct ControlView: View {
     @Query var tasks: [CopyTask]
     
     var taskCount: Int { tasks.count }
-    var showOperationView = false
+    var showOperationView = true
     var showDB: Bool { appManager.showDB}
     var showStateMessage: Bool { appManager.stateMessage.count > 0 }
     var showCopyMessage: Bool { tasks.count > 0 }

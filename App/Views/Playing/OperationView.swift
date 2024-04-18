@@ -9,17 +9,16 @@ struct OperationView: View {
     var geo: GeometryProxy
 
     var body: some View {
-        GeometryReader { geo in
+        GeometryReader { _ in
             VStack {
                 HStack(spacing: 0, content: {
                     Spacer()
                     if let audio = audio {
-                        BtnLike(audio: audio)
+                        BtnLike(audio: audio, autoResize: true)
                         if UIConfig.isDesktop {
-                            BtnShowInFinder(url: audio.url)
+                            BtnShowInFinder(url: audio.url, autoResize: true)
                         }
-                        //BtnTrash(audio: audio)
-                        BtnDelSome(audios: [audio.id])
+                        BtnDel(audios: [audio.id], autoResize: true)
                     }
                     Spacer()
                 })

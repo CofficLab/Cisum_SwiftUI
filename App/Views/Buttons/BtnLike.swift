@@ -6,28 +6,33 @@ struct BtnLike: View {
     @State var like = false
     
     var audio: Audio
+    var autoResize = false
     var title: String {
         audio.like ? "取消标记为喜欢" : "标记为喜欢"
     }
         
     var body: some View {
-        ControlButton(title: title, systemImage: getImageName(), onTap: {
-            Task {
-                if audio.like {
-                    await audioManager.db.dislike(audio)
-                    self.like = false
-                } else {
-                    await audioManager.db.like(audio)
-                    self.like = true
+        ControlButton(
+            title: title,
+            systemImage: getImageName(),
+            dynamicSize: autoResize,
+            onTap: {
+                Task {
+                    if audio.like {
+                        await audioManager.db.dislike(audio)
+                        self.like = false
+                    } else {
+                        await audioManager.db.like(audio)
+                        self.like = true
+                    }
                 }
+            })
+            .onAppear {
+                self.like = audio.like
             }
-        })
-        .onAppear {
-            self.like = audio.like
-        }
-        .onChange(of: audio, {
-            self.like = audio.like
-        })
+            .onChange(of: audio) {
+                self.like = audio.like
+            }
     }
     
     private func getImageName() -> String {

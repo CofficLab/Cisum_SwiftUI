@@ -2,13 +2,13 @@ import SwiftUI
 
 struct BtnShowInFinder: View {
     var url: URL
-    var dynamicSize = true
+    var autoResize = true
 
     var body: some View {
         ControlButton(
             title: "在访达中显示",
             systemImage: getImageName(),
-            dynamicSize: dynamicSize,
+            dynamicSize: autoResize,
             onTap: {
                 FileHelper.showInFinder(url: url)
             })

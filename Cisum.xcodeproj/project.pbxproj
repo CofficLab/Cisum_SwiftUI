@@ -72,7 +72,7 @@
 		0BBA421B2ABD67D600C0B977 /* WindowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA421A2ABD67D600C0B977 /* WindowManager.swift */; };
 		0BBA421F2AC1397F00C0B977 /* Centered.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA421E2AC1397F00C0B977 /* Centered.swift */; };
 		0BBA42212AC1802C00C0B977 /* ButtonCancelSelected.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA42202AC1802C00C0B977 /* ButtonCancelSelected.swift */; };
-		0BBA42252AC1813D00C0B977 /* BtnDelSome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA42242AC1813D00C0B977 /* BtnDelSome.swift */; };
+		0BBA42252AC1813D00C0B977 /* BtnDel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA42242AC1813D00C0B977 /* BtnDel.swift */; };
 		0BBA42272AC2A8B800C0B977 /* BtnAdd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA42262AC2A8B800C0B977 /* BtnAdd.swift */; };
 		0BBA422B2AC2ABAD00C0B977 /* ButtonShowDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA422A2AC2ABAD00C0B977 /* ButtonShowDatabase.swift */; };
 		0BBA422F2AC2BAE300C0B977 /* AlbumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA422E2AC2BAE300C0B977 /* AlbumView.swift */; };
@@ -167,7 +167,7 @@
 		0BBA421A2ABD67D600C0B977 /* WindowManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowManager.swift; sourceTree = "<group>"; };
 		0BBA421E2AC1397F00C0B977 /* Centered.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Centered.swift; sourceTree = "<group>"; };
 		0BBA42202AC1802C00C0B977 /* ButtonCancelSelected.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonCancelSelected.swift; sourceTree = "<group>"; };
-		0BBA42242AC1813D00C0B977 /* BtnDelSome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnDelSome.swift; sourceTree = "<group>"; };
+		0BBA42242AC1813D00C0B977 /* BtnDel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnDel.swift; sourceTree = "<group>"; };
 		0BBA42262AC2A8B800C0B977 /* BtnAdd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnAdd.swift; sourceTree = "<group>"; };
 		0BBA422A2AC2ABAD00C0B977 /* ButtonShowDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonShowDatabase.swift; sourceTree = "<group>"; };
 		0BBA422E2AC2BAE300C0B977 /* AlbumView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumView.swift; sourceTree = "<group>"; };
@@ -349,7 +349,7 @@
 			isa = PBXGroup;
 			children = (
 				0BBA42262AC2A8B800C0B977 /* BtnAdd.swift */,
-				0BBA42242AC1813D00C0B977 /* BtnDelSome.swift */,
+				0BBA42242AC1813D00C0B977 /* BtnDel.swift */,
 				0BAABEB72BC7D4B600DF4A31 /* BtnDelTask.swift */,
 				0BFDCE572BB01884009198DD /* BtnDestroy.swift */,
 				0BB889D12AC042EC004788D5 /* BtnDownload.swift */,
@@ -609,7 +609,7 @@
 				0BFB38ED2BCE779B0055E38B /* DeviceConfig.swift in Sources */,
 				0BBAD0A22BBD413B005834A3 /* DBList.swift in Sources */,
 				0B1165F02ABBCCB0005C5CBB /* AppManager.swift in Sources */,
-				0BBA42252AC1813D00C0B977 /* BtnDelSome.swift in Sources */,
+				0BBA42252AC1813D00C0B977 /* BtnDel.swift in Sources */,
 				0B901D882BB83BC3003AC253 /* FilePresenter.swift in Sources */,
 				0B7F558B2AD2636B0000D72E /* ButtonPlayList.swift in Sources */,
 				0BBC157C2AB84C21006E82C4 /* HomeView.swift in Sources */,
