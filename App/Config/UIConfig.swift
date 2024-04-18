@@ -13,6 +13,14 @@ enum UIConfig {
     }
     
     static var isNotDesktop: Bool { !isDesktop }
+    
+    @AppStorage("UI.ShowDB")
+    static var showDB: Bool = false
+    
+    static func setShowDB(_ value: Bool) {
+        //os_log("\(Logger.isMain)⚙️ AppConfig::setCurrentAudio \(audio.title)")
+        UIConfig.showDB = value
+    }
 }
 
 #Preview {

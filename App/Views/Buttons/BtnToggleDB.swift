@@ -8,7 +8,7 @@ struct BtnToggleDB: View {
 
     var body: some View {
         ControlButton(title: "仓库", systemImage: "list.bullet", dynamicSize: autoResize, onTap: {
-            appManager.showDB.toggle()
+            appManager.toggleDBView()
         })
     }
 }

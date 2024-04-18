@@ -49,7 +49,7 @@ struct HomeView: View {
                 autoResizing = false
                 
                 if geo.size.height <= controlViewHeightMin + 20 {
-                    appManager.showDB = false
+                    appManager.closeDBView()
                 }
             }
             .onAppear {

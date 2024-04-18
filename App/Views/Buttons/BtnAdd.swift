@@ -9,7 +9,7 @@ struct BtnAdd: View {
                 if appManager.showDB {
                     appManager.isImporting = true
                 } else {
-                    appManager.showDB = true
+                    appManager.showDBView()
                 }
             }
         }
