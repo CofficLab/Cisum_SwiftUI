@@ -4,11 +4,11 @@ import OSLog
 import SwiftUI
 
 extension Audio {
-    #if os(iOS)
+    #if os(macOS)
+        static var defaultImage = NSImage(named: "DefaultAlbum")!
+    #else
         // 要放一张正方形的图，否则会自动加上白色背景
         static var defaultImage = UIImage(imageLiteralResourceName: "DefaultAlbum")
-    #elseif os(macOS)
-        static var defaultImage = NSImage(named: "DefaultAlbum")!
     #endif
 
     var coverCacheURL: URL {
@@ -53,7 +53,7 @@ extension Audio {
 
         return nil
     }
-    
+
     func getImage<T>() -> T {
         var i: Any = Audio.defaultImage
         if fileManager.fileExists(atPath: coverCacheURL.path) {
@@ -63,10 +63,9 @@ extension Audio {
                 i = UIImage(contentsOfFile: coverCacheURL.path) ?? i
             #endif
         }
-        
+
         return i as! T
     }
-
 
     func getCoverImage() async -> Image? {
         // os_log("\(Logger.isMain)🍋 Audio::getCoverImage for \(self.title)")

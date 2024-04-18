@@ -22,7 +22,7 @@ class MediaPlayerManager: ObservableObject {
         let isPlaying = player.isPlaying
         let center = MPNowPlayingInfoCenter.default()
 
-        var artist = "乐音APP"
+        let artist = "乐音APP"
         var title = ""
         var duration: TimeInterval = 0
         var currentTime: TimeInterval = 0

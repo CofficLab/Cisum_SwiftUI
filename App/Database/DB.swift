@@ -37,7 +37,7 @@ actor DB: ModelActor {
         )
 
         Task.detached(operation: {
-            await DBSyncJob(db: self).run()
+            DBSyncJob(db: self).run()
         })
         
         Task.detached(operation: {

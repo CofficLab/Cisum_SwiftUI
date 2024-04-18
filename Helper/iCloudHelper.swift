@@ -177,7 +177,7 @@ extension iCloudHelper {
         // 获取当前iCloud容量
         let fileManager = FileManager.default
 
-        guard let currentiCloudToken = fileManager.ubiquityIdentityToken else {
+        guard fileManager.ubiquityIdentityToken != nil else {
             throw iCloudError.NoAccess
         }
 
@@ -207,7 +207,7 @@ extension iCloudHelper {
         // 获取当前iCloud容量
         let fileManager = FileManager.default
 
-        guard let currentiCloudToken = fileManager.ubiquityIdentityToken else {
+        guard fileManager.ubiquityIdentityToken != nil else {
             throw iCloudError.NoAccess
         }
 
