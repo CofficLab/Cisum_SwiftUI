@@ -50,7 +50,7 @@ struct Row: View {
                     Spacer()
                     BtnShowInFinder(url: audio.url, autoResize: false)
                         .labelStyle(.iconOnly)
-                    BtnPlay(audio: audio, dynamicSize: false)
+                    BtnPlay(audio: audio, autoResize: false)
                         .labelStyle(.iconOnly)
                 }
             }
@@ -58,7 +58,7 @@ struct Row: View {
         .onHover(perform: { hovered = $0 })
         .frame(maxHeight: .infinity)
         .contextMenu(menuItems: {
-            BtnPlay(audio: audio)
+            BtnPlay(audio: audio, autoResize: false)
             Divider()
             BtnDownload(audio: audio)
             BtnEvict(audio: audio)

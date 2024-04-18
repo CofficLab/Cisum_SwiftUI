@@ -35,6 +35,24 @@ extension DB {
 // MARK: 删除
 
 extension DB {
+    func delete(_ id: CopyTask.ID) {
+        os_log("\(Logger.isMain)\(DB.label)数据库删除")
+        let context = ModelContext(modelContainer)
+        guard let task = context.model(for: id) as? CopyTask else {
+            os_log("\(Logger.isMain)\(DB.label)删除时数据库找不到")
+            return
+        }
+        
+        do {
+            context.delete(task)
+            
+            try context.save()
+            os_log("\(Logger.isMain)\(DB.label)删除成功")
+        } catch let e {
+            os_log("\(Logger.isMain)\(DB.label)删除出错 \(e)")
+        }
+    }
+    
     func deleteCopyTasks(_ urls: [URL]) {
         try? self.context.delete(model: CopyTask.self, where: #Predicate {
             urls.contains($0.url)

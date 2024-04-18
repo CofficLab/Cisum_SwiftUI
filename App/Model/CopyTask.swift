@@ -23,3 +23,9 @@ class CopyTask {
         self.createdAt = .now
     }
 }
+
+// MARK: ID
+
+extension CopyTask: Identifiable {
+    var id: PersistentIdentifier { persistentModelID }
+}

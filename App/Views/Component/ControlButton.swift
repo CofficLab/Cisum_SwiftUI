@@ -35,7 +35,6 @@ struct ControlButton: View {
                 }
             }
         }
-        .background(.yellow.opacity(0))
     }
     
     func makeButton(_ geo: GeometryProxy? = nil) -> some View {
@@ -79,8 +78,6 @@ struct MyButtonStyle: ButtonStyle {
         configuration.label
             .padding(7)
             .background(configuration.isPressed ? Color.gray.opacity(0.5) : .clear)
-            .foregroundColor(.white)
-//            .cornerRadius(10)
     }
 }
 

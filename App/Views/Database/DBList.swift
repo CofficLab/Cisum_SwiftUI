@@ -8,6 +8,7 @@ struct DBList: View {
     @Environment(\.modelContext) private var modelContext
 
     @Query(sort: \Audio.order, animation: .default) var audios: [Audio]
+    @Query(sort: \CopyTask.createdAt, animation: .default) var tasks: [CopyTask]
     
     @State var selection: Audio.ID? = nil
 
@@ -26,6 +27,21 @@ struct DBList: View {
         ZStack {
             VStack(spacing: 0) {
                 List(selection: $selection) {
+                    if tasks.count > 0 {
+                        Section(header: HStack {
+                            Text("正在复制 \(tasks.count)")
+                        }, content: {
+                            ForEach(tasks) { task in
+                                RowTask(task)
+                            }
+                            .onDelete(perform: { indexSet in
+                                for i in indexSet {
+                                    modelContext.delete(tasks[i])
+                                }
+                            })
+                        })
+                    }
+                    
                     Section(header: HStack {
                         Text("共 \(total.description)")
                         Spacer()

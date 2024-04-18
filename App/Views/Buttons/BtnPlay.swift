@@ -8,13 +8,13 @@ struct BtnPlay: View {
     @State var isDownloaded = true
 
     var audio: Audio
-    var dynamicSize = true
+    var autoResize = true
 
     var body: some View {
         ControlButton(
             title: "播放 「\(audio.title)」",
             systemImage: getImageName(),
-            dynamicSize: dynamicSize,
+            dynamicSize: autoResize,
             onTap: {
                 audioManager.play(audio, reason: "Play Button")
             })
