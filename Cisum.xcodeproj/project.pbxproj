@@ -134,7 +134,6 @@
 		0B718F0B2AB4349900569762 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		0B73275E2BB5138200DBD922 /* LoggerHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerHelper.swift; sourceTree = "<group>"; };
 		0B7F558A2AD2636B0000D72E /* ButtonPlayList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonPlayList.swift; sourceTree = "<group>"; };
-		0B82633E2BD09540007EE041 /* Cisum copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Cisum copy-Info.plist"; path = "/Users/angel/Code/Yueyi/Cisum_SwiftUI/Cisum copy-Info.plist"; sourceTree = "<absolute>"; };
 		0B8FC26F2BBC559500839C75 /* PlayingAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayingAlbum.swift; sourceTree = "<group>"; };
 		0B8FC2752BBE817200839C75 /* DBAudio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBAudio.swift; sourceTree = "<group>"; };
 		0B901D852BB83BA2003AC253 /* CloudHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudHandler.swift; sourceTree = "<group>"; };
@@ -325,7 +324,6 @@
 				0B1D5A8B2AB305D70010DDF2 /* Info.plist */,
 				0B92ACC92BBA80F300F1A74F /* README.md */,
 				0B9C1C3E2AAF18FE001A26AF /* Products */,
-				0B82633E2BD09540007EE041 /* Cisum copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
