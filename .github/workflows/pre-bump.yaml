@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - main
+      - pre
 
 permissions:
   contents: write
@@ -64,35 +64,16 @@ jobs:
 
           build=$(agvtool what-version -terse)
 
-          echo "tag=v$version($build)" >> $GITHUB_ENV
+          echo "tag=pre$version($build)" >> $GITHUB_ENV
       - name: 打标签并推送到仓库
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: 'chore(workflow): Bump a new version'
           commit_user_name: GitHub Action
           tagging_message: ${{ env.tag }}
-
-  rebase-pre:
+  rebase:
     needs:
       - bump
-    runs-on: ubuntu-latest
-    steps:
-      - name: 拉取 pre 分支
-        uses: actions/checkout@v3
-        with:
-          ref: pre
-      - name: 拉取 main 分支
-        run: git fetch origin main
-      - name: Rebase pre on main
-        continue-on-error: true
-        run: git rebase origin/main
-      - name: Push the rebased pre branch
-        continue-on-error: true
-        run: git push origin pre
-
-  rebase-dev:
-    needs:
-      - rebase-pre
     runs-on: ubuntu-latest
     steps:
       - name: 拉取 dev 分支
