@@ -42,7 +42,7 @@ jobs:
         with:
           tag_name: ${{ env.tag }}
           body_path: ${{ github.workspace }}-CHANGELOG.txt
-          prerelease: true
+          prerelease: ${{ startsWith(env.tag, 'pre') }}
           files: |
             ./**/*.dmg
             ./**/*.zip
