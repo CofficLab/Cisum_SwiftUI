@@ -55,6 +55,8 @@ struct StateView: View {
                         .labelStyle(.iconOnly)
                         .buttonStyle(PlainButtonStyle())
                     }
+                }.onAppear {
+                    try? CopyFiles().run(tasks, db: db)
                 }
             }
         }
@@ -100,14 +102,6 @@ struct StateView: View {
             }
             .font(font)
         }
-    }
-
-    func delete(_ task: CopyTask) {
-        modelContext.delete(task)
-    }
-
-    func copy(_ task: CopyTask) {
-        try? CopyFiles().run(task, db: audioManager.db)
     }
 }
 

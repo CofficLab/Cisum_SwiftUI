@@ -1,25 +1,26 @@
 import Foundation
-import SwiftData
 import OSLog
+import SwiftData
 
 class CopyFiles {
     var fileManager = FileManager.default
     var queue = DispatchQueue.global(qos: .background)
     var audiosDir = AppConfig.audiosDir
     
-    func run(_ task: CopyTask, db: DB) throws {
+    func run(_ tasks: [CopyTask], db: DB) throws {
         queue.async {
-            Task {
-                if task.isRunning {
-                    return
-                }
-                
-                do {
-                    await db.setTaskRunning(task)
-                    try self.copyTo(url: task.url)
-                    db.delete(task)
-                } catch let e {
-                    await db.setTaskError(task, e)
+            for task in tasks {
+                Task {
+//                if task.isRunning {
+//                    return
+//                }
+                    do {
+                        await db.setTaskRunning(task)
+                        try self.copyTo(url: task.url)
+                        db.delete(task)
+                    } catch let e {
+                        await db.setTaskError(task, e)
+                    }
                 }
             }
         }

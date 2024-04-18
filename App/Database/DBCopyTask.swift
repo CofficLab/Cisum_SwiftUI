@@ -13,17 +13,18 @@ extension DB {
     func add(_ urls: [URL])
     {
         for url in urls {
-            add(url)
+            copy(url)
         }
     }
 
-    func add(_ url: URL) {
+    /// 将文件从外部复制到应用中
+    func copy(_ url: URL) {
         let task = CopyTask(url: url)
         context.insert(task)
         self.save()
         
         do {
-            try CopyFiles().run(task, db: self)
+            try CopyFiles().run([task], db: self)
         } catch let e {
             task.error = e.localizedDescription
         }
