@@ -39,95 +39,6 @@
 		0B718F0C2AB4349900569762 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B718F0B2AB4349900569762 /* CardView.swift */; };
 		0B73275F2BB5138200DBD922 /* LoggerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B73275E2BB5138200DBD922 /* LoggerHelper.swift */; };
 		0B7F558B2AD2636B0000D72E /* ButtonPlayList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7F558A2AD2636B0000D72E /* ButtonPlayList.swift */; };
-		0B8262DF2BD0953F007EE041 /* AlbumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA422E2AC2BAE300C0B977 /* AlbumView.swift */; };
-		0B8262E02BD0953F007EE041 /* BackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1D5A722AB302600010DDF2 /* BackgroundView.swift */; };
-		0B8262E12BD0953F007EE041 /* PlayingAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8FC26F2BBC559500839C75 /* PlayingAlbum.swift */; };
-		0B8262E22BD0953F007EE041 /* ControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC15832AB95272006E82C4 /* ControlView.swift */; };
-		0B8262E32BD0953F007EE041 /* BtnAdd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA42262AC2A8B800C0B977 /* BtnAdd.swift */; };
-		0B8262E42BD0953F007EE041 /* MediaPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1D5AAB2AB414600010DDF2 /* MediaPlayerManager.swift */; };
-		0B8262E52BD0953F007EE041 /* BtnPrev.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC15902ABAC19F006E82C4 /* BtnPrev.swift */; };
-		0B8262E62BD0953F007EE041 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B604AE72AD6384300929DD8 /* RootView.swift */; };
-		0B8262E72BD0953F007EE041 /* LayoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAABEC22BC939D000DF4A31 /* LayoutView.swift */; };
-		0B8262E82BD0953F007EE041 /* DBCopyTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAABEB22BC79C9F00DF4A31 /* DBCopyTask.swift */; };
-		0B8262E92BD0953F007EE041 /* CommonHelp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1D5A6C2AB302600010DDF2 /* CommonHelp.swift */; };
-		0B8262EA2BD0953F007EE041 /* StateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B220F6C2BB051140077255A /* StateView.swift */; };
-		0B8262EB2BD0953F007EE041 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1D5A8C2AB3E8290010DDF2 /* AppDelegate.swift */; };
-		0B8262EC2BD0953F007EE041 /* AudioCover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD056922BC636D600EBC7C4 /* AudioCover.swift */; };
-		0B8262ED2BD0953F007EE041 /* BtnNext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC158E2ABAC146006E82C4 /* BtnNext.swift */; };
-		0B8262EE2BD0953F007EE041 /* DBView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC157F2AB854A8006E82C4 /* DBView.swift */; };
-		0B8262EF2BD0953F007EE041 /* CloudKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B901D922BB83F38003AC253 /* CloudKit.swift */; };
-		0B8262F02BD0953F007EE041 /* BtnShowInFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB889D62AC046B5004788D5 /* BtnShowInFinder.swift */; };
-		0B8262F12BD0953F007EE041 /* SmartProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B22158D2BB6BC8F000EB36F /* SmartProgress.swift */; };
-		0B8262F22BD0953F007EE041 /* StatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA42122ABC137A00C0B977 /* StatusView.swift */; };
-		0B8262F32BD0953F007EE041 /* ViewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB5871A2AD81AF90071AEBD /* ViewHelper.swift */; };
-		0B8262F42BD0953F007EE041 /* DBTips.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAB7C3E2AD3BBAA00C5AEB5 /* DBTips.swift */; };
-		0B8262F52BD0953F007EE041 /* BtnTrash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB889D82AC047B3004788D5 /* BtnTrash.swift */; };
-		0B8262F62BD0953F007EE041 /* PlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B5786332BCB8DC00064F66A /* PlayView.swift */; };
-		0B8262F72BD0953F007EE041 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1D5A732AB302600010DDF2 /* ContentView.swift */; };
-		0B8262F82BD0953F007EE041 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B718F0B2AB4349900569762 /* CardView.swift */; };
-		0B8262F92BD0953F007EE041 /* MenuTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFDCB7F2AB86AF300B0D1C8 /* MenuTile.swift */; };
-		0B8262FA2BD0953F007EE041 /* BtnEvict.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD056902BC6340800EBC7C4 /* BtnEvict.swift */; };
-		0B8262FB2BD0953F007EE041 /* DeleteInvalid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1498782BC4DF940075DA61 /* DeleteInvalid.swift */; };
-		0B8262FC2BD0953F007EE041 /* Centered.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA421E2AC1397F00C0B977 /* Centered.swift */; };
-		0B8262FD2BD0953F007EE041 /* Boot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAB300D2AB814F70012D837 /* Boot.swift */; };
-		0B8262FE2BD0953F007EE041 /* ButtonCancelSelected.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA42202AC1802C00C0B977 /* ButtonCancelSelected.swift */; };
-		0B8262FF2BD0953F007EE041 /* SmartPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9FA29C2BC823A1007B235A /* SmartPlayer.swift */; };
-		0B8263002BD0953F007EE041 /* ButtonShowDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA422A2AC2ABAD00C0B977 /* ButtonShowDatabase.swift */; };
-		0B8263012BD0953F007EE041 /* CopyTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAABEB02BC79C4E00DF4A31 /* CopyTask.swift */; };
-		0B8263022BD0953F007EE041 /* TimeHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB587162AD815770071AEBD /* TimeHelper.swift */; };
-		0B8263032BD0953F007EE041 /* EventManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9FA2962BC80E51007B235A /* EventManager.swift */; };
-		0B8263042BD0953F007EE041 /* CopyFiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAABEAE2BC787A200DF4A31 /* CopyFiles.swift */; };
-		0B8263052BD0953F007EE041 /* BtnDestroy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFDCE572BB01884009198DD /* BtnDestroy.swift */; };
-		0B8263062BD0953F007EE041 /* AppPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4E246E2BCAB8020033CC07 /* AppPreview.swift */; };
-		0B8263072BD0953F007EE041 /* LoggerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B73275E2BB5138200DBD922 /* LoggerHelper.swift */; };
-		0B8263082BD0953F007EE041 /* BtnDownload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB889D12AC042EC004788D5 /* BtnDownload.swift */; };
-		0B8263092BD0953F007EE041 /* BtnDelTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAABEB72BC7D4B600DF4A31 /* BtnDelTask.swift */; };
-		0B82630A2BD0953F007EE041 /* DBFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD0568A2BC6202900EBC7C4 /* DBFolder.swift */; };
-		0B82630B2BD0953F007EE041 /* UIConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B51F1752BC50A6200B86CB1 /* UIConfig.swift */; };
-		0B82630C2BD0953F007EE041 /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1D5A5F2AB3025E0010DDF2 /* AudioManager.swift */; };
-		0B82630D2BD0953F007EE041 /* DefaultAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9FA29A2BC81F53007B235A /* DefaultAlbum.swift */; };
-		0B82630E2BD0953F007EE041 /* WindowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA421A2ABD67D600C0B977 /* WindowManager.swift */; };
-		0B82630F2BD0953F007EE041 /* PlayMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1498732BC4C5CB0075DA61 /* PlayMode.swift */; };
-		0B8263102BD0953F007EE041 /* ControlButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6B8B982BBA39F500F65B23 /* ControlButton.swift */; };
-		0B8263112BD0953F007EE041 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1D5A6E2AB302600010DDF2 /* Extensions.swift */; };
-		0B8263122BD0953F007EE041 /* Row.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBAD0712BBC05C6005834A3 /* Row.swift */; };
-		0B8263132BD0953F007EE041 /* DBSyncJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD056882BC6192D00EBC7C4 /* DBSyncJob.swift */; };
-		0B8263142BD0953F007EE041 /* LaunchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1165E82ABBC6C0005C5CBB /* LaunchView.swift */; };
-		0B8263152BD0953F007EE041 /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1D5A752AB302600010DDF2 /* AppConfig.swift */; };
-		0B8263162BD0953F007EE041 /* SmartError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B220F742BB1BBDB0077255A /* SmartError.swift */; };
-		0B8263172BD0953F007EE041 /* DBDownloadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAABEBB2BC8C9F700DF4A31 /* DBDownloadJob.swift */; };
-		0B8263182BD0953F007EE041 /* DB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB889DA2AC06C54004788D5 /* DB.swift */; };
-		0B8263192BD0953F007EE041 /* BtnMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA42182ABD5D9200C0B977 /* BtnMode.swift */; };
-		0B82631A2BD0953F007EE041 /* ImageHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B11262B2AC719B70093DFFA /* ImageHelper.swift */; };
-		0B82631B2BD0953F007EE041 /* OperationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFB38822BCCCC780055E38B /* OperationView.swift */; };
-		0B82631C2BD0953F007EE041 /* SliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC15992ABAD5DB006E82C4 /* SliderView.swift */; };
-		0B82631D2BD0953F007EE041 /* BtnLike.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFB38842BCCD26F0055E38B /* BtnLike.swift */; };
-		0B82631E2BD0953F007EE041 /* iCloudHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC15872AB9A473006E82C4 /* iCloudHelper.swift */; };
-		0B82631F2BD0953F007EE041 /* DBPrepareJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAABEB92BC8C5CB00DF4A31 /* DBPrepareJob.swift */; };
-		0B8263202BD0953F007EE041 /* CloudHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B901D852BB83BA2003AC253 /* CloudHandler.swift */; };
-		0B8263212BD0953F007EE041 /* DBAudio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8FC2752BBE817200839C75 /* DBAudio.swift */; };
-		0B8263222BD0953F007EE041 /* NotDownloadedAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9FA2982BC81EFF007B235A /* NotDownloadedAlbum.swift */; };
-		0B8263232BD0953F007EE041 /* BtnToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC158C2ABAC0C7006E82C4 /* BtnToggle.swift */; };
-		0B8263242BD0953F007EE041 /* BtnToggleDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1126292AC6F7B20093DFFA /* BtnToggleDB.swift */; };
-		0B8263252BD0953F007EE041 /* BtnPlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6B8B9A2BBA420600F65B23 /* BtnPlay.swift */; };
-		0B8263262BD0953F007EE041 /* DebugCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B5E51E42AD912B5000650CF /* DebugCommand.swift */; };
-		0B8263272BD0953F007EE041 /* Audio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1D5A672AB3025F0010DDF2 /* Audio.swift */; };
-		0B8263282BD0953F007EE041 /* DeviceConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFB38EC2BCE779B0055E38B /* DeviceConfig.swift */; };
-		0B8263292BD0953F007EE041 /* DBList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBAD0A12BBD413B005834A3 /* DBList.swift */; };
-		0B82632A2BD0953F007EE041 /* AppManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1165EF2ABBCCB0005C5CBB /* AppManager.swift */; };
-		0B82632B2BD0953F007EE041 /* BtnDelSome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA42242AC1813D00C0B977 /* BtnDelSome.swift */; };
-		0B82632C2BD0953F007EE041 /* FilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B901D872BB83BC3003AC253 /* FilePresenter.swift */; };
-		0B82632D2BD0953F007EE041 /* ButtonPlayList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7F558A2AD2636B0000D72E /* ButtonPlayList.swift */; };
-		0B82632E2BD0953F007EE041 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC157B2AB84C21006E82C4 /* HomeView.swift */; };
-		0B82632F2BD0953F007EE041 /* ItemQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B901D892BB83E28003AC253 /* ItemQuery.swift */; };
-		0B8263302BD0953F007EE041 /* Coffee.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6B8B9C2BBA4D0600F65B23 /* Coffee.swift */; };
-		0B8263312BD0953F007EE041 /* ButtonDismiss.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAB7C402AD3D25200C5AEB5 /* ButtonDismiss.swift */; };
-		0B8263322BD0953F007EE041 /* BtnsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B220F722BB1A3D70077255A /* BtnsView.swift */; };
-		0B8263332BD0953F007EE041 /* TitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B220F6E2BB051F50077255A /* TitleView.swift */; };
-		0B8263342BD0953F007EE041 /* FileHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC15892AB9AB7F006E82C4 /* FileHelper.swift */; };
-		0B8263362BD0953F007EE041 /* AsyncAlgorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 0B8262DC2BD0953F007EE041 /* AsyncAlgorithms */; };
-		0B8263382BD0953F007EE041 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 0B92ACC92BBA80F300F1A74F /* README.md */; };
-		0B8263392BD0953F007EE041 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0BB5871C2AD820FA0071AEBD /* Assets.xcassets */; };
 		0B8FC2702BBC559500839C75 /* PlayingAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8FC26F2BBC559500839C75 /* PlayingAlbum.swift */; };
 		0B8FC2762BBE817200839C75 /* DBAudio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8FC2752BBE817200839C75 /* DBAudio.swift */; };
 		0B901D862BB83BA2003AC253 /* CloudHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B901D852BB83BA2003AC253 /* CloudHandler.swift */; };
@@ -222,7 +133,6 @@
 		0B718F0B2AB4349900569762 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		0B73275E2BB5138200DBD922 /* LoggerHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerHelper.swift; sourceTree = "<group>"; };
 		0B7F558A2AD2636B0000D72E /* ButtonPlayList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonPlayList.swift; sourceTree = "<group>"; };
-		0B82633D2BD0953F007EE041 /* Cisum-Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Cisum-Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0B82633E2BD09540007EE041 /* Cisum copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Cisum copy-Info.plist"; path = "/Users/angel/Code/Yueyi/Cisum_SwiftUI/Cisum copy-Info.plist"; sourceTree = "<absolute>"; };
 		0B8FC26F2BBC559500839C75 /* PlayingAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayingAlbum.swift; sourceTree = "<group>"; };
 		0B8FC2752BBE817200839C75 /* DBAudio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBAudio.swift; sourceTree = "<group>"; };
@@ -289,14 +199,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				0B00F4672BB840C1000833B9 /* AsyncAlgorithms in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		0B8263352BD0953F007EE041 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				0B8263362BD0953F007EE041 /* AsyncAlgorithms in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -429,7 +331,6 @@
 			isa = PBXGroup;
 			children = (
 				0B1D5A4B2AB301AD0010DDF2 /* Cisum.app */,
-				0B82633D2BD0953F007EE041 /* Cisum-Dev.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -577,26 +478,6 @@
 			productReference = 0B1D5A4B2AB301AD0010DDF2 /* Cisum.app */;
 			productType = "com.apple.product-type.application";
 		};
-		0B8262DB2BD0953F007EE041 /* Cisum-Dev */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 0B82633A2BD0953F007EE041 /* Build configuration list for PBXNativeTarget "Cisum-Dev" */;
-			buildPhases = (
-				0B8262DE2BD0953F007EE041 /* Sources */,
-				0B8263352BD0953F007EE041 /* Frameworks */,
-				0B8263372BD0953F007EE041 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "Cisum-Dev";
-			packageProductDependencies = (
-				0B8262DC2BD0953F007EE041 /* AsyncAlgorithms */,
-			);
-			productName = Cisum;
-			productReference = 0B82633D2BD0953F007EE041 /* Cisum-Dev.app */;
-			productType = "com.apple.product-type.application";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -631,7 +512,6 @@
 			projectRoot = "";
 			targets = (
 				0B1D5A4A2AB301AD0010DDF2 /* Cisum */,
-				0B8262DB2BD0953F007EE041 /* Cisum-Dev */,
 			);
 		};
 /* End PBXProject section */
@@ -643,15 +523,6 @@
 			files = (
 				0B92ACCA2BBA80F300F1A74F /* README.md in Resources */,
 				0BB5871D2AD820FA0071AEBD /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		0B8263372BD0953F007EE041 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				0B8263382BD0953F007EE041 /* README.md in Resources */,
-				0B8263392BD0953F007EE041 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -751,106 +622,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		0B8262DE2BD0953F007EE041 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				0B8262DF2BD0953F007EE041 /* AlbumView.swift in Sources */,
-				0B8262E02BD0953F007EE041 /* BackgroundView.swift in Sources */,
-				0B8262E12BD0953F007EE041 /* PlayingAlbum.swift in Sources */,
-				0B8262E22BD0953F007EE041 /* ControlView.swift in Sources */,
-				0B8262E32BD0953F007EE041 /* BtnAdd.swift in Sources */,
-				0B8262E42BD0953F007EE041 /* MediaPlayerManager.swift in Sources */,
-				0B8262E52BD0953F007EE041 /* BtnPrev.swift in Sources */,
-				0B8262E62BD0953F007EE041 /* RootView.swift in Sources */,
-				0B8262E72BD0953F007EE041 /* LayoutView.swift in Sources */,
-				0B8262E82BD0953F007EE041 /* DBCopyTask.swift in Sources */,
-				0B8262E92BD0953F007EE041 /* CommonHelp.swift in Sources */,
-				0B8262EA2BD0953F007EE041 /* StateView.swift in Sources */,
-				0B8262EB2BD0953F007EE041 /* AppDelegate.swift in Sources */,
-				0B8262EC2BD0953F007EE041 /* AudioCover.swift in Sources */,
-				0B8262ED2BD0953F007EE041 /* BtnNext.swift in Sources */,
-				0B8262EE2BD0953F007EE041 /* DBView.swift in Sources */,
-				0B8262EF2BD0953F007EE041 /* CloudKit.swift in Sources */,
-				0B8262F02BD0953F007EE041 /* BtnShowInFinder.swift in Sources */,
-				0B8262F12BD0953F007EE041 /* SmartProgress.swift in Sources */,
-				0B8262F22BD0953F007EE041 /* StatusView.swift in Sources */,
-				0B8262F32BD0953F007EE041 /* ViewHelper.swift in Sources */,
-				0B8262F42BD0953F007EE041 /* DBTips.swift in Sources */,
-				0B8262F52BD0953F007EE041 /* BtnTrash.swift in Sources */,
-				0B8262F62BD0953F007EE041 /* PlayView.swift in Sources */,
-				0B8262F72BD0953F007EE041 /* ContentView.swift in Sources */,
-				0B8262F82BD0953F007EE041 /* CardView.swift in Sources */,
-				0B8262F92BD0953F007EE041 /* MenuTile.swift in Sources */,
-				0B8262FA2BD0953F007EE041 /* BtnEvict.swift in Sources */,
-				0B8262FB2BD0953F007EE041 /* DeleteInvalid.swift in Sources */,
-				0B8262FC2BD0953F007EE041 /* Centered.swift in Sources */,
-				0B8262FD2BD0953F007EE041 /* Boot.swift in Sources */,
-				0B8262FE2BD0953F007EE041 /* ButtonCancelSelected.swift in Sources */,
-				0B8262FF2BD0953F007EE041 /* SmartPlayer.swift in Sources */,
-				0B8263002BD0953F007EE041 /* ButtonShowDatabase.swift in Sources */,
-				0B8263012BD0953F007EE041 /* CopyTask.swift in Sources */,
-				0B8263022BD0953F007EE041 /* TimeHelper.swift in Sources */,
-				0B8263032BD0953F007EE041 /* EventManager.swift in Sources */,
-				0B8263042BD0953F007EE041 /* CopyFiles.swift in Sources */,
-				0B8263052BD0953F007EE041 /* BtnDestroy.swift in Sources */,
-				0B8263062BD0953F007EE041 /* AppPreview.swift in Sources */,
-				0B8263072BD0953F007EE041 /* LoggerHelper.swift in Sources */,
-				0B8263082BD0953F007EE041 /* BtnDownload.swift in Sources */,
-				0B8263092BD0953F007EE041 /* BtnDelTask.swift in Sources */,
-				0B82630A2BD0953F007EE041 /* DBFolder.swift in Sources */,
-				0B82630B2BD0953F007EE041 /* UIConfig.swift in Sources */,
-				0B82630C2BD0953F007EE041 /* AudioManager.swift in Sources */,
-				0B82630D2BD0953F007EE041 /* DefaultAlbum.swift in Sources */,
-				0B82630E2BD0953F007EE041 /* WindowManager.swift in Sources */,
-				0B82630F2BD0953F007EE041 /* PlayMode.swift in Sources */,
-				0B8263102BD0953F007EE041 /* ControlButton.swift in Sources */,
-				0B8263112BD0953F007EE041 /* Extensions.swift in Sources */,
-				0B8263122BD0953F007EE041 /* Row.swift in Sources */,
-				0B8263132BD0953F007EE041 /* DBSyncJob.swift in Sources */,
-				0B8263142BD0953F007EE041 /* LaunchView.swift in Sources */,
-				0B8263152BD0953F007EE041 /* AppConfig.swift in Sources */,
-				0B8263162BD0953F007EE041 /* SmartError.swift in Sources */,
-				0B8263172BD0953F007EE041 /* DBDownloadJob.swift in Sources */,
-				0B8263182BD0953F007EE041 /* DB.swift in Sources */,
-				0B8263192BD0953F007EE041 /* BtnMode.swift in Sources */,
-				0B82631A2BD0953F007EE041 /* ImageHelper.swift in Sources */,
-				0B82631B2BD0953F007EE041 /* OperationView.swift in Sources */,
-				0B82631C2BD0953F007EE041 /* SliderView.swift in Sources */,
-				0B82631D2BD0953F007EE041 /* BtnLike.swift in Sources */,
-				0B82631E2BD0953F007EE041 /* iCloudHelper.swift in Sources */,
-				0B82631F2BD0953F007EE041 /* DBPrepareJob.swift in Sources */,
-				0B8263202BD0953F007EE041 /* CloudHandler.swift in Sources */,
-				0B8263212BD0953F007EE041 /* DBAudio.swift in Sources */,
-				0B8263222BD0953F007EE041 /* NotDownloadedAlbum.swift in Sources */,
-				0B8263232BD0953F007EE041 /* BtnToggle.swift in Sources */,
-				0B8263242BD0953F007EE041 /* BtnToggleDB.swift in Sources */,
-				0B8263252BD0953F007EE041 /* BtnPlay.swift in Sources */,
-				0B8263262BD0953F007EE041 /* DebugCommand.swift in Sources */,
-				0B8263272BD0953F007EE041 /* Audio.swift in Sources */,
-				0B8263282BD0953F007EE041 /* DeviceConfig.swift in Sources */,
-				0B8263292BD0953F007EE041 /* DBList.swift in Sources */,
-				0B82632A2BD0953F007EE041 /* AppManager.swift in Sources */,
-				0B82632B2BD0953F007EE041 /* BtnDelSome.swift in Sources */,
-				0B82632C2BD0953F007EE041 /* FilePresenter.swift in Sources */,
-				0B82632D2BD0953F007EE041 /* ButtonPlayList.swift in Sources */,
-				0B82632E2BD0953F007EE041 /* HomeView.swift in Sources */,
-				0B82632F2BD0953F007EE041 /* ItemQuery.swift in Sources */,
-				0B8263302BD0953F007EE041 /* Coffee.swift in Sources */,
-				0B8263312BD0953F007EE041 /* ButtonDismiss.swift in Sources */,
-				0B8263322BD0953F007EE041 /* BtnsView.swift in Sources */,
-				0B8263332BD0953F007EE041 /* TitleView.swift in Sources */,
-				0B8263342BD0953F007EE041 /* FileHelper.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
 		0B1D5A572AB301AE0010DDF2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Dev";
 				"ASSETCATALOG_COMPILER_APPICON_NAME[sdk=xros*]" = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Signing.entitlements;
@@ -921,91 +699,6 @@
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 2.3.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.yueyi.cisum;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
-				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		0B82633B2BD0953F007EE041 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Dev";
-				"ASSETCATALOG_COMPILER_APPICON_NAME[sdk=xros*]" = AppIcon;
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = Signing.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 156;
-				DEVELOPMENT_ASSET_PATHS = "";
-				DEVELOPMENT_TEAM = Y6HZ9JJYV6;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Cisum copy-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = Cisum;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.3.5;
-				PRODUCT_BUNDLE_IDENTIFIER = com.yueyi.cisum.dev;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
-				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
-			};
-			name = Debug;
-		};
-		0B82633C2BD0953F007EE041 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Dev";
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = Signing.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 156;
-				DEVELOPMENT_ASSET_PATHS = "";
-				DEVELOPMENT_TEAM = Y6HZ9JJYV6;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Cisum copy-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = Cisum;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.3.5;
-				PRODUCT_BUNDLE_IDENTIFIER = com.yueyi.cisum.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = auto;
@@ -1157,15 +850,6 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0B82633A2BD0953F007EE041 /* Build configuration list for PBXNativeTarget "Cisum-Dev" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				0B82633B2BD0953F007EE041 /* Debug */,
-				0B82633C2BD0953F007EE041 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		0B9C1C382AAF18FE001A26AF /* Build configuration list for PBXProject "Cisum" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -1186,25 +870,12 @@
 				version = 0.1.0;
 			};
 		};
-		0B8262DD2BD0953F007EE041 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/apple/swift-async-algorithms";
-			requirement = {
-				kind = exactVersion;
-				version = 0.1.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
 		0B00F4662BB840C1000833B9 /* AsyncAlgorithms */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 0B00F4652BB840C1000833B9 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */;
-			productName = AsyncAlgorithms;
-		};
-		0B8262DC2BD0953F007EE041 /* AsyncAlgorithms */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 0B8262DD2BD0953F007EE041 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */;
 			productName = AsyncAlgorithms;
 		};
 /* End XCSwiftPackageProductDependency section */
