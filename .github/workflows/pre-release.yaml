@@ -35,7 +35,7 @@ jobs:
 
           build=$(agvtool what-version -terse)
 
-          echo "tag=v$version($build)" >> $GITHUB_ENV
+          echo "tag=pre$version($build)" >> $GITHUB_ENV
       - name: Generate Changelog
         run: echo "因为需要审核，APP商店的版本会比这里的版本旧很多。macOS、iOS版本在这里：[前往App Store](https://apps.apple.com/cn/app/cisum/id6466401036)"> ${{ github.workspace }}-CHANGELOG.txt
       - uses: softprops/action-gh-release@v1
