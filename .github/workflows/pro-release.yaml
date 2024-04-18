@@ -1,4 +1,4 @@
-name: Release
+name: Pro Release
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - '*v'
   workflow_run:
     workflows:
-      - 'Bump'
+      - 'Pro Bump'
     types:
       - completed
 
