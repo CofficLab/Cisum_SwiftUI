@@ -22,6 +22,7 @@ struct DebugCommand: Commands {
                 
                 NSWorkspace.shared.open(dir)
             }
+            
             Button("打开容器目录") {
                 guard let dir = AppConfig.localContainer else {
                     // 显示错误提示
@@ -37,6 +38,7 @@ struct DebugCommand: Commands {
                 
                 NSWorkspace.shared.open(dir)
             }
+            
             Button("打开文档目录") {
                 guard let dir = AppConfig.localDocumentsDir else {
                     // 显示错误提示
@@ -52,7 +54,22 @@ struct DebugCommand: Commands {
                 
                 NSWorkspace.shared.open(dir)
             }
-            .keyboardShortcut("f", modifiers: [.shift, .option])
+            
+            Button("打开数据库目录") {
+                guard let dir = AppConfig.localDocumentsDir else {
+                    // 显示错误提示
+                    let errorAlert = NSAlert()
+                    errorAlert.messageText = "打开数据库目录出错"
+                    errorAlert.informativeText = "数据库目录不存在"
+                    errorAlert.alertStyle = .critical
+                    errorAlert.addButton(withTitle: "好的")
+                    errorAlert.runModal()
+                    
+                    return
+                }
+                
+                NSWorkspace.shared.open(dir)
+            }
             
             Button("打开iCloud Documents") {
                 NSWorkspace.shared.open(AppConfig.cloudDocumentsDir)
@@ -60,10 +77,6 @@ struct DebugCommand: Commands {
             
             Button("打开音频目录") {
                 NSWorkspace.shared.open(AppConfig.audiosDir)
-            }
-            
-            Button("打开回收站目录") {
-                NSWorkspace.shared.open(AppConfig.trashDir)
             }
         }
         #endif
