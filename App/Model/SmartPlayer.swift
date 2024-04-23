@@ -15,7 +15,7 @@ class SmartPlayer: NSObject {
 
     var state: State = .Stopped {
         didSet {
-            os_log("\(Logger.isMain)\(self.label)State changed \(self.state.des)")
+            os_log("\(Logger.isMain)\(self.label)State changed \(oldValue.des) -> \(self.state.des)")
             onStateChange(state)
 
             switch self.state {
@@ -33,7 +33,14 @@ class SmartPlayer: NSObject {
                     return setError(SmartError.NoAudioInList)
                 }
             case .Playing(let audio):
+                // 说明是恢复播放
+                if self.player.currentTime > 0 {
+                    self.player.play()
+                    return
+                }
+                
                 self.audio = audio
+                
                 do {
                     self.audio = audio
                     try self.player = makePlayer(audio)

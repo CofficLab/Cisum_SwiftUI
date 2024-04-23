@@ -16,9 +16,15 @@ struct BtnDel: View {
             dynamicSize: autoResize,
             onTap: {
                 Task {
-                    appManager.stateMessage = "正在删除 \(audios.count) 个"
+                    //appManager.stateMessage = "正在删除 \(audios.count) 个"
+
+                    let isPlaying = audioManager.player.isPlaying
                     let next = await audioManager.db.delete(Array(audios))
-                    audioManager.prepare(next, reason: "删除了")
+
+                    if let audio = audioManager.audio, audios.contains(audio.persistentModelID) {
+                        audioManager.prepare(next, play: isPlaying, reason: "删除了")
+                    }
+
                     appManager.setFlashMessage("已删除")
                     appManager.cleanStateMessage()
                     callback()
