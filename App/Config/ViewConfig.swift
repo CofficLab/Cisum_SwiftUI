@@ -23,6 +23,18 @@ enum ViewConfig {
     }
 }
 
+// MARK: 背景
+
+extension ViewConfig {
+    /// 开发时如果不想显示背景，改成true
+    static var noBackground = true
+    
+    /// 生产环境一定不会显示背景
+    static func background(_ color: Color = .red) -> Color {
+        AppConfig.debug && !noBackground ? color.opacity(0.3) : Color.clear
+    }
+}
+
 // MARK: 响应式配置
 
 extension ViewConfig {
@@ -56,8 +68,10 @@ extension ViewConfig {
     }
 }
 
-#Preview {
-    RootView {
-        ContentView()
-    }
+#Preview("App") {
+    AppPreview()
+}
+
+#Preview("iPhone 15") {
+    LayoutView(device: .iPhone_15)
 }

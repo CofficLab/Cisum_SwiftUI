@@ -37,7 +37,7 @@ struct ControlView: View {
                     if shouldShowRightAlbum(geo) == false && geo.size.height > ViewConfig.minHeightToShowAlbum {
                         PlayingAlbum()
                             .frame(maxWidth: .infinity)
-                            .background(AppConfig.makeBackground(.yellow))
+                            .background(ViewConfig.background(.yellow))
                             .background(GeometryReader { geo in
                                 Color.clear.onAppear {
                                     self.topAlbumHeight = geo.size.height
@@ -47,27 +47,27 @@ struct ControlView: View {
                     }
 
                     // MARK: 标题
-
+                    
+                    Spacer()
                     if audioManager.showTitleView {
-                        Spacer()
                         TitleView(geo: geo)
                             .frame(maxWidth: .infinity)
-                            .background(AppConfig.makeBackground(.red))
+                            .background(ViewConfig.background(.red))
                             .background(GeometryReader { geo in
                                 Color.clear.onAppear {
                                     self.titleHeight = geo.size.height
                                     printHeight()
                                 }
                             })
-                        Spacer()
                     }
+                    Spacer()
                     
                     // MARK: 状态
 
                     StateView()
 //                        .frame(height: getStateHeight(geo))
                         .frame(maxWidth: .infinity)
-                        .background(AppConfig.makeBackground(.red))
+                        .background(ViewConfig.background(.red))
                         .background(GeometryReader { geo in
                             Color.clear.onAppear {
                                 self.titleHeight = geo.size.height
@@ -80,7 +80,7 @@ struct ControlView: View {
                     if showOperationView {
                         OperationView(geo: geo)
                             .frame(height: getOperationHeight(geo))
-                            .background(AppConfig.makeBackground(.white))
+                            .background(ViewConfig.background(.white))
                             .background(GeometryReader { geo in
                                 Color.clear.onAppear {
                                     self.operationHeight = geo.size.height
@@ -92,7 +92,7 @@ struct ControlView: View {
                     // MARK: 进度栏
 
                     SliderView(geo: geo)
-                        .background(AppConfig.makeBackground(.black))
+                        .background(ViewConfig.background(.black))
                         .background(GeometryReader { geo in
                             Color.clear.onAppear {
                                 self.sliderHeight = geo.size.height
@@ -105,7 +105,7 @@ struct ControlView: View {
                     BtnsView()
                         .frame(height: getButtonsHeight(geo))
                         .padding(.bottom, getBottomHeight(geo))
-                        .background(AppConfig.makeBackground(.red))
+                        .background(ViewConfig.background(.red))
                         .background(GeometryReader { geo in
                             Color.clear.onAppear {
                                 self.buttonsHeight = geo.size.height
@@ -121,7 +121,7 @@ struct ControlView: View {
                     HStack {
                         Spacer()
                         PlayingAlbum()
-                            .background(AppConfig.makeBackground(.yellow))
+                            .background(ViewConfig.background(.yellow))
                     }.frame(maxWidth: geo.size.height * 1.3)
                 }
             }
@@ -175,7 +175,8 @@ struct ControlView: View {
     // MARK: 底部Padding的高度
 
     private func getBottomHeight(_ geo: GeometryProxy) -> CGFloat {
-        if ViewConfig.isNotDesktop && showDB == false {
+        if DeviceConfig.noHomeButton && ViewConfig.isNotDesktop && showDB == false {
+            print(500)
             return 50
         }
 
@@ -195,7 +196,6 @@ struct ControlView: View {
 
 #Preview("App") {
     AppPreview()
-        .frame(height: 500)
 }
 
 #Preview("iMac") {

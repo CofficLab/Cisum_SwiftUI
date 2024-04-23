@@ -31,10 +31,6 @@ extension AppConfig {
         false
         #endif
     }
-    
-    static func makeBackground(_ color: Color = .red) -> Color {
-        debug ? color.opacity(0.3) : Color.clear
-    }
 }
 
 // MARK: APP状态
