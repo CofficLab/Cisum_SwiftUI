@@ -6,19 +6,28 @@ struct TitleView: View {
 
     var audio: Audio? { audioManager.audio }
     var characterCount: Int { audio?.title.count ?? 0 }
-    var geo: GeometryProxy
 
     @State var url: URL? = nil
 
     var body: some View {
         ZStack {
-            if let audio = audio {
-                Text(audio.title)
-                    .multilineTextAlignment(.leading)
-                    .lineLimit(nil)
-                    .foregroundStyle(.white)
-                    .font(getFont())
-                // .background(AppConfig.makeBackground(.blue))
+            GeometryReader { geo in
+                if let audio = audio {
+                    VStack {
+                        Spacer()
+                        HStack {
+                            Spacer()
+                            Text(audio.title)
+                                .multilineTextAlignment(.leading)
+                                .lineLimit(nil)
+                                .foregroundStyle(.white)
+                                .font(getFont(width: geo.size.width))
+                            // .background(AppConfig.makeBackground(.blue))
+                            Spacer()
+                        }
+                        Spacer()
+                    }
+                }
             }
         }
         .onAppear {
@@ -43,16 +52,12 @@ struct TitleView: View {
         }
     }
 
-    func getFont() -> Font {
-        if geo.size.height < 100 {
-            return .title3
+    func getFont(width: CGFloat) -> Font {
+        guard let audio = audioManager.audio else {
+            return .title
         }
 
-        if geo.size.height < 200 {
-            return .title2
-        }
-
-        return .system(size: geo.size.height/18)
+        return .system(size: max(width / CGFloat(audio.title.count), 20))
     }
 }
 

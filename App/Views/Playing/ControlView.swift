@@ -50,7 +50,7 @@ struct ControlView: View {
                     
                     Spacer()
                     if audioManager.showTitleView {
-                        TitleView(geo: geo)
+                        TitleView()
                             .frame(maxWidth: .infinity)
                             .background(ViewConfig.background(.red))
                             .background(GeometryReader { geo in
