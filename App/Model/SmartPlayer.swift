@@ -34,7 +34,7 @@ class SmartPlayer: NSObject {
                 }
             case .Playing(let audio):
                 // 说明是恢复播放
-                if self.player.currentTime > 0 {
+                if self.audio?.url == audio.url {
                     self.player.play()
                     return
                 }
@@ -91,12 +91,8 @@ extension SmartPlayer {
         player.currentTime = time
     }
 
-    func prepare(_ audio: Audio?, play: Bool = false) {
+    func prepare(_ audio: Audio?) {
         state = .Ready(audio)
-
-        if audio != nil, play, self.isReady {
-            resume()
-        }
     }
 
     func play(_ audio: Audio, reason: String) {

@@ -22,7 +22,11 @@ struct BtnDel: View {
                     let next = await audioManager.db.delete(Array(audios))
 
                     if let audio = audioManager.audio, audios.contains(audio.persistentModelID) {
-                        audioManager.prepare(next, play: isPlaying, reason: "删除了")
+                        if isPlaying, let next = next {
+                            audioManager.play(next, reason: "删除了")
+                        } else {
+                            audioManager.prepare(next, reason: "删除了")
+                        }
                     }
 
                     appManager.setFlashMessage("已删除")

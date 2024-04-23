@@ -90,10 +90,10 @@ class AudioManager: NSObject, ObservableObject {
 
     // MARK: 准备播放
 
-    func prepare(_ audio: Audio?, play: Bool = false, reason: String) {
+    func prepare(_ audio: Audio?, reason: String) {
         os_log("\(Logger.isMain)\(self.label)Prepare \(audio?.title ?? "nil") 🐛 \(reason)")
 
-        self.player.prepare(audio, play: play)
+        self.player.prepare(audio)
 
         Task {
             if let a = audio {
@@ -111,7 +111,7 @@ class AudioManager: NSObject, ObservableObject {
     func play(_ audio: Audio, reason: String) {
         os_log("\(Logger.isMain)\(self.label)play \(audio.title)")
 
-        prepare(audio, play: true, reason: reason)
+        self.player.play(audio, reason: reason)
     }
 
     // MARK: 切换
@@ -153,7 +153,11 @@ class AudioManager: NSObject, ObservableObject {
 
         Task {
             if let i = await db.nextOf(audio) {
-                prepare(i, play: player.isPlaying || manual == false, reason: "触发了下一首")
+                if player.isPlaying || manual == false {
+                    play(i, reason: "触发下一首")
+                } else {
+                    prepare(i, reason: "触发了下一首")
+                }
             } else {
                 self.player.stop()
             }
