@@ -28,6 +28,8 @@
 		0B220F732BB1A3D70077255A /* BtnsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B220F722BB1A3D70077255A /* BtnsView.swift */; };
 		0B220F752BB1BBDB0077255A /* SmartError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B220F742BB1BBDB0077255A /* SmartError.swift */; };
 		0B22158E2BB6BC8F000EB36F /* SmartProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B22158D2BB6BC8F000EB36F /* SmartProgress.swift */; };
+		0B4DFC722BD740B4001CEF32 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4DFC712BD740B4001CEF32 /* Device.swift */; };
+		0B4DFC742BD74145001CEF32 /* DeviceCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4DFC732BD74145001CEF32 /* DeviceCategory.swift */; };
 		0B4E246F2BCAB8020033CC07 /* AppPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4E246E2BCAB8020033CC07 /* AppPreview.swift */; };
 		0B51F1762BC50A6200B86CB1 /* UIConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B51F1752BC50A6200B86CB1 /* UIConfig.swift */; };
 		0B5786342BCB8DC00064F66A /* PlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B5786332BCB8DC00064F66A /* PlayView.swift */; };
@@ -123,6 +125,8 @@
 		0B220F722BB1A3D70077255A /* BtnsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnsView.swift; sourceTree = "<group>"; };
 		0B220F742BB1BBDB0077255A /* SmartError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmartError.swift; sourceTree = "<group>"; };
 		0B22158D2BB6BC8F000EB36F /* SmartProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmartProgress.swift; sourceTree = "<group>"; };
+		0B4DFC712BD740B4001CEF32 /* Device.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
+		0B4DFC732BD74145001CEF32 /* DeviceCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceCategory.swift; sourceTree = "<group>"; };
 		0B4E246E2BCAB8020033CC07 /* AppPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppPreview.swift; sourceTree = "<group>"; };
 		0B51F1752BC50A6200B86CB1 /* UIConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIConfig.swift; sourceTree = "<group>"; };
 		0B5786332BCB8DC00064F66A /* PlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayView.swift; sourceTree = "<group>"; };
@@ -420,6 +424,8 @@
 		0BEBCBAC2B352A2D00F2116E /* Config */ = {
 			isa = PBXGroup;
 			children = (
+				0B4DFC712BD740B4001CEF32 /* Device.swift */,
+				0B4DFC732BD74145001CEF32 /* DeviceCategory.swift */,
 				0B1D5A752AB302600010DDF2 /* AppConfig.swift */,
 				0B220F742BB1BBDB0077255A /* SmartError.swift */,
 				0B51F1752BC50A6200B86CB1 /* UIConfig.swift */,
@@ -551,6 +557,7 @@
 				0BBC158F2ABAC146006E82C4 /* BtnNext.swift in Sources */,
 				0BBC15802AB854A8006E82C4 /* DBView.swift in Sources */,
 				0B901D932BB83F38003AC253 /* CloudKit.swift in Sources */,
+				0B4DFC742BD74145001CEF32 /* DeviceCategory.swift in Sources */,
 				0BB889D72AC046B5004788D5 /* BtnShowInFinder.swift in Sources */,
 				0B22158E2BB6BC8F000EB36F /* SmartProgress.swift in Sources */,
 				0BBA42132ABC137A00C0B977 /* StatusView.swift in Sources */,
@@ -589,6 +596,7 @@
 				0BBAD0722BBC05C6005834A3 /* Row.swift in Sources */,
 				0BD056892BC6192D00EBC7C4 /* DBSyncJob.swift in Sources */,
 				0B1165E92ABBC6C0005C5CBB /* LaunchView.swift in Sources */,
+				0B4DFC722BD740B4001CEF32 /* Device.swift in Sources */,
 				0B1D5A8A2AB302610010DDF2 /* AppConfig.swift in Sources */,
 				0B220F752BB1BBDB0077255A /* SmartError.swift in Sources */,
 				0BAABEBC2BC8C9F700DF4A31 /* DBDownloadJob.swift in Sources */,

@@ -166,9 +166,11 @@ struct ControlView: View {
 
         return 0
     }
+    
+    // MARK: 是否显示右侧的封面图
 
     private func shouldShowRightAlbum(_ geo: GeometryProxy) -> Bool {
-        geo.size.width > 1200
+        geo.size.width > Device.iPad_mini.width
     }
 
     private func shouldShowTopAlbum(_ geo: GeometryProxy) -> Bool {
@@ -188,16 +190,20 @@ struct ControlView: View {
     AppPreview()
 }
 
+#Preview("iPad") {
+    LayoutView(device: .iPad_mini)
+}
+
 #Preview("Layout") {
     LayoutView()
 }
 
 #Preview("Layout-500") {
-    LayoutView(500)
+    LayoutView(width: 500)
         .frame(width: AppConfig.minWidth + 500)
 }
 
 #Preview("Layout-1500") {
-    LayoutView(1500)
+    LayoutView(width: 1500)
         .frame(width: AppConfig.minWidth + 1500)
 }

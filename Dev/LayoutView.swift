@@ -1,56 +1,53 @@
 import SwiftUI
 
 struct LayoutView: View {
-    var width: CGFloat? = 0
-
-    init(_ width: CGFloat? = nil) {
-        self.width = width ?? nil
-    }
+    var minWidth = AppConfig.minWidth
+    var minHeight = AppConfig.minHeight
+    var width: CGFloat?
+    var height: CGFloat?
+    var device: Device?
 
     var body: some View {
-        VStack {
-            if let width = width {
-                makeItem(width: AppConfig.minWidth + width)
+        ZStack {
+            if let width = width, width < minWidth {
+                Text("宽度至少 \(minWidth)")
+                    .padding()
+                    .foregroundStyle(.yellow)
+            } else if let device = device {
+                // 针对特定设备
+                makeItemForDevice(device)
+            } else if let width = width, height == nil {
+                // 固定宽度，多个高度
+                makeItemForManyHeights(width: width)
+            } else if let width = width, let height = height {
+                // 宽度、高度都固定
+                makeItem(width: width, height: height)
             } else {
-                TabView(content: {
-                    ForEach([
-                        0,
-                        100,
-                        200,
-                        300
-                    ], id: \.self) { v in
-                        makeItem(width: AppConfig.minWidth + v)
-                            .id("\(v)")
-                            .tabItem { Label("\(Int(v))", systemImage: "apple") }
-                    }
-                })
+                // 默认
+                makeItem(width: minWidth, height: minHeight)
             }
-        }
+        }.modelContainer(AppConfig.getContainer())
     }
 
-    func makeItem(width: CGFloat = 500) -> some View {
-        let variables: [CGFloat] = [
-            0,
-            100,
-            200,
-            300,
-            400, 
-            500,
-            600,
-            700, 
-            800,
-            900,
-            1000,
+    func makeItemForManyHeights(width: CGFloat) -> some View {
+        let heights: [CGFloat] = [
+            minHeight + 0,
+            minHeight + 100,
+            minHeight + 200,
+            minHeight + 300,
+            minHeight + 400,
+            minHeight + 500,
+            minHeight + 600,
+            minHeight + 700,
+            minHeight + 800,
+            minHeight + 900,
+            minHeight + 1000,
         ]
 
         return ScrollView {
             Spacer(minLength: 20)
-            ForEach(variables, id: \.self) { v in
-                RootView {
-                    ContentView()
-                }
-                .frame(width: width)
-                .frame(height: AppConfig.minHeight + v)
+            ForEach(heights, id: \.self) { height in
+                makeItem(width: width, height: height)
                 Spacer(minLength: 30)
                 Divider()
             }
@@ -63,20 +60,45 @@ struct LayoutView: View {
         .frame(height: 800)
         .background(BackgroundView.type4)
     }
+
+    func makeItemForDevice(_ device: Device) -> some View {
+        makeItem(width: device.width, height: device.height)
+    }
+
+    func makeItem(width: CGFloat, height: CGFloat) -> some View {
+        ZStack {
+            RootView {
+                ContentView()
+            }
+
+            GroupBox {
+                Text("\(Int(width)) x \(Int(height))")
+            }
+            .padding(.top, 150)
+            .foregroundStyle(.yellow)
+            .font(.system(size: height / 20))
+        }
+        .frame(width: width)
+        .frame(height: height)
+    }
 }
 
 #Preview("Layout") {
     LayoutView()
 }
 
-#Preview("100") {
-    LayoutView(100)
+#Preview("iPad") {
+    LayoutView(device: .iPad_mini)
 }
 
-#Preview("200") {
-    LayoutView(200)
+#Preview("350") {
+    LayoutView(width: 350)
 }
 
-#Preview("300") {
-    LayoutView(300)
+#Preview("400") {
+    LayoutView(width: 400)
+}
+
+#Preview("500") {
+    LayoutView(width: 500)
 }
