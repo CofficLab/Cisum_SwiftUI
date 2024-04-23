@@ -172,6 +172,8 @@ extension AudioManager {
         callback(mode)
 
         Task {
+            os_log("\(Logger.isMain)\(self.label)切换播放模式")
+            
             if mode == .Random {
                 await self.db.sortRandom(audio)
             }

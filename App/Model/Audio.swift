@@ -20,37 +20,38 @@ class Audio {
     var isSupported: Bool { AppConfig.supportedExtensions.contains(ext.lowercased()) }
     var isNotSupported: Bool { !isSupported }
     // 未解决的问题：ios上文件APP中能看到，但FileManager.default.exits返回false
-    var isExists: Bool { fileManager.fileExists(atPath: url.path) || true}
+    var isExists: Bool { fileManager.fileExists(atPath: url.path) || true }
     var isNotExists: Bool { !isExists }
 
     init(_ url: URL) {
         // os_log("\(Logger.isMain)🚩 AudioModel::init -> \(url.lastPathComponent)")
         self.url = url
-        self.title = url.deletingPathExtension().lastPathComponent
-        self.order = Self.makeRandomOrder()
+        title = url.deletingPathExtension().lastPathComponent
+        order = Self.makeRandomOrder()
     }
 
     static func makeRandomOrder() -> Int {
-        Int.random(in: 101...500000000)
+        Int.random(in: 101 ... 500000000)
     }
-    
+
     func randomOrder() {
-        self.order = Self.makeRandomOrder()
+//        os_log("\(Logger.isMain)🚩 AudioModel::randomOrder -> \(self.title)")
+        order = Self.makeRandomOrder()
     }
 
     func getFileSize() -> Int64 {
-        if self.isNotExists {
+        if isNotExists {
             return 0
         }
-        
+
         return FileHelper.getFileSize(url)
     }
 
     func getFileSizeReadable() -> String {
-        if self.isNotExists {
+        if isNotExists {
             return "-"
         }
-        
+
         return FileHelper.getFileSizeReadable(url)
     }
 

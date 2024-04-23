@@ -16,7 +16,7 @@ extension DB {
                 audio.isPlaceholder = item.isPlaceholder
                 context.insert(audio)
             }
-            
+
             try context.save()
         } catch let e {
             print(e)
@@ -31,16 +31,16 @@ extension DB {
         context.insert(audio)
         try? context.save()
     }
-    
+
     func insertIfNotIn(_ urls: [URL]) {
-        let dbURLs = self.getAllURLs()
+        let dbURLs = getAllURLs()
         for url in urls {
             if dbURLs.contains(url) == false {
                 context.insert(Audio(url))
             }
         }
-        
-        self.save()
+
+        save()
     }
 }
 
@@ -48,13 +48,13 @@ extension DB {
 
 extension DB {
     func deleteIfNotIn(_ urls: [URL]) {
-        try? self.context.delete(model: Audio.self, where: #Predicate {
+        try? context.delete(model: Audio.self, where: #Predicate {
             urls.contains($0.url) == false
         })
-            
-        self.save()
+
+        save()
     }
-    
+
     nonisolated func delete(_ url: URL) {
         os_log("\(Logger.isMain)\(DB.label)数据库删除 \(url.lastPathComponent)")
         Task {
@@ -62,7 +62,7 @@ extension DB {
             guard let audio = await self.find(url) else {
                 return os_log("\(Logger.isMain)\(DB.label)删除时数据库找不到 \(url.lastPathComponent)")
             }
-            
+
             do {
                 try context.delete(model: Audio.self, where: #Predicate<Audio> {
                     $0.url == url
@@ -74,23 +74,23 @@ extension DB {
             }
         }
     }
-    
+
     nonisolated func delete(_ audios: [Audio]) {
         for audio in audios {
             delete(audio)
         }
     }
-    
+
     func delete(_ audios: [Audio.ID]) -> Audio? {
         var next: Audio?
-        
+
         for audio in audios {
             next = delete(audio)
         }
-        
+
         return next
     }
-    
+
     func delete(_ id: Audio.ID) -> Audio? {
         os_log("\(Logger.isMain)\(DB.label)数据库删除")
         let context = ModelContext(modelContainer)
@@ -98,38 +98,38 @@ extension DB {
             os_log("\(Logger.isMain)\(DB.label)删除时数据库找不到")
             return nil
         }
-        
+
         // 找出下一个
-        var next = self.nextOf(audio)
+        var next = nextOf(audio)
         if next?.url == audio.url {
             os_log("\(Logger.isMain)\(DB.label)删除时next==current")
             next = nil
         }
-        
+
         do {
             // 从磁盘删除
-            try self.dbFolder.deleteFile(audio)
-            
+            try dbFolder.deleteFile(audio)
+
             // 从磁盘删除后，因为数据库监听了磁盘的变动，会自动删除
             // 但自动删除可能不及时，所以这里及时删除
             context.delete(audio)
-            
+
             try context.save()
             os_log("\(Logger.isMain)\(DB.label)删除成功 \(audio.title)")
         } catch let e {
             os_log("\(Logger.isMain)\(DB.label)删除出错 \(e)")
         }
-        
+
         return next
     }
-    
+
     nonisolated func delete(_ audio: Audio) {
         os_log("\(Logger.isMain)\(DB.label)数据库删除 \(audio.title)")
         let context = ModelContext(modelContainer)
         guard let audio = context.model(for: audio.id) as? Audio else {
             return os_log("\(Logger.isMain)\(DB.label)删除时数据库找不到 \(audio.title)")
         }
-        
+
         do {
             context.delete(audio)
             try context.save()
@@ -138,7 +138,7 @@ extension DB {
             os_log("\(Logger.isMain)\(DB.label)删除出错 \(e.localizedDescription)")
         }
     }
-    
+
     func trash(_ audio: Audio) {
         let url = audio.url
         let ext = audio.ext
@@ -146,7 +146,7 @@ extension DB {
         let trashDir = AppConfig.trashDir
         var trashUrl = trashDir.appendingPathComponent(url.lastPathComponent)
         var times = 1
-        
+
         // 回收站已经存在同名文件
         while fileManager.fileExists(atPath: trashUrl.path) {
             trashUrl = trashUrl.deletingLastPathComponent()
@@ -154,13 +154,13 @@ extension DB {
                 .appendingPathExtension(ext)
             times += 1
         }
-        
+
         Task {
             // 移动到回收站
             if audio.isExists {
                 do {
                     try await cloudHandler.moveFile(at: audio.url, to: trashUrl)
-                    
+
                     // 从数据库删除
                     self.delete(audio)
                 } catch let e {
@@ -181,13 +181,13 @@ extension DB {
 
 extension DB {
     func refresh(_ audio: Audio) -> Audio {
-        if let a = self.find(audio.id) {
+        if let a = find(audio.id) {
             return a
         } else {
             return audio
         }
     }
-    
+
     nonisolated func countOfURL(_ url: URL) -> Int {
         let context = ModelContext(modelContainer)
         let predicate = #Predicate<Audio> {
@@ -202,11 +202,11 @@ extension DB {
             return 0
         }
     }
-    
+
     func getAudioDir() -> URL {
-        self.audiosDir
+        audiosDir
     }
-    
+
     func getAllURLs() -> [URL] {
         let predicate = #Predicate<Audio> {
             $0.title != ""
@@ -219,7 +219,7 @@ extension DB {
             return []
         }
     }
-    
+
     /// 第一个
     nonisolated func first() -> Audio? {
         let context = ModelContext(modelContainer)
@@ -235,10 +235,10 @@ extension DB {
         } catch let e {
             print(e)
         }
-        
+
         return nil
     }
-    
+
     /// 最后一个
     nonisolated func last() -> Audio? {
         let context = ModelContext(modelContainer)
@@ -254,18 +254,18 @@ extension DB {
         } catch let e {
             print(e)
         }
-        
+
         return nil
     }
-    
+
     nonisolated func isAllInCloud() -> Bool {
-        self.getTotal() > 0 && self.first() == nil
+        getTotal() > 0 && first() == nil
     }
-    
+
     func find(_ id: PersistentIdentifier) -> Audio? {
         context.model(for: id) as? Audio
     }
-    
+
     func find(_ url: URL) -> Audio? {
         let predicate = #Predicate<Audio> {
             $0.url == url
@@ -278,10 +278,10 @@ extension DB {
         } catch let e {
             print(e)
         }
-        
+
         return nil
     }
-    
+
     static func find(_ container: ModelContainer, _ url: URL) -> Audio? {
         let context = ModelContext(container)
         let predicate = #Predicate<Audio> {
@@ -295,10 +295,10 @@ extension DB {
         } catch let e {
             print(e)
         }
-        
+
         return nil
     }
-    
+
     nonisolated func getTotal() -> Int {
         let context = ModelContext(modelContainer)
         let predicate = #Predicate<Audio> {
@@ -312,7 +312,7 @@ extension DB {
             return 0
         }
     }
-    
+
     /// 查询数据库中的按照order排序的第x个
     nonisolated func get(_ i: Int) -> Audio? {
         let context = ModelContext(modelContainer)
@@ -321,7 +321,7 @@ extension DB {
         descriptor.fetchOffset = i
         // descriptor.sortBy.append(.init(\.downloadingPercent, order: .reverse))
         descriptor.sortBy.append(.init(\.order))
-        
+
         do {
             let result = try context.fetch(descriptor)
             if let first = result.first {
@@ -332,17 +332,17 @@ extension DB {
         } catch let e {
             print(e)
         }
-        
+
         return nil
     }
-    
+
     /// The previous one of provided Audio
     func pre(_ audio: Audio?) -> Audio? {
         os_log("🍋 DBAudio::preOf [\(audio?.order ?? 0)] \(audio?.title ?? "nil")")
         guard let audio = audio else {
-            return self.first()
+            return first()
         }
-        
+
         let order = audio.order
         var descriptor = FetchDescriptor<Audio>()
         descriptor.sortBy.append(.init(\.order, order: .reverse))
@@ -350,17 +350,17 @@ extension DB {
         descriptor.predicate = #Predicate {
             $0.order < order
         }
-        
+
         do {
             let result = try context.fetch(descriptor)
-            return result.first ?? self.last()
+            return result.first ?? last()
         } catch let e {
             print(e)
         }
-        
+
         return nil
     }
-    
+
     /// The next one of provided Audio
     func nextOf(_ audio: Audio) -> Audio? {
         // os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title)")
@@ -373,10 +373,10 @@ extension DB {
         descriptor.predicate = #Predicate {
             $0.order >= order && $0.url != url
         }
-        
+
         do {
             let result = try context.fetch(descriptor)
-            return result.first ?? self.first()
+            return result.first ?? first()
         } catch let e {
             print(e)
         }
@@ -389,71 +389,44 @@ extension DB {
 
 extension DB {
     func sortRandom(_ sticky: Audio?) {
-        let pageSize = 100 // 每页数据条数
-        var offset = 0
+        os_log("\(Logger.isMain)\(DB.label)SortRandom")
 
         do {
-            while true {
-                var descriptor = FetchDescriptor<Audio>()
-                descriptor.sortBy.append(.init(\.title, order: .reverse))
-                descriptor.fetchLimit = pageSize
-                descriptor.fetchOffset = offset
-                let audioArray = try context.fetch(descriptor)
-                
-                if audioArray.isEmpty {
-                    break
+            try context.enumerate(FetchDescriptor<Audio>(), block: {
+                if $0 == sticky {
+                    $0.order = 0
+                } else {
+                    $0.randomOrder()
                 }
-                
-                for audio in audioArray {
-                    audio.randomOrder()
-                }
-                
-                if let s = sticky {
-                    s.order = 0
-                }
-                
-                try context.save()
-                
-                offset += pageSize
-            }
-            
-            self.onUpdated()
+            })
+
+            try context.save()
+            onUpdated()
         } catch let e {
             print(e)
         }
     }
-    
+
     func sort(_ sticky: Audio?) {
-        let pageSize = 100 // 每页数据条数
+        os_log("\(Logger.isMain)\(DB.label)Sort")
+        
         // 前100留给特殊用途
         var offset = 100
 
         do {
-            while true {
-                var descriptor = FetchDescriptor<Audio>()
-                descriptor.sortBy.append(.init(\.title, order: .forward))
-                descriptor.fetchLimit = pageSize
-                descriptor.fetchOffset = offset
-                let audioArray = try context.fetch(descriptor)
-                
-                if audioArray.isEmpty {
-                    break
+            try context.enumerate(FetchDescriptor<Audio>(sortBy: [
+                .init(\.title, order: .forward),
+            ]), block: {
+                if $0 == sticky {
+                    $0.order = 0
+                } else {
+                    $0.order = offset
+                    offset = offset + 1
                 }
-                
-                for (index, audio) in audioArray.enumerated() {
-                    if let s = sticky, s == audio {
-                        audio.order = 0
-                    } else {
-                        audio.order = offset + index + 1
-                    }
-                }
-                
-                try context.save()
-                
-                offset += pageSize
-            }
-            
-//            self.onUpdated()
+            })
+
+            try context.save()
+            onUpdated()
         } catch let e {
             print(e)
         }
@@ -466,50 +439,50 @@ extension DB {
     func evict(_ audio: Audio) {
         dbFolder.evict(audio.url)
     }
-    
+
     func increasePlayCount(_ audio: Audio) {
-        if let a = self.find(audio.id) {
+        if let a = find(audio.id) {
             a.playCount += 1
-            self.save()
+            save()
         }
     }
-    
+
     func download(_ audio: Audio, reason: String) {
         Task {
             await DBDownloadJob(db: self).run(audio)
         }
     }
-    
+
     /// 下载当前的和当前的后面的X个
     func downloadNext(_ audio: Audio, reason: String) {
         let count = 5
         var currentIndex = 0
         var currentAudio: Audio = audio
-        
+
         while currentIndex < count {
-            self.download(currentAudio, reason: "downloadNext 🐛 \(reason)")
-            
+            download(currentAudio, reason: "downloadNext 🐛 \(reason)")
+
             currentIndex = currentIndex + 1
             if let next = nextOf(currentAudio) {
                 currentAudio = next
             }
         }
     }
-    
+
     func like(_ audio: Audio) {
-        if let dbAudio = self.find(audio.id) {
+        if let dbAudio = find(audio.id) {
             dbAudio.like = true
-            self.save()
+            save()
         }
     }
-    
+
     func dislike(_ audio: Audio) {
-        if let dbAudio = self.find(audio.id) {
+        if let dbAudio = find(audio.id) {
             dbAudio.like = false
-            self.save()
+            save()
         }
     }
-    
+
     nonisolated func update(_ audio: Audio) {
         Task.detached {
             os_log("\(Logger.isMain)🍋 DB::update \(audio.title)")

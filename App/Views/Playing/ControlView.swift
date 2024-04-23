@@ -41,7 +41,7 @@ struct ControlView: View {
                             .background(GeometryReader { geo in
                                 Color.clear.onAppear {
                                     self.topAlbumHeight = geo.size.height
-                                    printHeight()
+//                                    printHeight()
                                 }
                             })
                     }
@@ -56,7 +56,7 @@ struct ControlView: View {
                             .background(GeometryReader { geo in
                                 Color.clear.onAppear {
                                     self.titleHeight = geo.size.height
-                                    printHeight()
+//                                    printHeight()
                                 }
                             })
                     }
@@ -71,7 +71,7 @@ struct ControlView: View {
                         .background(GeometryReader { geo in
                             Color.clear.onAppear {
                                 self.titleHeight = geo.size.height
-                                printHeight()
+//                                printHeight()
                             }
                         })
 
@@ -84,7 +84,7 @@ struct ControlView: View {
                             .background(GeometryReader { geo in
                                 Color.clear.onAppear {
                                     self.operationHeight = geo.size.height
-                                    printHeight()
+//                                    printHeight()
                                 }
                             })
                     }
@@ -97,7 +97,7 @@ struct ControlView: View {
                         .background(GeometryReader { geo in
                             Color.clear.onAppear {
                                 self.sliderHeight = geo.size.height
-                                printHeight()
+//                                printHeight()
                             }
                         })
 
@@ -110,7 +110,7 @@ struct ControlView: View {
                         .background(GeometryReader { geo in
                             Color.clear.onAppear {
                                 self.buttonsHeight = geo.size.height
-                                printHeight()
+//                                printHeight()
                             }
                         })
                 }
@@ -136,7 +136,7 @@ struct ControlView: View {
         .background(GeometryReader { geo in
             Color.clear.onAppear {
                 self.totalHeight = geo.size.height
-                printHeight()
+//                printHeight()
             }
         })
     }
