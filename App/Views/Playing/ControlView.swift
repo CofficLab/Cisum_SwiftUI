@@ -92,6 +92,7 @@ struct ControlView: View {
                     // MARK: 进度栏
 
                     SliderView(geo: geo)
+                        .padding()
                         .background(ViewConfig.background(.black))
                         .background(GeometryReader { geo in
                             Color.clear.onAppear {
@@ -161,7 +162,7 @@ struct ControlView: View {
             return 0
         }
 
-        return getButtonsHeight(geo) * 3 / 5
+        return getButtonsHeight(geo) * 0.6
     }
 
     // MARK: 控制按钮的高度
