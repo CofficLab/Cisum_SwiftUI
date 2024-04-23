@@ -27,11 +27,13 @@ struct ControlView: View {
                         .frame(height: getAlbumHeight(geo))
                     // .background(AppConfig.makeBackground(.red))
 
+                    // MARK: 标题
+
                     if audioManager.showTitleView {
                         TitleView(geo: geo)
                             .frame(height: getTitleHeight(geo))
                             .frame(maxHeight: .infinity)
-                        // .background(AppConfig.makeBackground(.red))
+                            .background(AppConfig.makeBackground(.red))
                     }
 
                     StateView()
@@ -46,8 +48,10 @@ struct ControlView: View {
 
                     Spacer()
 
-                    SliderView()
+                    SliderView(geo: geo)
                         .frame(height: getSliderHeight(geo))
+                        .frame(maxHeight: .infinity)
+                        .background(AppConfig.makeBackground(.red))
 
                     BtnsView()
                         .frame(height: getButtonsHeight(geo))
@@ -135,7 +139,7 @@ struct ControlView: View {
     // MARK: 进度条的高度
 
     private func getSliderHeight(_ geo: GeometryProxy) -> CGFloat {
-        return 36
+        return 80
     }
 
     // MARK: 控制按钮的高度
@@ -166,7 +170,7 @@ struct ControlView: View {
 
         return 0
     }
-    
+
     // MARK: 是否显示右侧的封面图
 
     private func shouldShowRightAlbum(_ geo: GeometryProxy) -> Bool {
@@ -188,6 +192,10 @@ struct ControlView: View {
 
 #Preview("App") {
     AppPreview()
+}
+
+#Preview("iMac") {
+    LayoutView(device: .iMac)
 }
 
 #Preview("iPad") {

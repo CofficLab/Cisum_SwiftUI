@@ -87,6 +87,10 @@ extension HomeView {
     LayoutView()
 }
 
+#Preview("iPhone 15") {
+    LayoutView(device: .iPhone_15)
+}
+
 #Preview("iPad") {
     LayoutView(device: .iPad_mini)
 }

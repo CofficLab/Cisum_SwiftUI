@@ -4,10 +4,11 @@ import SwiftUI
 enum Device: String, Equatable {
     case iMac
     case MacBook
+    case iPhone_15
     case iPhoneBig
     case iPhoneSmall
     case iPad_mini
-    
+
     var size: String {
         "\(Int(width)) x \(Int(height))"
     }
@@ -27,15 +28,13 @@ enum Device: String, Equatable {
     var category: DeviceCategory {
         switch self {
         case .iMac:
-            return .iMac
+            .iMac
         case .MacBook:
-            return .MacBook
+            .MacBook
         case .iPad_mini:
-            return .iPad
-        case .iPhoneBig:
-            return .iPhone
-        case .iPhoneSmall:
-            return .iPhone
+            .iPad
+        case .iPhoneBig, .iPhone_15, .iPhoneSmall:
+            .iPhone
         }
     }
 
@@ -46,7 +45,7 @@ enum Device: String, Equatable {
     var width: CGFloat {
         switch self {
         case .iMac:
-            2880
+            4480
         case .MacBook:
             2880
         case .iPhoneBig:
@@ -55,13 +54,15 @@ enum Device: String, Equatable {
             1242
         case .iPad_mini:
             1488
+        case .iPhone_15:
+            1179
         }
     }
 
     var height: CGFloat {
         switch self {
         case .iMac:
-            1800
+            2520
         case .MacBook:
             1800
         case .iPhoneBig:
@@ -70,12 +71,18 @@ enum Device: String, Equatable {
             2208
         case .iPad_mini:
             2266
+        case .iPhone_15:
+            2556
         }
     }
 }
 
 #Preview("Layout") {
     LayoutView()
+}
+
+#Preview("iPhone 15") {
+    LayoutView(device: .iPad_mini)
 }
 
 #Preview("iPad") {

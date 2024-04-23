@@ -24,9 +24,29 @@ struct LayoutView: View {
                 makeItem(width: width, height: height)
             } else {
                 // 默认
-                makeItem(width: minWidth, height: minHeight)
+                forManyDevices()
             }
         }.modelContainer(AppConfig.getContainer())
+    }
+
+    func forManyDevices() -> some View {
+        let devices: [Device] = [
+            .iMac,
+//            .MacBook,
+            .iPad_mini,
+//            .iPhone_15,
+//            .iPhoneBig,
+//            .iPhoneSmall,
+        ]
+
+        return
+            TabView(content: {
+                ForEach(devices, id: \.self) { device in
+                    makeItem(width: device.width, height: device.height)
+                        .id("\(device.rawValue)")
+                        .tabItem { Label("\(device.description)", systemImage: "apple") }
+                }
+            })
     }
 
     func makeItemForManyHeights(width: CGFloat) -> some View {
@@ -66,20 +86,24 @@ struct LayoutView: View {
     }
 
     func makeItem(width: CGFloat, height: CGFloat) -> some View {
-        ZStack {
-            RootView {
-                ContentView()
-            }
+        GeometryReader { geo in
+            ZStack {
+                ZStack {
+                    RootView {
+                        ContentView()
+                    }
+                    .frame(width: width)
+                    .frame(height: height)
 
-            GroupBox {
-                Text("\(Int(width)) x \(Int(height))")
-            }
-            .padding(.top, 150)
-            .foregroundStyle(.yellow)
-            .font(.system(size: height / 20))
+                    GroupBox {
+                        Text("\(Int(width)) x \(Int(height))")
+                        Text("\(Int(geo.size.width)) x \(Int(geo.size.height))")
+                    }
+                    .foregroundStyle(.yellow)
+                    .font(.system(size: height / 10))
+                }.scaleEffect(min(geo.size.width / width, geo.size.height / height))
+            }.frame(width: geo.size.width, height: geo.size.height)
         }
-        .frame(width: width)
-        .frame(height: height)
     }
 }
 
@@ -89,6 +113,14 @@ struct LayoutView: View {
 
 #Preview("iPad") {
     LayoutView(device: .iPad_mini)
+}
+
+#Preview("iMac") {
+    LayoutView(device: .iMac)
+}
+
+#Preview("iPhone 15") {
+    LayoutView(device: .iPhone_15)
 }
 
 #Preview("350") {

@@ -2,40 +2,42 @@ import SwiftUI
 import OSLog
 
 struct ContentView: View {
-    var play: Bool = false
-
     @EnvironmentObject var appManager: AppManager
     @EnvironmentObject var audioManager: AudioManager
-    
-    init() {
-        os_log("\(Logger.isMain)🚩 ContentView::init")
-    }
 
     var body: some View {
-        ZStack {
-            HomeView()
-                .alert(isPresented: $appManager.showAlert, content: {
-                    Alert(title: Text(appManager.alertMessage))
-                })
+        GeometryReader { geo in
+            ZStack {
+                HomeView()
+                    .alert(isPresented: $appManager.showAlert, content: {
+                        Alert(title: Text(appManager.alertMessage))
+                    })
 
-            if !appManager.flashMessage.isEmpty {
-                CardView(background: BackgroundView.type4) {
-                    Text(appManager.flashMessage)
-                        .font(.title)
-                        .foregroundStyle(.white)
-                }.onAppear {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-                        appManager.flashMessage = ""
+                if !appManager.flashMessage.isEmpty {
+                    CardView(background: BackgroundView.type4) {
+                        Text(appManager.flashMessage)
+                            .font(.title)
+                            .foregroundStyle(.white)
+                    }.onAppear {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                            appManager.flashMessage = ""
+                        }
                     }
                 }
-            }
 
-            if !appManager.fixedMessage.isEmpty {
-                CardView(background: BackgroundView.type4) {
-                    Text(appManager.fixedMessage)
-                        .font(.title)
-                        .foregroundStyle(.white)
+                if !appManager.fixedMessage.isEmpty {
+                    CardView(background: BackgroundView.type4) {
+                        Text(appManager.fixedMessage)
+                            .font(.title)
+                            .foregroundStyle(.white)
+                    }
                 }
+                
+//                if AppConfig.debug {
+//                    Text("\(Int(geo.size.width)) x \(Int(geo.size.height))")
+//                        .foregroundStyle(.red)
+//                        .font(.system(size: geo.size.height / 10))
+//                }
             }
         }
     }

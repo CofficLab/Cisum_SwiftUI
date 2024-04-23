@@ -13,6 +13,7 @@ struct SliderView: View {
         .publish(every: 0.5, on: .main, in: .common)
         .autoconnect()
 
+    var geo: GeometryProxy
     var player: SmartPlayer { audioManager.player }
     var duration: TimeInterval { player.duration }
     var current: String { player.currentTimeDisplay }
@@ -21,15 +22,19 @@ struct SliderView: View {
     var body: some View {
         HStack {
             Text(current)
+                .font(getFont())
 
             Slider(value: $value, in: 0 ... duration) { editing in
                 isEditing = editing
                 if !editing {
                     player.goto(value)
                 }
-            }.disabled(shouldDisable)
+            }
+            .disabled(shouldDisable)
+
 
             Text(left)
+                .font(getFont())
         }
         .font(.caption)
         .onReceive(timer) { _ in
@@ -53,8 +58,20 @@ struct SliderView: View {
         value = 0
         shouldDisable = true
     }
+
+    func getFont() -> Font {
+        return .title3
+    }
 }
 
 #Preview {
     AppPreview()
+}
+
+#Preview("iPad") {
+    LayoutView(device: .iPad_mini)
+}
+
+#Preview("iMac") {
+    LayoutView(device: .iMac)
 }

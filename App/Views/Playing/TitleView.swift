@@ -14,6 +14,8 @@ struct TitleView: View {
         ZStack {
             if let audio = audio {
                 Text(audio.title)
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(nil)
                     .foregroundStyle(.white)
                     .font(getFont())
                 // .background(AppConfig.makeBackground(.blue))
@@ -50,7 +52,7 @@ struct TitleView: View {
             return .title2
         }
 
-        return .title
+        return .system(size: geo.size.height/20)
     }
 }
 
@@ -62,4 +64,8 @@ struct TitleView: View {
 
 #Preview("Layout") {
     LayoutView()
+}
+
+#Preview("iMac") {
+    LayoutView(device: .iMac)
 }
