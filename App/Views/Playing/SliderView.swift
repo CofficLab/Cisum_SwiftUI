@@ -32,7 +32,6 @@ struct SliderView: View {
             }
             .disabled(shouldDisable)
 
-
             Text(left)
                 .font(getFont())
         }

@@ -7,7 +7,7 @@ import SwiftUI
 
 class AppManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
     @Published var showAlert: Bool = false
-    @Published var showDB: Bool = UIConfig.showDB
+    @Published var showDB: Bool = ViewConfig.showDB
     @Published var alertMessage: String = ""
     @Published var flashMessage: String = ""
     @Published var stateMessage: String = ""
@@ -20,7 +20,7 @@ class AppManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
             self.showDB = true
         }
         
-        UIConfig.setShowDB(true)
+        ViewConfig.setShowDB(true)
     }
     
     func closeDBView() {
@@ -28,7 +28,7 @@ class AppManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
             self.showDB = false
         }
         
-        UIConfig.setShowDB(false)
+        ViewConfig.setShowDB(false)
     }
     
     func toggleDBView() {

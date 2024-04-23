@@ -31,7 +31,7 @@
 		0B4DFC722BD740B4001CEF32 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4DFC712BD740B4001CEF32 /* Device.swift */; };
 		0B4DFC742BD74145001CEF32 /* DeviceCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4DFC732BD74145001CEF32 /* DeviceCategory.swift */; };
 		0B4E246F2BCAB8020033CC07 /* AppPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4E246E2BCAB8020033CC07 /* AppPreview.swift */; };
-		0B51F1762BC50A6200B86CB1 /* UIConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B51F1752BC50A6200B86CB1 /* UIConfig.swift */; };
+		0B51F1762BC50A6200B86CB1 /* ViewConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B51F1752BC50A6200B86CB1 /* ViewConfig.swift */; };
 		0B5786342BCB8DC00064F66A /* PlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B5786332BCB8DC00064F66A /* PlayView.swift */; };
 		0B5E51E52AD912B5000650CF /* DebugCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B5E51E42AD912B5000650CF /* DebugCommand.swift */; };
 		0B604AE82AD6384300929DD8 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B604AE72AD6384300929DD8 /* RootView.swift */; };
@@ -128,7 +128,7 @@
 		0B4DFC712BD740B4001CEF32 /* Device.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		0B4DFC732BD74145001CEF32 /* DeviceCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceCategory.swift; sourceTree = "<group>"; };
 		0B4E246E2BCAB8020033CC07 /* AppPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppPreview.swift; sourceTree = "<group>"; };
-		0B51F1752BC50A6200B86CB1 /* UIConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIConfig.swift; sourceTree = "<group>"; };
+		0B51F1752BC50A6200B86CB1 /* ViewConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewConfig.swift; sourceTree = "<group>"; };
 		0B5786332BCB8DC00064F66A /* PlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayView.swift; sourceTree = "<group>"; };
 		0B5E51E42AD912B5000650CF /* DebugCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugCommand.swift; sourceTree = "<group>"; };
 		0B604AE72AD6384300929DD8 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
@@ -428,7 +428,7 @@
 				0B4DFC732BD74145001CEF32 /* DeviceCategory.swift */,
 				0B1D5A752AB302600010DDF2 /* AppConfig.swift */,
 				0B220F742BB1BBDB0077255A /* SmartError.swift */,
-				0B51F1752BC50A6200B86CB1 /* UIConfig.swift */,
+				0B51F1752BC50A6200B86CB1 /* ViewConfig.swift */,
 				0BFB38EC2BCE779B0055E38B /* DeviceConfig.swift */,
 			);
 			path = Config;
@@ -586,7 +586,7 @@
 				0BB889D22AC042EC004788D5 /* BtnDownload.swift in Sources */,
 				0BAABEB82BC7D4B600DF4A31 /* BtnDelTask.swift in Sources */,
 				0BD0568B2BC6202900EBC7C4 /* DBFolder.swift in Sources */,
-				0B51F1762BC50A6200B86CB1 /* UIConfig.swift in Sources */,
+				0B51F1762BC50A6200B86CB1 /* ViewConfig.swift in Sources */,
 				0B1D5A792AB302610010DDF2 /* AudioManager.swift in Sources */,
 				0B9FA29B2BC81F53007B235A /* DefaultAlbum.swift in Sources */,
 				0BBA421B2ABD67D600C0B977 /* WindowManager.swift in Sources */,

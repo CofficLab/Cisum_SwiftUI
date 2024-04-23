@@ -5,6 +5,7 @@ enum Device: String, Equatable {
     case iMac
     case MacBook
     case iPhone_15
+    case iPhone_SE
     case iPhoneBig
     case iPhoneSmall
     case iPad_mini
@@ -33,7 +34,7 @@ enum Device: String, Equatable {
             .MacBook
         case .iPad_mini:
             .iPad
-        case .iPhoneBig, .iPhone_15, .iPhoneSmall:
+        case .iPhoneBig, .iPhone_15, .iPhoneSmall, .iPhone_SE:
             .iPhone
         }
     }
@@ -56,6 +57,8 @@ enum Device: String, Equatable {
             1488
         case .iPhone_15:
             1179
+        case .iPhone_SE:
+            750
         }
     }
 
@@ -73,6 +76,8 @@ enum Device: String, Equatable {
             2266
         case .iPhone_15:
             2556
+        case .iPhone_SE:
+            1334
         }
     }
 }
@@ -82,7 +87,11 @@ enum Device: String, Equatable {
 }
 
 #Preview("iPhone 15") {
-    LayoutView(device: .iPad_mini)
+    LayoutView(device: .iPhone_15)
+}
+
+#Preview("iPhone SE") {
+    LayoutView(device: .iPhone_SE)
 }
 
 #Preview("iPad") {

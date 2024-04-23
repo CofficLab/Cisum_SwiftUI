@@ -45,7 +45,7 @@ struct DBList: View {
                     Section(header: HStack {
                         Text("共 \(total.description)")
                         Spacer()
-                        if UIConfig.isNotDesktop {
+                        if ViewConfig.isNotDesktop {
                             BtnAdd()
                                 .font(.title2)
                                 .labelStyle(.iconOnly)

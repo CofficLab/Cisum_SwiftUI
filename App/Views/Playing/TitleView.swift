@@ -52,7 +52,7 @@ struct TitleView: View {
             return .title2
         }
 
-        return .system(size: geo.size.height/20)
+        return .system(size: geo.size.height/18)
     }
 }
 
@@ -64,6 +64,18 @@ struct TitleView: View {
 
 #Preview("Layout") {
     LayoutView()
+}
+
+#Preview("Layout-350") {
+    LayoutView(width: 350)
+}
+
+#Preview("iPhone 15") {
+    LayoutView(device: .iPhone_15)
+}
+
+#Preview("iPad") {
+    LayoutView(device: .iPad_mini)
 }
 
 #Preview("iMac") {

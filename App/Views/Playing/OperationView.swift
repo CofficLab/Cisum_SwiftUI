@@ -9,25 +9,20 @@ struct OperationView: View {
     var geo: GeometryProxy
 
     var body: some View {
-        GeometryReader { _ in
-            VStack {
-                HStack(spacing: 0, content: {
-                    Spacer()
-                    if let audio = audio {
-                        BtnLike(audio: audio, autoResize: true)
-                        if UIConfig.isDesktop {
-                            BtnShowInFinder(url: audio.url, autoResize: true)
-                        }
-                        BtnDel(audios: [audio.id], autoResize: true)
-                    }
-                    Spacer()
-                })
-                .frame(maxWidth: .infinity)
-                .foregroundStyle(.white)
-                .labelStyle(.iconOnly)
+        HStack(spacing: 0, content: {
+            Spacer()
+            if let audio = audio {
+                BtnLike(audio: audio, autoResize: true)
+                if ViewConfig.isDesktop {
+                    BtnShowInFinder(url: audio.url, autoResize: true)
+                }
+                BtnDel(audios: [audio.id], autoResize: true)
             }
-            .frame(maxWidth: .infinity)
-        }
+            Spacer()
+        })
+        .frame(maxWidth: .infinity)
+        .foregroundStyle(.white)
+        .labelStyle(.iconOnly)
     }
 
     func getFont() -> Font {

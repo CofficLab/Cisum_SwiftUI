@@ -130,13 +130,13 @@ struct AlbumView: View {
             AlbumView.makeProgressView()
             Text("1")
         }.frame(
-            width: UIConfig.isDesktop ? 36 : 36,
-            height: UIConfig.isDesktop ? 36 : 36
+            width: ViewConfig.isDesktop ? 36 : 36,
+            height: ViewConfig.isDesktop ? 36 : 36
         ).background(.red.opacity(0.2))
         HStack {
             AlbumView.makeProgressView().frame(
-                width: UIConfig.isDesktop ? 48 : 36,
-                height: UIConfig.isDesktop ? 36 : 36
+                width: ViewConfig.isDesktop ? 48 : 36,
+                height: ViewConfig.isDesktop ? 36 : 36
             )
             Text("2")
         }.background(.blue.opacity(0.2))

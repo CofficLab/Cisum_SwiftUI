@@ -36,7 +36,7 @@ struct RowTask: View {
         .onHover(perform: { hovered = $0 })
         .frame(maxHeight: .infinity)
         .contextMenu(menuItems: {
-            if UIConfig.isDesktop {
+            if ViewConfig.isDesktop {
                 BtnShowInFinder(url: task.url, autoResize: false)
             }
             Divider()

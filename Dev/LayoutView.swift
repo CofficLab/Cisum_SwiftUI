@@ -68,6 +68,7 @@ struct LayoutView: View {
             Spacer(minLength: 20)
             ForEach(heights, id: \.self) { height in
                 makeItem(width: width, height: height)
+                    .frame(width: width, height: height)
                 Spacer(minLength: 30)
                 Divider()
             }
@@ -75,10 +76,8 @@ struct LayoutView: View {
             Spacer()
         }
         .modelContainer(AppConfig.getContainer())
-        .frame(minWidth: width)
-        .frame(minHeight: AppConfig.minHeight)
+        .frame(width: width + 100)
         .frame(height: 800)
-        .background(BackgroundView.type4)
     }
 
     func makeItemForDevice(_ device: Device) -> some View {
@@ -95,12 +94,16 @@ struct LayoutView: View {
                     .frame(width: width)
                     .frame(height: height)
 
-                    GroupBox {
-                        Text("\(Int(width)) x \(Int(height))")
-                        Text("\(Int(geo.size.width)) x \(Int(geo.size.height))")
+                    VStack {
+                        GroupBox {
+                            Text("\(Int(width)) x \(Int(height))")
+                            Text("\(Int(geo.size.width)) x \(Int(geo.size.height))")
+                        }
+                        Spacer()
                     }
                     .foregroundStyle(.yellow)
-                    .font(.system(size: height / 10))
+                    .font(.system(size: min(height / 10, width/6)))
+                    .opacity(0.8)
                 }.scaleEffect(min(geo.size.width / width, geo.size.height / height))
             }.frame(width: geo.size.width, height: geo.size.height)
         }
@@ -117,6 +120,10 @@ struct LayoutView: View {
 
 #Preview("iMac") {
     LayoutView(device: .iMac)
+}
+
+#Preview("iPhone SE") {
+    LayoutView(device: .iPhone_SE)
 }
 
 #Preview("iPhone 15") {
