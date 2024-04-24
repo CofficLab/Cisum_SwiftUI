@@ -177,7 +177,6 @@ struct ControlView: View {
 
     private func getBottomHeight(_ geo: GeometryProxy) -> CGFloat {
         if DeviceConfig.noHomeButton && ViewConfig.isNotDesktop && showDB == false {
-            print(500)
             return 50
         }
 

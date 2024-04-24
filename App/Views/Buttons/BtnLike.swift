@@ -1,4 +1,5 @@
 import SwiftUI
+import OSLog
 
 struct BtnLike: View {
     @EnvironmentObject var audioManager: AudioManager
@@ -18,17 +19,15 @@ struct BtnLike: View {
             dynamicSize: autoResize,
             onTap: {
                 Task {
-                    if audio.like {
-                        await audioManager.db.dislike(audio)
-                        self.like = false
-                    } else {
-                        await audioManager.db.like(audio)
-                        self.like = true
-                    }
+                    await audioManager.db.toggleLike(audio)
                 }
             })
             .onAppear {
                 self.like = audio.like
+                EventManager().onAudioUpdate({ audio in
+                    os_log("OnAudioUpdated with like -> \(audio.like)")
+                    self.like = audio.like
+                })
             }
             .onChange(of: audio) {
                 self.like = audio.like

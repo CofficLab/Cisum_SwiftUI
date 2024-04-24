@@ -19,6 +19,16 @@ class EventManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
         )
     }
     
+    func emitAudioUpdate(_ audio: Audio) {
+        NotificationCenter.default.post(
+            name: NSNotification.Name(Event.AudioUpdated.name),
+            object: nil,
+            userInfo: [
+                "audio": audio
+            ]
+        )
+    }
+    
     func emitDelete(_ items: [MetadataItemWrapper]) {
         NotificationCenter.default.post(
             name: NSNotification.Name(Event.Delete.name),
@@ -57,12 +67,27 @@ class EventManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
             })
     }
     
+    func onAudioUpdate(_ callback: @escaping (_ audio: Audio) -> Void) {
+        n.addObserver(
+            forName: NSNotification.Name(Event.AudioUpdated.name),
+            object: nil,
+            queue: .main,
+            using: { notification in
+                self.queue.async {
+                    let data = notification.userInfo as! [String: Audio]
+                    let audio = data["audio"]!
+                    callback(audio)
+                }
+            })
+    }
+    
     func removeListener(_ observer: Any) {
         n.removeObserver(observer)
     }
     
     enum Event {
         case Updated
+        case AudioUpdated
         case Delete
         
         var name: String {

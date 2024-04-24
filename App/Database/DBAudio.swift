@@ -468,11 +468,22 @@ extension DB {
             }
         }
     }
+    
+    func toggleLike(_ audio: Audio) {
+        if let dbAudio = find(audio.id) {
+            dbAudio.like.toggle()
+            save()
+            
+            EventManager().emitAudioUpdate(dbAudio)
+        }
+    }
 
     func like(_ audio: Audio) {
         if let dbAudio = find(audio.id) {
             dbAudio.like = true
             save()
+            
+            EventManager().emitAudioUpdate(dbAudio)
         }
     }
 
@@ -480,6 +491,8 @@ extension DB {
         if let dbAudio = find(audio.id) {
             dbAudio.like = false
             save()
+            
+            EventManager().emitAudioUpdate(dbAudio)
         }
     }
 

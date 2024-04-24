@@ -22,6 +22,7 @@ class Audio {
     // 未解决的问题：ios上文件APP中能看到，但FileManager.default.exits返回false
     var isExists: Bool { fileManager.fileExists(atPath: url.path) || true }
     var isNotExists: Bool { !isExists }
+    var dislike: Bool { !like }
 
     init(_ url: URL) {
         // os_log("\(Logger.isMain)🚩 AudioModel::init -> \(url.lastPathComponent)")

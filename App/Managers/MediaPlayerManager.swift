@@ -6,6 +6,7 @@ import SwiftUI
 
 class MediaPlayerManager: ObservableObject {
     static var label = "📱 MediaPlayerManager::"
+    static let c = MPRemoteCommandCenter.shared()
 
     var label: String { MediaPlayerManager.label }
     var audioManager: AudioManager
@@ -13,7 +14,7 @@ class MediaPlayerManager: ObservableObject {
 
     init(audioManager: AudioManager) {
         self.audioManager = audioManager
-        onCommand()
+        self.onCommand()
     }
 
     static func setPlayingInfo(_ smartPlayer: SmartPlayer) {
@@ -28,7 +29,7 @@ class MediaPlayerManager: ObservableObject {
         var currentTime: TimeInterval = 0
         var image = Audio.defaultImage
 
-        //os_log("\(Logger.isMain)\(MediaPlayerManager.label)Update -> \(smartPlayer.state.des) -> \(audio?.title ?? "-")")
+        // os_log("\(Logger.isMain)\(MediaPlayerManager.label)Update -> \(smartPlayer.state.des) -> \(audio?.title ?? "-")")
 
         if let audio = audio {
             title = audio.title
@@ -51,15 +52,20 @@ class MediaPlayerManager: ObservableObject {
                 return image
             }),
         ]
+        
+        let like = audio?.like ?? false
+        os_log("\(Logger.isMain)\(self.label)setPlayingInfo like -> \(like)")
+        MediaPlayerManager.c.likeCommand.isActive = like
     }
 
     // 接收控制中心的指令
     private func onCommand() {
-        let c = MPRemoteCommandCenter.shared()
-
+        let c = MediaPlayerManager.c
+        
         c.nextTrackCommand.addTarget { _ in
             os_log("\(Logger.isMain)\(self.label)下一首")
             self.audioManager.next(manual: true)
+
             return .success
         }
 
@@ -68,6 +74,7 @@ class MediaPlayerManager: ObservableObject {
             do {
                 try self.audioManager.prev()
                 os_log("\(Logger.isMain)MediaPlayerManager::pre")
+
                 return .success
             } catch let e {
                 os_log("\(Logger.isMain)MediaPlayerManager::\(e.localizedDescription)")
@@ -83,14 +90,14 @@ class MediaPlayerManager: ObservableObject {
         }
 
         c.playCommand.addTarget { _ in
-            os_log("\(Logger.isMain)播放")
+            os_log("\(Logger.isMain)\(self.label)播放")
             self.player.resume()
 
             return .success
         }
 
         c.stopCommand.addTarget { _ in
-            os_log("\(Logger.isMain)停止")
+            os_log("\(Logger.isMain)\(self.label)停止")
 
             self.player.stop()
 
@@ -98,8 +105,17 @@ class MediaPlayerManager: ObservableObject {
         }
 
         c.likeCommand.addTarget { _ in
-            os_log("\(Logger.isMain)喜欢")
+            os_log("\(Logger.isMain)\(self.label)点击了喜欢按钮")
 
+            if let audio = self.player.audio {
+                Task {
+                    await self.audioManager.db.toggleLike(audio)
+                }
+                
+                c.likeCommand.isActive = audio.dislike
+                c.dislikeCommand.isActive = audio.like
+            }
+            
             return .success
         }
 
