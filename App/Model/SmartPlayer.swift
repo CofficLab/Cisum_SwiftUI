@@ -33,8 +33,7 @@ class SmartPlayer: NSObject {
                     return setError(SmartError.NoAudioInList)
                 }
             case .Playing(let audio):
-                // 说明是恢复播放
-                if self.audio?.url == audio.url {
+                if oldValue.isPaused() {
                     self.player.play()
                     return
                 }
@@ -197,6 +196,15 @@ extension SmartPlayer {
                 "错误：\(error.localizedDescription)"
             default:
                 String(describing: self)
+            }
+        }
+        
+        func isPaused() -> Bool {
+            switch self {
+            case .Paused:
+                true
+            default:
+                false
             }
         }
     }

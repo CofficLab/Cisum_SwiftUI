@@ -28,7 +28,7 @@ class MediaPlayerManager: ObservableObject {
         var currentTime: TimeInterval = 0
         var image = Audio.defaultImage
 
-        os_log("\(Logger.isMain)\(MediaPlayerManager.label)Update -> \(smartPlayer.state.des) -> \(audio?.title ?? "-")")
+        //os_log("\(Logger.isMain)\(MediaPlayerManager.label)Update -> \(smartPlayer.state.des) -> \(audio?.title ?? "-")")
 
         if let audio = audio {
             title = audio.title
