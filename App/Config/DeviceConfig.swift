@@ -6,6 +6,7 @@ import AppKit
 import UIKit
 #endif
 
+import LocalAuthentication
 import Foundation
 import OSLog
 
@@ -67,23 +68,35 @@ extension DeviceConfig {
     }
 }
 
-// MARK: Home键
+// MARK: FACEID
 
 extension DeviceConfig {
-    static var hasHomeButton: Bool {
-        #if os(iOS)
-        let aspectRatio = UIScreen.main.bounds.size.height / UIScreen.main.bounds.size.width
-        if aspectRatio >= 2.0 {
-            return false // 是全面屏设备
-        } else {
-            return true // 不是全面屏设备
-        }
-        #else
-        return false
-        #endif
+    static func isFaceIDAvailable() -> Bool {
+        biometricType() == .faceID
     }
+    
+    static func biometricType() -> LABiometryType {
+        let authContext = LAContext()
+        if #available(iOS 11, *) {
+            let _ = authContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
+            
+            return authContext.biometryType
+        } else {
+            return authContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil) ? .touchID : .none
+        }
+    }
+}
 
-    static var noHomeButton: Bool {
-        !hasHomeButton
+// MARK: HomeIndicator
+
+extension DeviceConfig {
+    static func hasHomeIndicator() -> Bool {
+        #if os(iOS)
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            return windowScene.windows.first?.safeAreaInsets.bottom ?? 0 > 0
+        }
+        #endif
+        
+        return false
     }
 }
