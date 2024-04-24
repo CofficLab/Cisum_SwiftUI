@@ -13,6 +13,7 @@ struct ControlView: View {
     @State var operationHeight: CGFloat = 0
     @State var sliderHeight: CGFloat = 0
     @State var buttonsHeight: CGFloat = 0
+    @State var rightAlbumWidth: CGFloat = 0
 
     var heightSpace: CGFloat {
         totalHeight
@@ -34,9 +35,14 @@ struct ControlView: View {
         GeometryReader { geo in
             HStack(spacing: 0) {
                 VStack(spacing: 0) {
+                    // MARK: 封面图
+
+                    // 封面图占尽可能多的高度
+
                     if shouldShowRightAlbum(geo) == false && geo.size.height > ViewConfig.minHeightToShowAlbum {
-                        PlayingAlbum()
+                        PlayingAlbum(alignTop: true)
                             .frame(maxWidth: .infinity)
+                            .frame(maxHeight: .infinity)
                             .background(ViewConfig.background(.yellow))
                             .background(GeometryReader { geo in
                                 Color.clear.onAppear {
@@ -47,10 +53,12 @@ struct ControlView: View {
                     }
 
                     // MARK: 标题
-                    
+
+                    // 标题占据的高度=实际需要的高度
+
                     Spacer()
                     if audioManager.showTitleView {
-                        TitleView()
+                        TitleView(width: geo.size.width - rightAlbumWidth)
                             .frame(maxWidth: .infinity)
                             .background(ViewConfig.background(.red))
                             .background(GeometryReader { geo in
@@ -61,7 +69,7 @@ struct ControlView: View {
                             })
                     }
                     Spacer()
-                    
+
                     // MARK: 状态
 
                     StateView()
@@ -123,7 +131,14 @@ struct ControlView: View {
                         Spacer()
                         PlayingAlbum()
                             .background(ViewConfig.background(.yellow))
-                    }.frame(maxWidth: geo.size.height * 1.3)
+                    }
+                    .frame(maxWidth: geo.size.height * 1.3)
+                    .background(GeometryReader { geo in
+                        Color.clear.onAppear {
+                            self.rightAlbumWidth = geo.size.width
+                            printHeight()
+                        }
+                    })
                 }
             }
             .padding(.bottom, 0)
@@ -169,7 +184,7 @@ struct ControlView: View {
 
     private func getButtonsHeight(_ geo: GeometryProxy) -> CGFloat {
         return max(0, min(
-            geo.size.width / 5,900
+            geo.size.width / 5, 900
         ))
     }
 

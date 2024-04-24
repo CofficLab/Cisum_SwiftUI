@@ -1,3 +1,4 @@
+import OSLog
 import SwiftData
 import SwiftUI
 
@@ -6,28 +7,19 @@ struct TitleView: View {
 
     var audio: Audio? { audioManager.audio }
     var characterCount: Int { audio?.title.count ?? 0 }
+    var width: CGFloat
 
     @State var url: URL? = nil
 
     var body: some View {
         ZStack {
-            GeometryReader { geo in
-                if let audio = audio {
-                    VStack {
-                        Spacer()
-                        HStack {
-                            Spacer()
-                            Text(audio.title)
-                                .multilineTextAlignment(.leading)
-                                .lineLimit(nil)
-                                .foregroundStyle(.white)
-                                .font(getFont(width: geo.size.width))
-                            // .background(AppConfig.makeBackground(.blue))
-                            Spacer()
-                        }
-                        Spacer()
-                    }
-                }
+            if let audio = audio {
+                Text(audio.title)
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(nil)
+                    .foregroundStyle(.white)
+                    .font(getFont(width: width))
+                // .background(AppConfig.makeBackground(.blue))
             }
         }
         .onAppear {
@@ -52,12 +44,18 @@ struct TitleView: View {
         }
     }
 
+    /// 根据宽度来决定字体的大小
     func getFont(width: CGFloat) -> Font {
         guard let audio = audioManager.audio else {
             return .title
         }
+        
+        // 防止字较少时字体很大
+        var characterCount = max(audio.title.count, 5)
 
-        return .system(size: max(width / CGFloat(audio.title.count), 20))
+        os_log("GetFont width -> \(width), characterCount=\(characterCount)")
+
+        return .system(size: max(width / CGFloat(characterCount) * 0.8, 20))
     }
 }
 

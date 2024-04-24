@@ -75,3 +75,7 @@ extension ViewConfig {
 #Preview("iPhone 15") {
     LayoutView(device: .iPhone_15)
 }
+
+#Preview("500") {
+    LayoutView(width: 500)
+}
