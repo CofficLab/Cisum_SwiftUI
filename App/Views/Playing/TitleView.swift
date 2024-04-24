@@ -49,13 +49,27 @@ struct TitleView: View {
         guard let audio = audioManager.audio else {
             return .title
         }
-        
+
         // 防止字较少时字体很大
-        var characterCount = max(audio.title.count, 5)
+        let characterCount = max(getCountCharacters(audio.title), 5)
 
         os_log("GetFont width -> \(width), characterCount=\(characterCount)")
 
-        return .system(size: max(width / CGFloat(characterCount) * 0.8, 20))
+        return .system(size: max(width / CGFloat(characterCount) * 1.1, 20))
+    }
+
+    func getCountCharacters(_ input: String) -> Double {
+        var count: Double = 0
+
+        for char in input {
+            if char.isASCII {
+                count += 1
+            } else {
+                count += 2 // 其他字符算2个
+            }
+        }
+
+        return count
     }
 }
 

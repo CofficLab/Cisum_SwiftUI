@@ -5,26 +5,6 @@ struct ControlView: View {
     @EnvironmentObject var audioManager: AudioManager
     @EnvironmentObject var appManager: AppManager
 
-    @State var totalHeight: CGFloat = 0
-    @State var topAlbumVisible = false
-    @State var topAlbumHeight: CGFloat = 0
-    @State var titleHeight: CGFloat = 0
-    @State var stateViewHeight: CGFloat = 0
-    @State var operationHeight: CGFloat = 0
-    @State var sliderHeight: CGFloat = 0
-    @State var buttonsHeight: CGFloat = 0
-    @State var rightAlbumWidth: CGFloat = 0
-
-    var heightSpace: CGFloat {
-        totalHeight
-            - self.topAlbumHeight
-            - self.titleHeight
-            - self.stateViewHeight
-            - self.operationHeight
-            - self.sliderHeight
-            - self.buttonsHeight
-    }
-
     // MARK: 子视图是否展示
 
     var showOperationView = true
@@ -35,40 +15,11 @@ struct ControlView: View {
         GeometryReader { geo in
             HStack(spacing: 0) {
                 VStack(spacing: 0) {
-                    // MARK: 封面图
+                    // MARK: 封面图和标题
 
-                    // 封面图占尽可能多的高度
-
-                    if shouldShowRightAlbum(geo) == false && geo.size.height > ViewConfig.minHeightToShowAlbum {
-                        PlayingAlbum(alignTop: true)
-                            .frame(maxWidth: .infinity)
-                            .frame(maxHeight: .infinity)
-                            .background(ViewConfig.background(.yellow))
-                            .background(GeometryReader { geo in
-                                Color.clear.onAppear {
-                                    self.topAlbumHeight = geo.size.height
-//                                    printHeight()
-                                }
-                            })
-                    }
-
-                    // MARK: 标题
-
-                    // 标题占据的高度=实际需要的高度
-
-                    Spacer()
-                    if audioManager.showTitleView {
-                        TitleView(width: geo.size.width - rightAlbumWidth)
-                            .frame(maxWidth: .infinity)
-                            .background(ViewConfig.background(.red))
-                            .background(GeometryReader { geo in
-                                Color.clear.onAppear {
-                                    self.titleHeight = geo.size.height
-//                                    printHeight()
-                                }
-                            })
-                    }
-                    Spacer()
+                    HeroView()
+                        .frame(maxWidth: .infinity)
+                        .frame(maxHeight: .infinity)
 
                     // MARK: 状态
 
@@ -76,12 +27,6 @@ struct ControlView: View {
 //                        .frame(height: getStateHeight(geo))
                         .frame(maxWidth: .infinity)
                         .background(ViewConfig.background(.red))
-                        .background(GeometryReader { geo in
-                            Color.clear.onAppear {
-                                self.titleHeight = geo.size.height
-//                                printHeight()
-                            }
-                        })
 
                     // MARK: 操作栏
 
@@ -89,12 +34,6 @@ struct ControlView: View {
                         OperationView(geo: geo)
                             .frame(height: getOperationHeight(geo))
                             .background(ViewConfig.background(.white))
-                            .background(GeometryReader { geo in
-                                Color.clear.onAppear {
-                                    self.operationHeight = geo.size.height
-//                                    printHeight()
-                                }
-                            })
                     }
 
                     // MARK: 进度栏
@@ -102,12 +41,6 @@ struct ControlView: View {
                     SliderView(geo: geo)
                         .padding()
                         .background(ViewConfig.background(.black))
-                        .background(GeometryReader { geo in
-                            Color.clear.onAppear {
-                                self.sliderHeight = geo.size.height
-//                                printHeight()
-                            }
-                        })
 
                     // MARK: 控制栏
 
@@ -115,12 +48,6 @@ struct ControlView: View {
                         .frame(height: getButtonsHeight(geo))
                         .padding(.bottom, getBottomHeight(geo))
                         .background(ViewConfig.background(.red))
-                        .background(GeometryReader { geo in
-                            Color.clear.onAppear {
-                                self.buttonsHeight = geo.size.height
-//                                printHeight()
-                            }
-                        })
                 }
 
                 // MARK: 横向的封面图
@@ -133,12 +60,12 @@ struct ControlView: View {
                             .background(ViewConfig.background(.yellow))
                     }
                     .frame(maxWidth: geo.size.height * 1.3)
-                    .background(GeometryReader { geo in
-                        Color.clear.onAppear {
-                            self.rightAlbumWidth = geo.size.width
-                            printHeight()
-                        }
-                    })
+                    .onAppear {
+                        appManager.rightAlbumVisible = true
+                    }
+                    .onDisappear {
+                        appManager.rightAlbumVisible = false
+                    }
                 }
             }
             .padding(.bottom, 0)
@@ -148,12 +75,6 @@ struct ControlView: View {
         .foregroundStyle(.white)
         .ignoresSafeArea()
         .frame(minHeight: AppConfig.controlViewMinHeight)
-        .background(GeometryReader { geo in
-            Color.clear.onAppear {
-                self.totalHeight = geo.size.height
-//                printHeight()
-            }
-        })
     }
 
     // MARK: 状态栏的高度
@@ -183,9 +104,7 @@ struct ControlView: View {
     // MARK: 控制按钮的高度
 
     private func getButtonsHeight(_ geo: GeometryProxy) -> CGFloat {
-        return max(0, min(
-            geo.size.width / 5, 900
-        ))
+        min(geo.size.width / 5, 900, geo.size.height / 4)
     }
 
     // MARK: 底部Padding的高度
@@ -202,10 +121,6 @@ struct ControlView: View {
 
     private func shouldShowRightAlbum(_ geo: GeometryProxy) -> Bool {
         geo.size.width > Device.iPad_mini.width
-    }
-
-    private func printHeight() {
-        print("共->\(self.totalHeight)\n 封面图->\(self.topAlbumHeight) \n 标题栏->\(self.titleHeight)  \n 状态栏->\(self.stateViewHeight) \n 操作栏->\(self.operationHeight) \n 控制栏->\(self.buttonsHeight) \n 进度栏->\(self.sliderHeight) \n 剩余栏->\(self.heightSpace)")
     }
 }
 

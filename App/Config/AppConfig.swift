@@ -66,7 +66,7 @@ extension AppConfig {
     static var controlViewMinHeight: CGFloat = Self.minHeight
     static var databaseViewHeightMin: CGFloat = 200
     static var minWidth: CGFloat = 350
-    static var minHeight: CGFloat = 250
+    static var minHeight: CGFloat = 320
     static var defaultHeight: CGFloat = 360
     #if os(macOS)
     static var canResize = true
@@ -177,4 +177,12 @@ extension AppConfig {
 
 #Preview {
     LayoutView()
+}
+
+#Preview("500") {
+    LayoutView(width: 500)
+}
+
+#Preview("1000") {
+    LayoutView(width: 1000)
 }

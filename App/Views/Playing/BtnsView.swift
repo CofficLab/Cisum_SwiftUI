@@ -21,20 +21,7 @@ struct BtnsView: View {
                 })
                 .foregroundStyle(.white)
                 .labelStyle(.iconOnly)
-//                .background(.blue)
-
-                if showRow2(geo) {
-                    HStack(spacing: 0, content: {
-                        BtnToggleDB()
-                        BtnMode()
-                    })
-                    .foregroundStyle(.white)
-                    .labelStyle(.iconOnly)
-//                    .background(.blue)
-                }
             }
-//            .frame(maxHeight: .infinity)
-            .background(.blue.opacity(0))
         }
     }
 

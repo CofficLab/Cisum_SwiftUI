@@ -27,7 +27,7 @@ enum ViewConfig {
 
 extension ViewConfig {
     /// 开发时如果不想显示背景，改成true
-    static var noBackground = true
+    static var noBackground = false
     
     /// 生产环境一定不会显示背景
     static func background(_ color: Color = .red) -> Color {
