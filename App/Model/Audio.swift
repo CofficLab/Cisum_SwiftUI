@@ -1,4 +1,5 @@
 import AVFoundation
+import CryptoKit
 import Foundation
 import OSLog
 import SwiftData
@@ -14,6 +15,9 @@ class Audio {
     var like: Bool = false
     var title: String = ""
     var playCount: Int = 0
+    var fileHash: String = ""
+    var duplicatedOf: Audio? = nil
+    var duplicateIds: [Audio.ID] = []
 
     var size: Int64 { getFileSize() }
     var ext: String { url.pathExtension }
@@ -27,8 +31,9 @@ class Audio {
     init(_ url: URL) {
         // os_log("\(Logger.isMain)🚩 AudioModel::init -> \(url.lastPathComponent)")
         self.url = url
-        title = url.deletingPathExtension().lastPathComponent
-        order = Self.makeRandomOrder()
+        self.title = url.deletingPathExtension().lastPathComponent
+        self.order = Self.makeRandomOrder()
+        self.fileHash = getHash()
     }
 
     static func makeRandomOrder() -> Int {
@@ -62,6 +67,17 @@ class Audio {
         return self
     }
 
+    func getDuplicates(_ db: DB) async -> [Audio] {
+        var audios: [Audio] = []
+        for duplicateId in self.duplicateIds {
+            if let a: Audio = await db.findAudio(duplicateId) {
+                audios.append(a)
+            }
+        }
+
+        return audios
+    }
+
     static func fromMetaItem(_ item: MetadataItemWrapper) -> Audio? {
         guard let url = item.url else {
             return nil
@@ -77,6 +93,22 @@ class Audio {
 
 extension Audio: Identifiable {
     var id: PersistentIdentifier { persistentModelID }
+}
+
+// MARK: HASH
+
+extension Audio {
+    func getHash() -> String {
+        do {
+            let fileData = try Data(contentsOf: URL(fileURLWithPath: self.url.path))
+            let hash = SHA256.hash(data: fileData)
+
+            return hash.compactMap { String(format: "%02x", $0) }.joined()
+        } catch {
+            print("Error calculating file hash: \(error)")
+            return "-"
+        }
+    }
 }
 
 // MARK: iCloud 相关

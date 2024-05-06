@@ -43,6 +43,10 @@ actor DB: ModelActor {
         Task.detached(operation: {
             await DBPrepareJob(db: self).run()
         })
+        
+        Task.detached(operation: {
+            FindDuplicates(db: self).run()
+        })
     }
 
     func setOnUpdated(_ callback: @escaping () -> Void) {

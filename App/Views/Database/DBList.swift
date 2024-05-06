@@ -9,9 +9,10 @@ struct DBList: View {
 
     @Query(sort: \Audio.order, animation: .default) var audios: [Audio]
     @Query(sort: \CopyTask.createdAt, animation: .default) var tasks: [CopyTask]
-    
+
     @State var selection: Audio.ID? = nil
 
+    var groups: [AudioGroup] { AudioGroup.fromAudios(audios) }
     var total: Int { db.getTotal() }
     var db: DB { audioManager.db }
     var audio: Audio? { audioManager.audio }
@@ -19,7 +20,7 @@ struct DBList: View {
         if appManager.isDropping {
             return true
         }
-        
+
         return appManager.flashMessage.isEmpty && total == 0
     }
 
@@ -41,7 +42,7 @@ struct DBList: View {
                             })
                         })
                     }
-                    
+
                     Section(header: HStack {
                         Text("共 \(total.description)")
                         Spacer()
@@ -51,18 +52,13 @@ struct DBList: View {
                                 .labelStyle(.iconOnly)
                         }
                     }, content: {
-                        ForEach(audios) { audio in
-                            Row(audio)
+                        ForEach(audios.filter { $0.duplicatedOf == nil }) { audio in
+                            DBRow(audio)
                         }
-                        .onDelete(perform: { indexSet in
-                            for i in indexSet {
-                                db.delete(audios[i])
-                            }
-                        })
                     })
                 }
             }
-            
+
             if showTips {
                 DBTips().shadow(radius: 8)
             }
@@ -71,7 +67,6 @@ struct DBList: View {
 }
 
 #Preview {
-    RootView {
-        ContentView()
-    }.modelContainer(AppConfig.getContainer())
+    LayoutView(width: 400, height: 800)
+        .frame(height: 800)
 }

@@ -180,6 +180,28 @@ extension DB {
 // MARK: 查询
 
 extension DB {
+    func findDuplicates(_ audio: Audio) -> [Audio] {
+        os_log("\(Logger.isMain)🍋 DB::findDuplicates")
+
+        guard let dbAudio = self.find(audio.id) else {
+            return []
+        }
+
+        let url = dbAudio.url
+        let hash = dbAudio.fileHash
+        let predicate = #Predicate<Audio> {
+            $0.fileHash == hash && $0.url != url
+        }
+        let descriptor = FetchDescriptor<Audio>(predicate: predicate)
+        do {
+            return try context.fetch(descriptor)
+        } catch let e {
+            print(e)
+        }
+
+        return []
+    }
+
     func refresh(_ audio: Audio) -> Audio {
         if let a = find(audio.id) {
             return a
@@ -200,6 +222,26 @@ extension DB {
         } catch let e {
             print(e)
             return 0
+        }
+    }
+
+    func audiosWithSameHash(_ audio: Audio) -> [Audio] {
+        guard let a = self.find(audio.id) else {
+            return []
+        }
+
+        let hash = audio.fileHash
+
+        let predicate = #Predicate<Audio> {
+            $0.fileHash == hash
+        }
+        let descriptor = FetchDescriptor<Audio>(predicate: predicate)
+        do {
+            let result = try context.fetch(descriptor)
+            return result
+        } catch let e {
+            print(e)
+            return []
         }
     }
 
@@ -265,6 +307,10 @@ extension DB {
     func find(_ id: PersistentIdentifier) -> Audio? {
         context.model(for: id) as? Audio
     }
+    
+    func findAudio(_ id: PersistentIdentifier) -> Audio? {
+        context.model(for: id) as? Audio
+    }
 
     func find(_ url: URL) -> Audio? {
         let predicate = #Predicate<Audio> {
@@ -327,7 +373,7 @@ extension DB {
             if let first = result.first {
                 return first
             } else {
-                os_log("\(Logger.isMain) ⚠️ DBAudio::get not found")
+                os_log("\(Logger.isMain) ⚠️ DBAudio::get not found -> \(i)")
             }
         } catch let e {
             print(e)
@@ -409,7 +455,7 @@ extension DB {
 
     func sort(_ sticky: Audio?) {
         os_log("\(Logger.isMain)\(DB.label)Sort")
-        
+
         // 前100留给特殊用途
         var offset = 100
 
@@ -468,12 +514,12 @@ extension DB {
             }
         }
     }
-    
+
     func toggleLike(_ audio: Audio) {
         if let dbAudio = find(audio.id) {
             dbAudio.like.toggle()
             save()
-            
+
             EventManager().emitAudioUpdate(dbAudio)
         }
     }
@@ -482,7 +528,7 @@ extension DB {
         if let dbAudio = find(audio.id) {
             dbAudio.like = true
             save()
-            
+
             EventManager().emitAudioUpdate(dbAudio)
         }
     }
@@ -491,8 +537,56 @@ extension DB {
         if let dbAudio = find(audio.id) {
             dbAudio.like = false
             save()
-            
+
             EventManager().emitAudioUpdate(dbAudio)
+        }
+    }
+    
+    func updateDuplicates(_ audio: Audio) {
+        os_log("\(Logger.isMain)🍋 DB::updateDuplicates \(audio.title)")
+
+        guard let dbAudio = self.find(audio.id) else {
+            return
+        }
+
+        let url = dbAudio.url
+        let hash = dbAudio.fileHash
+        let order = dbAudio.order
+        
+        // 更新DuplicateOf
+        var predicate = #Predicate<Audio> {
+            $0.fileHash == hash && $0.url != url && $0.order <= order
+        }
+        var descriptor = FetchDescriptor<Audio>(predicate: predicate)
+        do {
+            let duplicates = try context.fetch(descriptor)
+            dbAudio.duplicatedOf = duplicates.first
+            save()
+
+            EventManager().emitAudioUpdate(dbAudio)
+            
+            if dbAudio.duplicatedOf != nil {
+                return
+            }
+        } catch let e {
+            print(e)
+        }
+        
+        // 更新Duplicates
+        predicate = #Predicate<Audio> {
+            $0.fileHash == hash && $0.url != url && $0.order >= order
+        }
+        descriptor = FetchDescriptor<Audio>(predicate: predicate)
+        do {
+            let duplicates = try context.fetch(descriptor)
+            os_log("\(Logger.isMain)🍋 DB::updateDuplicates \(audio.title) -> \(duplicates.count)")
+            
+            dbAudio.duplicateIds = duplicates.map { $0.id }
+            save()
+
+            EventManager().emitAudioUpdate(dbAudio)
+        } catch let e {
+            print(e)
         }
     }
 

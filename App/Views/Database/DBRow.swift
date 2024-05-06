@@ -1,13 +1,15 @@
 import OSLog
 import SwiftUI
 
-struct Row: View {
+struct DBRow: View {
     @EnvironmentObject var audioManager: AudioManager
 
     @State var hovered = false
 
     var audio: Audio
+
     var current: Audio? { audioManager.audio }
+    var db: DB { audioManager.db }
     var background: Color {
         if current?.url == audio.url {
             return Color.accentColor
@@ -15,9 +17,10 @@ struct Row: View {
 
         return hovered ? AppConfig.getBackground.opacity(0.9) : .clear
     }
-    
+
     init(_ audio: Audio) {
         self.audio = audio
+//        print("\(audio.title) with duplicates -> \(audio.duplicates.count)")
     }
 
     var body: some View {
@@ -39,6 +42,9 @@ struct Row: View {
                     HStack {
                         Text(audio.getFileSizeReadable())
                             .foregroundStyle(.secondary)
+
+                        Duplicates(audio)
+
                         Spacer()
                     }
                 }
