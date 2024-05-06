@@ -553,41 +553,48 @@ extension DB {
         let hash = dbAudio.fileHash
         let order = dbAudio.order
         
+        // 清空字段
+        dbAudio.duplicateIds = []
+        dbAudio.duplicatedOf = nil
+        self.save()
+        
         // 更新DuplicateOf
         var predicate = #Predicate<Audio> {
-            $0.fileHash == hash && $0.url != url && $0.order <= order
+            $0.fileHash == hash && $0.url != url && $0.order < order
         }
         var descriptor = FetchDescriptor<Audio>(predicate: predicate)
         do {
             let duplicates = try context.fetch(descriptor)
             dbAudio.duplicatedOf = duplicates.first
+            
             save()
 
             EventManager().emitAudioUpdate(dbAudio)
             
-            if dbAudio.duplicatedOf != nil {
+            if duplicates.count > 0 {
+                os_log("\(Logger.isMain)🍋 DB::updateDuplicates \(audio.title) -> 是别人的Duplicate")
                 return
             }
         } catch let e {
             print(e)
         }
-        
-        // 更新Duplicates
-        predicate = #Predicate<Audio> {
-            $0.fileHash == hash && $0.url != url && $0.order >= order
-        }
-        descriptor = FetchDescriptor<Audio>(predicate: predicate)
-        do {
-            let duplicates = try context.fetch(descriptor)
-            os_log("\(Logger.isMain)🍋 DB::updateDuplicates \(audio.title) -> \(duplicates.count)")
-            
-            dbAudio.duplicateIds = duplicates.map { $0.id }
-            save()
-
-            EventManager().emitAudioUpdate(dbAudio)
-        } catch let e {
-            print(e)
-        }
+//        
+//        // 更新Duplicates
+//        predicate = #Predicate<Audio> {
+//            $0.fileHash == hash && $0.url != url && $0.order >= order
+//        }
+//        descriptor = FetchDescriptor<Audio>(predicate: predicate)
+//        do {
+//            let duplicates = try context.fetch(descriptor)
+//            os_log("\(Logger.isMain)🍋 DB::updateDuplicates \(audio.title) -> \(duplicates.count)")
+//            
+//            dbAudio.duplicateIds = duplicates.map { $0.id }
+//            save()
+//
+//            EventManager().emitAudioUpdate(dbAudio)
+//        } catch let e {
+//            print(e)
+//        }
     }
 
     nonisolated func update(_ audio: Audio) {
