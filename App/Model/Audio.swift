@@ -16,8 +16,12 @@ class Audio {
     var title: String = ""
     var playCount: Int = 0
     var fileHash: String = ""
-    var duplicatedOf: URL? = nil
-    var duplicateIds: [Audio.ID] = []
+    
+    @Relationship
+    var duplicatedOf: Audio? = nil
+    
+    @Relationship(inverse: \Audio.duplicatedOf)
+    var copies: [Audio] = []
 
     var size: Int64 { getFileSize() }
     var ext: String { url.pathExtension }
@@ -65,17 +69,6 @@ class Audio {
         isPlaceholder = item.isPlaceholder
 
         return self
-    }
-
-    func getDuplicates(_ db: DB) async -> [Audio] {
-        var audios: [Audio] = []
-        for duplicateId in self.duplicateIds {
-            if let a: Audio = await db.findAudio(duplicateId) {
-                audios.append(a)
-            }
-        }
-
-        return audios
     }
 
     static func fromMetaItem(_ item: MetadataItemWrapper) -> Audio? {

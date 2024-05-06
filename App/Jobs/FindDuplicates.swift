@@ -28,6 +28,7 @@ class FindDuplicates {
         os_log("\(Logger.isMain)🧮 检查 -> \(audio.title)")
             
         Task {
+            await self.db.updateDuplicatedOf(audio)
             await self.db.updateDuplicates(audio)
         }
     }

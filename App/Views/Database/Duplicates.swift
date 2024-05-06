@@ -14,7 +14,7 @@ struct Duplicates: View {
     }
 
     var body: some View {
-        if audio.duplicateIds.count > 0 {
+        if audio.copies.count > 0 {
             ControlButton(
                 title: "\(audios.count)",
                 systemImage: getImageName(),
@@ -32,7 +32,7 @@ struct Duplicates: View {
                     }
                 })
                 .task {
-                    self.audios = await audio.getDuplicates(audioManager.db)
+                    self.audios = audio.copies
                 }
         }
     }
