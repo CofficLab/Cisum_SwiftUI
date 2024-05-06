@@ -28,6 +28,10 @@ extension DB {
 
 extension DB {
     func insert(_ audio: Audio) {
+        let duplicatedOf = self.findDuplicate(audio)
+        
+        audio.duplicatedOf = duplicatedOf?.url
+        
         context.insert(audio)
         try? context.save()
     }
@@ -36,11 +40,9 @@ extension DB {
         let dbURLs = getAllURLs()
         for url in urls {
             if dbURLs.contains(url) == false {
-                context.insert(Audio(url))
+                self.insert(Audio(url))
             }
         }
-
-        save()
     }
 }
 
@@ -180,6 +182,28 @@ extension DB {
 // MARK: 查询
 
 extension DB {
+    // MARK: Duplicate
+    
+    func findDuplicate(_ audio: Audio) -> Audio? {
+        os_log("\(Logger.isMain)🍋 DB::findDuplicate")
+
+        let url = audio.url
+        let hash = audio.fileHash
+        let predicate = #Predicate<Audio> {
+            $0.fileHash == hash && $0.url != url
+        }
+        let descriptor = FetchDescriptor<Audio>(predicate: predicate)
+        do {
+            let duplicates = try context.fetch(descriptor)
+            
+            return duplicates.first
+        } catch let e {
+            print(e)
+        }
+
+        return nil
+    }
+    
     func findDuplicates(_ audio: Audio) -> [Audio] {
         os_log("\(Logger.isMain)🍋 DB::findDuplicates")
 
