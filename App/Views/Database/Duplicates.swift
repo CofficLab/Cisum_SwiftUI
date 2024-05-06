@@ -16,17 +16,19 @@ struct Duplicates: View {
     var body: some View {
         if audio.duplicateIds.count > 0 {
             ControlButton(
-                title: "显示重复的",
+                title: "\(audios.count)",
                 systemImage: getImageName(),
                 dynamicSize: false,
                 onTap: {
                     showDumplicates.toggle()
                 })
                 .popover(isPresented: $showDumplicates, content: {
-                    VStack {
-                        ForEach(audios) { d in
-                            Text("\(d.title)")
-                        }
+                    List {
+                        Section("共 \(audios.count) 个重复文件",content: {
+                            ForEach(audios, content: { a in
+                                DBRow(a)
+                            })
+                        })
                     }
                 })
                 .task {
@@ -34,9 +36,9 @@ struct Duplicates: View {
                 }
         }
     }
-    
+
     private func getImageName() -> String {
-        return "doc.text.fill.viewfinder"
+        return "doc.circle"
     }
 }
 

@@ -16,7 +16,7 @@ class Audio {
     var title: String = ""
     var playCount: Int = 0
     var fileHash: String = ""
-    var duplicatedOf: Audio? = nil
+    var duplicatedOf: URL? = nil
     var duplicateIds: [Audio.ID] = []
 
     var size: Int64 { getFileSize() }
