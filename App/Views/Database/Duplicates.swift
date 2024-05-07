@@ -4,36 +4,40 @@ import SwiftUI
 struct Duplicates: View {
     @EnvironmentObject var audioManager: AudioManager
 
-    @State var audios: [Audio] = []
+    @State var duplicates: [Audio] = []
     @State var showDumplicates = false
 
     var audio: Audio
+    
+    var db: DB { audioManager.db }
 
     init(_ audio: Audio) {
         self.audio = audio
     }
 
     var body: some View {
-        if audio.copies.count > 0 {
-            ControlButton(
-                title: "\(audios.count)",
-                systemImage: getImageName(),
-                dynamicSize: false,
-                onTap: {
-                    showDumplicates.toggle()
-                })
-                .popover(isPresented: $showDumplicates, content: {
-                    List {
-                        Section("共 \(audios.count) 个重复文件",content: {
-                            ForEach(audios, content: { a in
-                                DBRow(a)
+        ZStack {
+            if duplicates.count > 0 {
+                ControlButton(
+                    title: "\(duplicates.count)",
+                    systemImage: getImageName(),
+                    dynamicSize: false,
+                    onTap: {
+                        showDumplicates.toggle()
+                    })
+                    .popover(isPresented: $showDumplicates, content: {
+                        List {
+                            Section("共 \(duplicates.count) 个重复文件",content: {
+                                ForEach(duplicates, content: { a in
+                                    DBRow(a)
+                                })
                             })
-                        })
-                    }
-                })
-                .task {
-                    self.audios = audio.copies
-                }
+                        }
+                    })
+            }
+        }
+        .task {
+            self.duplicates = await audio.getDuplicates(db)
         }
     }
 

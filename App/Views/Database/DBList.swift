@@ -12,7 +12,6 @@ struct DBList: View {
 
     @State var selection: Audio.ID? = nil
 
-    var groups: [AudioGroup] { AudioGroup.fromAudios(audios) }
     var total: Int { db.getTotal() }
     var db: DB { audioManager.db }
     var audio: Audio? { audioManager.audio }

@@ -16,12 +16,7 @@ class Audio {
     var title: String = ""
     var playCount: Int = 0
     var fileHash: String = ""
-    
-    @Relationship
-    var duplicatedOf: Audio? = nil
-    
-    @Relationship(inverse: \Audio.duplicatedOf)
-    var copies: [Audio] = []
+    var duplicatedOf: URL? = nil
 
     var size: Int64 { getFileSize() }
     var ext: String { url.pathExtension }
@@ -31,13 +26,19 @@ class Audio {
     var isExists: Bool { fileManager.fileExists(atPath: url.path) || true }
     var isNotExists: Bool { !isExists }
     var dislike: Bool { !like }
+    var label: String { "\(Logger.isMain)🔊 Audio::" }
 
     init(_ url: URL) {
         // os_log("\(Logger.isMain)🚩 AudioModel::init -> \(url.lastPathComponent)")
         self.url = url
         self.title = url.deletingPathExtension().lastPathComponent
         self.order = Self.makeRandomOrder()
-        self.fileHash = getHash()
+        
+        if self.isNotDownloaded {
+            self.fileHash = ""
+        } else {
+            self.fileHash = getHash()
+        }
     }
 
     static func makeRandomOrder() -> Int {
@@ -92,6 +93,9 @@ extension Audio: Identifiable {
 
 extension Audio {
     func getHash() -> String {
+        os_log("\(self.label)GetHash -> \(self.title)")
+        
+        // 如果文件尚未下载，会卡住，直到下载完成
         do {
             let fileData = try Data(contentsOf: URL(fileURLWithPath: self.url.path))
             let hash = SHA256.hash(data: fileData)
@@ -110,6 +114,14 @@ extension Audio {
     var isDownloaded: Bool { iCloudHelper.isDownloaded(url: url) }
     var isNotDownloaded: Bool { !isDownloaded }
     var isDownloading: Bool { iCloudHelper.isDownloading(url) }
+}
+
+// MARK: Duplicates
+
+extension Audio {
+    func getDuplicates(_ db: DB) async -> [Audio] {
+        await db.findDuplicates(self)
+    }
 }
 
 #Preview("App") {

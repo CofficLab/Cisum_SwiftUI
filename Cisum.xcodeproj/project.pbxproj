@@ -62,7 +62,6 @@
 		0BAB300E2AB814F70012D837 /* Boot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAB300D2AB814F70012D837 /* Boot.swift */; };
 		0BAB7C3F2AD3BBAA00C5AEB5 /* DBTips.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAB7C3E2AD3BBAA00C5AEB5 /* DBTips.swift */; };
 		0BAB7C412AD3D25200C5AEB5 /* ButtonDismiss.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAB7C402AD3D25200C5AEB5 /* ButtonDismiss.swift */; };
-		0BB543EE2BE8B1BD00D7A2B2 /* AudioGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB543ED2BE8B1BD00D7A2B2 /* AudioGroup.swift */; };
 		0BB543F22BE8BAF300D7A2B2 /* FindDuplicates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB543F12BE8BAF300D7A2B2 /* FindDuplicates.swift */; };
 		0BB543F42BE8E38300D7A2B2 /* Duplicates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB543F32BE8E38300D7A2B2 /* Duplicates.swift */; };
 		0BB587172AD815770071AEBD /* TimeHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB587162AD815770071AEBD /* TimeHelper.swift */; };
@@ -163,7 +162,6 @@
 		0BAB300D2AB814F70012D837 /* Boot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Boot.swift; sourceTree = "<group>"; };
 		0BAB7C3E2AD3BBAA00C5AEB5 /* DBTips.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBTips.swift; sourceTree = "<group>"; };
 		0BAB7C402AD3D25200C5AEB5 /* ButtonDismiss.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonDismiss.swift; sourceTree = "<group>"; };
-		0BB543ED2BE8B1BD00D7A2B2 /* AudioGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioGroup.swift; sourceTree = "<group>"; };
 		0BB543F12BE8BAF300D7A2B2 /* FindDuplicates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindDuplicates.swift; sourceTree = "<group>"; };
 		0BB543F32BE8E38300D7A2B2 /* Duplicates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Duplicates.swift; sourceTree = "<group>"; };
 		0BB587162AD815770071AEBD /* TimeHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeHelper.swift; sourceTree = "<group>"; };
@@ -256,7 +254,6 @@
 			children = (
 				0B1D5A672AB3025F0010DDF2 /* Audio.swift */,
 				0BD056922BC636D600EBC7C4 /* AudioCover.swift */,
-				0BB543ED2BE8B1BD00D7A2B2 /* AudioGroup.swift */,
 				0BAABEB02BC79C4E00DF4A31 /* CopyTask.swift */,
 				0B9FA29C2BC823A1007B235A /* SmartPlayer.swift */,
 			);
@@ -567,7 +564,6 @@
 				0B1D5A8D2AB3E8290010DDF2 /* AppDelegate.swift in Sources */,
 				0BD056932BC636D600EBC7C4 /* AudioCover.swift in Sources */,
 				0BBC158F2ABAC146006E82C4 /* BtnNext.swift in Sources */,
-				0BB543EE2BE8B1BD00D7A2B2 /* AudioGroup.swift in Sources */,
 				0BBC15802AB854A8006E82C4 /* DBView.swift in Sources */,
 				0B901D932BB83F38003AC253 /* CloudKit.swift in Sources */,
 				0BB543F22BE8BAF300D7A2B2 /* FindDuplicates.swift in Sources */,

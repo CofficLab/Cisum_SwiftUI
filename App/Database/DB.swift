@@ -24,7 +24,7 @@ actor DB: ModelActor {
     var context: ModelContext
     var dbFolder: DBFolder = DBFolder()
     var onUpdated: () -> Void = { os_log("🍋 DB::updated") }
-    var label: String = DB.label
+    var label: String {"\(Logger.isMain)\(DB.label)::"}
 
     init(_ container: ModelContainer) {
         os_log("\(Logger.isMain)🚩 初始化 DB")
