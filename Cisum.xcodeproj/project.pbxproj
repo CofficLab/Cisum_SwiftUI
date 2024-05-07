@@ -13,7 +13,7 @@
 		0B1165E92ABBC6C0005C5CBB /* LaunchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1165E82ABBC6C0005C5CBB /* LaunchView.swift */; };
 		0B1165F02ABBCCB0005C5CBB /* AppManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1165EF2ABBCCB0005C5CBB /* AppManager.swift */; };
 		0B1498742BC4C5CB0075DA61 /* PlayMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1498732BC4C5CB0075DA61 /* PlayMode.swift */; };
-		0B1498792BC4DF940075DA61 /* DeleteInvalid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1498782BC4DF940075DA61 /* DeleteInvalid.swift */; };
+		0B1498792BC4DF940075DA61 /* DBDeleteInvalid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1498782BC4DF940075DA61 /* DBDeleteInvalid.swift */; };
 		0B1D5A792AB302610010DDF2 /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1D5A5F2AB3025E0010DDF2 /* AudioManager.swift */; };
 		0B1D5A7F2AB302610010DDF2 /* Audio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1D5A672AB3025F0010DDF2 /* Audio.swift */; };
 		0B1D5A822AB302610010DDF2 /* CommonHelp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1D5A6C2AB302600010DDF2 /* CommonHelp.swift */; };
@@ -57,7 +57,7 @@
 		0B9FA2992BC81EFF007B235A /* NotDownloadedAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9FA2982BC81EFF007B235A /* NotDownloadedAlbum.swift */; };
 		0B9FA29B2BC81F53007B235A /* DefaultAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9FA29A2BC81F53007B235A /* DefaultAlbum.swift */; };
 		0B9FA29D2BC823A1007B235A /* SmartPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9FA29C2BC823A1007B235A /* SmartPlayer.swift */; };
-		0BAABEAF2BC787A200DF4A31 /* CopyFiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAABEAE2BC787A200DF4A31 /* CopyFiles.swift */; };
+		0BAABEAF2BC787A200DF4A31 /* DBCopyFiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAABEAE2BC787A200DF4A31 /* DBCopyFiles.swift */; };
 		0BAABEB12BC79C4E00DF4A31 /* CopyTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAABEB02BC79C4E00DF4A31 /* CopyTask.swift */; };
 		0BAABEB32BC79C9F00DF4A31 /* TaskExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAABEB22BC79C9F00DF4A31 /* TaskExt.swift */; };
 		0BAABEB82BC7D4B600DF4A31 /* BtnDelTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAABEB72BC7D4B600DF4A31 /* BtnDelTask.swift */; };
@@ -115,7 +115,7 @@
 		0B1165E82ABBC6C0005C5CBB /* LaunchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchView.swift; sourceTree = "<group>"; };
 		0B1165EF2ABBCCB0005C5CBB /* AppManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppManager.swift; sourceTree = "<group>"; };
 		0B1498732BC4C5CB0075DA61 /* PlayMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayMode.swift; sourceTree = "<group>"; };
-		0B1498782BC4DF940075DA61 /* DeleteInvalid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteInvalid.swift; sourceTree = "<group>"; };
+		0B1498782BC4DF940075DA61 /* DBDeleteInvalid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBDeleteInvalid.swift; sourceTree = "<group>"; };
 		0B1D5A4B2AB301AD0010DDF2 /* Cisum.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cisum.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0B1D5A5D2AB3025E0010DDF2 /* Signing.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = Signing.entitlements; sourceTree = "<group>"; };
 		0B1D5A5F2AB3025E0010DDF2 /* AudioManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
@@ -162,7 +162,7 @@
 		0B9FA2982BC81EFF007B235A /* NotDownloadedAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotDownloadedAlbum.swift; sourceTree = "<group>"; };
 		0B9FA29A2BC81F53007B235A /* DefaultAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultAlbum.swift; sourceTree = "<group>"; };
 		0B9FA29C2BC823A1007B235A /* SmartPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmartPlayer.swift; sourceTree = "<group>"; };
-		0BAABEAE2BC787A200DF4A31 /* CopyFiles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyFiles.swift; sourceTree = "<group>"; };
+		0BAABEAE2BC787A200DF4A31 /* DBCopyFiles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBCopyFiles.swift; sourceTree = "<group>"; };
 		0BAABEB02BC79C4E00DF4A31 /* CopyTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyTask.swift; sourceTree = "<group>"; };
 		0BAABEB22BC79C9F00DF4A31 /* TaskExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskExt.swift; sourceTree = "<group>"; };
 		0BAABEB72BC7D4B600DF4A31 /* BtnDelTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnDelTask.swift; sourceTree = "<group>"; };
@@ -232,18 +232,6 @@
 				0B1498732BC4C5CB0075DA61 /* PlayMode.swift */,
 			);
 			path = Enum;
-			sourceTree = "<group>";
-		};
-		0B1498752BC4DDB90075DA61 /* Jobs */ = {
-			isa = PBXGroup;
-			children = (
-				0BAABEAE2BC787A200DF4A31 /* CopyFiles.swift */,
-				0BB543F12BE8BAF300D7A2B2 /* DBFindDuplicates.swift */,
-				0BAABEB92BC8C5CB00DF4A31 /* DBPrepareJob.swift */,
-				0BD056882BC6192D00EBC7C4 /* DBSyncJob.swift */,
-				0B1498782BC4DF940075DA61 /* DeleteInvalid.swift */,
-			);
-			path = Jobs;
 			sourceTree = "<group>";
 		};
 		0B1D5A5E2AB3025E0010DDF2 /* Managers */ = {
@@ -318,14 +306,19 @@
 		0B22158A2BB66D0C000EB36F /* Database */ = {
 			isa = PBXGroup;
 			children = (
-				0B8C36A82BEA2E0A00C47567 /* Disk */,
-				0B1498752BC4DDB90075DA61 /* Jobs */,
+				0B8C36A92BEA2EC600C47567 /* DiskContact.swift */,
+				0BD0568A2BC6202900EBC7C4 /* DiskiCloud.swift */,
 				0B8C36A62BEA15E000C47567 /* AudioC.swift */,
 				0B8C36A02BEA0E8800C47567 /* AudioD.swift */,
 				0B8C36A22BEA124900C47567 /* AudioR.swift */,
 				0B8C36A42BEA15A800C47567 /* AudioU.swift */,
 				0BAABEB22BC79C9F00DF4A31 /* TaskExt.swift */,
 				0BB889DA2AC06C54004788D5 /* DB.swift */,
+				0BAABEB92BC8C5CB00DF4A31 /* DBPrepareJob.swift */,
+				0BAABEAE2BC787A200DF4A31 /* DBCopyFiles.swift */,
+				0BD056882BC6192D00EBC7C4 /* DBSyncJob.swift */,
+				0BB543F12BE8BAF300D7A2B2 /* DBFindDuplicates.swift */,
+				0B1498782BC4DF940075DA61 /* DBDeleteInvalid.swift */,
 			);
 			path = Database;
 			sourceTree = "<group>";
@@ -336,15 +329,6 @@
 				0B5E51E42AD912B5000650CF /* DebugCommand.swift */,
 			);
 			path = Commands;
-			sourceTree = "<group>";
-		};
-		0B8C36A82BEA2E0A00C47567 /* Disk */ = {
-			isa = PBXGroup;
-			children = (
-				0B8C36A92BEA2EC600C47567 /* DiskContact.swift */,
-				0BD0568A2BC6202900EBC7C4 /* DiskiCloud.swift */,
-			);
-			path = Disk;
 			sourceTree = "<group>";
 		};
 		0B9C1C342AAF18FE001A26AF = {
@@ -606,7 +590,7 @@
 				0B718F0C2AB4349900569762 /* CardView.swift in Sources */,
 				0BFDCB802AB86AF300B0D1C8 /* MenuTile.swift in Sources */,
 				0BD056912BC6340800EBC7C4 /* BtnEvict.swift in Sources */,
-				0B1498792BC4DF940075DA61 /* DeleteInvalid.swift in Sources */,
+				0B1498792BC4DF940075DA61 /* DBDeleteInvalid.swift in Sources */,
 				0BBA421F2AC1397F00C0B977 /* Centered.swift in Sources */,
 				0BAB300E2AB814F70012D837 /* Boot.swift in Sources */,
 				0BBA42212AC1802C00C0B977 /* ButtonCancelSelected.swift in Sources */,
@@ -615,7 +599,7 @@
 				0BAABEB12BC79C4E00DF4A31 /* CopyTask.swift in Sources */,
 				0BB587172AD815770071AEBD /* TimeHelper.swift in Sources */,
 				0B9FA2972BC80E51007B235A /* EventManager.swift in Sources */,
-				0BAABEAF2BC787A200DF4A31 /* CopyFiles.swift in Sources */,
+				0BAABEAF2BC787A200DF4A31 /* DBCopyFiles.swift in Sources */,
 				0BFDCE582BB01884009198DD /* BtnDestroy.swift in Sources */,
 				0B8C36A52BEA15A800C47567 /* AudioU.swift in Sources */,
 				0BFB38F72BD0BCC20055E38B /* RowTask.swift in Sources */,

@@ -35,15 +35,15 @@ actor DB: ModelActor {
         )
 
         Task.detached(operation: {
-            DBSyncJob(db: self).run()
+            await self.sync()
         })
 
         Task.detached(operation: {
-            await DBPrepareJob(db: self).run()
+            await self.prepareJob()
         })
 
         Task.detached(operation: {
-            await DBFindDuplicates(db: self).run()
+            await self.findDuplicatesJob()
         })
     }
 

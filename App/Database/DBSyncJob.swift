@@ -3,22 +3,14 @@ import OSLog
 import SwiftUI
 
 /// 监听存储Audio文件的目录的变化，同步到数据库
-class DBSyncJob {
-    var db: DB
-    var eventManager = EventManager()
-    var label = "🧮 DBSyncJob::"
-    var queue = DispatchQueue(label: "DBSyncJob")
-    var verbose = false
-    
-    init(db: DB) {
-        self.db = db
+extension DB {
+    var eventManager: EventManager {
+        EventManager()
     }
     
     /// 入口，用来保证任务在后台运行
-    func run() {
-        queue.async {
-            self.watchAudiosFolder()
-        }
+    func sync() {
+        self.watchAudiosFolder()
     }
     
     /// 监听存储Audio文件的文件夹
@@ -30,7 +22,7 @@ class DBSyncJob {
 
             let queue = OperationQueue()
             queue.maxConcurrentOperationCount = 1
-            let query = await ItemQuery(queue: queue, url: self.db.getAudioDir())
+            let query = ItemQuery(queue: queue, url: self.getAudioDir())
             let result = query.searchMetadataItems()
             for try await items in result {
                 //os_log("\(Logger.isMain)\(self.label)getAudios \(items.count)")
@@ -61,7 +53,7 @@ class DBSyncJob {
         self.delete(itemsForDelete)
         
         // 删除无效的，必须放在处理Duplicate逻辑前
-        await DeleteInvalid(db: db).run()
+        await deleteInvalid()
             
         // 更新查到的item，发出更新事件让UI更新
         self.eventManager.emitUpdate(itemsForUpdate)
@@ -70,7 +62,7 @@ class DBSyncJob {
         await self.insertIfNotIn(itemsForUpdate)
         
         // 处理Duplicate逻辑
-        await DBFindDuplicates(db: db).run()
+        await findDuplicatesJob()
     }
     
     private func delete(_ items: [MetadataItemWrapper]) {
@@ -78,7 +70,7 @@ class DBSyncJob {
         
         for item in items {
             Task {
-                await self.db.deleteAudio(item.url!)
+                self.deleteAudio(item.url!)
                 
                 // 发出事件让UI更新
                 self.eventManager.emitDelete(items)
@@ -88,7 +80,7 @@ class DBSyncJob {
     
     private func deleteIfNotIn(_ items: [MetadataItemWrapper]) async {
         //os_log("\(Logger.isMain)\(self.label)deleteIfNotIn with count=\(items.count)")
-        await self.db.deleteIfNotIn(items.map { $0.url! })
+        self.deleteIfNotIn(items.map { $0.url! })
     }
     
     private func insertIfNotIn(_ items: [MetadataItemWrapper]) async {
@@ -99,7 +91,7 @@ class DBSyncJob {
         if items.isEmpty {
             return
         }
-        await self.db.insertIfNotIn(items.map { $0.url! })
+        self.insertIfNotIn(items.map { $0.url! })
     }
 }
 

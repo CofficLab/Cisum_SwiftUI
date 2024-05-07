@@ -39,8 +39,8 @@ struct StateView: View {
             if tasks.count > 0 {
                 HStack {
                     makeCopyView("正在复制 \(tasks.count) 个文件")
-                }.onAppear {
-                    try? CopyFiles().run(db: db)
+                }.task {
+                    try? await db.copyFiles()
                 }
             }
         }
