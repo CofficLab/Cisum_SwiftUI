@@ -101,7 +101,7 @@ struct StateView: View {
     func makeErrorView(_ e: Error) -> some View {
         CardView(background: BackgroundView.type3, paddingVertical: 6) {
             HStack {
-                Image(systemName: "")
+                Image(systemName: "info")
                     .foregroundStyle(.white)
                 Text(e.localizedDescription)
                     .foregroundStyle(.white)
