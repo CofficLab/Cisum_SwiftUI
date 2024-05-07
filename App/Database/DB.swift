@@ -15,14 +15,9 @@ actor DB: ModelActor {
     let modelContainer: ModelContainer
     let modelExecutor: any ModelExecutor
 
-    var fileManager = FileManager.default
-    var cloudHandler = CloudHandler()
-    var bg = AppConfig.bgQueue
     var queue = DispatchQueue(label: "DB")
-    var audiosDir: URL = AppConfig.audiosDir
-    var handler = CloudHandler()
     var context: ModelContext
-    var dbFolder: DiskContact = DiskiCloud()
+    var disk: DiskContact = DiskiCloud()
     var onUpdated: () -> Void = { os_log("🍋 DB::updated") }
     var label: String { "\(Logger.isMain)\(DB.label)" }
     var verbose = false

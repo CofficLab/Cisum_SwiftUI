@@ -9,7 +9,7 @@ class DiskiCloud: ObservableObject {
     var label = "🗄️ DBFolder::"
     var verbose = false
     
-    @MainActor func trash(_ audio: Audio) {
+    func trash(_ audio: Audio) async {
         let url = audio.url
         let ext = audio.ext
         let fileName = audio.title
@@ -25,19 +25,16 @@ class DiskiCloud: ObservableObject {
             times += 1
         }
         
-        Task {
-            // 文件不存在
-            if !fileManager.fileExists(atPath: audio.url.path) {
-                return
-            }
+        // 文件不存在
+        if !fileManager.fileExists(atPath: audio.url.path) {
+            return
+        }
             
-            // 移动到回收站
-            do {
-                try await cloudHandler.moveFile(at: audio.url, to: trashUrl)
-            } catch let e {
-                print(e)
-                os_log("\(Logger.isMain)☁️⚠️ CloudFile::trash \(e.localizedDescription)")
-            }
+        // 移动到回收站
+        do {
+            try await cloudHandler.moveFile(at: audio.url, to: trashUrl)
+        } catch let e {
+            os_log(.error, "\(Logger.isMain)☁️⚠️ CloudFile::trash \(e.localizedDescription)")
         }
     }
 }

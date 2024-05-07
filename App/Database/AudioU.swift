@@ -6,7 +6,7 @@ import SwiftData
 
 extension DB {
     func evict(_ audio: Audio) {
-        dbFolder.evict(audio.url)
+        disk.evict(audio.url)
     }
 
     func increasePlayCount(_ audio: Audio) {

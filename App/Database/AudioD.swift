@@ -70,7 +70,7 @@ extension DB {
             }
 
             // 从磁盘删除
-            try dbFolder.deleteFile(audio)
+            try disk.deleteFile(audio)
 
             // 从磁盘删除后，因为数据库监听了磁盘的变动，会自动删除
             // 但自动删除可能不及时，所以这里及时删除
@@ -84,32 +84,15 @@ extension DB {
         return next
     }
 
-    func trash(_ audio: Audio) {
-        let url = audio.url
-        let ext = audio.ext
-        let fileName = audio.title
-        let trashDir = AppConfig.trashDir
-        var trashUrl = trashDir.appendingPathComponent(url.lastPathComponent)
-        var times = 1
-
-        // 回收站已经存在同名文件
-        while fileManager.fileExists(atPath: trashUrl.path) {
-            trashUrl = trashUrl.deletingLastPathComponent()
-                .appendingPathComponent("\(fileName)-\(times)")
-                .appendingPathExtension(ext)
-            times += 1
-        }
-
+    func trash(_ audio: Audio) async {
         // 文件已经不存在了，放弃
         if audio.isNotExists {
             return
         }
 
         // 移动到回收站
-        Task {
-            try await cloudHandler.moveFile(at: audio.url, to: trashUrl)
-        }
-
+        await self.disk.trash(audio)
+        
         // 从数据库删除
         self.deleteAudio(audio)
     }
