@@ -7,6 +7,7 @@ class ItemQuery {
     let queue: OperationQueue
     let url: URL
     var label: String {"\(Logger.isMain)📷 ItemQuery::"}
+    var verbose = false
 
     init(queue: OperationQueue = .main, url: URL) {
         self.queue = queue
@@ -68,7 +69,10 @@ class ItemQuery {
 
     private func collectAll(_ continuation: AsyncStream<[MetadataItemWrapper]>.Continuation) {
         DispatchQueue.global().async {
-            os_log("\(self.label)NSMetadataQueryDidFinishGathering")
+            if self.verbose {
+                os_log("\(self.label)NSMetadataQueryDidFinishGathering")
+            }
+            
             let result = self.query.results.compactMap { item -> MetadataItemWrapper? in
                 guard let metadataItem = item as? NSMetadataItem else {
                     return nil

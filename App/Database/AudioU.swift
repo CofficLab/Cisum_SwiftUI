@@ -101,11 +101,17 @@ extension DB {
             }, sortBy: [
                 SortDescriptor(\.order, order: .forward),
             ]))
+            
+            for duplicate in duplicates {
+                if duplicate.isExists {
+                    dbAudio.duplicatedOf = duplicates.first?.url
+                    EventManager().emitAudioUpdate(dbAudio)
 
-            dbAudio.duplicatedOf = duplicates.first?.url
-            EventManager().emitAudioUpdate(dbAudio)
-
-            save()
+                    save()
+                    
+                    break
+                }
+            }
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
         }
@@ -116,8 +122,10 @@ extension DB {
     }
 
     func update(_ audio: Audio) {
-        os_log("\(self.label)update \(audio.title)")
-
+        if verbose {
+            os_log("\(self.label)update \(audio.title)")
+        }
+        
         if var current = findAudio(audio.id) {
             if audio.isDeleted {
                 context.delete(current)
@@ -125,15 +133,16 @@ extension DB {
                 current = audio
             }
         } else {
-            os_log("\(Logger.isMain)🍋 DB::update not found ⚠️")
+            if verbose {
+                os_log("\(self.label)🍋 DB::update not found ⚠️")
+            }
         }
 
         if context.hasChanges {
-            os_log("\(Logger.isMain)🍋 DB::update 保存")
             try? context.save()
             self.onUpdated()
         } else {
-            os_log("\(Logger.isMain)🍋 DB::update nothing changed 👌")
+            os_log("\(self.label)🍋 DB::update nothing changed 👌")
         }
     }
 }
@@ -143,16 +152,12 @@ extension DB {
 extension DB {
     func updateDuplicatedOf(_ audio: Audio, duplicatedOf: URL?) {
         // os_log("\(Logger.isMain)🍋 DB::updateDuplicatedOf \(audio.title)")
-        if let current = findAudio(audio.id) {
-            current.duplicatedOf = duplicatedOf
-        } else {
-            os_log("\(Logger.isMain)🍋 DB::updateDuplicatedOf not found ⚠️")
+        if audio.duplicatedOf == duplicatedOf {
+            return
         }
-
-        if context.hasChanges {
-            try? context.save()
-            self.onUpdated()
-        }
+        
+        audio.duplicatedOf = duplicatedOf
+        self.update(audio)
     }
 }
 

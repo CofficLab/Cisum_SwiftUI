@@ -17,6 +17,7 @@ class Audio {
     var playCount: Int = 0
     var fileHash: String = ""
     var duplicatedOf: URL? = nil
+    var verbose = false
 
     var size: Int64 { getFileSize() }
     var ext: String { url.pathExtension }
@@ -26,7 +27,7 @@ class Audio {
     var isExists: Bool { fileManager.fileExists(atPath: url.path) || true }
     var isNotExists: Bool { !isExists }
     var dislike: Bool { !like }
-    var label: String { "\(Logger.isMain)🔊 Audio::" }
+    var label: String { "\(Logger.isMain)🪖 Audio::" }
 
     init(_ url: URL) {
         // os_log("\(Logger.isMain)🚩 AudioModel::init -> \(url.lastPathComponent)")
@@ -93,7 +94,9 @@ extension Audio: Identifiable {
 
 extension Audio {
     func getHash() -> String {
-        os_log("\(self.label)GetHash -> \(self.title)")
+        if verbose {
+            os_log("\(self.label)GetHash -> \(self.title)")
+        }
         
         // 如果文件尚未下载，会卡住，直到下载完成
         do {
@@ -103,7 +106,7 @@ extension Audio {
             return hash.compactMap { String(format: "%02x", $0) }.joined()
         } catch {
             print("Error calculating file hash: \(error)")
-            return "-"
+            return ""
         }
     }
 }

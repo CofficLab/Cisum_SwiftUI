@@ -22,11 +22,28 @@ extension DB {
         }
     }
 
+    /// 当前Audio是不是前面某个Audio的Duplicate，是则返回前面的Audio
     func findDuplicatedOf(_ audio: Audio) -> Audio? {
+        guard let dbAudio = self.findAudio(audio.url) else {
+            return nil
+        }
+        
+        // 如果这个文件未下载，要等下载完才能计算hash
+        if dbAudio.fileHash.isEmpty {
+            dbAudio.fileHash = dbAudio.getHash()
+            
+            do {
+                try context.save()
+            } catch let e {
+                os_log(.error, "\(e.localizedDescription)")
+                return nil
+            }
+        }
+        
         do {
-            let hash = audio.fileHash
-            let url = audio.url
-            let order = audio.order
+            let hash = dbAudio.fileHash
+            let url = dbAudio.url
+            let order = dbAudio.order
             let duplicates = try context.fetch(FetchDescriptor<Audio>(predicate: #Predicate<Audio> {
                 $0.fileHash == hash &&
                     $0.url != url &&

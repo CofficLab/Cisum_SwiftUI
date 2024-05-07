@@ -56,18 +56,18 @@ class DBSyncJob {
             await self.deleteIfNotIn(itemsForSync)
             await self.insertIfNotIn(itemsForSync)
         }
+        
+        // 删除需要删除的
+        self.delete(itemsForDelete)
+        
+        // 删除无效的，必须放在处理Duplicate逻辑前
+        await DeleteInvalid(db: db).run()
             
         // 更新查到的item，发出更新事件让UI更新
         self.eventManager.emitUpdate(itemsForUpdate)
             
         // 如有必要，将更新的插入数据库
         await self.insertIfNotIn(itemsForUpdate)
-            
-        // 删除需要删除的
-        self.delete(itemsForDelete)
-        
-        // 删除无效的
-        DeleteInvalid(db: db).run()
         
         // 处理Duplicate逻辑
         DBFindDuplicates(db: db).run()
@@ -92,7 +92,10 @@ class DBSyncJob {
     }
     
     private func insertIfNotIn(_ items: [MetadataItemWrapper]) async {
-        os_log("\(Logger.isMain)\(self.label)insertIfNotIn with count=\(items.count)")
+        if verbose {
+            os_log("\(Logger.isMain)\(self.label)insertIfNotIn with count=\(items.count)")
+        }
+        
         if items.isEmpty {
             return
         }

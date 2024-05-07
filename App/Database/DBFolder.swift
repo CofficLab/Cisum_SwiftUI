@@ -7,6 +7,7 @@ class DBFolder: ObservableObject {
     var audiosDir: URL = AppConfig.audiosDir
     var bg = AppConfig.bgQueue
     var label = "🗄️ DBFolder::"
+    var verbose = false
     
     func clearFolderContents(atPath path: String) {
         let fileManager = FileManager.default
@@ -22,7 +23,9 @@ class DBFolder: ObservableObject {
     }
     
     func deleteFile(_ audio: Audio) throws {
-        os_log("\(Logger.isMain)\(self.label)删除 \(audio.url)")
+        if verbose {
+            os_log("\(Logger.isMain)\(self.label)删除 \(audio.url)")
+        }
         
         if fileManager.fileExists(atPath: audio.url.path) == false {
             return

@@ -44,7 +44,10 @@ extension DB {
     }
 
     func delete(_ id: Audio.ID) -> Audio? {
-        os_log("\(self.label)数据库删除")
+        if verbose {
+            os_log("\(self.label)数据库删除")
+        }
+        
         guard let audio = context.model(for: id) as? Audio else {
             os_log("\(self.label)删除时找不到")
             return nil
