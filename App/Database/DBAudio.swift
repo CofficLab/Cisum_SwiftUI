@@ -64,11 +64,18 @@ extension DB {
             }
 
             do {
+                // set duplicatedOf to nil
+                try context.fetch(FetchDescriptor(predicate: #Predicate<Audio> {
+                    $0.duplicatedOf == url
+                })).forEach({
+                    $0.duplicatedOf = nil
+                })
+                
+                // delete
                 try context.delete(model: Audio.self, where: #Predicate<Audio> {
                     $0.url == url
                 })
                 try context.save()
-                os_log("\(Logger.isMain)\(DB.label) 删除成功 \(audio.title)")
             } catch let e {
                 print(e)
             }
