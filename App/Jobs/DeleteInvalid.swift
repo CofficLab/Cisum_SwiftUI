@@ -14,7 +14,7 @@ class DeleteInvalid {
         var i = 0
         queue.sync {
             while true {
-                os_log("\(self.label)检查第 \(i) 个")
+                //os_log("\(self.label)检查第 \(i) 个")
                 if let audio = self.db.get(i) {
                     self.deleteIfNeed(audio)
                     i += 1

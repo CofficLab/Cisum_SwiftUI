@@ -8,6 +8,8 @@ struct TitleView: View {
     var audio: Audio? { audioManager.audio }
     var characterCount: Int { audio?.title.count ?? 0 }
     var width: CGFloat
+    var label: String {"\(Logger.isMain)📺 TitleView::"}
+    var verbose = false
 
     @State var url: URL? = nil
 
@@ -53,7 +55,9 @@ struct TitleView: View {
         // 防止字较少时字体很大
         let characterCount = max(getCountCharacters(audio.title), 5)
 
-        os_log("GetFont width -> \(width), characterCount=\(characterCount)")
+        if verbose {
+            os_log("\(self.label)GetFont width -> \(width), characterCount=\(characterCount)")
+        }
 
         return .system(size: max(width / CGFloat(characterCount) * 1.1, 20))
     }

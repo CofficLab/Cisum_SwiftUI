@@ -3,6 +3,7 @@ import SwiftUI
 
 struct RootView<Content>: View where Content: View {
     private var content: Content
+    private var verbose = false
 
     @State private var isReady: Bool = false
     @State private var errorMessage: String? = nil
@@ -30,7 +31,9 @@ struct RootView<Content>: View where Content: View {
             } else {
                 LanuchView(errorMessage: errorMessage)
                     .onAppear {
-                        os_log("\(Logger.isMain)🚩 初始化环境变量")
+                        if verbose {
+                            os_log("\(Logger.isMain)🚩 初始化环境变量")
+                        }
                         
                         audioManager = AudioManager()
                         mediaPlayerManger = MediaPlayerManager(audioManager: audioManager!)

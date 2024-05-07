@@ -7,9 +7,13 @@ import SwiftUI
 #if os(macOS)
 
     class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
+        var verbose = false
+        
         func applicationDidFinishLaunching(_ notification: Notification) {
-            AppConfig.bgQueue.async {
-                os_log("\(Logger.isMain)🚩 applicationDidFinishLaunching")
+            AppConfig.bgQueue.async { [self] in
+                if verbose {
+                    os_log("\(Logger.isMain)🚩 applicationDidFinishLaunching")
+                }
             }
         }
 

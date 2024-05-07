@@ -8,6 +8,7 @@ class DBSyncJob {
     var eventManager = EventManager()
     var label = "🧮 DBSyncJob::"
     var queue = DispatchQueue(label: "DBSyncJob")
+    var verbose = false
     
     init(db: DB) {
         self.db = db
@@ -23,7 +24,9 @@ class DBSyncJob {
     /// 监听存储Audio文件的文件夹
     private func watchAudiosFolder() {
         Task {
-            os_log("\(Logger.isMain)\(self.label)watchAudiosFolder")
+            if verbose {
+                os_log("\(Logger.isMain)\(self.label)watchAudiosFolder")
+            }
 
             let queue = OperationQueue()
             queue.maxConcurrentOperationCount = 1

@@ -16,6 +16,7 @@ struct HomeView: View {
     var controlViewHeightMin = AppConfig.controlViewMinHeight
     var databaseViewHeightMin = AppConfig.databaseViewHeightMin
     var label = "🖥️ HomeView::"
+    var verbose = false
 
     var body: some View {
         GeometryReader { geo in
@@ -56,7 +57,9 @@ struct HomeView: View {
                 if autoResizing == false {
                     // 说明是用户主动调整
                     self.height = DeviceConfig.getWindowHeight()
-                    os_log("\(Logger.isMain)\(self.label)Height=\(self.height)")
+                    if verbose {
+                        os_log("\(Logger.isMain)\(self.label)Height=\(self.height)")
+                    }
                 }
             }
         }

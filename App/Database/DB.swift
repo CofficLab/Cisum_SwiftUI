@@ -25,9 +25,12 @@ actor DB: ModelActor {
     var dbFolder: DBFolder = .init()
     var onUpdated: () -> Void = { os_log("🍋 DB::updated") }
     var label: String { "\(Logger.isMain)\(DB.label)::" }
+    var verbose = false
 
     init(_ container: ModelContainer) {
-        os_log("\(Logger.isMain)🚩 初始化 DB")
+        if verbose {
+            os_log("\(Logger.isMain)🚩 初始化 DB")
+        }
 
         self.modelContainer = container
         self.context = ModelContext(container)

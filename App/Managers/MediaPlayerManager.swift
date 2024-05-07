@@ -7,10 +7,12 @@ import SwiftUI
 class MediaPlayerManager: ObservableObject {
     static var label = "📱 MediaPlayerManager::"
     static let c = MPRemoteCommandCenter.shared()
+    static let verbose = false
 
     var label: String { MediaPlayerManager.label }
     var audioManager: AudioManager
     var player: SmartPlayer { audioManager.player }
+    var verbose: Bool { MediaPlayerManager.verbose }
 
     init(audioManager: AudioManager) {
         self.audioManager = audioManager
@@ -52,16 +54,18 @@ class MediaPlayerManager: ObservableObject {
                 return image
             }),
         ]
-        
+
         let like = audio?.like ?? false
-        os_log("\(Logger.isMain)\(self.label)setPlayingInfo like -> \(like)")
+        if verbose {
+            os_log("\(Logger.isMain)\(self.label)setPlayingInfo like -> \(like)")
+        }
         MediaPlayerManager.c.likeCommand.isActive = like
     }
 
     // 接收控制中心的指令
     private func onCommand() {
         let c = MediaPlayerManager.c
-        
+
         c.nextTrackCommand.addTarget { _ in
             os_log("\(Logger.isMain)\(self.label)下一首")
             self.audioManager.next(manual: true)
@@ -111,11 +115,11 @@ class MediaPlayerManager: ObservableObject {
                 Task {
                     await self.audioManager.db.toggleLike(audio)
                 }
-                
+
                 c.likeCommand.isActive = audio.dislike
                 c.dislikeCommand.isActive = audio.like
             }
-            
+
             return .success
         }
 

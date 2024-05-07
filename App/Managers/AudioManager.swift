@@ -28,9 +28,13 @@ class AudioManager: NSObject, ObservableObject {
     var isCloudStorage: Bool { iCloudHelper.isCloudPath(url: rootDir) }
     var showErrorView: Bool { self.error != nil }
     var showTitleView: Bool { self.audio != nil }
+    var verbose = false
 
     override init() {
-        os_log("\(Logger.isMain)\(AudioManager.label)初始化")
+        if verbose {
+            os_log("\(Logger.isMain)\(AudioManager.label)初始化")
+        }
+        
         super.init()
         restore()
 
@@ -45,7 +49,10 @@ class AudioManager: NSObject, ObservableObject {
     }
     
     func onStateChanged(_ state: SmartPlayer.State) {
-        os_log("\(Logger.isMain)\(AudioManager.label)播放状态变了 \(state.des)")
+        if verbose {
+            os_log("\(Logger.isMain)\(AudioManager.label)播放状态变了 \(state.des)")
+        }
+        
         self.main.async {
             self.audio = self.player.audio
             self.error = nil
@@ -91,7 +98,9 @@ class AudioManager: NSObject, ObservableObject {
     // MARK: 准备播放
 
     func prepare(_ audio: Audio?, reason: String) {
-        os_log("\(Logger.isMain)\(self.label)Prepare \(audio?.title ?? "nil") 🐛 \(reason)")
+        if verbose {
+            os_log("\(Logger.isMain)\(self.label)Prepare \(audio?.title ?? "nil") 🐛 \(reason)")
+        }
 
         self.player.prepare(audio)
 
@@ -109,7 +118,9 @@ class AudioManager: NSObject, ObservableObject {
     // MARK: 播放指定的
 
     func play(_ audio: Audio, reason: String) {
-        os_log("\(Logger.isMain)\(self.label)play \(audio.title)")
+        if verbose {
+            os_log("\(Logger.isMain)\(self.label)play \(audio.title)")
+        }
 
         self.player.play(audio, reason: reason)
     }
@@ -124,7 +135,9 @@ class AudioManager: NSObject, ObservableObject {
 
     /// 跳到上一首，manual=true表示由用户触发
     func prev(manual: Bool = false) throws {
-        os_log("\(Logger.isMain)\(self.label)prev ⬆️")
+        if verbose {
+            os_log("\(Logger.isMain)\(self.label)prev ⬆️")
+        }
 
         if mode == .Loop && manual == false {
             return
@@ -141,7 +154,9 @@ class AudioManager: NSObject, ObservableObject {
 
     /// 跳到下一首，manual=true表示由用户触发
     func next(manual: Bool = false) {
-        os_log("\(Logger.isMain)\(self.label)next ⬇️ \(manual ? "手动触发" : "自动触发")")
+        if verbose {
+            os_log("\(Logger.isMain)\(self.label)next ⬇️ \(manual ? "手动触发" : "自动触发")")
+        }
 
         if mode == .Loop && manual == false {
             return self.player.resume()
@@ -176,7 +191,9 @@ extension AudioManager {
         callback(mode)
 
         Task {
-            os_log("\(Logger.isMain)\(self.label)切换播放模式")
+            if verbose {
+                os_log("\(Logger.isMain)\(self.label)切换播放模式")
+            }
             
             if mode == .Random {
                 await self.db.sortRandom(audio)

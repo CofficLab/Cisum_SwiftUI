@@ -10,12 +10,16 @@ class SmartPlayer: NSObject {
     var label: String { SmartPlayer.label }
     var player = AVAudioPlayer()
     var audio: Audio?
+    var verbose = false
 
     // MARK: 状态改变时
 
     var state: State = .Stopped {
         didSet {
-            os_log("\(Logger.isMain)\(self.label)State changed \(oldValue.des) -> \(self.state.des)")
+            if verbose {
+                os_log("\(Logger.isMain)\(self.label)State changed \(oldValue.des) -> \(self.state.des)")
+            }
+            
             onStateChange(state)
 
             switch self.state {
