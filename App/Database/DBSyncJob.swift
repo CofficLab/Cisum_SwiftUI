@@ -15,14 +15,15 @@ extension DB {
     
     /// 监听存储Audio文件的文件夹
     private func watchAudiosFolder() {
-        Task {
-            if verbose {
-                os_log("\(Logger.isMain)\(self.label)watchAudiosFolder")
+        Task.detached(priority: .background) {
+            if await self.verbose {
+                let label = await self.getLabel()
+                os_log("\(label)watchAudiosFolder")
             }
 
             let queue = OperationQueue()
             queue.maxConcurrentOperationCount = 1
-            let query = ItemQuery(queue: queue, url: self.getAudioDir())
+            let query = await ItemQuery(queue: queue, url: self.getAudioDir())
             let result = query.searchMetadataItems()
             for try await items in result {
                 //os_log("\(Logger.isMain)\(self.label)getAudios \(items.count)")
@@ -85,7 +86,7 @@ extension DB {
     
     private func insertIfNotIn(_ items: [MetadataItemWrapper]) async {
         if verbose {
-            os_log("\(Logger.isMain)\(self.label)insertIfNotIn with count=\(items.count)")
+            os_log("\(self.label)insertIfNotIn with count=\(items.count)")
         }
         
         if items.isEmpty {

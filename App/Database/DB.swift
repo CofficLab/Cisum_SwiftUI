@@ -20,7 +20,7 @@ actor DB: ModelActor {
     var disk: DiskContact = DiskiCloud()
     var onUpdated: () -> Void = { os_log("🍋 DB::updated") }
     var label: String { "\(Logger.isMain)\(DB.label)" }
-    var verbose = false
+    var verbose = true
 
     init(_ container: ModelContainer) {
         if verbose {
@@ -61,6 +61,10 @@ actor DB: ModelActor {
         } catch let e {
             print(e)
         }
+    }
+    
+    func getLabel() -> String {
+        self.label
     }
 }
 

@@ -6,7 +6,7 @@ class DiskiCloud: ObservableObject {
     var cloudHandler = CloudHandler()
     var audiosDir: URL = AppConfig.audiosDir
     var bg = AppConfig.bgQueue
-    var label = "🗄️ DBFolder::"
+    var label = "☁️ DiskiCloud::"
     var verbose = false
     
     func trash(_ audio: Audio) async {

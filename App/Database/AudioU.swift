@@ -17,7 +17,7 @@ extension DB {
     }
 
     func download(_ audio: Audio, reason: String) {
-        self.disk.download(audio)
+        disk.download(audio)
     }
 
     /// 下载当前的和当前的后面的X个
@@ -74,56 +74,11 @@ extension DB {
         save()
     }
 
-    func updateDuplicatedOf(_ audio: Audio) {
-        // os_log("\(self.label)updateDuplicatedOf \(audio.title)")
-
-        guard let dbAudio = findAudio(audio.url) else {
-            return
-        }
-
-        let url = dbAudio.url
-        let hash = dbAudio.fileHash
-        let order = dbAudio.order
-
-        // 清空字段
-        dbAudio.duplicatedOf = nil
-        save()
-
-        // 更新DuplicateOf
-        do {
-            let duplicates = try context.fetch(FetchDescriptor<Audio>(predicate: #Predicate<Audio> {
-                $0.fileHash == hash &&
-                    $0.url != url &&
-                    $0.order < order &&
-                    $0.fileHash.count > 0
-            }, sortBy: [
-                SortDescriptor(\.order, order: .forward),
-            ]))
-            
-            for duplicate in duplicates {
-                if duplicate.isExists {
-                    dbAudio.duplicatedOf = duplicates.first?.url
-                    EventManager().emitAudioUpdate(dbAudio)
-
-                    save()
-                    
-                    break
-                }
-            }
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-        }
-
-        if let d = dbAudio.duplicatedOf {
-            os_log(.error, "\(self.label)\(audio.title) duplicatedOf -> \(d.lastPathComponent)")
-        }
-    }
-
     func update(_ audio: Audio) {
         if verbose {
             os_log("\(self.label)update \(audio.title)")
         }
-        
+
         if var current = findAudio(audio.id) {
             if audio.isDeleted {
                 context.delete(current)
@@ -138,24 +93,62 @@ extension DB {
 
         if context.hasChanges {
             try? context.save()
-            self.onUpdated()
+            onUpdated()
         } else {
             os_log("\(self.label)🍋 DB::update nothing changed 👌")
         }
     }
 }
 
-// MARK: Update-Duplicate
+// MARK: Duplicate
 
 extension DB {
-    func updateDuplicatedOf(_ audio: Audio, duplicatedOf: URL?) {
-        // os_log("\(Logger.isMain)🍋 DB::updateDuplicatedOf \(audio.title)")
-        if audio.duplicatedOf == duplicatedOf {
+    // nonisolated 是为了能让其在后台运行
+    nonisolated func updateDuplicatedOf(_ audio: Audio) {
+        //os_log("\(Logger.isMain)\(Self.label)updateDuplicatedOf \(audio.title)")
+        
+        let context = ModelContext(self.modelContainer)
+        context.autosaveEnabled = false
+
+        guard let dbAudio = context.model(for: audio.id) as? Audio else {
             return
         }
-        
-        audio.duplicatedOf = duplicatedOf
-        self.update(audio)
+
+        let url = dbAudio.url
+        let hash = dbAudio.fileHash
+        let order = dbAudio.order
+
+        // 清空字段
+        dbAudio.duplicatedOf = nil
+
+        // 更新DuplicateOf
+        do {
+            let duplicates = try context.fetch(FetchDescriptor<Audio>(predicate: #Predicate<Audio> {
+                $0.fileHash == hash &&
+                    $0.url != url &&
+                    $0.order < order &&
+                    $0.fileHash.count > 0
+            }, sortBy: [
+                SortDescriptor(\.order, order: .forward),
+            ]))
+
+            for duplicate in duplicates {
+                if duplicate.isExists {
+                    dbAudio.duplicatedOf = duplicates.first?.url
+                    EventManager().emitAudioUpdate(dbAudio)
+
+                    try context.save()
+
+                    break
+                }
+            }
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
+
+        if let d = dbAudio.duplicatedOf {
+            os_log(.error, "\(Logger.isMain)\(Self.label)\(audio.title) duplicatedOf -> \(d.lastPathComponent)")
+        }
     }
 }
 
