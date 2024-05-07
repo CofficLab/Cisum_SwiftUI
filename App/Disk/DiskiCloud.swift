@@ -2,12 +2,17 @@ import Foundation
 import OSLog
 
 class DiskiCloud: ObservableObject {
+    static var label = "☁️ DiskiCloud::"
+    
     var fileManager = FileManager.default
     var cloudHandler = CloudHandler()
     var audiosDir: URL = AppConfig.audiosDir
     var bg = AppConfig.bgQueue
-    var label = "☁️ DiskiCloud::"
+    var label: String { "\(Logger.isMain)\(Self.label)" }
     var verbose = false
+    var onUpdated: (_ items: [MetadataItemWrapper]) -> Void = { items in
+        os_log("\(Logger.isMain)\(DiskiCloud.label)updated with items.count=\(items.count)")
+    }
     
     func trash(_ audio: Audio) async {
         let url = audio.url
@@ -124,6 +129,32 @@ extension DiskiCloud: DiskContact {
         } catch {
             os_log("\(self.label)复制文件发生错误 -> \(error.localizedDescription)")
             throw error
+        }
+    }
+}
+
+// MARK: Watch
+
+extension DiskiCloud {
+    /// 监听存储Audio文件的文件夹
+    func watchAudiosFolder() {
+        Task.detached(priority: .background) {
+            if self.verbose {
+                os_log("\(self.label)watchAudiosFolder")
+            }
+
+            let queue = OperationQueue()
+            queue.maxConcurrentOperationCount = 1
+            let query = ItemQuery(queue: queue, url: self.audiosDir)
+            let result = query.searchMetadataItems()
+            for try await items in result {
+                //os_log("\(Logger.isMain)\(self.label)getAudios \(items.count)")
+                
+                let filtered = items.filter { $0.url != nil }
+                if filtered.count > 0 {
+                    self.onUpdated(items)
+                }
+            }
         }
     }
 }

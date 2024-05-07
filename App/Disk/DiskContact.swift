@@ -2,6 +2,7 @@ import Foundation
 
 protocol DiskContact {
     var audiosDir: URL { get }
+    var onUpdated: (_ items: [MetadataItemWrapper]) -> Void { get set }
     
     func clearFolderContents(atPath path: String)
     
@@ -16,4 +17,6 @@ protocol DiskContact {
     func download(_ audio: Audio)
     
     func copyTo(url: URL) throws
+    
+    func watchAudiosFolder()
 }

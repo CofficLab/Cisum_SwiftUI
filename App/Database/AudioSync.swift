@@ -8,35 +8,7 @@ extension DB {
         EventManager()
     }
     
-    /// 入口，用来保证任务在后台运行
-    func sync() {
-        self.watchAudiosFolder()
-    }
-    
-    /// 监听存储Audio文件的文件夹
-    private func watchAudiosFolder() {
-        Task.detached(priority: .background) {
-            if await self.verbose {
-                let label = await self.getLabel()
-                os_log("\(label)watchAudiosFolder")
-            }
-
-            let queue = OperationQueue()
-            queue.maxConcurrentOperationCount = 1
-            let query = await ItemQuery(queue: queue, url: self.getAudioDir())
-            let result = query.searchMetadataItems()
-            for try await items in result {
-                //os_log("\(Logger.isMain)\(self.label)getAudios \(items.count)")
-                
-                let filtered = items.filter { $0.url != nil }
-                if filtered.count > 0 {
-                    await self.sync(items)
-                }
-            }
-        }
-    }
-    
-    private func sync(_ items: [MetadataItemWrapper]) async {
+    func sync(_ items: [MetadataItemWrapper]) async {
         //os_log("\(Logger.isMain)\(self.label)sync with count=\(items.count)")
             
         let itemsForSync = items.filter { $0.isUpdated == false }
@@ -92,6 +64,7 @@ extension DB {
         if items.isEmpty {
             return
         }
+        
         self.insertIfNotIn(items.map { $0.url! })
     }
 }

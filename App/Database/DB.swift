@@ -33,10 +33,16 @@ actor DB: ModelActor {
         self.modelExecutor = DefaultSerialModelExecutor(
             modelContext: context
         )
-
-        Task.detached(operation: {
-            await self.sync()
-        })
+        
+        Task {
+            await self.disk.onUpdated = { items in
+                Task {
+                    await self.sync(items)
+                }
+            }
+            
+            await self.disk.watchAudiosFolder()
+        }
 
         Task.detached(operation: {
             await self.prepareJob()

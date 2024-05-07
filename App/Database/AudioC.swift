@@ -16,8 +16,9 @@ extension DB {
     }
 
     func insertIfNotIn(_ urls: [URL]) {
+        let allUrls = getAllURLs()
         for url in urls {
-            if getAllURLs().contains(url) == false {
+            if allUrls.contains(url) == false {
                 insertAudio(Audio(url))
             }
         }
