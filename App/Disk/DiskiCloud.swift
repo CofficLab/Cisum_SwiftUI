@@ -72,4 +72,23 @@ extension DiskiCloud: DiskContact {
             try? await cloudHandler.evict(url: url)
         }
     }
+    
+    func download(_ audio: Audio) {
+        if audio.isNotExists {
+            return
+        }
+        
+        if audio.isDownloaded {
+            return
+        }
+        
+        Task {
+            os_log("\(self.label)Download \(audio.title)")
+            do {
+                try await cloudHandler.download(url: audio.url)
+            } catch let e {
+                print(e)
+            }
+        }
+    }
 }

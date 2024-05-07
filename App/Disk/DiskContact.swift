@@ -12,4 +12,6 @@ protocol DiskContact {
     func evict(_ url: URL)
     
     func trash(_ audio: Audio) async
+    
+    func download(_ audio: Audio)
 }

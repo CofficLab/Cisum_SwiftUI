@@ -17,9 +17,7 @@ extension DB {
     }
 
     func download(_ audio: Audio, reason: String) {
-        Task {
-            await DBDownloadJob(db: self).run(audio)
-        }
+        self.disk.download(audio)
     }
 
     /// 下载当前的和当前的后面的X个
