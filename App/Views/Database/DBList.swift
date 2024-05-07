@@ -12,7 +12,7 @@ struct DBList: View {
 
     @State var selection: Audio.ID? = nil
 
-    var total: Int { db.getTotal() }
+    var total: Int { audios.count}
     var db: DB { audioManager.db }
     var audio: Audio? { audioManager.audio }
     var showTips: Bool {

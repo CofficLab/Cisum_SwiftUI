@@ -1,6 +1,6 @@
 import Foundation
-import SwiftData
 import OSLog
+import SwiftData
 
 // MARK: 查询-Duplicate
 
@@ -21,7 +21,7 @@ extension DB {
             print(e)
         }
     }
-    
+
     func findDuplicatedOf(_ audio: Audio) -> Audio? {
         do {
             let hash = audio.fileHash
@@ -93,17 +93,15 @@ extension DB {
         }
     }
 
-    nonisolated func countOfURL(_ url: URL) -> Int {
-        let context = ModelContext(modelContainer)
-        let predicate = #Predicate<Audio> {
+    func countOfURL(_ url: URL) -> Int {
+        let descriptor = FetchDescriptor<Audio>(predicate: #Predicate<Audio> {
             $0.url == url
-        }
-        let descriptor = FetchDescriptor<Audio>(predicate: predicate)
+        })
+
         do {
-            let result = try context.fetchCount(descriptor)
-            return result
+            return try context.fetchCount(descriptor)
         } catch let e {
-            print(e)
+            os_log(.error, "\(e.localizedDescription)")
             return 0
         }
     }
@@ -126,44 +124,42 @@ extension DB {
     }
 
     /// 第一个
-    nonisolated func first() -> Audio? {
-        let context = ModelContext(modelContainer)
-        let predicate = #Predicate<Audio> {
+    func first() -> Audio? {
+        var descriptor = FetchDescriptor<Audio>(predicate: #Predicate<Audio> {
             $0.title != ""
-        }
-        var descriptor = FetchDescriptor<Audio>(predicate: predicate)
+        }, sortBy: [
+            SortDescriptor(\.order, order: .forward),
+        ])
         descriptor.fetchLimit = 1
-        descriptor.sortBy.append(SortDescriptor(\.order, order: .forward))
+
         do {
-            let result = try context.fetch(descriptor)
-            return result.first
+            return try context.fetch(descriptor).first
         } catch let e {
-            print(e)
+            os_log(.error, "\(e.localizedDescription)")
         }
 
         return nil
     }
 
     /// 最后一个
-    nonisolated func last() -> Audio? {
-        let context = ModelContext(modelContainer)
-        let predicate = #Predicate<Audio> {
+    func last() -> Audio? {
+        var descriptor = FetchDescriptor<Audio>(predicate: #Predicate<Audio> {
             $0.title != ""
-        }
-        var descriptor = FetchDescriptor<Audio>(predicate: predicate)
+        }, sortBy: [
+            SortDescriptor(\.order, order: .reverse)
+        ])
         descriptor.fetchLimit = 1
-        descriptor.sortBy.append(SortDescriptor(\.order, order: .reverse))
+        
         do {
-            let result = try context.fetch(descriptor)
-            return result.first
+            return try context.fetch(descriptor).first
         } catch let e {
-            print(e)
+            os_log(.error, "\(e.localizedDescription)")
         }
 
         return nil
     }
 
-    nonisolated func isAllInCloud() -> Bool {
+    func isAllInCloud() -> Bool {
         getTotal() > 0 && first() == nil
     }
 }
@@ -195,23 +191,21 @@ extension DB {
 // MARK: Query-Get
 
 extension DB {
-    nonisolated func getTotal() -> Int {
-        let context = ModelContext(modelContainer)
-        let predicate = #Predicate<Audio> {
+    func getTotal() -> Int {
+        let descriptor = FetchDescriptor(predicate: #Predicate<Audio> {
             $0.order != -1
-        }
-        let descriptor = FetchDescriptor(predicate: predicate)
+        })
+        
         do {
-            let result = try context.fetchCount(descriptor)
-            return result
-        } catch {
+            return try context.fetchCount(descriptor)
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
             return 0
         }
     }
 
     /// 查询数据库中的按照order排序的第x个
-    nonisolated func get(_ i: Int) -> Audio? {
-        let context = ModelContext(modelContainer)
+    func get(_ i: Int) -> Audio? {
         var descriptor = FetchDescriptor<Audio>()
         descriptor.fetchLimit = 1
         descriptor.fetchOffset = i
@@ -224,7 +218,7 @@ extension DB {
                 return first
             }
         } catch let e {
-            print(e)
+            os_log(.error, "\(e.localizedDescription)")
         }
 
         return nil

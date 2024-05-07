@@ -28,14 +28,16 @@ class DeleteInvalid {
     private func deleteIfNeed(_ audio: Audio) {
         // os_log("\(Logger.isMain)🧮 检查 -> \(audio.title)")
             
-        if self.db.countOfURL(audio.url) > 1 {
-            os_log("\(self.label)删除重复的数据库记录 -> \(audio.title)")
-            self.deleteAudio(audio)
-        }
-        
-        if !FileManager.default.fileExists(atPath: audio.url.path) {
-            os_log("\(self.label)磁盘文件已不存在，删除数据库记录 -> \(audio.title)")
-            self.deleteAudio(audio)
+        Task {
+            if await self.db.countOfURL(audio.url) > 1 {
+                os_log("\(self.label)删除重复的数据库记录 -> \(audio.title)")
+                self.deleteAudio(audio)
+            }
+            
+            if !FileManager.default.fileExists(atPath: audio.url.path) {
+                os_log("\(self.label)磁盘文件已不存在，删除数据库记录 -> \(audio.title)")
+                self.deleteAudio(audio)
+            }
         }
     }
     

@@ -60,8 +60,10 @@ struct StateView: View {
             }
         }
         .onChange(of: count) {
-            if audioManager.audio == nil, let first = db.first() {
-                audioManager.prepare(first, reason: "自动设置为第一首")
+            Task {
+                if audioManager.audio == nil, let first = await db.first() {
+                    audioManager.prepare(first, reason: "自动设置为第一首")
+                }
             }
 
             if count == 0 {

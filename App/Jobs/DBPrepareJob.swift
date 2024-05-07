@@ -16,7 +16,7 @@ actor DBPrepareJob {
     }
     
     private func prepare() async {
-        guard let first = db.get(0) else {
+        guard let first = await db.get(0) else {
             return
         }
         
