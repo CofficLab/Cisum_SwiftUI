@@ -58,7 +58,7 @@ struct DBView: View {
 extension DBView {
     func copy(_ files: [URL]) {
         Task {
-            await db.add(files)
+            await db.addCopyTasks(files)
         }
     }
 

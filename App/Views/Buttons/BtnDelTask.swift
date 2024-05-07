@@ -16,7 +16,7 @@ struct BtnDelTask: View {
             onTap: {
                 for task in tasks {
                     Task {
-                        await audioManager.db.delete(task)
+                        await audioManager.db.deleteCopyTask(task)
                     }
                 }
             })

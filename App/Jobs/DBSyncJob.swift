@@ -74,11 +74,13 @@ class DBSyncJob {
         //os_log("\(Logger.isMain)\(self.label)delete with count=\(items.count)")
         
         for item in items {
-            self.db.delete(item.url!)
+            Task {
+                await self.db.deleteAudio(item.url!)
+                
+                // 发出事件让UI更新
+                self.eventManager.emitDelete(items)
+            }
         }
-        
-        // 发出事件让UI更新
-        self.eventManager.emitDelete(items)
     }
     
     private func deleteIfNotIn(_ items: [MetadataItemWrapper]) async {

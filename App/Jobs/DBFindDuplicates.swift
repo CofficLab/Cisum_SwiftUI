@@ -33,7 +33,7 @@ class DBFindDuplicates {
             }
             
             let duplicatedOf = await self.db.findDuplicatedOf(audio)
-            self.db.updateDuplicatedOf(audio, duplicatedOf: duplicatedOf?.url)
+            await self.db.updateDuplicatedOf(audio, duplicatedOf: duplicatedOf?.url)
         }
     }
 }

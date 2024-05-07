@@ -77,7 +77,7 @@ class AudioManager: NSObject, ObservableObject {
 
         if let currentAudioId = AppConfig.currentAudio, audio == nil {
             Task {
-                if let currentAudio = await self.db.find(currentAudioId) {
+                if let currentAudio = await self.db.findAudio(currentAudioId) {
                     self.prepare(currentAudio, reason: "初始化，恢复上次播放的")
                 } else if let current = self.db.first() {
                     self.prepare(current, reason: "初始化，播放第一个")

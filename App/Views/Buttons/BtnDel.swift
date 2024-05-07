@@ -19,7 +19,7 @@ struct BtnDel: View {
                     //appManager.stateMessage = "正在删除 \(audios.count) 个"
 
                     let isPlaying = audioManager.player.isPlaying
-                    let next = await audioManager.db.delete(Array(audios))
+                    let next = await audioManager.db.deleteAudios(Array(audios))
 
                     if let audio = audioManager.audio, audios.contains(audio.persistentModelID) {
                         if isPlaying, let next = next {

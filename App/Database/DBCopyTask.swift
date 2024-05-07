@@ -5,12 +5,12 @@ import SwiftData
 // MARK: 增加
 
 extension DB {
-    func insert(_ task: CopyTask) {
+    func insertCopyTask(_ task: CopyTask) {
         context.insert(task)
         try? context.save()
     }
 
-    func add(_ urls: [URL]) {
+    func addCopyTasks(_ urls: [URL]) {
         for url in urls {
             newCopyTask(url)
         }
@@ -31,7 +31,7 @@ extension DB {
 // MARK: 删除
 
 extension DB {
-    func delete(_ id: CopyTask.ID) {
+    func deleteCopyTask(_ id: CopyTask.ID) {
         os_log("\(Logger.isMain)\(DB.label)数据库删除")
         let context = ModelContext(modelContainer)
         guard let task = context.model(for: id) as? CopyTask else {
