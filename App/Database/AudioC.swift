@@ -1,10 +1,12 @@
 import Foundation
 import OSLog
+import SwiftData
 
 // MARK: 增加
 
 extension DB {
-    func insertAudio(_ audio: Audio) {
+    nonisolated func insertAudio(_ audio: Audio) {
+        let context = ModelContext(self.modelContainer)
         context.insert(audio)
         
         do {
@@ -15,7 +17,7 @@ extension DB {
         }
     }
 
-    func insertIfNotIn(_ urls: [URL]) {
+    nonisolated func insertIfNotIn(_ urls: [URL]) {
         let allUrls = getAllURLs()
         for url in urls {
             if allUrls.contains(url) == false {

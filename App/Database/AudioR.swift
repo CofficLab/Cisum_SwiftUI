@@ -127,7 +127,9 @@ extension DB {
         self.disk.audiosDir
     }
 
-    func getAllURLs() -> [URL] {
+    nonisolated func getAllURLs() -> [URL] {
+        let context = ModelContext(self.modelContainer)
+        
         let predicate = #Predicate<Audio> {
             $0.title != ""
         }
