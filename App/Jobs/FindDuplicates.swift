@@ -14,7 +14,7 @@ class FindDuplicates {
         var i = 0
         queue.sync {
             while true {
-                //os_log("\(self.label)检查第 \(i) 个")
+                // os_log("\(self.label)检查第 \(i) 个")
                 if let audio = self.db.get(i) {
                     self.findDuplicates(audio)
                     i += 1
@@ -26,14 +26,18 @@ class FindDuplicates {
     }
     
     private func findDuplicates(_ audio: Audio) {
-        os_log("\(self.label)检查 -> \(audio.title)")
-            
-        Task {
+        Task(priority: .background) {
+            os_log("\(self.label)检查 -> \(audio.title)")
             if audio.fileHash.isEmpty {
-                await self.db.updateFileHash(audio)
+                audio.fileHash = audio.getHash()
             }
             
-            await self.db.updateDuplicatedOf(audio)
+            let duplicatedOf = await self.db.findDuplicatedOf(audio)
+            
+            if let url = duplicatedOf?.url {
+                os_log(.error, "\(self.label)\(audio.title) is duplicated of \(url.lastPathComponent)")
+                self.db.updateDuplicatedOf(audio, duplicatedOf: url)
+            }
         }
     }
 }

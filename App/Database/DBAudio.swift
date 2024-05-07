@@ -180,6 +180,28 @@ extension DB {
 // MARK: 查询-Duplicate
 
 extension DB {
+    func findDuplicatedOf(_ audio: Audio) -> Audio? {
+        do {
+            let hash = audio.fileHash
+            let url = audio.url
+            let order = audio.order
+            let duplicates = try context.fetch(FetchDescriptor<Audio>(predicate: #Predicate<Audio> {
+                $0.fileHash == hash &&
+                    $0.url != url &&
+                    $0.order < order &&
+                    $0.fileHash.count > 0
+            }, sortBy: [
+                SortDescriptor(\.order, order: .forward),
+            ]))
+
+            return duplicates.first
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
+        
+        return nil
+    }
+    
     func findDuplicate(_ audio: Audio) -> Audio? {
         os_log("\(Logger.isMain)🍋 DB::findDuplicate")
 
@@ -228,7 +250,7 @@ extension DB {
             return audio
         }
     }
-
+    
     nonisolated func countOfURL(_ url: URL) -> Int {
         let context = ModelContext(modelContainer)
         let predicate = #Predicate<Audio> {
@@ -243,31 +265,11 @@ extension DB {
             return 0
         }
     }
-
-    func audiosWithSameHash(_ audio: Audio) -> [Audio] {
-        guard let a = find(audio.id) else {
-            return []
-        }
-
-        let hash = audio.fileHash
-
-        let predicate = #Predicate<Audio> {
-            $0.fileHash == hash
-        }
-        let descriptor = FetchDescriptor<Audio>(predicate: predicate)
-        do {
-            let result = try context.fetch(descriptor)
-            return result
-        } catch let e {
-            print(e)
-            return []
-        }
-    }
-
+    
     func getAudioDir() -> URL {
         audiosDir
     }
-
+    
     func getAllURLs() -> [URL] {
         let predicate = #Predicate<Audio> {
             $0.title != ""
@@ -280,7 +282,7 @@ extension DB {
             return []
         }
     }
-
+    
     /// 第一个
     nonisolated func first() -> Audio? {
         let context = ModelContext(modelContainer)
@@ -296,10 +298,10 @@ extension DB {
         } catch let e {
             print(e)
         }
-
+        
         return nil
     }
-
+    
     /// 最后一个
     nonisolated func last() -> Audio? {
         let context = ModelContext(modelContainer)
@@ -315,22 +317,26 @@ extension DB {
         } catch let e {
             print(e)
         }
-
+        
         return nil
     }
-
+    
     nonisolated func isAllInCloud() -> Bool {
         getTotal() > 0 && first() == nil
     }
+}
 
+// MARK: Query-Find
+
+extension DB {
     func find(_ id: PersistentIdentifier) -> Audio? {
         context.model(for: id) as? Audio
     }
-
+    
     func findAudio(_ id: PersistentIdentifier) -> Audio? {
         context.model(for: id) as? Audio
     }
-
+    
     func find(_ url: URL) -> Audio? {
         let predicate = #Predicate<Audio> {
             $0.url == url
@@ -343,10 +349,26 @@ extension DB {
         } catch let e {
             print(e)
         }
-
+        
         return nil
     }
-
+    
+    static func find(_ context: ModelContext, _ url: URL) -> Audio? {
+        let predicate = #Predicate<Audio> {
+            $0.url == url
+        }
+        var descriptor = FetchDescriptor<Audio>(predicate: predicate)
+        descriptor.fetchLimit = 1
+        do {
+            let result = try context.fetch(descriptor)
+            return result.first
+        } catch let e {
+            print(e)
+        }
+        
+        return nil
+    }
+    
     static func find(_ container: ModelContainer, _ url: URL) -> Audio? {
         let context = ModelContext(container)
         let predicate = #Predicate<Audio> {
@@ -360,10 +382,14 @@ extension DB {
         } catch let e {
             print(e)
         }
-
+        
         return nil
     }
+}
 
+// MARK: Query-Get
+
+extension DB {
     nonisolated func getTotal() -> Int {
         let context = ModelContext(modelContainer)
         let predicate = #Predicate<Audio> {
@@ -622,6 +648,8 @@ extension DB {
                 } else {
                     current = audio
                 }
+            } else {
+                os_log("\(Logger.isMain)🍋 DB::update not found ⚠️")
             }
 
             if context.hasChanges {
@@ -630,6 +658,32 @@ extension DB {
                 await self.onUpdated()
             } else {
                 os_log("\(Logger.isMain)🍋 DB::update nothing changed 👌")
+            }
+        }
+    }
+}
+
+// MARK: Update-Duplicate
+
+extension DB {
+    nonisolated func updateDuplicatedOf(_ audio: Audio, duplicatedOf: URL) {
+        Task.detached {
+            os_log("\(Logger.isMain)🍋 DB::updateDuplicatedOf \(audio.title)")
+            let context = ModelContext(self.modelContainer)
+            context.autosaveEnabled = false
+            
+            if let current = Self.find(context, audio.url) {
+                current.duplicatedOf = duplicatedOf
+            } else {
+                os_log("\(Logger.isMain)🍋 DB::updateDuplicatedOf not found ⚠️")
+            }
+
+            if context.hasChanges {
+                os_log("\(Logger.isMain)🍋 DB::updateDuplicatedOf 保存")
+                try? context.save()
+                await self.onUpdated()
+            } else {
+                os_log("\(Logger.isMain)🍋 DB::updateDuplicatedOf nothing changed 👌")
             }
         }
     }

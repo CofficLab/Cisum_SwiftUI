@@ -77,7 +77,7 @@ extension DB {
 
 extension DB {
     func allCopyTasks() -> [CopyTask] {
-        var descriptor = FetchDescriptor<CopyTask>()
+        let descriptor = FetchDescriptor<CopyTask>()
         do {
             return try context.fetch(descriptor)
         } catch let e {

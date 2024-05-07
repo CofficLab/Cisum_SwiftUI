@@ -8,9 +8,8 @@ struct BtnLike: View {
     
     var audio: Audio
     var autoResize = false
-    var title: String {
-        audio.like ? "取消标记为喜欢" : "标记为喜欢"
-    }
+    var title: String { audio.like ? "取消喜欢" : "标记喜欢" }
+    var label: String { "\(Logger.isMain)❤️ BtnLike::" }
         
     var body: some View {
         ControlButton(
@@ -25,7 +24,7 @@ struct BtnLike: View {
             .onAppear {
                 self.like = audio.like
                 EventManager().onAudioUpdate({ audio in
-                    os_log("OnAudioUpdated with like -> \(audio.like)")
+                    //os_log("\(self.label)OnAudioUpdated with like -> \(audio.like)")
                     self.like = audio.like
                 })
             }

@@ -11,7 +11,7 @@ import SwiftUI
  */
 actor DB: ModelActor {
     static let label = "📦 DB::"
-    
+
     let modelContainer: ModelContainer
     let modelExecutor: any ModelExecutor
 
@@ -22,9 +22,9 @@ actor DB: ModelActor {
     var audiosDir: URL = AppConfig.audiosDir
     var handler = CloudHandler()
     var context: ModelContext
-    var dbFolder: DBFolder = DBFolder()
+    var dbFolder: DBFolder = .init()
     var onUpdated: () -> Void = { os_log("🍋 DB::updated") }
-    var label: String {"\(Logger.isMain)\(DB.label)::"}
+    var label: String { "\(Logger.isMain)\(DB.label)::" }
 
     init(_ container: ModelContainer) {
         os_log("\(Logger.isMain)🚩 初始化 DB")
@@ -39,11 +39,11 @@ actor DB: ModelActor {
         Task.detached(operation: {
             DBSyncJob(db: self).run()
         })
-        
+
         Task.detached(operation: {
             await DBPrepareJob(db: self).run()
         })
-        
+
         Task.detached(operation: {
             FindDuplicates(db: self).run()
         })
