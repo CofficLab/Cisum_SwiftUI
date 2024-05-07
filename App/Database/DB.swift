@@ -45,7 +45,7 @@ actor DB: ModelActor {
         })
 
         Task.detached(operation: {
-            FindDuplicates(db: self).run()
+            DBFindDuplicates(db: self).run()
         })
     }
 

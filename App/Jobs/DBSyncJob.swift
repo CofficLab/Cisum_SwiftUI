@@ -62,6 +62,12 @@ class DBSyncJob {
             
         // 删除需要删除的
         self.delete(itemsForDelete)
+        
+        // 删除无效的
+        DeleteInvalid(db: db).run()
+        
+        // 处理Duplicate逻辑
+        DBFindDuplicates(db: db).run()
     }
     
     private func delete(_ items: [MetadataItemWrapper]) {
@@ -81,7 +87,7 @@ class DBSyncJob {
     }
     
     private func insertIfNotIn(_ items: [MetadataItemWrapper]) async {
-        //os_log("\(Logger.isMain)\(self.label)insertIfNotIn with count=\(items.count)")
+        os_log("\(Logger.isMain)\(self.label)insertIfNotIn with count=\(items.count)")
         if items.isEmpty {
             return
         }

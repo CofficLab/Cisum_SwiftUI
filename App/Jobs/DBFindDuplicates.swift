@@ -1,7 +1,7 @@
 import Foundation
 import OSLog
 
-class FindDuplicates {
+class DBFindDuplicates {
     var db: DB
     var queue = DispatchQueue.global(qos: .background)
     var label: String { "\(Logger.isMain)📁 FindDuplicates::" }
@@ -27,17 +27,13 @@ class FindDuplicates {
     
     private func findDuplicates(_ audio: Audio) {
         Task(priority: .background) {
-            os_log("\(self.label)检查 -> \(audio.title)")
+            //os_log("\(self.label)检查 -> \(audio.title)")
             if audio.fileHash.isEmpty {
                 audio.fileHash = audio.getHash()
             }
             
             let duplicatedOf = await self.db.findDuplicatedOf(audio)
-            
-            if let url = duplicatedOf?.url {
-                os_log(.error, "\(self.label)\(audio.title) is duplicated of \(url.lastPathComponent)")
-                self.db.updateDuplicatedOf(audio, duplicatedOf: url)
-            }
+            self.db.updateDuplicatedOf(audio, duplicatedOf: duplicatedOf?.url)
         }
     }
 }

@@ -59,7 +59,7 @@ extension DB {
         os_log("\(Logger.isMain)\(DB.label)数据库删除 \(url.lastPathComponent)")
         Task {
             let context = ModelContext(modelContainer)
-            guard let audio = await self.find(url) else {
+            guard (await self.find(url)) != nil else {
                 return os_log("\(Logger.isMain)\(DB.label)删除时数据库找不到 \(url.lastPathComponent)")
             }
 
@@ -140,7 +140,6 @@ extension DB {
         do {
             context.delete(audio)
             try context.save()
-            os_log("\(Logger.isMain)\(DB.label)删除成功 \(audio.title)")
         } catch let e {
             os_log("\(Logger.isMain)\(DB.label)删除出错 \(e.localizedDescription)")
         }
@@ -424,8 +423,6 @@ extension DB {
             let result = try context.fetch(descriptor)
             if let first = result.first {
                 return first
-            } else {
-                os_log("\(Logger.isMain) ⚠️ DBAudio::get not found -> \(i)")
             }
         } catch let e {
             print(e)
@@ -673,9 +670,9 @@ extension DB {
 // MARK: Update-Duplicate
 
 extension DB {
-    nonisolated func updateDuplicatedOf(_ audio: Audio, duplicatedOf: URL) {
+    nonisolated func updateDuplicatedOf(_ audio: Audio, duplicatedOf: URL?) {
         Task.detached {
-            os_log("\(Logger.isMain)🍋 DB::updateDuplicatedOf \(audio.title)")
+            //os_log("\(Logger.isMain)🍋 DB::updateDuplicatedOf \(audio.title)")
             let context = ModelContext(self.modelContainer)
             context.autosaveEnabled = false
             
@@ -686,11 +683,8 @@ extension DB {
             }
 
             if context.hasChanges {
-                os_log("\(Logger.isMain)🍋 DB::updateDuplicatedOf 保存")
                 try? context.save()
                 await self.onUpdated()
-            } else {
-                os_log("\(Logger.isMain)🍋 DB::updateDuplicatedOf nothing changed 👌")
             }
         }
     }

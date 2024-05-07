@@ -4,6 +4,7 @@ import OSLog
 class DeleteInvalid {
     var db: DB
     var queue = DispatchQueue.global(qos: .background)
+    var label: String { "\(Logger.isMain)🧮 DeleteInvalid::"}
     
     init(db: DB) {
         self.db = db
@@ -13,7 +14,7 @@ class DeleteInvalid {
         var i = 0
         queue.sync {
             while true {
-                 os_log("\(Logger.isMain)🧮 检查第 \(i) 个")
+                os_log("\(self.label)检查第 \(i) 个")
                 if let audio = self.db.get(i) {
                     self.deleteIfNeed(audio)
                     i += 1
@@ -28,9 +29,13 @@ class DeleteInvalid {
         // os_log("\(Logger.isMain)🧮 检查 -> \(audio.title)")
             
         if self.db.countOfURL(audio.url) > 1 {
-            os_log("\(Logger.isMain)🗑️ 删除重复的 -> \(audio.title)")
+            os_log("\(self.label)删除重复的数据库记录 -> \(audio.title)")
             self.db.delete(audio)
-            os_log("\(Logger.isMain)🗑️ 已删除重复的🎉🎉🎉 -> \(audio.title)")
+        }
+        
+        if !FileManager.default.fileExists(atPath: audio.url.path) {
+            os_log("\(self.label)磁盘文件已不存在，删除数据库记录 -> \(audio.title)")
+            self.db.delete(audio)
         }
     }
 }
