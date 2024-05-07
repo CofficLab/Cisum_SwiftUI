@@ -22,4 +22,8 @@ extension DB {
             }
         }
     }
+    
+    func copyTo(_ url: URL) throws {
+        try self.disk.copyTo(url: url)
+    }
 }

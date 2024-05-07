@@ -14,4 +14,6 @@ protocol DiskContact {
     func trash(_ audio: Audio) async
     
     func download(_ audio: Audio)
+    
+    func copyTo(url: URL) throws
 }
