@@ -70,7 +70,7 @@ class DBSyncJob {
         await self.insertIfNotIn(itemsForUpdate)
         
         // 处理Duplicate逻辑
-        DBFindDuplicates(db: db).run()
+        await DBFindDuplicates(db: db).run()
     }
     
     private func delete(_ items: [MetadataItemWrapper]) {

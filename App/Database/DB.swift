@@ -22,7 +22,7 @@ actor DB: ModelActor {
     var audiosDir: URL = AppConfig.audiosDir
     var handler = CloudHandler()
     var context: ModelContext
-    var dbFolder: DBFolder = .init()
+    var dbFolder: DiskContact = DiskiCloud()
     var onUpdated: () -> Void = { os_log("🍋 DB::updated") }
     var label: String { "\(Logger.isMain)\(DB.label)" }
     var verbose = false
@@ -48,7 +48,7 @@ actor DB: ModelActor {
         })
 
         Task.detached(operation: {
-            DBFindDuplicates(db: self).run()
+            await DBFindDuplicates(db: self).run()
         })
     }
 

@@ -10,7 +10,6 @@ struct DBView: View {
     var main = AppConfig.mainQueue
     var bg = AppConfig.bgQueue
     var db: DB { audioManager.db }
-    var dbFolder: DBFolder = .init()
     var dropping: Bool { appManager.isDropping }
 
     var body: some View {
