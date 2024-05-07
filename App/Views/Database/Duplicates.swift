@@ -1,15 +1,22 @@
 import OSLog
 import SwiftUI
+import SwiftData
 
 struct Duplicates: View {
     @EnvironmentObject var audioManager: AudioManager
 
-    @State var duplicates: [Audio] = []
     @State var showDumplicates = false
+    
+    @Query var audios: [Audio]
 
     var audio: Audio
     
     var db: DB { audioManager.db }
+    var duplicates: [Audio] {
+        audios.filter({
+            $0.duplicatedOf == audio.url
+        })
+    }
 
     init(_ audio: Audio) {
         self.audio = audio
@@ -35,9 +42,6 @@ struct Duplicates: View {
                         }
                     })
             }
-        }
-        .task {
-            self.duplicates = await audio.getDuplicates(db)
         }
     }
 
