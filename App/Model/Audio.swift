@@ -119,6 +119,10 @@ extension Audio {
             }
         }
         
+        if self.isNotDownloaded {
+            return ""
+        }
+        
         fileHash = FileHelper.getHash(self.url)
         
         // 计算代码执行时间

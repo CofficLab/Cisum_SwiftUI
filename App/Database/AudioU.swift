@@ -29,7 +29,7 @@ extension DB {
 
     /// 下载当前的和当前的后面的X个
     nonisolated func downloadNext(_ audio: Audio, reason: String) {
-        let count = 2
+        let count = 3
         var currentIndex = 0
         var currentAudio: Audio = audio
 
