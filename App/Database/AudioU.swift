@@ -8,34 +8,42 @@ extension DB {
     func evict(_ audio: Audio) {
         disk.evict(audio.url)
     }
-
+    
     func increasePlayCount(_ audio: Audio) {
         if let a = findAudio(audio.id) {
             a.playCount += 1
             save()
         }
     }
+}
 
-    func download(_ audio: Audio, reason: String) {
-        disk.download(audio)
+// MARK: Download
+
+extension DB {
+    nonisolated func download(_ audio: Audio, reason: String) {
+        Task {
+            await disk.download(audio)
+        }
     }
-
+    
     /// 下载当前的和当前的后面的X个
-    func downloadNext(_ audio: Audio, reason: String) {
+    nonisolated func downloadNext(_ audio: Audio, reason: String) {
         let count = 5
         var currentIndex = 0
         var currentAudio: Audio = audio
-
+        
         while currentIndex < count {
             download(currentAudio, reason: "downloadNext 🐛 \(reason)")
-
+            
             currentIndex = currentIndex + 1
-            if let next = nextOf(currentAudio) {
+            if let next = Self.nextOf(context: ModelContext(self.modelContainer), audio: currentAudio) {
                 currentAudio = next
             }
         }
     }
+}
 
+extension DB {
     func toggleLike(_ audio: Audio) {
         if let dbAudio = findAudio(audio.id) {
             dbAudio.like.toggle()

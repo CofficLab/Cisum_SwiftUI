@@ -2,7 +2,7 @@ import OSLog
 import SwiftUI
 
 struct AlbumView: View {
-    static var verbose = true
+    static var verbose = false
     static var label = "🐰 AlbumView::"
     
     @EnvironmentObject var audioManager: AudioManager
@@ -46,7 +46,7 @@ struct AlbumView: View {
             } else if isNotDownloaded {
                 NotDownloadedAlbum(forPlaying: forPlaying).onTapGesture {
                     Task {
-                        await audioManager.db.download(self.audio, reason: "点击了Album")
+                        audioManager.db.download(self.audio, reason: "点击了Album")
                     }
                 }
             } else if let image = image {

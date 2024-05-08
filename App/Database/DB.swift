@@ -34,24 +34,24 @@ actor DB: ModelActor {
         self.modelExecutor = DefaultSerialModelExecutor(
             modelContext: context
         )
-        
+
         Task {
             await self.disk.onUpdated = { items in
                 Task {
                     await self.sync(items)
                 }
             }
-            
+
             await self.disk.watchAudiosFolder()
         }
 
-        Task.detached(operation: {
+        Task {
             await self.prepareJob()
-        })
+        }
 
-        Task.detached(operation: {
-            await self.findDuplicatesJob()
-        })
+//        Task.detached(operation: {
+//            await self.findDuplicatesJob()
+//        })
     }
 
     func setOnUpdated(_ callback: @escaping () -> Void) {
@@ -69,11 +69,11 @@ actor DB: ModelActor {
             print(e)
         }
     }
-    
+
     func getLabel() -> String {
         self.label
     }
-    
+
     func getDisk() -> DiskContact {
         self.disk
     }
