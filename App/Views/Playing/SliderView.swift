@@ -18,6 +18,7 @@ struct SliderView: View {
     var duration: TimeInterval { player.duration }
     var current: String { player.currentTimeDisplay }
     var left: String { player.leftTimeDisplay }
+    var db: DB { audioManager.db }
 
     var body: some View {
         HStack {
@@ -38,11 +39,13 @@ struct SliderView: View {
         .font(.caption)
         .onReceive(timer) { _ in
             if audioManager.error != nil {
-                return disable()
+                disable()
+            } else if audioManager.player.duration > 0 && !isEditing {
+                enable()
             }
-
-            if audioManager.player.duration > 0 && !isEditing {
-                return enable()
+            
+            if let audio = audioManager.audio {
+                db.downloadNext(audio, reason: "SliderView确保下一个准备好")
             }
         }
         .padding(.horizontal, 10)

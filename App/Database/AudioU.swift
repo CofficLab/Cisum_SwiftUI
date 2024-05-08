@@ -22,13 +22,14 @@ extension DB {
 extension DB {
     nonisolated func download(_ audio: Audio, reason: String) {
         Task {
+            //os_log("\(Logger.isMain)\(Self.label)Download ⏬⏬⏬ \(audio.title) reason -> \(reason)")
             await disk.download(audio)
         }
     }
 
     /// 下载当前的和当前的后面的X个
     nonisolated func downloadNext(_ audio: Audio, reason: String) {
-        let count = 5
+        let count = 2
         var currentIndex = 0
         var currentAudio: Audio = audio
 

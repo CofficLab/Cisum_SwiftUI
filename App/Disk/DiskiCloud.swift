@@ -9,7 +9,7 @@ class DiskiCloud: ObservableObject {
     var audiosDir: URL = AppConfig.audiosDir
     var bg = AppConfig.bgQueue
     var label: String { "\(Logger.isMain)\(Self.label)" }
-    var verbose = false
+    var verbose = true
     var onUpdated: (_ items: [MetadataItemWrapper]) -> Void = { items in
         os_log("\(Logger.isMain)\(DiskiCloud.label)updated with items.count=\(items.count)")
     }
@@ -87,6 +87,10 @@ extension DiskiCloud: DiskContact {
             return
         }
         
+        if audio.isDownloading {
+            return
+        }
+        
         os_log("\(self.label)Download \(audio.title)")
         do {
             try await cloudHandler.download(url: audio.url)
@@ -139,7 +143,7 @@ extension DiskiCloud {
     func watchAudiosFolder() {
         Task.detached(priority: .background) {
             if self.verbose {
-                os_log("\(self.label)watchAudiosFolder")
+                os_log("\(Logger.isMain)\(self.label)watchAudiosFolder")
             }
 
             let queue = OperationQueue()
@@ -147,7 +151,9 @@ extension DiskiCloud {
             let query = ItemQuery(queue: queue, url: self.audiosDir)
             let result = query.searchMetadataItems()
             for try await items in result {
-                // os_log("\(Logger.isMain)\(self.label)getAudios \(items.count)")
+                if self.verbose {
+                    os_log("\(Logger.isMain)\(self.label)watchAudiosFolder -> count=\(items.count)")
+                }
                 
                 let filtered = items.filter { $0.url != nil }
                 if filtered.count > 0 {

@@ -21,7 +21,10 @@ class ItemQuery {
         sortDescriptors: [NSSortDescriptor] = [],
         scopes: [Any] = [NSMetadataQueryUbiquitousDocumentsScope]
     ) -> AsyncStream<[MetadataItemWrapper]> {
-        //os_log("\(self.label)searchMetadataItems")
+        if verbose {
+            os_log("\(self.label)searchMetadataItems")
+        }
+        
         let predicates = [
             NSPredicate(format: "%K BEGINSWITH %@", NSMetadataItemPathKey, url.path + "/"),
             NSPredicate(format: "NOT %K ENDSWITH %@", NSMetadataItemFSNameKey, ".DS_Store"),
@@ -54,7 +57,7 @@ class ItemQuery {
 
             query.operationQueue = queue
             query.operationQueue?.addOperation {
-                //os_log("\(self.label)start")
+                os_log("\(self.label)start")
                 self.query.start()
             }
 

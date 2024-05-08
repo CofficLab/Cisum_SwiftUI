@@ -35,7 +35,7 @@ actor DB: ModelActor {
             modelContext: context
         )
 
-        Task {
+        Task(priority: .high) {
             await self.disk.onUpdated = { items in
                 Task {
                     await self.sync(items)
