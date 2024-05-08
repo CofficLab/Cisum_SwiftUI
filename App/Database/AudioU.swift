@@ -8,7 +8,7 @@ extension DB {
     func evict(_ audio: Audio) {
         disk.evict(audio.url)
     }
-    
+
     func increasePlayCount(_ audio: Audio) {
         if let a = findAudio(audio.id) {
             a.playCount += 1
@@ -25,16 +25,16 @@ extension DB {
             await disk.download(audio)
         }
     }
-    
+
     /// 下载当前的和当前的后面的X个
     nonisolated func downloadNext(_ audio: Audio, reason: String) {
         let count = 5
         var currentIndex = 0
         var currentAudio: Audio = audio
-        
+
         while currentIndex < count {
             download(currentAudio, reason: "downloadNext 🐛 \(reason)")
-            
+
             currentIndex = currentIndex + 1
             if let next = Self.nextOf(context: ModelContext(self.modelContainer), audio: currentAudio) {
                 currentAudio = next
@@ -71,26 +71,6 @@ extension DB {
         }
     }
 
-    nonisolated func updateFileHash(_ audio: Audio) {
-        //os_log("\(Logger.isMain)\(DB.label)updateFileHash \(audio.title)")
-        
-        let context = ModelContext(self.modelContainer)
-        let url = audio.url
-        
-        do {
-            guard let dbAudio = try context.fetch(FetchDescriptor(predicate: #Predicate<Audio> {
-                $0.fileHash == "" && $0.url == url
-            })).first else {
-                return
-            }
-            
-            dbAudio.fileHash = dbAudio.getHash()
-            try context.save()
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-        }
-    }
-
     func update(_ audio: Audio) {
         if verbose {
             os_log("\(self.label)update \(audio.title)")
@@ -117,13 +97,56 @@ extension DB {
     }
 }
 
+// MARK: FileHash
+
+extension DB {
+    /// 更新按照order排序的第i个的FileHash
+    func updateFileHash(_ i: Int) {
+        // os_log("\(Logger.isMain)\(DB.label)updateFileHash \(audio.title)")
+        guard let audio = Self.get(context: context, i) else {
+            return
+        }
+
+        if audio.fileHash.count > 0 {
+            return
+        }
+
+        audio.fileHash = audio.getHash()
+
+        do {
+            try context.save()
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
+    }
+
+    nonisolated func updateFileHash(_ audio: Audio, hash: String) {
+        // os_log("\(Logger.isMain)\(DB.label)updateFileHash \(audio.title)")
+        let context = ModelContext(self.modelContainer)
+        let url = audio.url
+
+        do {
+            guard let dbAudio = try context.fetch(FetchDescriptor(predicate: #Predicate<Audio> {
+                $0.fileHash == "" && $0.url == url
+            })).first else {
+                return
+            }
+
+            dbAudio.fileHash = hash
+            try context.save()
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
+    }
+}
+
 // MARK: Duplicate
 
 extension DB {
     // nonisolated 是为了能让其在后台运行
     nonisolated func updateDuplicatedOf(_ audio: Audio) {
-        //os_log("\(Logger.isMain)\(Self.label)updateDuplicatedOf \(audio.title)")
-        
+        // os_log("\(Logger.isMain)\(Self.label)updateDuplicatedOf \(audio.title)")
+
         let context = ModelContext(self.modelContainer)
         context.autosaveEnabled = false
 
@@ -164,7 +187,7 @@ extension DB {
         }
 
 //        if let d = dbAudio.duplicatedOf {
-            //os_log(.error, "\(Logger.isMain)\(Self.label)\(audio.title) duplicatedOf -> \(d.lastPathComponent)")
+        // os_log(.error, "\(Logger.isMain)\(Self.label)\(audio.title) duplicatedOf -> \(d.lastPathComponent)")
 //        }
     }
 }

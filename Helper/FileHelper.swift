@@ -1,5 +1,6 @@
 import Foundation
 import OSLog
+import CryptoKit
 
 #if os(macOS)
     import AppKit
@@ -80,5 +81,20 @@ class FileHelper {
             os_log("Error: \(error.localizedDescription)")
             return "-"
         }
+    }
+    
+    static func getHash(_ url: URL) -> String {
+        var fileHash = ""
+        
+        // 如果文件尚未下载，会卡住，直到下载完成
+        do {
+            let fileData = try Data(contentsOf: url)
+            let hash = SHA256.hash(data: fileData)
+            fileHash = hash.compactMap { String(format: "%02x", $0) }.joined()
+        } catch {
+            print("Error calculating file hash: \(error)")
+        }
+        
+        return fileHash
     }
 }

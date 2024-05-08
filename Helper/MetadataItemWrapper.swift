@@ -19,7 +19,7 @@ struct MetadataItemWrapper: Sendable {
     let downloadProgress: Double
     let uploaded: Bool
 
-    init(metadataItem: NSMetadataItem, isDeleted: Bool = false, isUpdated: Bool = false) {
+    init(metadataItem: NSMetadataItem, isDeleted: Bool = false, isUpdated: Bool = false) {        
         self.isDeleted = isDeleted
         self.isUpdated = isUpdated
         fileName = metadataItem.value(forAttribute: NSMetadataItemFSNameKey) as? String

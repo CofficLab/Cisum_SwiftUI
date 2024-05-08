@@ -48,7 +48,7 @@ class Audio {
         if self.isNotDownloaded {
             self.fileHash = ""
         } else {
-            //self.fileHash = getHash()
+            self.fileHash = getHash()
         }
     }
 
@@ -108,29 +108,21 @@ extension Audio: Identifiable {
 extension Audio {
     func getHash() -> String {
         var fileHash = ""
+        let verbose = false
         let startTime = DispatchTime.now()
         
         if verbose {
             if self.isDownloaded {
-                //os_log("\(self.label)GetHash -> \(self.title) -> Downloaded 👍👍👍")
+                os_log("\(self.label)GetHash -> \(self.title) -> Downloaded 👍👍👍")
             } else {
                 os_log("\(self.label)GetHash -> \(self.title) -> Not Downloaded ☁️☁️☁️")
             }
         }
-
-        // 如果文件尚未下载，会卡住，直到下载完成
-        do {
-            let fileData = try Data(contentsOf: URL(fileURLWithPath: self.url.path))
-            let hash = SHA256.hash(data: fileData)
-            fileHash = hash.compactMap { String(format: "%02x", $0) }.joined()
-        } catch {
-            print("Error calculating file hash: \(error)")
-        }
         
-        let endTime = DispatchTime.now()
+        fileHash = FileHelper.getHash(self.url)
         
         // 计算代码执行时间
-        let nanoTime = endTime.uptimeNanoseconds - startTime.uptimeNanoseconds
+        let nanoTime = DispatchTime.now().uptimeNanoseconds - startTime.uptimeNanoseconds
         let timeInterval = Double(nanoTime) / 1_000_000_000
         
         if verbose {

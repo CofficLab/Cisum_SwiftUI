@@ -308,11 +308,13 @@ extension DB {
     func getTotal() -> Int {
         Self.getTotal(context: context)
     }
+}
 
-    /// 查询数据库中的按照order排序的第x个
-    nonisolated func get(_ i: Int) -> Audio? {
-        let context = ModelContext(self.modelContainer)
-        
+// MARK: Get by index
+
+extension DB {
+    /// 查询数据库中的按照order排序的第i个，i从0开始
+    static func get(context: ModelContext, _ i: Int) -> Audio? {
         var descriptor = FetchDescriptor<Audio>()
         descriptor.fetchLimit = 1
         descriptor.fetchOffset = i
@@ -329,5 +331,10 @@ extension DB {
         }
 
         return nil
+    }
+
+    /// 查询数据库中的按照order排序的第x个
+    nonisolated func get(_ i: Int) -> Audio? {
+        Self.get(context: ModelContext(self.modelContainer), i)
     }
 }

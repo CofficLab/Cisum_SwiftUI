@@ -66,7 +66,7 @@
 		0BAB300E2AB814F70012D837 /* Boot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAB300D2AB814F70012D837 /* Boot.swift */; };
 		0BAB7C3F2AD3BBAA00C5AEB5 /* DBTips.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAB7C3E2AD3BBAA00C5AEB5 /* DBTips.swift */; };
 		0BAB7C412AD3D25200C5AEB5 /* ButtonDismiss.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAB7C402AD3D25200C5AEB5 /* ButtonDismiss.swift */; };
-		0BB543F22BE8BAF300D7A2B2 /* DBFindDuplicates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB543F12BE8BAF300D7A2B2 /* DBFindDuplicates.swift */; };
+		0BB543F22BE8BAF300D7A2B2 /* AudioFindDuplicates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB543F12BE8BAF300D7A2B2 /* AudioFindDuplicates.swift */; };
 		0BB543F42BE8E38300D7A2B2 /* Duplicates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB543F32BE8E38300D7A2B2 /* Duplicates.swift */; };
 		0BB543F82BE9C64C00D7A2B2 /* PathExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB543F72BE9C64C00D7A2B2 /* PathExt.swift */; };
 		0BB587172AD815770071AEBD /* TimeHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB587162AD815770071AEBD /* TimeHelper.swift */; };
@@ -171,7 +171,7 @@
 		0BAB300D2AB814F70012D837 /* Boot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Boot.swift; sourceTree = "<group>"; };
 		0BAB7C3E2AD3BBAA00C5AEB5 /* DBTips.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBTips.swift; sourceTree = "<group>"; };
 		0BAB7C402AD3D25200C5AEB5 /* ButtonDismiss.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonDismiss.swift; sourceTree = "<group>"; };
-		0BB543F12BE8BAF300D7A2B2 /* DBFindDuplicates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBFindDuplicates.swift; sourceTree = "<group>"; };
+		0BB543F12BE8BAF300D7A2B2 /* AudioFindDuplicates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioFindDuplicates.swift; sourceTree = "<group>"; };
 		0BB543F32BE8E38300D7A2B2 /* Duplicates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Duplicates.swift; sourceTree = "<group>"; };
 		0BB543F72BE9C64C00D7A2B2 /* PathExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathExt.swift; sourceTree = "<group>"; };
 		0BB587162AD815770071AEBD /* TimeHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeHelper.swift; sourceTree = "<group>"; };
@@ -308,13 +308,13 @@
 			children = (
 				0B8C36A62BEA15E000C47567 /* AudioC.swift */,
 				0B8C36A02BEA0E8800C47567 /* AudioD.swift */,
+				0BB543F12BE8BAF300D7A2B2 /* AudioFindDuplicates.swift */,
 				0B8C36A22BEA124900C47567 /* AudioR.swift */,
 				0BD056882BC6192D00EBC7C4 /* AudioSync.swift */,
 				0B8C36A42BEA15A800C47567 /* AudioU.swift */,
 				0BB889DA2AC06C54004788D5 /* DB.swift */,
 				0BAABEAE2BC787A200DF4A31 /* DBCopyFiles.swift */,
 				0B1498782BC4DF940075DA61 /* DBDeleteInvalid.swift */,
-				0BB543F12BE8BAF300D7A2B2 /* DBFindDuplicates.swift */,
 				0BAABEB92BC8C5CB00DF4A31 /* DBPrepareJob.swift */,
 				0BAABEB22BC79C9F00DF4A31 /* TaskExt.swift */,
 			);
@@ -583,7 +583,7 @@
 				0BBC158F2ABAC146006E82C4 /* BtnNext.swift in Sources */,
 				0BBC15802AB854A8006E82C4 /* DBView.swift in Sources */,
 				0B901D932BB83F38003AC253 /* CloudKit.swift in Sources */,
-				0BB543F22BE8BAF300D7A2B2 /* DBFindDuplicates.swift in Sources */,
+				0BB543F22BE8BAF300D7A2B2 /* AudioFindDuplicates.swift in Sources */,
 				0B8C36A32BEA124900C47567 /* AudioR.swift in Sources */,
 				0B4DFC742BD74145001CEF32 /* DeviceCategory.swift in Sources */,
 				0BB889D72AC046B5004788D5 /* BtnShowInFinder.swift in Sources */,

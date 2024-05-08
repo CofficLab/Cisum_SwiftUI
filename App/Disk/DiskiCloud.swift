@@ -78,7 +78,7 @@ extension DiskiCloud: DiskContact {
         }
     }
     
-    func download(_ audio: Audio) {
+    func download(_ audio: Audio) async {
         if audio.isNotExists {
             return
         }
@@ -87,17 +87,16 @@ extension DiskiCloud: DiskContact {
             return
         }
         
-        Task {
-            os_log("\(self.label)Download \(audio.title)")
-            do {
-                try await cloudHandler.download(url: audio.url)
-            } catch let e {
-                print(e)
-            }
+        os_log("\(self.label)Download \(audio.title)")
+        do {
+            try await cloudHandler.download(url: audio.url)
+        } catch let e {
+            print(e)
         }
     }
 
     // MARK: 将文件复制到音频目录
+
     func copyTo(url: URL) throws {
         os_log("\(self.label)copy \(url.lastPathComponent)")
         
@@ -148,7 +147,7 @@ extension DiskiCloud {
             let query = ItemQuery(queue: queue, url: self.audiosDir)
             let result = query.searchMetadataItems()
             for try await items in result {
-                //os_log("\(Logger.isMain)\(self.label)getAudios \(items.count)")
+                // os_log("\(Logger.isMain)\(self.label)getAudios \(items.count)")
                 
                 let filtered = items.filter { $0.url != nil }
                 if filtered.count > 0 {
