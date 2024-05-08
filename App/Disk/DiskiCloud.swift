@@ -69,35 +69,6 @@ extension DiskiCloud: DiskContact {
         
         try fileManager.removeItem(at: audio.url)
     }
-    
-    // MARK: 移除下载
-
-    func evict(_ url: URL) {
-        Task {
-            try? await cloudHandler.evict(url: url)
-        }
-    }
-    
-    func download(_ audio: Audio) async {
-        if audio.isNotExists {
-            return
-        }
-        
-        if audio.isDownloaded {
-            return
-        }
-        
-        if audio.isDownloading {
-            return
-        }
-        
-        os_log("\(self.label)Download \(audio.title)")
-        do {
-            try await cloudHandler.download(url: audio.url)
-        } catch let e {
-            print(e)
-        }
-    }
 
     // MARK: 将文件复制到音频目录
 
@@ -133,6 +104,62 @@ extension DiskiCloud: DiskContact {
             os_log("\(self.label)复制文件发生错误 -> \(error.localizedDescription)")
             throw error
         }
+    }
+}
+
+// MARK: Download
+
+extension DiskiCloud {
+    func evict(_ url: URL) {
+        Task {
+            try? await cloudHandler.evict(url: url)
+        }
+    }
+    
+    func download(_ audio: Audio) async {
+        if audio.isNotExists {
+            return
+        }
+        
+        if audio.isDownloaded {
+            return
+        }
+        
+        if audio.isDownloading {
+            return
+        }
+        
+        let downloadingCount = getDownloadingCount()
+        
+        if downloadingCount > 5 {
+            os_log("\(self.label)Download \(audio.title) -> Ignore ❄️❄️❄️ -> Downloading.count=\(downloadingCount)")
+            
+            return
+        }
+        
+        os_log("\(self.label)Download \(audio.title)")
+        do {
+            try await cloudHandler.download(url: audio.url)
+        } catch let e {
+            print(e)
+        }
+    }
+    
+    func getDownloadingCount() -> Int {
+        var count = 0
+        
+        do {
+            let files = try FileManager.default.contentsOfDirectory(atPath: self.audiosDir.path)
+            for file in files {
+                if iCloudHelper.isDownloading(URL(fileURLWithPath: audiosDir.path).appendingPathComponent(file)) {
+                    count += 1
+                }
+            }
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
+        
+        return count
     }
 }
 

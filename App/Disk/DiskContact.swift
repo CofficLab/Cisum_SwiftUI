@@ -19,4 +19,6 @@ protocol DiskContact {
     func copyTo(url: URL) throws
     
     func watchAudiosFolder()
+    
+    func getDownloadingCount() -> Int
 }

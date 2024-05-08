@@ -1,13 +1,17 @@
 import AVKit
 import SwiftUI
+import OSLog
 
 struct SliderView: View {
+    static var label = "👀 SliderView::"
+    
     @EnvironmentObject var audioManager: AudioManager
     @EnvironmentObject var appManager: AppManager
 
     @State private var value: Double = 0
     @State private var isEditing: Bool = false
     @State private var shouldDisable = false
+    @State private var lastDownloadTime: Date = .now
 
     let timer = Timer
         .publish(every: 0.5, on: .main, in: .common)
@@ -19,6 +23,7 @@ struct SliderView: View {
     var current: String { player.currentTimeDisplay }
     var left: String { player.leftTimeDisplay }
     var db: DB { audioManager.db }
+    var label: String { "\(Logger.isMain)\(Self.label)"}
 
     var body: some View {
         HStack {
@@ -44,8 +49,11 @@ struct SliderView: View {
                 enable()
             }
             
-            if let audio = audioManager.audio {
-                db.downloadNext(audio, reason: "SliderView确保下一个准备好")
+            if Date.now.timeIntervalSince(lastDownloadTime) > 10, let audio = audioManager.audio {
+                lastDownloadTime = .now
+                Task.detached(priority: .low) {
+                    await db.downloadNext(audio, reason: "SliderView确保下一个准备好")
+                }
             }
         }
         .padding(.horizontal, 10)
