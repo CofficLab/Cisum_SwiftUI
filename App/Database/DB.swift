@@ -73,6 +73,10 @@ actor DB: ModelActor {
     func getLabel() -> String {
         self.label
     }
+    
+    func getDisk() -> DiskContact {
+        self.disk
+    }
 }
 
 #Preview {

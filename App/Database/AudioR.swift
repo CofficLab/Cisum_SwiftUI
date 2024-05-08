@@ -142,24 +142,6 @@ extension DB {
         }
     }
 
-    /// 第一个
-    func first() -> Audio? {
-        var descriptor = FetchDescriptor<Audio>(predicate: #Predicate<Audio> {
-            $0.title != ""
-        }, sortBy: [
-            SortDescriptor(\.order, order: .forward),
-        ])
-        descriptor.fetchLimit = 1
-
-        do {
-            return try context.fetch(descriptor).first
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-        }
-
-        return nil
-    }
-
     /// 最后一个
     func last() -> Audio? {
         var descriptor = FetchDescriptor<Audio>(predicate: #Predicate<Audio> {
@@ -180,6 +162,87 @@ extension DB {
 
     func isAllInCloud() -> Bool {
         getTotal() > 0 && first() == nil
+    }
+}
+
+// MARK: First
+
+extension DB {
+    static func first(context: ModelContext) -> Audio? {
+        var descriptor = FetchDescriptor<Audio>(predicate: #Predicate<Audio> {
+            $0.title != ""
+        }, sortBy: [
+            SortDescriptor(\.order, order: .forward),
+        ])
+        descriptor.fetchLimit = 1
+
+        do {
+            return try context.fetch(descriptor).first
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
+
+        return nil
+    }
+
+    /// 第一个
+    func first() -> Audio? {
+        Self.first(context: context)
+    }
+}
+
+// MARK: Query-Next & Prev
+
+extension DB {
+    /// The previous one of provided Audio
+    func pre(_ audio: Audio?) -> Audio? {
+        os_log("🍋 DBAudio::preOf [\(audio?.order ?? 0)] \(audio?.title ?? "nil")")
+        guard let audio = audio else {
+            return first()
+        }
+
+        let order = audio.order
+        var descriptor = FetchDescriptor<Audio>()
+        descriptor.sortBy.append(.init(\.order, order: .reverse))
+        descriptor.fetchLimit = 1
+        descriptor.predicate = #Predicate {
+            $0.order < order
+        }
+
+        do {
+            let result = try context.fetch(descriptor)
+            return result.first ?? last()
+        } catch let e {
+            print(e)
+        }
+
+        return nil
+    }
+
+    /// The next one of provided Audio
+    func nextOf(_ audio: Audio) -> Audio? {
+        Self.nextOf(context: context, audio: audio)
+    }
+    
+    static func nextOf(context: ModelContext, audio: Audio) -> Audio? {
+        // os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title)")
+        let order = audio.order
+        let url = audio.url
+        var descriptor = FetchDescriptor<Audio>()
+        descriptor.sortBy.append(.init(\.order, order: .forward))
+        descriptor.fetchLimit = 1
+        descriptor.predicate = #Predicate {
+            $0.order >= order && $0.url != url
+        }
+
+        do {
+            let result = try context.fetch(descriptor)
+            return result.first ?? Self.first(context: context)
+        } catch let e {
+            print(e)
+        }
+
+        return nil
     }
 }
 
@@ -240,54 +303,6 @@ extension DB {
             }
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
-        }
-
-        return nil
-    }
-
-    /// The previous one of provided Audio
-    func pre(_ audio: Audio?) -> Audio? {
-        os_log("🍋 DBAudio::preOf [\(audio?.order ?? 0)] \(audio?.title ?? "nil")")
-        guard let audio = audio else {
-            return first()
-        }
-
-        let order = audio.order
-        var descriptor = FetchDescriptor<Audio>()
-        descriptor.sortBy.append(.init(\.order, order: .reverse))
-        descriptor.fetchLimit = 1
-        descriptor.predicate = #Predicate {
-            $0.order < order
-        }
-
-        do {
-            let result = try context.fetch(descriptor)
-            return result.first ?? last()
-        } catch let e {
-            print(e)
-        }
-
-        return nil
-    }
-
-    /// The next one of provided Audio
-    func nextOf(_ audio: Audio) -> Audio? {
-        // os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title)")
-        let context = ModelContext(modelContainer)
-        let order = audio.order
-        let url = audio.url
-        var descriptor = FetchDescriptor<Audio>()
-        descriptor.sortBy.append(.init(\.order, order: .forward))
-        descriptor.fetchLimit = 1
-        descriptor.predicate = #Predicate {
-            $0.order >= order && $0.url != url
-        }
-
-        do {
-            let result = try context.fetch(descriptor)
-            return result.first ?? first()
-        } catch let e {
-            print(e)
         }
 
         return nil
