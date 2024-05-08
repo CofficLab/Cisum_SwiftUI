@@ -9,6 +9,7 @@ extension DB {
         let total = Self.getTotal(context: context)
         let group = DispatchGroup()
 
+        // 如果Task.detached写在for之外，内存占用会越来越大，因为每次循环算Hash都读一个文件进内存，直到Task结束才能释放
         for i in 1 ... total {
             Task.detached(priority: .background, operation: {
                 group.enter()
@@ -26,15 +27,17 @@ extension DB {
 
         // 等待所有任务完成
         group.notify(queue: .main) {
-            for i in 1 ... total {
-                if DB.verbose {
-                    os_log("\(Logger.isMain)\(Self.label)findDuplicatesJob -> 检查第 \(i)/\(total) 个")
+            Task.detached(priority: .background, operation: {
+                for i in 1 ... total {
+                    if DB.verbose {
+                        os_log("\(Logger.isMain)\(Self.label)findDuplicatesJob -> 检查第 \(i)/\(total) 个")
+                    }
+                    
+                    if let audio = self.get(i - 1) {
+                        self.updateDuplicatedOf(audio)
+                    }
                 }
-
-                if let audio = self.get(i - 1) {
-                    self.updateDuplicatedOf(audio)
-                }
-            }
+            })
         }
     }
 }
