@@ -20,7 +20,7 @@ extension DB {
             if itemsForSync.isEmpty == false || items.isEmpty {
                 // 第一次查到的item，同步到数据库
                 await self.deleteIfNotIn(itemsForSync.map { $0.url! })
-                self.insertIfNotIn(itemsForSync.map { $0.url! })
+                self.insertAudios(itemsForSync.map { $0.url! })
             }
             
             // 删除需要删除的
@@ -33,7 +33,7 @@ extension DB {
             await self.eventManager.emitUpdate(itemsForUpdate)
                 
             // 如有必要，将更新的插入数据库
-            self.insertIfNotIn(itemsForUpdate.map { $0.url! })
+            self.insertAudios(itemsForUpdate.map { $0.url! })
             
             // 处理Duplicate逻辑
             await self.findDuplicatesJob()

@@ -11,6 +11,7 @@ import SwiftUI
  */
 actor DB: ModelActor {
     static let label = "📦 DB::"
+    static let verbose = true
 
     let modelContainer: ModelContainer
     let modelExecutor: any ModelExecutor
@@ -20,10 +21,10 @@ actor DB: ModelActor {
     var disk: DiskContact = DiskiCloud()
     var onUpdated: () -> Void = { os_log("🍋 DB::updated") }
     var label: String { "\(Logger.isMain)\(DB.label)" }
-    var verbose = true
+    var verbose: Bool { DB.verbose }
 
     init(_ container: ModelContainer) {
-        if verbose {
+        if DB.verbose {
             os_log("\(Logger.isMain)🚩 初始化 DB")
         }
 

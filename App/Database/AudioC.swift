@@ -11,22 +11,37 @@ extension DB {
         
         do {
             try context.save()
-            updateDuplicatedOf(audio)
+//            updateDuplicatedOf(audio)
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
         }
     }
 
-    nonisolated func insertIfNotIn(_ urls: [URL]) {
-        if urls.isEmpty {
-            return
+    nonisolated func insertAudios(_ urls: [URL]) {
+        let startTime = DispatchTime.now()
+        
+        if DB.verbose {
+            os_log("\(Logger.isMain)\(DB.label)InsertAudios with count=\(urls.count)")
         }
         
-        let allUrls = getAllURLs()
+        let context = ModelContext(self.modelContainer)
+        
         for url in urls {
-            if allUrls.contains(url) == false {
-                insertAudio(Audio(url))
+            context.insert(Audio(url))
+        }
+        
+        do {
+            try context.save()
+            
+            // 计算代码执行时间
+            let nanoTime = DispatchTime.now().uptimeNanoseconds - startTime.uptimeNanoseconds
+            let timeInterval = Double(nanoTime) / 1_000_000_000
+            
+            if DB.verbose {
+                os_log("\(Logger.isMain)\(DB.label)InsertAudios with count=\(urls.count) 🎉🎉🎉 cost \(timeInterval) 秒")
             }
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
         }
     }
     

@@ -7,18 +7,24 @@ import SwiftUI
 
 @Model
 class Audio {
-    @Transient let fileManager = FileManager.default
+    static var label = "🪖 Audio::"
+    static var verbose = true
+    
+    @Transient
+    let fileManager = FileManager.default
 
+    @Attribute(.unique)
     var url: URL
+
     var order: Int
     var isPlaceholder: Bool = false
     var like: Bool = false
     var title: String = ""
     var playCount: Int = 0
     var fileHash: String = ""
-    var duplicatedOf: URL? = nil
-    var verbose = false
-
+    var duplicatedOf: URL?
+    
+    var verbose: Bool { Self.verbose }
     var size: Int64 { getFileSize() }
     var ext: String { url.pathExtension }
     var isSupported: Bool { AppConfig.supportedExtensions.contains(ext.lowercased()) }
@@ -27,18 +33,21 @@ class Audio {
     var isExists: Bool { fileManager.fileExists(atPath: url.path) || true }
     var isNotExists: Bool { !isExists }
     var dislike: Bool { !like }
-    var label: String { "\(Logger.isMain)🪖 Audio::" }
+    var label: String { "\(Logger.isMain)\(Self.label)" }
 
     init(_ url: URL) {
-        // os_log("\(Logger.isMain)🚩 AudioModel::init -> \(url.lastPathComponent)")
+        if Self.verbose {
+            //os_log("\(Logger.isMain)\(Self.label)Init -> \(url.lastPathComponent)")
+        }
+        
         self.url = url
         self.title = url.deletingPathExtension().lastPathComponent
         self.order = Self.makeRandomOrder()
-        
+
         if self.isNotDownloaded {
             self.fileHash = ""
         } else {
-            self.fileHash = getHash()
+            //self.fileHash = getHash()
         }
     }
 
@@ -94,20 +103,37 @@ extension Audio: Identifiable {
 
 extension Audio {
     func getHash() -> String {
+        var fileHash = ""
+        let startTime = DispatchTime.now()
+        
         if verbose {
             os_log("\(self.label)GetHash -> \(self.title)")
         }
-        
+
+        if self.isNotDownloaded && verbose {
+            os_log("\(self.label)GetHash -> \(self.title) -> Not Downloaded")
+        }
+
         // 如果文件尚未下载，会卡住，直到下载完成
         do {
             let fileData = try Data(contentsOf: URL(fileURLWithPath: self.url.path))
             let hash = SHA256.hash(data: fileData)
-
-            return hash.compactMap { String(format: "%02x", $0) }.joined()
+            fileHash = hash.compactMap { String(format: "%02x", $0) }.joined()
         } catch {
             print("Error calculating file hash: \(error)")
-            return ""
         }
+        
+        let endTime = DispatchTime.now()
+        
+        // 计算代码执行时间
+        let nanoTime = endTime.uptimeNanoseconds - startTime.uptimeNanoseconds
+        let timeInterval = Double(nanoTime) / 1_000_000_000
+        
+        if verbose {
+            os_log("\(self.label)GetHash cost -> \(timeInterval) 秒")
+        }
+        
+        return fileHash
     }
 }
 
