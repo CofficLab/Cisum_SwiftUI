@@ -85,13 +85,13 @@ struct AlbumView: View {
             os_log("\(self.label)Refresh -> \(audio.title)")
         }
 
-        isDownloaded = audio.isDownloaded
-        isDownloading = iCloudHelper.isDownloading(audio.url)
-
         if let item = item {
             isDownloaded = item.downloadProgress == 100
             isDownloading = item.isDownloading
             downloadingPercent = item.downloadProgress
+        } else {
+            isDownloaded = audio.isDownloaded
+            isDownloading = iCloudHelper.isDownloading(audio.url)
         }
 
         if isDownloaded {
