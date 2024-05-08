@@ -18,6 +18,10 @@ extension DB {
     }
 
     nonisolated func insertIfNotIn(_ urls: [URL]) {
+        if urls.isEmpty {
+            return
+        }
+        
         let allUrls = getAllURLs()
         for url in urls {
             if allUrls.contains(url) == false {

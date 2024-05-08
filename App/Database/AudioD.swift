@@ -32,6 +32,12 @@ extension DB {
         
         _ = self.delete(dbAudio.id)
     }
+    
+    func deleteAudios(_ urls: [URL]) {
+        urls.forEach({
+            deleteAudio($0)
+        })
+    }
 
     func deleteAudios(_ audios: [Audio.ID]) -> Audio? {
         var next: Audio?
