@@ -10,7 +10,13 @@ extension DB {
     
     func sync(_ items: [MetadataItemWrapper]) {
         Task.detached(priority: .background, operation: {
-            os_log("\(Logger.isMain)\(DB.label)sync with count=\(items.count)")
+            var message = "\(Logger.isMain)\(DB.label)sync with count=\(items.count)"
+            
+            if let first = items.first, first.isDownloading == true {
+                message += " -> \(first.fileName ?? "-") -> \(String(format: "%.0f", first.downloadProgress))% ⏬⏬⏬"
+            }
+            
+            os_log("\(message)")
                 
             let itemsForSync = items.filter { $0.isUpdated == false }
             let itemsForUpdate = items.filter { $0.isUpdated && $0.isDeleted == false }
@@ -34,9 +40,6 @@ extension DB {
                 
             // 如有必要，将更新的插入数据库
             self.insertAudios(itemsForUpdate.map { $0.url! })
-            
-            // 处理Duplicate逻辑
-//            await self.findDuplicatesJob()
         })
     }
 }

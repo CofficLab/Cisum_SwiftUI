@@ -44,20 +44,12 @@ class Audio {
         self.title = url.deletingPathExtension().lastPathComponent
         self.order = Self.makeRandomOrder()
 
+        // 计算FileHash需要较长时间，放到后台任务
         if self.isNotDownloaded {
             self.fileHash = ""
         } else {
             //self.fileHash = getHash()
         }
-    }
-
-    static func makeRandomOrder() -> Int {
-        Int.random(in: 101 ... 500000000)
-    }
-
-    func randomOrder() {
-//        os_log("\(Logger.isMain)🚩 AudioModel::randomOrder -> \(self.title)")
-        order = Self.makeRandomOrder()
     }
 
     func getFileSize() -> Int64 {
@@ -93,6 +85,18 @@ class Audio {
     }
 }
 
+// MARK: Order
+
+extension Audio {
+    static func makeRandomOrder() -> Int {
+        Int.random(in: 101 ... 500000000)
+    }
+
+    func randomOrder() {
+        order = Self.makeRandomOrder()
+    }
+}
+
 // MARK: ID
 
 extension Audio: Identifiable {
@@ -107,11 +111,11 @@ extension Audio {
         let startTime = DispatchTime.now()
         
         if verbose {
-            os_log("\(self.label)GetHash -> \(self.title)")
-        }
-
-        if self.isNotDownloaded && verbose {
-            os_log("\(self.label)GetHash -> \(self.title) -> Not Downloaded")
+            if self.isDownloaded {
+                //os_log("\(self.label)GetHash -> \(self.title) -> Downloaded 👍👍👍")
+            } else {
+                os_log("\(self.label)GetHash -> \(self.title) -> Not Downloaded ☁️☁️☁️")
+            }
         }
 
         // 如果文件尚未下载，会卡住，直到下载完成
@@ -130,7 +134,7 @@ extension Audio {
         let timeInterval = Double(nanoTime) / 1_000_000_000
         
         if verbose {
-            os_log("\(self.label)GetHash cost -> \(timeInterval) 秒")
+            os_log("\(self.label)GetHash -> \(self.title) -> \(timeInterval) 秒 🎉🎉🎉")
         }
         
         return fileHash

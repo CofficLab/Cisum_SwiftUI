@@ -249,11 +249,9 @@ extension DB {
 // MARK: Query-Find
 
 extension DB {
-    func findAudio(_ id: Audio.ID) -> Audio? {
-        context.model(for: id) as? Audio
-    }
-
-    func findAudio(_ url: URL) -> Audio? {
+    static func findAudio(context: ModelContext, _ url: URL) -> Audio? {
+        //os_log("\(Logger.isMain)\(Self.label)FindAudio -> \(url.lastPathComponent)")
+        
         let predicate = #Predicate<Audio> {
             $0.url == url
         }
@@ -268,12 +266,33 @@ extension DB {
 
         return nil
     }
+    
+    func findAudio(_ id: Audio.ID) -> Audio? {
+        context.model(for: id) as? Audio
+    }
+
+    func findAudio(_ url: URL) -> Audio? {
+        Self.findAudio(context: context, url)
+    }
 }
 
 // MARK: Query-Get
 
 extension DB {
-    func getTotal() -> Int {
+    static func getTotalOfFileHashEmpty(context: ModelContext) -> Int {
+        let descriptor = FetchDescriptor(predicate: #Predicate<Audio> {
+            $0.fileHash == ""
+        })
+        
+        do {
+            return try context.fetchCount(descriptor)
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+            return 0
+        }
+    }
+    
+    static func getTotal(context: ModelContext) -> Int {
         let descriptor = FetchDescriptor(predicate: #Predicate<Audio> {
             $0.order != -1
         })
@@ -284,6 +303,10 @@ extension DB {
             os_log(.error, "\(e.localizedDescription)")
             return 0
         }
+    }
+    
+    func getTotal() -> Int {
+        Self.getTotal(context: context)
     }
 
     /// 查询数据库中的按照order排序的第x个

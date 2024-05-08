@@ -49,9 +49,9 @@ actor DB: ModelActor {
             await self.prepareJob()
         }
 
-//        Task.detached(operation: {
-//            await self.findDuplicatesJob()
-//        })
+        Task.detached(operation: {
+            await self.findDuplicatesJob()
+        })
     }
 
     func setOnUpdated(_ callback: @escaping () -> Void) {

@@ -71,15 +71,24 @@ extension DB {
         }
     }
 
-    func updateFileHash(_ audio: Audio) {
-        os_log("\(self.label)updateFileHash \(audio.title)")
-
-        guard let dbAudio = findAudio(audio.url) else {
-            return
+    nonisolated func updateFileHash(_ audio: Audio) {
+        //os_log("\(Logger.isMain)\(DB.label)updateFileHash \(audio.title)")
+        
+        let context = ModelContext(self.modelContainer)
+        let url = audio.url
+        
+        do {
+            guard let dbAudio = try context.fetch(FetchDescriptor(predicate: #Predicate<Audio> {
+                $0.fileHash == "" && $0.url == url
+            })).first else {
+                return
+            }
+            
+            dbAudio.fileHash = dbAudio.getHash()
+            try context.save()
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
         }
-
-        dbAudio.fileHash = dbAudio.getHash()
-        save()
     }
 
     func update(_ audio: Audio) {
