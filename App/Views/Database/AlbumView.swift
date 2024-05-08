@@ -2,6 +2,9 @@ import OSLog
 import SwiftUI
 
 struct AlbumView: View {
+    static var verbose = true
+    static var label = "🐰 AlbumView::"
+    
     @EnvironmentObject var audioManager: AudioManager
 
     @State var image: Image? = nil
@@ -16,6 +19,8 @@ struct AlbumView: View {
     var url: URL
     var forPlaying: Bool = false
     var fileManager = FileManager.default
+    var verbose: Bool { Self.verbose }
+    var label: String { "\(Logger.isMain)\(Self.label)" }
     var isNotDownloaded: Bool { !isDownloaded }
     var shape: RoundedRectangle {
         if forPlaying {
@@ -51,14 +56,14 @@ struct AlbumView: View {
             }
         }
         .clipShape(shape)
-        .onHover(perform: {_ in 
+        .onHover(perform: { _ in
             refresh()
         })
         .onAppear {
             refresh()
 
             // 监听到了事件，注意要考虑audio已经被删除了的情况
-            e.onUpdated({ items in
+            e.onUpdated { items in
                 for item in items {
                     if item.isDeleted {
                         continue
@@ -68,7 +73,7 @@ struct AlbumView: View {
                         return refresh(item)
                     }
                 }
-            })
+            }
         }
         .onDisappear {
             e.removeListener(self)
@@ -76,7 +81,9 @@ struct AlbumView: View {
     }
 
     func refresh(_ item: MetadataItemWrapper? = nil) {
-        // os_log("\(Logger.isMain)🍋 AlbumView::refresh -> \(audio.title) \(percent)")
+        if verbose {
+            os_log("\(self.label)Refresh -> \(audio.title)")
+        }
 
         isDownloaded = audio.isDownloaded
         isDownloading = iCloudHelper.isDownloading(audio.url)
@@ -93,9 +100,18 @@ struct AlbumView: View {
     }
 
     func updateCover() {
-        Task {
+        Task.detached(priority: .background) {
+            if await AlbumView.verbose {
+                let label = await AlbumView.label
+                let audio = await self.audio
+                os_log("\(Logger.isMain)\(label)UpdateCover -> \(audio.title)")
+            }
+
             let image = await audio.getCoverImage()
-            self.image = image
+
+            DispatchQueue.main.async {
+                self.image = image
+            }
         }
     }
 
