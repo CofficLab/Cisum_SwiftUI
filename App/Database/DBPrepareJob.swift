@@ -10,7 +10,7 @@ extension DB {
             
             os_log("\(Logger.isMain)\(Self.label)Run Prepare Job")
             
-            self.downloadNext(first, reason: "\(Logger.isMain)\(Self.label)prepare")
+            self.downloadNextBatch(first, reason: "\(Logger.isMain)\(Self.label)prepare")
         })
     }
 }

@@ -26,10 +26,14 @@ extension DB {
             await disk.download(audio)
         }
     }
+    
+    /// 下载当前的和当前的后面的1个
+    nonisolated func downloadNext(_ audio: Audio, reason: String) {
+        downloadNextBatch(audio, count: 2, reason: reason)
+    }
 
     /// 下载当前的和当前的后面的X个
-    nonisolated func downloadNext(_ audio: Audio, reason: String) {
-        let count = 3
+    nonisolated func downloadNextBatch(_ audio: Audio, count: Int = 3, reason: String) {
         var currentIndex = 0
         var currentAudio: Audio = audio
 
