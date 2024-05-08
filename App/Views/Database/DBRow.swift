@@ -43,7 +43,7 @@ struct DBRow: View {
                         Text(audio.getFileSizeReadable())
                             .foregroundStyle(.secondary)
 
-                        Duplicates(audio)
+//                        Duplicates(audio)
 
                         Spacer()
                     }

@@ -10,7 +10,7 @@ extension DB {
                     //os_log("\(Logger.isMain)\(Self.label)findDuplicatesJob -> 检查第 \(i) 个")
                 }
 
-                if let audio = await self.get(i) {
+                if let audio = self.get(i) {
                     self.updateDuplicatedOf(audio)
                     i += 1
                 } else {

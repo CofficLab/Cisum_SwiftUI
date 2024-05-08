@@ -224,7 +224,9 @@ extension DB {
     }
 
     /// 查询数据库中的按照order排序的第x个
-    func get(_ i: Int) -> Audio? {
+    nonisolated func get(_ i: Int) -> Audio? {
+        let context = ModelContext(self.modelContainer)
+        
         var descriptor = FetchDescriptor<Audio>()
         descriptor.fetchLimit = 1
         descriptor.fetchOffset = i
