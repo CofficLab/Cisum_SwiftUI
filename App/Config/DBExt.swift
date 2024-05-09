@@ -5,6 +5,18 @@ import SwiftData
 // MARK: 数据库配置
 
 extension AppConfig {
+    /// iCloud容器的ID
+    static let containerIdentifier = "iCloud.yueyi.cisum"
+    
+    /// 封面图文件夹
+    static let coversDirName = "covers"
+    
+    /// 回收站文件夹
+    static let trashDirName = "trash"
+    
+    /// 缓存文件夹
+    static let cacheDirName = "audios_cache"
+    
     static var dbFileName = debug ? "database_debug.db" : "database.db"
     
     static let audiosDirName = debug ? "audios" : "audios"
