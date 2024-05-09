@@ -6,6 +6,7 @@ struct ControlButton: View {
     @EnvironmentObject var audioManager: AudioManager
 
     @State private var hovered: Bool = false
+    @State private var pressed: Bool = false
     @State private var isButtonTapped = false
     @State private var showTips: Bool = false
 
@@ -40,13 +41,34 @@ struct ControlButton: View {
     func makeButton(_ geo: GeometryProxy? = nil) -> some View {
         Button(action: {
             withAnimation(.default) {
+                self.pressed = true
                 onTap()
+                
+                DispatchQueue.main.asyncAfter(deadline: .now()+0.2, execute: {
+                    self.pressed = false
+                })
             }
         }, label: {
-            Label(title, systemImage: systemImage)
-                .font(getSize(geo))
+            Label(
+                title: { Text(title) },
+                icon: {
+                    Image(systemName: systemImage)
+                        .font(getSize(geo))
+                        .padding(7)
+                        .background(hovered ? Color.gray.opacity(0.4) : .clear)
+                        .clipShape(RoundedRectangle(cornerRadius: 10.0))
+                        .onHover(perform: { hovering in
+                            self.hovered = hovering
+                        })
+                        .scaleEffect(pressed ? 1.2 : 1)
+                        .animation(.easeOut(duration: 0.2), value: pressed)
+                }
+            )
         })
-        .buttonStyle(SmartButtonStyle())
+        // 注意测试ButtonStyle对这个操作的影响：
+        //  其他App获取焦点
+        //  点击本App的button，看看是否有反应
+        .buttonStyle(LinkButtonStyle())
     }
 
     func getSize(_ geo: GeometryProxy?) -> Font {
