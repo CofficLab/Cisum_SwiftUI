@@ -36,7 +36,7 @@ struct ControlButton: View {
             }
         }
     }
-    
+
     func makeButton(_ geo: GeometryProxy? = nil) -> some View {
         Button(action: {
             withAnimation(.default) {
@@ -46,38 +46,35 @@ struct ControlButton: View {
             Label(title, systemImage: systemImage)
                 .font(getSize(geo))
         })
-//                    .popover(isPresented: $showTips, content: {
-//                        Text(tips).padding()
-//                    })
-        .buttonStyle(MyButtonStyle())
-        .background(hovered ? Color.gray.opacity(0.4) : .clear)
-        .clipShape(RoundedRectangle(cornerRadius: 10.0))
-        .onHover(perform: { hovering in
-            withAnimation(.easeInOut) {
-                hovered = hovering
-                showTips = tips.count > 0 && hovered
-            }
-        })
+        .buttonStyle(SmartButtonStyle())
     }
 
     func getSize(_ geo: GeometryProxy?) -> Font {
         if dynamicSize == false {
             return .body
         }
-        
+
         guard let geo = geo else {
             return .system(size: 24)
         }
-        
+
         return .system(size: min(geo.size.height, geo.size.width) * 0.45)
     }
 }
 
-struct MyButtonStyle: ButtonStyle {
+struct SmartButtonStyle: ButtonStyle {
+    @State var hovered = false
+
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .padding(7)
-            .background(configuration.isPressed ? Color.gray.opacity(0.5) : .clear)
+            .background(hovered ? Color.gray.opacity(0.4) : .clear)
+            .onHover(perform: { hovering in
+                self.hovered = hovering
+            })
+            .clipShape(RoundedRectangle(cornerRadius: 10.0))
+            .scaleEffect(configuration.isPressed ? 1.2 : 1)
+            .animation(.easeOut(duration: 0.2), value: configuration.isPressed)
     }
 }
 
