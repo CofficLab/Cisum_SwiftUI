@@ -23,54 +23,54 @@ struct MetadataItemWrapper: Sendable {
 
     init(metadataItem: NSMetadataItem, isDeleted: Bool = false, isUpdated: Bool = false, verbose: Bool = true) {
         if verbose {
-//            var message = ""
-//            metadataItem.attributes.forEach({
-//                message += ("  \($0) -> \(String(describing: metadataItem.value(forAttribute: $0))) \n")
-//            })
-//            
-//            os_log("\(message)")
-//            
-//            message = "=========\n"
-//            [
-//                NSMetadataItemDisplayNameKey,
-//                NSMetadataItemAlbumKey,
-//                NSMetadataItemTitleKey,
-//                NSMetadataItemIdentifierKey,
-//                NSMetadataItemGenreKey,
-//                NSMetadataUbiquitousItemIsDownloadingKey,
-//                NSMetadataItemCodecsKey,
-//                NSMetadataItemKeywordsKey,
-//                NSMetadataItemCFBundleIdentifierKey,
-//                NSMetadataItemVersionKey,
-//                NSMetadataItemKeySignatureKey,
-//                NSMetadataItemFSSizeKey,
-//                NSMetadataItemDurationSecondsKey,
-//                NSMetadataItemContentTypeKey,
-//                NSMetadataUbiquitousItemContainerDisplayNameKey,
-//                NSMetadataUbiquitousItemURLInLocalContainerKey,
-//                NSMetadataItemFSCreationDateKey,
-//                NSMetadataItemCreatorKey,
-//                NSMetadataItemContentCreationDateKey,
-//                NSMetadataItemIsUbiquitousKey,
-//                "BRMetadataItemFileObjectIdentifierKey",
-//                NSMetadataItemFSContentChangeDateKey,
-//            ].forEach({
-//                let v = metadataItem.value(forAttribute: $0)
-//                
-//                if let s = v as? String {
-//                    message += ("  \($0) -> String: \(s) \n")
-//                } else if let i = v as? Int {
-//                    message += ("  \($0) -> Int: \(i) \n")
-//                } else if let d = v as? Date {
-//                    message += ("  \($0) -> Date: \(d) \n")
-//                } else if let o = v as? ObjectIdentifier {
-//                    message += ("  \($0) -> \(o.debugDescription) \n")
-//                } else {
-//                    message += ("  \($0) -> \(String(describing: metadataItem.value(forAttribute: $0))) -> \(type(of: metadataItem.value(forAttribute: $0)))) \n")
-//                }
-//            })
-//            
-//            os_log("\(message)=========")
+            var message = ""
+            metadataItem.attributes.forEach({
+                message += ("  \($0) -> \(String(describing: metadataItem.value(forAttribute: $0))) \n")
+            })
+            
+            os_log("\(message)")
+            
+            message = "=========\n"
+            [
+                NSMetadataItemDisplayNameKey,
+                NSMetadataItemAlbumKey,
+                NSMetadataItemTitleKey,
+                NSMetadataItemIdentifierKey,
+                NSMetadataItemGenreKey,
+                NSMetadataUbiquitousItemIsDownloadingKey,
+                NSMetadataItemCodecsKey,
+                NSMetadataItemKeywordsKey,
+                NSMetadataItemCFBundleIdentifierKey,
+                NSMetadataItemVersionKey,
+                NSMetadataItemKeySignatureKey,
+                NSMetadataItemFSSizeKey,
+                NSMetadataItemDurationSecondsKey,
+                NSMetadataItemContentTypeKey,
+                NSMetadataUbiquitousItemContainerDisplayNameKey,
+                NSMetadataUbiquitousItemURLInLocalContainerKey,
+                NSMetadataItemFSCreationDateKey,
+                NSMetadataItemCreatorKey,
+                NSMetadataItemContentCreationDateKey,
+                NSMetadataItemIsUbiquitousKey,
+                "BRMetadataItemFileObjectIdentifierKey",
+                NSMetadataItemFSContentChangeDateKey,
+            ].forEach({
+                let v = metadataItem.value(forAttribute: $0)
+                
+                if let s = v as? String {
+                    message += ("  \($0) -> String: \(s) \n")
+                } else if let i = v as? Int {
+                    message += ("  \($0) -> Int: \(i) \n")
+                } else if let d = v as? Date {
+                    message += ("  \($0) -> Date: \(d) \n")
+                } else if let o = v as? ObjectIdentifier {
+                    message += ("  \($0) -> \(o.debugDescription) \n")
+                } else {
+                    message += ("  \($0) -> \(String(describing: metadataItem.value(forAttribute: $0))) -> \(type(of: metadataItem.value(forAttribute: $0)))) \n")
+                }
+            })
+            
+            os_log("\(message)=========")
         }
         
         self.isDeleted = isDeleted

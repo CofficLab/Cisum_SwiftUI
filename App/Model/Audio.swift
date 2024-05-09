@@ -8,7 +8,7 @@ import SwiftUI
 @Model
 class Audio {
     static var label = "🪖 Audio::"
-    static var verbose = true
+    static var verbose = false
 
     @Transient
     let fileManager = FileManager.default
@@ -57,12 +57,11 @@ class Audio {
         self.order = Self.makeRandomOrder()
         self.identifierKey = identifierKey
         self.contentType = contentType
+        self.title = url.deletingPathExtension().lastPathComponent
 
-        if let title = title {
-            self.title = title
-        } else {
-            self.title = url.deletingPathExtension().lastPathComponent
-        }
+//        if let title = title {
+//            self.title = title
+//        }
 
         if let size = size {
             self.size = size

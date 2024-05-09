@@ -65,6 +65,11 @@ extension DB {
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
         }
+        
+        // 因为进度是异步发出的，接收方可能先接收了20/20，后接收了19/20，一直处于等待状态
+        Task {
+            await self.eventManager.emitSyncing(total, current: total)
+        }
     }
 
     nonisolated func insertAudios(_ urls: [URL]) {

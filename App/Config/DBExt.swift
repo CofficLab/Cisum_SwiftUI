@@ -7,7 +7,7 @@ import SwiftData
 extension AppConfig {
     static var dbFileName = debug ? "database_debug.db" : "database.db"
     
-    static let audiosDirName = debug ? "audios_debug" : "audios"
+    static let audiosDirName = debug ? "audios" : "audios"
     
     static func getDBUrl() -> URL? {
         if debug {
