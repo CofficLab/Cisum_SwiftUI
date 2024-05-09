@@ -16,6 +16,56 @@ extension DB {
             os_log(.error, "\(e.localizedDescription)")
         }
     }
+    
+    nonisolated func insertAudios(_ audios: [Audio]) {
+        let startTime = DispatchTime.now()
+        
+        if DB.verbose {
+            //os_log("\(Logger.isMain)\(DB.label)InsertAudios with count=\(urls.count)")
+        }
+        
+        let context = ModelContext(self.modelContainer)
+        
+        // 如果url属性为unique，数据库已存在相同url的记录，再执行context.insert，发现已存在的被替换成新的了
+        // 但在这里，希望如果存在，就不要插入
+        let total = audios.count
+        for (index, audio) in audios.enumerated() {
+            if Self.findAudio(context: context, audio.url) == nil {
+                context.insert(audio)
+                
+                if DB.verbose {
+                    os_log("\(Logger.isMain)\(DB.label)InsertAudios \(index+1)/\(total)")
+                }
+                
+                Task {
+                    await self.eventManager.emitSyncing(total, current: index+1)
+                }
+            }
+        }
+        
+        if context.hasChanges == false {
+            return
+        }
+        
+        do {
+            try context.save()
+            
+            // 计算代码执行时间
+            let nanoTime = DispatchTime.now().uptimeNanoseconds - startTime.uptimeNanoseconds
+            let timeInterval = Double(nanoTime) / 1_000_000_000
+            
+            if DB.verbose {
+                os_log("\(Logger.isMain)\(DB.label)InsertAudios with count=\(total) 🎉🎉🎉 cost \(timeInterval) 秒")
+            }
+            
+            Task {
+                // 处理Duplicate逻辑
+                //await self.findDuplicatesJob()
+            }
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
+    }
 
     nonisolated func insertAudios(_ urls: [URL]) {
         let startTime = DispatchTime.now()

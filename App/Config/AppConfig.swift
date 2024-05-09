@@ -7,7 +7,6 @@ enum AppConfig {
     static let id = "com.yueyi.cisum"
     static let fileManager = FileManager.default
     static let coversDirName = "covers"
-    static let audiosDirName = debug ? "audios" : "audios"
     static let trashDirName = "trash"
     static let cacheDirName = "audios_cache"
     /// iCloud容器的ID

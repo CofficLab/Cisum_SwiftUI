@@ -9,7 +9,7 @@ import SwiftUI
 class Audio {
     static var label = "🪖 Audio::"
     static var verbose = true
-    
+
     @Transient
     let fileManager = FileManager.default
 
@@ -24,10 +24,12 @@ class Audio {
     var fileHash: String = ""
     var duplicatedOf: URL?
     // nil表示未计算过
-    var size: Int64? = nil
-    
+    var size: Int64?
+    var identifierKey: String?
+    var contentType: String?
+
     // 新增字段记得设置默认值，否则低版本更新时崩溃
-    
+
     var verbose: Bool { Self.verbose }
     var ext: String { url.pathExtension }
     var isSupported: Bool { AppConfig.supportedExtensions.contains(ext.lowercased()) }
@@ -38,15 +40,42 @@ class Audio {
     var dislike: Bool { !like }
     var label: String { "\(Logger.isMain)\(Self.label)" }
 
-    init(_ url: URL) {
+    init(_ url: URL,
+         size: Int64? = nil,
+         title: String? = nil,
+         identifierKey: String? = nil,
+         contentType: String? = nil)
+    {
         if Self.verbose {
-            //os_log("\(Logger.isMain)\(Self.label)Init -> \(url.lastPathComponent)")
+            os_log("\(Logger.isMain)\(Self.label)Init -> \(url.lastPathComponent)")
+            print(" Title: \(title ?? "")")
+            print(" Type: \(contentType ?? "")")
+            print(" Size: \(String(describing: size))")
         }
-        
+
         self.url = url
-        self.title = url.deletingPathExtension().lastPathComponent
         self.order = Self.makeRandomOrder()
-        self.size = FileHelper.getFileSize(url)
+        self.identifierKey = identifierKey
+        self.contentType = contentType
+
+        if let title = title {
+            self.title = title
+        } else {
+            self.title = url.deletingPathExtension().lastPathComponent
+        }
+
+        if let size = size {
+            self.size = size
+        } else {
+            self.size = FileHelper.getFileSize(url)
+        }
+    }
+
+    convenience init(_ metadataItem: MetadataItemWrapper) {
+        self.init(metadataItem.url!,
+                  size: metadataItem.fileSize != nil ? Int64(metadataItem.fileSize!) : nil,
+                  title: metadataItem.fileName,
+                  contentType: metadataItem.contentType)
     }
 
     func mergeWith(_ item: MetadataItemWrapper) -> Audio {
@@ -71,7 +100,7 @@ extension Audio {
         if let size = self.size, size > 0 {
             return size
         }
-        
+
         return FileHelper.getFileSize(url)
     }
 
@@ -104,7 +133,7 @@ extension Audio {
     func getHash(verbose: Bool = false) -> String {
         var fileHash = ""
         let startTime = DispatchTime.now()
-        
+
         if verbose {
             if self.isDownloaded {
                 os_log("\(self.label)GetHash -> \(self.title) -> Downloaded 👍👍👍")
@@ -112,21 +141,21 @@ extension Audio {
                 os_log("\(self.label)GetHash -> \(self.title) -> Not Downloaded ☁️☁️☁️")
             }
         }
-        
+
         if self.isNotDownloaded {
             return ""
         }
-        
+
         fileHash = FileHelper.getHash(self.url)
-        
+
         // 计算代码执行时间
         let nanoTime = DispatchTime.now().uptimeNanoseconds - startTime.uptimeNanoseconds
         let timeInterval = Double(nanoTime) / 1_000_000_000
-        
+
         if verbose {
             os_log("\(self.label)GetHash -> \(self.title) -> \(timeInterval) 秒 🎉🎉🎉")
         }
-        
+
         return fileHash
     }
 }
