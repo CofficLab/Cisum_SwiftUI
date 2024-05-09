@@ -19,66 +19,14 @@ struct MetadataItemWrapper: Sendable {
     let isUpdated: Bool
     let downloadProgress: Double
     let uploaded: Bool
-    let identifierKey: String?
+    let identifierKey: String? = nil
 
     init(metadataItem: NSMetadataItem, isDeleted: Bool = false, isUpdated: Bool = false, verbose: Bool = true) {
-        if verbose {
-            var message = ""
-            metadataItem.attributes.forEach({
-                message += ("  \($0) -> \(String(describing: metadataItem.value(forAttribute: $0))) \n")
-            })
-            
-            os_log("\(message)")
-            
-            message = "=========\n"
-            [
-                NSMetadataItemDisplayNameKey,
-                NSMetadataItemAlbumKey,
-                NSMetadataItemTitleKey,
-                NSMetadataItemIdentifierKey,
-                NSMetadataItemGenreKey,
-                NSMetadataUbiquitousItemIsDownloadingKey,
-                NSMetadataItemCodecsKey,
-                NSMetadataItemKeywordsKey,
-                NSMetadataItemCFBundleIdentifierKey,
-                NSMetadataItemVersionKey,
-                NSMetadataItemKeySignatureKey,
-                NSMetadataItemFSSizeKey,
-                NSMetadataItemDurationSecondsKey,
-                NSMetadataItemContentTypeKey,
-                NSMetadataUbiquitousItemContainerDisplayNameKey,
-                NSMetadataUbiquitousItemURLInLocalContainerKey,
-                NSMetadataItemFSCreationDateKey,
-                NSMetadataItemCreatorKey,
-                NSMetadataItemContentCreationDateKey,
-                NSMetadataItemIsUbiquitousKey,
-                "BRMetadataItemFileObjectIdentifierKey",
-                NSMetadataItemFSContentChangeDateKey,
-            ].forEach({
-                let v = metadataItem.value(forAttribute: $0)
-                
-                if let s = v as? String {
-                    message += ("  \($0) -> String: \(s) \n")
-                } else if let i = v as? Int {
-                    message += ("  \($0) -> Int: \(i) \n")
-                } else if let d = v as? Date {
-                    message += ("  \($0) -> Date: \(d) \n")
-                } else if let o = v as? ObjectIdentifier {
-                    message += ("  \($0) -> \(o.debugDescription) \n")
-                } else {
-                    message += ("  \($0) -> \(String(describing: metadataItem.value(forAttribute: $0))) -> \(type(of: metadataItem.value(forAttribute: $0)))) \n")
-                }
-            })
-            
-            os_log("\(message)=========")
-        }
-        
         self.isDeleted = isDeleted
         self.isUpdated = isUpdated
         self.fileName = metadataItem.value(forAttribute: NSMetadataItemFSNameKey) as? String
         self.fileSize = metadataItem.value(forAttribute: NSMetadataItemFSSizeKey) as? Int
         self.contentType = metadataItem.value(forAttribute: NSMetadataItemContentTypeKey) as? String
-        self.identifierKey = metadataItem.value(forAttribute: NSMetadataItemAuthorsKey) as? String
         self.isDirectory = (self.contentType == "public.folder")
         self.url = metadataItem.value(forAttribute: NSMetadataItemURLKey) as? URL// 获取下载进度
         self.downloadProgress = metadataItem.value(forAttribute: NSMetadataUbiquitousItemPercentDownloadedKey) as? Double ?? 0.0
@@ -102,9 +50,5 @@ struct MetadataItemWrapper: Sendable {
 
         // 如果是占位文件且下载进度大于0且小于100，则认为文件正在下载
         isDownloading = isPlaceholder && downloadProgress > 0.0 && downloadProgress < 100.0
-        
-//        let t = self.contentType
-//        let title = self.fileName
-//        os_log("MetadataItemWrapper: \n ContentType -> \(t ?? "") \n Title -> \(title ?? "")")
     }
 }

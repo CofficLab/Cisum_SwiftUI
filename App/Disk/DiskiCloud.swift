@@ -60,7 +60,7 @@ extension DiskiCloud: DiskContact {
     
     func deleteFile(_ audio: Audio) throws {
         if verbose {
-            os_log("\(Logger.isMain)\(self.label)删除 \(audio.url)")
+            os_log("\(self.label)删除 \(audio.url)")
         }
         
         if fileManager.fileExists(atPath: audio.url.path) == false {
