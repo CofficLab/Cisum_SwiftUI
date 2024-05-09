@@ -1,10 +1,13 @@
 import SwiftUI
+import OSLog
 
 struct HeroView: View {
     @EnvironmentObject var audioManager: AudioManager
     @EnvironmentObject var app: AppManager
 
     @State var topAlbumHeight: CGFloat = 0
+    
+    var verbose = false
 
     var body: some View {
         GeometryReader { geo in
@@ -17,19 +20,27 @@ struct HeroView: View {
                             ViewConfig.background(.yellow)
                                 .onAppear {
                                     self.topAlbumHeight = geo.size.height
-                                    print(self.topAlbumHeight)
+                                    if verbose {
+                                        os_log("\(self.topAlbumHeight)")
+                                    }
                                 }
                                 .onDisappear {
                                     self.topAlbumHeight = 0
-                                    print(self.topAlbumHeight)
+                                    if verbose {
+                                        os_log("\(self.topAlbumHeight)")
+                                    }
                                 }
                                 .onChange(of: geo.size.width) {
                                     self.topAlbumHeight = geo.size.height
-                                    print(self.topAlbumHeight)
+                                    if verbose {
+                                        os_log("\(self.topAlbumHeight)")
+                                    }
                                 }
                                 .onChange(of: geo.size.height) {
                                     self.topAlbumHeight = geo.size.height
-                                    print(self.topAlbumHeight)
+                                    if verbose {
+                                        os_log("\(self.topAlbumHeight)")
+                                    }
                                 }
                         })
                 }
@@ -44,7 +55,9 @@ struct HeroView: View {
                 }
             }
             .onChange(of: geo.size.width) {
-                print("Geo withd \(geo.size.width)")
+                if verbose {
+                    os_log("Geo withd \(geo.size.width)")
+                }
             }
         }
         .frame(maxWidth: .infinity)

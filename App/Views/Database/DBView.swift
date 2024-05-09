@@ -23,7 +23,7 @@ struct DBView: View {
                     case let .success(urls):
                         copy(urls)
                     case let .failure(error):
-                        print("导入文件失败Error: \(error)")
+                        os_log(.error, "导入文件失败Error: \(error.localizedDescription)")
                     }
                 }
             )

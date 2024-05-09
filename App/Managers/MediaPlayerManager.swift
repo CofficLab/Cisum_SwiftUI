@@ -144,7 +144,7 @@ class MediaPlayerManager: ObservableObject {
             let positionTime = event.positionTime // 获取当前的播放进度时间
 
             // 在这里处理当前的播放进度时间
-            print("Current playback position: \(positionTime)")
+            os_log("Current playback position: \(positionTime)")
             self.player.goto(positionTime)
 
             return .success

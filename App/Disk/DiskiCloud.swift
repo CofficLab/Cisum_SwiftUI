@@ -141,7 +141,7 @@ extension DiskiCloud {
         do {
             try await cloudHandler.download(url: audio.url)
         } catch let e {
-            print(e)
+            os_log(.error, "\(e.localizedDescription)")
         }
     }
     

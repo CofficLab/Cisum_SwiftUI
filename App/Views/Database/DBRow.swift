@@ -20,7 +20,6 @@ struct DBRow: View {
 
     init(_ audio: Audio) {
         self.audio = audio
-//        print("\(audio.title) with duplicates -> \(audio.duplicates.count)")
     }
 
     var body: some View {

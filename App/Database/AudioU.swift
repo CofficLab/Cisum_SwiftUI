@@ -205,7 +205,7 @@ extension DB {
             try context.save()
             onUpdated()
         } catch let e {
-            print(e)
+            os_log(.error, "\(e.localizedDescription)")
         }
     }
 
@@ -230,7 +230,7 @@ extension DB {
             try context.save()
             onUpdated()
         } catch let e {
-            print(e)
+            os_log(.error, "\(e.localizedDescription)")
         }
     }
 }

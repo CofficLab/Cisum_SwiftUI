@@ -20,7 +20,7 @@ extension Audio {
             try fileManager.createDirectory(
                 at: coversDir, withIntermediateDirectories: true, attributes: nil)
         } catch {
-            print(error.localizedDescription)
+            os_log(.error, "\(error.localizedDescription)")
         }
 
         return coversDir
@@ -38,7 +38,7 @@ extension Audio {
         do {
             try data.write(to: saveTo)
         } catch let e {
-            print(e)
+            os_log(.error, "\(e.localizedDescription)")
         }
 
         #if os(iOS)

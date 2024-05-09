@@ -18,7 +18,7 @@ extension DB {
 
             try context.save()
         } catch let e {
-            print(e)
+            os_log(.error, "\(e.localizedDescription)")
         }
     }
     
@@ -106,7 +106,7 @@ extension DB {
 
             return duplicates.first
         } catch let e {
-            print(e)
+            os_log(.error, "\(e.localizedDescription)")
         }
 
         return nil
@@ -123,7 +123,7 @@ extension DB {
         do {
             return try context.fetch(descriptor)
         } catch let e {
-            print(e)
+            os_log(.error, "\(e.localizedDescription)")
         }
 
         return []
@@ -168,7 +168,7 @@ extension DB {
         do {
             return try context.fetch(descriptor).map { $0.url }
         } catch let e {
-            print(e)
+            os_log(.error, "\(e.localizedDescription)")
             return []
         }
     }
@@ -244,7 +244,7 @@ extension DB {
             let result = try context.fetch(descriptor)
             return result.first ?? last()
         } catch let e {
-            print(e)
+            os_log(.error, "\(e.localizedDescription)")
         }
 
         return nil
@@ -270,7 +270,7 @@ extension DB {
             let result = try context.fetch(descriptor)
             return result.first ?? Self.first(context: context)
         } catch let e {
-            print(e)
+            os_log(.error, "\(e.localizedDescription)")
         }
 
         return nil
@@ -292,7 +292,7 @@ extension DB {
             let result = try context.fetch(descriptor)
             return result.first
         } catch let e {
-            print(e)
+            os_log(.error, "\(e.localizedDescription)")
         }
 
         return nil

@@ -13,7 +13,7 @@ class FileHelper {
     static func getSize(url: URL) -> Int {
         let resourceValues = try? url.resourceValues(forKeys: [.fileSizeKey])
         let size = resourceValues?.fileSize ?? 0
-        print("File size: \(size) bytes")
+        os_log("File size: \(size) bytes")
 
         return size
     }
@@ -74,7 +74,7 @@ class FileHelper {
             if let fileSize = attributes[.size] as? Int64 {
                 return byteCountFormatter.string(fromByteCount: fileSize)
             } else {
-                print("Failed to retrieve file size.")
+                os_log("Failed to retrieve file size.")
                 return "-"
             }
         } catch {
@@ -103,7 +103,7 @@ class FileHelper {
             let hash = SHA256.hash(data: fileData)
             fileHash = hash.compactMap { String(format: "%02x", $0) }.joined()
         } catch {
-            print("Error calculating file hash: \(error)")
+            os_log("Error calculating file hash: \(error)")
         }
         
         return fileHash

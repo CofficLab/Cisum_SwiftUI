@@ -68,7 +68,7 @@ extension DB {
             context.delete(t)
             try context.save()
         } catch let e {
-            print(e)
+            os_log(.error, "\(e.localizedDescription)")
         }
     }
 }
@@ -81,7 +81,7 @@ extension DB {
         do {
             return try context.fetch(descriptor)
         } catch let e {
-            print(e)
+            os_log(.error, "\(e.localizedDescription)")
         }
 
         return []
@@ -97,7 +97,7 @@ extension DB {
             let result = try context.fetch(descriptor)
             return result.first
         } catch let e {
-            print(e)
+            os_log(.error, "\(e.localizedDescription)")
         }
 
         return nil

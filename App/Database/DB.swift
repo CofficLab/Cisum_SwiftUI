@@ -66,7 +66,7 @@ actor DB: ModelActor {
         do {
             try self.context.save()
         } catch let e {
-            print(e)
+            os_log(.error, "\(e.localizedDescription)")
         }
     }
 
