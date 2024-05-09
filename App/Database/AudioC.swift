@@ -56,7 +56,7 @@ extension DB {
             
             Task {
                 // 处理Duplicate逻辑
-                await self.findDuplicatesJob()
+                //await self.findDuplicatesJob()
             }
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")

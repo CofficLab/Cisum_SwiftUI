@@ -83,6 +83,17 @@ class FileHelper {
         }
     }
     
+    static func getFileSizeReadable(_ size: Int64) -> String {
+        let byteCountFormatter: ByteCountFormatter = {
+            let formatter = ByteCountFormatter()
+            formatter.allowedUnits = [.useMB, .useGB, .useTB]
+            formatter.countStyle = .file
+            return formatter
+        }()
+
+        return byteCountFormatter.string(fromByteCount: size)
+    }
+    
     static func getHash(_ url: URL) -> String {
         var fileHash = ""
         

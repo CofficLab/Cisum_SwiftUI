@@ -23,9 +23,12 @@ class Audio {
     var playCount: Int = 0
     var fileHash: String = ""
     var duplicatedOf: URL?
+    // nil表示未计算过
+    var size: Int64? = nil
+    
+    // 新增字段记得设置默认值，否则低版本更新时崩溃
     
     var verbose: Bool { Self.verbose }
-    var size: Int64 { getFileSize() }
     var ext: String { url.pathExtension }
     var isSupported: Bool { AppConfig.supportedExtensions.contains(ext.lowercased()) }
     var isNotSupported: Bool { !isSupported }
@@ -43,29 +46,7 @@ class Audio {
         self.url = url
         self.title = url.deletingPathExtension().lastPathComponent
         self.order = Self.makeRandomOrder()
-
-        // 计算FileHash需要较长时间，放到后台任务
-        if self.isNotDownloaded {
-            self.fileHash = ""
-        } else {
-            self.fileHash = getHash()
-        }
-    }
-
-    func getFileSize() -> Int64 {
-        if isNotExists {
-            return 0
-        }
-
-        return FileHelper.getFileSize(url)
-    }
-
-    func getFileSizeReadable() -> String {
-        if isNotExists {
-            return "-"
-        }
-
-        return FileHelper.getFileSizeReadable(url)
+        self.size = FileHelper.getFileSize(url)
     }
 
     func mergeWith(_ item: MetadataItemWrapper) -> Audio {
@@ -82,6 +63,20 @@ class Audio {
         let audio = Audio(url)
 
         return audio.mergeWith(item)
+    }
+}
+
+extension Audio {
+    func getFileSize() -> Int64 {
+        if let size = self.size, size > 0 {
+            return size
+        }
+        
+        return FileHelper.getFileSize(url)
+    }
+
+    func getFileSizeReadable() -> String {
+        FileHelper.getFileSizeReadable(getFileSize())
     }
 }
 
