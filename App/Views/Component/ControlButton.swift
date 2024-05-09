@@ -68,7 +68,9 @@ struct ControlButton: View {
         // 注意测试ButtonStyle对这个操作的影响：
         //  其他App获取焦点
         //  点击本App的button，看看是否有反应
+        #if os(macOS)
         .buttonStyle(LinkButtonStyle())
+        #endif
     }
 
     func getSize(_ geo: GeometryProxy?) -> Font {
