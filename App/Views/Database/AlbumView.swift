@@ -80,7 +80,7 @@ struct AlbumView: View {
         }
     }
 
-    func refresh(_ item: MetadataItemWrapper? = nil) {
+    func refresh(_ item: MetaWrapper? = nil) {
         if verbose {
             os_log("\(self.label)Refresh -> \(audio.title)")
         }
@@ -146,13 +146,13 @@ struct AlbumView: View {
             AlbumView.makeProgressView()
             Text("1")
         }.frame(
-            width: ViewConfig.isDesktop ? 36 : 36,
-            height: ViewConfig.isDesktop ? 36 : 36
+            width: AppConfig.isDesktop ? 36 : 36,
+            height: AppConfig.isDesktop ? 36 : 36
         ).background(.red.opacity(0.2))
         HStack {
             AlbumView.makeProgressView().frame(
-                width: ViewConfig.isDesktop ? 48 : 36,
-                height: ViewConfig.isDesktop ? 36 : 36
+                width: AppConfig.isDesktop ? 48 : 36,
+                height: AppConfig.isDesktop ? 36 : 36
             )
             Text("2")
         }.background(.blue.opacity(0.2))

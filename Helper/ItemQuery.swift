@@ -20,7 +20,7 @@ class ItemQuery {
         predicate: NSPredicate? = nil,
         sortDescriptors: [NSSortDescriptor] = [],
         scopes: [Any] = [NSMetadataQueryUbiquitousDocumentsScope]
-    ) -> AsyncStream<[MetadataItemWrapper]> {
+    ) -> AsyncStream<[MetaWrapper]> {
         if verbose {
             os_log("\(self.label)searchMetadataItems")
         }
@@ -70,23 +70,23 @@ class ItemQuery {
         }
     }
 
-    private func collectAll(_ continuation: AsyncStream<[MetadataItemWrapper]>.Continuation) {
+    private func collectAll(_ continuation: AsyncStream<[MetaWrapper]>.Continuation) {
         DispatchQueue.global().async {
             if self.verbose {
                 os_log("\(self.label)NSMetadataQueryDidFinishGathering")
             }
             
-            let result = self.query.results.compactMap { item -> MetadataItemWrapper? in
+            let result = self.query.results.compactMap { item -> MetaWrapper? in
                 guard let metadataItem = item as? NSMetadataItem else {
                     return nil
                 }
-                return MetadataItemWrapper(metadataItem: metadataItem)
+                return MetaWrapper(metadataItem: metadataItem)
             }
             continuation.yield(result)
         }
     }
 
-    private func collectChanged(_ continuation: AsyncStream<[MetadataItemWrapper]>.Continuation, notification: Notification) {
+    private func collectChanged(_ continuation: AsyncStream<[MetaWrapper]>.Continuation, notification: Notification) {
         DispatchQueue.global().async {
             let changedItems = notification.userInfo?[NSMetadataQueryUpdateChangedItemsKey] as? [NSMetadataItem] ?? []
 
@@ -94,8 +94,8 @@ class ItemQuery {
                 os_log("\(self.label)NSMetadataQueryDidUpdate with changed items -> \(changedItems.count)")
             }
 
-            let result = changedItems.compactMap { item -> MetadataItemWrapper? in
-                MetadataItemWrapper(metadataItem: item, isUpdated: true)
+            let result = changedItems.compactMap { item -> MetaWrapper? in
+                MetaWrapper(metadataItem: item, isUpdated: true)
             }
             if result.isEmpty == false {
                 continuation.yield(result)
@@ -103,15 +103,15 @@ class ItemQuery {
         }
     }
     
-    private func collectDeleted(_ continuation: AsyncStream<[MetadataItemWrapper]>.Continuation, notification: Notification) {
+    private func collectDeleted(_ continuation: AsyncStream<[MetaWrapper]>.Continuation, notification: Notification) {
         DispatchQueue.global().async {
             if let deletedItems = notification.userInfo?[NSMetadataQueryUpdateRemovedItemsKey] as? [NSMetadataItem] {
                 if self.verbose {
                     os_log("\(self.label)NSMetadataQueryDidUpdate with deleted items -> \(deletedItems.count)")
                 }
 
-                let result = deletedItems.compactMap { item -> MetadataItemWrapper? in
-                    MetadataItemWrapper(metadataItem: item, isDeleted: true, isUpdated: true)
+                let result = deletedItems.compactMap { item -> MetaWrapper? in
+                    MetaWrapper(metadataItem: item, isDeleted: true, isUpdated: true)
                 }
                 continuation.yield(result)
             }

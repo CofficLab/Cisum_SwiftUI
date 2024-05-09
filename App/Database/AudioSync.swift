@@ -8,7 +8,7 @@ extension DB {
         EventManager()
     }
     
-    func sync(_ items: [MetadataItemWrapper]) {
+    func sync(_ items: [MetaWrapper]) {
         Task.detached(priority: .background, operation: {
             var message = "\(Logger.isMain)\(DB.label)sync with count=\(items.count)"
             

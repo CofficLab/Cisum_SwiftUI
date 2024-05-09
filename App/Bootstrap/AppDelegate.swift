@@ -5,7 +5,6 @@ import OSLog
 import SwiftUI
 
 #if os(macOS)
-
     class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         var verbose = false
         

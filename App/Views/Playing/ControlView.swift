@@ -26,28 +26,28 @@ struct ControlView: View {
                     StateView()
 //                        .frame(height: getStateHeight(geo))
                         .frame(maxWidth: .infinity)
-                        .background(ViewConfig.background(.red))
+                        .background(AppConfig.background(.red))
 
                     // MARK: 操作栏
 
                     if showOperationView {
                         OperationView(geo: geo)
                             .frame(height: getOperationHeight(geo))
-                            .background(ViewConfig.background(.white))
+                            .background(AppConfig.background(.white))
                     }
 
                     // MARK: 进度栏
 
                     SliderView(geo: geo)
                         .padding()
-                        .background(ViewConfig.background(.black))
+                        .background(AppConfig.background(.black))
 
                     // MARK: 控制栏
 
                     BtnsView()
                         .frame(height: getButtonsHeight(geo))
                         .padding(.bottom, getBottomHeight(geo))
-                        .background(ViewConfig.background(.red))
+                        .background(AppConfig.background(.red))
                 }
 
                 // MARK: 横向的封面图
@@ -57,7 +57,7 @@ struct ControlView: View {
                     HStack {
                         Spacer()
                         PlayingAlbum()
-                            .background(ViewConfig.background(.yellow))
+                            .background(AppConfig.background(.yellow))
                     }
                     .frame(maxWidth: geo.size.height * 1.3)
                     .onAppear {
@@ -110,7 +110,7 @@ struct ControlView: View {
     // MARK: 底部Padding的高度
 
     private func getBottomHeight(_ geo: GeometryProxy) -> CGFloat {
-        if DeviceConfig.hasHomeIndicator() && ViewConfig.isNotDesktop && showDB == false {
+        if DeviceConfig.hasHomeIndicator() && AppConfig.isNotDesktop && showDB == false {
             return 50
         }
 

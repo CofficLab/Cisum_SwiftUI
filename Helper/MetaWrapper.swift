@@ -3,10 +3,10 @@ import OSLog
 
 struct MetadataItemCollection: Sendable {
     var isUpdated = false
-    var items: [MetadataItemWrapper] = []
+    var items: [MetaWrapper] = []
 }
 
-struct MetadataItemWrapper: Sendable {
+struct MetaWrapper: Sendable {
     let fileName: String?
     let fileSize: Int?
     let contentType: String?

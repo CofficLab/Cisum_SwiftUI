@@ -9,7 +9,7 @@ class EventManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
     var n = NotificationCenter.default
     var queue = DispatchQueue(label: "EventQueue")
     
-    func emitUpdate(_ items: [MetadataItemWrapper]) {
+    func emitUpdate(_ items: [MetaWrapper]) {
         NotificationCenter.default.post(
             name: NSNotification.Name(Event.Updated.name),
             object: nil,
@@ -40,7 +40,7 @@ class EventManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
         )
     }
     
-    func emitDelete(_ items: [MetadataItemWrapper]) {
+    func emitDelete(_ items: [MetaWrapper]) {
         NotificationCenter.default.post(
             name: NSNotification.Name(Event.Delete.name),
             object: nil,
@@ -50,28 +50,28 @@ class EventManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
         )
     }
     
-    func onUpdated(_ callback: @escaping (_ items: [MetadataItemWrapper]) -> Void) {
+    func onUpdated(_ callback: @escaping (_ items: [MetaWrapper]) -> Void) {
         n.addObserver(
             forName: NSNotification.Name(Event.Updated.name),
             object: nil,
             queue: .main,
             using: { notification in
                 self.queue.async {
-                    let data = notification.userInfo as! [String: [MetadataItemWrapper]]
+                    let data = notification.userInfo as! [String: [MetaWrapper]]
                     let items = data["items"]!
                     callback(items)
                 }
             })
     }
     
-    func onDelete(_ callback: @escaping (_ items: [MetadataItemWrapper]) -> Void) {
+    func onDelete(_ callback: @escaping (_ items: [MetaWrapper]) -> Void) {
         n.addObserver(
             forName: NSNotification.Name(Event.Delete.name),
             object: nil,
             queue: .main,
             using: { notification in
                 self.queue.async {
-                    let data = notification.userInfo as! [String: [MetadataItemWrapper]]
+                    let data = notification.userInfo as! [String: [MetaWrapper]]
                     let items = data["items"]!
                     callback(items)
                 }

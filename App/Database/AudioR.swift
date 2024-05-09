@@ -6,7 +6,7 @@ import SwiftData
 
 extension DB {
     /// 将数据库内容设置为items
-    func setAudios(_ items: [MetadataItemWrapper]) {
+    func setAudios(_ items: [MetaWrapper]) {
         context.autosaveEnabled = false
         do {
             try context.delete(model: Audio.self)

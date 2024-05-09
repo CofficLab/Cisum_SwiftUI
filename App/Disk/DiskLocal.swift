@@ -1,8 +1,8 @@
 import Foundation
 import OSLog
 
-class DiskiCloud: ObservableObject {
-    static var label = "☁️ DiskiCloud::"
+class DiskLocal: ObservableObject {
+    static var label = "🛖 DiskLocal::"
     
     var fileManager = FileManager.default
     var cloudHandler = CloudHandler()
@@ -44,7 +44,7 @@ class DiskiCloud: ObservableObject {
     }
 }
 
-extension DiskiCloud: DiskContact {
+extension DiskLocal: DiskContact {
     func clearFolderContents(atPath path: String) {
         let fileManager = FileManager.default
         do {
@@ -109,63 +109,23 @@ extension DiskiCloud: DiskContact {
 
 // MARK: Download
 
-extension DiskiCloud {
+extension DiskLocal {
     func evict(_ url: URL) {
-        Task {
-            try? await cloudHandler.evict(url: url)
-        }
+        return
     }
     
     func download(_ audio: Audio) async {
-        if audio.isNotExists {
-            return
-        }
-        
-        if audio.isDownloaded {
-            return
-        }
-        
-        if audio.isDownloading {
-            return
-        }
-        
-        let downloadingCount = getDownloadingCount()
-        
-        if downloadingCount > 5 {
-            os_log("\(self.label)Download \(audio.title) -> Ignore ❄️❄️❄️ -> Downloading.count=\(downloadingCount)")
-            
-            return
-        }
-        
-        os_log("\(self.label)Download \(audio.title)")
-        do {
-            try await cloudHandler.download(url: audio.url)
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-        }
+        return
     }
     
     func getDownloadingCount() -> Int {
-        var count = 0
-        
-        do {
-            let files = try FileManager.default.contentsOfDirectory(atPath: self.audiosDir.path)
-            for file in files {
-                if iCloudHelper.isDownloading(URL(fileURLWithPath: audiosDir.path).appendingPathComponent(file)) {
-                    count += 1
-                }
-            }
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-        }
-        
-        return count
+        return 0
     }
 }
 
 // MARK: Watch
 
-extension DiskiCloud {
+extension DiskLocal {
     /// 监听存储Audio文件的文件夹
     func watchAudiosFolder() {
         Task.detached(priority: .background) {

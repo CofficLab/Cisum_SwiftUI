@@ -3,12 +3,6 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-/**
- DB 负责
- - 对接文件系统
- - 提供 Audio
- - 操作 Audio
- */
 actor DB: ModelActor {
     static let label = "📦 DB::"
     static let verbose = true
@@ -62,6 +56,35 @@ actor DB: ModelActor {
         context.hasChanges
     }
 
+    func getLabel() -> String {
+        self.label
+    }
+
+    func getDisk() -> DiskContact {
+        self.disk
+    }
+}
+
+// MARK: 增加
+
+extension DB {
+    func insertModel(_ model: any PersistentModel) throws {
+        context.insert(model)
+        try context.save()
+    }
+}
+
+// MARK: 删除
+
+extension DB {
+    func destroy<T>(for model: T.Type) throws where T: PersistentModel {
+        try context.delete(model: T.self)
+    }
+}
+
+// MARK: 修改
+
+extension DB {
     func save() {
         do {
             try self.context.save()
@@ -69,13 +92,47 @@ actor DB: ModelActor {
             os_log(.error, "\(e.localizedDescription)")
         }
     }
-
-    func getLabel() -> String {
-        self.label
+    
+    func save(_ completion: @escaping (Error?) -> Void) {
+        do {
+            try context.save()
+            completion(nil)
+        } catch let error {
+            completion(error)
+        }
     }
+}
 
-    func getDisk() -> DiskContact {
-        self.disk
+// MARK: 查询
+
+extension DB {
+    /// 所有指定的model
+    func all<T: PersistentModel>() throws -> [T] {
+        return try context.fetch(FetchDescriptor<T>())
+    }
+    
+    /// 分页的方式查询model
+    func paginate<T: PersistentModel>(page: Int) throws -> [T] {
+        try context.fetch(FetchDescriptor<T>())
+    }
+    
+    /// 获取指定条件的数量
+    func getCount<T: PersistentModel>(for predicate: Predicate<T>) throws -> Int {
+        let descriptor = FetchDescriptor<T>(predicate: predicate)
+        return try context.fetchCount(descriptor)
+    }
+    
+    /// 按照指定条件查询多个model
+    func get<T: PersistentModel>(for predicate: Predicate<T>) throws -> [T] {
+        // os_log("\(self.isMain) 🏠 LocalDB.get")
+        let descriptor = FetchDescriptor<T>(predicate: predicate)
+        return try context.fetch(descriptor)
+    }
+    
+    /// 某个model的总条数
+    func count<T>(for model: T.Type) throws -> Int where T: PersistentModel {
+        let descriptor = FetchDescriptor<T>(predicate: .true)
+        return try context.fetchCount(descriptor)
     }
 }
 

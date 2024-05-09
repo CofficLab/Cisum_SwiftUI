@@ -27,8 +27,8 @@ struct DBRow: View {
             HStack(alignment: .center) {
                 AlbumView(audio)
                     .frame(
-                        width: ViewConfig.isDesktop ? 36 : 36,
-                        height: ViewConfig.isDesktop ? 36 : 36
+                        width: AppConfig.isDesktop ? 36 : 36,
+                        height: AppConfig.isDesktop ? 36 : 36
                     )
                 VStack(spacing: 0) {
                     HStack {
@@ -67,7 +67,7 @@ struct DBRow: View {
             Divider()
             BtnDownload(audio: audio)
             BtnEvict(audio: audio)
-            if ViewConfig.isDesktop {
+            if AppConfig.isDesktop {
                 BtnShowInFinder(url: audio.url, autoResize: false)
             }
             Divider()

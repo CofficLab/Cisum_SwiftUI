@@ -70,20 +70,24 @@ class Audio {
         }
     }
 
-    convenience init(_ metadataItem: MetadataItemWrapper) {
+    convenience init(_ metadataItem: MetaWrapper) {
         self.init(metadataItem.url!,
                   size: metadataItem.fileSize != nil ? Int64(metadataItem.fileSize!) : nil,
                   title: metadataItem.fileName,
                   contentType: metadataItem.contentType)
     }
+}
 
-    func mergeWith(_ item: MetadataItemWrapper) -> Audio {
+// MARK: MetaItem
+
+extension Audio {
+    func mergeWith(_ item: MetaWrapper) -> Audio {
         isPlaceholder = item.isPlaceholder
 
         return self
     }
 
-    static func fromMetaItem(_ item: MetadataItemWrapper) -> Audio? {
+    static func fromMetaItem(_ item: MetaWrapper) -> Audio? {
         guard let url = item.url else {
             return nil
         }
@@ -93,6 +97,8 @@ class Audio {
         return audio.mergeWith(item)
     }
 }
+
+// MARK: FileSize
 
 extension Audio {
     func getFileSize() -> Int64 {
