@@ -21,6 +21,37 @@ extension DB {
             print(e)
         }
     }
+    
+    /// 排序在当前audio前的相同的audio中的第一个
+    static func getFirstDuplicate(context: ModelContext, audio: Audio) -> Audio? {
+        Self.getPreDuplicates(context: context, audio: audio).first
+    }
+    
+    /// 排序在当前audio前的相同的audio
+    static func getPreDuplicates(context: ModelContext, audio: Audio) -> [Audio] {
+        let url = audio.url
+        let order = audio.order
+        let hash = audio.fileHash
+        
+        if hash.isEmpty {
+            return []
+        }
+        
+        do {
+            return try context.fetch(FetchDescriptor<Audio>(predicate: #Predicate<Audio> {
+                $0.fileHash == hash &&
+                    $0.url != url &&
+                    $0.order < order &&
+                    $0.fileHash.count > 0
+            }, sortBy: [
+                SortDescriptor(\.order, order: .forward),
+            ]))
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
+        
+        return []
+    }
 
     /// 当前Audio是不是前面某个Audio的Duplicate，是则返回前面的Audio
     func findDuplicatedOf(_ audio: Audio) -> Audio? {

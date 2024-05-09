@@ -50,7 +50,7 @@ actor DB: ModelActor {
         }
 
         Task.detached(operation: {
-            await self.findDuplicatesJob()
+//            await self.findDuplicatesJob()
         })
     }
 

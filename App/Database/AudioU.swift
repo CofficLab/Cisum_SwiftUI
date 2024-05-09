@@ -22,11 +22,11 @@ extension DB {
 extension DB {
     nonisolated func download(_ audio: Audio, reason: String) {
         Task {
-            //os_log("\(Logger.isMain)\(Self.label)Download ⏬⏬⏬ \(audio.title) reason -> \(reason)")
+            // os_log("\(Logger.isMain)\(Self.label)Download ⏬⏬⏬ \(audio.title) reason -> \(reason)")
             await disk.download(audio)
         }
     }
-    
+
     /// 下载当前的和当前的后面的1个
     nonisolated func downloadNext(_ audio: Audio, reason: String) {
         downloadNextBatch(audio, count: 2, reason: reason)
@@ -125,7 +125,7 @@ extension DB {
         }
     }
 
-    nonisolated func updateFileHash(_ audio: Audio, hash: String) {
+    nonisolated func updateFileHash(_ audio: Audio) {
         // os_log("\(Logger.isMain)\(DB.label)updateFileHash \(audio.title)")
         let context = ModelContext(self.modelContainer)
         let url = audio.url
@@ -137,7 +137,7 @@ extension DB {
                 return
             }
 
-            dbAudio.fileHash = hash
+            dbAudio.fileHash = dbAudio.getHash()
             try context.save()
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
@@ -148,10 +148,7 @@ extension DB {
 // MARK: Duplicate
 
 extension DB {
-    // nonisolated 是为了能让其在后台运行
     nonisolated func updateDuplicatedOf(_ audio: Audio) {
-        // os_log("\(Logger.isMain)\(Self.label)updateDuplicatedOf \(audio.title)")
-
         let context = ModelContext(self.modelContainer)
         context.autosaveEnabled = false
 
@@ -159,41 +156,34 @@ extension DB {
             return
         }
 
-        let url = dbAudio.url
-        let hash = dbAudio.fileHash
-        let order = dbAudio.order
-
-        // 清空字段
-        dbAudio.duplicatedOf = nil
-
-        // 更新DuplicateOf
         do {
-            let duplicates = try context.fetch(FetchDescriptor<Audio>(predicate: #Predicate<Audio> {
-                $0.fileHash == hash &&
-                    $0.url != url &&
-                    $0.order < order &&
-                    $0.fileHash.count > 0
-            }, sortBy: [
-                SortDescriptor(\.order, order: .forward),
-            ]))
+            let duplicate = Self.getFirstDuplicate(context: context, audio: dbAudio)
+            dbAudio.duplicatedOf = duplicate?.url
+            EventManager().emitAudioUpdate(dbAudio)
 
-            for duplicate in duplicates {
-                if duplicate.isExists {
-                    dbAudio.duplicatedOf = duplicates.first?.url
-                    EventManager().emitAudioUpdate(dbAudio)
-
-                    try context.save()
-
-                    break
-                }
-            }
+            try context.save()
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
         }
+    }
 
-//        if let d = dbAudio.duplicatedOf {
-        // os_log(.error, "\(Logger.isMain)\(Self.label)\(audio.title) duplicatedOf -> \(d.lastPathComponent)")
-//        }
+    nonisolated func updateDuplicatedOf(_ i: Int) {
+        let context = ModelContext(self.modelContainer)
+        context.autosaveEnabled = false
+
+        guard let dbAudio = Self.get(context: context, i) else {
+            return
+        }
+
+        do {
+            let duplicate = Self.getFirstDuplicate(context: context, audio: dbAudio)
+            dbAudio.duplicatedOf = duplicate?.url
+            EventManager().emitAudioUpdate(dbAudio)
+
+            try context.save()
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
     }
 }
 
