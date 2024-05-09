@@ -47,6 +47,11 @@
 		0B8C36A52BEA15A800C47567 /* AudioU.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C36A42BEA15A800C47567 /* AudioU.swift */; };
 		0B8C36A72BEA15E000C47567 /* AudioC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C36A62BEA15E000C47567 /* AudioC.swift */; };
 		0B8C36AA2BEA2EC700C47567 /* DiskContact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C36A92BEA2EC600C47567 /* DiskContact.swift */; };
+		0B8C36AC2BEC6E0F00C47567 /* StateExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C36AB2BEC6E0F00C47567 /* StateExt.swift */; };
+		0B8C36AE2BEC6E3E00C47567 /* DevExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C36AD2BEC6E3E00C47567 /* DevExt.swift */; };
+		0B8C36B02BEC6E6500C47567 /* DBExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C36AF2BEC6E6500C47567 /* DBExt.swift */; };
+		0B8C36B22BEC6E8D00C47567 /* QueueExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C36B12BEC6E8D00C47567 /* QueueExt.swift */; };
+		0B8C36B42BEC6EAB00C47567 /* ViewExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C36B32BEC6EAB00C47567 /* ViewExt.swift */; };
 		0B8FC2702BBC559500839C75 /* PlayingAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8FC26F2BBC559500839C75 /* PlayingAlbum.swift */; };
 		0B901D862BB83BA2003AC253 /* CloudHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B901D852BB83BA2003AC253 /* CloudHandler.swift */; };
 		0B901D882BB83BC3003AC253 /* FilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B901D872BB83BC3003AC253 /* FilePresenter.swift */; };
@@ -152,6 +157,11 @@
 		0B8C36A42BEA15A800C47567 /* AudioU.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioU.swift; sourceTree = "<group>"; };
 		0B8C36A62BEA15E000C47567 /* AudioC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioC.swift; sourceTree = "<group>"; };
 		0B8C36A92BEA2EC600C47567 /* DiskContact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskContact.swift; sourceTree = "<group>"; };
+		0B8C36AB2BEC6E0F00C47567 /* StateExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateExt.swift; sourceTree = "<group>"; };
+		0B8C36AD2BEC6E3E00C47567 /* DevExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevExt.swift; sourceTree = "<group>"; };
+		0B8C36AF2BEC6E6500C47567 /* DBExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBExt.swift; sourceTree = "<group>"; };
+		0B8C36B12BEC6E8D00C47567 /* QueueExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueExt.swift; sourceTree = "<group>"; };
+		0B8C36B32BEC6EAB00C47567 /* ViewExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExt.swift; sourceTree = "<group>"; };
 		0B8FC26F2BBC559500839C75 /* PlayingAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayingAlbum.swift; sourceTree = "<group>"; };
 		0B901D852BB83BA2003AC253 /* CloudHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudHandler.swift; sourceTree = "<group>"; };
 		0B901D872BB83BC3003AC253 /* FilePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilePresenter.swift; sourceTree = "<group>"; };
@@ -446,12 +456,17 @@
 			isa = PBXGroup;
 			children = (
 				0B1D5A752AB302600010DDF2 /* AppConfig.swift */,
+				0B8C36AF2BEC6E6500C47567 /* DBExt.swift */,
+				0B8C36AD2BEC6E3E00C47567 /* DevExt.swift */,
 				0B4DFC712BD740B4001CEF32 /* Device.swift */,
 				0B4DFC732BD74145001CEF32 /* DeviceCategory.swift */,
 				0BFB38EC2BCE779B0055E38B /* DeviceConfig.swift */,
 				0BB543F72BE9C64C00D7A2B2 /* PathExt.swift */,
+				0B8C36B12BEC6E8D00C47567 /* QueueExt.swift */,
 				0B220F742BB1BBDB0077255A /* SmartError.swift */,
+				0B8C36AB2BEC6E0F00C47567 /* StateExt.swift */,
 				0B51F1752BC50A6200B86CB1 /* ViewConfig.swift */,
+				0B8C36B32BEC6EAB00C47567 /* ViewExt.swift */,
 			);
 			path = Config;
 			sourceTree = "<group>";
@@ -566,6 +581,7 @@
 			files = (
 				0BBA422F2AC2BAE300C0B977 /* AlbumView.swift in Sources */,
 				0B1D5A872AB302610010DDF2 /* BackgroundView.swift in Sources */,
+				0B8C36AE2BEC6E3E00C47567 /* DevExt.swift in Sources */,
 				0B8FC2702BBC559500839C75 /* PlayingAlbum.swift in Sources */,
 				0BBC15842AB95272006E82C4 /* ControlView.swift in Sources */,
 				0BBA42272AC2A8B800C0B977 /* BtnAdd.swift in Sources */,
@@ -625,6 +641,7 @@
 				0B6B8B992BBA39F500F65B23 /* ControlButton.swift in Sources */,
 				0B1D5A842AB302610010DDF2 /* Extensions.swift in Sources */,
 				0BBAD0722BBC05C6005834A3 /* DBRow.swift in Sources */,
+				0B8C36B22BEC6E8D00C47567 /* QueueExt.swift in Sources */,
 				0BD056892BC6192D00EBC7C4 /* AudioSync.swift in Sources */,
 				0B1165E92ABBC6C0005C5CBB /* LaunchView.swift in Sources */,
 				0B4DFC722BD740B4001CEF32 /* Device.swift in Sources */,
@@ -632,6 +649,7 @@
 				0B220F752BB1BBDB0077255A /* SmartError.swift in Sources */,
 				0BB889DB2AC06C54004788D5 /* DB.swift in Sources */,
 				0BBA42192ABD5D9200C0B977 /* BtnMode.swift in Sources */,
+				0B8C36B42BEC6EAB00C47567 /* ViewExt.swift in Sources */,
 				0B11262C2AC719B70093DFFA /* ImageHelper.swift in Sources */,
 				0BFB38832BCCCC780055E38B /* OperationView.swift in Sources */,
 				0BBC159A2ABAD5DB006E82C4 /* SliderView.swift in Sources */,
@@ -640,6 +658,7 @@
 				0BBC15882AB9A473006E82C4 /* iCloudHelper.swift in Sources */,
 				0BAABEBA2BC8C5CB00DF4A31 /* DBPrepareJob.swift in Sources */,
 				0B901D862BB83BA2003AC253 /* CloudHandler.swift in Sources */,
+				0B8C36B02BEC6E6500C47567 /* DBExt.swift in Sources */,
 				0B9FA2992BC81EFF007B235A /* NotDownloadedAlbum.swift in Sources */,
 				0BBC158D2ABAC0C7006E82C4 /* BtnToggle.swift in Sources */,
 				0B11262A2AC6F7B20093DFFA /* BtnToggleDB.swift in Sources */,
@@ -651,6 +670,7 @@
 				0BBAD0A22BBD413B005834A3 /* DBList.swift in Sources */,
 				0B1165F02ABBCCB0005C5CBB /* AppManager.swift in Sources */,
 				0BBA42252AC1813D00C0B977 /* BtnDel.swift in Sources */,
+				0B8C36AC2BEC6E0F00C47567 /* StateExt.swift in Sources */,
 				0B901D882BB83BC3003AC253 /* FilePresenter.swift in Sources */,
 				0BB543F42BE8E38300D7A2B2 /* Duplicates.swift in Sources */,
 				0B7F558B2AD2636B0000D72E /* ButtonPlayList.swift in Sources */,
