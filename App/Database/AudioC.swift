@@ -36,6 +36,10 @@ extension DB {
                 if DB.verbose {
                     os_log("\(Logger.isMain)\(DB.label)InsertAudios \(index+1)/\(total)")
                 }
+                
+                Task {
+                    await self.eventManager.emitSyncing(total, current: index+1)
+                }
             }
         }
         

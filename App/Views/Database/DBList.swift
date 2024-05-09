@@ -11,6 +11,8 @@ struct DBList: View {
     @Query(sort: \CopyTask.createdAt, animation: .default) var tasks: [CopyTask]
 
     @State var selection: Audio.ID? = nil
+    @State var syncingTotal: Int = 0
+    @State var syncingCurrent: Int = 0
 
     var total: Int { audios.count}
     var db: DB { audioManager.db }
@@ -43,7 +45,13 @@ struct DBList: View {
                     }
 
                     Section(header: HStack {
-                        Text("共 \(total.description)")
+                        HStack {
+                            Text("共 \(total.description)")
+                            
+                            if syncingTotal > syncingCurrent {
+                                Text("正在同步 \(syncingCurrent)/\(syncingTotal)")
+                            }
+                        }
                         Spacer()
                         if ViewConfig.isNotDesktop {
                             BtnAdd()
@@ -55,6 +63,12 @@ struct DBList: View {
                             DBRow(audio)
                         }
                     })
+                    .onAppear {
+                        EventManager().onSyncing({
+                            self.syncingTotal = $0
+                            self.syncingCurrent = $1
+                        })
+                    }
                 }
             }
 

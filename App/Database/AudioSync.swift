@@ -31,9 +31,6 @@ extension DB {
             
             // 删除需要删除的
             await self.deleteAudios(itemsForDelete.map { $0.url! })
-            
-            // 删除无效的，必须放在处理Duplicate逻辑前
-//            await self.deleteInvalid()
                 
             // 更新查到的item，发出更新事件让UI更新
             await self.eventManager.emitUpdate(itemsForUpdate)

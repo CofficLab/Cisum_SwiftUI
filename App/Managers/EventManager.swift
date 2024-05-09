@@ -19,6 +19,17 @@ class EventManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
         )
     }
     
+    func emitSyncing(_ total: Int, current: Int) {
+        NotificationCenter.default.post(
+            name: NSNotification.Name(Event.Syncing.name),
+            object: nil,
+            userInfo: [
+                "total": total,
+                "current": current
+            ]
+        )
+    }
+    
     func emitAudioUpdate(_ audio: Audio) {
         NotificationCenter.default.post(
             name: NSNotification.Name(Event.AudioUpdated.name),
@@ -81,6 +92,21 @@ class EventManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
             })
     }
     
+    func onSyncing(_ callback: @escaping (_ total: Int, _ current: Int) -> Void) {
+        n.addObserver(
+            forName: NSNotification.Name(Event.Syncing.name),
+            object: nil,
+            queue: .main,
+            using: { notification in
+                self.queue.async {
+                    let data = notification.userInfo as! [String: Int]
+                    let total = data["total"]!
+                    let current = data["current"]!
+                    callback(total, current)
+                }
+            })
+    }
+    
     func removeListener(_ observer: Any) {
         n.removeObserver(observer)
     }
@@ -89,6 +115,7 @@ class EventManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
         case Updated
         case AudioUpdated
         case Delete
+        case Syncing
         
         var name: String {
             String(describing: self)
