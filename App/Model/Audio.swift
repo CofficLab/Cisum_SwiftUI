@@ -106,9 +106,8 @@ extension Audio: Identifiable {
 // MARK: HASH
 
 extension Audio {
-    func getHash() -> String {
+    func getHash(verbose: Bool = false) -> String {
         var fileHash = ""
-        let verbose = false
         let startTime = DispatchTime.now()
         
         if verbose {
