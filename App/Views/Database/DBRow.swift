@@ -43,6 +43,10 @@ struct DBRow: View {
                             .foregroundStyle(.secondary)
 
 //                        Duplicates(audio)
+                        
+//                        if audio.like {
+//                            Image(systemName: "star.fill")
+//                        }
 
                         Spacer()
                     }
