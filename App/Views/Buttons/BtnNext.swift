@@ -8,7 +8,7 @@ struct BtnNext: View {
     var autoResize = false
 
     var body: some View {
-        ControlButton(title: "下一曲", systemImage: "forward.fill", dynamicSize: autoResize, onTap: {
+        ControlButton(title: "下一曲", image: "forward.fill", dynamicSize: autoResize, onTap: {
             audioManager.next(manual: true)
         })
     }

@@ -7,7 +7,7 @@ struct BtnToggleDB: View {
     var autoResize = false
 
     var body: some View {
-        ControlButton(title: "仓库", systemImage: "list.bullet", dynamicSize: autoResize, onTap: {
+        ControlButton(title: "仓库", image: "list.bullet", dynamicSize: autoResize, onTap: {
             appManager.toggleDBView()
         })
     }

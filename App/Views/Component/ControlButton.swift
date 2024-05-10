@@ -12,11 +12,13 @@ struct ControlButton: View {
 
     var title: String = "标题"
     var tips: String = ""
-    var systemImage: String = "home"
+    var image: String = "plus"
     var dynamicSize = true
     var onTap: () -> Void = {
         os_log("点击了button")
     }
+
+    var menus: AnyView? = nil
 
     var body: some View {
         ZStack {
@@ -39,38 +41,62 @@ struct ControlButton: View {
     }
 
     func makeButton(_ geo: GeometryProxy? = nil) -> some View {
-        Button(action: {
-            withAnimation(.default) {
-                self.pressed = true
-                onTap()
-                
-                DispatchQueue.main.asyncAfter(deadline: .now()+0.2, execute: {
-                    self.pressed = false
+        ZStack {
+            if let menus = menus {
+                Menu(content: {
+                    menus
+                        .labelStyle(.titleAndIcon)
+                }, label: {
+                    getImage(geo)
                 })
+                .menuIndicator(.hidden)
+                // 注意测试ButtonStyle对这个操作的影响：
+                //  其他App获取焦点
+                //  点击本App的button，看看是否有反应
+                #if os(macOS)
+                .buttonStyle(PlainButtonStyle())
+                .foregroundStyle(.primary)
+                #endif
+            } else {
+                Button(action: {
+                    withAnimation(.default) {
+                        self.pressed = true
+                        onTap()
+
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                            self.pressed = false
+                        }
+                    }
+                }, label: {
+                    Label(
+                        title: { Text(title) },
+                        icon: {
+                            getImage(geo)
+                        }
+                    )
+                })
+                // 注意测试ButtonStyle对这个操作的影响：
+                //  其他App获取焦点
+                //  点击本App的button，看看是否有反应
+                #if os(macOS)
+                .buttonStyle(LinkButtonStyle())
+                .foregroundStyle(.primary)
+                #endif
             }
-        }, label: {
-            Label(
-                title: { Text(title) },
-                icon: {
-                    Image(systemName: systemImage)
-                        .font(getSize(geo))
-                        .padding(7)
-                        .background(hovered ? Color.gray.opacity(0.4) : .clear)
-                        .clipShape(RoundedRectangle(cornerRadius: 10.0))
-                        .onHover(perform: { hovering in
-                            self.hovered = hovering
-                        })
-                        .scaleEffect(pressed ? 1.2 : 1)
-                        .animation(.easeOut(duration: 0.2), value: pressed)
-                }
-            )
-        })
-        // 注意测试ButtonStyle对这个操作的影响：
-        //  其他App获取焦点
-        //  点击本App的button，看看是否有反应
-        #if os(macOS)
-        .buttonStyle(LinkButtonStyle())
-        #endif
+        }
+    }
+
+    func getImage(_ geo: GeometryProxy?) -> some View {
+        Image(systemName: image)
+            .font(getSize(geo))
+            .padding(7)
+            .background(hovered ? Color.gray.opacity(0.4) : .clear)
+            .clipShape(RoundedRectangle(cornerRadius: 10.0))
+            .onHover(perform: { hovering in
+                self.hovered = hovering
+            })
+            .scaleEffect(pressed ? 1.2 : 1)
+            .animation(.easeOut(duration: 0.2), value: pressed)
     }
 
     func getSize(_ geo: GeometryProxy?) -> Font {
@@ -100,6 +126,19 @@ struct SmartButtonStyle: ButtonStyle {
             .scaleEffect(configuration.isPressed ? 1.2 : 1)
             .animation(.easeOut(duration: 0.2), value: configuration.isPressed)
     }
+}
+
+#Preview("Button") {
+    VStack {
+        ControlButton(title: "菜单", menus: AnyView(VStack {
+            Button("1", action: {})
+            Button("2", action: {})
+        }))
+        
+        ControlButton(title: "菜单2")
+    }
+    .frame(height: 300)
+    .frame(width: 300)
 }
 
 #Preview("App") {

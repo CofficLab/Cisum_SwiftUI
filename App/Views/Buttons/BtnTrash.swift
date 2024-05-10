@@ -10,7 +10,7 @@ struct BtnTrash: View {
     var body: some View {
         ControlButton(
             title: "将「\(audio.title)」放入回收站",
-            systemImage: getImageName(),
+            image: getImageName(),
             dynamicSize: dynamicSize,
             onTap: {
                 Task {

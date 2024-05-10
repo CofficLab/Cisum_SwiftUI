@@ -54,10 +54,9 @@ struct DBRow: View {
                 HStack {
                     Spacer()
                     BtnShowInFinder(url: audio.url, autoResize: false)
-                        .labelStyle(.iconOnly)
                     BtnPlay(audio: audio, autoResize: false)
-                        .labelStyle(.iconOnly)
-                }
+                    BtnMore(audio: audio, autoResize: false)
+                }.labelStyle(.iconOnly)
             }
         }
         .onHover(perform: { hovered = $0 })
@@ -73,6 +72,7 @@ struct DBRow: View {
             Divider()
             BtnDel(audios: [audio.id], autoResize: false)
         })
+        
     }
 }
 

@@ -12,7 +12,7 @@ struct BtnDel: View {
         ControlButton(
             title: "删除 \(audios.count) 个",
             tips: "彻底删除，不可恢复",
-            systemImage: getImageName(),
+            image: getImageName(),
             dynamicSize: autoResize,
             onTap: {
                 Task {

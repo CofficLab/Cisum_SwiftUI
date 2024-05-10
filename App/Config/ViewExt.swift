@@ -43,7 +43,7 @@ extension AppConfig {
 
 extension AppConfig {
     /// 开发时如果不想显示背景，改成true
-    static var noBackground = false
+    static var noBackground = true
     
     /// 生产环境一定不会显示背景
     static func background(_ color: Color = .red) -> Color {

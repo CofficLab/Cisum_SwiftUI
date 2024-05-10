@@ -8,7 +8,7 @@ struct BtnPrev: View {
     var autoResize = false
 
     var body: some View {
-        ControlButton(title: "上一曲", systemImage: "backward.fill", dynamicSize: autoResize, onTap: {
+        ControlButton(title: "上一曲", image: "backward.fill", dynamicSize: autoResize, onTap: {
             do {
                 try audioManager.prev(manual: true)
             } catch let e {

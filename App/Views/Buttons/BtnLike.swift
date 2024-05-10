@@ -14,7 +14,7 @@ struct BtnLike: View {
     var body: some View {
         ControlButton(
             title: title,
-            systemImage: getImageName(),
+            image: getImageName(),
             dynamicSize: autoResize,
             onTap: {
                 Task {

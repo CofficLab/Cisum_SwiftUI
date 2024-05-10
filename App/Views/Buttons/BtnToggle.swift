@@ -26,7 +26,7 @@ struct BtnToggle: View {
     }
 
     var body: some View {
-        ControlButton(title: title, systemImage: image, dynamicSize: autoResize, onTap: {
+        ControlButton(title: title, image: image, dynamicSize: autoResize, onTap: {
             audioManager.toggle()
         })
     }

@@ -11,7 +11,7 @@ struct BtnDelTask: View {
     var body: some View {
         ControlButton(
             title: "删除 \(tasks.count) 个",
-            systemImage: getImageName(),
+            image: getImageName(),
             dynamicSize: autoResize,
             onTap: {
                 for task in tasks {

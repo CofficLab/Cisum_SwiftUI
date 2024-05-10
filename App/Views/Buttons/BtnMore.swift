@@ -1,7 +1,7 @@
 import OSLog
 import SwiftUI
 
-struct BtnPlay: View {
+struct BtnMore: View {
     @EnvironmentObject var audioManager: AudioManager
     @EnvironmentObject var appManager: AppManager
 
@@ -17,11 +17,22 @@ struct BtnPlay: View {
             dynamicSize: autoResize,
             onTap: {
                 audioManager.play(audio, reason: "Play Button")
-            })
+            },
+            menus: AnyView(VStack{
+                BtnPlay(audio: audio, autoResize: false)
+                Divider()
+                BtnDownload(audio: audio)
+                BtnEvict(audio: audio)
+                if AppConfig.isDesktop {
+                    BtnShowInFinder(url: audio.url, autoResize: false)
+                }
+                Divider()
+                BtnDel(audios: [audio.id], autoResize: false)
+            }))
     }
 
     private func getImageName() -> String {
-        return "play.fill"
+        return "ellipsis.circle"
     }
 }
 

@@ -7,7 +7,7 @@ struct BtnShowInFinder: View {
     var body: some View {
         ControlButton(
             title: "在访达中显示",
-            systemImage: getImageName(),
+            image: getImageName(),
             dynamicSize: autoResize,
             onTap: {
                 FileHelper.showInFinder(url: url)

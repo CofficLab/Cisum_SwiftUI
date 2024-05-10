@@ -27,7 +27,7 @@ struct Duplicates: View {
             if duplicates.count > 0 {
                 ControlButton(
                     title: "\(duplicates.count)",
-                    systemImage: getImageName(),
+                    image: getImageName(),
                     dynamicSize: false,
                     onTap: {
                         showDumplicates.toggle()
