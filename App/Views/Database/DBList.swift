@@ -10,7 +10,7 @@ struct DBList: View {
     @Query(sort: \Audio.order, animation: .default) var audios: [Audio]
     @Query(sort: \CopyTask.createdAt, animation: .default) var tasks: [CopyTask]
 
-    @State var selection: Audio.ID? = nil
+    @State var selection: Audio? = nil
     @State var syncingTotal: Int = 0
     @State var syncingCurrent: Int = 0
 
@@ -59,8 +59,9 @@ struct DBList: View {
                                 .labelStyle(.iconOnly)
                         }
                     }, content: {
-                        ForEach(audios.filter { $0.duplicatedOf == nil }) { audio in
+                        ForEach(audios.filter { $0.duplicatedOf == nil }, id: \.self) { audio in
                             DBRow(audio)
+                                .tag(audio as Audio?)
                         }
                     })
                     .onAppear {

@@ -1,4 +1,5 @@
 import Foundation
+import SwiftData
 import OSLog
 import SwiftUI
 
@@ -25,7 +26,7 @@ extension DB {
             // items.isEmpty 说明本来就是空的，需要将数据库全部删除
             if itemsForSync.isEmpty == false || items.isEmpty {
                 // 第一次查到的item，同步到数据库
-                await self.deleteIfNotIn(itemsForSync.map { $0.url! })
+                self.deleteExcept(itemsForSync.map { $0.url! })
                 self.insertAudios(itemsForSync.map { Audio($0) })
             }
             
@@ -38,6 +39,32 @@ extension DB {
             // 如有必要，将更新的插入数据库
             self.insertAudios(itemsForUpdate.map { Audio($0) })
         })
+    }
+    
+    func syncWithUrls(_ urls: [URL]) {
+        os_log("\(Logger.isMain)\(Self.label)syncWithUrls, count=\(urls.count)")
+
+        var items = urls
+        do {
+            try context.enumerate(FetchDescriptor<Audio>(), block: { audio in
+                if items.contains(audio.url) == false {
+                    // 如果数据库记录不存在items中，数据库删除
+                    context.delete(audio)
+                } else {
+                    // 如果数据库记录存在items中，同步完成
+                    items.removeAll(where: { $0 == audio.url })
+                }
+            })
+            
+            // 余下的是需要插入数据库的
+            items.forEach({
+                self.insertAudioIfNotExists(Audio($0))
+            })
+            
+            try context.save()
+        } catch {
+            os_log(.error, "\(error.localizedDescription)")
+        }
     }
 }
 

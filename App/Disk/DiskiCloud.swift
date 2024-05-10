@@ -44,6 +44,28 @@ class DiskiCloud: ObservableObject {
     }
 }
 
+// MARK: Delete
+
+extension DiskiCloud {
+    func deleteFiles(_ audios: [Audio]) throws {
+        for audio in audios {
+            if verbose {
+                os_log("\(self.label)删除 \(audio.title)")
+            }
+            
+            if fileManager.fileExists(atPath: audio.url.path) == false {
+                continue
+            }
+            
+            try fileManager.removeItem(at: audio.url)
+        }
+    }
+    
+    func deleteFile(_ audio: Audio) throws {
+        try deleteFiles([audio])
+    }
+}
+
 extension DiskiCloud: DiskContact {
     func clearFolderContents(atPath path: String) {
         let fileManager = FileManager.default
@@ -56,18 +78,6 @@ extension DiskiCloud: DiskContact {
         } catch {
             os_log("\(Logger.isMain)\(self.label)clearFolderContents error: \(error.localizedDescription)")
         }
-    }
-    
-    func deleteFile(_ audio: Audio) throws {
-        if verbose {
-            os_log("\(self.label)删除 \(audio.url)")
-        }
-        
-        if fileManager.fileExists(atPath: audio.url.path) == false {
-            return
-        }
-        
-        try fileManager.removeItem(at: audio.url)
     }
 
     // MARK: 将文件复制到音频目录

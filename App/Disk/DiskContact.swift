@@ -9,6 +9,8 @@ protocol DiskContact {
     /// 删除一个文件
     func deleteFile(_ audio: Audio) throws
     
+    func deleteFiles(_ audios: [Audio]) throws
+    
     /// 移除下载
     func evict(_ url: URL)
     
