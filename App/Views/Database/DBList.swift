@@ -40,14 +40,16 @@ struct DBList: View {
                         Section(header: HStack {
                             Text("正在复制 \(tasks.count)")
                         }, content: {
-                            ForEach(tasks) { task in
-                                RowTask(task)
-                            }
-                            .onDelete(perform: { indexSet in
-                                for i in indexSet {
-                                    modelContext.delete(tasks[i])
+                            if tasks.count <= 5 {
+                                ForEach(tasks) { task in
+                                    RowTask(task)
                                 }
-                            })
+                                .onDelete(perform: { indexSet in
+                                    for i in indexSet {
+                                        modelContext.delete(tasks[i])
+                                    }
+                                })
+                            }
                         })
                     }
 
