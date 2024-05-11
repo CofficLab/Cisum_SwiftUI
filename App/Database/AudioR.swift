@@ -5,23 +5,6 @@ import SwiftData
 // MARK: 查询-Duplicate
 
 extension DB {
-    /// 将数据库内容设置为items
-    func setAudios(_ items: [MetaWrapper]) {
-        context.autosaveEnabled = false
-        do {
-            try context.delete(model: Audio.self)
-            for item in items {
-                let audio = Audio(item.url!)
-                audio.isPlaceholder = item.isPlaceholder
-                context.insert(audio)
-            }
-
-            try context.save()
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-        }
-    }
-    
     /// 排序在当前audio前的相同的audio中的第一个
     static func getFirstDuplicate(context: ModelContext, audio: Audio) -> Audio? {
         Self.getPreDuplicates(context: context, audio: audio).first
@@ -193,6 +176,22 @@ extension DB {
 
     func isAllInCloud() -> Bool {
         getTotal() > 0 && first() == nil
+    }
+}
+
+// MARK: All
+
+extension DB {
+    func allAudios() -> [Audio] {
+        os_log("\(self.label)GetAllAudios")
+        do {
+            let audios:[Audio] = try self.all()
+            
+            return audios
+        } catch let error {
+            os_log(.error, "\(error.localizedDescription)")
+            return []
+        }
     }
 }
 

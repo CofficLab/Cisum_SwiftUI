@@ -35,7 +35,20 @@ extension DB {
             
             // 删除需要删除的
             if itemsForDelete.count > 0 {
-                self.syncWithDeletedItems(itemsForDelete)
+                let duration: Double = 3
+                let distance = Self.lastSyncedTime.distance(to: .now)
+                let delay = duration - distance
+                
+                if distance > duration {
+                    self.syncWithDeletedItems(itemsForDelete)
+                    Self.lastSyncedTime = .now
+                } else {
+                    os_log("\(Logger.isMain)\(DB.label)syncWithDeletedItems after \(delay) ⏰⏰⏰")
+                    DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + delay, execute: {
+                        self.syncWithDeletedItems(itemsForDelete)
+                        Self.lastSyncedTime = .now
+                    })
+                }
             }
                 
             // 将更新的同步到数据库

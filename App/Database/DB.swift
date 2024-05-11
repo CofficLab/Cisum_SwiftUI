@@ -6,6 +6,7 @@ import SwiftUI
 actor DB: ModelActor {
     static let label = "📦 DB::"
     static let verbose = true
+    static var lastSyncedTime: Date = .distantPast
 
     let modelContainer: ModelContainer
     let modelExecutor: any ModelExecutor
@@ -108,7 +109,7 @@ extension DB {
 extension DB {
     /// 所有指定的model
     func all<T: PersistentModel>() throws -> [T] {
-        return try context.fetch(FetchDescriptor<T>())
+        try context.fetch(FetchDescriptor<T>())
     }
     
     /// 分页的方式查询model
