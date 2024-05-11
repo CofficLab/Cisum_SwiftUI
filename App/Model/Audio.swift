@@ -27,6 +27,8 @@ class Audio {
     var size: Int64?
     var identifierKey: String?
     var contentType: String?
+    // nil表示未计算过，true表示有，false表示没有
+    var hasCover: Bool? = nil
 
     // 新增字段记得设置默认值，否则低版本更新时崩溃
 

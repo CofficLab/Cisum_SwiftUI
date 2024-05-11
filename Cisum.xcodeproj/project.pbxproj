@@ -10,6 +10,7 @@
 		0B00F4672BB840C1000833B9 /* AsyncAlgorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 0B00F4662BB840C1000833B9 /* AsyncAlgorithms */; };
 		0B11262A2AC6F7B20093DFFA /* BtnToggleDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1126292AC6F7B20093DFFA /* BtnToggleDB.swift */; };
 		0B11262C2AC719B70093DFFA /* ImageHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B11262B2AC719B70093DFFA /* ImageHelper.swift */; };
+		0B11365B2BEFABC700A71FE1 /* JobGetCover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B11365A2BEFABC700A71FE1 /* JobGetCover.swift */; };
 		0B1165E92ABBC6C0005C5CBB /* LaunchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1165E82ABBC6C0005C5CBB /* LaunchView.swift */; };
 		0B1165F02ABBCCB0005C5CBB /* AppManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1165EF2ABBCCB0005C5CBB /* AppManager.swift */; };
 		0B1498742BC4C5CB0075DA61 /* PlayMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1498732BC4C5CB0075DA61 /* PlayMode.swift */; };
@@ -118,6 +119,7 @@
 /* Begin PBXFileReference section */
 		0B1126292AC6F7B20093DFFA /* BtnToggleDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnToggleDB.swift; sourceTree = "<group>"; };
 		0B11262B2AC719B70093DFFA /* ImageHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageHelper.swift; sourceTree = "<group>"; };
+		0B11365A2BEFABC700A71FE1 /* JobGetCover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobGetCover.swift; sourceTree = "<group>"; };
 		0B1165E82ABBC6C0005C5CBB /* LaunchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchView.swift; sourceTree = "<group>"; };
 		0B1165EF2ABBCCB0005C5CBB /* AppManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppManager.swift; sourceTree = "<group>"; };
 		0B1498732BC4C5CB0075DA61 /* PlayMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayMode.swift; sourceTree = "<group>"; };
@@ -311,6 +313,7 @@
 				0BAABEAE2BC787A200DF4A31 /* JobCopy.swift */,
 				0B1498782BC4DF940075DA61 /* JobDelete.swift */,
 				0BB543F12BE8BAF300D7A2B2 /* JobDuplicate.swift */,
+				0B11365A2BEFABC700A71FE1 /* JobGetCover.swift */,
 				0BAABEB92BC8C5CB00DF4A31 /* JobPrepare.swift */,
 				0BD056882BC6192D00EBC7C4 /* JobSync.swift */,
 				0BAABEB22BC79C9F00DF4A31 /* TaskExt.swift */,
@@ -628,6 +631,7 @@
 				0B6B8B992BBA39F500F65B23 /* ControlButton.swift in Sources */,
 				0B1D5A842AB302610010DDF2 /* Extensions.swift in Sources */,
 				0BBAD0722BBC05C6005834A3 /* DBRow.swift in Sources */,
+				0B11365B2BEFABC700A71FE1 /* JobGetCover.swift in Sources */,
 				0B8C36B22BEC6E8D00C47567 /* QueueExt.swift in Sources */,
 				0BD056892BC6192D00EBC7C4 /* JobSync.swift in Sources */,
 				0B1165E92ABBC6C0005C5CBB /* LaunchView.swift in Sources */,

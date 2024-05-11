@@ -72,16 +72,16 @@ extension Audio {
     }
 
     // MARK: 封面图
-    
+
     func getCoverImageFromCache() -> Image? {
         os_log("\(self.label)getCoverImageFromCache for \(self.title)")
 
         var url: URL? = coverCacheURL
-        
+
         if !fileManager.fileExists(atPath: url!.path) {
             return nil
         }
-        
+
         #if os(macOS)
             if let nsImage = NSImage(contentsOf: url!) {
                 return Image(nsImage: nsImage)
@@ -95,13 +95,13 @@ extension Audio {
 
     func getCoverImage() async -> Image? {
         os_log("\(self.label)getCoverImage for \(self.title)")
-        
-        if let image = self.getCoverImageFromCache() {
+
+        if let image = getCoverImageFromCache() {
             return image
         }
 
-        let url =  await getCoverFromMeta()
-        
+        let url = await getCoverFromMeta()
+
         guard let url = url else {
             return nil
         }
@@ -152,5 +152,41 @@ extension Audio {
         }
 
         return nil
+    }
+
+    func getCoverFromMeta(_ callback: @escaping (_ url: URL?) -> Void, verbose: Bool = true) {
+        if verbose {
+            os_log("\(self.label)getCoverFromMeta for \(self.title)")
+        }
+
+        if isNotDownloaded {
+            return callback(nil)
+        }
+
+        if fileManager.fileExists(atPath: coverCacheURL.path) {
+            return callback(coverCacheURL)
+        }
+
+        Task {
+            let asset = AVAsset(url: url)
+            do {
+                let metadata = try await asset.load(.commonMetadata)
+
+                for item in metadata {
+                    switch item.commonKey?.rawValue {
+                    case "artwork":
+                        if try (makeImage(await item.load(.value), saveTo: coverCacheURL)) != nil {
+                            // os_log("\(Logger.isMain)🍋 AudioModel::updateMeta -> cover updated -> \(self.title)")
+                            return callback(coverCacheURL)
+                        }
+                    default:
+                        break
+                    }
+                }
+            } catch {
+                os_log(.error, "\(self.label)⚠️ 读取 Meta 出错\(error)")
+                callback(nil)
+            }
+        }
     }
 }

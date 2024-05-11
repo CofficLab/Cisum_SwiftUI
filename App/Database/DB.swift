@@ -43,6 +43,10 @@ actor DB: ModelActor {
         Task {
             await self.prepareJob()
         }
+        
+        Task.detached(priority: .high) {
+            await self.getCovers()
+        }
 
         Task.detached(operation: {
 //            await self.findDuplicatesJob()

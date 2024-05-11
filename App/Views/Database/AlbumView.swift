@@ -56,11 +56,10 @@ struct AlbumView: View {
             }
         }
         .clipShape(shape)
-//        .onHover(perform: { _ in
-//            refresh()
-//        })
         .onAppear {
-            refresh()
+            self.isDownloaded = audio.isDownloaded
+            self.isDownloading = iCloudHelper.isDownloading(audio.url)
+            self.image = audio.getCoverImageFromCache()
 
             // 监听到了事件，注意要考虑audio已经被删除了的情况
 //            e.onUpdated { items in
