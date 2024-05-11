@@ -136,6 +136,29 @@ extension DB {
     }
 }
 
+// MARK: 辅助类函数
+
+extension DB {
+    /// 执行并输出耗时
+    nonisolated func printRunTime(_ title: String, _ code: () -> Void) {
+        if DB.verbose {
+            os_log("\(Logger.isMain)\(DB.label)\(title) 🚀🚀🚀 start")
+        }
+        
+        let startTime = DispatchTime.now()
+        
+        code()
+        
+        // 计算代码执行时间
+        let nanoTime = DispatchTime.now().uptimeNanoseconds - startTime.uptimeNanoseconds
+        let timeInterval = Double(nanoTime) / 1_000_000_000
+        
+        if DB.verbose {
+            os_log("\(Logger.isMain)\(DB.label)\(title) 🎉🎉🎉 cost \(timeInterval) 秒")
+        }
+    }
+}
+
 #Preview {
     RootView {
         ContentView()

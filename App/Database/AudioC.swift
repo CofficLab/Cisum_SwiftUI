@@ -19,8 +19,10 @@ extension DB {
     
     // MARK: 不存在才insert
     
-    func insertAudioIfNotExists(_ audio: Audio) {
-        if (self.findAudio(audio.url) != nil) {
+    nonisolated func insertAudioIfNotExists(_ audio: Audio) {
+        let context = ModelContext(modelContainer)
+        
+        if (Self.findAudio(context: context, audio.url) != nil) {
             return
         }
         

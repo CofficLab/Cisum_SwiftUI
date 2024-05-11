@@ -26,8 +26,7 @@ extension DB {
             // items.isEmpty 说明本来就是空的，需要将数据库全部删除
             if itemsForSync.isEmpty == false || items.isEmpty {
                 // 第一次查到的item，同步到数据库
-                self.deleteExcept(itemsForSync.map { $0.url! })
-                self.insertAudios(itemsForSync.map { Audio($0) })
+                self.syncWithMetas(items)
             }
             
             // 删除需要删除的
@@ -39,6 +38,42 @@ extension DB {
             // 如有必要，将更新的插入数据库
             self.insertAudios(itemsForUpdate.map { Audio($0) })
         })
+    }
+    
+    // MARK: SyncWithMetas
+    
+    nonisolated func syncWithMetas(_ metas: [MetaWrapper]) {
+        self.printRunTime("syncWithMetas, count=\(metas.count)") {
+            let context = ModelContext(modelContainer)
+            context.autosaveEnabled = false
+
+            // 将数组转换成哈希表，方便通过键来快速查找元素，这样可以将时间复杂度降低到：O(m+n)
+            var hashMap = [URL: MetaWrapper]()
+            for element in metas {
+                hashMap[element.url!] = element
+            }
+            
+            do {
+                try context.enumerate(FetchDescriptor<Audio>(), block: { audio in
+                    if hashMap[audio.url] == nil {
+                        // 记录不存在哈希表中，数据库删除
+                        context.delete(audio)
+                    } else {
+                        // 记录存在哈希表中，同步完成，删除哈希表记录
+                        hashMap.removeValue(forKey: audio.url)
+                    }
+                })
+                
+                // 余下的是需要插入数据库的
+                for (_, value) in hashMap {
+                    context.insert(Audio.fromMetaItem(value)!)
+                }
+                
+                try context.save()
+            } catch {
+                os_log(.error, "\(error.localizedDescription)")
+            }
+        }
     }
     
     func syncWithUrls(_ urls: [URL]) {
