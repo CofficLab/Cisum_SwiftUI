@@ -140,9 +140,9 @@ extension DB {
 
 extension DB {
     /// 执行并输出耗时
-    nonisolated func printRunTime(_ title: String, _ code: () -> Void) {
+    nonisolated func printRunTime(_ title: String, tolerance: Double = 1, _ code: () -> Void) {
         if DB.verbose {
-            os_log("\(Logger.isMain)\(DB.label)\(title) 🚀🚀🚀 start")
+            os_log("\(Logger.isMain)\(DB.label)\(title)")
         }
         
         let startTime = DispatchTime.now()
@@ -153,8 +153,8 @@ extension DB {
         let nanoTime = DispatchTime.now().uptimeNanoseconds - startTime.uptimeNanoseconds
         let timeInterval = Double(nanoTime) / 1_000_000_000
         
-        if DB.verbose {
-            os_log("\(Logger.isMain)\(DB.label)\(title) 🎉🎉🎉 cost \(timeInterval) 秒")
+        if DB.verbose && timeInterval > tolerance {
+            os_log("\(Logger.isMain)\(DB.label)\(title) 🐢🐢🐢 cost \(timeInterval) 秒")
         }
     }
 }

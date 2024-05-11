@@ -11,6 +11,52 @@ extension DB {
 
     // MARK: Static-删除-多个
 
+    static func deleteAudiosByURL(context: ModelContext, disk: DiskContact, urls: [URL]) -> Audio? {
+        // 本批次的最后一个删除后的下一个
+        var next: Audio?
+
+        for (index, url) in urls.enumerated() {
+            do {
+                guard let audio = try context.fetch(FetchDescriptor(predicate: #Predicate<Audio> {
+                    $0.url == url
+                })).first else {
+                    os_log(.debug, "\(Logger.isMain)\(self.label)删除时找不到")
+                    continue
+                }
+
+                // 找出本批次的最后一个删除后的下一个
+                if index == urls.count - 1 {
+                    next = Self.nextOf(context: context, audio: audio)
+
+                    // 如果下一个等于当前，设为空
+                    if next?.url == url {
+                        next = nil
+                    }
+                }
+
+                // set duplicatedOf to nil
+                try context.fetch(FetchDescriptor(predicate: #Predicate<Audio> {
+                    $0.duplicatedOf == url
+                })).forEach {
+                    $0.duplicatedOf = nil
+                }
+
+                // 从磁盘删除
+                try disk.deleteFile(audio)
+
+                // 从磁盘删除后，因为数据库监听了磁盘的变动，会自动删除
+                // 但自动删除可能不及时，所以这里及时删除
+                context.delete(audio)
+
+                try context.save()
+            } catch let e {
+                os_log(.error, "\(Logger.isMain)\(DB.label)删除出错 \(e)")
+            }
+        }
+
+        return next
+    }
+
     static func deleteAudios(context: ModelContext, disk: DiskContact, ids: [Audio.ID]) -> Audio? {
         if verbose {
             os_log("\(Logger.isMain)\(self.label)数据库删除")
@@ -59,26 +105,6 @@ extension DB {
         }
 
         return next
-    }
-
-    // MARK: 除了某些Urls，其他全部删除
-
-    nonisolated func deleteExcept(_ urls: [URL]) {
-        os_log("\(Logger.isMain)\(Self.label)DeleteExcept, count=\(urls.count)")
-        let context = ModelContext(self.modelContainer)
-        context.autosaveEnabled = false
-        
-        do {
-            try context.enumerate(FetchDescriptor<Audio>(), block: { audio in
-                if urls.contains(audio.url) == false {
-                    context.delete(audio)
-                }
-            })
-            
-            try context.save()
-        } catch {
-            os_log(.error, "\(error.localizedDescription)")
-        }
     }
 
     func deleteAudioAndGetNext(_ audio: Audio) -> Audio? {

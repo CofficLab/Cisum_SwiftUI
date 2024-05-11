@@ -1,6 +1,6 @@
+import CryptoKit
 import Foundation
 import OSLog
-import CryptoKit
 
 #if os(macOS)
     import AppKit
@@ -9,7 +9,7 @@ import CryptoKit
 class FileHelper {
     static var fileManager = FileManager.default
     static var label = "📃 FileHelper::"
-    
+
     static func getSize(url: URL) -> Int {
         let resourceValues = try? url.resourceValues(forKeys: [.fileSizeKey])
         let size = resourceValues?.fileSize ?? 0
@@ -52,7 +52,7 @@ class FileHelper {
                 return 0
             }
         } catch {
-            os_log("Error: \(error.localizedDescription)")
+            os_log(.error, "Error: \(error.localizedDescription)")
             return 0
         }
     }
@@ -64,7 +64,7 @@ class FileHelper {
             formatter.countStyle = .file
             return formatter
         }()
-        
+
         if !fileManager.fileExists(atPath: url.path) {
             return "-"
         }
@@ -82,7 +82,7 @@ class FileHelper {
             return "-"
         }
     }
-    
+
     static func getFileSizeReadable(_ size: Int64) -> String {
         let byteCountFormatter: ByteCountFormatter = {
             let formatter = ByteCountFormatter()
@@ -93,10 +93,10 @@ class FileHelper {
 
         return byteCountFormatter.string(fromByteCount: size)
     }
-    
+
     static func getHash(_ url: URL) -> String {
         var fileHash = ""
-        
+
         // 如果文件尚未下载，会卡住，直到下载完成
         do {
             let fileData = try Data(contentsOf: url)
@@ -105,7 +105,7 @@ class FileHelper {
         } catch {
             os_log("Error calculating file hash: \(error)")
         }
-        
+
         return fileHash
     }
 }

@@ -1,6 +1,6 @@
 import Foundation
-import SwiftData
 import OSLog
+import SwiftData
 import SwiftUI
 
 /// 监听存储Audio文件的目录的变化，同步到数据库
@@ -11,7 +11,7 @@ extension DB {
     
     func sync(_ items: [MetaWrapper]) {
         Task.detached(priority: .background, operation: {
-            var message = "\(Logger.isMain)\(DB.label)sync with count=\(items.count)"
+            var message = "\(Logger.isMain)\(DB.label)sync with count=\(items.count) 🪣🪣🪣"
             
             if let first = items.first, first.isDownloading == true {
                 message += " -> \(first.fileName ?? "-") -> \(String(format: "%.0f", first.downloadProgress))% ⏬⏬⏬"
@@ -22,26 +22,32 @@ extension DB {
             let itemsForSync = items.filter { $0.isUpdated == false }
             let itemsForUpdate = items.filter { $0.isUpdated && $0.isDeleted == false }
             let itemsForDelete = items.filter { $0.isDeleted }
-                
-            // items.isEmpty 说明本来就是空的，需要将数据库全部删除
-            if itemsForSync.isEmpty == false || items.isEmpty {
-                // 第一次查到的item，同步到数据库
+            
+            // 磁盘目录是空的，需要将数据库清空
+            if items.isEmpty {
+                return await self.syncWithEmpty()
+            }
+            
+            // 第一次查到的item，同步到数据库
+            if itemsForSync.count > 0 {
                 self.syncWithMetas(items)
             }
             
             // 删除需要删除的
-            await self.deleteAudios(itemsForDelete.map { $0.url! })
+            if itemsForDelete.count > 0 {
+                self.syncWithDeletedItems(itemsForDelete)
+            }
                 
-            // 更新查到的item，发出更新事件让UI更新
-            await self.eventManager.emitUpdate(itemsForUpdate)
-                
-            // 如有必要，将更新的插入数据库
-            self.insertAudios(itemsForUpdate.map { Audio($0) })
+            // 将更新的同步到数据库
+            if itemsForUpdate.count > 0 {
+                self.syncWithUpdatedItems(itemsForUpdate)
+            }
         })
     }
     
     // MARK: SyncWithMetas
     
+    /// 将数据库和metas同步
     nonisolated func syncWithMetas(_ metas: [MetaWrapper]) {
         self.printRunTime("syncWithMetas, count=\(metas.count)") {
             let context = ModelContext(modelContainer)
@@ -76,29 +82,62 @@ extension DB {
         }
     }
     
-    func syncWithUrls(_ urls: [URL]) {
-        os_log("\(Logger.isMain)\(Self.label)syncWithUrls, count=\(urls.count)")
-
-        var items = urls
+    // MARK: SyncWithEmpty
+    
+    func syncWithEmpty() {
         do {
-            try context.enumerate(FetchDescriptor<Audio>(), block: { audio in
-                if items.contains(audio.url) == false {
-                    // 如果数据库记录不存在items中，数据库删除
-                    context.delete(audio)
-                } else {
-                    // 如果数据库记录存在items中，同步完成
-                    items.removeAll(where: { $0 == audio.url })
-                }
-            })
-            
-            // 余下的是需要插入数据库的
-            items.forEach({
-                self.insertAudioIfNotExists(Audio($0))
-            })
-            
+            try context.delete(model: Audio.self)
             try context.save()
-        } catch {
-            os_log(.error, "\(error.localizedDescription)")
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
+    }
+    
+    // MARK: SyncWithDeletedItems
+    
+    nonisolated func syncWithDeletedItems(_ metas: [MetaWrapper]) {
+        self.printRunTime("SyncWithDeletedItems, count=\(metas.count) 🗑️🗑️🗑️") {
+            let context = ModelContext(modelContainer)
+            context.autosaveEnabled = false
+            
+            do {
+                let urls = metas.map({ $0.url! })
+                try context.delete(model: Audio.self, where: #Predicate { audio in
+                    urls.contains(audio.url)
+                })
+                
+                try context.save()
+            } catch {
+                os_log(.error, "\(error.localizedDescription)")
+            }
+        }
+    }
+    
+    // MARK: SyncWithUpdatedItems
+    
+    nonisolated func syncWithUpdatedItems(_ metas: [MetaWrapper]) {
+        // 发出更新事件让UI更新，比如下载进度
+        Task.detached(priority: .high, operation: {
+            await self.eventManager.emitUpdate(metas)
+        })
+        
+        self.printRunTime("SyncWithUpdatedItems with count=\(metas.count)") {
+            let context = ModelContext(self.modelContainer)
+            context.autosaveEnabled = false
+            
+            // 如果url属性为unique，数据库已存在相同url的记录，再执行context.insert，发现已存在的被替换成新的了
+            // 但在这里，希望如果存在，就不要插入
+            for (_, meta) in metas.enumerated() {
+                if Self.findAudio(context: context, meta.url!) == nil {
+                    context.insert(Audio.fromMetaItem(meta)!)
+                }
+            }
+            
+            do {
+                try context.save()
+            } catch let e {
+                os_log(.error, "\(e.localizedDescription)")
+            }
         }
     }
 }
