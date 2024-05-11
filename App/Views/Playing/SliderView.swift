@@ -14,7 +14,7 @@ struct SliderView: View {
     @State private var lastDownloadTime: Date = .now
 
     let timer = Timer
-        .publish(every: 0.5, on: .main, in: .common)
+        .publish(every: 1, on: .main, in: .common)
         .autoconnect()
 
     var geo: GeometryProxy
