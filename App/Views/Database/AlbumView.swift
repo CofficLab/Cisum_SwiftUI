@@ -56,30 +56,38 @@ struct AlbumView: View {
             }
         }
         .clipShape(shape)
-        .onHover(perform: { _ in
-            refresh()
-        })
+//        .onHover(perform: { _ in
+//            refresh()
+//        })
         .onAppear {
-            self.image = audio.getCoverImageFromCache()
-            
             refresh()
 
             // 监听到了事件，注意要考虑audio已经被删除了的情况
-            e.onUpdated { items in
-                for item in items {
-                    if item.isDeleted {
-                        continue
-                    }
-
-                    if item.url == self.url {
-                        return refresh(item)
-                    }
-                }
-            }
+//            e.onUpdated { items in
+//                for item in items {
+//                    if item.isDeleted {
+//                        continue
+//                    }
+//
+//                    if item.url == self.url {
+//                        return refresh(item)
+//                    }
+//                }
+//            }
         }
         .onDisappear {
             e.removeListener(self)
         }
+    }
+    
+    func setCachedCover() {
+        Task.detached(priority: .low, operation: {
+            let image = await audio.getCoverImageFromCache()
+            
+            DispatchQueue.main.async {
+                self.image = image
+            }
+        })
     }
 
     func refresh(_ item: MetaWrapper? = nil, verbose: Bool = true) {

@@ -95,6 +95,10 @@ extension Audio {
 
     func getCoverImage() async -> Image? {
         os_log("\(self.label)getCoverImage for \(self.title)")
+        
+        if let image = self.getCoverImageFromCache() {
+            return image
+        }
 
         let url =  await getCoverFromMeta()
         
