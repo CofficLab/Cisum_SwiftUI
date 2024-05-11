@@ -7,7 +7,7 @@ struct AlbumView: View {
     
     @EnvironmentObject var audioManager: AudioManager
 
-    @State var image: Image? = nil
+    @State var image: Image?
     @State var isDownloaded: Bool = true
     @State var isDownloading: Bool = false
     @State var downloadingPercent: Double = 0
@@ -60,6 +60,8 @@ struct AlbumView: View {
             refresh()
         })
         .onAppear {
+            self.image = audio.getCoverImageFromCache()
+            
             refresh()
 
             // 监听到了事件，注意要考虑audio已经被删除了的情况
@@ -80,7 +82,7 @@ struct AlbumView: View {
         }
     }
 
-    func refresh(_ item: MetaWrapper? = nil) {
+    func refresh(_ item: MetaWrapper? = nil, verbose: Bool = true) {
         if verbose {
             os_log("\(self.label)Refresh -> \(audio.title)")
         }
@@ -94,14 +96,14 @@ struct AlbumView: View {
             isDownloading = iCloudHelper.isDownloading(audio.url)
         }
 
-        if isDownloaded {
+        if isDownloaded && image == nil {
             updateCover()
         }
     }
 
-    func updateCover() {
+    func updateCover(verbose: Bool = true) {
         Task.detached(priority: .background) {
-            if await AlbumView.verbose {
+            if verbose {
                 let label = await AlbumView.label
                 let audio = await self.audio
                 os_log("\(Logger.isMain)\(label)UpdateCover -> \(audio.title)")
