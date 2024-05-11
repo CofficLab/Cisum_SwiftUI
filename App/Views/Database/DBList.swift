@@ -3,18 +3,25 @@ import SwiftData
 import SwiftUI
 
 struct DBList: View {
+    static var descriptor: FetchDescriptor<Audio> {
+        let descriptor = FetchDescriptor<Audio>(predicate: #Predicate {
+            $0.duplicatedOf == nil
+        }, sortBy: [SortDescriptor(\.order, order: .reverse)])
+        return descriptor
+    }
+
     @EnvironmentObject var appManager: AppManager
     @EnvironmentObject var audioManager: AudioManager
     @Environment(\.modelContext) private var modelContext
 
-    @Query(sort: \Audio.order, animation: .default) var audios: [Audio]
+    @Query(descriptor, animation: .default) var audios: [Audio]
     @Query(sort: \CopyTask.createdAt, animation: .default) var tasks: [CopyTask]
 
     @State var selection: Audio? = nil
     @State var syncingTotal: Int = 0
     @State var syncingCurrent: Int = 0
 
-    var total: Int { audios.count}
+    var total: Int { audios.count }
     var db: DB { audioManager.db }
     var audio: Audio? { audioManager.audio }
     var showTips: Bool {
@@ -47,7 +54,7 @@ struct DBList: View {
                     Section(header: HStack {
                         HStack {
                             Text("共 \(total.description)")
-                            
+
                             if syncingTotal > syncingCurrent {
                                 Text("正在同步 \(syncingCurrent)/\(syncingTotal)")
                             }
@@ -59,16 +66,16 @@ struct DBList: View {
                                 .labelStyle(.iconOnly)
                         }
                     }, content: {
-                        ForEach(audios.filter { $0.duplicatedOf == nil }, id: \.self) { audio in
+                        ForEach(audios, id: \.self) { audio in
                             DBRow(audio)
                                 .tag(audio as Audio?)
                         }
                     })
                     .onAppear {
-                        EventManager().onSyncing({
+                        EventManager().onSyncing {
                             self.syncingTotal = $0
                             self.syncingCurrent = $1
-                        })
+                        }
                     }
                 }
             }
