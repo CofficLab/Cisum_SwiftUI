@@ -23,7 +23,12 @@ actor DB: ModelActor {
 
     init(_ container: ModelContainer, sync: Bool = false) {
         if DB.verbose {
-            os_log("\(Logger.isMain)🚩 初始化 DB")
+            var message = "\(Logger.isMain)🚩 初始化 DB"
+            if sync {
+                message += " 并监听文件夹"
+            }
+            
+            os_log("\(message)")
         }
 
         modelContainer = container

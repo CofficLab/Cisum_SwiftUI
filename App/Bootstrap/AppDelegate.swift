@@ -5,47 +5,84 @@ import OSLog
 import SwiftUI
 
 #if os(macOS)
-    class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
-        var verbose = false
-        var label: String { "\(Logger.isMain)🍎 AppDelegate::"}
-        
-        func applicationDidFinishLaunching(_ notification: Notification) {
-            os_log("\(self.label)applicationDidFinishLaunching")
-        }
-
-        func windowDidMove(_ notification: Notification) {
-            os_log("移动窗口")
-        }
-
-        func windowDidResize(_ notification: Notification) {
-            os_log("调整窗口")
-        }
-
-        func applicationWillTerminate(_ notification: Notification) {
-            os_log("\(self.label)Will Terminate")
-        }
-
-        func applicationDidBecomeActive(_ notification: Notification) {
-            os_log("\(self.label)Did Become Active")
-        }
-        
-        func applicationDidHide(_ notification: Notification) {
-            os_log("\(self.label)Did Hide 🐱🐱🐱")
-        }
-    }
+    typealias ApplicationDelegate = NSApplicationDelegate
+    typealias AppOrNotification = Notification
 #else
-    class AppDelegate: NSObject, UIApplicationDelegate {
-        func applicationWillTerminate(_ application: UIApplication) {
-            AppConfig.logger.app.debug("🚩 Will  terminate")
-        }
+    typealias ApplicationDelegate = UIApplicationDelegate
+    typealias AppOrNotification = UIApplication
+#endif
 
-        func application(
-            _ application: UIApplication,
-            didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
-        ) -> Bool {
-            AppConfig.logger.app.debug("🚩 DidFinishLaunchingWithOptions")
+class AppDelegate: NSObject, ApplicationDelegate {
+    var verbose = false
+    var label: String { "\(Logger.isMain)🍎 AppDelegate::" }
+    var db = DB(AppConfig.getContainer())
 
-            return true
+    func applicationWillHide(_ notification: Notification) {
+        os_log("\(self.label)WillHide")
+    }
+
+    func applicationDidHide(_ notification: Notification) {
+        os_log("\(self.label)Did Hide 🐱🐱🐱")
+    }
+    
+    func applicationWillBecomeActive(_ notification: Notification) {
+        os_log("\(self.label)WillBecomeActive")
+        
+        Task {
+            await db.stopFindDuplicatedsJob()
         }
     }
+    
+    func applicationDidFinishLaunching(_ notification: AppOrNotification) {
+        os_log("\(self.label)applicationDidFinishLaunching")
+    }
+
+    func applicationWillTerminate(_ notification: AppOrNotification) {
+        os_log("\(self.label)Will Terminate")
+    }
+    
+    func applicationWillUpdate(_ notification: Notification) {
+        //os_log("\(self.label)Will Update")
+    }
+    
+    func applicationDidBecomeActive(_ notification: AppOrNotification) {
+        os_log("\(self.label)Did Become Active")
+    }
+    
+    func applicationWillResignActive(_ application: AppOrNotification) {
+        // the app is about to become inactive and will lose focus.
+        os_log("\(self.label)WillResignActive")
+    }
+    
+    func applicationDidResignActive(_ notification: Notification) {
+        os_log("\(self.label)DidResignActive")
+        
+        Task.detached(priority: .background, operation: {
+            await self.db.getCovers()
+        })
+
+        Task.detached(priority: .background, operation: {
+            await self.db.findDuplicatesJob(verbose:true)
+        })
+
+        Task.detached(priority: .background, operation: {
+            await self.db.prepareJob()
+        })
+    }
+}
+
+// MARK: 窗口调整
+
+#if os(macOS)
+
+extension AppDelegate: NSWindowDelegate {
+    func windowDidMove(_ notification: Notification) {
+        os_log("移动窗口")
+    }
+
+    func windowDidResize(_ notification: Notification) {
+        os_log("调整窗口")
+    }
+}
+
 #endif

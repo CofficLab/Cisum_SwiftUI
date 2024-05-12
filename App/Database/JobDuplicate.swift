@@ -8,7 +8,7 @@ extension DB {
         Self.shouldStopJob = true
         Self.findDuplicatesJobProcessing = false
     }
-    
+
     func findDuplicatesJob(verbose: Bool = true) {
         if Self.findDuplicatesJobProcessing {
             if verbose {
@@ -20,56 +20,61 @@ extension DB {
         Self.findDuplicatesJobProcessing = true
         Self.shouldStopJob = false
 
-        let context = ModelContext(modelContainer)
         let group = DispatchGroup()
+        let total = getTotal()
 
-        // 如果Task.detached写在for之外，内存占用会越来越大，因为每次循环算Hash都读一个文件进内存，直到Task结束才能释放
-        do {
-            let audios = try context.fetch(FetchDescriptor(predicate: #Predicate<Audio> {
-                $0.fileHash == ""
-            }))
-
-            let total = audios.count
-
-            for (i, audio) in audios.enumerated() {
-                Task.detached(priority: .low) {
-                    if Self.shouldStopJob {
-                        if verbose {
-                            //os_log("\(Logger.isMain)\(Self.label)updateFileHashJob -> Stop 🤚🤚🤚")
+        Task.detached(priority: .background, operation: {
+            self.printRunTime("updateFileHashJob with total=\(total)", tolerance: 2) {
+                do {
+                    let context = ModelContext(self.modelContainer)
+                    try context.enumerate(FetchDescriptor(predicate: #Predicate<Audio> {
+                        $0.fileHash == ""
+                    }), block: { audio in
+                        if Self.shouldStopJob {
+                            if verbose {
+                                // os_log("\(Logger.isMain)\(Self.label)updateFileHashJob -> Stop 🤚🤚🤚")
+                            }
+                            return
                         }
-                        return
-                    }
-                    
-                    if verbose {
-                        os_log("\(Logger.isMain)\(Self.label)updateFileHashJob -> \(i)/\(total)")
-                    }
 
-                    group.enter()
-                    self.updateFileHash(audio)
-                    group.leave()
+//                        if verbose {
+//                            os_log("\(Logger.isMain)\(Self.label)updateFileHashJob -> \(audio.title)")
+//                        }
+
+                        group.enter()
+                        self.updateFileHash(audio)
+                        group.leave()
+                    })
+                    try context.save()
+                } catch let e {
+                    os_log(.error, "\(e.localizedDescription)")
                 }
             }
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-        }
+        })
 
         // 等待所有UpdateFileHash任务完成
-        let total = Self.getTotal(context: context)
         group.notify(queue: .main) {
             Task.detached(priority: .low) {
-                for i in 1 ... total {
-                    if Self.shouldStopJob {
-                        return
-                    }
-                    
-                    if DB.verbose {
-                        os_log("\(Logger.isMain)\(Self.label)findDuplicatesJob -> \(i)/\(total)")
-                    }
+                self.printRunTime("updateDuplicatedOf with total=\(total)", tolerance: 3) {
+                    do {
+                        let context = ModelContext(self.modelContainer)
+                        try context.enumerate(FetchDescriptor(predicate: #Predicate<Audio> {
+                            $0.title != ""
+                        }), block: {
+                            if Self.shouldStopJob {
+                                return
+                            }
+                            
+                            os_log("updateDuplicatedOf \($0.title)")
+                            self.updateDuplicatedOf($0)
+                        })
+                        try context.save()
 
-                    self.updateDuplicatedOf(i - 1)
+                        Self.findDuplicatesJobProcessing = false
+                    } catch let error {
+                        os_log(.error, "\(error.localizedDescription)")
+                    }
                 }
-
-                Self.findDuplicatesJobProcessing = false
             }
         }
     }

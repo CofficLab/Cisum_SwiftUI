@@ -12,7 +12,6 @@ struct Boot: App {
     @Environment(\.scenePhase) private var scenePhase
     
     static var label = "🍎 Boot::"
-    var db = DB(AppConfig.getContainer())
     var label:String { "\(Logger.isMain)\(Self.label)" }
 
     var body: some Scene {
@@ -33,23 +32,8 @@ struct Boot: App {
                 switch scenePhase {
                 case .active:
                     os_log("\(self.label)App is active")
-                    Task {
-                        await db.stopFindDuplicatedsJob()
-                    }
                 case .inactive:
                     os_log("\(self.label)App is inactive")
-                    
-                    Task.detached(priority: .background, operation: {
-                        await db.getCovers()
-                    })
-                    
-                    Task.detached(priority: .background, operation: {
-                        await db.findDuplicatesJob(verbose:true)
-                    })
-                    
-                    Task.detached(priority: .background, operation: {
-                        await db.prepareJob()
-                    })
                 case .background:
                     os_log("\(self.label)App is in background (minimized)")
                 @unknown default:
