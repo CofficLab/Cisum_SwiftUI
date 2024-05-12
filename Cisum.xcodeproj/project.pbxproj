@@ -11,6 +11,8 @@
 		0B11262A2AC6F7B20093DFFA /* BtnToggleDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1126292AC6F7B20093DFFA /* BtnToggleDB.swift */; };
 		0B11262C2AC719B70093DFFA /* ImageHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B11262B2AC719B70093DFFA /* ImageHelper.swift */; };
 		0B11365B2BEFABC700A71FE1 /* JobGetCover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B11365A2BEFABC700A71FE1 /* JobGetCover.swift */; };
+		0B11365D2BF106F300A71FE1 /* AudioGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B11365C2BF106F300A71FE1 /* AudioGroup.swift */; };
+		0B11365F2BF10A0100A71FE1 /* JobGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B11365E2BF10A0100A71FE1 /* JobGroup.swift */; };
 		0B1165E92ABBC6C0005C5CBB /* LaunchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1165E82ABBC6C0005C5CBB /* LaunchView.swift */; };
 		0B1165F02ABBCCB0005C5CBB /* AppManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1165EF2ABBCCB0005C5CBB /* AppManager.swift */; };
 		0B1498742BC4C5CB0075DA61 /* PlayMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1498732BC4C5CB0075DA61 /* PlayMode.swift */; };
@@ -120,6 +122,8 @@
 		0B1126292AC6F7B20093DFFA /* BtnToggleDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnToggleDB.swift; sourceTree = "<group>"; };
 		0B11262B2AC719B70093DFFA /* ImageHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageHelper.swift; sourceTree = "<group>"; };
 		0B11365A2BEFABC700A71FE1 /* JobGetCover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobGetCover.swift; sourceTree = "<group>"; };
+		0B11365C2BF106F300A71FE1 /* AudioGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioGroup.swift; sourceTree = "<group>"; };
+		0B11365E2BF10A0100A71FE1 /* JobGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobGroup.swift; sourceTree = "<group>"; };
 		0B1165E82ABBC6C0005C5CBB /* LaunchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchView.swift; sourceTree = "<group>"; };
 		0B1165EF2ABBCCB0005C5CBB /* AppManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppManager.swift; sourceTree = "<group>"; };
 		0B1498732BC4C5CB0075DA61 /* PlayMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayMode.swift; sourceTree = "<group>"; };
@@ -257,9 +261,10 @@
 			children = (
 				0B1D5A672AB3025F0010DDF2 /* Audio.swift */,
 				0BD056922BC636D600EBC7C4 /* AudioCoverExt.swift */,
+				0B11365C2BF106F300A71FE1 /* AudioGroup.swift */,
 				0BAABEB02BC79C4E00DF4A31 /* CopyTask.swift */,
-				0B9FA29C2BC823A1007B235A /* SmartPlayer.swift */,
 				0B1498732BC4C5CB0075DA61 /* PlayMode.swift */,
+				0B9FA29C2BC823A1007B235A /* SmartPlayer.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -314,6 +319,7 @@
 				0B1498782BC4DF940075DA61 /* JobDelete.swift */,
 				0BB543F12BE8BAF300D7A2B2 /* JobDuplicate.swift */,
 				0B11365A2BEFABC700A71FE1 /* JobGetCover.swift */,
+				0B11365E2BF10A0100A71FE1 /* JobGroup.swift */,
 				0BAABEB92BC8C5CB00DF4A31 /* JobPrepare.swift */,
 				0BD056882BC6192D00EBC7C4 /* JobSync.swift */,
 				0BAABEB22BC79C9F00DF4A31 /* TaskExt.swift */,
@@ -612,6 +618,7 @@
 				0B9FA29D2BC823A1007B235A /* SmartPlayer.swift in Sources */,
 				0BBA422B2AC2ABAD00C0B977 /* ButtonShowDatabase.swift in Sources */,
 				0BAABEB12BC79C4E00DF4A31 /* CopyTask.swift in Sources */,
+				0B11365D2BF106F300A71FE1 /* AudioGroup.swift in Sources */,
 				0BB587172AD815770071AEBD /* TimeHelper.swift in Sources */,
 				0B9FA2972BC80E51007B235A /* EventManager.swift in Sources */,
 				0BAABEAF2BC787A200DF4A31 /* JobCopy.swift in Sources */,
@@ -669,6 +676,7 @@
 				0BBC157C2AB84C21006E82C4 /* HomeView.swift in Sources */,
 				0B901D8A2BB83E28003AC253 /* ItemQuery.swift in Sources */,
 				0B6B8B9D2BBA4D0600F65B23 /* Coffee.swift in Sources */,
+				0B11365F2BF10A0100A71FE1 /* JobGroup.swift in Sources */,
 				0BAB7C412AD3D25200C5AEB5 /* ButtonDismiss.swift in Sources */,
 				0B220F732BB1A3D70077255A /* BtnsView.swift in Sources */,
 				0B220F6F2BB051F50077255A /* TitleView.swift in Sources */,

@@ -29,6 +29,9 @@ class Audio {
     var contentType: String?
     // nil表示未计算过，true表示有，false表示没有
     var hasCover: Bool? = nil
+    
+    @Relationship(inverse: \AudioGroup.audios)
+    var group: AudioGroup? = nil
 
     // 新增字段记得设置默认值，否则低版本更新时崩溃
 

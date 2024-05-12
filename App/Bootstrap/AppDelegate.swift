@@ -62,7 +62,7 @@ class AppDelegate: NSObject, ApplicationDelegate {
         })
 
         Task.detached(priority: .background, operation: {
-            await self.db.findDuplicatesJob(verbose:true)
+            await self.db.findAudioGroupJob(verbose:true)
         })
 
         Task.detached(priority: .background, operation: {
