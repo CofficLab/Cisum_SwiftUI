@@ -7,21 +7,30 @@ import SwiftUI
 #if os(macOS)
     class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         var verbose = false
+        var label: String { "\(Logger.isMain)🍎 AppDelegate::"}
         
         func applicationDidFinishLaunching(_ notification: Notification) {
-            AppConfig.bgQueue.async { [self] in
-                if verbose {
-                    os_log("\(Logger.isMain)🚩 applicationDidFinishLaunching")
-                }
-            }
+            os_log("\(self.label)applicationDidFinishLaunching")
         }
 
         func windowDidMove(_ notification: Notification) {
-            AppConfig.logger.app.debug("移动窗口")
+            os_log("移动窗口")
         }
 
         func windowDidResize(_ notification: Notification) {
-            AppConfig.logger.app.debug("调整窗口")
+            os_log("调整窗口")
+        }
+
+        func applicationWillTerminate(_ notification: Notification) {
+            os_log("\(self.label)Will Terminate")
+        }
+
+        func applicationDidBecomeActive(_ notification: Notification) {
+            os_log("\(self.label)Did Become Active")
+        }
+        
+        func applicationDidHide(_ notification: Notification) {
+            os_log("\(self.label)Did Hide 🐱🐱🐱")
         }
     }
 #else

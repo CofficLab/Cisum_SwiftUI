@@ -74,7 +74,7 @@ extension Audio {
     // MARK: 封面图
 
     func getCoverImageFromCache() -> Image? {
-        os_log("\(self.label)getCoverImageFromCache for \(self.title)")
+        //os_log("\(self.label)getCoverImageFromCache for \(self.title)")
 
         var url: URL? = coverCacheURL
 
