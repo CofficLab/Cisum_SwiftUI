@@ -5,7 +5,7 @@ import SwiftUI
 struct DBList: View {
     static var descriptor: FetchDescriptor<Audio> {
         let descriptor = FetchDescriptor<Audio>(predicate: #Predicate {
-            $0.duplicatedOf == nil
+            $0.title != ""
         }, sortBy: [SortDescriptor(\.order, order: .reverse)])
         return descriptor
     }

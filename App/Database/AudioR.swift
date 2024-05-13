@@ -2,117 +2,6 @@ import Foundation
 import OSLog
 import SwiftData
 
-// MARK: 查询-Duplicate
-
-extension DB {
-    /// 排序在当前audio前的相同的audio中的第一个
-    static func getFirstDuplicate(context: ModelContext, audio: Audio) -> Audio? {
-        Self.getPreDuplicates(context: context, audio: audio).first
-    }
-    
-    /// 排序在当前audio前的相同的audio
-    static func getPreDuplicates(context: ModelContext, audio: Audio) -> [Audio] {
-        let url = audio.url
-        let order = audio.order
-        let hash = audio.fileHash
-        
-        if hash.isEmpty {
-            return []
-        }
-        
-        do {
-            return try context.fetch(FetchDescriptor<Audio>(predicate: #Predicate<Audio> {
-                $0.fileHash == hash &&
-                    $0.url != url &&
-                    $0.order < order &&
-                    $0.fileHash.count > 0
-            }, sortBy: [
-                SortDescriptor(\.order, order: .forward),
-            ]))
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-        }
-        
-        return []
-    }
-
-    /// 当前Audio是不是前面某个Audio的Duplicate，是则返回前面的Audio
-    func findDuplicatedOf(_ audio: Audio) -> Audio? {
-        guard let dbAudio = self.findAudio(audio.url) else {
-            return nil
-        }
-        
-        // 如果这个文件未下载，要等下载完才能计算hash
-        if dbAudio.fileHash.isEmpty {
-            dbAudio.fileHash = dbAudio.getHash()
-            
-            do {
-                try context.save()
-            } catch let e {
-                os_log(.error, "\(e.localizedDescription)")
-                return nil
-            }
-        }
-        
-        do {
-            let hash = dbAudio.fileHash
-            let url = dbAudio.url
-            let order = dbAudio.order
-            let duplicates = try context.fetch(FetchDescriptor<Audio>(predicate: #Predicate<Audio> {
-                $0.fileHash == hash &&
-                    $0.url != url &&
-                    $0.order < order &&
-                    $0.fileHash.count > 0
-            }, sortBy: [
-                SortDescriptor(\.order, order: .forward),
-            ]))
-
-            return duplicates.first
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-        }
-
-        return nil
-    }
-
-    func findDuplicate(_ audio: Audio) -> Audio? {
-        os_log("\(Logger.isMain)🍋 DB::findDuplicate")
-
-        let url = audio.url
-        let hash = audio.fileHash
-        let predicate = #Predicate<Audio> {
-            $0.fileHash == hash && $0.url != url
-        }
-        let descriptor = FetchDescriptor<Audio>(predicate: predicate)
-        do {
-            let duplicates = try context.fetch(descriptor)
-
-            return duplicates.first
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-        }
-
-        return nil
-    }
-
-    func findDuplicates(_ audio: Audio) -> [Audio] {
-        // os_log("\(self.label)findDuplicates \(audio.title)")
-
-        let url = audio.url
-        let descriptor = FetchDescriptor<Audio>(predicate: #Predicate<Audio> {
-            $0.duplicatedOf == url
-        })
-
-        do {
-            return try context.fetch(descriptor)
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-        }
-
-        return []
-    }
-}
-
 // MARK: Query
 
 extension DB {
@@ -309,19 +198,6 @@ extension DB {
 // MARK: Query-Get
 
 extension DB {
-    static func getTotalOfFileHashEmpty(context: ModelContext) -> Int {
-        let descriptor = FetchDescriptor(predicate: #Predicate<Audio> {
-            $0.fileHash == ""
-        })
-        
-        do {
-            return try context.fetchCount(descriptor)
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-            return 0
-        }
-    }
-    
     static func getTotal(context: ModelContext) -> Int {
         let descriptor = FetchDescriptor(predicate: #Predicate<Audio> {
             $0.order != -1

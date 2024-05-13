@@ -7,8 +7,13 @@ actor DB: ModelActor {
     static let label = "📦 DB::"
     static let verbose = true
     static var lastSyncedTime: Date = .distantPast
-    static var findDuplicatesJobProcessing: Bool = false
+    
+    // MARK: 后台任务
+    static var grouping: Bool = false
     static var shouldStopJob = false
+    static var lastPrintTime: Date = .distantPast
+    static var lastGroupingIndex: Int = 0
+    static var groupingTotal: Int = 0
 
     let modelContainer: ModelContainer
     let modelExecutor: any ModelExecutor
@@ -143,8 +148,8 @@ extension DB {
 
 extension DB {
     /// 执行并输出耗时
-    nonisolated func printRunTime(_ title: String, tolerance: Double = 1, _ code: () -> Void) {
-        if DB.verbose {
+    nonisolated func printRunTime(_ title: String, tolerance: Double = 1, verbose: Bool = false, _ code: () -> Void) {
+        if verbose {
             os_log("\(Logger.isMain)\(DB.label)\(title)")
         }
 

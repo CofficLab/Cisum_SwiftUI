@@ -108,4 +108,15 @@ class FileHelper {
 
         return fileHash
     }
+
+    static func getMD5(_ url: URL) -> String {
+        do {
+            let data = try Data(contentsOf: url)
+            let hash = Insecure.MD5.hash(data: data)
+            return hash.map { String(format: "%02hhx", $0) }.joined()
+        } catch {
+            print("Error calculating MD5: \(error)")
+            return ""
+        }
+    }
 }
