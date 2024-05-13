@@ -89,7 +89,7 @@ struct AlbumView: View {
         })
     }
 
-    func refresh(_ item: MetaWrapper? = nil, verbose: Bool = true) {
+    func refresh(_ item: MetaWrapper? = nil, verbose: Bool = false) {
         if verbose {
             os_log("\(self.label)Refresh -> \(audio.title)")
         }

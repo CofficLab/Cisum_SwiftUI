@@ -154,7 +154,7 @@ extension Audio {
         return nil
     }
 
-    func getCoverFromMeta(_ callback: @escaping (_ url: URL?) -> Void, verbose: Bool = true) {
+    func getCoverFromMeta(_ callback: @escaping (_ url: URL?) -> Void, verbose: Bool = false) {
         if verbose {
             os_log("\(self.label)getCoverFromMeta for \(self.title)")
         }

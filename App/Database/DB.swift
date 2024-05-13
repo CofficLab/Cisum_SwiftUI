@@ -8,12 +8,17 @@ actor DB: ModelActor {
     static let verbose = true
     static var lastSyncedTime: Date = .distantPast
     
-    // MARK: 后台任务
+    // MARK: 后台任务-Grouping
     static var grouping: Bool = false
     static var shouldStopJob = false
     static var lastPrintTime: Date = .distantPast
     static var lastGroupingIndex: Int = 0
     static var groupingTotal: Int = 0
+    
+    // MARK: 后台任务-GetCover
+    static var getCoverProcessing: Bool = false
+    static var shouldStopGetCoverJob = false
+    static var getCoverTotal: Int = 0
 
     let modelContainer: ModelContainer
     let modelExecutor: any ModelExecutor
