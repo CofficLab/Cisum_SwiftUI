@@ -7,7 +7,7 @@ extension DB {
         Self.shouldStopGetCoverJob = true
     }
 
-    func getCoversJob() {
+    func getCoversJob(verbose: Bool = true) {
         if Self.getCoverProcessing {
             if verbose {
                 os_log("\(Logger.isMain)\(Self.label)GetCoversJob is running 👷👷👷")
@@ -56,9 +56,9 @@ extension DB {
                 } catch let error {
                     os_log(.error, "\(error.localizedDescription)")
                 }
+                
+                Self.getCoverProcessing = false
             }
         }
-        
-        Self.getCoverProcessing = false
     }
 }
