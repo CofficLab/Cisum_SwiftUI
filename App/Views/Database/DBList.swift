@@ -6,7 +6,7 @@ struct DBList: View {
     static var descriptor: FetchDescriptor<Audio> {
         let descriptor = FetchDescriptor<Audio>(predicate: #Predicate {
             $0.title != ""
-        }, sortBy: [SortDescriptor(\.order, order: .reverse)])
+        }, sortBy: [SortDescriptor(\.order, order: .forward)])
         return descriptor
     }
 

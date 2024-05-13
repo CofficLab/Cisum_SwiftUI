@@ -22,18 +22,18 @@ extension DB {
 extension DB {
     nonisolated func download(_ audio: Audio, reason: String) {
         Task {
-            // os_log("\(Logger.isMain)\(Self.label)Download ⏬⏬⏬ \(audio.title) reason -> \(reason)")
+            //os_log("\(Logger.isMain)\(Self.label)Download ⏬⏬⏬ \(audio.title) reason -> \(reason)")
             await disk.download(audio)
         }
     }
 
-    /// 下载当前的和当前的后面的1个
+    /// 下载当前的和当前的后面的X个
     nonisolated func downloadNext(_ audio: Audio, reason: String) {
         downloadNextBatch(audio, count: 2, reason: reason)
     }
 
     /// 下载当前的和当前的后面的X个
-    nonisolated func downloadNextBatch(_ audio: Audio, count: Int = 3, reason: String) {
+    nonisolated func downloadNextBatch(_ audio: Audio, count: Int = 6, reason: String) {
         var currentIndex = 0
         var currentAudio: Audio = audio
 

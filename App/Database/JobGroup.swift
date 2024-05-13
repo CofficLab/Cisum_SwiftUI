@@ -31,6 +31,7 @@ extension DB {
         
         if Self.groupingTotal == 0 {
             os_log("\(self.label)FindAudioGroupJob 🌾🌾🌾 All done 🎉🎉🎉")
+            Self.grouping = false
             return
         }
         

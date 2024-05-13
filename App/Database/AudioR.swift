@@ -144,7 +144,7 @@ extension DB {
     }
     
     static func nextOf(context: ModelContext, audio: Audio) -> Audio? {
-        // os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title)")
+        //os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title)")
         let order = audio.order
         let url = audio.url
         var descriptor = FetchDescriptor<Audio>()
@@ -156,7 +156,9 @@ extension DB {
 
         do {
             let result = try context.fetch(descriptor)
-            return result.first ?? Self.first(context: context)
+            let next = result.first ?? Self.first(context: context)
+            //os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title) -> [\(next?.order ?? -1)] \(next?.title ?? "-")")
+            return next
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
         }

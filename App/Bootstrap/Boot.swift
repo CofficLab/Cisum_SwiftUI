@@ -28,18 +28,6 @@ struct Boot: App {
             .commands {
                 DebugCommand()
             }
-            .onChange(of: scenePhase) {
-                switch scenePhase {
-                case .active:
-                    os_log("\(self.label)App is active")
-                case .inactive:
-                    os_log("\(self.label)App is inactive")
-                case .background:
-                    os_log("\(self.label)App is in background (minimized)")
-                @unknown default:
-                    os_log("\(self.label)Unknown scene phase")
-                }
-            }
         #else
             WindowGroup {
                 RootView {

@@ -62,17 +62,17 @@ struct AlbumView: View {
             self.image = audio.getCoverImageFromCache()
 
             // 监听到了事件，注意要考虑audio已经被删除了的情况
-//            e.onUpdated { items in
-//                for item in items {
-//                    if item.isDeleted {
-//                        continue
-//                    }
-//
-//                    if item.url == self.url {
-//                        return refresh(item)
-//                    }
-//                }
-//            }
+            e.onUpdated { items in
+                for item in items {
+                    if item.isDeleted {
+                        continue
+                    }
+
+                    if item.url == self.url {
+                        return refresh(item)
+                    }
+                }
+            }
         }
         .onDisappear {
             e.removeListener(self)

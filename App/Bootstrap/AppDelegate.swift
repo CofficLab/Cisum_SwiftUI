@@ -57,9 +57,9 @@ class AppDelegate: NSObject, ApplicationDelegate {
     func applicationDidResignActive(_ notification: Notification) {
         os_log("\(self.label)DidResignActive")
         
-//        Task.detached(priority: .background, operation: {
-//            await self.db.getCovers()
-//        })
+        Task.detached(priority: .background, operation: {
+            await self.db.getCovers()
+        })
 
         Task.detached(priority: .background, operation: {
             await self.db.findAudioGroupJob(verbose:true)
