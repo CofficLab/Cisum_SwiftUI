@@ -148,7 +148,8 @@ extension Audio {
                 }
             }
         } catch {
-            os_log(.error, "\(self.label)⚠️ 读取 Meta 出错\(error)")
+            os_log(.error, "\(self.label)⚠️ 读取 Meta 出错")
+            os_log(.error, "\(error.localizedDescription)")
         }
 
         return nil
@@ -165,6 +166,10 @@ extension Audio {
 
         if fileManager.fileExists(atPath: coverCacheURL.path) {
             return callback(coverCacheURL)
+        }
+        
+        if let contentType = contentType, !FileHelper.isAudioFile(contentType) {
+            return callback(nil)
         }
 
         Task {
@@ -184,7 +189,8 @@ extension Audio {
                     }
                 }
             } catch {
-                os_log(.error, "\(self.label)⚠️ 读取 Meta 出错\(error)")
+                os_log(.error, "\(self.label)⚠️ 读取 Meta 出错 -> \(error.localizedDescription)")
+                os_log(.error, "\(error)")
                 callback(nil)
             }
         }

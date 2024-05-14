@@ -85,7 +85,8 @@ class Audio {
 
 extension Audio {
     func mergeWith(_ item: MetaWrapper) -> Audio {
-        isPlaceholder = item.isPlaceholder
+        self.isPlaceholder = item.isPlaceholder
+        self.contentType = item.contentType
 
         return self
     }

@@ -28,9 +28,7 @@ class AppDelegate: NSObject, ApplicationDelegate {
     func applicationWillBecomeActive(_ notification: Notification) {
         os_log("\(self.label)WillBecomeActive")
         
-        Task {
-            await db.stopGroupJob()
-        }
+        db.stopAllJobs()
     }
     
     func applicationDidFinishLaunching(_ notification: AppOrNotification) {
@@ -57,12 +55,14 @@ class AppDelegate: NSObject, ApplicationDelegate {
     func applicationDidResignActive(_ notification: Notification) {
         os_log("\(self.label)DidResignActive")
         
+        db.canRunJobs()
+        
         Task.detached(priority: .background, operation: {
-            await self.db.getCoversJob()
+            await self.db.runGetCoversJob()
         })
 
         Task.detached(priority: .background, operation: {
-            await self.db.findAudioGroupJob(verbose:true)
+            await self.db.runFindAudioGroupJob()
         })
     }
 }

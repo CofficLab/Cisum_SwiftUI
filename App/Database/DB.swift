@@ -8,6 +8,12 @@ actor DB: ModelActor {
     static let verbose = true
     static var lastSyncedTime: Date = .distantPast
     
+    // MARK: 后台任务
+    static var shouldStopAllJobs: Bool = false
+    static var shouldStopJobs: Set<String> = []
+    static var runnningJobs: Set<String> = []
+    static var jobLastPrintTime: Dictionary<String, Date> = [:]
+    
     // MARK: 后台任务-Grouping
     static var grouping: Bool = false
     static var shouldStopJob = false

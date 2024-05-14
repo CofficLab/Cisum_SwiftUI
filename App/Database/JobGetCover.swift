@@ -3,62 +3,55 @@ import OSLog
 import SwiftData
 
 extension DB {
-    func stopGetCoverJob() {
-        Self.shouldStopGetCoverJob = true
+    var getCoversJobId: String {
+        "GetCoversJob 🌽🌽🌽"
     }
-
-    func getCoversJob(verbose: Bool = true) {
-        if Self.getCoverProcessing {
-            if verbose {
-                os_log("\(Logger.isMain)\(Self.label)GetCoversJob is running 👷👷👷")
+    
+    func runGetCoversJob() {
+        let id = self.getCoversJobId
+        self.runJob(id, verbose: true, code: {
+            if self.getCoverTaskCount() == 0 {
+                os_log("\(self.label)\(id) All done 🎉🎉🎉")
+                return
             }
-            return
-        }
-
-        Self.getCoverProcessing = true
-        Self.shouldStopGetCoverJob = false
-        
+            
+            let context = ModelContext(self.modelContainer)
+            do {
+                try context.enumerate(FetchDescriptor(predicate: #Predicate<Audio> {
+                    $0.hasCover == nil
+                }), block: { audio in
+                    if self.shouldStopJob(id) {
+                        //os_log("\(Self.label)\(id) ShouldStop")
+                        return
+                    }
+                            
+                    audio.getCoverFromMeta { url in
+                        self.updateCover(audio, hasCover: url != nil)
+                    }
+                        
+                    // 每隔一段时间输出1条日志，避免过多
+                    if self.getLastPrintTime(id).distance(to: .now) > 5 {
+                        self.updateLastPrintTime(id)
+                        os_log("\(Self.label)\(id) left -> \(self.getCoverTaskCount())")
+                    }
+                })
+            } catch {
+                os_log(.error, "\(error.localizedDescription)")
+            }
+        })
+    }
+    
+    nonisolated func getCoverTaskCount() -> Int {
         do {
-            Self.getCoverTotal = try context.fetchCount(FetchDescriptor(predicate: #Predicate<Audio> {
+            let total = try ModelContext(self.modelContainer).fetchCount(FetchDescriptor(predicate: #Predicate<Audio> {
                 $0.hasCover == nil
             }))
+            
+            return total
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
             
-            return
-        }
-        
-        if Self.getCoverTotal == 0 {
-            os_log("\(self.label)GetCoversJob 🌾🌾🌾 All done 🎉🎉🎉")
-            Self.grouping = false
-            return
-        }
-        
-        Task.detached(priority: .low) {
-            let context = ModelContext(self.modelContainer)
-            self.printRunTime("GetCoverJob 🌽🌽🌽", verbose: true) {
-                do {
-                    try context.enumerate(FetchDescriptor(predicate: #Predicate<Audio> {
-                        $0.hasCover == nil
-                    }), block: { audio in
-                        if Self.shouldStopGetCoverJob {
-                            return
-                        }
-                        
-                        if audio.isDownloaded {
-                            audio.getCoverFromMeta({
-                                audio.hasCover = $0 != nil
-                            })
-                        }
-                    })
-
-                    try context.save()
-                } catch let error {
-                    os_log(.error, "\(error.localizedDescription)")
-                }
-                
-                Self.getCoverProcessing = false
-            }
+            return 0
         }
     }
 }

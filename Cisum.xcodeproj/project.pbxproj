@@ -31,6 +31,7 @@
 		0B220F732BB1A3D70077255A /* BtnsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B220F722BB1A3D70077255A /* BtnsView.swift */; };
 		0B220F752BB1BBDB0077255A /* SmartError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B220F742BB1BBDB0077255A /* SmartError.swift */; };
 		0B22158E2BB6BC8F000EB36F /* SmartProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B22158D2BB6BC8F000EB36F /* SmartProgress.swift */; };
+		0B240BD52BF30730004A5944 /* JobExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B240BD42BF30730004A5944 /* JobExt.swift */; };
 		0B4DFC722BD740B4001CEF32 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4DFC712BD740B4001CEF32 /* Device.swift */; };
 		0B4DFC742BD74145001CEF32 /* DeviceCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4DFC732BD74145001CEF32 /* DeviceCategory.swift */; };
 		0B4E246F2BCAB8020033CC07 /* AppPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4E246E2BCAB8020033CC07 /* AppPreview.swift */; };
@@ -144,6 +145,7 @@
 		0B220F722BB1A3D70077255A /* BtnsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnsView.swift; sourceTree = "<group>"; };
 		0B220F742BB1BBDB0077255A /* SmartError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmartError.swift; sourceTree = "<group>"; };
 		0B22158D2BB6BC8F000EB36F /* SmartProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmartProgress.swift; sourceTree = "<group>"; };
+		0B240BD42BF30730004A5944 /* JobExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobExt.swift; sourceTree = "<group>"; };
 		0B4DFC712BD740B4001CEF32 /* Device.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		0B4DFC732BD74145001CEF32 /* DeviceCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceCategory.swift; sourceTree = "<group>"; };
 		0B4E246E2BCAB8020033CC07 /* AppPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppPreview.swift; sourceTree = "<group>"; };
@@ -315,6 +317,7 @@
 				0BB889DA2AC06C54004788D5 /* DB.swift */,
 				0BAABEAE2BC787A200DF4A31 /* JobCopy.swift */,
 				0B1498782BC4DF940075DA61 /* JobDelete.swift */,
+				0B240BD42BF30730004A5944 /* JobExt.swift */,
 				0B11365A2BEFABC700A71FE1 /* JobGetCover.swift */,
 				0B11365E2BF10A0100A71FE1 /* JobGroup.swift */,
 				0BAABEB92BC8C5CB00DF4A31 /* JobPrepare.swift */,
@@ -577,6 +580,7 @@
 				0B8C36AE2BEC6E3E00C47567 /* DevExt.swift in Sources */,
 				0B8FC2702BBC559500839C75 /* PlayingAlbum.swift in Sources */,
 				0BBC15842AB95272006E82C4 /* ControlView.swift in Sources */,
+				0B240BD52BF30730004A5944 /* JobExt.swift in Sources */,
 				0BBA42272AC2A8B800C0B977 /* BtnAdd.swift in Sources */,
 				0B1D5AAC2AB414600010DDF2 /* MediaPlayerManager.swift in Sources */,
 				0BBC15912ABAC19F006E82C4 /* BtnPrev.swift in Sources */,

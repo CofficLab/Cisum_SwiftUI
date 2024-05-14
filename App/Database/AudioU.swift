@@ -149,3 +149,23 @@ extension DB {
         }
     }
 }
+
+// MARK: Cover
+
+extension DB {
+    nonisolated func updateCover(_ audio: Audio, hasCover: Bool) {
+        let context = ModelContext(self.modelContainer)
+        guard let dbAudio = context.model(for: audio.id) as? Audio else {
+            return
+        }
+        
+        dbAudio.hasCover = hasCover
+        
+        do {
+            try context.save()
+        } catch let e {
+            os_log(.error, "保存Cover出错")
+            os_log(.error, "\(e)")
+        }
+    }
+}
