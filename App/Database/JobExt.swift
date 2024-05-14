@@ -85,16 +85,16 @@ extension DB {
                 do {
                     try context.enumerate(FetchDescriptor(predicate: predicate), block: { audio in
                         queue.addOperation {
-                            self.runJobBlock(audio, id: id, code: code)
+                            if Self.shouldStopJob(id) {
+                                os_log("\(Self.label)🐎🐎🐎\(id) 取消所有任务 🤚🤚🤚")
+                                queue.isSuspended = true
+                            } else {
+                                self.runJobBlock(audio, id: id, code: code)
+                            }
                         }
                     })
                 } catch let e {
                     os_log(.error, "\(e.localizedDescription)")
-                }
-                
-                if Self.shouldStopJob(id) {
-                    os_log("\(Self.label)🐎🐎🐎\(id) 取消所有任务 🤚🤚🤚")
-                    queue.cancelAllOperations()
                 }
                     
                 queue.waitUntilAllOperationsAreFinished()
