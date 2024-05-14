@@ -58,7 +58,7 @@ extension DB {
     }
 
     nonisolated func delete(_ task: CopyTask) {
-        os_log("\(Logger.isMain)🗑️ 删除复制任务 \(task.title)")
+        //os_log("\(Logger.isMain)🗑️ 删除复制任务 \(task.title)")
         let context = ModelContext(modelContainer)
         guard let t = context.model(for: task.id) as? CopyTask else {
             return os_log("\(Logger.isMain)🗑️ 删除时数据库找不到 \(task.title)")

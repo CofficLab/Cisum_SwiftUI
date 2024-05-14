@@ -175,8 +175,4 @@ extension DB {
             os_log(.error, "\(e.localizedDescription)")
         }
     }
-    
-    func copyTo(_ url: URL) throws {
-        try self.disk.copyTo(url: url)
-    }
 }

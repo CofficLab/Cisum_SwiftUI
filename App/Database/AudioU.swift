@@ -22,18 +22,18 @@ extension DB {
 extension DB {
     nonisolated func download(_ audio: Audio, reason: String) {
         Task {
-            // os_log("\(Logger.isMain)\(Self.label)Download ⏬⏬⏬ \(audio.title) reason -> \(reason)")
+            //os_log("\(Logger.isMain)\(Self.label)Download ⏬⏬⏬ \(audio.title) reason -> \(reason)")
             await disk.download(audio)
         }
     }
 
-    /// 下载当前的和当前的后面的1个
+    /// 下载当前的和当前的后面的X个
     nonisolated func downloadNext(_ audio: Audio, reason: String) {
         downloadNextBatch(audio, count: 2, reason: reason)
     }
 
     /// 下载当前的和当前的后面的X个
-    nonisolated func downloadNextBatch(_ audio: Audio, count: Int = 3, reason: String) {
+    nonisolated func downloadNextBatch(_ audio: Audio, count: Int = 6, reason: String) {
         var currentIndex = 0
         var currentAudio: Audio = audio
 
@@ -102,91 +102,6 @@ extension DB {
     }
 }
 
-// MARK: FileHash
-
-extension DB {
-    /// 更新按照order排序的第i个的FileHash
-    func updateFileHash(_ i: Int) {
-        // os_log("\(Logger.isMain)\(DB.label)updateFileHash \(audio.title)")
-        guard let audio = Self.get(context: context, i) else {
-            return
-        }
-
-        if audio.fileHash.count > 0 {
-            return
-        }
-
-        audio.fileHash = audio.getHash()
-
-        do {
-            try context.save()
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-        }
-    }
-
-    nonisolated func updateFileHash(_ audio: Audio) {
-        // os_log("\(Logger.isMain)\(DB.label)updateFileHash \(audio.title)")
-        let context = ModelContext(self.modelContainer)
-        let url = audio.url
-
-        do {
-            guard let dbAudio = try context.fetch(FetchDescriptor(predicate: #Predicate<Audio> {
-                $0.fileHash == "" && $0.url == url
-            })).first else {
-                return
-            }
-
-            dbAudio.fileHash = dbAudio.getHash()
-            try context.save()
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-        }
-    }
-}
-
-// MARK: Duplicate
-
-extension DB {
-    nonisolated func updateDuplicatedOf(_ audio: Audio) {
-        let context = ModelContext(self.modelContainer)
-        context.autosaveEnabled = false
-
-        guard let dbAudio = context.model(for: audio.id) as? Audio else {
-            return
-        }
-
-        do {
-            let duplicate = Self.getFirstDuplicate(context: context, audio: dbAudio)
-            dbAudio.duplicatedOf = duplicate?.url
-            EventManager().emitAudioUpdate(dbAudio)
-
-            try context.save()
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-        }
-    }
-
-    nonisolated func updateDuplicatedOf(_ i: Int) {
-        let context = ModelContext(self.modelContainer)
-        context.autosaveEnabled = false
-
-        guard let dbAudio = Self.get(context: context, i) else {
-            return
-        }
-
-        do {
-            let duplicate = Self.getFirstDuplicate(context: context, audio: dbAudio)
-            dbAudio.duplicatedOf = duplicate?.url
-            EventManager().emitAudioUpdate(dbAudio)
-
-            try context.save()
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-        }
-    }
-}
-
 // MARK: 排序
 
 extension DB {
@@ -231,6 +146,26 @@ extension DB {
             onUpdated()
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
+        }
+    }
+}
+
+// MARK: Cover
+
+extension DB {
+    nonisolated func updateCover(_ audio: Audio, hasCover: Bool) {
+        let context = ModelContext(self.modelContainer)
+        guard let dbAudio = context.model(for: audio.id) as? Audio else {
+            return
+        }
+        
+        dbAudio.hasCover = hasCover
+        
+        do {
+            try context.save()
+        } catch let e {
+            os_log(.error, "保存Cover出错")
+            os_log(.error, "\(e)")
         }
     }
 }

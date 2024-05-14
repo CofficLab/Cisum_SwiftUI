@@ -7,7 +7,7 @@ class ItemQuery {
     let queue: OperationQueue
     let url: URL
     var label: String {"\(Logger.isMain)📷 ItemQuery::"}
-    var verbose = true
+    var verbose = false
 
     init(queue: OperationQueue = .main, url: URL) {
         self.queue = queue

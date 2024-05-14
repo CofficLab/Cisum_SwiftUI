@@ -141,7 +141,7 @@ extension DiskiCloud {
         
         let downloadingCount = getDownloadingCount()
         
-        if downloadingCount > 5 {
+        if downloadingCount > 10 {
             os_log("\(self.label)Download \(audio.title) -> Ignore ❄️❄️❄️ -> Downloading.count=\(downloadingCount)")
             
             return

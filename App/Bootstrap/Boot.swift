@@ -1,4 +1,5 @@
 import SwiftUI
+import OSLog
 
 @main
 struct Boot: App {
@@ -8,10 +9,15 @@ struct Boot: App {
         @UIApplicationDelegateAdaptor var appDelegate: AppDelegate
     #endif
 
+    @Environment(\.scenePhase) private var scenePhase
+    
+    static var label = "🍎 Boot::"
+    var label:String { "\(Logger.isMain)\(Self.label)" }
+
     var body: some Scene {
         #if os(macOS)
             Window("", id: "Cisum") {
-                RootView{
+                RootView {
                     ContentView()
                 }
                 .frame(minWidth: AppConfig.minWidth, minHeight: AppConfig.minHeight)

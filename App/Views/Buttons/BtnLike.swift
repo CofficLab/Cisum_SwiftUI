@@ -1,5 +1,5 @@
-import SwiftUI
 import OSLog
+import SwiftUI
 
 struct BtnLike: View {
     @EnvironmentObject var audioManager: AudioManager
@@ -23,14 +23,15 @@ struct BtnLike: View {
             })
             .onAppear {
                 self.like = audio.like
-                EventManager().onAudioUpdate({ audio in
-                    //os_log("\(self.label)OnAudioUpdated with like -> \(audio.like)")
-                    self.like = audio.like
-                })
             }
             .onChange(of: audio) {
                 self.like = audio.like
             }
+            .onReceive(NotificationCenter.default.publisher(for: Notification.Name.AudioUpdatedNotification), perform: { notification in
+                let data = notification.userInfo as! [String: Audio]
+                let audio = data["audio"]!
+                self.like = audio.like
+            })
     }
     
     private func getImageName() -> String {

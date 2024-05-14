@@ -37,7 +37,7 @@ class MediaPlayerManager: ObservableObject {
             title = audio.title
             duration = player.duration
             currentTime = player.currentTime
-            image = audio.getImage()
+            image = audio.getMediaCenterImage()
         }
 
         center.playbackState = isPlaying ? .playing : .paused

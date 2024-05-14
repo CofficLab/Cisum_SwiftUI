@@ -11,6 +11,8 @@ extension Audio {
         static var defaultImage = UIImage(imageLiteralResourceName: "DefaultAlbum")
     #endif
 
+    // MARK: 图片的储存路径
+
     var coverCacheURL: URL {
         let fileName = url.lastPathComponent
         let imageName = fileName
@@ -54,7 +56,9 @@ extension Audio {
         return nil
     }
 
-    func getImage<T>() -> T {
+    // MARK: 控制中心的图
+
+    func getMediaCenterImage<T>() -> T {
         var i: Any = Audio.defaultImage
         if fileManager.fileExists(atPath: coverCacheURL.path) {
             #if os(macOS)
@@ -67,30 +71,62 @@ extension Audio {
         return i as! T
     }
 
-    func getCoverImage() async -> Image? {
-        // os_log("\(Logger.isMain)🍋 Audio::getCoverImage for \(self.title)")
-        guard let coverURL = await getCover() else {
-            // os_log("\(Logger.isMain)🍋 Audio::getCoverImage for \(self.title) coverURL=nil give up")
+    // MARK: 封面图
+
+    func getCoverImageFromCache() -> Image? {
+        //os_log("\(self.label)getCoverImageFromCache for \(self.title)")
+
+        var url: URL? = coverCacheURL
+
+        if !fileManager.fileExists(atPath: url!.path) {
             return nil
         }
 
         #if os(macOS)
-            if let nsImage = NSImage(contentsOf: coverURL) {
+            if let nsImage = NSImage(contentsOf: url!) {
                 return Image(nsImage: nsImage)
             } else {
                 return nil
             }
         #else
-            return Image(uiImage: UIImage(contentsOfFile: coverURL.path)!)
+            return Image(uiImage: UIImage(contentsOfFile: url!.path)!)
         #endif
     }
 
-    func getCover() async -> URL? {
-        // os_log("\(Logger.isMain)🍋 Audio::getCover for \(self.title)")
+    func getCoverImage() async -> Image? {
+        os_log("\(self.label)getCoverImage for \(self.title)")
 
-//        if isNotDownloaded {
-//            return nil
-//        }
+        if let image = getCoverImageFromCache() {
+            return image
+        }
+
+        let url = await getCoverFromMeta()
+
+        guard let url = url else {
+            return nil
+        }
+
+        #if os(macOS)
+            if let nsImage = NSImage(contentsOf: url) {
+                return Image(nsImage: nsImage)
+            } else {
+                return nil
+            }
+        #else
+            return Image(uiImage: UIImage(contentsOfFile: url.path)!)
+        #endif
+    }
+
+    // MARK: 从Meta读取
+
+    func getCoverFromMeta(verbose: Bool = true) async -> URL? {
+        if verbose {
+            os_log("\(self.label)getCoverFromMeta for \(self.title)")
+        }
+
+        if isNotDownloaded {
+            return nil
+        }
 
         if fileManager.fileExists(atPath: coverCacheURL.path) {
             return coverCacheURL
@@ -112,9 +148,51 @@ extension Audio {
                 }
             }
         } catch {
-            // os_log("\(Logger.isMain)⚠️ 读取 Meta 出错\(error)")
+            os_log(.error, "\(self.label)⚠️ 读取 Meta 出错")
+            os_log(.error, "\(error.localizedDescription)")
         }
 
         return nil
+    }
+
+    func getCoverFromMeta(_ callback: @escaping (_ url: URL?) -> Void, verbose: Bool = false) {
+        if verbose {
+            os_log("\(self.label)getCoverFromMeta for \(self.title)")
+        }
+
+        if isNotDownloaded {
+            return callback(nil)
+        }
+
+        if fileManager.fileExists(atPath: coverCacheURL.path) {
+            return callback(coverCacheURL)
+        }
+        
+        if let contentType = contentType, !FileHelper.isAudioFile(contentType) {
+            return callback(nil)
+        }
+
+        Task {
+            let asset = AVAsset(url: url)
+            do {
+                let metadata = try await asset.load(.commonMetadata)
+
+                for item in metadata {
+                    switch item.commonKey?.rawValue {
+                    case "artwork":
+                        if try (makeImage(await item.load(.value), saveTo: coverCacheURL)) != nil {
+                            // os_log("\(Logger.isMain)🍋 AudioModel::updateMeta -> cover updated -> \(self.title)")
+                            return callback(coverCacheURL)
+                        }
+                    default:
+                        break
+                    }
+                }
+            } catch {
+                os_log(.error, "\(self.label)⚠️ 读取 Meta 出错 -> \(error.localizedDescription)")
+                os_log(.error, "\(error)")
+                callback(nil)
+            }
+        }
     }
 }

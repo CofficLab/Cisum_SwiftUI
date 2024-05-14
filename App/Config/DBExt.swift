@@ -36,6 +36,7 @@ extension AppConfig {
 
         let schema = Schema([
             Audio.self,
+            AudioGroup.self,
             CopyTask.self
         ])
         let modelConfiguration = ModelConfiguration(

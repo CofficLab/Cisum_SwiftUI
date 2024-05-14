@@ -22,7 +22,7 @@ class AudioManager: NSObject, ObservableObject {
     private var rootDir: URL = AppConfig.cloudDocumentsDir
     private var label: String { AudioManager.label }
 
-    var db: DB = .init(AppConfig.getContainer())
+    var db: DB = .init(AppConfig.getContainer(), sync: true)
     var isEmpty: Bool { audio == nil }
     var player = SmartPlayer()
     var isCloudStorage: Bool { iCloudHelper.isCloudPath(url: rootDir) }

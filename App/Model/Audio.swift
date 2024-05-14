@@ -21,12 +21,15 @@ class Audio {
     var like: Bool = false
     var title: String = ""
     var playCount: Int = 0
-    var fileHash: String = ""
-    var duplicatedOf: URL?
     // nil表示未计算过
     var size: Int64?
     var identifierKey: String?
     var contentType: String?
+    // nil表示未计算过，true表示有，false表示没有
+    var hasCover: Bool? = nil
+    
+    @Relationship(deleteRule: .nullify, inverse: \AudioGroup.audios)
+    var group: AudioGroup? = nil
 
     // 新增字段记得设置默认值，否则低版本更新时崩溃
 
@@ -82,7 +85,8 @@ class Audio {
 
 extension Audio {
     func mergeWith(_ item: MetaWrapper) -> Audio {
-        isPlaceholder = item.isPlaceholder
+        self.isPlaceholder = item.isPlaceholder
+        self.contentType = item.contentType
 
         return self
     }
@@ -135,33 +139,8 @@ extension Audio: Identifiable {
 // MARK: HASH
 
 extension Audio {
-    func getHash(verbose: Bool = false) -> String {
-        var fileHash = ""
-        let startTime = DispatchTime.now()
-
-        if verbose {
-            if self.isDownloaded {
-                os_log("\(self.label)GetHash -> \(self.title) -> Downloaded 👍👍👍")
-            } else {
-                os_log("\(self.label)GetHash -> \(self.title) -> Not Downloaded ☁️☁️☁️")
-            }
-        }
-
-        if self.isNotDownloaded {
-            return ""
-        }
-
-        fileHash = FileHelper.getHash(self.url)
-
-        // 计算代码执行时间
-        let nanoTime = DispatchTime.now().uptimeNanoseconds - startTime.uptimeNanoseconds
-        let timeInterval = Double(nanoTime) / 1_000_000_000
-
-        if verbose {
-            os_log("\(self.label)GetHash -> \(self.title) -> \(timeInterval) 秒 🎉🎉🎉")
-        }
-
-        return fileHash
+    func getHash(verbose: Bool = true) -> String {
+        self.isNotDownloaded ? "" : FileHelper.getMD5(self.url)
     }
 }
 
@@ -171,14 +150,6 @@ extension Audio {
     var isDownloaded: Bool { iCloudHelper.isDownloaded(url: url) }
     var isNotDownloaded: Bool { !isDownloaded }
     var isDownloading: Bool { iCloudHelper.isDownloading(url) }
-}
-
-// MARK: Duplicates
-
-extension Audio {
-    func getDuplicates(_ db: DB) async -> [Audio] {
-        await db.findDuplicates(self)
-    }
 }
 
 #Preview("App") {

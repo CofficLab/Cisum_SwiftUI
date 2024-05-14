@@ -4,10 +4,10 @@ import SwiftUI
 struct AlbumView: View {
     static var verbose = false
     static var label = "🐰 AlbumView::"
-    
+
     @EnvironmentObject var audioManager: AudioManager
 
-    @State var image: Image? = nil
+    @State var image: Image?
     @State var isDownloaded: Bool = true
     @State var isDownloading: Bool = false
     @State var downloadingPercent: Double = 0
@@ -56,31 +56,37 @@ struct AlbumView: View {
             }
         }
         .clipShape(shape)
-        .onHover(perform: { _ in
-            refresh()
-        })
         .onAppear {
-            refresh()
+            self.isDownloaded = audio.isDownloaded
+            self.isDownloading = iCloudHelper.isDownloading(audio.url)
+            self.image = audio.getCoverImageFromCache()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: Notification.Name.AudiosUpdatedNotification)) { notification in
+            let data = notification.userInfo as! [String: [MetaWrapper]]
+            let items = data["items"]!
+            for item in items {
+                if item.isDeleted {
+                    continue
+                }
 
-            // 监听到了事件，注意要考虑audio已经被删除了的情况
-            e.onUpdated { items in
-                for item in items {
-                    if item.isDeleted {
-                        continue
-                    }
-
-                    if item.url == self.url {
-                        return refresh(item)
-                    }
+                if item.url == self.url {
+                    return refresh(item)
                 }
             }
         }
-        .onDisappear {
-            e.removeListener(self)
-        }
     }
 
-    func refresh(_ item: MetaWrapper? = nil) {
+    func setCachedCover() {
+        Task.detached(priority: .low, operation: {
+            let image = await audio.getCoverImageFromCache()
+
+            DispatchQueue.main.async {
+                self.image = image
+            }
+        })
+    }
+
+    func refresh(_ item: MetaWrapper? = nil, verbose: Bool = false) {
         if verbose {
             os_log("\(self.label)Refresh -> \(audio.title)")
         }
@@ -94,14 +100,14 @@ struct AlbumView: View {
             isDownloading = iCloudHelper.isDownloading(audio.url)
         }
 
-        if isDownloaded {
+        if isDownloaded && image == nil {
             updateCover()
         }
     }
 
-    func updateCover() {
+    func updateCover(verbose: Bool = true) {
         Task.detached(priority: .background) {
-            if await AlbumView.verbose {
+            if verbose {
                 let label = await AlbumView.label
                 let audio = await self.audio
                 os_log("\(Logger.isMain)\(label)UpdateCover -> \(audio.title)")

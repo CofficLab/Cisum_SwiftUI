@@ -12,11 +12,7 @@ struct Duplicates: View {
     var audio: Audio
     
     var db: DB { audioManager.db }
-    var duplicates: [Audio] {
-        audios.filter({
-            $0.duplicatedOf == audio.url
-        })
-    }
+    var duplicates: [Audio] = []
 
     init(_ audio: Audio) {
         self.audio = audio

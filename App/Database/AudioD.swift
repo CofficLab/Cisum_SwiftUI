@@ -34,13 +34,6 @@ extension DB {
                     }
                 }
 
-                // set duplicatedOf to nil
-                try context.fetch(FetchDescriptor(predicate: #Predicate<Audio> {
-                    $0.duplicatedOf == url
-                })).forEach {
-                    $0.duplicatedOf = nil
-                }
-
                 // 从磁盘删除
                 try disk.deleteFile(audio)
 
@@ -84,13 +77,6 @@ extension DB {
             }
 
             do {
-                // set duplicatedOf to nil
-                try context.fetch(FetchDescriptor(predicate: #Predicate<Audio> {
-                    $0.duplicatedOf == url
-                })).forEach {
-                    $0.duplicatedOf = nil
-                }
-
                 // 从磁盘删除
                 try disk.deleteFile(audio)
 
