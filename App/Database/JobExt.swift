@@ -42,7 +42,7 @@ extension DB {
         Self.jobLastPrintTime[id] = .now
     }
     
-    nonisolated func getLastPrintTime(_ id: String) -> Date {
+    static func getLastPrintTime(_ id: String) -> Date {
         if let t = Self.jobLastPrintTime[id] {
             return t
         }
@@ -89,7 +89,7 @@ extension DB {
                         code(audio)
                         
                         // 每隔一段时间输出1条日志，避免过多
-                        if self.getLastPrintTime(id).distance(to: .now) > 10 {
+                        if Self.getLastPrintTime(id).distance(to: .now) > 10 {
                             os_log("\(Self.label)🐎🐎🐎\(id) -> \(audio.title)")
                             self.updateLastPrintTime(id)
                         }
