@@ -64,7 +64,7 @@ jobs:
 
           build=$(agvtool what-version -terse)
 
-          echo "tag=v$version($build)" >> $GITHUB_ENV
+          echo "tag=v$version" >> $GITHUB_ENV
       - name: 打标签并推送到仓库
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
