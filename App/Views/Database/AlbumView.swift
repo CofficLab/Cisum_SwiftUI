@@ -4,7 +4,7 @@ import SwiftUI
 struct AlbumView: View {
     static var verbose = false
     static var label = "🐰 AlbumView::"
-    
+
     @EnvironmentObject var audioManager: AudioManager
 
     @State var image: Image?
@@ -60,29 +60,26 @@ struct AlbumView: View {
             self.isDownloaded = audio.isDownloaded
             self.isDownloading = iCloudHelper.isDownloading(audio.url)
             self.image = audio.getCoverImageFromCache()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: Notification.Name.AudiosUpdatedNotification)) { notification in
+            let data = notification.userInfo as! [String: [MetaWrapper]]
+            let items = data["items"]!
+            for item in items {
+                if item.isDeleted {
+                    continue
+                }
 
-            // 监听到了事件，注意要考虑audio已经被删除了的情况
-            e.onUpdated { items in
-                for item in items {
-                    if item.isDeleted {
-                        continue
-                    }
-
-                    if item.url == self.url {
-                        return refresh(item)
-                    }
+                if item.url == self.url {
+                    return refresh(item)
                 }
             }
         }
-        .onDisappear {
-            e.removeListener(self)
-        }
     }
-    
+
     func setCachedCover() {
         Task.detached(priority: .low, operation: {
             let image = await audio.getCoverImageFromCache()
-            
+
             DispatchQueue.main.async {
                 self.image = image
             }

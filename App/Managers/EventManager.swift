@@ -6,18 +6,33 @@ import OSLog
 import SwiftUI
 
 class EventManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
+    static var label = "🍋 EventManager::"
+    
     var n = NotificationCenter.default
     var queue = DispatchQueue(label: "EventQueue")
+    var label: String { "\(Logger.isMain)\(Self.label)" }
     
     func emitUpdate(_ items: [MetaWrapper]) {
-        NotificationCenter.default.post(
-            name: NSNotification.Name(Event.Updated.name),
-            object: nil,
-            userInfo: [
-                "items": items
-            ]
-        )
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(
+                name: Notification.Name.AudiosUpdatedNotification,
+                object: nil,
+                userInfo: [
+                    "items": items
+                ]
+            )
+        }
     }
+    
+    func emitAudioUpdate(_ audio: Audio) {
+            NotificationCenter.default.post(
+                name: Notification.Name.AudioUpdatedNotification,
+                object: nil,
+                userInfo: [
+                    "audio": audio
+                ]
+            )
+        }
     
     func emitSyncing(_ total: Int, current: Int) {
         NotificationCenter.default.post(
@@ -26,16 +41,6 @@ class EventManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
             userInfo: [
                 "total": total,
                 "current": current
-            ]
-        )
-    }
-    
-    func emitAudioUpdate(_ audio: Audio) {
-        NotificationCenter.default.post(
-            name: NSNotification.Name(Event.AudioUpdated.name),
-            object: nil,
-            userInfo: [
-                "audio": audio
             ]
         )
     }
@@ -50,20 +55,6 @@ class EventManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
         )
     }
     
-    func onUpdated(_ callback: @escaping (_ items: [MetaWrapper]) -> Void) {
-        n.addObserver(
-            forName: NSNotification.Name(Event.Updated.name),
-            object: nil,
-            queue: .main,
-            using: { notification in
-                self.queue.async {
-                    let data = notification.userInfo as! [String: [MetaWrapper]]
-                    let items = data["items"]!
-                    callback(items)
-                }
-            })
-    }
-    
     func onDelete(_ callback: @escaping (_ items: [MetaWrapper]) -> Void) {
         n.addObserver(
             forName: NSNotification.Name(Event.Delete.name),
@@ -74,20 +65,6 @@ class EventManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
                     let data = notification.userInfo as! [String: [MetaWrapper]]
                     let items = data["items"]!
                     callback(items)
-                }
-            })
-    }
-    
-    func onAudioUpdate(_ callback: @escaping (_ audio: Audio) -> Void) {
-        n.addObserver(
-            forName: NSNotification.Name(Event.AudioUpdated.name),
-            object: nil,
-            queue: .main,
-            using: { notification in
-                self.queue.async {
-                    let data = notification.userInfo as! [String: Audio]
-                    let audio = data["audio"]!
-                    callback(audio)
                 }
             })
     }
@@ -108,12 +85,12 @@ class EventManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
     }
     
     func removeListener(_ observer: Any) {
+        os_log("\(self.label)RemoveListener")
         n.removeObserver(observer)
     }
     
     enum Event {
         case Updated
-        case AudioUpdated
         case Delete
         case Syncing
         
@@ -121,4 +98,11 @@ class EventManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
             String(describing: self)
         }
     }
+}
+
+// MARK: 扩展Notification
+
+extension Notification.Name {
+    static let AudiosUpdatedNotification = Notification.Name("AudiosUpdatedNotification")
+    static let AudioUpdatedNotification = Notification.Name("AudioUpdatedNotification")
 }

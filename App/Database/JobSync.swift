@@ -130,9 +130,9 @@ extension DB {
     
     nonisolated func syncWithUpdatedItems(_ metas: [MetaWrapper]) {
         // 发出更新事件让UI更新，比如下载进度
-        Task.detached(priority: .high, operation: {
+        Task {
             await self.eventManager.emitUpdate(metas)
-        })
+        }
         
         self.printRunTime("SyncWithUpdatedItems with count=\(metas.count)") {
             let context = ModelContext(self.modelContainer)

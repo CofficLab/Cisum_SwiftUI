@@ -49,15 +49,15 @@ struct StateView: View {
                 appManager.showDBView()
             }
             
-            e.onUpdated { items in
-                for item in items {
-                    if item.url == audioManager.audio?.url {
-                        if item.downloadProgress == 100 {
-                            audioManager.prepare(audioManager.audio, reason: "StateView Detected Update")
-                        }
-                    }
-                }
-            }
+//            e.onUpdated { items in
+//                for item in items {
+//                    if item.url == audioManager.audio?.url {
+//                        if item.downloadProgress == 100 {
+//                            audioManager.prepare(audioManager.audio, reason: "StateView Detected Update")
+//                        }
+//                    }
+//                }
+//            }
         }
         .onChange(of: count) {
             Task {
