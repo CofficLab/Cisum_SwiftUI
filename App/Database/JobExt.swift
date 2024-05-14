@@ -36,20 +36,6 @@ extension DB {
         Self.runnningJobs.contains(id)
     }
 
-    // MARK: 输出日志
-
-    static func updateLastPrintTime(_ id: String) {
-        Self.jobLastPrintTime[id] = .now
-    }
-
-    static func getLastPrintTime(_ id: String) -> Date {
-        if let t = Self.jobLastPrintTime[id] {
-            return t
-        }
-
-        return .distantPast
-    }
-
     // MARK: 运行任务
 
     func runJob(_ id: String, verbose: Bool = true, predicate: Predicate<Audio>, code: @escaping (_ audio: Audio) -> Void) {
@@ -62,56 +48,50 @@ extension DB {
 
         Self.runnningJobs.insert(id)
         Self.shouldStopJobs.remove(id)
-        Self.updateLastPrintTime(id)
         let context = ModelContext(modelContainer)
+        let startTime = DispatchTime.now()
+        let title = "🐎🐎🐎\(id)"
+        let jobQueue = DispatchQueue(label: "DBJob", qos: .background)
+        let notifyQueue = DispatchQueue.global()
+        let group = DispatchGroup()
 
         do {
             let total = try context.fetchCount(FetchDescriptor(predicate: predicate))
 
             if total == 0 {
-                os_log("\(Self.label)🐎🐎🐎\(id) All done 🎉🎉🎉")
+                os_log("\(Self.label)\(title) All done 🎉🎉🎉")
                 return
             }
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
         }
 
-        printRunTime("🐎🐎🐎" + id, tolerance: 0, verbose: true) {
-            let jobQueue = DispatchQueue(label: "DBJob", qos: .background)
-            let group = DispatchGroup()
+        os_log("\(Logger.isMain)\(DB.label)\(title) Start 🚀🚀🚀")
 
-            do {
-                try context.enumerate(FetchDescriptor(predicate: predicate), block: { audio in
-                    jobQueue.async(group: group) {
-                        if Self.shouldStopJob(id) {
-                            Self.runnningJobs.remove(id)
-                            return
-                        } else {
-                            self.runJobBlock(audio, id: id, code: code)
-                        }
+        do {
+            try context.enumerate(FetchDescriptor(predicate: predicate), block: { audio in
+                jobQueue.async(group: group) {
+                    if Self.shouldStopJob(id) {
+                        Self.runnningJobs.remove(id)
+                        return
+                    } else {
+                        code(audio)
                     }
-                })
-            } catch let e {
-                os_log(.error, "\(e.localizedDescription)")
-            }
-
-            let notifyQueue = DispatchQueue.global()
-            group.notify(queue: notifyQueue) {
-                Self.runnningJobs.remove(id)
-            }
+                }
+            })
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
         }
-    }
 
-    nonisolated func runJobBlock(_ audio: Audio, id: String, code: (_ audio: Audio) -> Void) {
-        if Self.shouldStopJob(id) {
-            // os_log("\(Self.label)🐎🐎🐎\(id) Stop 🤚🤚🤚")
-        } else {
-            code(audio)
+        group.notify(queue: notifyQueue) {
+            Self.runnningJobs.remove(id)
 
-            // 每隔一段时间输出1条日志，避免过多
-            if Self.getLastPrintTime(id).distance(to: .now) > 3 {
-                // os_log("\(Self.label)🐎🐎🐎\(id) -> \(audio.title)")
-                Self.updateLastPrintTime(id)
+            // 计算代码执行时间
+            let nanoTime = DispatchTime.now().uptimeNanoseconds - startTime.uptimeNanoseconds
+            let timeInterval = Double(nanoTime) / 1000000000
+
+            if DB.verbose && timeInterval > 3 {
+                os_log("\(Logger.isMain)\(DB.label)\(title) cost \(timeInterval) 秒 🐢🐢🐢")
             }
         }
     }
