@@ -4,6 +4,16 @@ import OSLog
 import SwiftData
 
 extension DB {
+    // MARK: 运行任务
+    
+    func runBackgroundJob() {
+        Task.detached(priority: .background, operation: {
+            await self.runGetCoversJob()
+            await self.runFindAudioGroupJob()
+            await self.runDeleteInvalidJob()
+        })
+    }
+    
     // MARK: Start and Stop
     
     nonisolated func stopAllJobs() {
@@ -40,24 +50,56 @@ extension DB {
         return .distantPast
     }
     
-    func runJob(_ id: String, verbose: Bool = true, code: @escaping () -> Void) {
-        if Self.runnningJobs.contains(id) {
-            if verbose {
-                os_log("\(Logger.isMain)\(Self.label)\(id) is running 👷👷👷")
+    func runJob(_ id: String, verbose: Bool = true, predicate: Predicate<Audio>, code: @escaping (_ audio: Audio) -> Void) {
+        let queue = OperationQueue()
+        queue.maxConcurrentOperationCount = 2
+        queue.qualityOfService = .utility
+        
+        queue.addOperation {
+            if Self.runnningJobs.contains(id) {
+                if verbose {
+                    os_log("\(Logger.isMain)\(Self.label)🐎🐎🐎\(id) is running 👷👷👷")
+                }
+                return
             }
-            return
-        }
 
-        Self.runnningJobs.insert(id)
-        Self.shouldStopJobs.remove(id)
-
-        Task.detached(priority: .low) {
-            self.printRunTime(id, tolerance: 2, verbose: true) {
-                code()
+            Self.runnningJobs.insert(id)
+            Self.shouldStopJobs.remove(id)
+            let context = ModelContext(self.modelContainer)
+            
+            do {
+                let total = try context.fetchCount(FetchDescriptor(predicate: predicate))
+                
+                if total == 0 {
+                    os_log("\(Self.label)🐎🐎🐎\(id) All done 🎉🎉🎉")
+                    return
+                }
+            } catch let e {
+                os_log(.error, "\(e.localizedDescription)")
+            }
+            
+            self.printRunTime("🐎🐎🐎" + id, tolerance: 2, verbose: true) {
+                self.updateLastPrintTime(id)
+                do {
+                    try context.enumerate(FetchDescriptor(predicate: predicate), block: { audio in
+                        if self.shouldStopJob(id) {
+                            return
+                        }
+                        
+                        code(audio)
+                        
+                        // 每隔一段时间输出1条日志，避免过多
+                        if self.getLastPrintTime(id).distance(to: .now) > 10 {
+                            os_log("\(Self.label)🐎🐎🐎\(id) -> \(audio.title)")
+                            self.updateLastPrintTime(id)
+                        }
+                    })
+                } catch let e {
+                    os_log(.error, "\(e.localizedDescription)")
+                }
             }
                 
             Self.runnningJobs.remove(id)
-            os_log("\(Logger.isMain)\(DB.label)\(id) done 🎉🎉🎉")
         }
     }
 }

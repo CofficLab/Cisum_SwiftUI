@@ -13,18 +13,6 @@ actor DB: ModelActor {
     static var shouldStopJobs: Set<String> = []
     static var runnningJobs: Set<String> = []
     static var jobLastPrintTime: Dictionary<String, Date> = [:]
-    
-    // MARK: 后台任务-Grouping
-    static var grouping: Bool = false
-    static var shouldStopJob = false
-    static var lastPrintTime: Date = .distantPast
-    static var lastGroupingIndex: Int = 0
-    static var groupingTotal: Int = 0
-    
-    // MARK: 后台任务-GetCover
-    static var getCoverProcessing: Bool = false
-    static var shouldStopGetCoverJob = false
-    static var getCoverTotal: Int = 0
 
     let modelContainer: ModelContainer
     let modelExecutor: any ModelExecutor
@@ -173,7 +161,7 @@ extension DB {
         let timeInterval = Double(nanoTime) / 1000000000
 
         if DB.verbose && timeInterval > tolerance {
-            os_log("\(Logger.isMain)\(DB.label)\(title) 🐢🐢🐢 cost \(timeInterval) 秒")
+            os_log("\(Logger.isMain)\(DB.label)\(title) cost \(timeInterval) 秒 🐢🐢🐢")
         }
     }
 }
