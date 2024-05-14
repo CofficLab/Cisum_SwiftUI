@@ -17,16 +17,14 @@ extension AppConfig {
     /// 缓存文件夹
     static let cacheDirName = "audios_cache"
     
-    static var dbFileName = debug ? "database_debug.db" : "database.db"
+    static let dbDirName = debug ? "debug" : "production"
+    
+    static var dbFileName = debug ? "database.db" : "database.db"
     
     static let audiosDirName = debug ? "audios_debug" : "audios"
     
     static func getDBUrl() -> URL? {
-        if debug {
-            AppConfig.localDocumentsDir?.appendingPathComponent("debug").appendingPathComponent(dbFileName)
-        } else {
-            AppConfig.localDocumentsDir?.appendingPathComponent(dbFileName)
-        }
+        AppConfig.localDocumentsDir?.appendingPathComponent(dbDirName).appendingPathComponent(dbFileName)
     }
     
     static func getContainer() -> ModelContainer {

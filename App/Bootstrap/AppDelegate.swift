@@ -28,7 +28,7 @@ class AppDelegate: NSObject, ApplicationDelegate {
     func applicationWillBecomeActive(_ notification: Notification) {
         os_log("\(self.label)WillBecomeActive")
         
-        db.stopAllJobs()
+        DB.stopAllJobs()
     }
     
     func applicationDidFinishLaunching(_ notification: AppOrNotification) {
@@ -56,7 +56,7 @@ class AppDelegate: NSObject, ApplicationDelegate {
         os_log("\(self.label)DidResignActive")
         
         Task {
-            db.canRunJobs()
+            DB.canRunJobs()
             await db.runBackgroundJob()
         }
     }
