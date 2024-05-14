@@ -189,7 +189,7 @@ extension DiskiCloud {
             let result = query.searchMetadataItems()
             for try await items in result {
                 if self.verbose {
-                    os_log("\(Logger.isMain)\(self.label)watchAudiosFolder -> count=\(items.count)")
+                    //os_log("\(Logger.isMain)\(self.label)watchAudiosFolder -> count=\(items.count)")
                 }
                 
                 self.onUpdated(items)

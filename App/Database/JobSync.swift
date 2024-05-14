@@ -17,7 +17,7 @@ extension DB {
                 message += " -> \(first.fileName ?? "-") -> \(String(format: "%.0f", first.downloadProgress))% ⏬⏬⏬"
             }
             
-            os_log("\(message)")
+            //os_log("\(message)")
                 
             let itemsForSync = items.filter { $0.isUpdated == false }
             let itemsForUpdate = items.filter { $0.isUpdated && $0.isDeleted == false }

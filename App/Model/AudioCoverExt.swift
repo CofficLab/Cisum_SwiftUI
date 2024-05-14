@@ -94,7 +94,7 @@ extension Audio {
     }
 
     func getCoverImage() async -> Image? {
-        os_log("\(self.label)getCoverImage for \(self.title)")
+        //os_log("\(self.label)getCoverImage for \(self.title)")
 
         if let image = getCoverImageFromCache() {
             return image
@@ -121,7 +121,7 @@ extension Audio {
 
     func getCoverFromMeta(verbose: Bool = true) async -> URL? {
         if verbose {
-            os_log("\(self.label)getCoverFromMeta for \(self.title)")
+            //os_log("\(self.label)getCoverFromMeta for \(self.title)")
         }
 
         if isNotDownloaded {
