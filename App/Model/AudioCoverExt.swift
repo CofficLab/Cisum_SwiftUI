@@ -155,21 +155,27 @@ extension Audio {
         return nil
     }
 
-    func getCoverFromMeta(_ callback: @escaping (_ url: URL?) -> Void, verbose: Bool = false) {
+    func getCoverFromMeta(_ callback: @escaping (_ url: URL?) -> Void, verbose: Bool = false, queue: DispatchQueue = .main) {
         if verbose {
             os_log("\(self.label)getCoverFromMeta for \(self.title)")
         }
 
         if isNotDownloaded {
-            return callback(nil)
+            return queue.async {
+                callback(nil)
+            }
         }
 
         if fileManager.fileExists(atPath: coverCacheURL.path) {
-            return callback(coverCacheURL)
+            return queue.async {
+                callback(self.coverCacheURL)
+            }
         }
         
         if let contentType = contentType, !FileHelper.isAudioFile(contentType) {
-            return callback(nil)
+            return queue.async {
+                callback(nil)
+            }
         }
 
         Task {
@@ -181,8 +187,13 @@ extension Audio {
                     switch item.commonKey?.rawValue {
                     case "artwork":
                         if try (makeImage(await item.load(.value), saveTo: coverCacheURL)) != nil {
-                            // os_log("\(Logger.isMain)🍋 AudioModel::updateMeta -> cover updated -> \(self.title)")
-                            return callback(coverCacheURL)
+                            if verbose {
+                                os_log("\(self.label)🍋 AudioModel::updateMeta -> cover updated -> \(self.title)")
+                            }
+                            
+                            return queue.async {
+                                callback(self.coverCacheURL)
+                            }
                         }
                     default:
                         break
@@ -191,6 +202,9 @@ extension Audio {
             } catch {
                 os_log(.error, "\(self.label)⚠️ 读取 Meta 出错 -> \(error.localizedDescription)")
                 os_log(.error, "\(error)")
+            }
+            
+            queue.async {
                 callback(nil)
             }
         }

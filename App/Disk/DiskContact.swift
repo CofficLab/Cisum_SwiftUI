@@ -20,7 +20,7 @@ protocol DiskContact {
     
     func copyTo(url: URL) throws
     
-    func watchAudiosFolder(verbose: Bool) async
+    func watchAudiosFolder() async
     
     func getDownloadingCount() -> Int
 }

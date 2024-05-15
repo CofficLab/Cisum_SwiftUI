@@ -14,7 +14,7 @@ extension DB {
             self.sync(items)
         }
 
-        await self.disk.watchAudiosFolder(verbose: true)
+        await self.disk.watchAudiosFolder()
     }
     
     func sync(_ items: [MetaWrapper], verbose: Bool = false) {

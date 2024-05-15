@@ -6,7 +6,7 @@ import SwiftData
 extension DB {
     // MARK: 运行任务
 
-    func runJob(_ id: String, verbose: Bool = true, predicate: Predicate<Audio>, code: @escaping (_ audio: Audio) -> Void) {
+    func runJob(_ id: String, verbose: Bool = true, predicate: Predicate<Audio>? = nil, code: @escaping (_ audio: Audio) -> Void) {
         let startTime = DispatchTime.now()
         let title = "🐎🐎🐎\(id)"
         let jobQueue = DispatchQueue(label: "DBJob", qos: .background)
@@ -39,6 +39,12 @@ extension DB {
         }
 
         group.notify(queue: notifyQueue) {
+            do {
+                try self.context.save()
+            } catch let e {
+                os_log(.error, "\(e.localizedDescription)")
+            }
+            
             if verbose{
                 // 计算代码执行时间
                 let nanoTime = DispatchTime.now().uptimeNanoseconds - startTime.uptimeNanoseconds

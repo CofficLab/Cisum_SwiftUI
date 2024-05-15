@@ -59,7 +59,10 @@ struct AlbumView: View {
         .onAppear {
             self.isDownloaded = audio.isDownloaded
             self.isDownloading = iCloudHelper.isDownloading(audio.url)
-            self.image = audio.getCoverImageFromCache()
+            
+            if audio.hasCover == true || audio.hasCover == nil {
+                self.image = audio.getCoverImageFromCache()
+            }
         }
         .onReceive(NotificationCenter.default.publisher(for: Notification.Name.AudiosUpdatedNotification)) { notification in
             let data = notification.userInfo as! [String: [MetaWrapper]]
@@ -74,6 +77,14 @@ struct AlbumView: View {
                 }
             }
         }
+        .onReceive(NotificationCenter.default.publisher(for: Notification.Name.AudioUpdatedNotification)) { notification in
+            let data = notification.userInfo as! [String: Audio]
+            let audio = data["audio"]!
+
+            if audio.url == self.url {
+                    return refresh(audio)
+                }
+        }
     }
 
     func setCachedCover() {
@@ -84,6 +95,16 @@ struct AlbumView: View {
                 self.image = image
             }
         })
+    }
+    
+    func refresh(_ audio: Audio, verbose: Bool = false) {
+        if verbose {
+            os_log("\(self.label)Refresh -> \(audio.title)")
+        }
+
+        if isDownloaded && image == nil {
+            updateCover()
+        }
     }
 
     func refresh(_ item: MetaWrapper? = nil, verbose: Bool = false) {

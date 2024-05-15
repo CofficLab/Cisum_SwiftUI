@@ -131,7 +131,7 @@ extension DiskLocal {
 
 extension DiskLocal {
     /// 监听存储Audio文件的文件夹
-    func watchAudiosFolder(verbose: Bool = true) {
+    func watchAudiosFolder() {
         Task.detached(priority: .background) {
             if self.verbose {
                 os_log("\(Logger.isMain)\(self.label)watchAudiosFolder")
