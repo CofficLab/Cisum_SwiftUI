@@ -3,14 +3,15 @@ import SwiftUI
 
 struct RootView<Content>: View where Content: View {
     private var content: Content
-    private var verbose = false
+    private var verbose = true
+    private var label = "🌳 RootView::"
 
     @State private var isReady: Bool = false
     @State private var errorMessage: String? = nil
     @State private var audioManager: AudioManager? = nil
     @State private var mediaPlayerManger: MediaPlayerManager? = nil
-    @State private var windowManager: WindowManager = WindowManager()
-    @State private var appManager: AppManager = AppManager()
+    @State private var windowManager: WindowManager = .init()
+    @State private var appManager: AppManager = .init()
 
     init(@ViewBuilder content: () -> Content) {
         self.content = content()
@@ -30,21 +31,34 @@ struct RootView<Content>: View where Content: View {
                     .blendMode(.normal)
             } else {
                 LanuchView(errorMessage: errorMessage)
-                    .onAppear {
-                        if verbose {
-                            os_log("\(Logger.isMain)🚩 初始化环境变量")
-                        }
-                        
-                        audioManager = AudioManager()
-                        mediaPlayerManger = MediaPlayerManager(audioManager: audioManager!)
-
-                        #if os(iOS)
-                            UIApplication.shared.beginReceivingRemoteControlEvents()
-                        #endif
-
-                        isReady = true
-                    }
             }
+        }
+        .task(priority: .high) {
+            if verbose {
+                os_log("\(Logger.isMain)\(self.label)初始化")
+            }
+
+            self.audioManager = AudioManager()
+            self.mediaPlayerManger = MediaPlayerManager(audioManager: audioManager!)
+            self.isReady = true
+
+            #if os(iOS)
+                UIApplication.shared.beginReceivingRemoteControlEvents()
+            #endif
+
+            if verbose {
+                os_log("\(Logger.isMain)\(self.label)准备数据库")
+            }
+            
+            Task.detached(priority: .background, operation: {
+                let db = DB(AppConfig.getContainer())
+                await db.prepareJob()
+            })
+            
+            Task.detached(priority: .high, operation: {
+                let db = DB(AppConfig.getContainer())
+                await db.startWatch()
+            })
         }
     }
 }

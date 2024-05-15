@@ -20,17 +20,13 @@ actor DB: ModelActor {
     var queue = DispatchQueue(label: "DB")
     var context: ModelContext
     var disk: DiskContact = DiskiCloud()
-    var sync: Bool = false
     var onUpdated: () -> Void = { os_log("🍋 DB::updated") }
     var label: String { "\(Logger.isMain)\(DB.label)" }
     var verbose: Bool { DB.verbose }
 
-    init(_ container: ModelContainer, sync: Bool = false) {
+    init(_ container: ModelContainer) {
         if DB.verbose {
-            var message = "\(Logger.isMain)🚩 初始化 DB"
-            if sync {
-                message += " 并监听文件夹"
-            }
+            var message = "\(Logger.isMain)\(Self.label)初始化 "
             
             os_log("\(message)")
         }
@@ -41,18 +37,6 @@ actor DB: ModelActor {
         modelExecutor = DefaultSerialModelExecutor(
             modelContext: context
         )
-
-        if sync {
-            Task(priority: .high) {
-                await self.disk.onUpdated = { items in
-                    Task {
-                        await self.sync(items)
-                    }
-                }
-
-                await self.disk.watchAudiosFolder(verbose: true)
-            }
-        }
     }
 
     func setOnUpdated(_ callback: @escaping () -> Void) {

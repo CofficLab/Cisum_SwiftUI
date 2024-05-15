@@ -9,6 +9,14 @@ extension DB {
         EventManager()
     }
     
+    func startWatch() async {
+        self.disk.onUpdated = { items in
+            self.sync(items)
+        }
+
+        await self.disk.watchAudiosFolder(verbose: true)
+    }
+    
     func sync(_ items: [MetaWrapper]) {
         Task.detached(priority: .background, operation: {
             var message = "\(Logger.isMain)\(DB.label)sync with count=\(items.count) 🪣🪣🪣"

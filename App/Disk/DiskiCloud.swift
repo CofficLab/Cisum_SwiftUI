@@ -178,24 +178,21 @@ extension DiskiCloud {
 
 extension DiskiCloud {
     /// 监听存储Audio文件的文件夹
-    func watchAudiosFolder(verbose: Bool = true) {
-        Task.detached(priority: .userInitiated) {
-            if verbose {
-                os_log("\(Logger.isMain)\(self.label)watchAudiosFolder")
-                print(Task.currentPriority)
-            }
+    func watchAudiosFolder(verbose: Bool = true) async {
+        if verbose {
+            os_log("\(Logger.isMain)\(self.label)WatchAudiosFolder")
+        }
 
-            let queue = OperationQueue()
-            queue.maxConcurrentOperationCount = 1
-            let query = ItemQuery(queue: queue, url: self.audiosDir)
-            let result = query.searchMetadataItems()
-            for try await items in result {
-                if self.verbose {
-                    //os_log("\(Logger.isMain)\(self.label)watchAudiosFolder -> count=\(items.count)")
-                }
-                
-                self.onUpdated(items)
+        let queue = OperationQueue()
+        queue.maxConcurrentOperationCount = 1
+        let query = ItemQuery(queue: queue, url: self.audiosDir)
+        let result = query.searchMetadataItems()
+        for try await items in result {
+            if verbose {
+                os_log("\(Logger.isMain)\(self.label)WatchAudiosFolder -> count=\(items.count)")
             }
+                
+            self.onUpdated(items)
         }
     }
 }

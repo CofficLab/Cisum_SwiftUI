@@ -19,31 +19,31 @@ class AppDelegate: NSObject, ApplicationDelegate {
 
     func applicationWillHide(_ notification: Notification) {
         queue.async {
-            os_log("\(self.label)WillHide")
+            //os_log("\(self.label)WillHide")
         }
     }
 
     func applicationDidHide(_ notification: Notification) {
         queue.async {
-            os_log("\(self.label)Did Hide 🐱🐱🐱")
+            //os_log("\(self.label)Did Hide 🐱🐱🐱")
         }
     }
 
     func applicationWillBecomeActive(_ notification: Notification) {
         queue.async {
-            os_log("\(self.label)WillBecomeActive")
+            //os_log("\(self.label)WillBecomeActive")
         }
     }
 
     func applicationDidFinishLaunching(_ notification: AppOrNotification) {
         queue.async {
-            os_log("\(self.label)applicationDidFinishLaunching")
+            //os_log("\(self.label)applicationDidFinishLaunching")
         }
     }
 
     func applicationWillTerminate(_ notification: AppOrNotification) {
         queue.async {
-            os_log("\(self.label)Will Terminate")
+            //os_log("\(self.label)Will Terminate")
         }
     }
 
@@ -53,19 +53,19 @@ class AppDelegate: NSObject, ApplicationDelegate {
 
     func applicationDidBecomeActive(_ notification: AppOrNotification) {
         queue.async {
-            os_log("\(self.label)Did Become Active")
+            //os_log("\(self.label)Did Become Active")
         }
     }
 
     func applicationWillResignActive(_ application: AppOrNotification) {
         queue.async {
-            os_log("\(self.label)WillResignActive")
+            //os_log("\(self.label)WillResignActive")
         }
     }
 
     func applicationDidResignActive(_ notification: Notification) {
         queue.async {
-            os_log("\(self.label)DidResignActive")
+            //os_log("\(self.label)DidResignActive")
         }
     }
 }
@@ -77,13 +77,13 @@ class AppDelegate: NSObject, ApplicationDelegate {
 extension AppDelegate: NSWindowDelegate {
     func windowDidMove(_ notification: Notification) {
         queue.async {
-            os_log("移动窗口")
+            //os_log("移动窗口")
         }
     }
 
     func windowDidResize(_ notification: Notification) {
         queue.async {
-            os_log("调整窗口")
+            //os_log("调整窗口")
         }
     }
 }
