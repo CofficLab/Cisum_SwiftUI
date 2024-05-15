@@ -50,7 +50,7 @@ actor DB: ModelActor {
                     }
                 }
 
-                await self.disk.watchAudiosFolder()
+                await self.disk.watchAudiosFolder(verbose: true)
             }
         }
     }

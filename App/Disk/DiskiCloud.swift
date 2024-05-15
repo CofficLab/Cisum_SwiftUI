@@ -4,6 +4,7 @@ import OSLog
 class DiskiCloud: ObservableObject {
     static var label = "☁️ DiskiCloud::"
     
+    var queue = DispatchQueue(label: "DiskiCloud", qos: .background)
     var fileManager = FileManager.default
     var cloudHandler = CloudHandler()
     var audiosDir: URL = AppConfig.audiosDir
@@ -177,10 +178,11 @@ extension DiskiCloud {
 
 extension DiskiCloud {
     /// 监听存储Audio文件的文件夹
-    func watchAudiosFolder() {
-        Task.detached(priority: .background) {
-            if self.verbose {
+    func watchAudiosFolder(verbose: Bool = true) {
+        Task.detached(priority: .userInitiated) {
+            if verbose {
                 os_log("\(Logger.isMain)\(self.label)watchAudiosFolder")
+                print(Task.currentPriority)
             }
 
             let queue = OperationQueue()

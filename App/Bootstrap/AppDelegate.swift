@@ -76,11 +76,15 @@ class AppDelegate: NSObject, ApplicationDelegate {
 
 extension AppDelegate: NSWindowDelegate {
     func windowDidMove(_ notification: Notification) {
-        os_log("移动窗口")
+        queue.async {
+            os_log("移动窗口")
+        }
     }
 
     func windowDidResize(_ notification: Notification) {
-        os_log("调整窗口")
+        queue.async {
+            os_log("调整窗口")
+        }
     }
 }
 
