@@ -145,7 +145,10 @@ extension DB {
     // MARK: 清空数据库
 
     func destroy() {
-        try? context.delete(model: Audio.self)
-        try? context.save()
+        do {
+            try self.destroy(for: Audio.self)
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
     }
 }

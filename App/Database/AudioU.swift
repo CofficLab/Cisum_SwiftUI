@@ -2,13 +2,38 @@ import Foundation
 import OSLog
 import SwiftData
 
-// MARK: 修改与下载
+// MARK: Update
 
 extension DB {
-    func evict(_ audio: Audio) {
-        disk.evict(audio.url)
-    }
+    func update(_ audio: Audio) {
+        if verbose {
+            os_log("\(self.label)update \(audio.title)")
+        }
 
+        if var current = findAudio(audio.id) {
+            if audio.isDeleted {
+                context.delete(current)
+            } else {
+                current = audio
+            }
+        } else {
+            if verbose {
+                os_log("\(self.label)🍋 DB::update not found ⚠️")
+            }
+        }
+
+        if context.hasChanges {
+            try? context.save()
+            onUpdated()
+        } else {
+            os_log("\(self.label)🍋 DB::update nothing changed 👌")
+        }
+    }
+}
+
+// MARK: 播放次数
+
+extension DB {
     func increasePlayCount(_ audio: Audio) {
         if let a = findAudio(audio.id) {
             a.playCount += 1
@@ -20,6 +45,10 @@ extension DB {
 // MARK: Download
 
 extension DB {
+    func evict(_ audio: Audio) {
+        disk.evict(audio.url)
+    }
+    
     nonisolated func download(_ audio: Audio, reason: String) {
         Task {
             //os_log("\(Logger.isMain)\(Self.label)Download ⏬⏬⏬ \(audio.title) reason -> \(reason)")
@@ -48,6 +77,8 @@ extension DB {
     }
 }
 
+// MARK: LIKE
+
 extension DB {
     func toggleLike(_ audio: Audio) {
         if let dbAudio = findAudio(audio.id) {
@@ -73,31 +104,6 @@ extension DB {
             save()
 
             EventManager().emitAudioUpdate(dbAudio)
-        }
-    }
-
-    func update(_ audio: Audio) {
-        if verbose {
-            os_log("\(self.label)update \(audio.title)")
-        }
-
-        if var current = findAudio(audio.id) {
-            if audio.isDeleted {
-                context.delete(current)
-            } else {
-                current = audio
-            }
-        } else {
-            if verbose {
-                os_log("\(self.label)🍋 DB::update not found ⚠️")
-            }
-        }
-
-        if context.hasChanges {
-            try? context.save()
-            onUpdated()
-        } else {
-            os_log("\(self.label)🍋 DB::update nothing changed 👌")
         }
     }
 }
@@ -167,5 +173,35 @@ extension DB {
             os_log(.error, "保存Cover出错")
             os_log(.error, "\(e)")
         }
+    }
+}
+
+// MARK: Group
+
+extension DB {
+    nonisolated func updateGroup(_ audio: Audio) {
+        let fileHash = audio.getHash()
+        if fileHash.isEmpty {
+            return
+        }
+        
+        let context = ModelContext(self.modelContainer)
+        guard let dbAudio = context.model(for: audio.id) as? Audio else {
+            return
+        }
+        
+        dbAudio.group = AudioGroup(title: audio.title, hash: fileHash)
+        
+        do {
+            try context.save()
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
+    }
+    
+    nonisolated func updateGroup(_ audios: [Audio]) {
+        audios.forEach({
+            updateGroup($0)
+        })
     }
 }

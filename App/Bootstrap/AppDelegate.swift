@@ -5,59 +5,67 @@ import OSLog
 import SwiftUI
 
 #if os(macOS)
-    typealias ApplicationDelegate = NSApplicationDelegate
-    typealias AppOrNotification = Notification
+typealias ApplicationDelegate = NSApplicationDelegate
+typealias AppOrNotification = Notification
 #else
-    typealias ApplicationDelegate = UIApplicationDelegate
-    typealias AppOrNotification = UIApplication
+typealias ApplicationDelegate = UIApplicationDelegate
+typealias AppOrNotification = UIApplication
 #endif
 
 class AppDelegate: NSObject, ApplicationDelegate {
     var verbose = false
     var label: String { "\(Logger.isMain)🍎 AppDelegate::" }
-    var db = DB(AppConfig.getContainer())
+    var queue = DispatchQueue(label: "AppDelegate", qos: .background)
 
     func applicationWillHide(_ notification: Notification) {
-        os_log("\(self.label)WillHide")
+        queue.async {
+            os_log("\(self.label)WillHide")
+        }
     }
 
     func applicationDidHide(_ notification: Notification) {
-        os_log("\(self.label)Did Hide 🐱🐱🐱")
+        queue.async {
+            os_log("\(self.label)Did Hide 🐱🐱🐱")
+        }
     }
-    
+
     func applicationWillBecomeActive(_ notification: Notification) {
-        os_log("\(self.label)WillBecomeActive")
-        
-        DB.stopAllJobs()
+        queue.async {
+            os_log("\(self.label)WillBecomeActive")
+        }
     }
-    
+
     func applicationDidFinishLaunching(_ notification: AppOrNotification) {
-        os_log("\(self.label)applicationDidFinishLaunching")
+        queue.async {
+            os_log("\(self.label)applicationDidFinishLaunching")
+        }
     }
 
     func applicationWillTerminate(_ notification: AppOrNotification) {
-        os_log("\(self.label)Will Terminate")
+        queue.async {
+            os_log("\(self.label)Will Terminate")
+        }
     }
-    
+
     func applicationWillUpdate(_ notification: Notification) {
-        //os_log("\(self.label)Will Update")
+        // os_log("\(self.label)Will Update")
     }
-    
+
     func applicationDidBecomeActive(_ notification: AppOrNotification) {
-        os_log("\(self.label)Did Become Active")
+        queue.async {
+            os_log("\(self.label)Did Become Active")
+        }
     }
-    
+
     func applicationWillResignActive(_ application: AppOrNotification) {
-        // the app is about to become inactive and will lose focus.
-        os_log("\(self.label)WillResignActive")
+        queue.async {
+            os_log("\(self.label)WillResignActive")
+        }
     }
-    
+
     func applicationDidResignActive(_ notification: Notification) {
-        os_log("\(self.label)DidResignActive")
-        
-        Task {
-            DB.canRunJobs()
-            await db.runBackgroundJob()
+        queue.async {
+            os_log("\(self.label)DidResignActive")
         }
     }
 }

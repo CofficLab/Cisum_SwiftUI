@@ -6,11 +6,7 @@ import SwiftData
 
 extension DB {
     func refresh(_ audio: Audio) -> Audio {
-        if let a = findAudio(audio.id) {
-            return a
-        } else {
-            return audio
-        }
+        findAudio(audio.id) ?? audio
     }
 
     func countOfURL(_ url: URL) -> Int {

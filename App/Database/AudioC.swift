@@ -11,7 +11,7 @@ extension DB {
         
         do {
             try context.save()
-//            updateDuplicatedOf(audio)
+            updateGroup(audio)
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
         }
@@ -55,10 +55,7 @@ extension DB {
         
         do {
             try context.save()
-            Task {
-                // 处理Duplicate逻辑
-                //await self.findDuplicatesJob()
-            }
+            updateGroup(audios)
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
         }
@@ -112,10 +109,7 @@ extension DB {
                 os_log("\(Logger.isMain)\(DB.label)InsertAudios with count=\(total) 🎉🎉🎉 cost \(timeInterval) 秒")
             }
             
-            Task {
-                // 处理Duplicate逻辑
-                //await self.findDuplicatesJob()
-            }
+            self.updateGroup(audios)
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
         }
@@ -165,11 +159,6 @@ extension DB {
             
             if DB.verbose {
                 os_log("\(Logger.isMain)\(DB.label)InsertAudios with count=\(urls.count) 🎉🎉🎉 cost \(timeInterval) 秒")
-            }
-            
-            Task {
-                // 处理Duplicate逻辑
-                //await self.findDuplicatesJob()
             }
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")

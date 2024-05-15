@@ -11,6 +11,7 @@ class SmartPlayer: NSObject {
     var player = AVAudioPlayer()
     var audio: Audio?
     var verbose = false
+    var queue = DispatchQueue(label: "SmartPlayer", qos: .userInteractive)
 
     // MARK: 状态改变时
 
@@ -238,14 +239,16 @@ extension SmartPlayer {
 
 extension SmartPlayer: AVAudioPlayerDelegate {
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        // 没有播放完，被打断了
-        if !flag {
-            os_log("\(Logger.isMain)\(self.label)播放被打断，更新为暂停状态")
-            return pause()
-        }
+        queue.sync {
+            // 没有播放完，被打断了
+            if !flag {
+                os_log("\(Logger.isMain)\(self.label)播放被打断，更新为暂停状态")
+                return pause()
+            }
 
-        os_log("\(Logger.isMain)\(self.label)播放完成")
-        state = .Finished
+            os_log("\(Logger.isMain)\(self.label)播放完成")
+            state = .Finished
+        }
     }
 
     func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {
