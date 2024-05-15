@@ -26,7 +26,7 @@ actor DB: ModelActor {
 
     init(_ container: ModelContainer) {
         if DB.verbose {
-            var message = "\(Logger.isMain)\(Self.label)初始化 "
+            let message = "\(Logger.isMain)\(Self.label)初始化 "
             
             os_log("\(message)")
         }

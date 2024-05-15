@@ -18,58 +18,43 @@ extension DB {
     }
     
     func sync(_ items: [MetaWrapper]) {
-        Task.detached(priority: .background, operation: {
-            var message = "\(Logger.isMain)\(DB.label)sync with count=\(items.count) 🪣🪣🪣"
+        var message = "\(Logger.isMain)\(DB.label)sync with count=\(items.count) 🪣🪣🪣"
+        
+        if let first = items.first, first.isDownloading == true {
+            message += " -> \(first.fileName ?? "-") -> \(String(format: "%.0f", first.downloadProgress))% ⏬⏬⏬"
+        }
+        
+        os_log("\(message)")
             
-            if let first = items.first, first.isDownloading == true {
-                message += " -> \(first.fileName ?? "-") -> \(String(format: "%.0f", first.downloadProgress))% ⏬⏬⏬"
-            }
+        let itemsForSync = items.filter { $0.isUpdated == false }
+        let itemsForUpdate = items.filter { $0.isUpdated && $0.isDeleted == false }
+        let itemsForDelete = items.filter { $0.isDeleted }
+        
+        // 磁盘目录是空的，需要将数据库清空
+        if items.isEmpty {
+            return self.syncWithEmpty()
+        }
+        
+        // 第一次查到的item，同步到数据库
+        if itemsForSync.count > 0 {
+            self.syncWithMetas(items)
+        }
+        
+        // 删除需要删除的
+        if itemsForDelete.count > 0 {
+            self.syncWithDeletedItems(itemsForDelete)
+        }
             
-            //os_log("\(message)")
-                
-            let itemsForSync = items.filter { $0.isUpdated == false }
-            let itemsForUpdate = items.filter { $0.isUpdated && $0.isDeleted == false }
-            let itemsForDelete = items.filter { $0.isDeleted }
-            
-            // 磁盘目录是空的，需要将数据库清空
-            if items.isEmpty {
-                return await self.syncWithEmpty()
-            }
-            
-            // 第一次查到的item，同步到数据库
-            if itemsForSync.count > 0 {
-                self.syncWithMetas(items)
-            }
-            
-            // 删除需要删除的
-            if itemsForDelete.count > 0 {
-                let duration: Double = 3
-                let distance = Self.lastSyncedTime.distance(to: .now)
-                let delay = duration - distance
-                
-                if distance > duration {
-                    self.syncWithDeletedItems(itemsForDelete)
-                    Self.lastSyncedTime = .now
-                } else {
-                    os_log("\(Logger.isMain)\(DB.label)syncWithDeletedItems after \(delay) ⏰⏰⏰")
-                    DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + delay, execute: {
-                        self.syncWithDeletedItems(itemsForDelete)
-                        Self.lastSyncedTime = .now
-                    })
-                }
-            }
-                
-            // 将更新的同步到数据库
-            if itemsForUpdate.count > 0 {
-                self.syncWithUpdatedItems(itemsForUpdate)
-            }
-        })
+        // 将更新的同步到数据库
+        if itemsForUpdate.count > 0 {
+            self.syncWithUpdatedItems(itemsForUpdate)
+        }
     }
     
     // MARK: SyncWithMetas
     
     /// 将数据库和metas同步
-    nonisolated func syncWithMetas(_ metas: [MetaWrapper]) {
+    func syncWithMetas(_ metas: [MetaWrapper]) {
         self.printRunTime("syncWithMetas, count=\(metas.count)") {
             let context = ModelContext(modelContainer)
             context.autosaveEnabled = false
@@ -116,7 +101,7 @@ extension DB {
     
     // MARK: SyncWithDeletedItems
     
-    nonisolated func syncWithDeletedItems(_ metas: [MetaWrapper]) {
+    func syncWithDeletedItems(_ metas: [MetaWrapper]) {
         self.printRunTime("SyncWithDeletedItems, count=\(metas.count) 🗑️🗑️🗑️") {
             let context = ModelContext(modelContainer)
             context.autosaveEnabled = false
@@ -136,10 +121,10 @@ extension DB {
     
     // MARK: SyncWithUpdatedItems
     
-    nonisolated func syncWithUpdatedItems(_ metas: [MetaWrapper]) {
+    func syncWithUpdatedItems(_ metas: [MetaWrapper]) {
         // 发出更新事件让UI更新，比如下载进度
         Task {
-            await self.eventManager.emitUpdate(metas)
+            self.eventManager.emitUpdate(metas)
         }
         
         self.printRunTime("SyncWithUpdatedItems with count=\(metas.count)") {
