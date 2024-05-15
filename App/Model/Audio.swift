@@ -28,6 +28,8 @@ class Audio {
     // nil表示未计算过，true表示有，false表示没有
     var hasCover: Bool? = nil
     
+    // MARK: Relationship
+    
     @Relationship(deleteRule: .nullify, inverse: \AudioGroup.audios)
     var group: AudioGroup? = nil
 

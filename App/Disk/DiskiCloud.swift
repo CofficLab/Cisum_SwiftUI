@@ -148,7 +148,8 @@ extension DiskiCloud {
             return
         }
         
-        os_log("\(self.label)Download \(audio.title)")
+        //os_log("\(self.label)Download \(audio.title)")
+        
         do {
             try await cloudHandler.download(url: audio.url)
         } catch let e {

@@ -6,10 +6,16 @@ import SwiftData
 extension DB {
     // MARK: 运行任务
 
-    func runJob(_ id: String, verbose: Bool = true, predicate: Predicate<Audio>? = nil, code: @escaping (_ audio: Audio) -> Void) {
+    func runJob(
+        _ id: String,
+        verbose: Bool = true,
+        predicate: Predicate<Audio>? = nil,
+        qos: DispatchQoS = .background,
+        code: @escaping (_ audio: Audio) -> Void)
+    {
         let startTime = DispatchTime.now()
         let title = "🐎🐎🐎\(id)"
-        let jobQueue = DispatchQueue(label: "DBJob", qos: .background)
+        let jobQueue = DispatchQueue(label: "DBJob", qos: qos)
         let notifyQueue = DispatchQueue(label: "DBJobNotify", qos: .background)
         let group = DispatchGroup()
 

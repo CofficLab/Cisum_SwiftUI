@@ -13,6 +13,7 @@
 		0B11365B2BEFABC700A71FE1 /* JobGetCover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B11365A2BEFABC700A71FE1 /* JobGetCover.swift */; };
 		0B11365D2BF106F300A71FE1 /* AudioGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B11365C2BF106F300A71FE1 /* AudioGroup.swift */; };
 		0B11365F2BF10A0100A71FE1 /* JobGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B11365E2BF10A0100A71FE1 /* JobGroup.swift */; };
+		0B1136612BF4CF3000A71FE1 /* Cover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1136602BF4CF3000A71FE1 /* Cover.swift */; };
 		0B1165E92ABBC6C0005C5CBB /* LaunchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1165E82ABBC6C0005C5CBB /* LaunchView.swift */; };
 		0B1165F02ABBCCB0005C5CBB /* AppManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1165EF2ABBCCB0005C5CBB /* AppManager.swift */; };
 		0B1498742BC4C5CB0075DA61 /* PlayMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1498732BC4C5CB0075DA61 /* PlayMode.swift */; };
@@ -124,6 +125,7 @@
 		0B11365A2BEFABC700A71FE1 /* JobGetCover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobGetCover.swift; sourceTree = "<group>"; };
 		0B11365C2BF106F300A71FE1 /* AudioGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioGroup.swift; sourceTree = "<group>"; };
 		0B11365E2BF10A0100A71FE1 /* JobGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobGroup.swift; sourceTree = "<group>"; };
+		0B1136602BF4CF3000A71FE1 /* Cover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cover.swift; sourceTree = "<group>"; };
 		0B1165E82ABBC6C0005C5CBB /* LaunchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchView.swift; sourceTree = "<group>"; };
 		0B1165EF2ABBCCB0005C5CBB /* AppManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppManager.swift; sourceTree = "<group>"; };
 		0B1498732BC4C5CB0075DA61 /* PlayMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayMode.swift; sourceTree = "<group>"; };
@@ -263,6 +265,7 @@
 				0BD056922BC636D600EBC7C4 /* AudioCoverExt.swift */,
 				0B11365C2BF106F300A71FE1 /* AudioGroup.swift */,
 				0BAABEB02BC79C4E00DF4A31 /* CopyTask.swift */,
+				0B1136602BF4CF3000A71FE1 /* Cover.swift */,
 				0B1498732BC4C5CB0075DA61 /* PlayMode.swift */,
 				0B9FA29C2BC823A1007B235A /* SmartPlayer.swift */,
 			);
@@ -622,6 +625,7 @@
 				0BB587172AD815770071AEBD /* TimeHelper.swift in Sources */,
 				0B9FA2972BC80E51007B235A /* EventManager.swift in Sources */,
 				0BAABEAF2BC787A200DF4A31 /* JobCopy.swift in Sources */,
+				0B1136612BF4CF3000A71FE1 /* Cover.swift in Sources */,
 				0BFDCE582BB01884009198DD /* BtnDestroy.swift in Sources */,
 				0B8C36A52BEA15A800C47567 /* AudioU.swift in Sources */,
 				0BFB38F72BD0BCC20055E38B /* RowTask.swift in Sources */,

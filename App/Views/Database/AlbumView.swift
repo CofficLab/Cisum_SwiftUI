@@ -59,10 +59,7 @@ struct AlbumView: View {
         .onAppear {
             self.isDownloaded = audio.isDownloaded
             self.isDownloading = iCloudHelper.isDownloading(audio.url)
-            
-            if audio.hasCover == true || audio.hasCover == nil {
-                self.image = audio.getCoverImageFromCache()
-            }
+            self.image = audio.getCoverImageFromCache()
         }
         .onReceive(NotificationCenter.default.publisher(for: Notification.Name.AudiosUpdatedNotification)) { notification in
             let data = notification.userInfo as! [String: [MetaWrapper]]
@@ -126,7 +123,7 @@ struct AlbumView: View {
         }
     }
 
-    func updateCover(verbose: Bool = true) {
+    func updateCover(verbose: Bool = false) {
         Task.detached(priority: .background) {
             if verbose {
                 let label = await AlbumView.label
