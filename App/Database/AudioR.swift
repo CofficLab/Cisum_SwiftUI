@@ -26,7 +26,7 @@ extension DB {
         self.disk.audiosDir
     }
 
-    nonisolated func getAllURLs() -> [URL] {
+    func getAllURLs() -> [URL] {
         let context = ModelContext(self.modelContainer)
         
         let predicate = #Predicate<Audio> {
@@ -238,7 +238,7 @@ extension DB {
     }
 
     /// 查询数据库中的按照order排序的第x个
-    nonisolated func get(_ i: Int) -> Audio? {
+    func get(_ i: Int) -> Audio? {
         Self.get(context: ModelContext(self.modelContainer), i)
     }
 }

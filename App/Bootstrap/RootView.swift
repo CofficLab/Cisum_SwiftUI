@@ -50,15 +50,30 @@ struct RootView<Content>: View where Content: View {
                 os_log("\(Logger.isMain)\(self.label)准备数据库")
             }
             
+            Task.detached(priority: .high, operation: {
+                let db = DB(AppConfig.getContainer())
+                await db.startWatch()
+            })
+            
             Task.detached(priority: .background, operation: {
                 let db = DB(AppConfig.getContainer())
                 await db.prepareJob()
             })
             
-            Task.detached(priority: .high, operation: {
+            Task.detached(priority: .background, operation: {
                 let db = DB(AppConfig.getContainer())
-                await db.startWatch()
+                await db.runDeleteInvalidJob()
             })
+            
+            Task.detached(priority: .background, operation: {
+                let db = DB(AppConfig.getContainer())
+                await db.runGetCoversJob()
+            })
+            
+//            Task.detached(priority: .background, operation: {
+//                let db = DB(AppConfig.getContainer())
+//                await db.runFindAudioGroupJob()
+//            })
         }
     }
 }

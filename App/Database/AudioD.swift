@@ -99,11 +99,8 @@ extension DB {
 
     // MARK: 删除一个
 
-    nonisolated func deleteAudio(_ audio: Audio) {
-        Task {
-            let disk = await self.getDisk()
-            _ = Self.deleteAudio(context: ModelContext(self.modelContainer), disk: disk, id: audio.id)
-        }
+    func deleteAudio(_ audio: Audio) {
+        _ = Self.deleteAudio(context: context, disk: disk, id: audio.id)
     }
 
     func delete(_ id: Audio.ID) -> Audio? {

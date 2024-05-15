@@ -17,14 +17,16 @@ extension DB {
         await self.disk.watchAudiosFolder(verbose: true)
     }
     
-    func sync(_ items: [MetaWrapper]) {
+    func sync(_ items: [MetaWrapper], verbose: Bool = false) {
         var message = "\(Logger.isMain)\(DB.label)sync with count=\(items.count) 🪣🪣🪣"
         
         if let first = items.first, first.isDownloading == true {
             message += " -> \(first.fileName ?? "-") -> \(String(format: "%.0f", first.downloadProgress))% ⏬⏬⏬"
         }
         
-        os_log("\(message)")
+        if verbose {
+            os_log("\(message)")
+        }
             
         let itemsForSync = items.filter { $0.isUpdated == false }
         let itemsForUpdate = items.filter { $0.isUpdated && $0.isDeleted == false }

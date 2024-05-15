@@ -46,7 +46,7 @@ struct AlbumView: View {
             } else if isNotDownloaded {
                 NotDownloadedAlbum(forPlaying: forPlaying).onTapGesture {
                     Task {
-                        audioManager.db.download(self.audio, reason: "点击了Album")
+                        await audioManager.db.download(self.audio, reason: "点击了Album")
                     }
                 }
             } else if let image = image {

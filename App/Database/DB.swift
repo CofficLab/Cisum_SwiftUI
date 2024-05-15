@@ -24,9 +24,9 @@ actor DB: ModelActor {
     var label: String { "\(Logger.isMain)\(DB.label)" }
     var verbose: Bool { DB.verbose }
 
-    init(_ container: ModelContainer) {
-        if DB.verbose {
-            let message = "\(Logger.isMain)\(Self.label)初始化 "
+    init(_ container: ModelContainer, verbose: Bool = true) {
+        if verbose {
+            let message = "\(Logger.isMain)\(Self.label)初始化"
             
             os_log("\(message)")
         }
@@ -45,14 +45,6 @@ actor DB: ModelActor {
 
     func hasChanges() -> Bool {
         context.hasChanges
-    }
-
-    func getLabel() -> String {
-        label
-    }
-
-    func getDisk() -> DiskContact {
-        disk
     }
 }
 
@@ -131,7 +123,7 @@ extension DB {
 
 extension DB {
     /// 执行并输出耗时
-    nonisolated func printRunTime(_ title: String, tolerance: Double = 1, verbose: Bool = false, _ code: () -> Void) {
+    func printRunTime(_ title: String, tolerance: Double = 1, verbose: Bool = false, _ code: () -> Void) {
         if verbose {
             os_log("\(Logger.isMain)\(DB.label)\(title)")
         }

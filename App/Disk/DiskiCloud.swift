@@ -178,7 +178,7 @@ extension DiskiCloud {
 
 extension DiskiCloud {
     /// 监听存储Audio文件的文件夹
-    func watchAudiosFolder(verbose: Bool = true) async {
+    func watchAudiosFolder(verbose: Bool = false) async {
         if verbose {
             os_log("\(Logger.isMain)\(self.label)WatchAudiosFolder")
         }
