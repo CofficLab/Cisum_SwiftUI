@@ -51,7 +51,7 @@ extension DB {
     
     func download(_ audio: Audio, reason: String) {
         Task.detached(priority: .background) {
-            os_log("\(Logger.isMain)\(Self.label)Download ⏬⏬⏬ \(audio.title) reason -> \(reason)")
+            //os_log("\(Logger.isMain)\(Self.label)Download ⏬⏬⏬ \(audio.title) reason -> \(reason)")
             await self.disk.download(audio)
         }
     }

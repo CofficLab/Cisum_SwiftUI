@@ -29,33 +29,6 @@ struct RootView<Content>: View where Content: View {
                     .environmentObject(appManager)
                     .frame(minWidth: AppConfig.minWidth, minHeight: AppConfig.minHeight)
                     .blendMode(.normal)
-                    .task(priority: .high) {
-                        if verbose {
-                            os_log("\(Logger.isMain)\(self.label)准备数据库")
-                        }
-                        
-                        Task.detached(priority: .high, operation: {
-                            let db = DB(AppConfig.getContainer())
-                            await db.startWatch()
-                        })
-                    }
-                    .task(priority: .background) {
-                        Task.detached(priority: .background, operation: {
-                            let db = DB(AppConfig.getContainer())
-                            
-//                            Task.detached(priority: .background) {
-//                                await db.runDeleteInvalidJob()
-//                            }
-//                            
-//                            Task.detached(priority: .background) {
-//                                await db.runGetCoversJob()
-//                            }
-                            
-                            Task.detached(priority: .background) {
-                                await db.runFindAudioGroupJob()
-                            }
-                        })
-                    }
             } else {
                 LanuchView(errorMessage: errorMessage)
             }
@@ -72,6 +45,30 @@ struct RootView<Content>: View where Content: View {
             #if os(iOS)
                 UIApplication.shared.beginReceivingRemoteControlEvents()
             #endif
+        }
+        .task(priority: .high) {
+            if verbose {
+                os_log("\(Logger.isMain)\(self.label)准备数据库")
+            }
+            
+            let db = DB(AppConfig.getContainer())
+            await db.startWatch()
+        }
+        .task {
+            Task.detached(priority: .background, operation: {
+                let db = DB(AppConfig.getContainer())
+                await db.runDeleteInvalidJob()
+            })
+            
+            Task.detached(priority: .background, operation: {
+                let db = DB(AppConfig.getContainer())
+                await db.runGetCoversJob()
+            })
+            
+            Task.detached(priority: .background, operation: {
+                let db = DB(AppConfig.getContainer())
+                await db.runFindAudioGroupJob()
+            })
         }
     }
 }

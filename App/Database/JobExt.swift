@@ -13,7 +13,7 @@ extension DB {
         qos: DispatchQoS = .background,
         code: @escaping (_ audio: Audio, _ onEnd:@escaping () -> Void) -> Void,
         complete: (@escaping (_ context: ModelContext) -> Void) = { _ in
-            os_log("Job Done")
+            
         }
     ) {
         let startTime = DispatchTime.now()
