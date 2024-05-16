@@ -50,7 +50,7 @@ class AudioManager: NSObject, ObservableObject {
     
     func onStateChanged(_ state: SmartPlayer.State) {
         if verbose {
-            os_log("\(Logger.isMain)\(AudioManager.label)播放状态变了 \(state.des)")
+            os_log("\(Logger.isMain)\(AudioManager.label)播放状态变了 -> \(state.des)")
         }
         
         self.main.async {

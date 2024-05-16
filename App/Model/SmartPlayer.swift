@@ -18,7 +18,7 @@ class SmartPlayer: NSObject {
     var state: State = .Stopped {
         didSet {
             if verbose {
-                os_log("\(Logger.isMain)\(self.label)State changed \(oldValue.des) -> \(self.state.des)")
+                os_log("\(Logger.isMain)\(self.label)State changed 「\(oldValue.des)」 -> 「\(self.state.des)」")
             }
             
             onStateChange(state)
@@ -38,7 +38,7 @@ class SmartPlayer: NSObject {
                     return setError(SmartError.NoAudioInList)
                 }
             case .Playing(let audio):
-                if oldValue.isPaused() {
+                if let oldAudio = oldValue.getPausedAudio(), oldAudio.url == audio.url {
                     self.player.play()
                     return
                 }
@@ -119,7 +119,7 @@ extension SmartPlayer {
 
     func pause() {
         os_log("\(Logger.isMain)\(self.label)Pause")
-        state = .Paused
+        state = .Paused(self.audio)
     }
 
     func stop() {
@@ -188,7 +188,7 @@ extension SmartPlayer {
     enum State {
         case Ready(Audio?)
         case Playing(Audio)
-        case Paused
+        case Paused(Audio?)
         case Stopped
         case Finished
         case Error(Error)
@@ -196,22 +196,24 @@ extension SmartPlayer {
         var des: String {
             switch self {
             case .Ready(let audio):
-                "准备播放 \(audio?.title ?? "nil") 🚀🚀🚀"
+                "准备 \(audio?.title ?? "nil") 🚀🚀🚀"
             case .Error(let error):
                 "错误：\(error.localizedDescription) ⚠️⚠️⚠️"
             case .Playing(let audio):
-                "在播放 \(audio.title) 🔊🔊🔊"
+                "播放 \(audio.title) 🔊🔊🔊"
+            case .Paused(let audio):
+                "暂停 \(audio?.title ?? "-") ⏸️⏸️⏸️"
             default:
                 String(describing: self)
             }
         }
         
-        func isPaused() -> Bool {
+        func getPausedAudio() -> Audio? {
             switch self {
-            case .Paused:
-                true
+            case .Paused(let audio):
+                return audio
             default:
-                false
+                return nil
             }
         }
     }
