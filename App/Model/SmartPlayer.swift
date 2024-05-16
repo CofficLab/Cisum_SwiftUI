@@ -155,7 +155,7 @@ extension SmartPlayer {
 
         // 未下载的情况
         guard audio.isDownloaded else {
-            os_log("\(self.label)未下载 \(audio.title)")
+            os_log("\(self.label)未下载 \(audio.title) ⚠️⚠️⚠️")
             throw SmartError.NotDownloaded
         }
 

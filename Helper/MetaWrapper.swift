@@ -20,6 +20,10 @@ struct MetaWrapper: Sendable {
     let downloadProgress: Double
     let uploaded: Bool
     let identifierKey: String? = nil
+    
+    var isDownloaded: Bool {
+        downloadProgress == 100
+    }
 
     init(metadataItem: NSMetadataItem, isDeleted: Bool = false, isUpdated: Bool = false, verbose: Bool = true) {
         self.isDeleted = isDeleted

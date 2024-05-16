@@ -48,16 +48,6 @@ struct StateView: View {
             if audios.count == 0 {
                 appManager.showDBView()
             }
-            
-//            e.onUpdated { items in
-//                for item in items {
-//                    if item.url == audioManager.audio?.url {
-//                        if item.downloadProgress == 100 {
-//                            audioManager.prepare(audioManager.audio, reason: "StateView Detected Update")
-//                        }
-//                    }
-//                }
-//            }
         }
         .onChange(of: count) {
             Task {
@@ -70,8 +60,33 @@ struct StateView: View {
                 audioManager.prepare(nil, reason: "数据库个数变成了0")
             }
         }
+        .onReceive(NotificationCenter.default.publisher(for: Notification.Name.AudioUpdatedNotification), perform: { n in
+            let data = n.userInfo as! [String: Audio]
+            let audio = data["audio"]!
+
+            if audio.url == audioManager.audio?.url {
+                if audio.isDownloaded {
+                    audioManager.prepare(audioManager.audio, reason: "StateView Detected Update")
+                }
+            }
+        })
+        .onReceive(NotificationCenter.default.publisher(for: Notification.Name.AudiosUpdatedNotification), perform: { notification in
+            let data = notification.userInfo as! [String: [MetaWrapper]]
+            let items = data["items"]!
+            for item in items {
+                if item.isDeleted {
+                    continue
+                }
+
+                if item.url == audioManager.audio?.url {
+                    if item.isDownloaded {
+                        audioManager.prepare(audioManager.audio, reason: "StateView Detected Update")
+                    }
+                }
+            }
+        })
     }
-    
+
     func makeCopyView(_ i: String, buttons: some View = EmptyView()) -> some View {
         CardView(background: BackgroundView.type3, paddingVertical: 6) {
             HStack {

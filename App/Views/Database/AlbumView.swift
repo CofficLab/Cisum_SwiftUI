@@ -79,8 +79,8 @@ struct AlbumView: View {
             let audio = data["audio"]!
 
             if audio.url == self.url {
-                    return refresh(audio)
-                }
+                return refresh(audio)
+            }
         }
     }
 
@@ -93,7 +93,7 @@ struct AlbumView: View {
             }
         })
     }
-    
+
     func refresh(_ audio: Audio, verbose: Bool = false) {
         if verbose {
             os_log("\(self.label)Refresh -> \(audio.title)")
