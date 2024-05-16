@@ -47,7 +47,7 @@ extension DB {
                         groupCount = groupCount - 1
                         
                         if groupCount%100 == 0 {
-                            os_log("\(Logger.isMain)\(DB.label)\(title) \(groupCount)/\(total)")
+//                            os_log("\(Logger.isMain)\(DB.label)\(title) \(groupCount)/\(total)")
                         }
                     })
                 }

@@ -129,24 +129,27 @@ extension DiskiCloud {
     
     func download(_ audio: Audio) async {
         if audio.isNotExists {
+            //os_log("\(self.label)Download \(audio.title) -> Not Exists")
             return
         }
         
         if audio.isDownloaded {
+            //os_log("\(self.label)Download \(audio.title) -> Already downloaded")
             return
         }
         
         if audio.isDownloading {
+            //os_log("\(self.label)Download \(audio.title) -> Already downloading")
             return
         }
         
-        let downloadingCount = getDownloadingCount()
+//        let downloadingCount = getDownloadingCount()
         
-        if downloadingCount > 10 {
-            os_log("\(self.label)Download \(audio.title) -> Ignore ❄️❄️❄️ -> Downloading.count=\(downloadingCount)")
-            
-            return
-        }
+//        if downloadingCount > 10 {
+//            os_log("\(self.label)Download \(audio.title) -> Ignore ❄️❄️❄️ -> Downloading.count=\(downloadingCount)")
+//            
+//            return
+//        }
         
         //os_log("\(self.label)Download \(audio.title)")
         
