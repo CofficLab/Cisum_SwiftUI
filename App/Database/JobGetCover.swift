@@ -14,16 +14,22 @@ extension DB {
                     if audio.isDownloaded {
                         audio.getCoverFromMeta({ url in
                             if url != nil {
-                                EventManager().emitAudioUpdate(audio)
+                                self.emitCoverUpdated(audio)
                                 self.insertCover(audio)
                             }
-                        }, queue: .main)
+                        }, queue: DispatchQueue.global())
                     }
                 }
             } catch let e {
                 os_log(.error, "\(e.localizedDescription)")
             }
         })
+    }
+    
+    func emitCoverUpdated(_ audio: Audio) {
+        DispatchQueue.main.async {
+            EventManager().emitAudioUpdate(audio)
+        }
     }
     
     func insertCover(_ audio: Audio) {

@@ -33,7 +33,7 @@ struct RootView<Content>: View where Content: View {
                 LanuchView(errorMessage: errorMessage)
             }
         }
-        .task(priority: .high) {
+        .onAppear {
             if verbose {
                 os_log("\(Logger.isMain)\(self.label)初始化")
             }
@@ -45,7 +45,8 @@ struct RootView<Content>: View where Content: View {
             #if os(iOS)
                 UIApplication.shared.beginReceivingRemoteControlEvents()
             #endif
-
+        }
+        .task(priority: .high) {
             if verbose {
                 os_log("\(Logger.isMain)\(self.label)准备数据库")
             }
