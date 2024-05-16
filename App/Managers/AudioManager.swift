@@ -20,7 +20,7 @@ class AudioManager: NSObject, ObservableObject {
     private var bg = AppConfig.bgQueue
     private var main = AppConfig.mainQueue
     private var rootDir: URL = AppConfig.cloudDocumentsDir
-    private var label: String { AudioManager.label }
+    private var label: String { Logger.isMain + AudioManager.label }
 
     var db: DB = .init(AppConfig.getContainer())
     var isEmpty: Bool { audio == nil }
@@ -32,7 +32,7 @@ class AudioManager: NSObject, ObservableObject {
 
     override init() {
         if verbose {
-            os_log("\(Logger.isMain)\(AudioManager.label)初始化")
+            os_log("\(Logger.isMain)\(Self.label)初始化")
         }
         
         super.init()
@@ -50,7 +50,7 @@ class AudioManager: NSObject, ObservableObject {
     
     func onStateChanged(_ state: SmartPlayer.State) {
         if verbose {
-            os_log("\(Logger.isMain)\(AudioManager.label)播放状态变了 -> \(state.des)")
+            os_log("\(self.label)播放状态变了 -> \(state.des)")
         }
         
         self.main.async {
@@ -89,7 +89,7 @@ class AudioManager: NSObject, ObservableObject {
                 } else if let current = await self.db.first() {
                     self.prepare(current, reason: "初始化，播放第一个")
                 } else {
-                    os_log("\(Logger.isMain)🚩 AudioManager::restore nothing to play")
+                    os_log("\(self.label)restore nothing to play")
                 }
             }
         }
@@ -99,7 +99,7 @@ class AudioManager: NSObject, ObservableObject {
 
     func prepare(_ audio: Audio?, reason: String) {
         if verbose {
-            os_log("\(Logger.isMain)\(self.label)Prepare \(audio?.title ?? "nil") 🐛 \(reason)")
+            os_log("\(self.label)Prepare \(audio?.title ?? "nil") 🐛 \(reason)")
         }
 
         self.player.prepare(audio)
@@ -119,7 +119,7 @@ class AudioManager: NSObject, ObservableObject {
 
     func play(_ audio: Audio, reason: String) {
         if verbose {
-            os_log("\(Logger.isMain)\(self.label)play \(audio.title)")
+            os_log("\(self.label)play \(audio.title) 🚀🚀🚀")
         }
 
         self.player.play(audio, reason: reason)
@@ -136,7 +136,7 @@ class AudioManager: NSObject, ObservableObject {
     /// 跳到上一首，manual=true表示由用户触发
     func prev(manual: Bool = false) throws {
         if verbose {
-            os_log("\(Logger.isMain)\(self.label)prev ⬆️")
+            os_log("\(self.label)prev ⬆️")
         }
 
         if mode == .Loop && manual == false {
@@ -155,7 +155,7 @@ class AudioManager: NSObject, ObservableObject {
     /// 跳到下一首，manual=true表示由用户触发
     func next(manual: Bool = false) {
         if verbose {
-            os_log("\(Logger.isMain)\(self.label)next ⬇️ \(manual ? "手动触发" : "自动触发")")
+            os_log("\(self.label)next \(manual ? "手动触发" : "自动触发") ⬇️⬇️⬇️")
         }
 
         if mode == .Loop && manual == false {
@@ -192,7 +192,7 @@ extension AudioManager {
 
         Task {
             if verbose {
-                os_log("\(Logger.isMain)\(self.label)切换播放模式")
+                os_log("\(Logger.isMain)\(Self.label)切换播放模式")
             }
             
             if mode == .Random {

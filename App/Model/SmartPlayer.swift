@@ -7,7 +7,7 @@ class SmartPlayer: NSObject {
     // MARK: 成员
 
     static var label = "💿 SmartPlayer::"
-    var label: String { SmartPlayer.label }
+    var label: String { Logger.isMain+SmartPlayer.label }
     var player = AVAudioPlayer()
     var audio: Audio?
     var verbose = false
@@ -98,17 +98,17 @@ extension SmartPlayer {
     }
 
     func play(_ audio: Audio, reason: String) {
-        os_log("\(Logger.isMain)\(self.label)play \(audio.title) 🐛 \(reason)")
+        os_log("\(self.label)play \(audio.title) 🐛 \(reason)")
         state = .Playing(audio)
     }
 
     func play() {
-        os_log("\(Logger.isMain)\(self.label)Play")
+        os_log("\(self.label)Play")
         resume()
     }
 
     func resume() {
-        os_log("\(Logger.isMain)\(self.label)Resume while current is \(self.state.des)")
+        os_log("\(self.label)Resume while current is \(self.state.des)")
         switch state {
         case .Playing, .Error:
             break
@@ -118,12 +118,12 @@ extension SmartPlayer {
     }
 
     func pause() {
-        os_log("\(Logger.isMain)\(self.label)Pause")
+        os_log("\(self.label)Pause")
         state = .Paused(self.audio)
     }
 
     func stop() {
-        os_log("\(Logger.isMain)\(self.label)Stop")
+        os_log("\(self.label)Stop")
         state = .Stopped
     }
 
