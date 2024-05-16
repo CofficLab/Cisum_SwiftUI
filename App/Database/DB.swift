@@ -24,7 +24,7 @@ actor DB: ModelActor {
     var label: String { "\(Logger.isMain)\(DB.label)" }
     var verbose: Bool { DB.verbose }
 
-    init(_ container: ModelContainer, verbose: Bool = true) {
+    init(_ container: ModelContainer, verbose: Bool = false) {
         if verbose {
             let message = "\(Logger.isMain)\(Self.label)初始化"
             

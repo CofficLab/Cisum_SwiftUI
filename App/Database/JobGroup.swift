@@ -5,10 +5,11 @@ import SwiftData
 
 extension DB {
     func runFindAudioGroupJob() {
-        self.runJob("GroupingJob 🌾🌾🌾", verbose: true, predicate: #Predicate<Audio> {
-            $0.group == nil
-        }, code: { audio in
-            self.updateGroup(audio)
+        self.runJob("GroupingJob 🌾🌾🌾", verbose: true, descriptor: Audio.descriptorNoGroup, code: { audio,onEnd in
+            Task {
+                self.updateGroup(audio)
+                onEnd()
+            }
         })
     }
 }

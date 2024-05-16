@@ -50,9 +50,9 @@ extension DB {
     }
     
     func download(_ audio: Audio, reason: String) {
-        Task {
+        Task.detached(priority: .background) {
             //os_log("\(Logger.isMain)\(Self.label)Download ⏬⏬⏬ \(audio.title) reason -> \(reason)")
-            await disk.download(audio)
+            await self.disk.download(audio)
         }
     }
 
@@ -179,23 +179,25 @@ extension DB {
 
 extension DB {
     func updateGroup(_ audio: Audio) {
+        //os_log("\(Self.label)UpdateGroup for \(audio.title) 🌽")
         let fileHash = audio.getHash()
         if fileHash.isEmpty {
             return
         }
         
         let context = ModelContext(self.modelContainer)
+        context.autosaveEnabled = false
         guard let dbAudio = context.model(for: audio.id) as? Audio else {
             return
         }
         
         dbAudio.group = AudioGroup(title: audio.title, hash: fileHash)
         
-        do {
-            try context.save()
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-        }
+//        do {
+//            try context.save()
+//        } catch let e {
+//            os_log(.error, "\(e.localizedDescription)")
+//        }
     }
     
     func updateGroup(_ audios: [Audio]) {

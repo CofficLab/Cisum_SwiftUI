@@ -9,6 +9,15 @@ import SwiftUI
 class Audio {
     static var label = "🪖 Audio::"
     static var verbose = false
+    
+    // MARK: Descriptor
+    
+    static var descriptorAll = FetchDescriptor(predicate: #Predicate<Audio> { _ in
+        return true
+    })
+    static var descriptorNoGroup = FetchDescriptor(predicate: #Predicate<Audio> {
+        $0.group == nil
+    })
 
     @Transient
     let fileManager = FileManager.default

@@ -4,7 +4,7 @@ import SwiftData
 
 extension DB {
     func runGetCoversJob() {
-        runJob("GetCover 🌽🌽🌽", qos: .userInteractive, code: { audio in
+        runJob("GetCover 🌽🌽🌽", descriptor: Audio.descriptorAll, qos: .userInteractive, code: { audio,onEnd in
             let url = audio.url
 
             do {
@@ -23,6 +23,8 @@ extension DB {
             } catch let e {
                 os_log(.error, "\(e.localizedDescription)")
             }
+            
+            onEnd()
         })
     }
     

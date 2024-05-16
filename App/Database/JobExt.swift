@@ -9,18 +9,20 @@ extension DB {
     func runJob(
         _ id: String,
         verbose: Bool = true,
-        predicate: Predicate<Audio>? = nil,
+        descriptor: FetchDescriptor<Audio>,
         qos: DispatchQoS = .background,
-        code: @escaping (_ audio: Audio) -> Void)
+        code: @escaping (_ audio: Audio, _ onEnd:@escaping () -> Void) -> Void)
     {
         let startTime = DispatchTime.now()
         let title = "🐎🐎🐎\(id)"
         let jobQueue = DispatchQueue(label: "DBJob", qos: qos)
         let notifyQueue = DispatchQueue(label: "DBJobNotify", qos: .background)
         let group = DispatchGroup()
+        var groupCount = 0
+        var total = 0
 
         do {
-            let total = try context.fetchCount(FetchDescriptor(predicate: predicate))
+            total = try context.fetchCount(descriptor)
 
             if total == 0 {
                 os_log("\(Self.label)\(title) All done 🎉🎉🎉")
@@ -33,11 +35,15 @@ extension DB {
         os_log("\(Logger.isMain)\(DB.label)\(title) Start 🚀🚀🚀")
 
         do {
-            try context.enumerate(FetchDescriptor(predicate: predicate), block: { audio in
+            try context.enumerate(descriptor, block: { audio in
                 jobQueue.sync {
                     group.enter()
-                    code(audio)
-                    group.leave()
+                    groupCount = groupCount + 1
+                    code(audio, {
+                        print("leave \(audio.title) -> \(groupCount)/\(total)")
+                        group.leave()
+                        groupCount = groupCount - 1
+                    })
                 }
             })
         } catch let e {
@@ -45,13 +51,7 @@ extension DB {
         }
 
         group.notify(queue: notifyQueue) {
-            do {
-                try self.context.save()
-            } catch let e {
-                os_log(.error, "\(e.localizedDescription)")
-            }
-            
-            if verbose{
+            if verbose {
                 // 计算代码执行时间
                 let nanoTime = DispatchTime.now().uptimeNanoseconds - startTime.uptimeNanoseconds
                 let timeInterval = Double(nanoTime) / 1000000000

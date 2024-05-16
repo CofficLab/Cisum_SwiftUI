@@ -7,9 +7,14 @@ extension AppConfig {
     static var rootBackground: some View {
         ZStack {
             Color.black.opacity(0.5).ignoresSafeArea()
-            BackgroundView.type2A
+            if debug {
+                BackgroundView.forest
+            } else {
+                BackgroundView.type2A
+            }
         }
     }
+    
     static var getBackground: Color {
         #if os(macOS)
         Color(.controlBackgroundColor)

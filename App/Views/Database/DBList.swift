@@ -14,6 +14,7 @@ struct DBList: View {
     @EnvironmentObject var audioManager: AudioManager
     @Environment(\.modelContext) private var modelContext
 
+    // 测试发现：只要数据库变了这里就会刷新，即使变的是另外的Model
     @Query(descriptor, animation: .default) var audios: [Audio]
     @Query(sort: \CopyTask.createdAt, animation: .default) var tasks: [CopyTask]
 
