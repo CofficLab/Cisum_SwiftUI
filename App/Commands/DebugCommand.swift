@@ -19,6 +19,7 @@ struct DebugCommand: Commands {
     }
 
     private func openUrl(_ url: URL?) {
+        #if os(macOS)
         guard let dir = url else {
             // 显示错误提示
             let errorAlert = NSAlert()
@@ -32,5 +33,6 @@ struct DebugCommand: Commands {
         }
 
         NSWorkspace.shared.open(dir)
+        #endif
     }
 }
