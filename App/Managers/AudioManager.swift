@@ -28,7 +28,7 @@ class AudioManager: NSObject, ObservableObject {
     var isCloudStorage: Bool { iCloudHelper.isCloudPath(url: rootDir) }
     var showErrorView: Bool { self.error != nil }
     var showTitleView: Bool { self.audio != nil }
-    var verbose = false
+    var verbose = true
 
     override init() {
         if verbose {

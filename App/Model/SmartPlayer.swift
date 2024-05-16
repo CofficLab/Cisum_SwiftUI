@@ -43,15 +43,13 @@ class SmartPlayer: NSObject {
                     return
                 }
                 
-                self.audio = audio
-                
                 do {
                     self.audio = audio
                     try self.player = makePlayer(audio)
                     self.player.prepareToPlay()
                     self.player.play()
                 } catch {
-                    self.state = .Error(error)
+                    return setError(error)
                 }
             case .Paused:
                 self.player.pause()
@@ -151,17 +149,19 @@ extension SmartPlayer {
         }
 
         if audio.isDownloading {
+            os_log("\(self.label)在下载 \(audio.title) ⚠️⚠️⚠️")
             throw SmartError.Downloading
         }
 
         // 未下载的情况
         guard audio.isDownloaded else {
+            os_log("\(self.label)未下载 \(audio.title)")
             throw SmartError.NotDownloaded
         }
 
         // 格式不支持
         guard audio.isSupported else {
-            os_log("\(Logger.isMain)\(SmartPlayer.label)格式不支持 \(audio.title) \(audio.ext)")
+            os_log("\(self.label)格式不支持 \(audio.title) \(audio.ext)")
             throw SmartError.FormatNotSupported(audio.ext)
         }
 
@@ -196,9 +196,11 @@ extension SmartPlayer {
         var des: String {
             switch self {
             case .Ready(let audio):
-                "准备播放 \(audio?.title ?? "nil")"
+                "准备播放 \(audio?.title ?? "nil") 🚀🚀🚀"
             case .Error(let error):
-                "错误：\(error.localizedDescription)"
+                "错误：\(error.localizedDescription) ⚠️⚠️⚠️"
+            case .Playing(let audio):
+                "在播放 \(audio.title) 🔊🔊🔊"
             default:
                 String(describing: self)
             }
