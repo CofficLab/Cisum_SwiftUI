@@ -34,7 +34,7 @@ struct Boot: App {
                     ContentView()
                 }
             }
-            .modelContainer(AppConfig.getContainer())
+            .modelContainer(AppConfig.getContainer)
         #endif
     }
 }
