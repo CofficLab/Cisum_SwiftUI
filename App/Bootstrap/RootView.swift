@@ -11,7 +11,7 @@ struct RootView<Content>: View where Content: View {
     @State private var isReady: Bool = false
     @State private var errorMessage: String? = nil
     @State private var audioManager: AudioManager? = nil
-    @State private var appManager: AppManager = .init()
+    @State private var appManager: AppManager? = nil
 
     init(@ViewBuilder content: () -> Content) {
         self.content = content()
@@ -24,20 +24,18 @@ struct RootView<Content>: View where Content: View {
             if isReady {
                 content
                     .environmentObject(audioManager!)
-                    .environmentObject(appManager)
+                    .environmentObject(appManager!)
                     .frame(minWidth: AppConfig.minWidth, minHeight: AppConfig.minHeight)
                     .blendMode(.normal)
-                    .onAppear {
-                        Task {
-                            if verbose {
-                                os_log("\(self.label)同步数据库")
-                            }
-                            await DB(AppConfig.getContainer).startWatch()
+                    .task {
+                        if verbose {
+                            os_log("\(self.label)同步数据库")
                         }
-                        
-#if os(iOS)
-    UIApplication.shared.beginReceivingRemoteControlEvents()
-#endif
+                        await DB(AppConfig.getContainer).startWatch()
+
+                        #if os(iOS)
+                            UIApplication.shared.beginReceivingRemoteControlEvents()
+                        #endif
                     }
                     // 等content出现后，再执行后台任务
                     .task(priority: .background) {
@@ -70,9 +68,10 @@ struct RootView<Content>: View where Content: View {
                     .task {
                         os_log("\(self.label)初始化")
                         self.audioManager = AudioManager()
-                        self.isReady = true
-
-                        
+                        self.appManager = AppManager()
+                        withAnimation(.none) {
+                            self.isReady = true
+                        }
                     }
             }
         }
@@ -99,8 +98,5 @@ struct RootView<Content>: View where Content: View {
 }
 
 #Preview("App") {
-    RootView {
-        ContentView()
-    }
-    .modelContainer(AppConfig.getContainer)
+    AppPreview()
 }

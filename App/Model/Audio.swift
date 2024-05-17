@@ -14,7 +14,9 @@ class Audio {
     
     static var descriptorAll = FetchDescriptor(predicate: #Predicate<Audio> { _ in
         return true
-    })
+    }, sortBy: [
+        SortDescriptor(\.order, order: .forward)
+    ])
     static var descriptorNoGroup = FetchDescriptor(predicate: #Predicate<Audio> {
         $0.group == nil
     })

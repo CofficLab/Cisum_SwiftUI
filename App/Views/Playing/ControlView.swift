@@ -4,9 +4,14 @@ import SwiftUI
 struct ControlView: View {
     @EnvironmentObject var appManager: AppManager
 
+    @State var showHeroView = false
+    @State var showSliderView = false
+    @State var showBtnsView = false
+    @State var showOperationView = false
+    @State var showStateView = false
+
     // MARK: 子视图是否展示
 
-    var showOperationView = true
     var showDB: Bool { appManager.showDB }
     var showStateMessage: Bool { appManager.stateMessage.count > 0 }
 
@@ -16,37 +21,47 @@ struct ControlView: View {
                 VStack(spacing: 0) {
                     // MARK: 封面图和标题
 
-                    HeroView()
-                        .frame(maxWidth: .infinity)
-                        .frame(maxHeight: .infinity)
+                    if showHeroView {
+                        HeroView()
+                            .frame(maxWidth: .infinity)
+                            .frame(maxHeight: .infinity)
+                    }
 
                     // MARK: 状态
 
-                    StateView()
-//                        .frame(height: getStateHeight(geo))
-                        .frame(maxWidth: .infinity)
-                        .background(AppConfig.background(.red))
+                    if showStateView {
+                        StateView()
+                            //                        .frame(height: getStateHeight(geo))
+                            .frame(maxWidth: .infinity)
+                            .background(AppConfig.background(.red))
+                    }
 
                     // MARK: 操作栏
 
                     if showOperationView {
-                        OperationView(geo: geo)
-                            .frame(height: getOperationHeight(geo))
-                            .background(AppConfig.background(.white))
+                        if showOperationView {
+                            OperationView(geo: geo)
+                                .frame(height: getOperationHeight(geo))
+                                .background(AppConfig.background(.white))
+                        }
                     }
 
                     // MARK: 进度栏
 
-                    SliderView(geo: geo)
-                        .padding()
-                        .background(AppConfig.background(.black))
+                    if showSliderView {
+                        SliderView(geo: geo)
+                            .padding()
+                            .background(AppConfig.background(.black))
+                    }
 
                     // MARK: 控制栏
 
-                    BtnsView()
-                        .frame(height: getButtonsHeight(geo))
-                        .padding(.bottom, getBottomHeight(geo))
-                        .background(AppConfig.background(.red))
+                    if showBtnsView {
+                        BtnsView()
+                            .frame(height: getButtonsHeight(geo))
+                            .padding(.bottom, getBottomHeight(geo))
+                            .background(AppConfig.background(.red))
+                    }
                 }
 
                 // MARK: 横向的封面图
@@ -74,6 +89,13 @@ struct ControlView: View {
         .foregroundStyle(.white)
         .ignoresSafeArea()
         .frame(minHeight: AppConfig.controlViewMinHeight)
+        .onAppear() {
+            showHeroView = true
+            showSliderView = true
+            showBtnsView = true
+            showOperationView = true
+            showStateView = true
+        }
     }
 
     // MARK: 状态栏的高度

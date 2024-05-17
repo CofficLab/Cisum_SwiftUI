@@ -3,19 +3,13 @@ import SwiftData
 import SwiftUI
 
 struct DBList: View {
-    static var label = "🖥️ DBList::"
-    static var descriptor: FetchDescriptor<Audio> {
-        let descriptor = FetchDescriptor<Audio>(predicate: #Predicate {
-            $0.title != ""
-        }, sortBy: [SortDescriptor(\.order, order: .forward)])
-        return descriptor
-    }
+    static var label = "📬 DBList::"
 
     @EnvironmentObject var appManager: AppManager
     @EnvironmentObject var audioManager: AudioManager
     @Environment(\.modelContext) private var modelContext
 
-    @Query(descriptor, animation: .default) var audios: [Audio]
+    @Query(Audio.descriptorAll, animation: .default) var audios: [Audio]
     @Query(sort: \CopyTask.createdAt, animation: .default) var tasks: [CopyTask]
 
     @State var selection: Audio? = nil
@@ -42,22 +36,22 @@ struct DBList: View {
         ZStack {
             VStack(spacing: 0) {
                 List(selection: $selection) {
-                    if tasks.count > 0 {
-                        Section(header: HStack {
-                            Text("正在复制 \(tasks.count)")
-                        }, content: {
-                            if tasks.count <= 5 {
-                                ForEach(tasks) { task in
-                                    RowTask(task)
-                                }
-                                .onDelete(perform: { indexSet in
-                                    for i in indexSet {
-                                        modelContext.delete(tasks[i])
-                                    }
-                                })
-                            }
-                        })
-                    }
+//                    if tasks.count > 0 {
+//                        Section(header: HStack {
+//                            Text("正在复制 \(tasks.count)")
+//                        }, content: {
+//                            if tasks.count <= 5 {
+//                                ForEach(tasks) { task in
+//                                    RowTask(task)
+//                                }
+//                                .onDelete(perform: { indexSet in
+//                                    for i in indexSet {
+//                                        modelContext.delete(tasks[i])
+//                                    }
+//                                })
+//                            }
+//                        })
+//                    }
 
                     Section(header: HStack {
                         HStack {

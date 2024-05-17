@@ -278,7 +278,6 @@
 				0B901D872BB83BC3003AC253 /* FilePresenter.swift */,
 				0B1D5A722AB302600010DDF2 /* BackgroundView.swift */,
 				0B718F0B2AB4349900569762 /* CardView.swift */,
-				0B1165E82ABBC6C0005C5CBB /* LaunchView.swift */,
 				0BFDCB7F2AB86AF300B0D1C8 /* MenuTile.swift */,
 				0BBA421E2AC1397F00C0B977 /* Centered.swift */,
 				0B1D5A6C2AB302600010DDF2 /* CommonHelp.swift */,
@@ -407,6 +406,7 @@
 		0BBA42112ABC116300C0B977 /* Bootstrap */ = {
 			isa = PBXGroup;
 			children = (
+				0B1165E82ABBC6C0005C5CBB /* LaunchView.swift */,
 				0B1D5A8C2AB3E8290010DDF2 /* AppDelegate.swift */,
 				0BAB300D2AB814F70012D837 /* Boot.swift */,
 				0B604AE72AD6384300929DD8 /* RootView.swift */,
