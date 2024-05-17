@@ -24,7 +24,7 @@ struct Boot: App {
             }
             .windowStyle(.hiddenTitleBar)
             .defaultSize(width: AppConfig.minWidth, height: AppConfig.defaultHeight)
-            .modelContainer(AppConfig.getContainer())
+            .modelContainer(AppConfig.getContainer)
             .commands {
                 DebugCommand()
             }

@@ -22,7 +22,7 @@ class AudioManager: NSObject, ObservableObject {
     private var rootDir: URL = AppConfig.cloudDocumentsDir
     private var label: String { Logger.isMain + AudioManager.label }
 
-    var db: DB = .init(AppConfig.getContainer())
+    var db: DB = .init(AppConfig.getContainer)
     var isEmpty: Bool { audio == nil }
     var player = SmartPlayer()
     var isCloudStorage: Bool { iCloudHelper.isCloudPath(url: rootDir) }
@@ -36,15 +36,17 @@ class AudioManager: NSObject, ObservableObject {
         }
         
         super.init()
-        restore()
 
-        checkNetworkStatus()
-        player.onStateChange = { state in
-            self.onStateChanged(state)
+        Task {
+            checkNetworkStatus()
         }
         
         Task {
-            prepare(nil, reason: "AudioManager初始化")
+            restore()
+        }
+        
+        player.onStateChange = { state in
+            self.onStateChanged(state)
         }
     }
     
@@ -225,5 +227,5 @@ extension AudioManager {
 #Preview {
     RootView {
         ContentView()
-    }.modelContainer(AppConfig.getContainer())
+    }.modelContainer(AppConfig.getContainer)
 }

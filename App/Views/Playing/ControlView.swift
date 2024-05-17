@@ -2,7 +2,6 @@ import SwiftData
 import SwiftUI
 
 struct ControlView: View {
-    @EnvironmentObject var audioManager: AudioManager
     @EnvironmentObject var appManager: AppManager
 
     // MARK: 子视图是否展示

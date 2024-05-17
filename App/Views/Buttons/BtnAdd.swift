@@ -25,5 +25,5 @@ struct BtnAdd: View {
             
             DBView()
         }
-    }.modelContainer(AppConfig.getContainer())
+    }.modelContainer(AppConfig.getContainer)
 }

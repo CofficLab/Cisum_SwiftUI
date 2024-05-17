@@ -1,8 +1,6 @@
 import SwiftUI
 
 struct BtnsView: View {
-    @EnvironmentObject var audioManager: AudioManager
-
     var body: some View {
         GeometryReader { geo in
             VStack {

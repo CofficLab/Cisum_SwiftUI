@@ -40,5 +40,5 @@ struct DBTips: View {
 #Preview {
     RootView {
         DBView()
-    }.modelContainer(AppConfig.getContainer())
+    }.modelContainer(AppConfig.getContainer)
 }

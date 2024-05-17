@@ -11,23 +11,24 @@ extension DB {
         verbose: Bool = true,
         descriptor: FetchDescriptor<Audio>,
         qos: DispatchQoS = .background,
-        code: @escaping (_ audio: Audio, _ onEnd:@escaping () -> Void) -> Void,
-        complete: (@escaping (_ context: ModelContext) -> Void) = { _ in
-            
-        }
+        printLog: Bool = true,
+        printLogStep: Int = 100,
+        code: @escaping (_ audio: Audio, _ onEnd: @escaping () -> Void) -> Void,
+        complete: (@escaping (_ context: ModelContext) -> Void) = { _ in }
     ) {
         let startTime = DispatchTime.now()
         let title = "🐎🐎🐎\(id)"
         let jobQueue = DispatchQueue(label: "DBJob", qos: qos)
+        let opQueue = OperationQueue()
+        opQueue.maxConcurrentOperationCount = 2
         let notifyQueue = DispatchQueue(label: "DBJobNotify", qos: .background)
         let group = DispatchGroup()
-        var groupCount = 0
-        var total = 0
+        var totalCount = 0
 
         do {
-            total = try context.fetchCount(descriptor)
+            totalCount = try context.fetchCount(descriptor)
 
-            if total == 0 {
+            if totalCount == 0 {
                 os_log("\(Self.label)\(title) All done 🎉🎉🎉")
                 return
             }
@@ -38,18 +39,18 @@ extension DB {
         os_log("\(Logger.isMain)\(DB.label)\(title) Start 🚀🚀🚀")
 
         do {
+            let t = totalCount
             try context.enumerate(descriptor, block: { audio in
                 jobQueue.sync {
                     group.enter()
-                    groupCount = groupCount + 1
-                    code(audio, {
-                        group.leave()
-                        groupCount = groupCount - 1
-                        
-                        if groupCount%100 == 0 {
-//                            os_log("\(Logger.isMain)\(DB.label)\(title) \(groupCount)/\(total)")
+                    opQueue.addOperation {
+                        code(audio) {
+                            group.leave()
+                            if group.count % printLogStep == 0 && printLog {
+                                os_log("\(Logger.isMain)\(DB.label)\(title) 余 \(group.count)/\(t)")
+                            }
                         }
-                    })
+                    }
                 }
             })
         } catch let e {
@@ -65,5 +66,11 @@ extension DB {
                 os_log("\(Logger.isMain)\(DB.label)\(title) cost \(timeInterval) 秒 🐢🐢🐢")
             }
         }
+    }
+}
+
+extension DispatchGroup {
+    var count: Int {
+        self.debugDescription.components(separatedBy: ",").filter { $0.contains("count") }.first?.components(separatedBy: CharacterSet.decimalDigits.inverted).compactMap { Int($0) }.first ?? 0
     }
 }

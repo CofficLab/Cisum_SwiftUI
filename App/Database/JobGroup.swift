@@ -5,17 +5,10 @@ import SwiftData
 
 extension DB {
     func runFindAudioGroupJob() {
-        self.runJob("GroupingJob 🌾🌾🌾", verbose: true, descriptor: Audio.descriptorNoGroup, code: { audio,onEnd in
-            Task {
-                let fileHash = audio.getHash()
-                if fileHash.isEmpty {
-                    return onEnd()
-                }
-                
-                audio.group = AudioGroup(title: audio.title, hash: fileHash)
-                
-                onEnd()
-            }
+        self.runJob("GroupingJob 🌾🌾🌾", verbose: true, descriptor: Audio.descriptorNoGroup, code: { audio, onEnd in
+            self.updateGroup(audio)
+            
+            onEnd()
         }, complete: { context in
             do {
                 try context.save()

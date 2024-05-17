@@ -6,7 +6,7 @@ class ItemQuery {
     let query = NSMetadataQuery()
     let queue: OperationQueue
     let url: URL
-    var label: String {"\(Logger.isMain)📷 ItemQuery::"}
+    var label: String {"\(Logger.isMain)📁 ItemQuery::"}
     var verbose = false
 
     init(queue: OperationQueue = .main, url: URL) {

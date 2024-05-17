@@ -3,6 +3,7 @@ import SwiftData
 import SwiftUI
 
 struct DBList: View {
+    static var label = "🖥️ DBList::"
     static var descriptor: FetchDescriptor<Audio> {
         let descriptor = FetchDescriptor<Audio>(predicate: #Predicate {
             $0.title != ""
@@ -14,7 +15,6 @@ struct DBList: View {
     @EnvironmentObject var audioManager: AudioManager
     @Environment(\.modelContext) private var modelContext
 
-    // 测试发现：只要数据库变了这里就会刷新，即使变的是另外的Model
     @Query(descriptor, animation: .default) var audios: [Audio]
     @Query(sort: \CopyTask.createdAt, animation: .default) var tasks: [CopyTask]
 
@@ -25,12 +25,17 @@ struct DBList: View {
     var total: Int { audios.count }
     var db: DB { audioManager.db }
     var audio: Audio? { audioManager.audio }
+    var label: String { "\(Logger.isMain)\(Self.label)" }
     var showTips: Bool {
         if appManager.isDropping {
             return true
         }
 
         return appManager.flashMessage.isEmpty && total == 0
+    }
+    
+    init() {
+        os_log("\(Logger.isMain)\(Self.label)初始化")
     }
 
     var body: some View {
@@ -74,7 +79,7 @@ struct DBList: View {
                                 .tag(audio as Audio?)
                         }
                     })
-                    .onAppear {
+                    .task {
                         EventManager().onSyncing {
                             self.syncingTotal = $0
                             self.syncingCurrent = $1

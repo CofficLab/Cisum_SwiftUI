@@ -16,9 +16,7 @@ struct BtnToggle: View {
     var autoResize = false
 
     var image: String {
-        if audioManager.audio?.isNotDownloaded ?? false {
-            "icloud.and.arrow.down"
-        } else if !player.isPlaying {
+        if !player.isPlaying {
             "play.fill"
         } else {
             "pause.fill"
@@ -36,7 +34,7 @@ struct BtnToggle: View {
     RootView(content: {
         ContentView()
     })
-    .modelContainer(AppConfig.getContainer())
+    .modelContainer(AppConfig.getContainer)
 }
 
 #Preview {

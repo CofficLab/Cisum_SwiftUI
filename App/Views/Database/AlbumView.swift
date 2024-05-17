@@ -57,9 +57,17 @@ struct AlbumView: View {
         }
         .clipShape(shape)
         .onAppear {
-            self.isDownloaded = audio.isDownloaded
-            self.isDownloading = iCloudHelper.isDownloading(audio.url)
-            self.image = audio.getCoverImageFromCache()
+            bg.async {
+                let isDownloaded = audio.checkIfDownloaded()
+                let isDownloading = audio.checkIfDownloading()
+                let image = audio.getCoverImageFromCache()
+                
+                main.async {
+                    self.isDownloaded = isDownloaded
+                    self.isDownloading = isDownloading
+                    self.image = image
+                }
+            }
         }
         .onReceive(NotificationCenter.default.publisher(for: Notification.Name.AudiosUpdatedNotification)) { notification in
             let data = notification.userInfo as! [String: [MetaWrapper]]
@@ -114,8 +122,15 @@ struct AlbumView: View {
             isDownloading = item.isDownloading
             downloadingPercent = item.downloadProgress
         } else {
-            isDownloaded = audio.isDownloaded
-            isDownloading = iCloudHelper.isDownloading(audio.url)
+            bg.async {
+                let isDownloaded = audio.checkIfDownloaded()
+                let isDownloading = audio.checkIfDownloading()
+                main.async {
+                    self.isDownloaded = isDownloaded
+                    self.isDownloading = isDownloading
+                }
+            }
+            
         }
 
         if isDownloaded && image == nil {

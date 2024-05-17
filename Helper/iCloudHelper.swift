@@ -2,28 +2,35 @@ import OSLog
 import SwiftUI
 
 class iCloudHelper {
+    static var label = "☁️ iCloudHelper::"
+    
     static func iCloudEnabled() -> Bool {
         return FileManager.default.ubiquityIdentityToken != nil
     }
+    
+    // MARK: 下载状态
 
     static func getStatus(_ url: URL) -> String {
         getDownloadingStatus(url: url).rawValue
     }
 
     static func getDownloadingStatus(url: URL) -> URLUbiquitousItemDownloadingStatus {
-        // os_log("\(Logger.isMain)🔧 iCloudHelper::getDownloadingStatus -> \(url.absoluteString)")
+        var s: URLUbiquitousItemDownloadingStatus = .notDownloaded
+        printRunTime("GetDownloadingStatus -> \(url.lastPathComponent)", tolerance: 1, {
         do {
             let values = try url.resourceValues(forKeys: [.ubiquitousItemDownloadingStatusKey])
             let status = values.ubiquitousItemDownloadingStatus
 
             if status == nil {
-                return URLUbiquitousItemDownloadingStatus.downloaded
+                s = URLUbiquitousItemDownloadingStatus.downloaded
             } else {
-                return status!
+                s = status!
             }
         } catch {
             fatalError("\(error)")
         }
+    })
+        return s
     }
 
     static func isDownloaded(url: URL) -> Bool {
@@ -263,5 +270,24 @@ extension iCloudHelper {
         }
 
         return String(format: "%.2f %@", bytes, byteUnits[index])
+    }
+    
+    /// 执行并输出耗时
+    static func printRunTime(_ title: String, tolerance: Double = 1, verbose: Bool = false, _ code: () -> Void) {
+        if verbose {
+            os_log("\(Logger.isMain)\(Self.label)\(title)")
+        }
+
+        let startTime = DispatchTime.now()
+
+        code()
+
+        // 计算代码执行时间
+        let nanoTime = DispatchTime.now().uptimeNanoseconds - startTime.uptimeNanoseconds
+        let timeInterval = Double(nanoTime) / 1000000000
+
+        if DB.verbose && timeInterval > tolerance {
+            os_log("\(Logger.isMain)\(DB.label)\(title) cost \(timeInterval) 秒 🐢🐢🐢")
+        }
     }
 }

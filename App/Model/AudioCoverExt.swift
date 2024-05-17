@@ -124,7 +124,7 @@ extension Audio {
             //os_log("\(self.label)getCoverFromMeta for \(self.title)")
         }
 
-        if isNotDownloaded {
+        if self.checkIfDownloaded() == false {
             return nil
         }
 
@@ -160,7 +160,7 @@ extension Audio {
             os_log("\(self.label)getCoverFromMeta for \(self.title)")
         }
 
-        if isNotDownloaded {
+        if self.checkIfDownloaded() == false {
             return queue.async {
                 callback(nil)
             }

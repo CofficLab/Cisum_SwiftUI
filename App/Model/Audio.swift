@@ -151,21 +151,21 @@ extension Audio: Identifiable {
 
 extension Audio {
     func getHash(verbose: Bool = true) -> String {
-        self.isNotDownloaded ? "" : FileHelper.getMD5(self.url)
+        FileHelper.getMD5(self.url)
     }
 }
 
 // MARK: iCloud 相关
 
 extension Audio {
-    var isDownloaded: Bool { iCloudHelper.isDownloaded(url: url) }
-    var isNotDownloaded: Bool { !isDownloaded }
-    var isDownloading: Bool { iCloudHelper.isDownloading(url) }
+    func checkIfDownloaded() -> Bool { iCloudHelper.isDownloaded(url: url) }
+    func checkIfDownloading() -> Bool { iCloudHelper.isDownloading(url) }
+    func checkIfNotDownloaded() -> Bool { self.checkIfDownloaded() == false }
 }
 
 #Preview("App") {
     RootView {
         ContentView()
     }
-    .modelContainer(AppConfig.getContainer())
+    .modelContainer(AppConfig.getContainer)
 }

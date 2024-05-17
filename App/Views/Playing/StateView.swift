@@ -65,8 +65,10 @@ struct StateView: View {
             let audio = data["audio"]!
 
             if audio.url == audioManager.audio?.url {
-                if audio.isDownloaded {
-                    audioManager.prepare(audioManager.audio, reason: "StateView Detected Update")
+                AppConfig.bgQueue.async {
+                    if audio.checkIfDownloaded() {
+                        audioManager.prepare(audioManager.audio, reason: "StateView Detected Update")
+                    }
                 }
             }
         })

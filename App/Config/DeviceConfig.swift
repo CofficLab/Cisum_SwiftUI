@@ -29,20 +29,27 @@ extension DeviceConfig {
         #endif
     }
 
-    static func increseHeight(_ h: CGFloat) {
+    static func increseHeight(_ h: CGFloat, verbose: Bool = false) {
         #if os(macOS)
-        os_log("\(Logger.isMain)\(self.label)增加 Height=\(h)")
+        if verbose {
+            os_log("\(Logger.isMain)\(self.label)增加 Height=\(h)")
+        }
+        
         let window = NSApplication.shared.windows.first!
         var frame = window.frame
         let oldY = frame.origin.y
         let height = frame.size.height
 
-        os_log("\(Logger.isMain)\(self.label) 增加前 Y=\(oldY) height=\(height)")
+        if verbose {
+            os_log("\(Logger.isMain)\(self.label) 增加前 Y=\(oldY) height=\(height)")
+        }
 
         frame.origin.y = oldY - h
         frame.size.height = height + h
 
-        os_log("\(Logger.isMain)\(self.label) 增加后 Y=\(frame.origin.y) height=\(frame.size.height)")
+        if verbose {
+            os_log("\(Logger.isMain)\(self.label) 增加后 Y=\(frame.origin.y) height=\(frame.size.height)")
+        }
 
         window.setFrame(frame, display: true)
         #endif

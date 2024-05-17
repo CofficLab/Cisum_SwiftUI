@@ -133,15 +133,15 @@ extension DiskiCloud {
             return
         }
         
-        if audio.isDownloaded {
-            //os_log("\(self.label)Download \(audio.title) -> Already downloaded")
-            return
-        }
+//        if audio.isDownloaded {
+//            //os_log("\(self.label)Download \(audio.title) -> Already downloaded")
+//            return
+//        }
         
-        if audio.isDownloading {
-            //os_log("\(self.label)Download \(audio.title) -> Already downloading")
-            return
-        }
+//        if audio.isDownloading {
+//            //os_log("\(self.label)Download \(audio.title) -> Already downloading")
+//            return
+//        }
         
 //        let downloadingCount = getDownloadingCount()
         

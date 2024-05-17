@@ -27,7 +27,7 @@ extension AppConfig {
         AppConfig.localDocumentsDir?.appendingPathComponent(dbDirName).appendingPathComponent(dbFileName)
     }
     
-    static func getContainer() -> ModelContainer {
+    static var getContainer: ModelContainer = {
         guard let url = getDBUrl() else {
             fatalError("Could not create ModelContainer")
         }
@@ -50,5 +50,5 @@ extension AppConfig {
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }
-    }
+    }()
 }

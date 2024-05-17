@@ -3,7 +3,8 @@ import OSLog
 import SwiftUI
 
 struct HomeView: View {
-    @EnvironmentObject var windowManager: WindowManager
+    static var label = "🖥️ HomeView::"
+    
     @EnvironmentObject var appManager: AppManager
 
     @State private var databaseViewHeight: CGFloat = 300
@@ -15,8 +16,12 @@ struct HomeView: View {
     var showDB: Bool { appManager.showDB }
     var controlViewHeightMin = AppConfig.controlViewMinHeight
     var databaseViewHeightMin = AppConfig.databaseViewHeightMin
-    var label = "🖥️ HomeView::"
     var verbose = false
+    var label: String { "\(Logger.isMain)\(Self.label) "}
+    
+    init() {
+        os_log("\(Logger.isMain)\(Self.label)初始化")
+    }
 
     var body: some View {
         GeometryReader { geo in
@@ -68,7 +73,7 @@ struct HomeView: View {
 
 extension HomeView {
     private func increseHeightToShowDB(_ geo: GeometryProxy) {
-        os_log("\(Logger.isMain)\(self.label)增加 Height 以展开数据库视图")
+        os_log("\(self.label)增加 Height 以展开数据库视图")
         let space = geo.size.height - controlViewHeightMin
 
         if space >= databaseViewHeightMin {
@@ -80,7 +85,7 @@ extension HomeView {
     }
 
     private func resetHeight() {
-        os_log("\(Logger.isMain)\(self.label)减少 Height 以折叠数据库视图")
+        os_log("\(self.label)减少 Height 以折叠数据库视图")
         self.autoResizing = true
         DeviceConfig.setHeight(self.height)
     }

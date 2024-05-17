@@ -41,7 +41,7 @@ struct OperationView: View {
 #Preview("APP") {
     RootView {
         ContentView()
-    }.modelContainer(AppConfig.getContainer())
+    }.modelContainer(AppConfig.getContainer)
 }
 
 #Preview("Layout") {

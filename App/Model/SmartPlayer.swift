@@ -148,16 +148,16 @@ extension SmartPlayer {
             throw SmartError.NotExists
         }
 
-        if audio.isDownloading {
-            os_log("\(self.label)在下载 \(audio.title) ⚠️⚠️⚠️")
-            throw SmartError.Downloading
-        }
-
-        // 未下载的情况
-        guard audio.isDownloaded else {
-            os_log("\(self.label)未下载 \(audio.title) ⚠️⚠️⚠️")
-            throw SmartError.NotDownloaded
-        }
+//        if audio.isDownloading {
+//            os_log("\(self.label)在下载 \(audio.title) ⚠️⚠️⚠️")
+//            throw SmartError.Downloading
+//        }
+//
+//        // 未下载的情况
+//        guard audio.isDownloaded else {
+//            os_log("\(self.label)未下载 \(audio.title) ⚠️⚠️⚠️")
+//            throw SmartError.NotDownloaded
+//        }
 
         // 格式不支持
         guard audio.isSupported else {
