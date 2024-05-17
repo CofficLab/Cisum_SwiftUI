@@ -4,11 +4,11 @@ import SwiftUI
 struct ControlView: View {
     @EnvironmentObject var appManager: AppManager
 
-    @State var showHeroView = false
-    @State var showSliderView = false
-    @State var showBtnsView = false
-    @State var showOperationView = false
-    @State var showStateView = false
+    @State var showHeroView = true
+    @State var showSliderView = true
+    @State var showBtnsView = true
+    @State var showOperationView = true
+    @State var showStateView = true
 
     // MARK: 子视图是否展示
 

@@ -4,13 +4,18 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct DBView: View {
-    @EnvironmentObject var audioManager: AudioManager
     @EnvironmentObject var appManager: AppManager
+    
+    static var label = "🐘 DBView::"
 
     var main = AppConfig.mainQueue
     var bg = AppConfig.bgQueue
-    var db: DB { audioManager.db }
     var dropping: Bool { appManager.isDropping }
+    var label: String { "\(Logger.isMain)\(Self.label) "}
+    
+    init() {
+        os_log("\(Logger.isMain)\(Self.label)初始化")
+    }
 
     var body: some View {
         DBList()
@@ -57,7 +62,7 @@ struct DBView: View {
 extension DBView {
     func copy(_ files: [URL]) {
         Task {
-            await db.addCopyTasks(files)
+            await DB(AppConfig.getContainer).addCopyTasks(files)
         }
     }
 

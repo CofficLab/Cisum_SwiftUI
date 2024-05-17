@@ -6,7 +6,6 @@ struct DBList: View {
     static var label = "📬 DBList::"
 
     @EnvironmentObject var appManager: AppManager
-    @EnvironmentObject var audioManager: AudioManager
     @Environment(\.modelContext) private var modelContext
 
     @Query(Audio.descriptorAll, animation: .default) var audios: [Audio]
@@ -17,8 +16,6 @@ struct DBList: View {
     @State var syncingCurrent: Int = 0
 
     var total: Int { audios.count }
-    var db: DB { audioManager.db }
-    var audio: Audio? { audioManager.audio }
     var label: String { "\(Logger.isMain)\(Self.label)" }
     var showTips: Bool {
         if appManager.isDropping {
@@ -36,22 +33,22 @@ struct DBList: View {
         ZStack {
             VStack(spacing: 0) {
                 List(selection: $selection) {
-//                    if tasks.count > 0 {
-//                        Section(header: HStack {
-//                            Text("正在复制 \(tasks.count)")
-//                        }, content: {
-//                            if tasks.count <= 5 {
-//                                ForEach(tasks) { task in
-//                                    RowTask(task)
-//                                }
-//                                .onDelete(perform: { indexSet in
-//                                    for i in indexSet {
-//                                        modelContext.delete(tasks[i])
-//                                    }
-//                                })
-//                            }
-//                        })
-//                    }
+                    if tasks.count > 0 {
+                        Section(header: HStack {
+                            Text("正在复制 \(tasks.count)")
+                        }, content: {
+                            if tasks.count <= 5 {
+                                ForEach(tasks) { task in
+                                    RowTask(task)
+                                }
+                                .onDelete(perform: { indexSet in
+                                    for i in indexSet {
+                                        modelContext.delete(tasks[i])
+                                    }
+                                })
+                            }
+                        })
+                    }
 
                     Section(header: HStack {
                         HStack {
