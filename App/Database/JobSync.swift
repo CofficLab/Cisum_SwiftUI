@@ -5,10 +5,6 @@ import SwiftUI
 
 /// 监听存储Audio文件的目录的变化，同步到数据库
 extension DB {
-    var eventManager: EventManager {
-        EventManager()
-    }
-    
     func startWatch() async {
         self.disk.onUpdated = { items in
             self.sync(items)
@@ -17,12 +13,12 @@ extension DB {
         await self.disk.watchAudiosFolder()
     }
     
-    func sync(_ items: [MetaWrapper], verbose: Bool = false) {
-        var message = "\(Logger.isMain)\(DB.label)sync with count=\(items.count) 🪣🪣🪣"
+    func sync(_ items: [MetaWrapper], verbose: Bool = true) {
+        var message = "\(self.label)sync with count=\(items.count) 🪣🪣🪣"
         
-        if let first = items.first, first.isDownloading == true {
-            message += " -> \(first.fileName ?? "-") -> \(String(format: "%.0f", first.downloadProgress))% ⏬⏬⏬"
-        }
+//        if let first = items.first, first.isDownloading == true {
+//            message += " -> \(first.fileName ?? "-") -> \(String(format: "%.0f", first.downloadProgress))% ⏬⏬⏬"
+//        }
         
         if verbose {
             os_log("\(message)")
@@ -31,11 +27,6 @@ extension DB {
         let itemsForSync = items.filter { $0.isUpdated == false }
         let itemsForUpdate = items.filter { $0.isUpdated && $0.isDeleted == false }
         let itemsForDelete = items.filter { $0.isDeleted }
-        
-        // 磁盘目录是空的，需要将数据库清空
-        if items.isEmpty {
-            return self.syncWithEmpty()
-        }
         
         // 第一次查到的item，同步到数据库
         if itemsForSync.count > 0 {
@@ -58,9 +49,6 @@ extension DB {
     /// 将数据库和metas同步
     func syncWithMetas(_ metas: [MetaWrapper]) {
         self.printRunTime("syncWithMetas, count=\(metas.count)") {
-            let context = ModelContext(modelContainer)
-            context.autosaveEnabled = false
-
             // 将数组转换成哈希表，方便通过键来快速查找元素，这样可以将时间复杂度降低到：O(m+n)
             var hashMap = [URL: MetaWrapper]()
             for element in metas {
@@ -87,17 +75,13 @@ extension DB {
             } catch {
                 os_log(.error, "\(error.localizedDescription)")
             }
-        }
-    }
-    
-    // MARK: SyncWithEmpty
-    
-    func syncWithEmpty() {
-        do {
-            try context.delete(model: Audio.self)
-            try context.save()
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
+            
+            // 计算文件的Hash
+            metas.forEach({ meta in
+                if meta.isDownloaded, let url = meta.url, let audio = self.findAudio(url) {
+                    self.updateGroup(audio)
+                }
+            })
         }
     }
     
@@ -105,9 +89,6 @@ extension DB {
     
     func syncWithDeletedItems(_ metas: [MetaWrapper]) {
         self.printRunTime("SyncWithDeletedItems, count=\(metas.count) 🗑️🗑️🗑️") {
-            let context = ModelContext(modelContainer)
-            context.autosaveEnabled = false
-            
             do {
                 let urls = metas.map({ $0.url! })
                 try context.delete(model: Audio.self, where: #Predicate { audio in
@@ -130,9 +111,6 @@ extension DB {
         }
         
         self.printRunTime("SyncWithUpdatedItems with count=\(metas.count)") {
-            let context = ModelContext(self.modelContainer)
-            context.autosaveEnabled = false
-            
             // 如果url属性为unique，数据库已存在相同url的记录，再执行context.insert，发现已存在的被替换成新的了
             // 但在这里，希望如果存在，就不要插入
             for (_, meta) in metas.enumerated() {
@@ -147,6 +125,13 @@ extension DB {
                 os_log(.error, "\(e.localizedDescription)")
             }
         }
+        
+        // 计算文件的Hash
+        metas.forEach({ meta in
+            if meta.isDownloaded, let url = meta.url, let audio = self.findAudio(url) {
+                self.updateGroup(audio)
+            }
+        })
     }
 }
 

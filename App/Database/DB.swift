@@ -16,6 +16,7 @@ actor DB: ModelActor {
 
     let modelContainer: ModelContainer
     let modelExecutor: any ModelExecutor
+    let eventManager = EventManager()
 
     var queue = DispatchQueue(label: "DB")
     var context: ModelContext

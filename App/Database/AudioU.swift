@@ -179,7 +179,7 @@ extension DB {
 
 extension DB {
     func updateGroup(_ audio: Audio) {
-        //os_log("\(Self.label)UpdateGroup for \(audio.title) 🌽")
+        os_log("\(Self.label)UpdateGroup for \(audio.title) 🌽🌽🌽")
         let fileHash = audio.getHash()
         if fileHash.isEmpty {
             return
