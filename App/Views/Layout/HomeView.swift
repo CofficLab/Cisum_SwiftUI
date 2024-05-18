@@ -32,41 +32,41 @@ struct HomeView: View {
                     DBView()
                 }
             }
-            .onChange(of: showDB) {
-                // 高度被自动修改过了，重置
-                if !showDB && geo.size.height != self.height {
-                    resetHeight()
-                    return
-                }
-
-                // 高度不足，自动调整以展示数据库
-                if showDB && geo.size.height - controlViewHeightMin <= databaseViewHeightMin {
-                    increseHeightToShowDB(geo)
-                    return
-                }
-            }
-            .onChange(of: geo.size.height) {
-                if autoResizing == false {
-                    // 说明是用户主动调整
-                    self.height = DeviceConfig.getWindowHeight()
-                    // os_log("\(Logger.isMain)\(self.label)Height=\(self.height)")
-                }
-
-                autoResizing = false
-
-                if geo.size.height <= controlViewHeightMin + 20 {
-                    appManager.closeDBView()
-                }
-            }
-            .onAppear {
-                if autoResizing == false {
-                    // 说明是用户主动调整
-                    self.height = DeviceConfig.getWindowHeight()
-                    if verbose {
-                        os_log("\(Logger.isMain)\(self.label)Height=\(self.height)")
-                    }
-                }
-            }
+//            .onChange(of: showDB) {
+//                // 高度被自动修改过了，重置
+//                if !showDB && geo.size.height != self.height {
+//                    resetHeight()
+//                    return
+//                }
+//
+//                // 高度不足，自动调整以展示数据库
+//                if showDB && geo.size.height - controlViewHeightMin <= databaseViewHeightMin {
+//                    increseHeightToShowDB(geo)
+//                    return
+//                }
+//            }
+//            .onChange(of: geo.size.height) {
+//                if autoResizing == false {
+//                    // 说明是用户主动调整
+//                    self.height = DeviceConfig.getWindowHeight()
+//                    // os_log("\(Logger.isMain)\(self.label)Height=\(self.height)")
+//                }
+//
+//                autoResizing = false
+//
+//                if geo.size.height <= controlViewHeightMin + 20 {
+//                    appManager.closeDBView()
+//                }
+//            }
+//            .onAppear {
+//                if autoResizing == false {
+//                    // 说明是用户主动调整
+//                    self.height = DeviceConfig.getWindowHeight()
+//                    if verbose {
+//                        os_log("\(Logger.isMain)\(self.label)Height=\(self.height)")
+//                    }
+//                }
+//            }
         }
     }
 }

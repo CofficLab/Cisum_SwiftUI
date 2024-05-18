@@ -6,7 +6,7 @@ extension DB {
     func runDeleteInvalidJob() {
         self.runJob(
             "DeleteInvalid 🗑️🗑️🗑️",
-            verbose: true,
+            verbose: false,
             descriptor: Audio.descriptorAll,
             printLog: false,
             code: { audio, onEnd in

@@ -55,20 +55,27 @@ extension DeviceConfig {
         #endif
     }
 
-    static func setHeight(_ h: CGFloat) {
+    static func setHeight(_ h: CGFloat, verbose: Bool = false) {
         #if os(macOS)
-        os_log("\(Logger.isMain)\(self.label)设置Height=\(h)")
+        if verbose {
+            os_log("\(Logger.isMain)\(self.label)设置Height=\(h)")
+        }
+        
         let window = NSApplication.shared.windows.first!
         var frame = window.frame
         let oldY = frame.origin.y
         let height = frame.size.height
 
-        os_log("\(Logger.isMain)\(self.label)设置前 Y=\(oldY) height=\(height)")
+        if verbose {
+            os_log("\(Logger.isMain)\(self.label)设置前 Y=\(oldY) height=\(height)")
+        }
 
         frame.origin.y = oldY + height - h
         frame.size.height = h
 
-        os_log("\(Logger.isMain)\(self.label)设置后 Y=\(frame.origin.y) height=\(frame.size.height)")
+        if verbose {
+            os_log("\(Logger.isMain)\(self.label)设置后 Y=\(frame.origin.y) height=\(frame.size.height)")
+        }
 
         window.setFrame(frame, display: true)
         #endif

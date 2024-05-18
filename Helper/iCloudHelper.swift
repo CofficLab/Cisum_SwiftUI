@@ -286,7 +286,7 @@ extension iCloudHelper {
         let nanoTime = DispatchTime.now().uptimeNanoseconds - startTime.uptimeNanoseconds
         let timeInterval = Double(nanoTime) / 1000000000
 
-        if DB.verbose && timeInterval > tolerance {
+        if verbose && timeInterval > tolerance {
             os_log("\(Logger.isMain)\(DB.label)\(title) cost \(timeInterval) 秒 🐢🐢🐢")
         }
     }

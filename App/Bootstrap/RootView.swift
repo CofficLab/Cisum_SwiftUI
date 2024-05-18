@@ -33,7 +33,7 @@ struct RootView<Content>: View where Content: View {
                 }
                 // 等content出现后，再执行后台任务
                 .task(priority: .background) {
-                    AppConfig.bgQueue.asyncAfter(deadline: .now() + 20) {
+                    AppConfig.bgQueue.asyncAfter(deadline: .now() + 5) {
                         if verbose {
                             os_log("\(self.label)执行后台任务")
                         }

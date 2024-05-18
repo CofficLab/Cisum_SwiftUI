@@ -8,7 +8,7 @@ extension DB {
 
     func runJob(
         _ id: String,
-        verbose: Bool = true,
+        verbose: Bool = false,
         descriptor: FetchDescriptor<Audio>,
         qos: DispatchQoS = .background,
         printLog: Bool = true,
@@ -35,8 +35,10 @@ extension DB {
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
         }
-
-        os_log("\(Logger.isMain)\(DB.label)\(title) Start 🚀🚀🚀")
+        
+        if verbose {
+            os_log("\(Logger.isMain)\(DB.label)\(title) Start 🚀🚀🚀")
+        }
 
         do {
             let t = totalCount
