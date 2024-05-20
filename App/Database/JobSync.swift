@@ -16,9 +16,9 @@ extension DB {
     func sync(_ items: [MetaWrapper], verbose: Bool = true) {
         var message = "\(self.label)sync with count=\(items.count) 🪣🪣🪣"
         
-//        if let first = items.first, first.isDownloading == true {
-//            message += " -> \(first.fileName ?? "-") -> \(String(format: "%.0f", first.downloadProgress))% ⏬⏬⏬"
-//        }
+        if let first = items.first, first.isDownloading == true {
+            message += " -> \(first.fileName ?? "-") -> \(String(format: "%.0f", first.downloadProgress))% ⏬⏬⏬"
+        }
         
         if verbose {
             os_log("\(message)")

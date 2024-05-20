@@ -110,6 +110,8 @@
 		0BD056912BC6340800EBC7C4 /* BtnEvict.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD056902BC6340800EBC7C4 /* BtnEvict.swift */; };
 		0BD056932BC636D600EBC7C4 /* AudioCoverExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD056922BC636D600EBC7C4 /* AudioCoverExt.swift */; };
 		0BD98CFE2BD8E91500641A6A /* HeroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD98CFD2BD8E91500641A6A /* HeroView.swift */; };
+		0BE93F2E2BFB8B7E00F25445 /* MoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE93F2D2BFB8B7E00F25445 /* MoreView.swift */; };
+		0BE93F312BFB8E3200F25445 /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE93F302BFB8E3200F25445 /* SettingView.swift */; };
 		0BFB38832BCCCC780055E38B /* OperationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFB38822BCCCC780055E38B /* OperationView.swift */; };
 		0BFB38852BCCD26F0055E38B /* BtnLike.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFB38842BCCD26F0055E38B /* BtnLike.swift */; };
 		0BFB38ED2BCE779B0055E38B /* DeviceConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFB38EC2BCE779B0055E38B /* DeviceConfig.swift */; };
@@ -224,6 +226,8 @@
 		0BD056902BC6340800EBC7C4 /* BtnEvict.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnEvict.swift; sourceTree = "<group>"; };
 		0BD056922BC636D600EBC7C4 /* AudioCoverExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioCoverExt.swift; sourceTree = "<group>"; };
 		0BD98CFD2BD8E91500641A6A /* HeroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroView.swift; sourceTree = "<group>"; };
+		0BE93F2D2BFB8B7E00F25445 /* MoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreView.swift; sourceTree = "<group>"; };
+		0BE93F302BFB8E3200F25445 /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
 		0BFB38822BCCCC780055E38B /* OperationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationView.swift; sourceTree = "<group>"; };
 		0BFB38842BCCD26F0055E38B /* BtnLike.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnLike.swift; sourceTree = "<group>"; };
 		0BFB38EC2BCE779B0055E38B /* DeviceConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceConfig.swift; sourceTree = "<group>"; };
@@ -297,6 +301,7 @@
 		0B1D5A702AB302600010DDF2 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				0BE93F2F2BFB8E1C00F25445 /* Settings */,
 				0BB889D32AC04600004788D5 /* Buttons */,
 				0BBAD0702BBBDC22005834A3 /* Component */,
 				0BFDCE522BAFF279009198DD /* Database */,
@@ -419,6 +424,7 @@
 			children = (
 				0B1D5A732AB302600010DDF2 /* ContentView.swift */,
 				0BBC157B2AB84C21006E82C4 /* HomeView.swift */,
+				0BE93F2D2BFB8B7E00F25445 /* MoreView.swift */,
 			);
 			path = Layout;
 			sourceTree = "<group>";
@@ -432,6 +438,14 @@
 				0B9FA29A2BC81F53007B235A /* DefaultAlbum.swift */,
 			);
 			path = Component;
+			sourceTree = "<group>";
+		};
+		0BE93F2F2BFB8E1C00F25445 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				0BE93F302BFB8E3200F25445 /* SettingView.swift */,
+			);
+			path = Settings;
 			sourceTree = "<group>";
 		};
 		0BEBCBAB2B35285100F2116E /* App */ = {
@@ -596,6 +610,7 @@
 				0B8C36AA2BEA2EC700C47567 /* DiskContact.swift in Sources */,
 				0BBC158F2ABAC146006E82C4 /* BtnNext.swift in Sources */,
 				0BBC15802AB854A8006E82C4 /* DBView.swift in Sources */,
+				0BE93F312BFB8E3200F25445 /* SettingView.swift in Sources */,
 				0B901D932BB83F38003AC253 /* CloudKit.swift in Sources */,
 				0B8C36A32BEA124900C47567 /* AudioR.swift in Sources */,
 				0B4DFC742BD74145001CEF32 /* DeviceCategory.swift in Sources */,
@@ -657,6 +672,7 @@
 				0BAABEBA2BC8C5CB00DF4A31 /* JobPrepare.swift in Sources */,
 				0B901D862BB83BA2003AC253 /* CloudHandler.swift in Sources */,
 				0B8C36B02BEC6E6500C47567 /* DBExt.swift in Sources */,
+				0BE93F2E2BFB8B7E00F25445 /* MoreView.swift in Sources */,
 				0B9FA2992BC81EFF007B235A /* NotDownloadedAlbum.swift in Sources */,
 				0BBC158D2ABAC0C7006E82C4 /* BtnToggle.swift in Sources */,
 				0B11262A2AC6F7B20093DFFA /* BtnToggleDB.swift in Sources */,
