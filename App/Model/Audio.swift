@@ -163,6 +163,14 @@ extension Audio {
     func checkIfDownloaded() -> Bool { iCloudHelper.isDownloaded(url: url) }
     func checkIfDownloading() -> Bool { iCloudHelper.isDownloading(url) }
     func checkIfNotDownloaded() -> Bool { self.checkIfDownloaded() == false }
+    
+    var isDownloaded: Bool {
+        checkIfDownloaded()
+    }
+    
+    var isDownloading: Bool {
+        checkIfDownloading()
+    }
 }
 
 #Preview("App") {
