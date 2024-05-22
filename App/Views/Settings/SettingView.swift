@@ -4,8 +4,10 @@ struct SettingView: View {
     var body: some View {
         ScrollView {
             VStack {
-                DirSetting().padding()
-                CoverDirSetting().padding()
+                DirSetting().padding(.horizontal)
+                CoverDirSetting().padding(.horizontal)
+                VersionSetting().padding(.horizontal)
+                PlayTime().padding(.horizontal)
             }
         }
         .background(.background)

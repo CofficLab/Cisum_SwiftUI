@@ -242,3 +242,23 @@ extension DB {
         Self.get(context: ModelContext(self.modelContainer), i)
     }
 }
+
+// MARK: PlayTime
+
+extension DB {
+    func getAudioPlayTime() -> Int {
+        var time = 0
+        
+        do {
+            let audios = try context.fetch(Audio.descriptorAll)
+            
+            audios.forEach({
+                time += $0.playCount
+            })
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
+        
+        return time
+    }
+}

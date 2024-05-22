@@ -16,19 +16,21 @@ struct DirSetting: View {
                     }
                 }
                 Spacer()
-                Button(action: {
-                    openUrl(AppConfig.audiosDir)
-                }, label: {
-                    Label(title: {
-                        Text("打开")
-                    }, icon: {
-                        Image(systemName: "doc.viewfinder.fill")
+                #if os(macOS)
+                    Button(action: {
+                        openUrl(AppConfig.audiosDir)
+                    }, label: {
+                        Label(title: {
+                            Text("打开")
+                        }, icon: {
+                            Image(systemName: "doc.viewfinder.fill")
+                        })
                     })
-                })
+                #endif
             }.padding(10)
         }.background(BackgroundView.type1.opacity(0.1))
     }
-    
+
     private func openUrl(_ url: URL?) {
         #if os(macOS)
             guard let dir = url else {

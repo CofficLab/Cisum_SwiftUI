@@ -69,6 +69,7 @@
 		0B9FA29D2BC823A1007B235A /* SmartPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9FA29C2BC823A1007B235A /* SmartPlayer.swift */; };
 		0BA9FB6C2BFE14B4008074CB /* DirSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA9FB6B2BFE14B4008074CB /* DirSetting.swift */; };
 		0BA9FB6E2BFE155B008074CB /* CoverDirSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA9FB6D2BFE155B008074CB /* CoverDirSetting.swift */; };
+		0BA9FB702BFE223A008074CB /* VersionSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA9FB6F2BFE223A008074CB /* VersionSetting.swift */; };
 		0BAABEAF2BC787A200DF4A31 /* JobCopy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAABEAE2BC787A200DF4A31 /* JobCopy.swift */; };
 		0BAABEB12BC79C4E00DF4A31 /* CopyTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAABEB02BC79C4E00DF4A31 /* CopyTask.swift */; };
 		0BAABEB32BC79C9F00DF4A31 /* TaskExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAABEB22BC79C9F00DF4A31 /* TaskExt.swift */; };
@@ -112,6 +113,7 @@
 		0BD056912BC6340800EBC7C4 /* BtnEvict.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD056902BC6340800EBC7C4 /* BtnEvict.swift */; };
 		0BD056932BC636D600EBC7C4 /* AudioCoverExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD056922BC636D600EBC7C4 /* AudioCoverExt.swift */; };
 		0BD98CFE2BD8E91500641A6A /* HeroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD98CFD2BD8E91500641A6A /* HeroView.swift */; };
+		0BE6958E2BFE28B400CEFFEB /* PlayTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE6958D2BFE28B400CEFFEB /* PlayTime.swift */; };
 		0BE93F2E2BFB8B7E00F25445 /* MoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE93F2D2BFB8B7E00F25445 /* MoreView.swift */; };
 		0BE93F312BFB8E3200F25445 /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE93F302BFB8E3200F25445 /* SettingView.swift */; };
 		0BFB38832BCCCC780055E38B /* OperationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFB38822BCCCC780055E38B /* OperationView.swift */; };
@@ -187,6 +189,7 @@
 		0B9FA29C2BC823A1007B235A /* SmartPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmartPlayer.swift; sourceTree = "<group>"; };
 		0BA9FB6B2BFE14B4008074CB /* DirSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirSetting.swift; sourceTree = "<group>"; };
 		0BA9FB6D2BFE155B008074CB /* CoverDirSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverDirSetting.swift; sourceTree = "<group>"; };
+		0BA9FB6F2BFE223A008074CB /* VersionSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionSetting.swift; sourceTree = "<group>"; };
 		0BAABEAE2BC787A200DF4A31 /* JobCopy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobCopy.swift; sourceTree = "<group>"; };
 		0BAABEB02BC79C4E00DF4A31 /* CopyTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyTask.swift; sourceTree = "<group>"; };
 		0BAABEB22BC79C9F00DF4A31 /* TaskExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskExt.swift; sourceTree = "<group>"; };
@@ -230,6 +233,7 @@
 		0BD056902BC6340800EBC7C4 /* BtnEvict.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnEvict.swift; sourceTree = "<group>"; };
 		0BD056922BC636D600EBC7C4 /* AudioCoverExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioCoverExt.swift; sourceTree = "<group>"; };
 		0BD98CFD2BD8E91500641A6A /* HeroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroView.swift; sourceTree = "<group>"; };
+		0BE6958D2BFE28B400CEFFEB /* PlayTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayTime.swift; sourceTree = "<group>"; };
 		0BE93F2D2BFB8B7E00F25445 /* MoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreView.swift; sourceTree = "<group>"; };
 		0BE93F302BFB8E3200F25445 /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
 		0BFB38822BCCCC780055E38B /* OperationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationView.swift; sourceTree = "<group>"; };
@@ -450,6 +454,8 @@
 				0BE93F302BFB8E3200F25445 /* SettingView.swift */,
 				0BA9FB6B2BFE14B4008074CB /* DirSetting.swift */,
 				0BA9FB6D2BFE155B008074CB /* CoverDirSetting.swift */,
+				0BA9FB6F2BFE223A008074CB /* VersionSetting.swift */,
+				0BE6958D2BFE28B400CEFFEB /* PlayTime.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -613,6 +619,7 @@
 				0B220F6D2BB051140077255A /* StateView.swift in Sources */,
 				0B1D5A8D2AB3E8290010DDF2 /* AppDelegate.swift in Sources */,
 				0BD056932BC636D600EBC7C4 /* AudioCoverExt.swift in Sources */,
+				0BA9FB702BFE223A008074CB /* VersionSetting.swift in Sources */,
 				0B8C36AA2BEA2EC700C47567 /* DiskContact.swift in Sources */,
 				0BBC158F2ABAC146006E82C4 /* BtnNext.swift in Sources */,
 				0BBC15802AB854A8006E82C4 /* DBView.swift in Sources */,
@@ -672,6 +679,7 @@
 				0BA9FB6E2BFE155B008074CB /* CoverDirSetting.swift in Sources */,
 				0B8C36B42BEC6EAB00C47567 /* ViewExt.swift in Sources */,
 				0B11262C2AC719B70093DFFA /* ImageHelper.swift in Sources */,
+				0BE6958E2BFE28B400CEFFEB /* PlayTime.swift in Sources */,
 				0BFB38832BCCCC780055E38B /* OperationView.swift in Sources */,
 				0BBC159A2ABAD5DB006E82C4 /* SliderView.swift in Sources */,
 				0BFB38852BCCD26F0055E38B /* BtnLike.swift in Sources */,

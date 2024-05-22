@@ -12,19 +12,21 @@ struct CoverDirSetting: View {
                     Text("根据音频文件自动生成封面图").font(.footnote)
                 }
                 Spacer()
-                Button(action: {
-                    openUrl(AppConfig.coverDir)
-                }, label: {
-                    Label(title: {
-                        Text("打开")
-                    }, icon: {
-                        Image(systemName: "doc.viewfinder.fill")
+                #if os(macOS)
+                    Button(action: {
+                        openUrl(AppConfig.coverDir)
+                    }, label: {
+                        Label(title: {
+                            Text("打开")
+                        }, icon: {
+                            Image(systemName: "doc.viewfinder.fill")
+                        })
                     })
-                })
+                #endif
             }.padding(10)
         }.background(BackgroundView.type1.opacity(0.1))
     }
-    
+
     private func openUrl(_ url: URL?) {
         #if os(macOS)
             guard let dir = url else {
