@@ -115,6 +115,14 @@
 		0BD98CFE2BD8E91500641A6A /* HeroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD98CFD2BD8E91500641A6A /* HeroView.swift */; };
 		0BE6958E2BFE28B400CEFFEB /* PlayTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE6958D2BFE28B400CEFFEB /* PlayTime.swift */; };
 		0BE695902BFE325400CEFFEB /* StoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE6958F2BFE325400CEFFEB /* StoreManager.swift */; };
+		0BE6959A2BFE3DCC00CEFFEB /* AllSubscriptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE695912BFE3DCC00CEFFEB /* AllSubscriptions.swift */; };
+		0BE6959B2BFE3DCC00CEFFEB /* BuyButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE695922BFE3DCC00CEFFEB /* BuyButtonStyle.swift */; };
+		0BE6959C2BFE3DCC00CEFFEB /* BuyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE695932BFE3DCC00CEFFEB /* BuyView.swift */; };
+		0BE6959D2BFE3DCC00CEFFEB /* CarsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE695942BFE3DCC00CEFFEB /* CarsView.swift */; };
+		0BE6959E2BFE3DCC00CEFFEB /* MySubscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE695952BFE3DCC00CEFFEB /* MySubscription.swift */; };
+		0BE6959F2BFE3DCC00CEFFEB /* NonRenewables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE695962BFE3DCC00CEFFEB /* NonRenewables.swift */; };
+		0BE695A02BFE3DCC00CEFFEB /* OneTimeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE695972BFE3DCC00CEFFEB /* OneTimeView.swift */; };
+		0BE695A12BFE3DCC00CEFFEB /* ProductCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE695982BFE3DCC00CEFFEB /* ProductCell.swift */; };
 		0BE93F2E2BFB8B7E00F25445 /* MoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE93F2D2BFB8B7E00F25445 /* MoreView.swift */; };
 		0BE93F312BFB8E3200F25445 /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE93F302BFB8E3200F25445 /* SettingView.swift */; };
 		0BFB38832BCCCC780055E38B /* OperationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFB38822BCCCC780055E38B /* OperationView.swift */; };
@@ -236,6 +244,14 @@
 		0BD98CFD2BD8E91500641A6A /* HeroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroView.swift; sourceTree = "<group>"; };
 		0BE6958D2BFE28B400CEFFEB /* PlayTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayTime.swift; sourceTree = "<group>"; };
 		0BE6958F2BFE325400CEFFEB /* StoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreManager.swift; sourceTree = "<group>"; };
+		0BE695912BFE3DCC00CEFFEB /* AllSubscriptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllSubscriptions.swift; sourceTree = "<group>"; };
+		0BE695922BFE3DCC00CEFFEB /* BuyButtonStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuyButtonStyle.swift; sourceTree = "<group>"; };
+		0BE695932BFE3DCC00CEFFEB /* BuyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuyView.swift; sourceTree = "<group>"; };
+		0BE695942BFE3DCC00CEFFEB /* CarsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CarsView.swift; sourceTree = "<group>"; };
+		0BE695952BFE3DCC00CEFFEB /* MySubscription.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MySubscription.swift; sourceTree = "<group>"; };
+		0BE695962BFE3DCC00CEFFEB /* NonRenewables.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NonRenewables.swift; sourceTree = "<group>"; };
+		0BE695972BFE3DCC00CEFFEB /* OneTimeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OneTimeView.swift; sourceTree = "<group>"; };
+		0BE695982BFE3DCC00CEFFEB /* ProductCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductCell.swift; sourceTree = "<group>"; };
 		0BE93F2D2BFB8B7E00F25445 /* MoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreView.swift; sourceTree = "<group>"; };
 		0BE93F302BFB8E3200F25445 /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
 		0BFB38822BCCCC780055E38B /* OperationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationView.swift; sourceTree = "<group>"; };
@@ -451,9 +467,25 @@
 			path = Component;
 			sourceTree = "<group>";
 		};
+		0BE695992BFE3DCC00CEFFEB /* Store */ = {
+			isa = PBXGroup;
+			children = (
+				0BE695912BFE3DCC00CEFFEB /* AllSubscriptions.swift */,
+				0BE695922BFE3DCC00CEFFEB /* BuyButtonStyle.swift */,
+				0BE695932BFE3DCC00CEFFEB /* BuyView.swift */,
+				0BE695942BFE3DCC00CEFFEB /* CarsView.swift */,
+				0BE695952BFE3DCC00CEFFEB /* MySubscription.swift */,
+				0BE695962BFE3DCC00CEFFEB /* NonRenewables.swift */,
+				0BE695972BFE3DCC00CEFFEB /* OneTimeView.swift */,
+				0BE695982BFE3DCC00CEFFEB /* ProductCell.swift */,
+			);
+			path = Store;
+			sourceTree = "<group>";
+		};
 		0BE93F2F2BFB8E1C00F25445 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				0BE695992BFE3DCC00CEFFEB /* Store */,
 				0BE93F302BFB8E3200F25445 /* SettingView.swift */,
 				0BA9FB6B2BFE14B4008074CB /* DirSetting.swift */,
 				0BA9FB6D2BFE155B008074CB /* CoverDirSetting.swift */,
@@ -605,6 +637,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0BBA422F2AC2BAE300C0B977 /* AlbumView.swift in Sources */,
+				0BE695A12BFE3DCC00CEFFEB /* ProductCell.swift in Sources */,
 				0B1D5A872AB302610010DDF2 /* BackgroundView.swift in Sources */,
 				0B8C36AE2BEC6E3E00C47567 /* DevExt.swift in Sources */,
 				0B8FC2702BBC559500839C75 /* PlayingAlbum.swift in Sources */,
@@ -639,16 +672,21 @@
 				0BB889D92AC047B3004788D5 /* BtnTrash.swift in Sources */,
 				0B5786342BCB8DC00064F66A /* PlayView.swift in Sources */,
 				0B1D5A882AB302610010DDF2 /* ContentView.swift in Sources */,
+				0BE6959C2BFE3DCC00CEFFEB /* BuyView.swift in Sources */,
 				0B718F0C2AB4349900569762 /* CardView.swift in Sources */,
 				0BFDCB802AB86AF300B0D1C8 /* MenuTile.swift in Sources */,
+				0BE6959E2BFE3DCC00CEFFEB /* MySubscription.swift in Sources */,
 				0BD056912BC6340800EBC7C4 /* BtnEvict.swift in Sources */,
+				0BE695A02BFE3DCC00CEFFEB /* OneTimeView.swift in Sources */,
 				0B1498792BC4DF940075DA61 /* JobDelete.swift in Sources */,
 				0BBA421F2AC1397F00C0B977 /* Centered.swift in Sources */,
+				0BE6959A2BFE3DCC00CEFFEB /* AllSubscriptions.swift in Sources */,
 				0BAB300E2AB814F70012D837 /* Boot.swift in Sources */,
 				0BBA42212AC1802C00C0B977 /* ButtonCancelSelected.swift in Sources */,
 				0B9FA29D2BC823A1007B235A /* SmartPlayer.swift in Sources */,
 				0BBA422B2AC2ABAD00C0B977 /* ButtonShowDatabase.swift in Sources */,
 				0BAABEB12BC79C4E00DF4A31 /* CopyTask.swift in Sources */,
+				0BE6959F2BFE3DCC00CEFFEB /* NonRenewables.swift in Sources */,
 				0B11365D2BF106F300A71FE1 /* AudioGroup.swift in Sources */,
 				0BB587172AD815770071AEBD /* TimeHelper.swift in Sources */,
 				0B9FA2972BC80E51007B235A /* EventManager.swift in Sources */,
@@ -663,6 +701,7 @@
 				0BAABEB82BC7D4B600DF4A31 /* BtnDelTask.swift in Sources */,
 				0BD0568B2BC6202900EBC7C4 /* DiskiCloud.swift in Sources */,
 				0B1D5A792AB302610010DDF2 /* AudioManager.swift in Sources */,
+				0BE6959B2BFE3DCC00CEFFEB /* BuyButtonStyle.swift in Sources */,
 				0B9FA29B2BC81F53007B235A /* DefaultAlbum.swift in Sources */,
 				0B1498742BC4C5CB0075DA61 /* PlayMode.swift in Sources */,
 				0BB543F82BE9C64C00D7A2B2 /* PathExt.swift in Sources */,
@@ -704,6 +743,7 @@
 				0BBAD0A22BBD413B005834A3 /* DBList.swift in Sources */,
 				0BB427912BED0B38004E6F82 /* DiskLocal.swift in Sources */,
 				0B1165F02ABBCCB0005C5CBB /* AppManager.swift in Sources */,
+				0BE6959D2BFE3DCC00CEFFEB /* CarsView.swift in Sources */,
 				0BBA42252AC1813D00C0B977 /* BtnDel.swift in Sources */,
 				0B8C36AC2BEC6E0F00C47567 /* StateExt.swift in Sources */,
 				0B901D882BB83BC3003AC253 /* FilePresenter.swift in Sources */,
