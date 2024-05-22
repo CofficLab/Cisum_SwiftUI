@@ -30,7 +30,11 @@ struct HomeView: View {
                     .frame(height: showDB ? AppConfig.controlViewMinHeight : geo.size.height)
 
                 if showDB {
-                    MoreView()
+                    if AppConfig.debug {
+                        MoreView()
+                    } else {
+                        DBView()
+                    }
                 }
             }
             .onChange(of: showDB) {
