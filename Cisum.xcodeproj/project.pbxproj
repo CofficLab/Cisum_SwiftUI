@@ -67,6 +67,8 @@
 		0B9FA2992BC81EFF007B235A /* NotDownloadedAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9FA2982BC81EFF007B235A /* NotDownloadedAlbum.swift */; };
 		0B9FA29B2BC81F53007B235A /* DefaultAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9FA29A2BC81F53007B235A /* DefaultAlbum.swift */; };
 		0B9FA29D2BC823A1007B235A /* SmartPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9FA29C2BC823A1007B235A /* SmartPlayer.swift */; };
+		0BA9FB6C2BFE14B4008074CB /* DirSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA9FB6B2BFE14B4008074CB /* DirSetting.swift */; };
+		0BA9FB6E2BFE155B008074CB /* CoverDirSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA9FB6D2BFE155B008074CB /* CoverDirSetting.swift */; };
 		0BAABEAF2BC787A200DF4A31 /* JobCopy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAABEAE2BC787A200DF4A31 /* JobCopy.swift */; };
 		0BAABEB12BC79C4E00DF4A31 /* CopyTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAABEB02BC79C4E00DF4A31 /* CopyTask.swift */; };
 		0BAABEB32BC79C9F00DF4A31 /* TaskExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAABEB22BC79C9F00DF4A31 /* TaskExt.swift */; };
@@ -183,6 +185,8 @@
 		0B9FA2982BC81EFF007B235A /* NotDownloadedAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotDownloadedAlbum.swift; sourceTree = "<group>"; };
 		0B9FA29A2BC81F53007B235A /* DefaultAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultAlbum.swift; sourceTree = "<group>"; };
 		0B9FA29C2BC823A1007B235A /* SmartPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmartPlayer.swift; sourceTree = "<group>"; };
+		0BA9FB6B2BFE14B4008074CB /* DirSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirSetting.swift; sourceTree = "<group>"; };
+		0BA9FB6D2BFE155B008074CB /* CoverDirSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverDirSetting.swift; sourceTree = "<group>"; };
 		0BAABEAE2BC787A200DF4A31 /* JobCopy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobCopy.swift; sourceTree = "<group>"; };
 		0BAABEB02BC79C4E00DF4A31 /* CopyTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyTask.swift; sourceTree = "<group>"; };
 		0BAABEB22BC79C9F00DF4A31 /* TaskExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskExt.swift; sourceTree = "<group>"; };
@@ -444,6 +448,8 @@
 			isa = PBXGroup;
 			children = (
 				0BE93F302BFB8E3200F25445 /* SettingView.swift */,
+				0BA9FB6B2BFE14B4008074CB /* DirSetting.swift */,
+				0BA9FB6D2BFE155B008074CB /* CoverDirSetting.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -652,6 +658,7 @@
 				0BB543F82BE9C64C00D7A2B2 /* PathExt.swift in Sources */,
 				0B6B8B992BBA39F500F65B23 /* ControlButton.swift in Sources */,
 				0B1D5A842AB302610010DDF2 /* Extensions.swift in Sources */,
+				0BA9FB6C2BFE14B4008074CB /* DirSetting.swift in Sources */,
 				0BBAD0722BBC05C6005834A3 /* DBRow.swift in Sources */,
 				0B11365B2BEFABC700A71FE1 /* JobGetCover.swift in Sources */,
 				0B8C36B22BEC6E8D00C47567 /* QueueExt.swift in Sources */,
@@ -662,6 +669,7 @@
 				0B220F752BB1BBDB0077255A /* SmartError.swift in Sources */,
 				0BB889DB2AC06C54004788D5 /* DB.swift in Sources */,
 				0BBA42192ABD5D9200C0B977 /* BtnMode.swift in Sources */,
+				0BA9FB6E2BFE155B008074CB /* CoverDirSetting.swift in Sources */,
 				0B8C36B42BEC6EAB00C47567 /* ViewExt.swift in Sources */,
 				0B11262C2AC719B70093DFFA /* ImageHelper.swift in Sources */,
 				0BFB38832BCCCC780055E38B /* OperationView.swift in Sources */,
