@@ -55,7 +55,7 @@ struct MetaWrapper: Sendable {
         
         // MARK: DownloadProgress
         
-        var downloadProgress = metadataItem.value(forAttribute: NSMetadataUbiquitousItemPercentDownloadedKey) as? Double ?? 0.0
+        let downloadProgress = metadataItem.value(forAttribute: NSMetadataUbiquitousItemPercentDownloadedKey) as? Double ?? 0.0
         
         self.fileName = fileName
         self.isPlaceholder = isPlaceholder

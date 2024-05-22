@@ -27,6 +27,7 @@ struct HomeView: View {
         GeometryReader { geo in
             VStack(spacing: 0) {
                 ControlView()
+                    .frame(height: showDB ? AppConfig.controlViewMinHeight : geo.size.height)
 
                 if showDB {
                     MoreView()
@@ -93,6 +94,7 @@ extension HomeView {
 
 #Preview("App") {
     AppPreview()
+        .frame(height: 600)
 }
 
 #Preview("Layout") {
