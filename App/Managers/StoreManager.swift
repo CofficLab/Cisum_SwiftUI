@@ -222,6 +222,7 @@ class StoreManager: ObservableObject {
     @MainActor
     func requestProducts(_ reason: String, _ completion: ((Error?) -> Void)? = nil) async {
         os_log("\(Logger.isMain) 🚩 💰 请求 App Store 获取产品列表，并存储到 @Published，因为 -> \(reason)")
+        print("\(Logger.isMain) 🚩 💰 请求 App Store 获取产品列表，并存储到 @Published，因为 -> \(reason)")
         do {
             //Request products from the App Store using the identifiers that the Products.plist file defines.
             let storeProducts = try await Product.products(for: productIdToEmoji.keys)
@@ -233,6 +234,7 @@ class StoreManager: ObservableObject {
 
             //Filter the products into categories based on their type.
             os_log("\(Logger.isMain) 💰 将从 App Store 获取的产品列表归类，个数 -> \(storeProducts.count)")
+            print("\(Logger.isMain) 💰 将从 App Store 获取的产品列表归类，个数 -> \(storeProducts.count)")
             for product in storeProducts {
                 os_log("\(Logger.isMain) 💰 将从 App Store 获取的产品列表归类 -> \(product.displayName)")
                 switch product.type {
@@ -271,6 +273,10 @@ class StoreManager: ObservableObject {
 
     func purchase(_ product: Product) async throws -> Transaction? {
         os_log("\(Logger.isMain) 💰 去支付")
+        
+        #if os(visionOS)
+        return nil
+        #else
         //Begin purchasing the `Product` the user selects.
         let result = try await product.purchase()
 
@@ -296,6 +302,7 @@ class StoreManager: ObservableObject {
             os_log("\(Logger.isMain) 💰 支付结果 \(String(describing: result))")
             return nil
         }
+        #endif
     }
 
     func isPurchased(_ product: Product) async throws -> Bool {
@@ -468,4 +475,11 @@ class StoreManager: ObservableObject {
         
         return Date.distantPast
     }
+}
+
+#Preview {
+    RootView {
+        BuyView()
+    }
+    .frame(height: 800)
 }

@@ -19,6 +19,7 @@ struct RootView<Content>: View where Content: View {
             content
                 .environmentObject(AudioManager())
                 .environmentObject(AppManager())
+                .environmentObject(StoreManager())
                 .frame(minWidth: AppConfig.minWidth, minHeight: AppConfig.minHeight)
                 .blendMode(.normal)
                 .task {

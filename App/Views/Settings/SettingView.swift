@@ -10,7 +10,6 @@ struct SettingView: View {
                 PlayTime().padding(.horizontal)
             }
         }
-        .background(.background)
     }
 }
 

@@ -21,7 +21,7 @@ struct AllSubscriptions: View {
                 Divider()
 
                 if refreshing == false && subscriptions.isEmpty {
-                    Text("☹️ 暂不能从App Store获取产品列表")
+                    Text("🏃 暂无")
                 } else {
                     VStack {
                         ForEach(subscriptions) { product in
@@ -78,5 +78,6 @@ struct AllSubscriptions: View {
 #Preview {
     RootView {
         BuyView()
-    }.frame(height: 400)
+    }
+    .frame(height: 800)
 }

@@ -12,11 +12,19 @@ struct MoreView: View {
                 .tabItem {
                     Label("设置", systemImage: "gear")
                 }
+            
+            BuyView()
+                .tabItem {
+                    Label("商店", systemImage: "crown")
+                }
+                .environmentObject(StoreManager())
         }
+        .background(.background)
         .tabViewStyle(DefaultTabViewStyle())
     }
 }
 
 #Preview {
     AppPreview()
+        .frame(height: 800)
 }

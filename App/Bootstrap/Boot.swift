@@ -40,5 +40,9 @@ struct Boot: App {
 }
 
 #Preview {
+    AppPreview()
+}
+
+#Preview {
     LayoutView()
 }

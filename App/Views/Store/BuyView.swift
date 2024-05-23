@@ -14,7 +14,7 @@ struct BuyView: View {
         ZStack {
             ScrollView {
                 VStack {
-                    Text("购买专业版本").font(.title)
+                    Text("帮助我们做的更好").font(.title)
 
                     featureView
                         .frame(width: 300)
@@ -28,13 +28,6 @@ struct BuyView: View {
                 .padding(.top, 48)
                 .frame(maxWidth: .infinity)
             }
-            .background(
-                colorScheme == .light ?
-                BackgroundView.type2.opacity(0.2):
-                BackgroundView.type2.opacity(0.8)
-            )
-
-            headerView
         }
     }
 
@@ -81,16 +74,7 @@ struct BuyView: View {
                     .frame(width: 35, height: 30)
                     .clipShape(RoundedRectangle(cornerRadius: 5, style: .continuous))
                     .padding(.trailing, 5)
-                Text("不限制文档数量，基础版最多为 9")
-            }
-            Divider()
-            HStack {
-                Text("☁️")
-                    .font(.system(size: 30))
-                    .frame(width: 35, height: 30)
-                    .clipShape(RoundedRectangle(cornerRadius: 5, style: .continuous))
-                    .padding(.trailing, 5)
-                Text("多设备同步")
+                Text("不断优化用户体验")
             }
             Divider()
             HStack {
@@ -131,9 +115,12 @@ struct BuyView: View {
 }
 
 #Preview {
-    ScrollView {
-        RootView {
-            BuyView()
-        }.frame(height: 400)
-    }
+    AppPreview()
+        .frame(height: 800)
+}
+
+#Preview {
+    BuyView()
+        .environmentObject(StoreManager())
+        .frame(height: 800)
 }
