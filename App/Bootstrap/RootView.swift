@@ -46,6 +46,10 @@ struct RootView<Content>: View where Content: View {
                         Task.detached(priority: .background, operation: {
                             await DB(AppConfig.getContainer).runGetCoversJob()
                         })
+                        
+                        Task.detached(priority: .background, operation: {
+                            await DB(AppConfig.getContainer).runFindAudioGroupJob()
+                        })
                     }
                 }
         }

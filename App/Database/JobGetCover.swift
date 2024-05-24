@@ -9,6 +9,7 @@ extension DB {
             descriptor: Audio.descriptorAll,
             qos: .userInteractive,
             printLog: false,
+            printStartLog: true,
             printLogStep: 500,
             code: { audio, onEnd in
                 if self.hasCoverRecord(audio) == false {

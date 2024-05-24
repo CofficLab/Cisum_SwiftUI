@@ -17,9 +17,18 @@ class Audio {
     }, sortBy: [
         SortDescriptor(\.order, order: .forward)
     ])
+    
     static var descriptorNoGroup = FetchDescriptor(predicate: #Predicate<Audio> {
         $0.group == nil
     })
+    
+    static var descriptorFirst: FetchDescriptor<Audio> {
+        var descriptor = Audio.descriptorAll
+        descriptor.sortBy.append(.init(\.order, order: .forward))
+        descriptor.fetchLimit = 1
+        
+        return descriptor
+    }
 
     @Transient
     let fileManager = FileManager.default
@@ -170,6 +179,10 @@ extension Audio {
     
     var isDownloading: Bool {
         checkIfDownloading()
+    }
+    
+    var isNotDownloaded: Bool {
+        !isDownloaded
     }
 }
 

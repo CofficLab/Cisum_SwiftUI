@@ -12,15 +12,17 @@ extension DB {
         descriptor: FetchDescriptor<Audio>,
         qos: DispatchQoS = .background,
         printLog: Bool = true,
+        printStartLog: Bool = true,
+        printQueueEnter: Bool = false,
         printLogStep: Int = 100,
+        printCost: Bool = true,
         code: @escaping (_ audio: Audio, _ onEnd: @escaping () -> Void) -> Void,
         complete: (@escaping (_ context: ModelContext) -> Void) = { _ in }
     ) {
         let startTime = DispatchTime.now()
-        let title = "🐎🐎🐎\(id)"
+        let title = "🐎🐎🐎 \(id)"
         let jobQueue = DispatchQueue(label: "DBJob", qos: qos)
         let opQueue = OperationQueue()
-        opQueue.maxConcurrentOperationCount = 2
         let notifyQueue = DispatchQueue(label: "DBJobNotify", qos: .background)
         let group = DispatchGroup()
         var totalCount = 0
@@ -36,8 +38,8 @@ extension DB {
             os_log(.error, "\(e.localizedDescription)")
         }
         
-        if verbose {
-            os_log("\(Logger.isMain)\(DB.label)\(title) Start 🚀🚀🚀")
+        if printStartLog {
+            os_log("\(Logger.isMain)\(DB.label)\(title) Start 🚀🚀🚀 with count=\(totalCount)")
         }
 
         do {
@@ -45,10 +47,14 @@ extension DB {
             try context.enumerate(descriptor, block: { audio in
                 jobQueue.sync {
                     group.enter()
+                    if printQueueEnter {
+                        os_log("\(Logger.isMain)\(DB.label)\(title) 已加入队列 \(audio.title), 队列积累任务数量 \(group.count)/\(t)")
+                    }
+                    
                     opQueue.addOperation {
                         code(audio) {
                             group.leave()
-                            if group.count % printLogStep == 0 && printLog {
+                            if group.count % printLogStep == 0 && printLog && group.count > 0 {
                                 os_log("\(Logger.isMain)\(DB.label)\(title) 余 \(group.count)/\(t)")
                             }
                         }
@@ -61,7 +67,7 @@ extension DB {
 
         group.notify(queue: notifyQueue) {
             complete(self.context)
-            if verbose {
+            if printCost {
                 // 计算代码执行时间
                 let nanoTime = DispatchTime.now().uptimeNanoseconds - startTime.uptimeNanoseconds
                 let timeInterval = Double(nanoTime) / 1000000000

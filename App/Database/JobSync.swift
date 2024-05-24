@@ -13,7 +13,7 @@ extension DB {
         await self.disk.watchAudiosFolder()
     }
     
-    func sync(_ items: [MetaWrapper], verbose: Bool = true) {
+    func sync(_ items: [MetaWrapper], verbose: Bool = false) {
         var message = "\(self.label)sync with count=\(items.count) 🪣🪣🪣"
         
         if let first = items.first, first.isDownloading == true {
