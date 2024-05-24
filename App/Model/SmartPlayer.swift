@@ -60,7 +60,7 @@ class SmartPlayer: NSObject {
             self.onStateChange(state)
             
             if let ee = e {
-                setError(ee)
+                setError(ee, audio: self.audio)
             }
         }
     }
@@ -150,7 +150,7 @@ extension SmartPlayer {
             throw SmartError.Downloading
         }
 
-//        // 未下载的情况
+        // 未下载的情况
         guard audio.isDownloaded else {
             os_log("\(self.label)未下载 \(audio.title) ⚠️⚠️⚠️")
             throw SmartError.NotDownloaded
@@ -188,14 +188,14 @@ extension SmartPlayer {
         case Paused(Audio?)
         case Stopped
         case Finished
-        case Error(Error)
+        case Error(Error, Audio?)
 
         var des: String {
             switch self {
             case let .Ready(audio):
                 "准备 \(audio?.title ?? "nil") 🚀🚀🚀"
-            case let .Error(error):
-                "错误：\(error.localizedDescription) ⚠️⚠️⚠️"
+            case let .Error(error, audio):
+                "错误：\(error.localizedDescription) ⚠️⚠️⚠️ -> \(audio?.title ?? "-")"
             case let .Playing(audio):
                 "播放 \(audio.title) 🔊🔊🔊"
             case let .Paused(audio):
@@ -222,14 +222,16 @@ extension SmartPlayer {
                 audio
             case .Paused(let audio):
                 audio
-            case .Stopped,.Finished,.Error(_):
+            case .Error(let error, let audio):
+                audio
+            case .Stopped,.Finished:
                 nil
             }
         }
     }
 
-    func setError(_ e: Error) {
-        state = .Error(e)
+    func setError(_ e: Error, audio: Audio?) {
+        state = .Error(e, audio)
     }
 
     var isReady: Bool {
@@ -246,6 +248,10 @@ extension SmartPlayer {
         } else {
             return false
         }
+    }
+    
+    var isNotPlaying: Bool {
+        !isPlaying
     }
 }
 

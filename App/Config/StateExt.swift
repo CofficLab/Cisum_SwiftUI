@@ -1,11 +1,13 @@
 import Foundation
 import SwiftUI
 
-// MARK: APP状态
-
 extension AppConfig {
+    // MARK: 当前Audio
+    
     @AppStorage("App.CurrentAudio")
     static var currentAudio: URL?
+    
+    // MARK: 当前播放模式
     
     @AppStorage("App.CurrentMode")
     static var currentMode: String = PlayMode.Order.rawValue

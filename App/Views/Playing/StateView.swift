@@ -64,7 +64,7 @@ struct StateView: View {
             let data = n.userInfo as! [String: Audio]
             let audio = data["audio"]!
 
-            if audio.url == audioManager.audio?.url, audio.isDownloaded {
+            if audio.url == audioManager.audio?.url, audio.isDownloaded, audioManager.player.isNotPlaying, audioManager.player.currentTime == 0 {
                 audioManager.prepare(audioManager.audio, reason: "StateView Detected Update")
             }
         })

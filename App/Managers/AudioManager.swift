@@ -73,7 +73,7 @@ class AudioManager: NSObject, ObservableObject {
             next()
         case .Stopped:
             break
-        case let .Error(error):
+        case let .Error(error, audio):
             main.async {
                 self.error = error
             }
