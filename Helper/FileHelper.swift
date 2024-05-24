@@ -9,28 +9,28 @@ import OSLog
 class FileHelper {
     static var fileManager = FileManager.default
     static var label = "📃 FileHelper::"
-    
+
     static func showInFinder(url: URL) {
-#if os(macOS)
-        NSWorkspace.shared.activateFileViewerSelecting([url])
-#endif
+        #if os(macOS)
+            NSWorkspace.shared.activateFileViewerSelecting([url])
+        #endif
     }
-    
+
     static func openFolder(url: URL) {
-#if os(macOS)
-        NSWorkspace.shared.open(url)
-#endif
+        #if os(macOS)
+            NSWorkspace.shared.open(url)
+        #endif
     }
-    
+
     static func isAudioFile(url: URL) -> Bool {
         return ["mp3", "wav", "m4a"].contains(url.pathExtension.lowercased())
     }
-    
+
     static func isAudioiCloudFile(url: URL) -> Bool {
         let ex = url.pathExtension.lowercased()
-        
+
         os_log("\(Logger.isMain)🔧 FileHelper::isAudioiCloudFile -> \(ex)")
-        
+
         return ex == "icloud" && isAudioFile(url: url.deletingPathExtension())
     }
 }
@@ -42,10 +42,10 @@ extension FileHelper {
         let resourceValues = try? url.resourceValues(forKeys: [.fileSizeKey])
         let size = resourceValues?.fileSize ?? 0
         os_log("File size: \(size) bytes")
-        
+
         return size
     }
-    
+
     static func getFileSize(_ url: URL) -> Int64 {
         do {
             let attributes = try fileManager.attributesOfItem(atPath: url.path)
@@ -60,7 +60,7 @@ extension FileHelper {
             return 0
         }
     }
-    
+
     static func getFileSizeReadable(_ url: URL) -> String {
         let byteCountFormatter: ByteCountFormatter = {
             let formatter = ByteCountFormatter()
@@ -68,11 +68,11 @@ extension FileHelper {
             formatter.countStyle = .file
             return formatter
         }()
-        
+
         if !fileManager.fileExists(atPath: url.path) {
             return "-"
         }
-        
+
         do {
             let attributes = try fileManager.attributesOfItem(atPath: url.path)
             if let fileSize = attributes[.size] as? Int64 {
@@ -86,7 +86,7 @@ extension FileHelper {
             return "-"
         }
     }
-    
+
     static func getFileSizeReadable(_ size: Int64) -> String {
         let byteCountFormatter: ByteCountFormatter = {
             let formatter = ByteCountFormatter()
@@ -94,7 +94,7 @@ extension FileHelper {
             formatter.countStyle = .file
             return formatter
         }()
-        
+
         return byteCountFormatter.string(fromByteCount: size)
     }
 }
@@ -112,7 +112,7 @@ extension FileHelper {
 
 // MARK: Hash
 
-extension FileHelper{
+extension FileHelper {
     static func getHash(_ url: URL) -> String {
         var fileHash = ""
 
@@ -130,9 +130,18 @@ extension FileHelper{
 
     static func getMD5(_ url: URL) -> String {
         do {
-            let data = try Data(contentsOf: url)
-            let hash = Insecure.MD5.hash(data: data)
-            return hash.map { String(format: "%02hhx", $0) }.joined()
+            let bufferSize = 1024
+            var hash = Insecure.MD5()
+            let fileHandle = try FileHandle(forReadingFrom: url)
+            defer { fileHandle.closeFile() }
+
+            while autoreleasepool(invoking: {
+                let data = fileHandle.readData(ofLength: bufferSize)
+                hash.update(data: data)
+                return data.count > 0
+            }) {}
+
+            return hash.finalize().map { String(format: "%02hhx", $0) }.joined()
         } catch {
             print("Error calculating MD5: \(error)")
             return ""

@@ -178,13 +178,13 @@ extension DB {
 // MARK: Group
 
 extension DB {
-    func updateGroup(_ audio: Audio, verbose: Bool = false) {
-        if verbose {
-            os_log("\(Self.label)UpdateGroup for \(audio.title) 🌾🌾🌾")
-        }
-        
+    func updateGroup(_ audio: Audio, verbose: Bool = true) {
         if audio.isNotDownloaded {
             return
+        }
+        
+        if verbose {
+            os_log("\(Self.label)UpdateGroup for \(audio.title) 🌾🌾🌾 \(audio.getFileSizeReadable())")
         }
         
         let fileHash = audio.getHash()

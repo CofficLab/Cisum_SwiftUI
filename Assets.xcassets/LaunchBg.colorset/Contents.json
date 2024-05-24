@@ -10,7 +10,7 @@
           "red" : "0.411"
         }
       },
-      "idiom" : "universal"
+      "idiom" : "iphone"
     },
     {
       "appearances" : [
@@ -23,7 +23,7 @@
         "platform" : "ios",
         "reference" : "opaqueSeparatorColor"
       },
-      "idiom" : "universal"
+      "idiom" : "iphone"
     }
   ],
   "info" : {
