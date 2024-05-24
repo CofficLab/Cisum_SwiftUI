@@ -64,12 +64,8 @@ struct StateView: View {
             let data = n.userInfo as! [String: Audio]
             let audio = data["audio"]!
 
-            if audio.url == audioManager.audio?.url {
-                AppConfig.bgQueue.async {
-                    if audio.checkIfDownloaded() {
-                        audioManager.prepare(audioManager.audio, reason: "StateView Detected Update")
-                    }
-                }
+            if audio.url == audioManager.audio?.url, audio.isDownloaded {
+                audioManager.prepare(audioManager.audio, reason: "StateView Detected Update")
             }
         })
         .onReceive(NotificationCenter.default.publisher(for: Notification.Name.AudiosUpdatedNotification), perform: { notification in

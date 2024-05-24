@@ -178,7 +178,7 @@ extension DB {
 // MARK: Group
 
 extension DB {
-    func updateGroup(_ audio: Audio, verbose: Bool = true) {
+    func updateGroup(_ audio: Audio, verbose: Bool = false) {
         if audio.isNotDownloaded {
             return
         }

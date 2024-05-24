@@ -26,63 +26,69 @@ class AudioManager: NSObject, ObservableObject {
     var isEmpty: Bool { audio == nil }
     var player = SmartPlayer()
     var isCloudStorage: Bool { iCloudHelper.isCloudPath(url: rootDir) }
-    var showErrorView: Bool { self.error != nil }
-    var showTitleView: Bool { self.audio != nil }
+    var showErrorView: Bool { error != nil }
+    var showTitleView: Bool { audio != nil }
     var verbose = true
 
     override init() {
         if verbose {
             os_log("\(Logger.isMain)\(Self.label)初始化")
         }
-        
+
         super.init()
 
         Task {
             checkNetworkStatus()
         }
-        
+
         Task {
             restore()
         }
-        
+
         player.onStateChange = { state in
             self.onStateChanged(state)
         }
+
+        Task {
+            onCommand()
+        }
     }
-    
-    func onStateChanged(_ state: SmartPlayer.State) {
+
+    func onStateChanged(_ state: SmartPlayer.State, verbose: Bool = true) {
         if verbose {
             os_log("\(self.label)播放状态变了 -> \(state.des)")
         }
-        
-        self.main.async {
+
+        main.async {
             self.audio = self.player.audio
             self.error = nil
         }
-        
+
         switch state {
-        case .Playing(let audio):
-             Task {
-                 await self.db.increasePlayCount(audio)
-             }
-             case .Finished:
-            self.next()
+        case let .Playing(audio):
+            Task {
+                await self.db.increasePlayCount(audio)
+            }
+        case .Finished:
+            next()
         case .Stopped:
             break
-        case .Error(let error):
-            self.main.async {
+        case let .Error(error):
+            main.async {
                 self.error = error
             }
         default:
             break
         }
+
+        setPlayingInfo()
     }
 
     // MARK: 恢复上次播放的
 
     func restore() {
         let currentMode = PlayMode(rawValue: AppConfig.currentMode)
-        self.mode = currentMode ?? self.mode
+        mode = currentMode ?? mode
 
         if let currentAudioId = AppConfig.currentAudio, audio == nil {
             Task {
@@ -99,12 +105,12 @@ class AudioManager: NSObject, ObservableObject {
 
     // MARK: 准备播放
 
-    func prepare(_ audio: Audio?, reason: String) {
+    func prepare(_ audio: Audio?, reason: String, verbose: Bool = true) {
         if verbose {
             os_log("\(self.label)Prepare \(audio?.title ?? "nil") 🐛 \(reason)")
         }
 
-        self.player.prepare(audio)
+        player.prepare(audio)
 
         Task {
             if let a = audio {
@@ -120,7 +126,7 @@ class AudioManager: NSObject, ObservableObject {
             os_log("\(self.label)play \(audio.title) 🚀🚀🚀")
         }
 
-        self.player.play(audio, reason: reason)
+        player.play(audio, reason: reason)
     }
 
     // MARK: 切换
@@ -143,7 +149,11 @@ class AudioManager: NSObject, ObservableObject {
 
         Task {
             if let i = await self.db.pre(audio) {
-                self.prepare(i, reason: "触发了上一首")
+                if self.player.isPlaying {
+                    self.play(i, reason: "在播放时触发了上一首")
+                } else {
+                    self.prepare(i, reason: "未播放时触发了上一首")
+                }
             }
         }
     }
@@ -157,7 +167,7 @@ class AudioManager: NSObject, ObservableObject {
         }
 
         if mode == .Loop && manual == false {
-            return self.player.resume()
+            return player.resume()
         }
 
         guard let audio = audio else {
@@ -167,9 +177,9 @@ class AudioManager: NSObject, ObservableObject {
         Task {
             if let i = await db.nextOf(audio) {
                 if player.isPlaying || manual == false {
-                    play(i, reason: "触发下一首")
+                    play(i, reason: "在播放时或自动触发下一首")
                 } else {
-                    prepare(i, reason: "触发了下一首")
+                    prepare(i, reason: "「未播放且手动」触发了下一首")
                 }
             } else {
                 self.player.stop()
@@ -184,7 +194,7 @@ extension AudioManager {
     // MARK: 切换播放模式
 
     func switchMode(_ callback: @escaping (_ mode: PlayMode) -> Void) {
-        self.mode = self.mode.switchMode()
+        mode = mode.switchMode()
 
         callback(mode)
 
@@ -192,7 +202,7 @@ extension AudioManager {
             if verbose {
                 os_log("\(Logger.isMain)\(Self.label)切换播放模式")
             }
-            
+
             if mode == .Random {
                 await self.db.sortRandom(audio)
             }
@@ -221,6 +231,145 @@ extension AudioManager {
 
         let queue = DispatchQueue(label: "NetworkMonitor")
         monitor.start(queue: queue)
+    }
+}
+
+// MARK: 媒体中心
+
+extension AudioManager {
+    var c: MPRemoteCommandCenter {
+        MPRemoteCommandCenter.shared()
+    }
+
+    private func setPlayingInfo() {
+        let audio = player.audio
+        let player = player.player
+        let isPlaying = player.isPlaying
+        let center = MPNowPlayingInfoCenter.default()
+
+        let artist = "乐音APP"
+        var title = ""
+        var duration: TimeInterval = 0
+        var currentTime: TimeInterval = 0
+        var image = Audio.defaultImage
+
+        if let audio = audio {
+            title = audio.title
+            duration = player.duration
+            currentTime = player.currentTime
+            image = audio.getMediaCenterImage()
+        }
+        
+        os_log("\(self.label)📱📱📱 Update -> \(self.player.state.des)")
+        os_log("\(self.label)📱📱📱 Update -> Title: \(title)")
+        os_log("\(self.label)📱📱📱 Update -> Duration: \(duration)")
+        os_log("\(self.label)📱📱📱 Update -> Playing: \(isPlaying)")
+
+        center.playbackState = isPlaying ? .playing : .paused
+        center.nowPlayingInfo = [
+            MPMediaItemPropertyTitle: title,
+            MPMediaItemPropertyArtist: artist,
+            MPMediaItemPropertyPlaybackDuration: duration,
+            MPNowPlayingInfoPropertyElapsedPlaybackTime: currentTime,
+            MPMediaItemPropertyArtwork: MPMediaItemArtwork(boundsSize: image.size, requestHandler: { size in
+                #if os(macOS)
+                    image.size = size
+                #endif
+
+                return image
+            }),
+        ]
+
+        let like = audio?.like ?? false
+        if verbose {
+            os_log("\(self.label)setPlayingInfo like -> \(like)")
+        }
+        c.likeCommand.isActive = like
+    }
+
+    // 接收控制中心的指令
+    private func onCommand() {
+        c.nextTrackCommand.addTarget { _ in
+            os_log("\(Logger.isMain)\(self.label)下一首")
+            self.next(manual: true)
+
+            return .success
+        }
+
+        c.previousTrackCommand.addTarget { _ in
+            do {
+                try self.prev()
+                os_log("\(Logger.isMain)MediaPlayerManager::pre")
+
+                return .success
+            } catch let e {
+                os_log("\(Logger.isMain)MediaPlayerManager::\(e.localizedDescription)")
+                return .noActionableNowPlayingItem
+            }
+        }
+
+        c.pauseCommand.addTarget { _ in
+            self.player.pause()
+
+            return .success
+        }
+
+        c.playCommand.addTarget { _ in
+            os_log("\(Logger.isMain)\(self.label)播放")
+            self.player.resume()
+
+            return .success
+        }
+
+        c.stopCommand.addTarget { _ in
+            os_log("\(Logger.isMain)\(self.label)停止")
+
+            self.player.stop()
+
+            return .success
+        }
+
+        c.likeCommand.addTarget { _ in
+            os_log("\(Logger.isMain)\(self.label)点击了喜欢按钮")
+
+            if let audio = self.player.audio {
+                Task {
+                    await self.db.toggleLike(audio)
+                }
+
+                self.c.likeCommand.isActive = audio.dislike
+                self.c.dislikeCommand.isActive = audio.like
+            }
+
+            return .success
+        }
+
+        c.ratingCommand.addTarget { _ in
+            os_log("\(Logger.isMain)评分")
+
+            return .success
+        }
+
+        c.changeRepeatModeCommand.addTarget { _ in
+            os_log("\(Logger.isMain)changeRepeatModeCommand")
+
+            return .success
+        }
+
+        c.changePlaybackPositionCommand.addTarget { e in
+            os_log("\(Logger.isMain)\(self.label)changePlaybackPositionCommand")
+            guard let event = e as? MPChangePlaybackPositionCommandEvent else {
+                return .commandFailed
+            }
+
+            let positionTime = event.positionTime // 获取当前的播放进度时间
+
+            // 在这里处理当前的播放进度时间
+            os_log("Current playback position: \(positionTime)")
+            self.player.goto(positionTime)
+
+            return .success
+        }
     }
 }
 

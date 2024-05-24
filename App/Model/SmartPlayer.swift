@@ -7,10 +7,10 @@ class SmartPlayer: NSObject {
     // MARK: 成员
 
     static var label = "💿 SmartPlayer::"
-    var label: String { Logger.isMain+SmartPlayer.label }
+    var label: String { Logger.isMain + SmartPlayer.label }
     var player = AVAudioPlayer()
     var audio: Audio?
-    var verbose = false
+    var verbose = true
     var queue = DispatchQueue(label: "SmartPlayer", qos: .userInteractive)
 
     // MARK: 状态改变时
@@ -21,38 +21,33 @@ class SmartPlayer: NSObject {
                 os_log("\(Logger.isMain)\(self.label)State changed 「\(oldValue.des)」 -> 「\(self.state.des)」")
             }
             
-            onStateChange(state)
+            var e: Error? = nil
+            
+            self.audio = self.state.getAudio()
 
-            switch self.state {
-            case .Ready(let audio):
-                if let audio = audio {
+            switch state {
+            case .Ready(_):
+                do {
+                    try player = makePlayer(self.audio)
+                    player.prepareToPlay()
+                } catch {
+                    e = error
+                }
+            case let .Playing(audio):
+                if let oldAudio = oldValue.getPausedAudio(), oldAudio.url == audio.url {
+                    player.play()
+                } else {
                     do {
                         self.audio = audio
-                        try self.player = makePlayer(audio)
-                        self.player.prepareToPlay()
+                        try player = makePlayer(audio)
+                        player.prepareToPlay()
+                        player.play()
                     } catch {
-                        return setError(error)
+                        e = error
                     }
-                } else {
-                    self.audio = audio
-                    return setError(SmartError.NoAudioInList)
-                }
-            case .Playing(let audio):
-                if let oldAudio = oldValue.getPausedAudio(), oldAudio.url == audio.url {
-                    self.player.play()
-                    return
-                }
-                
-                do {
-                    self.audio = audio
-                    try self.player = makePlayer(audio)
-                    self.player.prepareToPlay()
-                    self.player.play()
-                } catch {
-                    return setError(error)
                 }
             case .Paused:
-                self.player.pause()
+                player.pause()
             case .Stopped:
                 player.stop()
                 player.currentTime = 0
@@ -61,9 +56,11 @@ class SmartPlayer: NSObject {
             case .Error:
                 player = makeEmptyPlayer()
             }
-
-            Task {
-                MediaPlayerManager.setPlayingInfo(self)
+            
+            self.onStateChange(state)
+            
+            if let ee = e {
+                setError(ee)
             }
         }
     }
@@ -113,13 +110,13 @@ extension SmartPlayer {
         case .Playing, .Error:
             break
         case .Ready, .Paused, .Stopped, .Finished:
-            state = .Playing(self.audio!)
+            state = .Playing(audio!)
         }
     }
 
     func pause() {
         os_log("\(self.label)Pause")
-        state = .Paused(self.audio)
+        state = .Paused(audio)
     }
 
     func stop() {
@@ -195,31 +192,44 @@ extension SmartPlayer {
 
         var des: String {
             switch self {
-            case .Ready(let audio):
+            case let .Ready(audio):
                 "准备 \(audio?.title ?? "nil") 🚀🚀🚀"
-            case .Error(let error):
+            case let .Error(error):
                 "错误：\(error.localizedDescription) ⚠️⚠️⚠️"
-            case .Playing(let audio):
+            case let .Playing(audio):
                 "播放 \(audio.title) 🔊🔊🔊"
-            case .Paused(let audio):
+            case let .Paused(audio):
                 "暂停 \(audio?.title ?? "-") ⏸️⏸️⏸️"
             default:
                 String(describing: self)
             }
         }
-        
+
         func getPausedAudio() -> Audio? {
             switch self {
-            case .Paused(let audio):
+            case let .Paused(audio):
                 return audio
             default:
                 return nil
             }
         }
+        
+        func getAudio() -> Audio? {
+            switch self {
+            case .Ready(let audio):
+                audio
+            case .Playing(let audio):
+                audio
+            case .Paused(let audio):
+                audio
+            case .Stopped,.Finished,.Error(_):
+                nil
+            }
+        }
     }
 
     func setError(_ e: Error) {
-        self.state = .Error(e)
+        state = .Error(e)
     }
 
     var isReady: Bool {
