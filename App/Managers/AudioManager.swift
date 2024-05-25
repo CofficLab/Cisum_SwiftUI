@@ -241,7 +241,7 @@ extension AudioManager {
         MPRemoteCommandCenter.shared()
     }
 
-    private func setPlayingInfo() {
+    private func setPlayingInfo(verbose: Bool = false) {
         let audio = player.audio
         let player = player.player
         let isPlaying = player.isPlaying
@@ -260,10 +260,12 @@ extension AudioManager {
             image = audio.getMediaCenterImage()
         }
         
-        os_log("\(self.label)📱📱📱 Update -> \(self.player.state.des)")
-        os_log("\(self.label)📱📱📱 Update -> Title: \(title)")
-        os_log("\(self.label)📱📱📱 Update -> Duration: \(duration)")
-        os_log("\(self.label)📱📱📱 Update -> Playing: \(isPlaying)")
+        if verbose {
+            os_log("\(self.label)📱📱📱 Update -> \(self.player.state.des)")
+            os_log("\(self.label)📱📱📱 Update -> Title: \(title)")
+            os_log("\(self.label)📱📱📱 Update -> Duration: \(duration)")
+            os_log("\(self.label)📱📱📱 Update -> Playing: \(isPlaying)")
+        }
 
         center.playbackState = isPlaying ? .playing : .paused
         center.nowPlayingInfo = [

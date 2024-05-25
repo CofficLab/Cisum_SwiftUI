@@ -11,6 +11,7 @@ extension DB {
             printLog: false,
             printStartLog: true,
             printLogStep: 500,
+            concurrency: false,
             code: { audio, onEnd in
                 if self.hasCoverRecord(audio) == false {
                     audio.getCoverFromMeta({ url in
@@ -27,6 +28,7 @@ extension DB {
 
     func emitCoverUpdated(_ audio: Audio) {
         DispatchQueue.main.async {
+            os_log("\(Logger.isMain)\(Self.label) -> \(audio.title) CoverUpdated 🍋🍋🍋")
             EventManager().emitAudioUpdate(audio)
         }
     }
