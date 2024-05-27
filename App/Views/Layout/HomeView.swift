@@ -53,7 +53,7 @@ struct HomeView: View {
             .onChange(of: geo.size.height) {
                 if autoResizing == false {
                     // 说明是用户主动调整
-                    self.height = DeviceConfig.getWindowHeight()
+                    self.height = AppConfig.getWindowHeight()
                     // os_log("\(Logger.isMain)\(self.label)Height=\(self.height)")
                 }
 
@@ -66,7 +66,7 @@ struct HomeView: View {
             .onAppear {
                 if autoResizing == false {
                     // 说明是用户主动调整
-                    self.height = DeviceConfig.getWindowHeight()
+                    self.height = AppConfig.getWindowHeight()
                     if verbose {
                         os_log("\(Logger.isMain)\(self.label)Height=\(self.height)")
                     }
@@ -86,13 +86,13 @@ extension HomeView {
         }
 
         self.autoResizing = true
-        DeviceConfig.increseHeight(databaseViewHeight - space)
+        AppConfig.increseHeight(databaseViewHeight - space)
     }
 
     private func resetHeight() {
         os_log("\(self.label)减少 Height 以折叠数据库视图")
         self.autoResizing = true
-        DeviceConfig.setHeight(self.height)
+        AppConfig.setHeight(self.height)
     }
 }
 

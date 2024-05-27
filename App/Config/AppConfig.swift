@@ -4,6 +4,7 @@ import SwiftData
 import OSLog
 
 enum AppConfig {
+    static var label = "🧲 AppConfig::"
     static let id = "com.yueyi.cisum"
     static let fileManager = FileManager.default
     static let logger = Logger.self
@@ -13,6 +14,19 @@ enum AppConfig {
         "flac",
         "wav"
     ]
+    
+    // MARK: UUID
+    
+    @AppStorage("App.UUID")
+    static var uuid: String = ""
+    
+    static func setUUID() {
+        if uuid.count > 0 {
+            return
+        }
+        
+        uuid = UUID().uuidString
+    }
 }
 
 #Preview {

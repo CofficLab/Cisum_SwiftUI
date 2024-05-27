@@ -33,9 +33,19 @@ extension AppConfig {
     
     static let audiosDirName = debug ? "audios_debug" : "audios"
     
+    // MARK: 本地的数据库的存储路径
+    
     static func getDBUrl() -> URL? {
         AppConfig.localDocumentsDir?.appendingPathComponent(dbDirName).appendingPathComponent(dbFileName)
     }
+    
+    // MARK: 同步的数据库的存储路径
+    
+    static func getDBSyncedUrl() -> URL? {
+        AppConfig.localDocumentsDir?.appendingPathComponent(syncedDBDirName).appendingPathComponent(syncedDBFileName)
+    }
+    
+    // MARK: Local Container
     
     static var getContainer: ModelContainer = {
         guard let url = getDBUrl() else {
@@ -65,7 +75,7 @@ extension AppConfig {
     // MARK: iCloud 同步的 Container
     
     static var getSyncedContainer: ModelContainer = {
-        guard let url = getDBUrl() else {
+        guard let url = getDBSyncedUrl() else {
             fatalError("Could not create SyncedModelContainer")
         }
 

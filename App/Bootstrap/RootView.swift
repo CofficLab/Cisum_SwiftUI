@@ -38,6 +38,8 @@ struct RootView<Content>: View where Content: View {
                         if verbose {
                             os_log("\(self.label)执行后台任务")
                         }
+                        
+                        AppConfig.setUUID()
 
                         Task.detached(priority: .background, operation: {
                             await DB(AppConfig.getContainer).prepareJob()
@@ -45,6 +47,10 @@ struct RootView<Content>: View where Content: View {
 
                         Task.detached(priority: .background, operation: {
                             await DB(AppConfig.getContainer).runGetCoversJob()
+                        })
+                        
+                        Task.detached(operation: {
+                            await DBSynced(AppConfig.getSyncedContainer).onAppOpen()
                         })
                     }
                 }

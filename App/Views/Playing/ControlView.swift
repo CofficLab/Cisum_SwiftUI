@@ -131,7 +131,7 @@ struct ControlView: View {
     // MARK: 底部Padding的高度
 
     private func getBottomHeight(_ geo: GeometryProxy) -> CGFloat {
-        if DeviceConfig.hasHomeIndicator() && AppConfig.isNotDesktop && showDB == false {
+        if AppConfig.hasHomeIndicator() && AppConfig.isNotDesktop && showDB == false {
             return 50
         }
 

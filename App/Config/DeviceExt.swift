@@ -1,8 +1,8 @@
+import Foundation
+
 #if os(macOS)
 import AppKit
-#endif
-
-#if os(iOS)
+#elseif os(iOS)
 import UIKit
 #endif
 
@@ -10,13 +10,7 @@ import LocalAuthentication
 import Foundation
 import OSLog
 
-class DeviceConfig {
-    static var label = "🧲 DeviceConfig::"
-}
-
-// MARK: 窗口
-
-extension DeviceConfig {
+extension AppConfig {
     static func getWindowHeight() -> CGFloat {
         #if os(macOS)
         let window = NSApplication.shared.windows.first!
@@ -84,7 +78,7 @@ extension DeviceConfig {
 
 // MARK: FACEID
 
-extension DeviceConfig {
+extension AppConfig {
     static func isFaceIDAvailable() -> Bool {
         biometricType() == .faceID
     }
@@ -103,7 +97,7 @@ extension DeviceConfig {
 
 // MARK: HomeIndicator
 
-extension DeviceConfig {
+extension AppConfig {
     static func hasHomeIndicator() -> Bool {
         #if os(iOS)
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {

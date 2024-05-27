@@ -60,7 +60,7 @@ extension DB {
     }
 
     func isAllInCloud() -> Bool {
-        getTotal() > 0 && first() == nil
+        getTotalOfAudio() > 0 && first() == nil
     }
 }
 
@@ -209,7 +209,7 @@ extension DB {
         }
     }
     
-    func getTotal() -> Int {
+    func getTotalOfAudio() -> Int {
         Self.getTotal(context: context)
     }
 }
