@@ -218,8 +218,8 @@
           "introductoryOffer" : null,
           "localizations" : [
             {
-              "description" : "Navigation assistance, dash cam, & autopilot",
-              "displayName" : "Pro",
+              "description" : "",
+              "displayName" : "Pro Annual",
               "locale" : "en_US"
             },
             {
