@@ -228,7 +228,7 @@
               "locale" : "zh_CN"
             }
           ],
-          "productID" : "com.yueyi.kuaiyizhi.pro.monthly",
+          "productID" : "com.yueyi.cisum.pro.monthly",
           "recurringSubscriptionPeriod" : "P1M",
           "referenceName" : "Pro Monthly",
           "subscriptionGroupID" : "3F19ED53",
@@ -262,9 +262,9 @@
               "locale" : "en_US"
             }
           ],
-          "productID" : "com.yueyi.kuaiyizhi.pro.yearly",
+          "productID" : "com.yueyi.cisum.pro.yearly",
           "recurringSubscriptionPeriod" : "P1Y",
-          "referenceName" : "Pro Yearly",
+          "referenceName" : "Pro Annual",
           "subscriptionGroupID" : "3F19ED53",
           "type" : "RecurringSubscription"
         }
