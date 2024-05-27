@@ -1,6 +1,6 @@
 #if os(macOS)
 import AppKit
-#elseif os(iOS)
+#elseif os(iOS) || os(visionOS)
 import UIKit
 #endif
 import Foundation
@@ -9,7 +9,7 @@ class DeviceHelper {
     static func getDeviceName() -> String {
         #if os(macOS)
         return Host.current().localizedName ?? "Unknown"
-        #elseif os(iOS)
+        #elseif os(iOS) || os(visionOS)
         return UIDevice.current.name
         #endif
     }

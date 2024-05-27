@@ -248,7 +248,9 @@
           "introductoryOffer" : {
             "displayPrice" : "0.99",
             "internalID" : "86438374",
-            "paymentMode" : "none"
+            "numberOfPeriods" : 1,
+            "paymentMode" : "payAsYouGo",
+            "subscriptionPeriod" : "P1Y"
           },
           "localizations" : [
             {

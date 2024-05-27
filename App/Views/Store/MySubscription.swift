@@ -63,7 +63,6 @@ struct MySubscription: View {
                 }
             }
         }
-        .background(BackgroundView.type2.opacity(0.2))
         .onChange(of: store.purchasedSubscriptions, {
             refresh("🐛 已购订阅变了")
         })
@@ -118,5 +117,8 @@ struct MySubscription: View {
 #Preview {
     RootView {
         BuyView()
-    }.frame(height: 400)
+    }
+    #if os(macOS)
+    .frame(height: 400)
+    #endif
 }

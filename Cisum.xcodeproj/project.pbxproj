@@ -130,6 +130,8 @@
 		0BFB38F72BD0BCC20055E38B /* RowTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFB38F62BD0BCC20055E38B /* RowTask.swift */; };
 		0BFDCB802AB86AF300B0D1C8 /* MenuTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFDCB7F2AB86AF300B0D1C8 /* MenuTile.swift */; };
 		0BFDCE582BB01884009198DD /* BtnDestroy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFDCE572BB01884009198DD /* BtnDestroy.swift */; };
+		F507F5132C04681200CB9A3A /* TopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F507F5122C04681200CB9A3A /* TopView.swift */; };
+		F507F5152C04688D00CB9A3A /* BtnBuy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F507F5142C04688D00CB9A3A /* BtnBuy.swift */; };
 		F54522252BFF3C780027CF55 /* Products.storekit in Resources */ = {isa = PBXBuildFile; fileRef = F54522242BFF3C770027CF55 /* Products.storekit */; };
 		F54522272BFF3CCE0027CF55 /* Products.plist in Resources */ = {isa = PBXBuildFile; fileRef = F54522262BFF3CCE0027CF55 /* Products.plist */; };
 		F573B1882C0411E4004C34CC /* DeviceDataExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B1872C0411E4004C34CC /* DeviceDataExt.swift */; };
@@ -263,6 +265,8 @@
 		0BFB38F62BD0BCC20055E38B /* RowTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowTask.swift; sourceTree = "<group>"; };
 		0BFDCB7F2AB86AF300B0D1C8 /* MenuTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTile.swift; sourceTree = "<group>"; };
 		0BFDCE572BB01884009198DD /* BtnDestroy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnDestroy.swift; sourceTree = "<group>"; };
+		F507F5122C04681200CB9A3A /* TopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopView.swift; sourceTree = "<group>"; };
+		F507F5142C04688D00CB9A3A /* BtnBuy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnBuy.swift; sourceTree = "<group>"; };
 		F54522242BFF3C770027CF55 /* Products.storekit */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Products.storekit; sourceTree = "<group>"; };
 		F54522262BFF3CCE0027CF55 /* Products.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Products.plist; sourceTree = "<group>"; };
 		F573B1872C0411E4004C34CC /* DeviceDataExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceDataExt.swift; sourceTree = "<group>"; };
@@ -413,6 +417,7 @@
 			isa = PBXGroup;
 			children = (
 				0BBA42262AC2A8B800C0B977 /* BtnAdd.swift */,
+				F507F5142C04688D00CB9A3A /* BtnBuy.swift */,
 				0BBA42242AC1813D00C0B977 /* BtnDel.swift */,
 				0BAABEB72BC7D4B600DF4A31 /* BtnDelTask.swift */,
 				0BFDCE572BB01884009198DD /* BtnDestroy.swift */,
@@ -420,6 +425,7 @@
 				0BD056902BC6340800EBC7C4 /* BtnEvict.swift */,
 				0BFB38842BCCD26F0055E38B /* BtnLike.swift */,
 				0BBA42182ABD5D9200C0B977 /* BtnMode.swift */,
+				0B8C36B52BEDAB5E00C47567 /* BtnMore.swift */,
 				0BBC158E2ABAC146006E82C4 /* BtnNext.swift */,
 				0B6B8B9A2BBA420600F65B23 /* BtnPlay.swift */,
 				0BBC15902ABAC19F006E82C4 /* BtnPrev.swift */,
@@ -431,7 +437,6 @@
 				0BAB7C402AD3D25200C5AEB5 /* ButtonDismiss.swift */,
 				0B7F558A2AD2636B0000D72E /* ButtonPlayList.swift */,
 				0BBA422A2AC2ABAD00C0B977 /* ButtonShowDatabase.swift */,
-				0B8C36B52BEDAB5E00C47567 /* BtnMore.swift */,
 			);
 			path = Buttons;
 			sourceTree = "<group>";
@@ -453,6 +458,7 @@
 				0B1D5A732AB302600010DDF2 /* ContentView.swift */,
 				0BBC157B2AB84C21006E82C4 /* HomeView.swift */,
 				0BE93F2D2BFB8B7E00F25445 /* MoreView.swift */,
+				F507F5122C04681200CB9A3A /* TopView.swift */,
 			);
 			path = Layout;
 			sourceTree = "<group>";
@@ -700,6 +706,7 @@
 				0BB5871B2AD81AFA0071AEBD /* ViewHelper.swift in Sources */,
 				0BAB7C3F2AD3BBAA00C5AEB5 /* DBTips.swift in Sources */,
 				0BB889D92AC047B3004788D5 /* BtnTrash.swift in Sources */,
+				F507F5132C04681200CB9A3A /* TopView.swift in Sources */,
 				0B5786342BCB8DC00064F66A /* PlayView.swift in Sources */,
 				0B1D5A882AB302610010DDF2 /* ContentView.swift in Sources */,
 				0BE6959C2BFE3DCC00CEFFEB /* BuyView.swift in Sources */,
@@ -748,6 +755,7 @@
 				0B1165E92ABBC6C0005C5CBB /* LaunchView.swift in Sources */,
 				0B4DFC722BD740B4001CEF32 /* Device.swift in Sources */,
 				0B1D5A8A2AB302610010DDF2 /* AppConfig.swift in Sources */,
+				F507F5152C04688D00CB9A3A /* BtnBuy.swift in Sources */,
 				0B220F752BB1BBDB0077255A /* SmartError.swift in Sources */,
 				0BB889DB2AC06C54004788D5 /* DB.swift in Sources */,
 				0BBA42192ABD5D9200C0B977 /* BtnMode.swift in Sources */,

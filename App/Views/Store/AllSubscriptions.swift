@@ -32,7 +32,6 @@ struct AllSubscriptions: View {
                 }
             }
         }
-        .background(BackgroundView.type2.opacity(0.1))
         .onAppear {
             refreshing = true
             getProducts("AllSubscription OnAppear")

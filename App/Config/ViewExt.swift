@@ -14,12 +14,12 @@ extension AppConfig {
             }
         }
     }
-    
+
     static var getBackground: Color {
         #if os(macOS)
-        Color(.controlBackgroundColor)
+            Color(.controlBackgroundColor)
         #else
-        Color(.systemBackground)
+            Color(.systemBackground)
         #endif
     }
 }
@@ -27,19 +27,26 @@ extension AppConfig {
 extension AppConfig {
     static var isDesktop: Bool {
         #if os(macOS)
-        true
+            true
         #else
-        false
+            false
         #endif
     }
-    
+
     static var isNotDesktop: Bool { !isDesktop }
-    
+    static var isiOS: Bool {
+        #if os(iOS)
+            true
+        #else
+            false
+        #endif
+    }
+
     @AppStorage("UI.ShowDB")
     static var showDB: Bool = false
-    
+
     static func setShowDB(_ value: Bool) {
-        //os_log("\(Logger.isMain)⚙️ AppConfig::setCurrentAudio \(audio.title)")
+        // os_log("\(Logger.isMain)⚙️ AppConfig::setCurrentAudio \(audio.title)")
         AppConfig.showDB = value
     }
 }
@@ -49,7 +56,7 @@ extension AppConfig {
 extension AppConfig {
     /// 开发时如果不想显示背景，改成true
     static var noBackground = true
-    
+
     /// 生产环境一定不会显示背景
     static func background(_ color: Color = .red) -> Color {
         AppConfig.debug && !noBackground ? color.opacity(0.3) : Color.clear
@@ -65,13 +72,13 @@ extension AppConfig {
     static var minWidth: CGFloat = 350
     static var minHeight: CGFloat = 250
     static var defaultHeight: CGFloat = 360
-    
+
     /// 大于此高度，可展示封面图
     static var minHeightToShowAlbum: CGFloat = 450
-    
+
     #if os(macOS)
-    static var canResize = true
+        static var canResize = true
     #else
-    static var canResize = false
+        static var canResize = false
     #endif
 }

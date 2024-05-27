@@ -103,13 +103,13 @@ class StoreManager: ObservableObject {
     
     // MARK: 更新当前订阅的产品
     func updateSubscription(_ sub: Product?) {
-        os_log("\(Logger.isMain) 💰 StoreManger 更新订阅计划为 \(sub?.displayName ?? "-")")
+        os_log("\(self.label)StoreManger 更新订阅计划为 \(sub?.displayName ?? "-")")
         self.currentSubscription = sub
     }
     
     // MARK: 更新当前订阅的产品的状态
     func updateStatus(_ status: Product.SubscriptionInfo.Status?) {
-        os_log("\(Logger.isMain) 💰 StoreManger 更新订阅状态")
+        os_log("\(self.label)StoreManger 更新订阅状态")
         self.status = status
     }
 
@@ -265,7 +265,7 @@ class StoreManager: ObservableObject {
                 c(nil)
             }
         } catch let error {
-            Logger.app.error("\(Logger.isMain) 🚩 💰 请求 App Store 获取产品列表出错 -> \(error.localizedDescription)")
+            os_log(.error, "\(self.label)请求 App Store 获取产品列表出错 -> \(error.localizedDescription)")
             if let c = completion {
                 c(error)
             }
@@ -379,7 +379,7 @@ class StoreManager: ObservableObject {
             var highestStatus: Product.SubscriptionInfo.Status?
             var highestProduct: Product?
             
-            os_log("\(Logger.isMain) 💰 StoreManger 检查订阅状态，statuses.count -> \(statuses.count)")
+            os_log("\(self.label)StoreManger 检查订阅状态，statuses.count -> \(statuses.count)")
 
             // Iterate through `statuses` for this subscription group and find
             // the `Status` with the highest level of service that isn't
