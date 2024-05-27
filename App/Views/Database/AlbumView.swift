@@ -24,7 +24,7 @@ struct AlbumView: View {
     var isNotDownloaded: Bool { !isDownloaded }
     var shape: RoundedRectangle {
         if forPlaying {
-            RoundedRectangle(cornerSize: CGSize(width: 0, height: 0))
+            RoundedRectangle(cornerSize: CGSize(width: 20, height: 10))
         } else {
             RoundedRectangle(cornerSize: CGSize(width: 20, height: 10))
         }

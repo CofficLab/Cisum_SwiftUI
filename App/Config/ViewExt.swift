@@ -1,13 +1,13 @@
 import Foundation
 import SwiftUI
 
-// MARK: 视图配置
-
 extension AppConfig {
+    // MARK: Root Background
+    
     static var rootBackground: some View {
         ZStack {
             Color.black.opacity(0.5).ignoresSafeArea()
-            if debug {
+            if debug && false {
                 BackgroundView.forest
             } else {
                 BackgroundView.type2A

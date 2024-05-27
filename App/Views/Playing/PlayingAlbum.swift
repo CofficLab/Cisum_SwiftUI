@@ -13,7 +13,7 @@ struct PlayingAlbum: View {
                 Spacer()
             }
         } else {
-            view
+            view.padding(.horizontal)
         }
     }
     
