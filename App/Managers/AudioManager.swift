@@ -28,7 +28,7 @@ class AudioManager: NSObject, ObservableObject {
     var isCloudStorage: Bool { iCloudHelper.isCloudPath(url: rootDir) }
     var showErrorView: Bool { error != nil }
     var showTitleView: Bool { audio != nil }
-    var verbose = true
+    var verbose = false
 
     override init() {
         if verbose {
@@ -54,7 +54,7 @@ class AudioManager: NSObject, ObservableObject {
         }
     }
 
-    func onStateChanged(_ state: SmartPlayer.State, verbose: Bool = true) {
+    func onStateChanged(_ state: SmartPlayer.State, verbose: Bool = false) {
         if verbose {
             os_log("\(self.label)播放状态变了 -> \(state.des)")
         }
@@ -105,7 +105,7 @@ class AudioManager: NSObject, ObservableObject {
 
     // MARK: 准备播放
 
-    func prepare(_ audio: Audio?, reason: String, verbose: Bool = true) {
+    func prepare(_ audio: Audio?, reason: String, verbose: Bool = false) {
         if verbose {
             os_log("\(self.label)Prepare \(audio?.title ?? "nil") 🐛 \(reason)")
         }

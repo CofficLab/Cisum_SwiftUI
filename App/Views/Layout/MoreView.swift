@@ -17,7 +17,6 @@ struct MoreView: View {
                 .tabItem {
                     Label("商店", systemImage: "crown")
                 }
-                .environmentObject(StoreManager())
         }
         .background(.background)
         .tabViewStyle(DefaultTabViewStyle())

@@ -32,6 +32,8 @@ public enum SubscriptionTier: Int, Comparable {
 }
 
 class StoreManager: ObservableObject {
+    static var label = "💰 Store::"
+    
     @Published private(set) var cars: [Product]
     @Published private(set) var fuel: [Product]
     @Published private(set) var subscriptions: [Product]
@@ -48,9 +50,12 @@ class StoreManager: ObservableObject {
     var updateListenerTask: Task<Void, Error>? = nil
 
     private let productIdToEmoji: [String: String]
+    private var label: String {
+        "\(Logger.isMain)\(Self.label)"
+    }
 
     init() {
-        os_log("\(Logger.isMain) 🚩 💰 Store 初始化")
+        os_log("\(Logger.isMain)\(Self.label)初始化")
         productIdToEmoji = StoreManager.loadProductIdToEmojiData()
 
         // 初始化产品列表，稍后填充
@@ -73,26 +78,26 @@ class StoreManager: ObservableObject {
     
     // MARK: 更新订阅组的状态
     func updateSubscriptionGroupStatus(_ state: RenewalState?, reason: String) {
-        os_log("\(Logger.isMain) 🚩 💰 StoreManger 更新订阅组的状态，因为 \(reason)")
+        os_log("\(self.label)更新订阅组的状态，因为 \(reason)")
         self.subscriptionGroupStatus = state
         
         guard let s = self.subscriptionGroupStatus else {
-            return os_log("\(Logger.isMain) 💰 StoreManger 订阅组状态: Nil")
+            return os_log("\(self.label)订阅组状态: Nil")
         }
 
         switch s {
         case .expired:
-            os_log("\(Logger.isMain) 💰 StoreManger 订阅组状态: Expired")
+            os_log("\(self.label)订阅组状态: Expired")
         case .inBillingRetryPeriod:
-            os_log("\(Logger.isMain) 💰 StoreManger 订阅组状态: InBillingRetryPeriod")
+            os_log("\(self.label)订阅组状态: InBillingRetryPeriod")
         case .inGracePeriod:
-            os_log("\(Logger.isMain) 💰 StoreManger 订阅组状态: InGracePeriod")
+            os_log("\(self.label)订阅组状态: InGracePeriod")
         case .revoked:
-            os_log("\(Logger.isMain) 💰 StoreManger 订阅组状态: Revoked")
+            os_log("\(self.label)订阅组状态: Revoked")
         case .subscribed:
-            os_log("\(Logger.isMain) 💰 StoreManger 订阅组状态: Subscribed")
+            os_log("\(self.label)订阅组状态: Subscribed")
         default:
-            Logger.app.error("\(Logger.isMain) 💰 StoreManger 订阅组状态: 未知")
+            Logger.app.error("\(self.label)订阅组状态: 未知")
         }
     }
     
@@ -111,7 +116,7 @@ class StoreManager: ObservableObject {
     // MARK: 更新已购列表
     
     @MainActor func updatePurchased(_ reason: String) async {
-        os_log("\(Logger.isMain) 🚩 💰 更新已购列表，因为 -> \(reason)")
+        os_log("\(self.label)更新已购列表，因为 -> \(reason)")
         
         var purchasedCars: [Product] = []
         var purchasedSubscriptions: [Product] = []
@@ -193,7 +198,7 @@ class StoreManager: ObservableObject {
     }
 
     func listenForTransactions(_ reason: String) -> Task<Void, Error> {
-        os_log("\(Logger.isMain) 🚩 💰 ListenForTransactions，因为 -> \(reason)")
+        os_log("\(self.label)ListenForTransactions，因为 -> \(reason)")
         return Task.detached {
             //Iterate through any transactions that don't come from a direct call to `purchase()`.
             for await result in Transaction.updates {
@@ -221,8 +226,7 @@ class StoreManager: ObservableObject {
     //  联网得到2个产品，断网，依然得到两个产品，再等等，不报错，得到0个产品
     @MainActor
     func requestProducts(_ reason: String, _ completion: ((Error?) -> Void)? = nil) async {
-        os_log("\(Logger.isMain) 🚩 💰 请求 App Store 获取产品列表，并存储到 @Published，因为 -> \(reason)")
-        print("\(Logger.isMain) 🚩 💰 请求 App Store 获取产品列表，并存储到 @Published，因为 -> \(reason)")
+        os_log("\(self.label)请求 App Store 获取产品列表，并存储到 @Published，因为 -> \(reason)")
         do {
             //Request products from the App Store using the identifiers that the Products.plist file defines.
             let storeProducts = try await Product.products(for: productIdToEmoji.keys)
@@ -233,10 +237,9 @@ class StoreManager: ObservableObject {
             var newFuel: [Product] = []
 
             //Filter the products into categories based on their type.
-            os_log("\(Logger.isMain) 💰 将从 App Store 获取的产品列表归类，个数 -> \(storeProducts.count)")
-            print("\(Logger.isMain) 💰 将从 App Store 获取的产品列表归类，个数 -> \(storeProducts.count)")
+            os_log("\(self.label)将从 App Store 获取的产品列表归类，个数 -> \(storeProducts.count)")
             for product in storeProducts {
-                os_log("\(Logger.isMain) 💰 将从 App Store 获取的产品列表归类 -> \(product.displayName)")
+                os_log("\(self.label)将从 App Store 获取的产品列表归类 -> \(product.displayName)")
                 switch product.type {
                 case .consumable:
                     newFuel.append(product)
@@ -349,13 +352,14 @@ class StoreManager: ObservableObject {
     
     @MainActor
     func updateSubscriptionStatus(_ reason: String, _ completion: ((Error?) -> Void)? = nil) async {
-        os_log("\(Logger.isMain) 🚩 💰 StoreManger 检查订阅状态，因为 -> \(reason)")
+        os_log("\(self.label)StoreManger 检查订阅状态，因为 -> \(reason)")
         
         guard subscriptions.count > 0 else {
             if let c = completion {
                 c(StoreError.canNotGetProducts)
             }
-            return Logger.app.warning("\(Logger.isMain) 💰 StoreManger 检查订阅状态，订阅计划为空，可能之前的步骤获取失败，停止")
+            
+            return Logger.app.warning("\(self.label)StoreManger 检查订阅状态，订阅计划为空，可能之前的步骤获取失败，停止")
         }
         
         // 订阅组可以多个，但一般设置一个

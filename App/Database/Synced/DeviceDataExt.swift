@@ -26,8 +26,6 @@ extension DBSynced {
     func onAppOpen() {
         let uuid = AppConfig.uuid
         
-        os_log("\(self.label)OnAppOpen of uuid=\(uuid)")
-        
         Task {
             if let deviceData = self.find(uuid) {
                 deviceData.timesOpened += 1

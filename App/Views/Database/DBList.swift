@@ -25,8 +25,10 @@ struct DBList: View {
         return appManager.flashMessage.isEmpty && total == 0
     }
     
-    init() {
-        os_log("\(Logger.isMain)\(Self.label)初始化")
+    init(verbose: Bool = false) {
+        if verbose {
+            os_log("\(Logger.isMain)\(Self.label)初始化")
+        }
     }
 
     var body: some View {

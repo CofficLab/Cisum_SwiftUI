@@ -12,10 +12,10 @@ extension DB {
         descriptor: FetchDescriptor<Audio>,
         qos: DispatchQoS = .background,
         printLog: Bool = true,
-        printStartLog: Bool = true,
+        printStartLog: Bool = false,
         printQueueEnter: Bool = false,
         printLogStep: Int = 100,
-        printCost: Bool = true,
+        printCost: Bool = false,
         concurrency: Bool = true,
         code: @escaping (_ audio: Audio, _ onEnd: @escaping () -> Void) -> Void,
         complete: (@escaping (_ context: ModelContext) -> Void) = { _ in }

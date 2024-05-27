@@ -10,7 +10,7 @@ class SmartPlayer: NSObject {
     var label: String { Logger.isMain + SmartPlayer.label }
     var player = AVAudioPlayer()
     var audio: Audio?
-    var verbose = true
+    var verbose = false
     var queue = DispatchQueue(label: "SmartPlayer", qos: .userInteractive)
 
     // MARK: 状态改变时

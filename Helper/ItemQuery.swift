@@ -19,7 +19,8 @@ class ItemQuery {
     func searchMetadataItems(
         predicate: NSPredicate? = nil,
         sortDescriptors: [NSSortDescriptor] = [],
-        scopes: [Any] = [NSMetadataQueryUbiquitousDocumentsScope]
+        scopes: [Any] = [NSMetadataQueryUbiquitousDocumentsScope],
+        verbose: Bool = false
     ) -> AsyncStream<[MetaWrapper]> {
         if verbose {
             os_log("\(self.label)searchMetadataItems")
@@ -57,7 +58,10 @@ class ItemQuery {
 
             query.operationQueue = queue
             query.operationQueue?.addOperation {
-                os_log("\(self.label)start")
+                if verbose {
+                    os_log("\(self.label)start")
+                }
+                
                 self.query.start()
             }
 

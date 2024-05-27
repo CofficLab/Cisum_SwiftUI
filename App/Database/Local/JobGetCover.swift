@@ -9,7 +9,7 @@ extension DB {
             descriptor: Audio.descriptorAll,
             qos: .userInteractive,
             printLog: false,
-            printStartLog: true,
+            printStartLog: false,
             printLogStep: 500,
             concurrency: false,
             code: { audio, onEnd in

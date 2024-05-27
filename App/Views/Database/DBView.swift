@@ -13,8 +13,10 @@ struct DBView: View {
     var dropping: Bool { appManager.isDropping }
     var label: String { "\(Logger.isMain)\(Self.label) "}
     
-    init() {
-        os_log("\(Logger.isMain)\(Self.label)初始化")
+    init(verbose: Bool = false) {
+        if verbose {
+            os_log("\(Logger.isMain)\(Self.label)初始化")
+        }
     }
 
     var body: some View {

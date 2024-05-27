@@ -20,7 +20,9 @@ struct HomeView: View {
     var label: String { "\(Logger.isMain)\(Self.label) "}
     
     init() {
-        os_log("\(Logger.isMain)\(Self.label)初始化")
+        if verbose {
+            os_log("\(Logger.isMain)\(Self.label)初始化")
+        }
     }
 
     var body: some View {

@@ -14,15 +14,15 @@
 	<string>🚙</string>
 	<key>nonconsumable.racecar</key>
 	<string>🏎</string>
-	<key>com.yueyi.kuaiyizhi.pro.monthly</key>
+	<key>com.yueyi.cisum.pro.monthly</key>
 	<string>🎉</string>
-	<key>com.yueyi.kuaiyizhi.pro.yearly</key>
+	<key>com.yueyi.cisum.pro.annual</key>
 	<string>👑</string>
-	<key>com.yueyi.kuaiyizhi.pro.year.1</key>
+	<key>com.yueyi.cisum.pro.year.1</key>
 	<string>👑</string>
-	<key>com.yueyi.kuaiyizhi.pro.month.1</key>
+	<key>com.yueyi.cisum.pro.month.1</key>
 	<string>🎉</string>
-	<key>com.yueyi.kuaiyizhi.pro.day.7</key>
+	<key>com.yueyi.cisum.pro.day.7</key>
 	<string>🍮</string>
 </dict>
 </plist>

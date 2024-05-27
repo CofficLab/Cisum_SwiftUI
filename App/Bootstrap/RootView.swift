@@ -3,7 +3,7 @@ import SwiftUI
 
 struct RootView<Content>: View where Content: View {
     private var content: Content
-    private var verbose = true
+    private var verbose = false
     private var label: String {
         "\(Logger.isMain)🌳 RootView::"
     }
