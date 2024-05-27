@@ -222,7 +222,7 @@ extension SmartPlayer {
                 audio
             case .Paused(let audio):
                 audio
-            case .Error(let error, let audio):
+            case .Error(_, let audio):
                 audio
             case .Stopped,.Finished:
                 nil
