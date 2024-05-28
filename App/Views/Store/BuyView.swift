@@ -14,7 +14,8 @@ struct BuyView: View {
         ZStack {
             ScrollView {
                 VStack {
-                    Text("帮助我们做的更好").font(.title)
+                    Text("订阅专业版").font(.title)
+                    Text("帮助我们做的更好").font(.footnote)
 
                     featureView
                         .frame(width: 300)
@@ -74,7 +75,7 @@ struct BuyView: View {
                     .frame(width: 35, height: 30)
                     .clipShape(RoundedRectangle(cornerRadius: 5, style: .continuous))
                     .padding(.trailing, 5)
-                Text("不断优化用户体验")
+                Text("不限制音频文件数量")
             }
             Divider()
             HStack {
