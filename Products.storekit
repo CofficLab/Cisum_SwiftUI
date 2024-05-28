@@ -264,7 +264,7 @@
               "locale" : "en_US"
             }
           ],
-          "productID" : "com.yueyi.cisum.pro.annual",
+          "productID" : "com.yueyi.cisum.pro.yearly",
           "recurringSubscriptionPeriod" : "P1Y",
           "referenceName" : "Pro Annual",
           "subscriptionGroupID" : "3F19ED53",
