@@ -130,7 +130,8 @@ extension DBSynced {
 }
 
 #Preview {
-    RootView {
-        ContentView()
-    }.modelContainer(AppConfig.getContainer)
+    AppPreview()
+    #if os(macOS)
+        .frame(height: 800)
+    #endif
 }

@@ -18,6 +18,7 @@ struct MoreView: View {
                     Label("商店", systemImage: "crown")
                 }
         }
+        .padding(.top)
         .background(.background)
         .tabViewStyle(DefaultTabViewStyle())
     }
