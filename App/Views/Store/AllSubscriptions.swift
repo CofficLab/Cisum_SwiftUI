@@ -14,7 +14,7 @@ struct AllSubscriptions: View {
         GroupBox {
             VStack {
                 ZStack {
-                    Text("自动续期的订阅").font(.title3)
+                    Text("订阅方案").font(.title3)
                     refreshButton
                 }
 
@@ -74,7 +74,7 @@ struct AllSubscriptions: View {
     }
 }
 
-#Preview {
+#Preview("Buy") {
     RootView {
         BuyView()
     }

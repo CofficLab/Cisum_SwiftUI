@@ -21,7 +21,7 @@ struct BuyView: View {
                         .frame(width: 300)
                         .padding()
                     
-                    MySubscription().padding()
+//                    MySubscription().padding()
                     AllSubscriptions().padding(.horizontal)
 //                    NonRenewables().padding(.horizontal)
                     footerView
@@ -101,26 +101,29 @@ struct BuyView: View {
     // MARK: Footer
 
     private var footerView: some View {
-        HStack {
-            Spacer()
-            Link("隐私政策", destination: URL(string: "https://www.kuaiyizhi.cn/privacy")!)
-            Link("许可协议", destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!)
-            Spacer()
+        GroupBox {
+            HStack {
+                Spacer()
+                Link("隐私政策", destination: URL(string: "https://www.kuaiyizhi.cn/privacy")!)
+                Link("许可协议", destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!)
+                Spacer()
+            }
+            .foregroundStyle(
+                colorScheme == .light ?
+                .black.opacity(0.8) :
+                .white.opacity(0.8))
+            .padding(.vertical, 12)
         }
-        .foregroundStyle(
-            colorScheme == .light ?
-            .black.opacity(0.8) :
-            .white.opacity(0.8))
-        .padding(.vertical, 12)
+        .padding(.horizontal)
     }
 }
 
-#Preview {
+#Preview("App") {
     AppPreview()
         .frame(height: 800)
 }
 
-#Preview {
+#Preview("Buy") {
     BuyView()
         .environmentObject(StoreManager())
         .frame(height: 800)
