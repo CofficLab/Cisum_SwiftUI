@@ -275,7 +275,7 @@ class StoreManager: ObservableObject {
     // MARK: 购买与支付
 
     func purchase(_ product: Product) async throws -> Transaction? {
-        os_log("\(Logger.isMain) 💰 去支付")
+        os_log("\(self.label)去支付")
         
         #if os(visionOS)
         return nil
@@ -285,12 +285,12 @@ class StoreManager: ObservableObject {
 
         switch result {
         case .success(let verification):
-            os_log("\(Logger.isMain) 💰 支付成功，验证")
+            os_log("\(self.label)支付成功，验证")
             //Check whether the transaction is verified. If it isn't,
             //this function rethrows the verification error.
             let transaction = try checkVerified(verification)
 
-            os_log("\(Logger.isMain) 💰 支付成功，验证成功")
+            os_log("\(self.label)支付成功，验证成功")
             //The transaction is verified. Deliver content to the user.
             await updatePurchased("支付并验证成功")
 
@@ -299,10 +299,10 @@ class StoreManager: ObservableObject {
 
             return transaction
         case .userCancelled, .pending:
-            os_log("\(Logger.isMain) 💰 取消或pending")
+            os_log("\(self.label)取消或pending")
             return nil
         default:
-            os_log("\(Logger.isMain) 💰 支付结果 \(String(describing: result))")
+            os_log("\(self.label)支付结果 \(String(describing: result))")
             return nil
         }
         #endif
