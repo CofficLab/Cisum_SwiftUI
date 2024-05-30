@@ -15,11 +15,8 @@ struct BuyView: View {
             ScrollView {
                 VStack {
                     Text("订阅专业版").font(.title)
-                    Text("帮助我们做的更好").font(.footnote)
 
-                    featureView
-                        .frame(width: 300)
-                        .padding()
+                    featureView.padding()
                     
 //                    MySubscription().padding()
                     AllSubscriptions().padding(.horizontal)
@@ -68,32 +65,21 @@ struct BuyView: View {
     }
     
     private var featureView: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .center) {
             HStack {
                 Text("♾️")
-                    .font(.system(size: 30))
-                    .frame(width: 35, height: 30)
+                    .font(.system(size: 18))
                     .clipShape(RoundedRectangle(cornerRadius: 5, style: .continuous))
-                    .padding(.trailing, 5)
-                Text("不限制音频文件数量")
+                    .padding(.trailing, 0)
+                Text("软件功能全无限制")
             }
             Divider()
             HStack {
                 Text("💗")
-                    .font(.system(size: 30))
-                    .frame(width: 35, height: 30)
+                    .font(.system(size: 18))
                     .clipShape(RoundedRectangle(cornerRadius: 5, style: .continuous))
-                    .padding(.trailing, 5)
-                Text("支持我们的持续开发")
-            }
-            Divider()
-            HStack {
-                Text("👑")
-                    .font(.system(size: 30))
-                    .frame(width: 35, height: 30)
-                    .clipShape(RoundedRectangle(cornerRadius: 5, style: .continuous))
-                    .padding(.trailing, 5)
-                Text("更多高级功能")
+                    .padding(.trailing, 0)
+                Text("支持我们持续开发")
             }
         }
     }
@@ -115,6 +101,7 @@ struct BuyView: View {
             .padding(.vertical, 12)
         }
         .padding(.horizontal)
+        .font(.footnote)
     }
 }
 

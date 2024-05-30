@@ -37,11 +37,7 @@ struct HomeView: View {
                     .frame(height: showDB ? AppConfig.controlViewMinHeight : geo.size.height)
 
                 if showDB {
-                    if AppConfig.debug {
-                        MoreView()
-                    } else {
-                        DBView()
-                    }
+                    MoreView()
                 }
             }
             .onChange(of: showDB) {
@@ -84,7 +80,7 @@ struct HomeView: View {
 }
 
 extension HomeView {
-    private func increseHeightToShowDB(_ geo: GeometryProxy) {
+    private func increseHeightToShowDB(_ geo: GeometryProxy, verbose: Bool = true) {
         os_log("\(self.label)增加 Height 以展开数据库视图")
         let space = geo.size.height - controlViewHeightMin
 
@@ -93,10 +89,13 @@ extension HomeView {
         }
 
         self.autoResizing = true
-        AppConfig.increseHeight(databaseViewHeight - space)
+        
+        if verbose {
+            AppConfig.increseHeight(databaseViewHeight - space)
+        }
     }
 
-    private func resetHeight(verbose: Bool = true) {
+    private func resetHeight(verbose: Bool = false) {
         if verbose {
             os_log("\(self.label)减少 Height 以折叠数据库视图")
         }

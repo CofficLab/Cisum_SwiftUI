@@ -8,10 +8,12 @@ struct MoreView: View {
                     Label("仓库", systemImage: "music.note.list")
                 }
 
-            SettingView()
-                .tabItem {
-                    Label("设置", systemImage: "gear")
-                }
+            if AppConfig.debug {
+                SettingView()
+                    .tabItem {
+                        Label("设置", systemImage: "gear")
+                    }
+            }
             
             BuyView()
                 .tabItem {
