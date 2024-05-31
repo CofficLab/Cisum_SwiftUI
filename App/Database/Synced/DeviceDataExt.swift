@@ -56,4 +56,14 @@ extension DBSynced {
             return nil
         }
     }
+    
+    func allDevices() -> [DeviceData] {
+        do {
+            return try context.fetch(DeviceData.descriptorAll)
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+            
+            return []
+        }
+    }
 }

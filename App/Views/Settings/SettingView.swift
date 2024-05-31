@@ -8,6 +8,7 @@ struct SettingView: View {
                 CoverDirSetting().padding(.horizontal)
                 VersionSetting().padding(.horizontal)
                 PlayTime().padding(.horizontal)
+                DeviceSetting().padding(.horizontal)
             }
         }
     }
