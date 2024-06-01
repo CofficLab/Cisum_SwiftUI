@@ -124,7 +124,7 @@ extension DB {
 
 extension DB {
     /// 执行并输出耗时
-    func printRunTime(_ title: String, tolerance: Double = 1, verbose: Bool = false, _ code: () -> Void) {
+    func printRunTime(_ title: String, tolerance: Double = 0.1, verbose: Bool = false, _ code: () -> Void) {
         if verbose {
             os_log("\(Logger.isMain)\(DB.label)\(title)")
         }
@@ -137,9 +137,25 @@ extension DB {
         let nanoTime = DispatchTime.now().uptimeNanoseconds - startTime.uptimeNanoseconds
         let timeInterval = Double(nanoTime) / 1000000000
 
-        if DB.verbose && timeInterval > tolerance {
+        if verbose && timeInterval > tolerance {
             os_log("\(Logger.isMain)\(DB.label)\(title) cost \(timeInterval) 秒 🐢🐢🐢")
         }
+    }
+    
+    static func jobStart(_ title: String, verbose: Bool = true) -> DispatchTime {
+        if verbose {
+            os_log("\(Logger.isMain)\(DB.label)\(title)")
+        }
+
+        return DispatchTime.now()
+    }
+    
+    static func jobEnd(_ startTime: DispatchTime, title: String) {
+        // 计算代码执行时间
+        let nanoTime = DispatchTime.now().uptimeNanoseconds - startTime.uptimeNanoseconds
+        let timeInterval = Double(nanoTime) / 1000000000
+
+        os_log("\(Logger.isMain)\(Self.label)\(title) cost \(timeInterval) 秒 🐢🐢🐢")
     }
 }
 
