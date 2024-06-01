@@ -212,7 +212,8 @@ extension DB {
     }
 
     nonisolated func updateGroupForMetas(_ metas: [MetaWrapper], verbose: Bool = false) {
-        let startTime = Self.jobStart("UpdateGroup for count=\(metas.count) 🌾🌾🌾")
+        let title = "UpdateGroup \(metas.count) 🌾🌾🌾"
+        let startTime = self.jobStart(title)
 
         let total = metas.count
         let context = ModelContext(modelContainer)
@@ -220,7 +221,6 @@ extension DB {
 
         for (i,meta) in metas.enumerated() {
             if verbose && i%100 == 0 {
-//                os_log("\(Logger.isMain)\(Self.label)UpdateGroup for \(audio.title) 🌾🌾🌾 \(audio.getFileSizeReadable())")
                 os_log("\(Logger.isMain)\(Self.label)UpdateGroup \(i)/\(total)")
             }
             
@@ -240,6 +240,6 @@ extension DB {
             os_log(.error, "\(e.localizedDescription)")
         }
 
-        Self.jobEnd(startTime, title: "UpdateGroup for metas 🌾🌾🌾")
+        self.jobEnd(startTime, title: title)
     }
 }

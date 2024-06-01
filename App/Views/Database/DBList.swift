@@ -25,7 +25,7 @@ struct DBList: View {
         return appManager.flashMessage.isEmpty && total == 0
     }
     
-    init(verbose: Bool = true) {
+    init(verbose: Bool = false) {
         if verbose {
             os_log("\(Logger.isMain)\(Self.label)初始化")
         }

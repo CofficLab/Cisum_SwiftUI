@@ -142,20 +142,22 @@ extension DB {
         }
     }
     
-    static func jobStart(_ title: String, verbose: Bool = true) -> DispatchTime {
+    nonisolated func jobStart(_ title: String, verbose: Bool = true) -> DispatchTime {
         if verbose {
-            os_log("\(Logger.isMain)\(DB.label)\(title)")
+            os_log("\(Logger.isMain)\(Self.label)🐎🐎🐎 \(title) 🚀🚀🚀")
         }
 
         return DispatchTime.now()
     }
     
-    static func jobEnd(_ startTime: DispatchTime, title: String) {
+    nonisolated func jobEnd(_ startTime: DispatchTime, title: String, tolerance: Double = 1.0) {
         // 计算代码执行时间
         let nanoTime = DispatchTime.now().uptimeNanoseconds - startTime.uptimeNanoseconds
         let timeInterval = Double(nanoTime) / 1000000000
 
-        os_log("\(Logger.isMain)\(Self.label)\(title) cost \(timeInterval) 秒 🐢🐢🐢")
+        if timeInterval > tolerance {
+            os_log("\(Logger.isMain)\(Self.label)🐎🐎🐎 \(title) \(timeInterval) 秒 🐢🐢🐢")
+        }
     }
 }
 
