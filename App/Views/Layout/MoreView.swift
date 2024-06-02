@@ -11,9 +11,10 @@ struct MoreView: View {
             SettingView()
                 .tabItem {
                     Label("设置", systemImage: "gear")
-                }
-        }
+                }        }
+        #if os(macOS)
         .padding(.top)
+        #endif
         .background(.background)
         .tabViewStyle(DefaultTabViewStyle())
     }

@@ -4,12 +4,17 @@ struct SettingView: View {
     var body: some View {
         ScrollView {
             VStack {
-                BuyView()
+                BuySetting()
+                    .padding(.horizontal)
+                    .padding(.top)
+
                 DirSetting().padding(.horizontal)
                 CoverDirSetting().padding(.horizontal)
                 VersionSetting().padding(.horizontal)
                 PlayTime().padding(.horizontal)
-                DeviceSetting().padding(.horizontal)
+                DeviceSetting()
+                    .padding(.horizontal)
+                    .padding(.bottom)
             }
         }
     }
