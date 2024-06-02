@@ -5,6 +5,7 @@ import SwiftUI
 struct AllSubscriptions: View {
     @EnvironmentObject var store: StoreManager
     @EnvironmentObject var app: AppManager
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
 
     @State private var subscriptions: [Product] = []
     @State private var refreshing = false
@@ -30,6 +31,8 @@ struct AllSubscriptions: View {
                     }
                     .padding()
                 }
+                
+                footerView
             }
         }
         .onAppear {
@@ -71,6 +74,21 @@ struct AllSubscriptions: View {
                 })
             })
         }
+    }
+    
+    private var footerView: some View {
+            HStack {
+                Spacer()
+                Link("隐私政策", destination: URL(string: "https://www.kuaiyizhi.cn/privacy")!)
+                Link("许可协议", destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!)
+                Spacer()
+            }
+            .foregroundStyle(
+                colorScheme == .light ?
+                .black.opacity(0.8) :
+                .white.opacity(0.8))
+            .padding(.top, 12)
+        .font(.footnote)
     }
 }
 

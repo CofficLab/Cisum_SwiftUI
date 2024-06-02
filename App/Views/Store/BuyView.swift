@@ -21,7 +21,7 @@ struct BuyView: View {
 //                    MySubscription().padding()
                     AllSubscriptions().padding(.horizontal)
 //                    NonRenewables().padding(.horizontal)
-                    footerView
+                    
                 }
                 .padding(.top, 48)
                 .frame(maxWidth: .infinity)

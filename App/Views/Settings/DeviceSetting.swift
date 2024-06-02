@@ -5,6 +5,8 @@ struct DeviceSetting: View {
     @State var playTime = 0
     @State var items: [DeviceData] = []
     
+    var verbose: Bool = false
+    
     var label: String {
         "\(Logger.isMain)🖥️ DeviceSetting::"
     }
@@ -38,7 +40,9 @@ struct DeviceSetting: View {
         Task {
             let items = await db.allDevices()
             
-            os_log("\(self.label)获取设备列表 -> \(items.count)")
+            if verbose {
+                os_log("\(self.label)获取设备列表 -> \(items.count)")
+            }
             
             AppConfig.mainQueue.sync {
                 self.items = items

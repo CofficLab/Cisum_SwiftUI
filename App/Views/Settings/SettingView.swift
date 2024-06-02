@@ -4,6 +4,7 @@ struct SettingView: View {
     var body: some View {
         ScrollView {
             VStack {
+                BuyView()
                 DirSetting().padding(.horizontal)
                 CoverDirSetting().padding(.horizontal)
                 VersionSetting().padding(.horizontal)
