@@ -3,11 +3,11 @@ import OSLog
 import SwiftData
 
 struct DeviceSetting: View {
-    @State var playTime = 0
-    @Query var items: [DeviceData]
-    
     @Environment(\.modelContext) private var modelContext
     
+    @State var playTime = 0
+    @Query(sort: \DeviceData.timesOpened, order: .reverse) var items: [DeviceData]
+
     var verbose: Bool = false
     
     var label: String {

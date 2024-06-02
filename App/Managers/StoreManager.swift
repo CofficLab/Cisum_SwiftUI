@@ -181,7 +181,7 @@ class StoreManager: ObservableObject {
                     }
                 case .autoRenewable:
                     if let subscription = subscriptions.first(where: { $0.id == transaction.productID }) {
-                        os_log("\(Logger.isMain) 💰 更新已购列表 -> 已购: \(subscription.displayName)")
+                        os_log("\(self.label)更新已购列表 -> 已购: \(subscription.displayName)")
                         
                         purchasedSubscriptions.append(subscription)
                     }
