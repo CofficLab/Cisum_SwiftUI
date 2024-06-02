@@ -42,6 +42,10 @@ extension DB {
         if itemsForUpdate.count > 0 {
             self.syncWithUpdatedItems(itemsForUpdate)
         }
+        
+        Task.detached {
+            self.updateGroupForMetas(items)
+        }
     }
     
     // MARK: SyncWithMetas
@@ -78,10 +82,6 @@ extension DB {
                 try context.save()
             } catch {
                 os_log(.error, "\(error.localizedDescription)")
-            }
-            
-            Task.detached {
-                self.updateGroupForMetas(metas)
             }
         }
     }
@@ -125,10 +125,6 @@ extension DB {
             } catch let e {
                 os_log(.error, "\(e.localizedDescription)")
             }
-        }
-        
-        Task {
-            self.updateGroupForMetas(metas)
         }
     }
 }
