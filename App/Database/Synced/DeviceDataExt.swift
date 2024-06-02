@@ -2,9 +2,6 @@ import Foundation
 import OSLog
 import SwiftData
 
-
-// MARK: 增加
-
 extension DBSynced {
     func insertDeviceData() {
         let deviceData = DeviceData(uuid: AppConfig.uuid)
@@ -40,6 +37,18 @@ extension DBSynced {
             } else {
                 insertDeviceData()
             }
+        }
+    }
+    
+    // MARK: Delete
+    
+    func deleteDevice(_ deviceData: DeviceData) {
+        context.delete(deviceData)
+        
+        do {
+            try context.save()
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
         }
     }
     

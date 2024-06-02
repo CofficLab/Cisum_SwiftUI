@@ -1,9 +1,12 @@
 import SwiftUI
 import OSLog
+import SwiftData
 
 struct DeviceSetting: View {
     @State var playTime = 0
-    @State var items: [DeviceData] = []
+    @Query var items: [DeviceData]
+    
+    @Environment(\.modelContext) private var modelContext
     
     var verbose: Bool = false
     
@@ -29,25 +32,8 @@ struct DeviceSetting: View {
                     }
                 }
             }.padding(10)
-        }.background(BackgroundView.type1.opacity(0.1))
-            .onAppear {
-                getItems()
-            }
-    }
-    
-    func getItems() {
-        let db = DBSynced(AppConfig.getSyncedContainer)
-        Task {
-            let items = await db.allDevices()
-            
-            if verbose {
-                os_log("\(self.label)获取设备列表 -> \(items.count)")
-            }
-            
-            AppConfig.mainQueue.sync {
-                self.items = items
-            }
         }
+        .background(BackgroundView.type1.opacity(0.1))
     }
 }
 

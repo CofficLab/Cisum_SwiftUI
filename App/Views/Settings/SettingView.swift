@@ -17,6 +17,7 @@ struct SettingView: View {
                     .padding(.bottom)
             }
         }
+        .modelContainer(AppConfig.getSyncedContainer)
     }
 }
 
