@@ -9,12 +9,18 @@ struct SettingView: View {
                     .padding(.top)
 
                 DirSetting().padding(.horizontal)
-                CoverDirSetting().padding(.horizontal)
+//                CoverDirSetting().padding(.horizontal)
                 VersionSetting().padding(.horizontal)
-                PlayTime().padding(.horizontal)
-                DeviceSetting()
-                    .padding(.horizontal)
-                    .padding(.bottom)
+                
+                if AppConfig.debug {
+                    PlayTime().padding(.horizontal)
+                }
+                
+                if AppConfig.isDebug {
+                    DeviceSetting()
+                        .padding(.horizontal)
+                        .padding(.bottom)
+                }
             }
         }
         .modelContainer(AppConfig.getSyncedContainer)

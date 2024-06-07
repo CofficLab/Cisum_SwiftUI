@@ -29,8 +29,7 @@ struct DeviceSetting: View {
                         Text(item.name)
                         Spacer()
                         Text("\(item.timesOpened)")
-                        BtnDelDevice(deviceData: item)
-                            .labelStyle(.iconOnly)
+//                        BtnDelDevice(deviceData: item).labelStyle(.iconOnly)
                     }
                 }
             }.padding(10)
