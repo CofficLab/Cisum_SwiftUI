@@ -20,12 +20,14 @@ enum AppConfig {
     @AppStorage("App.UUID")
     static var uuid: String = ""
     
-    static func setUUID() {
+    static func getDeviceId() -> String {
         if uuid.count > 0 {
-            return
+            return uuid
         }
         
         uuid = UUID().uuidString
+        
+        return uuid
     }
 }
 

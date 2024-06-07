@@ -211,7 +211,7 @@ extension DB {
         }
     }
 
-    nonisolated func updateGroupForMetas(_ metas: [MetaWrapper], verbose: Bool = true) {
+    nonisolated func updateGroupForMetas(_ metas: [MetaWrapper], verbose: Bool = false) {
         let title = "UpdateGroup \(metas.count) 🌾🌾🌾"
         let startTime = self.jobStart(title)
 

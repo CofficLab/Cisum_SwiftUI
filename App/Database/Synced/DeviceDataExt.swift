@@ -3,8 +3,8 @@ import OSLog
 import SwiftData
 
 extension DBSynced {
-    func insertDeviceData() {
-        let deviceData = DeviceData(uuid: AppConfig.uuid)
+    func insertDeviceData(deviceId: String) {
+        let deviceData = DeviceData(uuid: deviceId)
         deviceData.firstOpenTime = .now
         deviceData.lastOpenTime = .now
         deviceData.name = DeviceHelper.getDeviceName()
@@ -21,7 +21,7 @@ extension DBSynced {
     }
     
     func onAppOpen() {
-        let uuid = AppConfig.uuid
+        let uuid = AppConfig.getDeviceId()
         
         Task {
             if let deviceData = self.find(uuid) {
@@ -35,7 +35,7 @@ extension DBSynced {
                     os_log(.error, "\(e.localizedDescription)")
                 }
             } else {
-                insertDeviceData()
+                insertDeviceData(deviceId: uuid)
             }
         }
     }
@@ -43,7 +43,13 @@ extension DBSynced {
     // MARK: Delete
     
     func deleteDevice(_ deviceData: DeviceData) {
-        context.delete(deviceData)
+        os_log("\(self.label)Delete Device -> \(deviceData.name)")
+        
+        guard let dbItem = context.model(for: deviceData.id) as? DeviceData else {
+            return
+        }
+        
+        context.delete(dbItem)
         
         do {
             try context.save()

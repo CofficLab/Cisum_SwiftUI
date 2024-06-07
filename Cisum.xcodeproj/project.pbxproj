@@ -45,6 +45,7 @@
 		0B6B8B9D2BBA4D0600F65B23 /* Coffee.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6B8B9C2BBA4D0600F65B23 /* Coffee.swift */; };
 		0B718F0C2AB4349900569762 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B718F0B2AB4349900569762 /* CardView.swift */; };
 		0B73275F2BB5138200DBD922 /* LoggerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B73275E2BB5138200DBD922 /* LoggerHelper.swift */; };
+		0B7842752C1331B400E24869 /* BtnDelDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7842742C1331B400E24869 /* BtnDelDevice.swift */; };
 		0B7F558B2AD2636B0000D72E /* ButtonPlayList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7F558A2AD2636B0000D72E /* ButtonPlayList.swift */; };
 		0B8C369F2BEA011700C47567 /* MetaWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C369E2BEA011700C47567 /* MetaWrapper.swift */; };
 		0B8C36A12BEA0E8800C47567 /* AudioD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C36A02BEA0E8800C47567 /* AudioD.swift */; };
@@ -185,6 +186,7 @@
 		0B6B8B9C2BBA4D0600F65B23 /* Coffee.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coffee.swift; sourceTree = "<group>"; };
 		0B718F0B2AB4349900569762 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		0B73275E2BB5138200DBD922 /* LoggerHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerHelper.swift; sourceTree = "<group>"; };
+		0B7842742C1331B400E24869 /* BtnDelDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnDelDevice.swift; sourceTree = "<group>"; };
 		0B7F558A2AD2636B0000D72E /* ButtonPlayList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonPlayList.swift; sourceTree = "<group>"; };
 		0B8C369E2BEA011700C47567 /* MetaWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetaWrapper.swift; sourceTree = "<group>"; };
 		0B8C36A02BEA0E8800C47567 /* AudioD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioD.swift; sourceTree = "<group>"; };
@@ -430,6 +432,7 @@
 				0BBA42262AC2A8B800C0B977 /* BtnAdd.swift */,
 				F507F5142C04688D00CB9A3A /* BtnBuy.swift */,
 				0BBA42242AC1813D00C0B977 /* BtnDel.swift */,
+				0B7842742C1331B400E24869 /* BtnDelDevice.swift */,
 				0BAABEB72BC7D4B600DF4A31 /* BtnDelTask.swift */,
 				0BFDCE572BB01884009198DD /* BtnDestroy.swift */,
 				0BB889D12AC042EC004788D5 /* BtnDownload.swift */,
@@ -768,6 +771,7 @@
 				0B12B0A72C0CB88B00FD43AD /* BuySetting.swift in Sources */,
 				0BBAD0722BBC05C6005834A3 /* DBRow.swift in Sources */,
 				0B11365B2BEFABC700A71FE1 /* JobGetCover.swift in Sources */,
+				0B7842752C1331B400E24869 /* BtnDelDevice.swift in Sources */,
 				0B8C36B22BEC6E8D00C47567 /* QueueExt.swift in Sources */,
 				0BD056892BC6192D00EBC7C4 /* JobSync.swift in Sources */,
 				0B1165E92ABBC6C0005C5CBB /* LaunchView.swift in Sources */,
