@@ -2,7 +2,7 @@ import OSLog
 import StoreKit
 import SwiftUI
 
-struct BuyView: View {
+struct BuySetting: View {
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     @State var closeBtnHovered: Bool = false
 
@@ -11,35 +11,20 @@ struct BuyView: View {
     }
 
     var body: some View {
-        ZStack {
-            ScrollView {
-                VStack {
-                    Text("订阅专业版").font(.title)
+        GroupBox {
+            VStack {
+                Text("订阅专业版").font(.title)
 
-                    featureView.padding()
-                    
-//                    MySubscription().padding()
-                    AllSubscriptions().padding(.horizontal)
-//                    NonRenewables().padding(.horizontal)
-                    
-                }
-                .padding(.top, 48)
-                .frame(maxWidth: .infinity)
+                featureView.padding()
+                SubscriptionSetting().padding(.horizontal)
             }
-        }
+            .padding(.top, 12)
+        }.background(BackgroundView.type1.opacity(0.1))
     }
 
     private var headerView: some View {
         VStack {
             HStack {
-                //                            Button("恢复购买", action: {
-                //                                Task {
-                //                                    // This call displays a system prompt that asks users to authenticate with their App Store credentials.
-                //                                    // Call this function only in response to an explicit user action, such as tapping a button.
-                //                                    try? await AppStore.sync()
-                //                                }
-                //                            })
-
                 Button(action: {
                     onClose()
                 }, label: {
@@ -63,9 +48,9 @@ struct BuyView: View {
             Spacer()
         }
     }
-    
+
     private var featureView: some View {
-        VStack(alignment: .center) {
+        VStack(spacing: 2) {
             HStack {
                 Text("♾️")
                     .font(.system(size: 18))
@@ -73,7 +58,6 @@ struct BuyView: View {
                     .padding(.trailing, 0)
                 Text("软件功能全无限制")
             }
-            Divider()
             HStack {
                 Text("💗")
                     .font(.system(size: 18))
@@ -96,8 +80,8 @@ struct BuyView: View {
             }
             .foregroundStyle(
                 colorScheme == .light ?
-                .black.opacity(0.8) :
-                .white.opacity(0.8))
+                    .black.opacity(0.8) :
+                    .white.opacity(0.8))
             .padding(.vertical, 12)
         }
         .padding(.horizontal)

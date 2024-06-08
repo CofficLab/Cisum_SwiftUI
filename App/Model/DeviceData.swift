@@ -3,6 +3,12 @@ import SwiftData
 
 @Model
 class DeviceData {
+    static var descriptorAll = FetchDescriptor(predicate: #Predicate<DeviceData> { _ in
+        return true
+    }, sortBy: [
+        SortDescriptor(\.firstOpenTime, order: .forward)
+    ])
+    
     var uuid: String = ""
     var firstOpenTime: Date = Date.distantPast
     var lastOpenTime: Date = Date.distantPast

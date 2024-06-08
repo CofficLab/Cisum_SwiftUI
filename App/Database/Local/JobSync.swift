@@ -13,7 +13,7 @@ extension DB {
         await self.disk.watchAudiosFolder()
     }
     
-    func sync(_ items: [MetaWrapper], verbose: Bool = false) {
+    func sync(_ items: [MetaWrapper], verbose: Bool = true) {
         var message = "\(self.label)sync with count=\(items.count) 🪣🪣🪣"
         
         if let first = items.first, first.isDownloading == true {
@@ -42,13 +42,21 @@ extension DB {
         if itemsForUpdate.count > 0 {
             self.syncWithUpdatedItems(itemsForUpdate)
         }
+        
+        Task.detached {
+            self.updateGroupForMetas(items)
+        }
     }
     
     // MARK: SyncWithMetas
     
     /// 将数据库和metas同步
     func syncWithMetas(_ metas: [MetaWrapper]) {
-        self.printRunTime("syncWithMetas, count=\(metas.count)") {
+        self.printRunTime(
+            "syncWithMetas, count=\(metas.count)",
+            tolerance: 0.01,
+            verbose: true
+        ) {
             // 将数组转换成哈希表，方便通过键来快速查找元素，这样可以将时间复杂度降低到：O(m+n)
             var hashMap = [URL: MetaWrapper]()
             for element in metas {
@@ -75,13 +83,6 @@ extension DB {
             } catch {
                 os_log(.error, "\(error.localizedDescription)")
             }
-            
-            // 计算文件的Hash
-            metas.forEach({ meta in
-                if meta.isDownloaded, let url = meta.url, let audio = self.findAudio(url) {
-                    self.updateGroup(audio)
-                }
-            })
         }
     }
     
@@ -125,13 +126,6 @@ extension DB {
                 os_log(.error, "\(e.localizedDescription)")
             }
         }
-        
-        // 计算文件的Hash
-        metas.forEach({ meta in
-            if meta.isDownloaded, let url = meta.url, let audio = self.findAudio(url) {
-                self.updateGroup(audio)
-            }
-        })
     }
 }
 

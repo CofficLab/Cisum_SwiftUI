@@ -7,7 +7,7 @@ extension DB {
         self.runJob(
             "Download ⏬⏬⏬",
             descriptor: Audio.descriptorFirst,
-            printLog: false,
+            printLog: true,
             code: { audio, onEnd in
                 self.downloadNextBatch(audio, reason: "\(Logger.isMain)\(Self.label)prepare")
                 onEnd()

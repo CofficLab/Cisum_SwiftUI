@@ -48,10 +48,10 @@ extension DB {
     func evict(_ audio: Audio) {
         disk.evict(audio.url)
     }
-    
+
     func download(_ audio: Audio, reason: String) {
         Task.detached(priority: .background) {
-            //os_log("\(Logger.isMain)\(Self.label)Download ⏬⏬⏬ \(audio.title) reason -> \(reason)")
+            // os_log("\(Logger.isMain)\(Self.label)Download ⏬⏬⏬ \(audio.title) reason -> \(reason)")
             await self.disk.download(audio)
         }
     }
@@ -70,7 +70,7 @@ extension DB {
             download(currentAudio, reason: "downloadNext 🐛 \(reason)")
 
             currentIndex = currentIndex + 1
-            if let next = Self.nextOf(context: ModelContext(self.modelContainer), audio: currentAudio) {
+            if let next = Self.nextOf(context: ModelContext(modelContainer), audio: currentAudio) {
                 currentAudio = next
             }
         }
@@ -163,9 +163,9 @@ extension DB {
         guard let dbAudio = context.model(for: audio.id) as? Audio else {
             return
         }
-        
+
         dbAudio.hasCover = hasCover
-        
+
         do {
             try context.save()
         } catch let e {
@@ -178,38 +178,68 @@ extension DB {
 // MARK: Group
 
 extension DB {
-    func updateGroup(_ audio: Audio, verbose: Bool = false) {
+    func updateGroup(_ audio: Audio, save: Bool = true, verbose: Bool = true) {
         if audio.isNotDownloaded {
             return
         }
-        
+
         if verbose {
-            os_log("\(Self.label)UpdateGroup for \(audio.title) 🌾🌾🌾 \(audio.getFileSizeReadable())")
+            os_log("\(self.label)UpdateGroup for \(audio.title) 🌾🌾🌾 \(audio.getFileSizeReadable())")
         }
-        
+
         let fileHash = audio.getHash()
         if fileHash.isEmpty {
             return
         }
-        
-        let context = ModelContext(self.modelContainer)
+
+        let context = ModelContext(modelContainer)
         context.autosaveEnabled = false
         guard let dbAudio = context.model(for: audio.id) as? Audio else {
             return
         }
-        
+
         dbAudio.group = AudioGroup(title: audio.title, hash: fileHash)
-        
+
+        if save == false {
+            return
+        }
+
         do {
             try context.save()
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
         }
     }
-    
-    func updateGroup(_ audios: [Audio]) {
-        audios.forEach({
-            updateGroup($0)
-        })
+
+    nonisolated func updateGroupForMetas(_ metas: [MetaWrapper], verbose: Bool = false) {
+        let title = "UpdateGroup \(metas.count) 🌾🌾🌾"
+        let startTime = self.jobStart(title)
+
+        let total = metas.count
+        let context = ModelContext(modelContainer)
+        context.autosaveEnabled = false
+
+        for (i,meta) in metas.enumerated() {
+            if verbose && i%100 == 0 {
+                os_log("\(Logger.isMain)\(Self.label)UpdateGroup \(i)/\(total)")
+            }
+            
+            guard meta.isDownloaded, let url = meta.url, let audio = Self.findAudio(context: context, url) else {
+                continue
+            }
+
+            let fileHash = audio.getHash()
+            if fileHash.count > 0 {
+                audio.group = AudioGroup(title: audio.title, hash: fileHash)
+            }
+        }
+
+        do {
+            try context.save()
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
+
+        self.jobEnd(startTime, title: title)
     }
 }

@@ -35,7 +35,7 @@ struct ProductCell: View {
     }
     
     var label: String {
-        "\(Logger.isMain) 🖥️ ProductCell::"
+        "\(Logger.isMain)🖥️ ProductCell::"
     }
 
     init(product: Product, purchasingEnabled: Bool = true, showStatus: Bool = false) {

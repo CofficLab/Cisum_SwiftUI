@@ -6,7 +6,7 @@ struct DirSetting: View {
             HStack {
                 VStack(alignment: .leading, spacing: 5) {
                     Text("仓库目录").font(.headline)
-                    Text(AppConfig.audiosDir.absoluteString)
+                    Text(AppConfig.audiosDirName)
                         .font(.subheadline)
                         .opacity(0.8)
                     if iCloudHelper.isCloudPath(url: AppConfig.audiosDir) {
@@ -14,6 +14,7 @@ struct DirSetting: View {
                     } else {
                         Text("是本地目录，不会同步").font(.footnote)
                     }
+                    Text("本目录的文件可随意修改").font(.footnote)
                 }
                 Spacer()
                 #if os(macOS)
@@ -26,6 +27,7 @@ struct DirSetting: View {
                             Image(systemName: "doc.viewfinder.fill")
                         })
                     })
+                    .labelStyle(.iconOnly)
                 #endif
             }.padding(10)
         }.background(BackgroundView.type1.opacity(0.1))

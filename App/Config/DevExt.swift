@@ -11,4 +11,8 @@ extension AppConfig {
         false
         #endif
     }
+    
+    static var isDebug: Bool {
+        debug
+    }
 }

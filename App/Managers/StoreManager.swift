@@ -54,8 +54,11 @@ class StoreManager: ObservableObject {
         "\(Logger.isMain)\(Self.label)"
     }
 
-    init() {
-        os_log("\(Logger.isMain)\(Self.label)初始化")
+    init(verbose: Bool = false) {
+        if verbose {
+            os_log("\(Logger.isMain)\(Self.label)初始化")
+        }
+        
         productIdToEmoji = StoreManager.loadProductIdToEmojiData()
 
         // 初始化产品列表，稍后填充
@@ -77,8 +80,11 @@ class StoreManager: ObservableObject {
     }
     
     // MARK: 更新订阅组的状态
-    func updateSubscriptionGroupStatus(_ state: RenewalState?, reason: String) {
-        os_log("\(self.label)更新订阅组的状态，因为 \(reason)")
+    func updateSubscriptionGroupStatus(_ state: RenewalState?, reason: String, verbose: Bool = false) {
+        if verbose {
+            os_log("\(self.label)更新订阅组的状态，因为 \(reason)")
+        }
+        
         self.subscriptionGroupStatus = state
         
         guard let s = self.subscriptionGroupStatus else {
@@ -87,36 +93,56 @@ class StoreManager: ObservableObject {
 
         switch s {
         case .expired:
-            os_log("\(self.label)订阅组状态: Expired")
+            if verbose {
+                os_log("\(self.label)订阅组状态: Expired")
+            }
         case .inBillingRetryPeriod:
-            os_log("\(self.label)订阅组状态: InBillingRetryPeriod")
+            if verbose {
+                os_log("\(self.label)订阅组状态: InBillingRetryPeriod")
+            }
         case .inGracePeriod:
-            os_log("\(self.label)订阅组状态: InGracePeriod")
+            if verbose {
+                os_log("\(self.label)订阅组状态: InGracePeriod")
+            }
         case .revoked:
-            os_log("\(self.label)订阅组状态: Revoked")
+            if verbose {
+                os_log("\(self.label)订阅组状态: Revoked")
+            }
         case .subscribed:
-            os_log("\(self.label)订阅组状态: Subscribed")
+            if verbose {
+                os_log("\(self.label)订阅组状态: Subscribed")
+            }
         default:
-            Logger.app.error("\(self.label)订阅组状态: 未知")
+            if verbose {
+                os_log(.error, "\(self.label)订阅组状态: 未知")
+            }
         }
     }
     
     // MARK: 更新当前订阅的产品
-    func updateSubscription(_ sub: Product?) {
-        os_log("\(self.label)StoreManger 更新订阅计划为 \(sub?.displayName ?? "-")")
+    func updateSubscription(_ sub: Product?, verbose: Bool = false) {
+        if verbose {
+            os_log("\(self.label)StoreManger 更新订阅计划为 \(sub?.displayName ?? "-")")
+        }
+        
         self.currentSubscription = sub
     }
     
     // MARK: 更新当前订阅的产品的状态
-    func updateStatus(_ status: Product.SubscriptionInfo.Status?) {
-        os_log("\(self.label)StoreManger 更新订阅状态")
+    func updateStatus(_ status: Product.SubscriptionInfo.Status?, verbose: Bool = false) {
+        if verbose {
+            os_log("\(self.label)StoreManger 更新订阅状态")
+        }
+        
         self.status = status
     }
 
     // MARK: 更新已购列表
     
-    @MainActor func updatePurchased(_ reason: String) async {
-        os_log("\(self.label)更新已购列表，因为 -> \(reason)")
+    @MainActor func updatePurchased(_ reason: String, verbose: Bool = false) async {
+        if verbose {
+            os_log("\(self.label)更新已购列表，因为 -> \(reason)")
+        }
         
         var purchasedCars: [Product] = []
         var purchasedSubscriptions: [Product] = []
@@ -155,7 +181,7 @@ class StoreManager: ObservableObject {
                     }
                 case .autoRenewable:
                     if let subscription = subscriptions.first(where: { $0.id == transaction.productID }) {
-                        os_log("\(Logger.isMain) 💰 更新已购列表 -> 已购: \(subscription.displayName)")
+                        os_log("\(self.label)更新已购列表 -> 已购: \(subscription.displayName)")
                         
                         purchasedSubscriptions.append(subscription)
                     }
@@ -197,8 +223,11 @@ class StoreManager: ObservableObject {
         return data
     }
 
-    func listenForTransactions(_ reason: String) -> Task<Void, Error> {
-        os_log("\(self.label)ListenForTransactions，因为 -> \(reason)")
+    func listenForTransactions(_ reason: String, verbose: Bool = false) -> Task<Void, Error> {
+        if verbose {
+            os_log("\(self.label)ListenForTransactions，因为 -> \(reason)")
+        }
+        
         return Task.detached {
             //Iterate through any transactions that don't come from a direct call to `purchase()`.
             for await result in Transaction.updates {
@@ -225,8 +254,11 @@ class StoreManager: ObservableObject {
     //  联网得到2个产品，断网，依然得到两个产品
     //  联网得到2个产品，断网，依然得到两个产品，再等等，不报错，得到0个产品
     @MainActor
-    func requestProducts(_ reason: String, _ completion: ((Error?) -> Void)? = nil) async {
-        os_log("\(self.label)请求 App Store 获取产品列表，并存储到 @Published，因为 -> \(reason)")
+    func requestProducts(_ reason: String, _ completion: ((Error?) -> Void)? = nil, verbose: Bool = false) async {
+        if verbose {
+            os_log("\(self.label)请求 App Store 获取产品列表，并存储到 @Published，因为 -> \(reason)")
+        }
+        
         do {
             //Request products from the App Store using the identifiers that the Products.plist file defines.
             let storeProducts = try await Product.products(for: productIdToEmoji.keys)
@@ -236,10 +268,16 @@ class StoreManager: ObservableObject {
             var newNonRenewables: [Product] = []
             var newFuel: [Product] = []
 
+            if verbose {
+                os_log("\(self.label)将从 App Store 获取的产品列表归类，个数 -> \(storeProducts.count)")
+            }
+            
             //Filter the products into categories based on their type.
-            os_log("\(self.label)将从 App Store 获取的产品列表归类，个数 -> \(storeProducts.count)")
             for product in storeProducts {
-                os_log("\(self.label)将从 App Store 获取的产品列表归类 -> \(product.displayName)")
+                if verbose {
+                    os_log("\(self.label)将从 App Store 获取的产品列表归类 -> \(product.displayName)")
+                }
+                
                 switch product.type {
                 case .consumable:
                     newFuel.append(product)
@@ -275,7 +313,7 @@ class StoreManager: ObservableObject {
     // MARK: 购买与支付
 
     func purchase(_ product: Product) async throws -> Transaction? {
-        os_log("\(Logger.isMain) 💰 去支付")
+        os_log("\(self.label)去支付")
         
         #if os(visionOS)
         return nil
@@ -285,12 +323,12 @@ class StoreManager: ObservableObject {
 
         switch result {
         case .success(let verification):
-            os_log("\(Logger.isMain) 💰 支付成功，验证")
+            os_log("\(self.label)支付成功，验证")
             //Check whether the transaction is verified. If it isn't,
             //this function rethrows the verification error.
             let transaction = try checkVerified(verification)
 
-            os_log("\(Logger.isMain) 💰 支付成功，验证成功")
+            os_log("\(self.label)支付成功，验证成功")
             //The transaction is verified. Deliver content to the user.
             await updatePurchased("支付并验证成功")
 
@@ -299,10 +337,10 @@ class StoreManager: ObservableObject {
 
             return transaction
         case .userCancelled, .pending:
-            os_log("\(Logger.isMain) 💰 取消或pending")
+            os_log("\(self.label)取消或pending")
             return nil
         default:
-            os_log("\(Logger.isMain) 💰 支付结果 \(String(describing: result))")
+            os_log("\(self.label)支付结果 \(String(describing: result))")
             return nil
         }
         #endif
@@ -351,8 +389,10 @@ class StoreManager: ObservableObject {
     // MAKR: 更新订阅状态
     
     @MainActor
-    func updateSubscriptionStatus(_ reason: String, _ completion: ((Error?) -> Void)? = nil) async {
-        os_log("\(self.label)StoreManger 检查订阅状态，因为 -> \(reason)")
+    func updateSubscriptionStatus(_ reason: String, _ completion: ((Error?) -> Void)? = nil, verbose: Bool = false) async {
+        if verbose {
+            os_log("\(self.label)StoreManger 检查订阅状态，因为 -> \(reason)")
+        }
         
         guard subscriptions.count > 0 else {
             if let c = completion {
@@ -379,7 +419,9 @@ class StoreManager: ObservableObject {
             var highestStatus: Product.SubscriptionInfo.Status?
             var highestProduct: Product?
             
-            os_log("\(self.label)StoreManger 检查订阅状态，statuses.count -> \(statuses.count)")
+            if verbose {
+                os_log("\(self.label)StoreManger 检查订阅状态，statuses.count -> \(statuses.count)")
+            }
 
             // Iterate through `statuses` for this subscription group and find
             // the `Status` with the highest level of service that isn't
@@ -388,7 +430,10 @@ class StoreManager: ObservableObject {
             for status in statuses {
                 switch status.state {
                 case .expired, .revoked:
-                    os_log("\(Logger.isMain) 💰 StoreManger 检查订阅状态 -> 超时或被撤销")
+                    if verbose {
+                        os_log("\(self.label)检查订阅状态 -> 超时或被撤销")
+                    }
+                    
                     continue
                 default:
                     let renewalInfo = try checkVerified(status.renewalInfo)

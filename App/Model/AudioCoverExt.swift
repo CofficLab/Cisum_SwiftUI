@@ -188,7 +188,7 @@ extension Audio {
                     case "artwork":
                         if try (makeImage(await item.load(.value), saveTo: coverCacheURL)) != nil {
                             if verbose {
-                                os_log("\(self.label)🍋 AudioModel::updateMeta -> cover updated -> \(self.title)")
+                                os_log("\(self.label)cover updated -> \(self.title)")
                             }
                             
                             return queue.async {

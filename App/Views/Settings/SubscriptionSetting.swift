@@ -2,7 +2,7 @@ import OSLog
 import StoreKit
 import SwiftUI
 
-struct AllSubscriptions: View {
+struct SubscriptionSetting: View {
     @EnvironmentObject var store: StoreManager
     @EnvironmentObject var app: AppManager
     @Environment(\.colorScheme) var colorScheme: ColorScheme
@@ -12,30 +12,27 @@ struct AllSubscriptions: View {
     @State private var error: Error? = nil
 
     var body: some View {
-        GroupBox {
-            VStack {
-                ZStack {
-                    Text("订阅方案").font(.title3)
-                    refreshButton
-                }
-
-                Divider()
-
-                if refreshing == false && subscriptions.isEmpty {
-                    Text("🏃 暂无")
-                } else {
-                    VStack {
-                        ForEach(subscriptions) { product in
-                            ProductCell(product: product)
-                        }
-                    }
-                    .padding()
-                }
-
-                footerView
+        VStack {
+            ZStack {
+                Text("订阅方案").font(.title3)
+                refreshButton
             }
-        }
-        .onAppear {
+
+            Divider()
+
+            if refreshing == false && subscriptions.isEmpty {
+                Text("🏃 暂无")
+            } else {
+                VStack {
+                    ForEach(subscriptions) { product in
+                        ProductCell(product: product)
+                    }
+                }
+                .padding()
+            }
+
+            footerView
+        }.onAppear {
             refreshing = true
             getProducts("AllSubscription OnAppear")
         }
