@@ -87,7 +87,7 @@ struct ControlView: View {
             .frame(maxHeight: .infinity)
         }
         .foregroundStyle(.white)
-        .ignoresSafeArea(edges: appManager.showDB ? .horizontal : .all)
+        .ignoresSafeArea(edges: appManager.showDB || AppConfig.isNotDesktop ? .horizontal : .all)
         .frame(minHeight: AppConfig.controlViewMinHeight)
         .onAppear() {
             showHeroView = true
