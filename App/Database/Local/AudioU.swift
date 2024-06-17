@@ -210,7 +210,7 @@ extension DB {
         }
     }
 
-    nonisolated func updateGroupForMetas(_ metas: [MetaWrapper], verbose: Bool = false) {
+    nonisolated func updateGroupForMetas(_ metas: DiskFileGroup, verbose: Bool = false) {
         let title = "UpdateGroup \(metas.count) 🌾🌾🌾"
         let startTime = self.jobStart(title)
 
@@ -218,12 +218,12 @@ extension DB {
         let context = ModelContext(modelContainer)
         context.autosaveEnabled = false
 
-        for (i,meta) in metas.enumerated() {
+        for (i,meta) in metas.files.enumerated() {
             if verbose && i%100 == 0 {
                 os_log("\(Logger.isMain)\(Self.label)UpdateGroup \(i)/\(total)")
             }
             
-            guard meta.isDownloaded, let url = meta.url, let audio = Self.findAudio(context: context, url) else {
+            guard meta.isDownloaded, let audio = Self.findAudio(context: context, meta.url) else {
                 continue
             }
 

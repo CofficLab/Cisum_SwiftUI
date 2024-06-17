@@ -5,6 +5,7 @@ struct DiskFile {
     var isDownloading: Bool
     var isUpdated: Bool = false
     var isDeleted: Bool = false
+    var isDownloaded: Bool = true
     var downloadProgress: Double
     var fileName: String
 }

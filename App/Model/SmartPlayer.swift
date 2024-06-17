@@ -169,7 +169,7 @@ extension SmartPlayer {
             #endif
             player = try AVAudioPlayer(contentsOf: audio.url)
         } catch {
-            os_log("\(Logger.isMain)初始化播放器失败 ->\(audio.title)->\(error)")
+            os_log(.error, "\(self.label)初始化播放器失败 ->\(audio.title)->\(error)")
             player = AVAudioPlayer()
         }
 

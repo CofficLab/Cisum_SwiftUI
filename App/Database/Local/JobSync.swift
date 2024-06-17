@@ -31,6 +31,7 @@ extension DB {
             if verbose {
                 os_log("\(self.label)全量同步，共 \(collection.count)")
             }
+            
             syncWithMetas(collection)
         } else {
             if verbose {
@@ -40,9 +41,9 @@ extension DB {
             syncWithUpdatedItems(collection)
         }
 
-//        Task.detached {
-//            self.updateGroupForMetas(collection.items)
-//        }
+        Task.detached {
+            self.updateGroupForMetas(collection)
+        }
     }
 
     // MARK: SyncWithMetas

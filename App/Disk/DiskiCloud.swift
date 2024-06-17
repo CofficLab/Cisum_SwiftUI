@@ -141,10 +141,17 @@ extension DiskiCloud {
     }
     
     func download(_ audio: Audio, reason: String) async {
-        os_log("\(self.label)Download ⏬⏬⏬ \(audio.title) reason -> \(reason)")
+        let verbose = false
+        
+        if verbose {
+            os_log("\(self.label)Download ⏬⏬⏬ \(audio.title) reason -> \(reason)")
+        }
         
         if audio.isNotExists {
-            os_log("\(self.label)Download \(audio.title) -> Not Exists")
+            if verbose {
+                os_log("\(self.label)Download \(audio.title) -> Not Exists")
+            }
+            
             return
         }
         
