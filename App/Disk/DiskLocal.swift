@@ -10,8 +10,8 @@ class DiskLocal: ObservableObject {
     var bg = AppConfig.bgQueue
     var label: String { "\(Logger.isMain)\(Self.label)" }
     var verbose = true
-    var onUpdated: (_ items: [MetaWrapper]) -> Void = { items in
-        os_log("\(Logger.isMain)\(DiskiCloud.label)updated with items.count=\(items.count)")
+    var onUpdated: (_ collection: MetadataItemCollection) -> Void = { collection in
+        os_log("\(Logger.isMain)\(DiskiCloud.label)updated with items.count=\(collection.items.count)")
     }
     
     func trash(_ audio: Audio) async {
@@ -141,14 +141,14 @@ extension DiskLocal {
             queue.maxConcurrentOperationCount = 1
             let query = ItemQuery(queue: queue, url: self.audiosDir)
             let result = query.searchMetadataItems()
-            for try await items in result {
+            for try await collection in result {
                 if self.verbose {
                     //os_log("\(Logger.isMain)\(self.label)watchAudiosFolder -> count=\(items.count)")
                 }
                 
-                let filtered = items.filter { $0.url != nil }
+                let filtered = collection.items.filter { $0.url != nil }
                 if filtered.count > 0 {
-                    self.onUpdated(items)
+                    self.onUpdated(collection)
                 }
             }
         }

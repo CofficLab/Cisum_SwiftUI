@@ -11,7 +11,7 @@ class DiskiCloud: ObservableObject {
     var bg = AppConfig.bgQueue
     var label: String { "\(Logger.isMain)\(Self.label)" }
     var verbose = true
-    var onUpdated: (_ items: [MetaWrapper]) -> Void = { items in
+    var onUpdated: (_ items: MetadataItemCollection) -> Void = { items in
         os_log("\(Logger.isMain)\(DiskiCloud.label)updated with items.count=\(items.count)")
     }
     
@@ -189,10 +189,10 @@ extension DiskiCloud {
         queue.maxConcurrentOperationCount = 1
         let query = ItemQuery(queue: queue, url: self.audiosDir)
         let result = query.searchMetadataItems()
-        for try await items in result {
-            os_log("\(Logger.isMain)\(self.label)WatchAudiosFolder -> count=\(items.count)")
+        for try await collection in result {
+            os_log("\(Logger.isMain)\(self.label)WatchAudiosFolder -> count=\(collection.items.count)")
                 
-            self.onUpdated(items)
+            self.onUpdated(collection)
         }
     }
 }

@@ -2,8 +2,29 @@ import Foundation
 import OSLog
 
 struct MetadataItemCollection: Sendable {
+    var name: Notification.Name
     var isUpdated = false
     var items: [MetaWrapper] = []
+    
+    var count: Int {
+        items.count
+    }
+    
+    var first: MetaWrapper? {
+        items.first
+    }
+    
+    var itemsForSync: [MetaWrapper] {
+        items.filter { $0.isUpdated == false }
+    }
+    
+    var itemsForUpdate: [MetaWrapper] {
+        items.filter { $0.isUpdated && $0.isDeleted == false }
+    }
+    
+    var itemsForDelete: [MetaWrapper] {
+        items.filter { $0.isDeleted }
+    }
 }
 
 struct MetaWrapper: Sendable {

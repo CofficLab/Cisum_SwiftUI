@@ -21,7 +21,7 @@ class ItemQuery {
         sortDescriptors: [NSSortDescriptor] = [],
         scopes: [Any] = [NSMetadataQueryUbiquitousDocumentsScope],
         verbose: Bool = false
-    ) -> AsyncStream<[MetaWrapper]> {
+    ) -> AsyncStream<MetadataItemCollection> {
         if verbose {
             os_log("\(self.label)searchMetadataItems")
         }
@@ -44,7 +44,7 @@ class ItemQuery {
                 object: query,
                 queue: queue
             ) { _ in
-                self.collectAll(continuation)
+                self.collectAll(continuation, name: .NSMetadataQueryDidFinishGathering)
             }
 
             NotificationCenter.default.addObserver(
@@ -52,8 +52,8 @@ class ItemQuery {
                 object: query,
                 queue: queue
             ) { notification in
-                self.collectChanged(continuation, notification: notification)
-                self.collectDeleted(continuation, notification: notification)
+                self.collectChanged(continuation, notification: notification, name: .NSMetadataQueryDidUpdate)
+                self.collectDeleted(continuation, notification: notification, name: .NSMetadataQueryDidUpdate)
             }
 
             query.operationQueue = queue
@@ -76,7 +76,7 @@ class ItemQuery {
 
     // MARK: 所有的item
     
-    private func collectAll(_ continuation: AsyncStream<[MetaWrapper]>.Continuation) {
+    private func collectAll(_ continuation: AsyncStream<MetadataItemCollection>.Continuation, name: Notification.Name) {
         DispatchQueue.global().async {
             if self.verbose {
                 os_log("\(self.label)NSMetadataQueryDidFinishGathering")
@@ -88,13 +88,14 @@ class ItemQuery {
                 }
                 return MetaWrapper(metadataItem: metadataItem)
             }
-            continuation.yield(result)
+            
+            continuation.yield(MetadataItemCollection(name: name, items: result))
         }
     }
 
     // MARK: 仅改变过的item
     
-    private func collectChanged(_ continuation: AsyncStream<[MetaWrapper]>.Continuation, notification: Notification) {
+    private func collectChanged(_ continuation: AsyncStream<MetadataItemCollection>.Continuation, notification: Notification, name: Notification.Name) {
         DispatchQueue.global().async {
             let changedItems = notification.userInfo?[NSMetadataQueryUpdateChangedItemsKey] as? [NSMetadataItem] ?? []
 
@@ -106,14 +107,14 @@ class ItemQuery {
                 MetaWrapper(metadataItem: item, isUpdated: true)
             }
             if result.isEmpty == false {
-                continuation.yield(result)
+                continuation.yield(MetadataItemCollection(name: name, items: result))
             }
         }
     }
     
     // MARK: 被删除的item
     
-    private func collectDeleted(_ continuation: AsyncStream<[MetaWrapper]>.Continuation, notification: Notification) {
+    private func collectDeleted(_ continuation: AsyncStream<MetadataItemCollection>.Continuation, notification: Notification, name: Notification.Name) {
         DispatchQueue.global().async {
             if let deletedItems = notification.userInfo?[NSMetadataQueryUpdateRemovedItemsKey] as? [NSMetadataItem] {
                 if self.verbose {
@@ -123,7 +124,7 @@ class ItemQuery {
                 let result = deletedItems.compactMap { item -> MetaWrapper? in
                     MetaWrapper(metadataItem: item, isDeleted: true, isUpdated: true)
                 }
-                continuation.yield(result)
+                continuation.yield(MetadataItemCollection(name: name, items: result))
             }
         }
     }

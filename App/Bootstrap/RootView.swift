@@ -3,7 +3,7 @@ import SwiftUI
 
 struct RootView<Content>: View where Content: View {
     private var content: Content
-    private var verbose = false
+    private var verbose = true
     private var label: String {
         "\(Logger.isMain)🌳 RootView::"
     }
@@ -39,17 +39,17 @@ struct RootView<Content>: View where Content: View {
                             os_log("\(self.label)执行后台任务")
                         }
 
-                        Task.detached(priority: .background, operation: {
-                            await DB(AppConfig.getContainer).prepareJob()
-                        })
-
-                        Task.detached(priority: .background, operation: {
-                            await DB(AppConfig.getContainer).runGetCoversJob()
-                        })
-                        
-                        Task.detached(operation: {
-                            await DBSynced(AppConfig.getSyncedContainer).onAppOpen()
-                        })
+//                        Task.detached(priority: .background, operation: {
+//                            await DB(AppConfig.getContainer).prepareJob()
+//                        })
+//
+//                        Task.detached(priority: .background, operation: {
+//                            await DB(AppConfig.getContainer).runGetCoversJob()
+//                        })
+//                        
+//                        Task.detached(operation: {
+//                            await DBSynced(AppConfig.getSyncedContainer).onAppOpen()
+//                        })
                     }
                 }
         }

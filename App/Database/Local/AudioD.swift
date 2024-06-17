@@ -141,7 +141,7 @@ extension DB {
 
     // MARK: 清空数据库
 
-    func destroy() {
+    func destroyAudios() {
         do {
             try self.destroy(for: Audio.self)
         } catch let e {
