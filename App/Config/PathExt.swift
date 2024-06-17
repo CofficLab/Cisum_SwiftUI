@@ -29,8 +29,8 @@ extension AppConfig {
     // MARK: 音频存储目录
 
     static var audiosDir: URL {
-        var cloudURL = AppConfig.cloudDocumentsDir.appendingPathComponent(AppConfig.audiosDirName)
-        var localURL = AppConfig.localDocumentsDir!.appendingPathComponent(AppConfig.audiosDirName)
+        let cloudURL = AppConfig.cloudDocumentsDir.appendingPathComponent(AppConfig.audiosDirName)
+        let localURL = AppConfig.localDocumentsDir!.appendingPathComponent(AppConfig.audiosDirName)
         let url = iCloudEnabled ? cloudURL : localURL
 
         if !fileManager.fileExists(atPath: url.path) {

@@ -14,6 +14,6 @@ extension AppConfig {
     }
     
     static var isStoreIniCloud: Bool {
-        iCloudHelper.isCloudPath(url: AppConfig.audiosDir)
+        iCloudHelper.isCloudPath(url: AppConfig.disk.audiosDir)
     }
 }

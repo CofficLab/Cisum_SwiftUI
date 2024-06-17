@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct DirSetting: View {
+    let disk = AppConfig.disk
+    
     var body: some View {
         GroupBox {
             HStack {
@@ -16,7 +18,7 @@ struct DirSetting: View {
                 Spacer()
                 #if os(macOS)
                     Button(action: {
-                        openUrl(AppConfig.audiosDir)
+                        openUrl(disk.audiosDir)
                     }, label: {
                         Label(title: {
                             Text("打开")

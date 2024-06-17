@@ -27,4 +27,16 @@ class FilePresenter: NSObject, NSFilePresenter {
         // 例如，重新加载文件或通知其他组件
         self.onDidChange()
     }
+    
+    func getFiles() -> [URL] {
+        do {
+            let files = try FileManager.default.contentsOfDirectory(atPath: self.fileURL.path())
+            
+            return files.map { URL(fileURLWithPath: self.fileURL.path()).appendingPathComponent($0) }
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+            
+            return []
+        }
+    }
 }

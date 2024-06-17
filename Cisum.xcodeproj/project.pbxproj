@@ -138,11 +138,13 @@
 		F507F5132C04681200CB9A3A /* TopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F507F5122C04681200CB9A3A /* TopView.swift */; };
 		F507F5152C04688D00CB9A3A /* BtnBuy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F507F5142C04688D00CB9A3A /* BtnBuy.swift */; };
 		F507F5172C09541B00CB9A3A /* DeviceSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = F507F5162C09541B00CB9A3A /* DeviceSetting.swift */; };
+		F53BE0322C202420003CBA29 /* DiskFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53BE0312C202420003CBA29 /* DiskFile.swift */; };
 		F54522252BFF3C780027CF55 /* Products.storekit in Resources */ = {isa = PBXBuildFile; fileRef = F54522242BFF3C770027CF55 /* Products.storekit */; };
 		F54522272BFF3CCE0027CF55 /* Products.plist in Resources */ = {isa = PBXBuildFile; fileRef = F54522262BFF3CCE0027CF55 /* Products.plist */; };
 		F545D1732C1FC9F0006A6AFA /* CloudSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = F545D1722C1FC9F0006A6AFA /* CloudSetting.swift */; };
 		F545D1752C1FCAD0006A6AFA /* CloudExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F545D1742C1FCAD0006A6AFA /* CloudExt.swift */; };
 		F545D1772C1FCC86006A6AFA /* UserExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F545D1762C1FCC86006A6AFA /* UserExt.swift */; };
+		F545D1792C200901006A6AFA /* StorageExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F545D1782C200901006A6AFA /* StorageExt.swift */; };
 		F573B1882C0411E4004C34CC /* DeviceDataExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B1872C0411E4004C34CC /* DeviceDataExt.swift */; };
 		F573B18A2C0413DD004C34CC /* DeviceHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B1892C0413DD004C34CC /* DeviceHelper.swift */; };
 		F573B18C2C042E08004C34CC /* DeviceExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B18B2C042E08004C34CC /* DeviceExt.swift */; };
@@ -282,11 +284,13 @@
 		F507F5122C04681200CB9A3A /* TopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopView.swift; sourceTree = "<group>"; };
 		F507F5142C04688D00CB9A3A /* BtnBuy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnBuy.swift; sourceTree = "<group>"; };
 		F507F5162C09541B00CB9A3A /* DeviceSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceSetting.swift; sourceTree = "<group>"; };
+		F53BE0312C202420003CBA29 /* DiskFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskFile.swift; sourceTree = "<group>"; };
 		F54522242BFF3C770027CF55 /* Products.storekit */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Products.storekit; sourceTree = "<group>"; };
 		F54522262BFF3CCE0027CF55 /* Products.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Products.plist; sourceTree = "<group>"; };
 		F545D1722C1FC9F0006A6AFA /* CloudSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudSetting.swift; sourceTree = "<group>"; };
 		F545D1742C1FCAD0006A6AFA /* CloudExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudExt.swift; sourceTree = "<group>"; };
 		F545D1762C1FCC86006A6AFA /* UserExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserExt.swift; sourceTree = "<group>"; };
+		F545D1782C200901006A6AFA /* StorageExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageExt.swift; sourceTree = "<group>"; };
 		F573B1872C0411E4004C34CC /* DeviceDataExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceDataExt.swift; sourceTree = "<group>"; };
 		F573B1892C0413DD004C34CC /* DeviceHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceHelper.swift; sourceTree = "<group>"; };
 		F573B18B2C042E08004C34CC /* DeviceExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceExt.swift; sourceTree = "<group>"; };
@@ -426,6 +430,7 @@
 			isa = PBXGroup;
 			children = (
 				0B8C36A92BEA2EC600C47567 /* DiskContact.swift */,
+				F53BE0312C202420003CBA29 /* DiskFile.swift */,
 				0BD0568A2BC6202900EBC7C4 /* DiskiCloud.swift */,
 				0BB427902BED0B38004E6F82 /* DiskLocal.swift */,
 			);
@@ -554,8 +559,9 @@
 				0B8C36B12BEC6E8D00C47567 /* QueueExt.swift */,
 				0B220F742BB1BBDB0077255A /* SmartError.swift */,
 				0B8C36AB2BEC6E0F00C47567 /* StateExt.swift */,
-				0B8C36B32BEC6EAB00C47567 /* ViewExt.swift */,
+				F545D1782C200901006A6AFA /* StorageExt.swift */,
 				F545D1762C1FCC86006A6AFA /* UserExt.swift */,
+				0B8C36B32BEC6EAB00C47567 /* ViewExt.swift */,
 			);
 			path = Config;
 			sourceTree = "<group>";
@@ -727,6 +733,7 @@
 				0B901D932BB83F38003AC253 /* CloudKit.swift in Sources */,
 				0B8C36A32BEA124900C47567 /* AudioR.swift in Sources */,
 				0BB889D72AC046B5004788D5 /* BtnShowInFinder.swift in Sources */,
+				F53BE0322C202420003CBA29 /* DiskFile.swift in Sources */,
 				0B22158E2BB6BC8F000EB36F /* SmartProgress.swift in Sources */,
 				0BBA42132ABC137A00C0B977 /* StatusView.swift in Sources */,
 				F573B18C2C042E08004C34CC /* DeviceExt.swift in Sources */,
@@ -735,6 +742,7 @@
 				0BAB7C3F2AD3BBAA00C5AEB5 /* DBTips.swift in Sources */,
 				0BB889D92AC047B3004788D5 /* BtnTrash.swift in Sources */,
 				F507F5132C04681200CB9A3A /* TopView.swift in Sources */,
+				F545D1792C200901006A6AFA /* StorageExt.swift in Sources */,
 				0B5786342BCB8DC00064F66A /* PlayView.swift in Sources */,
 				0B1D5A882AB302610010DDF2 /* ContentView.swift in Sources */,
 				0BE6959C2BFE3DCC00CEFFEB /* BuyView.swift in Sources */,

@@ -2,7 +2,7 @@ import SwiftUI
 
 struct DBTips: View {
     @EnvironmentObject var appManager: AppManager
-    
+
     var supportedFormats: String {
         AppConfig.supportedExtensions.joined(separator: ",")
     }
@@ -12,16 +12,28 @@ struct DBTips: View {
             VStack {
                 VStack(spacing: 20) {
                     HStack {
-                            Image(systemName: "info.circle.fill")
-                                .foregroundStyle(.yellow)
+                        Image(systemName: "info.circle.fill")
+                            .foregroundStyle(.yellow)
                         Text(AppConfig.isDesktop ? "将音乐文件拖到这里可添加" : "仓库为空")
-                                .font(.title3)
-                                .foregroundStyle(.white)
+                            .font(.title3)
+                            .foregroundStyle(.white)
                     }
                     Text("支持的格式：\(supportedFormats)")
                         .font(.subheadline)
                         .foregroundStyle(.white)
-                    
+
+                    #if os(macOS)
+                        Button(action: {
+                            FileHelper.openFolder(url: AppConfig.disk.audiosDir)
+                        }, label: {
+                            Label(title: {
+                                Text("打开仓库目录")
+                            }, icon: {
+                                Image(systemName: "doc.viewfinder.fill")
+                            })
+                        })
+                    #endif
+
                     if AppConfig.isNotDesktop {
                         BtnAdd().buttonStyle(.bordered).foregroundStyle(.white)
                     }

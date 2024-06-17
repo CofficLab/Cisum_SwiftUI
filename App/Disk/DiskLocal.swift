@@ -131,26 +131,15 @@ extension DiskLocal {
 
 extension DiskLocal {
     /// 监听存储Audio文件的文件夹
-    func watchAudiosFolder() {
-        Task.detached(priority: .background) {
-            if self.verbose {
-                os_log("\(Logger.isMain)\(self.label)watchAudiosFolder")
-            }
-
-            let queue = OperationQueue()
-            queue.maxConcurrentOperationCount = 1
-            let query = ItemQuery(queue: queue, url: self.audiosDir)
-            let result = query.searchMetadataItems()
-            for try await collection in result {
-                if self.verbose {
-                    //os_log("\(Logger.isMain)\(self.label)watchAudiosFolder -> count=\(items.count)")
-                }
-                
-                let filtered = collection.items.filter { $0.url != nil }
-                if filtered.count > 0 {
-                    self.onUpdated(collection)
-                }
-            }
+    func watchAudiosFolder() async {
+        //os_log("\(Logger.isMain)\(self.label)WatchAudiosFolder")
+        
+        let p = FilePresenter(fileURL: self.audiosDir)
+        let files = p.getFiles()
+        let metas = files.map {
+            MetaWrapper(metadataItem: NSMetadataItem(url: $0)!)
         }
+        
+        self.onUpdated(MetadataItemCollection(name: .NSMetadataQueryDidFinishGathering, items: metas))
     }
 }
