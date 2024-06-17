@@ -32,7 +32,11 @@ class FilePresenter: NSObject, NSFilePresenter {
         do {
             let files = try FileManager.default.contentsOfDirectory(atPath: self.fileURL.path())
             
-            return files.map { URL(fileURLWithPath: self.fileURL.path()).appendingPathComponent($0) }
+            return files.filter({
+                $0.hasSuffix(".DS_Store") == false
+            }).map {
+                URL(fileURLWithPath: self.fileURL.path()).appendingPathComponent($0)
+            }
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
             

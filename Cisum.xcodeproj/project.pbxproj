@@ -340,25 +340,25 @@
 		0B1D5A6B2AB302600010DDF2 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
-				0B901D892BB83E28003AC253 /* ItemQuery.swift */,
-				0B901D922BB83F38003AC253 /* CloudKit.swift */,
-				0B901D852BB83BA2003AC253 /* CloudHandler.swift */,
-				0B901D872BB83BC3003AC253 /* FilePresenter.swift */,
 				0B1D5A722AB302600010DDF2 /* BackgroundView.swift */,
 				0B718F0B2AB4349900569762 /* CardView.swift */,
-				0BFDCB7F2AB86AF300B0D1C8 /* MenuTile.swift */,
 				0BBA421E2AC1397F00C0B977 /* Centered.swift */,
+				0B901D852BB83BA2003AC253 /* CloudHandler.swift */,
+				0B901D922BB83F38003AC253 /* CloudKit.swift */,
 				0B1D5A6C2AB302600010DDF2 /* CommonHelp.swift */,
+				F573B1892C0413DD004C34CC /* DeviceHelper.swift */,
 				0B1D5A6E2AB302600010DDF2 /* Extensions.swift */,
-				0BBC15872AB9A473006E82C4 /* iCloudHelper.swift */,
 				0BBC15892AB9AB7F006E82C4 /* FileHelper.swift */,
+				0B901D872BB83BC3003AC253 /* FilePresenter.swift */,
+				0BBC15872AB9A473006E82C4 /* iCloudHelper.swift */,
 				0B11262B2AC719B70093DFFA /* ImageHelper.swift */,
+				0B901D892BB83E28003AC253 /* ItemQuery.swift */,
+				0B73275E2BB5138200DBD922 /* LoggerHelper.swift */,
+				0BFDCB7F2AB86AF300B0D1C8 /* MenuTile.swift */,
+				0B8C369E2BEA011700C47567 /* MetaWrapper.swift */,
+				0B22158D2BB6BC8F000EB36F /* SmartProgress.swift */,
 				0BB587162AD815770071AEBD /* TimeHelper.swift */,
 				0BB5871A2AD81AF90071AEBD /* ViewHelper.swift */,
-				0B73275E2BB5138200DBD922 /* LoggerHelper.swift */,
-				0B22158D2BB6BC8F000EB36F /* SmartProgress.swift */,
-				0B8C369E2BEA011700C47567 /* MetaWrapper.swift */,
-				F573B1892C0413DD004C34CC /* DeviceHelper.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";

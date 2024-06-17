@@ -17,9 +17,9 @@ struct SettingView: View {
                 }
                 
                 if AppConfig.isDebug {
-                    DeviceSetting()
-                        .padding(.horizontal)
-                        .padding(.bottom)
+//                    DeviceSetting()
+//                        .padding(.horizontal)
+//                        .padding(.bottom)
                 }
             }
         }
