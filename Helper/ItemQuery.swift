@@ -7,7 +7,7 @@ class ItemQuery {
     let queue: OperationQueue
     let url: URL
     var label: String {"\(Logger.isMain)📁 ItemQuery::"}
-    var verbose = false
+    var verbose = true
 
     init(queue: OperationQueue = .main, url: URL) {
         self.queue = queue
@@ -53,7 +53,6 @@ class ItemQuery {
                 queue: queue
             ) { notification in
                 self.collectChanged(continuation, notification: notification, name: .NSMetadataQueryDidUpdate)
-                self.collectDeleted(continuation, notification: notification, name: .NSMetadataQueryDidUpdate)
             }
 
             query.operationQueue = queue
@@ -97,34 +96,27 @@ class ItemQuery {
     
     private func collectChanged(_ continuation: AsyncStream<MetadataItemCollection>.Continuation, notification: Notification, name: Notification.Name) {
         DispatchQueue.global().async {
-            let changedItems = notification.userInfo?[NSMetadataQueryUpdateChangedItemsKey] as? [NSMetadataItem] ?? []
-
             if self.verbose {
-                os_log("\(self.label)NSMetadataQueryDidUpdate with changed items -> \(changedItems.count)")
+                os_log("\(self.label)NSMetadataQueryDidUpdate")
             }
-
-            let result = changedItems.compactMap { item -> MetaWrapper? in
+            
+            let changedItems = notification.userInfo?[NSMetadataQueryUpdateChangedItemsKey] as? [NSMetadataItem] ?? []
+            let deletedItems = notification.userInfo?[NSMetadataQueryUpdateRemovedItemsKey] as? [NSMetadataItem] ?? []
+            
+            let changedResult = changedItems.compactMap { item -> MetaWrapper? in
                 MetaWrapper(metadataItem: item, isUpdated: true)
             }
-            if result.isEmpty == false {
-                continuation.yield(MetadataItemCollection(name: name, items: result))
+            
+            let deletedResult = deletedItems.compactMap { item -> MetaWrapper? in
+                MetaWrapper(metadataItem: item, isDeleted: true, isUpdated: true)
             }
-        }
-    }
-    
-    // MARK: 被删除的item
-    
-    private func collectDeleted(_ continuation: AsyncStream<MetadataItemCollection>.Continuation, notification: Notification, name: Notification.Name) {
-        DispatchQueue.global().async {
-            if let deletedItems = notification.userInfo?[NSMetadataQueryUpdateRemovedItemsKey] as? [NSMetadataItem] {
-                if self.verbose {
-                    os_log("\(self.label)NSMetadataQueryDidUpdate with deleted items -> \(deletedItems.count)")
-                }
-
-                let result = deletedItems.compactMap { item -> MetaWrapper? in
-                    MetaWrapper(metadataItem: item, isDeleted: true, isUpdated: true)
-                }
-                continuation.yield(MetadataItemCollection(name: name, items: result))
+                
+            if changedResult.count > 0 {
+                continuation.yield(MetadataItemCollection(name: name, items: changedResult))
+            }
+            
+            if deletedResult.count > 0 {
+                continuation.yield(MetadataItemCollection(name: name, items: deletedResult))
             }
         }
     }

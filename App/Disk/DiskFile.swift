@@ -3,6 +3,8 @@ import Foundation
 struct DiskFile {
     var url: URL
     var isDownloading: Bool
+    var isUpdated: Bool = false
+    var isDeleted: Bool = false
     var downloadProgress: Double
     var fileName: String
 }

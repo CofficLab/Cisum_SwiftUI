@@ -82,6 +82,10 @@ extension CloudHandler {
     func download(url: URL) throws {
         var coordinationError: NSError?
         var downloadError: Error?
+        
+        if iCloudHelper.isCloudPath(url: url) {
+            return
+        }
 
         coordinator.coordinate(writingItemAt: url, options: [], error: &coordinationError) { newURL in
             do {

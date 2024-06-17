@@ -3,17 +3,31 @@ import OSLog
 
 class DiskLocal: ObservableObject {
     static var label = "🛖 DiskLocal::"
-    
+
     var fileManager = FileManager.default
     var cloudHandler = CloudHandler()
-    var audiosDir: URL = AppConfig.audiosDir
+    var audiosDir: URL {
+        let url = AppConfig.localDocumentsDir!.appendingPathComponent(AppConfig.audiosDirName)
+
+        if !fileManager.fileExists(atPath: url.path) {
+            do {
+                try fileManager.createDirectory(at: url, withIntermediateDirectories: true)
+                os_log("\(Logger.isMain)🍋 DB::创建 Audios 目录成功")
+            } catch {
+                os_log("\(Logger.isMain)创建 Audios 目录失败\n\(error.localizedDescription)")
+            }
+        }
+
+        return url
+    }
+
     var bg = AppConfig.bgQueue
     var label: String { "\(Logger.isMain)\(Self.label)" }
     var verbose = true
     var onUpdated: (_ collection: DiskFileGroup) -> Void = { collection in
         os_log("\(Logger.isMain)\(DiskiCloud.label)updated with items.count=\(collection.count)")
     }
-    
+
     func trash(_ audio: Audio) async {
         let url = audio.url
         let ext = audio.ext
@@ -21,7 +35,7 @@ class DiskLocal: ObservableObject {
         let trashDir = AppConfig.trashDir
         var trashUrl = trashDir.appendingPathComponent(url.lastPathComponent)
         var times = 1
-        
+
         // 回收站已经存在同名文件
         while fileManager.fileExists(atPath: trashUrl.path) {
             trashUrl = trashUrl.deletingLastPathComponent()
@@ -29,12 +43,12 @@ class DiskLocal: ObservableObject {
                 .appendingPathExtension(ext)
             times += 1
         }
-        
+
         // 文件不存在
         if !fileManager.fileExists(atPath: audio.url.path) {
             return
         }
-            
+
         // 移动到回收站
         do {
             try await cloudHandler.moveFile(at: audio.url, to: trashUrl)
@@ -46,9 +60,8 @@ class DiskLocal: ObservableObject {
 
 extension DiskLocal: DiskContact {
     func deleteFiles(_ audios: [Audio]) throws {
-        
     }
-    
+
     func clearFolderContents(atPath path: String) {
         let fileManager = FileManager.default
         do {
@@ -61,16 +74,16 @@ extension DiskLocal: DiskContact {
             os_log("\(Logger.isMain)\(self.label)clearFolderContents error: \(error.localizedDescription)")
         }
     }
-    
+
     func deleteFile(_ audio: Audio) throws {
         if verbose {
             os_log("\(self.label)删除 \(audio.url)")
         }
-        
+
         if fileManager.fileExists(atPath: audio.url.path) == false {
             return
         }
-        
+
         try fileManager.removeItem(at: audio.url)
     }
 
@@ -78,7 +91,7 @@ extension DiskLocal: DiskContact {
 
     func copyTo(url: URL) throws {
         os_log("\(self.label)copy \(url.lastPathComponent)")
-        
+
         // 目的地已经存在同名文件
         var d = audiosDir.appendingPathComponent(url.lastPathComponent)
         var times = 1
@@ -91,7 +104,7 @@ extension DiskLocal: DiskContact {
             times += 1
             os_log("\(self.label)copy  -> \(d.lastPathComponent)")
         }
-        
+
         do {
             // 获取授权
             if url.startAccessingSecurityScopedResource() {
@@ -117,11 +130,11 @@ extension DiskLocal {
     func evict(_ url: URL) {
         return
     }
-    
-    func download(_ audio: Audio) async {
+
+    func download(_ audio: Audio, reason: String) async {
         return
     }
-    
+
     func getDownloadingCount() -> Int {
         return 0
     }
@@ -132,11 +145,11 @@ extension DiskLocal {
 extension DiskLocal {
     /// 监听存储Audio文件的文件夹
     func watchAudiosFolder() async {
-        //os_log("\(Logger.isMain)\(self.label)WatchAudiosFolder")
-        
-        let p = FilePresenter(fileURL: self.audiosDir)
+        // os_log("\(Logger.isMain)\(self.label)WatchAudiosFolder")
+
+        let p = FilePresenter(fileURL: audiosDir)
         let files = p.getFiles()
-        
-        self.onUpdated(DiskFileGroup.fromURLs(files))
+
+        onUpdated(DiskFileGroup.fromURLs(files, isFullLoad: true))
     }
 }

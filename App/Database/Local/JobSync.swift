@@ -29,20 +29,16 @@ extension DB {
         // 全量，同步到数据库
         if collection.isFullLoad {
             if verbose {
-                os_log("\(self.label)全量同步到数据库，共 \(collection.count)")
+                os_log("\(self.label)全量同步，共 \(collection.count)")
             }
             syncWithMetas(collection)
+        } else {
+            if verbose {
+                os_log("\(self.label)部分同步，共 \(collection.count)")
+            }
+            
+            syncWithUpdatedItems(collection)
         }
-
-        // 删除需要删除的
-//        if collection.itemsForDelete.count > 0 {
-//            syncWithDeletedItems(collection.itemsForDelete)
-//        }
-
-        // 将更新的同步到数据库
-//        if collection.itemsForUpdate.count > 0 {
-//            syncWithUpdatedItems(collection.itemsForUpdate)
-//        }
 
 //        Task.detached {
 //            self.updateGroupForMetas(collection.items)
@@ -81,38 +77,33 @@ extension DB {
 
         jobEnd(startTime, title: "syncWithMetas, count=\(metas.count)", tolerance: 0.01)
     }
-
-    // MARK: SyncWithDeletedItems
-
-    func syncWithDeletedItems(_ metas: [MetaWrapper]) {
-        printRunTime("SyncWithDeletedItems, count=\(metas.count) 🗑️🗑️🗑️") {
-            do {
-                let urls = metas.map({ $0.url! })
-                try context.delete(model: Audio.self, where: #Predicate { audio in
-                    urls.contains(audio.url)
-                })
-
-                try context.save()
-            } catch {
-                os_log(.error, "\(error.localizedDescription)")
-            }
-        }
-    }
-
+    
     // MARK: SyncWithUpdatedItems
 
-    func syncWithUpdatedItems(_ metas: [MetaWrapper]) {
+    func syncWithUpdatedItems(_ metas: DiskFileGroup) {
         // 发出更新事件让UI更新，比如下载进度
         Task {
-            self.eventManager.emitUpdate(metas)
+//            self.eventManager.emitUpdate(metas)
         }
 
         printRunTime("SyncWithUpdatedItems with count=\(metas.count)") {
             // 如果url属性为unique，数据库已存在相同url的记录，再执行context.insert，发现已存在的被替换成新的了
             // 但在这里，希望如果存在，就不要插入
-            for (_, meta) in metas.enumerated() {
-                if Self.findAudio(context: context, meta.url!) == nil {
-                    context.insert(Audio.fromMetaItem(meta)!)
+            for (_, meta) in metas.files.enumerated() {
+                if meta.isDeleted {
+                    let deletedURL = meta.url
+                    
+                    do {
+                        try context.delete(model: Audio.self, where: #Predicate { audio in
+                            audio.url == deletedURL
+                        })
+                    } catch let e {
+                        os_log(.error, "\(e.localizedDescription)")
+                    }
+                } else {
+                    if Self.findAudio(context: context, meta.url) == nil {
+                        context.insert(meta.toAudio())
+                    }
                 }
             }
 

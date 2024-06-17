@@ -26,25 +26,6 @@ extension AppConfig {
         fatalError()
     }
     
-    // MARK: 音频存储目录
-
-    static var audiosDir: URL {
-        let cloudURL = AppConfig.cloudDocumentsDir.appendingPathComponent(AppConfig.audiosDirName)
-        let localURL = AppConfig.localDocumentsDir!.appendingPathComponent(AppConfig.audiosDirName)
-        let url = iCloudEnabled ? cloudURL : localURL
-
-        if !fileManager.fileExists(atPath: url.path) {
-            do {
-                try fileManager.createDirectory(at: url, withIntermediateDirectories: true)
-                os_log("\(Logger.isMain)🍋 DB::创建 Audios 目录成功")
-            } catch {
-                os_log("\(Logger.isMain)创建 Audios 目录失败\n\(error.localizedDescription)")
-            }
-        }
-
-        return url
-    }
-
     static var trashDir: URL {
         let url = AppConfig.cloudDocumentsDir.appendingPathComponent(AppConfig.trashDirName)
 

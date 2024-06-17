@@ -7,7 +7,20 @@ class DiskiCloud: ObservableObject {
     var queue = DispatchQueue(label: "DiskiCloud", qos: .background)
     var fileManager = FileManager.default
     var cloudHandler = CloudHandler()
-    var audiosDir: URL = AppConfig.audiosDir
+    var audiosDir: URL {
+        let url = AppConfig.cloudDocumentsDir.appendingPathComponent(AppConfig.audiosDirName)
+
+        if !fileManager.fileExists(atPath: url.path) {
+            do {
+                try fileManager.createDirectory(at: url, withIntermediateDirectories: true)
+                os_log("\(Logger.isMain)🍋 DB::创建 Audios 目录成功")
+            } catch {
+                os_log("\(Logger.isMain)创建 Audios 目录失败\n\(error.localizedDescription)")
+            }
+        }
+
+        return url
+    }
     var bg = AppConfig.bgQueue
     var label: String { "\(Logger.isMain)\(Self.label)" }
     var verbose = true
@@ -127,21 +140,23 @@ extension DiskiCloud {
         }
     }
     
-    func download(_ audio: Audio) async {
+    func download(_ audio: Audio, reason: String) async {
+        os_log("\(self.label)Download ⏬⏬⏬ \(audio.title) reason -> \(reason)")
+        
         if audio.isNotExists {
-            //os_log("\(self.label)Download \(audio.title) -> Not Exists")
+            os_log("\(self.label)Download \(audio.title) -> Not Exists")
             return
         }
         
-//        if audio.isDownloaded {
-//            //os_log("\(self.label)Download \(audio.title) -> Already downloaded")
-//            return
-//        }
+        if audio.isDownloaded {
+            //os_log("\(self.label)Download \(audio.title) -> Already downloaded")
+            return
+        }
         
-//        if audio.isDownloading {
-//            //os_log("\(self.label)Download \(audio.title) -> Already downloading")
-//            return
-//        }
+        if audio.isDownloading {
+            //os_log("\(self.label)Download \(audio.title) -> Already downloading")
+            return
+        }
         
 //        let downloadingCount = getDownloadingCount()
         
@@ -151,12 +166,10 @@ extension DiskiCloud {
 //            return
 //        }
         
-        //os_log("\(self.label)Download \(audio.title)")
-        
         do {
             try await cloudHandler.download(url: audio.url)
         } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
+            os_log(.error, "\(self.label)Download(\(reason))出错->\(e.localizedDescription)")
         }
     }
     

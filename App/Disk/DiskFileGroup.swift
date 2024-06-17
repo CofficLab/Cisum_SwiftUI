@@ -21,17 +21,24 @@ struct DiskFileGroup {
         return hashMap
     }
     
-    static func fromURLs(_ urls: [URL]) -> Self {
+    static func fromURLs(_ urls: [URL], isFullLoad: Bool) -> Self {
         DiskFileGroup(files: urls.map({
             DiskFile.fromURL($0)
-        }), isFullLoad: true)
+        }), isFullLoad: isFullLoad)
     }
     
     static func fromMetaCollection(_ collection: MetadataItemCollection) -> Self {
         let items = collection.items
+        let isFullLoad = collection.name == .NSMetadataQueryDidFinishGathering
         
-        return DiskFileGroup.fromURLs(items.map({
-            $0.url!
-        }))
+        return DiskFileGroup(files: items.map({
+            DiskFile(
+                url: $0.url!,
+                isDownloading: $0.isDownloading,
+                isDeleted: $0.isDeleted, 
+                downloadProgress: $0.downloadProgress,
+                fileName: $0.fileName!
+            )
+        }), isFullLoad: isFullLoad)
     }
 }

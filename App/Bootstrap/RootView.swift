@@ -48,6 +48,10 @@ struct RootView<Content>: View where Content: View {
                         })
                         
                         Task.detached(operation: {
+                            DB.move()
+                        })
+                        
+                        Task.detached(operation: {
                             await DBSynced(AppConfig.getSyncedContainer).onAppOpen()
                         })
                     }
