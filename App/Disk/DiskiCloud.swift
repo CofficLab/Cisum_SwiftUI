@@ -190,7 +190,7 @@ extension DiskiCloud {
         let query = ItemQuery(queue: queue, url: self.audiosDir)
         let result = query.searchMetadataItems()
         for try await items in result {
-            //os_log("\(Logger.isMain)\(self.label)WatchAudiosFolder -> count=\(items.count)")
+            os_log("\(Logger.isMain)\(self.label)WatchAudiosFolder -> count=\(items.count)")
                 
             self.onUpdated(items)
         }

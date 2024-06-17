@@ -9,7 +9,7 @@ struct SettingView: View {
                     .padding(.top)
 
                 DirSetting().padding(.horizontal)
-//                CoverDirSetting().padding(.horizontal)
+                CloudSetting().padding(.horizontal)
                 VersionSetting().padding(.horizontal)
                 
                 if AppConfig.debug {
@@ -28,7 +28,12 @@ struct SettingView: View {
 }
 
 #Preview {
-    SettingView()
+    RootView {
+        SettingView()
+            .background(.background)
+    }
+    .modelContainer(AppConfig.getContainer)
+    .frame(height: 800)
 }
 
 #Preview("App") {

@@ -1,20 +1,18 @@
 import Foundation
 import OSLog
 
-// MARK: 路径配置
-
 extension AppConfig {
     static let appSupportDir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).last
     static let localContainer = localDocumentsDir?.deletingLastPathComponent()
     static let localDocumentsDir = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first
+    
+    // MARK: iCloud 容器路径
     static let containerDir = fileManager.url(forUbiquityContainerIdentifier: containerIdentifier)
+    
+    // MARK: iCloud 容器里的 Documents
     static var cloudDocumentsDir: URL {
         if let c = containerDir {
             return c.appending(component: "Documents")
-        }
-
-        if let documentsDirectory = localDocumentsDir {
-            return documentsDirectory
         }
 
         fatalError()
@@ -27,9 +25,13 @@ extension AppConfig {
 
         fatalError()
     }
+    
+    // MARK: 音频存储目录
 
     static var audiosDir: URL {
-        let url = AppConfig.cloudDocumentsDir.appendingPathComponent(AppConfig.audiosDirName)
+        var cloudURL = AppConfig.cloudDocumentsDir.appendingPathComponent(AppConfig.audiosDirName)
+        var localURL = AppConfig.localDocumentsDir!.appendingPathComponent(AppConfig.audiosDirName)
+        let url = iCloudEnabled ? cloudURL : localURL
 
         if !fileManager.fileExists(atPath: url.path) {
             do {

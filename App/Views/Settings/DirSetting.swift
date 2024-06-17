@@ -6,11 +6,8 @@ struct DirSetting: View {
             HStack {
                 VStack(alignment: .leading, spacing: 5) {
                     Text("仓库目录").font(.headline)
-                    Text(AppConfig.audiosDirName)
-                        .font(.subheadline)
-                        .opacity(0.8)
-                    if iCloudHelper.isCloudPath(url: AppConfig.audiosDir) {
-                        Text("是iCloud云盘目录，会保持同步").font(.footnote)
+                    if AppConfig.isStoreIniCloud {
+                        Text("是 iCloud 云盘目录，会保持同步").font(.footnote)
                     } else {
                         Text("是本地目录，不会同步").font(.footnote)
                     }
@@ -50,6 +47,14 @@ struct DirSetting: View {
             NSWorkspace.shared.open(dir)
         #endif
     }
+}
+
+#Preview("Setting") {
+    RootView {
+        SettingView()
+            .background(.background)
+    }.modelContainer(AppConfig.getContainer)
+        .frame(height: 1200)
 }
 
 #Preview {

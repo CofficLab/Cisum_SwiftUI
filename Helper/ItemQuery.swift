@@ -74,6 +74,8 @@ class ItemQuery {
         }
     }
 
+    // MARK: 所有的item
+    
     private func collectAll(_ continuation: AsyncStream<[MetaWrapper]>.Continuation) {
         DispatchQueue.global().async {
             if self.verbose {
@@ -90,6 +92,8 @@ class ItemQuery {
         }
     }
 
+    // MARK: 仅改变过的item
+    
     private func collectChanged(_ continuation: AsyncStream<[MetaWrapper]>.Continuation, notification: Notification) {
         DispatchQueue.global().async {
             let changedItems = notification.userInfo?[NSMetadataQueryUpdateChangedItemsKey] as? [NSMetadataItem] ?? []
@@ -106,6 +110,8 @@ class ItemQuery {
             }
         }
     }
+    
+    // MARK: 被删除的item
     
     private func collectDeleted(_ continuation: AsyncStream<[MetaWrapper]>.Continuation, notification: Notification) {
         DispatchQueue.global().async {

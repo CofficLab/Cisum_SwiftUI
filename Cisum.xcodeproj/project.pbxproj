@@ -140,6 +140,9 @@
 		F507F5172C09541B00CB9A3A /* DeviceSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = F507F5162C09541B00CB9A3A /* DeviceSetting.swift */; };
 		F54522252BFF3C780027CF55 /* Products.storekit in Resources */ = {isa = PBXBuildFile; fileRef = F54522242BFF3C770027CF55 /* Products.storekit */; };
 		F54522272BFF3CCE0027CF55 /* Products.plist in Resources */ = {isa = PBXBuildFile; fileRef = F54522262BFF3CCE0027CF55 /* Products.plist */; };
+		F545D1732C1FC9F0006A6AFA /* CloudSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = F545D1722C1FC9F0006A6AFA /* CloudSetting.swift */; };
+		F545D1752C1FCAD0006A6AFA /* CloudExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F545D1742C1FCAD0006A6AFA /* CloudExt.swift */; };
+		F545D1772C1FCC86006A6AFA /* UserExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F545D1762C1FCC86006A6AFA /* UserExt.swift */; };
 		F573B1882C0411E4004C34CC /* DeviceDataExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B1872C0411E4004C34CC /* DeviceDataExt.swift */; };
 		F573B18A2C0413DD004C34CC /* DeviceHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B1892C0413DD004C34CC /* DeviceHelper.swift */; };
 		F573B18C2C042E08004C34CC /* DeviceExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B18B2C042E08004C34CC /* DeviceExt.swift */; };
@@ -281,6 +284,9 @@
 		F507F5162C09541B00CB9A3A /* DeviceSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceSetting.swift; sourceTree = "<group>"; };
 		F54522242BFF3C770027CF55 /* Products.storekit */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Products.storekit; sourceTree = "<group>"; };
 		F54522262BFF3CCE0027CF55 /* Products.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Products.plist; sourceTree = "<group>"; };
+		F545D1722C1FC9F0006A6AFA /* CloudSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudSetting.swift; sourceTree = "<group>"; };
+		F545D1742C1FCAD0006A6AFA /* CloudExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudExt.swift; sourceTree = "<group>"; };
+		F545D1762C1FCC86006A6AFA /* UserExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserExt.swift; sourceTree = "<group>"; };
 		F573B1872C0411E4004C34CC /* DeviceDataExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceDataExt.swift; sourceTree = "<group>"; };
 		F573B1892C0413DD004C34CC /* DeviceHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceHelper.swift; sourceTree = "<group>"; };
 		F573B18B2C042E08004C34CC /* DeviceExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceExt.swift; sourceTree = "<group>"; };
@@ -507,6 +513,7 @@
 			isa = PBXGroup;
 			children = (
 				0B12B0A62C0CB88B00FD43AD /* BuySetting.swift */,
+				F545D1722C1FC9F0006A6AFA /* CloudSetting.swift */,
 				0BA9FB6D2BFE155B008074CB /* CoverDirSetting.swift */,
 				F507F5162C09541B00CB9A3A /* DeviceSetting.swift */,
 				0BA9FB6B2BFE14B4008074CB /* DirSetting.swift */,
@@ -537,6 +544,7 @@
 			isa = PBXGroup;
 			children = (
 				0B1D5A752AB302600010DDF2 /* AppConfig.swift */,
+				F545D1742C1FCAD0006A6AFA /* CloudExt.swift */,
 				0B8C36AF2BEC6E6500C47567 /* DBExt.swift */,
 				0B8C36AD2BEC6E3E00C47567 /* DevExt.swift */,
 				0B4DFC712BD740B4001CEF32 /* Device.swift */,
@@ -547,6 +555,7 @@
 				0B220F742BB1BBDB0077255A /* SmartError.swift */,
 				0B8C36AB2BEC6E0F00C47567 /* StateExt.swift */,
 				0B8C36B32BEC6EAB00C47567 /* ViewExt.swift */,
+				F545D1762C1FCC86006A6AFA /* UserExt.swift */,
 			);
 			path = Config;
 			sourceTree = "<group>";
@@ -696,6 +705,7 @@
 				0B8C36AE2BEC6E3E00C47567 /* DevExt.swift in Sources */,
 				0B8FC2702BBC559500839C75 /* PlayingAlbum.swift in Sources */,
 				0BBC15842AB95272006E82C4 /* ControlView.swift in Sources */,
+				F545D1772C1FCC86006A6AFA /* UserExt.swift in Sources */,
 				0B240BD52BF30730004A5944 /* JobExt.swift in Sources */,
 				0BBA42272AC2A8B800C0B977 /* BtnAdd.swift in Sources */,
 				0BBC15912ABAC19F006E82C4 /* BtnPrev.swift in Sources */,
@@ -733,6 +743,7 @@
 				0BE6959E2BFE3DCC00CEFFEB /* MySubscription.swift in Sources */,
 				0BD056912BC6340800EBC7C4 /* BtnEvict.swift in Sources */,
 				0BE695A02BFE3DCC00CEFFEB /* OneTimeView.swift in Sources */,
+				F545D1752C1FCAD0006A6AFA /* CloudExt.swift in Sources */,
 				F507F5172C09541B00CB9A3A /* DeviceSetting.swift in Sources */,
 				0B1498792BC4DF940075DA61 /* JobDelete.swift in Sources */,
 				0BBA421F2AC1397F00C0B977 /* Centered.swift in Sources */,
@@ -792,6 +803,7 @@
 				0BBC15882AB9A473006E82C4 /* iCloudHelper.swift in Sources */,
 				0BAABEBA2BC8C5CB00DF4A31 /* JobPrepare.swift in Sources */,
 				0B901D862BB83BA2003AC253 /* CloudHandler.swift in Sources */,
+				F545D1732C1FC9F0006A6AFA /* CloudSetting.swift in Sources */,
 				0B8C36B02BEC6E6500C47567 /* DBExt.swift in Sources */,
 				0BE93F2E2BFB8B7E00F25445 /* MoreView.swift in Sources */,
 				0B9FA2992BC81EFF007B235A /* NotDownloadedAlbum.swift in Sources */,

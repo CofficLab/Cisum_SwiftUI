@@ -14,7 +14,7 @@ struct CoverDirSetting: View {
                 Spacer()
                 #if os(macOS)
                     Button(action: {
-                        openUrl(AppConfig.coverDir)
+                        FileHelper.openFolder(url: AppConfig.coverDir)
                     }, label: {
                         Label(title: {
                             Text("打开")
@@ -25,24 +25,6 @@ struct CoverDirSetting: View {
                 #endif
             }.padding(10)
         }.background(BackgroundView.type1.opacity(0.1))
-    }
-
-    private func openUrl(_ url: URL?) {
-        #if os(macOS)
-            guard let dir = url else {
-                // 显示错误提示
-                let errorAlert = NSAlert()
-                errorAlert.messageText = "打开目录出错"
-                errorAlert.informativeText = "目录不存在"
-                errorAlert.alertStyle = .critical
-                errorAlert.addButton(withTitle: "好的")
-                errorAlert.runModal()
-
-                return
-            }
-
-            NSWorkspace.shared.open(dir)
-        #endif
     }
 }
 
