@@ -10,8 +10,8 @@ class DiskLocal: ObservableObject {
     var bg = AppConfig.bgQueue
     var label: String { "\(Logger.isMain)\(Self.label)" }
     var verbose = true
-    var onUpdated: (_ collection: MetadataItemCollection) -> Void = { collection in
-        os_log("\(Logger.isMain)\(DiskiCloud.label)updated with items.count=\(collection.items.count)")
+    var onUpdated: (_ collection: DiskFileGroup) -> Void = { collection in
+        os_log("\(Logger.isMain)\(DiskiCloud.label)updated with items.count=\(collection.count)")
     }
     
     func trash(_ audio: Audio) async {
@@ -136,10 +136,7 @@ extension DiskLocal {
         
         let p = FilePresenter(fileURL: self.audiosDir)
         let files = p.getFiles()
-        let metas = files.map {
-            MetaWrapper(metadataItem: NSMetadataItem(url: $0)!)
-        }
         
-        self.onUpdated(MetadataItemCollection(name: .NSMetadataQueryDidFinishGathering, items: metas))
+        self.onUpdated(DiskFileGroup.fromURLs(files))
     }
 }

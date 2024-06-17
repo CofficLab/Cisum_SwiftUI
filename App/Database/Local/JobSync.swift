@@ -15,51 +15,48 @@ extension DB {
         await disk.watchAudiosFolder()
     }
 
-    func sync(_ collection: MetadataItemCollection, verbose: Bool = true) {
+    func sync(_ collection: DiskFileGroup, verbose: Bool = true) {
         var message = "\(label)sync with count=\(collection.count) 🪣🪣🪣"
 
         if let first = collection.first, first.isDownloading == true {
-            message += " -> \(first.fileName ?? "-") -> \(String(format: "%.0f", first.downloadProgress))% ⏬⏬⏬"
+            message += " -> \(first.fileName) -> \(String(format: "%.0f", first.downloadProgress))% ⏬⏬⏬"
         }
 
         if verbose {
             os_log("\(message)")
         }
 
-        // 第一次查到的item，同步到数据库
-        if collection.name == .NSMetadataQueryDidFinishGathering {
+        // 全量，同步到数据库
+        if collection.isFullLoad {
             if verbose {
-                os_log("\(self.label)第一次查到的item，同步到数据库，共 \(collection.count)")
+                os_log("\(self.label)全量同步到数据库，共 \(collection.count)")
             }
-            syncWithMetas(collection.items)
+            syncWithMetas(collection)
         }
 
         // 删除需要删除的
-        if collection.itemsForDelete.count > 0 {
-            syncWithDeletedItems(collection.itemsForDelete)
-        }
+//        if collection.itemsForDelete.count > 0 {
+//            syncWithDeletedItems(collection.itemsForDelete)
+//        }
 
         // 将更新的同步到数据库
-        if collection.itemsForUpdate.count > 0 {
-            syncWithUpdatedItems(collection.itemsForUpdate)
-        }
+//        if collection.itemsForUpdate.count > 0 {
+//            syncWithUpdatedItems(collection.itemsForUpdate)
+//        }
 
-        Task.detached {
-            self.updateGroupForMetas(collection.items)
-        }
+//        Task.detached {
+//            self.updateGroupForMetas(collection.items)
+//        }
     }
 
     // MARK: SyncWithMetas
 
     /// 将数据库和metas同步
-    func syncWithMetas(_ metas: [MetaWrapper]) {
+    func syncWithMetas(_ metas: DiskFileGroup) {
         let startTime: DispatchTime = .now()
 
         // 将数组转换成哈希表，方便通过键来快速查找元素，这样可以将时间复杂度降低到：O(m+n)
-        var hashMap = [URL: MetaWrapper]()
-        for element in metas {
-            hashMap[element.url!] = element
-        }
+        var hashMap = metas.hashMap
 
         do {
             try context.enumerate(FetchDescriptor<Audio>(), block: { audio in
@@ -74,7 +71,7 @@ extension DB {
 
             // 余下的是需要插入数据库的
             for (_, value) in hashMap {
-                context.insert(Audio.fromMetaItem(value)!)
+                context.insert(value.toAudio())
             }
 
             try context.save()

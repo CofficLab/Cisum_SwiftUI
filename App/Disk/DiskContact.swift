@@ -2,7 +2,7 @@ import Foundation
 
 protocol DiskContact {
     var audiosDir: URL { get }
-    var onUpdated: (_ items: MetadataItemCollection) -> Void { get set }
+    var onUpdated: (_ items: DiskFileGroup) -> Void { get set }
     
     func clearFolderContents(atPath path: String)
     

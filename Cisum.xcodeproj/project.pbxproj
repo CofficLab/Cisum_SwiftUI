@@ -139,6 +139,7 @@
 		F507F5152C04688D00CB9A3A /* BtnBuy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F507F5142C04688D00CB9A3A /* BtnBuy.swift */; };
 		F507F5172C09541B00CB9A3A /* DeviceSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = F507F5162C09541B00CB9A3A /* DeviceSetting.swift */; };
 		F53BE0322C202420003CBA29 /* DiskFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53BE0312C202420003CBA29 /* DiskFile.swift */; };
+		F53BE0342C2024BE003CBA29 /* DiskFileGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53BE0332C2024BE003CBA29 /* DiskFileGroup.swift */; };
 		F54522252BFF3C780027CF55 /* Products.storekit in Resources */ = {isa = PBXBuildFile; fileRef = F54522242BFF3C770027CF55 /* Products.storekit */; };
 		F54522272BFF3CCE0027CF55 /* Products.plist in Resources */ = {isa = PBXBuildFile; fileRef = F54522262BFF3CCE0027CF55 /* Products.plist */; };
 		F545D1732C1FC9F0006A6AFA /* CloudSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = F545D1722C1FC9F0006A6AFA /* CloudSetting.swift */; };
@@ -285,6 +286,7 @@
 		F507F5142C04688D00CB9A3A /* BtnBuy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnBuy.swift; sourceTree = "<group>"; };
 		F507F5162C09541B00CB9A3A /* DeviceSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceSetting.swift; sourceTree = "<group>"; };
 		F53BE0312C202420003CBA29 /* DiskFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskFile.swift; sourceTree = "<group>"; };
+		F53BE0332C2024BE003CBA29 /* DiskFileGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskFileGroup.swift; sourceTree = "<group>"; };
 		F54522242BFF3C770027CF55 /* Products.storekit */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Products.storekit; sourceTree = "<group>"; };
 		F54522262BFF3CCE0027CF55 /* Products.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Products.plist; sourceTree = "<group>"; };
 		F545D1722C1FC9F0006A6AFA /* CloudSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudSetting.swift; sourceTree = "<group>"; };
@@ -431,6 +433,7 @@
 			children = (
 				0B8C36A92BEA2EC600C47567 /* DiskContact.swift */,
 				F53BE0312C202420003CBA29 /* DiskFile.swift */,
+				F53BE0332C2024BE003CBA29 /* DiskFileGroup.swift */,
 				0BD0568A2BC6202900EBC7C4 /* DiskiCloud.swift */,
 				0BB427902BED0B38004E6F82 /* DiskLocal.swift */,
 			);
@@ -791,6 +794,7 @@
 				0BBAD0722BBC05C6005834A3 /* DBRow.swift in Sources */,
 				0B11365B2BEFABC700A71FE1 /* JobGetCover.swift in Sources */,
 				0B7842752C1331B400E24869 /* BtnDelDevice.swift in Sources */,
+				F53BE0342C2024BE003CBA29 /* DiskFileGroup.swift in Sources */,
 				0B8C36B22BEC6E8D00C47567 /* QueueExt.swift in Sources */,
 				0BD056892BC6192D00EBC7C4 /* JobSync.swift in Sources */,
 				0B1165E92ABBC6C0005C5CBB /* LaunchView.swift in Sources */,

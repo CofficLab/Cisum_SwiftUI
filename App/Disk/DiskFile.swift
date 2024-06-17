@@ -1,5 +1,18 @@
 import Foundation
 
-protocol DiskFile {
-    var url: URL { get }
+struct DiskFile {
+    var url: URL
+    var isDownloading: Bool
+    var downloadProgress: Double
+    var fileName: String
+}
+
+extension DiskFile {
+    func toAudio() -> Audio {
+        Audio(url)
+    }
+    
+    static func fromURL(_ url: URL) -> Self {
+        DiskFile(url: url, isDownloading: false, downloadProgress: 1, fileName: url.lastPathComponent)
+    }
 }

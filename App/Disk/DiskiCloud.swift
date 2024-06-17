@@ -11,7 +11,7 @@ class DiskiCloud: ObservableObject {
     var bg = AppConfig.bgQueue
     var label: String { "\(Logger.isMain)\(Self.label)" }
     var verbose = true
-    var onUpdated: (_ items: MetadataItemCollection) -> Void = { items in
+    var onUpdated: (_ items: DiskFileGroup) -> Void = { items in
         os_log("\(Logger.isMain)\(DiskiCloud.label)updated with items.count=\(items.count)")
     }
     
@@ -192,7 +192,7 @@ extension DiskiCloud {
         for try await collection in result {
             os_log("\(Logger.isMain)\(self.label)WatchAudiosFolder -> count=\(collection.items.count)")
                 
-            self.onUpdated(collection)
+            self.onUpdated(DiskFileGroup.fromMetaCollection(collection))
         }
     }
 }
