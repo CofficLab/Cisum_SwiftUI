@@ -147,10 +147,13 @@ extension DiskLocal {
     func watchAudiosFolder() async {
         // os_log("\(Logger.isMain)\(self.label)WatchAudiosFolder")
 
-        let p = FilePresenter(fileURL: audiosDir)
-        let files = p.getFiles()
-
-        onUpdated(DiskFileGroup.fromURLs(files, isFullLoad: true))
+        let presenter = FilePresenter(fileURL: self.audiosDir)
+        
+        self.onUpdated(.fromURLs(presenter.getFiles(), isFullLoad: true))
+        
+        presenter.onDidChange = {
+            self.onUpdated(.fromURLs(presenter.getFiles(), isFullLoad: true))
+        }
     }
 }
 
