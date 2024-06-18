@@ -16,7 +16,6 @@ class AudioManager: NSObject, ObservableObject {
     @Published var networkOK = true
     @Published var audio: Audio? = nil
 
-    private var listener: AnyCancellable?
     private var bg = AppConfig.bgQueue
     private var main = AppConfig.mainQueue
     private var label: String { Logger.isMain + AudioManager.label }
@@ -24,8 +23,6 @@ class AudioManager: NSObject, ObservableObject {
     var db: DB = .init(AppConfig.getContainer, reason: "AudioManager")
     var isEmpty: Bool { audio == nil }
     var player = PlayMan()
-    var showErrorView: Bool { error != nil }
-    var showTitleView: Bool { audio != nil }
     var verbose = false
 
     init(db: DB) {

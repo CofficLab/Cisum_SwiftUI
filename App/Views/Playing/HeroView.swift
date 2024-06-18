@@ -8,6 +8,8 @@ struct HeroView: View {
     @State var topAlbumHeight: CGFloat = 0
     
     var verbose = false
+    var showErrorView: Bool { audioManager.error != nil }
+    var showTitleView: Bool { audioManager.audio != nil }
 
     var body: some View {
         GeometryReader { geo in
@@ -45,7 +47,7 @@ struct HeroView: View {
                         })
                 }
 
-                if audioManager.showTitleView {
+                if showTitleView {
                     TitleView(width: getTitleViewWidth(geo))
                         .frame(maxWidth: .infinity)
                         .frame(height: getTitleViewHeight(geo))
