@@ -3,14 +3,15 @@ import OSLog
 import SwiftData
 
 extension DB {
+    var labelPrepare: String { "\(self.label)⏬⏬⏬ Prepare" }
+    
     func prepareJob() {
-        self.runJob(
-            "Download ⏬⏬⏬",
-            descriptor: Audio.descriptorFirst,
-            printLog: true,
-            code: { audio, onEnd in
-                self.downloadNextBatch(audio, reason: "\(Logger.isMain)\(Self.label)prepare")
-                onEnd()
-            })
+        os_log("\(self.labelPrepare) 🚀🚀🚀")
+        
+        let audio = self.first()
+        
+        if let audio = audio {
+            self.downloadNextBatch(audio, reason: "\(Logger.isMain)\(Self.label)prepare")
+        }
     }
 }

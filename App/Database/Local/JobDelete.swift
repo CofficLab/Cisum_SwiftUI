@@ -3,18 +3,20 @@ import OSLog
 import SwiftData
 
 extension DB {
+    var labelForDelete: String { "\(label)🗑️🗑️🗑️" }
+
     func runDeleteInvalidJob() {
-        self.runJob(
-            "DeleteInvalid 🗑️🗑️🗑️",
-            verbose: true,
-            descriptor: Audio.descriptorAll,
-            printLog: true,
-            code: { audio, onEnd in
+        os_log("\(self.labelForDelete)🚀🚀🚀")
+
+        do {
+            try context.enumerate(Audio.descriptorAll, block: { audio in
                 if !FileManager.default.fileExists(atPath: audio.url.path) {
                     os_log(.error, "\(self.label)磁盘文件已不存在，删除数据库记录 -> \(audio.title)")
                     self.deleteAudio(audio)
                 }
-                onEnd()
             })
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
     }
 }

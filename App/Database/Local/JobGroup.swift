@@ -10,7 +10,7 @@ extension DB {
         let title = "\(labelForGroup) UpdateGroup(\(metas.count))"
         let startTime = DispatchTime.now()
         
-        os_log("\(title)🚀🚀🚀")
+        os_log("\(title) 🚀🚀🚀")
 
         let total = metas.count
         let context = ModelContext(modelContainer)
