@@ -8,8 +8,6 @@ struct Boot: App {
     #else
         @UIApplicationDelegateAdaptor var appDelegate: AppDelegate
     #endif
-
-    @Environment(\.scenePhase) private var scenePhase
     
     static var label = "🍎 Boot::"
     var label:String { "\(Logger.isMain)\(Self.label)" }

@@ -20,23 +20,19 @@ extension DBSynced {
         }
     }
     
-    func onAppOpen() {
-        let uuid = AppConfig.getDeviceId()
-        
-        Task {
-            if let deviceData = self.find(uuid) {
-                deviceData.timesOpened += 1
-                deviceData.lastOpenTime = .now
-                deviceData.audioCount = await DB(AppConfig.getContainer).getTotalOfAudio()
-                
-                do {
-                    try context.save()
-                } catch let e {
-                    os_log(.error, "\(e.localizedDescription)")
-                }
-            } else {
-                insertDeviceData(deviceId: uuid)
+    func saveDeviceData(uuid: String, audioCount: Int) {
+        if let deviceData = self.find(uuid) {
+            deviceData.timesOpened += 1
+            deviceData.lastOpenTime = .now
+            deviceData.audioCount = audioCount
+            
+            do {
+                try context.save()
+            } catch let e {
+                os_log(.error, "\(e.localizedDescription)")
             }
+        } else {
+            insertDeviceData(deviceId: uuid)
         }
     }
     

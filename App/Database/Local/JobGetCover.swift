@@ -3,16 +3,13 @@ import OSLog
 import SwiftData
 
 extension DB {
+    var labelForGetCovers: String { "\(self.label)🌽🌽🌽 GetCovers" }
+    
     func runGetCoversJob() {
-        runJob(
-            "GetCover 🌽🌽🌽",
-            descriptor: Audio.descriptorAll,
-            qos: .userInteractive,
-            printLog: false,
-            printStartLog: true,
-            printLogStep: 500,
-            concurrency: false,
-            code: { audio, onEnd in
+        os_log("\(self.labelForGetCovers) 🚀🚀🚀")
+        
+        do {
+            try self.context.enumerate(Audio.descriptorAll, block: { audio in
                 if self.hasCoverRecord(audio) == false {
                     audio.getCoverFromMeta({ url in
                         if url != nil {
@@ -21,9 +18,10 @@ extension DB {
                         }
                     }, queue: DispatchQueue.global())
                 }
-
-                onEnd()
             })
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
     }
 
     func emitCoverUpdated(_ audio: Audio) {

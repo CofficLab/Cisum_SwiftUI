@@ -5,6 +5,7 @@ import UniformTypeIdentifiers
 
 struct DBView: View {
     @EnvironmentObject var appManager: AppManager
+    @EnvironmentObject var db: DB
     
     static var label = "🐘 DBView::"
 
@@ -64,7 +65,7 @@ struct DBView: View {
 extension DBView {
     func copy(_ files: [URL]) {
         Task {
-            await DB(AppConfig.getContainer).addCopyTasks(files)
+            await db.addCopyTasks(files)
         }
     }
 
