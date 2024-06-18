@@ -30,10 +30,12 @@ class AudioManager: NSObject, ObservableObject {
     var showTitleView: Bool { audio != nil }
     var verbose = false
 
-    override init() {
+    init(db: DB) {
         if verbose {
             os_log("\(Logger.isMain)\(Self.label)初始化")
         }
+        
+        self.db = db
 
         super.init()
 

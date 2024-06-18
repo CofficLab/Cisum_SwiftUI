@@ -2,6 +2,7 @@ import OSLog
 import SwiftUI
 
 struct DBRow: View {
+    @EnvironmentObject var db: DB
     @EnvironmentObject var audioManager: AudioManager
 
     @State var hovered = false
@@ -9,7 +10,6 @@ struct DBRow: View {
     var audio: Audio
 
     var current: Audio? { audioManager.audio }
-    var db: DB { audioManager.db }
     var background: Color {
         if current?.url == audio.url {
             return Color.accentColor

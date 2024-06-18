@@ -3,6 +3,7 @@ import SwiftUI
 import SwiftData
 
 struct Duplicates: View {
+    @EnvironmentObject var db: DB
     @EnvironmentObject var audioManager: AudioManager
 
     @State var showDumplicates = false
@@ -10,8 +11,6 @@ struct Duplicates: View {
     @Query var audios: [Audio]
 
     var audio: Audio
-    
-    var db: DB { audioManager.db }
     var duplicates: [Audio] = []
 
     init(_ audio: Audio) {

@@ -8,7 +8,6 @@ struct RootView<Content>: View where Content: View {
 
     var db = DB(AppConfig.getContainer, reason: "RootView")
     var dbSynced = DBSynced(AppConfig.getSyncedContainer)
-    var audioManager = AudioManager()
     var appManager = AppManager()
     var storeManager = StoreManager()
 
@@ -21,7 +20,7 @@ struct RootView<Content>: View where Content: View {
             AppConfig.rootBackground
 
             content
-                .environmentObject(audioManager)
+                .environmentObject(AudioManager(db: db))
                 .environmentObject(appManager)
                 .environmentObject(storeManager)
                 .environmentObject(db)

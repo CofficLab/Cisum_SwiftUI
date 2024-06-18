@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct BtnDel: View {
+    @EnvironmentObject var db: DB
     @EnvironmentObject var appManager: AppManager
     @EnvironmentObject var audioManager: AudioManager
 
@@ -19,7 +20,7 @@ struct BtnDel: View {
                     //appManager.stateMessage = "正在删除 \(audios.count) 个"
 
                     let isPlaying = audioManager.player.isPlaying
-                    let next = await audioManager.db.deleteAudios(Array(audios))
+                    let next = await db.deleteAudios(Array(audios))
 
                     if let audio = audioManager.audio, audios.contains(audio.persistentModelID) {
                         if isPlaying, let next = next {
