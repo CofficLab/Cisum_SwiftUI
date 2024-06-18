@@ -36,7 +36,7 @@ extension DB {
                 os_log("\(self.labelForSync) 全量同步，共 \(collection.count)")
             }
             
-            syncWithMetas(collection)
+            syncWithDisk(collection)
         } else {
             if verbose {
                 os_log("\(self.labelForSync) 部分同步，共 \(collection.count)")
@@ -50,14 +50,13 @@ extension DB {
         }
     }
 
-    // MARK: SyncWithMetas
+    // MARK: SyncWithDisk
 
-    /// 将数据库和metas同步
-    func syncWithMetas(_ metas: DiskFileGroup) {
+    func syncWithDisk(_ group: DiskFileGroup) {
         let startTime: DispatchTime = .now()
 
         // 将数组转换成哈希表，方便通过键来快速查找元素，这样可以将时间复杂度降低到：O(m+n)
-        var hashMap = metas.hashMap
+        var hashMap = group.hashMap
 
         do {
             try context.enumerate(FetchDescriptor<Audio>(), block: { audio in
@@ -80,7 +79,7 @@ extension DB {
             os_log(.error, "\(error.localizedDescription)")
         }
 
-        os_log("\(self.jobEnd(startTime, title: "\(self.labelForSync) SyncWithMetas(\(metas.count))", tolerance: 0.01))")
+        os_log("\(self.jobEnd(startTime, title: "\(self.labelForSync) SyncWithDisk(\(group.count))", tolerance: 0.01))")
     }
     
     // MARK: SyncWithUpdatedItems
