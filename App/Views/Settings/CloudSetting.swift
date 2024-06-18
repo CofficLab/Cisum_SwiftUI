@@ -46,6 +46,10 @@ struct CloudSetting: View {
         }
         .onChange(of: iCloudEnabled, {
             iCloudEnabled ? AppConfig.enableiCloud() : AppConfig.disableiCloud()
+            
+            Task.detached(operation: {
+                DB.migrate()
+            })
         })
     }
 }
