@@ -25,9 +25,9 @@ actor DB: ModelActor, ObservableObject {
     var label: String { "\(Logger.isMain)\(DB.label)" }
     var verbose: Bool { DB.verbose }
 
-    init(_ container: ModelContainer, verbose: Bool = false) {
+    init(_ container: ModelContainer, reason: String, verbose: Bool = true) {
         if verbose {
-            let message = "\(Logger.isMain)\(Self.label)初始化"
+            let message = "\(Logger.isMain)\(Self.label)初始化 🚩 因为 \(reason)"
             
             os_log("\(message)")
         }

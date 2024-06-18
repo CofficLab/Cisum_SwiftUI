@@ -6,7 +6,7 @@ struct RootView<Content>: View where Content: View {
     private var verbose = true
     private var label: String { "\(Logger.isMain)🌳 RootView::" }
 
-    var db = DB(AppConfig.getContainer)
+    var db = DB(AppConfig.getContainer, reason: "RootView")
     var dbSynced = DBSynced(AppConfig.getSyncedContainer)
     var audioManager = AudioManager()
     var appManager = AppManager()
