@@ -23,4 +23,8 @@ protocol DiskContact {
     func watchAudiosFolder() async
     
     func getDownloadingCount() -> Int
+    
+    func moveFile(at sourceURL: URL, to destinationURL: URL) 
+    
+    func makeURL(_ fileName: String) -> URL
 }

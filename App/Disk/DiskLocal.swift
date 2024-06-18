@@ -153,3 +153,23 @@ extension DiskLocal {
         onUpdated(DiskFileGroup.fromURLs(files, isFullLoad: true))
     }
 }
+
+// MARK: Move
+
+extension DiskLocal {
+    func moveFile(at sourceURL: URL, to destinationURL: URL) {
+        do {
+            try fileManager.moveItem(at: sourceURL, to: destinationURL)
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
+    }
+}
+
+// MARK: MakeURL
+
+extension DiskLocal {
+    func makeURL(_ fileName: String) -> URL {
+        self.audiosDir.appending(component: fileName)
+    }
+}

@@ -1,7 +1,7 @@
 import Foundation
 import OSLog
 
-class DiskiCloud: ObservableObject {
+class DiskiCloud: ObservableObject, DiskContact {
     static var label = "☁️ DiskiCloud::"
     
     var queue = DispatchQueue(label: "DiskiCloud", qos: .background)
@@ -80,7 +80,7 @@ extension DiskiCloud {
     }
 }
 
-extension DiskiCloud: DiskContact {
+extension DiskiCloud {
     func clearFolderContents(atPath path: String) {
         let fileManager = FileManager.default
         do {
@@ -214,5 +214,28 @@ extension DiskiCloud {
                 
             self.onUpdated(DiskFileGroup.fromMetaCollection(collection))
         }
+    }
+}
+
+// MARK: Move
+
+extension DiskiCloud {
+    func moveFile(at sourceURL: URL, to destinationURL: URL) {
+        let handler = CloudHandler()
+        Task {
+            do {
+                try await handler.moveFile(at: sourceURL, to: destinationURL)
+            } catch let e {
+                os_log(.error, "\(e.localizedDescription)")
+            }
+        }
+    }
+}
+
+// MARK: MakeURL
+
+extension DiskiCloud {
+    func makeURL(_ fileName: String) -> URL {
+        self.audiosDir.appending(component: fileName)
     }
 }

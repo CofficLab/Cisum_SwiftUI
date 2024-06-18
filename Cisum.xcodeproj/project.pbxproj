@@ -140,7 +140,7 @@
 		F507F5172C09541B00CB9A3A /* DeviceSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = F507F5162C09541B00CB9A3A /* DeviceSetting.swift */; };
 		F53BE0322C202420003CBA29 /* DiskFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53BE0312C202420003CBA29 /* DiskFile.swift */; };
 		F53BE0342C2024BE003CBA29 /* DiskFileGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53BE0332C2024BE003CBA29 /* DiskFileGroup.swift */; };
-		F53BE0362C202E67003CBA29 /* JobMove.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53BE0352C202E67003CBA29 /* JobMove.swift */; };
+		F53BE0362C202E67003CBA29 /* JobMigrate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53BE0352C202E67003CBA29 /* JobMigrate.swift */; };
 		F54522252BFF3C780027CF55 /* Products.storekit in Resources */ = {isa = PBXBuildFile; fileRef = F54522242BFF3C770027CF55 /* Products.storekit */; };
 		F54522272BFF3CCE0027CF55 /* Products.plist in Resources */ = {isa = PBXBuildFile; fileRef = F54522262BFF3CCE0027CF55 /* Products.plist */; };
 		F545D1732C1FC9F0006A6AFA /* CloudSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = F545D1722C1FC9F0006A6AFA /* CloudSetting.swift */; };
@@ -288,7 +288,7 @@
 		F507F5162C09541B00CB9A3A /* DeviceSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceSetting.swift; sourceTree = "<group>"; };
 		F53BE0312C202420003CBA29 /* DiskFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskFile.swift; sourceTree = "<group>"; };
 		F53BE0332C2024BE003CBA29 /* DiskFileGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskFileGroup.swift; sourceTree = "<group>"; };
-		F53BE0352C202E67003CBA29 /* JobMove.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobMove.swift; sourceTree = "<group>"; };
+		F53BE0352C202E67003CBA29 /* JobMigrate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobMigrate.swift; sourceTree = "<group>"; };
 		F54522242BFF3C770027CF55 /* Products.storekit */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Products.storekit; sourceTree = "<group>"; };
 		F54522262BFF3CCE0027CF55 /* Products.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Products.plist; sourceTree = "<group>"; };
 		F545D1722C1FC9F0006A6AFA /* CloudSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudSetting.swift; sourceTree = "<group>"; };
@@ -614,7 +614,7 @@
 				0B240BD42BF30730004A5944 /* JobExt.swift */,
 				0B11365A2BEFABC700A71FE1 /* JobGetCover.swift */,
 				0B11365E2BF10A0100A71FE1 /* JobGroup.swift */,
-				F53BE0352C202E67003CBA29 /* JobMove.swift */,
+				F53BE0352C202E67003CBA29 /* JobMigrate.swift */,
 				0BAABEB92BC8C5CB00DF4A31 /* JobPrepare.swift */,
 				0BD056882BC6192D00EBC7C4 /* JobSync.swift */,
 				0BAABEB22BC79C9F00DF4A31 /* TaskExt.swift */,
@@ -723,7 +723,7 @@
 				0BBC15912ABAC19F006E82C4 /* BtnPrev.swift in Sources */,
 				F573B18A2C0413DD004C34CC /* DeviceHelper.swift in Sources */,
 				0B604AE82AD6384300929DD8 /* RootView.swift in Sources */,
-				F53BE0362C202E67003CBA29 /* JobMove.swift in Sources */,
+				F53BE0362C202E67003CBA29 /* JobMigrate.swift in Sources */,
 				0B8C36B62BEDAB5E00C47567 /* BtnMore.swift in Sources */,
 				0BAABEC32BC939D000DF4A31 /* LayoutView.swift in Sources */,
 				0BAABEB32BC79C9F00DF4A31 /* TaskExt.swift in Sources */,

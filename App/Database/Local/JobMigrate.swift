@@ -24,16 +24,18 @@ extension DB {
             
             let fileManager = FileManager.default
             do {
-                let files = try fileManager.contentsOfDirectory(atPath: from.audiosDir.path()).filter({
+                let files = try fileManager.contentsOfDirectory(atPath: from.audiosDir.path).filter({
                     !$0.hasSuffix(".DS_Store")
                 })
                 
                 for file in files {
-                    let sourceURL = URL(fileURLWithPath: from.audiosDir.path()).appendingPathComponent(file)
+                    let sourceURL = URL(fileURLWithPath: from.audiosDir.path).appendingPathComponent(file)
+                    let destnationURL = to.makeURL(file)
                     
-                    try to.copyTo(url: sourceURL)
                     
-                    try fileManager.removeItem(at: sourceURL)
+                    from.moveFile(at: sourceURL, to: destnationURL)
+                    
+//                    try fileManager.removeItem(at: sourceURL)
                 }
             } catch {
                 os_log("Error: \(error)")

@@ -18,9 +18,11 @@ struct CloudSetting: View {
                             if AppConfig.iCloudEnabled {
                                 Text("会占用 iCloud 存储空间并在设备间保持同步")
                             } else {
-                                Text("数据仅存储在本机")
-                                Text("不占用 iCloud 空间")
-                                Text("多设备不同步")
+                                VStack(alignment: .leading) {
+                                    Text("数据仅存储在本机")
+                                    Text("不占用 iCloud 空间")
+                                    Text("多设备不同步")
+                                }
                             }
                         }
                         .font(.subheadline)
