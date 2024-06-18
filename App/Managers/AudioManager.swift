@@ -62,14 +62,14 @@ class AudioManager: NSObject, ObservableObject {
         }
 
         main.async {
-            self.audio = self.player.audio
+            self.audio = self.player.asset?.toAudio()
             self.error = nil
         }
 
         switch state {
-        case let .Playing(audio):
+        case let .Playing(asset):
             Task {
-                await self.db.increasePlayCount(audio)
+                await self.db.increasePlayCount(asset.toAudio())
             }
         case .Finished:
             next()
@@ -128,7 +128,7 @@ class AudioManager: NSObject, ObservableObject {
             os_log("\(self.label)play \(audio.title) 🚀🚀🚀")
         }
 
-        player.play(audio, reason: reason)
+        player.play(audio.toPlayAsset(), reason: reason)
     }
 
     // MARK: 切换
@@ -244,7 +244,7 @@ extension AudioManager {
     }
 
     private func setPlayingInfo(verbose: Bool = false) {
-        let audio = player.audio
+        let audio = player.asset?.toAudio()
         let player = player.player
         let isPlaying = player.isPlaying
         let center = MPNowPlayingInfoCenter.default()
@@ -336,7 +336,7 @@ extension AudioManager {
         c.likeCommand.addTarget { _ in
             os_log("\(Logger.isMain)\(self.label)点击了喜欢按钮")
 
-            if let audio = self.player.audio {
+            if let audio = self.player.asset?.toAudio() {
                 Task {
                     await self.db.toggleLike(audio)
                 }

@@ -186,6 +186,16 @@ extension Audio {
     }
 }
 
+extension Audio {
+    func toPlayAsset() -> PlayAsset {
+        PlayAsset(url: self.url)
+    }
+    
+    static func fromPlayAsset(_ asset: PlayAsset) -> Audio {
+        Audio(asset.url)
+    }
+}
+
 #Preview("App") {
     RootView {
         ContentView()

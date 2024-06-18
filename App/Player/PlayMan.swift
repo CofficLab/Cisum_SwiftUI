@@ -9,7 +9,7 @@ class PlayMan: NSObject {
     static var label = "💿 SmartPlayer::"
     var label: String { Logger.isMain + Self.label }
     var player = AVAudioPlayer()
-    var audio: Audio?
+    var asset: PlayAsset?
     var verbose = false
     var queue = DispatchQueue(label: "SmartPlayer", qos: .userInteractive)
 
@@ -23,23 +23,23 @@ class PlayMan: NSObject {
             
             var e: Error? = nil
             
-            self.audio = self.state.getAudio()
+            self.asset = self.state.getAsset()
 
             switch state {
             case .Ready(_):
                 do {
-                    try player = makePlayer(self.audio)
+                    try player = makePlayer(self.asset)
                     player.prepareToPlay()
                 } catch {
                     e = error
                 }
-            case let .Playing(audio):
-                if let oldAudio = oldValue.getPausedAudio(), oldAudio.url == audio.url {
+            case let .Playing(asset):
+                if let oldAudio = oldValue.getPausedAudio(), oldAudio.url == asset.url {
                     player.play()
                 } else {
                     do {
-                        self.audio = audio
-                        try player = makePlayer(audio)
+                        self.asset = asset
+                        try player = makePlayer(asset)
                         player.prepareToPlay()
                         player.play()
                     } catch {
@@ -60,7 +60,7 @@ class PlayMan: NSObject {
             self.onStateChange(state)
             
             if let ee = e {
-                setError(ee, audio: self.audio)
+                setError(ee, asset: self.asset)
             }
         }
     }
@@ -91,12 +91,12 @@ extension PlayMan {
     }
 
     func prepare(_ audio: Audio?) {
-        state = .Ready(audio)
+        state = .Ready(asset)
     }
 
-    func play(_ audio: Audio, reason: String) {
-        os_log("\(self.label)play \(audio.title) 🐛 \(reason)")
-        state = .Playing(audio)
+    func play(_ asset: PlayAsset, reason: String) {
+        os_log("\(self.label)play \(asset.title) 🐛 \(reason)")
+        state = .Playing(asset)
     }
 
     func play() {
@@ -110,13 +110,13 @@ extension PlayMan {
         case .Playing, .Error:
             break
         case .Ready, .Paused, .Stopped, .Finished:
-            state = .Playing(audio!)
+            state = .Playing(asset!)
         }
     }
 
     func pause() {
         os_log("\(self.label)Pause")
-        state = .Paused(audio)
+        state = .Paused(asset)
     }
 
     func stop() {
@@ -136,30 +136,30 @@ extension PlayMan {
         AVAudioPlayer()
     }
 
-    func makePlayer(_ audio: Audio?) throws -> AVAudioPlayer {
-        guard let audio = audio else {
+    func makePlayer(_ asset: PlayAsset?) throws -> AVAudioPlayer {
+        guard let asset = asset else {
             return AVAudioPlayer()
         }
 
-        if audio.isNotExists {
+        if asset.isNotExists() {
             throw SmartError.NotExists
         }
 
-        if audio.isDownloading {
-            os_log("\(self.label)在下载 \(audio.title) ⚠️⚠️⚠️")
+        if asset.isDownloading() {
+            os_log("\(self.label)在下载 \(asset.title) ⚠️⚠️⚠️")
             throw SmartError.Downloading
         }
 
         // 未下载的情况
-        guard audio.isDownloaded else {
-            os_log("\(self.label)未下载 \(audio.title) ⚠️⚠️⚠️")
+        guard asset.isDownloaded() else {
+            os_log("\(self.label)未下载 \(asset.title) ⚠️⚠️⚠️")
             throw SmartError.NotDownloaded
         }
 
         // 格式不支持
-        guard audio.isSupported else {
-            os_log("\(self.label)格式不支持 \(audio.title) \(audio.ext)")
-            throw SmartError.FormatNotSupported(audio.ext)
+        guard asset.isSupported() else {
+            os_log("\(self.label)格式不支持 \(asset.title) \(asset.ext)")
+            throw SmartError.FormatNotSupported(asset.ext)
         }
 
         do {
@@ -167,9 +167,9 @@ extension PlayMan {
                 try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
                 try AVAudioSession.sharedInstance().setActive(true)
             #endif
-            player = try AVAudioPlayer(contentsOf: audio.url)
+            player = try AVAudioPlayer(contentsOf: asset.url)
         } catch {
-            os_log(.error, "\(self.label)初始化播放器失败 ->\(audio.title)->\(error)")
+            os_log(.error, "\(self.label)初始化播放器失败 ->\(asset.title)->\(error)")
             player = AVAudioPlayer()
         }
 
@@ -182,8 +182,8 @@ extension PlayMan {
 // MARK: 播放状态
 
 extension PlayMan {
-    func setError(_ e: Error, audio: Audio?) {
-        state = .Error(e, audio)
+    func setError(_ e: Error, asset: PlayAsset?) {
+        state = .Error(e, asset)
     }
 
     var isReady: Bool {
