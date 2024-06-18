@@ -17,7 +17,7 @@ struct SliderView: View {
         .autoconnect()
 
     var geo: GeometryProxy
-    var player: SmartPlayer { audioManager.player }
+    var player: PlayMan { audioManager.player }
     var duration: TimeInterval { player.duration }
     var current: String { player.currentTimeDisplay }
     var left: String { player.leftTimeDisplay }

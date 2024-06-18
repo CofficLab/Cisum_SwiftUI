@@ -24,7 +24,7 @@ class AudioManager: NSObject, ObservableObject {
 
     var db: DB = .init(AppConfig.getContainer, reason: "AudioManager")
     var isEmpty: Bool { audio == nil }
-    var player = SmartPlayer()
+    var player = PlayMan()
     var isCloudStorage: Bool { iCloudHelper.isCloudPath(url: rootDir) }
     var showErrorView: Bool { error != nil }
     var showTitleView: Bool { audio != nil }
@@ -56,7 +56,7 @@ class AudioManager: NSObject, ObservableObject {
         }
     }
 
-    func onStateChanged(_ state: SmartPlayer.State, verbose: Bool = false) {
+    func onStateChanged(_ state: PlayMan.State, verbose: Bool = false) {
         if verbose {
             os_log("\(self.label)播放状态变了 -> \(state.des)")
         }

@@ -3,11 +3,11 @@ import Foundation
 import OSLog
 import SwiftUI
 
-class SmartPlayer: NSObject {
+class PlayMan: NSObject {
     // MARK: 成员
 
     static var label = "💿 SmartPlayer::"
-    var label: String { Logger.isMain + SmartPlayer.label }
+    var label: String { Logger.isMain + Self.label }
     var player = AVAudioPlayer()
     var audio: Audio?
     var verbose = false
@@ -79,13 +79,13 @@ class SmartPlayer: NSObject {
     // MARK: 对外传递事件
 
     var onStateChange: (_ state: State) -> Void = { state in
-        os_log("\(SmartPlayer.label)播放器状态已变为 \(state.des)")
+        os_log("\(PlayMan.label)播放器状态已变为 \(state.des)")
     }
 }
 
 // MARK: 播放控制
 
-extension SmartPlayer {
+extension PlayMan {
     func goto(_ time: TimeInterval) {
         player.currentTime = time
     }
@@ -131,7 +131,7 @@ extension SmartPlayer {
 
 // MARK: 控制 AVAudioPlayer
 
-extension SmartPlayer {
+extension PlayMan {
     func makeEmptyPlayer() -> AVAudioPlayer {
         AVAudioPlayer()
     }
@@ -181,7 +181,7 @@ extension SmartPlayer {
 
 // MARK: 播放状态
 
-extension SmartPlayer {
+extension PlayMan {
     enum State {
         case Ready(Audio?)
         case Playing(Audio)
@@ -257,7 +257,7 @@ extension SmartPlayer {
 
 // MARK: 接收系统事件
 
-extension SmartPlayer: AVAudioPlayerDelegate {
+extension PlayMan: AVAudioPlayerDelegate {
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         queue.sync {
             // 没有播放完，被打断了
