@@ -19,13 +19,11 @@ class AudioManager: NSObject, ObservableObject {
     private var listener: AnyCancellable?
     private var bg = AppConfig.bgQueue
     private var main = AppConfig.mainQueue
-    private var rootDir: URL = AppConfig.cloudDocumentsDir
     private var label: String { Logger.isMain + AudioManager.label }
 
     var db: DB = .init(AppConfig.getContainer, reason: "AudioManager")
     var isEmpty: Bool { audio == nil }
     var player = PlayMan()
-    var isCloudStorage: Bool { iCloudHelper.isCloudPath(url: rootDir) }
     var showErrorView: Bool { error != nil }
     var showTitleView: Bool { audio != nil }
     var verbose = false
