@@ -4,9 +4,13 @@ import SwiftUI
 struct RootView<Content>: View where Content: View {
     private var content: Content
     private var verbose = true
-    private var label: String {
-        "\(Logger.isMain)🌳 RootView::"
-    }
+    private var label: String { "\(Logger.isMain)🌳 RootView::" }
+
+    var db = DB(AppConfig.getContainer)
+    var dbSynced = DBSynced(AppConfig.getSyncedContainer)
+    var audioManager = AudioManager()
+    var appManager = AppManager()
+    var storeManager = StoreManager()
 
     init(@ViewBuilder content: () -> Content) {
         self.content = content()
@@ -17,16 +21,18 @@ struct RootView<Content>: View where Content: View {
             AppConfig.rootBackground
 
             content
-                .environmentObject(AudioManager())
-                .environmentObject(AppManager())
-                .environmentObject(StoreManager())
+                .environmentObject(audioManager)
+                .environmentObject(appManager)
+                .environmentObject(storeManager)
+                .environmentObject(db)
                 .frame(minWidth: AppConfig.minWidth, minHeight: AppConfig.minHeight)
                 .blendMode(.normal)
                 .task {
                     if verbose {
                         os_log("\(self.label)同步数据库")
                     }
-                    await DB(AppConfig.getContainer).startWatch()
+                    
+                    await db.startWatch()
 
                     #if os(iOS)
                         UIApplication.shared.beginReceivingRemoteControlEvents()
@@ -34,21 +40,21 @@ struct RootView<Content>: View where Content: View {
                 }
                 // 等content出现后，再执行后台任务
                 .task(priority: .background) {
-                    AppConfig.bgQueue.asyncAfter(deadline: .now() + 5) {
+                    AppConfig.bgQueue.asyncAfter(deadline: .now() + 0) {
                         if verbose {
                             os_log("\(self.label)执行后台任务")
                         }
 
                         Task.detached(priority: .background, operation: {
-                            await DB(AppConfig.getContainer).prepareJob()
+                            await db.prepareJob()
                         })
 
                         Task.detached(priority: .background, operation: {
-                            await DB(AppConfig.getContainer).runGetCoversJob()
+                            await db.runGetCoversJob()
                         })
-                        
+
                         Task.detached(operation: {
-                            await DBSynced(AppConfig.getSyncedContainer).onAppOpen()
+                            self.onAppOpen()
                         })
                     }
                 }
@@ -71,6 +77,15 @@ struct RootView<Content>: View where Content: View {
 
         if verbose && timeInterval > tolerance {
             os_log("\(label)\(title) cost \(timeInterval) 秒 🐢🐢🐢")
+        }
+    }
+
+    func onAppOpen() {
+        Task {
+            let uuid = AppConfig.getDeviceId()
+            let audioCount = await db.getTotalOfAudio()
+
+            await dbSynced.saveDeviceData(uuid: uuid, audioCount: audioCount)
         }
     }
 }

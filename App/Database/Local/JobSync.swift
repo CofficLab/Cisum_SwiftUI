@@ -6,6 +6,10 @@ import SwiftUI
 extension DB {
     // MARK: Watch
     
+    var labelForSync: String {
+        "\(self.label)🪣🪣🪣"
+    }
+    
     /// 监听存储Audio文件的目录的变化，同步到数据库
     func startWatch() async {
         disk.onUpdated = { items in
@@ -16,7 +20,7 @@ extension DB {
     }
 
     func sync(_ collection: DiskFileGroup, verbose: Bool = true) {
-        var message = "\(label)sync with count=\(collection.count) 🪣🪣🪣"
+        var message = "\(labelForSync) sync with count=\(collection.count)"
 
         if let first = collection.first, first.isDownloading == true {
             message += " -> \(first.fileName) -> \(String(format: "%.0f", first.downloadProgress))% ⏬⏬⏬"
@@ -29,20 +33,20 @@ extension DB {
         // 全量，同步到数据库
         if collection.isFullLoad {
             if verbose {
-                os_log("\(self.label)全量同步，共 \(collection.count)")
+                os_log("\(self.labelForSync) 全量同步，共 \(collection.count)")
             }
             
             syncWithMetas(collection)
         } else {
             if verbose {
-                os_log("\(self.label)部分同步，共 \(collection.count)")
+                os_log("\(self.labelForSync) 部分同步，共 \(collection.count)")
             }
             
             syncWithUpdatedItems(collection)
         }
 
         Task.detached {
-            self.updateGroupForMetas(collection)
+            await self.updateGroupForMetas(collection)
         }
     }
 
@@ -76,7 +80,7 @@ extension DB {
             os_log(.error, "\(error.localizedDescription)")
         }
 
-        jobEnd(startTime, title: "syncWithMetas, count=\(metas.count)", tolerance: 0.01)
+        os_log("\(self.jobEnd(startTime, title: "\(self.labelForSync) SyncWithMetas(\(metas.count))", tolerance: 0.01))")
     }
     
     // MARK: SyncWithUpdatedItems

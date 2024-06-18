@@ -3,7 +3,7 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-actor DB: ModelActor {
+actor DB: ModelActor, ObservableObject {
     static let label = "📦 DB::"
     static let verbose = true
     static var lastSyncedTime: Date = .distantPast
@@ -142,22 +142,16 @@ extension DB {
         }
     }
     
-    nonisolated func jobStart(_ title: String, verbose: Bool = true) -> DispatchTime {
-        if verbose {
-            os_log("\(Logger.isMain)\(Self.label)🐎🐎🐎 \(title) 🚀🚀🚀")
-        }
-
-        return DispatchTime.now()
-    }
-    
-    nonisolated func jobEnd(_ startTime: DispatchTime, title: String, tolerance: Double = 1.0) {
+    nonisolated func jobEnd(_ startTime: DispatchTime, title: String, tolerance: Double = 1.0) -> String {
         // 计算代码执行时间
         let nanoTime = DispatchTime.now().uptimeNanoseconds - startTime.uptimeNanoseconds
         let timeInterval = Double(nanoTime) / 1000000000
 
         if timeInterval > tolerance {
-            os_log("\(Logger.isMain)\(Self.label)🐎🐎🐎 \(title) \(timeInterval) 秒 🐢🐢🐢")
+            return "\(title) \(timeInterval) 秒 🐢🐢🐢"
         }
+        
+        return "\(title) \(timeInterval) 秒 🐢🐢🐢"
     }
 }
 
