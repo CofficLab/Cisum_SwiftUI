@@ -56,7 +56,7 @@ class AudioManager: NSObject, ObservableObject {
         }
     }
 
-    func onStateChanged(_ state: PlayMan.State, verbose: Bool = false) {
+    func onStateChanged(_ state: PlayState, verbose: Bool = false) {
         if verbose {
             os_log("\(self.label)播放状态变了 -> \(state.des)")
         }

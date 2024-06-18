@@ -68,6 +68,7 @@
 		0B92ACCA2BBA80F300F1A74F /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 0B92ACC92BBA80F300F1A74F /* README.md */; };
 		0B9EA3592C21B41C00A4059A /* PlayAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9EA3582C21B41C00A4059A /* PlayAsset.swift */; };
 		0B9EA35B2C21C72800A4059A /* PlayMan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9EA35A2C21C72800A4059A /* PlayMan.swift */; };
+		0B9EA35D2C21C9AB00A4059A /* PlayState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9EA35C2C21C9AB00A4059A /* PlayState.swift */; };
 		0B9FA2972BC80E51007B235A /* EventManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9FA2962BC80E51007B235A /* EventManager.swift */; };
 		0B9FA2992BC81EFF007B235A /* NotDownloadedAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9FA2982BC81EFF007B235A /* NotDownloadedAlbum.swift */; };
 		0B9FA29B2BC81F53007B235A /* DefaultAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9FA29A2BC81F53007B235A /* DefaultAlbum.swift */; };
@@ -217,6 +218,7 @@
 		0B92ACC92BBA80F300F1A74F /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		0B9EA3582C21B41C00A4059A /* PlayAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayAsset.swift; sourceTree = "<group>"; };
 		0B9EA35A2C21C72800A4059A /* PlayMan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayMan.swift; sourceTree = "<group>"; };
+		0B9EA35C2C21C9AB00A4059A /* PlayState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayState.swift; sourceTree = "<group>"; };
 		0B9FA2962BC80E51007B235A /* EventManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventManager.swift; sourceTree = "<group>"; };
 		0B9FA2982BC81EFF007B235A /* NotDownloadedAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotDownloadedAlbum.swift; sourceTree = "<group>"; };
 		0B9FA29A2BC81F53007B235A /* DefaultAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultAlbum.swift; sourceTree = "<group>"; };
@@ -423,9 +425,10 @@
 		0B9EA3572C21B2FF00A4059A /* Player */ = {
 			isa = PBXGroup;
 			children = (
-				0B1498732BC4C5CB0075DA61 /* PlayMode.swift */,
 				0B9EA3582C21B41C00A4059A /* PlayAsset.swift */,
 				0B9EA35A2C21C72800A4059A /* PlayMan.swift */,
+				0B1498732BC4C5CB0075DA61 /* PlayMode.swift */,
+				0B9EA35C2C21C9AB00A4059A /* PlayState.swift */,
 			);
 			path = Player;
 			sourceTree = "<group>";
@@ -811,6 +814,7 @@
 				0B11365B2BEFABC700A71FE1 /* JobGetCover.swift in Sources */,
 				0B7842752C1331B400E24869 /* BtnDelDevice.swift in Sources */,
 				F53BE0342C2024BE003CBA29 /* DiskFileGroup.swift in Sources */,
+				0B9EA35D2C21C9AB00A4059A /* PlayState.swift in Sources */,
 				0B8C36B22BEC6E8D00C47567 /* QueueExt.swift in Sources */,
 				0BD056892BC6192D00EBC7C4 /* JobSync.swift in Sources */,
 				0B1165E92ABBC6C0005C5CBB /* LaunchView.swift in Sources */,

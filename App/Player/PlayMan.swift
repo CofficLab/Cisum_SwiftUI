@@ -15,7 +15,7 @@ class PlayMan: NSObject {
 
     // MARK: 状态改变时
 
-    var state: State = .Stopped {
+    var state: PlayState = .Stopped {
         didSet {
             if verbose {
                 os_log("\(Logger.isMain)\(self.label)State changed 「\(oldValue.des)」 -> 「\(self.state.des)」")
@@ -78,7 +78,7 @@ class PlayMan: NSObject {
 
     // MARK: 对外传递事件
 
-    var onStateChange: (_ state: State) -> Void = { state in
+    var onStateChange: (_ state: PlayState) -> Void = { state in
         os_log("\(PlayMan.label)播放器状态已变为 \(state.des)")
     }
 }
@@ -182,54 +182,6 @@ extension PlayMan {
 // MARK: 播放状态
 
 extension PlayMan {
-    enum State {
-        case Ready(Audio?)
-        case Playing(Audio)
-        case Paused(Audio?)
-        case Stopped
-        case Finished
-        case Error(Error, Audio?)
-
-        var des: String {
-            switch self {
-            case let .Ready(audio):
-                "准备 \(audio?.title ?? "nil") 🚀🚀🚀"
-            case let .Error(error, audio):
-                "错误：\(error.localizedDescription) ⚠️⚠️⚠️ -> \(audio?.title ?? "-")"
-            case let .Playing(audio):
-                "播放 \(audio.title) 🔊🔊🔊"
-            case let .Paused(audio):
-                "暂停 \(audio?.title ?? "-") ⏸️⏸️⏸️"
-            default:
-                String(describing: self)
-            }
-        }
-
-        func getPausedAudio() -> Audio? {
-            switch self {
-            case let .Paused(audio):
-                return audio
-            default:
-                return nil
-            }
-        }
-        
-        func getAudio() -> Audio? {
-            switch self {
-            case .Ready(let audio):
-                audio
-            case .Playing(let audio):
-                audio
-            case .Paused(let audio):
-                audio
-            case .Error(_, let audio):
-                audio
-            case .Stopped,.Finished:
-                nil
-            }
-        }
-    }
-
     func setError(_ e: Error, audio: Audio?) {
         state = .Error(e, audio)
     }
