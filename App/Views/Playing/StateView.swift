@@ -3,7 +3,7 @@ import SwiftUI
 
 struct StateView: View {
     @EnvironmentObject var appManager: AppManager
-    @EnvironmentObject var audioManager: AudioManager
+    @EnvironmentObject var audioManager: PlayManager
     @Environment(\.modelContext) private var modelContext
 
     @Query(sort: \CopyTask.createdAt, animation: .default) var tasks: [CopyTask]
@@ -13,7 +13,7 @@ struct StateView: View {
     var error: Error? { audioManager.error }
     var taskCount: Int { tasks.count }
     var showCopyMessage: Bool { tasks.count > 0 }
-    var audio: Audio? { audioManager.audio }
+    var audio: Audio? { audioManager.asset?.toAudio() }
     var db: DB { audioManager.db }
     var count: Int { audios.count }
     var font: Font {
@@ -51,7 +51,7 @@ struct StateView: View {
         }
         .onChange(of: count) {
             Task {
-                if audioManager.audio == nil, let first = await db.first() {
+                if audioManager.asset == nil, let first = await db.first() {
                     audioManager.prepare(first, reason: "自动设置为第一首")
                 }
             }
@@ -64,8 +64,8 @@ struct StateView: View {
             let data = n.userInfo as! [String: Audio]
             let audio = data["audio"]!
 
-            if audio.url == audioManager.audio?.url, audio.isDownloaded, audioManager.player.isNotPlaying, audioManager.player.currentTime == 0 {
-                audioManager.prepare(audioManager.audio, reason: "StateView Detected Update")
+            if audio.url == audioManager.asset?.url, audio.isDownloaded, audioManager.player.isNotPlaying, audioManager.player.currentTime == 0 {
+                audioManager.prepare(audioManager.asset?.toAudio(), reason: "StateView Detected Update")
             }
         })
         .onReceive(NotificationCenter.default.publisher(for: Notification.Name.AudiosUpdatedNotification), perform: { notification in
@@ -76,9 +76,9 @@ struct StateView: View {
                     continue
                 }
 
-                if item.url == audioManager.audio?.url {
+                if item.url == audioManager.asset?.url {
                     if item.isDownloaded {
-                        audioManager.prepare(audioManager.audio, reason: "StateView Detected Update")
+                        audioManager.prepare(audioManager.asset?.toAudio(), reason: "StateView Detected Update")
                     }
                 }
             }

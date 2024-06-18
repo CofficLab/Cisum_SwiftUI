@@ -4,7 +4,7 @@ import SwiftData
 
 struct Duplicates: View {
     @EnvironmentObject var db: DB
-    @EnvironmentObject var audioManager: AudioManager
+    @EnvironmentObject var audioManager: PlayManager
 
     @State var showDumplicates = false
     

@@ -2,7 +2,7 @@ import SwiftUI
 
 struct ButtonShowDatabase: View {
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var audioManager: AudioManager
+    @EnvironmentObject var audioManager: PlayManager
     @EnvironmentObject var appManager: AppManager
 
     @State private var hovered: Bool = false

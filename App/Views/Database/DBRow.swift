@@ -3,13 +3,13 @@ import SwiftUI
 
 struct DBRow: View {
     @EnvironmentObject var db: DB
-    @EnvironmentObject var audioManager: AudioManager
+    @EnvironmentObject var audioManager: PlayManager
 
     @State var hovered = false
 
     var audio: Audio
 
-    var current: Audio? { audioManager.audio }
+    var current: Audio? { audioManager.asset?.toAudio() }
     var background: Color {
         if current?.url == audio.url {
             return Color.accentColor

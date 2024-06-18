@@ -3,7 +3,7 @@ import SwiftUI
 struct BtnDel: View {
     @EnvironmentObject var db: DB
     @EnvironmentObject var appManager: AppManager
-    @EnvironmentObject var audioManager: AudioManager
+    @EnvironmentObject var audioManager: PlayManager
 
     var audios: Set<Audio.ID>
     var callback: () -> Void = {}
@@ -22,13 +22,13 @@ struct BtnDel: View {
                     let isPlaying = audioManager.player.isPlaying
                     let next = await db.deleteAudios(Array(audios))
 
-                    if let audio = audioManager.audio, audios.contains(audio.persistentModelID) {
-                        if isPlaying, let next = next {
-                            audioManager.play(next, reason: "删除了")
-                        } else {
-                            audioManager.prepare(next, reason: "删除了")
-                        }
-                    }
+//                    if let asset = audioManager.asset, audios.contains(audio.persistentModelID) {
+//                        if isPlaying, let next = next {
+//                            audioManager.play(next, reason: "删除了")
+//                        } else {
+//                            audioManager.prepare(next, reason: "删除了")
+//                        }
+//                    }
 
                     appManager.setFlashMessage("已删除")
                     appManager.cleanStateMessage()

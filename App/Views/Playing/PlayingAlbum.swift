@@ -2,7 +2,7 @@ import OSLog
 import SwiftUI
 
 struct PlayingAlbum: View {
-    @EnvironmentObject var audioManager: AudioManager
+    @EnvironmentObject var audioManager: PlayManager
     
     var alignTop = false
 
@@ -23,9 +23,9 @@ struct PlayingAlbum: View {
     
     var view: some View {
         ZStack {
-            if let audio = audioManager.audio {
-                AlbumView(audio, forPlaying: true)
-                    .id(audio.id)
+            if let asset = audioManager.asset {
+                AlbumView(asset.toAudio(), forPlaying: true)
+                    .id(asset.toAudio().id)
             } else {
                 DefaultAlbum(forPlaying: true)
             }

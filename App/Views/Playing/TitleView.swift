@@ -3,10 +3,10 @@ import SwiftData
 import SwiftUI
 
 struct TitleView: View {
-    @EnvironmentObject var audioManager: AudioManager
+    @EnvironmentObject var audioManager: PlayManager
 
-    var audio: Audio? { audioManager.audio }
-    var characterCount: Int { audio?.title.count ?? 0 }
+    var asset: PlayAsset? { audioManager.asset }
+    var characterCount: Int { asset?.title.count ?? 0 }
     var width: CGFloat
     var label: String {"\(Logger.isMain)📺 TitleView::"}
     var verbose = false
@@ -15,8 +15,8 @@ struct TitleView: View {
 
     var body: some View {
         ZStack {
-            if let audio = audio {
-                Text(audio.title)
+            if let asset = asset {
+                Text(asset.title)
                     .multilineTextAlignment(.leading)
                     .lineLimit(nil)
                     .foregroundStyle(.white)
@@ -25,7 +25,7 @@ struct TitleView: View {
             }
         }
         .onAppear {
-            if let audio = audioManager.audio {
+            if let audio = audioManager.asset {
                 self.url = audio.url
             }
 
@@ -41,14 +41,14 @@ struct TitleView: View {
                 }
             }
         }
-        .onChange(of: audio) {
-            self.url = audio?.url ?? nil
-        }
+//        .onChange(of: asset) {
+//            self.url = asset?.url ?? nil
+//        }
     }
 
     /// 根据宽度来决定字体的大小
     func getFont(width: CGFloat) -> Font {
-        guard let audio = audioManager.audio else {
+        guard let audio = audioManager.asset else {
             return .title
         }
 

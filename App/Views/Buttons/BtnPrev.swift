@@ -3,7 +3,7 @@ import SwiftUI
 
 struct BtnPrev: View {
     @EnvironmentObject var appManager: AppManager
-    @EnvironmentObject var audioManager: AudioManager
+    @EnvironmentObject var audioManager: PlayManager
 
     var autoResize = false
 

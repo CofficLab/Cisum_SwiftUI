@@ -8,20 +8,20 @@ import SwiftData
 import SwiftUI
 
 /// 管理播放器的播放、暂停、上一曲、下一曲等操作
-class AudioManager: NSObject, ObservableObject {
+class PlayManager: NSObject, ObservableObject {
     static var label: String = "🔊 AudioManager::"
 
     @Published var error: Error? = nil
     @Published var mode: PlayMode = .Order
     @Published var networkOK = true
-    @Published var audio: Audio? = nil
+    @Published var asset: PlayAsset? = nil
 
     private var bg = AppConfig.bgQueue
     private var main = AppConfig.mainQueue
-    private var label: String { Logger.isMain + AudioManager.label }
+    private var label: String { Logger.isMain + PlayManager.label }
 
     var db: DB = .init(AppConfig.getContainer, reason: "AudioManager")
-    var isEmpty: Bool { audio == nil }
+    var isEmpty: Bool { asset == nil }
     var player = PlayMan()
     var verbose = false
 
@@ -57,7 +57,7 @@ class AudioManager: NSObject, ObservableObject {
         }
 
         main.async {
-            self.audio = self.player.asset?.toAudio()
+            self.asset = self.player.asset
             self.error = nil
         }
 
@@ -87,7 +87,7 @@ class AudioManager: NSObject, ObservableObject {
         let currentMode = PlayMode(rawValue: AppConfig.currentMode)
         mode = currentMode ?? mode
 
-        if let currentAudioId = AppConfig.currentAudio, audio == nil {
+        if let currentAudioId = AppConfig.currentAudio, asset == nil {
             Task {
                 if let currentAudio = await self.db.findAudio(currentAudioId) {
                     self.prepare(currentAudio, reason: "初始化，恢复上次播放的")
@@ -145,7 +145,7 @@ class AudioManager: NSObject, ObservableObject {
         }
 
         Task {
-            if let i = await self.db.pre(audio) {
+            if let i = await self.db.pre(asset?.url) {
                 if self.player.isPlaying {
                     self.play(i, reason: "在播放时触发了上一首")
                 } else {
@@ -167,12 +167,12 @@ class AudioManager: NSObject, ObservableObject {
             return player.resume()
         }
 
-        guard let audio = audio else {
+        guard let audio = asset else {
             return
         }
 
         Task {
-            if let i = await db.nextOf(audio) {
+            if let i = await db.nextOf(asset?.url) {
                 if player.isPlaying || manual == false {
                     play(i, reason: "在播放时或自动触发下一首")
                 } else {
@@ -187,7 +187,7 @@ class AudioManager: NSObject, ObservableObject {
 
 // MARK: 播放模式
 
-extension AudioManager {
+extension PlayManager {
     // MARK: 切换播放模式
 
     func switchMode(_ callback: @escaping (_ mode: PlayMode) -> Void) {
@@ -200,20 +200,20 @@ extension AudioManager {
                 os_log("\(Logger.isMain)\(Self.label)切换播放模式")
             }
 
-            if mode == .Random {
-                await self.db.sortRandom(audio)
-            }
-
-            if mode == .Order {
-                await db.sort(audio)
-            }
+//            if mode == .Random {
+//                await self.db.sortRandom(asset?.url)
+//            }
+//
+//            if mode == .Order {
+//                await db.sort(asset?.url)
+//            }
         }
     }
 }
 
 // MARK: 检查错误
 
-extension AudioManager {
+extension PlayManager {
     func checkNetworkStatus() {
         let monitor = NWPathMonitor()
         monitor.pathUpdateHandler = { path in
@@ -233,7 +233,7 @@ extension AudioManager {
 
 // MARK: 媒体中心
 
-extension AudioManager {
+extension PlayManager {
     var c: MPRemoteCommandCenter {
         MPRemoteCommandCenter.shared()
     }

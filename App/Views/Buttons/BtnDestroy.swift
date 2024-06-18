@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct BtnDestroy: View {
-  @EnvironmentObject var audioManager: AudioManager
+  @EnvironmentObject var audioManager: PlayManager
 
 
   var body: some View {

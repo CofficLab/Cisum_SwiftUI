@@ -2,9 +2,9 @@ import SwiftData
 import SwiftUI
 
 struct OperationView: View {
-    @EnvironmentObject var audioManager: AudioManager
+    @EnvironmentObject var audioManager: PlayManager
 
-    var audio: Audio? { audioManager.audio }
+    var audio: Audio? { audioManager.asset?.toAudio() }
     var characterCount: Int { audio?.title.count ?? 0 }
     var geo: GeometryProxy
 

@@ -5,7 +5,7 @@ struct AlbumView: View {
     static var verbose = false
     static var label = "🐰 AlbumView::"
 
-    @EnvironmentObject var audioManager: AudioManager
+    @EnvironmentObject var audioManager: PlayManager
 
     @State var image: Image?
     @State var isDownloaded: Bool = true

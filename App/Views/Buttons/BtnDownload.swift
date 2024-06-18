@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct BtnDownload: View {
-    @EnvironmentObject var audioManager: AudioManager
+    @EnvironmentObject var audioManager: PlayManager
     
     var audio: Audio
         

@@ -109,6 +109,21 @@ extension DB {
 // MARK: Query-Next & Prev
 
 extension DB {
+    /// The previous one of provided URL
+    func pre(_ url: URL?) -> Audio? {
+        os_log("🍋 DBAudio::preOf \(url?.lastPathComponent ?? "nil")")
+        
+        guard let url = url else {
+            return first()
+        }
+
+        guard let audio = self.findAudio(url) else {
+            return first()
+        }
+
+        return pre(audio)
+    }
+    
     /// The previous one of provided Audio
     func pre(_ audio: Audio?) -> Audio? {
         os_log("🍋 DBAudio::preOf [\(audio?.order ?? 0)] \(audio?.title ?? "nil")")
@@ -132,6 +147,19 @@ extension DB {
         }
 
         return nil
+    }
+    
+    /// The next one of provided Audio
+    func nextOf(_ url: URL?) -> Audio? {
+        guard let url = url else {
+            return nil
+        }
+        
+        guard let audio = self.findAudio(url) else {
+            return nil
+        }
+        
+        return Self.nextOf(context: context, audio: audio)
     }
 
     /// The next one of provided Audio

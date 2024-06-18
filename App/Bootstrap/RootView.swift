@@ -20,7 +20,7 @@ struct RootView<Content>: View where Content: View {
             AppConfig.rootBackground
 
             content
-                .environmentObject(AudioManager(db: db))
+                .environmentObject(PlayManager(db: db))
                 .environmentObject(appManager)
                 .environmentObject(storeManager)
                 .environmentObject(db)

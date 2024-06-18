@@ -2,7 +2,7 @@ import OSLog
 import SwiftUI
 
 struct BtnNext: View {
-    @EnvironmentObject var audioManager: AudioManager
+    @EnvironmentObject var audioManager: PlayManager
     @EnvironmentObject var appManager: AppManager
 
     var autoResize = false

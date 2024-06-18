@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct BtnTrash: View {
-    @EnvironmentObject var audioManager: AudioManager
+    @EnvironmentObject var audioManager: PlayManager
     @EnvironmentObject var appManager: AppManager
 
     var audio: Audio

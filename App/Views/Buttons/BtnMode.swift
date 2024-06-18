@@ -2,7 +2,7 @@ import SwiftUI
 
 struct BtnMode: View {
     @EnvironmentObject var appManager: AppManager
-    @EnvironmentObject var audioManager: AudioManager
+    @EnvironmentObject var audioManager: PlayManager
 
     @State private var hovered: Bool = false
 

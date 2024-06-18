@@ -59,6 +59,13 @@ extension DB {
     func downloadNext(_ audio: Audio, reason: String) {
         downloadNextBatch(audio, count: 2, reason: reason)
     }
+    
+    /// 下载当前的和当前的后面的X个
+    func downloadNextBatch(_ url: URL, count: Int = 6, reason: String) {
+        if let audio = self.findAudio(url) {
+            downloadNextBatch(audio, count: count, reason: reason)
+        }
+    }
 
     /// 下载当前的和当前的后面的X个
     func downloadNextBatch(_ audio: Audio, count: Int = 6, reason: String) {
@@ -110,6 +117,14 @@ extension DB {
 // MARK: 排序
 
 extension DB {
+    func sortRandom(_ url: URL?) {
+        if let url = url {
+            sortRandom(self.findAudio(url))
+        } else {
+            sortRandom(nil as Audio?)
+        }
+    }
+    
     func sortRandom(_ sticky: Audio?) {
         os_log("\(Logger.isMain)\(DB.label)SortRandom")
 

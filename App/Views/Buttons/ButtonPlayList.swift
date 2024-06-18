@@ -2,7 +2,7 @@ import SwiftUI
 
 struct ButtonPlayList: View {
     @EnvironmentObject var appManager: AppManager
-    @EnvironmentObject var audioManager: AudioManager
+    @EnvironmentObject var audioManager: PlayManager
 //    @EnvironmentObject var playListManager: PlayListManager
 
     @State private var selectedList: String = ""
