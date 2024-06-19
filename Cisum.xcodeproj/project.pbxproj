@@ -141,6 +141,7 @@
 		F545D1752C1FCAD0006A6AFA /* CloudExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F545D1742C1FCAD0006A6AFA /* CloudExt.swift */; };
 		F545D1772C1FCC86006A6AFA /* UserExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F545D1762C1FCC86006A6AFA /* UserExt.swift */; };
 		F545D1792C200901006A6AFA /* StorageExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F545D1782C200901006A6AFA /* StorageExt.swift */; };
+		F5675C2F2C22B8EB00326664 /* DiskTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C2E2C22B8EB00326664 /* DiskTree.swift */; };
 		F573B1882C0411E4004C34CC /* DeviceDataExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B1872C0411E4004C34CC /* DeviceDataExt.swift */; };
 		F573B18A2C0413DD004C34CC /* DeviceHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B1892C0413DD004C34CC /* DeviceHelper.swift */; };
 		F573B18C2C042E08004C34CC /* DeviceExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B18B2C042E08004C34CC /* DeviceExt.swift */; };
@@ -283,6 +284,7 @@
 		F545D1742C1FCAD0006A6AFA /* CloudExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudExt.swift; sourceTree = "<group>"; };
 		F545D1762C1FCC86006A6AFA /* UserExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserExt.swift; sourceTree = "<group>"; };
 		F545D1782C200901006A6AFA /* StorageExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageExt.swift; sourceTree = "<group>"; };
+		F5675C2E2C22B8EB00326664 /* DiskTree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskTree.swift; sourceTree = "<group>"; };
 		F573B1872C0411E4004C34CC /* DeviceDataExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceDataExt.swift; sourceTree = "<group>"; };
 		F573B1892C0413DD004C34CC /* DeviceHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceHelper.swift; sourceTree = "<group>"; };
 		F573B18B2C042E08004C34CC /* DeviceExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceExt.swift; sourceTree = "<group>"; };
@@ -434,6 +436,7 @@
 				F53BE0332C2024BE003CBA29 /* DiskFileGroup.swift */,
 				0BD0568A2BC6202900EBC7C4 /* DiskiCloud.swift */,
 				0BB427902BED0B38004E6F82 /* DiskLocal.swift */,
+				F5675C2E2C22B8EB00326664 /* DiskTree.swift */,
 			);
 			path = Disk;
 			sourceTree = "<group>";
@@ -799,6 +802,7 @@
 				0B11262C2AC719B70093DFFA /* ImageHelper.swift in Sources */,
 				0BE6958E2BFE28B400CEFFEB /* PlayTime.swift in Sources */,
 				0BFB38832BCCCC780055E38B /* OperationView.swift in Sources */,
+				F5675C2F2C22B8EB00326664 /* DiskTree.swift in Sources */,
 				0BBC159A2ABAD5DB006E82C4 /* SliderView.swift in Sources */,
 				0BFB38852BCCD26F0055E38B /* BtnLike.swift in Sources */,
 				0B8C369F2BEA011700C47567 /* MetaWrapper.swift in Sources */,

@@ -32,13 +32,7 @@ struct DiskFileGroup {
         let isFullLoad = collection.name == .NSMetadataQueryDidFinishGathering
         
         return DiskFileGroup(files: items.map({
-            DiskFile(
-                url: $0.url!,
-                isDownloading: $0.isDownloading,
-                isDeleted: $0.isDeleted, 
-                downloadProgress: $0.downloadProgress,
-                fileName: $0.fileName!
-            )
+            DiskFile.fromMetaWrapper($0)
         }), isFullLoad: isFullLoad)
     }
 }
