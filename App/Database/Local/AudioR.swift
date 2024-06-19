@@ -194,7 +194,7 @@ extension DB {
 // MARK: Query-Find
 
 extension DB {
-    func findAudio(_ url: URL, verbose: Bool = true) -> Audio? {
+    func findAudio(_ url: URL, verbose: Bool = false) -> Audio? {
         if verbose {
             os_log("\(self.label)FindAudio -> \(url.lastPathComponent)")
         }
