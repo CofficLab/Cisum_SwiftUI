@@ -39,6 +39,14 @@ class PlayManager: NSObject, ObservableObject {
         player.onStateChange = { state in
             self.onStateChanged(state)
         }
+        
+        player.onNext = {
+            self.next(manual: true)
+        }
+        
+        player.onPrev = {
+            self.prev(manual: true)
+        }
     }
 
     func onStateChanged(_ state: PlayState, verbose: Bool = true) {
@@ -128,7 +136,7 @@ class PlayManager: NSObject, ObservableObject {
     // MARK: Prev
 
     /// 跳到上一首，manual=true表示由用户触发
-    func prev(manual: Bool = false, verbose: Bool = true) throws {
+    func prev(manual: Bool = false, verbose: Bool = true) {
         if verbose {
             os_log("\(self.label)prev ⬆️")
         }

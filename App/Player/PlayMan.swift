@@ -84,6 +84,16 @@ class PlayMan: NSObject {
         os_log("\(PlayMan.label)播放器状态已变为 \(state.des)")
     }
     
+    var onNext: () -> Void = {
+        os_log("\(PlayMan.label)Next")
+    }
+    
+    var onPrev: () -> Void = {
+        os_log("\(PlayMan.label)Prev")
+    }
+    
+    // MARK: 初始化
+    
     init(verbose: Bool = true) {
         super.init()
         
@@ -304,25 +314,18 @@ extension PlayMan {
     }
 
     // 接收控制中心的指令
-    private func onCommand() {
+    func onCommand() {
         c.nextTrackCommand.addTarget { _ in
-            os_log("\(self.label)下一首")
-//            self.next(manual: true)
+            self.onNext()
 
             return .success
         }
 
-//        c.previousTrackCommand.addTarget { _ in
-//            do {
-//                try self.prev()
-//                os_log("\(Logger.isMain)MediaPlayerManager::pre")
-//
-//                return .success
-//            } catch let e {
-//                os_log("\(Logger.isMain)MediaPlayerManager::\(e.localizedDescription)")
-//                return .noActionableNowPlayingItem
-//            }
-//        }
+        c.previousTrackCommand.addTarget { _ in
+            self.onPrev()
+            
+            return .success
+        }
 
         c.pauseCommand.addTarget { _ in
             self.player.pause()
