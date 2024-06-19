@@ -39,13 +39,9 @@ class PlayManager: NSObject, ObservableObject {
         player.onStateChange = { state in
             self.onStateChanged(state)
         }
-
-//        Task {
-//            onCommand()
-//        }
     }
 
-    func onStateChanged(_ state: PlayState, verbose: Bool = false) {
+    func onStateChanged(_ state: PlayState, verbose: Bool = true) {
         if verbose {
             os_log("\(self.label)播放状态变了 -> \(state.des)")
         }
@@ -71,17 +67,32 @@ class PlayManager: NSObject, ObservableObject {
         default:
             break
         }
-
-//        setPlayingInfo()
     }
 
     // MARK: 恢复上次播放的
 
-    func restore() {
+    func restore(verbose: Bool = true) {
+        if self.asset != nil {
+            if verbose {
+                os_log("\(self.label)当前有播放资源，无需恢复上次播放的音频")
+            }
+            
+            return
+        }
+        
+        if verbose {
+            os_log("\(self.label)试着恢复上次播放的音频")
+        }
+        
         let currentMode = PlayMode(rawValue: AppConfig.currentMode)
+        let currentAudioId = AppConfig.currentAudio
         mode = currentMode ?? mode
-
-        if let currentAudioId = AppConfig.currentAudio, asset == nil {
+        
+        if let currentAudioId = currentAudioId {
+            if verbose {
+                os_log("\(self.label)上次播放的音频是 -> \(currentAudioId.path())")
+            }
+            
             Task {
                 if let currentAudio = await self.db.findAudio(currentAudioId) {
                     self.prepare(currentAudio, reason: "初始化，恢复上次播放的")
@@ -91,39 +102,27 @@ class PlayManager: NSObject, ObservableObject {
                     os_log("\(self.label)restore nothing to play")
                 }
             }
+        } else {
+            if verbose {
+                os_log("\(self.label)无上次播放的音频")
+            }
         }
     }
 
     // MARK: 准备播放
 
-    func prepare(_ audio: Audio?, reason: String, verbose: Bool = false) {
+    func prepare(_ audio: Audio?, reason: String, verbose: Bool = true) {
         if verbose {
             os_log("\(self.label)Prepare \(audio?.title ?? "nil") 🐛 \(reason)")
         }
 
-        player.prepare(audio)
+        player.prepare(audio?.toPlayAsset())
 
         Task {
             if let a = audio {
                 AppConfig.setCurrentAudio(a)
             }
         }
-    }
-
-    // MARK: 播放指定的
-
-    func play(_ audio: Audio, reason: String, verbose: Bool = true) {
-        if verbose {
-            os_log("\(self.label)play \(audio.title) 🚀🚀🚀")
-        }
-
-        player.play(audio.toPlayAsset(), reason: reason)
-    }
-
-    // MARK: 切换
-
-    func toggle() {
-        player.toggle()
     }
 
     // MARK: Prev
@@ -141,7 +140,7 @@ class PlayManager: NSObject, ObservableObject {
         Task {
             if let i = await self.db.pre(asset?.url) {
                 if self.player.isPlaying {
-                    self.play(i, reason: "在播放时触发了上一首")
+                    self.player.play(i.toPlayAsset(), reason: "在播放时触发了上一首")
                 } else {
                     self.prepare(i, reason: "未播放时触发了上一首")
                 }
@@ -168,7 +167,7 @@ class PlayManager: NSObject, ObservableObject {
         Task {
             if let i = await db.nextOf(asset.url) {
                 if player.isPlaying || manual == false {
-                    play(i, reason: "在播放时或自动触发下一首")
+                    player.play(i.toPlayAsset(), reason: "在播放时或自动触发下一首")
                 } else {
                     prepare(i, reason: "「未播放且手动」触发了下一首")
                 }

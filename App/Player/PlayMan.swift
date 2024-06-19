@@ -59,6 +59,7 @@ class PlayMan: NSObject {
             }
             
             self.onStateChange(state)
+            self.setPlayingInfo()
             
             if let ee = e {
                 setError(ee, asset: self.asset)
@@ -99,7 +100,7 @@ extension PlayMan {
         player.currentTime = time
     }
 
-    func prepare(_ audio: Audio?) {
+    func prepare(_ asset: PlayAsset?) {
         state = .Ready(asset)
     }
 
@@ -305,7 +306,7 @@ extension PlayMan {
     // 接收控制中心的指令
     private func onCommand() {
         c.nextTrackCommand.addTarget { _ in
-            os_log("\(Logger.isMain)\(self.label)下一首")
+            os_log("\(self.label)下一首")
 //            self.next(manual: true)
 
             return .success

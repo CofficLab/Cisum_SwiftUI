@@ -9,6 +9,7 @@ struct BtnMore: View {
 
     var audio: Audio
     var autoResize = true
+    var player: PlayMan { audioManager.player }
 
     var body: some View {
         ControlButton(
@@ -16,7 +17,7 @@ struct BtnMore: View {
             image: getImageName(),
             dynamicSize: autoResize,
             onTap: {
-                audioManager.play(audio, reason: "Play Button")
+                player.play(audio.toPlayAsset(), reason: "Play Button")
             },
             menus: AnyView(VStack{
                 BtnPlay(audio: audio, autoResize: false)
