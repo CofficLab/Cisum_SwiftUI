@@ -142,6 +142,7 @@
 		F545D1772C1FCC86006A6AFA /* UserExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F545D1762C1FCC86006A6AFA /* UserExt.swift */; };
 		F545D1792C200901006A6AFA /* StorageExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F545D1782C200901006A6AFA /* StorageExt.swift */; };
 		F5675C2F2C22B8EB00326664 /* DiskTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C2E2C22B8EB00326664 /* DiskTree.swift */; };
+		F5675C332C22BFD900326664 /* DBBottomBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C322C22BFD900326664 /* DBBottomBar.swift */; };
 		F573B1882C0411E4004C34CC /* DeviceDataExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B1872C0411E4004C34CC /* DeviceDataExt.swift */; };
 		F573B18A2C0413DD004C34CC /* DeviceHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B1892C0413DD004C34CC /* DeviceHelper.swift */; };
 		F573B18C2C042E08004C34CC /* DeviceExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B18B2C042E08004C34CC /* DeviceExt.swift */; };
@@ -285,6 +286,7 @@
 		F545D1762C1FCC86006A6AFA /* UserExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserExt.swift; sourceTree = "<group>"; };
 		F545D1782C200901006A6AFA /* StorageExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageExt.swift; sourceTree = "<group>"; };
 		F5675C2E2C22B8EB00326664 /* DiskTree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskTree.swift; sourceTree = "<group>"; };
+		F5675C322C22BFD900326664 /* DBBottomBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBBottomBar.swift; sourceTree = "<group>"; };
 		F573B1872C0411E4004C34CC /* DeviceDataExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceDataExt.swift; sourceTree = "<group>"; };
 		F573B1892C0413DD004C34CC /* DeviceHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceHelper.swift; sourceTree = "<group>"; };
 		F573B18B2C042E08004C34CC /* DeviceExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceExt.swift; sourceTree = "<group>"; };
@@ -569,12 +571,13 @@
 			isa = PBXGroup;
 			children = (
 				0BBA422E2AC2BAE300C0B977 /* AlbumView.swift */,
+				F5675C322C22BFD900326664 /* DBBottomBar.swift */,
 				0BBAD0A12BBD413B005834A3 /* DBList.swift */,
+				0BBAD0712BBC05C6005834A3 /* DBRow.swift */,
 				0BAB7C3E2AD3BBAA00C5AEB5 /* DBTips.swift */,
 				0BBC157F2AB854A8006E82C4 /* DBView.swift */,
-				0BBAD0712BBC05C6005834A3 /* DBRow.swift */,
-				0BFB38F62BD0BCC20055E38B /* RowTask.swift */,
 				0BB543F32BE8E38300D7A2B2 /* Duplicates.swift */,
+				0BFB38F62BD0BCC20055E38B /* RowTask.swift */,
 			);
 			path = Database;
 			sourceTree = "<group>";
@@ -750,6 +753,7 @@
 				0BE695A02BFE3DCC00CEFFEB /* OneTimeView.swift in Sources */,
 				F545D1752C1FCAD0006A6AFA /* CloudExt.swift in Sources */,
 				F507F5172C09541B00CB9A3A /* DeviceSetting.swift in Sources */,
+				F5675C332C22BFD900326664 /* DBBottomBar.swift in Sources */,
 				0B1498792BC4DF940075DA61 /* JobDelete.swift in Sources */,
 				0BBA421F2AC1397F00C0B977 /* Centered.swift in Sources */,
 				0BE695C02C01E88E00CEFFEB /* DeviceData.swift in Sources */,

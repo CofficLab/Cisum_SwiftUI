@@ -21,42 +21,48 @@ struct DBView: View {
     }
 
     var body: some View {
-        DBList()
-            .fileImporter(
-                isPresented: $appManager.isImporting,
-                allowedContentTypes: [.audio],
-                allowsMultipleSelection: true,
-                onCompletion: { result in
-                    switch result {
-                    case let .success(urls):
-                        copy(urls)
-                    case let .failure(error):
-                        os_log(.error, "导入文件失败Error: \(error.localizedDescription)")
-                    }
-                }
-            )
-            .onDrop(of: [UTType.fileURL], isTargeted: $appManager.isDropping) { providers -> Bool in
-                let dispatchGroup = DispatchGroup()
-                var dropedFiles: [URL] = []
-                for provider in providers {
-                    dispatchGroup.enter()
-                    // 这是异步操作
-                    _ = provider.loadObject(ofClass: URL.self) { object, _ in
-                        if let url = object {
-                            os_log("\(Logger.isMain)🖥️ DBView::添加 \(url.lastPathComponent) 到复制队列")
-                            dropedFiles.append(url)
+        VStack {
+            DBList()
+                .fileImporter(
+                    isPresented: $appManager.isImporting,
+                    allowedContentTypes: [.audio],
+                    allowsMultipleSelection: true,
+                    onCompletion: { result in
+                        switch result {
+                        case let .success(urls):
+                            copy(urls)
+                        case let .failure(error):
+                            os_log(.error, "导入文件失败Error: \(error.localizedDescription)")
                         }
-
-                        dispatchGroup.leave()
                     }
-                }
+                )
+                .onDrop(of: [UTType.fileURL], isTargeted: $appManager.isDropping) { providers -> Bool in
+                    let dispatchGroup = DispatchGroup()
+                    var dropedFiles: [URL] = []
+                    for provider in providers {
+                        dispatchGroup.enter()
+                        // 这是异步操作
+                        _ = provider.loadObject(ofClass: URL.self) { object, _ in
+                            if let url = object {
+                                os_log("\(Logger.isMain)🖥️ DBView::添加 \(url.lastPathComponent) 到复制队列")
+                                dropedFiles.append(url)
+                            }
 
-                dispatchGroup.notify(queue: .main) {
-                    copy(dropedFiles)
-                }
+                            dispatchGroup.leave()
+                        }
+                    }
 
-                return true
+                    dispatchGroup.notify(queue: .main) {
+                        copy(dropedFiles)
+                    }
+
+                    return true
             }
+            
+            if Config.isDebug {
+                DBBottomBar()
+            }
+        }
     }
 }
 
@@ -91,6 +97,7 @@ extension DBView {
 
 #Preview("APP") {
     AppPreview()
+        .frame(height: 800)
 }
 
 #Preview("Layout") {
