@@ -10,12 +10,14 @@ extension DB {
             return
         }
         
+        context.insert(audio)
+        
         do {
-            context.insert(audio)
             try context.save()
-            updateGroup(audio)
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
         }
+        
+        updateGroup(audio)
     }
 }

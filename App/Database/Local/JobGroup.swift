@@ -17,7 +17,7 @@ extension DB {
 
         for (i,url) in urls.enumerated() {
             if verbose {
-                os_log("\(self.labelForGroup) UpdateGroup \(i)/\(total)")
+                os_log("\(self.labelForGroup) UpdateGroup \(i)/\(total) -> \(url.lastPathComponent)")
             }
             
             guard iCloudHelper.isDownloaded(url), let audio = findAudio(url) else {
@@ -26,7 +26,11 @@ extension DB {
 
             let fileHash = audio.getHash()
             if fileHash.count > 0 {
-                audio.group = AudioGroup(title: audio.title, hash: fileHash)
+                if let group = findAudioGroup(fileHash) {
+                    audio.group = group
+                } else {
+                    audio.group = AudioGroup(title: audio.title, hash: fileHash)
+                }
             }
         }
 
