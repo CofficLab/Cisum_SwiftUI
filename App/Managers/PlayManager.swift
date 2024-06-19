@@ -60,24 +60,24 @@ class PlayManager: NSObject, ObservableObject {
         main.async {
             self.asset = state.getAsset()
             self.error = nil
-
-            Config.setCurrentURL(state.getAsset()?.url)
+            
+            switch state {
+            case let .Playing(asset):
+                Task {
+                    await self.db.increasePlayCount(asset.url)
+                }
+            case .Finished:
+                self.next()
+            case let .Error(error, _):
+                self.error = error
+            case .Stopped:
+                break
+            default:
+                break
+            }
         }
         
-        switch state {
-        case let .Playing(asset):
-            Task {
-                await self.db.increasePlayCount(asset.url)
-            }
-        case .Finished:
-            next()
-        case let .Error(error, _):
-            self.error = error
-        case .Stopped: 
-            break
-        default:
-            break
-        }
+        Config.setCurrentURL(state.getAsset()?.url)
     }
 
     // MARK: 恢复上次播放的
@@ -167,7 +167,7 @@ class PlayManager: NSObject, ObservableObject {
                     playMan.prepare(i.toPlayAsset())
                 }
             } else {
-                self.playMan.stop()
+                playMan.stop()
             }
         }
     }

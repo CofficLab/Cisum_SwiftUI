@@ -75,9 +75,9 @@ struct AlbumView: View {
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: Notification.Name.AudiosUpdatedNotification)) { notification in
-            let data = notification.userInfo as! [String: [MetaWrapper]]
+            let data = notification.userInfo as! [String: DiskFileGroup]
             let items = data["items"]!
-            for item in items {
+            for item in items.files {
                 if item.isDeleted {
                     continue
                 }
@@ -117,7 +117,7 @@ struct AlbumView: View {
         }
     }
 
-    func refresh(_ item: MetaWrapper? = nil, verbose: Bool = false) {
+    func refresh(_ item: DiskFile? = nil, verbose: Bool = false) {
         if verbose {
             os_log("\(self.label)Refresh -> \(asset.title)")
         }

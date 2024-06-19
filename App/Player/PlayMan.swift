@@ -7,7 +7,7 @@ import SwiftUI
 class PlayMan: NSObject {
     // MARK: 成员
 
-    static var label = "💿 SmartPlayer::"
+    static var label = "💿 PlayMan::"
     var label: String { Logger.isMain + Self.label }
     var player = AVAudioPlayer()
     var asset: PlayAsset?
@@ -112,6 +112,7 @@ class PlayMan: NSObject {
 extension PlayMan {
     func goto(_ time: TimeInterval) {
         player.currentTime = time
+        setPlayingInfo()
     }
 
     func prepare(_ asset: PlayAsset?) {

@@ -87,7 +87,7 @@ extension DB {
     func syncWithUpdatedItems(_ metas: DiskFileGroup) {
         // 发出更新事件让UI更新，比如下载进度
         Task {
-//            self.eventManager.emitUpdate(metas)
+            self.eventManager.emitUpdate(metas)
         }
 
         printRunTime("SyncWithUpdatedItems with count=\(metas.count)") {

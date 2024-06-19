@@ -106,7 +106,7 @@ extension DB {
     }
 }
 
-// MARK: Query-Next & Prev
+// MARK: Next & Prev
 
 extension DB {
     /// The previous one of provided URL
@@ -159,28 +159,16 @@ extension DB {
             return nil
         }
         
-        let order = audio.order
-        var descriptor = FetchDescriptor<Audio>()
-        descriptor.sortBy.append(.init(\.order, order: .forward))
-        descriptor.fetchLimit = 1
-        descriptor.predicate = #Predicate {
-            $0.order >= order && $0.url != url
-        }
-
-        do {
-            let result = try context.fetch(descriptor)
-            let next = result.first ?? Self.first(context: context)
-            //os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title) -> [\(next?.order ?? -1)] \(next?.title ?? "-")")
-            return next
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-        }
-
-        return nil
+        return self.nextOf(audio)
     }
 
     /// The next one of provided Audio
     func nextOf(_ audio: Audio) -> Audio? {
+        Self.nextOf(context: context, audio: audio)
+    }
+    
+    static func nextOf(context: ModelContext, audio: Audio) -> Audio? {
+        //os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title)")
         let order = audio.order
         let url = audio.url
         var descriptor = FetchDescriptor<Audio>()
@@ -206,17 +194,15 @@ extension DB {
 // MARK: Query-Find
 
 extension DB {
-    func findAudio(_ url: URL) -> Audio? {
-        //os_log("\(Logger.isMain)\(Self.label)FindAudio -> \(url.lastPathComponent)")
-        
-        var descriptor = FetchDescriptor<Audio>(predicate: #Predicate<Audio> {
-            $0.url == url
-        })
+    func findAudio(_ url: URL, verbose: Bool = true) -> Audio? {
+        if verbose {
+            os_log("\(self.label)FindAudio -> \(url.lastPathComponent)")
+        }
         
         do {
-            let result = try context.fetch(descriptor)
-            
-            return result.first
+            return try context.fetch(FetchDescriptor<Audio>(predicate: #Predicate<Audio> {
+                $0.url == url
+            })).first
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
         }

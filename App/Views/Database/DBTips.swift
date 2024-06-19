@@ -23,11 +23,15 @@ struct DBTips: View {
                         .foregroundStyle(.white)
 
                     #if os(macOS)
+                        HStack {
+                            Text("或").foregroundStyle(.white)
+                        }
+                    
                         Button(action: {
                             FileHelper.openFolder(url: Config.disk.audiosDir)
                         }, label: {
                             Label(title: {
-                                Text("打开仓库目录")
+                                Text("打开仓库目录并放入文件")
                             }, icon: {
                                 Image(systemName: "doc.viewfinder.fill")
                             })

@@ -69,9 +69,9 @@ struct StateView: View {
             }
         })
         .onReceive(NotificationCenter.default.publisher(for: Notification.Name.AudiosUpdatedNotification), perform: { notification in
-            let data = notification.userInfo as! [String: [MetaWrapper]]
+            let data = notification.userInfo as! [String: DiskFileGroup]
             let items = data["items"]!
-            for item in items {
+            for item in items.files {
                 if item.isDeleted {
                     continue
                 }

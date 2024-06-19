@@ -12,7 +12,7 @@ class EventManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
     var queue = DispatchQueue(label: "EventQueue")
     var label: String { "\(Logger.isMain)\(Self.label)" }
     
-    func emitUpdate(_ items: [MetaWrapper]) {
+    func emitUpdate(_ items: DiskFileGroup) {
         DispatchQueue.main.async {
             NotificationCenter.default.post(
                 name: Notification.Name.AudiosUpdatedNotification,
