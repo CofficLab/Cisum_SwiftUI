@@ -169,16 +169,12 @@ extension Audio {
 // MARK: iCloud 相关
 
 extension Audio {
-    func checkIfDownloaded() -> Bool { iCloudHelper.isDownloaded(url) }
-    func checkIfDownloading() -> Bool { iCloudHelper.isDownloading(url) }
-    func checkIfNotDownloaded() -> Bool { self.checkIfDownloaded() == false }
-    
     var isDownloaded: Bool {
-        checkIfDownloaded()
+        iCloudHelper.isDownloaded(url)
     }
     
     var isDownloading: Bool {
-        checkIfDownloading()
+        iCloudHelper.isDownloading(url)
     }
     
     var isNotDownloaded: Bool {
