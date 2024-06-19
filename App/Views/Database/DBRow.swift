@@ -74,7 +74,7 @@ struct DBRow: View {
                 BtnShowInFinder(url: audio.url, autoResize: false)
             }
             Divider()
-            BtnDel(audios: [audio.id], autoResize: false)
+            BtnDel(audios: [audio], autoResize: false)
         })
         
     }

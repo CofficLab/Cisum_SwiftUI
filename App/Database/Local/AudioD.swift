@@ -20,7 +20,7 @@ extension DB {
                 guard let audio = try context.fetch(FetchDescriptor(predicate: #Predicate<Audio> {
                     $0.url == url
                 })).first else {
-                    os_log(.debug, "\(Logger.isMain)\(self.label)删除时找不到")
+                    os_log(.debug, "\(Logger.isMain)\(label)删除时找不到")
                     continue
                 }
 
@@ -52,7 +52,7 @@ extension DB {
 
     static func deleteAudios(context: ModelContext, disk: DiskContact, ids: [Audio.ID]) -> Audio? {
         if verbose {
-            os_log("\(Logger.isMain)\(self.label)数据库删除")
+            os_log("\(Logger.isMain)\(label)数据库删除")
         }
 
         // 本批次的最后一个删除后的下一个
@@ -60,7 +60,7 @@ extension DB {
 
         for (index, id) in ids.enumerated() {
             guard let audio = context.model(for: id) as? Audio else {
-                os_log(.debug, "\(Logger.isMain)\(self.label)删除时找不到")
+                os_log(.debug, "\(Logger.isMain)\(label)删除时找不到")
                 continue
             }
 
@@ -104,12 +104,12 @@ extension DB {
     }
 
     func delete(_ id: Audio.ID) -> Audio? {
-        Self.deleteAudio(context: context, disk: self.disk, id: id)
+        Self.deleteAudio(context: context, disk: disk, id: id)
     }
 
     func deleteAudio(_ url: URL) {
         os_log("\(self.label)DeleteAudio by url=\(url.lastPathComponent)")
-        self.deleteAudios([url])
+        deleteAudios([url])
     }
 
     // MARK: 删除多个
@@ -124,6 +124,10 @@ extension DB {
         Self.deleteAudios(context: context, disk: disk, ids: ids)
     }
 
+    func deleteAudios(_ audios: [Audio]) -> Audio? {
+        Self.deleteAudios(context: context, disk: disk, ids: audios.map { $0.id })
+    }
+
     // MARK: 回收站
 
     func trash(_ audio: Audio) async {
@@ -133,17 +137,17 @@ extension DB {
         }
 
         // 移动到回收站
-        await self.disk.trash(audio)
+        await disk.trash(audio)
 
         // 从数据库删除
-        self.deleteAudio(audio)
+        deleteAudio(audio)
     }
 
     // MARK: 清空数据库
 
     func destroyAudios() {
         do {
-            try self.destroy(for: Audio.self)
+            try destroy(for: Audio.self)
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
         }

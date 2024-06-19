@@ -1,4 +1,5 @@
 import SwiftData
+import Network
 import SwiftUI
 
 struct StateView: View {
@@ -8,6 +9,8 @@ struct StateView: View {
 
     @Query(sort: \CopyTask.createdAt, animation: .default) var tasks: [CopyTask]
     @Query(sort: \Audio.order, animation: .default) var audios: [Audio]
+    
+    @State var networkOK = true
 
     var e = EventManager()
     var error: Error? { audioManager.error }
@@ -48,6 +51,8 @@ struct StateView: View {
             if audios.count == 0 {
                 appManager.showDBView()
             }
+            
+            checkNetworkStatus()
         }
         .onChange(of: count) {
             Task {
@@ -121,6 +126,26 @@ struct StateView: View {
             }
             .font(font)
         }
+    }
+}
+
+// MARK: 检查错误
+
+extension StateView {
+    func checkNetworkStatus() {
+        let monitor = NWPathMonitor()
+        monitor.pathUpdateHandler = { path in
+            DispatchQueue.main.async {
+                if path.status == .satisfied {
+                    self.networkOK = true
+                } else {
+                    self.networkOK = false
+                }
+            }
+        }
+
+        let queue = DispatchQueue(label: "NetworkMonitor")
+        monitor.start(queue: queue)
     }
 }
 

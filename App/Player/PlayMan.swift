@@ -1,4 +1,5 @@
 import AVKit
+import MediaPlayer
 import Foundation
 import OSLog
 import SwiftUI
@@ -80,6 +81,14 @@ class PlayMan: NSObject {
 
     var onStateChange: (_ state: PlayState) -> Void = { state in
         os_log("\(PlayMan.label)播放器状态已变为 \(state.des)")
+    }
+    
+    init(verbose: Bool = true) {
+        super.init()
+        
+        Task {
+            onCommand()
+        }
     }
 }
 
@@ -235,5 +244,146 @@ extension PlayMan: AVAudioPlayerDelegate {
     func audioPlayerEndInterruption(_ player: AVAudioPlayer, withOptions flags: Int) {
         os_log("\(Logger.isMain)\(self.label)audioPlayerEndInterruption")
         resume()
+    }
+}
+
+// MARK: 媒体中心
+
+extension PlayMan {
+    var c: MPRemoteCommandCenter {
+        MPRemoteCommandCenter.shared()
+    }
+
+    private func setPlayingInfo(verbose: Bool = false) {
+        let audio = self.asset?.toAudio()
+        let player = self.player
+        let isPlaying = player.isPlaying
+        let center = MPNowPlayingInfoCenter.default()
+
+        let artist = "乐音APP"
+        var title = ""
+        var duration: TimeInterval = 0
+        var currentTime: TimeInterval = 0
+        var image = Audio.defaultImage
+
+        if let audio = audio {
+            title = audio.title
+            duration = player.duration
+            currentTime = player.currentTime
+            image = audio.getMediaCenterImage()
+        }
+        
+        if verbose {
+            os_log("\(self.label)📱📱📱 Update -> \(self.state.des)")
+            os_log("\(self.label)📱📱📱 Update -> Title: \(title)")
+            os_log("\(self.label)📱📱📱 Update -> Duration: \(duration)")
+            os_log("\(self.label)📱📱📱 Update -> Playing: \(isPlaying)")
+        }
+
+        center.playbackState = isPlaying ? .playing : .paused
+        center.nowPlayingInfo = [
+            MPMediaItemPropertyTitle: title,
+            MPMediaItemPropertyArtist: artist,
+            MPMediaItemPropertyPlaybackDuration: duration,
+            MPNowPlayingInfoPropertyElapsedPlaybackTime: currentTime,
+            MPMediaItemPropertyArtwork: MPMediaItemArtwork(boundsSize: image.size, requestHandler: { size in
+                #if os(macOS)
+                    image.size = size
+                #endif
+
+                return image
+            }),
+        ]
+
+        let like = audio?.like ?? false
+        if verbose {
+            os_log("\(self.label)setPlayingInfo like -> \(like)")
+        }
+        c.likeCommand.isActive = like
+    }
+
+    // 接收控制中心的指令
+    private func onCommand() {
+        c.nextTrackCommand.addTarget { _ in
+            os_log("\(Logger.isMain)\(self.label)下一首")
+//            self.next(manual: true)
+
+            return .success
+        }
+
+//        c.previousTrackCommand.addTarget { _ in
+//            do {
+//                try self.prev()
+//                os_log("\(Logger.isMain)MediaPlayerManager::pre")
+//
+//                return .success
+//            } catch let e {
+//                os_log("\(Logger.isMain)MediaPlayerManager::\(e.localizedDescription)")
+//                return .noActionableNowPlayingItem
+//            }
+//        }
+
+        c.pauseCommand.addTarget { _ in
+            self.player.pause()
+
+            return .success
+        }
+
+        c.playCommand.addTarget { _ in
+            os_log("\(Logger.isMain)\(self.label)播放")
+//            self.player.resume()
+
+            return .success
+        }
+
+        c.stopCommand.addTarget { _ in
+            os_log("\(Logger.isMain)\(self.label)停止")
+
+            self.player.stop()
+
+            return .success
+        }
+
+        c.likeCommand.addTarget { _ in
+            os_log("\(Logger.isMain)\(self.label)点击了喜欢按钮")
+
+//            if let audio = self.player.asset?.toAudio() {
+//                Task {
+//                    await self.db.toggleLike(audio)
+//                }
+//
+//                self.c.likeCommand.isActive = audio.dislike
+//                self.c.dislikeCommand.isActive = audio.like
+//            }
+
+            return .success
+        }
+
+        c.ratingCommand.addTarget { _ in
+            os_log("\(Logger.isMain)评分")
+
+            return .success
+        }
+
+        c.changeRepeatModeCommand.addTarget { _ in
+            os_log("\(Logger.isMain)changeRepeatModeCommand")
+
+            return .success
+        }
+
+        c.changePlaybackPositionCommand.addTarget { e in
+            os_log("\(Logger.isMain)\(self.label)changePlaybackPositionCommand")
+            guard let event = e as? MPChangePlaybackPositionCommandEvent else {
+                return .commandFailed
+            }
+
+            let positionTime = event.positionTime // 获取当前的播放进度时间
+
+            // 在这里处理当前的播放进度时间
+            os_log("Current playback position: \(positionTime)")
+//            self.player.goto(positionTime)
+
+            return .success
+        }
     }
 }

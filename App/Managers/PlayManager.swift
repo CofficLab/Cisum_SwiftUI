@@ -13,7 +13,6 @@ class PlayManager: NSObject, ObservableObject {
 
     @Published var error: Error? = nil
     @Published var mode: PlayMode = .Order
-    @Published var networkOK = true
     @Published var asset: PlayAsset? = nil
 
     private var bg = AppConfig.bgQueue
@@ -23,9 +22,8 @@ class PlayManager: NSObject, ObservableObject {
     var db: DB = .init(AppConfig.getContainer, reason: "AudioManager")
     var isEmpty: Bool { asset == nil }
     var player = PlayMan()
-    var verbose = false
 
-    init(db: DB) {
+    init(db: DB, verbose: Bool = true) {
         if verbose {
             os_log("\(Logger.isMain)\(Self.label)初始化")
         }
@@ -35,10 +33,6 @@ class PlayManager: NSObject, ObservableObject {
         super.init()
 
         Task {
-            checkNetworkStatus()
-        }
-
-        Task {
             restore()
         }
 
@@ -46,9 +40,9 @@ class PlayManager: NSObject, ObservableObject {
             self.onStateChanged(state)
         }
 
-        Task {
-            onCommand()
-        }
+//        Task {
+//            onCommand()
+//        }
     }
 
     func onStateChanged(_ state: PlayState, verbose: Bool = false) {
@@ -78,7 +72,7 @@ class PlayManager: NSObject, ObservableObject {
             break
         }
 
-        setPlayingInfo()
+//        setPlayingInfo()
     }
 
     // MARK: 恢复上次播放的
@@ -118,7 +112,7 @@ class PlayManager: NSObject, ObservableObject {
 
     // MARK: 播放指定的
 
-    func play(_ audio: Audio, reason: String) {
+    func play(_ audio: Audio, reason: String, verbose: Bool = true) {
         if verbose {
             os_log("\(self.label)play \(audio.title) 🚀🚀🚀")
         }
@@ -135,7 +129,7 @@ class PlayManager: NSObject, ObservableObject {
     // MARK: Prev
 
     /// 跳到上一首，manual=true表示由用户触发
-    func prev(manual: Bool = false) throws {
+    func prev(manual: Bool = false, verbose: Bool = true) throws {
         if verbose {
             os_log("\(self.label)prev ⬆️")
         }
@@ -158,7 +152,7 @@ class PlayManager: NSObject, ObservableObject {
     // MARK: Next
 
     /// 跳到下一首，manual=true表示由用户触发
-    func next(manual: Bool = false) {
+    func next(manual: Bool = false, verbose: Bool = true) {
         if verbose {
             os_log("\(self.label)next \(manual ? "手动触发" : "自动触发") ⬇️⬇️⬇️")
         }
@@ -167,12 +161,12 @@ class PlayManager: NSObject, ObservableObject {
             return player.resume()
         }
 
-        guard let audio = asset else {
+        guard let asset = asset else {
             return
         }
 
         Task {
-            if let i = await db.nextOf(asset?.url) {
+            if let i = await db.nextOf(asset.url) {
                 if player.isPlaying || manual == false {
                     play(i, reason: "在播放时或自动触发下一首")
                 } else {
@@ -190,7 +184,7 @@ class PlayManager: NSObject, ObservableObject {
 extension PlayManager {
     // MARK: 切换播放模式
 
-    func switchMode(_ callback: @escaping (_ mode: PlayMode) -> Void) {
+    func switchMode(_ callback: @escaping (_ mode: PlayMode) -> Void, verbose: Bool = true) {
         mode = mode.switchMode()
 
         callback(mode)
@@ -207,167 +201,6 @@ extension PlayManager {
 //            if mode == .Order {
 //                await db.sort(asset?.url)
 //            }
-        }
-    }
-}
-
-// MARK: 检查错误
-
-extension PlayManager {
-    func checkNetworkStatus() {
-        let monitor = NWPathMonitor()
-        monitor.pathUpdateHandler = { path in
-            DispatchQueue.main.async {
-                if path.status == .satisfied {
-                    self.networkOK = true
-                } else {
-                    self.networkOK = false
-                }
-            }
-        }
-
-        let queue = DispatchQueue(label: "NetworkMonitor")
-        monitor.start(queue: queue)
-    }
-}
-
-// MARK: 媒体中心
-
-extension PlayManager {
-    var c: MPRemoteCommandCenter {
-        MPRemoteCommandCenter.shared()
-    }
-
-    private func setPlayingInfo(verbose: Bool = false) {
-        let audio = player.asset?.toAudio()
-        let player = player.player
-        let isPlaying = player.isPlaying
-        let center = MPNowPlayingInfoCenter.default()
-
-        let artist = "乐音APP"
-        var title = ""
-        var duration: TimeInterval = 0
-        var currentTime: TimeInterval = 0
-        var image = Audio.defaultImage
-
-        if let audio = audio {
-            title = audio.title
-            duration = player.duration
-            currentTime = player.currentTime
-            image = audio.getMediaCenterImage()
-        }
-        
-        if verbose {
-            os_log("\(self.label)📱📱📱 Update -> \(self.player.state.des)")
-            os_log("\(self.label)📱📱📱 Update -> Title: \(title)")
-            os_log("\(self.label)📱📱📱 Update -> Duration: \(duration)")
-            os_log("\(self.label)📱📱📱 Update -> Playing: \(isPlaying)")
-        }
-
-        center.playbackState = isPlaying ? .playing : .paused
-        center.nowPlayingInfo = [
-            MPMediaItemPropertyTitle: title,
-            MPMediaItemPropertyArtist: artist,
-            MPMediaItemPropertyPlaybackDuration: duration,
-            MPNowPlayingInfoPropertyElapsedPlaybackTime: currentTime,
-            MPMediaItemPropertyArtwork: MPMediaItemArtwork(boundsSize: image.size, requestHandler: { size in
-                #if os(macOS)
-                    image.size = size
-                #endif
-
-                return image
-            }),
-        ]
-
-        let like = audio?.like ?? false
-        if verbose {
-            os_log("\(self.label)setPlayingInfo like -> \(like)")
-        }
-        c.likeCommand.isActive = like
-    }
-
-    // 接收控制中心的指令
-    private func onCommand() {
-        c.nextTrackCommand.addTarget { _ in
-            os_log("\(Logger.isMain)\(self.label)下一首")
-            self.next(manual: true)
-
-            return .success
-        }
-
-        c.previousTrackCommand.addTarget { _ in
-            do {
-                try self.prev()
-                os_log("\(Logger.isMain)MediaPlayerManager::pre")
-
-                return .success
-            } catch let e {
-                os_log("\(Logger.isMain)MediaPlayerManager::\(e.localizedDescription)")
-                return .noActionableNowPlayingItem
-            }
-        }
-
-        c.pauseCommand.addTarget { _ in
-            self.player.pause()
-
-            return .success
-        }
-
-        c.playCommand.addTarget { _ in
-            os_log("\(Logger.isMain)\(self.label)播放")
-            self.player.resume()
-
-            return .success
-        }
-
-        c.stopCommand.addTarget { _ in
-            os_log("\(Logger.isMain)\(self.label)停止")
-
-            self.player.stop()
-
-            return .success
-        }
-
-        c.likeCommand.addTarget { _ in
-            os_log("\(Logger.isMain)\(self.label)点击了喜欢按钮")
-
-            if let audio = self.player.asset?.toAudio() {
-                Task {
-                    await self.db.toggleLike(audio)
-                }
-
-                self.c.likeCommand.isActive = audio.dislike
-                self.c.dislikeCommand.isActive = audio.like
-            }
-
-            return .success
-        }
-
-        c.ratingCommand.addTarget { _ in
-            os_log("\(Logger.isMain)评分")
-
-            return .success
-        }
-
-        c.changeRepeatModeCommand.addTarget { _ in
-            os_log("\(Logger.isMain)changeRepeatModeCommand")
-
-            return .success
-        }
-
-        c.changePlaybackPositionCommand.addTarget { e in
-            os_log("\(Logger.isMain)\(self.label)changePlaybackPositionCommand")
-            guard let event = e as? MPChangePlaybackPositionCommandEvent else {
-                return .commandFailed
-            }
-
-            let positionTime = event.positionTime // 获取当前的播放进度时间
-
-            // 在这里处理当前的播放进度时间
-            os_log("Current playback position: \(positionTime)")
-            self.player.goto(positionTime)
-
-            return .success
         }
     }
 }

@@ -5,7 +5,7 @@ struct BtnDel: View {
     @EnvironmentObject var appManager: AppManager
     @EnvironmentObject var audioManager: PlayManager
 
-    var audios: Set<Audio.ID>
+    var audios: [Audio]
     var callback: () -> Void = {}
     var autoResize = false
 
@@ -20,15 +20,15 @@ struct BtnDel: View {
                     //appManager.stateMessage = "正在删除 \(audios.count) 个"
 
                     let isPlaying = audioManager.player.isPlaying
-                    let next = await db.deleteAudios(Array(audios))
+                    let next = await db.deleteAudios(audios)
 
-//                    if let asset = audioManager.asset, audios.contains(audio.persistentModelID) {
-//                        if isPlaying, let next = next {
-//                            audioManager.play(next, reason: "删除了")
-//                        } else {
-//                            audioManager.prepare(next, reason: "删除了")
-//                        }
-//                    }
+                    if let asset = audioManager.asset, audios.map{ $0.url }.contains(asset.url) {
+                        if isPlaying, let next = next {
+                            audioManager.play(next, reason: "删除了")
+                        } else {
+                            audioManager.prepare(next, reason: "删除了")
+                        }
+                    }
 
                     appManager.setFlashMessage("已删除")
                     appManager.cleanStateMessage()
