@@ -48,10 +48,6 @@ struct RootView<Content>: View where Content: View {
                             await db.prepareJob()
                         })
 
-                        Task.detached(priority: .background, operation: {
-                            await db.runGetCoversJob()
-                        })
-
                         Task.detached(operation: {
                             self.onAppOpen()
                         })
