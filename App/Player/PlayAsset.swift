@@ -5,12 +5,13 @@ import AVKit
 struct PlayAsset {
     static var label = "🪖 PlayAsset::"
     
+    let fileManager = FileManager.default
+    
     var url: URL
     var contentType: String?
     var like: Bool = false
-    var label: String { "\(Logger.isMain)\(Self.label)" }
-    let fileManager = FileManager.default
     
+    var label: String { "\(Logger.isMain)\(Self.label)" }
     var title: String { url.lastPathComponent }
     var ext: String { url.pathExtension }
     
@@ -250,4 +251,5 @@ func getCoverFromMeta(_ callback: @escaping (_ url: URL?) -> Void, verbose: Bool
 
 #Preview {
     AppPreview()
+        .frame(height: 800)
 }
