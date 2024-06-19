@@ -66,27 +66,6 @@ extension DB {
     }
 }
 
-// MARK: 修改
-
-extension DB {
-    func save() {
-        do {
-            try context.save()
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-        }
-    }
-
-    func save(_ completion: @escaping (Error?) -> Void) {
-        do {
-            try context.save()
-            completion(nil)
-        } catch let error {
-            completion(error)
-        }
-    }
-}
-
 // MARK: 查询
 
 extension DB {

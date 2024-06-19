@@ -105,7 +105,7 @@ extension DB {
                         os_log(.error, "\(e.localizedDescription)")
                     }
                 } else {
-                    if Self.findAudio(context: context, meta.url) == nil {
+                    if findAudio(meta.url) == nil {
                         context.insert(meta.toAudio())
                     }
                 }

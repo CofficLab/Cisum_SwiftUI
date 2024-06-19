@@ -10,7 +10,9 @@ extension DB {
         let title = "\(labelForGroup) UpdateGroup(\(metas.count))"
         let startTime = DispatchTime.now()
         
-        os_log("\(title) 🚀🚀🚀")
+        if verbose {
+            os_log("\(title) 🚀🚀🚀")
+        }
 
         let total = metas.count
         let context = ModelContext(modelContainer)
@@ -21,7 +23,7 @@ extension DB {
                 os_log("\(Logger.isMain)\(Self.label)UpdateGroup \(i)/\(total)")
             }
             
-            guard meta.isDownloaded, let audio = Self.findAudio(context: context, meta.url) else {
+            guard meta.isDownloaded, let audio = findAudio(meta.url) else {
                 continue
             }
 
@@ -37,7 +39,9 @@ extension DB {
             os_log(.error, "\(e.localizedDescription)")
         }
         
-        os_log("\(self.jobEnd(startTime, title: title))")
+        if verbose {
+            os_log("\(self.jobEnd(startTime, title: title))")
+        }
     }
     
 //    func runFindAudioGroupJob() {

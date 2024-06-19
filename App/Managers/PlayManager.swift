@@ -54,7 +54,7 @@ class PlayManager: NSObject, ObservableObject {
         switch state {
         case let .Playing(asset):
             Task {
-                await self.db.increasePlayCount(asset.toAudio())
+                await self.db.increasePlayCount(asset.url)
             }
         case .Finished:
             next()

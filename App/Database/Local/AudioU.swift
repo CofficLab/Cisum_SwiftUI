@@ -34,10 +34,15 @@ extension DB {
 // MARK: 播放次数
 
 extension DB {
-    func increasePlayCount(_ audio: Audio) {
-        if let a = findAudio(audio.id) {
+    func increasePlayCount(_ url: URL) {
+        if let a = findAudio(url) {
             a.playCount += 1
-            save()
+            do {
+                try context.save()
+            } catch let e {
+                os_log(.error, "\(e.localizedDescription)")
+                print(e)
+            }
         }
     }
 }
@@ -59,10 +64,10 @@ extension DB {
     func downloadNext(_ audio: Audio, reason: String) {
         downloadNextBatch(audio, count: 2, reason: reason)
     }
-    
+
     /// 下载当前的和当前的后面的X个
     func downloadNextBatch(_ url: URL, count: Int = 6, reason: String) {
-        if let audio = self.findAudio(url) {
+        if let audio = findAudio(url) {
             downloadNextBatch(audio, count: count, reason: reason)
         }
     }
@@ -76,7 +81,7 @@ extension DB {
             download(currentAudio, reason: "downloadNext 🐛 \(reason)")
 
             currentIndex = currentIndex + 1
-            if let next = Self.nextOf(context: ModelContext(modelContainer), audio: currentAudio) {
+            if let next = self.nextOf(currentAudio) {
                 currentAudio = next
             }
         }
@@ -89,7 +94,11 @@ extension DB {
     func toggleLike(_ audio: Audio) {
         if let dbAudio = findAudio(audio.id) {
             dbAudio.like.toggle()
-            save()
+            do {
+                try context.save()
+            } catch let e {
+                os_log(.error, "\(e.localizedDescription)")
+            }
 
             EventManager().emitAudioUpdate(dbAudio)
         }
@@ -98,7 +107,11 @@ extension DB {
     func like(_ audio: Audio) {
         if let dbAudio = findAudio(audio.id) {
             dbAudio.like = true
-            save()
+            do {
+                try context.save()
+            } catch let e {
+                os_log(.error, "\(e.localizedDescription)")
+            }
 
             EventManager().emitAudioUpdate(dbAudio)
         }
@@ -107,7 +120,11 @@ extension DB {
     func dislike(_ audio: Audio) {
         if let dbAudio = findAudio(audio.id) {
             dbAudio.like = false
-            save()
+            do {
+                try context.save()
+            } catch let e {
+                os_log(.error, "\(e.localizedDescription)")
+            }
 
             EventManager().emitAudioUpdate(dbAudio)
         }
@@ -119,12 +136,12 @@ extension DB {
 extension DB {
     func sortRandom(_ url: URL?) {
         if let url = url {
-            sortRandom(self.findAudio(url))
+            sortRandom(findAudio(url))
         } else {
             sortRandom(nil as Audio?)
         }
     }
-    
+
     func sortRandom(_ sticky: Audio?) {
         os_log("\(Logger.isMain)\(DB.label)SortRandom")
 

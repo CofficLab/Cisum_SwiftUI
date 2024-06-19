@@ -14,40 +14,41 @@ extension DB {
     static func deleteAudiosByURL(context: ModelContext, disk: DiskContact, urls: [URL]) -> Audio? {
         // 本批次的最后一个删除后的下一个
         var next: Audio?
+        return nil
 
-        for (index, url) in urls.enumerated() {
-            do {
-                guard let audio = try context.fetch(FetchDescriptor(predicate: #Predicate<Audio> {
-                    $0.url == url
-                })).first else {
-                    os_log(.debug, "\(Logger.isMain)\(label)删除时找不到")
-                    continue
-                }
-
-                // 找出本批次的最后一个删除后的下一个
-                if index == urls.count - 1 {
-                    next = Self.nextOf(context: context, audio: audio)
-
-                    // 如果下一个等于当前，设为空
-                    if next?.url == url {
-                        next = nil
-                    }
-                }
-
-                // 从磁盘删除
-                try disk.deleteFile(audio)
-
-                // 从磁盘删除后，因为数据库监听了磁盘的变动，会自动删除
-                // 但自动删除可能不及时，所以这里及时删除
-                context.delete(audio)
-
-                try context.save()
-            } catch let e {
-                os_log(.error, "\(Logger.isMain)\(DB.label)删除出错 \(e)")
-            }
-        }
-
-        return next
+//        for (index, url) in urls.enumerated() {
+//            do {
+//                guard let audio = try context.fetch(FetchDescriptor(predicate: #Predicate<Audio> {
+//                    $0.url == url
+//                })).first else {
+//                    os_log(.debug, "\(Logger.isMain)\(label)删除时找不到")
+//                    continue
+//                }
+//
+//                // 找出本批次的最后一个删除后的下一个
+//                if index == urls.count - 1 {
+//                    next = Self.nextOf(context: context, audio: audio)
+//
+//                    // 如果下一个等于当前，设为空
+//                    if next?.url == url {
+//                        next = nil
+//                    }
+//                }
+//
+//                // 从磁盘删除
+//                try disk.deleteFile(audio)
+//
+//                // 从磁盘删除后，因为数据库监听了磁盘的变动，会自动删除
+//                // 但自动删除可能不及时，所以这里及时删除
+//                context.delete(audio)
+//
+//                try context.save()
+//            } catch let e {
+//                os_log(.error, "\(Logger.isMain)\(DB.label)删除出错 \(e)")
+//            }
+//        }
+//
+//        return next
     }
 
     static func deleteAudios(context: ModelContext, disk: DiskContact, ids: [Audio.ID]) -> Audio? {
@@ -56,41 +57,42 @@ extension DB {
         }
 
         // 本批次的最后一个删除后的下一个
-        var next: Audio?
-
-        for (index, id) in ids.enumerated() {
-            guard let audio = context.model(for: id) as? Audio else {
-                os_log(.debug, "\(Logger.isMain)\(label)删除时找不到")
-                continue
-            }
-
-            let url = audio.url
-
-            // 找出本批次的最后一个删除后的下一个
-            if index == ids.count - 1 {
-                next = Self.nextOf(context: context, audio: audio)
-
-                // 如果下一个等于当前，设为空
-                if next?.url == url {
-                    next = nil
-                }
-            }
-
-            do {
-                // 从磁盘删除
-                try disk.deleteFile(audio)
-
-                // 从磁盘删除后，因为数据库监听了磁盘的变动，会自动删除
-                // 但自动删除可能不及时，所以这里及时删除
-                context.delete(audio)
-
-                try context.save()
-            } catch let e {
-                os_log(.error, "\(Logger.isMain)\(DB.label)删除出错 \(e)")
-            }
-        }
-
-        return next
+//        var next: Audio?
+//
+//        for (index, id) in ids.enumerated() {
+//            guard let audio = context.model(for: id) as? Audio else {
+//                os_log(.debug, "\(Logger.isMain)\(label)删除时找不到")
+//                continue
+//            }
+//
+//            let url = audio.url
+//
+//            // 找出本批次的最后一个删除后的下一个
+//            if index == ids.count - 1 {
+//                next = self.nextOf(audio)
+//
+//                // 如果下一个等于当前，设为空
+//                if next?.url == url {
+//                    next = nil
+//                }
+//            }
+//
+//            do {
+//                // 从磁盘删除
+//                try disk.deleteFile(audio)
+//
+//                // 从磁盘删除后，因为数据库监听了磁盘的变动，会自动删除
+//                // 但自动删除可能不及时，所以这里及时删除
+//                context.delete(audio)
+//
+//                try context.save()
+//            } catch let e {
+//                os_log(.error, "\(Logger.isMain)\(DB.label)删除出错 \(e)")
+//            }
+//        }
+//
+//        return next
+        return nil
     }
 
     func deleteAudioAndGetNext(_ audio: Audio) -> Audio? {

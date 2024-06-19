@@ -159,16 +159,28 @@ extension DB {
             return nil
         }
         
-        return Self.nextOf(context: context, audio: audio)
+        let order = audio.order
+        var descriptor = FetchDescriptor<Audio>()
+        descriptor.sortBy.append(.init(\.order, order: .forward))
+        descriptor.fetchLimit = 1
+        descriptor.predicate = #Predicate {
+            $0.order >= order && $0.url != url
+        }
+
+        do {
+            let result = try context.fetch(descriptor)
+            let next = result.first ?? Self.first(context: context)
+            //os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title) -> [\(next?.order ?? -1)] \(next?.title ?? "-")")
+            return next
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
+
+        return nil
     }
 
     /// The next one of provided Audio
     func nextOf(_ audio: Audio) -> Audio? {
-        Self.nextOf(context: context, audio: audio)
-    }
-    
-    static func nextOf(context: ModelContext, audio: Audio) -> Audio? {
-        //os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title)")
         let order = audio.order
         let url = audio.url
         var descriptor = FetchDescriptor<Audio>()
@@ -194,16 +206,16 @@ extension DB {
 // MARK: Query-Find
 
 extension DB {
-    static func findAudio(context: ModelContext, _ url: URL) -> Audio? {
+    func findAudio(_ url: URL) -> Audio? {
         //os_log("\(Logger.isMain)\(Self.label)FindAudio -> \(url.lastPathComponent)")
         
-        let predicate = #Predicate<Audio> {
+        var descriptor = FetchDescriptor<Audio>(predicate: #Predicate<Audio> {
             $0.url == url
-        }
-        var descriptor = FetchDescriptor<Audio>(predicate: predicate)
-        descriptor.fetchLimit = 1
+        })
+        
         do {
             let result = try context.fetch(descriptor)
+            
             return result.first
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
@@ -214,10 +226,6 @@ extension DB {
     
     func findAudio(_ id: Audio.ID) -> Audio? {
         context.model(for: id) as? Audio
-    }
-
-    func findAudio(_ url: URL) -> Audio? {
-        Self.findAudio(context: context, url)
     }
 }
 

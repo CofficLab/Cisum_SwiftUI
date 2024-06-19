@@ -6,7 +6,7 @@ import SwiftData
 
 extension DB {
     func insertAudio(_ audio: Audio, force: Bool = false) {
-        if force == false && (Self.findAudio(context: context, audio.url) != nil) {
+        if force == false && (findAudio(audio.url) != nil) {
             return
         }
         

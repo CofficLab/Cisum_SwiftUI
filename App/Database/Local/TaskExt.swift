@@ -24,7 +24,11 @@ extension DB {
 
         let task = CopyTask(url: url)
         context.insert(task)
-        self.save()
+        do {
+                    try context.save()
+                } catch let e {
+                    os_log(.error, "\(e.localizedDescription)")
+                }
     }
 }
 
@@ -54,7 +58,11 @@ extension DB {
             urls.contains($0.url)
         })
 
-        self.save()
+        do {
+                    try context.save()
+                } catch let e {
+                    os_log(.error, "\(e.localizedDescription)")
+                }
     }
 
     nonisolated func delete(_ task: CopyTask) {
@@ -110,12 +118,20 @@ extension DB {
     func setTaskRunning(_ task: CopyTask) {
         task.isRunning = true
         task.error = ""
-        self.save()
+        do {
+                    try context.save()
+                } catch let e {
+                    os_log(.error, "\(e.localizedDescription)")
+                }
     }
 
     func setTaskError(_ task: CopyTask, _ e: Error) {
         task.isRunning = false
         task.error = e.localizedDescription
-        self.save()
+        do {
+                    try context.save()
+                } catch let e {
+                    os_log(.error, "\(e.localizedDescription)")
+                }
     }
 }
