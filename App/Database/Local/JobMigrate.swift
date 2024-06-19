@@ -7,7 +7,7 @@ extension DB {
         let localDisk = DiskLocal()
         let cloudDisk = DiskiCloud()
         
-        if AppConfig.isStoreIniCloud {
+        if Config.isStoreIniCloud {
             os_log("\(Self.label)将文件从 LocalDisk 移动到 CloudDisk 🚛🚛🚛")
             moveAudios(localDisk, cloudDisk)
         } else {

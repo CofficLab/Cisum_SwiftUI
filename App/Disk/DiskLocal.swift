@@ -7,7 +7,7 @@ class DiskLocal: ObservableObject {
     var fileManager = FileManager.default
     var cloudHandler = CloudHandler()
     var audiosDir: URL {
-        let url = AppConfig.localDocumentsDir!.appendingPathComponent(AppConfig.audiosDirName)
+        let url = Config.localDocumentsDir!.appendingPathComponent(Config.audiosDirName)
 
         if !fileManager.fileExists(atPath: url.path) {
             do {
@@ -21,7 +21,7 @@ class DiskLocal: ObservableObject {
         return url
     }
 
-    var bg = AppConfig.bgQueue
+    var bg = Config.bgQueue
     var label: String { "\(Logger.isMain)\(Self.label)" }
     var verbose = true
     var onUpdated: (_ collection: DiskFileGroup) -> Void = { collection in
@@ -32,7 +32,7 @@ class DiskLocal: ObservableObject {
         let url = audio.url
         let ext = audio.ext
         let fileName = audio.title
-        let trashDir = AppConfig.trashDir
+        let trashDir = Config.trashDir
         var trashUrl = trashDir.appendingPathComponent(url.lastPathComponent)
         var times = 1
 

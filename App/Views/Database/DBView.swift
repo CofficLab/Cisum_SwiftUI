@@ -9,8 +9,8 @@ struct DBView: View {
     
     static var label = "🐘 DBView::"
 
-    var main = AppConfig.mainQueue
-    var bg = AppConfig.bgQueue
+    var main = Config.mainQueue
+    var bg = Config.bgQueue
     var dropping: Bool { appManager.isDropping }
     var label: String { "\(Logger.isMain)\(Self.label) "}
     

@@ -16,7 +16,7 @@ struct BtnDelDevice: View {
             dynamicSize: autoResize,
             onTap: {
                 Task {
-                    await DBSynced(AppConfig.getSyncedContainer).deleteDevice(deviceData)
+                    await DBSynced(Config.getSyncedContainer).deleteDevice(deviceData)
                 }
             })
     }

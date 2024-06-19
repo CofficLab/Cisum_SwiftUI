@@ -19,7 +19,7 @@ struct HeroView: View {
                         .frame(maxWidth: .infinity)
                         .frame(maxHeight: geo.size.width)
                         .background(GeometryReader { geo in
-                            AppConfig.background(.yellow)
+                            Config.background(.yellow)
                                 .onAppear {
                                     self.topAlbumHeight = geo.size.height
                                     if verbose {
@@ -51,9 +51,9 @@ struct HeroView: View {
                     TitleView(width: getTitleViewWidth(geo))
                         .frame(maxWidth: .infinity)
                         .frame(height: getTitleViewHeight(geo))
-                        .background(AppConfig.background(.red))
+                        .background(Config.background(.red))
                         .frame(alignment: .center)
-                        .background(AppConfig.background(.indigo))
+                        .background(Config.background(.indigo))
                 }
             }
             .onChange(of: geo.size.width) {
@@ -81,15 +81,15 @@ struct HeroView: View {
         var width = geo.size.width
 
         // 如果高度特别小，宽度也减小一些以让字体变小
-        if getTitleViewHeight(geo) <= AppConfig.minHeight * 1.5 {
-            width = AppConfig.minWidth
+        if getTitleViewHeight(geo) <= Config.minHeight * 1.5 {
+            width = Config.minWidth
         }
 
         return width
     }
 
     private func shouldShowAlbum(_ geo: GeometryProxy) -> Bool {
-        !app.rightAlbumVisible && geo.size.height > AppConfig.minHeightToShowAlbum
+        !app.rightAlbumVisible && geo.size.height > Config.minHeightToShowAlbum
     }
 }
 

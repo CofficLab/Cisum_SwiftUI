@@ -57,7 +57,7 @@ class Audio {
 
     var verbose: Bool { Self.verbose }
     var ext: String { url.pathExtension }
-    var isSupported: Bool { AppConfig.supportedExtensions.contains(ext.lowercased()) }
+    var isSupported: Bool { Config.supportedExtensions.contains(ext.lowercased()) }
     var isNotSupported: Bool { !isSupported }
     // 未解决的问题：ios上文件APP中能看到，但FileManager.default.exits返回false
     var isExists: Bool { fileManager.fileExists(atPath: url.path) || true }
@@ -200,5 +200,5 @@ extension Audio {
     RootView {
         ContentView()
     }
-    .modelContainer(AppConfig.getContainer)
+    .modelContainer(Config.getContainer)
 }

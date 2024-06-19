@@ -3,7 +3,7 @@ import SwiftUI
 
 // MARK: 开发调试
 
-extension AppConfig {
+extension Config {
     static var debug: Bool {
         #if DEBUG
         true

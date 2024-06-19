@@ -25,7 +25,7 @@ enum PlayMode: String {
             mode = .Loop
         }
 
-        AppConfig.setCurrentMode(mode)
+        Config.setCurrentMode(mode)
         return mode
     }
 }

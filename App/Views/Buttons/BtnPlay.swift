@@ -9,7 +9,7 @@ struct BtnPlay: View {
 
     var audio: Audio
     var autoResize = true
-    var player: PlayMan { audioManager.player }
+    var player: PlayMan { audioManager.playMan }
 
     var body: some View {
         ControlButton(

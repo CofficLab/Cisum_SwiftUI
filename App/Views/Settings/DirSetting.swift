@@ -1,14 +1,14 @@
 import SwiftUI
 
 struct DirSetting: View {
-    let disk = AppConfig.disk
+    let disk = Config.disk
     
     var body: some View {
         GroupBox {
             HStack {
                 VStack(alignment: .leading, spacing: 5) {
                     Text("仓库目录").font(.headline)
-                    if AppConfig.isStoreIniCloud {
+                    if Config.isStoreIniCloud {
                         Text("是 iCloud 云盘目录，会保持同步").font(.footnote)
                     } else {
                         Text("是本地目录，不会同步").font(.footnote)
@@ -55,7 +55,7 @@ struct DirSetting: View {
     RootView {
         SettingView()
             .background(.background)
-    }.modelContainer(AppConfig.getContainer)
+    }.modelContainer(Config.getContainer)
         .frame(height: 1200)
 }
 

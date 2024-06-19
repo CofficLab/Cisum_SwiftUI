@@ -6,7 +6,7 @@ struct CoverDirSetting: View {
             HStack {
                 VStack(alignment: .leading, spacing: 5) {
                     Text("封面图目录").font(.headline)
-                    Text(AppConfig.coverDir.absoluteString)
+                    Text(Config.coverDir.absoluteString)
                         .font(.subheadline)
                         .opacity(0.8)
                     Text("根据音频文件自动生成封面图").font(.footnote)
@@ -14,7 +14,7 @@ struct CoverDirSetting: View {
                 Spacer()
                 #if os(macOS)
                     Button(action: {
-                        FileHelper.openFolder(url: AppConfig.coverDir)
+                        FileHelper.openFolder(url: Config.coverDir)
                     }, label: {
                         Label(title: {
                             Text("打开")

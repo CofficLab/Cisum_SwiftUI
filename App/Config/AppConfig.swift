@@ -3,8 +3,8 @@ import SwiftUI
 import SwiftData
 import OSLog
 
-enum AppConfig {
-    static var label = "🧲 AppConfig::"
+enum Config {
+    static var label = "🧲 Config::"
     static let id = "com.yueyi.cisum"
     static let fileManager = FileManager.default
     static let logger = Logger.self

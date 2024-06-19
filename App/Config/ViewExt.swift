@@ -1,7 +1,7 @@
 import Foundation
 import SwiftUI
 
-extension AppConfig {
+extension Config {
     // MARK: Root Background
     
     static var rootBackground: some View {
@@ -24,7 +24,7 @@ extension AppConfig {
     }
 }
 
-extension AppConfig {
+extension Config {
     static var isDesktop: Bool {
         #if os(macOS)
             true
@@ -46,26 +46,26 @@ extension AppConfig {
     static var showDB: Bool = false
 
     static func setShowDB(_ value: Bool) {
-        // os_log("\(Logger.isMain)⚙️ AppConfig::setCurrentAudio \(audio.title)")
-        AppConfig.showDB = value
+        // os_log("\(Logger.isMain)⚙️ Config::setCurrentAudio \(audio.title)")
+        Config.showDB = value
     }
 }
 
 // MARK: 背景
 
-extension AppConfig {
+extension Config {
     /// 开发时如果不想显示背景，改成true
     static var noBackground = true
 
     /// 生产环境一定不会显示背景
     static func background(_ color: Color = .red) -> Color {
-        AppConfig.debug && !noBackground ? color.opacity(0.3) : Color.clear
+        Config.debug && !noBackground ? color.opacity(0.3) : Color.clear
     }
 }
 
 // MARK: 响应式配置
 
-extension AppConfig {
+extension Config {
     /// 上半部分播放控制的最小高度
     static var controlViewMinHeight: CGFloat = Self.minHeight
     static var databaseViewHeightMin: CGFloat = 200

@@ -16,7 +16,7 @@ struct OperationView: View {
             Spacer()
             if let audio = audio {
                 BtnLike(audio: audio, autoResize: true)
-                if AppConfig.isDesktop {
+                if Config.isDesktop {
                     BtnShowInFinder(url: audio.url, autoResize: true)
                 }
                 BtnDel(audios: [audio], autoResize: true)
@@ -51,7 +51,7 @@ struct OperationView: View {
 #Preview("APP") {
     RootView {
         ContentView()
-    }.modelContainer(AppConfig.getContainer)
+    }.modelContainer(Config.getContainer)
 }
 
 #Preview("Layout") {

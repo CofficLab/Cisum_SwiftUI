@@ -8,7 +8,7 @@ struct RowTask: View {
 
     var task: CopyTask
     var background: Color {
-        hovered ? AppConfig.getBackground.opacity(0.9) : .clear
+        hovered ? Config.getBackground.opacity(0.9) : .clear
     }
 
     init(_ task: CopyTask) {
@@ -36,7 +36,7 @@ struct RowTask: View {
         .onHover(perform: { hovered = $0 })
         .frame(maxHeight: .infinity)
         .contextMenu(menuItems: {
-            if AppConfig.isDesktop {
+            if Config.isDesktop {
                 BtnShowInFinder(url: task.url, autoResize: false)
             }
             Divider()
@@ -48,5 +48,5 @@ struct RowTask: View {
 #Preview {
     RootView {
         ContentView()
-    }.modelContainer(AppConfig.getContainer)
+    }.modelContainer(Config.getContainer)
 }

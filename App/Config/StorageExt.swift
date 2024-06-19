@@ -1,9 +1,9 @@
 import Foundation
 import SwiftUI
 
-extension AppConfig {
+extension Config {
     static var disk: DiskContact {
-        if AppConfig.iCloudEnabled {
+        if Config.iCloudEnabled {
             DiskiCloud()
         } else {
             DiskLocal()

@@ -15,7 +15,7 @@ struct CloudSetting: View {
                         Text("iCloud").font(.headline)
 
                         ZStack {
-                            if AppConfig.iCloudEnabled {
+                            if Config.iCloudEnabled {
                                 Text("会占用 iCloud 存储空间并在设备间保持同步")
                             } else {
                                 VStack(alignment: .leading) {
@@ -35,8 +35,8 @@ struct CloudSetting: View {
         }
         .background(BackgroundView.type1.opacity(0.1))
         .onAppear {
-            iCloudEnabled = AppConfig.iCloudEnabled
-            AppConfig.ifLogged { result in
+            iCloudEnabled = Config.iCloudEnabled
+            Config.ifLogged { result in
                 iCloudLogged = result
 
                 if !result {
@@ -45,7 +45,7 @@ struct CloudSetting: View {
             }
         }
         .onChange(of: iCloudEnabled, {
-            iCloudEnabled ? AppConfig.enableiCloud() : AppConfig.disableiCloud()
+            iCloudEnabled ? Config.enableiCloud() : Config.disableiCloud()
             
             Task.detached(operation: {
                 DB.migrate()
@@ -63,6 +63,6 @@ struct CloudSetting: View {
     RootView {
         SettingView()
             .background(.background)
-    }.modelContainer(AppConfig.getContainer)
+    }.modelContainer(Config.getContainer)
         .frame(height: 1200)
 }

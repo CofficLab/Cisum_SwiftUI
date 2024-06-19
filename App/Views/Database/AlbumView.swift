@@ -13,8 +13,8 @@ struct AlbumView: View {
     @State var downloadingPercent: Double = 0
 
     var e = EventManager()
-    var main = AppConfig.mainQueue
-    var bg = AppConfig.bgQueue
+    var main = Config.mainQueue
+    var bg = Config.bgQueue
     var asset: PlayAsset
     var url: URL
     var forPlaying: Bool = false
@@ -24,7 +24,7 @@ struct AlbumView: View {
     var isNotDownloaded: Bool { !isDownloaded }
     var shape: RoundedRectangle {
         if forPlaying {
-            if AppConfig.isiOS {
+            if Config.isiOS {
                 RoundedRectangle(cornerSize: CGSize(width: 20, height: 10))
             } else {
                 RoundedRectangle(cornerSize: CGSize(width: 0, height: 0))
@@ -191,13 +191,13 @@ struct AlbumView: View {
             AlbumView.makeProgressView()
             Text("1")
         }.frame(
-            width: AppConfig.isDesktop ? 36 : 36,
-            height: AppConfig.isDesktop ? 36 : 36
+            width: Config.isDesktop ? 36 : 36,
+            height: Config.isDesktop ? 36 : 36
         ).background(.red.opacity(0.2))
         HStack {
             AlbumView.makeProgressView().frame(
-                width: AppConfig.isDesktop ? 48 : 36,
-                height: AppConfig.isDesktop ? 36 : 36
+                width: Config.isDesktop ? 48 : 36,
+                height: Config.isDesktop ? 36 : 36
             )
             Text("2")
         }.background(.blue.opacity(0.2))

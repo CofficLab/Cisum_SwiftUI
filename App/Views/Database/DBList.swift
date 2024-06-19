@@ -61,7 +61,7 @@ struct DBList: View {
                             }
                         }
                         Spacer()
-                        if AppConfig.isNotDesktop {
+                        if Config.isNotDesktop {
                             BtnAdd()
                                 .font(.title2)
                                 .labelStyle(.iconOnly)

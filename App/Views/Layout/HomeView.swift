@@ -14,8 +14,8 @@ struct HomeView: View {
     @State private var autoResizing = false
 
     var showDB: Bool { appManager.showDB }
-    var controlViewHeightMin = AppConfig.controlViewMinHeight
-    var databaseViewHeightMin = AppConfig.databaseViewHeightMin
+    var controlViewHeightMin = Config.controlViewMinHeight
+    var databaseViewHeightMin = Config.databaseViewHeightMin
     var verbose = false
     var label: String { "\(Logger.isMain)\(Self.label) "}
     
@@ -29,7 +29,7 @@ struct HomeView: View {
         GeometryReader { geo in
             VStack(spacing: 0) {                
                 ControlView()
-                    .frame(height: showDB ? AppConfig.controlViewMinHeight : geo.size.height)
+                    .frame(height: showDB ? Config.controlViewMinHeight : geo.size.height)
 
                 if showDB {
                     MoreView()
@@ -51,7 +51,7 @@ struct HomeView: View {
             .onChange(of: geo.size.height) {
                 if autoResizing == false {
                     // 说明是用户主动调整
-                    self.height = AppConfig.getWindowHeight()
+                    self.height = Config.getWindowHeight()
                     // os_log("\(Logger.isMain)\(self.label)Height=\(self.height)")
                 }
 
@@ -64,7 +64,7 @@ struct HomeView: View {
             .onAppear {
                 if autoResizing == false {
                     // 说明是用户主动调整
-                    self.height = AppConfig.getWindowHeight()
+                    self.height = Config.getWindowHeight()
                     if verbose {
                         os_log("\(self.label)Height=\(self.height)")
                     }
@@ -86,7 +86,7 @@ extension HomeView {
         self.autoResizing = true
         
         if verbose {
-            AppConfig.increseHeight(databaseViewHeight - space)
+            Config.increseHeight(databaseViewHeight - space)
         }
     }
 
@@ -96,7 +96,7 @@ extension HomeView {
         }
         
         self.autoResizing = true
-        AppConfig.setHeight(self.height)
+        Config.setHeight(self.height)
     }
 }
 

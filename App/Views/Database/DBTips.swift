@@ -4,7 +4,7 @@ struct DBTips: View {
     @EnvironmentObject var appManager: AppManager
 
     var supportedFormats: String {
-        AppConfig.supportedExtensions.joined(separator: ",")
+        Config.supportedExtensions.joined(separator: ",")
     }
 
     var body: some View {
@@ -14,7 +14,7 @@ struct DBTips: View {
                     HStack {
                         Image(systemName: "info.circle.fill")
                             .foregroundStyle(.yellow)
-                        Text(AppConfig.isDesktop ? "将音乐文件拖到这里可添加" : "仓库为空")
+                        Text(Config.isDesktop ? "将音乐文件拖到这里可添加" : "仓库为空")
                             .font(.title3)
                             .foregroundStyle(.white)
                     }
@@ -24,7 +24,7 @@ struct DBTips: View {
 
                     #if os(macOS)
                         Button(action: {
-                            FileHelper.openFolder(url: AppConfig.disk.audiosDir)
+                            FileHelper.openFolder(url: Config.disk.audiosDir)
                         }, label: {
                             Label(title: {
                                 Text("打开仓库目录")
@@ -34,7 +34,7 @@ struct DBTips: View {
                         })
                     #endif
 
-                    if AppConfig.isNotDesktop {
+                    if Config.isNotDesktop {
                         BtnAdd().buttonStyle(.bordered).foregroundStyle(.white)
                     }
                 }
@@ -52,5 +52,5 @@ struct DBTips: View {
 #Preview {
     RootView {
         DBView()
-    }.modelContainer(AppConfig.getContainer)
+    }.modelContainer(Config.getContainer)
 }

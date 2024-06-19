@@ -1,19 +1,19 @@
 import Foundation
 import SwiftUI
 
-extension AppConfig {
+extension Config {
     @AppStorage("App.iCloudEnabled")
     static var iCloudEnabled: Bool = true
     
     static func enableiCloud() {
-        AppConfig.iCloudEnabled = true
+        Config.iCloudEnabled = true
     }
     
     static func disableiCloud() {
-        AppConfig.iCloudEnabled = false
+        Config.iCloudEnabled = false
     }
     
     static var isStoreIniCloud: Bool {
-        iCloudHelper.isCloudPath(url: AppConfig.disk.audiosDir)
+        iCloudHelper.isCloudPath(url: Config.disk.audiosDir)
     }
 }

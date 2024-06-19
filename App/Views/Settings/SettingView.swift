@@ -12,18 +12,18 @@ struct SettingView: View {
                 CloudSetting().padding(.horizontal)
                 VersionSetting().padding(.horizontal)
                 
-                if AppConfig.debug {
+                if Config.debug {
                     PlayTime().padding(.horizontal)
                 }
                 
-                if AppConfig.isDebug {
+                if Config.isDebug {
 //                    DeviceSetting()
 //                        .padding(.horizontal)
 //                        .padding(.bottom)
                 }
             }
         }
-        .modelContainer(AppConfig.getSyncedContainer)
+        .modelContainer(Config.getSyncedContainer)
     }
 }
 
@@ -32,7 +32,7 @@ struct SettingView: View {
         SettingView()
             .background(.background)
     }
-    .modelContainer(AppConfig.getContainer)
+    .modelContainer(Config.getContainer)
     .frame(height: 800)
 }
 

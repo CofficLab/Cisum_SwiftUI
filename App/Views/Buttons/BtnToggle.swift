@@ -10,7 +10,7 @@ struct BtnToggle: View {
     @State private var hovered: Bool = false
     @State private var systemImage = "play.fill"
 
-    var player: PlayMan { audioManager.player }
+    var player: PlayMan { audioManager.playMan }
     var title: String { player.isPlaying ? "播放" : "暂停" }
     var autoResize = false
 

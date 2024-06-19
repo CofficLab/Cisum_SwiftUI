@@ -15,7 +15,7 @@ struct DBRow: View {
             return Color.accentColor
         }
 
-        return hovered ? AppConfig.getBackground.opacity(0.9) : .clear
+        return hovered ? Config.getBackground.opacity(0.9) : .clear
     }
 
     init(_ audio: Audio) {
@@ -27,8 +27,8 @@ struct DBRow: View {
             HStack(alignment: .center) {
                 AlbumView(audio.toPlayAsset())
                     .frame(
-                        width: AppConfig.isDesktop ? 36 : 36,
-                        height: AppConfig.isDesktop ? 36 : 36
+                        width: Config.isDesktop ? 36 : 36,
+                        height: Config.isDesktop ? 36 : 36
                     )
                 VStack(spacing: 0) {
                     HStack {
@@ -70,7 +70,7 @@ struct DBRow: View {
             Divider()
             BtnDownload(audio: audio)
             BtnEvict(audio: audio)
-            if AppConfig.isDesktop {
+            if Config.isDesktop {
                 BtnShowInFinder(url: audio.url, autoResize: false)
             }
             Divider()
@@ -83,5 +83,5 @@ struct DBRow: View {
 #Preview {
     RootView {
         ContentView()
-    }.modelContainer(AppConfig.getContainer)
+    }.modelContainer(Config.getContainer)
 }

@@ -6,8 +6,8 @@ struct RootView<Content>: View where Content: View {
     private var verbose = true
     private var label: String { "\(Logger.isMain)🌳 RootView::" }
 
-    var db = DB(AppConfig.getContainer, reason: "RootView")
-    var dbSynced = DBSynced(AppConfig.getSyncedContainer)
+    var db = DB(Config.getContainer, reason: "RootView")
+    var dbSynced = DBSynced(Config.getSyncedContainer)
     var appManager = AppManager()
     var storeManager = StoreManager()
 
@@ -17,14 +17,14 @@ struct RootView<Content>: View where Content: View {
 
     var body: some View {
         ZStack {
-            AppConfig.rootBackground
+            Config.rootBackground
 
             content
                 .environmentObject(PlayManager(db: db))
                 .environmentObject(appManager)
                 .environmentObject(storeManager)
                 .environmentObject(db)
-                .frame(minWidth: AppConfig.minWidth, minHeight: AppConfig.minHeight)
+                .frame(minWidth: Config.minWidth, minHeight: Config.minHeight)
                 .blendMode(.normal)
                 .task {
                     if verbose {
@@ -39,7 +39,7 @@ struct RootView<Content>: View where Content: View {
                 }
                 // 等content出现后，再执行后台任务
                 .task(priority: .background) {
-                    AppConfig.bgQueue.asyncAfter(deadline: .now() + 0) {
+                    Config.bgQueue.asyncAfter(deadline: .now() + 0) {
                         if verbose {
                             os_log("\(self.label)执行后台任务")
                         }
@@ -81,7 +81,7 @@ struct RootView<Content>: View where Content: View {
 
     func onAppOpen() {
         Task {
-            let uuid = AppConfig.getDeviceId()
+            let uuid = Config.getDeviceId()
             let audioCount = await db.getTotalOfAudio()
 
             await dbSynced.saveDeviceData(uuid: uuid, audioCount: audioCount)

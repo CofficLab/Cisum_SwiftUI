@@ -1,8 +1,8 @@
 import SwiftUI
 
 struct LayoutView: View {
-    var minWidth = AppConfig.minWidth
-    var minHeight = AppConfig.minHeight
+    var minWidth = Config.minWidth
+    var minHeight = Config.minHeight
     var width: CGFloat?
     var height: CGFloat?
     var device: Device?
@@ -26,7 +26,7 @@ struct LayoutView: View {
                 // 默认
                 forManyDevices()
             }
-        }.modelContainer(AppConfig.getContainer)
+        }.modelContainer(Config.getContainer)
     }
 
     func forManyDevices() -> some View {
@@ -75,7 +75,7 @@ struct LayoutView: View {
 
             Spacer()
         }
-        .modelContainer(AppConfig.getContainer)
+        .modelContainer(Config.getContainer)
         .frame(width: width + 100)
         .frame(height: 800)
     }

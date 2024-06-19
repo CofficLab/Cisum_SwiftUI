@@ -7,13 +7,13 @@ struct DebugCommand: Commands {
 
         #if os(macOS)
         CommandMenu("调试") {
-            Button("打开App Support目录") { openUrl(AppConfig.appSupportDir) }
-            Button("打开容器目录") { openUrl(AppConfig.localContainer) }
-            Button("打开文档目录") { openUrl(AppConfig.localDocumentsDir) }
-            Button("打开数据库目录") { openUrl(AppConfig.localDocumentsDir) }
-            Button("打开iCloud Documents") { openUrl(AppConfig.cloudDocumentsDir) }
-            Button("打开音频目录") { openUrl(AppConfig.disk.audiosDir) }
-            Button("打开封面图目录") { openUrl(AppConfig.coverDir) }
+            Button("打开App Support目录") { openUrl(Config.appSupportDir) }
+            Button("打开容器目录") { openUrl(Config.localContainer) }
+            Button("打开文档目录") { openUrl(Config.localDocumentsDir) }
+            Button("打开数据库目录") { openUrl(Config.localDocumentsDir) }
+            Button("打开iCloud Documents") { openUrl(Config.cloudDocumentsDir) }
+            Button("打开音频目录") { openUrl(Config.disk.audiosDir) }
+            Button("打开封面图目录") { openUrl(Config.coverDir) }
         }
         #endif
     }

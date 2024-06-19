@@ -8,7 +8,7 @@ struct BtnDel: View {
     var audios: [Audio]
     var callback: () -> Void = {}
     var autoResize = false
-    var player: PlayMan { audioManager.player }
+    var playMan: PlayMan { audioManager.playMan }
 
     var body: some View {
         ControlButton(
@@ -20,14 +20,14 @@ struct BtnDel: View {
                 Task {
                     //appManager.stateMessage = "正在删除 \(audios.count) 个"
 
-                    let isPlaying = audioManager.player.isPlaying
+                    let isPlaying = audioManager.playMan.isPlaying
                     let next = await db.deleteAudios(audios)
 
                     if let asset = audioManager.asset, audios.map({ $0.url }).contains(asset.url) {
                         if isPlaying, let next = next {
-                            player.play(next.toPlayAsset(), reason: "删除了")
+                            playMan.play(next.toPlayAsset(), reason: "删除了")
                         } else {
-                            audioManager.prepare(next?.toPlayAsset(), reason: "删除了")
+                            playMan.prepare(next?.toPlayAsset())
                         }
                     }
 

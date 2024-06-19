@@ -57,7 +57,7 @@ struct TitleView: View {
 #Preview("APP") {
     RootView {
         ContentView()
-    }.modelContainer(AppConfig.getContainer)
+    }.modelContainer(Config.getContainer)
 }
 
 #Preview("Layout") {

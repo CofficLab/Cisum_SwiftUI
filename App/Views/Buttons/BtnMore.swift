@@ -9,7 +9,7 @@ struct BtnMore: View {
 
     var audio: Audio
     var autoResize = true
-    var player: PlayMan { audioManager.player }
+    var player: PlayMan { audioManager.playMan }
 
     var body: some View {
         ControlButton(
@@ -24,7 +24,7 @@ struct BtnMore: View {
                 Divider()
                 BtnDownload(audio: audio)
                 BtnEvict(audio: audio)
-                if AppConfig.isDesktop {
+                if Config.isDesktop {
                     BtnShowInFinder(url: audio.url, autoResize: false)
                 }
                 Divider()

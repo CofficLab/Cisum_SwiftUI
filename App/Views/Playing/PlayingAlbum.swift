@@ -13,7 +13,7 @@ struct PlayingAlbum: View {
                 Spacer()
             }
         } else {
-            if AppConfig.isiOS {
+            if Config.isiOS {
                 view.padding(.horizontal)
             } else {
                 view

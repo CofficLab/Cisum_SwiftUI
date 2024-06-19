@@ -17,7 +17,7 @@ struct SliderView: View {
         .autoconnect()
 
     var geo: GeometryProxy
-    var player: PlayMan { audioManager.player }
+    var player: PlayMan { audioManager.playMan }
     var duration: TimeInterval { player.duration }
     var current: String { player.currentTimeDisplay }
     var left: String { player.leftTimeDisplay }
@@ -44,7 +44,7 @@ struct SliderView: View {
         .onReceive(timer) { _ in
             if audioManager.error != nil {
                 disable()
-            } else if audioManager.player.duration > 0 && !isEditing {
+            } else if audioManager.playMan.duration > 0 && !isEditing {
                 enable()
             }
             

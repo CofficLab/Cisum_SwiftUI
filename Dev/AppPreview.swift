@@ -5,7 +5,7 @@ struct AppPreview: View {
         RootView {
             ContentView()
         }
-        .modelContainer(AppConfig.getContainer)
+        .modelContainer(Config.getContainer)
     }
 }
 

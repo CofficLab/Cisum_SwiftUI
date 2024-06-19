@@ -92,6 +92,10 @@ class PlayMan: NSObject {
         os_log("\(PlayMan.label)Prev")
     }
     
+    var onToggleLike: () -> Void = {
+        os_log("\(PlayMan.label)ToggleLike")
+    }
+    
     // MARK: 初始化
     
     init(verbose: Bool = true) {
@@ -130,7 +134,11 @@ extension PlayMan {
         case .Playing, .Error:
             break
         case .Ready, .Paused, .Stopped, .Finished:
-            state = .Playing(asset!)
+            if let asset = asset {
+                state = .Playing(asset)
+            } else {
+                state = .Error(SmartError.NoAudioInList, nil)
+            }
         }
     }
 
@@ -266,29 +274,18 @@ extension PlayMan {
     }
 
     private func setPlayingInfo(verbose: Bool = false) {
-        let asset = self.asset
-        let player = self.player
-        let isPlaying = player.isPlaying
         let center = MPNowPlayingInfoCenter.default()
-
-        let artist = "乐音APP"
-        var title = ""
-        var duration: TimeInterval = 0
-        var currentTime: TimeInterval = 0
-        var image = PlayAsset.defaultImage
-
-        if let asset = asset {
-            title = asset.title
-            duration = player.duration
-            currentTime = player.currentTime
-            image = asset.getMediaCenterImage()
-        }
+        let artist = "Cisum"
+        let title = asset?.title ?? ""
+        let duration: TimeInterval = self.duration
+        let currentTime: TimeInterval = self.currentTime
+        let image = asset?.getMediaCenterImage() ?? PlayAsset.defaultImage
         
         if verbose {
             os_log("\(self.label)📱📱📱 Update -> \(self.state.des)")
             os_log("\(self.label)📱📱📱 Update -> Title: \(title)")
             os_log("\(self.label)📱📱📱 Update -> Duration: \(duration)")
-            os_log("\(self.label)📱📱📱 Update -> Playing: \(isPlaying)")
+            os_log("\(self.label)📱📱📱 Update -> Playing: \(self.isPlaying)")
         }
 
         center.playbackState = isPlaying ? .playing : .paused
@@ -328,14 +325,14 @@ extension PlayMan {
         }
 
         c.pauseCommand.addTarget { _ in
-            self.player.pause()
+            self.pause()
 
             return .success
         }
 
         c.playCommand.addTarget { _ in
             os_log("\(Logger.isMain)\(self.label)播放")
-//            self.player.resume()
+            self.resume()
 
             return .success
         }
@@ -349,16 +346,8 @@ extension PlayMan {
         }
 
         c.likeCommand.addTarget { _ in
-            os_log("\(Logger.isMain)\(self.label)点击了喜欢按钮")
-
-//            if let audio = self.player.asset?.toAudio() {
-//                Task {
-//                    await self.db.toggleLike(audio)
-//                }
-//
-//                self.c.likeCommand.isActive = audio.dislike
-//                self.c.dislikeCommand.isActive = audio.like
-//            }
+            os_log("\(self.label)点击了喜欢按钮")
+            self.onToggleLike()
 
             return .success
         }
@@ -385,7 +374,7 @@ extension PlayMan {
 
             // 在这里处理当前的播放进度时间
             os_log("Current playback position: \(positionTime)")
-//            self.player.goto(positionTime)
+            self.goto(positionTime)
 
             return .success
         }

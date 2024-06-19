@@ -2,7 +2,7 @@ import CloudKit
 import OSLog
 import Foundation
 
-extension AppConfig {
+extension Config {
     static func ifLogged(_ callback: @escaping (_ hasLoggedIn: Bool) -> Void) {
         os_log("\(Self.label) ☁️ 检查是否已经登录 iCloud")
         CKContainer.default().accountStatus { status, error in

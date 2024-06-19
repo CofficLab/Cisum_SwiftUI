@@ -8,7 +8,7 @@ class DiskiCloud: ObservableObject, DiskContact {
     var fileManager = FileManager.default
     var cloudHandler = CloudHandler()
     var audiosDir: URL {
-        let url = AppConfig.cloudDocumentsDir.appendingPathComponent(AppConfig.audiosDirName)
+        let url = Config.cloudDocumentsDir.appendingPathComponent(Config.audiosDirName)
 
         if !fileManager.fileExists(atPath: url.path) {
             do {
@@ -21,7 +21,7 @@ class DiskiCloud: ObservableObject, DiskContact {
 
         return url
     }
-    var bg = AppConfig.bgQueue
+    var bg = Config.bgQueue
     var label: String { "\(Logger.isMain)\(Self.label)" }
     var verbose = true
     var onUpdated: (_ items: DiskFileGroup) -> Void = { items in
@@ -32,7 +32,7 @@ class DiskiCloud: ObservableObject, DiskContact {
         let url = audio.url
         let ext = audio.ext
         let fileName = audio.title
-        let trashDir = AppConfig.trashDir
+        let trashDir = Config.trashDir
         var trashUrl = trashDir.appendingPathComponent(url.lastPathComponent)
         var times = 1
         

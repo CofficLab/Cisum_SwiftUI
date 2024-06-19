@@ -1,7 +1,7 @@
 import Foundation
 import SwiftUI
 
-extension AppConfig {
+extension Config {
     // MARK: 当前Audio
     
     @AppStorage("App.CurrentAudio")
@@ -12,13 +12,13 @@ extension AppConfig {
     @AppStorage("App.CurrentMode")
     static var currentMode: String = PlayMode.Order.rawValue
     
-    static func setCurrentURL(_ url: URL) {
-        //os_log("\(Logger.isMain)⚙️ AppConfig::setCurrentAudio \(audio.title)")
-        AppConfig.currentAudio = url
+    static func setCurrentURL(_ url: URL?) {
+        //os_log("\(Logger.isMain)⚙️ Config::setCurrentAudio \(audio.title)")
+        Config.currentAudio = url
     }
     
     static func setCurrentMode(_ mode: PlayMode) {
-        //os_log("\(Logger.isMain)⚙️ AppConfig::setCurrentAudio \(audio.title)")
-        AppConfig.currentMode = mode.rawValue
+        //os_log("\(Logger.isMain)⚙️ Config::setCurrentAudio \(audio.title)")
+        Config.currentMode = mode.rawValue
     }
 }

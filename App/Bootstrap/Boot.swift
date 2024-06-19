@@ -18,11 +18,11 @@ struct Boot: App {
                 RootView {
                     ContentView()
                 }
-                .frame(minWidth: AppConfig.minWidth, minHeight: AppConfig.minHeight)
+                .frame(minWidth: Config.minWidth, minHeight: Config.minHeight)
             }
             .windowStyle(.hiddenTitleBar)
-            .defaultSize(width: AppConfig.minWidth, height: AppConfig.defaultHeight)
-            .modelContainer(AppConfig.getContainer)
+            .defaultSize(width: Config.minWidth, height: Config.defaultHeight)
+            .modelContainer(Config.getContainer)
             .commands {
                 DebugCommand()
             }
@@ -32,7 +32,7 @@ struct Boot: App {
                     ContentView()
                 }
             }
-            .modelContainer(AppConfig.getContainer)
+            .modelContainer(Config.getContainer)
         #endif
     }
 }

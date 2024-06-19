@@ -7,7 +7,6 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-/// 管理播放器的播放、暂停、上一曲、下一曲等操作
 class PlayManager: NSObject, ObservableObject {
     static var label: String = "🔊 AudioManager::"
 
@@ -15,13 +14,13 @@ class PlayManager: NSObject, ObservableObject {
     @Published var mode: PlayMode = .Order
     @Published var asset: PlayAsset? = nil
 
-    private var bg = AppConfig.bgQueue
-    private var main = AppConfig.mainQueue
+    private var bg = Config.bgQueue
+    private var main = Config.mainQueue
     private var label: String { Logger.isMain + PlayManager.label }
 
-    var db: DB = .init(AppConfig.getContainer, reason: "AudioManager")
+    var db: DB = .init(Config.getContainer, reason: "AudioManager")
     var isEmpty: Bool { asset == nil }
-    var player = PlayMan()
+    var playMan = PlayMan()
 
     init(db: DB, verbose: Bool = true) {
         if verbose {
@@ -36,16 +35,20 @@ class PlayManager: NSObject, ObservableObject {
             restore()
         }
 
-        player.onStateChange = { state in
+        playMan.onStateChange = { state in
             self.onStateChanged(state)
         }
         
-        player.onNext = {
+        playMan.onNext = {
             self.next(manual: true)
         }
         
-        player.onPrev = {
+        playMan.onPrev = {
             self.prev(manual: true)
+        }
+        
+        playMan.onToggleLike = {
+            self.toggleLike()
         }
     }
 
@@ -55,10 +58,12 @@ class PlayManager: NSObject, ObservableObject {
         }
 
         main.async {
-            self.asset = self.player.asset
+            self.asset = state.getAsset()
             self.error = nil
-        }
 
+            Config.setCurrentURL(state.getAsset()?.url)
+        }
+        
         switch state {
         case let .Playing(asset):
             Task {
@@ -66,12 +71,10 @@ class PlayManager: NSObject, ObservableObject {
             }
         case .Finished:
             next()
-        case .Stopped:
-            break
         case let .Error(error, _):
-            main.async {
-                self.error = error
-            }
+            self.error = error
+        case .Stopped: 
+            break
         default:
             break
         }
@@ -92,8 +95,8 @@ class PlayManager: NSObject, ObservableObject {
             os_log("\(self.label)试着恢复上次播放的音频")
         }
         
-        let currentMode = PlayMode(rawValue: AppConfig.currentMode)
-        let currentAudioId = AppConfig.currentAudio
+        let currentMode = PlayMode(rawValue: Config.currentMode)
+        let currentAudioId = Config.currentAudio
         mode = currentMode ?? mode
         
         if let currentAudioId = currentAudioId {
@@ -103,9 +106,9 @@ class PlayManager: NSObject, ObservableObject {
             
             Task {
                 if let currentAudio = await self.db.findAudio(currentAudioId) {
-                    self.prepare(currentAudio.toPlayAsset(), reason: "初始化，恢复上次播放的")
+                    playMan.prepare(currentAudio.toPlayAsset())
                 } else if let current = await self.db.first() {
-                    self.prepare(current.toPlayAsset(), reason: "初始化，播放第一个")
+                    playMan.prepare(current.toPlayAsset())
                 } else {
                     os_log("\(self.label)restore nothing to play")
                 }
@@ -113,22 +116,6 @@ class PlayManager: NSObject, ObservableObject {
         } else {
             if verbose {
                 os_log("\(self.label)无上次播放的音频")
-            }
-        }
-    }
-
-    // MARK: 准备播放
-
-    func prepare(_ asset: PlayAsset?, reason: String, verbose: Bool = true) {
-        if verbose {
-            os_log("\(self.label)Prepare \(asset?.title ?? "nil") 🐛 \(reason)")
-        }
-
-        player.prepare(asset)
-
-        Task {
-            if let a = asset {
-                AppConfig.setCurrentURL(a.url)
             }
         }
     }
@@ -147,10 +134,10 @@ class PlayManager: NSObject, ObservableObject {
 
         Task {
             if let i = await self.db.pre(asset?.url) {
-                if self.player.isPlaying {
-                    self.player.play(i.toPlayAsset(), reason: "在播放时触发了上一首")
+                if self.playMan.isPlaying {
+                    self.playMan.play(i.toPlayAsset(), reason: "在播放时触发了上一首")
                 } else {
-                    self.prepare(i.toPlayAsset(), reason: "未播放时触发了上一首")
+                    playMan.prepare(i.toPlayAsset())
                 }
             }
         }
@@ -165,7 +152,7 @@ class PlayManager: NSObject, ObservableObject {
         }
 
         if mode == .Loop && manual == false {
-            return player.resume()
+            return playMan.resume()
         }
 
         guard let asset = asset else {
@@ -174,15 +161,26 @@ class PlayManager: NSObject, ObservableObject {
 
         Task {
             if let i = await db.nextOf(asset.url) {
-                if player.isPlaying || manual == false {
-                    player.play(i.toPlayAsset(), reason: "在播放时或自动触发下一首")
+                if playMan.isPlaying || manual == false {
+                    playMan.play(i.toPlayAsset(), reason: "在播放时或自动触发下一首")
                 } else {
-                    prepare(i.toPlayAsset(), reason: "「未播放且手动」触发了下一首")
+                    playMan.prepare(i.toPlayAsset())
                 }
             } else {
-                self.player.stop()
+                self.playMan.stop()
             }
         }
+    }
+    
+    func toggleLike() {
+        //            if let audio = self.player.asset?.toAudio() {
+        //                Task {
+        //                    await self.db.toggleLike(audio)
+        //                }
+        //
+        //                self.c.likeCommand.isActive = audio.dislike
+        //                self.c.dislikeCommand.isActive = audio.like
+        //            }
     }
 }
 
@@ -201,13 +199,13 @@ extension PlayManager {
                 os_log("\(Logger.isMain)\(Self.label)切换播放模式")
             }
 
-//            if mode == .Random {
-//                await self.db.sortRandom(asset?.url)
-//            }
-//
-//            if mode == .Order {
-//                await db.sort(asset?.url)
-//            }
+            if mode == .Random {
+                await db.sortRandom(asset?.url as URL?)
+            }
+
+            if mode == .Order {
+                await db.sort(asset?.url as URL?)
+            }
         }
     }
 }
@@ -215,5 +213,5 @@ extension PlayManager {
 #Preview {
     RootView {
         ContentView()
-    }.modelContainer(AppConfig.getContainer)
+    }.modelContainer(Config.getContainer)
 }

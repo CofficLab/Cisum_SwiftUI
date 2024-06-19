@@ -160,6 +160,14 @@ extension DB {
             os_log(.error, "\(e.localizedDescription)")
         }
     }
+    
+    func sort(_ url: URL?) {
+        if let url = url {
+            sort(findAudio(url))
+        } else {
+            sort(nil as Audio?)
+        }
+    }
 
     func sort(_ sticky: Audio?) {
         os_log("\(Logger.isMain)\(DB.label)Sort")

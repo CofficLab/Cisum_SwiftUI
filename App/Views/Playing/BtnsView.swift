@@ -24,7 +24,7 @@ struct BtnsView: View {
     }
 
     func showRow2(_ geo: GeometryProxy) -> Bool {
-        geo.size.height > AppConfig.minHeight + 10000
+        geo.size.height > Config.minHeight + 10000
     }
 
     func getHeight(_ geo: GeometryProxy) -> CGFloat {

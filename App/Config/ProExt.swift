@@ -1,6 +1,6 @@
 import Foundation
 import SwiftUI
 
-extension AppConfig {
+extension Config {
     static var maxAudioCount = 100
 }

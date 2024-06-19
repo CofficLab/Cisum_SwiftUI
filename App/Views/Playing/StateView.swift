@@ -20,6 +20,7 @@ struct StateView: View {
     var db: DB { audioManager.db }
     var count: Int { audios.count }
     var font: Font { asset == nil ?  .title3 : .callout }
+    var playMan: PlayMan { audioManager.playMan }
 
     var body: some View {
         VStack {
@@ -51,20 +52,20 @@ struct StateView: View {
         .onChange(of: count) {
             Task {
                 if audioManager.asset == nil, let first = await db.first() {
-                    audioManager.prepare(first.toPlayAsset(), reason: "自动设置为第一首")
+                    playMan.prepare(first.toPlayAsset())
                 }
             }
 
             if count == 0 {
-                audioManager.prepare(nil, reason: "数据库个数变成了0")
+                playMan.prepare(nil)
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: Notification.Name.AudioUpdatedNotification), perform: { n in
             let data = n.userInfo as! [String: Audio]
             let audio = data["audio"]!
 
-            if audio.url == audioManager.asset?.url, audio.isDownloaded, audioManager.player.isNotPlaying, audioManager.player.currentTime == 0 {
-                audioManager.prepare(audioManager.asset, reason: "StateView Detected Update")
+            if audio.url == audioManager.asset?.url, audio.isDownloaded, playMan.isNotPlaying, playMan.currentTime == 0 {
+                playMan.prepare(audioManager.asset)
             }
         })
         .onReceive(NotificationCenter.default.publisher(for: Notification.Name.AudiosUpdatedNotification), perform: { notification in
@@ -77,7 +78,7 @@ struct StateView: View {
 
                 if item.url == audioManager.asset?.url {
                     if item.isDownloaded {
-                        audioManager.prepare(audioManager.asset, reason: "StateView Detected Update")
+                        playMan.prepare(audioManager.asset)
                     }
                 }
             }

@@ -123,5 +123,5 @@ extension DB {
 #Preview {
     RootView {
         ContentView()
-    }.modelContainer(AppConfig.getContainer)
+    }.modelContainer(Config.getContainer)
 }

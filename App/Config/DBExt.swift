@@ -4,7 +4,7 @@ import SwiftData
 
 // MARK: 数据库配置
 
-extension AppConfig {
+extension Config {
     /// iCloud容器的ID
     static let containerIdentifier = "iCloud.yueyi.cisum"
     
@@ -36,13 +36,13 @@ extension AppConfig {
     // MARK: 本地的数据库的存储路径
     
     static func getDBUrl() -> URL? {
-        AppConfig.localDocumentsDir?.appendingPathComponent(dbDirName).appendingPathComponent(dbFileName)
+        Config.localDocumentsDir?.appendingPathComponent(dbDirName).appendingPathComponent(dbFileName)
     }
     
     // MARK: 同步的数据库的存储路径
     
     static func getDBSyncedUrl() -> URL? {
-        AppConfig.localDocumentsDir?.appendingPathComponent(syncedDBDirName).appendingPathComponent(syncedDBFileName)
+        Config.localDocumentsDir?.appendingPathComponent(syncedDBDirName).appendingPathComponent(syncedDBFileName)
     }
     
     // MARK: Local Container

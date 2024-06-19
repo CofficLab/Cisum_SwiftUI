@@ -27,7 +27,7 @@ extension DateComponentsFormatter {
 }
 
 extension Logger {
-    static let loggingSubsystem: String = AppConfig.id
+    static let loggingSubsystem: String = Config.id
 
     static let databaseManager = Logger(subsystem: Self.loggingSubsystem, category: "DatabaseManager")
     static let audioManager = Logger(subsystem: Self.loggingSubsystem, category: "AudioManger")

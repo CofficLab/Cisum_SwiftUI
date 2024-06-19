@@ -1,7 +1,7 @@
 import Foundation
 import OSLog
 
-extension AppConfig {
+extension Config {
     static let appSupportDir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).last
     static let localContainer = localDocumentsDir?.deletingLastPathComponent()
     static let localDocumentsDir = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first
@@ -19,7 +19,7 @@ extension AppConfig {
     }
 
     static var coverDir: URL {
-        if let localDocumentsDir = AppConfig.localDocumentsDir {
+        if let localDocumentsDir = Config.localDocumentsDir {
             return localDocumentsDir.appendingPathComponent(coversDirName)
         }
 
@@ -27,7 +27,7 @@ extension AppConfig {
     }
     
     static var trashDir: URL {
-        let url = AppConfig.cloudDocumentsDir.appendingPathComponent(AppConfig.trashDirName)
+        let url = Config.cloudDocumentsDir.appendingPathComponent(Config.trashDirName)
 
         if !fileManager.fileExists(atPath: url.path) {
             do {

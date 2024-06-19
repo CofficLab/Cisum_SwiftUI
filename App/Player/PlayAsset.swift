@@ -37,7 +37,7 @@ struct PlayAsset {
     }
     
     func isSupported() -> Bool {
-        AppConfig.supportedExtensions.contains(ext.lowercased())
+        Config.supportedExtensions.contains(ext.lowercased())
     }
     
     // MARK: 控制中心的图
@@ -69,7 +69,7 @@ extension PlayAsset {
 var coverCacheURL: URL {
     let fileName = url.lastPathComponent
     let imageName = fileName
-    let coversDir = AppConfig.coverDir
+    let coversDir = Config.coverDir
 
     do {
         try fileManager.createDirectory(

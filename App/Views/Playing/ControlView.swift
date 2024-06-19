@@ -33,7 +33,7 @@ struct ControlView: View {
                         StateView()
                             //                        .frame(height: getStateHeight(geo))
                             .frame(maxWidth: .infinity)
-                            .background(AppConfig.background(.red))
+                            .background(Config.background(.red))
                     }
 
                     // MARK: 操作栏
@@ -42,7 +42,7 @@ struct ControlView: View {
                         if showOperationView {
                             OperationView(geo: geo)
                                 .frame(height: getOperationHeight(geo))
-                                .background(AppConfig.background(.white))
+                                .background(Config.background(.white))
                         }
                     }
 
@@ -51,7 +51,7 @@ struct ControlView: View {
                     if showSliderView {
                         SliderView(geo: geo)
                             .padding()
-                            .background(AppConfig.background(.black))
+                            .background(Config.background(.black))
                     }
 
                     // MARK: 控制栏
@@ -60,7 +60,7 @@ struct ControlView: View {
                         BtnsView()
                             .frame(height: getButtonsHeight(geo))
                             .padding(.bottom, getBottomHeight(geo))
-                            .background(AppConfig.background(.red))
+                            .background(Config.background(.red))
                     }
                 }
 
@@ -71,7 +71,7 @@ struct ControlView: View {
                     HStack {
                         Spacer()
                         PlayingAlbum()
-                            .background(AppConfig.background(.yellow))
+                            .background(Config.background(.yellow))
                     }
                     .frame(maxWidth: geo.size.height * 1.3)
                     .onAppear {
@@ -87,8 +87,8 @@ struct ControlView: View {
             .frame(maxHeight: .infinity)
         }
         .foregroundStyle(.white)
-        .ignoresSafeArea(edges: appManager.showDB || AppConfig.isNotDesktop ? .horizontal : .all)
-        .frame(minHeight: AppConfig.controlViewMinHeight)
+        .ignoresSafeArea(edges: appManager.showDB || Config.isNotDesktop ? .horizontal : .all)
+        .frame(minHeight: Config.controlViewMinHeight)
         .onAppear() {
             showHeroView = true
             showSliderView = true
@@ -101,11 +101,11 @@ struct ControlView: View {
     // MARK: 状态栏的高度
 
     private func getStateHeight(_ geo: GeometryProxy) -> CGFloat {
-        if geo.size.height <= AppConfig.minHeight {
+        if geo.size.height <= Config.minHeight {
             return 24
         }
 
-        if geo.size.height <= AppConfig.minWidth + 100 {
+        if geo.size.height <= Config.minWidth + 100 {
             return 36
         }
 
@@ -131,7 +131,7 @@ struct ControlView: View {
     // MARK: 底部Padding的高度
 
     private func getBottomHeight(_ geo: GeometryProxy) -> CGFloat {
-        if AppConfig.hasHomeIndicator() && AppConfig.isNotDesktop && showDB == false {
+        if Config.hasHomeIndicator() && Config.isNotDesktop && showDB == false {
             return 50
         }
 
