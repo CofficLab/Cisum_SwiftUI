@@ -42,7 +42,7 @@ struct PlayAsset {
     // MARK: 控制中心的图
 
     func getMediaCenterImage<T>() -> T {
-        var i: Any = Audio.defaultImage
+        var i: Any = PlayAsset.defaultImage
         if fileManager.fileExists(atPath: coverCacheURL.path) {
             #if os(macOS)
                 i = NSImage(contentsOf: coverCacheURL) ?? i

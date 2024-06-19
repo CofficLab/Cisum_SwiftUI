@@ -11,7 +11,7 @@ extension DB {
         do {
             try self.context.enumerate(Audio.descriptorAll, block: { audio in
                 if self.hasCoverRecord(audio) == false {
-                    audio.getCoverFromMeta({ url in
+                    audio.toPlayAsset().getCoverFromMeta({ url in
                         if url != nil {
                             self.emitCoverUpdated(audio)
                             self.insertCover(audio)

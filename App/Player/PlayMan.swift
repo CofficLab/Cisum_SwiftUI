@@ -265,7 +265,7 @@ extension PlayMan {
         var title = ""
         var duration: TimeInterval = 0
         var currentTime: TimeInterval = 0
-        var image = Audio.defaultImage
+        var image = PlayAsset.defaultImage
 
         if let asset = asset {
             title = asset.title
