@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct BtnToggleDB: View {
-    @EnvironmentObject var audioManager: PlayManager
     @EnvironmentObject var appManager: AppManager
     
     var autoResize = false
@@ -15,6 +14,7 @@ struct BtnToggleDB: View {
 
 #Preview("App") {
     AppPreview()
+        .frame(height: 800)
 }
 
 #Preview("Layout") {

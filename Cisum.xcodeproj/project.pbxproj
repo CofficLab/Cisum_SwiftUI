@@ -46,7 +46,6 @@
 		0B718F0C2AB4349900569762 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B718F0B2AB4349900569762 /* CardView.swift */; };
 		0B73275F2BB5138200DBD922 /* LoggerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B73275E2BB5138200DBD922 /* LoggerHelper.swift */; };
 		0B7842752C1331B400E24869 /* BtnDelDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7842742C1331B400E24869 /* BtnDelDevice.swift */; };
-		0B7F558B2AD2636B0000D72E /* ButtonPlayList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7F558A2AD2636B0000D72E /* ButtonPlayList.swift */; };
 		0B8C369F2BEA011700C47567 /* MetaWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C369E2BEA011700C47567 /* MetaWrapper.swift */; };
 		0B8C36A12BEA0E8800C47567 /* AudioD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C36A02BEA0E8800C47567 /* AudioD.swift */; };
 		0B8C36A32BEA124900C47567 /* AudioR.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C36A22BEA124900C47567 /* AudioR.swift */; };
@@ -83,7 +82,6 @@
 		0BAABEC32BC939D000DF4A31 /* LayoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAABEC22BC939D000DF4A31 /* LayoutView.swift */; };
 		0BAB300E2AB814F70012D837 /* Boot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAB300D2AB814F70012D837 /* Boot.swift */; };
 		0BAB7C3F2AD3BBAA00C5AEB5 /* DBTips.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAB7C3E2AD3BBAA00C5AEB5 /* DBTips.swift */; };
-		0BAB7C412AD3D25200C5AEB5 /* ButtonDismiss.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAB7C402AD3D25200C5AEB5 /* ButtonDismiss.swift */; };
 		0BB427912BED0B38004E6F82 /* DiskLocal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB427902BED0B38004E6F82 /* DiskLocal.swift */; };
 		0BB543F42BE8E38300D7A2B2 /* Duplicates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB543F32BE8E38300D7A2B2 /* Duplicates.swift */; };
 		0BB543F82BE9C64C00D7A2B2 /* PathExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB543F72BE9C64C00D7A2B2 /* PathExt.swift */; };
@@ -92,14 +90,12 @@
 		0BB5871D2AD820FA0071AEBD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0BB5871C2AD820FA0071AEBD /* Assets.xcassets */; };
 		0BB889D22AC042EC004788D5 /* BtnDownload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB889D12AC042EC004788D5 /* BtnDownload.swift */; };
 		0BB889D72AC046B5004788D5 /* BtnShowInFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB889D62AC046B5004788D5 /* BtnShowInFinder.swift */; };
-		0BB889D92AC047B3004788D5 /* BtnTrash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB889D82AC047B3004788D5 /* BtnTrash.swift */; };
 		0BB889DB2AC06C54004788D5 /* DB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB889DA2AC06C54004788D5 /* DB.swift */; };
 		0BBA42192ABD5D9200C0B977 /* BtnMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA42182ABD5D9200C0B977 /* BtnMode.swift */; };
 		0BBA421F2AC1397F00C0B977 /* Centered.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA421E2AC1397F00C0B977 /* Centered.swift */; };
 		0BBA42212AC1802C00C0B977 /* ButtonCancelSelected.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA42202AC1802C00C0B977 /* ButtonCancelSelected.swift */; };
 		0BBA42252AC1813D00C0B977 /* BtnDel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA42242AC1813D00C0B977 /* BtnDel.swift */; };
 		0BBA42272AC2A8B800C0B977 /* BtnAdd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA42262AC2A8B800C0B977 /* BtnAdd.swift */; };
-		0BBA422B2AC2ABAD00C0B977 /* ButtonShowDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA422A2AC2ABAD00C0B977 /* ButtonShowDatabase.swift */; };
 		0BBA422F2AC2BAE300C0B977 /* AlbumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA422E2AC2BAE300C0B977 /* AlbumView.swift */; };
 		0BBAD0722BBC05C6005834A3 /* DBRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBAD0712BBC05C6005834A3 /* DBRow.swift */; };
 		0BBAD0A22BBD413B005834A3 /* DBList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBAD0A12BBD413B005834A3 /* DBList.swift */; };
@@ -134,8 +130,6 @@
 		0BFB38852BCCD26F0055E38B /* BtnLike.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFB38842BCCD26F0055E38B /* BtnLike.swift */; };
 		0BFB38F72BD0BCC20055E38B /* RowTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFB38F62BD0BCC20055E38B /* RowTask.swift */; };
 		0BFDCB802AB86AF300B0D1C8 /* MenuTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFDCB7F2AB86AF300B0D1C8 /* MenuTile.swift */; };
-		0BFDCE582BB01884009198DD /* BtnDestroy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFDCE572BB01884009198DD /* BtnDestroy.swift */; };
-		F507F5132C04681200CB9A3A /* TopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F507F5122C04681200CB9A3A /* TopView.swift */; };
 		F507F5152C04688D00CB9A3A /* BtnBuy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F507F5142C04688D00CB9A3A /* BtnBuy.swift */; };
 		F507F5172C09541B00CB9A3A /* DeviceSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = F507F5162C09541B00CB9A3A /* DeviceSetting.swift */; };
 		F53BE0322C202420003CBA29 /* DiskFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53BE0312C202420003CBA29 /* DiskFile.swift */; };
@@ -194,7 +188,6 @@
 		0B718F0B2AB4349900569762 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		0B73275E2BB5138200DBD922 /* LoggerHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerHelper.swift; sourceTree = "<group>"; };
 		0B7842742C1331B400E24869 /* BtnDelDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnDelDevice.swift; sourceTree = "<group>"; };
-		0B7F558A2AD2636B0000D72E /* ButtonPlayList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonPlayList.swift; sourceTree = "<group>"; };
 		0B8C369E2BEA011700C47567 /* MetaWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetaWrapper.swift; sourceTree = "<group>"; };
 		0B8C36A02BEA0E8800C47567 /* AudioD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioD.swift; sourceTree = "<group>"; };
 		0B8C36A22BEA124900C47567 /* AudioR.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioR.swift; sourceTree = "<group>"; };
@@ -231,7 +224,6 @@
 		0BAABEC22BC939D000DF4A31 /* LayoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutView.swift; sourceTree = "<group>"; };
 		0BAB300D2AB814F70012D837 /* Boot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Boot.swift; sourceTree = "<group>"; };
 		0BAB7C3E2AD3BBAA00C5AEB5 /* DBTips.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBTips.swift; sourceTree = "<group>"; };
-		0BAB7C402AD3D25200C5AEB5 /* ButtonDismiss.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonDismiss.swift; sourceTree = "<group>"; };
 		0BB427902BED0B38004E6F82 /* DiskLocal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskLocal.swift; sourceTree = "<group>"; };
 		0BB543F32BE8E38300D7A2B2 /* Duplicates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Duplicates.swift; sourceTree = "<group>"; };
 		0BB543F72BE9C64C00D7A2B2 /* PathExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathExt.swift; sourceTree = "<group>"; };
@@ -240,14 +232,12 @@
 		0BB5871C2AD820FA0071AEBD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0BB889D12AC042EC004788D5 /* BtnDownload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnDownload.swift; sourceTree = "<group>"; };
 		0BB889D62AC046B5004788D5 /* BtnShowInFinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnShowInFinder.swift; sourceTree = "<group>"; };
-		0BB889D82AC047B3004788D5 /* BtnTrash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnTrash.swift; sourceTree = "<group>"; };
 		0BB889DA2AC06C54004788D5 /* DB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DB.swift; sourceTree = "<group>"; };
 		0BBA42182ABD5D9200C0B977 /* BtnMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnMode.swift; sourceTree = "<group>"; };
 		0BBA421E2AC1397F00C0B977 /* Centered.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Centered.swift; sourceTree = "<group>"; };
 		0BBA42202AC1802C00C0B977 /* ButtonCancelSelected.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonCancelSelected.swift; sourceTree = "<group>"; };
 		0BBA42242AC1813D00C0B977 /* BtnDel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnDel.swift; sourceTree = "<group>"; };
 		0BBA42262AC2A8B800C0B977 /* BtnAdd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnAdd.swift; sourceTree = "<group>"; };
-		0BBA422A2AC2ABAD00C0B977 /* ButtonShowDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonShowDatabase.swift; sourceTree = "<group>"; };
 		0BBA422E2AC2BAE300C0B977 /* AlbumView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumView.swift; sourceTree = "<group>"; };
 		0BBAD0712BBC05C6005834A3 /* DBRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBRow.swift; sourceTree = "<group>"; };
 		0BBAD0A12BBD413B005834A3 /* DBList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBList.swift; sourceTree = "<group>"; };
@@ -282,8 +272,6 @@
 		0BFB38842BCCD26F0055E38B /* BtnLike.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnLike.swift; sourceTree = "<group>"; };
 		0BFB38F62BD0BCC20055E38B /* RowTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowTask.swift; sourceTree = "<group>"; };
 		0BFDCB7F2AB86AF300B0D1C8 /* MenuTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTile.swift; sourceTree = "<group>"; };
-		0BFDCE572BB01884009198DD /* BtnDestroy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnDestroy.swift; sourceTree = "<group>"; };
-		F507F5122C04681200CB9A3A /* TopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopView.swift; sourceTree = "<group>"; };
 		F507F5142C04688D00CB9A3A /* BtnBuy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnBuy.swift; sourceTree = "<group>"; };
 		F507F5162C09541B00CB9A3A /* DeviceSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceSetting.swift; sourceTree = "<group>"; };
 		F53BE0312C202420003CBA29 /* DiskFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskFile.swift; sourceTree = "<group>"; };
@@ -458,7 +446,6 @@
 				0BBA42242AC1813D00C0B977 /* BtnDel.swift */,
 				0B7842742C1331B400E24869 /* BtnDelDevice.swift */,
 				0BAABEB72BC7D4B600DF4A31 /* BtnDelTask.swift */,
-				0BFDCE572BB01884009198DD /* BtnDestroy.swift */,
 				0BB889D12AC042EC004788D5 /* BtnDownload.swift */,
 				0BD056902BC6340800EBC7C4 /* BtnEvict.swift */,
 				0BFB38842BCCD26F0055E38B /* BtnLike.swift */,
@@ -470,11 +457,7 @@
 				0BB889D62AC046B5004788D5 /* BtnShowInFinder.swift */,
 				0BBC158C2ABAC0C7006E82C4 /* BtnToggle.swift */,
 				0B1126292AC6F7B20093DFFA /* BtnToggleDB.swift */,
-				0BB889D82AC047B3004788D5 /* BtnTrash.swift */,
 				0BBA42202AC1802C00C0B977 /* ButtonCancelSelected.swift */,
-				0BAB7C402AD3D25200C5AEB5 /* ButtonDismiss.swift */,
-				0B7F558A2AD2636B0000D72E /* ButtonPlayList.swift */,
-				0BBA422A2AC2ABAD00C0B977 /* ButtonShowDatabase.swift */,
 			);
 			path = Buttons;
 			sourceTree = "<group>";
@@ -496,7 +479,6 @@
 				0B1D5A732AB302600010DDF2 /* ContentView.swift */,
 				0BBC157B2AB84C21006E82C4 /* HomeView.swift */,
 				0BE93F2D2BFB8B7E00F25445 /* MoreView.swift */,
-				F507F5122C04681200CB9A3A /* TopView.swift */,
 			);
 			path = Layout;
 			sourceTree = "<group>";
@@ -754,8 +736,6 @@
 				0B8C36A72BEA15E000C47567 /* AudioC.swift in Sources */,
 				0BB5871B2AD81AFA0071AEBD /* ViewHelper.swift in Sources */,
 				0BAB7C3F2AD3BBAA00C5AEB5 /* DBTips.swift in Sources */,
-				0BB889D92AC047B3004788D5 /* BtnTrash.swift in Sources */,
-				F507F5132C04681200CB9A3A /* TopView.swift in Sources */,
 				F545D1792C200901006A6AFA /* StorageExt.swift in Sources */,
 				0B5786342BCB8DC00064F66A /* PlayView.swift in Sources */,
 				0B1D5A882AB302610010DDF2 /* ContentView.swift in Sources */,
@@ -775,7 +755,6 @@
 				0BAB300E2AB814F70012D837 /* Boot.swift in Sources */,
 				0BBA42212AC1802C00C0B977 /* ButtonCancelSelected.swift in Sources */,
 				0B9EA35B2C21C72800A4059A /* PlayMan.swift in Sources */,
-				0BBA422B2AC2ABAD00C0B977 /* ButtonShowDatabase.swift in Sources */,
 				0BAABEB12BC79C4E00DF4A31 /* CopyTask.swift in Sources */,
 				0BE6959F2BFE3DCC00CEFFEB /* NonRenewables.swift in Sources */,
 				0B11365D2BF106F300A71FE1 /* AudioGroup.swift in Sources */,
@@ -783,7 +762,6 @@
 				0B9FA2972BC80E51007B235A /* EventManager.swift in Sources */,
 				0BAABEAF2BC787A200DF4A31 /* JobCopy.swift in Sources */,
 				0B1136612BF4CF3000A71FE1 /* Cover.swift in Sources */,
-				0BFDCE582BB01884009198DD /* BtnDestroy.swift in Sources */,
 				0B8C36A52BEA15A800C47567 /* AudioU.swift in Sources */,
 				0BFB38F72BD0BCC20055E38B /* RowTask.swift in Sources */,
 				0B4E246F2BCAB8020033CC07 /* AppPreview.swift in Sources */,
@@ -847,12 +825,10 @@
 				0B8C36AC2BEC6E0F00C47567 /* StateExt.swift in Sources */,
 				0B901D882BB83BC3003AC253 /* FilePresenter.swift in Sources */,
 				0BB543F42BE8E38300D7A2B2 /* Duplicates.swift in Sources */,
-				0B7F558B2AD2636B0000D72E /* ButtonPlayList.swift in Sources */,
 				0BBC157C2AB84C21006E82C4 /* HomeView.swift in Sources */,
 				0B901D8A2BB83E28003AC253 /* ItemQuery.swift in Sources */,
 				0B6B8B9D2BBA4D0600F65B23 /* Coffee.swift in Sources */,
 				0B11365F2BF10A0100A71FE1 /* JobGroup.swift in Sources */,
-				0BAB7C412AD3D25200C5AEB5 /* ButtonDismiss.swift in Sources */,
 				0B220F732BB1A3D70077255A /* BtnsView.swift in Sources */,
 				0B220F6F2BB051F50077255A /* TitleView.swift in Sources */,
 				0BBC158A2AB9AB7F006E82C4 /* FileHelper.swift in Sources */,

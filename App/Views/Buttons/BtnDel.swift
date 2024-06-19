@@ -43,6 +43,11 @@ struct BtnDel: View {
     }
 }
 
+#Preview("App") {
+    AppPreview()
+        .frame(height: 800)
+}
+
 #Preview("Layout") {
     LayoutView()
 }

@@ -28,10 +28,9 @@ struct BtnMode: View {
     }
 }
 
-#Preview {
-    RootView {
-        ContentView()
-    }
+#Preview("App") {
+    AppPreview()
+        .frame(height: 800)
 }
 
 #Preview {

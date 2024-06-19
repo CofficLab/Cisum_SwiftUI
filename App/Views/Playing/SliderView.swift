@@ -51,7 +51,7 @@ struct SliderView: View {
             if Date.now.timeIntervalSince(lastDownloadTime) > 10, let asset = audioManager.asset {
                 lastDownloadTime = .now
                 Task.detached(priority: .low) {
-//                    await db.downloadNextBatch(asset.url, count: 4, reason: "SliderView确保下一个准备好")
+                    await db.downloadNextBatch(asset.url, count: 4, reason: "SliderView确保下一个准备好")
                 }
             }
         }

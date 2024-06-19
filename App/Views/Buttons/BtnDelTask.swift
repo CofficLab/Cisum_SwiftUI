@@ -2,8 +2,9 @@ import SwiftUI
 
 struct BtnDelTask: View {
     @EnvironmentObject var audioManager: PlayManager
-    @State var hovered = false
     @Environment(\.modelContext) private var modelContext
+    
+    @State var hovered = false
 
     var tasks: Set<CopyTask.ID>
     var autoResize = false
@@ -25,6 +26,11 @@ struct BtnDelTask: View {
     private func getImageName() -> String {
         return "trash"
     }
+}
+
+#Preview("App") {
+    AppPreview()
+        .frame(height: 800)
 }
 
 #Preview("Layout") {

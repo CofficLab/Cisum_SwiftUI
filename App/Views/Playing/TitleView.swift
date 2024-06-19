@@ -11,8 +11,6 @@ struct TitleView: View {
     var label: String {"\(Logger.isMain)📺 TitleView::"}
     var verbose = false
 
-    @State var url: URL? = nil
-
     var body: some View {
         ZStack {
             if let asset = asset {
@@ -21,29 +19,8 @@ struct TitleView: View {
                     .lineLimit(nil)
                     .foregroundStyle(.white)
                     .font(getFont(width: width))
-                // .background(AppConfig.makeBackground(.blue))
             }
         }
-        .onAppear {
-            if let audio = audioManager.asset {
-                self.url = audio.url
-            }
-
-            EventManager().onDelete { items in
-                for item in items {
-                    if item.isDeleted && item.url == self.url {
-                        AppConfig.mainQueue.async {
-                            audioManager.prepare(nil, reason: "TitleView")
-                            audioManager.player.stop()
-                        }
-                        continue
-                    }
-                }
-            }
-        }
-//        .onChange(of: asset) {
-//            self.url = asset?.url ?? nil
-//        }
     }
 
     /// 根据宽度来决定字体的大小

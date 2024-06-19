@@ -2,8 +2,9 @@ import SwiftUI
 
 struct BtnDelDevice: View {
     @EnvironmentObject var audioManager: PlayManager
-    @State var hovered = false
     @Environment(\.modelContext) private var modelContext
+    
+    @State var hovered = false
 
     var deviceData: DeviceData
     var autoResize = false
@@ -23,6 +24,11 @@ struct BtnDelDevice: View {
     private func getImageName() -> String {
         return "trash"
     }
+}
+
+#Preview("App") {
+    AppPreview()
+        .frame(height: 800)
 }
 
 #Preview("Layout") {

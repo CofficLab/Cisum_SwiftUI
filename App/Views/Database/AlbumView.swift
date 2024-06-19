@@ -15,7 +15,7 @@ struct AlbumView: View {
     var e = EventManager()
     var main = AppConfig.mainQueue
     var bg = AppConfig.bgQueue
-    var audio: PlayAsset
+    var asset: PlayAsset
     var url: URL
     var forPlaying: Bool = false
     var fileManager = FileManager.default
@@ -37,21 +37,21 @@ struct AlbumView: View {
 
     /// forPlaying表示显示在正在播放界面
     init(_ audio: PlayAsset, forPlaying: Bool = false) {
-        self.audio = audio
+        self.asset = audio
         url = audio.url
         self.forPlaying = forPlaying
     }
 
     var body: some View {
         ZStack {
-            if audio.isNotExists() {
+            if asset.isNotExists() {
                 Image(systemName: "minus.circle").resizable().scaledToFit()
             } else if isDownloading {
                 Self.makeProgressView(downloadingPercent / 100)
             } else if isNotDownloaded {
                 NotDownloadedAlbum(forPlaying: forPlaying).onTapGesture {
                     Task {
-                        await audioManager.db.download(self.audio.url, reason: "点击了Album")
+                        await audioManager.db.download(self.asset.url, reason: "点击了Album")
                     }
                 }
             } else if let image = image {
@@ -63,9 +63,9 @@ struct AlbumView: View {
         .clipShape(shape)
         .onAppear {
             bg.async {
-                let isDownloaded = audio.isDownloaded()
-                let isDownloading = audio.isDownloading()
-                let image = audio.getCoverImageFromCache()
+                let isDownloaded = asset.isDownloaded()
+                let isDownloading = asset.isDownloading()
+                let image = asset.getCoverImageFromCache()
                 
                 main.async {
                     self.isDownloaded = isDownloaded
@@ -99,7 +99,7 @@ struct AlbumView: View {
 
     func setCachedCover() {
         Task.detached(priority: .low, operation: {
-            let image = await audio.getCoverImageFromCache()
+            let image = await asset.getCoverImageFromCache()
 
             DispatchQueue.main.async {
                 self.image = image
@@ -119,7 +119,7 @@ struct AlbumView: View {
 
     func refresh(_ item: MetaWrapper? = nil, verbose: Bool = false) {
         if verbose {
-            os_log("\(self.label)Refresh -> \(audio.title)")
+            os_log("\(self.label)Refresh -> \(asset.title)")
         }
 
         if let item = item {
@@ -128,8 +128,8 @@ struct AlbumView: View {
             downloadingPercent = item.downloadProgress
         } else {
             bg.async {
-                let isDownloaded = audio.isDownloaded()
-                let isDownloading = audio.isDownloading()
+                let isDownloaded = asset.isDownloaded()
+                let isDownloading = asset.isDownloading()
                 main.async {
                     self.isDownloaded = isDownloaded
                     self.isDownloading = isDownloading
@@ -147,11 +147,11 @@ struct AlbumView: View {
         Task.detached(priority: .background) {
             if verbose {
                 let label = await AlbumView.label
-                let audio = await self.audio
+                let audio = await self.asset
                 os_log("\(Logger.isMain)\(label)UpdateCover -> \(audio.title)")
             }
 
-            let image = await audio.getCoverImage()
+            let image = await asset.getCoverImage()
 
             DispatchQueue.main.async {
                 self.image = image
@@ -176,6 +176,7 @@ struct AlbumView: View {
 
 #Preview("APP") {
     AppPreview()
+        .frame(height: 800)
 }
 
 #Preview("ProgressView") {

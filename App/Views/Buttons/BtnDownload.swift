@@ -1,14 +1,14 @@
 import SwiftUI
 
 struct BtnDownload: View {
-    @EnvironmentObject var audioManager: PlayManager
+    @EnvironmentObject var db: DB
     
     var audio: Audio
         
     var body: some View {
         Button {
             Task {
-                await audioManager.db.download(audio.url, reason: "点击了下载")
+                await db.download(audio.url, reason: "点击了下载")
             }
         } label: {
             Label("下载", systemImage: getImageName())
@@ -19,6 +19,11 @@ struct BtnDownload: View {
     private func getImageName() -> String {
         return "icloud.and.arrow.down.fill"
     }
+}
+
+#Preview("App") {
+    AppPreview()
+        .frame(height: 800)
 }
 
 #Preview("Layout") {

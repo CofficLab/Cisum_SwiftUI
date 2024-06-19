@@ -29,19 +29,7 @@ struct BtnToggle: View {
     }
 }
 
-#Preview("APP") {
-    RootView(content: {
-        ContentView()
-    })
-    .modelContainer(AppConfig.getContainer)
-}
-
-#Preview {
-    RootView(content: {
-        Centered {
-            BtnToggle()
-        }
-
-        ControlView()
-    })
+#Preview("App") {
+    AppPreview()
+        .frame(height: 800)
 }

@@ -18,10 +18,9 @@ struct BtnPrev: View {
     }
 }
 
-#Preview {
-    RootView(content: {
-        ContentView()
-    })
+#Preview("App") {
+    AppPreview()
+        .frame(height: 800)
 }
 
 #Preview {

@@ -33,5 +33,10 @@ struct ContentView: View {
 }
 
 #Preview("App") {
+    AppPreview()
+        .frame(height: 800)
+}
+
+#Preview("App") {
     LayoutView()
 }
