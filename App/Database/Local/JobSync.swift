@@ -19,10 +19,10 @@ extension DB {
         await disk.watchAudiosFolder()
     }
 
-    func sync(_ collection: DiskFileGroup, verbose: Bool = true) {
-        var message = "\(labelForSync) sync with count=\(collection.count)"
+    func sync(_ group: DiskFileGroup, verbose: Bool = true) {
+        var message = "\(labelForSync) sync with count=\(group.count)"
 
-        if let first = collection.first, first.isDownloading == true {
+        if let first = group.first, first.isDownloading == true {
             message += " -> \(first.fileName) -> \(String(format: "%.0f", first.downloadProgress))% ⏬⏬⏬"
         }
 
@@ -30,29 +30,30 @@ extension DB {
             os_log("\(message)")
         }
 
-        // 全量，同步到数据库
-        if collection.isFullLoad {
+        if group.isFullLoad {
             if verbose {
-                os_log("\(self.labelForSync) 全量同步，共 \(collection.count)")
+                os_log("\(self.labelForSync) 全量同步，共 \(group.count)")
             }
             
-            syncWithDisk(collection)
+            syncWithDisk(group)
         } else {
             if verbose {
-                os_log("\(self.labelForSync) 部分同步，共 \(collection.count)")
+                os_log("\(self.labelForSync) 部分同步，共 \(group.count)")
             }
             
-            syncWithUpdatedItems(collection)
+            syncWithUpdatedItems(group)
         }
 
-        Task.detached {
-            await self.updateGroupForMetas(collection)
+        if verbose {
+            os_log("\(self.labelForSync) 计算刚刚同步的项目的MD5(\(group.count))")
         }
+        
+        self.updateGroupForURLs(group.urls)
     }
 
     // MARK: SyncWithDisk
 
-    func syncWithDisk(_ group: DiskFileGroup) {
+    func syncWithDisk(_ group: DiskFileGroup, verbose: Bool = true) {
         let startTime: DispatchTime = .now()
 
         // 将数组转换成哈希表，方便通过键来快速查找元素，这样可以将时间复杂度降低到：O(m+n)
@@ -62,6 +63,9 @@ extension DB {
             try context.enumerate(FetchDescriptor<Audio>(), block: { audio in
                 if hashMap[audio.url] == nil {
                     // 记录不存在哈希表中，数据库删除
+                    if verbose {
+                        os_log("\(self.label)删除 \(audio.title)")
+                    }
                     context.delete(audio)
                 } else {
                     // 记录存在哈希表中，同步完成，删除哈希表记录
@@ -86,9 +90,7 @@ extension DB {
 
     func syncWithUpdatedItems(_ metas: DiskFileGroup) {
         // 发出更新事件让UI更新，比如下载进度
-        Task {
-            self.eventManager.emitUpdate(metas)
-        }
+        self.eventManager.emitUpdate(metas)
 
         printRunTime("SyncWithUpdatedItems with count=\(metas.count)") {
             // 如果url属性为unique，数据库已存在相同url的记录，再执行context.insert，发现已存在的被替换成新的了

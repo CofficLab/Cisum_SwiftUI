@@ -29,7 +29,7 @@ struct PlayAsset {
     }
     
     func isDownloaded() -> Bool {
-        iCloudHelper.isDownloaded(url: self.url)
+        iCloudHelper.isDownloaded(self.url)
     }
     
     func isNotDownloaded() -> Bool {

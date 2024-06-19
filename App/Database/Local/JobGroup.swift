@@ -6,24 +6,21 @@ import SwiftData
 extension DB {
     var labelForGroup: String { "\(self.label)🌾🌾🌾" }
 
-    func updateGroupForMetas(_ metas: DiskFileGroup, verbose: Bool = false) {
-        let title = "\(labelForGroup) UpdateGroup(\(metas.count))"
+    func updateGroupForURLs(_ urls: [URL], verbose: Bool = true) {
+        let total = urls.count
+        let title = "\(labelForGroup) UpdateGroup(\(total))"
         let startTime = DispatchTime.now()
         
         if verbose {
             os_log("\(title) 🚀🚀🚀")
         }
 
-        let total = metas.count
-        let context = ModelContext(modelContainer)
-        context.autosaveEnabled = false
-
-        for (i,meta) in metas.files.enumerated() {
-            if verbose && i%100 == 0 {
-                os_log("\(Logger.isMain)\(Self.label)UpdateGroup \(i)/\(total)")
+        for (i,url) in urls.enumerated() {
+            if verbose {
+                os_log("\(self.labelForGroup) UpdateGroup \(i)/\(total)")
             }
             
-            guard meta.isDownloaded, let audio = findAudio(meta.url) else {
+            guard iCloudHelper.isDownloaded(url), let audio = findAudio(url) else {
                 continue
             }
 
@@ -43,22 +40,4 @@ extension DB {
             os_log("\(self.jobEnd(startTime, title: title))")
         }
     }
-    
-//    func runFindAudioGroupJob() {
-//        runJob(
-//            "GetGroup 🌾🌾🌾",
-//            verbose: true,
-//            descriptor: Audio.descriptorNoGroup,
-//            printLog: true,
-//            printStartLog: true,
-//            printQueueEnter: true,
-//            printLogStep: 100,
-//            printCost: true,
-//            concurrency: false,
-//            code: { audio, onEnd in
-//                self.updateGroup(audio)
-//
-//                onEnd()
-//            })
-//    }
 }

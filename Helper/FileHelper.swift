@@ -129,6 +129,10 @@ extension FileHelper {
     }
 
     static func getMD5(_ url: URL) -> String {
+        if isDirectory(at: url) {
+            return ""
+        }
+        
         do {
             let bufferSize = 1024
             var hash = Insecure.MD5()
@@ -143,8 +147,17 @@ extension FileHelper {
 
             return hash.finalize().map { String(format: "%02hhx", $0) }.joined()
         } catch {
-            print("Error calculating MD5: \(error)")
+            os_log(.error, "计算MD5出错 -> \(error.localizedDescription)")
+            print(error)
             return ""
+        }
+    }
+    
+    static func isDirectory(at url: URL) -> Bool {
+        do {
+            return try url.resourceValues(forKeys: [.isDirectoryKey]).isDirectory == true
+        } catch {
+            return false
         }
     }
 }

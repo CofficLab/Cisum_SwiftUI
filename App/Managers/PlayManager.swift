@@ -101,7 +101,7 @@ class PlayManager: NSObject, ObservableObject {
         
         if let currentAudioId = currentAudioId {
             if verbose {
-                os_log("\(self.label)上次播放的音频是 -> \(currentAudioId.path())")
+                os_log("\(self.label)上次播放的音频是 -> \(currentAudioId.lastPathComponent)")
             }
             
             Task {

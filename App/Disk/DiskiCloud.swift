@@ -163,7 +163,7 @@ extension DiskiCloud {
             return
         }
         
-        if iCloudHelper.isDownloaded(url: url) {
+        if iCloudHelper.isDownloaded(url) {
             //os_log("\(self.label)Download \(audio.title) -> Already downloaded")
             return
         }

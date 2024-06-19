@@ -46,7 +46,6 @@ extension Config {
     static var showDB: Bool = false
 
     static func setShowDB(_ value: Bool) {
-        // os_log("\(Logger.isMain)⚙️ Config::setCurrentAudio \(audio.title)")
         Config.showDB = value
     }
 }

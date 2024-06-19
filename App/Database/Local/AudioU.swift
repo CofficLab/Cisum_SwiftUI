@@ -217,7 +217,7 @@ extension DB {
 // MARK: Group
 
 extension DB {
-    func updateGroup(_ audio: Audio, save: Bool = true, verbose: Bool = true) {
+    func updateGroup(_ audio: Audio, verbose: Bool = true) {
         if audio.isNotDownloaded {
             return
         }
@@ -231,17 +231,11 @@ extension DB {
             return
         }
 
-        let context = ModelContext(modelContainer)
-        context.autosaveEnabled = false
         guard let dbAudio = context.model(for: audio.id) as? Audio else {
             return
         }
 
         dbAudio.group = AudioGroup(title: audio.title, hash: fileHash)
-
-        if save == false {
-            return
-        }
 
         do {
             try context.save()

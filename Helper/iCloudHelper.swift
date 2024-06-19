@@ -33,7 +33,7 @@ class iCloudHelper {
         return s
     }
 
-    static func isDownloaded(url: URL) -> Bool {
+    static func isDownloaded(_ url: URL) -> Bool {
         return [
             URLUbiquitousItemDownloadingStatus.current, URLUbiquitousItemDownloadingStatus.downloaded,
         ].contains(getDownloadingStatus(url: url))
@@ -57,7 +57,7 @@ class iCloudHelper {
     }
 
     static func isNotDownloaded(_ url: URL) -> Bool {
-        !isDownloaded(url: url)
+        !isDownloaded(url)
     }
 
     static func fileExists(url: URL) -> Bool {

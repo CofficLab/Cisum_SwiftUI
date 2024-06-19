@@ -21,6 +21,8 @@ struct DiskFileGroup {
         return hashMap
     }
     
+    var urls: [URL] { files.map({ $0.url }) }
+    
     static func fromURLs(_ urls: [URL], isFullLoad: Bool) -> Self {
         DiskFileGroup(files: urls.map({
             DiskFile.fromURL($0)

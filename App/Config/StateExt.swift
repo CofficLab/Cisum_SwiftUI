@@ -1,4 +1,5 @@
 import Foundation
+import OSLog
 import SwiftUI
 
 extension Config {
@@ -13,12 +14,10 @@ extension Config {
     static var currentMode: String = PlayMode.Order.rawValue
     
     static func setCurrentURL(_ url: URL?) {
-        //os_log("\(Logger.isMain)⚙️ Config::setCurrentAudio \(audio.title)")
         Config.currentAudio = url
     }
     
     static func setCurrentMode(_ mode: PlayMode) {
-        //os_log("\(Logger.isMain)⚙️ Config::setCurrentAudio \(audio.title)")
         Config.currentMode = mode.rawValue
     }
 }
