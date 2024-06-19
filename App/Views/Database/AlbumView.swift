@@ -15,7 +15,7 @@ struct AlbumView: View {
     var e = EventManager()
     var main = AppConfig.mainQueue
     var bg = AppConfig.bgQueue
-    var audio: Audio
+    var audio: PlayAsset
     var url: URL
     var forPlaying: Bool = false
     var fileManager = FileManager.default
@@ -36,7 +36,7 @@ struct AlbumView: View {
     }
 
     /// forPlaying表示显示在正在播放界面
-    init(_ audio: Audio, forPlaying: Bool = false) {
+    init(_ audio: PlayAsset, forPlaying: Bool = false) {
         self.audio = audio
         url = audio.url
         self.forPlaying = forPlaying
@@ -44,14 +44,14 @@ struct AlbumView: View {
 
     var body: some View {
         ZStack {
-            if audio.isNotExists {
+            if audio.isNotExists() {
                 Image(systemName: "minus.circle").resizable().scaledToFit()
             } else if isDownloading {
                 Self.makeProgressView(downloadingPercent / 100)
             } else if isNotDownloaded {
                 NotDownloadedAlbum(forPlaying: forPlaying).onTapGesture {
                     Task {
-                        await audioManager.db.download(self.audio, reason: "点击了Album")
+                        await audioManager.db.download(self.audio.url, reason: "点击了Album")
                     }
                 }
             } else if let image = image {
@@ -63,8 +63,8 @@ struct AlbumView: View {
         .clipShape(shape)
         .onAppear {
             bg.async {
-                let isDownloaded = audio.checkIfDownloaded()
-                let isDownloading = audio.checkIfDownloading()
+                let isDownloaded = audio.isDownloaded()
+                let isDownloading = audio.isDownloading()
                 let image = audio.getCoverImageFromCache()
                 
                 main.async {
@@ -128,8 +128,8 @@ struct AlbumView: View {
             downloadingPercent = item.downloadProgress
         } else {
             bg.async {
-                let isDownloaded = audio.checkIfDownloaded()
-                let isDownloading = audio.checkIfDownloading()
+                let isDownloaded = audio.isDownloaded()
+                let isDownloading = audio.isDownloading()
                 main.async {
                     self.isDownloaded = isDownloaded
                     self.isDownloading = isDownloading

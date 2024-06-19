@@ -12,9 +12,9 @@ extension AppConfig {
     @AppStorage("App.CurrentMode")
     static var currentMode: String = PlayMode.Order.rawValue
     
-    static func setCurrentAudio(_ audio: Audio) {
+    static func setCurrentURL(_ url: URL) {
         //os_log("\(Logger.isMain)⚙️ AppConfig::setCurrentAudio \(audio.title)")
-        AppConfig.currentAudio = audio.url
+        AppConfig.currentAudio = url
     }
     
     static func setCurrentMode(_ mode: PlayMode) {

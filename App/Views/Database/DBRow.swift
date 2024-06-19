@@ -9,7 +9,7 @@ struct DBRow: View {
 
     var audio: Audio
 
-    var current: Audio? { audioManager.asset?.toAudio() }
+    var current: PlayAsset? { audioManager.asset }
     var background: Color {
         if current?.url == audio.url {
             return Color.accentColor
@@ -25,7 +25,7 @@ struct DBRow: View {
     var body: some View {
         ZStack {
             HStack(alignment: .center) {
-                AlbumView(audio)
+                AlbumView(audio.toPlayAsset())
                     .frame(
                         width: AppConfig.isDesktop ? 36 : 36,
                         height: AppConfig.isDesktop ? 36 : 36

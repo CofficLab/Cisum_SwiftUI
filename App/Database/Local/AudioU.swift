@@ -54,9 +54,9 @@ extension DB {
         disk.evict(audio.url)
     }
 
-    func download(_ audio: Audio, reason: String) {
+    func download(_ url: URL, reason: String) {
         Task.detached(priority: .background) {
-            await self.disk.download(audio, reason: reason)
+            await self.disk.download(url, reason: reason)
         }
     }
 
@@ -78,7 +78,7 @@ extension DB {
         var currentAudio: Audio = audio
 
         while currentIndex < count {
-            download(currentAudio, reason: "downloadNext 🐛 \(reason)")
+            download(currentAudio.url, reason: "downloadNext 🐛 \(reason)")
 
             currentIndex = currentIndex + 1
             if let next = self.nextOf(currentAudio) {

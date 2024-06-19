@@ -56,21 +56,6 @@ extension Audio {
         return nil
     }
 
-    // MARK: 控制中心的图
-
-    func getMediaCenterImage<T>() -> T {
-        var i: Any = Audio.defaultImage
-        if fileManager.fileExists(atPath: coverCacheURL.path) {
-            #if os(macOS)
-                i = NSImage(contentsOf: coverCacheURL) ?? i
-            #else
-                i = UIImage(contentsOfFile: coverCacheURL.path) ?? i
-            #endif
-        }
-
-        return i as! T
-    }
-
     // MARK: 封面图
 
     func getCoverImageFromCache() -> Image? {

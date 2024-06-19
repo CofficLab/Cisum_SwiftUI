@@ -3,9 +3,12 @@ import SwiftUI
 
 struct OperationView: View {
     @EnvironmentObject var audioManager: PlayManager
+    @EnvironmentObject var db: DB
+    
+    @State var audio: Audio?
 
-    var audio: Audio? { audioManager.asset?.toAudio() }
-    var characterCount: Int { audio?.title.count ?? 0 }
+    var asset: PlayAsset? { audioManager.asset }
+    var characterCount: Int { asset?.title.count ?? 0 }
     var geo: GeometryProxy
 
     var body: some View {
@@ -23,6 +26,13 @@ struct OperationView: View {
         .frame(maxWidth: .infinity)
         .foregroundStyle(.white)
         .labelStyle(.iconOnly)
+        .onAppear {
+            Task {
+                if let asset = asset {
+                    self.audio  = await db.findAudio(asset.url)
+                }
+            }
+        }
     }
 
     func getFont() -> Font {

@@ -95,9 +95,9 @@ class PlayManager: NSObject, ObservableObject {
             
             Task {
                 if let currentAudio = await self.db.findAudio(currentAudioId) {
-                    self.prepare(currentAudio, reason: "初始化，恢复上次播放的")
+                    self.prepare(currentAudio.toPlayAsset(), reason: "初始化，恢复上次播放的")
                 } else if let current = await self.db.first() {
-                    self.prepare(current, reason: "初始化，播放第一个")
+                    self.prepare(current.toPlayAsset(), reason: "初始化，播放第一个")
                 } else {
                     os_log("\(self.label)restore nothing to play")
                 }
@@ -111,16 +111,16 @@ class PlayManager: NSObject, ObservableObject {
 
     // MARK: 准备播放
 
-    func prepare(_ audio: Audio?, reason: String, verbose: Bool = true) {
+    func prepare(_ asset: PlayAsset?, reason: String, verbose: Bool = true) {
         if verbose {
-            os_log("\(self.label)Prepare \(audio?.title ?? "nil") 🐛 \(reason)")
+            os_log("\(self.label)Prepare \(asset?.title ?? "nil") 🐛 \(reason)")
         }
 
-        player.prepare(audio?.toPlayAsset())
+        player.prepare(asset)
 
         Task {
-            if let a = audio {
-                AppConfig.setCurrentAudio(a)
+            if let a = asset {
+                AppConfig.setCurrentURL(a.url)
             }
         }
     }
@@ -142,7 +142,7 @@ class PlayManager: NSObject, ObservableObject {
                 if self.player.isPlaying {
                     self.player.play(i.toPlayAsset(), reason: "在播放时触发了上一首")
                 } else {
-                    self.prepare(i, reason: "未播放时触发了上一首")
+                    self.prepare(i.toPlayAsset(), reason: "未播放时触发了上一首")
                 }
             }
         }
@@ -169,7 +169,7 @@ class PlayManager: NSObject, ObservableObject {
                 if player.isPlaying || manual == false {
                     player.play(i.toPlayAsset(), reason: "在播放时或自动触发下一首")
                 } else {
-                    prepare(i, reason: "「未播放且手动」触发了下一首")
+                    prepare(i.toPlayAsset(), reason: "「未播放且手动」触发了下一首")
                 }
             } else {
                 self.player.stop()

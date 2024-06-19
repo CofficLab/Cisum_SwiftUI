@@ -27,7 +27,7 @@ struct BtnDel: View {
                         if isPlaying, let next = next {
                             player.play(next.toPlayAsset(), reason: "删除了")
                         } else {
-                            audioManager.prepare(next, reason: "删除了")
+                            audioManager.prepare(next?.toPlayAsset(), reason: "删除了")
                         }
                     }
 

@@ -140,27 +140,27 @@ extension DiskiCloud {
         }
     }
     
-    func download(_ audio: Audio, reason: String) async {
+    func download(_ url: URL, reason: String) async {
         let verbose = false
         
         if verbose {
-            os_log("\(self.label)Download ⏬⏬⏬ \(audio.title) reason -> \(reason)")
+            os_log("\(self.label)Download ⏬⏬⏬ \(url.lastPathComponent) reason -> \(reason)")
         }
         
-        if audio.isNotExists {
+        if !fileManager.fileExists(atPath: url.path()) {
             if verbose {
-                os_log("\(self.label)Download \(audio.title) -> Not Exists")
+                os_log("\(self.label)Download \(url.lastPathComponent) -> Not Exists")
             }
             
             return
         }
         
-        if audio.isDownloaded {
+        if iCloudHelper.isDownloaded(url: url) {
             //os_log("\(self.label)Download \(audio.title) -> Already downloaded")
             return
         }
         
-        if audio.isDownloading {
+        if iCloudHelper.isDownloading(url) {
             //os_log("\(self.label)Download \(audio.title) -> Already downloading")
             return
         }
@@ -174,7 +174,7 @@ extension DiskiCloud {
 //        }
         
         do {
-            try await cloudHandler.download(url: audio.url)
+            try await cloudHandler.download(url: url)
         } catch let e {
             os_log(.error, "\(self.label)Download(\(reason))出错->\(e.localizedDescription)")
         }

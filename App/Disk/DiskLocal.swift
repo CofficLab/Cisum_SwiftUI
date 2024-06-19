@@ -131,7 +131,7 @@ extension DiskLocal {
         return
     }
 
-    func download(_ audio: Audio, reason: String) async {
+    func download(_ url: URL, reason: String) async {
         return
     }
 

@@ -24,8 +24,8 @@ struct PlayingAlbum: View {
     var view: some View {
         ZStack {
             if let asset = audioManager.asset {
-                AlbumView(asset.toAudio(), forPlaying: true)
-                    .id(asset.toAudio().id)
+                AlbumView(asset, forPlaying: true)
+                    .id(asset.url)
             } else {
                 DefaultAlbum(forPlaying: true)
             }

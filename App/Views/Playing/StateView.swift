@@ -16,16 +16,10 @@ struct StateView: View {
     var error: Error? { audioManager.error }
     var taskCount: Int { tasks.count }
     var showCopyMessage: Bool { tasks.count > 0 }
-    var audio: Audio? { audioManager.asset?.toAudio() }
+    var asset: PlayAsset? { audioManager.asset }
     var db: DB { audioManager.db }
     var count: Int { audios.count }
-    var font: Font {
-        if audio == nil {
-            return .title3
-        }
-
-        return .callout
-    }
+    var font: Font { asset == nil ?  .title3 : .callout }
 
     var body: some View {
         VStack {
@@ -57,7 +51,7 @@ struct StateView: View {
         .onChange(of: count) {
             Task {
                 if audioManager.asset == nil, let first = await db.first() {
-                    audioManager.prepare(first, reason: "自动设置为第一首")
+                    audioManager.prepare(first.toPlayAsset(), reason: "自动设置为第一首")
                 }
             }
 
@@ -70,7 +64,7 @@ struct StateView: View {
             let audio = data["audio"]!
 
             if audio.url == audioManager.asset?.url, audio.isDownloaded, audioManager.player.isNotPlaying, audioManager.player.currentTime == 0 {
-                audioManager.prepare(audioManager.asset?.toAudio(), reason: "StateView Detected Update")
+                audioManager.prepare(audioManager.asset, reason: "StateView Detected Update")
             }
         })
         .onReceive(NotificationCenter.default.publisher(for: Notification.Name.AudiosUpdatedNotification), perform: { notification in
@@ -83,7 +77,7 @@ struct StateView: View {
 
                 if item.url == audioManager.asset?.url {
                     if item.isDownloaded {
-                        audioManager.prepare(audioManager.asset?.toAudio(), reason: "StateView Detected Update")
+                        audioManager.prepare(audioManager.asset, reason: "StateView Detected Update")
                     }
                 }
             }

@@ -256,7 +256,7 @@ extension PlayMan {
     }
 
     private func setPlayingInfo(verbose: Bool = false) {
-        let audio = self.asset?.toAudio()
+        let asset = self.asset
         let player = self.player
         let isPlaying = player.isPlaying
         let center = MPNowPlayingInfoCenter.default()
@@ -267,11 +267,11 @@ extension PlayMan {
         var currentTime: TimeInterval = 0
         var image = Audio.defaultImage
 
-        if let audio = audio {
-            title = audio.title
+        if let asset = asset {
+            title = asset.title
             duration = player.duration
             currentTime = player.currentTime
-            image = audio.getMediaCenterImage()
+            image = asset.getMediaCenterImage()
         }
         
         if verbose {
@@ -296,7 +296,7 @@ extension PlayMan {
             }),
         ]
 
-        let like = audio?.like ?? false
+        let like = asset?.like ?? false
         if verbose {
             os_log("\(self.label)setPlayingInfo like -> \(like)")
         }
