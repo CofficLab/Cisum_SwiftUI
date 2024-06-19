@@ -27,4 +27,6 @@ protocol DiskContact {
     func moveFile(at sourceURL: URL, to destinationURL: URL) 
     
     func makeURL(_ fileName: String) -> URL
+    
+    func getTree() -> DiskTree
 }

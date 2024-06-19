@@ -58,6 +58,14 @@ class DiskiCloud: ObservableObject, DiskContact {
     }
 }
 
+// MARK: GetTree
+
+extension DiskiCloud {
+    func getTree() -> DiskTree {
+        DiskTree.fromURL(audiosDir)
+    }
+}
+
 // MARK: Delete
 
 extension DiskiCloud {

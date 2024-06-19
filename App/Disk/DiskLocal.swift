@@ -61,6 +61,10 @@ class DiskLocal: ObservableObject {
 extension DiskLocal: DiskContact {
     func deleteFiles(_ audios: [Audio]) throws {
     }
+    
+    func getTree() -> DiskTree {
+        DiskTree.fromURL(audiosDir)
+    }
 
     func clearFolderContents(atPath path: String) {
         let fileManager = FileManager.default

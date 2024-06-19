@@ -1,10 +1,3 @@
-//
-//  PlayView.swift
-//  Cisum
-//
-//  Created by Angel on 2024/4/14.
-//
-
 import SwiftUI
 
 struct PlayView: View {
