@@ -25,19 +25,4 @@ extension Config {
 
         fatalError()
     }
-    
-    static var trashDir: URL {
-        let url = Config.cloudDocumentsDir.appendingPathComponent(Config.trashDirName)
-
-        if !fileManager.fileExists(atPath: url.path) {
-            do {
-                try fileManager.createDirectory(at: url, withIntermediateDirectories: true)
-                os_log("\(Logger.isMain)🍋 DB::创建回收站目录成功")
-            } catch {
-                os_log("\(Logger.isMain)创建回收站目录失败\n\(error.localizedDescription)")
-            }
-        }
-
-        return url
-    }
 }

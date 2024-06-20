@@ -69,22 +69,11 @@ class Audio {
         self.contentType = contentType
         self.title = url.deletingPathExtension().lastPathComponent
 
-//        if let title = title {
-//            self.title = title
-//        }
-
         if let size = size {
             self.size = size
         } else {
             self.size = FileHelper.getFileSize(url)
         }
-    }
-
-    convenience init(_ metadataItem: MetaWrapper) {
-        self.init(metadataItem.url!,
-                  size: metadataItem.fileSize != nil ? Int64(metadataItem.fileSize!) : nil,
-                  title: metadataItem.fileName,
-                  contentType: metadataItem.contentType)
     }
 }
 
