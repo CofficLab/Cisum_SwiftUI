@@ -44,13 +44,13 @@ struct RootView<Content>: View where Content: View {
                             os_log("\(self.label)执行后台任务")
                         }
 
-//                        Task.detached(priority: .background, operation: {
-//                            await db.prepareJob()
-//                        })
-//
-//                        Task.detached(operation: {
-//                            self.onAppOpen()
-//                        })
+                        Task.detached(priority: .background, operation: {
+                            await db.prepareJob()
+                        })
+
+                        Task.detached(operation: {
+                            self.onAppOpen()
+                        })
                     }
                 }
         }
