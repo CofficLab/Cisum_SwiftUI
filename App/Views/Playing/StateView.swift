@@ -1,15 +1,17 @@
-import SwiftData
 import Network
+import OSLog
+import SwiftData
 import SwiftUI
 
 struct StateView: View {
     @EnvironmentObject var appManager: AppManager
     @EnvironmentObject var audioManager: PlayManager
+    @EnvironmentObject var db: DB
     @Environment(\.modelContext) private var modelContext
 
     @Query(sort: \CopyTask.createdAt, animation: .default) var tasks: [CopyTask]
     @Query(sort: \Audio.order, animation: .default) var audios: [Audio]
-    
+
     @State var networkOK = true
 
     var e = EventManager()
@@ -17,10 +19,10 @@ struct StateView: View {
     var taskCount: Int { tasks.count }
     var showCopyMessage: Bool { tasks.count > 0 }
     var asset: PlayAsset? { audioManager.asset }
-    var db: DB { audioManager.db }
     var count: Int { audios.count }
-    var font: Font { asset == nil ?  .title3 : .callout }
+    var font: Font { asset == nil ? .title3 : .callout }
     var playMan: PlayMan { audioManager.playMan }
+    var label: String { "\(Logger.isMain)🖥️ StateView::" }
 
     var body: some View {
         VStack {
@@ -46,12 +48,13 @@ struct StateView: View {
             if audios.count == 0 {
                 appManager.showDBView()
             }
-            
+
             checkNetworkStatus()
         }
         .onChange(of: count) {
             Task {
                 if audioManager.asset == nil, let first = await db.first() {
+                    os_log("\(self.label)准备第一个")
                     playMan.prepare(first.toPlayAsset())
                 }
             }
@@ -65,6 +68,7 @@ struct StateView: View {
             let audio = data["audio"]!
 
             if audio.url == audioManager.asset?.url, audio.isDownloaded, playMan.isNotPlaying, playMan.currentTime == 0 {
+                os_log("\(self.label)Audio更新后Prepare")
                 playMan.prepare(audioManager.asset)
             }
         })
@@ -76,10 +80,9 @@ struct StateView: View {
                     continue
                 }
 
-                if item.url == audioManager.asset?.url {
-                    if item.isDownloaded {
-                        playMan.prepare(audioManager.asset)
-                    }
+                if item.url == audioManager.asset?.url, item.isDownloaded, playMan.isNotPlaying {
+                    os_log("\(self.label)Audios更新后Prepare")
+                    playMan.prepare(audioManager.asset)
                 }
             }
         })
