@@ -18,10 +18,6 @@ class Audio {
         SortDescriptor(\.order, order: .forward)
     ])
     
-    static var descriptorNoGroup = FetchDescriptor(predicate: #Predicate<Audio> {
-        $0.group == nil
-    })
-    
     static var descriptorFirst: FetchDescriptor<Audio> {
         var descriptor = Audio.descriptorAll
         descriptor.sortBy.append(.init(\.order, order: .forward))
@@ -32,36 +28,25 @@ class Audio {
 
     @Transient
     let fileManager = FileManager.default
+    
+    // MARK: 字段
 
     @Attribute(.unique)
     var url: URL
-
     var order: Int
     var isPlaceholder: Bool = false
     var like: Bool = false
     var title: String = ""
     var playCount: Int = 0
-    // nil表示未计算过
     var size: Int64?
     var identifierKey: String?
     var contentType: String?
-    // nil表示未计算过，true表示有，false表示没有
     var hasCover: Bool? = nil
-    
-    // MARK: Relationship
-    
-    @Relationship(deleteRule: .nullify, inverse: \AudioGroup.audios)
-    var group: AudioGroup? = nil
+    var fileHash: String? = nil
 
     // 新增字段记得设置默认值，否则低版本更新时崩溃
 
     var verbose: Bool { Self.verbose }
-    var ext: String { url.pathExtension }
-    var isSupported: Bool { Config.supportedExtensions.contains(ext.lowercased()) }
-    var isNotSupported: Bool { !isSupported }
-    // 未解决的问题：ios上文件APP中能看到，但FileManager.default.exits返回false
-    var isExists: Bool { fileManager.fileExists(atPath: url.path) || true }
-    var isNotExists: Bool { !isExists }
     var dislike: Bool { !like }
     var label: String { "\(Logger.isMain)\(Self.label)" }
 
@@ -100,27 +85,6 @@ class Audio {
                   size: metadataItem.fileSize != nil ? Int64(metadataItem.fileSize!) : nil,
                   title: metadataItem.fileName,
                   contentType: metadataItem.contentType)
-    }
-}
-
-// MARK: MetaItem
-
-extension Audio {
-    func mergeWith(_ item: MetaWrapper) -> Audio {
-        self.isPlaceholder = item.isPlaceholder
-        self.contentType = item.contentType
-
-        return self
-    }
-
-    static func fromMetaItem(_ item: MetaWrapper) -> Audio? {
-        guard let url = item.url else {
-            return nil
-        }
-
-        let audio = Audio(url)
-
-        return audio.mergeWith(item)
     }
 }
 

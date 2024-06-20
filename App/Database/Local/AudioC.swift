@@ -18,6 +18,8 @@ extension DB {
             os_log(.error, "\(e.localizedDescription)")
         }
         
-        updateGroup(audio)
+        Task {
+            self.updateHash(audio)
+        }
     }
 }

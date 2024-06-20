@@ -16,28 +16,15 @@ extension DB {
         }
 
         for (i,url) in urls.enumerated() {
-            if verbose {
-                os_log("\(self.labelForGroup) UpdateGroup \(i)/\(total) -> \(url.lastPathComponent)")
+            if verbose && (i+1)%100 == 0 {
+                os_log("\(self.labelForGroup) UpdateGroup \(i+1)/\(total) -> \(url.lastPathComponent)")
             }
             
             guard iCloudHelper.isDownloaded(url), let audio = findAudio(url) else {
                 continue
             }
 
-            let fileHash = audio.getHash()
-            if fileHash.count > 0 {
-                if let group = findAudioGroup(fileHash) {
-                    audio.group = group
-                } else {
-                    audio.group = AudioGroup(title: audio.title, hash: fileHash)
-                }
-            }
-        }
-
-        do {
-            try context.save()
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
+            updateHash(audio)
         }
         
         if verbose {

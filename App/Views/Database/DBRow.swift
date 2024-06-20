@@ -42,11 +42,11 @@ struct DBRow: View {
                         Text(audio.getFileSizeReadable())
                             .foregroundStyle(.secondary)
 
-//                        Duplicates(audio)
+                        Duplicates(audio)
                         
-//                        if audio.like {
-//                            Image(systemName: "star.fill")
-//                        }
+                        if audio.like {
+                            Image(systemName: "star.fill")
+                        }
 
                         Spacer()
                     }

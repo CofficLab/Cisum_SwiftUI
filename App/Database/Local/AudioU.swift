@@ -214,16 +214,16 @@ extension DB {
     }
 }
 
-// MARK: Group
+// MARK: Hash
 
 extension DB {
-    func updateGroup(_ audio: Audio, verbose: Bool = true) {
+    func updateHash(_ audio: Audio, verbose: Bool = false) {
         if audio.isNotDownloaded {
             return
         }
 
         if verbose {
-            os_log("\(self.label)UpdateGroup for \(audio.title) 🌾🌾🌾 \(audio.getFileSizeReadable())")
+            os_log("\(self.label)UpdateHash for \(audio.title) 🌾🌾🌾 \(audio.getFileSizeReadable())")
         }
 
         let fileHash = audio.getHash()
@@ -235,7 +235,7 @@ extension DB {
             return
         }
 
-        dbAudio.group = AudioGroup(title: audio.title, hash: fileHash)
+        dbAudio.fileHash = fileHash
 
         do {
             try context.save()
