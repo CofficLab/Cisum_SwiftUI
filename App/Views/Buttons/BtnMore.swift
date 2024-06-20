@@ -7,28 +7,28 @@ struct BtnMore: View {
 
     @State var isDownloaded = true
 
-    var audio: Audio
+    var asset: PlayAsset
     var autoResize = true
     var player: PlayMan { audioManager.playMan }
 
     var body: some View {
         ControlButton(
-            title: "播放 「\(audio.title)」",
+            title: "播放 「\(asset.title)」",
             image: getImageName(),
             dynamicSize: autoResize,
             onTap: {
-                player.play(audio.toPlayAsset(), reason: "Play Button")
+                player.play(asset, reason: "Play Button")
             },
             menus: AnyView(VStack{
-                BtnPlay(audio: audio, autoResize: false)
+                BtnPlay(asset:asset, autoResize: false)
                 Divider()
-                BtnDownload(audio: audio)
-                BtnEvict(audio: audio)
+                BtnDownload(asset: asset)
+                BtnEvict(asset: asset)
                 if Config.isDesktop {
-                    BtnShowInFinder(url: audio.url, autoResize: false)
+                    BtnShowInFinder(url: asset.url, autoResize: false)
                 }
                 Divider()
-                BtnDel(audios: [audio], autoResize: false)
+                BtnDel(assets: [asset], autoResize: false)
             }))
     }
 

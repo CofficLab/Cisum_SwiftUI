@@ -19,7 +19,7 @@ struct OperationView: View {
                 if Config.isDesktop {
                     BtnShowInFinder(url: audio.url, autoResize: true)
                 }
-                BtnDel(audios: [audio], autoResize: true)
+                BtnDel(assets: [audio.toPlayAsset()], autoResize: true)
             }
             Spacer()
         })

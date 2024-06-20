@@ -7,17 +7,17 @@ struct BtnPlay: View {
 
     @State var isDownloaded = true
 
-    var audio: Audio
+    var asset: PlayAsset
     var autoResize = true
     var player: PlayMan { audioManager.playMan }
 
     var body: some View {
         ControlButton(
-            title: "播放 「\(audio.title)」",
+            title: "播放 「\(asset.title)」",
             image: getImageName(),
             dynamicSize: autoResize,
             onTap: {
-                player.play(audio.toPlayAsset(), reason: "Play Button")
+                player.play(asset, reason: "Play Button")
             })
     }
 

@@ -58,23 +58,23 @@ struct DBRow: View {
                 HStack {
                     Spacer()
                     BtnShowInFinder(url: audio.url, autoResize: false)
-                    BtnPlay(audio: audio, autoResize: false)
-                    BtnMore(audio: audio, autoResize: false)
+                    BtnPlay(asset: audio.toPlayAsset(), autoResize: false)
+                    BtnMore(asset: audio.toPlayAsset(), autoResize: false)
                 }.labelStyle(.iconOnly)
             }
         }
         .onHover(perform: { hovered = $0 })
         .frame(maxHeight: .infinity)
         .contextMenu(menuItems: {
-            BtnPlay(audio: audio, autoResize: false)
+            BtnPlay(asset: audio.toPlayAsset(), autoResize: false)
             Divider()
-            BtnDownload(audio: audio)
-            BtnEvict(audio: audio)
+            BtnDownload(asset: audio.toPlayAsset())
+            BtnEvict(asset: audio.toPlayAsset())
             if Config.isDesktop {
                 BtnShowInFinder(url: audio.url, autoResize: false)
             }
             Divider()
-            BtnDel(audios: [audio], autoResize: false)
+            BtnDel(assets: [audio.toPlayAsset()], autoResize: false)
         })
         
     }

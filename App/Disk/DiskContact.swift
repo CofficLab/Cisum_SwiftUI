@@ -14,8 +14,6 @@ protocol DiskContact {
     /// 移除下载
     func evict(_ url: URL)
     
-    func trash(_ audio: Audio) async
-    
     func download(_ url: URL, reason: String) async
     
     func copyTo(url: URL) throws

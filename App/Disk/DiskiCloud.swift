@@ -27,35 +27,6 @@ class DiskiCloud: ObservableObject, DiskContact {
     var onUpdated: (_ items: DiskFileGroup) -> Void = { items in
         os_log("\(Logger.isMain)\(DiskiCloud.label)updated with items.count=\(items.count)")
     }
-    
-    func trash(_ audio: Audio) async {
-        let url = audio.url
-        let ext = audio.ext
-        let fileName = audio.title
-        let trashDir = Config.trashDir
-        var trashUrl = trashDir.appendingPathComponent(url.lastPathComponent)
-        var times = 1
-        
-        // 回收站已经存在同名文件
-        while fileManager.fileExists(atPath: trashUrl.path) {
-            trashUrl = trashUrl.deletingLastPathComponent()
-                .appendingPathComponent("\(fileName)-\(times)")
-                .appendingPathExtension(ext)
-            times += 1
-        }
-        
-        // 文件不存在
-        if !fileManager.fileExists(atPath: audio.url.path) {
-            return
-        }
-            
-        // 移动到回收站
-        do {
-            try await cloudHandler.moveFile(at: audio.url, to: trashUrl)
-        } catch let e {
-            os_log(.error, "\(Logger.isMain)☁️⚠️ CloudFile::trash \(e.localizedDescription)")
-        }
-    }
 }
 
 // MARK: GetTree

@@ -3,12 +3,12 @@ import SwiftUI
 struct BtnDownload: View {
     @EnvironmentObject var db: DB
     
-    var audio: Audio
+    var asset: PlayAsset
         
     var body: some View {
         Button {
             Task {
-                await db.download(audio.url, reason: "点击了下载")
+                await db.download(asset.url, reason: "点击了下载")
             }
         } label: {
             Label("下载", systemImage: getImageName())

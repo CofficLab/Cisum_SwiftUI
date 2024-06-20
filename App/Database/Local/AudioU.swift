@@ -50,8 +50,8 @@ extension DB {
 // MARK: Download
 
 extension DB {
-    func evict(_ audio: Audio) {
-        disk.evict(audio.url)
+    func evict(_ url: URL) {
+        disk.evict(url)
     }
 
     func download(_ url: URL, reason: String) {

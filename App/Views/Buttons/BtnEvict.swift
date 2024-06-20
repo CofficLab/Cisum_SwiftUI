@@ -4,17 +4,17 @@ struct BtnEvict: View {
     @EnvironmentObject var audioManager: PlayManager
     @EnvironmentObject var db: DB
     
-    var audio: Audio
+    var asset: PlayAsset
         
     var body: some View {
         Button {
             Task {
-                await db.evict(audio)
+                await db.evict(asset.url)
             }
         } label: {
             Label("移除下载项", systemImage: getImageName())
                 .font(.system(size: 24))
-        }.disabled(audio.url == audioManager.asset?.url)
+        }.disabled(asset.url == audioManager.asset?.url)
     }
     
     private func getImageName() -> String {

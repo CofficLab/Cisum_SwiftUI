@@ -107,17 +107,21 @@ extension DB {
         Self.deleteAudio(context: context, disk: disk, id: id)
     }
 
-    func deleteAudio(_ url: URL) {
+    func deleteAudio(_ url: URL) -> Audio? {
         os_log("\(self.label)DeleteAudio by url=\(url.lastPathComponent)")
-        deleteAudios([url])
+        return deleteAudios([url])
     }
 
     // MARK: 删除多个
 
-    func deleteAudios(_ urls: [URL]) {
+    func deleteAudios(_ urls: [URL]) -> Audio? {
+        var audio: Audio? = nil
+        
         for url in urls {
-            deleteAudio(url)
+            audio = deleteAudio(url)
         }
+        
+        return audio
     }
 
     func deleteAudios(_ ids: [Audio.ID]) -> Audio? {
@@ -126,21 +130,6 @@ extension DB {
 
     func deleteAudios(_ audios: [Audio]) -> Audio? {
         Self.deleteAudios(context: context, disk: disk, ids: audios.map { $0.id })
-    }
-
-    // MARK: 回收站
-
-    func trash(_ audio: Audio) async {
-        // 文件已经不存在了，放弃
-        if audio.isNotExists {
-            return
-        }
-
-        // 移动到回收站
-        await disk.trash(audio)
-
-        // 从数据库删除
-        deleteAudio(audio)
     }
 
     // MARK: 清空数据库
