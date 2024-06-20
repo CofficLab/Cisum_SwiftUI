@@ -6,18 +6,24 @@ struct MenuTile: View {
     var trailing: String = ""
     var isFolder: Bool = false
     var level: Int = 0
+    var loading: Bool = false
 
     @Binding var deleting: Bool
     @Binding var selected: Bool
     @Binding var collapsed: Bool
+    @Binding var forceIcon: String
+    var clicked: () -> Void = {}
 
     @State private var indicatorHovered: Bool = false
     @State private var hovered: Bool = false
+    @State private var lastClickedAt: Date = .distantPast
 
     private var icon: some View {
         #if os(macOS)
             var color = Color(.controlAccentColor)
-        #else
+        #endif
+
+        #if os(iOS)
             var color = Color(.blue)
         #endif
 
@@ -25,14 +31,20 @@ struct MenuTile: View {
             color = Color(.white)
         }
 
+        var systemName = isFolder ? "folder" : "doc.text"
+        if forceIcon.count > 0 {
+            systemName = forceIcon
+        }
         return HStack {
-            Image(systemName: isFolder ? "folder" : "music.note")
+            Image(systemName: systemName)
                 .resizable()
-                .frame(width: isFolder ? 14 : 14, height: isFolder ? 12 : 15)
+                .frame(width: isFolder ? 14 : 12, height: isFolder ? 12 : 15)
                 .foregroundColor(color)
-                .padding(.trailing, isFolder ? 0 : 2)
+                .padding(.trailing, isFolder ? 4 : 6)
         }
     }
+
+    // MARK: 计算背景色
 
     private var background: some View {
         if dragging {
@@ -41,7 +53,7 @@ struct MenuTile: View {
 
         if selected {
             #if os(macOS)
-                return Color(.controlAccentColor).opacity(0.8)
+                return Color(.controlAccentColor)
             #endif
 
             #if os(iOS)
@@ -53,11 +65,9 @@ struct MenuTile: View {
             return Color(.gray).opacity(0.4)
         }
 
-        #if os(macOS)
         if hovered {
             return Color(.controlAccentColor).opacity(0.1)
         }
-        #endif
 
         return Color.clear
     }
@@ -71,6 +81,8 @@ struct MenuTile: View {
             background
 
             HStack(spacing: 2) {
+                // MARK: 折叠指示器
+
                 Image(systemName: collapsed ? "chevron.forward" : "chevron.down")
                     .frame(width: 4, height: 4)
                     .foregroundColor(foregroundColor)
@@ -79,25 +91,32 @@ struct MenuTile: View {
                     .onHover { hovering in
                         indicatorHovered = hovering
                     }
-                    .padding(.horizontal, 0)
+                    .padding(.horizontal, 8)
                     .padding(.vertical, 8)
                     .cornerRadius(4)
                     .background(getIndicatorBackground())
 
+                // MARK: 图标
+
                 icon
+
+                // MARK: 标题
 
                 Text(title)
                     .foregroundColor(foregroundColor)
 
                 Spacer()
 
+                // MARK: 子节点数量
+
                 Text(trailing)
                     .font(.footnote)
-                    .foregroundColor(foregroundColor)
+                    .foregroundColor(foregroundColor.opacity(0.8))
                     .opacity(isFolder ? 1 : 0)
 
-                if deleting == true {
-                    ProgressView().controlSize(.small)
+                if deleting || loading {
+                    ProgressView()
+                        .controlSize(.mini)
                 }
             }
             .onHover(perform: { v in
@@ -109,20 +128,30 @@ struct MenuTile: View {
             .contentShape(Rectangle())
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
         }
-        .onTapGesture(count: 2) {
+//         如果定义了双击事件，单击的响应就会变慢
+//        .onTapGesture(count: 2) {
+//            collapsed.toggle()
+//            clicked()
+//        }
+        .onTapGesture {
+            // MARK: 双击事件
+
+            if lastClickedAt.timeIntervalSinceNow > -0.5 {
+                collapsed.toggle()
+                return
+            }
+
+            // MARK: 单击事件
+
+            lastClickedAt = .now
             selected = true
-            collapsed.toggle()
-        }
-        .onTapGesture(count: 1) {
-            selected = true
+            clicked()
         }
         .cornerRadius(4)
-        #if os(macOS)
         .overlay(
             RoundedRectangle(cornerRadius: 4)
                 .stroke(hovered ? Color(.controlAccentColor).opacity(0) : Color.clear, lineWidth: 1)
         )
-        #endif
     }
 
     private func getIndicatorBackground() -> some ShapeStyle {
@@ -138,89 +167,106 @@ struct MenuTile: View {
     }
 }
 
-struct MenuTile_Previews: PreviewProvider {
-    static var previews: some View {
-        VStack(spacing: 0) {
-            MenuTile(
-                title: "普通",
-                dragging: false,
-                trailing: "",
-                isFolder: false,
-                deleting: Binding.constant(false),
-                selected: Binding.constant(false),
-                collapsed: Binding.constant(false)
-            )
-            MenuTile(
-                title: "普通删除中",
-                dragging: false,
-                deleting: Binding.constant(true),
-                selected: Binding.constant(false),
-                collapsed: Binding.constant(true)
-            )
-            MenuTile(
-                title: "普通目录",
-                dragging: false,
-                isFolder: true,
-                deleting: Binding.constant(false),
-                selected: Binding.constant(false),
-                collapsed: Binding.constant(true)
-            )
-            MenuTile(
-                title: "选中目录",
-                dragging: false,
-                isFolder: true,
-                deleting: Binding.constant(false),
-                selected: Binding.constant(true),
-                collapsed: Binding.constant(false)
-            )
-            MenuTile(
-                title: "普通带尾部",
-                dragging: false,
-                trailing: "9",
-                deleting: Binding.constant(false),
-                selected: Binding.constant(false),
-                collapsed: Binding.constant(false)
-            )
-            MenuTile(
-                title: "选中",
-                dragging: false,
-                deleting: Binding.constant(false),
-                selected: Binding.constant(true),
-                collapsed: Binding.constant(false)
-            )
-            MenuTile(
-                title: "展开",
-                dragging: false,
-                deleting: Binding.constant(false),
-                selected: Binding.constant(false),
-                collapsed: Binding.constant(false)
-            )
-            MenuTile(
-                title: "选中带尾部",
-                dragging: false,
-                trailing: "89",
-                deleting: Binding.constant(false),
-                selected: Binding.constant(true),
-                collapsed: Binding.constant(false)
-            )
-            MenuTile(
-                title: "普通",
-                dragging: false,
-                trailing: "",
-                isFolder: false,
-                deleting: Binding.constant(false),
-                selected: Binding.constant(false),
-                collapsed: Binding.constant(false)
-            )
-            MenuTile(
-                title: "选中展开",
-                dragging: false,
-                deleting: Binding.constant(false),
-                selected: Binding.constant(true),
-                collapsed: Binding.constant(false)
-            )
-        }
-        .frame(width: 300)
-        .padding(.all, 8)
+#Preview {
+    VStack(spacing: 0) {
+        MenuTile(
+            title: "普通",
+            dragging: false,
+            trailing: "",
+            isFolder: false,
+            deleting: Binding.constant(false),
+            selected: Binding.constant(true),
+            collapsed: Binding.constant(false),
+            forceIcon: Binding.constant("")
+        )
+        MenuTile(
+            title: "普通删除中",
+            dragging: false,
+            deleting: Binding.constant(true),
+            selected: Binding.constant(false),
+            collapsed: Binding.constant(true),
+            forceIcon: Binding.constant("")
+        )
+        MenuTile(
+            title: "普通加载中",
+            dragging: false,
+            loading: true,
+            deleting: Binding.constant(false),
+            selected: Binding.constant(false),
+            collapsed: Binding.constant(true),
+            forceIcon: Binding.constant("")
+        )
+        MenuTile(
+            title: "普通目录",
+            dragging: false,
+            isFolder: true,
+            deleting: Binding.constant(false),
+            selected: Binding.constant(false),
+            collapsed: Binding.constant(true),
+            forceIcon: Binding.constant("")
+        )
+        MenuTile(
+            title: "选中目录",
+            dragging: false,
+            isFolder: true,
+            deleting: Binding.constant(false),
+            selected: Binding.constant(false),
+            collapsed: Binding.constant(false),
+            forceIcon: Binding.constant("")
+        )
+        MenuTile(
+            title: "普通带尾部",
+            dragging: false,
+            trailing: "9",
+            deleting: Binding.constant(false),
+            selected: Binding.constant(false),
+            collapsed: Binding.constant(false),
+            forceIcon: Binding.constant("")
+        )
+        MenuTile(
+            title: "选中",
+            dragging: false,
+            deleting: Binding.constant(false),
+            selected: Binding.constant(false),
+            collapsed: Binding.constant(false),
+            forceIcon: Binding.constant("")
+        )
+        MenuTile(
+            title: "展开",
+            dragging: false,
+            deleting: Binding.constant(false),
+            selected: Binding.constant(false),
+            collapsed: Binding.constant(false),
+            forceIcon: Binding.constant("")
+        )
+        MenuTile(
+            title: "选中带尾部",
+            dragging: false,
+            trailing: "89",
+            deleting: Binding.constant(false),
+            selected: Binding.constant(false),
+            collapsed: Binding.constant(false),
+            forceIcon: Binding.constant("")
+        )
+        MenuTile(
+            title: "普通",
+            dragging: false,
+            trailing: "",
+            isFolder: false,
+            deleting: Binding.constant(false),
+            selected: Binding.constant(false),
+            collapsed: Binding.constant(false),
+            forceIcon: Binding.constant("")
+        )
+        MenuTile(
+            title: "选中展开",
+            dragging: false,
+            deleting: Binding.constant(false),
+            selected: Binding.constant(false),
+            collapsed: Binding.constant(false),
+            forceIcon: Binding.constant("")
+        )
     }
+    .frame(width: 300)
+    .padding(.all, 8)
 }

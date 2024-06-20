@@ -59,3 +59,15 @@ extension FileBox {
         !isExists()
     }
 }
+
+// MARK: isFolder
+
+extension FileBox {
+    func isFolder() -> Bool {
+        FileHelper.isDirectory(at: self.url)
+    }
+    
+    func isDirectory() -> Bool {
+        isFolder()
+    }
+}
