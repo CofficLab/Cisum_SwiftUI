@@ -68,7 +68,7 @@ struct DBList: View {
                         }
                     }, content: {
                         ForEach(audios, id: \.self) { audio in
-                            DBRow(audio)
+                            DBRow(audio.toPlayAsset())
                                 .tag(audio as Audio?)
                         }
                     })

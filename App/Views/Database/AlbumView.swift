@@ -63,8 +63,8 @@ struct AlbumView: View {
         .clipShape(shape)
         .onAppear {
             bg.async {
-                let isDownloaded = asset.isDownloaded()
-                let isDownloading = asset.isDownloading()
+                let isDownloaded = asset.isDownloaded
+                let isDownloading = asset.isDownloading
                 let image = asset.getCoverImageFromCache()
                 
                 main.async {
@@ -128,11 +128,9 @@ struct AlbumView: View {
             downloadingPercent = item.downloadProgress
         } else {
             bg.async {
-                let isDownloaded = asset.isDownloaded()
-                let isDownloading = asset.isDownloading()
                 main.async {
-                    self.isDownloaded = isDownloaded
-                    self.isDownloading = isDownloading
+                    self.isDownloaded = asset.isDownloaded
+                    self.isDownloading = asset.isDownloading
                 }
             }
             

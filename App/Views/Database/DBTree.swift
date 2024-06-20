@@ -22,8 +22,8 @@ struct DBTree: View {
     }
     
     var body: some View {
-        List([DiskTree.fromURL(folderURL)], children: \.children, selection: $selection) { item in
-            DBRow(Audio(item.url))
+        List([DiskTree.fromURL(folderURL)], children: \.children, selection: $selection) { tree in
+            DBRow(tree.toPlayAsset())
         }
     }
 }

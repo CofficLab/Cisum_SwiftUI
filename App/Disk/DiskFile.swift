@@ -1,6 +1,6 @@
 import Foundation
 
-struct DiskFile {
+struct DiskFile: FileBox {
     var url: URL
     var isDownloading: Bool
     var isUpdated: Bool = false

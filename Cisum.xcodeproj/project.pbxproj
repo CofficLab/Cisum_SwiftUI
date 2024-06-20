@@ -143,6 +143,7 @@
 		F5675C332C22BFD900326664 /* DBBottomBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C322C22BFD900326664 /* DBBottomBar.swift */; };
 		F5675C352C22CB3C00326664 /* DBTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C342C22CB3C00326664 /* DBTree.swift */; };
 		F5675C372C22DB4D00326664 /* DiskTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C362C22DB4D00326664 /* DiskTree.swift */; };
+		F5675C3A2C2404D700326664 /* FileBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C392C2404D700326664 /* FileBox.swift */; };
 		F573B1882C0411E4004C34CC /* DeviceDataExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B1872C0411E4004C34CC /* DeviceDataExt.swift */; };
 		F573B18A2C0413DD004C34CC /* DeviceHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B1892C0413DD004C34CC /* DeviceHelper.swift */; };
 		F573B18C2C042E08004C34CC /* DeviceExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B18B2C042E08004C34CC /* DeviceExt.swift */; };
@@ -287,6 +288,7 @@
 		F5675C322C22BFD900326664 /* DBBottomBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBBottomBar.swift; sourceTree = "<group>"; };
 		F5675C342C22CB3C00326664 /* DBTree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBTree.swift; sourceTree = "<group>"; };
 		F5675C362C22DB4D00326664 /* DiskTree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskTree.swift; sourceTree = "<group>"; };
+		F5675C392C2404D700326664 /* FileBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileBox.swift; sourceTree = "<group>"; };
 		F573B1872C0411E4004C34CC /* DeviceDataExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceDataExt.swift; sourceTree = "<group>"; };
 		F573B1892C0413DD004C34CC /* DeviceHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceHelper.swift; sourceTree = "<group>"; };
 		F573B18B2C042E08004C34CC /* DeviceExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceExt.swift; sourceTree = "<group>"; };
@@ -330,6 +332,7 @@
 		0B1D5A6B2AB302600010DDF2 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
+				F5675C382C2404B000326664 /* File */,
 				0B1D5A722AB302600010DDF2 /* BackgroundView.swift */,
 				0B718F0B2AB4349900569762 /* CardView.swift */,
 				0BBA421E2AC1397F00C0B977 /* Centered.swift */,
@@ -338,8 +341,6 @@
 				0B1D5A6C2AB302600010DDF2 /* CommonHelp.swift */,
 				F573B1892C0413DD004C34CC /* DeviceHelper.swift */,
 				0B1D5A6E2AB302600010DDF2 /* Extensions.swift */,
-				0BBC15892AB9AB7F006E82C4 /* FileHelper.swift */,
-				0B901D872BB83BC3003AC253 /* FilePresenter.swift */,
 				0BBC15872AB9A473006E82C4 /* iCloudHelper.swift */,
 				0B11262B2AC719B70093DFFA /* ImageHelper.swift */,
 				0B901D892BB83E28003AC253 /* ItemQuery.swift */,
@@ -597,6 +598,16 @@
 			path = Playing;
 			sourceTree = "<group>";
 		};
+		F5675C382C2404B000326664 /* File */ = {
+			isa = PBXGroup;
+			children = (
+				0BBC15892AB9AB7F006E82C4 /* FileHelper.swift */,
+				0B901D872BB83BC3003AC253 /* FilePresenter.swift */,
+				F5675C392C2404D700326664 /* FileBox.swift */,
+			);
+			path = File;
+			sourceTree = "<group>";
+		};
 		F573B1852C041175004C34CC /* Local */ = {
 			isa = PBXGroup;
 			children = (
@@ -817,6 +828,7 @@
 				0B8C36B02BEC6E6500C47567 /* DBExt.swift in Sources */,
 				0BE93F2E2BFB8B7E00F25445 /* MoreView.swift in Sources */,
 				0B9FA2992BC81EFF007B235A /* NotDownloadedAlbum.swift in Sources */,
+				F5675C3A2C2404D700326664 /* FileBox.swift in Sources */,
 				0BBC158D2ABAC0C7006E82C4 /* BtnToggle.swift in Sources */,
 				0B11262A2AC6F7B20093DFFA /* BtnToggleDB.swift in Sources */,
 				0B6B8B9B2BBA420700F65B23 /* BtnPlay.swift in Sources */,

@@ -1,3 +1,5 @@
+/* 播放模式 */
+
 enum PlayMode: String {
     case Order
     case Loop

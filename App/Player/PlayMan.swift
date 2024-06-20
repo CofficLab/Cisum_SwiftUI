@@ -4,6 +4,12 @@ import Foundation
 import OSLog
 import SwiftUI
 
+/* PlayAsset 负责
+      接收用户播放控制事件
+      接收系统播放控制事件
+      对接系统媒体中心
+ */
+
 class PlayMan: NSObject {
     // MARK: 成员
 
@@ -174,13 +180,13 @@ extension PlayMan {
             throw SmartError.NotExists
         }
 
-        if asset.isDownloading() {
+        if asset.isDownloading {
             os_log("\(self.label)在下载 \(asset.title) ⚠️⚠️⚠️")
             throw SmartError.Downloading
         }
 
         // 未下载的情况
-        guard asset.isDownloaded() else {
+        guard asset.isDownloaded else {
             os_log("\(self.label)未下载 \(asset.title) ⚠️⚠️⚠️")
             throw SmartError.NotDownloaded
         }

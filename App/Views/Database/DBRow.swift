@@ -7,44 +7,48 @@ struct DBRow: View {
 
     @State var hovered = false
 
-    var audio: Audio
+    var asset: PlayAsset
 
-    var current: PlayAsset? { audioManager.asset }
+    var isCurrent: Bool {
+        audioManager.asset?.url == self.asset.url
+    }
     var background: Color {
-        if current?.url == audio.url {
+        if isCurrent {
             return Color.accentColor
         }
+        
+        if hovered {
+            return Config.getBackground.opacity(0.9)
+        }
 
-        return hovered ? Config.getBackground.opacity(0.9) : .clear
+        return .clear
     }
 
-    init(_ audio: Audio) {
-        self.audio = audio
+    init(_ asset: PlayAsset) {
+        self.asset = asset
     }
 
     var body: some View {
         ZStack {
             HStack(alignment: .center) {
-                AlbumView(audio.toPlayAsset())
+                AlbumView(asset)
                     .frame(
                         width: Config.isDesktop ? 36 : 36,
                         height: Config.isDesktop ? 36 : 36
                     )
                 VStack(spacing: 0) {
                     HStack {
-                        Text(audio.title)
-                        if current?.url == audio.url {
+                        Text(asset.title)
+                        if isCurrent {
                             Image(systemName: "speaker.wave.2")
                         }
                         Spacer()
                     }
                     HStack {
-                        Text(audio.getFileSizeReadable())
+                        Text(asset.getFileSizeReadable())
                             .foregroundStyle(.secondary)
 
-                        Duplicates(audio)
-                        
-                        if audio.like {
+                        if asset.like {
                             Image(systemName: "star.fill")
                         }
 
@@ -57,24 +61,24 @@ struct DBRow: View {
             if hovered {
                 HStack {
                     Spacer()
-                    BtnShowInFinder(url: audio.url, autoResize: false)
-                    BtnPlay(asset: audio.toPlayAsset(), autoResize: false)
-                    BtnMore(asset: audio.toPlayAsset(), autoResize: false)
+                    BtnShowInFinder(url: asset.url, autoResize: false)
+                    BtnPlay(asset: asset, autoResize: false)
+                    BtnMore(asset: asset, autoResize: false)
                 }.labelStyle(.iconOnly)
             }
         }
         .onHover(perform: { hovered = $0 })
         .frame(maxHeight: .infinity)
         .contextMenu(menuItems: {
-            BtnPlay(asset: audio.toPlayAsset(), autoResize: false)
+            BtnPlay(asset: asset, autoResize: false)
             Divider()
-            BtnDownload(asset: audio.toPlayAsset())
-            BtnEvict(asset: audio.toPlayAsset())
+            BtnDownload(asset: asset)
+            BtnEvict(asset: asset)
             if Config.isDesktop {
-                BtnShowInFinder(url: audio.url, autoResize: false)
+                BtnShowInFinder(url: asset.url, autoResize: false)
             }
             Divider()
-            BtnDel(assets: [audio.toPlayAsset()], autoResize: false)
+            BtnDel(assets: [asset], autoResize: false)
         })
         
     }

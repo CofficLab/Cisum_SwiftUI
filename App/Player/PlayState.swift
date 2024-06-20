@@ -1,3 +1,5 @@
+/* 播放状态 */
+
 enum PlayState {
     case Ready(PlayAsset?)
     case Playing(PlayAsset)

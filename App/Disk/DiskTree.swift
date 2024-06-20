@@ -1,6 +1,6 @@
 import Foundation
 
-struct DiskTree: Hashable, Identifiable, CustomStringConvertible {
+struct DiskTree: Hashable, Identifiable, CustomStringConvertible, FileBox {
     var id: Self { self }
     var url: URL
     var name: String
@@ -43,5 +43,13 @@ struct DiskTree: Hashable, Identifiable, CustomStringConvertible {
             // Handle error
             return DiskTree(url: url, name: url.lastPathComponent, children: nil)
         }
+    }
+}
+
+// MARK: Tramsform
+
+extension DiskTree {
+    func toPlayAsset() -> PlayAsset {
+        PlayAsset(url: self.url)
     }
 }

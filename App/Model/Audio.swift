@@ -5,8 +5,10 @@ import OSLog
 import SwiftData
 import SwiftUI
 
+/* 存储音频数据，尤其是将计算出来的属性存储下来 */
+
 @Model
-class Audio {
+class Audio: FileBox {
     static var label = "🪖 Audio::"
     static var verbose = false
     
@@ -77,22 +79,6 @@ class Audio {
     }
 }
 
-// MARK: FileSize
-
-extension Audio {
-    func getFileSize() -> Int64 {
-        if let size = self.size, size > 0 {
-            return size
-        }
-
-        return FileHelper.getFileSize(url)
-    }
-
-    func getFileSizeReadable() -> String {
-        FileHelper.getFileSizeReadable(getFileSize())
-    }
-}
-
 // MARK: Order
 
 extension Audio {
@@ -111,33 +97,11 @@ extension Audio: Identifiable {
     var id: PersistentIdentifier { persistentModelID }
 }
 
-// MARK: HASH
-
-extension Audio {
-    func getHash(verbose: Bool = true) -> String {
-        FileHelper.getMD5(self.url)
-    }
-}
-
-// MARK: iCloud 相关
-
-extension Audio {
-    var isDownloaded: Bool {
-        iCloudHelper.isDownloaded(url)
-    }
-    
-    var isDownloading: Bool {
-        iCloudHelper.isDownloading(url)
-    }
-    
-    var isNotDownloaded: Bool {
-        !isDownloaded
-    }
-}
+// MARK: Transform
 
 extension Audio {
     func toPlayAsset() -> PlayAsset {
-        PlayAsset(url: self.url)
+        PlayAsset(url: self.url, size: size)
     }
     
     static func fromPlayAsset(_ asset: PlayAsset) -> Audio {
