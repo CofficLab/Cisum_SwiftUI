@@ -32,7 +32,20 @@ struct HomeView: View {
                     .frame(height: showDB ? Config.controlViewMinHeight : geo.size.height)
 
                 if showDB {
-                    MoreView()
+                    TabView {
+                        DBView()
+                            .tabItem {
+                                Label("仓库", systemImage: "music.note.list")
+                            }
+
+                        SettingView()
+                            .tabItem {
+                                Label("设置", systemImage: "gear")
+                            }        }
+                    #if os(macOS)
+                    .padding(.top, 2)
+                    #endif
+                    .background(.background)
                 }
             }
             .onChange(of: showDB) {

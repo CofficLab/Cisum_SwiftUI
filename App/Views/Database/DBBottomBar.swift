@@ -6,17 +6,25 @@ struct DBBottomBar: View {
     var body: some View {
         HStack {
             Spacer()
-            Image(systemName: "list.bullet")
-                .onTapGesture {
+            
+            ControlButton(
+                title: "列表视图",
+                image: "list.bullet",
+                dynamicSize: false,
+                onTap: {
                     self.treeView = false
-                }
-            Image(systemName: "rectangle.3.group.fill")
-                .onTapGesture {
+                })
+
+            ControlButton(
+                title: "文件夹视图",
+                image: "rectangle.3.group.fill",
+                dynamicSize: false,
+                onTap: {
                     self.treeView = true
-                }
+                })
         }
-        .padding(.vertical, 3)
-        .padding(.horizontal, 3)
+        .labelStyle(.iconOnly)
+        .offset(y:2)
     }
 }
 

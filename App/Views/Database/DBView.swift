@@ -24,7 +24,7 @@ struct DBView: View {
     }
 
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             ZStack {
                 if treeView {
                     if let rootURL = rootURL {
