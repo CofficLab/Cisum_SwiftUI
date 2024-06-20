@@ -3,12 +3,13 @@ import SwiftUI
 
 struct BtnLike: View {
     @EnvironmentObject var audioManager: PlayManager
+    @EnvironmentObject var db: DB
     
     @State var like = false
     
-    var audio: Audio
+    var asset: PlayAsset
     var autoResize = false
-    var title: String { audio.like ? "取消喜欢" : "标记喜欢" }
+    var title: String { asset.like ? "取消喜欢" : "标记喜欢" }
     var label: String { "\(Logger.isMain)❤️ BtnLike::" }
         
     var body: some View {
@@ -18,14 +19,14 @@ struct BtnLike: View {
             dynamicSize: autoResize,
             onTap: {
                 Task {
-                    await audioManager.db.toggleLike(audio)
+                    await db.toggleLike(asset.url)
                 }
             })
             .onAppear {
-                self.like = audio.like
+                self.like = asset.like
             }
-            .onChange(of: audio) {
-                self.like = audio.like
+            .onChange(of: asset.url) {
+                self.like = asset.like
             }
             .onReceive(NotificationCenter.default.publisher(for: Notification.Name.AudioUpdatedNotification), perform: { notification in
                 let data = notification.userInfo as! [String: Audio]

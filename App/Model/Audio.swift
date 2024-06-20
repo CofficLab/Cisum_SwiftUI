@@ -101,7 +101,7 @@ extension Audio: Identifiable {
 
 extension Audio {
     func toPlayAsset() -> PlayAsset {
-        PlayAsset(url: self.url, size: size)
+        PlayAsset(url: self.url, like: self.like, size: size)
     }
     
     static func fromPlayAsset(_ asset: PlayAsset) -> Audio {

@@ -39,11 +39,9 @@ struct ControlView: View {
                     // MARK: 操作栏
 
                     if showOperationView {
-                        if showOperationView {
-                            OperationView(geo: geo)
-                                .frame(height: getOperationHeight(geo))
-                                .background(Config.background(.white))
-                        }
+                        OperationView(geo: geo)
+                            .frame(height: getOperationHeight(geo))
+                            .background(Config.background(.white))
                     }
 
                     // MARK: 进度栏
@@ -147,6 +145,7 @@ struct ControlView: View {
 
 #Preview("App") {
     AppPreview()
+        .frame(height: 800)
 }
 
 #Preview("iMac") {

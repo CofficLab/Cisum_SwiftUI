@@ -91,8 +91,8 @@ extension DB {
 // MARK: LIKE
 
 extension DB {
-    func toggleLike(_ audio: Audio) {
-        if let dbAudio = findAudio(audio.id) {
+    func toggleLike(_ url: URL) {
+        if let dbAudio = findAudio(url) {
             dbAudio.like.toggle()
             do {
                 try context.save()

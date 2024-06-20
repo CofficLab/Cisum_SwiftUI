@@ -4,8 +4,6 @@ import SwiftUI
 struct OperationView: View {
     @EnvironmentObject var audioManager: PlayManager
     @EnvironmentObject var db: DB
-    
-    @State var audio: Audio?
 
     var asset: PlayAsset? { audioManager.asset }
     var characterCount: Int { asset?.title.count ?? 0 }
@@ -14,25 +12,18 @@ struct OperationView: View {
     var body: some View {
         HStack(spacing: 0, content: {
             Spacer()
-            if let audio = audio {
-                BtnLike(audio: audio, autoResize: true)
+            if let asset = asset {
+                BtnLike(asset: asset, autoResize: true)
                 if Config.isDesktop {
-                    BtnShowInFinder(url: audio.url, autoResize: true)
+                    BtnShowInFinder(url: asset.url, autoResize: true)
                 }
-                BtnDel(assets: [audio.toPlayAsset()], autoResize: true)
+                BtnDel(assets: [asset], autoResize: true)
             }
             Spacer()
         })
         .frame(maxWidth: .infinity)
         .foregroundStyle(.white)
         .labelStyle(.iconOnly)
-        .onAppear {
-            Task {
-                if let asset = asset {
-                    self.audio  = await db.findAudio(asset.url)
-                }
-            }
-        }
     }
 
     func getFont() -> Font {
@@ -49,9 +40,8 @@ struct OperationView: View {
 }
 
 #Preview("APP") {
-    RootView {
-        ContentView()
-    }.modelContainer(Config.getContainer)
+    AppPreview()
+        .frame(height: 800)
 }
 
 #Preview("Layout") {
