@@ -6,7 +6,7 @@ class DiskiCloud: ObservableObject, DiskContact {
     
     var queue = DispatchQueue(label: "DiskiCloud", qos: .background)
     var fileManager = FileManager.default
-    var cloudHandler = CloudHandler()
+    var cloudHandler = iCloudHandler()
     var audiosDir: URL {
         let url = Config.cloudDocumentsDir.appendingPathComponent(Config.audiosDirName)
 
@@ -200,7 +200,7 @@ extension DiskiCloud {
 
 extension DiskiCloud {
     func moveFile(at sourceURL: URL, to destinationURL: URL) {
-        let handler = CloudHandler()
+        let handler = iCloudHandler()
         Task {
             do {
                 try await handler.moveFile(at: sourceURL, to: destinationURL)

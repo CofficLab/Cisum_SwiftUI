@@ -59,10 +59,9 @@
 		0B8C36B62BEDAB5E00C47567 /* BtnMore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C36B52BEDAB5E00C47567 /* BtnMore.swift */; };
 		0B8EE09B2C0B5942007A6F3B /* JobManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8EE09A2C0B5942007A6F3B /* JobManager.swift */; };
 		0B8FC2702BBC559500839C75 /* PlayingAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8FC26F2BBC559500839C75 /* PlayingAlbum.swift */; };
-		0B901D862BB83BA2003AC253 /* CloudHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B901D852BB83BA2003AC253 /* CloudHandler.swift */; };
+		0B901D862BB83BA2003AC253 /* iCloudHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B901D852BB83BA2003AC253 /* iCloudHandler.swift */; };
 		0B901D882BB83BC3003AC253 /* FilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B901D872BB83BC3003AC253 /* FilePresenter.swift */; };
 		0B901D8A2BB83E28003AC253 /* ItemQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B901D892BB83E28003AC253 /* ItemQuery.swift */; };
-		0B901D932BB83F38003AC253 /* CloudKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B901D922BB83F38003AC253 /* CloudKit.swift */; };
 		0B92ACCA2BBA80F300F1A74F /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 0B92ACC92BBA80F300F1A74F /* README.md */; };
 		0B9EA3592C21B41C00A4059A /* PlayAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9EA3582C21B41C00A4059A /* PlayAsset.swift */; };
 		0B9EA35B2C21C72800A4059A /* PlayMan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9EA35A2C21C72800A4059A /* PlayMan.swift */; };
@@ -204,10 +203,9 @@
 		0B8C36B52BEDAB5E00C47567 /* BtnMore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnMore.swift; sourceTree = "<group>"; };
 		0B8EE09A2C0B5942007A6F3B /* JobManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobManager.swift; sourceTree = "<group>"; };
 		0B8FC26F2BBC559500839C75 /* PlayingAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayingAlbum.swift; sourceTree = "<group>"; };
-		0B901D852BB83BA2003AC253 /* CloudHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudHandler.swift; sourceTree = "<group>"; };
+		0B901D852BB83BA2003AC253 /* iCloudHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iCloudHandler.swift; sourceTree = "<group>"; };
 		0B901D872BB83BC3003AC253 /* FilePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilePresenter.swift; sourceTree = "<group>"; };
 		0B901D892BB83E28003AC253 /* ItemQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemQuery.swift; sourceTree = "<group>"; };
-		0B901D922BB83F38003AC253 /* CloudKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudKit.swift; sourceTree = "<group>"; };
 		0B92ACC92BBA80F300F1A74F /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		0B9EA3582C21B41C00A4059A /* PlayAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayAsset.swift; sourceTree = "<group>"; };
 		0B9EA35A2C21C72800A4059A /* PlayMan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayMan.swift; sourceTree = "<group>"; };
@@ -332,24 +330,16 @@
 		0B1D5A6B2AB302600010DDF2 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
+				F5675C3C2C24087100326664 /* View */,
+				F5675C3B2C24083700326664 /* iCloud */,
 				F5675C382C2404B000326664 /* File */,
-				0B1D5A722AB302600010DDF2 /* BackgroundView.swift */,
-				0B718F0B2AB4349900569762 /* CardView.swift */,
-				0BBA421E2AC1397F00C0B977 /* Centered.swift */,
-				0B901D852BB83BA2003AC253 /* CloudHandler.swift */,
-				0B901D922BB83F38003AC253 /* CloudKit.swift */,
 				0B1D5A6C2AB302600010DDF2 /* CommonHelp.swift */,
 				F573B1892C0413DD004C34CC /* DeviceHelper.swift */,
 				0B1D5A6E2AB302600010DDF2 /* Extensions.swift */,
-				0BBC15872AB9A473006E82C4 /* iCloudHelper.swift */,
 				0B11262B2AC719B70093DFFA /* ImageHelper.swift */,
-				0B901D892BB83E28003AC253 /* ItemQuery.swift */,
 				0B73275E2BB5138200DBD922 /* LoggerHelper.swift */,
-				0BFDCB7F2AB86AF300B0D1C8 /* MenuTile.swift */,
-				0B8C369E2BEA011700C47567 /* MetaWrapper.swift */,
 				0B22158D2BB6BC8F000EB36F /* SmartProgress.swift */,
 				0BB587162AD815770071AEBD /* TimeHelper.swift */,
-				0BB5871A2AD81AF90071AEBD /* ViewHelper.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -608,6 +598,29 @@
 			path = File;
 			sourceTree = "<group>";
 		};
+		F5675C3B2C24083700326664 /* iCloud */ = {
+			isa = PBXGroup;
+			children = (
+				0BBC15872AB9A473006E82C4 /* iCloudHelper.swift */,
+				0B901D852BB83BA2003AC253 /* iCloudHandler.swift */,
+				0B8C369E2BEA011700C47567 /* MetaWrapper.swift */,
+				0B901D892BB83E28003AC253 /* ItemQuery.swift */,
+			);
+			path = iCloud;
+			sourceTree = "<group>";
+		};
+		F5675C3C2C24087100326664 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				0B1D5A722AB302600010DDF2 /* BackgroundView.swift */,
+				0B718F0B2AB4349900569762 /* CardView.swift */,
+				0BBA421E2AC1397F00C0B977 /* Centered.swift */,
+				0BFDCB7F2AB86AF300B0D1C8 /* MenuTile.swift */,
+				0BB5871A2AD81AF90071AEBD /* ViewHelper.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		F573B1852C041175004C34CC /* Local */ = {
 			isa = PBXGroup;
 			children = (
@@ -744,7 +757,6 @@
 				0BBC158F2ABAC146006E82C4 /* BtnNext.swift in Sources */,
 				0BBC15802AB854A8006E82C4 /* DBView.swift in Sources */,
 				0BE93F312BFB8E3200F25445 /* SettingView.swift in Sources */,
-				0B901D932BB83F38003AC253 /* CloudKit.swift in Sources */,
 				0B8C36A32BEA124900C47567 /* AudioR.swift in Sources */,
 				0BB889D72AC046B5004788D5 /* BtnShowInFinder.swift in Sources */,
 				F53BE0322C202420003CBA29 /* DiskFile.swift in Sources */,
@@ -823,7 +835,7 @@
 				0B8C369F2BEA011700C47567 /* MetaWrapper.swift in Sources */,
 				0BBC15882AB9A473006E82C4 /* iCloudHelper.swift in Sources */,
 				0BAABEBA2BC8C5CB00DF4A31 /* JobPrepare.swift in Sources */,
-				0B901D862BB83BA2003AC253 /* CloudHandler.swift in Sources */,
+				0B901D862BB83BA2003AC253 /* iCloudHandler.swift in Sources */,
 				F545D1732C1FC9F0006A6AFA /* CloudSetting.swift in Sources */,
 				0B8C36B02BEC6E6500C47567 /* DBExt.swift in Sources */,
 				0BE93F2E2BFB8B7E00F25445 /* MoreView.swift in Sources */,

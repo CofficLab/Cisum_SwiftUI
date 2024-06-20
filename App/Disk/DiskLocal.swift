@@ -5,7 +5,7 @@ class DiskLocal: ObservableObject {
     static var label = "🛖 DiskLocal::"
 
     var fileManager = FileManager.default
-    var cloudHandler = CloudHandler()
+    var cloudHandler = iCloudHandler()
     var audiosDir: URL {
         let url = Config.localDocumentsDir!.appendingPathComponent(Config.audiosDirName)
 

@@ -1,7 +1,7 @@
 import Foundation
 import OSLog
 
-actor CloudHandler {
+actor iCloudHandler {
     let coordinator = NSFileCoordinator()
     var filePresenters: [URL: FilePresenter] = [:]
 
@@ -78,7 +78,7 @@ actor CloudHandler {
     }
 }
 
-extension CloudHandler {
+extension iCloudHandler {
     func download(url: URL) throws {
         var coordinationError: NSError?
         var downloadError: Error?
