@@ -1,14 +1,14 @@
 import SwiftUI
 
 struct DirSetting: View {
-    let disk = Config.disk
+    @EnvironmentObject var diskManager: DiskManager
     
     var body: some View {
         GroupBox {
             HStack {
                 VStack(alignment: .leading, spacing: 5) {
                     Text("仓库目录").font(.headline)
-                    if Config.isStoreIniCloud {
+                    if diskManager.isiCloudDisk {
                         Text("是 iCloud 云盘目录，会保持同步").font(.footnote)
                     } else {
                         Text("是本地目录，不会同步").font(.footnote)
@@ -18,7 +18,7 @@ struct DirSetting: View {
                 Spacer()
                 #if os(macOS)
                     Button(action: {
-                        openUrl(disk.audiosDir)
+                        openUrl(diskManager.disk.audiosDir)
                     }, label: {
                         Label(title: {
                             Text("打开")

@@ -4,6 +4,7 @@ import OSLog
 class DiskiCloud: ObservableObject, DiskContact {
     static var label = "☁️ DiskiCloud::"
     
+    var name: String = "iCloud 文件夹"
     var queue = DispatchQueue(label: "DiskiCloud", qos: .background)
     var fileManager = FileManager.default
     var cloudHandler = iCloudHandler()

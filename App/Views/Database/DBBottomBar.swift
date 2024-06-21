@@ -2,9 +2,11 @@ import SwiftUI
 
 struct DBBottomBar: View {
     @Binding var dbViewType: DBViewType
+    @EnvironmentObject var diskManager: DiskManager
     
     var body: some View {
         HStack {
+            Text(diskManager.disk.name)
             Spacer()
             
             ControlButton(

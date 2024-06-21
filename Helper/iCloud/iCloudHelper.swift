@@ -42,6 +42,11 @@ class iCloudHelper {
     static func isDownloading(_ url: URL) -> Bool {
         // os_log("\(Logger.isMain)🔧 iCloudHelper::getDownloadingStatus -> \(url.absoluteString)")
         var isDownloading = false
+        
+        if !FileManager.default.fileExists(atPath: url.path) {
+            return isDownloading
+        }
+        
         do {
             let values = try url.resourceValues(forKeys: [.ubiquitousItemIsDownloadingKey])
             for item in values.allValues {

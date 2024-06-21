@@ -3,32 +3,28 @@ import SwiftData
 import SwiftUI
 
 struct DBViewTree: View {
-    static var label = "📬 DBTree::"
+    static var label = "📬 DBTreeView::"
 
-    @EnvironmentObject var appManager: AppManager
     @EnvironmentObject var playManager: PlayManager
-    @EnvironmentObject var db: DB
+    @EnvironmentObject var diskManager: DiskManager
 
-    @State var folderContents: [URL] = []
     @State var selection: String = ""
-    @State var collapsed: Bool = true
-    @State var deleting: Bool = false
+    @State var collapsed: Bool = false
     @State var icon: String = ""
-    @State var rootURL: URL? = nil
-    
+
     var playMan: PlayMan { playManager.playMan }
-    
+    var disk: DiskContact { diskManager.disk }
+    var root: URL { disk.audiosDir }
+
     var body: some View {
-        if let rootURL = rootURL {
-            DBTree(selection: $selection, folderURL: rootURL)
-                .onChange(of: selection, {
-                    playMan.play(.fromURL(URL(string: selection)!), reason: "点击了")
-                })
-        } else {
-            LanuchView().task {
-                self.rootURL = Config.disk.audiosDir
-            }
-        }
+        DBTree(
+            selection: $selection,
+            collapsed: collapsed,
+            folderURL: root
+        )
+        .onChange(of: selection, {
+            playMan.play(.fromURL(URL(string: selection)!), reason: "点击了")
+        })
     }
 }
 

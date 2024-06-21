@@ -4,6 +4,7 @@ import OSLog
 class DiskLocal: ObservableObject {
     static var label = "🛖 DiskLocal::"
 
+    var name: String = "本地文件夹"
     var fileManager = FileManager.default
     var cloudHandler = iCloudHandler()
     var audiosDir: URL {

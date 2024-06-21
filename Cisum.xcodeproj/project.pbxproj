@@ -137,12 +137,13 @@
 		F545D1732C1FC9F0006A6AFA /* CloudSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = F545D1722C1FC9F0006A6AFA /* CloudSetting.swift */; };
 		F545D1752C1FCAD0006A6AFA /* CloudExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F545D1742C1FCAD0006A6AFA /* CloudExt.swift */; };
 		F545D1772C1FCC86006A6AFA /* UserExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F545D1762C1FCC86006A6AFA /* UserExt.swift */; };
-		F545D1792C200901006A6AFA /* StorageExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F545D1782C200901006A6AFA /* StorageExt.swift */; };
 		F5675C332C22BFD900326664 /* DBBottomBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C322C22BFD900326664 /* DBBottomBar.swift */; };
 		F5675C352C22CB3C00326664 /* DBViewTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C342C22CB3C00326664 /* DBViewTree.swift */; };
 		F5675C372C22DB4D00326664 /* DiskTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C362C22DB4D00326664 /* DiskTree.swift */; };
 		F5675C3A2C2404D700326664 /* FileBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C392C2404D700326664 /* FileBox.swift */; };
 		F5675C3E2C252A3800326664 /* DBTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C3D2C252A3800326664 /* DBTree.swift */; };
+		F5675C402C25456300326664 /* DiskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C3F2C25456300326664 /* DiskManager.swift */; };
+		F5675C422C254E8100326664 /* StorageExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C412C254E8100326664 /* StorageExt.swift */; };
 		F573B1882C0411E4004C34CC /* DeviceDataExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B1872C0411E4004C34CC /* DeviceDataExt.swift */; };
 		F573B18A2C0413DD004C34CC /* DeviceHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B1892C0413DD004C34CC /* DeviceHelper.swift */; };
 		F573B18C2C042E08004C34CC /* DeviceExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B18B2C042E08004C34CC /* DeviceExt.swift */; };
@@ -281,12 +282,13 @@
 		F545D1722C1FC9F0006A6AFA /* CloudSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudSetting.swift; sourceTree = "<group>"; };
 		F545D1742C1FCAD0006A6AFA /* CloudExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudExt.swift; sourceTree = "<group>"; };
 		F545D1762C1FCC86006A6AFA /* UserExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserExt.swift; sourceTree = "<group>"; };
-		F545D1782C200901006A6AFA /* StorageExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageExt.swift; sourceTree = "<group>"; };
 		F5675C322C22BFD900326664 /* DBBottomBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBBottomBar.swift; sourceTree = "<group>"; };
 		F5675C342C22CB3C00326664 /* DBViewTree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBViewTree.swift; sourceTree = "<group>"; };
 		F5675C362C22DB4D00326664 /* DiskTree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskTree.swift; sourceTree = "<group>"; };
 		F5675C392C2404D700326664 /* FileBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileBox.swift; sourceTree = "<group>"; };
 		F5675C3D2C252A3800326664 /* DBTree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBTree.swift; sourceTree = "<group>"; };
+		F5675C3F2C25456300326664 /* DiskManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskManager.swift; sourceTree = "<group>"; };
+		F5675C412C254E8100326664 /* StorageExt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StorageExt.swift; sourceTree = "<group>"; };
 		F573B1872C0411E4004C34CC /* DeviceDataExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceDataExt.swift; sourceTree = "<group>"; };
 		F573B1892C0413DD004C34CC /* DeviceHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceHelper.swift; sourceTree = "<group>"; };
 		F573B18B2C042E08004C34CC /* DeviceExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceExt.swift; sourceTree = "<group>"; };
@@ -308,10 +310,11 @@
 			isa = PBXGroup;
 			children = (
 				0B1165EF2ABBCCB0005C5CBB /* AppManager.swift */,
-				0B1D5A5F2AB3025E0010DDF2 /* PlayManager.swift */,
+				F5675C3F2C25456300326664 /* DiskManager.swift */,
 				0B9FA2962BC80E51007B235A /* EventManager.swift */,
-				0BE6958F2BFE325400CEFFEB /* StoreManager.swift */,
 				0B8EE09A2C0B5942007A6F3B /* JobManager.swift */,
+				0B1D5A5F2AB3025E0010DDF2 /* PlayManager.swift */,
+				0BE6958F2BFE325400CEFFEB /* StoreManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -423,12 +426,12 @@
 		0BB4278F2BEA7083004E6F82 /* Disk */ = {
 			isa = PBXGroup;
 			children = (
-				F5675C362C22DB4D00326664 /* DiskTree.swift */,
 				0B8C36A92BEA2EC600C47567 /* DiskContact.swift */,
 				F53BE0312C202420003CBA29 /* DiskFile.swift */,
 				F53BE0332C2024BE003CBA29 /* DiskFileGroup.swift */,
 				0BD0568A2BC6202900EBC7C4 /* DiskiCloud.swift */,
 				0BB427902BED0B38004E6F82 /* DiskLocal.swift */,
+				F5675C362C22DB4D00326664 /* DiskTree.swift */,
 			);
 			path = Disk;
 			sourceTree = "<group>";
@@ -549,7 +552,7 @@
 				0B8C36B12BEC6E8D00C47567 /* QueueExt.swift */,
 				0B220F742BB1BBDB0077255A /* SmartError.swift */,
 				0B8C36AB2BEC6E0F00C47567 /* StateExt.swift */,
-				F545D1782C200901006A6AFA /* StorageExt.swift */,
+				F5675C412C254E8100326664 /* StorageExt.swift */,
 				F545D1762C1FCC86006A6AFA /* UserExt.swift */,
 				0B8C36B32BEC6EAB00C47567 /* ViewExt.swift */,
 			);
@@ -765,9 +768,9 @@
 				0B8C36A72BEA15E000C47567 /* AudioC.swift in Sources */,
 				0BB5871B2AD81AFA0071AEBD /* ViewHelper.swift in Sources */,
 				0BAB7C3F2AD3BBAA00C5AEB5 /* DBTips.swift in Sources */,
-				F545D1792C200901006A6AFA /* StorageExt.swift in Sources */,
 				0B5786342BCB8DC00064F66A /* PlayView.swift in Sources */,
 				0B1D5A882AB302610010DDF2 /* ContentView.swift in Sources */,
+				F5675C422C254E8100326664 /* StorageExt.swift in Sources */,
 				0BE6959C2BFE3DCC00CEFFEB /* BuyView.swift in Sources */,
 				0B718F0C2AB4349900569762 /* CardView.swift in Sources */,
 				0BFDCB802AB86AF300B0D1C8 /* MenuTile.swift in Sources */,
@@ -858,6 +861,7 @@
 				0B901D882BB83BC3003AC253 /* FilePresenter.swift in Sources */,
 				0BB543F42BE8E38300D7A2B2 /* Duplicates.swift in Sources */,
 				0BBC157C2AB84C21006E82C4 /* HomeView.swift in Sources */,
+				F5675C402C25456300326664 /* DiskManager.swift in Sources */,
 				0B901D8A2BB83E28003AC253 /* ItemQuery.swift in Sources */,
 				0B6B8B9D2BBA4D0600F65B23 /* Coffee.swift in Sources */,
 				0B11365F2BF10A0100A71FE1 /* JobGroup.swift in Sources */,

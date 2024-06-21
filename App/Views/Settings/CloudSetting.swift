@@ -2,7 +2,8 @@ import OSLog
 import SwiftUI
 
 struct CloudSetting: View {
-    @EnvironmentObject private var app: AppManager
+    @EnvironmentObject var app: AppManager
+    @EnvironmentObject var diskManager: DiskManager
 
     @State private var iCloudLogged: Bool = false
     @State private var iCloudEnabled: Bool = false
@@ -15,7 +16,7 @@ struct CloudSetting: View {
                         Text("iCloud").font(.headline)
 
                         ZStack {
-                            if Config.iCloudEnabled {
+                            if iCloudEnabled {
                                 Text("会占用 iCloud 存储空间并在设备间保持同步")
                             } else {
                                 VStack(alignment: .leading) {
@@ -46,6 +47,8 @@ struct CloudSetting: View {
         }
         .onChange(of: iCloudEnabled, {
             iCloudEnabled ? Config.enableiCloud() : Config.disableiCloud()
+            
+            diskManager.changeDisk(Config.disk)
             
             Task.detached(operation: {
                 DB.migrate()

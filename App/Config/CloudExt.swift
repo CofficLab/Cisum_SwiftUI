@@ -12,8 +12,4 @@ extension Config {
     static func disableiCloud() {
         Config.iCloudEnabled = false
     }
-    
-    static var isStoreIniCloud: Bool {
-        iCloudHelper.isCloudPath(url: Config.disk.audiosDir)
-    }
 }

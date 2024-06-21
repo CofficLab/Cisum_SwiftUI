@@ -2,6 +2,7 @@ import SwiftUI
 
 struct DBTips: View {
     @EnvironmentObject var appManager: AppManager
+    @EnvironmentObject var diskManager: DiskManager
 
     var supportedFormats: String {
         Config.supportedExtensions.joined(separator: ",")
@@ -28,7 +29,7 @@ struct DBTips: View {
                         }
                     
                         Button(action: {
-                            FileHelper.openFolder(url: Config.disk.audiosDir)
+                            FileHelper.openFolder(url: diskManager.disk.audiosDir)
                         }, label: {
                             Label(title: {
                                 Text("打开仓库目录并放入文件")

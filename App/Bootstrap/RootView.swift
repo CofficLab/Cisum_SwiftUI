@@ -50,6 +50,7 @@ struct RootView<Content>: View where Content: View {
             .environmentObject(PlayManager(db: db))
             .environmentObject(appManager)
             .environmentObject(storeManager)
+            .environmentObject(DiskManager())
     }
 
     func onAppOpen() {
