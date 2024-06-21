@@ -15,6 +15,7 @@ struct DBTree: View {
     @State private var icon: String = ""
 
     var folderURL: URL
+    var level: Int = 0
     
     var tree: DiskTree {
         DiskTree.fromURL(self.folderURL)
@@ -30,7 +31,7 @@ struct DBTree: View {
                 MenuTile(
                     id: asset.url.absoluteString,
                     title: asset.title,
-                    isFolder: asset.isFolder(),
+                    isFolder: asset.isFolder(), level: level,
                     deleting: $deleting,
                     selectionId: $selection,
                     collapsed: $collapsed,
@@ -40,7 +41,11 @@ struct DBTree: View {
                 if let children = tree.children, !collapsed {
                     VStack(spacing: 0) {
                         ForEach(children, id: \.id) { node in
-                            DBTree(selection: $selection,folderURL: node.url)
+                            DBTree(
+                                selection: $selection,
+                                folderURL: node.url,
+                                level: level + 1
+                            )
                         }
                     }
                 }
