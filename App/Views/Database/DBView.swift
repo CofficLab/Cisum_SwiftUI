@@ -9,6 +9,7 @@ struct DBView: View {
     
     @State var treeView = false
     @State var rootURL: URL?
+    @State var selectionId: String = ""
     
     static var label = "🐘 DBView::"
 
@@ -28,7 +29,7 @@ struct DBView: View {
             ZStack {
                 if treeView {
                     if let rootURL = rootURL {
-                        DBTree(folderURL: rootURL)
+                        DBTree(selection: $selectionId, folderURL: rootURL)
                     } 
                 } else {
                     DBList()

@@ -9,36 +9,30 @@ struct DBTree: View {
     @EnvironmentObject var db: DB
 
     @State var folderContents: [URL] = []
-    @State var selection: DiskTree.ID?
-    @State var selected: Bool = false
+    @Binding var selection: String
     @State var collapsed: Bool = true
     @State var deleting: Bool = false
     @State private var icon: String = ""
 
     var folderURL: URL
-    var tree: DiskTree
+    
+    var tree: DiskTree {
+        DiskTree.fromURL(self.folderURL)
+    }
     
     var asset: PlayAsset {
         tree.toPlayAsset()
-    }
-
-    init(folderURL: URL, verbose: Bool = false) {
-        if verbose {
-            os_log("\(Logger.isMain)\(Self.label)初始化")
-        }
-        
-        self.folderURL = folderURL
-        self.tree = DiskTree.fromURL(self.folderURL)
     }
     
     var body: some View {
         ScrollView {
             VStack(spacing: 0) {
                 MenuTile(
+                    id: asset.url.absoluteString,
                     title: asset.title,
                     isFolder: asset.isFolder(), 
                     deleting: $deleting,
-                    selected: $selected,
+                    selectionId: $selection,
                     collapsed: $collapsed,
                     forceIcon: $icon
                 )
@@ -46,7 +40,7 @@ struct DBTree: View {
                 if let children = tree.children, !collapsed {
                     VStack(spacing: 0) {
                         ForEach(children, id: \.id) { node in
-                            DBTree(folderURL: node.url)
+                            DBTree(selection: $selection,folderURL: node.url)
                         }
                     }
                 }
@@ -57,7 +51,7 @@ struct DBTree: View {
 
 #Preview("DBTree") {
     RootView {
-        DBTree(folderURL: DiskLocal().audiosDir)
+        DBTree(selection: Binding.constant(""), folderURL: DiskLocal().audiosDir)
             .background(.background)
             .padding()
     }

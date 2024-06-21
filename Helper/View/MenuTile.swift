@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct MenuTile: View {
+    var id: String
     var title: String = "[无标题]"
     var dragging: Bool = false
     var trailing: String = ""
@@ -9,14 +10,18 @@ struct MenuTile: View {
     var loading: Bool = false
 
     @Binding var deleting: Bool
-    @Binding var selected: Bool
+    @Binding var selectionId: String
     @Binding var collapsed: Bool
     @Binding var forceIcon: String
     var clicked: () -> Void = {}
 
-    @State private var indicatorHovered: Bool = false
-    @State private var hovered: Bool = false
-    @State private var lastClickedAt: Date = .distantPast
+    @State var indicatorHovered: Bool = false
+    @State var hovered: Bool = false
+    @State var lastClickedAt: Date = .distantPast
+    
+    var selected: Bool {
+        id == selectionId
+    }
 
     private var icon: some View {
         #if os(macOS)
@@ -144,7 +149,7 @@ struct MenuTile: View {
             // MARK: 单击事件
 
             lastClickedAt = .now
-            selected = true
+            selectionId = id
             clicked()
         }
         .cornerRadius(4)
@@ -170,99 +175,110 @@ struct MenuTile: View {
 #Preview {
     VStack(spacing: 0) {
         MenuTile(
+            id: UUID().uuidString,
             title: "普通",
             dragging: false,
             trailing: "",
             isFolder: false,
             deleting: Binding.constant(false),
-            selected: Binding.constant(true),
+            selectionId: Binding.constant("1"),
             collapsed: Binding.constant(false),
             forceIcon: Binding.constant("")
         )
         MenuTile(
+            id: UUID().uuidString,
             title: "普通删除中",
             dragging: false,
             deleting: Binding.constant(true),
-            selected: Binding.constant(false),
+            selectionId: Binding.constant("1"),
             collapsed: Binding.constant(true),
             forceIcon: Binding.constant("")
         )
         MenuTile(
+            id: UUID().uuidString,
             title: "普通加载中",
             dragging: false,
             loading: true,
             deleting: Binding.constant(false),
-            selected: Binding.constant(false),
+            selectionId: Binding.constant("1"),
             collapsed: Binding.constant(true),
             forceIcon: Binding.constant("")
         )
         MenuTile(
+            id: UUID().uuidString,
             title: "普通目录",
             dragging: false,
             isFolder: true,
             deleting: Binding.constant(false),
-            selected: Binding.constant(false),
+            selectionId: Binding.constant("1"),
             collapsed: Binding.constant(true),
             forceIcon: Binding.constant("")
         )
         MenuTile(
+            id: UUID().uuidString,
             title: "选中目录",
             dragging: false,
             isFolder: true,
             deleting: Binding.constant(false),
-            selected: Binding.constant(false),
+            selectionId: Binding.constant("1"),
             collapsed: Binding.constant(false),
             forceIcon: Binding.constant("")
         )
         MenuTile(
+            id: UUID().uuidString,
             title: "普通带尾部",
             dragging: false,
             trailing: "9",
             deleting: Binding.constant(false),
-            selected: Binding.constant(false),
+            selectionId: Binding.constant("1"),
             collapsed: Binding.constant(false),
             forceIcon: Binding.constant("")
         )
         MenuTile(
+            id: UUID().uuidString,
             title: "选中",
             dragging: false,
             deleting: Binding.constant(false),
-            selected: Binding.constant(false),
+            selectionId: Binding.constant("1"),
             collapsed: Binding.constant(false),
             forceIcon: Binding.constant("")
         )
         MenuTile(
+            id: UUID().uuidString,
             title: "展开",
             dragging: false,
             deleting: Binding.constant(false),
-            selected: Binding.constant(false),
+            selectionId: Binding.constant("1"),
             collapsed: Binding.constant(false),
             forceIcon: Binding.constant("")
         )
         MenuTile(
+            id: UUID().uuidString,
             title: "选中带尾部",
             dragging: false,
             trailing: "89",
             deleting: Binding.constant(false),
-            selected: Binding.constant(false),
+            selectionId: Binding.constant("1"),
             collapsed: Binding.constant(false),
             forceIcon: Binding.constant("")
         )
         MenuTile(
+            id: UUID().uuidString,
             title: "普通",
             dragging: false,
             trailing: "",
             isFolder: false,
             deleting: Binding.constant(false),
-            selected: Binding.constant(false),
+            selectionId: Binding.constant("1"),
             collapsed: Binding.constant(false),
             forceIcon: Binding.constant("")
         )
         MenuTile(
+            id: UUID().uuidString,
             title: "选中展开",
             dragging: false,
             deleting: Binding.constant(false),
-            selected: Binding.constant(false),
+            selectionId: Binding.constant("1"),
             collapsed: Binding.constant(false),
             forceIcon: Binding.constant("")
         )
