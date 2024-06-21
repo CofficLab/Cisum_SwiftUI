@@ -49,9 +49,18 @@ struct DBTree: View {
     }
 }
 
-#Preview("DBTree") {
+#Preview("DBTree-Local") {
     RootView {
         DBTree(selection: Binding.constant(""), folderURL: DiskLocal().audiosDir)
+            .background(.background)
+            .padding()
+    }
+    .frame(height: 600)
+}
+
+#Preview("DBTree-iCloud") {
+    RootView {
+        DBTree(selection: Binding.constant(""), folderURL: DiskiCloud().audiosDir)
             .background(.background)
             .padding()
     }

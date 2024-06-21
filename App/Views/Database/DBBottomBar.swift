@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct DBBottomBar: View {
-    @Binding var treeView: Bool
+    @Binding var dbViewType: DBViewType
     
     var body: some View {
         HStack {
@@ -12,7 +12,7 @@ struct DBBottomBar: View {
                 image: "list.bullet",
                 dynamicSize: false,
                 onTap: {
-                    self.treeView = false
+                    self.dbViewType = .List
                 })
 
             ControlButton(
@@ -20,11 +20,14 @@ struct DBBottomBar: View {
                 image: "rectangle.3.group.fill",
                 dynamicSize: false,
                 onTap: {
-                    self.treeView = true
+                    self.dbViewType = .Tree
                 })
         }
         .labelStyle(.iconOnly)
         .offset(y:2)
+        .onChange(of: dbViewType, {
+            Config.setCurrentDBViewType(dbViewType)
+        })
     }
 }
 

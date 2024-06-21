@@ -1,10 +1,13 @@
 import Foundation
+import SwiftUI
 
 struct DiskTree: Hashable, Identifiable, CustomStringConvertible, FileBox {
     var id: Self { self }
     var url: URL
     var name: String
     var children: [DiskTree]? = nil
+    var index: Int = 0
+    
     var description: String {
         switch children {
         case nil:
@@ -46,10 +49,39 @@ struct DiskTree: Hashable, Identifiable, CustomStringConvertible, FileBox {
     }
 }
 
+// MARK: Next
+
+extension DiskTree {
+    func next() -> DiskTree? {
+        guard let parent = self.parent, let siblings = parent.children, siblings.count > self.index + 1 else {
+            return nil
+        }
+        
+        return siblings[self.index + 1]
+    }
+}
+
+// MARK: Parent
+
+extension DiskTree {
+    var parent: DiskTree? {
+        guard let parentURL = self.url.deletingLastPathComponent() as URL? else {
+            return nil
+        }
+        
+        return DiskTree.fromURL(parentURL)
+    }
+}
+
 // MARK: Tramsform
 
 extension DiskTree {
     func toPlayAsset() -> PlayAsset {
         PlayAsset(url: self.url)
     }
+}
+
+#Preview("App") {
+    AppPreview()
+        .frame(height: 800)
 }
