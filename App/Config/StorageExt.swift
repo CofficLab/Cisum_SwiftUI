@@ -2,7 +2,7 @@ import Foundation
 import SwiftUI
 
 extension Config {
-    static var disk: DiskContact {
+    static var disk: any DiskContact {
         if Config.iCloudEnabled {
             DiskiCloud()
         } else {

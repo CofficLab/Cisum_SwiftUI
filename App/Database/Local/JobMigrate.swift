@@ -16,7 +16,7 @@ extension DB {
         }
     }
     
-    static func moveAudios(_ from: DiskContact, _ to: DiskContact, verbose: Bool = true) {
+    static func moveAudios(_ from: any DiskContact, _ to: any DiskContact, verbose: Bool = true) {
         Task.detached(priority: .low) {
             if verbose {
                 os_log("\(Self.label)将文件从 \(from.audiosDir.path) 移动到 \(to.audiosDir.path)")

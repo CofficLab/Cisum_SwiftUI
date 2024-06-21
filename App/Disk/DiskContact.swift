@@ -1,6 +1,6 @@
 import Foundation
 
-protocol DiskContact {
+protocol DiskContact: ObservableObject {
     var audiosDir: URL { get }
     var onUpdated: (_ items: DiskFileGroup) -> Void { get set }
     

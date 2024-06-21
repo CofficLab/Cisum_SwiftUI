@@ -6,6 +6,7 @@ struct RootView<Content>: View where Content: View {
     private var verbose = true
     private var label: String { "\(Logger.isMain)🌳 RootView::" }
 
+    var disk = Config.disk
     var db = DB(Config.getContainer, reason: "RootView")
     var dbSynced = DBSynced(Config.getSyncedContainer)
     var appManager = AppManager()
@@ -23,6 +24,7 @@ struct RootView<Content>: View where Content: View {
                 .environmentObject(PlayManager(db: db))
                 .environmentObject(appManager)
                 .environmentObject(storeManager)
+                .environmentObject(disk)
                 .environmentObject(db)
                 .frame(minWidth: Config.minWidth, minHeight: Config.minHeight)
                 .blendMode(.normal)

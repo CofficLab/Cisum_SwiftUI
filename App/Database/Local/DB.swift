@@ -20,7 +20,7 @@ actor DB: ModelActor, ObservableObject {
 
     var queue = DispatchQueue(label: "DB")
     var context: ModelContext
-    var disk: DiskContact = Config.disk
+    var disk: any DiskContact = Config.disk
     var onUpdated: () -> Void = { os_log("🍋 DB::updated") }
     var label: String { "\(Logger.isMain)\(DB.label)" }
     var verbose: Bool { DB.verbose }
