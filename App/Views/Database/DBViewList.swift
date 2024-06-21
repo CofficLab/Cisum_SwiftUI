@@ -2,7 +2,7 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-struct DBList: View {
+struct DBViewList: View {
     static var label = "📬 DBList::"
 
     @EnvironmentObject var appManager: AppManager

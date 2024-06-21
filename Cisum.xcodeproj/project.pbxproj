@@ -96,7 +96,7 @@
 		0BBA42272AC2A8B800C0B977 /* BtnAdd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA42262AC2A8B800C0B977 /* BtnAdd.swift */; };
 		0BBA422F2AC2BAE300C0B977 /* AlbumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA422E2AC2BAE300C0B977 /* AlbumView.swift */; };
 		0BBAD0722BBC05C6005834A3 /* DBRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBAD0712BBC05C6005834A3 /* DBRow.swift */; };
-		0BBAD0A22BBD413B005834A3 /* DBList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBAD0A12BBD413B005834A3 /* DBList.swift */; };
+		0BBAD0A22BBD413B005834A3 /* DBViewList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBAD0A12BBD413B005834A3 /* DBViewList.swift */; };
 		0BBC157C2AB84C21006E82C4 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC157B2AB84C21006E82C4 /* HomeView.swift */; };
 		0BBC15802AB854A8006E82C4 /* DBView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC157F2AB854A8006E82C4 /* DBView.swift */; };
 		0BBC15842AB95272006E82C4 /* ControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC15832AB95272006E82C4 /* ControlView.swift */; };
@@ -139,9 +139,10 @@
 		F545D1772C1FCC86006A6AFA /* UserExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F545D1762C1FCC86006A6AFA /* UserExt.swift */; };
 		F545D1792C200901006A6AFA /* StorageExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F545D1782C200901006A6AFA /* StorageExt.swift */; };
 		F5675C332C22BFD900326664 /* DBBottomBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C322C22BFD900326664 /* DBBottomBar.swift */; };
-		F5675C352C22CB3C00326664 /* DBTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C342C22CB3C00326664 /* DBTree.swift */; };
+		F5675C352C22CB3C00326664 /* DBViewTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C342C22CB3C00326664 /* DBViewTree.swift */; };
 		F5675C372C22DB4D00326664 /* DiskTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C362C22DB4D00326664 /* DiskTree.swift */; };
 		F5675C3A2C2404D700326664 /* FileBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C392C2404D700326664 /* FileBox.swift */; };
+		F5675C3E2C252A3800326664 /* DBTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C3D2C252A3800326664 /* DBTree.swift */; };
 		F573B1882C0411E4004C34CC /* DeviceDataExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B1872C0411E4004C34CC /* DeviceDataExt.swift */; };
 		F573B18A2C0413DD004C34CC /* DeviceHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B1892C0413DD004C34CC /* DeviceHelper.swift */; };
 		F573B18C2C042E08004C34CC /* DeviceExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B18B2C042E08004C34CC /* DeviceExt.swift */; };
@@ -239,7 +240,7 @@
 		0BBA42262AC2A8B800C0B977 /* BtnAdd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnAdd.swift; sourceTree = "<group>"; };
 		0BBA422E2AC2BAE300C0B977 /* AlbumView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumView.swift; sourceTree = "<group>"; };
 		0BBAD0712BBC05C6005834A3 /* DBRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBRow.swift; sourceTree = "<group>"; };
-		0BBAD0A12BBD413B005834A3 /* DBList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBList.swift; sourceTree = "<group>"; };
+		0BBAD0A12BBD413B005834A3 /* DBViewList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBViewList.swift; sourceTree = "<group>"; };
 		0BBC157B2AB84C21006E82C4 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		0BBC157F2AB854A8006E82C4 /* DBView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBView.swift; sourceTree = "<group>"; };
 		0BBC15832AB95272006E82C4 /* ControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlView.swift; sourceTree = "<group>"; };
@@ -282,9 +283,10 @@
 		F545D1762C1FCC86006A6AFA /* UserExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserExt.swift; sourceTree = "<group>"; };
 		F545D1782C200901006A6AFA /* StorageExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageExt.swift; sourceTree = "<group>"; };
 		F5675C322C22BFD900326664 /* DBBottomBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBBottomBar.swift; sourceTree = "<group>"; };
-		F5675C342C22CB3C00326664 /* DBTree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBTree.swift; sourceTree = "<group>"; };
+		F5675C342C22CB3C00326664 /* DBViewTree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBViewTree.swift; sourceTree = "<group>"; };
 		F5675C362C22DB4D00326664 /* DiskTree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskTree.swift; sourceTree = "<group>"; };
 		F5675C392C2404D700326664 /* FileBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileBox.swift; sourceTree = "<group>"; };
+		F5675C3D2C252A3800326664 /* DBTree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBTree.swift; sourceTree = "<group>"; };
 		F573B1872C0411E4004C34CC /* DeviceDataExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceDataExt.swift; sourceTree = "<group>"; };
 		F573B1892C0413DD004C34CC /* DeviceHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceHelper.swift; sourceTree = "<group>"; };
 		F573B18B2C042E08004C34CC /* DeviceExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceExt.swift; sourceTree = "<group>"; };
@@ -559,11 +561,12 @@
 			children = (
 				0BBA422E2AC2BAE300C0B977 /* AlbumView.swift */,
 				F5675C322C22BFD900326664 /* DBBottomBar.swift */,
-				0BBAD0A12BBD413B005834A3 /* DBList.swift */,
 				0BBAD0712BBC05C6005834A3 /* DBRow.swift */,
 				0BAB7C3E2AD3BBAA00C5AEB5 /* DBTips.swift */,
-				F5675C342C22CB3C00326664 /* DBTree.swift */,
+				F5675C3D2C252A3800326664 /* DBTree.swift */,
 				0BBC157F2AB854A8006E82C4 /* DBView.swift */,
+				0BBAD0A12BBD413B005834A3 /* DBViewList.swift */,
+				F5675C342C22CB3C00326664 /* DBViewTree.swift */,
 				0BB543F32BE8E38300D7A2B2 /* Duplicates.swift */,
 				0BFB38F62BD0BCC20055E38B /* RowTask.swift */,
 			);
@@ -786,7 +789,7 @@
 				0BE6959F2BFE3DCC00CEFFEB /* NonRenewables.swift in Sources */,
 				0BB587172AD815770071AEBD /* TimeHelper.swift in Sources */,
 				0B9FA2972BC80E51007B235A /* EventManager.swift in Sources */,
-				F5675C352C22CB3C00326664 /* DBTree.swift in Sources */,
+				F5675C352C22CB3C00326664 /* DBViewTree.swift in Sources */,
 				0BAABEAF2BC787A200DF4A31 /* JobCopy.swift in Sources */,
 				0B1136612BF4CF3000A71FE1 /* Cover.swift in Sources */,
 				0B8C36A52BEA15A800C47567 /* AudioU.swift in Sources */,
@@ -843,10 +846,11 @@
 				0BD98CFE2BD8E91500641A6A /* HeroView.swift in Sources */,
 				0B5E51E52AD912B5000650CF /* DebugCommand.swift in Sources */,
 				0B1D5A7F2AB302610010DDF2 /* Audio.swift in Sources */,
-				0BBAD0A22BBD413B005834A3 /* DBList.swift in Sources */,
+				0BBAD0A22BBD413B005834A3 /* DBViewList.swift in Sources */,
 				F573B1882C0411E4004C34CC /* DeviceDataExt.swift in Sources */,
 				0BB427912BED0B38004E6F82 /* DiskLocal.swift in Sources */,
 				0B1165F02ABBCCB0005C5CBB /* AppManager.swift in Sources */,
+				F5675C3E2C252A3800326664 /* DBTree.swift in Sources */,
 				0B19D9562C062F400057D8DB /* ProExt.swift in Sources */,
 				0BE6959D2BFE3DCC00CEFFEB /* CarsView.swift in Sources */,
 				0BBA42252AC1813D00C0B977 /* BtnDel.swift in Sources */,

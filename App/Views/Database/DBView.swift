@@ -9,8 +9,6 @@ struct DBView: View {
     @EnvironmentObject var db: DB
     
     @State var treeView = false
-    @State var rootURL: URL?
-    @State var selectionId: String = ""
     @State var dbViewType: DBViewType = .init(rawValue: Config.currentDBViewType)!
     
     static var label = "🐘 DBView::"
@@ -31,11 +29,9 @@ struct DBView: View {
             ZStack {
                 switch dbViewType {
                 case .Tree:
-                    if let rootURL = rootURL {
-                        DBTree(selection: $selectionId, folderURL: rootURL)
-                    }
+                    DBViewTree()
                 case .List:
-                    DBList()
+                    DBViewList()
                 }
             }
             .frame(maxHeight: .infinity)
@@ -44,12 +40,6 @@ struct DBView: View {
                 DBBottomBar(dbViewType: $dbViewType)
             }
         }
-        .task {
-            self.rootURL = await db.getAudioDir()
-        }
-        .onChange(of: selectionId, {
-            playerManager.playMan.play(.fromURL(URL(string: selectionId)!), reason: "点击了")
-        })
         .fileImporter(
             isPresented: $appManager.isImporting,
             allowedContentTypes: [.audio],

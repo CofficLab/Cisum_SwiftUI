@@ -30,7 +30,7 @@ struct DBTree: View {
                 MenuTile(
                     id: asset.url.absoluteString,
                     title: asset.title,
-                    isFolder: asset.isFolder(), 
+                    isFolder: asset.isFolder(),
                     deleting: $deleting,
                     selectionId: $selection,
                     collapsed: $collapsed,
