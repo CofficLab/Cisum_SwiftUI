@@ -234,6 +234,14 @@ extension PlayAsset {
     }
 }
 
+// MARK: Transform
+
+extension PlayAsset {
+    static func fromURL(_ url: URL) -> PlayAsset {
+        PlayAsset(url: url)
+    }
+}
+
 #Preview {
     AppPreview()
         .frame(height: 800)

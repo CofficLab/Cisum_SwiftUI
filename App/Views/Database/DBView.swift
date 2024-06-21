@@ -5,6 +5,7 @@ import UniformTypeIdentifiers
 
 struct DBView: View {
     @EnvironmentObject var appManager: AppManager
+    @EnvironmentObject var playerManager: PlayManager
     @EnvironmentObject var db: DB
     
     @State var treeView = false
@@ -30,7 +31,10 @@ struct DBView: View {
                 if treeView {
                     if let rootURL = rootURL {
                         DBTree(selection: $selectionId, folderURL: rootURL)
-                    } 
+                            .onChange(of: selectionId, {
+                                playerManager.playMan.play(.fromURL(URL(string: selectionId)!), reason: "点击了")
+                            })
+                    }
                 } else {
                     DBList()
                         .fileImporter(
