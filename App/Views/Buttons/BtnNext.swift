@@ -4,6 +4,7 @@ import SwiftUI
 struct BtnNext: View {
     @EnvironmentObject var audioManager: PlayManager
     @EnvironmentObject var appManager: AppManager
+    @EnvironmentObject var diskManager: DiskManager
 
     var autoResize = false
 

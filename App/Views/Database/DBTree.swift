@@ -7,12 +7,11 @@ struct DBTree: View {
 
     @EnvironmentObject var appManager: AppManager
     @EnvironmentObject var db: DB
-
-    @State var folderContents: [URL] = []
+    
     @Binding var selection: String
     @State var collapsed: Bool = true
     @State var deleting: Bool = false
-    @State private var icon: String = ""
+    @State var icon: String = ""
 
     var folderURL: URL
     var level: Int = 0
