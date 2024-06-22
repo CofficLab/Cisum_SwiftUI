@@ -4,8 +4,8 @@ import SwiftUI
 struct AlbumView: View {
     static var verbose = false
     static var label = "🐰 AlbumView::"
-
-    @EnvironmentObject var audioManager: PlayManager
+    
+    @EnvironmentObject var db: DB
 
     @State var image: Image?
     @State var isDownloaded: Bool = true
@@ -51,7 +51,7 @@ struct AlbumView: View {
             } else if isNotDownloaded {
                 NotDownloadedAlbum(forPlaying: forPlaying).onTapGesture {
                     Task {
-                        await audioManager.db.download(self.asset.url, reason: "点击了Album")
+                        await db.download(self.asset.url, reason: "点击了Album")
                     }
                 }
             } else if let image = image {

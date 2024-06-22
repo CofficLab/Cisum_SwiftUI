@@ -2,14 +2,13 @@ import OSLog
 import SwiftUI
 
 struct BtnMore: View {
-    @EnvironmentObject var audioManager: PlayManager
     @EnvironmentObject var appManager: AppManager
+    @EnvironmentObject var playMan: PlayMan
 
     @State var isDownloaded = true
 
     var asset: PlayAsset
     var autoResize = true
-    var player: PlayMan { audioManager.playMan }
 
     var body: some View {
         ControlButton(
@@ -17,7 +16,7 @@ struct BtnMore: View {
             image: getImageName(),
             dynamicSize: autoResize,
             onTap: {
-                player.play(asset, reason: "Play Button")
+                playMan.play(asset, reason: "Play Button")
             },
             menus: AnyView(VStack{
                 BtnPlay(asset:asset, autoResize: false)

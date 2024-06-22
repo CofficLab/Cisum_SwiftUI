@@ -5,7 +5,6 @@ import UniformTypeIdentifiers
 
 struct DBView: View {
     @EnvironmentObject var appManager: AppManager
-    @EnvironmentObject var playerManager: PlayManager
     @EnvironmentObject var db: DB
     
     @State var treeView = false

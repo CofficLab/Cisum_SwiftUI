@@ -17,12 +17,13 @@ class PlayMan: NSObject, ObservableObject {
     var label: String { Logger.isMain + Self.label }
     var player = AVAudioPlayer()
     @Published var asset: PlayAsset?
+    @Published var mode: PlayMode = .Order
     var verbose = false
     var queue = DispatchQueue(label: "SmartPlayer", qos: .userInteractive)
 
     // MARK: 状态改变时
 
-    var state: PlayState = .Stopped {
+    @Published var state: PlayState = .Stopped {
         didSet {
             if verbose {
                 os_log("\(Logger.isMain)\(self.label)State changed 「\(oldValue.des)」 -> 「\(self.state.des)」")
@@ -113,6 +114,32 @@ class PlayMan: NSObject, ObservableObject {
     }
 }
 
+// MARK: 播放模式
+
+extension PlayMan {
+    // MARK: 切换播放模式
+
+    func switchMode(_ callback: @escaping (_ mode: PlayMode) -> Void, verbose: Bool = true) {
+        mode = mode.switchMode()
+
+        callback(mode)
+
+        Task {
+            if verbose {
+                os_log("\(Logger.isMain)\(Self.label)切换播放模式")
+            }
+
+//            if mode == .Random {
+//                await db.sortRandom(asset?.url as URL?)
+//            }
+//
+//            if mode == .Order {
+//                await db.sort(asset?.url as URL?)
+//            }
+        }
+    }
+}
+
 // MARK: 播放控制
 
 extension PlayMan {
@@ -131,12 +158,16 @@ extension PlayMan {
 
     func play(_ asset: PlayAsset, reason: String) {
         os_log("\(self.label)play \(asset.title) 🐛 \(reason)")
-        state = .Playing(asset)
+        DispatchQueue.main.async {
+            self.state = .Playing(asset)
+        }
     }
 
     func play() {
         os_log("\(self.label)Play")
-        resume()
+        DispatchQueue.main.async {
+            self.resume()
+        }
     }
 
     func resume() {

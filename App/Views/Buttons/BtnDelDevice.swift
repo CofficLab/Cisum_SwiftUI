@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct BtnDelDevice: View {
-    @EnvironmentObject var audioManager: PlayManager
     @Environment(\.modelContext) private var modelContext
     
     @State var hovered = false

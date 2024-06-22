@@ -11,20 +11,34 @@ struct RootView<Content>: View where Content: View {
     var appManager = AppManager()
     var storeManager = StoreManager()
     var playMan: PlayMan
-    var playManager: PlayManager
     var diskManager: DiskManager = DiskManager()
 
     init(@ViewBuilder content: () -> Content) {
         self.content = content()
         self.db = DB(Config.getContainer, reason: "RootView")
         self.playMan = PlayMan()
-        self.playManager = PlayManager(db: self.db, playMan: self.playMan)
     }
 
     var body: some View {
         content
             .onAppear {
                 restore()
+                
+                playMan.onNext = {
+                    self.next()
+                }
+                
+                playMan.onPrev = {
+                    self.prev()
+                }
+                
+                playMan.onStateChange = { state in
+                    self.onStateChanged(state)
+                }
+                
+                playMan.onToggleLike = {
+                    self.toggleLike()
+                }
             }
             .frame(minWidth: Config.minWidth, minHeight: Config.minHeight)
             .blendMode(.normal)
@@ -57,7 +71,6 @@ struct RootView<Content>: View where Content: View {
             .background(Config.rootBackground)
             .environmentObject(db)
             .environmentObject(playMan)
-            .environmentObject(playManager)
             .environmentObject(appManager)
             .environmentObject(storeManager)
             .environmentObject(diskManager)
@@ -79,7 +92,7 @@ struct RootView<Content>: View where Content: View {
             os_log("\(self.label)试着恢复上次播放的音频")
         }
 
-        playManager.mode = PlayMode(rawValue: Config.currentMode) ?? playManager.mode
+        playMan.mode = PlayMode(rawValue: Config.currentMode) ?? playMan.mode
         
         if let currentAudioId = Config.currentAudio {
             if verbose {
@@ -100,6 +113,101 @@ struct RootView<Content>: View where Content: View {
                 os_log("\(self.label)无上次播放的音频")
             }
         }
+    }
+    
+    func next(manual: Bool = false, verbose: Bool = true) {
+        if verbose {
+            os_log("\(self.label)next \(manual ? "手动触发" : "自动触发") ⬇️⬇️⬇️")
+        }
+
+        if playMan.mode == .Loop && manual == false {
+            return playMan.resume()
+        }
+
+        guard let asset = playMan.asset else {
+            return
+        }
+
+        Task {
+            if let i = await db.nextOf(asset.url) {
+                if playMan.isPlaying || manual == false {
+                    playMan.play(i.toPlayAsset(), reason: "在播放时或自动触发下一首")
+                } else {
+                    playMan.prepare(i.toPlayAsset())
+                }
+            } else {
+                playMan.stop()
+            }
+        }
+    }
+    
+    // MARK: Prev
+
+    /// 跳到上一首，manual=true表示由用户触发
+    func prev(manual: Bool = false, verbose: Bool = true) {
+        if verbose {
+            os_log("\(self.label)prev ⬆️")
+        }
+
+        if playMan.mode == .Loop && manual == false {
+            return
+        }
+        
+        guard let asset = playMan.asset else {
+            return
+        }
+
+        Task {
+            if let i = await self.db.pre(asset.url) {
+                if self.playMan.isPlaying {
+                    self.playMan.play(i.toPlayAsset(), reason: "在播放时触发了上一首")
+                } else {
+                    playMan.prepare(i.toPlayAsset())
+                }
+            }
+        }
+    }
+    
+    
+    func onStateChanged(_ state: PlayState, verbose: Bool = true) {
+        if verbose {
+            os_log("\(self.label)播放状态变了 -> \(state.des)")
+        }
+
+//        main.async {
+//            self.asset = state.getAsset()
+//            self.error = nil
+//
+//            switch state {
+//            case let .Playing(asset):
+//                Task {
+//                    await self.db.increasePlayCount(asset.url)
+//                }
+//            case .Finished:
+//                self.next()
+//            case let .Error(error, _):
+//                self.error = error
+//            case .Stopped:
+//                break
+//            default:
+//                break
+//            }
+//        }
+        
+        Config.setCurrentURL(state.getAsset()?.url)
+    }
+
+
+    
+    func toggleLike() {
+        //            if let audio = self.player.asset?.toAudio() {
+        //                Task {
+        //                    await self.db.toggleLike(audio)
+        //                }
+        //
+        //                self.c.likeCommand.isActive = audio.dislike
+        //                self.c.dislikeCommand.isActive = audio.like
+        //            }
     }
 }
 

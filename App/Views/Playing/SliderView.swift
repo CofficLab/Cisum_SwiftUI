@@ -5,8 +5,8 @@ import OSLog
 struct SliderView: View {
     static var label = "👀 SliderView::"
     
-    @EnvironmentObject var audioManager: PlayManager
     @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var db: DB
 
     @State private var value: Double = 0
     @State private var isEditing: Bool = false
@@ -18,11 +18,10 @@ struct SliderView: View {
         .autoconnect()
 
     var geo: GeometryProxy
-    var player: PlayMan { audioManager.playMan }
+    var player: PlayMan { playMan }
     var duration: TimeInterval { player.duration }
     var current: String { player.currentTimeDisplay }
     var left: String { player.leftTimeDisplay }
-    var db: DB { audioManager.db }
     var label: String { "\(Logger.isMain)\(Self.label)"}
 
     var body: some View {
@@ -43,11 +42,11 @@ struct SliderView: View {
         }
         .font(.caption)
         .onReceive(timer) { _ in
-            if audioManager.error != nil {
-                disable()
-            } else if audioManager.playMan.duration > 0 && !isEditing {
-                enable()
-            }
+//            if audioManager.error != nil {
+//                disable()
+//            } else if audioManager.playMan.duration > 0 && !isEditing {
+//                enable()
+//            }
             
             if Date.now.timeIntervalSince(lastDownloadTime) > 10, let asset = playMan.asset {
                 lastDownloadTime = .now

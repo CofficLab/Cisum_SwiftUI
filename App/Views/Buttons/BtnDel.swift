@@ -3,7 +3,6 @@ import SwiftUI
 struct BtnDel: View {
     @EnvironmentObject var db: DB
     @EnvironmentObject var appManager: AppManager
-    @EnvironmentObject var audioManager: PlayManager
     @EnvironmentObject var playMan: PlayMan
 
     var assets: [PlayAsset]
@@ -20,7 +19,7 @@ struct BtnDel: View {
                 Task {
                     //appManager.stateMessage = "正在删除 \(audios.count) 个"
 
-                    let isPlaying = audioManager.playMan.isPlaying
+                    let isPlaying = playMan.isPlaying
                     let next = await db.deleteAudios(assets.map{$0.url})
 
                     if let asset = playMan.asset, assets.map({ $0.url }).contains(asset.url) {

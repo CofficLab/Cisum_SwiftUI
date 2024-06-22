@@ -5,7 +5,6 @@ import SwiftUI
 struct BtnToggle: View {
     var play: Bool? = true
 
-    @EnvironmentObject var audioManager: PlayManager
     @EnvironmentObject var appManager: AppManager
     @EnvironmentObject var playMan: PlayMan
     

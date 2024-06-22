@@ -1,8 +1,8 @@
 import SwiftUI
 
 struct BtnDelTask: View {
-    @EnvironmentObject var audioManager: PlayManager
     @Environment(\.modelContext) private var modelContext
+    @EnvironmentObject var db: DB
     
     @State var hovered = false
 
@@ -17,7 +17,7 @@ struct BtnDelTask: View {
             onTap: {
                 for task in tasks {
                     Task {
-                        await audioManager.db.deleteCopyTask(task)
+                        await db.deleteCopyTask(task)
                     }
                 }
             })

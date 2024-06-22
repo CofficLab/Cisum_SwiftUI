@@ -3,7 +3,6 @@ import SwiftData
 import SwiftUI
 
 struct TitleView: View {
-    @EnvironmentObject var audioManager: PlayManager
     @EnvironmentObject var playMan: PlayMan
 
     var asset: PlayAsset? { playMan.asset }

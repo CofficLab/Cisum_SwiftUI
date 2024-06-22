@@ -2,14 +2,13 @@ import SwiftUI
 import OSLog
 
 struct HeroView: View {
-    @EnvironmentObject var audioManager: PlayManager
     @EnvironmentObject var app: AppManager
     @EnvironmentObject var playMan: PlayMan
 
     @State var topAlbumHeight: CGFloat = 0
     
     var verbose = false
-    var showErrorView: Bool { audioManager.error != nil }
+    var showErrorView: Bool { false }
     var showTitleView: Bool { playMan.asset != nil }
 
     var body: some View {

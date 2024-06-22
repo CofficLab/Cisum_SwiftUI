@@ -5,7 +5,6 @@ import SwiftUI
 struct DBViewTree: View {
     static var label = "📬 DBTreeView::"
 
-    @EnvironmentObject var playManager: PlayManager
     @EnvironmentObject var diskManager: DiskManager
     @EnvironmentObject var playMan: PlayMan
 

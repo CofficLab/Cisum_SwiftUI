@@ -2,7 +2,6 @@ import OSLog
 import SwiftUI
 
 struct BtnLike: View {
-    @EnvironmentObject var audioManager: PlayManager
     @EnvironmentObject var db: DB
     
     @State var like = false

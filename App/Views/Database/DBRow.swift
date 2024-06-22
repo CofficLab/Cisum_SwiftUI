@@ -3,7 +3,6 @@ import SwiftUI
 
 struct DBRow: View {
     @EnvironmentObject var db: DB
-    @EnvironmentObject var audioManager: PlayManager
     @EnvironmentObject var playMan: PlayMan
 
     @State var hovered = false

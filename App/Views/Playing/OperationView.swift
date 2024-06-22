@@ -2,7 +2,6 @@ import SwiftData
 import SwiftUI
 
 struct OperationView: View {
-    @EnvironmentObject var audioManager: PlayManager
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var db: DB
 

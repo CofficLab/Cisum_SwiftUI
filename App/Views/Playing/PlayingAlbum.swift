@@ -2,7 +2,6 @@ import OSLog
 import SwiftUI
 
 struct PlayingAlbum: View {
-    @EnvironmentObject var audioManager: PlayManager
     @EnvironmentObject var playMan: PlayMan
     
     var alignTop = false

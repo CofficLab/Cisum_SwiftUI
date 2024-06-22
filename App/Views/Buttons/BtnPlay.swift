@@ -2,14 +2,14 @@ import OSLog
 import SwiftUI
 
 struct BtnPlay: View {
-    @EnvironmentObject var audioManager: PlayManager
     @EnvironmentObject var appManager: AppManager
+    @EnvironmentObject var playMan: PlayMan
 
     @State var isDownloaded = true
 
     var asset: PlayAsset
     var autoResize = true
-    var player: PlayMan { audioManager.playMan }
+    var player: PlayMan { playMan }
 
     var body: some View {
         ControlButton(

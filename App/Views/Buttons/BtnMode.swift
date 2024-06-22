@@ -2,7 +2,7 @@ import SwiftUI
 
 struct BtnMode: View {
     @EnvironmentObject var appManager: AppManager
-    @EnvironmentObject var audioManager: PlayManager
+    @EnvironmentObject var playMan: PlayMan
 
     @State private var hovered: Bool = false
 
@@ -10,14 +10,14 @@ struct BtnMode: View {
 
     var body: some View {
         ControlButton(title: "模式", image: getImageName(), dynamicSize: autoResize, onTap: {
-            audioManager.switchMode { mode in
+            playMan.switchMode { mode in
                 appManager.setFlashMessage("\(mode.description)")
             }
         })
     }
 
     private func getImageName() -> String {
-        switch audioManager.mode {
+        switch playMan.mode {
         case .Order:
             return "repeat"
         case .Loop:

@@ -2,8 +2,6 @@ import OSLog
 import SwiftUI
 
 struct RowTask: View {
-    @EnvironmentObject var audioManager: PlayManager
-
     @State var hovered = false
 
     var task: CopyTask

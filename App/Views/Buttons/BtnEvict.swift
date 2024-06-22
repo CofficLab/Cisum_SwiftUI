@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct BtnEvict: View {
-    @EnvironmentObject var audioManager: PlayManager
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var db: DB
     
