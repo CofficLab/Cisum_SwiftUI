@@ -3,9 +3,10 @@ import SwiftUI
 
 struct OperationView: View {
     @EnvironmentObject var audioManager: PlayManager
+    @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var db: DB
 
-    var asset: PlayAsset? { audioManager.asset }
+    var asset: PlayAsset? { playMan.asset }
     var characterCount: Int { asset?.title.count ?? 0 }
     var geo: GeometryProxy
 

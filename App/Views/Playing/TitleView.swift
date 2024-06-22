@@ -4,8 +4,9 @@ import SwiftUI
 
 struct TitleView: View {
     @EnvironmentObject var audioManager: PlayManager
+    @EnvironmentObject var playMan: PlayMan
 
-    var asset: PlayAsset? { audioManager.asset }
+    var asset: PlayAsset? { playMan.asset }
     var characterCount: Int { asset?.title.count ?? 0 }
     var width: CGFloat
     var label: String {"\(Logger.isMain)📺 TitleView::"}
@@ -25,7 +26,7 @@ struct TitleView: View {
 
     /// 根据宽度来决定字体的大小
     func getFont(width: CGFloat) -> Font {
-        guard let audio = audioManager.asset else {
+        guard let audio = asset else {
             return .title
         }
 

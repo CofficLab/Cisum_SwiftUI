@@ -4,13 +4,14 @@ import SwiftUI
 struct DBRow: View {
     @EnvironmentObject var db: DB
     @EnvironmentObject var audioManager: PlayManager
+    @EnvironmentObject var playMan: PlayMan
 
     @State var hovered = false
 
     var asset: PlayAsset
 
     var isCurrent: Bool {
-        audioManager.asset?.url == self.asset.url
+        playMan.asset?.url == self.asset.url
     }
     var background: Color {
         if isCurrent {

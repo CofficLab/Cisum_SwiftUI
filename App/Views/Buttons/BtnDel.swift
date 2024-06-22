@@ -4,11 +4,11 @@ struct BtnDel: View {
     @EnvironmentObject var db: DB
     @EnvironmentObject var appManager: AppManager
     @EnvironmentObject var audioManager: PlayManager
+    @EnvironmentObject var playMan: PlayMan
 
     var assets: [PlayAsset]
     var callback: () -> Void = {}
     var autoResize = false
-    var playMan: PlayMan { audioManager.playMan }
 
     var body: some View {
         ControlButton(
@@ -23,7 +23,7 @@ struct BtnDel: View {
                     let isPlaying = audioManager.playMan.isPlaying
                     let next = await db.deleteAudios(assets.map{$0.url})
 
-                    if let asset = audioManager.asset, assets.map({ $0.url }).contains(asset.url) {
+                    if let asset = playMan.asset, assets.map({ $0.url }).contains(asset.url) {
                         if isPlaying, let next = next {
                             playMan.play(next.toPlayAsset(), reason: "删除了")
                         } else {

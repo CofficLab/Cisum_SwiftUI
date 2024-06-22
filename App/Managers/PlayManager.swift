@@ -12,14 +12,12 @@ class PlayManager: NSObject, ObservableObject {
 
     @Published var error: Error? = nil
     @Published var mode: PlayMode = .Order
-    @Published var asset: PlayAsset? = nil
 
     private var bg = Config.bgQueue
     private var main = Config.mainQueue
     private var label: String { Logger.isMain + PlayManager.label }
 
     var db: DB
-    var isEmpty: Bool { asset == nil }
     var playMan: PlayMan
 
     init(db: DB, playMan: PlayMan, verbose: Bool = true) {
@@ -54,25 +52,25 @@ class PlayManager: NSObject, ObservableObject {
             os_log("\(self.label)播放状态变了 -> \(state.des)")
         }
 
-        main.async {
-            self.asset = state.getAsset()
-            self.error = nil
-            
-            switch state {
-            case let .Playing(asset):
-                Task {
-                    await self.db.increasePlayCount(asset.url)
-                }
-            case .Finished:
-                self.next()
-            case let .Error(error, _):
-                self.error = error
-            case .Stopped:
-                break
-            default:
-                break
-            }
-        }
+//        main.async {
+//            self.asset = state.getAsset()
+//            self.error = nil
+//            
+//            switch state {
+//            case let .Playing(asset):
+//                Task {
+//                    await self.db.increasePlayCount(asset.url)
+//                }
+//            case .Finished:
+//                self.next()
+//            case let .Error(error, _):
+//                self.error = error
+//            case .Stopped:
+//                break
+//            default:
+//                break
+//            }
+//        }
         
         Config.setCurrentURL(state.getAsset()?.url)
     }
@@ -89,15 +87,15 @@ class PlayManager: NSObject, ObservableObject {
             return
         }
 
-        Task {
-            if let i = await self.db.pre(asset?.url) {
-                if self.playMan.isPlaying {
-                    self.playMan.play(i.toPlayAsset(), reason: "在播放时触发了上一首")
-                } else {
-                    playMan.prepare(i.toPlayAsset())
-                }
-            }
-        }
+//        Task {
+//            if let i = await self.db.pre(asset?.url) {
+//                if self.playMan.isPlaying {
+//                    self.playMan.play(i.toPlayAsset(), reason: "在播放时触发了上一首")
+//                } else {
+//                    playMan.prepare(i.toPlayAsset())
+//                }
+//            }
+//        }
     }
 
     // MARK: Next
@@ -112,7 +110,7 @@ class PlayManager: NSObject, ObservableObject {
             return playMan.resume()
         }
 
-        guard let asset = asset else {
+        guard let asset = playMan.asset else {
             return
         }
 
@@ -156,13 +154,13 @@ extension PlayManager {
                 os_log("\(Logger.isMain)\(Self.label)切换播放模式")
             }
 
-            if mode == .Random {
-                await db.sortRandom(asset?.url as URL?)
-            }
-
-            if mode == .Order {
-                await db.sort(asset?.url as URL?)
-            }
+//            if mode == .Random {
+//                await db.sortRandom(asset?.url as URL?)
+//            }
+//
+//            if mode == .Order {
+//                await db.sort(asset?.url as URL?)
+//            }
         }
     }
 }

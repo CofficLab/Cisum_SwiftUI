@@ -10,13 +10,13 @@ import SwiftUI
       对接系统媒体中心
  */
 
-class PlayMan: NSObject {
+class PlayMan: NSObject, ObservableObject {
     // MARK: 成员
 
     static var label = "💿 PlayMan::"
     var label: String { Logger.isMain + Self.label }
     var player = AVAudioPlayer()
-    var asset: PlayAsset?
+    @Published var asset: PlayAsset?
     var verbose = false
     var queue = DispatchQueue(label: "SmartPlayer", qos: .userInteractive)
 
@@ -122,7 +122,11 @@ extension PlayMan {
     }
 
     func prepare(_ asset: PlayAsset?) {
-        state = .Ready(asset)
+        os_log("\(self.label)prepare \(asset?.title ?? "nil")")
+        DispatchQueue.main.async {
+            self.state = .Ready(asset)
+        }
+        
     }
 
     func play(_ asset: PlayAsset, reason: String) {

@@ -56,6 +56,7 @@ struct RootView<Content>: View where Content: View {
             }
             .background(Config.rootBackground)
             .environmentObject(db)
+            .environmentObject(playMan)
             .environmentObject(playManager)
             .environmentObject(appManager)
             .environmentObject(storeManager)

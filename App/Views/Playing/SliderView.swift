@@ -6,6 +6,7 @@ struct SliderView: View {
     static var label = "👀 SliderView::"
     
     @EnvironmentObject var audioManager: PlayManager
+    @EnvironmentObject var playMan: PlayMan
 
     @State private var value: Double = 0
     @State private var isEditing: Bool = false
@@ -48,7 +49,7 @@ struct SliderView: View {
                 enable()
             }
             
-            if Date.now.timeIntervalSince(lastDownloadTime) > 10, let asset = audioManager.asset {
+            if Date.now.timeIntervalSince(lastDownloadTime) > 10, let asset = playMan.asset {
                 lastDownloadTime = .now
                 Task.detached(priority: .low) {
                     await db.downloadNextBatch(asset.url, count: 4, reason: "SliderView确保下一个准备好")

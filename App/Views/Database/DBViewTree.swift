@@ -7,12 +7,12 @@ struct DBViewTree: View {
 
     @EnvironmentObject var playManager: PlayManager
     @EnvironmentObject var diskManager: DiskManager
+    @EnvironmentObject var playMan: PlayMan
 
     @State var selection: String = ""
     @State var collapsed: Bool = false
     @State var icon: String = ""
 
-    var playMan: PlayMan { playManager.playMan }
     var disk: DiskContact { diskManager.disk }
     var root: URL { disk.audiosDir }
 
@@ -24,6 +24,9 @@ struct DBViewTree: View {
         )
         .onChange(of: selection, {
             playMan.play(.fromURL(URL(string: selection)!), reason: "点击了")
+        })
+        .onChange(of: playMan.asset?.url, {
+            self.selection = playMan.asset?.url.absoluteString ?? ""
         })
     }
 }

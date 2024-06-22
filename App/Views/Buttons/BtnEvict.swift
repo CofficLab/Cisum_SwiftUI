@@ -2,6 +2,7 @@ import SwiftUI
 
 struct BtnEvict: View {
     @EnvironmentObject var audioManager: PlayManager
+    @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var db: DB
     
     var asset: PlayAsset
@@ -14,7 +15,7 @@ struct BtnEvict: View {
         } label: {
             Label("移除下载项", systemImage: getImageName())
                 .font(.system(size: 24))
-        }.disabled(asset.url == audioManager.asset?.url)
+        }.disabled(asset.url == playMan.asset?.url)
     }
     
     private func getImageName() -> String {
