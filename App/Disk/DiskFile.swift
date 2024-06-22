@@ -2,8 +2,9 @@ import Foundation
 import OSLog
 
 struct DiskFile: FileBox,Hashable, Identifiable {
-    var id: URL {self.url}
+    static var home: DiskFile = DiskFile(url: URL.homeDirectory)
     
+    var id: URL {self.url}
     var url: URL
     var isDownloading: Bool = false
     var isUpdated: Bool = false

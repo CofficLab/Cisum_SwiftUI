@@ -8,7 +8,7 @@ struct DBViewTree: View {
     @EnvironmentObject var diskManager: DiskManager
     @EnvironmentObject var playMan: PlayMan
 
-    @State var selection: String = ""
+    @State var selection: DiskFile?
     @State var collapsed: Bool = false
     @State var icon: String = ""
 
@@ -22,10 +22,16 @@ struct DBViewTree: View {
             file: disk.getRoot()
         )
         .onChange(of: selection, {
-            playMan.play(.fromURL(URL(string: selection)!), reason: "点击了")
+            if let s = selection {
+                playMan.play(s.toPlayAsset(), reason: "点击了")
+            }
         })
         .onChange(of: playMan.asset?.url, {
-            self.selection = playMan.asset?.url.absoluteString ?? ""
+            if let asset = playMan.asset {
+                self.selection = DiskFile(url: asset.url)
+            } else {
+                self.selection = nil
+            }
         })
     }
 }

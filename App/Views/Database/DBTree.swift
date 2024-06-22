@@ -4,12 +4,13 @@ import SwiftUI
 
 struct DBTree: View {
     static var label = "📬 DBTree::"
+    static var urlNull = URL(string: "/dev/null")!
 
     @EnvironmentObject var appManager: AppManager
     @EnvironmentObject var diskManager: DiskManager
     @EnvironmentObject var db: DB
     
-    @Binding var selection: String
+    @Binding var selection: DiskFile?
     @State var collapsed: Bool = true
     @State var deleting: Bool = false
     @State var icon: String = ""
@@ -21,7 +22,7 @@ struct DBTree: View {
         ScrollView {
             VStack(spacing: 0) {
                 MenuTile(
-                    id: file.url.absoluteString,
+                    id: file,
                     title: file.title,
                     isFolder: file.isFolder(),
                     level: level,
@@ -48,7 +49,7 @@ struct DBTree: View {
 
 #Preview("DBTree-Local") {
     RootView {
-        DBTree(selection: Binding.constant(""), file: DiskLocal().getRoot())
+        DBTree(selection: Binding.constant(DiskFile.home), file: DiskLocal().getRoot())
             .background(.background)
             .padding()
     }
@@ -57,7 +58,7 @@ struct DBTree: View {
 
 #Preview("DBTree-iCloud") {
     RootView {
-        DBTree(selection: Binding.constant(""), file: DiskiCloud().getRoot())
+        DBTree(selection: Binding.constant(DiskFile.home), file: DiskiCloud().getRoot())
             .background(.background)
             .padding()
     }

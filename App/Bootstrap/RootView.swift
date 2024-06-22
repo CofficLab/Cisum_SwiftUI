@@ -115,6 +115,8 @@ struct RootView<Content>: View where Content: View {
         }
     }
     
+    // MARK: Next
+    
     func next(manual: Bool = false, verbose: Bool = true) {
         if verbose {
             os_log("\(self.label)next \(manual ? "手动触发" : "自动触发") ⬇️⬇️⬇️")
@@ -127,6 +129,8 @@ struct RootView<Content>: View where Content: View {
         guard let asset = playMan.asset else {
             return
         }
+        
+        let next = diskManager.disk
 
         Task {
             if let i = await db.nextOf(asset.url) {

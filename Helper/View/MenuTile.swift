@@ -1,7 +1,7 @@
 import SwiftUI
 
-struct MenuTile: View {
-    var id: String
+struct MenuTile<ID: Hashable>: View {
+    var id: ID
     var title: String = "[无标题]"
     var dragging: Bool = false
     var trailing: String = ""
@@ -10,7 +10,7 @@ struct MenuTile: View {
     var loading: Bool = false
 
     @Binding var deleting: Bool
-    @Binding var selectionId: String
+    @Binding var selectionId: ID?
     @Binding var collapsed: Bool
     @Binding var forceIcon: String
     var clicked: () -> Void = {}
