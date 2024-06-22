@@ -15,7 +15,7 @@ struct StateView: View {
     @State var networkOK = true
 
     var e = EventManager()
-    var error: Error? { nil }
+    var error: Error? { appManager.error }
     var taskCount: Int { tasks.count }
     var showCopyMessage: Bool { tasks.count > 0 }
     var asset: PlayAsset? { playMan.asset }

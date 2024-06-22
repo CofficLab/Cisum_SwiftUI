@@ -174,25 +174,24 @@ struct RootView<Content>: View where Content: View {
             os_log("\(self.label)播放状态变了 -> \(state.des)")
         }
 
-//        main.async {
-//            self.asset = state.getAsset()
-//            self.error = nil
-//
-//            switch state {
-//            case let .Playing(asset):
-//                Task {
-//                    await self.db.increasePlayCount(asset.url)
-//                }
-//            case .Finished:
-//                self.next()
-//            case let .Error(error, _):
-//                self.error = error
-//            case .Stopped:
-//                break
-//            default:
-//                break
-//            }
-//        }
+        DispatchQueue.main.async {
+            appManager.error = nil
+
+            switch state {
+            case let .Playing(asset):
+                Task {
+                    await self.db.increasePlayCount(asset.url)
+                }
+            case .Finished:
+                self.next()
+            case let .Error(error, _):
+                appManager.error = error
+            case .Stopped:
+                break
+            default:
+                break
+            }
+        }
         
         Config.setCurrentURL(state.getAsset()?.url)
     }

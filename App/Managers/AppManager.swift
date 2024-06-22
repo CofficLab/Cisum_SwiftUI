@@ -14,6 +14,7 @@ class AppManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
     @Published var fixedMessage: String = ""
     @Published var isImporting: Bool = false
     @Published var isDropping: Bool = false
+    @Published var error: Error? = nil
     
     // 右侧的封面图是否出现了
     @Published var rightAlbumVisible = false
