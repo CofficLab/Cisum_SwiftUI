@@ -27,5 +27,5 @@ protocol DiskContact {
     
     func makeURL(_ fileName: String) -> URL
     
-    func getTree() -> DiskTree
+    func getRoot() -> DiskFile
 }

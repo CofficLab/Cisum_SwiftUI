@@ -33,8 +33,8 @@ class DiskiCloud: ObservableObject, DiskContact {
 // MARK: GetTree
 
 extension DiskiCloud {
-    func getTree() -> DiskTree {
-        DiskTree.fromURL(audiosDir)
+    func getRoot() -> DiskFile {
+        DiskFile.fromURL(audiosDir)
     }
 }
 

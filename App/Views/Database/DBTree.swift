@@ -6,6 +6,7 @@ struct DBTree: View {
     static var label = "📬 DBTree::"
 
     @EnvironmentObject var appManager: AppManager
+    @EnvironmentObject var diskManager: DiskManager
     @EnvironmentObject var db: DB
     
     @Binding var selection: String
@@ -13,37 +14,29 @@ struct DBTree: View {
     @State var deleting: Bool = false
     @State var icon: String = ""
 
-    var folderURL: URL
     var level: Int = 0
-    
-    var tree: DiskTree {
-        DiskTree.fromURL(self.folderURL)
-    }
-    
-    var asset: PlayAsset {
-        tree.toPlayAsset()
-    }
+    var file: DiskFile
     
     var body: some View {
         ScrollView {
             VStack(spacing: 0) {
                 MenuTile(
-                    id: asset.url.absoluteString,
-                    title: asset.title,
-                    isFolder: asset.isFolder(), level: level,
+                    id: file.url.absoluteString,
+                    title: file.title,
+                    isFolder: file.isFolder(),
+                    level: level,
                     deleting: $deleting,
                     selectionId: $selection,
                     collapsed: $collapsed,
                     forceIcon: $icon
                 )
                 
-                if let children = tree.children, !collapsed {
+                if let children = file.getChildren(), !collapsed {
                     VStack(spacing: 0) {
-                        ForEach(children, id: \.id) { node in
+                        ForEach(children, id: \.id) { child in
                             DBTree(
                                 selection: $selection,
-                                folderURL: node.url,
-                                level: level + 1
+                                level: level + 1, file: child
                             )
                         }
                     }
@@ -55,7 +48,7 @@ struct DBTree: View {
 
 #Preview("DBTree-Local") {
     RootView {
-        DBTree(selection: Binding.constant(""), folderURL: DiskLocal().audiosDir)
+        DBTree(selection: Binding.constant(""), file: DiskLocal().getRoot())
             .background(.background)
             .padding()
     }
@@ -64,7 +57,7 @@ struct DBTree: View {
 
 #Preview("DBTree-iCloud") {
     RootView {
-        DBTree(selection: Binding.constant(""), folderURL: DiskiCloud().audiosDir)
+        DBTree(selection: Binding.constant(""), file: DiskiCloud().getRoot())
             .background(.background)
             .padding()
     }

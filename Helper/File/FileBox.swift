@@ -7,7 +7,10 @@ protocol FileBox {
 // MARK: Meta
 
 extension FileBox {
-    var title: String { url.lastPathComponent }
+    var title: String {
+        
+        return url.lastPathComponent
+    }
     var ext: String { url.pathExtension }
 }
 

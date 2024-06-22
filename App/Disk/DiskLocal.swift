@@ -34,8 +34,8 @@ extension DiskLocal: DiskContact {
     func deleteFiles(_ audios: [Audio]) throws {
     }
     
-    func getTree() -> DiskTree {
-        DiskTree.fromURL(audiosDir)
+    func getRoot() -> DiskFile {
+        DiskFile.fromURL(audiosDir)
     }
 
     func clearFolderContents(atPath path: String) {

@@ -20,7 +20,7 @@ struct DBViewTree: View {
         DBTree(
             selection: $selection,
             collapsed: collapsed,
-            folderURL: root
+            file: disk.getRoot()
         )
         .onChange(of: selection, {
             playMan.play(.fromURL(URL(string: selection)!), reason: "点击了")

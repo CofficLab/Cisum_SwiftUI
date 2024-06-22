@@ -139,7 +139,6 @@
 		F545D1772C1FCC86006A6AFA /* UserExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F545D1762C1FCC86006A6AFA /* UserExt.swift */; };
 		F5675C332C22BFD900326664 /* DBBottomBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C322C22BFD900326664 /* DBBottomBar.swift */; };
 		F5675C352C22CB3C00326664 /* DBViewTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C342C22CB3C00326664 /* DBViewTree.swift */; };
-		F5675C372C22DB4D00326664 /* DiskTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C362C22DB4D00326664 /* DiskTree.swift */; };
 		F5675C3A2C2404D700326664 /* FileBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C392C2404D700326664 /* FileBox.swift */; };
 		F5675C3E2C252A3800326664 /* DBTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C3D2C252A3800326664 /* DBTree.swift */; };
 		F5675C402C25456300326664 /* DiskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C3F2C25456300326664 /* DiskManager.swift */; };
@@ -284,7 +283,6 @@
 		F545D1762C1FCC86006A6AFA /* UserExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserExt.swift; sourceTree = "<group>"; };
 		F5675C322C22BFD900326664 /* DBBottomBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBBottomBar.swift; sourceTree = "<group>"; };
 		F5675C342C22CB3C00326664 /* DBViewTree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBViewTree.swift; sourceTree = "<group>"; };
-		F5675C362C22DB4D00326664 /* DiskTree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskTree.swift; sourceTree = "<group>"; };
 		F5675C392C2404D700326664 /* FileBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileBox.swift; sourceTree = "<group>"; };
 		F5675C3D2C252A3800326664 /* DBTree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBTree.swift; sourceTree = "<group>"; };
 		F5675C3F2C25456300326664 /* DiskManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskManager.swift; sourceTree = "<group>"; };
@@ -431,7 +429,6 @@
 				F53BE0332C2024BE003CBA29 /* DiskFileGroup.swift */,
 				0BD0568A2BC6202900EBC7C4 /* DiskiCloud.swift */,
 				0BB427902BED0B38004E6F82 /* DiskLocal.swift */,
-				F5675C362C22DB4D00326664 /* DiskTree.swift */,
 			);
 			path = Disk;
 			sourceTree = "<group>";
@@ -820,7 +817,6 @@
 				0B9EA35D2C21C9AB00A4059A /* PlayState.swift in Sources */,
 				0B8C36B22BEC6E8D00C47567 /* QueueExt.swift in Sources */,
 				0BD056892BC6192D00EBC7C4 /* JobSync.swift in Sources */,
-				F5675C372C22DB4D00326664 /* DiskTree.swift in Sources */,
 				0B1165E92ABBC6C0005C5CBB /* LaunchView.swift in Sources */,
 				0B4DFC722BD740B4001CEF32 /* Device.swift in Sources */,
 				0B1D5A8A2AB302610010DDF2 /* AppConfig.swift in Sources */,

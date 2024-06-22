@@ -1,6 +1,9 @@
 import Foundation
+import OSLog
 
-struct DiskFile: FileBox {
+struct DiskFile: FileBox,Hashable, Identifiable {
+    var id: URL {self.url}
+    
     var url: URL
     var isDownloading: Bool = false
     var isUpdated: Bool = false
@@ -8,8 +11,6 @@ struct DiskFile: FileBox {
     var isDownloaded: Bool = true
     var isFolder: Bool = false
     var downloadProgress: Double = 1.0
-    var fileName: String = ""
-    var children: [DiskFile]? = nil
     var index: Int = 0
 }
 
@@ -19,7 +20,7 @@ extension DiskFile {
     }
     
     static func fromURL(_ url: URL) -> Self {
-        DiskFile(url: url, isDownloading: false, downloadProgress: 1, fileName: url.lastPathComponent)
+        DiskFile(url: url, isDownloading: false, downloadProgress: 1)
     }
     
     static func fromMetaWrapper(_ meta: MetaWrapper) -> Self {
@@ -28,8 +29,7 @@ extension DiskFile {
             isDownloading: meta.isDownloading,
             isDeleted: meta.isDeleted,
             isFolder: meta.isDirectory,
-            downloadProgress: meta.downloadProgress,
-            fileName: meta.fileName!
+            downloadProgress: meta.downloadProgress
         )
     }
 }
@@ -41,20 +41,15 @@ extension DiskFile {
         let fileManager = FileManager.default
         
         do {
-            let contents = try fileManager.contentsOfDirectory(at: url, includingPropertiesForKeys: [.nameKey, .isDirectoryKey], options: .skipsHiddenFiles)
-            var subdirectories = contents.filter { $0.hasDirectoryPath }
-            var files = contents.filter { !$0.hasDirectoryPath }
+            var files = try fileManager.contentsOfDirectory(at: url, includingPropertiesForKeys: [.nameKey], options: .skipsHiddenFiles)
             
-            // Sort subdirectories and files by name
-            subdirectories.sort { $0.lastPathComponent < $1.lastPathComponent }
             files.sort { $0.lastPathComponent < $1.lastPathComponent }
             
-            var children: [DiskFile] = []
+            var children: [DiskFile] = files.map { DiskFile(url: $0) }
             
-            for file in files {
-                let fileTree = DiskFile(url: file)
-                children.append(fileTree)
-            }
+            children.forEach({
+                os_log("\(url.lastPathComponent) 的 children \($0.url.lastPathComponent)")
+            })
             
             return children.isEmpty ? nil : children
         } catch {
@@ -68,7 +63,7 @@ extension DiskFile {
 
 extension DiskFile {
     func next() -> DiskFile? {
-        guard let parent = self.parent, let siblings = parent.children, siblings.count > self.index + 1 else {
+        guard let parent = self.parent, let siblings = parent.getChildren(), siblings.count > self.index + 1 else {
             return nil
         }
         
@@ -85,5 +80,13 @@ extension DiskFile {
         }
         
         return DiskFile.fromURL(parentURL)
+    }
+}
+
+// MARK: Tramsform
+
+extension DiskFile {
+    func toPlayAsset() -> PlayAsset {
+        PlayAsset(url: self.url)
     }
 }

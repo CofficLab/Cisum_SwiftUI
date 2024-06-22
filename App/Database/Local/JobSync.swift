@@ -23,7 +23,7 @@ extension DB {
         var message = "\(labelForSync) sync with count=\(group.count)"
 
         if let first = group.first, first.isDownloading == true {
-            message += " -> \(first.fileName) -> \(String(format: "%.0f", first.downloadProgress))% ⏬⏬⏬"
+            message += " -> \(first.title) -> \(String(format: "%.0f", first.downloadProgress))% ⏬⏬⏬"
         }
 
         if verbose {
