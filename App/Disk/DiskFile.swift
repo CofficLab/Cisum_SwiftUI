@@ -47,10 +47,6 @@ extension DiskFile {
             
             var children: [DiskFile] = files.map { DiskFile(url: $0) }
             
-            children.forEach({
-                os_log("\(url.lastPathComponent) 的 children \($0.url.lastPathComponent)")
-            })
-            
             return children.isEmpty ? nil : children
         } catch {
             // Handle error

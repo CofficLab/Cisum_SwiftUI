@@ -18,22 +18,19 @@ class PlayManager: NSObject, ObservableObject {
     private var main = Config.mainQueue
     private var label: String { Logger.isMain + PlayManager.label }
 
-    var db: DB = .init(Config.getContainer, reason: "AudioManager")
+    var db: DB
     var isEmpty: Bool { asset == nil }
-    var playMan = PlayMan()
+    var playMan: PlayMan
 
-    init(db: DB, verbose: Bool = true) {
+    init(db: DB, playMan: PlayMan, verbose: Bool = true) {
         if verbose {
             os_log("\(Logger.isMain)\(Self.label)初始化")
         }
         
         self.db = db
+        self.playMan = playMan
 
         super.init()
-
-        Task {
-            restore()
-        }
 
         playMan.onStateChange = { state in
             self.onStateChanged(state)
@@ -78,46 +75,6 @@ class PlayManager: NSObject, ObservableObject {
         }
         
         Config.setCurrentURL(state.getAsset()?.url)
-    }
-
-    // MARK: 恢复上次播放的
-
-    func restore(verbose: Bool = true) {
-        if self.asset != nil {
-            if verbose {
-                os_log("\(self.label)当前有播放资源，无需恢复上次播放的音频")
-            }
-            
-            return
-        }
-        
-        if verbose {
-            os_log("\(self.label)试着恢复上次播放的音频")
-        }
-        
-        let currentMode = PlayMode(rawValue: Config.currentMode)
-        let currentAudioId = Config.currentAudio
-        mode = currentMode ?? mode
-        
-        if let currentAudioId = currentAudioId {
-            if verbose {
-                os_log("\(self.label)上次播放的音频是 -> \(currentAudioId.lastPathComponent)")
-            }
-            
-            Task {
-                if let currentAudio = await self.db.findAudio(currentAudioId) {
-                    playMan.prepare(currentAudio.toPlayAsset())
-                } else if let current = await self.db.first() {
-                    playMan.prepare(current.toPlayAsset())
-                } else {
-                    os_log("\(self.label)restore nothing to play")
-                }
-            }
-        } else {
-            if verbose {
-                os_log("\(self.label)无上次播放的音频")
-            }
-        }
     }
 
     // MARK: Prev
