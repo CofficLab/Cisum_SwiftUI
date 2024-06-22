@@ -4,17 +4,16 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct DBView: View {
-    @EnvironmentObject var appManager: AppManager
+    @EnvironmentObject var app: AppManager
     @EnvironmentObject var db: DB
     
     @State var treeView = false
-    @State var dbViewType: DBViewType = .init(rawValue: Config.currentDBViewType)!
     
     static var label = "🐘 DBView::"
 
     var main = Config.mainQueue
     var bg = Config.bgQueue
-    var dropping: Bool { appManager.isDropping }
+    var dropping: Bool { app.isDropping }
     var label: String { "\(Logger.isMain)\(Self.label) "}
     
     init(verbose: Bool = false) {
@@ -26,7 +25,7 @@ struct DBView: View {
     var body: some View {
         VStack(spacing: 0) {
             ZStack {
-                switch dbViewType {
+                switch app.dbViewType {
                 case .Tree:
                     DBViewTree()
                 case .List:
@@ -36,11 +35,11 @@ struct DBView: View {
             .frame(maxHeight: .infinity)
             
             if Config.isDebug {
-                DBBottomBar(dbViewType: $dbViewType)
+                DBBottomBar(dbViewType: $app.dbViewType)
             }
         }
         .fileImporter(
-            isPresented: $appManager.isImporting,
+            isPresented: $app.isImporting,
             allowedContentTypes: [.audio],
             allowsMultipleSelection: true,
             onCompletion: { result in
@@ -52,7 +51,7 @@ struct DBView: View {
                 }
             }
         )
-        .onDrop(of: [UTType.fileURL], isTargeted: $appManager.isDropping) { providers -> Bool in
+        .onDrop(of: [UTType.fileURL], isTargeted: $app.isDropping) { providers -> Bool in
             let dispatchGroup = DispatchGroup()
             var dropedFiles: [URL] = []
             for provider in providers {
@@ -88,20 +87,20 @@ extension DBView {
 
     func setFlashMessage(_ m: String) {
         main.async {
-            appManager.setFlashMessage(m)
+            app.setFlashMessage(m)
             self.cleanStateMessage()
         }
     }
 
     func setStateMessage(_ m: String) {
         main.async {
-            appManager.stateMessage = m
+            app.stateMessage = m
         }
     }
 
     func cleanStateMessage() {
         main.async {
-            appManager.cleanStateMessage()
+            app.cleanStateMessage()
         }
     }
 }

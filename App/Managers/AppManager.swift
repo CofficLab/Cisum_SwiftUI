@@ -16,6 +16,7 @@ class AppManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
     @Published var isDropping: Bool = false
     @Published var error: Error? = nil
     @Published var rightAlbumVisible = false
+    @Published var dbViewType: DBViewType = .init(rawValue: Config.currentDBViewType)!
     
     func showDBView() {
         withAnimation {

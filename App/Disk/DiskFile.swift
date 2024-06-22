@@ -1,10 +1,11 @@
 import Foundation
 import OSLog
 
-struct DiskFile: FileBox,Hashable, Identifiable {
+struct DiskFile: FileBox, Hashable, Identifiable {
     static var home: DiskFile = DiskFile(url: URL.homeDirectory)
-    
-    var id: URL {self.url}
+    static var label = "👶 DiskFile::"
+
+    var id: URL { url }
     var url: URL
     var isDownloading: Bool = false
     var isUpdated: Bool = false
@@ -13,17 +14,21 @@ struct DiskFile: FileBox,Hashable, Identifiable {
     var isFolder: Bool = false
     var downloadProgress: Double = 1.0
     var index: Int = 0
+
+    var label: String {
+        "\(Logger.isMain)\(Self.label)"
+    }
 }
 
 extension DiskFile {
     func toAudio() -> Audio {
         Audio(url)
     }
-    
+
     static func fromURL(_ url: URL) -> Self {
         DiskFile(url: url, isDownloading: false, downloadProgress: 1)
     }
-    
+
     static func fromMetaWrapper(_ meta: MetaWrapper) -> Self {
         DiskFile(
             url: meta.url!,
@@ -40,14 +45,14 @@ extension DiskFile {
 extension DiskFile {
     func getChildren() -> [DiskFile]? {
         let fileManager = FileManager.default
-        
+
         do {
             var files = try fileManager.contentsOfDirectory(at: url, includingPropertiesForKeys: [.nameKey], options: .skipsHiddenFiles)
-            
+
             files.sort { $0.lastPathComponent < $1.lastPathComponent }
-            
+
             var children: [DiskFile] = files.map { DiskFile(url: $0) }
-            
+
             return children.isEmpty ? nil : children
         } catch {
             // Handle error
@@ -60,11 +65,26 @@ extension DiskFile {
 
 extension DiskFile {
     func next() -> DiskFile? {
-        guard let parent = self.parent, let siblings = parent.getChildren(), siblings.count > self.index + 1 else {
+        var next: DiskFile?
+
+        os_log("\(label)Next of \(title)")
+
+        guard let parent = parent, let siblings = parent.getChildren(), siblings.count > self.index + 1 else {
+            os_log("\(label)Next of \(title) -> nil")
+
+            return next
+        }
+
+        guard let index = siblings.firstIndex(of: self) else {
             return nil
         }
-        
-        return siblings[self.index + 1]
+
+        let nextIndex = index + 1
+        if nextIndex < siblings.count {
+            return siblings[nextIndex]
+        } else {
+            return nil // 已经是数组的最后一个元素
+        }
     }
 }
 
@@ -72,10 +92,10 @@ extension DiskFile {
 
 extension DiskFile {
     var parent: DiskFile? {
-        guard let parentURL = self.url.deletingLastPathComponent() as URL? else {
+        guard let parentURL = url.deletingLastPathComponent() as URL? else {
             return nil
         }
-        
+
         return DiskFile.fromURL(parentURL)
     }
 }
@@ -84,6 +104,6 @@ extension DiskFile {
 
 extension DiskFile {
     func toPlayAsset() -> PlayAsset {
-        PlayAsset(url: self.url)
+        PlayAsset(url: url)
     }
 }

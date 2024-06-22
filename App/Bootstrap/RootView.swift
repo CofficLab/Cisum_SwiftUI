@@ -15,27 +15,27 @@ struct RootView<Content>: View where Content: View {
 
     init(@ViewBuilder content: () -> Content) {
         self.content = content()
-        self.db = DB(Config.getContainer, reason: "RootView")
-        self.playMan = PlayMan()
+        db = DB(Config.getContainer, reason: "RootView")
+        playMan = PlayMan()
     }
 
     var body: some View {
         content
             .onAppear {
                 restore()
-                
+
                 playMan.onNext = {
                     self.next()
                 }
-                
+
                 playMan.onPrev = {
                     self.prev()
                 }
-                
+
                 playMan.onStateChange = { state in
                     self.onStateChanged(state)
                 }
-                
+
                 playMan.onToggleLike = {
                     self.toggleLike()
                 }
@@ -84,21 +84,21 @@ struct RootView<Content>: View where Content: View {
             await dbSynced.saveDeviceData(uuid: uuid, audioCount: audioCount)
         }
     }
-    
+
     // MARK: 恢复上次播放的
 
     func restore(verbose: Bool = true) {
         if verbose {
-            os_log("\(self.label)试着恢复上次播放的音频")
+            os_log("\(label)恢复上次播放")
         }
 
         playMan.mode = PlayMode(rawValue: Config.currentMode) ?? playMan.mode
-        
+
         if let currentAudioId = Config.currentAudio {
             if verbose {
-                os_log("\(self.label)上次播放的音频是 -> \(currentAudioId.lastPathComponent)")
+                os_log("\(label)上次播放 -> \(currentAudioId.lastPathComponent)")
             }
-            
+
             Task {
                 if let currentAudio = await self.db.findAudio(currentAudioId) {
                     playMan.prepare(currentAudio.toPlayAsset())
@@ -110,16 +110,16 @@ struct RootView<Content>: View where Content: View {
             }
         } else {
             if verbose {
-                os_log("\(self.label)无上次播放的音频")
+                os_log("\(label)无上次播放的音频")
             }
         }
     }
-    
+
     // MARK: Next
-    
+
     func next(manual: Bool = false, verbose: Bool = true) {
         if verbose {
-            os_log("\(self.label)next \(manual ? "手动触发" : "自动触发") ⬇️⬇️⬇️")
+            os_log("\(label)next \(manual ? "手动触发" : "自动触发") ⬇️⬇️⬇️")
         }
 
         if playMan.mode == .Loop && manual == false {
@@ -129,34 +129,44 @@ struct RootView<Content>: View where Content: View {
         guard let asset = playMan.asset else {
             return
         }
-        
-        let next = diskManager.disk
 
-        Task {
-            if let i = await db.nextOf(asset.url) {
+        if appManager.dbViewType == .Tree {
+            if let next = DiskFile(url: asset.url).next() {
                 if playMan.isPlaying || manual == false {
-                    playMan.play(i.toPlayAsset(), reason: "在播放时或自动触发下一首")
+                    playMan.play(next.toPlayAsset(), reason: "在播放时或自动触发下一首")
                 } else {
-                    playMan.prepare(i.toPlayAsset())
+                    playMan.prepare(next.toPlayAsset())
                 }
             } else {
                 playMan.stop()
             }
+        } else {
+            Task {
+                if let i = await db.nextOf(asset.url) {
+                    if playMan.isPlaying || manual == false {
+                        playMan.play(i.toPlayAsset(), reason: "在播放时或自动触发下一首")
+                    } else {
+                        playMan.prepare(i.toPlayAsset())
+                    }
+                } else {
+                    playMan.stop()
+                }
+            }
         }
     }
-    
+
     // MARK: Prev
 
     /// 跳到上一首，manual=true表示由用户触发
     func prev(manual: Bool = false, verbose: Bool = true) {
         if verbose {
-            os_log("\(self.label)prev ⬆️")
+            os_log("\(label)prev ⬆️")
         }
 
         if playMan.mode == .Loop && manual == false {
             return
         }
-        
+
         guard let asset = playMan.asset else {
             return
         }
@@ -171,11 +181,10 @@ struct RootView<Content>: View where Content: View {
             }
         }
     }
-    
-    
+
     func onStateChanged(_ state: PlayState, verbose: Bool = true) {
         if verbose {
-            os_log("\(self.label)播放状态变了 -> \(state.des)")
+            os_log("\(label)播放状态变了 -> \(state.des)")
         }
 
         DispatchQueue.main.async {
@@ -196,12 +205,10 @@ struct RootView<Content>: View where Content: View {
                 break
             }
         }
-        
+
         Config.setCurrentURL(state.getAsset()?.url)
     }
 
-
-    
     func toggleLike() {
         //            if let audio = self.player.asset?.toAudio() {
         //                Task {

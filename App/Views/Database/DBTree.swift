@@ -4,7 +4,6 @@ import SwiftUI
 
 struct DBTree: View {
     static var label = "📬 DBTree::"
-    static var urlNull = URL(string: "/dev/null")!
 
     @EnvironmentObject var appManager: AppManager
     @EnvironmentObject var diskManager: DiskManager
