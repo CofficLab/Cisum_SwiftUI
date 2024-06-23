@@ -13,6 +13,7 @@ struct DBTree: View {
     @State var collapsed: Bool = true
     @State var deleting: Bool = false
     @State var icon: String = ""
+    @State var children: [DiskFile]?
 
     var level: Int = 0
     var file: DiskFile
@@ -30,8 +31,14 @@ struct DBTree: View {
                     collapsed: $collapsed,
                     forceIcon: $icon
                 )
+                .onAppear {
+                    self.children = file.getChildren()
+                    file.onChange {
+                        self.children = file.getChildren()
+                    }
+                }
                 
-                if let children = file.getChildren(), !collapsed {
+                if let children = children, !collapsed {
                     VStack(spacing: 0) {
                         ForEach(children, id: \.id) { child in
                             DBTree(

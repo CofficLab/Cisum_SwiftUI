@@ -121,7 +121,7 @@ extension DiskLocal {
 extension DiskLocal {
     /// 监听存储Audio文件的文件夹
     func watchAudiosFolder() async {
-        // os_log("\(Logger.isMain)\(self.label)WatchAudiosFolder")
+         os_log("\(self.label)WatchAudiosFolder")
 
         let presenter = FilePresenter(fileURL: self.audiosDir)
         

@@ -40,6 +40,20 @@ extension DiskFile {
     }
 }
 
+// MARK: OnChage
+
+extension DiskFile {
+    func onChange(_ callback: @escaping () -> Void) {
+        let presenter = FilePresenter(fileURL: self.url)
+        
+        presenter.onDidChange = {
+            os_log("\(self.label)变了 -> \(url.lastPathComponent)")
+            
+            callback()
+        }
+    }
+}
+
 // MARK: Children
 
 extension DiskFile {
@@ -55,7 +69,6 @@ extension DiskFile {
 
             return children.isEmpty ? nil : children
         } catch {
-            // Handle error
             return nil
         }
     }
@@ -94,7 +107,7 @@ extension DiskFile {
     }
 }
 
-// MARK: Next
+// MARK: Prev
 
 extension DiskFile {
     func prev() -> DiskFile? {
