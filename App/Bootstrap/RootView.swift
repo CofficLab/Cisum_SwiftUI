@@ -207,11 +207,9 @@ struct RootView<Content>: View where Content: View {
                 Task {
                     await self.db.increasePlayCount(asset.url)
                 }
-            case .Finished:
-                self.next()
             case let .Error(error, _):
                 appManager.error = error
-            case .Stopped:
+            case .Stopped,.Finished:
                 break
             default:
                 break

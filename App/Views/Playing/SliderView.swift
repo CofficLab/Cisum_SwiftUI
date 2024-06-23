@@ -7,6 +7,7 @@ struct SliderView: View {
     
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var db: DB
+    @EnvironmentObject var app: AppManager
 
     @State private var value: Double = 0
     @State private var isEditing: Bool = false
@@ -42,11 +43,11 @@ struct SliderView: View {
         }
         .font(.caption)
         .onReceive(timer) { _ in
-//            if audioManager.error != nil {
-//                disable()
-//            } else if audioManager.playMan.duration > 0 && !isEditing {
-//                enable()
-//            }
+            if app.error != nil {
+                disable()
+            } else if playMan.duration > 0 && !isEditing {
+                enable()
+            }
             
             if Date.now.timeIntervalSince(lastDownloadTime) > 10, let asset = playMan.asset {
                 lastDownloadTime = .now

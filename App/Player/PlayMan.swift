@@ -289,7 +289,7 @@ extension PlayMan: AVAudioPlayerDelegate {
             }
 
             os_log("\(Logger.isMain)\(self.label)播放完成")
-            state = .Finished
+            self.onNext()
         }
     }
 
