@@ -173,9 +173,9 @@ extension PlayMan {
     func resume() {
         os_log("\(self.label)Resume while current is \(self.state.des)")
         switch state {
-        case .Playing, .Error:
+        case .Playing:
             break
-        case .Ready, .Paused, .Stopped, .Finished:
+        case .Error, .Ready, .Paused, .Stopped, .Finished:
             if let asset = asset {
                 state = .Playing(asset)
             } else {
