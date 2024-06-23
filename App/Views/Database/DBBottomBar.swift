@@ -30,6 +30,7 @@ struct DBBottomBar: View {
                     self.dbViewType = .Tree
                 })
         }
+        .background(.bar)
         .labelStyle(.iconOnly)
         .offset(y:2)
         .onChange(of: dbViewType, {

@@ -127,28 +127,32 @@ extension DiskiCloud {
             os_log("\(self.label)Download ⏬⏬⏬ \(url.lastPathComponent) reason -> \(reason)")
         }
         
-        if !fileManager.fileExists(atPath: url.path()) {
+        if !fileManager.fileExists(atPath: url.path) {
             if verbose {
-                os_log("\(self.label)Download \(url.lastPathComponent) -> Not Exists")
+                os_log("\(self.label)Download \(url.lastPathComponent) -> Not Exists ⚠️⚠️⚠️")
             }
             
             return
         }
         
         if iCloudHelper.isDownloaded(url) {
-            //os_log("\(self.label)Download \(audio.title) -> Already downloaded")
+            if verbose {
+                os_log("\(self.label)Download \(url.lastPathComponent) -> Already downloaded ⚠️⚠️⚠️")
+            }
             return
         }
         
         if iCloudHelper.isDownloading(url) {
-            //os_log("\(self.label)Download \(audio.title) -> Already downloading")
+            if verbose {
+                os_log("\(self.label)Download \(url.lastPathComponent) -> Already downloading ⚠️⚠️⚠️")
+            }
             return
         }
         
 //        let downloadingCount = getDownloadingCount()
-        
+//        
 //        if downloadingCount > 10 {
-//            os_log("\(self.label)Download \(audio.title) -> Ignore ❄️❄️❄️ -> Downloading.count=\(downloadingCount)")
+//            os_log("\(self.label)Download \(url.lastPathComponent) -> Ignore ❄️❄️❄️ -> Downloading.count=\(downloadingCount)")
 //            
 //            return
 //        }

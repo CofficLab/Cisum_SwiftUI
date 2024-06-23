@@ -2,8 +2,10 @@ import Foundation
 import OSLog
 
 actor iCloudHandler {
+    static var label = "☁️ iCloudHandler::"
     let coordinator = NSFileCoordinator()
     var filePresenters: [URL: FilePresenter] = [:]
+    var label: String { "\(Logger.isMain)\(Self.label)" }
 
     func write(targetURL: URL, data: Data) throws {
         var coordinationError: NSError?
@@ -83,7 +85,8 @@ extension iCloudHandler {
         var coordinationError: NSError?
         var downloadError: Error?
         
-        if iCloudHelper.isCloudPath(url: url) {
+        if !iCloudHelper.isCloudPath(url: url) {
+            os_log(.error, "\(url.lastPathComponent) 不是一个 iCloud文件")
             return
         }
 

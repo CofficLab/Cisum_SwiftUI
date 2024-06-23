@@ -6,7 +6,7 @@ import SwiftData
 extension DB {
     var labelForGroup: String { "\(self.label)🌾🌾🌾" }
 
-    func updateGroupForURLs(_ urls: [URL], verbose: Bool = true) {
+    func updateGroupForURLs(_ urls: [URL], verbose: Bool = false) {
         let total = urls.count
         let title = "\(labelForGroup) UpdateGroup(\(total))"
         let startTime = DispatchTime.now()

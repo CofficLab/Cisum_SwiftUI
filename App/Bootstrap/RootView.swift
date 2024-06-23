@@ -47,7 +47,7 @@ struct RootView<Content>: View where Content: View {
                     os_log("\(self.label)同步数据库")
                 }
 
-                await db.startWatch()
+//                await db.startWatch()
 
                 #if os(iOS)
                     UIApplication.shared.beginReceivingRemoteControlEvents()
@@ -137,6 +137,10 @@ struct RootView<Content>: View where Content: View {
                 } else {
                     playMan.prepare(next.toPlayAsset())
                 }
+                
+                Task {
+                    await diskManager.disk.download(next.url, reason: "Next")
+                }
             } else {
                 playMan.stop()
             }
@@ -177,6 +181,10 @@ struct RootView<Content>: View where Content: View {
                     playMan.play(prev.toPlayAsset(), reason: "在播放时或自动触发上一首")
                 } else {
                     playMan.prepare(prev.toPlayAsset())
+                }
+                
+                Task {
+                    await diskManager.disk.download(prev.url, reason: "Prev")
                 }
             } else {
                 playMan.stop()
@@ -220,14 +228,14 @@ struct RootView<Content>: View where Content: View {
     }
 
     func toggleLike() {
-        //            if let audio = self.player.asset?.toAudio() {
-        //                Task {
-        //                    await self.db.toggleLike(audio)
-        //                }
-        //
-        //                self.c.likeCommand.isActive = audio.dislike
-        //                self.c.dislikeCommand.isActive = audio.like
-        //            }
+//        if let audio = playMan.asset?.toAudio() {
+//            Task {
+//                await self.db.toggleLike(audio)
+//            }
+//
+//            self.c.likeCommand.isActive = audio.dislike
+//            self.c.dislikeCommand.isActive = audio.like
+//        }
     }
 }
 
