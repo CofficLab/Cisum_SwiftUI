@@ -170,13 +170,25 @@ struct RootView<Content>: View where Content: View {
         guard let asset = playMan.asset else {
             return
         }
-
-        Task {
-            if let i = await self.db.pre(asset.url) {
-                if self.playMan.isPlaying {
-                    self.playMan.play(i.toPlayAsset(), reason: "在播放时触发了上一首")
+    
+        if appManager.dbViewType == .Tree {
+            if let prev = DiskFile(url: asset.url).prev() {
+                if playMan.isPlaying || manual == false {
+                    playMan.play(prev.toPlayAsset(), reason: "在播放时或自动触发上一首")
                 } else {
-                    playMan.prepare(i.toPlayAsset())
+                    playMan.prepare(prev.toPlayAsset())
+                }
+            } else {
+                playMan.stop()
+            }
+        } else {
+            Task {
+                if let i = await self.db.pre(asset.url) {
+                    if self.playMan.isPlaying {
+                        self.playMan.play(i.toPlayAsset(), reason: "在播放时触发了上一首")
+                    } else {
+                        playMan.prepare(i.toPlayAsset())
+                    }
                 }
             }
         }

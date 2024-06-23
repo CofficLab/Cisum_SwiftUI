@@ -51,7 +51,7 @@ extension DiskFile {
 
             files.sort { $0.lastPathComponent < $1.lastPathComponent }
 
-            var children: [DiskFile] = files.map { DiskFile(url: $0) }
+            let children: [DiskFile] = files.map { DiskFile(url: $0) }
 
             return children.isEmpty ? nil : children
         } catch {
@@ -65,11 +65,11 @@ extension DiskFile {
 
 extension DiskFile {
     func next() -> DiskFile? {
-        var next: DiskFile?
+        let next: DiskFile? = nil
 
         os_log("\(label)Next of \(title)")
 
-        guard let parent = parent, let siblings = parent.getChildren(), siblings.count > self.index + 1 else {
+        guard let parent = parent, let siblings = parent.getChildren() else {
             os_log("\(label)Next of \(title) -> nil")
 
             return next
@@ -78,12 +78,51 @@ extension DiskFile {
         guard let index = siblings.firstIndex(of: self) else {
             return nil
         }
+        
+        guard siblings.count > self.index + 1 else {
+            os_log("\(label)Next of \(title) -> nil")
+
+            return next
+        }
 
         let nextIndex = index + 1
         if nextIndex < siblings.count {
             return siblings[nextIndex]
         } else {
             return nil // 已经是数组的最后一个元素
+        }
+    }
+}
+
+// MARK: Next
+
+extension DiskFile {
+    func prev() -> DiskFile? {
+        let prev: DiskFile? = nil
+
+        os_log("\(label)Prev of \(title)")
+
+        guard let parent = parent, let siblings = parent.getChildren() else {
+            os_log("\(label)Prev of \(title) -> nil")
+
+            return prev
+        }
+        
+        guard let index = siblings.firstIndex(of: self) else {
+            return nil
+        }
+        
+        guard index - 1 >= 0 else {
+            os_log("\(label)Prev of \(title) -> nil")
+
+            return prev
+        }
+
+        let prevIndex = index - 1
+        if prevIndex < siblings.count {
+            return siblings[prevIndex]
+        } else {
+            return nil
         }
     }
 }
