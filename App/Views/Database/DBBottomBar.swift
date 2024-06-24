@@ -6,12 +6,6 @@ struct DBBottomBar: View {
     
     var body: some View {
         HStack {
-            if diskManager.isiCloudDisk {
-                Image(systemName: "icloud")
-            } else {
-                Image(systemName: "folder")
-            }
-            
             Spacer()
             
             ControlButton(

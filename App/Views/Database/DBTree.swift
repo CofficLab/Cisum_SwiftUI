@@ -36,6 +36,9 @@ struct DBTree: View {
                         self.children = file.getChildren()
                     }
                 }
+                .onChange(of: file, {
+                    self.children = file.getChildren()
+                })
                 .contextMenu(menuItems: {
                     BtnPlay(asset: file.toPlayAsset(), autoResize: false)
                     Divider()
