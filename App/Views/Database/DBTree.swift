@@ -9,9 +9,9 @@ struct DBTree: View {
     @EnvironmentObject var diskManager: DiskManager
     
     @Binding var selection: DiskFile?
+    @Binding var icon: String
     @State var collapsed: Bool = true
     @State var deleting: Bool = false
-    @State var icon: String = ""
     @State var children: [DiskFile]?
 
     var level: Int = 0
@@ -53,7 +53,9 @@ struct DBTree: View {
                         ForEach(children, id: \.id) { child in
                             DBTree(
                                 selection: $selection,
-                                level: level + 1, file: child
+                                icon: Binding.constant(""), 
+                                level: level + 1,
+                                file: child
                             )
                         }
                     }
@@ -65,18 +67,26 @@ struct DBTree: View {
 
 #Preview("DBTree-Local") {
     RootView {
-        DBTree(selection: Binding.constant(DiskFile.home), file: DiskLocal().getRoot())
-            .background(.background)
-            .padding()
+        DBTree(
+            selection: Binding.constant(DiskFile.home),
+            icon: Binding.constant(""),
+            file: DiskLocal().getRoot()
+        )
+        .background(.background)
+        .padding()
     }
     .frame(height: 600)
 }
 
 #Preview("DBTree-iCloud") {
     RootView {
-        DBTree(selection: Binding.constant(DiskFile.home), file: DiskiCloud().getRoot())
-            .background(.background)
-            .padding()
+        DBTree(
+            selection: Binding.constant(DiskFile.home),
+            icon: Binding.constant(""), 
+            file: DiskiCloud().getRoot()
+        )
+        .background(.background)
+        .padding()
     }
     .frame(height: 600)
 }

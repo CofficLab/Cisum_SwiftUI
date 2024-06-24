@@ -18,9 +18,13 @@ struct DBViewTree: View {
     var body: some View {
         DBTree(
             selection: $selection,
-            collapsed: collapsed,
+            icon: $icon, 
+            collapsed: collapsed, 
             file: disk.getRoot()
         )
+        .onAppear {
+            self.icon = diskManager.isiCloudDisk ? "icloud" : "folder"
+        }
         .onChange(of: selection, {
             if let s = selection {
                 playMan.play(s.toPlayAsset(), reason: "点击了")

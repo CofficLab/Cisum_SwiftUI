@@ -31,7 +31,7 @@ class DiskiCloud: ObservableObject, Disk {
             }
         }
 
-        return DiskLocal(root: subRoot)
+        return DiskiCloud(root: subRoot)
     }
     
     func download(_ url: URL, reason: String) {
