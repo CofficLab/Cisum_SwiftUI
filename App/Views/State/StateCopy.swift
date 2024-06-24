@@ -23,7 +23,7 @@ struct StateCopy: View {
         .background(background)
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .task {
-            diskManager.disk.copyFiles()
+            diskManager.copyFiles()
         }
     }
 }

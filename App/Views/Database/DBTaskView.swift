@@ -7,10 +7,11 @@ struct DBTaskView: View {
 
     @EnvironmentObject var appManager: AppManager
     @EnvironmentObject var diskManager: DiskManager
+    @Environment(\.modelContext) var context
 
     @State var selection: String = ""
 
-    var tasks: [CopyTask] { diskManager.tasks }
+    @Query(sort: \CopyTask.createdAt, animation: .default) var tasks: [CopyTask]
     var label: String { "\(Logger.isMain)\(Self.label)" }
     
     init(verbose: Bool = false) {

@@ -34,10 +34,6 @@ protocol Disk {
     func next(_ url: URL) -> DiskFile?
     
     func getTotal() -> Int
-    
-    // MARK: 复制
-    
-    func copyFiles()
 }
 
 extension Disk {

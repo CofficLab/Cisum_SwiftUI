@@ -108,28 +108,6 @@ extension DiskiCloud {
 // MARK: Copy
 
 extension DiskiCloud {
-    func copyFiles() {
-        Task.detached(priority: .low) {
-            let tasks = await self.db.allCopyTasks()
-
-//            for task in tasks {
-//                Task {
-//                    do {
-//                        let context = ModelContext(self.modelContainer)
-//                        let url = task.url
-//                        try await self.disk.copyTo(url: url)
-//                        try context.delete(model: CopyTask.self, where: #Predicate { item in
-//                            item.url == url
-//                        })
-//                        try context.save()
-//                    } catch let e {
-//                        await self.setTaskError(task, e)
-//                    }
-//                }
-//            }
-        }
-    }
-
     func copyTo(url: URL) throws {
         os_log("\(self.label)copy \(url.lastPathComponent)")
         

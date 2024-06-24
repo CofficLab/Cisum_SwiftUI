@@ -101,10 +101,10 @@ extension DiskLocal {
 
 // MARK: Copy
 
-extension DiskLocal {    
+extension DiskLocal {
     func copyTo(url: URL) throws {
         os_log("\(self.label)copy \(url.lastPathComponent)")
-
+        
         // 目的地已经存在同名文件
         var d = root.appendingPathComponent(url.lastPathComponent)
         var times = 1
@@ -117,7 +117,7 @@ extension DiskLocal {
             times += 1
             os_log("\(self.label)copy  -> \(d.lastPathComponent)")
         }
-
+        
         do {
             // 获取授权
             if url.startAccessingSecurityScopedResource() {
@@ -133,28 +133,6 @@ extension DiskLocal {
         } catch {
             os_log("\(self.label)复制文件发生错误 -> \(error.localizedDescription)")
             throw error
-        }
-    }
-    
-    func copyFiles() {
-        Task.detached(priority: .low) {
-            let tasks = await self.db.allCopyTasks()
-
-//            for task in tasks {
-//                Task {
-//                    do {
-//                        let context = ModelContext(self.modelContainer)
-//                        let url = task.url
-//                        try await self.disk.copyTo(url: url)
-//                        try context.delete(model: CopyTask.self, where: #Predicate { item in
-//                            item.url == url
-//                        })
-//                        try context.save()
-//                    } catch let e {
-//                        await self.setTaskError(task, e)
-//                    }
-//                }
-//            }
         }
     }
 }
