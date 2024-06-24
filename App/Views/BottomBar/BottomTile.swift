@@ -28,20 +28,23 @@ struct BottomTile: View {
             }
         }, label: {
             Label(
-                title: { Text(title) },
+                title: {
+                    Text(title)
+                },
                 icon: {
                     Image(systemName: image)
                         .frame(width: 5)
                         .scaleEffect(pressed ? 1.2 : 1)
                         .animation(.easeOut(duration: 0.2), value: pressed)
-                        .frame(maxHeight: .infinity)
-                        .padding(.horizontal)
-                        .background(hovered ? Color.yellow.opacity(0.5) : .clear)
-                        .onHover(perform: { hovering in
-                            self.hovered = hovering
-                        })
+                        
                 }
             )
+            .frame(maxHeight: .infinity)
+            .padding(.horizontal)
+            .background(hovered ? Color.yellow.opacity(0.5) : .clear)
+            .onHover(perform: { hovering in
+                self.hovered = hovering
+            })
         })
         
         // 注意测试ButtonStyle对这个操作的影响：

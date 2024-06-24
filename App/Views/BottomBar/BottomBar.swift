@@ -5,9 +5,6 @@ struct BottomBar: View {
     var body: some View {
         HStack(spacing: 0) {
             BottomViewType()
-
-            Spacer()
-
             BottomCopyState()
             
             Spacer()
