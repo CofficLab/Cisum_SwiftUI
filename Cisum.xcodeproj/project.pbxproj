@@ -136,7 +136,8 @@
 		F545D1752C1FCAD0006A6AFA /* CloudExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F545D1742C1FCAD0006A6AFA /* CloudExt.swift */; };
 		F545D1772C1FCC86006A6AFA /* UserExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F545D1762C1FCC86006A6AFA /* UserExt.swift */; };
 		F5511BB02C29050300400900 /* Playable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5511BAF2C29050300400900 /* Playable.swift */; };
-		F5511BB42C29118C00400900 /* DiskScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5511BB32C29118C00400900 /* DiskScene.swift */; };
+		F5511BB42C29118C00400900 /* AppScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5511BB32C29118C00400900 /* AppScene.swift */; };
+		F5511BB62C291D3400400900 /* SceneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5511BB52C291D3400400900 /* SceneView.swift */; };
 		F5675C332C22BFD900326664 /* DBBottomBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C322C22BFD900326664 /* DBBottomBar.swift */; };
 		F5675C352C22CB3C00326664 /* DBViewTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C342C22CB3C00326664 /* DBViewTree.swift */; };
 		F5675C3A2C2404D700326664 /* FileBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C392C2404D700326664 /* FileBox.swift */; };
@@ -280,7 +281,8 @@
 		F545D1742C1FCAD0006A6AFA /* CloudExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudExt.swift; sourceTree = "<group>"; };
 		F545D1762C1FCC86006A6AFA /* UserExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserExt.swift; sourceTree = "<group>"; };
 		F5511BAF2C29050300400900 /* Playable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playable.swift; sourceTree = "<group>"; };
-		F5511BB32C29118C00400900 /* DiskScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskScene.swift; sourceTree = "<group>"; };
+		F5511BB32C29118C00400900 /* AppScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppScene.swift; sourceTree = "<group>"; };
+		F5511BB52C291D3400400900 /* SceneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneView.swift; sourceTree = "<group>"; };
 		F5675C322C22BFD900326664 /* DBBottomBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBBottomBar.swift; sourceTree = "<group>"; };
 		F5675C342C22CB3C00326664 /* DBViewTree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBViewTree.swift; sourceTree = "<group>"; };
 		F5675C392C2404D700326664 /* FileBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileBox.swift; sourceTree = "<group>"; };
@@ -428,7 +430,6 @@
 				F53BE0332C2024BE003CBA29 /* DiskFileGroup.swift */,
 				0BD0568A2BC6202900EBC7C4 /* DiskiCloud.swift */,
 				0BB427902BED0B38004E6F82 /* DiskLocal.swift */,
-				F5511BB32C29118C00400900 /* DiskScene.swift */,
 			);
 			path = Disk;
 			sourceTree = "<group>";
@@ -464,6 +465,7 @@
 				0B1D5A8C2AB3E8290010DDF2 /* AppDelegate.swift */,
 				0BAB300D2AB814F70012D837 /* Boot.swift */,
 				0B604AE72AD6384300929DD8 /* RootView.swift */,
+				F5511BB32C29118C00400900 /* AppScene.swift */,
 			);
 			path = Bootstrap;
 			sourceTree = "<group>";
@@ -578,12 +580,13 @@
 			children = (
 				0B220F722BB1A3D70077255A /* BtnsView.swift */,
 				0BBC15832AB95272006E82C4 /* ControlView.swift */,
+				0BD98CFD2BD8E91500641A6A /* HeroView.swift */,
 				0BFB38822BCCCC780055E38B /* OperationView.swift */,
 				0B8FC26F2BBC559500839C75 /* PlayingAlbum.swift */,
+				F5511BB52C291D3400400900 /* SceneView.swift */,
 				0BBC15992ABAD5DB006E82C4 /* SliderView.swift */,
 				0B220F6C2BB051140077255A /* StateView.swift */,
 				0B220F6E2BB051F50077255A /* TitleView.swift */,
-				0BD98CFD2BD8E91500641A6A /* HeroView.swift */,
 			);
 			path = Playing;
 			sourceTree = "<group>";
@@ -760,7 +763,7 @@
 				0B8C36A32BEA124900C47567 /* AudioR.swift in Sources */,
 				0BB889D72AC046B5004788D5 /* BtnShowInFinder.swift in Sources */,
 				F53BE0322C202420003CBA29 /* DiskFile.swift in Sources */,
-				F5511BB42C29118C00400900 /* DiskScene.swift in Sources */,
+				F5511BB42C29118C00400900 /* AppScene.swift in Sources */,
 				0B22158E2BB6BC8F000EB36F /* SmartProgress.swift in Sources */,
 				F573B18C2C042E08004C34CC /* DeviceExt.swift in Sources */,
 				0B8C36A72BEA15E000C47567 /* AudioC.swift in Sources */,
@@ -862,6 +865,7 @@
 				0B6B8B9D2BBA4D0600F65B23 /* Coffee.swift in Sources */,
 				0B11365F2BF10A0100A71FE1 /* JobGroup.swift in Sources */,
 				0B220F732BB1A3D70077255A /* BtnsView.swift in Sources */,
+				F5511BB62C291D3400400900 /* SceneView.swift in Sources */,
 				0B220F6F2BB051F50077255A /* TitleView.swift in Sources */,
 				0BBC158A2AB9AB7F006E82C4 /* FileHelper.swift in Sources */,
 				0B12B0A92C0CB96F00FD43AD /* SubscriptionSetting.swift in Sources */,

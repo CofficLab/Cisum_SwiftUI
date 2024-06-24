@@ -1,7 +1,7 @@
 import Foundation
 import OSLog
 
-class DiskLocal: ObservableObject {
+class DiskLocal: ObservableObject, Disk {
     static let label = "🛖 DiskLocal::"
     static let rootDirName = Config.audiosDirName
     static let localDocumentsDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
@@ -32,31 +32,29 @@ class DiskLocal: ObservableObject {
     init(_ root: URL = DiskLocal.defaultRoot) {
         self.root = root
     }
-}
-
-// MARK: Delete
-
-extension DiskLocal: Disk {
-    func download(_ url: URL, reason: String) {
-        
-    }
-    
-    func next(_ url: URL) -> DiskFile? {
-        return nil
-    }
-    
-    func getTotal() -> Int {
-        0
-    }
-    
-    
-    func deleteFiles(_ urls: [URL]) {
-    }
     
     func getRoot() -> DiskFile {
         DiskFile.fromURL(root)
     }
+    func getTotal() -> Int {
+        0
+    }
+}
 
+// MARK: Next
+
+extension DiskLocal {
+    func next(_ url: URL) -> DiskFile? {
+        return nil
+    }
+}
+
+// MARK: Delete
+
+extension DiskLocal {
+    func deleteFiles(_ urls: [URL]) {
+    }
+    
     func clearFolderContents(atPath path: String) {
         let fileManager = FileManager.default
         do {
@@ -69,23 +67,25 @@ extension DiskLocal: Disk {
             os_log("\(Logger.isMain)\(self.label)clearFolderContents error: \(error.localizedDescription)")
         }
     }
-
+    
     func deleteFile(_ url: URL) {
         let verbose = false
         
         if verbose {
             os_log("\(self.label)删除 \(url)")
         }
-
+        
         if fileManager.fileExists(atPath: url.path) == false {
             return
         }
-
+        
         try? fileManager.removeItem(at: url)
     }
+}
 
-    // MARK: 将文件复制到音频目录
+// MARK: Copy
 
+extension DiskLocal {
     func copyTo(url: URL) throws {
         os_log("\(self.label)copy \(url.lastPathComponent)")
 
@@ -121,26 +121,29 @@ extension DiskLocal: Disk {
     }
 }
 
-// MARK: Download
+// MARK: Evit
 
 extension DiskLocal {
     func evict(_ url: URL) {
         return
     }
+}
 
-    func download(_ url: URL, reason: String) async {
-        return
-    }
+// MARK: Download
 
+extension DiskLocal {
     func getDownloadingCount() -> Int {
         return 0
+    }
+    
+    func download(_ url: URL, reason: String) {
+        
     }
 }
 
 // MARK: Watch
 
 extension DiskLocal {
-    /// 监听存储Audio文件的文件夹
     func watchAudiosFolder() async {
          os_log("\(self.label)WatchAudiosFolder")
 

@@ -94,6 +94,12 @@ struct ControlView: View {
             showOperationView = true
             showStateView = true
         }
+        .toolbar(content: {
+            HStack {
+                Spacer()
+                SceneView()
+            }
+        })
     }
 
     // MARK: 状态栏的高度
