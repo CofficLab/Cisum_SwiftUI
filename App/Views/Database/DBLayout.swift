@@ -6,6 +6,7 @@ import SwiftData
 
 struct DBLayout: View {
     @EnvironmentObject var app: AppManager
+    @EnvironmentObject var diskManager: DiskManager
     @EnvironmentObject var db: DB
     
     @State var treeView = false
@@ -17,6 +18,7 @@ struct DBLayout: View {
     var main = Config.mainQueue
     var bg = Config.bgQueue
     var dropping: Bool { app.isDropping }
+    var disk: Disk { diskManager.disk }
     var label: String { "\(Logger.isMain)\(Self.label) "}
     
     init(verbose: Bool = false) {
@@ -42,43 +44,43 @@ struct DBLayout: View {
                     DBTaskView()
                 }
             }
-            .fileImporter(
-                isPresented: $app.isImporting,
-                allowedContentTypes: [.audio],
-                allowsMultipleSelection: true,
-                onCompletion: { result in
-                    switch result {
-                    case let .success(urls):
-                        copy(urls)
-                    case let .failure(error):
-                        os_log(.error, "导入文件失败Error: \(error.localizedDescription)")
-                    }
-                }
-            )
-            .onDrop(of: [UTType.fileURL], isTargeted: $app.isDropping) { providers -> Bool in
-                let dispatchGroup = DispatchGroup()
-                var dropedFiles: [URL] = []
-                for provider in providers {
-                    dispatchGroup.enter()
-                    // 这是异步操作
-                    _ = provider.loadObject(ofClass: URL.self) { object, _ in
-                        if let url = object {
-                            os_log("\(Logger.isMain)🖥️ DBView::添加 \(url.lastPathComponent) 到复制队列")
-                            dropedFiles.append(url)
-                        }
-
-                        dispatchGroup.leave()
-                    }
-                }
-
-                dispatchGroup.notify(queue: .main) {
-                    copy(dropedFiles)
-                }
-
-                return true
-            }
 
             DBTips()
+        }
+        .fileImporter(
+            isPresented: $app.isImporting,
+            allowedContentTypes: [.audio],
+            allowsMultipleSelection: true,
+            onCompletion: { result in
+                switch result {
+                case let .success(urls):
+                    copy(urls)
+                case let .failure(error):
+                    os_log(.error, "导入文件失败Error: \(error.localizedDescription)")
+                }
+            }
+        )
+        .onDrop(of: [UTType.fileURL], isTargeted: $app.isDropping) { providers -> Bool in
+            let dispatchGroup = DispatchGroup()
+            var dropedFiles: [URL] = []
+            for provider in providers {
+                dispatchGroup.enter()
+                // 这是异步操作
+                _ = provider.loadObject(ofClass: URL.self) { object, _ in
+                    if let url = object {
+                        os_log("\(Logger.isMain)🖥️ DBView::添加 \(url.lastPathComponent) 到复制队列")
+                        dropedFiles.append(url)
+                    }
+
+                    dispatchGroup.leave()
+                }
+            }
+
+            dispatchGroup.notify(queue: .main) {
+                copy(dropedFiles)
+            }
+
+            return true
         }
     }
 }
@@ -87,9 +89,7 @@ struct DBLayout: View {
 
 extension DBLayout {
     func copy(_ files: [URL]) {
-        Task {
-            await db.addCopyTasks(files)
-        }
+        disk.copy(files)
     }
 
     func setFlashMessage(_ m: String) {

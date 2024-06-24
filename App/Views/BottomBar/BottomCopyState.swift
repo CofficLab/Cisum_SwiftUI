@@ -3,6 +3,7 @@ import SwiftData
 
 struct BottomCopyState: View {
     @EnvironmentObject var db: DB
+    @EnvironmentObject var diskManager: DiskManager
     @EnvironmentObject var app: AppManager
     
     @Query(sort: \CopyTask.createdAt, animation: .default) var tasks: [CopyTask]
@@ -25,7 +26,7 @@ struct BottomCopyState: View {
             )
             .labelStyle(.titleAndIcon)
             .task {
-                try? await db.copyFiles()
+                diskManager.disk.copyFiles()
             }
         }
     }

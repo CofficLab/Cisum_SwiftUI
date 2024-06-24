@@ -51,12 +51,12 @@ extension DB {
 
 extension DB {
     func evict(_ url: URL) {
-        disk.evict(url)
+//        disk.evict(url)
     }
 
     func download(_ url: URL, reason: String) {
         Task.detached(priority: .background) {
-            await self.disk.download(url, reason: reason)
+//            await self.disk.download(url, reason: reason)
         }
     }
 

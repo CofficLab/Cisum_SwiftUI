@@ -52,6 +52,7 @@ class DiskiCloud: ObservableObject, Disk {
     var fileManager = FileManager.default
     var cloudHandler = iCloudHandler()
     var bg = Config.bgQueue
+    var db = DB(Config.getContainer, reason: "DiskiCloud")
     var label: String { "\(Logger.isMain)\(Self.label)" }
     var verbose = true
     var onUpdated: (_ items: DiskFileGroup) -> Void = { items in
@@ -107,7 +108,35 @@ extension DiskiCloud {
         }
     }
 
-    // MARK: 将文件复制到音频目录
+    // MARK: Copy
+    
+    func copyFiles() {
+        Task.detached(priority: .low) {
+            let tasks = await self.db.allCopyTasks()
+
+//            for task in tasks {
+//                Task {
+//                    do {
+//                        let context = ModelContext(self.modelContainer)
+//                        let url = task.url
+//                        try await self.disk.copyTo(url: url)
+//                        try context.delete(model: CopyTask.self, where: #Predicate { item in
+//                            item.url == url
+//                        })
+//                        try context.save()
+//                    } catch let e {
+//                        await self.setTaskError(task, e)
+//                    }
+//                }
+//            }
+        }
+    }
+    
+    func copy(_ urls: [URL]) {
+        Task {
+            await self.db.addCopyTasks(urls)
+        }
+    }
 
     func copyTo(url: URL) throws {
         os_log("\(self.label)copy \(url.lastPathComponent)")

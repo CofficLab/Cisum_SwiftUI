@@ -2,7 +2,7 @@ import SwiftUI
 import SwiftData
 
 struct StateCopy: View {
-    @EnvironmentObject var db: DB
+    @EnvironmentObject var diskManager: DiskManager
     
     @Query(sort: \CopyTask.createdAt, animation: .default) var tasks: [CopyTask]
     
@@ -23,7 +23,7 @@ struct StateCopy: View {
         .background(background)
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .task {
-            try? await db.copyFiles()
+            diskManager.disk.copyFiles()
         }
     }
 }

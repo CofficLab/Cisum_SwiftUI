@@ -40,6 +40,7 @@ class DiskLocal: ObservableObject, Disk {
     var bg = Config.bgQueue
     var label: String { "\(Logger.isMain)\(Self.label)" }
     var root: URL
+    var db: DB = DB(Config.getContainer, reason: "DiskLocal")
     var onUpdated: (_ collection: DiskFileGroup) -> Void = { collection in
         os_log("\(Logger.isMain)\(DiskiCloud.label)updated with items.count=\(collection.count)")
     }
@@ -101,6 +102,12 @@ extension DiskLocal {
 // MARK: Copy
 
 extension DiskLocal {
+    func copy(_ urls: [URL]) {
+        Task {
+            await self.db.addCopyTasks(urls)
+        }
+    }
+    
     func copyTo(url: URL) throws {
         os_log("\(self.label)copy \(url.lastPathComponent)")
 
@@ -132,6 +139,28 @@ extension DiskLocal {
         } catch {
             os_log("\(self.label)复制文件发生错误 -> \(error.localizedDescription)")
             throw error
+        }
+    }
+    
+    func copyFiles() {
+        Task.detached(priority: .low) {
+            let tasks = await self.db.allCopyTasks()
+
+//            for task in tasks {
+//                Task {
+//                    do {
+//                        let context = ModelContext(self.modelContainer)
+//                        let url = task.url
+//                        try await self.disk.copyTo(url: url)
+//                        try context.delete(model: CopyTask.self, where: #Predicate { item in
+//                            item.url == url
+//                        })
+//                        try context.save()
+//                    } catch let e {
+//                        await self.setTaskError(task, e)
+//                    }
+//                }
+//            }
         }
     }
 }

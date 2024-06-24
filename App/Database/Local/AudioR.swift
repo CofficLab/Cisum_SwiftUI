@@ -22,10 +22,6 @@ extension DB {
         }
     }
 
-    func getAudioDir() -> URL {
-        self.disk.root
-    }
-
     func getAllURLs() -> [URL] {
         let context = ModelContext(self.modelContainer)
         

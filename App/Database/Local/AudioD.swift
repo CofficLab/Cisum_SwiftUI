@@ -100,11 +100,12 @@ extension DB {
     // MARK: 删除一个
 
     func deleteAudio(_ audio: Audio) {
-        _ = Self.deleteAudio(context: context, disk: disk, id: audio.id)
+//        _ = Self.deleteAudio(context: context, disk: disk, id: audio.id)
     }
 
     func delete(_ id: Audio.ID) -> Audio? {
-        Self.deleteAudio(context: context, disk: disk, id: id)
+//        Self.deleteAudio(context: context, disk: disk, id: id)
+        nil
     }
 
     func deleteAudio(_ url: URL) -> Audio? {
@@ -125,11 +126,13 @@ extension DB {
     }
 
     func deleteAudios(_ ids: [Audio.ID]) -> Audio? {
-        Self.deleteAudios(context: context, disk: disk, ids: ids)
+//        Self.deleteAudios(context: context, disk: disk, ids: ids)
+        nil
     }
 
     func deleteAudios(_ audios: [Audio]) -> Audio? {
-        Self.deleteAudios(context: context, disk: disk, ids: audios.map { $0.id })
+//        Self.deleteAudios(context: context, disk: disk, ids: audios.map { $0.id })
+        nil
     }
 
     // MARK: 清空数据库

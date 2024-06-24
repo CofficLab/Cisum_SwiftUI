@@ -11,13 +11,13 @@ extension DB {
     }
     
     /// 监听存储Audio文件的目录的变化，同步到数据库
-    func startWatch() async {
-        disk.onUpdated = { items in
-            self.sync(items)
-        }
-
-        await disk.watchAudiosFolder()
-    }
+//    func startWatch() async {
+//        disk.onUpdated = { items in
+//            self.sync(items)
+//        }
+//
+//        await disk.watchAudiosFolder()
+//    }
 
     func sync(_ group: DiskFileGroup, verbose: Bool = true) {
         var message = "\(labelForSync) sync with count=\(group.count)"
