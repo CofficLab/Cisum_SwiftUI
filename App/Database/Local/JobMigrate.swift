@@ -19,17 +19,17 @@ extension DB {
     static func moveAudios(_ from: any Disk, _ to: any Disk, verbose: Bool = true) {
         Task.detached(priority: .low) {
             if verbose {
-                os_log("\(Self.label)将文件从 \(from.audiosDir.path) 移动到 \(to.audiosDir.path)")
+                os_log("\(Self.label)将文件从 \(from.root.path) 移动到 \(to.root.path)")
             }
             
             let fileManager = FileManager.default
             do {
-                let files = try fileManager.contentsOfDirectory(atPath: from.audiosDir.path).filter({
+                let files = try fileManager.contentsOfDirectory(atPath: from.root.path).filter({
                     !$0.hasSuffix(".DS_Store")
                 })
                 
                 for file in files {
-                    let sourceURL = URL(fileURLWithPath: from.audiosDir.path).appendingPathComponent(file)
+                    let sourceURL = URL(fileURLWithPath: from.root.path).appendingPathComponent(file)
                     let destnationURL = to.makeURL(file)
                     
                     if verbose {

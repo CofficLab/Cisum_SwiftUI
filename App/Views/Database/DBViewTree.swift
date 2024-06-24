@@ -13,7 +13,7 @@ struct DBViewTree: View {
     @State var icon: String = ""
 
     var disk: Disk { diskManager.disk }
-    var root: URL { disk.audiosDir }
+    var root: URL { disk.root }
 
     var body: some View {
         DBTree(

@@ -2,6 +2,23 @@ import Foundation
 import OSLog
 
 class DiskiCloud: ObservableObject, Disk {
+    static var label = "☁️ DiskiCloud::"
+    static let rootDirName = Config.audiosDirName
+    static var defaultRoot: URL {
+        let fileManager = FileManager.default
+        let url = Config.cloudDocumentsDir.appendingPathComponent(Self.rootDirName)
+
+        if !fileManager.fileExists(atPath: url.path) {
+            do {
+                try fileManager.createDirectory(at: url, withIntermediateDirectories: true)
+            } catch {
+                os_log("\(Logger.isMain)\(Self.label)创建根目录失败 -> \(error.localizedDescription)")
+            }
+        }
+
+        return url
+    }
+    
     func download(_ url: URL, reason: String) {
         
     }
@@ -14,31 +31,20 @@ class DiskiCloud: ObservableObject, Disk {
         0
     }
     
-    static var label = "☁️ DiskiCloud::"
-    
     var name: String = "iCloud 文件夹"
+    var root: URL
     var queue = DispatchQueue(label: "DiskiCloud", qos: .background)
     var fileManager = FileManager.default
     var cloudHandler = iCloudHandler()
-    var audiosDir: URL {
-        let url = Config.cloudDocumentsDir.appendingPathComponent(Config.audiosDirName)
-
-        if !fileManager.fileExists(atPath: url.path) {
-            do {
-                try fileManager.createDirectory(at: url, withIntermediateDirectories: true)
-                os_log("\(Logger.isMain)🍋 DB::创建 Audios 目录成功")
-            } catch {
-                os_log("\(Logger.isMain)创建 Audios 目录失败\n\(error.localizedDescription)")
-            }
-        }
-
-        return url
-    }
     var bg = Config.bgQueue
     var label: String { "\(Logger.isMain)\(Self.label)" }
     var verbose = true
     var onUpdated: (_ items: DiskFileGroup) -> Void = { items in
         os_log("\(Logger.isMain)\(DiskiCloud.label)updated with items.count=\(items.count)")
+    }
+    
+    init(_ root: URL = DiskiCloud.defaultRoot) {
+        self.root = root
     }
 }
 
@@ -46,7 +52,7 @@ class DiskiCloud: ObservableObject, Disk {
 
 extension DiskiCloud {
     func getRoot() -> DiskFile {
-        DiskFile.fromURL(audiosDir)
+        DiskFile.fromURL(root)
     }
 }
 
@@ -92,7 +98,7 @@ extension DiskiCloud {
         os_log("\(self.label)copy \(url.lastPathComponent)")
         
         // 目的地已经存在同名文件
-        var d = audiosDir.appendingPathComponent(url.lastPathComponent)
+        var d = root.appendingPathComponent(url.lastPathComponent)
         var times = 1
         let fileName = url.deletingPathExtension().lastPathComponent
         let ext = url.pathExtension
@@ -180,9 +186,9 @@ extension DiskiCloud {
         var count = 0
         
         do {
-            let files = try FileManager.default.contentsOfDirectory(atPath: self.audiosDir.path)
+            let files = try FileManager.default.contentsOfDirectory(atPath: self.root.path)
             for file in files {
-                if iCloudHelper.isDownloading(URL(fileURLWithPath: audiosDir.path).appendingPathComponent(file)) {
+                if iCloudHelper.isDownloading(URL(fileURLWithPath: root.path).appendingPathComponent(file)) {
                     count += 1
                 }
             }
@@ -203,7 +209,7 @@ extension DiskiCloud {
 
         let queue = OperationQueue()
         queue.maxConcurrentOperationCount = 1
-        let query = ItemQuery(queue: queue, url: self.audiosDir)
+        let query = ItemQuery(queue: queue, url: self.root)
         let result = query.searchMetadataItems()
         for try await collection in result {
             os_log("\(Logger.isMain)\(self.label)WatchAudiosFolder -> count=\(collection.items.count)")
@@ -232,6 +238,6 @@ extension DiskiCloud {
 
 extension DiskiCloud {
     func makeURL(_ fileName: String) -> URL {
-        self.audiosDir.appending(component: fileName)
+        self.root.appending(component: fileName)
     }
 }

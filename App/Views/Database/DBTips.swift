@@ -29,7 +29,7 @@ struct DBTips: View {
                         }
                     
                         Button(action: {
-                            FileHelper.openFolder(url: diskManager.disk.audiosDir)
+                            FileHelper.openFolder(url: diskManager.disk.root)
                         }, label: {
                             Label(title: {
                                 Text("打开仓库目录并放入文件")

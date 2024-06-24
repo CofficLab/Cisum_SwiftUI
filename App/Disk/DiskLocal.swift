@@ -2,31 +2,35 @@ import Foundation
 import OSLog
 
 class DiskLocal: ObservableObject {
-    static var label = "🛖 DiskLocal::"
-
-    var name: String = "本地文件夹"
-    var fileManager = FileManager.default
-    var cloudHandler = iCloudHandler()
-    var audiosDir: URL {
-        let url = Config.localDocumentsDir!.appendingPathComponent(Config.audiosDirName)
+    static let label = "🛖 DiskLocal::"
+    static let rootDirName = Config.audiosDirName
+    static let localDocumentsDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+    static var defaultRoot: URL {
+        let fileManager = FileManager.default
+        let url = Self.localDocumentsDir!.appendingPathComponent(Self.rootDirName)
 
         if !fileManager.fileExists(atPath: url.path) {
             do {
                 try fileManager.createDirectory(at: url, withIntermediateDirectories: true)
-                os_log("\(Logger.isMain)🍋 DB::创建 Audios 目录成功")
             } catch {
-                os_log("\(Logger.isMain)创建 Audios 目录失败\n\(error.localizedDescription)")
+                os_log(.error, "\(self.label)创建根目录失败 -> \(error.localizedDescription)")
             }
         }
 
         return url
     }
 
+    var name: String = "本地文件夹"
+    var fileManager = FileManager.default
     var bg = Config.bgQueue
     var label: String { "\(Logger.isMain)\(Self.label)" }
-    var verbose = true
+    var root: URL
     var onUpdated: (_ collection: DiskFileGroup) -> Void = { collection in
         os_log("\(Logger.isMain)\(DiskiCloud.label)updated with items.count=\(collection.count)")
+    }
+    
+    init(_ root: URL = DiskLocal.defaultRoot) {
+        self.root = root
     }
 }
 
@@ -50,7 +54,7 @@ extension DiskLocal: Disk {
     }
     
     func getRoot() -> DiskFile {
-        DiskFile.fromURL(audiosDir)
+        DiskFile.fromURL(root)
     }
 
     func clearFolderContents(atPath path: String) {
@@ -67,6 +71,8 @@ extension DiskLocal: Disk {
     }
 
     func deleteFile(_ url: URL) {
+        let verbose = false
+        
         if verbose {
             os_log("\(self.label)删除 \(url)")
         }
@@ -84,7 +90,7 @@ extension DiskLocal: Disk {
         os_log("\(self.label)copy \(url.lastPathComponent)")
 
         // 目的地已经存在同名文件
-        var d = audiosDir.appendingPathComponent(url.lastPathComponent)
+        var d = root.appendingPathComponent(url.lastPathComponent)
         var times = 1
         let fileName = url.deletingPathExtension().lastPathComponent
         let ext = url.pathExtension
@@ -138,7 +144,7 @@ extension DiskLocal {
     func watchAudiosFolder() async {
          os_log("\(self.label)WatchAudiosFolder")
 
-        let presenter = FilePresenter(fileURL: self.audiosDir)
+        let presenter = FilePresenter(fileURL: self.root)
         
         self.onUpdated(.fromURLs(presenter.getFiles(), isFullLoad: true))
         
@@ -164,6 +170,6 @@ extension DiskLocal {
 
 extension DiskLocal {
     func makeURL(_ fileName: String) -> URL {
-        self.audiosDir.appending(component: fileName)
+        self.root.appending(component: fileName)
     }
 }

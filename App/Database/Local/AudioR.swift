@@ -23,7 +23,7 @@ extension DB {
     }
 
     func getAudioDir() -> URL {
-        self.disk.audiosDir
+        self.disk.root
     }
 
     func getAllURLs() -> [URL] {

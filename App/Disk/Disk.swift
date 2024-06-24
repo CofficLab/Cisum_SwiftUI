@@ -1,8 +1,9 @@
 import Foundation
 
 protocol Disk {
+    
     var name: String { get }
-    var audiosDir: URL { get }
+    var root: URL { get }
     var onUpdated: (_ items: DiskFileGroup) -> Void { get set }
     
     func clearFolderContents(atPath path: String)

@@ -18,7 +18,7 @@ struct DirSetting: View {
                 Spacer()
                 #if os(macOS)
                     Button(action: {
-                        openUrl(diskManager.disk.audiosDir)
+                        openUrl(diskManager.disk.root)
                     }, label: {
                         Label(title: {
                             Text("打开")
