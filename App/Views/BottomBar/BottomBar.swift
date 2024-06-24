@@ -1,13 +1,11 @@
 import SwiftUI
 
-struct DBBottomBar: View {
+struct BottomBar: View {
     @Binding var dbViewType: DBViewType
     @EnvironmentObject var diskManager: DiskManager
-    
+
     var body: some View {
         HStack {
-            Spacer()
-            
             ControlButton(
                 title: "列表视图",
                 image: "list.bullet",
@@ -23,17 +21,20 @@ struct DBBottomBar: View {
                 onTap: {
                     self.dbViewType = .Tree
                 })
+            Spacer()
+
+            CopyState()
         }
         .background(.bar)
         .labelStyle(.iconOnly)
-        .offset(y:2)
+        .offset(y: 2)
         .onChange(of: dbViewType, {
             Config.setCurrentDBViewType(dbViewType)
         })
     }
 }
 
-#Preview {
+#Preview("App") {
     AppPreview()
         .frame(height: 800)
 }

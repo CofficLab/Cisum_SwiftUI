@@ -23,7 +23,7 @@ struct BtnAdd: View {
             BtnAdd().buttonStyle(.borderedProminent)
             BtnAdd().labelStyle(.iconOnly)
             
-            DBView()
+            DBLayout()
         }
     }.modelContainer(Config.getContainer)
 }

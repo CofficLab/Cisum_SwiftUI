@@ -4,9 +4,10 @@ import SwiftData
 import SwiftUI
 
 struct StateView: View {
-    @EnvironmentObject var appManager: AppManager
+    @EnvironmentObject var app: AppManager
     @EnvironmentObject var diskManager: DiskManager
     @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var db: DB
     @Environment(\.modelContext) private var modelContext
 
     @Query(sort: \CopyTask.createdAt, animation: .default) var tasks: [CopyTask]
@@ -15,7 +16,7 @@ struct StateView: View {
     @State var networkOK = true
 
     var e = EventManager()
-    var error: Error? { appManager.error }
+    var error: Error? { app.error }
     var taskCount: Int { tasks.count }
     var showCopyMessage: Bool { tasks.count > 0 }
     var asset: PlayAsset? { playMan.asset }
@@ -26,8 +27,8 @@ struct StateView: View {
 
     var body: some View {
         VStack {
-            if appManager.stateMessage.count > 0 {
-                makeInfoView(appManager.stateMessage)
+            if app.stateMessage.count > 0 {
+                makeInfoView(app.stateMessage)
             }
 
             // 播放过程中出现的错误
@@ -36,17 +37,13 @@ struct StateView: View {
             }
 
             // 正在复制
-            if tasks.count > 0 {
-                HStack {
-                    makeCopyView("正在复制 \(tasks.count) 个文件")
-                }.task {
-//                    try? await db.copyFiles()
-                }
+            if tasks.count > 0 && app.showDB == false {
+                CopyState(withBackground: true)
             }
         }
         .onAppear {
             if audios.count == 0 {
-                appManager.showDBView()
+                app.showDBView()
             }
 
             checkNetworkStatus()
@@ -86,20 +83,6 @@ struct StateView: View {
                 }
             }
         })
-    }
-
-    func makeCopyView(_ i: String, buttons: some View = EmptyView()) -> some View {
-        CardView(background: BackgroundView.type3, paddingVertical: 6) {
-            HStack {
-                Image(systemName: "info.circle")
-                    .foregroundStyle(.white)
-                Text(i)
-                    .foregroundStyle(.white)
-                BtnToggleDB()
-                    .labelStyle(.iconOnly)
-            }
-            .font(font)
-        }
     }
 
     func makeInfoView(_ i: String) -> some View {
@@ -149,4 +132,5 @@ extension StateView {
 
 #Preview("APP") {
     AppPreview()
+        .frame(height: 800)
 }

@@ -33,7 +33,7 @@ struct HomeView: View {
 
                 if showDB {
                     TabView {
-                        DBView()
+                        DBLayout()
                             .tabItem {
                                 Label("仓库", systemImage: "music.note.list")
                             }

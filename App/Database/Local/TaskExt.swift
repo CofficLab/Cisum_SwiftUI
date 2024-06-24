@@ -25,10 +25,10 @@ extension DB {
         let task = CopyTask(url: url)
         context.insert(task)
         do {
-                    try context.save()
-                } catch let e {
-                    os_log(.error, "\(e.localizedDescription)")
-                }
+            try context.save()
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
     }
 }
 

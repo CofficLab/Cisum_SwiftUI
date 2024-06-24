@@ -9,7 +9,6 @@ struct DBViewList: View {
     @Environment(\.modelContext) private var modelContext
 
     @Query(Audio.descriptorAll, animation: .default) var audios: [Audio]
-    @Query(sort: \CopyTask.createdAt, animation: .default) var tasks: [CopyTask]
 
     @State var selection: Audio? = nil
     @State var syncingTotal: Int = 0
@@ -17,14 +16,7 @@ struct DBViewList: View {
 
     var total: Int { audios.count }
     var label: String { "\(Logger.isMain)\(Self.label)" }
-    var showTips: Bool {
-        if appManager.isDropping {
-            return true
-        }
 
-        return appManager.flashMessage.isEmpty && total == 0
-    }
-    
     init(verbose: Bool = false) {
         if verbose {
             os_log("\(Logger.isMain)\(Self.label)初始化")
@@ -35,23 +27,6 @@ struct DBViewList: View {
         ZStack {
             VStack(spacing: 0) {
                 List(selection: $selection) {
-                    if tasks.count > 0 {
-                        Section(header: HStack {
-                            Text("正在复制 \(tasks.count)")
-                        }, content: {
-                            if tasks.count <= 5 {
-                                ForEach(tasks) { task in
-                                    RowTask(task)
-                                }
-                                .onDelete(perform: { indexSet in
-                                    for i in indexSet {
-                                        modelContext.delete(tasks[i])
-                                    }
-                                })
-                            }
-                        })
-                    }
-
                     Section(header: HStack {
                         HStack {
                             Text("共 \(total.description)")
@@ -79,10 +54,6 @@ struct DBViewList: View {
                         }
                     }
                 }
-            }
-
-            if showTips {
-                DBTips().shadow(radius: 8)
             }
         }
     }
