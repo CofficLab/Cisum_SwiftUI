@@ -36,6 +36,17 @@ struct DBTree: View {
                         self.children = file.getChildren()
                     }
                 }
+                .contextMenu(menuItems: {
+                    BtnPlay(asset: file.toPlayAsset(), autoResize: false)
+                    Divider()
+                    BtnDownload(asset: file.toPlayAsset())
+                    BtnEvict(asset: file.toPlayAsset())
+                    if Config.isDesktop {
+                        BtnShowInFinder(url: file.url, autoResize: false)
+                    }
+                    Divider()
+                    BtnDel(assets: [file.toPlayAsset()], autoResize: false)
+                })
                 
                 if let children = children, !collapsed {
                     VStack(spacing: 0) {
