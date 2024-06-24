@@ -139,8 +139,11 @@
 		F5511BB42C29118C00400900 /* AppScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5511BB32C29118C00400900 /* AppScene.swift */; };
 		F5511BB62C291D3400400900 /* SceneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5511BB52C291D3400400900 /* SceneView.swift */; };
 		F5511BBC2C294A7400400900 /* DBTaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5511BBB2C294A7400400900 /* DBTaskView.swift */; };
-		F5511BBE2C29506400400900 /* CopyState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5511BBD2C29506400400900 /* CopyState.swift */; };
+		F5511BBE2C29506400400900 /* StateCopy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5511BBD2C29506400400900 /* StateCopy.swift */; };
 		F5511BC02C2953C200400900 /* BtnToggleCopying.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5511BBF2C2953C200400900 /* BtnToggleCopying.swift */; };
+		F5511BC32C29598100400900 /* BottomTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5511BC22C29598100400900 /* BottomTile.swift */; };
+		F5511BC52C2962AC00400900 /* BottomViewType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5511BC42C2962AC00400900 /* BottomViewType.swift */; };
+		F5511BC72C29636500400900 /* BottomCopyState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5511BC62C29636500400900 /* BottomCopyState.swift */; };
 		F5675C332C22BFD900326664 /* BottomBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C322C22BFD900326664 /* BottomBar.swift */; };
 		F5675C352C22CB3C00326664 /* DBViewTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C342C22CB3C00326664 /* DBViewTree.swift */; };
 		F5675C3A2C2404D700326664 /* FileBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C392C2404D700326664 /* FileBox.swift */; };
@@ -287,8 +290,11 @@
 		F5511BB32C29118C00400900 /* AppScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppScene.swift; sourceTree = "<group>"; };
 		F5511BB52C291D3400400900 /* SceneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneView.swift; sourceTree = "<group>"; };
 		F5511BBB2C294A7400400900 /* DBTaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBTaskView.swift; sourceTree = "<group>"; };
-		F5511BBD2C29506400400900 /* CopyState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyState.swift; sourceTree = "<group>"; };
+		F5511BBD2C29506400400900 /* StateCopy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateCopy.swift; sourceTree = "<group>"; };
 		F5511BBF2C2953C200400900 /* BtnToggleCopying.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnToggleCopying.swift; sourceTree = "<group>"; };
+		F5511BC22C29598100400900 /* BottomTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomTile.swift; sourceTree = "<group>"; };
+		F5511BC42C2962AC00400900 /* BottomViewType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomViewType.swift; sourceTree = "<group>"; };
+		F5511BC62C29636500400900 /* BottomCopyState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomCopyState.swift; sourceTree = "<group>"; };
 		F5675C322C22BFD900326664 /* BottomBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomBar.swift; sourceTree = "<group>"; };
 		F5675C342C22CB3C00326664 /* DBViewTree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBViewTree.swift; sourceTree = "<group>"; };
 		F5675C392C2404D700326664 /* FileBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileBox.swift; sourceTree = "<group>"; };
@@ -355,13 +361,14 @@
 			isa = PBXGroup;
 			children = (
 				F5511BC12C29557B00400900 /* BottomBar */,
-				0BE695992BFE3DCC00CEFFEB /* Store */,
-				0BE93F2F2BFB8E1C00F25445 /* Settings */,
 				0BB889D32AC04600004788D5 /* Buttons */,
 				0BBAD0702BBBDC22005834A3 /* Component */,
 				0BFDCE522BAFF279009198DD /* Database */,
 				0BBAD06F2BBBDC0B005834A3 /* Layout */,
 				0BFDCE562BB013AC009198DD /* Playing */,
+				0BE93F2F2BFB8E1C00F25445 /* Settings */,
+				F5511BC82C29669100400900 /* State */,
+				0BE695992BFE3DCC00CEFFEB /* Store */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -593,7 +600,6 @@
 				0B8FC26F2BBC559500839C75 /* PlayingAlbum.swift */,
 				F5511BB52C291D3400400900 /* SceneView.swift */,
 				0BBC15992ABAD5DB006E82C4 /* SliderView.swift */,
-				0B220F6C2BB051140077255A /* StateView.swift */,
 				0B220F6E2BB051F50077255A /* TitleView.swift */,
 			);
 			path = Playing;
@@ -602,10 +608,21 @@
 		F5511BC12C29557B00400900 /* BottomBar */ = {
 			isa = PBXGroup;
 			children = (
-				F5511BBD2C29506400400900 /* CopyState.swift */,
 				F5675C322C22BFD900326664 /* BottomBar.swift */,
+				F5511BC62C29636500400900 /* BottomCopyState.swift */,
+				F5511BC22C29598100400900 /* BottomTile.swift */,
+				F5511BC42C2962AC00400900 /* BottomViewType.swift */,
 			);
 			path = BottomBar;
+			sourceTree = "<group>";
+		};
+		F5511BC82C29669100400900 /* State */ = {
+			isa = PBXGroup;
+			children = (
+				0B220F6C2BB051140077255A /* StateView.swift */,
+				F5511BBD2C29506400400900 /* StateCopy.swift */,
+			);
+			path = State;
 			sourceTree = "<group>";
 		};
 		F5675C382C2404B000326664 /* File */ = {
@@ -773,6 +790,7 @@
 				0B8C36A12BEA0E8800C47567 /* AudioD.swift in Sources */,
 				0B220F6D2BB051140077255A /* StateView.swift in Sources */,
 				0B1D5A8D2AB3E8290010DDF2 /* AppDelegate.swift in Sources */,
+				F5511BC72C29636500400900 /* BottomCopyState.swift in Sources */,
 				0BA9FB702BFE223A008074CB /* VersionSetting.swift in Sources */,
 				0B8C36AA2BEA2EC700C47567 /* Disk.swift in Sources */,
 				0BBC158F2ABAC146006E82C4 /* BtnNext.swift in Sources */,
@@ -816,6 +834,7 @@
 				F5675C352C22CB3C00326664 /* DBViewTree.swift in Sources */,
 				0BAABEAF2BC787A200DF4A31 /* JobCopy.swift in Sources */,
 				0B1136612BF4CF3000A71FE1 /* Cover.swift in Sources */,
+				F5511BC52C2962AC00400900 /* BottomViewType.swift in Sources */,
 				0B8C36A52BEA15A800C47567 /* AudioU.swift in Sources */,
 				0BFB38F72BD0BCC20055E38B /* RowTask.swift in Sources */,
 				0B4E246F2BCAB8020033CC07 /* AppPreview.swift in Sources */,
@@ -876,7 +895,7 @@
 				0BE6959D2BFE3DCC00CEFFEB /* CarsView.swift in Sources */,
 				0BBA42252AC1813D00C0B977 /* BtnDel.swift in Sources */,
 				0B8C36AC2BEC6E0F00C47567 /* StateExt.swift in Sources */,
-				F5511BBE2C29506400400900 /* CopyState.swift in Sources */,
+				F5511BBE2C29506400400900 /* StateCopy.swift in Sources */,
 				0B901D882BB83BC3003AC253 /* FilePresenter.swift in Sources */,
 				0BB543F42BE8E38300D7A2B2 /* Duplicates.swift in Sources */,
 				0BBC157C2AB84C21006E82C4 /* HomeView.swift in Sources */,
@@ -889,6 +908,7 @@
 				0B220F6F2BB051F50077255A /* TitleView.swift in Sources */,
 				0BBC158A2AB9AB7F006E82C4 /* FileHelper.swift in Sources */,
 				0B12B0A92C0CB96F00FD43AD /* SubscriptionSetting.swift in Sources */,
+				F5511BC32C29598100400900 /* BottomTile.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

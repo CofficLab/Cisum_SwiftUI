@@ -12,6 +12,7 @@ struct HomeView: View {
     // 记录用户调整的窗口的高度
     @State private var height: CGFloat = 0
     @State private var autoResizing = false
+    @State private var tab: String = "DB"
 
     var showDB: Bool { appManager.showDB }
     var controlViewHeightMin = Config.controlViewMinHeight
@@ -32,20 +33,28 @@ struct HomeView: View {
                     .frame(height: showDB ? Config.controlViewMinHeight : geo.size.height)
 
                 if showDB {
-                    TabView {
+                    TabView(selection: $tab) {
                         DBLayout()
+                            .tag("DB")
                             .tabItem {
                                 Label("仓库", systemImage: "music.note.list")
                             }
-
+                        
                         SettingView()
+                            .tag("Setting")
                             .tabItem {
                                 Label("设置", systemImage: "gear")
-                            }        }
+                            }
+                    }
+                    .frame(maxHeight: .infinity)
                     #if os(macOS)
                     .padding(.top, 2)
                     #endif
                     .background(.background)
+                }
+                
+                if tab == "DB" {
+                    BottomBar()
                 }
             }
             .onChange(of: showDB) {

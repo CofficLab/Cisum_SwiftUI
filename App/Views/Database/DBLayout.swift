@@ -41,8 +41,6 @@ struct DBLayout: View {
                 if app.showCopying {
                     DBTaskView()
                 }
-                
-                BottomBar(dbViewType: $app.dbViewType)
             }
             .fileImporter(
                 isPresented: $app.isImporting,

@@ -38,7 +38,7 @@ struct StateView: View {
 
             // 正在复制
             if tasks.count > 0 && app.showDB == false {
-                CopyState(withBackground: true)
+                StateCopy()
             }
         }
         .onAppear {

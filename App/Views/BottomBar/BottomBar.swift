@@ -1,36 +1,19 @@
 import SwiftUI
+import SwiftData
 
 struct BottomBar: View {
-    @Binding var dbViewType: DBViewType
-    @EnvironmentObject var diskManager: DiskManager
-
     var body: some View {
-        HStack {
-            ControlButton(
-                title: "列表视图",
-                image: "list.bullet",
-                dynamicSize: false,
-                onTap: {
-                    self.dbViewType = .List
-                })
+        HStack(spacing: 0) {
+            BottomViewType()
 
-            ControlButton(
-                title: "文件夹视图",
-                image: "rectangle.3.group.fill",
-                dynamicSize: false,
-                onTap: {
-                    self.dbViewType = .Tree
-                })
             Spacer()
 
-            CopyState()
+            BottomCopyState()
+            
+            Spacer()
         }
-        .background(.bar)
-        .labelStyle(.iconOnly)
-        .offset(y: 2)
-        .onChange(of: dbViewType, {
-            Config.setCurrentDBViewType(dbViewType)
-        })
+        .frame(height: 25)
+        .background(BackgroundView.type2A.opacity(0.5))
     }
 }
 
