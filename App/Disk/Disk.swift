@@ -37,7 +37,6 @@ protocol Disk {
     
     // MARK: 复制
     
-    func copy(_ urls: [URL])
     func copyFiles()
 }
 

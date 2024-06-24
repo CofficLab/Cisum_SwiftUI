@@ -101,13 +101,7 @@ extension DiskLocal {
 
 // MARK: Copy
 
-extension DiskLocal {
-    func copy(_ urls: [URL]) {
-        Task {
-            await self.db.addCopyTasks(urls)
-        }
-    }
-    
+extension DiskLocal {    
     func copyTo(url: URL) throws {
         os_log("\(self.label)copy \(url.lastPathComponent)")
 
@@ -181,7 +175,7 @@ extension DiskLocal {
     }
     
     func download(_ url: URL, reason: String) {
-        
+        return
     }
 }
 

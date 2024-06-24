@@ -103,9 +103,11 @@ extension DiskiCloud {
             os_log("\(Logger.isMain)\(self.label)clearFolderContents error: \(error.localizedDescription)")
         }
     }
+}
 
-    // MARK: Copy
-    
+// MARK: Copy
+
+extension DiskiCloud {
     func copyFiles() {
         Task.detached(priority: .low) {
             let tasks = await self.db.allCopyTasks()
@@ -125,12 +127,6 @@ extension DiskiCloud {
 //                    }
 //                }
 //            }
-        }
-    }
-    
-    func copy(_ urls: [URL]) {
-        Task {
-            await self.db.addCopyTasks(urls)
         }
     }
 

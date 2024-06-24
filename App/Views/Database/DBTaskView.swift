@@ -6,12 +6,11 @@ struct DBTaskView: View {
     static var label = "📬 DBTaskView::"
 
     @EnvironmentObject var appManager: AppManager
-    @Environment(\.modelContext) private var modelContext
+    @EnvironmentObject var diskManager: DiskManager
 
-    @Query(sort: \CopyTask.createdAt, animation: .default) var tasks: [CopyTask]
-    
     @State var selection: String = ""
 
+    var tasks: [CopyTask] { diskManager.tasks }
     var label: String { "\(Logger.isMain)\(Self.label)" }
     
     init(verbose: Bool = false) {
@@ -32,7 +31,7 @@ struct DBTaskView: View {
                         }
                         .onDelete(perform: { indexSet in
                             for i in indexSet {
-                                modelContext.delete(tasks[i])
+                                diskManager.deleteCopyTask(tasks[i])
                             }
                         })
                     }

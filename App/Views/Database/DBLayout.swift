@@ -89,7 +89,7 @@ struct DBLayout: View {
 
 extension DBLayout {
     func copy(_ files: [URL]) {
-        disk.copy(files)
+        diskManager.copy(files)
     }
 
     func setFlashMessage(_ m: String) {
