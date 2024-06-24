@@ -34,10 +34,6 @@ class DiskiCloud: ObservableObject, Disk {
         return DiskiCloud(root: subRoot)
     }
     
-    func download(_ url: URL, reason: String) {
-        
-    }
-    
     func next(_ url: URL) -> DiskFile? {
         nil
     }
@@ -182,7 +178,7 @@ extension DiskiCloud {
         }
     }
     
-    func download(_ url: URL, reason: String) async {
+    func download(_ url: URL, reason: String) {
         let verbose = false
         
         if verbose {
@@ -219,10 +215,12 @@ extension DiskiCloud {
 //            return
 //        }
         
-        do {
-            try await cloudHandler.download(url: url)
-        } catch let e {
-            os_log(.error, "\(self.label)Download(\(reason))出错->\(e.localizedDescription)")
+        Task {
+            do {
+                try await cloudHandler.download(url: url)
+            } catch let e {
+                os_log(.error, "\(self.label)Download(\(reason))出错->\(e.localizedDescription)")
+            }
         }
     }
     
