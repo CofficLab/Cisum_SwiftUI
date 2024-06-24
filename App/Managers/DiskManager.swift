@@ -2,7 +2,7 @@ import SwiftUI
 import OSLog
 
 class DiskManager: ObservableObject {
-    @Published var disk: any Disk = DiskLocal()
+    @Published var disk: any Disk = DiskLocal.makeSub("music")
     
     var label: String {
         "\(Logger.isMain)💼 DiskManager::"}
@@ -23,4 +23,5 @@ class DiskManager: ObservableObject {
 
 #Preview {
     AppPreview()
+        .frame(height: 800)
 }

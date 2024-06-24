@@ -19,6 +19,21 @@ class DiskLocal: ObservableObject, Disk {
 
         return url
     }
+    
+    static func makeSub(_ subDirName: String) -> any Disk {
+        let fileManager = FileManager.default
+        let subRoot = DiskLocal.defaultRoot.appendingPathComponent(subDirName)
+        
+        if !fileManager.fileExists(atPath: subRoot.path) {
+            do {
+                try fileManager.createDirectory(at: subRoot, withIntermediateDirectories: true)
+            } catch {
+                os_log(.error, "\(self.label)创建根目录失败 -> \(error.localizedDescription)")
+            }
+        }
+
+        return DiskLocal(root: subRoot)
+    }
 
     var name: String = "本地文件夹"
     var fileManager = FileManager.default
@@ -29,7 +44,7 @@ class DiskLocal: ObservableObject, Disk {
         os_log("\(Logger.isMain)\(DiskiCloud.label)updated with items.count=\(collection.count)")
     }
     
-    init(_ root: URL = DiskLocal.defaultRoot) {
+    init(root: URL = DiskLocal.defaultRoot) {
         self.root = root
     }
     

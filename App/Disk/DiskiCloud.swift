@@ -19,6 +19,21 @@ class DiskiCloud: ObservableObject, Disk {
         return url
     }
     
+    static func makeSub(_ subDirName: String) -> any Disk {
+        let fileManager = FileManager.default
+        let subRoot = DiskiCloud.defaultRoot.appendingPathComponent(subDirName)
+        
+        if !fileManager.fileExists(atPath: subRoot.path) {
+            do {
+                try fileManager.createDirectory(at: subRoot, withIntermediateDirectories: true)
+            } catch {
+                os_log(.error, "\(self.label)创建根目录失败 -> \(error.localizedDescription)")
+            }
+        }
+
+        return DiskLocal(root: subRoot)
+    }
+    
     func download(_ url: URL, reason: String) {
         
     }
@@ -32,7 +47,7 @@ class DiskiCloud: ObservableObject, Disk {
     }
     
     var name: String = "iCloud 文件夹"
-    var root: URL
+    var root: URL = DiskiCloud.defaultRoot
     var queue = DispatchQueue(label: "DiskiCloud", qos: .background)
     var fileManager = FileManager.default
     var cloudHandler = iCloudHandler()
@@ -43,7 +58,7 @@ class DiskiCloud: ObservableObject, Disk {
         os_log("\(Logger.isMain)\(DiskiCloud.label)updated with items.count=\(items.count)")
     }
     
-    init(_ root: URL = DiskiCloud.defaultRoot) {
+    init(root: URL = DiskiCloud.defaultRoot) {
         self.root = root
     }
 }

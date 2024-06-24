@@ -1,6 +1,7 @@
 import Foundation
 
 protocol Disk {
+    static func makeSub(_ subDirName: String) -> Disk
     
     var name: String { get }
     var root: URL { get }
