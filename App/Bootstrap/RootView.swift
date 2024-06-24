@@ -43,12 +43,6 @@ struct RootView<Content>: View where Content: View {
             .frame(minWidth: Config.minWidth, minHeight: Config.minHeight)
             .blendMode(.normal)
             .task {
-                if verbose {
-                    os_log("\(self.label)同步数据库")
-                }
-
-//                await db.startWatch()
-
                 #if os(iOS)
                     UIApplication.shared.beginReceivingRemoteControlEvents()
                 #endif

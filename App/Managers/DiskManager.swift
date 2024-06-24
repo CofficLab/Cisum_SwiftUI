@@ -14,7 +14,7 @@ class DiskManager: ObservableObject {
     
     init() {
         let verbose = true
-        let appScene = AppScene.Music
+        let appScene = Config.getCurrentScene()
         self.appScene = appScene
         
         if Config.iCloudEnabled {
@@ -26,6 +26,17 @@ class DiskManager: ObservableObject {
         if verbose {
             os_log("\(Logger.isMain)\(Self.label)初始化，iCloud=\(Config.iCloudEnabled)")
             os_log("\(Logger.isMain)\(Self.label)初始化，Disk=\(self.disk.name)")
+        }
+        
+        Task {
+            /// 监听存储Audio文件的目录的变化，同步到数据库
+            disk.onUpdated = { items in
+                Task {
+                    await self.db.sync(items)
+                }
+            }
+
+            await disk.watchAudiosFolder()
         }
     }
     
@@ -62,6 +73,13 @@ class DiskManager: ObservableObject {
                 }
             }
         }
+    }
+    
+    func chageScene(_ to: AppScene) {
+        self.appScene = to
+        self.changeDisk(self.disk.makeSub(to.folderName))
+        
+        Config.setCurrentScene(to)
     }
 }
 

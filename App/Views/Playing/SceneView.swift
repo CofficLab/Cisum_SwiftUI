@@ -17,7 +17,7 @@ struct SceneView: View {
             self.select = diskManager.appScene
         }
         .onChange(of: select, {
-            diskManager.changeDisk(diskManager.disk.makeSub(select.folderName))
+            diskManager.chageScene(select)
         })
     }
 }

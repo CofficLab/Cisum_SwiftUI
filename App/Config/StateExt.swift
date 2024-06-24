@@ -3,7 +3,7 @@ import OSLog
 import SwiftUI
 
 extension Config {
-    // MARK: 当前Audio
+    // MARK: CurrentAudio
     
     @AppStorage("App.CurrentAudio")
     static var currentAudio: URL?
@@ -12,7 +12,7 @@ extension Config {
         Config.currentAudio = url
     }
     
-    // MARK: 当前播放模式
+    // MARK: PlayMode
     
     @AppStorage("App.CurrentMode")
     static var currentMode: String = PlayMode.Order.rawValue
@@ -21,13 +21,26 @@ extension Config {
         Config.currentMode = mode.rawValue
     }
     
-    // MARK: 当前数据库视图
+    // MARK: DBViewType
     
     @AppStorage("App.CurentDBViewType")
     static var currentDBViewType: String = DBViewType.List.rawValue
     
     static func setCurrentDBViewType(_ type: DBViewType) {
         Config.currentDBViewType = type.rawValue
+    }
+    
+    // MARK: Scene
+    
+    @AppStorage("App.Scene")
+    static var currentScene: String = AppScene.Music.rawValue
+    
+    static func getCurrentScene() -> AppScene {
+        AppScene.init(rawValue: Config.currentScene)!
+    }
+    
+    static func setCurrentScene(_ scene: AppScene) {
+        Config.currentScene = scene.rawValue
     }
 }
 

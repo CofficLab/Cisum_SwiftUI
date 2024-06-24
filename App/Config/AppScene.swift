@@ -1,6 +1,6 @@
 import Foundation
 
-enum AppScene: CaseIterable, Identifiable {
+enum AppScene: String, CaseIterable, Identifiable {
     var id: Self { self }
     
     case Baby

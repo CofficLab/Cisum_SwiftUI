@@ -362,6 +362,7 @@
 				0BB889D32AC04600004788D5 /* Buttons */,
 				0BBAD0702BBBDC22005834A3 /* Component */,
 				0BFDCE522BAFF279009198DD /* Database */,
+				0B8113AE2C29A7CB007CA124 /* DBTree */,
 				0BBAD06F2BBBDC0B005834A3 /* Layout */,
 				0BFDCE562BB013AC009198DD /* Playing */,
 				0BE93F2F2BFB8E1C00F25445 /* Settings */,
@@ -386,6 +387,13 @@
 				0B5E51E42AD912B5000650CF /* DebugCommand.swift */,
 			);
 			path = Commands;
+			sourceTree = "<group>";
+		};
+		0B8113AE2C29A7CB007CA124 /* DBTree */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = DBTree;
 			sourceTree = "<group>";
 		};
 		0B9C1C342AAF18FE001A26AF = {
@@ -478,7 +486,6 @@
 				0B1D5A8C2AB3E8290010DDF2 /* AppDelegate.swift */,
 				0BAB300D2AB814F70012D837 /* Boot.swift */,
 				0B604AE72AD6384300929DD8 /* RootView.swift */,
-				F5511BB32C29118C00400900 /* AppScene.swift */,
 			);
 			path = Bootstrap;
 			sourceTree = "<group>";
@@ -553,6 +560,7 @@
 		0BEBCBAC2B352A2D00F2116E /* Config */ = {
 			isa = PBXGroup;
 			children = (
+				F5511BB32C29118C00400900 /* AppScene.swift */,
 				0B1D5A752AB302600010DDF2 /* AppConfig.swift */,
 				F545D1742C1FCAD0006A6AFA /* CloudExt.swift */,
 				0B8C36AF2BEC6E6500C47567 /* DBExt.swift */,
