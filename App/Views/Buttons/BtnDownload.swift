@@ -1,14 +1,15 @@
 import SwiftUI
 
 struct BtnDownload: View {
-    @EnvironmentObject var db: DB
+    @EnvironmentObject var diskManager: DiskManager
     
     var asset: PlayAsset
+    var disk: Disk { diskManager.disk }
         
     var body: some View {
         Button {
             Task {
-                await db.download(asset.url, reason: "点击了下载")
+                disk.download(asset.url, reason: "点击了下载")
             }
         } label: {
             Label("下载", systemImage: getImageName())

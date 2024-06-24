@@ -1,0 +1,5 @@
+import SwiftUI
+
+protocol Playable {
+    
+}

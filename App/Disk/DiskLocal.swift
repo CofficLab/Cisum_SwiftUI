@@ -30,8 +30,23 @@ class DiskLocal: ObservableObject {
     }
 }
 
-extension DiskLocal: DiskContact {
-    func deleteFiles(_ audios: [Audio]) throws {
+// MARK: Delete
+
+extension DiskLocal: Disk {
+    func download(_ url: URL, reason: String) {
+        
+    }
+    
+    func next(_ url: URL) -> DiskFile? {
+        return nil
+    }
+    
+    func getTotal() -> Int {
+        0
+    }
+    
+    
+    func deleteFiles(_ urls: [URL]) {
     }
     
     func getRoot() -> DiskFile {
@@ -51,16 +66,16 @@ extension DiskLocal: DiskContact {
         }
     }
 
-    func deleteFile(_ audio: Audio) throws {
+    func deleteFile(_ url: URL) {
         if verbose {
-            os_log("\(self.label)删除 \(audio.url)")
+            os_log("\(self.label)删除 \(url)")
         }
 
-        if fileManager.fileExists(atPath: audio.url.path) == false {
+        if fileManager.fileExists(atPath: url.path) == false {
             return
         }
 
-        try fileManager.removeItem(at: audio.url)
+        try? fileManager.removeItem(at: url)
     }
 
     // MARK: 将文件复制到音频目录

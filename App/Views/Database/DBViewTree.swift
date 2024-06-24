@@ -12,7 +12,7 @@ struct DBViewTree: View {
     @State var collapsed: Bool = false
     @State var icon: String = ""
 
-    var disk: DiskContact { diskManager.disk }
+    var disk: Disk { diskManager.disk }
     var root: URL { disk.audiosDir }
 
     var body: some View {

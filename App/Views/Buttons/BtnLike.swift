@@ -2,11 +2,12 @@ import OSLog
 import SwiftUI
 
 struct BtnLike: View {
-    @EnvironmentObject var db: DB
+    @EnvironmentObject var diskManager: DiskManager
     
     @State var like = false
     
     var asset: PlayAsset
+    var disk: Disk { diskManager.disk }
     var autoResize = false
     var title: String { asset.like ? "取消喜欢" : "标记喜欢" }
     var label: String { "\(Logger.isMain)❤️ BtnLike::" }
@@ -18,7 +19,7 @@ struct BtnLike: View {
             dynamicSize: autoResize,
             onTap: {
                 Task {
-                    await db.toggleLike(asset.url)
+//                    await db.toggleLike(asset.url)
                 }
             })
             .onAppear {

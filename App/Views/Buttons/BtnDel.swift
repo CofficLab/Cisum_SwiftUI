@@ -1,10 +1,11 @@
 import SwiftUI
 
 struct BtnDel: View {
-    @EnvironmentObject var db: DB
     @EnvironmentObject var appManager: AppManager
     @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var diskManager: DiskManager
 
+    var disk: Disk { diskManager.disk }
     var assets: [PlayAsset]
     var callback: () -> Void = {}
     var autoResize = false
@@ -20,7 +21,14 @@ struct BtnDel: View {
                     //appManager.stateMessage = "正在删除 \(audios.count) 个"
 
                     let isPlaying = playMan.isPlaying
-                    let next = await db.deleteAudios(assets.map{$0.url})
+                    
+                    guard let lastAssetURL = assets.last?.url else {
+                        return
+                    }
+                    
+                    let next = disk.next(lastAssetURL)
+                    
+                    disk.deleteFiles(assets.map{$0.url})
 
                     if let asset = playMan.asset, assets.map({ $0.url }).contains(asset.url) {
                         if isPlaying, let next = next {

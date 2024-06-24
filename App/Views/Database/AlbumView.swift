@@ -5,8 +5,6 @@ struct AlbumView: View {
     static var verbose = false
     static var label = "🐰 AlbumView::"
     
-    @EnvironmentObject var db: DB
-
     @State var image: Image?
     @State var isDownloaded: Bool = true
     @State var isDownloading: Bool = false
@@ -51,7 +49,7 @@ struct AlbumView: View {
             } else if isNotDownloaded {
                 NotDownloadedAlbum(forPlaying: forPlaying).onTapGesture {
                     Task {
-                        await db.download(self.asset.url, reason: "点击了Album")
+//                        await db.download(self.asset.url, reason: "点击了Album")
                     }
                 }
             } else if let image = image {
@@ -99,7 +97,7 @@ struct AlbumView: View {
 
     func setCachedCover() {
         Task.detached(priority: .low, operation: {
-            let image = await asset.getCoverImageFromCache()
+            let image = asset.getCoverImageFromCache()
 
             DispatchQueue.main.async {
                 self.image = image
@@ -144,8 +142,8 @@ struct AlbumView: View {
     func updateCover(verbose: Bool = false) {
         Task.detached(priority: .background) {
             if verbose {
-                let label = await AlbumView.label
-                let audio = await self.asset
+                let label = AlbumView.label
+                let audio = self.asset
                 os_log("\(Logger.isMain)\(label)UpdateCover -> \(audio.title)")
             }
 

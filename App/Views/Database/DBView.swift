@@ -5,7 +5,6 @@ import UniformTypeIdentifiers
 
 struct DBView: View {
     @EnvironmentObject var app: AppManager
-    @EnvironmentObject var db: DB
     
     @State var treeView = false
     
@@ -81,7 +80,7 @@ struct DBView: View {
 extension DBView {
     func copy(_ files: [URL]) {
         Task {
-            await db.addCopyTasks(files)
+//            await db.addCopyTasks(files)
         }
     }
 

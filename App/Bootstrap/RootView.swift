@@ -6,17 +6,17 @@ struct RootView<Content>: View where Content: View {
     private var verbose = true
     private var label: String { "\(Logger.isMain)🌳 RootView::" }
 
-    var db: DB
+    var dbLocal: DB = DB(Config.getContainer, reason: "RootView")
     var dbSynced = DBSynced(Config.getSyncedContainer)
     var appManager = AppManager()
     var storeManager = StoreManager()
-    var playMan: PlayMan
+    var playMan: PlayMan = PlayMan()
     var diskManager: DiskManager = DiskManager()
+    
+    var disk: Disk { diskManager.disk }
 
     init(@ViewBuilder content: () -> Content) {
         self.content = content()
-        db = DB(Config.getContainer, reason: "RootView")
-        playMan = PlayMan()
     }
 
     var body: some View {
@@ -60,7 +60,9 @@ struct RootView<Content>: View where Content: View {
                     }
 
                     Task.detached(priority: .background, operation: {
-                        await db.prepareJob()
+                        if let url = playMan.asset?.url {
+                            disk.downloadNextBatch(url, reason: "RootView")
+                        }
                     })
 
                     Task.detached(operation: {
@@ -69,17 +71,17 @@ struct RootView<Content>: View where Content: View {
                 }
             }
             .background(Config.rootBackground)
-            .environmentObject(db)
             .environmentObject(playMan)
             .environmentObject(appManager)
             .environmentObject(storeManager)
             .environmentObject(diskManager)
+            .environmentObject(dbLocal)
     }
 
     func onAppOpen() {
         Task {
             let uuid = Config.getDeviceId()
-            let audioCount = await db.getTotalOfAudio()
+            let audioCount = disk.getTotal()
 
             await dbSynced.saveDeviceData(uuid: uuid, audioCount: audioCount)
         }
@@ -100,9 +102,9 @@ struct RootView<Content>: View where Content: View {
             }
 
             Task {
-                if let currentAudio = await self.db.findAudio(currentAudioId) {
+                if let currentAudio = await self.dbLocal.findAudio(currentAudioId) {
                     playMan.prepare(currentAudio.toPlayAsset())
-                } else if let current = await self.db.first() {
+                } else if let current = await self.dbLocal.first() {
                     playMan.prepare(current.toPlayAsset())
                 } else {
                     os_log("\(self.label)restore nothing to play")
@@ -139,14 +141,14 @@ struct RootView<Content>: View where Content: View {
                 }
                 
                 Task {
-                    await diskManager.disk.download(next.url, reason: "Next")
+                    disk.download(next.url, reason: "Next")
                 }
             } else {
                 playMan.stop()
             }
         } else {
             Task {
-                if let i = await db.nextOf(asset.url) {
+                if let i = await dbLocal.nextOf(asset.url) {
                     if playMan.isPlaying || manual == false {
                         playMan.play(i.toPlayAsset(), reason: "在播放时或自动触发下一首")
                     } else {
@@ -184,14 +186,14 @@ struct RootView<Content>: View where Content: View {
                 }
                 
                 Task {
-                    await diskManager.disk.download(prev.url, reason: "Prev")
+                    disk.download(prev.url, reason: "Prev")
                 }
             } else {
                 playMan.stop()
             }
         } else {
             Task {
-                if let i = await self.db.pre(asset.url) {
+                if let i = await self.dbLocal.pre(asset.url) {
                     if self.playMan.isPlaying {
                         self.playMan.play(i.toPlayAsset(), reason: "在播放时触发了上一首")
                     } else {
@@ -213,7 +215,7 @@ struct RootView<Content>: View where Content: View {
             switch state {
             case let .Playing(asset):
                 Task {
-                    await self.db.increasePlayCount(asset.url)
+                    await self.dbLocal.increasePlayCount(asset.url)
                 }
             case let .Error(error, _):
                 appManager.error = error
@@ -228,14 +230,14 @@ struct RootView<Content>: View where Content: View {
     }
 
     func toggleLike() {
-//        if let audio = playMan.asset?.toAudio() {
-//            Task {
-//                await self.db.toggleLike(audio)
-//            }
-//
+        if let url = playMan.asset?.url {
+            Task {
+                await self.dbLocal.toggleLike(url)
+            }
+
 //            self.c.likeCommand.isActive = audio.dislike
 //            self.c.dislikeCommand.isActive = audio.like
-//        }
+        }
     }
 }
 

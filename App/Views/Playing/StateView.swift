@@ -5,8 +5,8 @@ import SwiftUI
 
 struct StateView: View {
     @EnvironmentObject var appManager: AppManager
+    @EnvironmentObject var diskManager: DiskManager
     @EnvironmentObject var playMan: PlayMan
-    @EnvironmentObject var db: DB
     @Environment(\.modelContext) private var modelContext
 
     @Query(sort: \CopyTask.createdAt, animation: .default) var tasks: [CopyTask]
@@ -22,6 +22,7 @@ struct StateView: View {
     var count: Int { audios.count }
     var font: Font { asset == nil ? .title3 : .callout }
     var label: String { "\(Logger.isMain)🖥️ StateView::" }
+    var disk: Disk { diskManager.disk }
 
     var body: some View {
         VStack {
@@ -39,7 +40,7 @@ struct StateView: View {
                 HStack {
                     makeCopyView("正在复制 \(tasks.count) 个文件")
                 }.task {
-                    try? await db.copyFiles()
+//                    try? await db.copyFiles()
                 }
             }
         }
@@ -52,10 +53,10 @@ struct StateView: View {
         }
         .onChange(of: count) {
             Task {
-                if playMan.asset == nil, let first = await db.first() {
-                    os_log("\(self.label)准备第一个")
-                    playMan.prepare(first.toPlayAsset())
-                }
+//                if playMan.asset == nil, let first = await db.first() {
+//                    os_log("\(self.label)准备第一个")
+//                    playMan.prepare(first.toPlayAsset())
+//                }
             }
 
             if count == 0 {

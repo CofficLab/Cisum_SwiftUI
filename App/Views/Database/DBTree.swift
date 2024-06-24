@@ -7,7 +7,6 @@ struct DBTree: View {
 
     @EnvironmentObject var appManager: AppManager
     @EnvironmentObject var diskManager: DiskManager
-    @EnvironmentObject var db: DB
     
     @Binding var selection: DiskFile?
     @State var collapsed: Bool = true

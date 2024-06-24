@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct PlayTime: View {
-    @EnvironmentObject var db: DB
     @State var playTime = 0
     
     var body: some View {
@@ -21,7 +20,7 @@ struct PlayTime: View {
     
     func getTime() {
         Task {
-            self.playTime = await db.getAudioPlayTime()
+//            self.playTime = await db.getAudioPlayTime()
         }
     }
 }

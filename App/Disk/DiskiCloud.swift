@@ -1,7 +1,19 @@
 import Foundation
 import OSLog
 
-class DiskiCloud: ObservableObject, DiskContact {
+class DiskiCloud: ObservableObject, Disk {
+    func download(_ url: URL, reason: String) {
+        
+    }
+    
+    func next(_ url: URL) -> DiskFile? {
+        nil
+    }
+    
+    func getTotal() -> Int {
+        0
+    }
+    
     static var label = "☁️ DiskiCloud::"
     
     var name: String = "iCloud 文件夹"
@@ -41,22 +53,22 @@ extension DiskiCloud {
 // MARK: Delete
 
 extension DiskiCloud {
-    func deleteFiles(_ audios: [Audio]) throws {
-        for audio in audios {
+    func deleteFiles(_ urls: [URL]) {
+        for url in urls {
             if verbose {
-                os_log("\(self.label)删除 \(audio.title)")
+                os_log("\(self.label)删除 \(url.lastPathComponent)")
             }
             
-            if fileManager.fileExists(atPath: audio.url.path) == false {
+            if fileManager.fileExists(atPath: url.path) == false {
                 continue
             }
             
-            try fileManager.removeItem(at: audio.url)
+            try? fileManager.removeItem(at: url)
         }
     }
     
-    func deleteFile(_ audio: Audio) throws {
-        try deleteFiles([audio])
+    func deleteFile(_ url: URL) {
+        deleteFiles([url])
     }
 }
 

@@ -3,8 +3,6 @@ import SwiftUI
 import SwiftData
 
 struct Duplicates: View {
-    @EnvironmentObject var db: DB
-
     @State var showDumplicates = false
     
     @Query var audios: [Audio]

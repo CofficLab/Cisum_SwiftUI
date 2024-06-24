@@ -2,14 +2,13 @@ import SwiftUI
 
 struct BtnEvict: View {
     @EnvironmentObject var playMan: PlayMan
-    @EnvironmentObject var db: DB
-    
+
     var asset: PlayAsset
         
     var body: some View {
         Button {
             Task {
-                await db.evict(asset.url)
+//                await db.evict(asset.url)
             }
         } label: {
             Label("移除下载项", systemImage: getImageName())

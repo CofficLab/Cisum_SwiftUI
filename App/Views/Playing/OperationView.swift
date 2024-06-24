@@ -3,7 +3,6 @@ import SwiftUI
 
 struct OperationView: View {
     @EnvironmentObject var playMan: PlayMan
-    @EnvironmentObject var db: DB
 
     var asset: PlayAsset? { playMan.asset }
     var characterCount: Int { asset?.title.count ?? 0 }

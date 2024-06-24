@@ -2,7 +2,7 @@ import SwiftUI
 import OSLog
 
 class DiskManager: ObservableObject {
-    @Published var disk: any DiskContact = DiskLocal()
+    @Published var disk: any Disk = DiskLocal()
     
     var label: String {
         "\(Logger.isMain)💼 DiskManager::"}
@@ -15,7 +15,7 @@ class DiskManager: ObservableObject {
         }
     }
     
-    func changeDisk(_ to: DiskContact) {
+    func changeDisk(_ to: Disk) {
         os_log("\(self.label)更新磁盘为 \(to.name)")
         self.disk = to
     }
