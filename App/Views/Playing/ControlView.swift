@@ -85,7 +85,7 @@ struct ControlView: View {
             .frame(maxHeight: .infinity)
         }
         .foregroundStyle(.white)
-        .ignoresSafeArea(edges: appManager.showDB || Config.isNotDesktop ? .horizontal : .all)
+//        .ignoresSafeArea(edges: appManager.showDB || Config.isNotDesktop ? .horizontal : .all)
         .frame(minHeight: Config.controlViewMinHeight)
         .onAppear() {
             showHeroView = true
@@ -94,12 +94,6 @@ struct ControlView: View {
             showOperationView = true
             showStateView = true
         }
-        .toolbar(content: {
-            HStack {
-                Spacer()
-                SceneView()
-            }
-        })
     }
 
     // MARK: 状态栏的高度

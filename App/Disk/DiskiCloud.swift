@@ -46,7 +46,7 @@ class DiskiCloud: ObservableObject, Disk {
         0
     }
     
-    var name: String = "iCloud 文件夹"
+    var name: String { "iCloud 磁盘:\(root)" }
     var root: URL = DiskiCloud.defaultRoot
     var queue = DispatchQueue(label: "DiskiCloud", qos: .background)
     var fileManager = FileManager.default

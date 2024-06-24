@@ -35,7 +35,7 @@ class DiskLocal: ObservableObject, Disk {
         return DiskLocal(root: subRoot)
     }
 
-    var name: String = "本地文件夹"
+    var name: String { "本地磁盘:\(root)" }
     var fileManager = FileManager.default
     var bg = Config.bgQueue
     var label: String { "\(Logger.isMain)\(Self.label)" }

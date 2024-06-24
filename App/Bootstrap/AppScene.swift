@@ -6,7 +6,16 @@ enum AppScene: CaseIterable, Identifiable {
     case Baby
     case Music
     
-    var name: String {
+    var folderName: String {
+        switch self {
+        case .Baby:
+            "baby"
+        case .Music:
+            "music"
+        }
+    }
+    
+    var title: String {
         switch self {
         case .Baby:
             "幼儿教育"

@@ -2,7 +2,8 @@ import SwiftUI
 import OSLog
 
 class DiskManager: ObservableObject {
-    @Published var disk: any Disk = DiskLocal.makeSub("music")
+    @Published var appScene: AppScene
+    @Published var disk: any Disk
     
     var label: String {
         "\(Logger.isMain)💼 DiskManager::"}
@@ -10,8 +11,13 @@ class DiskManager: ObservableObject {
     var isiCloudDisk: Bool { ((self.disk as? DiskiCloud) != nil)}
     
     init() {
+        let appScene = AppScene.Music
+        self.appScene = appScene
+        
         if Config.iCloudEnabled {
-            self.disk = DiskiCloud()
+            self.disk = DiskiCloud.makeSub(appScene.folderName)
+        } else {
+            self.disk = DiskLocal.makeSub(appScene.folderName)
         }
     }
     

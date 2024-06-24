@@ -6,6 +6,9 @@ struct ContentView: View {
 
     var body: some View {
         HomeView()
+            .toolbar(content: {
+                SceneView()
+            })
             .alert(isPresented: $appManager.showAlert, content: {
                 Alert(title: Text(appManager.alertMessage))
             })

@@ -51,4 +51,8 @@ extension Disk {
             }
         }
     }
+    
+    func makeSub(_ subDirName: String) -> Disk {
+        Self.makeSub(subDirName)
+    }
 }
