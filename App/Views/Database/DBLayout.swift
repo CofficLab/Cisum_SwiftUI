@@ -40,9 +40,7 @@ struct DBLayout: View {
                 }
                 .frame(maxHeight: .infinity)
                 
-                if app.showCopying {
-                    DBTaskView()
-                }
+                DBTaskView()
             }
 
             DBTips()

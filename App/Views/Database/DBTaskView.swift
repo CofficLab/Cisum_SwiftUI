@@ -5,7 +5,7 @@ import SwiftUI
 struct DBTaskView: View {
     static var label = "📬 DBTaskView::"
 
-    @EnvironmentObject var appManager: AppManager
+    @EnvironmentObject var app: AppManager
     @EnvironmentObject var diskManager: DiskManager
     @Environment(\.modelContext) var context
 
@@ -13,7 +13,7 @@ struct DBTaskView: View {
 
     @Query(sort: \CopyTask.createdAt, animation: .default) var tasks: [CopyTask]
     var label: String { "\(Logger.isMain)\(Self.label)" }
-    
+
     init(verbose: Bool = false) {
         if verbose {
             os_log("\(Logger.isMain)\(Self.label)初始化")
@@ -21,24 +21,31 @@ struct DBTaskView: View {
     }
 
     var body: some View {
-        List(selection: $selection) {
-            if tasks.count > 0 {
-                Section(header: HStack {
-                    Text("正在复制 \(tasks.count)")
-                }, content: {
-                    if tasks.count <= 5 {
-                        ForEach(tasks) { task in
-                            RowTask(task)
-                        }
-                        .onDelete(perform: { indexSet in
-                            for i in indexSet {
-                                diskManager.deleteCopyTask(tasks[i])
+        ZStack {
+            if tasks.count > 0 && app.showCopying {
+                List(selection: $selection) {
+                    Section(header: HStack {
+                        Text("正在复制 \(tasks.count)")
+                    }, content: {
+                        if tasks.count <= 5 {
+                            ForEach(tasks) { task in
+                                RowTask(task)
                             }
-                        })
-                    }
-                })
+                            .onDelete(perform: { indexSet in
+                                for i in indexSet {
+                                    diskManager.deleteCopyTask(tasks[i])
+                                }
+                            })
+                        }
+                    })
+                }
             }
         }
+        .onChange(of: tasks.count, {
+            if tasks.count == 0 {
+                app.showCopying = false
+            }
+        })
     }
 }
 
