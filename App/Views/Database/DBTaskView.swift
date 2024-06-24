@@ -6,7 +6,7 @@ struct DBTaskView: View {
     static var label = "📬 DBTaskView::"
 
     @EnvironmentObject var app: AppManager
-    @EnvironmentObject var diskManager: DiskManager
+    @EnvironmentObject var diskManager: DataManager
     @Environment(\.modelContext) var context
 
     @State var selection: String = ""

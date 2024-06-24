@@ -4,9 +4,10 @@ import OSLog
 class DiskiCloud: ObservableObject, Disk {
     static var label = "☁️ DiskiCloud::"
     static let rootDirName = Config.audiosDirName
+    static let cloudRoot = Config.cloudDocumentsDir
     static var defaultRoot: URL {
         let fileManager = FileManager.default
-        let url = Config.cloudDocumentsDir.appendingPathComponent(Self.rootDirName)
+        let url = Self.cloudRoot.appendingPathComponent(Self.rootDirName)
 
         if !fileManager.fileExists(atPath: url.path) {
             do {
@@ -42,13 +43,12 @@ class DiskiCloud: ObservableObject, Disk {
         0
     }
     
-    var name: String { "iCloud 磁盘:\(root)" }
+    var name: String { "☁️\(root.relativeString.replacingOccurrences(of: Self.cloudRoot.relativeString, with: ""))" }
     var root: URL = DiskiCloud.defaultRoot
     var queue = DispatchQueue(label: "DiskiCloud", qos: .background)
     var fileManager = FileManager.default
     var cloudHandler = iCloudHandler()
     var bg = Config.bgQueue
-    var db = DB(Config.getContainer, reason: "DiskiCloud")
     var label: String { "\(Logger.isMain)\(Self.label)" }
     var verbose = true
     var onUpdated: (_ items: DiskFileGroup) -> Void = { items in
@@ -181,13 +181,13 @@ extension DiskiCloud {
             return
         }
         
-//        let downloadingCount = getDownloadingCount()
-//        
-//        if downloadingCount > 10 {
-//            os_log("\(self.label)Download \(url.lastPathComponent) -> Ignore ❄️❄️❄️ -> Downloading.count=\(downloadingCount)")
-//            
-//            return
-//        }
+        let downloadingCount = getDownloadingCount()
+        
+        if downloadingCount > 1000 {
+            os_log("\(self.label)Download \(url.lastPathComponent) -> Ignore ❄️❄️❄️ -> Downloading.count=\(downloadingCount)")
+            
+            return
+        }
         
         Task {
             do {
@@ -220,15 +220,20 @@ extension DiskiCloud {
 
 extension DiskiCloud {
     /// 监听存储Audio文件的文件夹
-    func watchAudiosFolder() async {
-        //os_log("\(Logger.isMain)\(self.label)WatchAudiosFolder")
+    func watch() async {
+        let verbose = true
+        let emoji = "🌞🌞🌞"
+        
+        if verbose {
+            os_log("\(Logger.isMain)\(self.label)\(emoji) Watch(\(self.name))")
+        }
 
         let queue = OperationQueue()
         queue.maxConcurrentOperationCount = 1
         let query = ItemQuery(queue: queue, url: self.root)
         let result = query.searchMetadataItems()
         for try await collection in result {
-            os_log("\(Logger.isMain)\(self.label)WatchAudiosFolder -> count=\(collection.items.count)")
+            os_log("\(Logger.isMain)\(self.label)\(emoji) Watch(\(collection.items.count))")
                 
             self.onUpdated(DiskFileGroup.fromMetaCollection(collection))
         }

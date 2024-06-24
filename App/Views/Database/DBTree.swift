@@ -6,7 +6,7 @@ struct DBTree: View {
     static var label = "📬 DBTree::"
 
     @EnvironmentObject var appManager: AppManager
-    @EnvironmentObject var diskManager: DiskManager
+    @EnvironmentObject var diskManager: DataManager
     
     @Binding var selection: DiskFile?
     @Binding var icon: String

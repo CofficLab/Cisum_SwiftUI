@@ -4,10 +4,10 @@ import OSLog
 class DiskLocal: ObservableObject, Disk {
     static let label = "🛖 DiskLocal::"
     static let rootDirName = Config.audiosDirName
-    static let localDocumentsDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+    static let localRoot = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
     static var defaultRoot: URL {
         let fileManager = FileManager.default
-        let url = Self.localDocumentsDir!.appendingPathComponent(Self.rootDirName)
+        let url = Self.localRoot.appendingPathComponent(Self.rootDirName)
 
         if !fileManager.fileExists(atPath: url.path) {
             do {
@@ -35,7 +35,7 @@ class DiskLocal: ObservableObject, Disk {
         return DiskLocal(root: subRoot)
     }
 
-    var name: String { "本地磁盘:\(root)" }
+    var name: String { "🛖\(root.absoluteString.replacingOccurrences(of: Self.localRoot.absoluteString, with: ""))" }
     var fileManager = FileManager.default
     var bg = Config.bgQueue
     var label: String { "\(Logger.isMain)\(Self.label)" }
@@ -160,8 +160,8 @@ extension DiskLocal {
 // MARK: Watch
 
 extension DiskLocal {
-    func watchAudiosFolder() async {
-         os_log("\(self.label)WatchAudiosFolder")
+    func watch() async {
+        os_log("\(self.label)WatchAudiosFolder")
 
         let presenter = FilePresenter(fileURL: self.root)
         

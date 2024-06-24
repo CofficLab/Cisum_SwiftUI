@@ -2,7 +2,7 @@ import SwiftUI
 import SwiftData
 
 struct BottomCopyState: View {
-    @EnvironmentObject var diskManager: DiskManager
+    @EnvironmentObject var diskManager: DataManager
     @EnvironmentObject var app: AppManager
     @Environment(\.modelContext) var context
     

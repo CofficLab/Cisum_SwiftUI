@@ -6,7 +6,7 @@ import SwiftData
 
 struct DBLayout: View {
     @EnvironmentObject var app: AppManager
-    @EnvironmentObject var diskManager: DiskManager
+    @EnvironmentObject var diskManager: DataManager
     @EnvironmentObject var db: DB
     
     @State var treeView = false

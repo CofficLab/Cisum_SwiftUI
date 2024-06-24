@@ -3,7 +3,7 @@ import SwiftData
 
 struct DBTips: View {
     @EnvironmentObject var app: AppManager
-    @EnvironmentObject var diskManager: DiskManager
+    @EnvironmentObject var diskManager: DataManager
     
     @Query(Audio.descriptorAll, animation: .default) var audios: [Audio]
 

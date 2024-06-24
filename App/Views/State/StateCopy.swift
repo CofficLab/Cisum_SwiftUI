@@ -2,7 +2,7 @@ import SwiftUI
 import SwiftData
 
 struct StateCopy: View {
-    @EnvironmentObject var diskManager: DiskManager
+    @EnvironmentObject var diskManager: DataManager
     
     @Query(sort: \CopyTask.createdAt, animation: .default) var tasks: [CopyTask]
     

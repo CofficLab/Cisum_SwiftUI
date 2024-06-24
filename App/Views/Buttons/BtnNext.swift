@@ -3,7 +3,7 @@ import SwiftUI
 
 struct BtnNext: View {
     @EnvironmentObject var appManager: AppManager
-    @EnvironmentObject var diskManager: DiskManager
+    @EnvironmentObject var diskManager: DataManager
     @EnvironmentObject var playMan: PlayMan
 
     var autoResize = false

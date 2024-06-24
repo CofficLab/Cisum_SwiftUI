@@ -3,7 +3,7 @@ import SwiftUI
 struct BtnDel: View {
     @EnvironmentObject var appManager: AppManager
     @EnvironmentObject var playMan: PlayMan
-    @EnvironmentObject var diskManager: DiskManager
+    @EnvironmentObject var diskManager: DataManager
 
     var disk: Disk { diskManager.disk }
     var assets: [PlayAsset]

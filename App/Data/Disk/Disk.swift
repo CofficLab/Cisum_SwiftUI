@@ -21,7 +21,7 @@ protocol Disk {
     
     func copyTo(url: URL) throws
     
-    func watchAudiosFolder() async
+    func watch() async
     
     func getDownloadingCount() -> Int
     

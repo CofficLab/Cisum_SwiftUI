@@ -5,7 +5,7 @@ import SwiftUI
 
 struct StateView: View {
     @EnvironmentObject var app: AppManager
-    @EnvironmentObject var diskManager: DiskManager
+    @EnvironmentObject var diskManager: DataManager
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var db: DB
     @Environment(\.modelContext) private var modelContext

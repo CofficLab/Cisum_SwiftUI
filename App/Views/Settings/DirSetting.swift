@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct DirSetting: View {
-    @EnvironmentObject var diskManager: DiskManager
+    @EnvironmentObject var diskManager: DataManager
     
     var body: some View {
         GroupBox {

@@ -147,7 +147,7 @@
 		F5675C352C22CB3C00326664 /* DBViewTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C342C22CB3C00326664 /* DBViewTree.swift */; };
 		F5675C3A2C2404D700326664 /* FileBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C392C2404D700326664 /* FileBox.swift */; };
 		F5675C3E2C252A3800326664 /* DBTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C3D2C252A3800326664 /* DBTree.swift */; };
-		F5675C402C25456300326664 /* DiskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C3F2C25456300326664 /* DiskManager.swift */; };
+		F5675C402C25456300326664 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C3F2C25456300326664 /* DataManager.swift */; };
 		F5675C422C254E8100326664 /* StorageExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C412C254E8100326664 /* StorageExt.swift */; };
 		F573B1882C0411E4004C34CC /* DeviceDataExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B1872C0411E4004C34CC /* DeviceDataExt.swift */; };
 		F573B18A2C0413DD004C34CC /* DeviceHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B1892C0413DD004C34CC /* DeviceHelper.swift */; };
@@ -297,7 +297,7 @@
 		F5675C342C22CB3C00326664 /* DBViewTree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBViewTree.swift; sourceTree = "<group>"; };
 		F5675C392C2404D700326664 /* FileBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileBox.swift; sourceTree = "<group>"; };
 		F5675C3D2C252A3800326664 /* DBTree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBTree.swift; sourceTree = "<group>"; };
-		F5675C3F2C25456300326664 /* DiskManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskManager.swift; sourceTree = "<group>"; };
+		F5675C3F2C25456300326664 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		F5675C412C254E8100326664 /* StorageExt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StorageExt.swift; sourceTree = "<group>"; };
 		F573B1872C0411E4004C34CC /* DeviceDataExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceDataExt.swift; sourceTree = "<group>"; };
 		F573B1892C0413DD004C34CC /* DeviceHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceHelper.swift; sourceTree = "<group>"; };
@@ -320,7 +320,7 @@
 			isa = PBXGroup;
 			children = (
 				0B1165EF2ABBCCB0005C5CBB /* AppManager.swift */,
-				F5675C3F2C25456300326664 /* DiskManager.swift */,
+				F5675C3F2C25456300326664 /* DataManager.swift */,
 				0B9FA2962BC80E51007B235A /* EventManager.swift */,
 				0BE6958F2BFE325400CEFFEB /* StoreManager.swift */,
 			);
@@ -903,7 +903,7 @@
 				0B901D882BB83BC3003AC253 /* FilePresenter.swift in Sources */,
 				0BB543F42BE8E38300D7A2B2 /* Duplicates.swift in Sources */,
 				0BBC157C2AB84C21006E82C4 /* HomeView.swift in Sources */,
-				F5675C402C25456300326664 /* DiskManager.swift in Sources */,
+				F5675C402C25456300326664 /* DataManager.swift in Sources */,
 				0B901D8A2BB83E28003AC253 /* ItemQuery.swift in Sources */,
 				0B6B8B9D2BBA4D0600F65B23 /* Coffee.swift in Sources */,
 				0B11365F2BF10A0100A71FE1 /* JobGroup.swift in Sources */,

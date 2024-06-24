@@ -2,7 +2,7 @@ import SwiftUI
 import OSLog
 import SwiftData
 
-class DiskManager: ObservableObject {
+class DataManager: ObservableObject {
     static var label = "💼 DiskManager::"
     
     @Published var appScene: AppScene
@@ -24,26 +24,36 @@ class DiskManager: ObservableObject {
         }
         
         if verbose {
-            os_log("\(Logger.isMain)\(Self.label)初始化，iCloud=\(Config.iCloudEnabled)")
-            os_log("\(Logger.isMain)\(Self.label)初始化，Disk=\(self.disk.name)")
+            os_log("\(Logger.isMain)\(Self.label)初始化(\(self.disk.name))")
         }
         
         Task {
-            /// 监听存储Audio文件的目录的变化，同步到数据库
-            disk.onUpdated = { items in
-                Task {
-                    await self.db.sync(items)
-                }
-            }
-
-            await disk.watchAudiosFolder()
+            self.watchDisk()
         }
     }
+    
+    // MARK: Disk
     
     func changeDisk(_ to: Disk) {
         os_log("\(self.label)更新磁盘为 \(to.name)")
         self.disk = to
+        watchDisk()
     }
+    
+    /// 监听存储Audio文件的目录的变化，同步到数据库
+    func watchDisk() {
+        disk.onUpdated = { items in
+            Task {
+                await self.db.sync(items)
+            }
+        }
+
+        Task {
+            await disk.watch()
+        }
+    }
+    
+    // MARK: Copy
     
     func deleteCopyTask(_ task: CopyTask) {
         Task {
@@ -74,6 +84,8 @@ class DiskManager: ObservableObject {
             }
         }
     }
+    
+    // MARK: Scene
     
     func chageScene(_ to: AppScene) {
         self.appScene = to

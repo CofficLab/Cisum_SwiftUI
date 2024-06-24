@@ -11,7 +11,7 @@ struct RootView<Content>: View where Content: View {
     var appManager = AppManager()
     var storeManager = StoreManager()
     var playMan: PlayMan = PlayMan()
-    var diskManager: DiskManager = DiskManager()
+    var diskManager: DataManager = DataManager()
     
     var disk: Disk { diskManager.disk }
 
@@ -84,10 +84,6 @@ struct RootView<Content>: View where Content: View {
     // MARK: 恢复上次播放的
 
     func restore(verbose: Bool = true) {
-        if verbose {
-            os_log("\(label)恢复上次播放")
-        }
-
         playMan.mode = PlayMode(rawValue: Config.currentMode) ?? playMan.mode
 
         if let currentAudioId = Config.currentAudio {

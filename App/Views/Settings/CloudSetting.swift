@@ -3,7 +3,7 @@ import SwiftUI
 
 struct CloudSetting: View {
     @EnvironmentObject var app: AppManager
-    @EnvironmentObject var diskManager: DiskManager
+    @EnvironmentObject var diskManager: DataManager
 
     @State private var iCloudLogged: Bool = false
     @State private var iCloudEnabled: Bool = false

@@ -3,7 +3,7 @@ import SwiftData
 import SwiftUI
 
 struct SceneView: View {
-    @EnvironmentObject var diskManager: DiskManager
+    @EnvironmentObject var diskManager: DataManager
     
     @State var select: AppScene = .Music
     

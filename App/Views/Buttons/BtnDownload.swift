@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct BtnDownload: View {
-    @EnvironmentObject var diskManager: DiskManager
+    @EnvironmentObject var diskManager: DataManager
     
     var asset: PlayAsset
     var disk: Disk { diskManager.disk }
