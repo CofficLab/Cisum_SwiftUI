@@ -34,14 +34,15 @@ struct BottomTile: View {
                         .frame(width: 5)
                         .scaleEffect(pressed ? 1.2 : 1)
                         .animation(.easeOut(duration: 0.2), value: pressed)
+                        .frame(maxHeight: .infinity)
+                        .padding(.horizontal)
+                        .background(hovered ? Color.yellow.opacity(0.5) : .clear)
+                        .onHover(perform: { hovering in
+                            self.hovered = hovering
+                        })
                 }
-            ).onHover(perform: { hovering in
-                self.hovered = hovering
-            })
+            )
         })
-        .frame(maxHeight: .infinity)
-        .padding(.horizontal)
-        .background(hovered ? Color.yellow.opacity(0.5) : .clear)
         
         // 注意测试ButtonStyle对这个操作的影响：
         //  其他App获取焦点
