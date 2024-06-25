@@ -362,7 +362,6 @@
 				0BB889D32AC04600004788D5 /* Buttons */,
 				0BBAD0702BBBDC22005834A3 /* Component */,
 				0BFDCE522BAFF279009198DD /* Database */,
-				0B8113AE2C29A7CB007CA124 /* DBTree */,
 				0BBAD06F2BBBDC0B005834A3 /* Layout */,
 				0BFDCE562BB013AC009198DD /* Playing */,
 				0BE93F2F2BFB8E1C00F25445 /* Settings */,
@@ -379,13 +378,6 @@
 				F573B1852C041175004C34CC /* Local */,
 			);
 			path = Database;
-			sourceTree = "<group>";
-		};
-		0B8113AE2C29A7CB007CA124 /* DBTree */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = DBTree;
 			sourceTree = "<group>";
 		};
 		0B8113AF2C29B2ED007CA124 /* Data */ = {

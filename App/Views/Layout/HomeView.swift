@@ -53,7 +53,7 @@ struct HomeView: View {
                     .background(.background)
                 }
                 
-                if tab == "DB" {
+                if tab == "DB" && Config.isDesktop {
                     BottomBar()
                 }
             }

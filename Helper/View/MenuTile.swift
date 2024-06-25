@@ -71,7 +71,11 @@ struct MenuTile<ID: Hashable>: View {
         }
 
         if hovered {
+            #if os(macOS)
             return Color(.controlAccentColor).opacity(0.1)
+            #else
+            return Color(.blue).opacity(0.1)
+            #endif
         }
 
         return Color.clear
@@ -155,7 +159,7 @@ struct MenuTile<ID: Hashable>: View {
         .cornerRadius(4)
         .overlay(
             RoundedRectangle(cornerRadius: 4)
-                .stroke(hovered ? Color(.controlAccentColor).opacity(0) : Color.clear, lineWidth: 1)
+                .stroke(hovered ? Color(.red).opacity(0) : Color.clear, lineWidth: 1)
         )
     }
 
