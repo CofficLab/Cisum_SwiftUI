@@ -27,7 +27,7 @@ struct MenuTile<ID: Hashable>: View {
         var color = Color(.blue)
         
         #if os(macOS)
-            var color = Color(.controlAccentColor)
+            color = Color(.controlAccentColor)
         #endif
 
         if selected == true {
