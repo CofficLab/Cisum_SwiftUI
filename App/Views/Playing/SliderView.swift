@@ -7,6 +7,7 @@ struct SliderView: View {
     
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var app: AppManager
+    @EnvironmentObject var dataManager: DataManager
 
     @State private var value: Double = 0
     @State private var isEditing: Bool = false
@@ -48,12 +49,12 @@ struct SliderView: View {
                 enable()
             }
             
-//            if Date.now.timeIntervalSince(lastDownloadTime) > 10, let asset = playMan.asset {
-//                lastDownloadTime = .now
-//                Task.detached(priority: .low) {
-//                    await db.downloadNextBatch(asset.url, count: 4, reason: "SliderView确保下一个准备好")
-//                }
-//            }
+            if Date.now.timeIntervalSince(lastDownloadTime) > 10, let asset = playMan.asset {
+                lastDownloadTime = .now
+                Task.detached(priority: .low) {
+                    await dataManager.disk.downloadNextBatch(asset.url, count: 4, reason: "SliderView确保下一个准备好")
+                }
+            }
         }
         .padding(.horizontal, 10)
     }
