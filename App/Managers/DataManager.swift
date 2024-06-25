@@ -7,6 +7,7 @@ class DataManager: ObservableObject {
 
     @Published var appScene: AppScene
     @Published var disk: any Disk
+    @Published var updating: DiskFileGroup = .empty
 
     var label: String { "\(Logger.isMain)\(Self.label)" }
     var isiCloudDisk: Bool { (disk as? DiskiCloud) != nil }
@@ -43,6 +44,10 @@ class DataManager: ObservableObject {
     /// 监听存储Audio文件的目录的变化，同步到数据库
     func watchDisk() {
         disk.onUpdated = { items in
+            DispatchQueue.main.async {
+                self.updating = items
+            }
+            
             Task {
                 await DB(Config.getContainer, reason: "DataManager.WatchDisk").sync(items)
             }

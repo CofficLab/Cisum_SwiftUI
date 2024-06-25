@@ -1,6 +1,8 @@
 import Foundation
 
 struct DiskFileGroup {
+    static var empty = DiskFileGroup(files: [], isFullLoad: true)
+    
     var files: [DiskFile]
     var isFullLoad: Bool
 
