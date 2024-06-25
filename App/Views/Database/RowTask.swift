@@ -14,21 +14,27 @@ struct RowTask: View {
     }
 
     var body: some View {
-        ZStack {
-            HStack {
-                Text(task.title)
-                Spacer()
-            }
-            .frame(height: 32)
-
-            if hovered {
+        VStack {
+            ZStack {
                 HStack {
+                    Text(task.title)
                     Spacer()
-                    BtnShowInFinder(url: task.url, autoResize: false)
-                        .labelStyle(.iconOnly)
-                    BtnDelTask(tasks: [task.id])
-                        .labelStyle(.iconOnly)
                 }
+                .frame(height: 32)
+
+                if hovered {
+                    HStack {
+                        Spacer()
+                        BtnShowInFinder(url: task.url, autoResize: false)
+                            .labelStyle(.iconOnly)
+                        BtnDelTask(tasks: [task.id])
+                            .labelStyle(.iconOnly)
+                    }
+                }
+            }
+            
+            HStack {
+                Text(task.message).font(.footnote)
             }
         }
         .onHover(perform: { hovered = $0 })

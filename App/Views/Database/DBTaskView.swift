@@ -29,8 +29,7 @@ struct DBTaskView: View {
               Text("正在复制 \(tasks.count)")
             },
             content: {
-              if tasks.count <= 5 {
-                ForEach(tasks) { task in
+                ForEach(tasks, id: \.url.relativeString) { task in
                   RowTask(task)
                 }
                 .onDelete(perform: { indexSet in
@@ -38,7 +37,6 @@ struct DBTaskView: View {
                     dataManager.deleteCopyTask(tasks[i])
                   }
                 })
-              }
             })
         }
       }
