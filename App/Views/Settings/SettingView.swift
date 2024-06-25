@@ -8,7 +8,10 @@ struct SettingView: View {
                     .padding(.horizontal)
                     .padding(.top)
 
-                DirSetting().padding(.horizontal)
+                if Config.isDesktop {
+                    DirSetting().padding(.horizontal)
+                }
+                
                 CloudSetting().padding(.horizontal)
                 VersionSetting().padding(.horizontal)
                 

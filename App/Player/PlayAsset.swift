@@ -41,6 +41,14 @@ struct PlayAsset: FileBox {
     }
 }
 
+// MARK: Size
+
+extension PlayAsset {
+    func getFileSizeReadable() -> String {
+        FileHelper.getFileSizeReadable(size ?? getFileSize())
+    }
+}
+
 extension PlayAsset {
     #if os(macOS)
         static var defaultImage = NSImage(named: "DefaultAlbum")!

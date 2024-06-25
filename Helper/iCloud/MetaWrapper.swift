@@ -31,7 +31,7 @@ struct MetaWrapper: Sendable {
     static var label = "📁 MetaWrapper::"
     
     let fileName: String?
-    let fileSize: Int?
+    let fileSize: Int64?
     let contentType: String?
     let isDirectory: Bool
     let url: URL?
@@ -78,20 +78,47 @@ struct MetaWrapper: Sendable {
         
         let downloadProgress = metadataItem.value(forAttribute: NSMetadataUbiquitousItemPercentDownloadedKey) as? Double ?? 0.0
         
+        // MARK: FileSize
+        
+        let fileSize = metadataItem.value(forAttribute: NSMetadataItemFSSizeKey) as? Int64
+        
         self.fileName = fileName
         self.isPlaceholder = isPlaceholder
         self.isDeleted = isDeleted
         self.isUpdated = isUpdated
-        self.fileSize = metadataItem.value(forAttribute: NSMetadataItemFSSizeKey) as? Int
+        self.fileSize = fileSize
         self.contentType = metadataItem.value(forAttribute: NSMetadataItemContentTypeKey) as? String
         self.isDirectory = (self.contentType == "public.folder")
         self.url = metadataItem.value(forAttribute: NSMetadataItemURLKey) as? URL
         self.downloadProgress = downloadProgress
         // 是否已经上传完毕(只有 0 和 100 两个状态)
         self.uploaded = (metadataItem.value(forAttribute: NSMetadataUbiquitousItemPercentUploadedKey) as? Double ?? 0.0) == 100
-        
+
         if verbose {
-            os_log("\(Logger.isMain)\(Self.label)Init -> \(fileName ?? "") -> PlaceHolder: \(isPlaceholder) -> \(downloadProgress)")
+            os_log("\(Logger.isMain)\(Self.label)Init -> \(fileName ?? "") -> PlaceHolder: \(isPlaceholder) -> \(downloadProgress) -> \(fileSize?.description ?? "")")
+ 
+            debugPrint(metadataItem: metadataItem)
         }
+    }
+}
+
+// MARK: Debug
+
+extension MetaWrapper {
+    func debugPrint(metadataItem: NSMetadataItem) {
+        metadataItem.attributes.forEach({
+            let key = $0
+            var value = metadataItem.value(forAttribute: $0) as? String ?? ""
+            
+            if key == NSMetadataItemURLKey {
+                value = (metadataItem.value(forAttribute: key) as? URL)?.path ?? "x"
+            }
+            
+            if key == NSMetadataItemFSSizeKey {
+                value = (metadataItem.value(forAttribute: NSMetadataItemFSSizeKey) as? Int)?.description ?? "x"
+            }
+            
+            os_log("    \(key):\(value)")
+        })
     }
 }

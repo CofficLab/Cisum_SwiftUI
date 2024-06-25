@@ -212,6 +212,7 @@ extension PlayMan {
         }
 
         if asset.isNotExists() {
+            os_log("\(self.label)不存在 \(asset.title) ⚠️⚠️⚠️")
             throw SmartError.NotExists
         }
 

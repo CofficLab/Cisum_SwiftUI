@@ -45,15 +45,18 @@ extension DB {
 
         do {
             try context.enumerate(FetchDescriptor<Audio>(), block: { audio in
-                if hashMap[audio.url] == nil {
+                if let item = hashMap[audio.url] {
+                    // 更新数据库记录
+                    audio.size = item.size
+                    
+                    // 记录存在哈希表中，同步完成，删除哈希表记录
+                    hashMap.removeValue(forKey: audio.url)
+                } else {
                     // 记录不存在哈希表中，数据库删除
                     if verbose {
                         os_log("\(self.label)删除 \(audio.title)")
                     }
                     context.delete(audio)
-                } else {
-                    // 记录存在哈希表中，同步完成，删除哈希表记录
-                    hashMap.removeValue(forKey: audio.url)
                 }
             })
 

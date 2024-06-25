@@ -6,6 +6,10 @@ import OSLog
     import AppKit
 #endif
 
+#if os(iOS)
+    import UIKit
+#endif
+
 class FileHelper {
     static var fileManager = FileManager.default
     static var label = "📃 FileHelper::"
@@ -18,7 +22,30 @@ class FileHelper {
 
     static func openFolder(url: URL) {
         #if os(macOS)
-            NSWorkspace.shared.open(url)
+        guard let dir = url else {
+          // 显示错误提示
+          let errorAlert = NSAlert()
+          errorAlert.messageText = "打开目录出错"
+          errorAlert.informativeText = "目录不存在"
+          errorAlert.alertStyle = .critical
+          errorAlert.addButton(withTitle: "好的")
+          errorAlert.runModal()
+
+          return
+        }
+
+        NSWorkspace.shared.open(dir)
+        #endif
+        
+        #if os(iOS)
+            // 检查 Files 应用程序是否可用
+            if UIApplication.shared.canOpenURL(url) {
+                // 打开 URL 并在 Files 应用程序中处理
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            } else {
+                // 如果 Files 应用程序不可用,可以显示一个错误提示或采取其他措施
+                print("无法打开文件")
+            }
         #endif
     }
 
@@ -46,7 +73,7 @@ extension FileHelper {
         return size
     }
 
-    static func getFileSize(_ url: URL) -> Int64 {
+    static func getFileSize(_ url: URL, verbose: Bool = false) -> Int64 {
         do {
             let attributes = try fileManager.attributesOfItem(atPath: url.path)
             if let fileSize = attributes[.size] as? Int64 {
@@ -56,7 +83,11 @@ extension FileHelper {
                 return 0
             }
         } catch {
-            os_log(.error, "Error: \(error.localizedDescription)")
+            if verbose {
+                os_log(.error, "\(Self.label)::GetFileSize \(error.localizedDescription)")
+                os_log(.error, "    \(url.path)")
+            }
+            
             return 0
         }
     }

@@ -18,6 +18,7 @@ struct DiskFile: FileBox, Hashable, Identifiable, Playable {
     var downloadProgress: Double = 1.0
     var index: Int = 0
     var contentType: String?
+    var size: Int64?
 
     var label: String {
         "\(Logger.isMain)\(Self.label)"
@@ -25,8 +26,12 @@ struct DiskFile: FileBox, Hashable, Identifiable, Playable {
 }
 
 extension DiskFile {
-    func toAudio() -> Audio {
-        Audio(url)
+    func toAudio(verbose: Bool = false) -> Audio {
+        if verbose {
+            os_log("\(self.label)ToAudio: size(\(size.debugDescription))")
+        }
+        
+        return Audio(url, size: size)
     }
 
     static func fromURL(_ url: URL) -> Self {
@@ -34,12 +39,19 @@ extension DiskFile {
     }
 
     static func fromMetaWrapper(_ meta: MetaWrapper) -> Self {
-        DiskFile(
+        let verbose = false
+        
+        if verbose {
+            os_log("\(Self.label)FromMetaWrapper -> \(meta.url?.path ?? "-")")
+        }
+        
+        return DiskFile(
             url: meta.url!,
             isDownloading: meta.isDownloading,
             isDeleted: meta.isDeleted,
             isFolder: meta.isDirectory,
-            downloadProgress: meta.downloadProgress
+            downloadProgress: meta.downloadProgress,
+            size: meta.fileSize
         )
     }
 }

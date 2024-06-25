@@ -100,8 +100,12 @@ extension Audio: Identifiable {
 // MARK: Transform
 
 extension Audio {
-    func toPlayAsset() -> PlayAsset {
-        PlayAsset(url: self.url, like: self.like, size: size)
+    func toPlayAsset(verbose: Bool = false) -> PlayAsset {
+        if verbose {
+            os_log("\(self.label)ToPlayAsset: size(\(self.size.debugDescription))")
+        }
+        
+        return PlayAsset(url: self.url, like: self.like, size: size)
     }
     
     static func fromPlayAsset(_ asset: PlayAsset) -> Audio {

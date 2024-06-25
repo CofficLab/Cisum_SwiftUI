@@ -1,7 +1,12 @@
 import Foundation
+import OSLog
 
 protocol FileBox {
     var url: URL { get }
+}
+
+extension FileBox {
+    var label: String { "🎁 FileBox::" }
 }
 
 // MARK: Meta
@@ -53,9 +58,18 @@ extension FileBox {
 // MARK: Exists
 
 extension FileBox {
-    // 未解决的问题：ios上文件APP中能看到，但FileManager.default.exits返回false
-    func isExists() -> Bool {
-        FileManager.default.fileExists(atPath: url.path)
+    func isExists(verbose: Bool = false) -> Bool {
+        // iOS模拟器，如果是iCloud云盘地址且未下载，FileManager.default.fileExists会返回false
+        
+        if verbose {
+            os_log("\(self.label)IsExists -> \(url.path)")
+        }
+        
+        if iCloudHelper.isCloudPath(url: url) {
+            return true
+        }
+        
+        return FileManager.default.fileExists(atPath: url.path)
     }
 
     func isNotExists() -> Bool {
