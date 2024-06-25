@@ -24,12 +24,10 @@ struct MenuTile<ID: Hashable>: View {
     }
 
     private var icon: some View {
+        var color = Color(.blue)
+        
         #if os(macOS)
             var color = Color(.controlAccentColor)
-        #endif
-
-        #if os(iOS)
-            var color = Color(.blue)
         #endif
 
         if selected == true {
