@@ -26,7 +26,7 @@ actor DB: ModelActor, ObservableObject {
 
     init(_ container: ModelContainer, reason: String, verbose: Bool = true) {
         if verbose {
-            let message = "\(Logger.isMain)\(Self.label)初始化 🚩 因为 \(reason)"
+            let message = "\(Logger.isMain)\(Self.label)🚩🚩🚩 初始化，因为 \(reason)"
             
             os_log("\(message)")
         }
