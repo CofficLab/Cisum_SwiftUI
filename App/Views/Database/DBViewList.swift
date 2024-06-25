@@ -6,6 +6,7 @@ struct DBViewList: View {
     static var label = "📬 DBList::"
 
     @EnvironmentObject var appManager: AppManager
+    @EnvironmentObject var playMan: PlayMan
     @Environment(\.modelContext) private var modelContext
 
     @Query(Audio.descriptorAll, animation: .default) var audios: [Audio]
@@ -24,38 +25,39 @@ struct DBViewList: View {
     }
 
     var body: some View {
-        ZStack {
-            VStack(spacing: 0) {
-                List(selection: $selection) {
-                    Section(header: HStack {
-                        HStack {
-                            Text("共 \(total.description)")
+        List(selection: $selection) {
+            Section(header: HStack {
+                HStack {
+                    Text("共 \(total.description)")
 
-                            if syncingTotal > syncingCurrent {
-                                Text("正在同步 \(syncingCurrent)/\(syncingTotal)")
-                            }
-                        }
-                        Spacer()
-                        if Config.isNotDesktop {
-                            BtnAdd()
-                                .font(.title2)
-                                .labelStyle(.iconOnly)
-                        }
-                    }, content: {
-                        ForEach(audios, id: \.self) { audio in
-                            DBRow(audio.toPlayAsset())
-                                .tag(audio as Audio?)
-                        }
-                    })
-                    .task {
-                        EventManager().onSyncing {
-                            self.syncingTotal = $0
-                            self.syncingCurrent = $1
-                        }
+                    if syncingTotal > syncingCurrent {
+                        Text("正在同步 \(syncingCurrent)/\(syncingTotal)")
                     }
+                }
+                Spacer()
+                if Config.isNotDesktop {
+                    BtnAdd()
+                        .font(.title2)
+                        .labelStyle(.iconOnly)
+                }
+            }, content: {
+                ForEach(audios, id: \.self) { audio in
+                    DBRow(audio.toPlayAsset())
+                        .tag(audio as Audio?)
+                }
+            })
+            .task {
+                EventManager().onSyncing {
+                    self.syncingTotal = $0
+                    self.syncingCurrent = $1
                 }
             }
         }
+        .onChange(of: selection, {
+            if let audio = selection {
+                playMan.play(audio.toPlayAsset(), reason: "点击了")
+            }
+        })
     }
 }
 

@@ -8,21 +8,6 @@ struct DBRow: View {
 
     var asset: PlayAsset
 
-    var isCurrent: Bool {
-        playMan.asset?.url == self.asset.url
-    }
-    var background: Color {
-        if isCurrent {
-            return Color.accentColor
-        }
-        
-        if hovered {
-            return Config.getBackground.opacity(0.9)
-        }
-
-        return .clear
-    }
-
     init(_ asset: PlayAsset) {
         self.asset = asset
     }
@@ -38,9 +23,6 @@ struct DBRow: View {
                 VStack(spacing: 0) {
                     HStack {
                         Text(asset.title)
-                        if isCurrent {
-                            Image(systemName: "speaker.wave.2")
-                        }
                         Spacer()
                     }
                     HStack {
@@ -61,7 +43,6 @@ struct DBRow: View {
                 HStack {
                     Spacer()
                     BtnShowInFinder(url: asset.url, autoResize: false)
-                    BtnPlay(asset: asset, autoResize: false)
                     BtnMore(asset: asset, autoResize: false)
                 }.labelStyle(.iconOnly)
             }

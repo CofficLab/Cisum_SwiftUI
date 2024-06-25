@@ -22,19 +22,7 @@ class FileHelper {
 
     static func openFolder(url: URL) {
         #if os(macOS)
-        guard let dir = url else {
-          // 显示错误提示
-          let errorAlert = NSAlert()
-          errorAlert.messageText = "打开目录出错"
-          errorAlert.informativeText = "目录不存在"
-          errorAlert.alertStyle = .critical
-          errorAlert.addButton(withTitle: "好的")
-          errorAlert.runModal()
-
-          return
-        }
-
-        NSWorkspace.shared.open(dir)
+        NSWorkspace.shared.open(url)
         #endif
         
         #if os(iOS)
