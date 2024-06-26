@@ -21,6 +21,7 @@ struct PlayAsset: FileBox {
     var like: Bool = false
     var size: Int64?
 
+    var notLike: Bool { !like }
     var label: String { "\(Logger.isMain)\(Self.label)" }
 
     func isSupported() -> Bool {

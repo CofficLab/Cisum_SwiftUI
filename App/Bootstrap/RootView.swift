@@ -7,9 +7,11 @@ struct RootView: View {
     @EnvironmentObject var dataManager: DataManager
     @EnvironmentObject var dbLocal: DB
 
-    var label: String { "\(Logger.isMain)✈️ RootView::" }
     var verbose: Bool = true
     var dbSynced = DBSynced(Config.getSyncedContainer)
+    
+    var label: String { "\(Logger.isMain)✈️ RootView::" }
+    var disk: Disk { dataManager.disk }
 
     var body: some View {
         Config.rootBackground
@@ -46,7 +48,7 @@ struct RootView: View {
                     priority: .background,
                     operation: {
                         if let url = await playMan.asset?.url {
-                            await dataManager.disk.downloadNextBatch(url, reason: "BootView")
+                            await disk.downloadNextBatch(url, reason: "BootView")
                         }
                     })
 
@@ -59,7 +61,7 @@ struct RootView: View {
     func onAppOpen() {
         Task {
             let uuid = Config.getDeviceId()
-            let audioCount = dataManager.disk.getTotal()
+            let audioCount = disk.getTotal()
 
             await dbSynced.saveDeviceData(uuid: uuid, audioCount: audioCount)
         }
@@ -115,7 +117,7 @@ struct RootView: View {
                 }
 
                 Task {
-                    dataManager.disk.download(next.url, reason: "Next")
+                    disk.download(next.url, reason: "Next")
                 }
             } else {
                 playMan.stop()
@@ -160,7 +162,7 @@ struct RootView: View {
                 }
 
                 Task {
-                    dataManager.disk.download(prev.url, reason: "Prev")
+                    disk.download(prev.url, reason: "Prev")
                 }
             } else {
                 playMan.stop()
@@ -204,13 +206,12 @@ struct RootView: View {
     }
 
     func toggleLike() {
-        if let url = playMan.asset?.url {
-            Task {
-                await self.dbLocal.toggleLike(url)
-            }
-
-            //            self.c.likeCommand.isActive = audio.dislike
-            //            self.c.dislikeCommand.isActive = audio.like
+        guard let asset = playMan.asset else {
+            return
+        }
+        
+        Task {
+            await self.dbLocal.toggleLike(asset.url)
         }
     }
 }

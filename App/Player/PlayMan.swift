@@ -143,6 +143,11 @@ extension PlayMan {
 // MARK: 播放控制
 
 extension PlayMan {
+    func toggleLike() {
+        self.asset?.like.toggle()
+        self.onToggleLike()
+    }
+    
     func goto(_ time: TimeInterval) {
         player.currentTime = time
         setPlayingInfo()
@@ -388,9 +393,15 @@ extension PlayMan {
             return .success
         }
 
-        c.likeCommand.addTarget { _ in
+        // MARK: Like
+        
+        c.likeCommand.addTarget { event in
             os_log("\(self.label)点击了喜欢按钮")
-            self.onToggleLike()
+            
+            self.toggleLike()
+            
+            self.c.likeCommand.isActive = self.asset?.like ?? false
+            self.c.dislikeCommand.isActive = self.asset?.notLike ?? true
 
             return .success
         }
