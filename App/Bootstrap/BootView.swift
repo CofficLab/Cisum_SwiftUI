@@ -44,4 +44,5 @@ struct BootView<Content>: View where Content: View {
 
 #Preview("App") {
     AppPreview()
+        .frame(height: 800)
 }
