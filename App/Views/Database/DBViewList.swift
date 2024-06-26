@@ -58,6 +58,11 @@ struct DBViewList: View {
                 playMan.play(audio.toPlayAsset(), reason: "点击了")
             }
         })
+        .onChange(of: playMan.asset?.url, {
+            selection = audios.first(where: {
+                $0.url == playMan.asset?.url
+            })
+        })
     }
 }
 
