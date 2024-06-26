@@ -8,7 +8,7 @@ struct TopView: View {
     var body: some View {
         HStack {
             if Config.isDebug {
-                SceneView()
+                SceneView().padding(.leading)
             }
 
             Spacer()
@@ -19,14 +19,16 @@ struct TopView: View {
                         BtnShowInFinder(url: asset.url, autoResize: false)
                     }
                     BtnDel(assets: [asset], autoResize: false)
-                }.padding(.trailing)
+                }
+                .labelStyle(.iconOnly)
+                .foregroundStyle(.white)
+                .padding(.trailing)
             }
         }
-        .labelStyle(.iconOnly)
-        .foregroundStyle(.white)
     }
 }
 
 #Preview {
-    TopView()
+    AppPreview()
+        .frame(height: 800)
 }

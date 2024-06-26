@@ -55,7 +55,11 @@ struct DBViewList: View {
         }
         .onChange(of: selection, {
             if let audio = selection {
-                playMan.play(audio.toPlayAsset(), reason: "点击了")
+                if playMan.isPlaying {
+                    playMan.play(audio.toPlayAsset(), reason: "点击了")
+                } else {
+                    playMan.prepare(audio.toPlayAsset())
+                }
             }
         })
         .onChange(of: playMan.asset?.url, {

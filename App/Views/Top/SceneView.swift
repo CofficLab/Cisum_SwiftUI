@@ -3,29 +3,30 @@ import SwiftData
 import SwiftUI
 
 struct SceneView: View {
-  @EnvironmentObject var dataManager: DataManager
+    @EnvironmentObject var dataManager: DataManager
 
-  @State var select: DiskScene = .Music
+    @State var select: DiskScene = .Music
+    @State var showSheet: Bool = false
 
-  var body: some View {
-    Picker("", selection: $select) {
-      ForEach(DiskScene.allCases) {
-        Text($0.title).tag($0)
-      }
+    var body: some View {
+        select.icon
+            .onTapGesture {
+                showSheet = true
+            }
+            .sheet(isPresented: $showSheet, content: {
+                Scenes(selection: $select, isPreseted: $showSheet)
+            })
+            .onAppear {
+                self.select = dataManager.appScene
+            }
+            .onChange(of: select,{
+                dataManager.chageScene(select)
+                showSheet = false
+            })
     }
-    .onAppear {
-      self.select = dataManager.appScene
-    }
-    .onChange(
-      of: select,
-      {
-        dataManager.chageScene(select)
-      })
-  }
 }
 
 #Preview("APP") {
-  RootView {
-    ContentView()
-  }.modelContainer(Config.getContainer)
+    AppPreview()
+        .frame(height: 800)
 }
