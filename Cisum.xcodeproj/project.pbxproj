@@ -154,6 +154,8 @@
 		F573B18A2C0413DD004C34CC /* DeviceHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B1892C0413DD004C34CC /* DeviceHelper.swift */; };
 		F573B18C2C042E08004C34CC /* DeviceExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B18B2C042E08004C34CC /* DeviceExt.swift */; };
 		F586DCD52C2BFE9E0078580B /* BtnOpenFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F586DCD42C2BFE9E0078580B /* BtnOpenFolder.swift */; };
+		F586DCD72C2C01FF0078580B /* FatalErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F586DCD62C2C01FF0078580B /* FatalErrorView.swift */; };
+		F586DCD92C2C05A60078580B /* StartUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F586DCD82C2C05A60078580B /* StartUpView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -486,9 +488,11 @@
 				0B1D5A8C2AB3E8290010DDF2 /* AppDelegate.swift */,
 				0BAB300D2AB814F70012D837 /* Boot.swift */,
 				0B5E51E42AD912B5000650CF /* DebugCommand.swift */,
+				F586DCD62C2C01FF0078580B /* FatalErrorView.swift */,
 				0B1165E82ABBC6C0005C5CBB /* LaunchView.swift */,
 				0B604AE72AD6384300929DD8 /* RootView.swift */,
 				0B220F742BB1BBDB0077255A /* SmartError.swift */,
+				F586DCD82C2C05A60078580B /* StartUpView.swift */,
 			);
 			path = Bootstrap;
 			sourceTree = "<group>";
@@ -812,6 +816,7 @@
 				F5511BB42C29118C00400900 /* DiskScene.swift in Sources */,
 				0B22158E2BB6BC8F000EB36F /* SmartProgress.swift in Sources */,
 				F573B18C2C042E08004C34CC /* DeviceExt.swift in Sources */,
+				F586DCD72C2C01FF0078580B /* FatalErrorView.swift in Sources */,
 				0B8C36A72BEA15E000C47567 /* AudioC.swift in Sources */,
 				0BB5871B2AD81AFA0071AEBD /* ViewHelper.swift in Sources */,
 				0BAB7C3F2AD3BBAA00C5AEB5 /* DBTips.swift in Sources */,
@@ -884,6 +889,7 @@
 				0BFB38852BCCD26F0055E38B /* BtnLike.swift in Sources */,
 				0B8C369F2BEA011700C47567 /* MetaWrapper.swift in Sources */,
 				0BBC15882AB9A473006E82C4 /* iCloudHelper.swift in Sources */,
+				F586DCD92C2C05A60078580B /* StartUpView.swift in Sources */,
 				0BAABEBA2BC8C5CB00DF4A31 /* JobPrepare.swift in Sources */,
 				0B901D862BB83BA2003AC253 /* iCloudHandler.swift in Sources */,
 				F545D1732C1FC9F0006A6AFA /* CloudSetting.swift in Sources */,
