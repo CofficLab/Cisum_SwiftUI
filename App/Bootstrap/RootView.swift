@@ -15,6 +15,10 @@ struct RootView: View {
 
     var body: some View {
         Config.rootBackground
+            // MARK: 版本升级操作
+            .onAppear {
+                Migrate().migrateTo25(dataManager: dataManager)
+            }
             .ignoresSafeArea()
             .toolbar(content: {
                 ToolbarItem(placement: .navigation, content: {

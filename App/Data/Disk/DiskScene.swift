@@ -17,6 +17,8 @@ enum DiskScene: String, CaseIterable, Identifiable {
             "music.note.list"
         case .AudioBook:
             "books.vertical.circle.fill"
+        case .KidsVideo:
+            "video.circle"
         }
     }
     
