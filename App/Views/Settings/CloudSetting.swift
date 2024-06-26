@@ -50,10 +50,10 @@ struct CloudSetting: View {
       {
         iCloudEnabled ? Config.enableiCloud() : Config.disableiCloud()
 
-        dataManager.changeDisk(Config.disk)
+//        dataManager.changeDisk(Config.disk)
 
         Task.detached(operation: {
-          DB.migrate()
+            await dataManager.migrate()
         })
       })
   }

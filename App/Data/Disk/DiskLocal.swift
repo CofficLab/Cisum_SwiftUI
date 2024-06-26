@@ -4,10 +4,16 @@ import OSLog
 class DiskLocal: ObservableObject, Disk {
     static let label = "🛖 DiskLocal::"
     static let rootDirName = Config.audiosDirName
-    static let localRoot = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-    static var defaultRoot: URL {
+    static let localRoot = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+    
+    static func getMountedURL() -> URL? {
         let fileManager = FileManager.default
-        let url = Self.localRoot.appendingPathComponent(Self.rootDirName)
+        
+        guard let localRoot = Self.localRoot else {
+            return nil
+        }
+        
+        let url = localRoot.appendingPathComponent(Self.rootDirName)
 
         if !fileManager.fileExists(atPath: url.path) {
             do {
@@ -19,23 +25,7 @@ class DiskLocal: ObservableObject, Disk {
 
         return url
     }
-    
-    static func makeSub(_ subDirName: String) -> any Disk {
-        let fileManager = FileManager.default
-        let subRoot = DiskLocal.defaultRoot.appendingPathComponent(subDirName)
-        
-        if !fileManager.fileExists(atPath: subRoot.path) {
-            do {
-                try fileManager.createDirectory(at: subRoot, withIntermediateDirectories: true)
-            } catch {
-                os_log(.error, "\(self.label)创建根目录失败 -> \(error.localizedDescription)")
-            }
-        }
 
-        return DiskLocal(root: subRoot)
-    }
-
-    var name: String { "🛖\(root.absoluteString.replacingOccurrences(of: Self.localRoot.absoluteString, with: ""))" }
     var fileManager = FileManager.default
     var bg = Config.bgQueue
     var label: String { "\(Logger.isMain)\(Self.label)" }
@@ -45,7 +35,7 @@ class DiskLocal: ObservableObject, Disk {
         os_log("\(Logger.isMain)\(DiskiCloud.label)updated with items.count=\(collection.count)")
     }
     
-    init(root: URL = DiskLocal.defaultRoot) {
+    init(root: URL) {
         self.root = root
     }
     

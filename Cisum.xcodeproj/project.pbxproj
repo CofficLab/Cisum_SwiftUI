@@ -25,7 +25,7 @@
 		0B1D5A842AB302610010DDF2 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1D5A6E2AB302600010DDF2 /* Extensions.swift */; };
 		0B1D5A872AB302610010DDF2 /* BackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1D5A722AB302600010DDF2 /* BackgroundView.swift */; };
 		0B1D5A882AB302610010DDF2 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1D5A732AB302600010DDF2 /* ContentView.swift */; };
-		0B1D5A8A2AB302610010DDF2 /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1D5A752AB302600010DDF2 /* AppConfig.swift */; };
+		0B1D5A8A2AB302610010DDF2 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1D5A752AB302600010DDF2 /* Config.swift */; };
 		0B1D5A8D2AB3E8290010DDF2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1D5A8C2AB3E8290010DDF2 /* AppDelegate.swift */; };
 		0B220F6D2BB051140077255A /* StateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B220F6C2BB051140077255A /* StateView.swift */; };
 		0B220F6F2BB051F50077255A /* TitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B220F6E2BB051F50077255A /* TitleView.swift */; };
@@ -128,7 +128,6 @@
 		F507F5172C09541B00CB9A3A /* DeviceSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = F507F5162C09541B00CB9A3A /* DeviceSetting.swift */; };
 		F53BE0322C202420003CBA29 /* DiskFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53BE0312C202420003CBA29 /* DiskFile.swift */; };
 		F53BE0342C2024BE003CBA29 /* DiskFileGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53BE0332C2024BE003CBA29 /* DiskFileGroup.swift */; };
-		F53BE0362C202E67003CBA29 /* JobMigrate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53BE0352C202E67003CBA29 /* JobMigrate.swift */; };
 		F54522252BFF3C780027CF55 /* Products.storekit in Resources */ = {isa = PBXBuildFile; fileRef = F54522242BFF3C770027CF55 /* Products.storekit */; };
 		F54522272BFF3CCE0027CF55 /* Products.plist in Resources */ = {isa = PBXBuildFile; fileRef = F54522262BFF3CCE0027CF55 /* Products.plist */; };
 		F545D1732C1FC9F0006A6AFA /* CloudSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = F545D1722C1FC9F0006A6AFA /* CloudSetting.swift */; };
@@ -154,6 +153,7 @@
 		F573B1882C0411E4004C34CC /* DeviceDataExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B1872C0411E4004C34CC /* DeviceDataExt.swift */; };
 		F573B18A2C0413DD004C34CC /* DeviceHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B1892C0413DD004C34CC /* DeviceHelper.swift */; };
 		F573B18C2C042E08004C34CC /* DeviceExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B18B2C042E08004C34CC /* DeviceExt.swift */; };
+		F586DCD52C2BFE9E0078580B /* BtnOpenFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F586DCD42C2BFE9E0078580B /* BtnOpenFolder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -176,7 +176,7 @@
 		0B1D5A6E2AB302600010DDF2 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		0B1D5A722AB302600010DDF2 /* BackgroundView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundView.swift; sourceTree = "<group>"; };
 		0B1D5A732AB302600010DDF2 /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		0B1D5A752AB302600010DDF2 /* AppConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppConfig.swift; sourceTree = "<group>"; };
+		0B1D5A752AB302600010DDF2 /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		0B1D5A8B2AB305D70010DDF2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0B1D5A8C2AB3E8290010DDF2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0B220F6C2BB051140077255A /* StateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateView.swift; sourceTree = "<group>"; };
@@ -280,7 +280,6 @@
 		F507F5162C09541B00CB9A3A /* DeviceSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceSetting.swift; sourceTree = "<group>"; };
 		F53BE0312C202420003CBA29 /* DiskFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskFile.swift; sourceTree = "<group>"; };
 		F53BE0332C2024BE003CBA29 /* DiskFileGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskFileGroup.swift; sourceTree = "<group>"; };
-		F53BE0352C202E67003CBA29 /* JobMigrate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobMigrate.swift; sourceTree = "<group>"; };
 		F54522242BFF3C770027CF55 /* Products.storekit */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Products.storekit; sourceTree = "<group>"; };
 		F54522262BFF3CCE0027CF55 /* Products.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Products.plist; sourceTree = "<group>"; };
 		F545D1722C1FC9F0006A6AFA /* CloudSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudSetting.swift; sourceTree = "<group>"; };
@@ -306,6 +305,7 @@
 		F573B1872C0411E4004C34CC /* DeviceDataExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceDataExt.swift; sourceTree = "<group>"; };
 		F573B1892C0413DD004C34CC /* DeviceHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceHelper.swift; sourceTree = "<group>"; };
 		F573B18B2C042E08004C34CC /* DeviceExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceExt.swift; sourceTree = "<group>"; };
+		F586DCD42C2BFE9E0078580B /* BtnOpenFolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnOpenFolder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -475,6 +475,7 @@
 				0B1126292AC6F7B20093DFFA /* BtnToggleDB.swift */,
 				0BBA42202AC1802C00C0B977 /* ButtonCancelSelected.swift */,
 				F5511BBF2C2953C200400900 /* BtnToggleCopying.swift */,
+				F586DCD42C2BFE9E0078580B /* BtnOpenFolder.swift */,
 			);
 			path = Buttons;
 			sourceTree = "<group>";
@@ -487,6 +488,7 @@
 				0B5E51E42AD912B5000650CF /* DebugCommand.swift */,
 				0B1165E82ABBC6C0005C5CBB /* LaunchView.swift */,
 				0B604AE72AD6384300929DD8 /* RootView.swift */,
+				0B220F742BB1BBDB0077255A /* SmartError.swift */,
 			);
 			path = Bootstrap;
 			sourceTree = "<group>";
@@ -558,7 +560,7 @@
 		0BEBCBAC2B352A2D00F2116E /* Config */ = {
 			isa = PBXGroup;
 			children = (
-				0B1D5A752AB302600010DDF2 /* AppConfig.swift */,
+				0B1D5A752AB302600010DDF2 /* Config.swift */,
 				F545D1742C1FCAD0006A6AFA /* CloudExt.swift */,
 				0B8C36AF2BEC6E6500C47567 /* DBExt.swift */,
 				0B8C36AD2BEC6E3E00C47567 /* DevExt.swift */,
@@ -567,7 +569,6 @@
 				0BB543F72BE9C64C00D7A2B2 /* PathExt.swift */,
 				0B19D9552C062F400057D8DB /* ProExt.swift */,
 				0B8C36B12BEC6E8D00C47567 /* QueueExt.swift */,
-				0B220F742BB1BBDB0077255A /* SmartError.swift */,
 				0B8C36AB2BEC6E0F00C47567 /* StateExt.swift */,
 				F5675C412C254E8100326664 /* StorageExt.swift */,
 				F545D1762C1FCC86006A6AFA /* UserExt.swift */,
@@ -682,7 +683,6 @@
 				0B240BD42BF30730004A5944 /* JobExt.swift */,
 				0B11365A2BEFABC700A71FE1 /* JobGetCover.swift */,
 				0B11365E2BF10A0100A71FE1 /* JobGroup.swift */,
-				F53BE0352C202E67003CBA29 /* JobMigrate.swift */,
 				0BAABEB92BC8C5CB00DF4A31 /* JobPrepare.swift */,
 				0BD056882BC6192D00EBC7C4 /* JobSync.swift */,
 				0BAABEB22BC79C9F00DF4A31 /* TaskExt.swift */,
@@ -791,7 +791,6 @@
 				0BBC15912ABAC19F006E82C4 /* BtnPrev.swift in Sources */,
 				F573B18A2C0413DD004C34CC /* DeviceHelper.swift in Sources */,
 				0B604AE82AD6384300929DD8 /* RootView.swift in Sources */,
-				F53BE0362C202E67003CBA29 /* JobMigrate.swift in Sources */,
 				0B8C36B62BEDAB5E00C47567 /* BtnMore.swift in Sources */,
 				0BAABEC32BC939D000DF4A31 /* LayoutView.swift in Sources */,
 				0BAABEB32BC79C9F00DF4A31 /* TaskExt.swift in Sources */,
@@ -816,6 +815,7 @@
 				0B8C36A72BEA15E000C47567 /* AudioC.swift in Sources */,
 				0BB5871B2AD81AFA0071AEBD /* ViewHelper.swift in Sources */,
 				0BAB7C3F2AD3BBAA00C5AEB5 /* DBTips.swift in Sources */,
+				F586DCD52C2BFE9E0078580B /* BtnOpenFolder.swift in Sources */,
 				0B5786342BCB8DC00064F66A /* PlayView.swift in Sources */,
 				0B1D5A882AB302610010DDF2 /* ContentView.swift in Sources */,
 				F5675C422C254E8100326664 /* StorageExt.swift in Sources */,
@@ -870,7 +870,7 @@
 				0BD056892BC6192D00EBC7C4 /* JobSync.swift in Sources */,
 				0B1165E92ABBC6C0005C5CBB /* LaunchView.swift in Sources */,
 				0B4DFC722BD740B4001CEF32 /* Device.swift in Sources */,
-				0B1D5A8A2AB302610010DDF2 /* AppConfig.swift in Sources */,
+				0B1D5A8A2AB302610010DDF2 /* Config.swift in Sources */,
 				F507F5152C04688D00CB9A3A /* BtnBuy.swift in Sources */,
 				0B220F752BB1BBDB0077255A /* SmartError.swift in Sources */,
 				0BB889DB2AC06C54004788D5 /* DB.swift in Sources */,

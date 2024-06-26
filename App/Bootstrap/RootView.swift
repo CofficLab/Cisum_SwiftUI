@@ -11,12 +11,18 @@ struct RootView<Content>: View where Content: View {
   var appManager = AppManager()
   var storeManager = StoreManager()
   var playMan: PlayMan = PlayMan()
-  var dataManager: DataManager = DataManager()
+  var dataManager: DataManager
 
   var disk: Disk { dataManager.disk }
 
   init(@ViewBuilder content: () -> Content) {
     self.content = content()
+      
+      do {
+          try self.dataManager = DataManager()
+      } catch let e {
+          fatalError()
+      }
   }
 
   var body: some View {

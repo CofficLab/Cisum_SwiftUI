@@ -1,9 +1,11 @@
 import Foundation
+import OSLog
 
 protocol Disk {
-    static func makeSub(_ subDirName: String) -> Disk
+    static var label: String { get }
+    static func make(_ subDirName: String) -> Disk?
+    static func getMountedURL() -> URL?
     
-    var name: String { get }
     var root: URL { get }
     var onUpdated: (_ items: DiskFileGroup) -> Void { get set }
     
@@ -37,7 +39,16 @@ protocol Disk {
 }
 
 extension Disk {
-    /// 下载当前的和当前的后面的X个
+    var name: String {
+        Self.label
+    }
+    
+    func getMountedURL() -> URL? {
+        Self.getMountedURL()
+    }
+    
+    // MARK: 下载
+    
     func downloadNextBatch(_ url: URL, count: Int = 6, reason: String) {
         var currentIndex = 0
         var currentURL: URL = url
@@ -52,7 +63,31 @@ extension Disk {
         }
     }
     
-    func makeSub(_ subDirName: String) -> Disk {
-        Self.makeSub(subDirName)
+    // MARK: 创建磁盘
+    
+    static func make(_ subDirName: String) -> (any Disk)? {
+        let fileManager = FileManager.default
+        
+        guard let mountedURL = Self.getMountedURL() else {
+            return nil
+        }
+        
+        let subRoot = mountedURL.appendingPathComponent(subDirName)
+        
+        if !fileManager.fileExists(atPath: subRoot.path) {
+            do {
+                try fileManager.createDirectory(at: subRoot, withIntermediateDirectories: true)
+            } catch {
+                os_log(.error, "\(self.label)创建Disk失败 -> \(error.localizedDescription)")
+                
+                return nil
+            }
+        }
+
+        return DiskiCloud(root: subRoot)
+    }
+    
+    func make(_ subDirName: String) -> (any Disk)? {
+        Self.make(subDirName)
     }
 }

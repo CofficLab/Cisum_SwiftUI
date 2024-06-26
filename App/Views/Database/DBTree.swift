@@ -71,32 +71,6 @@ struct DBTree: View {
   }
 }
 
-#Preview("DBTree-Local") {
-  RootView {
-    DBTree(
-      selection: Binding.constant(DiskFile.home),
-      icon: Binding.constant(""),
-      file: DiskLocal().getRoot()
-    )
-    .background(.background)
-    .padding()
-  }
-  .frame(height: 600)
-}
-
-#Preview("DBTree-iCloud") {
-  RootView {
-    DBTree(
-      selection: Binding.constant(DiskFile.home),
-      icon: Binding.constant(""),
-      file: DiskiCloud().getRoot()
-    )
-    .background(.background)
-    .padding()
-  }
-  .frame(height: 600)
-}
-
 #Preview {
   LayoutView(width: 400, height: 800)
     .frame(height: 800)

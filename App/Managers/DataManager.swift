@@ -13,16 +13,23 @@ class DataManager: ObservableObject {
     var isiCloudDisk: Bool { (disk as? DiskiCloud) != nil }
     var db: DB = DB(Config.getContainer, reason: "dataManager")
 
-    init() {
+    init() throws {
         let verbose = true
         let appScene = Config.getCurrentScene()
+        var disk: Disk? = nil
         self.appScene = appScene
 
         if Config.iCloudEnabled {
-            disk = DiskiCloud.makeSub(appScene.folderName)
+            disk = DiskiCloud.make(appScene.folderName)
         } else {
-            disk = DiskLocal.makeSub(appScene.folderName)
+            disk = DiskLocal.make(appScene.folderName)
         }
+        
+        guard let disk = disk else {
+            throw SmartError.NoDisk
+        }
+        
+        self.disk = disk
 
         if verbose {
             os_log("\(Logger.isMain)\(Self.label)初始化(\(self.disk.name))")
@@ -92,9 +99,14 @@ class DataManager: ObservableObject {
 
     // MARK: Scene
 
-    func chageScene(_ to: DiskScene) {
+    func chageScene(_ to: DiskScene) throws {
         appScene = to
-        changeDisk(disk.makeSub(to.folderName))
+        
+        guard let disk = disk.make(to.folderName) else {
+            throw SmartError.NoDisk
+        }
+        
+        changeDisk(disk)
 
         Config.setCurrentScene(to)
     }
@@ -106,6 +118,58 @@ class DataManager: ObservableObject {
             })
             
             callback(assets)
+        }
+    }
+}
+
+// MARK: Migrate
+
+extension DataManager {
+    func migrate() {
+        guard let localMountedURL = DiskLocal.getMountedURL() else {
+            return
+        }
+        
+        guard let cloudMoutedURL = DiskiCloud.getMountedURL() else {
+            return
+        }
+        
+        let localDisk = DiskLocal(root: localMountedURL)
+        let cloudDisk = DiskiCloud(root: cloudMoutedURL)
+
+        if Config.iCloudEnabled {
+            os_log("\(Self.label)将文件从 LocalDisk 移动到 CloudDisk 🚛🚛🚛")
+            moveAudios(localDisk, cloudDisk)
+        } else {
+            os_log("\(Self.label)将文件从 CloudDisk 移动到 LocalDisk 🚛🚛🚛")
+            moveAudios(cloudDisk, localDisk)
+        }
+    }
+    
+    func moveAudios(_ from: any Disk, _ to: any Disk, verbose: Bool = true) {
+        Task.detached(priority: .low) {
+            if verbose {
+                os_log("\(Self.label)将文件从 \(from.root.path) 移动到 \(to.root.path)")
+            }
+            
+            let fileManager = FileManager.default
+            do {
+                let files = try fileManager.contentsOfDirectory(atPath: from.root.path).filter({
+                    !$0.hasSuffix(".DS_Store")
+                })
+                
+                for file in files {
+                    let sourceURL = URL(fileURLWithPath: from.root.path).appendingPathComponent(file)
+                    let destnationURL = to.makeURL(file)
+                    
+                    if verbose {
+                        os_log("\(Self.label)移动 \(sourceURL.lastPathComponent)")
+                    }
+                    from.moveFile(at: sourceURL, to: destnationURL)
+                }
+            } catch {
+                os_log("Error: \(error)")
+            }
         }
     }
 }

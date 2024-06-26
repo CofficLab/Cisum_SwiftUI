@@ -5,46 +5,34 @@ class DiskiCloud: ObservableObject, Disk {
     static var label = "☁️ DiskiCloud::"
     static let rootDirName = Config.audiosDirName
     static let cloudRoot = Config.cloudDocumentsDir
-    static var defaultRoot: URL {
+
+    // MARK: 磁盘的挂载目录
+
+    static func getMountedURL() -> URL? {
         let fileManager = FileManager.default
-        let url = Self.cloudRoot.appendingPathComponent(Self.rootDirName)
+        
+        guard let cloudRoot = Self.cloudRoot else {
+            os_log(.error, "\(self.label)无法获取根目录，因为 CloudRoot=nil")
+            
+            return nil
+        }
+        
+        let url = cloudRoot.appendingPathComponent(Self.rootDirName)
 
         if !fileManager.fileExists(atPath: url.path) {
             do {
                 try fileManager.createDirectory(at: url, withIntermediateDirectories: true)
-            } catch {
-                os_log("\(Logger.isMain)\(Self.label)创建根目录失败 -> \(error.localizedDescription)")
+            } catch let e {
+                os_log(.error, "\(self.label)创建Disk根目录失败 -> \(e.localizedDescription)")
+                
+                return nil
             }
         }
 
         return url
     }
     
-    static func makeSub(_ subDirName: String) -> any Disk {
-        let fileManager = FileManager.default
-        let subRoot = DiskiCloud.defaultRoot.appendingPathComponent(subDirName)
-        
-        if !fileManager.fileExists(atPath: subRoot.path) {
-            do {
-                try fileManager.createDirectory(at: subRoot, withIntermediateDirectories: true)
-            } catch {
-                os_log(.error, "\(self.label)创建根目录失败 -> \(error.localizedDescription)")
-            }
-        }
-
-        return DiskiCloud(root: subRoot)
-    }
-    
-    func next(_ url: URL) -> DiskFile? {
-        nil
-    }
-    
-    func getTotal() -> Int {
-        0
-    }
-    
-    var name: String { "☁️\(root.relativeString.replacingOccurrences(of: Self.cloudRoot.relativeString, with: ""))" }
-    var root: URL = DiskiCloud.defaultRoot
+    var root: URL
     var queue = DispatchQueue(label: "DiskiCloud", qos: .background)
     var fileManager = FileManager.default
     var cloudHandler = iCloudHandler()
@@ -55,7 +43,7 @@ class DiskiCloud: ObservableObject, Disk {
         os_log("\(Logger.isMain)\(DiskiCloud.label)updated with items.count=\(items.count)")
     }
     
-    init(root: URL = DiskiCloud.defaultRoot) {
+    init(root: URL) {
         self.root = root
     }
 }
@@ -65,6 +53,14 @@ class DiskiCloud: ObservableObject, Disk {
 extension DiskiCloud {
     func getRoot() -> DiskFile {
         DiskFile.fromURL(root)
+    }
+    
+    func next(_ url: URL) -> DiskFile? {
+        nil
+    }
+    
+    func getTotal() -> Int {
+        0
     }
 }
 
@@ -225,7 +221,7 @@ extension DiskiCloud {
         let emoji = "🌞🌞🌞"
         
         if verbose {
-            os_log("\(Logger.isMain)\(self.label)\(emoji) Watch(\(self.name))")
+            os_log("\(Logger.isMain)\(self.label)\(emoji) Watch(\(self.root.relativeString))")
         }
 
         let queue = OperationQueue()

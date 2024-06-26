@@ -20,7 +20,7 @@ struct SceneView: View {
                 self.select = dataManager.appScene
             }
             .onChange(of: select,{
-                dataManager.chageScene(select)
+                try? dataManager.chageScene(select)
                 showSheet = false
             })
     }

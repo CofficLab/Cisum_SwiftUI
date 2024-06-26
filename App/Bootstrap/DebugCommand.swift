@@ -12,7 +12,6 @@ struct DebugCommand: Commands {
             Button("打开文档目录") { openUrl(Config.localDocumentsDir) }
             Button("打开数据库目录") { openUrl(Config.localDocumentsDir) }
             Button("打开iCloud Documents") { openUrl(Config.cloudDocumentsDir) }
-            Button("打开音频目录") { openUrl(Config.disk.root) }
             Button("打开封面图目录") { openUrl(Config.coverDir) }
         }
         #endif

@@ -10,12 +10,12 @@ extension Config {
     static let containerDir = fileManager.url(forUbiquityContainerIdentifier: containerIdentifier)
     
     // MARK: iCloud 容器里的 Documents
-    static var cloudDocumentsDir: URL {
+    static var cloudDocumentsDir: URL? {
         if let c = containerDir {
             return c.appending(component: "Documents")
         }
 
-        fatalError()
+        return nil
     }
 
     static var coverDir: URL {
