@@ -26,7 +26,7 @@ struct Scenes: View {
 
 #Preview("APP") {
     BootView {
-        Scenes(selection: Binding.constant(.Baby), isPreseted: Binding.constant(false))
+        Scenes(selection: Binding.constant(.KidsAudio), isPreseted: Binding.constant(false))
     }
     .frame(height: 800)
 }

@@ -36,7 +36,7 @@ extension Config {
     static var currentScene: String = DiskScene.Music.rawValue
     
     static func getCurrentScene() -> DiskScene {
-        DiskScene.init(rawValue: Config.currentScene)!
+        DiskScene.init(rawValue: Config.currentScene) ?? .Music
     }
     
     static func setCurrentScene(_ scene: DiskScene) {
