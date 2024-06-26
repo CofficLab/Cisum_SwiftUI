@@ -4,6 +4,7 @@ import SwiftUI
 
 struct SceneView: View {
     @EnvironmentObject var dataManager: DataManager
+    @EnvironmentObject var app: AppManager
 
     @State var select: DiskScene = .Music
     @State var showSheet: Bool = false
@@ -18,11 +19,27 @@ struct SceneView: View {
             })
             .onAppear {
                 self.select = dataManager.appScene
+                setDBViewType()
             }
             .onChange(of: select,{
                 try? dataManager.chageScene(select)
                 showSheet = false
+                
+                setDBViewType()
             })
+    }
+    
+    func setDBViewType() {
+        switch select {
+        case .Music:
+            app.dbViewType = .List
+        case .AudioBook:
+            app.dbViewType = .Tree
+        case .KidsAudio:
+            app.dbViewType = .Tree
+        case .KidsVideo:
+            app.dbViewType = .Tree
+        }
     }
 }
 
