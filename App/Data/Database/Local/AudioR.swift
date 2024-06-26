@@ -280,3 +280,21 @@ extension DB {
         return time
     }
 }
+
+// MARK: Children
+
+extension DB {
+    func getChildren(_ audio: Audio) -> [Audio] {
+        do {
+            let result = try context.fetch(Audio.descriptorAll).filter({
+                $0.url.deletingLastPathComponent() == audio.url
+            })
+            
+            return result
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
+        
+        return []
+    }
+}

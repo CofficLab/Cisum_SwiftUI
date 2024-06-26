@@ -98,6 +98,16 @@ class DataManager: ObservableObject {
 
         Config.setCurrentScene(to)
     }
+    
+    func getChildren(_ asset: PlayAsset, _ callback: @escaping ([PlayAsset]) -> Void) {
+        Task {
+            let assets = await db.getChildren(Audio(asset.url)).map({
+                $0.toPlayAsset()
+            })
+            
+            callback(assets)
+        }
+    }
 }
 
 #Preview {

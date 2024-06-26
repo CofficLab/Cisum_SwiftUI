@@ -7,7 +7,7 @@ struct TopView: View {
 
     var body: some View {
         HStack {
-            if Config.isDebug && false {
+            if Config.isDebug {
                 SceneView()
             }
 

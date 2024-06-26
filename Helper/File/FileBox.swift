@@ -1,7 +1,7 @@
 import Foundation
 import OSLog
 
-protocol FileBox {
+protocol FileBox: Identifiable {
     var url: URL { get }
 }
 

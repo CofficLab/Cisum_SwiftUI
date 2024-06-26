@@ -10,6 +10,8 @@ import SwiftUI
  */
 
 struct PlayAsset: FileBox {
+    var id: URL { self.url }
+    
     static var label = "🪖 PlayAsset::"
 
     let fileManager = FileManager.default
