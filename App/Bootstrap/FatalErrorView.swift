@@ -23,9 +23,11 @@ struct FatalErrorView: View {
 
                 Spacer()
 
+                #if os(macOS)
                 Button("退出") {
                     NSApplication.shared.terminate(self)
                 }.controlSize(.extraLarge)
+                #endif
 
                 Spacer()
             }
