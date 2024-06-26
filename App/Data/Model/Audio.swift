@@ -51,13 +51,20 @@ class Audio: FileBox {
     var verbose: Bool { Self.verbose }
     var dislike: Bool { !like }
     var label: String { "\(Logger.isMain)\(Self.label)" }
+    var children: [Audio]? {
+        if url == .applicationDirectory {
+            return nil
+        }
+        
+        return [Audio(.applicationDirectory)]
+    }
 
     init(_ url: URL,
          size: Int64? = nil,
          title: String? = nil,
          identifierKey: String? = nil,
-         contentType: String? = nil)
-    {
+         contentType: String? = nil
+    ) {
         if Self.verbose {
             os_log("\(Logger.isMain)\(Self.label)Init -> \(url.lastPathComponent)")
             print(" Title: \(title ?? "")")

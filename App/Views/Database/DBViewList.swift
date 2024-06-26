@@ -12,8 +12,6 @@ struct DBViewList: View {
     @Query(Audio.descriptorAll, animation: .default) var audios: [Audio]
 
     @State var selection: Audio? = nil
-    @State var syncingTotal: Int = 0
-    @State var syncingCurrent: Int = 0
 
     var total: Int { audios.count }
     var label: String { "\(Logger.isMain)\(Self.label)" }
@@ -25,34 +23,24 @@ struct DBViewList: View {
     }
 
     var body: some View {
-        List(selection: $selection) {
-            Section(header: HStack {
-                HStack {
-                    Text("共 \(total.description)")
-
-                    if syncingTotal > syncingCurrent {
-                        Text("正在同步 \(syncingCurrent)/\(syncingTotal)")
-                    }
-                }
-                Spacer()
-                if Config.isNotDesktop {
-                    BtnAdd()
-                        .font(.title2)
-                        .labelStyle(.iconOnly)
-                }
-            }, content: {
-                ForEach(audios, id: \.self) { audio in
+        Section(header: HStack {
+            Text("共 \(total.description)")
+            Spacer()
+            if Config.isNotDesktop {
+                BtnAdd()
+                    .font(.title2)
+                    .labelStyle(.iconOnly)
+            }
+        }, content: {
+            List(audios, id: \.self, children: \.children, selection: $selection) { audio in
+                if let children = audio.children {
+                    Text(audio.title)
+                } else {
                     DBRow(audio.toPlayAsset())
                         .tag(audio as Audio?)
                 }
-            })
-            .task {
-                EventManager().onSyncing {
-                    self.syncingTotal = $0
-                    self.syncingCurrent = $1
-                }
             }
-        }
+        })
         .onChange(of: selection, {
             if let audio = selection {
                 if playMan.isPlaying {
