@@ -5,10 +5,9 @@ struct ContentView: View {
     @EnvironmentObject var appManager: AppManager
 
     var body: some View {
+        TopView()
+        
         HomeView()
-            .toolbar(content: {
-                SceneView()
-            })
             .alert(isPresented: $appManager.showAlert, content: {
                 Alert(title: Text(appManager.alertMessage))
             })

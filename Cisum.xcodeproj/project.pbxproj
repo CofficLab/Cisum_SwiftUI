@@ -143,6 +143,7 @@
 		F5511BC32C29598100400900 /* BottomTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5511BC22C29598100400900 /* BottomTile.swift */; };
 		F5511BC52C2962AC00400900 /* BottomViewType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5511BC42C2962AC00400900 /* BottomViewType.swift */; };
 		F5511BC72C29636500400900 /* BottomCopyState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5511BC62C29636500400900 /* BottomCopyState.swift */; };
+		F5511BCA2C2BACC000400900 /* TopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5511BC92C2BACC000400900 /* TopView.swift */; };
 		F5675C332C22BFD900326664 /* BottomBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C322C22BFD900326664 /* BottomBar.swift */; };
 		F5675C352C22CB3C00326664 /* DBViewTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C342C22CB3C00326664 /* DBViewTree.swift */; };
 		F5675C3A2C2404D700326664 /* FileBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C392C2404D700326664 /* FileBox.swift */; };
@@ -293,6 +294,7 @@
 		F5511BC22C29598100400900 /* BottomTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomTile.swift; sourceTree = "<group>"; };
 		F5511BC42C2962AC00400900 /* BottomViewType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomViewType.swift; sourceTree = "<group>"; };
 		F5511BC62C29636500400900 /* BottomCopyState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomCopyState.swift; sourceTree = "<group>"; };
+		F5511BC92C2BACC000400900 /* TopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopView.swift; sourceTree = "<group>"; };
 		F5675C322C22BFD900326664 /* BottomBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomBar.swift; sourceTree = "<group>"; };
 		F5675C342C22CB3C00326664 /* DBViewTree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBViewTree.swift; sourceTree = "<group>"; };
 		F5675C392C2404D700326664 /* FileBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileBox.swift; sourceTree = "<group>"; };
@@ -358,6 +360,7 @@
 		0B1D5A702AB302600010DDF2 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				F5511BCB2C2BACFB00400900 /* Top */,
 				F5511BC12C29557B00400900 /* BottomBar */,
 				0BB889D32AC04600004788D5 /* Buttons */,
 				0BBAD0702BBBDC22005834A3 /* Component */,
@@ -596,7 +599,6 @@
 				0BD98CFD2BD8E91500641A6A /* HeroView.swift */,
 				0BFB38822BCCCC780055E38B /* OperationView.swift */,
 				0B8FC26F2BBC559500839C75 /* PlayingAlbum.swift */,
-				F5511BB52C291D3400400900 /* SceneView.swift */,
 				0BBC15992ABAD5DB006E82C4 /* SliderView.swift */,
 				0B220F6E2BB051F50077255A /* TitleView.swift */,
 			);
@@ -621,6 +623,15 @@
 				F5511BBD2C29506400400900 /* StateCopy.swift */,
 			);
 			path = State;
+			sourceTree = "<group>";
+		};
+		F5511BCB2C2BACFB00400900 /* Top */ = {
+			isa = PBXGroup;
+			children = (
+				F5511BC92C2BACC000400900 /* TopView.swift */,
+				F5511BB52C291D3400400900 /* SceneView.swift */,
+			);
+			path = Top;
 			sourceTree = "<group>";
 		};
 		F5675C382C2404B000326664 /* File */ = {
@@ -895,6 +906,7 @@
 				0B901D882BB83BC3003AC253 /* FilePresenter.swift in Sources */,
 				0BB543F42BE8E38300D7A2B2 /* Duplicates.swift in Sources */,
 				0BBC157C2AB84C21006E82C4 /* HomeView.swift in Sources */,
+				F5511BCA2C2BACC000400900 /* TopView.swift in Sources */,
 				F5675C402C25456300326664 /* DataManager.swift in Sources */,
 				0B901D8A2BB83E28003AC253 /* ItemQuery.swift in Sources */,
 				0B6B8B9D2BBA4D0600F65B23 /* Coffee.swift in Sources */,

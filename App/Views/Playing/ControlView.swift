@@ -7,7 +7,7 @@ struct ControlView: View {
     @State var showHeroView = true
     @State var showSliderView = true
     @State var showBtnsView = true
-    @State var showOperationView = true
+    @State var showOperationView = false
     @State var showStateView = true
 
     // MARK: 子视图是否展示
@@ -91,7 +91,6 @@ struct ControlView: View {
             showHeroView = true
             showSliderView = true
             showBtnsView = true
-            showOperationView = true
             showStateView = true
         }
     }
