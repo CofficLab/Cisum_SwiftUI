@@ -33,13 +33,13 @@ extension Config {
     // MARK: Scene
     
     @AppStorage("App.Scene")
-    static var currentScene: String = AppScene.Music.rawValue
+    static var currentScene: String = DiskScene.Music.rawValue
     
-    static func getCurrentScene() -> AppScene {
-        AppScene.init(rawValue: Config.currentScene)!
+    static func getCurrentScene() -> DiskScene {
+        DiskScene.init(rawValue: Config.currentScene)!
     }
     
-    static func setCurrentScene(_ scene: AppScene) {
+    static func setCurrentScene(_ scene: DiskScene) {
         Config.currentScene = scene.rawValue
     }
 }

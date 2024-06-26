@@ -38,11 +38,9 @@ extension DiskFile {
         DiskFile(url: url, isDownloading: false, downloadProgress: 1)
     }
 
-    static func fromMetaWrapper(_ meta: MetaWrapper) -> Self {
-        let verbose = false
-        
+    static func fromMetaWrapper(_ meta: MetaWrapper, verbose: Bool = false) -> Self {
         if verbose {
-            os_log("\(Self.label)FromMetaWrapper -> \(meta.url?.path ?? "-")")
+            os_log("\(Self.label)FromMetaWrapper -> \(meta.url?.path ?? "-") -> \(meta.downloadProgress)")
         }
         
         return DiskFile(

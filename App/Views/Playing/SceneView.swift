@@ -5,11 +5,11 @@ import SwiftUI
 struct SceneView: View {
   @EnvironmentObject var dataManager: DataManager
 
-  @State var select: AppScene = .Music
+  @State var select: DiskScene = .Music
 
   var body: some View {
     Picker("", selection: $select) {
-      ForEach(AppScene.allCases) {
+      ForEach(DiskScene.allCases) {
         Text($0.title).tag($0)
       }
     }

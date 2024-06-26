@@ -5,7 +5,7 @@ import SwiftUI
 class DataManager: ObservableObject {
     static var label = "💼 dataManager::"
 
-    @Published var appScene: AppScene
+    @Published var appScene: DiskScene
     @Published var disk: any Disk
     @Published var updating: DiskFileGroup = .empty
 
@@ -92,7 +92,7 @@ class DataManager: ObservableObject {
 
     // MARK: Scene
 
-    func chageScene(_ to: AppScene) {
+    func chageScene(_ to: DiskScene) {
         appScene = to
         changeDisk(disk.makeSub(to.folderName))
 

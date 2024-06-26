@@ -2,15 +2,36 @@ import OSLog
 import SwiftUI
 
 struct AlbumView: View {
+    @EnvironmentObject var dataManager: DataManager
+    
     static var verbose = false
     static var label = "🐰 AlbumView::"
     
     @State var image: Image?
-    @State var isDownloaded: Bool = true
-    @State var isDownloading: Bool = false
-    @State var downloadingPercent: Double = 0
-
-    var e = EventManager()
+    
+    // MARK: Download
+    
+    var isDownloading: Bool { downloadingPercent > 0 && downloadingPercent < 100}
+    var isNotDownloaded: Bool { !isDownloaded }
+    var isDownloaded: Bool {
+        let result = downloadingPercent == 100
+        
+        if result {
+            updateCover()
+        }
+        
+        return result
+    }
+    var downloadingPercent: Double {
+        for file in updating.files {
+            if file.url == url {
+                return file.downloadProgress
+            }
+        }
+        
+        return asset.isDownloaded ? 100 : 0
+    }
+    
     var main = Config.mainQueue
     var bg = Config.bgQueue
     var asset: PlayAsset
@@ -19,7 +40,7 @@ struct AlbumView: View {
     var fileManager = FileManager.default
     var verbose: Bool { Self.verbose }
     var label: String { "\(Logger.isMain)\(Self.label)" }
-    var isNotDownloaded: Bool { !isDownloaded }
+    var updating: DiskFileGroup { dataManager.updating }
     var shape: RoundedRectangle {
         if forPlaying {
             if Config.isiOS {
@@ -49,7 +70,7 @@ struct AlbumView: View {
             } else if isNotDownloaded {
                 NotDownloadedAlbum(forPlaying: forPlaying).onTapGesture {
                     Task {
-//                        await db.download(self.asset.url, reason: "点击了Album")
+                        dataManager.disk.download(self.asset.url, reason: "点击了Album")
                     }
                 }
             } else if let image = image {
@@ -60,93 +81,12 @@ struct AlbumView: View {
         }
         .clipShape(shape)
         .onAppear {
-            bg.async {
-                let isDownloaded = asset.isDownloaded
-                let isDownloading = asset.isDownloading
-                let image = asset.getCoverImageFromCache()
-                
-                main.async {
-                    self.isDownloaded = isDownloaded
-                    self.isDownloading = isDownloading
-                    self.image = image
-                }
-            }
-        }
-        .onReceive(NotificationCenter.default.publisher(for: Notification.Name.AudiosUpdatedNotification)) { notification in
-            let data = notification.userInfo as! [String: DiskFileGroup]
-            let items = data["items"]!
-            for item in items.files {
-                if item.isDeleted {
-                    continue
-                }
-
-                if item.url == self.url {
-                    return refresh(item)
-                }
-            }
-        }
-        .onReceive(NotificationCenter.default.publisher(for: Notification.Name.AudioUpdatedNotification)) { notification in
-            let data = notification.userInfo as! [String: Audio]
-            let audio = data["audio"]!
-
-            if audio.url == self.url {
-                return refresh(audio)
-            }
-        }
-    }
-
-    func setCachedCover() {
-        Task.detached(priority: .low, operation: {
-            let image = asset.getCoverImageFromCache()
-
-            DispatchQueue.main.async {
-                self.image = image
-            }
-        })
-    }
-
-    func refresh(_ audio: Audio, verbose: Bool = false) {
-        if verbose {
-            os_log("\(self.label)Refresh -> \(audio.title)")
-        }
-
-        if isDownloaded && image == nil {
-            updateCover()
-        }
-    }
-
-    func refresh(_ item: DiskFile? = nil, verbose: Bool = false) {
-        if verbose {
-            os_log("\(self.label)Refresh -> \(asset.title)")
-        }
-
-        if let item = item {
-            isDownloaded = item.downloadProgress == 100
-            isDownloading = item.isDownloading
-            downloadingPercent = item.downloadProgress
-        } else {
-            bg.async {
-                main.async {
-                    self.isDownloaded = asset.isDownloaded
-                    self.isDownloading = asset.isDownloading
-                }
-            }
-            
-        }
-
-        if isDownloaded && image == nil {
             updateCover()
         }
     }
 
     func updateCover(verbose: Bool = false) {
         Task.detached(priority: .background) {
-            if verbose {
-                let label = AlbumView.label
-                let audio = self.asset
-                os_log("\(Logger.isMain)\(label)UpdateCover -> \(audio.title)")
-            }
-
             let image = await asset.getCoverImage()
 
             DispatchQueue.main.async {

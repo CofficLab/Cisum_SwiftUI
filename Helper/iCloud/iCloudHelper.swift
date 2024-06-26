@@ -64,6 +64,10 @@ class iCloudHelper {
     static func isNotDownloaded(_ url: URL) -> Bool {
         !isDownloaded(url)
     }
+    
+    // TODO: 下载进度
+    
+    // MARK: Exists
 
     static func fileExists(url: URL) -> Bool {
         return FileManager.default.fileExists(atPath: url.absoluteString)

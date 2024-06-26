@@ -24,12 +24,9 @@ struct StateView: View {
     var font: Font { asset == nil ? .title3 : .callout }
     var label: String { "\(Logger.isMain)🖥️ StateView::" }
     var disk: Disk { dataManager.disk }
-    var updating: DiskFileGroup { dataManager.updating }
 
     var body: some View {
         VStack {
-            Text("\(updating.count)")
-            
             if app.stateMessage.count > 0 {
                 makeInfoView(app.stateMessage)
             }
