@@ -44,7 +44,7 @@ struct DeviceSetting: View {
 }
 
 #Preview {
-    RootView {
+    BootView {
         SettingView()
     }
     .frame(height: 800)

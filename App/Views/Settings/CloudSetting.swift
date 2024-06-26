@@ -65,7 +65,7 @@ struct CloudSetting: View {
 }
 
 #Preview("Setting") {
-  RootView {
+  BootView {
     SettingView()
       .background(.background)
   }.modelContainer(Config.getContainer)

@@ -20,7 +20,7 @@ struct BtnPrev: View {
 }
 
 #Preview {
-    RootView(content: {
+    BootView(content: {
         Centered {
             BtnPrev()
         }

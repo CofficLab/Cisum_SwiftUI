@@ -114,7 +114,7 @@ extension Audio {
 }
 
 #Preview("App") {
-    RootView {
+    BootView {
         ContentView()
     }
     .modelContainer(Config.getContainer)

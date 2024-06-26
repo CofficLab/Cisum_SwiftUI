@@ -17,7 +17,7 @@ struct BtnAdd: View {
 }
 
 #Preview {
-    RootView {
+    BootView {
         VStack {
             BtnAdd()
             BtnAdd().buttonStyle(.borderedProminent)

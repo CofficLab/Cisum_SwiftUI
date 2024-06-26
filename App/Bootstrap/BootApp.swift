@@ -2,7 +2,7 @@ import SwiftUI
 import OSLog
 
 @main
-struct Boot: App {
+struct BootApp: App {
     #if os(macOS)
         @NSApplicationDelegateAdaptor var appDelegate: AppDelegate
     #else
@@ -15,7 +15,7 @@ struct Boot: App {
     var body: some Scene {
         #if os(macOS)
             Window("", id: "Cisum") {
-                RootView {
+                BootView {
                     ContentView()
                 }
                 .frame(minWidth: Config.minWidth, minHeight: Config.minHeight)
@@ -28,7 +28,7 @@ struct Boot: App {
             }
         #else
             WindowGroup {
-                RootView {
+                BootView {
                     ContentView()
                 }
             }

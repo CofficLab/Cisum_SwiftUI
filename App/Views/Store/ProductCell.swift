@@ -180,7 +180,7 @@ struct ProductCell: View {
 }
 
 #Preview {
-    RootView {
+    BootView {
         BuyView()
     }
 }

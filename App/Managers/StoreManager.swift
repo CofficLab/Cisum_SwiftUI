@@ -527,7 +527,7 @@ class StoreManager: ObservableObject {
 }
 
 #Preview {
-    RootView {
+    BootView {
         BuyView()
     }
     .frame(height: 800)

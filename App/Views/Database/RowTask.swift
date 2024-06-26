@@ -50,7 +50,7 @@ struct RowTask: View {
 }
 
 #Preview {
-    RootView {
+    BootView {
         ContentView()
     }.modelContainer(Config.getContainer)
 }

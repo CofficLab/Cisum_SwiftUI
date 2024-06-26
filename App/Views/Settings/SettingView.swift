@@ -31,7 +31,7 @@ struct SettingView: View {
 }
 
 #Preview {
-    RootView {
+    BootView {
         SettingView()
             .background(.background)
     }

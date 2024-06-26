@@ -72,7 +72,7 @@ struct DBTips: View {
 }
 
 #Preview {
-  RootView {
+  BootView {
     DBLayout()
   }.modelContainer(Config.getContainer)
 }

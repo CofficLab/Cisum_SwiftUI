@@ -19,7 +19,7 @@ struct OneTimeView: View {
 }
 
 #Preview {
-    RootView {
+    BootView {
         BuyView()
     }
 }

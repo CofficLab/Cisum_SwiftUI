@@ -65,7 +65,7 @@ struct DBRow: View {
 }
 
 #Preview {
-    RootView {
+    BootView {
         ContentView()
     }.modelContainer(Config.getContainer)
 }

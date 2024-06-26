@@ -30,7 +30,7 @@ struct DirSetting: View {
 }
 
 #Preview("Setting") {
-    RootView {
+    BootView {
         SettingView()
             .background(.background)
     }.modelContainer(Config.getContainer)

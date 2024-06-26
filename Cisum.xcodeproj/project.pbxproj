@@ -37,7 +37,7 @@
 		0B4E246F2BCAB8020033CC07 /* AppPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4E246E2BCAB8020033CC07 /* AppPreview.swift */; };
 		0B5786342BCB8DC00064F66A /* PlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B5786332BCB8DC00064F66A /* PlayView.swift */; };
 		0B5E51E52AD912B5000650CF /* DebugCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B5E51E42AD912B5000650CF /* DebugCommand.swift */; };
-		0B604AE82AD6384300929DD8 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B604AE72AD6384300929DD8 /* RootView.swift */; };
+		0B604AE82AD6384300929DD8 /* BootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B604AE72AD6384300929DD8 /* BootView.swift */; };
 		0B6B8B992BBA39F500F65B23 /* ControlButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6B8B982BBA39F500F65B23 /* ControlButton.swift */; };
 		0B6B8B9B2BBA420700F65B23 /* BtnPlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6B8B9A2BBA420600F65B23 /* BtnPlay.swift */; };
 		0B6B8B9D2BBA4D0600F65B23 /* Coffee.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6B8B9C2BBA4D0600F65B23 /* Coffee.swift */; };
@@ -75,7 +75,7 @@
 		0BAABEB82BC7D4B600DF4A31 /* BtnDelTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAABEB72BC7D4B600DF4A31 /* BtnDelTask.swift */; };
 		0BAABEBA2BC8C5CB00DF4A31 /* JobPrepare.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAABEB92BC8C5CB00DF4A31 /* JobPrepare.swift */; };
 		0BAABEC32BC939D000DF4A31 /* LayoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAABEC22BC939D000DF4A31 /* LayoutView.swift */; };
-		0BAB300E2AB814F70012D837 /* Boot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAB300D2AB814F70012D837 /* Boot.swift */; };
+		0BAB300E2AB814F70012D837 /* BootApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAB300D2AB814F70012D837 /* BootApp.swift */; };
 		0BAB7C3F2AD3BBAA00C5AEB5 /* DBTips.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAB7C3E2AD3BBAA00C5AEB5 /* DBTips.swift */; };
 		0BB427912BED0B38004E6F82 /* DiskLocal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB427902BED0B38004E6F82 /* DiskLocal.swift */; };
 		0BB543F42BE8E38300D7A2B2 /* Duplicates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB543F32BE8E38300D7A2B2 /* Duplicates.swift */; };
@@ -155,7 +155,7 @@
 		F573B18C2C042E08004C34CC /* DeviceExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B18B2C042E08004C34CC /* DeviceExt.swift */; };
 		F586DCD52C2BFE9E0078580B /* BtnOpenFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F586DCD42C2BFE9E0078580B /* BtnOpenFolder.swift */; };
 		F586DCD72C2C01FF0078580B /* FatalErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F586DCD62C2C01FF0078580B /* FatalErrorView.swift */; };
-		F586DCD92C2C05A60078580B /* StartUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F586DCD82C2C05A60078580B /* StartUpView.swift */; };
+		F586DCD92C2C05A60078580B /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F586DCD82C2C05A60078580B /* RootView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -191,7 +191,7 @@
 		0B4E246E2BCAB8020033CC07 /* AppPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppPreview.swift; sourceTree = "<group>"; };
 		0B5786332BCB8DC00064F66A /* PlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayView.swift; sourceTree = "<group>"; };
 		0B5E51E42AD912B5000650CF /* DebugCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugCommand.swift; sourceTree = "<group>"; };
-		0B604AE72AD6384300929DD8 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		0B604AE72AD6384300929DD8 /* BootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BootView.swift; sourceTree = "<group>"; };
 		0B6B8B982BBA39F500F65B23 /* ControlButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlButton.swift; sourceTree = "<group>"; };
 		0B6B8B9A2BBA420600F65B23 /* BtnPlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BtnPlay.swift; sourceTree = "<group>"; };
 		0B6B8B9C2BBA4D0600F65B23 /* Coffee.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coffee.swift; sourceTree = "<group>"; };
@@ -229,7 +229,7 @@
 		0BAABEB72BC7D4B600DF4A31 /* BtnDelTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnDelTask.swift; sourceTree = "<group>"; };
 		0BAABEB92BC8C5CB00DF4A31 /* JobPrepare.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobPrepare.swift; sourceTree = "<group>"; };
 		0BAABEC22BC939D000DF4A31 /* LayoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutView.swift; sourceTree = "<group>"; };
-		0BAB300D2AB814F70012D837 /* Boot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Boot.swift; sourceTree = "<group>"; };
+		0BAB300D2AB814F70012D837 /* BootApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BootApp.swift; sourceTree = "<group>"; };
 		0BAB7C3E2AD3BBAA00C5AEB5 /* DBTips.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBTips.swift; sourceTree = "<group>"; };
 		0BB427902BED0B38004E6F82 /* DiskLocal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskLocal.swift; sourceTree = "<group>"; };
 		0BB543F32BE8E38300D7A2B2 /* Duplicates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Duplicates.swift; sourceTree = "<group>"; };
@@ -309,7 +309,7 @@
 		F573B18B2C042E08004C34CC /* DeviceExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceExt.swift; sourceTree = "<group>"; };
 		F586DCD42C2BFE9E0078580B /* BtnOpenFolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnOpenFolder.swift; sourceTree = "<group>"; };
 		F586DCD62C2C01FF0078580B /* FatalErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FatalErrorView.swift; sourceTree = "<group>"; };
-		F586DCD82C2C05A60078580B /* StartUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartUpView.swift; sourceTree = "<group>"; };
+		F586DCD82C2C05A60078580B /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -488,13 +488,13 @@
 			isa = PBXGroup;
 			children = (
 				0B1D5A8C2AB3E8290010DDF2 /* AppDelegate.swift */,
-				0BAB300D2AB814F70012D837 /* Boot.swift */,
+				0BAB300D2AB814F70012D837 /* BootApp.swift */,
+				0B604AE72AD6384300929DD8 /* BootView.swift */,
 				0B5E51E42AD912B5000650CF /* DebugCommand.swift */,
 				F586DCD62C2C01FF0078580B /* FatalErrorView.swift */,
 				0B1165E82ABBC6C0005C5CBB /* LaunchView.swift */,
-				0B604AE72AD6384300929DD8 /* RootView.swift */,
+				F586DCD82C2C05A60078580B /* RootView.swift */,
 				0B220F742BB1BBDB0077255A /* SmartError.swift */,
-				F586DCD82C2C05A60078580B /* StartUpView.swift */,
 			);
 			path = Bootstrap;
 			sourceTree = "<group>";
@@ -796,7 +796,7 @@
 				0BBA42272AC2A8B800C0B977 /* BtnAdd.swift in Sources */,
 				0BBC15912ABAC19F006E82C4 /* BtnPrev.swift in Sources */,
 				F573B18A2C0413DD004C34CC /* DeviceHelper.swift in Sources */,
-				0B604AE82AD6384300929DD8 /* RootView.swift in Sources */,
+				0B604AE82AD6384300929DD8 /* BootView.swift in Sources */,
 				0B8C36B62BEDAB5E00C47567 /* BtnMore.swift in Sources */,
 				0BAABEC32BC939D000DF4A31 /* LayoutView.swift in Sources */,
 				0BAABEB32BC79C9F00DF4A31 /* TaskExt.swift in Sources */,
@@ -841,7 +841,7 @@
 				0BE695C02C01E88E00CEFFEB /* DeviceData.swift in Sources */,
 				0BE6959A2BFE3DCC00CEFFEB /* AllSubscriptions.swift in Sources */,
 				0BE695C22C01E8F600CEFFEB /* DBSynced.swift in Sources */,
-				0BAB300E2AB814F70012D837 /* Boot.swift in Sources */,
+				0BAB300E2AB814F70012D837 /* BootApp.swift in Sources */,
 				0BBA42212AC1802C00C0B977 /* ButtonCancelSelected.swift in Sources */,
 				0B9EA35B2C21C72800A4059A /* PlayMan.swift in Sources */,
 				0BAABEB12BC79C4E00DF4A31 /* CopyTask.swift in Sources */,
@@ -891,7 +891,7 @@
 				0BFB38852BCCD26F0055E38B /* BtnLike.swift in Sources */,
 				0B8C369F2BEA011700C47567 /* MetaWrapper.swift in Sources */,
 				0BBC15882AB9A473006E82C4 /* iCloudHelper.swift in Sources */,
-				F586DCD92C2C05A60078580B /* StartUpView.swift in Sources */,
+				F586DCD92C2C05A60078580B /* RootView.swift in Sources */,
 				0BAABEBA2BC8C5CB00DF4A31 /* JobPrepare.swift in Sources */,
 				0B901D862BB83BA2003AC253 /* iCloudHandler.swift in Sources */,
 				F545D1732C1FC9F0006A6AFA /* CloudSetting.swift in Sources */,

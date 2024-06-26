@@ -49,7 +49,7 @@ enum SmartError: Error, LocalizedError {
 }
 
 #Preview {
-    RootView {
+    BootView {
         ContentView()
     }
 }

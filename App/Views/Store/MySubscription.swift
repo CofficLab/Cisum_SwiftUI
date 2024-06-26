@@ -115,7 +115,7 @@ struct MySubscription: View {
 }
 
 #Preview {
-    RootView {
+    BootView {
         BuyView()
     }
     #if os(macOS)

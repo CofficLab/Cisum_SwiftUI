@@ -134,7 +134,7 @@ extension DB {
 }
 
 #Preview {
-    RootView {
+    BootView {
         ContentView()
     }.modelContainer(Config.getContainer)
 }

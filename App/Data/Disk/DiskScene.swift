@@ -67,13 +67,13 @@ enum DiskScene: String, CaseIterable, Identifiable {
 }
 
 #Preview("SceneView") {
-    RootView {
+    BootView {
         SceneView()
     }
 }
 
 #Preview("Scenes") {
-    RootView {
+    BootView {
         Scenes(selection: Binding.constant(.Baby), isPreseted: Binding.constant(false))
     }
 }
