@@ -20,7 +20,6 @@ struct BootApp: App {
                 }
                 .frame(minWidth: Config.minWidth, minHeight: Config.minHeight)
             }
-            .windowStyle(.hiddenTitleBar)
             .defaultSize(width: Config.minWidth, height: Config.defaultHeight)
             .modelContainer(Config.getContainer)
             .commands {

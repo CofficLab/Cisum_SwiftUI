@@ -15,6 +15,28 @@ struct RootView: View {
 
     var body: some View {
         Config.rootBackground
+            .ignoresSafeArea()
+            .toolbar(content: {
+                ToolbarItem(placement: .navigation, content: {
+                    if Config.isDebug {
+                        SceneView()
+                    }
+                })
+                
+                if let asset = playMan.asset {
+                    ToolbarItem(content: {
+                        BtnLike(asset: asset, autoResize: false)
+                    })
+                    
+                    ToolbarItem(content: {
+                        BtnShowInFinder(url: asset.url, autoResize: false)
+                    })
+                    
+                    ToolbarItem(content: {
+                        BtnDel(assets: [asset], autoResize: false)
+                    })
+                }
+            })
             .task {
                 restore()
 

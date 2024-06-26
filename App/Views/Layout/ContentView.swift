@@ -7,7 +7,9 @@ struct ContentView: View {
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
-                TopView()
+                if Config.isNotDesktop {
+                    TopView()
+                }
                 
                 HomeView()
                     .alert(isPresented: $appManager.showAlert, content: {

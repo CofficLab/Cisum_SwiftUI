@@ -6,7 +6,7 @@ extension Config {
     
     static var rootBackground: some View {
         ZStack {
-            Color.black.opacity(0.5).ignoresSafeArea()
+            Color.black.opacity(0.5)
             if debug && false {
                 BackgroundView.forest
             } else {
