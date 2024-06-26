@@ -7,19 +7,23 @@ struct TopView: View {
 
     var body: some View {
         HStack {
-            SceneView()
+            if Config.isDebug && false {
+                SceneView()
+            }
 
             Spacer()
             if let asset = asset {
-                BtnLike(asset: asset, autoResize: false)
-                if Config.isDesktop {
-                    BtnShowInFinder(url: asset.url, autoResize: false)
-                }
-                BtnDel(assets: [asset], autoResize: false)
+                HStack {
+                    BtnLike(asset: asset, autoResize: false)
+                    if Config.isDesktop {
+                        BtnShowInFinder(url: asset.url, autoResize: false)
+                    }
+                    BtnDel(assets: [asset], autoResize: false)
+                }.padding(.trailing)
             }
-            Spacer()
         }
         .labelStyle(.iconOnly)
+        .foregroundStyle(.white)
     }
 }
 
