@@ -20,6 +20,7 @@ struct BootApp: App {
                 }
                 .frame(minWidth: Config.minWidth, minHeight: Config.minHeight)
             }
+            .windowToolbarStyle(.unifiedCompact(showsTitle: false))
             .defaultSize(width: Config.minWidth, height: Config.defaultHeight)
             .modelContainer(Config.getContainer)
             .commands {

@@ -19,22 +19,18 @@ struct RootView: View {
             .toolbar(content: {
                 ToolbarItem(placement: .navigation, content: {
                     if Config.isDebug {
-                        SceneView()
+                        BtnScene()
                     }
                 })
                 
                 if let asset = playMan.asset {
-                    ToolbarItem(content: {
+                    ToolbarItemGroup(placement: .cancellationAction, content: {
+                        Spacer()
                         BtnLike(asset: asset, autoResize: false)
-                    })
-                    
-                    ToolbarItem(content: {
                         BtnShowInFinder(url: asset.url, autoResize: false)
-                    })
-                    
-                    ToolbarItem(content: {
                         BtnDel(assets: [asset], autoResize: false)
-                    })
+                    }
+                    )
                 }
             })
             .task {
@@ -236,4 +232,9 @@ struct RootView: View {
             await self.dbLocal.toggleLike(asset.url)
         }
     }
+}
+
+#Preview("App") {
+    AppPreview()
+        .frame(height: 800)
 }

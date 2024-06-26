@@ -8,6 +8,17 @@ enum DiskScene: String, CaseIterable, Identifiable {
     case AudioBook
     case KidsAudio
     
+    var iconName: String {
+        switch self {
+        case .KidsAudio:
+            "figure.and.child.holdinghands"
+        case .Music:
+            "music.note.list"
+        case .AudioBook:
+            "books.vertical.circle.fill"
+        }
+    }
+    
     var icon: some View {
         switch self {
         case .KidsAudio:
