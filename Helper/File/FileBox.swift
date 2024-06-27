@@ -87,4 +87,8 @@ extension FileBox {
     func isDirectory() -> Bool {
         isFolder()
     }
+    
+    func isNotFolder() -> Bool {
+        !self.isFolder()
+    }
 }

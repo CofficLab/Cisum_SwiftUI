@@ -24,6 +24,7 @@ struct DBViewList: View {
 
     var total: Int { audios.count }
     var label: String { "\(Logger.isMain)\(Self.label)" }
+    var items: [Audio] { audios.filter({ $0.isNotFolder()}) }
 
     init(verbose: Bool = false) {
         if verbose {
@@ -42,7 +43,7 @@ struct DBViewList: View {
                         .labelStyle(.iconOnly)
                 }
             }, content: {
-                ForEach(audios, id: \.self) { audio in
+                ForEach(items, id: \.self) { audio in
                     DBRow(audio.toPlayAsset())
                         .tag(audio as Audio?)
                 }
