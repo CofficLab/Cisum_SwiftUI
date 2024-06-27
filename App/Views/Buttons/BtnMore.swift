@@ -18,8 +18,8 @@ struct BtnMore: View {
             onTap: {
                 playMan.play(asset, reason: "Play Button")
             },
-            menus: AnyView(VStack{
-                BtnPlay(asset:asset, autoResize: false)
+            menus: AnyView(VStack {
+                BtnPlay(asset: asset, autoResize: false)
                 Divider()
                 BtnDownload(asset: asset)
                 BtnEvict(asset: asset)
@@ -28,12 +28,19 @@ struct BtnMore: View {
                 }
                 Divider()
                 BtnDel(assets: [asset], autoResize: false)
-            }))
+            }
+                .labelStyle(.titleOnly)
+            ))
     }
 
     private func getImageName() -> String {
         return "ellipsis.circle"
     }
+}
+
+#Preview("App") {
+    AppPreview()
+        .frame(height: 800)
 }
 
 #Preview("Layout") {

@@ -173,10 +173,6 @@ extension FileHelper {
     }
     
     static func isDirectory(at url: URL) -> Bool {
-        do {
-            return try url.resourceValues(forKeys: [.isDirectoryKey]).isDirectory == true
-        } catch {
-            return false
-        }
+        return url.hasDirectoryPath
     }
 }

@@ -28,7 +28,7 @@ struct AlbumView: View {
                 return file.downloadProgress
             }
         }
-        
+
         return asset.isDownloaded ? 100 : 0
     }
     

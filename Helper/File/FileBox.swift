@@ -34,7 +34,7 @@ extension FileBox {
 
 extension FileBox {
     var isDownloaded: Bool {
-        iCloudHelper.isDownloaded(url)
+        isFolder() || iCloudHelper.isDownloaded(url)
     }
     
     var isDownloading: Bool {
@@ -114,4 +114,9 @@ extension FileBox {
     var image: Image {
         Image(systemName: icon)
     }
+}
+
+#Preview("App") {
+    AppPreview()
+        .frame(height: 800)
 }

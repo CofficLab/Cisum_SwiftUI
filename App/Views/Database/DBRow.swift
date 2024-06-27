@@ -15,25 +15,32 @@ struct DBRow: View {
     var body: some View {
         ZStack {
             HStack(alignment: .center) {
-                AlbumView(asset)
-                    .frame(
-                        width: Config.isDesktop ? 36 : 36,
-                        height: Config.isDesktop ? 36 : 36
-                    )
+                ZStack {
+                    if asset.isNotFolder() {
+                        AlbumView(asset)
+                    } else {
+                        asset.image.scaleEffect(1.4)
+                    }
+                }
+                .frame(width: 36, height: 36)
+                
                 VStack(spacing: 0) {
                     HStack {
                         Text(asset.fileName)
                         Spacer()
                     }
-                    HStack {
-                        Text(asset.getFileSizeReadable())
-                            .foregroundStyle(.secondary)
+                    
+                    if asset.isNotFolder() {
+                        HStack {
+                            Text(asset.getFileSizeReadable())
+                                .foregroundStyle(.secondary)
 
-                        if asset.like {
-                            Image(systemName: "star.fill")
+                            if asset.like {
+                                Image(systemName: "star.fill")
+                            }
+
+                            Spacer()
                         }
-
-                        Spacer()
                     }
                 }
                 Spacer()
@@ -65,7 +72,6 @@ struct DBRow: View {
 }
 
 #Preview {
-    BootView {
-        ContentView()
-    }.modelContainer(Config.getContainer)
+    AppPreview()
+        .frame(height: 800)
 }

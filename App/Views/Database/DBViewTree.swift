@@ -46,22 +46,8 @@ struct DBViewTree: View {
              children: \.children,
              selection: $selection
         ) { file in
-            HStack {
-                file.image
-                Text(file.title)
-            }
-                .tag(file as DiskFile?)
-                .contextMenu(ContextMenu(menuItems: {
-                    BtnPlay(asset: file.toPlayAsset(), autoResize: false)
-                    Divider()
-                    BtnDownload(asset: file.toPlayAsset())
-                    BtnEvict(asset: file.toPlayAsset())
-                    if Config.isDesktop {
-                        BtnShowInFinder(url: file.url, autoResize: false)
-                    }
-                    Divider()
-                    BtnDel(assets: [file.toPlayAsset()], autoResize: false)
-                }))
+            DBRow(file.toPlayAsset())
+            .tag(file as DiskFile?)
         }
     }
 
