@@ -66,7 +66,7 @@ enum DiskScene: String, CaseIterable, Identifiable {
         case .KidsAudio:
             "适用于青少年听儿歌、故事等音频内容"
         case .Music:
-            "作为歌曲仓库"
+            "作为歌曲仓库，只关注文件，文件夹将被忽略"
         case .KidsVideo:
             "适用于青少年看动画片等场景"
         case .AudioBook:
