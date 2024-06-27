@@ -37,6 +37,7 @@ class DiskiCloud: ObservableObject, Disk {
     var fileManager = FileManager.default
     var cloudHandler = iCloudHandler()
     var bg = Config.bgQueue
+    var query: ItemQuery
     var label: String { "\(Logger.isMain)\(Self.label)" }
     var verbose = true
     var onUpdated: (_ items: DiskFileGroup) -> Void = { items in
@@ -44,7 +45,11 @@ class DiskiCloud: ObservableObject, Disk {
     }
     
     init(root: URL) {
+        let queue = OperationQueue()
+        queue.maxConcurrentOperationCount = 1
+        
         self.root = root
+        self.query = ItemQuery(queue: queue)
     }
 }
 
@@ -150,7 +155,7 @@ extension DiskiCloud {
     
     func download(_ url: URL, reason: String) {
         let verbose = false
-        
+
         if verbose {
             os_log("\(self.label)Download ⏬⏬⏬ \(url.lastPathComponent) reason -> \(reason)")
         }
@@ -215,27 +220,31 @@ extension DiskiCloud {
 // MARK: Watch
 
 extension DiskiCloud {
+    func stopWatch() {
+        let emoji = "🌛🌛🌛"
+        
+        os_log("\(self.label)\(emoji) 停止监听")
+        self.query.stop()
+    }
+    
     /// 监听存储Audio文件的文件夹
     func watch() async {
         let verbose = true
         let emoji = "🌞🌞🌞"
         
         if verbose {
-            os_log("\(Logger.isMain)\(self.label)\(emoji) Watch(\(self.root.relativeString))")
+            os_log("\(Logger.isMain)\(self.label)\(emoji) Watch(\(self.name))")
         }
 
-        let queue = OperationQueue()
-        queue.maxConcurrentOperationCount = 1
-        let query = ItemQuery(queue: queue, url: self.root)
-        let result = query.searchMetadataItems().debounce(for: .seconds(1))
-        
-        
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 30, execute: {
-            os_log("\(self.label)停止监听")
-            query.stop()
-        })
-        
+        self.query.stopped = false
+        let result = query.searchMetadataItems(predicates:  [
+            NSPredicate(format: "%K BEGINSWITH %@", NSMetadataItemPathKey, root.path + "/"),
+            NSPredicate(format: "NOT %K ENDSWITH %@", NSMetadataItemFSNameKey, ".DS_Store"),
+            NSPredicate(format: "NOT %K ENDSWITH %@", NSMetadataItemFSNameKey, ".zip"),
+            NSPredicate(format: "NOT %K ENDSWITH %@", NSMetadataItemFSNameKey, ".plist"),
+            NSPredicate(format: "NOT %K BEGINSWITH %@", NSMetadataItemFSNameKey, "."),
+            NSPredicate(format: "NOT %K BEGINSWITH[c] %@", NSMetadataItemFSNameKey, ".")
+        ]).debounce(for: .seconds(1))
         for try await collection in result {
             os_log("\(Logger.isMain)\(self.label)\(emoji) Watch(\(collection.items.count))")
                 

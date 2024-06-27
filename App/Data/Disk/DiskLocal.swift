@@ -151,6 +151,10 @@ extension DiskLocal {
 // MARK: Watch
 
 extension DiskLocal {
+    func stopWatch() {
+        
+    }
+    
     func watch() async {
         os_log("\(self.label)WatchAudiosFolder")
 

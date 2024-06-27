@@ -3,7 +3,7 @@ import SwiftData
 import SwiftUI
 
 class DataManager: ObservableObject {
-    static var label = "💼 dataManager::"
+    static var label = "💼 DataManager::"
 
     @Published var appScene: DiskScene
     @Published var disk: any Disk
@@ -37,6 +37,9 @@ class DataManager: ObservableObject {
 
     func changeDisk(_ to: Disk) {
         os_log("\(self.label)更新磁盘为 \(to.name)")
+        
+        self.disk.stopWatch()
+        
         disk = to
         
         // 目前，只有Music模式需要监听文件变动并写入数据库
@@ -115,6 +118,46 @@ class DataManager: ObservableObject {
             })
             
             callback(assets)
+        }
+    }
+}
+
+// MARK: Download
+
+extension DataManager {
+    func downloadNextBatch(_ url: URL, count: Int = 6, reason: String) {
+        if self.appScene == .Music {
+            Task {
+                var currentIndex = 0
+                var currentURL: URL = url
+
+                while currentIndex < count {
+                    disk.download(currentURL, reason: "downloadNext 🐛 \(reason)")
+
+                    currentIndex = currentIndex + 1
+                    
+                    if let next = await db.nextOf(currentURL) {
+                        currentURL = next.url
+                    } else {
+                        break
+                    }
+                }
+            }
+        } else {
+            var currentIndex = 0
+            var currentURL: URL = url
+
+            while currentIndex < count {
+                disk.download(currentURL, reason: "downloadNext 🐛 \(reason)")
+
+                currentIndex = currentIndex + 1
+                
+                if let next = disk.next(currentURL) {
+                    currentURL = next.url
+                } else {
+                    break
+                }
+            }
         }
     }
 }

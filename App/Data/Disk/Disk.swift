@@ -24,6 +24,7 @@ protocol Disk {
     func copyTo(url: URL) throws
     
     func watch() async
+    func stopWatch()
     
     func getDownloadingCount() -> Int
     
@@ -40,7 +41,7 @@ protocol Disk {
 
 extension Disk {
     var name: String {
-        Self.label
+        Self.label + root.pathComponents.suffix(2).joined(separator: "/")
     }
     
     func getMountedURL() -> URL? {

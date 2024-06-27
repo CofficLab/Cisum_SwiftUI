@@ -5,14 +5,12 @@ import OSLog
 class ItemQuery {
     let query = NSMetadataQuery()
     let queue: OperationQueue
-    let url: URL
     var label: String {"\(Logger.isMain)📁 ItemQuery::"}
     var verbose = false
     var stopped = false
 
-    init(queue: OperationQueue = .main, url: URL) {
+    init(queue: OperationQueue = .main) {
         self.queue = queue
-        self.url = url
     }
     
     func stop() {
@@ -22,23 +20,14 @@ class ItemQuery {
     // MARK: 监听某个目录的变化
 
     func searchMetadataItems(
-        predicate: NSPredicate? = nil,
+        predicates: [NSPredicate] = [],
         sortDescriptors: [NSSortDescriptor] = [],
-        scopes: [Any] = [NSMetadataQueryUbiquitousDocumentsScope],
-        verbose: Bool = true
+        scopes: [Any] = [NSMetadataQueryUbiquitousDocumentsScope]
     ) -> AsyncStream<MetadataItemCollection> {
         if verbose {
             os_log("\(self.label)searchMetadataItems")
         }
         
-        let predicates = [
-            NSPredicate(format: "%K BEGINSWITH %@", NSMetadataItemPathKey, url.path + "/"),
-            NSPredicate(format: "NOT %K ENDSWITH %@", NSMetadataItemFSNameKey, ".DS_Store"),
-            NSPredicate(format: "NOT %K ENDSWITH %@", NSMetadataItemFSNameKey, ".zip"),
-            NSPredicate(format: "NOT %K ENDSWITH %@", NSMetadataItemFSNameKey, ".plist"),
-            NSPredicate(format: "NOT %K BEGINSWITH %@", NSMetadataItemFSNameKey, "."),
-            NSPredicate(format: "NOT %K BEGINSWITH[c] %@", NSMetadataItemFSNameKey, ".")
-        ]
         query.searchScopes = scopes
         query.sortDescriptors = sortDescriptors
         query.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
@@ -57,19 +46,17 @@ class ItemQuery {
                 object: query,
                 queue: queue
             ) { notification in
-                
-                
-                    if self.stopped {
-                        os_log("\(self.label)停止监听")
-                        return continuation.finish()
-                    }
+                if self.stopped {
+                    os_log("\(self.label)停止监听")
+                    return continuation.finish()
+                }
                 
                 self.collectChanged(continuation, notification: notification, name: .NSMetadataQueryDidUpdate)
             }
 
             query.operationQueue = queue
             query.operationQueue?.addOperation {
-                if verbose {
+                if self.verbose {
                     os_log("\(self.label)start")
                 }
                 
