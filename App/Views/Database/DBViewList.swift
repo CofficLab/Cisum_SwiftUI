@@ -2,10 +2,19 @@ import OSLog
 import SwiftData
 import SwiftUI
 
+/*
+ 将仓库中的文件扁平化展示，文件夹将被忽略
+    A
+      A1               A1
+      A2               A2
+    B           =>     B1
+      B1               B2
+      B2
+ */
 struct DBViewList: View {
     static var label = "📬 DBList::"
 
-    @EnvironmentObject var appManager: AppManager
+    @EnvironmentObject var app: AppManager
     @EnvironmentObject var playMan: PlayMan
     @Environment(\.modelContext) private var modelContext
 
@@ -23,24 +32,22 @@ struct DBViewList: View {
     }
 
     var body: some View {
-        Section(header: HStack {
-            Text("共 \(total.description)")
-            Spacer()
-            if Config.isNotDesktop {
-                BtnAdd()
-                    .font(.title2)
-                    .labelStyle(.iconOnly)
-            }
-        }, content: {
-            List(audios, id: \.self, children: \.children, selection: $selection) { audio in
-                if let children = audio.children {
-                    Text(audio.title)
-                } else {
+        List(selection: $selection) {
+            Section(header: HStack {
+                Text("共 \(total.description)")
+                Spacer()
+                if Config.isNotDesktop {
+                    BtnAdd()
+                        .font(.title2)
+                        .labelStyle(.iconOnly)
+                }
+            }, content: {
+                ForEach(audios, id: \.self) { audio in
                     DBRow(audio.toPlayAsset())
                         .tag(audio as Audio?)
                 }
-            }
-        })
+            })
+        }
         .onChange(of: selection, {
             if let audio = selection {
                 if playMan.isPlaying {
