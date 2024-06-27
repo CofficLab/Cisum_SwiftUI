@@ -182,7 +182,7 @@ extension PlayAsset {
                 }
             }
         } catch {
-            os_log(.error, "\(label)⚠️ 读取 Meta 出错")
+            os_log(.error, "\(label)⚠️ 读取 Meta 出错 -> \(self.title)")
             os_log(.error, "\(error.localizedDescription)")
         }
 
