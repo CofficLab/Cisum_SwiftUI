@@ -93,15 +93,15 @@ extension DiskFile {
 // MARK: Next
 
 extension DiskFile {
-    func next() -> DiskFile? {
-        let next: DiskFile? = nil
-
-        os_log("\(label)Next of \(fileName)")
+    func next(verbose: Bool = false) -> DiskFile? {
+        if verbose {
+            os_log("\(label)Next of \(fileName)")
+        }
 
         guard let parent = parent, let siblings = parent.getChildren() else {
             os_log("\(label)Next of \(fileName) -> nil")
 
-            return next
+            return nil
         }
 
         guard let index = siblings.firstIndex(of: self) else {
@@ -111,7 +111,7 @@ extension DiskFile {
         guard siblings.count > self.index + 1 else {
             os_log("\(label)Next of \(fileName) -> nil")
 
-            return next
+            return nil
         }
 
         let nextIndex = index + 1

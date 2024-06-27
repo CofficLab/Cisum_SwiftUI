@@ -125,7 +125,11 @@ class DataManager: ObservableObject {
 // MARK: Download
 
 extension DataManager {
-    func downloadNextBatch(_ url: URL, count: Int = 6, reason: String) {
+    func downloadNextBatch(_ url: URL, count: Int = 6, reason: String, verbose: Bool = false) {
+        if verbose {
+            os_log("\(self.label)DownloadNextBatch(\(self.appScene.title))")
+        }
+        
         if self.appScene == .Music {
             Task {
                 var currentIndex = 0

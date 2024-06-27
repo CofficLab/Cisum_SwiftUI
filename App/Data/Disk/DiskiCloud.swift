@@ -61,7 +61,7 @@ extension DiskiCloud {
     }
     
     func next(_ url: URL) -> DiskFile? {
-        nil
+        DiskFile(url: url).next()
     }
     
     func getTotal() -> Int {

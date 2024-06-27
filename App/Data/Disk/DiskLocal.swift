@@ -52,7 +52,9 @@ class DiskLocal: ObservableObject, Disk {
 
 extension DiskLocal {
     func next(_ url: URL) -> DiskFile? {
-        return nil
+        let diskFile = DiskFile(url: url)
+        
+        return diskFile.next()
     }
 }
 
