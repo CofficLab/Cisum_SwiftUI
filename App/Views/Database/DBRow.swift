@@ -18,11 +18,13 @@ struct DBRow: View {
                 ZStack {
                     if asset.isNotFolder() {
                         AlbumView(asset)
+                            .frame(width: 36, height: 36)
                     } else {
-                        asset.image.scaleEffect(1.4)
+                        asset.image
+                            .scaleEffect(1.4)
+                            .frame(width: 24, height: 36)
                     }
                 }
-                .frame(width: 36, height: 36)
                 
                 VStack(spacing: 0) {
                     HStack {

@@ -103,6 +103,10 @@ class PlayMan: NSObject, ObservableObject {
         os_log("\(PlayMan.label)ToggleLike")
     }
     
+    var onToggleMode: () -> Void = {
+        os_log("\(PlayMan.label)ToggleMode")
+    }
+    
     // MARK: 初始化
     
     init(verbose: Bool = true) {
@@ -117,26 +121,10 @@ class PlayMan: NSObject, ObservableObject {
 // MARK: 播放模式
 
 extension PlayMan {
-    // MARK: 切换播放模式
-
-    func switchMode(_ callback: @escaping (_ mode: PlayMode) -> Void, verbose: Bool = true) {
+    func switchMode(verbose: Bool = true) {
         mode = mode.switchMode()
-
-        callback(mode)
-
-        Task {
-            if verbose {
-                os_log("\(Logger.isMain)\(Self.label)切换播放模式")
-            }
-
-//            if mode == .Random {
-//                await db.sortRandom(asset?.url as URL?)
-//            }
-//
-//            if mode == .Order {
-//                await db.sort(asset?.url as URL?)
-//            }
-        }
+        Config.setCurrentMode(mode)
+        onToggleMode()
     }
 }
 

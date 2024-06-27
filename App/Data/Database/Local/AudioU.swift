@@ -1,8 +1,7 @@
 import Foundation
 import OSLog
 import SwiftData
-
-// MARK: Update
+import SwiftUI
 
 extension DB {
     func update(_ audio: Audio) {
@@ -143,7 +142,7 @@ extension DB {
     }
 
     func sortRandom(_ sticky: Audio?) {
-        os_log("\(Logger.isMain)\(DB.label)SortRandom")
+        os_log("\(self.label)SortRandom")
 
         do {
             try context.enumerate(FetchDescriptor<Audio>(), block: {
@@ -243,4 +242,9 @@ extension DB {
             os_log(.error, "\(e.localizedDescription)")
         }
     }
+}
+
+#Preview("App") {
+    AppPreview()
+        .frame(height: 800)
 }

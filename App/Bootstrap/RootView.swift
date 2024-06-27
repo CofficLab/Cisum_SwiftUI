@@ -9,13 +9,15 @@ struct RootView: View {
 
     var verbose: Bool = true
     var dbSynced = DBSynced(Config.getSyncedContainer)
-    
+
     var label: String { "\(Logger.isMain)✈️ RootView::" }
     var disk: Disk { dataManager.disk }
 
     var body: some View {
         Config.rootBackground
+
             // MARK: 版本升级操作
+
             .onAppear {
                 Migrate().migrateTo25(dataManager: dataManager)
             }
@@ -26,7 +28,7 @@ struct RootView: View {
                         BtnScene()
                     }
                 })
-                
+
                 if let asset = playMan.asset {
                     ToolbarItemGroup(placement: .cancellationAction, content: {
                         Spacer()
@@ -54,6 +56,22 @@ struct RootView: View {
 
                 playMan.onToggleLike = {
                     self.toggleLike()
+                }
+
+                playMan.onToggleMode = {
+                    Task {
+                        if verbose {
+                            os_log("\(self.label)切换播放模式")
+                        }
+
+                        if playMan.mode == .Random {
+                            await dbLocal.sortRandom(playMan.asset?.url as URL?)
+                        }
+
+                        if playMan.mode == .Order {
+                            await dbLocal.sort(playMan.asset?.url as URL?)
+                        }
+                    }
                 }
             }
             .task {
@@ -231,7 +249,7 @@ struct RootView: View {
         guard let asset = playMan.asset else {
             return
         }
-        
+
         Task {
             await self.dbLocal.toggleLike(asset.url)
         }
