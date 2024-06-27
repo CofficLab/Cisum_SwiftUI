@@ -14,7 +14,6 @@ struct DiskFile: FileBox, Hashable, Identifiable, Playable {
     var isUpdated: Bool = false
     var isDeleted: Bool = false
     var isDownloaded: Bool = true
-    var isFolder: Bool = false
     var downloadProgress: Double = 1.0
     var index: Int = 0
     var contentType: String?
@@ -47,7 +46,6 @@ extension DiskFile {
             url: meta.url!,
             isDownloading: meta.isDownloading,
             isDeleted: meta.isDeleted,
-            isFolder: meta.isDirectory,
             downloadProgress: meta.downloadProgress,
             size: meta.fileSize
         )
@@ -71,6 +69,10 @@ extension DiskFile {
 // MARK: Children
 
 extension DiskFile {
+    var children: [DiskFile]? {
+        getChildren()
+    }
+    
     func getChildren() -> [DiskFile]? {
         let fileManager = FileManager.default
 

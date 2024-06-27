@@ -1,5 +1,6 @@
 import Foundation
 import OSLog
+import SwiftUI
 
 protocol FileBox: Identifiable {
     var url: URL { get }
@@ -42,6 +43,18 @@ extension FileBox {
     
     var isNotDownloaded: Bool {
         !isDownloaded
+    }
+    
+    var isiCloud: Bool {
+        iCloudHelper.isCloudPath(url: url)
+    }
+    
+    var isNotiCloud: Bool {
+        !isiCloud
+    }
+    
+    var isLocal: Bool {
+        isNotiCloud
     }
 }
 
@@ -88,5 +101,17 @@ extension FileBox {
     
     func isNotFolder() -> Bool {
         !self.isFolder()
+    }
+}
+
+// MARK: Icon
+
+extension FileBox {
+    var icon: String {
+        isFolder() ? "folder" : "doc.text"
+    }
+    
+    var image: Image {
+        Image(systemName: icon)
     }
 }

@@ -42,6 +42,7 @@ class DiskLocal: ObservableObject, Disk {
     func getRoot() -> DiskFile {
         DiskFile.fromURL(root)
     }
+    
     func getTotal() -> Int {
         0
     }
