@@ -2,7 +2,7 @@ import Foundation
 import SwiftData
 
 @Model
-class CopyTask {
+class CopyTask: FileBox {
     var url: URL
     var createdAt: Date
     var error: String = ""
@@ -13,6 +13,10 @@ class CopyTask {
     var message: String {
         if isRunning {
             return "进行中"
+        }
+        
+        if self.isDownloading {
+            return "正在从 iCloud 下载"
         }
     
         return error

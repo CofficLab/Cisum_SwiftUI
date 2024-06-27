@@ -36,7 +36,6 @@ struct BottomTile: View {
                         .frame(width: 5)
                         .scaleEffect(pressed ? 1.2 : 1)
                         .animation(.easeOut(duration: 0.2), value: pressed)
-                        
                 }
             )
             .frame(maxHeight: .infinity)

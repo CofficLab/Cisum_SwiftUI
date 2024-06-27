@@ -35,6 +35,7 @@ struct RowTask: View {
             
             HStack {
                 Text(task.message).font(.footnote)
+                Spacer()
             }
         }
         .onHover(perform: { hovered = $0 })

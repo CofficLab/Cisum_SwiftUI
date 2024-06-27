@@ -50,10 +50,10 @@ struct StateView: View {
         }
         .onChange(of: count) {
             Task {
-                //                if playMan.asset == nil, let first = await db.first() {
-                //                    os_log("\(self.label)准备第一个")
-                //                    playMan.prepare(first.toPlayAsset())
-                //                }
+                if playMan.asset == nil, let first = await db.first() {
+                    os_log("\(self.label)准备第一个")
+                    playMan.prepare(first.toPlayAsset())
+                }
             }
 
             if count == 0 {

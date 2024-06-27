@@ -2,7 +2,7 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-struct DBTaskView: View {
+struct TaskView: View {
     static var label = "📬 DBTaskView::"
 
     @EnvironmentObject var app: AppManager
@@ -27,6 +27,11 @@ struct DBTaskView: View {
                     Section(
                         header: HStack {
                             Text("正在复制 \(tasks.count)")
+                            Spacer()
+                            Button("关闭", systemImage: "xmark.circle", action: {
+                                app.showCopying = false
+                            })
+                            .labelStyle(.iconOnly)
                         },
                         content: {
                             ForEach(tasks, id: \.url.relativeString) { task in
@@ -41,13 +46,11 @@ struct DBTaskView: View {
                 }
             }
         }
-        .onChange(
-            of: tasks.count,
-            {
-                if tasks.count == 0 {
-                    app.showCopying = false
-                }
-            })
+        .onChange(of: tasks.count, {
+            if tasks.count == 0 {
+                app.showCopying = false
+            }
+        })
     }
 }
 
