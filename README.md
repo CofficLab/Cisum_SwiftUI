@@ -51,7 +51,8 @@ Cisum 看起来是一个非常简单的软件，但其背后的功能并不简�
 
 ### 平台无关的设计理念
 
-不管是什么平台，对 Cisum 来说只是屏幕大小不一样而已，需要适配屏幕，而不是适配平台。
+- 不管是什么平台，对 Cisum 来说只是屏幕大小不一样而已，需要适配屏幕，而不是适配平台
+- 尽量使用Swift UI原生的视图组件，如：List、Table等，因为对多平台的适配最好
 
 ### 常见问题
 
@@ -62,5 +63,6 @@ Cisum 看起来是一个非常简单的软件，但其背后的功能并不简�
 
 - [Cisum Flutter](https://github.com/CofficLab/CisumPlayer)
 - [macOS 联网控制](https://github.com/CofficLab/TravelMode)
+- [基于 Git 的项目管理工具](https://github.com/CofficLab/GitOK)
 
 

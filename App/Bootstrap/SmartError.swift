@@ -35,9 +35,9 @@ enum SmartError: Error, LocalizedError {
         case .PlayFailed:
             "出现系统错误，播放失败"
         case .TargetNotFoundInPlaylist:
-            "播放列表中找不到这个音频"
+            "播放列表中找不到这个文件"
         case .NotDownloaded:
-            "当前歌曲未下载"
+            "当前文件未下载"
         case .NetworkError:
             "网络未连接"
         case .NotExists:

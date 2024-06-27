@@ -176,3 +176,11 @@ extension FileHelper {
         return url.hasDirectoryPath
     }
 }
+
+// MARK: Sub
+
+extension FileHelper {
+    static func isURLInDirectory(_ url: URL, _ dir: URL) -> Bool {
+        url.absoluteString.hasPrefix(dir.absoluteString)
+    }
+}

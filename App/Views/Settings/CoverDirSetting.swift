@@ -9,7 +9,7 @@ struct CoverDirSetting: View {
                     Text(Config.coverDir.absoluteString)
                         .font(.subheadline)
                         .opacity(0.8)
-                    Text("根据音频文件自动生成封面图").font(.footnote)
+                    Text("根据文件自动生成封面图").font(.footnote)
                 }
                 Spacer()
                 #if os(macOS)

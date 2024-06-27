@@ -30,14 +30,7 @@ class DataManager: ObservableObject {
         }
         
         self.disk = disk
-
-        if verbose {
-            os_log("\(Logger.isMain)\(Self.label)初始化(\(self.disk.name))")
-        }
-
-        Task {
-            self.watchDisk()
-        }
+        self.changeDisk(disk)
     }
 
     // MARK: Disk
@@ -45,7 +38,11 @@ class DataManager: ObservableObject {
     func changeDisk(_ to: Disk) {
         os_log("\(self.label)更新磁盘为 \(to.name)")
         disk = to
-        watchDisk()
+        
+        // 目前，只有Music模式需要监听文件变动并写入数据库
+        if self.appScene == .Music {
+            watchDisk()
+        }
     }
 
     /// 监听存储Audio文件的目录的变化，同步到数据库

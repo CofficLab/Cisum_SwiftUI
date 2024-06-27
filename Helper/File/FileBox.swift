@@ -116,6 +116,18 @@ extension FileBox {
     }
 }
 
+// MARK: Sub
+
+extension FileBox {
+    func inDir(_ dir: URL) -> Bool {
+        FileHelper.isURLInDirectory(self.url, dir)
+    }
+    
+    func has(_ url: URL) -> Bool {
+        FileHelper.isURLInDirectory(url, self.url)
+    }
+}
+
 #Preview("App") {
     AppPreview()
         .frame(height: 800)
