@@ -227,7 +227,15 @@ extension DiskiCloud {
         let queue = OperationQueue()
         queue.maxConcurrentOperationCount = 1
         let query = ItemQuery(queue: queue, url: self.root)
-        let result = query.searchMetadataItems()
+        let result = query.searchMetadataItems().debounce(for: .seconds(1))
+        
+        
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 30, execute: {
+            os_log("\(self.label)停止监听")
+            query.stop()
+        })
+        
         for try await collection in result {
             os_log("\(Logger.isMain)\(self.label)\(emoji) Watch(\(collection.items.count))")
                 

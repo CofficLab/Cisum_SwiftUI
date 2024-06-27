@@ -7,11 +7,16 @@ class ItemQuery {
     let queue: OperationQueue
     let url: URL
     var label: String {"\(Logger.isMain)📁 ItemQuery::"}
-    var verbose = true
+    var verbose = false
+    var stopped = false
 
     init(queue: OperationQueue = .main, url: URL) {
         self.queue = queue
         self.url = url
+    }
+    
+    func stop() {
+        self.stopped = true
     }
 
     // MARK: 监听某个目录的变化
@@ -20,7 +25,7 @@ class ItemQuery {
         predicate: NSPredicate? = nil,
         sortDescriptors: [NSSortDescriptor] = [],
         scopes: [Any] = [NSMetadataQueryUbiquitousDocumentsScope],
-        verbose: Bool = false
+        verbose: Bool = true
     ) -> AsyncStream<MetadataItemCollection> {
         if verbose {
             os_log("\(self.label)searchMetadataItems")
@@ -52,6 +57,13 @@ class ItemQuery {
                 object: query,
                 queue: queue
             ) { notification in
+                
+                
+                    if self.stopped {
+                        os_log("\(self.label)停止监听")
+                        return continuation.finish()
+                    }
+                
                 self.collectChanged(continuation, notification: notification, name: .NSMetadataQueryDidUpdate)
             }
 
@@ -85,9 +97,13 @@ class ItemQuery {
                 guard let metadataItem = item as? NSMetadataItem else {
                     return nil
                 }
+                
                 return MetaWrapper(metadataItem: metadataItem)
             }
             
+            if self.verbose {
+                os_log("\(self.label)Yield with \(result.count)")
+            }
             continuation.yield(MetadataItemCollection(name: name, items: result))
         }
     }
@@ -112,10 +128,16 @@ class ItemQuery {
             }
                 
             if changedResult.count > 0 {
+                if self.verbose {
+                    os_log("\(self.label)Yield with changed \(changedResult.count)")
+                }
                 continuation.yield(MetadataItemCollection(name: name, items: changedResult))
             }
             
             if deletedResult.count > 0 {
+                if self.verbose {
+                    os_log("\(self.label)Yield with deleted\(deletedResult.count)")
+                }
                 continuation.yield(MetadataItemCollection(name: name, items: deletedResult))
             }
         }
