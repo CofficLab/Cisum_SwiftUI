@@ -2,7 +2,7 @@ import OSLog
 import SwiftUI
 
 struct BtnLike: View {
-    @EnvironmentObject var dataManager: DataManager
+    @EnvironmentObject var data: DataManager
     @EnvironmentObject var playMan: PlayMan
 
     var like: Bool { playMan.asset?.like ?? false}
@@ -12,14 +12,18 @@ struct BtnLike: View {
     var label: String { "\(Logger.isMain)❤️ BtnLike::" }
 
     var body: some View {
-        ControlButton(
-            title: title,
-            image: getImageName(),
-            dynamicSize: autoResize,
-            onTap: {
-                playMan.toggleLike()
+        ZStack {
+            if data.appScene == .Music {
+                ControlButton(
+                    title: title,
+                    image: getImageName(),
+                    dynamicSize: autoResize,
+                    onTap: {
+                        playMan.toggleLike()
+                    }
+                )
             }
-        )
+        }
     }
 
     private func getImageName() -> String {
