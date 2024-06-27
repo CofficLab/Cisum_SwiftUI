@@ -1,18 +1,19 @@
 import SwiftUI
 
 struct BtnsView: View {
+    @EnvironmentObject var app: AppManager
+    @EnvironmentObject var data: DataManager
+    
     var body: some View {
         GeometryReader { geo in
             VStack {
                 HStack(spacing: 0, content: {
                     Spacer()
-                    if showRow2(geo) == false {
-                        BtnToggleDB(autoResize: true)
-                    }
+                    BtnToggleDB(autoResize: true)
                     BtnPrev(autoResize: true)
                     BtnToggle(autoResize: true)
                     BtnNext(autoResize: true)
-                    if showRow2(geo) == false {
+                    if data.appScene == .Music {
                         BtnMode(autoResize: true)
                     }
                     Spacer()
@@ -21,10 +22,6 @@ struct BtnsView: View {
                 .labelStyle(.iconOnly)
             }
         }
-    }
-
-    func showRow2(_ geo: GeometryProxy) -> Bool {
-        geo.size.height > Config.minHeight + 10000
     }
 
     func getHeight(_ geo: GeometryProxy) -> CGFloat {
