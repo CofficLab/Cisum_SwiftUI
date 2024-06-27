@@ -47,7 +47,7 @@ struct DBViewTree: View {
              selection: $selection
         ) { file in
             DBRow(file.toPlayAsset())
-            .tag(file as DiskFile?)
+                .tag(file as DiskFile?)
         }
     }
 

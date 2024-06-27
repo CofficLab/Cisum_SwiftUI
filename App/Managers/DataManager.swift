@@ -42,8 +42,7 @@ class DataManager: ObservableObject {
         
         disk = to
         
-        // 目前，只有Music模式需要监听文件变动并写入数据库
-        if self.appScene == .Music {
+        if self.appScene == .Music || isiCloudDisk {
             watchDisk()
         }
     }
@@ -55,8 +54,10 @@ class DataManager: ObservableObject {
                 self.updating = items
             }
             
-            Task {
-                await DB(Config.getContainer, reason: "DataManager.WatchDisk").sync(items)
+            if self.appScene == .Music {
+                Task {
+                    await DB(Config.getContainer, reason: "DataManager.WatchDisk").sync(items)
+                }
             }
         }
 
