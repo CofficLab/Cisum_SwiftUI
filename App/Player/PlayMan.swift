@@ -4,7 +4,7 @@ import Foundation
 import OSLog
 import SwiftUI
 
-/* PlayAsset 负责
+/* 负责
       接收用户播放控制事件
       接收系统播放控制事件
       对接系统媒体中心
@@ -154,15 +154,22 @@ extension PlayMan {
     }
 
     func prepare(_ asset: PlayAsset?) {
-        os_log("\(self.label)prepare \(asset?.title ?? "nil")")
+        os_log("\(self.label)prepare \(asset?.fileName ?? "nil")")
         DispatchQueue.main.async {
             self.state = .Ready(asset)
         }
         
     }
 
+    // MARK: Play
+    
     func play(_ asset: PlayAsset, reason: String) {
-        os_log("\(self.label)play \(asset.title) 🐛 \(reason)")
+        os_log("\(self.label)Play \(asset.fileName) 🐛 \(reason)")
+        
+        if asset.isFolder() {
+            return prepare(asset)
+        }
+        
         DispatchQueue.main.async {
             self.state = .Playing(asset)
         }
@@ -217,24 +224,24 @@ extension PlayMan {
         }
 
         if asset.isNotExists() {
-            os_log("\(self.label)不存在 \(asset.title) ⚠️⚠️⚠️")
+            os_log("\(self.label)不存在 \(asset.fileName) ⚠️⚠️⚠️")
             throw SmartError.NotExists
         }
 
         if asset.isDownloading {
-            os_log("\(self.label)在下载 \(asset.title) ⚠️⚠️⚠️")
+            os_log("\(self.label)在下载 \(asset.fileName) ⚠️⚠️⚠️")
             throw SmartError.Downloading
         }
 
         // 未下载的情况
         guard asset.isDownloaded else {
-            os_log("\(self.label)未下载 \(asset.title) ⚠️⚠️⚠️")
+            os_log("\(self.label)未下载 \(asset.fileName) ⚠️⚠️⚠️")
             throw SmartError.NotDownloaded
         }
 
         // 格式不支持
         guard asset.isSupported() else {
-            os_log("\(self.label)格式不支持 \(asset.title) \(asset.ext)")
+            os_log("\(self.label)格式不支持 \(asset.fileName) \(asset.ext)")
             throw SmartError.FormatNotSupported(asset.ext)
         }
 
@@ -245,7 +252,7 @@ extension PlayMan {
             #endif
             player = try AVAudioPlayer(contentsOf: asset.url)
         } catch {
-            os_log(.error, "\(self.label)初始化播放器失败 ->\(asset.title)->\(error)")
+            os_log(.error, "\(self.label)初始化播放器失败 ->\(asset.fileName)->\(error)")
             player = AVAudioPlayer()
         }
 
@@ -324,7 +331,7 @@ extension PlayMan {
     private func setPlayingInfo(verbose: Bool = false) {
         let center = MPNowPlayingInfoCenter.default()
         let artist = "Cisum"
-        let title = asset?.title ?? ""
+        let title = asset?.fileName ?? ""
         let duration: TimeInterval = self.duration
         let currentTime: TimeInterval = self.currentTime
         let image = asset?.getMediaCenterImage() ?? PlayAsset.defaultImage

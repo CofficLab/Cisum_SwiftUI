@@ -22,7 +22,7 @@ struct DBRow: View {
                     )
                 VStack(spacing: 0) {
                     HStack {
-                        Text(asset.title)
+                        Text(asset.fileName)
                         Spacer()
                     }
                     HStack {

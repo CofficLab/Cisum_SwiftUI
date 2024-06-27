@@ -22,7 +22,7 @@ struct DBTree: View {
       VStack(spacing: 0) {
         MenuTile(
           id: file,
-          title: file.title,
+          title: file.fileName,
           isFolder: file.isFolder(),
           level: level,
           deleting: $deleting,

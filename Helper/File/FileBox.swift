@@ -12,10 +12,8 @@ extension FileBox {
 // MARK: Meta
 
 extension FileBox {
-    var title: String {
-        
-        return url.lastPathComponent
-    }
+    var title: String { url.deletingPathExtension().lastPathComponent }
+    var fileName: String { url.lastPathComponent }
     var ext: String { url.pathExtension }
 }
 

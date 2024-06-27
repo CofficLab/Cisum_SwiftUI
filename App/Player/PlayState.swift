@@ -11,13 +11,13 @@ enum PlayState {
     var des: String {
         switch self {
         case let .Ready(asset):
-            "准备 \(asset?.title ?? "nil") 🚀🚀🚀"
+            "准备 \(asset?.fileName ?? "nil") 🚀🚀🚀"
         case let .Error(error, asset):
-            "错误：\(error.localizedDescription) ⚠️⚠️⚠️ -> \(asset?.title ?? "-")"
+            "错误：\(error.localizedDescription) ⚠️⚠️⚠️ -> \(asset?.fileName ?? "-")"
         case let .Playing(asset):
-            "播放 \(asset.title) 🔊🔊🔊"
+            "播放 \(asset.fileName) 🔊🔊🔊"
         case let .Paused(asset):
-            "暂停 \(asset?.title ?? "-") ⏸️⏸️⏸️"
+            "暂停 \(asset?.fileName ?? "-") ⏸️⏸️⏸️"
         default:
             String(describing: self)
         }

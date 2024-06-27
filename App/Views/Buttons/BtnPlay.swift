@@ -13,7 +13,7 @@ struct BtnPlay: View {
 
     var body: some View {
         ControlButton(
-            title: "播放 「\(asset.title)」",
+            title: "播放 「\(asset.fileName)」",
             image: getImageName(),
             dynamicSize: autoResize,
             onTap: {

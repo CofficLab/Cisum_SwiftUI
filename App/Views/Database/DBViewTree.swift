@@ -26,7 +26,7 @@ struct DBViewTree: View {
             self.icon = dataManager.isiCloudDisk ? "icloud" : "folder"
         }
         .onChange(of: selection, {
-            if let s = selection {
+            if let s = selection, s.isNotFolder() {
                 if playMan.isPlaying {
                     playMan.play(s.toPlayAsset(), reason: "点击了")
                 } else {

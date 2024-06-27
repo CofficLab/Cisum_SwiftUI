@@ -25,7 +25,7 @@ struct PlayAsset: FileBox {
     var label: String { "\(Logger.isMain)\(Self.label)" }
 
     func isSupported() -> Bool {
-        Config.supportedExtensions.contains(ext.lowercased())
+        self.isFolder() || Config.supportedExtensions.contains(ext.lowercased())
     }
 
     // MARK: 控制中心的图
@@ -191,7 +191,7 @@ extension PlayAsset {
 
     func getCoverFromMeta(_ callback: @escaping (_ url: URL?) -> Void, verbose: Bool = false, queue: DispatchQueue = .main) {
         if verbose {
-            os_log("\(label)getCoverFromMeta for \(title)")
+            os_log("\(label)getCoverFromMeta for \(fileName)")
         }
 
         if isNotDownloaded {
@@ -222,7 +222,7 @@ extension PlayAsset {
                     case "artwork":
                         if try (makeImage(await item.load(.value), saveTo: coverCacheURL)) != nil {
                             if verbose {
-                                os_log("\(self.label)cover updated -> \(self.title)")
+                                os_log("\(self.label)cover updated -> \(self.fileName)")
                             }
 
                             return queue.async {

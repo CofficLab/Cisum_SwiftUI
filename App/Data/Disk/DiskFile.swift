@@ -94,10 +94,10 @@ extension DiskFile {
     func next() -> DiskFile? {
         let next: DiskFile? = nil
 
-        os_log("\(label)Next of \(title)")
+        os_log("\(label)Next of \(fileName)")
 
         guard let parent = parent, let siblings = parent.getChildren() else {
-            os_log("\(label)Next of \(title) -> nil")
+            os_log("\(label)Next of \(fileName) -> nil")
 
             return next
         }
@@ -107,7 +107,7 @@ extension DiskFile {
         }
         
         guard siblings.count > self.index + 1 else {
-            os_log("\(label)Next of \(title) -> nil")
+            os_log("\(label)Next of \(fileName) -> nil")
 
             return next
         }
@@ -127,10 +127,10 @@ extension DiskFile {
     func prev() -> DiskFile? {
         let prev: DiskFile? = nil
 
-        os_log("\(label)Prev of \(title)")
+        os_log("\(label)Prev of \(fileName)")
 
         guard let parent = parent, let siblings = parent.getChildren() else {
-            os_log("\(label)Prev of \(title) -> nil")
+            os_log("\(label)Prev of \(fileName) -> nil")
 
             return prev
         }
@@ -140,7 +140,7 @@ extension DiskFile {
         }
         
         guard index - 1 >= 0 else {
-            os_log("\(label)Prev of \(title) -> nil")
+            os_log("\(label)Prev of \(fileName) -> nil")
 
             return prev
         }
@@ -313,7 +313,7 @@ extension DiskFile {
 
     func getCoverFromMeta(_ callback: @escaping (_ url: URL?) -> Void, verbose: Bool = false, queue: DispatchQueue = .main) {
         if verbose {
-            os_log("\(label)getCoverFromMeta for \(title)")
+            os_log("\(label)getCoverFromMeta for \(fileName)")
         }
 
         if isNotDownloaded {
@@ -344,7 +344,7 @@ extension DiskFile {
                     case "artwork":
                         if try (makeImage(await item.load(.value), saveTo: coverCacheURL)) != nil {
                             if verbose {
-                                os_log("\(self.label)cover updated -> \(self.title)")
+                                os_log("\(self.label)cover updated -> \(self.fileName)")
                             }
 
                             return queue.async {

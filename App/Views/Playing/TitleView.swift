@@ -6,7 +6,7 @@ struct TitleView: View {
     @EnvironmentObject var playMan: PlayMan
 
     var asset: PlayAsset? { playMan.asset }
-    var characterCount: Int { asset?.title.count ?? 0 }
+    var characterCount: Int { asset?.fileName.count ?? 0 }
     var width: CGFloat
     var label: String {"\(Logger.isMain)📺 TitleView::"}
     var verbose = false
@@ -30,7 +30,7 @@ struct TitleView: View {
         }
 
         // 防止字较少时字体很大
-        let characterCount = max(getCountCharacters(audio.title), 5)
+        let characterCount = max(getCountCharacters(audio.fileName), 5)
 
         if verbose {
             os_log("\(self.label)GetFont width -> \(width), characterCount=\(characterCount)")
