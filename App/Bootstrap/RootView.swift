@@ -11,7 +11,7 @@ struct RootView: View {
     var dbSynced = DBSynced(Config.getSyncedContainer)
 
     var label: String { "\(Logger.isMain)✈️ RootView::" }
-    var disk: Disk { dataManager.disk }
+    var disk: any Disk { dataManager.disk }
 
     var body: some View {
         Config.rootBackground

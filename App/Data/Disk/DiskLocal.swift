@@ -6,8 +6,6 @@ class DiskLocal: ObservableObject, Disk {
     static let localRoot = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
     
     static func getMountedURL() -> URL? {
-        let fileManager = FileManager.default
-        
         guard let localRoot = Self.localRoot else {
             return nil
         }

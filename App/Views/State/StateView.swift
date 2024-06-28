@@ -23,7 +23,7 @@ struct StateView: View {
     var count: Int { audios.count }
     var font: Font { asset == nil ? .title3 : .callout }
     var label: String { "\(Logger.isMain)🖥️ StateView::" }
-    var disk: Disk { dataManager.disk }
+    var disk: any Disk { dataManager.disk }
 
     var body: some View {
         VStack {

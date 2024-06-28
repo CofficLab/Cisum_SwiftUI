@@ -13,7 +13,7 @@ struct DBViewTree: View {
     @State var collapsed: Bool = false
     @State var icon: String = ""
 
-    var disk: Disk { dataManager.disk }
+    var disk: any Disk { dataManager.disk }
     var root: URL { disk.root }
     var rootDiskFile: DiskFile { disk.getRoot() }
     

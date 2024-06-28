@@ -1,9 +1,9 @@
 import Foundation
 import OSLog
 
-protocol Disk {
+protocol Disk: FileBox {
     static var label: String { get }
-    static func make(_ subDirName: String) -> Disk?
+    static func make(_ subDirName: String) -> (any Disk)?
     static func getMountedURL() -> URL?
     
     var root: URL { get }
@@ -42,8 +42,10 @@ protocol Disk {
 }
 
 extension Disk {
+    var url: URL { root }
+    
     var name: String {
-        Self.label + root.pathComponents.suffix(2).joined(separator: "/")
+        Self.label + url.pathComponents.suffix(2).joined(separator: "/")
     }
     
     func getMountedURL() -> URL? {

@@ -15,7 +15,7 @@ class DataManager: ObservableObject {
 
     init() throws {
         let appScene = Config.getCurrentScene()
-        var disk: Disk? = nil
+        var disk: (any Disk)? = nil
         self.appScene = appScene
 
         if Config.iCloudEnabled {
@@ -34,7 +34,7 @@ class DataManager: ObservableObject {
 
     // MARK: Disk
 
-    func changeDisk(_ to: Disk) {
+    func changeDisk(_ to: any Disk) {
         os_log("\(self.label)更新磁盘为 \(to.name)")
         
         self.disk.stopWatch()

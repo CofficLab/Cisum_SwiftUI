@@ -5,7 +5,7 @@ struct BtnDel: View {
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var dataManager: DataManager
 
-    var disk: Disk { dataManager.disk }
+    var disk: any Disk { dataManager.disk }
     var assets: [PlayAsset]
     var callback: () -> Void = {}
     var autoResize = false

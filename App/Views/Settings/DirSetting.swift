@@ -19,6 +19,7 @@ struct DirSetting: View {
                     }
                 }
                 if dataManager.isiCloudDisk {
+                    Text(dataManager.disk.getFileSizeReadable())
                     Text("☁️ 是 iCloud 云盘目录，会保持同步").font(.footnote)
                 } else {
                     Text("💾 是本地目录，不会同步").font(.footnote)

@@ -18,7 +18,7 @@ struct DBLayout: View {
     var main = Config.mainQueue
     var bg = Config.bgQueue
     var dropping: Bool { app.isDropping }
-    var disk: Disk { data.disk }
+    var disk: any Disk { data.disk }
     var label: String { "\(Logger.isMain)\(Self.label) " }
 
     init(verbose: Bool = false) {

@@ -4,7 +4,7 @@ struct BtnDownload: View {
     @EnvironmentObject var dataManager: DataManager
 
     var asset: PlayAsset
-    var disk: Disk { dataManager.disk }
+    var disk: any Disk { dataManager.disk }
 
     var body: some View {
         Button {
