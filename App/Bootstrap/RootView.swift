@@ -34,9 +34,15 @@ struct RootView: View {
                 if let asset = playMan.asset {
                     ToolbarItemGroup(placement: .cancellationAction, content: {
                         Spacer()
-                        BtnLike(asset: asset, autoResize: false)
+                        if dataManager.appScene == .Music {
+                            BtnLike(asset: asset, autoResize: false)
+                        }
+                        
                         BtnShowInFinder(url: asset.url, autoResize: false)
-                        BtnDel(assets: [asset], autoResize: false)
+                        
+                        if dataManager.appScene == .Music {
+                            BtnDel(assets: [asset], autoResize: false)
+                        }
                     })
                 }
             })

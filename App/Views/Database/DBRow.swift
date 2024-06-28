@@ -57,6 +57,9 @@ struct DBRow: View {
         }
         .onHover(perform: { hovered = $0 })
         .frame(maxHeight: .infinity)
+        .onTapGesture {
+            playMan.play(asset, reason: "点击")
+        }
         .contextMenu(menuItems: {
             BtnToggle(asset: asset)
             Divider()

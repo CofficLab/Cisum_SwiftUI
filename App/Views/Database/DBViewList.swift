@@ -46,9 +46,6 @@ struct DBViewList: View {
                 ForEach(items, id: \.self) { audio in
                     DBRow(audio.toPlayAsset())
                         .tag(audio as Audio?)
-                        .onTapGesture {
-                            playMan.play(audio.toPlayAsset(), reason: "点击了")
-                        }
                 }
             })
         }

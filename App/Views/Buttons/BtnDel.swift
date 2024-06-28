@@ -6,26 +6,19 @@ struct BtnDel: View {
     @EnvironmentObject var dataManager: DataManager
 
     var disk: Disk { dataManager.disk }
-    var scene: DiskScene { dataManager.appScene }
     var assets: [PlayAsset]
     var callback: () -> Void = {}
     var autoResize = false
 
     var body: some View {
-        ZStack {
-            if scene == .Music {
-                ControlButton(
-                    title: "删除 \(assets.count) 个",
-                    tips: "彻底删除，不可恢复",
-                    image: getImageName(),
-                    dynamicSize: autoResize,
-                    onTap: {
-                        delete()
-                    })
-            } else {
-                EmptyView()
-            }
-        }
+        ControlButton(
+            title: "删除 \(assets.count) 个",
+            tips: "彻底删除，不可恢复",
+            image: getImageName(),
+            dynamicSize: autoResize,
+            onTap: {
+                delete()
+            })
     }
 
     private func getImageName() -> String {
