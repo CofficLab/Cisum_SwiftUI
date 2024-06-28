@@ -4,7 +4,7 @@ import SwiftData
 import SwiftUI
 
 extension DB {
-    func update(_ audio: Audio) {
+    func update(_ audio: Audio, verbose: Bool = false) {
         if verbose {
             os_log("\(self.label)update \(audio.title)")
         }

@@ -28,7 +28,7 @@ extension DB {
         }
 
         if verbose {
-            os_log("\(self.labelForSync) 计算刚刚同步的项目的MD5(\(group.count))")
+            os_log("\(self.labelForSync) 计算刚刚同步的项目的 Hash(\(group.count))")
         }
         
         self.updateGroupForURLs(group.urls)
@@ -76,9 +76,6 @@ extension DB {
     // MARK: SyncWithUpdatedItems
 
     func syncWithUpdatedItems(_ metas: DiskFileGroup) {
-        // 发出更新事件让UI更新，比如下载进度
-        self.eventManager.emitUpdate(metas)
-
         printRunTime("SyncWithUpdatedItems with count=\(metas.count)") {
             // 如果url属性为unique，数据库已存在相同url的记录，再执行context.insert，发现已存在的被替换成新的了
             // 但在这里，希望如果存在，就不要插入

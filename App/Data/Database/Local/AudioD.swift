@@ -50,7 +50,7 @@ extension DB {
         return next
     }
 
-    static func deleteAudios(context: ModelContext, disk: any Disk, ids: [Audio.ID]) -> Audio? {
+    static func deleteAudios(context: ModelContext, disk: any Disk, ids: [Audio.ID], verbose: Bool = false) -> Audio? {
         if verbose {
             os_log("\(Logger.isMain)\(label)数据库删除")
         }

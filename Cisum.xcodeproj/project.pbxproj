@@ -11,7 +11,7 @@
 		0B11262A2AC6F7B20093DFFA /* BtnToggleDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1126292AC6F7B20093DFFA /* BtnToggleDB.swift */; };
 		0B11262C2AC719B70093DFFA /* ImageHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B11262B2AC719B70093DFFA /* ImageHelper.swift */; };
 		0B11365B2BEFABC700A71FE1 /* JobGetCover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B11365A2BEFABC700A71FE1 /* JobGetCover.swift */; };
-		0B11365F2BF10A0100A71FE1 /* JobGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B11365E2BF10A0100A71FE1 /* JobGroup.swift */; };
+		0B11365F2BF10A0100A71FE1 /* JobHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B11365E2BF10A0100A71FE1 /* JobHash.swift */; };
 		0B1136612BF4CF3000A71FE1 /* Cover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1136602BF4CF3000A71FE1 /* Cover.swift */; };
 		0B1165E92ABBC6C0005C5CBB /* LaunchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1165E82ABBC6C0005C5CBB /* LaunchView.swift */; };
 		0B1165F02ABBCCB0005C5CBB /* AppManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1165EF2ABBCCB0005C5CBB /* AppManager.swift */; };
@@ -164,7 +164,7 @@
 		0B1126292AC6F7B20093DFFA /* BtnToggleDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnToggleDB.swift; sourceTree = "<group>"; };
 		0B11262B2AC719B70093DFFA /* ImageHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageHelper.swift; sourceTree = "<group>"; };
 		0B11365A2BEFABC700A71FE1 /* JobGetCover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobGetCover.swift; sourceTree = "<group>"; };
-		0B11365E2BF10A0100A71FE1 /* JobGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobGroup.swift; sourceTree = "<group>"; };
+		0B11365E2BF10A0100A71FE1 /* JobHash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobHash.swift; sourceTree = "<group>"; };
 		0B1136602BF4CF3000A71FE1 /* Cover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cover.swift; sourceTree = "<group>"; };
 		0B1165E82ABBC6C0005C5CBB /* LaunchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchView.swift; sourceTree = "<group>"; };
 		0B1165EF2ABBCCB0005C5CBB /* AppManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppManager.swift; sourceTree = "<group>"; };
@@ -702,7 +702,7 @@
 				0B1498782BC4DF940075DA61 /* JobDelete.swift */,
 				0B240BD42BF30730004A5944 /* JobExt.swift */,
 				0B11365A2BEFABC700A71FE1 /* JobGetCover.swift */,
-				0B11365E2BF10A0100A71FE1 /* JobGroup.swift */,
+				0B11365E2BF10A0100A71FE1 /* JobHash.swift */,
 				0BAABEB92BC8C5CB00DF4A31 /* JobPrepare.swift */,
 				0BD056882BC6192D00EBC7C4 /* JobSync.swift */,
 				0BAABEB22BC79C9F00DF4A31 /* TaskExt.swift */,
@@ -937,7 +937,7 @@
 				F5675C402C25456300326664 /* DataManager.swift in Sources */,
 				0B901D8A2BB83E28003AC253 /* ItemQuery.swift in Sources */,
 				0B6B8B9D2BBA4D0600F65B23 /* Coffee.swift in Sources */,
-				0B11365F2BF10A0100A71FE1 /* JobGroup.swift in Sources */,
+				0B11365F2BF10A0100A71FE1 /* JobHash.swift in Sources */,
 				0B8113B12C2C38AD007CA124 /* BtnScene.swift in Sources */,
 				0B220F732BB1A3D70077255A /* BtnsView.swift in Sources */,
 				F5511BB62C291D3400400900 /* SceneView.swift in Sources */,

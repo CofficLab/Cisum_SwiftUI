@@ -5,15 +5,11 @@ import SwiftUI
 
 actor DBSynced: ModelActor {
     static let label = "📦 DBSynced::"
-    static let verbose = true
 
     let modelContainer: ModelContainer
     let modelExecutor: any ModelExecutor
-    let eventManager = EventManager()
-
-    var context: ModelContext
+    let context: ModelContext
     var label: String { "\(Logger.isMain)\(DB.label)" }
-    var verbose: Bool { DB.verbose }
 
     init(_ container: ModelContainer, verbose: Bool = false) {
         if verbose {
@@ -123,7 +119,7 @@ extension DBSynced {
         let nanoTime = DispatchTime.now().uptimeNanoseconds - startTime.uptimeNanoseconds
         let timeInterval = Double(nanoTime) / 1000000000
 
-        if DB.verbose && timeInterval > tolerance {
+        if verbose && timeInterval > tolerance {
             os_log("\(Logger.isMain)\(DB.label)\(title) cost \(timeInterval) 秒 🐢🐢🐢")
         }
     }

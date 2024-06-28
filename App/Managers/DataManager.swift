@@ -38,16 +38,16 @@ class DataManager: ObservableObject {
         os_log("\(self.label)更新磁盘为 \(to.name)")
         
         self.disk.stopWatch()
-        
-        disk = to
-        
-        if self.appScene == .Music || isiCloudDisk {
-            watchDisk()
-        }
+        self.disk = to
+        self.watchDisk()
     }
 
     /// 监听存储Audio文件的目录的变化，同步到数据库
     func watchDisk() {
+        if self.appScene != .Music && !self.isiCloudDisk {
+            return
+        }
+        
         disk.onUpdated = { items in
             DispatchQueue.main.async {
                 self.updating = items
@@ -107,18 +107,7 @@ class DataManager: ObservableObject {
         }
         
         changeDisk(disk)
-
         Config.setCurrentScene(to)
-    }
-    
-    func getChildren(_ asset: PlayAsset, _ callback: @escaping ([PlayAsset]) -> Void) {
-        Task {
-            let assets = await db.getChildren(Audio(asset.url)).map({
-                $0.toPlayAsset()
-            })
-            
-            callback(assets)
-        }
     }
 }
 
@@ -182,10 +171,8 @@ extension DataManager {
         let cloudDisk = DiskiCloud(root: cloudMoutedURL)
 
         if Config.iCloudEnabled {
-            os_log("\(Self.label)将文件从 LocalDisk 移动到 CloudDisk 🚛🚛🚛")
             moveAudios(localDisk, cloudDisk)
         } else {
-            os_log("\(Self.label)将文件从 CloudDisk 移动到 LocalDisk 🚛🚛🚛")
             moveAudios(cloudDisk, localDisk)
         }
     }
@@ -193,7 +180,7 @@ extension DataManager {
     func moveAudios(_ from: any Disk, _ to: any Disk, verbose: Bool = true) {
         Task.detached(priority: .low) {
             if verbose {
-                os_log("\(Self.label)将文件从 \(from.root.path) 移动到 \(to.root.path)")
+                os_log("\(Self.label)将文件从 \(from.name) 移动到 \(to.name)")
             }
             
             let fileManager = FileManager.default

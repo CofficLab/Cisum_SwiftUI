@@ -5,28 +5,18 @@ import SwiftUI
 
 actor DB: ModelActor, ObservableObject {
     static let label = "📦 DB::"
-    static let verbose = true
-    static var lastSyncedTime: Date = .distantPast
     
-    // MARK: 后台任务
-    static var shouldStopAllJobs: Bool = false
-    static var shouldStopJobs: Set<String> = []
-    static var runnningJobs: Set<String> = []
-    static var jobLastPrintTime: Dictionary<String, Date> = [:]
-
     let modelContainer: ModelContainer
     let modelExecutor: any ModelExecutor
-    let eventManager = EventManager()
+    let context: ModelContext
+    let queue = DispatchQueue(label: "DB")
 
-    var queue = DispatchQueue(label: "DB")
-    var context: ModelContext
     var onUpdated: () -> Void = { os_log("🍋 DB::updated") }
     var label: String { "\(Logger.isMain)\(DB.label)" }
-    var verbose: Bool { DB.verbose }
 
     init(_ container: ModelContainer, reason: String, verbose: Bool = true) {
         if verbose {
-            let message = "\(Logger.isMain)\(Self.label)🚩🚩🚩 初始化，因为 \(reason)"
+            let message = "\(Logger.isMain)\(Self.label)🚩🚩🚩 初始化(\(reason))"
             
             os_log("\(message)")
         }

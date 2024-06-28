@@ -144,7 +144,7 @@ extension PlayMan {
     }
 
     func prepare(_ asset: PlayAsset?) {
-        os_log("\(self.label)prepare \(asset?.fileName ?? "nil")")
+        os_log("\(self.label)Prepare \(asset?.fileName ?? "nil")")
         DispatchQueue.main.async {
             self.state = .Ready(asset)
         }
