@@ -45,6 +45,12 @@ struct HomeView: View {
                             .tabItem {
                                 Label("设置", systemImage: "gear")
                             }
+                        
+                        StoreView()
+                            .tag("Store")
+                            .tabItem {
+                                Label("订阅", systemImage: "crown")
+                            }
                     }
                     .frame(maxHeight: .infinity)
                     #if os(macOS)

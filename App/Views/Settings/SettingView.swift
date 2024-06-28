@@ -4,10 +4,6 @@ struct SettingView: View {
     var body: some View {
         ScrollView {
             VStack {
-                BuySetting()
-                    .padding(.horizontal)
-                    .padding(.top)
-
                 if Config.isDesktop {
                     DirSetting().padding(.horizontal)
                 }
@@ -24,7 +20,7 @@ struct SettingView: View {
 //                        .padding(.horizontal)
 //                        .padding(.bottom)
                 }
-            }
+            }.padding(.top)
         }
         .modelContainer(Config.getSyncedContainer)
     }

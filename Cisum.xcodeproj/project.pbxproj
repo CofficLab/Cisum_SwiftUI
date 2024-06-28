@@ -159,6 +159,7 @@
 		F586DCD72C2C01FF0078580B /* FatalErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F586DCD62C2C01FF0078580B /* FatalErrorView.swift */; };
 		F586DCD92C2C05A60078580B /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F586DCD82C2C05A60078580B /* RootView.swift */; };
 		F5A076632C2E9C2D00DD4621 /* MigrateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A076622C2E9C2D00DD4621 /* MigrateView.swift */; };
+		F5A076662C2EBE5500DD4621 /* StoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A076652C2EBE5500DD4621 /* StoreView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -316,6 +317,7 @@
 		F586DCD62C2C01FF0078580B /* FatalErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FatalErrorView.swift; sourceTree = "<group>"; };
 		F586DCD82C2C05A60078580B /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		F5A076622C2E9C2D00DD4621 /* MigrateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrateView.swift; sourceTree = "<group>"; };
+		F5A076652C2EBE5500DD4621 /* StoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -540,12 +542,14 @@
 			children = (
 				0BE695912BFE3DCC00CEFFEB /* AllSubscriptions.swift */,
 				0BE695922BFE3DCC00CEFFEB /* BuyButtonStyle.swift */,
+				0B12B0A62C0CB88B00FD43AD /* BuySetting.swift */,
 				0BE695932BFE3DCC00CEFFEB /* BuyView.swift */,
 				0BE695942BFE3DCC00CEFFEB /* CarsView.swift */,
 				0BE695952BFE3DCC00CEFFEB /* MySubscription.swift */,
 				0BE695962BFE3DCC00CEFFEB /* NonRenewables.swift */,
 				0BE695972BFE3DCC00CEFFEB /* OneTimeView.swift */,
 				0BE695982BFE3DCC00CEFFEB /* ProductCell.swift */,
+				F5A076652C2EBE5500DD4621 /* StoreView.swift */,
 			);
 			path = Store;
 			sourceTree = "<group>";
@@ -553,7 +557,6 @@
 		0BE93F2F2BFB8E1C00F25445 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				0B12B0A62C0CB88B00FD43AD /* BuySetting.swift */,
 				F545D1722C1FC9F0006A6AFA /* CloudSetting.swift */,
 				0BA9FB6D2BFE155B008074CB /* CoverDirSetting.swift */,
 				F507F5162C09541B00CB9A3A /* DeviceSetting.swift */,
@@ -812,6 +815,7 @@
 				0B240BD52BF30730004A5944 /* JobExt.swift in Sources */,
 				0BBA42272AC2A8B800C0B977 /* BtnAdd.swift in Sources */,
 				0BBC15912ABAC19F006E82C4 /* BtnPrev.swift in Sources */,
+				F5A076662C2EBE5500DD4621 /* StoreView.swift in Sources */,
 				F573B18A2C0413DD004C34CC /* DeviceHelper.swift in Sources */,
 				0B604AE82AD6384300929DD8 /* BootView.swift in Sources */,
 				0B8C36B62BEDAB5E00C47567 /* BtnMore.swift in Sources */,
