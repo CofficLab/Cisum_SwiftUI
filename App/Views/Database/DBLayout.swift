@@ -33,7 +33,7 @@ struct DBLayout: View {
                 switch data.appScene {
                 case .Music:
                     DBViewList()
-                case .AudioBook,.KidsAudio,.KidsVideo:
+                case .AudiosBook,.AudiosKids,.VideosKids:
                     DBViewTree()
                 }
             }

@@ -3,7 +3,6 @@ import OSLog
 
 class DiskLocal: ObservableObject, Disk {
     static let label = "🛖 DiskLocal::"
-    static let rootDirName = Config.audiosDirName
     static let localRoot = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
     
     static func getMountedURL() -> URL? {
@@ -13,17 +12,7 @@ class DiskLocal: ObservableObject, Disk {
             return nil
         }
         
-        let url = localRoot.appendingPathComponent(Self.rootDirName)
-
-        if !fileManager.fileExists(atPath: url.path) {
-            do {
-                try fileManager.createDirectory(at: url, withIntermediateDirectories: true)
-            } catch {
-                os_log(.error, "\(self.label)创建根目录失败 -> \(error.localizedDescription)")
-            }
-        }
-
-        return url
+        return localRoot
     }
 
     var fileManager = FileManager.default

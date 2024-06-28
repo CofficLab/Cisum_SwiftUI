@@ -33,11 +33,11 @@ struct SceneView: View {
         switch select {
         case .Music:
             app.dbViewType = .List
-        case .AudioBook:
+        case .AudiosBook:
             app.dbViewType = .Tree
-        case .KidsAudio:
+        case .AudiosKids:
             app.dbViewType = .Tree
-        case .KidsVideo:
+        case .VideosKids:
             app.dbViewType = .Tree
         }
     }

@@ -9,7 +9,7 @@ struct Scenes: View {
     var body: some View {
         VStack(spacing: 10) {
             ForEach(DiskScene.allCases.filter({
-                $0 != .KidsVideo
+                $0 != .VideosKids
             })) { scene in
                 GroupBox {
                     scene.card
@@ -28,7 +28,7 @@ struct Scenes: View {
 
 #Preview("APP") {
     BootView {
-        Scenes(selection: Binding.constant(.KidsAudio), isPreseted: Binding.constant(false))
+        Scenes(selection: Binding.constant(.AudiosKids), isPreseted: Binding.constant(false))
     }
     .frame(height: 800)
 }

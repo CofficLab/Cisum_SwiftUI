@@ -28,11 +28,7 @@ extension Config {
     static let syncedDBDirName = debug ? "debug" : "production"
     
     static var syncedDBFileName = debug ? "synced_database.db" : "synced_database.db"
-    
-    // MARK: 音频目录名称
-    
-    static let audiosDirName = debug ? "audios_debug" : "audios"
-    
+        
     // MARK: 本地的数据库的存储路径
     
     static func getDBUrl() -> URL? {

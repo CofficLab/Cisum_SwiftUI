@@ -3,7 +3,6 @@ import OSLog
 
 class DiskiCloud: ObservableObject, Disk {
     static var label = "☁️ DiskiCloud::"
-    static let rootDirName = Config.audiosDirName
     static let cloudRoot = Config.cloudDocumentsDir
 
     // MARK: 磁盘的挂载目录
@@ -16,20 +15,8 @@ class DiskiCloud: ObservableObject, Disk {
             
             return nil
         }
-        
-        let url = cloudRoot.appendingPathComponent(Self.rootDirName)
 
-        if !fileManager.fileExists(atPath: url.path) {
-            do {
-                try fileManager.createDirectory(at: url, withIntermediateDirectories: true)
-            } catch let e {
-                os_log(.error, "\(self.label)创建Disk根目录失败 -> \(e.localizedDescription)")
-                
-                return nil
-            }
-        }
-
-        return url
+        return cloudRoot
     }
     
     var root: URL
