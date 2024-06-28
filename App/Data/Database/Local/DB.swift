@@ -14,7 +14,7 @@ actor DB: ModelActor, ObservableObject {
     var onUpdated: () -> Void = { os_log("🍋 DB::updated") }
     var label: String { "\(Logger.isMain)\(DB.label)" }
 
-    init(_ container: ModelContainer, reason: String, verbose: Bool = true) {
+    init(_ container: ModelContainer, reason: String, verbose: Bool = false) {
         if verbose {
             let message = "\(Logger.isMain)\(Self.label)🚩🚩🚩 初始化(\(reason))"
             

@@ -15,9 +15,9 @@ struct RootView: View {
 
     var body: some View {
         Config.rootBackground
-        
+
             // MARK: 场景变化
-            
+
             .onChange(of: dataManager.appScene, {
                 playMan.stop()
             })
@@ -43,9 +43,9 @@ struct RootView: View {
                         if dataManager.appScene == .Music {
                             BtnLike(asset: asset, autoResize: false)
                         }
-                        
+
                         BtnShowInFinder(url: asset.url, autoResize: false)
-                        
+
                         if dataManager.appScene == .Music {
                             BtnDel(assets: [asset], autoResize: false)
                         }
@@ -147,12 +147,12 @@ struct RootView: View {
     }
 
     // MARK: Next
-    
+
     func getNextOf(_ asset: PlayAsset?) -> PlayAsset? {
         guard let asset = asset else {
             return nil
         }
-        
+
         if dataManager.appScene != .Music {
             return DiskFile(url: asset.url).next()?.toPlayAsset()
         } else {
@@ -161,12 +161,12 @@ struct RootView: View {
     }
 
     // MARK: Prev
-    
+
     func getPrevOf(_ asset: PlayAsset?) -> PlayAsset? {
         guard let asset = asset else {
             return nil
         }
-        
+
         if dataManager.appScene != .Music {
             return DiskFile(url: asset.url).prev()?.toPlayAsset()
         } else {
@@ -175,28 +175,17 @@ struct RootView: View {
     }
 
     func onStateChanged(_ state: PlayState, verbose: Bool = true) {
-        if verbose {
-            os_log("\(label)播放状态变了 -> \(state.des)")
-        }
-
         DispatchQueue.main.async {
-            appManager.error = nil
+            if verbose {
+                os_log("\(label)播放状态变了 -> \(state.des)")
+            }
 
-            switch state {
-            case let .Playing(asset):
-                Task {
-                    await self.dbLocal.increasePlayCount(asset.url)
-                }
-            case let .Error(error, _):
-                appManager.error = error
-            case .Stopped, .Finished:
-                break
-            default:
-                break
+            appManager.error = state.getError()
+            Task {
+                Config.setCurrentURL(state.getAsset()?.url)
+                await self.dbLocal.increasePlayCount(state.getPlayingAsset()?.url)
             }
         }
-
-        Config.setCurrentURL(state.getAsset()?.url)
     }
 
     func toggleLike() {

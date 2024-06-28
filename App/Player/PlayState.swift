@@ -46,4 +46,22 @@ enum PlayState {
             nil
         }
     }
+    
+    func getError() -> Error? {
+        switch self {
+        case let .Error(error, _):
+            return error
+        default:
+            return nil
+        }
+    }
+    
+    func getPlayingAsset() -> PlayAsset? {
+        switch self {
+        case let .Playing(asset):
+            return asset
+        default:
+            return nil
+        }
+    }
 }

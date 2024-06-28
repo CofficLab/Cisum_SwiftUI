@@ -33,6 +33,12 @@ extension DB {
 // MARK: 播放次数
 
 extension DB {
+    func increasePlayCount(_ url: URL?) {
+        if let url = url {
+            increasePlayCount(url)
+        }
+    }
+    
     func increasePlayCount(_ url: URL) {
         if let a = findAudio(url) {
             a.playCount += 1
