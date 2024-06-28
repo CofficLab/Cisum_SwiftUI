@@ -12,4 +12,8 @@ extension Config {
     static func disableiCloud() {
         Config.iCloudEnabled = false
     }
+    
+    static func setiCloud(_ v: Bool) {
+        v ? enableiCloud() : disableiCloud()
+    }
 }

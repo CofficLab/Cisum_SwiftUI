@@ -44,7 +44,7 @@ class DiskiCloud: ObservableObject, Disk {
         os_log("\(Logger.isMain)\(DiskiCloud.label)updated with items.count=\(items.count)")
     }
     
-    init(root: URL) {
+    required init(root: URL) {
         let queue = OperationQueue()
         queue.maxConcurrentOperationCount = 1
         
@@ -256,14 +256,11 @@ extension DiskiCloud {
 // MARK: Move
 
 extension DiskiCloud {
-    func moveFile(at sourceURL: URL, to destinationURL: URL) {
-        let handler = iCloudHandler()
-        Task {
-            do {
-                try await handler.moveFile(at: sourceURL, to: destinationURL)
-            } catch let e {
-                os_log(.error, "\(e.localizedDescription)")
-            }
+    func moveFile(at sourceURL: URL, to destinationURL: URL) async {
+        do {
+            try await self.cloudHandler.moveFile(at: sourceURL, to: destinationURL)
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
         }
     }
 }

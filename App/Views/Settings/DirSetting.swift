@@ -11,7 +11,7 @@ struct DirSetting: View {
         GroupBox {
             HStack {
                 VStack(alignment: .leading, spacing: 5) {
-                    Text("仓库目录").font(.headline)
+                    Text("仓库目录 \(dataManager.disk.name)").font(.headline)
                     if dataManager.isiCloudDisk {
                         Text("是 iCloud 云盘目录，会保持同步").font(.footnote)
                     } else {

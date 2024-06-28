@@ -28,7 +28,7 @@ protocol Disk {
     
     func getDownloadingCount() -> Int
     
-    func moveFile(at sourceURL: URL, to destinationURL: URL) 
+    func moveFile(at sourceURL: URL, to destinationURL: URL) async
     
     func makeURL(_ fileName: String) -> URL
     
@@ -37,6 +37,8 @@ protocol Disk {
     func next(_ url: URL) -> DiskFile?
     
     func getTotal() -> Int
+    
+    init(root: URL)
 }
 
 extension Disk {
@@ -85,7 +87,7 @@ extension Disk {
             }
         }
 
-        return DiskiCloud(root: subRoot)
+        return Self.init(root: subRoot)
     }
     
     func make(_ subDirName: String) -> (any Disk)? {

@@ -158,6 +158,30 @@ extension DataManager {
 // MARK: Migrate
 
 extension DataManager {
+    func enableiCloud() throws {
+        os_log("\(self.label)Enable iCloud")
+        let disk = DiskiCloud.make(appScene.folderName)
+        
+        guard let disk = disk else {
+            throw SmartError.NoDisk
+        }
+        
+        self.changeDisk(disk)
+        self.migrate()
+    }
+    
+    func disableiCloud() throws {
+        os_log("\(self.label)Disable iCloud")
+        let disk = DiskLocal.make(appScene.folderName)
+        
+        guard let disk = disk else {
+            throw SmartError.NoDisk
+        }
+        
+        self.changeDisk(disk)
+        self.migrate()
+    }
+    
     func migrate() {
         guard let localMountedURL = DiskLocal.getMountedURL() else {
             return
@@ -196,10 +220,14 @@ extension DataManager {
                     if verbose {
                         os_log("\(Self.label)移动 \(sourceURL.lastPathComponent)")
                     }
-                    from.moveFile(at: sourceURL, to: destnationURL)
+                    await from.moveFile(at: sourceURL, to: destnationURL)
                 }
             } catch {
                 os_log("Error: \(error)")
+            }
+            
+            if verbose {
+                os_log("\(Self.label)将文件从 \(from.name) 移动到 \(to.name) 完成 🎉🎉🎉")
             }
         }
     }

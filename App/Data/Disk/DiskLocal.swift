@@ -35,7 +35,7 @@ class DiskLocal: ObservableObject, Disk {
         os_log("\(Logger.isMain)\(DiskiCloud.label)updated with items.count=\(collection.count)")
     }
     
-    init(root: URL) {
+    required init(root: URL) {
         self.root = root
     }
     
@@ -173,7 +173,7 @@ extension DiskLocal {
 // MARK: Move
 
 extension DiskLocal {
-    func moveFile(at sourceURL: URL, to destinationURL: URL) {
+    func moveFile(at sourceURL: URL, to destinationURL: URL) async {
         do {
             try fileManager.moveItem(at: sourceURL, to: destinationURL)
         } catch let e {
