@@ -82,7 +82,7 @@ struct AlbumView: View {
         })
     }
 
-    func updateCover(reason: String, verbose: Bool = true) {
+    func updateCover(reason: String, verbose: Bool = false) {
         let title = asset.title
         let label = Self.label
         Task.detached(priority: .background) {

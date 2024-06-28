@@ -46,18 +46,12 @@ struct DBViewList: View {
                 ForEach(items, id: \.self) { audio in
                     DBRow(audio.toPlayAsset())
                         .tag(audio as Audio?)
+                        .onTapGesture {
+                            playMan.play(audio.toPlayAsset(), reason: "点击了")
+                        }
                 }
             })
         }
-        .onChange(of: selection, {
-            if let audio = selection {
-                if playMan.isPlaying {
-                    playMan.play(audio.toPlayAsset(), reason: "点击了")
-                } else {
-                    playMan.prepare(audio.toPlayAsset())
-                }
-            }
-        })
         .onChange(of: playMan.asset?.url, {
             selection = audios.first(where: {
                 $0.url == playMan.asset?.url
