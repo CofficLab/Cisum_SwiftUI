@@ -27,11 +27,11 @@ extension DB {
             syncWithUpdatedItems(group)
         }
 
-        if verbose {
-            os_log("\(self.labelForSync) 计算刚刚同步的项目的 Hash(\(group.count))")
-        }
-        
-        self.updateGroupForURLs(group.urls)
+//        if verbose {
+//            os_log("\(self.labelForSync) 计算刚刚同步的项目的 Hash(\(group.count))")
+//        }
+//        
+//        self.updateGroupForURLs(group.urls)
     }
 
     // MARK: SyncWithDisk

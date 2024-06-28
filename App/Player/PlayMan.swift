@@ -313,7 +313,11 @@ extension PlayMan: AVAudioPlayerDelegate {
 
             if self.mode == .Loop {
                 os_log("\(self.label)播放完成，单曲循环")
-                self.resume()
+                if let asset = self.asset {
+                    self.play(asset, reason: "单曲循环")
+                } else {
+                    self.next()
+                }
             } else {
                 os_log("\(self.label)播放完成，\(self.mode.description)")
                 self.next()

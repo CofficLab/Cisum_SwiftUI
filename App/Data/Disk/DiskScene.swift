@@ -31,7 +31,7 @@ enum DiskScene: String, CaseIterable, Identifiable {
         case .VideosKids:
             Image(systemName: "video.circle")
         case .AudiosBook:
-            Image(systemName: "books.vertical.circle.fill")
+            Image(systemName: "books.vertical.circle")
         }
     }
     

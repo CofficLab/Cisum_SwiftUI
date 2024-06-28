@@ -18,17 +18,25 @@ struct DirSetting: View {
                             .labelStyle(.iconOnly)
                     }
                 }
-                if dataManager.isiCloudDisk {
-                    Text(dataManager.disk.getFileSizeReadable())
-                    Text("☁️ 是 iCloud 云盘目录，会保持同步").font(.footnote)
-                } else {
-                    Text("💾 是本地目录，不会同步").font(.footnote)
-                }
+                
+                VStack(alignment: .leading) {
+                    if dataManager.isiCloudDisk {
+                        Text(dataManager.disk.getFileSizeReadable())
+                        Text("☁️ 是 iCloud 云盘目录，会保持同步")
+                    } else {
+                        Text("💾 是本地目录，不会同步")
+                    }
+                }.font(.footnote)
 
                 VStack(alignment: .leading) {
                     ForEach(DiskScene.allCases) { s in
                         HStack {
-                            Text(s.title)
+                            VStack(alignment: .leading) {
+                                Text(s.title)
+                                if let disk = dataManager.disk.make(s.folderName) {
+                                    Text(disk.getFileSizeReadable()).font(.footnote)
+                                }
+                            }
                             Spacer()
                             if let root = dataManager.disk.make(s.folderName)?.root {
                                 BtnOpenFolder(url: root)

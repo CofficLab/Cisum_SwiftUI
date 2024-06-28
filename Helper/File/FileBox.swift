@@ -22,11 +22,37 @@ extension FileBox {
 
 extension FileBox {
     func getFileSize() -> Int64 {
-        FileHelper.getFileSize(url)
+        if self.isNotFolder() {
+            FileHelper.getFileSize(url)
+        } else {
+            getFolderSize(self.url)
+        }
+        
     }
 
     func getFileSizeReadable() -> String {
         FileHelper.getFileSizeReadable(getFileSize())
+    }
+    
+    private func getFolderSize(_ url: URL) -> Int64 {
+        var totalSize: Int64 = 0
+        
+        do {
+            let fileManager = FileManager.default
+            let contents = try  fileManager.contentsOfDirectory(at: url, includingPropertiesForKeys: [.fileSizeKey], options: .skipsHiddenFiles)
+            
+            for itemURL in contents {
+                if itemURL.hasDirectoryPath {
+                    totalSize += getFolderSize(itemURL)
+                } else {
+                    totalSize += FileHelper.getFileSize(itemURL)
+                }
+            }
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
+        
+        return totalSize
     }
 }
 

@@ -4,9 +4,7 @@ struct SettingView: View {
     var body: some View {
         ScrollView {
             VStack {
-                if Config.isDesktop {
-                    DirSetting().padding(.horizontal)
-                }
+                DirSetting().padding(.horizontal)
                 
                 //CloudSetting().padding(.horizontal)
                 VersionSetting().padding(.horizontal)
