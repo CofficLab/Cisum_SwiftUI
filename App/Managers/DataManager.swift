@@ -14,7 +14,6 @@ class DataManager: ObservableObject {
     var db: DB = DB(Config.getContainer, reason: "dataManager")
 
     init() throws {
-        let verbose = true
         let appScene = Config.getCurrentScene()
         var disk: Disk? = nil
         self.appScene = appScene

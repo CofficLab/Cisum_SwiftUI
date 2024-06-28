@@ -20,38 +20,44 @@ struct BtnDel: View {
                     image: getImageName(),
                     dynamicSize: autoResize,
                     onTap: {
-                        Task {
-                            // appManager.stateMessage = "正在删除 \(audios.count) 个"
-
-                            let isPlaying = playMan.isPlaying
-
-                            guard let lastAssetURL = assets.last?.url else {
-                                return
-                            }
-
-                            let next = disk.next(lastAssetURL)
-
-                            disk.deleteFiles(assets.map { $0.url })
-
-                            if let asset = playMan.asset, assets.map({ $0.url }).contains(asset.url) {
-                                if isPlaying, let next = next {
-                                    playMan.play(next.toPlayAsset(), reason: "删除了")
-                                } else {
-                                    playMan.prepare(next?.toPlayAsset())
-                                }
-                            }
-
-                            appManager.setFlashMessage("已删除")
-                            appManager.cleanStateMessage()
-                            callback()
-                        }
+                        delete()
                     })
+            } else {
+                EmptyView()
             }
         }
     }
 
     private func getImageName() -> String {
         return "trash"
+    }
+    
+    private func delete() {
+        Task {
+            // appManager.stateMessage = "正在删除 \(audios.count) 个"
+
+            let isPlaying = playMan.isPlaying
+
+            guard let lastAssetURL = assets.last?.url else {
+                return
+            }
+
+            let next = disk.next(lastAssetURL)
+
+            disk.deleteFiles(assets.map { $0.url })
+
+            if let asset = playMan.asset, assets.map({ $0.url }).contains(asset.url) {
+                if isPlaying, let next = next {
+                    playMan.play(next.toPlayAsset(), reason: "删除了")
+                } else {
+                    playMan.prepare(next?.toPlayAsset())
+                }
+            }
+
+            appManager.setFlashMessage("已删除")
+            appManager.cleanStateMessage()
+            callback()
+        }
     }
 }
 

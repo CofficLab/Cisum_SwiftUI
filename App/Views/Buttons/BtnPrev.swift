@@ -2,15 +2,18 @@ import OSLog
 import SwiftUI
 
 struct BtnPrev: View {
-    @EnvironmentObject var appManager: AppManager
     @EnvironmentObject var playMan: PlayMan
 
     var autoResize = false
 
     var body: some View {
-        ControlButton(title: "上一曲", image: "backward.fill", dynamicSize: autoResize, onTap: {
-            playMan.onPrev()
-        })
+        ControlButton(
+            title: "上一曲",
+            image: "backward.fill",
+            dynamicSize: autoResize,
+            onTap: {
+                playMan.prev()
+            })
     }
 }
 

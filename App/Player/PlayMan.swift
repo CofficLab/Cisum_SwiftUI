@@ -91,12 +91,14 @@ class PlayMan: NSObject, ObservableObject {
         os_log("\(PlayMan.label)播放器状态已变为 \(state.des)")
     }
     
-    var onNext: () -> Void = {
-        os_log("\(PlayMan.label)Next")
+    var onGetPrevOf: (_ asset: PlayAsset?) -> PlayAsset? = { asset in
+        os_log("\(PlayMan.label)GetPrevOf -> \(asset?.title ?? "nil")")
+        return nil
     }
     
-    var onPrev: () -> Void = {
-        os_log("\(PlayMan.label)Prev")
+    var onGetNextOf: (_ asset: PlayAsset?) -> PlayAsset? = { asset in
+        os_log("\(PlayMan.label)GetNextOf -> \(asset?.title ?? "nil")")
+        return nil
     }
     
     var onToggleLike: () -> Void = {
@@ -197,6 +199,26 @@ extension PlayMan {
     func toggle() {
         isPlaying ? pause() : resume()
     }
+    
+    // MARK: Prev
+    
+    func prev() {
+        if let prev = self.onGetPrevOf(self.asset) {
+            self.play(prev, reason: "Prev")
+        } else {
+            self.stop()
+        }
+    }
+    
+    // MARK: Next
+    
+    func next() {
+        if let next = self.onGetNextOf(self.asset) {
+            self.play(next, reason: "Next")
+        } else {
+            self.stop()
+        }
+    }
 }
 
 // MARK: 控制 AVAudioPlayer
@@ -289,8 +311,13 @@ extension PlayMan: AVAudioPlayerDelegate {
                 return pause()
             }
 
-            os_log("\(Logger.isMain)\(self.label)播放完成")
-            self.onNext()
+            if self.mode == .Loop {
+                os_log("\(self.label)播放完成，单曲循环")
+                self.resume()
+            } else {
+                os_log("\(self.label)播放完成，\(self.mode.description)")
+                self.next()
+            }
         }
     }
 
@@ -356,13 +383,13 @@ extension PlayMan {
     // 接收控制中心的指令
     func onCommand() {
         c.nextTrackCommand.addTarget { _ in
-            self.onNext()
+            self.next()
 
             return .success
         }
 
         c.previousTrackCommand.addTarget { _ in
-            self.onPrev()
+            self.prev()
             
             return .success
         }

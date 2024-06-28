@@ -29,25 +29,26 @@ struct RootView: View {
                     }
                 })
 
+                // MARK: 工具栏
+
                 if let asset = playMan.asset {
                     ToolbarItemGroup(placement: .cancellationAction, content: {
                         Spacer()
                         BtnLike(asset: asset, autoResize: false)
                         BtnShowInFinder(url: asset.url, autoResize: false)
                         BtnDel(assets: [asset], autoResize: false)
-                    }
-                    )
+                    })
                 }
             })
             .task {
                 restore()
 
-                playMan.onNext = {
-                    self.next()
+                playMan.onGetNextOf = { asset in
+                    self.getNextOf(asset)
                 }
 
-                playMan.onPrev = {
-                    self.prev()
+                playMan.onGetPrevOf = { asset in
+                    self.getPrevOf(asset)
                 }
 
                 playMan.onStateChange = { state in
@@ -134,89 +135,30 @@ struct RootView: View {
     }
 
     // MARK: Next
-
-    func next(manual: Bool = false, verbose: Bool = true) {
-        if verbose {
-            os_log("\(label)next \(manual ? "手动触发" : "自动触发") ⬇️⬇️⬇️")
+    
+    func getNextOf(_ asset: PlayAsset?) -> PlayAsset? {
+        guard let asset = asset else {
+            return nil
         }
-
-        if playMan.mode == .Loop && manual == false {
-            return playMan.resume()
-        }
-
-        guard let asset = playMan.asset else {
-            return
-        }
-
-        if appManager.dbViewType == .Tree {
-            if let next = DiskFile(url: asset.url).next() {
-                if playMan.isPlaying || manual == false {
-                    playMan.play(next.toPlayAsset(), reason: "在播放时或自动触发下一首")
-                } else {
-                    playMan.prepare(next.toPlayAsset())
-                }
-
-                Task {
-                    disk.download(next.url, reason: "Next")
-                }
-            } else {
-                playMan.stop()
-            }
+        
+        if dataManager.appScene != .Music {
+            return DiskFile(url: asset.url).next()?.toPlayAsset()
         } else {
-            Task {
-                if let i = await dbLocal.nextOf(asset.url) {
-                    if playMan.isPlaying || manual == false {
-                        playMan.play(i.toPlayAsset(), reason: "在播放时或自动触发下一首")
-                    } else {
-                        playMan.prepare(i.toPlayAsset())
-                    }
-                } else {
-                    playMan.stop()
-                }
-            }
+            return dbLocal.getNextOf(asset.url)?.toPlayAsset()
         }
     }
 
     // MARK: Prev
-
-    /// 跳到上一首，manual=true表示由用户触发
-    func prev(manual: Bool = false, verbose: Bool = true) {
-        if verbose {
-            os_log("\(label)prev ⬆️")
+    
+    func getPrevOf(_ asset: PlayAsset?) -> PlayAsset? {
+        guard let asset = asset else {
+            return nil
         }
-
-        if playMan.mode == .Loop && manual == false {
-            return
-        }
-
-        guard let asset = playMan.asset else {
-            return
-        }
-
-        if appManager.dbViewType == .Tree {
-            if let prev = DiskFile(url: asset.url).prev() {
-                if playMan.isPlaying || manual == false {
-                    playMan.play(prev.toPlayAsset(), reason: "在播放时或自动触发上一首")
-                } else {
-                    playMan.prepare(prev.toPlayAsset())
-                }
-
-                Task {
-                    disk.download(prev.url, reason: "Prev")
-                }
-            } else {
-                playMan.stop()
-            }
+        
+        if dataManager.appScene != .Music {
+            return DiskFile(url: asset.url).prev()?.toPlayAsset()
         } else {
-            Task {
-                if let i = await self.dbLocal.pre(asset.url) {
-                    if self.playMan.isPlaying {
-                        self.playMan.play(i.toPlayAsset(), reason: "在播放时触发了上一首")
-                    } else {
-                        playMan.prepare(i.toPlayAsset())
-                    }
-                }
-            }
+            return dbLocal.getPrevOf(asset.url)?.toPlayAsset()
         }
     }
 

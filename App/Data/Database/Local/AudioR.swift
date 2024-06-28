@@ -37,8 +37,20 @@ extension DB {
         }
     }
 
+    func isAllInCloud() -> Bool {
+        getTotalOfAudio() > 0 && first() == nil
+    }
+}
+
+// MARK: Last
+
+extension DB {
     /// 最后一个
     func last() -> Audio? {
+        Self.last(context)
+    }
+    
+    static func last(_ context: ModelContext) -> Audio? {
         var descriptor = FetchDescriptor<Audio>(predicate: #Predicate<Audio> {
             $0.title != ""
         }, sortBy: [
@@ -53,10 +65,6 @@ extension DB {
         }
 
         return nil
-    }
-
-    func isAllInCloud() -> Bool {
-        getTotalOfAudio() > 0 && first() == nil
     }
 }
 
@@ -102,51 +110,32 @@ extension DB {
     }
 }
 
-// MARK: Next & Prev
+// MARK: Next
 
 extension DB {
-    /// The previous one of provided URL
-    func pre(_ url: URL?) -> Audio? {
-        os_log("🍋 DBAudio::preOf \(url?.lastPathComponent ?? "nil")")
+    nonisolated func getNextOf(_ url: URL?, verbose: Bool = false) -> Audio? {
+        if verbose {
+            os_log("\(Logger.isMain)\(Self.label)NextOf -> \(url?.lastPathComponent ?? "-")")
+        }
         
         guard let url = url else {
-            return first()
+            return nil
         }
-
-        guard let audio = self.findAudio(url) else {
-            return first()
+        
+        let context = ModelContext(self.modelContainer)
+        guard let audio = Self.findAudio(url, context: context) else {
+            return nil
         }
-
-        return pre(audio)
+        
+        return Self.nextOf(context: context, audio: audio)
     }
     
-    /// The previous one of provided Audio
-    func pre(_ audio: Audio?) -> Audio? {
-        os_log("🍋 DBAudio::preOf [\(audio?.order ?? 0)] \(audio?.title ?? "nil")")
-        guard let audio = audio else {
-            return first()
+    /// The next one of provided URL
+    func nextOf(_ url: URL?, verbose: Bool = false) -> Audio? {
+        if verbose {
+            os_log("\(self.label)NextOf -> \(url?.lastPathComponent ?? "-")")
         }
-
-        let order = audio.order
-        var descriptor = FetchDescriptor<Audio>()
-        descriptor.sortBy.append(.init(\.order, order: .reverse))
-        descriptor.fetchLimit = 1
-        descriptor.predicate = #Predicate {
-            $0.order < order
-        }
-
-        do {
-            let result = try context.fetch(descriptor)
-            return result.first ?? last()
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-        }
-
-        return nil
-    }
-    
-    /// The next one of provided Audio
-    func nextOf(_ url: URL?) -> Audio? {
+        
         guard let url = url else {
             return nil
         }
@@ -187,10 +176,79 @@ extension DB {
     }
 }
 
+// MARK: Prev
+
+extension DB {
+    /// The previous one of provided URL
+    func pre(_ url: URL?) -> Audio? {
+        os_log("🍋 DBAudio::preOf \(url?.lastPathComponent ?? "nil")")
+        
+        guard let url = url else {
+            return first()
+        }
+
+        guard let audio = self.findAudio(url) else {
+            return first()
+        }
+
+        return prev(audio)
+    }
+    
+    /// The previous one of provided Audio
+    func prev(_ audio: Audio?) -> Audio? {
+        os_log("🍋 DBAudio::preOf [\(audio?.order ?? 0)] \(audio?.title ?? "nil")")
+        guard let audio = audio else {
+            return first()
+        }
+
+        return Self.prevOf(context: context, audio: audio)
+    }
+    
+    nonisolated func getPrevOf(_ url: URL?, verbose: Bool = false) -> Audio? {
+        if verbose {
+            os_log("\(Logger.isMain)\(Self.label)PrevOf -> \(url?.lastPathComponent ?? "-")")
+        }
+        
+        guard let url = url else {
+            return nil
+        }
+        
+        let context = ModelContext(self.modelContainer)
+        guard let audio = Self.findAudio(url, context: context) else {
+            return nil
+        }
+        
+        return Self.prevOf(context: context, audio: audio)
+    }
+    
+    static func prevOf(context: ModelContext, audio: Audio, verbose: Bool = true) -> Audio? {
+        if verbose {
+            os_log("\(Logger.isMain)\(Self.label)PrevOf [\(audio.order)] \(audio.title)")
+        }
+
+        let order = audio.order
+        var descriptor = FetchDescriptor<Audio>()
+        descriptor.sortBy.append(.init(\.order, order: .reverse))
+        descriptor.fetchLimit = 1
+        descriptor.predicate = #Predicate {
+            $0.order < order
+        }
+
+        do {
+            let result = try context.fetch(descriptor)
+            return result.first ?? Self.last(context)
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
+
+        return nil
+    }
+}
+
 // MARK: Query-Find
 
 extension DB {
-    func findAudio(_ url: URL, verbose: Bool = false) -> Audio? {
+    static func findAudio(_ url: URL, context: ModelContext, verbose: Bool = false) -> Audio? {
         if verbose {
             os_log("\(self.label)FindAudio -> \(url.lastPathComponent)")
         }
@@ -204,6 +262,10 @@ extension DB {
         }
 
         return nil
+    }
+    
+    func findAudio(_ url: URL) -> Audio? {
+        Self.findAudio(url, context: context)
     }
     
     func findAudio(_ id: Audio.ID) -> Audio? {
