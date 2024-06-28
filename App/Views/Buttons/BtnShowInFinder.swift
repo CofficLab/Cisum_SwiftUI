@@ -10,7 +10,9 @@ struct BtnShowInFinder: View {
             image: getImageName(),
             dynamicSize: autoResize,
             onTap: {
-                FileHelper.showInFinder(url: url)
+                Task.detached {
+                    FileHelper.showInFinder(url: url)
+                }
             })
     }
 
