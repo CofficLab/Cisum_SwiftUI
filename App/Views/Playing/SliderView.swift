@@ -42,6 +42,11 @@ struct SliderView: View {
                 .font(getFont())
         }
         .font(.caption)
+        .onChange(of: playMan.asset?.url, {
+            if playMan.asset == nil {
+                disable()
+            }
+        })
         .onReceive(timer) { _ in
             if app.error != nil {
                 disable()

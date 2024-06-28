@@ -58,7 +58,7 @@ class PlayMan: NSObject, ObservableObject {
                 player.pause()
             case .Stopped:
                 player.stop()
-                player.currentTime = 0
+                player = makeEmptyPlayer()
             case .Finished:
                 player.stop()
             case .Error:

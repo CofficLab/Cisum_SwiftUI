@@ -15,6 +15,12 @@ struct RootView: View {
 
     var body: some View {
         Config.rootBackground
+        
+            // MARK: 场景变化
+            
+            .onChange(of: dataManager.appScene, {
+                playMan.stop()
+            })
 
             // MARK: 版本升级操作
 
