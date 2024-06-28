@@ -12,7 +12,7 @@ struct SettingView: View {
                     DirSetting().padding(.horizontal)
                 }
                 
-                CloudSetting().padding(.horizontal)
+                //CloudSetting().padding(.horizontal)
                 VersionSetting().padding(.horizontal)
                 
                 if Config.debug {
