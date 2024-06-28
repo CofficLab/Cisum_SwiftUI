@@ -24,7 +24,15 @@ struct DBViewList: View {
 
     var total: Int { audios.count }
     var label: String { "\(Logger.isMain)\(Self.label)" }
-    var items: [Audio] { audios.filter({ $0.isNotFolder()}) }
+    var items: [Audio] { audios.filter({ $0.isNotFolder() }) }
+    
+    var showTips: Bool {
+        if app.isDropping {
+            return true
+        }
+
+        return app.flashMessage.isEmpty && audios.count == 0
+    }
 
     init(verbose: Bool = false) {
         if verbose {
@@ -33,27 +41,33 @@ struct DBViewList: View {
     }
 
     var body: some View {
-        List(selection: $selection) {
-            Section(header: HStack {
-                Text("共 \(total.description)")
-                Spacer()
-                if Config.isNotDesktop {
-                    BtnAdd()
-                        .font(.title2)
-                        .labelStyle(.iconOnly)
-                }
-            }, content: {
-                ForEach(items, id: \.self) { audio in
-                    DBRow(audio.toPlayAsset())
-                        .tag(audio as Audio?)
-                }
+        ZStack {
+            List(selection: $selection) {
+                Section(header: HStack {
+                    Text("共 \(total.description)")
+                    Spacer()
+                    if Config.isNotDesktop {
+                        BtnAdd()
+                            .font(.title2)
+                            .labelStyle(.iconOnly)
+                    }
+                }, content: {
+                    ForEach(items, id: \.self) { audio in
+                        DBRow(audio.toPlayAsset())
+                            .tag(audio as Audio?)
+                    }
+                })
+            }
+            .onChange(of: playMan.asset?.url, {
+                selection = audios.first(where: {
+                    $0.url == playMan.asset?.url
+                })
             })
+            
+            if showTips {
+                DBTips()
+            }
         }
-        .onChange(of: playMan.asset?.url, {
-            selection = audios.first(where: {
-                $0.url == playMan.asset?.url
-            })
-        })
     }
 }
 

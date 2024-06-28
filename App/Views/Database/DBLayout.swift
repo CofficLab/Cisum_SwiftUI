@@ -28,23 +28,19 @@ struct DBLayout: View {
     }
 
     var body: some View {
-        ZStack {
-            VStack(spacing: 0) {
-                ZStack {
-                    switch data.appScene {
-                    case .Music:
-                        DBViewList()
-                    case .AudioBook,.KidsAudio,.KidsVideo:
-                        DBViewTree()
-                    }
+        VStack(spacing: 0) {
+            ZStack {
+                switch data.appScene {
+                case .Music:
+                    DBViewList()
+                case .AudioBook,.KidsAudio,.KidsVideo:
+                    DBViewTree()
                 }
-                .frame(maxHeight: .infinity)
-
-                TaskView()
-                    .shadow(radius: 10)
             }
+            .frame(maxHeight: .infinity)
 
-            DBTips()
+            TaskView()
+                .shadow(radius: 10)
         }
         .fileImporter(
             isPresented: $app.isImporting,
