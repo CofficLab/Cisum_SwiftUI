@@ -33,7 +33,7 @@ extension Migrate {
     }
     
     func moveTo(_ url: URL, _ t: URL) {
-        os_log("\(self.label)move \(url.lastPathComponent) -> \(t.lastPathComponent)")
+        os_log("\(self.label)Move \(url.lastPathComponent) -> \(t.lastPathComponent)")
         
         let fileManager = FileManager.default
         
@@ -47,19 +47,19 @@ extension Migrate {
                 .appendingPathComponent("\(fileName)-\(times)")
                 .appendingPathExtension(ext)
             times += 1
-            os_log("\(self.label)move  -> \(d.lastPathComponent)")
+            os_log("\(self.label)Move  -> \(d.lastPathComponent)")
         }
         
         do {
             // 获取授权
             if url.startAccessingSecurityScopedResource() {
                 os_log(
-                    "\(self.label)copy 获取授权后移动 \(url.lastPathComponent, privacy: .public)"
+                    "\(self.label)Move 获取授权后移动 \(url.lastPathComponent, privacy: .public)"
                 )
                 try FileManager.default.moveItem(at: url, to: d)
                 url.stopAccessingSecurityScopedResource()
             } else {
-                os_log("\(self.label)copy 获取授权失败，可能不是用户选择的文件，直接移动 \(url.lastPathComponent)")
+                os_log("\(self.label)Move 获取授权失败，可能不是用户选择的文件，直接移动 \(url.lastPathComponent)")
                 try fileManager.copyItem(at: url, to: d)
             }
         } catch {
