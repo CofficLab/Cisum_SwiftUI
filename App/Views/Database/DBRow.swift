@@ -35,14 +35,13 @@ struct DBRow: View {
                     if asset.isNotFolder() {
                         HStack {
                             Text(asset.getFileSizeReadable())
-                                .foregroundStyle(.secondary)
 
                             if asset.like {
                                 Image(systemName: "star.fill")
                             }
 
                             Spacer()
-                        }
+                        }.foregroundStyle(.secondary)
                     }
                 }
                 Spacer()

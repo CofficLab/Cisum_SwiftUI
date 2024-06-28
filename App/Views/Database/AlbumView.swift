@@ -13,15 +13,7 @@ struct AlbumView: View {
     
     var isDownloading: Bool { downloadingPercent > 0 && downloadingPercent < 100}
     var isNotDownloaded: Bool { !isDownloaded }
-    var isDownloaded: Bool {
-        let result = downloadingPercent == 100
-        
-        if result {
-            updateCover()
-        }
-        
-        return result
-    }
+    var isDownloaded: Bool { downloadingPercent == 100 }
     var downloadingPercent: Double {
         for file in updating.files {
             if file.url == url {
@@ -81,12 +73,23 @@ struct AlbumView: View {
         }
         .clipShape(shape)
         .onAppear {
-            updateCover()
+            updateCover(reason: "OnAppear")
         }
+        .onChange(of: isDownloaded, {
+            if isDownloaded {
+                updateCover(reason: "下载完成")
+            }
+        })
     }
 
-    func updateCover(verbose: Bool = false) {
+    func updateCover(reason: String, verbose: Bool = true) {
+        let title = asset.title
+        let label = Self.label
         Task.detached(priority: .background) {
+            if verbose {
+                os_log("\(Logger.isMain)\(label)UpdateCover for \(title) Because of \(reason)")
+            }
+            
             let image = await asset.getCoverImage()
 
             DispatchQueue.main.async {
