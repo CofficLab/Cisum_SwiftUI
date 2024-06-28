@@ -59,7 +59,7 @@ struct DBRow: View {
         .onHover(perform: { hovered = $0 })
         .frame(maxHeight: .infinity)
         .contextMenu(menuItems: {
-            BtnPlay(asset: asset, autoResize: false)
+            BtnToggle(asset: asset)
             Divider()
             BtnDownload(asset: asset)
             BtnEvict(asset: asset)

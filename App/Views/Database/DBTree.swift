@@ -43,7 +43,7 @@ struct DBTree: View {
                     }
                 )
                 .contextMenu(menuItems: {
-                    BtnPlay(asset: file.toPlayAsset(), autoResize: false)
+                    BtnToggle(asset: file.toPlayAsset(), autoResize: false)
                     Divider()
                     BtnDownload(asset: file.toPlayAsset())
                     BtnEvict(asset: file.toPlayAsset())
