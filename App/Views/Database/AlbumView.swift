@@ -33,8 +33,8 @@ struct AlbumView: View {
     }
 
     /// forPlaying表示显示在正在播放界面
-    init(_ audio: PlayAsset, forPlaying: Bool = false) {
-        self.asset = audio
+    init(_ asset: PlayAsset, forPlaying: Bool = false) {
+        self.asset = asset
         self.forPlaying = forPlaying
     }
 

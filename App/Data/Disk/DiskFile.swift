@@ -14,6 +14,7 @@ struct DiskFile: FileBox, Hashable, Identifiable, Playable {
     var isUpdated: Bool = false
     var isDeleted: Bool = false
     var isDownloaded: Bool = true
+    var isFolder: Bool = false
     var downloadProgress: Double = 1.0
     var index: Int = 0
     var contentType: String?
@@ -25,14 +26,6 @@ struct DiskFile: FileBox, Hashable, Identifiable, Playable {
 }
 
 extension DiskFile {
-    func toAudio(verbose: Bool = false) -> Audio {
-        if verbose {
-            os_log("\(self.label)ToAudio: size(\(size.debugDescription))")
-        }
-        
-        return Audio(url, size: size)
-    }
-
     static func fromURL(_ url: URL) -> Self {
         DiskFile(url: url, isDownloading: false, downloadProgress: 1)
     }
@@ -46,6 +39,7 @@ extension DiskFile {
             url: meta.url!,
             isDownloading: meta.isDownloading,
             isDeleted: meta.isDeleted,
+            isFolder: meta.isDirectory,
             downloadProgress: meta.downloadProgress,
             size: meta.fileSize
         )
@@ -174,6 +168,15 @@ extension DiskFile {
     func toPlayAsset() -> PlayAsset {
         PlayAsset(url: url)
     }
+    
+    func toAudio(verbose: Bool = false) -> Audio {
+        if verbose {
+            os_log("\(self.label)ToAudio: size(\(size.debugDescription))")
+        }
+        
+        return Audio(url, size: size, isFolder: isFolder)
+    }
+
 }
 
 extension DiskFile {

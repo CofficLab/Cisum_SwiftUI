@@ -16,15 +16,14 @@ struct DBViewList: View {
 
     @EnvironmentObject var app: AppManager
     @EnvironmentObject var playMan: PlayMan
-    @Environment(\.modelContext) private var modelContext
+    @Environment(\.modelContext) var modelContext
 
-    @Query(Audio.descriptorAll, animation: .default) var audios: [Audio]
+    @Query(Audio.descriptorNotFolder) var audios: [Audio]
 
     @State var selection: Audio? = nil
 
     var total: Int { audios.count }
     var label: String { "\(Logger.isMain)\(Self.label)" }
-    var items: [Audio] { audios.filter({ $0.isNotFolder() }) }
     
     var showTips: Bool {
         if app.isDropping {
@@ -52,7 +51,7 @@ struct DBViewList: View {
                             .labelStyle(.iconOnly)
                     }
                 }, content: {
-                    ForEach(items, id: \.self) { audio in
+                    ForEach(audios, id: \.self) { audio in
                         DBRow(audio.toPlayAsset())
                             .tag(audio as Audio?)
                     }

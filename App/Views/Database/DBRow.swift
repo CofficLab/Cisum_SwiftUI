@@ -14,7 +14,7 @@ struct DBRow: View {
 
     var body: some View {
         ZStack {
-            HStack(alignment: .center) {
+            HStack {
                 ZStack {
                     if asset.isNotFolder() {
                         AlbumView(asset)
@@ -26,12 +26,8 @@ struct DBRow: View {
                     }
                 }
                 
-                VStack(spacing: 0) {
-                    HStack {
-                        Text(asset.fileName)
-                        Spacer()
-                    }
-                    
+                VStack(alignment: .leading, spacing: 0) {
+                    Text(asset.fileName)
                     if asset.isNotFolder() {
                         HStack {
                             Text(asset.getFileSizeReadable())
@@ -39,9 +35,9 @@ struct DBRow: View {
                             if asset.like {
                                 Image(systemName: "star.fill")
                             }
-
-                            Spacer()
-                        }.foregroundStyle(.secondary)
+                        }
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
                     }
                 }
                 Spacer()
@@ -56,7 +52,6 @@ struct DBRow: View {
             }
         }
         .onHover(perform: { hovered = $0 })
-        .frame(maxHeight: .infinity)
         .onTapGesture {
             playMan.play(asset, reason: "点击")
         }
@@ -71,7 +66,6 @@ struct DBRow: View {
             Divider()
             BtnDel(assets: [asset], autoResize: false)
         })
-        
     }
 }
 

@@ -20,6 +20,12 @@ class Audio: FileBox {
         SortDescriptor(\.order, order: .forward)
     ])
     
+    static var descriptorNotFolder = FetchDescriptor(predicate: #Predicate<Audio> { audio in
+        audio.isFolder == false
+    }, sortBy: [
+        SortDescriptor(\.order, order: .forward)
+    ])
+    
     static var descriptorFirst: FetchDescriptor<Audio> {
         var descriptor = Audio.descriptorAll
         descriptor.sortBy.append(.init(\.order, order: .forward))
@@ -32,6 +38,8 @@ class Audio: FileBox {
     let fileManager = FileManager.default
     
     // MARK: Properties
+    
+    // 新增字段记得设置默认值，否则低版本更新时崩溃
 
     @Attribute(.unique)
     var url: URL
@@ -45,8 +53,7 @@ class Audio: FileBox {
     var contentType: String?
     var hasCover: Bool? = nil
     var fileHash: String? = nil
-
-    // 新增字段记得设置默认值，否则低版本更新时崩溃
+    var isFolder: Bool = false
 
     var verbose: Bool { Self.verbose }
     var dislike: Bool { !like }
@@ -63,7 +70,8 @@ class Audio: FileBox {
          size: Int64? = nil,
          title: String? = nil,
          identifierKey: String? = nil,
-         contentType: String? = nil
+         contentType: String? = nil,
+         isFolder: Bool = false
     ) {
         if Self.verbose {
             os_log("\(Logger.isMain)\(Self.label)Init -> \(url.lastPathComponent)")
@@ -121,8 +129,6 @@ extension Audio {
 }
 
 #Preview("App") {
-    BootView {
-        ContentView()
-    }
-    .modelContainer(Config.getContainer)
+    AppPreview()
+        .frame(height: 800)
 }
