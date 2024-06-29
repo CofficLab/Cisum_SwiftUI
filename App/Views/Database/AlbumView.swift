@@ -2,27 +2,19 @@ import OSLog
 import SwiftUI
 
 struct AlbumView: View {
-    @EnvironmentObject var dataManager: DataManager
+    @EnvironmentObject var data: DataManager
     
     static var verbose = false
     static var label = "🐰 AlbumView::"
     
     @State var image: Image?
+    @State var downloadingPercent: Double = 100
     
     // MARK: Download
     
     var isDownloading: Bool { downloadingPercent > 0 && downloadingPercent < 100}
     var isNotDownloaded: Bool { !isDownloaded }
     var isDownloaded: Bool { downloadingPercent == 100 }
-    var downloadingPercent: Double {
-        for file in updating.files {
-            if file.url == url {
-                return file.downloadProgress
-            }
-        }
-
-        return asset.isDownloaded ? 100 : 0
-    }
     
     var main = Config.mainQueue
     var bg = Config.bgQueue
@@ -32,7 +24,7 @@ struct AlbumView: View {
     var fileManager = FileManager.default
     var verbose: Bool { Self.verbose }
     var label: String { "\(Logger.isMain)\(Self.label)" }
-    var updating: DiskFileGroup { dataManager.updating }
+    var updating: DiskFileGroup { data.updating }
     var shape: RoundedRectangle {
         if forPlaying {
             if Config.isiOS {
@@ -62,7 +54,7 @@ struct AlbumView: View {
             } else if isNotDownloaded {
                 NotDownloadedAlbum(forPlaying: forPlaying).onTapGesture {
                     Task {
-                        dataManager.disk.download(self.asset.url, reason: "点击了Album")
+                        data.disk.download(self.asset.url, reason: "点击了Album")
                     }
                 }
             } else if let image = image {
@@ -73,11 +65,24 @@ struct AlbumView: View {
         }
         .clipShape(shape)
         .onAppear {
+            if let file = updating.find(asset.url) {
+                self.downloadingPercent = file.downloadProgress
+            } else {
+                self.downloadingPercent = asset.isDownloaded ? 100 : 0
+            }
+            
             updateCover(reason: "OnAppear")
         }
         .onChange(of: isDownloaded, {
             if isDownloaded {
                 updateCover(reason: "下载完成")
+            }
+        })
+        .onChange(of: updating, {
+            for file in updating.files {
+                if file.url == url {
+                    self.downloadingPercent = file.downloadProgress
+                }
             }
         })
     }

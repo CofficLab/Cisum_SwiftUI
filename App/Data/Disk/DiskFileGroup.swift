@@ -1,6 +1,6 @@
 import Foundation
 
-struct DiskFileGroup {
+struct DiskFileGroup: Equatable {
     static var empty = DiskFileGroup(files: [], isFullLoad: true)
     
     var files: [DiskFile]
@@ -24,6 +24,10 @@ struct DiskFileGroup {
     }
     
     var urls: [URL] { files.map({ $0.url }) }
+    
+    func find(_ url: URL) -> DiskFile? {
+        files.first(where: { $0.url == url})
+    }
     
     static func fromURLs(_ urls: [URL], isFullLoad: Bool) -> Self {
         DiskFileGroup(files: urls.map({

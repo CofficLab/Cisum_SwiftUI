@@ -34,7 +34,7 @@ struct DBViewList: View {
         return app.flashMessage.isEmpty && audios.count == 0
     }
 
-    init(verbose: Bool = false) {
+    init(verbose: Bool = true) {
         if verbose {
             os_log("\(Logger.isMain)\(Self.label)初始化")
         }

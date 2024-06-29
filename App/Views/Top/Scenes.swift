@@ -8,9 +8,7 @@ struct Scenes: View {
     
     var body: some View {
         VStack(spacing: 10) {
-            ForEach(DiskScene.allCases.filter({
-                $0 != .VideosKids
-            })) { scene in
+            ForEach(DiskScene.allCases) { scene in
                 GroupBox {
                     scene.card
                         .frame(maxWidth: .infinity)

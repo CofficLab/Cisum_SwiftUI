@@ -5,9 +5,9 @@ import SwiftUI
 
 extension DB {
     // MARK: Watch
-    
+
     var labelForSync: String {
-        "\(self.label)🪣🪣🪣"
+        "\(label)🪣🪣🪣"
     }
 
     func sync(_ group: DiskFileGroup, verbose: Bool = true) {
@@ -30,7 +30,7 @@ extension DB {
 //        if verbose {
 //            os_log("\(self.labelForSync) 计算刚刚同步的项目的 Hash(\(group.count))")
 //        }
-//        
+//
 //        self.updateGroupForURLs(group.urls)
     }
 
@@ -48,7 +48,7 @@ extension DB {
                 if let item = hashMap[audio.url] {
                     // 更新数据库记录
                     audio.size = item.size
-                    
+
                     // 记录存在哈希表中，同步完成，删除哈希表记录
                     hashMap.removeValue(forKey: audio.url)
                 } else {
@@ -72,36 +72,35 @@ extension DB {
 
         os_log("\(self.jobEnd(startTime, title: "\(self.labelForSync) SyncWithDisk(\(group.count))", tolerance: 0.01))")
     }
-    
+
     // MARK: SyncWithUpdatedItems
 
-    func syncWithUpdatedItems(_ metas: DiskFileGroup) {
-        printRunTime("SyncWithUpdatedItems with count=\(metas.count)") {
-            // 如果url属性为unique，数据库已存在相同url的记录，再执行context.insert，发现已存在的被替换成新的了
-            // 但在这里，希望如果存在，就不要插入
-            for (_, meta) in metas.files.enumerated() {
-                if meta.isDeleted {
-                    let deletedURL = meta.url
-                    
-                    do {
-                        try context.delete(model: Audio.self, where: #Predicate { audio in
-                            audio.url == deletedURL
-                        })
-                    } catch let e {
-                        os_log(.error, "\(e.localizedDescription)")
-                    }
-                } else {
-                    if findAudio(meta.url) == nil {
-                        context.insert(meta.toAudio())
-                    }
+    func syncWithUpdatedItems(_ metas: DiskFileGroup, verbose: Bool = true) {
+        os_log("\(self.label)SyncWithUpdatedItems with count=\(metas.count)")
+        // 如果url属性为unique，数据库已存在相同url的记录，再执行context.insert，发现已存在的被替换成新的了
+        // 但在这里，希望如果存在，就不要插入
+        for (_, meta) in metas.files.enumerated() {
+            if meta.isDeleted {
+                let deletedURL = meta.url
+
+                do {
+                    try context.delete(model: Audio.self, where: #Predicate { audio in
+                        audio.url == deletedURL
+                    })
+                } catch let e {
+                    os_log(.error, "\(e.localizedDescription)")
+                }
+            } else {
+                if findAudio(meta.url) == nil {
+                    context.insert(meta.toAudio())
                 }
             }
+        }
 
-            do {
-                try context.save()
-            } catch let e {
-                os_log(.error, "\(e.localizedDescription)")
-            }
+        do {
+            try context.save()
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
         }
     }
 }

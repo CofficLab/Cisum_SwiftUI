@@ -231,7 +231,7 @@ extension DiskiCloud {
             NSPredicate(format: "NOT %K ENDSWITH %@", NSMetadataItemFSNameKey, ".plist"),
             NSPredicate(format: "NOT %K BEGINSWITH %@", NSMetadataItemFSNameKey, "."),
             NSPredicate(format: "NOT %K BEGINSWITH[c] %@", NSMetadataItemFSNameKey, ".")
-        ]).debounce(for: .seconds(1))
+        ]).debounce(for: .seconds(0.2))
         for try await collection in result {
             os_log("\(Logger.isMain)\(self.label)\(emoji) Watch(\(collection.items.count))")
                 
