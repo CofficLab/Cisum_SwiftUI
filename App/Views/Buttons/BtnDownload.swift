@@ -5,10 +5,11 @@ struct BtnDownload: View {
 
     var asset: PlayAsset
     var disk: any Disk { dataManager.disk }
+    let queue = DispatchQueue(label: "cisum.btnDownload")
 
     var body: some View {
         Button {
-            Task {
+            queue.async {
                 disk.download(asset.url, reason: "点击了下载")
             }
         } label: {
