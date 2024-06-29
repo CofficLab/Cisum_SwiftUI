@@ -129,7 +129,7 @@ struct ControlView: View {
 
     private func getBottomHeight(_ geo: GeometryProxy) -> CGFloat {
         if Config.hasHomeIndicator() && Config.isNotDesktop && showDB == false {
-            return 50
+            return 0
         }
 
         return 0

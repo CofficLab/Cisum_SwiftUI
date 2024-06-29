@@ -24,7 +24,9 @@ class AppManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
             self.showDB = true
         }
         
-        Config.setShowDB(true)
+        Task {
+            Config.setShowDB(true)
+        }
     }
     
     func closeDBView() {
@@ -32,15 +34,13 @@ class AppManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
             self.showDB = false
         }
         
-        Config.setShowDB(false)
+        Task {
+            Config.setShowDB(false)
+        }
     }
     
     func toggleDBView() {
-        if showDB {
-            self.closeDBView()
-        } else {
-            self.showDBView()
-        }
+        showDB ? self.closeDBView() : self.showDBView()
     }
     
     func cleanStateMessage() {
