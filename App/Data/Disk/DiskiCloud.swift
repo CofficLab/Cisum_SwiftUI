@@ -8,8 +8,6 @@ class DiskiCloud: ObservableObject, Disk {
     // MARK: 磁盘的挂载目录
 
     static func getMountedURL() -> URL? {
-        let fileManager = FileManager.default
-        
         guard let cloudRoot = Self.cloudRoot else {
             os_log(.error, "\(self.label)无法获取根目录，因为 CloudRoot=nil")
             

@@ -4,11 +4,10 @@ import SwiftUI
 struct AlbumView: View {
     @EnvironmentObject var data: DataManager
     
-    static var verbose = false
     static var label = "🐰 AlbumView::"
     
     @State var image: Image?
-    @State var downloadingPercent: Double = 100
+    @State var downloadingPercent: Double = -1
     
     // MARK: Download
     
@@ -16,13 +15,8 @@ struct AlbumView: View {
     var isNotDownloaded: Bool { !isDownloaded }
     var isDownloaded: Bool { downloadingPercent == 100 }
     
-    var main = Config.mainQueue
-    var bg = Config.bgQueue
     var asset: PlayAsset
-    var url: URL
     var forPlaying: Bool = false
-    var fileManager = FileManager.default
-    var verbose: Bool { Self.verbose }
     var label: String { "\(Logger.isMain)\(Self.label)" }
     var updating: DiskFileGroup { data.updating }
     var shape: RoundedRectangle {
@@ -41,7 +35,6 @@ struct AlbumView: View {
     /// forPlaying表示显示在正在播放界面
     init(_ audio: PlayAsset, forPlaying: Bool = false) {
         self.asset = audio
-        url = audio.url
         self.forPlaying = forPlaying
     }
 
@@ -52,11 +45,7 @@ struct AlbumView: View {
             } else if isDownloading {
                 Self.makeProgressView(downloadingPercent / 100)
             } else if isNotDownloaded {
-                NotDownloadedAlbum(forPlaying: forPlaying).onTapGesture {
-                    Task {
-                        data.disk.download(self.asset.url, reason: "点击了Album")
-                    }
-                }
+                NotDownloadedAlbum(forPlaying: forPlaying)
             } else if let image = image {
                 image.resizable().scaledToFit()
             } else {
@@ -70,8 +59,6 @@ struct AlbumView: View {
             } else {
                 self.downloadingPercent = asset.isDownloaded ? 100 : 0
             }
-            
-            updateCover(reason: "OnAppear")
         }
         .onChange(of: isDownloaded, {
             if isDownloaded {
@@ -80,7 +67,7 @@ struct AlbumView: View {
         })
         .onChange(of: updating, {
             for file in updating.files {
-                if file.url == url {
+                if file.url == asset.url {
                     self.downloadingPercent = file.downloadProgress
                 }
             }
