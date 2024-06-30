@@ -7,10 +7,7 @@ struct TopView: View {
 
     var body: some View {
         HStack {
-            if Config.isDebug {
-                SceneView().padding(.leading)
-            }
-
+        SceneView().padding(.leading)
             Spacer()
             if let asset = asset {
                 HStack {

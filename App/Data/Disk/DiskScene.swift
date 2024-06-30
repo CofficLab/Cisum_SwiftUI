@@ -16,23 +16,14 @@ enum DiskScene: String, CaseIterable, Identifiable {
         case .Music:
             "music.note.list"
         case .AudiosBook:
-            "books.vertical.circle.fill"
+            "books.vertical"
         case .VideosKids:
-            "video.circle"
+            "video"
         }
     }
     
     var icon: some View {
-        switch self {
-        case .AudiosKids:
-            Image(systemName: "figure.and.child.holdinghands")
-        case .Music:
-            Image(systemName: "music.note.list")
-        case .VideosKids:
-            Image(systemName: "video.circle")
-        case .AudiosBook:
-            Image(systemName: "books.vertical.circle")
-        }
+        Image(systemName: iconName)
     }
     
     var folderName: String {
@@ -76,7 +67,10 @@ enum DiskScene: String, CaseIterable, Identifiable {
     
     var card: some View {
         VStack {
-            Text(title)
+            HStack {
+                self.icon
+                Text(title)
+            }
             
             Text(description).font(.footnote)
         }
