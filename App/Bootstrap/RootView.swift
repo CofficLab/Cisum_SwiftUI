@@ -4,28 +4,31 @@ import SwiftUI
 struct RootView: View {
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var appManager: AppManager
-    @EnvironmentObject var dataManager: DataManager
+    @EnvironmentObject var data: DataManager
     @EnvironmentObject var dbLocal: DB
 
     var verbose: Bool = true
     var dbSynced = DBSynced(Config.getSyncedContainer)
 
     var label: String { "\(Logger.isMain)✈️ RootView::" }
-    var disk: any Disk { dataManager.disk }
+    var disk: any Disk { data.disk }
 
     var body: some View {
         Config.rootBackground
 
             // MARK: 场景变化
 
-            .onChange(of: dataManager.appScene, {
+            .onChange(of: data.disk.root, {
                 playMan.stop()
+                
+                os_log("\(self.label)Disk已变为：\(data.disk.name)")
+                restore()
             })
 
             // MARK: 版本升级操作
 
             .onAppear {
-                Migrate().migrateTo25(dataManager: dataManager)
+                Migrate().migrateTo25(dataManager: data)
             }
             .ignoresSafeArea()
             .toolbar(content: {
@@ -40,13 +43,13 @@ struct RootView: View {
                 if let asset = playMan.asset {
                     ToolbarItemGroup(placement: .cancellationAction, content: {
                         Spacer()
-                        if dataManager.appScene == .Music {
+                        if data.appScene == .Music {
                             BtnLike(asset: asset, autoResize: false)
                         }
 
                         BtnShowInFinder(url: asset.url, autoResize: false)
 
-                        if dataManager.appScene == .Music {
+                        if data.appScene == .Music {
                             BtnDel(assets: [asset], autoResize: false)
                         }
                     })
@@ -125,7 +128,7 @@ struct RootView: View {
     func restore(verbose: Bool = true) {
         playMan.mode = PlayMode(rawValue: Config.currentMode) ?? playMan.mode
 
-        if let currentAudioId = Config.currentAudio {
+        if let currentAudioId = Config.currentAudio, data.appScene == .Music {
             if verbose {
                 os_log("\(label)上次播放 -> \(currentAudioId.lastPathComponent)")
             }
@@ -141,7 +144,23 @@ struct RootView: View {
             }
         } else {
             if verbose {
-                os_log("\(label)无上次播放的音频")
+                os_log("\(label)无上次播放的音频，尝试播放第一个(\(data.disk.name))")
+            }
+            
+            if data.appScene == .Music {
+                Task {
+                    if let first = await self.dbLocal.first() {
+                        playMan.prepare(first.toPlayAsset())
+                    } else {
+                        os_log("\(self.label)restore nothing to play")
+                    }
+                }
+            } else {
+                if let first = data.disk.getRoot().children?.first {
+                    playMan.prepare(first.toPlayAsset())
+                } else {
+                    os_log("\(self.label)restore nothing to play")
+                }
             }
         }
     }
@@ -153,7 +172,7 @@ struct RootView: View {
             return nil
         }
 
-        if dataManager.appScene != .Music {
+        if data.appScene != .Music {
             return DiskFile(url: asset.url).next()?.toPlayAsset()
         } else {
             return dbLocal.getNextOf(asset.url)?.toPlayAsset()
@@ -167,7 +186,7 @@ struct RootView: View {
             return nil
         }
 
-        if dataManager.appScene != .Music {
+        if data.appScene != .Music {
             return DiskFile(url: asset.url).prev()?.toPlayAsset()
         } else {
             return dbLocal.getPrevOf(asset.url)?.toPlayAsset()

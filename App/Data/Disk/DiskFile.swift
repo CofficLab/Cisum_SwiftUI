@@ -103,7 +103,9 @@ extension DiskFile {
         }
         
         guard siblings.count > self.index + 1 else {
-            os_log("\(label)Next of \(fileName) -> nil")
+            if verbose {
+                os_log("\(label)Next of \(fileName) -> nil")
+            }
 
             return nil
         }
