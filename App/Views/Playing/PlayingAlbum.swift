@@ -24,10 +24,10 @@ struct PlayingAlbum: View {
     var view: some View {
         ZStack {
             if let asset = playMan.asset {
-                AlbumView(asset, forPlaying: true)
+                CoverView(asset, role: .Hero)
                     .id(asset.url)
             } else {
-                DefaultAlbum(forPlaying: true)
+                DefaultAlbum(role: .Hero)
             }
         }
     }

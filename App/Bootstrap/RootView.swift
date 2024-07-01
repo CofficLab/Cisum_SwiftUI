@@ -3,6 +3,7 @@ import SwiftUI
 
 struct RootView: View {
     @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var videoMan: VideoMan
     @EnvironmentObject var appManager: AppManager
     @EnvironmentObject var data: DataManager
     @EnvironmentObject var dbLocal: DB

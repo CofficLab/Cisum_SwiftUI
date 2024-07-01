@@ -7,14 +7,7 @@ struct MigrateView: View {
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
-                if Config.isNotDesktop {
-                    TopView()
-                }
-                
-                HomeView()
-                    .alert(isPresented: $appManager.showAlert, content: {
-                        Alert(title: Text(appManager.alertMessage))
-                    })
+                Text("Migrate")
             }
 
             if !appManager.flashMessage.isEmpty {

@@ -17,7 +17,7 @@ struct DBRow: View {
             HStack {
                 ZStack {
                     if asset.isNotFolder() {
-                        AlbumView(asset)
+                        CoverView(asset)
                             .frame(width: 36, height: 36)
                     } else {
                         asset.image

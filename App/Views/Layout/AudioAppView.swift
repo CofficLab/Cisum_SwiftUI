@@ -2,7 +2,7 @@ import AVKit
 import OSLog
 import SwiftUI
 
-struct HomeView: View {
+struct AudioAppView: View {
     static var label = "🖥️ HomeView::"
     
     @EnvironmentObject var appManager: AppManager
@@ -102,7 +102,7 @@ struct HomeView: View {
     }
 }
 
-extension HomeView {
+extension AudioAppView {
     private func increseHeightToShowDB(_ geo: GeometryProxy, verbose: Bool = true) {
         os_log("\(self.label)增加 Height 以展开数据库视图")
         let space = geo.size.height - controlViewHeightMin

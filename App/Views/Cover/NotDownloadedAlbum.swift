@@ -1,11 +1,11 @@
 import SwiftUI
 
 struct NotDownloadedAlbum: View {
-    var forPlaying = false
+    var role: CoverView.Role = .Icon
     
     var body: some View {
         ZStack {
-            if forPlaying {
+            if role == .Hero {
                 HStack {
                     Spacer()
                     Image(systemName: "arrow.down.circle.dotted")

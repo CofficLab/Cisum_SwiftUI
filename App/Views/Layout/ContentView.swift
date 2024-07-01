@@ -12,23 +12,23 @@ struct ContentView: View {
                     TopView()
                 }
 
-                HomeView()
-                    .onTapGesture(count: 2, perform: {
-                        app.showScenes = true
-                    })
-                    .alert(isPresented: $app.showAlert, content: {
-                        Alert(title: Text(app.alertMessage))
-                    })
-                    .sheet(isPresented: $app.showScenes, content: {
-                        Scenes(
-                            selection: $data.appScene,
-                            isPreseted: $app.showScenes
-                        )
-                    })
-                    .onChange(of: data.appScene, {
-                        try? data.chageScene(data.appScene)
-                        app.showScenes = false
-                    })
+                AudioAppView()
+                .onTapGesture(count: 2, perform: {
+                    app.showScenes = true
+                })
+                .alert(isPresented: $app.showAlert, content: {
+                    Alert(title: Text(app.alertMessage))
+                })
+                .sheet(isPresented: $app.showScenes, content: {
+                    Scenes(
+                        selection: $data.appScene,
+                        isPreseted: $app.showScenes
+                    )
+                })
+                .onChange(of: data.appScene, {
+                    try? data.chageScene(data.appScene)
+                    app.showScenes = false
+                })
             }
 
             if !app.flashMessage.isEmpty {

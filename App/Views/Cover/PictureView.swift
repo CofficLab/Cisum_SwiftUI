@@ -1,7 +1,7 @@
 import OSLog
 import SwiftUI
 
-struct AlbumView: View {
+struct PictureView: View {
     @EnvironmentObject var app: AppManager
     @EnvironmentObject var data: DataManager
     
@@ -17,11 +17,11 @@ struct AlbumView: View {
     var isDownloaded: Bool { downloadingPercent == 100 }
     
     var asset: PlayAsset
-    var forPlaying: Bool = false
+    var role: CoverView.Role = .Icon
     var label: String { "\(Logger.isMain)\(Self.label)" }
     var updating: DiskFileGroup { data.updating }
     var shape: RoundedRectangle {
-        if forPlaying {
+        if role == .Hero {
             if Config.isiOS {
                 RoundedRectangle(cornerSize: CGSize(width: 20, height: 10))
             } else {
@@ -33,10 +33,9 @@ struct AlbumView: View {
         }
     }
 
-    /// forPlaying表示显示在正在播放界面
-    init(_ asset: PlayAsset, forPlaying: Bool = false) {
+    init(_ asset: PlayAsset, role: CoverView.Role = .Icon) {
         self.asset = asset
-        self.forPlaying = forPlaying
+        self.role = role
     }
 
     var body: some View {
@@ -46,11 +45,11 @@ struct AlbumView: View {
             } else if isDownloading {
                 Self.makeProgressView(downloadingPercent / 100)
             } else if isNotDownloaded {
-                NotDownloadedAlbum(forPlaying: forPlaying)
+                NotDownloadedAlbum(role: role)
             } else if let image = image {
                 image.resizable().scaledToFit()
             } else {
-                DefaultAlbum(forPlaying: forPlaying)
+                DefaultAlbum(role: role)
             }
         }
         .clipShape(shape)
@@ -112,7 +111,7 @@ struct AlbumView: View {
 }
 
 #Preview("ProgressView") {
-    AlbumView.makeProgressView()
+    PictureView.makeProgressView()
         .frame(width: 300, height: 300)
         .background(BackgroundView.type2)
 }
@@ -120,14 +119,14 @@ struct AlbumView: View {
 #Preview("List") {
     List {
         HStack {
-            AlbumView.makeProgressView()
+            PictureView.makeProgressView()
             Text("1")
         }.frame(
             width: Config.isDesktop ? 36 : 36,
             height: Config.isDesktop ? 36 : 36
         ).background(.red.opacity(0.2))
         HStack {
-            AlbumView.makeProgressView().frame(
+            PictureView.makeProgressView().frame(
                 width: Config.isDesktop ? 48 : 36,
                 height: Config.isDesktop ? 36 : 36
             )
