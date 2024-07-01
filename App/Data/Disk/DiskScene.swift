@@ -7,6 +7,7 @@ enum DiskScene: String, CaseIterable, Identifiable {
     case Music
     case AudiosBook
     case AudiosKids
+    case Videos
     case VideosKids
     
     var iconName: String {
@@ -18,6 +19,8 @@ enum DiskScene: String, CaseIterable, Identifiable {
         case .AudiosBook:
             "books.vertical"
         case .VideosKids:
+            "teddybear"
+        case .Videos:
             "video"
         }
     }
@@ -36,6 +39,8 @@ enum DiskScene: String, CaseIterable, Identifiable {
             "audios_book"
         case .VideosKids:
             "videos_kids"
+        case .Videos:
+            "videos"
         }
     }
     
@@ -49,6 +54,8 @@ enum DiskScene: String, CaseIterable, Identifiable {
             "青少年视频模式"
         case .AudiosBook:
             "有声书模式"
+        case .Videos:
+            "视频模式"
         }
     }
     
@@ -62,6 +69,8 @@ enum DiskScene: String, CaseIterable, Identifiable {
             "适用于青少年看动画片等场景"
         case .AudiosBook:
             "适用于听有声书的场景"
+        case .Videos:
+            "适用于看视频的场景"
         }
     }
     

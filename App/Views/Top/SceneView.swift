@@ -39,6 +39,8 @@ struct SceneView: View {
             app.dbViewType = .Tree
         case .VideosKids:
             app.dbViewType = .Tree
+        case .Videos:
+            app.dbViewType = .Tree
         }
     }
 }
