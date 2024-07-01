@@ -4,6 +4,7 @@ import SwiftUI
 struct CoverView: View {
     @EnvironmentObject var app: AppManager
     @EnvironmentObject var data: DataManager
+    @EnvironmentObject var playMan: PlayMan
     
     enum Role {
         case Icon
@@ -23,7 +24,7 @@ struct CoverView: View {
             if role == .Icon {
                 PictureView(asset, role: role)
             } else {
-                if data.appScene == .Videos {
+                if playMan.isVideoWorker {
                     VideoView(asset)
                 } else {
                     PictureView(asset, role: role)

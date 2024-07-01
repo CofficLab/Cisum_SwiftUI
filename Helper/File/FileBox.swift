@@ -158,7 +158,7 @@ extension FileBox {
 
 extension FileBox {
     func isVideo() -> Bool {
-        [".mp4"].contains(self.ext)
+        ["mp4"].contains(self.ext)
     }
     
     func isAudio() -> Bool {

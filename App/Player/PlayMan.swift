@@ -16,12 +16,12 @@ class PlayMan: NSObject, ObservableObject {
     static var label = "💃 PlayMan::"
     
     var label: String { Logger.isMain + Self.label }
-    var audioWorker: AudioWorker = AudioWorker()
-    var videoWorker: VideoWorker = VideoWorker()
+    var audioWorker: AudioWorker
+    var videoWorker: VideoWorker
     var verbose = false
     var queue = DispatchQueue(label: "PlayMan", qos: .userInteractive)
     var worker: PlayWorker {
-        guard let asset = asset else {
+        guard let asset = asset, asset.isNotFolder() else {
             return audioWorker
         }
         
@@ -31,16 +31,15 @@ class PlayMan: NSObject, ObservableObject {
     @Published var asset: PlayAsset?
     @Published var mode: PlayMode = .Order
 
-    // MARK: 状态改变时
-
-    var state: PlayState { worker.state }
+    var isAudioWorker: Bool { ((self.worker as? AudioWorker) != nil)}
+    var isVideoWorker: Bool { ((self.worker as? VideoWorker) != nil) }
     var duration: TimeInterval { worker.duration }
     var currentTime: TimeInterval { worker.currentTime }
     var leftTime: TimeInterval { duration - currentTime }
+    var state: PlayState { worker.state }
     var currentTimeDisplay: String {
         DateComponentsFormatter.positional.string(from: currentTime) ?? "0:00"
     }
-
     var leftTimeDisplay: String {
         DateComponentsFormatter.positional.string(from: leftTime) ?? "0:00"
     }
@@ -48,31 +47,61 @@ class PlayMan: NSObject, ObservableObject {
     // MARK: 对外传递事件
 
     var onStateChange: (_ state: PlayState) -> Void = { state in
-        os_log("\(AudioWorker.label)播放器状态已变为 \(state.des)")
+        os_log("\(PlayMan.label)播放器状态已变为 \(state.des)")
     }
     
     var onGetPrevOf: (_ asset: PlayAsset?) -> PlayAsset? = { asset in
-        os_log("\(AudioWorker.label)GetPrevOf -> \(asset?.title ?? "nil")")
+        os_log("\(PlayMan.label)GetPrevOf -> \(asset?.title ?? "nil")")
         return nil
     }
     
     var onGetNextOf: (_ asset: PlayAsset?) -> PlayAsset? = { asset in
-        os_log("\(AudioWorker.label)GetNextOf -> \(asset?.title ?? "nil")")
+        os_log("\(PlayMan.label)GetNextOf -> \(asset?.title ?? "nil")")
         return nil
     }
     
     var onToggleLike: () -> Void = {
-        os_log("\(AudioWorker.label)ToggleLike")
+        os_log("\(PlayMan.label)ToggleLike")
     }
     
     var onToggleMode: () -> Void = {
-        os_log("\(AudioWorker.label)ToggleMode")
+        os_log("\(PlayMan.label)ToggleMode")
     }
     
     // MARK: 初始化
     
     init(verbose: Bool = true) {
+        
+        self.audioWorker = AudioWorker()
+        self.videoWorker = VideoWorker()
+        
         super.init()
+        
+        self.audioWorker.onGetNextOf = onGetNextOf
+        self.audioWorker.onGetPrevOf = onGetPrevOf
+        self.audioWorker.onStateChange = { state in
+            self.setPlayingInfo()
+            self.asset = state.getAsset()
+            self.onStateChange(state)
+            
+            if state.isFinished {
+                os_log("\(self.label)播放完成，自动播放下一个")
+                self.next()
+            }
+        }
+        
+        self.videoWorker.onGetNextOf = onGetNextOf
+        self.videoWorker.onGetPrevOf = onGetPrevOf
+        self.videoWorker.onStateChange = { state in
+            self.setPlayingInfo()
+            self.asset = state.getAsset()
+            self.onStateChange(state)
+            
+            if state.isFinished {
+                os_log("\(self.label)播放完成，自动播放下一个")
+                self.next()
+            }
+        }
         
         Task {
             onCommand()
@@ -99,6 +128,7 @@ extension PlayMan {
     
     func goto(_ time: TimeInterval) {
         self.worker.goto(time)
+        setPlayingInfo()
     }
 
     func prepare(_ asset: PlayAsset?) {
@@ -142,7 +172,12 @@ extension PlayMan {
     // MARK: Next
     
     func next() {
-        self.worker.next()
+        if let next = self.onGetNextOf(self.asset) {
+            self.play(next, reason: "Next")
+        } else {
+            os_log("\(self.label)Next of (\(self.asset?.title ?? "nil")) is nil, stop")
+            self.stop()
+        }
     }
 }
 
@@ -150,63 +185,19 @@ extension PlayMan {
 
 extension PlayMan {
     var isReady: Bool {
-        if case .Ready = state {
-            return true
-        } else {
-            return false
-        }
+        self.state.isReady
     }
 
     var isPlaying: Bool {
-        if case .Playing = state {
-            return true
-        } else {
-            return false
-        }
+        self.state.isPlaying
+    }
+    
+    var isStopped: Bool {
+        self.state.isStopped
     }
     
     var isNotPlaying: Bool {
         !isPlaying
-    }
-}
-
-// MARK: 接收系统事件
-
-extension PlayMan: AVAudioPlayerDelegate {
-    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        queue.sync {
-            // 没有播放完，被打断了
-            if !flag {
-                os_log("\(Logger.isMain)\(self.label)播放被打断，更新为暂停状态")
-                return pause()
-            }
-
-            if self.mode == .Loop {
-                os_log("\(self.label)播放完成，单曲循环")
-                if let asset = self.asset {
-                    self.play(asset, reason: "单曲循环")
-                } else {
-                    self.next()
-                }
-            } else {
-                os_log("\(self.label)播放完成，\(self.mode.description)")
-                self.next()
-            }
-        }
-    }
-
-    func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {
-        os_log("\(Logger.isMain)\(self.label)audioPlayerDecodeErrorDidOccur")
-    }
-
-    func audioPlayerBeginInterruption(_ player: AVAudioPlayer) {
-        os_log("\(Logger.isMain)\(self.label)audioPlayerBeginInterruption")
-        pause()
-    }
-
-    func audioPlayerEndInterruption(_ player: AVAudioPlayer, withOptions flags: Int) {
-        os_log("\(Logger.isMain)\(self.label)audioPlayerEndInterruption")
-        resume()
     }
 }
 
@@ -217,7 +208,7 @@ extension PlayMan {
         MPRemoteCommandCenter.shared()
     }
 
-    private func setPlayingInfo(verbose: Bool = false) {
+    private func setPlayingInfo(verbose: Bool = true) {
         let center = MPNowPlayingInfoCenter.default()
         let artist = "Cisum"
         let title = asset?.fileName ?? ""
@@ -233,6 +224,7 @@ extension PlayMan {
         }
 
         center.playbackState = isPlaying ? .playing : .paused
+        center.playbackState = isStopped ? .stopped : .paused
         center.nowPlayingInfo = [
             MPMediaItemPropertyTitle: title,
             MPMediaItemPropertyArtist: artist,

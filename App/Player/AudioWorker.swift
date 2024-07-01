@@ -16,7 +16,7 @@ class AudioWorker: NSObject, ObservableObject, PlayWorker {
     static var label = "💿 AudioWorker::"
     var label: String { Logger.isMain + Self.label }
     var player = AVAudioPlayer()
-    @Published var asset: PlayAsset?
+    var asset: PlayAsset?
     @Published var mode: PlayMode = .Order
     var verbose = false
     var queue = DispatchQueue(label: "AudioWorker", qos: .userInteractive)
@@ -66,7 +66,6 @@ class AudioWorker: NSObject, ObservableObject, PlayWorker {
             }
             
             self.onStateChange(state)
-            self.setPlayingInfo()
             
             if let ee = e {
                 setError(ee, asset: self.asset)
@@ -108,16 +107,6 @@ class AudioWorker: NSObject, ObservableObject, PlayWorker {
     var onToggleMode: () -> Void = {
         os_log("\(AudioWorker.label)ToggleMode")
     }
-    
-    // MARK: 初始化
-    
-    init(verbose: Bool = true) {
-        super.init()
-        
-        Task {
-            onCommand()
-        }
-    }
 }
 
 // MARK: 播放模式
@@ -140,7 +129,6 @@ extension AudioWorker {
     
     func goto(_ time: TimeInterval) {
         player.currentTime = time
-        setPlayingInfo()
     }
 
     func prepare(_ asset: PlayAsset?) {
@@ -195,6 +183,15 @@ extension AudioWorker {
         os_log("\(self.label)Stop")
         state = .Stopped
     }
+    
+    func finish() {
+        os_log("\(self.label)Finish(\(self.asset?.title ?? "nil"))")
+        guard let asset = self.asset else {
+            return
+        }
+        
+        state = .Finished(asset)
+    }
 
     func toggle() {
         isPlaying ? pause() : resume()
@@ -205,16 +202,6 @@ extension AudioWorker {
     func prev() {
         if let prev = self.onGetPrevOf(self.asset) {
             self.play(prev, reason: "Prev")
-        } else {
-            self.stop()
-        }
-    }
-    
-    // MARK: Next
-    
-    func next() {
-        if let next = self.onGetNextOf(self.asset) {
-            self.play(next, reason: "Next")
         } else {
             self.stop()
         }
@@ -316,11 +303,11 @@ extension AudioWorker: AVAudioPlayerDelegate {
                 if let asset = self.asset {
                     self.play(asset, reason: "单曲循环")
                 } else {
-                    self.next()
+                    self.finish()
                 }
             } else {
                 os_log("\(self.label)播放完成，\(self.mode.description)")
-                self.next()
+                self.finish()
             }
         }
     }
@@ -337,126 +324,5 @@ extension AudioWorker: AVAudioPlayerDelegate {
     func audioPlayerEndInterruption(_ player: AVAudioPlayer, withOptions flags: Int) {
         os_log("\(Logger.isMain)\(self.label)audioPlayerEndInterruption")
         resume()
-    }
-}
-
-// MARK: 媒体中心
-
-extension AudioWorker {
-    var c: MPRemoteCommandCenter {
-        MPRemoteCommandCenter.shared()
-    }
-
-    private func setPlayingInfo(verbose: Bool = false) {
-        let center = MPNowPlayingInfoCenter.default()
-        let artist = "Cisum"
-        let title = asset?.fileName ?? ""
-        let duration: TimeInterval = self.duration
-        let currentTime: TimeInterval = self.currentTime
-        let image = asset?.getMediaCenterImage() ?? PlayAsset.defaultImage
-        
-        if verbose {
-            os_log("\(self.label)📱📱📱 Update -> \(self.state.des)")
-            os_log("\(self.label)📱📱📱 Update -> Title: \(title)")
-            os_log("\(self.label)📱📱📱 Update -> Duration: \(duration)")
-            os_log("\(self.label)📱📱📱 Update -> Playing: \(self.isPlaying)")
-        }
-
-        center.playbackState = isPlaying ? .playing : .paused
-        center.nowPlayingInfo = [
-            MPMediaItemPropertyTitle: title,
-            MPMediaItemPropertyArtist: artist,
-            MPMediaItemPropertyPlaybackDuration: duration,
-            MPNowPlayingInfoPropertyElapsedPlaybackTime: currentTime,
-            MPMediaItemPropertyArtwork: MPMediaItemArtwork(boundsSize: image.size, requestHandler: { size in
-                #if os(macOS)
-                    image.size = size
-                #endif
-
-                return image
-            }),
-        ]
-
-        let like = asset?.like ?? false
-        if verbose {
-            os_log("\(self.label)setPlayingInfo like -> \(like)")
-        }
-        c.likeCommand.isActive = like
-    }
-
-    // 接收控制中心的指令
-    func onCommand() {
-        c.nextTrackCommand.addTarget { _ in
-            self.next()
-
-            return .success
-        }
-
-        c.previousTrackCommand.addTarget { _ in
-            self.prev()
-            
-            return .success
-        }
-
-        c.pauseCommand.addTarget { _ in
-            self.pause()
-
-            return .success
-        }
-
-        c.playCommand.addTarget { _ in
-            os_log("\(Logger.isMain)\(self.label)播放")
-            self.resume()
-
-            return .success
-        }
-
-        c.stopCommand.addTarget { _ in
-            os_log("\(Logger.isMain)\(self.label)停止")
-
-            self.player.stop()
-
-            return .success
-        }
-
-        // MARK: Like
-        
-        c.likeCommand.addTarget { event in
-            os_log("\(self.label)点击了喜欢按钮")
-            
-            self.toggleLike()
-            
-            self.c.likeCommand.isActive = self.asset?.like ?? false
-            self.c.dislikeCommand.isActive = self.asset?.notLike ?? true
-
-            return .success
-        }
-
-        c.ratingCommand.addTarget { _ in
-            os_log("\(Logger.isMain)评分")
-
-            return .success
-        }
-
-        c.changeRepeatModeCommand.addTarget { _ in
-            os_log("\(Logger.isMain)changeRepeatModeCommand")
-
-            return .success
-        }
-
-        c.changePlaybackPositionCommand.addTarget { e in
-            os_log("\(Logger.isMain)\(self.label)changePlaybackPositionCommand")
-            guard let event = e as? MPChangePlaybackPositionCommandEvent else {
-                return .commandFailed
-            }
-
-            let positionTime = event.positionTime // 获取当前的播放进度时间
-
-            // 在这里处理当前的播放进度时间
-            os_log("Current playback position: \(positionTime)")
-            self.goto(positionTime)
-
-            return .success
-        }
     }
 }

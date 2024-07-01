@@ -3,9 +3,10 @@ import SwiftUI
 
 struct ControlView: View {
     @EnvironmentObject var appManager: AppManager
+    @EnvironmentObject var data: DataManager
+    @EnvironmentObject var playMan: PlayMan
 
     @State var showHeroView = true
-    @State var showSliderView = true
     @State var showBtnsView = true
     @State var showOperationView = false
     @State var showStateView = true
@@ -14,6 +15,7 @@ struct ControlView: View {
 
     var showDB: Bool { appManager.showDB }
     var showStateMessage: Bool { appManager.stateMessage.count > 0 }
+    var showSliderView: Bool { playMan.isAudioWorker }
 
     var body: some View {
         GeometryReader { geo in
@@ -89,7 +91,6 @@ struct ControlView: View {
         .frame(minHeight: Config.controlViewMinHeight)
         .onAppear() {
             showHeroView = true
-            showSliderView = true
             showBtnsView = true
             showStateView = true
         }

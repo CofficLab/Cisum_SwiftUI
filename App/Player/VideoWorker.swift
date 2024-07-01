@@ -4,18 +4,6 @@ import OSLog
 import SwiftUI
 
 class VideoWorker: NSObject, ObservableObject, PlayWorker {
-    func toggleLike() {
-        
-    }
-    
-    func prev() {
-        
-    }
-    
-    func next() {
-        
-    }
-    
     // MARK: 成员
 
     static var label = "💿 VideoWorker::"
@@ -32,15 +20,15 @@ class VideoWorker: NSObject, ObservableObject, PlayWorker {
             if verbose {
                 os_log("\(Logger.isMain)\(self.label)State changed 「\(oldValue.des)」 -> 「\(self.state.des)」")
             }
-            
-            var e: Error? = nil
-            
-            self.asset = self.state.getAsset()
+
+            var e: Error?
+
+            asset = state.getAsset()
 
             switch state {
-            case .Ready(_):
+            case .Ready:
                 do {
-                    try player = makePlayer(self.asset)
+                    try player = makePlayer(asset)
                 } catch {
                     e = error
                 }
@@ -49,8 +37,8 @@ class VideoWorker: NSObject, ObservableObject, PlayWorker {
                     player.play()
                 } else {
                     do {
-                        self.asset = audio
-                        self.player.pause()
+                        asset = audio
+                        player.pause()
                         try player = makePlayer(audio)
                         player.play()
                     } catch {
@@ -66,16 +54,23 @@ class VideoWorker: NSObject, ObservableObject, PlayWorker {
             case .Error:
                 player = makeEmptyPlayer()
             }
-            
-            self.onStateChange(state)
-            
+
+            onStateChange(state)
+
             if let ee = e {
-                setError(ee, asset: self.asset)
+                setError(ee, asset: asset)
             }
         }
     }
 
-    var duration: TimeInterval { 0 }
+    var duration: TimeInterval {
+        if let duration = player.currentItem?.asset.duration.seconds {
+            return duration
+        } else {
+            return 0
+        }
+    }
+
     var currentTime: TimeInterval { 0 }
     var leftTime: TimeInterval { duration - currentTime }
     var currentTimeDisplay: String {
@@ -91,6 +86,20 @@ class VideoWorker: NSObject, ObservableObject, PlayWorker {
     var onStateChange: (_ state: PlayState) -> Void = { state in
         os_log("\(VideoWorker.label)播放器状态已变为 \(state.des)")
     }
+    
+    var onGetPrevOf: (_ asset: PlayAsset?) -> PlayAsset? = { asset in
+        os_log("\(VideoWorker.label)GetPrevOf -> \(asset?.title ?? "nil")")
+        return nil
+    }
+    
+    var onGetNextOf: (_ asset: PlayAsset?) -> PlayAsset? = { asset in
+        os_log("\(VideoWorker.label)GetNextOf -> \(asset?.title ?? "nil")")
+        return nil
+    }
+    
+    var onToggleLike: () -> Void = {
+        os_log("\(VideoWorker.label)ToggleLike")
+    }
 }
 
 // MARK: 播放控制
@@ -99,7 +108,7 @@ extension VideoWorker {
     func setError(_ e: Error, asset: PlayAsset?) {
         state = .Error(e, asset)
     }
-    
+
     func goto(_ time: TimeInterval) {
 //        player.currentTime = time
     }
@@ -140,6 +149,21 @@ extension VideoWorker {
 
     func toggle() {
         state.isPlaying ? pause() : resume()
+    }
+    
+    func toggleLike() {
+        self.asset?.like.toggle()
+        self.onToggleLike()
+    }
+    
+    // MARK: Prev
+    
+    func prev() {
+        if let prev = self.onGetPrevOf(self.asset) {
+            self.play(prev, reason: "Prev")
+        } else {
+            self.stop()
+        }
     }
 }
 

@@ -5,7 +5,7 @@ enum PlayState {
     case Playing(PlayAsset)
     case Paused(PlayAsset?)
     case Stopped
-    case Finished
+    case Finished(PlayAsset)
     case Error(Error, PlayAsset?)
 
     var des: String {
@@ -18,6 +18,8 @@ enum PlayState {
             "播放 \(asset.fileName) 🔊🔊🔊"
         case let .Paused(asset):
             "暂停 \(asset?.fileName ?? "-") ⏸️⏸️⏸️"
+        case let .Finished(asset):
+            "完成 \(asset.fileName) 🎉🎉🎉"
         default:
             String(describing: self)
         }
@@ -33,6 +35,22 @@ enum PlayState {
 
     var isPlaying: Bool {
         if case .Playing = self {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    var isStopped: Bool {
+        if case .Stopped = self {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    var isFinished: Bool {
+        if case .Finished = self {
             return true
         } else {
             return false
@@ -60,9 +78,11 @@ enum PlayState {
             asset
         case .Paused(let asset):
             asset
+        case .Finished(let asset):
+            asset
         case .Error(_, let asset):
             asset
-        case .Stopped,.Finished:
+        case .Stopped:
             nil
         }
     }
