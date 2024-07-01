@@ -8,6 +8,7 @@ class DataManager: ObservableObject {
     @Published var appScene: DiskScene
     @Published var disk: any Disk
     @Published var updating: DiskFileGroup = .empty
+    @Published var syncing: Bool = false
 
     var label: String { "\(Logger.isMain)\(Self.label)" }
     var isiCloudDisk: Bool { (disk as? DiskiCloud) != nil }
@@ -49,6 +50,12 @@ class DataManager: ObservableObject {
         }
         
         disk.onUpdated = { items in
+            if items.isFullLoad {
+                DispatchQueue.main.async {
+                    self.syncing = false
+                }
+            }
+            
             DispatchQueue.main.async {
                 self.updating = items
             }
@@ -58,6 +65,10 @@ class DataManager: ObservableObject {
                     await DB(Config.getContainer, reason: "DataManager.WatchDisk").sync(items)
                 }
             }
+        }
+        
+        DispatchQueue.main.async {
+            self.syncing = true
         }
 
         Task {

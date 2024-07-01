@@ -13,6 +13,9 @@ struct ContentView: View {
                 }
 
                 HomeView()
+                    .onTapGesture(count: 2, perform: {
+                        app.showScenes = true
+                    })
                     .alert(isPresented: $app.showAlert, content: {
                         Alert(title: Text(app.alertMessage))
                     })

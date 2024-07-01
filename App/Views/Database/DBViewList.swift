@@ -15,6 +15,7 @@ struct DBViewList: View {
     static var label = "📬 DBList::"
 
     @EnvironmentObject var app: AppManager
+    @EnvironmentObject var data: DataManager
     @EnvironmentObject var playMan: PlayMan
     @Environment(\.modelContext) var modelContext
 
@@ -24,7 +25,7 @@ struct DBViewList: View {
 
     var total: Int { audios.count }
     var label: String { "\(Logger.isMain)\(Self.label)" }
-    
+
     var showTips: Bool {
         if app.isDropping {
             return true
@@ -45,6 +46,12 @@ struct DBViewList: View {
                 Section(header: HStack {
                     Text("共 \(total.description)")
                     Spacer()
+                    if data.syncing {
+                        HStack {
+                            Image(systemName: "arrow.triangle.2.circlepath")
+                            Text("正在读取仓库")
+                        }
+                    }
                     if Config.isNotDesktop {
                         BtnAdd()
                             .font(.title2)
@@ -62,7 +69,7 @@ struct DBViewList: View {
                     $0.url == playMan.asset?.url
                 })
             })
-            
+
             if showTips {
                 DBTips()
             }
