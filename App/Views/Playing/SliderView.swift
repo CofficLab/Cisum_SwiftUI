@@ -5,7 +5,7 @@ import OSLog
 struct SliderView: View {
     static var label = "👀 SliderView::"
     
-    @EnvironmentObject var playMan: AudioMan
+    @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var app: AppManager
     @EnvironmentObject var dataManager: DataManager
 
@@ -19,10 +19,9 @@ struct SliderView: View {
         .autoconnect()
 
     var geo: GeometryProxy
-    var player: AudioMan { playMan }
-    var duration: TimeInterval { player.duration }
-    var current: String { player.currentTimeDisplay }
-    var left: String { player.leftTimeDisplay }
+    var duration: TimeInterval { playMan.duration }
+    var current: String { playMan.currentTimeDisplay }
+    var left: String { playMan.leftTimeDisplay }
     var label: String { "\(Logger.isMain)\(Self.label)"}
 
     var body: some View {
@@ -33,7 +32,7 @@ struct SliderView: View {
             Slider(value: $value, in: 0 ... duration) { editing in
                 isEditing = editing
                 if !editing {
-                    player.goto(value)
+                    playMan.goto(value)
                 }
             }
             .disabled(shouldDisable)
@@ -65,7 +64,7 @@ struct SliderView: View {
     }
 
     func enable() {
-        value = player.currentTime
+        value = playMan.currentTime
         shouldDisable = false
     }
 

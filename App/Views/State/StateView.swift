@@ -6,7 +6,7 @@ import SwiftUI
 struct StateView: View {
     @EnvironmentObject var app: AppManager
     @EnvironmentObject var dataManager: DataManager
-    @EnvironmentObject var playMan: AudioMan
+    @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var db: DB
     @Environment(\.modelContext) private var modelContext
 

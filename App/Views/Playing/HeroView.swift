@@ -3,7 +3,7 @@ import OSLog
 
 struct HeroView: View {
     @EnvironmentObject var app: AppManager
-    @EnvironmentObject var playMan: AudioMan
+    @EnvironmentObject var playMan: PlayMan
 
     @State var topAlbumHeight: CGFloat = 0
     

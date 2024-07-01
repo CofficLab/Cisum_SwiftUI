@@ -10,16 +10,16 @@ import SwiftUI
       对接系统媒体中心
  */
 
-class AudioMan: NSObject, ObservableObject {
+class AudioWorker: NSObject, ObservableObject, PlayWorker {
     // MARK: 成员
 
-    static var label = "💿 AudioMan::"
+    static var label = "💿 AudioWorker::"
     var label: String { Logger.isMain + Self.label }
     var player = AVAudioPlayer()
     @Published var asset: PlayAsset?
     @Published var mode: PlayMode = .Order
     var verbose = false
-    var queue = DispatchQueue(label: "SmartPlayer", qos: .userInteractive)
+    var queue = DispatchQueue(label: "AudioWorker", qos: .userInteractive)
 
     // MARK: 状态改变时
 
@@ -88,25 +88,25 @@ class AudioMan: NSObject, ObservableObject {
     // MARK: 对外传递事件
 
     var onStateChange: (_ state: PlayState) -> Void = { state in
-        os_log("\(AudioMan.label)播放器状态已变为 \(state.des)")
+        os_log("\(AudioWorker.label)播放器状态已变为 \(state.des)")
     }
     
     var onGetPrevOf: (_ asset: PlayAsset?) -> PlayAsset? = { asset in
-        os_log("\(AudioMan.label)GetPrevOf -> \(asset?.title ?? "nil")")
+        os_log("\(AudioWorker.label)GetPrevOf -> \(asset?.title ?? "nil")")
         return nil
     }
     
     var onGetNextOf: (_ asset: PlayAsset?) -> PlayAsset? = { asset in
-        os_log("\(AudioMan.label)GetNextOf -> \(asset?.title ?? "nil")")
+        os_log("\(AudioWorker.label)GetNextOf -> \(asset?.title ?? "nil")")
         return nil
     }
     
     var onToggleLike: () -> Void = {
-        os_log("\(AudioMan.label)ToggleLike")
+        os_log("\(AudioWorker.label)ToggleLike")
     }
     
     var onToggleMode: () -> Void = {
-        os_log("\(AudioMan.label)ToggleMode")
+        os_log("\(AudioWorker.label)ToggleMode")
     }
     
     // MARK: 初始化
@@ -122,7 +122,7 @@ class AudioMan: NSObject, ObservableObject {
 
 // MARK: 播放模式
 
-extension AudioMan {
+extension AudioWorker {
     func switchMode(verbose: Bool = true) {
         mode = mode.switchMode()
         Config.setCurrentMode(mode)
@@ -132,7 +132,7 @@ extension AudioMan {
 
 // MARK: 播放控制
 
-extension AudioMan {
+extension AudioWorker {
     func toggleLike() {
         self.asset?.like.toggle()
         self.onToggleLike()
@@ -223,7 +223,7 @@ extension AudioMan {
 
 // MARK: 控制 AVAudioPlayer
 
-extension AudioMan {
+extension AudioWorker {
     func makeEmptyPlayer() -> AVAudioPlayer {
         AVAudioPlayer()
     }
@@ -274,7 +274,7 @@ extension AudioMan {
 
 // MARK: 播放状态
 
-extension AudioMan {
+extension AudioWorker {
     func setError(_ e: Error, asset: PlayAsset?) {
         state = .Error(e, asset)
     }
@@ -302,7 +302,7 @@ extension AudioMan {
 
 // MARK: 接收系统事件
 
-extension AudioMan: AVAudioPlayerDelegate {
+extension AudioWorker: AVAudioPlayerDelegate {
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         queue.sync {
             // 没有播放完，被打断了
@@ -342,7 +342,7 @@ extension AudioMan: AVAudioPlayerDelegate {
 
 // MARK: 媒体中心
 
-extension AudioMan {
+extension AudioWorker {
     var c: MPRemoteCommandCenter {
         MPRemoteCommandCenter.shared()
     }

@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct TopView: View {
-    @EnvironmentObject var playMan: AudioMan
+    @EnvironmentObject var playMan: PlayMan
 
     var asset: PlayAsset? { playMan.asset }
 

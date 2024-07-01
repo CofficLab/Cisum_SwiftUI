@@ -3,19 +3,31 @@ import Foundation
 import OSLog
 import SwiftUI
 
-class VideoMan: NSObject, ObservableObject {
+class VideoWorker: NSObject, ObservableObject, PlayWorker {
+    func toggleLike() {
+        
+    }
+    
+    func prev() {
+        
+    }
+    
+    func next() {
+        
+    }
+    
     // MARK: 成员
 
-    static var label = "💿 SmartPlayer::"
-    var label: String { Logger.isMain + VideoMan.label }
+    static var label = "💿 VideoWorker::"
+    var label: String { Logger.isMain + VideoWorker.label }
     var player = AVPlayer()
-    var audio: Audio?
+    var asset: PlayAsset?
     var verbose = false
-    var queue = DispatchQueue(label: "SmartPlayer", qos: .userInteractive)
+    var queue = DispatchQueue(label: "VideoWorker", qos: .userInteractive)
 
     // MARK: 状态改变时
 
-    var state: State = .Stopped {
+    var state: PlayState = .Stopped {
         didSet {
             if verbose {
                 os_log("\(Logger.isMain)\(self.label)State changed 「\(oldValue.des)」 -> 「\(self.state.des)」")
@@ -23,12 +35,12 @@ class VideoMan: NSObject, ObservableObject {
             
             var e: Error? = nil
             
-            self.audio = self.state.getAudio()
+            self.asset = self.state.getAsset()
 
             switch state {
             case .Ready(_):
                 do {
-                    try player = makePlayer(self.audio)
+                    try player = makePlayer(self.asset)
                 } catch {
                     e = error
                 }
@@ -37,7 +49,7 @@ class VideoMan: NSObject, ObservableObject {
                     player.play()
                 } else {
                     do {
-                        self.audio = audio
+                        self.asset = audio
                         self.player.pause()
                         try player = makePlayer(audio)
                         player.play()
@@ -58,7 +70,7 @@ class VideoMan: NSObject, ObservableObject {
             self.onStateChange(state)
             
             if let ee = e {
-                setError(ee, audio: self.audio)
+                setError(ee, asset: self.asset)
             }
         }
     }
@@ -76,23 +88,27 @@ class VideoMan: NSObject, ObservableObject {
 
     // MARK: 对外传递事件
 
-    var onStateChange: (_ state: State) -> Void = { state in
-        os_log("\(VideoMan.label)播放器状态已变为 \(state.des)")
+    var onStateChange: (_ state: PlayState) -> Void = { state in
+        os_log("\(VideoWorker.label)播放器状态已变为 \(state.des)")
     }
 }
 
 // MARK: 播放控制
 
-extension VideoMan {
+extension VideoWorker {
+    func setError(_ e: Error, asset: PlayAsset?) {
+        state = .Error(e, asset)
+    }
+    
     func goto(_ time: TimeInterval) {
 //        player.currentTime = time
     }
 
-    func prepare(_ audio: Audio?) {
+    func prepare(_ audio: PlayAsset?) {
         state = .Ready(audio)
     }
 
-    func play(_ audio: Audio, reason: String) {
+    func play(_ audio: PlayAsset, reason: String) {
         os_log("\(self.label)play \(audio.title) 🐛 \(reason)")
         state = .Playing(audio)
     }
@@ -108,13 +124,13 @@ extension VideoMan {
         case .Playing, .Error:
             break
         case .Ready, .Paused, .Stopped, .Finished:
-            state = .Playing(audio!)
+            state = .Playing(asset!)
         }
     }
 
     func pause() {
         os_log("\(self.label)Pause")
-        state = .Paused(audio)
+        state = .Paused(asset)
     }
 
     func stop() {
@@ -123,19 +139,19 @@ extension VideoMan {
     }
 
     func toggle() {
-        isPlaying ? pause() : resume()
+        state.isPlaying ? pause() : resume()
     }
 }
 
 // MARK: 控制 AVAudioPlayer
 
-extension VideoMan {
+extension VideoWorker {
     func makeEmptyPlayer() -> AVPlayer {
         AVPlayer()
     }
 
-    func makePlayer(_ audio: Audio?) throws -> AVPlayer {
-        guard let audio = audio else {
+    func makePlayer(_ asset: PlayAsset?) throws -> AVPlayer {
+        guard let audio = asset else {
             return AVPlayer()
         }
 
@@ -167,81 +183,5 @@ extension VideoMan {
         player = AVPlayer(url: audio.url)
 
         return player
-    }
-}
-
-// MARK: 播放状态
-
-extension VideoMan {
-    enum State {
-        case Ready(Audio?)
-        case Playing(Audio)
-        case Paused(Audio?)
-        case Stopped
-        case Finished
-        case Error(Error, Audio?)
-
-        var des: String {
-            switch self {
-            case let .Ready(audio):
-                "准备 \(audio?.title ?? "nil") 🚀🚀🚀"
-            case let .Error(error, audio):
-                "错误：\(error.localizedDescription) ⚠️⚠️⚠️ -> \(audio?.title ?? "-")"
-            case let .Playing(audio):
-                "播放 \(audio.title) 🔊🔊🔊"
-            case let .Paused(audio):
-                "暂停 \(audio?.title ?? "-") ⏸️⏸️⏸️"
-            default:
-                String(describing: self)
-            }
-        }
-
-        func getPausedAudio() -> Audio? {
-            switch self {
-            case let .Paused(audio):
-                return audio
-            default:
-                return nil
-            }
-        }
-        
-        func getAudio() -> Audio? {
-            switch self {
-            case .Ready(let audio):
-                audio
-            case .Playing(let audio):
-                audio
-            case .Paused(let audio):
-                audio
-            case .Error(_, let audio):
-                audio
-            case .Stopped,.Finished:
-                nil
-            }
-        }
-    }
-
-    func setError(_ e: Error, audio: Audio?) {
-        state = .Error(e, audio)
-    }
-
-    var isReady: Bool {
-        if case .Ready = state {
-            return true
-        } else {
-            return false
-        }
-    }
-
-    var isPlaying: Bool {
-        if case .Playing = state {
-            return true
-        } else {
-            return false
-        }
-    }
-    
-    var isNotPlaying: Bool {
-        !isPlaying
     }
 }

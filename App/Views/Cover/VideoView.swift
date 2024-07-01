@@ -5,7 +5,7 @@ import SwiftUI
 struct VideoView: View {
     @EnvironmentObject var app: AppManager
     @EnvironmentObject var data: DataManager
-    @EnvironmentObject var videoMan: VideoMan
+    @EnvironmentObject var playMan: PlayMan
 
     static var label = "🎬 VideoView::"
 
@@ -27,9 +27,9 @@ struct VideoView: View {
     }
 
     var body: some View {
-        VideoPlayer(player: videoMan.player)
+        VideoPlayer(player: playMan.videoWorker.player)
             .onAppear {
-                videoMan.play(Audio(asset.url), reason: "OnAppear")
+                playMan.play(asset, reason: "OnAppear")
             }
     }
 }

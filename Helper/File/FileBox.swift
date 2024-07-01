@@ -154,6 +154,18 @@ extension FileBox {
     }
 }
 
+// MARK: Format
+
+extension FileBox {
+    func isVideo() -> Bool {
+        [".mp4"].contains(self.ext)
+    }
+    
+    func isAudio() -> Bool {
+        [".mp3", ".wav"].contains(self.ext)
+    }
+}
+
 #Preview("App") {
     AppPreview()
         .frame(height: 800)

@@ -65,7 +65,7 @@
 		0B901D8A2BB83E28003AC253 /* ItemQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B901D892BB83E28003AC253 /* ItemQuery.swift */; };
 		0B92ACCA2BBA80F300F1A74F /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 0B92ACC92BBA80F300F1A74F /* README.md */; };
 		0B9EA3592C21B41C00A4059A /* PlayAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9EA3582C21B41C00A4059A /* PlayAsset.swift */; };
-		0B9EA35B2C21C72800A4059A /* AudioMan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9EA35A2C21C72800A4059A /* AudioMan.swift */; };
+		0B9EA35B2C21C72800A4059A /* AudioWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9EA35A2C21C72800A4059A /* AudioWorker.swift */; };
 		0B9EA35D2C21C9AB00A4059A /* PlayState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9EA35C2C21C9AB00A4059A /* PlayState.swift */; };
 		0B9FA2972BC80E51007B235A /* EventManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9FA2962BC80E51007B235A /* EventManager.swift */; };
 		0B9FA2992BC81EFF007B235A /* NotDownloadedAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9FA2982BC81EFF007B235A /* NotDownloadedAlbum.swift */; };
@@ -163,9 +163,11 @@
 		F5A076662C2EBE5500DD4621 /* StoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A076652C2EBE5500DD4621 /* StoreView.swift */; };
 		F5B64D042C32546F00DE55AD /* SyncingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B64D032C32546F00DE55AD /* SyncingView.swift */; };
 		F5B64D062C32597B00DE55AD /* DBSyncing.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B64D052C32597B00DE55AD /* DBSyncing.swift */; };
-		F5B64D0A2C327D8600DE55AD /* VideoMan.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B64D092C327D8600DE55AD /* VideoMan.swift */; };
+		F5B64D0A2C327D8600DE55AD /* VideoWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B64D092C327D8600DE55AD /* VideoWorker.swift */; };
 		F5B64D0F2C3280DE00DE55AD /* VideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B64D0E2C3280DE00DE55AD /* VideoView.swift */; };
 		F5B64D112C3280F300DE55AD /* CoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B64D102C3280F300DE55AD /* CoverView.swift */; };
+		F5B64D132C3288D300DE55AD /* PlayMan.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B64D122C3288D300DE55AD /* PlayMan.swift */; };
+		F5B64D152C328F3900DE55AD /* PlayWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B64D142C328F3900DE55AD /* PlayWorker.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -229,7 +231,7 @@
 		0B901D892BB83E28003AC253 /* ItemQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemQuery.swift; sourceTree = "<group>"; };
 		0B92ACC92BBA80F300F1A74F /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		0B9EA3582C21B41C00A4059A /* PlayAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayAsset.swift; sourceTree = "<group>"; };
-		0B9EA35A2C21C72800A4059A /* AudioMan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioMan.swift; sourceTree = "<group>"; };
+		0B9EA35A2C21C72800A4059A /* AudioWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioWorker.swift; sourceTree = "<group>"; };
 		0B9EA35C2C21C9AB00A4059A /* PlayState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayState.swift; sourceTree = "<group>"; };
 		0B9FA2962BC80E51007B235A /* EventManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventManager.swift; sourceTree = "<group>"; };
 		0B9FA2982BC81EFF007B235A /* NotDownloadedAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotDownloadedAlbum.swift; sourceTree = "<group>"; };
@@ -327,9 +329,11 @@
 		F5A076652C2EBE5500DD4621 /* StoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreView.swift; sourceTree = "<group>"; };
 		F5B64D032C32546F00DE55AD /* SyncingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncingView.swift; sourceTree = "<group>"; };
 		F5B64D052C32597B00DE55AD /* DBSyncing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBSyncing.swift; sourceTree = "<group>"; };
-		F5B64D092C327D8600DE55AD /* VideoMan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoMan.swift; sourceTree = "<group>"; };
+		F5B64D092C327D8600DE55AD /* VideoWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoWorker.swift; sourceTree = "<group>"; };
 		F5B64D0E2C3280DE00DE55AD /* VideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoView.swift; sourceTree = "<group>"; };
 		F5B64D102C3280F300DE55AD /* CoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverView.swift; sourceTree = "<group>"; };
+		F5B64D122C3288D300DE55AD /* PlayMan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayMan.swift; sourceTree = "<group>"; };
+		F5B64D142C328F3900DE55AD /* PlayWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayWorker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -456,12 +460,14 @@
 		0B9EA3572C21B2FF00A4059A /* Player */ = {
 			isa = PBXGroup;
 			children = (
-				0B9EA35A2C21C72800A4059A /* AudioMan.swift */,
+				0B9EA35A2C21C72800A4059A /* AudioWorker.swift */,
 				F5511BAF2C29050300400900 /* Playable.swift */,
 				0B9EA3582C21B41C00A4059A /* PlayAsset.swift */,
+				F5B64D122C3288D300DE55AD /* PlayMan.swift */,
 				0B1498732BC4C5CB0075DA61 /* PlayMode.swift */,
 				0B9EA35C2C21C9AB00A4059A /* PlayState.swift */,
-				F5B64D092C327D8600DE55AD /* VideoMan.swift */,
+				F5B64D142C328F3900DE55AD /* PlayWorker.swift */,
+				F5B64D092C327D8600DE55AD /* VideoWorker.swift */,
 			);
 			path = Player;
 			sourceTree = "<group>";
@@ -892,7 +898,7 @@
 				0BE695C22C01E8F600CEFFEB /* DBSynced.swift in Sources */,
 				0BAB300E2AB814F70012D837 /* BootApp.swift in Sources */,
 				0BBA42212AC1802C00C0B977 /* ButtonCancelSelected.swift in Sources */,
-				0B9EA35B2C21C72800A4059A /* AudioMan.swift in Sources */,
+				0B9EA35B2C21C72800A4059A /* AudioWorker.swift in Sources */,
 				0BAABEB12BC79C4E00DF4A31 /* CopyTask.swift in Sources */,
 				F5511BB02C29050300400900 /* Playable.swift in Sources */,
 				0BE6959F2BFE3DCC00CEFFEB /* NonRenewables.swift in Sources */,
@@ -938,12 +944,14 @@
 				0BE6958E2BFE28B400CEFFEB /* PlayTime.swift in Sources */,
 				0BFB38832BCCCC780055E38B /* OperationView.swift in Sources */,
 				0BBC159A2ABAD5DB006E82C4 /* SliderView.swift in Sources */,
+				F5B64D152C328F3900DE55AD /* PlayWorker.swift in Sources */,
 				0BFB38852BCCD26F0055E38B /* BtnLike.swift in Sources */,
 				0B8C369F2BEA011700C47567 /* MetaWrapper.swift in Sources */,
 				0BBC15882AB9A473006E82C4 /* iCloudHelper.swift in Sources */,
 				F586DCD92C2C05A60078580B /* RootView.swift in Sources */,
 				0BAABEBA2BC8C5CB00DF4A31 /* JobPrepare.swift in Sources */,
 				0B901D862BB83BA2003AC253 /* iCloudHandler.swift in Sources */,
+				F5B64D132C3288D300DE55AD /* PlayMan.swift in Sources */,
 				F545D1732C1FC9F0006A6AFA /* CloudSetting.swift in Sources */,
 				0B8C36B02BEC6E6500C47567 /* DBExt.swift in Sources */,
 				0B9FA2992BC81EFF007B235A /* NotDownloadedAlbum.swift in Sources */,
@@ -972,7 +980,7 @@
 				F5511BCA2C2BACC000400900 /* TopView.swift in Sources */,
 				F5675C402C25456300326664 /* DataManager.swift in Sources */,
 				0B901D8A2BB83E28003AC253 /* ItemQuery.swift in Sources */,
-				F5B64D0A2C327D8600DE55AD /* VideoMan.swift in Sources */,
+				F5B64D0A2C327D8600DE55AD /* VideoWorker.swift in Sources */,
 				F5B64D0F2C3280DE00DE55AD /* VideoView.swift in Sources */,
 				0B6B8B9D2BBA4D0600F65B23 /* Coffee.swift in Sources */,
 				0B11365F2BF10A0100A71FE1 /* JobHash.swift in Sources */,

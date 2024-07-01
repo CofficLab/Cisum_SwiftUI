@@ -44,6 +44,14 @@ struct PlayAsset: FileBox {
     }
 }
 
+// MARK: Format
+
+extension PlayAsset {
+    func isAudio() -> Bool {
+        !isVideo()
+    }
+}
+
 // MARK: Size
 
 extension PlayAsset {
