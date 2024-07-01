@@ -4,7 +4,7 @@ import SwiftData
 import SwiftUI
 import UniformTypeIdentifiers
 
-struct DBLayout: View {
+struct DBView: View {
     @EnvironmentObject var app: AppManager
     @EnvironmentObject var data: DataManager
     @EnvironmentObject var db: DB
@@ -82,7 +82,7 @@ struct DBLayout: View {
 
 // MARK: 操作
 
-extension DBLayout {
+extension DBView {
     func copy(_ files: [URL]) {
         data.copy(files)
     }

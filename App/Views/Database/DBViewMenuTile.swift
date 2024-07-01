@@ -2,7 +2,7 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-struct DBViewTree: View {
+struct DBViewMenuTile: View {
     static var label = "📬 DBTreeView::"
 
     @EnvironmentObject var app: AppManager
@@ -27,14 +27,12 @@ struct DBViewTree: View {
 
     var body: some View {
         ZStack {
-            List(rootDiskFile.getChildren() ?? [],
-                 id: \.self,
-                 children: \.children,
-                 selection: $selection
-            ) { file in
-                DBRow(file.toPlayAsset())
-                    .tag(file as DiskFile?)
-            }
+            DBTree(
+                selection: $selection,
+                icon: $icon,
+                collapsed: collapsed,
+                file: disk.getRoot()
+            )
                 .onAppear {
                     self.icon = dataManager.isiCloudDisk ? "icloud" : "folder"
                 }

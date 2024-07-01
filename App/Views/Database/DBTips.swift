@@ -60,6 +60,6 @@ struct DBTips: View {
 
 #Preview {
     BootView {
-        DBLayout()
+        DBView()
     }.modelContainer(Config.getContainer)
 }

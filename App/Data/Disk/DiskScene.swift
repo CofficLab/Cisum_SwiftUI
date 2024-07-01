@@ -10,6 +10,15 @@ enum DiskScene: String, CaseIterable, Identifiable {
     case Videos
     case VideosKids
     
+    var available: Bool {
+        switch self {
+        case .Music,.AudiosBook:
+            true
+        case .AudiosKids,.Videos,.VideosKids:
+            false
+        }
+    }
+    
     var iconName: String {
         switch self {
         case .AudiosKids:

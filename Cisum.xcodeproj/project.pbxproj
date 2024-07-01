@@ -89,6 +89,9 @@
 		0BB889D22AC042EC004788D5 /* BtnDownload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB889D12AC042EC004788D5 /* BtnDownload.swift */; };
 		0BB889D72AC046B5004788D5 /* BtnShowInFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB889D62AC046B5004788D5 /* BtnShowInFinder.swift */; };
 		0BB889DB2AC06C54004788D5 /* DB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB889DA2AC06C54004788D5 /* DB.swift */; };
+		0BB9D2442C32E3E60027DDAD /* BtnChapters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB9D2432C32E3E60027DDAD /* BtnChapters.swift */; };
+		0BB9D2462C32E4F20027DDAD /* DBViewNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB9D2452C32E4F20027DDAD /* DBViewNavigation.swift */; };
+		0BB9D2482C32E53B0027DDAD /* DBViewMenuTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB9D2472C32E53B0027DDAD /* DBViewMenuTile.swift */; };
 		0BBA42192ABD5D9200C0B977 /* BtnMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA42182ABD5D9200C0B977 /* BtnMode.swift */; };
 		0BBA421F2AC1397F00C0B977 /* Centered.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA421E2AC1397F00C0B977 /* Centered.swift */; };
 		0BBA42212AC1802C00C0B977 /* ButtonCancelSelected.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA42202AC1802C00C0B977 /* ButtonCancelSelected.swift */; };
@@ -98,7 +101,7 @@
 		0BBAD0722BBC05C6005834A3 /* DBRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBAD0712BBC05C6005834A3 /* DBRow.swift */; };
 		0BBAD0A22BBD413B005834A3 /* DBViewList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBAD0A12BBD413B005834A3 /* DBViewList.swift */; };
 		0BBC157C2AB84C21006E82C4 /* AudioAppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC157B2AB84C21006E82C4 /* AudioAppView.swift */; };
-		0BBC15802AB854A8006E82C4 /* DBLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC157F2AB854A8006E82C4 /* DBLayout.swift */; };
+		0BBC15802AB854A8006E82C4 /* DBView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC157F2AB854A8006E82C4 /* DBView.swift */; };
 		0BBC15842AB95272006E82C4 /* ControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC15832AB95272006E82C4 /* ControlView.swift */; };
 		0BBC15882AB9A473006E82C4 /* iCloudHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC15872AB9A473006E82C4 /* iCloudHelper.swift */; };
 		0BBC158A2AB9AB7F006E82C4 /* FileHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC15892AB9AB7F006E82C4 /* FileHelper.swift */; };
@@ -255,6 +258,9 @@
 		0BB889D12AC042EC004788D5 /* BtnDownload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnDownload.swift; sourceTree = "<group>"; };
 		0BB889D62AC046B5004788D5 /* BtnShowInFinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnShowInFinder.swift; sourceTree = "<group>"; };
 		0BB889DA2AC06C54004788D5 /* DB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DB.swift; sourceTree = "<group>"; };
+		0BB9D2432C32E3E60027DDAD /* BtnChapters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnChapters.swift; sourceTree = "<group>"; };
+		0BB9D2452C32E4F20027DDAD /* DBViewNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBViewNavigation.swift; sourceTree = "<group>"; };
+		0BB9D2472C32E53B0027DDAD /* DBViewMenuTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBViewMenuTile.swift; sourceTree = "<group>"; };
 		0BBA42182ABD5D9200C0B977 /* BtnMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnMode.swift; sourceTree = "<group>"; };
 		0BBA421E2AC1397F00C0B977 /* Centered.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Centered.swift; sourceTree = "<group>"; };
 		0BBA42202AC1802C00C0B977 /* ButtonCancelSelected.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonCancelSelected.swift; sourceTree = "<group>"; };
@@ -264,7 +270,7 @@
 		0BBAD0712BBC05C6005834A3 /* DBRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBRow.swift; sourceTree = "<group>"; };
 		0BBAD0A12BBD413B005834A3 /* DBViewList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBViewList.swift; sourceTree = "<group>"; };
 		0BBC157B2AB84C21006E82C4 /* AudioAppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioAppView.swift; sourceTree = "<group>"; };
-		0BBC157F2AB854A8006E82C4 /* DBLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBLayout.swift; sourceTree = "<group>"; };
+		0BBC157F2AB854A8006E82C4 /* DBView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBView.swift; sourceTree = "<group>"; };
 		0BBC15832AB95272006E82C4 /* ControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlView.swift; sourceTree = "<group>"; };
 		0BBC15872AB9A473006E82C4 /* iCloudHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iCloudHelper.swift; sourceTree = "<group>"; };
 		0BBC15892AB9AB7F006E82C4 /* FileHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileHelper.swift; sourceTree = "<group>"; };
@@ -500,6 +506,7 @@
 			children = (
 				0BBA42262AC2A8B800C0B977 /* BtnAdd.swift */,
 				F507F5142C04688D00CB9A3A /* BtnBuy.swift */,
+				0BB9D2432C32E3E60027DDAD /* BtnChapters.swift */,
 				0BBA42242AC1813D00C0B977 /* BtnDel.swift */,
 				0B7842742C1331B400E24869 /* BtnDelDevice.swift */,
 				0BAABEB72BC7D4B600DF4A31 /* BtnDelTask.swift */,
@@ -509,14 +516,14 @@
 				0BBA42182ABD5D9200C0B977 /* BtnMode.swift */,
 				0B8C36B52BEDAB5E00C47567 /* BtnMore.swift */,
 				0BBC158E2ABAC146006E82C4 /* BtnNext.swift */,
+				F586DCD42C2BFE9E0078580B /* BtnOpenFolder.swift */,
 				0BBC15902ABAC19F006E82C4 /* BtnPrev.swift */,
+				0B8113B02C2C38AD007CA124 /* BtnScene.swift */,
 				0BB889D62AC046B5004788D5 /* BtnShowInFinder.swift */,
 				0BBC158C2ABAC0C7006E82C4 /* BtnToggle.swift */,
+				F5511BBF2C2953C200400900 /* BtnToggleCopying.swift */,
 				0B1126292AC6F7B20093DFFA /* BtnToggleDB.swift */,
 				0BBA42202AC1802C00C0B977 /* ButtonCancelSelected.swift */,
-				F5511BBF2C2953C200400900 /* BtnToggleCopying.swift */,
-				F586DCD42C2BFE9E0078580B /* BtnOpenFolder.swift */,
-				0B8113B02C2C38AD007CA124 /* BtnScene.swift */,
 			);
 			path = Buttons;
 			sourceTree = "<group>";
@@ -626,15 +633,17 @@
 		0BFDCE522BAFF279009198DD /* Database */ = {
 			isa = PBXGroup;
 			children = (
-				0BBC157F2AB854A8006E82C4 /* DBLayout.swift */,
 				0BBAD0712BBC05C6005834A3 /* DBRow.swift */,
+				F5B64D052C32597B00DE55AD /* DBSyncing.swift */,
 				0BAB7C3E2AD3BBAA00C5AEB5 /* DBTips.swift */,
 				F5675C3D2C252A3800326664 /* DBTree.swift */,
+				0BBC157F2AB854A8006E82C4 /* DBView.swift */,
 				0BBAD0A12BBD413B005834A3 /* DBViewList.swift */,
+				0BB9D2472C32E53B0027DDAD /* DBViewMenuTile.swift */,
+				0BB9D2452C32E4F20027DDAD /* DBViewNavigation.swift */,
 				F5675C342C22CB3C00326664 /* DBViewTree.swift */,
 				0BB543F32BE8E38300D7A2B2 /* Duplicates.swift */,
 				0BFB38F62BD0BCC20055E38B /* RowTask.swift */,
-				F5B64D052C32597B00DE55AD /* DBSyncing.swift */,
 			);
 			path = Database;
 			sourceTree = "<group>";
@@ -865,7 +874,7 @@
 				0BA9FB702BFE223A008074CB /* VersionSetting.swift in Sources */,
 				0B8C36AA2BEA2EC700C47567 /* Disk.swift in Sources */,
 				0BBC158F2ABAC146006E82C4 /* BtnNext.swift in Sources */,
-				0BBC15802AB854A8006E82C4 /* DBLayout.swift in Sources */,
+				0BBC15802AB854A8006E82C4 /* DBView.swift in Sources */,
 				0BE93F312BFB8E3200F25445 /* SettingView.swift in Sources */,
 				0B8C36A32BEA124900C47567 /* AudioR.swift in Sources */,
 				0BB889D72AC046B5004788D5 /* BtnShowInFinder.swift in Sources */,
@@ -971,6 +980,7 @@
 				0BE6959D2BFE3DCC00CEFFEB /* CarsView.swift in Sources */,
 				F5511BCD2C2BBF8900400900 /* Scenes.swift in Sources */,
 				0BBA42252AC1813D00C0B977 /* BtnDel.swift in Sources */,
+				0BB9D2442C32E3E60027DDAD /* BtnChapters.swift in Sources */,
 				0B8C36AC2BEC6E0F00C47567 /* StateExt.swift in Sources */,
 				F5B64D042C32546F00DE55AD /* SyncingView.swift in Sources */,
 				F5511BBE2C29506400400900 /* StateCopy.swift in Sources */,
@@ -978,6 +988,7 @@
 				0BB543F42BE8E38300D7A2B2 /* Duplicates.swift in Sources */,
 				0BBC157C2AB84C21006E82C4 /* AudioAppView.swift in Sources */,
 				F5511BCA2C2BACC000400900 /* TopView.swift in Sources */,
+				0BB9D2462C32E4F20027DDAD /* DBViewNavigation.swift in Sources */,
 				F5675C402C25456300326664 /* DataManager.swift in Sources */,
 				0B901D8A2BB83E28003AC253 /* ItemQuery.swift in Sources */,
 				F5B64D0A2C327D8600DE55AD /* VideoWorker.swift in Sources */,
@@ -986,6 +997,7 @@
 				0B11365F2BF10A0100A71FE1 /* JobHash.swift in Sources */,
 				0B8113B12C2C38AD007CA124 /* BtnScene.swift in Sources */,
 				0B220F732BB1A3D70077255A /* BtnsView.swift in Sources */,
+				0BB9D2482C32E53B0027DDAD /* DBViewMenuTile.swift in Sources */,
 				F5511BB62C291D3400400900 /* SceneView.swift in Sources */,
 				0B220F6F2BB051F50077255A /* TitleView.swift in Sources */,
 				0BBC158A2AB9AB7F006E82C4 /* FileHelper.swift in Sources */,

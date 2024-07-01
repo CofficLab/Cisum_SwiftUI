@@ -34,7 +34,7 @@ struct AudioAppView: View {
 
                 if showDB {
                     TabView(selection: $tab) {
-                        DBLayout()
+                        DBView()
                             .tag("DB")
                             .tabItem {
                                 Label("仓库", systemImage: "music.note.list")

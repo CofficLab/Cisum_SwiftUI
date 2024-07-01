@@ -16,6 +16,10 @@ struct BtnsView: View {
                     if data.appScene == .Music {
                         BtnMode(autoResize: true)
                     }
+                    
+                    if data.appScene == .AudiosBook {
+                        BtnChapters()
+                    }
                     Spacer()
                 })
                 .foregroundStyle(.white)
