@@ -4,7 +4,7 @@ import SwiftUI
 
 struct BtnToggle: View {
     @EnvironmentObject var appManager: AppManager
-    @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var playMan: AudioMan
 
     @State private var hovered: Bool = false
     @State private var systemImage = "play.fill"

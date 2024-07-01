@@ -3,7 +3,7 @@ import SwiftData
 import SwiftUI
 
 struct TitleView: View {
-    @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var playMan: AudioMan
 
     var asset: PlayAsset? { playMan.asset }
     var characterCount: Int { asset?.fileName.count ?? 0 }

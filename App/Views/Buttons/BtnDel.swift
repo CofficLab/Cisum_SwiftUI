@@ -2,7 +2,7 @@ import SwiftUI
 
 struct BtnDel: View {
     @EnvironmentObject var appManager: AppManager
-    @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var playMan: AudioMan
     @EnvironmentObject var dataManager: DataManager
 
     var disk: any Disk { dataManager.disk }

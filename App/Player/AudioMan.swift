@@ -10,10 +10,10 @@ import SwiftUI
       对接系统媒体中心
  */
 
-class PlayMan: NSObject, ObservableObject {
+class AudioMan: NSObject, ObservableObject {
     // MARK: 成员
 
-    static var label = "💿 PlayMan::"
+    static var label = "💿 AudioMan::"
     var label: String { Logger.isMain + Self.label }
     var player = AVAudioPlayer()
     @Published var asset: PlayAsset?
@@ -88,25 +88,25 @@ class PlayMan: NSObject, ObservableObject {
     // MARK: 对外传递事件
 
     var onStateChange: (_ state: PlayState) -> Void = { state in
-        os_log("\(PlayMan.label)播放器状态已变为 \(state.des)")
+        os_log("\(AudioMan.label)播放器状态已变为 \(state.des)")
     }
     
     var onGetPrevOf: (_ asset: PlayAsset?) -> PlayAsset? = { asset in
-        os_log("\(PlayMan.label)GetPrevOf -> \(asset?.title ?? "nil")")
+        os_log("\(AudioMan.label)GetPrevOf -> \(asset?.title ?? "nil")")
         return nil
     }
     
     var onGetNextOf: (_ asset: PlayAsset?) -> PlayAsset? = { asset in
-        os_log("\(PlayMan.label)GetNextOf -> \(asset?.title ?? "nil")")
+        os_log("\(AudioMan.label)GetNextOf -> \(asset?.title ?? "nil")")
         return nil
     }
     
     var onToggleLike: () -> Void = {
-        os_log("\(PlayMan.label)ToggleLike")
+        os_log("\(AudioMan.label)ToggleLike")
     }
     
     var onToggleMode: () -> Void = {
-        os_log("\(PlayMan.label)ToggleMode")
+        os_log("\(AudioMan.label)ToggleMode")
     }
     
     // MARK: 初始化
@@ -122,7 +122,7 @@ class PlayMan: NSObject, ObservableObject {
 
 // MARK: 播放模式
 
-extension PlayMan {
+extension AudioMan {
     func switchMode(verbose: Bool = true) {
         mode = mode.switchMode()
         Config.setCurrentMode(mode)
@@ -132,7 +132,7 @@ extension PlayMan {
 
 // MARK: 播放控制
 
-extension PlayMan {
+extension AudioMan {
     func toggleLike() {
         self.asset?.like.toggle()
         self.onToggleLike()
@@ -223,7 +223,7 @@ extension PlayMan {
 
 // MARK: 控制 AVAudioPlayer
 
-extension PlayMan {
+extension AudioMan {
     func makeEmptyPlayer() -> AVAudioPlayer {
         AVAudioPlayer()
     }
@@ -274,7 +274,7 @@ extension PlayMan {
 
 // MARK: 播放状态
 
-extension PlayMan {
+extension AudioMan {
     func setError(_ e: Error, asset: PlayAsset?) {
         state = .Error(e, asset)
     }
@@ -302,7 +302,7 @@ extension PlayMan {
 
 // MARK: 接收系统事件
 
-extension PlayMan: AVAudioPlayerDelegate {
+extension AudioMan: AVAudioPlayerDelegate {
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         queue.sync {
             // 没有播放完，被打断了
@@ -342,7 +342,7 @@ extension PlayMan: AVAudioPlayerDelegate {
 
 // MARK: 媒体中心
 
-extension PlayMan {
+extension AudioMan {
     var c: MPRemoteCommandCenter {
         MPRemoteCommandCenter.shared()
     }

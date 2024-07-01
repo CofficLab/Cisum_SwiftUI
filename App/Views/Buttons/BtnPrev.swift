@@ -2,7 +2,7 @@ import OSLog
 import SwiftUI
 
 struct BtnPrev: View {
-    @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var playMan: AudioMan
 
     var autoResize = false
 

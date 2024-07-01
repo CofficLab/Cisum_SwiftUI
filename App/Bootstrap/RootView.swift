@@ -2,7 +2,7 @@ import OSLog
 import SwiftUI
 
 struct RootView: View {
-    @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var playMan: AudioMan
     @EnvironmentObject var videoMan: VideoMan
     @EnvironmentObject var appManager: AppManager
     @EnvironmentObject var data: DataManager

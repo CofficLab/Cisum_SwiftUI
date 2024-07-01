@@ -16,7 +16,7 @@ struct DBViewList: View {
 
     @EnvironmentObject var app: AppManager
     @EnvironmentObject var data: DataManager
-    @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var playMan: AudioMan
     @Environment(\.modelContext) var modelContext
 
     @Query(Audio.descriptorNotFolder) var audios: [Audio]

@@ -2,7 +2,7 @@ import OSLog
 import SwiftUI
 
 struct DBRow: View {
-    @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var playMan: AudioMan
 
     @State var hovered = false
 

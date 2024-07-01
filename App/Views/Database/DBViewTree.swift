@@ -7,7 +7,7 @@ struct DBViewTree: View {
 
     @EnvironmentObject var app: AppManager
     @EnvironmentObject var dataManager: DataManager
-    @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var playMan: AudioMan
 
     @State var selection: DiskFile?
     @State var collapsed: Bool = false

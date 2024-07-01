@@ -2,7 +2,7 @@ import SwiftUI
 
 struct BtnMode: View {
     @EnvironmentObject var app: AppManager
-    @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var playMan: AudioMan
 
     var autoResize = false
 

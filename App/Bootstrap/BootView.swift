@@ -30,7 +30,7 @@ struct BootView<Content>: View where Content: View {
                 }
                 .frame(minWidth: Config.minWidth, minHeight: Config.minHeight)
                 .blendMode(.normal)
-                .environmentObject(PlayMan())
+                .environmentObject(AudioMan())
                 .environmentObject(VideoMan())
                 .environmentObject(AppManager())
                 .environmentObject(StoreManager())

@@ -1,23 +1,23 @@
-import OSLog
 import AVKit
+import OSLog
 import SwiftUI
 
 struct VideoView: View {
     @EnvironmentObject var app: AppManager
     @EnvironmentObject var data: DataManager
     @EnvironmentObject var videoMan: VideoMan
-    
+
     static var label = "🎬 VideoView::"
-    
+
     @State var image: Image?
     @State var downloadingPercent: Double = -1
-    
+
     // MARK: Download
-    
-    var isDownloading: Bool { downloadingPercent > 0 && downloadingPercent < 100}
+
+    var isDownloading: Bool { downloadingPercent > 0 && downloadingPercent < 100 }
     var isNotDownloaded: Bool { !isDownloaded }
     var isDownloaded: Bool { downloadingPercent == 100 }
-    
+
     var asset: PlayAsset
     var label: String { "\(Logger.isMain)\(Self.label)" }
     var updating: DiskFileGroup { data.updating }
@@ -27,14 +27,10 @@ struct VideoView: View {
     }
 
     var body: some View {
-        VideoPlayer(player: videoMan.player) {
-            StateView()
-                .frame(maxWidth: .infinity)
-                .frame(maxHeight: .infinity)
-        }
-        .onAppear {
-            videoMan.play(Audio(asset.url), reason: "OnAppear")
-        }
+        VideoPlayer(player: videoMan.player)
+            .onAppear {
+                videoMan.play(Audio(asset.url), reason: "OnAppear")
+            }
     }
 }
 

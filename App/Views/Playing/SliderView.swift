@@ -5,7 +5,7 @@ import OSLog
 struct SliderView: View {
     static var label = "👀 SliderView::"
     
-    @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var playMan: AudioMan
     @EnvironmentObject var app: AppManager
     @EnvironmentObject var dataManager: DataManager
 
@@ -19,7 +19,7 @@ struct SliderView: View {
         .autoconnect()
 
     var geo: GeometryProxy
-    var player: PlayMan { playMan }
+    var player: AudioMan { playMan }
     var duration: TimeInterval { player.duration }
     var current: String { player.currentTimeDisplay }
     var left: String { player.leftTimeDisplay }

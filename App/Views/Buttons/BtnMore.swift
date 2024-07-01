@@ -3,7 +3,7 @@ import SwiftUI
 
 struct BtnMore: View {
     @EnvironmentObject var appManager: AppManager
-    @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var playMan: AudioMan
 
     @State var isDownloaded = true
 
