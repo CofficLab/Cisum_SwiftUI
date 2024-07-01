@@ -2,6 +2,7 @@ import OSLog
 import SwiftUI
 
 struct AlbumView: View {
+    @EnvironmentObject var app: AppManager
     @EnvironmentObject var data: DataManager
     
     static var label = "🐰 AlbumView::"
@@ -53,6 +54,9 @@ struct AlbumView: View {
             }
         }
         .clipShape(shape)
+        .onTapGesture(count: 2, perform: {
+            app.showScenes = true
+        })
         .onAppear {
             if let file = updating.find(asset.url) {
                 self.downloadingPercent = file.downloadProgress

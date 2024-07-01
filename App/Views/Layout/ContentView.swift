@@ -2,7 +2,8 @@ import OSLog
 import SwiftUI
 
 struct ContentView: View {
-    @EnvironmentObject var appManager: AppManager
+    @EnvironmentObject var app: AppManager
+    @EnvironmentObject var data: DataManager
 
     var body: some View {
         ZStack {
@@ -10,28 +11,38 @@ struct ContentView: View {
                 if Config.isNotDesktop {
                     TopView()
                 }
-                
+
                 HomeView()
-                    .alert(isPresented: $appManager.showAlert, content: {
-                        Alert(title: Text(appManager.alertMessage))
+                    .alert(isPresented: $app.showAlert, content: {
+                        Alert(title: Text(app.alertMessage))
+                    })
+                    .sheet(isPresented: $app.showScenes, content: {
+                        Scenes(
+                            selection: $data.appScene,
+                            isPreseted: $app.showScenes
+                        )
+                    })
+                    .onChange(of: data.appScene, {
+                        try? data.chageScene(data.appScene)
+                        app.showScenes = false
                     })
             }
 
-            if !appManager.flashMessage.isEmpty {
+            if !app.flashMessage.isEmpty {
                 CardView(background: BackgroundView.type4) {
-                    Text(appManager.flashMessage)
+                    Text(app.flashMessage)
                         .font(.title)
                         .foregroundStyle(.white)
                 }.onAppear {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-                        appManager.flashMessage = ""
+                        app.flashMessage = ""
                     }
                 }
             }
 
-            if !appManager.fixedMessage.isEmpty {
+            if !app.fixedMessage.isEmpty {
                 CardView(background: BackgroundView.type4) {
-                    Text(appManager.fixedMessage)
+                    Text(app.fixedMessage)
                         .font(.title)
                         .foregroundStyle(.white)
                 }
