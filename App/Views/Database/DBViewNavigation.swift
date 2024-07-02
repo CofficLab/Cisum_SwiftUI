@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct SettingsView: View {
+struct DBViewNavigation: View {
     @StateObject var viewModel = SettingsViewModel()
     
     var body: some View {
@@ -16,7 +16,7 @@ struct SettingsView: View {
             }
             .navigationDestination(for: SettingsItem.self) { item in
                 if let subItems = item.subItems, !subItems.isEmpty {
-                    SettingsView(viewModel: SettingsViewModel(initialSelection: item))
+                    DBViewNavigation(viewModel: SettingsViewModel(initialSelection: item))
                 } else {
                     SettingsDetailView(item: item)
                 }
@@ -97,5 +97,5 @@ struct SettingsItem: Identifiable, Hashable {
 }
 
 #Preview {
-    SettingsView()
+    DBViewNavigation()
 }

@@ -61,6 +61,7 @@ struct SliderView: View {
             }
         }
         .padding(.horizontal, 10)
+        .foregroundStyle(.white)
     }
 
     func enable() {
@@ -78,8 +79,9 @@ struct SliderView: View {
     }
 }
 
-#Preview {
+#Preview("App") {
     AppPreview()
+        .frame(height: 800)
 }
 
 #Preview("iPad") {

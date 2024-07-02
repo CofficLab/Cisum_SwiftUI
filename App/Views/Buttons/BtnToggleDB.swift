@@ -13,6 +13,7 @@ struct BtnToggleDB: View {
             onTap: {
                 app.toggleDBView()
             })
+        .foregroundStyle(.white)
     }
 }
 

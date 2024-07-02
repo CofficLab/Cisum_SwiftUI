@@ -22,7 +22,6 @@ struct BtnsView: View {
                     }
                     Spacer()
                 })
-                .foregroundStyle(.white)
                 .labelStyle(.iconOnly)
             }
         }
@@ -31,6 +30,11 @@ struct BtnsView: View {
     func getHeight(_ geo: GeometryProxy) -> CGFloat {
         return geo.size.height
     }
+}
+
+#Preview("App") {
+    AppPreview()
+        .frame(height: 800)
 }
 
 #Preview("Layout") {

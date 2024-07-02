@@ -33,7 +33,9 @@ struct DBView: View {
                 switch data.appScene {
                 case .Music:
                     DBViewList()
-                case .AudiosBook,.AudiosKids,.VideosKids, .Videos:
+                case .AudiosBook:
+                    DBViewBook()
+                case .AudiosKids,.VideosKids, .Videos:
                     DBViewTree()
                 }
             }

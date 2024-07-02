@@ -15,4 +15,5 @@ protocol PlayWorker {
     func stop()
     func toggle()
     func prev()
+    func setError(_ e: Error, asset: PlayAsset?)
 }

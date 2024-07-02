@@ -43,12 +43,8 @@ class PlayMan: NSObject, ObservableObject {
     var leftTimeDisplay: String {
         DateComponentsFormatter.positional.string(from: leftTime) ?? "0:00"
     }
-
-    // MARK: 对外传递事件
-
-    var onStateChange: (_ state: PlayState) -> Void = { state in
-        os_log("\(PlayMan.label)播放器状态已变为 \(state.des)")
-    }
+    
+    // MARK: 告诉我如何获取播放资源
     
     var onGetPrevOf: (_ asset: PlayAsset?) -> PlayAsset? = { asset in
         os_log("\(PlayMan.label)GetPrevOf -> \(asset?.title ?? "nil")")
@@ -58,6 +54,17 @@ class PlayMan: NSObject, ObservableObject {
     var onGetNextOf: (_ asset: PlayAsset?) -> PlayAsset? = { asset in
         os_log("\(PlayMan.label)GetNextOf -> \(asset?.title ?? "nil")")
         return nil
+    }
+    
+    var onGetChildren: (_ asset: PlayAsset) -> [PlayAsset] = { asset in
+        os_log("\(PlayMan.label)GetChildrenOf -> \(asset.title)")
+        return []
+    }
+
+    // MARK: 对外传递事件
+
+    var onStateChange: (_ state: PlayState) -> Void = { state in
+        os_log("\(PlayMan.label)播放器状态已变为 \(state.des)")
     }
     
     var onToggleLike: () -> Void = {
@@ -139,8 +146,18 @@ extension PlayMan {
     
     func play(_ asset: PlayAsset, reason: String) {
         os_log("\(self.label)Play \(asset.fileName) (\(asset.isAudio() ? "Audio" : "Video")) 🐛 \(reason)")
-        self.asset = asset
-        self.worker.play(asset, reason: reason)
+        
+        if asset.isFolder() {
+            guard let first = self.onGetChildren(asset).first else {
+                return self.worker.setError(SmartError.NoNextAudio, asset: asset)
+            }
+            
+            self.asset = first
+        } else {
+            self.asset = asset
+        }
+        
+        self.worker.play(self.asset!, reason: reason)
     }
 
     func play() {
@@ -148,7 +165,22 @@ extension PlayMan {
     }
 
     func resume() {
-        self.worker.resume()
+        os_log("\(self.label)Resume while current is \(self.state.des)")
+        
+        guard let asset = self.asset else {
+            return
+        }
+        
+        if asset.isFolder() {
+            guard let first = self.onGetChildren(asset).first else {
+                return self.worker.setError(SmartError.NoNextAudio, asset: asset)
+            }
+            
+            self.asset = first
+            self.worker.play(self.asset!, reason: "Resum")
+        } else {
+            self.worker.resume()
+        }
     }
 
     func pause() {
@@ -160,7 +192,11 @@ extension PlayMan {
     }
 
     func toggle() {
-        self.worker.toggle()
+        if isPlaying {
+            self.pause()
+        } else {
+            self.resume()
+        }
     }
     
     // MARK: Prev
@@ -321,4 +357,9 @@ extension PlayMan {
             return .success
         }
     }
+}
+
+#Preview("App") {
+    AppPreview()
+        .frame(height: 800)
 }

@@ -12,6 +12,7 @@ struct BtnNext: View {
             onTap: {
                 playMan.next()
             })
+        .foregroundStyle(.white)
     }
 }
 
