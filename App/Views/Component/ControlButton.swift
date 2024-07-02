@@ -55,6 +55,8 @@ struct ControlButton: View {
                 #if os(macOS)
                 .buttonStyle(PlainButtonStyle())
                 .foregroundStyle(.primary)
+                #else
+                .buttonStyle(PlainButtonStyle())
                 #endif
             } else {
                 Button(action: {
@@ -80,6 +82,8 @@ struct ControlButton: View {
                 #if os(macOS)
                 .buttonStyle(LinkButtonStyle())
                 .foregroundStyle(.primary)
+                #else
+                .buttonStyle(PlainButtonStyle())
                 #endif
             }
         }
