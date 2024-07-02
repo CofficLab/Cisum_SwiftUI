@@ -100,10 +100,6 @@ class AudioWorker: NSObject, ObservableObject, PlayWorker {
         return nil
     }
     
-    var onToggleLike: () -> Void = {
-        os_log("\(AudioWorker.label)ToggleLike")
-    }
-    
     var onToggleMode: () -> Void = {
         os_log("\(AudioWorker.label)ToggleMode")
     }
@@ -122,11 +118,6 @@ extension AudioWorker {
 // MARK: 播放控制
 
 extension AudioWorker {
-    func toggleLike() {
-        self.asset?.like.toggle()
-        self.onToggleLike()
-    }
-    
     func goto(_ time: TimeInterval) {
         player.currentTime = time
     }

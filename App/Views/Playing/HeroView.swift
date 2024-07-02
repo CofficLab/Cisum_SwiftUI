@@ -64,6 +64,7 @@ struct HeroView: View {
         }
         .frame(maxWidth: .infinity)
         .frame(maxHeight: .infinity)
+        .foregroundStyle(.white)
     }
 
     func getTitleViewHeight(_ geo: GeometryProxy) -> CGFloat {

@@ -86,7 +86,6 @@ struct ControlView: View {
             .padding(.horizontal, 0)
             .frame(maxHeight: .infinity)
         }
-        .foregroundStyle(.white)
 //        .ignoresSafeArea(edges: appManager.showDB || Config.isNotDesktop ? .horizontal : .all)
         .frame(minHeight: Config.controlViewMinHeight)
         .onAppear() {

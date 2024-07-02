@@ -15,6 +15,7 @@ struct BtnMode: View {
                 playMan.switchMode()
                 app.setFlashMessage("\(playMan.mode.description)")
             })
+        .foregroundStyle(.white)
     }
 
     private func getImageName() -> String {

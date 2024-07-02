@@ -47,6 +47,7 @@ struct BtnToggle: View {
                     playMan.toggle()
                 }
             })
+        .foregroundStyle(.white)
     }
 }
 

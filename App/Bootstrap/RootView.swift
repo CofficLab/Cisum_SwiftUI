@@ -66,6 +66,14 @@ struct RootView: View {
                 playMan.onGetPrevOf = { asset in
                     self.getPrevOf(asset)
                 }
+                
+                playMan.onGetChildren = { asset in
+                    if let children = DiskFile(url: asset.url).getChildren() {
+                        return children.map({$0.toPlayAsset()})
+                    }
+                    
+                    return []
+                }
 
                 playMan.onStateChange = { state in
                     self.onStateChanged(state)

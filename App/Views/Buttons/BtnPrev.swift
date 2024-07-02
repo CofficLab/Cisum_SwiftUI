@@ -14,6 +14,7 @@ struct BtnPrev: View {
             onTap: {
                 playMan.prev()
             })
+        .foregroundStyle(.white)
     }
 }
 

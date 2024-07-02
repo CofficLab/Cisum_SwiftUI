@@ -96,10 +96,6 @@ class VideoWorker: NSObject, ObservableObject, PlayWorker {
         os_log("\(VideoWorker.label)GetNextOf -> \(asset?.title ?? "nil")")
         return nil
     }
-    
-    var onToggleLike: () -> Void = {
-        os_log("\(VideoWorker.label)ToggleLike")
-    }
 }
 
 // MARK: 播放控制
@@ -149,11 +145,6 @@ extension VideoWorker {
 
     func toggle() {
         state.isPlaying ? pause() : resume()
-    }
-    
-    func toggleLike() {
-        self.asset?.like.toggle()
-        self.onToggleLike()
     }
     
     // MARK: Prev

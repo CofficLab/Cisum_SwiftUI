@@ -41,7 +41,9 @@ struct DirSetting: View {
         
         GroupBox {
             VStack {
-                ForEach(Array(DiskScene.allCases.enumerated()), id: \.offset) { (index, s) in
+                ForEach(Array(DiskScene.allCases.filter({
+                    $0.available
+                }).enumerated()), id: \.offset) { (index, s) in
                     DirScene(scene: s)
 
                     // 如果不是最后一个元素,才显示分割线

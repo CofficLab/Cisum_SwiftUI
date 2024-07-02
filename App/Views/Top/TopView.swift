@@ -7,7 +7,7 @@ struct TopView: View {
 
     var body: some View {
         HStack {
-        SceneView().padding(.leading)
+            BtnScene()
             Spacer()
             if let asset = asset {
                 HStack {
@@ -17,15 +17,14 @@ struct TopView: View {
                     }
                     BtnDel(assets: [asset], autoResize: false)
                 }
-                .labelStyle(.iconOnly)
-                .foregroundStyle(.white)
-                .padding(.trailing)
             }
         }
+        .padding(.horizontal)
+        .labelStyle(.iconOnly)
     }
 }
 
-#Preview {
+#Preview("App") {
     AppPreview()
         .frame(height: 800)
 }
