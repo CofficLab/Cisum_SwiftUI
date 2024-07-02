@@ -5,7 +5,6 @@ protocol PlayWorker {
     var currentTime: TimeInterval { get }
     var state: PlayState { get }
     
-    func toggleLike()
     func goto(_ time: TimeInterval)
     func prepare(_ asset: PlayAsset?)
     func play(_ asset: PlayAsset, reason: String)

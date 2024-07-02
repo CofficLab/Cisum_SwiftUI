@@ -130,7 +130,8 @@ extension PlayMan {
 
 extension PlayMan {
     func toggleLike() {
-        self.worker.toggleLike()
+        self.asset?.like.toggle()
+        self.onToggleLike()
     }
     
     func goto(_ time: TimeInterval) {
