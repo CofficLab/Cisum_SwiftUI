@@ -12,8 +12,10 @@ enum DiskScene: String, CaseIterable, Identifiable {
     
     var available: Bool {
         switch self {
-        case .Music,.AudiosBook:
+        case .Music:
             true
+        case .AudiosBook:
+            Config.debug
         case .AudiosKids,.Videos,.VideosKids:
             false
         }
