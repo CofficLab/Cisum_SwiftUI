@@ -141,6 +141,7 @@
 		F518F6FD2C34F18500844E62 /* DBViewBookData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F518F6FC2C34F18500844E62 /* DBViewBookData.swift */; };
 		F518F6FF2C34F1D200844E62 /* BookTileData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F518F6FE2C34F1D200844E62 /* BookTileData.swift */; };
 		F518F7012C34FB0400844E62 /* BookState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F518F7002C34FB0400844E62 /* BookState.swift */; };
+		F518F7032C34FD5F00844E62 /* BookStateExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F518F7022C34FD5F00844E62 /* BookStateExt.swift */; };
 		F53BE0322C202420003CBA29 /* DiskFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53BE0312C202420003CBA29 /* DiskFile.swift */; };
 		F53BE0342C2024BE003CBA29 /* DiskFileGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53BE0332C2024BE003CBA29 /* DiskFileGroup.swift */; };
 		F54522252BFF3C780027CF55 /* Products.storekit in Resources */ = {isa = PBXBuildFile; fileRef = F54522242BFF3C770027CF55 /* Products.storekit */; };
@@ -319,6 +320,7 @@
 		F518F6FC2C34F18500844E62 /* DBViewBookData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBViewBookData.swift; sourceTree = "<group>"; };
 		F518F6FE2C34F1D200844E62 /* BookTileData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookTileData.swift; sourceTree = "<group>"; };
 		F518F7002C34FB0400844E62 /* BookState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookState.swift; sourceTree = "<group>"; };
+		F518F7022C34FD5F00844E62 /* BookStateExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookStateExt.swift; sourceTree = "<group>"; };
 		F53BE0312C202420003CBA29 /* DiskFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskFile.swift; sourceTree = "<group>"; };
 		F53BE0332C2024BE003CBA29 /* DiskFileGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskFileGroup.swift; sourceTree = "<group>"; };
 		F54522242BFF3C770027CF55 /* Products.storekit */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Products.storekit; sourceTree = "<group>"; };
@@ -420,7 +422,7 @@
 				0BB889D32AC04600004788D5 /* Buttons */,
 				0BBAD0702BBBDC22005834A3 /* Component */,
 				F5B64D0D2C3280BF00DE55AD /* Cover */,
-				0BFDCE522BAFF279009198DD /* Database */,
+				0BFDCE522BAFF279009198DD /* DBView */,
 				0BBAD06F2BBBDC0B005834A3 /* Layout */,
 				0BFDCE562BB013AC009198DD /* Playing */,
 				0BE93F2F2BFB8E1C00F25445 /* Settings */,
@@ -650,7 +652,7 @@
 			path = Config;
 			sourceTree = "<group>";
 		};
-		0BFDCE522BAFF279009198DD /* Database */ = {
+		0BFDCE522BAFF279009198DD /* DBView */ = {
 			isa = PBXGroup;
 			children = (
 				F518F6EE2C33917500844E62 /* BookView */,
@@ -668,7 +670,7 @@
 				0BB543F32BE8E38300D7A2B2 /* Duplicates.swift */,
 				0BFB38F62BD0BCC20055E38B /* RowTask.swift */,
 			);
-			path = Database;
+			path = DBView;
 			sourceTree = "<group>";
 		};
 		0BFDCE562BB013AC009198DD /* Playing */ = {
@@ -783,6 +785,7 @@
 		F573B1862C041180004C34CC /* Synced */ = {
 			isa = PBXGroup;
 			children = (
+				F518F7022C34FD5F00844E62 /* BookStateExt.swift */,
 				0BE695C12C01E8F600CEFFEB /* DBSynced.swift */,
 				F573B1872C0411E4004C34CC /* DeviceDataExt.swift */,
 			);
@@ -942,6 +945,7 @@
 				0BE695C02C01E88E00CEFFEB /* DeviceData.swift in Sources */,
 				0BE6959A2BFE3DCC00CEFFEB /* AllSubscriptions.swift in Sources */,
 				F518F6FF2C34F1D200844E62 /* BookTileData.swift in Sources */,
+				F518F7032C34FD5F00844E62 /* BookStateExt.swift in Sources */,
 				0BE695C22C01E8F600CEFFEB /* DBSynced.swift in Sources */,
 				0BAB300E2AB814F70012D837 /* BootApp.swift in Sources */,
 				0BBA42212AC1802C00C0B977 /* ButtonCancelSelected.swift in Sources */,

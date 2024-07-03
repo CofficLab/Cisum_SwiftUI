@@ -1,12 +1,17 @@
 import SwiftUI
 import SwiftData
 
+/**
+ 展示从数据库读取的图书数据
+ */
 struct BookTileData: View {
     @EnvironmentObject var playMan: PlayMan
-    @EnvironmentObject var db: DB
+    @EnvironmentObject var db: DBSynced
     @Environment(\.modelContext) var modelContext
     
     @Query(Book.descriptorAll) var books: [Book]
+    
+    @State var state: BookState? = nil
     
     var chapters: [Book] {
         books.filter({
@@ -25,6 +30,9 @@ struct BookTileData: View {
                 Spacer()
                 Text("共 \(chapters.count)")
                 Spacer()
+                if let s = self.state {
+                    Text("上次播放 \(s.currentTitle)").padding()
+                }
             }
             Spacer()
         }
@@ -33,6 +41,15 @@ struct BookTileData: View {
         .clipShape(RoundedRectangle(cornerSize: CGSize(width: 10, height: 10)))
         .onTapGesture {
             playMan.play(book.toPlayAsset(), reason: "点击了书本")
+        }
+        .onAppear {
+            Task {
+                if let state = await db.find(self.book.url) {
+                    DispatchQueue.main.async {
+                        self.state = state
+                    }
+                }
+            }
         }
         .contextMenu(menuItems: {
             BtnShowInFinder(url: book.url, autoResize: false)

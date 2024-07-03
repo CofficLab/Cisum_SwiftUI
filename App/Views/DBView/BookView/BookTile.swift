@@ -1,5 +1,8 @@
 import SwiftUI
 
+/**
+ 展示从地盘读取的图书数据
+ */
 struct BookTile: View {
     @EnvironmentObject var playMan: PlayMan
     
