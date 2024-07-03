@@ -14,9 +14,9 @@ struct SettingView: View {
                 }
                 
                 if Config.isDebug {
-//                    DeviceSetting()
-//                        .padding(.horizontal)
-//                        .padding(.bottom)
+                    DeviceSetting()
+                        .padding(.horizontal)
+                        .padding(.bottom)
                 }
             }.padding(.top)
         }
