@@ -245,7 +245,7 @@ extension PlayMan {
         MPRemoteCommandCenter.shared()
     }
 
-    private func setPlayingInfo(verbose: Bool = true) {
+    private func setPlayingInfo(verbose: Bool = false) {
         let center = MPNowPlayingInfoCenter.default()
         let artist = "Cisum"
         let title = asset?.fileName ?? ""

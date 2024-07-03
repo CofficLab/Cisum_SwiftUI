@@ -179,6 +179,13 @@ extension DiskFile {
         return Audio(url, size: size, isFolder: isFolder)
     }
 
+    func toBook(verbose: Bool = false) -> Book {
+        if verbose {
+            os_log("\(self.label)ToBook: title(\(title))")
+        }
+        
+        return Book(url: url, isFolder: isFolder())
+    }
 }
 
 extension DiskFile {

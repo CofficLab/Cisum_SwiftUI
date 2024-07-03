@@ -34,7 +34,7 @@ struct DBView: View {
                 case .Music:
                     DBViewList()
                 case .AudiosBook:
-                    DBViewBook()
+                    DBViewBookData()
                 case .AudiosKids,.VideosKids, .Videos:
                     DBViewTree()
                 }

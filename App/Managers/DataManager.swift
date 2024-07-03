@@ -33,7 +33,7 @@ class DataManager: ObservableObject {
         self.changeDisk(disk)
     }
 
-    // MARK: Disk
+    // MARK: ChangeDisk
 
     func changeDisk(_ to: any Disk) {
         os_log("\(self.label)更新磁盘为 \(to.name)")
@@ -43,7 +43,8 @@ class DataManager: ObservableObject {
         self.watchDisk()
     }
 
-    /// 监听存储Audio文件的目录的变化，同步到数据库
+    // MARK: WatchDisk
+    
     func watchDisk() {
         if self.appScene != .Music && !self.isiCloudDisk {
             return
@@ -60,10 +61,17 @@ class DataManager: ObservableObject {
                 self.updating = items
             }
             
-            if self.appScene == .Music {
+            switch self.appScene {
+            case .Music:
                 Task {
                     await DB(Config.getContainer, reason: "DataManager.WatchDisk").sync(items)
                 }
+            case .AudiosBook:
+                Task {
+                    await DB(Config.getContainer, reason: "DataManager.WatchDisk").bookSync(items)
+                }
+            case .AudiosKids,.Videos,.VideosKids:
+                break
             }
         }
         

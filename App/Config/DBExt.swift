@@ -50,6 +50,7 @@ extension Config {
 
         let schema = Schema([
             Audio.self,
+            Book.self,
             Cover.self,
             CopyTask.self
         ])
