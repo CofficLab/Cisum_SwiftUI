@@ -17,7 +17,7 @@ enum DiskScene: String, CaseIterable, Identifiable {
         case .AudiosBook:
             Config.debug
         case .AudiosKids,.Videos,.VideosKids:
-            false
+            false || Config.debug
         }
     }
     
