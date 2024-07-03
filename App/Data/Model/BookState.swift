@@ -13,13 +13,17 @@ class BookState {
     /// 当前播放的章节的URL
     var currentURL: URL?
     
+    /// 播放进度
+    var time: TimeInterval? = 0
+    
     var currentTitle: String {
         currentURL?.lastPathComponent ?? "无"
     }
     
-    init(url: URL, currentURL: URL? = nil) {
+    init(url: URL, currentURL: URL? = nil, time: TimeInterval = 0) {
         self.url = url
         self.currentURL = currentURL
+        self.time = time
     }
 }
 

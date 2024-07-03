@@ -51,8 +51,9 @@ struct BookTileData: View {
         .foregroundStyle(.white)
         .clipShape(RoundedRectangle(cornerSize: CGSize(width: 10, height: 10)))
         .onTapGesture {
-            if let s = self.state, let current = s.currentURL {
+            if let s = self.state, let current = s.currentURL, let time = s.time {
                 playMan.play(PlayAsset(url: current), reason: "点击了书本")
+                playMan.goto(time)
             } else {
                 playMan.play(book.toPlayAsset(), reason: "点击了书本")
             }
