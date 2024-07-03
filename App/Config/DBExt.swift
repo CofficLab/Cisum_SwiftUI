@@ -77,6 +77,7 @@ extension Config {
 
         let schema = Schema([
             DeviceData.self,
+            BookState.self
         ])
         
         let modelConfiguration = ModelConfiguration(
