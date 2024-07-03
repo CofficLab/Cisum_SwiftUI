@@ -6,17 +6,19 @@ struct BtnChapters: View {
     @EnvironmentObject var app: AppManager
     @EnvironmentObject var data: DataManager
     @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var db: DBSynced
     
     @State var isPresented = false
     @State var selection: DiskFile?
     
     var asset: PlayAsset? { playMan.asset }
+    var bookURL: URL? { asset?.url.deletingLastPathComponent() ?? nil }
     var items: [DiskFile] {
-        guard let asset = asset else {
+        guard let bookURL = bookURL else {
             return []
         }
         
-        return DiskFile(url: asset.url.deletingLastPathComponent()).getChildren() ?? []
+        return DiskFile(url: bookURL).getChildren() ?? []
     }
 
     var body: some View {
@@ -30,7 +32,7 @@ struct BtnChapters: View {
         .foregroundStyle(.white)
         .popover(isPresented: $isPresented, content: {
             List(items, id: \.self, selection: $selection) { file in
-                Text(file.title)
+                ChapterTile(file: file)
                     .tag(file as DiskFile?)
             }
             .onAppear {
@@ -39,8 +41,11 @@ struct BtnChapters: View {
                 }
             }
             .onChange(of: selection, {
-                if let s = selection {
-                    playMan.play(s.toPlayAsset(), reason: "点击")
+                if let s = selection, let bookURL = bookURL, s.url != asset?.url {
+                    playMan.play(s.toPlayAsset(), reason: "BtnChapters的Selection变了")
+                    Task {
+                        await db.updateCurrent(bookURL,currentURL:s.url)
+                    }
                 }
             })
         })

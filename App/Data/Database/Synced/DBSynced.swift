@@ -3,13 +3,13 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-actor DBSynced: ModelActor {
+actor DBSynced: ModelActor, ObservableObject {
     static let label = "📦 DBSynced::"
 
     let modelContainer: ModelContainer
     let modelExecutor: any ModelExecutor
     let context: ModelContext
-    var label: String { "\(Logger.isMain)\(DB.label)" }
+    var label: String { "\(Logger.isMain)\(DBSynced.label)" }
 
     init(_ container: ModelContainer, verbose: Bool = false) {
         if verbose {

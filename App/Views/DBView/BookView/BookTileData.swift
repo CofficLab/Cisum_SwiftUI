@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import OSLog
 
 /**
  展示从数据库读取的图书数据
@@ -19,6 +20,8 @@ struct BookTileData: View {
         })
     }
     
+    var label: String {"\(Logger.isMain)🖥️ BookTileData::"}
+    
     var book: Book
     
     var body: some View {
@@ -31,7 +34,15 @@ struct BookTileData: View {
                 Text("共 \(chapters.count)")
                 Spacer()
                 if let s = self.state {
-                    Text("上次播放 \(s.currentTitle)").padding()
+                    VStack(spacing: 0) {
+                        HStack {
+                            Image(systemName: "info")
+                            Text("上次播放")
+                        }
+                        Text(s.currentTitle)
+                    }
+                    .font(.footnote)
+                    .padding()
                 }
             }
             Spacer()
@@ -40,14 +51,20 @@ struct BookTileData: View {
         .foregroundStyle(.white)
         .clipShape(RoundedRectangle(cornerSize: CGSize(width: 10, height: 10)))
         .onTapGesture {
-            playMan.play(book.toPlayAsset(), reason: "点击了书本")
+            if let s = self.state, let current = s.currentURL {
+                playMan.play(PlayAsset(url: current), reason: "点击了书本")
+            } else {
+                playMan.play(book.toPlayAsset(), reason: "点击了书本")
+            }
         }
         .onAppear {
             Task {
-                if let state = await db.find(self.book.url) {
+                if let state = await db.findBookState(self.book.url) {
                     DispatchQueue.main.async {
                         self.state = state
                     }
+                } else {
+                    os_log("\(self.label)\(self.book.title) 无上次播放")
                 }
             }
         }

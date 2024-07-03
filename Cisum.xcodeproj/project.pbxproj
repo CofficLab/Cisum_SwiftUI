@@ -142,6 +142,7 @@
 		F518F6FF2C34F1D200844E62 /* BookTileData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F518F6FE2C34F1D200844E62 /* BookTileData.swift */; };
 		F518F7012C34FB0400844E62 /* BookState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F518F7002C34FB0400844E62 /* BookState.swift */; };
 		F518F7032C34FD5F00844E62 /* BookStateExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F518F7022C34FD5F00844E62 /* BookStateExt.swift */; };
+		F518F7052C35210300844E62 /* ChapterTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = F518F7042C35210300844E62 /* ChapterTile.swift */; };
 		F53BE0322C202420003CBA29 /* DiskFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53BE0312C202420003CBA29 /* DiskFile.swift */; };
 		F53BE0342C2024BE003CBA29 /* DiskFileGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53BE0332C2024BE003CBA29 /* DiskFileGroup.swift */; };
 		F54522252BFF3C780027CF55 /* Products.storekit in Resources */ = {isa = PBXBuildFile; fileRef = F54522242BFF3C770027CF55 /* Products.storekit */; };
@@ -321,6 +322,7 @@
 		F518F6FE2C34F1D200844E62 /* BookTileData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookTileData.swift; sourceTree = "<group>"; };
 		F518F7002C34FB0400844E62 /* BookState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookState.swift; sourceTree = "<group>"; };
 		F518F7022C34FD5F00844E62 /* BookStateExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookStateExt.swift; sourceTree = "<group>"; };
+		F518F7042C35210300844E62 /* ChapterTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterTile.swift; sourceTree = "<group>"; };
 		F53BE0312C202420003CBA29 /* DiskFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskFile.swift; sourceTree = "<group>"; };
 		F53BE0332C2024BE003CBA29 /* DiskFileGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskFileGroup.swift; sourceTree = "<group>"; };
 		F54522242BFF3C770027CF55 /* Products.storekit */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Products.storekit; sourceTree = "<group>"; };
@@ -692,6 +694,7 @@
 			children = (
 				F518F6EF2C33919600844E62 /* BookTile.swift */,
 				F518F6FE2C34F1D200844E62 /* BookTileData.swift */,
+				F518F7042C35210300844E62 /* ChapterTile.swift */,
 			);
 			path = BookView;
 			sourceTree = "<group>";
@@ -933,6 +936,7 @@
 				0BE6959C2BFE3DCC00CEFFEB /* BuyView.swift in Sources */,
 				0B718F0C2AB4349900569762 /* CardView.swift in Sources */,
 				0BFDCB802AB86AF300B0D1C8 /* MenuTile.swift in Sources */,
+				F518F7052C35210300844E62 /* ChapterTile.swift in Sources */,
 				0BE6959E2BFE3DCC00CEFFEB /* MySubscription.swift in Sources */,
 				0BD056912BC6340800EBC7C4 /* BtnEvict.swift in Sources */,
 				0BE695A02BFE3DCC00CEFFEB /* OneTimeView.swift in Sources */,

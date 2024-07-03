@@ -35,6 +35,7 @@ struct BootView<Content>: View where Content: View {
                 .environmentObject(StoreManager())
                 .environmentObject(dataManager)
                 .environmentObject(DB(Config.getContainer, reason: "BootView"))
+                .environmentObject(DBSynced(Config.getSyncedContainer))
             } else {
                 Text("启动失败")
             }
