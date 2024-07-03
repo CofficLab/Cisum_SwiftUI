@@ -6,7 +6,7 @@ import OSLog
  记录一本有声书的状态数据，并通过 CloudKit 同步
  */
 @Model
-class BookState: FileBox {
+class BookState {
     // MARK: Descriptor
     
     static var descriptorAll = FetchDescriptor(predicate: #Predicate<BookState> { _ in
@@ -14,7 +14,7 @@ class BookState: FileBox {
     }, sortBy: [])
     
     /// 图书的URL
-    var url: URL
+    var url: URL?
     
     /// 当前播放的章节的URL
     var currentURL: URL?
