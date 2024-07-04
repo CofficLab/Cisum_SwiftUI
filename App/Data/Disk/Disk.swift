@@ -24,7 +24,7 @@ protocol Disk: FileBox {
     func copyTo(url: URL) throws
     
     func watch() async
-    func stopWatch()
+    func stopWatch(reason: String)
     
     func getDownloadingCount() -> Int
     

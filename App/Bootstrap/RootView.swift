@@ -23,7 +23,7 @@ struct RootView: View {
                 playMan.stop()
 
                 os_log("\(self.label)Disk已变为：\(data.disk.name)")
-                restore()
+                restore(reason: "Disk Changed")
             })
 
             // MARK: 版本升级操作
@@ -57,7 +57,7 @@ struct RootView: View {
                 }
             })
             .task {
-                restore()
+                restore(reason: "First Launch")
 
                 playMan.onGetNextOf = { asset in
                     self.getNextOf(asset)
@@ -106,7 +106,7 @@ struct RootView: View {
             }
             .task(priority: .background) {
                 if verbose {
-                    os_log("\(self.label)执行后台任务")
+                    os_log("\(self.label)🐎🐎🐎 执行后台任务")
                 }
 
                 Task.detached(
@@ -134,11 +134,15 @@ struct RootView: View {
 
     // MARK: 恢复上次播放的
 
-    func restore(verbose: Bool = true) {
+    func restore(reason: String, verbose: Bool = true) {
+        if verbose {
+            os_log("\(label)👻👻👻 Restore because of \(reason)")
+        }
+        
         playMan.mode = PlayMode(rawValue: Config.currentMode) ?? playMan.mode
 
         Task {
-            let currentURL = await dbSynced.getSceneCurrent(data.appScene)
+            let currentURL = await dbSynced.getSceneCurrent(data.appScene, reason: "Restore")
 
             if let url = currentURL {
                 if verbose {
@@ -194,7 +198,6 @@ struct RootView: View {
 
             appManager.error = state.getError()
             Task {
-                Config.setCurrentURL(state.getAsset()?.url)
                 await self.dbLocal.increasePlayCount(state.getPlayingAsset()?.url)
                 await dbSynced.updateSceneCurrent(data.appScene, currentURL: state.getURL())
             }

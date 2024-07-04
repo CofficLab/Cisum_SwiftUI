@@ -38,7 +38,7 @@ class DataManager: ObservableObject {
     func changeDisk(_ to: any Disk) {
         os_log("\(self.label)更新磁盘为 \(to.name)")
         
-        self.disk.stopWatch()
+        self.disk.stopWatch(reason: "Disk Will Chang")
         self.disk = to
         self.watchDisk()
     }

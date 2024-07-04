@@ -5,8 +5,11 @@ import SwiftData
 extension DBSynced {
     // MARK: Find
     
-    func findSceneState(_ scene: DiskScene) -> SceneState? {
-        os_log("\(self.label)FindSceneState for \(scene.title)")
+    func findSceneState(_ scene: DiskScene, reason: String, verbose: Bool = true) -> SceneState? {
+        if verbose {
+            os_log("\(self.label)FindSceneState for \(scene.title) because of \(reason)")
+        }
+        
         do {
             return try context.fetch(SceneState.descriptorOf(scene)).first
         } catch let e {
@@ -16,15 +19,15 @@ extension DBSynced {
         }
     }
     
-    func getSceneCurrent(_ scene: DiskScene) -> URL? {
-        return self.findSceneState(scene)?.currentURL
+    func getSceneCurrent(_ scene: DiskScene, reason: String) -> URL? {
+        return self.findSceneState(scene, reason: reason)?.currentURL
     }
     
     // MARK: Update
     
     func updateSceneCurrent(_ scene: DiskScene, currentURL: URL?) {
         os_log("\(self.label)UpdateSceneCurrent: \(scene.title) -> \(currentURL?.lastPathComponent ?? "")")
-        if let state = self.findSceneState(scene) {
+        if let state = self.findSceneState(scene, reason: "UpdateSceneCurrent") {
             state.currentURL = currentURL
         } else {
             context.insert(SceneState(scene: scene, currentURL: currentURL))

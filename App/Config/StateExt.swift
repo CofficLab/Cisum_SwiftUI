@@ -3,15 +3,6 @@ import OSLog
 import SwiftUI
 
 extension Config {
-    // MARK: CurrentAudio
-    
-    @AppStorage("App.CurrentAudio")
-    static var currentAudio: URL?
-    
-    static func setCurrentURL(_ url: URL?) {
-        Config.currentAudio = url
-    }
-    
     // MARK: PlayMode
     
     @AppStorage("App.CurrentMode")

@@ -205,10 +205,10 @@ extension DiskiCloud {
 // MARK: Watch
 
 extension DiskiCloud {
-    func stopWatch() {
+    func stopWatch(reason: String) {
         let emoji = "🌛🌛🌛"
         
-        os_log("\(self.label)\(emoji) 停止监听")
+        os_log("\(self.label)\(emoji) 停止监听 because of \(reason)")
         self.query.stop()
     }
     
