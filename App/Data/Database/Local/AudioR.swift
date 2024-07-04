@@ -38,7 +38,7 @@ extension DB {
     }
 
     func isAllInCloud() -> Bool {
-        getTotalOfAudio() > 0 && first() == nil
+        getTotalOfAudio() > 0 && DB.first(context: context) == nil
     }
 }
 
@@ -105,8 +105,8 @@ extension DB {
     }
 
     /// 第一个
-    func first() -> Audio? {
-        Self.first(context: context)
+    nonisolated func firstAudio() -> Audio? {
+        Self.first(context: ModelContext(self.modelContainer))
     }
 }
 
@@ -184,11 +184,11 @@ extension DB {
         os_log("🍋 DBAudio::preOf \(url?.lastPathComponent ?? "nil")")
         
         guard let url = url else {
-            return first()
+            return DB.first(context: context)
         }
 
         guard let audio = self.findAudio(url) else {
-            return first()
+            return DB.first(context: context)
         }
 
         return prev(audio)
@@ -198,7 +198,7 @@ extension DB {
     func prev(_ audio: Audio?) -> Audio? {
         os_log("🍋 DBAudio::preOf [\(audio?.order ?? 0)] \(audio?.title ?? "nil")")
         guard let audio = audio else {
-            return first()
+            return DB.first(context: context)
         }
 
         return Self.prevOf(context: context, audio: audio)

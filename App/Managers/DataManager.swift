@@ -252,6 +252,19 @@ extension DataManager {
     }
 }
 
+// MARK: FirstPlayAsset
+
+extension DataManager {
+    func first() -> PlayAsset? {
+        switch self.appScene {
+        case .Music:
+            self.db.firstAudio()?.toPlayAsset()
+        default:
+            disk.getRoot().children?.first?.toPlayAsset()
+        }
+    }
+}
+
 #Preview {
     AppPreview()
         .frame(height: 800)

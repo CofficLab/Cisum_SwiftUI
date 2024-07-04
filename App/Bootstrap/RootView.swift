@@ -21,7 +21,7 @@ struct RootView: View {
 
             .onChange(of: data.disk.root, {
                 playMan.stop()
-                
+
                 os_log("\(self.label)Disk已变为：\(data.disk.name)")
                 restore()
             })
@@ -66,12 +66,12 @@ struct RootView: View {
                 playMan.onGetPrevOf = { asset in
                     self.getPrevOf(asset)
                 }
-                
+
                 playMan.onGetChildren = { asset in
                     if let children = DiskFile(url: asset.url).getChildren() {
-                        return children.map({$0.toPlayAsset()})
+                        return children.map({ $0.toPlayAsset() })
                     }
-                    
+
                     return []
                 }
 
@@ -137,39 +137,21 @@ struct RootView: View {
     func restore(verbose: Bool = true) {
         playMan.mode = PlayMode(rawValue: Config.currentMode) ?? playMan.mode
 
-        if let currentAudioId = Config.currentAudio, data.appScene == .Music {
-            if verbose {
-                os_log("\(label)上次播放 -> \(currentAudioId.lastPathComponent)")
-            }
+        Task {
+            let currentURL = await dbSynced.getSceneCurrent(data.appScene)
 
-            Task {
-                if let currentAudio = await self.dbLocal.findAudio(currentAudioId) {
-                    playMan.prepare(currentAudio.toPlayAsset())
-                } else if let current = await self.dbLocal.first() {
-                    playMan.prepare(current.toPlayAsset())
-                } else {
-                    os_log("\(self.label)restore nothing to play")
+            if let url = currentURL {
+                if verbose {
+                    os_log("\(label)上次播放 -> \(url.lastPathComponent)")
                 }
-            }
-        } else {
-            if verbose {
-                os_log("\(label)无上次播放的音频，尝试播放第一个(\(data.disk.name))")
-            }
-            
-            if data.appScene == .Music {
-                Task {
-                    if let first = await self.dbLocal.first() {
-                        playMan.prepare(first.toPlayAsset())
-                    } else {
-                        os_log("\(self.label)restore nothing to play")
-                    }
-                }
+
+                playMan.prepare(PlayAsset(url: url))
             } else {
-                if let first = data.disk.getRoot().children?.first {
-                    playMan.prepare(first.toPlayAsset())
-                } else {
-                    os_log("\(self.label)restore nothing to play")
+                if verbose {
+                    os_log("\(label)无上次播放的音频，尝试播放第一个(\(data.disk.name))")
                 }
+
+                playMan.prepare(data.first())
             }
         }
     }
@@ -202,6 +184,8 @@ struct RootView: View {
         }
     }
 
+    // MARK: PlayState Changed
+
     func onStateChanged(_ state: PlayState, verbose: Bool = true) {
         DispatchQueue.main.async {
             if verbose {
@@ -212,6 +196,7 @@ struct RootView: View {
             Task {
                 Config.setCurrentURL(state.getAsset()?.url)
                 await self.dbLocal.increasePlayCount(state.getPlayingAsset()?.url)
+                await dbSynced.updateSceneCurrent(data.appScene, currentURL: state.getURL())
             }
         }
     }

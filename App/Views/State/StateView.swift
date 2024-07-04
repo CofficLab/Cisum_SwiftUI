@@ -5,7 +5,7 @@ import SwiftUI
 
 struct StateView: View {
     @EnvironmentObject var app: AppManager
-    @EnvironmentObject var dataManager: DataManager
+    @EnvironmentObject var data: DataManager
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var db: DB
     @Environment(\.modelContext) private var modelContext
@@ -23,7 +23,7 @@ struct StateView: View {
     var count: Int { audios.count }
     var font: Font { asset == nil ? .title3 : .callout }
     var label: String { "\(Logger.isMain)🖥️ StateView::" }
-    var disk: any Disk { dataManager.disk }
+    var disk: any Disk { data.disk }
 
     var body: some View {
         VStack {
@@ -50,9 +50,9 @@ struct StateView: View {
         }
         .onChange(of: count) {
             Task {
-                if playMan.asset == nil, let first = await db.first() {
+                if playMan.asset == nil, let first = data.first() {
                     os_log("\(self.label)准备第一个")
-                    playMan.prepare(first.toPlayAsset())
+                    playMan.prepare(first)
                 }
             }
 

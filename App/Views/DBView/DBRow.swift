@@ -46,6 +46,7 @@ struct DBRow: View {
             if hovered {
                 HStack {
                     Spacer()
+                    BtnToggle()
                     BtnShowInFinder(url: asset.url, autoResize: false)
                     BtnMore(asset: asset, autoResize: false)
                 }.labelStyle(.iconOnly)

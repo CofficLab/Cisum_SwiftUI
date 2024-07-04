@@ -1,5 +1,7 @@
 /* 播放状态 */
 
+import Foundation
+
 enum PlayState {
     case Ready(PlayAsset?)
     case Playing(PlayAsset)
@@ -85,6 +87,10 @@ enum PlayState {
         case .Stopped:
             nil
         }
+    }
+    
+    func getURL() -> URL? {
+        self.getAsset()?.url
     }
     
     func getError() -> Error? {

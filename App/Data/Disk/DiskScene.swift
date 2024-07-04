@@ -1,4 +1,5 @@
 import Foundation
+import SwiftData
 import SwiftUI
 
 enum DiskScene: String, CaseIterable, Identifiable {

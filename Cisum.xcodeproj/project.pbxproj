@@ -170,6 +170,8 @@
 		F573B1882C0411E4004C34CC /* DeviceDataExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B1872C0411E4004C34CC /* DeviceDataExt.swift */; };
 		F573B18A2C0413DD004C34CC /* DeviceHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B1892C0413DD004C34CC /* DeviceHelper.swift */; };
 		F573B18C2C042E08004C34CC /* DeviceExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B18B2C042E08004C34CC /* DeviceExt.swift */; };
+		F5847C1B2C368FE20080887B /* SceneState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5847C1A2C368FE20080887B /* SceneState.swift */; };
+		F5847C1D2C36906B0080887B /* SceneStateExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5847C1C2C36906B0080887B /* SceneStateExt.swift */; };
 		F586DCD52C2BFE9E0078580B /* BtnOpenFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F586DCD42C2BFE9E0078580B /* BtnOpenFolder.swift */; };
 		F586DCD72C2C01FF0078580B /* FatalErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F586DCD62C2C01FF0078580B /* FatalErrorView.swift */; };
 		F586DCD92C2C05A60078580B /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F586DCD82C2C05A60078580B /* RootView.swift */; };
@@ -350,6 +352,8 @@
 		F573B1872C0411E4004C34CC /* DeviceDataExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceDataExt.swift; sourceTree = "<group>"; };
 		F573B1892C0413DD004C34CC /* DeviceHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceHelper.swift; sourceTree = "<group>"; };
 		F573B18B2C042E08004C34CC /* DeviceExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceExt.swift; sourceTree = "<group>"; };
+		F5847C1A2C368FE20080887B /* SceneState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneState.swift; sourceTree = "<group>"; };
+		F5847C1C2C36906B0080887B /* SceneStateExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneStateExt.swift; sourceTree = "<group>"; };
 		F586DCD42C2BFE9E0078580B /* BtnOpenFolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnOpenFolder.swift; sourceTree = "<group>"; };
 		F586DCD62C2C01FF0078580B /* FatalErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FatalErrorView.swift; sourceTree = "<group>"; };
 		F586DCD82C2C05A60078580B /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
@@ -396,6 +400,7 @@
 				0BAABEB02BC79C4E00DF4A31 /* CopyTask.swift */,
 				0B1136602BF4CF3000A71FE1 /* Cover.swift */,
 				0BE695BF2C01E88E00CEFFEB /* DeviceData.swift */,
+				F5847C1A2C368FE20080887B /* SceneState.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -791,6 +796,7 @@
 				F518F7022C34FD5F00844E62 /* BookStateExt.swift */,
 				0BE695C12C01E8F600CEFFEB /* DBSynced.swift */,
 				F573B1872C0411E4004C34CC /* DeviceDataExt.swift */,
+				F5847C1C2C36906B0080887B /* SceneStateExt.swift */,
 			);
 			path = Synced;
 			sourceTree = "<group>";
@@ -977,6 +983,7 @@
 				0B1498742BC4C5CB0075DA61 /* PlayMode.swift in Sources */,
 				0BB543F82BE9C64C00D7A2B2 /* PathExt.swift in Sources */,
 				0B6B8B992BBA39F500F65B23 /* ControlButton.swift in Sources */,
+				F5847C1D2C36906B0080887B /* SceneStateExt.swift in Sources */,
 				0B1D5A842AB302610010DDF2 /* Extensions.swift in Sources */,
 				0BA9FB6C2BFE14B4008074CB /* DirSetting.swift in Sources */,
 				0BE695902BFE325400CEFFEB /* StoreManager.swift in Sources */,
@@ -1052,6 +1059,7 @@
 				F5511BB62C291D3400400900 /* SceneView.swift in Sources */,
 				0B220F6F2BB051F50077255A /* TitleView.swift in Sources */,
 				0BBC158A2AB9AB7F006E82C4 /* FileHelper.swift in Sources */,
+				F5847C1B2C368FE20080887B /* SceneState.swift in Sources */,
 				F5B64D062C32597B00DE55AD /* DBSyncing.swift in Sources */,
 				0B12B0A92C0CB96F00FD43AD /* SubscriptionSetting.swift in Sources */,
 				F518F6F92C34ECEF00844E62 /* BookSync.swift in Sources */,
