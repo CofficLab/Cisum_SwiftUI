@@ -7,20 +7,6 @@ import OSLog
  */
 @Model
 class Book: FileBox {
-    // MARK: Descriptor
-    
-    static var descriptorAll = FetchDescriptor(predicate: #Predicate<Book> { _ in
-        return true
-    }, sortBy: [])
-    
-    static var descriptorIsFolder = FetchDescriptor(predicate: #Predicate<Book> { book in
-        book.isFolder == true
-    }, sortBy: [])
-    
-    static var descriptorNotFolder = FetchDescriptor(predicate: #Predicate<Book> { book in
-        book.isFolder == false
-    }, sortBy: [])
-    
     var url: URL
     var currentURL: URL?
     var isFolder: Bool = false
@@ -45,5 +31,27 @@ extension Book {
     
     static func fromDiskFile(_ file: DiskFile) -> Book {
         file.toBook()
+    }
+}
+
+// MARK: Descriptor
+
+extension Book {
+    static var descriptorIsFolder = FetchDescriptor(predicate: #Predicate<Book> { book in
+        book.isFolder == true
+    }, sortBy: [])
+    
+    static var descriptorNotFolder = FetchDescriptor(predicate: #Predicate<Book> { book in
+        book.isFolder == false
+    }, sortBy: [])
+    
+    static var descriptorAll = FetchDescriptor(predicate: #Predicate<Book> { _ in
+        return true
+    }, sortBy: [])
+    
+    static func descriptorOf(_ url: URL) -> FetchDescriptor<Book> {
+        FetchDescriptor(predicate: #Predicate<Book> { s in
+            s.url == url
+        }, sortBy: [])
     }
 }

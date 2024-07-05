@@ -16,6 +16,9 @@ class BookState {
     /// 播放进度
     var time: TimeInterval? = 0
     
+    var createdAt: Date?
+    var updateAt: Date?
+    
     var currentTitle: String {
         currentURL?.lastPathComponent ?? "无"
     }
@@ -24,6 +27,8 @@ class BookState {
         self.url = url
         self.currentURL = currentURL
         self.time = time
+        self.createdAt = .now
+        self.updateAt = .now
     }
 }
 
@@ -37,6 +42,8 @@ extension BookState {
     static func descriptorOf(_ url: URL) -> FetchDescriptor<BookState> {
         FetchDescriptor(predicate: #Predicate<BookState> { s in
             s.url == url
-        }, sortBy: [])
+        }, sortBy: [
+            SortDescriptor(\.createdAt, order: .forward)
+        ])
     }
 }

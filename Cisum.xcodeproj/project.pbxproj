@@ -173,6 +173,7 @@
 		F5847C1B2C368FE20080887B /* SceneState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5847C1A2C368FE20080887B /* SceneState.swift */; };
 		F5847C1D2C36906B0080887B /* SceneStateExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5847C1C2C36906B0080887B /* SceneStateExt.swift */; };
 		F5847C1F2C3778570080887B /* ErrorViewCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5847C1E2C3778570080887B /* ErrorViewCloud.swift */; };
+		F5847C212C37DFEB0080887B /* BookExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5847C202C37DFEB0080887B /* BookExt.swift */; };
 		F586DCD52C2BFE9E0078580B /* BtnOpenFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F586DCD42C2BFE9E0078580B /* BtnOpenFolder.swift */; };
 		F586DCD72C2C01FF0078580B /* ErrorViewFatal.swift in Sources */ = {isa = PBXBuildFile; fileRef = F586DCD62C2C01FF0078580B /* ErrorViewFatal.swift */; };
 		F586DCD92C2C05A60078580B /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F586DCD82C2C05A60078580B /* RootView.swift */; };
@@ -356,6 +357,7 @@
 		F5847C1A2C368FE20080887B /* SceneState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneState.swift; sourceTree = "<group>"; };
 		F5847C1C2C36906B0080887B /* SceneStateExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneStateExt.swift; sourceTree = "<group>"; };
 		F5847C1E2C3778570080887B /* ErrorViewCloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorViewCloud.swift; sourceTree = "<group>"; };
+		F5847C202C37DFEB0080887B /* BookExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookExt.swift; sourceTree = "<group>"; };
 		F586DCD42C2BFE9E0078580B /* BtnOpenFolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnOpenFolder.swift; sourceTree = "<group>"; };
 		F586DCD62C2C01FF0078580B /* ErrorViewFatal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorViewFatal.swift; sourceTree = "<group>"; };
 		F586DCD82C2C05A60078580B /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
@@ -796,6 +798,7 @@
 		F573B1862C041180004C34CC /* Synced */ = {
 			isa = PBXGroup;
 			children = (
+				F5847C202C37DFEB0080887B /* BookExt.swift */,
 				F518F7022C34FD5F00844E62 /* BookStateExt.swift */,
 				0BE695C12C01E8F600CEFFEB /* DBSynced.swift */,
 				F573B1872C0411E4004C34CC /* DeviceDataExt.swift */,
@@ -1022,6 +1025,7 @@
 				0BAABEBA2BC8C5CB00DF4A31 /* JobPrepare.swift in Sources */,
 				0B901D862BB83BA2003AC253 /* iCloudHandler.swift in Sources */,
 				F5B64D132C3288D300DE55AD /* PlayMan.swift in Sources */,
+				F5847C212C37DFEB0080887B /* BookExt.swift in Sources */,
 				F545D1732C1FC9F0006A6AFA /* CloudSetting.swift in Sources */,
 				0B8C36B02BEC6E6500C47567 /* DBExt.swift in Sources */,
 				0B9FA2992BC81EFF007B235A /* NotDownloadedAlbum.swift in Sources */,

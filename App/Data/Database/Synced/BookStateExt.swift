@@ -22,6 +22,7 @@ extension DBSynced {
         os_log("\(self.label)UpdateCurrent: \(bookURL.lastPathComponent) -> \(currentURL?.lastPathComponent ?? "")")
         if let book = self.findBookState(bookURL) {
             book.currentURL = currentURL
+            book.updateAt = .now
         } else {
             context.insert(BookState(url: bookURL, currentURL: currentURL))
         }
@@ -30,6 +31,12 @@ extension DBSynced {
             try context.save()
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
+        }
+    }
+    
+    func updateCurrent(currentURL: URL) {
+        if let parent = self.findBook(currentURL.deletingLastPathComponent()) {
+            self.updateCurrent(parent.url, currentURL: currentURL)
         }
     }
 }

@@ -1,6 +1,6 @@
-import SwiftUI
-import SwiftData
 import OSLog
+import SwiftData
+import SwiftUI
 
 /**
  展示从数据库读取的图书数据
@@ -9,21 +9,21 @@ struct BookTileData: View {
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var db: DBSynced
     @Environment(\.modelContext) var modelContext
-    
+
     @Query(Book.descriptorAll) var books: [Book]
-    
+
     @State var state: BookState? = nil
-    
+
     var chapters: [Book] {
         books.filter({
             $0.url.absoluteString.hasPrefix(self.book.url.absoluteString)
         })
     }
-    
-    var label: String {"\(Logger.isMain)🖥️ BookTileData::"}
-    
+
+    var label: String { "\(Logger.isMain)🖥️ BookTileData::" }
+
     var book: Book
-    
+
     var body: some View {
         HStack {
             Spacer()
@@ -59,19 +59,27 @@ struct BookTileData: View {
             }
         }
         .onAppear {
-            Task {
-                if let state = await db.findBookState(self.book.url) {
-                    DispatchQueue.main.async {
-                        self.state = state
-                    }
-                } else {
-                    os_log("\(self.label)\(self.book.title) 无上次播放")
-                }
-            }
+            findState()
         }
+        .onChange(of: playMan.state.getAsset()?.url, {
+            findState()
+        })
         .contextMenu(menuItems: {
             BtnShowInFinder(url: book.url, autoResize: false)
         })
+    }
+
+    func findState() {
+        Task {
+            os_log("\(self.label)FindState for \(self.book.title)")
+            if let state = await db.findBookState(self.book.url) {
+                DispatchQueue.main.async {
+                    self.state = state
+                }
+            } else {
+                os_log("\(self.label)\(self.book.title) 无上次播放")
+            }
+        }
     }
 }
 
