@@ -10,6 +10,8 @@ struct BtnToggle: View {
     @State private var systemImage = "play.fill"
 
     var asset: PlayAsset?
+    var foregroundStyle: Color?
+    
     var title: String {
         if let asset = asset {
             if asset.url == playMan.asset?.url {
@@ -32,6 +34,14 @@ struct BtnToggle: View {
     }
 
     var body: some View {
+        if let f = foregroundStyle {
+            buttonView.foregroundStyle(f)
+        } else {
+            buttonView
+        }
+    }
+    
+    var buttonView: some View {
         ControlButton(
             title: title,
             image: image,
@@ -47,7 +57,6 @@ struct BtnToggle: View {
                     playMan.toggle()
                 }
             })
-        .foregroundStyle(.white)
     }
 }
 

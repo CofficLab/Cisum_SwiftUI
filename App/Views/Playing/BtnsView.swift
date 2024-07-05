@@ -11,7 +11,7 @@ struct BtnsView: View {
                     Spacer()
                     BtnToggleDB(autoResize: true)
                     BtnPrev(autoResize: true)
-                    BtnToggle(autoResize: true)
+                    BtnToggle(foregroundStyle: .white, autoResize: true)
                     BtnNext(autoResize: true)
                     if data.appScene == .Music {
                         BtnMode(autoResize: true)
