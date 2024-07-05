@@ -32,7 +32,7 @@ struct ErrorViewCloud: View {
                         Spacer()
                     #else
                         Button("关闭 APP") {
-                            restartApp()
+                            quitApp()
                         }.padding()
                     #endif
 
@@ -98,11 +98,15 @@ struct ErrorViewCloud: View {
         #endif
     }
 
-    private func restartApp() {
+    private func quitApp() {
+        #if os(iOS)
         let selector = NSSelectorFromString("terminate")
         if let method = UIApplication.shared.method(for: selector) {
             UIApplication.shared.perform(selector, with: nil)
         }
+        #elseif os(macOS)
+        NSApplication.shared.terminate(self)
+        #endif
     }
 }
 
