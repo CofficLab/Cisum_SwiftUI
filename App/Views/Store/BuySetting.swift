@@ -6,10 +6,6 @@ struct BuySetting: View {
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     @State var closeBtnHovered: Bool = false
 
-    var onClose: () -> Void = {
-        print("点击了关闭按钮")
-    }
-
     var body: some View {
         GroupBox {
             VStack {
@@ -20,33 +16,6 @@ struct BuySetting: View {
             }
             .padding(.top, 12)
         }.background(BackgroundView.type1.opacity(0.1))
-    }
-
-    private var headerView: some View {
-        VStack {
-            HStack {
-                Button(action: {
-                    onClose()
-                }, label: {
-                    Label("关闭", systemImage: "xmark.circle")
-                        .labelStyle(.iconOnly)
-                        .font(.title)
-                        .foregroundStyle(.red.opacity(0.5))
-                        .scaleEffect(closeBtnHovered ? 1.1 : 1)
-                })
-                .buttonStyle(.plain)
-                .onHover(perform: { hovering in
-                    withAnimation {
-                        closeBtnHovered = hovering
-                    }
-                })
-
-                Spacer()
-            }
-            .padding(.vertical, 2)
-            .padding(.horizontal, 2)
-            Spacer()
-        }
     }
 
     private var featureView: some View {
