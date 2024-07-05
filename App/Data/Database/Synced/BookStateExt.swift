@@ -34,9 +34,9 @@ extension DBSynced {
         }
     }
     
-    func updateCurrent(currentURL: URL) {
-        if let parent = self.findBook(currentURL.deletingLastPathComponent()) {
-            self.updateCurrent(parent.url, currentURL: currentURL)
-        }
-    }
+//    func updateCurrent(currentURL: URL) {
+//        if let parent = self.findBook(currentURL.deletingLastPathComponent()) {
+//            self.updateCurrent(parent.url, currentURL: currentURL)
+//        }
+//    }
 }
