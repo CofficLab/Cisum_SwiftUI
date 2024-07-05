@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct FatalErrorView: View {
+struct ErrorViewFatal: View {
     var error: Error
     
     var body: some View {

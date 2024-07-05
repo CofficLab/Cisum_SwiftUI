@@ -21,7 +21,11 @@ struct BootView<Content>: View where Content: View {
 
     var body: some View {
         if let e = self.error {
-            FatalErrorView(error: e)
+            if let smartError = e as? SmartError, smartError == SmartError.NoDisk {
+                ErrorViewCloud()
+            } else {
+                ErrorViewFatal(error: e)
+            }
         } else {
             if let dataManager = dataManager {
                 ZStack {

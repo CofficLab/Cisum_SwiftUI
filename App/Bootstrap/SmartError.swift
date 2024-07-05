@@ -1,7 +1,7 @@
 import Foundation
 import SwiftUI
 
-enum SmartError: Error, LocalizedError {
+enum SmartError: Error, LocalizedError, Equatable {
     case NoDownloadedAudio
     case NoNextDownloadedAudio
     case NoNextAudio

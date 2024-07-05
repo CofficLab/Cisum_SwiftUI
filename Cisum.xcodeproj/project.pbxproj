@@ -172,8 +172,9 @@
 		F573B18C2C042E08004C34CC /* DeviceExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B18B2C042E08004C34CC /* DeviceExt.swift */; };
 		F5847C1B2C368FE20080887B /* SceneState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5847C1A2C368FE20080887B /* SceneState.swift */; };
 		F5847C1D2C36906B0080887B /* SceneStateExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5847C1C2C36906B0080887B /* SceneStateExt.swift */; };
+		F5847C1F2C3778570080887B /* ErrorViewCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5847C1E2C3778570080887B /* ErrorViewCloud.swift */; };
 		F586DCD52C2BFE9E0078580B /* BtnOpenFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F586DCD42C2BFE9E0078580B /* BtnOpenFolder.swift */; };
-		F586DCD72C2C01FF0078580B /* FatalErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F586DCD62C2C01FF0078580B /* FatalErrorView.swift */; };
+		F586DCD72C2C01FF0078580B /* ErrorViewFatal.swift in Sources */ = {isa = PBXBuildFile; fileRef = F586DCD62C2C01FF0078580B /* ErrorViewFatal.swift */; };
 		F586DCD92C2C05A60078580B /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F586DCD82C2C05A60078580B /* RootView.swift */; };
 		F5A076632C2E9C2D00DD4621 /* MigrateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A076622C2E9C2D00DD4621 /* MigrateView.swift */; };
 		F5A076662C2EBE5500DD4621 /* StoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A076652C2EBE5500DD4621 /* StoreView.swift */; };
@@ -354,8 +355,9 @@
 		F573B18B2C042E08004C34CC /* DeviceExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceExt.swift; sourceTree = "<group>"; };
 		F5847C1A2C368FE20080887B /* SceneState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneState.swift; sourceTree = "<group>"; };
 		F5847C1C2C36906B0080887B /* SceneStateExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneStateExt.swift; sourceTree = "<group>"; };
+		F5847C1E2C3778570080887B /* ErrorViewCloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorViewCloud.swift; sourceTree = "<group>"; };
 		F586DCD42C2BFE9E0078580B /* BtnOpenFolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnOpenFolder.swift; sourceTree = "<group>"; };
-		F586DCD62C2C01FF0078580B /* FatalErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FatalErrorView.swift; sourceTree = "<group>"; };
+		F586DCD62C2C01FF0078580B /* ErrorViewFatal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorViewFatal.swift; sourceTree = "<group>"; };
 		F586DCD82C2C05A60078580B /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		F5A076622C2E9C2D00DD4621 /* MigrateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrateView.swift; sourceTree = "<group>"; };
 		F5A076652C2EBE5500DD4621 /* StoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreView.swift; sourceTree = "<group>"; };
@@ -564,7 +566,8 @@
 				0BAB300D2AB814F70012D837 /* BootApp.swift */,
 				0B604AE72AD6384300929DD8 /* BootView.swift */,
 				0B5E51E42AD912B5000650CF /* DebugCommand.swift */,
-				F586DCD62C2C01FF0078580B /* FatalErrorView.swift */,
+				F5847C1E2C3778570080887B /* ErrorViewCloud.swift */,
+				F586DCD62C2C01FF0078580B /* ErrorViewFatal.swift */,
 				0B1165E82ABBC6C0005C5CBB /* LaunchView.swift */,
 				F586DCD82C2C05A60078580B /* RootView.swift */,
 				0B220F742BB1BBDB0077255A /* SmartError.swift */,
@@ -931,7 +934,7 @@
 				F5511BB42C29118C00400900 /* DiskScene.swift in Sources */,
 				0B22158E2BB6BC8F000EB36F /* SmartProgress.swift in Sources */,
 				F573B18C2C042E08004C34CC /* DeviceExt.swift in Sources */,
-				F586DCD72C2C01FF0078580B /* FatalErrorView.swift in Sources */,
+				F586DCD72C2C01FF0078580B /* ErrorViewFatal.swift in Sources */,
 				0B8C36A72BEA15E000C47567 /* AudioC.swift in Sources */,
 				0BB5871B2AD81AFA0071AEBD /* ViewHelper.swift in Sources */,
 				0BAB7C3F2AD3BBAA00C5AEB5 /* DBTips.swift in Sources */,
@@ -1012,6 +1015,7 @@
 				F5B64D152C328F3900DE55AD /* PlayWorker.swift in Sources */,
 				0BFB38852BCCD26F0055E38B /* BtnLike.swift in Sources */,
 				0B8C369F2BEA011700C47567 /* MetaWrapper.swift in Sources */,
+				F5847C1F2C3778570080887B /* ErrorViewCloud.swift in Sources */,
 				0BBC15882AB9A473006E82C4 /* iCloudHelper.swift in Sources */,
 				F586DCD92C2C05A60078580B /* RootView.swift in Sources */,
 				F518F6FB2C34F06000844E62 /* BookRead.swift in Sources */,
