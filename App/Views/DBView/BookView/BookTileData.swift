@@ -23,6 +23,7 @@ struct BookTileData: View {
 
     var book: Book
 
+    let mainQueue = DispatchQueue.main
     let backgroundQueue = DispatchQueue(label: "cisum.BookTileData", qos: .background)
 
     var body: some View {
@@ -83,8 +84,13 @@ struct BookTileData: View {
             }
         }
         .task {
-            findState()
-            getChapterCount()
+            if self.state == nil {
+                findState()
+            }
+            
+            if self.chapterCount == nil {
+                getChapterCount()
+            }
         }
         .onChange(of: playMan.url, {
             findState()
@@ -95,9 +101,15 @@ struct BookTileData: View {
     }
     
     func getChapterCount() {
-        self.chapterCount = books.filter({
+        backgroundQueue.async {
+            let chapterCount = books.filter({
                 $0.url.absoluteString.hasPrefix(self.book.url.absoluteString)
-        }).count
+            }).count
+            
+            mainQueue.async {
+                self.chapterCount = chapterCount
+            }
+        }
     }
 
     func findState(verbose: Bool = false) {
@@ -107,7 +119,7 @@ struct BookTileData: View {
             }
 
             if let state = data.findBookState(book) {
-                DispatchQueue.main.async {
+                mainQueue.async {
                     self.state = state
                 }
             } else {

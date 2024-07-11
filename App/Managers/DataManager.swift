@@ -275,7 +275,7 @@ extension DataManager {
 
         let db = DBSynced(Config.getSyncedContainer)
 
-        if let state = db.findBookState(book.url) {
+        if let state = db.findOrInsertBookState(book.url) {
             return state
         } else {
             if verbose {
