@@ -669,7 +669,6 @@
 				0BAB7C3E2AD3BBAA00C5AEB5 /* DBTips.swift */,
 				F5675C3D2C252A3800326664 /* DBTree.swift */,
 				0BBC157F2AB854A8006E82C4 /* DBView.swift */,
-				F518F6F22C3391E100844E62 /* DBViewBook.swift */,
 				F518F6FC2C34F18500844E62 /* DBViewBookData.swift */,
 				0BBAD0A12BBD413B005834A3 /* DBViewList.swift */,
 				0BB9D2472C32E53B0027DDAD /* DBViewMenuTile.swift */,
@@ -701,6 +700,7 @@
 				F518F6EF2C33919600844E62 /* BookTile.swift */,
 				F518F6FE2C34F1D200844E62 /* BookTileData.swift */,
 				F518F7042C35210300844E62 /* ChapterTile.swift */,
+				F518F6F22C3391E100844E62 /* DBViewBook.swift */,
 			);
 			path = BookView;
 			sourceTree = "<group>";

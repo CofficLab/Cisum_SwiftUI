@@ -13,19 +13,16 @@ struct BookTileData: View {
     @Query(Book.descriptorAll) var books: [Book]
 
     @State var state: BookState? = nil
-    
-    static var label = "🖥️ BookTileData::"
+    @State var scale: CGFloat = 1.0
+    @State var opacity: Double = 1.0
+    @State var chapterCount: Int? = nil
 
-    var chapters: [Book] {
-        books.filter({
-            $0.url.absoluteString.hasPrefix(self.book.url.absoluteString)
-        })
-    }
+    static var label = "🖥️ BookTileData::"
 
     var label: String { "\(Logger.isMain)\(Self.label)" }
 
     var book: Book
-    
+
     let backgroundQueue = DispatchQueue(label: "cisum.BookTileData", qos: .background)
 
     var body: some View {
@@ -35,7 +32,11 @@ struct BookTileData: View {
                 Spacer()
                 Text(book.title).font(.title)
                 Spacer()
-                Text("共 \(chapters.count)")
+                
+                if let c = chapterCount {
+                    Text("共 \(c)")
+                }
+                
                 Spacer()
                 if let s = self.state {
                     VStack(spacing: 0) {
@@ -54,16 +55,31 @@ struct BookTileData: View {
         .background(BackgroundView.type2A)
         .foregroundStyle(.white)
         .clipShape(RoundedRectangle(cornerSize: CGSize(width: 10, height: 10)))
+        .scaleEffect(CGSize(width: scale, height: scale))
+        .opacity(opacity)
         .onTapGesture {
-            if let s = self.state, let current = s.currentURL, let time = s.time {
-                playMan.play(PlayAsset(url: current), reason: "点击了书本")
-                playMan.goto(time)
-            } else {
-                playMan.play(book.toPlayAsset(), reason: "点击了书本")
+            withAnimation(.spring()) {
+                if let s = self.state, let current = s.currentURL, let time = s.time {
+                    playMan.play(PlayAsset(url: current), reason: "点击了书本")
+                    playMan.goto(time)
+                } else {
+                    playMan.play(book.toPlayAsset(), reason: "点击了书本")
+                }
+
+                scale = 0.95
+                opacity = 0.8
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    withAnimation(.spring()) {
+                        scale = 1.0
+                        opacity = 1.0
+                    }
+                }
             }
         }
         .task {
             findState()
+            getChapterCount()
         }
         .onChange(of: playMan.state.getAsset()?.url, {
             findState()
@@ -72,13 +88,19 @@ struct BookTileData: View {
             BtnShowInFinder(url: book.url, autoResize: false)
         })
     }
+    
+    func getChapterCount() {
+        self.chapterCount = books.filter({
+                $0.url.absoluteString.hasPrefix(self.book.url.absoluteString)
+        }).count
+    }
 
     func findState(verbose: Bool = false) {
         backgroundQueue.async {
             if verbose {
                 os_log("\(label)FindState for \(book.title)")
             }
-            
+
             if let state = data.findBookState(book) {
                 DispatchQueue.main.async {
                     self.state = state
