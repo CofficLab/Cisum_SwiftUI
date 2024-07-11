@@ -9,7 +9,7 @@ import SwiftUI
       一个文件URL
  */
 
-struct PlayAsset: FileBox {
+struct PlayAsset: FileBox, Identifiable, Equatable {
     var id: URL { self.url }
     
     static var label = "🪖 PlayAsset::"

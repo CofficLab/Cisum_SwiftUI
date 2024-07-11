@@ -4,13 +4,16 @@ struct SettingView: View {
     var body: some View {
         ScrollView {
             VStack {
-                DirSetting().padding(.horizontal)
+                DirSetting()
+                    .padding(.horizontal)
                 
                 //CloudSetting().padding(.horizontal)
-                VersionSetting().padding(.horizontal)
+                VersionSetting()
+                    .padding(.horizontal)
                 
                 if Config.debug {
-                    PlayTime().padding(.horizontal)
+                    PlayTime()
+                        .padding(.horizontal)
                 }
                 
                 if Config.isDebug {

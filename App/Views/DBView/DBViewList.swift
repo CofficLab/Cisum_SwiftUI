@@ -64,16 +64,23 @@ struct DBViewList: View {
                     }
                 })
             }
-            .onChange(of: playMan.asset?.url, {
-                selection = audios.first(where: {
-                    $0.url == playMan.asset?.url
-                })
+            .onChange(of: playMan.asset, {
+                setSelection()
             })
+            .onAppear {
+                setSelection()
+            }
 
             if showTips {
                 DBTips()
             }
         }
+    }
+    
+    func setSelection() {
+        selection = audios.first(where: {
+            $0.url == playMan.asset?.url
+        })
     }
 }
 

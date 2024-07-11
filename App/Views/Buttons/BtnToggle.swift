@@ -26,10 +26,18 @@ struct BtnToggle: View {
     var autoResize = false
 
     var image: String {
-        if !playMan.isPlaying {
-            "play.fill"
+        if let asset = asset {
+            if playMan.isPlaying, playMan.asset?.url == asset.url {
+                "pause.fill"
+            } else {
+                "play.fill"
+            }
         } else {
-            "pause.fill"
+            if !playMan.isPlaying {
+                "play.fill"
+            } else {
+                "pause.fill"
+            }
         }
     }
 

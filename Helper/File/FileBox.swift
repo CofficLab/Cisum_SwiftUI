@@ -30,8 +30,12 @@ extension FileBox {
         
     }
 
-    func getFileSizeReadable() -> String {
-        FileHelper.getFileSizeReadable(getFileSize())
+    func getFileSizeReadable(verbose: Bool = true) -> String {
+        if verbose {
+            os_log("\(self.label)GetFileSizeReadable for \(url.lastPathComponent)")
+        }
+        
+        return FileHelper.getFileSizeReadable(getFileSize())
     }
     
     private func getFolderSize(_ url: URL) -> Int64 {
