@@ -23,7 +23,7 @@ extension DBSynced {
     
     // MARK: Update
     
-    func updateCurrent(_ bookURL: URL, currentURL: URL?) {
+    func updateBookCurrent(_ bookURL: URL, currentURL: URL?) {
         os_log("\(self.label)UpdateCurrent: \(bookURL.lastPathComponent) -> \(currentURL?.lastPathComponent ?? "")")
         if let book = self.findBookState(bookURL) {
             book.currentURL = currentURL

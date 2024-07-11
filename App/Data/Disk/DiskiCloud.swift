@@ -214,7 +214,7 @@ extension DiskiCloud {
     
     /// 监听存储Audio文件的文件夹
     func watch() async {
-        let verbose = true
+        let verbose = false
         let emoji = "🌞🌞🌞"
         
         if verbose {
@@ -231,7 +231,9 @@ extension DiskiCloud {
             NSPredicate(format: "NOT %K BEGINSWITH[c] %@", NSMetadataItemFSNameKey, ".")
         ]).debounce(for: .seconds(0.2))
         for try await collection in result {
-            os_log("\(Logger.isMain)\(self.label)\(emoji) Watch(\(collection.items.count))")
+            if verbose {
+                os_log("\(Logger.isMain)\(self.label)\(emoji) Watch(\(collection.items.count))")
+            }
                 
             self.onUpdated(DiskFileGroup.fromMetaCollection(collection))
         }

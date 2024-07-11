@@ -63,7 +63,12 @@ struct BookTileData: View {
                     playMan.play(PlayAsset(url: current), reason: "点击了书本")
                     playMan.goto(time)
                 } else {
-                    playMan.play(book.toPlayAsset(), reason: "点击了书本")
+                    if let first = DiskFile(url: book.url).getChildren()?.first {
+                        playMan.play(first.toPlayAsset(), reason: "点击了书本")
+                        data.updateBookState(book.url, first.url)
+                    } else {
+                        playMan.play(book.toPlayAsset(), reason: "点击了书本")
+                    }
                 }
 
                 scale = 0.95
@@ -81,7 +86,7 @@ struct BookTileData: View {
             findState()
             getChapterCount()
         }
-        .onChange(of: playMan.state.getAsset()?.url, {
+        .onChange(of: playMan.url, {
             findState()
         })
         .contextMenu(menuItems: {

@@ -43,9 +43,7 @@ struct BtnChapters: View {
             .onChange(of: selection, {
                 if let s = selection, let bookURL = bookURL, s.url != asset?.url {
                     playMan.play(s.toPlayAsset(), reason: "BtnChapters的Selection变了")
-                    Task {
-                        await db.updateCurrent(bookURL,currentURL:s.url)
-                    }
+                    data.updateBookState(bookURL, s.url)
                 }
             })
         })

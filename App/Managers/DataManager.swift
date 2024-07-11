@@ -285,6 +285,17 @@ extension DataManager {
             return nil
         }
     }
+
+    func updateBookState(_ bookURL: URL, _ current: URL, verbose: Bool = true) {
+        if verbose {
+            os_log("\(self.label)FindState for \(bookURL.lastPathComponent)")
+        }
+
+        Task {
+            let db = DBSynced(Config.getSyncedContainer)
+            await db.updateBookCurrent(bookURL, currentURL: current)
+        }
+    }
 }
 
 #Preview {

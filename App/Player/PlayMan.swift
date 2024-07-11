@@ -37,6 +37,7 @@ class PlayMan: NSObject, ObservableObject {
     var currentTime: TimeInterval { worker.currentTime }
     var leftTime: TimeInterval { duration - currentTime }
     var state: PlayState { worker.state }
+    var url: URL? { state.getURL() }
     var currentTimeDisplay: String {
         DateComponentsFormatter.positional.string(from: currentTime) ?? "0:00"
     }
