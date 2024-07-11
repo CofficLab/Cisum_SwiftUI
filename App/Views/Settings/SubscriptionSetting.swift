@@ -10,6 +10,10 @@ struct SubscriptionSetting: View {
     @State private var subscriptions: [Product] = []
     @State private var refreshing = false
     @State private var error: Error? = nil
+    
+    var label: String {
+        "\(Logger.isMain)🖥️ SubscriptionSetting::"
+    }
 
     var body: some View {
         VStack {
@@ -58,7 +62,11 @@ struct SubscriptionSetting: View {
 
     // MARK: 获取可用的订阅
 
-    private func getProducts(_ reason: String) {
+    private func getProducts(_ reason: String, verbose: Bool = true) {
+        if verbose {
+            os_log("\(self.label)GetProducts because of \(reason)")
+        }
+        
         refreshing = true
 
         Task {
