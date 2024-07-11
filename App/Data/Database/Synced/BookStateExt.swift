@@ -5,8 +5,13 @@ import SwiftData
 extension DBSynced {
     // MARK: Find
     
-    func findBookState(_ url: URL) -> BookState? {
-        os_log("\(self.label)FindBookState for \(url.lastPathComponent)")
+    nonisolated func findBookState(_ url: URL, verbose: Bool = false) -> BookState? {
+        if verbose {
+            os_log("\(Logger.isMain)\(Self.label)FindBookState for \(url.lastPathComponent)")
+        }
+        
+        let context = ModelContext(self.modelContainer)
+        
         do {
             return try context.fetch(BookState.descriptorOf(url)).first
         } catch let e {

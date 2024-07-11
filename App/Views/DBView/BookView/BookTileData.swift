@@ -6,13 +6,15 @@ import SwiftUI
  展示从数据库读取的图书数据
  */
 struct BookTileData: View {
+    @EnvironmentObject var data: DataManager
     @EnvironmentObject var playMan: PlayMan
-    @EnvironmentObject var db: DBSynced
     @Environment(\.modelContext) var modelContext
 
     @Query(Book.descriptorAll) var books: [Book]
 
     @State var state: BookState? = nil
+    
+    static var label = "🖥️ BookTileData::"
 
     var chapters: [Book] {
         books.filter({
@@ -20,9 +22,11 @@ struct BookTileData: View {
         })
     }
 
-    var label: String { "\(Logger.isMain)🖥️ BookTileData::" }
+    var label: String { "\(Logger.isMain)\(Self.label)" }
 
     var book: Book
+    
+    let backgroundQueue = DispatchQueue(label: "cisum.BookTileData", qos: .background)
 
     var body: some View {
         HStack {
@@ -58,7 +62,7 @@ struct BookTileData: View {
                 playMan.play(book.toPlayAsset(), reason: "点击了书本")
             }
         }
-        .onAppear {
+        .task {
             findState()
         }
         .onChange(of: playMan.state.getAsset()?.url, {
@@ -69,15 +73,20 @@ struct BookTileData: View {
         })
     }
 
-    func findState() {
-        Task {
-            os_log("\(self.label)FindState for \(self.book.title)")
-            if let state = await db.findBookState(self.book.url) {
+    func findState(verbose: Bool = false) {
+        backgroundQueue.async {
+            if verbose {
+                os_log("\(label)FindState for \(book.title)")
+            }
+            
+            if let state = data.findBookState(book) {
                 DispatchQueue.main.async {
                     self.state = state
                 }
             } else {
-                os_log("\(self.label)\(self.book.title) 无上次播放")
+                if verbose {
+                    os_log("\(label)\(book.title) 无上次播放")
+                }
             }
         }
     }

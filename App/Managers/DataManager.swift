@@ -16,7 +16,7 @@ class DataManager: ObservableObject {
 
     init() throws {
         let appScene = Config.getCurrentScene()
-        var disk: (any Disk)? = nil
+        var disk: (any Disk)?
         self.appScene = appScene
 
         if Config.iCloudEnabled {
@@ -24,43 +24,43 @@ class DataManager: ObservableObject {
         } else {
             disk = DiskLocal.make(appScene.folderName)
         }
-        
+
         guard let disk = disk else {
             throw SmartError.NoDisk
         }
-        
+
         self.disk = disk
-        self.changeDisk(disk)
+        changeDisk(disk)
     }
 
     // MARK: ChangeDisk
 
     func changeDisk(_ to: any Disk) {
         os_log("\(self.label)更新磁盘为 \(to.name)")
-        
-        self.disk.stopWatch(reason: "Disk Will Chang")
-        self.disk = to
-        self.watchDisk()
+
+        disk.stopWatch(reason: "Disk Will Chang")
+        disk = to
+        watchDisk()
     }
 
     // MARK: WatchDisk
-    
+
     func watchDisk() {
-        if self.appScene != .Music && !self.isiCloudDisk {
+        if appScene != .Music && !isiCloudDisk {
             return
         }
-        
+
         disk.onUpdated = { items in
             if items.isFullLoad {
                 DispatchQueue.main.async {
                     self.syncing = false
                 }
             }
-            
+
             DispatchQueue.main.async {
                 self.updating = items
             }
-            
+
             switch self.appScene {
             case .Music:
                 Task {
@@ -70,11 +70,11 @@ class DataManager: ObservableObject {
                 Task {
                     await DB(Config.getContainer, reason: "DataManager.WatchDisk").bookSync(items)
                 }
-            case .AudiosKids,.Videos,.VideosKids:
+            case .AudiosKids, .Videos, .VideosKids:
                 break
             }
         }
-        
+
         DispatchQueue.main.async {
             self.syncing = true
         }
@@ -120,11 +120,11 @@ class DataManager: ObservableObject {
 
     func chageScene(_ to: DiskScene) throws {
         appScene = to
-        
+
         guard let disk = disk.make(to.folderName) else {
             throw SmartError.NoDisk
         }
-        
+
         changeDisk(disk)
         Config.setCurrentScene(to)
     }
@@ -137,8 +137,8 @@ extension DataManager {
         if verbose {
             os_log("\(self.label)DownloadNextBatch(\(self.appScene.title))")
         }
-        
-        if self.appScene == .Music {
+
+        if appScene == .Music {
             Task {
                 var currentIndex = 0
                 var currentURL: URL = url
@@ -147,7 +147,7 @@ extension DataManager {
                     disk.download(currentURL, reason: "downloadNext 🐛 \(reason)")
 
                     currentIndex = currentIndex + 1
-                    
+
                     if let next = await db.nextOf(currentURL) {
                         currentURL = next.url
                     } else {
@@ -163,7 +163,7 @@ extension DataManager {
                 disk.download(currentURL, reason: "downloadNext 🐛 \(reason)")
 
                 currentIndex = currentIndex + 1
-                
+
                 if let next = disk.next(currentURL) {
                     currentURL = next.url
                 } else {
@@ -180,36 +180,36 @@ extension DataManager {
     func enableiCloud() throws {
         os_log("\(self.label)Enable iCloud")
         let disk = DiskiCloud.make(appScene.folderName)
-        
+
         guard let disk = disk else {
             throw SmartError.NoDisk
         }
-        
-        self.changeDisk(disk)
-        self.migrate()
+
+        changeDisk(disk)
+        migrate()
     }
-    
+
     func disableiCloud() throws {
         os_log("\(self.label)Disable iCloud")
         let disk = DiskLocal.make(appScene.folderName)
-        
+
         guard let disk = disk else {
             throw SmartError.NoDisk
         }
-        
-        self.changeDisk(disk)
-        self.migrate()
+
+        changeDisk(disk)
+        migrate()
     }
-    
+
     func migrate() {
         guard let localMountedURL = DiskLocal.getMountedURL() else {
             return
         }
-        
+
         guard let cloudMoutedURL = DiskiCloud.getMountedURL() else {
             return
         }
-        
+
         let localDisk = DiskLocal(root: localMountedURL)
         let cloudDisk = DiskiCloud(root: cloudMoutedURL)
 
@@ -219,23 +219,23 @@ extension DataManager {
             moveAudios(cloudDisk, localDisk)
         }
     }
-    
+
     func moveAudios(_ from: any Disk, _ to: any Disk, verbose: Bool = true) {
         Task.detached(priority: .low) {
             if verbose {
                 os_log("\(Self.label)将文件从 \(from.name) 移动到 \(to.name)")
             }
-            
+
             let fileManager = FileManager.default
             do {
                 let files = try fileManager.contentsOfDirectory(atPath: from.root.path).filter({
                     !$0.hasSuffix(".DS_Store")
                 })
-                
+
                 for file in files {
                     let sourceURL = URL(fileURLWithPath: from.root.path).appendingPathComponent(file)
                     let destnationURL = to.makeURL(file)
-                    
+
                     if verbose {
                         os_log("\(Self.label)移动 \(sourceURL.lastPathComponent)")
                     }
@@ -244,7 +244,7 @@ extension DataManager {
             } catch {
                 os_log("Error: \(error)")
             }
-            
+
             if verbose {
                 os_log("\(Self.label)将文件从 \(from.name) 移动到 \(to.name) 完成 🎉🎉🎉")
             }
@@ -256,11 +256,33 @@ extension DataManager {
 
 extension DataManager {
     func first() -> PlayAsset? {
-        switch self.appScene {
+        switch appScene {
         case .Music:
-            self.db.firstAudio()?.toPlayAsset()
+            db.firstAudio()?.toPlayAsset()
         default:
             disk.getRoot().children?.first?.toPlayAsset()
+        }
+    }
+}
+
+// MARK: Book
+
+extension DataManager {
+    func findBookState(_ book: Book, verbose: Bool = false) -> BookState? {
+        if verbose {
+            os_log("\(self.label)FindState for \(book.title)")
+        }
+
+        let db = DBSynced(Config.getSyncedContainer)
+
+        if let state = db.findBookState(book.url) {
+            return state
+        } else {
+            if verbose {
+                os_log("\(self.label)\(book.title) 无上次播放")
+            }
+
+            return nil
         }
     }
 }
