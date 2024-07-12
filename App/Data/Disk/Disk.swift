@@ -23,7 +23,7 @@ protocol Disk: FileBox {
     
     func copyTo(url: URL) throws
     
-    func watch() async
+    func watch(reason: String) async
     func stopWatch(reason: String)
     
     func getDownloadingCount() -> Int
@@ -43,7 +43,7 @@ protocol Disk: FileBox {
 
 extension Disk {
     var url: URL { root }
-    
+
     var name: String {
         Self.label + url.pathComponents.suffix(2).joined(separator: "/")
     }

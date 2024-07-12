@@ -5,14 +5,20 @@ import SwiftUI
 
 extension DB {
     var labelForBookSync: String {
-        "\(label)🥣🥣🥣"
+        "\(label)📖📖📖"
     }
 
-    func bookSync(_ group: DiskFileGroup, verbose: Bool = false) {
-        var message = "\(labelForSync) Sync(\(group.count))"
+    func bookSync(_ group: DiskFileGroup, verbose: Bool = true) {
+        var message = "\(labelForBookSync) Sync(\(group.count))"
 
         if let first = group.first, first.isDownloading == true {
             message += " -> \(first.fileName) -> \(String(format: "%.0f", first.downloadProgress))% ⏬⏬⏬"
+        }
+        
+        if group.isFullLoad {
+            message += " Full"
+        } else {
+            message += " Update"
         }
 
         if verbose {
@@ -35,7 +41,7 @@ extension DB {
     // MARK: SyncWithDisk
 
     func bookSyncWithDisk(_ group: DiskFileGroup) {
-        let verbose = false
+        let verbose = true
         let startTime: DispatchTime = .now()
 
         // 将数组转换成哈希表，方便通过键来快速查找元素，这样可以将时间复杂度降低到：O(m+n)
@@ -45,14 +51,14 @@ extension DB {
             try context.enumerate(FetchDescriptor<Book>(), block: { book in
                 if let item = hashMap[book.url] {
                     // 更新数据库记录
-                    book.isFolder = item.isFolder
+                    book.isCollection = item.isFolder
                     
                     // 记录存在哈希表中，同步完成，删除哈希表记录
                     hashMap.removeValue(forKey: book.url)
                 } else {
                     // 记录不存在哈希表中，数据库删除
                     if verbose {
-                        os_log("\(self.label)删除 \(book.title)")
+                        os_log("\(self.labelForBookSync) 删除 \(book.title)")
                     }
                     context.delete(book)
                 }
@@ -62,13 +68,19 @@ extension DB {
             for (_, value) in hashMap {
                 context.insert(value.toBook())
             }
-
+        } catch {
+            os_log(.error, "\(error.localizedDescription)")
+        }
+        
+        do {
             try context.save()
         } catch {
             os_log(.error, "\(error.localizedDescription)")
         }
 
         os_log("\(self.jobEnd(startTime, title: "\(self.labelForSync) SyncWithDisk(\(group.count))", tolerance: 0.01))")
+        
+        self.updateBookParent()
     }
 
     // MARK: SyncWithUpdatedItems

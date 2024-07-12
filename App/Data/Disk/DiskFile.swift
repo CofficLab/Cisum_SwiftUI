@@ -132,6 +132,6 @@ extension DiskFile {
             os_log("\(self.label)ToBook: title(\(title))")
         }
         
-        return Book(url: url, isFolder: isFolder())
+        return Book(url: url)
     }
 }

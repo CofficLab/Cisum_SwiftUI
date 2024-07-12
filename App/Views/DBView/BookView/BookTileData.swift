@@ -1,5 +1,4 @@
 import OSLog
-import SwiftData
 import SwiftUI
 
 /**
@@ -8,14 +7,10 @@ import SwiftUI
 struct BookTileData: View {
     @EnvironmentObject var data: DataManager
     @EnvironmentObject var playMan: PlayMan
-    @Environment(\.modelContext) var modelContext
-
-    @Query(Book.descriptorAll) var books: [Book]
 
     @State var state: BookState? = nil
     @State var scale: CGFloat = 1.0
     @State var opacity: Double = 1.0
-    @State var chapterCount: Int? = nil
     @State var cover: Image? = nil
 
     static var label = "🖥️ BookTileData::"
@@ -36,17 +31,17 @@ struct BookTileData: View {
                 Spacer()
                 
                 if noCover {
-                    Text(book.title).font(.title)
+                    Text(book.bookTitle).font(.title)
                 }
                 
                 Spacer()
 
-                if let c = chapterCount, noCover  {
-                    Text("共 \(c)")
+                if book.childCount > 0, noCover  {
+                    Text("共 \(book.childCount)")
                 }
 
                 Spacer()
-                if let s = self.state, noCover {
+                if let s = self.state, noCover, s.currentURL != nil {
                     VStack(spacing: 0) {
                         HStack {
                             Image(systemName: "info")
@@ -102,10 +97,6 @@ struct BookTileData: View {
             if self.state == nil {
                 findState()
             }
-
-            if self.chapterCount == nil {
-                getChapterCount()
-            }
         }
         .onChange(of: playMan.url, {
             findState()
@@ -125,18 +116,6 @@ struct BookTileData: View {
         }
         .clipShape(RoundedRectangle(cornerSize: CGSize(width: 10, height: 10)))
         .shadow(radius: 5)
-    }
-
-    func getChapterCount() {
-        backgroundQueue.async {
-            let chapterCount = books.filter({
-                $0.url.absoluteString.hasPrefix(self.book.url.absoluteString)
-            }).count
-
-            mainQueue.async {
-                self.chapterCount = chapterCount
-            }
-        }
     }
 
     func findState(verbose: Bool = false) {

@@ -2,6 +2,18 @@ import Foundation
 import OSLog
 import SwiftData
 
+extension DB {
+    func getBookCount() -> Int {
+        do {
+            return try context.fetchCount(Book.descriptorAll)
+        } catch {
+            os_log(.error, "\(error.localizedDescription)")
+            
+            return 0
+        }
+    }
+}
+
 // MARK: Find
 
 extension DB {
@@ -11,9 +23,7 @@ extension DB {
         }
         
         do {
-            return try context.fetch(FetchDescriptor<Book>(predicate: #Predicate<Book> {
-                $0.url == url
-            })).first
+            return try context.fetch(Book.descriptorOf(url)).first
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
         }
@@ -27,6 +37,23 @@ extension DB {
     
     func findBook(_ id: Book.ID) -> Book? {
         context.model(for: id) as? Book
+    }
+    
+    func findOrCreateBook(_ url: URL) -> Book? {
+        if let book = self.findBook(url) {
+            return book
+        } else {
+            let book = Book(url: url)
+            context.insert(Book(url: url))
+            
+//            do {
+//                try context.save()
+//            } catch {
+//                os_log(.error, "\(error.localizedDescription)")
+//            }
+            return book
+//            return self.findBook(url)
+        }
     }
 }
 

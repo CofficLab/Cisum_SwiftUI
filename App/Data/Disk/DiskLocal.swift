@@ -4,6 +4,7 @@ import OSLog
 class DiskLocal: ObservableObject, Disk {
     static let label = "🛖 DiskLocal::"
     static let localRoot = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+    static let null = DiskLocal(root: URL(string: "/dev/null")!) 
     
     static func getMountedURL() -> URL? {
         guard let localRoot = Self.localRoot else {
@@ -144,15 +145,15 @@ extension DiskLocal {
         
     }
     
-    func watch() async {
-        os_log("\(self.label)WatchAudiosFolder")
+    func watch(reason: String) async {
+        os_log("\(self.label)WatchAudiosFolder because of \(reason)")
 
         let presenter = FilePresenter(fileURL: self.root)
         
-        self.onUpdated(.fromURLs(presenter.getFiles(), isFullLoad: true))
+        self.onUpdated(.fromURLs(presenter.getFiles(), isFullLoad: true, disk: self))
         
         presenter.onDidChange = {
-            self.onUpdated(.fromURLs(presenter.getFiles(), isFullLoad: true))
+            self.onUpdated(.fromURLs(presenter.getFiles(), isFullLoad: true, disk: self))
         }
     }
 }

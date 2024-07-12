@@ -12,6 +12,7 @@ class DataManager: ObservableObject {
 
     var label: String { "\(Logger.isMain)\(Self.label)" }
     var isiCloudDisk: Bool { (disk as? DiskiCloud) != nil }
+    var isNotiCloudDisk: Bool { !isiCloudDisk }
     var db: DB = DB(Config.getContainer, reason: "dataManager")
 
     init() throws {
@@ -38,18 +39,14 @@ class DataManager: ObservableObject {
     func changeDisk(_ to: any Disk) {
         os_log("\(self.label)更新磁盘为 \(to.name)")
 
-        disk.stopWatch(reason: "Disk Will Chang")
+        disk.stopWatch(reason: "Disk Will Change")
         disk = to
-        watchDisk()
+        watchDisk(reason: "Disk Changed")
     }
 
     // MARK: WatchDisk
 
-    func watchDisk() {
-        if appScene != .Music && !isiCloudDisk {
-            return
-        }
-
+    func watchDisk(reason: String) {
         disk.onUpdated = { items in
             if items.isFullLoad {
                 DispatchQueue.main.async {
@@ -80,7 +77,7 @@ class DataManager: ObservableObject {
         }
 
         Task {
-            await disk.watch()
+            await disk.watch(reason: reason)
         }
     }
 

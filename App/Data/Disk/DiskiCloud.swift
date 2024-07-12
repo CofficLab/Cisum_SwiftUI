@@ -213,12 +213,12 @@ extension DiskiCloud {
     }
     
     /// 监听存储Audio文件的文件夹
-    func watch() async {
-        let verbose = false
+    func watch(reason: String) async {
+        let verbose = true
         let emoji = "🌞🌞🌞"
         
         if verbose {
-            os_log("\(Logger.isMain)\(self.label)\(emoji) Watch(\(self.name))")
+            os_log("\(Logger.isMain)\(self.label)\(emoji) Watch(\(self.name)) because of \(reason)")
         }
 
         self.query.stopped = false
@@ -235,7 +235,7 @@ extension DiskiCloud {
                 os_log("\(Logger.isMain)\(self.label)\(emoji) Watch(\(collection.items.count))")
             }
                 
-            self.onUpdated(DiskFileGroup.fromMetaCollection(collection))
+            self.onUpdated(DiskFileGroup.fromMetaCollection(collection, disk: self))
         }
     }
 }

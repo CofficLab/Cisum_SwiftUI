@@ -9,6 +9,7 @@ protocol FileBox: Identifiable {
 
 extension FileBox {
     var label: String { "🎁 FileBox::" }
+//    var backgroundQueue = DispatchQueue
 }
 
 // MARK: Meta
@@ -73,7 +74,7 @@ extension FileBox {
 // MARK: Parent
 
 extension FileBox {
-    var parent: URL? {
+    var parentURL: URL? {
         guard let parentURL = url.deletingLastPathComponent() as URL? else {
             return nil
         }
@@ -94,7 +95,11 @@ extension FileBox {
         getChildrenOf(self.url)
     }
     
-    func getChildrenOf(_ url: URL) -> [URL]? {
+    func getChildrenOf(_ url: URL, verbose: Bool = false) -> [URL]? {
+        if verbose {
+            os_log("\(self.label)GetChildrenOf \(url.lastPathComponent)")
+        }
+        
         let fileManager = FileManager.default
 
         do {
@@ -117,7 +122,7 @@ extension FileBox {
             os_log("\(label)Next of \(fileName)")
         }
 
-        guard let parent = parent, let siblings = getChildrenOf(parent) else {
+        guard let parent = parentURL, let siblings = getChildrenOf(parent) else {
             os_log("\(label)Next of \(fileName) -> nil")
 
             return nil
@@ -152,7 +157,7 @@ extension FileBox {
 
         os_log("\(label)Prev of \(fileName)")
 
-        guard let parent = parent, let siblings = getChildrenOf(parent) else {
+        guard let parent = parentURL, let siblings = getChildrenOf(parent) else {
             os_log("\(label)Prev of \(fileName) -> nil")
 
             return prev
@@ -424,6 +429,10 @@ extension FileBox {
         if fileManager.fileExists(atPath: coverCacheURL.path) {
             return coverCacheURL
         }
+        
+        if self.isFolder() {
+            return nil
+        }
 
         let asset = AVAsset(url: url)
         do {
@@ -441,8 +450,8 @@ extension FileBox {
                 }
             }
         } catch {
-            os_log(.error, "\(label)⚠️ 读取 Meta 出错 -> \(self.title)")
-            os_log(.error, "\(error.localizedDescription)")
+            os_log(.error, "\(label)⚠️ 读取 Meta 出错 -> \(self.title) -> \(error.localizedDescription)")
+//            os_log(.error, "\(error.localizedDescription)")
         }
 
         return nil

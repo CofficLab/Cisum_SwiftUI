@@ -7,6 +7,7 @@ enum SmartError: Error, LocalizedError, Equatable {
     case NoNextAudio
     case NoPrevAudio
     case NoAudioInList
+    case NoChildrenAudio
     case NotDownloaded
     case TargetNotFoundInPlaylist
     case Downloading
@@ -44,6 +45,8 @@ enum SmartError: Error, LocalizedError, Equatable {
             "文件不存在"
         case .NoDisk:
             "初始化磁盘失败"
+        case .NoChildrenAudio:
+            "文件夹内无内容"
         }
     }
 }

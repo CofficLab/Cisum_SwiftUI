@@ -8,14 +8,31 @@ import OSLog
  */
 @Model
 class Book: FileBox {
+    @Attribute(.unique)
     var url: URL
     var currentURL: URL?
-    var isFolder: Bool = false
     
-    init(url: URL, currentURL: URL? = nil, isFolder: Bool) {
+    // 以下值可以通过其他属性计算出来，但因为这些原因而保存下来
+    //  swiftdata查询时不支持计算属性
+    //  计算开销较大，直接缓存下来
+    //  值变动时，UI刷新
+    var isCollection: Bool = false
+    var parentBookURL: URL?
+    var bookTitle: String = ""
+    var childCount: Int = 0
+    
+    @Relationship(deleteRule: .noAction)
+    var parent: Book?
+    
+    @Relationship(deleteRule: .noAction, inverse: \Book.parent)
+    var childBooks: [Book]?
+    
+    init(url: URL, currentURL: URL? = nil) {
         self.url = url
         self.currentURL = currentURL
-        self.isFolder = isFolder
+        self.bookTitle = self.title
+        self.isCollection = self.isFolder()
+        self.parentBookURL = self.parentURL
     }
 }
 
@@ -50,7 +67,7 @@ extension Book {
         }
         
         // 获取children的
-        for child in children.map({Book(url: $0, isFolder: $0.isFileURL == false)}) {
+        for child in children.map({Book(url: $0)}) {
             if let image = await child.getBookCover() {
                 return image
             }
@@ -64,11 +81,11 @@ extension Book {
 
 extension Book {
     static var descriptorIsFolder = FetchDescriptor(predicate: #Predicate<Book> { book in
-        book.isFolder == true
+        book.isCollection == true
     }, sortBy: [])
     
     static var descriptorNotFolder = FetchDescriptor(predicate: #Predicate<Book> { book in
-        book.isFolder == false
+        book.isCollection == false
     }, sortBy: [])
     
     static var descriptorAll = FetchDescriptor(predicate: #Predicate<Book> { _ in
@@ -78,6 +95,24 @@ extension Book {
     static func descriptorOf(_ url: URL) -> FetchDescriptor<Book> {
         FetchDescriptor(predicate: #Predicate<Book> { s in
             s.url == url
+        }, sortBy: [])
+    }
+    
+    static func descriptorOfParentBookURL(_ url: URL) -> FetchDescriptor<Book> {
+        FetchDescriptor(predicate: #Predicate<Book> { s in
+            s.parentBookURL == url
+        }, sortBy: [])
+    }
+    
+    static func descriptorOfHasParentBookURL() -> FetchDescriptor<Book> {
+        FetchDescriptor(predicate: #Predicate<Book> { s in
+            s.parentBookURL != nil
+        }, sortBy: [])
+    }
+    
+    static func descriptorOfNeedUpdateParent() -> FetchDescriptor<Book> {
+        FetchDescriptor(predicate: #Predicate<Book> { s in
+            s.parentBookURL != nil && s.parent == nil
         }, sortBy: [])
     }
 }

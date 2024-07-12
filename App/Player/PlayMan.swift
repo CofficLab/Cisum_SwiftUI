@@ -157,7 +157,7 @@ extension PlayMan {
         
         if asset.isFolder() {
             guard let first = self.onGetChildren(asset).first else {
-                return self.worker.setError(SmartError.NoNextAudio, asset: asset)
+                return self.worker.setError(SmartError.NoChildrenAudio, asset: asset)
             }
             
             self.asset = first
