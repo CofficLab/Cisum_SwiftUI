@@ -79,7 +79,7 @@ struct BookTileData: View {
                 }
 
                 scale = 0.95
-                opacity = 0.8
+                opacity = 0.95
 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     withAnimation(.spring()) {
@@ -117,7 +117,9 @@ struct BookTileData: View {
             } else {
                 BackgroundView.type2A
             }
-        }.clipShape(RoundedRectangle(cornerSize: CGSize(width: 10, height: 10)))
+        }
+        .clipShape(RoundedRectangle(cornerSize: CGSize(width: 10, height: 10)))
+        .shadow(radius: 5)
     }
 
     func getChapterCount() {
