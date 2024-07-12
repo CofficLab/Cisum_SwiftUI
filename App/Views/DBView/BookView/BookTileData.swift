@@ -64,6 +64,11 @@ struct BookTileData: View {
         .foregroundStyle(.white)
         .scaleEffect(CGSize(width: scale, height: scale))
         .opacity(opacity)
+        .onHover(perform: { hovering in
+            withAnimation {
+                scale = hovering ? 1.02 : 1
+            }
+        })
         .onTapGesture {
             withAnimation(.spring()) {
                 if let s = self.state, let current = s.currentURL, let time = s.time {
