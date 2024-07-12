@@ -55,7 +55,11 @@ extension Book {
 // MARK: Cover
 
 extension Book {
-    func getBookCover() async -> Image? {
+    func getBookCover(verbose: Bool = true) async -> Image? {
+        if verbose {
+            os_log("\(self.label)GetBookCover for \(self.title)")
+        }
+        
         // 先获取自己的
         if let selfImage = await self.getCoverImage() {
             return selfImage

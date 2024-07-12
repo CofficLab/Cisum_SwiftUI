@@ -90,9 +90,7 @@ struct BookTileData: View {
             }
         }
         .task {
-            if self.cover == nil {
-                self.cover = await book.getBookCover()
-            }
+            updateCover()
 
             if self.state == nil {
                 findState()
@@ -101,6 +99,13 @@ struct BookTileData: View {
         .onChange(of: playMan.url, {
             findState()
         })
+//        .onChange(of: data.updating, {
+//                data.updating.urls.forEach { url in
+//                    if url.relativeString.hasPrefix(self.book.url.relativeString) {
+//                        updateCover()
+//                    }
+//                }
+//            })
         .contextMenu(menuItems: {
             BtnShowInFinder(url: book.url, autoResize: false)
         })
@@ -134,6 +139,17 @@ struct BookTileData: View {
                 }
             }
         }
+    }
+    
+    func updateCover() {
+        backgroundQueue.async {
+            if self.cover == nil {
+                Task {
+                    self.cover = await book.getBookCover()
+                }
+
+            }
+                    }
     }
 }
 

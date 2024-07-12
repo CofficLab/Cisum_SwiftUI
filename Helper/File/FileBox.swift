@@ -424,7 +424,7 @@ extension FileBox {
              os_log("\(self.label)GetCoverFromMeta for \(self.title)")
         }
         
-        var fileManager = FileManager.default
+        let fileManager = FileManager.default
 
         if isNotDownloaded {
             return nil
