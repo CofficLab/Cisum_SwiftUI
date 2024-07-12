@@ -52,6 +52,7 @@ extension DB {
                 if let item = hashMap[book.url] {
                     // 更新数据库记录
                     book.isCollection = item.isFolder
+                    book.bookTitle = book.title
                     
                     // 记录存在哈希表中，同步完成，删除哈希表记录
                     hashMap.removeValue(forKey: book.url)

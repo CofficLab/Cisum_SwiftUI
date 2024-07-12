@@ -366,8 +366,10 @@ extension FileBox {
 
 // MARK: 获取封面图
 
-    func getCoverImage() async -> Image? {
-        // os_log("\(self.label)getCoverImage for \(self.title)")
+    func getCoverImage(verbose: Bool = false) async -> Image? {
+        if verbose {
+            os_log("\(self.label)GetCoverImage for \(self.title)")
+        }
 
         if let image = getCoverImageFromCache() {
             return image
@@ -392,8 +394,10 @@ extension FileBox {
     
 // MARK: 从缓存读取封面图
 
-    func getCoverImageFromCache() -> Image? {
-        // os_log("\(self.label)getCoverImageFromCache for \(self.title)")
+    func getCoverImageFromCache(verbose: Bool = false) -> Image? {
+        if verbose {
+             os_log("\(self.label)GetCoverImageFromCache for \(self.title)")
+        }
 
         var url: URL? = coverCacheURL
         var fileManager = FileManager.default
@@ -415,9 +419,9 @@ extension FileBox {
 
 // MARK: 从Meta读取封面图
 
-    func getCoverFromMeta(verbose: Bool = true) async -> URL? {
+    func getCoverFromMeta(verbose: Bool = false) async -> URL? {
         if verbose {
-            // os_log("\(self.label)getCoverFromMeta for \(self.title)")
+             os_log("\(self.label)GetCoverFromMeta for \(self.title)")
         }
         
         var fileManager = FileManager.default
