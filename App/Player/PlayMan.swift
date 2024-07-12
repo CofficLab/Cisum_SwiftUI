@@ -14,6 +14,12 @@ class PlayMan: NSObject, ObservableObject {
     // MARK: 成员
 
     static var label = "💃 PlayMan::"
+    #if os(macOS)
+    static var defaultImage = NSImage(named: "DefaultAlbum")!
+    #else
+    // 要放一张正方形的图，否则会自动加上白色背景
+    static var defaultImage = UIImage(imageLiteralResourceName: "DefaultAlbum")
+    #endif
     
     var label: String { Logger.isMain + Self.label }
     var audioWorker: AudioWorker
@@ -252,7 +258,7 @@ extension PlayMan {
         let title = asset?.fileName ?? ""
         let duration: TimeInterval = self.duration
         let currentTime: TimeInterval = self.currentTime
-        let image = asset?.getMediaCenterImage() ?? PlayAsset.defaultImage
+        let image = asset?.getMediaCenterImage() ?? Self.defaultImage
         
         if verbose {
             os_log("\(self.label)📱📱📱 Update -> \(self.state.des)")

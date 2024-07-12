@@ -1,5 +1,6 @@
 import Foundation
 import SwiftData
+import SwiftUI
 import OSLog
 
 /**
@@ -54,4 +55,9 @@ extension Book {
             s.url == url
         }, sortBy: [])
     }
+}
+
+#Preview("App") {
+    AppPreview()
+        .frame(height: 800)
 }
