@@ -295,15 +295,23 @@ extension FileBox {
 
 extension FileBox {
     #if os(macOS)
-    var defaultImage: NSImage {
+    var defaultNSImage: NSImage {
         NSImage(named: "DefaultAlbum")!
     }
     #else
-    var defaultImage: UIImage {
+    var defaultUIImage: UIImage {
         // 要放一张正方形的图，否则会自动加上白色背景
         UIImage(imageLiteralResourceName: "DefaultAlbum")
     }
     #endif
+    
+    var defaultImage: Image {
+        #if os(macOS)
+        Image(nsImage: defaultNSImage)
+        #else
+        Image(uiImage: defaultUIImage)
+        #endif
+    }
 
 // MARK: 封面图的储存路径
 

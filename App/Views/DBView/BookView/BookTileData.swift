@@ -16,10 +16,13 @@ struct BookTileData: View {
     @State var scale: CGFloat = 1.0
     @State var opacity: Double = 1.0
     @State var chapterCount: Int? = nil
+    @State var cover: Image? = nil
 
     static var label = "🖥️ BookTileData::"
 
     var label: String { "\(Logger.isMain)\(Self.label)" }
+    var hasCover: Bool { cover != nil }
+    var noCover: Bool { cover == nil}
 
     var book: Book
 
@@ -31,15 +34,19 @@ struct BookTileData: View {
             Spacer()
             VStack {
                 Spacer()
-                Text(book.title).font(.title)
-                Spacer()
                 
-                if let c = chapterCount {
-                    Text("共 \(c)")
+                if noCover {
+                    Text(book.title).font(.title)
                 }
                 
                 Spacer()
-                if let s = self.state {
+
+                if let c = chapterCount, noCover  {
+                    Text("共 \(c)")
+                }
+
+                Spacer()
+                if let s = self.state, noCover {
                     VStack(spacing: 0) {
                         HStack {
                             Image(systemName: "info")
@@ -53,9 +60,8 @@ struct BookTileData: View {
             }
             Spacer()
         }
-        .background(BackgroundView.type2A)
+        .background(getBackground())
         .foregroundStyle(.white)
-        .clipShape(RoundedRectangle(cornerSize: CGSize(width: 10, height: 10)))
         .scaleEffect(CGSize(width: scale, height: scale))
         .opacity(opacity)
         .onTapGesture {
@@ -74,7 +80,7 @@ struct BookTileData: View {
 
                 scale = 0.95
                 opacity = 0.8
-                
+
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     withAnimation(.spring()) {
                         scale = 1.0
@@ -84,10 +90,14 @@ struct BookTileData: View {
             }
         }
         .task {
+            if self.cover == nil {
+                self.cover = await book.getBookCover()
+            }
+
             if self.state == nil {
                 findState()
             }
-            
+
             if self.chapterCount == nil {
                 getChapterCount()
             }
@@ -99,13 +109,23 @@ struct BookTileData: View {
             BtnShowInFinder(url: book.url, autoResize: false)
         })
     }
-    
+
+    func getBackground() -> some View {
+        ZStack {
+            if let cover = cover {
+                cover.resizable().scaledToFit()
+            } else {
+                BackgroundView.type2A
+            }
+        }.clipShape(RoundedRectangle(cornerSize: CGSize(width: 10, height: 10)))
+    }
+
     func getChapterCount() {
         backgroundQueue.async {
             let chapterCount = books.filter({
                 $0.url.absoluteString.hasPrefix(self.book.url.absoluteString)
             }).count
-            
+
             mainQueue.async {
                 self.chapterCount = chapterCount
             }

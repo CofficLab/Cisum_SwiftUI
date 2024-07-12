@@ -31,7 +31,12 @@ struct PlayAsset: FileBox, Identifiable, Equatable {
     // MARK: 控制中心的图
 
     func getMediaCenterImage<T>() -> T {
-        var i: Any = self.defaultImage
+        #if os(macOS)
+            var i = defaultNSImage
+        #else
+            var i = defaultUIImage
+        #endif
+        
         if fileManager.fileExists(atPath: coverCacheURL.path) {
             #if os(macOS)
                 i = NSImage(contentsOf: coverCacheURL) ?? i

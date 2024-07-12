@@ -35,6 +35,31 @@ extension Book {
     }
 }
 
+// MARK: Cover
+
+extension Book {
+    func getBookCover() async -> Image? {
+        // 先获取自己的
+        if let selfImage = await self.getCoverImage() {
+            return selfImage
+        }
+        
+        // 无children
+        guard let children = children else {
+            return nil
+        }
+        
+        // 获取children的
+        for child in children.map({Book(url: $0, isFolder: $0.isFileURL == false)}) {
+            if let image = await child.getBookCover() {
+                return image
+            }
+        }
+        
+        return nil
+    }
+}
+
 // MARK: Descriptor
 
 extension Book {
