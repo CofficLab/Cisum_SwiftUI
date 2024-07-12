@@ -2,7 +2,7 @@ import SwiftUI
 
 struct DBTips: View {
     @EnvironmentObject var app: AppManager
-    @EnvironmentObject var dataManager: DataManager
+    @EnvironmentObject var data: DataManager
 
     var supportedFormats: String {
         Config.supportedExtensions.joined(separator: ",")
@@ -30,7 +30,7 @@ struct DBTips: View {
 
                             Button(
                                 action: {
-                                    FileHelper.openFolder(url: dataManager.disk.root)
+                                    FileHelper.openFolder(url: data.disk.root)
                                 },
                                 label: {
                                     Label(

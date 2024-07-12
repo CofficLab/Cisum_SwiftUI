@@ -7,7 +7,7 @@ struct SliderView: View {
     
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var app: AppManager
-    @EnvironmentObject var dataManager: DataManager
+    @EnvironmentObject var data: DataManager
 
     @State private var value: Double = 0
     @State private var isEditing: Bool = false
@@ -56,7 +56,7 @@ struct SliderView: View {
             if Date.now.timeIntervalSince(lastDownloadTime) > 10, let asset = playMan.asset {
                 lastDownloadTime = .now
                 Task.detached(priority: .low) {
-                    await dataManager.downloadNextBatch(asset.url, reason: "SliderView确保下一个准备好")
+                    await data.downloadNextBatch(asset.url,count: data.appScene.prepareCount, reason: "SliderView确保下一个准备好")
                 }
             }
         }

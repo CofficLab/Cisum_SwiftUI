@@ -24,6 +24,7 @@ struct StateView: View {
     var font: Font { asset == nil ? .title3 : .callout }
     var label: String { "\(Logger.isMain)🖥️ StateView::" }
     var disk: any Disk { data.disk }
+    var updating: DiskFileGroup { data.updating }
 
     var body: some View {
         VStack {
@@ -60,35 +61,18 @@ struct StateView: View {
                 playMan.prepare(nil)
             }
         }
-        .onReceive(
-            NotificationCenter.default.publisher(for: Notification.Name.AudioUpdatedNotification),
-            perform: { n in
-                let data = n.userInfo as! [String: Audio]
-                let audio = data["audio"]!
-
-                if audio.url == playMan.asset?.url, audio.isDownloaded, playMan.isNotPlaying,
-                   playMan.currentTime == 0 {
-                    os_log("\(self.label)Audio更新后Prepare")
-                    playMan.prepare(playMan.asset)
+        .onChange(of: updating, {
+            if let url = asset?.url, let t = updating.find(url) {
+                if t.isDownloading {
+                    app.error = SmartError.Downloading
+                }
+                
+                if t.isDownloaded {
+                    app.error = nil
+                    playMan.prepare(self.asset)
                 }
             }
-        )
-        .onReceive(
-            NotificationCenter.default.publisher(for: Notification.Name.AudiosUpdatedNotification),
-            perform: { notification in
-                let data = notification.userInfo as! [String: DiskFileGroup]
-                let items = data["items"]!
-                for item in items.files {
-                    if item.isDeleted {
-                        continue
-                    }
-
-                    if item.url == playMan.asset?.url, item.isDownloaded, playMan.isNotPlaying {
-                        os_log("\(self.label)Audios更新后Prepare")
-                        playMan.prepare(playMan.asset)
-                    }
-                }
-            })
+        })
     }
 
     func makeInfoView(_ i: String) -> some View {

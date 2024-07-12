@@ -134,7 +134,12 @@ extension DiskiCloud {
 extension DiskiCloud {
     func evict(_ url: URL) {
         Task {
-            try? await cloudHandler.evict(url: url)
+            os_log("\(self.label)🏃🏃🏃 Evit \(url.lastPathComponent)")
+            do {
+                try await cloudHandler.evict(url: url)
+            } catch {
+                os_log(.error, "\(error.localizedDescription)")
+            }
         }
     }
     
@@ -231,8 +236,15 @@ extension DiskiCloud {
             NSPredicate(format: "NOT %K BEGINSWITH[c] %@", NSMetadataItemFSNameKey, ".")
         ]).debounce(for: .seconds(0.2))
         for try await collection in result {
+            
+            var message = "\(Logger.isMain)\(self.label)\(emoji) Watch(\(collection.items.count))"
+
+            if let first = collection.first, first.isDownloading == true {
+                message += " -> \(first.fileName ?? "-") -> \(String(format: "%.0f", first.downloadProgress))% ⏬⏬⏬"
+            }
+
             if verbose {
-                os_log("\(Logger.isMain)\(self.label)\(emoji) Watch(\(collection.items.count))")
+                os_log("\(message)")
             }
                 
             self.onUpdated(DiskFileGroup.fromMetaCollection(collection, disk: self))

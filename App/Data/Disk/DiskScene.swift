@@ -86,6 +86,21 @@ enum DiskScene: String, CaseIterable, Identifiable {
         }
     }
     
+    var prepareCount: Int {
+        switch self {
+        case .Music:
+            6
+        case .AudiosBook:
+            6
+        case .AudiosKids:
+            6
+        case .Videos:
+            1
+        case .VideosKids:
+            1
+        }
+    }
+    
     var card: some View {
         VStack {
             HStack {

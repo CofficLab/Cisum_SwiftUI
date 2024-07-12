@@ -39,7 +39,7 @@ extension DiskFile {
             url: meta.url!,
             isDownloading: meta.isDownloading,
             isDeleted: meta.isDeleted,
-            isFolder: meta.isDirectory,
+            isDownloaded: meta.isDownloaded, isFolder: meta.isDirectory,
             downloadProgress: meta.downloadProgress,
             size: meta.fileSize
         )
