@@ -31,15 +31,15 @@ struct DBTree: View {
                     forceIcon: $icon
                 )
                 .onAppear {
-                    self.children = file.getChildren()
+                    self.children = file.children
                     file.onChange {
-                        self.children = file.getChildren()
+                        self.children = file.children
                     }
                 }
                 .onChange(
                     of: file,
                     {
-                        self.children = file.getChildren()
+                        self.children = file.children
                     }
                 )
                 .contextMenu(menuItems: {

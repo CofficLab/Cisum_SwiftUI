@@ -70,6 +70,113 @@ extension FileBox {
     }
 }
 
+// MARK: Parent
+
+extension FileBox {
+    var parent: URL? {
+        guard let parentURL = url.deletingLastPathComponent() as URL? else {
+            return nil
+        }
+
+        return parentURL
+    }
+}
+
+
+// MARK: Children
+
+extension FileBox {
+    var children: [URL]? {
+        getChildren()
+    }
+    
+    func getChildren() -> [URL]? {
+        getChildrenOf(self.url)
+    }
+    
+    func getChildrenOf(_ url: URL) -> [URL]? {
+        let fileManager = FileManager.default
+
+        do {
+            var files = try fileManager.contentsOfDirectory(at: url, includingPropertiesForKeys: [.nameKey], options: .skipsHiddenFiles)
+
+            files.sort { $0.lastPathComponent < $1.lastPathComponent }
+
+            return files.isEmpty ? nil : files
+        } catch {
+            return nil
+        }
+    }
+}
+
+// MARK: Next
+
+extension FileBox {
+    func next(verbose: Bool = false) -> URL? {
+        if verbose {
+            os_log("\(label)Next of \(fileName)")
+        }
+
+        guard let parent = parent, let siblings = getChildrenOf(parent) else {
+            os_log("\(label)Next of \(fileName) -> nil")
+
+            return nil
+        }
+
+        guard let index = siblings.firstIndex(of: self.url) else {
+            return nil
+        }
+        
+        guard siblings.count > index + 1 else {
+            if verbose {
+                os_log("\(label)Next of \(fileName) -> nil")
+            }
+
+            return nil
+        }
+
+        let nextIndex = index + 1
+        if nextIndex < siblings.count {
+            return siblings[nextIndex]
+        } else {
+            return nil // 已经是数组的最后一个元素
+        }
+    }
+}
+
+// MARK: Prev
+
+extension FileBox {
+    func prev() -> URL? {
+        let prev: URL? = nil
+
+        os_log("\(label)Prev of \(fileName)")
+
+        guard let parent = parent, let siblings = getChildrenOf(parent) else {
+            os_log("\(label)Prev of \(fileName) -> nil")
+
+            return prev
+        }
+        
+        guard let index = siblings.firstIndex(of: self.url) else {
+            return nil
+        }
+        
+        guard index - 1 >= 0 else {
+            os_log("\(label)Prev of \(fileName) -> nil")
+
+            return prev
+        }
+
+        let prevIndex = index - 1
+        if prevIndex < siblings.count {
+            return siblings[prevIndex]
+        } else {
+            return nil
+        }
+    }
+}
+
 // MARK: iCloud 相关
 
 extension FileBox {

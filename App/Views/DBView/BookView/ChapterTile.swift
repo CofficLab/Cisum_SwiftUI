@@ -8,7 +8,7 @@ struct ChapterTile: View {
     
     var file: DiskFile
     
-    var chapters: [DiskFile] { file.getChildren() ?? []}
+    var chapters: [DiskFile] { file.children ?? []}
     
     var body: some View {
         Text(file.title)

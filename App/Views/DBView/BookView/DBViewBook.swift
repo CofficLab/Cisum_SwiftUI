@@ -15,7 +15,7 @@ struct DBViewBook: View {
     var disk: any Disk { data.disk }
     var root: URL { disk.root }
     var rootDiskFile: DiskFile { disk.getRoot() }
-    var items: [DiskFile] { rootDiskFile.getChildren() ?? [] }
+    var items: [DiskFile] { rootDiskFile.children ?? [] }
     var total: Int { items.count }
     var label: String { "\(Logger.isMain)\(Self.label)" }
     var showTips: Bool {

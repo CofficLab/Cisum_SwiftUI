@@ -64,21 +64,9 @@ extension DiskFile {
 
 extension DiskFile {
     var children: [DiskFile]? {
-        getChildren()
-    }
-    
-    func getChildren() -> [DiskFile]? {
-        let fileManager = FileManager.default
-
-        do {
-            var files = try fileManager.contentsOfDirectory(at: url, includingPropertiesForKeys: [.nameKey], options: .skipsHiddenFiles)
-
-            files.sort { $0.lastPathComponent < $1.lastPathComponent }
-
-            let children: [DiskFile] = files.map { DiskFile(url: $0) }
-
-            return children.isEmpty ? nil : children
-        } catch {
+        if let c = getChildren() {
+            return c.map({DiskFile(url: $0)})
+        } else {
             return nil
         }
     }
@@ -87,34 +75,15 @@ extension DiskFile {
 // MARK: Next
 
 extension DiskFile {
-    func next(verbose: Bool = false) -> DiskFile? {
+    func nextDiskFile(verbose: Bool = false) -> DiskFile? {
         if verbose {
             os_log("\(label)Next of \(fileName)")
         }
 
-        guard let parent = parent, let siblings = parent.getChildren() else {
-            os_log("\(label)Next of \(fileName) -> nil")
-
-            return nil
-        }
-
-        guard let index = siblings.firstIndex(of: self) else {
-            return nil
-        }
-        
-        guard siblings.count > self.index + 1 else {
-            if verbose {
-                os_log("\(label)Next of \(fileName) -> nil")
-            }
-
-            return nil
-        }
-
-        let nextIndex = index + 1
-        if nextIndex < siblings.count {
-            return siblings[nextIndex]
+        if let nextURL = self.next() {
+            return DiskFile(url: nextURL)
         } else {
-            return nil // 已经是数组的最后一个元素
+            return nil
         }
     }
 }
@@ -122,32 +91,11 @@ extension DiskFile {
 // MARK: Prev
 
 extension DiskFile {
-    func prev() -> DiskFile? {
-        let prev: DiskFile? = nil
-
-        os_log("\(label)Prev of \(fileName)")
-
-        guard let parent = parent, let siblings = parent.getChildren() else {
-            os_log("\(label)Prev of \(fileName) -> nil")
-
-            return prev
-        }
-        
-        guard let index = siblings.firstIndex(of: self) else {
-            return nil
-        }
-        
-        guard index - 1 >= 0 else {
-            os_log("\(label)Prev of \(fileName) -> nil")
-
-            return prev
-        }
-
-        let prevIndex = index - 1
-        if prevIndex < siblings.count {
-            return siblings[prevIndex]
+    func prevDiskFile() -> DiskFile? {
+        if let prevURL = self.prev() {
+            DiskFile(url: prevURL)
         } else {
-            return nil
+            nil
         }
     }
 }

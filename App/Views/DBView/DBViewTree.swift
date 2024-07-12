@@ -27,7 +27,7 @@ struct DBViewTree: View {
 
     var body: some View {
         ZStack {
-            List(rootDiskFile.getChildren() ?? [],
+            List(rootDiskFile.children ?? [],
                  id: \.self,
                  children: \.children,
                  selection: $selection

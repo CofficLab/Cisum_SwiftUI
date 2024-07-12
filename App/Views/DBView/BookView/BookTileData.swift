@@ -64,7 +64,7 @@ struct BookTileData: View {
                     playMan.play(PlayAsset(url: current), reason: "点击了书本")
                     playMan.goto(time)
                 } else {
-                    if let first = DiskFile(url: book.url).getChildren()?.first {
+                    if let first = DiskFile(url: book.url).children?.first {
                         playMan.play(first.toPlayAsset(), reason: "点击了书本")
                         data.updateBookState(book.url, first.url)
                     } else {

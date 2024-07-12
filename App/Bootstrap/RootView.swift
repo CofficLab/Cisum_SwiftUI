@@ -68,7 +68,7 @@ struct RootView: View {
                 }
 
                 playMan.onGetChildren = { asset in
-                    if let children = DiskFile(url: asset.url).getChildren() {
+                    if let children = DiskFile(url: asset.url).children {
                         return children.map({ $0.toPlayAsset() })
                     }
 
@@ -168,7 +168,7 @@ struct RootView: View {
         }
 
         if data.appScene != .Music {
-            return DiskFile(url: asset.url).next()?.toPlayAsset()
+            return DiskFile(url: asset.url).nextDiskFile()?.toPlayAsset()
         } else {
             return dbLocal.getNextOf(asset.url)?.toPlayAsset()
         }
@@ -182,7 +182,7 @@ struct RootView: View {
         }
 
         if data.appScene != .Music {
-            return DiskFile(url: asset.url).prev()?.toPlayAsset()
+            return DiskFile(url: asset.url).prevDiskFile()?.toPlayAsset()
         } else {
             return dbLocal.getPrevOf(asset.url)?.toPlayAsset()
         }

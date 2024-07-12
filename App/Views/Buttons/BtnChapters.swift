@@ -18,7 +18,7 @@ struct BtnChapters: View {
             return []
         }
         
-        return DiskFile(url: bookURL).getChildren() ?? []
+        return DiskFile(url: bookURL).children ?? []
     }
 
     var body: some View {

@@ -1,14 +1,14 @@
 import SwiftUI
 
 /**
- 展示从地盘读取的图书数据
+ 展示从磁盘读取的图书数据
  */
 struct BookTile: View {
     @EnvironmentObject var playMan: PlayMan
     
     var file: DiskFile
     
-    var chapters: [DiskFile] { file.getChildren() ?? []}
+    var chapters: [DiskFile] { file.children ?? []}
     
     var body: some View {
         HStack {

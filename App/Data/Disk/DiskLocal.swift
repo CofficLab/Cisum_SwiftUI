@@ -41,7 +41,7 @@ extension DiskLocal {
     func next(_ url: URL) -> DiskFile? {
         let diskFile = DiskFile(url: url)
         
-        return diskFile.next()
+        return diskFile.nextDiskFile()
     }
 }
 
