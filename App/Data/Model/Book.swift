@@ -55,7 +55,7 @@ extension Book {
 // MARK: Cover
 
 extension Book {
-    func getBookCover(verbose: Bool = true) async -> Image? {
+    func getBookCover(verbose: Bool = false) async -> Image? {
         if verbose {
             os_log("\(self.label)GetBookCover for \(self.title)")
         }
