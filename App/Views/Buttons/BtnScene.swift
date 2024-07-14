@@ -14,6 +14,12 @@ struct BtnScene: View {
             onTap: {
                 app.showScenes = true
             })
+        .popover(isPresented: $app.showScenes, content: {
+            Scenes(
+                selection: $data.appScene,
+                isPreseted: $app.showScenes
+            )
+        })
     }
 }
 
