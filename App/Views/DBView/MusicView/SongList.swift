@@ -11,7 +11,7 @@ import SwiftUI
       B1               B2
       B2
  */
-struct DBViewList: View {
+struct SongList: View {
     static var label = "📬 DBList::"
 
     @EnvironmentObject var app: AppManager
@@ -59,7 +59,7 @@ struct DBViewList: View {
                     }
                 }, content: {
                     ForEach(audios, id: \.self) { audio in
-                        DBRow(audio.toPlayAsset())
+                        SongTile(audio.toPlayAsset())
                             .tag(audio as Audio?)
                     }
                 })

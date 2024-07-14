@@ -32,7 +32,7 @@ struct DBView: View {
             ZStack {
                 switch data.appScene {
                 case .Music:
-                    DBViewList()
+                    SongList()
                 case .AudiosBook:
                     DBViewBookData()
                 case .AudiosKids,.VideosKids, .Videos:

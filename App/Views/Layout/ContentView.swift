@@ -13,19 +13,6 @@ struct ContentView: View {
                 }
 
                 AudioAppView()
-                .alert(isPresented: $app.showAlert, content: {
-                    Alert(title: Text(app.alertMessage))
-                })
-                .sheet(isPresented: $app.showScenes, content: {
-                    Scenes(
-                        selection: $data.appScene,
-                        isPreseted: $app.showScenes
-                    )
-                })
-                .onChange(of: data.appScene, {
-                    try? data.chageScene(data.appScene)
-                    app.showScenes = false
-                })
             }
 
             if !app.flashMessage.isEmpty {
@@ -48,6 +35,19 @@ struct ContentView: View {
                 }
             }
         }
+        .alert(isPresented: $app.showAlert, content: {
+            Alert(title: Text(app.alertMessage))
+        })
+        .popover(isPresented: $app.showScenes, content: {
+            Scenes(
+                selection: $data.appScene,
+                isPreseted: $app.showScenes
+            )
+        })
+        .onChange(of: data.appScene, {
+            try? data.chageScene(data.appScene)
+            app.showScenes = false
+        })
     }
 }
 

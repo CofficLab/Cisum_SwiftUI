@@ -13,10 +13,8 @@ enum DiskScene: String, CaseIterable, Identifiable {
     
     var available: Bool {
         switch self {
-        case .Music:
+        case .Music,.AudiosBook:
             true
-        case .AudiosBook:
-            Config.debug
         case .AudiosKids,.Videos,.VideosKids:
             false || Config.debug
         }
@@ -61,7 +59,7 @@ enum DiskScene: String, CaseIterable, Identifiable {
         case .AudiosKids:
             "青少年音频模式"
         case .Music:
-            "听歌模式"
+            "歌曲模式"
         case .VideosKids:
             "青少年视频模式"
         case .AudiosBook:
@@ -107,8 +105,31 @@ enum DiskScene: String, CaseIterable, Identifiable {
                 self.icon
                 Text(title)
             }
+            .font(.title)
+            .padding()
             
-            Text(description).font(.footnote)
+            Text(description)
+            
+            GroupBox {
+                hero
+            }.padding()
+        }
+    }
+    
+    var hero: some View {
+        ZStack {
+            switch self {
+            case .Music:
+                AudioScene()
+            case .AudiosBook:
+                BookScene()
+            case .AudiosKids:
+                BookScene()
+            case .Videos:
+                BookScene()
+            case .VideosKids:
+                BookScene()
+            }
         }
     }
 }
@@ -118,14 +139,10 @@ enum DiskScene: String, CaseIterable, Identifiable {
         .frame(height: 800)
 }
 
-#Preview("SceneView") {
-    BootView {
-        SceneView()
-    }
-}
-
 #Preview("Scenes") {
     BootView {
         Scenes(selection: Binding.constant(.AudiosKids), isPreseted: Binding.constant(false))
+            .background(.background)
     }
+    .frame(height: 800)
 }

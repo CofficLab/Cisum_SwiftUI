@@ -1,7 +1,7 @@
 import OSLog
 import SwiftUI
 
-struct DBRow: View {
+struct SongTile: View {
     @EnvironmentObject var playMan: PlayMan
 
     @State var hovered = false
@@ -70,7 +70,7 @@ struct DBRow: View {
     }
 }
 
-#Preview {
+#Preview("App") {
     AppPreview()
         .frame(height: 800)
 }
