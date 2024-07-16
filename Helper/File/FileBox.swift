@@ -400,7 +400,7 @@ extension FileBox {
         }
 
         var url: URL? = coverCacheURL
-        var fileManager = FileManager.default
+        let fileManager = FileManager.default
 
         if !fileManager.fileExists(atPath: url!.path) {
             return nil
@@ -466,7 +466,7 @@ extension FileBox {
             os_log("\(label)getCoverFromMeta for \(fileName)")
         }
         
-        var fileManager = FileManager.default
+        let fileManager = FileManager.default
 
         if isNotDownloaded {
             return queue.async {

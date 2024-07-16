@@ -10,8 +10,18 @@ class BookState {
     /// 图书的URL
     var url: URL?
     
+    /// 图书的文件的 Hash，多平台同步时用到
+    var hash: String?
+    
     /// 当前播放的章节的URL
     var currentURL: URL?
+    
+    /// 当前播放的章节的 Hash，多平台同步时用到
+    var currentHash: String?
+    
+    /// 如果url是iCloud云盘的URL，relativePath=相对于iCloud云盘的路径；
+    /// 如果url是本地的URL，relativePath=相对于container的路径。
+    var relativePath: String?
     
     /// 播放进度
     var time: TimeInterval? = 0

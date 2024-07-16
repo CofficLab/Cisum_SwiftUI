@@ -402,11 +402,8 @@
 			children = (
 				0B1D5A672AB3025F0010DDF2 /* Audio.swift */,
 				F518F6F42C34E78C00844E62 /* Book.swift */,
-				F518F7002C34FB0400844E62 /* BookState.swift */,
 				0BAABEB02BC79C4E00DF4A31 /* CopyTask.swift */,
 				0B1136602BF4CF3000A71FE1 /* Cover.swift */,
-				0BE695BF2C01E88E00CEFFEB /* DeviceData.swift */,
-				F5847C1A2C368FE20080887B /* SceneState.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -462,6 +459,7 @@
 				0B22158A2BB66D0C000EB36F /* Database */,
 				0BB4278F2BEA7083004E6F82 /* Disk */,
 				0B1D5A652AB3025F0010DDF2 /* Model */,
+				F5037CAA2C44B0E600DD77AC /* ModelSynced */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -697,6 +695,16 @@
 				0B220F6E2BB051F50077255A /* TitleView.swift */,
 			);
 			path = Playing;
+			sourceTree = "<group>";
+		};
+		F5037CAA2C44B0E600DD77AC /* ModelSynced */ = {
+			isa = PBXGroup;
+			children = (
+				F518F7002C34FB0400844E62 /* BookState.swift */,
+				0BE695BF2C01E88E00CEFFEB /* DeviceData.swift */,
+				F5847C1A2C368FE20080887B /* SceneState.swift */,
+			);
+			path = ModelSynced;
 			sourceTree = "<group>";
 		};
 		F518F6EE2C33917500844E62 /* BookView */ = {
