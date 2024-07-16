@@ -35,12 +35,8 @@ struct ContentView: View {
                 }
             }
         }
-        .alert(isPresented: $app.showAlert, content: {
-            Alert(title: Text(app.alertMessage))
-        })
         .onChange(of: data.appScene, {
             try? data.chageScene(data.appScene)
-            app.showScenes = false
         })
     }
 }

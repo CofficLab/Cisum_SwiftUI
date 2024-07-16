@@ -31,7 +31,7 @@ struct AudioScene: View {
 
 #Preview("Scenes") {
     BootView {
-        Scenes(selection: Binding.constant(.Music), isPreseted: Binding.constant(false))
+        Scenes(selection: Binding.constant(.Music), isPresented: .constant(false))
             .background(.background)
     }
     .frame(height: 800)

@@ -4,7 +4,7 @@ import SwiftUI
 struct RootView: View {
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var videoMan: VideoWorker
-    @EnvironmentObject var appManager: AppManager
+    @EnvironmentObject var app: AppManager
     @EnvironmentObject var data: DataManager
     @EnvironmentObject var dbLocal: DB
 
@@ -16,6 +16,11 @@ struct RootView: View {
 
     var body: some View {
         Config.rootBackground
+            // MARK: Alert
+        
+            .alert(isPresented: $app.showAlert, content: {
+                Alert(title: Text(app.alertMessage))
+            })
 
             // MARK: 场景变化
 
@@ -138,7 +143,7 @@ struct RootView: View {
         if verbose {
             os_log("\(label)👻👻👻 Restore because of \(reason)")
         }
-        
+
         playMan.mode = PlayMode(rawValue: Config.currentMode) ?? playMan.mode
 
         Task {
@@ -196,7 +201,7 @@ struct RootView: View {
                 os_log("\(label)播放状态变了 -> \(state.des)")
             }
 
-            appManager.error = state.getError()
+            app.error = state.getError()
             Task {
                 await self.dbLocal.increasePlayCount(state.getPlayingAsset()?.url)
                 await dbSynced.updateSceneCurrent(data.appScene, currentURL: state.getURL())

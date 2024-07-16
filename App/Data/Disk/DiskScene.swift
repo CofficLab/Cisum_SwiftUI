@@ -16,7 +16,7 @@ enum DiskScene: String, CaseIterable, Identifiable {
         case .Music,.AudiosBook:
             true
         case .AudiosKids,.Videos,.VideosKids:
-            false || Config.debug
+            false
         }
     }
     
@@ -141,7 +141,7 @@ enum DiskScene: String, CaseIterable, Identifiable {
 
 #Preview("Scenes") {
     BootView {
-        Scenes(selection: Binding.constant(.AudiosKids), isPreseted: Binding.constant(false))
+        Scenes(selection: Binding.constant(.AudiosKids), isPresented: .constant(false))
             .background(.background)
     }
     .frame(height: 800)

@@ -5,6 +5,8 @@ import SwiftUI
 struct BtnScene: View {
     @EnvironmentObject var app: AppManager
     @EnvironmentObject var data: DataManager
+    
+    @State var isPresented: Bool = false
 
     var body: some View {
         ControlButton(
@@ -12,13 +14,14 @@ struct BtnScene: View {
             image: data.appScene.iconName,
             dynamicSize: false,
             onTap: {
-                app.showScenes = true
+                self.isPresented = true
             })
-        .popover(isPresented: $app.showScenes, content: {
+        .popover(isPresented: $isPresented, content: {
             Scenes(
                 selection: $data.appScene,
-                isPreseted: $app.showScenes
+                isPresented: $isPresented
             )
+            .frame(minWidth: Config.minWidth)
         })
     }
 }

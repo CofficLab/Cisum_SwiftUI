@@ -9,7 +9,6 @@ class AppManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
     @Published var showAlert: Bool = false
     @Published var showDB: Bool = Config.showDB
     @Published var showCopying: Bool = false
-    @Published var showScenes: Bool = false
     @Published var alertMessage: String = ""
     @Published var flashMessage: String = ""
     @Published var stateMessage: String = ""

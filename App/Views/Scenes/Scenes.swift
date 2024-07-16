@@ -4,7 +4,7 @@ import SwiftUI
 
 struct Scenes: View {
     @Binding var selection: DiskScene
-    @Binding var isPreseted: Bool
+    @Binding var isPresented: Bool
     
     @State var picked: DiskScene?
 
@@ -24,8 +24,8 @@ struct Scenes: View {
                 
                 Button("选择") {
                     self.selection = p
-                    self.isPreseted = false
-                }
+                    self.isPresented = false
+                }.controlSize(.extraLarge)
                 
                 Spacer()
             }
@@ -38,7 +38,7 @@ struct Scenes: View {
 
 #Preview("Scenes") {
     BootView {
-        Scenes(selection: Binding.constant(.AudiosKids), isPreseted: Binding.constant(false))
+        Scenes(selection: Binding.constant(.AudiosKids), isPresented: .constant(false))
             .background(.background)
     }
     .frame(height: 800)

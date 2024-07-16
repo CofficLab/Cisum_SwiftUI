@@ -22,7 +22,7 @@ struct BookScene: View {
                     }
                     Spacer()
                 }
-                .background(BackgroundView.forest)
+                .background(BackgroundView.type2A)
                 .clipShape(RoundedRectangle(cornerSize: CGSize(width: 10, height: 10)))
                 .frame(width: 130)
                 .frame(height: 180)
@@ -34,7 +34,7 @@ struct BookScene: View {
 
 #Preview("Scenes") {
     BootView {
-        Scenes(selection: Binding.constant(.AudiosBook), isPreseted: Binding.constant(false))
+        Scenes(selection: Binding.constant(.AudiosBook), isPresented: .constant(false))
             .background(.background)
     }
     .frame(height: 800)

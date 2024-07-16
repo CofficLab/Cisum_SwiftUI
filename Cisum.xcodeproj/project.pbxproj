@@ -155,7 +155,6 @@
 		F545D1772C1FCC86006A6AFA /* UserExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F545D1762C1FCC86006A6AFA /* UserExt.swift */; };
 		F5511BB02C29050300400900 /* Playable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5511BAF2C29050300400900 /* Playable.swift */; };
 		F5511BB42C29118C00400900 /* DiskScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5511BB32C29118C00400900 /* DiskScene.swift */; };
-		F5511BB62C291D3400400900 /* SceneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5511BB52C291D3400400900 /* SceneView.swift */; };
 		F5511BBC2C294A7400400900 /* TaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5511BBB2C294A7400400900 /* TaskView.swift */; };
 		F5511BBE2C29506400400900 /* StateCopy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5511BBD2C29506400400900 /* StateCopy.swift */; };
 		F5511BC02C2953C200400900 /* BtnToggleCopying.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5511BBF2C2953C200400900 /* BtnToggleCopying.swift */; };
@@ -340,7 +339,6 @@
 		F545D1762C1FCC86006A6AFA /* UserExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserExt.swift; sourceTree = "<group>"; };
 		F5511BAF2C29050300400900 /* Playable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playable.swift; sourceTree = "<group>"; };
 		F5511BB32C29118C00400900 /* DiskScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskScene.swift; sourceTree = "<group>"; };
-		F5511BB52C291D3400400900 /* SceneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneView.swift; sourceTree = "<group>"; };
 		F5511BBB2C294A7400400900 /* TaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskView.swift; sourceTree = "<group>"; };
 		F5511BBD2C29506400400900 /* StateCopy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateCopy.swift; sourceTree = "<group>"; };
 		F5511BBF2C2953C200400900 /* BtnToggleCopying.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnToggleCopying.swift; sourceTree = "<group>"; };
@@ -763,7 +761,6 @@
 			isa = PBXGroup;
 			children = (
 				F5511BC92C2BACC000400900 /* TopView.swift */,
-				F5511BB52C291D3400400900 /* SceneView.swift */,
 			);
 			path = Top;
 			sourceTree = "<group>";
@@ -1091,7 +1088,6 @@
 				0B8113B12C2C38AD007CA124 /* BtnScene.swift in Sources */,
 				0B220F732BB1A3D70077255A /* BtnsView.swift in Sources */,
 				0BB9D2482C32E53B0027DDAD /* DBViewMenuTile.swift in Sources */,
-				F5511BB62C291D3400400900 /* SceneView.swift in Sources */,
 				0B220F6F2BB051F50077255A /* TitleView.swift in Sources */,
 				0BBC158A2AB9AB7F006E82C4 /* FileHelper.swift in Sources */,
 				F5847C1B2C368FE20080887B /* SceneState.swift in Sources */,
