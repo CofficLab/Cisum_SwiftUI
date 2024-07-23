@@ -2,7 +2,7 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-class DataManager: ObservableObject {
+class DataManager: ObservableObject, SuperLog {
     static var label = "💼 DataManager::"
 
     @Published var appScene: DiskScene
@@ -10,7 +10,7 @@ class DataManager: ObservableObject {
     @Published var updating: DiskFileGroup = .empty
     @Published var syncing: Bool = false
 
-    var label: String { "\(Logger.isMain)\(Self.label)" }
+    let emoji = "💼"
     var isiCloudDisk: Bool { (disk as? DiskiCloud) != nil }
     var isNotiCloudDisk: Bool { !isiCloudDisk }
     var db: DB = DB(Config.getContainer, reason: "dataManager")
@@ -37,7 +37,7 @@ class DataManager: ObservableObject {
     // MARK: ChangeDisk
 
     func changeDisk(_ to: any Disk) {
-        os_log("\(self.label)更新磁盘为 \(to.name)")
+        os_log("\(self.t)更新磁盘为 \(to.name)")
 
         disk.stopWatch(reason: "Disk Will Change")
         disk = to
@@ -132,7 +132,7 @@ class DataManager: ObservableObject {
 extension DataManager {
     func downloadNextBatch(_ url: URL, count: Int = 6, reason: String, verbose: Bool = false) {
         if verbose {
-            os_log("\(self.label)DownloadNextBatch(\(self.appScene.title))")
+            os_log("\(self.t)DownloadNextBatch(\(self.appScene.title))")
         }
 
         if appScene == .Music {
@@ -175,7 +175,7 @@ extension DataManager {
 
 extension DataManager {
     func enableiCloud() throws {
-        os_log("\(self.label)Enable iCloud")
+        os_log("\(self.t)Enable iCloud")
         let disk = DiskiCloud.make(appScene.folderName)
 
         guard let disk = disk else {
@@ -187,7 +187,7 @@ extension DataManager {
     }
 
     func disableiCloud() throws {
-        os_log("\(self.label)Disable iCloud")
+        os_log("\(self.t)Disable iCloud")
         let disk = DiskLocal.make(appScene.folderName)
 
         guard let disk = disk else {
@@ -267,7 +267,7 @@ extension DataManager {
 extension DataManager {
     func findBookState(_ book: Book, verbose: Bool = false) -> BookState? {
         if verbose {
-            os_log("\(self.label)FindState for \(book.title)")
+            os_log("\(self.t)FindState for \(book.title)")
         }
 
         let db = DBSynced(Config.getSyncedContainer)
@@ -276,7 +276,7 @@ extension DataManager {
             return state
         } else {
             if verbose {
-                os_log("\(self.label)\(book.title) 无上次播放")
+                os_log("\(self.t)\(book.title) 无上次播放")
             }
 
             return nil
@@ -285,7 +285,7 @@ extension DataManager {
 
     func updateBookState(_ bookURL: URL, _ current: URL, verbose: Bool = true) {
         if verbose {
-            os_log("\(self.label)FindState for \(bookURL.lastPathComponent)")
+            os_log("\(self.t)FindState for \(bookURL.lastPathComponent)")
         }
 
         Task {
