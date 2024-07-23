@@ -3,7 +3,7 @@ import OSLog
 import SwiftData
 
 extension DB {
-    var labelForGetCovers: String { "\(self.label)🌽🌽🌽 GetCovers" }
+    var labelForGetCovers: String { "\(self.t)🌽🌽🌽 GetCovers" }
     
     func runGetCoversJob() {
         os_log("\(self.labelForGetCovers) 🚀🚀🚀")

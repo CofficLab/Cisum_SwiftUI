@@ -3,13 +3,13 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-actor DBSynced: ModelActor, ObservableObject {
+actor DBSynced: ModelActor, ObservableObject, SuperLog {
     static let label = "📦 DBSynced::"
 
+    let emoji = "🚢"
     let modelContainer: ModelContainer
     let modelExecutor: any ModelExecutor
     let context: ModelContext
-    var label: String { "\(Logger.isMain)\(DBSynced.label)" }
 
     init(_ container: ModelContainer, verbose: Bool = false) {
         if verbose {

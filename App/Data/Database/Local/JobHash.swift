@@ -4,7 +4,7 @@ import OSLog
 import SwiftData
 
 extension DB {
-    var labelForGroup: String { "\(self.label)🌾🌾🌾" }
+    var labelForGroup: String { "\(self.t)🌾🌾🌾" }
 
     func updateGroupForURLs(_ urls: [URL], verbose: Bool = true) {
         let total = urls.count

@@ -10,11 +10,11 @@ import SwiftUI
       对接系统媒体中心
  */
 
-class AudioWorker: NSObject, ObservableObject, PlayWorker {
+class AudioWorker: NSObject, ObservableObject, PlayWorker, SuperLog {
     // MARK: 成员
 
     static var label = "💿 AudioWorker::"
-    var label: String { Logger.isMain + Self.label }
+    let emoji = "🎺"
     var player = AVAudioPlayer()
     var asset: PlayAsset?
     @Published var mode: PlayMode = .Order
@@ -26,7 +26,7 @@ class AudioWorker: NSObject, ObservableObject, PlayWorker {
     @Published var state: PlayState = .Stopped {
         didSet {
             if verbose {
-                os_log("\(Logger.isMain)\(self.label)State changed 「\(oldValue.des)」 -> 「\(self.state.des)」")
+                os_log("\(self.t)State changed 「\(oldValue.des)」 -> 「\(self.state.des)」")
             }
             
             var e: Error? = nil
@@ -123,7 +123,7 @@ extension AudioWorker {
     }
 
     func prepare(_ asset: PlayAsset?) {
-        os_log("\(self.label)Prepare \(asset?.fileName ?? "nil")")
+        os_log("\(self.t)Prepare \(asset?.fileName ?? "nil")")
         DispatchQueue.main.async {
             self.state = .Ready(asset)
         }
@@ -133,7 +133,7 @@ extension AudioWorker {
     // MARK: Play
     
     func play(_ asset: PlayAsset, reason: String) {
-        os_log("\(self.label)Play \(asset.fileName) 🐛 \(reason)")
+        os_log("\(self.t)Play \(asset.fileName) 🐛 \(reason)")
         
         if asset.isFolder() {
             return prepare(asset)
@@ -145,14 +145,14 @@ extension AudioWorker {
     }
 
     func play() {
-        os_log("\(self.label)Play")
+        os_log("\(self.t)Play")
         DispatchQueue.main.async {
             self.resume()
         }
     }
 
     func resume() {
-        os_log("\(self.label)Resume while current is \(self.state.des)")
+        os_log("\(self.t)Resume while current is \(self.state.des)")
         switch state {
         case .Playing:
             break
@@ -166,17 +166,17 @@ extension AudioWorker {
     }
 
     func pause() {
-        os_log("\(self.label)Pause")
+        os_log("\(self.t)Pause")
         state = .Paused(asset)
     }
 
     func stop() {
-        os_log("\(self.label)Stop")
+        os_log("\(self.t)Stop")
         state = .Stopped
     }
     
     func finish() {
-        os_log("\(self.label)Finish(\(self.asset?.title ?? "nil"))")
+        os_log("\(self.t)Finish(\(self.asset?.title ?? "nil"))")
         guard let asset = self.asset else {
             return
         }
@@ -212,24 +212,24 @@ extension AudioWorker {
         }
 
         if asset.isNotExists() {
-            os_log("\(self.label)不存在 \(asset.fileName) ⚠️⚠️⚠️")
+            os_log("\(self.t)不存在 \(asset.fileName) ⚠️⚠️⚠️")
             throw SmartError.NotExists
         }
 
         if asset.isDownloading {
-            os_log("\(self.label)在下载 \(asset.fileName) ⚠️⚠️⚠️")
+            os_log("\(self.t)在下载 \(asset.fileName) ⚠️⚠️⚠️")
             throw SmartError.Downloading
         }
 
         // 未下载的情况
         guard asset.isDownloaded else {
-            os_log("\(self.label)未下载 \(asset.fileName) ⚠️⚠️⚠️")
+            os_log("\(self.t)未下载 \(asset.fileName) ⚠️⚠️⚠️")
             throw SmartError.NotDownloaded
         }
 
         // 格式不支持
         guard asset.isSupported() else {
-            os_log("\(self.label)格式不支持 \(asset.fileName) \(asset.ext)")
+            os_log("\(self.t)格式不支持 \(asset.fileName) \(asset.ext)")
             throw SmartError.FormatNotSupported(asset.ext)
         }
 
@@ -240,7 +240,7 @@ extension AudioWorker {
             #endif
             player = try AVAudioPlayer(contentsOf: asset.url)
         } catch {
-            os_log(.error, "\(self.label)初始化播放器失败 ->\(asset.fileName)->\(error)")
+            os_log(.error, "\(self.t)初始化播放器失败 ->\(asset.fileName)->\(error)")
             player = AVAudioPlayer()
         }
 
@@ -285,35 +285,35 @@ extension AudioWorker: AVAudioPlayerDelegate {
         queue.sync {
             // 没有播放完，被打断了
             if !flag {
-                os_log("\(Logger.isMain)\(self.label)播放被打断，更新为暂停状态")
+                os_log("\(self.t)播放被打断，更新为暂停状态")
                 return pause()
             }
 
             if self.mode == .Loop {
-                os_log("\(self.label)播放完成，单曲循环")
+                os_log("\(self.t)播放完成，单曲循环")
                 if let asset = self.asset {
                     self.play(asset, reason: "单曲循环")
                 } else {
                     self.finish()
                 }
             } else {
-                os_log("\(self.label)播放完成，\(self.mode.description)")
+                os_log("\(self.t)播放完成，\(self.mode.description)")
                 self.finish()
             }
         }
     }
 
     func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {
-        os_log("\(Logger.isMain)\(self.label)audioPlayerDecodeErrorDidOccur")
+        os_log("\(self.t)audioPlayerDecodeErrorDidOccur")
     }
 
     func audioPlayerBeginInterruption(_ player: AVAudioPlayer) {
-        os_log("\(Logger.isMain)\(self.label)audioPlayerBeginInterruption")
+        os_log("\(self.t)audioPlayerBeginInterruption")
         pause()
     }
 
     func audioPlayerEndInterruption(_ player: AVAudioPlayer, withOptions flags: Int) {
-        os_log("\(Logger.isMain)\(self.label)audioPlayerEndInterruption")
+        os_log("\(self.t)audioPlayerEndInterruption")
         resume()
     }
 }

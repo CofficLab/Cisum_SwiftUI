@@ -72,7 +72,7 @@ extension DB {
 
 extension DB {
     func allAudios() -> [Audio] {
-        os_log("\(self.label)GetAllAudios")
+        os_log("\(self.t)GetAllAudios")
         do {
             let audios:[Audio] = try self.all()
             
@@ -133,7 +133,7 @@ extension DB {
     /// The next one of provided URL
     func nextOf(_ url: URL?, verbose: Bool = false) -> Audio? {
         if verbose {
-            os_log("\(self.label)NextOf -> \(url?.lastPathComponent ?? "-")")
+            os_log("\(self.t)NextOf -> \(url?.lastPathComponent ?? "-")")
         }
         
         guard let url = url else {

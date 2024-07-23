@@ -7,7 +7,7 @@ extension DB {
     // MARK: Watch
 
     var labelForSync: String {
-        "\(label)🪣🪣🪣"
+        "\(t)🪣🪣🪣"
     }
 
     func sync(_ group: DiskFileGroup, verbose: Bool = true) {
@@ -54,7 +54,7 @@ extension DB {
                 } else {
                     // 记录不存在哈希表中，数据库删除
                     if verbose {
-                        os_log("\(self.label)删除 \(audio.title)")
+                        os_log("\(self.t)删除 \(audio.title)")
                     }
                     context.delete(audio)
                 }
@@ -76,7 +76,7 @@ extension DB {
     // MARK: SyncWithUpdatedItems
 
     func syncWithUpdatedItems(_ metas: DiskFileGroup, verbose: Bool = true) {
-        os_log("\(self.label)SyncWithUpdatedItems with count=\(metas.count)")
+        os_log("\(self.t)SyncWithUpdatedItems with count=\(metas.count)")
         // 如果url属性为unique，数据库已存在相同url的记录，再执行context.insert，发现已存在的被替换成新的了
         // 但在这里，希望如果存在，就不要插入
         for (_, meta) in metas.files.enumerated() {

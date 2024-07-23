@@ -3,16 +3,16 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-actor DB: ModelActor, ObservableObject {
-    static let label = "📦 DB::"
+actor DB: ModelActor, ObservableObject, SuperLog {
     
+    static let label = "📦 DB::"
+    let emoji = "🎁"
     let modelContainer: ModelContainer
     let modelExecutor: any ModelExecutor
     let context: ModelContext
     let queue = DispatchQueue(label: "DB")
 
     var onUpdated: () -> Void = { os_log("🍋 DB::updated") }
-    var label: String { "\(Logger.isMain)\(DB.label)" }
 
     init(_ container: ModelContainer, reason: String, verbose: Bool = false) {
         if verbose {

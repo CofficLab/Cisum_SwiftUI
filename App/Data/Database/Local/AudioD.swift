@@ -109,7 +109,7 @@ extension DB {
     }
 
     func deleteAudio(_ url: URL) -> Audio? {
-        os_log("\(self.label)DeleteAudio by url=\(url.lastPathComponent)")
+        os_log("\(self.t)DeleteAudio by url=\(url.lastPathComponent)")
         return deleteAudios([url])
     }
 

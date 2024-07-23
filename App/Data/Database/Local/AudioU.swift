@@ -6,7 +6,7 @@ import SwiftUI
 extension DB {
     func update(_ audio: Audio, verbose: Bool = false) {
         if verbose {
-            os_log("\(self.label)update \(audio.title)")
+            os_log("\(self.t)update \(audio.title)")
         }
 
         if var current = findAudio(audio.id) {
@@ -17,7 +17,7 @@ extension DB {
             }
         } else {
             if verbose {
-                os_log("\(self.label)🍋 DB::update not found ⚠️")
+                os_log("\(self.t)🍋 DB::update not found ⚠️")
             }
         }
 
@@ -25,7 +25,7 @@ extension DB {
             try? context.save()
             onUpdated()
         } else {
-            os_log("\(self.label)🍋 DB::update nothing changed 👌")
+            os_log("\(self.t)🍋 DB::update nothing changed 👌")
         }
     }
 }
@@ -148,7 +148,7 @@ extension DB {
     }
 
     func sortRandom(_ sticky: Audio?) {
-        os_log("\(self.label)SortRandom")
+        os_log("\(self.t)SortRandom")
 
         do {
             try context.enumerate(FetchDescriptor<Audio>(), block: {
@@ -228,7 +228,7 @@ extension DB {
         }
 
         if verbose {
-            os_log("\(self.label)UpdateHash for \(audio.title) 🌾🌾🌾 \(audio.getFileSizeReadable())")
+            os_log("\(self.t)UpdateHash for \(audio.title) 🌾🌾🌾 \(audio.getFileSizeReadable())")
         }
 
         let fileHash = audio.getHash()

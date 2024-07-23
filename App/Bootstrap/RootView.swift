@@ -1,17 +1,16 @@
 import OSLog
 import SwiftUI
 
-struct RootView: View {
+struct RootView: View, SuperLog {
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var videoMan: VideoWorker
     @EnvironmentObject var app: AppManager
     @EnvironmentObject var data: DataManager
     @EnvironmentObject var dbLocal: DB
 
+    let emoji = "🌳"
     var verbose: Bool = true
     var dbSynced = DBSynced(Config.getSyncedContainer)
-
-    var label: String { "\(Logger.isMain)✈️ RootView::" }
     var disk: any Disk { data.disk }
 
     var body: some View {
@@ -27,7 +26,7 @@ struct RootView: View {
             .onChange(of: data.disk.root, {
                 playMan.stop()
 
-                os_log("\(self.label)Disk已变为：\(data.disk.name)")
+                os_log("\(self.t)Disk已变为：\(data.disk.name)")
                 restore(reason: "Disk Changed")
             })
 
@@ -91,7 +90,7 @@ struct RootView: View {
                 playMan.onToggleMode = {
                     Task {
                         if verbose {
-                            os_log("\(self.label)切换播放模式")
+                            os_log("\(self.t)切换播放模式")
                         }
 
                         if playMan.mode == .Random {
@@ -111,7 +110,7 @@ struct RootView: View {
             }
             .task(priority: .background) {
                 if verbose {
-                    os_log("\(self.label)🐎🐎🐎 执行后台任务")
+                    os_log("\(self.t)🐎🐎🐎 执行后台任务")
                 }
 
                 Task.detached(
@@ -141,7 +140,7 @@ struct RootView: View {
 
     func restore(reason: String, verbose: Bool = true) {
         if verbose {
-            os_log("\(label)👻👻👻 Restore because of \(reason)")
+            os_log("\(t)👻👻👻 Restore because of \(reason)")
         }
 
         playMan.mode = PlayMode(rawValue: Config.currentMode) ?? playMan.mode
@@ -151,13 +150,13 @@ struct RootView: View {
 
             if let url = currentURL {
                 if verbose {
-                    os_log("\(label)上次播放 -> \(url.lastPathComponent)")
+                    os_log("\(t)上次播放 -> \(url.lastPathComponent)")
                 }
 
                 playMan.prepare(PlayAsset(url: url))
             } else {
                 if verbose {
-                    os_log("\(label)无上次播放的音频，尝试播放第一个(\(data.disk.name))")
+                    os_log("\(t)无上次播放的音频，尝试播放第一个(\(data.disk.name))")
                 }
 
                 playMan.prepare(data.first())
@@ -198,7 +197,7 @@ struct RootView: View {
     func onStateChanged(_ state: PlayState, verbose: Bool = true) {
         DispatchQueue.main.async {
             if verbose {
-                os_log("\(label)播放状态变了 -> \(state.des)")
+                os_log("\(t)播放状态变了 -> \(state.des)")
             }
 
             app.error = state.getError()

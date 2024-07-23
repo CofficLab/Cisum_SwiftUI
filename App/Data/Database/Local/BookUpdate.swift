@@ -4,7 +4,7 @@ import OSLog
 extension DB {
     func updateBookParent(verbose: Bool = true) {
         if verbose {
-            os_log("\(self.label)UpdateBookParent start(\(self.getBookCount()))")
+            os_log("\(self.t)UpdateBookParent start(\(self.getBookCount()))")
         }
         
         do {
@@ -18,7 +18,7 @@ extension DB {
         }
         
         if verbose {
-            os_log("\(self.label)UpdateBookParent done")
+            os_log("\(self.t)UpdateBookParent done")
         }
         
         self.updateChildCount()
@@ -36,7 +36,7 @@ extension DB {
         }
         
         if verbose {
-            os_log("\(self.label)UpdateChildCount done")
+            os_log("\(self.t)UpdateChildCount done")
         }
     }
     
@@ -100,7 +100,7 @@ extension DB {
     func updateParent(_ book: Book, verbose: Bool = true) {
         guard let parentURL = book.parentURL else {
             if verbose {
-                os_log("\(self.label)UpdateBookParent for \(book.title) ignore because of no parentURL")
+                os_log("\(self.t)UpdateBookParent for \(book.title) ignore because of no parentURL")
             }
 
             return
@@ -110,7 +110,7 @@ extension DB {
         book.parent = parent
 
         if verbose {
-            os_log("\(self.label)UpdateBookParent for \(book.title) with \(parent?.title ?? "nil")")
+            os_log("\(self.t)UpdateBookParent for \(book.title) with \(parent?.title ?? "nil")")
         }
 
         do {

@@ -39,7 +39,7 @@ extension DBSynced {
     // MARK: Delete
     
     func deleteDevice(_ deviceData: DeviceData) {
-        os_log("\(self.label)Delete Device -> \(deviceData.name)")
+        os_log("\(self.t)Delete Device -> \(deviceData.name)")
         
         guard let dbItem = context.model(for: deviceData.id) as? DeviceData else {
             return

@@ -1,9 +1,11 @@
 import Foundation
 import OSLog
 
-class DiskiCloud: ObservableObject, Disk {
+class DiskiCloud: ObservableObject, Disk, SuperLog {
     static var label = "☁️ DiskiCloud::"
     static let cloudRoot = Config.cloudDocumentsDir
+    
+    let emoji = "☁️"
 
     // MARK: 磁盘的挂载目录
 
@@ -23,7 +25,6 @@ class DiskiCloud: ObservableObject, Disk {
     var cloudHandler = iCloudHandler()
     var bg = Config.bgQueue
     var query: ItemQuery
-    var label: String { "\(Logger.isMain)\(Self.label)" }
     var verbose = true
     var onUpdated: (_ items: DiskFileGroup) -> Void = { items in
         os_log("\(Logger.isMain)\(DiskiCloud.label)updated with items.count=\(items.count)")
@@ -237,7 +238,7 @@ extension DiskiCloud {
         ]).debounce(for: .seconds(0.2))
         for try await collection in result {
             
-            var message = "\(Logger.isMain)\(self.label)\(emoji) Watch(\(collection.items.count))"
+            var message = "\(self.t)\(emoji) Watch(\(collection.items.count))"
 
             if let first = collection.first, first.isDownloading == true {
                 message += " -> \(first.fileName ?? "-") -> \(String(format: "%.0f", first.downloadProgress))% ⏬⏬⏬"

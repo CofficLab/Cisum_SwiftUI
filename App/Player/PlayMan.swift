@@ -10,7 +10,7 @@ import SwiftUI
       对接系统媒体中心
  */
 
-class PlayMan: NSObject, ObservableObject {
+class PlayMan: NSObject, ObservableObject, SuperLog {
     // MARK: 成员
 
     static var label = "💃 PlayMan::"
@@ -21,7 +21,7 @@ class PlayMan: NSObject, ObservableObject {
     static var defaultImage = UIImage(imageLiteralResourceName: "DefaultAlbum")
     #endif
     
-    var label: String { Logger.isMain + Self.label }
+    let emoji = "💃"
     var audioWorker: AudioWorker
     var videoWorker: VideoWorker
     var verbose = false
@@ -99,7 +99,7 @@ class PlayMan: NSObject, ObservableObject {
             self.onStateChange(state)
             
             if state.isFinished {
-                os_log("\(self.label)播放完成，自动播放下一个")
+                os_log("\(self.t)播放完成，自动播放下一个")
                 self.next()
             }
         }
@@ -112,7 +112,7 @@ class PlayMan: NSObject, ObservableObject {
             self.onStateChange(state)
             
             if state.isFinished {
-                os_log("\(self.label)播放完成，自动播放下一个")
+                os_log("\(self.t)播放完成，自动播放下一个")
                 self.next()
             }
         }
@@ -153,7 +153,7 @@ extension PlayMan {
     // MARK: Play
     
     func play(_ asset: PlayAsset, reason: String) {
-        os_log("\(self.label)Play \(asset.fileName) (\(asset.isAudio() ? "Audio" : "Video")) 🐛 \(reason)")
+        os_log("\(self.t)Play \(asset.fileName) (\(asset.isAudio() ? "Audio" : "Video")) 🐛 \(reason)")
         
         if asset.isFolder() {
             guard let first = self.onGetChildren(asset).first else {
@@ -173,7 +173,7 @@ extension PlayMan {
     }
 
     func resume() {
-        os_log("\(self.label)Resume while current is \(self.state.des)")
+        os_log("\(self.t)Resume while current is \(self.state.des)")
         
         guard let asset = self.asset else {
             return
@@ -219,7 +219,7 @@ extension PlayMan {
         if let next = self.onGetNextOf(self.asset) {
             self.play(next, reason: "Next")
         } else {
-            os_log("\(self.label)Next of (\(self.asset?.title ?? "nil")) is nil, stop")
+            os_log("\(self.t)Next of (\(self.asset?.title ?? "nil")) is nil, stop")
             self.stop()
         }
     }
@@ -261,10 +261,10 @@ extension PlayMan {
         let image = asset?.getMediaCenterImage() ?? Self.defaultImage
         
         if verbose {
-            os_log("\(self.label)📱📱📱 Update -> \(self.state.des)")
-            os_log("\(self.label)📱📱📱 Update -> Title: \(title)")
-            os_log("\(self.label)📱📱📱 Update -> Duration: \(duration)")
-            os_log("\(self.label)📱📱📱 Update -> Playing: \(self.isPlaying)")
+            os_log("\(self.t)📱📱📱 Update -> \(self.state.des)")
+            os_log("\(self.t)📱📱📱 Update -> Title: \(title)")
+            os_log("\(self.t)📱📱📱 Update -> Duration: \(duration)")
+            os_log("\(self.t)📱📱📱 Update -> Playing: \(self.isPlaying)")
         }
 
         center.playbackState = isPlaying ? .playing : .paused
@@ -285,7 +285,7 @@ extension PlayMan {
 
         let like = asset?.like ?? false
         if verbose {
-            os_log("\(self.label)setPlayingInfo like -> \(like)")
+            os_log("\(self.t)setPlayingInfo like -> \(like)")
         }
         c.likeCommand.isActive = like
     }
@@ -311,14 +311,14 @@ extension PlayMan {
         }
 
         c.playCommand.addTarget { _ in
-            os_log("\(Logger.isMain)\(self.label)播放")
+            os_log("\(self.t)播放")
             self.resume()
 
             return .success
         }
 
         c.stopCommand.addTarget { _ in
-            os_log("\(Logger.isMain)\(self.label)停止")
+            os_log("\(self.t)停止")
 
             self.worker.stop()
 
@@ -328,7 +328,7 @@ extension PlayMan {
         // MARK: Like
         
         c.likeCommand.addTarget { event in
-            os_log("\(self.label)点击了喜欢按钮")
+            os_log("\(self.t)点击了喜欢按钮")
             
             self.toggleLike()
             
@@ -345,13 +345,13 @@ extension PlayMan {
         }
 
         c.changeRepeatModeCommand.addTarget { _ in
-            os_log("\(Logger.isMain)changeRepeatModeCommand")
+            os_log("\(self.t)changeRepeatModeCommand")
 
             return .success
         }
 
         c.changePlaybackPositionCommand.addTarget { e in
-            os_log("\(Logger.isMain)\(self.label)changePlaybackPositionCommand")
+            os_log("\(self.t)changePlaybackPositionCommand")
             guard let event = e as? MPChangePlaybackPositionCommandEvent else {
                 return .commandFailed
             }

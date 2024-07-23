@@ -62,7 +62,7 @@ extension DB {
 extension DB {
     func getChildren(_ url: URL, verbose: Bool = true) -> [Book] {
         if verbose {
-            os_log("\(self.label)GetChildren -> \(url.lastPathComponent)")
+            os_log("\(self.t)GetChildren -> \(url.lastPathComponent)")
         }
         
         do {

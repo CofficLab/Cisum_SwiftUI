@@ -7,7 +7,7 @@ extension DBSynced {
     
     func findSceneState(_ scene: DiskScene, reason: String, verbose: Bool = true) -> SceneState? {
         if verbose {
-            os_log("\(self.label)FindSceneState for \(scene.title) because of \(reason)")
+            os_log("\(self.t)FindSceneState for \(scene.title) because of \(reason)")
         }
         
         do {
@@ -26,7 +26,7 @@ extension DBSynced {
     // MARK: Update
     
     func updateSceneCurrent(_ scene: DiskScene, currentURL: URL?) {
-        os_log("\(self.label)UpdateSceneCurrent: \(scene.title) -> \(currentURL?.lastPathComponent ?? "")")
+        os_log("\(self.t)UpdateSceneCurrent: \(scene.title) -> \(currentURL?.lastPathComponent ?? "")")
         if let state = self.findSceneState(scene, reason: "UpdateSceneCurrent") {
             state.currentURL = currentURL
         } else {

@@ -5,7 +5,7 @@ import SwiftUI
 
 extension DB {
     var labelForBookSync: String {
-        "\(label)📖📖📖"
+        "\(t)📖📖📖"
     }
 
     func bookSync(_ group: DiskFileGroup, verbose: Bool = true) {
@@ -88,7 +88,7 @@ extension DB {
 
     func bookSyncWithUpdatedItems(_ metas: DiskFileGroup, verbose: Bool = false) {
         if verbose {
-            os_log("\(self.label)SyncWithUpdatedItems with count=\(metas.count)")
+            os_log("\(self.t)SyncWithUpdatedItems with count=\(metas.count)")
         }
         
         // 如果url属性为unique，数据库已存在相同url的记录，再执行context.insert，发现已存在的被替换成新的了

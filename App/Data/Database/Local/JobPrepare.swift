@@ -3,7 +3,7 @@ import OSLog
 import SwiftData
 
 extension DB {
-    var labelPrepare: String { "\(self.label)⏬⏬⏬ Prepare" }
+    var labelPrepare: String { "\(self.t)⏬⏬⏬ Prepare" }
     
     func prepareJob() {
         os_log("\(self.labelPrepare) 🚀🚀🚀")
