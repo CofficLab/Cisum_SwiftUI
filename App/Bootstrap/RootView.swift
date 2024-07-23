@@ -38,9 +38,7 @@ struct RootView: View, SuperLog {
             .ignoresSafeArea()
             .toolbar(content: {
                 ToolbarItem(placement: .navigation, content: {
-                    if Config.isDebug {
-                        BtnScene()
-                    }
+                    BtnScene()
                 })
 
                 // MARK: 工具栏
