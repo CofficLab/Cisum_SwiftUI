@@ -4,8 +4,8 @@ import SwiftData
 import SwiftUI
 
 struct StateView: View {
-    @EnvironmentObject var app: AppManager
-    @EnvironmentObject var data: DataManager
+    @EnvironmentObject var app: AppProvider
+    @EnvironmentObject var data: DataProvider
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var db: DB
     @Environment(\.modelContext) private var modelContext
@@ -15,7 +15,7 @@ struct StateView: View {
 
     @State var networkOK = true
 
-    var e = EventManager()
+    var e = EventProvider()
     var error: Error? { app.error }
     var taskCount: Int { tasks.count }
     var showCopyMessage: Bool { tasks.count > 0 }

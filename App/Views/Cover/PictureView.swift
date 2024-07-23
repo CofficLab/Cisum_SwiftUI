@@ -2,8 +2,8 @@ import OSLog
 import SwiftUI
 
 struct PictureView: View {
-    @EnvironmentObject var app: AppManager
-    @EnvironmentObject var data: DataManager
+    @EnvironmentObject var app: AppProvider
+    @EnvironmentObject var data: DataProvider
     
     static var label = "🐰 AlbumView::"
     

@@ -5,7 +5,7 @@ import SwiftUI
 struct AudioAppView: View {
     static var label = "🖥️ HomeView::"
     
-    @EnvironmentObject var appManager: AppManager
+    @EnvironmentObject var appManager: AppProvider
 
     @State private var databaseViewHeight: CGFloat = 300
 

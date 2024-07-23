@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct DirSetting: View {
-    @EnvironmentObject var dataManager: DataManager
+    @EnvironmentObject var dataManager: DataProvider
     
     @State var diskSize: String?
 

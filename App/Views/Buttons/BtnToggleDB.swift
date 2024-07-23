@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct BtnToggleDB: View {
-    @EnvironmentObject var app: AppManager
+    @EnvironmentObject var app: AppProvider
 
     var autoResize = false
 

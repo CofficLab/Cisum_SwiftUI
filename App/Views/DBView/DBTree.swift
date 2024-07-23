@@ -5,8 +5,8 @@ import SwiftUI
 struct DBTree: View {
     static var label = "📬 DBTree::"
 
-    @EnvironmentObject var appManager: AppManager
-    @EnvironmentObject var dataManager: DataManager
+    @EnvironmentObject var appManager: AppProvider
+    @EnvironmentObject var dataManager: DataProvider
 
     @Binding var selection: DiskFile?
     @Binding var icon: String

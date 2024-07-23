@@ -5,7 +5,7 @@ import MediaPlayer
 import OSLog
 import SwiftUI
 
-class EventManager: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLog {
+class EventProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLog {
     static var label = "🍋 EventManager::"
     
     var n = NotificationCenter.default

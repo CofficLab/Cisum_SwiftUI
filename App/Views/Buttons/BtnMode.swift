@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct BtnMode: View {
-    @EnvironmentObject var app: AppManager
+    @EnvironmentObject var app: AppProvider
     @EnvironmentObject var playMan: PlayMan
 
     var autoResize = false

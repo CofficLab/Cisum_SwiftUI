@@ -2,7 +2,7 @@ import OSLog
 import SwiftUI
 
 struct BtnMore: View {
-    @EnvironmentObject var appManager: AppManager
+    @EnvironmentObject var appManager: AppProvider
     @EnvironmentObject var playMan: PlayMan
 
     @State var isDownloaded = true

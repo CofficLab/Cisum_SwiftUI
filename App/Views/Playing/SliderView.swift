@@ -6,8 +6,8 @@ struct SliderView: View {
     static var label = "👀 SliderView::"
     
     @EnvironmentObject var playMan: PlayMan
-    @EnvironmentObject var app: AppManager
-    @EnvironmentObject var data: DataManager
+    @EnvironmentObject var app: AppProvider
+    @EnvironmentObject var data: DataProvider
 
     @State private var value: Double = 0
     @State private var isEditing: Bool = false

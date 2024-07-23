@@ -4,8 +4,8 @@ import SwiftUI
 struct RootView: View, SuperLog {
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var videoMan: VideoWorker
-    @EnvironmentObject var app: AppManager
-    @EnvironmentObject var data: DataManager
+    @EnvironmentObject var app: AppProvider
+    @EnvironmentObject var data: DataProvider
     @EnvironmentObject var dbLocal: DB
 
     let emoji = "🌳"

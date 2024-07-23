@@ -27,7 +27,7 @@ extension DB {
     func emitCoverUpdated(_ audio: Audio) {
         DispatchQueue.main.async {
             os_log("\(Logger.isMain)\(Self.label) -> \(audio.title) CoverUpdated 🍋🍋🍋")
-            EventManager().emitAudioUpdate(audio)
+            EventProvider().emitAudioUpdate(audio)
         }
     }
 

@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct BottomViewType: View {
-    @EnvironmentObject var app: AppManager
+    @EnvironmentObject var app: AppProvider
     
     var body: some View {
         ZStack {

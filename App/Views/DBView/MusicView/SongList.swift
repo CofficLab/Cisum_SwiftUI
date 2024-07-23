@@ -14,8 +14,8 @@ import SwiftUI
 struct SongList: View {
     static var label = "📬 DBList::"
 
-    @EnvironmentObject var app: AppManager
-    @EnvironmentObject var data: DataManager
+    @EnvironmentObject var app: AppProvider
+    @EnvironmentObject var data: DataProvider
     @EnvironmentObject var playMan: PlayMan
     @Environment(\.modelContext) var modelContext
 

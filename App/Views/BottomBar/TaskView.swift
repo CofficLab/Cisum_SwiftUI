@@ -5,8 +5,8 @@ import SwiftUI
 struct TaskView: View {
     static var label = "📬 DBTaskView::"
 
-    @EnvironmentObject var app: AppManager
-    @EnvironmentObject var dataManager: DataManager
+    @EnvironmentObject var app: AppProvider
+    @EnvironmentObject var dataManager: DataProvider
     @Environment(\.modelContext) var context
 
     @State var selection: String?

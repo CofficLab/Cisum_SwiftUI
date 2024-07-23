@@ -2,7 +2,7 @@ import SwiftData
 import SwiftUI
 
 struct StateCopy: View {
-    @EnvironmentObject var dataManager: DataManager
+    @EnvironmentObject var dataManager: DataProvider
 
     @Query(sort: \CopyTask.createdAt, animation: .default) var tasks: [CopyTask]
 

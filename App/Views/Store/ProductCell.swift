@@ -3,7 +3,7 @@ import StoreKit
 import SwiftUI
 
 struct ProductCell: View {
-    @EnvironmentObject var store: StoreManager
+    @EnvironmentObject var store: StoreProvider
     @State var isPurchased: Bool = false
     @State var errorTitle = ""
     @State var isShowingError: Bool = false

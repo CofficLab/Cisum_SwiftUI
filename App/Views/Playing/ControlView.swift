@@ -2,8 +2,8 @@ import SwiftData
 import SwiftUI
 
 struct ControlView: View {
-    @EnvironmentObject var appManager: AppManager
-    @EnvironmentObject var data: DataManager
+    @EnvironmentObject var appManager: AppProvider
+    @EnvironmentObject var data: DataProvider
     @EnvironmentObject var playMan: PlayMan
 
     @State var showHeroView = true

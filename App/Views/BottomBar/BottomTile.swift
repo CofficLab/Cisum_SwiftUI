@@ -2,7 +2,7 @@ import OSLog
 import SwiftUI
 
 struct BottomTile: View {
-    @EnvironmentObject var appManager: AppManager
+    @EnvironmentObject var appManager: AppProvider
 
     @State private var hovered: Bool = false
     @State private var pressed: Bool = false

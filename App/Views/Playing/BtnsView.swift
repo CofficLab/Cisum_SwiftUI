@@ -1,8 +1,8 @@
 import SwiftUI
 
 struct BtnsView: View {
-    @EnvironmentObject var app: AppManager
-    @EnvironmentObject var data: DataManager
+    @EnvironmentObject var app: AppProvider
+    @EnvironmentObject var data: DataProvider
     
     var body: some View {
         GeometryReader { geo in

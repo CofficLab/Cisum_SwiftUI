@@ -2,7 +2,7 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-class DataManager: ObservableObject, SuperLog {
+class DataProvider: ObservableObject, SuperLog {
     static var label = "💼 DataManager::"
 
     @Published var appScene: DiskScene
@@ -129,7 +129,7 @@ class DataManager: ObservableObject, SuperLog {
 
 // MARK: Download
 
-extension DataManager {
+extension DataProvider {
     func downloadNextBatch(_ url: URL, count: Int = 6, reason: String, verbose: Bool = false) {
         if verbose {
             os_log("\(self.t)DownloadNextBatch(\(self.appScene.title))")
@@ -173,7 +173,7 @@ extension DataManager {
 
 // MARK: Migrate
 
-extension DataManager {
+extension DataProvider {
     func enableiCloud() throws {
         os_log("\(self.t)Enable iCloud")
         let disk = DiskiCloud.make(appScene.folderName)
@@ -251,7 +251,7 @@ extension DataManager {
 
 // MARK: FirstPlayAsset
 
-extension DataManager {
+extension DataProvider {
     func first() -> PlayAsset? {
         switch appScene {
         case .Music:
@@ -264,7 +264,7 @@ extension DataManager {
 
 // MARK: Book
 
-extension DataManager {
+extension DataProvider {
     func findBookState(_ book: Book, verbose: Bool = false) -> BookState? {
         if verbose {
             os_log("\(self.t)FindState for \(book.title)")

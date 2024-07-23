@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct BtnAdd: View {
-    @EnvironmentObject var appManager: AppManager
+    @EnvironmentObject var appManager: AppProvider
 
     var body: some View {
         Button("添加", systemImage: "plus.circle") {

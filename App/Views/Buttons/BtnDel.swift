@@ -1,9 +1,9 @@
 import SwiftUI
 
 struct BtnDel: View {
-    @EnvironmentObject var appManager: AppManager
+    @EnvironmentObject var appManager: AppProvider
     @EnvironmentObject var playMan: PlayMan
-    @EnvironmentObject var dataManager: DataManager
+    @EnvironmentObject var dataManager: DataProvider
 
     var disk: any Disk { dataManager.disk }
     var assets: [PlayAsset]

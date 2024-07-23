@@ -5,7 +5,7 @@ import MediaPlayer
 import OSLog
 import SwiftUI
 
-class AppManager: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLog {
+class AppProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLog {
     @Published var showAlert: Bool = false
     @Published var showDB: Bool = Config.showDB
     @Published var showCopying: Bool = false

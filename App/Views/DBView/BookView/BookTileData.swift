@@ -5,7 +5,7 @@ import SwiftUI
  展示从数据库读取的图书数据
  */
 struct BookTileData: View {
-    @EnvironmentObject var data: DataManager
+    @EnvironmentObject var data: DataProvider
     @EnvironmentObject var playMan: PlayMan
 
     @State var state: BookState? = nil

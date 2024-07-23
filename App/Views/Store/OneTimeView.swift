@@ -3,7 +3,7 @@ import StoreKit
 import OSLog
 
 struct OneTimeView: View {
-    @EnvironmentObject var store: StoreManager
+    @EnvironmentObject var store: StoreProvider
     
     private var products: [Product] {
         store.nonRenewables

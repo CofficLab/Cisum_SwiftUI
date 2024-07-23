@@ -5,8 +5,8 @@ import SwiftUI
 struct DBViewMenuTile: View {
     static var label = "📬 DBTreeView::"
 
-    @EnvironmentObject var app: AppManager
-    @EnvironmentObject var dataManager: DataManager
+    @EnvironmentObject var app: AppProvider
+    @EnvironmentObject var dataManager: DataProvider
     @EnvironmentObject var playMan: PlayMan
 
     @State var selection: DiskFile?

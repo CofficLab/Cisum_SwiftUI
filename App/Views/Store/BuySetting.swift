@@ -65,6 +65,6 @@ struct BuySetting: View {
 
 #Preview("Buy") {
     BuyView()
-        .environmentObject(StoreManager())
+        .environmentObject(StoreProvider())
         .frame(height: 800)
 }

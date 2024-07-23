@@ -3,7 +3,7 @@ import StoreKit
 import SwiftUI
 
 struct BtnBuy: View {
-    @EnvironmentObject var app: AppManager
+    @EnvironmentObject var app: AppProvider
     
     @State var popover: Bool = false
     @State var proColor: Bool = true

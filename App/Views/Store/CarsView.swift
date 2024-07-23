@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct CarsView: View {
-    @EnvironmentObject var store: StoreManager
+    @EnvironmentObject var store: StoreProvider
     
     var body: some View {
         Section("小汽车") {

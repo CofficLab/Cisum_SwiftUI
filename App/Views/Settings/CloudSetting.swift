@@ -2,8 +2,8 @@ import OSLog
 import SwiftUI
 
 struct CloudSetting: View {
-    @EnvironmentObject var app: AppManager
-    @EnvironmentObject var dataManager: DataManager
+    @EnvironmentObject var app: AppProvider
+    @EnvironmentObject var dataManager: DataProvider
 
     @State private var iCloudLogged: Bool = false
     @State private var iCloudEnabled: Bool = false

@@ -3,8 +3,8 @@ import StoreKit
 import SwiftUI
 
 struct NonRenewables: View {
-    @EnvironmentObject var store: StoreManager
-    @EnvironmentObject var app: AppManager
+    @EnvironmentObject var store: StoreProvider
+    @EnvironmentObject var app: AppProvider
 
     @State private var nonRenewables: [Product] = []
     @State private var refreshing = false

@@ -1,8 +1,8 @@
 import SwiftUI
 
 struct DBTips: View {
-    @EnvironmentObject var app: AppManager
-    @EnvironmentObject var data: DataManager
+    @EnvironmentObject var app: AppProvider
+    @EnvironmentObject var data: DataProvider
 
     var supportedFormats: String {
         Config.supportedExtensions.joined(separator: ",")

@@ -5,8 +5,8 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct DBView: View {
-    @EnvironmentObject var app: AppManager
-    @EnvironmentObject var data: DataManager
+    @EnvironmentObject var app: AppProvider
+    @EnvironmentObject var data: DataProvider
     @EnvironmentObject var db: DB
 
     @State var treeView = false

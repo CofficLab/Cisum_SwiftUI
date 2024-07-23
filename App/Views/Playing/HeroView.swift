@@ -2,7 +2,7 @@ import SwiftUI
 import OSLog
 
 struct HeroView: View {
-    @EnvironmentObject var app: AppManager
+    @EnvironmentObject var app: AppProvider
     @EnvironmentObject var playMan: PlayMan
 
     @State var topAlbumHeight: CGFloat = 0

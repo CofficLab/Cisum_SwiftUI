@@ -105,7 +105,7 @@ extension DB {
                 os_log(.error, "\(e.localizedDescription)")
             }
 
-            EventManager().emitAudioUpdate(dbAudio)
+            EventProvider().emitAudioUpdate(dbAudio)
         }
     }
 
@@ -118,7 +118,7 @@ extension DB {
                 os_log(.error, "\(e.localizedDescription)")
             }
 
-            EventManager().emitAudioUpdate(dbAudio)
+            EventProvider().emitAudioUpdate(dbAudio)
         }
     }
 
@@ -131,7 +131,7 @@ extension DB {
                 os_log(.error, "\(e.localizedDescription)")
             }
 
-            EventManager().emitAudioUpdate(dbAudio)
+            EventProvider().emitAudioUpdate(dbAudio)
         }
     }
 }

@@ -2,7 +2,7 @@ import OSLog
 import SwiftUI
 
 struct MigrateView: View {
-    @EnvironmentObject var appManager: AppManager
+    @EnvironmentObject var appManager: AppProvider
 
     var body: some View {
         ZStack {

@@ -5,8 +5,8 @@ import SwiftUI
 struct DBViewBook: View {
     static var label = "📬 DBList::"
 
-    @EnvironmentObject var appManager: AppManager
-    @EnvironmentObject var data: DataManager
+    @EnvironmentObject var appManager: AppProvider
+    @EnvironmentObject var data: DataProvider
 
     @State var selection: Audio? = nil
     @State var syncingTotal: Int = 0

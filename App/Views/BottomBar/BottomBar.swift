@@ -2,8 +2,8 @@ import SwiftUI
 import SwiftData
 
 struct BottomBar: View {
-    @EnvironmentObject var dataManager: DataManager
-    @EnvironmentObject var app: AppManager
+    @EnvironmentObject var dataManager: DataProvider
+    @EnvironmentObject var app: AppProvider
     @Environment(\.modelContext) var context
 
     @Query(sort: \CopyTask.createdAt, animation: .default) var tasks: [CopyTask]

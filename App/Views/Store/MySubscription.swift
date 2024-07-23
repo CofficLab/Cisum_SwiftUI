@@ -3,8 +3,8 @@ import StoreKit
 import SwiftUI
 
 struct MySubscription: View {
-    @EnvironmentObject var store: StoreManager
-    @EnvironmentObject var app: AppManager
+    @EnvironmentObject var store: StoreProvider
+    @EnvironmentObject var app: AppProvider
 
     @State private var error: Error? = nil
     @State private var refreshing: Bool = false

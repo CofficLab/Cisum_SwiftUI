@@ -3,8 +3,8 @@ import StoreKit
 import SwiftUI
 
 struct AllSubscriptions: View {
-    @EnvironmentObject var store: StoreManager
-    @EnvironmentObject var app: AppManager
+    @EnvironmentObject var store: StoreProvider
+    @EnvironmentObject var app: AppProvider
     @Environment(\.colorScheme) var colorScheme: ColorScheme
 
     @State private var subscriptions: [Product] = []

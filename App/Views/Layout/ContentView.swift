@@ -2,8 +2,8 @@ import OSLog
 import SwiftUI
 
 struct ContentView: View {
-    @EnvironmentObject var app: AppManager
-    @EnvironmentObject var data: DataManager
+    @EnvironmentObject var app: AppProvider
+    @EnvironmentObject var data: DataProvider
 
     var body: some View {
         ZStack {
