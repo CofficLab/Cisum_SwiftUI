@@ -162,7 +162,7 @@
 		F5511BC52C2962AC00400900 /* BottomViewType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5511BC42C2962AC00400900 /* BottomViewType.swift */; };
 		F5511BC72C29636500400900 /* BottomCopyState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5511BC62C29636500400900 /* BottomCopyState.swift */; };
 		F5511BCA2C2BACC000400900 /* TopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5511BC92C2BACC000400900 /* TopView.swift */; };
-		F55A48D62C4F5AD8004764C8 /* SuperLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = F55A48D52C4F5AD8004764C8 /* SuperLog.swift */; };
+		F5640CB92C4FBD2F00AFD522 /* SuperLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5640CB82C4FBD2F00AFD522 /* SuperLog.swift */; };
 		F5675C332C22BFD900326664 /* BottomBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C322C22BFD900326664 /* BottomBar.swift */; };
 		F5675C352C22CB3C00326664 /* DBViewTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C342C22CB3C00326664 /* DBViewTree.swift */; };
 		F5675C3A2C2404D700326664 /* FileBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C392C2404D700326664 /* FileBox.swift */; };
@@ -347,7 +347,7 @@
 		F5511BC42C2962AC00400900 /* BottomViewType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomViewType.swift; sourceTree = "<group>"; };
 		F5511BC62C29636500400900 /* BottomCopyState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomCopyState.swift; sourceTree = "<group>"; };
 		F5511BC92C2BACC000400900 /* TopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopView.swift; sourceTree = "<group>"; };
-		F55A48D52C4F5AD8004764C8 /* SuperLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperLog.swift; sourceTree = "<group>"; };
+		F5640CB82C4FBD2F00AFD522 /* SuperLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperLog.swift; sourceTree = "<group>"; };
 		F5675C322C22BFD900326664 /* BottomBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomBar.swift; sourceTree = "<group>"; };
 		F5675C342C22CB3C00326664 /* DBViewTree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBViewTree.swift; sourceTree = "<group>"; };
 		F5675C392C2404D700326664 /* FileBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileBox.swift; sourceTree = "<group>"; };
@@ -623,7 +623,7 @@
 			children = (
 				0BBA42112ABC116300C0B977 /* Bootstrap */,
 				0BEBCBAC2B352A2D00F2116E /* Config */,
-				F55A48BF2C4F5A75004764C8 /* Contract */,
+				F5640CB72C4FBD1B00AFD522 /* Contract */,
 				0B22158A2BB66D0C000EB36F /* Database */,
 				0B8113B22C2C42EF007CA124 /* Migrate */,
 				0B1D5A652AB3025F0010DDF2 /* Model */,
@@ -757,15 +757,6 @@
 			path = Top;
 			sourceTree = "<group>";
 		};
-		F55A48BF2C4F5A75004764C8 /* Contract */ = {
-			isa = PBXGroup;
-			children = (
-				F55A48D52C4F5AD8004764C8 /* SuperLog.swift */,
-			);
-			name = Contract;
-			path = ../../Kuaiyizhi_SwiftUI/App/Contract;
-			sourceTree = "<group>";
-		};
 		F55A48D72C4F6519004764C8 /* Local */ = {
 			isa = PBXGroup;
 			children = (
@@ -775,6 +766,14 @@
 				0B1136602BF4CF3000A71FE1 /* Cover.swift */,
 			);
 			path = Local;
+			sourceTree = "<group>";
+		};
+		F5640CB72C4FBD1B00AFD522 /* Contract */ = {
+			isa = PBXGroup;
+			children = (
+				F5640CB82C4FBD2F00AFD522 /* SuperLog.swift */,
+			);
+			path = Contract;
 			sourceTree = "<group>";
 		};
 		F5675C382C2404B000326664 /* File */ = {
@@ -1082,7 +1081,7 @@
 				0B19D9562C062F400057D8DB /* ProExt.swift in Sources */,
 				0BE6959D2BFE3DCC00CEFFEB /* CarsView.swift in Sources */,
 				0BBA42252AC1813D00C0B977 /* BtnDel.swift in Sources */,
-				F55A48D62C4F5AD8004764C8 /* SuperLog.swift in Sources */,
+				F5640CB92C4FBD2F00AFD522 /* SuperLog.swift in Sources */,
 				0BB9D2442C32E3E60027DDAD /* BtnChapters.swift in Sources */,
 				0B8C36AC2BEC6E0F00C47567 /* StateExt.swift in Sources */,
 				F5B64D042C32546F00DE55AD /* SyncingView.swift in Sources */,
