@@ -27,9 +27,9 @@ extension SuperLog {
         Thread.current.name ?? "-"
     }
     
-    var className: String {
-        Thread.current.className
-    }
+//    var className: String {
+//        Thread.current.className
+//    }
     
 //    func logInfo(_ message: String, hero: String? = nil) {
 //        Task {
