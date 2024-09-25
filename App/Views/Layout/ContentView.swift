@@ -5,6 +5,7 @@ import MagicKit
 struct ContentView: View, SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var data: DataProvider
+    @EnvironmentObject var p: PluginProvider
 
     var body: some View {
         ZStack {
@@ -13,7 +14,7 @@ struct ContentView: View, SuperLog, SuperThread {
                     TopView()
                 }
 
-                AudioAppView()
+                p.layout
             }
 
             if !app.flashMessage.isEmpty {

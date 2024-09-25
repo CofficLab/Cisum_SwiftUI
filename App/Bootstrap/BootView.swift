@@ -37,6 +37,7 @@ struct BootView<Content>: View where Content: View {
                 .environmentObject(PlayMan())
                 .environmentObject(AppProvider())
                 .environmentObject(StoreProvider())
+                .environmentObject(PluginProvider())
                 .environmentObject(dataManager)
                 .environmentObject(DB(Config.getContainer, reason: "BootView"))
                 .environmentObject(DBSynced(Config.getSyncedContainer))
