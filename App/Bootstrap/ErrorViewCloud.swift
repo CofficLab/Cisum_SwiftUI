@@ -1,4 +1,5 @@
 import SwiftUI
+import MagicKit
 
 struct ErrorViewCloud: View {
     var body: some View {

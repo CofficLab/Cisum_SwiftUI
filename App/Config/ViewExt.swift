@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import MagicKit
 
 extension Config {
     // MARK: Root Background

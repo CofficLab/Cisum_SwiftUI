@@ -1,5 +1,6 @@
 import OSLog
 import SwiftUI
+import MagicKit
 
 struct PictureView: View {
     @EnvironmentObject var app: AppProvider

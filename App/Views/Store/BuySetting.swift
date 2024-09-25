@@ -1,6 +1,7 @@
 import OSLog
 import StoreKit
 import SwiftUI
+import MagicKit
 
 struct BuySetting: View {
     @Environment(\.colorScheme) var colorScheme: ColorScheme

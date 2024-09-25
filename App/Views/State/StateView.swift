@@ -2,6 +2,7 @@ import Network
 import OSLog
 import SwiftData
 import SwiftUI
+import MagicKit
 
 struct StateView: View {
     @EnvironmentObject var app: AppProvider

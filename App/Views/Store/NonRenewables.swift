@@ -1,6 +1,7 @@
 import OSLog
 import StoreKit
 import SwiftUI
+import MagicKit
 
 struct NonRenewables: View {
     @EnvironmentObject var store: StoreProvider

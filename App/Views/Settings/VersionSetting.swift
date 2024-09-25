@@ -1,4 +1,5 @@
 import SwiftUI
+import MagicKit
 
 struct VersionSetting: View {
     var body: some View {

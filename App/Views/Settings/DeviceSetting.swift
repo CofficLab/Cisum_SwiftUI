@@ -1,6 +1,7 @@
 import SwiftUI
 import OSLog
 import SwiftData
+import MagicKit
 
 struct DeviceSetting: View {
     @Environment(\.modelContext) private var modelContext

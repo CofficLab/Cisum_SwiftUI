@@ -1,4 +1,5 @@
 import SwiftUI
+import MagicKit
 
 struct CardView<Content, Background>: View where Content: View, Background: View {
     private let content: Content
@@ -23,7 +24,7 @@ struct CardView<Content, Background>: View where Content: View, Background: View
 
 #Preview {
     ZStack {
-        BackgroundView()
+        BackgroundView.type2
 
         VStack {
             CardView(background: BackgroundView.type1) {

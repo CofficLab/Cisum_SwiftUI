@@ -1,5 +1,6 @@
 import OSLog
 import SwiftUI
+import MagicKit
 
 struct MigrateView: View {
     @EnvironmentObject var appManager: AppProvider

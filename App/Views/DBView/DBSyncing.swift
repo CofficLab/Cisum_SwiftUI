@@ -1,4 +1,5 @@
 import SwiftUI
+import MagicKit
 
 struct DBSyncing: View {
     var body: some View {

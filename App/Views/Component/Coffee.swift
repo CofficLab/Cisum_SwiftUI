@@ -1,4 +1,5 @@
 import SwiftUI
+import MagicKit
 
 struct Coffee: View {
     @State private var rotationAngle: Double = 0

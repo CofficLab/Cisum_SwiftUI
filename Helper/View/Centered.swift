@@ -1,4 +1,5 @@
 import SwiftUI
+import MagicKit
 
 struct Centered<Content>: View where Content: View {
     private let content: Content
@@ -24,7 +25,7 @@ struct Centered<Content>: View where Content: View {
 
 #Preview {
     ZStack {
-        BackgroundView()
+        BackgroundView.type2
 
         VStack {
             Spacer()

@@ -1,3 +1,11 @@
+//
+//  DeviceHelper.swift
+//  Cisum
+//
+//  Created by Angel on 2024/9/25.
+//
+
+
 #if os(macOS)
 import AppKit
 #elseif os(iOS) || os(visionOS)

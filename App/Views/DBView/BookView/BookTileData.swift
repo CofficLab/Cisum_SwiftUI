@@ -1,5 +1,6 @@
 import OSLog
 import SwiftUI
+import MagicKit
 
 /**
  展示从数据库读取的图书数据

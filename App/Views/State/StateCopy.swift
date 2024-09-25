@@ -1,5 +1,6 @@
 import SwiftData
 import SwiftUI
+import MagicKit
 
 struct StateCopy: View {
     @EnvironmentObject var dataManager: DataProvider

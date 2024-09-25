@@ -1,5 +1,6 @@
 import OSLog
 import SwiftUI
+import MagicKit
 
 struct CloudSetting: View {
     @EnvironmentObject var app: AppProvider

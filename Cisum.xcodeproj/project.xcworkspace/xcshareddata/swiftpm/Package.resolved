@@ -1,6 +1,15 @@
 {
-  "originHash" : "9254d8ba71e5c8336e01ab745dc7b44b6ffc254f2c838f9fe0f93cca4c4d3647",
+  "originHash" : "9bb0a96b273ebd0d740dfde5041a4f5b9ae11e0dbf50f135f473092d5e97fabf",
   "pins" : [
+    {
+      "identity" : "magickit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/CofficLab/MagicKit",
+      "state" : {
+        "branch" : "main",
+        "revision" : "158fd5ff30cf47546f5d433600b86d6d6815b0c4"
+      }
+    },
     {
       "identity" : "swift-async-algorithms",
       "kind" : "remoteSourceControl",

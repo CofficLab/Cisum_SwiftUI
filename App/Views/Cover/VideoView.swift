@@ -1,6 +1,7 @@
 import AVKit
 import OSLog
 import SwiftUI
+import MagicKit
 
 struct VideoView: View {
     @EnvironmentObject var app: AppProvider

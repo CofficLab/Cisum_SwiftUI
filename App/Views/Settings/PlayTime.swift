@@ -1,4 +1,5 @@
 import SwiftUI
+import MagicKit
 
 struct PlayTime: View {
     @State var playTime = 0

@@ -1,4 +1,5 @@
 import SwiftUI
+import MagicKit
 
 struct DirSetting: View {
     @EnvironmentObject var dataManager: DataProvider

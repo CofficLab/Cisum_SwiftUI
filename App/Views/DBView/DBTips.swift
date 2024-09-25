@@ -1,4 +1,5 @@
 import SwiftUI
+import MagicKit
 
 struct DBTips: View {
     @EnvironmentObject var app: AppProvider

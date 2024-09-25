@@ -1,6 +1,7 @@
 import Foundation
 import OSLog
 import SwiftData
+import MagicKit
 
 extension DBSynced {
     func insertDeviceData(deviceId: String) {

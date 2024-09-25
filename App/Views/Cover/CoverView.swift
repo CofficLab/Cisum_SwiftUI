@@ -1,5 +1,6 @@
 import OSLog
 import SwiftUI
+import MagicKit
 
 struct CoverView: View {
     @EnvironmentObject var app: AppProvider

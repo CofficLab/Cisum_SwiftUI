@@ -1,4 +1,5 @@
 import SwiftUI
+import MagicKit
 
 struct CoverDirSetting: View {
     var body: some View {

@@ -1,4 +1,5 @@
 import SwiftUI
+import MagicKit
 
 /**
  展示从磁盘读取的图书数据

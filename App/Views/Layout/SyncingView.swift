@@ -1,4 +1,5 @@
 import OSLog
+import MagicKit
 import SwiftUI
 
 struct SyncingView: View {
