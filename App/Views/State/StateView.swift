@@ -15,7 +15,6 @@ struct StateView: View {
 
     @State var networkOK = true
 
-    var e = EventProvider()
     var error: Error? { app.error }
     var taskCount: Int { tasks.count }
     var showCopyMessage: Bool { tasks.count > 0 }

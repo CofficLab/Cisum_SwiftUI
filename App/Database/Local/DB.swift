@@ -3,7 +3,7 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-actor DB: ModelActor, ObservableObject, SuperLog {
+actor DB: ModelActor, ObservableObject, SuperLog, SuperEvent {
     
     static let label = "📦 DB::"
     let emoji = "🎁"
