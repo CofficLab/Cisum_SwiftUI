@@ -124,21 +124,21 @@ struct BookTileData: View {
     }
 
     func findState(verbose: Bool = false) {
-        backgroundQueue.async {
-            if verbose {
-                os_log("\(label)FindState for \(book.title)")
-            }
-
-            if let state = data.findBookState(book) {
-                mainQueue.async {
-                    self.state = state
-                }
-            } else {
-                if verbose {
-                    os_log("\(label)\(book.title) 无上次播放")
-                }
-            }
-        }
+//        backgroundQueue.async {
+//            if verbose {
+//                os_log("\(label)FindState for \(book.title)")
+//            }
+//
+//            if let state = data.findBookState(book) {
+//                mainQueue.async {
+//                    self.state = state
+//                }
+//            } else {
+//                if verbose {
+//                    os_log("\(label)\(book.title) 无上次播放")
+//                }
+//            }
+//        }
     }
     
     func updateCover() {

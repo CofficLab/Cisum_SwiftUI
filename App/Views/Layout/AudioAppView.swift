@@ -4,7 +4,7 @@ import SwiftUI
 
 struct AudioAppView: View {
     static var label = "🖥️ HomeView::"
-    
+
     @EnvironmentObject var appManager: AppProvider
 
     @State private var databaseViewHeight: CGFloat = 300
@@ -18,8 +18,8 @@ struct AudioAppView: View {
     var controlViewHeightMin = Config.controlViewMinHeight
     var databaseViewHeightMin = Config.databaseViewHeightMin
     var verbose = false
-    var label: String { "\(Logger.isMain)\(Self.label) "}
-    
+    var label: String { "\(Logger.isMain)\(Self.label) " }
+
     init() {
         if verbose {
             os_log("\(Logger.isMain)\(Self.label)初始化")
@@ -28,47 +28,17 @@ struct AudioAppView: View {
 
     var body: some View {
         GeometryReader { geo in
-            VStack(spacing: 0) {                
+            VStack(spacing: 0) {
                 ControlView()
                     .frame(height: showDB ? Config.controlViewMinHeight : geo.size.height)
 
                 if showDB {
-                    TabView(selection: $tab) {
-                        DBView()
-                            .tag("DB")
-                            .tabItem {
-                                Label("仓库", systemImage: "music.note.list")
-                            }
-                        
-                        SettingView()
-                            .tag("Setting")
-                            .tabItem {
-                                Label("设置", systemImage: "gear")
-                            }
-                        
-                        StoreView()
-                            .tag("Store")
-                            .tabItem {
-                                Label("订阅", systemImage: "crown")
-                            }
-                        
-                        if Config.debug {
-                            DBViewNavigation()
-                                .tag("Testing")
-                                .tabItem {
-                                    Label("测试", systemImage: "testtube.2")
-                                }
-                        }
+                    if #available(macOS 15.0, *) {
+                        getTabView()
+                            .tabViewStyle(GroupedTabViewStyle())
+                    } else {
+                        getTabView()
                     }
-                    .frame(maxHeight: .infinity)
-                    #if os(macOS)
-                    .padding(.top, 2)
-                    #endif
-                    .background(.background)
-                }
-                
-                if tab == "DB" && Config.isDesktop {
-                    BottomBar()
                 }
             }
             .onChange(of: showDB) {
@@ -108,6 +78,41 @@ struct AudioAppView: View {
             }
         }
     }
+
+    func getTabView() -> some View {
+        TabView(selection: $tab) {
+            DBView()
+                .tag("DB")
+                .tabItem {
+                    Label("仓库", systemImage: "music.note.list")
+                }
+
+            SettingView()
+                .tag("Setting")
+                .tabItem {
+                    Label("设置", systemImage: "gear")
+                }
+
+            StoreView()
+                .tag("Store")
+                .tabItem {
+                    Label("订阅", systemImage: "crown")
+                }
+
+            if Config.debug {
+                DBViewNavigation()
+                    .tag("Testing")
+                    .tabItem {
+                        Label("测试", systemImage: "testtube.2")
+                    }
+            }
+        }
+        .frame(maxHeight: .infinity)
+        #if os(macOS)
+            .padding(.top, 2)
+        #endif
+            .background(.background)
+    }
 }
 
 extension AudioAppView {
@@ -120,7 +125,7 @@ extension AudioAppView {
         }
 
         self.autoResizing = true
-        
+
         if verbose {
             Config.increseHeight(databaseViewHeight - space)
         }
@@ -130,7 +135,7 @@ extension AudioAppView {
         if verbose {
             os_log("\(self.label)减少 Height 以折叠数据库视图")
         }
-        
+
         self.autoResizing = true
         Config.setHeight(self.height)
     }

@@ -39,10 +39,17 @@ extension DBSynced {
         let context = ModelContext(self.modelContainer)
         
         do {
-            return try context.fetch(BookState.descriptorOf(url)).first
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-            
+            let descriptor = BookState.descriptorOf(url)
+            let result = try context.fetch(descriptor)
+            return result.first
+        } catch let fetchError as NSError {
+            os_log(.error, "Fetch error: \(fetchError.localizedDescription)")
+            if let underlyingError = fetchError.userInfo[NSUnderlyingErrorKey] as? NSError {
+                os_log(.error, "Underlying error: \(underlyingError.localizedDescription)")
+            }
+            return nil
+        } catch {
+            os_log(.error, "Unknown error: \(error.localizedDescription)")
             return nil
         }
     }

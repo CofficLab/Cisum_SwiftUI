@@ -1,7 +1,7 @@
 import OSLog
 import SwiftUI
 
-struct ContentView: View {
+struct ContentView: View, SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var data: DataProvider
 
@@ -21,7 +21,7 @@ struct ContentView: View {
                         .font(.title)
                         .foregroundStyle(.white)
                 }.onAppear {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                    self.main.asyncAfter(deadline: .now() + 3.0) {
                         app.flashMessage = ""
                     }
                 }
