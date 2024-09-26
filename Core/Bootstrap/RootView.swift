@@ -38,7 +38,7 @@ struct RootView: View, SuperLog {
             }
             .ignoresSafeArea()
             .toolbar(content: {
-                ToolbarItem {
+                ToolbarItem(placement: .navigation) {
                     BtnScene()
                 }
 

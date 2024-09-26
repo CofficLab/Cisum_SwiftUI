@@ -253,7 +253,7 @@ class StoreProvider: ObservableObject, SuperLog {
     //  联网得到2个产品，断网，依然得到两个产品
     //  联网得到2个产品，断网，依然得到两个产品，再等等，不报错，得到0个产品
     @MainActor
-    func requestProducts(_ reason: String, _ completion: ((Error?) -> Void)? = nil, verbose: Bool = true) async {
+    func requestProducts(_ reason: String, _ completion: ((Error?) -> Void)? = nil, verbose: Bool = false) async {
         if verbose {
             os_log("\(self.t)请求 App Store 获取产品列表，并存储到 @Published，因为 -> \(reason)")
         }

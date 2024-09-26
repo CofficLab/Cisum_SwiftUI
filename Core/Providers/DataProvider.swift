@@ -5,7 +5,6 @@ import SwiftUI
 class DataProvider: ObservableObject, SuperLog {
     static var label = "💼 DataManager::"
 
-    @Published var appScene: DiskScene
     @Published var disk: any Disk
     @Published var updating: DiskFileGroup = .empty
     @Published var syncing: Bool = false
@@ -16,14 +15,12 @@ class DataProvider: ObservableObject, SuperLog {
     var db: DB = DB(Config.getContainer, reason: "dataManager")
 
     init() throws {
-        let appScene = Config.getCurrentScene()
         var disk: (any Disk)?
-        self.appScene = appScene
 
         if Config.iCloudEnabled {
-            disk = DiskiCloud.make(appScene.folderName)
+            disk = DiskiCloud.make("audios")
         } else {
-            disk = DiskLocal.make(appScene.folderName)
+            disk = DiskLocal.make("audios")
         }
 
         guard let disk = disk else {
@@ -58,18 +55,18 @@ class DataProvider: ObservableObject, SuperLog {
                 self.updating = items
             }
 
-            switch self.appScene {
-            case .Music:
-                Task {
-                    await DB(Config.getContainer, reason: "DataManager.WatchDisk").sync(items)
-                }
-            case .AudiosBook:
-                Task {
-                    await DB(Config.getContainer, reason: "DataManager.WatchDisk").bookSync(items)
-                }
-            case .AudiosKids, .Videos, .VideosKids:
-                break
-            }
+//            switch self.appScene {
+//            case .Music:
+//                Task {
+//                    await DB(Config.getContainer, reason: "DataManager.WatchDisk").sync(items)
+//                }
+//            case .AudiosBook:
+//                Task {
+//                    await DB(Config.getContainer, reason: "DataManager.WatchDisk").bookSync(items)
+//                }
+//            case .AudiosKids, .Videos, .VideosKids:
+//                break
+//            }
         }
 
         DispatchQueue.main.async {
@@ -116,14 +113,14 @@ class DataProvider: ObservableObject, SuperLog {
     // MARK: Scene
 
     func chageScene(_ to: DiskScene) throws {
-        appScene = to
-
-        guard let disk = disk.make(to.folderName) else {
-            throw SmartError.NoDisk
-        }
-
-        changeDisk(disk)
-        Config.setCurrentScene(to)
+//        appScene = to
+//
+//        guard let disk = disk.make(to.folderName) else {
+//            throw SmartError.NoDisk
+//        }
+//
+//        changeDisk(disk)
+//        Config.setCurrentScene(to)
     }
 }
 
@@ -131,43 +128,43 @@ class DataProvider: ObservableObject, SuperLog {
 
 extension DataProvider {
     func downloadNextBatch(_ url: URL, count: Int = 6, reason: String, verbose: Bool = false) {
-        if verbose {
-            os_log("\(self.t)DownloadNextBatch(\(self.appScene.title))")
-        }
+//        if verbose {
+//            os_log("\(self.t)DownloadNextBatch(\(self.appScene.title))")
+//        }
 
-        if appScene == .Music {
-            Task {
-                var currentIndex = 0
-                var currentURL: URL = url
-
-                while currentIndex < count {
-                    disk.download(currentURL, reason: "downloadNext 🐛 \(reason)")
-
-                    currentIndex = currentIndex + 1
-
-                    if let next = await db.nextOf(currentURL) {
-                        currentURL = next.url
-                    } else {
-                        break
-                    }
-                }
-            }
-        } else {
-            var currentIndex = 0
-            var currentURL: URL = url
-
-            while currentIndex < count {
-                disk.download(currentURL, reason: "downloadNext 🐛 \(reason)")
-
-                currentIndex = currentIndex + 1
-
-                if let next = disk.next(currentURL) {
-                    currentURL = next.url
-                } else {
-                    break
-                }
-            }
-        }
+//        if appScene == .Music {
+//            Task {
+//                var currentIndex = 0
+//                var currentURL: URL = url
+//
+//                while currentIndex < count {
+//                    disk.download(currentURL, reason: "downloadNext 🐛 \(reason)")
+//
+//                    currentIndex = currentIndex + 1
+//
+//                    if let next = await db.nextOf(currentURL) {
+//                        currentURL = next.url
+//                    } else {
+//                        break
+//                    }
+//                }
+//            }
+//        } else {
+//            var currentIndex = 0
+//            var currentURL: URL = url
+//
+//            while currentIndex < count {
+//                disk.download(currentURL, reason: "downloadNext 🐛 \(reason)")
+//
+//                currentIndex = currentIndex + 1
+//
+//                if let next = disk.next(currentURL) {
+//                    currentURL = next.url
+//                } else {
+//                    break
+//                }
+//            }
+//        }
     }
 }
 
@@ -176,7 +173,7 @@ extension DataProvider {
 extension DataProvider {
     func enableiCloud() throws {
         os_log("\(self.t)Enable iCloud")
-        let disk = DiskiCloud.make(appScene.folderName)
+        let disk = DiskiCloud.make("audios")
 
         guard let disk = disk else {
             throw SmartError.NoDisk
@@ -188,7 +185,7 @@ extension DataProvider {
 
     func disableiCloud() throws {
         os_log("\(self.t)Disable iCloud")
-        let disk = DiskLocal.make(appScene.folderName)
+        let disk = DiskLocal.make("audios")
 
         guard let disk = disk else {
             throw SmartError.NoDisk
@@ -253,12 +250,8 @@ extension DataProvider {
 
 extension DataProvider {
     func first() -> PlayAsset? {
-        switch appScene {
-        case .Music:
             db.firstAudio()?.toPlayAsset()
-        default:
-            disk.getRoot().children?.first?.toPlayAsset()
-        }
+//            disk.getRoot().children?.first?.toPlayAsset()
     }
 }
 

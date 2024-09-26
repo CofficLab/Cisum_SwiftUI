@@ -13,6 +13,7 @@ struct AudioBtns: View {
                     BtnPrev(autoResize: true)
                     BtnToggle(foregroundStyle: .white, autoResize: true)
                     BtnNext(autoResize: true)
+                    BtnMode(autoResize: true)
                     Spacer()
                 })
                 .labelStyle(.iconOnly)
