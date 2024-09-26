@@ -67,7 +67,7 @@ struct BookPoster: View {
 
 #Preview("Scenes") {
     BootView {
-        Posters(selection: Binding.constant(.AudiosBook), isPresented: .constant(false))
+        Posters(isPresented: .constant(false))
             .background(.background)
     }
     .frame(height: 800)

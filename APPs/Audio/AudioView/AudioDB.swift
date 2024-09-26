@@ -29,17 +29,8 @@ struct AudioDB: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            ZStack {
-                switch data.appScene {
-                case .Music:
-                    SongList()
-                case .AudiosBook:
-                    DBViewBookData()
-                case .AudiosKids,.VideosKids, .Videos:
-                    DBViewTree()
-                }
-            }
-            .frame(maxHeight: .infinity)
+            AudioList()
+                .frame(maxHeight: .infinity)
 
             TaskView()
                 .shadow(radius: 10)

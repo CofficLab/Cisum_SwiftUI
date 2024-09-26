@@ -3,6 +3,12 @@ import Foundation
 
 class BookApp: SuperLayout {
     var id: String = "Book"
+
+    var iconName: String = "books.vertical"
+    
+    var icon: any View {
+        Image(systemName: iconName)
+    }
     
     var layout: any View {
         BookLayout()

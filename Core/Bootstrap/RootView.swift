@@ -6,6 +6,7 @@ struct RootView: View, SuperLog {
     @EnvironmentObject var videoMan: VideoWorker
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var data: DataProvider
+    @EnvironmentObject var l: LayoutProvider
     @EnvironmentObject var dbLocal: DB
 
     let emoji = "🌳"
@@ -37,22 +38,22 @@ struct RootView: View, SuperLog {
             }
             .ignoresSafeArea()
             .toolbar(content: {
-                ToolbarItem(placement: .navigation, content: {
+                ToolbarItem {
                     BtnScene()
-                })
+                }
 
                 // MARK: 工具栏
 
                 if let asset = playMan.asset {
                     ToolbarItemGroup(placement: .cancellationAction, content: {
                         Spacer()
-                        if data.appScene == .Music {
+                        if l.current.id == AudioApp().id {
                             BtnLike(asset: asset, autoResize: false)
                         }
 
                         BtnShowInFinder(url: asset.url, autoResize: false)
 
-                        if data.appScene == .Music {
+                        if l.current.id == AudioApp().id {
                             BtnDel(assets: [asset], autoResize: false)
                         }
                     })
@@ -143,23 +144,23 @@ struct RootView: View, SuperLog {
 
         playMan.mode = PlayMode(rawValue: Config.currentMode) ?? playMan.mode
 
-        Task {
-            let currentURL = await dbSynced.getSceneCurrent(data.appScene, reason: "Restore")
-
-            if let url = currentURL {
-                if verbose {
-                    os_log("\(t)上次播放 -> \(url.lastPathComponent)")
-                }
-
-                playMan.prepare(PlayAsset(url: url))
-            } else {
-                if verbose {
-                    os_log("\(t)无上次播放的音频，尝试播放第一个(\(data.disk.name))")
-                }
-
-                playMan.prepare(data.first())
-            }
-        }
+//        Task {
+//            let currentURL = await dbSynced.getSceneCurrent(data.appScene, reason: "Restore")
+//
+//            if let url = currentURL {
+//                if verbose {
+//                    os_log("\(t)上次播放 -> \(url.lastPathComponent)")
+//                }
+//
+//                playMan.prepare(PlayAsset(url: url))
+//            } else {
+//                if verbose {
+//                    os_log("\(t)无上次播放的音频，尝试播放第一个(\(data.disk.name))")
+//                }
+//
+//                playMan.prepare(data.first())
+//            }
+//        }
     }
 
     // MARK: Next
@@ -169,11 +170,11 @@ struct RootView: View, SuperLog {
             return nil
         }
 
-        if data.appScene != .Music {
+//        if data.appScene != .Music {
             return DiskFile(url: asset.url).nextDiskFile()?.toPlayAsset()
-        } else {
-            return dbLocal.getNextOf(asset.url)?.toPlayAsset()
-        }
+//        } else {
+//            return dbLocal.getNextOf(asset.url)?.toPlayAsset()
+//        }
     }
 
     // MARK: Prev
@@ -183,11 +184,11 @@ struct RootView: View, SuperLog {
             return nil
         }
 
-        if data.appScene != .Music {
+//        if data.appScene != .Music {
             return DiskFile(url: asset.url).prevDiskFile()?.toPlayAsset()
-        } else {
-            return dbLocal.getPrevOf(asset.url)?.toPlayAsset()
-        }
+//        } else {
+//            return dbLocal.getPrevOf(asset.url)?.toPlayAsset()
+//        }
     }
 
     // MARK: PlayState Changed
@@ -201,7 +202,7 @@ struct RootView: View, SuperLog {
             app.error = state.getError()
             Task {
                 await self.dbLocal.increasePlayCount(state.getPlayingAsset()?.url)
-                await dbSynced.updateSceneCurrent(data.appScene, currentURL: state.getURL())
+//                await dbSynced.updateSceneCurrent(data.appScene, currentURL: state.getURL())
             }
         }
     }

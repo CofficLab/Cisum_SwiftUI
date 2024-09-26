@@ -3,6 +3,12 @@ import Foundation
 
 class VideoApp: SuperLayout {
     var id = "Video"
+
+    var iconName: String = "video"
+    
+    var icon: any View {
+        Image(systemName: iconName)
+    }
     
     var layout: any View {
         VideoLayout()

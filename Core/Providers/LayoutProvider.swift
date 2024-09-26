@@ -11,7 +11,7 @@ class LayoutProvider: ObservableObject, SuperLog, SuperThread {
     @Published var current: any SuperLayout = VideoApp()
     
     var items: [any SuperLayout] = [
-        AppAudio(),
+        AudioApp(),
         VideoApp(),
         BookApp()
     ]

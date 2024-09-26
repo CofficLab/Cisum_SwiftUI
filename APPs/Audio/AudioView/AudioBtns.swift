@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct BtnsView: View {
+struct AudioBtns: View {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var data: DataProvider
     
@@ -13,13 +13,6 @@ struct BtnsView: View {
                     BtnPrev(autoResize: true)
                     BtnToggle(foregroundStyle: .white, autoResize: true)
                     BtnNext(autoResize: true)
-                    if data.appScene == .Music {
-                        BtnMode(autoResize: true)
-                    }
-                    
-                    if data.appScene == .AudiosBook {
-                        BtnChapters()
-                    }
                     Spacer()
                 })
                 .labelStyle(.iconOnly)

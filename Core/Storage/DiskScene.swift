@@ -143,7 +143,7 @@ enum DiskScene: String, CaseIterable, Identifiable {
 
 #Preview("Scenes") {
     BootView {
-        Posters(selection: Binding.constant(.AudiosKids), isPresented: .constant(false))
+        Posters(isPresented: .constant(false))
             .background(.background)
     }
     .frame(height: 800)

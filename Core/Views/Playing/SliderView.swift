@@ -55,9 +55,9 @@ struct SliderView: View {
             
             if Date.now.timeIntervalSince(lastDownloadTime) > 10, let asset = playMan.asset {
                 lastDownloadTime = .now
-                Task.detached(priority: .low) {
-                    await data.downloadNextBatch(asset.url,count: data.appScene.prepareCount, reason: "SliderView确保下一个准备好")
-                }
+//                Task.detached(priority: .low) {
+//                    await data.downloadNextBatch(asset.url,count: data.appScene.prepareCount, reason: "SliderView确保下一个准备好")
+//                }
             }
         }
         .padding(.horizontal, 10)

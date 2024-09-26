@@ -13,14 +13,6 @@ struct VideoBtns: View {
                     BtnPrev(autoResize: true)
                     BtnToggle(foregroundStyle: .white, autoResize: true)
                     BtnNext(autoResize: true)
-                    Text("Video")
-                    if data.appScene == .Music {
-                        BtnMode(autoResize: true)
-                    }
-                    
-                    if data.appScene == .AudiosBook {
-                        BtnChapters()
-                    }
                     Spacer()
                 })
                 .labelStyle(.iconOnly)

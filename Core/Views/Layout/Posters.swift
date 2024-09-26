@@ -5,61 +5,17 @@ import SwiftUI
 struct Posters: View {
     @EnvironmentObject var l: LayoutProvider
     
-    @Binding var selection: DiskScene
     @Binding var isPresented: Bool
     
     @State var picked: DiskScene?
     @State var layoutId: String = ""
     
     var body: some View {
-        newView
-    }
-
-    var oldView: some View {
-        VStack {
-            Picker("", selection: $picked) {
-                ForEach(DiskScene.allCases.filter { $0.available }) { scene in
-                    Text(scene.title)
-                        .tag(scene as DiskScene?)
-                }
-            }
-            .pickerStyle(SegmentedPickerStyle())
-            .padding()
-
-            if let p = picked {
-                    VStack {
-                        HStack {
-//                            self.icon
-                            Text(l.current.name)
-                        }
-                        .font(.title)
-                        .padding()
-            
-                        Text(l.current.description)
-            
-                        GroupBox {
-                            AnyView(l.current.poster)
-                        }.padding()
-                    }
-                
-                Button("选择") {
-                    self.selection = p
-                    self.isPresented = false
-                }.controlSize(.extraLarge)
-                
-                Spacer()
-            }
-        }
-        .onAppear {
-            picked = selection
-        }
-    }
-    
-    var newView: some View {
         VStack {
             Picker("", selection: $layoutId) {
-                ForEach(l.items.map{$0.id}, id: \.self) { item in
-                    Text(item).tag(item)
+                ForEach(l.items.map({$0.id}), id: \.self) { item in
+                    Text(item)
+                        .tag(item)
                 }
             }
             .pickerStyle(SegmentedPickerStyle())
@@ -96,7 +52,7 @@ struct Posters: View {
 
 #Preview("Scenes") {
     BootView {
-        Posters(selection: Binding.constant(.AudiosKids), isPresented: .constant(false))
+        Posters(isPresented: .constant(false))
             .background(.background)
     }
     .frame(height: 800)

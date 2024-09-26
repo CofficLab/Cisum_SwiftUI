@@ -11,7 +11,7 @@ import SwiftUI
       B1               B2
       B2
  */
-struct SongList: View {
+struct AudioList: View {
     static var label = "📬 DBList::"
 
     @EnvironmentObject var app: AppProvider

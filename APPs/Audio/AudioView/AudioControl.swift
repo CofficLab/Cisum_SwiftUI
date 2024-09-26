@@ -1,7 +1,7 @@
 import SwiftData
 import SwiftUI
 
-struct ControlView: View {
+struct AudioControl: View {
     @EnvironmentObject var appManager: AppProvider
     @EnvironmentObject var data: DataProvider
     @EnvironmentObject var playMan: PlayMan
@@ -57,7 +57,7 @@ struct ControlView: View {
                     // MARK: 控制栏
 
                     if showBtnsView {
-                        BtnsView()
+                        AudioBtns()
                             .frame(height: getButtonsHeight(geo))
                             .padding(.bottom, getBottomHeight(geo))
                             .background(Config.background(.red))
