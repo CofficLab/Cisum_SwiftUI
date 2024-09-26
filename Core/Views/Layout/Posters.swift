@@ -7,7 +7,6 @@ struct Posters: View {
     
     @Binding var isPresented: Bool
     
-    @State var picked: DiskScene?
     @State var layoutId: String = ""
     
     var body: some View {

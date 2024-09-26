@@ -20,19 +20,6 @@ extension Config {
     static func setCurrentDBViewType(_ type: DBViewType) {
         Config.currentDBViewType = type.rawValue
     }
-    
-    // MARK: Scene
-    
-    @AppStorage("App.Scene")
-    static var currentScene: String = DiskScene.Music.rawValue
-    
-    static func getCurrentScene() -> DiskScene {
-        DiskScene.init(rawValue: Config.currentScene) ?? .Music
-    }
-    
-    static func setCurrentScene(_ scene: DiskScene) {
-        Config.currentScene = scene.rawValue
-    }
 }
 
 enum DBViewType: String {

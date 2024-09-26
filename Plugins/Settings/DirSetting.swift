@@ -40,22 +40,22 @@ struct DirSetting: View {
             }.padding(10)
         }.background(BackgroundView.type1.opacity(0.1))
         
-        GroupBox {
-            VStack {
-                ForEach(Array(DiskScene.allCases.filter({
-                    $0.available
-                }).enumerated()), id: \.offset) { (index, s) in
-                    DirScene(scene: s)
-
-                    // 如果不是最后一个元素,才显示分割线
-                    if index < DiskScene.allCases.count - 1 {
-                        Divider()
-                    }
-                }
-            }
-            .padding(10)
-        }
-        .labelStyle(.iconOnly)
+//        GroupBox {
+//            VStack {
+//                ForEach(Array(DiskScene.allCases.filter({
+//                    $0.available
+//                }).enumerated()), id: \.offset) { (index, s) in
+//                    DirScene(scene: s)
+//
+//                    // 如果不是最后一个元素,才显示分割线
+//                    if index < DiskScene.allCases.count - 1 {
+//                        Divider()
+//                    }
+//                }
+//            }
+//            .padding(10)
+//        }
+//        .labelStyle(.iconOnly)
     }
 }
 

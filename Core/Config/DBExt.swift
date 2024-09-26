@@ -78,7 +78,6 @@ extension Config {
         let schema = Schema([
             DeviceData.self,
             BookState.self,
-            SceneState.self
         ])
         
         let modelConfiguration = ModelConfiguration(

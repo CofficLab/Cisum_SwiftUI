@@ -109,19 +109,6 @@ class DataProvider: ObservableObject, SuperLog {
             }
         }
     }
-
-    // MARK: Scene
-
-    func chageScene(_ to: DiskScene) throws {
-//        appScene = to
-//
-//        guard let disk = disk.make(to.folderName) else {
-//            throw SmartError.NoDisk
-//        }
-//
-//        changeDisk(disk)
-//        Config.setCurrentScene(to)
-    }
 }
 
 // MARK: Download

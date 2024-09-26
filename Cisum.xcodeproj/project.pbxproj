@@ -172,7 +172,6 @@
 		F54DFA6D2CA4FCB500F81BE3 /* BookDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA6C2CA4FCB500F81BE3 /* BookDB.swift */; };
 		F54DFA702CA5007600F81BE3 /* VideoGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA6F2CA5007600F81BE3 /* VideoGrid.swift */; };
 		F5511BB02C29050300400900 /* Playable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5511BAF2C29050300400900 /* Playable.swift */; };
-		F5511BB42C29118C00400900 /* DiskScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5511BB32C29118C00400900 /* DiskScene.swift */; };
 		F5511BBC2C294A7400400900 /* TaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5511BBB2C294A7400400900 /* TaskView.swift */; };
 		F5511BBE2C29506400400900 /* StateCopy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5511BBD2C29506400400900 /* StateCopy.swift */; };
 		F5511BC02C2953C200400900 /* BtnToggleCopying.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5511BBF2C2953C200400900 /* BtnToggleCopying.swift */; };
@@ -189,8 +188,6 @@
 		F5675C422C254E8100326664 /* StorageExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C412C254E8100326664 /* StorageExt.swift */; };
 		F573B1882C0411E4004C34CC /* DeviceDataExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B1872C0411E4004C34CC /* DeviceDataExt.swift */; };
 		F573B18C2C042E08004C34CC /* DeviceExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B18B2C042E08004C34CC /* DeviceExt.swift */; };
-		F5847C1B2C368FE20080887B /* SceneState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5847C1A2C368FE20080887B /* SceneState.swift */; };
-		F5847C1D2C36906B0080887B /* SceneStateExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5847C1C2C36906B0080887B /* SceneStateExt.swift */; };
 		F5847C1F2C3778570080887B /* ErrorViewCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5847C1E2C3778570080887B /* ErrorViewCloud.swift */; };
 		F586DCD52C2BFE9E0078580B /* BtnOpenFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F586DCD42C2BFE9E0078580B /* BtnOpenFolder.swift */; };
 		F586DCD72C2C01FF0078580B /* ErrorViewFatal.swift in Sources */ = {isa = PBXBuildFile; fileRef = F586DCD62C2C01FF0078580B /* ErrorViewFatal.swift */; };
@@ -373,7 +370,6 @@
 		F54DFA6C2CA4FCB500F81BE3 /* BookDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookDB.swift; sourceTree = "<group>"; };
 		F54DFA6F2CA5007600F81BE3 /* VideoGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoGrid.swift; sourceTree = "<group>"; };
 		F5511BAF2C29050300400900 /* Playable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playable.swift; sourceTree = "<group>"; };
-		F5511BB32C29118C00400900 /* DiskScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskScene.swift; sourceTree = "<group>"; };
 		F5511BBB2C294A7400400900 /* TaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskView.swift; sourceTree = "<group>"; };
 		F5511BBD2C29506400400900 /* StateCopy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateCopy.swift; sourceTree = "<group>"; };
 		F5511BBF2C2953C200400900 /* BtnToggleCopying.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnToggleCopying.swift; sourceTree = "<group>"; };
@@ -390,8 +386,6 @@
 		F5675C412C254E8100326664 /* StorageExt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StorageExt.swift; sourceTree = "<group>"; };
 		F573B1872C0411E4004C34CC /* DeviceDataExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceDataExt.swift; sourceTree = "<group>"; };
 		F573B18B2C042E08004C34CC /* DeviceExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceExt.swift; sourceTree = "<group>"; };
-		F5847C1A2C368FE20080887B /* SceneState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneState.swift; sourceTree = "<group>"; };
-		F5847C1C2C36906B0080887B /* SceneStateExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneStateExt.swift; sourceTree = "<group>"; };
 		F5847C1E2C3778570080887B /* ErrorViewCloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorViewCloud.swift; sourceTree = "<group>"; };
 		F586DCD42C2BFE9E0078580B /* BtnOpenFolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnOpenFolder.swift; sourceTree = "<group>"; };
 		F586DCD62C2C01FF0078580B /* ErrorViewFatal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorViewFatal.swift; sourceTree = "<group>"; };
@@ -436,7 +430,6 @@
 			isa = PBXGroup;
 			children = (
 				F55A48D72C4F6519004764C8 /* Local */,
-				F5037CAA2C44B0E600DD77AC /* Synced */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -550,7 +543,6 @@
 				F53BE0332C2024BE003CBA29 /* DiskFileGroup.swift */,
 				0BD0568A2BC6202900EBC7C4 /* DiskiCloud.swift */,
 				0BB427902BED0B38004E6F82 /* DiskLocal.swift */,
-				F5511BB32C29118C00400900 /* DiskScene.swift */,
 			);
 			path = Storage;
 			sourceTree = "<group>";
@@ -787,14 +779,6 @@
 			path = Playing;
 			sourceTree = "<group>";
 		};
-		F5037CAA2C44B0E600DD77AC /* Synced */ = {
-			isa = PBXGroup;
-			children = (
-				F5847C1A2C368FE20080887B /* SceneState.swift */,
-			);
-			path = Synced;
-			sourceTree = "<group>";
-		};
 		F518F6EE2C33917500844E62 /* BookView */ = {
 			isa = PBXGroup;
 			children = (
@@ -951,7 +935,6 @@
 			isa = PBXGroup;
 			children = (
 				0BE695C12C01E8F600CEFFEB /* DBSynced.swift */,
-				F5847C1C2C36906B0080887B /* SceneStateExt.swift */,
 			);
 			path = Synced;
 			sourceTree = "<group>";
@@ -1091,7 +1074,6 @@
 				0BB889D72AC046B5004788D5 /* BtnShowInFinder.swift in Sources */,
 				F53BE0322C202420003CBA29 /* DiskFile.swift in Sources */,
 				F54DFA582CA4E59B00F81BE3 /* VideoLayout.swift in Sources */,
-				F5511BB42C29118C00400900 /* DiskScene.swift in Sources */,
 				0B22158E2BB6BC8F000EB36F /* SmartProgress.swift in Sources */,
 				F573B18C2C042E08004C34CC /* DeviceExt.swift in Sources */,
 				F586DCD72C2C01FF0078580B /* ErrorViewFatal.swift in Sources */,
@@ -1150,7 +1132,6 @@
 				0B1498742BC4C5CB0075DA61 /* PlayMode.swift in Sources */,
 				0BB543F82BE9C64C00D7A2B2 /* PathExt.swift in Sources */,
 				0B6B8B992BBA39F500F65B23 /* ControlButton.swift in Sources */,
-				F5847C1D2C36906B0080887B /* SceneStateExt.swift in Sources */,
 				0B1D5A842AB302610010DDF2 /* Extensions.swift in Sources */,
 				0BA9FB6C2BFE14B4008074CB /* DirSetting.swift in Sources */,
 				0BE695902BFE325400CEFFEB /* StoreProvider.swift in Sources */,
@@ -1232,7 +1213,6 @@
 				0BB9D2482C32E53B0027DDAD /* DBViewMenuTile.swift in Sources */,
 				0B220F6F2BB051F50077255A /* TitleView.swift in Sources */,
 				0BBC158A2AB9AB7F006E82C4 /* FileHelper.swift in Sources */,
-				F5847C1B2C368FE20080887B /* SceneState.swift in Sources */,
 				F5B64D062C32597B00DE55AD /* DBSyncing.swift in Sources */,
 				0BC29EA92CA4599500E4813F /* PluginProvider.swift in Sources */,
 				0BD651072CA4264300BA3CB8 /* SuperEvent.swift in Sources */,
