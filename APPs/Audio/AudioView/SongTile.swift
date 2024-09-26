@@ -1,7 +1,8 @@
 import OSLog
 import SwiftUI
+import MagicKit
 
-struct SongTile: View {
+struct SongTile: View, SuperThread {
     @EnvironmentObject var playMan: PlayMan
 
     @State var hovered = false
@@ -54,7 +55,9 @@ struct SongTile: View {
         }
         .onHover(perform: { hovered = $0 })
         .onTapGesture {
-            playMan.play(asset, reason: "点击")
+            self.bg.async {
+                playMan.play(asset, reason: "点击")
+            }
         }
         .contextMenu(menuItems: {
             BtnToggle(asset: asset)

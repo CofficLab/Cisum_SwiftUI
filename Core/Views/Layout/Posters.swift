@@ -23,7 +23,7 @@ struct Posters: View {
             if let currentLayout = l.items.first(where: { $0.id == layoutId }) {
                 VStack {
                     HStack {
-                        Text(currentLayout.name)
+                        Text(currentLayout.title)
                     }
                     .font(.title)
                     .padding()

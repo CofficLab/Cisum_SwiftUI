@@ -32,7 +32,7 @@ class LayoutProvider: ObservableObject, SuperLog, SuperThread {
     }
 
     func setLayout(_ l: any SuperLayout) {
-        os_log("\(self.t) setLayout: \(l.name)")
+        os_log("\(self.t)setLayout -> \(l.title)")
         self.current = l
     }
 }

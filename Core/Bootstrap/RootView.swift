@@ -24,18 +24,10 @@ struct RootView: View, SuperLog {
 
             // MARK: 场景变化
 
-            .onChange(of: data.disk.root, {
+            .onChange(of: l.current.id, {
                 playMan.stop()
-
-                os_log("\(self.t)Disk已变为：\(data.disk.name)")
-                restore(reason: "Disk Changed")
             })
 
-            // MARK: 版本升级操作
-
-            .onAppear {
-                Migrate().migrateTo25(dataManager: data)
-            }
             .ignoresSafeArea()
             .toolbar(content: {
                 ToolbarItem(placement: .navigation) {
@@ -60,8 +52,6 @@ struct RootView: View, SuperLog {
                 }
             })
             .task {
-                restore(reason: "First Launch")
-
                 playMan.onGetNextOf = { asset in
                     self.getNextOf(asset)
                 }
@@ -133,34 +123,6 @@ struct RootView: View, SuperLog {
 
             await dbSynced.saveDeviceData(uuid: uuid, audioCount: audioCount)
         }
-    }
-
-    // MARK: 恢复上次播放的
-
-    func restore(reason: String, verbose: Bool = true) {
-        if verbose {
-            os_log("\(t)👻👻👻 Restore because of \(reason)")
-        }
-
-        playMan.mode = PlayMode(rawValue: Config.currentMode) ?? playMan.mode
-
-//        Task {
-//            let currentURL = await dbSynced.getSceneCurrent(data.appScene, reason: "Restore")
-//
-//            if let url = currentURL {
-//                if verbose {
-//                    os_log("\(t)上次播放 -> \(url.lastPathComponent)")
-//                }
-//
-//                playMan.prepare(PlayAsset(url: url))
-//            } else {
-//                if verbose {
-//                    os_log("\(t)无上次播放的音频，尝试播放第一个(\(data.disk.name))")
-//                }
-//
-//                playMan.prepare(data.first())
-//            }
-//        }
     }
 
     // MARK: Next
