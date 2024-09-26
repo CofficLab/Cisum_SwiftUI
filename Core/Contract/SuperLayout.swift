@@ -10,3 +10,17 @@ protocol SuperLayout: Identifiable {
     var poster: any View { get }
     var layout: any View { get }
 }
+
+extension SuperLayout {
+    var isAudioApp: Bool {
+        return self is AudioLayout
+    }
+
+    var isVideoApp: Bool {
+        return self is VideoLayout
+    }
+
+    var isBookApp: Bool {
+        return self is BookLayout
+    }
+}

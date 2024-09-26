@@ -23,8 +23,34 @@ class AudioApp: SuperLayout, SuperLog {
     
     var description: String = "作为歌曲仓库，只关注文件，文件夹将被忽略"
     
-    func getDisk() -> (any Disk)? {
-        DiskiCloud.make("audios")
+    var disk: (any Disk)?
+
+    init() {
+        self.disk = DiskiCloud.make("audios")
+        
+        Task {
+            self.watchDisk(reason: r("AudioApp.init"))
+        }
+    }
+    
+    func watchDisk(reason: String) {
+        guard var disk = disk  else {
+            return
+        }
+        
+        disk.onUpdated = { items in
+//            DispatchQueue.main.async {
+//                self.updating = items
+//            }
+
+                Task {
+                    await DB(Config.getContainer, reason: "DataManager.WatchDisk").sync(items)
+                }
+        }
+
+        Task {
+            await disk.watch(reason: reason)
+        }
     }
     
     // MARK: 恢复上次播放的

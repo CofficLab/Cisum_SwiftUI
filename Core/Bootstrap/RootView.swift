@@ -39,13 +39,13 @@ struct RootView: View, SuperLog {
                 if let asset = playMan.asset {
                     ToolbarItemGroup(placement: .cancellationAction, content: {
                         Spacer()
-                        if l.current.id == AudioApp().id {
+                        if l.current.isAudioApp {
                             BtnLike(asset: asset, autoResize: false)
                         }
 
                         BtnShowInFinder(url: asset.url, autoResize: false)
 
-                        if l.current.id == AudioApp().id {
+                        if l.current.isAudioApp {
                             BtnDel(assets: [asset], autoResize: false)
                         }
                     })

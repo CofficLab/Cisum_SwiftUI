@@ -28,55 +28,8 @@ class DataProvider: ObservableObject, SuperLog {
         }
 
         self.disk = disk
-        changeDisk(disk)
     }
 
-    // MARK: ChangeDisk
-
-    func changeDisk(_ to: any Disk) {
-        os_log("\(self.t)更新磁盘为 \(to.name)")
-
-        disk.stopWatch(reason: "Disk Will Change")
-        disk = to
-        watchDisk(reason: "Disk Changed")
-    }
-
-    // MARK: WatchDisk
-
-    func watchDisk(reason: String) {
-        disk.onUpdated = { items in
-            if items.isFullLoad {
-                DispatchQueue.main.async {
-                    self.syncing = false
-                }
-            }
-
-            DispatchQueue.main.async {
-                self.updating = items
-            }
-
-//            switch self.appScene {
-//            case .Music:
-//                Task {
-//                    await DB(Config.getContainer, reason: "DataManager.WatchDisk").sync(items)
-//                }
-//            case .AudiosBook:
-//                Task {
-//                    await DB(Config.getContainer, reason: "DataManager.WatchDisk").bookSync(items)
-//                }
-//            case .AudiosKids, .Videos, .VideosKids:
-//                break
-//            }
-        }
-
-        DispatchQueue.main.async {
-            self.syncing = true
-        }
-
-        Task {
-            await disk.watch(reason: reason)
-        }
-    }
 
     // MARK: Copy
 
@@ -166,7 +119,6 @@ extension DataProvider {
             throw SmartError.NoDisk
         }
 
-        changeDisk(disk)
         migrate()
     }
 
@@ -178,7 +130,6 @@ extension DataProvider {
             throw SmartError.NoDisk
         }
 
-        changeDisk(disk)
         migrate()
     }
 

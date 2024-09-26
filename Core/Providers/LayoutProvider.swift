@@ -8,7 +8,7 @@ import MagicKit
 class LayoutProvider: ObservableObject, SuperLog, SuperThread {
     let emoji = "🧩"
     
-    @Published var current: any SuperLayout = VideoApp()
+    @Published var current: any SuperLayout
     
     var items: [any SuperLayout] = [
         AudioApp(),
@@ -29,6 +29,8 @@ class LayoutProvider: ObservableObject, SuperLog, SuperThread {
         if verbose {
             os_log("\(Logger.initLog) PluginProvider")
         }
+        
+        self.current = self.items.first!
     }
 
     func setLayout(_ l: any SuperLayout) {
