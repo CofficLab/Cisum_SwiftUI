@@ -3,6 +3,7 @@ import MediaPlayer
 import Foundation
 import OSLog
 import SwiftUI
+import MagicKit
 
 /* 负责
       接收用户播放控制事件
@@ -10,7 +11,7 @@ import SwiftUI
       对接系统媒体中心
  */
 
-class PlayMan: NSObject, ObservableObject, SuperLog {
+class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread {
     // MARK: 成员
 
     static var label = "💃 PlayMan::"

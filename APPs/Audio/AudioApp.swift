@@ -59,13 +59,16 @@ class AudioApp: SuperLayout, SuperLog {
             }
         }
 
-        Task {
-            await disk.watch(reason: reason)
-        }
+//        Task {
+//            await disk.watch(reason: reason)
+//        }
     }
 
     func setCurrent(url: URL) {
-        os_log("\(self.t)👻👻👻 setCurrent: \(url.absoluteString)")
+        let verbose = false
+        if verbose {
+            os_log("\(self.t)👻👻👻 setCurrent: \(url.absoluteString)")
+        }
         
         // 将当前的url存储下来
         UserDefaults.standard.set(url.absoluteString, forKey: "currentAudioURL")
@@ -81,6 +84,7 @@ class AudioApp: SuperLayout, SuperLog {
         if let urlString = UserDefaults.standard.string(forKey: "currentAudioURL") {
             return URL(string: urlString)
         }
+        
         return nil
     }
 }

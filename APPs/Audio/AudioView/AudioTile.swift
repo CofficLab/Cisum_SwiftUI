@@ -59,8 +59,6 @@ struct AudioTile: View, SuperThread {
             self.bg.async {
                 playMan.play(asset, reason: "点击")
             }
-            
-            l.current.setCurrent(url: asset.url)
         }
         .contextMenu(menuItems: {
             BtnToggle(asset: asset)

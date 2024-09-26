@@ -64,12 +64,12 @@ struct AudioList: View {
                     }
                 })
             }
-            .onChange(of: playMan.asset, {
-                setSelection()
-            })
-            .onAppear {
-                setSelection()
-            }
+//            .onChange(of: playMan.asset, {
+//                setSelection()
+//            })
+//            .onAppear {
+//                setSelection()
+//            }
 
             if showTips {
                 DBTips()

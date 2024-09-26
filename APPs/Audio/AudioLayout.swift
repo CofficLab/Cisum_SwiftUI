@@ -3,7 +3,7 @@ import MagicKit
 import OSLog
 import SwiftUI
 
-struct AudioLayout: View, SuperLog {
+struct AudioLayout: View, SuperLog, SuperThread {
     let emoji = "🖥️"
     static var label = "🖥️ HomeView::"
 
@@ -54,7 +54,7 @@ struct AudioLayout: View, SuperLog {
 
                 // 高度不足，自动调整以展示数据库
                 if showDB && geo.size.height - controlViewHeightMin <= databaseViewHeightMin {
-                    increseHeightToShowDB(geo)
+                    self.increaseHeightToShowDB(geo)
                     return
                 }
             }
@@ -92,7 +92,7 @@ struct AudioLayout: View, SuperLog {
             }
             .onReceive(NotificationCenter.default.publisher(for: .PlayerEventCurrent)) { notification in
                 if let asset = notification.object as? PlayAsset {
-                    self.l.current.setCurrent(url: asset.url)
+                    self.setCurrent(url: asset.url)
                 }
             }
         }
@@ -136,45 +136,24 @@ struct AudioLayout: View, SuperLog {
     // MARK: 恢复上次播放的
 
     func restore(reason: String, verbose: Bool = true) {
-        if verbose {
-            os_log("\(self.t)👻👻👻 Restore because of \(reason)")
+        self.bg.async {
+            if verbose {
+                os_log("\(self.t)👻👻👻 Restore because of \(reason)")
+            }
+
+            var db: DB = DB(Config.getContainer, reason: "dataManager")
+
+            if let url = l.current.getCurrent() {
+                self.playMan.prepare(PlayAsset(url: url))
+            } else if let disk = l.current.getDisk() {
+                self.playMan.prepare(db.firstAudio()?.toPlayAsset())
+            }
         }
-
-        var db: DB = DB(Config.getContainer, reason: "dataManager")
-
-        if let url = l.current.getCurrent() {
-            self.playMan.prepare(PlayAsset(url: url))
-            return
-        }
-
-        if let disk = l.current.getDisk() {
-            self.playMan.prepare(db.firstAudio()?.toPlayAsset())
-        }
-
-//        playMan.mode = PlayMode(rawValue: Config.currentMode) ?? playMan.mode
-
-//        Task {
-//            let currentURL = await dbSynced.getSceneCurrent(data.appScene, reason: "Restore")
-//
-//            if let url = currentURL {
-//                if verbose {
-//                    os_log("\(t)上次播放 -> \(url.lastPathComponent)")
-//                }
-//
-//                playMan.prepare(PlayAsset(url: url))
-//            } else {
-//                if verbose {
-//                    os_log("\(t)无上次播放的音频，尝试播放第一个(\(data.disk.name))")
-//                }
-//
-//                playMan.prepare(data.first())
-//            }
-//        }
     }
 }
 
 extension AudioLayout {
-    private func increseHeightToShowDB(_ geo: GeometryProxy, verbose: Bool = true) {
+    private func increaseHeightToShowDB(_ geo: GeometryProxy, verbose: Bool = true) {
         os_log("\(self.label)增加 Height 以展开数据库视图")
         let space = geo.size.height - controlViewHeightMin
 
@@ -196,6 +175,12 @@ extension AudioLayout {
 
         self.autoResizing = true
         Config.setHeight(self.height)
+    }
+
+    private func setCurrent(url: URL) {
+        self.bg.async {
+            self.l.current.setCurrent(url: url)
+        }
     }
 }
 

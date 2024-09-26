@@ -1,7 +1,8 @@
 import OSLog
 import SwiftUI
+import MagicKit
 
-struct RootView: View, SuperLog, SuperEvent {
+struct RootView: View, SuperLog, SuperEvent, SuperThread {
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var videoMan: VideoWorker
     @EnvironmentObject var app: AppProvider
@@ -98,11 +99,11 @@ struct RootView: View, SuperLog, SuperEvent {
                 #endif
             }
             .task(priority: .background) {
-                if verbose {
-                    os_log("\(self.t)🐎🐎🐎 执行后台任务")
-                }
-
                 Task.detached(operation: {
+                    if verbose {
+                        os_log("\(self.t)🐎🐎🐎 执行后台任务")
+                    }
+                    
                     await self.onAppOpen()
                 })
             }
@@ -149,16 +150,16 @@ struct RootView: View, SuperLog, SuperEvent {
     // MARK: PlayState Changed
 
     func onStateChanged(_ state: PlayState, verbose: Bool = true) {
-        DispatchQueue.main.async {
+
+
+            app.error = state.getError()
+        self.bg.async {
             if verbose {
                 os_log("\(t)播放状态变了 -> \(state.des)")
             }
 
-            app.error = state.getError()
-            Task {
-                await self.dbLocal.increasePlayCount(state.getPlayingAsset()?.url)
+                // await self.dbLocal.increasePlayCount(state.getPlayingAsset()?.url)
 //                await dbSynced.updateSceneCurrent(data.appScene, currentURL: state.getURL())
-            }
 
             if let asset = state.getPlayingAsset() {
                 emitPlayerEventCurrent(asset)
