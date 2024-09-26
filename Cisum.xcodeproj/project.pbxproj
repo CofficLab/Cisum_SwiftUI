@@ -172,6 +172,7 @@
 		F54DFA6D2CA4FCB500F81BE3 /* BookDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA6C2CA4FCB500F81BE3 /* BookDB.swift */; };
 		F54DFA702CA5007600F81BE3 /* VideoGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA6F2CA5007600F81BE3 /* VideoGrid.swift */; };
 		F54DFA742CA559F200F81BE3 /* VideoTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA732CA559F200F81BE3 /* VideoTile.swift */; };
+		F54DFA762CA56B4000F81BE3 /* AudioAvatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA752CA56B4000F81BE3 /* AudioAvatar.swift */; };
 		F5511BB02C29050300400900 /* Playable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5511BAF2C29050300400900 /* Playable.swift */; };
 		F5511BBC2C294A7400400900 /* TaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5511BBB2C294A7400400900 /* TaskView.swift */; };
 		F5511BBE2C29506400400900 /* StateCopy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5511BBD2C29506400400900 /* StateCopy.swift */; };
@@ -371,6 +372,7 @@
 		F54DFA6C2CA4FCB500F81BE3 /* BookDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookDB.swift; sourceTree = "<group>"; };
 		F54DFA6F2CA5007600F81BE3 /* VideoGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoGrid.swift; sourceTree = "<group>"; };
 		F54DFA732CA559F200F81BE3 /* VideoTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTile.swift; sourceTree = "<group>"; };
+		F54DFA752CA56B4000F81BE3 /* AudioAvatar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioAvatar.swift; sourceTree = "<group>"; };
 		F5511BAF2C29050300400900 /* Playable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playable.swift; sourceTree = "<group>"; };
 		F5511BBB2C294A7400400900 /* TaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskView.swift; sourceTree = "<group>"; };
 		F5511BBD2C29506400400900 /* StateCopy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateCopy.swift; sourceTree = "<group>"; };
@@ -798,6 +800,7 @@
 		F52A98FC2C43BC79003559F1 /* AudioView */ = {
 			isa = PBXGroup;
 			children = (
+				F54DFA752CA56B4000F81BE3 /* AudioAvatar.swift */,
 				F54DFA662CA4EA1700F81BE3 /* AudioControl.swift */,
 				0B220F722BB1A3D70077255A /* AudioBtns.swift */,
 				0BBC157F2AB854A8006E82C4 /* AudioDB.swift */,
@@ -1062,6 +1065,7 @@
 				F54DFA612CA4E81200F81BE3 /* VideoControl.swift in Sources */,
 				F518F7012C34FB0400844E62 /* BookState.swift in Sources */,
 				F54DFA562CA4E4EE00F81BE3 /* BookApp.swift in Sources */,
+				F54DFA762CA56B4000F81BE3 /* AudioAvatar.swift in Sources */,
 				0B220F6D2BB051140077255A /* StateView.swift in Sources */,
 				F54DFA702CA5007600F81BE3 /* VideoGrid.swift in Sources */,
 				0B1D5A8D2AB3E8290010DDF2 /* AppDelegate.swift in Sources */,

@@ -19,7 +19,7 @@ struct AudioTile: View, SuperThread {
             HStack {
                 ZStack {
                     if asset.isNotFolder() {
-                        CoverView(asset)
+                        AudioAvatar(asset)
                             .frame(width: 36, height: 36)
                     } else {
                         asset.image
@@ -54,7 +54,11 @@ struct AudioTile: View, SuperThread {
                 }.labelStyle(.iconOnly)
             }
         }
-        .onHover(perform: { hovered = $0 })
+        .onHover { isHovered in
+            withAnimation(.easeInOut(duration: 0.1)) {
+                hovered = isHovered 
+            }
+        }
         .onTapGesture {
             self.selection = audio.url
             self.bg.async {
