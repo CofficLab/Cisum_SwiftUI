@@ -1,6 +1,7 @@
 import AVKit
 import OSLog
 import SwiftUI
+import MagicKit
 
 /* PlayAsset 用于代表可播放、展示的个体
  
@@ -61,7 +62,9 @@ extension PlayAsset {
 
 extension PlayAsset {
     func getFileSizeReadable() -> String {
-        FileHelper.getFileSizeReadable(size ?? getFileSize())
+        os_log("%@ GetFileSizeReadable: %@", label, FileHelper.getFileSizeReadable(size ?? getFileSize()))
+        
+        return FileHelper.getFileSizeReadable(size ?? getFileSize())
     }
 }
 

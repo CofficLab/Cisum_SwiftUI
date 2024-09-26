@@ -18,29 +18,20 @@ struct AudioTile: View, SuperThread {
         ZStack {
             HStack {
                 ZStack {
-                    if asset.isNotFolder() {
-                        AudioAvatar(asset)
-                            .frame(width: 36, height: 36)
-                    } else {
-                        asset.image
-                            .scaleEffect(1.4)
-                            .frame(width: 24, height: 36)
-                    }
+                    AudioAvatar(asset).frame(width: 36, height: 36)
                 }
 
                 VStack(alignment: .leading, spacing: 0) {
                     Text(asset.fileName)
-                    if asset.isNotFolder() {
-                        HStack {
-                            Text(asset.getFileSizeReadable())
+                    HStack {
+                        Text(asset.getFileSizeReadable())
 
-                            if asset.like {
-                                Image(systemName: "star.fill")
-                            }
+                        if asset.like {
+                            Image(systemName: "star.fill")
                         }
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
                     }
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
                 }
                 Spacer()
             }
