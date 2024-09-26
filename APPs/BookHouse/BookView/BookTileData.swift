@@ -97,9 +97,9 @@ struct BookTileData: View {
                 findState()
             }
         }
-        .onChange(of: playMan.url, {
-            findState()
-        })
+        // .onChange(of: playMan.url, {
+        //     findState()
+        // })
 //        .onChange(of: data.updating, {
 //                data.updating.urls.forEach { url in
 //                    if url.relativeString.hasPrefix(self.book.url.relativeString) {

@@ -1,8 +1,10 @@
 import AVKit
+import Combine
 import SwiftUI
 import OSLog
+import MagicKit
 
-struct SliderView: View {
+struct AudioSlider: View, SuperThread, SuperLog {
     static var label = "👀 SliderView::"
     
     @EnvironmentObject var playMan: PlayMan
@@ -14,15 +16,15 @@ struct SliderView: View {
     @State private var shouldDisable = false
     @State private var lastDownloadTime: Date = .now
 
+    let emoji = "👀"
     let timer = Timer
-        .publish(every: 1, on: .main, in: .common)
+        .publish(every: 0.1, on: .main, in: .common)
         .autoconnect()
 
     var geo: GeometryProxy
     var duration: TimeInterval { playMan.duration }
     var current: String { playMan.currentTimeDisplay }
     var left: String { playMan.leftTimeDisplay }
-    var label: String { "\(Logger.isMain)\(Self.label)"}
 
     var body: some View {
         HStack {
@@ -41,27 +43,10 @@ struct SliderView: View {
                 .font(getFont())
         }
         .font(.caption)
-        // .onChange(of: playMan.asset?.url, {
-        //     if playMan.asset == nil {
-        //         disable()
-        //     }
-        // })
-        .onReceive(timer) { _ in
-            if app.error != nil {
-                disable()
-            } else if playMan.duration > 0 && !isEditing {
-                enable()
-            }
-            
-            if Date.now.timeIntervalSince(lastDownloadTime) > 10, let asset = playMan.asset {
-                lastDownloadTime = .now
-//                Task.detached(priority: .low) {
-//                    await data.downloadNextBatch(asset.url,count: data.appScene.prepareCount, reason: "SliderView确保下一个准备好")
-//                }
-            }
-        }
         .padding(.horizontal, 10)
         .foregroundStyle(.white)
+        .onReceive(timer, perform: handleTimer)
+        .onReceive(NotificationCenter.default.publisher(for: .PlayManStateChange), perform: handlePlayManStateChange)
     }
 
     func enable() {
@@ -76,6 +61,33 @@ struct SliderView: View {
 
     func getFont() -> Font {
         return .title3
+    }
+}
+
+// MARK: Event Handler
+
+extension AudioSlider {
+    func handlePlayManStateChange(_ notification: Notification) {
+        self.bg.async {
+            if playMan.asset == nil {
+                disable()
+            }
+        }
+    }
+
+    func handleTimer(_ timer: Publishers.Autoconnect<Timer.TimerPublisher>.Output) {
+        if app.error != nil {
+            disable()
+        } else if playMan.duration > 0 && !isEditing {
+                enable()
+            }
+            
+            if Date.now.timeIntervalSince(lastDownloadTime) > 10, let asset = playMan.asset {
+                lastDownloadTime = .now
+//                Task.detached(priority: .low) {
+//                    await data.downloadNextBatch(asset.url,count: data.appScene.prepareCount, reason: "SliderView确保下一个准备好")
+//                }
+            }
     }
 }
 

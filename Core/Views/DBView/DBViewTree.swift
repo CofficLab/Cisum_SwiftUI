@@ -47,13 +47,14 @@ struct DBViewTree: View {
                         }
                     }
                 })
-                .onChange(of: playMan.asset?.url, {
-                    if let asset = playMan.asset {
-                        self.selection = DiskFile(url: asset.url)
-                    } else {
-                        self.selection = nil
-                    }
-            })
+            //     .onChange(of: playMan.asset?.url, {
+            //         if let asset = playMan.asset {
+            //             self.selection = DiskFile(url: asset.url)
+            //         } else {
+            //             self.selection = nil
+            //         }
+            // }
+//            )
             
             if showTips {
                 DBTips()

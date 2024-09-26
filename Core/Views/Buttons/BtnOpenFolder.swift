@@ -1,6 +1,7 @@
 import SwiftUI
+import MagicKit
 
-struct BtnOpenFolder: View {
+struct BtnOpenFolder: View, SuperThread {
     var url: URL
     var autoResize = false
 
@@ -10,7 +11,9 @@ struct BtnOpenFolder: View {
             image: getImageName(),
             dynamicSize: autoResize,
             onTap: {
-                FileHelper.openFolder(url: url)
+                self.bg.async {
+                    FileHelper.openFolder(url: url)
+                }
             })
     }
 

@@ -1,6 +1,6 @@
+import MagicKit
 import OSLog
 import SwiftUI
-import MagicKit
 
 struct RootView: View, SuperLog, SuperEvent, SuperThread {
     @EnvironmentObject var playMan: PlayMan
@@ -52,62 +52,11 @@ struct RootView: View, SuperLog, SuperEvent, SuperThread {
                     })
                 }
             })
-            .task {
-                playMan.onGetNextOf = { asset in
-                    self.getNextOf(asset)
-                }
-
-                playMan.onGetPrevOf = { asset in
-                    self.getPrevOf(asset)
-                }
-
-                playMan.onGetChildren = { asset in
-                    if let children = DiskFile(url: asset.url).children {
-                        return children.map({ $0.toPlayAsset() })
-                    }
-
-                    return []
-                }
-
-                playMan.onToggleLike = {
-                    self.toggleLike()
-                }
-
-                playMan.onToggleMode = {
-                    Task {
-                        if verbose {
-                            os_log("\(self.t)切换播放模式")
-                        }
-
-                        if playMan.mode == .Random {
-                            await dbLocal.sortRandom(playMan.asset?.url as URL?)
-                        }
-
-                        if playMan.mode == .Order {
-                            await dbLocal.sort(playMan.asset?.url as URL?)
-                        }
-                    }
-                }
-            }
-            .task {
-                #if os(iOS)
-                    UIApplication.shared.beginReceivingRemoteControlEvents()
-                #endif
-            }
-            .task(priority: .background) {
-                Task.detached(operation: {
-                    if verbose {
-                        os_log("\(self.t)🐎🐎🐎 执行后台任务")
-                    }
-                    
-                    await self.onAppOpen()
-                })
-            }
-            .onReceive(NotificationCenter.default.publisher(for: .PlayManStateChange)) { notification in
-                if let state = notification.userInfo?["state"] as? PlayState {
-                    self.onStateChanged(state, verbose: true)
-                }
-            }
+            .task(onAppearTask)
+            .onReceive(NotificationCenter.default.publisher(for: .PlayManStateChange), perform: onStateChanged)
+            .onReceive(NotificationCenter.default.publisher(for: .PlayManModeChange), perform: onPlayModeChange)
+            .onReceive(NotificationCenter.default.publisher(for: .PlayManNext), perform: onGetNextOf)
+            .onReceive(NotificationCenter.default.publisher(for: .PlayManLike), perform: onToggleLike)
     }
 
     func onAppOpen() {
@@ -116,21 +65,6 @@ struct RootView: View, SuperLog, SuperEvent, SuperThread {
 //            let audioCount = disk.getTotal()
 //
 //            await dbSynced.saveDeviceData(uuid: uuid, audioCount: audioCount)
-//        }
-    }
-
-    // MARK: Next
-
-    func getNextOf(_ asset: PlayAsset?) -> PlayAsset? {
-        os_log("\(t)getNextOf -> \(asset?.url.lastPathComponent ?? "")")
-        guard let asset = asset else {
-            return nil
-        }
-
-//        if data.appScene != .Music {
-        return DiskFile(url: asset.url).nextDiskFile()?.toPlayAsset()
-//        } else {
-//            return dbLocal.getNextOf(asset.url)?.toPlayAsset()
 //        }
     }
 
@@ -147,31 +81,70 @@ struct RootView: View, SuperLog, SuperEvent, SuperThread {
 //            return dbLocal.getPrevOf(asset.url)?.toPlayAsset()
 //        }
     }
+}
 
-    // MARK: PlayState Changed
+// MARK: Event Handler
 
-    func onStateChanged(_ state: PlayState, verbose: Bool = true) {
+extension RootView {
+    func onAppearTask() {
+        playMan.onGetPrevOf = { asset in
+            self.getPrevOf(asset)
+        }
 
-
-            app.error = state.getError()
-        self.bg.async {
-            if verbose {
-                os_log("\(t)播放状态变了 -> \(state.des)")
+        playMan.onGetChildren = { asset in
+            if let children = DiskFile(url: asset.url).children {
+                return children.map({ $0.toPlayAsset() })
             }
 
-                // await self.dbLocal.increasePlayCount(state.getPlayingAsset()?.url)
-//                await dbSynced.updateSceneCurrent(data.appScene, currentURL: state.getURL())
+            return []
+        }
+
+        #if os(iOS)
+            UIApplication.shared.beginReceivingRemoteControlEvents()
+        #endif
+
+        Task.detached(operation: {
+            if verbose {
+                os_log("\(self.t)🐎🐎🐎 执行后台任务")
+            }
+
+            await self.onAppOpen()
+        })
+    }
+
+    func onStateChanged(_ notification: Notification) {
+        let verbose = false
+
+        if let state = notification.userInfo?["state"] as? PlayState {
+            app.error = state.getError()
+            self.bg.async {
+                if verbose {
+                    os_log("\(t)播放状态变了 -> \(state.des)")
+                }
+            }
         }
     }
 
-    func toggleLike() {
-        guard let asset = playMan.asset else {
-            return
+    func onPlayModeChange(_ notification: Notification) {
+        if let mode = notification.userInfo?["mode"] as? PlayMode {
+            os_log("\(t)播放模式变了 -> \(mode.description)")
         }
+    }
 
-        Task {
-            await self.dbLocal.toggleLike(asset.url)
+    func onToggleLike(_ notification: Notification) {
+        if let asset = notification.userInfo?["asset"] as? PlayAsset {
+            os_log("\(t)喜欢变了 -> \(asset.url.lastPathComponent)")
         }
+    }
+
+    func onGetNextOf(_ notification: Notification) {
+        os_log("\(t)getNextOf")
+
+//        if data.appScene != .Music {
+        // return DiskFile(url: asset.url).nextDiskFile()?.toPlayAsset()
+//        } else {
+//
+//        }
     }
 }
 

@@ -24,7 +24,7 @@ struct AudioControl: View {
                     // MARK: 封面图和标题
 
                     if showHeroView {
-                        HeroView()
+                        AudioHero()
                             .frame(maxWidth: .infinity)
                             .frame(maxHeight: .infinity)
                     }
@@ -49,7 +49,7 @@ struct AudioControl: View {
                     // MARK: 进度栏
 
                     if showSliderView {
-                        SliderView(geo: geo)
+                        AudioSlider(geo: geo)
                             .padding()
                             .background(Config.background(.black))
                     }

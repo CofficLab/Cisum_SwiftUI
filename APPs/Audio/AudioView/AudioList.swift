@@ -60,21 +60,27 @@ struct AudioList: View, SuperThread {
                     }
                 }, content: {
                     ForEach(audios, id: \.url) { audio in
-                        AudioTile(selection: $selection, audio: audio)
+                        AudioTile(audio: audio)
                             .tag(audio.url as URL?)
                     }
                 })
             }
-            .onChange(of: playMan.asset, {
-                self.bg.async {
-                    if let asset = playMan.asset, asset.url != self.selection {
-                        selection = asset.url
-                    }
-                }
-            })
 
             if showTips {
                 DBTips()
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .PlayManStateChange), perform: handlePlayManStateChange)
+    }
+}
+
+// MARK: Event Handler
+
+extension AudioList {
+    func handlePlayManStateChange(_ notification: Notification) {
+        self.bg.async {
+            if let asset = playMan.asset, asset.url != self.selection {
+                selection = asset.url
             }
         }
     }

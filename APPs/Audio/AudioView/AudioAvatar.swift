@@ -76,7 +76,7 @@ struct AudioAvatar: View, SuperLog, SuperThread {
         })
     }
 
-    func updateCover(reason: String, verbose: Bool = true) {
+    func updateCover(reason: String, verbose: Bool = false) {
         self.bg.async {
             if verbose {
                 os_log("\(t)UpdateCover for \(self.asset.title) Because of \(reason)")

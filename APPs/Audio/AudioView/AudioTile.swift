@@ -7,8 +7,6 @@ struct AudioTile: View, SuperThread {
     @EnvironmentObject var l: LayoutProvider
 
     @State var hovered = false
-    
-    @Binding var selection: URL?
 
     var audio: Audio
     
@@ -18,15 +16,15 @@ struct AudioTile: View, SuperThread {
         ZStack {
             HStack {
                 ZStack {
-                    AudioAvatar(asset).frame(width: 36, height: 36)
+                   AudioAvatar(asset).frame(width: 36, height: 36)
                 }
 
                 VStack(alignment: .leading, spacing: 0) {
-                    Text(asset.fileName)
+                    Text(audio.fileName)
                     HStack {
-                        Text(asset.getFileSizeReadable())
+                       Text(audio.getFileSizeReadable())
 
-                        if asset.like {
+                        if audio.like {
                             Image(systemName: "star.fill")
                         }
                     }
@@ -51,7 +49,6 @@ struct AudioTile: View, SuperThread {
             }
         }
         .onTapGesture {
-            self.selection = audio.url
             self.bg.async {
                 self.playMan.play(audio.toPlayAsset(), reason: "AudioTile")
             }

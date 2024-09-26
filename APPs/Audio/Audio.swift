@@ -130,6 +130,14 @@ extension Audio {
     }
 }
 
+// MARK: Size
+
+extension Audio {
+    func getFileSizeReadable() -> String {
+        FileHelper.getFileSizeReadable(size ?? getFileSize())
+    }
+}
+
 #Preview("App") {
     AppPreview()
         .frame(height: 800)

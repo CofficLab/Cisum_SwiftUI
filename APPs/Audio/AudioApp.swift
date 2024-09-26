@@ -1,9 +1,11 @@
 import Foundation
 import OSLog
 import SwiftUI
+import MagicKit
 
-class AudioApp: SuperLayout, SuperLog {
+class AudioApp: SuperLayout, SuperLog, SuperThread {
     let emoji = "🎶"
+    let dirName = "audios"
     var id: String = "Audio"
 
     var iconName: String = "music.note.list"
@@ -26,17 +28,12 @@ class AudioApp: SuperLayout, SuperLog {
 
     var disk: (any Disk)?
 
-    init() {
-        os_log("%@👻👻👻 init", t)
-    }
-
     func boot() {
-        os_log("%@👻👻👻 boot", t)
-
-        self.disk = DiskiCloud.make("audios")
-
-        Task {
-            self.watchDisk(reason: r("AudioApp.init"))
+        self.bg.async {
+            os_log("%@👻👻👻 boot", self.t)
+            self.disk = DiskiCloud.make(self.dirName)
+            self.watchDisk(reason: self.r("AudioApp.Boot"))
+            self.emitBoot()
         }
     }
 
@@ -79,12 +76,26 @@ class AudioApp: SuperLayout, SuperLog {
     }
 
     func getCurrent() -> URL? {
-        os_log("\(self.t)👻👻👻 getCurrent")
+        os_log("\(self.t)GetCurrent")
         
         if let urlString = UserDefaults.standard.string(forKey: "currentAudioURL") {
             return URL(string: urlString)
         }
         
         return nil
+    }
+}
+
+// MARK: Event 
+
+extension Notification.Name {
+    static let AudioAppDidBoot = Notification.Name("AudioAppDidBoot")
+}
+
+extension AudioApp {
+    func emitBoot() {
+        self.main.async {
+            NotificationCenter.default.post(name: .AudioAppDidBoot, object: nil)
+        }
     }
 }

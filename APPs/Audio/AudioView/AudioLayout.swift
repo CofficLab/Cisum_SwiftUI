@@ -5,12 +5,11 @@ import SwiftUI
 
 struct AudioLayout: View, SuperLog, SuperThread {
     let emoji = "🖥️"
-    static var label = "🖥️ HomeView::"
 
     @EnvironmentObject var appManager: AppProvider
     @EnvironmentObject var l: LayoutProvider
     @EnvironmentObject var playMan: PlayMan
-
+    @EnvironmentObject var dbLocal: DB
     @State private var databaseViewHeight: CGFloat = 300
 
     // 记录用户调整的窗口的高度
@@ -22,11 +21,10 @@ struct AudioLayout: View, SuperLog, SuperThread {
     var controlViewHeightMin = Config.controlViewMinHeight
     var databaseViewHeightMin = Config.databaseViewHeightMin
     var verbose = false
-    var label: String { "\(Logger.isMain)\(Self.label) " }
 
     init() {
         if verbose {
-            os_log("\(Logger.isMain)\(Self.label)初始化")
+            os_log("\(Logger.initLog)初始化")
         }
     }
 
@@ -76,25 +74,14 @@ struct AudioLayout: View, SuperLog, SuperThread {
                     // 说明是用户主动调整
                     self.height = Config.getWindowHeight()
                     if verbose {
-                        os_log("\(self.label)Height=\(self.height)")
+                        os_log("\(self.t)Height=\(self.height)")
                     }
                 }
             }
-            .task {
-                self.restore(reason: "BootView")
-                Task.detached(
-                    priority: .background,
-                    operation: {
-                        if let url = await playMan.asset?.url, let disk = l.current.getDisk() {
-                            await disk.downloadNextBatch(url, reason: "BootView")
-                        }
-                    })
-            }
-            .onReceive(NotificationCenter.default.publisher(for: .PlayManPlay)) { notification in
-                if let asset = notification.object as? PlayAsset {
-                    self.setCurrent(url: asset.url)
-                }
-            }
+            .onReceive(NotificationCenter.default.publisher(for: .PlayManStateChange), perform: onPlayStateChange)
+            .onReceive(NotificationCenter.default.publisher(for: .AudioAppDidBoot), perform: onAudioAppDidBoot)
+            .onReceive(NotificationCenter.default.publisher(for: .PlayManPlay), perform: onPlay)
+            .onReceive(NotificationCenter.default.publisher(for: .PlayManNext), perform: onPlayNext)
         }
     }
 
@@ -117,14 +104,6 @@ struct AudioLayout: View, SuperLog, SuperThread {
                 .tabItem {
                     Label("订阅", systemImage: "crown")
                 }
-
-            if Config.debug {
-                DBViewNavigation()
-                    .tag("Testing")
-                    .tabItem {
-                        Label("测试", systemImage: "testtube.2")
-                    }
-            }
         }
         .frame(maxHeight: .infinity)
         #if os(macOS)
@@ -138,14 +117,14 @@ struct AudioLayout: View, SuperLog, SuperThread {
     func restore(reason: String, verbose: Bool = true) {
         self.bg.async {
             if verbose {
-                os_log("\(self.t)👻👻👻 Restore because of \(reason)")
+                os_log("\(self.t)Restore because of \(reason)")
             }
 
-            var db: DB = DB(Config.getContainer, reason: "dataManager")
+            let db: DB = DB(Config.getContainer, reason: "dataManager")
 
             if let url = l.current.getCurrent() {
                 self.playMan.prepare(PlayAsset(url: url))
-            } else if let disk = l.current.getDisk() {
+            } else if (l.current.getDisk()) != nil {
                 self.playMan.prepare(db.firstAudio()?.toPlayAsset())
             }
         }
@@ -154,7 +133,7 @@ struct AudioLayout: View, SuperLog, SuperThread {
 
 extension AudioLayout {
     private func increaseHeightToShowDB(_ geo: GeometryProxy, verbose: Bool = true) {
-        os_log("\(self.label)增加 Height 以展开数据库视图")
+        os_log("\(self.t)增加 Height 以展开数据库视图")
         let space = geo.size.height - controlViewHeightMin
 
         if space >= databaseViewHeightMin {
@@ -170,7 +149,7 @@ extension AudioLayout {
 
     private func resetHeight(verbose: Bool = false) {
         if verbose {
-            os_log("\(self.label)减少 Height 以折叠数据库视图")
+            os_log("\(self.t)减少 Height 以折叠数据库视图")
         }
 
         self.autoResizing = true
@@ -180,6 +159,45 @@ extension AudioLayout {
     private func setCurrent(url: URL) {
         self.bg.async {
             self.l.current.setCurrent(url: url)
+        }
+    }
+}
+
+// MARK: 事件处理
+
+extension AudioLayout {
+    func onPlayNext(_ notification: Notification) {
+        let asset = notification.userInfo?["asset"] as? PlayAsset
+        self.bg.async {
+            if let asset = asset {
+                let next = dbLocal.getNextOf(asset.url)?.toPlayAsset()
+                os_log("\(self.t)播放下一个 -> \(next?.url.lastPathComponent ?? "")")
+
+                if let next = next {
+                    self.playMan.play(next, reason: "onPlayNext")
+                }
+            }
+        }
+    }
+
+    func onAudioAppDidBoot(_ notification: Notification) {
+        self.restore(reason: "AudioAppDidBoot")
+        if let url = playMan.asset?.url, let disk = l.current.getDisk() {
+            disk.downloadNextBatch(url, reason: "BootView")
+        }
+    }
+
+    func onPlay(_ notification: Notification) {
+        if let asset = notification.object as? PlayAsset {
+            self.setCurrent(url: asset.url)
+        }
+    }
+
+    func onPlayStateChange(_ notification: Notification) {
+        if let state = notification.userInfo?["state"] as? PlayState {
+            if let asset = state.getPlayingAsset() {
+                self.setCurrent(url: asset.url)
+            }
         }
     }
 }

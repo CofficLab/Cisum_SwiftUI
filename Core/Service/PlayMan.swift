@@ -35,9 +35,8 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread {
         return asset.isVideo() ? videoWorker : audioWorker
     }
 
-    @Published var asset: PlayAsset?
-    @Published var mode: PlayMode = .Order
-
+    var asset: PlayAsset?
+    var mode: PlayMode = .Order
     var isAudioWorker: Bool { (self.worker as? AudioWorker) != nil }
     var isVideoWorker: Bool { (self.worker as? VideoWorker) != nil }
     var duration: TimeInterval { worker.duration }
@@ -60,24 +59,9 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread {
         return nil
     }
 
-    var onGetNextOf: (_ asset: PlayAsset?) -> PlayAsset? = { asset in
-        os_log("\(PlayMan.label)GetNextOf -> \(asset?.title ?? "nil")")
-        return nil
-    }
-
     var onGetChildren: (_ asset: PlayAsset) -> [PlayAsset] = { asset in
         os_log("\(PlayMan.label)GetChildrenOf -> \(asset.title)")
         return []
-    }
-
-    // MARK: 对外传递事件
-
-    var onToggleLike: () -> Void = {
-        os_log("\(PlayMan.label)ToggleLike")
-    }
-
-    var onToggleMode: () -> Void = {
-        os_log("\(PlayMan.label)ToggleMode")
     }
 
     // MARK: 初始化
@@ -88,7 +72,6 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread {
 
         super.init()
 
-        self.audioWorker.onGetNextOf = onGetNextOf
         self.audioWorker.onGetPrevOf = onGetPrevOf
         self.audioWorker.onStateChange = { state in
             DispatchQueue.main.async {
@@ -103,7 +86,6 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread {
             }
         }
 
-        self.videoWorker.onGetNextOf = onGetNextOf
         self.videoWorker.onGetPrevOf = onGetPrevOf
         self.videoWorker.onStateChange = { state in
             DispatchQueue.main.async {
@@ -130,7 +112,7 @@ extension PlayMan {
     func switchMode(verbose: Bool = true) {
         mode = mode.switchMode()
         Config.setCurrentMode(mode)
-        onToggleMode()
+        self.emitPlayModeChange(mode)
     }
 }
 
@@ -139,7 +121,7 @@ extension PlayMan {
 extension PlayMan {
     func toggleLike() {
         self.asset?.like.toggle()
-        self.onToggleLike()
+        self.emitPlayLike()
     }
 
     func goto(_ time: TimeInterval) {
@@ -154,7 +136,6 @@ extension PlayMan {
     // MARK: Play
 
     func play(_ asset: PlayAsset, reason: String) {
-        self.main.async {
             os_log("\(self.t)Play \(asset.fileName) (\(asset.isAudio() ? "Audio" : "Video")) 🐛 \(reason)")
 
             if asset.isFolder() {
@@ -168,14 +149,13 @@ extension PlayMan {
             }
 
             self.worker.play(self.asset!, reason: reason)
-        }
     }
 
     func play() {
         self.worker.play()
     }
 
-    func resume() {
+    func resume(reason: String) {
         os_log("\(self.t)Resume while current is \(self.state.des)")
 
         guard let asset = self.asset else {
@@ -206,7 +186,7 @@ extension PlayMan {
         if isPlaying {
             self.pause()
         } else {
-            self.resume()
+            self.resume(reason: "Toggle")
         }
     }
 
@@ -219,12 +199,13 @@ extension PlayMan {
     // MARK: Next
 
     func next() {
-        if let next = self.onGetNextOf(self.asset) {
-            self.play(next, reason: "Next")
-        } else {
-            os_log("\(self.t)Next of (\(self.asset?.title ?? "nil")) is nil, stop")
-            self.stop()
-        }
+//        if let next = self.onGetNextOf(self.asset) {
+//            self.play(next, reason: "Next")
+//        } else {
+//            os_log("\(self.t)Next of (\(self.asset?.title ?? "nil")) is nil, stop")
+//            self.stop()
+//        }
+        self.emitPlayNext(self.asset)
     }
 }
 
@@ -315,7 +296,7 @@ extension PlayMan {
 
         c.playCommand.addTarget { _ in
             os_log("\(self.t)播放")
-            self.resume()
+            self.resume(reason: "PlayCommand")
 
             return .success
         }
@@ -382,6 +363,7 @@ extension Notification.Name {
     static let PlayManLike = Notification.Name("PlayManLike")
     static let PlayManDislike = Notification.Name("PlayManDislike")
     static let PlayManStateChange = Notification.Name("PlayManStateChange")
+    static let PlayManModeChange = Notification.Name("PlayManModeChange")
 }
 
 extension PlayMan {
@@ -397,8 +379,8 @@ extension PlayMan {
         NotificationCenter.default.post(name: .PlayManStop, object: self)
     }
     
-    func emitPlayNext() {
-        NotificationCenter.default.post(name: .PlayManNext, object: self)
+    func emitPlayNext(_ asset: PlayAsset?) {
+        NotificationCenter.default.post(name: .PlayManNext, object: self, userInfo: ["asset": asset])
     }
 
     func emitPlayPrev() {
@@ -417,8 +399,15 @@ extension PlayMan {
         NotificationCenter.default.post(name: .PlayManDislike, object: self)
     }
 
+    func emitPlayModeChange(_ mode: PlayMode) {
+        NotificationCenter.default.post(name: .PlayManModeChange, object: self, userInfo: ["mode": mode])
+    }
+
     func emitPlayStateChange(_ state: PlayState) {
-        os_log("\(self.t)emitPlayStateChange -> \(state.des)")
+        let verbose = false
+        if verbose {
+            os_log("\(self.t)emitPlayStateChange 🚀🚀🚀 -> \(state.des)")
+        }
         NotificationCenter.default.post(name: .PlayManStateChange, object: self, userInfo: ["state": state])
     }
 }
