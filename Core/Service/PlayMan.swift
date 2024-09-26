@@ -94,26 +94,30 @@ class PlayMan: NSObject, ObservableObject, SuperLog {
         self.audioWorker.onGetNextOf = onGetNextOf
         self.audioWorker.onGetPrevOf = onGetPrevOf
         self.audioWorker.onStateChange = { state in
-            self.setPlayingInfo()
-            self.asset = state.getAsset()
-            self.onStateChange(state)
-            
-            if state.isFinished {
-                os_log("\(self.t)播放完成，自动播放下一个")
-                self.next()
+            DispatchQueue.main.async {
+                self.setPlayingInfo()
+                self.asset = state.getAsset()
+                self.onStateChange(state)
+                
+                if state.isFinished {
+                    os_log("\(self.t)播放完成，自动播放下一个")
+                    self.next()
+                }
             }
         }
         
         self.videoWorker.onGetNextOf = onGetNextOf
         self.videoWorker.onGetPrevOf = onGetPrevOf
         self.videoWorker.onStateChange = { state in
-            self.setPlayingInfo()
-            self.asset = state.getAsset()
-            self.onStateChange(state)
-            
-            if state.isFinished {
-                os_log("\(self.t)播放完成，自动播放下一个")
-                self.next()
+            DispatchQueue.main.async {
+                self.setPlayingInfo()
+                self.asset = state.getAsset()
+                self.onStateChange(state)
+                
+                if state.isFinished {
+                    os_log("\(self.t)播放完成，自动播放下一个")
+                    self.next()
+                }
             }
         }
         

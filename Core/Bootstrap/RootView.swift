@@ -1,7 +1,7 @@
 import OSLog
 import SwiftUI
 
-struct RootView: View, SuperLog {
+struct RootView: View, SuperLog, SuperEvent {
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var videoMan: VideoWorker
     @EnvironmentObject var app: AppProvider
@@ -120,6 +120,7 @@ struct RootView: View, SuperLog {
     // MARK: Next
 
     func getNextOf(_ asset: PlayAsset?) -> PlayAsset? {
+        os_log("\(t)getNextOf -> \(asset?.url.lastPathComponent ?? "")")
         guard let asset = asset else {
             return nil
         }
@@ -157,6 +158,10 @@ struct RootView: View, SuperLog {
             Task {
                 await self.dbLocal.increasePlayCount(state.getPlayingAsset()?.url)
 //                await dbSynced.updateSceneCurrent(data.appScene, currentURL: state.getURL())
+            }
+
+            if let asset = state.getPlayingAsset() {
+                emitPlayerEventCurrent(asset)
             }
         }
     }

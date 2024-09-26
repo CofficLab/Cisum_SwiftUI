@@ -90,6 +90,11 @@ struct AudioLayout: View, SuperLog {
                         }
                     })
             }
+            .onReceive(NotificationCenter.default.publisher(for: .PlayerEventCurrent)) { notification in
+                if let asset = notification.object as? PlayAsset {
+                    self.l.current.setCurrent(url: asset.url)
+                }
+            }
         }
     }
 
