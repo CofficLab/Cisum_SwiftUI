@@ -20,11 +20,13 @@ class Audio: FileBox {
         SortDescriptor(\.order, order: .forward)
     ])
     
-    static var descriptorNotFolder = FetchDescriptor(predicate: #Predicate<Audio> { audio in
-        audio.isFolder == false
-    }, sortBy: [
+    static var descriptorNotFolder = FetchDescriptor(predicate: predicateNotFolder, sortBy: [
         SortDescriptor(\.order, order: .forward)
     ])
+
+    static var predicateNotFolder = #Predicate<Audio> { audio in
+        audio.isFolder == false
+    }
     
     static var descriptorFirst: FetchDescriptor<Audio> {
         var descriptor = Audio.descriptorAll
