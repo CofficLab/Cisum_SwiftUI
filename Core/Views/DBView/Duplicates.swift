@@ -28,7 +28,7 @@ struct Duplicates: View {
                         List {
                             Section("共 \(duplicates.count) 个重复文件",content: {
                                 ForEach(duplicates, content: { a in
-                                    SongTile(a.toPlayAsset())
+                                    AudioTile(a.toPlayAsset())
                                 })
                             })
                         }

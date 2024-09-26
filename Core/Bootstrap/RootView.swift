@@ -12,12 +12,12 @@ struct RootView: View, SuperLog {
     let emoji = "🌳"
     var verbose: Bool = true
     var dbSynced = DBSynced(Config.getSyncedContainer)
-    var disk: any Disk { data.disk }
 
     var body: some View {
         Config.rootBackground
+
             // MARK: Alert
-        
+
             .alert(isPresented: $app.showAlert, content: {
                 Alert(title: Text(app.alertMessage))
             })
@@ -30,9 +30,9 @@ struct RootView: View, SuperLog {
 
             .ignoresSafeArea()
             .toolbar(content: {
-                ToolbarItem(placement: .navigation) {
-                    BtnScene()
-                }
+                // ToolbarItem(placement: .navigation) {
+                //     BtnScene()
+                // }
 
                 // MARK: 工具栏
 
@@ -102,14 +102,6 @@ struct RootView: View, SuperLog {
                     os_log("\(self.t)🐎🐎🐎 执行后台任务")
                 }
 
-                Task.detached(
-                    priority: .background,
-                    operation: {
-                        if let url = await playMan.asset?.url {
-                            await disk.downloadNextBatch(url, reason: "BootView")
-                        }
-                    })
-
                 Task.detached(operation: {
                     await self.onAppOpen()
                 })
@@ -117,12 +109,12 @@ struct RootView: View, SuperLog {
     }
 
     func onAppOpen() {
-        Task {
-            let uuid = Config.getDeviceId()
-            let audioCount = disk.getTotal()
-
-            await dbSynced.saveDeviceData(uuid: uuid, audioCount: audioCount)
-        }
+//        Task {
+//            let uuid = Config.getDeviceId()
+//            let audioCount = disk.getTotal()
+//
+//            await dbSynced.saveDeviceData(uuid: uuid, audioCount: audioCount)
+//        }
     }
 
     // MARK: Next
@@ -133,7 +125,7 @@ struct RootView: View, SuperLog {
         }
 
 //        if data.appScene != .Music {
-            return DiskFile(url: asset.url).nextDiskFile()?.toPlayAsset()
+        return DiskFile(url: asset.url).nextDiskFile()?.toPlayAsset()
 //        } else {
 //            return dbLocal.getNextOf(asset.url)?.toPlayAsset()
 //        }
@@ -147,7 +139,7 @@ struct RootView: View, SuperLog {
         }
 
 //        if data.appScene != .Music {
-            return DiskFile(url: asset.url).prevDiskFile()?.toPlayAsset()
+        return DiskFile(url: asset.url).prevDiskFile()?.toPlayAsset()
 //        } else {
 //            return dbLocal.getPrevOf(asset.url)?.toPlayAsset()
 //        }

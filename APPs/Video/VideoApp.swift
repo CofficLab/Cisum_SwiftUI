@@ -3,6 +3,7 @@ import Foundation
 import OSLog
 
 class VideoApp: SuperLayout, SuperLog {
+    let emoji = "🎥"
     var id = "Video"
 
     var iconName: String = "video"
@@ -25,6 +26,32 @@ class VideoApp: SuperLayout, SuperLog {
 
     var description: String {
         "适用于看视频的场景"
+    }
+
+    init() {
+        os_log("%@👻👻👻 init", t)
+    }
+
+    func setCurrent(url: URL) {
+        os_log("\(self.t)👻👻👻 setCurrent: \(url.absoluteString)")
+        
+        // 将当前的url存储下来
+        UserDefaults.standard.set(url.absoluteString, forKey: "currentAudioURL")
+        
+        // 通过iCloud key-value同步
+        NSUbiquitousKeyValueStore.default.set(url.absoluteString, forKey: "currentAudioURL")
+        NSUbiquitousKeyValueStore.default.synchronize()
+    }
+
+    func getCurrent() -> URL? {
+        if let urlString = UserDefaults.standard.string(forKey: "currentAudioURL") {
+            return URL(string: urlString)
+        }
+        return nil
+    }
+
+    func boot() {
+        os_log("%@👻👻👻 boot", t)
     }
     
     func getDisk() -> (any Disk)? {

@@ -3,6 +3,7 @@ import Foundation
 import OSLog
 
 class BookApp: SuperLayout, SuperLog {
+    let emoji = "📚"
     var id: String = "Book"
 
     var iconName: String = "books.vertical"
@@ -25,6 +26,36 @@ class BookApp: SuperLayout, SuperLog {
 
     var description: String {
         "适用于听有声书的场景"
+    }
+
+    init() {
+        os_log("%@👻👻👻 init", t)
+    }
+
+    func getDisk() -> (any Disk)? {
+        return nil
+    }
+
+    func boot() {
+        os_log("%@👻👻👻 boot", t)
+    }
+
+    func setCurrent(url: URL) {
+        os_log("\(self.t)👻👻👻 setCurrent: \(url.absoluteString)")
+        
+        // 将当前的url存储下来
+        UserDefaults.standard.set(url.absoluteString, forKey: "currentAudioURL")
+        
+        // 通过iCloud key-value同步
+        NSUbiquitousKeyValueStore.default.set(url.absoluteString, forKey: "currentAudioURL")
+        NSUbiquitousKeyValueStore.default.synchronize()
+    }
+
+    func getCurrent() -> URL? {
+        if let urlString = UserDefaults.standard.string(forKey: "currentAudioURL") {
+            return URL(string: urlString)
+        }
+        return nil
     }
     
     // MARK: 恢复上次播放的

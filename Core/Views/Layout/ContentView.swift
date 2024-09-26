@@ -15,7 +15,9 @@ struct ContentView: View, SuperLog, SuperThread {
                     TopView()
                 }
 
-                l.layout
+                l.layout.onAppear {
+                    l.current.boot()
+                }
             }
 
             if !app.flashMessage.isEmpty {

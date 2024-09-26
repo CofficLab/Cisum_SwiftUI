@@ -8,12 +8,15 @@ struct VideoGrid: View {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var dataManager: DataProvider
     @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var l: LayoutProvider
 
     @State var selection: DiskFile?
     @State var collapsed: Bool = false
     @State var icon: String = ""
 
-    var disk = VideoApp().getDisk()
+    var disk: (any Disk)? {
+        l.current.getDisk()
+    }
 
     var body: some View {
         ZStack {
@@ -23,7 +26,7 @@ struct VideoGrid: View {
                      children: \.children,
                      selection: $selection
                 ) { file in
-                    SongTile(file.toPlayAsset())
+                    AudioTile(file.toPlayAsset())
                         .tag(file as DiskFile?)
                 }
                     .onAppear {

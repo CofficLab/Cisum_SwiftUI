@@ -9,6 +9,11 @@ protocol SuperLayout: Identifiable {
     var description: String { get }
     var poster: any View { get }
     var layout: any View { get }
+
+    func boot()
+    func getDisk() -> (any Disk)?
+    func setCurrent(url: URL)
+    func getCurrent() -> URL?
 }
 
 extension SuperLayout {

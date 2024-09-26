@@ -27,6 +27,10 @@ extension FileBox {
            return ""
        }
     }
+
+    var isImage: Bool {
+        ["png", "jpg", "jpeg", "gif", "bmp", "webp"].contains(ext)
+    }
 }
 
 // MARK: FileSize
@@ -437,6 +441,10 @@ extension FileBox {
         if self.isFolder() {
             return nil
         }
+        
+        if self.isImage {
+            return nil
+        }
 
         let asset = AVAsset(url: url)
         do {
@@ -455,7 +463,8 @@ extension FileBox {
             }
         } catch {
             os_log(.error, "\(label)⚠️ 读取 Meta 出错 -> \(self.title) -> \(error.localizedDescription)")
-//            os_log(.error, "\(error.localizedDescription)")
+            os_log(.error, "  ➡️ \(self.url.relativeString)")
+            os_log(.error, "  ⚠️ \(error)")
         }
 
         return nil

@@ -59,7 +59,7 @@ struct AudioList: View {
                     }
                 }, content: {
                     ForEach(audios, id: \.self) { audio in
-                        SongTile(audio.toPlayAsset())
+                        AudioTile(audio.toPlayAsset())
                             .tag(audio as Audio?)
                     }
                 })

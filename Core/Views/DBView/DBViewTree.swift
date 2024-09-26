@@ -32,7 +32,7 @@ struct DBViewTree: View {
                  children: \.children,
                  selection: $selection
             ) { file in
-                SongTile(file.toPlayAsset())
+                AudioTile(file.toPlayAsset())
                     .tag(file as DiskFile?)
             }
                 .onAppear {

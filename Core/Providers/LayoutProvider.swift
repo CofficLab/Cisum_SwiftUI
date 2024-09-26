@@ -12,8 +12,8 @@ class LayoutProvider: ObservableObject, SuperLog, SuperThread {
     
     var items: [any SuperLayout] = [
         AudioApp(),
-        VideoApp(),
-        BookApp()
+//        VideoApp(),
+//        BookApp()
     ]
     
     var posters: [any View] {

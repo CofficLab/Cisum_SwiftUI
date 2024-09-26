@@ -2,8 +2,9 @@ import OSLog
 import SwiftUI
 import MagicKit
 
-struct SongTile: View, SuperThread {
+struct AudioTile: View, SuperThread {
     @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var l: LayoutProvider
 
     @State var hovered = false
 
@@ -58,6 +59,8 @@ struct SongTile: View, SuperThread {
             self.bg.async {
                 playMan.play(asset, reason: "点击")
             }
+            
+            l.current.setCurrent(url: asset.url)
         }
         .contextMenu(menuItems: {
             BtnToggle(asset: asset)

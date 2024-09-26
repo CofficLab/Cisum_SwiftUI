@@ -1,11 +1,15 @@
 import AVKit
+import MagicKit
 import OSLog
 import SwiftUI
 
-struct AudioLayout: View {
+struct AudioLayout: View, SuperLog {
+    let emoji = "🖥️"
     static var label = "🖥️ HomeView::"
 
     @EnvironmentObject var appManager: AppProvider
+    @EnvironmentObject var l: LayoutProvider
+    @EnvironmentObject var playMan: PlayMan
 
     @State private var databaseViewHeight: CGFloat = 300
 
@@ -76,6 +80,16 @@ struct AudioLayout: View {
                     }
                 }
             }
+            .task {
+                self.restore(reason: "BootView")
+                Task.detached(
+                    priority: .background,
+                    operation: {
+                        if let url = await playMan.asset?.url, let disk = l.current.getDisk() {
+                            await disk.downloadNextBatch(url, reason: "BootView")
+                        }
+                    })
+            }
         }
     }
 
@@ -112,6 +126,45 @@ struct AudioLayout: View {
             .padding(.top, 2)
         #endif
             .background(.background)
+    }
+
+    // MARK: 恢复上次播放的
+
+    func restore(reason: String, verbose: Bool = true) {
+        if verbose {
+            os_log("\(self.t)👻👻👻 Restore because of \(reason)")
+        }
+
+        var db: DB = DB(Config.getContainer, reason: "dataManager")
+
+        if let url = l.current.getCurrent() {
+            self.playMan.prepare(PlayAsset(url: url))
+            return
+        }
+
+        if let disk = l.current.getDisk() {
+            self.playMan.prepare(db.firstAudio()?.toPlayAsset())
+        }
+
+//        playMan.mode = PlayMode(rawValue: Config.currentMode) ?? playMan.mode
+
+//        Task {
+//            let currentURL = await dbSynced.getSceneCurrent(data.appScene, reason: "Restore")
+//
+//            if let url = currentURL {
+//                if verbose {
+//                    os_log("\(t)上次播放 -> \(url.lastPathComponent)")
+//                }
+//
+//                playMan.prepare(PlayAsset(url: url))
+//            } else {
+//                if verbose {
+//                    os_log("\(t)无上次播放的音频，尝试播放第一个(\(data.disk.name))")
+//                }
+//
+//                playMan.prepare(data.first())
+//            }
+//        }
     }
 }
 
