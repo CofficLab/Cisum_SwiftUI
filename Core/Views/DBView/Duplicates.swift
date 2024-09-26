@@ -26,11 +26,11 @@ struct Duplicates: View {
                     })
                     .popover(isPresented: $showDumplicates, content: {
                         List {
-                            Section("共 \(duplicates.count) 个重复文件",content: {
-                                ForEach(duplicates, content: { a in
-                                    AudioTile(a.toPlayAsset())
-                                })
-                            })
+//                            Section("共 \(duplicates.count) 个重复文件",content: {
+//                                ForEach(duplicates, content: { a in
+//                                    AudioTile(a.toPlayAsset())
+//                                })
+//                            })
                         }
                     })
             }

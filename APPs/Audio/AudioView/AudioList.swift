@@ -1,3 +1,4 @@
+import MagicKit
 import OSLog
 import SwiftData
 import SwiftUI
@@ -11,7 +12,7 @@ import SwiftUI
       B1               B2
       B2
  */
-struct AudioList: View {
+struct AudioList: View, SuperThread {
     static var label = "📬 DBList::"
 
     @EnvironmentObject var app: AppProvider
@@ -21,7 +22,7 @@ struct AudioList: View {
 
     @Query(Audio.descriptorNotFolder) var audios: [Audio]
 
-    @State var selection: Audio? = nil
+    @State var selection: URL? = nil
 
     var total: Int { audios.count }
     var label: String { "\(Logger.isMain)\(Self.label)" }
@@ -58,29 +59,24 @@ struct AudioList: View {
                             .labelStyle(.iconOnly)
                     }
                 }, content: {
-                    ForEach(audios, id: \.self) { audio in
-                        AudioTile(audio.toPlayAsset())
-                            .tag(audio as Audio?)
+                    ForEach(audios, id: \.url) { audio in
+                        AudioTile(selection: $selection, audio: audio)
+                            .tag(audio.url as URL?)
                     }
                 })
             }
-//            .onChange(of: playMan.asset, {
-//                setSelection()
-//            })
-//            .onAppear {
-//                setSelection()
-//            }
+            .onChange(of: playMan.asset, {
+                self.bg.async {
+                    if let asset = playMan.asset, asset.url != self.selection {
+                        selection = asset.url
+                    }
+                }
+            })
 
             if showTips {
                 DBTips()
             }
         }
-    }
-    
-    func setSelection() {
-        selection = audios.first(where: {
-            $0.url == playMan.asset?.url
-        })
     }
 }
 

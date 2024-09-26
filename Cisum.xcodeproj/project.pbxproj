@@ -171,7 +171,7 @@
 		F54DFA6B2CA4FB7D00F81BE3 /* BookBtns.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA6A2CA4FB7D00F81BE3 /* BookBtns.swift */; };
 		F54DFA6D2CA4FCB500F81BE3 /* BookDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA6C2CA4FCB500F81BE3 /* BookDB.swift */; };
 		F54DFA702CA5007600F81BE3 /* VideoGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA6F2CA5007600F81BE3 /* VideoGrid.swift */; };
-		F54DFA722CA549EC00F81BE3 /* PlayerEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA712CA549E700F81BE3 /* PlayerEvent.swift */; };
+		F54DFA742CA559F200F81BE3 /* VideoTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA732CA559F200F81BE3 /* VideoTile.swift */; };
 		F5511BB02C29050300400900 /* Playable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5511BAF2C29050300400900 /* Playable.swift */; };
 		F5511BBC2C294A7400400900 /* TaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5511BBB2C294A7400400900 /* TaskView.swift */; };
 		F5511BBE2C29506400400900 /* StateCopy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5511BBD2C29506400400900 /* StateCopy.swift */; };
@@ -370,7 +370,7 @@
 		F54DFA6A2CA4FB7D00F81BE3 /* BookBtns.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookBtns.swift; sourceTree = "<group>"; };
 		F54DFA6C2CA4FCB500F81BE3 /* BookDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookDB.swift; sourceTree = "<group>"; };
 		F54DFA6F2CA5007600F81BE3 /* VideoGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoGrid.swift; sourceTree = "<group>"; };
-		F54DFA712CA549E700F81BE3 /* PlayerEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerEvent.swift; sourceTree = "<group>"; };
+		F54DFA732CA559F200F81BE3 /* VideoTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTile.swift; sourceTree = "<group>"; };
 		F5511BAF2C29050300400900 /* Playable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playable.swift; sourceTree = "<group>"; };
 		F5511BBB2C294A7400400900 /* TaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskView.swift; sourceTree = "<group>"; };
 		F5511BBD2C29506400400900 /* StateCopy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateCopy.swift; sourceTree = "<group>"; };
@@ -678,7 +678,6 @@
 		0BD651082CA4267900BA3CB8 /* Event */ = {
 			isa = PBXGroup;
 			children = (
-				F54DFA712CA549E700F81BE3 /* PlayerEvent.swift */,
 				0BD651092CA426B100BA3CB8 /* AudioEvent.swift */,
 			);
 			path = Event;
@@ -833,6 +832,7 @@
 		F54DFA6E2CA5005C00F81BE3 /* VideoView */ = {
 			isa = PBXGroup;
 			children = (
+				F54DFA732CA559F200F81BE3 /* VideoTile.swift */,
 				F54DFA6F2CA5007600F81BE3 /* VideoGrid.swift */,
 				F54DFA642CA4E92100F81BE3 /* VideoDB.swift */,
 			);
@@ -1117,7 +1117,6 @@
 				0BE6959F2BFE3DCC00CEFFEB /* NonRenewables.swift in Sources */,
 				0BB587172AD815770071AEBD /* TimeHelper.swift in Sources */,
 				0BC29EA72CA4597100E4813F /* PluginBookState.swift in Sources */,
-				F54DFA722CA549EC00F81BE3 /* PlayerEvent.swift in Sources */,
 				F5675C352C22CB3C00326664 /* DBViewTree.swift in Sources */,
 				0B1136612BF4CF3000A71FE1 /* Cover.swift in Sources */,
 				F5511BC52C2962AC00400900 /* BottomViewType.swift in Sources */,
@@ -1192,6 +1191,7 @@
 				F54DFA6B2CA4FB7D00F81BE3 /* BookBtns.swift in Sources */,
 				0B19D9562C062F400057D8DB /* ProExt.swift in Sources */,
 				0BE6959D2BFE3DCC00CEFFEB /* CarsView.swift in Sources */,
+				F54DFA742CA559F200F81BE3 /* VideoTile.swift in Sources */,
 				0BBA42252AC1813D00C0B977 /* BtnDel.swift in Sources */,
 				F5640CB92C4FBD2F00AFD522 /* SuperLog.swift in Sources */,
 				0BB9D2442C32E3E60027DDAD /* BtnChapters.swift in Sources */,

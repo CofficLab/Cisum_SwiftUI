@@ -59,9 +59,9 @@ class AudioApp: SuperLayout, SuperLog {
             }
         }
 
-//        Task {
-//            await disk.watch(reason: reason)
-//        }
+       Task {
+           await disk.watch(reason: reason)
+       }
     }
 
     func setCurrent(url: URL) {

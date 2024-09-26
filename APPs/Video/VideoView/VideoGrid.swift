@@ -26,7 +26,7 @@ struct VideoGrid: View {
                      children: \.children,
                      selection: $selection
                 ) { file in
-                    AudioTile(file.toPlayAsset())
+                    VideoTile(selection: $selection, file: file)
                         .tag(file as DiskFile?)
                 }
                     .onAppear {

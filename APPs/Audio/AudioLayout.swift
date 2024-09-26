@@ -90,7 +90,7 @@ struct AudioLayout: View, SuperLog, SuperThread {
                         }
                     })
             }
-            .onReceive(NotificationCenter.default.publisher(for: .PlayerEventCurrent)) { notification in
+            .onReceive(NotificationCenter.default.publisher(for: .PlayManPlay)) { notification in
                 if let asset = notification.object as? PlayAsset {
                     self.setCurrent(url: asset.url)
                 }

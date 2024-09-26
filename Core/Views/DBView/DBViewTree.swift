@@ -32,8 +32,8 @@ struct DBViewTree: View {
                  children: \.children,
                  selection: $selection
             ) { file in
-                AudioTile(file.toPlayAsset())
-                    .tag(file as DiskFile?)
+//                AudioTile(file.toPlayAsset())
+//                    .tag(file as DiskFile?)
             }
                 .onAppear {
                     self.icon = dataManager.isiCloudDisk ? "icloud" : "folder"

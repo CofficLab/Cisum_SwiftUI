@@ -4,22 +4,6 @@ import Foundation
 protocol SuperEvent {
 }
 
-// MARK: Player
-
-extension SuperEvent {
-    func emitPlayerEventCurrent(_ asset: PlayAsset?) {
-        DispatchQueue.main.async {
-            NotificationCenter.default.post(name: .PlayerEventCurrent, object: asset)
-        }
-    }
-    
-    func emitPlayerEventNext(_ asset: PlayAsset?) {
-        DispatchQueue.main.async {
-            NotificationCenter.default.post(name: .PlayerEventNext, object: asset)
-        }
-    }
-}
-
 // MARK: Audio
 
 extension SuperEvent {

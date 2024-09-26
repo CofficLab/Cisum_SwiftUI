@@ -69,10 +69,6 @@ struct RootView: View, SuperLog, SuperEvent, SuperThread {
                     return []
                 }
 
-                playMan.onStateChange = { state in
-                    self.onStateChanged(state)
-                }
-
                 playMan.onToggleLike = {
                     self.toggleLike()
                 }
@@ -106,6 +102,11 @@ struct RootView: View, SuperLog, SuperEvent, SuperThread {
                     
                     await self.onAppOpen()
                 })
+            }
+            .onReceive(NotificationCenter.default.publisher(for: .PlayManStateChange)) { notification in
+                if let state = notification.userInfo?["state"] as? PlayState {
+                    self.onStateChanged(state, verbose: true)
+                }
             }
     }
 
@@ -160,10 +161,6 @@ struct RootView: View, SuperLog, SuperEvent, SuperThread {
 
                 // await self.dbLocal.increasePlayCount(state.getPlayingAsset()?.url)
 //                await dbSynced.updateSceneCurrent(data.appScene, currentURL: state.getURL())
-
-            if let asset = state.getPlayingAsset() {
-                emitPlayerEventCurrent(asset)
-            }
         }
     }
 

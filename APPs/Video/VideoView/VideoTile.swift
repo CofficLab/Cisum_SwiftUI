@@ -2,17 +2,17 @@ import MagicKit
 import OSLog
 import SwiftUI
 
-struct AudioTile: View, SuperThread {
+struct VideoTile: View, SuperThread {
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var l: LayoutProvider
 
     @State var hovered = false
     
-    @Binding var selection: URL?
+    @Binding var selection: DiskFile?
 
-    var audio: Audio
+    var file: DiskFile
     
-    var asset: PlayAsset { audio.toPlayAsset() }
+    var asset: PlayAsset { file.toPlayAsset() }
 
     var body: some View {
         ZStack {
@@ -56,10 +56,7 @@ struct AudioTile: View, SuperThread {
         }
         .onHover(perform: { hovered = $0 })
         .onTapGesture {
-            self.selection = audio.url
-            self.bg.async {
-                self.playMan.play(audio.toPlayAsset(), reason: "AudioTile")
-            }
+            self.selection = file
         }
         .contextMenu(menuItems: {
             BtnToggle(asset: asset)
