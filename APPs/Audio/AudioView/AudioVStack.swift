@@ -30,6 +30,8 @@ struct AudioVStack: View, SuperThread, SuperLog {
     let pageSize = 50
 
     var total: Int { audios.count }
+    var loaded: Int { loadedAudios.count }
+    var remaining: Int { total - loaded }
 
     var showTips: Bool {
         if app.isDropping {
@@ -47,7 +49,7 @@ struct AudioVStack: View, SuperThread, SuperLog {
 
     var header: some View {
         HStack {
-            Text("共 \(audios.count.description)")
+            Text("共 \(total.description)")
             Spacer()
             if isSyncing {
                 HStack {
@@ -61,7 +63,9 @@ struct AudioVStack: View, SuperThread, SuperLog {
                     .labelStyle(.iconOnly)
             }
         }
-        .padding()
+        .padding(.vertical, 6)
+        .padding(.horizontal, 8)
+        .font(.footnote)
         .background(.background)
     }
 
@@ -79,11 +83,10 @@ struct AudioVStack: View, SuperThread, SuperLog {
                                 }
                         }
                         if isLoading {
-                            ProgressView("加载中...")
-                                .frame(height: 50)
+                            ProgressView().frame(height: 30)
                         }
                         if currentPage * pageSize < audios.count {
-                            Text("加载更多...")
+                            Text("加载更多... (剩余 \(remaining.description) 项)")
                                 .frame(height: 50)
                                 .onAppear {
                                     Task {
@@ -92,6 +95,7 @@ struct AudioVStack: View, SuperThread, SuperLog {
                                 }
                         }
                     }
+                    .padding()
                 }
             }
 
