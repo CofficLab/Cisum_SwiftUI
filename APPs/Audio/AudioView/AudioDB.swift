@@ -10,6 +10,7 @@ struct AudioDB: View {
     @EnvironmentObject var db: DB
 
     @State var treeView = false
+    @State var isSorting = false
 
     @Query(Audio.descriptorAll, animation: .default) var audios: [Audio]
 
@@ -29,8 +30,12 @@ struct AudioDB: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            AudioList(reason: "AudioDB")
-                .frame(maxHeight: .infinity)
+            if isSorting {
+                Text("正在排序...")
+            } else {
+                AudioList(reason: "AudioDB")
+                    .frame(maxHeight: .infinity)
+            }
 
             TaskView()
                 .shadow(radius: 10)
@@ -48,28 +53,9 @@ struct AudioDB: View {
                 }
             }
         )
-        .onDrop(of: [UTType.fileURL], isTargeted: $app.isDropping) { providers -> Bool in
-            let dispatchGroup = DispatchGroup()
-            var dropedFiles: [URL] = []
-            for provider in providers {
-                dispatchGroup.enter()
-                // 这是异步操作
-                _ = provider.loadObject(ofClass: URL.self) { object, _ in
-                    if let url = object {
-                        os_log("\(Logger.isMain)🖥️ DBView::添加 \(url.lastPathComponent) 到复制队列")
-                        dropedFiles.append(url)
-                    }
-
-                    dispatchGroup.leave()
-                }
-            }
-
-            dispatchGroup.notify(queue: .main) {
-                copy(dropedFiles)
-            }
-
-            return true
-        }
+        .onReceive(NotificationCenter.default.publisher(for: .DBSorting), perform: onSorting)
+        .onReceive(NotificationCenter.default.publisher(for: .DBSortDone), perform: onSortDone)
+        .onDrop(of: [UTType.fileURL], isTargeted: $app.isDropping, perform: onDrop)
     }
 }
 
@@ -97,6 +83,43 @@ extension AudioDB {
         main.async {
             app.cleanStateMessage()
         }
+    }
+}
+
+// MARK: Event Handle
+
+extension AudioDB {
+    func onDrop(_ providers: [NSItemProvider]) -> Bool {
+        let dispatchGroup = DispatchGroup()
+            var dropedFiles: [URL] = []
+            for provider in providers {
+                dispatchGroup.enter()
+                // 这是异步操作
+                _ = provider.loadObject(ofClass: URL.self) { object, _ in
+                    if let url = object {
+                        os_log("\(Logger.isMain)🖥️ DBView::添加 \(url.lastPathComponent) 到复制队列")
+                        dropedFiles.append(url)
+                    }
+
+                    dispatchGroup.leave()
+                }
+            }
+
+            dispatchGroup.notify(queue: .main) {
+                copy(dropedFiles)
+            }
+
+        return true
+    }
+
+    func onSorting(_ notification: Notification) {
+        os_log("\(label)onSorting")
+        isSorting = true
+    }
+
+    func onSortDone(_ notification: Notification) {
+        os_log("\(label)onSortDone")
+        isSorting = false
     }
 }
 

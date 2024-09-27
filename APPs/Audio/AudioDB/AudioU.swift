@@ -139,20 +139,22 @@ extension DB {
 // MARK: 排序
 
 extension DB {
-    func sortRandom(_ url: URL?) {
+    func sortRandom(_ url: URL?, reason: String) {
         if let url = url {
-            sortRandom(findAudio(url))
+            sortRandom(findAudio(url), reason: reason)
         } else {
-            sortRandom(nil as Audio?)
+            sortRandom(nil as Audio?, reason: reason)
         }
     }
 
-    func sortRandom(_ sticky: Audio?) {
+    func sortRandom(_ sticky: Audio?, reason: String) {
         let verbose = true
 
         if verbose {
-            os_log("\(self.t)SortRandom with sticky: \(sticky?.title ?? "nil")")
+            os_log("\(self.t)SortRandom with sticky: \(sticky?.title ?? "nil") with reason: \(reason)")
         }
+
+        emitSorting()
 
         do {
             try context.enumerate(FetchDescriptor<Audio>(), block: {
@@ -165,21 +167,25 @@ extension DB {
 
             try context.save()
             onUpdated()
+            emitSortDone()
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
+            emitSortDone()
         }
     }
 
-    func sort(_ url: URL?) {
+    func sort(_ url: URL?, reason: String) {
         if let url = url {
-            sort(findAudio(url))
+            sort(findAudio(url), reason: reason)
         } else {
-            sort(nil as Audio?)
+            sort(nil as Audio?, reason: reason)
         }
     }
 
-    func sort(_ sticky: Audio?) {
-        os_log("\(Logger.isMain)\(DB.label)Sort")
+    func sort(_ sticky: Audio?, reason: String) {
+        os_log("\(Logger.isMain)\(DB.label)Sort with reason: \(reason)")
+
+        emitSorting()
 
         // 前100留给特殊用途
         var offset = 100
@@ -198,17 +204,19 @@ extension DB {
 
             try context.save()
             onUpdated()
+            emitSortDone()
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
+            emitSortDone()
         }
     }
 
-    func sticky(_ url: URL?) {
+    func sticky(_ url: URL?, reason: String) {
         guard let url = url else {
             return
         }
 
-        os_log("\(Logger.isMain)\(DB.label)Sticky \(url.lastPathComponent)")
+        os_log("\(Logger.isMain)\(DB.label)Sticky \(url.lastPathComponent) with reason: \(reason)")
 
         do {
             // Find the audio corresponding to the URL
@@ -278,6 +286,31 @@ extension DB {
             try context.save()
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
+        }
+    }
+}
+
+// MARK: Event Name 
+
+extension Notification.Name {
+    static let DBSorting = Notification.Name("DBSorting")
+    static let DBSortDone = Notification.Name("DBSortDone")
+}
+
+// MARK: Event Emit
+
+extension DB {
+    func emitSorting() {
+        DispatchQueue.main.sync {
+            os_log("\(self.t)emitSorting")
+            NotificationCenter.default.post(name: .DBSorting, object: nil)
+        }
+    }
+
+    func emitSortDone() {
+        DispatchQueue.main.sync {
+            os_log("\(self.t)emitSortDone")
+            NotificationCenter.default.post(name: .DBSortDone, object: nil)
         }
     }
 }

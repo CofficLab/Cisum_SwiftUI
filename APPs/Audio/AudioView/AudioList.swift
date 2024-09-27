@@ -70,6 +70,7 @@ struct AudioList: View, SuperThread, SuperLog {
                 DBTips()
             }
         }
+        .onAppear(perform: handleOnAppear)
         .onChange(of: selection, handleSelectionChange)
         .onReceive(NotificationCenter.default.publisher(for: .PlayManStateChange), perform: handlePlayManStateChange)
         .onReceive(NotificationCenter.default.publisher(for: .dbSyncing), perform: handleDBSyncing)
@@ -80,6 +81,12 @@ struct AudioList: View, SuperThread, SuperLog {
 // MARK: Event Handler
 
 extension AudioList {
+    func handleOnAppear() {
+        if let asset = playMan.asset {
+            selection = asset.url
+        }
+    }
+
     func handlePlayManStateChange(_ notification: Notification) {
         self.bg.async {
             if let asset = playMan.asset, asset.url != self.selection {

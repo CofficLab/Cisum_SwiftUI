@@ -253,7 +253,7 @@ extension AudioLayout {
         let state = notification.userInfo?["state"] as? PlayState
         
         self.bg.async {
-            let verbose = true
+            let verbose = false
 
             if verbose {
                 os_log("\(self.t)OnPlayModeChange -> \(mode?.rawValue ?? "nil")")
@@ -263,7 +263,7 @@ extension AudioLayout {
 
             switch mode {
             case .Order:
-                dbLocal.sort(state?.getAsset()?.url)
+                dbLocal.sort(state?.getAsset()?.url, reason: "onPlayModeChange")
                 if let mode = mode {
                     l.current.setCurrentPlayMode(mode: mode)
                 }
@@ -272,9 +272,9 @@ extension AudioLayout {
                     l.current.setCurrentPlayMode(mode: mode)
                 }
 
-                dbLocal.sticky(state?.getAsset()?.url)
+                dbLocal.sticky(state?.getAsset()?.url, reason: "onPlayModeChange")
             case .Random:
-                dbLocal.sortRandom(state?.getAsset()?.url)
+                dbLocal.sortRandom(state?.getAsset()?.url, reason: "onPlayModeChange")
                 if let mode = mode {
                     l.current.setCurrentPlayMode(mode: mode)
                 }

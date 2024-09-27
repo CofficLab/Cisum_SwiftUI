@@ -201,6 +201,10 @@ extension PlayMan {
     }
 
     func setMode(_ mode: PlayMode) {
+        if self.mode == mode {
+            return
+        }
+
         self.mode = mode
         self.emitPlayModeChange()
     }
@@ -426,7 +430,7 @@ extension PlayMan {
     }
 
     func emitPlayModeChange() {
-        let verbose = false
+        let verbose = true
         if verbose {
             os_log("\(self.t)emitPlayModeChange 🚀🚀🚀 -> \(self.mode.rawValue)")
             os_log("  ➡️ State -> \(self.state.des)")
