@@ -109,6 +109,7 @@
 		0BC29EAF2CA5893800E4813F /* AudioHero.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC29EAE2CA5893800E4813F /* AudioHero.swift */; };
 		0BC29EB12CA5899200E4813F /* AudioTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC29EB02CA5899200E4813F /* AudioTitle.swift */; };
 		0BC29EB32CA59E8B00E4813F /* AudioSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC29EB22CA59E8B00E4813F /* AudioSlider.swift */; };
+		0BC29EB52CA6DE5F00E4813F /* AudioVStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC29EB42CA6DE5E00E4813F /* AudioVStack.swift */; };
 		0BD056892BC6192D00EBC7C4 /* AudioSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD056882BC6192D00EBC7C4 /* AudioSync.swift */; };
 		0BD0568B2BC6202900EBC7C4 /* DiskiCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD0568A2BC6202900EBC7C4 /* DiskiCloud.swift */; };
 		0BD056912BC6340800EBC7C4 /* BtnEvict.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD056902BC6340800EBC7C4 /* BtnEvict.swift */; };
@@ -315,6 +316,7 @@
 		0BC29EAE2CA5893800E4813F /* AudioHero.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioHero.swift; sourceTree = "<group>"; };
 		0BC29EB02CA5899200E4813F /* AudioTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioTitle.swift; sourceTree = "<group>"; };
 		0BC29EB22CA59E8B00E4813F /* AudioSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSlider.swift; sourceTree = "<group>"; };
+		0BC29EB42CA6DE5E00E4813F /* AudioVStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioVStack.swift; sourceTree = "<group>"; };
 		0BD056882BC6192D00EBC7C4 /* AudioSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSync.swift; sourceTree = "<group>"; };
 		0BD0568A2BC6202900EBC7C4 /* DiskiCloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskiCloud.swift; sourceTree = "<group>"; };
 		0BD056902BC6340800EBC7C4 /* BtnEvict.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnEvict.swift; sourceTree = "<group>"; };
@@ -806,6 +808,7 @@
 		F52A98FC2C43BC79003559F1 /* AudioView */ = {
 			isa = PBXGroup;
 			children = (
+				0BC29EB42CA6DE5E00E4813F /* AudioVStack.swift */,
 				0BC29EB22CA59E8B00E4813F /* AudioSlider.swift */,
 				0BC29EB02CA5899200E4813F /* AudioTitle.swift */,
 				0BC29EAE2CA5893800E4813F /* AudioHero.swift */,
@@ -1078,6 +1081,7 @@
 				F54DFA4F2CA4E37500F81BE3 /* AudioApp.swift in Sources */,
 				0B8C36B62BEDAB5E00C47567 /* BtnMore.swift in Sources */,
 				0BAABEC32BC939D000DF4A31 /* LayoutView.swift in Sources */,
+				0BC29EB52CA6DE5F00E4813F /* AudioVStack.swift in Sources */,
 				0BAABEB32BC79C9F00DF4A31 /* TaskExt.swift in Sources */,
 				F518F6F52C34E78C00844E62 /* Book.swift in Sources */,
 				F5511BC02C2953C200400900 /* BtnToggleCopying.swift in Sources */,

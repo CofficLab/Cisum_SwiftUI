@@ -11,6 +11,7 @@ struct AudioDB: View {
 
     @State var treeView = false
     @State var isSorting = false
+    @State var sortMode: String?
 
     @Query(Audio.descriptorAll, animation: .default) var audios: [Audio]
 
@@ -31,9 +32,19 @@ struct AudioDB: View {
     var body: some View {
         VStack(spacing: 0) {
             if isSorting {
-                Text("正在排序...")
+                if let mode = sortMode {
+                    if mode == "random" {
+                        Text("正在随机排序...")
+                    } else if mode == "order" {
+                        Text("正在顺序排序...")
+                    } else {
+                        Text("正在排序...")
+                    }
+                } else {
+                    Text("正在排序...")
+                }
             } else {
-                AudioList(reason: "AudioDB")
+                AudioVStack(reason: "AudioDB")
                     .frame(maxHeight: .infinity)
             }
 
@@ -115,6 +126,9 @@ extension AudioDB {
     func onSorting(_ notification: Notification) {
         os_log("\(label)onSorting")
         isSorting = true
+        if let mode = notification.userInfo?["mode"] as? String {
+            sortMode = mode
+        }
     }
 
     func onSortDone(_ notification: Notification) {

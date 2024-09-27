@@ -12,7 +12,7 @@ import SwiftUI
       B1               B2
       B2
  */
-struct AudioList: View, SuperThread, SuperLog {
+struct AudioVStack: View, SuperThread, SuperLog {
     let emoji = "📬"
 
     @EnvironmentObject var app: AppProvider
@@ -45,61 +45,53 @@ struct AudioList: View, SuperThread, SuperLog {
         }
     }
 
-    var body: some View {
-        ZStack {
-            ScrollView {
-                LazyVStack(spacing: 0) {
-                    ForEach(loadedAudios, id: \.url) { audio in
-                        AudioTile(audio: audio)
-                            .tag(audio.url as URL?)
-                            .onTapGesture {
-                                selection = audio.url
-                            }
-                    }
-                    if isLoading {
-                        ProgressView("加载中...")
-                            .frame(height: 50)
-                    }
-                    if currentPage * pageSize < audios.count {
-                        Text("加载更多...")
-                            .frame(height: 50)
-                            .onAppear {
-                                Task {
-                                    await loadMoreAudios()
-                                }
-                            }
-                    }
+    var header: some View {
+        HStack {
+            Text("共 \(audios.count.description)")
+            Spacer()
+            if isSyncing {
+                HStack {
+                    Image(systemName: "arrow.triangle.2.circlepath")
+                    Text("正在读取仓库")
                 }
             }
-            .overlay(alignment: .top) {
-                HStack {
-                    Text("共 \(audios.count.description)")
-                    Spacer()
-                    if isSyncing {
-                        HStack {
-                            Image(systemName: "arrow.triangle.2.circlepath")
-                            Text("正在读取仓库")
+            if Config.isNotDesktop {
+                BtnAdd()
+                    .font(.title2)
+                    .labelStyle(.iconOnly)
+            }
+        }
+        .padding()
+        .background(.background)
+    }
+
+    var body: some View {
+        ZStack {
+            VStack(spacing: 0) {
+                header
+                ScrollView {
+                    LazyVStack(spacing: 0) {
+                        ForEach(loadedAudios, id: \.url) { audio in
+                            AudioTile(audio: audio)
+                                .tag(audio.url as URL?)
+                                .onTapGesture {
+                                    selection = audio.url
+                                }
+                        }
+                        if isLoading {
+                            ProgressView("加载中...")
+                                .frame(height: 50)
+                        }
+                        if currentPage * pageSize < audios.count {
+                            Text("加载更多...")
+                                .frame(height: 50)
+                                .onAppear {
+                                    Task {
+                                        await loadMoreAudios()
+                                    }
+                                }
                         }
                     }
-                    if Config.isNotDesktop {
-                        BtnAdd()
-                            .font(.title2)
-                            .labelStyle(.iconOnly)
-                    }
-                }
-                .padding()
-                .background(
-                    Group {
-                        #if os(iOS)
-                        Color(uiColor: .systemBackground)
-                        #elseif os(macOS)
-                        Color(nsColor: .windowBackgroundColor)
-                        #endif
-                    }.opacity(0.8)
-                )
-
-                if showTips {
-                    DBTips()
                 }
             }
 
@@ -120,7 +112,7 @@ struct AudioList: View, SuperThread, SuperLog {
 
 // MARK: Event Handler
 
-extension AudioList {
+extension AudioVStack {
     func handleOnAppear() {
         if let asset = playMan.asset {
             selection = asset.url
@@ -158,14 +150,14 @@ extension AudioList {
 
 // MARK: Data Loading
 
-extension AudioList {
+extension AudioVStack {
     func loadInitialAudios() async {
         isLoading = true
         defer { isLoading = false }
 
         let endIndex = min(pageSize, audios.count)
-        let initialBatch = Array(audios[0..<endIndex])
-        
+        let initialBatch = Array(audios[0 ..< endIndex])
+
         await MainActor.run {
             loadedAudios = initialBatch
             currentPage = 1
@@ -179,8 +171,8 @@ extension AudioList {
 
         let startIndex = currentPage * pageSize
         let endIndex = min(startIndex + pageSize, audios.count)
-        let nextBatch = Array(audios[startIndex..<endIndex])
-        
+        let nextBatch = Array(audios[startIndex ..< endIndex])
+
         await MainActor.run {
             loadedAudios.append(contentsOf: nextBatch)
             currentPage += 1

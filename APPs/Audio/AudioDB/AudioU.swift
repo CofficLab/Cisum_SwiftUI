@@ -154,7 +154,7 @@ extension DB {
             os_log("\(self.t)SortRandom with sticky: \(sticky?.title ?? "nil") with reason: \(reason)")
         }
 
-        emitSorting()
+        emitSorting("random")
 
         do {
             try context.enumerate(FetchDescriptor<Audio>(), block: {
@@ -185,7 +185,7 @@ extension DB {
     func sort(_ sticky: Audio?, reason: String) {
         os_log("\(Logger.isMain)\(DB.label)Sort with reason: \(reason)")
 
-        emitSorting()
+        emitSorting("order")
 
         // 前100留给特殊用途
         var offset = 100
@@ -300,10 +300,10 @@ extension Notification.Name {
 // MARK: Event Emit
 
 extension DB {
-    func emitSorting() {
+    func emitSorting(_ mode: String) {
         DispatchQueue.main.sync {
             os_log("\(self.t)emitSorting")
-            NotificationCenter.default.post(name: .DBSorting, object: nil)
+            NotificationCenter.default.post(name: .DBSorting, object: nil, userInfo: ["mode": mode])
         }
     }
 

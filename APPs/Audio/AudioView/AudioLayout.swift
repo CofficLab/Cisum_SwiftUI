@@ -17,6 +17,8 @@ struct AudioLayout: View, SuperLog, SuperThread {
     @State private var autoResizing = false
     @State private var tab: String = "DB"
 
+    @State private var mode: PlayMode?
+
     var showDB: Bool { app.showDB }
     var controlViewHeightMin = Config.controlViewMinHeight
     var databaseViewHeightMin = Config.databaseViewHeightMin
@@ -174,7 +176,7 @@ extension AudioLayout {
             }
         }
 
-        let mode = l.current.getCurrentPlayMode()
+        self.mode = l.current.getCurrentPlayMode()
         if let mode = mode {
             playMan.setMode(mode)
         }
@@ -261,23 +263,22 @@ extension AudioLayout {
                 os_log("  ➡️ Mode -> \(mode?.rawValue ?? "nil")")
             }
 
+            if mode == self.mode {
+                return
+            }
+
+            if let mode = mode {
+                l.current.setCurrentPlayMode(mode: mode)
+                self.mode = mode
+            }
+
             switch mode {
             case .Order:
                 dbLocal.sort(state?.getAsset()?.url, reason: "onPlayModeChange")
-                if let mode = mode {
-                    l.current.setCurrentPlayMode(mode: mode)
-                }
             case .Loop:
-                if let mode = mode {
-                    l.current.setCurrentPlayMode(mode: mode)
-                }
-
                 dbLocal.sticky(state?.getAsset()?.url, reason: "onPlayModeChange")
             case .Random:
                 dbLocal.sortRandom(state?.getAsset()?.url, reason: "onPlayModeChange")
-                if let mode = mode {
-                    l.current.setCurrentPlayMode(mode: mode)
-                }
             case .none:
                 os_log("\(self.t)播放模式 -> 未知")
             }
