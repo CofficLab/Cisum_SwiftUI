@@ -20,7 +20,7 @@ struct PictureView: View {
     var asset: PlayAsset
     var role: CoverView.Role = .Icon
     var label: String { "\(Logger.isMain)\(Self.label)" }
-    var updating: DiskFileGroup { data.updating }
+    var updating: DiskFileGroup = .empty
     var shape: RoundedRectangle {
         if role == .Hero {
             if Config.isiOS {

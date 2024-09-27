@@ -55,7 +55,6 @@ struct RootView: View, SuperLog, SuperEvent, SuperThread {
             .task(onAppearTask)
             .onReceive(NotificationCenter.default.publisher(for: .PlayManStateChange), perform: onStateChanged)
             .onReceive(NotificationCenter.default.publisher(for: .PlayManLike), perform: onToggleLike)
-            .onReceive(NotificationCenter.default.publisher(for: .dbSyncing), perform: onDBSyncing)
     }
 }
 
@@ -109,14 +108,6 @@ extension RootView {
     func onToggleLike(_ notification: Notification) {
         if let asset = notification.userInfo?["asset"] as? PlayAsset {
             os_log("\(t)喜欢变了 -> \(asset.url.lastPathComponent)")
-        }
-    }
-
-    func onDBSyncing(_ notification: Notification) {
-        let files = notification.object as? [DiskFile]
-
-        if let files = files {
-            self.data.updating = DiskFileGroup(disk: l.current.getDisk()!, files: files, isFullLoad: true)
         }
     }
 }

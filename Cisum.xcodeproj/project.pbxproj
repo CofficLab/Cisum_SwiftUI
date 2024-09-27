@@ -662,7 +662,6 @@
 				F54DFA4E2CA4E37500F81BE3 /* AudioApp.swift */,
 				0B1D5A672AB3025F0010DDF2 /* Audio.swift */,
 				F52A98FA2C43AA63003559F1 /* AudioPoster.swift */,
-				0BD056882BC6192D00EBC7C4 /* AudioSync.swift */,
 				F52A98FC2C43BC79003559F1 /* AudioView */,
 			);
 			path = Audio;
@@ -976,6 +975,7 @@
 				0B8C36A62BEA15E000C47567 /* AudioC.swift */,
 				0B8C36A02BEA0E8800C47567 /* AudioD.swift */,
 				0B8C36A22BEA124900C47567 /* AudioR.swift */,
+				0BD056882BC6192D00EBC7C4 /* AudioSync.swift */,
 				0B8C36A42BEA15A800C47567 /* AudioU.swift */,
 			);
 			path = AudioDB;

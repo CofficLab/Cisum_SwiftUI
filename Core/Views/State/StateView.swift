@@ -24,7 +24,7 @@ struct StateView: View {
     var font: Font { asset == nil ? .title3 : .callout }
     var label: String { "\(Logger.isMain)🖥️ StateView::" }
     var disk: any Disk { data.disk }
-    var updating: DiskFileGroup { data.updating }
+    var updating: DiskFileGroup = .empty
 
     var body: some View {
         VStack {

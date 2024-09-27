@@ -24,6 +24,7 @@ struct AudioVStack: View, SuperThread, SuperLog {
 
     @State var selection: URL? = nil
     @State var isSyncing: Bool = false
+    @State var syncingCount: Int = 0
     @State private var loadedAudios: [Audio] = []
     @State private var isLoading = false
     @State private var currentPage = 0
@@ -54,7 +55,7 @@ struct AudioVStack: View, SuperThread, SuperLog {
             if isSyncing {
                 HStack {
                     Image(systemName: "arrow.triangle.2.circlepath")
-                    Text("正在读取仓库")
+                    Text("正在同步 \(syncingCount.description) 项")
                 }
             }
             if Config.isNotDesktop {
@@ -72,7 +73,7 @@ struct AudioVStack: View, SuperThread, SuperLog {
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
-                header
+                // header
                 ScrollView {
                     LazyVStack(spacing: 0) {
                         ForEach(loadedAudios, id: \.url) { audio in
@@ -84,7 +85,7 @@ struct AudioVStack: View, SuperThread, SuperLog {
                                     }
                                 Divider()
                                     .background(Color.gray.opacity(0.3))
-                                    .padding(.horizontal, 8)
+                                    .padding(.horizontal, 0)
                                     .padding(.bottom, 8)
                                     .padding(.top, 4)
                             }
@@ -140,6 +141,9 @@ extension AudioVStack {
 
     func handleDBSyncing(_ notification: Notification) {
         isSyncing = true
+        if let files = notification.object as? [DiskFile] {
+            syncingCount = files.count
+        }
     }
 
     func handleDBSynced(_ notification: Notification) {

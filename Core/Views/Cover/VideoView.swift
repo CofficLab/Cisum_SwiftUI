@@ -21,7 +21,7 @@ struct VideoView: View {
 
     var asset: PlayAsset
     var label: String { "\(Logger.isMain)\(Self.label)" }
-    var updating: DiskFileGroup { data.updating }
+    var updating: DiskFileGroup = .empty
 
     init(_ asset: PlayAsset) {
         self.asset = asset

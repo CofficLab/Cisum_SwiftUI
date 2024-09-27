@@ -24,10 +24,6 @@ struct AudioList: View, SuperThread, SuperLog {
 
     @State var selection: URL? = nil
     @State var isSyncing: Bool = false
-    @State private var loadedAudios: [Audio] = []
-    @State private var isLoading = false
-    @State private var currentPage = 0
-    let pageSize = 50
 
     var total: Int { audios.count }
 
@@ -47,33 +43,9 @@ struct AudioList: View, SuperThread, SuperLog {
 
     var body: some View {
         ZStack {
-            ScrollView {
-                LazyVStack(spacing: 0) {
-                    ForEach(loadedAudios, id: \.url) { audio in
-                        AudioTile(audio: audio)
-                            .tag(audio.url as URL?)
-                            .onTapGesture {
-                                selection = audio.url
-                            }
-                    }
-                    if isLoading {
-                        ProgressView("加载中...")
-                            .frame(height: 50)
-                    }
-                    if currentPage * pageSize < audios.count {
-                        Text("加载更多...")
-                            .frame(height: 50)
-                            .onAppear {
-                                Task {
-                                    await loadMoreAudios()
-                                }
-                            }
-                    }
-                }
-            }
-            .overlay(alignment: .top) {
-                HStack {
-                    Text("共 \(audios.count.description)")
+            List(selection: $selection) {
+                Section(header: HStack {
+                    Text("共 \(total.description)")
                     Spacer()
                     if isSyncing {
                         HStack {
@@ -86,21 +58,12 @@ struct AudioList: View, SuperThread, SuperLog {
                             .font(.title2)
                             .labelStyle(.iconOnly)
                     }
-                }
-                .padding()
-                .background(
-                    Group {
-                        #if os(iOS)
-                        Color(uiColor: .systemBackground)
-                        #elseif os(macOS)
-                        Color(nsColor: .windowBackgroundColor)
-                        #endif
-                    }.opacity(0.8)
-                )
-
-                if showTips {
-                    DBTips()
-                }
+                }, content: {
+                    ForEach(audios, id: \.url) { audio in
+                        AudioTile(audio: audio)
+                            .tag(audio.url as URL?)
+                    }
+                })
             }
 
             if showTips {
@@ -112,9 +75,6 @@ struct AudioList: View, SuperThread, SuperLog {
         .onReceive(NotificationCenter.default.publisher(for: .PlayManStateChange), perform: handlePlayManStateChange)
         .onReceive(NotificationCenter.default.publisher(for: .dbSyncing), perform: handleDBSyncing)
         .onReceive(NotificationCenter.default.publisher(for: .dbSynced), perform: handleDBSynced)
-        .task {
-            await loadInitialAudios()
-        }
     }
 }
 
@@ -152,38 +112,6 @@ extension AudioList {
             if url != playMan.asset?.url {
                 self.playMan.play(audio.toPlayAsset(), reason: "AudioList SelectionChange")
             }
-        }
-    }
-}
-
-// MARK: Data Loading
-
-extension AudioList {
-    func loadInitialAudios() async {
-        isLoading = true
-        defer { isLoading = false }
-
-        let endIndex = min(pageSize, audios.count)
-        let initialBatch = Array(audios[0..<endIndex])
-        
-        await MainActor.run {
-            loadedAudios = initialBatch
-            currentPage = 1
-        }
-    }
-
-    func loadMoreAudios() async {
-        guard !isLoading else { return }
-        isLoading = true
-        defer { isLoading = false }
-
-        let startIndex = currentPage * pageSize
-        let endIndex = min(startIndex + pageSize, audios.count)
-        let nextBatch = Array(audios[startIndex..<endIndex])
-        
-        await MainActor.run {
-            loadedAudios.append(contentsOf: nextBatch)
-            currentPage += 1
         }
     }
 }

@@ -6,7 +6,6 @@ class DataProvider: ObservableObject, SuperLog {
     static var label = "💼 DataManager::"
 
     @Published var disk: any Disk
-    @Published var updating: DiskFileGroup = .empty
     @Published var syncing: Bool = false
 
     let emoji = "💼"

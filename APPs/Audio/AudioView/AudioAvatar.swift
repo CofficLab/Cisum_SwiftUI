@@ -1,27 +1,22 @@
+import MagicKit
 import OSLog
 import SwiftUI
-import MagicKit
 
 struct AudioAvatar: View, SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var data: DataProvider
-    
+
     let emoji = "🐰"
-    static var label = "🐰 AlbumView::"
-    
+
     @State var image: Image?
     @State var downloadingPercent: Double = -1
-    
-    // MARK: Download
-    
-    var isDownloading: Bool { downloadingPercent > 0 && downloadingPercent < 100}
+    @State var displayedPercent: Int = 0
+
+    var isDownloading: Bool { downloadingPercent > 0 && downloadingPercent < 100 }
     var isNotDownloaded: Bool { !isDownloaded }
     var isDownloaded: Bool { downloadingPercent == 100 }
-    
+
     var asset: PlayAsset
     var role: CoverView.Role = .Icon
-    var label: String { "\(Logger.isMain)\(Self.label)" }
-    var updating: DiskFileGroup { data.updating }
     var shape: RoundedRectangle {
         if role == .Hero {
             if Config.isiOS {
@@ -29,7 +24,7 @@ struct AudioAvatar: View, SuperLog, SuperThread {
             } else {
                 RoundedRectangle(cornerSize: CGSize(width: 0, height: 0))
             }
-            
+
         } else {
             RoundedRectangle(cornerSize: CGSize(width: 20, height: 10))
         }
@@ -40,12 +35,14 @@ struct AudioAvatar: View, SuperLog, SuperThread {
         self.role = role
     }
 
-    var body: some View {
-        ZStack {
+    private var avatarContent: some View {
+        Group {
             if asset.isNotExists() {
                 Image(systemName: "minus.circle").resizable().scaledToFit()
             } else if isDownloading {
-                Self.makeProgressView(downloadingPercent / 100)
+                ProgressView(value: downloadingPercent, total: 100) {
+                    Text("\(displayedPercent)%")
+                }.progressViewStyle(CircularProgressViewStyle(size: 35))
             } else if isNotDownloaded {
                 NotDownloadedAlbum(role: role)
             } else if let image = image {
@@ -54,26 +51,14 @@ struct AudioAvatar: View, SuperLog, SuperThread {
                 DefaultAlbum(role: role)
             }
         }
-        .clipShape(shape)
-        .onAppear {
-            if let file = updating.find(asset.url) {
-                self.downloadingPercent = file.downloadProgress
-            } else {
-                self.downloadingPercent = asset.isDownloaded ? 100 : 0
-            }
-        }
-        .onChange(of: isDownloaded, {
-            if isDownloaded {
-                updateCover(reason: "下载完成")
-            }
-        })
-        .onChange(of: updating, {
-            for file in updating.files {
-                if file.url == asset.url {
-                    self.downloadingPercent = file.downloadProgress
-                }
-            }
-        })
+    }
+
+    var body: some View {
+        avatarContent
+            .clipShape(shape)
+            .onAppear(perform: handleOnAppear)
+            .onChange(of: isDownloaded, handleDownloadCompletion)
+            .onReceive(NotificationCenter.default.publisher(for: .dbSyncing), perform: handleDBSyncing)
     }
 
     func updateCover(reason: String, verbose: Bool = false) {
@@ -81,7 +66,7 @@ struct AudioAvatar: View, SuperLog, SuperThread {
             if verbose {
                 os_log("\(t)UpdateCover for \(self.asset.title) Because of \(reason)")
             }
-            
+
             Task {
                 let image = await asset.getCoverImage()
 
@@ -103,6 +88,32 @@ struct AudioAvatar: View, SuperLog, SuperThread {
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+    }
+}
+
+// MARK: Event Handler
+
+extension AudioAvatar {
+    func handleOnAppear() {
+        self.downloadingPercent = asset.isDownloaded ? 100 : 0
+    }
+
+    private func handleDownloadCompletion() {
+        if isDownloaded {
+            updateCover(reason: "下载完成")
+        }
+    }
+
+    func handleDBSyncing(_ notification: Notification) {
+        if let files = notification.object as? [DiskFile] {
+            for file in files {
+                if file.url == self.asset.url {
+                    self.downloadingPercent = file.downloadProgress
+                    self.displayedPercent = Int(file.downloadProgress)
+                    break
+                }
+            }
         }
     }
 }
