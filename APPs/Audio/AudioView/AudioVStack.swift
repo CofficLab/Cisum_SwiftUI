@@ -76,11 +76,18 @@ struct AudioVStack: View, SuperThread, SuperLog {
                 ScrollView {
                     LazyVStack(spacing: 0) {
                         ForEach(loadedAudios, id: \.url) { audio in
-                            AudioTile(audio: audio)
-                                .tag(audio.url as URL?)
-                                .onTapGesture {
-                                    selection = audio.url
-                                }
+                            VStack(spacing: 0) {
+                                AudioTile(audio: audio)
+                                    .tag(audio.url as URL?)
+                                    .onTapGesture {
+                                        selection = audio.url
+                                    }
+                                Divider()
+                                    .background(Color.gray.opacity(0.3))
+                                    .padding(.horizontal, 8)
+                                    .padding(.bottom, 8)
+                                    .padding(.top, 4)
+                            }
                         }
                         if isLoading {
                             ProgressView().frame(height: 30)
