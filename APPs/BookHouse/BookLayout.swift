@@ -1,4 +1,3 @@
-
 import AVKit
 import OSLog
 import SwiftUI
@@ -34,12 +33,16 @@ struct BookLayout: View {
                     .frame(height: showDB ? Config.controlViewMinHeight : geo.size.height)
 
                 if showDB {
-                    if #available(macOS 15.0, *) {
+                    #if os(macOS)
+                        if #available(macOS 15.0, *) {
+                            getTabView()
+                                .tabViewStyle(GroupedTabViewStyle())
+                        } else {
+                            getTabView()
+                        }
+                    #else
                         getTabView()
-                            .tabViewStyle(GroupedTabViewStyle())
-                    } else {
-                        getTabView()
-                    }
+                    #endif
                 }
             }
             .onChange(of: showDB) {

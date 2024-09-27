@@ -36,8 +36,12 @@ struct AudioLayout: View, SuperLog, SuperThread {
 
                 if showDB {
                     if #available(macOS 15.0, *) {
+                        #if os(macOS)
                         getTabView()
                             .tabViewStyle(GroupedTabViewStyle())
+                        #else
+                        getTabView()
+                        #endif
                     } else {
                         getTabView()
                     }

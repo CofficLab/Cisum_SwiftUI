@@ -34,8 +34,12 @@ struct VideoLayout: View {
 
                 if showDB {
                     if #available(macOS 15.0, *) {
-                        getTabView()
-                            .tabViewStyle(GroupedTabViewStyle())
+                        #if os(macOS)
+                            getTabView()
+                                .tabViewStyle(GroupedTabViewStyle())
+                        #else
+                            getTabView()
+                        #endif
                     } else {
                         getTabView()
                     }

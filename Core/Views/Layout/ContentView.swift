@@ -11,9 +11,9 @@ struct ContentView: View, SuperLog, SuperThread {
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
-                if Config.isNotDesktop {
-                    TopView()
-                }
+//                if Config.isNotDesktop {
+//                    TopView()
+//                }
 
                 l.layout.onAppear {
                     l.current.boot()

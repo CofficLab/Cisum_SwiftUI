@@ -100,7 +100,9 @@ extension RootView {
         }
 
         #if os(iOS)
-            UIApplication.shared.beginReceivingRemoteControlEvents()
+            self.main.async {
+                UIApplication.shared.beginReceivingRemoteControlEvents()
+            }
         #endif
 
         Task.detached(operation: {
