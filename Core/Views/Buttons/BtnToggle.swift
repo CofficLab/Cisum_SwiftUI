@@ -82,12 +82,16 @@ extension BtnToggle {
     }
 
     func onPlayStateChange(_ notification: Notification) {
+        os_log("\(self.t) OnPlayStateChange")
+
         if let state = notification.userInfo?["state"] as? PlayState {
-            if let asset = state.getPlayingAsset() {
-                if self.asset == nil {
+            if self.asset == nil {
+                self.isPlaying = state.isPlaying
+            } else {
+                if let asset = state.getPlayingAsset() {
                     self.isPlaying = state.isPlaying
                 } else {
-                    self.isPlaying = state.isPlaying && self.asset?.url == asset.url
+                    self.isPlaying = false
                 }
             }
         }

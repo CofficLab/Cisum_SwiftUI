@@ -6,7 +6,7 @@ import SwiftUI
 struct AudioLayout: View, SuperLog, SuperThread {
     let emoji = "🖥️"
 
-    @EnvironmentObject var appManager: AppProvider
+    @EnvironmentObject var app: AppProvider
     @EnvironmentObject var l: LayoutProvider
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var dbLocal: DB
@@ -17,7 +17,7 @@ struct AudioLayout: View, SuperLog, SuperThread {
     @State private var autoResizing = false
     @State private var tab: String = "DB"
 
-    var showDB: Bool { appManager.showDB }
+    var showDB: Bool { app.showDB }
     var controlViewHeightMin = Config.controlViewMinHeight
     var databaseViewHeightMin = Config.databaseViewHeightMin
     var verbose = false
@@ -70,7 +70,7 @@ struct AudioLayout: View, SuperLog, SuperThread {
                 autoResizing = false
 
                 if geo.size.height <= controlViewHeightMin + 20 {
-                    appManager.closeDBView()
+                    app.closeDBView()
                 }
             }
             .onAppear {
@@ -198,6 +198,8 @@ extension AudioLayout {
     }
 
     func onPlayStateChange(_ notification: Notification) {
+        os_log("\(self.t)OnPlayStateChange")
+        
         if let state = notification.userInfo?["state"] as? PlayState {
             if let asset = state.getPlayingAsset() {
                 self.setCurrent(url: asset.url)
