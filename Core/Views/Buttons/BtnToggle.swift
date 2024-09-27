@@ -11,6 +11,7 @@ struct BtnToggle: View, SuperThread, SuperLog {
     @State private var systemImage = "play.fill"
     @State private var isPlaying = false
 
+    let emoji = "🔊"
     var asset: PlayAsset?
     var foregroundStyle: Color?
 
@@ -82,7 +83,10 @@ extension BtnToggle {
     }
 
     func onPlayStateChange(_ notification: Notification) {
-        os_log("\(self.t) OnPlayStateChange")
+        let verbose = false
+        if verbose {
+            os_log("\(self.t) OnPlayStateChange")
+        }
 
         if let state = notification.userInfo?["state"] as? PlayState {
             if self.asset == nil {

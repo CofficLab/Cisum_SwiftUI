@@ -198,8 +198,11 @@ extension AudioLayout {
     }
 
     func onPlayStateChange(_ notification: Notification) {
-        os_log("\(self.t)OnPlayStateChange")
-        
+        let verbose = false
+        if verbose {
+            os_log("\(self.t)OnPlayStateChange")
+        }
+
         if let state = notification.userInfo?["state"] as? PlayState {
             if let asset = state.getPlayingAsset() {
                 self.setCurrent(url: asset.url)
