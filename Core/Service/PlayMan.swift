@@ -122,8 +122,12 @@ extension PlayMan {
         setPlayingInfo()
     }
 
-    func prepare(_ asset: PlayAsset?) {
-        self.worker.prepare(asset)
+    func prepare(_ asset: PlayAsset?, reason: String) {
+        let verbose = true
+        if verbose {
+            os_log("\(self.t)Prepare 「\(asset?.fileName ?? "nil")」 🐛 \(reason)")
+        }
+        self.worker.prepare(asset, reason: reason)
     }
 
     // MARK: Play
@@ -149,7 +153,10 @@ extension PlayMan {
     }
 
     func resume(reason: String) {
-        os_log("\(self.t)Resume while current is \(self.state.des)")
+        let verbose = true
+        if verbose {
+            os_log("\(self.t)Resume 🐛 \(reason)")
+        }
 
         guard let asset = self.asset else {
             return

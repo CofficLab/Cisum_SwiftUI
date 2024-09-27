@@ -220,7 +220,7 @@ extension DiskiCloud {
     
     /// 监听存储Audio文件的文件夹
     func watch(reason: String) async {
-        let verbose = true
+        let verbose = false
         let emoji = "🌞🌞🌞"
         
         if verbose {

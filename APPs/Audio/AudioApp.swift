@@ -72,7 +72,10 @@ class AudioApp: SuperLayout, SuperLog, SuperThread {
     }
 
     func getCurrent() -> URL? {
-        os_log("\(self.t)GetCurrent")
+        let verbose = false
+        if verbose {
+            os_log("\(self.t)GetCurrent")
+        }
         
         if let urlString = UserDefaults.standard.string(forKey: "currentAudioURL") {
             return URL(string: urlString)

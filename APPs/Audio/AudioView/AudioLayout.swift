@@ -119,7 +119,7 @@ struct AudioLayout: View, SuperLog, SuperThread {
 
     // MARK: 恢复上次播放的
 
-    func restore(reason: String, verbose: Bool = true) {
+    func restore(reason: String, verbose: Bool = false) {
         self.bg.async {
             if verbose {
                 os_log("\(self.t)Restore because of \(reason)")
@@ -128,9 +128,9 @@ struct AudioLayout: View, SuperLog, SuperThread {
             let db: DB = DB(Config.getContainer, reason: "dataManager")
 
             if let url = l.current.getCurrent() {
-                self.playMan.prepare(PlayAsset(url: url))
+                self.playMan.prepare(PlayAsset(url: url), reason: "Restore")
             } else if (l.current.getDisk()) != nil {
-                self.playMan.prepare(db.firstAudio()?.toPlayAsset())
+                self.playMan.prepare(db.firstAudio()?.toPlayAsset(), reason: "Restore")
             }
         }
     }

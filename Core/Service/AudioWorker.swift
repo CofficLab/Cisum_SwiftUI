@@ -37,7 +37,7 @@ class AudioWorker: NSObject, ObservableObject, PlayWorker, SuperLog, SuperThread
             switch state {
             case .Ready:
                 do {
-                    try player = makePlayer(self.asset, reason: r("AudioWorker.Ready"))
+                    try player = makePlayer(self.asset, reason: "AudioWorker.Ready")
                     player.prepareToPlay()
                 } catch {
                     e = error
@@ -118,8 +118,11 @@ extension AudioWorker {
         player.currentTime = time
     }
 
-    func prepare(_ asset: PlayAsset?) {
-        os_log("\(self.t)Prepare \(asset?.fileName ?? "nil")")
+    func prepare(_ asset: PlayAsset?, reason: String) {
+        let verbose = false
+        if verbose {
+            os_log("\(self.t)Prepare \(asset?.fileName ?? "nil") \(reason)")
+        }
         self.state = .Ready(asset)
     }
 
@@ -129,7 +132,7 @@ extension AudioWorker {
         os_log("\(self.t)Play \(asset.fileName) 🐛 \(reason)")
 
         if asset.isFolder() {
-            return prepare(asset)
+            return prepare(asset, reason: reason)
         }
 
         self.state = .Playing(asset)
@@ -143,7 +146,11 @@ extension AudioWorker {
     }
 
     func resume() {
-        os_log("\(self.t)Resume while current is \(self.state.des)")
+        let verbose = true
+        if verbose {
+            os_log("\(self.t)Resume")
+        }
+
         switch state {
         case .Playing:
             break
@@ -188,7 +195,7 @@ extension AudioWorker {
     }
 
     func makePlayer(_ asset: PlayAsset?, reason: String) throws -> AVAudioPlayer {
-        os_log("\(self.t)MakePlayer(\(reason)) \(asset?.fileName ?? "nil")")
+        os_log("\(self.t)MakePlayer「\(asset?.fileName ?? "nil")」 🐛 \(reason)")
 
         guard let asset = asset else {
             return AVAudioPlayer()

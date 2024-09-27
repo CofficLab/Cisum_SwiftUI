@@ -35,7 +35,7 @@ struct AudioList: View, SuperThread, SuperLog {
         return app.flashMessage.isEmpty && audios.count == 0
     }
 
-    init(verbose: Bool = true, reason: String) {
+    init(verbose: Bool = false, reason: String) {
         if verbose {
             os_log("\(Logger.initLog)AudioList")
         }

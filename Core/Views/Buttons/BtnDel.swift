@@ -43,7 +43,7 @@ struct BtnDel: View {
                 if isPlaying, let next = next {
                     playMan.play(next.toPlayAsset(), reason: "删除了")
                 } else {
-                    playMan.prepare(next?.toPlayAsset())
+                    playMan.prepare(next?.toPlayAsset(), reason: "删除了")
                 }
             }
 

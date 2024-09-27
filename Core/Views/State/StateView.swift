@@ -53,12 +53,12 @@ struct StateView: View {
             Task {
                 if playMan.asset == nil, let first = data.first() {
                     os_log("\(self.label)准备第一个")
-                    playMan.prepare(first)
+                    playMan.prepare(first, reason: "count changed")
                 }
             }
 
             if count == 0 {
-                playMan.prepare(nil)
+                playMan.prepare(nil, reason: "count changed")
             }
         }
         .onChange(of: updating, {
@@ -67,10 +67,10 @@ struct StateView: View {
                     app.error = SmartError.Downloading
                 }
                 
-                if t.isDownloaded {
-                    app.error = nil
-                    playMan.prepare(self.asset)
-                }
+                // if t.isDownloaded {
+                //     app.error = nil
+                //     playMan.prepare(self.asset, reason: "updating changed")
+                // }
             }
         })
     }

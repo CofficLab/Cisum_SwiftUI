@@ -6,7 +6,7 @@ protocol PlayWorker {
     var state: PlayState { get }
     
     func goto(_ time: TimeInterval)
-    func prepare(_ asset: PlayAsset?)
+    func prepare(_ asset: PlayAsset?, reason: String)
     func play(_ asset: PlayAsset, reason: String)
     func play()
     func resume()

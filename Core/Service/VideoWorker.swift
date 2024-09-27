@@ -109,7 +109,7 @@ extension VideoWorker {
 //        player.currentTime = time
     }
 
-    func prepare(_ audio: PlayAsset?) {
+    func prepare(_ audio: PlayAsset?, reason: String) {
         state = .Ready(audio)
     }
 

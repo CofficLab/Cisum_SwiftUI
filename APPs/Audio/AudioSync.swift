@@ -74,7 +74,9 @@ extension DB {
             os_log(.error, "\(error.localizedDescription)")
         }
 
-        os_log("\(self.jobEnd(startTime, title: "\(self.labelForSync) SyncWithDisk(\(group.count))", tolerance: 0.01))")
+        if verbose {
+            os_log("\(self.jobEnd(startTime, title: "\(self.labelForSync) SyncWithDisk(\(group.count))", tolerance: 0.01))")
+        }
     }
 
     // MARK: SyncWithUpdatedItems

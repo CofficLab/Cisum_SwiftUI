@@ -43,7 +43,7 @@ struct DBViewTree: View {
                         if playMan.isPlaying {
                             playMan.play(s.toPlayAsset(), reason: "点击了")
                         } else {
-                            playMan.prepare(s.toPlayAsset())
+                            playMan.prepare(s.toPlayAsset(), reason: "点击了")
                         }
                     }
                 })
