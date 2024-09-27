@@ -83,6 +83,27 @@ class AudioApp: SuperLayout, SuperLog, SuperThread {
         
         return nil
     }
+
+    func setCurrentPlayMode(mode: PlayMode) {
+        // 将当前的播放模式存储到UserDefaults
+        UserDefaults.standard.set(mode.rawValue, forKey: "currentPlayMode")
+        
+        // 通过iCloud key-value同步
+        NSUbiquitousKeyValueStore.default.set(mode.rawValue, forKey: "currentPlayMode")
+        NSUbiquitousKeyValueStore.default.synchronize()
+        
+        let verbose = false
+        if verbose {
+            os_log("\(self.t)setCurrentPlayMode: \(mode.rawValue)")
+        }
+    }
+
+    func getCurrentPlayMode() -> PlayMode? {
+        if let modeRawValue = UserDefaults.standard.string(forKey: "currentPlayMode") {
+            return PlayMode(rawValue: modeRawValue)
+        }
+        return nil
+    }
 }
 
 // MARK: Event 

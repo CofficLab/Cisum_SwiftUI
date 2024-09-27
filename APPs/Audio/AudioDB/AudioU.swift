@@ -38,7 +38,7 @@ extension DB {
             increasePlayCount(url)
         }
     }
-    
+
     func increasePlayCount(_ url: URL) {
         if let a = findAudio(url) {
             a.playCount += 1
@@ -148,7 +148,11 @@ extension DB {
     }
 
     func sortRandom(_ sticky: Audio?) {
-        os_log("\(self.t)SortRandom")
+        let verbose = true
+
+        if verbose {
+            os_log("\(self.t)SortRandom with sticky: \(sticky?.title ?? "nil")")
+        }
 
         do {
             try context.enumerate(FetchDescriptor<Audio>(), block: {
@@ -165,7 +169,7 @@ extension DB {
             os_log(.error, "\(e.localizedDescription)")
         }
     }
-    
+
     func sort(_ url: URL?) {
         if let url = url {
             sort(findAudio(url))
@@ -196,6 +200,34 @@ extension DB {
             onUpdated()
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
+        }
+    }
+
+    func sticky(_ url: URL?) {
+        guard let url = url else {
+            return
+        }
+
+        os_log("\(Logger.isMain)\(DB.label)Sticky \(url.lastPathComponent)")
+
+        do {
+            // Find the audio corresponding to the URL
+            guard let audioToSticky = findAudio(url) else {
+                os_log(.error, "Audio not found for URL: \(url)")
+                return
+            }
+
+            // Find the currently sticky audio (if any)
+            let currentStickyAudio = try context.fetch(FetchDescriptor<Audio>(predicate: #Predicate { $0.order == 0 })).first
+
+            // Update orders
+            audioToSticky.order = 0
+            currentStickyAudio?.order = 1
+
+            try context.save()
+            onUpdated()
+        } catch let e {
+            os_log(.error, "Error setting sticky audio: \(e.localizedDescription)")
         }
     }
 }

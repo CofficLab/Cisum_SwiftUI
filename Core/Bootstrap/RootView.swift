@@ -54,7 +54,6 @@ struct RootView: View, SuperLog, SuperEvent, SuperThread {
             })
             .task(onAppearTask)
             .onReceive(NotificationCenter.default.publisher(for: .PlayManStateChange), perform: onStateChanged)
-            .onReceive(NotificationCenter.default.publisher(for: .PlayManModeChange), perform: onPlayModeChange)
             .onReceive(NotificationCenter.default.publisher(for: .PlayManLike), perform: onToggleLike)
             .onReceive(NotificationCenter.default.publisher(for: .dbSyncing), perform: onDBSyncing)
     }
@@ -107,12 +106,6 @@ extension RootView {
         }
     }
 
-    func onPlayModeChange(_ notification: Notification) {
-        if let mode = notification.userInfo?["mode"] as? PlayMode {
-            os_log("\(t)播放模式变了 -> \(mode.description)")
-        }
-    }
-
     func onToggleLike(_ notification: Notification) {
         if let asset = notification.userInfo?["asset"] as? PlayAsset {
             os_log("\(t)喜欢变了 -> \(asset.url.lastPathComponent)")
@@ -121,7 +114,6 @@ extension RootView {
 
     func onDBSyncing(_ notification: Notification) {
         let files = notification.object as? [DiskFile]
-        let count = files?.count ?? 0
 
         if let files = files {
             self.data.updating = DiskFileGroup(disk: l.current.getDisk()!, files: files, isFullLoad: true)

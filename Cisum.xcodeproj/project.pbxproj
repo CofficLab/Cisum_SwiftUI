@@ -656,14 +656,11 @@
 		0BC29EAB2CA45BEA00E4813F /* Audio */ = {
 			isa = PBXGroup;
 			children = (
+				F5B6AAC62CA6B361001F3BC3 /* AudioDB */,
 				F54DFA4E2CA4E37500F81BE3 /* AudioApp.swift */,
 				0B1D5A672AB3025F0010DDF2 /* Audio.swift */,
-				0B8C36A62BEA15E000C47567 /* AudioC.swift */,
-				0B8C36A02BEA0E8800C47567 /* AudioD.swift */,
 				F52A98FA2C43AA63003559F1 /* AudioPoster.swift */,
-				0B8C36A22BEA124900C47567 /* AudioR.swift */,
 				0BD056882BC6192D00EBC7C4 /* AudioSync.swift */,
-				0B8C36A42BEA15A800C47567 /* AudioU.swift */,
 				F52A98FC2C43BC79003559F1 /* AudioView */,
 			);
 			path = Audio;
@@ -968,6 +965,17 @@
 				0B9FA2982BC81EFF007B235A /* NotDownloadedAlbum.swift */,
 			);
 			path = Cover;
+			sourceTree = "<group>";
+		};
+		F5B6AAC62CA6B361001F3BC3 /* AudioDB */ = {
+			isa = PBXGroup;
+			children = (
+				0B8C36A62BEA15E000C47567 /* AudioC.swift */,
+				0B8C36A02BEA0E8800C47567 /* AudioD.swift */,
+				0B8C36A22BEA124900C47567 /* AudioR.swift */,
+				0B8C36A42BEA15A800C47567 /* AudioU.swift */,
+			);
+			path = AudioDB;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

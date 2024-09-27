@@ -36,7 +36,7 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread {
     }
 
     var asset: PlayAsset?
-    var mode: PlayMode = .Order
+    private var mode: PlayMode = .Order
     var isAudioWorker: Bool { (self.worker as? AudioWorker) != nil }
     var isVideoWorker: Bool { (self.worker as? VideoWorker) != nil }
     var duration: TimeInterval { worker.duration }
@@ -68,14 +68,13 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread {
         super.init()
 
         self.audioWorker.onStateChange = { state in
-            DispatchQueue.main.async {
+            self.main.async {
                 self.setPlayingInfo()
                 self.asset = state.getAsset()
                 self.emitPlayStateChange(state)
 
                 if state.isFinished {
-                    os_log("\(self.t)播放完成，自动播放下一个")
-                    self.next()
+                    self.onPlayFinished()
                 }
             }
         }
@@ -104,8 +103,7 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread {
 extension PlayMan {
     func switchMode(verbose: Bool = true) {
         mode = mode.switchMode()
-        Config.setCurrentMode(mode)
-        self.emitPlayModeChange(mode)
+        self.emitPlayModeChange()
     }
 }
 
@@ -201,6 +199,15 @@ extension PlayMan {
     func next() {
         self.emitPlayNext(self.asset)
     }
+
+    func setMode(_ mode: PlayMode) {
+        self.mode = mode
+        self.emitPlayModeChange()
+    }
+
+    func getMode() -> PlayMode {
+        self.mode
+    }
 }
 
 // MARK: 播放状态
@@ -266,6 +273,40 @@ extension PlayMan {
             os_log("\(self.t)setPlayingInfo like -> \(like)")
         }
         c.likeCommand.isActive = like
+    }
+}
+
+// MARK: Event Names
+
+extension Notification.Name {
+    static let PlayManPlay = Notification.Name("PlayManPlay")
+    static let PlayManPause = Notification.Name("PlayManPause")
+    static let PlayManStop = Notification.Name("PlayManStop")
+    static let PlayManNext = Notification.Name("PlayManNext")
+    static let PlayManRandomNext = Notification.Name("PlayManRandomNext")
+    static let PlayManPrev = Notification.Name("PlayManPrev")
+    static let PlayManToggle = Notification.Name("PlayManToggle")
+    static let PlayManLike = Notification.Name("PlayManLike")
+    static let PlayManDislike = Notification.Name("PlayManDislike")
+    static let PlayManStateChange = Notification.Name("PlayManStateChange")
+    static let PlayManModeChange = Notification.Name("PlayManModeChange")
+}
+
+// MARK: Event Handlers
+
+extension PlayMan {
+    func onPlayFinished() {
+        switch mode {
+        case .Order:
+            os_log("\(self.t)播放完成，自动播放下一个")
+            self.next()
+        case .Loop:
+            os_log("\(self.t)循环播放")
+            play()
+        case .Random:
+            os_log("\(self.t)随机播放")
+            emitPlayRandomNext(self.asset)
+        }
     }
 
     // 接收控制中心的指令
@@ -345,20 +386,7 @@ extension PlayMan {
     }
 }
 
-// MARK: Event 
-
-extension Notification.Name {
-    static let PlayManPlay = Notification.Name("PlayManPlay")
-    static let PlayManPause = Notification.Name("PlayManPause")
-    static let PlayManStop = Notification.Name("PlayManStop")
-    static let PlayManNext = Notification.Name("PlayManNext")
-    static let PlayManPrev = Notification.Name("PlayManPrev")
-    static let PlayManToggle = Notification.Name("PlayManToggle")
-    static let PlayManLike = Notification.Name("PlayManLike")
-    static let PlayManDislike = Notification.Name("PlayManDislike")
-    static let PlayManStateChange = Notification.Name("PlayManStateChange")
-    static let PlayManModeChange = Notification.Name("PlayManModeChange")
-}
+// MARK: Event Emitters
 
 extension PlayMan {
     func emitPlayStart() {
@@ -377,6 +405,10 @@ extension PlayMan {
         NotificationCenter.default.post(name: .PlayManNext, object: self, userInfo: ["asset": asset])
     }
 
+    func emitPlayRandomNext(_ asset: PlayAsset?) {
+        NotificationCenter.default.post(name: .PlayManRandomNext, object: self, userInfo: ["asset": asset])
+    }
+
     func emitPlayPrev(_ asset: PlayAsset?) {
         NotificationCenter.default.post(name: .PlayManPrev, object: self, userInfo: ["asset": asset])
     }
@@ -393,8 +425,13 @@ extension PlayMan {
         NotificationCenter.default.post(name: .PlayManDislike, object: self)
     }
 
-    func emitPlayModeChange(_ mode: PlayMode) {
-        NotificationCenter.default.post(name: .PlayManModeChange, object: self, userInfo: ["mode": mode])
+    func emitPlayModeChange() {
+        let verbose = false
+        if verbose {
+            os_log("\(self.t)emitPlayModeChange 🚀🚀🚀 -> \(self.mode.rawValue)")
+            os_log("  ➡️ State -> \(self.state.des)")
+        }
+        NotificationCenter.default.post(name: .PlayManModeChange, object: self, userInfo: ["mode": mode, "state": state])
     }
 
     func emitPlayStateChange(_ state: PlayState) {

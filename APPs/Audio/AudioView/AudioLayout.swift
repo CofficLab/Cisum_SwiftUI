@@ -37,10 +37,10 @@ struct AudioLayout: View, SuperLog, SuperThread {
                 if showDB {
                     if #available(macOS 15.0, *) {
                         #if os(macOS)
-                        getTabView()
-                            .tabViewStyle(GroupedTabViewStyle())
+                            getTabView()
+                                .tabViewStyle(GroupedTabViewStyle())
                         #else
-                        getTabView()
+                            getTabView()
                         #endif
                     } else {
                         getTabView()
@@ -73,20 +73,14 @@ struct AudioLayout: View, SuperLog, SuperThread {
                     app.closeDBView()
                 }
             }
-            .onAppear {
-                if autoResizing == false {
-                    // 说明是用户主动调整
-                    self.height = Config.getWindowHeight()
-                    if verbose {
-                        os_log("\(self.t)Height=\(self.height)")
-                    }
-                }
-            }
+            .onAppear(perform: onAppear)
             .onReceive(NotificationCenter.default.publisher(for: .PlayManStateChange), perform: onPlayStateChange)
             .onReceive(NotificationCenter.default.publisher(for: .AudioAppDidBoot), perform: onAudioAppDidBoot)
             .onReceive(NotificationCenter.default.publisher(for: .PlayManPlay), perform: onPlay)
             .onReceive(NotificationCenter.default.publisher(for: .PlayManNext), perform: onPlayNext)
             .onReceive(NotificationCenter.default.publisher(for: .PlayManPrev), perform: onPlayPrev)
+            .onReceive(NotificationCenter.default.publisher(for: .PlayManRandomNext), perform: onPlayRandomNext)
+            .onReceive(NotificationCenter.default.publisher(for: .PlayManModeChange), perform: onPlayModeChange)
         }
     }
 
@@ -171,6 +165,21 @@ extension AudioLayout {
 // MARK: 事件处理
 
 extension AudioLayout {
+    func onAppear() {
+        if autoResizing == false {
+            // 说明是用户主动调整
+            self.height = Config.getWindowHeight()
+            if verbose {
+                os_log("\(self.t)Height=\(self.height)")
+            }
+        }
+
+        let mode = l.current.getCurrentPlayMode()
+        if let mode = mode {
+            playMan.setMode(mode)
+        }
+    }
+
     func onPlayNext(_ notification: Notification) {
         let asset = notification.userInfo?["asset"] as? PlayAsset
         self.bg.async {
@@ -199,6 +208,20 @@ extension AudioLayout {
         }
     }
 
+    func onPlayRandomNext(_ notification: Notification) {
+        let asset = notification.userInfo?["asset"] as? PlayAsset
+        self.bg.async {
+            if let asset = asset {
+                let next = dbLocal.getNextOf(asset.url)?.toPlayAsset()
+                os_log("\(self.t)随机播放下一个 -> \(next?.url.lastPathComponent ?? "")")
+
+                if let next = next {
+                    self.playMan.play(next, reason: "onPlayNext")
+                }
+            }
+        }
+    }
+
     func onAudioAppDidBoot(_ notification: Notification) {
         self.restore(reason: "AudioAppDidBoot")
         if let url = playMan.asset?.url, let disk = l.current.getDisk() {
@@ -221,6 +244,42 @@ extension AudioLayout {
         if let state = notification.userInfo?["state"] as? PlayState {
             if let asset = state.getPlayingAsset() {
                 self.setCurrent(url: asset.url)
+            }
+        }
+    }
+
+    func onPlayModeChange(_ notification: Notification) {
+        let mode = notification.userInfo?["mode"] as? PlayMode
+        let state = notification.userInfo?["state"] as? PlayState
+        
+        self.bg.async {
+            let verbose = true
+
+            if verbose {
+                os_log("\(self.t)OnPlayModeChange -> \(mode?.rawValue ?? "nil")")
+                os_log("  ➡️ State -> \(state?.des ?? "nil")")
+                os_log("  ➡️ Mode -> \(mode?.rawValue ?? "nil")")
+            }
+
+            switch mode {
+            case .Order:
+                dbLocal.sort(state?.getAsset()?.url)
+                if let mode = mode {
+                    l.current.setCurrentPlayMode(mode: mode)
+                }
+            case .Loop:
+                if let mode = mode {
+                    l.current.setCurrentPlayMode(mode: mode)
+                }
+
+                dbLocal.sticky(state?.getAsset()?.url)
+            case .Random:
+                dbLocal.sortRandom(state?.getAsset()?.url)
+                if let mode = mode {
+                    l.current.setCurrentPlayMode(mode: mode)
+                }
+            case .none:
+                os_log("\(self.t)播放模式 -> 未知")
             }
         }
     }

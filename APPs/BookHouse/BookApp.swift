@@ -57,6 +57,17 @@ class BookApp: SuperLayout, SuperLog {
         }
         return nil
     }
+
+    func setCurrentPlayMode(mode: PlayMode) {
+        UserDefaults.standard.set(mode.rawValue, forKey: "currentBookPlayMode")
+    }
+
+    func getCurrentPlayMode() -> PlayMode? {
+        if let mode = UserDefaults.standard.string(forKey: "currentBookPlayMode") {
+            return PlayMode(rawValue: mode)
+        }
+        return nil
+    }
     
     // MARK: 恢复上次播放的
 

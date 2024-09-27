@@ -13,13 +13,13 @@ struct BtnMode: View {
             dynamicSize: autoResize,
             onTap: {
                 playMan.switchMode()
-                app.setFlashMessage("\(playMan.mode.description)")
+                app.setFlashMessage("\(playMan.getMode().description)")
             })
         .foregroundStyle(.white)
     }
 
     private func getImageName() -> String {
-        switch playMan.mode {
+        switch playMan.getMode() {
         case .Order:
             return "repeat"
         case .Loop:

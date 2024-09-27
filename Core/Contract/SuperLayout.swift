@@ -14,6 +14,8 @@ protocol SuperLayout: Identifiable {
     func getDisk() -> (any Disk)?
     func setCurrent(url: URL)
     func getCurrent() -> URL?
+    func setCurrentPlayMode(mode: PlayMode)
+    func getCurrentPlayMode() -> PlayMode?
 }
 
 extension SuperLayout {
