@@ -7,10 +7,19 @@ struct AudioTile: View, SuperThread {
     @EnvironmentObject var l: LayoutProvider
 
     @State var hovered = false
-
+    
     var audio: Audio
     
     var asset: PlayAsset { audio.toPlayAsset() }
+
+    init(audio: Audio) {
+        let verbose = false 
+        self.audio = audio
+
+        if verbose {
+            os_log("\(Logger.initLog)AudioTile -> \(audio.title)")
+        }
+    }
 
     var body: some View {
         ZStack {
@@ -34,25 +43,25 @@ struct AudioTile: View, SuperThread {
                 Spacer()
             }
 
-            if hovered {
-                HStack {
-                    Spacer()
-                    BtnToggle(asset: asset)
-                    BtnShowInFinder(url: asset.url, autoResize: false)
-                    BtnMore(asset: asset, autoResize: false)
-                }.labelStyle(.iconOnly)
-            }
+             if hovered {
+                 HStack {
+                     Spacer()
+                     BtnToggle(asset: asset)
+                     BtnShowInFinder(url: asset.url, autoResize: false)
+                     BtnMore(asset: asset, autoResize: false)
+                 }.labelStyle(.iconOnly)
+             }
         }
         .onHover { isHovered in
             withAnimation(.easeInOut(duration: 0.1)) {
                 hovered = isHovered 
             }
         }
-        .onTapGesture {
-            self.bg.async {
-                self.playMan.play(audio.toPlayAsset(), reason: "AudioTile")
-            }
-        }
+//        .onTapGesture {
+//            self.bg.async {
+//                self.playMan.play(audio.toPlayAsset(), reason: "AudioTile")
+//            }
+//        }
         .contextMenu(menuItems: {
             BtnToggle(asset: asset)
             Divider()

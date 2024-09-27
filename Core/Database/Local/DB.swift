@@ -2,8 +2,9 @@ import Foundation
 import OSLog
 import SwiftData
 import SwiftUI
+import MagicKit
 
-actor DB: ModelActor, ObservableObject, SuperLog, SuperEvent {
+actor DB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     
     static let label = "📦 DB::"
     let emoji = "🎁"

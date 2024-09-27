@@ -86,6 +86,7 @@ struct AudioLayout: View, SuperLog, SuperThread {
             .onReceive(NotificationCenter.default.publisher(for: .AudioAppDidBoot), perform: onAudioAppDidBoot)
             .onReceive(NotificationCenter.default.publisher(for: .PlayManPlay), perform: onPlay)
             .onReceive(NotificationCenter.default.publisher(for: .PlayManNext), perform: onPlayNext)
+            .onReceive(NotificationCenter.default.publisher(for: .PlayManPrev), perform: onPlayPrev)
         }
     }
 
@@ -179,6 +180,20 @@ extension AudioLayout {
 
                 if let next = next {
                     self.playMan.play(next, reason: "onPlayNext")
+                }
+            }
+        }
+    }
+
+    func onPlayPrev(_ notification: Notification) {
+        let asset = notification.userInfo?["asset"] as? PlayAsset
+        self.bg.async {
+            if let asset = asset {
+                let prev = dbLocal.getPrevOf(asset.url)?.toPlayAsset()
+                os_log("\(self.t)播放上一个 -> \(prev?.url.lastPathComponent ?? "")")
+
+                if let prev = prev {
+                    self.playMan.play(prev, reason: "onPlayPrev")
                 }
             }
         }

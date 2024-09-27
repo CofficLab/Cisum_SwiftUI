@@ -54,11 +54,6 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread {
 
     // MARK: 告诉我如何获取播放资源
 
-    var onGetPrevOf: (_ asset: PlayAsset?) -> PlayAsset? = { asset in
-        os_log("\(PlayMan.label)GetPrevOf -> \(asset?.title ?? "nil")")
-        return nil
-    }
-
     var onGetChildren: (_ asset: PlayAsset) -> [PlayAsset] = { asset in
         os_log("\(PlayMan.label)GetChildrenOf -> \(asset.title)")
         return []
@@ -72,7 +67,6 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread {
 
         super.init()
 
-        self.audioWorker.onGetPrevOf = onGetPrevOf
         self.audioWorker.onStateChange = { state in
             DispatchQueue.main.async {
                 self.setPlayingInfo()
@@ -86,7 +80,6 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread {
             }
         }
 
-        self.videoWorker.onGetPrevOf = onGetPrevOf
         self.videoWorker.onStateChange = { state in
             DispatchQueue.main.async {
                 self.setPlayingInfo()
@@ -193,18 +186,12 @@ extension PlayMan {
     // MARK: Prev
 
     func prev() {
-        self.worker.prev()
+        self.emitPlayPrev(self.asset)
     }
 
     // MARK: Next
 
     func next() {
-//        if let next = self.onGetNextOf(self.asset) {
-//            self.play(next, reason: "Next")
-//        } else {
-//            os_log("\(self.t)Next of (\(self.asset?.title ?? "nil")) is nil, stop")
-//            self.stop()
-//        }
         self.emitPlayNext(self.asset)
     }
 }
@@ -383,8 +370,8 @@ extension PlayMan {
         NotificationCenter.default.post(name: .PlayManNext, object: self, userInfo: ["asset": asset])
     }
 
-    func emitPlayPrev() {
-        NotificationCenter.default.post(name: .PlayManPrev, object: self)
+    func emitPlayPrev(_ asset: PlayAsset?) {
+        NotificationCenter.default.post(name: .PlayManPrev, object: self, userInfo: ["asset": asset])
     }
     
     func emitPlayToggle() {

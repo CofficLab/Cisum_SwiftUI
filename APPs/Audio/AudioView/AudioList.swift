@@ -12,8 +12,8 @@ import SwiftUI
       B1               B2
       B2
  */
-struct AudioList: View, SuperThread {
-    static var label = "📬 DBList::"
+struct AudioList: View, SuperThread, SuperLog {
+    let emoji = "📬"
 
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var data: DataProvider
@@ -23,9 +23,9 @@ struct AudioList: View, SuperThread {
     @Query(Audio.descriptorNotFolder) var audios: [Audio]
 
     @State var selection: URL? = nil
+    @State var isSyncing: Bool = false
 
     var total: Int { audios.count }
-    var label: String { "\(Logger.isMain)\(Self.label)" }
 
     var showTips: Bool {
         if app.isDropping {
@@ -35,9 +35,9 @@ struct AudioList: View, SuperThread {
         return app.flashMessage.isEmpty && audios.count == 0
     }
 
-    init(verbose: Bool = false) {
+    init(verbose: Bool = true, reason: String) {
         if verbose {
-            os_log("\(Logger.isMain)\(Self.label)初始化")
+            os_log("\(Logger.initLog)AudioList")
         }
     }
 
@@ -47,7 +47,7 @@ struct AudioList: View, SuperThread {
                 Section(header: HStack {
                     Text("共 \(total.description)")
                     Spacer()
-                    if data.syncing {
+                    if isSyncing {
                         HStack {
                             Image(systemName: "arrow.triangle.2.circlepath")
                             Text("正在读取仓库")
@@ -70,7 +70,10 @@ struct AudioList: View, SuperThread {
                 DBTips()
             }
         }
+        .onChange(of: selection, handleSelectionChange)
         .onReceive(NotificationCenter.default.publisher(for: .PlayManStateChange), perform: handlePlayManStateChange)
+        .onReceive(NotificationCenter.default.publisher(for: .dbSyncing), perform: handleDBSyncing)
+        .onReceive(NotificationCenter.default.publisher(for: .dbSynced), perform: handleDBSynced)
     }
 }
 
@@ -81,6 +84,26 @@ extension AudioList {
         self.bg.async {
             if let asset = playMan.asset, asset.url != self.selection {
                 selection = asset.url
+            }
+        }
+    }
+
+    func handleDBSyncing(_ notification: Notification) {
+        isSyncing = true
+    }
+
+    func handleDBSynced(_ notification: Notification) {
+        isSyncing = false
+    }
+
+    func handleSelectionChange() {
+        guard let url = selection, let audio = audios.first(where: { $0.url == url }) else {
+            return
+        }
+
+        self.bg.async {
+            if url != playMan.asset?.url {
+                self.playMan.play(audio.toPlayAsset(), reason: "AudioList SelectionChange")
             }
         }
     }

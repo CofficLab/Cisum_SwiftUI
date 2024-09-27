@@ -29,7 +29,7 @@ struct AudioDB: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            AudioList()
+            AudioList(reason: "AudioDB")
                 .frame(maxHeight: .infinity)
 
             TaskView()

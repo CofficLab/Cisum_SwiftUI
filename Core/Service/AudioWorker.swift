@@ -91,11 +91,6 @@ class AudioWorker: NSObject, ObservableObject, PlayWorker, SuperLog, SuperThread
         os_log("\(AudioWorker.label)播放器状态已变为 \(state.des)")
     }
 
-    var onGetPrevOf: (_ asset: PlayAsset?) -> PlayAsset? = { asset in
-        os_log("\(AudioWorker.label)GetPrevOf -> \(asset?.title ?? "nil")")
-        return nil
-    }
-
     var onGetNextOf: (_ asset: PlayAsset?) -> PlayAsset? = { asset in
         os_log("\(AudioWorker.label)GetNextOf -> \(asset?.title ?? "nil")")
         return nil
@@ -182,16 +177,6 @@ extension AudioWorker {
 
     func toggle() {
         isPlaying ? pause() : resume()
-    }
-
-    // MARK: Prev
-
-    func prev() {
-        if let prev = self.onGetPrevOf(self.asset) {
-            self.play(prev, reason: "Prev")
-        } else {
-            self.stop()
-        }
     }
 }
 

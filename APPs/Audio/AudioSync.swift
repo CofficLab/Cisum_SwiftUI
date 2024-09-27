@@ -13,6 +13,8 @@ extension DB {
     func sync(_ group: DiskFileGroup, verbose: Bool = true) {
         var message = "\(labelForSync) Sync(\(group.count))"
 
+        self.emitDBSyncing(group.files)
+
         if let first = group.first, first.isDownloading == true {
             message += " -> \(first.fileName) -> \(String(format: "%.0f", first.downloadProgress))% ⏬⏬⏬"
         }
@@ -32,6 +34,8 @@ extension DB {
 //        }
 //
 //        self.updateGroupForURLs(group.urls)
+
+        self.emitDBSynced()
     }
 
     // MARK: SyncWithDisk
@@ -101,6 +105,27 @@ extension DB {
             try context.save()
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
+        }
+    }
+}
+
+// MARK: Event 
+
+extension Notification.Name {
+    static let dbSyncing = Notification.Name("dbSyncing")
+    static let dbSynced = Notification.Name("dbSynced")
+}
+
+extension DB {
+    func emitDBSyncing(_ files: [DiskFile]) {
+        self.main.async {
+            NotificationCenter.default.post(name: .dbSyncing, object: files)
+        }
+    }
+
+    func emitDBSynced() {
+        self.main.async {
+            NotificationCenter.default.post(name: .dbSynced, object: nil)
         }
     }
 }

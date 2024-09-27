@@ -55,31 +55,7 @@ struct RootView: View, SuperLog, SuperEvent, SuperThread {
             .task(onAppearTask)
             .onReceive(NotificationCenter.default.publisher(for: .PlayManStateChange), perform: onStateChanged)
             .onReceive(NotificationCenter.default.publisher(for: .PlayManModeChange), perform: onPlayModeChange)
-            .onReceive(NotificationCenter.default.publisher(for: .PlayManNext), perform: onGetNextOf)
             .onReceive(NotificationCenter.default.publisher(for: .PlayManLike), perform: onToggleLike)
-    }
-
-    func onAppOpen() {
-//        Task {
-//            let uuid = Config.getDeviceId()
-//            let audioCount = disk.getTotal()
-//
-//            await dbSynced.saveDeviceData(uuid: uuid, audioCount: audioCount)
-//        }
-    }
-
-    // MARK: Prev
-
-    func getPrevOf(_ asset: PlayAsset?) -> PlayAsset? {
-        guard let asset = asset else {
-            return nil
-        }
-
-//        if data.appScene != .Music {
-        return DiskFile(url: asset.url).prevDiskFile()?.toPlayAsset()
-//        } else {
-//            return dbLocal.getPrevOf(asset.url)?.toPlayAsset()
-//        }
     }
 }
 
@@ -87,10 +63,6 @@ struct RootView: View, SuperLog, SuperEvent, SuperThread {
 
 extension RootView {
     func onAppearTask() {
-        playMan.onGetPrevOf = { asset in
-            self.getPrevOf(asset)
-        }
-
         playMan.onGetChildren = { asset in
             if let children = DiskFile(url: asset.url).children {
                 return children.map({ $0.toPlayAsset() })
@@ -110,8 +82,15 @@ extension RootView {
                 os_log("\(self.t)🐎🐎🐎 执行后台任务")
             }
 
-            await self.onAppOpen()
+//            await self.onAppOpen()
         })
+
+        //        Task {
+//            let uuid = Config.getDeviceId()
+//            let audioCount = disk.getTotal()
+//
+//            await dbSynced.saveDeviceData(uuid: uuid, audioCount: audioCount)
+//        }
     }
 
     func onStateChanged(_ notification: Notification) {
@@ -137,16 +116,6 @@ extension RootView {
         if let asset = notification.userInfo?["asset"] as? PlayAsset {
             os_log("\(t)喜欢变了 -> \(asset.url.lastPathComponent)")
         }
-    }
-
-    func onGetNextOf(_ notification: Notification) {
-        os_log("\(t)getNextOf")
-
-//        if data.appScene != .Music {
-        // return DiskFile(url: asset.url).nextDiskFile()?.toPlayAsset()
-//        } else {
-//
-//        }
     }
 }
 

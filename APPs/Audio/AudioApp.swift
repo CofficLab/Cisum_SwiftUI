@@ -47,10 +47,6 @@ class AudioApp: SuperLayout, SuperLog, SuperThread {
         }
 
         disk.onUpdated = { items in
-//            DispatchQueue.main.async {
-//                self.updating = items
-//            }
-
             Task {
                 await DB(Config.getContainer, reason: "DataManager.WatchDisk").sync(items)
             }
@@ -99,3 +95,10 @@ extension AudioApp {
         }
     }
 }
+
+
+//        if data.appScene != .Music {
+        // return DiskFile(url: asset.url).nextDiskFile()?.toPlayAsset()
+//        } else {
+//
+//        }
