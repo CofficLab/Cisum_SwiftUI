@@ -1,6 +1,8 @@
 import AVKit
 import MagicKit
+import Network
 import OSLog
+import SwiftData
 import SwiftUI
 
 struct AudioRoot: View, SuperLog, SuperThread {
@@ -12,6 +14,11 @@ struct AudioRoot: View, SuperLog, SuperThread {
     @EnvironmentObject var db: DB
 
     @State private var mode: PlayMode?
+    @State var networkOK = true
+
+    @Query(sort: \Audio.order, animation: .default) var audios: [Audio]
+
+    var disk: (any Disk)? { l.current.getDisk() }
 
     let timer = Timer
         .publish(every: 10, on: .main, in: .common)
@@ -34,13 +41,31 @@ struct AudioRoot: View, SuperLog, SuperThread {
             .onReceive(NotificationCenter.default.publisher(for: .PlayManPrev), perform: onPlayPrev)
             .onReceive(NotificationCenter.default.publisher(for: .PlayManRandomNext), perform: onPlayRandomNext)
             .onReceive(NotificationCenter.default.publisher(for: .PlayManModeChange), perform: onPlayModeChange)
+            .onReceive(NotificationCenter.default.publisher(for: .dbSyncing), perform: onDBSyncing)
             .onReceive(timer, perform: onTimer)
+            .onChange(of: audios.count, onChangeOfAudiosCount)
     }
 }
 
 // MARK: Functions
 
 extension AudioRoot {
+    func checkNetworkStatus() {
+        let monitor = NWPathMonitor()
+        monitor.pathUpdateHandler = { path in
+            DispatchQueue.main.async {
+                if path.status == .satisfied {
+                    self.networkOK = true
+                } else {
+                    self.networkOK = false
+                }
+            }
+        }
+
+        let queue = DispatchQueue(label: "NetworkMonitor")
+        monitor.start(queue: queue)
+    }
+
     func restore(reason: String, verbose: Bool = false) {
         self.bg.async {
             if verbose {
@@ -114,7 +139,53 @@ extension AudioRoot {
 // MARK: 事件处理
 
 extension AudioRoot {
+    func onDBSyncing(_ notification: Notification) {
+        let verbose = false
+        let files = notification.userInfo?["files"] as? [DiskFile] ?? []
+
+        self.bg.async {
+            if verbose {
+                os_log("\(self.t)DBSyncing -> \(files.count)")
+            }
+
+            if let playError = app.error as? PlayManError,
+               case .NotDownloaded = playError {
+                let assetURL = playMan.state.getAsset()?.url
+
+                if let assetURL = assetURL {
+                    for file in files {
+                        if assetURL == file.url, file.isDownloaded {
+                            if verbose {
+                                os_log("\(self.t)DBSyncing -> 下载完成 -> \(file.url.lastPathComponent)")
+                            }
+                            app.clearError()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    func onChangeOfAudiosCount() {
+        Task {
+            if playMan.asset == nil, let first = db.firstAudio()?.toPlayAsset() {
+                os_log("\(self.t)准备第一个")
+                playMan.prepare(first, reason: "count changed")
+            }
+        }
+
+        if audios.count == 0 {
+            playMan.prepare(nil, reason: "count changed")
+        }
+    }
+
     func onAppear() {
+        if audios.count == 0 {
+            app.showDBView()
+        }
+
+        checkNetworkStatus()
+
         self.bg.async {
             let verbose = true
 
@@ -185,14 +256,29 @@ extension AudioRoot {
     }
 
     func onPlayStateChange(_ notification: Notification) {
-        let verbose = false
-        if verbose {
-            os_log("\(self.t)OnPlayStateChange")
-        }
+        let state = notification.userInfo?["state"] as? PlayState
 
-        if let state = notification.userInfo?["state"] as? PlayState {
-            if let asset = state.getPlayingAsset() {
-                self.setCurrent(url: asset.url)
+        self.bg.async {
+            let verbose = false
+            if verbose {
+                os_log("\(self.t)OnPlayStateChange")
+            }
+
+            if let state = state {
+                if let asset = state.getPlayingAsset() {
+                    self.setCurrent(url: asset.url)
+                }
+
+                if let e = state.getError() {
+                    os_log("\(self.t)播放状态错误 -> \(e.localizedDescription)")
+
+                    if let playManError = e as? PlayManError,
+                       case .NotDownloaded = playManError,
+                       let disk = disk,
+                       let asset = state.getAsset() {
+                        disk.download(asset.url, reason: "PlayManError.NotDownloaded")
+                    }
+                }
             }
         }
     }

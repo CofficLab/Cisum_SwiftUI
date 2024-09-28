@@ -29,8 +29,11 @@ class AudioApp: SuperLayout, SuperLog, SuperThread {
     var disk: (any Disk)?
 
     func boot() {
+        let verbose = false 
         self.bg.async {
-            os_log("%@👻👻👻 boot", self.t)
+            if verbose {
+                os_log("%@👻👻👻 boot", self.t)
+            }
             self.disk = DiskiCloud.make(self.dirName)
             self.watchDisk(reason: self.r("AudioApp.Boot"))
             self.emitBoot()

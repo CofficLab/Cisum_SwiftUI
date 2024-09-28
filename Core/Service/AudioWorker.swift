@@ -146,7 +146,7 @@ extension AudioWorker {
     }
 
     func resume() {
-        let verbose = true
+        let verbose = false
         if verbose {
             os_log("\(self.t)Resume")
         }
@@ -206,23 +206,23 @@ extension AudioWorker {
 
         if asset.isNotExists() {
             os_log("\(self.t)不存在 \(asset.fileName) ⚠️⚠️⚠️")
-            throw SmartError.NotExists
+            throw PlayManError.NotFound
         }
 
         if asset.isDownloading {
             os_log("\(self.t)在下载 \(asset.fileName) ⚠️⚠️⚠️")
-            throw SmartError.Downloading
+            throw PlayManError.Downloading
         }
 
         guard asset.isDownloaded else {
             os_log("  ⚠️ 未下载 \(asset.fileName)")
-            throw AudioWorkerError.NotDownloaded
+            throw PlayManError.NotDownloaded
         }
 
         // 格式不支持
         guard asset.isSupported() else {
             os_log("\(self.t)格式不支持 \(asset.fileName) \(asset.ext)")
-            throw SmartError.FormatNotSupported(asset.ext)
+            throw PlayManError.FormatNotSupported(asset.ext)
         }
 
         do {
@@ -307,16 +307,5 @@ extension AudioWorker: AVAudioPlayerDelegate {
     func audioPlayerEndInterruption(_ player: AVAudioPlayer, withOptions flags: Int) {
         os_log("\(self.t)audioPlayerEndInterruption")
         resume()
-    }
-}
-
-enum AudioWorkerError: Error, LocalizedError {
-    case NotDownloaded
-
-    var errorDescription: String? {
-        switch self {
-        case .NotDownloaded:
-            return "未下载"
-        }
     }
 }

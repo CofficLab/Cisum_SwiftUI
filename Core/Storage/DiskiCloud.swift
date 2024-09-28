@@ -148,7 +148,7 @@ extension DiskiCloud {
     }
     
     func download(_ url: URL, reason: String) {
-        let verbose = false
+        let verbose = true
 
         if verbose {
             os_log("\(self.label)Download ⏬⏬⏬ \(url.lastPathComponent) reason -> \(reason)")
@@ -163,6 +163,9 @@ extension DiskiCloud {
         }
         
         if iCloudHelper.isDownloaded(url) {
+            if verbose {
+                os_log("\(self.label)Download \(url.lastPathComponent) -> Already downloaded ✅✅✅")
+            }
             return
         }
         

@@ -124,7 +124,7 @@ extension Notification.Name {
 extension DB {
     func emitDBSyncing(_ files: [DiskFile]) {
         self.main.async {
-            NotificationCenter.default.post(name: .dbSyncing, object: files)
+            NotificationCenter.default.post(name: .dbSyncing, object: self, userInfo: ["files": files])
         }
     }
 

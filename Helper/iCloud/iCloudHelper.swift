@@ -35,24 +35,41 @@ class iCloudHelper {
 
     static func isDownloaded(_ url: URL) -> Bool {
         do {
-            let values = try url.resourceValues(forKeys: [.ubiquitousItemDownloadingStatusKey])
-            guard let status = values.ubiquitousItemDownloadingStatus else {
-                // 如果状态为nil，通常意味着文件已经完全下载
-                return true
-            }
+            let values = try url.resourceValues(forKeys: [.ubiquitousItemDownloadingStatusKey, .fileSizeKey])
             
-            switch status {
-            case .current, .downloaded:
-                return true
-            case .notDownloaded:
-                return false
-            default:
-                // 处理将来可能添加的新状态
-                os_log("Unknown download status for file: %@", log: .default, type: .error, url.path)
+            // Check ubiquitousItemDownloadingStatusKey
+            if let status = values.ubiquitousItemDownloadingStatus {
+                switch status {
+                case .current, .downloaded:
+                    return true
+                case .notDownloaded:
+                    return false
+                default:
+                    os_log("Unknown download status for file: %@", log: .default, type: .error, url.path)
+                    // For unknown status, if file exists and has size, consider it downloaded
+                    if FileManager.default.fileExists(atPath: url.path),
+                       let fileSize = values.fileSize, fileSize > 0 {
+                        os_log("文件已存在且有大小: %@, 认为已下载", log: .default, type: .info, url.path)
+                        return true
+                    }
+                    return false
+                }
+            } else {
+                // If status is nil, but file exists and has size, consider it downloaded
+                if FileManager.default.fileExists(atPath: url.path),
+                   let fileSize = values.fileSize, fileSize > 0 {
+                    os_log("文件已存在且有大小: %@, 认为已下载", log: .default, type: .info, url.path)
+                    return true
+                }
                 return false
             }
         } catch {
             os_log("Error getting download status for file: %@, Error: %@", log: .default, type: .error, url.path, error.localizedDescription)
+            // If there's an error, but file exists, consider it downloaded
+            if FileManager.default.fileExists(atPath: url.path) {
+                os_log("文件已存在且有大小: %@, 认为已下载", log: .default, type: .info, url.path)
+                return true
+            }
             return false
         }
     }

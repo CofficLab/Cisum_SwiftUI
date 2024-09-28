@@ -4,8 +4,9 @@ import Foundation
 import MediaPlayer
 import OSLog
 import SwiftUI
+import MagicKit
 
-class AppProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLog {
+class AppProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLog, SuperThread {
     @Published var showAlert: Bool = false
     @Published var showDB: Bool = Config.showDB
     @Published var showCopying: Bool = false
@@ -55,6 +56,12 @@ class AppProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLog {
         flashMessage = message
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
             self.flashMessage = ""
+        }
+    }
+    
+    func clearError() {
+        self.main.async {
+            self.error = nil
         }
     }
 }

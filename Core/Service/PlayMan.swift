@@ -121,7 +121,7 @@ extension PlayMan {
     }
 
     func prepare(_ asset: PlayAsset?, reason: String) {
-        let verbose = true
+        let verbose = false
         if verbose {
             os_log("\(self.t)Prepare 「\(asset?.fileName ?? "nil")」 🐛 \(reason)")
         }
@@ -131,19 +131,22 @@ extension PlayMan {
     // MARK: Play
 
     func play(_ asset: PlayAsset, reason: String) {
+        let verbose = false
+        if verbose {
             os_log("\(self.t)Play \(asset.fileName) (\(asset.isAudio() ? "Audio" : "Video")) 🐛 \(reason)")
+        }
 
-            if asset.isFolder() {
-                guard let first = self.onGetChildren(asset).first else {
-                    return self.worker.setError(SmartError.NoChildrenAudio, asset: asset)
-                }
-
-                self.asset = first
-            } else {
-                self.asset = asset
+        if asset.isFolder() {
+            guard let first = self.onGetChildren(asset).first else {
+                return self.worker.setError(SmartError.NoChildrenAudio, asset: asset)
             }
 
-            self.worker.play(self.asset!, reason: reason)
+            self.asset = first
+        } else {
+            self.asset = asset
+        }
+
+        self.worker.play(self.asset!, reason: reason)
     }
 
     func play() {
@@ -151,7 +154,7 @@ extension PlayMan {
     }
 
     func resume(reason: String) {
-        let verbose = true
+        let verbose = false
         if verbose {
             os_log("\(self.t)Resume 🐛 \(reason)")
         }
@@ -458,6 +461,34 @@ extension PlayMan {
             os_log("\(self.t)emitPlayStateChange 🚀🚀🚀 -> \(state.des)")
         }
         NotificationCenter.default.post(name: .PlayManStateChange, object: self, userInfo: ["state": state])
+    }
+}
+
+// MARK: Error
+
+enum PlayManError: Error, LocalizedError {
+    case NotDownloaded
+    case DownloadFailed
+    case Downloading
+    case NotFound
+    case NoChildren
+    case FormatNotSupported(String)
+
+    var errorDescription: String? {
+        switch self {
+        case .NotDownloaded:
+            return "未下载"
+        case .DownloadFailed:
+            return "下载失败"
+        case .Downloading:
+            return "正在下载"
+        case .NotFound:
+            return "未找到"
+        case .NoChildren:
+            return "没有子项"
+        case .FormatNotSupported(let ext):
+            return "格式不支持 \(ext)"
+        }
     }
 }
 
