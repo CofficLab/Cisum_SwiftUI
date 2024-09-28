@@ -11,6 +11,11 @@ extension DB {
     }
 
     func addCopyTasks(_ urls: [URL]) {
+        let verbose = true
+        if verbose {
+            os_log("\(self.t)添加复制任务(\(urls.count)个)")
+        }
+        
         for url in urls {
             newCopyTask(url)
         }

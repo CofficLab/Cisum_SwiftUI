@@ -1,9 +1,12 @@
+import MagicKit
 import SwiftData
 import SwiftUI
-import MagicKit
 
-struct StateCopy: View {
+struct StateCopy: View, SuperThread {
     @EnvironmentObject var dataManager: DataProvider
+    @EnvironmentObject var app: AppProvider
+    @EnvironmentObject var db: DB
+    @EnvironmentObject var l: LayoutProvider
 
     @Query(sort: \CopyTask.createdAt, animation: .default) var tasks: [CopyTask]
 
@@ -23,9 +26,6 @@ struct StateCopy: View {
         .padding(.vertical, 6)
         .background(background)
         .clipShape(RoundedRectangle(cornerRadius: 8))
-        .task {
-            dataManager.copyFiles(reason: "StateCopy")
-        }
     }
 }
 

@@ -28,19 +28,11 @@ struct AudioVStack: View, SuperThread, SuperLog {
     @State private var loadedAudios: [Audio] = []
     @State private var isLoading = false
     @State private var currentPage = 0
-    let pageSize = 50
 
+    let pageSize = 50
     var total: Int { audios.count }
     var loaded: Int { loadedAudios.count }
     var remaining: Int { total - loaded }
-
-    var showTips: Bool {
-        if app.isDropping {
-            return true
-        }
-
-        return app.flashMessage.isEmpty && audios.count == 0
-    }
 
     init(verbose: Bool = false, reason: String) {
         if verbose {
@@ -71,44 +63,38 @@ struct AudioVStack: View, SuperThread, SuperLog {
     }
 
     var body: some View {
-        ZStack {
-            VStack(spacing: 0) {
-                // header
-                ScrollView {
-                    LazyVStack(spacing: 0) {
-                        ForEach(loadedAudios, id: \.url) { audio in
-                            VStack(spacing: 0) {
-                                AudioTile(audio: audio)
-                                    .tag(audio.url as URL?)
-                                    .onTapGesture {
-                                        selection = audio.url
-                                    }
-                                Divider()
-                                    .background(Color.gray.opacity(0.3))
-                                    .padding(.horizontal, 0)
-                                    .padding(.bottom, 8)
-                                    .padding(.top, 4)
-                            }
-                        }
-                        if isLoading {
-                            ProgressView().frame(height: 30)
-                        }
-                        if currentPage * pageSize < audios.count {
-                            Text("加载更多... (剩余 \(remaining.description) 项)")
-                                .frame(height: 50)
-                                .onAppear {
-                                    Task {
-                                        await loadMoreAudios()
-                                    }
+        VStack(spacing: 0) {
+//             header
+            ScrollView {
+                LazyVStack(spacing: 0) {
+                    ForEach(loadedAudios, id: \.url) { audio in
+                        VStack(spacing: 0) {
+                            AudioTile(audio: audio)
+                                .tag(audio.url as URL?)
+                                .onTapGesture {
+                                    selection = audio.url
                                 }
+                            Divider()
+                                .background(Color.gray.opacity(0.3))
+                                .padding(.horizontal, 0)
+                                .padding(.bottom, 8)
+                                .padding(.top, 4)
                         }
                     }
-                    .padding()
+                    if isLoading {
+                        ProgressView().frame(height: 30)
+                    }
+                    if currentPage * pageSize < audios.count {
+                        Text("加载更多... (剩余 \(remaining.description) 项)")
+                            .frame(height: 50)
+                            .onAppear {
+                                Task {
+                                    await loadMoreAudios()
+                                }
+                            }
+                    }
                 }
-            }
-
-            if showTips {
-                DBTips()
+                .padding()
             }
         }
         .onAppear(perform: handleOnAppear)

@@ -15,8 +15,10 @@ struct AudioRoot: View, SuperLog, SuperThread {
 
     @State private var mode: PlayMode?
     @State var networkOK = true
+    @State var copyJob: AudioCopyJob?
 
     @Query(sort: \Audio.order, animation: .default) var audios: [Audio]
+    @Query(animation: .default) var copyTasks: [CopyTask]
 
     var disk: (any Disk)? { l.current.getDisk() }
 
@@ -42,8 +44,10 @@ struct AudioRoot: View, SuperLog, SuperThread {
             .onReceive(NotificationCenter.default.publisher(for: .PlayManRandomNext), perform: onPlayRandomNext)
             .onReceive(NotificationCenter.default.publisher(for: .PlayManModeChange), perform: onPlayModeChange)
             .onReceive(NotificationCenter.default.publisher(for: .dbSyncing), perform: onDBSyncing)
+            .onReceive(NotificationCenter.default.publisher(for: .CopyFiles), perform: onCopyFiles)
             .onReceive(timer, perform: onTimer)
             .onChange(of: audios.count, onChangeOfAudiosCount)
+            .onChange(of: self.disk?.root, onChangeOfDisk)
     }
 }
 
@@ -139,6 +143,12 @@ extension AudioRoot {
 // MARK: 事件处理
 
 extension AudioRoot {
+    func onChangeOfDisk() {
+        if let disk = disk {
+            self.copyJob = AudioCopyJob(db: db, disk: disk)
+        }
+    }
+
     func onDBSyncing(_ notification: Notification) {
         let verbose = false
         let files = notification.userInfo?["files"] as? [DiskFile] ?? []
@@ -163,6 +173,12 @@ extension AudioRoot {
                     }
                 }
             }
+        }
+    }
+
+    func onCopyFiles(_ notification: Notification) {
+        if let job = copyJob, let urls = notification.userInfo?["urls"] as? [URL] {
+            job.append(urls)
         }
     }
 

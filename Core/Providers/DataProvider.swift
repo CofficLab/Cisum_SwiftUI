@@ -43,24 +43,6 @@ class DataProvider: ObservableObject, SuperLog {
             await self.db.addCopyTasks(urls)
         }
     }
-
-    func copyFiles(reason: String) {
-        Task.detached(priority: .low) {
-            let tasks = await self.db.allCopyTasks()
-
-            for task in tasks {
-                Task {
-                    do {
-                        let url = task.url
-                        try self.disk.copyTo(url: url, reason: reason)
-                        await self.db.deleteCopyTasks([url])
-                    } catch let e {
-                        await self.db.setTaskError(task, e)
-                    }
-                }
-            }
-        }
-    }
 }
 
 // MARK: Download

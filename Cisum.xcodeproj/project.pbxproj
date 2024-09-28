@@ -130,6 +130,8 @@
 		0BE695C22C01E8F600CEFFEB /* DBSynced.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE695C12C01E8F600CEFFEB /* DBSynced.swift */; };
 		0BE93F312BFB8E3200F25445 /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE93F302BFB8E3200F25445 /* SettingView.swift */; };
 		0BEE7C6D2CA7E9E300DC1DCF /* AudioRoot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEE7C6C2CA7E9E300DC1DCF /* AudioRoot.swift */; };
+		0BEE7C6F2CA8343800DC1DCF /* AudioTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEE7C6E2CA8343800DC1DCF /* AudioTask.swift */; };
+		0BEE7C722CA838D600DC1DCF /* AudioCopyJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEE7C712CA838D100DC1DCF /* AudioCopyJob.swift */; };
 		0BFB38832BCCCC780055E38B /* OperationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFB38822BCCCC780055E38B /* OperationView.swift */; };
 		0BFB38852BCCD26F0055E38B /* BtnLike.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFB38842BCCD26F0055E38B /* BtnLike.swift */; };
 		0BFB38F72BD0BCC20055E38B /* RowTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFB38F62BD0BCC20055E38B /* RowTask.swift */; };
@@ -338,6 +340,8 @@
 		0BE695C12C01E8F600CEFFEB /* DBSynced.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBSynced.swift; sourceTree = "<group>"; };
 		0BE93F302BFB8E3200F25445 /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
 		0BEE7C6C2CA7E9E300DC1DCF /* AudioRoot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRoot.swift; sourceTree = "<group>"; };
+		0BEE7C6E2CA8343800DC1DCF /* AudioTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioTask.swift; sourceTree = "<group>"; };
+		0BEE7C712CA838D100DC1DCF /* AudioCopyJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioCopyJob.swift; sourceTree = "<group>"; };
 		0BFB38822BCCCC780055E38B /* OperationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationView.swift; sourceTree = "<group>"; };
 		0BFB38842BCCD26F0055E38B /* BtnLike.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnLike.swift; sourceTree = "<group>"; };
 		0BFB38F62BD0BCC20055E38B /* RowTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowTask.swift; sourceTree = "<group>"; };
@@ -660,6 +664,7 @@
 		0BC29EAB2CA45BEA00E4813F /* Audio */ = {
 			isa = PBXGroup;
 			children = (
+				0BEE7C702CA838C500DC1DCF /* Job */,
 				F5B6AAC62CA6B361001F3BC3 /* AudioDB */,
 				F54DFA4E2CA4E37500F81BE3 /* AudioApp.swift */,
 				0B1D5A672AB3025F0010DDF2 /* Audio.swift */,
@@ -765,6 +770,14 @@
 			path = Config;
 			sourceTree = "<group>";
 		};
+		0BEE7C702CA838C500DC1DCF /* Job */ = {
+			isa = PBXGroup;
+			children = (
+				0BEE7C712CA838D100DC1DCF /* AudioCopyJob.swift */,
+			);
+			path = Job;
+			sourceTree = "<group>";
+		};
 		0BFDCE522BAFF279009198DD /* DBView */ = {
 			isa = PBXGroup;
 			children = (
@@ -818,6 +831,7 @@
 				F52A98FF2C43C0DA003559F1 /* AudioList.swift */,
 				0BEE7C6C2CA7E9E300DC1DCF /* AudioRoot.swift */,
 				0BC29EB22CA59E8B00E4813F /* AudioSlider.swift */,
+				0BEE7C6E2CA8343800DC1DCF /* AudioTask.swift */,
 				F52A98FD2C43BC99003559F1 /* AudioTile.swift */,
 				0BC29EB02CA5899200E4813F /* AudioTitle.swift */,
 				0BC29EB42CA6DE5E00E4813F /* AudioVStack.swift */,
@@ -947,7 +961,6 @@
 				0B11365A2BEFABC700A71FE1 /* JobGetCover.swift */,
 				0B11365E2BF10A0100A71FE1 /* JobHash.swift */,
 				0BAABEB92BC8C5CB00DF4A31 /* JobPrepare.swift */,
-				0BAABEB22BC79C9F00DF4A31 /* TaskExt.swift */,
 			);
 			path = Local;
 			sourceTree = "<group>";
@@ -980,6 +993,7 @@
 				0B8C36A22BEA124900C47567 /* AudioR.swift */,
 				0BD056882BC6192D00EBC7C4 /* AudioSync.swift */,
 				0B8C36A42BEA15A800C47567 /* AudioU.swift */,
+				0BAABEB22BC79C9F00DF4A31 /* TaskExt.swift */,
 			);
 			path = AudioDB;
 			sourceTree = "<group>";
@@ -1111,6 +1125,7 @@
 				0BB889D72AC046B5004788D5 /* BtnShowInFinder.swift in Sources */,
 				F53BE0322C202420003CBA29 /* DiskFile.swift in Sources */,
 				F54DFA582CA4E59B00F81BE3 /* VideoLayout.swift in Sources */,
+				0BEE7C6F2CA8343800DC1DCF /* AudioTask.swift in Sources */,
 				0B22158E2BB6BC8F000EB36F /* SmartProgress.swift in Sources */,
 				F573B18C2C042E08004C34CC /* DeviceExt.swift in Sources */,
 				F586DCD72C2C01FF0078580B /* ErrorViewFatal.swift in Sources */,
@@ -1178,6 +1193,7 @@
 				0B12B0A72C0CB88B00FD43AD /* BuySetting.swift in Sources */,
 				0B11365B2BEFABC700A71FE1 /* JobGetCover.swift in Sources */,
 				0B7842752C1331B400E24869 /* BtnDelDevice.swift in Sources */,
+				0BEE7C722CA838D600DC1DCF /* AudioCopyJob.swift in Sources */,
 				F53BE0342C2024BE003CBA29 /* DiskFileGroup.swift in Sources */,
 				0B9EA35D2C21C9AB00A4059A /* PlayState.swift in Sources */,
 				0B8C36B22BEC6E8D00C47567 /* QueueExt.swift in Sources */,

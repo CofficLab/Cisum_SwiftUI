@@ -4,7 +4,7 @@ import OSLog
 class DiskiCloud: ObservableObject, Disk, SuperLog {
     static var label = "☁️ DiskiCloud::"
     static let cloudRoot = Config.cloudDocumentsDir
-    
+
     let emoji = "☁️"
 
     // MARK: 磁盘的挂载目录
@@ -12,13 +12,13 @@ class DiskiCloud: ObservableObject, Disk, SuperLog {
     static func getMountedURL() -> URL? {
         guard let cloudRoot = Self.cloudRoot else {
             os_log(.error, "\(self.label)无法获取根目录，因为 CloudRoot=nil")
-            
+
             return nil
         }
 
         return cloudRoot
     }
-    
+
     var root: URL
     var queue = DispatchQueue(label: "DiskiCloud", qos: .background)
     var fileManager = FileManager.default
@@ -29,11 +29,11 @@ class DiskiCloud: ObservableObject, Disk, SuperLog {
     var onUpdated: (_ items: DiskFileGroup) -> Void = { items in
         os_log("\(Logger.isMain)\(DiskiCloud.label)updated with items.count=\(items.count)")
     }
-    
+
     required init(root: URL) {
         let queue = OperationQueue()
         queue.maxConcurrentOperationCount = 1
-        
+
         self.root = root
         self.query = ItemQuery(queue: queue)
     }
@@ -45,11 +45,11 @@ extension DiskiCloud {
     func getRoot() -> DiskFile {
         DiskFile.fromURL(root)
     }
-    
+
     func next(_ url: URL) -> DiskFile? {
         DiskFile(url: url).nextDiskFile()
     }
-    
+
     func getTotal() -> Int {
         0
     }
@@ -63,15 +63,15 @@ extension DiskiCloud {
             if verbose {
                 os_log("\(self.label)删除 \(url.lastPathComponent)")
             }
-            
+
             if fileManager.fileExists(atPath: url.path) == false {
                 continue
             }
-            
+
             try? fileManager.removeItem(at: url)
         }
     }
-    
+
     func deleteFile(_ url: URL) {
         deleteFiles([url])
     }
@@ -98,9 +98,9 @@ extension DiskiCloud {
     func copyTo(url: URL, reason: String) throws {
         let verbose = true
         if verbose {
-            os_log("\(self.label)copy \(url.lastPathComponent) because of \(reason)")
+            os_log("\(self.t)copy \(url.lastPathComponent) because of \(reason)")
         }
-        
+
         // 目的地已经存在同名文件
         var d = root.appendingPathComponent(url.lastPathComponent)
         var times = 1
@@ -111,23 +111,55 @@ extension DiskiCloud {
                 .appendingPathComponent("\(fileName)-\(times)")
                 .appendingPathExtension(ext)
             times += 1
-            os_log("\(self.label)copy  -> \(d.lastPathComponent)")
+            os_log("\(self.t)copy  -> \(d.lastPathComponent)")
         }
-        
+
+        os_log("\(self.t)copy 开始复制 \(url.lastPathComponent)")
+        os_log("  ➡️ 从： \(url.relativePath)")
+        os_log("  ➡️ 到： \(d.relativePath)")
+
         do {
-            // 获取授权
-            if url.startAccessingSecurityScopedResource() {
-                os_log(
-                    "\(self.label)copy 获取授权后复制 \(url.lastPathComponent, privacy: .public)"
-                )
-                try FileManager.default.copyItem(at: url, to: d)
-                url.stopAccessingSecurityScopedResource()
-            } else {
-                os_log("\(self.label)copy 获取授权失败，可能不是用户选择的文件，直接复制 \(url.lastPathComponent)")
-                try fileManager.copyItem(at: url, to: d)
+            // 检查源文件的访问权限
+            guard fileManager.isReadableFile(atPath: url.path) else {
+                throw NSError(domain: "DiskiCloud", code: 403, userInfo: [NSLocalizedDescriptionKey: "没有读取源文件的权限: \(url.path)"])
             }
+
+            // 检查目标文件夹是否存在，如果不存在则创建
+            let destinationFolder = d.deletingLastPathComponent()
+            if !fileManager.fileExists(atPath: destinationFolder.path) {
+                try fileManager.createDirectory(at: destinationFolder, withIntermediateDirectories: true, attributes: nil)
+                os_log("\(self.t)创建目标文件夹: \(destinationFolder.path)")
+            }
+            
+            // 检查目标文件夹的访问权限
+            guard fileManager.isWritableFile(atPath: destinationFolder.path) else {
+                throw NSError(domain: "DiskiCloud", code: 403, userInfo: [NSLocalizedDescriptionKey: "没有写入目标文件夹的权限: \(destinationFolder.path)"])
+            }
+            
+            // 执行复制操作
+            try fileManager.copyItem(at: url, to: d)
+            os_log("\(self.t)复制成功: \(d.path)")
         } catch {
-            os_log("\(self.label)复制文件发生错误 -> \(error.localizedDescription)")
+            os_log(.error, "\(self.t)复制文件发生错误 -> \(error.localizedDescription)")
+            
+            // 添加更多诊断信息
+            if let nsError = error as NSError? {
+                os_log(.error, "\(self.t)错误域: \(nsError.domain)")
+                os_log(.error, "\(self.t)错误代码: \(nsError.code)")
+                if let failureReason = nsError.localizedFailureReason {
+                    os_log(.error, "\(self.t)失败原因: \(failureReason)")
+                }
+                if let recoverySuggestion = nsError.localizedRecoverySuggestion {
+                    os_log(.error, "\(self.t)恢复建议: \(recoverySuggestion)")
+                }
+            }
+            
+            // 检查文件的具体权限
+            let attributes = try? fileManager.attributesOfItem(atPath: url.path)
+            if let permissions = attributes?[.posixPermissions] as? Int {
+                os_log(.error, "\(self.t)文件权限: \(String(format:"%o", permissions))")
+            }
+            
             throw error
         }
     }
@@ -146,44 +178,44 @@ extension DiskiCloud {
             }
         }
     }
-    
+
     func download(_ url: URL, reason: String) {
         let verbose = true
 
         if verbose {
             os_log("\(self.label)Download ⏬⏬⏬ \(url.lastPathComponent) reason -> \(reason)")
         }
-        
+
         if !fileManager.fileExists(atPath: url.path) {
             if verbose {
                 os_log("\(self.label)Download \(url.lastPathComponent) -> Not Exists ⚠️⚠️⚠️")
             }
-            
+
             return
         }
-        
+
         if iCloudHelper.isDownloaded(url) {
             if verbose {
                 os_log("\(self.label)Download \(url.lastPathComponent) -> Already downloaded ✅✅✅")
             }
             return
         }
-        
+
         if iCloudHelper.isDownloading(url) {
             if verbose {
                 os_log("\(self.label)Download \(url.lastPathComponent) -> Already downloading ⚠️⚠️⚠️")
             }
             return
         }
-        
+
         let downloadingCount = getDownloadingCount()
-        
+
         if downloadingCount > 1000 {
             os_log("\(self.label)Download \(url.lastPathComponent) -> Ignore ❄️❄️❄️ -> Downloading.count=\(downloadingCount)")
-            
+
             return
         }
-        
+
         Task {
             do {
                 try await cloudHandler.download(url: url)
@@ -192,10 +224,10 @@ extension DiskiCloud {
             }
         }
     }
-    
+
     func getDownloadingCount() -> Int {
         var count = 0
-        
+
         do {
             let files = try FileManager.default.contentsOfDirectory(atPath: self.root.path)
             for file in files {
@@ -206,7 +238,7 @@ extension DiskiCloud {
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
         }
-        
+
         return count
     }
 }
@@ -216,31 +248,30 @@ extension DiskiCloud {
 extension DiskiCloud {
     func stopWatch(reason: String) {
         let emoji = "🌛🌛🌛"
-        
+
         os_log("\(self.label)\(emoji) 停止监听 because of \(reason)")
         self.query.stop()
     }
-    
+
     /// 监听存储Audio文件的文件夹
     func watch(reason: String) async {
         let verbose = false
         let emoji = "🌞🌞🌞"
-        
+
         if verbose {
             os_log("\(Logger.isMain)\(self.label)\(emoji) Watch(\(self.name)) because of \(reason)")
         }
 
         self.query.stopped = false
-        let result = query.searchMetadataItems(predicates:  [
+        let result = query.searchMetadataItems(predicates: [
             NSPredicate(format: "%K BEGINSWITH %@", NSMetadataItemPathKey, root.path + "/"),
             NSPredicate(format: "NOT %K ENDSWITH %@", NSMetadataItemFSNameKey, ".DS_Store"),
             NSPredicate(format: "NOT %K ENDSWITH %@", NSMetadataItemFSNameKey, ".zip"),
             NSPredicate(format: "NOT %K ENDSWITH %@", NSMetadataItemFSNameKey, ".plist"),
             NSPredicate(format: "NOT %K BEGINSWITH %@", NSMetadataItemFSNameKey, "."),
-            NSPredicate(format: "NOT %K BEGINSWITH[c] %@", NSMetadataItemFSNameKey, ".")
+            NSPredicate(format: "NOT %K BEGINSWITH[c] %@", NSMetadataItemFSNameKey, "."),
         ]).debounce(for: .seconds(0.2))
         for try await collection in result {
-            
             var message = "\(self.t)\(emoji) Watch(\(collection.items.count))"
 
             if let first = collection.first, first.isDownloading == true {
@@ -250,7 +281,7 @@ extension DiskiCloud {
             if verbose {
                 os_log("\(message)")
             }
-                
+
             self.onUpdated(DiskFileGroup.fromMetaCollection(collection, disk: self))
         }
     }
