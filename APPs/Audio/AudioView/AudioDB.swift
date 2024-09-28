@@ -3,8 +3,9 @@ import OSLog
 import SwiftData
 import SwiftUI
 import UniformTypeIdentifiers
+import MagicKit
 
-struct AudioDB: View {
+struct AudioDB: View, SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var data: DataProvider
     @EnvironmentObject var db: DB
@@ -16,12 +17,9 @@ struct AudioDB: View {
 
     @Query(Audio.descriptorAll, animation: .default) var audios: [Audio]
 
-    static let label = "🐘 DBLayout::"
+    let emoji = "🐘"
 
-    private var main = Config.mainQueue
-    private var bg = Config.bgQueue
     private var disk: any Disk { data.disk }
-    private var label: String { "\(Logger.isMain)\(Self.label) " }
 
     var showTips: Bool {
         if isDropping {
@@ -33,7 +31,7 @@ struct AudioDB: View {
 
     init(verbose: Bool = false) {
         if verbose {
-            os_log("\(Logger.isMain)\(Self.label)初始化")
+            os_log("\(Logger.isMain)AudioDB")
         }
     }
 
@@ -119,31 +117,31 @@ extension AudioDB {
 
 extension AudioDB {
     func onDrop(_ providers: [NSItemProvider]) -> Bool {
+        // Extract URLs from providers on the main thread
+        let urls = providers.compactMap { provider -> URL? in
+            var result: URL?
+            let semaphore = DispatchSemaphore(value: 0)
+            
+            _ = provider.loadObject(ofClass: URL.self) { url, _ in
+                result = url
+                semaphore.signal()
+            }
+            
+            semaphore.wait()
+            return result
+        }
+        
+        // Process the extracted URLs on the background queue
         bg.async {
-            let dispatchGroup = DispatchGroup()
-            var droppedFiles: [URL] = []
-
-            for provider in providers {
-                dispatchGroup.enter()
-                provider.loadObject(ofClass: URL.self) { url, _ in
-                    if let url = url {
-                        os_log("\(Logger.isMain)🖥️ DBView::添加 \(url.lastPathComponent) 到复制队列")
-                        droppedFiles.append(url)
-                    }
-                    dispatchGroup.leave()
-                }
-            }
-
-            dispatchGroup.notify(queue: self.bg) {
-                self.emitCopyFiles(droppedFiles)
-            }
+            os_log("\(Logger.isMain)🖥️ DBView::添加 \(urls.count) 个文件到复制队列")
+            self.emitCopyFiles(urls)
         }
 
         return true
     }
 
     func onSorting(_ notification: Notification) {
-        os_log("\(label)onSorting")
+        os_log("\(t)onSorting")
         isSorting = true
         if let mode = notification.userInfo?["mode"] as? String {
             sortMode = SortMode(rawValue: mode) ?? .none
@@ -151,7 +149,7 @@ extension AudioDB {
     }
 
     func onSortDone(_ notification: Notification) {
-        os_log("\(label)onSortDone")
+        os_log("\(t)onSortDone")
         isSorting = false
     }
 }

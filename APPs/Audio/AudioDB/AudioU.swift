@@ -290,7 +290,7 @@ extension DB {
     }
 }
 
-// MARK: Event Name 
+// MARK: Event Name
 
 extension Notification.Name {
     static let DBSorting = Notification.Name("DBSorting")
@@ -301,17 +301,13 @@ extension Notification.Name {
 
 extension DB {
     func emitSorting(_ mode: String) {
-        DispatchQueue.main.sync {
-            os_log("\(self.t)emitSorting")
-            NotificationCenter.default.post(name: .DBSorting, object: nil, userInfo: ["mode": mode])
-        }
+        os_log("\(self.t)emitSorting")
+        NotificationCenter.default.post(name: .DBSorting, object: nil, userInfo: ["mode": mode])
     }
 
     func emitSortDone() {
-        DispatchQueue.main.sync {
-            os_log("\(self.t)emitSortDone")
-            NotificationCenter.default.post(name: .DBSortDone, object: nil)
-        }
+        os_log("\(self.t)emitSortDone")
+        NotificationCenter.default.post(name: .DBSortDone, object: nil)
     }
 }
 
