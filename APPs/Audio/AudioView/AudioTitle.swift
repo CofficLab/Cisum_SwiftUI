@@ -63,10 +63,6 @@ extension AudioTitle {
     }
 
     func handlePlayManStateChange(_ notification: Notification) {
-        guard let userInfo = notification.userInfo, let state = userInfo["state"] as? PlayState else {
-            return
-        }
-
         withAnimation {
             self.title = playMan.asset?.title ?? ""
         }

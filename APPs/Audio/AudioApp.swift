@@ -14,8 +14,8 @@ class AudioApp: SuperLayout, SuperLog, SuperThread {
         Image(systemName: iconName)
     }
 
-    var layout: any View {
-        AudioLayout()
+    var rootView: any View {
+        AudioRoot()
     }
 
     var poster: any View {

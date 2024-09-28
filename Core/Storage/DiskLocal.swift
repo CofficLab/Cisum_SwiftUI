@@ -83,8 +83,11 @@ extension DiskLocal {
 // MARK: Copy
 
 extension DiskLocal {
-    func copyTo(url: URL) throws {
-        os_log("\(self.label)copy \(url.lastPathComponent)")
+    func copyTo(url: URL, reason: String) throws {
+        let verbose = true
+        if verbose {
+            os_log("\(self.label)copy \(url.lastPathComponent) because of \(reason)")
+        }
         
         // 目的地已经存在同名文件
         var d = root.appendingPathComponent(url.lastPathComponent)

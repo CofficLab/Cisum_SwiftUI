@@ -98,20 +98,20 @@ class ItemQuery {
     // MARK: 仅改变过的item
     
     private func collectChanged(_ continuation: AsyncStream<MetadataItemCollection>.Continuation, notification: Notification, name: Notification.Name) {
+        let changedItems = notification.userInfo?[NSMetadataQueryUpdateChangedItemsKey] as? [NSMetadataItem] ?? []
+        let deletedItems = notification.userInfo?[NSMetadataQueryUpdateRemovedItemsKey] as? [NSMetadataItem] ?? []
+        
+        let changedResult = changedItems.compactMap { item -> MetaWrapper? in
+            MetaWrapper(metadataItem: item, isUpdated: true)
+        }
+        
+        let deletedResult = deletedItems.compactMap { item -> MetaWrapper? in
+            MetaWrapper(metadataItem: item, isDeleted: true, isUpdated: true)
+        }
+        
         DispatchQueue.global().async {
             if self.verbose {
                 os_log("\(self.label)NSMetadataQueryDidUpdate")
-            }
-            
-            let changedItems = notification.userInfo?[NSMetadataQueryUpdateChangedItemsKey] as? [NSMetadataItem] ?? []
-            let deletedItems = notification.userInfo?[NSMetadataQueryUpdateRemovedItemsKey] as? [NSMetadataItem] ?? []
-            
-            let changedResult = changedItems.compactMap { item -> MetaWrapper? in
-                MetaWrapper(metadataItem: item, isUpdated: true)
-            }
-            
-            let deletedResult = deletedItems.compactMap { item -> MetaWrapper? in
-                MetaWrapper(metadataItem: item, isDeleted: true, isUpdated: true)
             }
                 
             if changedResult.count > 0 {

@@ -27,7 +27,7 @@ struct BottomCopyState: View {
             )
             .labelStyle(.titleAndIcon)
             .task {
-                dataManager.copyFiles()
+                dataManager.copyFiles(reason: "BottomCopyState")
             }
         }
     }

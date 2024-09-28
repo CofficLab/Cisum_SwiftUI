@@ -1,6 +1,6 @@
+import MagicKit
 import OSLog
 import SwiftUI
-import MagicKit
 
 /**
  展示从数据库读取的图书数据
@@ -18,7 +18,7 @@ struct BookTileData: View {
 
     var label: String { "\(Logger.isMain)\(Self.label)" }
     var hasCover: Bool { cover != nil }
-    var noCover: Bool { cover == nil}
+    var noCover: Bool { cover == nil }
 
     var book: Book
 
@@ -30,14 +30,14 @@ struct BookTileData: View {
             Spacer()
             VStack {
                 Spacer()
-                
+
                 if noCover {
                     Text(book.bookTitle).font(.title)
                 }
-                
+
                 Spacer()
 
-                if book.childCount > 0, noCover  {
+                if book.childCount > 0, noCover {
                     Text("共 \(book.childCount)")
                 }
 
@@ -141,16 +141,15 @@ struct BookTileData: View {
 //            }
 //        }
     }
-    
+
     func updateCover() {
         backgroundQueue.async {
             if self.cover == nil {
                 Task {
                     self.cover = await book.getBookCover()
                 }
-
             }
-                    }
+        }
     }
 }
 

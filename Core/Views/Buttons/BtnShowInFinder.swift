@@ -1,6 +1,7 @@
 import SwiftUI
+import MagicKit
 
-struct BtnShowInFinder: View {
+struct BtnShowInFinder: View, SuperThread {
     var url: URL
     var autoResize = true
 
@@ -10,7 +11,7 @@ struct BtnShowInFinder: View {
             image: getImageName(),
             dynamicSize: autoResize,
             onTap: {
-                Task.detached {
+                self.bg.async {
                     FileHelper.showInFinder(url: url)
                 }
             })

@@ -24,7 +24,7 @@ struct BuyButtonStyle: ButtonStyle {
     }
 }
 
-#Preview {
+#Preview("BuyButtonStyle") {
     Group {
         Button(action: {}) {
             Text("Buy")
@@ -32,13 +32,11 @@ struct BuyButtonStyle: ButtonStyle {
                 .bold()
         }
         .buttonStyle(BuyButtonStyle())
-        .previewDisplayName("普通")
 
         Button(action: {}) {
             Image(systemName: "checkmark")
                 .foregroundColor(.white)
         }
         .buttonStyle(BuyButtonStyle(isPurchased: true))
-        .previewDisplayName("已购买")
     }
 }

@@ -52,7 +52,36 @@ struct RootView: View, SuperLog, SuperEvent, SuperThread {
                     })
                 }
             })
-            .task(onAppearTask)
+            .task {
+                playMan.onGetChildren = { asset in
+                    if let children = DiskFile(url: asset.url).children {
+                        return children.map({ $0.toPlayAsset() })
+                    }
+
+                    return []
+                }
+
+                #if os(iOS)
+                    self.main.async {
+                        UIApplication.shared.beginReceivingRemoteControlEvents()
+                    }
+                #endif
+
+                self.bg.async {
+                    if verbose {
+                        os_log("\(self.t)🐎🐎🐎 执行后台任务")
+                    }
+
+                    //            await self.onAppOpen()
+                }
+
+                //        Task {
+                //            let uuid = Config.getDeviceId()
+                //            let audioCount = disk.getTotal()
+                //
+                //            await dbSynced.saveDeviceData(uuid: uuid, audioCount: audioCount)
+                //        }
+            }
             .onReceive(NotificationCenter.default.publisher(for: .PlayManStateChange), perform: onStateChanged)
             .onReceive(NotificationCenter.default.publisher(for: .PlayManLike), perform: onToggleLike)
     }
@@ -61,37 +90,6 @@ struct RootView: View, SuperLog, SuperEvent, SuperThread {
 // MARK: Event Handler
 
 extension RootView {
-    func onAppearTask() {
-        playMan.onGetChildren = { asset in
-            if let children = DiskFile(url: asset.url).children {
-                return children.map({ $0.toPlayAsset() })
-            }
-
-            return []
-        }
-
-        #if os(iOS)
-            self.main.async {
-                UIApplication.shared.beginReceivingRemoteControlEvents()
-            }
-        #endif
-
-        Task.detached(operation: {
-            if verbose {
-                os_log("\(self.t)🐎🐎🐎 执行后台任务")
-            }
-
-//            await self.onAppOpen()
-        })
-
-        //        Task {
-//            let uuid = Config.getDeviceId()
-//            let audioCount = disk.getTotal()
-//
-//            await dbSynced.saveDeviceData(uuid: uuid, audioCount: audioCount)
-//        }
-    }
-
     func onStateChanged(_ notification: Notification) {
         let verbose = false
 

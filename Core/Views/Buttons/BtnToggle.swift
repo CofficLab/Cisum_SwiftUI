@@ -92,7 +92,7 @@ extension BtnToggle {
             if self.asset == nil {
                 self.isPlaying = state.isPlaying
             } else {
-                if let asset = state.getPlayingAsset() {
+                if state.getPlayingAsset() != nil {
                     self.isPlaying = state.isPlaying
                 } else {
                     self.isPlaying = false

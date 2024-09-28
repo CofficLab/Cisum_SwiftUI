@@ -21,7 +21,7 @@ protocol Disk: FileBox {
     
     func download(_ url: URL, reason: String)
     
-    func copyTo(url: URL) throws
+    func copyTo(url: URL, reason: String) throws
     
     func watch(reason: String) async
     

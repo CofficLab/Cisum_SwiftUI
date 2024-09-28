@@ -95,8 +95,11 @@ extension DiskiCloud {
 // MARK: Copy
 
 extension DiskiCloud {
-    func copyTo(url: URL) throws {
-        os_log("\(self.label)copy \(url.lastPathComponent)")
+    func copyTo(url: URL, reason: String) throws {
+        let verbose = true
+        if verbose {
+            os_log("\(self.label)copy \(url.lastPathComponent) because of \(reason)")
+        }
         
         // 目的地已经存在同名文件
         var d = root.appendingPathComponent(url.lastPathComponent)
@@ -160,9 +163,6 @@ extension DiskiCloud {
         }
         
         if iCloudHelper.isDownloaded(url) {
-            if verbose {
-                os_log("\(self.label)Download \(url.lastPathComponent) -> Already downloaded ⚠️⚠️⚠️")
-            }
             return
         }
         

@@ -24,7 +24,7 @@ struct StateCopy: View {
         .background(background)
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .task {
-            dataManager.copyFiles()
+            dataManager.copyFiles(reason: "StateCopy")
         }
     }
 }

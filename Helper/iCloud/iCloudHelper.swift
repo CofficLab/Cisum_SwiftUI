@@ -34,9 +34,27 @@ class iCloudHelper {
     }
 
     static func isDownloaded(_ url: URL) -> Bool {
-        return [
-            URLUbiquitousItemDownloadingStatus.current, URLUbiquitousItemDownloadingStatus.downloaded,
-        ].contains(getDownloadingStatus(url: url))
+        do {
+            let values = try url.resourceValues(forKeys: [.ubiquitousItemDownloadingStatusKey])
+            guard let status = values.ubiquitousItemDownloadingStatus else {
+                // 如果状态为nil，通常意味着文件已经完全下载
+                return true
+            }
+            
+            switch status {
+            case .current, .downloaded:
+                return true
+            case .notDownloaded:
+                return false
+            default:
+                // 处理将来可能添加的新状态
+                os_log("Unknown download status for file: %@", log: .default, type: .error, url.path)
+                return false
+            }
+        } catch {
+            os_log("Error getting download status for file: %@, Error: %@", log: .default, type: .error, url.path, error.localizedDescription)
+            return false
+        }
     }
 
     static func isDownloading(_ url: URL) -> Bool {

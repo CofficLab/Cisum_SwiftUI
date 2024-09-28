@@ -21,7 +21,7 @@ class LayoutProvider: ObservableObject, SuperLog, SuperThread {
     }
     
     var layout: AnyView {
-        AnyView(self.current.layout)
+        AnyView(self.current.rootView)
     }
 
     init() {

@@ -44,7 +44,7 @@ class DataProvider: ObservableObject, SuperLog {
         }
     }
 
-    func copyFiles() {
+    func copyFiles(reason: String) {
         Task.detached(priority: .low) {
             let tasks = await self.db.allCopyTasks()
 
@@ -52,7 +52,7 @@ class DataProvider: ObservableObject, SuperLog {
                 Task {
                     do {
                         let url = task.url
-                        try self.disk.copyTo(url: url)
+                        try self.disk.copyTo(url: url, reason: reason)
                         await self.db.deleteCopyTasks([url])
                     } catch let e {
                         await self.db.setTaskError(task, e)
@@ -114,7 +114,7 @@ extension DataProvider {
         os_log("\(self.t)Enable iCloud")
         let disk = DiskiCloud.make("audios")
 
-        guard let disk = disk else {
+        guard disk != nil else {
             throw SmartError.NoDisk
         }
 
@@ -125,7 +125,7 @@ extension DataProvider {
         os_log("\(self.t)Disable iCloud")
         let disk = DiskLocal.make("audios")
 
-        guard let disk = disk else {
+        guard disk != nil else {
             throw SmartError.NoDisk
         }
 

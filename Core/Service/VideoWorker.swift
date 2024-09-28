@@ -63,11 +63,26 @@ class VideoWorker: NSObject, ObservableObject, PlayWorker {
         }
     }
 
-    var duration: TimeInterval {
-        if let duration = player.currentItem?.asset.duration.seconds {
-            return duration
+    @Published var duration: TimeInterval = 0
+
+    func updateDuration() {
+        if #available(macOS 13.0, iOS 16.0, *) {
+            Task {
+                do {
+                    let durationSeconds = try await player.currentItem?.asset.load(.duration).seconds ?? 0
+                    DispatchQueue.main.async {
+                        self.duration = durationSeconds
+                    }
+                } catch {
+                    os_log("\(self.label)Error loading duration: \(error.localizedDescription)")
+                    // Optionally, you can set a default duration or handle the error in another way
+                    DispatchQueue.main.async {
+                        self.duration = 0
+                    }
+                }
+            }
         } else {
-            return 0
+            duration = player.currentItem?.asset.duration.seconds ?? 0
         }
     }
 
@@ -116,6 +131,7 @@ extension VideoWorker {
     func play(_ audio: PlayAsset, reason: String) {
         os_log("\(self.label)play \(audio.title) 🐛 \(reason)")
         state = .Playing(audio)
+        updateDuration()
     }
 
     func play() {

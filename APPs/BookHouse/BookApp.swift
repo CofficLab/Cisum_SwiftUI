@@ -12,7 +12,7 @@ class BookApp: SuperLayout, SuperLog {
         Image(systemName: iconName)
     }
     
-    var layout: any View {
+    var rootView: any View {
         BookLayout()
     }
     

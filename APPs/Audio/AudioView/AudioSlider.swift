@@ -79,15 +79,8 @@ extension AudioSlider {
         if app.error != nil {
             disable()
         } else if playMan.duration > 0 && !isEditing {
-                enable()
-            }
-            
-            if Date.now.timeIntervalSince(lastDownloadTime) > 10, let asset = playMan.asset {
-                lastDownloadTime = .now
-//                Task.detached(priority: .low) {
-//                    await data.downloadNextBatch(asset.url,count: data.appScene.prepareCount, reason: "SliderView确保下一个准备好")
-//                }
-            }
+            enable()
+        }
     }
 }
 

@@ -191,13 +191,13 @@ extension PlayMan {
     // MARK: Prev
 
     func prev() {
-        self.emitPlayPrev(self.asset)
+        self.emitPlayPrev()
     }
 
     // MARK: Next
 
     func next() {
-        self.emitPlayNext(self.asset)
+        self.emitPlayNext()
     }
 
     func setMode(_ mode: PlayMode) {
@@ -309,7 +309,7 @@ extension PlayMan {
             play()
         case .Random:
             os_log("\(self.t)随机播放")
-            emitPlayRandomNext(self.asset)
+            emitPlayRandomNext()
         }
     }
 
@@ -405,16 +405,28 @@ extension PlayMan {
         NotificationCenter.default.post(name: .PlayManStop, object: self)
     }
     
-    func emitPlayNext(_ asset: PlayAsset?) {
-        NotificationCenter.default.post(name: .PlayManNext, object: self, userInfo: ["asset": asset])
+    func emitPlayNext() {
+        var userInfo: [String: Any] = [:]
+        if let asset = asset {
+            userInfo["asset"] = asset
+        }
+        NotificationCenter.default.post(name: .PlayManNext, object: self, userInfo: userInfo)
     }
 
-    func emitPlayRandomNext(_ asset: PlayAsset?) {
-        NotificationCenter.default.post(name: .PlayManRandomNext, object: self, userInfo: ["asset": asset])
+    func emitPlayRandomNext() {
+        var userInfo: [String: Any] = [:]
+        if let asset = asset {
+            userInfo["asset"] = asset
+        }
+        NotificationCenter.default.post(name: .PlayManRandomNext, object: self, userInfo: userInfo)
     }
 
-    func emitPlayPrev(_ asset: PlayAsset?) {
-        NotificationCenter.default.post(name: .PlayManPrev, object: self, userInfo: ["asset": asset])
+    func emitPlayPrev() {
+        var userInfo: [String: Any] = [:]
+        if let asset = asset {
+            userInfo["asset"] = asset
+        }
+        NotificationCenter.default.post(name: .PlayManPrev, object: self, userInfo: userInfo)
     }
     
     func emitPlayToggle() {
@@ -430,12 +442,14 @@ extension PlayMan {
     }
 
     func emitPlayModeChange() {
-        let verbose = true
-        if verbose {
-            os_log("\(self.t)emitPlayModeChange 🚀🚀🚀 -> \(self.mode.rawValue)")
-            os_log("  ➡️ State -> \(self.state.des)")
+        self.main.async {
+            let verbose = true
+            if verbose {
+                os_log("\(self.t)emitPlayModeChange 🚀🚀🚀 -> \(self.mode.rawValue)")
+                os_log("  ➡️ State -> \(self.state.des)")
+            }
+            NotificationCenter.default.post(name: .PlayManModeChange, object: self, userInfo: ["mode": self.mode, "state": self.state])
         }
-        NotificationCenter.default.post(name: .PlayManModeChange, object: self, userInfo: ["mode": mode, "state": state])
     }
 
     func emitPlayStateChange(_ state: PlayState) {

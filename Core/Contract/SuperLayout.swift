@@ -8,7 +8,7 @@ protocol SuperLayout: Identifiable {
     var title: String { get }
     var description: String { get }
     var poster: any View { get }
-    var layout: any View { get }
+    var rootView: any View { get }
 
     func boot()
     func getDisk() -> (any Disk)?

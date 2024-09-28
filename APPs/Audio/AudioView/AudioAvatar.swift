@@ -41,7 +41,7 @@ struct AudioAvatar: View, SuperLog, SuperThread {
                 Image(systemName: "minus.circle").resizable().scaledToFit()
             } else if isDownloading {
                 ProgressView(value: downloadingPercent, total: 100) {
-                    Text("\(displayedPercent)%")
+                    Text("\(displayedPercent)")
                 }.progressViewStyle(CircularProgressViewStyle(size: 35))
             } else if isNotDownloaded {
                 NotDownloadedAlbum(role: role)

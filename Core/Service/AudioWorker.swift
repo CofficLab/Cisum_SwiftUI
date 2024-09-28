@@ -195,7 +195,10 @@ extension AudioWorker {
     }
 
     func makePlayer(_ asset: PlayAsset?, reason: String) throws -> AVAudioPlayer {
-        os_log("\(self.t)MakePlayer「\(asset?.fileName ?? "nil")」 🐛 \(reason)")
+        let verbose = false
+        if verbose {
+            os_log("\(self.t)MakePlayer「\(asset?.fileName ?? "nil")」 🐛 \(reason)")
+        }
 
         guard let asset = asset else {
             return AVAudioPlayer()
