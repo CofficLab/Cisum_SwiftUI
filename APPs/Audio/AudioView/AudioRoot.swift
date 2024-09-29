@@ -160,21 +160,35 @@ extension AudioRoot {
                 os_log("\(self.t)DBSyncing -> \(files.count)")
             }
 
-            if let playError = app.error as? PlayManError,
-               case .NotDownloaded = playError {
-                let assetURL = playMan.state.getAsset()?.url
-
-                if let assetURL = assetURL {
+            if let playError = app.error as? PlayManError {
+                if case .NotDownloaded = playError, let assetURL = playMan.state.getAsset()?.url {
                     for file in files {
                         if assetURL == file.url, file.isDownloaded {
                             if verbose {
                                 os_log("\(self.t)DBSyncing -> 下载完成 -> \(file.url.lastPathComponent)")
                             }
                             app.clearError()
+                            
+                            break
                         }
 
                         if assetURL == file.url, file.isDownloading, file.isDownloading {
                             app.setPlayManError(.Downloading)
+                            
+                            break
+                        }
+                    }
+                }
+
+                if case .Downloading = playError, let assetURL = playMan.state.getAsset()?.url {
+                    for file in files {
+                        if assetURL == file.url, file.isDownloaded {
+                            if verbose {
+                                os_log("\(self.t)DBSyncing -> 下载完成 -> \(file.url.lastPathComponent)")
+                            }
+                            app.clearError()
+
+                            break
                         }
                     }
                 }

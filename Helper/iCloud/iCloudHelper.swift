@@ -62,58 +62,49 @@ class iCloudHelper: SuperLog, SuperThread {
             return false
         }
 
+        if FileManager.default.fileExists(atPath: url.path) {
+            if verbose {
+                os_log("文件存在: %@", log: .default, type: .info, url.path)
+            }
+            return true
+        }
+
         do {
             let values = try url.resourceValues(forKeys: [.ubiquitousItemDownloadingStatusKey, .fileSizeKey])
 
             // 检查 ubiquitousItemDownloadingStatusKey
             if let status = values.ubiquitousItemDownloadingStatus {
+                if verbose {
+                    os_log("文件「%@」当前状态: %@", log: .default, type: .info, url.lastPathComponent, status.rawValue)
+                }
                 switch status {
                 case .current, .downloaded:
                     return true
                 case .notDownloaded:
+                    // Print URLs of items in the parent folder
+                    if let parentURL = url.deletingLastPathComponent().standardized as URL? {
+                        do {
+                            let contents = try FileManager.default.contentsOfDirectory(at: parentURL, includingPropertiesForKeys: nil, options: [])
+                            os_log("Contents of parent folder:")
+                            for itemURL in contents {
+                                os_log("  %@", log: .default, type: .info, itemURL.path)
+                            }
+                        } catch {
+                            os_log("Error listing parent folder contents: %@", log: .default, type: .error, error.localizedDescription)
+                        }
+                    }
                     return false
                 default:
                     os_log("Unknown download status for file: %@", log: .default, type: .error, url.path)
-                    // 对于未知状态，如果文件存在且有大小，则认为已下载
-                    if FileManager.default.fileExists(atPath: url.path),
-                       let fileSize = values.fileSize, fileSize > 0 {
-                        os_log("文件已存在且有大小: %@, 认为已下载", log: .default, type: .info, url.path)
-                        return true
-                    }
                     return false
                 }
             } else {
-                // 如果状态为 nil，但文件存在且有大小，则认为已下载
-                if FileManager.default.fileExists(atPath: url.path),
-                   let fileSize = values.fileSize, fileSize > 0 {
-                    os_log("文件已存在且有大小: %@, 认为已下载", log: .default, type: .info, url.path)
-                    return true
-                }
+                os_log(.error, "文件状态不存在")
                 return false
             }
         } catch {
             os_log("Error getting download status for file: %@, Error: %@", log: .default, type: .error, url.path, error.localizedDescription)
 
-            // 获取父文件夹的路径
-            let parentURL = url.deletingLastPathComponent()
-
-            // 获取父文件夹的子文件
-            do {
-                let contents = try FileManager.default.contentsOfDirectory(at: parentURL, includingPropertiesForKeys: nil, options: [])
-
-                // 输出子文件的路径
-                for childURL in contents {
-                    os_log("子文件路径: %@", log: .default, type: .info, childURL.path)
-                }
-            } catch {
-                os_log("获取父文件夹内容时出错: %@", log: .default, type: .error, error.localizedDescription)
-            }
-
-            // If there's an error, but file exists, consider it downloaded
-            if FileManager.default.fileExists(atPath: url.path) {
-                os_log("文件已存在且有大小: %@, 认为已下载", log: .default, type: .info, url.path)
-                return true
-            }
             return false
         }
     }
