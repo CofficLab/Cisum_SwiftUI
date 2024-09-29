@@ -268,7 +268,8 @@ extension DiskiCloud {
 
     /// 监听存储Audio文件的文件夹
     func watch(reason: String) async {
-        let verbose = true
+        let verbose = false
+        let verbose2 = false
 
         if verbose {
             os_log("\(self.t)Watch(\(self.name)) because of 🐛 \(reason)")
@@ -294,11 +295,13 @@ extension DiskiCloud {
                 os_log("\(message)")
             }
 
-            if collection.count == 1, let first = collection.first {
-                os_log("   ➡️ FileName: \(first.fileName ?? "nil")")
-                os_log("   ➡️ Downloading: \(first.isDownloading ? "true" : "false")")
-                os_log("   ➡️ Downloaded: \(first.isDownloaded ? "true" : "false")")
-                os_log("   ➡️ Placeholder: \(first.isPlaceholder ? "true" : "false")")
+            if verbose2 {
+                if collection.count == 1, let first = collection.first {
+                    os_log("   ➡️ FileName: \(first.fileName ?? "nil")")
+                    os_log("   ➡️ Downloading: \(first.isDownloading ? "true" : "false")")
+                    os_log("   ➡️ Downloaded: \(first.isDownloaded ? "true" : "false")")
+                    os_log("   ➡️ Placeholder: \(first.isPlaceholder ? "true" : "false")")
+                }
             }
 
             self.onUpdated(DiskFileGroup.fromMetaCollection(collection, disk: self))

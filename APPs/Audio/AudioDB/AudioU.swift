@@ -301,7 +301,12 @@ extension Notification.Name {
 
 extension DB {
     func emitSorting(_ mode: String) {
-        os_log("\(self.t)emitSorting")
+        let verbose = false
+        
+        if verbose {
+            os_log("\(self.t)emitSorting")
+        }
+        
         NotificationCenter.default.post(name: .DBSorting, object: nil, userInfo: ["mode": mode])
     }
 

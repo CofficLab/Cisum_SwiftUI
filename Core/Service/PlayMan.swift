@@ -451,7 +451,7 @@ extension PlayMan {
 
     func emitPlayModeChange() {
         self.main.async {
-            let verbose = true
+            let verbose = false
             if verbose {
                 os_log("\(self.t)emitPlayModeChange 🚀🚀🚀 -> \(self.mode.rawValue)")
                 os_log("  ➡️ State -> \(self.state.des)")

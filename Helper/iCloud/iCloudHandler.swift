@@ -84,7 +84,7 @@ actor iCloudHandler: SuperLog, SuperThread {
 
 extension iCloudHandler {
     func download(url: URL) throws {
-        let verbose = true
+        let verbose = false
         if verbose {
             os_log("\(self.t)下载 「\(url.lastPathComponent)」")
         }

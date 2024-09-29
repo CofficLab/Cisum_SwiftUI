@@ -193,7 +193,7 @@ extension AudioWorker {
     }
 
     func makePlayer(_ asset: PlayAsset?, reason: String) throws -> AVAudioPlayer {
-        let verbose = true
+        let verbose = false
         if verbose {
             os_log("\(self.t)MakePlayer「\(asset?.fileName ?? "nil")」 🐛 \(reason)")
         }
@@ -215,7 +215,9 @@ extension AudioWorker {
         }
 
         guard asset.isDownloaded else {
-            os_log("  ⚠️ 未下载 \(asset.fileName)")
+            if verbose {
+                os_log("  ⚠️ 未下载 \(asset.fileName)")
+            }
             throw PlayManError.NotDownloaded
         }
 

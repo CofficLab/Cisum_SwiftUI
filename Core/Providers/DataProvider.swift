@@ -51,26 +51,40 @@ class DataProvider: ObservableObject, SuperLog {
     }
 
     func checkAndUpdateiCloudStatus() async throws {
-        os_log("\(self.t)Checking iCloud status")
+        let verbose = false
+
+        if verbose {
+            os_log("\(self.t)Checking iCloud status")
+        }
 
         let accountStatus = try await CKContainer.default().accountStatus()
         switch accountStatus {
         case .couldNotDetermine:
-            os_log("iCloud status: could not determine")
+            if verbose {
+                os_log("iCloud status: could not determine")
+            }
         case .available:
-            os_log("\(self.t)iCloud status: available")
+            if verbose {
+                os_log("\(self.t)iCloud status: available")
+            }
         case .restricted:
-            os_log("iCloud status: restricted")
+            if verbose {
+                os_log("iCloud status: restricted")
+            }
         case .noAccount:
-            os_log("iCloud status: no account")
+            if verbose {
+                os_log("iCloud status: no account")
+            }
 
             throw DataProviderError.NoiCloudAccount
         case .temporarilyUnavailable:
-            os_log("\(self.t)iCloud status: temporarily unavailable")
+            if verbose {
+                os_log("\(self.t)iCloud status: temporarily unavailable")
+            }
 
             throw DataProviderError.iCloudAccountTemporarilyUnavailable
         @unknown default:
-            os_log("iCloud status: unknown")
+            os_log(.error, "iCloud status: unknown")
         }
     }
 }

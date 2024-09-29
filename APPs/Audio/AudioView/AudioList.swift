@@ -96,7 +96,15 @@ extension AudioList {
     }
 
     func handleDBSyncing(_ notification: Notification) {
-        isSyncing = true
+        guard let group = notification.userInfo?["group"] as? DiskFileGroup else {
+            return
+        }
+
+        if group.isFullLoad {
+            isSyncing = false
+        } else {
+            isSyncing = true
+        }
     }
 
     func handleDBSynced(_ notification: Notification) {

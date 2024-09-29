@@ -11,16 +11,16 @@ struct SettingView: View {
                 VersionSetting()
                     .padding(.horizontal)
                 
-                if Config.debug {
-                    PlayTime()
-                        .padding(.horizontal)
-                }
+//                if Config.debug {
+//                    PlayTime()
+//                        .padding(.horizontal)
+//                }
                 
-                if Config.isDebug {
-                    DeviceSetting()
-                        .padding(.horizontal)
-                        .padding(.bottom)
-                }
+//                if Config.isDebug {
+//                    DeviceSetting()
+//                        .padding(.horizontal)
+//                        .padding(.bottom)
+//                }
             }.padding(.top)
         }
         .modelContainer(Config.getSyncedContainer)

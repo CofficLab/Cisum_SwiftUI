@@ -153,16 +153,18 @@ extension AudioRoot {
 
     func onDBSyncing(_ notification: Notification) {
         let verbose = false
-        let files = notification.userInfo?["files"] as? [DiskFile] ?? []
+        guard let group = notification.userInfo?["group"] as? DiskFileGroup else {
+            return
+        }
 
         self.bg.async {
             if verbose {
-                os_log("\(self.t)DBSyncing -> \(files.count)")
+                os_log("\(self.t)DBSyncing -> \(group.count)")
             }
 
             if let playError = app.error as? PlayManError {
                 if case .NotDownloaded = playError, let assetURL = playMan.state.getAsset()?.url {
-                    for file in files {
+                    for file in group.files {
                         if assetURL == file.url, file.isDownloaded {
                             if verbose {
                                 os_log("\(self.t)DBSyncing -> 下载完成 -> \(file.url.lastPathComponent)")
@@ -181,7 +183,7 @@ extension AudioRoot {
                 }
 
                 if case .Downloading = playError, let assetURL = playMan.state.getAsset()?.url {
-                    for file in files {
+                    for file in group.files {
                         if assetURL == file.url, file.isDownloaded {
                             if verbose {
                                 os_log("\(self.t)DBSyncing -> 下载完成 -> \(file.url.lastPathComponent)")
@@ -237,11 +239,15 @@ extension AudioRoot {
     }
 
     func onPlayNext(_ notification: Notification) {
+        let verbose = false 
         let asset = notification.userInfo?["asset"] as? PlayAsset
         self.bg.async {
             if let asset = asset {
                 let next = db.getNextOf(asset.url)?.toPlayAsset()
-                os_log("\(self.t)播放下一个 -> \(next?.url.lastPathComponent ?? "")")
+
+                if verbose {
+                    os_log("\(self.t)播放下一个 -> \(next?.url.lastPathComponent ?? "")")
+                }
 
                 if let next = next {
                     self.playMan.play(next, reason: "onPlayNext")
@@ -251,11 +257,15 @@ extension AudioRoot {
     }
 
     func onPlayPrev(_ notification: Notification) {
+        let verbose = false 
         let asset = notification.userInfo?["asset"] as? PlayAsset
         self.bg.async {
             if let asset = asset {
                 let prev = db.getPrevOf(asset.url)?.toPlayAsset()
-                os_log("\(self.t)播放上一个 -> \(prev?.url.lastPathComponent ?? "")")
+
+                if verbose {
+                    os_log("\(self.t)播放上一个 -> \(prev?.url.lastPathComponent ?? "")")
+                }
 
                 if let prev = prev {
                     self.playMan.play(prev, reason: "onPlayPrev")
@@ -306,7 +316,9 @@ extension AudioRoot {
                 }
 
                 if let e = state.getError() {
-                    os_log("\(self.t)播放状态错误 -> \(e.localizedDescription)")
+                    if verbose {
+                        os_log("\(self.t)播放状态错误 -> \(e.localizedDescription)")
+                    }
 
                     if let playManError = e as? PlayManError,
                        case .NotDownloaded = playManError,

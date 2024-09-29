@@ -43,8 +43,9 @@ class iCloudHelper: SuperLog, SuperThread {
         }
     }
 
-    static func isDownloaded(_ url: URL) -> Bool {
-        let verbose = true
+    static func isDownloaded(_ u: URL) -> Bool {
+        let verbose = false
+        var url = u
 
         // 文件不存在且占位符不存在，则认为文件不存在
         if !FileManager.default.fileExists(atPath: url.path) && !isPlaceholder(url) {
@@ -62,37 +63,19 @@ class iCloudHelper: SuperLog, SuperThread {
             return false
         }
 
-        if FileManager.default.fileExists(atPath: url.path) {
-            if verbose {
-                os_log("文件存在: %@", log: .default, type: .info, url.path)
-            }
-            return true
-        }
-
         do {
+            url.removeCachedResourceValue(forKey: .ubiquitousItemDownloadingStatusKey)
             let values = try url.resourceValues(forKeys: [.ubiquitousItemDownloadingStatusKey, .fileSizeKey])
 
             // 检查 ubiquitousItemDownloadingStatusKey
             if let status = values.ubiquitousItemDownloadingStatus {
                 if verbose {
-                    os_log("文件「%@」当前状态: %@", log: .default, type: .info, url.lastPathComponent, status.rawValue)
+                    os_log("\(Self.label)文件「\(url.lastPathComponent)」当前状态: \(status.rawValue)")
                 }
                 switch status {
                 case .current, .downloaded:
                     return true
                 case .notDownloaded:
-                    // Print URLs of items in the parent folder
-                    if let parentURL = url.deletingLastPathComponent().standardized as URL? {
-                        do {
-                            let contents = try FileManager.default.contentsOfDirectory(at: parentURL, includingPropertiesForKeys: nil, options: [])
-                            os_log("Contents of parent folder:")
-                            for itemURL in contents {
-                                os_log("  %@", log: .default, type: .info, itemURL.path)
-                            }
-                        } catch {
-                            os_log("Error listing parent folder contents: %@", log: .default, type: .error, error.localizedDescription)
-                        }
-                    }
                     return false
                 default:
                     os_log("Unknown download status for file: %@", log: .default, type: .error, url.path)
@@ -113,7 +96,7 @@ class iCloudHelper: SuperLog, SuperThread {
         let verbose = false
 
         if verbose {
-            os_log("Checking download status for file: %@", log: .default, type: .info, url.path)
+            os_log("\(Self.label)Checking download status for file: \(url.path(percentEncoded: false))")
         }
 
         do {

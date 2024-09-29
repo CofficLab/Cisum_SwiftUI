@@ -10,8 +10,8 @@ extension DB {
         "\(t)🪣🪣🪣"
     }
 
-    func sync(_ group: DiskFileGroup, verbose: Bool = true) {
-        self.emitDBSyncing(group.files)
+    func sync(_ group: DiskFileGroup, verbose: Bool = false) {
+        self.emitDBSyncing(group)
 
         if verbose {
             os_log("\(self.labelForSync) Sync(\(group.count))")
@@ -116,9 +116,9 @@ extension Notification.Name {
 }
 
 extension DB {
-    func emitDBSyncing(_ files: [DiskFile]) {
+    func emitDBSyncing(_ group: DiskFileGroup) {
         self.main.async {
-            NotificationCenter.default.post(name: .dbSyncing, object: self, userInfo: ["files": files])
+            NotificationCenter.default.post(name: .dbSyncing, object: self, userInfo: ["group": group])
         }
     }
 

@@ -106,8 +106,8 @@ extension AudioAvatar {
     }
 
     func handleDBSyncing(_ notification: Notification) {
-        if let files = notification.userInfo?["files"] as? [DiskFile] {
-            for file in files {
+        if let group = notification.userInfo?["group"] as? DiskFileGroup {
+            for file in group.files {
                 if file.url == self.asset.url {
                     self.downloadingPercent = file.downloadProgress
                     self.displayedPercent = Int(file.downloadProgress)

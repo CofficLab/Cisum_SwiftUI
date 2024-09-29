@@ -45,7 +45,7 @@ extension FileBox {
         
     }
 
-    func getFileSizeReadable(verbose: Bool = true) -> String {
+    func getFileSizeReadable(verbose: Bool = false) -> String {
         if verbose {
             os_log("\(self.label)GetFileSizeReadable for \(url.lastPathComponent)")
         }
