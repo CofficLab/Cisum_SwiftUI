@@ -221,7 +221,7 @@ extension DB {
         return Self.prevOf(context: context, audio: audio)
     }
     
-    static func prevOf(context: ModelContext, audio: Audio, verbose: Bool = true) -> Audio? {
+    static func prevOf(context: ModelContext, audio: Audio, verbose: Bool = false) -> Audio? {
         if verbose {
             os_log("\(Logger.isMain)\(Self.label)PrevOf [\(audio.order)] \(audio.title)")
         }

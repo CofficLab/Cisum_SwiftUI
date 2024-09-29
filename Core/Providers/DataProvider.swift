@@ -58,7 +58,7 @@ class DataProvider: ObservableObject, SuperLog {
         case .couldNotDetermine:
             os_log("iCloud status: could not determine")
         case .available:
-            os_log("iCloud status: available")
+            os_log("\(self.t)iCloud status: available")
         case .restricted:
             os_log("iCloud status: restricted")
         case .noAccount:
@@ -253,7 +253,6 @@ enum DataProviderError: Error, LocalizedError, Equatable {
         case .NoiCloudAccount:
             return "没有 iCloud 账户"
         }
-
     }
 }
 

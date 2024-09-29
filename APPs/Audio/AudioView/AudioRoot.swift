@@ -172,6 +172,10 @@ extension AudioRoot {
                             }
                             app.clearError()
                         }
+
+                        if assetURL == file.url, file.isDownloading, file.isDownloading {
+                            app.setPlayManError(.Downloading)
+                        }
                     }
                 }
             }

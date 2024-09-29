@@ -64,4 +64,16 @@ class AppProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLog, 
             self.error = nil
         }
     }
+
+    func setError(_ error: Error) {
+        self.main.async {
+            self.error = error
+        }
+    }
+
+    func setPlayManError(_ error: PlayManError) {
+        self.main.async {
+            self.error = error as Error
+        }
+    }
 }

@@ -9,6 +9,7 @@ struct BootView<Content>: View where Content: View {
     @State var dataManager: DataProvider?
     @State var error: Error? = nil
     @State var loading = true
+    @State var iCloudAvailable = true
 
     init(@ViewBuilder content: () -> Content) {
         self.content = content()
@@ -22,6 +23,7 @@ struct BootView<Content>: View where Content: View {
                 mainView
             }
         }
+        .onReceive(NotificationCenter.default.publisher(for: NSUbiquitousKeyValueStore.didChangeExternallyNotification), perform: onCloudAccountStateChanged)
     }
     
     var loadingView: some View {
@@ -42,6 +44,11 @@ struct BootView<Content>: View where Content: View {
             if let e = self.error {
                 if let smartError = e as? DataProviderError, (smartError == DataProviderError.NoDisk || smartError == DataProviderError.iCloudAccountTemporarilyUnavailable) {
                     ErrorViewCloud(error: smartError)
+                        .onChange(of: iCloudAvailable) {
+                            if iCloudAvailable {
+                                reloadView()
+                            }
+                        }
                 } else {
                     ErrorViewFatal(error: e)
                 }
@@ -65,6 +72,23 @@ struct BootView<Content>: View where Content: View {
                     Text("启动失败")
                 }
             }
+        }
+    }
+
+    private func reloadView() {
+        loading = true
+        error = nil
+        dataManager = nil
+    }
+}
+
+// MARK: Event Handler 
+
+extension BootView {
+    func onCloudAccountStateChanged(_ n: Notification) {
+        let newAvailability = FileManager.default.ubiquityIdentityToken != nil
+        if newAvailability != iCloudAvailable {
+            iCloudAvailable = newAvailability
         }
     }
 }

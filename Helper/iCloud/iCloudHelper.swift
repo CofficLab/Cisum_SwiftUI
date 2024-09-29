@@ -48,13 +48,17 @@ class iCloudHelper: SuperLog, SuperThread {
 
         // 文件不存在且占位符不存在，则认为文件不存在
         if !FileManager.default.fileExists(atPath: url.path) && !isPlaceholder(url) {
-            os_log("文件不存在: %@", log: .default, type: .error, url.path)
+            if verbose {
+                os_log("文件不存在: %@", log: .default, type: .info, url.path)
+            }
             return false
         }
 
         // 文件不存在且占位符存在，则认为未下载
         if !FileManager.default.fileExists(atPath: url.path) && isPlaceholder(url) {
-            os_log("文件不存在但占位符存在，认为未下载")
+            if verbose {
+                os_log("占位符存在: %@", log: .default, type: .info, url.path)
+            }
             return false
         }
 
@@ -115,25 +119,42 @@ class iCloudHelper: SuperLog, SuperThread {
     }
 
     static func isDownloading(_ url: URL) -> Bool {
-        // os_log("\(Logger.isMain)🔧 iCloudHelper::getDownloadingStatus -> \(url.absoluteString)")
-        var isDownloading = false
+        let verbose = false
 
-        if !FileManager.default.fileExists(atPath: url.path) {
-            return isDownloading
+        if verbose {
+            os_log("Checking download status for file: %@", log: .default, type: .info, url.path)
         }
 
         do {
-            let values = try url.resourceValues(forKeys: [.ubiquitousItemIsDownloadingKey])
-            for item in values.allValues {
-                if item.key == .ubiquitousItemIsDownloadingKey && item.value as! Bool {
-                    isDownloading = true
+            let values = try url.resourceValues(forKeys: [.ubiquitousItemDownloadingStatusKey, .ubiquitousItemIsDownloadingKey])
+
+            // 首先检查 ubiquitousItemIsDownloadingKey
+            if let isDownloading = values.ubiquitousItemIsDownloading, isDownloading {
+                os_log("\(Self.label)File is currently downloading: \(url.lastPathComponent)")
+                return true
+            }
+
+            // 然后检查 ubiquitousItemDownloadingStatusKey
+            if let status = values.ubiquitousItemDownloadingStatus {
+                switch status {
+                case .current:
+                    return false // 文件已经是最新的，不在下载中
+                case .notDownloaded:
+                    return false // 文件未下载，但也不在下载中
+                case .downloaded:
+                    return false // 文件已下载完成，不在下载中
+                default:
+                    os_log("Unknown download status: %@", log: .default, type: .error, status.rawValue)
+                    return false
                 }
             }
-        } catch {
-            fatalError("\(error)")
-        }
 
-        return isDownloading
+            os_log("No download status available for file: %@", log: .default, type: .info, url.path)
+            return false
+        } catch {
+            os_log("Error checking download status for file: %@, Error: %@", log: .default, type: .error, url.path, error.localizedDescription)
+            return false
+        }
     }
 
     static func isNotDownloaded(_ url: URL) -> Bool {
@@ -363,7 +384,7 @@ extension iCloudHelper {
 
         code()
 
-        // 计算代码执行时间
+        // 计算码执行时间
         let nanoTime = DispatchTime.now().uptimeNanoseconds - startTime.uptimeNanoseconds
         let timeInterval = Double(nanoTime) / 1000000000
 

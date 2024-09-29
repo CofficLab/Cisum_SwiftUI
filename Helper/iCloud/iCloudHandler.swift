@@ -1,7 +1,9 @@
 import Foundation
 import OSLog
+import MagicKit
 
-actor iCloudHandler {
+actor iCloudHandler: SuperLog, SuperThread {
+    let emoji = "🌤️"
     static var label = "☁️ iCloudHandler::"
     let coordinator = NSFileCoordinator()
     var filePresenters: [URL: FilePresenter] = [:]
@@ -84,7 +86,7 @@ extension iCloudHandler {
     func download(url: URL) throws {
         let verbose = true
         if verbose {
-            os_log("下载 \(url.lastPathComponent)")
+            os_log("\(self.t)下载 「\(url.lastPathComponent)」")
         }
         var coordinationError: NSError?
         var downloadError: Error?
