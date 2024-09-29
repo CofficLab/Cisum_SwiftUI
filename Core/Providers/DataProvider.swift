@@ -251,7 +251,7 @@ enum DataProviderError: Error, LocalizedError, Equatable {
         case .iCloudAccountTemporarilyUnavailable:
             return "iCloud 账户暂时不可用"
         case .NoiCloudAccount:
-            return "没有 iCloud 账户"
+            return "登录 iCloud 后使用"
         }
     }
 }

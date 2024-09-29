@@ -42,7 +42,11 @@ struct BootView<Content>: View where Content: View {
     var mainView: some View {
         Group {
             if let e = self.error {
-                if let smartError = e as? DataProviderError, (smartError == DataProviderError.NoDisk || smartError == DataProviderError.iCloudAccountTemporarilyUnavailable) {
+                if let smartError = e as? DataProviderError, (
+                    smartError == DataProviderError.NoDisk ||
+                    smartError == DataProviderError.iCloudAccountTemporarilyUnavailable ||
+                    smartError == DataProviderError.NoiCloudAccount
+                ) {
                     ErrorViewCloud(error: smartError)
                         .onChange(of: iCloudAvailable) {
                             if iCloudAvailable {

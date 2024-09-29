@@ -91,6 +91,17 @@ struct ErrorViewCloud: View, SuperLog, SuperThread {
         if let url = URL(string: "x-apple.systempreferences:") {
             NSWorkspace.shared.open(url)
         }
+        #elseif os(visionOS)
+        if let url = URL(string: "App-Prefs:root") {
+            if UIApplication.shared.canOpenURL(url) {
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            } else {
+                // 如果无法打开设置首页，回退到打开应用自身的设置
+                if let settingsUrl = URL(string: UIApplication.openSettingsURLString) {
+                    UIApplication.shared.open(settingsUrl, options: [:], completionHandler: nil)
+                }
+            }
+        }
         #endif
     }
 }
