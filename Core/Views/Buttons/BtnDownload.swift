@@ -1,5 +1,5 @@
-import SwiftUI
 import MagicKit
+import SwiftUI
 
 struct BtnDownload: View, SuperThread {
     @EnvironmentObject var dataManager: DataProvider
@@ -30,7 +30,9 @@ extension BtnDownload {
     private func handleDownload() {
         guard let disk else { return }
         self.bg.async {
-            disk.download(asset.url, reason: "点击了下载")
+            Task {
+                try? await disk.download(asset.url, reason: "点击了下载")
+            }
         }
     }
 }

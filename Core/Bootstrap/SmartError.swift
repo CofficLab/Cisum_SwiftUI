@@ -15,7 +15,6 @@ enum SmartError: Error, LocalizedError, Equatable {
     case PlayFailed
     case NetworkError
     case NotExists
-    case NoDisk
     
     var errorDescription: String? {
         switch self {
@@ -43,8 +42,6 @@ enum SmartError: Error, LocalizedError, Equatable {
             "网络未连接"
         case .NotExists:
             "文件不存在"
-        case .NoDisk:
-            "初始化磁盘失败"
         case .NoChildrenAudio:
             "文件夹内无内容"
         }

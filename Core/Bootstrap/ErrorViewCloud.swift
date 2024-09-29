@@ -1,7 +1,11 @@
 import SwiftUI
+import CloudKit
 import MagicKit
+import OSLog
 
-struct ErrorViewCloud: View {
+struct ErrorViewCloud: View, SuperLog, SuperThread {
+    var error: Error
+    
     var body: some View {
         ScrollView {
             VStack {
@@ -13,7 +17,7 @@ struct ErrorViewCloud: View {
                 Spacer()
 
                 VStack {
-                    Text("需要登录 iCloud")
+                    Text(error.localizedDescription)
                         .font(.title)
                         .padding(.bottom, 10)
 
@@ -24,18 +28,6 @@ struct ErrorViewCloud: View {
                     }
 
                     Spacer()
-
-                    #if os(macOS)
-                        Button("退出") {
-                            NSApplication.shared.terminate(self)
-                        }.controlSize(.extraLarge)
-
-                        Spacer()
-                    #else
-                        Button("关闭 APP") {
-                            quitApp()
-                        }.padding()
-                    #endif
 
                     debugView
                 }
@@ -85,28 +77,20 @@ struct ErrorViewCloud: View {
 
     private func openSystemSettings() {
         #if os(iOS)
-            guard let url = URL(string: UIApplication.openSettingsURLString) else {
-                return
-            }
-
+        if let url = URL(string: "App-Prefs:root=CASTLE") {
             if UIApplication.shared.canOpenURL(url) {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            } else {
+                // 如果无法打开设置首页，回退到打开应用自身的设置
+                if let settingsUrl = URL(string: UIApplication.openSettingsURLString) {
+                    UIApplication.shared.open(settingsUrl, options: [:], completionHandler: nil)
+                }
             }
-        #elseif os(macOS)
-            if let url = URL(string: "x-apple.systempreferences:com.apple.preference") {
-                NSWorkspace.shared.open(url)
-            }
-        #endif
-    }
-
-    private func quitApp() {
-        #if os(iOS)
-        let selector = NSSelectorFromString("terminate")
-        if let method = UIApplication.shared.method(for: selector) {
-            UIApplication.shared.perform(selector, with: nil)
         }
         #elseif os(macOS)
-        NSApplication.shared.terminate(self)
+        if let url = URL(string: "x-apple.systempreferences:") {
+            NSWorkspace.shared.open(url)
+        }
         #endif
     }
 }

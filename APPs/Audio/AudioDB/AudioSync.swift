@@ -11,16 +11,10 @@ extension DB {
     }
 
     func sync(_ group: DiskFileGroup, verbose: Bool = true) {
-        var message = "\(labelForSync) Sync(\(group.count))"
-
         self.emitDBSyncing(group.files)
 
-        if let first = group.first, first.isDownloading == true {
-            message += " -> \(first.fileName) -> \(String(format: "%.0f", first.downloadProgress))% ⏬⏬⏬"
-        }
-
         if verbose {
-            os_log("\(message)")
+            os_log("\(self.labelForSync) Sync(\(group.count))")
         }
 
         if group.isFullLoad {
@@ -114,7 +108,7 @@ extension DB {
     }
 }
 
-// MARK: Event 
+// MARK: Event
 
 extension Notification.Name {
     static let dbSyncing = Notification.Name("dbSyncing")

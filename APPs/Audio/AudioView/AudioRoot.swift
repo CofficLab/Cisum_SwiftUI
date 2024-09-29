@@ -104,7 +104,7 @@ extension AudioRoot {
                         var currentURL: URL = url
 
                         while currentIndex < count {
-                            disk.download(currentURL, reason: "downloadNext 🐛 \(reason)")
+                            try await disk.download(currentURL, reason: "downloadNext 🐛 \(reason)")
 
                             currentIndex = currentIndex + 1
 
@@ -294,7 +294,9 @@ extension AudioRoot {
                        case .NotDownloaded = playManError,
                        let disk = disk,
                        let asset = state.getAsset() {
-                        disk.download(asset.url, reason: "PlayManError.NotDownloaded")
+                        Task {
+                            try? await disk.download(asset.url, reason: "PlayManError.NotDownloaded")
+                        }
                     }
                 }
             }

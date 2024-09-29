@@ -1,3 +1,4 @@
+import CloudKit
 import OSLog
 import SwiftData
 import SwiftUI
@@ -9,26 +10,31 @@ class DataProvider: ObservableObject, SuperLog {
     @Published var syncing: Bool = false
 
     let emoji = "💼"
-    var isiCloudDisk: Bool { (disk as? DiskiCloud) != nil }
-    var isNotiCloudDisk: Bool { !isiCloudDisk }
     var db: DB = DB(Config.getContainer, reason: "dataManager")
 
-    init() throws {
-        var disk: (any Disk)?
-
-        if Config.iCloudEnabled {
-            disk = DiskiCloud.make("audios")
-        } else {
-            disk = DiskLocal.make("audios")
-        }
-
-        guard let disk = disk else {
-            throw SmartError.NoDisk
-        }
-
-        self.disk = disk
+    // Move these computed properties to be calculated based on the disk type
+    var isiCloudDisk: Bool {
+        disk is DiskiCloud
     }
 
+    var isNotiCloudDisk: Bool {
+        !(disk is DiskiCloud)
+    }
+
+    init() async throws {
+        // Initialize disk with a default value
+        self.disk = DiskLocal.make("audios") ?? DiskLocal(root: URL(fileURLWithPath: "/tmp"))
+
+        if Config.iCloudEnabled {
+            try await self.checkAndUpdateiCloudStatus()
+
+            guard let iCloudDisk = DiskiCloud.make("audios") else {
+                throw DataProviderError.NoDisk
+            }
+
+            self.disk = iCloudDisk
+        }
+    }
 
     // MARK: Copy
 
@@ -41,6 +47,30 @@ class DataProvider: ObservableObject, SuperLog {
     func copy(_ urls: [URL]) {
         Task {
             await self.db.addCopyTasks(urls)
+        }
+    }
+
+    func checkAndUpdateiCloudStatus() async throws {
+        os_log("\(self.t)Checking iCloud status")
+
+        let accountStatus = try await CKContainer.default().accountStatus()
+        switch accountStatus {
+        case .couldNotDetermine:
+            os_log("iCloud status: could not determine")
+        case .available:
+            os_log("iCloud status: available")
+        case .restricted:
+            os_log("iCloud status: restricted")
+        case .noAccount:
+            os_log("iCloud status: no account")
+
+            throw DataProviderError.NoiCloudAccount
+        case .temporarilyUnavailable:
+            os_log("\(self.t)iCloud status: temporarily unavailable")
+
+            throw DataProviderError.iCloudAccountTemporarilyUnavailable
+        @unknown default:
+            os_log("iCloud status: unknown")
         }
     }
 }
@@ -97,7 +127,7 @@ extension DataProvider {
         let disk = DiskiCloud.make("audios")
 
         guard disk != nil else {
-            throw SmartError.NoDisk
+            throw DataProviderError.NoDisk
         }
 
         migrate()
@@ -108,7 +138,7 @@ extension DataProvider {
         let disk = DiskLocal.make("audios")
 
         guard disk != nil else {
-            throw SmartError.NoDisk
+            throw DataProviderError.NoDisk
         }
 
         migrate()
@@ -169,7 +199,7 @@ extension DataProvider {
 
 extension DataProvider {
     func first() -> PlayAsset? {
-            db.firstAudio()?.toPlayAsset()
+        db.firstAudio()?.toPlayAsset()
 //            disk.getRoot().children?.first?.toPlayAsset()
     }
 }
@@ -204,6 +234,26 @@ extension DataProvider {
             let db = DBSynced(Config.getSyncedContainer)
             await db.updateBookCurrent(bookURL, currentURL: current)
         }
+    }
+}
+
+// MARK: Error
+
+enum DataProviderError: Error, LocalizedError, Equatable {
+    case NoDisk
+    case iCloudAccountTemporarilyUnavailable
+    case NoiCloudAccount
+
+    var errorDescription: String? {
+        switch self {
+        case .NoDisk:
+            return "没有磁盘"
+        case .iCloudAccountTemporarilyUnavailable:
+            return "iCloud 账户暂时不可用"
+        case .NoiCloudAccount:
+            return "没有 iCloud 账户"
+        }
+
     }
 }
 

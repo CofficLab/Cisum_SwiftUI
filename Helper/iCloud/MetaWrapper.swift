@@ -118,7 +118,7 @@ extension MetaWrapper {
                 value = (metadataItem.value(forAttribute: NSMetadataItemFSSizeKey) as? Int)?.description ?? "x"
             }
             
-            os_log("    \(key):\(value)")
+            os_log("   ➡️ \(key):\(value)")
         })
     }
 }

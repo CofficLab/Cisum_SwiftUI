@@ -82,7 +82,7 @@ actor iCloudHandler {
 
 extension iCloudHandler {
     func download(url: URL) throws {
-        let verbose = false
+        let verbose = true
         if verbose {
             os_log("下载 \(url.lastPathComponent)")
         }

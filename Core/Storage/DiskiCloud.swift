@@ -1,19 +1,30 @@
 import Foundation
+import MagicKit
 import OSLog
 
-class DiskiCloud: ObservableObject, Disk, SuperLog {
+class DiskiCloud: ObservableObject, Disk, SuperLog, SuperThread {
     static var label = "☁️ DiskiCloud::"
     static let cloudRoot = Config.cloudDocumentsDir
 
-    let emoji = "☁️"
+    let emoji = "🐶"
 
     // MARK: 磁盘的挂载目录
 
     static func getMountedURL() -> URL? {
+        let verbose = false
+
         guard let cloudRoot = Self.cloudRoot else {
             os_log(.error, "\(self.label)无法获取根目录，因为 CloudRoot=nil")
 
             return nil
+        }
+
+        if verbose {
+            os_log("\(Self.label)磁盘的根目录是 \(cloudRoot.path())")
+        }
+
+        if FileManager.default.fileExists(atPath: cloudRoot.path(percentEncoded: false)) == false {
+            os_log(.error, "CloudRoot 目录不存在")
         }
 
         return cloudRoot
@@ -130,18 +141,18 @@ extension DiskiCloud {
                 try fileManager.createDirectory(at: destinationFolder, withIntermediateDirectories: true, attributes: nil)
                 os_log("\(self.t)创建目标文件夹: \(destinationFolder.path)")
             }
-            
+
             // 检查目标文件夹的访问权限
             guard fileManager.isWritableFile(atPath: destinationFolder.path) else {
                 throw NSError(domain: "DiskiCloud", code: 403, userInfo: [NSLocalizedDescriptionKey: "没有写入目标文件夹的权限: \(destinationFolder.path)"])
             }
-            
+
             // 执行复制操作
             try fileManager.copyItem(at: url, to: d)
             os_log("\(self.t)复制成功: \(d.path)")
         } catch {
             os_log(.error, "\(self.t)复制文件发生错误 -> \(error.localizedDescription)")
-            
+
             // 添加更多诊断信息
             if let nsError = error as NSError? {
                 os_log(.error, "\(self.t)错误域: \(nsError.domain)")
@@ -153,13 +164,13 @@ extension DiskiCloud {
                     os_log(.error, "\(self.t)恢复建议: \(recoverySuggestion)")
                 }
             }
-            
+
             // 检查文件的具体权限
             let attributes = try? fileManager.attributesOfItem(atPath: url.path)
             if let permissions = attributes?[.posixPermissions] as? Int {
-                os_log(.error, "\(self.t)文件权限: \(String(format:"%o", permissions))")
+                os_log(.error, "\(self.t)文件权限: \(String(format: "%o", permissions))")
             }
-            
+
             throw error
         }
     }
@@ -179,22 +190,28 @@ extension DiskiCloud {
         }
     }
 
-    func download(_ url: URL, reason: String) {
+    func download(_ url: URL, reason: String) async throws {
         let verbose = true
 
         if verbose {
-            os_log("\(self.label)Download ⏬⏬⏬ \(url.lastPathComponent) reason -> \(reason)")
+            os_log("\(self.label)Download ⏬⏬⏬ \(url.lastPathComponent) reason 🐛 -> \(reason)")
         }
 
-        if url.isFileExist() == false {
-            if verbose {
-                os_log(.error, "\(self.label)Download \(url.lastPathComponent) -> Not Exists ⚠️⚠️⚠️")
-                os_log(.error, "  ➡️ \(url.absoluteString)")
+        // 检查是否为 iCloud 项目
+        do {
+            let resourceValues = try url.resourceValues(forKeys: [.isUbiquitousItemKey])
+            guard let isUbiquitousItem = resourceValues.isUbiquitousItem, isUbiquitousItem else {
+                if verbose {
+                    os_log("\(self.label)不是 iCloud 项目: \(url.lastPathComponent)")
+                }
+                return
             }
-
+        } catch {
+            os_log(.error, "\(self.label)检查 iCloud 项目时出错: \(error.localizedDescription)")
             return
         }
 
+        // 检查文件是否已下载
         if iCloudHelper.isDownloaded(url) {
             if verbose {
                 os_log("\(self.label)Download \(url.lastPathComponent) -> Already downloaded ✅✅✅")
@@ -202,6 +219,7 @@ extension DiskiCloud {
             return
         }
 
+        // 检查文件是否正在下载
         if iCloudHelper.isDownloading(url) {
             if verbose {
                 os_log("\(self.label)Download \(url.lastPathComponent) -> Already downloading ⚠️⚠️⚠️")
@@ -217,13 +235,7 @@ extension DiskiCloud {
             return
         }
 
-        Task {
-            do {
-                try await cloudHandler.download(url: url)
-            } catch let e {
-                os_log(.error, "\(self.label)Download(\(reason))出错->\(e.localizedDescription)")
-            }
-        }
+        try await cloudHandler.download(url: url)
     }
 
     func getDownloadingCount() -> Int {
@@ -256,11 +268,10 @@ extension DiskiCloud {
 
     /// 监听存储Audio文件的文件夹
     func watch(reason: String) async {
-        let verbose = false
-        let emoji = "🌞🌞🌞"
+        let verbose = true
 
         if verbose {
-            os_log("\(Logger.isMain)\(self.label)\(emoji) Watch(\(self.name)) because of \(reason)")
+            os_log("\(self.t)Watch(\(self.name)) because of 🐛 \(reason)")
         }
 
         self.query.stopped = false
@@ -271,7 +282,7 @@ extension DiskiCloud {
             NSPredicate(format: "NOT %K ENDSWITH %@", NSMetadataItemFSNameKey, ".plist"),
             NSPredicate(format: "NOT %K BEGINSWITH %@", NSMetadataItemFSNameKey, "."),
             NSPredicate(format: "NOT %K BEGINSWITH[c] %@", NSMetadataItemFSNameKey, "."),
-        ]).debounce(for: .seconds(0.2))
+        ]).debounce(for: .seconds(0.3))
         for try await collection in result {
             var message = "\(self.t)\(emoji) Watch(\(collection.items.count))"
 
@@ -281,6 +292,13 @@ extension DiskiCloud {
 
             if verbose {
                 os_log("\(message)")
+            }
+
+            if collection.count == 1, let first = collection.first {
+                os_log("   ➡️ FileName: \(first.fileName ?? "nil")")
+                os_log("   ➡️ Downloading: \(first.isDownloading ? "true" : "false")")
+                os_log("   ➡️ Downloaded: \(first.isDownloaded ? "true" : "false")")
+                os_log("   ➡️ Placeholder: \(first.isPlaceholder ? "true" : "false")")
             }
 
             self.onUpdated(DiskFileGroup.fromMetaCollection(collection, disk: self))

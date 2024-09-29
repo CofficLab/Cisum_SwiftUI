@@ -6,17 +6,8 @@ extension Config {
     static let localContainer = localDocumentsDir?.deletingLastPathComponent()
     static let localDocumentsDir = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first
     
-    // MARK: iCloud 容器路径
-    static let containerDir = fileManager.url(forUbiquityContainerIdentifier: containerIdentifier)
-    
     // MARK: iCloud 容器里的 Documents
-    static var cloudDocumentsDir: URL? {
-        if let c = containerDir {
-            return c.appending(component: "Documents")
-        }
-
-        return nil
-    }
+    static var cloudDocumentsDir: URL? = fileManager.url(forUbiquityContainerIdentifier: containerIdentifier)?.appendingPathComponent("Documents")
 
     static var coverDir: URL {
         if let localDocumentsDir = Config.localDocumentsDir {

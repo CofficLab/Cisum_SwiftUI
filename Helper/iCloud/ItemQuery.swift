@@ -1,8 +1,9 @@
 import AsyncAlgorithms
 import Foundation
 import OSLog
+import MagicKit
 
-class ItemQuery {
+class ItemQuery: SuperLog, SuperEvent, SuperThread {
     let query = NSMetadataQuery()
     let queue: OperationQueue
     var label: String {"\(Logger.isMain)📁 ItemQuery::"}
@@ -75,7 +76,7 @@ class ItemQuery {
     // MARK: 所有的item
     
     private func collectAll(_ continuation: AsyncStream<MetadataItemCollection>.Continuation, name: Notification.Name) {
-        DispatchQueue.global().async {
+        self.bg.async {
             if self.verbose {
                 os_log("\(self.label)NSMetadataQueryDidFinishGathering")
             }

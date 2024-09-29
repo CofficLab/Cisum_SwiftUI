@@ -35,7 +35,7 @@ class AudioApp: SuperLayout, SuperLog, SuperThread {
                 os_log("%@👻👻👻 boot", self.t)
             }
             self.disk = DiskiCloud.make(self.dirName)
-            self.watchDisk(reason: self.r("AudioApp.Boot"))
+            self.watchDisk(reason: "AudioApp.Boot")
             self.emitBoot()
         }
     }

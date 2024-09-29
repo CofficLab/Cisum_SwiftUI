@@ -19,6 +19,7 @@ struct DiskFile: FileBox, Hashable, Identifiable, Playable {
     var index: Int = 0
     var contentType: String?
     var size: Int64?
+    var isPlaceholder: Bool = false
 
     var label: String {
         "\(Logger.isMain)\(Self.label)"
@@ -41,7 +42,8 @@ extension DiskFile {
             isDeleted: meta.isDeleted,
             isDownloaded: meta.isDownloaded, isFolder: meta.isDirectory,
             downloadProgress: meta.downloadProgress,
-            size: meta.fileSize
+            size: meta.fileSize,
+            isPlaceholder: meta.isPlaceholder
         )
     }
 }

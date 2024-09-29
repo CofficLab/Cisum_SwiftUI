@@ -1,14 +1,14 @@
+import MagicKit
 import OSLog
 import SwiftUI
-import MagicKit
 
 class iCloudHelper: SuperLog, SuperThread {
     static var label = "☁️ iCloudHelper::"
-    
+
     static func iCloudEnabled() -> Bool {
         return FileManager.default.ubiquityIdentityToken != nil
     }
-    
+
     // MARK: 下载状态
 
     static func getStatus(_ url: URL) -> String {
@@ -18,41 +18,59 @@ class iCloudHelper: SuperLog, SuperThread {
     static func getDownloadingStatus(url: URL) -> URLUbiquitousItemDownloadingStatus {
         var s: URLUbiquitousItemDownloadingStatus = .notDownloaded
         printRunTime("GetDownloadingStatus -> \(url.lastPathComponent)", tolerance: 1, {
-        do {
-            let values = try url.resourceValues(forKeys: [.ubiquitousItemDownloadingStatusKey])
-            let status = values.ubiquitousItemDownloadingStatus
+            do {
+                let values = try url.resourceValues(forKeys: [.ubiquitousItemDownloadingStatusKey])
+                let status = values.ubiquitousItemDownloadingStatus
 
-            if status == nil {
-                s = URLUbiquitousItemDownloadingStatus.downloaded
-            } else {
-                s = status!
+                if status == nil {
+                    s = URLUbiquitousItemDownloadingStatus.downloaded
+                } else {
+                    s = status!
+                }
+            } catch {
+                fatalError("\(error)")
             }
-        } catch {
-            fatalError("\(error)")
-        }
-    })
+        })
         return s
+    }
+
+    static func isPlaceholder(_ url: URL) -> Bool {
+        do {
+            return try url.resourceValues(forKeys: [.isUbiquitousItemKey]).isUbiquitousItem ?? false
+        } catch {
+            os_log("Error getting isUbiquitousItem for file: %@, Error: %@", log: .default, type: .error, url.path, error.localizedDescription)
+            return false
+        }
     }
 
     static func isDownloaded(_ url: URL) -> Bool {
         let verbose = true
+
+        // 文件不存在且占位符不存在，则认为文件不存在
+        if !FileManager.default.fileExists(atPath: url.path) && !isPlaceholder(url) {
+            os_log("文件不存在: %@", log: .default, type: .error, url.path)
+            return false
+        }
+
+        // 文件不存在且占位符存在，则认为未下载
+        if !FileManager.default.fileExists(atPath: url.path) && isPlaceholder(url) {
+            os_log("文件不存在但占位符存在，认为未下载")
+            return false
+        }
+
         do {
             let values = try url.resourceValues(forKeys: [.ubiquitousItemDownloadingStatusKey, .fileSizeKey])
-            
-            // Check ubiquitousItemDownloadingStatusKey
+
+            // 检查 ubiquitousItemDownloadingStatusKey
             if let status = values.ubiquitousItemDownloadingStatus {
                 switch status {
                 case .current, .downloaded:
                     return true
                 case .notDownloaded:
-                if verbose {
-                    os_log("\(self.label)\(url.relativePath) 状态为 notDownloaded")
-                    print(status)
-                }
                     return false
                 default:
                     os_log("Unknown download status for file: %@", log: .default, type: .error, url.path)
-                    // For unknown status, if file exists and has size, consider it downloaded
+                    // 对于未知状态，如果文件存在且有大小，则认为已下载
                     if FileManager.default.fileExists(atPath: url.path),
                        let fileSize = values.fileSize, fileSize > 0 {
                         os_log("文件已存在且有大小: %@, 认为已下载", log: .default, type: .info, url.path)
@@ -61,7 +79,7 @@ class iCloudHelper: SuperLog, SuperThread {
                     return false
                 }
             } else {
-                // If status is nil, but file exists and has size, consider it downloaded
+                // 如果状态为 nil，但文件存在且有大小，则认为已下载
                 if FileManager.default.fileExists(atPath: url.path),
                    let fileSize = values.fileSize, fileSize > 0 {
                     os_log("文件已存在且有大小: %@, 认为已下载", log: .default, type: .info, url.path)
@@ -71,6 +89,22 @@ class iCloudHelper: SuperLog, SuperThread {
             }
         } catch {
             os_log("Error getting download status for file: %@, Error: %@", log: .default, type: .error, url.path, error.localizedDescription)
+
+            // 获取父文件夹的路径
+            let parentURL = url.deletingLastPathComponent()
+
+            // 获取父文件夹的子文件
+            do {
+                let contents = try FileManager.default.contentsOfDirectory(at: parentURL, includingPropertiesForKeys: nil, options: [])
+
+                // 输出子文件的路径
+                for childURL in contents {
+                    os_log("子文件路径: %@", log: .default, type: .info, childURL.path)
+                }
+            } catch {
+                os_log("获取父文件夹内容时出错: %@", log: .default, type: .error, error.localizedDescription)
+            }
+
             // If there's an error, but file exists, consider it downloaded
             if FileManager.default.fileExists(atPath: url.path) {
                 os_log("文件已存在且有大小: %@, 认为已下载", log: .default, type: .info, url.path)
@@ -83,11 +117,11 @@ class iCloudHelper: SuperLog, SuperThread {
     static func isDownloading(_ url: URL) -> Bool {
         // os_log("\(Logger.isMain)🔧 iCloudHelper::getDownloadingStatus -> \(url.absoluteString)")
         var isDownloading = false
-        
+
         if !FileManager.default.fileExists(atPath: url.path) {
             return isDownloading
         }
-        
+
         do {
             let values = try url.resourceValues(forKeys: [.ubiquitousItemIsDownloadingKey])
             for item in values.allValues {
@@ -105,9 +139,9 @@ class iCloudHelper: SuperLog, SuperThread {
     static func isNotDownloaded(_ url: URL) -> Bool {
         !isDownloaded(url)
     }
-    
+
     // TODO: 下载进度
-    
+
     // MARK: Exists
 
     static func fileExists(url: URL) -> Bool {
@@ -120,8 +154,7 @@ class iCloudHelper: SuperLog, SuperThread {
 
     static func isCloudPath(url: URL) -> Bool {
         if let resourceValues = try? url.resourceValues(forKeys: [.isUbiquitousItemKey]),
-           resourceValues.isUbiquitousItem == true
-        {
+           resourceValues.isUbiquitousItem == true {
             return true
         } else {
             return false
@@ -184,8 +217,7 @@ extension iCloudHelper {
                     let values = try iCloudContainerURL.resourceValues(forKeys: [.volumeAvailableCapacityForImportantUsageKey, .volumeTotalCapacityKey])
 
                     if let availableCapacity = values.volumeAvailableCapacityForImportantUsage,
-                       let totalCapacity = values.volumeTotalCapacity
-                    {
+                       let totalCapacity = values.volumeTotalCapacity {
                         print("Total iCloud capacity: \(totalCapacity) bytes")
                         print("Available iCloud capacity: \(availableCapacity) bytes")
 
@@ -246,8 +278,7 @@ extension iCloudHelper {
         do {
             let values = try iCloudContainerURL.resourceValues(forKeys: [.volumeAvailableCapacityForImportantUsageKey, .volumeTotalCapacityKey])
 
-            if let availableCapacity = values.volumeAvailableCapacityForImportantUsage
-            {
+            if let availableCapacity = values.volumeAvailableCapacityForImportantUsage {
                 return availableCapacity
             } else {
                 throw iCloudError.CanNotGetCapacity
@@ -321,7 +352,7 @@ extension iCloudHelper {
 
         return String(format: "%.2f %@", bytes, byteUnits[index])
     }
-    
+
     /// 执行并输出耗时
     static func printRunTime(_ title: String, tolerance: Double = 1, verbose: Bool = false, _ code: () -> Void) {
         if verbose {
