@@ -186,9 +186,10 @@ extension DiskiCloud {
             os_log("\(self.label)Download ⏬⏬⏬ \(url.lastPathComponent) reason -> \(reason)")
         }
 
-        if !fileManager.fileExists(atPath: url.path) {
+        if url.isFileExist() == false {
             if verbose {
-                os_log("\(self.label)Download \(url.lastPathComponent) -> Not Exists ⚠️⚠️⚠️")
+                os_log(.error, "\(self.label)Download \(url.lastPathComponent) -> Not Exists ⚠️⚠️⚠️")
+                os_log(.error, "  ➡️ \(url.absoluteString)")
             }
 
             return

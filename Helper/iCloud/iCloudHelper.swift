@@ -1,7 +1,8 @@
 import OSLog
 import SwiftUI
+import MagicKit
 
-class iCloudHelper {
+class iCloudHelper: SuperLog, SuperThread {
     static var label = "☁️ iCloudHelper::"
     
     static func iCloudEnabled() -> Bool {
@@ -34,6 +35,7 @@ class iCloudHelper {
     }
 
     static func isDownloaded(_ url: URL) -> Bool {
+        let verbose = true
         do {
             let values = try url.resourceValues(forKeys: [.ubiquitousItemDownloadingStatusKey, .fileSizeKey])
             
@@ -43,6 +45,10 @@ class iCloudHelper {
                 case .current, .downloaded:
                     return true
                 case .notDownloaded:
+                if verbose {
+                    os_log("\(self.label)\(url.relativePath) 状态为 notDownloaded")
+                    print(status)
+                }
                     return false
                 default:
                     os_log("Unknown download status for file: %@", log: .default, type: .error, url.path)
