@@ -9,6 +9,7 @@ struct AudioDB: View, SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var data: DataProvider
     @EnvironmentObject var db: DB
+    @EnvironmentObject var s: StoreProvider
 
     @State private var treeView = false
     @State private var isSorting = false
@@ -21,12 +22,16 @@ struct AudioDB: View, SuperLog, SuperThread {
 
     private var disk: any Disk { data.disk }
 
-    var showTips: Bool {
-        if isDropping {
-            return true
-        }
+    var showProTips: Bool {
+        audios.count >= Config.maxAudioCount && s.currentSubscription == nil && isDropping
+    }
 
-        return app.flashMessage.isEmpty && audios.count == 0
+    var showTips: Bool {
+        (isDropping || (app.flashMessage.isEmpty && audios.count == 0)) && !showProTips
+    }
+
+    var outOfLimit: Bool {
+        audios.count >= Config.maxAudioCount && s.currentSubscription == nil
     }
 
     init(verbose: Bool = false) {
@@ -50,7 +55,11 @@ struct AudioDB: View, SuperLog, SuperThread {
             }
 
             if showTips {
-                DBTips()
+                AudioDBTips()
+            }
+            
+            if showProTips {
+                AudioProTips()
             }
         }
         .fileImporter(
@@ -117,6 +126,10 @@ extension AudioDB {
 
 extension AudioDB {
     func onDrop(_ providers: [NSItemProvider]) -> Bool {
+        if outOfLimit {
+            return false
+        }
+        
         // Extract URLs from providers on the main thread
         let urls = providers.compactMap { provider -> URL? in
             var result: URL?
