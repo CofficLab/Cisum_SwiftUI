@@ -41,7 +41,7 @@ struct AudioDB: View, SuperLog, SuperThread {
                 if isSorting {
                     Text(sortMode.description)
                 } else {
-                    AudioVStack(reason: "AudioDB")
+                    AudioList(reason: "AudioDB")
                         .frame(maxHeight: .infinity)
                 }
 

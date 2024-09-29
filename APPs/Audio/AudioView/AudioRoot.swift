@@ -144,8 +144,10 @@ extension AudioRoot {
 
 extension AudioRoot {
     func onChangeOfDisk() {
-        if let disk = disk {
-            self.copyJob = AudioCopyJob(db: db, disk: disk)
+        self.bg.async {
+            if let disk = disk {
+                self.copyJob = AudioCopyJob(db: db, disk: disk)
+            }
         }
     }
 
@@ -203,7 +205,7 @@ extension AudioRoot {
         checkNetworkStatus()
 
         self.bg.async {
-            let verbose = true
+            let verbose = false
 
             if verbose {
                 os_log("\(self.t)OnAppear")

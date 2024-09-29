@@ -18,7 +18,6 @@ class AudioWorker: NSObject, ObservableObject, PlayWorker, SuperLog, SuperThread
     let emoji = "🎺"
     var player = AVAudioPlayer()
     var asset: PlayAsset?
-    var mode: PlayMode = .Order
     var verbose = false
     var queue = DispatchQueue(label: "AudioWorker", qos: .userInteractive)
 
@@ -101,16 +100,6 @@ class AudioWorker: NSObject, ObservableObject, PlayWorker, SuperLog, SuperThread
     }
 }
 
-// MARK: 播放模式
-
-extension AudioWorker {
-    func switchMode(verbose: Bool = true) {
-        mode = mode.switchMode()
-        Config.setCurrentMode(mode)
-        onToggleMode()
-    }
-}
-
 // MARK: 播放控制
 
 extension AudioWorker {
@@ -129,7 +118,10 @@ extension AudioWorker {
     // MARK: Play
 
     func play(_ asset: PlayAsset, reason: String) {
-        os_log("\(self.t)Play \(asset.fileName) 🐛 \(reason)")
+        let verbose = false
+        if verbose {
+            os_log("\(self.t)Play \(asset.fileName) 🐛 \(reason)")
+        }
 
         if asset.isFolder() {
             return prepare(asset, reason: reason)
@@ -164,7 +156,10 @@ extension AudioWorker {
     }
 
     func pause() {
-        os_log("\(self.t)Pause")
+        let verbose = false
+        if verbose {
+            os_log("\(self.t)Pause")
+        }
         state = .Paused(asset)
     }
 
@@ -174,7 +169,10 @@ extension AudioWorker {
     }
 
     func finish() {
-        os_log("\(self.t)Finish(\(self.asset?.title ?? "nil"))")
+        let verbose = false
+        if verbose {
+            os_log("\(self.t)Finish(\(self.asset?.title ?? "nil"))")
+        }
         guard let asset = self.asset else {
             return
         }
@@ -274,6 +272,8 @@ extension AudioWorker {
 
 extension AudioWorker: AVAudioPlayerDelegate {
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        let verbose = false
+
         self.bg.async {
             // 没有播放完，被打断了
             if !flag {
@@ -281,17 +281,10 @@ extension AudioWorker: AVAudioPlayerDelegate {
                 return self.pause()
             }
 
-            if self.mode == .Loop {
-                os_log("\(self.t)播放完成，单曲循环")
-                if let asset = self.asset {
-                    self.play(asset, reason: "单曲循环")
-                } else {
-                    self.finish()
-                }
-            } else {
-                os_log("\(self.t)播放完成，\(self.mode.description)")
-                self.finish()
+            if verbose {
+                os_log("\(self.t)播放完成")
             }
+            self.finish()
         }
     }
 

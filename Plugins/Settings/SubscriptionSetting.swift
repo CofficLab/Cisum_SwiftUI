@@ -56,7 +56,7 @@ struct SubscriptionSetting: View, SuperEvent, SuperLog, SuperThread {
 
     // MARK: 获取可用的订阅
 
-    private func getProducts(_ reason: String, verbose: Bool = true) async {
+    private func getProducts(_ reason: String, verbose: Bool = false) async {
         if verbose {
             os_log("\(self.t)GetProducts because of \(reason)")
         }

@@ -12,7 +12,10 @@ class AudioCopyJob: SuperLog, SuperThread {
         self.db = db
         self.disk = disk
 
-        os_log("\(self.t)init")
+        let verbose = false
+        if verbose {
+            os_log("\(self.t)init")
+        }
 
         self.bg.async {
             self.run()
@@ -30,15 +33,20 @@ class AudioCopyJob: SuperLog, SuperThread {
     }
     
     func run() {
+        let verbose = false
+
         if running {
             return
         }
 
         running = true
-        os_log("\(self.t)run")
+
+        if verbose {
+            os_log("\(self.t)run")
+        }
 
         guard let disk = self.disk else {
-            os_log("\(self.t)run -> 没有磁盘")
+            os_log(.error, "\(self.t)run -> 没有磁盘")
             running = false
             return
         }
@@ -46,6 +54,14 @@ class AudioCopyJob: SuperLog, SuperThread {
         self.bg.async {
             Task {
                 let tasks = await self.db.allCopyTasks()
+
+                if tasks.isEmpty {
+                    self.running = false
+                    if verbose {
+                        os_log("\(self.t)run -> 没有任务")
+                    }
+                    return
+                }
 
                 for task in tasks {
                     do {

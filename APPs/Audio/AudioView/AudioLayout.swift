@@ -142,7 +142,7 @@ extension AudioLayout {
 
     func onAppear() {
         self.bg.async {
-            let verbose = true
+            let verbose = false
             
             if verbose {
                 os_log("\(self.t)OnAppear")

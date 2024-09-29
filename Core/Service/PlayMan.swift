@@ -303,15 +303,22 @@ extension Notification.Name {
 
 extension PlayMan {
     func onPlayFinished() {
+        let verbose = false
         switch mode {
         case .Order:
-            os_log("\(self.t)播放完成，自动播放下一个")
+            if verbose {
+                os_log("\(self.t)播放完成，模式为：\(self.mode.description)，自动播放下一个")
+            }
             self.next()
         case .Loop:
-            os_log("\(self.t)循环播放")
+            if verbose {
+                os_log("\(self.t)循环播放")
+            }
             play()
         case .Random:
-            os_log("\(self.t)随机播放")
+            if verbose {
+                os_log("\(self.t)随机播放")
+            }
             emitPlayRandomNext()
         }
     }
@@ -350,8 +357,6 @@ extension PlayMan {
 
             return .success
         }
-
-        // MARK: Like
 
         c.likeCommand.addTarget { _ in
             os_log("\(self.t)点击了喜欢按钮")
@@ -407,7 +412,7 @@ extension PlayMan {
     func emitPlayStop() {
         NotificationCenter.default.post(name: .PlayManStop, object: self)
     }
-    
+
     func emitPlayNext() {
         var userInfo: [String: Any] = [:]
         if let asset = asset {
@@ -431,7 +436,7 @@ extension PlayMan {
         }
         NotificationCenter.default.post(name: .PlayManPrev, object: self, userInfo: userInfo)
     }
-    
+
     func emitPlayToggle() {
         NotificationCenter.default.post(name: .PlayManToggle, object: self)
     }
@@ -486,7 +491,7 @@ enum PlayManError: Error, LocalizedError {
             return "未找到"
         case .NoChildren:
             return "没有子项"
-        case .FormatNotSupported(let ext):
+        case let .FormatNotSupported(ext):
             return "格式不支持 \(ext)"
         }
     }

@@ -142,12 +142,7 @@ struct ProductCell: View {
         .onHover(perform: { hovering in
             self.btnHovered = hovering
         })
-        .onAppear {
-            Task {
-                isPurchased = (try? await store.isPurchased(product)) ?? false
-                os_log("\(self.label)OnAppear 检查购买状态 -> \(product.displayName) -> \(isPurchased)")
-            }
-        }
+        .onAppear(perform: onAppear)
     }
 
     // MARK: 去购买
@@ -176,6 +171,21 @@ struct ProductCell: View {
         }
 
         purchasing = false
+    }
+}
+
+// MARK: Event Handler
+
+extension ProductCell {
+    func onAppear() {
+        let verbose = false
+            Task {
+                isPurchased = (try? await store.isPurchased(product)) ?? false
+
+                if verbose {
+                    os_log("\(self.label)OnAppear 检查购买状态 -> \(product.displayName) -> \(isPurchased)")
+            }
+        }
     }
 }
 
