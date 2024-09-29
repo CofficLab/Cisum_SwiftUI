@@ -17,7 +17,7 @@ struct SubscriptionSetting: View, SuperEvent, SuperLog, SuperThread {
     var body: some View {
         VStack {
             ZStack {
-                Text("订阅方案").font(.title3)
+                Text("订阅专业版本").font(.title3)
                 refreshButton
             }
 
@@ -32,10 +32,7 @@ struct SubscriptionSetting: View, SuperEvent, SuperLog, SuperThread {
                     }
                 }
                 .padding()
-            }
-
-            footerView
-        }.onAppear(perform: onAppear)
+            }        }.onAppear(perform: onAppear)
     }
 
     private var refreshButton: some View {
@@ -71,21 +68,6 @@ struct SubscriptionSetting: View, SuperEvent, SuperLog, SuperThread {
             })
         })
     }
-
-    private var footerView: some View {
-        HStack {
-            Spacer()
-            Link("隐私政策", destination: URL(string: "https://www.kuaiyizhi.cn/privacy")!)
-            Link("许可协议", destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!)
-            Spacer()
-        }
-        .foregroundStyle(
-            colorScheme == .light ?
-                .black.opacity(0.8) :
-                .white.opacity(0.8))
-        .padding(.top, 12)
-        .font(.footnote)
-    }
 }
 
 // MARK: Event Handler
@@ -109,8 +91,7 @@ extension SubscriptionSetting {
 }
 
 #Preview("Buy") {
-    BootView {
-        BuyView()
-    }
-    .frame(height: 800)
+    BuySetting()
+        .environmentObject(StoreProvider())
+        .frame(height: 800)
 }

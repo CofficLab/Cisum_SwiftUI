@@ -5,7 +5,7 @@ struct StoreView: View {
         ScrollView {
             VStack {
                 BuySetting()
-                    .padding(.horizontal)
+//                    .padding(.horizontal)
             }
         }
         .padding(.top)
