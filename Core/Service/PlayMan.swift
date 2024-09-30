@@ -69,13 +69,18 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread {
 
         self.audioWorker.onStateChange = { state in
             self.main.async {
-                self.setPlayingInfo()
+                let verbose = false
+                if verbose {
+                    os_log("AudioWorker StateChange -> \(state.des)")
+                }
                 self.asset = state.getAsset()
                 self.emitPlayStateChange(state)
 
                 if state.isFinished {
                     self.onPlayFinished()
                 }
+                
+                self.setPlayingInfo()
             }
         }
 
@@ -257,10 +262,15 @@ extension PlayMan {
             os_log("\(self.t)📱📱📱 Update -> Title: \(title)")
             os_log("\(self.t)📱📱📱 Update -> Duration: \(duration)")
             os_log("\(self.t)📱📱📱 Update -> Playing: \(self.isPlaying)")
+            os_log("\(self.t)📱📱📱 Update -> Stopped: \(self.isStopped)")
         }
 
-        center.playbackState = isPlaying ? .playing : .paused
-        center.playbackState = isStopped ? .stopped : .paused
+        center.playbackState = self.isPlaying ? .playing : .paused
+        
+        if self.isStopped {
+            center.playbackState = .stopped
+        }
+        
         center.nowPlayingInfo = [
             MPMediaItemPropertyTitle: title,
             MPMediaItemPropertyArtist: artist,
@@ -274,6 +284,15 @@ extension PlayMan {
                 return image
             }),
         ]
+        
+        if verbose {
+            // unknown = 0
+            // playing = 1
+            // paused = 2
+            // stopped = 3
+            // interrupted = 4
+            os_log("\(self.t)📱📱📱 playbackState -> \(center.playbackState.rawValue)")
+        }
 
         let like = asset?.like ?? false
         if verbose {
