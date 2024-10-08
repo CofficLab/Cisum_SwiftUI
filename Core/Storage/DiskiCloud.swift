@@ -72,7 +72,7 @@ extension DiskiCloud {
     func deleteFiles(_ urls: [URL]) {
         for url in urls {
             if verbose {
-                os_log("\(self.label)删除 \(url.lastPathComponent)")
+                os_log("\(self.t)删除 \(url.lastPathComponent)")
             }
 
             if fileManager.fileExists(atPath: url.path) == false {
