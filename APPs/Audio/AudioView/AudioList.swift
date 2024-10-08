@@ -43,28 +43,28 @@ struct AudioList: View, SuperThread, SuperLog {
 
     var body: some View {
         ZStack {
-            List(selection: $selection) {
-                Section(header: HStack {
-                    Text("共 \(total.description)")
-                    Spacer()
-                    if isSyncing {
-                        HStack {
-                            Image(systemName: "arrow.triangle.2.circlepath")
-                            Text("正在读取仓库")
-                        }
-                    }
-                    if Config.isNotDesktop {
-                        BtnAdd()
-                            .font(.title2)
-                            .labelStyle(.iconOnly)
-                    }
-                }, content: {
-                    ForEach(audios, id: \.url) { audio in
-                        AudioTile(audio: audio)
-                            .tag(audio.url as URL?)
-                    }
-                })
-            }
+             List(selection: $selection) {
+                 Section(header: HStack {
+                     Text("共 \(total.description)")
+                     Spacer()
+                     if isSyncing {
+                         HStack {
+                             Image(systemName: "arrow.triangle.2.circlepath")
+                             Text("正在读取仓库")
+                         }
+                     }
+                     if Config.isNotDesktop {
+                         BtnAdd()
+                             .font(.title2)
+                             .labelStyle(.iconOnly)
+                     }
+                 }, content: {
+                     ForEach(audios, id: \.url) { audio in
+                         AudioTile(audio: audio)
+                             .tag(audio.url as URL?)
+                     }
+                 })
+             }
 
             if showTips {
                 DBTips()

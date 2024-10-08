@@ -15,7 +15,7 @@ struct AudioHero: View {
         GeometryReader { geo in
             VStack(spacing: 0) {
                 if shouldShowAlbum(geo) {
-                    PlayingAlbum()
+                    AudioPlayingCover()
                         .frame(maxWidth: .infinity)
                         .frame(maxHeight: geo.size.width)
                         .background(GeometryReader { geo in

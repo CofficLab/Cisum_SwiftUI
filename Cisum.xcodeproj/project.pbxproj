@@ -208,6 +208,7 @@
 		F59DC6EE2CB4C1FD0052AEC8 /* Plan.swift in Sources */ = {isa = PBXBuildFile; fileRef = F59DC6ED2CB4C1FD0052AEC8 /* Plan.swift */; };
 		F59DC6F02CB4C2050052AEC8 /* Feature.swift in Sources */ = {isa = PBXBuildFile; fileRef = F59DC6EF2CB4C2050052AEC8 /* Feature.swift */; };
 		F59DC6F22CB4C3140052AEC8 /* RestoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F59DC6F12CB4C3140052AEC8 /* RestoreView.swift */; };
+		F59DC6F42CB4D8F10052AEC8 /* AudioPlayingCover.swift in Sources */ = {isa = PBXBuildFile; fileRef = F59DC6F32CB4D8F10052AEC8 /* AudioPlayingCover.swift */; };
 		F5A076632C2E9C2D00DD4621 /* MigrateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A076622C2E9C2D00DD4621 /* MigrateView.swift */; };
 		F5A076662C2EBE5500DD4621 /* StoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A076652C2EBE5500DD4621 /* StoreView.swift */; };
 		F5B64D042C32546F00DE55AD /* SyncingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B64D032C32546F00DE55AD /* SyncingView.swift */; };
@@ -422,6 +423,7 @@
 		F59DC6ED2CB4C1FD0052AEC8 /* Plan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Plan.swift; sourceTree = "<group>"; };
 		F59DC6EF2CB4C2050052AEC8 /* Feature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Feature.swift; sourceTree = "<group>"; };
 		F59DC6F12CB4C3140052AEC8 /* RestoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreView.swift; sourceTree = "<group>"; };
+		F59DC6F32CB4D8F10052AEC8 /* AudioPlayingCover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayingCover.swift; sourceTree = "<group>"; };
 		F5A076622C2E9C2D00DD4621 /* MigrateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrateView.swift; sourceTree = "<group>"; };
 		F5A076652C2EBE5500DD4621 /* StoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreView.swift; sourceTree = "<group>"; };
 		F5B64D032C32546F00DE55AD /* SyncingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncingView.swift; sourceTree = "<group>"; };
@@ -846,6 +848,7 @@
 				0BC29EAE2CA5893800E4813F /* AudioHero.swift */,
 				0BBC157B2AB84C21006E82C4 /* AudioLayout.swift */,
 				F52A98FF2C43C0DA003559F1 /* AudioList.swift */,
+				F59DC6F32CB4D8F10052AEC8 /* AudioPlayingCover.swift */,
 				0BEE7C732CA99CE000DC1DCF /* AudioProTips.swift */,
 				0BEE7C6C2CA7E9E300DC1DCF /* AudioRoot.swift */,
 				0BC29EB22CA59E8B00E4813F /* AudioSlider.swift */,
@@ -1162,6 +1165,7 @@
 				0BFDCB802AB86AF300B0D1C8 /* MenuTile.swift in Sources */,
 				F518F7052C35210300844E62 /* ChapterTile.swift in Sources */,
 				0BE6959E2BFE3DCC00CEFFEB /* MySubscription.swift in Sources */,
+				F59DC6F42CB4D8F10052AEC8 /* AudioPlayingCover.swift in Sources */,
 				F54DFA6D2CA4FCB500F81BE3 /* BookDB.swift in Sources */,
 				0BD056912BC6340800EBC7C4 /* BtnEvict.swift in Sources */,
 				0BE695A02BFE3DCC00CEFFEB /* OneTimeView.swift in Sources */,
