@@ -4,9 +4,7 @@ import SwiftUI
 import OSLog
 import MagicKit
 
-struct AudioSlider: View, SuperThread, SuperLog {
-    static var label = "👀 SliderView::"
-    
+struct BookSlider: View, SuperThread, SuperLog {
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var data: DataProvider
@@ -66,7 +64,7 @@ struct AudioSlider: View, SuperThread, SuperLog {
 
 // MARK: Event Handler
 
-extension AudioSlider {
+extension BookSlider {
     func handlePlayManStateChange(_ notification: Notification) {
         self.bg.async {
             if playMan.asset == nil {

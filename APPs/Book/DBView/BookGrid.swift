@@ -1,9 +1,10 @@
 import OSLog
 import SwiftData
 import SwiftUI
+import MagicKit
 
-struct BookGrid: View {
-    static var label = "📬 DBList::"
+struct BookGrid: View, SuperLog, SuperThread {
+    let emoji = "📖"
 
     @EnvironmentObject var appManager: AppProvider
     @EnvironmentObject var data: DataProvider
@@ -11,13 +12,10 @@ struct BookGrid: View {
     @State var selection: Audio? = nil
     @State var syncingTotal: Int = 0
     @State var syncingCurrent: Int = 0
+    
+    @Query(Book.descriptorIsFolder) var books: [Book]
 
-    var disk: any Disk { data.disk }
-    var root: URL { disk.root }
-    var rootDiskFile: DiskFile { disk.getRoot() }
-    var items: [DiskFile] { rootDiskFile.children ?? [] }
-    var total: Int { items.count }
-    var label: String { "\(Logger.isMain)\(Self.label)" }
+    var total: Int { books.count }
     var showTips: Bool {
         if appManager.isDropping {
             return true
@@ -26,19 +24,13 @@ struct BookGrid: View {
         return appManager.flashMessage.isEmpty && total == 0
     }
 
-    init(verbose: Bool = true) {
-        if verbose {
-            os_log("\(Logger.isMain)\(Self.label)初始化")
-        }
-    }
-
     var body: some View {
         ScrollView {
             LazyVGrid(columns: [
                 GridItem(.adaptive(minimum: 150), spacing: 10),
             ], pinnedViews: [.sectionHeaders]) {
-                ForEach(items) { item in
-                    BookTile(file: item)
+                ForEach(books) { item in
+                    BookTile(book: item)
                         .frame(width: 150)
                         .frame(height: 200)
                 }

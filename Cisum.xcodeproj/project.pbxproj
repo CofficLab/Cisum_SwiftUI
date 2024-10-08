@@ -141,13 +141,12 @@
 		F500793F2CA635B900C9D3D4 /* MagicKit in Frameworks */ = {isa = PBXBuildFile; productRef = F500793E2CA635B900C9D3D4 /* MagicKit */; };
 		F507F5152C04688D00CB9A3A /* BtnBuy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F507F5142C04688D00CB9A3A /* BtnBuy.swift */; };
 		F507F5172C09541B00CB9A3A /* DeviceSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = F507F5162C09541B00CB9A3A /* DeviceSetting.swift */; };
-		F518F6F02C33919600844E62 /* BookTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = F518F6EF2C33919600844E62 /* BookTile.swift */; };
-		F518F6F32C3391E100844E62 /* BookGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = F518F6F22C3391E100844E62 /* BookGrid.swift */; };
+		F518F6F02C33919600844E62 /* BookTileBackup.swift in Sources */ = {isa = PBXBuildFile; fileRef = F518F6EF2C33919600844E62 /* BookTileBackup.swift */; };
 		F518F6F52C34E78C00844E62 /* Book.swift in Sources */ = {isa = PBXBuildFile; fileRef = F518F6F42C34E78C00844E62 /* Book.swift */; };
 		F518F6F92C34ECEF00844E62 /* BookSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = F518F6F82C34ECEF00844E62 /* BookSync.swift */; };
 		F518F6FB2C34F06000844E62 /* BookRead.swift in Sources */ = {isa = PBXBuildFile; fileRef = F518F6FA2C34F06000844E62 /* BookRead.swift */; };
-		F518F6FD2C34F18500844E62 /* DBViewBookData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F518F6FC2C34F18500844E62 /* DBViewBookData.swift */; };
-		F518F6FF2C34F1D200844E62 /* BookTileData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F518F6FE2C34F1D200844E62 /* BookTileData.swift */; };
+		F518F6FD2C34F18500844E62 /* BookGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = F518F6FC2C34F18500844E62 /* BookGrid.swift */; };
+		F518F6FF2C34F1D200844E62 /* BookTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = F518F6FE2C34F1D200844E62 /* BookTile.swift */; };
 		F518F7012C34FB0400844E62 /* BookState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F518F7002C34FB0400844E62 /* BookState.swift */; };
 		F518F7032C34FD5F00844E62 /* BookStateExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F518F7022C34FD5F00844E62 /* BookStateExt.swift */; };
 		F518F7052C35210300844E62 /* ChapterTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = F518F7042C35210300844E62 /* ChapterTile.swift */; };
@@ -211,6 +210,9 @@
 		F59DC6F42CB4D8F10052AEC8 /* AudioPlayingCover.swift in Sources */ = {isa = PBXBuildFile; fileRef = F59DC6F32CB4D8F10052AEC8 /* AudioPlayingCover.swift */; };
 		F5A076632C2E9C2D00DD4621 /* MigrateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A076622C2E9C2D00DD4621 /* MigrateView.swift */; };
 		F5A076662C2EBE5500DD4621 /* StoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A076652C2EBE5500DD4621 /* StoreView.swift */; };
+		F5AEE0552CB5010C0007825B /* BookSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5AEE0542CB5010C0007825B /* BookSlider.swift */; };
+		F5AEE0582CB5032E0007825B /* BookRoot.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5AEE0572CB5032E0007825B /* BookRoot.swift */; };
+		F5AEE05A2CB515660007825B /* BookHero.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5AEE0592CB515660007825B /* BookHero.swift */; };
 		F5B64D042C32546F00DE55AD /* SyncingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B64D032C32546F00DE55AD /* SyncingView.swift */; };
 		F5B64D062C32597B00DE55AD /* DBSyncing.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B64D052C32597B00DE55AD /* DBSyncing.swift */; };
 		F5B64D0A2C327D8600DE55AD /* VideoWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B64D092C327D8600DE55AD /* VideoWorker.swift */; };
@@ -357,13 +359,12 @@
 		0BFDCB7F2AB86AF300B0D1C8 /* MenuTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTile.swift; sourceTree = "<group>"; };
 		F507F5142C04688D00CB9A3A /* BtnBuy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnBuy.swift; sourceTree = "<group>"; };
 		F507F5162C09541B00CB9A3A /* DeviceSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceSetting.swift; sourceTree = "<group>"; };
-		F518F6EF2C33919600844E62 /* BookTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookTile.swift; sourceTree = "<group>"; };
-		F518F6F22C3391E100844E62 /* BookGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookGrid.swift; sourceTree = "<group>"; };
+		F518F6EF2C33919600844E62 /* BookTileBackup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookTileBackup.swift; sourceTree = "<group>"; };
 		F518F6F42C34E78C00844E62 /* Book.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Book.swift; sourceTree = "<group>"; };
 		F518F6F82C34ECEF00844E62 /* BookSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookSync.swift; sourceTree = "<group>"; };
 		F518F6FA2C34F06000844E62 /* BookRead.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookRead.swift; sourceTree = "<group>"; };
-		F518F6FC2C34F18500844E62 /* DBViewBookData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBViewBookData.swift; sourceTree = "<group>"; };
-		F518F6FE2C34F1D200844E62 /* BookTileData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookTileData.swift; sourceTree = "<group>"; };
+		F518F6FC2C34F18500844E62 /* BookGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookGrid.swift; sourceTree = "<group>"; };
+		F518F6FE2C34F1D200844E62 /* BookTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookTile.swift; sourceTree = "<group>"; };
 		F518F7002C34FB0400844E62 /* BookState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookState.swift; sourceTree = "<group>"; };
 		F518F7022C34FD5F00844E62 /* BookStateExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookStateExt.swift; sourceTree = "<group>"; };
 		F518F7042C35210300844E62 /* ChapterTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterTile.swift; sourceTree = "<group>"; };
@@ -426,6 +427,9 @@
 		F59DC6F32CB4D8F10052AEC8 /* AudioPlayingCover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayingCover.swift; sourceTree = "<group>"; };
 		F5A076622C2E9C2D00DD4621 /* MigrateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrateView.swift; sourceTree = "<group>"; };
 		F5A076652C2EBE5500DD4621 /* StoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreView.swift; sourceTree = "<group>"; };
+		F5AEE0542CB5010C0007825B /* BookSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookSlider.swift; sourceTree = "<group>"; };
+		F5AEE0572CB5032E0007825B /* BookRoot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookRoot.swift; sourceTree = "<group>"; };
+		F5AEE0592CB515660007825B /* BookHero.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookHero.swift; sourceTree = "<group>"; };
 		F5B64D032C32546F00DE55AD /* SyncingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncingView.swift; sourceTree = "<group>"; };
 		F5B64D052C32597B00DE55AD /* DBSyncing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBSyncing.swift; sourceTree = "<group>"; };
 		F5B64D092C327D8600DE55AD /* VideoWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoWorker.swift; sourceTree = "<group>"; };
@@ -678,31 +682,24 @@
 		0BC29EAB2CA45BEA00E4813F /* Audio */ = {
 			isa = PBXGroup;
 			children = (
-				0BEE7C702CA838C500DC1DCF /* Job */,
-				F5B6AAC62CA6B361001F3BC3 /* AudioDB */,
-				F54DFA4E2CA4E37500F81BE3 /* AudioApp.swift */,
-				0B1D5A672AB3025F0010DDF2 /* Audio.swift */,
-				F52A98FA2C43AA63003559F1 /* AudioPoster.swift */,
+				F5AEE0562CB502F80007825B /* App */,
 				F52A98FC2C43BC79003559F1 /* AudioView */,
+				F5AEE0532CB500E80007825B /* Control */,
+				F5B6AAC62CA6B361001F3BC3 /* Database */,
+				0BEE7C702CA838C500DC1DCF /* Job */,
 			);
 			path = Audio;
 			sourceTree = "<group>";
 		};
-		0BC29EAD2CA45C2200E4813F /* BookHouse */ = {
+		0BC29EAD2CA45C2200E4813F /* Book */ = {
 			isa = PBXGroup;
 			children = (
-				F518F6F42C34E78C00844E62 /* Book.swift */,
-				F54DFA552CA4E4EE00F81BE3 /* BookApp.swift */,
-				F54DFA6A2CA4FB7D00F81BE3 /* BookBtns.swift */,
-				F54DFA682CA4FB4B00F81BE3 /* BookControl.swift */,
-				F54DFA592CA4E5C800F81BE3 /* BookLayout.swift */,
-				F52A98F42C43988D003559F1 /* BookPoster.swift */,
-				F518F6FA2C34F06000844E62 /* BookRead.swift */,
-				F518F6F82C34ECEF00844E62 /* BookSync.swift */,
-				F52A98F12C410C41003559F1 /* BookUpdate.swift */,
-				F518F6EE2C33917500844E62 /* BookView */,
+				F59DC6F62CB4E9740052AEC8 /* App */,
+				F59DC6F72CB4E9A20052AEC8 /* ControlView */,
+				F59DC6F52CB4E8B90052AEC8 /* Database */,
+				F518F6EE2C33917500844E62 /* DBView */,
 			);
-			path = BookHouse;
+			path = Book;
 			sourceTree = "<group>";
 		};
 		0BD651082CA4267900BA3CB8 /* Event */ = {
@@ -823,35 +820,28 @@
 			path = Playing;
 			sourceTree = "<group>";
 		};
-		F518F6EE2C33917500844E62 /* BookView */ = {
+		F518F6EE2C33917500844E62 /* DBView */ = {
 			isa = PBXGroup;
 			children = (
 				F54DFA6C2CA4FCB500F81BE3 /* BookDB.swift */,
-				F518F6F22C3391E100844E62 /* BookGrid.swift */,
-				F518F6EF2C33919600844E62 /* BookTile.swift */,
-				F518F6FE2C34F1D200844E62 /* BookTileData.swift */,
-				0BB9D2432C32E3E60027DDAD /* BtnChapters.swift */,
+				F518F6FC2C34F18500844E62 /* BookGrid.swift */,
+				F518F6FE2C34F1D200844E62 /* BookTile.swift */,
+				F518F6EF2C33919600844E62 /* BookTileBackup.swift */,
 				F518F7042C35210300844E62 /* ChapterTile.swift */,
-				F518F6FC2C34F18500844E62 /* DBViewBookData.swift */,
 			);
-			path = BookView;
+			path = DBView;
 			sourceTree = "<group>";
 		};
 		F52A98FC2C43BC79003559F1 /* AudioView */ = {
 			isa = PBXGroup;
 			children = (
 				F54DFA752CA56B4000F81BE3 /* AudioAvatar.swift */,
-				0B220F722BB1A3D70077255A /* AudioBtns.swift */,
-				F54DFA662CA4EA1700F81BE3 /* AudioControl.swift */,
 				0BBC157F2AB854A8006E82C4 /* AudioDB.swift */,
 				0BEE7C752CA99D0D00DC1DCF /* AudioDBTips.swift */,
-				0BC29EAE2CA5893800E4813F /* AudioHero.swift */,
 				0BBC157B2AB84C21006E82C4 /* AudioLayout.swift */,
 				F52A98FF2C43C0DA003559F1 /* AudioList.swift */,
 				F59DC6F32CB4D8F10052AEC8 /* AudioPlayingCover.swift */,
 				0BEE7C732CA99CE000DC1DCF /* AudioProTips.swift */,
-				0BEE7C6C2CA7E9E300DC1DCF /* AudioRoot.swift */,
-				0BC29EB22CA59E8B00E4813F /* AudioSlider.swift */,
 				0BEE7C6E2CA8343800DC1DCF /* AudioTask.swift */,
 				F52A98FD2C43BC99003559F1 /* AudioTile.swift */,
 				0BC29EB02CA5899200E4813F /* AudioTitle.swift */,
@@ -876,8 +866,8 @@
 			isa = PBXGroup;
 			children = (
 				0BC29EAB2CA45BEA00E4813F /* Audio */,
+				0BC29EAD2CA45C2200E4813F /* Book */,
 				F54DFA502CA4E40C00F81BE3 /* Video */,
-				0BC29EAD2CA45C2200E4813F /* BookHouse */,
 			);
 			path = APPs;
 			sourceTree = "<group>";
@@ -994,6 +984,61 @@
 			path = Synced;
 			sourceTree = "<group>";
 		};
+		F59DC6F52CB4E8B90052AEC8 /* Database */ = {
+			isa = PBXGroup;
+			children = (
+				F518F6F42C34E78C00844E62 /* Book.swift */,
+				F518F6FA2C34F06000844E62 /* BookRead.swift */,
+				F518F6F82C34ECEF00844E62 /* BookSync.swift */,
+				F52A98F12C410C41003559F1 /* BookUpdate.swift */,
+			);
+			path = Database;
+			sourceTree = "<group>";
+		};
+		F59DC6F62CB4E9740052AEC8 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				F5AEE0572CB5032E0007825B /* BookRoot.swift */,
+				F54DFA552CA4E4EE00F81BE3 /* BookApp.swift */,
+				F52A98F42C43988D003559F1 /* BookPoster.swift */,
+				F54DFA592CA4E5C800F81BE3 /* BookLayout.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		F59DC6F72CB4E9A20052AEC8 /* ControlView */ = {
+			isa = PBXGroup;
+			children = (
+				F5AEE0592CB515660007825B /* BookHero.swift */,
+				F5AEE0542CB5010C0007825B /* BookSlider.swift */,
+				F54DFA6A2CA4FB7D00F81BE3 /* BookBtns.swift */,
+				F54DFA682CA4FB4B00F81BE3 /* BookControl.swift */,
+				0BB9D2432C32E3E60027DDAD /* BtnChapters.swift */,
+			);
+			path = ControlView;
+			sourceTree = "<group>";
+		};
+		F5AEE0532CB500E80007825B /* Control */ = {
+			isa = PBXGroup;
+			children = (
+				0BC29EAE2CA5893800E4813F /* AudioHero.swift */,
+				0B220F722BB1A3D70077255A /* AudioBtns.swift */,
+				F54DFA662CA4EA1700F81BE3 /* AudioControl.swift */,
+				0BC29EB22CA59E8B00E4813F /* AudioSlider.swift */,
+			);
+			path = Control;
+			sourceTree = "<group>";
+		};
+		F5AEE0562CB502F80007825B /* App */ = {
+			isa = PBXGroup;
+			children = (
+				F54DFA4E2CA4E37500F81BE3 /* AudioApp.swift */,
+				F52A98FA2C43AA63003559F1 /* AudioPoster.swift */,
+				0BEE7C6C2CA7E9E300DC1DCF /* AudioRoot.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
 		F5B64D0D2C3280BF00DE55AD /* Cover */ = {
 			isa = PBXGroup;
 			children = (
@@ -1006,7 +1051,7 @@
 			path = Cover;
 			sourceTree = "<group>";
 		};
-		F5B6AAC62CA6B361001F3BC3 /* AudioDB */ = {
+		F5B6AAC62CA6B361001F3BC3 /* Database */ = {
 			isa = PBXGroup;
 			children = (
 				0B8C36A62BEA15E000C47567 /* AudioC.swift */,
@@ -1015,8 +1060,9 @@
 				0BD056882BC6192D00EBC7C4 /* AudioSync.swift */,
 				0B8C36A42BEA15A800C47567 /* AudioU.swift */,
 				0BAABEB22BC79C9F00DF4A31 /* TaskExt.swift */,
+				0B1D5A672AB3025F0010DDF2 /* Audio.swift */,
 			);
-			path = AudioDB;
+			path = Database;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1108,6 +1154,7 @@
 				F52A98F52C43988D003559F1 /* BookPoster.swift in Sources */,
 				0B8C36AE2BEC6E3E00C47567 /* DevExt.swift in Sources */,
 				0B8FC2702BBC559500839C75 /* PlayingAlbum.swift in Sources */,
+				F5AEE0552CB5010C0007825B /* BookSlider.swift in Sources */,
 				F545D1772C1FCC86006A6AFA /* UserExt.swift in Sources */,
 				0BC29EA52CA4592A00E4813F /* DBBookState.swift in Sources */,
 				0B240BD52BF30730004A5944 /* JobExt.swift in Sources */,
@@ -1116,6 +1163,7 @@
 				0BBC15912ABAC19F006E82C4 /* BtnPrev.swift in Sources */,
 				F5A076662C2EBE5500DD4621 /* StoreView.swift in Sources */,
 				0B604AE82AD6384300929DD8 /* BootView.swift in Sources */,
+				F5AEE05A2CB515660007825B /* BookHero.swift in Sources */,
 				F54DFA4F2CA4E37500F81BE3 /* AudioApp.swift in Sources */,
 				0B8C36B62BEDAB5E00C47567 /* BtnMore.swift in Sources */,
 				0BAABEC32BC939D000DF4A31 /* LayoutView.swift in Sources */,
@@ -1180,7 +1228,7 @@
 				0BBA421F2AC1397F00C0B977 /* Centered.swift in Sources */,
 				0BE695C02C01E88E00CEFFEB /* DeviceData.swift in Sources */,
 				0BE6959A2BFE3DCC00CEFFEB /* AllSubscriptions.swift in Sources */,
-				F518F6FF2C34F1D200844E62 /* BookTileData.swift in Sources */,
+				F518F6FF2C34F1D200844E62 /* BookTile.swift in Sources */,
 				0BC29EB12CA5899200E4813F /* AudioTitle.swift in Sources */,
 				F518F7032C34FD5F00844E62 /* BookStateExt.swift in Sources */,
 				0BE695C22C01E8F600CEFFEB /* DBSynced.swift in Sources */,
@@ -1188,8 +1236,9 @@
 				0BBA42212AC1802C00C0B977 /* ButtonCancelSelected.swift in Sources */,
 				0B9EA35B2C21C72800A4059A /* AudioWorker.swift in Sources */,
 				0BAABEB12BC79C4E00DF4A31 /* CopyTask.swift in Sources */,
+				F5AEE0582CB5032E0007825B /* BookRoot.swift in Sources */,
 				F5511BB02C29050300400900 /* Playable.swift in Sources */,
-				F518F6FD2C34F18500844E62 /* DBViewBookData.swift in Sources */,
+				F518F6FD2C34F18500844E62 /* BookGrid.swift in Sources */,
 				0BE6959F2BFE3DCC00CEFFEB /* NonRenewables.swift in Sources */,
 				0BB587172AD815770071AEBD /* TimeHelper.swift in Sources */,
 				0BC29EA72CA4597100E4813F /* PluginBookState.swift in Sources */,
@@ -1207,7 +1256,7 @@
 				0BAABEB82BC7D4B600DF4A31 /* BtnDelTask.swift in Sources */,
 				0BD0568B2BC6202900EBC7C4 /* DiskiCloud.swift in Sources */,
 				0BE6959B2BFE3DCC00CEFFEB /* BuyButtonStyle.swift in Sources */,
-				F518F6F02C33919600844E62 /* BookTile.swift in Sources */,
+				F518F6F02C33919600844E62 /* BookTileBackup.swift in Sources */,
 				0B9FA29B2BC81F53007B235A /* DefaultAlbum.swift in Sources */,
 				0B1498742BC4C5CB0075DA61 /* PlayMode.swift in Sources */,
 				0BB543F82BE9C64C00D7A2B2 /* PathExt.swift in Sources */,
@@ -1231,7 +1280,6 @@
 				F507F5152C04688D00CB9A3A /* BtnBuy.swift in Sources */,
 				0B220F752BB1BBDB0077255A /* SmartError.swift in Sources */,
 				0BB889DB2AC06C54004788D5 /* DB.swift in Sources */,
-				F518F6F32C3391E100844E62 /* BookGrid.swift in Sources */,
 				F54DFA5A2CA4E5C800F81BE3 /* BookLayout.swift in Sources */,
 				0BBA42192ABD5D9200C0B977 /* BtnMode.swift in Sources */,
 				0BA9FB6E2BFE155B008074CB /* CoverDirSetting.swift in Sources */,
@@ -1340,7 +1388,7 @@
 					"@executable_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.5.24;
+				MARKETING_VERSION = 2.6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.yueyi.cisum;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1383,7 +1431,7 @@
 					"@executable_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.5.24;
+				MARKETING_VERSION = 2.6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.yueyi.cisum;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

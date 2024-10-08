@@ -1,32 +1,29 @@
-import SwiftUI
 import Foundation
+import MagicKit
 import OSLog
+import SwiftUI
 
-class BookApp: SuperLayout, SuperLog {
+class BookApp: SuperLayout, SuperLog, SuperThread {
+    let id = "Book"
     let emoji = "📚"
-    var id: String = "Book"
+    let title = "有声书模式"
+    let dirName = "audios_book"
+    let iconName = "books.vertical"
+    let description = "适用于听有声书的场景"
 
-    var iconName: String = "books.vertical"
-    
     var icon: any View {
         Image(systemName: iconName)
     }
-    
+
     var rootView: any View {
-        BookLayout()
+        BookRoot()
     }
-    
+
     var poster: any View {
         BookPoster()
     }
 
-    var title: String {
-        "有声书模式"
-    }
-
-    var description: String {
-        "适用于听有声书的场景"
-    }
+    var disk: (any Disk)?
 
     init() {
         os_log("%@👻👻👻 init", t)
@@ -37,15 +34,23 @@ class BookApp: SuperLayout, SuperLog {
     }
 
     func boot() {
-        os_log("%@👻👻👻 boot", t)
+        let verbose = true
+        self.bg.async {
+            if verbose {
+                os_log("%@👻👻👻 boot", self.t)
+            }
+            self.disk = DiskiCloud.make(self.dirName)
+            self.watchDisk(reason: "BookApp.Boot")
+            self.emitBoot()
+        }
     }
 
     func setCurrent(url: URL) {
-        os_log("\(self.t)👻👻👻 setCurrent: \(url.absoluteString)")
-        
+        os_log("\(self.t)👻👻👻 setCurrent: \(url.lastPathComponent)")
+
         // 将当前的url存储下来
         UserDefaults.standard.set(url.absoluteString, forKey: "currentAudioURL")
-        
+
         // 通过iCloud key-value同步
         NSUbiquitousKeyValueStore.default.set(url.absoluteString, forKey: "currentAudioURL")
         NSUbiquitousKeyValueStore.default.synchronize()
@@ -68,7 +73,23 @@ class BookApp: SuperLayout, SuperLog {
         }
         return nil
     }
-    
+
+    func watchDisk(reason: String) {
+        guard var disk = disk else {
+            return
+        }
+
+        disk.onUpdated = { items in
+            Task {
+                await DB(Config.getContainer, reason: "DataManager.WatchDisk").bookSync(items)
+            }
+        }
+
+        Task {
+            await disk.watch(reason: reason)
+        }
+    }
+
     // MARK: 恢复上次播放的
 
     func restore(reason: String, verbose: Bool = true) {
@@ -95,5 +116,19 @@ class BookApp: SuperLayout, SuperLog {
 //                playMan.prepare(data.first())
 //            }
 //        }
+    }
+}
+
+// MARK: Event
+
+extension Notification.Name {
+    static let BookAppDidBoot = Notification.Name("BookAppDidBoot")
+}
+
+extension BookApp {
+    func emitBoot() {
+        self.main.async {
+            NotificationCenter.default.post(name: .BookAppDidBoot, object: nil)
+        }
     }
 }

@@ -136,9 +136,10 @@ extension PlayMan {
     // MARK: Play
 
     func play(_ asset: PlayAsset, reason: String) {
-        let verbose = false
+        let verbose = true
         if verbose {
-            os_log("\(self.t)Play \(asset.fileName) (\(asset.isAudio() ? "Audio" : "Video")) 🐛 \(reason)")
+            os_log("\(self.t)Play 「\(asset.fileName) (\(asset.isAudio() ? "Audio" : "Video"))」")
+            os_log("  🐛 \(reason)")
         }
 
         if asset.isFolder() {
@@ -433,6 +434,10 @@ extension PlayMan {
     }
 
     func emitPlayNext() {
+        let verbose = true 
+
+        os_log("\(self.t)emitPlayNext 🚀🚀🚀 -> \(self.mode.rawValue)")
+        
         var userInfo: [String: Any] = [:]
         if let asset = asset {
             userInfo["asset"] = asset

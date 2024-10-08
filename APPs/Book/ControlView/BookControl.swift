@@ -24,7 +24,7 @@ struct BookControl: View {
                     // MARK: 封面图和标题
 
                     if showHeroView {
-                        HeroView()
+                        BookHero()
                             .frame(maxWidth: .infinity)
                             .frame(maxHeight: .infinity)
                     }
@@ -49,7 +49,7 @@ struct BookControl: View {
                     // MARK: 进度栏
 
                     if showSliderView {
-                        SliderView(geo: geo)
+                        BookSlider(geo: geo)
                             .padding()
                             .background(Config.background(.black))
                     }

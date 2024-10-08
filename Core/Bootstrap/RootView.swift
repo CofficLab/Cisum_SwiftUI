@@ -31,9 +31,9 @@ struct RootView: View, SuperLog, SuperEvent, SuperThread {
 
             .ignoresSafeArea()
             .toolbar(content: {
-                // ToolbarItem(placement: .navigation) {
-                //     BtnScene()
-                // }
+                 ToolbarItem(placement: .navigation) {
+                     BtnScene()
+                 }
 
                 // MARK: 工具栏
 

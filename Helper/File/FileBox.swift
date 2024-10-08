@@ -35,6 +35,10 @@ extension FileBox {
     var isJSON: Bool {
         ext == "json"
     }
+
+    var isWMA: Bool {
+        ext == "wma"
+    }
 }
 
 // MARK: FileSize
@@ -451,6 +455,10 @@ extension FileBox {
         }
         
         if self.isJSON {
+            return nil
+        }
+        
+        if self.isWMA {
             return nil
         }
 

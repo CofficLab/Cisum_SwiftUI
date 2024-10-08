@@ -9,7 +9,7 @@ extension DB {
     }
 
     func bookSync(_ group: DiskFileGroup, verbose: Bool = true) {
-        var message = "\(labelForBookSync) Sync(\(group.count))"
+        var message = "\(labelForBookSync) SyncBook(\(group.count))"
 
         if let first = group.first, first.isDownloading == true {
             message += " -> \(first.fileName) -> \(String(format: "%.0f", first.downloadProgress))% ⏬⏬⏬"
@@ -79,7 +79,7 @@ extension DB {
             os_log(.error, "\(error.localizedDescription)")
         }
 
-        os_log("\(self.jobEnd(startTime, title: "\(self.labelForSync) SyncWithDisk(\(group.count))", tolerance: 0.01))")
+        os_log("\(self.jobEnd(startTime, title: "\(self.labelForSync) SyncBookWithDisk(\(group.count))", tolerance: 0.01))")
         
         self.updateBookParent()
     }

@@ -7,7 +7,7 @@ struct TopView: View {
 
     var body: some View {
         HStack {
-            BtnScene()
+            BtnMode()
             Spacer()
             if let asset = asset {
                 HStack {

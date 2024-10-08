@@ -3,8 +3,9 @@ import OSLog
 import SwiftData
 import SwiftUI
 import UniformTypeIdentifiers
+import MagicKit
 
-struct BookDB: View {
+struct BookDB: View, SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var data: DataProvider
     @EnvironmentObject var db: DB
@@ -23,13 +24,13 @@ struct BookDB: View {
 
     init(verbose: Bool = false) {
         if verbose {
-            os_log("\(Logger.isMain)\(Self.label)初始化")
+            os_log("\(Logger.initLog)BookDB")
         }
     }
 
     var body: some View {
         VStack(spacing: 0) {
-            DBViewBookData()
+            BookGrid()
             .frame(maxHeight: .infinity)
 
             TaskView()

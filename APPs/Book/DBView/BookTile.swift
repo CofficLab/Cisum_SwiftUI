@@ -5,7 +5,7 @@ import SwiftUI
 /**
  展示从数据库读取的图书数据
  */
-struct BookTileData: View {
+struct BookTile: View, SuperThread, SuperLog {
     @EnvironmentObject var data: DataProvider
     @EnvironmentObject var playMan: PlayMan
 
@@ -14,16 +14,10 @@ struct BookTileData: View {
     @State var opacity: Double = 1.0
     @State var cover: Image? = nil
 
-    static var label = "🖥️ BookTileData::"
-
-    var label: String { "\(Logger.isMain)\(Self.label)" }
+    let emoji = "🖥️"
     var hasCover: Bool { cover != nil }
     var noCover: Bool { cover == nil }
-
     var book: Book
-
-    let mainQueue = DispatchQueue.main
-    let backgroundQueue = DispatchQueue(label: "cisum.BookTileData", qos: .background)
 
     var body: some View {
         HStack {
@@ -66,6 +60,7 @@ struct BookTileData: View {
             }
         })
         .onTapGesture {
+            os_log("\(self.t)onTapGesture 🚀🚀🚀")
             withAnimation(.spring()) {
                 if let s = self.state, let current = s.currentURL, let time = s.time {
                     playMan.play(PlayAsset(url: current), reason: "点击了书本")
@@ -82,7 +77,7 @@ struct BookTileData: View {
                 scale = 0.95
                 opacity = 0.95
 
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self.main.asyncAfter(deadline: .now() + 0.5) {
                     withAnimation(.spring()) {
                         scale = 1.0
                         opacity = 1.0
@@ -143,7 +138,7 @@ struct BookTileData: View {
     }
 
     func updateCover() {
-        backgroundQueue.async {
+        self.bg.async {
             if self.cover == nil {
                 Task {
                     self.cover = await book.getBookCover()
