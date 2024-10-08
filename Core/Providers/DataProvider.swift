@@ -2,6 +2,7 @@ import CloudKit
 import OSLog
 import SwiftData
 import SwiftUI
+import MagicKit
 
 class DataProvider: ObservableObject, SuperLog {
     static var label = "💼 DataManager::"

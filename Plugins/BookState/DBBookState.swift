@@ -2,6 +2,7 @@ import Foundation
 import OSLog
 import SwiftData
 import SwiftUI
+import MagicKit
 
 actor DBBookState: ModelActor, ObservableObject, SuperLog {
     static let label = "📦 DBSynced::"

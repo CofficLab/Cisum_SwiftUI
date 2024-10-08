@@ -138,11 +138,9 @@ struct BookTile: View, SuperThread, SuperLog {
     }
 
     func updateCover() {
-        self.bg.async {
-            if self.cover == nil {
-                Task {
-                    self.cover = await book.getBookCover()
-                }
+        if self.cover == nil {
+            Task {
+                self.cover = await book.getBookCover()
             }
         }
     }

@@ -1,6 +1,7 @@
 import SwiftUI
 import Foundation
 import OSLog
+import MagicKit
 
 class VideoApp: SuperLayout, SuperLog {
     let emoji = "🎥"

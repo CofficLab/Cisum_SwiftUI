@@ -2,12 +2,13 @@ import Foundation
 import OSLog
 import SwiftData
 import SwiftUI
+import MagicKit
 
 /**
  记录一本有声书的数据
  */
 @Model
-class Book: FileBox {
+class Book: FileBox, SuperLog {
     @Attribute(.unique)
     var url: URL
     var currentURL: URL?
@@ -50,7 +51,7 @@ class Book: FileBox {
 extension Book {
     func toPlayAsset(verbose: Bool = false) -> PlayAsset {
         if verbose {
-            os_log("\(self.label)ToPlayAsset: title(\(self.title))")
+            os_log("\(self.t)ToPlayAsset: title(\(self.title))")
         }
 
         return PlayAsset(url: self.url, like: false)
@@ -64,9 +65,14 @@ extension Book {
 // MARK: Cover
 
 extension Book {
-    func getBookCover(verbose: Bool = false) async -> Image? {
+    func getBookCover(verbose: Bool = true) async -> Image? {
         if verbose {
-            os_log("\(self.label)GetBookCover for \(self.title)")
+            os_log("\(self.t)GetBookCover for \(self.title)")
+        }
+
+        // 根目录没有封面
+        if self.url.pathComponents.count <= 1 {
+            return nil
         }
 
         // 先获取自己的

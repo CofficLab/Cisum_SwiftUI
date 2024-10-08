@@ -15,7 +15,7 @@ struct BookHero: View {
         GeometryReader { geo in
             VStack(spacing: 0) {
                 if shouldShowAlbum(geo) {
-                    AudioPlayingCover()
+                    BookPlayingCover()
                         .frame(maxWidth: .infinity)
                         .frame(maxHeight: geo.size.width)
                         .background(GeometryReader { geo in

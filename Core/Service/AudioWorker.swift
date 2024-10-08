@@ -47,7 +47,7 @@ class AudioWorker: NSObject, ObservableObject, PlayWorker, SuperLog, SuperThread
                 } else {
                     do {
                         self.asset = asset
-                        try player = makePlayer(asset, reason: r("AudioWorker.Playing"))
+                        try player = makePlayer(asset, reason: "AudioWorker.Playing")
                         player.prepareToPlay()
                         player.play()
                     } catch {

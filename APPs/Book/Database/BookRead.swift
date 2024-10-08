@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUICore
 import OSLog
 import SwiftData
 
@@ -166,6 +167,26 @@ extension DB {
             os_log(.error, "\(e.localizedDescription)")
         }
 
+        return nil
+    }
+}
+
+// MARK: Cover
+
+extension DB {
+    func getCover(_ bookURL: URL) async -> Image? {
+        guard let book = self.findBook(bookURL) else {
+            return nil
+        }
+        
+        if let image = await book.getBookCover() {
+            return image
+        }
+        
+        if let parent = self.findBook(bookURL.deletingLastPathComponent()) {
+            return await self.getCover(parent.url)
+        }
+        
         return nil
     }
 }

@@ -2,6 +2,7 @@ import Foundation
 import StoreKit
 import OSLog
 import SwiftUI
+import MagicKit
 
 typealias Transaction = StoreKit.Transaction
 typealias RenewalInfo = StoreKit.Product.SubscriptionInfo.RenewalInfo

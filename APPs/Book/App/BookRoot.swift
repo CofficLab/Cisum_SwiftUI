@@ -254,18 +254,18 @@ extension BookRoot {
     }
 
     func onPlayPrev(_ notification: Notification) {
-        let verbose = false 
+        let verbose = true 
         let asset = notification.userInfo?["asset"] as? PlayAsset
         self.bg.async {
             if let asset = asset {
-                let prev = db.getPrevOf(asset.url)?.toPlayAsset()
+                let prev = asset.url.getPrevFile()
 
                 if verbose {
-                    os_log("\(self.t)播放上一个 -> \(prev?.url.lastPathComponent ?? "")")
+                    os_log("\(self.t)播放上一个 -> \(prev?.lastPathComponent ?? "")")
                 }
 
                 if let prev = prev {
-                    self.playMan.play(prev, reason: "onPlayPrev")
+                    self.playMan.play(PlayAsset(url: prev), reason: "onPlayPrev")
                 }
             }
         }
