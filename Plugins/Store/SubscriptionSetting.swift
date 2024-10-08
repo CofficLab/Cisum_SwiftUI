@@ -33,6 +33,7 @@ struct SubscriptionSetting: View, SuperEvent, SuperLog, SuperThread {
                 }
                 .padding()
             }        }.onAppear(perform: onAppear)
+            .onReceive(NotificationCenter.default.publisher(for: .Restored), perform: onRestore)
     }
 
     private var refreshButton: some View {
@@ -53,7 +54,7 @@ struct SubscriptionSetting: View, SuperEvent, SuperLog, SuperThread {
 
     // MARK: 获取可用的订阅
 
-    private func getProducts(_ reason: String, verbose: Bool = false) async {
+    private func getProducts(_ reason: String, verbose: Bool = true) async {
         if verbose {
             os_log("\(self.t)GetProducts because of \(reason)")
         }
@@ -85,6 +86,14 @@ extension SubscriptionSetting {
         self.bg.async {
             Task {
                 await getProducts("点击了重试按钮")
+            }
+        }
+    }
+
+    func onRestore(_ notification: Notification) {
+        self.bg.async {
+            Task {
+                await getProducts("恢复购买")
             }
         }
     }

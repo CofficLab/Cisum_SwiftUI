@@ -26,8 +26,8 @@ struct AudioTask: View, SuperLog, SuperThread {
                 taskList
             }
         }
-        .onChange(of: tasks.count) { newCount in
-            if newCount == 0 {
+        .onChange(of: tasks.count) {
+            if tasks.count == 0 {
                 app.showCopying = false
             }
         }

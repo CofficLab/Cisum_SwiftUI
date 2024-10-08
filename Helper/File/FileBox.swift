@@ -31,6 +31,10 @@ extension FileBox {
     var isImage: Bool {
         ["png", "jpg", "jpeg", "gif", "bmp", "webp"].contains(ext)
     }
+
+    var isJSON: Bool {
+        ext == "json"
+    }
 }
 
 // MARK: FileSize
@@ -445,6 +449,10 @@ extension FileBox {
         if self.isImage {
             return nil
         }
+        
+        if self.isJSON {
+            return nil
+        }
 
         let asset = AVAsset(url: url)
         do {
@@ -526,9 +534,4 @@ extension FileBox {
             }
         }
     }
-}
-
-#Preview("App") {
-    AppPreview()
-        .frame(height: 800)
 }

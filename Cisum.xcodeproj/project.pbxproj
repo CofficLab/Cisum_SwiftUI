@@ -204,6 +204,10 @@
 		F586DCD52C2BFE9E0078580B /* BtnOpenFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F586DCD42C2BFE9E0078580B /* BtnOpenFolder.swift */; };
 		F586DCD72C2C01FF0078580B /* ErrorViewFatal.swift in Sources */ = {isa = PBXBuildFile; fileRef = F586DCD62C2C01FF0078580B /* ErrorViewFatal.swift */; };
 		F586DCD92C2C05A60078580B /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F586DCD82C2C05A60078580B /* RootView.swift */; };
+		F59DC6EC2CB4C1F40052AEC8 /* PlanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F59DC6EB2CB4C1F40052AEC8 /* PlanView.swift */; };
+		F59DC6EE2CB4C1FD0052AEC8 /* Plan.swift in Sources */ = {isa = PBXBuildFile; fileRef = F59DC6ED2CB4C1FD0052AEC8 /* Plan.swift */; };
+		F59DC6F02CB4C2050052AEC8 /* Feature.swift in Sources */ = {isa = PBXBuildFile; fileRef = F59DC6EF2CB4C2050052AEC8 /* Feature.swift */; };
+		F59DC6F22CB4C3140052AEC8 /* RestoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F59DC6F12CB4C3140052AEC8 /* RestoreView.swift */; };
 		F5A076632C2E9C2D00DD4621 /* MigrateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A076622C2E9C2D00DD4621 /* MigrateView.swift */; };
 		F5A076662C2EBE5500DD4621 /* StoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A076652C2EBE5500DD4621 /* StoreView.swift */; };
 		F5B64D042C32546F00DE55AD /* SyncingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B64D032C32546F00DE55AD /* SyncingView.swift */; };
@@ -414,6 +418,10 @@
 		F586DCD42C2BFE9E0078580B /* BtnOpenFolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnOpenFolder.swift; sourceTree = "<group>"; };
 		F586DCD62C2C01FF0078580B /* ErrorViewFatal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorViewFatal.swift; sourceTree = "<group>"; };
 		F586DCD82C2C05A60078580B /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		F59DC6EB2CB4C1F40052AEC8 /* PlanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanView.swift; sourceTree = "<group>"; };
+		F59DC6ED2CB4C1FD0052AEC8 /* Plan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Plan.swift; sourceTree = "<group>"; };
+		F59DC6EF2CB4C2050052AEC8 /* Feature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Feature.swift; sourceTree = "<group>"; };
+		F59DC6F12CB4C3140052AEC8 /* RestoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreView.swift; sourceTree = "<group>"; };
 		F5A076622C2E9C2D00DD4621 /* MigrateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrateView.swift; sourceTree = "<group>"; };
 		F5A076652C2EBE5500DD4621 /* StoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreView.swift; sourceTree = "<group>"; };
 		F5B64D032C32546F00DE55AD /* SyncingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncingView.swift; sourceTree = "<group>"; };
@@ -707,16 +715,21 @@
 			isa = PBXGroup;
 			children = (
 				0BE695912BFE3DCC00CEFFEB /* AllSubscriptions.swift */,
+				F507F5142C04688D00CB9A3A /* BtnBuy.swift */,
 				0BE695922BFE3DCC00CEFFEB /* BuyButtonStyle.swift */,
 				0B12B0A62C0CB88B00FD43AD /* BuySetting.swift */,
 				0BE695932BFE3DCC00CEFFEB /* BuyView.swift */,
 				0BE695942BFE3DCC00CEFFEB /* CarsView.swift */,
+				F59DC6EF2CB4C2050052AEC8 /* Feature.swift */,
 				0BE695952BFE3DCC00CEFFEB /* MySubscription.swift */,
 				0BE695962BFE3DCC00CEFFEB /* NonRenewables.swift */,
 				0BE695972BFE3DCC00CEFFEB /* OneTimeView.swift */,
+				F59DC6ED2CB4C1FD0052AEC8 /* Plan.swift */,
+				F59DC6EB2CB4C1F40052AEC8 /* PlanView.swift */,
 				0BE695982BFE3DCC00CEFFEB /* ProductCell.swift */,
+				F59DC6F12CB4C3140052AEC8 /* RestoreView.swift */,
 				F5A076652C2EBE5500DD4621 /* StoreView.swift */,
-				F507F5142C04688D00CB9A3A /* BtnBuy.swift */,
+				0B12B0A82C0CB96F00FD43AD /* SubscriptionSetting.swift */,
 			);
 			path = Store;
 			sourceTree = "<group>";
@@ -731,7 +744,6 @@
 				0BA9FB6B2BFE14B4008074CB /* DirSetting.swift */,
 				0BE6958D2BFE28B400CEFFEB /* PlayTime.swift */,
 				0BE93F302BFB8E3200F25445 /* SettingView.swift */,
-				0B12B0A82C0CB96F00FD43AD /* SubscriptionSetting.swift */,
 				0BA9FB6F2BFE223A008074CB /* VersionSetting.swift */,
 			);
 			path = Settings;
@@ -1111,6 +1123,7 @@
 				0B8113B62C2C4342007CA124 /* v25.swift in Sources */,
 				0B9EA3592C21B41C00A4059A /* PlayAsset.swift in Sources */,
 				F54DFA522CA4E41600F81BE3 /* VideoApp.swift in Sources */,
+				F59DC6EE2CB4C1FD0052AEC8 /* Plan.swift in Sources */,
 				0B8C36A12BEA0E8800C47567 /* AudioD.swift in Sources */,
 				F54DFA612CA4E81200F81BE3 /* VideoControl.swift in Sources */,
 				F518F7012C34FB0400844E62 /* BookState.swift in Sources */,
@@ -1127,11 +1140,13 @@
 				0BBC158F2ABAC146006E82C4 /* BtnNext.swift in Sources */,
 				0BBC15802AB854A8006E82C4 /* AudioDB.swift in Sources */,
 				0BE93F312BFB8E3200F25445 /* SettingView.swift in Sources */,
+				F59DC6EC2CB4C1F40052AEC8 /* PlanView.swift in Sources */,
 				0B8C36A32BEA124900C47567 /* AudioR.swift in Sources */,
 				0BB889D72AC046B5004788D5 /* BtnShowInFinder.swift in Sources */,
 				F53BE0322C202420003CBA29 /* DiskFile.swift in Sources */,
 				F54DFA582CA4E59B00F81BE3 /* VideoLayout.swift in Sources */,
 				0BEE7C6F2CA8343800DC1DCF /* AudioTask.swift in Sources */,
+				F59DC6F22CB4C3140052AEC8 /* RestoreView.swift in Sources */,
 				0B22158E2BB6BC8F000EB36F /* SmartProgress.swift in Sources */,
 				F573B18C2C042E08004C34CC /* DeviceExt.swift in Sources */,
 				F586DCD72C2C01FF0078580B /* ErrorViewFatal.swift in Sources */,
@@ -1216,6 +1231,7 @@
 				F54DFA5A2CA4E5C800F81BE3 /* BookLayout.swift in Sources */,
 				0BBA42192ABD5D9200C0B977 /* BtnMode.swift in Sources */,
 				0BA9FB6E2BFE155B008074CB /* CoverDirSetting.swift in Sources */,
+				F59DC6F02CB4C2050052AEC8 /* Feature.swift in Sources */,
 				0B8C36B42BEC6EAB00C47567 /* ViewExt.swift in Sources */,
 				0BE6958E2BFE28B400CEFFEB /* PlayTime.swift in Sources */,
 				0BFB38832BCCCC780055E38B /* OperationView.swift in Sources */,

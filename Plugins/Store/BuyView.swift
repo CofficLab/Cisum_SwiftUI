@@ -22,6 +22,13 @@ struct BuyView: View {
                     AllSubscriptions().padding(.horizontal)
 //                    NonRenewables().padding(.horizontal)
                     
+                    Button("恢复购买", action: {
+                        Task {
+                            // This call displays a system prompt that asks users to authenticate with their App Store credentials.
+                            // Call this function only in response to an explicit user action, such as tapping a button.
+                            try? await AppStore.sync()
+                        }
+                    })
                 }
                 .padding(.top, 48)
                 .frame(maxWidth: .infinity)
@@ -32,13 +39,13 @@ struct BuyView: View {
     private var headerView: some View {
         VStack {
             HStack {
-                //                            Button("恢复购买", action: {
-                //                                Task {
-                //                                    // This call displays a system prompt that asks users to authenticate with their App Store credentials.
-                //                                    // Call this function only in response to an explicit user action, such as tapping a button.
-                //                                    try? await AppStore.sync()
-                //                                }
-                //                            })
+                                            Button("恢复购买", action: {
+                                                Task {
+                                                    // This call displays a system prompt that asks users to authenticate with their App Store credentials.
+                                                    // Call this function only in response to an explicit user action, such as tapping a button.
+                                                    try? await AppStore.sync()
+                                                }
+                                            })
 
                 Button(action: {
                     onClose()

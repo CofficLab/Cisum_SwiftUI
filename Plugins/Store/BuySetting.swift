@@ -3,7 +3,7 @@ import OSLog
 import StoreKit
 import SwiftUI
 
-struct BuySetting: View {
+struct BuySetting: View, SuperLog {
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     @State var closeBtnHovered: Bool = false
 
@@ -35,6 +35,10 @@ struct BuySetting: View {
             SubscriptionSetting()
                 .padding()
                 .background(BackgroundView.type1.opacity(0.1))
+            
+            RestoreView()
+                .padding()
+                .background(BackgroundView.type1.opacity(0.1))
 
             footerView
         }
@@ -57,68 +61,6 @@ struct BuySetting: View {
 
         .font(.footnote)
         .background(BackgroundView.type1.opacity(0.1))
-    }
-}
-
-struct Feature: Identifiable {
-    let id = UUID()
-    let name: String
-    let freeVersion: String
-    let proVersion: String
-}
-
-struct Plan: Identifiable {
-    let id = UUID()
-    let name: String
-    let price: String
-    let period: String
-    let features: [String: Any]
-}
-
-struct PlanView: View {
-    let plan: Plan
-
-    var body: some View {
-        VStack {
-            Text(plan.name)
-                .font(.headline)
-            Divider()
-
-//            Text(plan.price)
-//                .font(.system(size: 36, weight: .bold))
-//            + Text(plan.period)
-//                .font(.subheadline)
-
-//            Button("Buy plan") {
-//                // Handle purchase
-//            }
-//            .padding()
-//            .frame(maxWidth: .infinity)
-//            .background(plan.name == "Essential" ? Color.blue : Color.gray)
-//            .foregroundColor(.white)
-//            .cornerRadius(8)
-
-            VStack(alignment: .leading, spacing: 10) {
-                Text("Features")
-                    .font(.headline)
-
-                ForEach(Array(plan.features.keys.sorted()), id: \.self) { key in
-                    HStack {
-                        Text(key)
-                        Spacer()
-                        if let value = plan.features[key] as? Bool {
-                            Image(systemName: value ? "checkmark" : "minus")
-                        } else if let value = plan.features[key] as? String {
-                            Text(value)
-                        }
-                    }
-                }
-            }
-            .padding(.top)
-        }
-        .padding()
-        .background(plan.name == "专业版本" ? Color.gray.opacity(0.2) : Color.clear)
-        .cornerRadius(12)
     }
 }
 
