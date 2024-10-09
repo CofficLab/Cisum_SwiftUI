@@ -26,11 +26,11 @@ class BookApp: SuperLayout, SuperLog, SuperThread {
     var disk: (any Disk)?
 
     func getDisk() -> (any Disk)? {
-        return nil
+        disk
     }
 
     func boot() {
-        let verbose = true
+        let verbose = false
         self.bg.async {
             if verbose {
                 os_log("%@👻👻👻 boot", self.t)
@@ -42,7 +42,11 @@ class BookApp: SuperLayout, SuperLog, SuperThread {
     }
 
     func setCurrent(url: URL) {
-        os_log("\(self.t)👻👻👻 setCurrent: \(url.lastPathComponent)")
+        let verbose = false
+        
+        if verbose {
+            os_log("\(self.t)👻👻👻 setCurrent: \(url.lastPathComponent)")
+        }
 
         // 将当前的url存储下来
         UserDefaults.standard.set(url.absoluteString, forKey: "currentAudioURL")

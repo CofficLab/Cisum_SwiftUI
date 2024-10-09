@@ -136,7 +136,7 @@ extension PlayMan {
     // MARK: Play
 
     func play(_ asset: PlayAsset, reason: String) {
-        let verbose = true
+        let verbose = false
         if verbose {
             os_log("\(self.t)Play 「\(asset.fileName) (\(asset.isAudio() ? "Audio" : "Video"))」")
             os_log("  🐛 \(reason)")

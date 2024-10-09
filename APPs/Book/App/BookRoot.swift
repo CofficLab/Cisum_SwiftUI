@@ -70,7 +70,7 @@ extension BookRoot {
         monitor.start(queue: queue)
     }
 
-    func restore(reason: String, verbose: Bool = true) {
+    func restore(reason: String, verbose: Bool = false) {
         self.bg.async {
             if verbose {
                 os_log("\(self.t)Restore because of \(reason)")
@@ -165,13 +165,13 @@ extension BookRoot {
                                 os_log("\(self.t)DBSyncing -> 下载完成 -> \(file.url.lastPathComponent)")
                             }
                             app.clearError()
-                            
+
                             break
                         }
 
                         if assetURL == file.url, file.isDownloading, file.isDownloading {
                             app.setPlayManError(.Downloading)
-                            
+
                             break
                         }
                     }
@@ -220,12 +220,12 @@ extension BookRoot {
         checkNetworkStatus()
 
         self.bg.async {
-            let verbose = true
+            let verbose = false
 
             if verbose {
                 os_log("\(self.t)OnAppear")
             }
-            
+
             self.restore(reason: "OnAppear")
             BookUpdateCoverJob(db: db).run()
         }
@@ -237,7 +237,7 @@ extension BookRoot {
     }
 
     func onPlayNext(_ notification: Notification) {
-        let verbose = true 
+        let verbose = true
         let asset = notification.userInfo?["asset"] as? PlayAsset
         self.bg.async {
             if let asset = asset {
@@ -255,7 +255,7 @@ extension BookRoot {
     }
 
     func onPlayPrev(_ notification: Notification) {
-        let verbose = true 
+        let verbose = false
         let asset = notification.userInfo?["asset"] as? PlayAsset
         self.bg.async {
             if let asset = asset {
@@ -303,7 +303,7 @@ extension BookRoot {
         let state = notification.userInfo?["state"] as? PlayState
 
         self.bg.async {
-            let verbose = false
+            let verbose = true
             if verbose {
                 os_log("\(self.t)OnPlayStateChange")
             }
@@ -318,10 +318,25 @@ extension BookRoot {
                         os_log("\(self.t)播放状态错误 -> \(e.localizedDescription)")
                     }
 
-                    if let playManError = e as? PlayManError,
-                       case .NotDownloaded = playManError,
-                       let disk = disk,
-                       let asset = state.getAsset() {
+                    if let playManError = e as? PlayManError, case .NotDownloaded = playManError {
+                        if verbose {
+                            os_log("\(self.t)播放状态错误是：未下载")
+                        }
+
+                        guard let disk = disk else {
+                            os_log(.error, "\(self.t)Disk is nil")
+                            return
+                        }
+
+                        guard let asset = state.getAsset() else {
+                            os_log(.error, "\(self.t)Asset is nil")
+                            return
+                        }
+
+                        if verbose {
+                            os_log("\(self.t)自动下载")
+                        }
+
                         Task {
                             try? await disk.download(asset.url, reason: "PlayManError.NotDownloaded")
                         }

@@ -12,7 +12,7 @@ class BookUpdateCoverJob: SuperLog, SuperThread {
     }
 
     func run() {
-        let verbose = true
+        let verbose = false
 
         if running {
             return
