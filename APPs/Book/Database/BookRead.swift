@@ -199,7 +199,7 @@ extension DB {
             return nil
         }
         
-        if let image = await book.getBookCover() {
+        if let image = await book.getBookCoverFromDB() {
             return image
         }
         

@@ -103,14 +103,6 @@ struct BookLayout: View, SuperLog {
                 .tabItem {
                     Label("订阅", systemImage: "crown")
                 }
-
-            if Config.debug {
-                DBViewNavigation()
-                    .tag("Testing")
-                    .tabItem {
-                        Label("测试", systemImage: "testtube.2")
-                    }
-            }
         }
         .frame(maxHeight: .infinity)
         #if os(macOS)

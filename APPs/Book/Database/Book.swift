@@ -68,18 +68,16 @@ extension Book {
 // MARK: Cover
 
 extension Book {
-    func getBookCover(verbose: Bool = true) async -> Image? {
+    func getBookCoverFromDB(verbose: Bool = false) async -> Image? {
         if verbose {
             os_log("\(self.t)GetBookCover for \(self.title)")
         }
 
-        // 根目录没有封面
-        if self.url.pathComponents.count <= 1 {
-            return nil
-        }
-
-        // 如果 coverData 不为空，使用它来生成跨平台的图像
         if let coverData = self.coverData {
+            if verbose {
+                os_log("  🎉 GetBookCover From Database")
+            }
+            
             #if canImport(UIKit)
             if let uiImage = UIImage(data: coverData) {
                 return Image(uiImage: uiImage)
@@ -91,43 +89,11 @@ extension Book {
             #endif
         }
 
-        return await self.getBookCoverFromFile()
-    }
-
-    func getBookCoverFromFile() async -> Image? {
-        let verbose = true
-        
-        if verbose {
-            os_log("\(self.t)GetBookCoverFromFile for \(self.title)")
-        }
-
-        // 根目录没有封面
-        if self.url.pathComponents.count <= 1 {
-            return nil
-        }
-
-        // 先获取自己的
-        if let selfImage = await self.getCoverImage() {
-            return selfImage
-        }
-
-        // 无children
-        guard let children = children else {
-            return nil
-        }
-
-        // 获取children的
-        for child in children.map({ Book(url: $0) }) {
-            if let image = await child.getBookCoverFromFile() {
-                return image
-            }
-        }
-
         return nil
     }
     
     func getCoverURLFromFile() async -> URL? {
-        let verbose = true
+        let verbose = false
         
         if verbose {
             os_log("\(self.t)GetBookCoverFromFile for \(self.title)")
