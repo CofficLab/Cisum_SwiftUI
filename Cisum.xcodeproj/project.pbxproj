@@ -213,6 +213,7 @@
 		F5AEE0582CB5032E0007825B /* BookRoot.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5AEE0572CB5032E0007825B /* BookRoot.swift */; };
 		F5AEE05A2CB515660007825B /* BookHero.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5AEE0592CB515660007825B /* BookHero.swift */; };
 		F5AEE05C2CB519C90007825B /* BookPlayingCover.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5AEE05B2CB519C90007825B /* BookPlayingCover.swift */; };
+		F5AEE0612CB68CA80007825B /* BookUpdateCoverJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5AEE0602CB68CA80007825B /* BookUpdateCoverJob.swift */; };
 		F5B64D042C32546F00DE55AD /* SyncingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B64D032C32546F00DE55AD /* SyncingView.swift */; };
 		F5B64D062C32597B00DE55AD /* DBSyncing.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B64D052C32597B00DE55AD /* DBSyncing.swift */; };
 		F5B64D0A2C327D8600DE55AD /* VideoWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B64D092C327D8600DE55AD /* VideoWorker.swift */; };
@@ -430,6 +431,7 @@
 		F5AEE0572CB5032E0007825B /* BookRoot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookRoot.swift; sourceTree = "<group>"; };
 		F5AEE0592CB515660007825B /* BookHero.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookHero.swift; sourceTree = "<group>"; };
 		F5AEE05B2CB519C90007825B /* BookPlayingCover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookPlayingCover.swift; sourceTree = "<group>"; };
+		F5AEE0602CB68CA80007825B /* BookUpdateCoverJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookUpdateCoverJob.swift; sourceTree = "<group>"; };
 		F5B64D032C32546F00DE55AD /* SyncingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncingView.swift; sourceTree = "<group>"; };
 		F5B64D052C32597B00DE55AD /* DBSyncing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBSyncing.swift; sourceTree = "<group>"; };
 		F5B64D092C327D8600DE55AD /* VideoWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoWorker.swift; sourceTree = "<group>"; };
@@ -698,6 +700,7 @@
 				F59DC6F72CB4E9A20052AEC8 /* ControlView */,
 				F59DC6F52CB4E8B90052AEC8 /* Database */,
 				F518F6EE2C33917500844E62 /* DBView */,
+				F5AEE05F2CB68C950007825B /* Job */,
 			);
 			path = Book;
 			sourceTree = "<group>";
@@ -1039,6 +1042,14 @@
 			path = App;
 			sourceTree = "<group>";
 		};
+		F5AEE05F2CB68C950007825B /* Job */ = {
+			isa = PBXGroup;
+			children = (
+				F5AEE0602CB68CA80007825B /* BookUpdateCoverJob.swift */,
+			);
+			path = Job;
+			sourceTree = "<group>";
+		};
 		F5B64D0D2C3280BF00DE55AD /* Cover */ = {
 			isa = PBXGroup;
 			children = (
@@ -1235,6 +1246,7 @@
 				0BAB300E2AB814F70012D837 /* BootApp.swift in Sources */,
 				0BBA42212AC1802C00C0B977 /* ButtonCancelSelected.swift in Sources */,
 				0B9EA35B2C21C72800A4059A /* AudioWorker.swift in Sources */,
+				F5AEE0612CB68CA80007825B /* BookUpdateCoverJob.swift in Sources */,
 				0BAABEB12BC79C4E00DF4A31 /* CopyTask.swift in Sources */,
 				F5AEE0582CB5032E0007825B /* BookRoot.swift in Sources */,
 				F5511BB02C29050300400900 /* Playable.swift in Sources */,

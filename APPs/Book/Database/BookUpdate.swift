@@ -119,4 +119,27 @@ extension DB {
             os_log(.error, "\(error.localizedDescription)")
         }
     }
+
+    func updateBookCover(bookURL: URL, coverURL: URL) {
+        let verbose = true
+        guard let book = findBook(bookURL) else {
+            if verbose {
+                os_log("Failed to find book at URL: \(bookURL)")
+            }
+            return
+        }
+        
+        do {
+            let coverData = try Data(contentsOf: coverURL)
+            book.coverData = coverData
+            
+            try context.save()
+            
+            if verbose {
+                os_log("Successfully updated cover for book: \(book.title)")
+            }
+        } catch {
+            os_log(.error, "Failed to update book cover: \(error.localizedDescription)")
+        }
+    }
 }

@@ -25,10 +25,6 @@ class BookApp: SuperLayout, SuperLog, SuperThread {
 
     var disk: (any Disk)?
 
-    init() {
-        os_log("%@👻👻👻 init", t)
-    }
-
     func getDisk() -> (any Disk)? {
         return nil
     }

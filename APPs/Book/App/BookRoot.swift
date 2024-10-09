@@ -227,6 +227,7 @@ extension BookRoot {
             }
             
             self.restore(reason: "OnAppear")
+            BookUpdateCoverJob(db: db).run()
         }
     }
 

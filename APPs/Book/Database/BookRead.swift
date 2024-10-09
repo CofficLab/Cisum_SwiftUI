@@ -13,6 +13,26 @@ extension DB {
             return 0
         }
     }
+
+    func getBookCountOfNoCoverData() -> Int {
+        do {
+            return try context.fetchCount(Book.descriptorOfNoCoverData)
+        } catch {
+            os_log(.error, "\(error.localizedDescription)")
+            
+            return 0
+        }
+    }
+
+    func getBooksWithNoCoverData() -> [Book] {
+        do {
+            return try context.fetch(Book.descriptorOfNoCoverData)
+        } catch {
+            os_log(.error, "\(error.localizedDescription)")
+            
+            return []
+        }
+    }
 }
 
 // MARK: First
@@ -188,5 +208,15 @@ extension DB {
         }
         
         return nil
+    }
+}
+
+// MARK: Descriptor
+
+extension Book {
+    static var descriptorOfNoCoverData: FetchDescriptor<Book> {
+        FetchDescriptor<Book>(predicate: #Predicate<Book> {
+            $0.coverData == nil
+        })
     }
 }

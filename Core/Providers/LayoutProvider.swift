@@ -25,7 +25,7 @@ class LayoutProvider: ObservableObject, SuperLog, SuperThread {
     }
 
     init() {
-        let verbose = false
+        let verbose = true
         if verbose {
             os_log("\(Logger.initLog) LayoutProvider")
         }
@@ -33,8 +33,10 @@ class LayoutProvider: ObservableObject, SuperLog, SuperThread {
         let currentLayoutId = Config.getLayoutId()
 
         if let c = items.first(where: { $0.id == currentLayoutId }) {
+            os_log("  ➡️ Set Current Layout: \(c.id)")
             self.current = c
         } else {
+            os_log("  ➡️ Set Default Layout: \(self.items.first!.id)")
             self.current = self.items.first!
         }
     }
