@@ -97,13 +97,20 @@ extension AudioRoot {
 
     func getCurrent() -> URL? {
         let verbose = false
+        
+        if let urlString = UserDefaults.standard.string(forKey: keyOfCurrentURL) {
+            let url = URL(string: urlString)
+            if verbose {
+                os_log("\(self.t)GetCurrent, Found: \(url?.lastPathComponent ?? "")")
+            }
+            
+            return url
+        }
+        
         if verbose {
-            os_log("\(self.t)GetCurrent")
+            os_log("\(self.t)GetCurrent, Not Found")
         }
 
-        if let urlString = UserDefaults.standard.string(forKey: keyOfCurrentURL) {
-            return URL(string: urlString)
-        }
 
         return nil
     }
@@ -145,10 +152,10 @@ extension AudioRoot {
         monitor.start(queue: queue)
     }
 
-    func restore(reason: String, verbose: Bool = false) {
+    func restore(reason: String, verbose: Bool = true) {
         self.bg.async {
             if verbose {
-                os_log("\(self.t)Restore because of \(reason)")
+                os_log("\(self.t)Restore 🐛 \(reason)")
             }
 
             if let url = getCurrent() {
@@ -367,7 +374,7 @@ extension AudioRoot {
         self.bg.async {
             let verbose = false
             if verbose {
-                os_log("\(self.t)OnPlayStateChange")
+                os_log("\(self.t)OnPlayStateChange: \(playMan.state.des)")
             }
 
             if let state = state {

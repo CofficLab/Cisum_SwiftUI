@@ -70,7 +70,7 @@ struct BookControl: View {
                     // 最大宽度=控制栏的高度+系统标题栏高度
                     HStack {
                         Spacer()
-                        PlayingAlbum()
+                        BookPlayingCover()
                             .background(Config.background(.yellow))
                     }
                     .frame(maxWidth: geo.size.height * 1.3)

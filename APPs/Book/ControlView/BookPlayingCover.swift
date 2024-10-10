@@ -28,6 +28,7 @@ struct BookPlayingCover: View, SuperLog, SuperThread {
 
     var body: some View {
         ZStack {
+            Text("EEEEEE")
             if alignTop {
                 VStack {
                     view
@@ -84,8 +85,7 @@ struct BookPlayingCover: View, SuperLog, SuperThread {
         let title = asset.title
 
         if verbose {
-            os_log("\(t)UpdateCover for \(title)")
-            os_log("  🐛 \(reason)")
+            os_log("\(t)UpdateCover for \(title) 🐛 \(reason)")
         }
         
         self.downloadingPercent = asset.isDownloaded ? 100 : 0

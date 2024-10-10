@@ -261,8 +261,12 @@ extension DiskiCloud {
 extension DiskiCloud {
     func stopWatch(reason: String) {
         let emoji = "🌛🌛🌛"
+        let verbose = false
 
-        os_log("\(self.label)\(emoji) 停止监听 🐛 \(reason)")
+        if verbose {
+            os_log("\(self.label)\(emoji) 停止监听 🐛 \(reason)")
+        }
+        
         self.query.stop()
     }
 

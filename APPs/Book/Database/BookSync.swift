@@ -8,7 +8,7 @@ extension DB {
         "\(t)📖📖📖"
     }
 
-    func bookSync(_ group: DiskFileGroup, verbose: Bool = true) {
+    func bookSync(_ group: DiskFileGroup, verbose: Bool = false) {
         var message = "\(labelForBookSync) SyncBook(\(group.count))"
 
         if let first = group.first, first.isDownloading == true {

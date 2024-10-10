@@ -68,65 +68,23 @@ extension Book {
         if verbose {
             os_log("\(self.t)GetBookCover for \(self.title)")
         }
-
+        
         if let coverData = self.coverData {
             if verbose {
                 os_log("  🎉 GetBookCover From Database")
             }
             
-            #if canImport(UIKit)
+#if canImport(UIKit)
             if let uiImage = UIImage(data: coverData) {
                 return Image(uiImage: uiImage)
             }
-            #elseif canImport(AppKit)
+#elseif canImport(AppKit)
             if let nsImage = NSImage(data: coverData) {
                 return Image(nsImage: nsImage)
             }
-            #endif
-        }
-
-        return nil
-    }
-    
-    func getCoverURLFromFile() async -> URL? {
-        let verbose = false
-        
-        if verbose {
-            os_log("\(self.t)GetBookCoverFromFile for \(self.title)")
-        }
-
-        return await self.getCoverFromMeta()
-    }
-    
-    func getCoverURLFromChildren() async -> URL? {
-        let verbose = false
-        
-        if verbose {
-            os_log("\(self.t)GetBookCoverFromChildren for \(self.title)")
-        }
-
-        // 根目录没有封面
-        if self.url.pathComponents.count <= 1 {
-            return nil
+#endif
         }
         
-        // 获取自己的
-        if let coverURL = await self.getCoverURLFromFile() {
-            return coverURL
-        }
-
-        // 无children
-        guard let children = children else {
-            return nil
-        }
-
-        // 获取children的
-        for child in children.map({ Book(url: $0) }) {
-            if let image = await child.getCoverURLFromChildren() {
-                return image
-            }
-        }
-
         return nil
     }
 }

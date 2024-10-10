@@ -48,7 +48,7 @@ extension AudioPlayingCover {
         let asset = playMan.asset
         
         if asset != self.asset {
-            os_log("\(self.t)PlayAssetChange")
+            os_log("\(self.t)PlayAssetChange: \(playMan.state.des)")
             withAnimation {
                 self.asset = asset
             }
