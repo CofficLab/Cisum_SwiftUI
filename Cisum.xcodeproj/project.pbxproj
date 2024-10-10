@@ -163,13 +163,11 @@
 		F545D1732C1FC9F0006A6AFA /* CloudSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = F545D1722C1FC9F0006A6AFA /* CloudSetting.swift */; };
 		F545D1752C1FCAD0006A6AFA /* CloudExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F545D1742C1FCAD0006A6AFA /* CloudExt.swift */; };
 		F545D1772C1FCC86006A6AFA /* UserExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F545D1762C1FCC86006A6AFA /* UserExt.swift */; };
-		F54DFA4F2CA4E37500F81BE3 /* AudioApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA4E2CA4E37500F81BE3 /* AudioApp.swift */; };
 		F54DFA522CA4E41600F81BE3 /* VideoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA512CA4E41600F81BE3 /* VideoApp.swift */; };
-		F54DFA542CA4E44700F81BE3 /* SuperLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA532CA4E44300F81BE3 /* SuperLayout.swift */; };
-		F54DFA562CA4E4EE00F81BE3 /* BookApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA552CA4E4EE00F81BE3 /* BookApp.swift */; };
+		F54DFA542CA4E44700F81BE3 /* SuperRoot.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA532CA4E44300F81BE3 /* SuperRoot.swift */; };
 		F54DFA582CA4E59B00F81BE3 /* VideoLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA572CA4E59B00F81BE3 /* VideoLayout.swift */; };
 		F54DFA5A2CA4E5C800F81BE3 /* BookLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA592CA4E5C800F81BE3 /* BookLayout.swift */; };
-		F54DFA5C2CA4E63000F81BE3 /* LayoutProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA5B2CA4E63000F81BE3 /* LayoutProvider.swift */; };
+		F54DFA5C2CA4E63000F81BE3 /* RootProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA5B2CA4E63000F81BE3 /* RootProvider.swift */; };
 		F54DFA5F2CA4E75D00F81BE3 /* SuperPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA5E2CA4E75A00F81BE3 /* SuperPlugin.swift */; };
 		F54DFA612CA4E81200F81BE3 /* VideoControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA602CA4E81200F81BE3 /* VideoControl.swift */; };
 		F54DFA632CA4E84500F81BE3 /* VideoBtns.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA622CA4E84500F81BE3 /* VideoBtns.swift */; };
@@ -382,13 +380,11 @@
 		F545D1722C1FC9F0006A6AFA /* CloudSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudSetting.swift; sourceTree = "<group>"; };
 		F545D1742C1FCAD0006A6AFA /* CloudExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudExt.swift; sourceTree = "<group>"; };
 		F545D1762C1FCC86006A6AFA /* UserExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserExt.swift; sourceTree = "<group>"; };
-		F54DFA4E2CA4E37500F81BE3 /* AudioApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioApp.swift; sourceTree = "<group>"; };
 		F54DFA512CA4E41600F81BE3 /* VideoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoApp.swift; sourceTree = "<group>"; };
-		F54DFA532CA4E44300F81BE3 /* SuperLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperLayout.swift; sourceTree = "<group>"; };
-		F54DFA552CA4E4EE00F81BE3 /* BookApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookApp.swift; sourceTree = "<group>"; };
+		F54DFA532CA4E44300F81BE3 /* SuperRoot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperRoot.swift; sourceTree = "<group>"; };
 		F54DFA572CA4E59B00F81BE3 /* VideoLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoLayout.swift; sourceTree = "<group>"; };
 		F54DFA592CA4E5C800F81BE3 /* BookLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookLayout.swift; sourceTree = "<group>"; };
-		F54DFA5B2CA4E63000F81BE3 /* LayoutProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutProvider.swift; sourceTree = "<group>"; };
+		F54DFA5B2CA4E63000F81BE3 /* RootProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootProvider.swift; sourceTree = "<group>"; };
 		F54DFA5E2CA4E75A00F81BE3 /* SuperPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperPlugin.swift; sourceTree = "<group>"; };
 		F54DFA602CA4E81200F81BE3 /* VideoControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoControl.swift; sourceTree = "<group>"; };
 		F54DFA622CA4E84500F81BE3 /* VideoBtns.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoBtns.swift; sourceTree = "<group>"; };
@@ -461,7 +457,7 @@
 			children = (
 				0B1165EF2ABBCCB0005C5CBB /* AppProvider.swift */,
 				F5675C3F2C25456300326664 /* DataProvider.swift */,
-				F54DFA5B2CA4E63000F81BE3 /* LayoutProvider.swift */,
+				F54DFA5B2CA4E63000F81BE3 /* RootProvider.swift */,
 				0BC29EA82CA4599500E4813F /* PluginProvider.swift */,
 				0BE6958F2BFE325400CEFFEB /* StoreProvider.swift */,
 			);
@@ -925,9 +921,9 @@
 		F5640CB72C4FBD1B00AFD522 /* Contract */ = {
 			isa = PBXGroup;
 			children = (
-				F54DFA5E2CA4E75A00F81BE3 /* SuperPlugin.swift */,
-				F54DFA532CA4E44300F81BE3 /* SuperLayout.swift */,
 				0BD651062CA4264000BA3CB8 /* SuperEvent.swift */,
+				F54DFA5E2CA4E75A00F81BE3 /* SuperPlugin.swift */,
+				F54DFA532CA4E44300F81BE3 /* SuperRoot.swift */,
 			);
 			path = Contract;
 			sourceTree = "<group>";
@@ -1000,7 +996,6 @@
 			isa = PBXGroup;
 			children = (
 				F5AEE0572CB5032E0007825B /* BookRoot.swift */,
-				F54DFA552CA4E4EE00F81BE3 /* BookApp.swift */,
 				F52A98F42C43988D003559F1 /* BookPoster.swift */,
 				F54DFA592CA4E5C800F81BE3 /* BookLayout.swift */,
 			);
@@ -1035,7 +1030,6 @@
 		F5AEE0562CB502F80007825B /* App */ = {
 			isa = PBXGroup;
 			children = (
-				F54DFA4E2CA4E37500F81BE3 /* AudioApp.swift */,
 				F52A98FA2C43AA63003559F1 /* AudioPoster.swift */,
 				0BEE7C6C2CA7E9E300DC1DCF /* AudioRoot.swift */,
 			);
@@ -1170,12 +1164,11 @@
 				0BC29EA52CA4592A00E4813F /* DBBookState.swift in Sources */,
 				0B240BD52BF30730004A5944 /* JobExt.swift in Sources */,
 				0BBA42272AC2A8B800C0B977 /* BtnAdd.swift in Sources */,
-				F54DFA542CA4E44700F81BE3 /* SuperLayout.swift in Sources */,
+				F54DFA542CA4E44700F81BE3 /* SuperRoot.swift in Sources */,
 				0BBC15912ABAC19F006E82C4 /* BtnPrev.swift in Sources */,
 				F5A076662C2EBE5500DD4621 /* StoreView.swift in Sources */,
 				0B604AE82AD6384300929DD8 /* BootView.swift in Sources */,
 				F5AEE05A2CB515660007825B /* BookHero.swift in Sources */,
-				F54DFA4F2CA4E37500F81BE3 /* AudioApp.swift in Sources */,
 				0B8C36B62BEDAB5E00C47567 /* BtnMore.swift in Sources */,
 				0BAABEC32BC939D000DF4A31 /* LayoutView.swift in Sources */,
 				0BC29EB52CA6DE5F00E4813F /* AudioVStack.swift in Sources */,
@@ -1189,7 +1182,6 @@
 				0B8C36A12BEA0E8800C47567 /* AudioD.swift in Sources */,
 				F54DFA612CA4E81200F81BE3 /* VideoControl.swift in Sources */,
 				F518F7012C34FB0400844E62 /* BookState.swift in Sources */,
-				F54DFA562CA4E4EE00F81BE3 /* BookApp.swift in Sources */,
 				F54DFA762CA56B4000F81BE3 /* AudioAvatar.swift in Sources */,
 				0B220F6D2BB051140077255A /* StateView.swift in Sources */,
 				F54DFA702CA5007600F81BE3 /* VideoGrid.swift in Sources */,
@@ -1328,7 +1320,7 @@
 				F573B1882C0411E4004C34CC /* DeviceDataExt.swift in Sources */,
 				0BB427912BED0B38004E6F82 /* DiskLocal.swift in Sources */,
 				0B1165F02ABBCCB0005C5CBB /* AppProvider.swift in Sources */,
-				F54DFA5C2CA4E63000F81BE3 /* LayoutProvider.swift in Sources */,
+				F54DFA5C2CA4E63000F81BE3 /* RootProvider.swift in Sources */,
 				F5675C3E2C252A3800326664 /* DBTree.swift in Sources */,
 				F54DFA6B2CA4FB7D00F81BE3 /* BookBtns.swift in Sources */,
 				0B19D9562C062F400057D8DB /* ProExt.swift in Sources */,

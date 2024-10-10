@@ -3,7 +3,7 @@ import Foundation
 import OSLog
 import MagicKit
 
-class VideoApp: SuperLayout, SuperLog {
+class VideoApp: SuperLog {
     let emoji = "🎥"
     var id = "Video"
 

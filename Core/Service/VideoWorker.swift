@@ -154,8 +154,8 @@ extension VideoWorker {
         state = .Paused(asset)
     }
 
-    func stop() {
-        os_log("\(self.label)Stop")
+    func stop(reason: String) {
+        os_log("\(self.label)Stop 🐛 \(reason)")
         state = .Stopped
     }
 
@@ -169,7 +169,7 @@ extension VideoWorker {
         if let prev = self.onGetPrevOf(self.asset) {
             self.play(prev, reason: "Prev")
         } else {
-            self.stop()
+            self.stop(reason: "prev")
         }
     }
 }

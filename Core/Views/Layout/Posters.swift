@@ -3,7 +3,7 @@ import SwiftData
 import SwiftUI
 
 struct Posters: View {
-    @EnvironmentObject var l: LayoutProvider
+    @EnvironmentObject var l: RootProvider
     
     @Binding var isPresented: Bool
     

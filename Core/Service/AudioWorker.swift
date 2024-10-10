@@ -163,8 +163,8 @@ extension AudioWorker {
         state = .Paused(asset)
     }
 
-    func stop() {
-        os_log("\(self.t)Stop")
+    func stop(reason: String) {
+        os_log("\(self.t)Stop 🐛 \(reason)")
         state = .Stopped
     }
 

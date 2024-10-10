@@ -5,15 +5,15 @@ import StoreKit
 import SwiftData
 import SwiftUI
 
-class LayoutProvider: ObservableObject, SuperLog, SuperThread {
+class RootProvider: ObservableObject, SuperLog, SuperThread {
     let emoji = "🧩"
 
-    @Published var current: any SuperLayout
+    @Published var current: any SuperRoot
 
-    var items: [any SuperLayout] = [
-        AudioApp(),
+    var items: [any SuperRoot] = [
+        AudioRoot(),
 //        VideoApp(),
-        BookApp(),
+        BookRoot(),
     ]
 
     var posters: [any View] {
@@ -21,32 +21,32 @@ class LayoutProvider: ObservableObject, SuperLog, SuperThread {
     }
 
     var layout: AnyView {
-        AnyView(self.current.rootView)
+        AnyView(self.current)
     }
 
     init() {
         let verbose = true
         if verbose {
-            os_log("\(Logger.initLog) LayoutProvider")
+            os_log("\(Logger.initLog) RootProvider")
         }
         
         let currentLayoutId = Config.getLayoutId()
 
         if let c = items.first(where: { $0.id == currentLayoutId }) {
-            os_log("  ➡️ Set Current Layout: \(c.id)")
+            os_log("  ➡️ Set Current Root: \(c.id)")
             self.current = c
         } else {
-            os_log("  ➡️ Set Default Layout: \(self.items.first!.id)")
+            os_log("  ➡️ Set Default Root: \(self.items.first!.id)")
             self.current = self.items.first!
         }
     }
 
-    func setLayout(_ l: any SuperLayout) {
+    func setLayout(_ l: any SuperRoot) {
         if l.id == self.current.id {
             return
         }
 
-        os_log("\(self.t)setLayout -> \(l.title)")
+        os_log("\(self.t)SetRoot -> \(l.title)")
 
         self.current = l
 
@@ -57,7 +57,7 @@ class LayoutProvider: ObservableObject, SuperLog, SuperThread {
 // MARK: Config
 
 extension Config {
-    static func storeLayout(_ l: any SuperLayout) {
+    static func storeLayout(_ l: any SuperRoot) {
         let id = l.id
         
         UserDefaults.standard.set(id, forKey: "currentLayoutID")

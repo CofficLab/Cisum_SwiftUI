@@ -3,7 +3,7 @@ import SwiftData
 import SwiftUI
 
 struct BtnScene: View {
-    @EnvironmentObject var l: LayoutProvider
+    @EnvironmentObject var l: RootProvider
     
     @State var isPresented: Bool = false
 

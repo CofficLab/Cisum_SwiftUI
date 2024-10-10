@@ -5,22 +5,27 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-struct AudioRoot: View, SuperLog, SuperThread {
-    let emoji = "👶"
+struct AudioRoot: View, SuperLog, SuperThread, SuperRoot {
+    let emoji = "🎶"
+    let dirName = "audios"
+    let id = "Audio"
+    let iconName = "music.note.list"
+    let title = "歌曲模式"
+    let description: String = "作为歌曲仓库，只关注文件，文件夹将被忽略"
+    let poster: any View = AudioPoster()
 
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var l: LayoutProvider
+    @EnvironmentObject var l: RootProvider
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var db: DB
 
     @State private var mode: PlayMode?
     @State var networkOK = true
     @State var copyJob: AudioCopyJob?
+    @State var disk: (any Disk)?
 
     @Query(sort: \Audio.order, animation: .default) var audios: [Audio]
     @Query(animation: .default) var copyTasks: [CopyTask]
-
-    var disk: (any Disk)? { l.current.getDisk() }
 
     let timer = Timer
         .publish(every: 10, on: .main, in: .common)
@@ -37,7 +42,6 @@ struct AudioRoot: View, SuperLog, SuperThread {
         AudioLayout()
             .onAppear(perform: onAppear)
             .onReceive(NotificationCenter.default.publisher(for: .PlayManStateChange), perform: onPlayStateChange)
-            .onReceive(NotificationCenter.default.publisher(for: .AudioAppDidBoot), perform: onAudioAppDidBoot)
             .onReceive(NotificationCenter.default.publisher(for: .PlayManPlay), perform: onPlay)
             .onReceive(NotificationCenter.default.publisher(for: .PlayManNext), perform: onPlayNext)
             .onReceive(NotificationCenter.default.publisher(for: .PlayManPrev), perform: onPlayPrev)
@@ -54,6 +58,74 @@ struct AudioRoot: View, SuperLog, SuperThread {
 // MARK: Functions
 
 extension AudioRoot {
+    func getDisk() -> (any Disk)? {
+        return disk
+    }
+
+    func watchDisk(reason: String) {
+        guard var disk = disk else {
+            return
+        }
+
+        disk.onUpdated = { items in
+            Task {
+                await DB(Config.getContainer, reason: "DataManager.WatchDisk").sync(items)
+            }
+        }
+
+        Task {
+            await disk.watch(reason: reason)
+        }
+    }
+
+    func setCurrent(url: URL) {
+        let verbose = false
+        if verbose {
+            os_log("\(self.t)👻👻👻 setCurrent: \(url.absoluteString)")
+        }
+
+        // 将当前的url存储下来
+        UserDefaults.standard.set(url.absoluteString, forKey: "currentAudioURL")
+
+        // 通过iCloud key-value同步
+        NSUbiquitousKeyValueStore.default.set(url.absoluteString, forKey: "currentAudioURL")
+        NSUbiquitousKeyValueStore.default.synchronize()
+    }
+
+    func getCurrent() -> URL? {
+        let verbose = false
+        if verbose {
+            os_log("\(self.t)GetCurrent")
+        }
+
+        if let urlString = UserDefaults.standard.string(forKey: "currentAudioURL") {
+            return URL(string: urlString)
+        }
+
+        return nil
+    }
+
+    func setCurrentPlayMode(mode: PlayMode) {
+        // 将当前的播放模式存储到UserDefaults
+        UserDefaults.standard.set(mode.rawValue, forKey: "currentPlayMode")
+
+        // 通过iCloud key-value同步
+        NSUbiquitousKeyValueStore.default.set(mode.rawValue, forKey: "currentPlayMode")
+        NSUbiquitousKeyValueStore.default.synchronize()
+
+        let verbose = false
+        if verbose {
+            os_log("\(self.t)setCurrentPlayMode: \(mode.rawValue)")
+        }
+    }
+
+    func getCurrentPlayMode() -> PlayMode? {
+        if let modeRawValue = UserDefaults.standard.string(forKey: "currentPlayMode") {
+            return PlayMode(rawValue: modeRawValue)
+        }
+        return nil
+    }
+
     func checkNetworkStatus() {
         let monitor = NWPathMonitor()
         monitor.pathUpdateHandler = { path in
@@ -78,17 +150,11 @@ extension AudioRoot {
 
             let db: DB = DB(Config.getContainer, reason: "dataManager")
 
-            if let url = l.current.getCurrent() {
+            if let url = getCurrent() {
                 self.playMan.prepare(PlayAsset(url: url), reason: "AudioRoot.Restore")
             } else if (l.current.getDisk()) != nil {
                 self.playMan.prepare(db.firstAudio()?.toPlayAsset(), reason: "AudioRoot.Restore")
             }
-        }
-    }
-
-    private func setCurrent(url: URL) {
-        self.bg.async {
-            self.l.current.setCurrent(url: url)
         }
     }
 
@@ -170,13 +236,13 @@ extension AudioRoot {
                                 os_log("\(self.t)DBSyncing -> 下载完成 -> \(file.url.lastPathComponent)")
                             }
                             app.clearError()
-                            
+
                             break
                         }
 
                         if assetURL == file.url, file.isDownloading, file.isDownloading {
                             app.setPlayManError(.Downloading)
-                            
+
                             break
                         }
                     }
@@ -230,6 +296,9 @@ extension AudioRoot {
             if verbose {
                 os_log("\(self.t)OnAppear")
             }
+            
+            self.disk = DiskiCloud.make(self.dirName)
+            self.watchDisk(reason: "AudioApp.Boot")
         }
     }
 
@@ -239,7 +308,7 @@ extension AudioRoot {
     }
 
     func onPlayNext(_ notification: Notification) {
-        let verbose = false 
+        let verbose = false
         let asset = notification.userInfo?["asset"] as? PlayAsset
         self.bg.async {
             if let asset = asset {
@@ -257,7 +326,7 @@ extension AudioRoot {
     }
 
     func onPlayPrev(_ notification: Notification) {
-        let verbose = false 
+        let verbose = false
         let asset = notification.userInfo?["asset"] as? PlayAsset
         self.bg.async {
             if let asset = asset {
@@ -287,14 +356,7 @@ extension AudioRoot {
             }
         }
     }
-
-    func onAudioAppDidBoot(_ notification: Notification) {
-        self.restore(reason: "AudioAppDidBoot")
-        if let url = playMan.asset?.url, let disk = l.current.getDisk() {
-            disk.downloadNextBatch(url, reason: "BootView")
-        }
-    }
-
+    
     func onPlay(_ notification: Notification) {
         if let asset = notification.object as? PlayAsset {
             self.setCurrent(url: asset.url)
@@ -351,7 +413,7 @@ extension AudioRoot {
             }
 
             if let mode = mode {
-                l.current.setCurrentPlayMode(mode: mode)
+                setCurrentPlayMode(mode: mode)
                 self.mode = mode
             }
 

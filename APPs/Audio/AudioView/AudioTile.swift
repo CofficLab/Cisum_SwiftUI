@@ -4,7 +4,7 @@ import SwiftUI
 
 struct AudioTile: View {
     @EnvironmentObject private var playMan: PlayMan
-    @EnvironmentObject private var l: LayoutProvider
+    @EnvironmentObject private var l: RootProvider
 
     @State private var hovered = false
 

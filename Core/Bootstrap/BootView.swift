@@ -68,7 +68,7 @@ struct BootView<Content>: View where Content: View {
                     .environmentObject(AppProvider())
                     .environmentObject(StoreProvider())
                     .environmentObject(PluginProvider())
-                    .environmentObject(LayoutProvider())
+                    .environmentObject(RootProvider())
                     .environmentObject(dataManager)
                     .environmentObject(DB(Config.getContainer, reason: "BootView"))
                     .environmentObject(DBSynced(Config.getSyncedContainer))

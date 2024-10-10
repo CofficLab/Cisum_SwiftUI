@@ -6,7 +6,7 @@ struct ContentView: View, SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var data: DataProvider
     @EnvironmentObject var p: PluginProvider
-    @EnvironmentObject var l: LayoutProvider
+    @EnvironmentObject var l: RootProvider
 
     var body: some View {
         ZStack {
@@ -15,9 +15,7 @@ struct ContentView: View, SuperLog, SuperThread {
                     TopView()
                 }
 
-                l.layout.task {
-                    l.current.boot()
-                }
+                l.layout
             }
 
             if !app.flashMessage.isEmpty {

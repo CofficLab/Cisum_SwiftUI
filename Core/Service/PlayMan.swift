@@ -185,8 +185,8 @@ extension PlayMan {
         self.worker.pause()
     }
 
-    func stop() {
-        self.worker.stop()
+    func stop(reason: String) {
+        self.worker.stop(reason: reason)
     }
 
     func toggle() {
@@ -373,7 +373,7 @@ extension PlayMan {
         c.stopCommand.addTarget { _ in
             os_log("\(self.t)停止")
 
-            self.worker.stop()
+            self.worker.stop(reason: "StopCommand")
 
             return .success
         }

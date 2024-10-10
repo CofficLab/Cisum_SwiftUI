@@ -5,22 +5,28 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-struct BookRoot: View, SuperLog, SuperThread {
-    let emoji = "👶"
+struct BookRoot: View, SuperLog, SuperThread, SuperRoot {
+    let id = "Book"
+    let emoji = "📚"
+    let title = "有声书模式"
+    let dirName = "audios_book"
+    let iconName = "books.vertical"
+    let description = "适用于听有声书的场景"
+    let poster: any View = BookPoster()
 
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var l: LayoutProvider
+    @EnvironmentObject var l: RootProvider
     @EnvironmentObject var d: DataProvider
     @EnvironmentObject var playMan: PlayMan
 
     @State private var mode: PlayMode?
     @State var networkOK = true
     @State var copyJob: AudioCopyJob?
+    @State var disk: (any Disk)?
 
     @Query(sort: \Book.order, animation: .default) var books: [Book]
     @Query(animation: .default) var copyTasks: [CopyTask]
 
-    var disk: (any Disk)? { l.current.getDisk() }
     var db: DB { d.db }
 
     let timer = Timer
@@ -37,8 +43,8 @@ struct BookRoot: View, SuperLog, SuperThread {
     var body: some View {
         BookLayout()
             .onAppear(perform: onAppear)
+            .onDisappear(perform: onDisappear)
             .onReceive(NotificationCenter.default.publisher(for: .PlayManStateChange), perform: onPlayStateChange)
-            .onReceive(NotificationCenter.default.publisher(for: .AudioAppDidBoot), perform: onAudioAppDidBoot)
             .onReceive(NotificationCenter.default.publisher(for: .PlayManPlay), perform: onPlay)
             .onReceive(NotificationCenter.default.publisher(for: .PlayManNext), perform: onPlayNext)
             .onReceive(NotificationCenter.default.publisher(for: .PlayManPrev), perform: onPlayPrev)
@@ -55,6 +61,76 @@ struct BookRoot: View, SuperLog, SuperThread {
 // MARK: Actions
 
 extension BookRoot {
+    func setCurrent(url: URL) {
+        let verbose = false
+        
+        if verbose {
+            os_log("\(self.t)SetCurrent: \(url.lastPathComponent)")
+        }
+
+        // 将当前的url存储下来
+        UserDefaults.standard.set(url.absoluteString, forKey: "currentAudioURL")
+
+        // 通过iCloud key-value同步
+        NSUbiquitousKeyValueStore.default.set(url.absoluteString, forKey: "currentAudioURL")
+        NSUbiquitousKeyValueStore.default.synchronize()
+    }
+
+    func getCurrent() -> URL? {
+        let verbose = false
+
+        if verbose {
+            os_log("\(self.t)GetCurrent")
+        }
+
+        if let urlString = UserDefaults.standard.string(forKey: "currentAudioURL") {
+            let url = URL(string: urlString)
+
+            if verbose {
+                os_log("  🎉 \(url?.lastPathComponent ?? "")")
+            }
+
+            return url
+        }
+        
+        if verbose {
+            os_log("  ➡️ No current book URL found")
+        }
+        
+        return nil
+    }
+
+    func setCurrentPlayMode(mode: PlayMode) {
+        UserDefaults.standard.set(mode.rawValue, forKey: "currentBookPlayMode")
+    }
+
+    func getCurrentPlayMode() -> PlayMode? {
+        if let mode = UserDefaults.standard.string(forKey: "currentBookPlayMode") {
+            return PlayMode(rawValue: mode)
+        }
+        return nil
+    }
+    
+    func getDisk() -> (any Disk)? {
+        self.disk
+    }
+    
+    func watchDisk(reason: String) {
+        guard var disk = disk else {
+            return
+        }
+
+        disk.onUpdated = { items in
+            Task {
+                await DB(Config.getContainer, reason: "DataManager.WatchDisk").bookSync(items)
+            }
+        }
+
+        Task {
+            await disk.watch(reason: reason)
+        }
+    }
+    
     func checkNetworkStatus() {
         let monitor = NWPathMonitor()
         monitor.pathUpdateHandler = { path in
@@ -79,17 +155,11 @@ extension BookRoot {
 
             let db: DB = DB(Config.getContainer, reason: "BookRoot")
 
-            if let url = l.current.getCurrent() {
+            if let url = getCurrent() {
                 self.playMan.prepare(PlayAsset(url: url), reason: "BookRoot.Restore")
             } else if (l.current.getDisk()) != nil {
                 self.playMan.prepare(db.firstAudio()?.toPlayAsset(), reason: "BookRoot.Restore")
             }
-        }
-    }
-
-    private func setCurrent(url: URL) {
-        self.bg.async {
-            self.l.current.setCurrent(url: url)
         }
     }
 
@@ -215,6 +285,18 @@ extension BookRoot {
 
             self.restore(reason: "OnAppear")
             BookUpdateCoverJob(container: d.container).run()
+
+            self.disk = DiskiCloud.make(self.dirName)
+            self.watchDisk(reason: "BookRoot.OnAppear")
+        }
+    }
+
+    func onDisappear() {
+        self.bg.async {
+            let verbose = true
+            if verbose {
+                os_log("\(self.t)OnDisappear")
+            }
         }
     }
 
@@ -270,13 +352,6 @@ extension BookRoot {
                     self.playMan.play(next, reason: "onPlayNext")
                 }
             }
-        }
-    }
-
-    func onAudioAppDidBoot(_ notification: Notification) {
-        self.restore(reason: "AudioAppDidBoot")
-        if let url = playMan.asset?.url, let disk = l.current.getDisk() {
-            disk.downloadNextBatch(url, reason: "BootView")
         }
     }
 
@@ -347,7 +422,7 @@ extension BookRoot {
             }
 
             if let mode = mode {
-                l.current.setCurrentPlayMode(mode: mode)
+                setCurrentPlayMode(mode: mode)
                 self.mode = mode
             }
 

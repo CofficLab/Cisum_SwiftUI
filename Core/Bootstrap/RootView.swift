@@ -7,7 +7,7 @@ struct RootView: View, SuperLog, SuperEvent, SuperThread {
     @EnvironmentObject var videoMan: VideoWorker
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var data: DataProvider
-    @EnvironmentObject var l: LayoutProvider
+    @EnvironmentObject var l: RootProvider
     @EnvironmentObject var dbLocal: DB
 
     let emoji = "🌳"
@@ -26,7 +26,7 @@ struct RootView: View, SuperLog, SuperEvent, SuperThread {
             // MARK: 场景变化
 
             .onChange(of: l.current.id, {
-                playMan.stop()
+                playMan.stop(reason: "RootView.Root Change")
             })
 
             .ignoresSafeArea()

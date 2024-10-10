@@ -8,7 +8,7 @@ struct VideoGrid: View {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var dataManager: DataProvider
     @EnvironmentObject var playMan: PlayMan
-    @EnvironmentObject var l: LayoutProvider
+    @EnvironmentObject var l: RootProvider
 
     @State var selection: DiskFile?
     @State var collapsed: Bool = false

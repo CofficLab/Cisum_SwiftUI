@@ -11,7 +11,7 @@ protocol PlayWorker {
     func play()
     func resume()
     func pause()
-    func stop()
+    func stop(reason: String)
     func toggle()
     func setError(_ e: Error, asset: PlayAsset?)
 }
