@@ -43,10 +43,12 @@ class BookUpdateCoverJob: SuperLog, SuperThread {
                     if verbose2 {
                         os_log("\(self.t)run(\(books.count)) -> \(count)/\(books.count)")
                     }
-                    
+
                     await self.updateBookCover(book: book)
                     count += 1
                 }
+
+                self.updateCoverForFolder()
 
                 self.running = false
 
@@ -67,15 +69,57 @@ class BookUpdateCoverJob: SuperLog, SuperThread {
         if book.coverData != nil {
             return
         }
-        
+
         if book.isNotDownloaded {
             return
         }
 
-        if let coverURL = await book.getCoverURLFromFile() {
-            await db.updateBookCover(bookURL: book.url, coverURL: coverURL)
+        if let data = await book.getCoverData() {
+            await db.updateBookCover(bookURL: book.url, coverData: data)
         } else {
             await db.updateBookSetNoCover(bookURL: book.url)
         }
+    }
+
+    private func updateCoverForFolder() {
+        self.bg.async {
+            Task {
+                let books = await self.db.getBooksOfCollectionType()
+
+                if books.isEmpty {
+                    return
+                }
+
+                for book in books {
+                    if book.coverData != nil {
+                        return
+                    }
+                    
+                    if let data = await self.getCoverFromChildren(book: book) {
+                        await self.db.updateBookCover(bookURL: book.url, coverData: data)
+                    } else {
+                        await self.db.updateBookSetNoCover(bookURL: book.url)
+                    }
+                }
+            }
+        }
+    }
+
+    private func getCoverFromChildren(book: Book) async -> Data? {
+        if let data = book.coverData {
+            return data
+        }
+
+        guard let children = book.childBooks else {
+            return nil
+        }
+
+        for child in children {
+            if let coverData = await getCoverFromChildren(book: child) {
+                return coverData
+            }
+        }
+
+        return nil
     }
 }

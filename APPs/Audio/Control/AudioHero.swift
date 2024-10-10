@@ -6,10 +6,10 @@ struct AudioHero: View {
     @EnvironmentObject var playMan: PlayMan
 
     @State var topAlbumHeight: CGFloat = 0
+    @State var showTitleView = true
     
     var verbose = false
     var showErrorView: Bool { false }
-    var showTitleView: Bool { playMan.asset != nil }
 
     var body: some View {
         GeometryReader { geo in

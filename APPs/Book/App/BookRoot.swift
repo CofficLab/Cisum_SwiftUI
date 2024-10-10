@@ -42,6 +42,7 @@ struct BookRoot: View, SuperLog, SuperThread, SuperRoot {
 
     var body: some View {
         BookLayout()
+            .task(priority: .low) { runJobs() }
             .onAppear(perform: onAppear)
             .onDisappear(perform: onDisappear)
             .onReceive(NotificationCenter.default.publisher(for: .PlayManStateChange), perform: onPlayStateChange)
@@ -177,6 +178,22 @@ extension BookRoot {
             }
         }
     }
+    
+    func runJobs() {
+        self.bg.async {
+            let verbose = true
+            
+            if verbose {
+                os_log("\(self.t)RunJobs")
+            }
+            
+            self.restore(reason: "OnAppear")
+            self.copyJob = BookCopyJob(db: db, disk: disk!)
+            BookUpdateCoverJob(container: data.container).run()
+            
+            checkNetworkStatus()
+        }
+    }
 }
 
 // MARK: Events Handler
@@ -262,12 +279,8 @@ extension BookRoot {
                 os_log("\(self.t)OnAppear")
             }
 
-            self.restore(reason: "OnAppear")
-            BookUpdateCoverJob(container: data.container).run()
-
             self.disk = DiskiCloud.make(self.dirName)
             self.watchDisk(reason: "BookRoot.OnAppear")
-            self.copyJob = BookCopyJob(db: db, disk: disk!)
         }
     }
 

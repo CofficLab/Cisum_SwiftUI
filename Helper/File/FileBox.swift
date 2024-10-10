@@ -3,6 +3,14 @@ import Foundation
 import OSLog
 import SwiftUI
 
+#if os(iOS)
+import UIKit
+typealias PlatformImage = UIImage
+#elseif os(macOS)
+import AppKit
+typealias PlatformImage = NSImage
+#endif
+
 protocol FileBox: Identifiable {
     var url: URL { get }
 }
@@ -468,6 +476,51 @@ extension FileBox {
 
         return nil
     }
+    
+    func getCoverData(verbose: Bool = false) async -> Data? {
+        guard isDownloaded
+            && url.isFileExist()
+            && !isFolder()
+            && !isImage
+            && !isJSON
+            && !isWMA
+        else {
+            return nil
+        }
+
+        if verbose {
+            os_log("\(self.label)GetCoverFromMeta for \(self.title)")
+        }
+
+        let asset = AVURLAsset(url: url)
+        do {
+            let commonMetadata = try await asset.load(.commonMetadata)
+            let artworkItems = AVMetadataItem.metadataItems(
+                from: commonMetadata,
+                withKey: AVMetadataKey.commonKeyArtwork,
+                keySpace: .common
+            )
+            
+            if let artworkItem = artworkItems.first,
+               let artworkData = try await artworkItem.load(.value) as? Data {
+                return artworkData
+            } else if let artworkItem = artworkItems.first,
+                      let artworkImage = try await artworkItem.load(.value) as? PlatformImage {
+                #if os(iOS)
+                return artworkImage.pngData()
+                #elseif os(macOS)
+                return artworkImage.tiffRepresentation
+                #endif
+            }
+        } catch {
+            if verbose {
+                os_log(.error, "\(label)⚠️ Error reading metadata for \(self.title): \(error.localizedDescription)")
+                os_log(.error, "  ➡️ \(self.url.relativeString)")
+            }
+        }
+
+        return nil
+    }
 
     func getCoverFromMeta(_ callback: @escaping (_ url: URL?) -> Void, verbose: Bool = false, queue: DispatchQueue = .main) {
         if verbose {
@@ -526,3 +579,4 @@ extension FileBox {
         }
     }
 }
+

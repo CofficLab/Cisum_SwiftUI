@@ -30,12 +30,6 @@ extension DB {
         } else {
             bookSyncWithUpdatedItems(group)
         }
-
-//        if verbose {
-//            os_log("\(self.labelForSync) 计算刚刚同步的项目的 Hash(\(group.count))")
-//        }
-//
-//        self.updateGroupForURLs(group.urls)
     }
 
     // MARK: SyncWithDisk

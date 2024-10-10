@@ -42,6 +42,7 @@ struct AudioRoot: View, SuperLog, SuperThread, SuperRoot {
 
     var body: some View {
         AudioLayout()
+            .task(priority: .low) { runJobs() }
             .onAppear(perform: onAppear)
             .onDisappear(perform: onDisappear)
             .onReceive(NotificationCenter.default.publisher(for: .PlayManStateChange), perform: onPlayStateChange)
@@ -185,6 +186,21 @@ extension AudioRoot {
             }
         }
     }
+    
+    func runJobs() {
+        self.bg.async {
+            let verbose = true
+            
+            if verbose {
+                os_log("\(self.t)RunJobs")
+            }
+            
+            self.restore(reason: "OnAppear")
+            self.copyJob = AudioCopyJob(db: db, disk: disk!)
+            
+            checkNetworkStatus()
+        }
+    }
 }
 
 // MARK: Events Handler
@@ -261,8 +277,6 @@ extension AudioRoot {
             app.showDBView()
         }
 
-        checkNetworkStatus()
-
         self.bg.async {
             let verbose = false
 
@@ -270,10 +284,8 @@ extension AudioRoot {
                 os_log("\(self.t)OnAppear")
             }
             
-            self.restore(reason: "OnAppear")
             self.disk = DiskiCloud.make(self.dirName)
             self.watchDisk(reason: "AudioApp.Boot")
-            self.copyJob = AudioCopyJob(db: db, disk: disk!)
         }
     }
 

@@ -33,6 +33,16 @@ extension DB {
             return []
         }
     }
+    
+    func getBooksOfCollectionType() -> [Book] {
+        do {
+            return try context.fetch(Book.descriptorOfFolder)
+        } catch {
+            os_log(.error, "\(error.localizedDescription)")
+            
+            return []
+        }
+    }
 }
 
 // MARK: First
@@ -189,6 +199,13 @@ extension DB {
 
         return nil
     }
+
+//    func getBooks(filter: BookFilter) async throws -> [Book] {
+//        var descriptor = FetchDescriptor<Book>()
+//        descriptor.predicate = filter.predicate
+//        descriptor.sortBy = [SortDescriptor(\.order, order: .forward)]
+//        return try context.fetch(descriptor)
+//    }
 }
 
 // MARK: Cover
@@ -218,5 +235,56 @@ extension Book {
         FetchDescriptor<Book>(predicate: #Predicate<Book> {
             $0.hasGetCover == false
         })
+    }
+
+    static var descriptorOfFolder: FetchDescriptor<Book> {
+        FetchDescriptor<Book>(predicate: #Predicate<Book> {
+            $0.isCollection == true
+        })
+    }
+}
+
+// MARK: - BookFilter
+
+struct BookFilter {
+    private var isCollectionPredicate: (Predicate<Book>, Bool)?
+    private var titlePredicate: (Predicate<Book>, Bool)?
+    private var pathExtensionPredicate: (Predicate<Book>, Bool)?
+    
+    var predicate: Predicate<Book> {
+        #Predicate<Book> { book in
+            (self.isCollectionPredicate.map { $0.1 ? $0.0.evaluate(book) : true } ?? true) &&
+            (self.titlePredicate.map { $0.1 ? $0.0.evaluate(book) : true } ?? true) &&
+            (self.pathExtensionPredicate.map { $0.1 ? $0.0.evaluate(book) : true } ?? true)
+        }
+    }
+    
+    init() {}
+    
+    func isCollection(_ value: Bool, enabled: Bool = true) -> BookFilter {
+        var newFilter = self
+        newFilter.isCollectionPredicate = (#Predicate<Book> { $0.isCollection == value }, enabled)
+        return newFilter
+    }
+    
+    func title(_ value: String, enabled: Bool = true) -> BookFilter {
+        var newFilter = self
+        newFilter.titlePredicate = (#Predicate<Book> { $0.bookTitle == value }, enabled)
+        return newFilter
+    }
+    
+    func pathExtension(_ value: String, enabled: Bool = true) -> BookFilter {
+        var newFilter = self
+        newFilter.pathExtensionPredicate = (#Predicate<Book> { $0.url.pathExtension == value }, enabled)
+        return newFilter
+    }
+}
+
+extension DB {
+    func getBooks(filter: BookFilter) async throws -> [Book] {
+        var descriptor = FetchDescriptor<Book>()
+        descriptor.predicate = filter.predicate
+        descriptor.sortBy = [SortDescriptor(\.order, order: .forward)]
+        return try context.fetch(descriptor)
     }
 }
