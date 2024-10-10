@@ -1,7 +1,7 @@
+import MagicKit
 import OSLog
 import StoreKit
 import SwiftUI
-import MagicKit
 
 struct NonRenewables: View {
     @EnvironmentObject var store: StoreProvider
@@ -47,7 +47,6 @@ struct NonRenewables: View {
                     ProgressView().scaleEffect(0.4)
                 } else {
                     Button(action: {
-                        
                         getProducts("点击了重试按钮")
                     }, label: {
                         Label("重试", systemImage: "arrow.clockwise")
@@ -64,12 +63,15 @@ struct NonRenewables: View {
         refreshing = true
 
         Task {
-            await store.requestProducts(reason, { error in
-                self.error = error
+            do {
+                try await store.requestProducts(reason)
                 self.nonRenewables = store.nonRenewables
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
-                    refreshing = false
-                })
+            } catch {
+                self.error = error
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
+                refreshing = false
             })
         }
     }

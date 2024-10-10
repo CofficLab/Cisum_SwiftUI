@@ -1,7 +1,7 @@
+import MagicKit
 import OSLog
 import StoreKit
 import SwiftUI
-import MagicKit
 
 struct SubscriptionSetting: View, SuperEvent, SuperLog, SuperThread {
     @EnvironmentObject var store: StoreProvider
@@ -11,7 +11,7 @@ struct SubscriptionSetting: View, SuperEvent, SuperLog, SuperThread {
     @State private var subscriptions: [Product] = []
     @State private var refreshing = false
     @State private var error: Error? = nil
-    
+
     var emoji = "🖥️"
 
     var body: some View {
@@ -32,7 +32,8 @@ struct SubscriptionSetting: View, SuperEvent, SuperLog, SuperThread {
                     }
                 }
                 .padding()
-            }        }.onAppear(perform: onAppear)
+            }
+        }.onAppear(perform: onAppear)
             .onReceive(NotificationCenter.default.publisher(for: .Restored), perform: onRestore)
     }
 
@@ -54,20 +55,26 @@ struct SubscriptionSetting: View, SuperEvent, SuperLog, SuperThread {
 
     // MARK: 获取可用的订阅
 
-    private func getProducts(_ reason: String, verbose: Bool = true) async {
+    private func getProducts(_ reason: String, verbose: Bool = true) {
         if verbose {
             os_log("\(self.t)GetProducts because of \(reason)")
         }
-        
+
         refreshing = true
 
-        await store.requestProducts(reason, { error in
-            self.error = error
-            self.subscriptions = store.subscriptions
-            self.main.asyncAfter(deadline: .now() + 0.1, execute: {
+        Task {
+            do {
+                try await store.requestProducts(reason)
+
+                self.subscriptions = store.subscriptions
+            } catch {
+                self.error = error
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
                 self.refreshing = false
             })
-        })
+        }
     }
 }
 
@@ -81,7 +88,7 @@ extension SubscriptionSetting {
             }
         }
     }
-    
+
     func onTapRefreshButton() {
         self.bg.async {
             Task {

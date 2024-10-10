@@ -73,14 +73,17 @@ struct AllSubscriptions: View {
         refreshing = true
 
         Task {
-            await store.requestProducts(reason, { error in
-                self.error = error
+            do {
+                try await store.requestProducts(reason)
                 self.subscriptions = store.subscriptions
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
-                    refreshing = false
-                })
-            })
+            } catch {
+                self.error = error
+            }
         }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
+            refreshing = false
+        })
     }
 
     private var footerView: some View {

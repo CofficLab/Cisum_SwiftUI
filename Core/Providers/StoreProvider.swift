@@ -72,7 +72,7 @@ class StoreProvider: ObservableObject, SuperLog {
 
         Task(priority: .low) {
             // 从 AppStore获取产品列表
-            await requestProducts("🐛 Store 初始化")
+            try? await requestProducts("🐛 Store 初始化")
             // 更新用户已购产品列表
             await updatePurchased("🐛 Store 初始化")
             await updateSubscriptionStatus("🐛 Store 初始化")
@@ -254,7 +254,7 @@ class StoreProvider: ObservableObject, SuperLog {
     //  联网得到2个产品，断网，依然得到两个产品
     //  联网得到2个产品，断网，依然得到两个产品，再等等，不报错，得到0个产品
     @MainActor
-    func requestProducts(_ reason: String, _ completion: ((Error?) -> Void)? = nil, verbose: Bool = false) async {
+    func requestProducts(_ reason: String, verbose: Bool = false) async throws {
         if verbose {
             os_log("\(self.t)请求 App Store 获取产品列表，并存储到 @Published，因为 -> \(reason)")
         }
@@ -298,15 +298,10 @@ class StoreProvider: ObservableObject, SuperLog {
             subscriptions = sortByPrice(newSubscriptions)
             nonRenewables = sortByPrice(newNonRenewables)
             fuel = sortByPrice(newFuel)
-            
-            if let c = completion {
-                c(nil)
-            }
         } catch let error {
             os_log(.error, "\(self.t)请求 App Store 获取产品列表出错 -> \(error.localizedDescription)")
-            if let c = completion {
-                c(error)
-            }
+            
+            throw error
         }
     }
     
