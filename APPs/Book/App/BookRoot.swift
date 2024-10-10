@@ -6,28 +6,28 @@ import SwiftData
 import SwiftUI
 
 struct BookRoot: View, SuperLog, SuperThread, SuperRoot {
-    let id = "Book"
     let emoji = "📚"
     let title = "有声书模式"
     let dirName = "audios_book"
     let iconName = "books.vertical"
     let description = "适用于听有声书的场景"
+    let keyOfCurrentURL = "currentBookURL"
     let poster: any View = BookPoster()
 
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var l: RootProvider
-    @EnvironmentObject var d: DataProvider
-    @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var root: RootProvider
+    @EnvironmentObject var data: DataProvider
+    @EnvironmentObject var play: PlayMan
 
     @State private var mode: PlayMode?
     @State var networkOK = true
-    @State var copyJob: AudioCopyJob?
+    @State var copyJob: BookCopyJob?
     @State var disk: (any Disk)?
 
     @Query(sort: \Book.order, animation: .default) var books: [Book]
     @Query(animation: .default) var copyTasks: [CopyTask]
 
-    var db: DB { d.db }
+    var db: DB { data.db }
 
     let timer = Timer
         .publish(every: 10, on: .main, in: .common)
@@ -49,12 +49,10 @@ struct BookRoot: View, SuperLog, SuperThread, SuperRoot {
             .onReceive(NotificationCenter.default.publisher(for: .PlayManNext), perform: onPlayNext)
             .onReceive(NotificationCenter.default.publisher(for: .PlayManPrev), perform: onPlayPrev)
             .onReceive(NotificationCenter.default.publisher(for: .PlayManRandomNext), perform: onPlayRandomNext)
-            .onReceive(NotificationCenter.default.publisher(for: .PlayManModeChange), perform: onPlayModeChange)
             .onReceive(NotificationCenter.default.publisher(for: .dbSyncing), perform: onDBSyncing)
             .onReceive(NotificationCenter.default.publisher(for: .CopyFiles), perform: onCopyFiles)
             .onReceive(timer, perform: onTimer)
             .onChange(of: books.count, onChangeOfBooksCount)
-            .onChange(of: self.disk?.root, onChangeOfDisk)
     }
 }
 
@@ -69,10 +67,10 @@ extension BookRoot {
         }
 
         // 将当前的url存储下来
-        UserDefaults.standard.set(url.absoluteString, forKey: "currentAudioURL")
+        UserDefaults.standard.set(url.absoluteString, forKey: keyOfCurrentURL)
 
         // 通过iCloud key-value同步
-        NSUbiquitousKeyValueStore.default.set(url.absoluteString, forKey: "currentAudioURL")
+        NSUbiquitousKeyValueStore.default.set(url.absoluteString, forKey: keyOfCurrentURL)
         NSUbiquitousKeyValueStore.default.synchronize()
     }
 
@@ -83,7 +81,7 @@ extension BookRoot {
             os_log("\(self.t)GetCurrent")
         }
 
-        if let urlString = UserDefaults.standard.string(forKey: "currentAudioURL") {
+        if let urlString = UserDefaults.standard.string(forKey: keyOfCurrentURL) {
             let url = URL(string: urlString)
 
             if verbose {
@@ -100,17 +98,6 @@ extension BookRoot {
         return nil
     }
 
-    func setCurrentPlayMode(mode: PlayMode) {
-        UserDefaults.standard.set(mode.rawValue, forKey: "currentBookPlayMode")
-    }
-
-    func getCurrentPlayMode() -> PlayMode? {
-        if let mode = UserDefaults.standard.string(forKey: "currentBookPlayMode") {
-            return PlayMode(rawValue: mode)
-        }
-        return nil
-    }
-    
     func getDisk() -> (any Disk)? {
         self.disk
     }
@@ -156,9 +143,9 @@ extension BookRoot {
             let db: DB = DB(Config.getContainer, reason: "BookRoot")
 
             if let url = getCurrent() {
-                self.playMan.prepare(PlayAsset(url: url), reason: "BookRoot.Restore")
-            } else if (l.current.getDisk()) != nil {
-                self.playMan.prepare(db.firstAudio()?.toPlayAsset(), reason: "BookRoot.Restore")
+                self.play.prepare(PlayAsset(url: url), reason: "BookRoot.Restore")
+            } else if (root.current.getDisk()) != nil {
+                self.play.prepare(db.firstAudio()?.toPlayAsset(), reason: "BookRoot.Restore")
             }
         }
     }
@@ -170,7 +157,7 @@ extension BookRoot {
                 os_log("\(self.t)DownloadNextBatch(\(count))")
 
                 Task {
-                    if let url = url, let disk = await l.current.getDisk() {
+                    if let url = url, let disk = await root.current.getDisk() {
                         var currentIndex = 0
                         var currentURL: URL = url
 
@@ -192,17 +179,9 @@ extension BookRoot {
     }
 }
 
-// MARK: 事件处理
+// MARK: Events Handler
 
 extension BookRoot {
-    func onChangeOfDisk() {
-        self.bg.async {
-            if let disk = disk {
-                self.copyJob = AudioCopyJob(db: db, disk: disk)
-            }
-        }
-    }
-
     func onDBSyncing(_ notification: Notification) {
         let verbose = false
         guard let group = notification.userInfo?["group"] as? DiskFileGroup else {
@@ -215,7 +194,7 @@ extension BookRoot {
             }
 
             if let playError = app.error as? PlayManError {
-                if case .NotDownloaded = playError, let assetURL = playMan.state.getAsset()?.url {
+                if case .NotDownloaded = playError, let assetURL = play.state.getAsset()?.url {
                     for file in group.files {
                         if assetURL == file.url, file.isDownloaded {
                             if verbose {
@@ -234,7 +213,7 @@ extension BookRoot {
                     }
                 }
 
-                if case .Downloading = playError, let assetURL = playMan.state.getAsset()?.url {
+                if case .Downloading = playError, let assetURL = play.state.getAsset()?.url {
                     for file in group.files {
                         if assetURL == file.url, file.isDownloaded {
                             if verbose {
@@ -258,14 +237,14 @@ extension BookRoot {
 
     func onChangeOfBooksCount() {
         Task {
-            if playMan.asset == nil, let first = db.firstBook()?.toPlayAsset() {
+            if play.asset == nil, let first = db.firstBook()?.toPlayAsset() {
                 os_log("\(self.t)准备第一个")
-                playMan.prepare(first, reason: "count changed")
+                play.prepare(first, reason: "count changed")
             }
         }
 
         if books.count == 0 {
-            playMan.prepare(nil, reason: "count changed")
+            play.prepare(nil, reason: "count changed")
         }
     }
 
@@ -284,10 +263,11 @@ extension BookRoot {
             }
 
             self.restore(reason: "OnAppear")
-            BookUpdateCoverJob(container: d.container).run()
+            BookUpdateCoverJob(container: data.container).run()
 
             self.disk = DiskiCloud.make(self.dirName)
             self.watchDisk(reason: "BookRoot.OnAppear")
+            self.copyJob = BookCopyJob(db: db, disk: disk!)
         }
     }
 
@@ -297,11 +277,13 @@ extension BookRoot {
             if verbose {
                 os_log("\(self.t)OnDisappear")
             }
+            
+            self.disk?.stopWatch(reason: "BookRoot.OnDisappear")
         }
     }
 
     func onTimer(_ timer: Date) {
-        let asset = playMan.asset
+        let asset = play.asset
         self.downloadNextBatch(url: asset?.url, count: 4, reason: "AudioRoot确保下一个准备好")
     }
 
@@ -317,7 +299,7 @@ extension BookRoot {
                 }
 
                 if let next = next {
-                    self.playMan.play(PlayAsset(url: next), reason: "onPlayNext")
+                    self.play.play(PlayAsset(url: next), reason: "onPlayNext")
                 }
             }
         }
@@ -335,7 +317,7 @@ extension BookRoot {
                 }
 
                 if let prev = prev {
-                    self.playMan.play(PlayAsset(url: prev), reason: "onPlayPrev")
+                    self.play.play(PlayAsset(url: prev), reason: "onPlayPrev")
                 }
             }
         }
@@ -349,7 +331,7 @@ extension BookRoot {
                 os_log("\(self.t)随机播放下一个 -> \(next?.url.lastPathComponent ?? "")")
 
                 if let next = next {
-                    self.playMan.play(next, reason: "onPlayNext")
+                    self.play.play(next, reason: "onPlayNext")
                 }
             }
         }
@@ -400,47 +382,6 @@ extension BookRoot {
                         }
                     }
                 }
-            }
-        }
-    }
-
-    func onPlayModeChange(_ notification: Notification) {
-        let mode = notification.userInfo?["mode"] as? PlayMode
-        let state = notification.userInfo?["state"] as? PlayState
-
-        self.bg.async {
-            let verbose = false
-
-            if verbose {
-                os_log("\(self.t)OnPlayModeChange -> \(mode?.rawValue ?? "nil")")
-                os_log("  ➡️ State -> \(state?.des ?? "nil")")
-                os_log("  ➡️ Mode -> \(mode?.rawValue ?? "nil")")
-            }
-
-            if mode == self.mode {
-                return
-            }
-
-            if let mode = mode {
-                setCurrentPlayMode(mode: mode)
-                self.mode = mode
-            }
-
-            switch mode {
-            case .Order:
-                Task {
-                    await db.sort(state?.getAsset()?.url, reason: "onPlayModeChange")
-                }
-            case .Loop:
-                Task {
-                    await db.sticky(state?.getAsset()?.url, reason: "onPlayModeChange")
-                }
-            case .Random:
-                Task {
-                    await db.sortRandom(state?.getAsset()?.url, reason: "onPlayModeChange")
-                }
-            case .none:
-                os_log("\(self.t)播放模式 -> 未知")
             }
         }
     }

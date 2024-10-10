@@ -6,10 +6,10 @@ struct BookHero: View {
     @EnvironmentObject var playMan: PlayMan
 
     @State var topAlbumHeight: CGFloat = 0
+    @State var showTitleView = true
     
     var verbose = false
     var showErrorView: Bool { false }
-    var showTitleView: Bool { playMan.asset != nil }
 
     var body: some View {
         GeometryReader { geo in
@@ -48,7 +48,7 @@ struct BookHero: View {
                 }
 
                 if showTitleView {
-                    AudioTitle(width: getTitleViewWidth(geo))
+                    BookTitle(width: getTitleViewWidth(geo))
                         .frame(maxWidth: .infinity)
                         .frame(height: getTitleViewHeight(geo))
                         .background(Config.background(.red))

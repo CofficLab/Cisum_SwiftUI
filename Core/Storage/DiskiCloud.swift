@@ -262,7 +262,7 @@ extension DiskiCloud {
     func stopWatch(reason: String) {
         let emoji = "🌛🌛🌛"
 
-        os_log("\(self.label)\(emoji) 停止监听 because of \(reason)")
+        os_log("\(self.label)\(emoji) 停止监听 🐛 \(reason)")
         self.query.stop()
     }
 
@@ -272,7 +272,7 @@ extension DiskiCloud {
         let verbose2 = false
 
         if verbose {
-            os_log("\(self.t)Watch(\(self.name)) because of 🐛 \(reason)")
+            os_log("\(self.t)Watch(\(self.name)) 🐛 \(reason)")
         }
 
         self.query.stopped = false

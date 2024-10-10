@@ -2,7 +2,7 @@ import Foundation
 import MagicKit
 import OSLog
 
-class AudioCopyJob: SuperLog, SuperThread {
+class BookCopyJob: SuperLog, SuperThread {
     let emoji = "🔄"
     let db: DB
     let disk: (any Disk)?

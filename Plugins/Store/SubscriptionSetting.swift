@@ -65,7 +65,7 @@ struct SubscriptionSetting: View, SuperEvent, SuperLog, SuperThread {
             self.error = error
             self.subscriptions = store.subscriptions
             self.main.asyncAfter(deadline: .now() + 0.1, execute: {
-                refreshing = false
+                self.refreshing = false
             })
         })
     }

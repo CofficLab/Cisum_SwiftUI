@@ -164,7 +164,10 @@ extension AudioWorker {
     }
 
     func stop(reason: String) {
-        os_log("\(self.t)Stop 🐛 \(reason)")
+        let verbose = false
+        if verbose {
+            os_log("\(self.t)Stop 🐛 \(reason)")
+        }
         state = .Stopped
     }
 

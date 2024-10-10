@@ -101,7 +101,6 @@ extension BookTile {
     }
     
     func onTap() {
-        os_log("\(self.t)onTapGesture 🚀🚀🚀")
         withAnimation(.spring()) {
             if let s = self.state, let current = s.currentURL, let time = s.time {
                 playMan.play(PlayAsset(url: current), reason: "点击了书本")

@@ -186,6 +186,10 @@ extension PlayMan {
     }
 
     func stop(reason: String) {
+        let verbose = true
+        if verbose {
+            os_log("\(self.t)Stop 🐛 \(reason)")
+        }
         self.worker.stop(reason: reason)
     }
 
@@ -436,7 +440,9 @@ extension PlayMan {
     func emitPlayNext() {
         let verbose = true 
 
-        os_log("\(self.t)emitPlayNext 🚀🚀🚀 -> \(self.mode.rawValue)")
+        if verbose {
+            os_log("\(self.t)emitPlayNext 🚀🚀🚀 -> \(self.mode.rawValue)")
+        }
         
         var userInfo: [String: Any] = [:]
         if let asset = asset {

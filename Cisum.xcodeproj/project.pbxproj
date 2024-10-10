@@ -212,6 +212,8 @@
 		F5AEE05A2CB515660007825B /* BookHero.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5AEE0592CB515660007825B /* BookHero.swift */; };
 		F5AEE05C2CB519C90007825B /* BookPlayingCover.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5AEE05B2CB519C90007825B /* BookPlayingCover.swift */; };
 		F5AEE0612CB68CA80007825B /* BookUpdateCoverJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5AEE0602CB68CA80007825B /* BookUpdateCoverJob.swift */; };
+		F5AEE0632CB7BD550007825B /* BookCopyJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5AEE0622CB7BD550007825B /* BookCopyJob.swift */; };
+		F5AEE0652CB7C61D0007825B /* BookTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5AEE0642CB7C61D0007825B /* BookTitle.swift */; };
 		F5B64D042C32546F00DE55AD /* SyncingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B64D032C32546F00DE55AD /* SyncingView.swift */; };
 		F5B64D062C32597B00DE55AD /* DBSyncing.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B64D052C32597B00DE55AD /* DBSyncing.swift */; };
 		F5B64D0A2C327D8600DE55AD /* VideoWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B64D092C327D8600DE55AD /* VideoWorker.swift */; };
@@ -428,6 +430,8 @@
 		F5AEE0592CB515660007825B /* BookHero.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookHero.swift; sourceTree = "<group>"; };
 		F5AEE05B2CB519C90007825B /* BookPlayingCover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookPlayingCover.swift; sourceTree = "<group>"; };
 		F5AEE0602CB68CA80007825B /* BookUpdateCoverJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookUpdateCoverJob.swift; sourceTree = "<group>"; };
+		F5AEE0622CB7BD550007825B /* BookCopyJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookCopyJob.swift; sourceTree = "<group>"; };
+		F5AEE0642CB7C61D0007825B /* BookTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookTitle.swift; sourceTree = "<group>"; };
 		F5B64D032C32546F00DE55AD /* SyncingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncingView.swift; sourceTree = "<group>"; };
 		F5B64D052C32597B00DE55AD /* DBSyncing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBSyncing.swift; sourceTree = "<group>"; };
 		F5B64D092C327D8600DE55AD /* VideoWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoWorker.swift; sourceTree = "<group>"; };
@@ -1010,6 +1014,7 @@
 				F5AEE0592CB515660007825B /* BookHero.swift */,
 				F5AEE05B2CB519C90007825B /* BookPlayingCover.swift */,
 				F5AEE0542CB5010C0007825B /* BookSlider.swift */,
+				F5AEE0642CB7C61D0007825B /* BookTitle.swift */,
 				0BB9D2432C32E3E60027DDAD /* BtnChapters.swift */,
 			);
 			path = ControlView;
@@ -1039,6 +1044,7 @@
 		F5AEE05F2CB68C950007825B /* Job */ = {
 			isa = PBXGroup;
 			children = (
+				F5AEE0622CB7BD550007825B /* BookCopyJob.swift */,
 				F5AEE0602CB68CA80007825B /* BookUpdateCoverJob.swift */,
 			);
 			path = Job;
@@ -1266,6 +1272,7 @@
 				0BB543F82BE9C64C00D7A2B2 /* PathExt.swift in Sources */,
 				0B6B8B992BBA39F500F65B23 /* ControlButton.swift in Sources */,
 				0B1D5A842AB302610010DDF2 /* Extensions.swift in Sources */,
+				F5AEE0652CB7C61D0007825B /* BookTitle.swift in Sources */,
 				0BA9FB6C2BFE14B4008074CB /* DirSetting.swift in Sources */,
 				0BEE7C762CA99D1400DC1DCF /* AudioDBTips.swift in Sources */,
 				0BE695902BFE325400CEFFEB /* StoreProvider.swift in Sources */,
@@ -1315,6 +1322,7 @@
 				0B11262A2AC6F7B20093DFFA /* BtnToggleDB.swift in Sources */,
 				0BD98CFE2BD8E91500641A6A /* HeroView.swift in Sources */,
 				F5B64D112C3280F300DE55AD /* CoverView.swift in Sources */,
+				F5AEE0632CB7BD550007825B /* BookCopyJob.swift in Sources */,
 				0B5E51E52AD912B5000650CF /* DebugCommand.swift in Sources */,
 				0B1D5A7F2AB302610010DDF2 /* Audio.swift in Sources */,
 				F573B1882C0411E4004C34CC /* DeviceDataExt.swift in Sources */,

@@ -3,24 +3,24 @@ import SwiftData
 import SwiftUI
 
 struct Posters: View {
-    @EnvironmentObject var l: RootProvider
+    @EnvironmentObject var root: RootProvider
     
     @Binding var isPresented: Bool
     
-    @State var layoutId: String = ""
+    @State var id: String = ""
     
     var body: some View {
         VStack {
-            Picker("", selection: $layoutId) {
-                ForEach(l.items.map({$0.id}), id: \.self) { item in
-                    Text(item)
-                        .tag(item)
+            Picker("", selection: $id) {
+                ForEach(root.items, id: \.id) { item in
+                    Text(item.title)
+                        .tag(item.id)
                 }
             }
             .pickerStyle(SegmentedPickerStyle())
             .padding()
 
-            if let currentLayout = l.items.first(where: { $0.id == layoutId }) {
+            if let currentLayout = root.items.first(where: { $0.id == id }) {
                 VStack {
                     HStack {
                         Text(currentLayout.title)
@@ -36,7 +36,7 @@ struct Posters: View {
                 }
         
                 Button("选择") {
-                    l.setLayout(currentLayout)
+                    root.setLayout(currentLayout)
                     self.isPresented = false
                 }.controlSize(.extraLarge)
         
@@ -44,7 +44,7 @@ struct Posters: View {
             }
         }
         .onAppear {
-            layoutId = l.items.first?.id ?? ""
+            id = root.items.first?.id ?? ""
         }
     }
 }

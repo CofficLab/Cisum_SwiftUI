@@ -6,6 +6,8 @@ import SwiftData
 import SwiftUI
 
 class RootProvider: ObservableObject, SuperLog, SuperThread {
+    static let keyOfCurrentLayoutID = "currentLayoutID"
+    
     let emoji = "🧩"
 
     @Published var current: any SuperRoot
@@ -30,7 +32,7 @@ class RootProvider: ObservableObject, SuperLog, SuperThread {
             os_log("\(Logger.initLog) RootProvider")
         }
         
-        let currentLayoutId = Config.getLayoutId()
+        let currentLayoutId = Self.getLayoutId()
 
         if let c = items.first(where: { $0.id == currentLayoutId }) {
             os_log("  ➡️ Set Current Root: \(c.id)")
@@ -50,33 +52,29 @@ class RootProvider: ObservableObject, SuperLog, SuperThread {
 
         self.current = l
 
-        Config.storeLayout(self.current)
+        Self.storeLayout(self.current)
     }
-}
 
-// MARK: Config
-
-extension Config {
     static func storeLayout(_ l: any SuperRoot) {
         let id = l.id
         
-        UserDefaults.standard.set(id, forKey: "currentLayoutID")
+        UserDefaults.standard.set(id, forKey: keyOfCurrentLayoutID)
 
         // Synchronize with CloudKit
-        NSUbiquitousKeyValueStore.default.set(id, forKey: "currentLayoutID")
+        NSUbiquitousKeyValueStore.default.set(id, forKey: keyOfCurrentLayoutID)
         NSUbiquitousKeyValueStore.default.synchronize()
     }
 
     static func getLayoutId() -> String {
         // First, try to get the layout ID from UserDefaults
-        if let id = UserDefaults.standard.string(forKey: "currentLayoutID") {
+        if let id = UserDefaults.standard.string(forKey: keyOfCurrentLayoutID) {
             return id
         }
         
         // If not found in UserDefaults, try to get from iCloud
-        if let id = NSUbiquitousKeyValueStore.default.string(forKey: "currentLayoutID") {
+        if let id = NSUbiquitousKeyValueStore.default.string(forKey: keyOfCurrentLayoutID) {
             // If found in iCloud, update UserDefaults for future local access
-            UserDefaults.standard.set(id, forKey: "currentLayoutID")
+            UserDefaults.standard.set(id, forKey: keyOfCurrentLayoutID)
             return id
         }
         

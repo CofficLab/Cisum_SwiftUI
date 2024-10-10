@@ -2,7 +2,6 @@ import SwiftUI
 import Foundation
 
 protocol SuperRoot: Identifiable, View {
-    var id: String { get }
     var iconName: String { get }
     var title: String { get }
     var description: String { get }
@@ -12,6 +11,10 @@ protocol SuperRoot: Identifiable, View {
 }
 
 extension SuperRoot {
+    var id: String {
+        return String(describing: Self.self)
+    }
+
     var isAudioApp: Bool {
         return self is AudioRoot
     }
