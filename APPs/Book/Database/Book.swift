@@ -14,17 +14,13 @@ class Book: FileBox, SuperLog {
     @Attribute(.unique)
     var url: URL
     var currentURL: URL?
-
-    // 以下值可以通过其他属性计算出来，但因为这些原因而保存下来
-    //  SwiftData查询时不支持计算属性
-    //  计算开销较大，直接缓存下来
-    //  值变动时，UI刷新
     var isCollection: Bool = false
     var parentBookURL: URL?
     var bookTitle: String = ""
     var childCount: Int = 0
     var order: Int = 0
     var coverData: Data?
+    var hasGetCover = false
 
     @Relationship(deleteRule: .noAction)
     var parent: Book?
@@ -99,14 +95,24 @@ extension Book {
             os_log("\(self.t)GetBookCoverFromFile for \(self.title)")
         }
 
+        return await self.getCoverFromMeta()
+    }
+    
+    func getCoverURLFromChildren() async -> URL? {
+        let verbose = false
+        
+        if verbose {
+            os_log("\(self.t)GetBookCoverFromChildren for \(self.title)")
+        }
+
         // 根目录没有封面
         if self.url.pathComponents.count <= 1 {
             return nil
         }
-
-        // 先获取自己的
-        if let selfImage = await self.getCoverFromMeta() {
-            return selfImage
+        
+        // 获取自己的
+        if let coverURL = await self.getCoverURLFromFile() {
+            return coverURL
         }
 
         // 无children
@@ -116,7 +122,7 @@ extension Book {
 
         // 获取children的
         for child in children.map({ Book(url: $0) }) {
-            if let image = await child.getCoverURLFromFile() {
+            if let image = await child.getCoverURLFromChildren() {
                 return image
             }
         }

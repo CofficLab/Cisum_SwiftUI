@@ -1,7 +1,7 @@
+import AVKit
 import Foundation
 import OSLog
 import SwiftUI
-import AVKit
 
 protocol FileBox: Identifiable {
     var url: URL { get }
@@ -19,13 +19,13 @@ extension FileBox {
     var fileName: String { url.lastPathComponent }
     var ext: String { url.pathExtension }
     var contentType: String {
-       do {
-           let resourceValues = try url.resourceValues(forKeys: [.typeIdentifierKey])
-           return resourceValues.contentType?.identifier ?? ""
-       } catch {
-           print("Error getting content type: \(error)")
-           return ""
-       }
+        do {
+            let resourceValues = try url.resourceValues(forKeys: [.typeIdentifierKey])
+            return resourceValues.contentType?.identifier ?? ""
+        } catch {
+            print("Error getting content type: \(error)")
+            return ""
+        }
     }
 
     var isImage: Bool {
@@ -50,24 +50,23 @@ extension FileBox {
         } else {
             getFolderSize(self.url)
         }
-        
     }
 
     func getFileSizeReadable(verbose: Bool = false) -> String {
         if verbose {
             os_log("\(self.label)GetFileSizeReadable for \(url.lastPathComponent)")
         }
-        
+
         return FileHelper.getFileSizeReadable(getFileSize())
     }
-    
+
     private func getFolderSize(_ url: URL) -> Int64 {
         var totalSize: Int64 = 0
-        
+
         do {
             let fileManager = FileManager.default
-            let contents = try  fileManager.contentsOfDirectory(at: url, includingPropertiesForKeys: [.fileSizeKey], options: .skipsHiddenFiles)
-            
+            let contents = try fileManager.contentsOfDirectory(at: url, includingPropertiesForKeys: [.fileSizeKey], options: .skipsHiddenFiles)
+
             for itemURL in contents {
                 if itemURL.hasDirectoryPath {
                     totalSize += getFolderSize(itemURL)
@@ -78,7 +77,7 @@ extension FileBox {
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
         }
-        
+
         return totalSize
     }
 }
@@ -95,23 +94,22 @@ extension FileBox {
     }
 }
 
-
 // MARK: Children
 
 extension FileBox {
     var children: [URL]? {
         getChildren()
     }
-    
+
     func getChildren() -> [URL]? {
         getChildrenOf(self.url)
     }
-    
+
     func getChildrenOf(_ url: URL, verbose: Bool = false) -> [URL]? {
         if verbose {
             os_log("\(self.label)GetChildrenOf \(url.lastPathComponent)")
         }
-        
+
         let fileManager = FileManager.default
 
         do {
@@ -143,7 +141,7 @@ extension FileBox {
         guard let index = siblings.firstIndex(of: self.url) else {
             return nil
         }
-        
+
         guard siblings.count > index + 1 else {
             if verbose {
                 os_log("\(label)Next of \(fileName) -> nil")
@@ -174,11 +172,11 @@ extension FileBox {
 
             return prev
         }
-        
+
         guard let index = siblings.firstIndex(of: self.url) else {
             return nil
         }
-        
+
         guard index - 1 >= 0 else {
             os_log("\(label)Prev of \(fileName) -> nil")
 
@@ -200,23 +198,23 @@ extension FileBox {
     var isDownloaded: Bool {
         isFolder() || iCloudHelper.isDownloaded(url)
     }
-    
+
     var isDownloading: Bool {
         iCloudHelper.isDownloading(url)
     }
-    
+
     var isNotDownloaded: Bool {
         !isDownloaded
     }
-    
+
     var isiCloud: Bool {
         iCloudHelper.isCloudPath(url: url)
     }
-    
+
     var isNotiCloud: Bool {
         !isiCloud
     }
-    
+
     var isLocal: Bool {
         isNotiCloud
     }
@@ -235,15 +233,15 @@ extension FileBox {
 extension FileBox {
     func isExists(verbose: Bool = false) -> Bool {
         // iOS模拟器，如果是iCloud云盘地址且未下载，FileManager.default.fileExists会返回false
-        
+
         if verbose {
             os_log("\(self.label)IsExists -> \(url.path)")
         }
-        
+
         if iCloudHelper.isCloudPath(url: url) {
             return true
         }
-        
+
         return FileManager.default.fileExists(atPath: url.path)
     }
 
@@ -258,11 +256,11 @@ extension FileBox {
     func isFolder() -> Bool {
         FileHelper.isDirectory(at: self.url)
     }
-    
+
     func isDirectory() -> Bool {
         isFolder()
     }
-    
+
     func isNotFolder() -> Bool {
         !self.isFolder()
     }
@@ -274,7 +272,7 @@ extension FileBox {
     var icon: String {
         isFolder() ? "folder" : "doc.text"
     }
-    
+
     var image: Image {
         Image(systemName: icon)
     }
@@ -286,7 +284,7 @@ extension FileBox {
     func inDir(_ dir: URL) -> Bool {
         FileHelper.isURLInDirectory(self.url, dir)
     }
-    
+
     func has(_ url: URL) -> Bool {
         FileHelper.isURLInDirectory(url, self.url)
     }
@@ -298,11 +296,11 @@ extension FileBox {
     func isVideo() -> Bool {
         ["mp4"].contains(self.ext)
     }
-    
+
     func isAudio() -> Bool {
         [".mp3", ".wav"].contains(self.ext)
     }
-    
+
     func isNotAudio() -> Bool {
         !isAudio()
     }
@@ -312,25 +310,25 @@ extension FileBox {
 
 extension FileBox {
     #if os(macOS)
-    var defaultNSImage: NSImage {
-        NSImage(named: "DefaultAlbum")!
-    }
+        var defaultNSImage: NSImage {
+            NSImage(named: "DefaultAlbum")!
+        }
     #else
-    var defaultUIImage: UIImage {
-        // 要放一张正方形的图，否则会自动加上白色背景
-        UIImage(imageLiteralResourceName: "DefaultAlbum")
-    }
+        var defaultUIImage: UIImage {
+            // 要放一张正方形的图，否则会自动加上白色背景
+            UIImage(imageLiteralResourceName: "DefaultAlbum")
+        }
     #endif
-    
+
     var defaultImage: Image {
         #if os(macOS)
-        Image(nsImage: defaultNSImage)
+            Image(nsImage: defaultNSImage)
         #else
-        Image(uiImage: defaultUIImage)
+            Image(uiImage: defaultUIImage)
         #endif
     }
 
-// MARK: 封面图的储存路径
+    // MARK: 封面图的储存路径
 
     var coverCacheURL: URL {
         let fileName = url.lastPathComponent
@@ -376,7 +374,7 @@ extension FileBox {
         return nil
     }
 
-// MARK: 获取封面图
+    // MARK: 获取封面图
 
     func getCoverImage(verbose: Bool = false) async -> Image? {
         if verbose {
@@ -403,12 +401,12 @@ extension FileBox {
             return Image(uiImage: UIImage(contentsOfFile: url.path)!)
         #endif
     }
-    
-// MARK: 从缓存读取封面图
+
+    // MARK: 从缓存读取封面图
 
     func getCoverImageFromCache(verbose: Bool = false) -> Image? {
         if verbose {
-             os_log("\(self.label)GetCoverImageFromCache for \(self.title)")
+            os_log("\(self.label)GetCoverImageFromCache for \(self.title)")
         }
 
         var url: URL? = coverCacheURL
@@ -429,58 +427,43 @@ extension FileBox {
         #endif
     }
 
-// MARK: 从Meta读取封面图
+    // MARK: 从Meta读取封面图
 
     func getCoverFromMeta(verbose: Bool = false) async -> URL? {
+        guard isDownloaded
+            && !FileManager.default.fileExists(atPath: coverCacheURL.path)
+            && !isFolder()
+            && !isImage
+            && !isJSON
+            && !isWMA
+        else {
+            return isDownloaded ? coverCacheURL : nil
+        }
+
         if verbose {
-             os_log("\(self.label)GetCoverFromMeta for \(self.title)")
-        }
-        
-        let fileManager = FileManager.default
-
-        if isNotDownloaded {
-            return nil
+            os_log("\(self.label)GetCoverFromMeta for \(self.title)")
         }
 
-        if fileManager.fileExists(atPath: coverCacheURL.path) {
-            return coverCacheURL
-        }
-        
-        if self.isFolder() {
-            return nil
-        }
-        
-        if self.isImage {
-            return nil
-        }
-        
-        if self.isJSON {
-            return nil
-        }
-        
-        if self.isWMA {
-            return nil
-        }
-
-        let asset = AVAsset(url: url)
+        let asset = AVURLAsset(url: url)
         do {
-            let metadata = try await asset.load(.commonMetadata)
-
-            for item in metadata {
-                switch item.commonKey?.rawValue {
-                case "artwork":
-                    if try (makeImage(await item.load(.value), saveTo: coverCacheURL)) != nil {
-                        // os_log("\(Logger.isMain)🍋 AudioModel::updateMeta -> cover updated -> \(self.title)")
-                        return coverCacheURL
+            let commonMetadata = try await asset.load(.commonMetadata)
+            let artworkItems = AVMetadataItem.metadataItems(
+                from: commonMetadata,
+                withKey: AVMetadataKey.commonKeyArtwork,
+                keySpace: .common
+            )
+            if let artworkItem = artworkItems.first {
+                let artworkData = try await artworkItem.load(.value)
+                if makeImage(artworkData, saveTo: coverCacheURL) != nil {
+                    if verbose {
+                        os_log("\(self.label)Cover updated for \(self.title)")
                     }
-                default:
-                    break
+                    return coverCacheURL
                 }
             }
         } catch {
-            os_log(.error, "\(label)⚠️ 读取 Meta 出错 -> \(self.title) -> \(error.localizedDescription)")
+            os_log(.error, "\(label)⚠️ Error reading metadata for \(self.title): \(error.localizedDescription)")
             os_log(.error, "  ➡️ \(self.url.relativeString)")
-            os_log(.error, "  ⚠️ \(error)")
         }
 
         return nil
@@ -490,7 +473,7 @@ extension FileBox {
         if verbose {
             os_log("\(label)getCoverFromMeta for \(fileName)")
         }
-        
+
         let fileManager = FileManager.default
 
         if isNotDownloaded {
@@ -512,7 +495,7 @@ extension FileBox {
         }
 
         Task {
-            let asset = AVAsset(url: url)
+            let asset = AVURLAsset(url: url)
             do {
                 let metadata = try await asset.load(.commonMetadata)
 

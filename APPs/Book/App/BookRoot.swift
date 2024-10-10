@@ -10,17 +10,18 @@ struct BookRoot: View, SuperLog, SuperThread {
 
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var l: LayoutProvider
+    @EnvironmentObject var d: DataProvider
     @EnvironmentObject var playMan: PlayMan
-    @EnvironmentObject var db: DB
 
     @State private var mode: PlayMode?
     @State var networkOK = true
     @State var copyJob: AudioCopyJob?
 
-    @Query(sort: \Audio.order, animation: .default) var audios: [Audio]
+    @Query(sort: \Book.order, animation: .default) var books: [Book]
     @Query(animation: .default) var copyTasks: [CopyTask]
 
     var disk: (any Disk)? { l.current.getDisk() }
+    var db: DB { d.db }
 
     let timer = Timer
         .publish(every: 10, on: .main, in: .common)
@@ -46,12 +47,12 @@ struct BookRoot: View, SuperLog, SuperThread {
             .onReceive(NotificationCenter.default.publisher(for: .dbSyncing), perform: onDBSyncing)
             .onReceive(NotificationCenter.default.publisher(for: .CopyFiles), perform: onCopyFiles)
             .onReceive(timer, perform: onTimer)
-            .onChange(of: audios.count, onChangeOfAudiosCount)
+            .onChange(of: books.count, onChangeOfBooksCount)
             .onChange(of: self.disk?.root, onChangeOfDisk)
     }
 }
 
-// MARK: Functions
+// MARK: Actions
 
 extension BookRoot {
     func checkNetworkStatus() {
@@ -70,18 +71,18 @@ extension BookRoot {
         monitor.start(queue: queue)
     }
 
-    func restore(reason: String, verbose: Bool = false) {
+    func restore(reason: String, verbose: Bool = true) {
         self.bg.async {
             if verbose {
-                os_log("\(self.t)Restore because of \(reason)")
+                os_log("\(self.t)Restore Book 🐛 \(reason)")
             }
 
-            let db: DB = DB(Config.getContainer, reason: "dataManager")
+            let db: DB = DB(Config.getContainer, reason: "BookRoot")
 
             if let url = l.current.getCurrent() {
-                self.playMan.prepare(PlayAsset(url: url), reason: "AudioRoot.Restore")
+                self.playMan.prepare(PlayAsset(url: url), reason: "BookRoot.Restore")
             } else if (l.current.getDisk()) != nil {
-                self.playMan.prepare(db.firstAudio()?.toPlayAsset(), reason: "AudioRoot.Restore")
+                self.playMan.prepare(db.firstAudio()?.toPlayAsset(), reason: "BookRoot.Restore")
             }
         }
     }
@@ -118,20 +119,6 @@ extension BookRoot {
                 }
             }
         }
-
-//            var currentIndex = 0
-//            var currentURL: URL = url
-//
-//            while currentIndex < count {
-//                disk.download(currentURL, reason: "downloadNext 🐛 \(reason)")
-//
-//                currentIndex = currentIndex + 1
-//
-//                if let next = disk.next(currentURL) {
-//                    currentURL = next.url
-//                } else {
-//                    break
-//                }
     }
 }
 
@@ -199,21 +186,21 @@ extension BookRoot {
         }
     }
 
-    func onChangeOfAudiosCount() {
+    func onChangeOfBooksCount() {
         Task {
-            if playMan.asset == nil, let first = db.firstAudio()?.toPlayAsset() {
+            if playMan.asset == nil, let first = db.firstBook()?.toPlayAsset() {
                 os_log("\(self.t)准备第一个")
                 playMan.prepare(first, reason: "count changed")
             }
         }
 
-        if audios.count == 0 {
+        if books.count == 0 {
             playMan.prepare(nil, reason: "count changed")
         }
     }
 
     func onAppear() {
-        if audios.count == 0 {
+        if books.count == 0 {
             app.showDBView()
         }
 
@@ -227,7 +214,7 @@ extension BookRoot {
             }
 
             self.restore(reason: "OnAppear")
-            BookUpdateCoverJob(db: db).run()
+            BookUpdateCoverJob(container: d.container).run()
         }
     }
 
@@ -303,9 +290,9 @@ extension BookRoot {
         let state = notification.userInfo?["state"] as? PlayState
 
         self.bg.async {
-            let verbose = true
+            let verbose = false
             if verbose {
-                os_log("\(self.t)OnPlayStateChange")
+                os_log("\(self.t)OnPlayStateChange -> \(state?.des ?? "nil")")
             }
 
             if let state = state {
@@ -319,10 +306,6 @@ extension BookRoot {
                     }
 
                     if let playManError = e as? PlayManError, case .NotDownloaded = playManError {
-                        if verbose {
-                            os_log("\(self.t)播放状态错误是：未下载")
-                        }
-
                         guard let disk = disk else {
                             os_log(.error, "\(self.t)Disk is nil")
                             return

@@ -45,7 +45,7 @@ class BookApp: SuperLayout, SuperLog, SuperThread {
         let verbose = false
         
         if verbose {
-            os_log("\(self.t)👻👻👻 setCurrent: \(url.lastPathComponent)")
+            os_log("\(self.t)SetCurrent: \(url.lastPathComponent)")
         }
 
         // 将当前的url存储下来
@@ -57,9 +57,26 @@ class BookApp: SuperLayout, SuperLog, SuperThread {
     }
 
     func getCurrent() -> URL? {
-        if let urlString = UserDefaults.standard.string(forKey: "currentAudioURL") {
-            return URL(string: urlString)
+        let verbose = false
+
+        if verbose {
+            os_log("\(self.t)GetCurrent")
         }
+
+        if let urlString = UserDefaults.standard.string(forKey: "currentAudioURL") {
+            let url = URL(string: urlString)
+
+            if verbose {
+                os_log("  🎉 \(url?.lastPathComponent ?? "")")
+            }
+
+            return url
+        }
+        
+        if verbose {
+            os_log("  ➡️ No current book URL found")
+        }
+        
         return nil
     }
 
@@ -88,34 +105,6 @@ class BookApp: SuperLayout, SuperLog, SuperThread {
         Task {
             await disk.watch(reason: reason)
         }
-    }
-
-    // MARK: 恢复上次播放的
-
-    func restore(reason: String, verbose: Bool = true) {
-        if verbose {
-            os_log("\(self.t)👻👻👻 Restore because of \(reason)")
-        }
-
-//        playMan.mode = PlayMode(rawValue: Config.currentMode) ?? playMan.mode
-
-//        Task {
-//            let currentURL = await dbSynced.getSceneCurrent(data.appScene, reason: "Restore")
-//
-//            if let url = currentURL {
-//                if verbose {
-//                    os_log("\(t)上次播放 -> \(url.lastPathComponent)")
-//                }
-//
-//                playMan.prepare(PlayAsset(url: url))
-//            } else {
-//                if verbose {
-//                    os_log("\(t)无上次播放的音频，尝试播放第一个(\(data.disk.name))")
-//                }
-//
-//                playMan.prepare(data.first())
-//            }
-//        }
     }
 }
 

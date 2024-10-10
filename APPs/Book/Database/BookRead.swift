@@ -16,7 +16,7 @@ extension DB {
 
     func getBookCountOfNoCoverData() -> Int {
         do {
-            return try context.fetchCount(Book.descriptorOfNoCoverData)
+            return try context.fetchCount(Book.descriptorOfShouldUpdateCover)
         } catch {
             os_log(.error, "\(error.localizedDescription)")
             
@@ -24,9 +24,9 @@ extension DB {
         }
     }
 
-    func getBooksWithNoCoverData() -> [Book] {
+    func getBooksShouldUpdateCover() -> [Book] {
         do {
-            return try context.fetch(Book.descriptorOfNoCoverData)
+            return try context.fetch(Book.descriptorOfShouldUpdateCover)
         } catch {
             os_log(.error, "\(error.localizedDescription)")
             
@@ -214,9 +214,9 @@ extension DB {
 // MARK: Descriptor
 
 extension Book {
-    static var descriptorOfNoCoverData: FetchDescriptor<Book> {
+    static var descriptorOfShouldUpdateCover: FetchDescriptor<Book> {
         FetchDescriptor<Book>(predicate: #Predicate<Book> {
-            $0.coverData == nil
+            $0.hasGetCover == false
         })
     }
 }

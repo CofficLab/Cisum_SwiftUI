@@ -1,18 +1,20 @@
 import Foundation
 import MagicKit
 import OSLog
+import SwiftData
 
 class BookUpdateCoverJob: SuperLog, SuperThread {
     let emoji = "🌽"
     let db: DB
     var running = false
 
-    init(db: DB) {
-        self.db = db
+    init(container: ModelContainer) {
+        self.db = DB(container, reason: "BookUpdateCoverJob.Init")
     }
 
     func run() {
-        let verbose = false
+        let verbose = true
+        let verbose2 = false
 
         if running {
             return
@@ -20,13 +22,9 @@ class BookUpdateCoverJob: SuperLog, SuperThread {
 
         running = true
 
-        if verbose {
-            os_log("\(self.t)run")
-        }
-
         self.bg.async {
             Task {
-                let books = await self.db.getBooksWithNoCoverData()
+                let books = await self.db.getBooksShouldUpdateCover()
 
                 if books.isEmpty {
                     self.running = false
@@ -36,45 +34,48 @@ class BookUpdateCoverJob: SuperLog, SuperThread {
                     return
                 }
 
+                if verbose {
+                    os_log("\(self.t)run(\(books.count))")
+                }
+
+                var count = 1
                 for book in books {
-                    self.updateBookCover(book: book)
+                    if verbose2 {
+                        os_log("\(self.t)run(\(books.count)) -> \(count)/\(books.count)")
+                    }
+                    
+                    await self.updateBookCover(book: book)
+                    count += 1
                 }
 
                 self.running = false
 
                 if verbose {
-                    os_log("\(self.t)run -> 完成")
+                    os_log("\(self.t)run -> 完成 🎉🎉🎉")
                 }
             }
         }
     }
 
-    func updateBookCover(book: Book) {
+    private func updateBookCover(book: Book) async {
         let verbose = false
-        let verbose2 = false
 
         if verbose {
             os_log("\(self.t)UpdateBookCover for \(book.bookTitle)")
         }
 
         if book.coverData != nil {
-            if verbose2 {
-                os_log("  ➡️ Already Have Cover, Ignore")
-            }
+            return
+        }
+        
+        if book.isNotDownloaded {
             return
         }
 
-        Task {
-            if let coverURL = await book.getCoverURLFromFile() {
-                if verbose2 {
-                    os_log("  🎉 Got Cover URL")
-                }
-                await db.updateBookCover(bookURL: book.url, coverURL: coverURL)
-            } else {
-                if verbose2 {
-                    os_log("  ☹️ No Cover URL")
-                }
-            }
+        if let coverURL = await book.getCoverURLFromFile() {
+            await db.updateBookCover(bookURL: book.url, coverURL: coverURL)
+        } else {
+            await db.updateBookSetNoCover(bookURL: book.url)
         }
     }
 }

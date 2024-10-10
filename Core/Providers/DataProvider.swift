@@ -5,15 +5,13 @@ import SwiftUI
 import MagicKit
 
 class DataProvider: ObservableObject, SuperLog {
-    static var label = "💼 DataManager::"
+    let label = "💼"
+    var db: DB
+    var container: ModelContainer
 
     @Published var disk: any Disk
     @Published var syncing: Bool = false
 
-    let emoji = "💼"
-    var db: DB = DB(Config.getContainer, reason: "dataManager")
-
-    // Move these computed properties to be calculated based on the disk type
     var isiCloudDisk: Bool {
         disk is DiskiCloud
     }
@@ -23,8 +21,9 @@ class DataProvider: ObservableObject, SuperLog {
     }
 
     init() async throws {
-        // Initialize disk with a default value
         self.disk = DiskLocal.make("audios") ?? DiskLocal(root: URL(fileURLWithPath: "/tmp"))
+        self.container = Config.getContainer
+        self.db = DB(self.container, reason: "DataProvider.Init")
 
         if Config.iCloudEnabled {
             try await self.checkAndUpdateiCloudStatus()
@@ -90,50 +89,6 @@ class DataProvider: ObservableObject, SuperLog {
     }
 }
 
-// MARK: Download
-
-extension DataProvider {
-    func downloadNextBatch(_ url: URL, count: Int = 6, reason: String, verbose: Bool = false) {
-//        if verbose {
-//            os_log("\(self.t)DownloadNextBatch(\(self.appScene.title))")
-//        }
-
-//        if appScene == .Music {
-//            Task {
-//                var currentIndex = 0
-//                var currentURL: URL = url
-//
-//                while currentIndex < count {
-//                    disk.download(currentURL, reason: "downloadNext 🐛 \(reason)")
-//
-//                    currentIndex = currentIndex + 1
-//
-//                    if let next = await db.nextOf(currentURL) {
-//                        currentURL = next.url
-//                    } else {
-//                        break
-//                    }
-//                }
-//            }
-//        } else {
-//            var currentIndex = 0
-//            var currentURL: URL = url
-//
-//            while currentIndex < count {
-//                disk.download(currentURL, reason: "downloadNext 🐛 \(reason)")
-//
-//                currentIndex = currentIndex + 1
-//
-//                if let next = disk.next(currentURL) {
-//                    currentURL = next.url
-//                } else {
-//                    break
-//                }
-//            }
-//        }
-    }
-}
-
 // MARK: Migrate
 
 extension DataProvider {
@@ -181,7 +136,7 @@ extension DataProvider {
     func moveAudios(_ from: any Disk, _ to: any Disk, verbose: Bool = true) {
         Task.detached(priority: .low) {
             if verbose {
-                os_log("\(Self.label)将文件从 \(from.name) 移动到 \(to.name)")
+                os_log("\(self.t)将文件从 \(from.name) 移动到 \(to.name)")
             }
 
             let fileManager = FileManager.default
@@ -195,7 +150,7 @@ extension DataProvider {
                     let destnationURL = to.makeURL(file)
 
                     if verbose {
-                        os_log("\(Self.label)移动 \(sourceURL.lastPathComponent)")
+                        os_log("\(self.t)移动 \(sourceURL.lastPathComponent)")
                     }
                     await from.moveFile(at: sourceURL, to: destnationURL)
                 }
@@ -204,7 +159,7 @@ extension DataProvider {
             }
 
             if verbose {
-                os_log("\(Self.label)将文件从 \(from.name) 移动到 \(to.name) 完成 🎉🎉🎉")
+                os_log("\(self.t)将文件从 \(from.name) 移动到 \(to.name) 完成 🎉🎉🎉")
             }
         }
     }
