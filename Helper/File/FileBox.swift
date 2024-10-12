@@ -3,7 +3,7 @@ import Foundation
 import OSLog
 import SwiftUI
 
-#if os(iOS)
+#if os(iOS) || os(visionOS)
 import UIKit
 typealias PlatformImage = UIImage
 #elseif os(macOS)
@@ -579,4 +579,3 @@ extension FileBox {
         }
     }
 }
-
