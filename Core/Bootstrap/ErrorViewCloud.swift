@@ -1,11 +1,11 @@
-import SwiftUI
 import CloudKit
 import MagicKit
 import OSLog
+import SwiftUI
 
 struct ErrorViewCloud: View, SuperLog, SuperThread {
     var error: Error
-    
+
     var body: some View {
         ScrollView {
             VStack {
@@ -25,6 +25,8 @@ struct ErrorViewCloud: View, SuperLog, SuperThread {
                         Button("打开系统设置登录iCloud") {
                             openSystemSettings()
                         }.padding()
+
+                        Text("请打开访达检查 iCloud 云盘是否可用")
                     }
 
                     Spacer()
@@ -41,9 +43,9 @@ struct ErrorViewCloud: View, SuperLog, SuperThread {
         VStack(spacing: 10) {
             Section(content: {
                 GroupBox {
-                    makeKeyValueItem(key: "使用 iCloud", value: Config.iCloudEnabled ? "是" : "否")
+                    makeKeyValueItem(key: "使用iCloud", value: Config.iCloudEnabled ? "是" : "否")
                     Divider()
-                    makeKeyValueItem(key: "登录 iCloud", value: iCloudHelper.iCloudDiskEnabled() ? "是" : "否")
+                    makeKeyValueItem(key: "启用iCloud云盘", value: iCloudHelper.iCloudDiskEnabled() ? "是" : "否")
                 }
             }, header: { makeTitle("iCloud") })
         }.padding(20)
@@ -77,31 +79,31 @@ struct ErrorViewCloud: View, SuperLog, SuperThread {
 
     private func openSystemSettings() {
         #if os(iOS)
-        if let url = URL(string: "App-Prefs:root=CASTLE") {
-            if UIApplication.shared.canOpenURL(url) {
-                UIApplication.shared.open(url, options: [:], completionHandler: nil)
-            } else {
-                // 如果无法打开设置首页，回退到打开应用自身的设置
-                if let settingsUrl = URL(string: UIApplication.openSettingsURLString) {
-                    UIApplication.shared.open(settingsUrl, options: [:], completionHandler: nil)
+            if let url = URL(string: "App-Prefs:root=CASTLE") {
+                if UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                } else {
+                    // 如果无法打开设置首页，回退到打开应用自身的设置
+                    if let settingsUrl = URL(string: UIApplication.openSettingsURLString) {
+                        UIApplication.shared.open(settingsUrl, options: [:], completionHandler: nil)
+                    }
                 }
             }
-        }
         #elseif os(macOS)
-        if let url = URL(string: "x-apple.systempreferences:") {
-            NSWorkspace.shared.open(url)
-        }
+            if let url = URL(string: "x-apple.systempreferences:") {
+                NSWorkspace.shared.open(url)
+            }
         #elseif os(visionOS)
-        if let url = URL(string: "App-Prefs:root") {
-            if UIApplication.shared.canOpenURL(url) {
-                UIApplication.shared.open(url, options: [:], completionHandler: nil)
-            } else {
-                // 如果无法打开设置首页，回退到打开应用自身的设置
-                if let settingsUrl = URL(string: UIApplication.openSettingsURLString) {
-                    UIApplication.shared.open(settingsUrl, options: [:], completionHandler: nil)
+            if let url = URL(string: "App-Prefs:root") {
+                if UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                } else {
+                    // 如果无法打开设置首页，回退到打开应用自身的设置
+                    if let settingsUrl = URL(string: UIApplication.openSettingsURLString) {
+                        UIApplication.shared.open(settingsUrl, options: [:], completionHandler: nil)
+                    }
                 }
             }
-        }
         #endif
     }
 }

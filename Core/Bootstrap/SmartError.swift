@@ -15,7 +15,7 @@ enum SmartError: Error, LocalizedError, Equatable {
     case PlayFailed
     case NetworkError
     case NotExists
-    
+
     var errorDescription: String? {
         switch self {
         case .NoDownloadedAudio:
@@ -30,7 +30,7 @@ enum SmartError: Error, LocalizedError, Equatable {
             "无可播放的歌曲"
         case .Downloading:
             "正在从 iCloud 下载"
-        case .FormatNotSupported(let format):
+        case let .FormatNotSupported(format):
             "不支持这个格式： \(format)"
         case .PlayFailed:
             "出现系统错误，播放失败"
@@ -54,7 +54,13 @@ extension Error {
     }
 
     var isCloudError: Bool {
-        self is DataProviderError && (self as? DataProviderError) == .iCloudAccountTemporarilyUnavailable || (self as? DataProviderError) == .NoiCloudAccount
+        guard let e = self as? DataProviderError else {
+            return false
+        }
+
+        return e == .iCloudAccountTemporarilyUnavailable
+            || e == .NoiCloudAccount
+            || e == .NoiCloudDisk
     }
 }
 
