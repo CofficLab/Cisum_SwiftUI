@@ -48,6 +48,16 @@ enum SmartError: Error, LocalizedError, Equatable {
     }
 }
 
+extension Error {
+    var isSmartError: Bool {
+        self is SmartError
+    }
+
+    var isCloudError: Bool {
+        self is DataProviderError && (self as? DataProviderError) == .iCloudAccountTemporarilyUnavailable || (self as? DataProviderError) == .NoiCloudAccount
+    }
+}
+
 #Preview {
     BootView {
         ContentView()

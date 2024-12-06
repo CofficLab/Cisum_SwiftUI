@@ -11,6 +11,7 @@ struct ErrorViewFatal: View {
                     .resizable()
                     .scaledToFit()
                     .padding()
+                    .frame(maxHeight: 150)
 
                 Spacer()
 

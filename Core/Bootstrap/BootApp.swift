@@ -1,5 +1,5 @@
-import SwiftUI
 import OSLog
+import SwiftUI
 
 @main
 struct BootApp: App {
@@ -8,9 +8,9 @@ struct BootApp: App {
     #else
         @UIApplicationDelegateAdaptor var appDelegate: AppDelegate
     #endif
-    
+
     static var label = "🍎 Boot::"
-    var label:String { "\(Logger.isMain)\(Self.label)" }
+    var label: String { "\(Logger.isMain)\(Self.label)" }
 
     var body: some Scene {
         #if os(macOS)

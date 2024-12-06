@@ -7,7 +7,7 @@ import SwiftUI
 
 class RootProvider: ObservableObject, SuperLog, SuperThread {
     static let keyOfCurrentLayoutID = "currentLayoutID"
-    
+
     let emoji = "🧩"
 
     @Published var current: any SuperRoot
@@ -31,7 +31,7 @@ class RootProvider: ObservableObject, SuperLog, SuperThread {
         if verbose {
             os_log("\(Logger.initLog) RootProvider")
         }
-        
+
         let currentLayoutId = Self.getLayoutId()
 
         if let c = items.first(where: { $0.id == currentLayoutId }) {
@@ -57,7 +57,7 @@ class RootProvider: ObservableObject, SuperLog, SuperThread {
 
     static func storeLayout(_ l: any SuperRoot) {
         let id = l.id
-        
+
         UserDefaults.standard.set(id, forKey: keyOfCurrentLayoutID)
 
         // Synchronize with CloudKit
@@ -70,14 +70,14 @@ class RootProvider: ObservableObject, SuperLog, SuperThread {
         if let id = UserDefaults.standard.string(forKey: keyOfCurrentLayoutID) {
             return id
         }
-        
+
         // If not found in UserDefaults, try to get from iCloud
         if let id = NSUbiquitousKeyValueStore.default.string(forKey: keyOfCurrentLayoutID) {
             // If found in iCloud, update UserDefaults for future local access
             UserDefaults.standard.set(id, forKey: keyOfCurrentLayoutID)
             return id
         }
-        
+
         return ""
     }
 }
