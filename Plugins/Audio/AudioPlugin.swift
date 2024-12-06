@@ -9,7 +9,9 @@ class AudioPlugin: SuperPlugin, SuperLog {
     var label: String = ""
 
     func addDBView() -> AnyView? {
-        AnyView() {
+        os_log("\(self.t)AddDBView")
+        
+        return AnyView() {
             AudioPoster()
         }
     }
