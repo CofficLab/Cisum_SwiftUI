@@ -25,7 +25,7 @@ struct BtnDel: View {
     private func getImageName() -> String {
         return "trash"
     }
-    
+
     private func delete() {
         Task {
             // appManager.stateMessage = "正在删除 \(audios.count) 个"
@@ -40,16 +40,20 @@ struct BtnDel: View {
 
             disk.deleteFiles(assets.map { $0.url })
 
-            if let asset = playMan.asset, assets.map({ $0.url }).contains(asset.url) {
-                if isPlaying, let next = next {
-                    playMan.play(next.toPlayAsset(), reason: "删除了")
-                } else {
-                    playMan.prepare(next?.toPlayAsset(), reason: "删除了")
+            do {
+                if let asset = playMan.asset, assets.map({ $0.url }).contains(asset.url) {
+                    if isPlaying, let next = next {
+                        try? playMan.play(next.toPlayAsset(), reason: "删除了")
+                    } else {
+                        playMan.prepare(next?.toPlayAsset(), reason: "删除了")
+                    }
                 }
-            }
 
-            messageManager.toast("已删除")
-            callback()
+                messageManager.toast("已删除")
+                callback()
+            } catch {
+                messageManager.error(error)
+            }
         }
     }
 }

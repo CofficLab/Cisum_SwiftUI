@@ -9,7 +9,7 @@ struct VideoGrid: View {
     @EnvironmentObject var dataManager: DataProvider
     @EnvironmentObject var m: MessageProvider
     @EnvironmentObject var playMan: PlayMan
-    @EnvironmentObject var l: RootProvider
+    @EnvironmentObject var l: FamalyProvider
 
     @State var selection: DiskFile?
     @State var collapsed: Bool = false
@@ -36,7 +36,7 @@ struct VideoGrid: View {
                     .onChange(of: selection, {
                         if let s = selection, s.isNotFolder() {
                             if playMan.isPlaying {
-                                playMan.play(s.toPlayAsset(), reason: "点击了")
+                                try?  playMan.play(s.toPlayAsset(), reason: "点击了")
                             } else {
                                 playMan.prepare(s.toPlayAsset(), reason: "点击了")
                             }

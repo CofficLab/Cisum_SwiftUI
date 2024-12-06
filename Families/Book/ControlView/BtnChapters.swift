@@ -6,6 +6,7 @@ struct BtnChapters: View {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var data: DataProvider
     @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var m: MessageProvider
     @EnvironmentObject var db: DBSynced
 
     @State var isPresented = false
@@ -52,7 +53,11 @@ extension BtnChapters {
 
     func onSelectionChange() {
         if let s = selection, s.url != asset?.url {
-            playMan.play(s.toPlayAsset(), reason: "BtnChapters的Selection变了")
+            do {
+                try playMan.play(s.toPlayAsset(), reason: "BtnChapters的Selection变了")
+            } catch {
+                m.error(error)
+            }
         }
     }
 }

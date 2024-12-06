@@ -42,7 +42,7 @@ struct DBViewTree: View {
                 .onChange(of: selection, {
                     if let s = selection, s.isNotFolder() {
                         if playMan.isPlaying {
-                            playMan.play(s.toPlayAsset(), reason: "点击了")
+                            try? playMan.play(s.toPlayAsset(), reason: "点击了")
                         } else {
                             playMan.prepare(s.toPlayAsset(), reason: "点击了")
                         }

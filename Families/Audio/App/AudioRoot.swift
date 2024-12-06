@@ -21,7 +21,7 @@ struct AudioRoot: View, SuperLog, SuperThread, SuperFamily {
     var db: DB { d.db }
 
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var l: RootProvider
+    @EnvironmentObject var l: FamalyProvider
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var d: DataProvider
 
@@ -324,7 +324,7 @@ extension AudioRoot {
                 }
 
                 if let next = next {
-                    self.playMan.play(next, reason: "onPlayNext")
+                    try? self.playMan.play(next, reason: "onPlayNext")
                 }
             }
         }
@@ -342,7 +342,7 @@ extension AudioRoot {
                 }
 
                 if let prev = prev {
-                    self.playMan.play(prev, reason: "onPlayPrev")
+                    try? self.playMan.play(prev, reason: "onPlayPrev")
                 }
             }
         }
@@ -356,7 +356,7 @@ extension AudioRoot {
                 os_log("\(self.t)随机播放下一个 -> \(next?.url.lastPathComponent ?? "")")
 
                 if let next = next {
-                    self.playMan.play(next, reason: "onPlayNext")
+                    try? self.playMan.play(next, reason: "onPlayNext")
                 }
             }
         }

@@ -103,14 +103,14 @@ extension BookTile {
     func onTap() {
         withAnimation(.spring()) {
             if let s = self.state, let current = s.currentURL, let time = s.time {
-                playMan.play(PlayAsset(url: current), reason: "点击了书本")
+                try? playMan.play(PlayAsset(url: current), reason: "点击了书本")
                 playMan.goto(time)
             } else {
                 if let first = DiskFile(url: book.url).children?.first {
-                    playMan.play(first.toPlayAsset(), reason: "点击了书本")
+                    try? playMan.play(first.toPlayAsset(), reason: "点击了书本")
                     //                        data.updateBookState(book.url, first.url)
                 } else {
-                    playMan.play(book.toPlayAsset(), reason: "点击了书本")
+                    try? playMan.play(book.toPlayAsset(), reason: "点击了书本")
                 }
             }
             

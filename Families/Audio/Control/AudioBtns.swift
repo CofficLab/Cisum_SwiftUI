@@ -3,6 +3,7 @@ import SwiftUI
 struct AudioBtns: View {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var data: DataProvider
+    @EnvironmentObject var message: MessageProvider
     
     var body: some View {
         GeometryReader { geo in

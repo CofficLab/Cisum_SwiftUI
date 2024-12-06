@@ -3,7 +3,7 @@ import SwiftUI
 
 struct BtnDownload: View, SuperThread {
     @EnvironmentObject var dataManager: DataProvider
-    @EnvironmentObject var l: RootProvider
+    @EnvironmentObject var l: FamalyProvider
 
     var asset: PlayAsset
     var disk: (any SuperDisk)? { l.current.getDisk() }

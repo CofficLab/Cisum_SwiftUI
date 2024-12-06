@@ -192,7 +192,8 @@ extension DiskiCloud {
         let verbose = true
 
         if verbose {
-            os_log("\(self.label)Download ⏬⏬⏬ \(url.lastPathComponent) reason 🐛 -> \(reason)")
+            os_log("\(self.label)Download ⏬⏬⏬ \(url.lastPathComponent)")
+            os_log("   ➡️ Reason: \(reason)")
         }
 
         // 检查是否为 iCloud 项目

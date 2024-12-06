@@ -3,7 +3,7 @@ import Foundation
 import OSLog
 import SwiftUI
 
-class VideoWorker: NSObject, ObservableObject, PlayWorker {
+class VideoWorker: NSObject, ObservableObject, SuperPlayWorker {
     // MARK: 成员
 
     static var label = "💿 VideoWorker::"

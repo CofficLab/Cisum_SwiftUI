@@ -16,7 +16,7 @@ struct BtnMore: View {
             image: getImageName(),
             dynamicSize: autoResize,
             onTap: {
-                playMan.play(asset, reason: "Play Button")
+                try? playMan.play(asset, reason: "Play Button")
             },
             menus: AnyView(VStack {
                 BtnToggle(asset: asset, autoResize: false)

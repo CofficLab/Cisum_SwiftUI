@@ -21,13 +21,15 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread {
         // 要放一张正方形的图，否则会自动加上白色背景
         static var defaultImage = UIImage(imageLiteralResourceName: "DefaultAlbum")
     #endif
+    
+    @Published var asset: PlayAsset?
 
     let emoji = "💃"
     var audioWorker: AudioWorker
     var videoWorker: VideoWorker
-    var verbose = false
+    var verbose = true
     var queue = DispatchQueue(label: "PlayMan", qos: .userInteractive)
-    var worker: PlayWorker {
+    var worker: SuperPlayWorker {
         guard let asset = asset, asset.isNotFolder() else {
             return audioWorker
         }
@@ -35,7 +37,6 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread {
         return asset.isVideo() ? videoWorker : audioWorker
     }
 
-    var asset: PlayAsset?
     private var mode: PlayMode = .Order
     var isAudioWorker: Bool { (self.worker as? AudioWorker) != nil }
     var isVideoWorker: Bool { (self.worker as? VideoWorker) != nil }
@@ -135,8 +136,8 @@ extension PlayMan {
 
     // MARK: Play
 
-    func play(_ asset: PlayAsset, reason: String) {
-        let verbose = false
+    func play(_ asset: PlayAsset, reason: String) throws {
+        let verbose = true
         if verbose {
             os_log("\(self.t)Play 「\(asset.fileName) (\(asset.isAudio() ? "Audio" : "Video"))」")
             os_log("  🐛 \(reason)")
@@ -152,21 +153,20 @@ extension PlayMan {
             self.asset = asset
         }
 
-        self.worker.play(self.asset!, reason: reason)
+        try self.worker.play(self.asset!, reason: reason)
     }
 
-    func play() {
-        self.worker.play()
+    func play() throws {
+        try self.worker.play()
     }
 
-    func resume(reason: String) {
-        let verbose = false
+    func resume(reason: String, verbose: Bool) throws {
         if verbose {
             os_log("\(self.t)Resume 🐛 \(reason)")
         }
 
         guard let asset = self.asset else {
-            return
+            throw PlayManError.NoAsset
         }
 
         if asset.isFolder() {
@@ -175,14 +175,14 @@ extension PlayMan {
             }
 
             self.asset = first
-            self.worker.play(self.asset!, reason: "Resum")
+            try self.worker.play(self.asset!, reason: "Resum")
         } else {
-            self.worker.resume()
+            try self.worker.resume()
         }
     }
 
-    func pause() {
-        self.worker.pause()
+    func pause() throws {
+       try self.worker.pause()
     }
 
     func stop(reason: String) {
@@ -193,11 +193,11 @@ extension PlayMan {
         self.worker.stop(reason: reason)
     }
 
-    func toggle() {
+    func toggle() throws {
         if isPlaying {
-            self.pause()
+           try self.pause()
         } else {
-            self.resume(reason: "Toggle")
+            try self.resume(reason: "Toggle", verbose: true)
         }
     }
 
@@ -338,7 +338,7 @@ extension PlayMan {
             if verbose {
                 os_log("\(self.t)循环播放")
             }
-            play()
+            try? play()
         case .Random:
             if verbose {
                 os_log("\(self.t)随机播放")
@@ -362,14 +362,14 @@ extension PlayMan {
         }
 
         c.pauseCommand.addTarget { _ in
-            self.pause()
+            try? self.pause()
 
             return .success
         }
 
         c.playCommand.addTarget { _ in
             os_log("\(self.t)播放")
-            self.resume(reason: "PlayCommand")
+            try? self.resume(reason: "PlayCommand", verbose: true)
 
             return .success
         }
@@ -496,34 +496,6 @@ extension PlayMan {
             os_log("\(self.t)emitPlayStateChange 🚀🚀🚀 -> \(state.des)")
         }
         NotificationCenter.default.post(name: .PlayManStateChange, object: self, userInfo: ["state": state])
-    }
-}
-
-// MARK: Error
-
-enum PlayManError: Error, LocalizedError {
-    case NotDownloaded
-    case DownloadFailed
-    case Downloading
-    case NotFound
-    case NoChildren
-    case FormatNotSupported(String)
-
-    var errorDescription: String? {
-        switch self {
-        case .NotDownloaded:
-            return "未下载"
-        case .DownloadFailed:
-            return "下载失败"
-        case .Downloading:
-            return "正在下载"
-        case .NotFound:
-            return "未找到"
-        case .NoChildren:
-            return "没有子项"
-        case let .FormatNotSupported(ext):
-            return "格式不支持 \(ext)"
-        }
     }
 }
 

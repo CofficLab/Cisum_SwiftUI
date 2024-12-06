@@ -15,7 +15,7 @@ struct BookRoot: View, SuperLog, SuperThread, SuperFamily {
     let poster: any View = BookPoster()
 
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var root: RootProvider
+    @EnvironmentObject var root: FamalyProvider
     @EnvironmentObject var data: DataProvider
     @EnvironmentObject var play: PlayMan
 
@@ -312,7 +312,7 @@ extension BookRoot {
                 }
 
                 if let next = next {
-                    self.play.play(PlayAsset(url: next), reason: "onPlayNext")
+                    try? self.play.play(PlayAsset(url: next), reason: "onPlayNext")
                 }
             }
         }
@@ -330,7 +330,7 @@ extension BookRoot {
                 }
 
                 if let prev = prev {
-                    self.play.play(PlayAsset(url: prev), reason: "onPlayPrev")
+                    try? self.play.play(PlayAsset(url: prev), reason: "onPlayPrev")
                 }
             }
         }
@@ -344,7 +344,7 @@ extension BookRoot {
                 os_log("\(self.t)随机播放下一个 -> \(next?.url.lastPathComponent ?? "")")
 
                 if let next = next {
-                    self.play.play(next, reason: "onPlayNext")
+                    try? self.play.play(next, reason: "onPlayNext")
                 }
             }
         }

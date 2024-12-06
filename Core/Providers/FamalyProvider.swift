@@ -5,7 +5,7 @@ import StoreKit
 import SwiftData
 import SwiftUI
 
-class RootProvider: ObservableObject, SuperLog, SuperThread {
+class FamalyProvider: ObservableObject, SuperLog, SuperThread {
     static let keyOfCurrentLayoutID = "currentLayoutID"
 
     let emoji = "🧩"

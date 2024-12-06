@@ -6,21 +6,18 @@ import SwiftUI
 struct AudioTitle: View, SuperLog, SuperThread {
     @EnvironmentObject var playMan: PlayMan
 
-    @State var title: String = ""
-
+    var title: String { playMan.asset?.title ?? "" }
     var width: CGFloat
     let emoji = "📺"
 
     var body: some View {
         ZStack {
-            Text(title)
+            Text(playMan.asset?.title ?? "")
                 .multilineTextAlignment(.leading)
                 .lineLimit(nil)
                 .foregroundStyle(.white)
                 .font(getFont(width: width))
         }
-        .onAppear(perform: handleOnAppear)
-        .onReceive(NotificationCenter.default.publisher(for: .PlayManStateChange), perform: handlePlayManStateChange)
     }
 
     /// 根据宽度来决定字体的大小
@@ -52,20 +49,6 @@ struct AudioTitle: View, SuperLog, SuperThread {
         }
 
         return count
-    }
-}
-
-// MARK: Event Handler
-
-extension AudioTitle {
-    func handleOnAppear() {
-        self.title = playMan.asset?.title ?? ""
-    }
-
-    func handlePlayManStateChange(_ notification: Notification) {
-        withAnimation {
-            self.title = playMan.asset?.title ?? ""
-        }
     }
 }
 

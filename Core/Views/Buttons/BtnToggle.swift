@@ -6,6 +6,7 @@ import SwiftUI
 struct BtnToggle: View, SuperThread, SuperLog {
     @EnvironmentObject var appManager: AppProvider
     @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var m: MessageProvider
 
     @State private var hovered: Bool = false
     @State private var systemImage = "play.fill"
@@ -69,16 +70,18 @@ struct BtnToggle: View, SuperThread, SuperLog {
 
 extension BtnToggle {
     func onTap() {
-        self.bg.async {
+        do {
             if let asset = asset {
                 if asset.url == playMan.asset?.url {
-                    playMan.toggle()
+                    try playMan.toggle()
                 } else {
-                    playMan.play(asset, reason: "点击了BtnToggle")
+                    try playMan.play(asset, reason: "点击了BtnToggle")
                 }
             } else {
-                playMan.toggle()
+                try playMan.toggle()
             }
+        } catch {
+            m.error(error)
         }
     }
 

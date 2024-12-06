@@ -6,6 +6,13 @@ import MagicKit
 struct BootView<Content>: View, SuperEvent, SuperLog where Content: View {
     var content: Content
     let emoji = "🌳"
+    let a = AppProvider()
+    let p = PluginProvider()
+    let s = StoreProvider()
+    let f = FamalyProvider()
+    let man = PlayMan()
+    let db = DB(Config.getContainer, reason: "BootView")
+    let dbSyncedd = DBSynced(Config.getSyncedContainer)
     
     @State var dataManager: DataProvider?
     @State var error: Error? = nil
@@ -39,14 +46,14 @@ struct BootView<Content>: View, SuperEvent, SuperLog where Content: View {
                             }
                             .frame(minWidth: Config.minWidth, minHeight: Config.minHeight)
                             .blendMode(.normal)
-                            .environmentObject(PlayMan())
-                            .environmentObject(AppProvider())
-                            .environmentObject(StoreProvider())
-                            .environmentObject(PluginProvider())
-                            .environmentObject(RootProvider())
+                            .environmentObject(man)
+                            .environmentObject(a)
+                            .environmentObject(s)
+                            .environmentObject(p)
+                            .environmentObject(f)
                             .environmentObject(dataManager)
-                            .environmentObject(DB(Config.getContainer, reason: "BootView"))
-                            .environmentObject(DBSynced(Config.getSyncedContainer))
+                            .environmentObject(db)
+                            .environmentObject(dbSyncedd)
                             .environmentObject(m)
                         } else {
                             Text("启动失败")

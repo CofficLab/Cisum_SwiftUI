@@ -1,17 +1,17 @@
 import Foundation
 
-protocol PlayWorker {
+protocol SuperPlayWorker {
     var duration: TimeInterval { get }
     var currentTime: TimeInterval { get }
     var state: PlayState { get }
     
     func goto(_ time: TimeInterval)
     func prepare(_ asset: PlayAsset?, reason: String)
-    func play(_ asset: PlayAsset, reason: String)
-    func play()
-    func resume()
-    func pause()
+    func play(_ asset: PlayAsset, reason: String) throws
+    func play() throws
+    func resume() throws
+    func pause() throws
     func stop(reason: String)
-    func toggle()
+    func toggle() throws
     func setError(_ e: Error, asset: PlayAsset?)
 }

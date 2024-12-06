@@ -11,68 +11,13 @@ import SwiftUI
       对接系统媒体中心
  */
 
-class AudioWorker: NSObject, ObservableObject, PlayWorker, SuperLog, SuperThread {
-    // MARK: 成员
-
-    static var label = "💿 AudioWorker::"
+class AudioWorker: NSObject, ObservableObject, SuperPlayWorker, SuperLog, SuperThread {
     let emoji = "🎺"
     var player = AVAudioPlayer()
     var asset: PlayAsset?
     var verbose = false
     var queue = DispatchQueue(label: "AudioWorker", qos: .userInteractive)
-
-    // MARK: 状态改变时
-
-    var state: PlayState = .Stopped {
-        didSet {
-            if verbose {
-                os_log("\(self.t)State changed 「\(oldValue.des)」 -> 「\(self.state.des)」")
-            }
-
-            var e: Error?
-
-            self.asset = self.state.getAsset()
-
-            switch state {
-            case .Ready:
-                do {
-                    try player = makePlayer(self.asset, reason: "AudioWorker.Ready")
-                    player.prepareToPlay()
-                } catch {
-                    e = error
-                }
-            case let .Playing(asset):
-                if let oldAudio = oldValue.getPausedAudio(), oldAudio.url == asset.url {
-                    player.play()
-                } else {
-                    do {
-                        self.asset = asset
-                        try player = makePlayer(asset, reason: "AudioWorker.Playing")
-                        player.prepareToPlay()
-                        player.play()
-                    } catch {
-                        e = error
-                    }
-                }
-            case .Paused:
-                player.pause()
-            case .Stopped:
-                player.stop()
-                player = makeEmptyPlayer()
-            case .Finished:
-                player.stop()
-            case .Error:
-                player = makeEmptyPlayer()
-            }
-
-            self.onStateChange(state)
-
-            if let ee = e {
-                setError(ee, asset: self.asset)
-            }
-        }
-    }
-
+    var state: PlayState = .Stopped
     var duration: TimeInterval { player.duration }
     var currentTime: TimeInterval { player.currentTime }
     var leftTime: TimeInterval { duration - currentTime }
@@ -87,22 +32,18 @@ class AudioWorker: NSObject, ObservableObject, PlayWorker, SuperLog, SuperThread
     // MARK: 对外传递事件
 
     var onStateChange: (_ state: PlayState) -> Void = { state in
-        os_log("\(AudioWorker.label)播放器状态已变为 \(state.des)")
+        os_log("播放器状态已变为 \(state.des)")
     }
 
     var onGetNextOf: (_ asset: PlayAsset?) -> PlayAsset? = { asset in
-        os_log("\(AudioWorker.label)GetNextOf -> \(asset?.title ?? "nil")")
+        os_log("GetNextOf -> \(asset?.title ?? "nil")")
         return nil
     }
 
     var onToggleMode: () -> Void = {
-        os_log("\(AudioWorker.label)ToggleMode")
+        os_log("ToggleMode")
     }
-}
 
-// MARK: 播放控制
-
-extension AudioWorker {
     func goto(_ time: TimeInterval) {
         player.currentTime = time
     }
@@ -117,7 +58,7 @@ extension AudioWorker {
 
     // MARK: Play
 
-    func play(_ asset: PlayAsset, reason: String) {
+    func play(_ asset: PlayAsset, reason: String) throws {
         let verbose = false
         if verbose {
             os_log("\(self.t)Play \(asset.fileName) 🐛 \(reason)")
@@ -127,18 +68,19 @@ extension AudioWorker {
             return prepare(asset, reason: reason)
         }
 
-        self.state = .Playing(asset)
+        try player = makePlayer(asset, reason: "AudioWorker.Playing", verbose: true)
+        self.asset = asset
+        self.player.prepareToPlay()
+        self.player.play()
     }
 
-    func play() {
+    func play() throws {
         os_log("\(self.t)Play")
-        DispatchQueue.main.async {
-            self.resume()
-        }
+        try self.resume()
     }
 
-    func resume() {
-        let verbose = false
+    func resume() throws {
+        let verbose = true
         if verbose {
             os_log("\(self.t)Resume")
         }
@@ -151,6 +93,8 @@ extension AudioWorker {
                 state = .Playing(asset)
             } else {
                 state = .Error(SmartError.NoAudioInList, nil)
+
+                throw SmartError.NoAudioInList
             }
         }
     }
@@ -183,8 +127,8 @@ extension AudioWorker {
         state = .Finished(asset)
     }
 
-    func toggle() {
-        isPlaying ? pause() : resume()
+    func toggle() throws {
+        isPlaying ? pause() : try resume()
     }
 }
 
@@ -195,8 +139,7 @@ extension AudioWorker {
         AVAudioPlayer()
     }
 
-    func makePlayer(_ asset: PlayAsset?, reason: String) throws -> AVAudioPlayer {
-        let verbose = false
+    func makePlayer(_ asset: PlayAsset?, reason: String, verbose: Bool) throws -> AVAudioPlayer {
         if verbose {
             os_log("\(self.t)MakePlayer「\(asset?.fileName ?? "nil")」 🐛 \(reason)")
         }
@@ -306,6 +249,6 @@ extension AudioWorker: AVAudioPlayerDelegate {
 
     func audioPlayerEndInterruption(_ player: AVAudioPlayer, withOptions flags: Int) {
         os_log("\(self.t)audioPlayerEndInterruption")
-        resume()
+        try? resume()
     }
 }

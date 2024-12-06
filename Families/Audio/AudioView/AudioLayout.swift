@@ -7,7 +7,7 @@ struct AudioLayout: View, SuperLog, SuperThread {
     let emoji = "🖥️"
 
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var l: RootProvider
+    @EnvironmentObject var l: FamalyProvider
     @State private var databaseViewHeight: CGFloat = 300
 
     // 记录用户调整的窗口的高度

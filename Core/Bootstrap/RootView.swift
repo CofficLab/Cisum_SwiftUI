@@ -6,7 +6,7 @@ struct RootView: View, SuperLog, SuperEvent, SuperThread {
     @EnvironmentObject var play: PlayMan
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var data: DataProvider
-    @EnvironmentObject var root: RootProvider
+    @EnvironmentObject var root: FamalyProvider
 
     let emoji = "🌳"
     var dbSynced = DBSynced(Config.getSyncedContainer)

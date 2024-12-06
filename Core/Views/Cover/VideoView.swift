@@ -30,7 +30,7 @@ struct VideoView: View {
     var body: some View {
         VideoPlayer(player: playMan.videoWorker.player)
             .onAppear {
-                playMan.play(asset, reason: "OnAppear")
+                try? playMan.play(asset, reason: "OnAppear")
             }
     }
 }
