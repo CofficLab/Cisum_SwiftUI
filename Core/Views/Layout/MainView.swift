@@ -8,6 +8,7 @@ struct MainView: View, SuperLog, SuperThread {
 
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var l: FamalyProvider
+    @EnvironmentObject var p: PluginProvider
     @State private var databaseViewHeight: CGFloat = 300
 
     // 记录用户调整的窗口的高度
@@ -28,7 +29,11 @@ struct MainView: View, SuperLog, SuperThread {
 
     var body: some View {
         GeometryReader { geo in
-            VStack(spacing: 0) {
+            VStack(spacing: 0) {                
+                p.plugins.first?.addDBView()
+                    .background(Color.red.opacity(0.3))
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+
                 AudioControl()
                     .frame(height: showDB ? Config.controlViewMinHeight : geo.size.height)
 

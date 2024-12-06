@@ -105,6 +105,16 @@ extension BtnToggle {
     }
 }
 
+extension Notification.Name {
+    static let BtnToggleTap = Notification.Name("BtnToggleTap")
+}
+
+extension BtnToggle {
+    func emitTap() {
+        NotificationCenter.default.post(name: .BtnToggleTap, object: nil)
+    }
+}
+
 #Preview("App") {
     AppPreview()
         .frame(height: 800)

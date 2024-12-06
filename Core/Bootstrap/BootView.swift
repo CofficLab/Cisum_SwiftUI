@@ -7,10 +7,8 @@ struct BootView<Content>: View, SuperEvent, SuperLog where Content: View {
     var content: Content
     let emoji = "🌳"
     let a = AppProvider()
-    let p = PluginProvider()
     let s = StoreProvider()
     let f = FamalyProvider()
-    let man = PlayMan()
     let db = DB(Config.getContainer, reason: "BootView")
     let dbSyncedd = DBSynced(Config.getSyncedContainer)
     
@@ -20,6 +18,9 @@ struct BootView<Content>: View, SuperEvent, SuperLog where Content: View {
     @State var iCloudAvailable = true
 
     @StateObject var m = MessageProvider()
+    @StateObject var p = PluginProvider()
+    @StateObject var man = PlayMan()
+
 
     init(@ViewBuilder content: () -> Content) {
         self.content = content()
@@ -84,6 +85,8 @@ struct BootView<Content>: View, SuperEvent, SuperLog where Content: View {
         })
         .onReceive(nc.publisher(for: NSUbiquitousKeyValueStore.didChangeExternallyNotification), perform: onCloudAccountStateChanged)
         .onAppear(perform: onAppear)
+        .onDisappear(perform: onDisappear)
+        .onChange(of: man.asset, onPlayAssetChange)
     }
 
     private func reloadView() {
@@ -119,6 +122,31 @@ extension BootView {
 
             self.loading = false
         }
+        
+        self.p.append(AudioPlugin())
+        self.p.append(PlayPlugin())
+
+        p.plugins.forEach({
+            $0.onAppear()
+        })
+    }
+
+    func onDisappear() {
+        p.plugins.forEach({
+            $0.onDisappear()
+        })
+    }
+
+    func onPlayManStateChange() {
+        p.plugins.forEach({
+            $0.onPlayStateUpdate()
+        })
+    }
+
+    func onPlayAssetChange() {
+        p.plugins.forEach({
+            $0.onPlayAssetUpdate()
+        })
     }
 }
 

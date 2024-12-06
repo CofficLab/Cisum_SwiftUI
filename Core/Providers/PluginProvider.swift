@@ -1,25 +1,20 @@
 import Foundation
+import MagicKit
 import OSLog
 import StoreKit
 import SwiftData
 import SwiftUI
-import MagicKit
 
 class PluginProvider: ObservableObject, SuperLog, SuperThread {
     let emoji = "🧩"
 
-    var plugins: [SuperPlugin] = []
+    @Published var plugins: [SuperPlugin] = []
 
     init() {
-        let verbose = false
-        if verbose {
-            os_log("\(Logger.initLog) PluginProvider")
-        }
+        os_log("\(Logger.initLog) PluginProvider")
     }
 
-    func getPlugins() -> some View {
-        HStack(spacing: 0) {
-            
-        }
+    func append(_ plugin: SuperPlugin) {
+        self.plugins.append(plugin)
     }
 }
