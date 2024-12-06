@@ -14,7 +14,7 @@ struct DBViewMenuTile: View {
     @State var collapsed: Bool = false
     @State var icon: String = ""
 
-    var disk: any Disk { dataManager.disk }
+    var disk: any SuperDisk { dataManager.disk }
     var root: URL { disk.root }
     var rootDiskFile: DiskFile { disk.getRoot() }
     

@@ -66,8 +66,8 @@ class VideoApp: SuperLog {
         os_log("%@👻👻👻 boot", t)
     }
     
-    func getDisk() -> (any Disk)? {
-        DiskiCloud.make("videos")
+    func getDisk() -> (any SuperDisk)? {
+        DiskiCloud.make("videos", verbose: true)
     }
     
     // MARK: 恢复上次播放的

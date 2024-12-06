@@ -21,7 +21,7 @@ struct AudioDB: View, SuperLog, SuperThread {
 
     let emoji = "🐘"
 
-    private var disk: any Disk { data.disk }
+    private var disk: any SuperDisk { data.disk }
 
     var showProTips: Bool {
         audios.count >= Config.maxAudioCount && s.currentSubscription == nil && isDropping

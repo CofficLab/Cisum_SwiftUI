@@ -5,7 +5,7 @@ import SwiftUI
 class iCloudHelper: SuperLog, SuperThread {
     static var label = "☁️ iCloudHelper::"
 
-    static func iCloudEnabled() -> Bool {
+    static func iCloudDiskEnabled() -> Bool {
         return FileManager.default.ubiquityIdentityToken != nil
     }
 

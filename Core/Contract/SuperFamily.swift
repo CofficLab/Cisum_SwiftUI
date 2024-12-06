@@ -1,16 +1,16 @@
 import SwiftUI
 import Foundation
 
-protocol SuperRoot: Identifiable, View {
+protocol SuperFamily: Identifiable, View {
     var iconName: String { get }
     var title: String { get }
     var description: String { get }
     var poster: any View { get }
 
-    func getDisk() -> (any Disk)?
+    func getDisk() -> (any SuperDisk)?
 }
 
-extension SuperRoot {
+extension SuperFamily {
     var id: String {
         return String(describing: Self.self)
     }

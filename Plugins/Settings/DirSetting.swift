@@ -25,7 +25,7 @@ struct DirSetting: View {
                     }
                 }
                 .task {
-                    if let disk = dataManager.disk.make("") {
+                    if let disk = dataManager.disk.make("", verbose: true) {
                         diskSize = disk.getFileSizeReadable()
                     }
                 }

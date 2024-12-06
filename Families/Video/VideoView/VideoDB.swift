@@ -3,11 +3,11 @@ import OSLog
 import SwiftData
 import SwiftUI
 import UniformTypeIdentifiers
-import MagicKit
 
-struct BookDB: View, SuperLog, SuperThread {
+struct VideoDB: View {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var data: DataProvider
+    @EnvironmentObject var message: MessageProvider
     @EnvironmentObject var db: DB
 
     @State var treeView = false
@@ -19,19 +19,18 @@ struct BookDB: View, SuperLog, SuperThread {
     var main = Config.mainQueue
     var bg = Config.bgQueue
     var dropping: Bool { app.isDropping }
-    var disk: any Disk { data.disk }
+    var disk: any SuperDisk { data.disk }
     var label: String { "\(Logger.isMain)\(Self.label) " }
 
     init(verbose: Bool = false) {
         if verbose {
-            os_log("\(Logger.initLog)BookDB")
+            os_log("\(Logger.isMain)\(Self.label)初始化")
         }
     }
 
     var body: some View {
         VStack(spacing: 0) {
-            BookGrid()
-            .frame(maxHeight: .infinity)
+            VideoGrid().frame(maxHeight: .infinity)
 
             TaskView()
                 .shadow(radius: 10)
@@ -76,7 +75,7 @@ struct BookDB: View, SuperLog, SuperThread {
 
 // MARK: 操作
 
-extension BookDB {
+extension VideoDB {
     func copy(_ files: [URL]) {
         data.copy(files)
     }

@@ -7,7 +7,7 @@ struct DiskFileGroup: Equatable {
     
     static var empty = DiskFileGroup(disk: DiskLocal.null, files: [], isFullLoad: true)
     
-    var disk: any Disk
+    var disk: any SuperDisk
     var files: [DiskFile]
     var isFullLoad: Bool
 
@@ -34,13 +34,13 @@ struct DiskFileGroup: Equatable {
         files.first(where: { $0.url == url})
     }
     
-    static func fromURLs(_ urls: [URL], isFullLoad: Bool, disk: any Disk) -> Self {
+    static func fromURLs(_ urls: [URL], isFullLoad: Bool, disk: any SuperDisk) -> Self {
         DiskFileGroup(disk: disk, files: urls.map({
             DiskFile.fromURL($0)
         }), isFullLoad: isFullLoad)
     }
     
-    static func fromMetaCollection(_ collection: MetadataItemCollection, disk: any Disk) -> Self {
+    static func fromMetaCollection(_ collection: MetadataItemCollection, disk: any SuperDisk) -> Self {
         let items = collection.items
         let isFullLoad = collection.name == .NSMetadataQueryDidFinishGathering
         

@@ -10,9 +10,9 @@ class RootProvider: ObservableObject, SuperLog, SuperThread {
 
     let emoji = "🧩"
 
-    @Published var current: any SuperRoot
+    @Published var current: any SuperFamily
 
-    var items: [any SuperRoot] = [
+    var items: [any SuperFamily] = [
         AudioRoot(),
 //        VideoApp(),
         BookRoot(),
@@ -43,7 +43,7 @@ class RootProvider: ObservableObject, SuperLog, SuperThread {
         }
     }
 
-    func setLayout(_ l: any SuperRoot) {
+    func setLayout(_ l: any SuperFamily) {
         if l.id == self.current.id {
             return
         }
@@ -55,7 +55,7 @@ class RootProvider: ObservableObject, SuperLog, SuperThread {
         Self.storeLayout(self.current)
     }
 
-    static func storeLayout(_ l: any SuperRoot) {
+    static func storeLayout(_ l: any SuperFamily) {
         let id = l.id
 
         UserDefaults.standard.set(id, forKey: keyOfCurrentLayoutID)

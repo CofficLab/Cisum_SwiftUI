@@ -49,7 +49,7 @@
 		0B8C36A32BEA124900C47567 /* AudioR.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C36A22BEA124900C47567 /* AudioR.swift */; };
 		0B8C36A52BEA15A800C47567 /* AudioU.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C36A42BEA15A800C47567 /* AudioU.swift */; };
 		0B8C36A72BEA15E000C47567 /* AudioC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C36A62BEA15E000C47567 /* AudioC.swift */; };
-		0B8C36AA2BEA2EC700C47567 /* Disk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C36A92BEA2EC600C47567 /* Disk.swift */; };
+		0B8C36AA2BEA2EC700C47567 /* SuperDisk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C36A92BEA2EC600C47567 /* SuperDisk.swift */; };
 		0B8C36AC2BEC6E0F00C47567 /* StateExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C36AB2BEC6E0F00C47567 /* StateExt.swift */; };
 		0B8C36AE2BEC6E3E00C47567 /* DevExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C36AD2BEC6E3E00C47567 /* DevExt.swift */; };
 		0B8C36B02BEC6E6500C47567 /* DBExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C36AF2BEC6E6500C47567 /* DBExt.swift */; };
@@ -164,7 +164,7 @@
 		F545D1752C1FCAD0006A6AFA /* CloudExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F545D1742C1FCAD0006A6AFA /* CloudExt.swift */; };
 		F545D1772C1FCC86006A6AFA /* UserExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F545D1762C1FCC86006A6AFA /* UserExt.swift */; };
 		F54DFA522CA4E41600F81BE3 /* VideoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA512CA4E41600F81BE3 /* VideoApp.swift */; };
-		F54DFA542CA4E44700F81BE3 /* SuperRoot.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA532CA4E44300F81BE3 /* SuperRoot.swift */; };
+		F54DFA542CA4E44700F81BE3 /* SuperFamily.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA532CA4E44300F81BE3 /* SuperFamily.swift */; };
 		F54DFA582CA4E59B00F81BE3 /* VideoLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA572CA4E59B00F81BE3 /* VideoLayout.swift */; };
 		F54DFA5A2CA4E5C800F81BE3 /* BookLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA592CA4E5C800F81BE3 /* BookLayout.swift */; };
 		F54DFA5C2CA4E63000F81BE3 /* RootProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA5B2CA4E63000F81BE3 /* RootProvider.swift */; };
@@ -272,7 +272,7 @@
 		0B8C36A22BEA124900C47567 /* AudioR.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioR.swift; sourceTree = "<group>"; };
 		0B8C36A42BEA15A800C47567 /* AudioU.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioU.swift; sourceTree = "<group>"; };
 		0B8C36A62BEA15E000C47567 /* AudioC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioC.swift; sourceTree = "<group>"; };
-		0B8C36A92BEA2EC600C47567 /* Disk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Disk.swift; sourceTree = "<group>"; };
+		0B8C36A92BEA2EC600C47567 /* SuperDisk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperDisk.swift; sourceTree = "<group>"; };
 		0B8C36AB2BEC6E0F00C47567 /* StateExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateExt.swift; sourceTree = "<group>"; };
 		0B8C36AD2BEC6E3E00C47567 /* DevExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevExt.swift; sourceTree = "<group>"; };
 		0B8C36AF2BEC6E6500C47567 /* DBExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBExt.swift; sourceTree = "<group>"; };
@@ -386,7 +386,7 @@
 		F545D1742C1FCAD0006A6AFA /* CloudExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudExt.swift; sourceTree = "<group>"; };
 		F545D1762C1FCC86006A6AFA /* UserExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserExt.swift; sourceTree = "<group>"; };
 		F54DFA512CA4E41600F81BE3 /* VideoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoApp.swift; sourceTree = "<group>"; };
-		F54DFA532CA4E44300F81BE3 /* SuperRoot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperRoot.swift; sourceTree = "<group>"; };
+		F54DFA532CA4E44300F81BE3 /* SuperFamily.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperFamily.swift; sourceTree = "<group>"; };
 		F54DFA572CA4E59B00F81BE3 /* VideoLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoLayout.swift; sourceTree = "<group>"; };
 		F54DFA592CA4E5C800F81BE3 /* BookLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookLayout.swift; sourceTree = "<group>"; };
 		F54DFA5B2CA4E63000F81BE3 /* RootProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootProvider.swift; sourceTree = "<group>"; };
@@ -537,7 +537,7 @@
 			isa = PBXGroup;
 			children = (
 				0BEBCBAB2B35285100F2116E /* Core */,
-				F54DFA5D2CA4E67200F81BE3 /* APPs */,
+				F54DFA5D2CA4E67200F81BE3 /* Families */,
 				0BC29EA22CA458BB00E4813F /* Plugins */,
 				0BB5871C2AD820FA0071AEBD /* Assets.xcassets */,
 				0BAABEC12BC939BF00DF4A31 /* Dev */,
@@ -587,7 +587,6 @@
 		0BB4278F2BEA7083004E6F82 /* Storage */ = {
 			isa = PBXGroup;
 			children = (
-				0B8C36A92BEA2EC600C47567 /* Disk.swift */,
 				F53BE0312C202420003CBA29 /* DiskFile.swift */,
 				F53BE0332C2024BE003CBA29 /* DiskFileGroup.swift */,
 				0BD0568A2BC6202900EBC7C4 /* DiskiCloud.swift */,
@@ -872,14 +871,14 @@
 			path = Video;
 			sourceTree = "<group>";
 		};
-		F54DFA5D2CA4E67200F81BE3 /* APPs */ = {
+		F54DFA5D2CA4E67200F81BE3 /* Families */ = {
 			isa = PBXGroup;
 			children = (
 				0BC29EAB2CA45BEA00E4813F /* Audio */,
 				0BC29EAD2CA45C2200E4813F /* Book */,
 				F54DFA502CA4E40C00F81BE3 /* Video */,
 			);
-			path = APPs;
+			path = Families;
 			sourceTree = "<group>";
 		};
 		F54DFA6E2CA5005C00F81BE3 /* VideoView */ = {
@@ -935,7 +934,8 @@
 			children = (
 				0BD651062CA4264000BA3CB8 /* SuperEvent.swift */,
 				F54DFA5E2CA4E75A00F81BE3 /* SuperPlugin.swift */,
-				F54DFA532CA4E44300F81BE3 /* SuperRoot.swift */,
+				F54DFA532CA4E44300F81BE3 /* SuperFamily.swift */,
+				0B8C36A92BEA2EC600C47567 /* SuperDisk.swift */,
 			);
 			path = Contract;
 			sourceTree = "<group>";
@@ -1180,7 +1180,7 @@
 				0BC29EA52CA4592A00E4813F /* DBBookState.swift in Sources */,
 				0B240BD52BF30730004A5944 /* JobExt.swift in Sources */,
 				0BBA42272AC2A8B800C0B977 /* BtnAdd.swift in Sources */,
-				F54DFA542CA4E44700F81BE3 /* SuperRoot.swift in Sources */,
+				F54DFA542CA4E44700F81BE3 /* SuperFamily.swift in Sources */,
 				0BBC15912ABAC19F006E82C4 /* BtnPrev.swift in Sources */,
 				F5A076662C2EBE5500DD4621 /* StoreView.swift in Sources */,
 				0B604AE82AD6384300929DD8 /* BootView.swift in Sources */,
@@ -1207,7 +1207,7 @@
 				F5A076632C2E9C2D00DD4621 /* MigrateView.swift in Sources */,
 				F52A99002C43C0DA003559F1 /* AudioList.swift in Sources */,
 				0BA9FB702BFE223A008074CB /* VersionSetting.swift in Sources */,
-				0B8C36AA2BEA2EC700C47567 /* Disk.swift in Sources */,
+				0B8C36AA2BEA2EC700C47567 /* SuperDisk.swift in Sources */,
 				0BBC158F2ABAC146006E82C4 /* BtnNext.swift in Sources */,
 				0BBC15802AB854A8006E82C4 /* AudioDB.swift in Sources */,
 				0BE93F312BFB8E3200F25445 /* SettingView.swift in Sources */,

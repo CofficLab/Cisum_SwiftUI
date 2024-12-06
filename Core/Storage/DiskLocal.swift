@@ -1,12 +1,12 @@
 import Foundation
 import OSLog
 
-class DiskLocal: ObservableObject, Disk {
+class DiskLocal: ObservableObject, SuperDisk {    
     static let label = "🛖 DiskLocal::"
     static let localRoot = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
     static let null = DiskLocal(root: URL(string: "/dev/null")!) 
     
-    static func getMountedURL() -> URL? {
+    static func getMountedURL(verbose: Bool) -> URL? {
         guard let localRoot = Self.localRoot else {
             return nil
         }

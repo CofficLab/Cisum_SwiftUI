@@ -6,7 +6,7 @@ struct BtnDownload: View, SuperThread {
     @EnvironmentObject var l: RootProvider
 
     var asset: PlayAsset
-    var disk: (any Disk)? { l.current.getDisk() }
+    var disk: (any SuperDisk)? { l.current.getDisk() }
     let queue = DispatchQueue(label: "cisum.btnDownload")
 
     var body: some View {

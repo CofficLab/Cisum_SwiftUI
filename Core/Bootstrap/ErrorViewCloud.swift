@@ -43,7 +43,7 @@ struct ErrorViewCloud: View, SuperLog, SuperThread {
                 GroupBox {
                     makeKeyValueItem(key: "使用 iCloud", value: Config.iCloudEnabled ? "是" : "否")
                     Divider()
-                    makeKeyValueItem(key: "登录 iCloud", value: iCloudHelper.iCloudEnabled() ? "是" : "否")
+                    makeKeyValueItem(key: "登录 iCloud", value: iCloudHelper.iCloudDiskEnabled() ? "是" : "否")
                 }
             }, header: { makeTitle("iCloud") })
         }.padding(20)

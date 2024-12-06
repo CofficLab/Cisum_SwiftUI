@@ -15,7 +15,7 @@ struct VideoGrid: View {
     @State var collapsed: Bool = false
     @State var icon: String = ""
 
-    var disk: (any Disk)? {
+    var disk: (any SuperDisk)? {
         l.current.getDisk()
     }
 

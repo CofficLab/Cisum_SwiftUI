@@ -1,10 +1,10 @@
 import Foundation
 import OSLog
 
-protocol Disk: FileBox {
+protocol SuperDisk: FileBox {
     static var label: String { get }
-    static func make(_ subDirName: String) -> (any Disk)?
-    static func getMountedURL() -> URL?
+    static func make(_ subDirName: String, verbose: Bool) -> (any SuperDisk)?
+    static func getMountedURL(verbose: Bool) -> URL?
 
     var root: URL { get }
     var onUpdated: (_ items: DiskFileGroup) -> Void { get set }
@@ -15,11 +15,12 @@ protocol Disk: FileBox {
     func deleteFile(_ url: URL)
 
     func deleteFiles(_ urls: [URL])
+    
+    func download(_ url: URL, reason: String) async throws
 
     /// 移除下载
     func evict(_ url: URL)
 
-    func download(_ url: URL, reason: String) async throws
 
     func copyTo(url: URL, reason: String) throws
 
@@ -42,7 +43,7 @@ protocol Disk: FileBox {
     init(root: URL)
 }
 
-extension Disk {
+extension SuperDisk {
     var url: URL { root }
 
     var name: String {
@@ -50,7 +51,7 @@ extension Disk {
     }
 
     func getMountedURL() -> URL? {
-        Self.getMountedURL()
+        Self.getMountedURL(verbose: true)
     }
 
     // MARK: 下载
@@ -77,10 +78,10 @@ extension Disk {
 
     // MARK: 创建磁盘
 
-    static func make(_ subDirName: String) -> (any Disk)? {
+    static func make(_ subDirName: String, verbose: Bool) -> (any SuperDisk)? {
         let fileManager = FileManager.default
 
-        guard let mountedURL = Self.getMountedURL() else {
+        guard let mountedURL = Self.getMountedURL(verbose: verbose) else {
             return nil
         }
 
@@ -99,7 +100,7 @@ extension Disk {
         return Self(root: subRoot)
     }
 
-    func make(_ subDirName: String) -> (any Disk)? {
-        Self.make(subDirName)
+    func make(_ subDirName: String, verbose: Bool) -> (any SuperDisk)? {
+        Self.make(subDirName, verbose: verbose)
     }
 }

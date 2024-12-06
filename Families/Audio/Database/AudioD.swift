@@ -5,13 +5,13 @@ import SwiftData
 extension DB {
     // MARK: Static-删除-单个
 
-    static func deleteAudio(context: ModelContext, disk: any Disk, id: Audio.ID) -> Audio? {
+    static func deleteAudio(context: ModelContext, disk: any SuperDisk, id: Audio.ID) -> Audio? {
         deleteAudios(context: context, disk: disk, ids: [id])
     }
 
     // MARK: Static-删除-多个
 
-    static func deleteAudiosByURL(context: ModelContext, disk: any Disk, urls: [URL]) -> Audio? {
+    static func deleteAudiosByURL(context: ModelContext, disk: any SuperDisk, urls: [URL]) -> Audio? {
         // 本批次的最后一个删除后的下一个
         var next: Audio?
 
@@ -50,7 +50,7 @@ extension DB {
         return next
     }
 
-    static func deleteAudios(context: ModelContext, disk: any Disk, ids: [Audio.ID], verbose: Bool = false) -> Audio? {
+    static func deleteAudios(context: ModelContext, disk: any SuperDisk, ids: [Audio.ID], verbose: Bool = false) -> Audio? {
         if verbose {
             os_log("\(Logger.isMain)\(label)数据库删除")
         }

@@ -5,7 +5,7 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-struct AudioRoot: View, SuperLog, SuperThread, SuperRoot {
+struct AudioRoot: View, SuperLog, SuperThread, SuperFamily {
     let emoji = "🎶"
     let dirName = "audios"
     let iconName = "music.note.list"
@@ -28,7 +28,7 @@ struct AudioRoot: View, SuperLog, SuperThread, SuperRoot {
     @State private var mode: PlayMode?
     @State var networkOK = true
     @State var copyJob: AudioCopyJob?
-    @State var disk: (any Disk)?
+    @State var disk: (any SuperDisk)?
 
     @Query(sort: \Audio.order, animation: .default) var audios: [Audio]
     @Query(animation: .default) var copyTasks: [CopyTask]
@@ -61,7 +61,7 @@ struct AudioRoot: View, SuperLog, SuperThread, SuperRoot {
 // MARK: Actions
 
 extension AudioRoot {
-    func getDisk() -> (any Disk)? {
+    func getDisk() -> (any SuperDisk)? {
         return disk
     }
 
@@ -291,7 +291,7 @@ extension AudioRoot {
                 os_log("\(self.t)OnAppear")
             }
             
-            self.disk = DiskiCloud.make(self.dirName)
+            self.disk = DiskiCloud.make(self.dirName, verbose: true)
             self.watchDisk(reason: "AudioApp.Boot")
         }
     }

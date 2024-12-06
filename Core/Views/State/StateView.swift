@@ -19,7 +19,7 @@ struct StateView: View, SuperLog, SuperThread {
     var asset: PlayAsset? { playMan.asset }
     var font: Font { asset == nil ? .title3 : .callout }
     let emoji = "🖥️"
-    var disk: any Disk { data.disk }
+    var disk: any SuperDisk { data.disk }
 
     var body: some View {
         VStack {

@@ -5,7 +5,7 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-struct BookRoot: View, SuperLog, SuperThread, SuperRoot {
+struct BookRoot: View, SuperLog, SuperThread, SuperFamily {
     let emoji = "📚"
     let title = "有声书模式"
     let dirName = "audios_book"
@@ -22,7 +22,7 @@ struct BookRoot: View, SuperLog, SuperThread, SuperRoot {
     @State private var mode: PlayMode?
     @State var networkOK = true
     @State var copyJob: BookCopyJob?
-    @State var disk: (any Disk)?
+    @State var disk: (any SuperDisk)?
 
     @Query(sort: \Book.order, animation: .default) var books: [Book]
     @Query(animation: .default) var copyTasks: [CopyTask]
@@ -99,7 +99,7 @@ extension BookRoot {
         return nil
     }
 
-    func getDisk() -> (any Disk)? {
+    func getDisk() -> (any SuperDisk)? {
         self.disk
     }
     
@@ -279,7 +279,7 @@ extension BookRoot {
                 os_log("\(self.t)OnAppear")
             }
 
-            self.disk = DiskiCloud.make(self.dirName)
+            self.disk = DiskiCloud.make(self.dirName, verbose: true)
             self.watchDisk(reason: "BookRoot.OnAppear")
         }
     }

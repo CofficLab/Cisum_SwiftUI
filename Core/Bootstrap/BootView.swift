@@ -1,12 +1,12 @@
 import AlertToast
 import OSLog
 import SwiftUI
+import MagicKit
 
-struct BootView<Content>: View, SuperEvent where Content: View {
-    private var content: Content
-    private var verbose = true
-    private var label: String { "\(Logger.isMain)🌳 BootView::" }
-
+struct BootView<Content>: View, SuperEvent, SuperLog where Content: View {
+    var content: Content
+    let emoji = "🌳"
+    
     @State var dataManager: DataProvider?
     @State var error: Error? = nil
     @State var loading = true
@@ -105,7 +105,7 @@ extension BootView {
     func onAppear() {
         Task {
             do {
-                try dataManager = await DataProvider()
+                try dataManager = await DataProvider(verbose: true)
             } catch let e {
                 self.error = e
             }

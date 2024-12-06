@@ -5,11 +5,11 @@ import SwiftUI
 import MagicKit
 
 class DataProvider: ObservableObject, SuperLog {
-    let label = "💼"
+    let emoji = "💼"
     var db: DB
     var container: ModelContainer
 
-    @Published var disk: any Disk
+    @Published var disk: any SuperDisk
     @Published var syncing: Bool = false
 
     var isiCloudDisk: Bool {
@@ -20,16 +20,24 @@ class DataProvider: ObservableObject, SuperLog {
         !(disk is DiskiCloud)
     }
 
-    init() async throws {
-        self.disk = DiskLocal.make("audios") ?? DiskLocal(root: URL(fileURLWithPath: "/tmp"))
+    init(verbose: Bool) async throws {
+        if verbose {
+            os_log("\(Logger.initLog) DataProvider")
+        }
+        
+        self.disk = DiskLocal.make("audios", verbose: verbose) ?? DiskLocal(root: URL(fileURLWithPath: "/tmp"))
         self.container = Config.getContainer
         self.db = DB(self.container, reason: "DataProvider.Init")
 
         if Config.iCloudEnabled {
-            try await self.checkAndUpdateiCloudStatus()
+            if verbose {
+                os_log("\(Logger.initLog) DataProvider::设置中启用了 iCloud")
+            }
 
-            guard let iCloudDisk = DiskiCloud.make("audios") else {
-                throw DataProviderError.NoDisk
+            try await self.checkAndUpdateiCloudStatus(verbose: verbose)
+
+            guard let iCloudDisk = DiskiCloud.make("audios", verbose: verbose) else {
+                throw DataProviderError.NoiCloudDisk
             }
 
             self.disk = iCloudDisk
@@ -50,9 +58,7 @@ class DataProvider: ObservableObject, SuperLog {
         }
     }
 
-    func checkAndUpdateiCloudStatus() async throws {
-        let verbose = false
-
+    func checkAndUpdateiCloudStatus(verbose: Bool) async throws {
         if verbose {
             os_log("\(self.t)Checking iCloud status")
         }
@@ -94,10 +100,10 @@ class DataProvider: ObservableObject, SuperLog {
 extension DataProvider {
     func enableiCloud() throws {
         os_log("\(self.t)Enable iCloud")
-        let disk = DiskiCloud.make("audios")
+        let disk = DiskiCloud.make("audios", verbose: true)
 
         guard disk != nil else {
-            throw DataProviderError.NoDisk
+            throw DataProviderError.NoiCloudDisk
         }
 
         migrate()
@@ -105,21 +111,21 @@ extension DataProvider {
 
     func disableiCloud() throws {
         os_log("\(self.t)Disable iCloud")
-        let disk = DiskLocal.make("audios")
+        let disk = DiskLocal.make("audios", verbose: true)
 
         guard disk != nil else {
-            throw DataProviderError.NoDisk
+            throw DataProviderError.NoLocalDisk
         }
 
         migrate()
     }
 
     func migrate() {
-        guard let localMountedURL = DiskLocal.getMountedURL() else {
+        guard let localMountedURL = DiskLocal.getMountedURL(verbose: true) else {
             return
         }
 
-        guard let cloudMoutedURL = DiskiCloud.getMountedURL() else {
+        guard let cloudMoutedURL = DiskiCloud.getMountedURL(verbose: true) else {
             return
         }
 
@@ -133,7 +139,7 @@ extension DataProvider {
         }
     }
 
-    func moveAudios(_ from: any Disk, _ to: any Disk, verbose: Bool = true) {
+    func moveAudios(_ from: any SuperDisk, _ to: any SuperDisk, verbose: Bool = true) {
         Task.detached(priority: .low) {
             if verbose {
                 os_log("\(self.t)将文件从 \(from.name) 移动到 \(to.name)")
@@ -210,14 +216,17 @@ extension DataProvider {
 // MARK: Error
 
 enum DataProviderError: Error, LocalizedError, Equatable {
-    case NoDisk
+    case NoiCloudDisk
+    case NoLocalDisk
     case iCloudAccountTemporarilyUnavailable
     case NoiCloudAccount
 
     var errorDescription: String? {
         switch self {
-        case .NoDisk:
-            return "没有磁盘"
+        case .NoiCloudDisk:
+            return "没有 iCloud 磁盘"
+        case .NoLocalDisk:
+            return "没有本地磁盘"
         case .iCloudAccountTemporarilyUnavailable:
             return "iCloud 账户暂时不可用"
         case .NoiCloudAccount:

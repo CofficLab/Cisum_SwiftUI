@@ -2,7 +2,7 @@ import Foundation
 import MagicKit
 import OSLog
 
-class DiskiCloud: ObservableObject, Disk, SuperLog, SuperThread {
+class DiskiCloud: ObservableObject, SuperDisk, SuperLog, SuperThread {
     static var label = "☁️ DiskiCloud::"
     static let cloudRoot = Config.cloudDocumentsDir
 
@@ -10,9 +10,7 @@ class DiskiCloud: ObservableObject, Disk, SuperLog, SuperThread {
 
     // MARK: 磁盘的挂载目录
 
-    static func getMountedURL() -> URL? {
-        let verbose = false
-
+    static func getMountedURL(verbose: Bool) -> URL? {
         guard let cloudRoot = Self.cloudRoot else {
             os_log(.error, "\(self.label)无法获取根目录，因为 CloudRoot=nil")
 
