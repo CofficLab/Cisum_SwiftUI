@@ -81,7 +81,7 @@ extension BtnToggle {
                 try playMan.toggle()
             }
         } catch {
-            m.error(error)
+            m.alert(error.localizedDescription)
         }
     }
 

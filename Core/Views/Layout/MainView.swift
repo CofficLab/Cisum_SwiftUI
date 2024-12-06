@@ -3,7 +3,7 @@ import MagicKit
 import OSLog
 import SwiftUI
 
-struct AudioLayout: View, SuperLog, SuperThread {
+struct MainView: View, SuperLog, SuperThread {
     let emoji = "🖥️"
 
     @EnvironmentObject var app: AppProvider
@@ -83,7 +83,7 @@ struct AudioLayout: View, SuperLog, SuperThread {
     }
 }
 
-extension AudioLayout {
+extension MainView {
     private func increaseHeightToShowDB(_ geo: GeometryProxy, verbose: Bool = true) {
         os_log("\(self.t)增加 Height 以展开数据库视图")
         let space = geo.size.height - controlViewHeightMin
@@ -111,7 +111,7 @@ extension AudioLayout {
 
 // MARK: 事件处理
 
-extension AudioLayout {
+extension MainView {
     func onGeoHeightChange(_ geo: GeometryProxy) {
         if autoResizing == false {
             // 说明是用户主动调整

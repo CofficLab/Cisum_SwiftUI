@@ -1,39 +1,37 @@
+import MagicKit
 import OSLog
 import SwiftData
 import SwiftUI
 
-struct TitleView: View {
+struct TitleView: View, SuperLog, SuperThread {
     @EnvironmentObject var playMan: PlayMan
 
-    var asset: PlayAsset? { playMan.asset }
-    var characterCount: Int { asset?.fileName.count ?? 0 }
+    var title: String { playMan.asset?.title ?? "" }
     var width: CGFloat
-    var label: String {"\(Logger.isMain)📺 TitleView::"}
-    var verbose = false
+    let emoji = "📺"
 
     var body: some View {
         ZStack {
-            if let asset = asset {
-                Text(asset.title)
-                    .multilineTextAlignment(.leading)
-                    .lineLimit(nil)
-                    .foregroundStyle(.white)
-                    .font(getFont(width: width))
-            }
+            Text(playMan.asset?.title ?? "")
+                .multilineTextAlignment(.leading)
+                .lineLimit(nil)
+                .foregroundStyle(.white)
+                .font(getFont(width: width))
         }
     }
 
     /// 根据宽度来决定字体的大小
     func getFont(width: CGFloat) -> Font {
-        guard let audio = asset else {
+        let verbose = false
+        guard title.isNotEmpty else {
             return .title
         }
 
         // 防止字较少时字体很大
-        let characterCount = max(getCountCharacters(audio.fileName), 5)
+        let characterCount = max(getCountCharacters(title), 5)
 
         if verbose {
-            os_log("\(self.label)GetFont width -> \(width), characterCount=\(characterCount)")
+            os_log("\(self.t)GetFont width -> \(width), characterCount=\(characterCount)")
         }
 
         return .system(size: max(width / CGFloat(characterCount) * 1.1, 20))

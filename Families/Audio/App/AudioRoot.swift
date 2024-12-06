@@ -41,7 +41,7 @@ struct AudioRoot: View, SuperLog, SuperThread, SuperFamily {
     }
 
     var body: some View {
-        AudioLayout()
+        MainView()
             .task(priority: .low) { runJobs() }
             .onAppear(perform: onAppear)
             .onDisappear(perform: onDisappear)

@@ -48,7 +48,7 @@ struct AudioHero: View {
                 }
 
                 if showTitleView {
-                    AudioTitle(width: getTitleViewWidth(geo))
+                    TitleView(width: getTitleViewWidth(geo))
                         .frame(maxWidth: .infinity)
                         .frame(height: getTitleViewHeight(geo))
                         .background(Config.background(.red))

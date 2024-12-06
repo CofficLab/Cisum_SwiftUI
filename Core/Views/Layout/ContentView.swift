@@ -15,7 +15,7 @@ struct ContentView: View, SuperLog, SuperThread {
                     TopView()
                 }
 
-                l.layout
+                MainView()
             }
         }
     }
