@@ -3,6 +3,7 @@ import SwiftUI
 
 struct BookControl: View {
     @EnvironmentObject var appManager: AppProvider
+    @EnvironmentObject var messageManager: MessageProvider
     @EnvironmentObject var data: DataProvider
     @EnvironmentObject var playMan: PlayMan
 
@@ -14,7 +15,7 @@ struct BookControl: View {
     // MARK: 子视图是否展示
 
     var showDB: Bool { appManager.showDB }
-    var showStateMessage: Bool { appManager.stateMessage.count > 0 }
+    var showStateMessage: Bool { messageManager.showStateMessage }
     var showSliderView: Bool { playMan.isAudioWorker }
 
     var body: some View {

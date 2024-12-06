@@ -8,6 +8,7 @@ struct BookGrid: View, SuperLog, SuperThread {
 
     @EnvironmentObject var appManager: AppProvider
     @EnvironmentObject var data: DataProvider
+    @EnvironmentObject var messageManager: MessageProvider
 
     @State var selection: Audio? = nil
     @State var syncingTotal: Int = 0
@@ -21,7 +22,7 @@ struct BookGrid: View, SuperLog, SuperThread {
             return true
         }
 
-        return appManager.flashMessage.isEmpty && total == 0
+        return messageManager.flashMessage.isEmpty && total == 0
     }
 
     var body: some View {

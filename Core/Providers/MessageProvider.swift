@@ -14,11 +14,16 @@ class MessageProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
     @Published var error: Error?
     @Published var toast: String?
     @Published var doneMessage: String?
+    @Published var stateMessage: String = ""
+    @Published var flashMessage: String = ""
 
     @Published var showDone = false
     @Published var showError = false
     @Published var showToast = false
     @Published var showAlert = false
+    
+    
+    var showStateMessage: Bool { stateMessage.count > 0 }
 
     var showDoneMessage: Bool {
         doneMessage != nil

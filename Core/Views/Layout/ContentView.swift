@@ -17,26 +17,6 @@ struct ContentView: View, SuperLog, SuperThread {
 
                 l.layout
             }
-
-            if !app.flashMessage.isEmpty {
-                CardView(background: BackgroundView.type4) {
-                    Text(app.flashMessage)
-                        .font(.title)
-                        .foregroundStyle(.white)
-                }.onAppear {
-                    self.main.asyncAfter(deadline: .now() + 3.0) {
-                        app.flashMessage = ""
-                    }
-                }
-            }
-
-            if !app.fixedMessage.isEmpty {
-                CardView(background: BackgroundView.type4) {
-                    Text(app.fixedMessage)
-                        .font(.title)
-                        .foregroundStyle(.white)
-                }
-            }
         }
     }
 }

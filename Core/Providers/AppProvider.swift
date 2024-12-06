@@ -7,13 +7,8 @@ import SwiftUI
 import MagicKit
 
 class AppProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLog, SuperThread {
-    @Published var showAlert: Bool = false
     @Published var showDB: Bool = Config.showDB
     @Published var showCopying: Bool = false
-    @Published var alertMessage: String = ""
-    @Published var flashMessage: String = ""
-    @Published var stateMessage: String = ""
-    @Published var fixedMessage: String = ""
     @Published var isImporting: Bool = false
     @Published var isDropping: Bool = false
     @Published var error: Error? = nil
@@ -42,21 +37,6 @@ class AppProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLog, 
     
     func toggleDBView() {
         showDB ? self.closeDBView() : self.showDBView()
-    }
-    
-    func cleanStateMessage() {
-        stateMessage = ""
-    }
-    
-    func cleanFlashMessage() {
-        flashMessage = ""
-    }
-    
-    func setFlashMessage(_ message: String) {
-        flashMessage = message
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-            self.flashMessage = ""
-        }
     }
     
     func clearError() {

@@ -1,34 +1,15 @@
+import MagicKit
 import OSLog
 import SwiftUI
-import MagicKit
 
-struct MigrateView: View {
+struct MigrateView: View, SuperThread {
     @EnvironmentObject var appManager: AppProvider
+    @EnvironmentObject var m: MessageProvider
 
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
                 Text("Migrate")
-            }
-
-            if !appManager.flashMessage.isEmpty {
-                CardView(background: BackgroundView.type4) {
-                    Text(appManager.flashMessage)
-                        .font(.title)
-                        .foregroundStyle(.white)
-                }.onAppear {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-                        appManager.flashMessage = ""
-                    }
-                }
-            }
-
-            if !appManager.fixedMessage.isEmpty {
-                CardView(background: BackgroundView.type4) {
-                    Text(appManager.fixedMessage)
-                        .font(.title)
-                        .foregroundStyle(.white)
-                }
             }
         }
     }

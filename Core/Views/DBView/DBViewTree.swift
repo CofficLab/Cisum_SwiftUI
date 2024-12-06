@@ -7,6 +7,7 @@ struct DBViewTree: View {
 
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var dataManager: DataProvider
+    @EnvironmentObject var messageManager: MessageProvider
     @EnvironmentObject var playMan: PlayMan
 
     @State var selection: DiskFile?
@@ -22,7 +23,7 @@ struct DBViewTree: View {
             return true
         }
 
-        return app.flashMessage.isEmpty && rootDiskFile.getChildren()?.isEmpty ?? true
+        return messageManager.flashMessage.isEmpty && rootDiskFile.getChildren()?.isEmpty ?? true
     }
 
     var body: some View {

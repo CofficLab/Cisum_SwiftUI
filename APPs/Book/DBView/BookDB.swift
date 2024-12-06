@@ -80,25 +80,6 @@ extension BookDB {
     func copy(_ files: [URL]) {
         data.copy(files)
     }
-
-    func setFlashMessage(_ m: String) {
-        main.async {
-            app.setFlashMessage(m)
-            self.cleanStateMessage()
-        }
-    }
-
-    func setStateMessage(_ m: String) {
-        main.async {
-            app.stateMessage = m
-        }
-    }
-
-    func cleanStateMessage() {
-        main.async {
-            app.cleanStateMessage()
-        }
-    }
 }
 
 #Preview("APP") {

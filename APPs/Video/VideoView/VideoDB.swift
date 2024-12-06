@@ -7,6 +7,7 @@ import UniformTypeIdentifiers
 struct VideoDB: View {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var data: DataProvider
+    @EnvironmentObject var message: MessageProvider
     @EnvironmentObject var db: DB
 
     @State var treeView = false
@@ -77,25 +78,6 @@ struct VideoDB: View {
 extension VideoDB {
     func copy(_ files: [URL]) {
         data.copy(files)
-    }
-
-    func setFlashMessage(_ m: String) {
-        main.async {
-            app.setFlashMessage(m)
-            self.cleanStateMessage()
-        }
-    }
-
-    func setStateMessage(_ m: String) {
-        main.async {
-            app.stateMessage = m
-        }
-    }
-
-    func cleanStateMessage() {
-        main.async {
-            app.cleanStateMessage()
-        }
     }
 }
 

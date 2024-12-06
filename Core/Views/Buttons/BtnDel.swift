@@ -4,6 +4,7 @@ struct BtnDel: View {
     @EnvironmentObject var appManager: AppProvider
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var dataManager: DataProvider
+    @EnvironmentObject var messageManager: MessageProvider
 
     var disk: any Disk { dataManager.disk }
     var assets: [PlayAsset]
@@ -47,8 +48,7 @@ struct BtnDel: View {
                 }
             }
 
-            appManager.setFlashMessage("已删除")
-            appManager.cleanStateMessage()
+            messageManager.toast("已删除")
             callback()
         }
     }

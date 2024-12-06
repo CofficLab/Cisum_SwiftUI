@@ -3,6 +3,7 @@ import SwiftUI
 struct BtnMode: View {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var messageManager: MessageProvider
 
     var autoResize = false
 
@@ -13,7 +14,7 @@ struct BtnMode: View {
             dynamicSize: autoResize,
             onTap: {
                 playMan.switchMode()
-                app.setFlashMessage("\(playMan.getMode().description)")
+                messageManager.toast("\(playMan.getMode().description)")
             })
         .foregroundStyle(.white)
     }

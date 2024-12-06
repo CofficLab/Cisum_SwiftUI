@@ -6,6 +6,7 @@ import MagicKit
 struct StateView: View, SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var data: DataProvider
+    @EnvironmentObject var messageManager: MessageProvider
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var db: DB
     @Environment(\.modelContext) private var modelContext
@@ -22,8 +23,8 @@ struct StateView: View, SuperLog, SuperThread {
 
     var body: some View {
         VStack {
-            if app.stateMessage.count > 0 {
-                makeInfoView(app.stateMessage)
+            if messageManager.stateMessage.count > 0 {
+                makeInfoView(messageManager.stateMessage)
             }
             
             // 播放过程中出现的错误

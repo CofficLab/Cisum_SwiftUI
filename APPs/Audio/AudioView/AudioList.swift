@@ -18,6 +18,7 @@ struct AudioList: View, SuperThread, SuperLog {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var data: DataProvider
     @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var messageManager: MessageProvider
     @Environment(\.modelContext) var modelContext
 
     @Query(Audio.descriptorNotFolder) var audios: [Audio]
@@ -32,7 +33,7 @@ struct AudioList: View, SuperThread, SuperLog {
             return true
         }
 
-        return app.flashMessage.isEmpty && audios.count == 0
+        return messageManager.flashMessage.isEmpty && audios.count == 0
     }
 
     init(verbose: Bool = false, reason: String) {

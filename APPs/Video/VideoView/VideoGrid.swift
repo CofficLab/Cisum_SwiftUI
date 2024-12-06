@@ -7,6 +7,7 @@ struct VideoGrid: View {
 
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var dataManager: DataProvider
+    @EnvironmentObject var m: MessageProvider
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var l: RootProvider
 
@@ -51,7 +52,7 @@ struct VideoGrid: View {
                 
 //                )
                 
-                if app.isDropping || app.flashMessage.isEmpty && disk.getRoot().getChildren()?.isEmpty ?? true {
+                if app.isDropping || m.flashMessage.isEmpty && disk.getRoot().getChildren()?.isEmpty ?? true {
                     DBTips()
                 }
             }

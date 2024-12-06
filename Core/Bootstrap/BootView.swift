@@ -1,3 +1,4 @@
+import AlertToast
 import OSLog
 import SwiftUI
 
@@ -10,6 +11,8 @@ struct BootView<Content>: View, SuperEvent where Content: View {
     @State var error: Error? = nil
     @State var loading = true
     @State var iCloudAvailable = true
+
+    @StateObject var m = MessageProvider()
 
     init(@ViewBuilder content: () -> Content) {
         self.content = content()
@@ -44,6 +47,7 @@ struct BootView<Content>: View, SuperEvent where Content: View {
                             .environmentObject(dataManager)
                             .environmentObject(DB(Config.getContainer, reason: "BootView"))
                             .environmentObject(DBSynced(Config.getSyncedContainer))
+                            .environmentObject(m)
                         } else {
                             Text("启动失败")
                         }
@@ -51,6 +55,26 @@ struct BootView<Content>: View, SuperEvent where Content: View {
                 }
             }
         }
+        .toast(isPresenting: $m.showToast, alert: {
+            AlertToast(type: .systemImage("info.circle", .blue), title: m.toast)
+        }, completion: {
+            m.clearToast()
+        })
+        .toast(isPresenting: $m.showAlert, alert: {
+            AlertToast(displayMode: .alert, type: .error(.red), title: m.alert)
+        }, completion: {
+            m.clearAlert()
+        })
+        .toast(isPresenting: $m.showDone, alert: {
+            AlertToast(type: .complete(.green), title: m.doneMessage)
+        }, completion: {
+            m.clearDoneMessage()
+        })
+        .toast(isPresenting: $m.showError, duration: 0, tapToDismiss: true, alert: {
+            AlertToast(displayMode: .alert, type: .error(.indigo), title: m.error?.localizedDescription)
+        }, completion: {
+            m.clearError()
+        })
         .onReceive(nc.publisher(for: NSUbiquitousKeyValueStore.didChangeExternallyNotification), perform: onCloudAccountStateChanged)
         .onAppear(perform: onAppear)
     }

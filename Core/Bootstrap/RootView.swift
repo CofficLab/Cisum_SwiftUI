@@ -13,9 +13,6 @@ struct RootView: View, SuperLog, SuperEvent, SuperThread {
 
     var body: some View {
         Config.rootBackground
-            .alert(isPresented: $app.showAlert, content: {
-                Alert(title: Text(app.alertMessage))
-            })
             .onChange(of: root.current.id, onRootChange)
             .ignoresSafeArea()
             .toolbar(content: {

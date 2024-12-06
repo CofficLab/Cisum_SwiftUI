@@ -8,6 +8,7 @@ import MagicKit
 struct AudioDB: View, SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var data: DataProvider
+    @EnvironmentObject var messageManager: MessageProvider
     @EnvironmentObject var db: DB
     @EnvironmentObject var s: StoreProvider
 
@@ -27,7 +28,7 @@ struct AudioDB: View, SuperLog, SuperThread {
     }
 
     var showTips: Bool {
-        (isDropping || (app.flashMessage.isEmpty && audios.count == 0)) && !showProTips
+        (isDropping || (messageManager.flashMessage.isEmpty && audios.count == 0)) && !showProTips
     }
 
     var outOfLimit: Bool {
@@ -99,25 +100,6 @@ extension AudioDB {
             emitCopyFiles(urls)
         case let .failure(error):
             os_log(.error, "导入文件失败Error: \(error.localizedDescription)")
-        }
-    }
-
-    private func setFlashMessage(_ m: String) {
-        main.async {
-            app.setFlashMessage(m)
-            self.cleanStateMessage()
-        }
-    }
-
-    private func setStateMessage(_ m: String) {
-        main.async {
-            app.stateMessage = m
-        }
-    }
-
-    private func cleanStateMessage() {
-        main.async {
-            app.cleanStateMessage()
         }
     }
 }

@@ -4,6 +4,7 @@ import SwiftUI
 struct AudioControl: View {
     @EnvironmentObject var appManager: AppProvider
     @EnvironmentObject var data: DataProvider
+    @EnvironmentObject var message: MessageProvider
     @EnvironmentObject var playMan: PlayMan
 
     @State var showHeroView = true
@@ -14,7 +15,7 @@ struct AudioControl: View {
     // MARK: 子视图是否展示
 
     var showDB: Bool { appManager.showDB }
-    var showStateMessage: Bool { appManager.stateMessage.count > 0 }
+    var showStateMessage: Bool { message.stateMessage.count > 0 }
     var showSliderView: Bool { playMan.isAudioWorker }
 
     var body: some View {
