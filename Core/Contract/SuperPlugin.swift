@@ -3,7 +3,7 @@ import SwiftUI
 protocol SuperPlugin {
     var label: String { get }
 
-    func addDBView() -> AnyView?
+    func addDBView() -> AnyView
     
     func onInit() -> Void
     func onAppear() -> Void

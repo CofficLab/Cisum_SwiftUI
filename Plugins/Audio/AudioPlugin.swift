@@ -1,25 +1,25 @@
 import Foundation
-import OSLog
 import MagicKit
+import OSLog
 import SwiftUI
 
 class AudioPlugin: SuperPlugin, SuperLog {
     let emoji = "🎺"
-    
+
     var label: String = ""
 
-    func addDBView() -> AnyView? {
+    func addDBView() -> AnyView {
         os_log("\(self.t)AddDBView")
-        
-        return AnyView() {
+
+        return AnyView(
             AudioPoster()
-        }
+        )
     }
-    
+
     func onPlay() {
         os_log("\(self.t)OnPlay")
     }
-    
+
     func onPlayStateUpdate() {
         os_log("\(self.t)OnPlayStateUpdate")
     }

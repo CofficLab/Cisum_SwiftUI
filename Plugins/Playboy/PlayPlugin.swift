@@ -8,12 +8,10 @@ class PlayPlugin: SuperPlugin, SuperLog {
     
     var label: String = ""
 
-    func addDBView() -> AnyView? {
+    func addDBView() -> AnyView {
         os_log("\(self.t)AddDBView")
         
-        return AnyView {
-            Text("Hi")
-        }
+        return AnyView(Text("Hi"))
     }
     
     func onPlay() {
