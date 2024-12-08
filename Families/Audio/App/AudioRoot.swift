@@ -21,9 +21,9 @@ struct AudioRoot: View, SuperLog, SuperThread, SuperFamily {
     var db: DB { d.db }
 
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var l: FamalyProvider
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var d: DataProvider
+    @EnvironmentObject var p: PluginProvider
 
     @State private var mode: PlayMode?
     @State var networkOK = true
@@ -160,7 +160,7 @@ extension AudioRoot {
 
             if let url = getCurrent() {
                 self.playMan.prepare(PlayAsset(url: url), reason: "AudioRoot.Restore")
-            } else if (l.current.getDisk()) != nil {
+            } else if (p.current?.getDisk()) != nil {
                 self.playMan.prepare(db.firstAudio()?.toPlayAsset(), reason: "AudioRoot.Restore")
             }
         }
@@ -173,7 +173,7 @@ extension AudioRoot {
                 os_log("\(self.t)DownloadNextBatch(\(count))")
 
                 Task {
-                    if let url = url, let disk = await l.current.getDisk() {
+                    if let url = url, let disk = await p.current?.getDisk() {
                         var currentIndex = 0
                         var currentURL: URL = url
 

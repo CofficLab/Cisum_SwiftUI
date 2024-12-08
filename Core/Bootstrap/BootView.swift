@@ -8,7 +8,6 @@ struct BootView<Content>: View, SuperEvent, SuperLog where Content: View {
     let emoji = "🌳"
     let a = AppProvider()
     let s = StoreProvider()
-    let f = FamalyProvider()
     let db = DB(Config.getContainer, reason: "BootView")
     let dbSyncedd = DBSynced(Config.getSyncedContainer)
     
@@ -51,7 +50,6 @@ struct BootView<Content>: View, SuperEvent, SuperLog where Content: View {
                             .environmentObject(a)
                             .environmentObject(s)
                             .environmentObject(p)
-                            .environmentObject(f)
                             .environmentObject(dataManager)
                             .environmentObject(db)
                             .environmentObject(dbSyncedd)
@@ -125,6 +123,7 @@ extension BootView {
         
         self.p.append(AudioPlugin())
         self.p.append(PlayPlugin())
+        self.p.append(BookPlugin())
 
         p.plugins.forEach({
             $0.onAppear()

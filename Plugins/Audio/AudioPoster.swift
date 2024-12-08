@@ -28,11 +28,3 @@ struct AudioPoster: View {
         .padding()
     }
 }
-
-#Preview("Scenes") {
-    BootView {
-        Posters(isPresented: .constant(false))
-            .background(.background)
-    }
-    .frame(height: 800)
-}

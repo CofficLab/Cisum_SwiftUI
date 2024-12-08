@@ -37,6 +37,7 @@
 		0B4E246F2BCAB8020033CC07 /* AppPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4E246E2BCAB8020033CC07 /* AppPreview.swift */; };
 		0B5786342BCB8DC00064F66A /* PlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B5786332BCB8DC00064F66A /* PlayView.swift */; };
 		0B59FF3E2C2F108500F04728 /* DirScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B59FF3D2C2F108500F04728 /* DirScene.swift */; };
+		0B5D09952D05EE4C00224E6B /* BookPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B5D09942D05EE4C00224E6B /* BookPlugin.swift */; };
 		0B5E51E52AD912B5000650CF /* DebugCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B5E51E42AD912B5000650CF /* DebugCommand.swift */; };
 		0B604AE82AD6384300929DD8 /* BootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B604AE72AD6384300929DD8 /* BootView.swift */; };
 		0B6B8B992BBA39F500F65B23 /* ControlButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6B8B982BBA39F500F65B23 /* ControlButton.swift */; };
@@ -169,7 +170,6 @@
 		F54DFA542CA4E44700F81BE3 /* SuperFamily.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA532CA4E44300F81BE3 /* SuperFamily.swift */; };
 		F54DFA582CA4E59B00F81BE3 /* VideoLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA572CA4E59B00F81BE3 /* VideoLayout.swift */; };
 		F54DFA5A2CA4E5C800F81BE3 /* BookLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA592CA4E5C800F81BE3 /* BookLayout.swift */; };
-		F54DFA5C2CA4E63000F81BE3 /* FamalyProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA5B2CA4E63000F81BE3 /* FamalyProvider.swift */; };
 		F54DFA5F2CA4E75D00F81BE3 /* SuperPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA5E2CA4E75A00F81BE3 /* SuperPlugin.swift */; };
 		F54DFA612CA4E81200F81BE3 /* VideoControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA602CA4E81200F81BE3 /* VideoControl.swift */; };
 		F54DFA632CA4E84500F81BE3 /* VideoBtns.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA622CA4E84500F81BE3 /* VideoBtns.swift */; };
@@ -262,6 +262,7 @@
 		0B4E246E2BCAB8020033CC07 /* AppPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppPreview.swift; sourceTree = "<group>"; };
 		0B5786332BCB8DC00064F66A /* PlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayView.swift; sourceTree = "<group>"; };
 		0B59FF3D2C2F108500F04728 /* DirScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirScene.swift; sourceTree = "<group>"; };
+		0B5D09942D05EE4C00224E6B /* BookPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookPlugin.swift; sourceTree = "<group>"; };
 		0B5E51E42AD912B5000650CF /* DebugCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugCommand.swift; sourceTree = "<group>"; };
 		0B604AE72AD6384300929DD8 /* BootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BootView.swift; sourceTree = "<group>"; };
 		0B6B8B982BBA39F500F65B23 /* ControlButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlButton.swift; sourceTree = "<group>"; };
@@ -393,7 +394,6 @@
 		F54DFA532CA4E44300F81BE3 /* SuperFamily.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperFamily.swift; sourceTree = "<group>"; };
 		F54DFA572CA4E59B00F81BE3 /* VideoLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoLayout.swift; sourceTree = "<group>"; };
 		F54DFA592CA4E5C800F81BE3 /* BookLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookLayout.swift; sourceTree = "<group>"; };
-		F54DFA5B2CA4E63000F81BE3 /* FamalyProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FamalyProvider.swift; sourceTree = "<group>"; };
 		F54DFA5E2CA4E75A00F81BE3 /* SuperPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperPlugin.swift; sourceTree = "<group>"; };
 		F54DFA602CA4E81200F81BE3 /* VideoControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoControl.swift; sourceTree = "<group>"; };
 		F54DFA622CA4E84500F81BE3 /* VideoBtns.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoBtns.swift; sourceTree = "<group>"; };
@@ -498,7 +498,6 @@
 				F5675C3F2C25456300326664 /* DataProvider.swift */,
 				F5E17A752D03074500473CB8 /* MessageProvider.swift */,
 				0BC29EA82CA4599500E4813F /* PluginProvider.swift */,
-				F54DFA5B2CA4E63000F81BE3 /* FamalyProvider.swift */,
 				0BE6958F2BFE325400CEFFEB /* StoreProvider.swift */,
 			);
 			path = Providers;
@@ -550,6 +549,14 @@
 				F573B1852C041175004C34CC /* Local */,
 			);
 			path = Database;
+			sourceTree = "<group>";
+		};
+		0B5D09932D05EE4400224E6B /* Book */ = {
+			isa = PBXGroup;
+			children = (
+				0B5D09942D05EE4C00224E6B /* BookPlugin.swift */,
+			);
+			path = Book;
 			sourceTree = "<group>";
 		};
 		0B8113B22C2C42EF007CA124 /* Migrate */ = {
@@ -690,6 +697,7 @@
 		0BC29EA22CA458BB00E4813F /* Plugins */ = {
 			isa = PBXGroup;
 			children = (
+				0B5D09932D05EE4400224E6B /* Book */,
 				0B0FA2272D03485C004D4D41 /* Audio */,
 				0B0FA2102D034431004D4D41 /* Playboy */,
 				0B0FA20F2D034216004D4D41 /* AudioList */,
@@ -1217,6 +1225,7 @@
 				F5AEE05A2CB515660007825B /* BookHero.swift in Sources */,
 				0B8C36B62BEDAB5E00C47567 /* BtnMore.swift in Sources */,
 				0BAABEC32BC939D000DF4A31 /* LayoutView.swift in Sources */,
+				0B5D09952D05EE4C00224E6B /* BookPlugin.swift in Sources */,
 				0BC29EB52CA6DE5F00E4813F /* AudioVStack.swift in Sources */,
 				0BAABEB32BC79C9F00DF4A31 /* TaskExt.swift in Sources */,
 				F518F6F52C34E78C00844E62 /* Book.swift in Sources */,
@@ -1371,7 +1380,6 @@
 				F573B1882C0411E4004C34CC /* DeviceDataExt.swift in Sources */,
 				0BB427912BED0B38004E6F82 /* DiskLocal.swift in Sources */,
 				0B1165F02ABBCCB0005C5CBB /* AppProvider.swift in Sources */,
-				F54DFA5C2CA4E63000F81BE3 /* FamalyProvider.swift in Sources */,
 				F5675C3E2C252A3800326664 /* DBTree.swift in Sources */,
 				F54DFA6B2CA4FB7D00F81BE3 /* BookBtns.swift in Sources */,
 				0B19D9562C062F400057D8DB /* ProExt.swift in Sources */,

@@ -6,14 +6,12 @@ struct RootView: View, SuperLog, SuperEvent, SuperThread {
     @EnvironmentObject var play: PlayMan
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var data: DataProvider
-    @EnvironmentObject var root: FamalyProvider
-
+    
     let emoji = "🌳"
     var dbSynced = DBSynced(Config.getSyncedContainer)
 
     var body: some View {
         Config.rootBackground
-            .onChange(of: root.current.id, onRootChange)
             .ignoresSafeArea()
             .toolbar(content: {
                  ToolbarItem(placement: .navigation) {
@@ -22,20 +20,20 @@ struct RootView: View, SuperLog, SuperEvent, SuperThread {
 
                 // MARK: 工具栏
 
-                if let asset = play.asset {
-                    ToolbarItemGroup(placement: .cancellationAction, content: {
-                        Spacer()
-                        if root.current.isAudioApp {
-                            BtnLike(asset: asset, autoResize: false)
-                        }
-
-                        BtnShowInFinder(url: asset.url, autoResize: false)
-
-                        if root.current.isAudioApp {
-                            BtnDel(assets: [asset], autoResize: false)
-                        }
-                    })
-                }
+//                if let asset = play.asset {
+//                    ToolbarItemGroup(placement: .cancellationAction, content: {
+//                        Spacer()
+//                        if root.current.isAudioApp {
+//                            BtnLike(asset: asset, autoResize: false)
+//                        }
+//
+//                        BtnShowInFinder(url: asset.url, autoResize: false)
+//
+//                        if root.current.isAudioApp {
+//                            BtnDel(assets: [asset], autoResize: false)
+//                        }
+//                    })
+//                }
             })
             .onAppear(perform: onAppear)
     }

@@ -7,7 +7,6 @@ struct MainView: View, SuperLog, SuperThread {
     let emoji = "🖥️"
 
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var l: FamalyProvider
     @EnvironmentObject var p: PluginProvider
     @State private var databaseViewHeight: CGFloat = 300
 

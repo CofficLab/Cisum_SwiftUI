@@ -3,27 +3,31 @@ import SwiftData
 import SwiftUI
 
 struct Posters: View {
-    @EnvironmentObject var root: FamalyProvider
+    @EnvironmentObject var p: PluginProvider
     
     @Binding var isPresented: Bool
     
     @State var id: String = ""
+
+    var plugins: [SuperPlugin] {
+        return p.plugins.filter { $0.hasPoster }
+    }
     
     var body: some View {
         VStack {
             Picker("", selection: $id) {
-                ForEach(root.items, id: \.id) { item in
-                    Text(item.title)
-                        .tag(item.id)
+                ForEach(plugins, id: \.label) { item in
+                    Text(item.label)
+                        .tag(item.label)
                 }
             }
             .pickerStyle(SegmentedPickerStyle())
             .padding()
 
-            if let currentLayout = root.items.first(where: { $0.id == id }) {
+            if let currentLayout = plugins.first(where: { $0.label == id }) {
                 VStack {
                     HStack {
-                        Text(currentLayout.title)
+                        Text(currentLayout.label)
                     }
                     .font(.title)
                     .padding()
@@ -31,12 +35,12 @@ struct Posters: View {
                     Text(currentLayout.description)
         
                     GroupBox {
-                        AnyView(currentLayout.poster)
+                        AnyView(currentLayout.addPosterView())
                     }.padding()
                 }
         
                 Button("选择") {
-                    root.setLayout(currentLayout)
+                    p.setCurrent(currentLayout)
                     self.isPresented = false
                 }.controlSize(.extraLarge)
         
@@ -44,15 +48,7 @@ struct Posters: View {
             }
         }
         .onAppear {
-            id = root.items.first?.id ?? ""
+            id = plugins.first?.label ?? ""
         }
     }
-}
-
-#Preview("Scenes") {
-    BootView {
-        Posters(isPresented: .constant(false))
-            .background(.background)
-    }
-    .frame(height: 800)
 }

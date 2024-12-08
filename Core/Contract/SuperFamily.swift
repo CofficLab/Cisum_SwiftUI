@@ -24,6 +24,7 @@ extension SuperFamily {
     }
 
     var isBookApp: Bool {
-        return self is BookRoot
+        false
+//        return self is BookRoot
     }
 }

@@ -1,26 +1,34 @@
+//
+//  AudioPlugin.swift
+//  Cisum
+//
+//  Created by Angel on 2024/12/8.
+//
+
+
 import Foundation
 import MagicKit
 import OSLog
 import SwiftUI
 
-class AudioPlugin: SuperPlugin, SuperLog {
+class BookPlugin: SuperPlugin, SuperLog {
     let emoji = "🎺"
 
-    var label: String = "Audio"
+    var label: String = "Book"
     var hasPoster: Bool = true
-    let description: String = "作为歌曲仓库，只关注文件，文件夹将被忽略"
-    var iconName: String = "music.note"
+    let description: String = "适用于听有声书的场景"
+    var iconName: String = "book"
     func addDBView() -> AnyView {
         os_log("\(self.t)AddDBView")
 
         return AnyView(
-            AudioDB()
+            BookDB()
         )
     }
 
     func addPosterView() -> AnyView {
         return AnyView(
-            AudioPoster()
+            BookPoster()
         )
     }
 

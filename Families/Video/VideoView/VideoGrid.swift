@@ -9,14 +9,14 @@ struct VideoGrid: View {
     @EnvironmentObject var dataManager: DataProvider
     @EnvironmentObject var m: MessageProvider
     @EnvironmentObject var playMan: PlayMan
-    @EnvironmentObject var l: FamalyProvider
+    @EnvironmentObject var p: PluginProvider
 
     @State var selection: DiskFile?
     @State var collapsed: Bool = false
     @State var icon: String = ""
 
     var disk: (any SuperDisk)? {
-        l.current.getDisk()
+        p.current?.getDisk()
     }
 
     var body: some View {

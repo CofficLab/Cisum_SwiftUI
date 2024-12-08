@@ -3,14 +3,15 @@ import SwiftData
 import SwiftUI
 
 struct BtnScene: View {
-    @EnvironmentObject var l: FamalyProvider
+    @EnvironmentObject var p: PluginProvider
     
     @State var isPresented: Bool = false
 
     var body: some View {
-        ControlButton(
-            title: "打开",
-            image: l.current.iconName,
+        if let plugin = p.current {
+            ControlButton(
+                title: "打开",
+            image: plugin.iconName,
             dynamicSize: false,
             onTap: {
                 self.isPresented = true
@@ -20,7 +21,8 @@ struct BtnScene: View {
                 isPresented: $isPresented
             )
             .frame(minWidth: Config.minWidth)
-        })
+            })
+        }
     }
 }
 
