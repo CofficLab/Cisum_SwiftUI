@@ -29,11 +29,7 @@ struct MainView: View, SuperLog, SuperThread {
 
     var body: some View {
         GeometryReader { geo in
-            VStack(spacing: 0) {                
-                p.plugins.first?.addDBView()
-                    .background(Color.red.opacity(0.3))
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-
+            VStack(spacing: 0) {
                 AudioControl()
                     .frame(height: showDB ? Config.controlViewMinHeight : geo.size.height)
 
