@@ -20,10 +20,10 @@ struct AudioList: View, SuperThread, SuperLog {
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var messageManager: MessageProvider
     @EnvironmentObject var db: AudioDB
+    @EnvironmentObject var audioManager: AudioProvider
 
     @State var audios: [AudioModel] = []
     @State var selection: URL? = nil
-    @State var isSyncing: Bool = false
 
     var total: Int { audios.count }
 
@@ -47,7 +47,7 @@ struct AudioList: View, SuperThread, SuperLog {
                 Section(header: HStack {
                     Text("共 \(total.description)")
                     Spacer()
-                    if isSyncing {
+                    if audioManager.isSyncing {
                         HStack {
                             Image(systemName: "arrow.triangle.2.circlepath")
                             Text("正在读取仓库")
@@ -73,10 +73,7 @@ struct AudioList: View, SuperThread, SuperLog {
         .onAppear(perform: handleOnAppear)
         .onChange(of: selection, handleSelectionChange)
         .onChange(of: playMan.asset, handlePlayAssetChange)
-        .onReceive(NotificationCenter.default.publisher(for: .PlayManStateChange), perform: handlePlayManStateChange)
-        .onReceive(NotificationCenter.default.publisher(for: .dbSyncing), perform: handleDBSyncing)
-        .onReceive(NotificationCenter.default.publisher(for: .dbSynced), perform: handleDBSynced)
-        .onReceive(NotificationCenter.default.publisher(for: .audioDeleted), perform: handleAudioDeleted)
+        .onReceive(NotificationCenter.default.publisher(for: .PlayManStateChange), perform: handlePlayManStateChange).onReceive(NotificationCenter.default.publisher(for: .audioDeleted), perform: handleAudioDeleted)
     }
 }
 
@@ -93,7 +90,7 @@ extension AudioList {
         if let asset = playMan.asset {
             selection = asset.url
         }
-        
+
         Task {
             self.audios = await db.allAudios()
         }
@@ -105,22 +102,6 @@ extension AudioList {
                 selection = asset.url
             }
         }
-    }
-
-    func handleDBSyncing(_ notification: Notification) {
-        guard let group = notification.userInfo?["group"] as? DiskFileGroup else {
-            return
-        }
-
-        if group.isFullLoad {
-            isSyncing = false
-        } else {
-            isSyncing = true
-        }
-    }
-
-    func handleDBSynced(_ notification: Notification) {
-        isSyncing = false
     }
 
     func handleSelectionChange() {

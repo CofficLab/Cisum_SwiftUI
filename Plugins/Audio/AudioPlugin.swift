@@ -14,6 +14,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
     let description: String = "作为歌曲仓库，只关注文件，文件夹将被忽略"
     var iconName: String = "music.note"
     var isGroup: Bool = true
+    let audioProvider = AudioProvider()
     lazy var db = RecordDB(AudioConfig.getContainer, reason: "AudioPlugin")
 
     var disk: (any SuperDisk)?
@@ -27,6 +28,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
         
         return AnyView(AudioDBView()
             .environmentObject(fileDB)
+            .environmentObject(audioProvider)
         )
     }
 
@@ -84,8 +86,6 @@ class AudioPlugin: SuperPlugin, SuperLog {
                 os_log("\(self.t)No current audio URL")
             }
         }
-
-        self.watchDisk(reason: "AudioApp.Boot")
     }
 
     func onPlayPrev(playMan: PlayMan, current: PlayAsset?) async throws {
@@ -105,28 +105,6 @@ class AudioPlugin: SuperPlugin, SuperLog {
             try await playMan.play(PlayAsset(url: asset.url), reason: "OnPlayNext", verbose: true)
         } else {
             throw AudioPluginError.NoNextAsset
-        }
-    }
-
-    func onPlayAssetDeleted(asset: PlayAsset) {
-        os_log("\(self.t)OnPlayAssetDeleted")
-
-        self.disk?.deleteFile(asset.url)
-    }
-
-    func watchDisk(reason: String) {
-        guard var disk = disk else {
-            return
-        }
-
-        disk.onUpdated = { items in
-            Task {
-                await self.db.sync(items)
-            }
-        }
-
-        Task {
-            await disk.watch(reason: reason, verbose: true)
         }
     }
 }
