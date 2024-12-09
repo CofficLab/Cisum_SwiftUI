@@ -8,7 +8,6 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     let emoji = "🌳"
     let a = AppProvider()
     let s = StoreProvider()
-    let dbSynced = DBSynced(Config.getSyncedContainer)
 
     @State var dataManager: DataProvider?
     @State var error: Error? = nil
@@ -58,7 +57,6 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                                 .environmentObject(s)
                                 .environmentObject(p)
                                 .environmentObject(dataManager)
-                                .environmentObject(dbSynced)
                                 .environmentObject(m)
                         } else {
                             Text("启动失败")

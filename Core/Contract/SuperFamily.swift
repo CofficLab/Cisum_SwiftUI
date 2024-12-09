@@ -15,10 +15,6 @@ extension SuperFamily {
         return String(describing: Self.self)
     }
 
-    var isAudioApp: Bool {
-        return self is AudioRoot
-    }
-
     var isVideoApp: Bool {
         return self is VideoLayout
     }

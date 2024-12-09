@@ -1,13 +1,11 @@
 import CloudKit
+import MagicKit
 import OSLog
 import SwiftData
 import SwiftUI
-import MagicKit
 
 class DataProvider: ObservableObject, SuperLog {
     let emoji = "💼"
-    var db: DB
-    var container: ModelContainer
 
     @Published var syncing: Bool = false
 
@@ -15,9 +13,6 @@ class DataProvider: ObservableObject, SuperLog {
         if verbose {
             os_log("\(Logger.initLog) DataProvider")
         }
-        
-        self.container = Config.getContainer
-        self.db = DB(self.container, reason: "DataProvider.Init")
 
         if Config.iCloudEnabled {
             if verbose {
@@ -31,15 +26,15 @@ class DataProvider: ObservableObject, SuperLog {
     // MARK: Copy
 
     func deleteCopyTask(_ task: CopyTask) {
-        Task {
-            await db.deleteCopyTask(task.id)
-        }
+//        Task {
+//            await db.deleteCopyTask(task.id)
+//        }
     }
 
     func copy(_ urls: [URL]) {
-        Task {
-            await self.db.addCopyTasks(urls)
-        }
+//        Task {
+//            await self.db.addCopyTasks(urls)
+//        }
     }
 
     func checkAndUpdateiCloudStatus(verbose: Bool) async throws {
@@ -159,7 +154,8 @@ extension DataProvider {
 
 extension DataProvider {
     func first() -> PlayAsset? {
-        db.firstAudio()?.toPlayAsset()
+        nil
+//        db.firstAudio()?.toPlayAsset()
 //            disk.getRoot().children?.first?.toPlayAsset()
     }
 }

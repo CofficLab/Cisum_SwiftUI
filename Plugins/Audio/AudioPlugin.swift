@@ -19,7 +19,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
     var disk: (any SuperDisk)?
 
     func addDBView() -> AnyView {
-        AnyView(AudioDB())
+        AnyView(AudioDB().modelContainer(AudioConfig.getContainer))
     }
 
     func addPosterView() -> AnyView {

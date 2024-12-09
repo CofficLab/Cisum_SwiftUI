@@ -28,6 +28,10 @@ extension Config {
     static let syncedDBDirName = debug ? "debug" : "production"
     
     static var syncedDBFileName = debug ? "synced_database.db" : "synced_database.db"
+
+    static func getDBRootDir() -> URL? {
+        Config.localDocumentsDir?.appendingPathComponent(dbDirName)
+    }
         
     // MARK: 本地的数据库的存储路径
     
@@ -40,33 +44,6 @@ extension Config {
     static func getDBSyncedUrl() -> URL? {
         Config.localDocumentsDir?.appendingPathComponent(syncedDBDirName).appendingPathComponent(syncedDBFileName)
     }
-    
-    // MARK: Local Container
-    
-    static var getContainer: ModelContainer = {
-        guard let url = getDBUrl() else {
-            fatalError("Could not create ModelContainer")
-        }
-
-        let schema = Schema([
-            Audio.self,
-            Book.self,
-            Cover.self,
-            CopyTask.self
-        ])
-        let modelConfiguration = ModelConfiguration(
-            schema: schema,
-            url: url,
-            allowsSave: true,
-            cloudKitDatabase: .none
-        )
-
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
     
     // MARK: iCloud 同步的 Container
     

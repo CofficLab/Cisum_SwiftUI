@@ -72,6 +72,6 @@ struct CloudSetting: View {
     RootView {
         SettingView()
             .background(.background)
-    }.modelContainer(Config.getContainer)
+    }
         .frame(height: 1200)
 }

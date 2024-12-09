@@ -53,5 +53,5 @@ struct RowTask: View {
 #Preview {
     RootView {
         ContentView()
-    }.modelContainer(Config.getContainer)
+    }
 }

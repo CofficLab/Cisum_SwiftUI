@@ -90,18 +90,18 @@ struct BookPlayingCover: View, SuperLog, SuperThread {
         
         self.downloadingPercent = asset.isDownloaded ? 100 : 0
 
-        Task {
-            guard let book = await self.data.db.findBook(asset.url) else {
-                os_log(.error, "No Book Found")
-                return
-            }
-
-            let image = await self.data.db.getCover(book.url)
-
-            if image != self.image {
-                self.image = image
-            }
-        }
+//        Task {
+//            guard let book = await self.data.db.findBook(asset.url) else {
+//                os_log(.error, "No Book Found")
+//                return
+//            }
+//
+//            let image = await self.data.db.getCover(book.url)
+//
+//            if image != self.image {
+//                self.image = image
+//            }
+//        }
     }
 
     static func makeProgressView(_ value: CGFloat = 0.5) -> some View {

@@ -1,8 +1,125 @@
-import CryptoKit
 import Foundation
 import OSLog
 import SwiftData
 
+
+extension DB {
+    var labelPrepare: String { "\(self.t)⏬⏬⏬ Prepare" }
+    
+    func prepareJob() {
+        os_log("\(self.labelPrepare) 🚀🚀🚀")
+        
+        let audio = DB.first(context: context)
+        
+        if let audio = audio {
+            self.downloadNextBatch(audio, reason: "\(Logger.isMain)\(Self.label)prepare")
+        }
+    }
+}
+
+
+extension DB {
+    var labelForGroup: String { "\(self.t)🌾🌾🌾" }
+
+    func updateGroupForURLs(_ urls: [URL], verbose: Bool = true) {
+        let total = urls.count
+        let title = "\(labelForGroup) UpdateHash(\(total))"
+        let startTime = DispatchTime.now()
+        
+        if verbose {
+            os_log("\(title) 🚀🚀🚀")
+        }
+
+        for (i,url) in urls.enumerated() {
+            if verbose && (i+1)%100 == 0 {
+                os_log("\(self.labelForGroup) UpdateHash \(i+1)/\(total) -> \(url.lastPathComponent)")
+            }
+            
+            guard iCloudHelper.isDownloaded(url), let audio = findAudio(url) else {
+                continue
+            }
+
+            updateHash(audio)
+        }
+        
+        if verbose {
+            os_log("\(self.jobEnd(startTime, title: title))")
+        }
+    }
+}
+
+extension DB {
+    var labelForGetCovers: String { "\(self.t)🌽🌽🌽 GetCovers" }
+    
+    func runGetCoversJob() {
+        os_log("\(self.labelForGetCovers) 🚀🚀🚀")
+        
+        do {
+            try self.context.enumerate(Audio.descriptorAll, block: { audio in
+                if self.hasCoverRecord(audio) == false {
+                    audio.toPlayAsset().getCoverFromMeta({ url in
+                        if url != nil {
+                            self.emitCoverUpdated(audio)
+                            self.insertCover(audio)
+                        }
+                    }, queue: DispatchQueue.global())
+                }
+            })
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
+    }
+
+    func emitCoverUpdated(_ audio: Audio) {
+        DispatchQueue.main.async {
+            os_log("\(Logger.isMain)\(Self.label) -> \(audio.title) CoverUpdated 🍋🍋🍋")
+            self.emitAudioUpdate(audio)
+        }
+    }
+
+    func insertCover(_ audio: Audio) {
+        let context = ModelContext(self.modelContainer)
+        context.insert(Cover(audio: audio, hasCover: true))
+        do {
+            try context.save()
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
+    }
+
+    func hasCoverRecord(_ audio: Audio) -> Bool {
+        let url = audio.url
+
+        do {
+            return try self.context.fetchCount(FetchDescriptor(predicate: #Predicate<Cover> {
+                $0.audio == url
+            })) > 0
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+            return false
+        }
+    }
+}
+
+
+extension DB {
+    var labelForDelete: String { "\(t)🗑️🗑️🗑️" }
+
+    func runDeleteInvalidJob() {
+        os_log("\(self.labelForDelete)🚀🚀🚀")
+
+        do {
+            try context.enumerate(Audio.descriptorAll, block: { audio in
+                if !FileManager.default.fileExists(atPath: audio.url.path) {
+                    os_log(.error, "\(self.t)磁盘文件已不存在，删除数据库记录 -> \(audio.title)")
+                    self.deleteAudio(audio)
+                }
+            })
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
+    }
+}
 extension DB {
     // MARK: 运行任务
 

@@ -99,6 +99,10 @@ extension PlayMan {
     }
 
     func play(_ asset: PlayAsset? = nil, reason: String = "", verbose: Bool = false) throws {
+        if !Thread.isMainThread {
+            assert(false, "PlayMan.play 必须在主线程调用")
+        }
+
         if let asset = asset {
             if verbose {
                 os_log("\(self.t)Play 🔊「\(asset.fileName)」🐛 \(reason)")

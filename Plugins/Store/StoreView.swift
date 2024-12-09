@@ -17,7 +17,6 @@ struct StoreView: View {
         SettingView()
             .background(.background)
     }
-    .modelContainer(Config.getContainer)
     .frame(height: 800)
 }
 

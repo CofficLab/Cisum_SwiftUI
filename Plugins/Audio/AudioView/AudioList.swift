@@ -44,28 +44,28 @@ struct AudioList: View, SuperThread, SuperLog {
 
     var body: some View {
         ZStack {
-             List(selection: $selection) {
-                 Section(header: HStack {
-                     Text("共 \(total.description)")
-                     Spacer()
-                     if isSyncing {
-                         HStack {
-                             Image(systemName: "arrow.triangle.2.circlepath")
-                             Text("正在读取仓库")
-                         }
-                     }
-                     if Config.isNotDesktop {
-                         BtnAdd()
-                             .font(.title2)
-                             .labelStyle(.iconOnly)
-                     }
-                 }, content: {
-                     ForEach(audios, id: \.url) { audio in
-                         AudioTile(audio: audio)
-                             .tag(audio.url as URL?)
-                     }
-                 })
-             }
+            List(selection: $selection) {
+                Section(header: HStack {
+                    Text("共 \(total.description)")
+                    Spacer()
+                    if isSyncing {
+                        HStack {
+                            Image(systemName: "arrow.triangle.2.circlepath")
+                            Text("正在读取仓库")
+                        }
+                    }
+                    if Config.isNotDesktop {
+                        BtnAdd()
+                            .font(.title2)
+                            .labelStyle(.iconOnly)
+                    }
+                }, content: {
+                    ForEach(audios, id: \.url) { audio in
+                        AudioTile(audio: audio)
+                            .tag(audio.url as URL?)
+                    }
+                })
+            }
 
             if showTips {
                 DBTips()
@@ -118,9 +118,12 @@ extension AudioList {
             return
         }
 
-        self.bg.async {
-            if url != playMan.asset?.url {
-                try? self.playMan.play(audio.toPlayAsset(), reason: "AudioList SelectionChange", verbose: true)
+        if url != playMan.asset?.url {
+            do {
+                try self.playMan.play(audio.toPlayAsset(), reason: "AudioList SelectionChange", verbose: true)
+            } catch let e {
+                os_log("\(self.t)handleSelectionChange error: \(e)")
+                self.messageManager.alert(e.localizedDescription)
             }
         }
     }

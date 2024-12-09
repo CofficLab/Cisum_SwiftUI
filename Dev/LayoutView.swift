@@ -26,7 +26,7 @@ struct LayoutView: View {
                 // 默认
                 forManyDevices()
             }
-        }.modelContainer(Config.getContainer)
+        }
     }
 
     func forManyDevices() -> some View {
@@ -75,7 +75,6 @@ struct LayoutView: View {
 
             Spacer()
         }
-        .modelContainer(Config.getContainer)
         .frame(width: width + 100)
         .frame(height: 800)
     }
