@@ -31,9 +31,13 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
         return current?.addToolBarButtons() ?? []
     }
 
-    func setCurrent(_ plugin: SuperPlugin) {
-        self.current = plugin
-        Self.storeCurrent(plugin)
+    func setCurrentGroup(_ plugin: SuperPlugin) throws {
+        if plugin.isGroup {
+            self.current = plugin
+            Self.storeCurrent(plugin)
+        } else {
+            throw PluginProviderError.PluginIsNotGroup(plugin: plugin)
+        }
     }
 
     static func storeCurrent(_ plugin: SuperPlugin) {
@@ -60,5 +64,16 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
         }
 
         return ""
+    }
+}
+
+enum PluginProviderError: Error, LocalizedError {
+    case PluginIsNotGroup(plugin: SuperPlugin)
+
+    var errorDescription: String? {
+        switch self {
+        case .PluginIsNotGroup(let plugin):
+            return "Plugin \(plugin.id) is not a group"
+        }
     }
 }

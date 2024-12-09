@@ -137,8 +137,7 @@ extension PlayMan {
 
     func play(_ asset: PlayAsset, reason: String, verbose: Bool) throws {
         if verbose {
-            os_log("\(self.t)Play 「\(asset.fileName) (\(asset.isAudio() ? "Audio" : "Video"))」")
-            os_log("  🐛 \(reason)")
+            os_log("\(self.t)Play 「\(asset.fileName) (\(asset.isAudio() ? "Audio" : "Video"))」🐛 \(reason)")
         }
 
         if asset.isFolder() {

@@ -135,13 +135,13 @@ extension RootView {
         }
 
         self.p.append(AudioPlugin())
-        self.p.append(PlayPlugin())
+        self.p.append(DebugPlugin())
         self.p.append(BookPlugin())
         
-        self.p.setCurrent(p.plugins.first!)
+        try? self.p.setCurrentGroup(p.plugins.first!)
 
         p.plugins.forEach({
-            $0.onAppear()
+            $0.onAppear(playMan: man, currentGroup: p.current)
         })
 
         let verbose = false
@@ -190,7 +190,7 @@ extension RootView {
 
     func onPlayAssetChange() {
         p.plugins.forEach({
-            $0.onPlayAssetUpdate()
+            $0.onPlayAssetUpdate(asset: man.asset)
         })
     }
 }

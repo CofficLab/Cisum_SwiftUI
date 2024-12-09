@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		0B00F4672BB840C1000833B9 /* AsyncAlgorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 0B00F4662BB840C1000833B9 /* AsyncAlgorithms */; };
 		0B0FA20E2D03328E004D4D41 /* PlayManError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0FA20D2D03328E004D4D41 /* PlayManError.swift */; };
-		0B0FA2122D034440004D4D41 /* PlayPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0FA2112D03443C004D4D41 /* PlayPlugin.swift */; };
+		0B0FA2122D034440004D4D41 /* DebugPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0FA2112D03443C004D4D41 /* DebugPlugin.swift */; };
 		0B0FA2292D034867004D4D41 /* AudioPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0FA2282D034867004D4D41 /* AudioPlugin.swift */; };
 		0B11262A2AC6F7B20093DFFA /* BtnToggleDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1126292AC6F7B20093DFFA /* BtnToggleDB.swift */; };
 		0B11365B2BEFABC700A71FE1 /* JobGetCover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B11365A2BEFABC700A71FE1 /* JobGetCover.swift */; };
@@ -229,7 +229,7 @@
 
 /* Begin PBXFileReference section */
 		0B0FA20D2D03328E004D4D41 /* PlayManError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayManError.swift; sourceTree = "<group>"; };
-		0B0FA2112D03443C004D4D41 /* PlayPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayPlugin.swift; sourceTree = "<group>"; };
+		0B0FA2112D03443C004D4D41 /* DebugPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugPlugin.swift; sourceTree = "<group>"; };
 		0B0FA2282D034867004D4D41 /* AudioPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlugin.swift; sourceTree = "<group>"; };
 		0B1126292AC6F7B20093DFFA /* BtnToggleDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnToggleDB.swift; sourceTree = "<group>"; };
 		0B11365A2BEFABC700A71FE1 /* JobGetCover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobGetCover.swift; sourceTree = "<group>"; };
@@ -462,12 +462,12 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0B0FA2102D034431004D4D41 /* Playboy */ = {
+		0B0FA2102D034431004D4D41 /* Debug */ = {
 			isa = PBXGroup;
 			children = (
-				0B0FA2112D03443C004D4D41 /* PlayPlugin.swift */,
+				0B0FA2112D03443C004D4D41 /* DebugPlugin.swift */,
 			);
-			path = Playboy;
+			path = Debug;
 			sourceTree = "<group>";
 		};
 		0B0FA2272D03485C004D4D41 /* Audio */ = {
@@ -697,9 +697,9 @@
 				0B0FA2272D03485C004D4D41 /* Audio */,
 				0B5D09932D05EE4400224E6B /* Book */,
 				0BC29EA32CA458FC00E4813F /* BookState */,
+				0B0FA2102D034431004D4D41 /* Debug */,
 				0BC29EAA2CA459E200E4813F /* DeviceData */,
 				0B8113B22C2C42EF007CA124 /* Migrate */,
-				0B0FA2102D034431004D4D41 /* Playboy */,
 				0BE93F2F2BFB8E1C00F25445 /* Settings */,
 				0BE695992BFE3DCC00CEFFEB /* Store */,
 				F54DFA502CA4E40C00F81BE3 /* Video */,
@@ -1264,7 +1264,7 @@
 				F54DFA652CA4E92100F81BE3 /* VideoDB.swift in Sources */,
 				0BFB38F72BD0BCC20055E38B /* RowTask.swift in Sources */,
 				0B8113B42C2C430B007CA124 /* Migrate.swift in Sources */,
-				0B0FA2122D034440004D4D41 /* PlayPlugin.swift in Sources */,
+				0B0FA2122D034440004D4D41 /* DebugPlugin.swift in Sources */,
 				0B4E246F2BCAB8020033CC07 /* AppPreview.swift in Sources */,
 				0B73275F2BB5138200DBD922 /* LoggerHelper.swift in Sources */,
 				0BB889D22AC042EC004788D5 /* BtnDownload.swift in Sources */,

@@ -36,13 +36,9 @@ class MessageProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
         }
     }
 
-    func alert(_ message: String, verbose: Bool = true) {
+    func alert(_ message: String) {
         if !Thread.isMainThread {
             assertionFailure("alert called from background thread")
-        }
-
-        if verbose {
-            os_log("\(self.t)Alert: \(message)")
         }
 
         self.alert = message

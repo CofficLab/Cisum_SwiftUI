@@ -4,6 +4,7 @@ import SwiftUI
 
 struct Posters: View {
     @EnvironmentObject var p: PluginProvider
+    @EnvironmentObject var m: MessageProvider
     
     @Binding var isPresented: Bool
     
@@ -40,8 +41,14 @@ struct Posters: View {
                 }
         
                 Button("选择") {
-                    p.setCurrent(currentLayout)
-                    self.isPresented = false
+                    do {
+                        try p.setCurrentGroup(currentLayout)
+                        self.isPresented = false
+                    } catch {
+                        os_log("🐷 PluginProvider::setCurrentGroup, error: \(error)")
+
+                        m.error(error)
+                    }
                 }.controlSize(.extraLarge)
         
                 Spacer()
