@@ -10,7 +10,7 @@ import MagicKit
       一个文件URL
  */
 
-struct PlayAsset: FileBox, Identifiable {
+struct PlayAsset: FileBox, Identifiable, SuperEvent {
     var id: URL { self.url }
     
     static var label = "🪖 PlayAsset::"
@@ -56,6 +56,8 @@ struct PlayAsset: FileBox, Identifiable {
         }
 
         try await source.delete()
+
+        emit(name: .playAssetDeleted, object: self)
     }
 
     func setSource(_ source: PlaySource) -> PlayAsset {
@@ -106,6 +108,10 @@ enum PlayAssetError: Error, LocalizedError {
             return "PlayAsset: Source not found"
         }
     }
+}
+
+extension Notification.Name {
+    static let playAssetDeleted = Notification.Name("PlayAssetDeleted")
 }
 
 #Preview {

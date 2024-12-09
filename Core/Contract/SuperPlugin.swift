@@ -24,6 +24,7 @@ protocol SuperPlugin {
     func onPlayAssetUpdate(asset: PlayAsset?) -> Void
     func onPlayNext(playMan: PlayMan, current: PlayAsset?) async throws -> Void
     func onPlayPrev(playMan: PlayMan, current: PlayAsset?) async throws -> Void
+    func onPlayAssetDeleted(asset: PlayAsset) -> Void
 }
 
 extension SuperPlugin {
@@ -84,5 +85,9 @@ extension SuperPlugin {
 
     func onPlayPrev(playMan: PlayMan, current: PlayAsset?) async throws -> Void {
         os_log("🐷 %{public}s::OnPlayPrev while current is %{public}s", log: .default, type: .debug, String(describing: type(of: self)), current?.title ?? "nil")
+    }
+
+    func onPlayAssetDeleted(asset: PlayAsset) {
+        os_log("🐷 %{public}s::OnPlayAssetDeleted", log: .default, type: .debug, String(describing: type(of: self)))
     }
 }

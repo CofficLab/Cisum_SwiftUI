@@ -91,6 +91,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
             Config.rootBackground)
         .ignoresSafeArea()
         .onReceive(nc.publisher(for: NSUbiquitousKeyValueStore.didChangeExternallyNotification), perform: onCloudAccountStateChanged)
+        .onReceive(nc.publisher(for: .playAssetDeleted), perform: onPlayAssetDeleted)
         .onAppear(perform: onAppear)
         .onDisappear(perform: onDisappear)
         .onChange(of: man.asset, onPlayAssetChange)
@@ -177,6 +178,14 @@ extension RootView {
                 $0.onPause(playMan: man)
             }
         })
+    }
+
+    func onPlayAssetDeleted(_ n: Notification) {
+        if let asset = n.object as? PlayAsset {
+            p.plugins.forEach({
+                $0.onPlayAssetDeleted(asset: asset)
+            })
+        }
     }
 }
 

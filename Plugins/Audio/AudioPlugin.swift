@@ -92,6 +92,12 @@ class AudioPlugin: SuperPlugin, SuperLog {
         }
     }
 
+    func onPlayAssetDeleted(asset: PlayAsset) {
+        os_log("\(self.t)OnPlayAssetDeleted")
+
+        self.disk?.deleteFile(asset.url)
+    }
+
     func watchDisk(reason: String) {
         guard var disk = disk else {
             return
