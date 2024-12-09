@@ -122,8 +122,8 @@ extension PlayMan {
         self.emitPlayLike()
     }
 
-    func goto(_ time: TimeInterval) {
-        self.worker.goto(time)
+    func seek(_ to: TimeInterval) {
+        self.worker.goto(to)
         setPlayingInfo()
     }
 
@@ -411,7 +411,7 @@ extension PlayMan {
 
             // 在这里处理当前的播放进度时间
             os_log("Current playback position: \(positionTime)")
-            self.goto(positionTime)
+            self.seek(positionTime)
 
             return .success
         }

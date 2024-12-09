@@ -9,7 +9,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     let a = AppProvider()
     let s = StoreProvider()
     let db = DB(Config.getContainer, reason: "BootView")
-    let dbSyncedd = DBSynced(Config.getSyncedContainer)
+    let dbSynced = DBSynced(Config.getSyncedContainer)
 
     @State var dataManager: DataProvider?
     @State var error: Error? = nil
@@ -60,7 +60,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                                 .environmentObject(p)
                                 .environmentObject(dataManager)
                                 .environmentObject(db)
-                                .environmentObject(dbSyncedd)
+                                .environmentObject(dbSynced)
                                 .environmentObject(m)
                         } else {
                             Text("启动失败")
@@ -98,6 +98,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
         .onAppear(perform: onAppear)
         .onDisappear(perform: onDisappear)
         .onChange(of: man.asset, onPlayAssetChange)
+        .onChange(of: man.playing, onPlayingChange)
     }
 
     private func reloadView() {
@@ -191,6 +192,16 @@ extension RootView {
     func onPlayAssetChange() {
         p.plugins.forEach({
             $0.onPlayAssetUpdate(asset: man.asset)
+        })
+    }
+
+    func onPlayingChange() {
+        p.plugins.forEach({
+            if man.playing {
+                $0.onPlay()
+            } else {
+                $0.onPause(playMan: man)
+            }
         })
     }
 }

@@ -19,6 +19,7 @@ protocol SuperPlugin {
     func onAppear(playMan: PlayMan, currentGroup: SuperPlugin?) -> Void
     func onDisappear() -> Void
     func onPlay() -> Void
+    func onPause(playMan: PlayMan) -> Void
     func onPlayStateUpdate() -> Void
     func onPlayAssetUpdate(asset: PlayAsset?) -> Void
 }
@@ -45,26 +46,30 @@ extension SuperPlugin {
     }
 
     func onAppear(playMan: PlayMan, currentGroup: SuperPlugin?) {
-        os_log("🐷 %{public}s::OnAppear, currentGroup: %{public}s", String(describing: type(of: self)), currentGroup?.id ?? "nil")
+        os_log("🐷 %{public}s::OnAppear, currentGroup: %{public}s", log: .default, type: .debug, String(describing: type(of: self)), currentGroup?.id ?? "nil")
     }
 
     func onInit() {
-        os_log("🐷 %{public}s::OnInit", String(describing: type(of: self)))
+        os_log("🐷 %{public}s::OnInit", log: .default, type: .debug, String(describing: type(of: self)))
     }
 
     func onPlayAssetUpdate(asset: PlayAsset?) {
-        os_log("🐷 %{public}s::OnPlayAssetUpdate", String(describing: type(of: self)))
+        os_log("🐷 %{public}s::OnPlayAssetUpdate", log: .default, type: .debug, String(describing: type(of: self)))
     }
 
     func onDisappear() {
-        os_log("🐷 %{public}s::OnDisappear", String(describing: type(of: self)))
+        os_log("🐷 %{public}s::OnDisappear", log: .default, type: .debug, String(describing: type(of: self)))
     }
 
     func onPlay() {
-        os_log("🐷 %{public}s::OnPlay", String(describing: type(of: self)))
+        os_log("🐷 %{public}s::OnPlay", log: .default, type: .debug, String(describing: type(of: self)))
+    }
+
+    func onPause(playMan: PlayMan) {
+        os_log("🐷 %{public}s::OnPause, current time: %{public}s", log: .default, type: .debug, String(describing: type(of: self)), playMan.currentTimeDisplay)
     }
 
     func onPlayStateUpdate() {
-        os_log("🐷 %{public}s::OnPlayStateUpdate", String(describing: type(of: self)))
+        os_log("🐷 %{public}s::OnPlayStateUpdate", log: .default, type: .debug, String(describing: type(of: self)))
     }
 }

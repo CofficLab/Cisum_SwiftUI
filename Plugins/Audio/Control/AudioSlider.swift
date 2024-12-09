@@ -32,7 +32,7 @@ struct AudioSlider: View, SuperThread, SuperLog {
             Slider(value: $value, in: 0 ... duration) { editing in
                 isEditing = editing
                 if !editing {
-                    playMan.goto(value)
+                    playMan.seek(value)
                 }
             }
             .disabled(shouldDisable)

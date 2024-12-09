@@ -104,7 +104,7 @@ extension BookTile {
         withAnimation(.spring()) {
             if let s = self.state, let current = s.currentURL, let time = s.time {
                 try? playMan.play(PlayAsset(url: current), reason: "点击了书本",verbose: true)
-                playMan.goto(time)
+                playMan.seek(time)
             } else {
                 if let first = DiskFile(url: book.url).children?.first {
                     try? playMan.play(first.toPlayAsset(), reason: "点击了书本", verbose: true)

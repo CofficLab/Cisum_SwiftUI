@@ -5,6 +5,7 @@ import SwiftUI
 
 class AudioPlugin: SuperPlugin, SuperLog {
     static let keyOfCurrentAudioURL = "AudioPluginCurrentAudioURL"
+    static let keyOfCurrentAudioTime = "AudioPluginCurrentAudioTime"
 
     let emoji = "🎺"
     let label: String = "Audio"
@@ -14,17 +15,11 @@ class AudioPlugin: SuperPlugin, SuperLog {
     var isGroup: Bool = true
 
     func addDBView() -> AnyView {
-        os_log("\(self.t)AddDBView")
-
-        return AnyView(
-            AudioDB()
-        )
+        AnyView(AudioDB())
     }
 
     func addPosterView() -> AnyView {
-        return AnyView(
-            AudioPoster()
-        )
+        AnyView(AudioPoster())
     }
 
     func addToolBarButtons() -> [(id: String, view: AnyView)] {
@@ -35,46 +30,47 @@ class AudioPlugin: SuperPlugin, SuperLog {
         ]
     }
 
-    func onPlay() {
-        os_log("\(self.t)OnPlay")
-    }
-
-    func onPlayStateUpdate() {
-        os_log("\(self.t)OnPlayStateUpdate")
+    func onPause(playMan: PlayMan) {
+        AudioPlugin.storeCurrentTime(playMan.currentTime)
     }
 
     func onPlayAssetUpdate(asset: PlayAsset?) {
-        os_log("\(self.t)OnPlayAssetUpdate, store current audio URL -> \(asset?.url.lastPathComponent ?? "nil")")
         AudioPlugin.storeCurrent(asset?.url)
     }
 
-    func onInit() {
-        os_log("\(self.t)OnInit")
-    }
-
     func onAppear(playMan: PlayMan, currentGroup: SuperPlugin?) {
-        os_log("\(self.t)OnAppear")
-
         if currentGroup?.id != self.id {
             return
         }
 
         if let url = AudioPlugin.getCurrent() {
             try? playMan.play(PlayAsset(url: url), reason: "OnAppear", verbose: true)
+
+            if let time = AudioPlugin.getCurrentTime() {
+                playMan.seek(time)
+            }
         } else {
             os_log("\(self.t)No current audio URL")
         }
     }
+}
 
-    func onDisappear() {
-        os_log("\(self.t)OnDisappear")
-    }
-    
+// MARK: Store
+
+extension AudioPlugin {
     static func storeCurrent(_ url: URL?) {
         UserDefaults.standard.set(url, forKey: keyOfCurrentAudioURL)
 
         // Store URL as string for CloudKit
         NSUbiquitousKeyValueStore.default.set(url?.absoluteString ?? "", forKey: keyOfCurrentAudioURL)
+        NSUbiquitousKeyValueStore.default.synchronize()
+    }
+
+    static func storeCurrentTime(_ time: TimeInterval) {
+        UserDefaults.standard.set(time, forKey: keyOfCurrentAudioTime)
+
+        // Store time as string for CloudKit
+        NSUbiquitousKeyValueStore.default.set(String(time), forKey: keyOfCurrentAudioTime)
         NSUbiquitousKeyValueStore.default.synchronize()
     }
 
@@ -90,6 +86,24 @@ class AudioPlugin: SuperPlugin, SuperLog {
             // If found in iCloud, update UserDefaults for future local access
             UserDefaults.standard.set(url, forKey: keyOfCurrentAudioURL)
             return url
+        }
+
+        return nil
+    }
+
+    static func getCurrentTime() -> TimeInterval? {
+        // First, try to get the time from UserDefaults
+        let time = UserDefaults.standard.double(forKey: keyOfCurrentAudioTime)
+        if time > 0 { // Since 0 is the default value when key doesn't exist
+            return time
+        }
+
+        // If not found in UserDefaults, try to get from iCloud
+        if let timeString = NSUbiquitousKeyValueStore.default.string(forKey: keyOfCurrentAudioTime),
+           let time = TimeInterval(timeString) {
+            // If found in iCloud, update UserDefaults for future local access
+            UserDefaults.standard.set(time, forKey: keyOfCurrentAudioTime)
+            return time
         }
 
         return nil
