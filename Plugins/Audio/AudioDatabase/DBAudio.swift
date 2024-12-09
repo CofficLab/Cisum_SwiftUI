@@ -3,6 +3,18 @@ import OSLog
 import SwiftData
 
 extension DB {
+    func allAudios() -> [AudioModel] {
+        os_log("\(self.t)GetAllAudios")
+        do {
+            let audios: [AudioModel] = try self.all()
+
+            return audios
+        } catch let error {
+            os_log(.error, "\(error.localizedDescription)")
+            return []
+        }
+    }
+
     func countOfURL(_ url: URL) -> Int {
         let descriptor = FetchDescriptor<AudioModel>(predicate: #Predicate<AudioModel> {
             $0.url == url
@@ -14,6 +26,141 @@ extension DB {
             os_log(.error, "\(e.localizedDescription)")
             return 0
         }
+    }
+
+    func delete(_ id: AudioModel.ID) -> AudioModel? {
+        nil
+    }
+
+    func deleteAudio(_ audio: AudioModel) {
+//        _ = Self.deleteAudio(context: context, disk: disk, id: audio.id)
+    }
+
+    func deleteAudio(_ url: URL) -> AudioModel? {
+        os_log("\(self.t)DeleteAudio by url=\(url.lastPathComponent)")
+        return deleteAudios([url])
+    }
+
+    func deleteAudioAndGetNext(_ audio: AudioModel) -> AudioModel? {
+        delete(audio.id)
+    }
+
+    func deleteAudios(_ audios: [AudioModel]) -> AudioModel? {
+//        Self.deleteAudios(context: context, disk: disk, ids: audios.map { $0.id })
+        nil
+    }
+
+    func deleteAudios(_ ids: [AudioModel.ID]) -> AudioModel? {
+//        Self.deleteAudios(context: context, disk: disk, ids: ids)
+        nil
+    }
+
+    func deleteAudios(_ urls: [URL]) -> AudioModel? {
+        var audio: AudioModel?
+
+        for url in urls {
+            audio = deleteAudio(url)
+        }
+
+        return audio
+    }
+
+    func destroyAudios() {
+        do {
+            try destroy(for: AudioModel.self)
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
+    }
+
+    func dislike(_ audio: AudioModel) {
+        if let dbAudio = findAudio(audio.id) {
+            dbAudio.like = false
+            do {
+                try context.save()
+            } catch let e {
+                os_log(.error, "\(e.localizedDescription)")
+            }
+
+            emitAudioUpdate(dbAudio)
+        }
+    }
+
+    func download(_ url: URL, reason: String) {
+        Task.detached(priority: .background) {
+//            await self.disk.download(url, reason: reason)
+        }
+    }
+
+    func downloadNext(_ audio: AudioModel, reason: String) {
+        downloadNextBatch(audio, count: 2, reason: reason)
+    }
+
+    func downloadNextBatch(_ audio: AudioModel, count: Int = 6, reason: String) {
+        var currentIndex = 0
+        var currentAudio: AudioModel = audio
+
+        while currentIndex < count {
+            download(currentAudio.url, reason: "downloadNext 🐛 \(reason)")
+
+            currentIndex = currentIndex + 1
+            if let next = self.nextOf(currentAudio) {
+                currentAudio = next
+            }
+        }
+    }
+
+    func downloadNextBatch(_ url: URL, count: Int = 6, reason: String) {
+        if let audio = findAudio(url) {
+            downloadNextBatch(audio, count: count, reason: reason)
+        }
+    }
+
+    func emitDBSynced() {
+        self.main.async {
+            NotificationCenter.default.post(name: .dbSynced, object: nil)
+        }
+    }
+
+    func emitDBSyncing(_ group: DiskFileGroup) {
+        self.main.async {
+            NotificationCenter.default.post(name: .dbSyncing, object: self, userInfo: ["group": group])
+        }
+    }
+
+    func emitSortDone() {
+        os_log("\(self.t)emitSortDone")
+        NotificationCenter.default.post(name: .DBSortDone, object: nil)
+    }
+
+    func emitSorting(_ mode: String) {
+        let verbose = false
+
+        if verbose {
+            os_log("\(self.t)emitSorting")
+        }
+
+        NotificationCenter.default.post(name: .DBSorting, object: nil, userInfo: ["mode": mode])
+    }
+
+    func evict(_ url: URL) {
+//        disk.evict(url)
+    }
+
+    func findAudio(_ id: AudioModel.ID) -> AudioModel? {
+        context.model(for: id) as? AudioModel
+    }
+
+    func findAudio(_ url: URL) -> AudioModel? {
+        Self.findAudio(url, context: context)
+    }
+
+    func firstAudio() -> AudioModel? {
+        Self.first(context: ModelContext(self.modelContainer))
+    }
+
+    func get(_ i: Int) -> AudioModel? {
+        Self.get(context: ModelContext(self.modelContainer), i)
     }
 
     func getAllURLs() -> [URL] {
@@ -29,237 +176,6 @@ extension DB {
             os_log(.error, "\(e.localizedDescription)")
             return []
         }
-    }
-
-    func isAllInCloud() -> Bool {
-        getTotalOfAudio() > 0 && DB.first(context: context) == nil
-    }
-
-    func refresh(_ audio: AudioModel) -> AudioModel {
-        findAudio(audio.id) ?? audio
-    }
-
-    func allAudios() -> [AudioModel] {
-        os_log("\(self.t)GetAllAudios")
-        do {
-            let audios: [AudioModel] = try self.all()
-
-            return audios
-        } catch let error {
-            os_log(.error, "\(error.localizedDescription)")
-            return []
-        }
-    }
-
-    static func first(context: ModelContext) -> AudioModel? {
-        var descriptor = FetchDescriptor<AudioModel>(predicate: #Predicate<AudioModel> {
-            $0.title != ""
-        }, sortBy: [
-            SortDescriptor(\.order, order: .forward),
-        ])
-        descriptor.fetchLimit = 1
-
-        do {
-            return try context.fetch(descriptor).first
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-        }
-
-        return nil
-    }
-
-    nonisolated func firstAudio() -> AudioModel? {
-        Self.first(context: ModelContext(self.modelContainer))
-    }
-
-    func getNextOf(_ url: URL?, verbose: Bool = false) -> AudioModel? {
-        if verbose {
-            os_log("\(Logger.isMain)\(Self.label)NextOf -> \(url?.lastPathComponent ?? "-")")
-        }
-
-        guard let url = url else {
-            return nil
-        }
-
-        let context = ModelContext(self.modelContainer)
-        guard let audio = Self.findAudio(url, context: context) else {
-            return nil
-        }
-
-        return Self.nextOf(context: context, audio: audio)
-    }
-
-    func nextOf(_ audio: AudioModel) -> AudioModel? {
-        Self.nextOf(context: context, audio: audio)
-    }
-
-    func nextOf(_ url: URL?, verbose: Bool = false) -> AudioModel? {
-        if verbose {
-            os_log("\(self.t)NextOf -> \(url?.lastPathComponent ?? "-")")
-        }
-
-        guard let url = url else {
-            return nil
-        }
-
-        guard let audio = self.findAudio(url) else {
-            return nil
-        }
-
-        return self.nextOf(audio)
-    }
-
-    static func nextOf(context: ModelContext, audio: AudioModel) -> AudioModel? {
-        // os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title)")
-        let order = audio.order
-        let url = audio.url
-        var descriptor = FetchDescriptor<AudioModel>()
-        descriptor.sortBy.append(.init(\.order, order: .forward))
-        descriptor.fetchLimit = 1
-        descriptor.predicate = #Predicate {
-            $0.order >= order && $0.url != url
-        }
-
-        do {
-            let result = try context.fetch(descriptor)
-            let next = result.first ?? Self.first(context: context)
-            // os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title) -> [\(next?.order ?? -1)] \(next?.title ?? "-")")
-            return next
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-        }
-
-        return nil
-    }
-
-    func getPrevOf(_ url: URL?, verbose: Bool = false) -> AudioModel? {
-        if verbose {
-            os_log("\(Logger.isMain)\(Self.label)PrevOf -> \(url?.lastPathComponent ?? "-")")
-        }
-
-        guard let url = url else {
-            return nil
-        }
-
-        let context = ModelContext(self.modelContainer)
-        guard let audio = Self.findAudio(url, context: context) else {
-            return nil
-        }
-
-        return Self.prevOf(context: context, audio: audio)
-    }
-
-    func pre(_ url: URL?) -> AudioModel? {
-        os_log("🍋 DBAudio::preOf \(url?.lastPathComponent ?? "nil")")
-
-        guard let url = url else {
-            return DB.first(context: context)
-        }
-
-        guard let audio = self.findAudio(url) else {
-            return DB.first(context: context)
-        }
-
-        return prev(audio)
-    }
-
-    func prev(_ audio: AudioModel?) -> AudioModel? {
-        os_log("🍋 DBAudio::preOf [\(audio?.order ?? 0)] \(audio?.title ?? "nil")")
-        guard let audio = audio else {
-            return DB.first(context: context)
-        }
-
-        return Self.prevOf(context: context, audio: audio)
-    }
-
-    static func prevOf(context: ModelContext, audio: AudioModel, verbose: Bool = false) -> AudioModel? {
-        if verbose {
-            os_log("\(Logger.isMain)\(Self.label)PrevOf [\(audio.order)] \(audio.title)")
-        }
-
-        let order = audio.order
-        var descriptor = FetchDescriptor<AudioModel>()
-        descriptor.sortBy.append(.init(\.order, order: .reverse))
-        descriptor.fetchLimit = 1
-        descriptor.predicate = #Predicate {
-            $0.order < order
-        }
-
-        do {
-            let result = try context.fetch(descriptor)
-            return nil
-//            return result.first ?? Self.last(context)
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-        }
-
-        return nil
-    }
-
-    static func findAudio(_ url: URL, context: ModelContext, verbose: Bool = false) -> AudioModel? {
-        if verbose {
-            os_log("\(self.label)FindAudio -> \(url.lastPathComponent)")
-        }
-
-        do {
-            return try context.fetch(FetchDescriptor<AudioModel>(predicate: #Predicate<AudioModel> {
-                $0.url == url
-            })).first
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-        }
-
-        return nil
-    }
-
-    func findAudio(_ url: URL) -> AudioModel? {
-        Self.findAudio(url, context: context)
-    }
-
-    func findAudio(_ id: AudioModel.ID) -> AudioModel? {
-        context.model(for: id) as? AudioModel
-    }
-
-    static func getTotal(context: ModelContext) -> Int {
-        let descriptor = FetchDescriptor(predicate: #Predicate<AudioModel> {
-            $0.order != -1
-        })
-
-        do {
-            return try context.fetchCount(descriptor)
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-            return 0
-        }
-    }
-
-    func getTotalOfAudio() -> Int {
-        Self.getTotal(context: context)
-    }
-
-    /// 查询数据库中的按照order排序的第i个，i从0开始
-    static func get(context: ModelContext, _ i: Int) -> AudioModel? {
-        var descriptor = FetchDescriptor<AudioModel>()
-        descriptor.fetchLimit = 1
-        descriptor.fetchOffset = i
-        // descriptor.sortBy.append(.init(\.downloadingPercent, order: .reverse))
-        descriptor.sortBy.append(.init(\.order))
-
-        do {
-            let result = try context.fetch(descriptor)
-            if let first = result.first {
-                return first
-            }
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-        }
-
-        return nil
-    }
-
-    /// 查询数据库中的按照order排序的第x个
-    func get(_ i: Int) -> AudioModel? {
-        Self.get(context: ModelContext(self.modelContainer), i)
     }
 
     func getAudioPlayTime() -> Int {
@@ -292,51 +208,421 @@ extension DB {
         return []
     }
 
-    // MARK: Static-删除-单个
+    func getNextOf(_ url: URL?, verbose: Bool = false) -> AudioModel? {
+        if verbose {
+            os_log("\(Logger.isMain)\(Self.label)NextOf -> \(url?.lastPathComponent ?? "-")")
+        }
 
-    static func deleteAudio(context: ModelContext, disk: any SuperDisk, id: AudioModel.ID) -> AudioModel? {
-        deleteAudios(context: context, disk: disk, ids: [id])
+        guard let url = url else {
+            return nil
+        }
+
+        let context = ModelContext(self.modelContainer)
+        guard let audio = Self.findAudio(url, context: context) else {
+            return nil
+        }
+
+        return Self.nextOf(context: context, audio: audio)
     }
 
-    // MARK: Static-删除-多个
+    func getPrevOf(_ url: URL?, verbose: Bool = false) -> AudioModel? {
+        if verbose {
+            os_log("\(Logger.isMain)\(Self.label)PrevOf -> \(url?.lastPathComponent ?? "-")")
+        }
 
-    static func deleteAudiosByURL(context: ModelContext, disk: any SuperDisk, urls: [URL]) -> AudioModel? {
-        // 本批次的最后一个删除后的下一个
-        var next: AudioModel?
+        guard let url = url else {
+            return nil
+        }
 
-        for (index, url) in urls.enumerated() {
+        let context = ModelContext(self.modelContainer)
+        guard let audio = Self.findAudio(url, context: context) else {
+            return nil
+        }
+
+        return Self.prevOf(context: context, audio: audio)
+    }
+
+    func getTotalOfAudio() -> Int {
+        Self.getTotal(context: context)
+    }
+
+    func increasePlayCount(_ url: URL) {
+        if let a = findAudio(url) {
+            a.playCount += 1
             do {
-                guard let audio = try context.fetch(FetchDescriptor(predicate: #Predicate<AudioModel> {
-                    $0.url == url
-                })).first else {
-                    os_log(.debug, "\(Logger.isMain)\(label)删除时找不到")
-                    continue
-                }
-
-                // 找出本批次的最后一个删除后的下一个
-                if index == urls.count - 1 {
-                    next = Self.nextOf(context: context, audio: audio)
-
-                    // 如果下一个等于当前，设为空
-                    if next?.url == url {
-                        next = nil
-                    }
-                }
-
-                // 从磁盘删除
-                disk.deleteFile(audio.url)
-
-                // 从磁盘删除后，因为数据库监听了磁盘的变动，会自动删除
-                // 但自动删除可能不及时，所以这里及时删除
-                context.delete(audio)
-
                 try context.save()
             } catch let e {
-                os_log(.error, "\(Logger.isMain)\(DB.label)删除出错 \(e)")
+                os_log(.error, "\(e.localizedDescription)")
+                print(e)
+            }
+        }
+    }
+
+    func increasePlayCount(_ url: URL?) {
+        if let url = url {
+            increasePlayCount(url)
+        }
+    }
+
+    func insertAudio(_ audio: AudioModel, force: Bool = false) {
+        if force == false && (findAudio(audio.url) != nil) {
+            return
+        }
+
+        context.insert(audio)
+
+        do {
+            try context.save()
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
+
+        Task {
+            self.updateHash(audio)
+        }
+    }
+
+    func isAllInCloud() -> Bool {
+        getTotalOfAudio() > 0 && DB.first(context: context) == nil
+    }
+
+    func like(_ audio: AudioModel) {
+        if let dbAudio = findAudio(audio.id) {
+            dbAudio.like = true
+            do {
+                try context.save()
+            } catch let e {
+                os_log(.error, "\(e.localizedDescription)")
+            }
+
+            emitAudioUpdate(dbAudio)
+        }
+    }
+
+    func nextOf(_ audio: AudioModel) -> AudioModel? {
+        Self.nextOf(context: context, audio: audio)
+    }
+
+    func nextOf(_ url: URL?, verbose: Bool = false) -> AudioModel? {
+        if verbose {
+            os_log("\(self.t)NextOf -> \(url?.lastPathComponent ?? "-")")
+        }
+
+        guard let url = url else {
+            return nil
+        }
+
+        guard let audio = self.findAudio(url) else {
+            return nil
+        }
+
+        return self.nextOf(audio)
+    }
+
+    func pre(_ url: URL?) -> AudioModel? {
+        os_log("🍋 DBAudio::preOf \(url?.lastPathComponent ?? "nil")")
+
+        guard let url = url else {
+            return DB.first(context: context)
+        }
+
+        guard let audio = self.findAudio(url) else {
+            return DB.first(context: context)
+        }
+
+        return prev(audio)
+    }
+
+    func prev(_ audio: AudioModel?) -> AudioModel? {
+        os_log("🍋 DBAudio::preOf [\(audio?.order ?? 0)] \(audio?.title ?? "nil")")
+        guard let audio = audio else {
+            return DB.first(context: context)
+        }
+
+        return Self.prevOf(context: context, audio: audio)
+    }
+
+    func refresh(_ audio: AudioModel) -> AudioModel {
+        findAudio(audio.id) ?? audio
+    }
+
+    func sort(_ sticky: AudioModel?, reason: String) {
+        os_log("\(Logger.isMain)\(DB.label)Sort with reason: \(reason)")
+
+        emitSorting("order")
+
+        // 前100留给特殊用途
+        var offset = 100
+
+        do {
+            try context.enumerate(FetchDescriptor<AudioModel>(sortBy: [
+                .init(\.title, order: .forward),
+            ]), block: {
+                if $0 == sticky {
+                    $0.order = 0
+                } else {
+                    $0.order = offset
+                    offset = offset + 1
+                }
+            })
+
+            try context.save()
+            onUpdated()
+            emitSortDone()
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+            emitSortDone()
+        }
+    }
+
+    func sort(_ url: URL?, reason: String) {
+        if let url = url {
+            sort(findAudio(url), reason: reason)
+        } else {
+            sort(nil as AudioModel?, reason: reason)
+        }
+    }
+
+    func sortRandom(_ sticky: AudioModel?, reason: String) {
+        let verbose = true
+
+        if verbose {
+            os_log("\(self.t)SortRandom with sticky: \(sticky?.title ?? "nil") with reason: \(reason)")
+        }
+
+        emitSorting("random")
+
+        do {
+            try context.enumerate(FetchDescriptor<AudioModel>(), block: {
+                if $0 == sticky {
+                    $0.order = 0
+                } else {
+                    $0.randomOrder()
+                }
+            })
+
+            try context.save()
+            onUpdated()
+            emitSortDone()
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+            emitSortDone()
+        }
+    }
+
+    func sortRandom(_ url: URL?, reason: String) {
+        if let url = url {
+            sortRandom(findAudio(url), reason: reason)
+        } else {
+            sortRandom(nil as AudioModel?, reason: reason)
+        }
+    }
+
+    func sticky(_ url: URL?, reason: String) {
+        guard let url = url else {
+            return
+        }
+
+        os_log("\(Logger.isMain)\(DB.label)Sticky \(url.lastPathComponent) with reason: \(reason)")
+
+        do {
+            // Find the audio corresponding to the URL
+            guard let audioToSticky = findAudio(url) else {
+                os_log(.error, "Audio not found for URL: \(url)")
+                return
+            }
+
+            // Find the currently sticky audio (if any)
+            let currentStickyAudio = try context.fetch(FetchDescriptor<AudioModel>(predicate: #Predicate { $0.order == 0 })).first
+
+            // Update orders
+            audioToSticky.order = 0
+            currentStickyAudio?.order = 1
+
+            try context.save()
+            onUpdated()
+        } catch let e {
+            os_log(.error, "Error setting sticky audio: \(e.localizedDescription)")
+        }
+    }
+
+    func sync(_ group: DiskFileGroup, verbose: Bool = false) {
+        self.emitDBSyncing(group)
+
+        if verbose {
+            os_log("\(self.t) Sync(\(group.count))")
+        }
+
+        if group.isFullLoad {
+            syncWithDisk(group)
+        } else {
+            syncWithUpdatedItems(group)
+        }
+
+//        if verbose {
+//            os_log("\(self.labelForSync) 计算刚刚同步的项目的 Hash(\(group.count))")
+//        }
+//
+//        self.updateGroupForURLs(group.urls)
+
+        self.emitDBSynced()
+    }
+
+    func syncWithDisk(_ group: DiskFileGroup) {
+        let verbose = false
+        let startTime: DispatchTime = .now()
+
+        // 将数组转换成哈希表，方便通过键来快速查找元素，这样可以将时间复杂度降低到：O(m+n)
+        var hashMap = group.hashMap
+
+        do {
+            try context.enumerate(FetchDescriptor<AudioModel>(), block: { audio in
+                if let item = hashMap[audio.url] {
+                    // 更新数据库记录
+                    audio.size = item.size
+
+                    // 记录存在哈希表中，同步完成，删除哈希表记录
+                    hashMap.removeValue(forKey: audio.url)
+                } else {
+                    // 记录不存在哈希表中，数据库删除
+                    if verbose {
+                        os_log("\(self.t)删除 \(audio.title)")
+                    }
+                    context.delete(audio)
+                }
+            })
+
+            // 余下的是需要插入数据库的
+            for (_, value) in hashMap {
+                context.insert(value.toAudio())
+            }
+
+            try context.save()
+        } catch {
+            os_log(.error, "\(error.localizedDescription)")
+        }
+
+        if verbose {
+            os_log("\(self.jobEnd(startTime, title: "\(self.t) SyncWithDisk(\(group.count))", tolerance: 0.01))")
+        }
+    }
+
+    func syncWithUpdatedItems(_ metas: DiskFileGroup, verbose: Bool = false) {
+        if verbose {
+            os_log("\(self.t)SyncWithUpdatedItems with count=\(metas.count)")
+        }
+
+        // 如果url属性为unique，数据库已存在相同url的记录，再执行context.insert，发现已存在的被替换成新的了
+        // 但在这里，希望如果存在，就不要插入
+        for (_, meta) in metas.files.enumerated() {
+            if meta.isDeleted {
+                let deletedURL = meta.url
+
+                do {
+                    try context.delete(model: AudioModel.self, where: #Predicate { audio in
+                        audio.url == deletedURL
+                    })
+                } catch let e {
+                    os_log(.error, "\(e.localizedDescription)")
+                }
+            } else {
+                if findAudio(meta.url) == nil {
+                    context.insert(meta.toAudio())
+                }
             }
         }
 
-        return next
+        do {
+            try context.save()
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
+    }
+
+    func toggleLike(_ url: URL) {
+        if let dbAudio = findAudio(url) {
+            dbAudio.like.toggle()
+            do {
+                try context.save()
+            } catch let e {
+                os_log(.error, "\(e.localizedDescription)")
+            }
+
+            emitAudioUpdate(dbAudio)
+        }
+    }
+
+    func update(_ audio: AudioModel, verbose: Bool = false) {
+        if verbose {
+            os_log("\(self.t)update \(audio.title)")
+        }
+
+        if var current = findAudio(audio.id) {
+            if audio.isDeleted {
+                context.delete(current)
+            } else {
+                current = audio
+            }
+        } else {
+            if verbose {
+                os_log("\(self.t)🍋 DB::update not found ⚠️")
+            }
+        }
+
+        if context.hasChanges {
+            try? context.save()
+            onUpdated()
+        } else {
+            os_log("\(self.t)🍋 DB::update nothing changed 👌")
+        }
+    }
+
+    func updateCover(_ audio: AudioModel, hasCover: Bool) {
+        guard let dbAudio = context.model(for: audio.id) as? AudioModel else {
+            return
+        }
+
+        dbAudio.hasCover = hasCover
+
+        do {
+            try context.save()
+        } catch let e {
+            os_log(.error, "保存Cover出错")
+            os_log(.error, "\(e)")
+        }
+    }
+
+    func updateHash(_ audio: AudioModel, verbose: Bool = false) {
+        if audio.isNotDownloaded {
+            return
+        }
+
+        if verbose {
+            os_log("\(self.t)UpdateHash for \(audio.title) 🌾🌾🌾 \(audio.getFileSizeReadable())")
+        }
+
+        let fileHash = audio.getHash()
+        if fileHash.isEmpty {
+            return
+        }
+
+        guard let dbAudio = context.model(for: audio.id) as? AudioModel else {
+            return
+        }
+
+        dbAudio.fileHash = fileHash
+
+        do {
+            try context.save()
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
+    }
+
+    // MARK: Static functions
+
+    static func deleteAudio(context: ModelContext, disk: any SuperDisk, id: AudioModel.ID) -> AudioModel? {
+        deleteAudios(context: context, disk: disk, ids: [id])
     }
 
     static func deleteAudios(context: ModelContext, disk: any SuperDisk, ids: [AudioModel.ID], verbose: Bool = false) -> AudioModel? {
@@ -382,467 +668,155 @@ extension DB {
         return next
     }
 
-    func deleteAudioAndGetNext(_ audio: AudioModel) -> AudioModel? {
-        delete(audio.id)
-    }
+    static func deleteAudiosByURL(context: ModelContext, disk: any SuperDisk, urls: [URL]) -> AudioModel? {
+        // 本批次的最后一个删除后的下一个
+        var next: AudioModel?
 
-    // MARK: 删除一个
+        for (index, url) in urls.enumerated() {
+            do {
+                guard let audio = try context.fetch(FetchDescriptor(predicate: #Predicate<AudioModel> {
+                    $0.url == url
+                })).first else {
+                    os_log(.debug, "\(Logger.isMain)\(label)删除时找不到")
+                    continue
+                }
 
-    func deleteAudio(_ audio: AudioModel) {
-//        _ = Self.deleteAudio(context: context, disk: disk, id: audio.id)
-    }
+                // 找出本批次的最后一个删除后的下一个
+                if index == urls.count - 1 {
+                    next = Self.nextOf(context: context, audio: audio)
 
-    func delete(_ id: AudioModel.ID) -> AudioModel? {
-//        Self.deleteAudio(context: context, disk: disk, id: id)
-        nil
-    }
-
-    func deleteAudio(_ url: URL) -> AudioModel? {
-        os_log("\(self.t)DeleteAudio by url=\(url.lastPathComponent)")
-        return deleteAudios([url])
-    }
-
-    // MARK: 删除多个
-
-    func deleteAudios(_ urls: [URL]) -> AudioModel? {
-        var audio: AudioModel?
-
-        for url in urls {
-            audio = deleteAudio(url)
-        }
-
-        return audio
-    }
-
-    func deleteAudios(_ ids: [AudioModel.ID]) -> AudioModel? {
-//        Self.deleteAudios(context: context, disk: disk, ids: ids)
-        nil
-    }
-
-    func deleteAudios(_ audios: [AudioModel]) -> AudioModel? {
-//        Self.deleteAudios(context: context, disk: disk, ids: audios.map { $0.id })
-        nil
-    }
-
-    // MARK: 清空数据库
-
-    func destroyAudios() {
-        do {
-            try destroy(for: AudioModel.self)
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-        }
-    }
-
-    func insertAudio(_ audio: AudioModel, force: Bool = false) {
-        if force == false && (findAudio(audio.url) != nil) {
-            return
-        }
-
-        context.insert(audio)
-
-        do {
-            try context.save()
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-        }
-
-        Task {
-            self.updateHash(audio)
-        }
-    }
-
-    var labelForSync: String {
-        "\(t)🪣🪣🪣"
-    }
-
-    func sync(_ group: DiskFileGroup, verbose: Bool = false) {
-        self.emitDBSyncing(group)
-
-        if verbose {
-            os_log("\(self.labelForSync) Sync(\(group.count))")
-        }
-
-        if group.isFullLoad {
-            syncWithDisk(group)
-        } else {
-            syncWithUpdatedItems(group)
-        }
-
-//        if verbose {
-//            os_log("\(self.labelForSync) 计算刚刚同步的项目的 Hash(\(group.count))")
-//        }
-//
-//        self.updateGroupForURLs(group.urls)
-
-        self.emitDBSynced()
-    }
-
-    // MARK: SyncWithDisk
-
-    func syncWithDisk(_ group: DiskFileGroup) {
-        let verbose = false
-        let startTime: DispatchTime = .now()
-
-        // 将数组转换成哈希表，方便通过键来快速查找元素，这样可以将时间复杂度降低到：O(m+n)
-        var hashMap = group.hashMap
-
-        do {
-            try context.enumerate(FetchDescriptor<AudioModel>(), block: { audio in
-                if let item = hashMap[audio.url] {
-                    // 更新数据库记录
-                    audio.size = item.size
-
-                    // 记录存在哈希表中，同步完成，删除哈希表记录
-                    hashMap.removeValue(forKey: audio.url)
-                } else {
-                    // 记录不存在哈希表中，数据库删除
-                    if verbose {
-                        os_log("\(self.t)删除 \(audio.title)")
+                    // 如果下一个等于当前，设为空
+                    if next?.url == url {
+                        next = nil
                     }
-                    context.delete(audio)
                 }
-            })
 
-            // 余下的是需要插入数据库的
-            for (_, value) in hashMap {
-                context.insert(value.toAudio())
+                // 从磁盘删除
+                disk.deleteFile(audio.url)
+
+                // 从磁盘删除后，因为数据库监听了磁盘的变动，会自动删除
+                // 但自动删除可能不及时，所以这里及时删除
+                context.delete(audio)
+
+                try context.save()
+            } catch let e {
+                os_log(.error, "\(Logger.isMain)\(DB.label)删除出错 \(e)")
             }
-
-            try context.save()
-        } catch {
-            os_log(.error, "\(error.localizedDescription)")
         }
 
-        if verbose {
-            os_log("\(self.jobEnd(startTime, title: "\(self.labelForSync) SyncWithDisk(\(group.count))", tolerance: 0.01))")
-        }
+        return next
     }
 
-    // MARK: SyncWithUpdatedItems
-
-    func syncWithUpdatedItems(_ metas: DiskFileGroup, verbose: Bool = false) {
+    static func findAudio(_ url: URL, context: ModelContext, verbose: Bool = false) -> AudioModel? {
         if verbose {
-            os_log("\(self.t)SyncWithUpdatedItems with count=\(metas.count)")
-        }
-
-        // 如果url属性为unique，数据库已存在相同url的记录，再执行context.insert，发现已存在的被替换成新的了
-        // 但在这里，希望如果存在，就不要插入
-        for (_, meta) in metas.files.enumerated() {
-            if meta.isDeleted {
-                let deletedURL = meta.url
-
-                do {
-                    try context.delete(model: AudioModel.self, where: #Predicate { audio in
-                        audio.url == deletedURL
-                    })
-                } catch let e {
-                    os_log(.error, "\(e.localizedDescription)")
-                }
-            } else {
-                if findAudio(meta.url) == nil {
-                    context.insert(meta.toAudio())
-                }
-            }
+            os_log("\(self.label)FindAudio -> \(url.lastPathComponent)")
         }
 
         do {
-            try context.save()
+            return try context.fetch(FetchDescriptor<AudioModel>(predicate: #Predicate<AudioModel> {
+                $0.url == url
+            })).first
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
         }
+
+        return nil
     }
 
-    func emitDBSyncing(_ group: DiskFileGroup) {
-        self.main.async {
-            NotificationCenter.default.post(name: .dbSyncing, object: self, userInfo: ["group": group])
-        }
-    }
-
-    func emitDBSynced() {
-        self.main.async {
-            NotificationCenter.default.post(name: .dbSynced, object: nil)
-        }
-    }
-
-    func update(_ audio: AudioModel, verbose: Bool = false) {
-        if verbose {
-            os_log("\(self.t)update \(audio.title)")
-        }
-
-        if var current = findAudio(audio.id) {
-            if audio.isDeleted {
-                context.delete(current)
-            } else {
-                current = audio
-            }
-        } else {
-            if verbose {
-                os_log("\(self.t)🍋 DB::update not found ⚠️")
-            }
-        }
-
-        if context.hasChanges {
-            try? context.save()
-            onUpdated()
-        } else {
-            os_log("\(self.t)🍋 DB::update nothing changed 👌")
-        }
-    }
-
-    func increasePlayCount(_ url: URL?) {
-        if let url = url {
-            increasePlayCount(url)
-        }
-    }
-
-    func increasePlayCount(_ url: URL) {
-        if let a = findAudio(url) {
-            a.playCount += 1
-            do {
-                try context.save()
-            } catch let e {
-                os_log(.error, "\(e.localizedDescription)")
-                print(e)
-            }
-        }
-    }
-
-    func evict(_ url: URL) {
-//        disk.evict(url)
-    }
-
-    func download(_ url: URL, reason: String) {
-        Task.detached(priority: .background) {
-//            await self.disk.download(url, reason: reason)
-        }
-    }
-
-    /// 下载当前的和当前的后面的X个
-    func downloadNext(_ audio: AudioModel, reason: String) {
-        downloadNextBatch(audio, count: 2, reason: reason)
-    }
-
-    /// 下载当前的和当前的后面的X个
-    func downloadNextBatch(_ url: URL, count: Int = 6, reason: String) {
-        if let audio = findAudio(url) {
-            downloadNextBatch(audio, count: count, reason: reason)
-        }
-    }
-
-    /// 下载当前的和当前的后面的X个
-    func downloadNextBatch(_ audio: AudioModel, count: Int = 6, reason: String) {
-        var currentIndex = 0
-        var currentAudio: AudioModel = audio
-
-        while currentIndex < count {
-            download(currentAudio.url, reason: "downloadNext 🐛 \(reason)")
-
-            currentIndex = currentIndex + 1
-            if let next = self.nextOf(currentAudio) {
-                currentAudio = next
-            }
-        }
-    }
-
-    func toggleLike(_ url: URL) {
-        if let dbAudio = findAudio(url) {
-            dbAudio.like.toggle()
-            do {
-                try context.save()
-            } catch let e {
-                os_log(.error, "\(e.localizedDescription)")
-            }
-
-            emitAudioUpdate(dbAudio)
-        }
-    }
-
-    func like(_ audio: AudioModel) {
-        if let dbAudio = findAudio(audio.id) {
-            dbAudio.like = true
-            do {
-                try context.save()
-            } catch let e {
-                os_log(.error, "\(e.localizedDescription)")
-            }
-
-            emitAudioUpdate(dbAudio)
-        }
-    }
-
-    func dislike(_ audio: AudioModel) {
-        if let dbAudio = findAudio(audio.id) {
-            dbAudio.like = false
-            do {
-                try context.save()
-            } catch let e {
-                os_log(.error, "\(e.localizedDescription)")
-            }
-
-            emitAudioUpdate(dbAudio)
-        }
-    }
-
-    func sortRandom(_ url: URL?, reason: String) {
-        if let url = url {
-            sortRandom(findAudio(url), reason: reason)
-        } else {
-            sortRandom(nil as AudioModel?, reason: reason)
-        }
-    }
-
-    func sortRandom(_ sticky: AudioModel?, reason: String) {
-        let verbose = true
-
-        if verbose {
-            os_log("\(self.t)SortRandom with sticky: \(sticky?.title ?? "nil") with reason: \(reason)")
-        }
-
-        emitSorting("random")
+    static func first(context: ModelContext) -> AudioModel? {
+        var descriptor = FetchDescriptor<AudioModel>(predicate: #Predicate<AudioModel> {
+            $0.title != ""
+        }, sortBy: [
+            SortDescriptor(\.order, order: .forward),
+        ])
+        descriptor.fetchLimit = 1
 
         do {
-            try context.enumerate(FetchDescriptor<AudioModel>(), block: {
-                if $0 == sticky {
-                    $0.order = 0
-                } else {
-                    $0.randomOrder()
-                }
-            })
-
-            try context.save()
-            onUpdated()
-            emitSortDone()
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-            emitSortDone()
-        }
-    }
-
-    func sort(_ url: URL?, reason: String) {
-        if let url = url {
-            sort(findAudio(url), reason: reason)
-        } else {
-            sort(nil as AudioModel?, reason: reason)
-        }
-    }
-
-    func sort(_ sticky: AudioModel?, reason: String) {
-        os_log("\(Logger.isMain)\(DB.label)Sort with reason: \(reason)")
-
-        emitSorting("order")
-
-        // 前100留给特殊用途
-        var offset = 100
-
-        do {
-            try context.enumerate(FetchDescriptor<AudioModel>(sortBy: [
-                .init(\.title, order: .forward),
-            ]), block: {
-                if $0 == sticky {
-                    $0.order = 0
-                } else {
-                    $0.order = offset
-                    offset = offset + 1
-                }
-            })
-
-            try context.save()
-            onUpdated()
-            emitSortDone()
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-            emitSortDone()
-        }
-    }
-
-    func sticky(_ url: URL?, reason: String) {
-        guard let url = url else {
-            return
-        }
-
-        os_log("\(Logger.isMain)\(DB.label)Sticky \(url.lastPathComponent) with reason: \(reason)")
-
-        do {
-            // Find the audio corresponding to the URL
-            guard let audioToSticky = findAudio(url) else {
-                os_log(.error, "Audio not found for URL: \(url)")
-                return
-            }
-
-            // Find the currently sticky audio (if any)
-            let currentStickyAudio = try context.fetch(FetchDescriptor<AudioModel>(predicate: #Predicate { $0.order == 0 })).first
-
-            // Update orders
-            audioToSticky.order = 0
-            currentStickyAudio?.order = 1
-
-            try context.save()
-            onUpdated()
-        } catch let e {
-            os_log(.error, "Error setting sticky audio: \(e.localizedDescription)")
-        }
-    }
-
-    func updateCover(_ audio: AudioModel, hasCover: Bool) {
-        guard let dbAudio = context.model(for: audio.id) as? AudioModel else {
-            return
-        }
-
-        dbAudio.hasCover = hasCover
-
-        do {
-            try context.save()
-        } catch let e {
-            os_log(.error, "保存Cover出错")
-            os_log(.error, "\(e)")
-        }
-    }
-
-    func updateHash(_ audio: AudioModel, verbose: Bool = false) {
-        if audio.isNotDownloaded {
-            return
-        }
-
-        if verbose {
-            os_log("\(self.t)UpdateHash for \(audio.title) 🌾🌾🌾 \(audio.getFileSizeReadable())")
-        }
-
-        let fileHash = audio.getHash()
-        if fileHash.isEmpty {
-            return
-        }
-
-        guard let dbAudio = context.model(for: audio.id) as? AudioModel else {
-            return
-        }
-
-        dbAudio.fileHash = fileHash
-
-        do {
-            try context.save()
+            return try context.fetch(descriptor).first
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
         }
+
+        return nil
     }
-}
 
-// MARK: Event Emit
+    static func get(context: ModelContext, _ i: Int) -> AudioModel? {
+        var descriptor = FetchDescriptor<AudioModel>()
+        descriptor.fetchLimit = 1
+        descriptor.fetchOffset = i
+        // descriptor.sortBy.append(.init(\.downloadingPercent, order: .reverse))
+        descriptor.sortBy.append(.init(\.order))
 
-extension DB {
-    func emitSorting(_ mode: String) {
-        let verbose = false
-
-        if verbose {
-            os_log("\(self.t)emitSorting")
+        do {
+            let result = try context.fetch(descriptor)
+            if let first = result.first {
+                return first
+            }
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
         }
 
-        NotificationCenter.default.post(name: .DBSorting, object: nil, userInfo: ["mode": mode])
+        return nil
     }
 
-    func emitSortDone() {
-        os_log("\(self.t)emitSortDone")
-        NotificationCenter.default.post(name: .DBSortDone, object: nil)
+    static func getTotal(context: ModelContext) -> Int {
+        let descriptor = FetchDescriptor(predicate: #Predicate<AudioModel> {
+            $0.order != -1
+        })
+
+        do {
+            return try context.fetchCount(descriptor)
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+            return 0
+        }
+    }
+
+    static func nextOf(context: ModelContext, audio: AudioModel) -> AudioModel? {
+        // os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title)")
+        let order = audio.order
+        let url = audio.url
+        var descriptor = FetchDescriptor<AudioModel>()
+        descriptor.sortBy.append(.init(\.order, order: .forward))
+        descriptor.fetchLimit = 1
+        descriptor.predicate = #Predicate {
+            $0.order >= order && $0.url != url
+        }
+
+        do {
+            let result = try context.fetch(descriptor)
+            let next = result.first ?? Self.first(context: context)
+            // os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title) -> [\(next?.order ?? -1)] \(next?.title ?? "-")")
+            return next
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
+
+        return nil
+    }
+
+    static func prevOf(context: ModelContext, audio: AudioModel, verbose: Bool = false) -> AudioModel? {
+        if verbose {
+            os_log("\(Logger.isMain)\(Self.label)PrevOf [\(audio.order)] \(audio.title)")
+        }
+
+        let order = audio.order
+        var descriptor = FetchDescriptor<AudioModel>()
+        descriptor.sortBy.append(.init(\.order, order: .reverse))
+        descriptor.fetchLimit = 1
+        descriptor.predicate = #Predicate {
+            $0.order < order
+        }
+
+        do {
+            let result = try context.fetch(descriptor)
+            return nil
+//            return result.first ?? Self.last(context)
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
+
+        return nil
     }
 }
 
