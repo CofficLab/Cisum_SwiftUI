@@ -138,16 +138,7 @@ extension PlayMan {
             throw PlayManError.NoAsset
         }
 
-        if asset.isFolder() {
-            guard let first = self.onGetChildren(asset).first else {
-                return self.worker.setError(SmartError.NoNextAudio, asset: asset)
-            }
-
-            self.asset = first
-            try self.play(self.asset!, reason: "Resum", verbose: true)
-        } else {
-            try self.play()
-        }
+        try self.play()
     }
 
     func pause(verbose: Bool) throws {

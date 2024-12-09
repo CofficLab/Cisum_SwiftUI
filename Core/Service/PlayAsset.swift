@@ -60,6 +60,14 @@ struct PlayAsset: FileBox, Identifiable, SuperEvent {
         emit(name: .playAssetDeleted, object: self)
     }
 
+    func download() async throws {
+        guard let source = source else {
+            throw PlayAssetError.sourceNotFound
+        }
+
+        try await source.download()
+    }
+
     func setSource(_ source: PlaySource) -> PlayAsset {
         var updated = self
         updated.source = source

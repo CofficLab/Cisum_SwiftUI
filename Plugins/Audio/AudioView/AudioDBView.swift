@@ -1,9 +1,9 @@
 import Foundation
+import MagicKit
 import OSLog
 import SwiftData
 import SwiftUI
 import UniformTypeIdentifiers
-import MagicKit
 
 struct AudioDBView: View, SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
@@ -17,6 +17,7 @@ struct AudioDBView: View, SuperLog, SuperThread {
     @State var sortMode: SortMode = .none
     @State var isDropping: Bool = false
     @State var count: Int = 0
+    @State var loading: Bool = true
 
     let emoji = "🐘"
 
@@ -25,7 +26,11 @@ struct AudioDBView: View, SuperLog, SuperThread {
     }
 
     var showTips: Bool {
-        (isDropping || (messageManager.flashMessage.isEmpty && count == 0)) && !showProTips
+        if loading {
+            return false
+        }
+        
+        return (isDropping || (messageManager.flashMessage.isEmpty && count == 0)) && !showProTips
     }
 
     var outOfLimit: Bool {
@@ -34,30 +39,34 @@ struct AudioDBView: View, SuperLog, SuperThread {
 
     init(verbose: Bool = false) {
         if verbose {
-            os_log("\(Logger.isMain)AudioDB")
+            os_log("\(Logger.isMain)AudioDBView")
         }
     }
 
     var body: some View {
-        ZStack {
-            VStack {
-                if isSorting {
-                    Text(sortMode.description)
-                } else {
-                    AudioList(reason: "AudioDB")
-                        .frame(maxHeight: .infinity)
+        Group {
+            if loading {
+                ProgressView()
+            } else {
+                VStack {
+                    if isSorting {
+                        Text(sortMode.description)
+                    } else {
+                        AudioList(reason: "AudioDB")
+                            .frame(maxHeight: .infinity)
+                    }
+
+                    AudioTask()
+                        .shadow(radius: 10)
                 }
 
-                AudioTask()
-                    .shadow(radius: 10)
-            }
+                if showTips {
+                    AudioDBTips()
+                }
 
-            if showTips {
-                AudioDBTips()
-            }
-            
-            if showProTips {
-                AudioProTips()
+                if showProTips {
+                    AudioProTips()
+                }
             }
         }
         .fileImporter(
@@ -71,6 +80,7 @@ struct AudioDBView: View, SuperLog, SuperThread {
         .onDrop(of: [UTType.fileURL], isTargeted: self.$isDropping, perform: onDrop)
         .task {
             self.count = await db.getTotalCount()
+            self.loading = false
         }
     }
 }
@@ -111,21 +121,21 @@ extension AudioDBView {
         if outOfLimit {
             return false
         }
-        
+
         // Extract URLs from providers on the main thread
         let urls = providers.compactMap { provider -> URL? in
             var result: URL?
             let semaphore = DispatchSemaphore(value: 0)
-            
+
             _ = provider.loadObject(ofClass: URL.self) { url, _ in
                 result = url
                 semaphore.signal()
             }
-            
+
             semaphore.wait()
             return result
         }
-        
+
         // Process the extracted URLs on the background queue
         bg.async {
             os_log("\(Logger.isMain)🖥️ DBView::添加 \(urls.count) 个文件到复制队列")
@@ -149,7 +159,7 @@ extension AudioDBView {
     }
 }
 
-// MARK: Event Name 
+// MARK: Event Name
 
 extension Notification.Name {
     static let CopyFiles = Notification.Name("CopyFiles")

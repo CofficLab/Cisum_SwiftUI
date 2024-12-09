@@ -20,8 +20,8 @@ protocol SuperPlugin {
     func onDisappear() -> Void
     func onPlay() -> Void
     func onPause(playMan: PlayMan) -> Void
-    func onPlayStateUpdate() -> Void
-    func onPlayAssetUpdate(asset: PlayAsset?) -> Void
+    func onPlayStateUpdate() async throws -> Void
+    func onPlayAssetUpdate(asset: PlayAsset?) async throws -> Void
     func onPlayNext(playMan: PlayMan, current: PlayAsset?) async throws -> Void
     func onPlayPrev(playMan: PlayMan, current: PlayAsset?) async throws -> Void
     func onPlayAssetDeleted(asset: PlayAsset) -> Void
@@ -75,7 +75,7 @@ extension SuperPlugin {
         }
     }
 
-    func onPlayStateUpdate() {
+    func onPlayStateUpdate() async throws -> Void {
         os_log("🐷 %{public}s::OnPlayStateUpdate", log: .default, type: .debug, String(describing: type(of: self)))
     }
 

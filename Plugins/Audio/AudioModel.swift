@@ -150,6 +150,14 @@ extension AudioModel: PlaySource {
 
         await db.delete(self, verbose: true)
     }
+
+    func download() async throws {
+        guard let db = db else {
+            throw AudioModelError.dbNotFound
+        }
+
+        try await db.download(self, verbose: true)
+    }
 }
 
 enum AudioModelError: Error, LocalizedError {

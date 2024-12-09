@@ -40,7 +40,7 @@ struct StateView: View, SuperLog, SuperThread {
                 makeInfoView("正在下载")
             }
 
-            if asset?.isNotDownloaded ?? false {
+            if let asset = asset, asset.isNotDownloaded {
                 makeInfoView("未下载")
             }
         }

@@ -3,7 +3,7 @@ import MagicKit
 import OSLog
 import SwiftUI
 
-class AudioPlugin: SuperPlugin, SuperLog {
+class AudioPlugin: SuperPlugin, SuperLog {    
     static let keyOfCurrentAudioURL = "AudioPluginCurrentAudioURL"
     static let keyOfCurrentAudioTime = "AudioPluginCurrentAudioTime"
 
@@ -56,8 +56,16 @@ class AudioPlugin: SuperPlugin, SuperLog {
     func onPlay() {
     }
 
-    func onPlayAssetUpdate(asset: PlayAsset?) {
+    func onPlayAssetUpdate(asset: PlayAsset?) async throws -> Void {
         AudioPlugin.storeCurrent(asset?.url)
+        if let asset = asset, asset.isNotDownloaded {
+            do {
+                try await asset.download()
+                os_log("\(self.t)onPlayAssetUpdate: 开始下载")
+            } catch let e {
+                os_log("\(self.t)onPlayAssetUpdate: \(e.localizedDescription)")
+            }
+        }
     }
 
     func onAppear(playMan: PlayMan, currentGroup: SuperPlugin?) {

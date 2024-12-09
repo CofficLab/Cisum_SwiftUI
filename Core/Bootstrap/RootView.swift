@@ -159,15 +159,19 @@ extension RootView {
     }
 
     func onPlayManStateChange() {
-        p.plugins.forEach({
-            $0.onPlayStateUpdate()
-        })
+        for plugin in p.plugins {
+            Task {
+                try await plugin.onPlayStateUpdate()
+            }
+        }
     }
 
     func onPlayAssetChange() {
-        p.plugins.forEach({
-            $0.onPlayAssetUpdate(asset: man.asset)
-        })
+        for plugin in p.plugins {
+            Task {
+                try await plugin.onPlayAssetUpdate(asset: man.asset)
+            }
+        }
     }
 
     func onPlayingChange() {

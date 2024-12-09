@@ -33,6 +33,10 @@ class BookPlugin: SuperPlugin, SuperLog {
 
     func onPlay() {
     }
+    
+    func onPause(playMan: PlayMan) {
+        
+    }
 
     func onPlayAssetUpdate(asset: PlayAsset?) {
     }

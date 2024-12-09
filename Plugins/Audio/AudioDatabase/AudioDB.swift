@@ -22,6 +22,10 @@ class AudioDB: ObservableObject, SuperEvent {
         await self.db.deleteAudio(audio, verbose: verbose)
         self.emit(.audioDeleted)
     }
+
+    func download(_ audio: AudioModel, verbose: Bool) async throws {
+        try await self.disk.download(audio.url, reason: "AudioDB.download")
+    }
     
     func getTotalCount() async -> Int {
         await self.db.getTotalOfAudio()
