@@ -18,7 +18,13 @@ struct BtnDel: View {
             dynamicSize: autoResize,
             onTap: {
                 assets.forEach { asset in
-                    asset.delete()
+                    Task {
+                        do {
+                            try await asset.delete()
+                        } catch {
+                            messageManager.alert(error.localizedDescription)
+                        }
+                    }
                 }
             })
     }

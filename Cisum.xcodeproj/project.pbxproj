@@ -217,6 +217,7 @@
 		F5D3EF112D06B7DD00548889 /* AudioConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D3EF102D06B7D300548889 /* AudioConfig.swift */; };
 		F5D3EF132D06C70000548889 /* PluginExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D3EF122D06C6FD00548889 /* PluginExt.swift */; };
 		F5D3EF152D06E9D400548889 /* DBDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D3EF142D06E9CE00548889 /* DBDelegate.swift */; };
+		F5D3EF192D06F4A200548889 /* PlaySource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D3EF182D06F49D00548889 /* PlaySource.swift */; };
 		F5E17A742D03050D00473CB8 /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = F5E17A732D03050D00473CB8 /* AlertToast */; };
 		F5E17A762D03074500473CB8 /* MessageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E17A752D03074500473CB8 /* MessageProvider.swift */; };
 		F5E17A782D03075E00473CB8 /* SmartMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E17A772D03075E00473CB8 /* SmartMessage.swift */; };
@@ -434,6 +435,7 @@
 		F5D3EF102D06B7D300548889 /* AudioConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioConfig.swift; sourceTree = "<group>"; };
 		F5D3EF122D06C6FD00548889 /* PluginExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginExt.swift; sourceTree = "<group>"; };
 		F5D3EF142D06E9CE00548889 /* DBDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBDelegate.swift; sourceTree = "<group>"; };
+		F5D3EF182D06F49D00548889 /* PlaySource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaySource.swift; sourceTree = "<group>"; };
 		F5E17A752D03074500473CB8 /* MessageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageProvider.swift; sourceTree = "<group>"; };
 		F5E17A772D03075E00473CB8 /* SmartMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmartMessage.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -594,6 +596,7 @@
 				F5D3EF0E2D06B5F000548889 /* PlayManDelegate.swift */,
 				0B0FA20D2D03328E004D4D41 /* PlayManError.swift */,
 				0B1498732BC4C5CB0075DA61 /* PlayMode.swift */,
+				F5D3EF182D06F49D00548889 /* PlaySource.swift */,
 				0B9EA35C2C21C9AB00A4059A /* PlayState.swift */,
 				F5B64D142C328F3900DE55AD /* SuperPlayWorker.swift */,
 				F5B64D092C327D8600DE55AD /* VideoWorker.swift */,
@@ -1276,6 +1279,7 @@
 				0BBC158D2ABAC0C7006E82C4 /* BtnToggle.swift in Sources */,
 				0B11262A2AC6F7B20093DFFA /* BtnToggleDB.swift in Sources */,
 				F5D3EF0F2D06B5F600548889 /* PlayManDelegate.swift in Sources */,
+				F5D3EF192D06F4A200548889 /* PlaySource.swift in Sources */,
 				0BD98CFE2BD8E91500641A6A /* HeroView.swift in Sources */,
 				F5B64D112C3280F300DE55AD /* CoverView.swift in Sources */,
 				F5AEE0632CB7BD550007825B /* BookCopyJob.swift in Sources */,

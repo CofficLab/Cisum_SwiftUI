@@ -36,8 +36,8 @@ class AudioModel: FileBox {
         return descriptor
     }
 
-    @Transient
-    let fileManager = FileManager.default
+    @Transient let fileManager = FileManager.default
+    @Transient var db: DB?
     
     // MARK: Properties
     
@@ -94,6 +94,10 @@ class AudioModel: FileBox {
             self.size = FileHelper.getFileSize(url)
         }
     }
+
+    func setDB(_ db: DB?) {
+        self.db = db
+    }
 }
 
 // MARK: Order
@@ -122,7 +126,7 @@ extension AudioModel {
             os_log("\(self.label)ToPlayAsset: size(\(self.size.debugDescription))")
         }
         
-        return PlayAsset(url: self.url, like: self.like, size: size)
+        return PlayAsset(url: self.url, like: self.like, size: size).setSource(self)
     }
     
     static func fromPlayAsset(_ asset: PlayAsset) -> AudioModel {
@@ -135,6 +139,37 @@ extension AudioModel {
 extension AudioModel {
     func getFileSizeReadable() -> String {
         FileHelper.getFileSizeReadable(size ?? getFileSize())
+    }
+}
+
+extension AudioModel: PlaySource {
+    func delete() async throws {
+        if let context = self.modelContext {
+            context.delete(self)
+            try context.save()
+
+            return
+        }
+        
+        guard let db = db else {
+            throw AudioModelError.dbNotFound
+        }
+
+        await db.deleteAudio(self, verbose: true)
+    }
+}
+
+enum AudioModelError: Error, LocalizedError {
+    case deleteFailed
+    case dbNotFound
+
+    var errorDescription: String? {
+        switch self {
+        case .deleteFailed:
+            return "Delete failed"
+        case .dbNotFound:
+            return "DB not found"
+        }
     }
 }
 

@@ -10,7 +10,7 @@ import MagicKit
       一个文件URL
  */
 
-struct PlayAsset: FileBox, Identifiable, Equatable {
+struct PlayAsset: FileBox, Identifiable {
     var id: URL { self.url }
     
     static var label = "🪖 PlayAsset::"
@@ -24,6 +24,7 @@ struct PlayAsset: FileBox, Identifiable, Equatable {
 
     var notLike: Bool { !like }
     var label: String { "\(Logger.isMain)\(Self.label)" }
+    var source: PlaySource?
 
     func isSupported() -> Bool {
         self.isFolder() || Config.supportedExtensions.contains(ext.lowercased())
@@ -49,8 +50,24 @@ struct PlayAsset: FileBox, Identifiable, Equatable {
         return i as! T
     }
     
-    func delete() {
-        
+    func delete() async throws {
+        guard let source = source else {
+            throw PlayAssetError.sourceNotFound
+        }
+
+        try await source.delete()
+    }
+
+    func setSource(_ source: PlaySource) -> PlayAsset {
+        var updated = self
+        updated.source = source
+        return updated
+    }
+}
+
+extension PlayAsset: Equatable {
+    static func == (lhs: PlayAsset, rhs: PlayAsset) -> Bool {
+        lhs.url == rhs.url
     }
 }
 
@@ -77,6 +94,17 @@ extension PlayAsset {
 extension PlayAsset {
     static func fromURL(_ url: URL) -> PlayAsset {
         PlayAsset(url: url)
+    }
+}
+
+enum PlayAssetError: Error, LocalizedError {
+    case sourceNotFound
+
+    var errorDescription: String? {
+        switch self {
+        case .sourceNotFound:
+            return "PlayAsset: Source not found"
+        }
     }
 }
 

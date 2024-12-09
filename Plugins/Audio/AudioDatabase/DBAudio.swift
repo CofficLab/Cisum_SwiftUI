@@ -32,8 +32,8 @@ extension DB {
         nil
     }
 
-    func deleteAudio(_ audio: AudioModel) {
-//        _ = Self.deleteAudio(context: context, disk: disk, id: audio.id)
+    func deleteAudio(_ audio: AudioModel, verbose: Bool) {
+        _ = Self.deleteAudio(context: context, id: audio.id)
     }
 
     func deleteAudio(_ url: URL) -> AudioModel? {
@@ -621,11 +621,11 @@ extension DB {
 
     // MARK: Static functions
 
-    static func deleteAudio(context: ModelContext, disk: any SuperDisk, id: AudioModel.ID) -> AudioModel? {
-        deleteAudios(context: context, disk: disk, ids: [id])
+    static func deleteAudio(context: ModelContext, id: AudioModel.ID) -> AudioModel? {
+        deleteAudios(context: context, ids: [id])
     }
 
-    static func deleteAudios(context: ModelContext, disk: any SuperDisk, ids: [AudioModel.ID], verbose: Bool = false) -> AudioModel? {
+    static func deleteAudios(context: ModelContext, ids: [AudioModel.ID], verbose: Bool = true) -> AudioModel? {
         if verbose {
             os_log("\(Logger.isMain)\(label)数据库删除")
         }
@@ -652,13 +652,7 @@ extension DB {
             }
 
             do {
-                // 从磁盘删除
-                disk.deleteFile(audio.url)
-
-                // 从磁盘删除后，因为数据库监听了磁盘的变动，会自动删除
-                // 但自动删除可能不及时，所以这里及时删除
                 context.delete(audio)
-
                 try context.save()
             } catch let e {
                 os_log(.error, "\(Logger.isMain)\(DB.label)删除出错 \(e)")
