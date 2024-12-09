@@ -12,7 +12,7 @@ struct VideoDB: View {
 
     @State var treeView = false
 
-    @Query(Audio.descriptorAll, animation: .default) var audios: [Audio]
+    @Query(AudioModel.descriptorAll, animation: .default) var audios: [AudioModel]
 
     static var label = "🐘 DBLayout::"
 

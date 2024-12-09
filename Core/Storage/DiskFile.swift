@@ -121,12 +121,12 @@ extension DiskFile {
         PlayAsset(url: url)
     }
     
-    func toAudio(verbose: Bool = false) -> Audio {
+    func toAudio(verbose: Bool = false) -> AudioModel {
         if verbose {
             os_log("\(self.label)ToAudio: size(\(size.debugDescription))")
         }
         
-        return Audio(url, size: size, isFolder: isFolder)
+        return AudioModel(url, size: size, isFolder: isFolder)
     }
 
     func toBook(verbose: Bool = false) -> Book {

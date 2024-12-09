@@ -21,7 +21,7 @@ struct AudioList: View, SuperThread, SuperLog {
     @EnvironmentObject var messageManager: MessageProvider
     @Environment(\.modelContext) var modelContext
 
-    @Query(Audio.descriptorNotFolder) var audios: [Audio]
+    @Query(AudioModel.descriptorNotFolder) var audios: [AudioModel]
 
     @State var selection: URL? = nil
     @State var isSyncing: Bool = false

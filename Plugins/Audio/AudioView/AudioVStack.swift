@@ -20,12 +20,12 @@ struct AudioVStack: View, SuperThread, SuperLog {
     @EnvironmentObject var playMan: PlayMan
     @Environment(\.modelContext) var modelContext
 
-    @Query(Audio.descriptorNotFolder) var audios: [Audio]
+    @Query(AudioModel.descriptorNotFolder) var audios: [AudioModel]
 
     @State var selection: URL? = nil
     @State var isSyncing: Bool = false
     @State var syncingCount: Int = 0
-    @State private var loadedAudios: [Audio] = []
+    @State private var loadedAudios: [AudioModel] = []
     @State private var isLoading = false
     @State private var currentPage = 0
 

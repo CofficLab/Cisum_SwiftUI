@@ -14,7 +14,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
     let description: String = "作为歌曲仓库，只关注文件，文件夹将被忽略"
     var iconName: String = "music.note"
     var isGroup: Bool = true
-    let db = DB(AudioConfig.getContainer, reason: "AudioPlugin")
+    lazy var db = DB(AudioConfig.getContainer, reason: "AudioPlugin", delegate: self)
 
     var disk: (any SuperDisk)?
 
@@ -74,7 +74,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
 
     func onPlayPrev(playMan: PlayMan, current: PlayAsset?) async throws {
         os_log("\(self.t)OnPlayPrev")
-        let asset = self.db.getPrevOf(current?.url, verbose: false)
+        let asset = await self.db.getPrevOf(current?.url, verbose: false)
         if let asset = asset {
             try await playMan.play(PlayAsset(url: asset.url), reason: "OnPlayPrev", verbose: true)
         } else {
@@ -84,7 +84,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
 
     func onPlayNext(playMan: PlayMan, current: PlayAsset?) async throws {
         os_log("\(self.t)OnPlayNext")
-        let asset = self.db.getNextOf(current?.url, verbose: false)
+        let asset = await self.db.getNextOf(current?.url, verbose: false)
         if let asset = asset {
             try await playMan.play(PlayAsset(url: asset.url), reason: "OnPlayNext", verbose: true)
         } else {
@@ -106,6 +106,12 @@ class AudioPlugin: SuperPlugin, SuperLog {
         Task {
             await disk.watch(reason: reason, verbose: true)
         }
+    }
+}
+
+extension AudioPlugin: AudioDBDelegate {
+    func onDelete(_ uuid: String) {
+        
     }
 }
 

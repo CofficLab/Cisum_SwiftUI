@@ -5,12 +5,12 @@ import SwiftData
 struct Duplicates: View {
     @State var showDumplicates = false
     
-    @Query var audios: [Audio]
+    @Query var audios: [AudioModel]
 
-    var audio: Audio
-    var duplicates: [Audio] = []
+    var audio: AudioModel
+    var duplicates: [AudioModel] = []
 
-    init(_ audio: Audio) {
+    init(_ audio: AudioModel) {
         self.audio = audio
     }
 

@@ -16,7 +16,7 @@ struct AudioDB: View, SuperLog, SuperThread {
     @State private var sortMode: SortMode = .none
     @State private var isDropping: Bool = false
 
-    @Query(Audio.descriptorAll, animation: .default) var audios: [Audio]
+    @Query(AudioModel.descriptorAll, animation: .default) var audios: [AudioModel]
 
     let emoji = "🐘"
 

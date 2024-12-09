@@ -11,7 +11,7 @@ class Cover {
     var title: String
     var createdAt: Date = Date.now
 
-    init(audio: Audio, hasCover: Bool) {
+    init(audio: AudioModel, hasCover: Bool) {
         self.audio = audio.url
         self.hasCover = hasCover
         self.title = audio.url.lastPathComponent

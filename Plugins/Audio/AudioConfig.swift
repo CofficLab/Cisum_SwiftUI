@@ -35,7 +35,7 @@ struct AudioConfig {
         }
 
         let schema = Schema([
-            Audio.self,
+            AudioModel.self,
             Cover.self,
             CopyTask.self
         ])

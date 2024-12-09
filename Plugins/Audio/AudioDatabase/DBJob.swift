@@ -55,7 +55,7 @@ extension DB {
         os_log("\(self.labelForGetCovers) 🚀🚀🚀")
         
         do {
-            try self.context.enumerate(Audio.descriptorAll, block: { audio in
+            try self.context.enumerate(AudioModel.descriptorAll, block: { audio in
                 if self.hasCoverRecord(audio) == false {
                     audio.toPlayAsset().getCoverFromMeta({ url in
                         if url != nil {
@@ -70,14 +70,14 @@ extension DB {
         }
     }
 
-    func emitCoverUpdated(_ audio: Audio) {
+    func emitCoverUpdated(_ audio: AudioModel) {
         DispatchQueue.main.async {
             os_log("\(Logger.isMain)\(Self.label) -> \(audio.title) CoverUpdated 🍋🍋🍋")
             self.emitAudioUpdate(audio)
         }
     }
 
-    func insertCover(_ audio: Audio) {
+    func insertCover(_ audio: AudioModel) {
         let context = ModelContext(self.modelContainer)
         context.insert(Cover(audio: audio, hasCover: true))
         do {
@@ -87,7 +87,7 @@ extension DB {
         }
     }
 
-    func hasCoverRecord(_ audio: Audio) -> Bool {
+    func hasCoverRecord(_ audio: AudioModel) -> Bool {
         let url = audio.url
 
         do {
@@ -109,7 +109,7 @@ extension DB {
         os_log("\(self.labelForDelete)🚀🚀🚀")
 
         do {
-            try context.enumerate(Audio.descriptorAll, block: { audio in
+            try context.enumerate(AudioModel.descriptorAll, block: { audio in
                 if !FileManager.default.fileExists(atPath: audio.url.path) {
                     os_log(.error, "\(self.t)磁盘文件已不存在，删除数据库记录 -> \(audio.title)")
                     self.deleteAudio(audio)
@@ -126,7 +126,7 @@ extension DB {
     func runJob(
         _ id: String,
         verbose: Bool = false,
-        descriptor: FetchDescriptor<Audio>,
+        descriptor: FetchDescriptor<AudioModel>,
         qos: DispatchQoS = .background,
         printLog: Bool = true,
         printStartLog: Bool = false,
@@ -134,7 +134,7 @@ extension DB {
         printLogStep: Int = 100,
         printCost: Bool = false,
         concurrency: Bool = true,
-        code: @escaping (_ audio: Audio, _ onEnd: @escaping () -> Void) -> Void,
+        code: @escaping (_ audio: AudioModel, _ onEnd: @escaping () -> Void) -> Void,
         complete: (@escaping (_ context: ModelContext) -> Void) = { _ in }
     ) {
         let startTime = DispatchTime.now()

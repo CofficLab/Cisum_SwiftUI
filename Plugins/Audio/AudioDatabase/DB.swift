@@ -5,17 +5,17 @@ import SwiftUI
 import MagicKit
 
 actor DB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
-    
     static let label = "📦 DB::"
     let emoji = "🎁"
     let modelContainer: ModelContainer
     let modelExecutor: any ModelExecutor
     let context: ModelContext
     let queue = DispatchQueue(label: "DB")
+    let delegate: AudioDBDelegate?
 
     var onUpdated: () -> Void = { os_log("🍋 DB::updated") }
 
-    init(_ container: ModelContainer, reason: String, verbose: Bool = false) {
+    init(_ container: ModelContainer, reason: String, verbose: Bool = false, delegate: AudioDBDelegate? = nil) {
         if verbose {
             let message = "\(Logger.isMain)\(Self.label)🚩🚩🚩 初始化(\(reason))"
             
@@ -28,6 +28,7 @@ actor DB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
         modelExecutor = DefaultSerialModelExecutor(
             modelContext: context
         )
+        self.delegate = delegate
     }
 
     func setOnUpdated(_ callback: @escaping () -> Void) {

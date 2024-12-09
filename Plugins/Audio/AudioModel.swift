@@ -8,13 +8,13 @@ import SwiftUI
 /* 存储音频数据，尤其是将计算出来的属性存储下来 */
 
 @Model
-class Audio: FileBox {
+class AudioModel: FileBox {
     static var label = "🪖 Audio::"
     static var verbose = false
     
     // MARK: Descriptor
     
-    static var descriptorAll = FetchDescriptor(predicate: #Predicate<Audio> { _ in
+    static var descriptorAll = FetchDescriptor(predicate: #Predicate<AudioModel> { _ in
         return true
     }, sortBy: [
         SortDescriptor(\.order, order: .forward)
@@ -24,12 +24,12 @@ class Audio: FileBox {
         SortDescriptor(\.order, order: .forward)
     ])
 
-    static var predicateNotFolder = #Predicate<Audio> { audio in
+    static var predicateNotFolder = #Predicate<AudioModel> { audio in
         audio.isFolder == false
     }
     
-    static var descriptorFirst: FetchDescriptor<Audio> {
-        var descriptor = Audio.descriptorAll
+    static var descriptorFirst: FetchDescriptor<AudioModel> {
+        var descriptor = AudioModel.descriptorAll
         descriptor.sortBy.append(.init(\.order, order: .forward))
         descriptor.fetchLimit = 1
         
@@ -60,12 +60,12 @@ class Audio: FileBox {
     var verbose: Bool { Self.verbose }
     var dislike: Bool { !like }
     var label: String { "\(Logger.isMain)\(Self.label)" }
-    var children: [Audio]? {
+    var children: [AudioModel]? {
         if url == .applicationDirectory {
             return nil
         }
         
-        return [Audio(.applicationDirectory)]
+        return [AudioModel(.applicationDirectory)]
     }
 
     init(_ url: URL,
@@ -98,7 +98,7 @@ class Audio: FileBox {
 
 // MARK: Order
 
-extension Audio {
+extension AudioModel {
     static func makeRandomOrder() -> Int {
         Int.random(in: 101 ... 500000000)
     }
@@ -110,13 +110,13 @@ extension Audio {
 
 // MARK: ID
 
-extension Audio: Identifiable {
+extension AudioModel: Identifiable {
     var id: PersistentIdentifier { persistentModelID }
 }
 
 // MARK: Transform
 
-extension Audio {
+extension AudioModel {
     func toPlayAsset(verbose: Bool = false) -> PlayAsset {
         if verbose {
             os_log("\(self.label)ToPlayAsset: size(\(self.size.debugDescription))")
@@ -125,14 +125,14 @@ extension Audio {
         return PlayAsset(url: self.url, like: self.like, size: size)
     }
     
-    static func fromPlayAsset(_ asset: PlayAsset) -> Audio {
-        Audio(asset.url)
+    static func fromPlayAsset(_ asset: PlayAsset) -> AudioModel {
+        AudioModel(asset.url)
     }
 }
 
 // MARK: Size
 
-extension Audio {
+extension AudioModel {
     func getFileSizeReadable() -> String {
         FileHelper.getFileSizeReadable(size ?? getFileSize())
     }

@@ -25,13 +25,13 @@ extension SuperEvent {
 // MARK: Audio
 
 extension SuperEvent {
-    func emitAudioUpdate(_ audio: Audio) {
+    func emitAudioUpdate(_ audio: AudioModel) {
         DispatchQueue.main.async {
             NotificationCenter.default.post(name: .AudioUpdatedNotification, object: audio)
         }
     }
 
-    func emitAudiosUpdated(_ audios: [Audio]) {
+    func emitAudiosUpdated(_ audios: [AudioModel]) {
         DispatchQueue.main.async {
             NotificationCenter.default.post(name: .AudiosUpdatedNotification, object: audios)
         }

@@ -7,11 +7,11 @@ struct AudioTile: View {
 
     @State private var hovered = false
 
-    let audio: Audio
+    let audio: AudioModel
 
     var asset: PlayAsset { audio.toPlayAsset() }
 
-    init(audio: Audio) {
+    init(audio: AudioModel) {
         let verbose = false
         self.audio = audio
 

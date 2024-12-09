@@ -10,7 +10,7 @@ struct BookGrid: View, SuperLog, SuperThread {
     @EnvironmentObject var data: DataProvider
     @EnvironmentObject var messageManager: MessageProvider
 
-    @State var selection: Audio? = nil
+    @State var selection: AudioModel? = nil
     @State var syncingTotal: Int = 0
     @State var syncingCurrent: Int = 0
     

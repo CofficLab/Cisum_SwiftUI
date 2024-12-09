@@ -48,6 +48,10 @@ struct PlayAsset: FileBox, Identifiable, Equatable {
 
         return i as! T
     }
+    
+    func delete() {
+        
+    }
 }
 
 // MARK: Format

@@ -12,7 +12,7 @@ struct BookDB: View, SuperLog, SuperThread {
 
     @State var treeView = false
 
-    @Query(Audio.descriptorAll, animation: .default) var audios: [Audio]
+    @Query(AudioModel.descriptorAll, animation: .default) var audios: [AudioModel]
 
     static var label = "🐘 DBLayout::"
 
