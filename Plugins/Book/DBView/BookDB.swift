@@ -19,13 +19,15 @@ struct BookDB: View, SuperLog, SuperThread {
     var main = Config.mainQueue
     var bg = Config.bgQueue
     var dropping: Bool { app.isDropping }
-    var disk: any SuperDisk { data.disk }
+    var disk: any SuperDisk
     var label: String { "\(Logger.isMain)\(Self.label) " }
 
-    init(verbose: Bool = false) {
+    init(verbose: Bool = false, disk: any SuperDisk) {
         if verbose {
             os_log("\(Logger.initLog)BookDB")
         }
+        
+        self.disk = disk
     }
 
     var body: some View {

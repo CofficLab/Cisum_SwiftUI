@@ -19,9 +19,3 @@ struct DBSyncing: View {
         .frame(width: 300, height: 300)
         .background(BackgroundView.type1)
 }
-
-#Preview {
-    RootView {
-        AudioDB()
-    }.modelContainer(Config.getContainer)
-}

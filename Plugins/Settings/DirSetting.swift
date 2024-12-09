@@ -1,14 +1,12 @@
 import SwiftUI
 import MagicKit
 
-struct DirSetting: View {
+struct DirSetting: View,SuperLog {
     @EnvironmentObject var dataManager: DataProvider
     
     @State var diskSize: String?
 
-    var mountedURL: URL? {
-        dataManager.disk.getMountedURL()
-    }
+    var mountedURL: URL?
 
     var body: some View {
         GroupBox {
@@ -25,18 +23,18 @@ struct DirSetting: View {
                     }
                 }
                 .task {
-                    if let disk = dataManager.disk.make("", verbose: true) {
-                        diskSize = disk.getFileSizeReadable()
-                    }
+//                    if let disk = dataManager.disk.make("", verbose: true, reason: "DirSetting") {
+//                        diskSize = disk.getFileSizeReadable()
+//                    }
                 }
                 
-                VStack(alignment: .leading) {
-                    if dataManager.isiCloudDisk {
-                        Text("是 iCloud 云盘目录，会保持同步")
-                    } else {
-                        Text("是本地目录，不会同步")
-                    }
-                }.font(.footnote)
+//                VStack(alignment: .leading) {
+//                    if dataManager.isiCloudDisk {
+//                        Text("是 iCloud 云盘目录，会保持同步")
+//                    } else {
+//                        Text("是本地目录，不会同步")
+//                    }
+//                }.font(.footnote)
             }.padding(10)
         }.background(BackgroundView.type1.opacity(0.1))
         

@@ -19,7 +19,7 @@ struct VideoDB: View {
     var main = Config.mainQueue
     var bg = Config.bgQueue
     var dropping: Bool { app.isDropping }
-    var disk: any SuperDisk { data.disk }
+//    var disk: any SuperDisk { data.disk }
     var label: String { "\(Logger.isMain)\(Self.label) " }
 
     init(verbose: Bool = false) {

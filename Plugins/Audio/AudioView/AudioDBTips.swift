@@ -32,7 +32,7 @@ struct AudioDBTips: View {
 
                         Button(
                             action: {
-                                FileHelper.openFolder(url: data.disk.root)
+//                                FileHelper.openFolder(url: data.disk.root)
                             },
                             label: {
                                 Label(
@@ -64,10 +64,4 @@ struct AudioDBTips: View {
     DBTips()
         .frame(width: 300, height: 300)
         .background(BackgroundView.type1)
-}
-
-#Preview {
-    RootView {
-        AudioDB()
-    }.modelContainer(Config.getContainer)
 }

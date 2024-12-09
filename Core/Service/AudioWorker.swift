@@ -29,21 +29,6 @@ class AudioWorker: NSObject, ObservableObject, SuperPlayWorker, SuperLog, SuperT
         DateComponentsFormatter.positional.string(from: leftTime) ?? "0:00"
     }
 
-    // MARK: 对外传递事件
-
-    var onStateChange: (_ state: PlayState) -> Void = { state in
-        os_log("播放器状态已变为 \(state.des)")
-    }
-
-    var onGetNextOf: (_ asset: PlayAsset?) -> PlayAsset? = { asset in
-        os_log("GetNextOf -> \(asset?.title ?? "nil")")
-        return nil
-    }
-
-    var onToggleMode: () -> Void = {
-        os_log("ToggleMode")
-    }
-
     func goto(_ time: TimeInterval) {
         player.currentTime = time
     }

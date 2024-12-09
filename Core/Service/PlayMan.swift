@@ -11,6 +11,7 @@ import SwiftUI
       对接系统媒体中心
  */
 
+@MainActor
 class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread {
     // MARK: 成员
 
@@ -71,36 +72,6 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread {
 
         super.init()
 
-        self.audioWorker.onStateChange = { state in
-            self.main.async {
-                let verbose = false
-                if verbose {
-                    os_log("AudioWorker StateChange -> \(state.des)")
-                }
-                self.asset = state.getAsset()
-                self.emitPlayStateChange(state)
-
-                if state.isFinished {
-                    self.onPlayFinished()
-                }
-
-                self.setPlayingInfo()
-            }
-        }
-
-        self.videoWorker.onStateChange = { state in
-            DispatchQueue.main.async {
-                self.setPlayingInfo()
-                self.asset = state.getAsset()
-                self.emitPlayStateChange(state)
-
-                if state.isFinished {
-                    os_log("\(self.t)播放完成，自动播放下一个")
-                    self.next()
-                }
-            }
-        }
-
         Task {
             onCommand()
         }
@@ -112,7 +83,6 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread {
 extension PlayMan {
     func switchMode(verbose: Bool = true) {
         mode = mode.switchMode()
-        self.emitPlayModeChange()
     }
 }
 
@@ -121,7 +91,6 @@ extension PlayMan {
 extension PlayMan {
     func toggleLike() {
         self.asset?.like.toggle()
-        self.emitPlayLike()
     }
 
     func seek(_ to: TimeInterval) {
@@ -219,7 +188,6 @@ extension PlayMan {
         }
 
         self.mode = mode
-        self.emitPlayModeChange()
     }
 
     func getMode() -> PlayMode {
@@ -335,7 +303,6 @@ extension PlayMan {
             if verbose {
                 os_log("\(self.t)随机播放")
             }
-            emitPlayRandomNext()
         }
     }
 
@@ -411,83 +378,6 @@ extension PlayMan {
 
             return .success
         }
-    }
-}
-
-// MARK: Event Emitters
-
-extension PlayMan {
-    func emitPlayStart() {
-        NotificationCenter.default.post(name: .PlayManPlay, object: self)
-    }
-
-    func emitPlayPause() {
-        NotificationCenter.default.post(name: .PlayManPause, object: self)
-    }
-
-    func emitPlayStop() {
-        NotificationCenter.default.post(name: .PlayManStop, object: self)
-    }
-
-    func emitPlayNext() {
-        let verbose = true
-
-        if verbose {
-            os_log("\(self.t)emitPlayNext 🚀🚀🚀 -> \(self.mode.rawValue)")
-        }
-
-        var userInfo: [String: Any] = [:]
-        if let asset = asset {
-            userInfo["asset"] = asset
-        }
-        NotificationCenter.default.post(name: .PlayManNext, object: self, userInfo: userInfo)
-    }
-
-    func emitPlayRandomNext() {
-        var userInfo: [String: Any] = [:]
-        if let asset = asset {
-            userInfo["asset"] = asset
-        }
-        NotificationCenter.default.post(name: .PlayManRandomNext, object: self, userInfo: userInfo)
-    }
-
-    func emitPlayPrev() {
-        var userInfo: [String: Any] = [:]
-        if let asset = asset {
-            userInfo["asset"] = asset
-        }
-        NotificationCenter.default.post(name: .PlayManPrev, object: self, userInfo: userInfo)
-    }
-
-    func emitPlayToggle() {
-        NotificationCenter.default.post(name: .PlayManToggle, object: self)
-    }
-
-    func emitPlayLike() {
-        NotificationCenter.default.post(name: .PlayManLike, object: self)
-    }
-
-    func emitPlayDislike() {
-        NotificationCenter.default.post(name: .PlayManDislike, object: self)
-    }
-
-    func emitPlayModeChange() {
-        self.main.async {
-            let verbose = false
-            if verbose {
-                os_log("\(self.t)emitPlayModeChange 🚀🚀🚀 -> \(self.mode.rawValue)")
-                os_log("  ➡️ State -> \(self.state.des)")
-            }
-            NotificationCenter.default.post(name: .PlayManModeChange, object: self, userInfo: ["mode": self.mode, "state": self.state])
-        }
-    }
-
-    func emitPlayStateChange(_ state: PlayState) {
-        let verbose = false
-        if verbose {
-            os_log("\(self.t)emitPlayStateChange 🚀🚀🚀 -> \(state.des)")
-        }
-        NotificationCenter.default.post(name: .PlayManStateChange, object: self, userInfo: ["state": state])
     }
 }
 

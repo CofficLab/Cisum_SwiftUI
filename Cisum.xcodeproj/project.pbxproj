@@ -479,15 +479,15 @@
 		0B0FA2272D03485C004D4D41 /* Audio */ = {
 			isa = PBXGroup;
 			children = (
-				F5D3EF102D06B7D300548889 /* AudioConfig.swift */,
 				F5AEE0562CB502F80007825B /* App */,
+				F5D3EF102D06B7D300548889 /* AudioConfig.swift */,
+				0BBC157F2AB854A8006E82C4 /* AudioDB.swift */,
+				0B0FA2282D034867004D4D41 /* AudioPlugin.swift */,
+				F52A98FA2C43AA63003559F1 /* AudioPoster.swift */,
 				F52A98FC2C43BC79003559F1 /* AudioView */,
 				F5AEE0532CB500E80007825B /* Control */,
 				F5B6AAC62CA6B361001F3BC3 /* Database */,
 				0BEE7C702CA838C500DC1DCF /* Job */,
-				F52A98FA2C43AA63003559F1 /* AudioPoster.swift */,
-				0BBC157F2AB854A8006E82C4 /* AudioDB.swift */,
-				0B0FA2282D034867004D4D41 /* AudioPlugin.swift */,
 			);
 			path = Audio;
 			sourceTree = "<group>";

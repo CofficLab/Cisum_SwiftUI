@@ -17,19 +17,19 @@ struct CloudSetting: View {
                         Text("iCloud").font(.headline)
 
                         ZStack {
-                            if dataManager.isiCloudDisk {
-                                VStack(alignment: .leading) {
-                                    Text(iCloudLogged ? "iCloud 已登录" : "iCloud 未登录")
-                                    Text("会占用 iCloud 存储空间并在设备间保持同步")
-                                }
-                            } else {
-                                VStack(alignment: .leading) {
-                                    Text(iCloudLogged ? "iCloud 已登录，但不使用" : "iCloud 未登录")
-                                    Text("数据仅存储在本机")
-                                    Text("不占用 iCloud 空间")
-                                    Text("多设备不同步")
-                                }
-                            }
+//                            if dataManager.isiCloudDisk {
+//                                VStack(alignment: .leading) {
+//                                    Text(iCloudLogged ? "iCloud 已登录" : "iCloud 未登录")
+//                                    Text("会占用 iCloud 存储空间并在设备间保持同步")
+//                                }
+//                            } else {
+//                                VStack(alignment: .leading) {
+//                                    Text(iCloudLogged ? "iCloud 已登录，但不使用" : "iCloud 未登录")
+//                                    Text("数据仅存储在本机")
+//                                    Text("不占用 iCloud 空间")
+//                                    Text("多设备不同步")
+//                                }
+//                            }
                         }
                         .font(.subheadline)
                         .opacity(0.8)
@@ -41,7 +41,7 @@ struct CloudSetting: View {
         }
         .background(BackgroundView.type1.opacity(0.1))
         .onAppear {
-            iCloudEnabled = dataManager.isiCloudDisk
+//            iCloudEnabled = dataManager.isiCloudDisk
             Config.ifLogged { result in
                 iCloudLogged = result
 

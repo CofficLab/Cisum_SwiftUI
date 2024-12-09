@@ -30,9 +30,9 @@ struct VideoGrid: View {
                     VideoTile(selection: $selection, file: file)
                         .tag(file as DiskFile?)
                 }
-                    .onAppear {
-                        self.icon = dataManager.isiCloudDisk ? "icloud" : "folder"
-                    }
+//                    .onAppear {
+//                        self.icon = dataManager.isiCloudDisk ? "icloud" : "folder"
+//                    }
                     .onChange(of: selection, {
                         if let s = selection, s.isNotFolder() {
                             if playMan.playing {

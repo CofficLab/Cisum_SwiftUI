@@ -148,8 +148,10 @@ extension DiskLocal {
         
     }
     
-    func watch(reason: String) async {
-        os_log("\(self.label)WatchAudiosFolder because of \(reason)")
+    func watch(reason: String, verbose: Bool) async {
+        if verbose {
+            os_log("\(self.label)WatchAudiosFolder because of \(reason)")
+        }
 
         let presenter = FilePresenter(fileURL: self.root)
         

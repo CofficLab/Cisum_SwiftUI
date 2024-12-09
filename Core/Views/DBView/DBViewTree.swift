@@ -14,7 +14,7 @@ struct DBViewTree: View {
     @State var collapsed: Bool = false
     @State var icon: String = ""
 
-    var disk: any SuperDisk { dataManager.disk }
+    var disk: any SuperDisk
     var root: URL { disk.root }
     var rootDiskFile: DiskFile { disk.getRoot() }
     
@@ -37,7 +37,7 @@ struct DBViewTree: View {
 //                    .tag(file as DiskFile?)
             }
                 .onAppear {
-                    self.icon = dataManager.isiCloudDisk ? "icloud" : "folder"
+//                    self.icon = dataManager.isiCloudDisk ? "icloud" : "folder"
                 }
                 .onChange(of: selection, {
                     if let s = selection, s.isNotFolder() {

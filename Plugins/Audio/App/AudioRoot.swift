@@ -7,7 +7,6 @@ import SwiftUI
 
 struct AudioRoot: View, SuperLog, SuperThread, SuperFamily {
     let emoji = "🎶"
-    let dirName = "audios"
     let iconName = "music.note.list"
     let title = "歌曲模式"
     let description: String = "作为歌曲仓库，只关注文件，文件夹将被忽略"
@@ -65,19 +64,7 @@ extension AudioRoot {
     }
 
     func watchDisk(reason: String) {
-        guard var disk = disk else {
-            return
-        }
 
-        disk.onUpdated = { items in
-            Task {
-                await DB(Config.getContainer, reason: "AudioRoot.WatchDisk").sync(items)
-            }
-        }
-
-        Task {
-            await disk.watch(reason: reason)
-        }
     }
 
     func setCurrent(url: URL) {
@@ -253,17 +240,6 @@ extension AudioRoot {
     func onAppear() {
         if audios.count == 0 {
             app.showDBView()
-        }
-
-        self.bg.async {
-            let verbose = false
-
-            if verbose {
-                os_log("\(self.t)OnAppear")
-            }
-            
-            self.disk = DiskiCloud.make(self.dirName, verbose: true)
-            self.watchDisk(reason: "AudioApp.Boot")
         }
     }
 

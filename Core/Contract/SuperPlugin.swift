@@ -68,7 +68,10 @@ extension SuperPlugin {
     }
 
     func onPause(playMan: PlayMan) {
-        os_log("🐷 %{public}s::OnPause, current time: %{public}s", log: .default, type: .debug, String(describing: type(of: self)), playMan.currentTimeDisplay)
+        Task {
+            let timeDisplay = await playMan.currentTimeDisplay
+            os_log("🐷 %{public}s::OnPause, current time: %{public}s", log: .default, type: .debug, String(describing: type(of: self)), timeDisplay)
+        }
     }
 
     func onPlayStateUpdate() {

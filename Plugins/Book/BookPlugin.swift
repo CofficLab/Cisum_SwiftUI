@@ -15,7 +15,7 @@ class BookPlugin: SuperPlugin, SuperLog {
         os_log("\(self.t)AddDBView")
 
         return AnyView(
-            BookDB()
+            EmptyView()
         )
     }
 
@@ -23,6 +23,9 @@ class BookPlugin: SuperPlugin, SuperLog {
         return AnyView(
             BookPoster()
         )
+    }
+
+    func onInit() {
     }
 
     func onAppear(playMan: PlayMan, currentGroup: SuperPlugin?) {

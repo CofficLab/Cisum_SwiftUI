@@ -83,11 +83,7 @@ struct BookLayout: View, SuperLog {
 
     func getTabView() -> some View {
         TabView(selection: $tab) {
-            BookDB()
-                .tag("DB")
-                .tabItem {
-                    Label("仓库", systemImage: "music.note.list")
-                }
+            
 
             SettingView()
                 .tag("Setting")

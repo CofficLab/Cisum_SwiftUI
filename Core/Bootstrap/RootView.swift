@@ -126,56 +126,33 @@ extension RootView {
 
     func onAppear() {
         man.delegate = self
+
         Task {
             do {
                 try dataManager = await DataProvider(verbose: true)
+
+                Config.getPlugins().forEach({
+                    self.p.append($0)
+                    $0.onInit()
+                })
+
+                try self.p.setCurrentGroup(p.plugins.first!)
+
+                for plugin in p.plugins {
+                    plugin.onAppear(playMan: man, currentGroup: p.current)
+                }
+
+                #if os(iOS)
+                    self.main.async {
+                        UIApplication.shared.beginReceivingRemoteControlEvents()
+                    }
+                #endif
             } catch let e {
                 self.error = e
             }
 
             self.loading = false
         }
-
-        Config.getPlugins().forEach({
-            self.p.append($0)
-        })
-
-        try? self.p.setCurrentGroup(p.plugins.first!)
-
-        p.plugins.forEach({
-            $0.onAppear(playMan: man, currentGroup: p.current)
-        })
-
-        let verbose = false
-
-//        play.onGetChildren = { asset in
-//            if let children = DiskFile(url: asset.url).children {
-//                return children.map({ $0.toPlayAsset() })
-//            }
-//
-//            return []
-//        }
-
-        #if os(iOS)
-            self.main.async {
-                UIApplication.shared.beginReceivingRemoteControlEvents()
-            }
-        #endif
-
-        self.bg.async {
-            if verbose {
-                os_log("\(self.t)🐎🐎🐎 执行后台任务")
-            }
-
-            //            await self.onAppOpen()
-        }
-
-        //        Task {
-        //            let uuid = Config.getDeviceId()
-        //            let audioCount = disk.getTotal()
-        //
-        //            await dbSynced.saveDeviceData(uuid: uuid, audioCount: audioCount)
-        //        }
     }
 
     func onDisappear() {

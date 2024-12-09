@@ -8,7 +8,8 @@ struct DirScene: View {
 //    var scene: DiskScene
 
     var mountedURL: URL? {
-        dataManager.disk.getMountedURL()
+        nil
+//        dataManager.disk.getMountedURL()
     }
 
     var body: some View {

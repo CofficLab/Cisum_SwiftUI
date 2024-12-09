@@ -13,7 +13,7 @@ struct BtnEvict: View {
     var body: some View {
         Button {
             Task {
-                data.disk.evict(asset.url)
+//                data.disk.evict(asset.url)
             }
         } label: {
             Label(title, systemImage: getImageName())

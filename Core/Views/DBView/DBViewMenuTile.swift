@@ -14,34 +14,35 @@ struct DBViewMenuTile: View {
     @State var collapsed: Bool = false
     @State var icon: String = ""
 
-    var disk: any SuperDisk { dataManager.disk }
-    var root: URL { disk.root }
-    var rootDiskFile: DiskFile { disk.getRoot() }
+//    var disk: any SuperDisk { dataManager.disk }
+//    var root: URL { disk.root }
+//    var rootDiskFile: DiskFile { disk.getRoot() }
     
     var showTips: Bool {
         if app.isDropping {
             return true
         }
+        return false
 
-        return messageManager.flashMessage.isEmpty && rootDiskFile.getChildren()?.isEmpty ?? true
+//        return messageManager.flashMessage.isEmpty && rootDiskFile.getChildren()?.isEmpty ?? true
     }
 
     var body: some View {
         ZStack {
-            DBTree(
-                selection: $selection,
-                icon: $icon,
-                collapsed: collapsed,
-                file: disk.getRoot()
-            )
-                .onAppear {
-                    self.icon = dataManager.isiCloudDisk ? "icloud" : "folder"
+//            DBTree(
+//                selection: $selection,
+//                icon: $icon,
+//                collapsed: collapsed,
+//                file: disk.getRoot()
+//            )
+//                .onAppear {
+//                    self.icon = dataManager.isiCloudDisk ? "icloud" : "folder"
                 }
-                .onChange(of: selection, {
-                    if let s = selection, s.isNotFolder() {
-                        try? playMan.play(s.toPlayAsset(), reason: "点击了", verbose: true)
-                    }
-                })
+//                .onChange(of: selection, {
+//                    if let s = selection, s.isNotFolder() {
+//                        try? playMan.play(s.toPlayAsset(), reason: "点击了", verbose: true)
+//                    }
+//                })
             //     .onChange(of: playMan.asset?.url, {
             //         if let asset = playMan.asset {
             //             self.selection = DiskFile(url: asset.url)
@@ -56,7 +57,7 @@ struct DBViewMenuTile: View {
             }
         }
     }
-}
+//}
 
 #Preview("App") {
     AppPreview()

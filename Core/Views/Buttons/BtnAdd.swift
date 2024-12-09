@@ -15,15 +15,3 @@ struct BtnAdd: View {
         }
     }
 }
-
-#Preview {
-    RootView {
-        VStack {
-            BtnAdd()
-            BtnAdd().buttonStyle(.borderedProminent)
-            BtnAdd().labelStyle(.iconOnly)
-            
-            AudioDB()
-        }
-    }.modelContainer(Config.getContainer)
-}

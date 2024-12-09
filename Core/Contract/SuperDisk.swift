@@ -3,7 +3,7 @@ import OSLog
 
 protocol SuperDisk: FileBox {
     static var label: String { get }
-    static func make(_ subDirName: String, verbose: Bool) -> (any SuperDisk)?
+    static func make(_ subDirName: String, verbose: Bool, reason: String) -> (any SuperDisk)?
     static func getMountedURL(verbose: Bool) -> URL?
 
     var root: URL { get }
@@ -21,10 +21,9 @@ protocol SuperDisk: FileBox {
     /// 移除下载
     func evict(_ url: URL)
 
-
     func copyTo(url: URL, reason: String) throws
 
-    func watch(reason: String) async
+    func watch(reason: String, verbose: Bool) async
 
     func stopWatch(reason: String)
 
@@ -78,7 +77,11 @@ extension SuperDisk {
 
     // MARK: 创建磁盘
 
-    static func make(_ subDirName: String, verbose: Bool) -> (any SuperDisk)? {
+    static func make(_ subDirName: String, verbose: Bool, reason: String) -> (any SuperDisk)? {
+        if verbose {
+            os_log("\(self.label)创建Disk: \(subDirName) 🐛 \(reason)")
+        }
+
         let fileManager = FileManager.default
 
         guard let mountedURL = Self.getMountedURL(verbose: verbose) else {
@@ -100,7 +103,7 @@ extension SuperDisk {
         return Self(root: subRoot)
     }
 
-    func make(_ subDirName: String, verbose: Bool) -> (any SuperDisk)? {
-        Self.make(subDirName, verbose: verbose)
+    func make(_ subDirName: String, verbose: Bool, reason: String) -> (any SuperDisk)? {
+        Self.make(subDirName, verbose: verbose, reason: reason)
     }
 }

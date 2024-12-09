@@ -9,23 +9,13 @@ class DataProvider: ObservableObject, SuperLog {
     var db: DB
     var container: ModelContainer
 
-    @Published var disk: any SuperDisk
     @Published var syncing: Bool = false
-
-    var isiCloudDisk: Bool {
-        disk is DiskiCloud
-    }
-
-    var isNotiCloudDisk: Bool {
-        !(disk is DiskiCloud)
-    }
 
     init(verbose: Bool) async throws {
         if verbose {
             os_log("\(Logger.initLog) DataProvider")
         }
         
-        self.disk = DiskLocal.make("audios", verbose: verbose) ?? DiskLocal(root: URL(fileURLWithPath: "/tmp"))
         self.container = Config.getContainer
         self.db = DB(self.container, reason: "DataProvider.Init")
 
@@ -35,12 +25,6 @@ class DataProvider: ObservableObject, SuperLog {
             }
 
             try await self.checkAndUpdateiCloudStatus(verbose: verbose)
-
-            guard let iCloudDisk = DiskiCloud.make("audios", verbose: verbose) else {
-                throw DataProviderError.NoiCloudDisk
-            }
-
-            self.disk = iCloudDisk
         }
     }
 
@@ -100,7 +84,7 @@ class DataProvider: ObservableObject, SuperLog {
 extension DataProvider {
     func enableiCloud() throws {
         os_log("\(self.t)Enable iCloud")
-        let disk = DiskiCloud.make("audios", verbose: true)
+        let disk = DiskiCloud.make("audios", verbose: true, reason: "DataProvider.enableiCloud")
 
         guard disk != nil else {
             throw DataProviderError.NoiCloudDisk
@@ -111,7 +95,7 @@ extension DataProvider {
 
     func disableiCloud() throws {
         os_log("\(self.t)Disable iCloud")
-        let disk = DiskLocal.make("audios", verbose: true)
+        let disk = DiskLocal.make("audios", verbose: true, reason: "DataProvider.disableiCloud")
 
         guard disk != nil else {
             throw DataProviderError.NoLocalDisk

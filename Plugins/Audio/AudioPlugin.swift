@@ -8,6 +8,8 @@ class AudioPlugin: SuperPlugin, SuperLog {
     static let keyOfCurrentAudioTime = "AudioPluginCurrentAudioTime"
 
     let emoji = "🎺"
+
+    let dirName = "audios"
     let label: String = "Audio"
     var hasPoster: Bool = true
     let description: String = "作为歌曲仓库，只关注文件，文件夹将被忽略"
@@ -15,8 +17,14 @@ class AudioPlugin: SuperPlugin, SuperLog {
     var isGroup: Bool = true
     let db = DB(AudioConfig.getContainer, reason: "AudioPlugin")
 
+    var disk: (any SuperDisk)?
+
     func addDBView() -> AnyView {
-        AnyView(AudioDB())
+        guard let disk = disk else {
+            return AnyView(EmptyView())
+        }
+        
+        return AnyView(AudioDB(disk: disk))
     }
 
     func addPosterView() -> AnyView {
@@ -31,8 +39,15 @@ class AudioPlugin: SuperPlugin, SuperLog {
         ]
     }
 
+    func onInit() {
+        os_log("\(self.t)onInit")
+        self.disk = DiskiCloud.make(self.dirName, verbose: true, reason: "AudioPlugin.onInit")
+    }
+
     func onPause(playMan: PlayMan) {
-        AudioPlugin.storeCurrentTime(playMan.currentTime)
+        Task { @MainActor in
+            AudioPlugin.storeCurrentTime(playMan.currentTime)
+        }
     }
 
     func onPlay() {
@@ -47,34 +62,54 @@ class AudioPlugin: SuperPlugin, SuperLog {
             return
         }
 
-        if let url = AudioPlugin.getCurrent() {
-            try? playMan.play(PlayAsset(url: url), reason: "OnAppear", verbose: true)
+        Task { @MainActor in
+            if let url = AudioPlugin.getCurrent() {
+                try? playMan.play(PlayAsset(url: url), reason: "OnAppear", verbose: true)
 
-            if let time = AudioPlugin.getCurrentTime() {
-                playMan.seek(time)
+                if let time = AudioPlugin.getCurrentTime() {
+                    playMan.seek(time)
+                }
+            } else {
+                os_log("\(self.t)No current audio URL")
             }
-        } else {
-            os_log("\(self.t)No current audio URL")
         }
+
+        self.watchDisk(reason: "AudioApp.Boot")
     }
 
-    func onPlayPrev(playMan: PlayMan, current: PlayAsset?) throws {
+    func onPlayPrev(playMan: PlayMan, current: PlayAsset?) async throws {
         os_log("\(self.t)OnPlayPrev")
         let asset = self.db.getPrevOf(current?.url, verbose: false)
         if let asset = asset {
-            try playMan.play(PlayAsset(url: asset.url), reason: "OnPlayPrev", verbose: true)
+            try await playMan.play(PlayAsset(url: asset.url), reason: "OnPlayPrev", verbose: true)
         } else {
             throw AudioPluginError.NoPrevAsset
         }
     }
 
-    func onPlayNext(playMan: PlayMan, current: PlayAsset?) throws {
+    func onPlayNext(playMan: PlayMan, current: PlayAsset?) async throws {
         os_log("\(self.t)OnPlayNext")
         let asset = self.db.getNextOf(current?.url, verbose: false)
         if let asset = asset {
-            try playMan.play(PlayAsset(url: asset.url), reason: "OnPlayNext", verbose: true)
+            try await playMan.play(PlayAsset(url: asset.url), reason: "OnPlayNext", verbose: true)
         } else {
             throw AudioPluginError.NoNextAsset
+        }
+    }
+
+    func watchDisk(reason: String) {
+        guard var disk = disk else {
+            return
+        }
+
+        disk.onUpdated = { items in
+            Task {
+                await DB(Config.getContainer, reason: "AudioRoot.WatchDisk").sync(items)
+            }
+        }
+
+        Task {
+            await disk.watch(reason: reason, verbose: true)
         }
     }
 }
@@ -155,4 +190,3 @@ enum AudioPluginError: Error, LocalizedError {
         }
     }
 }
-
