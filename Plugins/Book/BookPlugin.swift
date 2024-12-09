@@ -3,7 +3,7 @@ import MagicKit
 import OSLog
 import SwiftUI
 
-class BookPlugin: SuperPlugin, SuperLog {
+class BookPlugin: SuperPlugin, SuperLog {    
     let emoji = "🎺"
 
     var label: String = "Book"
@@ -23,5 +23,20 @@ class BookPlugin: SuperPlugin, SuperLog {
         return AnyView(
             BookPoster()
         )
+    }
+
+    func onAppear(playMan: PlayMan, currentGroup: SuperPlugin?) {
+    }
+
+    func onPlay() {
+    }
+
+    func onPlayAssetUpdate(asset: PlayAsset?) {
+    }
+
+    func onPlayNext(playMan: PlayMan, current: PlayAsset?) throws {
+    }
+
+    func onPlayPrev(playMan: PlayMan, current: PlayAsset?) throws {
     }
 }

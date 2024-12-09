@@ -18,7 +18,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
 
     @StateObject var m = MessageProvider()
     @StateObject var p = PluginProvider()
-    @StateObject var man = PlayMan()
+    @StateObject var man: PlayMan = PlayMan(delegate: nil)
 
     init(@ViewBuilder content: () -> Content) {
         self.content = content()
@@ -125,6 +125,7 @@ extension RootView {
     }
 
     func onAppear() {
+        man.delegate = self
         Task {
             do {
                 try dataManager = await DataProvider(verbose: true)
@@ -135,10 +136,10 @@ extension RootView {
             self.loading = false
         }
 
-        self.p.append(AudioPlugin())
-        self.p.append(DebugPlugin())
-        self.p.append(BookPlugin())
-        
+        Config.getPlugins().forEach({
+            self.p.append($0)
+        })
+
         try? self.p.setCurrentGroup(p.plugins.first!)
 
         p.plugins.forEach({
@@ -201,6 +202,28 @@ extension RootView {
                 $0.onPlay()
             } else {
                 $0.onPause(playMan: man)
+            }
+        })
+    }
+}
+
+extension RootView: PlayManDelegate {
+    func onPlayPrev(current: PlayAsset?) {
+        p.plugins.forEach({
+            do {
+                try $0.onPlayPrev(playMan: man, current: current)
+            } catch let e {
+                m.error(e)
+            }
+        })
+    }
+
+    func onPlayNext(current: PlayAsset?) {
+        p.plugins.forEach({
+            do {
+                try $0.onPlayNext(playMan: man, current: current)
+            } catch let e {
+                m.alert(e.localizedDescription)
             }
         })
     }

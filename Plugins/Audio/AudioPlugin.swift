@@ -13,6 +13,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
     let description: String = "作为歌曲仓库，只关注文件，文件夹将被忽略"
     var iconName: String = "music.note"
     var isGroup: Bool = true
+    let db = DB(AudioConfig.getContainer, reason: "AudioPlugin")
 
     func addDBView() -> AnyView {
         AnyView(AudioDB())
@@ -34,6 +35,9 @@ class AudioPlugin: SuperPlugin, SuperLog {
         AudioPlugin.storeCurrentTime(playMan.currentTime)
     }
 
+    func onPlay() {
+    }
+
     func onPlayAssetUpdate(asset: PlayAsset?) {
         AudioPlugin.storeCurrent(asset?.url)
     }
@@ -51,6 +55,26 @@ class AudioPlugin: SuperPlugin, SuperLog {
             }
         } else {
             os_log("\(self.t)No current audio URL")
+        }
+    }
+
+    func onPlayPrev(playMan: PlayMan, current: PlayAsset?) throws {
+        os_log("\(self.t)OnPlayPrev")
+        let asset = self.db.getPrevOf(current?.url, verbose: false)
+        if let asset = asset {
+            try playMan.play(PlayAsset(url: asset.url), reason: "OnPlayPrev", verbose: true)
+        } else {
+            throw AudioPluginError.NoPrevAsset
+        }
+    }
+
+    func onPlayNext(playMan: PlayMan, current: PlayAsset?) throws {
+        os_log("\(self.t)OnPlayNext")
+        let asset = self.db.getNextOf(current?.url, verbose: false)
+        if let asset = asset {
+            try playMan.play(PlayAsset(url: asset.url), reason: "OnPlayNext", verbose: true)
+        } else {
+            throw AudioPluginError.NoNextAsset
         }
     }
 }
@@ -117,3 +141,18 @@ extension Notification.Name {
     static let MetaWrapperDeletedNotification = Notification.Name("MetaWrapperDeletedNotification")
     static let MetaWrappersDeletedNotification = Notification.Name("MetaWrappersDeletedNotification")
 }
+
+enum AudioPluginError: Error, LocalizedError {
+    case NoNextAsset
+    case NoPrevAsset
+
+    var errorDescription: String? {
+        switch self {
+        case .NoNextAsset:
+            return "No next asset"
+        case .NoPrevAsset:
+            return "No prev asset"
+        }
+    }
+}
+

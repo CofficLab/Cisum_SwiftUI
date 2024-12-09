@@ -36,6 +36,14 @@ struct StateView: View, SuperLog, SuperThread {
             if tasks.count > 0 && app.showDB == false {
                 StateCopy()
             }
+
+            if asset?.isDownloading ?? false {
+                makeInfoView("正在下载")
+            }
+
+            if asset?.isNotDownloaded ?? false {
+                makeInfoView("未下载")
+            }
         }
     }
 

@@ -73,6 +73,7 @@ struct AudioList: View, SuperThread, SuperLog {
         }
         .onAppear(perform: handleOnAppear)
         .onChange(of: selection, handleSelectionChange)
+        .onChange(of: playMan.asset, handlePlayAssetChange)
         .onReceive(NotificationCenter.default.publisher(for: .PlayManStateChange), perform: handlePlayManStateChange)
         .onReceive(NotificationCenter.default.publisher(for: .dbSyncing), perform: handleDBSyncing)
         .onReceive(NotificationCenter.default.publisher(for: .dbSynced), perform: handleDBSynced)
@@ -121,6 +122,12 @@ extension AudioList {
             if url != playMan.asset?.url {
                 try? self.playMan.play(audio.toPlayAsset(), reason: "AudioList SelectionChange", verbose: true)
             }
+        }
+    }
+
+    func handlePlayAssetChange() {
+        if let asset = playMan.asset, let audio = audios.first(where: { $0.url == asset.url }) {
+            selection = asset.url
         }
     }
 }

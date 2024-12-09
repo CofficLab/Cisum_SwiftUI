@@ -48,15 +48,10 @@ class AudioWorker: NSObject, ObservableObject, SuperPlayWorker, SuperLog, SuperT
         player.currentTime = time
     }
 
-    func prepare(_ asset: PlayAsset?, reason: String) {
-        let verbose = false
-        if verbose {
-            os_log("\(self.t)Prepare \(asset?.fileName ?? "nil") \(reason)")
-        }
-        self.state = .Ready(asset)
+    func prepare(_ asset: PlayAsset?, reason: String, verbose: Bool) throws {
+        self.asset = asset
+        self.player = try self.makePlayer(asset, reason: reason, verbose: verbose)
     }
-
-    // MARK: Play
 
     func play(_ asset: PlayAsset, reason: String) throws {
         let verbose = false
@@ -65,7 +60,7 @@ class AudioWorker: NSObject, ObservableObject, SuperPlayWorker, SuperLog, SuperT
         }
 
         if asset.isFolder() {
-            return prepare(asset, reason: reason)
+            return try prepare(asset, reason: reason, verbose: true)
         }
 
         try player = makePlayer(asset, reason: "AudioWorker.Playing", verbose: true)
@@ -86,12 +81,12 @@ class AudioWorker: NSObject, ObservableObject, SuperPlayWorker, SuperLog, SuperT
         self.player.pause()
     }
 
-    func stop(reason: String) {
-        let verbose = false
+    func stop(reason: String, verbose: Bool) {
         if verbose {
             os_log("\(self.t)Stop 🐛 \(reason)")
         }
-        state = .Stopped
+        
+        self.player.stop()
     }
 
     func finish() {
@@ -119,31 +114,8 @@ extension AudioWorker {
     }
 
     func makePlayer(_ asset: PlayAsset?, reason: String, verbose: Bool) throws -> AVAudioPlayer {
-        if verbose {
-            os_log("\(self.t)MakePlayer「\(asset?.fileName ?? "nil")」 🐛 \(reason)")
-        }
-
         guard let asset = asset else {
             return AVAudioPlayer()
-        }
-
-        if asset.isNotExists() {
-            os_log("\(self.t)不存在 \(asset.fileName) ⚠️⚠️⚠️")
-            throw PlayManError.NotFound
-        }
-
-        if asset.isDownloading {
-            if verbose {
-                os_log("\(self.t)正在下载 \(asset.fileName)")
-            }
-            throw PlayManError.Downloading
-        }
-
-        guard asset.isDownloaded else {
-            if verbose {
-                os_log("  ⚠️ 未下载 \(asset.fileName)")
-            }
-            throw PlayManError.NotDownloaded
         }
 
         // 格式不支持

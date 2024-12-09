@@ -1,18 +1,19 @@
 import OSLog
 import SwiftUI
 
-struct BtnNext: View {
+struct BtnNext: View, SuperEvent {
     @EnvironmentObject var playMan: PlayMan
 
     var autoResize = false
 
     var body: some View {
         ControlButton(
-            title: "下一曲", image: "forward.fill", dynamicSize: autoResize,
+            title: "下一曲", image: "forward.fill",
+            dynamicSize: autoResize,
             onTap: {
-                playMan.next()
+                self.playMan.next()
             })
-        .foregroundStyle(.white)
+            .foregroundStyle(.white)
     }
 }
 

@@ -54,7 +54,6 @@ struct AudioRoot: View, SuperLog, SuperThread, SuperFamily {
             .onReceive(NotificationCenter.default.publisher(for: .dbSyncing), perform: onDBSyncing)
             .onReceive(NotificationCenter.default.publisher(for: .CopyFiles), perform: onCopyFiles)
             .onReceive(timer, perform: onTimer)
-            .onChange(of: audios.count, onChangeOfAudiosCount)
     }
 }
 
@@ -152,20 +151,6 @@ extension AudioRoot {
         monitor.start(queue: queue)
     }
 
-    func restore(reason: String, verbose: Bool = true) {
-        self.bg.async {
-            if verbose {
-                os_log("\(self.t)Restore 🐛 \(reason)")
-            }
-
-            if let url = getCurrent() {
-                self.playMan.prepare(PlayAsset(url: url), reason: "AudioRoot.Restore")
-            } else if (p.current?.getDisk()) != nil {
-                self.playMan.prepare(db.firstAudio()?.toPlayAsset(), reason: "AudioRoot.Restore")
-            }
-        }
-    }
-
     func downloadNextBatch(url: URL?, count: Int, reason: String) {
         self.bg.async {
             let verbose = false
@@ -202,7 +187,6 @@ extension AudioRoot {
                 os_log("\(self.t)RunJobs")
             }
             
-            self.restore(reason: "OnAppear")
             self.copyJob = AudioCopyJob(db: db, disk: disk!)
             
             checkNetworkStatus()
@@ -263,19 +247,6 @@ extension AudioRoot {
     func onCopyFiles(_ notification: Notification) {
         if let job = copyJob, let urls = notification.userInfo?["urls"] as? [URL] {
             job.append(urls)
-        }
-    }
-
-    func onChangeOfAudiosCount() {
-        Task {
-            if playMan.asset == nil, let first = db.firstAudio()?.toPlayAsset() {
-                os_log("\(self.t)准备第一个")
-                playMan.prepare(first, reason: "count changed")
-            }
-        }
-
-        if audios.count == 0 {
-            playMan.prepare(nil, reason: "count changed")
         }
     }
 

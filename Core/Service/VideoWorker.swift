@@ -124,7 +124,7 @@ extension VideoWorker {
 //        player.currentTime = time
     }
 
-    func prepare(_ audio: PlayAsset?, reason: String) {
+    func prepare(_ audio: PlayAsset?, reason: String, verbose: Bool) {
         state = .Ready(audio)
     }
 
@@ -154,8 +154,10 @@ extension VideoWorker {
         state = .Paused(asset)
     }
 
-    func stop(reason: String) {
-        os_log("\(self.label)Stop 🐛 \(reason)")
+    func stop(reason: String, verbose: Bool) {
+        if verbose {
+            os_log("\(self.label)Stop 🐛 \(reason)")
+        }
         state = .Stopped
     }
 
@@ -166,11 +168,11 @@ extension VideoWorker {
     // MARK: Prev
     
     func prev() {
-        if let prev = self.onGetPrevOf(self.asset) {
-            self.play(prev, reason: "Prev")
-        } else {
-            self.stop(reason: "prev")
-        }
+//        if let prev = self.onGetPrevOf(self.asset) {
+//            self.play(prev, reason: "Prev")
+//        } else {
+//            self.stop(reason: "prev")
+//        }
     }
 }
 

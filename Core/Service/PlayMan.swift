@@ -27,6 +27,7 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread {
     @Published var mode: PlayMode = .Order
 
     let emoji = "💃"
+    var delegate: PlayManDelegate?
     var audioWorker: AudioWorker
     var videoWorker: VideoWorker
     var verbose = true
@@ -63,9 +64,10 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread {
 
     // MARK: 初始化
 
-    init(verbose: Bool = true) {
+    init(verbose: Bool = true, delegate: PlayManDelegate?) {
         self.audioWorker = AudioWorker()
         self.videoWorker = VideoWorker()
+        self.delegate = delegate
 
         super.init()
 
@@ -127,43 +129,38 @@ extension PlayMan {
         setPlayingInfo()
     }
 
-    func prepare(_ asset: PlayAsset?, reason: String) {
-        let verbose = false
-        if verbose {
-            os_log("\(self.t)Prepare 「\(asset?.fileName ?? "nil")」 🐛 \(reason)")
-        }
-        self.worker.prepare(asset, reason: reason)
-    }
-
-    func play(_ asset: PlayAsset, reason: String, verbose: Bool) throws {
-        if verbose {
-            os_log("\(self.t)Play 「\(asset.fileName) (\(asset.isAudio() ? "Audio" : "Video"))」🐛 \(reason)")
-        }
-
-        if asset.isFolder() {
-            guard let first = self.onGetChildren(asset).first else {
-                return self.worker.setError(SmartError.NoChildrenAudio, asset: asset)
+    func play(_ asset: PlayAsset? = nil, reason: String = "", verbose: Bool = false) throws {
+        if let asset = asset {
+            if verbose {
+                os_log("\(self.t)Play 🔊「\(asset.fileName)」🐛 \(reason)")
             }
-
-            self.asset = first
-        } else {
             self.asset = asset
         }
 
-        try self.worker.play(self.asset!, reason: reason)
-        self.playing = true
-    }
+        guard let currentAsset = self.asset else {
+            self.stop(reason: "Play.NoAsset", verbose: true)
+            throw PlayManError.NoAsset
+        }
 
-    func play() throws {
+        if currentAsset.isDownloading {
+            self.stop(reason: "Play.Downloading", verbose: true)
+            throw PlayManError.Downloading
+        }
+
+        if currentAsset.isNotDownloaded {
+            self.stop(reason: "Play.NotDownloaded", verbose: true)
+            throw PlayManError.NotDownloaded
+        }
+        
+        if asset != nil {
+            try self.worker.prepare(asset, reason: reason, verbose: true)
+        }
+        
         try self.worker.play()
         self.playing = true
     }
 
     func resume(reason: String, verbose: Bool) throws {
-        if verbose {
-            os_log("\(self.t)Resume 🎵🎵🎵 🐛 \(reason)")
-        }
-
         guard let asset = self.asset else {
             throw PlayManError.NoAsset
         }
@@ -184,17 +181,16 @@ extension PlayMan {
         if verbose {
             os_log("\(self.t)Pause ⏸️⏸️⏸️")
         }
-        
+
         try self.worker.pause(verbose: verbose)
         self.playing = false
     }
 
-    func stop(reason: String) {
-        let verbose = true
+    func stop(reason: String, verbose: Bool) {
         if verbose {
             os_log("\(self.t)Stop 🐛 \(reason)")
         }
-        self.worker.stop(reason: reason)
+        self.worker.stop(reason: reason, verbose: verbose)
     }
 
     func toggle() throws {
@@ -208,13 +204,13 @@ extension PlayMan {
     // MARK: Prev
 
     func prev() {
-        self.emitPlayPrev()
+        self.delegate?.onPlayPrev(current: self.asset)
     }
 
     // MARK: Next
 
     func next() {
-        self.emitPlayNext()
+        self.delegate?.onPlayNext(current: self.asset)
     }
 
     func setMode(_ mode: PlayMode) {
@@ -373,7 +369,7 @@ extension PlayMan {
         c.stopCommand.addTarget { _ in
             os_log("\(self.t)停止")
 
-            self.worker.stop(reason: "StopCommand")
+            self.worker.stop(reason: "StopCommand", verbose: true)
 
             return .success
         }

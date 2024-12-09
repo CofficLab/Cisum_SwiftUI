@@ -43,8 +43,6 @@ struct BtnDel: View {
             if let asset = playMan.asset, assets.map({ $0.url }).contains(asset.url) {
                 if isPlaying, let next = next {
                     try? playMan.play(next.toPlayAsset(), reason: "删除了", verbose: true)
-                } else {
-                    playMan.prepare(next?.toPlayAsset(), reason: "删除了")
                 }
             }
 
