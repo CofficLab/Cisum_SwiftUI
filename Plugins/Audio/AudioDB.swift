@@ -9,7 +9,6 @@ struct AudioDB: View, SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var data: DataProvider
     @EnvironmentObject var messageManager: MessageProvider
-    @EnvironmentObject var db: DB
     @EnvironmentObject var s: StoreProvider
 
     @State private var treeView = false
@@ -20,8 +19,6 @@ struct AudioDB: View, SuperLog, SuperThread {
     @Query(Audio.descriptorAll, animation: .default) var audios: [Audio]
 
     let emoji = "🐘"
-
-    var disk: any SuperDisk
 
     var showProTips: Bool {
         audios.count >= Config.maxAudioCount && s.currentSubscription == nil && isDropping
@@ -35,12 +32,10 @@ struct AudioDB: View, SuperLog, SuperThread {
         audios.count >= Config.maxAudioCount && s.currentSubscription == nil
     }
 
-    init(verbose: Bool = false, disk: any SuperDisk) {
+    init(verbose: Bool = false) {
         if verbose {
             os_log("\(Logger.isMain)AudioDB")
         }
-        
-        self.disk = disk
     }
 
     var body: some View {

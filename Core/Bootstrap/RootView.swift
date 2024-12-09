@@ -8,7 +8,6 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     let emoji = "🌳"
     let a = AppProvider()
     let s = StoreProvider()
-    let db = DB(Config.getContainer, reason: "BootView")
     let dbSynced = DBSynced(Config.getSyncedContainer)
 
     @State var dataManager: DataProvider?
@@ -59,7 +58,6 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                                 .environmentObject(s)
                                 .environmentObject(p)
                                 .environmentObject(dataManager)
-                                .environmentObject(db)
                                 .environmentObject(dbSynced)
                                 .environmentObject(m)
                         } else {
@@ -186,23 +184,27 @@ extension RootView {
 
 extension RootView: PlayManDelegate {
     func onPlayPrev(current: PlayAsset?) {
-        p.plugins.forEach({
-            do {
-                try $0.onPlayPrev(playMan: man, current: current)
-            } catch let e {
-                m.error(e)
+        Task {
+            for plugin in p.plugins {
+                do {
+                    try await plugin.onPlayPrev(playMan: man, current: current)
+                } catch let e {
+                    m.error(e)
+                }
             }
-        })
+        }
     }
 
     func onPlayNext(current: PlayAsset?) {
-        p.plugins.forEach({
-            do {
-                try $0.onPlayNext(playMan: man, current: current)
-            } catch let e {
-                m.alert(e.localizedDescription)
+        Task {
+            for plugin in p.plugins {
+                do {
+                    try await plugin.onPlayNext(playMan: man, current: current)
+                } catch let e {
+                    m.alert(e.localizedDescription)
+                }
             }
-        })
+        }
     }
 }
 

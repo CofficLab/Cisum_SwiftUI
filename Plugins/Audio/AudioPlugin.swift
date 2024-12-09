@@ -8,7 +8,6 @@ class AudioPlugin: SuperPlugin, SuperLog {
     static let keyOfCurrentAudioTime = "AudioPluginCurrentAudioTime"
 
     let emoji = "🎺"
-
     let dirName = "audios"
     let label: String = "Audio"
     var hasPoster: Bool = true
@@ -20,11 +19,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
     var disk: (any SuperDisk)?
 
     func addDBView() -> AnyView {
-        guard let disk = disk else {
-            return AnyView(EmptyView())
-        }
-        
-        return AnyView(AudioDB(disk: disk))
+        AnyView(AudioDB())
     }
 
     func addPosterView() -> AnyView {
@@ -104,7 +99,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
 
         disk.onUpdated = { items in
             Task {
-                await DB(Config.getContainer, reason: "AudioRoot.WatchDisk").sync(items)
+                await self.db.sync(items)
             }
         }
 
