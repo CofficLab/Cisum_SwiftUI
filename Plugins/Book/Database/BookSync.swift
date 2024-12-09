@@ -3,7 +3,7 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-extension DB {
+extension RecordDB {
     var labelForBookSync: String {
         "\(t)📖📖📖"
     }

@@ -8,7 +8,7 @@ struct StateView: View, SuperLog, SuperThread {
     @EnvironmentObject var data: DataProvider
     @EnvironmentObject var messageManager: MessageProvider
     @EnvironmentObject var playMan: PlayMan
-    @EnvironmentObject var db: DB
+    @EnvironmentObject var db: RecordDB
     @Environment(\.modelContext) private var modelContext
 
     @Query(sort: \CopyTask.createdAt, animation: .default) var tasks: [CopyTask]

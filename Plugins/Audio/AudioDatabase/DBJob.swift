@@ -3,13 +3,13 @@ import OSLog
 import SwiftData
 
 
-extension DB {
+extension RecordDB {
     var labelPrepare: String { "\(self.t)⏬⏬⏬ Prepare" }
     
     func prepareJob() {
         os_log("\(self.labelPrepare) 🚀🚀🚀")
         
-        let audio = DB.first(context: context)
+        let audio = RecordDB.first(context: context)
         
         if let audio = audio {
             self.downloadNextBatch(audio, reason: "\(Logger.isMain)\(Self.label)prepare")
@@ -18,7 +18,7 @@ extension DB {
 }
 
 
-extension DB {
+extension RecordDB {
     var labelForGroup: String { "\(self.t)🌾🌾🌾" }
 
     func updateGroupForURLs(_ urls: [URL], verbose: Bool = true) {
@@ -48,7 +48,7 @@ extension DB {
     }
 }
 
-extension DB {
+extension RecordDB {
     var labelForGetCovers: String { "\(self.t)🌽🌽🌽 GetCovers" }
     
     func runGetCoversJob() {
@@ -102,7 +102,7 @@ extension DB {
 }
 
 
-extension DB {
+extension RecordDB {
     var labelForDelete: String { "\(t)🗑️🗑️🗑️" }
 
     func runDeleteInvalidJob() {
@@ -120,7 +120,7 @@ extension DB {
         }
     }
 }
-extension DB {
+extension RecordDB {
     // MARK: 运行任务
 
     func runJob(
@@ -159,7 +159,7 @@ extension DB {
         }
 
         if printStartLog {
-            os_log("\(Logger.isMain)\(DB.label)\(title) Start 🚀🚀🚀 with count=\(totalCount)")
+            os_log("\(Logger.isMain)\(RecordDB.label)\(title) Start 🚀🚀🚀 with count=\(totalCount)")
         }
 
         do {
@@ -172,14 +172,14 @@ extension DB {
                     jobQueue.sync {
                         group.enter()
                         if printQueueEnter {
-                            os_log("\(Logger.isMain)\(DB.label)\(title) 已加入队列 \(audio.title), 队列积累任务数量 \(group.count)/\(t)")
+                            os_log("\(Logger.isMain)\(RecordDB.label)\(title) 已加入队列 \(audio.title), 队列积累任务数量 \(group.count)/\(t)")
                         }
 
                         opQueue.addOperation {
                             code(audio) {
                                 group.leave()
                                 if group.count % printLogStep == 0 && printLog && group.count > 0 {
-                                    os_log("\(Logger.isMain)\(DB.label)\(title) 余 \(group.count)/\(t)")
+                                    os_log("\(Logger.isMain)\(RecordDB.label)\(title) 余 \(group.count)/\(t)")
                                 }
                             }
                         }
@@ -188,14 +188,14 @@ extension DB {
                     // MARK: 串行处理
                     
                     if printQueueEnter {
-                        os_log("\(Logger.isMain)\(DB.label)\(title) 处理 \(audio.title)")
+                        os_log("\(Logger.isMain)\(RecordDB.label)\(title) 处理 \(audio.title)")
                     }
                     
                     serialQueue.sync {
                         code(audio) {
                             finishedCount += 1
                             if finishedCount % printLogStep == 0 && printLog && finishedCount > 0 {
-                                os_log("\(Logger.isMain)\(DB.label)\(title) 完成 \(finishedCount)/\(t) 🐎🐎🐎")
+                                os_log("\(Logger.isMain)\(RecordDB.label)\(title) 完成 \(finishedCount)/\(t) 🐎🐎🐎")
                             }
                         }
                     }
@@ -208,7 +208,7 @@ extension DB {
                     // 计算代码执行时间
                     let nanoTime = DispatchTime.now().uptimeNanoseconds - startTime.uptimeNanoseconds
                     let timeInterval = Double(nanoTime) / 1000000000
-                    os_log("\(Logger.isMain)\(DB.label)\(title) cost \(timeInterval) 秒 🐢🐢🐢")
+                    os_log("\(Logger.isMain)\(RecordDB.label)\(title) cost \(timeInterval) 秒 🐢🐢🐢")
                 }
             }
         } catch let e {

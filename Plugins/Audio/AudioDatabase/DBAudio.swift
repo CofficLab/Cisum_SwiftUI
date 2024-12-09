@@ -2,7 +2,7 @@ import Foundation
 import OSLog
 import SwiftData
 
-extension DB {
+extension RecordDB {
     func allAudios() -> [AudioModel] {
         os_log("\(self.t)GetAllAudios")
         do {
@@ -36,33 +36,12 @@ extension DB {
         _ = Self.deleteAudio(context: context, id: audio.id)
     }
 
-    func deleteAudio(_ url: URL) -> AudioModel? {
-        os_log("\(self.t)DeleteAudio by url=\(url.lastPathComponent)")
-        return deleteAudios([url])
-    }
-
-    func deleteAudioAndGetNext(_ audio: AudioModel) -> AudioModel? {
-        delete(audio.id)
-    }
-
     func deleteAudios(_ audios: [AudioModel]) -> AudioModel? {
-//        Self.deleteAudios(context: context, disk: disk, ids: audios.map { $0.id })
-        nil
+        Self.deleteAudios(context: context, ids: audios.map { $0.id })
     }
 
     func deleteAudios(_ ids: [AudioModel.ID]) -> AudioModel? {
-//        Self.deleteAudios(context: context, disk: disk, ids: ids)
-        nil
-    }
-
-    func deleteAudios(_ urls: [URL]) -> AudioModel? {
-        var audio: AudioModel?
-
-        for url in urls {
-            audio = deleteAudio(url)
-        }
-
-        return audio
+        Self.deleteAudios(context: context, ids: ids)
     }
 
     func destroyAudios() {
@@ -283,7 +262,7 @@ extension DB {
     }
 
     func isAllInCloud() -> Bool {
-        getTotalOfAudio() > 0 && DB.first(context: context) == nil
+        getTotalOfAudio() > 0 && RecordDB.first(context: context) == nil
     }
 
     func like(_ audio: AudioModel) {
@@ -323,11 +302,11 @@ extension DB {
         os_log("🍋 DBAudio::preOf \(url?.lastPathComponent ?? "nil")")
 
         guard let url = url else {
-            return DB.first(context: context)
+            return RecordDB.first(context: context)
         }
 
         guard let audio = self.findAudio(url) else {
-            return DB.first(context: context)
+            return RecordDB.first(context: context)
         }
 
         return prev(audio)
@@ -336,7 +315,7 @@ extension DB {
     func prev(_ audio: AudioModel?) -> AudioModel? {
         os_log("🍋 DBAudio::preOf [\(audio?.order ?? 0)] \(audio?.title ?? "nil")")
         guard let audio = audio else {
-            return DB.first(context: context)
+            return RecordDB.first(context: context)
         }
 
         return Self.prevOf(context: context, audio: audio)
@@ -347,7 +326,7 @@ extension DB {
     }
 
     func sort(_ sticky: AudioModel?, reason: String) {
-        os_log("\(Logger.isMain)\(DB.label)Sort with reason: \(reason)")
+        os_log("\(Logger.isMain)\(RecordDB.label)Sort with reason: \(reason)")
 
         emitSorting("order")
 
@@ -423,7 +402,7 @@ extension DB {
             return
         }
 
-        os_log("\(Logger.isMain)\(DB.label)Sticky \(url.lastPathComponent) with reason: \(reason)")
+        os_log("\(Logger.isMain)\(RecordDB.label)Sticky \(url.lastPathComponent) with reason: \(reason)")
 
         do {
             // Find the audio corresponding to the URL
@@ -619,8 +598,6 @@ extension DB {
         }
     }
 
-    // MARK: Static functions
-
     static func deleteAudio(context: ModelContext, id: AudioModel.ID) -> AudioModel? {
         deleteAudios(context: context, ids: [id])
     }
@@ -655,7 +632,7 @@ extension DB {
                 context.delete(audio)
                 try context.save()
             } catch let e {
-                os_log(.error, "\(Logger.isMain)\(DB.label)删除出错 \(e)")
+                os_log(.error, "\(Logger.isMain)\(RecordDB.label)删除出错 \(e)")
             }
         }
 
@@ -694,7 +671,7 @@ extension DB {
 
                 try context.save()
             } catch let e {
-                os_log(.error, "\(Logger.isMain)\(DB.label)删除出错 \(e)")
+                os_log(.error, "\(Logger.isMain)\(RecordDB.label)删除出错 \(e)")
             }
         }
 

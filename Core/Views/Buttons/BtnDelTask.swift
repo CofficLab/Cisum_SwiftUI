@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct BtnDelTask: View {
-    @EnvironmentObject var db: DB
+    @EnvironmentObject var db: RecordDB
     
     @State var hovered = false
 

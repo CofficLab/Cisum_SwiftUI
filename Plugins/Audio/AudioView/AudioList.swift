@@ -19,10 +19,9 @@ struct AudioList: View, SuperThread, SuperLog {
     @EnvironmentObject var data: DataProvider
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var messageManager: MessageProvider
-    @Environment(\.modelContext) var modelContext
+    @EnvironmentObject var db: AudioDB
 
-    @Query(AudioModel.descriptorNotFolder) var audios: [AudioModel]
-
+    @State var audios: [AudioModel] = []
     @State var selection: URL? = nil
     @State var isSyncing: Bool = false
 
@@ -77,15 +76,26 @@ struct AudioList: View, SuperThread, SuperLog {
         .onReceive(NotificationCenter.default.publisher(for: .PlayManStateChange), perform: handlePlayManStateChange)
         .onReceive(NotificationCenter.default.publisher(for: .dbSyncing), perform: handleDBSyncing)
         .onReceive(NotificationCenter.default.publisher(for: .dbSynced), perform: handleDBSynced)
+        .onReceive(NotificationCenter.default.publisher(for: .audioDeleted), perform: handleAudioDeleted)
     }
 }
 
 // MARK: Event Handler
 
 extension AudioList {
+    func handleAudioDeleted(_ notification: Notification) {
+        Task {
+            self.audios = await db.allAudios()
+        }
+    }
+
     func handleOnAppear() {
         if let asset = playMan.asset {
             selection = asset.url
+        }
+        
+        Task {
+            self.audios = await db.allAudios()
         }
     }
 

@@ -11,36 +11,36 @@ import SwiftUI
 class AudioModel: FileBox {
     static var label = "🪖 Audio::"
     static var verbose = false
-    
+
     // MARK: Descriptor
-    
+
     static var descriptorAll = FetchDescriptor(predicate: #Predicate<AudioModel> { _ in
-        return true
+        true
     }, sortBy: [
-        SortDescriptor(\.order, order: .forward)
+        SortDescriptor(\.order, order: .forward),
     ])
-    
+
     static var descriptorNotFolder = FetchDescriptor(predicate: predicateNotFolder, sortBy: [
-        SortDescriptor(\.order, order: .forward)
+        SortDescriptor(\.order, order: .forward),
     ])
 
     static var predicateNotFolder = #Predicate<AudioModel> { audio in
         audio.isFolder == false
     }
-    
+
     static var descriptorFirst: FetchDescriptor<AudioModel> {
         var descriptor = AudioModel.descriptorAll
         descriptor.sortBy.append(.init(\.order, order: .forward))
         descriptor.fetchLimit = 1
-        
+
         return descriptor
     }
 
     @Transient let fileManager = FileManager.default
-    @Transient var db: DB?
-    
+    @Transient var db: AudioDB?
+
     // MARK: Properties
-    
+
     // 新增字段记得设置默认值，否则低版本更新时崩溃
 
     @Attribute(.unique)
@@ -53,8 +53,8 @@ class AudioModel: FileBox {
     var size: Int64?
     var identifierKey: String?
     var contentType: String?
-    var hasCover: Bool? = nil
-    var fileHash: String? = nil
+    var hasCover: Bool?
+    var fileHash: String?
     var isFolder: Bool = false
 
     var verbose: Bool { Self.verbose }
@@ -64,7 +64,7 @@ class AudioModel: FileBox {
         if url == .applicationDirectory {
             return nil
         }
-        
+
         return [AudioModel(.applicationDirectory)]
     }
 
@@ -95,7 +95,7 @@ class AudioModel: FileBox {
         }
     }
 
-    func setDB(_ db: DB?) {
+    func setDB(_ db: AudioDB?) {
         self.db = db
     }
 }
@@ -125,10 +125,10 @@ extension AudioModel {
         if verbose {
             os_log("\(self.label)ToPlayAsset: size(\(self.size.debugDescription))")
         }
-        
+
         return PlayAsset(url: self.url, like: self.like, size: size).setSource(self)
     }
-    
+
     static func fromPlayAsset(_ asset: PlayAsset) -> AudioModel {
         AudioModel(asset.url)
     }
@@ -144,18 +144,11 @@ extension AudioModel {
 
 extension AudioModel: PlaySource {
     func delete() async throws {
-        if let context = self.modelContext {
-            context.delete(self)
-            try context.save()
-
-            return
-        }
-        
         guard let db = db else {
             throw AudioModelError.dbNotFound
         }
 
-        await db.deleteAudio(self, verbose: true)
+        await db.delete(self, verbose: true)
     }
 }
 
@@ -168,7 +161,7 @@ enum AudioModelError: Error, LocalizedError {
         case .deleteFailed:
             return "Delete failed"
         case .dbNotFound:
-            return "DB not found"
+            return "AudioModel: DB not found"
         }
     }
 }

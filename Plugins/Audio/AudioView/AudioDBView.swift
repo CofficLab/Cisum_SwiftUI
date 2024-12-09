@@ -5,31 +5,31 @@ import SwiftUI
 import UniformTypeIdentifiers
 import MagicKit
 
-struct AudioDB: View, SuperLog, SuperThread {
+struct AudioDBView: View, SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var data: DataProvider
     @EnvironmentObject var messageManager: MessageProvider
     @EnvironmentObject var s: StoreProvider
+    @EnvironmentObject var db: AudioDB
 
-    @State private var treeView = false
-    @State private var isSorting = false
-    @State private var sortMode: SortMode = .none
-    @State private var isDropping: Bool = false
-
-    @Query(AudioModel.descriptorAll, animation: .default) var audios: [AudioModel]
+    @State var treeView = false
+    @State var isSorting = false
+    @State var sortMode: SortMode = .none
+    @State var isDropping: Bool = false
+    @State var count: Int = 0
 
     let emoji = "🐘"
 
     var showProTips: Bool {
-        audios.count >= Config.maxAudioCount && s.currentSubscription == nil && isDropping
+        count >= Config.maxAudioCount && s.currentSubscription == nil && isDropping
     }
 
     var showTips: Bool {
-        (isDropping || (messageManager.flashMessage.isEmpty && audios.count == 0)) && !showProTips
+        (isDropping || (messageManager.flashMessage.isEmpty && count == 0)) && !showProTips
     }
 
     var outOfLimit: Bool {
-        audios.count >= Config.maxAudioCount && s.currentSubscription == nil
+        count >= Config.maxAudioCount && s.currentSubscription == nil
     }
 
     init(verbose: Bool = false) {
@@ -69,12 +69,15 @@ struct AudioDB: View, SuperLog, SuperThread {
         .onReceive(NotificationCenter.default.publisher(for: .DBSorting), perform: onSorting)
         .onReceive(NotificationCenter.default.publisher(for: .DBSortDone), perform: onSortDone)
         .onDrop(of: [UTType.fileURL], isTargeted: self.$isDropping, perform: onDrop)
+        .task {
+            self.count = await db.getTotalCount()
+        }
     }
 }
 
 // MARK: - Enums
 
-extension AudioDB {
+extension AudioDBView {
     enum SortMode: String {
         case random, order, none
 
@@ -90,7 +93,7 @@ extension AudioDB {
 
 // MARK: - Helper Methods
 
-extension AudioDB {
+extension AudioDBView {
     private func handleFileImport(result: Result<[URL], Error>) {
         switch result {
         case let .success(urls):
@@ -103,7 +106,7 @@ extension AudioDB {
 
 // MARK: - Event Handlers
 
-extension AudioDB {
+extension AudioDBView {
     func onDrop(_ providers: [NSItemProvider]) -> Bool {
         if outOfLimit {
             return false
@@ -154,7 +157,7 @@ extension Notification.Name {
 
 // MARK: Event Emit
 
-extension AudioDB {
+extension AudioDBView {
     func emitCopyFiles(_ urls: [URL]) {
         self.main.async {
             NotificationCenter.default.post(name: .CopyFiles, object: self, userInfo: ["urls": urls])

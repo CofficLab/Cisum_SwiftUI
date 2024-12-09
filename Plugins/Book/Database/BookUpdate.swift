@@ -1,7 +1,7 @@
 import Foundation
 import OSLog
 
-extension DB {
+extension RecordDB {
     func updateBookParent(verbose: Bool = false) {
         if verbose {
             os_log("\(self.t)UpdateBookParent start(\(self.getBookCount()))")

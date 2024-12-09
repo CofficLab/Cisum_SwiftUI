@@ -35,6 +35,7 @@
 		0B5786342BCB8DC00064F66A /* PlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B5786332BCB8DC00064F66A /* PlayView.swift */; };
 		0B59FF3E2C2F108500F04728 /* DirScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B59FF3D2C2F108500F04728 /* DirScene.swift */; };
 		0B5D09952D05EE4C00224E6B /* BookPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B5D09942D05EE4C00224E6B /* BookPlugin.swift */; };
+		0B5D099F2D07193100224E6B /* AudioDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B5D099E2D07192F00224E6B /* AudioDB.swift */; };
 		0B5E51E52AD912B5000650CF /* DebugCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B5E51E42AD912B5000650CF /* DebugCommand.swift */; };
 		0B604AE82AD6384300929DD8 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B604AE72AD6384300929DD8 /* RootView.swift */; };
 		0B6B8B992BBA39F500F65B23 /* ControlButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6B8B982BBA39F500F65B23 /* ControlButton.swift */; };
@@ -81,7 +82,7 @@
 		0BB5871D2AD820FA0071AEBD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0BB5871C2AD820FA0071AEBD /* Assets.xcassets */; };
 		0BB889D22AC042EC004788D5 /* BtnDownload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB889D12AC042EC004788D5 /* BtnDownload.swift */; };
 		0BB889D72AC046B5004788D5 /* BtnShowInFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB889D62AC046B5004788D5 /* BtnShowInFinder.swift */; };
-		0BB889DB2AC06C54004788D5 /* DB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB889DA2AC06C54004788D5 /* DB.swift */; };
+		0BB889DB2AC06C54004788D5 /* RecordDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB889DA2AC06C54004788D5 /* RecordDB.swift */; };
 		0BB9D2442C32E3E60027DDAD /* BtnChapters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB9D2432C32E3E60027DDAD /* BtnChapters.swift */; };
 		0BB9D2462C32E4F20027DDAD /* DBViewNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB9D2452C32E4F20027DDAD /* DBViewNavigation.swift */; };
 		0BB9D2482C32E53B0027DDAD /* DBViewMenuTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB9D2472C32E53B0027DDAD /* DBViewMenuTile.swift */; };
@@ -92,7 +93,7 @@
 		0BBA42272AC2A8B800C0B977 /* BtnAdd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA42262AC2A8B800C0B977 /* BtnAdd.swift */; };
 		0BBA422F2AC2BAE300C0B977 /* PictureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA422E2AC2BAE300C0B977 /* PictureView.swift */; };
 		0BBC157C2AB84C21006E82C4 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC157B2AB84C21006E82C4 /* MainView.swift */; };
-		0BBC15802AB854A8006E82C4 /* AudioDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC157F2AB854A8006E82C4 /* AudioDB.swift */; };
+		0BBC15802AB854A8006E82C4 /* AudioDBView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC157F2AB854A8006E82C4 /* AudioDBView.swift */; };
 		0BBC15882AB9A473006E82C4 /* iCloudHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC15872AB9A473006E82C4 /* iCloudHelper.swift */; };
 		0BBC158A2AB9AB7F006E82C4 /* FileHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC15892AB9AB7F006E82C4 /* FileHelper.swift */; };
 		0BBC158D2ABAC0C7006E82C4 /* BtnToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC158C2ABAC0C7006E82C4 /* BtnToggle.swift */; };
@@ -216,7 +217,6 @@
 		F5D3EF0F2D06B5F600548889 /* PlayManDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D3EF0E2D06B5F000548889 /* PlayManDelegate.swift */; };
 		F5D3EF112D06B7DD00548889 /* AudioConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D3EF102D06B7D300548889 /* AudioConfig.swift */; };
 		F5D3EF132D06C70000548889 /* PluginExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D3EF122D06C6FD00548889 /* PluginExt.swift */; };
-		F5D3EF152D06E9D400548889 /* DBDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D3EF142D06E9CE00548889 /* DBDelegate.swift */; };
 		F5D3EF192D06F4A200548889 /* PlaySource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D3EF182D06F49D00548889 /* PlaySource.swift */; };
 		F5E17A742D03050D00473CB8 /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = F5E17A732D03050D00473CB8 /* AlertToast */; };
 		F5E17A762D03074500473CB8 /* MessageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E17A752D03074500473CB8 /* MessageProvider.swift */; };
@@ -255,6 +255,7 @@
 		0B5786332BCB8DC00064F66A /* PlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayView.swift; sourceTree = "<group>"; };
 		0B59FF3D2C2F108500F04728 /* DirScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirScene.swift; sourceTree = "<group>"; };
 		0B5D09942D05EE4C00224E6B /* BookPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookPlugin.swift; sourceTree = "<group>"; };
+		0B5D099E2D07192F00224E6B /* AudioDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioDB.swift; sourceTree = "<group>"; };
 		0B5E51E42AD912B5000650CF /* DebugCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugCommand.swift; sourceTree = "<group>"; };
 		0B604AE72AD6384300929DD8 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		0B6B8B982BBA39F500F65B23 /* ControlButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlButton.swift; sourceTree = "<group>"; };
@@ -301,7 +302,7 @@
 		0BB5871C2AD820FA0071AEBD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0BB889D12AC042EC004788D5 /* BtnDownload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnDownload.swift; sourceTree = "<group>"; };
 		0BB889D62AC046B5004788D5 /* BtnShowInFinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnShowInFinder.swift; sourceTree = "<group>"; };
-		0BB889DA2AC06C54004788D5 /* DB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DB.swift; sourceTree = "<group>"; };
+		0BB889DA2AC06C54004788D5 /* RecordDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordDB.swift; sourceTree = "<group>"; };
 		0BB9D2432C32E3E60027DDAD /* BtnChapters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnChapters.swift; sourceTree = "<group>"; };
 		0BB9D2452C32E4F20027DDAD /* DBViewNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBViewNavigation.swift; sourceTree = "<group>"; };
 		0BB9D2472C32E53B0027DDAD /* DBViewMenuTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBViewMenuTile.swift; sourceTree = "<group>"; };
@@ -312,7 +313,7 @@
 		0BBA42262AC2A8B800C0B977 /* BtnAdd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnAdd.swift; sourceTree = "<group>"; };
 		0BBA422E2AC2BAE300C0B977 /* PictureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureView.swift; sourceTree = "<group>"; };
 		0BBC157B2AB84C21006E82C4 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
-		0BBC157F2AB854A8006E82C4 /* AudioDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioDB.swift; sourceTree = "<group>"; };
+		0BBC157F2AB854A8006E82C4 /* AudioDBView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioDBView.swift; sourceTree = "<group>"; };
 		0BBC15872AB9A473006E82C4 /* iCloudHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iCloudHelper.swift; sourceTree = "<group>"; };
 		0BBC15892AB9AB7F006E82C4 /* FileHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileHelper.swift; sourceTree = "<group>"; };
 		0BBC158C2ABAC0C7006E82C4 /* BtnToggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnToggle.swift; sourceTree = "<group>"; };
@@ -434,7 +435,6 @@
 		F5D3EF0E2D06B5F000548889 /* PlayManDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayManDelegate.swift; sourceTree = "<group>"; };
 		F5D3EF102D06B7D300548889 /* AudioConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioConfig.swift; sourceTree = "<group>"; };
 		F5D3EF122D06C6FD00548889 /* PluginExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginExt.swift; sourceTree = "<group>"; };
-		F5D3EF142D06E9CE00548889 /* DBDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBDelegate.swift; sourceTree = "<group>"; };
 		F5D3EF182D06F49D00548889 /* PlaySource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaySource.swift; sourceTree = "<group>"; };
 		F5E17A752D03074500473CB8 /* MessageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageProvider.swift; sourceTree = "<group>"; };
 		F5E17A772D03075E00473CB8 /* SmartMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmartMessage.swift; sourceTree = "<group>"; };
@@ -842,7 +842,7 @@
 			children = (
 				F54DFA752CA56B4000F81BE3 /* AudioAvatar.swift */,
 				0B220F722BB1A3D70077255A /* AudioBtns.swift */,
-				0BBC157F2AB854A8006E82C4 /* AudioDB.swift */,
+				0BBC157F2AB854A8006E82C4 /* AudioDBView.swift */,
 				0BEE7C752CA99D0D00DC1DCF /* AudioDBTips.swift */,
 				0BC29EAE2CA5893800E4813F /* AudioHero.swift */,
 				F52A98FF2C43C0DA003559F1 /* AudioList.swift */,
@@ -1026,8 +1026,8 @@
 		F5B6AAC62CA6B361001F3BC3 /* AudioDatabase */ = {
 			isa = PBXGroup;
 			children = (
-				F5D3EF142D06E9CE00548889 /* DBDelegate.swift */,
-				0BB889DA2AC06C54004788D5 /* DB.swift */,
+				0B5D099E2D07192F00224E6B /* AudioDB.swift */,
+				0BB889DA2AC06C54004788D5 /* RecordDB.swift */,
 				0B8C36A62BEA15E000C47567 /* DBAudio.swift */,
 				0B1498782BC4DF940075DA61 /* DBJob.swift */,
 				0BAABEB22BC79C9F00DF4A31 /* DBTask.swift */,
@@ -1159,8 +1159,9 @@
 				0BA9FB702BFE223A008074CB /* VersionSetting.swift in Sources */,
 				0B8C36AA2BEA2EC700C47567 /* SuperDisk.swift in Sources */,
 				0BBC158F2ABAC146006E82C4 /* BtnNext.swift in Sources */,
-				0BBC15802AB854A8006E82C4 /* AudioDB.swift in Sources */,
+				0BBC15802AB854A8006E82C4 /* AudioDBView.swift in Sources */,
 				0BE93F312BFB8E3200F25445 /* SettingView.swift in Sources */,
+				0B5D099F2D07193100224E6B /* AudioDB.swift in Sources */,
 				F59DC6EC2CB4C1F40052AEC8 /* PlanView.swift in Sources */,
 				0BB889D72AC046B5004788D5 /* BtnShowInFinder.swift in Sources */,
 				F53BE0322C202420003CBA29 /* DiskFile.swift in Sources */,
@@ -1186,7 +1187,6 @@
 				F54DFA6D2CA4FCB500F81BE3 /* BookDB.swift in Sources */,
 				0BD056912BC6340800EBC7C4 /* BtnEvict.swift in Sources */,
 				0BE695A02BFE3DCC00CEFFEB /* OneTimeView.swift in Sources */,
-				F5D3EF152D06E9D400548889 /* DBDelegate.swift in Sources */,
 				0BC29EB32CA59E8B00E4813F /* AudioSlider.swift in Sources */,
 				F54DFA5F2CA4E75D00F81BE3 /* SuperPlugin.swift in Sources */,
 				F545D1752C1FCAD0006A6AFA /* CloudExt.swift in Sources */,
@@ -1251,7 +1251,7 @@
 				0B1D5A8A2AB302610010DDF2 /* Config.swift in Sources */,
 				F507F5152C04688D00CB9A3A /* BtnBuy.swift in Sources */,
 				0B220F752BB1BBDB0077255A /* SmartError.swift in Sources */,
-				0BB889DB2AC06C54004788D5 /* DB.swift in Sources */,
+				0BB889DB2AC06C54004788D5 /* RecordDB.swift in Sources */,
 				F54DFA5A2CA4E5C800F81BE3 /* BookLayout.swift in Sources */,
 				0BBA42192ABD5D9200C0B977 /* BtnMode.swift in Sources */,
 				0BA9FB6E2BFE155B008074CB /* CoverDirSetting.swift in Sources */,

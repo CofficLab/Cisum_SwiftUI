@@ -5,11 +5,11 @@ import SwiftData
 
 class BookUpdateCoverJob: SuperLog, SuperThread {
     let emoji = "🌽"
-    let db: DB
+    let db: RecordDB
     var running = false
 
     init(container: ModelContainer) {
-        self.db = DB(container, reason: "BookUpdateCoverJob.Init")
+        self.db = RecordDB(container, reason: "BookUpdateCoverJob.Init")
     }
 
     func run() {

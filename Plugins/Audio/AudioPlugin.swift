@@ -14,12 +14,20 @@ class AudioPlugin: SuperPlugin, SuperLog {
     let description: String = "作为歌曲仓库，只关注文件，文件夹将被忽略"
     var iconName: String = "music.note"
     var isGroup: Bool = true
-    lazy var db = DB(AudioConfig.getContainer, reason: "AudioPlugin", delegate: self)
+    lazy var db = RecordDB(AudioConfig.getContainer, reason: "AudioPlugin")
 
     var disk: (any SuperDisk)?
 
     func addDBView() -> AnyView {
-        AnyView(AudioDB().modelContainer(AudioConfig.getContainer))
+        guard let disk = self.disk else {
+            return AnyView(EmptyView())
+        }
+        
+        let fileDB = AudioDB(db: self.db, disk: disk)
+        
+        return AnyView(AudioDBView()
+            .environmentObject(fileDB)
+        )
     }
 
     func addPosterView() -> AnyView {
@@ -112,12 +120,6 @@ class AudioPlugin: SuperPlugin, SuperLog {
         Task {
             await disk.watch(reason: reason, verbose: true)
         }
-    }
-}
-
-extension AudioPlugin: AudioDBDelegate {
-    func onDelete(_ uuid: String) {
-        
     }
 }
 

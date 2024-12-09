@@ -8,7 +8,7 @@ import MagicKit
 struct BookDB: View, SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var data: DataProvider
-    @EnvironmentObject var db: DB
+    @EnvironmentObject var db: RecordDB
 
     @State var treeView = false
 
