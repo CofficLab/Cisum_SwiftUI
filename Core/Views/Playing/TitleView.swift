@@ -53,7 +53,7 @@ struct TitleView: View, SuperLog, SuperThread {
 }
 
 #Preview("APP") {
-    BootView {
+    RootView {
         ContentView()
     }.modelContainer(Config.getContainer)
 }

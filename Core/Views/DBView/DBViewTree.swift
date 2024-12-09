@@ -41,8 +41,8 @@ struct DBViewTree: View {
                 }
                 .onChange(of: selection, {
                     if let s = selection, s.isNotFolder() {
-                        if playMan.isPlaying {
-                            try? playMan.play(s.toPlayAsset(), reason: "点击了")
+                        if playMan.playing {
+                            try? playMan.play(s.toPlayAsset(), reason: "点击了", verbose: true)
                         } else {
                             playMan.prepare(s.toPlayAsset(), reason: "点击了")
                         }

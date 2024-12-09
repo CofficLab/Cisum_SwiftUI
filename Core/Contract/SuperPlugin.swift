@@ -1,6 +1,7 @@
 import SwiftUI
 
 protocol SuperPlugin {
+    var id: String { get }
     var label: String { get }
     var hasPoster: Bool { get }
     var description: String { get }
@@ -8,6 +9,7 @@ protocol SuperPlugin {
 
     func addDBView() -> AnyView
     func addPosterView() -> AnyView
+    func addToolBarButtons() -> [(id: String, view: AnyView)]
 
     func getDisk() -> (any SuperDisk)?
     
@@ -27,6 +29,10 @@ extension SuperPlugin {
 
     func addPosterView() -> AnyView {
         return AnyView(EmptyView())
+    }
+
+    func addToolBarButtons() -> [(id: String, view: AnyView)] {
+        return []
     }
 
     func getDisk() -> (any SuperDisk)? {

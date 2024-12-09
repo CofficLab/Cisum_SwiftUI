@@ -2,7 +2,7 @@ import SwiftUI
 
 struct AppPreview: View {
     var body: some View {
-        BootView {
+        RootView {
             ContentView()
         }
         .modelContainer(Config.getContainer)

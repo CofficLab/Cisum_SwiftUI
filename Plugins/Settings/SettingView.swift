@@ -28,7 +28,7 @@ struct SettingView: View {
 }
 
 #Preview {
-    BootView {
+    RootView {
         SettingView()
             .background(.background)
     }

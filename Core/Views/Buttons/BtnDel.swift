@@ -30,7 +30,7 @@ struct BtnDel: View {
         Task {
             // appManager.stateMessage = "正在删除 \(audios.count) 个"
 
-            let isPlaying = playMan.isPlaying
+            let isPlaying = playMan.playing
 
             guard let lastAssetURL = assets.last?.url else {
                 return
@@ -40,20 +40,16 @@ struct BtnDel: View {
 
             disk.deleteFiles(assets.map { $0.url })
 
-            do {
-                if let asset = playMan.asset, assets.map({ $0.url }).contains(asset.url) {
-                    if isPlaying, let next = next {
-                        try? playMan.play(next.toPlayAsset(), reason: "删除了")
-                    } else {
-                        playMan.prepare(next?.toPlayAsset(), reason: "删除了")
-                    }
+            if let asset = playMan.asset, assets.map({ $0.url }).contains(asset.url) {
+                if isPlaying, let next = next {
+                    try? playMan.play(next.toPlayAsset(), reason: "删除了", verbose: true)
+                } else {
+                    playMan.prepare(next?.toPlayAsset(), reason: "删除了")
                 }
-
-                messageManager.toast("已删除")
-                callback()
-            } catch {
-                messageManager.error(error)
             }
+
+            messageManager.toast("已删除")
+            callback()
         }
     }
 }

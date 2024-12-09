@@ -65,7 +65,7 @@ extension Error {
 }
 
 #Preview {
-    BootView {
+    RootView {
         ContentView()
     }
 }

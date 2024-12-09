@@ -15,7 +15,7 @@ struct BootApp: App {
     var body: some Scene {
         #if os(macOS)
             Window("", id: "Cisum") {
-                BootView {
+                RootView {
                     ContentView()
                 }
                 .frame(minWidth: Config.minWidth, minHeight: Config.minHeight)

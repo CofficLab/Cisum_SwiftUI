@@ -1,61 +1,158 @@
+import AlertToast
 import MagicKit
 import OSLog
 import SwiftUI
 
-struct RootView: View, SuperLog, SuperEvent, SuperThread {
-    @EnvironmentObject var play: PlayMan
-    @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var data: DataProvider
-    
+struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content: View {
+    var content: Content
     let emoji = "🌳"
-    var dbSynced = DBSynced(Config.getSyncedContainer)
+    let a = AppProvider()
+    let s = StoreProvider()
+    let db = DB(Config.getContainer, reason: "BootView")
+    let dbSyncedd = DBSynced(Config.getSyncedContainer)
+
+    @State var dataManager: DataProvider?
+    @State var error: Error? = nil
+    @State var loading = true
+    @State var iCloudAvailable = true
+
+    @StateObject var m = MessageProvider()
+    @StateObject var p = PluginProvider()
+    @StateObject var man = PlayMan()
+
+    init(@ViewBuilder content: () -> Content) {
+        self.content = content()
+    }
 
     var body: some View {
-        Config.rootBackground
-            .ignoresSafeArea()
-            .toolbar(content: {
-                 ToolbarItem(placement: .navigation) {
-                     BtnScene()
-                 }
+        Group {
+            if self.loading {
+                ProgressView()
+            } else {
+                Group {
+                    if let e = self.error {
+                        if e.isCloudError {
+                            ErrorViewCloud(error: e)
+                                .onChange(of: iCloudAvailable, onChangeOfiCloud)
+                        } else {
+                            ErrorViewFatal(error: e)
+                        }
+                    } else {
+                        if let dataManager = dataManager {
+                            content
+                                .toolbar(content: {
+                                    ToolbarItem(placement: .navigation) {
+                                        BtnScene()
+                                    }
 
-                // MARK: 工具栏
+                                    ToolbarItemGroup(placement: .cancellationAction) {
+                                        Spacer()
+                                        ForEach(p.getToolBarButtons(), id: \.id) { item in
+                                            item.view
+                                        }
+                                    }
+                                })
+                                .frame(minWidth: Config.minWidth, minHeight: Config.minHeight)
+                                .blendMode(.normal)
+                                .environmentObject(man)
+                                .environmentObject(a)
+                                .environmentObject(s)
+                                .environmentObject(p)
+                                .environmentObject(dataManager)
+                                .environmentObject(db)
+                                .environmentObject(dbSyncedd)
+                                .environmentObject(m)
+                        } else {
+                            Text("启动失败")
+                        }
+                    }
+                }
+            }
+        }
+        .toast(isPresenting: $m.showToast, alert: {
+            AlertToast(type: .systemImage("info.circle", .blue), title: m.toast)
+        }, completion: {
+            m.clearToast()
+        })
+        .toast(isPresenting: $m.showAlert, alert: {
+            AlertToast(displayMode: .alert, type: .error(.red), title: m.alert)
+        }, completion: {
+            m.clearAlert()
+        })
+        .toast(isPresenting: $m.showDone, alert: {
+            AlertToast(type: .complete(.green), title: m.doneMessage)
+        }, completion: {
+            m.clearDoneMessage()
+        })
+        .toast(isPresenting: $m.showError, duration: 0, tapToDismiss: true, alert: {
+            AlertToast(displayMode: .alert, type: .error(.indigo), title: m.error?.localizedDescription)
+        }, completion: {
+            m.clearError()
+        })
+        .frame(maxWidth: .infinity)
+        .frame(maxHeight: .infinity)
+        .background(
+            Config.rootBackground)
+        .ignoresSafeArea()
+        .onReceive(nc.publisher(for: NSUbiquitousKeyValueStore.didChangeExternallyNotification), perform: onCloudAccountStateChanged)
+        .onAppear(perform: onAppear)
+        .onDisappear(perform: onDisappear)
+        .onChange(of: man.asset, onPlayAssetChange)
+    }
 
-//                if let asset = play.asset {
-//                    ToolbarItemGroup(placement: .cancellationAction, content: {
-//                        Spacer()
-//                        if root.current.isAudioApp {
-//                            BtnLike(asset: asset, autoResize: false)
-//                        }
-//
-//                        BtnShowInFinder(url: asset.url, autoResize: false)
-//
-//                        if root.current.isAudioApp {
-//                            BtnDel(assets: [asset], autoResize: false)
-//                        }
-//                    })
-//                }
-            })
-            .onAppear(perform: onAppear)
+    private func reloadView() {
+        loading = true
+        error = nil
+        dataManager = nil
     }
 }
 
 // MARK: Event Handler
 
 extension RootView {
-    func onRootChange() {
-        play.stop(reason: "RootView.Root Change")
+    func onChangeOfiCloud() {
+        if iCloudAvailable {
+            reloadView()
+        }
+    }
+
+    func onCloudAccountStateChanged(_ n: Notification) {
+        let newAvailability = FileManager.default.ubiquityIdentityToken != nil
+        if newAvailability != iCloudAvailable {
+            iCloudAvailable = newAvailability
+        }
     }
 
     func onAppear() {
-        let verbose = false
-        
-        play.onGetChildren = { asset in
-            if let children = DiskFile(url: asset.url).children {
-                return children.map({ $0.toPlayAsset() })
+        Task {
+            do {
+                try dataManager = await DataProvider(verbose: true)
+            } catch let e {
+                self.error = e
             }
 
-            return []
+            self.loading = false
         }
+
+        self.p.append(AudioPlugin())
+        self.p.append(PlayPlugin())
+        self.p.append(BookPlugin())
+        
+        self.p.setCurrent(p.plugins.first!)
+
+        p.plugins.forEach({
+            $0.onAppear()
+        })
+
+        let verbose = false
+
+//        play.onGetChildren = { asset in
+//            if let children = DiskFile(url: asset.url).children {
+//                return children.map({ $0.toPlayAsset() })
+//            }
+//
+//            return []
+//        }
 
         #if os(iOS)
             self.main.async {
@@ -78,9 +175,28 @@ extension RootView {
         //            await dbSynced.saveDeviceData(uuid: uuid, audioCount: audioCount)
         //        }
     }
+
+    func onDisappear() {
+        p.plugins.forEach({
+            $0.onDisappear()
+        })
+    }
+
+    func onPlayManStateChange() {
+        p.plugins.forEach({
+            $0.onPlayStateUpdate()
+        })
+    }
+
+    func onPlayAssetChange() {
+        p.plugins.forEach({
+            $0.onPlayAssetUpdate()
+        })
+    }
 }
 
 #Preview("App") {
     AppPreview()
         .frame(height: 800)
+        .frame(width: 800)
 }

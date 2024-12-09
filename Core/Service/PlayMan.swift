@@ -21,8 +21,10 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread {
         // 要放一张正方形的图，否则会自动加上白色背景
         static var defaultImage = UIImage(imageLiteralResourceName: "DefaultAlbum")
     #endif
-    
+
     @Published var asset: PlayAsset?
+    @Published var playing: Bool = false
+    @Published var mode: PlayMode = .Order
 
     let emoji = "💃"
     var audioWorker: AudioWorker
@@ -37,7 +39,6 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread {
         return asset.isVideo() ? videoWorker : audioWorker
     }
 
-    private var mode: PlayMode = .Order
     var isAudioWorker: Bool { (self.worker as? AudioWorker) != nil }
     var isVideoWorker: Bool { (self.worker as? VideoWorker) != nil }
     var duration: TimeInterval { worker.duration }
@@ -80,7 +81,7 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread {
                 if state.isFinished {
                     self.onPlayFinished()
                 }
-                
+
                 self.setPlayingInfo()
             }
         }
@@ -134,10 +135,7 @@ extension PlayMan {
         self.worker.prepare(asset, reason: reason)
     }
 
-    // MARK: Play
-
-    func play(_ asset: PlayAsset, reason: String) throws {
-        let verbose = true
+    func play(_ asset: PlayAsset, reason: String, verbose: Bool) throws {
         if verbose {
             os_log("\(self.t)Play 「\(asset.fileName) (\(asset.isAudio() ? "Audio" : "Video"))」")
             os_log("  🐛 \(reason)")
@@ -154,15 +152,17 @@ extension PlayMan {
         }
 
         try self.worker.play(self.asset!, reason: reason)
+        self.playing = true
     }
 
     func play() throws {
         try self.worker.play()
+        self.playing = true
     }
 
     func resume(reason: String, verbose: Bool) throws {
         if verbose {
-            os_log("\(self.t)Resume 🐛 \(reason)")
+            os_log("\(self.t)Resume 🎵🎵🎵 🐛 \(reason)")
         }
 
         guard let asset = self.asset else {
@@ -175,14 +175,19 @@ extension PlayMan {
             }
 
             self.asset = first
-            try self.worker.play(self.asset!, reason: "Resum")
+            try self.play(self.asset!, reason: "Resum", verbose: true)
         } else {
-            try self.worker.resume()
+            try self.play()
         }
     }
 
-    func pause() throws {
-       try self.worker.pause()
+    func pause(verbose: Bool) throws {
+        if verbose {
+            os_log("\(self.t)Pause ⏸️⏸️⏸️")
+        }
+        
+        try self.worker.pause(verbose: verbose)
+        self.playing = false
     }
 
     func stop(reason: String) {
@@ -194,8 +199,8 @@ extension PlayMan {
     }
 
     func toggle() throws {
-        if isPlaying {
-           try self.pause()
+        if playing {
+            try self.pause(verbose: true)
         } else {
             try self.resume(reason: "Toggle", verbose: true)
         }
@@ -234,16 +239,8 @@ extension PlayMan {
         self.state.isReady
     }
 
-    var isPlaying: Bool {
-        self.state.isPlaying
-    }
-
     var isStopped: Bool {
         self.state.isStopped
-    }
-
-    var isNotPlaying: Bool {
-        !isPlaying
     }
 }
 
@@ -266,16 +263,16 @@ extension PlayMan {
             os_log("\(self.t)📱📱📱 Update -> \(self.state.des)")
             os_log("\(self.t)📱📱📱 Update -> Title: \(title)")
             os_log("\(self.t)📱📱📱 Update -> Duration: \(duration)")
-            os_log("\(self.t)📱📱📱 Update -> Playing: \(self.isPlaying)")
+            os_log("\(self.t)📱📱📱 Update -> Playing: \(self.playing)")
             os_log("\(self.t)📱📱📱 Update -> Stopped: \(self.isStopped)")
         }
 
-        center.playbackState = self.isPlaying ? .playing : .paused
-        
+        center.playbackState = self.playing ? .playing : .paused
+
         if self.isStopped {
             center.playbackState = .stopped
         }
-        
+
         center.nowPlayingInfo = [
             MPMediaItemPropertyTitle: title,
             MPMediaItemPropertyArtist: artist,
@@ -289,7 +286,7 @@ extension PlayMan {
                 return image
             }),
         ]
-        
+
         if verbose {
             // unknown = 0
             // playing = 1
@@ -362,7 +359,7 @@ extension PlayMan {
         }
 
         c.pauseCommand.addTarget { _ in
-            try? self.pause()
+            try? self.pause(verbose: true)
 
             return .success
         }
@@ -438,12 +435,12 @@ extension PlayMan {
     }
 
     func emitPlayNext() {
-        let verbose = true 
+        let verbose = true
 
         if verbose {
             os_log("\(self.t)emitPlayNext 🚀🚀🚀 -> \(self.mode.rawValue)")
         }
-        
+
         var userInfo: [String: Any] = [:]
         if let asset = asset {
             userInfo["asset"] = asset

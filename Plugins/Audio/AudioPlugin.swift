@@ -10,6 +10,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
     var hasPoster: Bool = true
     let description: String = "作为歌曲仓库，只关注文件，文件夹将被忽略"
     var iconName: String = "music.note"
+
     func addDBView() -> AnyView {
         os_log("\(self.t)AddDBView")
 
@@ -22,6 +23,14 @@ class AudioPlugin: SuperPlugin, SuperLog {
         return AnyView(
             AudioPoster()
         )
+    }
+
+    func addToolBarButtons() -> [(id: String, view: AnyView)] {
+        return [
+            (id: "like", view: AnyView(
+                BtnLike(autoResize: false)
+            ))
+        ]
     }
 
     func onPlay() {
@@ -47,4 +56,12 @@ class AudioPlugin: SuperPlugin, SuperLog {
     func onDisappear() {
         os_log("\(self.t)OnDisappear")
     }
+}
+
+extension Notification.Name {
+    static let AudiosUpdatedNotification = Notification.Name("AudiosUpdatedNotification")
+    static let AudioUpdatedNotification = Notification.Name("AudioUpdatedNotification")
+    static let SyncingNotification = Notification.Name("SyncingNotification")
+    static let MetaWrapperDeletedNotification = Notification.Name("MetaWrapperDeletedNotification")
+    static let MetaWrappersDeletedNotification = Notification.Name("MetaWrappersDeletedNotification")
 }

@@ -9,8 +9,7 @@ protocol SuperPlayWorker {
     func prepare(_ asset: PlayAsset?, reason: String)
     func play(_ asset: PlayAsset, reason: String) throws
     func play() throws
-    func resume() throws
-    func pause() throws
+    func pause(verbose: Bool) throws
     func stop(reason: String)
     func toggle() throws
     func setError(_ e: Error, asset: PlayAsset?)

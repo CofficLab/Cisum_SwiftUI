@@ -43,7 +43,7 @@ struct Duplicates: View {
 }
 
 #Preview {
-    BootView {
+    RootView {
         ContentView()
     }.modelContainer(Config.getContainer)
 }

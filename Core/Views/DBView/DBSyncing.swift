@@ -21,7 +21,7 @@ struct DBSyncing: View {
 }
 
 #Preview {
-    BootView {
+    RootView {
         AudioDB()
     }.modelContainer(Config.getContainer)
 }

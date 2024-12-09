@@ -1,11 +1,3 @@
-//
-//  AudioPlugin.swift
-//  Cisum
-//
-//  Created by Angel on 2024/12/8.
-//
-
-
 import Foundation
 import MagicKit
 import OSLog

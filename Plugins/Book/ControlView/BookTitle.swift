@@ -75,7 +75,7 @@ extension BookTitle {
 }
 
 #Preview("APP") {
-    BootView {
+    RootView {
         ContentView()
     }.modelContainer(Config.getContainer)
 }

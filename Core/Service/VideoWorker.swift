@@ -149,7 +149,7 @@ extension VideoWorker {
         }
     }
 
-    func pause() {
+    func pause(verbose: Bool) {
         os_log("\(self.label)Pause")
         state = .Paused(asset)
     }
@@ -160,7 +160,7 @@ extension VideoWorker {
     }
 
     func toggle() {
-        state.isPlaying ? pause() : resume()
+        state.isPlaying ? pause(verbose: true) : resume()
     }
     
     // MARK: Prev

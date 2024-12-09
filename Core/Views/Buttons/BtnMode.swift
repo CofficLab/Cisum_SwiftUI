@@ -37,7 +37,7 @@ struct BtnMode: View {
 }
 
 #Preview {
-    BootView {
+    RootView {
         Centered {
             BtnMode()
         }

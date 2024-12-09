@@ -190,7 +190,7 @@ extension ProductCell {
 }
 
 #Preview {
-    BootView {
+    RootView {
         BuyView()
     }
 }

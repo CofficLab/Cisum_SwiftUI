@@ -67,7 +67,7 @@ struct AudioDBTips: View {
 }
 
 #Preview {
-    BootView {
+    RootView {
         AudioDB()
     }.modelContainer(Config.getContainer)
 }

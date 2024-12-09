@@ -88,7 +88,7 @@ struct LayoutView: View {
         GeometryReader { geo in
             ZStack {
                 ZStack {
-                    BootView {
+                    RootView {
                         ContentView()
                     }
                     .frame(width: width)

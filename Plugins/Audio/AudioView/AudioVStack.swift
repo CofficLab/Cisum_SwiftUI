@@ -143,7 +143,7 @@ extension AudioVStack {
 
         self.bg.async {
             if url != playMan.asset?.url {
-                try? self.playMan.play(audio.toPlayAsset(), reason: "AudioList SelectionChange")
+                try? self.playMan.play(audio.toPlayAsset(), reason: "AudioList SelectionChange", verbose: true)
             }
         }
     }

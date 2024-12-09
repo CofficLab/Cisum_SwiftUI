@@ -5,9 +5,8 @@ struct BtnLike: View {
     @EnvironmentObject var playMan: PlayMan
 
     var like: Bool { playMan.asset?.like ?? false }
-    var asset: PlayAsset
     var autoResize = false
-    var title: String { asset.like ? "取消喜欢" : "标记喜欢" }
+    var title: String { like ? "取消喜欢" : "标记喜欢" }
     var label: String { "\(Logger.isMain)❤️ BtnLike::" }
 
     var body: some View {

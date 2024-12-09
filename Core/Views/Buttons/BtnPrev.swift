@@ -24,7 +24,7 @@ struct BtnPrev: View {
 }
 
 #Preview {
-    BootView(content: {
+    RootView(content: {
         Centered {
             BtnPrev()
         }

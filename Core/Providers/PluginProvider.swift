@@ -27,6 +27,10 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
         self.plugins.append(plugin)
     }
 
+    func getToolBarButtons() -> [(id: String, view: AnyView)] {
+        return current?.addToolBarButtons() ?? []
+    }
+
     func setCurrent(_ plugin: SuperPlugin) {
         self.current = plugin
         Self.storeCurrent(plugin)

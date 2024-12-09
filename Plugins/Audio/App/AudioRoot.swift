@@ -324,7 +324,7 @@ extension AudioRoot {
                 }
 
                 if let next = next {
-                    try? self.playMan.play(next, reason: "onPlayNext")
+                    try? self.playMan.play(next, reason: "onPlayNext", verbose: true)
                 }
             }
         }
@@ -342,7 +342,7 @@ extension AudioRoot {
                 }
 
                 if let prev = prev {
-                    try? self.playMan.play(prev, reason: "onPlayPrev")
+                    try? self.playMan.play(prev, reason: "onPlayPrev", verbose: true)
                 }
             }
         }
@@ -356,7 +356,7 @@ extension AudioRoot {
                 os_log("\(self.t)随机播放下一个 -> \(next?.url.lastPathComponent ?? "")")
 
                 if let next = next {
-                    try? self.playMan.play(next, reason: "onPlayNext")
+                    try? self.playMan.play(next, reason: "onPlayNext", verbose: true)
                 }
             }
         }

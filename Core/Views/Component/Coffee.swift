@@ -80,7 +80,7 @@ struct Coffee: View {
 }
 
 #Preview {
-    BootView {
+    RootView {
         ContentView()
     }
 }

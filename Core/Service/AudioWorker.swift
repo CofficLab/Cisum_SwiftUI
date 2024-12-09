@@ -75,36 +75,15 @@ class AudioWorker: NSObject, ObservableObject, SuperPlayWorker, SuperLog, SuperT
     }
 
     func play() throws {
-        os_log("\(self.t)Play")
-        try self.resume()
+        self.player.play()
     }
 
-    func resume() throws {
-        let verbose = true
-        if verbose {
-            os_log("\(self.t)Resume")
-        }
-
-        switch state {
-        case .Playing:
-            break
-        case .Error, .Ready, .Paused, .Stopped, .Finished:
-            if let asset = asset {
-                state = .Playing(asset)
-            } else {
-                state = .Error(SmartError.NoAudioInList, nil)
-
-                throw SmartError.NoAudioInList
-            }
-        }
-    }
-
-    func pause() {
+    func pause(verbose: Bool) {
         let verbose = false
         if verbose {
             os_log("\(self.t)Pause")
         }
-        state = .Paused(asset)
+        self.player.pause()
     }
 
     func stop(reason: String) {
@@ -128,7 +107,7 @@ class AudioWorker: NSObject, ObservableObject, SuperPlayWorker, SuperLog, SuperT
     }
 
     func toggle() throws {
-        isPlaying ? pause() : try resume()
+        isPlaying ? pause(verbose: true) : try play()
     }
 }
 
@@ -228,7 +207,7 @@ extension AudioWorker: AVAudioPlayerDelegate {
             // 没有播放完，被打断了
             if !flag {
                 os_log("\(self.t)播放被打断，更新为暂停状态")
-                return self.pause()
+                return self.pause(verbose: true)
             }
 
             if verbose {
@@ -244,11 +223,11 @@ extension AudioWorker: AVAudioPlayerDelegate {
 
     func audioPlayerBeginInterruption(_ player: AVAudioPlayer) {
         os_log("\(self.t)audioPlayerBeginInterruption")
-        pause()
+        pause(verbose: true)
     }
 
     func audioPlayerEndInterruption(_ player: AVAudioPlayer, withOptions flags: Int) {
         os_log("\(self.t)audioPlayerEndInterruption")
-        try? resume()
+        try? play()
     }
 }

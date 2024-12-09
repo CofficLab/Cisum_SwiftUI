@@ -103,7 +103,7 @@ struct AllSubscriptions: View {
 }
 
 #Preview("Buy") {
-    BootView {
+    RootView {
         BuyView()
     }
     .frame(height: 800)

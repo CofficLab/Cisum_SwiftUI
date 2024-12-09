@@ -13,7 +13,7 @@ struct StoreView: View {
 }
 
 #Preview {
-    BootView {
+    RootView {
         SettingView()
             .background(.background)
     }

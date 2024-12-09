@@ -522,7 +522,7 @@ class StoreProvider: ObservableObject, SuperLog {
 }
 
 #Preview {
-    BootView {
+    RootView {
         BuyView()
     }
     .frame(height: 800)

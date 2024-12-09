@@ -11,7 +11,7 @@ struct TopView: View {
             Spacer()
             if let asset = asset {
                 HStack {
-                    BtnLike(asset: asset, autoResize: false)
+                    BtnLike(autoResize: false)
                     if Config.isDesktop {
                         BtnShowInFinder(url: asset.url, autoResize: false)
                     }
