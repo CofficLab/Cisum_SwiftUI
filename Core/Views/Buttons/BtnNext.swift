@@ -11,7 +11,9 @@ struct BtnNext: View, SuperEvent {
             title: "下一曲", image: "forward.fill",
             dynamicSize: autoResize,
             onTap: {
-                self.playMan.next()
+                Task {
+                    await self.playMan.next()
+                }
             })
             .foregroundStyle(.white)
     }

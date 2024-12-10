@@ -87,9 +87,8 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
         })
         .frame(maxWidth: .infinity)
         .frame(maxHeight: .infinity)
-        .background(
-            Config.rootBackground)
-        .ignoresSafeArea()
+        .background(Config.rootBackground)
+//        .ignoresSafeArea()
         .onReceive(nc.publisher(for: NSUbiquitousKeyValueStore.didChangeExternallyNotification), perform: onCloudAccountStateChanged)
         .onAppear(perform: onAppear)
         .onDisappear(perform: onDisappear)
@@ -197,14 +196,12 @@ extension RootView: PlayManDelegate {
         }
     }
 
-    func onPlayNext(current: PlayAsset?) {
-        Task {
-            for plugin in p.plugins {
-                do {
-                    try await plugin.onPlayNext(playMan: man, current: current, verbose: true)
-                } catch let e {
-                    m.alert(e.localizedDescription)
-                }
+    func onPlayNext(current: PlayAsset?) async {
+        for plugin in p.plugins {
+            do {
+                try await plugin.onPlayNext(playMan: man, current: current, verbose: true)
+            } catch let e {
+                m.alert(e.localizedDescription)
             }
         }
     }

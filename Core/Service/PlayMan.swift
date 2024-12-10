@@ -91,6 +91,7 @@ extension PlayMan {
         setPlayingInfo()
     }
 
+    @MainActor
     func play(_ asset: PlayAsset? = nil, reason: String = "", verbose: Bool) {
         if !Thread.isMainThread {
             assert(false, "PlayMan.play 必须在主线程调用")
@@ -158,6 +159,7 @@ extension PlayMan {
         self.playing = false
     }
 
+    @MainActor
     func toggle() throws {
         if playing {
             try self.pause(verbose: true)
@@ -170,8 +172,8 @@ extension PlayMan {
         self.delegate?.onPlayPrev(current: self.asset)
     }
 
-    func next() {
-        self.delegate?.onPlayNext(current: self.asset)
+    func next() async {
+        await self.delegate?.onPlayNext(current: self.asset)
     }
 
     func setMode(_ mode: PlayMode) {
@@ -265,16 +267,16 @@ extension Notification.Name {
 // MARK: Event Handlers
 
 extension PlayMan {
-    nonisolated func onPlayFinished(verbose: Bool) {
+    func onPlayFinished(verbose: Bool) async {
         if verbose {
             os_log("\(self.t)Play finished: \(self.mode.description)")
         }
 
         switch mode {
         case .Order:
-            self.next()
+            await self.next()
         case .Loop:
-            self.play(verbose: verbose)
+            await self.play(verbose: verbose)
         case .Random:
             break
         }
@@ -283,7 +285,9 @@ extension PlayMan {
     // 接收控制中心的指令
     func onCommand() {
         c.nextTrackCommand.addTarget { _ in
-            self.next()
+            Task {
+                await self.next()
+            }
 
             return .success
         }

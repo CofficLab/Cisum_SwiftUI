@@ -12,7 +12,7 @@ import SwiftUI
  */
 
 protocol AudioWorkerDelegate: AnyObject {
-    func onPlayFinished(verbose: Bool)
+    func onPlayFinished(verbose: Bool) async
 }
 
 class AudioWorker: NSObject, ObservableObject, SuperPlayWorker, SuperLog, SuperThread {
@@ -159,7 +159,9 @@ extension AudioWorker: AVAudioPlayerDelegate {
             return self.pause(verbose: true)
         }
 
-        self.delegate?.onPlayFinished(verbose: verbose)
+        Task {
+            await self.delegate?.onPlayFinished(verbose: verbose)
+        }
     }
 
     func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {

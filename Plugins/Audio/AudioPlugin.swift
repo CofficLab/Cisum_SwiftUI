@@ -113,7 +113,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
         os_log("\(self.t)OnPlayPrev")
         let asset = await self.db.getPrevOf(current?.url, verbose: false)
         if let asset = asset {
-            playMan.play(PlayAsset(url: asset.url), reason: "OnPlayPrev", verbose: true)
+            await playMan.play(PlayAsset(url: asset.url), reason: "OnPlayPrev", verbose: true)
         } else {
             throw AudioPluginError.NoPrevAsset
         }
@@ -126,7 +126,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
 
         let asset = await self.db.getNextOf(current?.url, verbose: false)
         if let asset = asset {
-            playMan.play(PlayAsset(url: asset.url), reason: "OnPlayNext", verbose: true)
+            await playMan.play(PlayAsset(url: asset.url), reason: "OnPlayNext", verbose: true)
         } else {
             throw AudioPluginError.NoNextAsset
         }
