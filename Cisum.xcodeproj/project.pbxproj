@@ -100,13 +100,12 @@
 		0BBC158D2ABAC0C7006E82C4 /* BtnToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC158C2ABAC0C7006E82C4 /* BtnToggle.swift */; };
 		0BBC158F2ABAC146006E82C4 /* BtnNext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC158E2ABAC146006E82C4 /* BtnNext.swift */; };
 		0BBC15912ABAC19F006E82C4 /* BtnPrev.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC15902ABAC19F006E82C4 /* BtnPrev.swift */; };
-		0BBC159A2ABAD5DB006E82C4 /* SliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC15992ABAD5DB006E82C4 /* SliderView.swift */; };
 		0BC29EA12CA452AD00E4813F /* DeviceHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC29EA02CA452AD00E4813F /* DeviceHelper.swift */; };
 		0BC29EA52CA4592A00E4813F /* DBBookState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC29EA42CA4592A00E4813F /* DBBookState.swift */; };
 		0BC29EA72CA4597100E4813F /* PluginBookState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC29EA62CA4596800E4813F /* PluginBookState.swift */; };
 		0BC29EA92CA4599500E4813F /* PluginProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC29EA82CA4599500E4813F /* PluginProvider.swift */; };
 		0BC29EAF2CA5893800E4813F /* AudioHero.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC29EAE2CA5893800E4813F /* AudioHero.swift */; };
-		0BC29EB32CA59E8B00E4813F /* AudioSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC29EB22CA59E8B00E4813F /* AudioSlider.swift */; };
+		0BC29EB32CA59E8B00E4813F /* SliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC29EB22CA59E8B00E4813F /* SliderView.swift */; };
 		0BC29EB52CA6DE5F00E4813F /* AudioVStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC29EB42CA6DE5E00E4813F /* AudioVStack.swift */; };
 		0BD0568B2BC6202900EBC7C4 /* DiskiCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD0568A2BC6202900EBC7C4 /* DiskiCloud.swift */; };
 		0BD056912BC6340800EBC7C4 /* BtnEvict.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD056902BC6340800EBC7C4 /* BtnEvict.swift */; };
@@ -167,7 +166,7 @@
 		F54DFA612CA4E81200F81BE3 /* VideoControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA602CA4E81200F81BE3 /* VideoControl.swift */; };
 		F54DFA632CA4E84500F81BE3 /* VideoBtns.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA622CA4E84500F81BE3 /* VideoBtns.swift */; };
 		F54DFA652CA4E92100F81BE3 /* VideoDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA642CA4E92100F81BE3 /* VideoDB.swift */; };
-		F54DFA672CA4EA1700F81BE3 /* AudioControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA662CA4EA1700F81BE3 /* AudioControl.swift */; };
+		F54DFA672CA4EA1700F81BE3 /* ControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA662CA4EA1700F81BE3 /* ControlView.swift */; };
 		F54DFA6B2CA4FB7D00F81BE3 /* BookBtns.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA6A2CA4FB7D00F81BE3 /* BookBtns.swift */; };
 		F54DFA6D2CA4FCB500F81BE3 /* BookDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA6C2CA4FCB500F81BE3 /* BookDB.swift */; };
 		F54DFA702CA5007600F81BE3 /* VideoGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA6F2CA5007600F81BE3 /* VideoGrid.swift */; };
@@ -200,7 +199,6 @@
 		F59DC6F42CB4D8F10052AEC8 /* AudioPlayingCover.swift in Sources */ = {isa = PBXBuildFile; fileRef = F59DC6F32CB4D8F10052AEC8 /* AudioPlayingCover.swift */; };
 		F5A076632C2E9C2D00DD4621 /* MigrateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A076622C2E9C2D00DD4621 /* MigrateView.swift */; };
 		F5A076662C2EBE5500DD4621 /* StoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A076652C2EBE5500DD4621 /* StoreView.swift */; };
-		F5AEE0552CB5010C0007825B /* BookSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5AEE0542CB5010C0007825B /* BookSlider.swift */; };
 		F5AEE0582CB5032E0007825B /* BookRoot.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5AEE0572CB5032E0007825B /* BookRoot.swift */; };
 		F5AEE05A2CB515660007825B /* BookHero.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5AEE0592CB515660007825B /* BookHero.swift */; };
 		F5AEE05C2CB519C90007825B /* BookPlayingCover.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5AEE05B2CB519C90007825B /* BookPlayingCover.swift */; };
@@ -320,13 +318,12 @@
 		0BBC158C2ABAC0C7006E82C4 /* BtnToggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnToggle.swift; sourceTree = "<group>"; };
 		0BBC158E2ABAC146006E82C4 /* BtnNext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnNext.swift; sourceTree = "<group>"; };
 		0BBC15902ABAC19F006E82C4 /* BtnPrev.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnPrev.swift; sourceTree = "<group>"; };
-		0BBC15992ABAD5DB006E82C4 /* SliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderView.swift; sourceTree = "<group>"; };
 		0BC29EA02CA452AD00E4813F /* DeviceHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceHelper.swift; sourceTree = "<group>"; };
 		0BC29EA42CA4592A00E4813F /* DBBookState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBBookState.swift; sourceTree = "<group>"; };
 		0BC29EA62CA4596800E4813F /* PluginBookState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginBookState.swift; sourceTree = "<group>"; };
 		0BC29EA82CA4599500E4813F /* PluginProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginProvider.swift; sourceTree = "<group>"; };
 		0BC29EAE2CA5893800E4813F /* AudioHero.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioHero.swift; sourceTree = "<group>"; };
-		0BC29EB22CA59E8B00E4813F /* AudioSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSlider.swift; sourceTree = "<group>"; };
+		0BC29EB22CA59E8B00E4813F /* SliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderView.swift; sourceTree = "<group>"; };
 		0BC29EB42CA6DE5E00E4813F /* AudioVStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioVStack.swift; sourceTree = "<group>"; };
 		0BD0568A2BC6202900EBC7C4 /* DiskiCloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskiCloud.swift; sourceTree = "<group>"; };
 		0BD056902BC6340800EBC7C4 /* BtnEvict.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnEvict.swift; sourceTree = "<group>"; };
@@ -386,7 +383,7 @@
 		F54DFA602CA4E81200F81BE3 /* VideoControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoControl.swift; sourceTree = "<group>"; };
 		F54DFA622CA4E84500F81BE3 /* VideoBtns.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoBtns.swift; sourceTree = "<group>"; };
 		F54DFA642CA4E92100F81BE3 /* VideoDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoDB.swift; sourceTree = "<group>"; };
-		F54DFA662CA4EA1700F81BE3 /* AudioControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioControl.swift; sourceTree = "<group>"; };
+		F54DFA662CA4EA1700F81BE3 /* ControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlView.swift; sourceTree = "<group>"; };
 		F54DFA6A2CA4FB7D00F81BE3 /* BookBtns.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookBtns.swift; sourceTree = "<group>"; };
 		F54DFA6C2CA4FCB500F81BE3 /* BookDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookDB.swift; sourceTree = "<group>"; };
 		F54DFA6F2CA5007600F81BE3 /* VideoGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoGrid.swift; sourceTree = "<group>"; };
@@ -418,7 +415,6 @@
 		F59DC6F32CB4D8F10052AEC8 /* AudioPlayingCover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayingCover.swift; sourceTree = "<group>"; };
 		F5A076622C2E9C2D00DD4621 /* MigrateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrateView.swift; sourceTree = "<group>"; };
 		F5A076652C2EBE5500DD4621 /* StoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreView.swift; sourceTree = "<group>"; };
-		F5AEE0542CB5010C0007825B /* BookSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookSlider.swift; sourceTree = "<group>"; };
 		F5AEE0572CB5032E0007825B /* BookRoot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookRoot.swift; sourceTree = "<group>"; };
 		F5AEE0592CB515660007825B /* BookHero.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookHero.swift; sourceTree = "<group>"; };
 		F5AEE05B2CB519C90007825B /* BookPlayingCover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookPlayingCover.swift; sourceTree = "<group>"; };
@@ -467,13 +463,13 @@
 		0B0FA2272D03485C004D4D41 /* Audio */ = {
 			isa = PBXGroup;
 			children = (
-				0B5D09A02D0735BC00224E6B /* AudioProvider.swift */,
 				F5D3EF102D06B7D300548889 /* AudioConfig.swift */,
 				0BEE7C712CA838D100DC1DCF /* AudioCopyJob.swift */,
 				F5B6AAC62CA6B361001F3BC3 /* AudioDatabase */,
 				0B1D5A672AB3025F0010DDF2 /* AudioModel.swift */,
 				0B0FA2282D034867004D4D41 /* AudioPlugin.swift */,
 				F52A98FA2C43AA63003559F1 /* AudioPoster.swift */,
+				0B5D09A02D0735BC00224E6B /* AudioProvider.swift */,
 				0BEE7C6C2CA7E9E300DC1DCF /* AudioRoot.swift */,
 				F52A98FC2C43BC79003559F1 /* AudioView */,
 			);
@@ -670,10 +666,10 @@
 			isa = PBXGroup;
 			children = (
 				0B1D5A732AB302600010DDF2 /* ContentView.swift */,
+				F54DFA662CA4EA1700F81BE3 /* ControlView.swift */,
 				0BBC157B2AB84C21006E82C4 /* MainView.swift */,
 				F52A98F62C439D6C003559F1 /* Posters.swift */,
 				F5B64D032C32546F00DE55AD /* SyncingView.swift */,
-				F54DFA662CA4EA1700F81BE3 /* AudioControl.swift */,
 			);
 			path = Layout;
 			sourceTree = "<group>";
@@ -820,7 +816,7 @@
 				0BD98CFD2BD8E91500641A6A /* HeroView.swift */,
 				0BFB38822BCCCC780055E38B /* OperationView.swift */,
 				0B8FC26F2BBC559500839C75 /* PlayingAlbum.swift */,
-				0BBC15992ABAD5DB006E82C4 /* SliderView.swift */,
+				0BC29EB22CA59E8B00E4813F /* SliderView.swift */,
 				0B220F6E2BB051F50077255A /* TitleView.swift */,
 			);
 			path = Playing;
@@ -849,7 +845,6 @@
 				F52A98FF2C43C0DA003559F1 /* AudioList.swift */,
 				F59DC6F32CB4D8F10052AEC8 /* AudioPlayingCover.swift */,
 				0BEE7C732CA99CE000DC1DCF /* AudioProTips.swift */,
-				0BC29EB22CA59E8B00E4813F /* AudioSlider.swift */,
 				0BEE7C6E2CA8343800DC1DCF /* AudioTask.swift */,
 				F52A98FD2C43BC99003559F1 /* AudioTile.swift */,
 				0BC29EB42CA6DE5E00E4813F /* AudioVStack.swift */,
@@ -995,7 +990,6 @@
 				F54DFA6A2CA4FB7D00F81BE3 /* BookBtns.swift */,
 				F5AEE0592CB515660007825B /* BookHero.swift */,
 				F5AEE05B2CB519C90007825B /* BookPlayingCover.swift */,
-				F5AEE0542CB5010C0007825B /* BookSlider.swift */,
 				F5AEE0642CB7C61D0007825B /* BookTitle.swift */,
 				0BB9D2432C32E3E60027DDAD /* BtnChapters.swift */,
 			);
@@ -1126,7 +1120,6 @@
 				F52A98F52C43988D003559F1 /* BookPoster.swift in Sources */,
 				0B8C36AE2BEC6E3E00C47567 /* DevExt.swift in Sources */,
 				0B8FC2702BBC559500839C75 /* PlayingAlbum.swift in Sources */,
-				F5AEE0552CB5010C0007825B /* BookSlider.swift in Sources */,
 				F545D1772C1FCC86006A6AFA /* UserExt.swift in Sources */,
 				0BC29EA52CA4592A00E4813F /* DBBookState.swift in Sources */,
 				0BBA42272AC2A8B800C0B977 /* BtnAdd.swift in Sources */,
@@ -1187,7 +1180,7 @@
 				F54DFA6D2CA4FCB500F81BE3 /* BookDB.swift in Sources */,
 				0BD056912BC6340800EBC7C4 /* BtnEvict.swift in Sources */,
 				0BE695A02BFE3DCC00CEFFEB /* OneTimeView.swift in Sources */,
-				0BC29EB32CA59E8B00E4813F /* AudioSlider.swift in Sources */,
+				0BC29EB32CA59E8B00E4813F /* SliderView.swift in Sources */,
 				F54DFA5F2CA4E75D00F81BE3 /* SuperPlugin.swift in Sources */,
 				F545D1752C1FCAD0006A6AFA /* CloudExt.swift in Sources */,
 				F54DFA632CA4E84500F81BE3 /* VideoBtns.swift in Sources */,
@@ -1260,7 +1253,6 @@
 				0B8C36B42BEC6EAB00C47567 /* ViewExt.swift in Sources */,
 				0BE6958E2BFE28B400CEFFEB /* PlayTime.swift in Sources */,
 				0BFB38832BCCCC780055E38B /* OperationView.swift in Sources */,
-				0BBC159A2ABAD5DB006E82C4 /* SliderView.swift in Sources */,
 				0BEE7C6D2CA7E9E300DC1DCF /* AudioRoot.swift in Sources */,
 				F5B64D152C328F3900DE55AD /* SuperPlayWorker.swift in Sources */,
 				F52A98FE2C43BC99003559F1 /* AudioTile.swift in Sources */,
@@ -1312,7 +1304,7 @@
 				F5B64D0A2C327D8600DE55AD /* VideoWorker.swift in Sources */,
 				F5B64D0F2C3280DE00DE55AD /* VideoView.swift in Sources */,
 				0B6B8B9D2BBA4D0600F65B23 /* Coffee.swift in Sources */,
-				F54DFA672CA4EA1700F81BE3 /* AudioControl.swift in Sources */,
+				F54DFA672CA4EA1700F81BE3 /* ControlView.swift in Sources */,
 				0B8113B12C2C38AD007CA124 /* BtnScene.swift in Sources */,
 				0B220F732BB1A3D70077255A /* AudioBtns.swift in Sources */,
 				0BB9D2482C32E53B0027DDAD /* DBViewMenuTile.swift in Sources */,

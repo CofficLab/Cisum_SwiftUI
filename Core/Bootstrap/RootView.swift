@@ -189,7 +189,7 @@ extension RootView: PlayManDelegate {
         Task {
             for plugin in p.plugins {
                 do {
-                    try await plugin.onPlayPrev(playMan: man, current: current)
+                    try await plugin.onPlayPrev(playMan: man, current: current, verbose: true)
                 } catch let e {
                     m.error(e)
                 }
@@ -201,7 +201,7 @@ extension RootView: PlayManDelegate {
         Task {
             for plugin in p.plugins {
                 do {
-                    try await plugin.onPlayNext(playMan: man, current: current)
+                    try await plugin.onPlayNext(playMan: man, current: current, verbose: true)
                 } catch let e {
                     m.alert(e.localizedDescription)
                 }

@@ -11,10 +11,15 @@ import SwiftUI
       对接系统媒体中心
  */
 
+protocol AudioWorkerDelegate: AnyObject {
+    func onPlayFinished(verbose: Bool)
+}
+
 class AudioWorker: NSObject, ObservableObject, SuperPlayWorker, SuperLog, SuperThread {
     let emoji = "🎺"
     var player = AVAudioPlayer()
     var asset: PlayAsset?
+    var delegate: AudioWorkerDelegate?
     var verbose = false
     var queue = DispatchQueue(label: "AudioWorker", qos: .userInteractive)
     var state: PlayState = .Stopped
@@ -27,6 +32,10 @@ class AudioWorker: NSObject, ObservableObject, SuperPlayWorker, SuperLog, SuperT
 
     var leftTimeDisplay: String {
         DateComponentsFormatter.positional.string(from: leftTime) ?? "0:00"
+    }
+
+    init(delegate: AudioWorkerDelegate?) {
+        self.delegate = delegate
     }
 
     func goto(_ time: TimeInterval) {
@@ -67,23 +76,8 @@ class AudioWorker: NSObject, ObservableObject, SuperPlayWorker, SuperLog, SuperT
     }
 
     func stop(reason: String, verbose: Bool) {
-        if verbose {
-            os_log("\(self.t)Stop 🐛 \(reason)")
-        }
-        
         self.player.stop()
-    }
-
-    func finish() {
-        let verbose = false
-        if verbose {
-            os_log("\(self.t)Finish(\(self.asset?.title ?? "nil"))")
-        }
-        guard let asset = self.asset else {
-            return
-        }
-
-        state = .Finished(asset)
+        self.goto(0)
     }
 
     func toggle() throws {
@@ -158,20 +152,14 @@ extension AudioWorker {
 
 extension AudioWorker: AVAudioPlayerDelegate {
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        let verbose = false
+        let verbose = true
 
-        self.bg.async {
-            // 没有播放完，被打断了
-            if !flag {
-                os_log("\(self.t)播放被打断，更新为暂停状态")
-                return self.pause(verbose: true)
-            }
-
-            if verbose {
-                os_log("\(self.t)播放完成")
-            }
-            self.finish()
+        if !flag {
+            os_log("\(self.t)播放被打断，更新为暂停状态")
+            return self.pause(verbose: true)
         }
+
+        self.delegate?.onPlayFinished(verbose: verbose)
     }
 
     func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {

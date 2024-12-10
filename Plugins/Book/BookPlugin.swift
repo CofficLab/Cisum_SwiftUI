@@ -41,9 +41,9 @@ class BookPlugin: SuperPlugin, SuperLog {
     func onPlayAssetUpdate(asset: PlayAsset?) {
     }
 
-    func onPlayNext(playMan: PlayMan, current: PlayAsset?) throws {
+    func onPlayNext(playMan: PlayMan, current: PlayAsset?, verbose: Bool) throws {
     }
 
-    func onPlayPrev(playMan: PlayMan, current: PlayAsset?) throws {
+    func onPlayPrev(playMan: PlayMan, current: PlayAsset?, verbose: Bool) throws {
     }
 }

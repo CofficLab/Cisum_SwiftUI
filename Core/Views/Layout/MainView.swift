@@ -29,7 +29,7 @@ struct MainView: View, SuperLog, SuperThread {
     var body: some View {
         GeometryReader { geo in
             VStack(spacing: 0) {
-                AudioControl()
+                ControlView()
                     .frame(height: showDB ? Config.controlViewMinHeight : geo.size.height)
 
                 if showDB {

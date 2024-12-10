@@ -27,7 +27,7 @@ struct BookTileBackup: View {
         .foregroundStyle(.white)
         .clipShape(RoundedRectangle(cornerSize: CGSize(width: 10, height: 10)))
         .onTapGesture {
-            try? playMan.play(file.toPlayAsset(), reason: "点击了书本", verbose: true)
+            playMan.play(file.toPlayAsset(), reason: "点击了书本", verbose: true)
         }
         .contextMenu(menuItems: {
             BtnShowInFinder(url: file.url, autoResize: false)

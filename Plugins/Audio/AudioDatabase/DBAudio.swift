@@ -781,8 +781,7 @@ extension RecordDB {
 
         do {
             let result = try context.fetch(descriptor)
-            return nil
-//            return result.first ?? Self.last(context)
+            return result.first
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
         }

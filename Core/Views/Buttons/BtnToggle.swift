@@ -8,9 +8,6 @@ struct BtnToggle: View, SuperThread, SuperLog {
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var m: MessageProvider
 
-    @State var hovered: Bool = false
-    @State var systemImage = "play.fill"
-
     let emoji = "🔊"
     var asset: PlayAsset?
     var foregroundStyle: Color?
@@ -66,7 +63,7 @@ extension BtnToggle {
                 if asset.url == playMan.asset?.url {
                     try playMan.toggle()
                 } else {
-                    try playMan.play(asset, reason: "点击了BtnToggle", verbose: true)
+                    playMan.play(asset, reason: self.className, verbose: true)
                 }
             } else {
                 try playMan.toggle()

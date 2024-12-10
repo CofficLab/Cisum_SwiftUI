@@ -12,7 +12,7 @@ import SwiftUI
  */
 
 @MainActor
-class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread {
+class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread, AudioWorkerDelegate {
     // MARK: 成员
 
     static var label = "💃 PlayMan::"
@@ -26,11 +26,12 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread {
     @Published var asset: PlayAsset?
     @Published var playing: Bool = false
     @Published var mode: PlayMode = .Order
+    @Published var error: PlayManError? = nil
 
     let emoji = "💃"
     var delegate: PlayManDelegate?
-    var audioWorker: AudioWorker
-    var videoWorker: VideoWorker
+    var audioWorker: AudioWorker = AudioWorker(delegate: nil)
+    var videoWorker: VideoWorker = VideoWorker()
     var verbose = true
     var queue = DispatchQueue(label: "PlayMan", qos: .userInteractive)
     var worker: SuperPlayWorker {
@@ -41,6 +42,7 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread {
         return asset.isVideo() ? videoWorker : audioWorker
     }
 
+    var hasError: Bool { error != nil }
     var isAudioWorker: Bool { (self.worker as? AudioWorker) != nil }
     var isVideoWorker: Bool { (self.worker as? VideoWorker) != nil }
     var duration: TimeInterval { worker.duration }
@@ -56,21 +58,13 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread {
         DateComponentsFormatter.positional.string(from: leftTime) ?? "0:00"
     }
 
-    // MARK: 告诉我如何获取播放资源
-
-    var onGetChildren: (_ asset: PlayAsset) -> [PlayAsset] = { asset in
-        os_log("\(PlayMan.label)GetChildrenOf -> \(asset.title)")
-        return []
-    }
-
     // MARK: 初始化
 
     init(verbose: Bool = true, delegate: PlayManDelegate?) {
-        self.audioWorker = AudioWorker()
-        self.videoWorker = VideoWorker()
-        self.delegate = delegate
-
         super.init()
+        
+        self.audioWorker.delegate = self
+        self.delegate = delegate
 
         Task {
             onCommand()
@@ -98,10 +92,12 @@ extension PlayMan {
         setPlayingInfo()
     }
 
-    func play(_ asset: PlayAsset? = nil, reason: String = "", verbose: Bool = false) throws {
+    func play(_ asset: PlayAsset? = nil, reason: String = "", verbose: Bool) {
         if !Thread.isMainThread {
             assert(false, "PlayMan.play 必须在主线程调用")
         }
+        
+        self.error = nil
 
         if let asset = asset {
             if verbose {
@@ -112,33 +108,38 @@ extension PlayMan {
 
         guard let currentAsset = self.asset else {
             self.stop(reason: "Play.NoAsset", verbose: true)
-            throw PlayManError.NoAsset
+            self.error = .NoAsset
+            return
         }
 
         if currentAsset.isDownloading {
             self.stop(reason: "Play.Downloading", verbose: true)
-            throw PlayManError.Downloading
+            self.error = .Downloading
+            return
         }
 
         if currentAsset.isNotDownloaded {
             self.stop(reason: "Play.NotDownloaded", verbose: true)
-            throw PlayManError.NotDownloaded
+            self.error = .NotDownloaded
+            return
         }
         
         if asset != nil {
-            try self.worker.prepare(asset, reason: reason, verbose: true)
+            do {
+                try self.worker.prepare(asset, reason: reason, verbose: true)
+            } catch {
+                self.error = .PrepareFailed(error)
+                return
+            }
         }
         
-        try self.worker.play()
-        self.playing = true
-    }
-
-    func resume(reason: String, verbose: Bool) throws {
-        guard let asset = self.asset else {
-            throw PlayManError.NoAsset
+        do {
+            try self.worker.play()
+            self.playing = true
+        } catch {
+            self.error = .PlayFailed(error)
+            return
         }
-
-        try self.play()
     }
 
     func pause(verbose: Bool) throws {
@@ -152,7 +153,7 @@ extension PlayMan {
 
     func stop(reason: String, verbose: Bool) {
         if verbose {
-            os_log("\(self.t)Stop 🐛 \(reason)")
+            os_log("\(self.t)Stop ⏹️⏹️⏹️ 🐛 \(reason)")
         }
         self.worker.stop(reason: reason, verbose: verbose)
         self.playing = false
@@ -162,17 +163,13 @@ extension PlayMan {
         if playing {
             try self.pause(verbose: true)
         } else {
-            try self.resume(reason: "Toggle", verbose: true)
+            self.play(reason: "Toggle", verbose: true)
         }
     }
-
-    // MARK: Prev
 
     func prev() {
         self.delegate?.onPlayPrev(current: self.asset)
     }
-
-    // MARK: Next
 
     func next() {
         self.delegate?.onPlayNext(current: self.asset)
@@ -188,18 +185,6 @@ extension PlayMan {
 
     func getMode() -> PlayMode {
         self.mode
-    }
-}
-
-// MARK: 播放状态
-
-extension PlayMan {
-    var isReady: Bool {
-        self.state.isReady
-    }
-
-    var isStopped: Bool {
-        self.state.isStopped
     }
 }
 
@@ -223,12 +208,11 @@ extension PlayMan {
             os_log("\(self.t)📱📱📱 Update -> Title: \(title)")
             os_log("\(self.t)📱📱📱 Update -> Duration: \(duration)")
             os_log("\(self.t)📱📱📱 Update -> Playing: \(self.playing)")
-            os_log("\(self.t)📱📱📱 Update -> Stopped: \(self.isStopped)")
         }
 
         center.playbackState = self.playing ? .playing : .paused
 
-        if self.isStopped {
+        if self.playing == false {
             center.playbackState = .stopped
         }
 
@@ -282,22 +266,19 @@ extension Notification.Name {
 // MARK: Event Handlers
 
 extension PlayMan {
-    func onPlayFinished() {
-        let verbose = false
-        switch mode {
-        case .Order:
+    func onPlayFinished(verbose: Bool) {
+        Task { @MainActor in
             if verbose {
-                os_log("\(self.t)播放完成，模式为：\(self.mode.description)，自动播放下一个")
+                os_log("\(self.t)Play finished: \(self.mode.description)")
             }
-            self.next()
-        case .Loop:
-            if verbose {
-                os_log("\(self.t)循环播放")
-            }
-            try? play()
-        case .Random:
-            if verbose {
-                os_log("\(self.t)随机播放")
+            
+            switch mode {
+            case .Order:
+                self.next()
+            case .Loop:
+                self.play(verbose: verbose)
+            case .Random:
+                break
             }
         }
     }
@@ -324,7 +305,7 @@ extension PlayMan {
 
         c.playCommand.addTarget { _ in
             os_log("\(self.t)播放")
-            try? self.resume(reason: "PlayCommand", verbose: true)
+            self.play(reason: "PlayCommand", verbose: true)
 
             return .success
         }

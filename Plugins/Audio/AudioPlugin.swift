@@ -81,7 +81,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
 
         Task { @MainActor in
             if let url = AudioPlugin.getCurrent() {
-                try? playMan.play(PlayAsset(url: url), reason: "OnAppear", verbose: true)
+                playMan.play(PlayAsset(url: url), reason: "OnAppear", verbose: true)
 
                 if let time = AudioPlugin.getCurrentTime() {
                     playMan.seek(time)
@@ -96,17 +96,20 @@ class AudioPlugin: SuperPlugin, SuperLog {
         os_log("\(self.t)OnPlayPrev")
         let asset = await self.db.getPrevOf(current?.url, verbose: false)
         if let asset = asset {
-            try await playMan.play(PlayAsset(url: asset.url), reason: "OnPlayPrev", verbose: true)
+            await playMan.play(PlayAsset(url: asset.url), reason: "OnPlayPrev", verbose: true)
         } else {
             throw AudioPluginError.NoPrevAsset
         }
     }
 
-    func onPlayNext(playMan: PlayMan, current: PlayAsset?) async throws {
-        os_log("\(self.t)OnPlayNext")
+    func onPlayNext(playMan: PlayMan, current: PlayAsset?, verbose: Bool) async throws {
+        if verbose {
+            os_log("\(self.t)OnPlayNext")
+        }
+
         let asset = await self.db.getNextOf(current?.url, verbose: false)
         if let asset = asset {
-            try await playMan.play(PlayAsset(url: asset.url), reason: "OnPlayNext", verbose: true)
+            await playMan.play(PlayAsset(url: asset.url), reason: "OnPlayNext", verbose: true)
         } else {
             throw AudioPluginError.NoNextAsset
         }

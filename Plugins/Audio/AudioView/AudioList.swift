@@ -97,10 +97,8 @@ extension AudioList {
     }
 
     func handlePlayManStateChange(_ notification: Notification) {
-        self.bg.async {
-            if let asset = playMan.asset, asset.url != self.selection {
-                selection = asset.url
-            }
+        if let asset = playMan.asset, asset.url != self.selection {
+            selection = asset.url
         }
     }
 
@@ -110,17 +108,12 @@ extension AudioList {
         }
 
         if url != playMan.asset?.url {
-            do {
-                try self.playMan.play(audio.toPlayAsset(), reason: "AudioList SelectionChange", verbose: true)
-            } catch let e {
-                os_log("\(self.t)handleSelectionChange error: \(e)")
-                self.messageManager.alert(e.localizedDescription)
-            }
+            self.playMan.play(audio.toPlayAsset(), reason: "AudioList SelectionChange", verbose: true)
         }
     }
 
     func handlePlayAssetChange() {
-        if let asset = playMan.asset, let audio = audios.first(where: { $0.url == asset.url }) {
+        if let asset = playMan.asset {
             selection = asset.url
         }
     }

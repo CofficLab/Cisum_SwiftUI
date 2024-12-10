@@ -1,7 +1,7 @@
 import SwiftData
 import SwiftUI
 
-struct AudioControl: View {
+struct ControlView: View {
     @EnvironmentObject var appManager: AppProvider
     @EnvironmentObject var data: DataProvider
     @EnvironmentObject var message: MessageProvider
@@ -56,7 +56,7 @@ struct AudioControl: View {
                     // MARK: 进度栏
 
                     if showSliderView {
-                        AudioSlider(geo: geo)
+                        SliderView(geo: geo)
                             .padding()
                             .background(Config.background(.black))
                     }
