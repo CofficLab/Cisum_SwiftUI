@@ -1,10 +1,12 @@
 import OSLog
 import SwiftData
 import SwiftUI
+import MagicKit
 
-struct Posters: View {
+struct Posters: View, SuperLog {
     @EnvironmentObject var p: PluginProvider
     @EnvironmentObject var m: MessageProvider
+    @EnvironmentObject var man: PlayMan
     
     @Binding var isPresented: Bool
     
@@ -42,6 +44,7 @@ struct Posters: View {
         
                 Button("选择") {
                     do {
+                        self.man.stop(reason: self.className, verbose: true)
                         try p.setCurrentGroup(currentLayout)
                         self.isPresented = false
                     } catch {

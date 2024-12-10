@@ -363,7 +363,7 @@ extension iCloudHelper {
         let timeInterval = Double(nanoTime) / 1000000000
 
         if verbose && timeInterval > tolerance {
-            os_log("\(Logger.isMain)\(RecordDB.label)\(title) cost \(timeInterval) 秒 🐢🐢🐢")
+            os_log("\(Logger.isMain)\(AudioRecordDB.label)\(title) cost \(timeInterval) 秒 🐢🐢🐢")
         }
     }
 }

@@ -2,7 +2,7 @@ import Foundation
 import OSLog
 import SwiftData
 
-extension RecordDB {
+extension AudioRecordDB {
     func allAudios() -> [AudioModel] {
         os_log("\(self.t)GetAllAudios")
         do {
@@ -262,7 +262,7 @@ extension RecordDB {
     }
 
     func isAllInCloud() -> Bool {
-        getTotalOfAudio() > 0 && RecordDB.first(context: context) == nil
+        getTotalOfAudio() > 0 && AudioRecordDB.first(context: context) == nil
     }
 
     func like(_ audio: AudioModel) {
@@ -302,11 +302,11 @@ extension RecordDB {
         os_log("🍋 DBAudio::preOf \(url?.lastPathComponent ?? "nil")")
 
         guard let url = url else {
-            return RecordDB.first(context: context)
+            return AudioRecordDB.first(context: context)
         }
 
         guard let audio = self.findAudio(url) else {
-            return RecordDB.first(context: context)
+            return AudioRecordDB.first(context: context)
         }
 
         return prev(audio)
@@ -315,7 +315,7 @@ extension RecordDB {
     func prev(_ audio: AudioModel?) -> AudioModel? {
         os_log("🍋 DBAudio::preOf [\(audio?.order ?? 0)] \(audio?.title ?? "nil")")
         guard let audio = audio else {
-            return RecordDB.first(context: context)
+            return AudioRecordDB.first(context: context)
         }
 
         return Self.prevOf(context: context, audio: audio)
@@ -326,7 +326,7 @@ extension RecordDB {
     }
 
     func sort(_ sticky: AudioModel?, reason: String) {
-        os_log("\(Logger.isMain)\(RecordDB.label)Sort with reason: \(reason)")
+        os_log("\(Logger.isMain)\(AudioRecordDB.label)Sort with reason: \(reason)")
 
         emitSorting("order")
 
@@ -402,7 +402,7 @@ extension RecordDB {
             return
         }
 
-        os_log("\(Logger.isMain)\(RecordDB.label)Sticky \(url.lastPathComponent) with reason: \(reason)")
+        os_log("\(Logger.isMain)\(AudioRecordDB.label)Sticky \(url.lastPathComponent) with reason: \(reason)")
 
         do {
             // Find the audio corresponding to the URL
@@ -632,7 +632,7 @@ extension RecordDB {
                 context.delete(audio)
                 try context.save()
             } catch let e {
-                os_log(.error, "\(Logger.isMain)\(RecordDB.label)删除出错 \(e)")
+                os_log(.error, "\(Logger.isMain)\(AudioRecordDB.label)删除出错 \(e)")
             }
         }
 
@@ -671,7 +671,7 @@ extension RecordDB {
 
                 try context.save()
             } catch let e {
-                os_log(.error, "\(Logger.isMain)\(RecordDB.label)删除出错 \(e)")
+                os_log(.error, "\(Logger.isMain)\(AudioRecordDB.label)删除出错 \(e)")
             }
         }
 

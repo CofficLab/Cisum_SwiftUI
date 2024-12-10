@@ -131,7 +131,11 @@ extension RootView {
                     $0.onInit()
                 })
 
-                try self.p.setCurrentGroup(p.plugins.first!)
+                self.p.restoreCurrent()
+
+                if p.current == nil {
+                    p.current = p.plugins.first
+                }
 
                 for plugin in p.plugins {
                     plugin.onAppear(playMan: man, currentGroup: p.current)
@@ -167,7 +171,7 @@ extension RootView {
     func onPlayAssetChange() {
         for plugin in p.plugins {
             Task {
-                try await plugin.onPlayAssetUpdate(asset: man.asset)
+                try await plugin.onPlayAssetUpdate(asset: man.asset, currentGroup: p.current)
             }
         }
     }
@@ -188,7 +192,7 @@ extension RootView: PlayManDelegate {
         Task {
             for plugin in p.plugins {
                 do {
-                    try await plugin.onPlayPrev(playMan: man, current: current, verbose: true)
+                    try await plugin.onPlayPrev(playMan: man, current: current, currentGroup: p.current, verbose: true)
                 } catch let e {
                     m.error(e)
                 }
@@ -199,7 +203,7 @@ extension RootView: PlayManDelegate {
     func onPlayNext(current: PlayAsset?) async {
         for plugin in p.plugins {
             do {
-                try await plugin.onPlayNext(playMan: man, current: current, verbose: true)
+                try await plugin.onPlayNext(playMan: man, current: current, currentGroup: p.current, verbose: true)
             } catch let e {
                 m.alert(e.localizedDescription)
             }

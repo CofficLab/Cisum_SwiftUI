@@ -1,8 +1,8 @@
 import Foundation
+import MagicKit
 import OSLog
 import SwiftData
 import SwiftUI
-import MagicKit
 
 /**
  记录一本有声书的数据
@@ -10,7 +10,8 @@ import MagicKit
 @Model
 class Book: FileBox, SuperLog {
     @Transient let emoji = "📖"
-    
+    @Transient var db: BookDB?
+
     @Attribute(.unique)
     var url: URL
     var currentURL: URL?
@@ -43,6 +44,28 @@ class Book: FileBox, SuperLog {
     func nextURL() -> URL? {
         url.getNextFile()
     }
+
+    func setDB(_ db: BookDB?) {
+        self.db = db
+    }
+}
+
+extension Book: PlaySource {
+    func delete() async throws {
+        guard let db = db else {
+            throw BookModelError.dbNotFound
+        }
+
+        await db.delete(self, verbose: true)
+    }
+
+    func download() async throws {
+        guard let db = db else {
+            throw BookModelError.dbNotFound
+        }
+
+        try await db.download(self, verbose: true)
+    }
 }
 
 // MARK: Transform
@@ -53,7 +76,7 @@ extension Book {
             os_log("\(self.t)ToPlayAsset: title(\(self.title))")
         }
 
-        return PlayAsset(url: self.url, like: false)
+        return PlayAsset(url: self.url, like: false).setSource(self)
     }
 
     static func fromDiskFile(_ file: DiskFile) -> Book {
@@ -68,23 +91,23 @@ extension Book {
         if verbose {
             os_log("\(self.t)GetBookCover for \(self.title)")
         }
-        
+
         if let coverData = self.coverData {
             if verbose {
                 os_log("  🎉 GetBookCover From Database")
             }
-            
-#if canImport(UIKit)
-            if let uiImage = UIImage(data: coverData) {
-                return Image(uiImage: uiImage)
-            }
-#elseif canImport(AppKit)
-            if let nsImage = NSImage(data: coverData) {
-                return Image(nsImage: nsImage)
-            }
-#endif
+
+            #if canImport(UIKit)
+                if let uiImage = UIImage(data: coverData) {
+                    return Image(uiImage: uiImage)
+                }
+            #elseif canImport(AppKit)
+                if let nsImage = NSImage(data: coverData) {
+                    return Image(nsImage: nsImage)
+                }
+            #endif
         }
-        
+
         return nil
     }
 }
@@ -126,6 +149,20 @@ extension Book {
         FetchDescriptor(predicate: #Predicate<Book> { s in
             s.parentBookURL != nil && s.parent == nil
         }, sortBy: [])
+    }
+}
+
+enum BookModelError: Error, LocalizedError {
+    case deleteFailed
+    case dbNotFound
+
+    var errorDescription: String? {
+        switch self {
+        case .deleteFailed:
+            return "Delete failed"
+        case .dbNotFound:
+            return "BookModel: DB not found"
+        }
     }
 }
 

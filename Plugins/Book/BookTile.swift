@@ -8,33 +8,34 @@ import SwiftUI
 struct BookTile: View, SuperThread, SuperLog {
     @EnvironmentObject var data: DataProvider
     @EnvironmentObject var playMan: PlayMan
-    
+    @EnvironmentObject var db: BookDB
+
     @State var state: BookState? = nil
     @State var scale: CGFloat = 1.0
     @State var opacity: Double = 1.0
     @State var cover: Image? = nil
-    
+
     let emoji = "🖥️"
     var hasCover: Bool { cover != nil }
     var noCover: Bool { cover == nil }
     var book: Book
-    
+
     var body: some View {
         HStack {
             Spacer()
             VStack {
                 Spacer()
-                
+
                 if noCover {
                     Text(book.bookTitle).font(.title)
                 }
-                
+
                 Spacer()
-                
+
                 if book.childCount > 0, noCover {
                     Text("共 \(book.childCount)")
                 }
-                
+
                 Spacer()
                 if let s = self.state, noCover, s.currentURL != nil {
                     VStack(spacing: 0) {
@@ -61,7 +62,7 @@ struct BookTile: View, SuperThread, SuperLog {
         .onAppear(perform: onAppear)
         .onTapGesture(perform: onTap)
     }
-    
+
     func getBackground() -> some View {
         ZStack {
             if let cover = cover {
@@ -93,34 +94,36 @@ extension BookTile {
     func onAppear() {
         self.updateCover()
     }
-    
+
     func onHover(_ hovering: Bool) {
         withAnimation {
             scale = hovering ? 1.02 : 1
         }
     }
-    
+
     func onTap() {
         withAnimation(.spring()) {
-            if let s = self.state, let current = s.currentURL, let time = s.time {
-                playMan.play(PlayAsset(url: current), reason: "点击了书本",verbose: true)
-                playMan.seek(time)
-            } else {
-                if let first = DiskFile(url: book.url).children?.first {
-                    playMan.play(first.toPlayAsset(), reason: "点击了书本", verbose: true)
-                    //                        data.updateBookState(book.url, first.url)
+            Task {
+                if let s = self.state, let current = s.currentURL, let time = s.time {
+                    playMan.play(PlayAsset(url: current), reason: self.className, verbose: true)
+                    playMan.seek(time)
                 } else {
-                    playMan.play(book.toPlayAsset(), reason: "点击了书本", verbose: true)
+                    if let first = DiskFile(url: book.url).children?.first, let book = await self.db.find(first.url) {
+                        playMan.play(book.toPlayAsset(), reason: self.className, verbose: true)
+                        //                        data.updateBookState(book.url, first.url)
+                    } else {
+                        playMan.play(book.toPlayAsset(), reason: self.className, verbose: true)
+                    }
                 }
-            }
-            
-            scale = 0.95
-            opacity = 0.95
-            
-            self.main.asyncAfter(deadline: .now() + 0.5) {
-                withAnimation(.spring()) {
-                    scale = 1.0
-                    opacity = 1.0
+
+                scale = 0.95
+                opacity = 0.95
+
+                self.main.asyncAfter(deadline: .now() + 0.5) {
+                    withAnimation(.spring()) {
+                        scale = 1.0
+                        opacity = 1.0
+                    }
                 }
             }
         }

@@ -2,10 +2,10 @@ import Foundation
 import MagicKit
 
 class AudioDB: ObservableObject, SuperEvent {
-    var db: RecordDB
+    var db: AudioRecordDB
     var disk: (any SuperDisk)
     
-    init(db: RecordDB, disk: any SuperDisk) {
+    init(db: AudioRecordDB, disk: any SuperDisk) {
         self.db = db
         self.disk = disk
         
@@ -35,6 +35,13 @@ class AudioDB: ObservableObject, SuperEvent {
     
     func download(_ audio: AudioModel, verbose: Bool) async throws {
         try await self.disk.download(audio.url, reason: "AudioDB.download")
+    }
+    
+    func find(_ url: URL) async -> AudioModel? {
+        let audio = await self.db.findAudio(url)
+        audio?.setDB(self)
+        
+        return audio
     }
     
     func getTotalCount() async -> Int {

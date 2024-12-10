@@ -4,7 +4,7 @@ import SwiftData
 import SwiftUI
 import MagicKit
 
-actor RecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
+actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     static let label = "📦 DB::"
     let emoji = "🎁"
     let modelContainer: ModelContainer
@@ -39,7 +39,7 @@ actor RecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread 
 
 // MARK: 增加
 
-extension RecordDB {
+extension AudioRecordDB {
     func insertModel(_ model: any PersistentModel) throws {
         context.insert(model)
         try context.save()
@@ -48,7 +48,7 @@ extension RecordDB {
 
 // MARK: 删除
 
-extension RecordDB {
+extension AudioRecordDB {
     func destroy<T>(for model: T.Type) throws where T: PersistentModel {
         try context.delete(model: T.self)
     }
@@ -56,7 +56,7 @@ extension RecordDB {
 
 // MARK: 查询
 
-extension RecordDB {
+extension AudioRecordDB {
     /// 所有指定的model
     func all<T: PersistentModel>() throws -> [T] {
         try context.fetch(FetchDescriptor<T>())
@@ -89,11 +89,11 @@ extension RecordDB {
 
 // MARK: 辅助类函数
 
-extension RecordDB {
+extension AudioRecordDB {
     /// 执行并输出耗时
     func printRunTime(_ title: String, tolerance: Double = 0.1, verbose: Bool = false, _ code: () -> Void) {
         if verbose {
-            os_log("\(Logger.isMain)\(RecordDB.label)\(title)")
+            os_log("\(Logger.isMain)\(AudioRecordDB.label)\(title)")
         }
 
         let startTime = DispatchTime.now()
@@ -105,7 +105,7 @@ extension RecordDB {
         let timeInterval = Double(nanoTime) / 1000000000
 
         if verbose && timeInterval > tolerance {
-            os_log("\(Logger.isMain)\(RecordDB.label)\(title) cost \(timeInterval) 秒 🐢🐢🐢")
+            os_log("\(Logger.isMain)\(AudioRecordDB.label)\(title) cost \(timeInterval) 秒 🐢🐢🐢")
         }
     }
     

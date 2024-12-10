@@ -14,10 +14,11 @@ class AudioPlugin: SuperPlugin, SuperLog {
     let description: String = "作为歌曲仓库，只关注文件，文件夹将被忽略"
     var iconName: String = "music.note"
     var isGroup: Bool = true
-    lazy var db = RecordDB(AudioConfig.getContainer, reason: "AudioPlugin")
+    lazy var db = AudioRecordDB(AudioConfig.getContainer, reason: "AudioPlugin")
 
     var disk: (any SuperDisk)?
     var audioProvider: AudioProvider?
+    var audioDB: AudioDB?
 
     func addDBView() -> AnyView {
         guard let disk = self.disk else {
@@ -27,11 +28,13 @@ class AudioPlugin: SuperPlugin, SuperLog {
         guard let audioProvider = self.audioProvider else {
             return AnyView(EmptyView())
         }
-
-        let fileDB = AudioDB(db: self.db, disk: disk)
+        
+        guard let audioDB = audioDB else {
+            return AnyView(EmptyView())
+        }
 
         return AnyView(AudioDBView()
-            .environmentObject(fileDB)
+            .environmentObject(audioDB)
             .environmentObject(audioProvider)
         )
     }
@@ -48,7 +51,11 @@ class AudioPlugin: SuperPlugin, SuperLog {
         return AnyView(AudioSettings().environmentObject(audioProvider))
     }
 
-    func addStateView() -> AnyView? {
+    func addStateView(currentGroup: SuperPlugin?) -> AnyView? {
+        if currentGroup?.id != self.id {
+            return nil
+        }
+        
         guard let audioProvider = self.audioProvider else {
             return nil
         }
@@ -67,6 +74,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
     func onInit() {
         os_log("\(self.t)onInit")
         self.disk = DiskiCloud.make(self.dirName, verbose: true, reason: "AudioPlugin.onInit")
+        self.audioDB = AudioDB(db: self.db, disk: disk!)
         self.audioProvider = AudioProvider(disk: disk!)
     }
 
@@ -79,7 +87,11 @@ class AudioPlugin: SuperPlugin, SuperLog {
     func onPlay() {
     }
 
-    func onPlayAssetUpdate(asset: PlayAsset?) async throws {
+    func onPlayAssetUpdate(asset: PlayAsset?, currentGroup: SuperPlugin?) async throws {
+        if currentGroup?.id != self.id {
+            return
+        }
+
         AudioPlugin.storeCurrent(asset?.url)
         if let asset = asset, asset.isNotDownloaded {
             do {
@@ -97,8 +109,8 @@ class AudioPlugin: SuperPlugin, SuperLog {
         }
 
         Task { @MainActor in
-            if let url = AudioPlugin.getCurrent() {
-                playMan.play(PlayAsset(url: url), reason: "OnAppear", verbose: true)
+            if let url = AudioPlugin.getCurrent(), let audio = await self.audioDB?.find(url) {
+                playMan.play(audio.toPlayAsset(), reason: "OnAppear", verbose: true)
 
                 if let time = AudioPlugin.getCurrentTime() {
                     playMan.seek(time)
@@ -109,7 +121,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
         }
     }
 
-    func onPlayPrev(playMan: PlayMan, current: PlayAsset?) async throws {
+    func onPlayPrev(playMan: PlayMan, current: PlayAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws {
         os_log("\(self.t)OnPlayPrev")
         let asset = await self.db.getPrevOf(current?.url, verbose: false)
         if let asset = asset {
@@ -119,7 +131,11 @@ class AudioPlugin: SuperPlugin, SuperLog {
         }
     }
 
-    func onPlayNext(playMan: PlayMan, current: PlayAsset?, verbose: Bool) async throws {
+    func onPlayNext(playMan: PlayMan, current: PlayAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws {
+        if currentGroup?.id != self.id {
+            return
+        }
+        
         if verbose {
             os_log("\(self.t)OnPlayNext")
         }

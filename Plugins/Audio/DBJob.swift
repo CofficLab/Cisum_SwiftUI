@@ -2,58 +2,56 @@ import Foundation
 import OSLog
 import SwiftData
 
-
-extension RecordDB {
+extension AudioRecordDB {
     var labelPrepare: String { "\(self.t)⏬⏬⏬ Prepare" }
-    
+
     func prepareJob() {
         os_log("\(self.labelPrepare) 🚀🚀🚀")
-        
-        let audio = RecordDB.first(context: context)
-        
+
+        let audio = AudioRecordDB.first(context: context)
+
         if let audio = audio {
             self.downloadNextBatch(audio, reason: "\(Logger.isMain)\(Self.label)prepare")
         }
     }
 }
 
-
-extension RecordDB {
+extension AudioRecordDB {
     var labelForGroup: String { "\(self.t)🌾🌾🌾" }
 
     func updateGroupForURLs(_ urls: [URL], verbose: Bool = true) {
         let total = urls.count
         let title = "\(labelForGroup) UpdateHash(\(total))"
         let startTime = DispatchTime.now()
-        
+
         if verbose {
             os_log("\(title) 🚀🚀🚀")
         }
 
-        for (i,url) in urls.enumerated() {
-            if verbose && (i+1)%100 == 0 {
-                os_log("\(self.labelForGroup) UpdateHash \(i+1)/\(total) -> \(url.lastPathComponent)")
+        for (i, url) in urls.enumerated() {
+            if verbose && (i + 1) % 100 == 0 {
+                os_log("\(self.labelForGroup) UpdateHash \(i + 1)/\(total) -> \(url.lastPathComponent)")
             }
-            
+
             guard iCloudHelper.isDownloaded(url), let audio = findAudio(url) else {
                 continue
             }
 
             updateHash(audio)
         }
-        
+
         if verbose {
             os_log("\(self.jobEnd(startTime, title: title))")
         }
     }
 }
 
-extension RecordDB {
+extension AudioRecordDB {
     var labelForGetCovers: String { "\(self.t)🌽🌽🌽 GetCovers" }
-    
+
     func runGetCoversJob() {
         os_log("\(self.labelForGetCovers) 🚀🚀🚀")
-        
+
         do {
             try self.context.enumerate(AudioModel.descriptorAll, block: { audio in
                 if self.hasCoverRecord(audio) == false {
@@ -101,8 +99,7 @@ extension RecordDB {
     }
 }
 
-
-extension RecordDB {
+extension AudioRecordDB {
     var labelForDelete: String { "\(t)🗑️🗑️🗑️" }
 
     func runDeleteInvalidJob() {
@@ -120,7 +117,8 @@ extension RecordDB {
         }
     }
 }
-extension RecordDB {
+
+extension AudioRecordDB {
     // MARK: 运行任务
 
     func runJob(
@@ -159,7 +157,7 @@ extension RecordDB {
         }
 
         if printStartLog {
-            os_log("\(Logger.isMain)\(RecordDB.label)\(title) Start 🚀🚀🚀 with count=\(totalCount)")
+            os_log("\(Logger.isMain)\(AudioRecordDB.label)\(title) Start 🚀🚀🚀 with count=\(totalCount)")
         }
 
         do {
@@ -168,47 +166,47 @@ extension RecordDB {
             try context.enumerate(descriptor, batchSize: 1, block: { audio in
                 if concurrency {
                     // MARK: 并发处理
-                    
+
                     jobQueue.sync {
                         group.enter()
                         if printQueueEnter {
-                            os_log("\(Logger.isMain)\(RecordDB.label)\(title) 已加入队列 \(audio.title), 队列积累任务数量 \(group.count)/\(t)")
+                            os_log("\(Logger.isMain)\(AudioRecordDB.label)\(title) 已加入队列 \(audio.title), 队列积累任务数量 \(group.count)/\(t)")
                         }
 
                         opQueue.addOperation {
                             code(audio) {
                                 group.leave()
                                 if group.count % printLogStep == 0 && printLog && group.count > 0 {
-                                    os_log("\(Logger.isMain)\(RecordDB.label)\(title) 余 \(group.count)/\(t)")
+                                    os_log("\(Logger.isMain)\(AudioRecordDB.label)\(title) 余 \(group.count)/\(t)")
                                 }
                             }
                         }
                     }
                 } else {
                     // MARK: 串行处理
-                    
+
                     if printQueueEnter {
-                        os_log("\(Logger.isMain)\(RecordDB.label)\(title) 处理 \(audio.title)")
+                        os_log("\(Logger.isMain)\(AudioRecordDB.label)\(title) 处理 \(audio.title)")
                     }
-                    
+
                     serialQueue.sync {
                         code(audio) {
                             finishedCount += 1
                             if finishedCount % printLogStep == 0 && printLog && finishedCount > 0 {
-                                os_log("\(Logger.isMain)\(RecordDB.label)\(title) 完成 \(finishedCount)/\(t) 🐎🐎🐎")
+                                os_log("\(Logger.isMain)\(AudioRecordDB.label)\(title) 完成 \(finishedCount)/\(t) 🐎🐎🐎")
                             }
                         }
                     }
                 }
             })
-            
+
             group.notify(queue: notifyQueue) {
                 complete(self.context)
                 if printCost {
                     // 计算代码执行时间
                     let nanoTime = DispatchTime.now().uptimeNanoseconds - startTime.uptimeNanoseconds
                     let timeInterval = Double(nanoTime) / 1000000000
-                    os_log("\(Logger.isMain)\(RecordDB.label)\(title) cost \(timeInterval) 秒 🐢🐢🐢")
+                    os_log("\(Logger.isMain)\(AudioRecordDB.label)\(title) cost \(timeInterval) 秒 🐢🐢🐢")
                 }
             }
         } catch let e {

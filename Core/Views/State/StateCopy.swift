@@ -5,7 +5,7 @@ import SwiftUI
 struct StateCopy: View, SuperThread {
     @EnvironmentObject var dataManager: DataProvider
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var db: RecordDB
+    @EnvironmentObject var db: AudioRecordDB
 
     @Query(sort: \CopyTask.createdAt, animation: .default) var tasks: [CopyTask]
 

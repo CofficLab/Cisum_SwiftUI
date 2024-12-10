@@ -40,6 +40,14 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
         }
     }
 
+    func restoreCurrent() {
+        let currentPluginId = Self.getPluginId()
+
+        if let plugin = plugins.first(where: { $0.id == currentPluginId }) {
+            self.current = plugin
+        }
+    }
+
     static func storeCurrent(_ plugin: SuperPlugin) {
         let id = plugin.id
 
@@ -72,7 +80,7 @@ enum PluginProviderError: Error, LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .PluginIsNotGroup(let plugin):
+        case let .PluginIsNotGroup(plugin):
             return "Plugin \(plugin.id) is not a group"
         }
     }

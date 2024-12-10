@@ -3,7 +3,7 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-extension RecordDB {
+extension BookRecordDB {
     var labelForBookSync: String {
         "\(t)📖📖📖"
     }
@@ -73,7 +73,7 @@ extension RecordDB {
             os_log(.error, "\(error.localizedDescription)")
         }
 
-        os_log("\(self.jobEnd(startTime, title: "\(self.t) SyncBookWithDisk(\(group.count))", tolerance: 0.01))")
+        os_log("\(self.jobEnd(startTime, title: "\(self.t)SyncBookWithDisk(\(group.count))", tolerance: 0.01))")
         
         self.updateBookParent()
     }

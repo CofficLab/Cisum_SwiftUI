@@ -4,7 +4,7 @@ import SwiftData
 
 // MARK: 增加
 
-extension RecordDB {
+extension AudioRecordDB {
     func insertCopyTask(_ task: CopyTask) {
         context.insert(task)
         try? context.save()
@@ -15,7 +15,7 @@ extension RecordDB {
         if verbose {
             os_log("\(self.t)添加复制任务(\(urls.count)个)")
         }
-        
+
         for url in urls {
             newCopyTask(url)
         }
@@ -23,7 +23,7 @@ extension RecordDB {
 
     /// 将文件从外部复制到应用中
     func newCopyTask(_ url: URL) {
-        if (self.findCopyTask(url) != nil) {
+        if self.findCopyTask(url) != nil {
             return
         }
 
@@ -39,12 +39,12 @@ extension RecordDB {
 
 // MARK: 删除
 
-extension RecordDB {
+extension AudioRecordDB {
     func deleteCopyTask(_ id: CopyTask.ID) {
-        os_log("\(Logger.isMain)\(RecordDB.label)数据库删除")
+        os_log("\(Logger.isMain)\(AudioRecordDB.label)数据库删除")
         let context = ModelContext(modelContainer)
         guard let task = context.model(for: id) as? CopyTask else {
-            os_log("\(Logger.isMain)\(RecordDB.label)删除时数据库找不到")
+            os_log("\(Logger.isMain)\(AudioRecordDB.label)删除时数据库找不到")
             return
         }
 
@@ -52,9 +52,9 @@ extension RecordDB {
             context.delete(task)
 
             try context.save()
-            os_log("\(Logger.isMain)\(RecordDB.label)删除成功")
+            os_log("\(Logger.isMain)\(AudioRecordDB.label)删除成功")
         } catch let e {
-            os_log("\(Logger.isMain)\(RecordDB.label)删除出错 \(e)")
+            os_log("\(Logger.isMain)\(AudioRecordDB.label)删除出错 \(e)")
         }
     }
 
@@ -64,14 +64,14 @@ extension RecordDB {
         })
 
         do {
-                    try context.save()
-                } catch let e {
-                    os_log(.error, "\(e.localizedDescription)")
-                }
+            try context.save()
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
     }
 
     nonisolated func delete(_ task: CopyTask) {
-        //os_log("\(Logger.isMain)🗑️ 删除复制任务 \(task.title)")
+        // os_log("\(Logger.isMain)🗑️ 删除复制任务 \(task.title)")
         let context = ModelContext(modelContainer)
         guard let t = context.model(for: task.id) as? CopyTask else {
             return os_log("\(Logger.isMain)🗑️ 删除时数据库找不到 \(task.title)")
@@ -88,7 +88,7 @@ extension RecordDB {
 
 // MARK: 查询
 
-extension RecordDB {
+extension AudioRecordDB {
     func allCopyTasks() -> [CopyTask] {
         let descriptor = FetchDescriptor<CopyTask>()
         do {
@@ -99,7 +99,7 @@ extension RecordDB {
 
         return []
     }
-    
+
     func findCopyTask(_ url: URL) -> CopyTask? {
         let predicate = #Predicate<CopyTask> {
             $0.url == url
@@ -119,24 +119,24 @@ extension RecordDB {
 
 // MARK: 更新
 
-extension RecordDB {
+extension AudioRecordDB {
     func setTaskRunning(_ task: CopyTask) {
         task.isRunning = true
         task.error = ""
         do {
-                    try context.save()
-                } catch let e {
-                    os_log(.error, "\(e.localizedDescription)")
-                }
+            try context.save()
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
     }
 
     func setTaskError(_ task: CopyTask, _ e: Error) {
         task.isRunning = false
         task.error = e.localizedDescription
         do {
-                    try context.save()
-                } catch let e {
-                    os_log(.error, "\(e.localizedDescription)")
-                }
+            try context.save()
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
     }
 }

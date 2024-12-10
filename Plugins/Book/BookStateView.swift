@@ -3,13 +3,13 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-struct AudioStateView: View, SuperLog, SuperThread {
+struct BookStateView: View, SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var data: DataProvider
     @EnvironmentObject var messageManager: MessageProvider
-    @EnvironmentObject var audioManager: AudioProvider
+    @EnvironmentObject var bookManager: BookProvider
     @EnvironmentObject var playMan: PlayMan
-    @EnvironmentObject var db: RecordDB
+    @EnvironmentObject var db: BookRecordDB
     @Environment(\.modelContext) private var modelContext
 
     @Query(sort: \CopyTask.createdAt, animation: .default) var tasks: [CopyTask]
@@ -37,8 +37,8 @@ struct AudioStateView: View, SuperLog, SuperThread {
                 StateCopy()
             }
         }
-        .onChange(of: audioManager.isSyncing, {
-            os_log("\(self.t)isSyncing: \(audioManager.isSyncing)")
+        .onChange(of: bookManager.isSyncing, {
+            os_log("\(self.t)isSyncing: \(bookManager.isSyncing)")
             
             if playMan.hasError, let asset = playMan.asset, asset.isDownloaded {
                 playMan.play(verbose: true)

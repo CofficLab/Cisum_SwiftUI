@@ -109,7 +109,7 @@ extension DBSynced {
     /// 执行并输出耗时
     func printRunTime(_ title: String, tolerance: Double = 1, verbose: Bool = false, _ code: () -> Void) {
         if verbose {
-            os_log("\(Logger.isMain)\(RecordDB.label)\(title)")
+            os_log("\(Logger.isMain)\(AudioRecordDB.label)\(title)")
         }
 
         let startTime = DispatchTime.now()
@@ -121,7 +121,7 @@ extension DBSynced {
         let timeInterval = Double(nanoTime) / 1000000000
 
         if verbose && timeInterval > tolerance {
-            os_log("\(Logger.isMain)\(RecordDB.label)\(title) cost \(timeInterval) 秒 🐢🐢🐢")
+            os_log("\(Logger.isMain)\(AudioRecordDB.label)\(title) cost \(timeInterval) 秒 🐢🐢🐢")
         }
     }
 }

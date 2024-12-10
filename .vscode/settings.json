@@ -3,5 +3,10 @@
         "autoconnect",
         "circlepath",
         "Cisum"
-    ]
+    ],
+    "editor.quickSuggestions": {
+        "comments": "off",
+        "strings": "off",
+        "other": "off"
+    }
 }

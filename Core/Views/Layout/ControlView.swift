@@ -36,7 +36,7 @@ struct ControlView: View {
                     if showStateView {
                         VStack {
                             ForEach(p.plugins, id: \.id) { plugin in
-                                plugin.addStateView()
+                                plugin.addStateView(currentGroup: p.current)
                             }
                         }
                         .frame(height: getStateHeight(geo))

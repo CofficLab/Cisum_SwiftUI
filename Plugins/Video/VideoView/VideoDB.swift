@@ -8,7 +8,7 @@ struct VideoDB: View {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var data: DataProvider
     @EnvironmentObject var message: MessageProvider
-    @EnvironmentObject var db: RecordDB
+    @EnvironmentObject var db: AudioRecordDB
 
     @State var treeView = false
 

@@ -9,13 +9,13 @@ struct BookGrid: View, SuperLog, SuperThread {
     @EnvironmentObject var appManager: AppProvider
     @EnvironmentObject var data: DataProvider
     @EnvironmentObject var messageManager: MessageProvider
+    @EnvironmentObject var db: BookDB
 
     @State var selection: AudioModel? = nil
     @State var syncingTotal: Int = 0
     @State var syncingCurrent: Int = 0
+    @State var books: [Book] = []
     
-    @Query(Book.descriptorIsFolder) var books: [Book]
-
     var total: Int { books.count }
     var showTips: Bool {
         if appManager.isDropping {
@@ -38,8 +38,17 @@ struct BookGrid: View, SuperLog, SuperThread {
             }
             .padding()
         }
+        .onAppear(perform: handleOnAppear)
+    }
+    
+    func handleOnAppear() {
+        Task {
+            self.books = await db.getRootBooks()
+        }
     }
 }
+
+
 
 #Preview("App") {
     AppPreview()

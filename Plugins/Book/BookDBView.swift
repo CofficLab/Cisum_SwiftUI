@@ -1,18 +1,18 @@
 import Foundation
+import MagicKit
 import OSLog
 import SwiftData
 import SwiftUI
 import UniformTypeIdentifiers
-import MagicKit
 
-struct BookDB: View, SuperLog, SuperThread {
+struct BookDBView: View, SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var data: DataProvider
-    @EnvironmentObject var db: RecordDB
+    @EnvironmentObject var bookManager: BookProvider
+    @EnvironmentObject var db: BookDB
 
     @State var treeView = false
-
-    @Query(AudioModel.descriptorAll, animation: .default) var audios: [AudioModel]
+    @State var total: Int = 0
 
     static var label = "🐘 DBLayout::"
 
@@ -24,16 +24,27 @@ struct BookDB: View, SuperLog, SuperThread {
 
     init(verbose: Bool = false, disk: any SuperDisk) {
         if verbose {
-            os_log("\(Logger.initLog)BookDB")
+            os_log("\(Logger.initLog)BookDBView")
         }
-        
+
         self.disk = disk
     }
 
     var body: some View {
         VStack(spacing: 0) {
+            HStack {
+                Text("共 \(total.description)")
+                Spacer()
+                if bookManager.isSyncing {
+                    Image(systemName: "arrow.triangle.2.circlepath")
+                    Text("正在读取仓库")
+                }
+            }
+            .padding(.horizontal)
+            .padding(.bottom, 5)
+
             BookGrid()
-            .frame(maxHeight: .infinity)
+                .frame(maxHeight: .infinity)
 
             TaskView()
                 .shadow(radius: 10)
@@ -51,6 +62,9 @@ struct BookDB: View, SuperLog, SuperThread {
                 }
             }
         )
+        .task {
+            self.total = await db.getTotal()
+        }
         .onDrop(of: [UTType.fileURL], isTargeted: $app.isDropping) { providers -> Bool in
             let dispatchGroup = DispatchGroup()
             var dropedFiles: [URL] = []
@@ -78,7 +92,7 @@ struct BookDB: View, SuperLog, SuperThread {
 
 // MARK: 操作
 
-extension BookDB {
+extension BookDBView {
     func copy(_ files: [URL]) {
         data.copy(files)
     }

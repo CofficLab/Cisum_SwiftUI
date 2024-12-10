@@ -4,11 +4,11 @@ import OSLog
 
 class AudioCopyJob: SuperLog, SuperThread {
     let emoji = "🔄"
-    let db: RecordDB
+    let db: AudioRecordDB
     let disk: (any SuperDisk)?
     var running = false
     
-    init(db: RecordDB, disk: (any SuperDisk)?) {
+    init(db: AudioRecordDB, disk: (any SuperDisk)?) {
         self.db = db
         self.disk = disk
 

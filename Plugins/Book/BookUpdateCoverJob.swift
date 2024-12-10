@@ -3,19 +3,16 @@ import MagicKit
 import OSLog
 import SwiftData
 
-class BookUpdateCoverJob: SuperLog, SuperThread {
+class BookUpdateCoverJob: SuperLog, SuperThread, BookJob {
     let emoji = "🌽"
-    let db: RecordDB
+    let db: BookRecordDB
     var running = false
 
-    init(container: ModelContainer) {
-        self.db = RecordDB(container, reason: "BookUpdateCoverJob.Init")
+    init(db: BookRecordDB) {
+        self.db = db
     }
 
-    func run() {
-        let verbose = false
-        let verbose2 = false
-
+    func run(verbose: Bool) {
         if running {
             return
         }
@@ -40,7 +37,7 @@ class BookUpdateCoverJob: SuperLog, SuperThread {
 
                 var count = 1
                 for book in books {
-                    if verbose2 {
+                    if verbose {
                         os_log("\(self.t)run(\(books.count)) -> \(count)/\(books.count)")
                     }
 

@@ -11,7 +11,7 @@ protocol SuperPlugin {
 
     func addDBView() -> AnyView
     func addPosterView() -> AnyView
-    func addStateView() -> AnyView?
+    func addStateView(currentGroup: SuperPlugin?) -> AnyView?
     func addSettingView() -> AnyView?
     func addToolBarButtons() -> [(id: String, view: AnyView)]
 
@@ -23,9 +23,9 @@ protocol SuperPlugin {
     func onPlay() -> Void
     func onPause(playMan: PlayMan) -> Void
     func onPlayStateUpdate() async throws -> Void
-    func onPlayAssetUpdate(asset: PlayAsset?) async throws -> Void
-    func onPlayNext(playMan: PlayMan, current: PlayAsset?, verbose: Bool) async throws -> Void
-    func onPlayPrev(playMan: PlayMan, current: PlayAsset?, verbose: Bool) async throws -> Void
+    func onPlayAssetUpdate(asset: PlayAsset?, currentGroup: SuperPlugin?) async throws -> Void
+    func onPlayNext(playMan: PlayMan, current: PlayAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws -> Void
+    func onPlayPrev(playMan: PlayMan, current: PlayAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws -> Void
 }
 
 extension SuperPlugin {
@@ -45,7 +45,7 @@ extension SuperPlugin {
         return []
     }
 
-    func addStateView() -> AnyView? {
+    func addStateView(currentGroup: SuperPlugin?) -> AnyView? {
         return nil
     }
 
@@ -65,7 +65,7 @@ extension SuperPlugin {
         os_log("🐷 %{public}s::OnInit", log: .default, type: .debug, String(describing: type(of: self)))
     }
     
-    func onPlayAssetUpdate(asset: PlayAsset?) {
+    func onPlayAssetUpdate(asset: PlayAsset?, currentGroup: SuperPlugin?) {
         os_log("🐷 %{public}s::OnPlayAssetUpdate", log: .default, type: .debug, String(describing: type(of: self)))
     }
     
@@ -88,11 +88,11 @@ extension SuperPlugin {
         os_log("🐷 %{public}s::OnPlayStateUpdate", log: .default, type: .debug, String(describing: type(of: self)))
     }
     
-    func onPlayNext(playMan: PlayMan, current: PlayAsset?, verbose: Bool) async throws -> Void {
+    func onPlayNext(playMan: PlayMan, current: PlayAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws -> Void {
         os_log("🐷 %{public}s::OnPlayNext while current is %{public}s", log: .default, type: .debug, String(describing: type(of: self)), current?.title ?? "nil")
     }
     
-    func onPlayPrev(playMan: PlayMan, current: PlayAsset?, verbose: Bool) async throws -> Void {
+    func onPlayPrev(playMan: PlayMan, current: PlayAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws -> Void {
         os_log("🐷 %{public}s::OnPlayPrev while current is %{public}s", log: .default, type: .debug, String(describing: type(of: self)), current?.title ?? "nil")
     }
 }
