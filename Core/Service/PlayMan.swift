@@ -155,6 +155,7 @@ extension PlayMan {
             os_log("\(self.t)Stop 🐛 \(reason)")
         }
         self.worker.stop(reason: reason, verbose: verbose)
+        self.playing = false
     }
 
     func toggle() throws {

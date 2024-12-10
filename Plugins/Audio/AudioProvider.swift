@@ -32,14 +32,7 @@ class AudioProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
     private func handleDBSyncing(_ notification: Notification) {
         if let group = notification.userInfo?["group"] as? DiskFileGroup {
             self.files = group.files
-            
-            if group.isFullLoad {
-                os_log("\(self.t)handleDBSyncing: isFullLoad")
-                self.setSyncing(false)
-            } else {
-                os_log("\(self.t)handleDBSyncing: isNotFullLoad")
-                self.setSyncing(true)
-            }
+            self.setSyncing(true)
         }
     }
 
@@ -54,7 +47,7 @@ class AudioProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
                 self.isSyncing = true
             }
         } else {
-            debounceTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { [weak self] _ in
+            debounceTimer = Timer.scheduledTimer(withTimeInterval: 1.5, repeats: false) { [weak self] _ in
                 withAnimation {
                     self?.isSyncing = false
                 }

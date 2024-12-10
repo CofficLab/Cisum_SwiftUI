@@ -30,8 +30,8 @@ struct BookLayout: View, SuperLog {
     var body: some View {
         GeometryReader { geo in
             VStack(spacing: 0) {
-                BookControl()
-                    .frame(height: showDB ? Config.controlViewMinHeight : geo.size.height)
+//                BookControl()
+//                    .frame(height: showDB ? Config.controlViewMinHeight : geo.size.height)
 
                 if showDB {
                     #if os(macOS)

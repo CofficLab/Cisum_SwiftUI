@@ -25,7 +25,7 @@
 		0B1D5A882AB302610010DDF2 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1D5A732AB302600010DDF2 /* ContentView.swift */; };
 		0B1D5A8A2AB302610010DDF2 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1D5A752AB302600010DDF2 /* Config.swift */; };
 		0B1D5A8D2AB3E8290010DDF2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1D5A8C2AB3E8290010DDF2 /* AppDelegate.swift */; };
-		0B220F6D2BB051140077255A /* StateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B220F6C2BB051140077255A /* StateView.swift */; };
+		0B220F6D2BB051140077255A /* AudioStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B220F6C2BB051140077255A /* AudioStateView.swift */; };
 		0B220F6F2BB051F50077255A /* TitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B220F6E2BB051F50077255A /* TitleView.swift */; };
 		0B220F732BB1A3D70077255A /* AudioBtns.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B220F722BB1A3D70077255A /* AudioBtns.swift */; };
 		0B220F752BB1BBDB0077255A /* SmartError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B220F742BB1BBDB0077255A /* SmartError.swift */; };
@@ -168,7 +168,6 @@
 		F54DFA632CA4E84500F81BE3 /* VideoBtns.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA622CA4E84500F81BE3 /* VideoBtns.swift */; };
 		F54DFA652CA4E92100F81BE3 /* VideoDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA642CA4E92100F81BE3 /* VideoDB.swift */; };
 		F54DFA672CA4EA1700F81BE3 /* AudioControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA662CA4EA1700F81BE3 /* AudioControl.swift */; };
-		F54DFA692CA4FB4B00F81BE3 /* BookControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA682CA4FB4B00F81BE3 /* BookControl.swift */; };
 		F54DFA6B2CA4FB7D00F81BE3 /* BookBtns.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA6A2CA4FB7D00F81BE3 /* BookBtns.swift */; };
 		F54DFA6D2CA4FCB500F81BE3 /* BookDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA6C2CA4FCB500F81BE3 /* BookDB.swift */; };
 		F54DFA702CA5007600F81BE3 /* VideoGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA6F2CA5007600F81BE3 /* VideoGrid.swift */; };
@@ -246,7 +245,7 @@
 		0B1D5A752AB302600010DDF2 /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		0B1D5A8B2AB305D70010DDF2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0B1D5A8C2AB3E8290010DDF2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		0B220F6C2BB051140077255A /* StateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateView.swift; sourceTree = "<group>"; };
+		0B220F6C2BB051140077255A /* AudioStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioStateView.swift; sourceTree = "<group>"; };
 		0B220F6E2BB051F50077255A /* TitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleView.swift; sourceTree = "<group>"; };
 		0B220F722BB1A3D70077255A /* AudioBtns.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioBtns.swift; sourceTree = "<group>"; };
 		0B220F742BB1BBDB0077255A /* SmartError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmartError.swift; sourceTree = "<group>"; };
@@ -388,7 +387,6 @@
 		F54DFA622CA4E84500F81BE3 /* VideoBtns.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoBtns.swift; sourceTree = "<group>"; };
 		F54DFA642CA4E92100F81BE3 /* VideoDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoDB.swift; sourceTree = "<group>"; };
 		F54DFA662CA4EA1700F81BE3 /* AudioControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioControl.swift; sourceTree = "<group>"; };
-		F54DFA682CA4FB4B00F81BE3 /* BookControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookControl.swift; sourceTree = "<group>"; };
 		F54DFA6A2CA4FB7D00F81BE3 /* BookBtns.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookBtns.swift; sourceTree = "<group>"; };
 		F54DFA6C2CA4FCB500F81BE3 /* BookDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookDB.swift; sourceTree = "<group>"; };
 		F54DFA6F2CA5007600F81BE3 /* VideoGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoGrid.swift; sourceTree = "<group>"; };
@@ -855,6 +853,7 @@
 				0BEE7C6E2CA8343800DC1DCF /* AudioTask.swift */,
 				F52A98FD2C43BC99003559F1 /* AudioTile.swift */,
 				0BC29EB42CA6DE5E00E4813F /* AudioVStack.swift */,
+				0B220F6C2BB051140077255A /* AudioStateView.swift */,
 			);
 			path = AudioView;
 			sourceTree = "<group>";
@@ -896,7 +895,6 @@
 		F5511BC82C29669100400900 /* State */ = {
 			isa = PBXGroup;
 			children = (
-				0B220F6C2BB051140077255A /* StateView.swift */,
 				F5511BBD2C29506400400900 /* StateCopy.swift */,
 			);
 			path = State;
@@ -995,7 +993,6 @@
 			isa = PBXGroup;
 			children = (
 				F54DFA6A2CA4FB7D00F81BE3 /* BookBtns.swift */,
-				F54DFA682CA4FB4B00F81BE3 /* BookControl.swift */,
 				F5AEE0592CB515660007825B /* BookHero.swift */,
 				F5AEE05B2CB519C90007825B /* BookPlayingCover.swift */,
 				F5AEE0542CB5010C0007825B /* BookSlider.swift */,
@@ -1153,7 +1150,7 @@
 				F54DFA612CA4E81200F81BE3 /* VideoControl.swift in Sources */,
 				F518F7012C34FB0400844E62 /* BookState.swift in Sources */,
 				F54DFA762CA56B4000F81BE3 /* AudioAvatar.swift in Sources */,
-				0B220F6D2BB051140077255A /* StateView.swift in Sources */,
+				0B220F6D2BB051140077255A /* AudioStateView.swift in Sources */,
 				F54DFA702CA5007600F81BE3 /* VideoGrid.swift in Sources */,
 				0B1D5A8D2AB3E8290010DDF2 /* AppDelegate.swift in Sources */,
 				F5511BC72C29636500400900 /* BottomCopyState.swift in Sources */,
@@ -1263,7 +1260,6 @@
 				0B8C36B42BEC6EAB00C47567 /* ViewExt.swift in Sources */,
 				0BE6958E2BFE28B400CEFFEB /* PlayTime.swift in Sources */,
 				0BFB38832BCCCC780055E38B /* OperationView.swift in Sources */,
-				F54DFA692CA4FB4B00F81BE3 /* BookControl.swift in Sources */,
 				0BBC159A2ABAD5DB006E82C4 /* SliderView.swift in Sources */,
 				0BEE7C6D2CA7E9E300DC1DCF /* AudioRoot.swift in Sources */,
 				F5B64D152C328F3900DE55AD /* SuperPlayWorker.swift in Sources */,

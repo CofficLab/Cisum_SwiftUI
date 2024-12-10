@@ -27,16 +27,16 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
             if self.loading {
                 ProgressView()
             } else {
-                Group {
-                    if let e = self.error {
-                        if e.isCloudError {
-                            ErrorViewCloud(error: e)
-                                .onChange(of: iCloudAvailable, onChangeOfiCloud)
-                        } else {
-                            ErrorViewFatal(error: e)
-                        }
+                if let e = self.error {
+                    if e.isCloudError {
+                        ErrorViewCloud(error: e)
+                            .onChange(of: iCloudAvailable, onChangeOfiCloud)
                     } else {
-                        if let dataManager = dataManager {
+                        ErrorViewFatal(error: e)
+                    }
+                } else {
+                    if let dataManager = dataManager {
+                        ZStack {
                             content
                                 .toolbar(content: {
                                     ToolbarItem(placement: .navigation) {
@@ -58,9 +58,9 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                                 .environmentObject(p)
                                 .environmentObject(dataManager)
                                 .environmentObject(m)
-                        } else {
-                            Text("启动失败")
                         }
+                    } else {
+                        Text("启动失败")
                     }
                 }
             }

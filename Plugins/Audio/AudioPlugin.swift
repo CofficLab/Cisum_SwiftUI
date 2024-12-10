@@ -36,6 +36,10 @@ class AudioPlugin: SuperPlugin, SuperLog {
         AnyView(AudioPoster())
     }
 
+    func addStateView() -> AnyView? {
+        AnyView(AudioStateView().environmentObject(audioProvider))
+    }
+
     func addToolBarButtons() -> [(id: String, view: AnyView)] {
         return [
             (id: "like", view: AnyView(

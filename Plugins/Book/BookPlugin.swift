@@ -3,7 +3,7 @@ import MagicKit
 import OSLog
 import SwiftUI
 
-class BookPlugin: SuperPlugin, SuperLog {    
+class BookPlugin: SuperPlugin, SuperLog {
     let emoji = "🎺"
 
     var label: String = "Book"

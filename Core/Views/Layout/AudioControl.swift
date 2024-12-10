@@ -6,6 +6,7 @@ struct AudioControl: View {
     @EnvironmentObject var data: DataProvider
     @EnvironmentObject var message: MessageProvider
     @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var p: PluginProvider
 
     @State var showHeroView = true
     @State var showBtnsView = true
@@ -33,10 +34,15 @@ struct AudioControl: View {
                     // MARK: 状态
 
                     if showStateView {
-                        StateView()
-                            //                        .frame(height: getStateHeight(geo))
-                            .frame(maxWidth: .infinity)
-                            .background(Config.background(.red))
+                        // StateView()
+                        //     //                        .frame(height: getStateHeight(geo))
+                        //     .frame(maxWidth: .infinity)
+                        //     .background(Config.background(.red))
+                        VStack {
+                            ForEach(p.plugins, id: \.id) { plugin in
+                                plugin.addStateView()
+                            }
+                        }
                     }
 
                     // MARK: 操作栏

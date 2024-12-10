@@ -33,10 +33,10 @@ struct VideoControl: View {
                     // MARK: 状态
 
                     if showStateView {
-                        StateView()
+//                        StateView()
                             //                        .frame(height: getStateHeight(geo))
-                            .frame(maxWidth: .infinity)
-                            .background(Config.background(.red))
+//                            .frame(maxWidth: .infinity)
+//                            .background(Config.background(.red))
                     }
 
                     // MARK: 操作栏
