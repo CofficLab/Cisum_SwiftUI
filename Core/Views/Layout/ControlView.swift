@@ -34,15 +34,13 @@ struct ControlView: View {
                     // MARK: 状态
 
                     if showStateView {
-                        // StateView()
-                        //     //                        .frame(height: getStateHeight(geo))
-                        //     .frame(maxWidth: .infinity)
-                        //     .background(Config.background(.red))
                         VStack {
                             ForEach(p.plugins, id: \.id) { plugin in
                                 plugin.addStateView()
                             }
                         }
+                        .frame(height: getStateHeight(geo))
+                        .frame(maxWidth: .infinity)
                     }
 
                     // MARK: 操作栏
@@ -95,7 +93,7 @@ struct ControlView: View {
         }
 //        .ignoresSafeArea(edges: appManager.showDB || Config.isNotDesktop ? .horizontal : .all)
         .frame(minHeight: Config.controlViewMinHeight)
-        .onAppear() {
+        .onAppear {
             showHeroView = true
             showBtnsView = true
             showStateView = true

@@ -40,7 +40,7 @@ struct AudioStateView: View, SuperLog, SuperThread {
         .onChange(of: audioManager.isSyncing, {
             os_log("\(self.t)isSyncing: \(audioManager.isSyncing)")
             
-            if playMan.hasError {
+            if playMan.hasError, let asset = playMan.asset, asset.isDownloaded {
                 playMan.play(verbose: true)
             }
         })

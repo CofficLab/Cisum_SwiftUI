@@ -40,7 +40,3 @@ struct DirScene: View {
     }
         .frame(height: 1200)
 }
-
-#Preview {
-    DirSetting()
-}

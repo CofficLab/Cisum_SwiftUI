@@ -11,7 +11,6 @@ import SwiftUI
       对接系统媒体中心
  */
 
-@MainActor
 class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread, AudioWorkerDelegate {
     // MARK: 成员
 
@@ -62,7 +61,7 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread, AudioWorkerDel
 
     init(verbose: Bool = true, delegate: PlayManDelegate?) {
         super.init()
-        
+
         self.audioWorker.delegate = self
         self.delegate = delegate
 
@@ -96,7 +95,7 @@ extension PlayMan {
         if !Thread.isMainThread {
             assert(false, "PlayMan.play 必须在主线程调用")
         }
-        
+
         self.error = nil
 
         if let asset = asset {
@@ -123,7 +122,7 @@ extension PlayMan {
             self.error = .NotDownloaded
             return
         }
-        
+
         if asset != nil {
             do {
                 try self.worker.prepare(asset, reason: reason, verbose: true)
@@ -132,7 +131,7 @@ extension PlayMan {
                 return
             }
         }
-        
+
         do {
             try self.worker.play()
             self.playing = true
@@ -266,20 +265,18 @@ extension Notification.Name {
 // MARK: Event Handlers
 
 extension PlayMan {
-    func onPlayFinished(verbose: Bool) {
-        Task { @MainActor in
-            if verbose {
-                os_log("\(self.t)Play finished: \(self.mode.description)")
-            }
-            
-            switch mode {
-            case .Order:
-                self.next()
-            case .Loop:
-                self.play(verbose: verbose)
-            case .Random:
-                break
-            }
+    nonisolated func onPlayFinished(verbose: Bool) {
+        if verbose {
+            os_log("\(self.t)Play finished: \(self.mode.description)")
+        }
+
+        switch mode {
+        case .Order:
+            self.next()
+        case .Loop:
+            self.play(verbose: verbose)
+        case .Random:
+            break
         }
     }
 

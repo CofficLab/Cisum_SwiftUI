@@ -12,6 +12,7 @@ protocol SuperPlugin {
     func addDBView() -> AnyView
     func addPosterView() -> AnyView
     func addStateView() -> AnyView?
+    func addSettingView() -> AnyView?
     func addToolBarButtons() -> [(id: String, view: AnyView)]
 
     func getDisk() -> (any SuperDisk)?
@@ -47,6 +48,10 @@ extension SuperPlugin {
     func addStateView() -> AnyView? {
         return nil
     }
+
+    func addSettingView() -> AnyView? {
+        return nil
+    }
     
     func getDisk() -> (any SuperDisk)? {
         return nil
@@ -74,7 +79,7 @@ extension SuperPlugin {
     
     func onPause(playMan: PlayMan) {
         Task {
-            let timeDisplay = await playMan.currentTimeDisplay
+            let timeDisplay = playMan.currentTimeDisplay
             os_log("🐷 %{public}s::OnPause, current time: %{public}s", log: .default, type: .debug, String(describing: type(of: self)), timeDisplay)
         }
     }

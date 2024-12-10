@@ -8,14 +8,16 @@ import Combine
 
 class AudioProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
     private var cancellables = Set<AnyCancellable>()
+    private var debounceTimer: Timer?
+    
     let emoji = "🌿"
+    let disk: (any SuperDisk)
 
     @Published var files: [DiskFile] = []
     @Published var isSyncing: Bool = true
-    
-    private var debounceTimer: Timer?
 
-    init() {
+    init(disk: any SuperDisk) {
+        self.disk = disk
         self.nc.publisher(for: .dbSyncing)
             .sink { [weak self] notification in
                 self?.handleDBSyncing(notification)

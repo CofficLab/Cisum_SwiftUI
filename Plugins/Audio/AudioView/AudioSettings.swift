@@ -1,12 +1,11 @@
 import SwiftUI
 import MagicKit
 
-struct DirSetting: View,SuperLog {
+struct AudioSettings: View,SuperLog {
     @EnvironmentObject var dataManager: DataProvider
+    @EnvironmentObject var audioManager: AudioProvider
     
     @State var diskSize: String?
-
-    var mountedURL: URL?
 
     var body: some View {
         GroupBox {
@@ -17,24 +16,24 @@ struct DirSetting: View,SuperLog {
                     if let diskSize = diskSize {
                         Text(diskSize)
                     }
-                    if let url = mountedURL, Config.isDesktop {
+                    if let url = audioManager.disk.getMountedURL(), Config.isDesktop {
                         BtnOpenFolder(url: url)
                             .labelStyle(.iconOnly)
                     }
                 }
                 .task {
-//                    if let disk = dataManager.disk.make("", verbose: true, reason: "DirSetting") {
-//                        diskSize = disk.getFileSizeReadable()
-//                    }
+                    if let disk = audioManager.disk.make("", verbose: true, reason: "DirSetting") {
+                        diskSize = disk.getFileSizeReadable()
+                    }
                 }
                 
-//                VStack(alignment: .leading) {
-//                    if dataManager.isiCloudDisk {
-//                        Text("是 iCloud 云盘目录，会保持同步")
-//                    } else {
-//                        Text("是本地目录，不会同步")
-//                    }
-//                }.font(.footnote)
+                VStack(alignment: .leading) {
+                    if audioManager.disk is DiskiCloud {
+                        Text("是 iCloud 云盘目录，会保持同步")
+                    } else {
+                        Text("是本地目录，不会同步")
+                    }
+                }.font(.footnote)
             }.padding(10)
         }.background(BackgroundView.type1.opacity(0.1))
         
@@ -63,8 +62,4 @@ struct DirSetting: View,SuperLog {
             .background(.background)
     }
         .frame(height: 1200)
-}
-
-#Preview {
-    DirSetting()
 }

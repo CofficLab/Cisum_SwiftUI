@@ -1,11 +1,14 @@
 import SwiftUI
 
 struct SettingView: View {
+    @EnvironmentObject var p: PluginProvider
+
     var body: some View {
         ScrollView {
             VStack {
-                DirSetting()
-                    .padding(.horizontal)
+                ForEach(p.plugins.indices) { index in
+                    p.plugins[index].addSettingView().padding(.horizontal)
+                }
                 
                 //CloudSetting().padding(.horizontal)
                 VersionSetting()

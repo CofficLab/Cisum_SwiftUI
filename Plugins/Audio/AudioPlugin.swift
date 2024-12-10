@@ -3,7 +3,7 @@ import MagicKit
 import OSLog
 import SwiftUI
 
-class AudioPlugin: SuperPlugin, SuperLog {    
+class AudioPlugin: SuperPlugin, SuperLog {
     static let keyOfCurrentAudioURL = "AudioPluginCurrentAudioURL"
     static let keyOfCurrentAudioTime = "AudioPluginCurrentAudioTime"
 
@@ -14,18 +14,22 @@ class AudioPlugin: SuperPlugin, SuperLog {
     let description: String = "作为歌曲仓库，只关注文件，文件夹将被忽略"
     var iconName: String = "music.note"
     var isGroup: Bool = true
-    let audioProvider = AudioProvider()
     lazy var db = RecordDB(AudioConfig.getContainer, reason: "AudioPlugin")
 
     var disk: (any SuperDisk)?
+    var audioProvider: AudioProvider?
 
     func addDBView() -> AnyView {
         guard let disk = self.disk else {
             return AnyView(EmptyView())
         }
-        
+
+        guard let audioProvider = self.audioProvider else {
+            return AnyView(EmptyView())
+        }
+
         let fileDB = AudioDB(db: self.db, disk: disk)
-        
+
         return AnyView(AudioDBView()
             .environmentObject(fileDB)
             .environmentObject(audioProvider)
@@ -36,8 +40,20 @@ class AudioPlugin: SuperPlugin, SuperLog {
         AnyView(AudioPoster())
     }
 
+    func addSettingView() -> AnyView? {
+        guard let audioProvider = self.audioProvider else {
+            return nil
+        }
+
+        return AnyView(AudioSettings().environmentObject(audioProvider))
+    }
+
     func addStateView() -> AnyView? {
-        AnyView(AudioStateView().environmentObject(audioProvider))
+        guard let audioProvider = self.audioProvider else {
+            return nil
+        }
+
+        return AnyView(AudioStateView().environmentObject(audioProvider))
     }
 
     func addToolBarButtons() -> [(id: String, view: AnyView)] {
@@ -51,6 +67,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
     func onInit() {
         os_log("\(self.t)onInit")
         self.disk = DiskiCloud.make(self.dirName, verbose: true, reason: "AudioPlugin.onInit")
+        self.audioProvider = AudioProvider(disk: disk!)
     }
 
     func onPause(playMan: PlayMan) {
@@ -62,7 +79,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
     func onPlay() {
     }
 
-    func onPlayAssetUpdate(asset: PlayAsset?) async throws -> Void {
+    func onPlayAssetUpdate(asset: PlayAsset?) async throws {
         AudioPlugin.storeCurrent(asset?.url)
         if let asset = asset, asset.isNotDownloaded {
             do {
@@ -96,7 +113,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
         os_log("\(self.t)OnPlayPrev")
         let asset = await self.db.getPrevOf(current?.url, verbose: false)
         if let asset = asset {
-            await playMan.play(PlayAsset(url: asset.url), reason: "OnPlayPrev", verbose: true)
+            playMan.play(PlayAsset(url: asset.url), reason: "OnPlayPrev", verbose: true)
         } else {
             throw AudioPluginError.NoPrevAsset
         }
@@ -109,7 +126,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
 
         let asset = await self.db.getNextOf(current?.url, verbose: false)
         if let asset = asset {
-            await playMan.play(PlayAsset(url: asset.url), reason: "OnPlayNext", verbose: true)
+            playMan.play(PlayAsset(url: asset.url), reason: "OnPlayNext", verbose: true)
         } else {
             throw AudioPluginError.NoNextAsset
         }
