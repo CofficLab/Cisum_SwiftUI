@@ -4,8 +4,8 @@
 
 把音频文件放进去，让 Cisum 为你播放和管理。
 
-![Cisum](./docs/music-library-7.png)
-![Cisum](./docs/music-library-8.png)
+![Cisum](./docs/feature-1.png)
+![Cisum](./docs/feature-2.png)
 
 ## 关于
 

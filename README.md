@@ -4,8 +4,8 @@
 
 Drop your audio files in, and let Cisum play and manage them for you.
 
-![Cisum](./docs/music-library-5.png)
-![Cisum](./docs/music-library-6.png)
+![Cisum](./docs/feature-3.png)
+![Cisum](./docs/feature-4.png)
 
 ## About
 
