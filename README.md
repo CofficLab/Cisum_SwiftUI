@@ -4,10 +4,8 @@
 
 Drop your audio files in, and let Cisum play and manage them for you.
 
-<div style="overflow-x: scroll; white-space: nowrap;">
-    <img src="./docs/p2.min.png"  height="600" style="display: inline-block; margin-right: 10px;" />
-    <img src="./docs/p1.png" style="display: inline-block; margin-right: 10px;" />
-</div>
+![Cisum](./docs/music-library-5.png)
+![Cisum](./docs/music-library-6.png)
 
 ## About
 
