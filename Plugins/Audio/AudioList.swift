@@ -32,9 +32,27 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     }
 
     var body: some View {
-        List(audios, id: \.url, selection: $selection) { audio in
-            AudioTile(audio: audio)
-                .tag(audio.url as URL?)
+        List(selection: $selection) {
+            Section(header: HStack {
+                Text("共 \(total.description)")
+                Spacer()
+                if audioManager.isSyncing {
+                    HStack {
+                        Image(systemName: "arrow.triangle.2.circlepath")
+                        Text("正在读取仓库")
+                    }
+                }
+                if Config.isNotDesktop {
+                    BtnAdd()
+                        .font(.title2)
+                        .labelStyle(.iconOnly)
+                }
+            }, content: {
+                ForEach(audios, id: \.url) { audio in
+                    AudioTile(audio: audio)
+                        .tag(audio.url as URL?)
+                }
+            })
         }
         .listStyle(.plain)
         .onAppear(perform: handleOnAppear)
