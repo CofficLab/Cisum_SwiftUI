@@ -14,7 +14,7 @@ class AudioProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
     let disk: (any SuperDisk)
 
     @Published var files: [DiskFile] = []
-    @Published var isSyncing: Bool = true
+    @Published var isSyncing: Bool = false
 
     init(disk: any SuperDisk) {
         self.disk = disk

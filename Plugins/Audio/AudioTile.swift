@@ -6,6 +6,9 @@ struct AudioTile: View {
     @EnvironmentObject private var playMan: PlayMan
 
     @State private var hovered = false
+    @State private var showAvatar = false
+    @State private var showMeta = false
+    @State private var showHoverButtons = false
 
     let audio: AudioModel
 
@@ -27,7 +30,7 @@ struct AudioTile: View {
                 Spacer()
             }
 
-            if hovered {
+            if hovered && showHoverButtons {
                 HStack {
                     Spacer()
                     hoverButtons
@@ -44,17 +47,23 @@ struct AudioTile: View {
 
     private var audioInfo: some View {
         HStack {
-            AudioAvatar(asset).frame(width: 36, height: 36)
+            if self.showAvatar {
+                AudioAvatar(asset).frame(width: 36, height: 36)
+            }
+
             VStack(alignment: .leading, spacing: 0) {
                 Text(audio.fileName)
-                HStack {
-                    Text(audio.getFileSizeReadable())
-                    if audio.like {
-                        Image(systemName: "star.fill")
+
+                if self.showMeta {
+                    HStack {
+                        Text(audio.getFileSizeReadable())
+                        if audio.like {
+                            Image(systemName: "star.fill")
+                        }
                     }
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
                 }
-                .font(.footnote)
-                .foregroundStyle(.secondary)
             }
         }
     }

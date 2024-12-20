@@ -6,9 +6,7 @@ struct BtnEvict: View {
 
     var asset: PlayAsset
     var inUse: Bool { asset.url == playMan.asset?.url }
-    var title: String {
-        inUse ? "移除下载项[正在使用，不能移除]" : "移除下载项"
-    }
+    var title = "移除下载项"
         
     var body: some View {
         Button {

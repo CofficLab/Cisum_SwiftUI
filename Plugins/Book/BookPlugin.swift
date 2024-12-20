@@ -33,7 +33,6 @@ class BookPlugin: SuperPlugin, SuperLog {
         }
         
         guard let bookProvider = self.bookProvider else {
-            #warning("bookProvider is nil")
             return AnyView(EmptyView())
         }
 

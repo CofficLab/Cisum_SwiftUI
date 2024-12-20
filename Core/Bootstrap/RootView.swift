@@ -128,14 +128,9 @@ extension RootView {
 
                 Config.getPlugins().forEach({
                     self.p.append($0)
-                    $0.onInit()
                 })
 
                 self.p.restoreCurrent()
-
-                if p.current == nil {
-                    p.current = p.plugins.first
-                }
 
                 for plugin in p.plugins {
                     plugin.onAppear(playMan: man, currentGroup: p.current)

@@ -82,7 +82,7 @@ struct AudioList: View, SuperThread, SuperLog {
 extension AudioList {
     func handleAudioDeleted(_ notification: Notification) {
         Task {
-            self.audios = await db.allAudios()
+            self.audios = await db.allAudios(reason: self.className + ".handleAudioDeleted")
         }
     }
 
@@ -92,7 +92,7 @@ extension AudioList {
         }
 
         Task {
-            self.audios = await db.allAudios()
+            self.audios = await db.db.randomAudios(reason: self.className + ".handleOnAppear")
         }
     }
 

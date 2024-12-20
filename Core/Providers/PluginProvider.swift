@@ -9,8 +9,8 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
     static let keyOfCurrentPluginID = "currentPluginID"
     let emoji = "🧩"
 
-    @Published var plugins: [SuperPlugin] = []
-    @Published var current: SuperPlugin?
+    @Published private(set) var plugins: [SuperPlugin] = []
+    @Published private(set) var current: SuperPlugin?
 
     init() {
         os_log("\(Logger.initLog) PluginProvider")
@@ -32,9 +32,12 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
     }
 
     func setCurrentGroup(_ plugin: SuperPlugin) throws {
+        os_log("\(self.t)setCurrentGroup: \(plugin.id)")
+
         if plugin.isGroup {
             self.current = plugin
             Self.storeCurrent(plugin)
+            self.current?.onInit()
         } else {
             throw PluginProviderError.PluginIsNotGroup(plugin: plugin)
         }
@@ -44,7 +47,9 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
         let currentPluginId = Self.getPluginId()
 
         if let plugin = plugins.first(where: { $0.id == currentPluginId }) {
-            self.current = plugin
+            try? self.setCurrentGroup(plugin)
+        } else if let first = plugins.first(where: { $0.isGroup }) {
+            try? self.setCurrentGroup(first)
         }
     }
 

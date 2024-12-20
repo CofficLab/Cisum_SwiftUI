@@ -73,6 +73,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
 
     func onInit() {
         os_log("\(self.t)onInit")
+        
         self.disk = DiskiCloud.make(self.dirName, verbose: true, reason: "AudioPlugin.onInit")
         self.audioDB = AudioDB(db: self.db, disk: disk!)
         self.audioProvider = AudioProvider(disk: disk!)

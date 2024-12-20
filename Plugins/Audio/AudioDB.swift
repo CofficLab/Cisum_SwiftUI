@@ -16,12 +16,12 @@ class AudioDB: ObservableObject, SuperEvent {
         }
         
         Task {
-            await disk.watch(reason: "AudioDB.init", verbose: true)
+//            await disk.watch(reason: "AudioDB.init", verbose: true)
         }
     }
     
-    func allAudios() async -> [AudioModel] {
-        (await self.db.allAudios()).map { audio in
+    func allAudios(reason: String) async -> [AudioModel] {
+        (await self.db.allAudios(reason: reason)).map { audio in
             audio.setDB(self)
             return audio
         }
