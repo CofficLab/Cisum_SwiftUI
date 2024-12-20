@@ -36,7 +36,7 @@ struct ErrorViewCloud: View, SuperLog, SuperThread {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(BackgroundView.forest)
+        .background(.background.opacity(0.8))
     }
 
     var debugView: some View {

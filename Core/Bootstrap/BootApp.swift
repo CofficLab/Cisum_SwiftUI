@@ -27,11 +27,10 @@ struct BootApp: App {
             }
         #else
             WindowGroup {
-                BootView {
+                RootView {
                     ContentView()
                 }
             }
-            .modelContainer(Config.getContainer)
         #endif
     }
 }
