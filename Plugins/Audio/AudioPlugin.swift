@@ -6,7 +6,7 @@ import SwiftUI
 class AudioPlugin: SuperPlugin, SuperLog {
     static let keyOfCurrentAudioURL = "AudioPluginCurrentAudioURL"
     static let keyOfCurrentAudioTime = "AudioPluginCurrentAudioTime"
-
+    static let keyOfCurrentPlayMode = "AudioPluginCurrentPlayMode"
     let emoji = "🎺"
     let dirName = "audios"
     let label: String = "Audio"
@@ -104,12 +104,21 @@ class AudioPlugin: SuperPlugin, SuperLog {
         }
     }
 
+    func onPlayModeChange(mode: PlayMode) {
+        AudioPlugin.storePlayMode(mode)
+    }
+
     func onAppear(playMan: PlayMan, currentGroup: SuperPlugin?) {
         if currentGroup?.id != self.id {
             return
         }
         
         os_log("\(self.t)onAppear")
+
+        let mode = AudioPlugin.getPlayMode()
+        if let mode = mode {
+            playMan.setMode(mode, reason: self.className + ".OnAppear")
+        }
 
         Task { @MainActor in
             if let url = AudioPlugin.getCurrent(), let audio = await self.audioDB?.find(url) {
@@ -140,8 +149,10 @@ class AudioPlugin: SuperPlugin, SuperLog {
             return
         }
         
+        let mode = playMan.mode
+        
         if verbose {
-            os_log("\(self.t)OnPlayNext")
+            os_log("\(self.t)OnPlayNext with mode \(mode.description)")
         }
 
         let asset = try await self.db.getNextOf(current?.url, verbose: false)
@@ -156,6 +167,14 @@ class AudioPlugin: SuperPlugin, SuperLog {
 // MARK: Store
 
 extension AudioPlugin {
+    static func storePlayMode(_ mode: PlayMode) {
+        UserDefaults.standard.set(mode.rawValue, forKey: keyOfCurrentPlayMode)
+
+        // Store mode as string for CloudKit
+        NSUbiquitousKeyValueStore.default.set(mode.description, forKey: keyOfCurrentPlayMode)
+        NSUbiquitousKeyValueStore.default.synchronize()
+    }
+
     static func storeCurrent(_ url: URL?) {
         UserDefaults.standard.set(url, forKey: keyOfCurrentAudioURL)
 
@@ -170,6 +189,21 @@ extension AudioPlugin {
         // Store time as string for CloudKit
         NSUbiquitousKeyValueStore.default.set(String(time), forKey: keyOfCurrentAudioTime)
         NSUbiquitousKeyValueStore.default.synchronize()
+    }
+    
+    static func getPlayMode() -> PlayMode? {
+        // First, try to get the mode from UserDefaults
+        if let mode = UserDefaults.standard.string(forKey: keyOfCurrentPlayMode) {
+            return PlayMode(rawValue: mode)
+        }
+
+        // If not found in UserDefaults, try to get from iCloud
+        if let modeString = NSUbiquitousKeyValueStore.default.string(forKey: keyOfCurrentPlayMode),
+           let mode = PlayMode(rawValue: modeString) {
+            return mode
+        }
+
+        return nil
     }
 
     static func getCurrent() -> URL? {

@@ -10,24 +10,13 @@ struct BtnMode: View {
     var body: some View {
         ControlButton(
             title: "模式",
-            image: getImageName(),
+            image: playMan.mode.getImageName(),
             dynamicSize: autoResize,
             onTap: {
                 playMan.switchMode()
-                messageManager.toast("\(playMan.getMode().description)")
+                messageManager.toast("\(playMan.mode.description)")
             })
         .foregroundStyle(.white)
-    }
-
-    private func getImageName() -> String {
-        switch playMan.getMode() {
-        case .Order:
-            return "repeat"
-        case .Loop:
-            return "repeat.1"
-        case .Random:
-            return "shuffle"
-        }
     }
 }
 

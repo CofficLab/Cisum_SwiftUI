@@ -100,6 +100,10 @@ class BookPlugin: SuperPlugin, SuperLog {
         }
     }
 
+    func onPlayModeChange(mode: PlayMode) {
+
+    }
+
     func onPlayAssetUpdate(asset: PlayAsset?, currentGroup: SuperPlugin?) async throws {
         if currentGroup?.id != self.id {
             return

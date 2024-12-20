@@ -29,4 +29,15 @@ enum PlayMode: String {
 
         return mode
     }
+    
+    func getImageName() -> String {
+        switch self {
+        case .Order:
+            return "repeat"
+        case .Loop:
+            return "repeat.1"
+        case .Random:
+            return "shuffle"
+        }
+    }
 }

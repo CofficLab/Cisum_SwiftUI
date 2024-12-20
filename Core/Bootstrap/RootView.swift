@@ -182,6 +182,8 @@ extension RootView {
     }
 }
 
+// MARK: PlayManDelegate
+
 extension RootView: PlayManDelegate {
     func onPlayPrev(current: PlayAsset?) {
         Task {
@@ -195,13 +197,19 @@ extension RootView: PlayManDelegate {
         }
     }
 
-    func onPlayNext(current: PlayAsset?) async {
+    func onPlayNext(current: PlayAsset?, mode: PlayMode) async {
         for plugin in p.plugins {
             do {
                 try await plugin.onPlayNext(playMan: man, current: current, currentGroup: p.current, verbose: true)
             } catch let e {
                 m.alert(e.localizedDescription)
             }
+        }
+    }
+
+    func onPlayModeChange(mode: PlayMode) {
+        for plugin in p.plugins {
+            plugin.onPlayModeChange(mode: mode)
         }
     }
 }

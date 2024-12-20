@@ -12,8 +12,6 @@ import SwiftUI
  */
 
 class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread, AudioWorkerDelegate {
-    // MARK: 成员
-
     static var label = "💃 PlayMan::"
     #if os(macOS)
         static var defaultImage = NSImage(named: "DefaultAlbum")!
@@ -22,10 +20,10 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread, AudioWorkerDel
         static var defaultImage = UIImage(imageLiteralResourceName: "DefaultAlbum")
     #endif
 
-    @Published var asset: PlayAsset?
-    @Published var playing: Bool = false
-    @Published var mode: PlayMode = .Order
-    @Published var error: PlayManError? = nil
+    @Published private(set) var asset: PlayAsset?
+    @Published private(set) var playing: Bool = false
+    @Published private(set) var mode: PlayMode = .Order
+    @Published private(set) var error: PlayManError? = nil
 
     let emoji = "💃"
     var delegate: PlayManDelegate?
@@ -57,8 +55,6 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread, AudioWorkerDel
         DateComponentsFormatter.positional.string(from: leftTime) ?? "0:00"
     }
 
-    // MARK: 初始化
-
     init(verbose: Bool = true, delegate: PlayManDelegate?) {
         super.init()
 
@@ -69,28 +65,16 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread, AudioWorkerDel
             onCommand()
         }
     }
-}
+    
+    func pause(verbose: Bool) throws {
+        if verbose {
+            os_log("\(self.t)Pause ⏸️⏸️⏸️")
+        }
 
-// MARK: 播放模式
-
-extension PlayMan {
-    func switchMode(verbose: Bool = true) {
-        mode = mode.switchMode()
+        try self.worker.pause(verbose: verbose)
+        self.playing = false
     }
-}
-
-// MARK: 播放控制
-
-extension PlayMan {
-    func toggleLike() {
-        self.asset?.like.toggle()
-    }
-
-    func seek(_ to: TimeInterval) {
-        self.worker.goto(to)
-        setPlayingInfo()
-    }
-
+    
     @MainActor
     func play(_ asset: PlayAsset? = nil, reason: String = "", verbose: Bool) {
         if !Thread.isMainThread {
@@ -141,14 +125,32 @@ extension PlayMan {
             return
         }
     }
+    
+    func seek(_ to: TimeInterval) {
+        self.worker.goto(to)
+        setPlayingInfo()
+    }
 
-    func pause(verbose: Bool) throws {
+    func switchMode(verbose: Bool = true) {
+        mode = mode.switchMode()
+        self.delegate?.onPlayModeChange(mode: mode)
+    }
+    
+    func setMode(_ mode: PlayMode, reason: String) {
         if verbose {
-            os_log("\(self.t)Pause ⏸️⏸️⏸️")
+            os_log("\(self.t)SetMode 🐛 \(reason)")
+        }
+        
+        if self.mode == mode {
+            return
         }
 
-        try self.worker.pause(verbose: verbose)
-        self.playing = false
+        self.mode = mode
+        self.delegate?.onPlayModeChange(mode: mode)
+    }
+
+    func toggleLike() {
+        self.asset?.like.toggle()
     }
 
     func stop(reason: String, verbose: Bool) {
@@ -173,19 +175,7 @@ extension PlayMan {
     }
 
     func next() async {
-        await self.delegate?.onPlayNext(current: self.asset)
-    }
-
-    func setMode(_ mode: PlayMode) {
-        if self.mode == mode {
-            return
-        }
-
-        self.mode = mode
-    }
-
-    func getMode() -> PlayMode {
-        self.mode
+        await self.delegate?.onPlayNext(current: self.asset, mode: mode)
     }
 }
 
