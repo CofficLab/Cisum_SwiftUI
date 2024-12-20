@@ -43,16 +43,16 @@ struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
 
     var body: some View {
         ZStack {
-            VStack {
-                AudioList(verbose: false, reason: self.className)
-                    .frame(maxHeight: .infinity)
-
-                AudioTask()
-                    .shadow(radius: 10)
-            }
-
             if loading {
                 ProgressView()
+            } else {
+                VStack {
+                    AudioList(verbose: false, reason: self.className)
+                        .frame(maxHeight: .infinity)
+
+                    AudioTask()
+                        .shadow(radius: 10)
+                }
             }
 
             if showTips {

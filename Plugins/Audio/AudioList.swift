@@ -34,34 +34,52 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     }
 
     var body: some View {
-        List(selection: $selection) {
-            Section(header: HStack {
-                Text("共 \(total.description)")
-                Spacer()
-                if audioManager.isSyncing {
-                    HStack {
-                        Image(systemName: "arrow.triangle.2.circlepath")
-                        Text("正在读取仓库")
-                    }
-                }
+        Group {
+            if isSorting {
+                VStack(spacing: 0) {
+                    Spacer()
 
-                if isSorting {
+                    Image(systemName: sortMode.icon)
+                        .font(.system(size: 40))
+                        .foregroundStyle(.tint)
+                        .rotationEffect(.degrees(360))
+                        .animation(.linear(duration: 2).repeatForever(autoreverses: false), value: isSorting)
+
                     Text(sortMode.description)
-                }
+                        .font(.headline)
+                        .foregroundStyle(.secondary)
+                        .padding(.top, 24)
 
-                if Config.isNotDesktop {
-                    BtnAdd()
-                        .font(.title2)
-                        .labelStyle(.iconOnly)
+                    Spacer()
                 }
-            }, content: {
-                ForEach(assets, id: \.url) { a in
-                    AudioTile(asset: a)
-                        .tag(a.url as URL?)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                List(selection: $selection) {
+                    Section(header: HStack {
+                        Text("共 \(total.description)")
+                        Spacer()
+                        if audioManager.isSyncing {
+                            HStack {
+                                Image(systemName: "arrow.triangle.2.circlepath")
+                                Text("正在读取仓库")
+                            }
+                        }
+
+                        if Config.isNotDesktop {
+                            BtnAdd()
+                                .font(.title2)
+                                .labelStyle(.iconOnly)
+                        }
+                    }, content: {
+                        ForEach(assets, id: \.url) { a in
+                            AudioTile(asset: a)
+                                .tag(a.url as URL?)
+                        }
+                    })
                 }
-            })
+                .listStyle(.plain)
+            }
         }
-        .listStyle(.plain)
         .onAppear(perform: handleOnAppear)
         .onChange(of: selection, handleSelectionChange)
         .onChange(of: playMan.asset, handlePlayAssetChange)
@@ -139,6 +157,14 @@ extension AudioList {
 extension AudioList {
     enum SortMode: String {
         case random, order, none
+        
+        var icon: String {
+            switch self {
+            case .random: return "shuffle"
+            case .order: return "arrow.up.arrow.down"
+            case .none: return "arrow.triangle.2.circlepath"
+            }
+        }
 
         var description: String {
             switch self {
