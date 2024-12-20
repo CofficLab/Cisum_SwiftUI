@@ -104,7 +104,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
         }
     }
 
-    func onPlayModeChange(mode: PlayMode) throws {
+    func onPlayModeChange(mode: PlayMode, asset: PlayAsset?) throws {
         AudioPlugin.storePlayMode(mode)
         
         // Use weak self to avoid retain cycles
@@ -115,9 +115,9 @@ class AudioPlugin: SuperPlugin, SuperLog {
             case .Loop:
                 break
             case .Order:
-                try await self.db.sort(nil as AudioModel?, reason: self.className + ".OnPlayModeChange")
+                await self.db.sort(asset?.url, reason: self.className + ".OnPlayModeChange")
             case .Random:
-                try await self.db.sortRandom(nil as AudioModel?, reason: self.className + ".OnPlayModeChange", verbose: true)
+                try await self.db.sortRandom(asset?.url, reason: self.className + ".OnPlayModeChange", verbose: true)
             }
         }
     }

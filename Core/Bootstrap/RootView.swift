@@ -210,7 +210,7 @@ extension RootView: PlayManDelegate {
     func onPlayModeChange(mode: PlayMode) {
         for plugin in p.plugins {
             do {
-                try plugin.onPlayModeChange(mode: mode)
+                try plugin.onPlayModeChange(mode: mode, asset: man.asset)
             } catch let e {
                 m.error(e)
             }
