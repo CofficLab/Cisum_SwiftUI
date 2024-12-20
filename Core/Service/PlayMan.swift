@@ -263,12 +263,10 @@ extension PlayMan {
         }
 
         switch mode {
-        case .Order:
+        case .Order, .Random:
             await self.next()
         case .Loop:
             await self.play(verbose: verbose)
-        case .Random:
-            break
         }
     }
 

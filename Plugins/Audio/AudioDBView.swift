@@ -5,7 +5,7 @@ import SwiftData
 import SwiftUI
 import UniformTypeIdentifiers
 
-struct AudioDBView: View, SuperLog, SuperThread {
+struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var data: DataProvider
     @EnvironmentObject var messageManager: MessageProvider
@@ -45,12 +45,14 @@ struct AudioDBView: View, SuperLog, SuperThread {
 
     var body: some View {
         ZStack {
-            VStack {
-                AudioList(verbose: false, reason: self.className)
-                    .frame(maxHeight: .infinity)
+            if !isSorting {
+                VStack {
+                    AudioList(verbose: false, reason: self.className)
+                        .frame(maxHeight: .infinity)
 
-                AudioTask()
-                    .shadow(radius: 10)
+                    AudioTask()
+                        .shadow(radius: 10)
+                }
             }
 
             if isSorting {
@@ -75,8 +77,8 @@ struct AudioDBView: View, SuperLog, SuperThread {
             allowsMultipleSelection: true,
             onCompletion: handleFileImport
         )
-        .onReceive(NotificationCenter.default.publisher(for: .DBSorting), perform: onSorting)
-        .onReceive(NotificationCenter.default.publisher(for: .DBSortDone), perform: onSortDone)
+        .onReceive(nc.publisher(for: .DBSorting), perform: onSorting)
+        .onReceive(nc.publisher(for: .DBSortDone), perform: onSortDone)
         .onDrop(of: [UTType.fileURL], isTargeted: self.$isDropping, perform: onDrop)
         .task {
             self.count = await db.getTotalCount()

@@ -122,7 +122,10 @@ extension AudioRecordDB {
 
     func emitSortDone() {
         os_log("\(self.t)emitSortDone")
-        NotificationCenter.default.post(name: .DBSortDone, object: nil)
+
+        self.main.async {
+            self.emit(name: .DBSortDone, object: nil)
+        }
     }
 
     func emitSorting(_ mode: String) {
@@ -132,7 +135,9 @@ extension AudioRecordDB {
             os_log("\(self.t)emitSorting")
         }
 
-        NotificationCenter.default.post(name: .DBSorting, object: nil, userInfo: ["mode": mode])
+        self.main.async {
+            self.emit(name: .DBSorting, object: nil, userInfo: ["mode": mode])
+        }
     }
 
     func evict(_ url: URL) {
@@ -359,38 +364,31 @@ extension AudioRecordDB {
         }
     }
 
-    func sortRandom(_ sticky: AudioModel?, reason: String) {
-        let verbose = true
-
+    func sortRandom(_ sticky: AudioModel?, reason: String, verbose: Bool) throws {
         if verbose {
             os_log("\(self.t)SortRandom with sticky: \(sticky?.title ?? "nil") with reason: \(reason)")
         }
 
         emitSorting("random")
 
-        do {
-            try context.enumerate(FetchDescriptor<AudioModel>(), block: {
-                if $0 == sticky {
-                    $0.order = 0
-                } else {
-                    $0.randomOrder()
-                }
-            })
+        try context.enumerate(FetchDescriptor<AudioModel>(), block: {
+            if $0 == sticky {
+                $0.order = 0
+            } else {
+                $0.randomOrder()
+            }
+        })
 
-            try context.save()
-            onUpdated()
-            emitSortDone()
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-            emitSortDone()
-        }
+        try context.save()
+        
+        onUpdated()
     }
 
-    func sortRandom(_ url: URL?, reason: String) {
+    func sortRandom(_ url: URL?, reason: String, verbose: Bool) throws {
         if let url = url {
-            sortRandom(findAudio(url), reason: reason)
+            try sortRandom(findAudio(url), reason: reason, verbose: verbose)
         } else {
-            sortRandom(nil as AudioModel?, reason: reason)
+            try sortRandom(nil as AudioModel?, reason: reason, verbose: verbose)
         }
     }
 
