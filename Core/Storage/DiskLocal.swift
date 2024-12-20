@@ -34,21 +34,13 @@ class DiskLocal: ObservableObject, SuperDisk {
     func getTotal() -> Int {
         0
     }
-}
 
-// MARK: Next
-
-extension DiskLocal {
     func next(_ url: URL) -> DiskFile? {
         let diskFile = DiskFile(url: url)
         
         return diskFile.nextDiskFile()
     }
-}
 
-// MARK: Delete
-
-extension DiskLocal {
     func deleteFiles(_ urls: [URL]) {
     }
     
@@ -78,11 +70,7 @@ extension DiskLocal {
         
         try? fileManager.removeItem(at: url)
     }
-}
 
-// MARK: Copy
-
-extension DiskLocal {
     func copyTo(url: URL, reason: String) throws {
         let verbose = true
         if verbose {
@@ -119,31 +107,19 @@ extension DiskLocal {
             throw error
         }
     }
-}
 
-// MARK: Evit
-
-extension DiskLocal {
     func evict(_ url: URL) {
         return
     }
-}
 
-// MARK: Download
-
-extension DiskLocal {
     func getDownloadingCount() -> Int {
         return 0
     }
     
-    func download(_ url: URL, reason: String) {
+    func download(_ url: URL, reason: String, verbose: Bool) {
         return
     }
-}
 
-// MARK: Watch
-
-extension DiskLocal {
     func stopWatch(reason: String) {
         
     }
@@ -161,11 +137,7 @@ extension DiskLocal {
             self.onUpdated(.fromURLs(presenter.getFiles(), isFullLoad: true, disk: self))
         }
     }
-}
 
-// MARK: Move
-
-extension DiskLocal {
     func moveFile(at sourceURL: URL, to destinationURL: URL) async {
         do {
             try fileManager.moveItem(at: sourceURL, to: destinationURL)
@@ -173,11 +145,7 @@ extension DiskLocal {
             os_log(.error, "\(e.localizedDescription)")
         }
     }
-}
 
-// MARK: MakeURL
-
-extension DiskLocal {
     func makeURL(_ fileName: String) -> URL {
         self.root.appending(component: fileName)
     }

@@ -108,10 +108,12 @@ class AudioPlugin: SuperPlugin, SuperLog {
         if currentGroup?.id != self.id {
             return
         }
+        
+        os_log("\(self.t)onAppear")
 
         Task { @MainActor in
             if let url = AudioPlugin.getCurrent(), let audio = await self.audioDB?.find(url) {
-                playMan.play(audio.toPlayAsset(), reason: "OnAppear", verbose: true)
+                playMan.play(audio.toPlayAsset(), reason: self.className + ".OnAppear", verbose: true)
 
                 if let time = AudioPlugin.getCurrentTime() {
                     playMan.seek(time)

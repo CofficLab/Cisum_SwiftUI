@@ -188,9 +188,7 @@ extension DiskiCloud {
         }
     }
 
-    func download(_ url: URL, reason: String) async throws {
-        let verbose = true
-
+    func download(_ url: URL, reason: String, verbose: Bool = false) async throws {
         if verbose {
             os_log("\(self.label)Download ⏬⏬⏬ \(url.lastPathComponent)")
             os_log("   ➡️ Reason: \(reason)")

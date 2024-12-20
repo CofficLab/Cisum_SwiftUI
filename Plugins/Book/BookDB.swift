@@ -46,7 +46,7 @@ class BookDB: ObservableObject, SuperEvent, SuperLog {
     }
     
     func download(_ book: Book, verbose: Bool) async throws {
-        try await self.disk.download(book.url, reason: "BookDB.download")
+        try await self.disk.download(book.url, reason: "BookDB.download", verbose: verbose)
     }
     
     func find(_ url: URL) async -> Book? {

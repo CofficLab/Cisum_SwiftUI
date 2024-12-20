@@ -11,12 +11,11 @@ protocol SuperDisk: FileBox {
 
     func clearFolderContents(atPath path: String)
 
-    /// 删除一个文件
     func deleteFile(_ url: URL)
 
     func deleteFiles(_ urls: [URL])
     
-    func download(_ url: URL, reason: String) async throws
+    func download(_ url: URL, reason: String, verbose: Bool) async throws
 
     /// 移除下载
     func evict(_ url: URL)
@@ -62,7 +61,7 @@ extension SuperDisk {
                 var currentURL: URL = url
 
                 while currentIndex < count {
-                    try await download(currentURL, reason: "downloadNext 🐛 \(reason)")
+                    try await download(currentURL, reason: "downloadNext 🐛 \(reason)", verbose: false)
 
                     currentIndex = currentIndex + 1
                     if let next = self.next(currentURL) {

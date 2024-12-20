@@ -34,7 +34,7 @@ class AudioDB: ObservableObject, SuperEvent {
     }
     
     func download(_ audio: AudioModel, verbose: Bool) async throws {
-        try await self.disk.download(audio.url, reason: "AudioDB.download")
+        try await self.disk.download(audio.url, reason: "AudioDB.download", verbose: verbose)
     }
     
     func find(_ url: URL) async -> AudioModel? {

@@ -104,7 +104,6 @@ class iCloudHelper: SuperLog, SuperThread {
 
             // 首先检查 ubiquitousItemIsDownloadingKey
             if let isDownloading = values.ubiquitousItemIsDownloading, isDownloading {
-                os_log("\(Self.label)File is currently downloading: \(url.lastPathComponent)")
                 return true
             }
 
