@@ -16,7 +16,7 @@ class AudioDB: ObservableObject, SuperEvent {
         }
         
         Task {
-//            await disk.watch(reason: "AudioDB.init", verbose: true)
+            await disk.watch(reason: "AudioDB.init", verbose: true)
         }
     }
     
