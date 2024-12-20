@@ -20,7 +20,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
     var audioProvider: AudioProvider?
     var audioDB: AudioDB?
 
-    func addDBView() -> AnyView {
+    func addDBView(reason: String) -> AnyView {
         guard let disk = self.disk else {
             return AnyView(EmptyView())
         }
@@ -33,7 +33,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
             return AnyView(EmptyView())
         }
 
-        return AnyView(AudioDBView()
+        return AnyView(AudioDBView(verbose: false, reason: reason)
             .environmentObject(audioDB)
             .environmentObject(audioProvider)
         )
@@ -126,7 +126,8 @@ class AudioPlugin: SuperPlugin, SuperLog {
 
     func onPlayPrev(playMan: PlayMan, current: PlayAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws {
         os_log("\(self.t)OnPlayPrev")
-        let asset = await self.db.getPrevOf(current?.url, verbose: false)
+        let asset = try await self.db.getPrevOf(current?.url, verbose: false)
+        
         if let asset = asset {
             await playMan.play(PlayAsset(url: asset.url), reason: "OnPlayPrev", verbose: true)
         } else {
@@ -143,7 +144,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
             os_log("\(self.t)OnPlayNext")
         }
 
-        let asset = await self.db.getNextOf(current?.url, verbose: false)
+        let asset = try await self.db.getNextOf(current?.url, verbose: false)
         if let asset = asset {
             await playMan.play(PlayAsset(url: asset.url), reason: "OnPlayNext", verbose: true)
         } else {

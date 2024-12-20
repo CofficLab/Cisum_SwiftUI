@@ -12,30 +12,6 @@ class AudioModel: FileBox {
     static var label = "🪖 Audio::"
     static var verbose = false
 
-    // MARK: Descriptor
-
-    static var descriptorAll = FetchDescriptor(predicate: #Predicate<AudioModel> { _ in
-        true
-    }, sortBy: [
-        SortDescriptor(\.order, order: .forward),
-    ])
-
-    static var descriptorNotFolder = FetchDescriptor(predicate: predicateNotFolder, sortBy: [
-        SortDescriptor(\.order, order: .forward),
-    ])
-
-    static var predicateNotFolder = #Predicate<AudioModel> { audio in
-        audio.isFolder == false
-    }
-
-    static var descriptorFirst: FetchDescriptor<AudioModel> {
-        var descriptor = AudioModel.descriptorAll
-        descriptor.sortBy.append(.init(\.order, order: .forward))
-        descriptor.fetchLimit = 1
-
-        return descriptor
-    }
-
     @Transient let fileManager = FileManager.default
     @Transient var db: AudioDB?
 
@@ -148,7 +124,7 @@ extension AudioModel: PlaySource {
             throw AudioModelError.dbNotFound
         }
 
-        await db.delete(self, verbose: true)
+        try await db.delete(self, verbose: true)
     }
 
     func download() async throws {
@@ -171,6 +147,64 @@ enum AudioModelError: Error, LocalizedError {
         case .dbNotFound:
             return "AudioModel: DB not found"
         }
+    }
+}
+
+// MARK: Descriptor
+
+extension AudioModel {
+    
+    static var descriptorOrderAsc: FetchDescriptor<AudioModel> {
+        var descriptor = FetchDescriptor<AudioModel>()
+        descriptor.sortBy.append(.init(\.order, order: .forward))
+        return descriptor
+    }
+
+    static var descriptorOrderDesc: FetchDescriptor<AudioModel> {
+        var descriptor = FetchDescriptor<AudioModel>()
+        descriptor.sortBy.append(.init(\.order, order: .reverse))
+        return descriptor
+    }
+
+    static var descriptorFirst: FetchDescriptor<AudioModel> {
+        var descriptor = FetchDescriptor<AudioModel>()
+        descriptor.sortBy.append(.init(\.order, order: .forward))
+        descriptor.fetchLimit = 1
+        return descriptor
+    }
+
+    static func descriptorPrev(order: Int) -> FetchDescriptor<AudioModel> {
+        var descriptor = FetchDescriptor<AudioModel>()
+        descriptor.sortBy.append(.init(\.order, order: .reverse))
+        descriptor.fetchLimit = 1
+        descriptor.predicate = #Predicate {
+            $0.order < order
+        }
+        return descriptor
+    }
+
+    static func descriptorNext(order: Int) -> FetchDescriptor<AudioModel> {
+        var descriptor = FetchDescriptor<AudioModel>()
+        descriptor.sortBy.append(.init(\.order, order: .forward))
+        descriptor.fetchLimit = 1
+        descriptor.predicate = #Predicate {
+            $0.order > order
+        }
+        return descriptor
+    }
+
+    static var descriptorAll = FetchDescriptor(predicate: #Predicate<AudioModel> { _ in
+        true
+    }, sortBy: [
+        SortDescriptor(\.order, order: .forward),
+    ])
+
+    static var descriptorNotFolder = FetchDescriptor(predicate: predicateNotFolder, sortBy: [
+        SortDescriptor(\.order, order: .forward),
+    ])
+
+    static var predicateNotFolder = #Predicate<AudioModel> { audio in
+        audio.isFolder == false
     }
 }
 

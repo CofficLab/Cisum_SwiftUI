@@ -27,9 +27,9 @@ class AudioDB: ObservableObject, SuperEvent {
         }
     }
     
-    func delete(_ audio: AudioModel, verbose: Bool) async {
+    func delete(_ audio: AudioModel, verbose: Bool) async throws {
         self.disk.deleteFile(audio.url)
-        await self.db.deleteAudio(audio, verbose: verbose)
+        try await self.db.deleteAudio(audio, verbose: verbose)
         self.emit(.audioDeleted)
     }
     

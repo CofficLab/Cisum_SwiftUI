@@ -5,9 +5,9 @@ import SwiftData
 extension AudioRecordDB {
     func allAudios(reason: String) -> [AudioModel] {
         os_log("\(self.t)GetAllAudios 🐛 \(reason)")
-        
+
         do {
-            let audios: [AudioModel] = try self.all()
+            let audios: [AudioModel] = try context.fetch(AudioModel.descriptorOrderAsc)
 
             return audios
         } catch let error {
@@ -18,7 +18,7 @@ extension AudioRecordDB {
 
     func randomAudios(count: Int = 100, reason: String) -> [AudioModel] {
         os_log("\(self.t)GetRandomAudios 🐛 \(reason)")
-        
+
         do {
             let audios: [AudioModel] = try self.all()
             return Array(audios.shuffled().prefix(count))
@@ -45,16 +45,16 @@ extension AudioRecordDB {
         nil
     }
 
-    func deleteAudio(_ audio: AudioModel, verbose: Bool) {
-        _ = Self.deleteAudio(context: context, id: audio.id)
+    func deleteAudio(_ audio: AudioModel, verbose: Bool) throws {
+        try deleteAudio(id: audio.id)
     }
 
-    func deleteAudios(_ audios: [AudioModel]) -> AudioModel? {
-        Self.deleteAudios(context: context, ids: audios.map { $0.id })
+    func deleteAudios(_ audios: [AudioModel]) throws -> AudioModel? {
+        try deleteAudios(ids: audios.map { $0.id })
     }
 
-    func deleteAudios(_ ids: [AudioModel.ID]) -> AudioModel? {
-        Self.deleteAudios(context: context, ids: ids)
+    func deleteAudios(_ ids: [AudioModel.ID]) throws -> AudioModel? {
+        try deleteAudios(ids: ids)
     }
 
     func destroyAudios() {
@@ -147,8 +147,8 @@ extension AudioRecordDB {
         Self.findAudio(url, context: context)
     }
 
-    func firstAudio() -> AudioModel? {
-        Self.first(context: ModelContext(self.modelContainer))
+    func firstAudio() throws -> AudioModel? {
+        try context.fetch(AudioModel.descriptorFirst).first
     }
 
     func get(_ i: Int) -> AudioModel? {
@@ -200,7 +200,7 @@ extension AudioRecordDB {
         return []
     }
 
-    func getNextOf(_ url: URL?, verbose: Bool = false) -> AudioModel? {
+    func getNextOf(_ url: URL?, verbose: Bool = false) throws -> AudioModel? {
         if verbose {
             os_log("\(Logger.isMain)\(Self.label)NextOf -> \(url?.lastPathComponent ?? "-")")
         }
@@ -209,15 +209,14 @@ extension AudioRecordDB {
             return nil
         }
 
-        let context = ModelContext(self.modelContainer)
-        guard let audio = Self.findAudio(url, context: context) else {
+        guard let audio = findAudio(url) else {
             return nil
         }
 
-        return Self.nextOf(context: context, audio: audio)
+        return try nextOf(audio: audio)
     }
 
-    func getPrevOf(_ url: URL?, verbose: Bool = false) -> AudioModel? {
+    func getPrevOf(_ url: URL?, verbose: Bool = false) throws -> AudioModel? {
         if verbose {
             os_log("\(Logger.isMain)\(Self.label)PrevOf -> \(url?.lastPathComponent ?? "-")")
         }
@@ -226,12 +225,11 @@ extension AudioRecordDB {
             return nil
         }
 
-        let context = ModelContext(self.modelContainer)
-        guard let audio = Self.findAudio(url, context: context) else {
+        guard let audio = self.findAudio(url) else {
             return nil
         }
 
-        return Self.prevOf(context: context, audio: audio)
+        return try prev(audio)
     }
 
     func getTotalOfAudio() -> Int {
@@ -275,7 +273,7 @@ extension AudioRecordDB {
     }
 
     func isAllInCloud() -> Bool {
-        getTotalOfAudio() > 0 && AudioRecordDB.first(context: context) == nil
+        getTotalOfAudio() > 0
     }
 
     func like(_ audio: AudioModel) {
@@ -292,7 +290,7 @@ extension AudioRecordDB {
     }
 
     func nextOf(_ audio: AudioModel) -> AudioModel? {
-        Self.nextOf(context: context, audio: audio)
+        nextOf(audio.url, verbose: true)
     }
 
     func nextOf(_ url: URL?, verbose: Bool = false) -> AudioModel? {
@@ -311,27 +309,13 @@ extension AudioRecordDB {
         return self.nextOf(audio)
     }
 
-    func pre(_ url: URL?) -> AudioModel? {
-        os_log("🍋 DBAudio::preOf \(url?.lastPathComponent ?? "nil")")
-
-        guard let url = url else {
-            return AudioRecordDB.first(context: context)
-        }
-
-        guard let audio = self.findAudio(url) else {
-            return AudioRecordDB.first(context: context)
-        }
-
-        return prev(audio)
-    }
-
-    func prev(_ audio: AudioModel?) -> AudioModel? {
-        os_log("🍋 DBAudio::preOf [\(audio?.order ?? 0)] \(audio?.title ?? "nil")")
+    func prev(_ audio: AudioModel?) throws -> AudioModel? {
         guard let audio = audio else {
-            return AudioRecordDB.first(context: context)
+            return try firstAudio()
         }
 
-        return Self.prevOf(context: context, audio: audio)
+        let result = try context.fetch(AudioModel.descriptorPrev(order: audio.order))
+        return result.first
     }
 
     func refresh(_ audio: AudioModel) -> AudioModel {
@@ -611,13 +595,14 @@ extension AudioRecordDB {
         }
     }
 
-    static func deleteAudio(context: ModelContext, id: AudioModel.ID) -> AudioModel? {
-        deleteAudios(context: context, ids: [id])
+    func deleteAudio(id: AudioModel.ID) throws -> AudioModel? {
+        try deleteAudios(ids: [id])
     }
 
-    static func deleteAudios(context: ModelContext, ids: [AudioModel.ID], verbose: Bool = true) -> AudioModel? {
+    @discardableResult
+    func deleteAudios(ids: [AudioModel.ID], verbose: Bool = true) throws -> AudioModel? {
         if verbose {
-            os_log("\(Logger.isMain)\(label)数据库删除")
+            os_log("\(self.t)数据库删除")
         }
 
         // 本批次的最后一个删除后的下一个
@@ -625,7 +610,7 @@ extension AudioRecordDB {
 
         for (index, id) in ids.enumerated() {
             guard let audio = context.model(for: id) as? AudioModel else {
-                os_log(.debug, "\(Logger.isMain)\(label)删除时找不到")
+                os_log(.error, "\(self.t)删除时找不到")
                 continue
             }
 
@@ -633,7 +618,7 @@ extension AudioRecordDB {
 
             // 找出本批次的最后一个删除后的下一个
             if index == ids.count - 1 {
-                next = Self.nextOf(context: context, audio: audio)
+                next = try nextOf(audio: audio)
 
                 // 如果下一个等于当前，设为空
                 if next?.url == url {
@@ -652,7 +637,7 @@ extension AudioRecordDB {
         return next
     }
 
-    static func deleteAudiosByURL(context: ModelContext, disk: any SuperDisk, urls: [URL]) -> AudioModel? {
+    func deleteAudiosByURL(disk: any SuperDisk, urls: [URL]) throws -> AudioModel? {
         // 本批次的最后一个删除后的下一个
         var next: AudioModel?
 
@@ -661,13 +646,13 @@ extension AudioRecordDB {
                 guard let audio = try context.fetch(FetchDescriptor(predicate: #Predicate<AudioModel> {
                     $0.url == url
                 })).first else {
-                    os_log(.debug, "\(Logger.isMain)\(label)删除时找不到")
+                    os_log(.error, "\(self.t)删除时找不到")
                     continue
                 }
 
                 // 找出本批次的最后一个删除后的下一个
                 if index == urls.count - 1 {
-                    next = Self.nextOf(context: context, audio: audio)
+                    next = try nextOf(audio: audio)
 
                     // 如果下一个等于当前，设为空
                     if next?.url == url {
@@ -707,23 +692,6 @@ extension AudioRecordDB {
         return nil
     }
 
-    static func first(context: ModelContext) -> AudioModel? {
-        var descriptor = FetchDescriptor<AudioModel>(predicate: #Predicate<AudioModel> {
-            $0.title != ""
-        }, sortBy: [
-            SortDescriptor(\.order, order: .forward),
-        ])
-        descriptor.fetchLimit = 1
-
-        do {
-            return try context.fetch(descriptor).first
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-        }
-
-        return nil
-    }
-
     static func get(context: ModelContext, _ i: Int) -> AudioModel? {
         var descriptor = FetchDescriptor<AudioModel>()
         descriptor.fetchLimit = 1
@@ -756,50 +724,13 @@ extension AudioRecordDB {
         }
     }
 
-    static func nextOf(context: ModelContext, audio: AudioModel) -> AudioModel? {
-        // os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title)")
-        let order = audio.order
-        let url = audio.url
-        var descriptor = FetchDescriptor<AudioModel>()
-        descriptor.sortBy.append(.init(\.order, order: .forward))
-        descriptor.fetchLimit = 1
-        descriptor.predicate = #Predicate {
-            $0.order >= order && $0.url != url
+    func nextOf(audio: AudioModel) throws -> AudioModel? {
+        let result = try context.fetch(AudioModel.descriptorNext(order: audio.order))
+        if let first = result.first {
+            return first
         }
 
-        do {
-            let result = try context.fetch(descriptor)
-            let next = result.first ?? Self.first(context: context)
-            // os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title) -> [\(next?.order ?? -1)] \(next?.title ?? "-")")
-            return next
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-        }
-
-        return nil
-    }
-
-    static func prevOf(context: ModelContext, audio: AudioModel, verbose: Bool = false) -> AudioModel? {
-        if verbose {
-            os_log("\(Logger.isMain)\(Self.label)PrevOf [\(audio.order)] \(audio.title)")
-        }
-
-        let order = audio.order
-        var descriptor = FetchDescriptor<AudioModel>()
-        descriptor.sortBy.append(.init(\.order, order: .reverse))
-        descriptor.fetchLimit = 1
-        descriptor.predicate = #Predicate {
-            $0.order < order
-        }
-
-        do {
-            let result = try context.fetch(descriptor)
-            return result.first
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-        }
-
-        return nil
+        return try firstAudio()
     }
 }
 

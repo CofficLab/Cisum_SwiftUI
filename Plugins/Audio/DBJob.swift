@@ -5,10 +5,10 @@ import SwiftData
 extension AudioRecordDB {
     var labelPrepare: String { "\(self.t)⏬⏬⏬ Prepare" }
 
-    func prepareJob() {
+    func prepareJob() throws {
         os_log("\(self.labelPrepare) 🚀🚀🚀")
 
-        let audio = AudioRecordDB.first(context: context)
+        let audio = try firstAudio()
 
         if let audio = audio {
             self.downloadNextBatch(audio, reason: "\(Logger.isMain)\(Self.label)prepare")
@@ -102,14 +102,14 @@ extension AudioRecordDB {
 extension AudioRecordDB {
     var labelForDelete: String { "\(t)🗑️🗑️🗑️" }
 
-    func runDeleteInvalidJob() {
+    func runDeleteInvalidJob() throws {
         os_log("\(self.labelForDelete)🚀🚀🚀")
 
         do {
             try context.enumerate(AudioModel.descriptorAll, block: { audio in
                 if !FileManager.default.fileExists(atPath: audio.url.path) {
                     os_log(.error, "\(self.t)磁盘文件已不存在，删除数据库记录 -> \(audio.title)")
-                    self.deleteAudio(audio, verbose: true)
+                    try self.deleteAudio(audio, verbose: true)
                 }
             })
         } catch let e {

@@ -10,7 +10,7 @@ class DebugPlugin: SuperPlugin, SuperLog {
     var iconName: String = "play"
     var label: String = ""
 
-    func addDBView() -> AnyView {
+    func addDBView(reason: String) -> AnyView {
         os_log("\(self.t)AddDBView")
         
         return AnyView(Text("Hi"))

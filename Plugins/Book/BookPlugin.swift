@@ -21,7 +21,7 @@ class BookPlugin: SuperPlugin, SuperLog {
     var bookProvider: BookProvider?
     var initialized = false
 
-    func addDBView() -> AnyView {
+    func addDBView(reason: String) -> AnyView {
         os_log("\(self.t)addDBView")
 
         guard let disk = disk else {

@@ -12,13 +12,11 @@ import SwiftUI
       B1               B2
       B2
  */
-struct AudioList: View, SuperThread, SuperLog {
+struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     let emoji = "📬"
 
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var data: DataProvider
     @EnvironmentObject var playMan: PlayMan
-    @EnvironmentObject var messageManager: MessageProvider
     @EnvironmentObject var db: AudioDB
     @EnvironmentObject var audioManager: AudioProvider
 
@@ -27,53 +25,23 @@ struct AudioList: View, SuperThread, SuperLog {
 
     var total: Int { audios.count }
 
-    var showTips: Bool {
-        if app.isDropping {
-            return true
-        }
-
-        return messageManager.flashMessage.isEmpty && audios.count == 0
-    }
-
-    init(verbose: Bool = false, reason: String) {
+    init(verbose: Bool, reason: String) {
         if verbose {
-            os_log("\(Logger.initLog)AudioList")
+            os_log("\(Logger.initLog)AudioList 🐛 \(reason)")
         }
     }
 
     var body: some View {
-        ZStack {
-            List(selection: $selection) {
-                Section(header: HStack {
-                    Text("共 \(total.description)")
-                    Spacer()
-                    if audioManager.isSyncing {
-                        HStack {
-                            Image(systemName: "arrow.triangle.2.circlepath")
-                            Text("正在读取仓库")
-                        }
-                    }
-                    if Config.isNotDesktop {
-                        BtnAdd()
-                            .font(.title2)
-                            .labelStyle(.iconOnly)
-                    }
-                }, content: {
-                    ForEach(audios, id: \.url) { audio in
-                        AudioTile(audio: audio)
-                            .tag(audio.url as URL?)
-                    }
-                })
-            }
-
-            if showTips {
-                DBTips()
-            }
+        List(audios, id: \.url, selection: $selection) { audio in
+            AudioTile(audio: audio)
+                .tag(audio.url as URL?)
         }
+        .listStyle(.plain)
         .onAppear(perform: handleOnAppear)
         .onChange(of: selection, handleSelectionChange)
         .onChange(of: playMan.asset, handlePlayAssetChange)
-        .onReceive(NotificationCenter.default.publisher(for: .PlayManStateChange), perform: handlePlayManStateChange).onReceive(NotificationCenter.default.publisher(for: .audioDeleted), perform: handleAudioDeleted)
+        .onReceive(nc.publisher(for: .PlayManStateChange), perform: handlePlayManStateChange)
+        .onReceive(nc.publisher(for: .audioDeleted), perform: handleAudioDeleted)
     }
 }
 
@@ -92,7 +60,7 @@ extension AudioList {
         }
 
         Task {
-            self.audios = await db.db.randomAudios(reason: self.className + ".handleOnAppear")
+            self.audios = await db.db.allAudios(reason: self.className + ".handleOnAppear")
         }
     }
 
@@ -108,7 +76,7 @@ extension AudioList {
         }
 
         if url != playMan.asset?.url {
-            self.playMan.play(audio.toPlayAsset(), reason: "AudioList SelectionChange", verbose: true)
+            self.playMan.play(audio.toPlayAsset(), reason: self.className + ".SelectionChange", verbose: true)
         }
     }
 

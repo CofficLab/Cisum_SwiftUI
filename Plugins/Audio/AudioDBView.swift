@@ -29,7 +29,7 @@ struct AudioDBView: View, SuperLog, SuperThread {
         if loading {
             return false
         }
-        
+
         return (isDropping || (messageManager.flashMessage.isEmpty && count == 0)) && !showProTips
     }
 
@@ -37,36 +37,36 @@ struct AudioDBView: View, SuperLog, SuperThread {
         count >= Config.maxAudioCount && s.currentSubscription == nil
     }
 
-    init(verbose: Bool = false) {
+    init(verbose: Bool, reason: String) {
         if verbose {
-            os_log("\(Logger.isMain)AudioDBView")
+            os_log("\(Logger.isMain)AudioDBView 🐛 \(reason)")
         }
     }
 
     var body: some View {
-        Group {
+        ZStack {
+            VStack {
+                AudioList(verbose: false, reason: self.className)
+                    .frame(maxHeight: .infinity)
+
+                AudioTask()
+                    .shadow(radius: 10)
+            }
+
+            if isSorting {
+                Text(sortMode.description)
+            }
+
             if loading {
                 ProgressView()
-            } else {
-                VStack {
-                    if isSorting {
-                        Text(sortMode.description)
-                    } else {
-                        AudioList(reason: "AudioDB")
-                            .frame(maxHeight: .infinity)
-                    }
+            }
 
-                    AudioTask()
-                        .shadow(radius: 10)
-                }
+            if showTips {
+                AudioDBTips()
+            }
 
-                if showTips {
-                    AudioDBTips()
-                }
-
-                if showProTips {
-                    AudioProTips()
-                }
+            if showProTips {
+                AudioProTips()
             }
         }
         .fileImporter(
