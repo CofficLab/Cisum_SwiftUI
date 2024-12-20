@@ -20,10 +20,12 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     @EnvironmentObject var db: AudioDB
     @EnvironmentObject var audioManager: AudioProvider
 
-    @State var audios: [AudioModel] = []
+    @State var assets: [PlayAsset] = []
     @State var selection: URL? = nil
+    @State var isSorting = false
+    @State var sortMode: SortMode = .none
 
-    var total: Int { audios.count }
+    var total: Int { assets.count }
 
     init(verbose: Bool, reason: String) {
         if verbose {
@@ -42,15 +44,20 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
                         Text("正在读取仓库")
                     }
                 }
+
+                if isSorting {
+                    Text(sortMode.description)
+                }
+
                 if Config.isNotDesktop {
                     BtnAdd()
                         .font(.title2)
                         .labelStyle(.iconOnly)
                 }
             }, content: {
-                ForEach(audios, id: \.url) { audio in
-                    AudioTile(audio: audio)
-                        .tag(audio.url as URL?)
+                ForEach(assets, id: \.url) { a in
+                    AudioTile(asset: a)
+                        .tag(a.url as URL?)
                 }
             })
         }
@@ -60,6 +67,16 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
         .onChange(of: playMan.asset, handlePlayAssetChange)
         .onReceive(nc.publisher(for: .PlayManStateChange), perform: handlePlayManStateChange)
         .onReceive(nc.publisher(for: .audioDeleted), perform: handleAudioDeleted)
+        .onReceive(nc.publisher(for: .DBSorting), perform: onSorting)
+        .onReceive(nc.publisher(for: .DBSortDone), perform: onSortDone)
+    }
+
+    private func refreshAssets() {
+        Task {
+            let audios = await db.allAudios(reason: self.className + ".handleAudioDeleted")
+            let assets = audios.map { $0.toPlayAsset() }
+            self.assets = assets
+        }
     }
 }
 
@@ -67,9 +84,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
 
 extension AudioList {
     func handleAudioDeleted(_ notification: Notification) {
-        Task {
-            self.audios = await db.allAudios(reason: self.className + ".handleAudioDeleted")
-        }
+        refreshAssets()
     }
 
     func handleOnAppear() {
@@ -77,9 +92,7 @@ extension AudioList {
             selection = asset.url
         }
 
-        Task {
-            self.audios = await db.db.allAudios(reason: self.className + ".handleOnAppear")
-        }
+        refreshAssets()
     }
 
     func handlePlayManStateChange(_ notification: Notification) {
@@ -89,18 +102,50 @@ extension AudioList {
     }
 
     func handleSelectionChange() {
-        guard let url = selection, let audio = audios.first(where: { $0.url == url }) else {
+        guard let url = selection, let asset = assets.first(where: { $0.url == url }) else {
             return
         }
 
         if url != playMan.asset?.url {
-            self.playMan.play(audio.toPlayAsset(), reason: self.className + ".SelectionChange", verbose: true)
+            self.playMan.play(asset, reason: self.className + ".SelectionChange", verbose: true)
         }
     }
 
     func handlePlayAssetChange() {
         if let asset = playMan.asset {
             selection = asset.url
+        }
+    }
+
+    func onSorting(_ notification: Notification) {
+        os_log("\(t)onSorting")
+        isSorting = true
+        if let mode = notification.userInfo?["mode"] as? String {
+            sortMode = SortMode(rawValue: mode) ?? .none
+        }
+    }
+
+    func onSortDone(_ notification: Notification) {
+        os_log("\(t)onSortDone")
+
+        self.refreshAssets()
+
+        self.main.asyncAfter(deadline: .now() + 1.0) {
+            isSorting = false
+        }
+    }
+}
+
+extension AudioList {
+    enum SortMode: String {
+        case random, order, none
+
+        var description: String {
+            switch self {
+            case .random: return "正在随机排序..."
+            case .order: return "正在顺序排序..."
+            case .none: return "正在排序..."
+            }
         }
     }
 }

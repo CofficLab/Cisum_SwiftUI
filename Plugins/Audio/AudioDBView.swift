@@ -13,8 +13,6 @@ struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
     @EnvironmentObject var db: AudioDB
 
     @State var treeView = false
-    @State var isSorting = false
-    @State var sortMode: SortMode = .none
     @State var isDropping: Bool = false
     @State var count: Int = 0
     @State var loading: Bool = true
@@ -45,18 +43,12 @@ struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
 
     var body: some View {
         ZStack {
-            if !isSorting {
-                VStack {
-                    AudioList(verbose: false, reason: self.className)
-                        .frame(maxHeight: .infinity)
+            VStack {
+                AudioList(verbose: false, reason: self.className)
+                    .frame(maxHeight: .infinity)
 
-                    AudioTask()
-                        .shadow(radius: 10)
-                }
-            }
-
-            if isSorting {
-                Text(sortMode.description)
+                AudioTask()
+                    .shadow(radius: 10)
             }
 
             if loading {
@@ -77,28 +69,10 @@ struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
             allowsMultipleSelection: true,
             onCompletion: handleFileImport
         )
-        .onReceive(nc.publisher(for: .DBSorting), perform: onSorting)
-        .onReceive(nc.publisher(for: .DBSortDone), perform: onSortDone)
         .onDrop(of: [UTType.fileURL], isTargeted: self.$isDropping, perform: onDrop)
         .task {
             self.count = await db.getTotalCount()
             self.loading = false
-        }
-    }
-}
-
-// MARK: - Enums
-
-extension AudioDBView {
-    enum SortMode: String {
-        case random, order, none
-
-        var description: String {
-            switch self {
-            case .random: return "正在随机排序..."
-            case .order: return "正在顺序排序..."
-            case .none: return "正在排序..."
-            }
         }
     }
 }
@@ -145,19 +119,6 @@ extension AudioDBView {
         }
 
         return true
-    }
-
-    func onSorting(_ notification: Notification) {
-        os_log("\(t)onSorting")
-        isSorting = true
-        if let mode = notification.userInfo?["mode"] as? String {
-            sortMode = SortMode(rawValue: mode) ?? .none
-        }
-    }
-
-    func onSortDone(_ notification: Notification) {
-        os_log("\(t)onSortDone")
-        isSorting = false
     }
 }
 

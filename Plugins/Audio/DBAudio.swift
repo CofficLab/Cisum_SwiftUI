@@ -381,6 +381,7 @@ extension AudioRecordDB {
 
         try context.save()
         
+        emitSortDone()
         onUpdated()
     }
 

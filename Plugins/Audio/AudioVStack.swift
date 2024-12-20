@@ -69,7 +69,7 @@ struct AudioVStack: View, SuperThread, SuperLog {
                 LazyVStack(spacing: 0) {
                     ForEach(loadedAudios, id: \.url) { audio in
                         VStack(spacing: 0) {
-                            AudioTile(audio: audio)
+                            AudioTile(asset: audio.toPlayAsset())
                                 .tag(audio.url as URL?)
                                 .onTapGesture {
                                     selection = audio.url

@@ -5,12 +5,10 @@ import SwiftUI
 struct AudioTile: View {
     @EnvironmentObject private var playMan: PlayMan
 
-    let audio: AudioModel
     let asset: PlayAsset
 
-    init(audio: AudioModel) {
-        self.audio = audio
-        self.asset = audio.toPlayAsset()
+    init(asset: PlayAsset) {
+        self.asset = asset
     }
 
     var body: some View {
@@ -19,13 +17,13 @@ struct AudioTile: View {
                 AudioAvatar(asset).frame(width: 36, height: 36)
 
                 VStack(alignment: .leading, spacing: 0) {
-                    Text(audio.fileName)
+                    Text(asset.fileName)
 
                     HStack {
-                        Text(audio.getFileSizeReadable())
-                        if audio.like {
-                            Image(systemName: "star.fill")
-                        }
+                        Text(asset.getFileSizeReadable())
+//                        if audio.like {
+//                            Image(systemName: "star.fill")
+//                        }
                     }
                     .font(.footnote)
                     .foregroundStyle(.secondary)
@@ -33,13 +31,6 @@ struct AudioTile: View {
             }
             Spacer()
         }
-    }
-}
-
-// 使用 equatable 减少不必要的重绘
-extension AudioTile: Equatable {
-    static func == (lhs: AudioTile, rhs: AudioTile) -> Bool {
-        lhs.audio.url == rhs.audio.url
     }
 }
 
