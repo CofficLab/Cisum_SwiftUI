@@ -118,7 +118,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
         }
     }
 
-    func onAppear(playMan: PlayMan, currentGroup: SuperPlugin?) {
+    func onAppear(playMan: PlayMan, currentGroup: SuperPlugin?) async {
         if currentGroup?.id != self.id {
             return
         }
@@ -127,7 +127,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
 
         let mode = AudioPlugin.getPlayMode()
         if let mode = mode {
-            playMan.setMode(mode, reason: self.className + ".OnAppear")
+            await playMan.setMode(mode, reason: self.className + ".OnAppear")
         }
 
         Task { @MainActor in
@@ -148,7 +148,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
         let asset = try await self.db.getPrevOf(current?.url, verbose: false)
         
         if let asset = asset {
-            playMan.play(PlayAsset(url: asset.url), reason: "OnPlayPrev", verbose: true)
+            await playMan.play(PlayAsset(url: asset.url), reason: "OnPlayPrev", verbose: true)
         } else {
             throw AudioPluginError.NoPrevAsset
         }
@@ -159,7 +159,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
             return
         }
         
-        let mode = playMan.mode
+        let mode = await playMan.mode
         
         if verbose {
             os_log("\(self.t)OnPlayNext with mode \(mode.description)")
@@ -167,7 +167,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
 
         let asset = try await self.db.getNextOf(current?.url, verbose: false)
         if let asset = asset {
-            playMan.play(PlayAsset(url: asset.url), reason: "OnPlayNext", verbose: true)
+            await playMan.play(PlayAsset(url: asset.url), reason: "OnPlayNext", verbose: true)
         } else {
             throw AudioPluginError.NoNextAsset
         }

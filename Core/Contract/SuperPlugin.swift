@@ -18,10 +18,10 @@ protocol SuperPlugin {
     func getDisk() -> (any SuperDisk)?
 
     func onInit() -> Void
-    func onAppear(playMan: PlayMan, currentGroup: SuperPlugin?) -> Void
+    func onAppear(playMan: PlayMan, currentGroup: SuperPlugin?) async -> Void
     func onDisappear() -> Void
     func onPlay() -> Void
-    func onPause(playMan: PlayMan) -> Void
+    func onPause(playMan: PlayMan) async -> Void
     func onPlayStateUpdate() async throws -> Void
     func onPlayModeChange(mode: PlayMode, asset: PlayAsset?) throws -> Void
     func onPlayAssetUpdate(asset: PlayAsset?, currentGroup: SuperPlugin?) async throws -> Void
@@ -82,11 +82,9 @@ extension SuperPlugin {
         os_log("🐷 %{public}s::OnPlayModeChange while mode is %{public}s", log: .default, type: .debug, String(describing: type(of: self)), mode.description)
     }
 
-    func onPause(playMan: PlayMan) {
-        Task {
-            let timeDisplay = playMan.currentTimeDisplay
-            os_log("🐷 %{public}s::OnPause, current time: %{public}s", log: .default, type: .debug, String(describing: type(of: self)), timeDisplay)
-        }
+    func onPause(playMan: PlayMan) async {
+        let timeDisplay = await playMan.currentTimeDisplay
+        os_log("🐷 %{public}s::OnPause, current time: %{public}s", log: .default, type: .debug, String(describing: type(of: self)), timeDisplay)
     }
 
     func onPlayStateUpdate() async throws {

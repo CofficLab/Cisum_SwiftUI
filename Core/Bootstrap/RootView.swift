@@ -92,13 +92,13 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
         .frame(maxHeight: .infinity)
         .background(Config.rootBackground)
         #if os(iOS)
-        .ignoresSafeArea()
+            .ignoresSafeArea()
         #endif
-        .onReceive(nc.publisher(for: NSUbiquitousKeyValueStore.didChangeExternallyNotification), perform: onCloudAccountStateChanged)
-        .onAppear(perform: onAppear)
-        .onDisappear(perform: onDisappear)
-        .onChange(of: man.asset, onPlayAssetChange)
-        .onChange(of: man.playing, onPlayingChange)
+            .onReceive(nc.publisher(for: NSUbiquitousKeyValueStore.didChangeExternallyNotification), perform: onCloudAccountStateChanged)
+            .onAppear(perform: onAppear)
+            .onDisappear(perform: onDisappear)
+            .onChange(of: man.asset, onPlayAssetChange)
+            .onChange(of: man.playing, onPlayingChange)
     }
 
     private func reloadView() {
@@ -138,7 +138,7 @@ extension RootView {
                 self.p.restoreCurrent()
 
                 for plugin in p.plugins {
-                    plugin.onAppear(playMan: man, currentGroup: p.current)
+                    await plugin.onAppear(playMan: man, currentGroup: p.current)
                 }
 
                 #if os(iOS)
@@ -177,13 +177,15 @@ extension RootView {
     }
 
     func onPlayingChange() {
-        p.plugins.forEach({
-            if man.playing {
-                $0.onPlay()
-            } else {
-                $0.onPause(playMan: man)
+        Task {
+            for plugin in p.plugins {
+                if man.playing {
+                    plugin.onPlay()
+                } else {
+                    await plugin.onPause(playMan: man)
+                }
             }
-        })
+        }
     }
 }
 

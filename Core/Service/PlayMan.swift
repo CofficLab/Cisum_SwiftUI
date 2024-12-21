@@ -11,6 +11,7 @@ import SwiftUI
       对接系统媒体中心
  */
 
+@MainActor
 class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread, AudioWorkerDelegate {
     static var label = "💃 PlayMan::"
     #if os(macOS)
@@ -30,7 +31,6 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread, AudioWorkerDel
     var audioWorker: AudioWorker = AudioWorker(delegate: nil)
     var videoWorker: VideoWorker = VideoWorker()
     var verbose = true
-    var queue = DispatchQueue(label: "PlayMan", qos: .userInteractive)
     var worker: SuperPlayWorker {
         guard let asset = asset, asset.isNotFolder() else {
             return audioWorker
@@ -137,7 +137,6 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread, AudioWorkerDel
         setPlaying(false)
     }
 
-    @MainActor
     func toggle() throws {
         if playing {
             try self.pause(verbose: true)
@@ -159,9 +158,7 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread, AudioWorkerDel
 
 extension PlayMan {
     func clearError() {
-        self.main.async {
-            self.error = nil
-        }
+        self.error = nil
     }
     
     func switchMode(verbose: Bool = true) {
@@ -170,15 +167,11 @@ extension PlayMan {
     }
     
     func setError(_ e: PlayManError) {
-        self.main.async {
-            self.error = e
-        }
+        self.error = e
     }
     
     func setAsset(_ a: PlayAsset) {
-        self.main.async {
-            self.asset = a
-        }
+        self.asset = a
     }
     
     func setMode(_ mode: PlayMode, reason: String) {
@@ -195,10 +188,8 @@ extension PlayMan {
     }
     
     func setPlaying(_ playing: Bool) {
-        self.main.async {
-            self.playing = playing
-            self.setPlayingInfo()
-        }
+        self.playing = playing
+        self.setPlayingInfo()
     }
 }
 
