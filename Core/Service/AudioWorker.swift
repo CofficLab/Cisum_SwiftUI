@@ -16,9 +16,8 @@ protocol AudioWorkerDelegate: AnyObject {
 }
 
 class AudioWorker: NSObject, ObservableObject, SuperPlayWorker, SuperLog, SuperThread {
-    let emoji = "🎺"
+    let emoji = "👷"
     var player = AVAudioPlayer()
-    var asset: PlayAsset?
     var delegate: AudioWorkerDelegate?
     var verbose = false
     var queue = DispatchQueue(label: "AudioWorker", qos: .userInteractive)
@@ -42,37 +41,39 @@ class AudioWorker: NSObject, ObservableObject, SuperPlayWorker, SuperLog, SuperT
         player.currentTime = time
     }
 
-    func prepare(_ asset: PlayAsset?, reason: String, verbose: Bool) throws {
-        self.asset = asset
-        self.player = try self.makePlayer(asset, reason: reason, verbose: verbose)
+    func prepare(_ asset: PlayAsset, reason: String, verbose: Bool) throws {
+        if verbose {
+            os_log("\(self.t)Prepare \(asset.fileName) 🐛 \(reason)")
+        }
+        
+        self.player.prepareToPlay()
     }
 
-    func play(_ asset: PlayAsset, reason: String) throws {
-        let verbose = false
+    func play(_ asset: PlayAsset, reason: String, verbose: Bool) throws {
         if verbose {
             os_log("\(self.t)Play \(asset.fileName) 🐛 \(reason)")
         }
 
-        if asset.isFolder() {
-            return try prepare(asset, reason: reason, verbose: true)
-        }
-
-        try player = makePlayer(asset, reason: "AudioWorker.Playing", verbose: true)
-        self.asset = asset
+        try player = makePlayer(asset, reason: reason, verbose: true)
         self.player.prepareToPlay()
         self.player.play()
     }
 
-    func play() throws {
-        self.player.play()
-    }
-
     func pause(verbose: Bool) {
-        let verbose = false
         if verbose {
             os_log("\(self.t)Pause")
         }
+        
         self.player.pause()
+    }
+    
+    func resume() {
+        let verbose = true
+        if verbose {
+            os_log("\(self.t)Resume")
+        }
+        
+        self.player.play()
     }
 
     func stop(reason: String, verbose: Bool) {
@@ -81,7 +82,7 @@ class AudioWorker: NSObject, ObservableObject, SuperPlayWorker, SuperLog, SuperT
     }
 
     func toggle() throws {
-        isPlaying ? pause(verbose: true) : try play()
+        isPlaying ? pause(verbose: true) : self.resume()
     }
 }
 
@@ -92,11 +93,7 @@ extension AudioWorker {
         AVAudioPlayer()
     }
 
-    func makePlayer(_ asset: PlayAsset?, reason: String, verbose: Bool) throws -> AVAudioPlayer {
-        guard let asset = asset else {
-            return AVAudioPlayer()
-        }
-        
+    func makePlayer(_ asset: PlayAsset, reason: String, verbose: Bool) throws -> AVAudioPlayer {
         if asset.isNotDownloaded {
             os_log(.error, "\(self.t)未下载，等待下载 -> \(asset.title)")
         }
@@ -179,6 +176,6 @@ extension AudioWorker: AVAudioPlayerDelegate {
 
     func audioPlayerEndInterruption(_ player: AVAudioPlayer, withOptions flags: Int) {
         os_log("\(self.t)audioPlayerEndInterruption")
-        try? play()
+        self.resume()
     }
 }

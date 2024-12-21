@@ -65,7 +65,7 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread, AudioWorkerDel
             onCommand()
         }
     }
-    
+
     func pause(verbose: Bool) throws {
         if verbose {
             os_log("\(self.t)Pause ⏸️⏸️⏸️")
@@ -74,57 +74,36 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread, AudioWorkerDel
         try self.worker.pause(verbose: verbose)
         setPlaying(false)
     }
-    
-    func play(_ asset: PlayAsset? = nil, reason: String = "", verbose: Bool) {
+
+    func play(_ asset: PlayAsset, reason: String, verbose: Bool) {
         if verbose {
-            if let asset = asset {
-                os_log("\(self.t)Play 🔊🔊🔊「\(asset.fileName)」🐛 \(reason)")
-            } else {
-                os_log("\(self.t)Play Current 🔊🔊🔊 🐛 \(reason)")
-            }
+            os_log("\(self.t)Play 🔊🔊🔊「\(asset.fileName)」🐛 \(reason)")
         }
-        
+
         clearError()
 
-        if let asset = asset {
-            self.setAsset(asset)
-        }
+        self.setAsset(asset)
 
-        guard let currentAsset = self.asset else {
-            self.stop(reason: "Play.NoAsset", verbose: true)
-            self.setError(.NoAsset)
-            return
-        }
-
-        if currentAsset.isDownloading {
+        if asset.isDownloading {
             self.stop(reason: "Play.Downloading", verbose: true)
             self.setError(.Downloading)
             return
         }
 
-        if currentAsset.isNotDownloaded {
+        if asset.isNotDownloaded {
             self.stop(reason: "Play.NotDownloaded", verbose: true)
             self.setError(.NotDownloaded)
             return
         }
 
-        if asset != nil {
-            do {
-                try self.worker.prepare(asset, reason: reason, verbose: true)
-            } catch {
-                self.error = .PrepareFailed(error)
-                return
-            }
-        }
-
         do {
-            try self.worker.play()
+            try self.worker.play(asset, reason: reason, verbose: verbose)
             setPlaying(true)
         } catch {
             self.setError(.PlayFailed(error))
         }
     }
-    
+
     func seek(_ to: TimeInterval) {
         self.worker.goto(to)
         setPlayingInfo()
@@ -146,7 +125,22 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread, AudioWorkerDel
         if playing {
             try self.pause(verbose: true)
         } else {
-            self.play(reason: "Toggle", verbose: true)
+            self.resume()
+        }
+    }
+
+    func resume() {
+        guard self.asset != nil else {
+            self.stop(reason: "Play.NoAsset", verbose: true)
+            self.setError(.NoAsset)
+            return
+        }
+
+        do {
+            try self.worker.resume()
+            self.setPlaying(true)
+        } catch {
+            self.setError(.PlayFailed(error))
         }
     }
 
@@ -165,25 +159,25 @@ extension PlayMan {
     func clearError() {
         self.error = nil
     }
-    
+
     func switchMode(verbose: Bool = true) {
         mode = mode.switchMode()
         self.delegate?.onPlayModeChange(mode: mode)
     }
-    
+
     func setError(_ e: PlayManError) {
         self.error = e
     }
-    
+
     func setAsset(_ a: PlayAsset) {
         self.asset = a
     }
-    
+
     func setMode(_ mode: PlayMode, reason: String) {
         if verbose {
             os_log("\(self.t)SetMode 🐛 \(reason)")
         }
-        
+
         if self.mode == mode {
             return
         }
@@ -191,7 +185,7 @@ extension PlayMan {
         self.mode = mode
         self.delegate?.onPlayModeChange(mode: mode)
     }
-    
+
     func setPlaying(_ playing: Bool) {
         self.playing = playing
         self.setPlayingInfo()
@@ -285,7 +279,7 @@ extension PlayMan {
         case .Order, .Random:
             await self.next()
         case .Loop:
-            self.play(verbose: verbose)
+            self.resume()
         }
     }
 
@@ -312,7 +306,7 @@ extension PlayMan {
         }
 
         c.playCommand.addTarget { _ in
-            self.play(reason: "PlayCommand", verbose: true)
+            self.resume()
 
             return .success
         }
@@ -330,14 +324,14 @@ extension PlayMan {
 
             do {
                 try self.toggleLike()
-                
+
                 self.c.likeCommand.isActive = self.asset?.like ?? false
                 self.c.dislikeCommand.isActive = self.asset?.notLike ?? true
-                
+
                 return .success
             } catch {
                 self.setError(.ToggleLikeError(error))
-                
+
                 return .commandFailed
             }
         }

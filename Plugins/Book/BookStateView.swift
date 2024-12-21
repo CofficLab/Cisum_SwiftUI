@@ -40,9 +40,9 @@ struct BookStateView: View, SuperLog, SuperThread {
         .onChange(of: bookManager.isSyncing, {
             os_log("\(self.t)isSyncing: \(bookManager.isSyncing)")
             
-            if playMan.hasError, let asset = playMan.asset, asset.isDownloaded {
-                playMan.play(verbose: true)
-            }
+//            if playMan.hasError, let asset = playMan.asset, asset.isDownloaded {
+//                playMan.play(verbose: true)
+//            }
         })
     }
 

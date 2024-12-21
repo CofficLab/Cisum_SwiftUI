@@ -124,19 +124,14 @@ extension VideoWorker {
 //        player.currentTime = time
     }
 
-    func prepare(_ audio: PlayAsset?, reason: String, verbose: Bool) {
+    func prepare(_ audio: PlayAsset, reason: String, verbose: Bool) {
         state = .Ready(audio)
     }
 
-    func play(_ audio: PlayAsset, reason: String) {
+    func play(_ audio: PlayAsset, reason: String, verbose: Bool) {
         os_log("\(self.label)play \(audio.title) 🐛 \(reason)")
         state = .Playing(audio)
         updateDuration()
-    }
-
-    func play() {
-        os_log("\(self.label)Play")
-        resume()
     }
 
     func resume() {
