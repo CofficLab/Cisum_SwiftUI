@@ -21,9 +21,13 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread, AudioWorkerDel
     #endif
 
     @Published private(set) var asset: PlayAsset?
-    @Published private(set) var playing: Bool = false
     @Published private(set) var mode: PlayMode = .Order
     @Published private(set) var error: PlayManError? = nil
+    @Published private(set) var playing: Bool = false {
+        didSet {
+            self.setPlayingInfo()
+        }
+    }
 
     let emoji = "💃"
     var delegate: PlayManDelegate?
@@ -75,7 +79,6 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread, AudioWorkerDel
         self.playing = false
     }
     
-    @MainActor
     func play(_ asset: PlayAsset? = nil, reason: String = "", verbose: Bool) {
         if !Thread.isMainThread {
             assert(false, "PlayMan.play 必须在主线程调用")
@@ -122,7 +125,6 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread, AudioWorkerDel
             self.playing = true
         } catch {
             self.error = .PlayFailed(error)
-            return
         }
     }
     
@@ -179,7 +181,7 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread, AudioWorkerDel
     }
 }
 
-// MARK: 媒体中心
+// MARK: Media Center
 
 extension PlayMan {
     var c: MPRemoteCommandCenter {
@@ -266,7 +268,7 @@ extension PlayMan {
         case .Order, .Random:
             await self.next()
         case .Loop:
-            await self.play(verbose: verbose)
+            self.play(verbose: verbose)
         }
     }
 

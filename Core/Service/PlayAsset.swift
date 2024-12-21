@@ -1,18 +1,20 @@
 import AVKit
+import MagicKit
 import OSLog
 import SwiftUI
-import MagicKit
 
 /* PlayAsset 用于代表可播放、展示的个体
- 
+
     可以从以下数据转换而来：
       一条数据库记录
       一个文件URL
  */
 
-struct PlayAsset: FileBox, Identifiable, SuperEvent {
+struct PlayAsset: FileBox, Identifiable, SuperEvent, SuperLog {
+    let emoji = "🫓"
+
     var id: URL { self.url }
-    
+
     static var label = "🪖 PlayAsset::"
 
     let fileManager = FileManager.default
@@ -38,7 +40,7 @@ struct PlayAsset: FileBox, Identifiable, SuperEvent {
         #else
             var i = defaultUIImage
         #endif
-        
+
         if fileManager.fileExists(atPath: coverCacheURL.path) {
             #if os(macOS)
                 i = NSImage(contentsOf: coverCacheURL) ?? i
@@ -49,7 +51,7 @@ struct PlayAsset: FileBox, Identifiable, SuperEvent {
 
         return i as! T
     }
-    
+
     func delete() async throws {
         guard let source = source else {
             throw PlayAssetError.sourceNotFound
@@ -92,9 +94,11 @@ extension PlayAsset {
 // MARK: Size
 
 extension PlayAsset {
-    func getFileSizeReadable() -> String {
-        os_log("%@ GetFileSizeReadable: %@", label, FileHelper.getFileSizeReadable(size ?? getFileSize()))
-        
+    func getFileSizeReadable(verbose: Bool = false) -> String {
+        if verbose {
+            os_log("\(self.t) GetFileSizeReadable: \(FileHelper.getFileSizeReadable(size ?? getFileSize()))")
+        }
+
         return FileHelper.getFileSizeReadable(size ?? getFileSize())
     }
 }

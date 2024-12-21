@@ -19,7 +19,7 @@ struct BtnMore: View {
                 playMan.play(asset, reason: "Play Button", verbose: true)
             },
             menus: AnyView(VStack {
-                BtnToggle(asset: asset, autoResize: false)
+                BtnToggle(autoResize: false)
                 Divider()
                 BtnDownload(asset: asset)
                 BtnEvict(asset: asset)

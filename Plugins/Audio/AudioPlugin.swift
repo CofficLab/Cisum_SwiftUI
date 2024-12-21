@@ -21,10 +21,6 @@ class AudioPlugin: SuperPlugin, SuperLog {
     var audioDB: AudioDB?
 
     func addDBView(reason: String) -> AnyView {
-        guard let disk = self.disk else {
-            return AnyView(EmptyView())
-        }
-
         guard let audioProvider = self.audioProvider else {
             return AnyView(EmptyView())
         }
@@ -152,7 +148,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
         let asset = try await self.db.getPrevOf(current?.url, verbose: false)
         
         if let asset = asset {
-            await playMan.play(PlayAsset(url: asset.url), reason: "OnPlayPrev", verbose: true)
+            playMan.play(PlayAsset(url: asset.url), reason: "OnPlayPrev", verbose: true)
         } else {
             throw AudioPluginError.NoPrevAsset
         }
@@ -171,7 +167,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
 
         let asset = try await self.db.getNextOf(current?.url, verbose: false)
         if let asset = asset {
-            await playMan.play(PlayAsset(url: asset.url), reason: "OnPlayNext", verbose: true)
+            playMan.play(PlayAsset(url: asset.url), reason: "OnPlayNext", verbose: true)
         } else {
             throw AudioPluginError.NoNextAsset
         }
