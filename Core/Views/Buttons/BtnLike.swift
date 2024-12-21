@@ -2,9 +2,11 @@ import OSLog
 import SwiftUI
 
 struct BtnLike: View {
-    @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var man: PlayMan
+    @EnvironmentObject var m: MessageProvider
 
-    var like: Bool { playMan.asset?.like ?? false }
+    @State var like: Bool = false
+    
     var autoResize = false
     var title: String { like ? "取消喜欢" : "标记喜欢" }
     var label: String { "\(Logger.isMain)❤️ BtnLike::" }
@@ -15,9 +17,21 @@ struct BtnLike: View {
             image: getImageName(),
             dynamicSize: autoResize,
             onTap: {
-                playMan.toggleLike()
+                do {
+                    try man.toggleLike()
+                    m.hub(like ? "已取消喜欢" : "已标记为喜欢")
+                    self.like.toggle()
+                } catch {
+                    self.m.error(error)
+                }
             }
         )
+        .onAppear {
+            self.like = man.asset?.like ?? false
+        }
+        .onChange(of: man.asset, {
+            self.like = man.asset?.like ?? false
+        })
     }
 
     private func getImageName() -> String {

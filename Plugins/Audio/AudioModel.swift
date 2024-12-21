@@ -134,6 +134,14 @@ extension AudioModel: PlaySource {
 
         try await db.download(self, verbose: true)
     }
+    
+    func toggleLike() async throws {
+        guard let db = db else {
+            throw AudioModelError.dbNotFound
+        }
+
+        try await db.toggleLike(self.url)
+    }
 }
 
 enum AudioModelError: Error, LocalizedError {
@@ -153,7 +161,6 @@ enum AudioModelError: Error, LocalizedError {
 // MARK: Descriptor
 
 extension AudioModel {
-    
     static var descriptorOrderAsc: FetchDescriptor<AudioModel> {
         var descriptor = FetchDescriptor<AudioModel>()
         descriptor.sortBy.append(.init(\.order, order: .forward))

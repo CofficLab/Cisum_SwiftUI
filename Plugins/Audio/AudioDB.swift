@@ -47,6 +47,10 @@ class AudioDB: ObservableObject, SuperEvent {
     func getTotalCount() async -> Int {
         await self.db.getTotalOfAudio()
     }
+    
+    func toggleLike(_ url: URL) async throws {
+        try await self.db.toggleLike(url)
+    }
 }
 
 extension Notification.Name {

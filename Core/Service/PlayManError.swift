@@ -10,6 +10,8 @@ enum PlayManError: Error, LocalizedError {
     case FormatNotSupported(String)
     case PrepareFailed(Error)
     case PlayFailed(Error)
+    case ToggleLikeError(Error)
+
     var errorDescription: String? {
         switch self {
         case .NotDownloaded:
@@ -30,7 +32,8 @@ enum PlayManError: Error, LocalizedError {
             return "准备失败: \(error.localizedDescription)"
         case let .PlayFailed(error):
             return "播放失败: \(error.localizedDescription)"
+        case let .ToggleLikeError(error):
+            return "切换喜欢状态失败: \(error.localizedDescription)"
         }
     }
 }
-

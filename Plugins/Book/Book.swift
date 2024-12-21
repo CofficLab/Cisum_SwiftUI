@@ -66,6 +66,10 @@ extension Book: PlaySource {
 
         try await db.download(self, verbose: true)
     }
+    
+    func toggleLike() async throws {
+        
+    }
 }
 
 // MARK: Transform

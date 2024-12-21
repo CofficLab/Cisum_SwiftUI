@@ -169,6 +169,8 @@ extension RootView {
     }
 
     func onPlayAssetChange() {
+        os_log("\(self.t)Play Asset Change")
+        
         for plugin in p.plugins {
             Task {
                 try await plugin.onPlayAssetUpdate(asset: man.asset, currentGroup: p.current)

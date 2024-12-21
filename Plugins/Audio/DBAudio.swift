@@ -514,7 +514,7 @@ extension AudioRecordDB {
         }
     }
 
-    func toggleLike(_ url: URL) {
+    func toggleLike(_ url: URL) throws {
         if let dbAudio = findAudio(url) {
             dbAudio.like.toggle()
             do {
@@ -524,6 +524,8 @@ extension AudioRecordDB {
             }
 
             emitAudioUpdate(dbAudio)
+        } else {
+            throw AudioRecordDBError.ToggleLikeError(AudioRecordDBError.AudioNotFound(url))
         }
     }
 
@@ -740,4 +742,11 @@ extension Notification.Name {
     static let dbSynced = Notification.Name("dbSynced")
     static let DBSorting = Notification.Name("DBSorting")
     static let DBSortDone = Notification.Name("DBSortDone")
+}
+
+// MARK: Error
+
+enum AudioRecordDBError: Error {
+    case ToggleLikeError(Error)
+    case AudioNotFound(URL)
 }

@@ -130,8 +130,8 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread, AudioWorkerDel
         setPlayingInfo()
     }
 
-    func toggleLike() {
-        self.asset?.like.toggle()
+    func toggleLike() throws {
+        try self.asset?.toggleLike()
     }
 
     func stop(reason: String, verbose: Bool) {
@@ -159,7 +159,7 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread, AudioWorkerDel
     }
 }
 
-// MAKR: Set
+// MARK: Set
 
 extension PlayMan {
     func clearError() {
@@ -328,12 +328,18 @@ extension PlayMan {
         c.likeCommand.addTarget { _ in
             os_log("\(self.t)点击了喜欢按钮")
 
-            self.toggleLike()
-
-            self.c.likeCommand.isActive = self.asset?.like ?? false
-            self.c.dislikeCommand.isActive = self.asset?.notLike ?? true
-
-            return .success
+            do {
+                try self.toggleLike()
+                
+                self.c.likeCommand.isActive = self.asset?.like ?? false
+                self.c.dislikeCommand.isActive = self.asset?.notLike ?? true
+                
+                return .success
+            } catch {
+                self.setError(.ToggleLikeError(error))
+                
+                return .commandFailed
+            }
         }
 
         c.ratingCommand.addTarget { _ in

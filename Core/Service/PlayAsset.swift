@@ -17,19 +17,22 @@ struct PlayAsset: FileBox, Identifiable, SuperEvent, SuperLog {
 
     static var label = "🪖 PlayAsset::"
 
-    let fileManager = FileManager.default
+    let fm = FileManager.default
 
     var url: URL
     var contentType: String?
     var like: Bool = false
     var size: Int64?
-
     var notLike: Bool { !like }
     var label: String { "\(Logger.isMain)\(Self.label)" }
     var source: PlaySource?
 
     func isSupported() -> Bool {
         self.isFolder() || Config.supportedExtensions.contains(ext.lowercased())
+    }
+    
+    func isAudio() -> Bool {
+        !isVideo()
     }
 
     // MARK: 控制中心的图
@@ -41,7 +44,7 @@ struct PlayAsset: FileBox, Identifiable, SuperEvent, SuperLog {
             var i = defaultUIImage
         #endif
 
-        if fileManager.fileExists(atPath: coverCacheURL.path) {
+        if fm.fileExists(atPath: coverCacheURL.path) {
             #if os(macOS)
                 i = NSImage(contentsOf: coverCacheURL) ?? i
             #else
@@ -75,19 +78,21 @@ struct PlayAsset: FileBox, Identifiable, SuperEvent, SuperLog {
         updated.source = source
         return updated
     }
+    
+    func toggleLike() throws {
+        guard let source = source else {
+            throw PlayAssetError.sourceNotFound
+        }
+
+        Task {
+            try await source.toggleLike()
+        }
+    }
 }
 
 extension PlayAsset: Equatable {
     static func == (lhs: PlayAsset, rhs: PlayAsset) -> Bool {
         lhs.url == rhs.url
-    }
-}
-
-// MARK: Format
-
-extension PlayAsset {
-    func isAudio() -> Bool {
-        !isVideo()
     }
 }
 
