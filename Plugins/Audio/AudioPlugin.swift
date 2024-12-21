@@ -7,12 +7,12 @@ class AudioPlugin: SuperPlugin, SuperLog {
     static let keyOfCurrentAudioURL = "AudioPluginCurrentAudioURL"
     static let keyOfCurrentAudioTime = "AudioPluginCurrentAudioTime"
     static let keyOfCurrentPlayMode = "AudioPluginCurrentPlayMode"
-    let emoji = "🎺"
+    let emoji = "🎧"
     let dirName = "audios"
     let label: String = "Audio"
     var hasPoster: Bool = true
     let description: String = "作为歌曲仓库，只关注文件，文件夹将被忽略"
-    var iconName: String = "music.note"
+var iconName: String = "music.note"
     var isGroup: Bool = true
     lazy var db = AudioRecordDB(AudioConfig.getContainer, reason: "AudioPlugin")
 

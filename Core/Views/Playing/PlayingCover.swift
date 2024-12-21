@@ -2,10 +2,10 @@ import MagicKit
 import OSLog
 import SwiftUI
 
-struct AudioPlayingCover: View, SuperLog {
-    @EnvironmentObject var playMan: PlayMan
+struct PlayingCover: View, SuperLog {
+    @EnvironmentObject var man: PlayMan
 
-    @State var asset: PlayAsset?
+    private var asset: PlayAsset? { man.asset }
 
     let emoji = "🥇"
     var alignTop = false
@@ -25,8 +25,6 @@ struct AudioPlayingCover: View, SuperLog {
                 }
             }
         }
-        .onAppear(perform: onAppear)
-        .onReceive(NotificationCenter.default.publisher(for: .PlayManStateChange), perform: onPlayStateChange)
     }
 
     var view: some View {
@@ -38,25 +36,6 @@ struct AudioPlayingCover: View, SuperLog {
                 DefaultAlbum(role: .Hero)
             }
         }
-    }
-}
-
-// MARK: Event Handler
-
-extension AudioPlayingCover {
-    func onPlayStateChange(_ notification: Notification) {
-        let asset = playMan.asset
-        
-        if asset != self.asset {
-            os_log("\(self.t)PlayAssetChange: \(playMan.state.des)")
-            withAnimation {
-                self.asset = asset
-            }
-        }
-    }
-
-    func onAppear() {
-        self.asset = playMan.asset
     }
 }
 

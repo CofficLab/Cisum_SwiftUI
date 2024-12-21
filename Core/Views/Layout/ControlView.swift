@@ -26,7 +26,7 @@ struct ControlView: View {
                     // MARK: 封面图和标题
 
                     if showHeroView {
-                        AudioHero()
+                        HeroView()
                             .frame(maxWidth: .infinity)
                             .frame(maxHeight: .infinity)
                     }
@@ -62,7 +62,7 @@ struct ControlView: View {
                     // MARK: 控制栏
 
                     if showBtnsView {
-                        AudioBtns()
+                        ControlBtns()
                             .frame(height: getButtonsHeight(geo))
                             .padding(.bottom, getBottomHeight(geo))
                             .background(Config.background(.red))
