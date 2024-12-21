@@ -96,6 +96,10 @@ extension AudioWorker {
         guard let asset = asset else {
             return AVAudioPlayer()
         }
+        
+        if asset.isNotDownloaded {
+            os_log(.error, "\(self.t)未下载，等待下载 -> \(asset.title)")
+        }
 
         // 格式不支持
         guard asset.isSupported() else {

@@ -16,11 +16,13 @@ class MessageProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
     @Published var doneMessage: String?
     @Published var stateMessage: String = ""
     @Published var flashMessage: String = ""
+    @Published var hub: String?
 
     @Published var showDone = false
     @Published var showError = false
     @Published var showToast = false
     @Published var showAlert = false
+    @Published var showHub = false
     
     
     var showStateMessage: Bool { stateMessage.count > 0 }
@@ -130,6 +132,16 @@ class MessageProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
 
         return messages.filter { $0.channel == channel }
     }
+    
+    func hub(_ title: String) {
+        if !Thread.isMainThread {
+            assertionFailure("toast called from background thread")
+        }
+
+        self.hub = title
+        self.showHub = true
+    }
+
 
     func toast(_ toast: String) {
         if !Thread.isMainThread {

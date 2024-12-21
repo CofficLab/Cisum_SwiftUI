@@ -14,7 +14,7 @@ struct BtnMode: View {
             dynamicSize: autoResize,
             onTap: {
                 playMan.switchMode()
-                messageManager.toast("\(playMan.mode.description)")
+                messageManager.hub("\(playMan.mode.description)")
             })
         .foregroundStyle(.white)
     }

@@ -65,6 +65,9 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                 }
             }
         }
+        .toast(isPresenting: $m.showHub, alert: {
+            AlertToast(displayMode: .hud, type: .regular, title: m.hub)
+        })
         .toast(isPresenting: $m.showToast, alert: {
             AlertToast(type: .systemImage("info.circle", .blue), title: m.toast)
         }, completion: {
@@ -88,7 +91,9 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
         .frame(maxWidth: .infinity)
         .frame(maxHeight: .infinity)
         .background(Config.rootBackground)
-//        .ignoresSafeArea()
+        #if os(iOS)
+        .ignoresSafeArea()
+        #endif
         .onReceive(nc.publisher(for: NSUbiquitousKeyValueStore.didChangeExternallyNotification), perform: onCloudAccountStateChanged)
         .onAppear(perform: onAppear)
         .onDisappear(perform: onDisappear)
