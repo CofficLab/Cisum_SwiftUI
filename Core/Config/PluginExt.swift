@@ -5,7 +5,7 @@ extension Config {
         return [
             // DebugPlugin(),
             AudioPlugin(),
-            BookPlugin()
+//            BookPlugin()
         ]
     }
 }

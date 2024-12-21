@@ -12,6 +12,10 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
     @Published private(set) var plugins: [SuperPlugin] = []
     @Published private(set) var current: SuperPlugin?
 
+    var groupPlugins: [SuperPlugin] {
+        plugins.filter { $0.isGroup }
+    }
+
     init() {
         os_log("\(Logger.initLog) PluginProvider")
 

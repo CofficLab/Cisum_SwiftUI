@@ -39,8 +39,10 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                         ZStack {
                             content
                                 .toolbar(content: {
-                                    ToolbarItem(placement: .navigation) {
-                                        BtnScene()
+                                    if p.groupPlugins.count > 1 {
+                                        ToolbarItem(placement: .navigation) {
+                                            BtnScene()
+                                        }
                                     }
 
                                     ToolbarItemGroup(placement: .cancellationAction) {
