@@ -8,19 +8,14 @@ struct BtnShowInFinder: View, SuperThread {
     var body: some View {
         ControlButton(
             title: "在访达中显示",
-            image: getImageName(),
+            image: "doc.text.fill.viewfinder",
             dynamicSize: autoResize,
             onTap: {
                 self.bg.async {
                     FileHelper.showInFinder(url: url)
                 }
             })
-    }
-
-    private func getImageName() -> String {
-        return "doc.text.fill.viewfinder"
-    }
-}
+    }}
 
 #Preview("App") {
     AppPreview()

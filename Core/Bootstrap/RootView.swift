@@ -47,6 +47,9 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
 
                                     ToolbarItemGroup(placement: .cancellationAction) {
                                         Spacer()
+                                        if let asset = man.asset {
+                                            BtnShowInFinder(url: asset.url, autoResize: false)
+                                        }
                                         ForEach(p.getToolBarButtons(), id: \.id) { item in
                                             item.view
                                         }
@@ -172,7 +175,7 @@ extension RootView {
 
     func onPlayAssetChange() {
         os_log("\(self.t)Play Asset Change")
-        
+
         for plugin in p.plugins {
             Task {
                 try await plugin.onPlayAssetUpdate(asset: man.asset, currentGroup: p.current)
