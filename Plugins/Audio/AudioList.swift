@@ -16,7 +16,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     let emoji = "📬"
 
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var man: PlayMan
     @EnvironmentObject var db: AudioDB
     @EnvironmentObject var audioManager: AudioProvider
 
@@ -24,6 +24,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     @State var selection: URL? = nil
     @State var isSorting = false
     @State var sortMode: SortMode = .none
+    @State var loading = true
 
     var total: Int { assets.count }
 
@@ -35,7 +36,9 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
 
     var body: some View {
         Group {
-            if isSorting {
+            if loading {
+                ProgressView()
+            } else if isSorting {
                 VStack(spacing: 0) {
                     Spacer()
 
@@ -82,7 +85,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
         }
         .onAppear(perform: handleOnAppear)
         .onChange(of: selection, handleSelectionChange)
-        .onChange(of: playMan.asset, handlePlayAssetChange)
+        .onChange(of: man.asset, handlePlayAssetChange)
         .onReceive(nc.publisher(for: .PlayManStateChange), perform: handlePlayManStateChange)
         .onReceive(nc.publisher(for: .audioDeleted), perform: handleAudioDeleted)
         .onReceive(nc.publisher(for: .DBSorting), perform: onSorting)
@@ -90,10 +93,14 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     }
 
     private func refreshAssets() {
-        Task {
+        Task.detached(priority: .background) {
             let audios = await db.allAudios(reason: self.className + ".handleAudioDeleted")
             let assets = audios.map { $0.toPlayAsset() }
-            self.assets = assets
+            
+            await MainActor.run {
+                self.assets = assets
+                self.loading = false
+            }
         }
     }
 }
@@ -106,7 +113,7 @@ extension AudioList {
     }
 
     func handleOnAppear() {
-        if let asset = playMan.asset {
+        if let asset = man.asset {
             selection = asset.url
         }
 
@@ -114,7 +121,7 @@ extension AudioList {
     }
 
     func handlePlayManStateChange(_ notification: Notification) {
-        if let asset = playMan.asset, asset.url != self.selection {
+        if let asset = man.asset, asset.url != self.selection {
             selection = asset.url
         }
     }
@@ -124,13 +131,13 @@ extension AudioList {
             return
         }
 
-        if url != playMan.asset?.url {
-            self.playMan.play(asset, reason: self.className + ".SelectionChange", verbose: true)
+        if url != man.asset?.url {
+            self.man.play(asset, reason: self.className + ".SelectionChange", verbose: true)
         }
     }
 
     func handlePlayAssetChange() {
-        if let asset = playMan.asset {
+        if let asset = man.asset {
             selection = asset.url
         }
     }
@@ -157,7 +164,7 @@ extension AudioList {
 extension AudioList {
     enum SortMode: String {
         case random, order, none
-        
+
         var icon: String {
             switch self {
             case .random: return "shuffle"
