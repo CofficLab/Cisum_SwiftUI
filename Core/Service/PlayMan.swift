@@ -77,7 +77,11 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread, AudioWorkerDel
     
     func play(_ asset: PlayAsset? = nil, reason: String = "", verbose: Bool) {
         if verbose {
-            os_log("\(self.t)Play 🔊「\(asset?.fileName ?? "")」🐛 \(reason)")
+            if let asset = asset {
+                os_log("\(self.t)Play 🔊🔊🔊「\(asset.fileName)」🐛 \(reason)")
+            } else {
+                os_log("\(self.t)Play Current 🔊🔊🔊 🐛 \(reason)")
+            }
         }
         
         clearError()
