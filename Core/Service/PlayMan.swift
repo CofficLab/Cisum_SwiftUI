@@ -23,11 +23,7 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread, AudioWorkerDel
     @Published private(set) var asset: PlayAsset?
     @Published private(set) var mode: PlayMode = .Order
     @Published private(set) var error: PlayManError? = nil
-    @Published private(set) var playing: Bool = false {
-        didSet {
-            self.setPlayingInfo()
-        }
-    }
+    @Published private(set) var playing: Bool = false
 
     let emoji = "💃"
     var delegate: PlayManDelegate?
@@ -76,38 +72,34 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread, AudioWorkerDel
         }
 
         try self.worker.pause(verbose: verbose)
-        self.playing = false
+        setPlaying(false)
     }
     
     func play(_ asset: PlayAsset? = nil, reason: String = "", verbose: Bool) {
-        if !Thread.isMainThread {
-            assert(false, "PlayMan.play 必须在主线程调用")
-        }
-
-        self.error = nil
+        clearError()
 
         if let asset = asset {
             if verbose {
                 os_log("\(self.t)Play 🔊「\(asset.fileName)」🐛 \(reason)")
             }
-            self.asset = asset
+            self.setAsset(asset)
         }
 
         guard let currentAsset = self.asset else {
             self.stop(reason: "Play.NoAsset", verbose: true)
-            self.error = .NoAsset
+            self.setError(.NoAsset)
             return
         }
 
         if currentAsset.isDownloading {
             self.stop(reason: "Play.Downloading", verbose: true)
-            self.error = .Downloading
+            self.setError(.Downloading)
             return
         }
 
         if currentAsset.isNotDownloaded {
             self.stop(reason: "Play.NotDownloaded", verbose: true)
-            self.error = .NotDownloaded
+            self.setError(.NotDownloaded)
             return
         }
 
@@ -122,33 +114,15 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread, AudioWorkerDel
 
         do {
             try self.worker.play()
-            self.playing = true
+            setPlaying(true)
         } catch {
-            self.error = .PlayFailed(error)
+            self.setError(.PlayFailed(error))
         }
     }
     
     func seek(_ to: TimeInterval) {
         self.worker.goto(to)
         setPlayingInfo()
-    }
-
-    func switchMode(verbose: Bool = true) {
-        mode = mode.switchMode()
-        self.delegate?.onPlayModeChange(mode: mode)
-    }
-    
-    func setMode(_ mode: PlayMode, reason: String) {
-        if verbose {
-            os_log("\(self.t)SetMode 🐛 \(reason)")
-        }
-        
-        if self.mode == mode {
-            return
-        }
-
-        self.mode = mode
-        self.delegate?.onPlayModeChange(mode: mode)
     }
 
     func toggleLike() {
@@ -160,7 +134,7 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread, AudioWorkerDel
             os_log("\(self.t)Stop ⏹️⏹️⏹️ 🐛 \(reason)")
         }
         self.worker.stop(reason: reason, verbose: verbose)
-        self.playing = false
+        setPlaying(false)
     }
 
     @MainActor
@@ -178,6 +152,53 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread, AudioWorkerDel
 
     func next() async {
         await self.delegate?.onPlayNext(current: self.asset, mode: mode)
+    }
+}
+
+// MAKR: Set
+
+extension PlayMan {
+    func clearError() {
+        self.main.async {
+            self.error = nil
+        }
+    }
+    
+    func switchMode(verbose: Bool = true) {
+        mode = mode.switchMode()
+        self.delegate?.onPlayModeChange(mode: mode)
+    }
+    
+    func setError(_ e: PlayManError) {
+        self.main.async {
+            self.error = e
+        }
+    }
+    
+    func setAsset(_ a: PlayAsset) {
+        self.main.async {
+            self.asset = a
+        }
+    }
+    
+    func setMode(_ mode: PlayMode, reason: String) {
+        if verbose {
+            os_log("\(self.t)SetMode 🐛 \(reason)")
+        }
+        
+        if self.mode == mode {
+            return
+        }
+
+        self.mode = mode
+        self.delegate?.onPlayModeChange(mode: mode)
+    }
+    
+    func setPlaying(_ playing: Bool) {
+        self.main.async {
+            self.playing = playing
+            self.setPlayingInfo()
+        }
     }
 }
 
