@@ -76,12 +76,13 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread, AudioWorkerDel
     }
     
     func play(_ asset: PlayAsset? = nil, reason: String = "", verbose: Bool) {
+        if verbose {
+            os_log("\(self.t)Play 🔊「\(asset?.fileName ?? "")」🐛 \(reason)")
+        }
+        
         clearError()
 
         if let asset = asset {
-            if verbose {
-                os_log("\(self.t)Play 🔊「\(asset.fileName)」🐛 \(reason)")
-            }
             self.setAsset(asset)
         }
 
@@ -307,7 +308,6 @@ extension PlayMan {
         }
 
         c.playCommand.addTarget { _ in
-            os_log("\(self.t)播放")
             self.play(reason: "PlayCommand", verbose: true)
 
             return .success

@@ -190,8 +190,7 @@ extension DiskiCloud {
 
     func download(_ url: URL, reason: String, verbose: Bool = false) async throws {
         if verbose {
-            os_log("\(self.t)Download ⏬⏬⏬ \(url.lastPathComponent)")
-            os_log("   ➡️ Reason: \(reason)")
+            os_log("\(self.t)Download ⏬⏬⏬ \(url.lastPathComponent) 🐛 \(reason)")
         }
 
         // 检查是否为 iCloud 项目
