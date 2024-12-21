@@ -24,7 +24,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
         guard let audioProvider = self.audioProvider else {
             return AnyView(EmptyView())
         }
-        
+
         guard let audioDB = audioDB else {
             return AnyView(EmptyView())
         }
@@ -51,7 +51,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
         if currentGroup?.id != self.id {
             return nil
         }
-        
+
         guard let audioProvider = self.audioProvider else {
             return nil
         }
@@ -69,7 +69,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
 
     func onInit() {
         os_log("\(self.t)onInit")
-        
+
         self.disk = DiskiCloud.make(self.dirName, verbose: true, reason: "AudioPlugin.onInit")
         self.audioDB = AudioDB(db: self.db, disk: disk!)
         self.audioProvider = AudioProvider(disk: disk!)
@@ -100,21 +100,16 @@ class AudioPlugin: SuperPlugin, SuperLog {
         }
     }
 
-    func onPlayModeChange(mode: PlayMode, asset: PlayAsset?) throws {
+    func onPlayModeChange(mode: PlayMode, asset: PlayAsset?) async throws {
         AudioPlugin.storePlayMode(mode)
-        
-        // Use weak self to avoid retain cycles
-        Task { [weak self] in
-            guard let self = self else { return }
-            
-            switch mode {
-            case .Loop:
-                break
-            case .Order:
-                await self.db.sort(asset?.url, reason: self.className + ".OnPlayModeChange")
-            case .Random:
-                try await self.db.sortRandom(asset?.url, reason: self.className + ".OnPlayModeChange", verbose: true)
-            }
+
+        switch mode {
+        case .Loop:
+            break
+        case .Order:
+            await self.db.sort(asset?.url, reason: self.className + ".OnPlayModeChange")
+        case .Random:
+            try await self.db.sortRandom(asset?.url, reason: self.className + ".OnPlayModeChange", verbose: true)
         }
     }
 
@@ -122,7 +117,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
         if currentGroup?.id != self.id {
             return
         }
-        
+
         os_log("\(self.t)onAppear")
 
         let mode = AudioPlugin.getPlayMode()
@@ -146,7 +141,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
     func onPlayPrev(playMan: PlayMan, current: PlayAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws {
         os_log("\(self.t)OnPlayPrev")
         let asset = try await self.db.getPrevOf(current?.url, verbose: false)
-        
+
         if let asset = asset {
             await playMan.play(PlayAsset(url: asset.url), reason: "OnPlayPrev", verbose: true)
         } else {
@@ -158,9 +153,9 @@ class AudioPlugin: SuperPlugin, SuperLog {
         if currentGroup?.id != self.id {
             return
         }
-        
+
         let mode = await playMan.mode
-        
+
         if verbose {
             os_log("\(self.t)OnPlayNext with mode \(mode.description)")
         }
@@ -200,7 +195,7 @@ extension AudioPlugin {
         NSUbiquitousKeyValueStore.default.set(String(time), forKey: keyOfCurrentAudioTime)
         NSUbiquitousKeyValueStore.default.synchronize()
     }
-    
+
     static func getPlayMode() -> PlayMode? {
         // First, try to get the mode from UserDefaults
         if let mode = UserDefaults.standard.string(forKey: keyOfCurrentPlayMode) {

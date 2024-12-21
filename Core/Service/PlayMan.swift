@@ -278,7 +278,7 @@ extension Notification.Name {
 extension PlayMan {
     func onPlayFinished(verbose: Bool) async {
         if verbose {
-            os_log("\(self.t)Play finished: \(self.mode.description)")
+            os_log("\(self.t)Play finished with mode -> \(self.mode.description)")
         }
 
         switch mode {

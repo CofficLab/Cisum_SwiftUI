@@ -23,7 +23,7 @@ protocol SuperPlugin {
     func onPlay() -> Void
     func onPause(playMan: PlayMan) async -> Void
     func onPlayStateUpdate() async throws -> Void
-    func onPlayModeChange(mode: PlayMode, asset: PlayAsset?) throws -> Void
+    func onPlayModeChange(mode: PlayMode, asset: PlayAsset?) async throws -> Void
     func onPlayAssetUpdate(asset: PlayAsset?, currentGroup: SuperPlugin?) async throws -> Void
     func onPlayNext(playMan: PlayMan, current: PlayAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws -> Void
     func onPlayPrev(playMan: PlayMan, current: PlayAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws -> Void
