@@ -23,7 +23,7 @@ class DiskLocal: ObservableObject, SuperDisk {
         os_log("\(Logger.isMain)\(DiskiCloud.label)updated with items.count=\(collection.count)")
     }
     
-    required init(root: URL) {
+    required init(root: URL, delegate: DiskDelegate? = nil) {
         self.root = root
     }
     

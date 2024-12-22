@@ -12,7 +12,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
     let label: String = "Audio"
     var hasPoster: Bool = true
     let description: String = "作为歌曲仓库，只关注文件，文件夹将被忽略"
-var iconName: String = "music.note"
+    var iconName: String = "music.note"
     var isGroup: Bool = true
     lazy var db = AudioRecordDB(AudioConfig.getContainer, reason: "AudioPlugin")
 
@@ -70,7 +70,7 @@ var iconName: String = "music.note"
     func onInit() {
         os_log("\(self.t)onInit")
 
-        self.disk = DiskiCloud.make(self.dirName, verbose: true, reason: "AudioPlugin.onInit")
+        self.disk = DiskiCloud.make(self.dirName, delegate: self, verbose: true, reason: "AudioPlugin.onInit")
         self.audioDB = AudioDB(db: self.db, disk: disk!)
         self.audioProvider = AudioProvider(disk: disk!)
     }
@@ -166,6 +166,19 @@ var iconName: String = "music.note"
         }
     }
 }
+
+
+
+extension AudioPlugin: DiskDelegate {
+    func onUpdate(_ items: DiskFileGroup) {
+        os_log("\(self.t)onUpdate(\(items.count))")
+        
+        Task.detached(priority: .background) {
+            await self.db.sync(items)
+        }
+    }
+}
+
 
 // MARK: Store
 

@@ -109,7 +109,7 @@ extension DataProvider {
         }
 
         let localDisk = DiskLocal(root: localMountedURL)
-        let cloudDisk = DiskiCloud(root: cloudMoutedURL)
+        let cloudDisk = DiskiCloud(root: cloudMoutedURL, delegate: nil)
 
         if Config.iCloudEnabled {
             moveAudios(localDisk, cloudDisk)

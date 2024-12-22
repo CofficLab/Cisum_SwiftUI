@@ -1,7 +1,9 @@
 import Foundation
 import MagicKit
+import OSLog
 
-class AudioDB: ObservableObject, SuperEvent {
+class AudioDB: ObservableObject, SuperEvent, SuperLog {
+    var emoji = "🍺"
     var db: AudioRecordDB
     var disk: (any SuperDisk)
     
@@ -9,13 +11,7 @@ class AudioDB: ObservableObject, SuperEvent {
         self.db = db
         self.disk = disk
         
-        self.disk.onUpdated = { items in
-            Task {
-                await self.db.sync(items)
-            }
-        }
-        
-        Task.detached(priority: .background) {
+        Task {
             await disk.watch(reason: "AudioDB.init", verbose: true)
         }
     }

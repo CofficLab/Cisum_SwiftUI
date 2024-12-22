@@ -16,12 +16,6 @@ class BookDB: ObservableObject, SuperEvent, SuperLog {
         self.disk = disk
         self.worker = BookWorker(db: db)
 
-        self.disk.onUpdated = { items in
-            Task {
-                await self.db.bookSync(items)
-            }
-        }
-
         Task {
             self.worker.runJobs()
             await disk.watch(reason: "AudioDB.init", verbose: true)
