@@ -2,16 +2,14 @@ import Foundation
 import MagicKit
 import OSLog
 
-class CopyJob: SuperLog, SuperThread, ObservableObject {
+class CopyWorker: SuperLog, SuperThread, ObservableObject {
     static let emoji = "🔄"
     
     let db: CopyDB
-    let disk: (any SuperDisk)?
     var running = false
     
-    init(db: CopyDB, disk: (any SuperDisk)?) {
+    init(db: CopyDB) {
         self.db = db
-        self.disk = disk
 
         let verbose = false
         if verbose {
@@ -19,16 +17,6 @@ class CopyJob: SuperLog, SuperThread, ObservableObject {
         }
 
         self.bg.async {
-            self.run()
-        }
-    }
-
-    func append(_ urls: [URL]) {
-        Task {
-            for url in urls {
-                await db.newCopyTask(url)
-            }
-
             self.run()
         }
     }
@@ -41,12 +29,6 @@ class CopyJob: SuperLog, SuperThread, ObservableObject {
         running = true
 
         os_log("\(self.t)run")
-
-        guard let disk = self.disk else {
-            os_log(.error, "\(self.t)没有磁盘")
-            running = false
-            return
-        }
 
         self.bg.async {
             Task {
@@ -61,8 +43,8 @@ class CopyJob: SuperLog, SuperThread, ObservableObject {
                 for task in tasks {
                     do {
                         let url = task.url
-                        os_log("\(self.t)run -> \(url)")
-                        try disk.copyTo(url: url, reason: "AudioCopyJob")
+                        os_log("\(self.t)run -> \(url.path(percentEncoded: false)) -> \(task.destination.path(percentEncoded: false))")
+                        try FileManager.default.copyItem(at: url, to: task.destination.appendingPathExtension(url.lastPathComponent))
                         await self.db.deleteCopyTasks([url])
                     } catch let e {
                         await self.db.setTaskError(task, e)

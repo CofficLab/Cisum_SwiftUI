@@ -9,6 +9,8 @@ struct CopyRootView: View, SuperEvent, SuperLog, SuperThread {
 
     @EnvironmentObject var db: CopyDB
     @EnvironmentObject var s: StoreProvider
+    @EnvironmentObject var m: MessageProvider
+    @EnvironmentObject var p: PluginProvider
 
     @State var dataManager: DataProvider?
     @State var isDropping: Bool = false
@@ -16,12 +18,8 @@ struct CopyRootView: View, SuperEvent, SuperLog, SuperThread {
     @State var iCloudAvailable = true
     @State var count: Int = 0
 
-    @StateObject var m = MessageProvider()
-    @StateObject var p = PluginProvider()
-    @StateObject var man: PlayMan = PlayMan(delegate: nil)
-    
     init() {
-        //os_log("\(Self.i)")
+        // os_log("\(Self.i)")
     }
 
     var outOfLimit: Bool {
@@ -80,10 +78,19 @@ extension CopyRootView {
             return result
         }
 
-        bg.async {
-            os_log("\(self.t)添加 \(urls.count) 个文件到复制队列")
-            self.emitCopyFiles(urls)
-            self.db.addCopyTasks(urls)
+        os_log("\(self.t)添加 \(urls.count) 个文件到复制队列")
+        self.emitCopyFiles(urls)
+
+        guard let disk = p.current?.getDisk() else {
+            os_log(.error, "\(self.t)No Disk")
+            self.m.toast("No Disk")
+            return false
+        }
+
+        self.m.toast("复制 \(urls.count) 个文件")
+
+        urls.forEach {
+            self.db.newCopyTask($0, destination: disk.root)
         }
 
         return true

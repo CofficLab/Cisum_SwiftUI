@@ -12,7 +12,7 @@ class CopyPlugin: SuperPlugin, SuperLog {
     var iconName: String = "music.note"
     var isGroup: Bool = false
     var db: CopyDB?
-    var worker: CopyJob?
+    var worker: CopyWorker?
 
     init() {
         os_log("\(self.i)")
@@ -45,6 +45,6 @@ class CopyPlugin: SuperPlugin, SuperLog {
         os_log("\(self.t)🛫🛫🛫 OnInit")
 
         self.db = CopyDB(CopyConfig.getContainer, reason: self.author + ".onInit", verbose: true)
-        self.worker = CopyJob(db: self.db!, disk: nil)
+        self.worker = CopyWorker(db: self.db!)
     }
 }

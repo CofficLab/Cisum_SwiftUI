@@ -105,6 +105,10 @@ class AudioPlugin: SuperPlugin, SuperLog {
             }
         }
     }
+    
+    func getDisk() -> (any SuperDisk)? {
+        self.disk
+    }
 
     func onPlayModeChange(mode: PlayMode, asset: PlayAsset?) async throws {
         AudioPlugin.storePlayMode(mode)

@@ -124,7 +124,7 @@
 		0BE695C02C01E88E00CEFFEB /* DeviceData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE695BF2C01E88E00CEFFEB /* DeviceData.swift */; };
 		0BE93F312BFB8E3200F25445 /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE93F302BFB8E3200F25445 /* SettingView.swift */; };
 		0BEE7C6F2CA8343800DC1DCF /* CopyStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEE7C6E2CA8343800DC1DCF /* CopyStatusView.swift */; };
-		0BEE7C722CA838D600DC1DCF /* CopyJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEE7C712CA838D100DC1DCF /* CopyJob.swift */; };
+		0BEE7C722CA838D600DC1DCF /* CopyWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEE7C712CA838D100DC1DCF /* CopyWorker.swift */; };
 		0BEE7C742CA99CE000DC1DCF /* ProTips.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEE7C732CA99CE000DC1DCF /* ProTips.swift */; };
 		0BEE7C762CA99D1400DC1DCF /* DropTips.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEE7C752CA99D0D00DC1DCF /* DropTips.swift */; };
 		0BFB38832BCCCC780055E38B /* OperationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFB38822BCCCC780055E38B /* OperationView.swift */; };
@@ -344,7 +344,7 @@
 		0BE695BF2C01E88E00CEFFEB /* DeviceData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceData.swift; sourceTree = "<group>"; };
 		0BE93F302BFB8E3200F25445 /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
 		0BEE7C6E2CA8343800DC1DCF /* CopyStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyStatusView.swift; sourceTree = "<group>"; };
-		0BEE7C712CA838D100DC1DCF /* CopyJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyJob.swift; sourceTree = "<group>"; };
+		0BEE7C712CA838D100DC1DCF /* CopyWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyWorker.swift; sourceTree = "<group>"; };
 		0BEE7C732CA99CE000DC1DCF /* ProTips.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProTips.swift; sourceTree = "<group>"; };
 		0BEE7C752CA99D0D00DC1DCF /* DropTips.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropTips.swift; sourceTree = "<group>"; };
 		0BFB38822BCCCC780055E38B /* OperationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationView.swift; sourceTree = "<group>"; };
@@ -924,13 +924,13 @@
 				0BAABEB72BC7D4B600DF4A31 /* BtnDelTask.swift */,
 				F5ADFF632D195404003CF664 /* CopyConfig.swift */,
 				F5ADFF652D1954B9003CF664 /* CopyDB.swift */,
-				0BEE7C712CA838D100DC1DCF /* CopyJob.swift */,
 				F5ADFF612D1951D7003CF664 /* CopyPlugin.swift */,
 				F5ADFF672D195D4E003CF664 /* CopyRootView.swift */,
 				0BFB38F62BD0BCC20055E38B /* CopyRow.swift */,
 				F5ADFF692D196811003CF664 /* CopyStateView.swift */,
 				0BEE7C6E2CA8343800DC1DCF /* CopyStatusView.swift */,
 				0BAABEB02BC79C4E00DF4A31 /* CopyTask.swift */,
+				0BEE7C712CA838D100DC1DCF /* CopyWorker.swift */,
 			);
 			path = CopyPlugin;
 			sourceTree = "<group>";
@@ -1155,7 +1155,7 @@
 				0B12B0A72C0CB88B00FD43AD /* BuySetting.swift in Sources */,
 				F5AEE05C2CB519C90007825B /* BookPlayingCover.swift in Sources */,
 				0B7842752C1331B400E24869 /* BtnDelDevice.swift in Sources */,
-				0BEE7C722CA838D600DC1DCF /* CopyJob.swift in Sources */,
+				0BEE7C722CA838D600DC1DCF /* CopyWorker.swift in Sources */,
 				F53BE0342C2024BE003CBA29 /* DiskFileGroup.swift in Sources */,
 				0B9EA35D2C21C9AB00A4059A /* PlayState.swift in Sources */,
 				0B8C36B22BEC6E8D00C47567 /* QueueExt.swift in Sources */,

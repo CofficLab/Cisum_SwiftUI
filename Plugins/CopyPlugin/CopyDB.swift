@@ -38,24 +38,24 @@ actor CopyDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
         try? context.save()
     }
 
-    func addCopyTasks(_ urls: [URL]) {
+    func addCopyTasks(_ urls: [URL], folder: URL) {
         let verbose = true
         if verbose {
             os_log("\(self.t)添加复制任务(\(urls.count)个)")
         }
 
         for url in urls {
-            newCopyTask(url)
+            newCopyTask(url, destination: folder.appendingPathComponent(url.lastPathComponent))
         }
     }
 
     /// 将文件从外部复制到应用中
-    func newCopyTask(_ url: URL) {
+    func newCopyTask(_ url: URL, destination: URL) {
         if self.findCopyTask(url) != nil {
             return
         }
 
-        let task = CopyTask(url: url)
+        let task = CopyTask(url: url, destination: destination)
         context.insert(task)
         do {
             try context.save()

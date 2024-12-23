@@ -4,6 +4,7 @@ import SwiftData
 @Model
 class CopyTask: FileBox {
     var url: URL
+    var destination: URL
     var createdAt: Date
     var error: String = ""
     var isRunning: Bool = false
@@ -22,8 +23,9 @@ class CopyTask: FileBox {
         return error
     }
     
-    init(url: URL) {
+    init(url: URL, destination: URL) {
         self.url = url
+        self.destination = destination
         self.createdAt = .now
     }
 }
