@@ -41,6 +41,7 @@
 		0B604AE82AD6384300929DD8 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B604AE72AD6384300929DD8 /* RootView.swift */; };
 		0B6B8B992BBA39F500F65B23 /* ControlButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6B8B982BBA39F500F65B23 /* ControlButton.swift */; };
 		0B6B8B9D2BBA4D0600F65B23 /* Coffee.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6B8B9C2BBA4D0600F65B23 /* Coffee.swift */; };
+		0B6DDCE32D198861001473E3 /* DBSynced.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6DDCE02D198861001473E3 /* DBSynced.swift */; };
 		0B718F0C2AB4349900569762 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B718F0B2AB4349900569762 /* CardView.swift */; };
 		0B73275F2BB5138200DBD922 /* LoggerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B73275E2BB5138200DBD922 /* LoggerHelper.swift */; };
 		0B7792462D15ADF500D78FF4 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 0B7792452D15ADF500D78FF4 /* Localizable.xcstrings */; };
@@ -121,7 +122,6 @@
 		0BE695A02BFE3DCC00CEFFEB /* OneTimeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE695972BFE3DCC00CEFFEB /* OneTimeView.swift */; };
 		0BE695A12BFE3DCC00CEFFEB /* ProductCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE695982BFE3DCC00CEFFEB /* ProductCell.swift */; };
 		0BE695C02C01E88E00CEFFEB /* DeviceData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE695BF2C01E88E00CEFFEB /* DeviceData.swift */; };
-		0BE695C22C01E8F600CEFFEB /* DBSynced.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE695C12C01E8F600CEFFEB /* DBSynced.swift */; };
 		0BE93F312BFB8E3200F25445 /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE93F302BFB8E3200F25445 /* SettingView.swift */; };
 		0BEE7C6F2CA8343800DC1DCF /* CopyStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEE7C6E2CA8343800DC1DCF /* CopyStatusView.swift */; };
 		0BEE7C722CA838D600DC1DCF /* CopyJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEE7C712CA838D100DC1DCF /* CopyJob.swift */; };
@@ -261,6 +261,7 @@
 		0B604AE72AD6384300929DD8 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		0B6B8B982BBA39F500F65B23 /* ControlButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlButton.swift; sourceTree = "<group>"; };
 		0B6B8B9C2BBA4D0600F65B23 /* Coffee.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coffee.swift; sourceTree = "<group>"; };
+		0B6DDCE02D198861001473E3 /* DBSynced.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBSynced.swift; sourceTree = "<group>"; };
 		0B718F0B2AB4349900569762 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		0B73275E2BB5138200DBD922 /* LoggerHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerHelper.swift; sourceTree = "<group>"; };
 		0B7792452D15ADF500D78FF4 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
@@ -341,7 +342,6 @@
 		0BE695972BFE3DCC00CEFFEB /* OneTimeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OneTimeView.swift; sourceTree = "<group>"; };
 		0BE695982BFE3DCC00CEFFEB /* ProductCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductCell.swift; sourceTree = "<group>"; };
 		0BE695BF2C01E88E00CEFFEB /* DeviceData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceData.swift; sourceTree = "<group>"; };
-		0BE695C12C01E8F600CEFFEB /* DBSynced.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBSynced.swift; sourceTree = "<group>"; };
 		0BE93F302BFB8E3200F25445 /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
 		0BEE7C6E2CA8343800DC1DCF /* CopyStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyStatusView.swift; sourceTree = "<group>"; };
 		0BEE7C712CA838D100DC1DCF /* CopyJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyJob.swift; sourceTree = "<group>"; };
@@ -483,6 +483,7 @@
 				0BC29EB42CA6DE5E00E4813F /* AudioVStack.swift */,
 				0B8C36A62BEA15E000C47567 /* DBAudio.swift */,
 				0B1498782BC4DF940075DA61 /* DBJob.swift */,
+				0B1136602BF4CF3000A71FE1 /* Cover.swift */,
 			);
 			path = Audio;
 			sourceTree = "<group>";
@@ -497,14 +498,6 @@
 				0BE6958F2BFE325400CEFFEB /* StoreProvider.swift */,
 			);
 			path = Providers;
-			sourceTree = "<group>";
-		};
-		0B1D5A652AB3025F0010DDF2 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				F55A48D72C4F6519004764C8 /* Local */,
-			);
-			path = Model;
 			sourceTree = "<group>";
 		};
 		0B1D5A6B2AB302600010DDF2 /* Helper */ = {
@@ -537,14 +530,6 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		0B22158A2BB66D0C000EB36F /* Database */ = {
-			isa = PBXGroup;
-			children = (
-				F573B1862C041180004C34CC /* Synced */,
-			);
-			path = Database;
-			sourceTree = "<group>";
-		};
 		0B5D09932D05EE4400224E6B /* Book */ = {
 			isa = PBXGroup;
 			children = (
@@ -575,6 +560,14 @@
 				F518F7042C35210300844E62 /* ChapterTile.swift */,
 			);
 			path = Book;
+			sourceTree = "<group>";
+		};
+		0B6DDCDF2D198845001473E3 /* DevicePlugin */ = {
+			isa = PBXGroup;
+			children = (
+				0B6DDCE02D198861001473E3 /* DBSynced.swift */,
+			);
+			path = DevicePlugin;
 			sourceTree = "<group>";
 		};
 		0B8113B22C2C42EF007CA124 /* Migrate */ = {
@@ -715,6 +708,7 @@
 		0BC29EA22CA458BB00E4813F /* Plugins */ = {
 			isa = PBXGroup;
 			children = (
+				0B6DDCDF2D198845001473E3 /* DevicePlugin */,
 				F5ADFF602D1951C6003CF664 /* CopyPlugin */,
 				0B0FA2272D03485C004D4D41 /* Audio */,
 				0B5D09932D05EE4400224E6B /* Book */,
@@ -792,8 +786,6 @@
 				0BBA42112ABC116300C0B977 /* Bootstrap */,
 				0BEBCBAC2B352A2D00F2116E /* Config */,
 				F5640CB72C4FBD1B00AFD522 /* Contract */,
-				0B22158A2BB66D0C000EB36F /* Database */,
-				0B1D5A652AB3025F0010DDF2 /* Model */,
 				0B1D5A5E2AB3025E0010DDF2 /* Providers */,
 				0B9EA3572C21B2FF00A4059A /* Service */,
 				0BB4278F2BEA7083004E6F82 /* Storage */,
@@ -883,14 +875,6 @@
 			path = Top;
 			sourceTree = "<group>";
 		};
-		F55A48D72C4F6519004764C8 /* Local */ = {
-			isa = PBXGroup;
-			children = (
-				0B1136602BF4CF3000A71FE1 /* Cover.swift */,
-			);
-			path = Local;
-			sourceTree = "<group>";
-		};
 		F5640CB72C4FBD1B00AFD522 /* Contract */ = {
 			isa = PBXGroup;
 			children = (
@@ -932,14 +916,6 @@
 				0BB5871A2AD81AF90071AEBD /* ViewHelper.swift */,
 			);
 			path = View;
-			sourceTree = "<group>";
-		};
-		F573B1862C041180004C34CC /* Synced */ = {
-			isa = PBXGroup;
-			children = (
-				0BE695C12C01E8F600CEFFEB /* DBSynced.swift */,
-			);
-			path = Synced;
 			sourceTree = "<group>";
 		};
 		F5ADFF602D1951C6003CF664 /* CopyPlugin */ = {
@@ -1027,7 +1003,7 @@
 			packageReferences = (
 				0B00F4652BB840C1000833B9 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */,
 				F5E17A722D03050D00473CB8 /* XCRemoteSwiftPackageReference "AlertToast" */,
-				F53ED8D82D19098300F8E42D /* XCLocalSwiftPackageReference "../MagicKit" */,
+				0B1C1E9E2D1982D300C1892D /* XCRemoteSwiftPackageReference "MagicKit" */,
 			);
 			productRefGroup = 0B9C1C3E2AAF18FE001A26AF /* Products */;
 			projectDirPath = "";
@@ -1128,6 +1104,7 @@
 				F5D3EF272D082ECF00548889 /* BookStateView.swift in Sources */,
 				F545D1752C1FCAD0006A6AFA /* CloudExt.swift in Sources */,
 				F54DFA632CA4E84500F81BE3 /* VideoBtns.swift in Sources */,
+				0B6DDCE32D198861001473E3 /* DBSynced.swift in Sources */,
 				F507F5172C09541B00CB9A3A /* DeviceSetting.swift in Sources */,
 				0B1498792BC4DF940075DA61 /* DBJob.swift in Sources */,
 				0BBA421F2AC1397F00C0B977 /* Centered.swift in Sources */,
@@ -1136,7 +1113,6 @@
 				0BE6959A2BFE3DCC00CEFFEB /* AllSubscriptions.swift in Sources */,
 				F518F6FF2C34F1D200844E62 /* BookTile.swift in Sources */,
 				F518F7032C34FD5F00844E62 /* BookStateExt.swift in Sources */,
-				0BE695C22C01E8F600CEFFEB /* DBSynced.swift in Sources */,
 				0BAB300E2AB814F70012D837 /* BootApp.swift in Sources */,
 				0B5D09A12D0735C000224E6B /* AudioProvider.swift in Sources */,
 				0BBA42212AC1802C00C0B977 /* ButtonCancelSelected.swift in Sources */,
@@ -1505,13 +1481,6 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCLocalSwiftPackageReference section */
-		F53ED8D82D19098300F8E42D /* XCLocalSwiftPackageReference "../MagicKit" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../MagicKit;
-		};
-/* End XCLocalSwiftPackageReference section */
-
 /* Begin XCRemoteSwiftPackageReference section */
 		0B00F4652BB840C1000833B9 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -1519,6 +1488,14 @@
 			requirement = {
 				kind = exactVersion;
 				version = 0.1.0;
+			};
+		};
+		0B1C1E9E2D1982D300C1892D /* XCRemoteSwiftPackageReference "MagicKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/CofficLab/MagicKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
 			};
 		};
 		F5E17A722D03050D00473CB8 /* XCRemoteSwiftPackageReference "AlertToast" */ = {
