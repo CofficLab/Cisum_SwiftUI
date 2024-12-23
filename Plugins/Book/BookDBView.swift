@@ -93,7 +93,7 @@ struct BookDBView: View, SuperLog, SuperThread {
 
 extension BookDBView {
     func copy(_ files: [URL]) {
-        data.copy(files)
+
     }
 }
 

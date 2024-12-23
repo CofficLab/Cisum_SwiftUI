@@ -77,7 +77,7 @@ struct VideoDB: View {
 
 extension VideoDB {
     func copy(_ files: [URL]) {
-        data.copy(files)
+
     }
 }
 

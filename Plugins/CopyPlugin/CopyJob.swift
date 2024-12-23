@@ -2,8 +2,9 @@ import Foundation
 import MagicKit
 import OSLog
 
-class BookCopyJob: SuperLog, SuperThread {
+class CopyJob: SuperLog, SuperThread {
     static let emoji = "🔄"
+    
     let db: AudioRecordDB
     let disk: (any SuperDisk)?
     var running = false
@@ -23,13 +24,13 @@ class BookCopyJob: SuperLog, SuperThread {
     }
 
     func append(_ urls: [URL]) {
-//        Task {
-//            for url in urls {
+        Task {
+            for url in urls {
 //                await db.newCopyTask(url)
-//            }
-//
-//            self.run()
-//        }
+            }
+
+            self.run()
+        }
     }
     
     func run() {

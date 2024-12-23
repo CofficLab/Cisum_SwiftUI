@@ -9,7 +9,8 @@ protocol SuperPlugin {
     var iconName: String { get }
     var isGroup: Bool { get }
 
-    func addDBView(reason: String) -> AnyView
+    func addRootView() -> AnyView?
+    func addDBView(reason: String) -> AnyView?
     func addPosterView() -> AnyView
     func addStateView(currentGroup: SuperPlugin?) -> AnyView?
     func addSettingView() -> AnyView?
@@ -47,6 +48,14 @@ extension SuperPlugin {
     }
 
     func addStateView(currentGroup: SuperPlugin?) -> AnyView? {
+        return nil
+    }
+    
+    func addRootView() -> AnyView? {
+        return nil
+    }
+    
+    func addDBView(reason: String) -> AnyView? {
         return nil
     }
 

@@ -31,11 +31,6 @@ struct AudioStateView: View, SuperLog, SuperThread {
             if let e = playMan.error {
                 makeErrorView(e)
             }
-
-            // 正在复制
-            if tasks.count > 0 && app.showDB == false {
-                StateCopy()
-            }
         }
         .onChange(of: audioManager.isSyncing, {
             if playMan.hasError, let asset = playMan.asset, asset.isDownloaded {

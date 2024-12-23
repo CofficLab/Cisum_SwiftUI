@@ -14,11 +14,11 @@ struct BtnDelTask: View {
             image: getImageName(),
             dynamicSize: autoResize,
             onTap: {
-                for task in tasks {
-                    Task {
-                        await db.deleteCopyTask(task)
-                    }
-                }
+//                for task in tasks {
+//                    Task {
+//                        await db.deleteCopyTask(task)
+//                    }
+//                }
             })
     }
 

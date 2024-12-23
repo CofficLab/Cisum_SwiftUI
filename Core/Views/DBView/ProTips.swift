@@ -1,7 +1,7 @@
 import MagicKit
 import SwiftUI
 
-struct AudioProTips: View {
+struct ProTips: View {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var data: DataProvider
     @EnvironmentObject var s: StoreProvider

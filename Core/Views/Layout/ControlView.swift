@@ -32,7 +32,6 @@ struct ControlView: View {
                     }
 
                     // MARK: 状态
-
                     if showStateView {
                         VStack {
                             ForEach(p.plugins, id: \.id) { plugin in

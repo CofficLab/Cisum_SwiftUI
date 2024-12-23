@@ -1,10 +1,38 @@
 import Foundation
 import OSLog
 import SwiftData
+import SwiftUI
+import MagicKit
 
-// MARK: 增加
+actor CopyDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
+    static let emoji = "🛖"
+    let modelContainer: ModelContainer
+    let modelExecutor: any ModelExecutor
+    let context: ModelContext
+    let queue = DispatchQueue(label: "DB")
+    var onUpdated: () -> Void = { os_log("🍋 DB::updated") }
 
-extension AudioRecordDB {
+    init(_ container: ModelContainer, reason: String, verbose: Bool) {
+        if verbose {
+            os_log("\(Self.i)")
+        }
+
+        modelContainer = container
+        context = ModelContext(container)
+        context.autosaveEnabled = false
+        modelExecutor = DefaultSerialModelExecutor(
+            modelContext: context
+        )
+    }
+
+    func setOnUpdated(_ callback: @escaping () -> Void) {
+        onUpdated = callback
+    }
+
+    func hasChanges() -> Bool {
+        context.hasChanges
+    }
+
     func insertCopyTask(_ task: CopyTask) {
         context.insert(task)
         try? context.save()
@@ -35,11 +63,7 @@ extension AudioRecordDB {
             os_log(.error, "\(e.localizedDescription)")
         }
     }
-}
 
-// MARK: 删除
-
-extension AudioRecordDB {
     func deleteCopyTask(_ id: CopyTask.ID) {
         os_log("\(self.t)数据库删除")
         let context = ModelContext(modelContainer)
@@ -84,11 +108,7 @@ extension AudioRecordDB {
             os_log(.error, "\(e.localizedDescription)")
         }
     }
-}
 
-// MARK: 查询
-
-extension AudioRecordDB {
     func allCopyTasks() -> [CopyTask] {
         let descriptor = FetchDescriptor<CopyTask>()
         do {
@@ -115,11 +135,7 @@ extension AudioRecordDB {
 
         return nil
     }
-}
 
-// MARK: 更新
-
-extension AudioRecordDB {
     func setTaskRunning(_ task: CopyTask) {
         task.isRunning = true
         task.error = ""
@@ -138,5 +154,12 @@ extension AudioRecordDB {
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
         }
+    }
+}
+
+
+#Preview {
+    RootView {
+        ContentView()
     }
 }

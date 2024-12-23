@@ -6,6 +6,7 @@ extension Config {
             // DebugPlugin(),
             AudioPlugin(),
 //            BookPlugin()
+            CopyPlugin(),
         ]
     }
 }

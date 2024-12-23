@@ -2,28 +2,16 @@ import Foundation
 import SwiftUI
 import SwiftData
 
-struct AudioConfig {
-    /// iCloud容器的ID
-    static let containerIdentifier = "iCloud.yueyi.cisum"
-    
-    /// 封面图文件夹
-    static let coversDirName = "covers"
-    
-    /// 回收站文件夹
-    static let trashDirName = "trash"
-    
-    /// 缓存文件夹
-    static let cacheDirName = "audios_cache"
-    
+struct CopyConfig {
     // MARK: 数据库存储名称
     
-    static var dbFileName = "audios.db"
+    static var dbFileName = "copy_task.db"
         
     // MARK: 本地的数据库的存储路径
     
     static func getDBUrl() -> URL? {
         Config.getDBRootDir()?
-            .appendingPathComponent("audios_db")
+            .appendingPathComponent("copy_db")
             .appendingPathComponent(dbFileName)
     }
     
@@ -35,8 +23,7 @@ struct AudioConfig {
         }
 
         let schema = Schema([
-            AudioModel.self,
-            Cover.self,
+            CopyTask.self
         ])
         let modelConfiguration = ModelConfiguration(
             schema: schema,

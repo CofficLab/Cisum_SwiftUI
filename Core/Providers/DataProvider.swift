@@ -6,36 +6,11 @@ import SwiftUI
 
 class DataProvider: ObservableObject, SuperLog {
     static let emoji = "💼"
-    let emoji = "💼"
 
-    @Published var syncing: Bool = false
-
-    init(verbose: Bool) async throws {
+    init(verbose: Bool) {
         if verbose {
             os_log("\(Self.i)")
         }
-
-        if Config.iCloudEnabled {
-            if verbose {
-                os_log("\(Self.t)设置中启用了 iCloud")
-            }
-
-            try await self.checkAndUpdateiCloudStatus(verbose: verbose)
-        }
-    }
-
-    // MARK: Copy
-
-    func deleteCopyTask(_ task: CopyTask) {
-//        Task {
-//            await db.deleteCopyTask(task.id)
-//        }
-    }
-
-    func copy(_ urls: [URL]) {
-//        Task {
-//            await self.db.addCopyTasks(urls)
-//        }
     }
 
     func checkAndUpdateiCloudStatus(verbose: Bool) async throws {

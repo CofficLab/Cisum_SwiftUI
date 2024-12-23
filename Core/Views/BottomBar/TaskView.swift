@@ -39,7 +39,7 @@ struct TaskView: View {
                             }
                             .onDelete(perform: { indexSet in
                                 for i in indexSet {
-                                    dataManager.deleteCopyTask(tasks[i])
+//                                    dataManager.deleteCopyTask(tasks[i])
                                 }
                             })
                         })

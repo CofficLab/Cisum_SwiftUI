@@ -26,8 +26,26 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
         }
     }
 
-    func append(_ plugin: SuperPlugin) {
+    func append(_ plugin: SuperPlugin, reason: String) throws {
+        os_log("\(self.t)➕➕➕ Append: \(plugin.id) with reason: \(reason)")
+        
+        // Check if plugin with same ID already exists
+        if plugins.contains(where: { $0.id == plugin.id }) {
+            throw PluginProviderError.duplicatePluginID(plugin: plugin)
+        }
+        
         self.plugins.append(plugin)
+
+        os_log("\(self.t)🚀🚀🚀 Init Plugin: \(plugin.id)")
+        plugin.onInit()
+    }
+    
+    func getRootViews() -> [AnyView] {
+        let items = plugins.flatMap { $0.addRootView() }
+        
+        os_log("\(self.t)GetRootViews: \(items.count)")
+        
+        return items
     }
 
     func getToolBarButtons() -> [(id: String, view: AnyView)] {
@@ -35,23 +53,18 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
     }
 
     func setCurrentGroup(_ plugin: SuperPlugin) throws {
-        os_log("\(self.t)setCurrentGroup: \(plugin.id) 🐑")
+        os_log("\(self.t)🏃🏃🏃 SetCurrentGroup: \(plugin.id)")
 
         if plugin.isGroup {
             self.current = plugin
             Self.storeCurrent(plugin)
-
-            Task(priority: .high) {
-                os_log("\(self.t)🚀🚀🚀 Init Plugin: \(plugin.id)")
-                self.current?.onInit()
-            }
         } else {
             throw PluginProviderError.PluginIsNotGroup(plugin: plugin)
         }
     }
 
     func restoreCurrent() throws {
-        os_log("\(self.t)restoreCurrent 🐑")
+        os_log("\(self.t)🏃🏃🏃 RestoreCurrent")
         
         let currentPluginId = Self.getPluginId()
 
@@ -91,11 +104,14 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
 
 enum PluginProviderError: Error, LocalizedError {
     case PluginIsNotGroup(plugin: SuperPlugin)
+    case duplicatePluginID(plugin: SuperPlugin)
 
     var errorDescription: String? {
         switch self {
         case let .PluginIsNotGroup(plugin):
             return "Plugin \(plugin.id) is not a group"
+        case let .duplicatePluginID(plugin):
+            return "Plugin with ID \(plugin.id) already exists"
         }
     }
 }

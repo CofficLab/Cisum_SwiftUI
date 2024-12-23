@@ -1,7 +1,7 @@
 import MagicKit
 import SwiftUI
 
-struct AudioDBTips: View {
+struct DropTips: View {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var data: DataProvider
     @EnvironmentObject var s: StoreProvider

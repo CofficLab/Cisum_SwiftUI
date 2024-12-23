@@ -31,11 +31,6 @@ struct BookStateView: View, SuperLog, SuperThread {
             if let e = playMan.error {
                 makeErrorView(e)
             }
-
-            // 正在复制
-            if tasks.count > 0 && app.showDB == false {
-                StateCopy()
-            }
         }
         .onChange(of: bookManager.isSyncing, {
             os_log("\(self.t)isSyncing: \(bookManager.isSyncing)")

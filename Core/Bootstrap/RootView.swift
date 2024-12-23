@@ -10,6 +10,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     let s = StoreProvider()
 
     @State var dataManager: DataProvider?
+    @State var isDropping: Bool = false
     @State var error: Error? = nil
     @State var loading = true
     @State var iCloudAvailable = true
@@ -37,6 +38,10 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                 } else {
                     if let dataManager = dataManager {
                         ZStack {
+                            ForEach(Array(p.getRootViews().enumerated()), id: \.offset) { index, view in
+                                view
+                            }
+                            
                             content
                                 .toolbar(content: {
                                     if p.groupPlugins.count > 1 {
@@ -57,13 +62,13 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                                 })
                                 .frame(minWidth: Config.minWidth, minHeight: Config.minHeight)
                                 .blendMode(.normal)
-                                .environmentObject(man)
-                                .environmentObject(a)
-                                .environmentObject(s)
-                                .environmentObject(p)
-                                .environmentObject(dataManager)
-                                .environmentObject(m)
                         }
+                        .environmentObject(man)
+                        .environmentObject(a)
+                        .environmentObject(s)
+                        .environmentObject(p)
+                        .environmentObject(dataManager)
+                        .environmentObject(m)
                     } else {
                         Text("启动失败")
                     }
@@ -136,8 +141,8 @@ extension RootView {
             do {
                 try dataManager = await DataProvider(verbose: true)
 
-                Config.getPlugins().forEach({
-                    self.p.append($0)
+                try Config.getPlugins().forEach({
+                    try self.p.append($0, reason: self.className)
                 })
 
                 try? self.p.restoreCurrent()
@@ -156,6 +161,7 @@ extension RootView {
             }
 
             self.loading = false
+            os_log("\(self.t)Ready 👌👌👌")
         }
     }
 

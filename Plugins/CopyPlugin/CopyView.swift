@@ -3,11 +3,11 @@ import SwiftData
 import SwiftUI
 import MagicKit
 
-struct AudioTask: View, SuperLog, SuperThread {
+struct CopyView: View, SuperLog, SuperThread {
     static let emoji = "📬"
 
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var dataManager: DataProvider
+    @EnvironmentObject var audioManager: AudioProvider
     @Environment(\.modelContext) private var context
 
     @State private var selection: String?
@@ -16,20 +16,20 @@ struct AudioTask: View, SuperLog, SuperThread {
 
     init(verbose: Bool = false) {
         if verbose {
-            os_log("\(Logger.isMain)AudioTask")
+            os_log("\(Self.i)")
         }
     }
 
     var body: some View {
         Group {
-            if !tasks.isEmpty && app.showCopying {
+            if !tasks.isEmpty {
                 taskList
+            } else {
+                Text("没有复制任务")
             }
         }
         .onChange(of: tasks.count) {
-            if tasks.count == 0 {
-                app.showCopying = false
-            }
+            os_log("\(self.t)Task count changed to \(tasks.count)")
         }
     }
 
@@ -59,7 +59,7 @@ struct AudioTask: View, SuperLog, SuperThread {
 
     private func deleteTasks(at offsets: IndexSet) {
         for index in offsets {
-            dataManager.deleteCopyTask(tasks[index])
+//            dataManager.deleteCopyTask(tasks[index])
         }
     }
 }
