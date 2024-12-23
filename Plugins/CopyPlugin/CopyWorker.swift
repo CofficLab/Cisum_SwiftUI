@@ -3,23 +3,34 @@ import MagicKit
 import OSLog
 
 class CopyWorker: SuperLog, SuperThread, ObservableObject {
-    static let emoji = "🔄"
+    static let emoji = "👷"
     
     let db: CopyDB
     var running = false
     
     init(db: CopyDB) {
         self.db = db
-
+        
         let verbose = false
         if verbose {
             os_log("\(self.t)init")
         }
-
+        
         self.bg.async {
             self.run()
         }
     }
+    
+    func append(_ urls: [URL], folder: URL) {
+        Task {
+            for url in urls {
+                await db.newCopyTask(url, destination: folder)
+            }
+            
+            self.run()
+        }
+    }
+
     
     func run() {
         if running {

@@ -30,6 +30,7 @@ class CopyPlugin: SuperPlugin, SuperLog {
 
         return AnyView(CopyRootView()
             .environmentObject(self.db!)
+            .environmentObject(self.worker!)
             .modelContainer(CopyConfig.getContainer)
         )
     }

@@ -38,10 +38,6 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                 } else {
                     if let dataManager = dataManager {
                         ZStack {
-                            ForEach(Array(p.getRootViews().enumerated()), id: \.offset) { index, view in
-                                view
-                            }
-                            
                             content
                                 .toolbar(content: {
                                     if p.groupPlugins.count > 1 {
@@ -62,6 +58,10 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                                 })
                                 .frame(minWidth: Config.minWidth, minHeight: Config.minHeight)
                                 .blendMode(.normal)
+
+                            ForEach(Array(p.getRootViews().enumerated()), id: \.offset) { _, view in
+                                view
+                            }
                         }
                         .environmentObject(man)
                         .environmentObject(a)

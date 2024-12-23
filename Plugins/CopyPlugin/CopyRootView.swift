@@ -11,6 +11,7 @@ struct CopyRootView: View, SuperEvent, SuperLog, SuperThread {
     @EnvironmentObject var s: StoreProvider
     @EnvironmentObject var m: MessageProvider
     @EnvironmentObject var p: PluginProvider
+    @EnvironmentObject var worker: CopyWorker
 
     @State var dataManager: DataProvider?
     @State var isDropping: Bool = false
@@ -35,7 +36,7 @@ struct CopyRootView: View, SuperEvent, SuperLog, SuperThread {
     }
 
     var body: some View {
-        ZStack {
+        VStack {
             if showProTips {
                 ProTips()
             }
@@ -46,7 +47,6 @@ struct CopyRootView: View, SuperEvent, SuperLog, SuperThread {
         }
         .frame(maxWidth: .infinity)
         .frame(maxHeight: .infinity)
-        .background(Config.rootBackground)
         .onAppear(perform: onAppear)
         .onDrop(of: [UTType.fileURL], isTargeted: self.$isDropping, perform: onDrop)
     }
@@ -89,9 +89,7 @@ extension CopyRootView {
 
         self.m.toast("复制 \(urls.count) 个文件")
 
-        urls.forEach {
-            self.db.newCopyTask($0, destination: disk.root)
-        }
+        self.worker.append(urls, folder: disk.root)
 
         return true
     }
