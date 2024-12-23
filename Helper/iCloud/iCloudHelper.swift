@@ -3,7 +3,7 @@ import OSLog
 import SwiftUI
 
 class iCloudHelper: SuperLog, SuperThread {
-    static var label = "☁️ iCloudHelper::"
+    static var emoji = "☁️"
 
     static func iCloudDiskEnabled() -> Bool {
         return FileManager.default.ubiquityIdentityToken != nil
@@ -70,7 +70,7 @@ class iCloudHelper: SuperLog, SuperThread {
             // 检查 ubiquitousItemDownloadingStatusKey
             if let status = values.ubiquitousItemDownloadingStatus {
                 if verbose {
-                    os_log("\(Self.label)文件「\(url.lastPathComponent)」当前状态: \(status.rawValue)")
+                    os_log("\(Self.t)文件「\(url.lastPathComponent)」当前状态: \(status.rawValue)")
                 }
                 switch status {
                 case .current, .downloaded:
@@ -96,7 +96,7 @@ class iCloudHelper: SuperLog, SuperThread {
         let verbose = false
 
         if verbose {
-            os_log("\(Self.label)Checking download status for file: \(url.path(percentEncoded: false))")
+            os_log("\(Self.t)Checking download status for file: \(url.path(percentEncoded: false))")
         }
 
         do {
@@ -350,7 +350,7 @@ extension iCloudHelper {
     /// 执行并输出耗时
     static func printRunTime(_ title: String, tolerance: Double = 1, verbose: Bool = false, _ code: () -> Void) {
         if verbose {
-            os_log("\(Logger.isMain)\(Self.label)\(title)")
+            os_log("\(self.t)\(title)")
         }
 
         let startTime = DispatchTime.now()
@@ -362,7 +362,7 @@ extension iCloudHelper {
         let timeInterval = Double(nanoTime) / 1000000000
 
         if verbose && timeInterval > tolerance {
-            os_log("\(Logger.isMain)\(AudioRecordDB.label)\(title) cost \(timeInterval) 秒 🐢🐢🐢")
+            os_log("\(Self.t)\(title) cost \(timeInterval) 秒 🐢🐢🐢")
         }
     }
 }

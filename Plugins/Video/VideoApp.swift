@@ -4,7 +4,7 @@ import OSLog
 import MagicKit
 
 class VideoApp: SuperLog {
-    let emoji = "🎥"
+    static let emoji = "🎥"
     var id = "Video"
 
     var iconName: String = "video"

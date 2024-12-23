@@ -3,11 +3,10 @@ import OSLog
 import MagicKit
 
 actor iCloudHandler: SuperLog, SuperThread {
-    let emoji = "🌤️"
-    static var label = "☁️ iCloudHandler::"
+    static let emoji = "🌤️"
+    
     let coordinator = NSFileCoordinator()
     var filePresenters: [URL: FilePresenter] = [:]
-    var label: String { "\(Logger.isMain)\(Self.label)" }
 
     func write(targetURL: URL, data: Data) throws {
         var coordinationError: NSError?

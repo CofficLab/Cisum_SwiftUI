@@ -7,7 +7,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
     static let keyOfCurrentAudioURL = "AudioPluginCurrentAudioURL"
     static let keyOfCurrentAudioTime = "AudioPluginCurrentAudioTime"
     static let keyOfCurrentPlayMode = "AudioPluginCurrentPlayMode"
-    let emoji = "🎧"
+    static let emoji = "🎧"
     let dirName = "audios"
     let label: String = "Audio"
     var hasPoster: Bool = true

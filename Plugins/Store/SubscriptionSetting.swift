@@ -12,7 +12,7 @@ struct SubscriptionSetting: View, SuperEvent, SuperLog, SuperThread {
     @State private var refreshing = false
     @State private var error: Error? = nil
 
-    var emoji = "🖥️"
+    static let emoji = "🖥️"
 
     var body: some View {
         VStack {

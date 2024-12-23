@@ -9,7 +9,7 @@ struct BookTitle: View, SuperLog, SuperThread {
     @State var title: String = ""
 
     var width: CGFloat
-    let emoji = "📺"
+    static let emoji = "📺"
 
     var body: some View {
         ZStack {

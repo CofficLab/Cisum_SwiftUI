@@ -12,7 +12,7 @@ struct RestoreView: View, SuperEvent, SuperLog, SuperThread {
     @State private var refreshing = false
     @State private var error: Error? = nil
 
-    var emoji = "🖥️"
+    static var emoji = "🖥️"
 
     var body: some View {
         VStack {

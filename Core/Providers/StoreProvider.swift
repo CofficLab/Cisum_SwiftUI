@@ -33,9 +33,7 @@ public enum SubscriptionTier: Int, Comparable {
 }
 
 class StoreProvider: ObservableObject, SuperLog {
-    static var label = "💰 Store::"
-    
-    let emoji = "👑"
+    static var emoji = "💰"
     
     @Published private(set) var cars: [Product]
     @Published private(set) var fuel: [Product]
@@ -56,7 +54,7 @@ class StoreProvider: ObservableObject, SuperLog {
 
     init(verbose: Bool = false) {
         if verbose {
-            os_log("\(Logger.isMain)\(Self.label)初始化")
+            os_log("\(Self.t)初始化")
         }
         
         productIdToEmoji = StoreProvider.loadProductIdToEmojiData()

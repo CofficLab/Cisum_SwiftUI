@@ -3,6 +3,8 @@ import SwiftUI
 import MagicKit
 
 struct ContentView: View, SuperLog, SuperThread {
+    static let emoji = "🐮"
+    
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var data: DataProvider
     @EnvironmentObject var p: PluginProvider

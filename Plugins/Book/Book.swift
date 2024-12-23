@@ -9,7 +9,7 @@ import SwiftUI
  */
 @Model
 class Book: FileBox, SuperLog {
-    @Transient let emoji = "📖"
+    static let emoji = "📖"
     @Transient var db: BookDB?
 
     @Attribute(.unique)

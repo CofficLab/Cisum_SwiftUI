@@ -5,6 +5,7 @@ import SwiftData
 import SwiftUI
 
 class DataProvider: ObservableObject, SuperLog {
+    static let emoji = "💼"
     let emoji = "💼"
 
     @Published var syncing: Bool = false

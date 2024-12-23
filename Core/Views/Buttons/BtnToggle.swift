@@ -7,7 +7,7 @@ struct BtnToggle: View, SuperThread, SuperLog {
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var m: MessageProvider
 
-    let emoji = "🔊"
+    static let emoji = "🔊"
     var foregroundStyle: Color?
     var playing: Bool { playMan.playing }
 

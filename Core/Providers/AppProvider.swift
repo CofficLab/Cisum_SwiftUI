@@ -7,6 +7,8 @@ import SwiftUI
 import MagicKit
 
 class AppProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLog, SuperThread {
+    static let emoji: String = "🐮"
+    
     @Published var showDB: Bool = Config.showDB
     @Published var showCopying: Bool = false
     @Published var isImporting: Bool = false

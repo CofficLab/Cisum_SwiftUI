@@ -5,8 +5,8 @@ import SwiftUI
 import MagicKit
 
 actor BookRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
-    static let label = "📦 DB::"
-    let emoji = "🎁"
+    static let emoji = "📦"
+
     let modelContainer: ModelContainer
     let modelExecutor: any ModelExecutor
     let context: ModelContext
@@ -15,7 +15,7 @@ actor BookRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThr
 
     init(_ container: ModelContainer, reason: String, verbose: Bool = false) {
         if verbose {
-            let message = "\(Logger.isMain)\(Self.label)🚩🚩🚩 初始化(\(reason))"
+            let message = "\(Self.t)🚩🚩🚩 初始化(\(reason))"
             
             os_log("\(message)")
         }
@@ -93,7 +93,7 @@ extension BookRecordDB {
     /// 执行并输出耗时
     func printRunTime(_ title: String, tolerance: Double = 0.1, verbose: Bool = false, _ code: () -> Void) {
         if verbose {
-            os_log("\(Logger.isMain)\(AudioRecordDB.label)\(title)")
+            os_log("\(self.t)\(title)")
         }
 
         let startTime = DispatchTime.now()
@@ -105,7 +105,7 @@ extension BookRecordDB {
         let timeInterval = Double(nanoTime) / 1000000000
 
         if verbose && timeInterval > tolerance {
-            os_log("\(Logger.isMain)\(AudioRecordDB.label)\(title) cost \(timeInterval) 秒 🐢🐢🐢")
+            os_log("\(self.t)\(title) cost \(timeInterval) 秒 🐢🐢🐢")
         }
     }
     
@@ -193,7 +193,7 @@ extension BookRecordDB {
                 context.delete(book)
                 try context.save()
             } catch let e {
-                os_log(.error, "\(Logger.isMain)\(AudioRecordDB.label)删除出错 \(e)")
+                os_log(.error, "\(self.t)删除出错 \(e)")
             }
         }
 

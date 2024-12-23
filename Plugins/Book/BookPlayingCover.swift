@@ -23,7 +23,7 @@ struct BookPlayingCover: View, SuperLog, SuperThread {
         }
     }
 
-    let emoji = "🥇"
+    static let emoji = "🥇"
     var alignTop = false
 
     var body: some View {

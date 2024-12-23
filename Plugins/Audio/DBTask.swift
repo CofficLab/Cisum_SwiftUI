@@ -41,10 +41,10 @@ extension AudioRecordDB {
 
 extension AudioRecordDB {
     func deleteCopyTask(_ id: CopyTask.ID) {
-        os_log("\(Logger.isMain)\(AudioRecordDB.label)数据库删除")
+        os_log("\(self.t)数据库删除")
         let context = ModelContext(modelContainer)
         guard let task = context.model(for: id) as? CopyTask else {
-            os_log("\(Logger.isMain)\(AudioRecordDB.label)删除时数据库找不到")
+            os_log("\(self.t)删除时数据库找不到")
             return
         }
 
@@ -52,9 +52,9 @@ extension AudioRecordDB {
             context.delete(task)
 
             try context.save()
-            os_log("\(Logger.isMain)\(AudioRecordDB.label)删除成功")
+            os_log("\(self.t)删除成功")
         } catch let e {
-            os_log("\(Logger.isMain)\(AudioRecordDB.label)删除出错 \(e)")
+            os_log("\(self.t)删除出错 \(e)")
         }
     }
 

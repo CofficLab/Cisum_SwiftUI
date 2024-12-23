@@ -3,6 +3,8 @@ import MagicKit
 import OSLog
 
 class BookDB: ObservableObject, SuperEvent, SuperLog {
+    static var emoji = "📖"
+    
     var db: BookRecordDB
     var disk: any SuperDisk
     let worker: BookWorker

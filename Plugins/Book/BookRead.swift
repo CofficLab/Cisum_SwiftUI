@@ -76,7 +76,7 @@ extension BookRecordDB {
 extension BookRecordDB {
     static func findBook(_ url: URL, context: ModelContext, verbose: Bool = false) -> Book? {
         if verbose {
-            os_log("\(self.label)FindBook -> \(url.lastPathComponent)")
+            os_log("\(self.t)FindBook -> \(url.lastPathComponent)")
         }
         
         do {
@@ -140,7 +140,7 @@ extension BookRecordDB {
 extension BookRecordDB {
     nonisolated func getNextBookOf(_ url: URL?, verbose: Bool = false) -> Book? {
         if verbose {
-            os_log("\(Logger.isMain)\(Self.label)NextBookOf -> \(url?.lastPathComponent ?? "-")")
+            os_log("\(self.t)NextBookOf -> \(url?.lastPathComponent ?? "-")")
         }
         
         guard let url = url else {

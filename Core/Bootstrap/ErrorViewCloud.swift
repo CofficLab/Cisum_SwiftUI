@@ -4,6 +4,8 @@ import OSLog
 import SwiftUI
 
 struct ErrorViewCloud: View, SuperLog, SuperThread {
+    static let emoji = "🐮"
+    
     var error: Error
 
     var body: some View {

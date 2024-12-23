@@ -14,7 +14,7 @@ struct SliderView: View, SuperThread, SuperLog {
     @State private var shouldDisable = false
     @State private var lastDownloadTime: Date = .now
 
-    let emoji = "👀"
+    static let emoji = "👀"
     let timer = Timer
         .publish(every: 0.1, on: .main, in: .common)
         .autoconnect()

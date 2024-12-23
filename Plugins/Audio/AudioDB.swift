@@ -3,7 +3,7 @@ import MagicKit
 import OSLog
 
 class AudioDB: ObservableObject, SuperEvent, SuperLog {
-    var emoji = "🍺"
+    static var emoji = "🍺"
     var db: AudioRecordDB
     var disk: (any SuperDisk)
     

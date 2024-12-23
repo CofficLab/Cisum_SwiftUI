@@ -18,7 +18,7 @@ struct BookStateView: View, SuperLog, SuperThread {
     var showCopyMessage: Bool { tasks.count > 0 }
     var asset: PlayAsset? { playMan.asset }
     var font: Font { asset == nil ? .title3 : .callout }
-    let emoji = "🖥️"
+    static let emoji = "🖥️"
     let verbose = true
 
     var body: some View {

@@ -4,6 +4,8 @@ import SwiftUI
 import MagicKit
 
 struct Posters: View, SuperLog {
+    static let emoji = "🪧"
+    
     @EnvironmentObject var p: PluginProvider
     @EnvironmentObject var m: MessageProvider
     @EnvironmentObject var man: PlayMan

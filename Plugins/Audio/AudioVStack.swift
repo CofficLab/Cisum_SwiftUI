@@ -13,7 +13,7 @@ import SwiftUI
       B2
  */
 struct AudioVStack: View, SuperThread, SuperLog {
-    let emoji = "📬"
+    static let emoji = "📬"
 
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var data: DataProvider

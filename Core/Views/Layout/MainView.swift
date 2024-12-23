@@ -4,7 +4,7 @@ import OSLog
 import SwiftUI
 
 struct MainView: View, SuperLog, SuperThread {
-    let emoji = "🖥️"
+    static let emoji = "🖥️"
 
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var p: PluginProvider

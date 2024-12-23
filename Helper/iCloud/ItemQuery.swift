@@ -4,6 +4,8 @@ import OSLog
 import MagicKit
 
 class ItemQuery: SuperLog, SuperEvent, SuperThread {
+    static let emoji = "🌸"
+    
     let query = NSMetadataQuery()
     let queue: OperationQueue
     var label: String {"\(Logger.isMain)📁 ItemQuery::"}

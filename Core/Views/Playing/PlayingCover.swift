@@ -7,7 +7,7 @@ struct PlayingCover: View, SuperLog {
 
     private var asset: PlayAsset? { man.asset }
 
-    let emoji = "🥇"
+    static let emoji = "🥇"
     var alignTop = false
 
     var body: some View {

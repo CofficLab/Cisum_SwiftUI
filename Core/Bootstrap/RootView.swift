@@ -5,7 +5,7 @@ import SwiftUI
 
 struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content: View {
     var content: Content
-    let emoji = "🌳"
+    static var emoji: String { "🌳" }
     let a = AppProvider()
     let s = StoreProvider()
 

@@ -11,7 +11,7 @@ extension AudioRecordDB {
         let audio = try firstAudio()
 
         if let audio = audio {
-            self.downloadNextBatch(audio, reason: "\(Logger.isMain)\(Self.label)prepare")
+            self.downloadNextBatch(audio, reason: "\(self.t)prepare")
         }
     }
 }
@@ -70,7 +70,7 @@ extension AudioRecordDB {
 
     func emitCoverUpdated(_ audio: AudioModel) {
         DispatchQueue.main.async {
-            os_log("\(Logger.isMain)\(Self.label) -> \(audio.title) CoverUpdated 🍋🍋🍋")
+            os_log("\(self.t) -> \(audio.title) CoverUpdated 🍋🍋🍋")
             self.emitAudioUpdate(audio)
         }
     }
@@ -149,7 +149,7 @@ extension AudioRecordDB {
             totalCount = try context.fetchCount(descriptor)
 
             if totalCount == 0 {
-                os_log("\(Self.label)\(title) All done 🎉🎉🎉")
+                os_log("\(Self.t)\(title) All done 🎉🎉🎉")
                 return
             }
         } catch let e {
@@ -157,7 +157,7 @@ extension AudioRecordDB {
         }
 
         if printStartLog {
-            os_log("\(Logger.isMain)\(AudioRecordDB.label)\(title) Start 🚀🚀🚀 with count=\(totalCount)")
+            os_log("\(self.t)\(title) Start 🚀🚀🚀 with count=\(totalCount)")
         }
 
         do {
@@ -170,14 +170,14 @@ extension AudioRecordDB {
                     jobQueue.sync {
                         group.enter()
                         if printQueueEnter {
-                            os_log("\(Logger.isMain)\(AudioRecordDB.label)\(title) 已加入队列 \(audio.title), 队列积累任务数量 \(group.count)/\(t)")
+                            os_log("\(t)\(title) 已加入队列 \(audio.title), 队列积累任务数量 \(group.count)/\(t)")
                         }
 
                         opQueue.addOperation {
                             code(audio) {
                                 group.leave()
                                 if group.count % printLogStep == 0 && printLog && group.count > 0 {
-                                    os_log("\(Logger.isMain)\(AudioRecordDB.label)\(title) 余 \(group.count)/\(t)")
+                                    os_log("\(t)\(title) 余 \(group.count)/\(t)")
                                 }
                             }
                         }
@@ -186,14 +186,14 @@ extension AudioRecordDB {
                     // MARK: 串行处理
 
                     if printQueueEnter {
-                        os_log("\(Logger.isMain)\(AudioRecordDB.label)\(title) 处理 \(audio.title)")
+                        os_log("\(t)\(title) 处理 \(audio.title)")
                     }
 
                     serialQueue.sync {
                         code(audio) {
                             finishedCount += 1
                             if finishedCount % printLogStep == 0 && printLog && finishedCount > 0 {
-                                os_log("\(Logger.isMain)\(AudioRecordDB.label)\(title) 完成 \(finishedCount)/\(t) 🐎🐎🐎")
+                                os_log("\(t)\(title) 完成 \(finishedCount)/\(t) 🐎🐎🐎")
                             }
                         }
                     }
@@ -206,7 +206,7 @@ extension AudioRecordDB {
                     // 计算代码执行时间
                     let nanoTime = DispatchTime.now().uptimeNanoseconds - startTime.uptimeNanoseconds
                     let timeInterval = Double(nanoTime) / 1000000000
-                    os_log("\(Logger.isMain)\(AudioRecordDB.label)\(title) cost \(timeInterval) 秒 🐢🐢🐢")
+                    os_log("\(self.t)\(title) cost \(timeInterval) 秒 🐢🐢🐢")
                 }
             }
         } catch let e {

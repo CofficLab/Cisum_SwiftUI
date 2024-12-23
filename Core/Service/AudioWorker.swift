@@ -16,7 +16,7 @@ protocol AudioWorkerDelegate: AnyObject {
 }
 
 class AudioWorker: NSObject, ObservableObject, SuperPlayWorker, SuperLog, SuperThread {
-    let emoji = "👷"
+    static let emoji = "👷"
     var player = AVAudioPlayer()
     var delegate: AudioWorkerDelegate?
     var verbose = false

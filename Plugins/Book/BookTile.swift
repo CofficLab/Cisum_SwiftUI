@@ -15,7 +15,7 @@ struct BookTile: View, SuperThread, SuperLog {
     @State var opacity: Double = 1.0
     @State var cover: Image? = nil
 
-    let emoji = "🖥️"
+    static let emoji = "🖥️"
     var hasCover: Bool { cover != nil }
     var noCover: Bool { cover == nil }
     var book: Book

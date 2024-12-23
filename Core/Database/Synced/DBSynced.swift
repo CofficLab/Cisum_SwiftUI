@@ -5,16 +5,15 @@ import SwiftUI
 import MagicKit
 
 actor DBSynced: ModelActor, ObservableObject, SuperLog {
-    static let label = "📦 DBSynced::"
+    static let emoji = "📦"
 
-    let emoji = "🚢"
     let modelContainer: ModelContainer
     let modelExecutor: any ModelExecutor
     let context: ModelContext
 
     init(_ container: ModelContainer, verbose: Bool = false) {
         if verbose {
-            let message = "\(Logger.isMain)\(Self.label)初始化"
+            let message = "\(Self.t)初始化"
             
             os_log("\(message)")
         }
@@ -109,7 +108,7 @@ extension DBSynced {
     /// 执行并输出耗时
     func printRunTime(_ title: String, tolerance: Double = 1, verbose: Bool = false, _ code: () -> Void) {
         if verbose {
-            os_log("\(Logger.isMain)\(AudioRecordDB.label)\(title)")
+            os_log("\(self.t)\(title)")
         }
 
         let startTime = DispatchTime.now()
@@ -121,7 +120,7 @@ extension DBSynced {
         let timeInterval = Double(nanoTime) / 1000000000
 
         if verbose && timeInterval > tolerance {
-            os_log("\(Logger.isMain)\(AudioRecordDB.label)\(title) cost \(timeInterval) 秒 🐢🐢🐢")
+            os_log("\(self.t)\(title) cost \(timeInterval) 秒 🐢🐢🐢")
         }
     }
 }

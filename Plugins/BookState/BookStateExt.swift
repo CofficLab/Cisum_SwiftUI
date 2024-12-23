@@ -7,7 +7,7 @@ extension DBSynced {
     
     nonisolated func findOrInsertBookState(_ url: URL, verbose: Bool = false) -> BookState? {
         if verbose {
-            os_log("\(Logger.isMain)\(Self.label)FindOrInsertBookState for \(url.lastPathComponent)")
+            os_log("\(self.t)FindOrInsertBookState for \(url.lastPathComponent)")
         }
         
         let context = ModelContext(self.modelContainer)
@@ -33,7 +33,7 @@ extension DBSynced {
     
     nonisolated func findBookState(_ url: URL, verbose: Bool = false) -> BookState? {
         if verbose {
-            os_log("\(Logger.isMain)\(Self.label)FindBookState for \(url.lastPathComponent)")
+            os_log("\(self.t)FindBookState for \(url.lastPathComponent)")
         }
         
         let context = ModelContext(self.modelContainer)

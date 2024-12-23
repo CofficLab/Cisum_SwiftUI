@@ -14,13 +14,12 @@ struct BookDBView: View, SuperLog, SuperThread {
     @State var treeView = false
     @State var total: Int = 0
 
-    static var label = "🐘 DBLayout::"
+    static var emoji = "🐘"
 
     var main = Config.mainQueue
     var bg = Config.bgQueue
     var dropping: Bool { app.isDropping }
     var disk: any SuperDisk
-    var label: String { "\(Logger.isMain)\(Self.label) " }
 
     init(verbose: Bool = false, disk: any SuperDisk) {
         if verbose {

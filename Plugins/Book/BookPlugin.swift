@@ -7,7 +7,7 @@ class BookPlugin: SuperPlugin, SuperLog {
     static let keyOfCurrentBookURL = "com.bookplugin.currentBookURL"
     static let keyOfCurrentBookTime = "com.bookplugin.currentBookTime"
 
-    let emoji = "🎺"
+    static let emoji = "🎺"
     let label: String = "Book"
     let hasPoster: Bool = true
     let description: String = "适用于听有声书的场景"

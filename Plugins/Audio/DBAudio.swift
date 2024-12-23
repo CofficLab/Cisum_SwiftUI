@@ -207,7 +207,7 @@ extension AudioRecordDB {
 
     func getNextOf(_ url: URL?, verbose: Bool = false) throws -> AudioModel? {
         if verbose {
-            os_log("\(Logger.isMain)\(Self.label)NextOf -> \(url?.lastPathComponent ?? "-")")
+            os_log("\(self.t)NextOf -> \(url?.lastPathComponent ?? "-")")
         }
 
         guard let url = url else {
@@ -223,7 +223,7 @@ extension AudioRecordDB {
 
     func getPrevOf(_ url: URL?, verbose: Bool = false) throws -> AudioModel? {
         if verbose {
-            os_log("\(Logger.isMain)\(Self.label)PrevOf -> \(url?.lastPathComponent ?? "-")")
+            os_log("\(self.t)PrevOf -> \(url?.lastPathComponent ?? "-")")
         }
 
         guard let url = url else {
@@ -328,7 +328,7 @@ extension AudioRecordDB {
     }
 
     func sort(_ sticky: AudioModel?, reason: String) {
-        os_log("\(Logger.isMain)\(AudioRecordDB.label)Sort with reason: \(reason)")
+        os_log("\(self.t)Sort with reason: \(reason)")
 
         emitSorting("order")
 
@@ -398,7 +398,7 @@ extension AudioRecordDB {
             return
         }
 
-        os_log("\(Logger.isMain)\(AudioRecordDB.label)Sticky \(url.lastPathComponent) with reason: \(reason)")
+        os_log("\(self.t)Sticky \(url.lastPathComponent) with reason: \(reason)")
 
         do {
             // Find the audio corresponding to the URL
@@ -636,7 +636,7 @@ extension AudioRecordDB {
                 context.delete(audio)
                 try context.save()
             } catch let e {
-                os_log(.error, "\(Logger.isMain)\(AudioRecordDB.label)删除出错 \(e)")
+                os_log(.error, "\(self.t)删除出错 \(e)")
             }
         }
 
@@ -675,7 +675,7 @@ extension AudioRecordDB {
 
                 try context.save()
             } catch let e {
-                os_log(.error, "\(Logger.isMain)\(AudioRecordDB.label)删除出错 \(e)")
+                os_log(.error, "\(self.t)删除出错 \(e)")
             }
         }
 
@@ -684,7 +684,7 @@ extension AudioRecordDB {
 
     static func findAudio(_ url: URL, context: ModelContext, verbose: Bool = false) -> AudioModel? {
         if verbose {
-            os_log("\(self.label)FindAudio -> \(url.lastPathComponent)")
+            os_log("\(self.t)FindAudio -> \(url.lastPathComponent)")
         }
 
         do {

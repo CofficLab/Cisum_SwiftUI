@@ -11,11 +11,9 @@ import SwiftUI
  */
 
 struct PlayAsset: FileBox, Identifiable, SuperEvent, SuperLog {
-    let emoji = "🫓"
+    static let emoji = "🫓"
 
     var id: URL { self.url }
-
-    static var label = "🪖 PlayAsset::"
 
     let fm = FileManager.default
 
@@ -24,7 +22,6 @@ struct PlayAsset: FileBox, Identifiable, SuperEvent, SuperLog {
     var like: Bool = false
     var size: Int64?
     var notLike: Bool { !like }
-    var label: String { "\(Logger.isMain)\(Self.label)" }
     var source: PlaySource?
 
     func isSupported() -> Bool {

@@ -4,7 +4,7 @@ import OSLog
 import SwiftData
 
 class BookUpdateCoverJob: SuperLog, SuperThread, BookJob {
-    let emoji = "🌽"
+    static let emoji = "🌽"
     let db: BookRecordDB
     var running = false
 

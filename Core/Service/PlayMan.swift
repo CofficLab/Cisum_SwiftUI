@@ -13,7 +13,7 @@ import SwiftUI
 
 @MainActor
 class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread, AudioWorkerDelegate {
-    static var label = "💃 PlayMan::"
+    static var emoji = "💃"
     #if os(macOS)
         static var defaultImage = NSImage(named: "DefaultAlbum")!
     #else
@@ -26,7 +26,6 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread, AudioWorkerDel
     @Published private(set) var error: PlayManError? = nil
     @Published private(set) var playing: Bool = false
 
-    let emoji = "💃"
     var delegate: PlayManDelegate?
     var audioWorker: AudioWorker = AudioWorker(delegate: nil)
     var videoWorker: VideoWorker = VideoWorker()

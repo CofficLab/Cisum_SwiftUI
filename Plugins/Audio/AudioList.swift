@@ -13,7 +13,7 @@ import SwiftUI
       B2
  */
 struct AudioList: View, SuperThread, SuperLog, SuperEvent {
-    let emoji = "📬"
+    static let emoji = "📬"
 
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var man: PlayMan

@@ -17,7 +17,7 @@ struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
     @State var count: Int = 0
     @State var loading: Bool = true
 
-    let emoji = "🐘"
+    static let emoji = "🐘"
 
     var showProTips: Bool {
         count >= Config.maxAudioCount && s.currentSubscription == nil && isDropping

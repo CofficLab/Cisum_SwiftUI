@@ -4,6 +4,8 @@ import StoreKit
 import SwiftUI
 
 struct BuySetting: View, SuperLog {
+    static let emoji = "🛒"
+    
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     @State var closeBtnHovered: Bool = false
 

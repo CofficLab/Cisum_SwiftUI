@@ -6,7 +6,8 @@ import SwiftUI
 
 @MainActor
 class MessageProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
-    let emoji = "📪"
+    static let emoji = "📪"
+    
     let maxMessageCount = 100
 
     @Published var messages: [SmartMessage] = []

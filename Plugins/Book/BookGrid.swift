@@ -4,7 +4,7 @@ import SwiftUI
 import MagicKit
 
 struct BookGrid: View, SuperLog, SuperThread {
-    let emoji = "📖"
+    static let emoji = "📖"
 
     @EnvironmentObject var appManager: AppProvider
     @EnvironmentObject var data: DataProvider

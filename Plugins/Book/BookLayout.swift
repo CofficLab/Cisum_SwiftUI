@@ -4,7 +4,7 @@ import SwiftUI
 import MagicKit
 
 struct BookLayout: View, SuperLog {
-    let emoji = "🖥️"
+    static let emoji = "🖥️"
 
     @EnvironmentObject var appManager: AppProvider
 

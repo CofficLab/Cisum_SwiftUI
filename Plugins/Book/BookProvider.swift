@@ -10,7 +10,7 @@ class BookProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
     private var cancellables = Set<AnyCancellable>()
     private var debounceTimer: Timer?
     
-    let emoji = "🌿"
+    static let emoji = "🌿"
     let disk: (any SuperDisk)
 
     @Published var files: [DiskFile] = []

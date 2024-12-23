@@ -7,7 +7,7 @@ import SwiftUI
 
 class PluginProvider: ObservableObject, SuperLog, SuperThread {
     static let keyOfCurrentPluginID = "currentPluginID"
-    let emoji = "🧩"
+    static let emoji = "🧩"
 
     @Published private(set) var plugins: [SuperPlugin] = []
     @Published private(set) var current: SuperPlugin?
@@ -17,7 +17,7 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
     }
 
     init() {
-        os_log("\(Logger.initLog) PluginProvider")
+        os_log("\(self.t) PluginProvider")
 
         let currentPluginId = Self.getPluginId()
 

@@ -4,7 +4,7 @@ import SwiftUI
 import MagicKit
 
 struct AudioTask: View, SuperLog, SuperThread {
-    let emoji = "📬"
+    static let emoji = "📬"
 
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var dataManager: DataProvider

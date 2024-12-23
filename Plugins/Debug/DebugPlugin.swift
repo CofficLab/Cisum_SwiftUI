@@ -6,7 +6,7 @@ import SwiftUI
 class DebugPlugin: SuperPlugin, SuperLog {    
     var hasPoster: Bool = false
     let description: String = "作为播放器，只关注文件，文件夹将被忽略"
-    let emoji = "🥣"
+    static let emoji = "🥣"
     var iconName: String = "play"
     var label: String = ""
 

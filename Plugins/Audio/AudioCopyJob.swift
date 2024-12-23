@@ -3,7 +3,8 @@ import MagicKit
 import OSLog
 
 class AudioCopyJob: SuperLog, SuperThread {
-    let emoji = "🔄"
+    static let emoji = "🔄"
+    
     let db: AudioRecordDB
     let disk: (any SuperDisk)?
     var running = false

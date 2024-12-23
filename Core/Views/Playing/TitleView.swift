@@ -8,7 +8,7 @@ struct TitleView: View, SuperLog, SuperThread {
 
     var title: String { playMan.asset?.title ?? "" }
     var width: CGFloat
-    let emoji = "📺"
+    static let emoji = "📺"
 
     var body: some View {
         ZStack {

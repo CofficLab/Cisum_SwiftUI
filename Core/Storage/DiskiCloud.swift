@@ -3,7 +3,9 @@ import MagicKit
 import OSLog
 
 class DiskiCloud: ObservableObject, SuperDisk, SuperLog, SuperThread {
-    static var label = "☁️ DiskiCloud::"
+    static var label: String = "DiskiCloud"
+    
+    static var emoji = "☁️"
     static let cloudRoot = Config.cloudDocumentsDir
 
     let emoji = "🐶"
@@ -13,7 +15,7 @@ class DiskiCloud: ObservableObject, SuperDisk, SuperLog, SuperThread {
 
     static func getMountedURL(verbose: Bool) -> URL? {
         guard let cloudRoot = Self.cloudRoot else {
-            os_log(.error, "\(self.label)无法获取根目录，因为 CloudRoot=nil")
+            os_log(.error, "\(Self.t)无法获取根目录，因为 CloudRoot=nil")
 
             return nil
         }

@@ -5,7 +5,7 @@ import SwiftUI
 struct AudioAvatar: View, SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
 
-    let emoji = "🐰"
+    static let emoji = "🐰"
 
     @State var image: Image?
     @State var downloadingPercent: Double = -1
