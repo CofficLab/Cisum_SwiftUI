@@ -12,14 +12,17 @@ class CopyPlugin: SuperPlugin, SuperLog {
     var iconName: String = "music.note"
     var isGroup: Bool = false
     var db: CopyDB?
+    var worker: CopyJob?
 
     init() {
         os_log("\(self.i)")
     }
 
     func addStateView(currentGroup: SuperPlugin?) -> AnyView? {
-        return AnyView(CopyStateView()
-            .modelContainer(CopyConfig.getContainer))
+        return AnyView(
+            CopyStateView()
+                .environmentObject(self.worker!)
+                .modelContainer(CopyConfig.getContainer))
     }
 
     func addRootView() -> AnyView? {
@@ -30,10 +33,10 @@ class CopyPlugin: SuperPlugin, SuperLog {
             .modelContainer(CopyConfig.getContainer)
         )
     }
-    
+
     func addStatusView() -> AnyView? {
         os_log("\(self.t)AddStatusView")
-        
+
         return AnyView(CopyStatusView()
             .modelContainer(CopyConfig.getContainer))
     }
@@ -42,5 +45,6 @@ class CopyPlugin: SuperPlugin, SuperLog {
         os_log("\(self.t)🛫🛫🛫 OnInit")
 
         self.db = CopyDB(CopyConfig.getContainer, reason: self.author + ".onInit", verbose: true)
+        self.worker = CopyJob(db: self.db!, disk: nil)
     }
 }

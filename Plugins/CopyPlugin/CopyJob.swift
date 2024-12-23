@@ -2,14 +2,14 @@ import Foundation
 import MagicKit
 import OSLog
 
-class CopyJob: SuperLog, SuperThread {
+class CopyJob: SuperLog, SuperThread, ObservableObject {
     static let emoji = "🔄"
     
-    let db: AudioRecordDB
+    let db: CopyDB
     let disk: (any SuperDisk)?
     var running = false
     
-    init(db: AudioRecordDB, disk: (any SuperDisk)?) {
+    init(db: CopyDB, disk: (any SuperDisk)?) {
         self.db = db
         self.disk = disk
 
@@ -26,7 +26,7 @@ class CopyJob: SuperLog, SuperThread {
     func append(_ urls: [URL]) {
         Task {
             for url in urls {
-//                await db.newCopyTask(url)
+                await db.newCopyTask(url)
             }
 
             self.run()
@@ -34,49 +34,43 @@ class CopyJob: SuperLog, SuperThread {
     }
     
     func run() {
-        let verbose = false
-
         if running {
             return
         }
 
         running = true
 
-        if verbose {
-            os_log("\(self.t)run")
-        }
+        os_log("\(self.t)run")
 
         guard let disk = self.disk else {
-            os_log(.error, "\(self.t)run -> 没有磁盘")
+            os_log(.error, "\(self.t)没有磁盘")
             running = false
             return
         }
 
-//        self.bg.async {
-//            Task {
-//                let tasks = await self.db.allCopyTasks()
-//
-//                if tasks.isEmpty {
-//                    self.running = false
-//                    if verbose {
-//                        os_log("\(self.t)run -> 没有任务")
-//                    }
-//                    return
-//                }
-//
-//                for task in tasks {
-//                    do {
-//                        let url = task.url
-//                        os_log("\(self.t)run -> \(url)")
-//                        try disk.copyTo(url: url, reason: "AudioCopyJob")
-//                        await self.db.deleteCopyTasks([url])
-//                    } catch let e {
-//                        await self.db.setTaskError(task, e)
-//                    }
-//                }
-//
-//                self.running = false
-//            }
-//        }
+        self.bg.async {
+            Task {
+                let tasks = await self.db.allCopyTasks()
+
+                if tasks.isEmpty {
+                    self.running = false
+                    os_log("\(self.t)没有任务")
+                    return
+                }
+
+                for task in tasks {
+                    do {
+                        let url = task.url
+                        os_log("\(self.t)run -> \(url)")
+                        try disk.copyTo(url: url, reason: "AudioCopyJob")
+                        await self.db.deleteCopyTasks([url])
+                    } catch let e {
+                        await self.db.setTaskError(task, e)
+                    }
+                }
+
+                self.running = false
+            }
+        }
     }
 }

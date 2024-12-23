@@ -6,6 +6,7 @@ import SwiftUI
 struct CopyStateView: View, SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var messageManager: MessageProvider
+    @EnvironmentObject var worker: CopyJob
     @Environment(\.modelContext) private var modelContext
 
     @Query(sort: \CopyTask.createdAt, animation: .default) var tasks: [CopyTask]
@@ -30,6 +31,9 @@ struct CopyStateView: View, SuperLog, SuperThread {
             .padding(.vertical, 6)
             .background(BackgroundView.type3)
             .clipShape(RoundedRectangle(cornerRadius: 8))
+            .onAppear {
+                self.worker.append(tasks.map({ $0.url }))
+            }
         }
     }
 
