@@ -14,7 +14,7 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
 
     init(_ container: ModelContainer, reason: String, verbose: Bool) {
         if verbose {
-            os_log("\(Logger.initLog) AudioRecordDB 💾")
+            os_log("\(Self.i)")
         }
 
         modelContainer = container

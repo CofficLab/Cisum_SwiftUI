@@ -8,6 +8,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
     static let keyOfCurrentAudioTime = "AudioPluginCurrentAudioTime"
     static let keyOfCurrentPlayMode = "AudioPluginCurrentPlayMode"
     static let emoji = "🎧"
+    
     let dirName = "audios"
     let label: String = "Audio"
     var hasPoster: Bool = true
@@ -18,15 +19,19 @@ class AudioPlugin: SuperPlugin, SuperLog {
     var disk: (any SuperDisk)?
     var audioProvider: AudioProvider?
     var audioDB: AudioDB?
+    
+    init() {
+        os_log("\(self.i)")
+    }
 
     func addDBView(reason: String) -> AnyView {
         guard let audioProvider = self.audioProvider else {
-            os_log(.error, "\(self.t)AudioProvider not found")
+            os_log(.error, "\(self.t)AddDBView, AudioProvider not found")
             return AnyView(EmptyView())
         }
 
         guard let audioDB = audioDB else {
-            os_log(.error, "\(self.t)AudioDB not found")
+            os_log(.error, "\(self.t)AddDBView, AudioDB not found")
             return AnyView(EmptyView())
         }
 

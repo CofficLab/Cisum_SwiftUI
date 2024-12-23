@@ -8,7 +8,7 @@ class AudioDB: ObservableObject, SuperEvent, SuperLog {
     var disk: (any SuperDisk)
     
     init(disk: any SuperDisk, reason: String) {
-        os_log("\(Logger.initLog) AudioDB 💾 with reason: 🐛 \(reason)")
+        os_log("\(Self.i) with reason: 🐛 \(reason)")
         
         self.db = AudioRecordDB(AudioConfig.getContainer, reason: "AudioPlugin", verbose: true)
         self.disk = disk

@@ -12,12 +12,12 @@ class DataProvider: ObservableObject, SuperLog {
 
     init(verbose: Bool) async throws {
         if verbose {
-            os_log("\(Logger.initLog) DataProvider")
+            os_log("\(Self.i)")
         }
 
         if Config.iCloudEnabled {
             if verbose {
-                os_log("\(Logger.initLog) DataProvider::设置中启用了 iCloud")
+                os_log("\(Self.t)设置中启用了 iCloud")
             }
 
             try await self.checkAndUpdateiCloudStatus(verbose: verbose)

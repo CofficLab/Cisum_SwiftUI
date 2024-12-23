@@ -17,13 +17,12 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
     }
 
     init() {
-        os_log("\(self.t) PluginProvider")
+        os_log("\(self.i)")
 
         let currentPluginId = Self.getPluginId()
 
         if let plugin = plugins.first(where: { $0.id == currentPluginId }) {
-            os_log("  ➡️ Set Current Plugin: \(plugin.id)")
-            self.current = plugin
+            try? self.setCurrentGroup(plugin)
         }
     }
 
@@ -42,8 +41,8 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
             self.current = plugin
             Self.storeCurrent(plugin)
 
-            Task(priority: .userInitiated) {
-                os_log("\(self.t)Init Plugin: \(plugin.id)")
+            Task(priority: .high) {
+                os_log("\(self.t)🚀🚀🚀 Init Plugin: \(plugin.id)")
                 self.current?.onInit()
             }
         } else {
