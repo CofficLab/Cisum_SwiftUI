@@ -21,7 +21,7 @@ struct CopyRootView: View, SuperEvent, SuperLog, SuperThread {
     @StateObject var man: PlayMan = PlayMan(delegate: nil)
     
     init() {
-        os_log("\(Self.i)")
+        //os_log("\(Self.i)")
     }
 
     var outOfLimit: Bool {

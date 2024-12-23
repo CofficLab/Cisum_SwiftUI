@@ -19,7 +19,6 @@ struct VideoDB: View {
     var main = Config.mainQueue
     var bg = Config.bgQueue
     var dropping: Bool { app.isDropping }
-//    var disk: any SuperDisk { data.disk }
     var label: String { "\(Logger.isMain)\(Self.label) " }
 
     init(verbose: Bool = false) {
@@ -31,9 +30,6 @@ struct VideoDB: View {
     var body: some View {
         VStack(spacing: 0) {
             VideoGrid().frame(maxHeight: .infinity)
-
-            TaskView()
-                .shadow(radius: 10)
         }
         .fileImporter(
             isPresented: $app.isImporting,

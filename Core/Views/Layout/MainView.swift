@@ -33,15 +33,21 @@ struct MainView: View, SuperLog, SuperThread {
                     .frame(height: showDB ? Config.controlViewMinHeight : geo.size.height)
 
                 if showDB {
-                    if #available(macOS 15.0, *) {
-                        #if os(macOS)
+                    VStack(spacing: 0) {
+                        if #available(macOS 15.0, *) {
+                            #if os(macOS)
+                                getTabView()
+                                    .tabViewStyle(GroupedTabViewStyle())
+                            #else
+                                getTabView()
+                            #endif
+                        } else {
                             getTabView()
-                                .tabViewStyle(GroupedTabViewStyle())
-                        #else
-                            getTabView()
-                        #endif
-                    } else {
-                        getTabView()
+                        }
+                        
+                        ForEach(Array(p.getStatusViews().enumerated()), id: \.offset) { index, view in
+                            view
+                        }
                     }
                 }
             }

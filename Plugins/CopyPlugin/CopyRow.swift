@@ -1,7 +1,7 @@
 import OSLog
 import SwiftUI
 
-struct RowTask: View {
+struct CopyRow: View {
     @State var hovered = false
 
     var task: CopyTask
@@ -27,7 +27,7 @@ struct RowTask: View {
                         Spacer()
                         BtnShowInFinder(url: task.url, autoResize: false)
                             .labelStyle(.iconOnly)
-                        BtnDelTask(tasks: [task.id])
+                        BtnDelTask(tasks: [task])
                             .labelStyle(.iconOnly)
                     }
                 }
@@ -45,7 +45,7 @@ struct RowTask: View {
                 BtnShowInFinder(url: task.url, autoResize: false)
             }
             Divider()
-            BtnDelTask(tasks: [task.id], autoResize: false)
+            BtnDelTask(tasks: [task], autoResize: false)
         })
     }
 }

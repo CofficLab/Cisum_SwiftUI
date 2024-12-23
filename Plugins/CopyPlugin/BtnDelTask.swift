@@ -1,11 +1,10 @@
 import SwiftUI
 
 struct BtnDelTask: View {
-    @EnvironmentObject var db: AudioRecordDB
-    
+    @Environment(\.modelContext) private var context
     @State var hovered = false
 
-    var tasks: Set<CopyTask.ID>
+    var tasks: Set<CopyTask>
     var autoResize = false
 
     var body: some View {
@@ -14,11 +13,11 @@ struct BtnDelTask: View {
             image: getImageName(),
             dynamicSize: autoResize,
             onTap: {
-//                for task in tasks {
-//                    Task {
-//                        await db.deleteCopyTask(task)
-//                    }
-//                }
+                for task in tasks {
+                    Task {
+                        context.delete(task)
+                    }
+                }
             })
     }
 

@@ -3,7 +3,7 @@ import SwiftData
 import SwiftUI
 import MagicKit
 
-struct CopyView: View, SuperLog, SuperThread {
+struct CopyStatusView: View, SuperLog, SuperThread {
     static let emoji = "📬"
 
     @EnvironmentObject var app: AppProvider
@@ -24,8 +24,6 @@ struct CopyView: View, SuperLog, SuperThread {
         Group {
             if !tasks.isEmpty {
                 taskList
-            } else {
-                Text("没有复制任务")
             }
         }
         .onChange(of: tasks.count) {
@@ -37,7 +35,7 @@ struct CopyView: View, SuperLog, SuperThread {
         List(selection: $selection) {
             Section {
                 ForEach(tasks, id: \.url.relativeString) { task in
-                    RowTask(task)
+                    CopyRow(task)
                 }
                 .onDelete(perform: deleteTasks)
             } header: {
@@ -59,7 +57,7 @@ struct CopyView: View, SuperLog, SuperThread {
 
     private func deleteTasks(at offsets: IndexSet) {
         for index in offsets {
-//            dataManager.deleteCopyTask(tasks[index])
+            context.delete(tasks[index])
         }
     }
 }

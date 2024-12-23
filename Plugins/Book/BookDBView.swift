@@ -44,9 +44,6 @@ struct BookDBView: View, SuperLog, SuperThread {
 
             BookGrid()
                 .frame(maxHeight: .infinity)
-
-            TaskView()
-                .shadow(radius: 10)
         }
         .fileImporter(
             isPresented: $app.isImporting,

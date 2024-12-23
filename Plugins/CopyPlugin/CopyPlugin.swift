@@ -30,6 +30,13 @@ class CopyPlugin: SuperPlugin, SuperLog {
             .modelContainer(CopyConfig.getContainer)
         )
     }
+    
+    func addStatusView() -> AnyView? {
+        os_log("\(self.t)AddStatusView")
+        
+        return AnyView(CopyStatusView()
+            .modelContainer(CopyConfig.getContainer))
+    }
 
     func onInit() {
         os_log("\(self.t)🛫🛫🛫 OnInit")

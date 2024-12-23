@@ -139,7 +139,7 @@ extension RootView {
 
         Task(priority: .userInitiated) {
             do {
-                try dataManager = await DataProvider(verbose: true)
+                dataManager = DataProvider(verbose: true)
 
                 try Config.getPlugins().forEach({
                     try self.p.append($0, reason: self.className)

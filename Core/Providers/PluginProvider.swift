@@ -17,7 +17,7 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
     }
 
     init() {
-        os_log("\(self.i)")
+        //os_log("\(self.i)")
 
         let currentPluginId = Self.getPluginId()
 
@@ -40,10 +40,18 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
         plugin.onInit()
     }
     
-    func getRootViews() -> [AnyView] {
-        let items = plugins.flatMap { $0.addRootView() }
+    func getStatusViews() -> [AnyView] {
+        let items = plugins.compactMap { $0.addStatusView() }
         
-        os_log("\(self.t)GetRootViews: \(items.count)")
+        //os_log("\(self.t)GetRootViews: \(items.count)")
+        
+        return items
+    }
+    
+    func getRootViews() -> [AnyView] {
+        let items = plugins.compactMap { $0.addRootView() }
+        
+        //os_log("\(self.t)GetRootViews: \(items.count)")
         
         return items
     }
@@ -53,7 +61,7 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
     }
 
     func setCurrentGroup(_ plugin: SuperPlugin) throws {
-        os_log("\(self.t)🏃🏃🏃 SetCurrentGroup: \(plugin.id)")
+        //os_log("\(self.t)🏃🏃🏃 SetCurrentGroup: \(plugin.id)")
 
         if plugin.isGroup {
             self.current = plugin
@@ -64,7 +72,7 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
     }
 
     func restoreCurrent() throws {
-        os_log("\(self.t)🏃🏃🏃 RestoreCurrent")
+        //os_log("\(self.t)🏃🏃🏃 RestoreCurrent")
         
         let currentPluginId = Self.getPluginId()
 

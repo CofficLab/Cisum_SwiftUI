@@ -14,6 +14,7 @@ protocol SuperPlugin {
     func addPosterView() -> AnyView
     func addStateView(currentGroup: SuperPlugin?) -> AnyView?
     func addSettingView() -> AnyView?
+    func addStatusView() -> AnyView?
     func addToolBarButtons() -> [(id: String, view: AnyView)]
 
     func getDisk() -> (any SuperDisk)?
@@ -48,6 +49,10 @@ extension SuperPlugin {
     }
 
     func addStateView(currentGroup: SuperPlugin?) -> AnyView? {
+        return nil
+    }
+    
+    func addStatusView() -> AnyView? {
         return nil
     }
     
