@@ -13,11 +13,9 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
     let queue = DispatchQueue(label: "DB")
     var onUpdated: () -> Void = { os_log("🍋 DB::updated") }
 
-    init(_ container: ModelContainer, reason: String, verbose: Bool = false) {
+    init(_ container: ModelContainer, reason: String, verbose: Bool) {
         if verbose {
-            let message = "\(Logger.isMain)\(Self.label)🚩🚩🚩 初始化(\(reason))"
-            
-            os_log("\(message)")
+            os_log("\(Logger.initLog) AudioRecordDB 💾")
         }
 
         modelContainer = container

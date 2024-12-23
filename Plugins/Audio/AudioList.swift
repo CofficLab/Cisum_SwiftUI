@@ -93,7 +93,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     }
 
     private func refreshAssets() {
-        Task.detached(priority: .background) {
+        Task.detached(priority: .userInitiated) {
             let audios = await db.allAudios(reason: self.className + ".handleAudioDeleted")
             let assets = audios.map { $0.toPlayAsset() }
             

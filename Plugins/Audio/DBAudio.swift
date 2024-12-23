@@ -422,6 +422,8 @@ extension AudioRecordDB {
     }
 
     func sync(_ group: DiskFileGroup, verbose: Bool = false) {
+        os_log("\(self.t)sync")
+        
         self.emitDBSyncing(group)
 
         if verbose {
@@ -444,10 +446,12 @@ extension AudioRecordDB {
     }
 
     func syncWithDisk(_ group: DiskFileGroup) {
+        os_log("\(self.t)syncWithDisk")
+        
         let verbose = false
         let startTime: DispatchTime = .now()
 
-        // 将数���转换成哈希表，方便通过键来快速查找元素，这样可以将时间复杂度降低到：O(m+n)
+        // 将数组转换成哈希表，方便通过键来快速查找元素，这样可以将时间复杂度降低到：O(m+n)
         var hashMap = group.hashMap
 
         do {
@@ -472,7 +476,8 @@ extension AudioRecordDB {
                 context.insert(value.toAudio())
             }
 
-            try context.save()
+            os_log("\(self.t)syncWithDisk -> context.save")
+            try self.context.save()
         } catch {
             os_log(.error, "\(error.localizedDescription)")
         }

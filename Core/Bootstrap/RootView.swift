@@ -132,7 +132,7 @@ extension RootView {
     func onAppear() {
         man.delegate = self
 
-        Task {
+        Task(priority: .userInitiated) {
             do {
                 try dataManager = await DataProvider(verbose: true)
 
@@ -140,7 +140,7 @@ extension RootView {
                     self.p.append($0)
                 })
 
-                self.p.restoreCurrent()
+                try? self.p.restoreCurrent()
 
                 for plugin in p.plugins {
                     await plugin.onAppear(playMan: man, currentGroup: p.current)

@@ -152,6 +152,7 @@
 		F52A99002C43C0DA003559F1 /* AudioList.swift in Sources */ = {isa = PBXBuildFile; fileRef = F52A98FF2C43C0DA003559F1 /* AudioList.swift */; };
 		F53BE0322C202420003CBA29 /* DiskFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53BE0312C202420003CBA29 /* DiskFile.swift */; };
 		F53BE0342C2024BE003CBA29 /* DiskFileGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53BE0332C2024BE003CBA29 /* DiskFileGroup.swift */; };
+		F53ED8DA2D19098300F8E42D /* MagicKit in Frameworks */ = {isa = PBXBuildFile; productRef = F53ED8D92D19098300F8E42D /* MagicKit */; };
 		F54522252BFF3C780027CF55 /* Products.storekit in Resources */ = {isa = PBXBuildFile; fileRef = F54522242BFF3C770027CF55 /* Products.storekit */; };
 		F54522272BFF3CCE0027CF55 /* Products.plist in Resources */ = {isa = PBXBuildFile; fileRef = F54522262BFF3CCE0027CF55 /* Products.plist */; };
 		F545D1732C1FC9F0006A6AFA /* CloudSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = F545D1722C1FC9F0006A6AFA /* CloudSetting.swift */; };
@@ -223,7 +224,6 @@
 		F5E17A742D03050D00473CB8 /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = F5E17A732D03050D00473CB8 /* AlertToast */; };
 		F5E17A762D03074500473CB8 /* MessageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E17A752D03074500473CB8 /* MessageProvider.swift */; };
 		F5E17A782D03075E00473CB8 /* SmartMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E17A772D03075E00473CB8 /* SmartMessage.swift */; };
-		F5EEC37E2CA636E9003ECF8B /* MagicKit in Frameworks */ = {isa = PBXBuildFile; productRef = F5EEC37D2CA636E9003ECF8B /* MagicKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -449,8 +449,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F53ED8DA2D19098300F8E42D /* MagicKit in Frameworks */,
 				F500793F2CA635B900C9D3D4 /* MagicKit in Frameworks */,
-				F5EEC37E2CA636E9003ECF8B /* MagicKit in Frameworks */,
 				0B00F4672BB840C1000833B9 /* AsyncAlgorithms in Frameworks */,
 				F5E17A742D03050D00473CB8 /* AlertToast in Frameworks */,
 				F54DFA792CA630BE00F81BE3 /* MagicKit in Frameworks */,
@@ -1005,8 +1005,8 @@
 				0B00F4662BB840C1000833B9 /* AsyncAlgorithms */,
 				F54DFA782CA630BE00F81BE3 /* MagicKit */,
 				F500793E2CA635B900C9D3D4 /* MagicKit */,
-				F5EEC37D2CA636E9003ECF8B /* MagicKit */,
 				F5E17A732D03050D00473CB8 /* AlertToast */,
+				F53ED8D92D19098300F8E42D /* MagicKit */,
 			);
 			productName = Cisum;
 			productReference = 0B1D5A4B2AB301AD0010DDF2 /* Cisum.app */;
@@ -1040,8 +1040,8 @@
 			mainGroup = 0B9C1C342AAF18FE001A26AF;
 			packageReferences = (
 				0B00F4652BB840C1000833B9 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */,
-				F5EEC37C2CA636E9003ECF8B /* XCRemoteSwiftPackageReference "MagicKit" */,
 				F5E17A722D03050D00473CB8 /* XCRemoteSwiftPackageReference "AlertToast" */,
+				F53ED8D82D19098300F8E42D /* XCLocalSwiftPackageReference "../MagicKit" */,
 			);
 			productRefGroup = 0B9C1C3E2AAF18FE001A26AF /* Products */;
 			projectDirPath = "";
@@ -1521,6 +1521,13 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		F53ED8D82D19098300F8E42D /* XCLocalSwiftPackageReference "../MagicKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../MagicKit;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		0B00F4652BB840C1000833B9 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -1538,14 +1545,6 @@
 				minimumVersion = 1.3.9;
 			};
 		};
-		F5EEC37C2CA636E9003ECF8B /* XCRemoteSwiftPackageReference "MagicKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/CofficLab/MagicKit";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1558,6 +1557,10 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = MagicKit;
 		};
+		F53ED8D92D19098300F8E42D /* MagicKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MagicKit;
+		};
 		F54DFA782CA630BE00F81BE3 /* MagicKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MagicKit;
@@ -1566,11 +1569,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = F5E17A722D03050D00473CB8 /* XCRemoteSwiftPackageReference "AlertToast" */;
 			productName = AlertToast;
-		};
-		F5EEC37D2CA636E9003ECF8B /* MagicKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F5EEC37C2CA636E9003ECF8B /* XCRemoteSwiftPackageReference "MagicKit" */;
-			productName = MagicKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

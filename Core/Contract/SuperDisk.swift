@@ -82,7 +82,7 @@ extension SuperDisk {
 
     static func make(_ subDirName: String, delegate: DiskDelegate? = nil, verbose: Bool, reason: String) -> (any SuperDisk)? {
         if verbose {
-            os_log("\(self.label)创建Disk: \(subDirName) 🐛 \(reason)")
+//            os_log("\(self.label)创建Disk: \(subDirName) 🐛 \(reason)")
         }
 
         let fileManager = FileManager.default

@@ -36,24 +36,30 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
     }
 
     func setCurrentGroup(_ plugin: SuperPlugin) throws {
-        os_log("\(self.t)setCurrentGroup: \(plugin.id)")
+        os_log("\(self.t)setCurrentGroup: \(plugin.id) 🐑")
 
         if plugin.isGroup {
             self.current = plugin
             Self.storeCurrent(plugin)
-            self.current?.onInit()
+
+            Task(priority: .userInitiated) {
+                os_log("\(self.t)Init Plugin: \(plugin.id)")
+                self.current?.onInit()
+            }
         } else {
             throw PluginProviderError.PluginIsNotGroup(plugin: plugin)
         }
     }
 
-    func restoreCurrent() {
+    func restoreCurrent() throws {
+        os_log("\(self.t)restoreCurrent 🐑")
+        
         let currentPluginId = Self.getPluginId()
 
         if let plugin = plugins.first(where: { $0.id == currentPluginId }) {
-            try? self.setCurrentGroup(plugin)
+            try self.setCurrentGroup(plugin)
         } else if let first = plugins.first(where: { $0.isGroup }) {
-            try? self.setCurrentGroup(first)
+            try self.setCurrentGroup(first)
         }
     }
 

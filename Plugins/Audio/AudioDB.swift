@@ -7,12 +7,14 @@ class AudioDB: ObservableObject, SuperEvent, SuperLog {
     var db: AudioRecordDB
     var disk: (any SuperDisk)
     
-    init(disk: any SuperDisk) {
-        self.db = AudioRecordDB(AudioConfig.getContainer, reason: "AudioPlugin")
+    init(disk: any SuperDisk, reason: String) {
+        os_log("\(Logger.initLog) AudioDB 💾 with reason: 🐛 \(reason)")
+        
+        self.db = AudioRecordDB(AudioConfig.getContainer, reason: "AudioPlugin", verbose: true)
         self.disk = disk
         self.disk.setDelegate(self)
         
-        Task {
+        Task(priority: .userInitiated) {
             await disk.watch(reason: "AudioDB.init", verbose: true)
         }
     }
@@ -76,6 +78,8 @@ class AudioDB: ObservableObject, SuperEvent, SuperLog {
 
 extension AudioDB: DiskDelegate {
     public func onUpdate(_ items: DiskFileGroup) async {
+        os_log("\(self.t)onUpdate")
+        
         await self.db.sync(items)
     }
 }

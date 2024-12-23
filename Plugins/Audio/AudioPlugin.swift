@@ -21,10 +21,12 @@ class AudioPlugin: SuperPlugin, SuperLog {
 
     func addDBView(reason: String) -> AnyView {
         guard let audioProvider = self.audioProvider else {
+            os_log(.error, "\(self.t)AudioProvider not found")
             return AnyView(EmptyView())
         }
 
         guard let audioDB = audioDB else {
+            os_log(.error, "\(self.t)AudioDB not found")
             return AnyView(EmptyView())
         }
 
@@ -70,7 +72,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
         os_log("\(self.t)onInit")
 
         self.disk = DiskiCloud.make(self.dirName, verbose: true, reason: "AudioPlugin.onInit")
-        self.audioDB = AudioDB(disk: disk!)
+        self.audioDB = AudioDB(disk: disk!, reason: self.className + ".onInit")
         self.audioProvider = AudioProvider(disk: disk!)
     }
 
