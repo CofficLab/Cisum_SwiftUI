@@ -2,7 +2,7 @@ import Foundation
 import OSLog
 
 protocol DiskDelegate {
-    func onUpdate(_ items: DiskFileGroup) -> Void
+    func onUpdate(_ items: DiskFileGroup) async -> Void
 }
 
 protocol SuperDisk: FileBox {
@@ -11,6 +11,8 @@ protocol SuperDisk: FileBox {
     static func getMountedURL(verbose: Bool) -> URL?
 
     var root: URL { get }
+    
+    init(root: URL, delegate: DiskDelegate?)
 
     func clearFolderContents(atPath path: String)
 
@@ -20,7 +22,6 @@ protocol SuperDisk: FileBox {
     
     func download(_ url: URL, reason: String, verbose: Bool) async throws
 
-    /// 移除下载
     func evict(_ url: URL)
 
     func copyTo(url: URL, reason: String) throws
@@ -40,8 +41,8 @@ protocol SuperDisk: FileBox {
     func next(_ url: URL) -> DiskFile?
 
     func getTotal() -> Int
-
-    init(root: URL, delegate: DiskDelegate?)
+    
+    func setDelegate(_ d: DiskDelegate)
 }
 
 extension SuperDisk {

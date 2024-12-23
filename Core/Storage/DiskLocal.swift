@@ -18,7 +18,7 @@ class DiskLocal: ObservableObject, SuperDisk {
     var bg = Config.bgQueue
     var label: String { "\(Logger.isMain)\(Self.label)" }
     var root: URL
-//    var db: DB = DB(Config.getContainer, reason: "DiskLocal")
+    var delegate: DiskDelegate?
     var onUpdated: (_ collection: DiskFileGroup) -> Void = { collection in
         os_log("\(Logger.isMain)\(DiskiCloud.label)updated with items.count=\(collection.count)")
     }
@@ -148,5 +148,9 @@ class DiskLocal: ObservableObject, SuperDisk {
 
     func makeURL(_ fileName: String) -> URL {
         self.root.appending(component: fileName)
+    }
+    
+    func setDelegate(_ delegate: DiskDelegate) {
+        self.delegate = delegate
     }
 }

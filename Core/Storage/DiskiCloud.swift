@@ -7,7 +7,7 @@ class DiskiCloud: ObservableObject, SuperDisk, SuperLog, SuperThread {
     static let cloudRoot = Config.cloudDocumentsDir
 
     let emoji = "🐶"
-    let delegate: DiskDelegate?
+    var delegate: DiskDelegate?
 
     // MARK: 磁盘的挂载目录
 
@@ -44,6 +44,10 @@ class DiskiCloud: ObservableObject, SuperDisk, SuperLog, SuperThread {
         self.root = root
         self.delegate = delegate
         self.query = ItemQuery(queue: queue)
+    }
+    
+    func setDelegate(_ delegate: DiskDelegate) {
+        self.delegate = delegate
     }
 }
 
@@ -302,7 +306,7 @@ extension DiskiCloud {
                 }
             }
 
-            self.delegate?.onUpdate(DiskFileGroup.fromMetaCollection(collection, disk: self))
+            await self.delegate?.onUpdate(DiskFileGroup.fromMetaCollection(collection, disk: self))
         }
     }
 }

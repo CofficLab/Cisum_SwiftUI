@@ -14,7 +14,6 @@ class AudioPlugin: SuperPlugin, SuperLog {
     let description: String = "作为歌曲仓库，只关注文件，文件夹将被忽略"
     var iconName: String = "music.note"
     var isGroup: Bool = true
-    lazy var db = AudioRecordDB(AudioConfig.getContainer, reason: "AudioPlugin")
 
     var disk: (any SuperDisk)?
     var audioProvider: AudioProvider?
@@ -70,8 +69,8 @@ class AudioPlugin: SuperPlugin, SuperLog {
     func onInit() {
         os_log("\(self.t)onInit")
 
-        self.disk = DiskiCloud.make(self.dirName, delegate: self, verbose: true, reason: "AudioPlugin.onInit")
-        self.audioDB = AudioDB(db: self.db, disk: disk!)
+        self.disk = DiskiCloud.make(self.dirName, verbose: true, reason: "AudioPlugin.onInit")
+        self.audioDB = AudioDB(disk: disk!)
         self.audioProvider = AudioProvider(disk: disk!)
     }
 
@@ -102,14 +101,18 @@ class AudioPlugin: SuperPlugin, SuperLog {
 
     func onPlayModeChange(mode: PlayMode, asset: PlayAsset?) async throws {
         AudioPlugin.storePlayMode(mode)
-
+        
+        guard let audioDB = audioDB else {
+            return
+        }
+        
         switch mode {
         case .Loop:
             break
         case .Order:
-            await self.db.sort(asset?.url, reason: self.className + ".OnPlayModeChange")
+            await audioDB.sort(asset?.url, reason: self.className + ".OnPlayModeChange")
         case .Random:
-            try await self.db.sortRandom(asset?.url, reason: self.className + ".OnPlayModeChange", verbose: true)
+            try await audioDB.sortRandom(asset?.url, reason: self.className + ".OnPlayModeChange", verbose: true)
         }
     }
 
@@ -138,7 +141,12 @@ class AudioPlugin: SuperPlugin, SuperLog {
 
     func onPlayPrev(playMan: PlayMan, current: PlayAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws {
         os_log("\(self.t)OnPlayPrev")
-        let audio = try await self.db.getPrevOf(current?.url, verbose: false)
+        
+        guard let audioDB = audioDB else {
+            return
+        }
+        
+        let audio = try await audioDB.getPrevOf(current?.url, verbose: false)
 
         if let audio = audio {
             await playMan.play(audio.toPlayAsset(), reason: "OnPlayPrev", verbose: true)
@@ -157,8 +165,12 @@ class AudioPlugin: SuperPlugin, SuperLog {
         if verbose {
             os_log("\(self.t)OnPlayNext with mode \(mode.description)")
         }
+        
+        guard let audioDB = audioDB else {
+            return
+        }
 
-        let audio = try await self.db.getNextOf(current?.url, verbose: false)
+        let audio = try await audioDB.getNextOf(current?.url, verbose: false)
         if let audio = audio {
             await playMan.play(audio.toPlayAsset(), reason: "OnPlayNext", verbose: true)
         } else {
@@ -166,19 +178,6 @@ class AudioPlugin: SuperPlugin, SuperLog {
         }
     }
 }
-
-
-
-extension AudioPlugin: DiskDelegate {
-    func onUpdate(_ items: DiskFileGroup) {
-        os_log("\(self.t)onUpdate(\(items.count))")
-        
-        Task.detached(priority: .background) {
-            await self.db.sync(items)
-        }
-    }
-}
-
 
 // MARK: Store
 
