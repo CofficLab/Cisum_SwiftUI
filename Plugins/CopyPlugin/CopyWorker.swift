@@ -8,14 +8,12 @@ class CopyWorker: SuperLog, SuperThread, ObservableObject {
     let db: CopyDB
     var running = false
     
-    init(db: CopyDB) {
-        self.db = db
-        
-        let verbose = false
+    init(db: CopyDB, verbose: Bool = false) {
         if verbose {
-            os_log("\(self.t)init")
+            os_log("\(Self.i)")
         }
         
+        self.db = db
         self.bg.async {
             self.run()
         }
@@ -39,7 +37,7 @@ class CopyWorker: SuperLog, SuperThread, ObservableObject {
 
         running = true
 
-        os_log("\(self.t)run")
+        os_log("\(self.t)🛫🛫🛫 Run")
 
         self.bg.async {
             Task {
@@ -47,7 +45,7 @@ class CopyWorker: SuperLog, SuperThread, ObservableObject {
 
                 if tasks.isEmpty {
                     self.running = false
-                    os_log("\(self.t)没有任务")
+                    os_log("\(self.t)🎉🎉🎉 Done")
                     return
                 }
 

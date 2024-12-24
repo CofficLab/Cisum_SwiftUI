@@ -26,7 +26,7 @@ class CopyPlugin: SuperPlugin, SuperLog {
     }
 
     func addRootView() -> AnyView? {
-        os_log("\(self.t)AddRootView")
+        os_log("\(self.t)🖥️🖥️🖥️ AddRootView")
 
         return AnyView(CopyRootView()
             .environmentObject(self.db!)
@@ -36,7 +36,7 @@ class CopyPlugin: SuperPlugin, SuperLog {
     }
 
     func addStatusView() -> AnyView? {
-        os_log("\(self.t)AddStatusView")
+        os_log("\(self.t)🖥️🖥️🖥️ AddStatusView")
 
         return AnyView(CopyStatusView()
             .modelContainer(CopyConfig.getContainer))

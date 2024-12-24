@@ -3,7 +3,7 @@ import MagicKit
 import OSLog
 
 class AudioDB: ObservableObject, SuperEvent, SuperLog {
-    static var emoji = "🍺"
+    static var emoji = "🎵"
     var db: AudioRecordDB
     var disk: (any SuperDisk)
     
@@ -78,7 +78,7 @@ class AudioDB: ObservableObject, SuperEvent, SuperLog {
 
 extension AudioDB: DiskDelegate {
     public func onUpdate(_ items: DiskFileGroup) async {
-        os_log("\(self.t)onUpdate")
+        os_log("\(self.t)🍋🍋🍋 OnDiskUpdate")
         
         await self.db.sync(items)
     }

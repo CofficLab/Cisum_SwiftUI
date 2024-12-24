@@ -14,19 +14,21 @@ import SwiftUI
  */
 struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     static let emoji = "📬"
+    
+    @Environment(\.modelContext) private var modelContext
 
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var man: PlayMan
-    @EnvironmentObject var db: AudioDB
     @EnvironmentObject var audioManager: AudioProvider
 
-    @State var assets: [PlayAsset] = []
     @State var selection: URL? = nil
     @State var isSorting = false
     @State var sortMode: SortMode = .none
-    @State var loading = true
 
-    var total: Int { assets.count }
+    @Query(sort: \AudioModel.order, animation: .default) var audios: [AudioModel]
+
+    var total: Int { audios.count }
+    var assets: [PlayAsset] { audios.map { $0.toPlayAsset() } }
 
     init(verbose: Bool, reason: String) {
         if verbose {
@@ -36,9 +38,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
 
     var body: some View {
         Group {
-            if loading {
-                ProgressView()
-            } else if isSorting {
+            if isSorting {
                 VStack(spacing: 0) {
                     Spacer()
 
@@ -91,33 +91,19 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
         .onReceive(nc.publisher(for: .DBSorting), perform: onSorting)
         .onReceive(nc.publisher(for: .DBSortDone), perform: onSortDone)
     }
-
-    private func refreshAssets() {
-        Task.detached(priority: .userInitiated) {
-            let audios = await db.allAudios(reason: self.className + ".handleAudioDeleted")
-            let assets = audios.map { $0.toPlayAsset() }
-            
-            await MainActor.run {
-                self.assets = assets
-                self.loading = false
-            }
-        }
-    }
 }
 
 // MARK: Event Handler
 
 extension AudioList {
     func handleAudioDeleted(_ notification: Notification) {
-        refreshAssets()
+        
     }
 
     func handleOnAppear() {
         if let asset = man.asset {
             selection = asset.url
         }
-
-        refreshAssets()
     }
 
     func handlePlayManStateChange(_ notification: Notification) {
@@ -152,8 +138,6 @@ extension AudioList {
 
     func onSortDone(_ notification: Notification) {
         os_log("\(t)onSortDone")
-
-        self.refreshAssets()
 
         self.main.asyncAfter(deadline: .now() + 1.0) {
             isSorting = false

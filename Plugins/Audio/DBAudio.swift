@@ -120,19 +120,19 @@ extension AudioRecordDB {
         }
     }
 
-    func emitSortDone() {
-        os_log("\(self.t)emitSortDone")
+    func emitSortDone(verbose: Bool = false) {
+        if verbose {
+            os_log("\(self.t)🚀🚀🚀 EmitSortDone")
+        }
 
         self.main.async {
             self.emit(name: .DBSortDone, object: nil)
         }
     }
 
-    func emitSorting(_ mode: String) {
-        let verbose = false
-
+    func emitSorting(_ mode: String, verbose: Bool = false) {
         if verbose {
-            os_log("\(self.t)emitSorting")
+            os_log("\(self.t)🚀🚀🚀 EmitSorting")
         }
 
         self.main.async {
@@ -366,7 +366,7 @@ extension AudioRecordDB {
 
     func sortRandom(_ sticky: AudioModel?, reason: String, verbose: Bool) throws {
         if verbose {
-            os_log("\(self.t)SortRandom with sticky: \(sticky?.title ?? "nil") with reason: \(reason)")
+            os_log("\(self.t)🐳🐳🐳 SortRandom with sticky: \(sticky?.title ?? "nil") 🐛 \(reason)")
         }
 
         emitSorting("random")
@@ -422,7 +422,9 @@ extension AudioRecordDB {
     }
 
     func sync(_ group: DiskFileGroup, verbose: Bool = false) {
-        os_log("\(self.t)sync")
+        if verbose {
+            os_log("\(self.t)🔄🔄🔄 Sync")
+        }
         
         self.emitDBSyncing(group)
 
@@ -445,9 +447,7 @@ extension AudioRecordDB {
         self.emitDBSynced()
     }
 
-    func syncWithDisk(_ group: DiskFileGroup) {
-        os_log("\(self.t)syncWithDisk")
-        
+    func syncWithDisk(_ group: DiskFileGroup, verbose: Bool = false) {
         let verbose = false
         let startTime: DispatchTime = .now()
 
@@ -476,7 +476,6 @@ extension AudioRecordDB {
                 context.insert(value.toAudio())
             }
 
-            os_log("\(self.t)syncWithDisk -> context.save")
             try self.context.save()
         } catch {
             os_log(.error, "\(error.localizedDescription)")

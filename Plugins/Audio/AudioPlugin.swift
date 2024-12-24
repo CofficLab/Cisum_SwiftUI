@@ -36,6 +36,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
         }
 
         return AnyView(AudioDBView(verbose: false, reason: reason)
+            .modelContainer(AudioConfig.getContainer)
             .environmentObject(audioDB)
             .environmentObject(audioProvider)
         )
@@ -110,7 +111,9 @@ class AudioPlugin: SuperPlugin, SuperLog {
         self.disk
     }
 
-    func onPlayModeChange(mode: PlayMode, asset: PlayAsset?) async throws {
+    func onPlayModeChange(mode: PlayMode, asset: PlayAsset?) async throws -> Void {
+        os_log("\(self.t)🍋🍋🍋 OnPlayModelChange")
+        
         AudioPlugin.storePlayMode(mode)
         
         guard let audioDB = audioDB else {

@@ -3,7 +3,7 @@ import OSLog
 import MagicKit
 import SwiftUI
 
-class DebugPlugin: SuperPlugin, SuperLog {    
+class DebugPlugin: SuperPlugin, SuperLog {
     var hasPoster: Bool = false
     let description: String = "作为播放器，只关注文件，文件夹将被忽略"
     static let emoji = "🥣"

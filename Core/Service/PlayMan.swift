@@ -67,7 +67,7 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread, AudioWorkerDel
 
     func pause(verbose: Bool) throws {
         if verbose {
-            os_log("\(self.t)Pause ⏸️⏸️⏸️")
+            os_log("\(self.t)⏸️⏸️⏸️ Pause")
         }
 
         try self.worker.pause(verbose: verbose)
@@ -76,7 +76,7 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread, AudioWorkerDel
 
     func play(_ asset: PlayAsset, reason: String, verbose: Bool) {
         if verbose {
-            os_log("\(self.t)Play 🔊🔊🔊「\(asset.fileName)」🐛 \(reason)")
+            os_log("\(self.t)🔊🔊🔊 Play 「\(asset.fileName)」🐛 \(reason)")
         }
 
         clearError()
@@ -96,7 +96,7 @@ class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread, AudioWorkerDel
         }
 
         do {
-            try self.worker.play(asset, reason: reason, verbose: verbose)
+            try self.worker.play(asset, reason: reason, verbose: false)
             setPlaying(true)
         } catch {
             self.setError(.PlayFailed(error))
@@ -174,7 +174,7 @@ extension PlayMan {
 
     func setMode(_ mode: PlayMode, reason: String) {
         if verbose {
-            os_log("\(self.t)SetMode 🐛 \(reason)")
+            os_log("\(self.t)♻️♻️♻️ SetMode 🐛 \(reason)")
         }
 
         if self.mode == mode {

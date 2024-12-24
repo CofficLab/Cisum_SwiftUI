@@ -161,7 +161,7 @@ extension RootView {
             }
 
             self.loading = false
-            os_log("\(self.t)Ready 👌👌👌")
+            os_log("\(self.t)👌👌👌 Ready")
         }
     }
 
@@ -180,7 +180,7 @@ extension RootView {
     }
 
     func onPlayAssetChange() {
-        os_log("\(self.t)Play Asset Change")
+        os_log("\(self.t)🍋🍋🍋 Play Asset Change")
 
         for plugin in p.plugins {
             Task {
@@ -228,11 +228,13 @@ extension RootView: PlayManDelegate {
     }
 
     func onPlayModeChange(mode: PlayMode) {
-        for plugin in p.plugins {
-            do {
-                try plugin.onPlayModeChange(mode: mode, asset: man.asset)
-            } catch let e {
-                m.error(e)
+        Task {
+            for plugin in p.plugins {
+                do {
+                    try await plugin.onPlayModeChange(mode: mode, asset: man.asset)
+                } catch let e {
+                    m.error(e)
+                }
             }
         }
     }

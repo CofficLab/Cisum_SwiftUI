@@ -8,7 +8,6 @@ class DiskiCloud: ObservableObject, SuperDisk, SuperLog, SuperThread {
     static var emoji = "☁️"
     static let cloudRoot = Config.cloudDocumentsDir
 
-    let emoji = "🐶"
     var delegate: DiskDelegate?
 
     // MARK: 磁盘的挂载目录
@@ -276,7 +275,7 @@ extension DiskiCloud {
         let verbose2 = false
 
         if verbose {
-            os_log("\(self.t)Watch(\(self.name)) 🐛 \(reason)")
+            os_log("\(self.t)👀👀👀 Watch(\(self.name)) 🐛 \(reason)")
         }
 
         self.query.stopped = false
@@ -289,7 +288,7 @@ extension DiskiCloud {
             NSPredicate(format: "NOT %K BEGINSWITH[c] %@", NSMetadataItemFSNameKey, "."),
         ]).debounce(for: .seconds(0.3))
         for try await collection in result {
-            var message = "\(self.t)\(emoji) Watch(\(collection.items.count))"
+            var message = "\(self.t)👀👀👀 Watch(\(collection.items.count))"
 
             if let first = collection.first, first.isDownloading == true {
                 message += " -> \(first.fileName ?? "-") -> \(String(format: "%.0f", first.downloadProgress))% ⏬⏬⏬"
