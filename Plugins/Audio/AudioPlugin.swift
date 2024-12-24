@@ -161,7 +161,13 @@ class AudioPlugin: SuperPlugin, SuperLog {
                 await playMan.seek(time)
             }
         } else {
-            os_log("\(self.t)No current audio URL")
+            os_log("\(self.t)No current audio URL, try find first")
+            
+            if let first = try? await audioDB?.getFirst() {
+                await playMan.play(first.toPlayAsset(), reason: self.className + ".OnAppear", verbose: true)
+            } else {
+                os_log("\(self.t)No audio found")
+            }
         }
         
         let mode = AudioPlugin.getPlayMode()

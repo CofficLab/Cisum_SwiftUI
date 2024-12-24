@@ -44,6 +44,10 @@ class AudioDB: ObservableObject, SuperEvent, SuperLog {
         return audio
     }
     
+    func getFirst() async throws -> AudioModel? {
+        try await self.db.firstAudio()
+    }
+    
     func getNextOf(_ url: URL?, verbose: Bool = false) async throws -> AudioModel? {
         try await self.db.getNextOf(url, verbose: verbose)
     }
