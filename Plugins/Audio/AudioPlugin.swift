@@ -19,6 +19,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
     var disk: (any SuperDisk)?
     var audioProvider: AudioProvider?
     var audioDB: AudioDB?
+    var initialized: Bool = false
     
     init() {
         os_log("\(self.i)")
@@ -76,10 +77,22 @@ class AudioPlugin: SuperPlugin, SuperLog {
 
     func onInit() {
         os_log("\(self.t)🛫🛫🛫 OnInit")
-
-        self.disk = DiskiCloud.make(self.dirName, verbose: true, reason: "AudioPlugin.onInit")
+        
+        let cloudDisk = DiskiCloud.make(self.dirName, verbose: true, reason: "AudioPlugin.onInit")
+        
+        if let cloudDisk = cloudDisk {
+            disk = cloudDisk
+        } else {
+            disk = DiskLocal.make("audios", verbose: true, reason: "DataProvider.disableiCloud")
+        }
+        
+        guard disk != nil else {
+            fatalError("AudioPlugin.onInit: disk == nil")
+        }
+        
         self.audioDB = AudioDB(disk: disk!, reason: self.className + ".onInit")
         self.audioProvider = AudioProvider(disk: disk!)
+        self.initialized = true
     }
 
     func onPause(playMan: PlayMan) {
@@ -112,7 +125,11 @@ class AudioPlugin: SuperPlugin, SuperLog {
     }
 
     func onPlayModeChange(mode: PlayMode, asset: PlayAsset?) async throws -> Void {
-        os_log("\(self.t)🍋🍋🍋 OnPlayModelChange")
+        guard self.initialized else {
+            return
+        }
+
+        os_log("\(self.t)🍋🍋🍋 OnPlayModelChange with asset \(asset?.title ?? "nil")")
         
         AudioPlugin.storePlayMode(mode)
         
@@ -137,11 +154,6 @@ class AudioPlugin: SuperPlugin, SuperLog {
 
         os_log("\(self.a)")
 
-        let mode = AudioPlugin.getPlayMode()
-        if let mode = mode {
-            await playMan.setMode(mode, reason: self.className + ".OnAppear")
-        }
-
         if let url = AudioPlugin.getCurrent(), let audio = await self.audioDB?.find(url) {
             await playMan.play(audio.toPlayAsset(), reason: self.className + ".OnAppear", verbose: true)
 
@@ -150,6 +162,11 @@ class AudioPlugin: SuperPlugin, SuperLog {
             }
         } else {
             os_log("\(self.t)No current audio URL")
+        }
+        
+        let mode = AudioPlugin.getPlayMode()
+        if let mode = mode {
+            await playMan.setMode(mode, reason: self.className + ".OnAppear")
         }
     }
 

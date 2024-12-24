@@ -75,6 +75,7 @@ struct AudioAvatar: View, SuperLog, SuperThread {
                     self.image = image
                 }
             } catch {
+                os_log(.error, "\(error.localizedDescription)")
                 self.m.toast("\(error.localizedDescription)")
             }
         }
