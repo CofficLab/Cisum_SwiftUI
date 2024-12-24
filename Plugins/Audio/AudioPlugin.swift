@@ -105,6 +105,8 @@ class AudioPlugin: SuperPlugin, SuperLog {
     }
 
     func onPlayAssetUpdate(asset: PlayAsset?, currentGroup: SuperPlugin?) async throws {
+        os_log("\(self.t)🍋🍋🍋 OnPlayAssetUpdate with asset \(asset?.title ?? "nil")")
+        
         if currentGroup?.id != self.id {
             return
         }
@@ -227,7 +229,11 @@ extension AudioPlugin {
         NSUbiquitousKeyValueStore.default.synchronize()
     }
 
-    static func storeCurrent(_ url: URL?) {
+    static func storeCurrent(_ url: URL?, verbose: Bool = false) {
+        if verbose {
+            os_log("\(Self.t)🍋🍋🍋 Store current audio URL: \(url?.absoluteString ?? "")")
+        }
+        
         UserDefaults.standard.set(url, forKey: keyOfCurrentAudioURL)
 
         // Store URL as string for CloudKit
