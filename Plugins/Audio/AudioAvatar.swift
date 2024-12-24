@@ -62,7 +62,7 @@ struct AudioAvatar: View, SuperLog, SuperThread {
             .onReceive(NotificationCenter.default.publisher(for: .dbSyncing), perform: handleDBSyncing)
     }
 
-    func updateCover(reason: String, verbose: Bool = true) {
+    func updateCover(reason: String, verbose: Bool = false) {
         Task {
             if verbose {
                 os_log("\(t)🪞🪞🪞 UpdateCover for \(self.asset.title) Because of \(reason)")
