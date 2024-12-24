@@ -8,6 +8,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     static var emoji: String { "🌳" }
     let a = AppProvider()
     let s = StoreProvider()
+    let c = ConfigProvider()
 
     @State var dataManager: DataProvider?
     @State var isDropping: Bool = false
@@ -69,6 +70,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                         .environmentObject(p)
                         .environmentObject(dataManager)
                         .environmentObject(m)
+                        .environmentObject(c)
                     } else {
                         Text("启动失败")
                     }

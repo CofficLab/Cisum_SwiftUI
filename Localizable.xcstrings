@@ -105,6 +105,9 @@
     "OK" : {
 
     },
+    "Setting" : {
+
+    },
     "Video" : {
 
     },
@@ -218,17 +221,6 @@
         }
       }
     },
-    "加载更多... (剩余 %@ 项)" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Loading more... (Remaining %@ items)"
-          }
-        }
-      }
-    },
     "取消" : {
       "localizations" : {
         "en" : {
@@ -278,6 +270,9 @@
           }
         }
       }
+    },
+    "媒体仓库位置" : {
+
     },
     "宽度至少 %lf" : {
       "localizations" : {
@@ -368,6 +363,9 @@
           }
         }
       }
+    },
+    "打开 iCloud 文件夹" : {
+
     },
     "打开App Support目录" : {
       "localizations" : {
@@ -528,17 +526,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Using"
-          }
-        }
-      }
-    },
-    "正在同步 %@ 项" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Syncing %@ items"
           }
         }
       }
@@ -735,6 +722,9 @@
           }
         }
       }
+    },
+    "选择目录" : {
+
     },
     "遇到问题无法继续运行" : {
       "localizations" : {
