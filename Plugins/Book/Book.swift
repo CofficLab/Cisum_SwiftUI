@@ -8,7 +8,7 @@ import SwiftUI
  记录一本有声书的数据
  */
 @Model
-class Book: FileBox, SuperLog {
+class Book: SuperLog {
     static let emoji = "📖"
     @Transient var db: BookDB?
 
@@ -50,7 +50,11 @@ class Book: FileBox, SuperLog {
     }
 }
 
-extension Book: PlaySource {
+extension Book: SuperCover {
+    var coverFolder: URL { BookConfig.getCoverFolderUrl() }
+}
+
+extension Book: PlaySource {    
     func delete() async throws {
         guard let db = db else {
             throw BookModelError.dbNotFound
@@ -66,9 +70,8 @@ extension Book: PlaySource {
 
         try await db.download(self, verbose: true)
     }
-    
+
     func toggleLike() async throws {
-        
     }
 }
 

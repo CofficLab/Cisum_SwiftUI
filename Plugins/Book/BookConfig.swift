@@ -15,6 +15,15 @@ struct BookConfig {
             .appendingPathComponent(dbFileName)
     }
     
+    static func getCoverFolderUrl() -> URL {
+        guard let dir = Config.getDBRootDir()?
+            .appendingPathComponent("books_cover") else {
+            fatalError("Could not create cover folder")
+        }
+          
+        return dir
+    }
+    
     // MARK: Local Container
     
     static var getContainer: ModelContainer = {

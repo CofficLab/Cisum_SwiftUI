@@ -196,6 +196,7 @@
 		F5ADFF662D1954B9003CF664 /* CopyDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5ADFF652D1954B9003CF664 /* CopyDB.swift */; };
 		F5ADFF682D195D52003CF664 /* CopyRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5ADFF672D195D4E003CF664 /* CopyRootView.swift */; };
 		F5ADFF6A2D196811003CF664 /* CopyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5ADFF692D196811003CF664 /* CopyStateView.swift */; };
+		F5ADFF6D2D1A8770003CF664 /* SuperCover.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5ADFF6C2D1A8770003CF664 /* SuperCover.swift */; };
 		F5AEE05A2CB515660007825B /* BookHero.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5AEE0592CB515660007825B /* BookHero.swift */; };
 		F5AEE05C2CB519C90007825B /* BookPlayingCover.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5AEE05B2CB519C90007825B /* BookPlayingCover.swift */; };
 		F5AEE0612CB68CA80007825B /* BookUpdateCoverJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5AEE0602CB68CA80007825B /* BookUpdateCoverJob.swift */; };
@@ -412,6 +413,7 @@
 		F5ADFF652D1954B9003CF664 /* CopyDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyDB.swift; sourceTree = "<group>"; };
 		F5ADFF672D195D4E003CF664 /* CopyRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyRootView.swift; sourceTree = "<group>"; };
 		F5ADFF692D196811003CF664 /* CopyStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyStateView.swift; sourceTree = "<group>"; };
+		F5ADFF6C2D1A8770003CF664 /* SuperCover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperCover.swift; sourceTree = "<group>"; };
 		F5AEE0592CB515660007825B /* BookHero.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookHero.swift; sourceTree = "<group>"; };
 		F5AEE05B2CB519C90007825B /* BookPlayingCover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookPlayingCover.swift; sourceTree = "<group>"; };
 		F5AEE0602CB68CA80007825B /* BookUpdateCoverJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookUpdateCoverJob.swift; sourceTree = "<group>"; };
@@ -705,6 +707,7 @@
 		0BC29EA22CA458BB00E4813F /* Plugins */ = {
 			isa = PBXGroup;
 			children = (
+				F5ADFF6B2D1A5765003CF664 /* Cover */,
 				0B6DDCDF2D198845001473E3 /* DevicePlugin */,
 				F5ADFF602D1951C6003CF664 /* CopyPlugin */,
 				0B0FA2272D03485C004D4D41 /* Audio */,
@@ -886,6 +889,7 @@
 		F5675C382C2404B000326664 /* File */ = {
 			isa = PBXGroup;
 			children = (
+				F5ADFF6C2D1A8770003CF664 /* SuperCover.swift */,
 				0BBC15892AB9AB7F006E82C4 /* FileHelper.swift */,
 				0B901D872BB83BC3003AC253 /* FilePresenter.swift */,
 				F5675C392C2404D700326664 /* FileBox.swift */,
@@ -930,6 +934,13 @@
 				0BEE7C712CA838D100DC1DCF /* CopyWorker.swift */,
 			);
 			path = CopyPlugin;
+			sourceTree = "<group>";
+		};
+		F5ADFF6B2D1A5765003CF664 /* Cover */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Cover;
 			sourceTree = "<group>";
 		};
 		F5B64D0D2C3280BF00DE55AD /* Cover */ = {
@@ -1131,6 +1142,7 @@
 				F54DFA652CA4E92100F81BE3 /* VideoDB.swift in Sources */,
 				0BFB38F72BD0BCC20055E38B /* CopyRow.swift in Sources */,
 				0B8113B42C2C430B007CA124 /* Migrate.swift in Sources */,
+				F5ADFF6D2D1A8770003CF664 /* SuperCover.swift in Sources */,
 				0B0FA2122D034440004D4D41 /* DebugPlugin.swift in Sources */,
 				0B4E246F2BCAB8020033CC07 /* AppPreview.swift in Sources */,
 				0B73275F2BB5138200DBD922 /* LoggerHelper.swift in Sources */,

@@ -2,7 +2,7 @@ import Foundation
 import MagicKit
 import OSLog
 
-class DiskiCloud: ObservableObject, SuperDisk, SuperLog, SuperThread {
+class DiskiCloud: ObservableObject, SuperDisk, SuperLog, SuperThread {    
     static var label: String = "DiskiCloud"
     
     static var emoji = "☁️"
@@ -100,7 +100,7 @@ extension DiskiCloud {
                 try fileManager.removeItem(atPath: itemPath)
             }
         } catch {
-            os_log("\(Logger.isMain)\(self.label)clearFolderContents error: \(error.localizedDescription)")
+            os_log("\(self.t)clearFolderContents error: \(error.localizedDescription)")
         }
     }
 }
@@ -183,7 +183,7 @@ extension DiskiCloud {
 extension DiskiCloud {
     func evict(_ url: URL) {
         Task {
-            os_log("\(self.label)🏃🏃🏃 Evit \(url.lastPathComponent)")
+            os_log("\(self.t)🏃🏃🏃 Evit \(url.lastPathComponent)")
             do {
                 try await cloudHandler.evict(url: url)
             } catch {
@@ -202,19 +202,19 @@ extension DiskiCloud {
             let resourceValues = try url.resourceValues(forKeys: [.isUbiquitousItemKey])
             guard let isUbiquitousItem = resourceValues.isUbiquitousItem, isUbiquitousItem else {
                 if verbose {
-                    os_log("\(self.label)不是 iCloud 项目: \(url.lastPathComponent)")
+                    os_log("\(self.t)不是 iCloud 项目: \(url.lastPathComponent)")
                 }
                 return
             }
         } catch {
-            os_log(.error, "\(self.label)检查 iCloud 项目时出错: \(error.localizedDescription)")
+            os_log(.error, "\(self.t)检查 iCloud 项目时出错: \(error.localizedDescription)")
             return
         }
 
         // 检查文件是否已下载
         if iCloudHelper.isDownloaded(url) {
             if verbose {
-                os_log("\(self.label)Download \(url.lastPathComponent) -> Already downloaded ✅✅✅")
+                os_log("\(self.t)Download \(url.lastPathComponent) -> Already downloaded ✅✅✅")
             }
             return
         }
@@ -222,7 +222,7 @@ extension DiskiCloud {
         // 检查文件是否正在下载
         if iCloudHelper.isDownloading(url) {
             if verbose {
-                os_log("\(self.label)Download \(url.lastPathComponent) -> Already downloading ⚠️⚠️⚠️")
+                os_log("\(self.t)Download \(url.lastPathComponent) -> Already downloading ⚠️⚠️⚠️")
             }
             return
         }
@@ -230,7 +230,7 @@ extension DiskiCloud {
         let downloadingCount = getDownloadingCount()
 
         if downloadingCount > 1000 {
-            os_log("\(self.label)Download \(url.lastPathComponent) -> Ignore ❄️❄️❄️ -> Downloading.count=\(downloadingCount)")
+            os_log("\(self.t)Download \(url.lastPathComponent) -> Ignore ❄️❄️❄️ -> Downloading.count=\(downloadingCount)")
 
             return
         }
@@ -264,7 +264,7 @@ extension DiskiCloud {
         let verbose = false
 
         if verbose {
-            os_log("\(self.label)\(emoji) 停止监听 🐛 \(reason)")
+            os_log("\(self.t)\(emoji) 停止监听 🐛 \(reason)")
         }
         
         self.query.stop()

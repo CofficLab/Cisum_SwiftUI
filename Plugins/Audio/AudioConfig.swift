@@ -18,6 +18,15 @@ struct AudioConfig {
     // MARK: 数据库存储名称
     
     static var dbFileName = "audios.db"
+    
+    static func getCoverFolderUrl() -> URL {
+        guard let dir = Config.getDBRootDir()?
+            .appendingPathComponent("audios_cover") else {
+            fatalError("Could not create cover folder")
+        }
+          
+        return dir
+    }
         
     // MARK: 本地的数据库的存储路径
     

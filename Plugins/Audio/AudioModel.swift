@@ -4,12 +4,14 @@ import Foundation
 import OSLog
 import SwiftData
 import SwiftUI
+import MagicKit
 
 /* 存储音频数据，尤其是将计算出来的属性存储下来 */
 
 @Model
 class AudioModel: FileBox {
-    static var label = "🪖 Audio::"
+    @Transient
+    var coverFolder: URL = AudioConfig.getCoverFolderUrl()
     static var verbose = false
 
     @Transient let fileManager = FileManager.default
@@ -35,7 +37,6 @@ class AudioModel: FileBox {
 
     var verbose: Bool { Self.verbose }
     var dislike: Bool { !like }
-    var label: String { "\(Logger.isMain)\(Self.label)" }
     var children: [AudioModel]? {
         if url == .applicationDirectory {
             return nil
@@ -52,7 +53,7 @@ class AudioModel: FileBox {
          isFolder: Bool = false
     ) {
         if Self.verbose {
-            os_log("\(Logger.isMain)\(Self.label)Init -> \(url.lastPathComponent)")
+            os_log("\(Self.i) -> \(url.lastPathComponent)")
             print(" Title: \(title ?? "")")
             print(" Type: \(contentType ?? "")")
             print(" Size: \(String(describing: size))")
@@ -74,6 +75,14 @@ class AudioModel: FileBox {
     func setDB(_ db: AudioDB?) {
         self.db = db
     }
+}
+
+extension AudioModel: SuperLog {
+    static var emoji: String { "🪖" }
+}
+
+extension AudioModel: SuperCover {
+    
 }
 
 // MARK: Order
@@ -99,7 +108,7 @@ extension AudioModel: Identifiable {
 extension AudioModel {
     func toPlayAsset(verbose: Bool = false) -> PlayAsset {
         if verbose {
-            os_log("\(self.label)ToPlayAsset: size(\(self.size.debugDescription))")
+            os_log("\(self.t)ToPlayAsset: size(\(self.size.debugDescription))")
         }
 
         return PlayAsset(url: self.url, like: self.like, size: size).setSource(self)
@@ -119,6 +128,10 @@ extension AudioModel {
 }
 
 extension AudioModel: PlaySource {
+    func getCoverImage() async throws -> Image? {
+        try await self.getCoverImage()
+    }
+    
     func delete() async throws {
         guard let db = db else {
             throw AudioModelError.dbNotFound

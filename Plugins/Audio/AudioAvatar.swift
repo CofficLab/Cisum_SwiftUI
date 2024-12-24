@@ -4,6 +4,7 @@ import SwiftUI
 
 struct AudioAvatar: View, SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
+    @EnvironmentObject var m: MessageProvider
 
     static let emoji = "🐰"
 
@@ -61,18 +62,20 @@ struct AudioAvatar: View, SuperLog, SuperThread {
             .onReceive(NotificationCenter.default.publisher(for: .dbSyncing), perform: handleDBSyncing)
     }
 
-    func updateCover(reason: String, verbose: Bool = false) {
-        self.bg.async {
+    func updateCover(reason: String, verbose: Bool = true) {
+        Task {
             if verbose {
                 os_log("\(t)UpdateCover for \(self.asset.title) Because of \(reason)")
             }
 
-            Task {
-                let image = await asset.getCoverImage()
+            do {
+                let image = try await asset.getCoverImage()
 
                 await MainActor.run {
                     self.image = image
                 }
+            } catch {
+                self.m.toast("\(error.localizedDescription)")
             }
         }
     }

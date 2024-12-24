@@ -8,20 +8,9 @@ extension Config {
     /// iCloud容器的ID
     static let containerIdentifier = "iCloud.yueyi.cisum"
     
-    /// 封面图文件夹
-    static let coversDirName = "covers"
-    
-    /// 回收站文件夹
-    static let trashDirName = "trash"
-    
-    /// 缓存文件夹
-    static let cacheDirName = "audios_cache"
-    
     // MARK: 数据库存储名称
     
     static let dbDirName = debug ? "debug" : "production"
-    
-    static var dbFileName = debug ? "database.db" : "database.db"
     
     // MARK: 同步的数据库的存储名称
     
@@ -31,12 +20,6 @@ extension Config {
 
     static func getDBRootDir() -> URL? {
         Config.localDocumentsDir?.appendingPathComponent(dbDirName)
-    }
-        
-    // MARK: 本地的数据库的存储路径
-    
-    static func getDBUrl() -> URL? {
-        Config.localDocumentsDir?.appendingPathComponent(dbDirName).appendingPathComponent(dbFileName)
     }
     
     // MARK: 同步的数据库的存储路径

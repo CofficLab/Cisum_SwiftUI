@@ -52,20 +52,20 @@ extension AudioRecordDB {
     func runGetCoversJob() {
         os_log("\(self.labelForGetCovers) 🚀🚀🚀")
 
-        do {
-            try self.context.enumerate(AudioModel.descriptorAll, block: { audio in
-                if self.hasCoverRecord(audio) == false {
-                    audio.toPlayAsset().getCoverFromMeta({ url in
-                        if url != nil {
-                            self.emitCoverUpdated(audio)
-                            self.insertCover(audio)
-                        }
-                    }, queue: DispatchQueue.global())
-                }
-            })
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-        }
+//        do {
+//            try self.context.enumerate(AudioModel.descriptorAll, block: { audio in
+//                if self.hasCoverRecord(audio) == false {
+//                    audio.toPlayAsset().getCoverFromMeta({ url in
+//                        if url != nil {
+//                            self.emitCoverUpdated(audio)
+//                            self.insertCover(audio)
+//                        }
+//                    }, queue: DispatchQueue.global())
+//                }
+//            })
+//        } catch let e {
+//            os_log(.error, "\(e.localizedDescription)")
+//        }
     }
 
     func emitCoverUpdated(_ audio: AudioModel) {

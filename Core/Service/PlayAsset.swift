@@ -10,8 +10,8 @@ import SwiftUI
       一个文件URL
  */
 
-struct PlayAsset: FileBox, Identifiable, SuperEvent, SuperLog {
-    static let emoji = "🫓"
+struct PlayAsset: FileBox, Identifiable, SuperEvent, SuperLog {    
+    static let emoji = "🎹"
 
     var id: URL { self.url }
 
@@ -34,22 +34,20 @@ struct PlayAsset: FileBox, Identifiable, SuperEvent, SuperLog {
 
     // MARK: 控制中心的图
 
-    func getMediaCenterImage<T>() -> T {
+    func getMediaCenterImage() async throws -> NSImage?  {
         #if os(macOS)
-            var i = defaultNSImage
-        #else
-            var i = defaultUIImage
+        return try await self.source?.getCoverImage(verbose: true) as? NSImage
+        #elseif os(iOS)
+        return nil
         #endif
-
-        if fm.fileExists(atPath: coverCacheURL.path) {
-            #if os(macOS)
-                i = NSImage(contentsOf: coverCacheURL) ?? i
-            #else
-                i = UIImage(contentsOfFile: coverCacheURL.path) ?? i
-            #endif
-        }
-
-        return i as! T
+    }
+    
+    func getCoverImage() async throws -> Image? {
+        return try await self.source?.getCoverImage(verbose: true)
+    }
+    
+    func getCoverFromMeta() async throws -> URL? {
+        return try await self.source?.getCoverFromMeta(verbose: true)
     }
 
     func delete() async throws {

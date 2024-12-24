@@ -29,6 +29,9 @@ enum Config {
         
         return uuid
     }
+    
+    /// 封面图文件夹
+    static let coversDirName = "covers"
 }
 
 #Preview {

@@ -2,11 +2,11 @@ import OSLog
 import SwiftUI
 import MagicKit
 
-struct PictureView: View {
+struct PictureView: View, SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var data: DataProvider
     
-    static var label = "🐰 AlbumView::"
+    static let emoji = "🐰"
     
     @State var image: Image?
     @State var downloadingPercent: Double = -1
@@ -19,7 +19,6 @@ struct PictureView: View {
     
     var asset: PlayAsset
     var role: CoverView.Role = .Icon
-    var label: String { "\(Logger.isMain)\(Self.label)" }
     var updating: DiskFileGroup = .empty
     var shape: RoundedRectangle {
         if role == .Hero {
@@ -75,18 +74,21 @@ struct PictureView: View {
         })
     }
 
-    func updateCover(reason: String, verbose: Bool = false) {
+    func updateCover(reason: String, verbose: Bool = true) {
         let title = asset.title
-        let label = Self.label
         Task.detached(priority: .background) {
             if verbose {
-                os_log("\(Logger.isMain)\(label)UpdateCover for \(title) Because of \(reason)")
+                os_log("\(self.t)UpdateCover for \(title) Because of \(reason)")
             }
             
-            let image = await asset.getCoverImage()
+            do {
+                let image =  try await asset.getCoverImage()
 
-            DispatchQueue.main.async {
-                self.image = image
+                DispatchQueue.main.async {
+                    self.image = image
+                }
+            } catch {
+                
             }
         }
     }

@@ -199,54 +199,56 @@ extension PlayMan {
     }
 
     private func setPlayingInfo(verbose: Bool = false) {
-        let center = MPNowPlayingInfoCenter.default()
-        let artist = "Cisum"
-        let title = asset?.fileName ?? ""
-        let duration: TimeInterval = self.duration
-        let currentTime: TimeInterval = self.currentTime
-        let image = asset?.getMediaCenterImage() ?? Self.defaultImage
+        Task {
+            let center = MPNowPlayingInfoCenter.default()
+            let artist = "Cisum"
+            let title = asset?.fileName ?? ""
+            let duration: TimeInterval = self.duration
+            let currentTime: TimeInterval = self.currentTime
+            let image: NSImage = (try? await asset?.getMediaCenterImage()) ?? Self.defaultImage
 
-        if verbose {
-            os_log("\(self.t)📱📱📱 Update -> \(self.state.des)")
-            os_log("\(self.t)📱📱📱 Update -> Title: \(title)")
-            os_log("\(self.t)📱📱📱 Update -> Duration: \(duration)")
-            os_log("\(self.t)📱📱📱 Update -> Playing: \(self.playing)")
+            if verbose {
+                os_log("\(self.t)📱📱📱 Update -> \(self.state.des)")
+                os_log("\(self.t)📱📱📱 Update -> Title: \(title)")
+                os_log("\(self.t)📱📱📱 Update -> Duration: \(duration)")
+                os_log("\(self.t)📱📱📱 Update -> Playing: \(self.playing)")
+            }
+
+            center.playbackState = self.playing ? .playing : .paused
+
+            if self.playing == false {
+                center.playbackState = .stopped
+            }
+
+            center.nowPlayingInfo = [
+                MPMediaItemPropertyTitle: title,
+                MPMediaItemPropertyArtist: artist,
+                MPMediaItemPropertyPlaybackDuration: duration,
+                MPNowPlayingInfoPropertyElapsedPlaybackTime: currentTime,
+                MPMediaItemPropertyArtwork: MPMediaItemArtwork(boundsSize: image.size, requestHandler: { size in
+                    #if os(macOS)
+                        image.size = size
+                    #endif
+
+                    return image
+                }),
+            ]
+
+            if verbose {
+                // unknown = 0
+                // playing = 1
+                // paused = 2
+                // stopped = 3
+                // interrupted = 4
+                os_log("\(self.t)📱📱📱 playbackState -> \(center.playbackState.rawValue)")
+            }
+
+            let like = asset?.like ?? false
+            if verbose {
+                os_log("\(self.t)setPlayingInfo like -> \(like)")
+            }
+            c.likeCommand.isActive = like
         }
-
-        center.playbackState = self.playing ? .playing : .paused
-
-        if self.playing == false {
-            center.playbackState = .stopped
-        }
-
-        center.nowPlayingInfo = [
-            MPMediaItemPropertyTitle: title,
-            MPMediaItemPropertyArtist: artist,
-            MPMediaItemPropertyPlaybackDuration: duration,
-            MPNowPlayingInfoPropertyElapsedPlaybackTime: currentTime,
-            MPMediaItemPropertyArtwork: MPMediaItemArtwork(boundsSize: image.size, requestHandler: { size in
-                #if os(macOS)
-                    image.size = size
-                #endif
-
-                return image
-            }),
-        ]
-
-        if verbose {
-            // unknown = 0
-            // playing = 1
-            // paused = 2
-            // stopped = 3
-            // interrupted = 4
-            os_log("\(self.t)📱📱📱 playbackState -> \(center.playbackState.rawValue)")
-        }
-
-        let like = asset?.like ?? false
-        if verbose {
-            os_log("\(self.t)setPlayingInfo like -> \(like)")
-        }
-        c.likeCommand.isActive = like
     }
 }
 
