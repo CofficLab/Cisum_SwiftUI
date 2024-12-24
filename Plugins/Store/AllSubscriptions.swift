@@ -1,8 +1,9 @@
 import OSLog
 import StoreKit
 import SwiftUI
+import MagicKit
 
-struct AllSubscriptions: View {
+struct AllSubscriptions: View, SuperLog {
     @EnvironmentObject var store: StoreProvider
     @EnvironmentObject var app: AppProvider
     @Environment(\.colorScheme) var colorScheme: ColorScheme
@@ -11,9 +12,7 @@ struct AllSubscriptions: View {
     @State private var refreshing = false
     @State private var error: Error? = nil
     
-    var label: String {
-        "\(Logger.isMain) 🖥️ AllSubscriptions::"
-    }
+    static var emoji = "🖥️"
 
     var body: some View {
         GroupBox {
@@ -67,7 +66,7 @@ struct AllSubscriptions: View {
 
     private func getProducts(_ reason: String, verbose: Bool = true) {
         if verbose {
-            os_log("\(self.label)GetProducts because of \(reason)")
+            os_log("\(self.t)GetProducts because of \(reason)")
         }
         
         refreshing = true

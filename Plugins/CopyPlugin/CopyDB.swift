@@ -98,7 +98,7 @@ actor CopyDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
         // os_log("\(Logger.isMain)🗑️ 删除复制任务 \(task.title)")
         let context = ModelContext(modelContainer)
         guard let t = context.model(for: task.id) as? CopyTask else {
-            return os_log("\(Logger.isMain)🗑️ 删除时数据库找不到 \(task.title)")
+            return os_log("\(self.t)🗑️ 删除时数据库找不到 \(task.title)")
         }
 
         do {

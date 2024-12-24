@@ -57,25 +57,25 @@ class BookUpdateCoverJob: SuperLog, SuperThread, BookJob {
     }
 
     private func updateBookCover(book: Book) async {
-        let verbose = false
-
-        if verbose {
-            os_log("\(self.t)UpdateBookCover for \(book.bookTitle)")
-        }
-
-        if book.coverData != nil {
-            return
-        }
-
-        if book.isNotDownloaded {
-            return
-        }
-
-        if let data = await book.getCoverData() {
-            await db.updateBookCover(bookURL: book.url, coverData: data)
-        } else {
-            await db.updateBookSetNoCover(bookURL: book.url)
-        }
+//        let verbose = false
+//
+//        if verbose {
+//            os_log("\(self.t)UpdateBookCover for \(book.bookTitle)")
+//        }
+//
+//        if book.coverData != nil {
+//            return
+//        }
+//
+//        if book.isNotDownloaded {
+//            return
+//        }
+//
+//        if let data = await book.getCoverData() {
+//            await db.updateBookCover(bookURL: book.url, coverData: data)
+//        } else {
+//            await db.updateBookSetNoCover(bookURL: book.url)
+//        }
     }
 
     private func updateCoverForFolder() {

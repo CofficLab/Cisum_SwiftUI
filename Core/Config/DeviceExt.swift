@@ -26,7 +26,7 @@ extension Config {
     static func increseHeight(_ h: CGFloat, verbose: Bool = false) {
         #if os(macOS)
         if verbose {
-            os_log("\(Logger.isMain)\(self.label)增加 Height=\(h)")
+            os_log("\(t)增加 Height=\(h)")
         }
         
         let window = NSApplication.shared.windows.first!
@@ -35,14 +35,14 @@ extension Config {
         let height = frame.size.height
 
         if verbose {
-            os_log("\(Logger.isMain)\(self.label) 增加前 Y=\(oldY) height=\(height)")
+            os_log("\(t) 增加前 Y=\(oldY) height=\(height)")
         }
 
         frame.origin.y = oldY - h
         frame.size.height = height + h
 
         if verbose {
-            os_log("\(Logger.isMain)\(self.label) 增加后 Y=\(frame.origin.y) height=\(frame.size.height)")
+            os_log("\(t) 增加后 Y=\(frame.origin.y) height=\(frame.size.height)")
         }
 
         window.setFrame(frame, display: true)
@@ -52,7 +52,7 @@ extension Config {
     static func setHeight(_ h: CGFloat, verbose: Bool = false) {
         #if os(macOS)
         if verbose {
-            os_log("\(Logger.isMain)\(self.label)设置Height=\(h)")
+            os_log("\(t)设置Height=\(h)")
         }
         
         let window = NSApplication.shared.windows.first!
@@ -61,14 +61,14 @@ extension Config {
         let height = frame.size.height
 
         if verbose {
-            os_log("\(Logger.isMain)\(self.label)设置前 Y=\(oldY) height=\(height)")
+            os_log("\(t)设置前 Y=\(oldY) height=\(height)")
         }
 
         frame.origin.y = oldY + height - h
         frame.size.height = h
 
         if verbose {
-            os_log("\(Logger.isMain)\(self.label)设置后 Y=\(frame.origin.y) height=\(frame.size.height)")
+            os_log("\(t)设置后 Y=\(frame.origin.y) height=\(frame.size.height)")
         }
 
         window.setFrame(frame, display: true)

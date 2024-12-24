@@ -3,8 +3,9 @@ import OSLog
 import SwiftData
 import SwiftUI
 import UniformTypeIdentifiers
+import MagicKit
 
-struct VideoDB: View {
+struct VideoDB: View, SuperLog {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var data: DataProvider
     @EnvironmentObject var message: MessageProvider
@@ -14,16 +15,15 @@ struct VideoDB: View {
 
     @Query(AudioModel.descriptorAll, animation: .default) var audios: [AudioModel]
 
-    static var label = "🐘 DBLayout::"
+    static var emoji = "🐘"
 
     var main = Config.mainQueue
     var bg = Config.bgQueue
     var dropping: Bool { app.isDropping }
-    var label: String { "\(Logger.isMain)\(Self.label) " }
 
     init(verbose: Bool = false) {
         if verbose {
-            os_log("\(Logger.isMain)\(Self.label)初始化")
+            os_log("\(Self.i)")
         }
     }
 
@@ -52,7 +52,7 @@ struct VideoDB: View {
                 // 这是异步操作
                 _ = provider.loadObject(ofClass: URL.self) { object, _ in
                     if let url = object {
-                        os_log("\(Logger.isMain)🖥️ DBView::添加 \(url.lastPathComponent) 到复制队列")
+                        os_log("\(self.t)添加 \(url.lastPathComponent) 到复制队列")
                         dropedFiles.append(url)
                     }
 

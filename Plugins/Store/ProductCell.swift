@@ -1,8 +1,9 @@
+import MagicKit
 import OSLog
 import StoreKit
 import SwiftUI
 
-struct ProductCell: View {
+struct ProductCell: View, SuperLog {
     @EnvironmentObject var store: StoreProvider
     @State var isPurchased: Bool = false
     @State var errorTitle = ""
@@ -33,10 +34,8 @@ struct ProductCell: View {
 
         return false
     }
-    
-    var label: String {
-        "\(Logger.isMain)🖥️ ProductCell::"
-    }
+
+    static var emoji: String = "🖥️"
 
     init(product: Product, purchasingEnabled: Bool = true, showStatus: Bool = false) {
         self.product = product
@@ -151,16 +150,16 @@ struct ProductCell: View {
         purchasing = true
 
         do {
-            os_log("\(self.label)点击了购买按钮")
+            os_log("\(self.t)点击了购买按钮")
 
             let result = try await store.purchase(product)
             if result != nil {
                 withAnimation {
-                    os_log("\(self.label)购买回调，更新购买状态为 true")
+                    os_log("\(self.t)购买回调，更新购买状态为 true")
                     isPurchased = true
                 }
             } else {
-                os_log("\(self.label)购买回调，结果为空，表示取消了")
+                os_log("\(self.t)购买回调，结果为空，表示取消了")
             }
         } catch StoreError.failedVerification {
             errorTitle = "App Store 验证失败"
@@ -179,11 +178,11 @@ struct ProductCell: View {
 extension ProductCell {
     func onAppear() {
         let verbose = false
-            Task {
-                isPurchased = (try? await store.isPurchased(product)) ?? false
+        Task {
+            isPurchased = (try? await store.isPurchased(product)) ?? false
 
-                if verbose {
-                    os_log("\(self.label)OnAppear 检查购买状态 -> \(product.displayName) -> \(isPurchased)")
+            if verbose {
+                os_log("\(self.t)OnAppear 检查购买状态 -> \(product.displayName) -> \(isPurchased)")
             }
         }
     }

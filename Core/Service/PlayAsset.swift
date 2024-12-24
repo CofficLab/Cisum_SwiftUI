@@ -31,23 +31,13 @@ struct PlayAsset: FileBox, Identifiable, SuperEvent, SuperLog {
     func isAudio() -> Bool {
         !isVideo()
     }
-
-    // MARK: 控制中心的图
-
-    func getMediaCenterImage() async throws -> NSImage?  {
-        #if os(macOS)
-        return try await self.source?.getCoverImage(verbose: true) as? NSImage
-        #elseif os(iOS)
-        return nil
-        #endif
-    }
     
     func getCoverImage() async throws -> Image? {
-        return try await self.source?.getCoverImage(verbose: true)
+        return try await self.source?.getCoverImage(verbose: false)
     }
     
-    func getCoverFromMeta() async throws -> URL? {
-        return try await self.source?.getCoverFromMeta(verbose: true)
+    func getPlatformImage() async throws -> PlatformImage? {
+        return try await self.source?.getPlatformImage()
     }
 
     func delete() async throws {

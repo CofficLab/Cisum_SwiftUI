@@ -45,7 +45,6 @@ struct AudioConfig {
 
         let schema = Schema([
             AudioModel.self,
-            Cover.self,
         ])
         let modelConfiguration = ModelConfiguration(
             schema: schema,

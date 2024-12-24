@@ -1,17 +1,17 @@
 import OSLog
 import StoreKit
 import SwiftUI
+import MagicKit
 
-struct BtnBuy: View {
+struct BtnBuy: View, SuperLog {
+    static var emoji: String = "🎩"
+    
     @EnvironmentObject var app: AppProvider
     
     @State var popover: Bool = false
     @State var proColor: Bool = true
 
     var isPro: Bool { true }
-    var label: String {
-        "\(Logger.isMain)🖥️ BtnBuy::"
-    }
 
     var body: some View {
         Button(action: {
@@ -27,11 +27,11 @@ struct BtnBuy: View {
             .controlSize(.large)
         }
         .onAppear {
-            os_log("\(self.label)OnAppear, isPro = \(isPro)")
+            os_log("\(self.t)OnAppear, isPro = \(isPro)")
 //            proColor = ProConfig.isPro
         }
         .onChange(of: isPro, {
-            os_log("\(self.label)isPro 变成了 \(isPro)")
+            os_log("\(self.t)isPro 变成了 \(isPro)")
             self.proColor = isPro
         })
         .sheet(isPresented: $popover) {

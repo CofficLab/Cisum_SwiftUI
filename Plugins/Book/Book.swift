@@ -52,6 +52,13 @@ class Book: SuperLog {
 
 extension Book: SuperCover {
     var coverFolder: URL { BookConfig.getCoverFolderUrl() }
+    var defaultImage: Image {
+        #if os(macOS)
+            Image(nsImage: NSImage(named: "DefaultAlbum")!)
+        #else
+            Image(uiImage: UIImage(imageLiteralResourceName: "DefaultAlbum"))
+        #endif
+    }
 }
 
 extension Book: PlaySource {    

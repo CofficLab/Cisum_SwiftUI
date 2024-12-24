@@ -8,7 +8,6 @@ class ItemQuery: SuperLog, SuperEvent, SuperThread {
     
     let query = NSMetadataQuery()
     let queue: OperationQueue
-    var label: String {"\(Logger.isMain)📁 ItemQuery::"}
     var verbose = false
     var stopped = false
 
@@ -28,7 +27,7 @@ class ItemQuery: SuperLog, SuperEvent, SuperThread {
         scopes: [Any] = [NSMetadataQueryUbiquitousDocumentsScope]
     ) -> AsyncStream<MetadataItemCollection> {
         if verbose {
-            os_log("\(self.label)searchMetadataItems")
+            os_log("\(self.t)searchMetadataItems")
         }
         
         query.searchScopes = scopes
@@ -50,7 +49,7 @@ class ItemQuery: SuperLog, SuperEvent, SuperThread {
                 queue: queue
             ) { notification in
                 if self.stopped {
-                    os_log("\(self.label)停止监听")
+                    os_log("\(self.t)停止监听")
                     return continuation.finish()
                 }
                 
@@ -60,14 +59,14 @@ class ItemQuery: SuperLog, SuperEvent, SuperThread {
             query.operationQueue = queue
             query.operationQueue?.addOperation {
                 if self.verbose {
-                    os_log("\(self.label)start")
+                    os_log("\(self.t)start")
                 }
                 
                 self.query.start()
             }
 
             continuation.onTermination = { @Sendable _ in
-                os_log("\(self.label)onTermination")
+                os_log("\(self.t)onTermination")
                 self.query.stop()
                 NotificationCenter.default.removeObserver(self, name: .NSMetadataQueryDidFinishGathering, object: self.query)
                 NotificationCenter.default.removeObserver(self, name: .NSMetadataQueryDidUpdate, object: self.query)
@@ -80,7 +79,7 @@ class ItemQuery: SuperLog, SuperEvent, SuperThread {
     private func collectAll(_ continuation: AsyncStream<MetadataItemCollection>.Continuation, name: Notification.Name) {
         self.bg.async {
             if self.verbose {
-                os_log("\(self.label)NSMetadataQueryDidFinishGathering")
+                os_log("\(self.t)NSMetadataQueryDidFinishGathering")
             }
             
             let result = self.query.results.compactMap { item -> MetaWrapper? in
@@ -92,7 +91,7 @@ class ItemQuery: SuperLog, SuperEvent, SuperThread {
             }
             
             if self.verbose {
-                os_log("\(self.label)Yield with \(result.count)")
+                os_log("\(self.t)Yield with \(result.count)")
             }
             continuation.yield(MetadataItemCollection(name: name, items: result))
         }
@@ -114,19 +113,19 @@ class ItemQuery: SuperLog, SuperEvent, SuperThread {
         
         DispatchQueue.global().async {
             if self.verbose {
-                os_log("\(self.label)NSMetadataQueryDidUpdate")
+                os_log("\(self.t)NSMetadataQueryDidUpdate")
             }
                 
             if changedResult.count > 0 {
                 if self.verbose {
-                    os_log("\(self.label)Yield with changed \(changedResult.count)")
+                    os_log("\(self.t)Yield with changed \(changedResult.count)")
                 }
                 continuation.yield(MetadataItemCollection(name: name, items: changedResult))
             }
             
             if deletedResult.count > 0 {
                 if self.verbose {
-                    os_log("\(self.label)Yield with deleted\(deletedResult.count)")
+                    os_log("\(self.t)Yield with deleted\(deletedResult.count)")
                 }
                 continuation.yield(MetadataItemCollection(name: name, items: deletedResult))
             }

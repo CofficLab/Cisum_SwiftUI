@@ -141,7 +141,7 @@ extension DataProvider {
 extension DataProvider {
     func findBookState(_ book: Book, verbose: Bool = false) -> BookState? {
         if verbose {
-            os_log("\(self.t)FindState for \(book.title)")
+            os_log("\(self.t)FindState for \(book.bookTitle)")
         }
 
         let db = DBSynced(Config.getSyncedContainer)
@@ -150,7 +150,7 @@ extension DataProvider {
             return state
         } else {
             if verbose {
-                os_log("\(self.t)\(book.title) 无上次播放")
+                os_log("\(self.t)\(book.bookTitle) 无上次播放")
             }
 
             return nil

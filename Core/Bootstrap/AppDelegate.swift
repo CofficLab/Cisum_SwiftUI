@@ -14,58 +14,58 @@ typealias AppOrNotification = UIApplication
 
 class AppDelegate: NSObject, ApplicationDelegate {
     var verbose = false
-    var label: String { "\(Logger.isMain)🍎 AppDelegate::" }
+    static var emoji: String = "🍎" 
     var queue = DispatchQueue(label: "AppDelegate", qos: .background)
 
     func applicationWillHide(_ notification: Notification) {
         queue.async {
-            //os_log("\(self.label)WillHide")
+            //os_log("\(self.t)WillHide")
         }
     }
 
     func applicationDidHide(_ notification: Notification) {
         queue.async {
-            //os_log("\(self.label)Did Hide 🐱🐱🐱")
+            //os_log("\(self.t)Did Hide 🐱🐱🐱")
         }
     }
 
     func applicationWillBecomeActive(_ notification: Notification) {
         queue.async {
-            //os_log("\(self.label)WillBecomeActive")
+            //os_log("\(self.t)WillBecomeActive")
         }
     }
 
     func applicationDidFinishLaunching(_ notification: AppOrNotification) {
         queue.async {
-            //os_log("\(self.label)applicationDidFinishLaunching")
+            //os_log("\(self.t)applicationDidFinishLaunching")
         }
     }
 
     func applicationWillTerminate(_ notification: AppOrNotification) {
         queue.async {
-            //os_log("\(self.label)Will Terminate")
+            //os_log("\(self.t)Will Terminate")
         }
     }
 
     func applicationWillUpdate(_ notification: Notification) {
-        // os_log("\(self.label)Will Update")
+        // os_log("\(self.t)Will Update")
     }
 
     func applicationDidBecomeActive(_ notification: AppOrNotification) {
         queue.async {
-            //os_log("\(self.label)Did Become Active")
+            //os_log("\(self.t)Did Become Active")
         }
     }
 
     func applicationWillResignActive(_ application: AppOrNotification) {
         queue.async {
-            //os_log("\(self.label)WillResignActive")
+            //os_log("\(self.t)WillResignActive")
         }
     }
 
     func applicationDidResignActive(_ notification: Notification) {
         queue.async {
-            //os_log("\(self.label)DidResignActive")
+            //os_log("\(self.t)DidResignActive")
         }
     }
 }

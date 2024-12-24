@@ -63,7 +63,7 @@ struct BookLayout: View, SuperLog {
                 if autoResizing == false {
                     // 说明是用户主动调整
                     self.height = Config.getWindowHeight()
-                    // os_log("\(Logger.isMain)\(self.label)Height=\(self.height)")
+                    // os_log("\(Logger.isMain)\(self.t)Height=\(self.height)")
                 }
 
                 autoResizing = false

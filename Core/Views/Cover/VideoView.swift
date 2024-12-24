@@ -3,12 +3,12 @@ import OSLog
 import SwiftUI
 import MagicKit
 
-struct VideoView: View {
+struct VideoView: View, SuperLog {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var data: DataProvider
     @EnvironmentObject var playMan: PlayMan
 
-    static var label = "🎬 VideoView::"
+    static var emoji = "🎬"
 
     @State var image: Image?
     @State var downloadingPercent: Double = -1
@@ -20,7 +20,6 @@ struct VideoView: View {
     var isDownloaded: Bool { downloadingPercent == 100 }
 
     var asset: PlayAsset
-    var label: String { "\(Logger.isMain)\(Self.label)" }
     var updating: DiskFileGroup = .empty
 
     init(_ asset: PlayAsset) {

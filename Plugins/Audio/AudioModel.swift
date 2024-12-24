@@ -1,17 +1,15 @@
 import AVFoundation
 import CryptoKit
 import Foundation
+import MagicKit
 import OSLog
 import SwiftData
 import SwiftUI
-import MagicKit
 
 /* 存储音频数据，尤其是将计算出来的属性存储下来 */
 
 @Model
 class AudioModel: FileBox {
-    @Transient
-    var coverFolder: URL = AudioConfig.getCoverFolderUrl()
     static var verbose = false
 
     @Transient let fileManager = FileManager.default
@@ -82,7 +80,14 @@ extension AudioModel: SuperLog {
 }
 
 extension AudioModel: SuperCover {
-    
+    var coverFolder: URL { AudioConfig.getCoverFolderUrl() }
+    var defaultImage: Image {
+        #if os(macOS)
+            Image(nsImage: NSImage(named: "DefaultAlbum")!)
+        #else
+            Image(uiImage: UIImage(imageLiteralResourceName: "DefaultAlbum"))
+        #endif
+    }
 }
 
 // MARK: Order
@@ -127,11 +132,11 @@ extension AudioModel {
     }
 }
 
-extension AudioModel: PlaySource {
-    func getCoverImage() async throws -> Image? {
+extension AudioModel: PlaySource {    
+    func getCoverImage(verbose: Bool) async throws -> Image? {
         try await self.getCoverImage()
     }
-    
+
     func delete() async throws {
         guard let db = db else {
             throw AudioModelError.dbNotFound
@@ -147,7 +152,7 @@ extension AudioModel: PlaySource {
 
         try await db.download(self, verbose: true)
     }
-    
+
     func toggleLike() async throws {
         guard let db = db else {
             throw AudioModelError.dbNotFound

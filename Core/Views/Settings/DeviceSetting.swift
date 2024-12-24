@@ -3,7 +3,7 @@ import OSLog
 import SwiftData
 import MagicKit
 
-struct DeviceSetting: View {
+struct DeviceSetting: View, SuperLog {
     @Environment(\.modelContext) private var modelContext
     
     @State var playTime = 0
@@ -11,9 +11,7 @@ struct DeviceSetting: View {
 
     var verbose: Bool = false
     
-    var label: String {
-        "\(Logger.isMain)🖥️ DeviceSetting::"
-    }
+    static var emoji: String = "🖥️"
     
     var body: some View {
         GroupBox {

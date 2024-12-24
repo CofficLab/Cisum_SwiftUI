@@ -69,7 +69,7 @@ struct BookDBView: View, SuperLog, SuperThread {
                 // 这是异步操作
                 _ = provider.loadObject(ofClass: URL.self) { object, _ in
                     if let url = object {
-                        os_log("\(Logger.isMain)🖥️ DBView::添加 \(url.lastPathComponent) 到复制队列")
+                        os_log("\(self.t)添加 \(url.lastPathComponent) 到复制队列")
                         dropedFiles.append(url)
                     }
 

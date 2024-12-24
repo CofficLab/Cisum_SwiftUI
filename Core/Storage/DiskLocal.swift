@@ -1,8 +1,9 @@
 import Foundation
 import OSLog
 
-class DiskLocal: ObservableObject, SuperDisk {    
-    static let label = "🛖 DiskLocal::"
+class DiskLocal: ObservableObject, SuperDisk {
+    static var label: String = "DiskLocal"
+    static let emoji = "🛖"
     static let localRoot = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
     static let null = DiskLocal(root: URL(string: "/dev/null")!) 
     
@@ -16,12 +17,9 @@ class DiskLocal: ObservableObject, SuperDisk {
 
     var fileManager = FileManager.default
     var bg = Config.bgQueue
-    var label: String { "\(Logger.isMain)\(Self.label)" }
     var root: URL
     var delegate: DiskDelegate?
-    var onUpdated: (_ collection: DiskFileGroup) -> Void = { collection in
-        os_log("\(Logger.isMain)\(DiskiCloud.label)updated with items.count=\(collection.count)")
-    }
+    var onUpdated: (_ collection: DiskFileGroup) -> Void = { collection in }
     
     required init(root: URL, delegate: DiskDelegate? = nil) {
         self.root = root
@@ -53,7 +51,7 @@ class DiskLocal: ObservableObject, SuperDisk {
                 try fileManager.removeItem(atPath: itemPath)
             }
         } catch {
-            os_log("\(Logger.isMain)\(self.label)clearFolderContents error: \(error.localizedDescription)")
+            os_log("\(self.t)clearFolderContents error: \(error.localizedDescription)")
         }
     }
     
@@ -61,7 +59,7 @@ class DiskLocal: ObservableObject, SuperDisk {
         let verbose = false
         
         if verbose {
-            os_log("\(self.label)删除 \(url)")
+            os_log("\(self.t)删除 \(url)")
         }
         
         if fileManager.fileExists(atPath: url.path) == false {
@@ -74,7 +72,7 @@ class DiskLocal: ObservableObject, SuperDisk {
     func copyTo(url: URL, reason: String) throws {
         let verbose = true
         if verbose {
-            os_log("\(self.label)copy \(url.lastPathComponent) because of \(reason)")
+            os_log("\(self.t)copy \(url.lastPathComponent) because of \(reason)")
         }
         
         // 目的地已经存在同名文件
@@ -87,23 +85,23 @@ class DiskLocal: ObservableObject, SuperDisk {
                 .appendingPathComponent("\(fileName)-\(times)")
                 .appendingPathExtension(ext)
             times += 1
-            os_log("\(self.label)copy  -> \(d.lastPathComponent)")
+            os_log("\(self.t)copy  -> \(d.lastPathComponent)")
         }
         
         do {
             // 获取授权
             if url.startAccessingSecurityScopedResource() {
                 os_log(
-                    "\(self.label)copy 获取授权后复制 \(url.lastPathComponent, privacy: .public)"
+                    "\(self.t)copy 获取授权后复制 \(url.lastPathComponent, privacy: .public)"
                 )
                 try FileManager.default.copyItem(at: url, to: d)
                 url.stopAccessingSecurityScopedResource()
             } else {
-                os_log("\(self.label)copy 获取授权失败，可能不是用户选择的文件，直接复制 \(url.lastPathComponent)")
+                os_log("\(self.t)copy 获取授权失败，可能不是用户选择的文件，直接复制 \(url.lastPathComponent)")
                 try fileManager.copyItem(at: url, to: d)
             }
         } catch {
-            os_log("\(self.label)复制文件发生错误 -> \(error.localizedDescription)")
+            os_log("\(self.t)复制文件发生错误 -> \(error.localizedDescription)")
             throw error
         }
     }
@@ -126,7 +124,7 @@ class DiskLocal: ObservableObject, SuperDisk {
     
     func watch(reason: String, verbose: Bool) async {
         if verbose {
-            os_log("\(self.label)WatchAudiosFolder because of \(reason)")
+            os_log("\(self.t)WatchAudiosFolder because of \(reason)")
         }
 
         let presenter = FilePresenter(fileURL: self.root)

@@ -1,9 +1,10 @@
 import AVKit
 import OSLog
 import SwiftUI
+import MagicKit
 
-struct VideoLayout: View {
-    static var label = "🖥️ HomeView::"
+struct VideoLayout: View, SuperLog {
+    static var emoji = "🖥️"
 
     @EnvironmentObject var appManager: AppProvider
 
@@ -18,11 +19,10 @@ struct VideoLayout: View {
     var controlViewHeightMin = Config.controlViewMinHeight
     var databaseViewHeightMin = Config.databaseViewHeightMin
     var verbose = false
-    var label: String { "\(Logger.isMain)\(Self.label) " }
 
     init() {
         if verbose {
-            os_log("\(Logger.isMain)\(Self.label)初始化")
+            os_log("\(Self.i)")
         }
     }
 
@@ -62,7 +62,7 @@ struct VideoLayout: View {
                 if autoResizing == false {
                     // 说明是用户主动调整
                     self.height = Config.getWindowHeight()
-                    // os_log("\(Logger.isMain)\(self.label)Height=\(self.height)")
+                    // os_log("\(Logger.isMain)\(self.t)Height=\(self.height)")
                 }
 
                 autoResizing = false
@@ -76,7 +76,7 @@ struct VideoLayout: View {
                     // 说明是用户主动调整
                     self.height = Config.getWindowHeight()
                     if verbose {
-                        os_log("\(self.label)Height=\(self.height)")
+                        os_log("\(self.t)Height=\(self.height)")
                     }
                 }
             }
@@ -121,7 +121,7 @@ struct VideoLayout: View {
 
 extension VideoLayout {
     private func increseHeightToShowDB(_ geo: GeometryProxy, verbose: Bool = true) {
-        os_log("\(self.label)增加 Height 以展开数据库视图")
+        os_log("\(self.t)增加 Height 以展开数据库视图")
         let space = geo.size.height - controlViewHeightMin
 
         if space >= databaseViewHeightMin {
@@ -137,7 +137,7 @@ extension VideoLayout {
 
     private func resetHeight(verbose: Bool = false) {
         if verbose {
-            os_log("\(self.label)减少 Height 以折叠数据库视图")
+            os_log("\(self.t)减少 Height 以折叠数据库视图")
         }
 
         self.autoResizing = true

@@ -20,7 +20,7 @@ class DiskiCloud: ObservableObject, SuperDisk, SuperLog, SuperThread {
         }
 
         if verbose {
-//            os_log("\(Self.label)磁盘的根目录是 \(cloudRoot.path())")
+//            os_log("\(self.t)磁盘的根目录是 \(cloudRoot.path())")
         }
 
         if FileManager.default.fileExists(atPath: cloudRoot.path(percentEncoded: false)) == false {

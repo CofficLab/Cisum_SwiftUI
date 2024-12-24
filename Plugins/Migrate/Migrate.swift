@@ -1,9 +1,6 @@
 import OSLog
+import MagicKit
 
-struct Migrate {
-    static var label = "🐯 Migrate::"
-    
-    var label: String {
-        "\(Logger.isMain)\(Self.label)"
-    }
+struct Migrate: SuperLog {
+    static var emoji = "🐯"
 }

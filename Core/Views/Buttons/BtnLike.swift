@@ -9,7 +9,6 @@ struct BtnLike: View {
     
     var autoResize = false
     var title: String { like ? "取消喜欢" : "标记喜欢" }
-    var label: String { "\(Logger.isMain)❤️ BtnLike::" }
 
     var body: some View {
         ControlButton(

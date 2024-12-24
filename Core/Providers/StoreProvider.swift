@@ -155,13 +155,13 @@ class StoreProvider: ObservableObject, SuperLog {
                 //Check the `productType` of the transaction and get the corresponding product from the store.
                 switch transaction.productType {
                 case .nonConsumable:
-                    os_log("\(Logger.isMain) 🚩 💰 更新购买状态 -> nonConsumable")
+                    os_log("\(self.t) 🚩 💰 更新购买状态 -> nonConsumable")
                     if let car = cars.first(where: { $0.id == transaction.productID }) {
-                        os_log("\(Logger.isMain) 🚩 💰 更新购买状态 -> 已购车: \(car.displayName)")
+                        os_log("\(self.t) 🚩 💰 更新购买状态 -> 已购车: \(car.displayName)")
                         purchasedCars.append(car)
                     }
                 case .nonRenewable:
-                    os_log("\(Logger.isMain) 🚩 💰 更新购买状态 -> nonRenewable")
+                    os_log("\(self.t) 🚩 💰 更新购买状态 -> nonRenewable")
                     if let nonRenewable = nonRenewables.first(where: { $0.id == transaction.productID }),
                        transaction.productID == "nonRenewing.standard" {
                         //Non-renewing subscriptions have no inherent expiration date, so they're always
@@ -173,7 +173,7 @@ class StoreProvider: ObservableObject, SuperLog {
                         let expirationDate = Calendar(identifier: .gregorian).date(byAdding: DateComponents(year: 1), to: transaction.purchaseDate)!
 
                         if currentDate < expirationDate {
-                            os_log("\(Logger.isMain) 🚩💰 更新购买状态 -> 已购: \(nonRenewable.displayName)")
+                            os_log("\(self.t) 🚩💰 更新购买状态 -> 已购: \(nonRenewable.displayName)")
                             purchasedNonRenewableSubscriptions.append(nonRenewable)
                         }
                     }
@@ -184,11 +184,11 @@ class StoreProvider: ObservableObject, SuperLog {
                         purchasedSubscriptions.append(subscription)
                     }
                 default:
-                    Logger.app.error("\(Logger.isMain) 💰 更新已购列表，产品类型未知")
+                    Logger.app.error("\(self.t) 💰 更新已购列表，产品类型未知")
                     break
                 }
             } catch let error {
-                Logger.app.error("\(Logger.isMain) 💰 更新已购列表出错 -> \(error.localizedDescription)")
+                Logger.app.error("\(self.t) 💰 更新已购列表出错 -> \(error.localizedDescription)")
             }
         }
 
@@ -459,7 +459,7 @@ class StoreProvider: ObservableObject, SuperLog {
                 c(nil)
             }
         } catch {
-            Logger.app.error("\(Logger.isMain) 💰 StoreManger 检查订阅状态，出错 -> \(error.localizedDescription)")
+            Logger.app.error("\(self.t) 💰 StoreManger 检查订阅状态，出错 -> \(error.localizedDescription)")
             if let c = completion {
                 c(error)
             }
@@ -469,16 +469,16 @@ class StoreProvider: ObservableObject, SuperLog {
     // MARK: 获取Pro版本失效时间
     
     func getExpirationDate() -> Date {
-        os_log("\(Logger.isMain) 💰 StoreManger 获取失效时间")
+        os_log("\(self.t) 💰 StoreManger 获取失效时间")
         
         guard let status = status else {
-            os_log("\(Logger.isMain) 💰 StoreManger 获取失效时间 -> 无状态，返回很早时间")
+            os_log("\(self.t) 💰 StoreManger 获取失效时间 -> 无状态，返回很早时间")
             return Date.distantPast
         }
         
         guard case let .verified(renewalInfo) = status.renewalInfo,
               case let .verified(transaction) = status.transaction else {
-            Logger.app.error("\(Logger.isMain) 💰 getExpirationDate 出错 -> App Store 无法验证")
+            Logger.app.error("\(self.t) 💰 getExpirationDate 出错 -> App Store 无法验证")
             return Date.distantPast
         }
         
@@ -486,10 +486,10 @@ class StoreProvider: ObservableObject, SuperLog {
         case .subscribed:
             print("💰 获取状态 -> subscribed")
             if let expirationDate = transaction.expirationDate {
-                os_log("\(Logger.isMain) 💰 StoreManger 获取失效时间 -> 已订阅 -> \(expirationDate)")
+                os_log("\(self.t) 💰 StoreManger 获取失效时间 -> 已订阅 -> \(expirationDate)")
                 return expirationDate
             } else {
-                Logger.app.error("\(Logger.isMain) 💰 StoreManger 获取失效时间 -> 已订阅但无 expirationDate")
+                Logger.app.error("\(self.t) 💰 StoreManger 获取失效时间 -> 已订阅但无 expirationDate")
                 return Date.distantPast
             }
         case .expired:

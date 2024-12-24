@@ -2,10 +2,11 @@ import Foundation
 import SwiftUI
 import OSLog
 import AVKit
+import MagicKit
 
 struct DiskFile: FileBox, Hashable, Identifiable, Playable {
     static var home: DiskFile = DiskFile(url: URL.homeDirectory)
-    static var label = "👶 DiskFile::"
+    static var emoji = "👶"
     
     var fileManager = FileManager.default
     var id: URL { url }
@@ -20,10 +21,6 @@ struct DiskFile: FileBox, Hashable, Identifiable, Playable {
     var contentType: String?
     var size: Int64?
     var isPlaceholder: Bool = false
-
-    var label: String {
-        "\(Logger.isMain)\(Self.label)"
-    }
 }
 
 extension DiskFile {
@@ -33,7 +30,7 @@ extension DiskFile {
 
     static func fromMetaWrapper(_ meta: MetaWrapper, verbose: Bool = false) -> Self {
         if verbose {
-            os_log("\(Self.label)FromMetaWrapper -> \(meta.url?.path ?? "-") -> \(meta.downloadProgress)")
+            os_log("\(Self.t)FromMetaWrapper -> \(meta.url?.path ?? "-") -> \(meta.downloadProgress)")
         }
         
         return DiskFile(
@@ -55,7 +52,7 @@ extension DiskFile {
         let presenter = FilePresenter(fileURL: self.url)
         
         presenter.onDidChange = {
-            os_log("\(self.label)变了 -> \(url.lastPathComponent)")
+            os_log("\(self.t)变了 -> \(url.lastPathComponent)")
             
             callback()
         }
@@ -79,7 +76,7 @@ extension DiskFile {
 extension DiskFile {
     func nextDiskFile(verbose: Bool = false) -> DiskFile? {
         if verbose {
-            os_log("\(label)Next of \(fileName)")
+            os_log("\(t)Next of \(fileName)")
         }
 
         if let nextURL = self.next() {
@@ -123,7 +120,7 @@ extension DiskFile {
     
     func toAudio(verbose: Bool = false) -> AudioModel {
         if verbose {
-            os_log("\(self.label)ToAudio: size(\(size.debugDescription))")
+            os_log("\(self.t)ToAudio: size(\(size.debugDescription))")
         }
         
         return AudioModel(url, size: size, isFolder: isFolder)
@@ -131,7 +128,7 @@ extension DiskFile {
 
     func toBook(verbose: Bool = false) -> Book {
         if verbose {
-            os_log("\(self.label)ToBook: title(\(title))")
+            os_log("\(self.t)ToBook: title(\(title))")
         }
         
         return Book(url: url)

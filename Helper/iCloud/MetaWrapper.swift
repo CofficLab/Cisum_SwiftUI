@@ -1,7 +1,10 @@
 import Foundation
 import OSLog
+import MagicKit
 
-struct MetadataItemCollection: Sendable {
+struct MetadataItemCollection: Sendable, SuperLog {
+    static var emoji: String = "🧑‍🎓"
+    
     var name: Notification.Name
     var isUpdated = false
     var items: [MetaWrapper] = []
@@ -27,8 +30,8 @@ struct MetadataItemCollection: Sendable {
     }
 }
 
-struct MetaWrapper: Sendable {
-    static var label = "📁 MetaWrapper::"
+struct MetaWrapper: Sendable, SuperLog {
+    static var emoji = "📁"
     
     let fileName: String?
     let fileSize: Int64?
@@ -51,8 +54,6 @@ struct MetaWrapper: Sendable {
     var isDownloading: Bool {
         isPlaceholder && downloadProgress > 0.0 && downloadProgress < 100.0
     }
-    
-    var label: String { "\(Logger.isMain)\(Self.label)" }
 
     init(metadataItem: NSMetadataItem, isDeleted: Bool = false, isUpdated: Bool = false, verbose: Bool = false) {
         // MARK: FileName
@@ -95,7 +96,7 @@ struct MetaWrapper: Sendable {
         self.uploaded = (metadataItem.value(forAttribute: NSMetadataUbiquitousItemPercentUploadedKey) as? Double ?? 0.0) == 100
 
         if verbose {
-            os_log("\(Logger.isMain)\(Self.label)Init -> \(fileName ?? "") -> PlaceHolder: \(isPlaceholder) -> \(downloadProgress) -> \(fileSize?.description ?? "")")
+            os_log("\(Self.t)Init -> \(fileName ?? "") -> PlaceHolder: \(isPlaceholder) -> \(downloadProgress) -> \(fileSize?.description ?? "")")
  
             debugPrint(metadataItem: metadataItem)
         }

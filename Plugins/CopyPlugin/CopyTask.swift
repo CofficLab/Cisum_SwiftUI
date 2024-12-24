@@ -1,8 +1,11 @@
 import Foundation
 import SwiftData
+import MagicKit
 
 @Model
 class CopyTask: FileBox {
+    static var emoji: String = "🍁"
+    
     var url: URL
     var destination: URL
     var createdAt: Date

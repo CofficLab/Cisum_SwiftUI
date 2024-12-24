@@ -65,7 +65,7 @@ struct AudioAvatar: View, SuperLog, SuperThread {
     func updateCover(reason: String, verbose: Bool = true) {
         Task {
             if verbose {
-                os_log("\(t)UpdateCover for \(self.asset.title) Because of \(reason)")
+                os_log("\(t)🪞🪞🪞 UpdateCover for \(self.asset.title) Because of \(reason)")
             }
 
             do {

@@ -46,14 +46,14 @@ extension BookRecordDB {
                 if let item = hashMap[book.url] {
                     // 更新数据库记录
                     book.isCollection = item.isFolder
-                    book.bookTitle = book.title
+                    book.bookTitle = book.bookTitle
                     
                     // 记录存在哈希表中，同步完成，删除哈希表记录
                     hashMap.removeValue(forKey: book.url)
                 } else {
                     // 记录不存在哈希表中，数据库删除
                     if verbose {
-                        os_log("\(self.labelForBookSync) 删除 \(book.title)")
+                        os_log("\(self.t) 删除 \(book.bookTitle)")
                     }
                     context.delete(book)
                 }

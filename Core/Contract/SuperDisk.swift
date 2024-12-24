@@ -1,5 +1,6 @@
 import Foundation
 import OSLog
+import MagicKit
 
 protocol DiskDelegate {
     func onUpdate(_ items: DiskFileGroup) async -> Void
@@ -49,7 +50,7 @@ extension SuperDisk {
     var url: URL { root }
 
     var name: String {
-        Self.label + url.pathComponents.suffix(2).joined(separator: "/")
+        self.t + url.pathComponents.suffix(2).joined(separator: "/")
     }
 
     func getMountedURL() -> URL? {
@@ -82,7 +83,7 @@ extension SuperDisk {
 
     static func make(_ subDirName: String, delegate: DiskDelegate? = nil, verbose: Bool, reason: String) -> (any SuperDisk)? {
         if verbose {
-//            os_log("\(self.label)创建Disk: \(subDirName) 🐛 \(reason)")
+//            os_log("\(self.t)创建Disk: \(subDirName) 🐛 \(reason)")
         }
 
         let fileManager = FileManager.default
@@ -97,7 +98,7 @@ extension SuperDisk {
             do {
                 try fileManager.createDirectory(at: subRoot, withIntermediateDirectories: true)
             } catch {
-                os_log(.error, "\(self.label)创建Disk失败 -> \(error.localizedDescription)")
+                os_log(.error, "\(self.t)创建Disk失败 -> \(error.localizedDescription)")
 
                 return nil
             }

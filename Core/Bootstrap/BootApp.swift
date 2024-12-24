@@ -1,16 +1,16 @@
 import OSLog
 import SwiftUI
+import MagicKit
 
 @main
-struct BootApp: App {
+struct BootApp: App, SuperLog {
     #if os(macOS)
         @NSApplicationDelegateAdaptor var appDelegate: AppDelegate
     #else
         @UIApplicationDelegateAdaptor var appDelegate: AppDelegate
     #endif
 
-    static var label = "🍎 Boot::"
-    var label: String { "\(Logger.isMain)\(Self.label)" }
+    static var emoji = "🍎"
 
     var body: some Scene {
         #if os(macOS)

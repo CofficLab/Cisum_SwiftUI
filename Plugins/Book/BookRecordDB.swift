@@ -125,7 +125,7 @@ extension BookRecordDB {
 extension BookRecordDB {
     static func first(context: ModelContext) -> Book? {
         var descriptor = FetchDescriptor<Book>(predicate: #Predicate<Book> {
-            $0.title != ""
+            $0.bookTitle != ""
         }, sortBy: [
             SortDescriptor(\.order, order: .forward),
         ])
@@ -141,7 +141,7 @@ extension BookRecordDB {
     }
     
     static func nextOf(context: ModelContext, book: Book) -> Book? {
-         os_log("🍋 DB::nextOf [\(book.order)] \(book.title)")
+        os_log("🍋 DB::nextOf [\(book.order)] \(book.bookTitle)")
         let order = book.order
         let url = book.url
         var descriptor = FetchDescriptor<Book>()

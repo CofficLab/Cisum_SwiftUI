@@ -1,12 +1,11 @@
 import Foundation
 import OSLog
 import SwiftData
+import MagicKit
 
 extension AudioRecordDB {
-    var labelPrepare: String { "\(self.t)⏬⏬⏬ Prepare" }
-
     func prepareJob() throws {
-        os_log("\(self.labelPrepare) 🚀🚀🚀")
+        os_log("\(self.t) 🚀🚀🚀 Prepare")
 
         let audio = try firstAudio()
 
@@ -17,11 +16,9 @@ extension AudioRecordDB {
 }
 
 extension AudioRecordDB {
-    var labelForGroup: String { "\(self.t)🌾🌾🌾" }
-
     func updateGroupForURLs(_ urls: [URL], verbose: Bool = true) {
         let total = urls.count
-        let title = "\(labelForGroup) UpdateHash(\(total))"
+        let title = "\(t) UpdateHash(\(total))"
         let startTime = DispatchTime.now()
 
         if verbose {
@@ -30,7 +27,7 @@ extension AudioRecordDB {
 
         for (i, url) in urls.enumerated() {
             if verbose && (i + 1) % 100 == 0 {
-                os_log("\(self.labelForGroup) UpdateHash \(i + 1)/\(total) -> \(url.lastPathComponent)")
+                os_log("\(self.t) UpdateHash \(i + 1)/\(total) -> \(url.lastPathComponent)")
             }
 
             guard iCloudHelper.isDownloaded(url), let audio = findAudio(url) else {
@@ -49,52 +46,10 @@ extension AudioRecordDB {
 extension AudioRecordDB {
     var labelForGetCovers: String { "\(self.t)🌽🌽🌽 GetCovers" }
 
-    func runGetCoversJob() {
-        os_log("\(self.labelForGetCovers) 🚀🚀🚀")
-
-//        do {
-//            try self.context.enumerate(AudioModel.descriptorAll, block: { audio in
-//                if self.hasCoverRecord(audio) == false {
-//                    audio.toPlayAsset().getCoverFromMeta({ url in
-//                        if url != nil {
-//                            self.emitCoverUpdated(audio)
-//                            self.insertCover(audio)
-//                        }
-//                    }, queue: DispatchQueue.global())
-//                }
-//            })
-//        } catch let e {
-//            os_log(.error, "\(e.localizedDescription)")
-//        }
-    }
-
     func emitCoverUpdated(_ audio: AudioModel) {
         DispatchQueue.main.async {
             os_log("\(self.t) -> \(audio.title) CoverUpdated 🍋🍋🍋")
             self.emitAudioUpdate(audio)
-        }
-    }
-
-    func insertCover(_ audio: AudioModel) {
-        let context = ModelContext(self.modelContainer)
-        context.insert(Cover(audio: audio, hasCover: true))
-        do {
-            try context.save()
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-        }
-    }
-
-    func hasCoverRecord(_ audio: AudioModel) -> Bool {
-        let url = audio.url
-
-        do {
-            return try self.context.fetchCount(FetchDescriptor(predicate: #Predicate<Cover> {
-                $0.audio == url
-            })) > 0
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-            return false
         }
     }
 }
@@ -103,7 +58,7 @@ extension AudioRecordDB {
     var labelForDelete: String { "\(t)🗑️🗑️🗑️" }
 
     func runDeleteInvalidJob() throws {
-        os_log("\(self.labelForDelete)🚀🚀🚀")
+        os_log("\(self.t)🚀🚀🚀")
 
         do {
             try context.enumerate(AudioModel.descriptorAll, block: { audio in

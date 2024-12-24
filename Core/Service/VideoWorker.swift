@@ -2,12 +2,12 @@ import AVKit
 import Foundation
 import OSLog
 import SwiftUI
+import MagicKit
 
-class VideoWorker: NSObject, ObservableObject, SuperPlayWorker {
+class VideoWorker: NSObject, ObservableObject, SuperPlayWorker, SuperLog {
     // MARK: 成员
 
-    static var label = "💿 VideoWorker::"
-    var label: String { Logger.isMain + VideoWorker.label }
+    static var emoji = "💿"
     var player = AVPlayer()
     var asset: PlayAsset?
     var verbose = false
@@ -18,7 +18,7 @@ class VideoWorker: NSObject, ObservableObject, SuperPlayWorker {
     var state: PlayState = .Stopped {
         didSet {
             if verbose {
-                os_log("\(Logger.isMain)\(self.label)State changed 「\(oldValue.des)」 -> 「\(self.state.des)」")
+                os_log("\(self.t)State changed 「\(oldValue.des)」 -> 「\(self.state.des)」")
             }
 
             var e: Error?
@@ -74,7 +74,7 @@ class VideoWorker: NSObject, ObservableObject, SuperPlayWorker {
                         self.duration = durationSeconds
                     }
                 } catch {
-                    os_log("\(self.label)Error loading duration: \(error.localizedDescription)")
+                    os_log("\(self.t)Error loading duration: \(error.localizedDescription)")
                     // Optionally, you can set a default duration or handle the error in another way
                     DispatchQueue.main.async {
                         self.duration = 0
@@ -99,16 +99,16 @@ class VideoWorker: NSObject, ObservableObject, SuperPlayWorker {
     // MARK: 对外传递事件
 
     var onStateChange: (_ state: PlayState) -> Void = { state in
-        os_log("\(VideoWorker.label)播放器状态已变为 \(state.des)")
+        os_log("\(t)播放器状态已变为 \(state.des)")
     }
     
     var onGetPrevOf: (_ asset: PlayAsset?) -> PlayAsset? = { asset in
-        os_log("\(VideoWorker.label)GetPrevOf -> \(asset?.title ?? "nil")")
+        os_log("\(t)GetPrevOf -> \(asset?.title ?? "nil")")
         return nil
     }
     
     var onGetNextOf: (_ asset: PlayAsset?) -> PlayAsset? = { asset in
-        os_log("\(VideoWorker.label)GetNextOf -> \(asset?.title ?? "nil")")
+        os_log("\(t)GetNextOf -> \(asset?.title ?? "nil")")
         return nil
     }
 }
@@ -129,13 +129,13 @@ extension VideoWorker {
     }
 
     func play(_ audio: PlayAsset, reason: String, verbose: Bool) {
-        os_log("\(self.label)play \(audio.title) 🐛 \(reason)")
+        os_log("\(self.t)play \(audio.title) 🐛 \(reason)")
         state = .Playing(audio)
         updateDuration()
     }
 
     func resume() {
-        os_log("\(self.label)Resume while current is \(self.state.des)")
+        os_log("\(self.t)Resume while current is \(self.state.des)")
         switch state {
         case .Playing, .Error:
             break
@@ -145,13 +145,13 @@ extension VideoWorker {
     }
 
     func pause(verbose: Bool) {
-        os_log("\(self.label)Pause")
+        os_log("\(self.t)Pause")
         state = .Paused(asset)
     }
 
     func stop(reason: String, verbose: Bool) {
         if verbose {
-            os_log("\(self.label)Stop 🐛 \(reason)")
+            os_log("\(self.t)Stop 🐛 \(reason)")
         }
         state = .Stopped
     }
@@ -188,19 +188,19 @@ extension VideoWorker {
         }
 
         if audio.isDownloading {
-            os_log("\(self.label)在下载 \(audio.title) ⚠️⚠️⚠️")
+            os_log("\(self.t)在下载 \(audio.title) ⚠️⚠️⚠️")
             throw SmartError.Downloading
         }
 
         // 未下载的情况
         guard audio.isDownloaded else {
-            os_log("\(self.label)未下载 \(audio.title) ⚠️⚠️⚠️")
+            os_log("\(self.t)未下载 \(audio.title) ⚠️⚠️⚠️")
             throw SmartError.NotDownloaded
         }
 
         // 格式不支持
 //        guard audio.isSupported else {
-//            os_log("\(self.label)格式不支持 \(audio.title) \(audio.ext)")
+//            os_log("\(self.t)格式不支持 \(audio.title) \(audio.ext)")
 //            throw SmartError.FormatNotSupported(audio.ext)
 //        }
 

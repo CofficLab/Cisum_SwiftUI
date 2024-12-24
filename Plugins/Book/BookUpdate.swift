@@ -46,7 +46,7 @@ extension BookRecordDB {
 //                // 更新Parent
 //                guard let parentURL = book.parentURL else {
 //                    if verbose {
-//                        os_log("\(self.label)UpdateBookParent for \(book.title) ignore because of no parentURL")
+//                        os_log("\(self.t)UpdateBookParent for \(book.title) ignore because of no parentURL")
 //                    }
 //
 //                    return
@@ -70,7 +70,7 @@ extension BookRecordDB {
 //            try context.save()
 //            
 //            if verbose {
-//                os_log("\(self.label)UpdateOnInserted(\(urls.count) done")
+//                os_log("\(self.t)UpdateOnInserted(\(urls.count) done")
 //            }
 //        } catch {
 //            os_log(.error, "\(error.localizedDescription)")
@@ -100,7 +100,7 @@ extension BookRecordDB {
     func updateParent(_ book: Book, verbose: Bool = true) {
         guard let parentURL = book.parentURL else {
             if verbose {
-                os_log("\(self.t)UpdateBookParent for \(book.title) ignore because of no parentURL")
+                os_log("\(self.t)UpdateBookParent for \(book.bookTitle) ignore because of no parentURL")
             }
 
             return
@@ -110,7 +110,7 @@ extension BookRecordDB {
         book.parent = parent
 
         if verbose {
-            os_log("\(self.t)UpdateBookParent for \(book.title) with \(parent?.title ?? "nil")")
+            os_log("\(self.t)UpdateBookParent for \(book.bookTitle) with \(parent?.title ?? "nil")")
         }
 
         do {
@@ -136,7 +136,7 @@ extension BookRecordDB {
             try context.save()
             
             if verbose {
-                os_log("\(self.t)Successfully updated cover for book: \(book.title)")
+                os_log("\(self.t)Successfully updated cover for book: \(book.bookTitle)")
             }
         } catch {
             os_log(.error, "\(self.t)Failed to update book cover: \(error.localizedDescription)")

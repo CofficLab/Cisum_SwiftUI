@@ -2,9 +2,10 @@ import Foundation
 import SwiftUI
 import SwiftData
 import OSLog
+import MagicKit
 
-enum Config {
-    static var label = "🧲 Config::"
+enum Config: SuperLog {
+    static var emoji = "🧲"
     static let id = "com.yueyi.cisum"
     static let fileManager = FileManager.default
     static let logger = Logger.self

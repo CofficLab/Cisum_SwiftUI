@@ -205,7 +205,11 @@ extension PlayMan {
             let title = asset?.fileName ?? ""
             let duration: TimeInterval = self.duration
             let currentTime: TimeInterval = self.currentTime
-            let image: NSImage = (try? await asset?.getMediaCenterImage()) ?? Self.defaultImage
+            var image = Self.defaultImage
+            
+            if let cover = try? await asset?.getPlatformImage() {
+                image = cover
+            }
 
             if verbose {
                 os_log("\(self.t)📱📱📱 Update -> \(self.state.des)")
@@ -338,7 +342,7 @@ extension PlayMan {
         }
 
         c.ratingCommand.addTarget { _ in
-            os_log("\(Logger.isMain)评分")
+            os_log("\(self.t)评分")
 
             return .success
         }
