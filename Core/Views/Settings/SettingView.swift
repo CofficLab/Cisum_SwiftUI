@@ -6,7 +6,7 @@ struct SettingView: View {
     var body: some View {
         ScrollView {
             VStack {
-                ForEach(p.plugins.indices) { index in
+                ForEach(p.plugins.indices, id: \.self) { index in
                     p.plugins[index].addSettingView().padding(.horizontal)
                 }
                 

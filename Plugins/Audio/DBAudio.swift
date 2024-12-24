@@ -348,7 +348,6 @@ extension AudioRecordDB {
             })
 
             try context.save()
-            onUpdated()
             emitSortDone()
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
@@ -382,7 +381,6 @@ extension AudioRecordDB {
         try context.save()
         
         emitSortDone()
-        onUpdated()
     }
 
     func sortRandom(_ url: URL?, reason: String, verbose: Bool) throws {
@@ -415,7 +413,6 @@ extension AudioRecordDB {
             currentStickyAudio?.order = 1
 
             try context.save()
-            onUpdated()
         } catch let e {
             os_log(.error, "Error setting sticky audio: \(e.localizedDescription)")
         }
@@ -552,7 +549,6 @@ extension AudioRecordDB {
 
         if context.hasChanges {
             try? context.save()
-            onUpdated()
         } else {
             os_log("\(self.t)🍋 DB::update nothing changed 👌")
         }
@@ -600,6 +596,7 @@ extension AudioRecordDB {
         }
     }
 
+    @discardableResult
     func deleteAudio(id: AudioModel.ID) throws -> AudioModel? {
         try deleteAudios(ids: [id])
     }

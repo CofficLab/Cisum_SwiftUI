@@ -107,7 +107,6 @@
 		0BC29EA92CA4599500E4813F /* PluginProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC29EA82CA4599500E4813F /* PluginProvider.swift */; };
 		0BC29EAF2CA5893800E4813F /* HeroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC29EAE2CA5893800E4813F /* HeroView.swift */; };
 		0BC29EB32CA59E8B00E4813F /* SliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC29EB22CA59E8B00E4813F /* SliderView.swift */; };
-		0BC29EB52CA6DE5F00E4813F /* AudioVStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC29EB42CA6DE5E00E4813F /* AudioVStack.swift */; };
 		0BD0568B2BC6202900EBC7C4 /* DiskiCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD0568A2BC6202900EBC7C4 /* DiskiCloud.swift */; };
 		0BD056912BC6340800EBC7C4 /* BtnEvict.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD056902BC6340800EBC7C4 /* BtnEvict.swift */; };
 		0BD651072CA4264300BA3CB8 /* SuperEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD651062CA4264000BA3CB8 /* SuperEvent.swift */; };
@@ -327,7 +326,6 @@
 		0BC29EA82CA4599500E4813F /* PluginProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginProvider.swift; sourceTree = "<group>"; };
 		0BC29EAE2CA5893800E4813F /* HeroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroView.swift; sourceTree = "<group>"; };
 		0BC29EB22CA59E8B00E4813F /* SliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderView.swift; sourceTree = "<group>"; };
-		0BC29EB42CA6DE5E00E4813F /* AudioVStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioVStack.swift; sourceTree = "<group>"; };
 		0BD0568A2BC6202900EBC7C4 /* DiskiCloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskiCloud.swift; sourceTree = "<group>"; };
 		0BD056902BC6340800EBC7C4 /* BtnEvict.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnEvict.swift; sourceTree = "<group>"; };
 		0BD651062CA4264000BA3CB8 /* SuperEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperEvent.swift; sourceTree = "<group>"; };
@@ -480,7 +478,6 @@
 				0BA9FB6B2BFE14B4008074CB /* AudioSettings.swift */,
 				0B220F6C2BB051140077255A /* AudioStateView.swift */,
 				F52A98FD2C43BC99003559F1 /* AudioTile.swift */,
-				0BC29EB42CA6DE5E00E4813F /* AudioVStack.swift */,
 				0B8C36A62BEA15E000C47567 /* DBAudio.swift */,
 				0B1498782BC4DF940075DA61 /* DBJob.swift */,
 				0B1136602BF4CF3000A71FE1 /* Cover.swift */,
@@ -1050,7 +1047,6 @@
 				0B8C36B62BEDAB5E00C47567 /* BtnMore.swift in Sources */,
 				0BAABEC32BC939D000DF4A31 /* LayoutView.swift in Sources */,
 				0B5D09952D05EE4C00224E6B /* BookPlugin.swift in Sources */,
-				0BC29EB52CA6DE5F00E4813F /* AudioVStack.swift in Sources */,
 				F518F6F52C34E78C00844E62 /* Book.swift in Sources */,
 				F5ADFF662D1954B9003CF664 /* CopyDB.swift in Sources */,
 				F5511BC02C2953C200400900 /* BtnToggleCopying.swift in Sources */,

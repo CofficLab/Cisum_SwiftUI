@@ -10,7 +10,6 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
     let modelExecutor: any ModelExecutor
     let context: ModelContext
     let queue = DispatchQueue(label: "DB")
-    var onUpdated: () -> Void = {}
 
     init(_ container: ModelContainer, reason: String, verbose: Bool) {
         self.modelContainer = container
@@ -19,19 +18,10 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         self.modelExecutor = DefaultSerialModelExecutor(
             modelContext: self.context
         )
-        
-        self.onUpdated = { [weak self] in
-            guard let self = self else { return }
-            os_log("\(self.t)🍋🍋🍋 Updated")
-        }
 
         if verbose {
             os_log("\(Self.i) with reason: \(reason)")
         }
-    }
-
-    func setOnUpdated(_ callback: @escaping () -> Void) {
-        onUpdated = callback
     }
 
     func hasChanges() -> Bool {

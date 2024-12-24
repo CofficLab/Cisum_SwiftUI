@@ -12,7 +12,7 @@ import SwiftUI
  */
 
 @MainActor
-class PlayMan: NSObject, ObservableObject, SuperLog, SuperThread, AudioWorkerDelegate {
+class PlayMan: NSObject, ObservableObject, @preconcurrency SuperLog, SuperThread, AudioWorkerDelegate {
     static var emoji = "💃"
     #if os(macOS)
         static var defaultImage = NSImage(named: "DefaultAlbum")!

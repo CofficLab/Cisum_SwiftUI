@@ -219,6 +219,7 @@
       }
     },
     "加载更多... (剩余 %@ 项)" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -532,6 +533,7 @@
       }
     },
     "正在同步 %@ 项" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

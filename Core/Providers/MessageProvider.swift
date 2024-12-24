@@ -5,7 +5,7 @@ import SwiftData
 import SwiftUI
 
 @MainActor
-class MessageProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
+class MessageProvider: ObservableObject, @preconcurrency SuperLog, SuperThread, SuperEvent {
     static let emoji = "📪"
     
     let maxMessageCount = 100
