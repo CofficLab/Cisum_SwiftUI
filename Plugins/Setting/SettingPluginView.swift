@@ -5,6 +5,7 @@ struct SettingPluginView: View, SuperSetting {
     @EnvironmentObject var c: ConfigProvider
     @State private var showMigrationProgress = false
     @State private var tempStorageLocation: StorageLocation
+    @State private var hasChanges = false
     @State var diskSize: String?
     
     init() {
@@ -62,6 +63,7 @@ struct SettingPluginView: View, SuperSetting {
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.borderedProminent)
+                .disabled(!hasChanges)
                 .padding(.top, 16)
             }
             .sheet(isPresented: $showMigrationProgress) {
@@ -78,6 +80,10 @@ struct SettingPluginView: View, SuperSetting {
             .padding(.vertical, 8)
             .onAppear {
                 tempStorageLocation = c.storageLocation ?? .local
+                hasChanges = false
+            }
+            .onChange(of: tempStorageLocation) { newValue in
+                hasChanges = newValue != (c.storageLocation ?? .local)
             }
         } trailing: {
             HStack {

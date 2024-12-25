@@ -49,13 +49,14 @@ struct RepositoryInfoView: View {
             }
 
             // 文件列表
-            if !files.isEmpty {
+            let filteredFiles = files.filter { $0 != ".DS_Store" }
+            if !filteredFiles.isEmpty {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(title == "源仓库" ? "包含以下文件：" : "已有以下文件：")
                         .font(.caption)
                         .foregroundColor(.secondary)
 
-                    ForEach(files, id: \.self) { file in
+                    ForEach(filteredFiles, id: \.self) { file in
                         HStack {
                             if title == "源仓库" {
                                 if let fileStatus = processedFiles.first(where: { $0.name == file }) {
@@ -69,13 +70,6 @@ struct RepositoryInfoView: View {
                                 Text(file)
                                     .font(.caption)
                                     .foregroundColor(.secondary)
-
-                                if let fileStatus = processedFiles.first(where: { $0.name == file }),
-                                   case let .failed(error) = fileStatus.status {
-                                    Text(error)
-                                        .font(.caption2)
-                                        .foregroundColor(.red)
-                                }
                             } else {
                                 Image(systemName: "checkmark.circle.fill")
                                     .foregroundColor(.green)

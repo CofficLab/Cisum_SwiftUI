@@ -29,8 +29,8 @@ struct MigrationProgressView: View {
 
         建议：
         1. 请检查新旧仓库的权限和空间
-        2. 可以手动查看并处理两个仓库中的数据
-        3. 确认问题解决后再尝试迁移
+        2. 可以手动查看并理两个仓库中的数据
+        3. 确认问题解决后可以重试迁移
         """
     }
 
@@ -93,6 +93,36 @@ struct MigrationProgressView: View {
                 .padding(.vertical)
             }
 
+            // 只在非确认状态下显示迁移状态
+            if !showConfirmation {
+                GroupBox {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("迁移状态")
+                            .font(.headline)
+                            .foregroundColor(.primary)
+
+                        if migrationCompleted {
+                            Text("迁移已完成")
+                                .font(.subheadline)
+                                .foregroundColor(.green)
+                        } else if let errorMessage = errorMessage {
+                            Text("迁移出现问题: \(errorMessage)")
+                                .font(.subheadline)
+                                .foregroundColor(.red)
+                        } else {
+                            Text("迁移中...")
+                                .font(.subheadline)
+                                .foregroundColor(.blue)
+                        }
+
+                        ProgressView(value: migrationProgress)
+                            .padding(.top, 4)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical)
+                }
+            }
+
             if showConfirmation {
                 // 确认对话框
                 VStack(spacing: 16) {
@@ -117,15 +147,6 @@ struct MigrationProgressView: View {
                     }
                 }
             } else {
-                // 迁移进度显示
-                ProgressView(value: migrationProgress) {
-                    Text(migrationCompleted ? "迁移完成" : "正在迁移数据...")
-                }
-
-                Text(currentMigratingFile)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-
                 if errorMessage == nil {
                     if migrationCompleted {
                         Button("完成") {
@@ -136,7 +157,7 @@ struct MigrationProgressView: View {
                         Button("取消迁移") {
                             if let window = NSApp.keyWindow {
                                 let alert = NSAlert()
-                                alert.messageText = "确定要取消迁移吗？"
+                                alert.messageText = "确要取消迁移吗？"
                                 alert.informativeText = "取消迁移可能会导致数据不完整，建议等待迁移完成。"
                                 alert.alertStyle = .warning
                                 alert.addButton(withTitle: "继续迁移")
@@ -153,8 +174,17 @@ struct MigrationProgressView: View {
                         .buttonStyle(.borderless)
                     }
                 } else {
-                    Button("确定") {
-                        onDismiss()
+                    HStack(spacing: 16) {
+                        Button("重试") {
+                            errorMessage = nil
+                            showConfirmation = true
+                        }
+                        .buttonStyle(.borderedProminent)
+
+                        Button("放弃") {
+                            onDismiss()
+                        }
+                        .buttonStyle(.bordered)
                     }
                 }
             }
