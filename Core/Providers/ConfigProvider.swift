@@ -40,6 +40,23 @@ enum StorageLocation: String, Codable {
     }
 }
 
+enum MigrationError: LocalizedError {
+    case sourceDirectoryNotFound
+    case targetDirectoryNotFound
+    case fileOperationFailed(String)
+    
+    var errorDescription: String? {
+        switch self {
+        case .sourceDirectoryNotFound:
+            return "无法找到源文件夹"
+        case .targetDirectoryNotFound:
+            return "无法找到目标文件夹"
+        case .fileOperationFailed(let message):
+            return "文件操作失败: \(message)"
+        }
+    }
+}
+
 class ConfigProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLog, SuperThread {
     static let emoji: String = "🔩"
     static let keyOfStorageLocation = "StorageLocation"
@@ -93,48 +110,44 @@ class ConfigProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLo
         to newLocation: StorageLocation,
         shouldMigrate: Bool,
         progressCallback: ProgressCallback?
-    ) async {
+    ) async throws {
         if shouldMigrate {
-            // 获取源目录和目标目录
-            guard let sourceRoot = getStorageRoot(),
-                  let targetRoot = getStorageRoot(for: newLocation) else {
-                return
+            guard let sourceRoot = getStorageRoot() else {
+                throw MigrationError.sourceDirectoryNotFound
+            }
+            guard let targetRoot = getStorageRoot(for: newLocation) else {
+                throw MigrationError.targetDirectoryNotFound
             }
 
+            let fileManager = FileManager.default
+            
             do {
-                // 获取所有需要迁移的文件
-                let fileManager = FileManager.default
                 let files = try fileManager.contentsOfDirectory(
                     at: sourceRoot,
                     includingPropertiesForKeys: nil
                 )
 
-                // 创建目标目录
                 try fileManager.createDirectory(
                     at: targetRoot,
                     withIntermediateDirectories: true
                 )
 
-                // 迁移每个文件
                 for (index, sourceFile) in files.enumerated() {
                     let progress = Double(index + 1) / Double(files.count)
                     let fileName = sourceFile.lastPathComponent
-
                     progressCallback?(progress, fileName)
 
                     let targetFile = targetRoot.appendingPathComponent(fileName)
                     try fileManager.moveItem(at: sourceFile, to: targetFile)
                 }
 
-                // 删除源目录（如果为空）
                 try fileManager.removeItem(at: sourceRoot)
             } catch {
                 os_log(.error, "\(self.t)Migration error: \(error.localizedDescription)")
-                return
+                throw MigrationError.fileOperationFailed(error.localizedDescription)
             }
         }
 
-        // 更新存储位置
         updateStorageLocation(newLocation)
     }
 }
