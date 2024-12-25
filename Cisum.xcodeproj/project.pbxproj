@@ -206,6 +206,7 @@
 		F5C2C7412D1BB50B0094157C /* MigrationProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C2C7402D1BB50B0094157C /* MigrationProgressView.swift */; };
 		F5C2C7432D1BF57A0094157C /* RepositoryInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C2C7422D1BF57A0094157C /* RepositoryInfoView.swift */; };
 		F5C2C7452D1BF59A0094157C /* FileStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C2C7442D1BF59A0094157C /* FileStatus.swift */; };
+		F5C2C7492D1C141D0094157C /* MigrationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C2C7482D1C141D0094157C /* MigrationManager.swift */; };
 		F5C2EB7E2D1AB49700798B46 /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = F5C2EB7D2D1AB49700798B46 /* AlertToast */; };
 		F5C2EB812D1AB51100798B46 /* MagicKit in Frameworks */ = {isa = PBXBuildFile; productRef = F5C2EB802D1AB51100798B46 /* MagicKit */; };
 		F5C2EB832D1AC16900798B46 /* ConfigProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C2EB822D1AC16500798B46 /* ConfigProvider.swift */; };
@@ -419,6 +420,7 @@
 		F5C2C7402D1BB50B0094157C /* MigrationProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationProgressView.swift; sourceTree = "<group>"; };
 		F5C2C7422D1BF57A0094157C /* RepositoryInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryInfoView.swift; sourceTree = "<group>"; };
 		F5C2C7442D1BF59A0094157C /* FileStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileStatus.swift; sourceTree = "<group>"; };
+		F5C2C7482D1C141D0094157C /* MigrationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationManager.swift; sourceTree = "<group>"; };
 		F5C2EB822D1AC16500798B46 /* ConfigProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigProvider.swift; sourceTree = "<group>"; };
 		F5D3EF0E2D06B5F000548889 /* PlayManDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayManDelegate.swift; sourceTree = "<group>"; };
 		F5D3EF102D06B7D300548889 /* AudioConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioConfig.swift; sourceTree = "<group>"; };
@@ -528,11 +530,12 @@
 			isa = PBXGroup;
 			children = (
 				F5C2C7442D1BF59A0094157C /* FileStatus.swift */,
-				F5C2C7422D1BF57A0094157C /* RepositoryInfoView.swift */,
+				F5C2C7482D1C141D0094157C /* MigrationManager.swift */,
 				F5C2C7402D1BB50B0094157C /* MigrationProgressView.swift */,
-				0B382A9B2D1AF6160075391C /* SettingRootView.swift */,
-				0B382A992D1AED920075391C /* SettingPluginView.swift */,
+				F5C2C7422D1BF57A0094157C /* RepositoryInfoView.swift */,
 				0B4788A02D1ADE3200E984C5 /* SettingPlugin.swift */,
+				0B382A992D1AED920075391C /* SettingPluginView.swift */,
+				0B382A9B2D1AF6160075391C /* SettingRootView.swift */,
 			);
 			path = Setting;
 			sourceTree = "<group>";
@@ -1195,6 +1198,7 @@
 				0B901D862BB83BA2003AC253 /* iCloudHandler.swift in Sources */,
 				F5B64D132C3288D300DE55AD /* PlayMan.swift in Sources */,
 				F545D1732C1FC9F0006A6AFA /* CloudSetting.swift in Sources */,
+				F5C2C7492D1C141D0094157C /* MigrationManager.swift in Sources */,
 				F52A98F22C410C41003559F1 /* BookUpdate.swift in Sources */,
 				0B8C36B02BEC6E6500C47567 /* DBExt.swift in Sources */,
 				0B9FA2992BC81EFF007B235A /* NotDownloadedAlbum.swift in Sources */,

@@ -1,8 +1,10 @@
-import MagicKit
 import SwiftUI
+import MagicKit
+import OSLog
 
 struct MigrationProgressView: View {
     @EnvironmentObject var c: ConfigProvider
+    @StateObject private var migrationManager = MigrationManager()
     let sourceLocation: StorageLocation
     let targetLocation: StorageLocation
     let sourceURL: URL?
@@ -29,7 +31,7 @@ struct MigrationProgressView: View {
 
         建议：
         1. 请检查新旧仓库的权限和空间
-        2. 可以手动查看并��两个仓库中的数据
+        2. 可以手动查看并两个仓库中的数据
         3. 确认问题解决后可以重试迁移
         """
     }
@@ -165,7 +167,7 @@ struct MigrationProgressView: View {
 
                                 alert.beginSheetModal(for: window) { response in
                                     if response == .alertSecondButtonReturn {
-                                        c.cancelMigration()
+                                        migrationManager.cancelMigration()
                                         onDismiss()
                                     }
                                 }
@@ -200,26 +202,36 @@ struct MigrationProgressView: View {
     private func startMigration(shouldMigrate: Bool) {
         Task.detached(priority: .background) {
             do {
-                try await c.migrateAndUpdateStorageLocation(
-                    to: targetLocation,
-                    shouldMigrate: shouldMigrate,
-                    progressCallback: { progress, file in
-                        // 在主线程更新 UI
-                        Task { @MainActor in
-                            self.migrationProgress = progress
-                            self.currentMigratingFile = file
-                            self.updateFileStatus(file)
-                        }
-                    },
-                    downloadProgressCallback: { file, downloadStatus in
-                        // 在主线程更新下载状态
-                        Task { @MainActor in
-                            self.updateFileDownloadStatus(file, downloadStatus: downloadStatus)
-                        }
-                    },
-                    verbose: true
-                )
+                if shouldMigrate {
+                    guard let sourceRoot = await c.getStorageRoot() else {
+                        throw MigrationError.sourceDirectoryNotFound
+                    }
+                    guard let targetRoot = await c.getStorageRoot(for: targetLocation) else {
+                        throw MigrationError.targetDirectoryNotFound
+                    }
+                    
+                    try await migrationManager.migrate(
+                        from: sourceRoot,
+                        to: targetRoot,
+                        progressCallback: { progress, file in
+                            Task { @MainActor in
+                                self.migrationProgress = progress
+                                self.currentMigratingFile = file
+                                self.updateFileStatus(file)
+                            }
+                        },
+                        downloadProgressCallback: { file, downloadStatus in
+                            Task { @MainActor in
+                                self.updateFileDownloadStatus(file, downloadStatus: downloadStatus)
+                            }
+                        },
+                        verbose: true
+                    )
+                }
+                
+                // 更新存储位置
                 await MainActor.run {
+                    c.updateStorageLocation(targetLocation)
                     self.migrationCompleted = true
                     self.currentMigratingFile = "迁移完成"
                 }
@@ -267,7 +279,7 @@ struct MigrationProgressView: View {
 
     private func updateFileStatus(_ fileName: String, error: String? = nil) {
         if let error = error {
-            // 如果有错误，更新文件状态��失败
+            // 如果有错误，更新文件状态失败
             if let index = processedFiles.firstIndex(where: { $0.name == fileName }) {
                 processedFiles[index] = FileStatus(
                     name: fileName, 
