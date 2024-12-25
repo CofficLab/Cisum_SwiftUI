@@ -103,6 +103,13 @@ struct FileItemView: View {
             if isSourceRepository {
                 statusIcon
                 fileName
+                Spacer()
+                // 添加状态描述
+                if let status = fileStatus?.downloadStatus {
+                    Text(status.description)
+                        .font(.caption)
+                        .foregroundColor(status.color)
+                }
             } else {
                 Image(systemName: "checkmark.circle.fill")
                     .foregroundColor(.green)
@@ -110,8 +117,6 @@ struct FileItemView: View {
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
-            
-            Spacer()
         }
         .padding(.vertical, 2)
         .background(

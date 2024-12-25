@@ -29,7 +29,7 @@ struct MigrationProgressView: View {
 
         建议：
         1. 请检查新旧仓库的权限和空间
-        2. 可以手动查看并理两个仓库中的数据
+        2. 可以手动查看并��两个仓库中的数据
         3. 确认问题解决后可以重试迁移
         """
     }
@@ -198,7 +198,6 @@ struct MigrationProgressView: View {
     }
 
     private func startMigration(shouldMigrate: Bool) {
-        // 使用 Task.detached 在后台执行迁移操作
         Task.detached(priority: .background) {
             do {
                 try await c.migrateAndUpdateStorageLocation(
@@ -207,23 +206,27 @@ struct MigrationProgressView: View {
                     progressCallback: { progress, file in
                         // 在主线程更新 UI
                         Task { @MainActor in
-                            migrationProgress = progress
-                            currentMigratingFile = file
-                            updateFileStatus(file)
+                            self.migrationProgress = progress
+                            self.currentMigratingFile = file
+                            self.updateFileStatus(file)
+                        }
+                    },
+                    downloadProgressCallback: { file, downloadStatus in
+                        // 在主线程更新下载状态
+                        Task { @MainActor in
+                            self.updateFileDownloadStatus(file, downloadStatus: downloadStatus)
                         }
                     },
                     verbose: true
                 )
-                // 在主线程更新完成状态
                 await MainActor.run {
-                    migrationCompleted = true
-                    currentMigratingFile = "迁移完成"
+                    self.migrationCompleted = true
+                    self.currentMigratingFile = "迁移完成"
                 }
             } catch {
-                // 在主线程更新错误状态
                 await MainActor.run {
-                    errorMessage = error.localizedDescription
-                    updateFileStatus(currentMigratingFile, error: errorMessage)
+                    self.errorMessage = error.localizedDescription
+                    self.updateFileStatus(self.currentMigratingFile, error: error.localizedDescription)
                 }
             }
         }
@@ -238,7 +241,13 @@ struct MigrationProgressView: View {
                 .sorted()
 
             // 初始化所有文件为待处理状态
-            processedFiles = sourceFiles.map { FileStatus(name: $0, status: .pending) }
+            processedFiles = sourceFiles.map { fileName in
+                FileStatus(
+                    name: fileName, 
+                    status: .pending,
+                    downloadStatus: .local  // 初始状态默认为本地文件
+                )
+            }
         } catch {
             print("Error loading source files: \(error)")
         }
@@ -258,23 +267,46 @@ struct MigrationProgressView: View {
 
     private func updateFileStatus(_ fileName: String, error: String? = nil) {
         if let error = error {
-            // 如果有错误，更新文件状态为失败
+            // 如果有错误，更新文件状态��失败
             if let index = processedFiles.firstIndex(where: { $0.name == fileName }) {
-                processedFiles[index] = FileStatus(name: fileName, status: .failed(error))
+                processedFiles[index] = FileStatus(
+                    name: fileName, 
+                    status: .failed(error),
+                    downloadStatus: processedFiles[index].downloadStatus  // 保持原有的下载状态
+                )
             }
             errorMessage = error
         } else {
             // 更新当前处理的文件状态
             if let index = processedFiles.firstIndex(where: { $0.name == fileName }) {
-                // 当前文件设置为处理中
-                processedFiles[index] = FileStatus(name: fileName, status: .processing)
+                // 当前文件设置为处理中，保持下载状态不变
+                processedFiles[index] = FileStatus(
+                    name: fileName, 
+                    status: .processing,
+                    downloadStatus: processedFiles[index].downloadStatus
+                )
                 
                 // 检查目标文件夹中是否存在该文件，如果存在则表示已完成
                 if let targetURL = targetURL,
                    FileManager.default.fileExists(atPath: targetURL.appendingPathComponent(fileName).path) {
-                    processedFiles[index] = FileStatus(name: fileName, status: .completed)
+                    processedFiles[index] = FileStatus(
+                        name: fileName, 
+                        status: .completed,
+                        downloadStatus: .local  // 完成后标记为本地文件
+                    )
                 }
             }
+        }
+    }
+
+    // 添加新方法来更新文件的下载状态
+    private func updateFileDownloadStatus(_ fileName: String, downloadStatus: FileStatus.DownloadStatus) {
+        if let index = processedFiles.firstIndex(where: { $0.name == fileName }) {
+            processedFiles[index] = FileStatus(
+                name: fileName,
+                status: processedFiles[index].status,
+                downloadStatus: downloadStatus
+            )
         }
     }
 }
