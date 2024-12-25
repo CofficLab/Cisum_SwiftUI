@@ -1,8 +1,14 @@
 import SwiftUI
+import MagicKit
 
 struct SettingPluginView: View, SuperSetting {
     @EnvironmentObject var c: ConfigProvider
+    @State private var showMigrationAlert = false
+    @State private var showMigrationProgress = false
+    @State private var migrationProgress = 0.0
+    @State private var currentMigratingFile = ""
     @State private var tempStorageLocation: StorageLocation
+    @State var diskSize: String?
 
     init() {
         // 直接初始化为默认值 .local
@@ -10,7 +16,7 @@ struct SettingPluginView: View, SuperSetting {
     }
 
     var body: some View {
-        makeSettingView(title: "媒体仓库位置") {
+        makeSettingView(title: "📺 媒体仓库位置") {
             VStack(alignment: .leading, spacing: 16) {
                 // iCloud 选项
                 RadioButton(
@@ -53,13 +59,46 @@ struct SettingPluginView: View, SuperSetting {
 
                 // 添加保存按钮
                 Button(action: {
-                    c.updateStorageLocation(tempStorageLocation)
+                    showMigrationAlert = true
                 }) {
                     Text("保存更改")
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.borderedProminent)
                 .padding(.top, 16)
+                .alert("迁移数据", isPresented: $showMigrationAlert) {
+                    Button("迁移数据", role: .destructive) {
+                        showMigrationProgress = true
+                        Task {
+                            await c.migrateAndUpdateStorageLocation(
+                                to: tempStorageLocation,
+                                shouldMigrate: true,
+                                progressCallback: { progress, file in
+                                    migrationProgress = progress
+                                    currentMigratingFile = file
+                                }
+                            )
+                            showMigrationProgress = false
+                        }
+                    }
+                    Button("不迁移", role: .cancel) {
+                        Task {
+                            await c.migrateAndUpdateStorageLocation(
+                                to: tempStorageLocation,
+                                shouldMigrate: false,
+                                progressCallback: nil
+                            )
+                        }
+                    }
+                } message: {
+                    Text("是否将现有数据迁移到新位置？\n选择\"不迁移\"将在新位置创建空白仓库。")
+                }
+            }
+            .sheet(isPresented: $showMigrationProgress) {
+                MigrationProgressView(
+                    progress: migrationProgress,
+                    currentFile: currentMigratingFile
+                )
             }
             .padding(.vertical, 8)
             .onAppear {
@@ -67,8 +106,18 @@ struct SettingPluginView: View, SuperSetting {
                 tempStorageLocation = c.storageLocation ?? .local
             }
         } trailing: {
+            HStack {
+                if let diskSize = diskSize {
+                    Text(diskSize)
+                }
+                if let root = c.getStorageRoot() {
+                    BtnOpenFolder(url: root).labelStyle(.iconOnly)
+                }
+            }
+        }
+        .task {
             if let root = c.getStorageRoot() {
-                BtnOpenFolder(url: root).labelStyle(.iconOnly)
+                diskSize = FileHelper.getFileSizeReadable(root)
             }
         }
     }
@@ -103,7 +152,7 @@ struct RadioButton: View {
                     .foregroundColor(isSelected.wrappedValue ? .accentColor : .secondary)
                     .imageScale(.medium)
 
-                // 文本内容
+                // 文���内容
                 VStack(alignment: .leading, spacing: 4) {
                     HStack {
                         Text(title)

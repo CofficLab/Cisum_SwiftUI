@@ -9,7 +9,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
     static let keyOfCurrentPlayMode = "AudioPluginCurrentPlayMode"
     static let emoji = "🎧"
 
-    let dirName = "audios"
+    let dirName = Config.isDebug ? "audios_debug" : "audios"
     let label: String = "Audio"
     var hasPoster: Bool = true
     let description: String = "作为歌曲仓库，只关注文件，文件夹将被忽略"

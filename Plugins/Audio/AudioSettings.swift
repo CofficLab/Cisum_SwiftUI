@@ -10,7 +10,7 @@ struct AudioSettings: View, SuperSetting, SuperLog {
 
     var body: some View {
         makeSettingView(
-            title: "仓库目录",
+            title: "\(Self.emoji) 歌曲仓库目录",
             content: {
                 if audioManager.disk is DiskiCloud {
                     Text("是 iCloud 云盘目录，会保持同步")
@@ -23,17 +23,15 @@ struct AudioSettings: View, SuperSetting, SuperLog {
                     if let diskSize = diskSize {
                         Text(diskSize)
                     }
-                    if let url = audioManager.disk.getMountedURL(), Config.isDesktop {
-                        BtnOpenFolder(url: url)
+                    if Config.isDesktop {
+                        BtnOpenFolder(url: audioManager.disk.getRoot().url)
                             .labelStyle(.iconOnly)
                     }
                 }
             }
         )
         .task {
-            if let disk = audioManager.disk.make("", verbose: true, reason: "DirSetting") {
-                diskSize = disk.getFileSizeReadable()
-            }
+            diskSize = audioManager.disk.getFileSizeReadable()
         }
         
         // 注释掉的 GroupBox 保持不变

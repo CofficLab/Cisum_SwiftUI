@@ -1,10 +1,10 @@
 import AVKit
 import Combine
 import Foundation
+import MagicKit
 import MediaPlayer
 import OSLog
 import SwiftUI
-import MagicKit
 
 enum StorageLocation: String, Codable {
     case icloud
@@ -12,7 +12,7 @@ enum StorageLocation: String, Codable {
     case custom
 
     var emojiTitle: String {
-        self.emoji + " " + self.title 
+        self.emoji + " " + self.title
     }
 
     var emoji: String {
@@ -43,9 +43,9 @@ enum StorageLocation: String, Codable {
 class ConfigProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLog, SuperThread {
     static let emoji: String = "🔩"
     static let keyOfStorageLocation = "StorageLocation"
-    
+
     @Published var storageLocation: StorageLocation?
-    
+
     override init() {
         super.init()
         // 从 UserDefaults 加载存储位置设置
@@ -54,7 +54,7 @@ class ConfigProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLo
             self.storageLocation = location
         }
     }
-    
+
     func updateStorageLocation(_ location: StorageLocation?) {
         self.storageLocation = location
         // 保存到 UserDefaults
@@ -75,5 +75,66 @@ class ConfigProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLo
             return nil
         }
     }
-}
 
+    func getStorageRoot(for location: StorageLocation) -> URL? {
+        switch location {
+        case .icloud:
+            return Config.cloudDocumentsDir
+        case .local:
+            return Config.localDocumentsDir
+        case .custom:
+            return nil // 或者返回自定义的路径
+        }
+    }
+
+    typealias ProgressCallback = (Double, String) -> Void
+
+    func migrateAndUpdateStorageLocation(
+        to newLocation: StorageLocation,
+        shouldMigrate: Bool,
+        progressCallback: ProgressCallback?
+    ) async {
+        if shouldMigrate {
+            // 获取源目录和目标目录
+            guard let sourceRoot = getStorageRoot(),
+                  let targetRoot = getStorageRoot(for: newLocation) else {
+                return
+            }
+
+            do {
+                // 获取所有需要迁移的文件
+                let fileManager = FileManager.default
+                let files = try fileManager.contentsOfDirectory(
+                    at: sourceRoot,
+                    includingPropertiesForKeys: nil
+                )
+
+                // 创建目标目录
+                try fileManager.createDirectory(
+                    at: targetRoot,
+                    withIntermediateDirectories: true
+                )
+
+                // 迁移每个文件
+                for (index, sourceFile) in files.enumerated() {
+                    let progress = Double(index + 1) / Double(files.count)
+                    let fileName = sourceFile.lastPathComponent
+
+                    progressCallback?(progress, fileName)
+
+                    let targetFile = targetRoot.appendingPathComponent(fileName)
+                    try fileManager.moveItem(at: sourceFile, to: targetFile)
+                }
+
+                // 删除源目录（如果为空）
+                try fileManager.removeItem(at: sourceRoot)
+            } catch {
+                os_log(.error, "\(self.t)Migration error: \(error.localizedDescription)")
+                return
+            }
+        }
+
+        // 更新存储位置
+        updateStorageLocation(newLocation)
+    }
+}
