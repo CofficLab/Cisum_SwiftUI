@@ -198,23 +198,33 @@ struct MigrationProgressView: View {
     }
 
     private func startMigration(shouldMigrate: Bool) {
-        Task {
+        // 使用 Task.detached 在后台执行迁移操作
+        Task.detached(priority: .background) {
             do {
                 try await c.migrateAndUpdateStorageLocation(
                     to: targetLocation,
                     shouldMigrate: shouldMigrate,
                     progressCallback: { progress, file in
-                        migrationProgress = progress
-                        currentMigratingFile = file
-                        updateFileStatus(file)
+                        // 在主线程更新 UI
+                        Task { @MainActor in
+                            migrationProgress = progress
+                            currentMigratingFile = file
+                            updateFileStatus(file)
+                        }
                     },
                     verbose: true
                 )
-                migrationCompleted = true // 设置迁移完成状态
-                currentMigratingFile = "迁移完成" // 更新状态信息
+                // 在主线程更新完成状态
+                await MainActor.run {
+                    migrationCompleted = true
+                    currentMigratingFile = "迁移完成"
+                }
             } catch {
-                errorMessage = error.localizedDescription
-                updateFileStatus(currentMigratingFile, error: errorMessage)
+                // 在主线程更新错误状态
+                await MainActor.run {
+                    errorMessage = error.localizedDescription
+                    updateFileStatus(currentMigratingFile, error: errorMessage)
+                }
             }
         }
     }
@@ -254,18 +264,16 @@ struct MigrationProgressView: View {
             }
             errorMessage = error
         } else {
-            // 正常的状态更新逻辑
+            // 更新当前处理的文件状态
             if let index = processedFiles.firstIndex(where: { $0.name == fileName }) {
+                // 当前文件设置为处理中
                 processedFiles[index] = FileStatus(name: fileName, status: .processing)
-            }
-
-            if let currentIndex = processedFiles.firstIndex(where: { $0.name == fileName }),
-               currentIndex > 0 {
-                let previousIndex = currentIndex - 1
-                processedFiles[previousIndex] = FileStatus(
-                    name: processedFiles[previousIndex].name,
-                    status: .completed
-                )
+                
+                // 检查目标文件夹中是否存在该文件，如果存在则表示已完成
+                if let targetURL = targetURL,
+                   FileManager.default.fileExists(atPath: targetURL.appendingPathComponent(fileName).path) {
+                    processedFiles[index] = FileStatus(name: fileName, status: .completed)
+                }
             }
         }
     }

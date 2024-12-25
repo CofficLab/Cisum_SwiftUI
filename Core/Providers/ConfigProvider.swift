@@ -125,56 +125,75 @@ class ConfigProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLo
         isCancelled = false
 
         if shouldMigrate {
-            guard let sourceRoot = getStorageRoot() else {
-                throw MigrationError.sourceDirectoryNotFound
-            }
-            guard let targetRoot = getStorageRoot(for: newLocation) else {
-                throw MigrationError.targetDirectoryNotFound
-            }
-
-            let fileManager = FileManager.default
-            
-            do {
-                let files = try fileManager.contentsOfDirectory(
-                    at: sourceRoot,
-                    includingPropertiesForKeys: nil
-                )
-
-                try fileManager.createDirectory(
-                    at: targetRoot,
-                    withIntermediateDirectories: true
-                )
-
-                for (index, sourceFile) in files.enumerated() {
-                    if isCancelled {
-                        throw MigrationError.migrationCancelled
-                    }
-
-                    let progress = Double(index + 1) / Double(files.count)
-                    let fileName = sourceFile.lastPathComponent
-                    
-                    // 调用回调通知当前处理的文件
-                    progressCallback?(progress, fileName)
-                    
-                    let targetFile = targetRoot.appendingPathComponent(fileName)
-                    do {
-                        try fileManager.moveItem(at: sourceFile, to: targetFile)
-                    } catch {
-                        throw MigrationError.fileOperationFailed("\(fileName): \(error.localizedDescription)")
-                    }
+            // 将所有文件操作放在 Task.detached 中执行
+            try await Task.detached(priority: .background) {
+                guard let sourceRoot = await self.getStorageRoot() else {
+                    throw MigrationError.sourceDirectoryNotFound
+                }
+                guard let targetRoot = await self.getStorageRoot(for: newLocation) else {
+                    throw MigrationError.targetDirectoryNotFound
                 }
 
-                try fileManager.removeItem(at: sourceRoot)
-            } catch {
-                os_log(.error, "\(self.t)Migration error: \(error.localizedDescription)")
-                if let migrationError = error as? MigrationError {
-                    throw migrationError
-                } else {
-                    throw MigrationError.fileOperationFailed(error.localizedDescription)
+                let fileManager = FileManager.default
+                
+                do {
+                    var files = try fileManager.contentsOfDirectory(
+                        at: sourceRoot,
+                        includingPropertiesForKeys: nil
+                    )
+                    
+                    files.sort { $0.lastPathComponent < $1.lastPathComponent }
+
+                    try fileManager.createDirectory(
+                        at: targetRoot,
+                        withIntermediateDirectories: true
+                    )
+
+                    for (index, sourceFile) in files.enumerated() {
+                        if await self.isCancelled {
+                            throw MigrationError.migrationCancelled
+                        }
+
+                        let progress = Double(index + 1) / Double(files.count)
+                        let fileName = sourceFile.lastPathComponent
+                        
+                        // 在后台线程输出日志
+                        os_log(.info, "\(self.t)正在迁移: \(fileName) (\(index + 1)/\(files.count))")
+                        
+                        // 在主线程更新 UI
+                        await MainActor.run {
+                            progressCallback?(progress, fileName)
+                        }
+                        
+                        let targetFile = targetRoot.appendingPathComponent(fileName)
+                        do {
+                            try fileManager.moveItem(at: sourceFile, to: targetFile)
+                            os_log(.info, "\(self.t)成功迁移: \(fileName)")
+                        } catch {
+                            os_log(.error, "\(self.t)迁移失败: \(fileName) - \(error.localizedDescription)")
+                            throw MigrationError.fileOperationFailed("\(fileName): \(error.localizedDescription)")
+                        }
+                    }
+
+                    try fileManager.removeItem(at: sourceRoot)
+                    os_log(.info, "\(self.t)迁移完成，共处理 \(files.count) 个文件")
+                } catch {
+                    os_log(.error, "\(self.t)Migration error: \(error.localizedDescription)")
+                    if let migrationError = error as? MigrationError {
+                        throw migrationError
+                    } else {
+                        throw MigrationError.fileOperationFailed(error.localizedDescription)
+                    }
                 }
+            }.value
+
+            // 在主线程更新存储位置
+            await MainActor.run {
+                updateStorageLocation(newLocation)
             }
+        } else {
+            // 如果不需要迁移，直接更新存储位置
+            updateStorageLocation(newLocation)
         }
-
-        updateStorageLocation(newLocation)
     }
 }
