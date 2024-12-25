@@ -54,6 +54,7 @@ struct FileStatus: Identifiable {
         case downloading(Double)  // 正在从 iCloud 下载，包含下载进度
         case checking   // 正在检查状态
         case checkingDirectory(String, Int, Int)  // 正在检查目录（目录名，当前项，总项数）
+        case directoryStatus(total: Int, downloaded: Int, downloading: Int, notDownloaded: Int) // 新增：目录状态
         
         var icon: String {
             switch self {
@@ -67,6 +68,8 @@ struct FileStatus: Identifiable {
                 return "magnifyingglass"
             case .checkingDirectory:
                 return "folder.badge.gearshape"
+            case .directoryStatus:
+                return "folder"
             }
         }
         
@@ -78,6 +81,8 @@ struct FileStatus: Identifiable {
                 return .blue
             case .checking, .checkingDirectory:
                 return .secondary
+            case .directoryStatus:
+                return .blue
             }
         }
         
@@ -95,6 +100,18 @@ struct FileStatus: Identifiable {
                 return "检查中"
             case .checkingDirectory(let name, let current, let total):
                 return "正在检查目录 \(name) (\(current)/\(total))"
+            case .directoryStatus(let total, let downloaded, let downloading, let notDownloaded):
+                var parts: [String] = []
+                if downloaded > 0 {
+                    parts.append("\(downloaded) 已下载")
+                }
+                if downloading > 0 {
+                    parts.append("\(downloading) 下载中")
+                }
+                if notDownloaded > 0 {
+                    parts.append("\(notDownloaded) 未下载")
+                }
+                return parts.isEmpty ? "空文件夹" : parts.joined(separator: ", ")
             }
         }
     }

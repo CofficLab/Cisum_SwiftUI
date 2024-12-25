@@ -721,7 +721,6 @@
 			isa = PBXGroup;
 			children = (
 				0B4788992D1ADCA400E984C5 /* Setting */,
-				F5ADFF6B2D1A5765003CF664 /* Cover */,
 				0B6DDCDF2D198845001473E3 /* DevicePlugin */,
 				F5ADFF602D1951C6003CF664 /* CopyPlugin */,
 				0B0FA2272D03485C004D4D41 /* Audio */,
@@ -940,13 +939,6 @@
 				0BEE7C712CA838D100DC1DCF /* CopyWorker.swift */,
 			);
 			path = CopyPlugin;
-			sourceTree = "<group>";
-		};
-		F5ADFF6B2D1A5765003CF664 /* Cover */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Cover;
 			sourceTree = "<group>";
 		};
 		F5B64D0D2C3280BF00DE55AD /* Cover */ = {

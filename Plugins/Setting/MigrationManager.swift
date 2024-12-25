@@ -50,6 +50,9 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread {
                     var hasNotDownloaded = false
                     var isAnyDownloading = false
                     var downloadingProgress: [Double] = []
+                    var downloaded = 0
+                    var downloading = 0
+                    var notDownloaded = 0
                     
                     for (index, item) in contents.enumerated() {
                         // 更新检查进度状态
@@ -66,29 +69,25 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread {
                         switch itemStatus {
                         case .notDownloaded:
                             hasNotDownloaded = true
+                            notDownloaded += 1
                         case .downloading(let progress):
                             isAnyDownloading = true
                             downloadingProgress.append(progress)
+                            downloading += 1
+                        case .downloaded, .local:
+                            downloaded += 1
                         default:
                             break
                         }
                     }
                     
-                    // 确定目录的整体状态
-                    if hasNotDownloaded {
-                        status = .notDownloaded
-                        os_log(.info, "\(self.t)目录 \(fileName) 状态: 包含未下载文件")
-                    } else if isAnyDownloading {
-                        let avgProgress = downloadingProgress.reduce(0.0, +) / Double(downloadingProgress.count)
-                        status = .downloading(avgProgress)
-                        os_log(.info, "\(self.t)目录 \(fileName) 状态: 正在下载 (平均进度: \(Int(avgProgress * 100))%)")
-                    } else if resourceValues?.ubiquitousItemDownloadingStatus == .current {
-                        status = .downloaded
-                        os_log(.info, "\(self.t)目录 \(fileName) 状态: 已全部下载")
-                    } else {
-                        status = .local
-                        os_log(.info, "\(self.t)目录 \(fileName) 状态: 本地目录")
-                    }
+                    // 返回目录状态
+                    status = .directoryStatus(
+                        total: contents.count,
+                        downloaded: downloaded,
+                        downloading: downloading,
+                        notDownloaded: notDownloaded
+                    )
                 } catch {
                     os_log(.error, "\(self.t)检查目录失败: \(fileName) - \(error.localizedDescription)")
                     status = .local
