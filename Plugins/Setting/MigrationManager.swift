@@ -9,6 +9,7 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread {
     static var emoji: String = "👵"
     
     @Published private(set) var isCancelled = false
+    private let statusChecker = DirectoryStatusChecker()
     
     func cancelMigration() {
         isCancelled = true
@@ -27,106 +28,22 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread {
                 .isDirectoryKey
             ])
             
-            let status: FileStatus.DownloadStatus
             let isDirectory = resourceValues?.isDirectory ?? false
             let fileName = url.lastPathComponent
             
             // 如果是目录且需要递归检查
             if isDirectory && isRecursive {
-                os_log(.info, "\(self.t)开始检查目录: \(fileName)")
-                
-                do {
-                    let contents = try FileManager.default.contentsOfDirectory(
-                        at: url,
-                        includingPropertiesForKeys: [
-                            .ubiquitousItemIsDownloadingKey,
-                            .ubiquitousItemDownloadingStatusKey
-                        ]
-                    )
-                    
-                    os_log(.info, "\(self.t)目录 \(fileName) 包含 \(contents.count) 个项目")
-                    
-                    // 检查所有子项的下载状态
-                    var hasNotDownloaded = false
-                    var isAnyDownloading = false
-                    var downloadingProgress: [Double] = []
-                    var downloaded = 0
-                    var downloading = 0
-                    var notDownloaded = 0
-                    
-                    for (index, item) in contents.enumerated() {
-                        // 更新检查进度状态
-                        await MainActor.run {
-                            downloadProgressCallback?(fileName, .checkingDirectory(fileName, index + 1, contents.count))
-                        }
-                        
-                        os_log(.info, "\(self.t)检查目录 \(fileName) 的第 \(index + 1)/\(contents.count) 个项目")
-                        let itemStatus = await self.checkFileDownloadStatus(
-                            item,
-                            isRecursive: true,
-                            downloadProgressCallback: downloadProgressCallback
-                        )
-                        switch itemStatus {
-                        case .notDownloaded:
-                            hasNotDownloaded = true
-                            notDownloaded += 1
-                        case .downloading(let progress):
-                            isAnyDownloading = true
-                            downloadingProgress.append(progress)
-                            downloading += 1
-                        case .downloaded, .local:
-                            downloaded += 1
-                        default:
-                            break
-                        }
-                    }
-                    
-                    // 返回目录状态
-                    status = .directoryStatus(
-                        total: contents.count,
-                        downloaded: downloaded,
-                        downloading: downloading,
-                        notDownloaded: notDownloaded
-                    )
-                } catch {
-                    os_log(.error, "\(self.t)检查目录失败: \(fileName) - \(error.localizedDescription)")
-                    status = .local
-                }
-            } else {
-                // 单个文件的检查逻辑
-                if resourceValues?.ubiquitousItemDownloadingStatus == .current {
-                    status = .downloaded
-                    os_log(.debug, "\(self.t)文件 \(fileName) 状态: 已下载完成")
-                } else if resourceValues?.ubiquitousItemIsDownloading == true {
-                    let query = NSMetadataQuery()
-                    query.predicate = NSPredicate(format: "%K == %@", 
-                        NSMetadataItemPathKey, url.path)
-                    query.searchScopes = [NSMetadataQueryUbiquitousDataScope]
-                    
-                    query.start()
-                    RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
-                    
-                    if query.resultCount > 0,
-                       let item = query.results.first as? NSMetadataItem {
-                        let progress = item.value(forAttribute: NSMetadataUbiquitousItemPercentDownloadedKey) as? Double ?? 0
-                        query.stop()
-                        status = .downloading(progress / 100.0)
-                        os_log(.info, "\(self.t)文件 \(fileName) 状态: 正在下载 (进度: \(Int(progress))%)")
-                    } else {
-                        query.stop()
-                        status = .downloading(0)
-                        os_log(.info, "\(self.t)文件 \(fileName) 状态: 正在下载 (进度: 0%)")
-                    }
-                } else if resourceValues?.ubiquitousItemDownloadingStatus == .notDownloaded {
-                    status = .notDownloaded
-                    os_log(.info, "\(self.t)文件 \(fileName) 状态: 未下载")
-                } else {
-                    status = .local
-                    os_log(.debug, "\(self.t)文件 \(fileName) 状态: 本地文件")
-                }
+                return await self.statusChecker.checkDirectoryStatus(
+                    url,
+                    downloadProgressCallback: downloadProgressCallback
+                )
             }
             
-            return status
+            // 单个文件的检查
+            return await self.statusChecker.checkItemStatus(
+                url,
+                downloadProgressCallback: downloadProgressCallback
+            )
         }.value
     }
     
@@ -154,6 +71,32 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread {
                 withIntermediateDirectories: true
             )
             os_log(.info, "\(self.t)已创建目标目录")
+            
+            // 添加状态统计
+            var totalDownloaded = 0
+            var totalDownloading = 0
+            var totalNotDownloaded = 0
+            
+            // 先检查所有文件的状态
+            for file in files {
+                let status = await self.checkFileDownloadStatus(file)
+                switch status {
+                case .downloaded, .local:
+                    totalDownloaded += 1
+                case .downloading:
+                    totalDownloading += 1
+                case .notDownloaded:
+                    totalNotDownloaded += 1
+                case .directoryStatus(_, let downloaded, let downloading, let notDownloaded):
+                    totalDownloaded += downloaded
+                    totalDownloading += downloading
+                    totalNotDownloaded += notDownloaded
+                default:
+                    break
+                }
+            }
+            
+            os_log(.info, "\(self.t)文件状态统计：\(totalDownloaded)个已下载，\(totalDownloading)个下载中，\(totalNotDownloaded)个未下载")
 
             for (index, sourceFile) in files.enumerated() {
                 if self.isCancelled {

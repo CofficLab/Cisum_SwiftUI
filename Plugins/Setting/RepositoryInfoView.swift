@@ -1,13 +1,27 @@
 import MagicKit
 import SwiftUI
 
+struct FileStats: Equatable {
+    var downloaded: Int = 0
+    var downloading: Int = 0
+    var notDownloaded: Int = 0
+    
+    var isEmpty: Bool {
+        downloaded == 0 && downloading == 0 && notDownloaded == 0
+    }
+}
+
 struct RepositoryInfoView: View {
     let title: String
     let location: StorageLocation
     let url: URL?
     let files: [String]
     let processedFiles: [FileStatus]
-
+    
+    @StateObject private var statusChecker = DirectoryStatusChecker()
+    @State private var fileStatuses: [String: FileStatus.DownloadStatus] = [:]
+    @State private var totalStats = FileStats()
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             // 标题部分
@@ -20,6 +34,18 @@ struct RepositoryInfoView: View {
             if !filteredFiles.isEmpty {
                 fileListView
             }
+        }
+        .task {
+            // 预先初始化所有文件状态为检查中
+            let initialStatuses = Dictionary(
+                uniqueKeysWithValues: filteredFiles.map { ($0, FileStatus.DownloadStatus.checking) }
+            )
+            await MainActor.run {
+                withAnimation {
+                    fileStatuses = initialStatuses
+                }
+            }
+            await checkAllFileStatuses()
         }
     }
     
@@ -70,17 +96,43 @@ struct RepositoryInfoView: View {
     }
     
     private var fileListView: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(title == "源仓库" ? "包含以下文件：" : "已有以下文件：")
-                .font(.caption)
-                .foregroundColor(.secondary)
+        VStack(alignment: .leading, spacing: 4) {            
+            if statusChecker.isChecking {
+                Text("正在检查文件状态...")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .transition(.opacity)
+            }
+            
+            if !totalStats.isEmpty {
+                HStack(spacing: 8) {
+                    if totalStats.downloaded > 0 {
+                        Text("\(totalStats.downloaded) 已下载")
+                            .font(.caption)
+                            .foregroundColor(.green)
+                    }
+                    if totalStats.downloading > 0 {
+                        Text("\(totalStats.downloading) 下载中")
+                            .font(.caption)
+                            .foregroundColor(.blue)
+                    }
+                    if totalStats.notDownloaded > 0 {
+                        Text("\(totalStats.notDownloaded) 未下载")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                .padding(.vertical, 4)
+                .transition(.opacity)
+            }
 
             ForEach(filteredFiles, id: \.self) { file in
                 FileItemView(
                     file: file,
                     fileStatus: processedFiles.first(where: { $0.name == file }),
-                    isSourceRepository: title == "源仓库"
+                    downloadStatus: fileStatuses[file]
                 )
+                .transition(.opacity)
             }
         }
         .frame(maxWidth: .infinity)
@@ -89,72 +141,79 @@ struct RepositoryInfoView: View {
         .padding(.vertical, 8)
         .background(Color.accentColor.opacity(0.1))
         .cornerRadius(6)
+        .animation(.easeInOut(duration: 0.2), value: statusChecker.isChecking)
+        .animation(.easeInOut(duration: 0.2), value: totalStats)
+        .animation(.easeInOut(duration: 0.2), value: fileStatuses)
+    }
+    
+    private func checkAllFileStatuses() async {
+        guard let rootURL = url else { return }
+        
+        // 创建一个任务组来并发检查所有文件状态
+        await withTaskGroup(of: (String, FileStatus.DownloadStatus).self) { group in
+            for file in filteredFiles {
+                group.addTask {
+                    let fileURL = rootURL.appendingPathComponent(file)
+                    let status = await statusChecker.checkItemStatus(fileURL) { _, status in
+                        // 这里可以处理进度回调
+                    }
+                    return (file, status)
+                }
+            }
+            
+            // 收集结果并更新状态
+            var stats = FileStats()
+            var newStatuses: [String: FileStatus.DownloadStatus] = [:]
+            
+            for await (file, status) in group {
+                // 使用 MainActor 更新单个文件状态
+                await MainActor.run {
+                    withAnimation {
+                        fileStatuses[file] = status
+                    }
+                }
+                
+                newStatuses[file] = status
+                
+                // 更新统计信息
+                switch status {
+                case .downloaded, .local:
+                    stats.downloaded += 1
+                case .downloading:
+                    stats.downloading += 1
+                case .notDownloaded:
+                    stats.notDownloaded += 1
+                case .directoryStatus(_, let d, let ing, let nd):
+                    stats.downloaded += d
+                    stats.downloading += ing
+                    stats.notDownloaded += nd
+                default:
+                    break
+                }
+            }
+            
+            // 更新总体统计
+            await MainActor.run {
+                withAnimation {
+                    totalStats = stats
+                }
+            }
+        }
     }
 }
 
-// 将文件项提取为单独的视图
-struct FileItemView: View {
-    let file: String
-    let fileStatus: FileStatus?
-    let isSourceRepository: Bool
-    
-    var body: some View {
-        HStack {
-            if isSourceRepository {
-                statusIcon
-                fileName
-                Spacer()
-                // 添加状态描述
-                if let status = fileStatus?.downloadStatus {
-                    Text(status.description)
-                        .font(.caption)
-                        .foregroundColor(status.color)
-                }
-            } else {
-                Image(systemName: "checkmark.circle.fill")
-                    .foregroundColor(.green)
-                Text(file)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            }
+
+
+extension View {
+    @ViewBuilder
+    func `if`<Transform: View>(
+        _ condition: Bool,
+        transform: (Self) -> Transform
+    ) -> some View {
+        if condition {
+            transform(self)
+        } else {
+            self
         }
-        .padding(.vertical, 2)
-        .background(
-            fileStatus?.status == .processing ? 
-                Color.accentColor.opacity(0.1) : 
-                Color.clear
-        )
-        .cornerRadius(4)
-    }
-    
-    private var statusIcon: some View {
-        Group {
-            if let fileStatus = fileStatus {
-                if case .processing = fileStatus.status {
-                    Image(systemName: fileStatus.status.icon)
-                        .foregroundColor(fileStatus.status.color)
-                        .rotationEffect(.degrees(360))
-                        .animation(
-                            .linear(duration: 1.0)
-                            .repeatForever(autoreverses: false),
-                            value: fileStatus.status
-                        )
-                } else {
-                    Image(systemName: fileStatus.status.icon)
-                        .foregroundColor(fileStatus.status.color)
-                }
-            } else {
-                Image(systemName: "circle")
-                    .foregroundColor(.secondary)
-            }
-        }
-    }
-    
-    private var fileName: some View {
-        Text(file)
-            .font(.caption)
-            .foregroundColor(
-                fileStatus?.status == .processing ? .primary : .secondary
-            )
     }
 }
