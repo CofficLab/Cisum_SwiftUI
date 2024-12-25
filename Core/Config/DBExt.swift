@@ -10,7 +10,7 @@ extension Config {
     
     // MARK: 数据库存储名称
     
-    static let dbDirName = debug ? "debug" : "production"
+    static let dbDirName = debug ? "db_debug" : "db_production"
     
     // MARK: 同步的数据库的存储名称
     
@@ -19,13 +19,16 @@ extension Config {
     static var syncedDBFileName = debug ? "synced_database.db" : "synced_database.db"
 
     static func getDBRootDir() -> URL? {
-        Config.localDocumentsDir?.appendingPathComponent(dbDirName)
+        Config.appSupportDir?
+            .appendingPathComponent("Cisum_Database")
+            .appendingPathComponent(dbDirName)
     }
     
     // MARK: 同步的数据库的存储路径
     
     static func getDBSyncedUrl() -> URL? {
-        Config.localDocumentsDir?.appendingPathComponent(syncedDBDirName).appendingPathComponent(syncedDBFileName)
+        Config.localDocumentsDir?
+            .appendingPathComponent(syncedDBDirName).appendingPathComponent(syncedDBFileName)
     }
     
     // MARK: iCloud 同步的 Container

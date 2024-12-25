@@ -204,6 +204,8 @@
 		F5B64D152C328F3900DE55AD /* SuperPlayWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B64D142C328F3900DE55AD /* SuperPlayWorker.swift */; };
 		F5C2C73F2D1B987C0094157C /* SuperSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C2C73E2D1B98770094157C /* SuperSetting.swift */; };
 		F5C2C7412D1BB50B0094157C /* MigrationProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C2C7402D1BB50B0094157C /* MigrationProgressView.swift */; };
+		F5C2C7432D1BF57A0094157C /* RepositoryInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C2C7422D1BF57A0094157C /* RepositoryInfoView.swift */; };
+		F5C2C7452D1BF59A0094157C /* FileStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C2C7442D1BF59A0094157C /* FileStatus.swift */; };
 		F5C2EB7E2D1AB49700798B46 /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = F5C2EB7D2D1AB49700798B46 /* AlertToast */; };
 		F5C2EB812D1AB51100798B46 /* MagicKit in Frameworks */ = {isa = PBXBuildFile; productRef = F5C2EB802D1AB51100798B46 /* MagicKit */; };
 		F5C2EB832D1AC16900798B46 /* ConfigProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C2EB822D1AC16500798B46 /* ConfigProvider.swift */; };
@@ -415,6 +417,8 @@
 		F5B64D142C328F3900DE55AD /* SuperPlayWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperPlayWorker.swift; sourceTree = "<group>"; };
 		F5C2C73E2D1B98770094157C /* SuperSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperSetting.swift; sourceTree = "<group>"; };
 		F5C2C7402D1BB50B0094157C /* MigrationProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationProgressView.swift; sourceTree = "<group>"; };
+		F5C2C7422D1BF57A0094157C /* RepositoryInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryInfoView.swift; sourceTree = "<group>"; };
+		F5C2C7442D1BF59A0094157C /* FileStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileStatus.swift; sourceTree = "<group>"; };
 		F5C2EB822D1AC16500798B46 /* ConfigProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigProvider.swift; sourceTree = "<group>"; };
 		F5D3EF0E2D06B5F000548889 /* PlayManDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayManDelegate.swift; sourceTree = "<group>"; };
 		F5D3EF102D06B7D300548889 /* AudioConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioConfig.swift; sourceTree = "<group>"; };
@@ -523,6 +527,8 @@
 		0B4788992D1ADCA400E984C5 /* Setting */ = {
 			isa = PBXGroup;
 			children = (
+				F5C2C7442D1BF59A0094157C /* FileStatus.swift */,
+				F5C2C7422D1BF57A0094157C /* RepositoryInfoView.swift */,
 				F5C2C7402D1BB50B0094157C /* MigrationProgressView.swift */,
 				0B382A9B2D1AF6160075391C /* SettingRootView.swift */,
 				0B382A992D1AED920075391C /* SettingPluginView.swift */,
@@ -1057,6 +1063,7 @@
 				0BAABEC32BC939D000DF4A31 /* LayoutView.swift in Sources */,
 				0B5D09952D05EE4C00224E6B /* BookPlugin.swift in Sources */,
 				F518F6F52C34E78C00844E62 /* Book.swift in Sources */,
+				F5C2C7432D1BF57A0094157C /* RepositoryInfoView.swift in Sources */,
 				F5ADFF662D1954B9003CF664 /* CopyDB.swift in Sources */,
 				F5511BC02C2953C200400900 /* BtnToggleCopying.swift in Sources */,
 				F5E17A782D03075E00473CB8 /* SmartMessage.swift in Sources */,
@@ -1111,6 +1118,7 @@
 				F54DFA632CA4E84500F81BE3 /* VideoBtns.swift in Sources */,
 				0B6DDCE32D198861001473E3 /* DBSynced.swift in Sources */,
 				F507F5172C09541B00CB9A3A /* DeviceSetting.swift in Sources */,
+				F5C2C7452D1BF59A0094157C /* FileStatus.swift in Sources */,
 				0B1498792BC4DF940075DA61 /* AudioJob.swift in Sources */,
 				0BBA421F2AC1397F00C0B977 /* Centered.swift in Sources */,
 				0B0FA2292D034867004D4D41 /* AudioPlugin.swift in Sources */,

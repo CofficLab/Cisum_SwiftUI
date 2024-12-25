@@ -44,6 +44,7 @@ enum MigrationError: LocalizedError {
     case sourceDirectoryNotFound
     case targetDirectoryNotFound
     case fileOperationFailed(String)
+    case migrationCancelled
     
     var errorDescription: String? {
         switch self {
@@ -53,15 +54,20 @@ enum MigrationError: LocalizedError {
             return "无法找到目标文件夹"
         case .fileOperationFailed(let message):
             return "文件操作失败: \(message)"
+        case .migrationCancelled:
+            return "迁移已取消，部分文件可能已经迁移"
         }
     }
 }
 
+@MainActor
 class ConfigProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLog, SuperThread {
     static let emoji: String = "🔩"
     static let keyOfStorageLocation = "StorageLocation"
 
     @Published var storageLocation: StorageLocation?
+
+    private var isCancelled = false
 
     override init() {
         super.init()
@@ -106,11 +112,18 @@ class ConfigProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLo
 
     typealias ProgressCallback = (Double, String) -> Void
 
+    func cancelMigration() {
+        isCancelled = true
+    }
+
     func migrateAndUpdateStorageLocation(
         to newLocation: StorageLocation,
         shouldMigrate: Bool,
-        progressCallback: ProgressCallback?
+        progressCallback: ProgressCallback?,
+        verbose: Bool
     ) async throws {
+        isCancelled = false
+
         if shouldMigrate {
             guard let sourceRoot = getStorageRoot() else {
                 throw MigrationError.sourceDirectoryNotFound
@@ -133,18 +146,32 @@ class ConfigProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLo
                 )
 
                 for (index, sourceFile) in files.enumerated() {
+                    if isCancelled {
+                        throw MigrationError.migrationCancelled
+                    }
+
                     let progress = Double(index + 1) / Double(files.count)
                     let fileName = sourceFile.lastPathComponent
+                    
+                    // 调用回调通知当前处理的文件
                     progressCallback?(progress, fileName)
-
+                    
                     let targetFile = targetRoot.appendingPathComponent(fileName)
-                    try fileManager.moveItem(at: sourceFile, to: targetFile)
+                    do {
+                        try fileManager.moveItem(at: sourceFile, to: targetFile)
+                    } catch {
+                        throw MigrationError.fileOperationFailed("\(fileName): \(error.localizedDescription)")
+                    }
                 }
 
                 try fileManager.removeItem(at: sourceRoot)
             } catch {
                 os_log(.error, "\(self.t)Migration error: \(error.localizedDescription)")
-                throw MigrationError.fileOperationFailed(error.localizedDescription)
+                if let migrationError = error as? MigrationError {
+                    throw migrationError
+                } else {
+                    throw MigrationError.fileOperationFailed(error.localizedDescription)
+                }
             }
         }
 

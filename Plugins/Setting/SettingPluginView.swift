@@ -3,33 +3,14 @@ import MagicKit
 
 struct SettingPluginView: View, SuperSetting {
     @EnvironmentObject var c: ConfigProvider
-    @State private var showMigrationAlert = false
     @State private var showMigrationProgress = false
-    @State private var migrationProgress = 0.0
-    @State private var currentMigratingFile = ""
     @State private var tempStorageLocation: StorageLocation
     @State var diskSize: String?
-    @State private var errorMessage: String?
-    @State private var showErrorAlert = false
-
+    
     init() {
-        // 直接初始化为默认值 .local
         _tempStorageLocation = State(initialValue: .local)
     }
-
-    var errorAlertMessage: String {
-        """
-        \(errorMessage ?? "未知错误")
-        
-        存储位置已重置为原位置，未做更改。
-        
-        建议：
-        1. 请检查新旧仓库的权限和空间
-        2. 可以手动查看并处理两个仓库中的数据
-        3. 确认问题解决后再尝试迁移
-        """
-    }
-
+    
     var body: some View {
         makeSettingView(title: "📺 媒体仓库位置") {
             VStack(alignment: .leading, spacing: 16) {
@@ -75,80 +56,27 @@ struct SettingPluginView: View, SuperSetting {
 
                 // 添加保存按钮
                 Button(action: {
-                    showMigrationAlert = true
+                    showMigrationProgress = true
                 }) {
                     Text("保存更改")
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.borderedProminent)
                 .padding(.top, 16)
-                .alert("迁移数据", isPresented: $showMigrationAlert) {
-                    Button("迁移数据", role: .destructive) {
-                        showMigrationProgress = true
-                        Task {
-                            do {
-                                try await c.migrateAndUpdateStorageLocation(
-                                    to: tempStorageLocation,
-                                    shouldMigrate: true,
-                                    progressCallback: { progress, file in
-                                        migrationProgress = progress
-                                        currentMigratingFile = file
-                                    }
-                                )
-                                showMigrationProgress = false
-                            } catch {
-                                showMigrationProgress = false
-                                errorMessage = error.localizedDescription
-                                showErrorAlert = true
-                                // 重置为当前实际的存储位置
-                                tempStorageLocation = c.storageLocation ?? .local
-                            }
-                        }
-                    }
-                    Button("不迁移", role: .cancel) {
-                        Task {
-                            do {
-                                try await c.migrateAndUpdateStorageLocation(
-                                    to: tempStorageLocation,
-                                    shouldMigrate: false,
-                                    progressCallback: nil
-                                )
-                            } catch {
-                                errorMessage = error.localizedDescription
-                                showErrorAlert = true
-                                // 重置为当前实际的存储位置
-                                tempStorageLocation = c.storageLocation ?? .local
-                            }
-                        }
-                    }
-                } message: {
-                    Text("是否将现有数据迁移到新位置？\n选择\"不迁移\"将在新位置创建空白仓库。")
-                }
             }
             .sheet(isPresented: $showMigrationProgress) {
                 MigrationProgressView(
-                    progress: migrationProgress,
-                    currentFile: currentMigratingFile
+                    sourceLocation: c.storageLocation ?? .local,
+                    targetLocation: tempStorageLocation,
+                    sourceURL: c.getStorageRoot(),
+                    targetURL: c.getStorageRoot(for: tempStorageLocation),
+                    onDismiss: {
+                        showMigrationProgress = false
+                    }
                 )
-            }
-            .alert("迁移失败", isPresented: $showErrorAlert) {
-                Button("打开当前仓库", role: .none) {
-                    if let root = c.getStorageRoot() {
-                        NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: root.path)
-                    }
-                }
-                Button("打开目标仓库", role: .none) {
-                    if let root = c.getStorageRoot(for: tempStorageLocation) {
-                        NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: root.path)
-                    }
-                }
-                Button("确定", role: .cancel) { }
-            } message: {
-                Text(errorAlertMessage)
             }
             .padding(.vertical, 8)
             .onAppear {
-                // 在视图出现时更新临时存储位置
                 tempStorageLocation = c.storageLocation ?? .local
             }
         } trailing: {

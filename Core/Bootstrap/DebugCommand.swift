@@ -10,7 +10,7 @@ struct DebugCommand: Commands {
             Button("打开App Support目录") { openUrl(Config.appSupportDir) }
             Button("打开容器目录") { openUrl(Config.localContainer) }
             Button("打开文档目录") { openUrl(Config.localDocumentsDir) }
-            Button("打开数据库目录") { openUrl(Config.localDocumentsDir) }
+            Button("打开数据库目录") { openUrl(Config.getDBRootDir()) }
             Button("打开iCloud Documents") { openUrl(Config.cloudDocumentsDir) }
             Button("打开封面图目录") { openUrl(Config.coverDir) }
         }
