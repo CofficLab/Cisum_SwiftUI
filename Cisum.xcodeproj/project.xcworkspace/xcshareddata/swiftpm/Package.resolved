@@ -1,6 +1,24 @@
 {
-  "originHash" : "eaac17ac87f4edd7bb53816357cade75fa7b01b852645c48942674cd2509dcdd",
+  "originHash" : "705f865500a1a0adda85698f8ff587173e0041a25e985b5906ae618a439c269d",
   "pins" : [
+    {
+      "identity" : "magickit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/CofficLab/MagicKit",
+      "state" : {
+        "branch" : "main",
+        "revision" : "e63d835a0bfbaf470735fc0cdd55ba60b117c3e6"
+      }
+    },
+    {
+      "identity" : "magicmessage",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/nookery/MagicMessage.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "d57ee1f9efc7336b31638f980670566a4a1d2441"
+      }
+    },
     {
       "identity" : "swift-async-algorithms",
       "kind" : "remoteSourceControl",
