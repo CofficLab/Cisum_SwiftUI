@@ -16,8 +16,6 @@ struct BookDBView: View, SuperLog, SuperThread {
 
     static var emoji = "🐘"
 
-    var main = Config.mainQueue
-    var bg = Config.bgQueue
     var dropping: Bool { app.isDropping }
     var disk: any SuperDisk
 

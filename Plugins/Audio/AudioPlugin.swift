@@ -8,7 +8,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
     static let keyOfCurrentAudioTime = "AudioPluginCurrentAudioTime"
     static let keyOfCurrentPlayMode = "AudioPluginCurrentPlayMode"
     static let emoji = "🎧"
-    
+
     let dirName = "audios"
     let label: String = "Audio"
     var hasPoster: Bool = true
@@ -20,7 +20,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
     var audioProvider: AudioProvider?
     var audioDB: AudioDB?
     var initialized: Bool = false
-    
+
     init() {
         os_log("\(self.i)")
     }
@@ -75,23 +75,24 @@ class AudioPlugin: SuperPlugin, SuperLog {
         ]
     }
 
-    func onInit() {
-        os_log("\(self.t)🛫🛫🛫 OnInit")
-        
-        let cloudDisk = DiskiCloud.make(self.dirName, verbose: true, reason: "AudioPlugin.onInit")
-        
-        if let cloudDisk = cloudDisk {
-            disk = cloudDisk
-        } else {
-            disk = DiskLocal.make("audios", verbose: true, reason: "DataProvider.disableiCloud")
+    func onInit(storage: StorageLocation?) {
+        os_log("\(self.t)🛫🛫🛫 OnInit with storage \(storage?.emojiTitle ?? "nil")")
+
+        switch storage {
+        case .local, .none:
+            disk = DiskLocal.make(self.dirName, verbose: true, reason: self.className + ".onInit")
+        case .icloud:
+            disk = DiskiCloud.make(self.dirName, verbose: true, reason: self.className + ".onInit")
+        case .custom:
+            disk = DiskLocal.make(self.dirName, verbose: true, reason: self.className + ".onInit")
         }
-        
-        guard disk != nil else {
+
+        guard let disk = disk else {
             fatalError("AudioPlugin.onInit: disk == nil")
         }
-        
-        self.audioDB = AudioDB(disk: disk!, reason: self.className + ".onInit")
-        self.audioProvider = AudioProvider(disk: disk!)
+
+        self.audioDB = AudioDB(disk: disk, reason: self.className + ".onInit")
+        self.audioProvider = AudioProvider(disk: disk)
         self.initialized = true
     }
 
@@ -106,7 +107,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
 
     func onPlayAssetUpdate(asset: PlayAsset?, currentGroup: SuperPlugin?) async throws {
         os_log("\(self.t)🍋🍋🍋 OnPlayAssetUpdate with asset \(asset?.title ?? "nil")")
-        
+
         if currentGroup?.id != self.id {
             return
         }
@@ -121,24 +122,24 @@ class AudioPlugin: SuperPlugin, SuperLog {
             }
         }
     }
-    
+
     func getDisk() -> (any SuperDisk)? {
         self.disk
     }
 
-    func onPlayModeChange(mode: PlayMode, asset: PlayAsset?) async throws -> Void {
+    func onPlayModeChange(mode: PlayMode, asset: PlayAsset?) async throws {
         guard self.initialized else {
             return
         }
 
         os_log("\(self.t)🍋🍋🍋 OnPlayModelChange with asset \(asset?.title ?? "nil")")
-        
+
         AudioPlugin.storePlayMode(mode)
-        
+
         guard let audioDB = audioDB else {
             return
         }
-        
+
         switch mode {
         case .Loop:
             break
@@ -164,14 +165,14 @@ class AudioPlugin: SuperPlugin, SuperLog {
             }
         } else {
             os_log("\(self.t)No current audio URL, try find first")
-            
+
             if let first = try? await audioDB?.getFirst() {
                 await playMan.play(first.toPlayAsset(), reason: self.className + ".OnAppear", verbose: true)
             } else {
                 os_log("\(self.t)No audio found")
             }
         }
-        
+
         let mode = AudioPlugin.getPlayMode()
         if let mode = mode {
             await playMan.setMode(mode, reason: self.className + ".OnAppear")
@@ -180,11 +181,11 @@ class AudioPlugin: SuperPlugin, SuperLog {
 
     func onPlayPrev(playMan: PlayMan, current: PlayAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws {
         os_log("\(self.t)OnPlayPrev")
-        
+
         guard let audioDB = audioDB else {
             return
         }
-        
+
         let audio = try await audioDB.getPrevOf(current?.url, verbose: false)
 
         if let audio = audio {
@@ -204,7 +205,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
         if verbose {
             os_log("\(self.t)OnPlayNext with mode \(mode.description)")
         }
-        
+
         guard let audioDB = audioDB else {
             return
         }
@@ -233,7 +234,7 @@ extension AudioPlugin {
         if verbose {
             os_log("\(Self.t)🍋🍋🍋 Store current audio URL: \(url?.absoluteString ?? "")")
         }
-        
+
         UserDefaults.standard.set(url, forKey: keyOfCurrentAudioURL)
 
         // Store URL as string for CloudKit

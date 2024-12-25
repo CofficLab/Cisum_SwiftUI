@@ -27,10 +27,18 @@ class CopyPlugin: SuperPlugin, SuperLog {
 
     func addRootView() -> AnyView? {
         os_log("\(self.t)🖥️🖥️🖥️ AddRootView")
+        
+        guard let db = self.db else {
+            assert(false, "DB is nil")
+        }
+
+        guard let worker = self.worker else {
+            assert(false, "Worker is nil")
+        }
 
         return AnyView(CopyRootView()
-            .environmentObject(self.db!)
-            .environmentObject(self.worker!)
+            .environmentObject(db)
+            .environmentObject(worker)
             .modelContainer(CopyConfig.getContainer)
         )
     }
@@ -42,7 +50,7 @@ class CopyPlugin: SuperPlugin, SuperLog {
             .modelContainer(CopyConfig.getContainer))
     }
 
-    func onInit() {
+    func onInit(storage: StorageLocation?) {
         os_log("\(self.t)🛫🛫🛫 OnInit")
 
         self.db = CopyDB(CopyConfig.getContainer, reason: self.author + ".onInit", verbose: true)

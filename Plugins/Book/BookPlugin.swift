@@ -61,7 +61,7 @@ class BookPlugin: SuperPlugin, SuperLog {
         )
     }
 
-    func onInit() {
+    func onInit(storage: StorageLocation?) {
         os_log("\(self.t)onInit")
         if self.initialized {
             return

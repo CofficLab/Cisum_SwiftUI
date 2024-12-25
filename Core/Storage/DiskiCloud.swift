@@ -34,7 +34,6 @@ class DiskiCloud: ObservableObject, SuperDisk, SuperLog, SuperThread {
     var queue = DispatchQueue(label: "DiskiCloud", qos: .background)
     var fileManager = FileManager.default
     var cloudHandler = iCloudHandler()
-    var bg = Config.bgQueue
     var query: ItemQuery
     var verbose = true
     

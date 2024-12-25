@@ -41,7 +41,7 @@ class SettingPlugin: SuperPlugin, SuperLog {
         []
     }
 
-    func onInit() {
+    func onInit(storage: StorageLocation?) {
         os_log("\(self.t)🛫🛫🛫 OnInit")
     }
 

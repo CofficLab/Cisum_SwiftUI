@@ -18,7 +18,6 @@
 		0B12B0A92C0CB96F00FD43AD /* SubscriptionSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B12B0A82C0CB96F00FD43AD /* SubscriptionSetting.swift */; };
 		0B1498742BC4C5CB0075DA61 /* PlayMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1498732BC4C5CB0075DA61 /* PlayMode.swift */; };
 		0B1498792BC4DF940075DA61 /* AudioJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1498782BC4DF940075DA61 /* AudioJob.swift */; };
-		0B19D9562C062F400057D8DB /* ProExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B19D9552C062F400057D8DB /* ProExt.swift */; };
 		0B1D5A7F2AB302610010DDF2 /* AudioModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1D5A672AB3025F0010DDF2 /* AudioModel.swift */; };
 		0B1D5A842AB302610010DDF2 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1D5A6E2AB302600010DDF2 /* Extensions.swift */; };
 		0B1D5A882AB302610010DDF2 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1D5A732AB302600010DDF2 /* ContentView.swift */; };
@@ -53,9 +52,7 @@
 		0B8C369F2BEA011700C47567 /* MetaWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C369E2BEA011700C47567 /* MetaWrapper.swift */; };
 		0B8C36AA2BEA2EC700C47567 /* SuperDisk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C36A92BEA2EC600C47567 /* SuperDisk.swift */; };
 		0B8C36AC2BEC6E0F00C47567 /* StateExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C36AB2BEC6E0F00C47567 /* StateExt.swift */; };
-		0B8C36AE2BEC6E3E00C47567 /* DevExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C36AD2BEC6E3E00C47567 /* DevExt.swift */; };
 		0B8C36B02BEC6E6500C47567 /* DBExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C36AF2BEC6E6500C47567 /* DBExt.swift */; };
-		0B8C36B22BEC6E8D00C47567 /* QueueExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C36B12BEC6E8D00C47567 /* QueueExt.swift */; };
 		0B8C36B42BEC6EAB00C47567 /* ViewExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C36B32BEC6EAB00C47567 /* ViewExt.swift */; };
 		0B8C36B62BEDAB5E00C47567 /* BtnMore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C36B52BEDAB5E00C47567 /* BtnMore.swift */; };
 		0B8FC2702BBC559500839C75 /* PlayingAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8FC26F2BBC559500839C75 /* PlayingAlbum.swift */; };
@@ -78,7 +75,6 @@
 		0BAB7C3F2AD3BBAA00C5AEB5 /* DBTips.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAB7C3E2AD3BBAA00C5AEB5 /* DBTips.swift */; };
 		0BB427912BED0B38004E6F82 /* DiskLocal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB427902BED0B38004E6F82 /* DiskLocal.swift */; };
 		0BB543F42BE8E38300D7A2B2 /* Duplicates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB543F32BE8E38300D7A2B2 /* Duplicates.swift */; };
-		0BB543F82BE9C64C00D7A2B2 /* PathExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB543F72BE9C64C00D7A2B2 /* PathExt.swift */; };
 		0BB587172AD815770071AEBD /* TimeHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB587162AD815770071AEBD /* TimeHelper.swift */; };
 		0BB5871B2AD81AFA0071AEBD /* ViewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB5871A2AD81AF90071AEBD /* ViewHelper.swift */; };
 		0BB5871D2AD820FA0071AEBD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0BB5871C2AD820FA0071AEBD /* Assets.xcassets */; };
@@ -175,7 +171,6 @@
 		F5675C352C22CB3C00326664 /* DBViewTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C342C22CB3C00326664 /* DBViewTree.swift */; };
 		F5675C3E2C252A3800326664 /* DBTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C3D2C252A3800326664 /* DBTree.swift */; };
 		F5675C402C25456300326664 /* DataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C3F2C25456300326664 /* DataProvider.swift */; };
-		F5675C422C254E8100326664 /* StorageExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C412C254E8100326664 /* StorageExt.swift */; };
 		F573B1882C0411E4004C34CC /* DeviceDataExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B1872C0411E4004C34CC /* DeviceDataExt.swift */; };
 		F573B18C2C042E08004C34CC /* DeviceExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B18B2C042E08004C34CC /* DeviceExt.swift */; };
 		F5847C1F2C3778570080887B /* ErrorViewCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5847C1E2C3778570080887B /* ErrorViewCloud.swift */; };
@@ -236,7 +231,6 @@
 		0B12B0A82C0CB96F00FD43AD /* SubscriptionSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionSetting.swift; sourceTree = "<group>"; };
 		0B1498732BC4C5CB0075DA61 /* PlayMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayMode.swift; sourceTree = "<group>"; };
 		0B1498782BC4DF940075DA61 /* AudioJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioJob.swift; sourceTree = "<group>"; };
-		0B19D9552C062F400057D8DB /* ProExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProExt.swift; sourceTree = "<group>"; };
 		0B1D5A4B2AB301AD0010DDF2 /* Cisum.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cisum.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0B1D5A5D2AB3025E0010DDF2 /* Signing.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = Signing.entitlements; sourceTree = "<group>"; };
 		0B1D5A672AB3025F0010DDF2 /* AudioModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioModel.swift; sourceTree = "<group>"; };
@@ -274,9 +268,7 @@
 		0B8C369E2BEA011700C47567 /* MetaWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetaWrapper.swift; sourceTree = "<group>"; };
 		0B8C36A92BEA2EC600C47567 /* SuperDisk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperDisk.swift; sourceTree = "<group>"; };
 		0B8C36AB2BEC6E0F00C47567 /* StateExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateExt.swift; sourceTree = "<group>"; };
-		0B8C36AD2BEC6E3E00C47567 /* DevExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevExt.swift; sourceTree = "<group>"; };
 		0B8C36AF2BEC6E6500C47567 /* DBExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBExt.swift; sourceTree = "<group>"; };
-		0B8C36B12BEC6E8D00C47567 /* QueueExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueExt.swift; sourceTree = "<group>"; };
 		0B8C36B32BEC6EAB00C47567 /* ViewExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExt.swift; sourceTree = "<group>"; };
 		0B8C36B52BEDAB5E00C47567 /* BtnMore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnMore.swift; sourceTree = "<group>"; };
 		0B8FC26F2BBC559500839C75 /* PlayingAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayingAlbum.swift; sourceTree = "<group>"; };
@@ -299,7 +291,6 @@
 		0BAB7C3E2AD3BBAA00C5AEB5 /* DBTips.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBTips.swift; sourceTree = "<group>"; };
 		0BB427902BED0B38004E6F82 /* DiskLocal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskLocal.swift; sourceTree = "<group>"; };
 		0BB543F32BE8E38300D7A2B2 /* Duplicates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Duplicates.swift; sourceTree = "<group>"; };
-		0BB543F72BE9C64C00D7A2B2 /* PathExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathExt.swift; sourceTree = "<group>"; };
 		0BB587162AD815770071AEBD /* TimeHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeHelper.swift; sourceTree = "<group>"; };
 		0BB5871A2AD81AF90071AEBD /* ViewHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewHelper.swift; sourceTree = "<group>"; };
 		0BB5871C2AD820FA0071AEBD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -392,7 +383,6 @@
 		F5675C342C22CB3C00326664 /* DBViewTree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBViewTree.swift; sourceTree = "<group>"; };
 		F5675C3D2C252A3800326664 /* DBTree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBTree.swift; sourceTree = "<group>"; };
 		F5675C3F2C25456300326664 /* DataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataProvider.swift; sourceTree = "<group>"; };
-		F5675C412C254E8100326664 /* StorageExt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StorageExt.swift; sourceTree = "<group>"; };
 		F573B1872C0411E4004C34CC /* DeviceDataExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceDataExt.swift; sourceTree = "<group>"; };
 		F573B18B2C042E08004C34CC /* DeviceExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceExt.swift; sourceTree = "<group>"; };
 		F5847C1E2C3778570080887B /* ErrorViewCloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorViewCloud.swift; sourceTree = "<group>"; };
@@ -810,15 +800,10 @@
 				F545D1742C1FCAD0006A6AFA /* CloudExt.swift */,
 				0B1D5A752AB302600010DDF2 /* Config.swift */,
 				0B8C36AF2BEC6E6500C47567 /* DBExt.swift */,
-				0B8C36AD2BEC6E3E00C47567 /* DevExt.swift */,
 				0B4DFC712BD740B4001CEF32 /* Device.swift */,
 				F573B18B2C042E08004C34CC /* DeviceExt.swift */,
-				0BB543F72BE9C64C00D7A2B2 /* PathExt.swift */,
 				F5D3EF122D06C6FD00548889 /* PluginExt.swift */,
-				0B19D9552C062F400057D8DB /* ProExt.swift */,
-				0B8C36B12BEC6E8D00C47567 /* QueueExt.swift */,
 				0B8C36AB2BEC6E0F00C47567 /* StateExt.swift */,
-				F5675C412C254E8100326664 /* StorageExt.swift */,
 				F545D1762C1FCC86006A6AFA /* UserExt.swift */,
 				0B8C36B32BEC6EAB00C47567 /* ViewExt.swift */,
 			);
@@ -1056,7 +1041,6 @@
 				0BBA422F2AC2BAE300C0B977 /* PictureView.swift in Sources */,
 				0BE695A12BFE3DCC00CEFFEB /* ProductCell.swift in Sources */,
 				F52A98F52C43988D003559F1 /* BookPoster.swift in Sources */,
-				0B8C36AE2BEC6E3E00C47567 /* DevExt.swift in Sources */,
 				0B8FC2702BBC559500839C75 /* PlayingAlbum.swift in Sources */,
 				F545D1772C1FCC86006A6AFA /* UserExt.swift in Sources */,
 				0BC29EA52CA4592A00E4813F /* DBBookState.swift in Sources */,
@@ -1106,7 +1090,6 @@
 				F586DCD52C2BFE9E0078580B /* BtnOpenFolder.swift in Sources */,
 				0B5786342BCB8DC00064F66A /* PlayView.swift in Sources */,
 				0B1D5A882AB302610010DDF2 /* ContentView.swift in Sources */,
-				F5675C422C254E8100326664 /* StorageExt.swift in Sources */,
 				0BE6959C2BFE3DCC00CEFFEB /* BuyView.swift in Sources */,
 				F5ADFF682D195D52003CF664 /* CopyRootView.swift in Sources */,
 				0B718F0C2AB4349900569762 /* CardView.swift in Sources */,
@@ -1163,7 +1146,6 @@
 				F518F6F02C33919600844E62 /* BookTileBackup.swift in Sources */,
 				0B9FA29B2BC81F53007B235A /* DefaultAlbum.swift in Sources */,
 				0B1498742BC4C5CB0075DA61 /* PlayMode.swift in Sources */,
-				0BB543F82BE9C64C00D7A2B2 /* PathExt.swift in Sources */,
 				0B6B8B992BBA39F500F65B23 /* ControlButton.swift in Sources */,
 				0B1D5A842AB302610010DDF2 /* Extensions.swift in Sources */,
 				F5AEE0652CB7C61D0007825B /* BookTitle.swift in Sources */,
@@ -1176,7 +1158,6 @@
 				0BEE7C722CA838D600DC1DCF /* CopyWorker.swift in Sources */,
 				F53BE0342C2024BE003CBA29 /* DiskFileGroup.swift in Sources */,
 				0B9EA35D2C21C9AB00A4059A /* PlayState.swift in Sources */,
-				0B8C36B22BEC6E8D00C47567 /* QueueExt.swift in Sources */,
 				0B1165E92ABBC6C0005C5CBB /* LaunchView.swift in Sources */,
 				F52A98F72C439D6C003559F1 /* Posters.swift in Sources */,
 				0B4DFC722BD740B4001CEF32 /* Device.swift in Sources */,
@@ -1219,7 +1200,6 @@
 				0B1165F02ABBCCB0005C5CBB /* AppProvider.swift in Sources */,
 				F5675C3E2C252A3800326664 /* DBTree.swift in Sources */,
 				F54DFA6B2CA4FB7D00F81BE3 /* BookBtns.swift in Sources */,
-				0B19D9562C062F400057D8DB /* ProExt.swift in Sources */,
 				0BE6959D2BFE3DCC00CEFFEB /* CarsView.swift in Sources */,
 				F54DFA742CA559F200F81BE3 /* VideoTile.swift in Sources */,
 				0BBA42252AC1813D00C0B977 /* BtnDel.swift in Sources */,

@@ -151,6 +151,8 @@ extension RootView {
 
                 for plugin in p.plugins {
                     await plugin.onAppear(playMan: man, currentGroup: p.current)
+                    
+                    plugin.onInit(storage: c.getStorageLocation())
                 }
 
                 #if os(iOS)

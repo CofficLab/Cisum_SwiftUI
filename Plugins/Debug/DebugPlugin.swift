@@ -28,7 +28,7 @@ class DebugPlugin: SuperPlugin, SuperLog {
         os_log("\(self.t)OnPlayAssetUpdate")
     }
 
-    func onInit() {
+    func onInit(storage: StorageLocation?) {
         os_log("\(self.t)OnInit")
     }
 

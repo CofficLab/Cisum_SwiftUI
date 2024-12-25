@@ -35,9 +35,6 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
         }
         
         self.plugins.append(plugin)
-
-        os_log("\(self.t)🚀🚀🚀 Init Plugin: \(plugin.id)")
-        plugin.onInit()
     }
     
     func getStatusViews() -> [AnyView] {

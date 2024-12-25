@@ -17,8 +17,6 @@ struct VideoDB: View, SuperLog {
 
     static var emoji = "🐘"
 
-    var main = Config.mainQueue
-    var bg = Config.bgQueue
     var dropping: Bool { app.isDropping }
 
     init(verbose: Bool = false) {

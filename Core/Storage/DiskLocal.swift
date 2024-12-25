@@ -16,7 +16,6 @@ class DiskLocal: ObservableObject, SuperDisk {
     }
 
     var fileManager = FileManager.default
-    var bg = Config.bgQueue
     var root: URL
     var delegate: DiskDelegate?
     var onUpdated: (_ collection: DiskFileGroup) -> Void = { collection in }
