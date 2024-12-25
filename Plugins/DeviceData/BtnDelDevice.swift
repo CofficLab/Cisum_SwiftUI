@@ -14,9 +14,9 @@ struct BtnDelDevice: View {
             image: getImageName(),
             dynamicSize: autoResize,
             onTap: {
-                Task {
-                    await DBSynced(Config.getSyncedContainer).deleteDevice(deviceData)
-                }
+//                Task {
+//                    await DBSynced(Config.getSyncedContainer).deleteDevice(deviceData)
+//                }
             })
     }
 

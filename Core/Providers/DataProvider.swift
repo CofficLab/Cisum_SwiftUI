@@ -144,27 +144,13 @@ extension DataProvider {
             os_log("\(self.t)FindState for \(book.bookTitle)")
         }
 
-        let db = DBSynced(Config.getSyncedContainer)
 
-        if let state = db.findOrInsertBookState(book.url) {
-            return state
-        } else {
-            if verbose {
-                os_log("\(self.t)\(book.bookTitle) 无上次播放")
-            }
-
-            return nil
-        }
+        return nil
     }
 
     func updateBookState(_ bookURL: URL, _ current: URL, verbose: Bool = true) {
         if verbose {
             os_log("\(self.t)FindState for \(bookURL.lastPathComponent)")
-        }
-
-        Task {
-            let db = DBSynced(Config.getSyncedContainer)
-            await db.updateBookCurrent(bookURL, currentURL: current)
         }
     }
 }

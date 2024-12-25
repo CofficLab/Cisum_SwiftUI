@@ -10,9 +10,19 @@ struct CopyConfig {
     // MARK: 本地的数据库的存储路径
     
     static func getDBUrl() -> URL? {
-        Config.getDBRootDir()?
-            .appendingPathComponent("copy_db")
-            .appendingPathComponent(dbFileName)
+        guard let rootURL = Config.getDBRootDir() else { return nil }
+        
+        let dbDirURL = rootURL.appendingPathComponent("copy_db")
+        
+        // 创建目录如果不存在
+        do {
+            try FileManager.default.createDirectory(at: dbDirURL, withIntermediateDirectories: true)
+        } catch {
+            print("Error creating directory: \(error)")
+            return nil
+        }
+        
+        return dbDirURL.appendingPathComponent(dbFileName)
     }
     
     // MARK: Local Container

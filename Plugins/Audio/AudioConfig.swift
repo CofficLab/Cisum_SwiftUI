@@ -31,9 +31,21 @@ struct AudioConfig {
     // MARK: 本地的数据库的存储路径
     
     static func getDBUrl() -> URL? {
-        Config.getDBRootDir()?
-            .appendingPathComponent("audios_db")
-            .appendingPathComponent(dbFileName)
+        guard let baseURL = Config.getDBRootDir() else { return nil }
+        
+        let dbDirURL = baseURL.appendingPathComponent("audios_db")
+        
+        // 确保目录存在
+        if !FileManager.default.fileExists(atPath: dbDirURL.path) {
+            do {
+                try FileManager.default.createDirectory(at: dbDirURL, withIntermediateDirectories: true)
+            } catch {
+                print("创建数据库目录失败: \(error)")
+                return nil
+            }
+        }
+        
+        return dbDirURL.appendingPathComponent(dbFileName)
     }
     
     // MARK: Local Container

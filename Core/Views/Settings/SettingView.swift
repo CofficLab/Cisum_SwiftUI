@@ -26,7 +26,6 @@ struct SettingView: View {
 //                }
             }.padding(.top)
         }
-        .modelContainer(Config.getSyncedContainer)
     }
 }
 
