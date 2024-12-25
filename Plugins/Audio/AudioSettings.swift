@@ -1,7 +1,7 @@
 import SwiftUI
 import MagicKit
 
-struct AudioSettings: View,SuperLog {
+struct AudioSettings: View, SuperSetting, SuperLog {
     static let emoji = "🔊"
     @EnvironmentObject var dataManager: DataProvider
     @EnvironmentObject var audioManager: AudioProvider
@@ -9,11 +9,17 @@ struct AudioSettings: View,SuperLog {
     @State var diskSize: String?
 
     var body: some View {
-        GroupBox {
-            VStack(alignment: .leading, spacing: 5) {
+        makeSettingView(
+            title: "仓库目录",
+            content: {
+                if audioManager.disk is DiskiCloud {
+                    Text("是 iCloud 云盘目录，会保持同步")
+                } else {
+                    Text("是本地目录，不会同步")
+                }
+            },
+            trailing: {
                 HStack {
-                    Text("仓库目录").font(.headline)
-                    Spacer()
                     if let diskSize = diskSize {
                         Text(diskSize)
                     }
@@ -22,22 +28,15 @@ struct AudioSettings: View,SuperLog {
                             .labelStyle(.iconOnly)
                     }
                 }
-                .task {
-                    if let disk = audioManager.disk.make("", verbose: true, reason: "DirSetting") {
-                        diskSize = disk.getFileSizeReadable()
-                    }
-                }
-                
-                VStack(alignment: .leading) {
-                    if audioManager.disk is DiskiCloud {
-                        Text("是 iCloud 云盘目录，会保持同步")
-                    } else {
-                        Text("是本地目录，不会同步")
-                    }
-                }.font(.footnote)
-            }.padding(10)
-        }.background(BackgroundView.type1.opacity(0.1))
+            }
+        )
+        .task {
+            if let disk = audioManager.disk.make("", verbose: true, reason: "DirSetting") {
+                diskSize = disk.getFileSizeReadable()
+            }
+        }
         
+        // 注释掉的 GroupBox 保持不变
 //        GroupBox {
 //            VStack {
 //                ForEach(Array(DiskScene.allCases.filter({
