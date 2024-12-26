@@ -47,9 +47,7 @@ struct MigrationProgressView: View {
                 RepositoryInfoView(
                     title: "源仓库",
                     location: sourceLocation,
-                    url: sourceURL,
-                    files: sourceFiles,
-                    processedFiles: processedFiles
+                    url: sourceURL
                 )
             }
 
@@ -69,9 +67,7 @@ struct MigrationProgressView: View {
                 RepositoryInfoView(
                     title: "目标仓库",
                     location: targetLocation,
-                    url: targetURL,
-                    files: targetFiles,
-                    processedFiles: processedFiles
+                    url: targetURL
                 )
             }
 
