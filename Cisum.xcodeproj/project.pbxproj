@@ -103,7 +103,6 @@
 		0BC29EB32CA59E8B00E4813F /* SliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC29EB22CA59E8B00E4813F /* SliderView.swift */; };
 		0BCEB0232D1C3F9400493116 /* DirectoryStatusChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BCEB0222D1C3F9400493116 /* DirectoryStatusChecker.swift */; };
 		0BCEB0252D1C429000493116 /* FileItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BCEB0242D1C429000493116 /* FileItemView.swift */; };
-		0BCEB0272D1C443600493116 /* FileStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BCEB0262D1C443600493116 /* FileStats.swift */; };
 		0BD0568B2BC6202900EBC7C4 /* DiskiCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD0568A2BC6202900EBC7C4 /* DiskiCloud.swift */; };
 		0BD056912BC6340800EBC7C4 /* BtnEvict.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD056902BC6340800EBC7C4 /* BtnEvict.swift */; };
 		0BD651072CA4264300BA3CB8 /* SuperEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD651062CA4264000BA3CB8 /* SuperEvent.swift */; };
@@ -329,7 +328,6 @@
 		0BC29EB22CA59E8B00E4813F /* SliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderView.swift; sourceTree = "<group>"; };
 		0BCEB0222D1C3F9400493116 /* DirectoryStatusChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectoryStatusChecker.swift; sourceTree = "<group>"; };
 		0BCEB0242D1C429000493116 /* FileItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileItemView.swift; sourceTree = "<group>"; };
-		0BCEB0262D1C443600493116 /* FileStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileStats.swift; sourceTree = "<group>"; };
 		0BD0568A2BC6202900EBC7C4 /* DiskiCloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskiCloud.swift; sourceTree = "<group>"; };
 		0BD056902BC6340800EBC7C4 /* BtnEvict.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnEvict.swift; sourceTree = "<group>"; };
 		0BD651062CA4264000BA3CB8 /* SuperEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperEvent.swift; sourceTree = "<group>"; };
@@ -981,7 +979,6 @@
 				F5C2C75C2D1CF8300094157C /* FileInfoView.swift */,
 				0BCEB0242D1C429000493116 /* FileItemView.swift */,
 				F5C2C75A2D1CF1F50094157C /* FileItemViewModel.swift */,
-				0BCEB0262D1C443600493116 /* FileStats.swift */,
 				F5C2C7442D1BF59A0094157C /* FileStatus.swift */,
 			);
 			path = FileInfo;
@@ -1153,7 +1150,6 @@
 				0B6DDCE32D198861001473E3 /* DBSynced.swift in Sources */,
 				F507F5172C09541B00CB9A3A /* DeviceSetting.swift in Sources */,
 				F5C2C7452D1BF59A0094157C /* FileStatus.swift in Sources */,
-				0BCEB0272D1C443600493116 /* FileStats.swift in Sources */,
 				0B1498792BC4DF940075DA61 /* AudioJob.swift in Sources */,
 				0BBA421F2AC1397F00C0B977 /* Centered.swift in Sources */,
 				0B0FA2292D034867004D4D41 /* AudioPlugin.swift in Sources */,
