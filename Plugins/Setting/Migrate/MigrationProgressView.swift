@@ -1,6 +1,6 @@
-import SwiftUI
 import MagicKit
 import OSLog
+import SwiftUI
 
 struct MigrationProgressView: View {
     @EnvironmentObject var c: ConfigProvider
@@ -19,7 +19,7 @@ struct MigrationProgressView: View {
     @State private var currentMigratingFile = ""
     @State private var showConfirmation = true // 用于显示确认对话框
     @State private var migrationCompleted = false // 添加新状态变量
-    @State private var migrationCancelled = false  // 添加新状态来跟踪取消状态
+    @State private var migrationCancelled = false // 添加新状态来跟踪取消状态
 
     // 添加 errorAlertMessage 计算属性
     var errorAlertMessage: String {
@@ -45,65 +45,62 @@ struct MigrationProgressView: View {
                 .fontWeight(.bold)
                 .padding(.top)
 
-            // 内容部分可以滚动
-            ScrollView {
-                VStack(spacing: 16) {
-                    GroupBox {
-                        // 源仓库
-                        RepositoryInfoView(
-                            title: "源仓库",
-                            location: sourceLocation,
-                            url: sourceURL
-                        )
-                    }
+            VStack(spacing: 16) {
+                GroupBox {
+                    // 源仓库
+                    RepositoryInfoView(
+                        title: "源仓库",
+                        location: sourceLocation,
+                        url: sourceURL
+                    ).frame(height: 300)
+                }
 
-                    Group {
-                        HStack {
-                            Spacer()
-                            Image(systemName: "arrow.down")
-                                .foregroundColor(.secondary)
-                                .imageScale(.large)
-                                .font(.system(size: 16))
-                            Spacer()
-                        }
-                    }
-
-                    GroupBox {
-                        // 目标仓库
-                        RepositoryInfoView(
-                            title: "目标仓库",
-                            location: targetLocation,
-                            url: targetURL
-                        )
-                    }
-
-                    GroupBox {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("⚠️ 重要提示：")
-                                .font(.subheadline)
-                                .foregroundColor(.orange)
-
-                            Group {
-                                Text("• 迁移时间取决于数据量大小，可能需要较长时间")
-                                Text("• 如果源数据在iCloud中且有未下载的文件，需要等待下载完成")
-                                Text("• 迁移过程中请勿关闭应用")
-                                Text("• 取消迁移可能导致数据不完整")
-                                Text("• 请保目标位置有足够的存储空间")
-                            }
-                            .font(.caption)
+                Group {
+                    HStack {
+                        Spacer()
+                        Image(systemName: "arrow.down")
                             .foregroundColor(.secondary)
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical)
-                    }
-
-                    // 只在非确认状态下显示迁移状态
-                    if !showConfirmation {
-                        migrationStatusView
+                            .imageScale(.large)
+                            .font(.system(size: 16))
+                        Spacer()
                     }
                 }
-                .padding()
+
+                GroupBox {
+                    // 目标仓库
+                    RepositoryInfoView(
+                        title: "目标仓库",
+                        location: targetLocation,
+                        url: targetURL
+                    ).frame(height: 250)
+                }
+
+                GroupBox {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("⚠️ 重要提示：")
+                            .font(.subheadline)
+                            .foregroundColor(.orange)
+
+                        Group {
+                            Text("• 迁移时间取决于数据量大小，可能需要较长时间")
+                            Text("• 如果源数据在iCloud中且有未下载的文件，需要等待下载完成")
+                            Text("• 迁移过程中请勿关闭应用")
+                            Text("• 取消迁移可能导致数据不完整")
+                            Text("• 请保目标位置有足够的存储空间")
+                        }
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical)
+                }
+
+                // 只在非确认状态下显示迁移状态
+                if !showConfirmation {
+                    migrationStatusView
+                }
             }
+            .padding()
 
             // 底部按钮固定在底部
             if showConfirmation {
@@ -112,7 +109,7 @@ struct MigrationProgressView: View {
                 actionButtons
             }
         }
-        .frame(width: 600, height: 900)
+        .frame(width: 800, height: 1000)
         .onAppear {
             loadSourceFiles()
             loadTargetFiles()
@@ -129,7 +126,7 @@ struct MigrationProgressView: View {
                     guard let targetRoot = await c.getStorageRoot(for: targetLocation) else {
                         throw MigrationError.targetDirectoryNotFound
                     }
-                    
+
                     try await migrationManager.migrate(
                         from: sourceRoot,
                         to: targetRoot,
@@ -153,11 +150,11 @@ struct MigrationProgressView: View {
                         self.migrationCancelled = true
                     }
                 }
-                
+
                 // 更新存储位置
                 await MainActor.run {
                     c.updateStorageLocation(targetLocation)
-                    self.migrationCompleted = shouldMigrate  // 只有在实际迁移时才标记为完成
+                    self.migrationCompleted = shouldMigrate // 只有在实际迁移时才标记为完成
                     self.currentMigratingFile = shouldMigrate ? "迁移完成" : "迁移已取消"
                 }
             } catch {
@@ -180,9 +177,9 @@ struct MigrationProgressView: View {
             // 初始化所有文件为待处理状态
             processedFiles = sourceFiles.map { fileName in
                 FileStatus(
-                    name: fileName, 
+                    name: fileName,
                     status: .pending,
-                    downloadStatus: .local  // 初始状态默认为本地文件
+                    downloadStatus: .local // 初始状态默认为本地文件
                 )
             }
         } catch {
@@ -207,9 +204,9 @@ struct MigrationProgressView: View {
             // 如果有错误，更新文件状态失败
             if let index = processedFiles.firstIndex(where: { $0.name == fileName }) {
                 processedFiles[index] = FileStatus(
-                    name: fileName, 
+                    name: fileName,
                     status: .failed(error),
-                    downloadStatus: processedFiles[index].downloadStatus  // 保持原有的下载状态
+                    downloadStatus: processedFiles[index].downloadStatus // 保持原有的下载状态
                 )
             }
             errorMessage = error
@@ -218,18 +215,18 @@ struct MigrationProgressView: View {
             if let index = processedFiles.firstIndex(where: { $0.name == fileName }) {
                 // 当前文件设置为处理中，保持下载状态不变
                 processedFiles[index] = FileStatus(
-                    name: fileName, 
+                    name: fileName,
                     status: .processing,
                     downloadStatus: processedFiles[index].downloadStatus
                 )
-                
+
                 // 检查目标文件夹中是否存在该文件，如果存在则表示已完成
                 if let targetURL = targetURL,
                    FileManager.default.fileExists(atPath: targetURL.appendingPathComponent(fileName).path) {
                     processedFiles[index] = FileStatus(
-                        name: fileName, 
+                        name: fileName,
                         status: .completed,
-                        downloadStatus: .local  // 完成后标记为本地文件
+                        downloadStatus: .local // 完成后标记为本地文件
                     )
                 }
             }
@@ -340,7 +337,7 @@ struct MigrationProgressView: View {
                         Text("迁移已取消")
                             .font(.subheadline)
                             .foregroundColor(.orange)
-                        
+
                         Button("重试迁移") {
                             migrationCancelled = false
                             showConfirmation = true

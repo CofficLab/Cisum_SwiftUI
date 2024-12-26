@@ -141,4 +141,19 @@ class FileItemViewModel: ObservableObject {
             }
         }
     }
+
+    var modificationDate: Date? {
+        try? FileManager.default.attributesOfItem(atPath: url.path)[.modificationDate] as? Date
+    }
+    
+    var formattedSize: String {
+        // Format file size to human readable string (e.g., "1.2 MB")
+        if isDirectory { return "--" }
+        // ... implement size formatting ...
+        return ""
+    }
+    
+    var fileType: String {
+        isDirectory ? "文件夹" : url.pathExtension.uppercased() + " 文件"
+    }
 }

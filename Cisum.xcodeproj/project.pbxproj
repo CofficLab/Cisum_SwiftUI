@@ -102,7 +102,7 @@
 		0BC29EAF2CA5893800E4813F /* HeroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC29EAE2CA5893800E4813F /* HeroView.swift */; };
 		0BC29EB32CA59E8B00E4813F /* SliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC29EB22CA59E8B00E4813F /* SliderView.swift */; };
 		0BCEB0232D1C3F9400493116 /* DirectoryStatusChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BCEB0222D1C3F9400493116 /* DirectoryStatusChecker.swift */; };
-		0BCEB0252D1C429000493116 /* FileItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BCEB0242D1C429000493116 /* FileItemView.swift */; };
+		0BCEB0252D1C429000493116 /* FileListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BCEB0242D1C429000493116 /* FileListView.swift */; };
 		0BD0568B2BC6202900EBC7C4 /* DiskiCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD0568A2BC6202900EBC7C4 /* DiskiCloud.swift */; };
 		0BD056912BC6340800EBC7C4 /* BtnEvict.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD056902BC6340800EBC7C4 /* BtnEvict.swift */; };
 		0BD651072CA4264300BA3CB8 /* SuperEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD651062CA4264000BA3CB8 /* SuperEvent.swift */; };
@@ -213,7 +213,11 @@
 		F5C2C7592D1CF1A40094157C /* FileIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C2C7582D1CF1A40094157C /* FileIconView.swift */; };
 		F5C2C75B2D1CF1F50094157C /* FileItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C2C75A2D1CF1F50094157C /* FileItemViewModel.swift */; };
 		F5C2C75D2D1CF8300094157C /* FileInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C2C75C2D1CF8300094157C /* FileInfoView.swift */; };
-		F5C2C75F2D1D0D770094157C /* TableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C2C75E2D1D0D770094157C /* TableHeaderView.swift */; };
+		F5C2C7612D1D22680094157C /* FileItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C2C7602D1D22680094157C /* FileItem.swift */; };
+		F5C2C7632D1D22840094157C /* FileTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C2C7622D1D22840094157C /* FileTitleView.swift */; };
+		F5C2C7652D1D2ACA0094157C /* FileSizeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C2C7642D1D2ACA0094157C /* FileSizeView.swift */; };
+		F5C2C7672D1D2DCD0094157C /* FileStatusColumnView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C2C7662D1D2DCD0094157C /* FileStatusColumnView.swift */; };
+		F5C2C7692D1D41380094157C /* FileExpandButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C2C7682D1D41380094157C /* FileExpandButton.swift */; };
 		F5C2EB7E2D1AB49700798B46 /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = F5C2EB7D2D1AB49700798B46 /* AlertToast */; };
 		F5C2EB812D1AB51100798B46 /* MagicKit in Frameworks */ = {isa = PBXBuildFile; productRef = F5C2EB802D1AB51100798B46 /* MagicKit */; };
 		F5C2EB832D1AC16900798B46 /* ConfigProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C2EB822D1AC16500798B46 /* ConfigProvider.swift */; };
@@ -328,7 +332,7 @@
 		0BC29EAE2CA5893800E4813F /* HeroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroView.swift; sourceTree = "<group>"; };
 		0BC29EB22CA59E8B00E4813F /* SliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderView.swift; sourceTree = "<group>"; };
 		0BCEB0222D1C3F9400493116 /* DirectoryStatusChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectoryStatusChecker.swift; sourceTree = "<group>"; };
-		0BCEB0242D1C429000493116 /* FileItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileItemView.swift; sourceTree = "<group>"; };
+		0BCEB0242D1C429000493116 /* FileListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileListView.swift; sourceTree = "<group>"; };
 		0BD0568A2BC6202900EBC7C4 /* DiskiCloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskiCloud.swift; sourceTree = "<group>"; };
 		0BD056902BC6340800EBC7C4 /* BtnEvict.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnEvict.swift; sourceTree = "<group>"; };
 		0BD651062CA4264000BA3CB8 /* SuperEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperEvent.swift; sourceTree = "<group>"; };
@@ -433,7 +437,11 @@
 		F5C2C7582D1CF1A40094157C /* FileIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileIconView.swift; sourceTree = "<group>"; };
 		F5C2C75A2D1CF1F50094157C /* FileItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileItemViewModel.swift; sourceTree = "<group>"; };
 		F5C2C75C2D1CF8300094157C /* FileInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileInfoView.swift; sourceTree = "<group>"; };
-		F5C2C75E2D1D0D770094157C /* TableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableHeaderView.swift; sourceTree = "<group>"; };
+		F5C2C7602D1D22680094157C /* FileItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileItem.swift; sourceTree = "<group>"; };
+		F5C2C7622D1D22840094157C /* FileTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTitleView.swift; sourceTree = "<group>"; };
+		F5C2C7642D1D2ACA0094157C /* FileSizeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileSizeView.swift; sourceTree = "<group>"; };
+		F5C2C7662D1D2DCD0094157C /* FileStatusColumnView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileStatusColumnView.swift; sourceTree = "<group>"; };
+		F5C2C7682D1D41380094157C /* FileExpandButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileExpandButton.swift; sourceTree = "<group>"; };
 		F5C2EB822D1AC16500798B46 /* ConfigProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigProvider.swift; sourceTree = "<group>"; };
 		F5D3EF0E2D06B5F000548889 /* PlayManDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayManDelegate.swift; sourceTree = "<group>"; };
 		F5D3EF102D06B7D300548889 /* AudioConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioConfig.swift; sourceTree = "<group>"; };
@@ -976,13 +984,17 @@
 		F5C2C7572D1CE99E0094157C /* FileInfo */ = {
 			isa = PBXGroup;
 			children = (
-				F5C2C75E2D1D0D770094157C /* TableHeaderView.swift */,
 				0BCEB0222D1C3F9400493116 /* DirectoryStatusChecker.swift */,
+				F5C2C7682D1D41380094157C /* FileExpandButton.swift */,
 				F5C2C7582D1CF1A40094157C /* FileIconView.swift */,
 				F5C2C75C2D1CF8300094157C /* FileInfoView.swift */,
-				0BCEB0242D1C429000493116 /* FileItemView.swift */,
+				F5C2C7602D1D22680094157C /* FileItem.swift */,
 				F5C2C75A2D1CF1F50094157C /* FileItemViewModel.swift */,
+				0BCEB0242D1C429000493116 /* FileListView.swift */,
+				F5C2C7642D1D2ACA0094157C /* FileSizeView.swift */,
 				F5C2C7442D1BF59A0094157C /* FileStatus.swift */,
+				F5C2C7662D1D2DCD0094157C /* FileStatusColumnView.swift */,
+				F5C2C7622D1D22840094157C /* FileTitleView.swift */,
 			);
 			path = FileInfo;
 			sourceTree = "<group>";
@@ -1125,6 +1137,7 @@
 				0BB889D72AC046B5004788D5 /* BtnShowInFinder.swift in Sources */,
 				F53BE0322C202420003CBA29 /* DiskFile.swift in Sources */,
 				F54DFA582CA4E59B00F81BE3 /* VideoLayout.swift in Sources */,
+				F5C2C7612D1D22680094157C /* FileItem.swift in Sources */,
 				0BEE7C6F2CA8343800DC1DCF /* CopyStatusView.swift in Sources */,
 				F59DC6F22CB4C3140052AEC8 /* RestoreView.swift in Sources */,
 				0B22158E2BB6BC8F000EB36F /* SmartProgress.swift in Sources */,
@@ -1142,7 +1155,6 @@
 				F518F7052C35210300844E62 /* ChapterTile.swift in Sources */,
 				0BE6959E2BFE3DCC00CEFFEB /* MySubscription.swift in Sources */,
 				F59DC6F42CB4D8F10052AEC8 /* PlayingCover.swift in Sources */,
-				F5C2C75F2D1D0D770094157C /* TableHeaderView.swift in Sources */,
 				F54DFA6D2CA4FCB500F81BE3 /* BookDBView.swift in Sources */,
 				0BD056912BC6340800EBC7C4 /* BtnEvict.swift in Sources */,
 				0BE695A02BFE3DCC00CEFFEB /* OneTimeView.swift in Sources */,
@@ -1155,6 +1167,7 @@
 				F507F5172C09541B00CB9A3A /* DeviceSetting.swift in Sources */,
 				F5C2C7452D1BF59A0094157C /* FileStatus.swift in Sources */,
 				0B1498792BC4DF940075DA61 /* AudioJob.swift in Sources */,
+				F5C2C7652D1D2ACA0094157C /* FileSizeView.swift in Sources */,
 				0BBA421F2AC1397F00C0B977 /* Centered.swift in Sources */,
 				0B0FA2292D034867004D4D41 /* AudioPlugin.swift in Sources */,
 				0BE695C02C01E88E00CEFFEB /* DeviceData.swift in Sources */,
@@ -1192,7 +1205,7 @@
 				0BE6959B2BFE3DCC00CEFFEB /* BuyButtonStyle.swift in Sources */,
 				F518F6F02C33919600844E62 /* BookTileBackup.swift in Sources */,
 				0B9FA29B2BC81F53007B235A /* DefaultAlbum.swift in Sources */,
-				0BCEB0252D1C429000493116 /* FileItemView.swift in Sources */,
+				0BCEB0252D1C429000493116 /* FileListView.swift in Sources */,
 				0B1498742BC4C5CB0075DA61 /* PlayMode.swift in Sources */,
 				0B6B8B992BBA39F500F65B23 /* ControlButton.swift in Sources */,
 				0B1D5A842AB302610010DDF2 /* Extensions.swift in Sources */,
@@ -1216,6 +1229,7 @@
 				0BB889DB2AC06C54004788D5 /* AudioRecordDB.swift in Sources */,
 				F54DFA5A2CA4E5C800F81BE3 /* BookLayout.swift in Sources */,
 				0BBA42192ABD5D9200C0B977 /* BtnMode.swift in Sources */,
+				F5C2C7672D1D2DCD0094157C /* FileStatusColumnView.swift in Sources */,
 				0BA9FB6E2BFE155B008074CB /* CoverDirSetting.swift in Sources */,
 				F59DC6F02CB4C2050052AEC8 /* Feature.swift in Sources */,
 				0B8C36B42BEC6EAB00C47567 /* ViewExt.swift in Sources */,
@@ -1266,6 +1280,7 @@
 				0BBC157C2AB84C21006E82C4 /* MainView.swift in Sources */,
 				F5511BCA2C2BACC000400900 /* TopView.swift in Sources */,
 				0BB9D2462C32E4F20027DDAD /* DBViewNavigation.swift in Sources */,
+				F5C2C7692D1D41380094157C /* FileExpandButton.swift in Sources */,
 				F5675C402C25456300326664 /* DataProvider.swift in Sources */,
 				0B382A9A2D1AED960075391C /* SettingPluginView.swift in Sources */,
 				0B901D8A2BB83E28003AC253 /* ItemQuery.swift in Sources */,
@@ -1286,6 +1301,7 @@
 				F518F6F92C34ECEF00844E62 /* BookSync.swift in Sources */,
 				F52A98FB2C43AA63003559F1 /* AudioPoster.swift in Sources */,
 				0B59FF3E2C2F108500F04728 /* DirScene.swift in Sources */,
+				F5C2C7632D1D22840094157C /* FileTitleView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1318,7 +1334,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.4;
 				MARKETING_VERSION = 2.6.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.yueyi.cisum;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1362,7 +1378,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.4;
 				MARKETING_VERSION = 2.6.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.yueyi.cisum;
 				PRODUCT_NAME = "$(TARGET_NAME)";

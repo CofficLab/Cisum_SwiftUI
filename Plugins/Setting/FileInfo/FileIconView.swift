@@ -3,14 +3,15 @@ import MagicKit
 
 struct FileIconView: View {
     let url: URL
-    let isDirectory: Bool
-    let downloadStatus: FileStatus.DownloadStatus?
-    let isProcessing: Bool
+    
+    // 计算属性：判断是否为目录
+    private var isDirectory: Bool {
+        (try? url.resourceValues(forKeys: [.isDirectoryKey]))?.isDirectory ?? false
+    }
     
     private var fileIcon: String {
         // 如果是目录，返回文件夹图标
         if isDirectory {
-            // 检查是否为 iCloud 目录
             if let values = try? url.resourceValues(forKeys: [.isUbiquitousItemKey]),
                values.isUbiquitousItem == true {
                 return "icloud.fill"
@@ -35,54 +36,26 @@ struct FileIconView: View {
         }
     }
     
-    private var statusIcon: String {
-        if let status = downloadStatus {
-            switch status {
-            case .notDownloaded:
-                return "icloud.and.arrow.down"
-            case .checking, .checkingDirectory:
-                return "arrow.triangle.2.circlepath"
-            case .downloading:
-                return "arrow.down.circle"
-            case .downloaded, .local:
-                return fileIcon
-            case .directoryStatus:
-                return fileIcon
-            }
-        }
-        return fileIcon
-    }
-    
     var body: some View {
-        Group {
-            if let status = downloadStatus {
-                switch status {
-                case .local, .downloaded:
-                    Image(systemName: statusIcon)
-                        .foregroundColor(.accentColor)
-                case .downloading:
-                    Image(systemName: statusIcon)
-                        .foregroundColor(status.color)
-                        .if(isProcessing) { view in
-                            view.rotationEffect(.degrees(360))
-                                .animation(
-                                    .linear(duration: 1.0)
-                                    .repeatForever(autoreverses: false),
-                                    value: isProcessing
-                                )
-                        }
-                case .notDownloaded:
-                    Image(systemName: statusIcon)
-                        .foregroundColor(status.color)
-                default:
-                    Image(systemName: statusIcon)
-                        .foregroundColor(status.color)
-                }
-            } else {
-                Image(systemName: statusIcon)
-                    .foregroundColor(.secondary)
-            }
-        }
-        .animation(.easeInOut(duration: 0.2), value: downloadStatus)
+        Image(systemName: fileIcon)
+            .foregroundColor(.secondary)
     }
-} 
+}
+
+extension Notification.Name {
+    static let fileStatusUpdated = Notification.Name("fileStatusUpdated")
+}
+
+extension View {
+    @ViewBuilder
+    func `if`<Transform: View>(
+        _ condition: Bool,
+        transform: (Self) -> Transform
+    ) -> some View {
+        if condition {
+            transform(self)
+        } else {
+            self
+        }
+    }
+}
