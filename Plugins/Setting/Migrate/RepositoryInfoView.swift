@@ -43,8 +43,6 @@ struct RepositoryInfoView: View {
 
             Spacer()
 
-            Text(location.title)
-
             if let root = url {
                 BtnOpenFolder(url: root).labelStyle(.iconOnly)
             }
