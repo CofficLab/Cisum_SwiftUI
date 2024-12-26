@@ -7,6 +7,7 @@ struct FileItemView: View {
     let rootURL: URL
     let level: Int
     let isExpanded: Bool
+    let showDownloadStatus: Bool
     
     @StateObject private var viewModel: FileItemViewModel
     
@@ -18,15 +19,21 @@ struct FileItemView: View {
         fileStatus: FileStatus?,
         rootURL: URL,
         level: Int = 0,
-        isExpanded: Bool = false
+        isExpanded: Bool = false,
+        showDownloadStatus: Bool = false
     ) {
         self.file = file
         self.fileStatus = fileStatus
         self.rootURL = rootURL
         self.level = level
         self.isExpanded = isExpanded
+        self.showDownloadStatus = showDownloadStatus
         let fileURL = rootURL.appendingPathComponent(file)
-        _viewModel = StateObject(wrappedValue: FileItemViewModel(url: fileURL, isExpanded: isExpanded))
+        _viewModel = StateObject(wrappedValue: FileItemViewModel(
+            url: fileURL,
+            isExpanded: isExpanded,
+            shouldCheckStatus: showDownloadStatus
+        ))
     }
     
     private func formatFileSize(_ bytes: Int64) -> String {
@@ -104,7 +111,8 @@ struct FileItemView: View {
                 FileInfoView(
                     itemSize: viewModel.itemSize,
                     downloadStatus: viewModel.downloadStatus,
-                    isProcessing: fileStatus?.status == .processing
+                    isProcessing: fileStatus?.status == .processing,
+                    showDownloadStatus: showDownloadStatus
                 )
             }
             .padding(.vertical, 2)
@@ -143,14 +151,17 @@ struct FileItemView: View {
                         file: subURL.lastPathComponent,
                         fileStatus: nil,
                         rootURL: subURL.deletingLastPathComponent(),
-                        level: level + 1
+                        level: level + 1,
+                        showDownloadStatus: showDownloadStatus
                     )
                     .transition(.opacity)
                 }
             }
         }
         .task {
-            await viewModel.checkStatus()
+            if showDownloadStatus {
+                await viewModel.checkStatus()
+            }
         }
     }
 }

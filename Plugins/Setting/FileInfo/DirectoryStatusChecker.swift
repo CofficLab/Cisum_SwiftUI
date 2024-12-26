@@ -7,6 +7,9 @@ class DirectoryStatusChecker: ObservableObject, SuperLog, SuperThread {
     
     @Published private(set) var isChecking = false
     
+    // 添加一个通知来传递子项目状态更新
+    static let subItemStatusUpdated = Notification.Name("DirectoryStatusChecker.subItemStatusUpdated")
+    
     func checkDirectoryStatus(
         _ url: URL,
         downloadProgressCallback: DownloadProgressCallback? = nil
@@ -14,15 +17,13 @@ class DirectoryStatusChecker: ObservableObject, SuperLog, SuperThread {
         await MainActor.run { isChecking = true }
         defer { Task { @MainActor in isChecking = false } }
         
-        let resourceValues = try? url.resourceValues(forKeys: [
-            .ubiquitousItemIsDownloadingKey,
-            .ubiquitousItemDownloadingStatusKey,
-            .ubiquitousItemDownloadingErrorKey,
-            .isDirectoryKey
-        ])
-        
         let fileName = url.lastPathComponent
         os_log(.info, "\(self.t)开始检查目录: \(fileName)")
+        
+        // 先返回检查中状态
+        await MainActor.run {
+            downloadProgressCallback?(fileName, .checking)
+        }
         
         do {
             let contents = try FileManager.default.contentsOfDirectory(
@@ -33,50 +34,63 @@ class DirectoryStatusChecker: ObservableObject, SuperLog, SuperThread {
                 ]
             )
             
-            os_log(.info, "\(self.t)目录 \(fileName) 包含 \(contents.count) 个项目")
-            
-            // 检查所有子项的下载状态
-            var hasNotDownloaded = false
-            var isAnyDownloading = false
-            var downloadingProgress: [Double] = []
-            var downloaded = 0
-            var downloading = 0
-            var notDownloaded = 0
-            
-            for (index, item) in contents.enumerated() {
-                // 更新检查进度状态
-                await MainActor.run {
-                    downloadProgressCallback?(fileName, .checkingDirectory(fileName, index + 1, contents.count))
+            // 创建一个任务组来并行检查所有子项目
+            let directoryStatus = await withTaskGroup(of: (String, FileStatus.DownloadStatus).self) { group -> FileStatus.DownloadStatus in
+                for item in contents {
+                    group.addTask {
+                        let status = await self.checkItemStatus(
+                            item,
+                            downloadProgressCallback: downloadProgressCallback
+                        )
+                        return (item.path, status)
+                    }
                 }
                 
-                os_log(.info, "\(self.t)检查目录 \(fileName) 的第 \(index + 1)/\(contents.count) 个项目")
-                let itemStatus = await checkItemStatus(item, downloadProgressCallback: downloadProgressCallback)
-                switch itemStatus {
-                case .notDownloaded:
-                    hasNotDownloaded = true
-                    notDownloaded += 1
-                case .downloading(let progress):
-                    isAnyDownloading = true
-                    downloadingProgress.append(progress)
-                    downloading += 1
-                case .downloaded, .local:
-                    downloaded += 1
-                case .directoryStatus(_, let subDownloaded, let subDownloading, let subNotDownloaded):
-                    downloaded += subDownloaded
-                    downloading += subDownloading
-                    notDownloaded += subNotDownloaded
-                default:
-                    break
+                // 收集所有子项目的状态
+                var statuses: [String: FileStatus.DownloadStatus] = [:]
+                for await (path, status) in group {
+                    statuses[path] = status
+                    // 发送子项目状态更新通知
+                    await MainActor.run {
+                        NotificationCenter.default.post(
+                            name: Self.subItemStatusUpdated,
+                            object: (path, status)
+                        )
+                    }
                 }
+                
+                // 计算目录状态
+                var downloaded = 0
+                var downloading = 0
+                var notDownloaded = 0
+                
+                for status in statuses.values {
+                    switch status {
+                    case .notDownloaded:
+                        notDownloaded += 1
+                    case .downloading:
+                        downloading += 1
+                    case .downloaded, .local:
+                        downloaded += 1
+                    case .directoryStatus(_, let subDownloaded, let subDownloading, let subNotDownloaded):
+                        downloaded += subDownloaded
+                        downloading += subDownloading
+                        notDownloaded += subNotDownloaded
+                    default:
+                        break
+                    }
+                }
+                
+                return .directoryStatus(
+                    total: contents.count,
+                    downloaded: downloaded,
+                    downloading: downloading,
+                    notDownloaded: notDownloaded
+                )
             }
             
-            // 返回目录状态
-            return .directoryStatus(
-                total: contents.count,
-                downloaded: downloaded,
-                downloading: downloading,
-                notDownloaded: notDownloaded
-            )
+            return directoryStatus
+            
         } catch {
             os_log(.error, "\(self.t)检查目录失败: \(fileName) - \(error.localizedDescription)")
             return .local

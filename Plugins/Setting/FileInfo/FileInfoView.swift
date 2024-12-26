@@ -5,6 +5,19 @@ struct FileInfoView: View {
     let itemSize: Int64
     let downloadStatus: FileStatus.DownloadStatus?
     let isProcessing: Bool
+    let showDownloadStatus: Bool
+    
+    init(
+        itemSize: Int64,
+        downloadStatus: FileStatus.DownloadStatus?,
+        isProcessing: Bool,
+        showDownloadStatus: Bool = false
+    ) {
+        self.itemSize = itemSize
+        self.downloadStatus = downloadStatus
+        self.isProcessing = isProcessing
+        self.showDownloadStatus = showDownloadStatus
+    }
     
     private func formatFileSize(_ bytes: Int64) -> String {
         let units = ["B", "KB", "MB", "GB", "TB"]
@@ -28,7 +41,7 @@ struct FileInfoView: View {
                 .frame(minWidth: 60, alignment: .trailing)
             
             // 状态描述
-            if let status = downloadStatus {
+            if let status = downloadStatus, showDownloadStatus {
                 Text(status.description)
                     .font(.caption)
                     .foregroundColor(status.color)
@@ -51,13 +64,15 @@ struct FileInfoView: View {
         FileInfoView(
             itemSize: 1024 * 1024,
             downloadStatus: .downloading(progress: 0.5),
-            isProcessing: true
+            isProcessing: true,
+            showDownloadStatus: true
         )
         
         FileInfoView(
             itemSize: 2048 * 1024 * 1024,
             downloadStatus: .downloaded,
-            isProcessing: false
+            isProcessing: false,
+            showDownloadStatus: false
         )
         
         FileInfoView(
@@ -68,7 +83,8 @@ struct FileInfoView: View {
                 downloading: 2,
                 notDownloaded: 3
             ),
-            isProcessing: false
+            isProcessing: false,
+            showDownloadStatus: true
         )
     }
     .padding()

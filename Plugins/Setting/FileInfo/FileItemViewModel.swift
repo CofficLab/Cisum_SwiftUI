@@ -19,10 +19,16 @@ class FileItemViewModel: ObservableObject {
     private let statusChecker = DirectoryStatusChecker()
     let url: URL
     let isDirectory: Bool
+    let shouldCheckStatus: Bool
 
-    init(url: URL, isExpanded: Bool = false) {
+    init(
+        url: URL,
+        isExpanded: Bool = false,
+        shouldCheckStatus: Bool = true
+    ) {
         self.url = url
         self.isExpanded = isExpanded
+        self.shouldCheckStatus = shouldCheckStatus
 
         // 检查是否为目录
         var isDir: ObjCBool = false
@@ -34,7 +40,7 @@ class FileItemViewModel: ObservableObject {
             loadSubItems()
         }
 
-        // 异计算大小
+        // 异步计算大小
         Task {
             await calculateSize()
         }
@@ -95,6 +101,9 @@ class FileItemViewModel: ObservableObject {
     }
 
     func checkStatus() async {
+        // 如果不需要检查状态，直接返回
+        guard shouldCheckStatus else { return }
+        
         // 如果是目录，先检查是否只包含被忽略的文件
         if isDirectory {
             let hasNonIgnoredFiles = subItems.contains { url in

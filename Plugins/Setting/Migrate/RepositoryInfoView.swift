@@ -20,7 +20,8 @@ struct RepositoryInfoView: View {
                     file: url.lastPathComponent,
                     fileStatus: nil,
                     rootURL: url.deletingLastPathComponent(),
-                    isExpanded: true
+                    isExpanded: true,
+                    showDownloadStatus: true
                 )
                 .padding(.horizontal)
             }

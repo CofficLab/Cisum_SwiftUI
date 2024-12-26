@@ -19,6 +19,7 @@ struct MigrationProgressView: View {
     @State private var currentMigratingFile = ""
     @State private var showConfirmation = true // 用于显示确认对话框
     @State private var migrationCompleted = false // 添加新状态变量
+    @State private var migrationCancelled = false  // 添加新状态来跟踪取消状态
 
     // 添加 errorAlertMessage 计算属性
     var errorAlertMessage: String {
@@ -87,7 +88,7 @@ struct MigrationProgressView: View {
                                 Text("• 如果源数据在iCloud中且有未下载的文件，需要等待下载完成")
                                 Text("• 迁移过程中请勿关闭应用")
                                 Text("• 取消迁移可能导致数据不完整")
-                                Text("• 请确保目标位置有足够的存储空间")
+                                Text("• 请保目标位置有足够的存储空间")
                             }
                             .font(.caption)
                             .foregroundColor(.secondary)
@@ -98,32 +99,7 @@ struct MigrationProgressView: View {
 
                     // 只在非确认状态下显示迁移状态
                     if !showConfirmation {
-                        GroupBox {
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text("迁移状态")
-                                    .font(.headline)
-                                    .foregroundColor(.primary)
-
-                                if migrationCompleted {
-                                    Text("迁移已完成")
-                                        .font(.subheadline)
-                                        .foregroundColor(.green)
-                                } else if let errorMessage = errorMessage {
-                                    Text("迁移出现问题: \(errorMessage)")
-                                        .font(.subheadline)
-                                        .foregroundColor(.red)
-                                } else {
-                                    Text("迁移中...")
-                                        .font(.subheadline)
-                                        .foregroundColor(.blue)
-                                }
-
-                                ProgressView(value: migrationProgress)
-                                    .padding(.top, 4)
-                            }
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical)
-                        }
+                        migrationStatusView
                     }
                 }
                 .padding()
@@ -171,13 +147,18 @@ struct MigrationProgressView: View {
                         },
                         verbose: true
                     )
+                } else {
+                    // 如果选择不迁移，直接标记为取消
+                    await MainActor.run {
+                        self.migrationCancelled = true
+                    }
                 }
                 
                 // 更新存储位置
                 await MainActor.run {
                     c.updateStorageLocation(targetLocation)
-                    self.migrationCompleted = true
-                    self.currentMigratingFile = "迁移完成"
+                    self.migrationCompleted = shouldMigrate  // 只有在实际迁移时才标记为完成
+                    self.currentMigratingFile = shouldMigrate ? "迁移完成" : "迁移已取消"
                 }
             } catch {
                 await MainActor.run {
@@ -235,7 +216,7 @@ struct MigrationProgressView: View {
         } else {
             // 更新当前处理的文件状态
             if let index = processedFiles.firstIndex(where: { $0.name == fileName }) {
-                // 当前文件设置为��理中，保持下载状态不变
+                // 当前文件设置为处理中，保持下载状态不变
                 processedFiles[index] = FileStatus(
                     name: fileName, 
                     status: .processing,
@@ -266,7 +247,7 @@ struct MigrationProgressView: View {
         }
     }
 
-    // 将按钮部分提取为单��的视图
+    // 将按钮部分提取为单独的视图
     private var confirmationButtons: some View {
         VStack(spacing: 16) {
             Text("是否将现有数据迁移到新位置？")
@@ -295,7 +276,7 @@ struct MigrationProgressView: View {
     private var actionButtons: some View {
         Group {
             if errorMessage == nil {
-                if migrationCompleted {
+                if migrationCompleted || migrationCancelled {
                     Button("完成") {
                         onDismiss()
                     }
@@ -339,6 +320,50 @@ struct MigrationProgressView: View {
                     onDismiss()
                 }
             }
+        }
+    }
+
+    // 修改状态显示部分
+    private var migrationStatusView: some View {
+        GroupBox {
+            VStack(alignment: .leading, spacing: 8) {
+                Text("迁移状态")
+                    .font(.headline)
+                    .foregroundColor(.primary)
+
+                if migrationCompleted {
+                    Text("迁移已完成")
+                        .font(.subheadline)
+                        .foregroundColor(.green)
+                } else if migrationCancelled {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("迁移已取消")
+                            .font(.subheadline)
+                            .foregroundColor(.orange)
+                        
+                        Button("重试迁移") {
+                            migrationCancelled = false
+                            showConfirmation = true
+                        }
+                        .buttonStyle(.borderedProminent)
+                    }
+                } else if let errorMessage = errorMessage {
+                    Text("迁移出现问题: \(errorMessage)")
+                        .font(.subheadline)
+                        .foregroundColor(.red)
+                } else {
+                    Text("迁移中...")
+                        .font(.subheadline)
+                        .foregroundColor(.blue)
+                }
+
+                if !migrationCancelled {
+                    ProgressView(value: migrationProgress)
+                        .padding(.top, 4)
+                }
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical)
         }
     }
 }
