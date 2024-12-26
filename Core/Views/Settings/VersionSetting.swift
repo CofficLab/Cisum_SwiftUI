@@ -3,7 +3,7 @@ import MagicKit
 
 struct VersionSetting: View, SuperSetting {
     var body: some View {
-        makeSettingView(title: "版本") {
+        makeSettingView(title: "🔮 版本") {
             if let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
                 Text(appVersion)
                     .font(.footnote)
@@ -13,7 +13,6 @@ struct VersionSetting: View, SuperSetting {
         }
     }
 }
-
 #Preview {
     VersionSetting()
 }

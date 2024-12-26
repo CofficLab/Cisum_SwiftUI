@@ -217,7 +217,6 @@
 		F5C2C7672D1D2DCD0094157C /* FileStatusColumnView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C2C7662D1D2DCD0094157C /* FileStatusColumnView.swift */; };
 		F5C2C7692D1D41380094157C /* FileExpandButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C2C7682D1D41380094157C /* FileExpandButton.swift */; };
 		F5C2C76B2D1D52860094157C /* RadioButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C2C76A2D1D52860094157C /* RadioButton.swift */; };
-		F5C2C76D2D1D5C980094157C /* MigrationConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C2C76C2D1D5C980094157C /* MigrationConfirmationView.swift */; };
 		F5C2C76F2D1D5F230094157C /* MigrationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C2C76E2D1D5F230094157C /* MigrationError.swift */; };
 		F5C2EB7E2D1AB49700798B46 /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = F5C2EB7D2D1AB49700798B46 /* AlertToast */; };
 		F5C2EB812D1AB51100798B46 /* MagicKit in Frameworks */ = {isa = PBXBuildFile; productRef = F5C2EB802D1AB51100798B46 /* MagicKit */; };
@@ -442,7 +441,6 @@
 		F5C2C7662D1D2DCD0094157C /* FileStatusColumnView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileStatusColumnView.swift; sourceTree = "<group>"; };
 		F5C2C7682D1D41380094157C /* FileExpandButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileExpandButton.swift; sourceTree = "<group>"; };
 		F5C2C76A2D1D52860094157C /* RadioButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioButton.swift; sourceTree = "<group>"; };
-		F5C2C76C2D1D5C980094157C /* MigrationConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationConfirmationView.swift; sourceTree = "<group>"; };
 		F5C2C76E2D1D5F230094157C /* MigrationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationError.swift; sourceTree = "<group>"; };
 		F5C2EB822D1AC16500798B46 /* ConfigProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigProvider.swift; sourceTree = "<group>"; };
 		F5D3EF0E2D06B5F000548889 /* PlayManDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayManDelegate.swift; sourceTree = "<group>"; };
@@ -978,7 +976,6 @@
 			isa = PBXGroup;
 			children = (
 				F5C2C76E2D1D5F230094157C /* MigrationError.swift */,
-				F5C2C76C2D1D5C980094157C /* MigrationConfirmationView.swift */,
 				F5C2C7482D1C141D0094157C /* MigrationManager.swift */,
 				F5C2C7402D1BB50B0094157C /* MigrationProgressView.swift */,
 				F5C2C7422D1BF57A0094157C /* RepositoryInfoView.swift */,
@@ -1141,7 +1138,6 @@
 				F54DFA582CA4E59B00F81BE3 /* VideoLayout.swift in Sources */,
 				F5C2C7612D1D22680094157C /* FileItem.swift in Sources */,
 				0BEE7C6F2CA8343800DC1DCF /* CopyStatusView.swift in Sources */,
-				F5C2C76D2D1D5C980094157C /* MigrationConfirmationView.swift in Sources */,
 				F59DC6F22CB4C3140052AEC8 /* RestoreView.swift in Sources */,
 				0B22158E2BB6BC8F000EB36F /* SmartProgress.swift in Sources */,
 				F573B18C2C042E08004C34CC /* DeviceExt.swift in Sources */,

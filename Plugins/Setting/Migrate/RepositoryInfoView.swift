@@ -16,7 +16,6 @@ struct RepositoryInfoView: View {
                         url: url,
                         expandByDefault: true
                     )
-                    .padding(.horizontal)
                     .frame(maxHeight: .infinity)
                 }
                 .background(Color.secondary.opacity(0.02))

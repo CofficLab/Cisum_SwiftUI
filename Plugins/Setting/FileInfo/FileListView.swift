@@ -62,16 +62,10 @@ struct FileListView: View, SuperLog {
                     }
                 }
             }
-            .width(min: 80)
+            .width(min: 120)
 
             TableColumn("大小") { item in
                 FileSizeView(url: item.url)
-            }
-            .width(80)
-
-            TableColumn("种类") { item in
-                Text("")
-                    .foregroundColor(.secondary)
             }
             .width(80)
 

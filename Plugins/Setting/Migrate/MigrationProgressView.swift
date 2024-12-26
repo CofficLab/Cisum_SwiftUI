@@ -38,78 +38,62 @@ struct MigrationProgressView: View {
     }
 
     var body: some View {
-        VStack(spacing: 16) {
-            // 标题固定在顶部
-            Text("数据迁移")
-                .font(.title2)
-                .fontWeight(.bold)
-                .padding(.top)
-
-            VStack(spacing: 16) {
-                GroupBox {
-                    // 源仓库
-                    RepositoryInfoView(
-                        title: "源仓库",
-                        location: sourceLocation,
-                        url: sourceURL
-                    ).frame(height: 300)
-                }
-
-                Group {
-                    HStack {
-                        Spacer()
-                        Image(systemName: "arrow.down")
-                            .foregroundColor(.secondary)
-                            .imageScale(.large)
-                            .font(.system(size: 16))
-                        Spacer()
-                    }
-                }
-
-                GroupBox {
-                    // 目标仓库
-                    RepositoryInfoView(
-                        title: "目标仓库",
-                        location: targetLocation,
-                        url: targetURL
-                    ).frame(height: 250)
-                }
-
-                GroupBox {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("⚠️ 重要提示：")
-                            .font(.subheadline)
-                            .foregroundColor(.orange)
-
-                        Group {
-                            Text("• 迁移时间取决于数据量大小，可能需要较长时间")
-                            Text("• 如果源数据在iCloud中且有未下载的文件，需要等待下载完成")
-                            Text("• 迁移过程中请勿关闭应用")
-                            Text("• 取消迁移可能导致数据不完整")
-                            Text("• 请保目标位置有足够的存储空间")
-                        }
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical)
-                }
-
-                // 只在非确认状态下显示迁移状态
-                if !showConfirmation {
-                    migrationStatusView
-                }
+        VStack(spacing: 5) {
+            GroupBox {
+                RepositoryInfoView(
+                    title: "源仓库",
+                    location: sourceLocation,
+                    url: sourceURL
+                ).frame(height: 200)
             }
-            .padding()
 
-            // 底部按钮固定在底部
+            HStack {
+                Spacer()
+                Image(systemName: "arrow.down")
+                    .foregroundColor(.secondary)
+                    .imageScale(.large)
+                    .font(.system(size: 12))
+                Spacer()
+            }
+
+            GroupBox {
+                RepositoryInfoView(
+                    title: "目标仓库",
+                    location: targetLocation,
+                    url: targetURL
+                ).frame(height: 200)
+            }
+
+            GroupBox {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("⚠️ 重要提示：")
+                        .font(.subheadline)
+                        .foregroundColor(.orange)
+
+                    Group {
+                        Text("• 如果源数据在 iCloud 中且有未下载的文件，需要等待下载完成，可能需要较长时间")
+                        Text("• 迁移过程中请勿关闭应用，取消迁移可能导致数据不完整")
+                        Text("• 迁移数据：将现有数据迁移到新位置")
+                        Text("• 直接使用：直接使用新位置，原有数据保持不变").foregroundStyle(.primary)
+                        Text("• 取消操作：保持原位置不变")
+                    }
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                }.frame(maxWidth: .infinity)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.horizontal)
+
+            if !showConfirmation {
+                migrationStatusView.padding(.horizontal)
+            }
+
             if showConfirmation {
                 confirmationButtons
             } else {
                 actionButtons
             }
         }
-        .frame(width: 800, height: 1200)
         .onAppear {
             loadSourceFiles()
             loadTargetFiles()
@@ -244,19 +228,30 @@ struct MigrationProgressView: View {
         }
     }
 
-    // 将按钮部分提取为单独的视图
     private var confirmationButtons: some View {
-        MigrationConfirmationView(
-            onConfirm: {
-                showConfirmation = false
-                startMigration(shouldMigrate: true)
-            },
-            onSkipMigration: {
+        HStack(spacing: 48) {
+            Button("取消操作") {
+                onDismiss()
+            }
+            .buttonStyle(.bordered)
+            .help("保持原位置不变")
+
+            Button("直接使用") {
                 showConfirmation = false
                 startMigration(shouldMigrate: false)
-            },
-            onCancel: onDismiss
-        )
+            }
+            .buttonStyle(.borderedProminent)
+            .help("直接使用新位置，原有数据保持不变")
+
+            Button("迁移数据") {
+                showConfirmation = false
+                startMigration(shouldMigrate: true)
+            }
+            .buttonStyle(.bordered)
+            .help("将现有数据迁移到新位置")
+        }
+        .padding()
+        .frame(maxWidth: 500)
     }
 
     private var actionButtons: some View {
@@ -349,7 +344,7 @@ struct MigrationProgressView: View {
                 }
             }
             .frame(maxWidth: .infinity)
-            .padding(.vertical)
+            .padding()
         }
     }
 }

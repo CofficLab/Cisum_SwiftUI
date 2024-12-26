@@ -18,7 +18,7 @@ extension SuperSetting {
                         Spacer()
                         trailing()
                     }
-                    content()
+                    content().font(.footnote)
                 }
                 Spacer()
             }
