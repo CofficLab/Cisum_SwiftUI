@@ -101,7 +101,6 @@
 		0BC29EA92CA4599500E4813F /* PluginProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC29EA82CA4599500E4813F /* PluginProvider.swift */; };
 		0BC29EAF2CA5893800E4813F /* HeroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC29EAE2CA5893800E4813F /* HeroView.swift */; };
 		0BC29EB32CA59E8B00E4813F /* SliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC29EB22CA59E8B00E4813F /* SliderView.swift */; };
-		0BCEB0232D1C3F9400493116 /* DirectoryStatusChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BCEB0222D1C3F9400493116 /* DirectoryStatusChecker.swift */; };
 		0BCEB0252D1C429000493116 /* FileListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BCEB0242D1C429000493116 /* FileListView.swift */; };
 		0BD0568B2BC6202900EBC7C4 /* DiskiCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD0568A2BC6202900EBC7C4 /* DiskiCloud.swift */; };
 		0BD056912BC6340800EBC7C4 /* BtnEvict.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD056902BC6340800EBC7C4 /* BtnEvict.swift */; };
@@ -211,13 +210,15 @@
 		F5C2C7452D1BF59A0094157C /* FileStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C2C7442D1BF59A0094157C /* FileStatus.swift */; };
 		F5C2C7492D1C141D0094157C /* MigrationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C2C7482D1C141D0094157C /* MigrationManager.swift */; };
 		F5C2C7592D1CF1A40094157C /* FileIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C2C7582D1CF1A40094157C /* FileIconView.swift */; };
-		F5C2C75B2D1CF1F50094157C /* FileItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C2C75A2D1CF1F50094157C /* FileItemViewModel.swift */; };
 		F5C2C75D2D1CF8300094157C /* FileInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C2C75C2D1CF8300094157C /* FileInfoView.swift */; };
 		F5C2C7612D1D22680094157C /* FileItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C2C7602D1D22680094157C /* FileItem.swift */; };
 		F5C2C7632D1D22840094157C /* FileTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C2C7622D1D22840094157C /* FileTitleView.swift */; };
 		F5C2C7652D1D2ACA0094157C /* FileSizeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C2C7642D1D2ACA0094157C /* FileSizeView.swift */; };
 		F5C2C7672D1D2DCD0094157C /* FileStatusColumnView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C2C7662D1D2DCD0094157C /* FileStatusColumnView.swift */; };
 		F5C2C7692D1D41380094157C /* FileExpandButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C2C7682D1D41380094157C /* FileExpandButton.swift */; };
+		F5C2C76B2D1D52860094157C /* RadioButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C2C76A2D1D52860094157C /* RadioButton.swift */; };
+		F5C2C76D2D1D5C980094157C /* MigrationConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C2C76C2D1D5C980094157C /* MigrationConfirmationView.swift */; };
+		F5C2C76F2D1D5F230094157C /* MigrationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C2C76E2D1D5F230094157C /* MigrationError.swift */; };
 		F5C2EB7E2D1AB49700798B46 /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = F5C2EB7D2D1AB49700798B46 /* AlertToast */; };
 		F5C2EB812D1AB51100798B46 /* MagicKit in Frameworks */ = {isa = PBXBuildFile; productRef = F5C2EB802D1AB51100798B46 /* MagicKit */; };
 		F5C2EB832D1AC16900798B46 /* ConfigProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C2EB822D1AC16500798B46 /* ConfigProvider.swift */; };
@@ -331,7 +332,6 @@
 		0BC29EA82CA4599500E4813F /* PluginProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginProvider.swift; sourceTree = "<group>"; };
 		0BC29EAE2CA5893800E4813F /* HeroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroView.swift; sourceTree = "<group>"; };
 		0BC29EB22CA59E8B00E4813F /* SliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderView.swift; sourceTree = "<group>"; };
-		0BCEB0222D1C3F9400493116 /* DirectoryStatusChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectoryStatusChecker.swift; sourceTree = "<group>"; };
 		0BCEB0242D1C429000493116 /* FileListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileListView.swift; sourceTree = "<group>"; };
 		0BD0568A2BC6202900EBC7C4 /* DiskiCloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskiCloud.swift; sourceTree = "<group>"; };
 		0BD056902BC6340800EBC7C4 /* BtnEvict.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnEvict.swift; sourceTree = "<group>"; };
@@ -435,13 +435,15 @@
 		F5C2C7442D1BF59A0094157C /* FileStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileStatus.swift; sourceTree = "<group>"; };
 		F5C2C7482D1C141D0094157C /* MigrationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationManager.swift; sourceTree = "<group>"; };
 		F5C2C7582D1CF1A40094157C /* FileIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileIconView.swift; sourceTree = "<group>"; };
-		F5C2C75A2D1CF1F50094157C /* FileItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileItemViewModel.swift; sourceTree = "<group>"; };
 		F5C2C75C2D1CF8300094157C /* FileInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileInfoView.swift; sourceTree = "<group>"; };
 		F5C2C7602D1D22680094157C /* FileItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileItem.swift; sourceTree = "<group>"; };
 		F5C2C7622D1D22840094157C /* FileTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTitleView.swift; sourceTree = "<group>"; };
 		F5C2C7642D1D2ACA0094157C /* FileSizeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileSizeView.swift; sourceTree = "<group>"; };
 		F5C2C7662D1D2DCD0094157C /* FileStatusColumnView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileStatusColumnView.swift; sourceTree = "<group>"; };
 		F5C2C7682D1D41380094157C /* FileExpandButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileExpandButton.swift; sourceTree = "<group>"; };
+		F5C2C76A2D1D52860094157C /* RadioButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioButton.swift; sourceTree = "<group>"; };
+		F5C2C76C2D1D5C980094157C /* MigrationConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationConfirmationView.swift; sourceTree = "<group>"; };
+		F5C2C76E2D1D5F230094157C /* MigrationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationError.swift; sourceTree = "<group>"; };
 		F5C2EB822D1AC16500798B46 /* ConfigProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigProvider.swift; sourceTree = "<group>"; };
 		F5D3EF0E2D06B5F000548889 /* PlayManDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayManDelegate.swift; sourceTree = "<group>"; };
 		F5D3EF102D06B7D300548889 /* AudioConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioConfig.swift; sourceTree = "<group>"; };
@@ -551,6 +553,7 @@
 		0B4788992D1ADCA400E984C5 /* Setting */ = {
 			isa = PBXGroup;
 			children = (
+				F5C2C76A2D1D52860094157C /* RadioButton.swift */,
 				F5C2C7572D1CE99E0094157C /* FileInfo */,
 				F5C2C7562D1CDF6D0094157C /* Migrate */,
 				0B4788A02D1ADE3200E984C5 /* SettingPlugin.swift */,
@@ -974,6 +977,8 @@
 		F5C2C7562D1CDF6D0094157C /* Migrate */ = {
 			isa = PBXGroup;
 			children = (
+				F5C2C76E2D1D5F230094157C /* MigrationError.swift */,
+				F5C2C76C2D1D5C980094157C /* MigrationConfirmationView.swift */,
 				F5C2C7482D1C141D0094157C /* MigrationManager.swift */,
 				F5C2C7402D1BB50B0094157C /* MigrationProgressView.swift */,
 				F5C2C7422D1BF57A0094157C /* RepositoryInfoView.swift */,
@@ -984,12 +989,10 @@
 		F5C2C7572D1CE99E0094157C /* FileInfo */ = {
 			isa = PBXGroup;
 			children = (
-				0BCEB0222D1C3F9400493116 /* DirectoryStatusChecker.swift */,
 				F5C2C7682D1D41380094157C /* FileExpandButton.swift */,
 				F5C2C7582D1CF1A40094157C /* FileIconView.swift */,
 				F5C2C75C2D1CF8300094157C /* FileInfoView.swift */,
 				F5C2C7602D1D22680094157C /* FileItem.swift */,
-				F5C2C75A2D1CF1F50094157C /* FileItemViewModel.swift */,
 				0BCEB0242D1C429000493116 /* FileListView.swift */,
 				F5C2C7642D1D2ACA0094157C /* FileSizeView.swift */,
 				F5C2C7442D1BF59A0094157C /* FileStatus.swift */,
@@ -1117,7 +1120,6 @@
 				0B9EA3592C21B41C00A4059A /* PlayAsset.swift in Sources */,
 				F54DFA522CA4E41600F81BE3 /* VideoApp.swift in Sources */,
 				F59DC6EE2CB4C1FD0052AEC8 /* Plan.swift in Sources */,
-				0BCEB0232D1C3F9400493116 /* DirectoryStatusChecker.swift in Sources */,
 				F54DFA612CA4E81200F81BE3 /* VideoControl.swift in Sources */,
 				F518F7012C34FB0400844E62 /* BookState.swift in Sources */,
 				0B4788A12D1ADE3200E984C5 /* SettingPlugin.swift in Sources */,
@@ -1139,6 +1141,7 @@
 				F54DFA582CA4E59B00F81BE3 /* VideoLayout.swift in Sources */,
 				F5C2C7612D1D22680094157C /* FileItem.swift in Sources */,
 				0BEE7C6F2CA8343800DC1DCF /* CopyStatusView.swift in Sources */,
+				F5C2C76D2D1D5C980094157C /* MigrationConfirmationView.swift in Sources */,
 				F59DC6F22CB4C3140052AEC8 /* RestoreView.swift in Sources */,
 				0B22158E2BB6BC8F000EB36F /* SmartProgress.swift in Sources */,
 				F573B18C2C042E08004C34CC /* DeviceExt.swift in Sources */,
@@ -1146,9 +1149,11 @@
 				0BB5871B2AD81AFA0071AEBD /* ViewHelper.swift in Sources */,
 				0BAB7C3F2AD3BBAA00C5AEB5 /* DBTips.swift in Sources */,
 				F586DCD52C2BFE9E0078580B /* BtnOpenFolder.swift in Sources */,
+				F5C2C76F2D1D5F230094157C /* MigrationError.swift in Sources */,
 				0B5786342BCB8DC00064F66A /* PlayView.swift in Sources */,
 				0B1D5A882AB302610010DDF2 /* ContentView.swift in Sources */,
 				0BE6959C2BFE3DCC00CEFFEB /* BuyView.swift in Sources */,
+				F5C2C76B2D1D52860094157C /* RadioButton.swift in Sources */,
 				F5ADFF682D195D52003CF664 /* CopyRootView.swift in Sources */,
 				0B718F0C2AB4349900569762 /* CardView.swift in Sources */,
 				0BFDCB802AB86AF300B0D1C8 /* MenuTile.swift in Sources */,
@@ -1247,7 +1252,6 @@
 				F545D1732C1FC9F0006A6AFA /* CloudSetting.swift in Sources */,
 				F5C2C7492D1C141D0094157C /* MigrationManager.swift in Sources */,
 				F52A98F22C410C41003559F1 /* BookUpdate.swift in Sources */,
-				F5C2C75B2D1CF1F50094157C /* FileItemViewModel.swift in Sources */,
 				0B8C36B02BEC6E6500C47567 /* DBExt.swift in Sources */,
 				0B9FA2992BC81EFF007B235A /* NotDownloadedAlbum.swift in Sources */,
 				0BBC158D2ABAC0C7006E82C4 /* BtnToggle.swift in Sources */,

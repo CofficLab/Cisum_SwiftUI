@@ -9,21 +9,9 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread {
     static var emoji: String = "👵"
     
     @Published private(set) var isCancelled = false
-    private let statusChecker = DirectoryStatusChecker()
     
     func cancelMigration() {
         isCancelled = true
-    }
-    
-    func checkFileDownloadStatus(
-        _ url: URL,
-        isRecursive: Bool = true,
-        downloadProgressCallback: DownloadProgressCallback? = nil
-    ) async -> FileStatus.DownloadStatus {
-        return await statusChecker.checkItemStatus(
-            url,
-            downloadProgressCallback: downloadProgressCallback
-        )
     }
     
     func migrate(
@@ -59,37 +47,6 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread {
 
                 let progress = Double(index + 1) / Double(files.count)
                 let fileName = sourceFile.lastPathComponent
-                
-                // 通知正在检查状态
-                await MainActor.run {
-                    downloadProgressCallback?(fileName, .checking(current: index + 1, total: files.count))
-                }
-                
-                os_log(.info, "\(self.t)检查文件下载状态: \(fileName)")
-                let downloadStatus = await self.checkFileDownloadStatus(
-                    sourceFile,
-                    downloadProgressCallback: downloadProgressCallback
-                )
-                
-                // 通知下载状态
-                await MainActor.run {
-                    downloadProgressCallback?(fileName, downloadStatus)
-                }
-                
-                if case .notDownloaded = downloadStatus {
-                    os_log(.info, "\(self.t)开始下载文件: \(fileName)")
-                    try FileManager.default.startDownloadingUbiquitousItem(at: sourceFile)
-                }
-                
-                // 等待并报告下载进度
-                while case .downloading = await self.checkFileDownloadStatus(sourceFile) {
-                    let currentStatus = await self.checkFileDownloadStatus(sourceFile)
-                    await MainActor.run {
-                        downloadProgressCallback?(fileName, currentStatus)
-                    }
-                    os_log(.info, "\(self.t)等待文件下载完成: \(fileName)")
-                    try await Task.sleep(nanoseconds: 500_000_000)
-                }
                 
                 os_log(.info, "\(self.t)开始迁移文件: \(fileName) (\(index + 1)/\(files.count))")
                 

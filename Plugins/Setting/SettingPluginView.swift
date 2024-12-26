@@ -1,12 +1,15 @@
 import SwiftUI
 import MagicKit
+import OSLog
 
-struct SettingPluginView: View, SuperSetting {
+struct SettingPluginView: View, SuperSetting, SuperLog {
+    static var emoji: String = "🍴"
+    
     @EnvironmentObject var c: ConfigProvider
     @State private var showMigrationProgress = false
     @State private var tempStorageLocation: StorageLocation
     @State private var hasChanges = false
-    @State var diskSize: String?
+    @State private var storageRoot: URL?
     
     init() {
         _tempStorageLocation = State(initialValue: .local)
@@ -28,6 +31,10 @@ struct SettingPluginView: View, SuperSetting {
                         AnyView(
                             HStack {
                                 Text("推荐").font(.footnote)
+                                
+                                if c.storageLocation == .icloud {
+                                    Text("当前").font(.footnote)
+                                }
                             }
                         )
                     }
@@ -41,25 +48,34 @@ struct SettingPluginView: View, SuperSetting {
                     isSelected: Binding(
                         get: { tempStorageLocation == .local },
                         set: { _ in tempStorageLocation = .local }
-                    )
+                    ),
+                    trailing: {
+                        AnyView(
+                            HStack {
+                                if c.storageLocation == .local {
+                                    Text("当前").font(.footnote)
+                                }
+                            }
+                        )
+                    }
                 )
 
                 // 自定义目录选项
-                RadioButton(
-                    text: "自定义目录",
-                    description: "选择您想要存储的位置",
-                    url: c.getStorageRoot(for: .custom),
-                    isSelected: Binding(
-                        get: { tempStorageLocation == .custom },
-                        set: { _ in tempStorageLocation = .custom }
-                    )
-                )
+//                RadioButton(
+//                    text: "自定义目录",
+//                    description: "选择您想要存储的位置",
+//                    url: c.getStorageRoot(for: .custom),
+//                    isSelected: Binding(
+//                        get: { tempStorageLocation == .custom },
+//                        set: { _ in tempStorageLocation = .custom }
+//                    )
+//                )
 
                 // 添加保存按钮
                 Button(action: {
                     showMigrationProgress = true
                 }) {
-                    Text("保存更改")
+                    Text("准备迁移")
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.borderedProminent)
@@ -74,6 +90,10 @@ struct SettingPluginView: View, SuperSetting {
                     targetURL: c.getStorageRoot(for: tempStorageLocation),
                     onDismiss: {
                         showMigrationProgress = false
+                        self.hasChanges = tempStorageLocation != c.storageLocation
+                        storageRoot = c.getStorageRoot()
+
+                        os_log("\(self.t) Current Storage Root \(storageRoot?.path ?? "nil")")
                     }
                 )
             }
@@ -81,100 +101,20 @@ struct SettingPluginView: View, SuperSetting {
             .onAppear {
                 tempStorageLocation = c.storageLocation ?? .local
                 hasChanges = false
+                storageRoot = c.getStorageRoot()
             }
             .onChange(of: tempStorageLocation) { newValue in
                 hasChanges = newValue != (c.storageLocation ?? .local)
+                storageRoot = c.getStorageRoot()
             }
         } trailing: {
             HStack {
-                if let diskSize = diskSize {
-                    Text(diskSize)
+                if let root = storageRoot {
+                    FileSizeView(url: root)
+                        .id(root.path)
+                    BtnOpenFolder(url: root).labelStyle(.iconOnly)
                 }
             }
-        }
-        .task {
-            if let root = c.getStorageRoot() {
-                diskSize = FileHelper.getFileSizeReadable(root)
-            }
-        }
-    }
-}
-
-// 自定义 RadioButton 组件
-struct RadioButton: View {
-    let title: String
-    let description: String
-    let url: URL?
-    let isSelected: Binding<Bool>
-    let trailing: (() -> AnyView)?
-
-    init(
-        text: String,
-        description: String,
-        url: URL?,
-        isSelected: Binding<Bool>,
-        trailing: (() -> AnyView)? = nil
-    ) {
-        self.title = text
-        self.description = description
-        self.url = url
-        self.isSelected = isSelected
-        self.trailing = trailing
-    }
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack(alignment: .top, spacing: 8) {
-                Image(systemName: isSelected.wrappedValue ? "circle.inset.filled" : "circle")
-                    .foregroundColor(isSelected.wrappedValue ? .accentColor : .secondary)
-                    .imageScale(.medium)
-                    .padding(.top, 2)
-
-                VStack(alignment: .leading, spacing: 4) {
-                    VStack(alignment: .leading, spacing: 4) {
-                        HStack {
-                            Text(title)
-                                .font(.headline)
-
-                            Spacer()
-
-                            if let trailing {
-                                trailing()
-                            }
-                        }
-                        .padding(.bottom)
-
-                        Text(description)
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                            .padding(.bottom)
-                        
-                        HStack {
-                            Text(url?.path ?? "未设置路径")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                                .fixedSize(horizontal: false, vertical: true)
-                                .lineLimit(nil)
-                            Spacer()
-                            
-                            if let url = url {
-                                BtnOpenFolder(url: url).labelStyle(.iconOnly)
-                            }
-                        }
-                        .padding(8)
-                        .background(BackgroundView.type2A.opacity(0.2))
-                        .cornerRadius(6)
-                    }
-                }
-            }
-            .contentShape(Rectangle())
-            .onTapGesture {
-                isSelected.wrappedValue = true
-            }
-
-            Divider()
-                .background(.background)
-                .padding(.top, 4)
         }
     }
 }

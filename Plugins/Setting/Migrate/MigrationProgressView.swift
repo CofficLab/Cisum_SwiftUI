@@ -109,7 +109,7 @@ struct MigrationProgressView: View {
                 actionButtons
             }
         }
-        .frame(width: 800, height: 1000)
+        .frame(width: 800, height: 1200)
         .onAppear {
             loadSourceFiles()
             loadTargetFiles()
@@ -145,17 +145,17 @@ struct MigrationProgressView: View {
                         verbose: true
                     )
                 } else {
-                    // 如果选择不迁移，直接标记为取消
+                    // 如果选择直接使用，立即将进度设置为 100%
                     await MainActor.run {
-                        self.migrationCancelled = true
+                        self.migrationProgress = 1.0
                     }
                 }
 
                 // 更新存储位置
                 await MainActor.run {
                     c.updateStorageLocation(targetLocation)
-                    self.migrationCompleted = shouldMigrate // 只有在实际迁移时才标记为完成
-                    self.currentMigratingFile = shouldMigrate ? "迁移完成" : "迁移已取消"
+                    self.migrationCompleted = true
+                    self.currentMigratingFile = shouldMigrate ? "迁移完成" : "已切换到新位置"
                 }
             } catch {
                 await MainActor.run {
@@ -246,28 +246,17 @@ struct MigrationProgressView: View {
 
     // 将按钮部分提取为单独的视图
     private var confirmationButtons: some View {
-        VStack(spacing: 16) {
-            Text("是否将现有数据迁移到新位置？")
-                .font(.headline)
-            Text("选择\"不迁移\"将在新位置创建空白仓库。")
-                .font(.caption)
-                .foregroundColor(.secondary)
-
-            HStack(spacing: 16) {
-                Button("迁移数据") {
-                    showConfirmation = false
-                    startMigration(shouldMigrate: true)
-                }
-                .buttonStyle(.borderedProminent)
-
-                Button("不迁移") {
-                    showConfirmation = false
-                    startMigration(shouldMigrate: false)
-                }
-                .buttonStyle(.bordered)
-            }
-        }
-        .padding(.bottom)
+        MigrationConfirmationView(
+            onConfirm: {
+                showConfirmation = false
+                startMigration(shouldMigrate: true)
+            },
+            onSkipMigration: {
+                showConfirmation = false
+                startMigration(shouldMigrate: false)
+            },
+            onCancel: onDismiss
+        )
     }
 
     private var actionButtons: some View {
@@ -306,7 +295,7 @@ struct MigrationProgressView: View {
         if let window = NSApp.keyWindow {
             let alert = NSAlert()
             alert.messageText = "确要取消迁移吗？"
-            alert.informativeText = "取消迁移可能会导致数据不完整，建议等待迁移完成。"
+            alert.informativeText = "取消迁移能会导致数据不完整，建议等待迁移完成。"
             alert.alertStyle = .warning
             alert.addButton(withTitle: "继续迁移")
             alert.addButton(withTitle: "确定取消")

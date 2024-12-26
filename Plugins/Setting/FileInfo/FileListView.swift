@@ -13,6 +13,15 @@ struct FileListView: View, SuperLog {
     @State private var visibleItems: [FileItem] = []
     @State private var itemCache: [URL: [FileItem]] = [:]
 
+    // 添加忽略文件列表
+    private let ignoredFiles = [
+        ".DS_Store",
+        ".git",
+        ".svn",
+        "__pycache__",
+        "node_modules"
+    ]
+
     init(url: URL, expandByDefault: Bool = false) {
         self.url = url
         self.expandByDefault = expandByDefault
@@ -61,8 +70,7 @@ struct FileListView: View, SuperLog {
             .width(80)
 
             TableColumn("种类") { item in
-                let viewModel = FileItemViewModel(url: item.url, isExpanded: false, shouldCheckStatus: true)
-                Text(viewModel.fileType)
+                Text("")
                     .foregroundColor(.secondary)
             }
             .width(80)
@@ -86,12 +94,22 @@ struct FileListView: View, SuperLog {
 
     private func cacheChildItems(for item: FileItem) {
         guard let children = item.children() else { return }
+        
+        // 过滤掉需要忽略的文件，并按名称排序
+        let filteredChildren = children
+            .filter { child in
+                !ignoredFiles.contains(child.url.lastPathComponent)
+            }
+            .sorted { item1, item2 in
+                item1.url.lastPathComponent.localizedStandardCompare(item2.url.lastPathComponent) == .orderedAscending
+            }
+        
         var newCache = self.itemCache
-        newCache[item.url] = children
+        newCache[item.url] = filteredChildren
         self.setItemCache(newCache)
 
         // 递归缓存子文件夹的内容
-        for child in children {
+        for child in filteredChildren {
             if (try? child.url.resourceValues(forKeys: [.isDirectoryKey]).isDirectory) == true {
                 self.cacheChildItems(for: child)
             }
@@ -121,7 +139,7 @@ struct FileListView: View, SuperLog {
 
             if rootItem.isExpanded {
                 func addItems(from item: FileItem) {
-                    // 使用缓存的子项目
+                    // 使用缓存的子��目
                     if let cachedChildren = itemCache[item.url] {
                         for child in cachedChildren {
                             let isExpanded = expandedItems.contains { $0.url == child.url }
