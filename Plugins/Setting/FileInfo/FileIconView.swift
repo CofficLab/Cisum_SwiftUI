@@ -5,7 +5,7 @@ struct FileIconView: View {
     let url: URL
     let isDirectory: Bool
     let downloadStatus: FileStatus.DownloadStatus?
-    let fileStatus: FileStatus?
+    let isProcessing: Bool
     
     private var fileIcon: String {
         // 如果是目录，返回文件夹图标
@@ -63,12 +63,12 @@ struct FileIconView: View {
                 case .downloading:
                     Image(systemName: statusIcon)
                         .foregroundColor(status.color)
-                        .if(fileStatus?.status == .processing) { view in
+                        .if(isProcessing) { view in
                             view.rotationEffect(.degrees(360))
                                 .animation(
                                     .linear(duration: 1.0)
                                     .repeatForever(autoreverses: false),
-                                    value: fileStatus?.status
+                                    value: isProcessing
                                 )
                         }
                 case .notDownloaded:

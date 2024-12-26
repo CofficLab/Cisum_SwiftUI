@@ -15,6 +15,7 @@ class FileItemViewModel: ObservableObject {
     @Published private(set) var subItems: [URL] = []
     @Published var isExpanded: Bool
     @Published private(set) var itemSize: Int64 = 0
+    @Published private(set) var isProcessing: Bool = false
 
     private let statusChecker = DirectoryStatusChecker()
     let url: URL

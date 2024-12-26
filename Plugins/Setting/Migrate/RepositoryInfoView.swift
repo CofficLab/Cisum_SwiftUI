@@ -16,14 +16,20 @@ struct RepositoryInfoView: View {
             
             // 文件列表
             if let url = url {
-                FileItemView(
-                    file: url.lastPathComponent,
-                    fileStatus: nil,
-                    rootURL: url.deletingLastPathComponent(),
-                    isExpanded: true,
-                    showDownloadStatus: true
-                )
-                .padding(.horizontal)
+                VStack(spacing: 0) {
+                    // 添加表头
+                    TableHeaderView()
+                    
+                    // 文件列表
+                    FileItemView(
+                        url: url,
+                        isExpanded: true,
+                        showDownloadStatus: true
+                    )
+                    .padding(.horizontal)
+                }
+                .background(Color.secondary.opacity(0.02))
+                .cornerRadius(6)
             }
         }
     }
