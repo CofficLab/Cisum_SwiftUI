@@ -42,8 +42,8 @@ struct FileStatus: Identifiable {
     
     enum DownloadStatus: Equatable {
         case notDownloaded
-        case checking
-        case checkingDirectory(String, Int, Int)  // 目录名, 当前项目, 总项目数
+        case checking(current: Int, total: Int)  // 修改 checking 状态，添加进度信息
+        case checkingDirectory(String, Int, Int)  // 目录名，当前项，总项数
         case downloading(progress: Double)
         case downloaded
         case local
@@ -74,8 +74,12 @@ struct FileStatus: Identifiable {
                 return "未下载"
             case .downloading(let progress):
                 return "下载中 \(Int(progress * 100))%"
-            case .checking:
-                return "检查中"
+            case .checking(let current, let total):
+                if total > 0 {
+                    return "检查中 (\(current)/\(total))"
+                } else {
+                    return "检查中"
+                }
             case .checkingDirectory(let name, let current, let total):
                 return "正在检查目录 \(name) (\(current)/\(total))"
             case .directoryStatus(let total, let downloaded, let downloading, let notDownloaded):

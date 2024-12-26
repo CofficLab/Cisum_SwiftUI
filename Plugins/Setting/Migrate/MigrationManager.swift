@@ -62,7 +62,7 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread {
                 
                 // 通知正在检查状态
                 await MainActor.run {
-                    downloadProgressCallback?(fileName, .checking)
+                    downloadProgressCallback?(fileName, .checking(current: index + 1, total: files.count))
                 }
                 
                 os_log(.info, "\(self.t)检查文件下载状态: \(fileName)")

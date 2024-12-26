@@ -20,11 +20,6 @@ class DirectoryStatusChecker: ObservableObject, SuperLog, SuperThread {
         let fileName = url.lastPathComponent
         os_log(.info, "\(self.t)开始检查目录: \(fileName)")
         
-        // 先返回检查中状态
-        await MainActor.run {
-            downloadProgressCallback?(fileName, .checking)
-        }
-        
         do {
             let contents = try FileManager.default.contentsOfDirectory(
                 at: url,
@@ -36,6 +31,14 @@ class DirectoryStatusChecker: ObservableObject, SuperLog, SuperThread {
             
             // 创建一个任务组来并行检查所有子项目
             let directoryStatus = await withTaskGroup(of: (String, FileStatus.DownloadStatus).self) { group -> FileStatus.DownloadStatus in
+                var checkedCount = 0
+                let totalCount = contents.count
+                
+                // 先通知开始检查
+                await MainActor.run {
+                    downloadProgressCallback?(fileName, .checking(current: checkedCount, total: totalCount))
+                }
+                
                 for item in contents {
                     group.addTask {
                         let status = await self.checkItemStatus(
@@ -49,13 +52,17 @@ class DirectoryStatusChecker: ObservableObject, SuperLog, SuperThread {
                 // 收集所有子项目的状态
                 var statuses: [String: FileStatus.DownloadStatus] = [:]
                 for await (path, status) in group {
+                    checkedCount += 1
                     statuses[path] = status
+                    
                     // 发送子项目状态更新通知
                     await MainActor.run {
                         NotificationCenter.default.post(
                             name: Self.subItemStatusUpdated,
                             object: (path, status)
                         )
+                        // 更新目录检查进度
+                        downloadProgressCallback?(fileName, .checking(current: checkedCount, total: totalCount))
                     }
                 }
                 
@@ -102,6 +109,26 @@ class DirectoryStatusChecker: ObservableObject, SuperLog, SuperThread {
         downloadProgressCallback: DownloadProgressCallback? = nil,
         verbose: Bool = false
     ) async -> FileStatus.DownloadStatus {
+        // 获取所有需要检查的项目
+        var itemsToCheck: [URL] = []
+        if let enumerator = FileManager.default.enumerator(
+            at: url,
+            includingPropertiesForKeys: [.isDirectoryKey],
+            options: []
+        ) {
+            for case let itemURL as URL in enumerator {
+                itemsToCheck.append(itemURL)
+            }
+        }
+        
+        let totalItems = itemsToCheck.count
+        var currentItem = 0
+        
+        // 更新检查状态
+        await MainActor.run {
+            downloadProgressCallback?(url.lastPathComponent, .checking(current: currentItem, total: totalItems))
+        }
+        
         let resourceValues = try? url.resourceValues(forKeys: [
             .ubiquitousItemIsDownloadingKey,
             .ubiquitousItemDownloadingStatusKey,
@@ -114,10 +141,21 @@ class DirectoryStatusChecker: ObservableObject, SuperLog, SuperThread {
         
         // 如果是目录，递归检查
         if isDirectory {
-            return await checkDirectoryStatus(url, downloadProgressCallback: downloadProgressCallback)
+            return await checkDirectoryStatus(
+                url,
+                downloadProgressCallback: { name, status in
+                    currentItem += 1
+                    downloadProgressCallback?(name, status)
+                }
+            )
         }
         
         // 单个文件的检查逻辑
+        currentItem += 1
+        await MainActor.run {
+            downloadProgressCallback?(fileName, .checking(current: currentItem, total: totalItems))
+        }
+        
         if resourceValues?.ubiquitousItemDownloadingStatus == .current {
             if verbose {
                 os_log(.debug, "\(self.t)文件 \(fileName) 状态: 已下载完成")
@@ -143,7 +181,7 @@ class DirectoryStatusChecker: ObservableObject, SuperLog, SuperThread {
             } else {
                 query.stop()
                 if verbose {
-                    os_log(.info, "\(self.t)文件 \(fileName) 状态: 正在下载 (进度: 0%)")
+                    os_log(.info, "\(self.t)文件 \(fileName) 状态: 在下载 (进度: 0%)")
                 }
                 return .downloading(progress: 0)
             }

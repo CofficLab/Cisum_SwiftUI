@@ -1,12 +1,12 @@
-import SwiftUI
 import MagicKit
+import SwiftUI
 
 struct FileInfoView: View {
     let itemSize: Int64
     let downloadStatus: FileStatus.DownloadStatus?
     let isProcessing: Bool
     let showDownloadStatus: Bool
-    
+
     init(
         itemSize: Int64,
         downloadStatus: FileStatus.DownloadStatus?,
@@ -18,28 +18,22 @@ struct FileInfoView: View {
         self.isProcessing = isProcessing
         self.showDownloadStatus = showDownloadStatus
     }
-    
+
     private func formatFileSize(_ bytes: Int64) -> String {
         let units = ["B", "KB", "MB", "GB", "TB"]
         var size = Double(bytes)
         var unitIndex = 0
-        
+
         while size >= 1024 && unitIndex < units.count - 1 {
             size /= 1024
             unitIndex += 1
         }
-        
+
         return String(format: "%.1f %@", size, units[unitIndex])
     }
-    
+
     var body: some View {
         HStack(spacing: 8) {
-            // 文件大小
-            Text(formatFileSize(itemSize))
-                .font(.caption)
-                .foregroundColor(.secondary)
-                .frame(minWidth: 60, alignment: .trailing)
-            
             // 状态描述
             if let status = downloadStatus, showDownloadStatus {
                 Text(status.description)
@@ -48,12 +42,17 @@ struct FileInfoView: View {
                     .frame(minWidth: 80, alignment: .trailing)
                     .transition(.opacity)
             }
+            // 文件大小
+            Text(formatFileSize(itemSize))
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .frame(minWidth: 60, alignment: .trailing)
         }
         .padding(.horizontal, 4)
         .background(
-            isProcessing ? 
-            Color.accentColor.opacity(0.1) : 
-            Color.clear
+            isProcessing ?
+                Color.accentColor.opacity(0.1) :
+                Color.clear
         )
         .cornerRadius(4)
     }
@@ -67,14 +66,14 @@ struct FileInfoView: View {
             isProcessing: true,
             showDownloadStatus: true
         )
-        
+
         FileInfoView(
             itemSize: 2048 * 1024 * 1024,
             downloadStatus: .downloaded,
             isProcessing: false,
             showDownloadStatus: false
         )
-        
+
         FileInfoView(
             itemSize: 3 * 1024 * 1024 * 1024,
             downloadStatus: .directoryStatus(
@@ -88,4 +87,4 @@ struct FileInfoView: View {
         )
     }
     .padding()
-} 
+}
