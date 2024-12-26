@@ -20,6 +20,7 @@ struct MigrationProgressView: View {
     @State private var showConfirmation = true // 用于显示确认对话框
     @State private var migrationCompleted = false // 添加新状态变量
     @State private var migrationCancelled = false // 添加新状态来跟踪取消状态
+    @State private var showCancelConfirmation = false
 
     // 添加 errorAlertMessage 计算属性
     var errorAlertMessage: String {
@@ -264,9 +265,18 @@ struct MigrationProgressView: View {
                     .buttonStyle(.borderedProminent)
                 } else {
                     Button("取消迁移") {
-                        showCancelAlert()
+                        showCancelConfirmation = true
                     }
                     .buttonStyle(.borderless)
+                    .alert("确要取消迁移吗？", isPresented: $showCancelConfirmation) {
+                        Button("继续迁移", role: .cancel) { }
+                        Button("确定取消", role: .destructive) {
+                            migrationManager.cancelMigration()
+                            onDismiss()
+                        }
+                    } message: {
+                        Text("取消迁移能会导致数据不完整，建议等待迁移完成。")
+                    }
                 }
             } else {
                 HStack(spacing: 16) {
@@ -284,24 +294,6 @@ struct MigrationProgressView: View {
             }
         }
         .padding(.bottom)
-    }
-
-    private func showCancelAlert() {
-        if let window = NSApp.keyWindow {
-            let alert = NSAlert()
-            alert.messageText = "确要取消迁移吗？"
-            alert.informativeText = "取消迁移能会导致数据不完整，建议等待迁移完成。"
-            alert.alertStyle = .warning
-            alert.addButton(withTitle: "继续迁移")
-            alert.addButton(withTitle: "确定取消")
-
-            alert.beginSheetModal(for: window) { response in
-                if response == .alertSecondButtonReturn {
-                    migrationManager.cancelMigration()
-                    onDismiss()
-                }
-            }
-        }
     }
 
     // 修改状态显示部分

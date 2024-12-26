@@ -28,6 +28,7 @@
 		0B220F732BB1A3D70077255A /* ControlBtns.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B220F722BB1A3D70077255A /* ControlBtns.swift */; };
 		0B220F752BB1BBDB0077255A /* SmartError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B220F742BB1BBDB0077255A /* SmartError.swift */; };
 		0B22158E2BB6BC8F000EB36F /* SmartProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B22158D2BB6BC8F000EB36F /* SmartProgress.swift */; };
+		0B27EAE72D1D9E9E00242B78 /* MagicKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0B27EAE62D1D9E9E00242B78 /* MagicKit */; };
 		0B382A9A2D1AED960075391C /* SettingPluginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B382A992D1AED920075391C /* SettingPluginView.swift */; };
 		0B382A9C2D1AF6160075391C /* SettingRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B382A9B2D1AF6160075391C /* SettingRootView.swift */; };
 		0B382A9F2D1C2F3B0075391C /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = 0B382A9E2D1C2F3B0075391C /* AlertToast */; };
@@ -466,6 +467,7 @@
 				F5AF31952D1B8D41000448F0 /* MagicKit in Frameworks */,
 				F5C2EB7E2D1AB49700798B46 /* AlertToast in Frameworks */,
 				0B382A9F2D1C2F3B0075391C /* AlertToast in Frameworks */,
+				0B27EAE72D1D9E9E00242B78 /* MagicKit in Frameworks */,
 				F566BD742D1B8EE0005D7F54 /* AlertToast in Frameworks */,
 				F53ED8DA2D19098300F8E42D /* MagicKit in Frameworks */,
 				F500793F2CA635B900C9D3D4 /* MagicKit in Frameworks */,
@@ -1026,6 +1028,7 @@
 				F5AF31942D1B8D41000448F0 /* MagicKit */,
 				F566BD732D1B8EE0005D7F54 /* AlertToast */,
 				0B382A9E2D1C2F3B0075391C /* AlertToast */,
+				0B27EAE62D1D9E9E00242B78 /* MagicKit */,
 			);
 			productName = Cisum;
 			productReference = 0B1D5A4B2AB301AD0010DDF2 /* Cisum.app */;
@@ -1060,7 +1063,7 @@
 			packageReferences = (
 				0B00F4652BB840C1000833B9 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */,
 				0B382A9D2D1C2F3B0075391C /* XCRemoteSwiftPackageReference "MagicMessage" */,
-				0B382AA02D1C302C0075391C /* XCRemoteSwiftPackageReference "MagicKit" */,
+				0B27EAE82D1DA12A00242B78 /* XCRemoteSwiftPackageReference "MagicKit" */,
 			);
 			productRefGroup = 0B9C1C3E2AAF18FE001A26AF /* Products */;
 			projectDirPath = "";
@@ -1555,17 +1558,17 @@
 				version = 0.1.0;
 			};
 		};
-		0B382A9D2D1C2F3B0075391C /* XCRemoteSwiftPackageReference "MagicMessage" */ = {
+		0B27EAE82D1DA12A00242B78 /* XCRemoteSwiftPackageReference "MagicKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/nookery/MagicMessage.git";
+			repositoryURL = "https://github.com/CofficLab/MagicKit";
 			requirement = {
 				branch = main;
 				kind = branch;
 			};
 		};
-		0B382AA02D1C302C0075391C /* XCRemoteSwiftPackageReference "MagicKit" */ = {
+		0B382A9D2D1C2F3B0075391C /* XCRemoteSwiftPackageReference "MagicMessage" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/CofficLab/MagicKit";
+			repositoryURL = "https://github.com/nookery/MagicMessage.git";
 			requirement = {
 				branch = main;
 				kind = branch;
@@ -1578,6 +1581,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 0B00F4652BB840C1000833B9 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */;
 			productName = AsyncAlgorithms;
+		};
+		0B27EAE62D1D9E9E00242B78 /* MagicKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MagicKit;
 		};
 		0B382A9E2D1C2F3B0075391C /* AlertToast */ = {
 			isa = XCSwiftPackageProductDependency;

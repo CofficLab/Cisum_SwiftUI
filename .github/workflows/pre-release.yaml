@@ -4,11 +4,11 @@ on:
   push:
     tags:
       - '*p_stop'
-  workflow_run:
-    workflows:
-      - 'Pre Bump'
-    types:
-      - completed
+  # workflow_run:
+  #   workflows:
+  #     - 'Pre Bump'
+  #   types:
+  #     - completed
 
 permissions:
   contents: write
