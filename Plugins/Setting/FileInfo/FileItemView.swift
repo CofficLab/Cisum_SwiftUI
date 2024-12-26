@@ -87,6 +87,8 @@ struct FileItemView: View {
                 .frame(width: 20)
                 
                 FileIconView(
+                    url: viewModel.url,
+                    isDirectory: viewModel.isDirectory,
                     downloadStatus: viewModel.downloadStatus,
                     fileStatus: fileStatus
                 )

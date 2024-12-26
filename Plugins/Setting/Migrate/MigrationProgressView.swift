@@ -136,7 +136,7 @@ struct MigrationProgressView: View {
                 actionButtons
             }
         }
-        .frame(width: 520, height: 700)
+        .frame(width: 600, height: 700)
         .onAppear {
             loadSourceFiles()
             loadTargetFiles()
