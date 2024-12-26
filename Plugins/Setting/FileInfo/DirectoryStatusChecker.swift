@@ -85,7 +85,8 @@ class DirectoryStatusChecker: ObservableObject, SuperLog, SuperThread {
     
     func checkItemStatus(
         _ url: URL,
-        downloadProgressCallback: DownloadProgressCallback? = nil
+        downloadProgressCallback: DownloadProgressCallback? = nil,
+        verbose: Bool = false
     ) async -> FileStatus.DownloadStatus {
         let resourceValues = try? url.resourceValues(forKeys: [
             .ubiquitousItemIsDownloadingKey,
@@ -104,7 +105,9 @@ class DirectoryStatusChecker: ObservableObject, SuperLog, SuperThread {
         
         // 单个文件的检查逻辑
         if resourceValues?.ubiquitousItemDownloadingStatus == .current {
-            os_log(.debug, "\(self.t)文件 \(fileName) 状态: 已下载完成")
+            if verbose {
+                os_log(.debug, "\(self.t)文件 \(fileName) 状态: 已下载完成")
+            }
             return .downloaded
         } else if resourceValues?.ubiquitousItemIsDownloading == true {
             let query = NSMetadataQuery()
@@ -119,18 +122,26 @@ class DirectoryStatusChecker: ObservableObject, SuperLog, SuperThread {
                let item = query.results.first as? NSMetadataItem {
                 let progress = item.value(forAttribute: NSMetadataUbiquitousItemPercentDownloadedKey) as? Double ?? 0
                 query.stop()
-                os_log(.info, "\(self.t)文件 \(fileName) 状态: 正在下载 (进度: \(Int(progress))%)")
-                return .downloading(progress / 100.0)
+                if verbose {
+                    os_log(.info, "\(self.t)文件 \(fileName) 状态: 正在下载 (进度: \(Int(progress))%)")
+                }
+                return .downloading(progress: progress / 100.0)
             } else {
                 query.stop()
-                os_log(.info, "\(self.t)文件 \(fileName) 状态: 正在下载 (进度: 0%)")
-                return .downloading(0)
+                if verbose {
+                    os_log(.info, "\(self.t)文件 \(fileName) 状态: 正在下载 (进度: 0%)")
+                }
+                return .downloading(progress: 0)
             }
         } else if resourceValues?.ubiquitousItemDownloadingStatus == .notDownloaded {
-            os_log(.info, "\(self.t)文件 \(fileName) 状态: 未下载")
+            if verbose {
+                os_log(.info, "\(self.t)文件 \(fileName) 状态: 未下载")
+            }
             return .notDownloaded
         } else {
-            os_log(.debug, "\(self.t)文件 \(fileName) 状态: 本地文件")
+            if verbose {
+                os_log(.debug, "\(self.t)文件 \(fileName) 状态: 本地文件")
+            }
             return .local
         }
     }

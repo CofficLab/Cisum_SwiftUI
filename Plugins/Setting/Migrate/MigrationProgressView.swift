@@ -235,7 +235,7 @@ struct MigrationProgressView: View {
         } else {
             // 更新当前处理的文件状态
             if let index = processedFiles.firstIndex(where: { $0.name == fileName }) {
-                // 当前文件设置为处理中，保持下载状态不��
+                // 当前文件设置为��理中，保持下载状态不变
                 processedFiles[index] = FileStatus(
                     name: fileName, 
                     status: .processing,
@@ -266,7 +266,7 @@ struct MigrationProgressView: View {
         }
     }
 
-    // 将按钮部分提取为单独的视图
+    // 将按钮部分提取为单��的视图
     private var confirmationButtons: some View {
         VStack(spacing: 16) {
             Text("是否将现有数据迁移到新位置？")

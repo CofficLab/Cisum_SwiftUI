@@ -1,45 +1,48 @@
 import Foundation
-import SwiftUICore
+import SwiftUI
 
 struct FileStatus: Identifiable {
-    let id = UUID()
+    let id: UUID
     let name: String
     let status: Status
     let downloadStatus: DownloadStatus
-
+    let url: URL?
+    let isDirectory: Bool
+    
+    init(
+        name: String,
+        status: Status,
+        downloadStatus: DownloadStatus,
+        url: URL? = nil,
+        isDirectory: Bool = false
+    ) {
+        self.id = UUID()
+        self.name = name
+        self.status = status
+        self.downloadStatus = downloadStatus
+        self.url = url
+        self.isDirectory = isDirectory
+    }
+    
     enum Status: Equatable {
+        case idle
         case pending
         case processing
         case completed
         case failed(String)
-
-        static func == (lhs: Status, rhs: Status) -> Bool {
-            switch (lhs, rhs) {
-            case (.pending, .pending):
-                return true
-            case (.processing, .processing):
-                return true
-            case (.completed, .completed):
-                return true
-            case (.failed(let lhsMessage), .failed(let rhsMessage)):
-                return lhsMessage == rhsMessage
-            default:
-                return false
-            }
-        }
-
+        
         var icon: String {
             switch self {
-            case .pending: return "circle"
+            case .idle, .pending: return "circle"
             case .processing: return "arrow.triangle.2.circlepath"
             case .completed: return "checkmark.circle.fill"
             case .failed: return "exclamationmark.circle.fill"
             }
         }
-
+        
         var color: Color {
             switch self {
-            case .pending: return .secondary
+            case .idle, .pending: return .secondary
             case .processing: return .accentColor
             case .completed: return .green
             case .failed: return .red
@@ -48,41 +51,67 @@ struct FileStatus: Identifiable {
     }
     
     enum DownloadStatus: Equatable {
-        case local       // 本地文件
-        case downloaded  // 已从 iCloud 下载
-        case notDownloaded  // 在 iCloud 中但未下载
-        case downloading(Double)  // 正在从 iCloud 下载，包含下载进度
-        case checking   // 正在检查状态
-        case checkingDirectory(String, Int, Int)  // 正在检查目录（目录名，当前项，总项数）
-        case directoryStatus(total: Int, downloaded: Int, downloading: Int, notDownloaded: Int) // 新增：目录状态
+        case notDownloaded
+        case checking
+        case checkingDirectory(String, Int, Int)  // 目录名, 当前项目, 总项目数
+        case downloading(progress: Double)
+        case downloaded
+        case local
+        case directoryStatus(total: Int, downloaded: Int, downloading: Int, notDownloaded: Int)
         
-        var icon: String {
+        static func == (lhs: DownloadStatus, rhs: DownloadStatus) -> Bool {
+            switch (lhs, rhs) {
+            case (.notDownloaded, .notDownloaded):
+                return true
+            case (.checking, .checking):
+                return true
+            case (.checkingDirectory(let lhsName, let lhsCurrent, let lhsTotal),
+                  .checkingDirectory(let rhsName, let rhsCurrent, let rhsTotal)):
+                return lhsName == rhsName && lhsCurrent == rhsCurrent && lhsTotal == rhsTotal
+            case (.downloading(let lhsProgress), .downloading(let rhsProgress)):
+                return lhsProgress == rhsProgress
+            case (.downloaded, .downloaded):
+                return true
+            case (.local, .local):
+                return true
+            case (.directoryStatus(let lhsTotal, let lhsDownloaded, let lhsDownloading, let lhsNotDownloaded),
+                  .directoryStatus(let rhsTotal, let rhsDownloaded, let rhsDownloading, let rhsNotDownloaded)):
+                return lhsTotal == rhsTotal &&
+                       lhsDownloaded == rhsDownloaded &&
+                       lhsDownloading == rhsDownloading &&
+                       lhsNotDownloaded == rhsNotDownloaded
+            default:
+                return false
+            }
+        }
+        
+        var icon: String? {
             switch self {
-            case .local, .downloaded:
-                return ""
             case .notDownloaded:
                 return "icloud.and.arrow.down"
+            case .checking, .checkingDirectory:
+                return "arrow.triangle.2.circlepath"
             case .downloading:
                 return "arrow.down.circle"
-            case .checking:
-                return "magnifyingglass"
-            case .checkingDirectory:
-                return "folder.badge.gearshape"
+            case .downloaded, .local:
+                return nil
             case .directoryStatus:
-                return "folder"
+                return nil
             }
         }
         
         var color: Color {
             switch self {
-            case .local, .downloaded:
-                return .clear
-            case .notDownloaded, .downloading:
-                return .blue
-            case .checking, .checkingDirectory:
+            case .notDownloaded:
                 return .secondary
-            case .directoryStatus:
+            case .checking, .checkingDirectory:
+                return .orange
+            case .downloading:
                 return .blue
+            case .downloaded, .local:
+                return .accentColor
+            case .directoryStatus:
+                return .accentColor
             }
         }
         
@@ -113,6 +142,42 @@ struct FileStatus: Identifiable {
                 }
                 return parts.isEmpty ? "空文件夹" : parts.joined(separator: ", ")
             }
+        }
+    }
+    
+    var icon: String {
+        // 首先检查下载状态的图标
+        if let downloadIcon = downloadStatus.icon, !downloadIcon.isEmpty {
+            return downloadIcon
+        }
+        
+        // 如果没有下载状态图标，则返回文件类型图标
+        if isDirectory {
+            // 检查是否为 iCloud 目录
+            if let url = url,
+               let values = try? url.resourceValues(forKeys: [.isUbiquitousItemKey]),
+               values.isUbiquitousItem == true {
+                return "icloud.fill"
+            }
+            return "folder.fill"
+        }
+        
+        guard let url = url else { return "doc.fill" }
+        
+        // 文件类型图标
+        switch url.pathExtension.lowercased() {
+        case "mp3", "m4a", "wav", "aac":
+            return "music.note"
+        case "mp4", "mov", "avi", "mkv":
+            return "film"
+        case "jpg", "jpeg", "png", "gif":
+            return "photo"
+        case "pdf":
+            return "doc.fill"
+        case "txt", "md":
+            return "doc.text.fill"
+        default:
+            return "doc.fill"
         }
     }
 }

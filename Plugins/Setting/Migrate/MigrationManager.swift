@@ -20,31 +20,10 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread {
         isRecursive: Bool = true,
         downloadProgressCallback: DownloadProgressCallback? = nil
     ) async -> FileStatus.DownloadStatus {
-        return await Task.detached(priority: .background) {
-            let resourceValues = try? url.resourceValues(forKeys: [
-                .ubiquitousItemIsDownloadingKey,
-                .ubiquitousItemDownloadingStatusKey,
-                .ubiquitousItemDownloadingErrorKey,
-                .isDirectoryKey
-            ])
-            
-            let isDirectory = resourceValues?.isDirectory ?? false
-            let fileName = url.lastPathComponent
-            
-            // 如果是目录且需要递归检查
-            if isDirectory && isRecursive {
-                return await self.statusChecker.checkDirectoryStatus(
-                    url,
-                    downloadProgressCallback: downloadProgressCallback
-                )
-            }
-            
-            // 单个文件的检查
-            return await self.statusChecker.checkItemStatus(
-                url,
-                downloadProgressCallback: downloadProgressCallback
-            )
-        }.value
+        return await statusChecker.checkItemStatus(
+            url,
+            downloadProgressCallback: downloadProgressCallback
+        )
     }
     
     func migrate(
@@ -71,32 +50,6 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread {
                 withIntermediateDirectories: true
             )
             os_log(.info, "\(self.t)已创建目标目录")
-            
-            // 添加状态统计
-            var totalDownloaded = 0
-            var totalDownloading = 0
-            var totalNotDownloaded = 0
-            
-            // 先检查所有文件的状态
-            for file in files {
-                let status = await self.checkFileDownloadStatus(file)
-                switch status {
-                case .downloaded, .local:
-                    totalDownloaded += 1
-                case .downloading:
-                    totalDownloading += 1
-                case .notDownloaded:
-                    totalNotDownloaded += 1
-                case .directoryStatus(_, let downloaded, let downloading, let notDownloaded):
-                    totalDownloaded += downloaded
-                    totalDownloading += downloading
-                    totalNotDownloaded += notDownloaded
-                default:
-                    break
-                }
-            }
-            
-            os_log(.info, "\(self.t)文件状态统计：\(totalDownloaded)个已下载，\(totalDownloading)个下载中，\(totalNotDownloaded)个未下载")
 
             for (index, sourceFile) in files.enumerated() {
                 if self.isCancelled {
