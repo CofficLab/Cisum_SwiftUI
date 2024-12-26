@@ -19,7 +19,8 @@ struct RepositoryInfoView: View {
                 FileItemView(
                     file: url.lastPathComponent,
                     fileStatus: nil,
-                    rootURL: url.deletingLastPathComponent()
+                    rootURL: url.deletingLastPathComponent(),
+                    isExpanded: true
                 )
                 .padding(.horizontal)
             }

@@ -537,6 +537,7 @@
 		0B4788992D1ADCA400E984C5 /* Setting */ = {
 			isa = PBXGroup;
 			children = (
+				F5C2C7572D1CE99E0094157C /* FileInfo */,
 				F5C2C7562D1CDF6D0094157C /* Migrate */,
 				0B4788A02D1ADE3200E984C5 /* SettingPlugin.swift */,
 				0B382A992D1AED920075391C /* SettingPluginView.swift */,
@@ -959,15 +960,22 @@
 		F5C2C7562D1CDF6D0094157C /* Migrate */ = {
 			isa = PBXGroup;
 			children = (
-				0BCEB0222D1C3F9400493116 /* DirectoryStatusChecker.swift */,
-				0BCEB0242D1C429000493116 /* FileItemView.swift */,
-				0BCEB0262D1C443600493116 /* FileStats.swift */,
-				F5C2C7442D1BF59A0094157C /* FileStatus.swift */,
 				F5C2C7482D1C141D0094157C /* MigrationManager.swift */,
 				F5C2C7402D1BB50B0094157C /* MigrationProgressView.swift */,
 				F5C2C7422D1BF57A0094157C /* RepositoryInfoView.swift */,
 			);
 			path = Migrate;
+			sourceTree = "<group>";
+		};
+		F5C2C7572D1CE99E0094157C /* FileInfo */ = {
+			isa = PBXGroup;
+			children = (
+				0BCEB0262D1C443600493116 /* FileStats.swift */,
+				F5C2C7442D1BF59A0094157C /* FileStatus.swift */,
+				0BCEB0222D1C3F9400493116 /* DirectoryStatusChecker.swift */,
+				0BCEB0242D1C429000493116 /* FileItemView.swift */,
+			);
+			path = FileInfo;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

@@ -38,157 +38,105 @@ struct MigrationProgressView: View {
 
     var body: some View {
         VStack(spacing: 16) {
+            // 标题固定在顶部
             Text("数据迁移")
                 .font(.title2)
                 .fontWeight(.bold)
+                .padding(.top)
 
-            GroupBox {
-                // 源仓库
-                RepositoryInfoView(
-                    title: "源仓库",
-                    location: sourceLocation,
-                    url: sourceURL
-                )
-            }
-
-            Group {
-                HStack {
-                    Spacer()
-                    Image(systemName: "arrow.down")
-                        .foregroundColor(.secondary)
-                        .imageScale(.large)
-                        .font(.system(size: 32))
-                    Spacer()
-                }
-            }
-
-            GroupBox {
-                // 目标仓库
-                RepositoryInfoView(
-                    title: "目标仓库",
-                    location: targetLocation,
-                    url: targetURL
-                )
-            }
-
-            GroupBox {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("⚠️ 重要提示：")
-                        .font(.subheadline)
-                        .foregroundColor(.orange)
+            // 内容部分可以滚动
+            ScrollView {
+                VStack(spacing: 16) {
+                    GroupBox {
+                        // 源仓库
+                        RepositoryInfoView(
+                            title: "源仓库",
+                            location: sourceLocation,
+                            url: sourceURL
+                        )
+                    }
 
                     Group {
-                        Text("• 迁移时间取决于数据量大小，可能需要较长时间")
-                        Text("• 如果源数据在iCloud中且有未下载的文件，需要等待下载完成")
-                        Text("• 迁移过程中请勿关闭应用")
-                        Text("• 取消迁移可能导致数据不完整")
-                        Text("• 请确保目标位置有足够的存储空间")
+                        HStack {
+                            Spacer()
+                            Image(systemName: "arrow.down")
+                                .foregroundColor(.secondary)
+                                .imageScale(.large)
+                                .font(.system(size: 16))
+                            Spacer()
+                        }
                     }
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                }
-                .frame(maxWidth: .infinity)
-                .padding(.vertical)
-            }
 
-            // 只在非确认状态下显示迁移状态
-            if !showConfirmation {
-                GroupBox {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("迁移状态")
-                            .font(.headline)
-                            .foregroundColor(.primary)
-
-                        if migrationCompleted {
-                            Text("迁移已完成")
-                                .font(.subheadline)
-                                .foregroundColor(.green)
-                        } else if let errorMessage = errorMessage {
-                            Text("迁移出现问题: \(errorMessage)")
-                                .font(.subheadline)
-                                .foregroundColor(.red)
-                        } else {
-                            Text("迁移中...")
-                                .font(.subheadline)
-                                .foregroundColor(.blue)
-                        }
-
-                        ProgressView(value: migrationProgress)
-                            .padding(.top, 4)
+                    GroupBox {
+                        // 目标仓库
+                        RepositoryInfoView(
+                            title: "目标仓库",
+                            location: targetLocation,
+                            url: targetURL
+                        )
                     }
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical)
-                }
-            }
 
-            if showConfirmation {
-                // 确认对话框
-                VStack(spacing: 16) {
-                    Text("是否将现有数据迁移到新位置？")
-                        .font(.headline)
-                    Text("选择\"不迁移\"将在新位置创建空白仓库。")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
+                    GroupBox {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("⚠️ 重要提示：")
+                                .font(.subheadline)
+                                .foregroundColor(.orange)
 
-                    HStack(spacing: 16) {
-                        Button("迁移数据") {
-                            showConfirmation = false
-                            startMigration(shouldMigrate: true)
-                        }
-                        .buttonStyle(.borderedProminent)
-
-                        Button("不迁移") {
-                            showConfirmation = false
-                            startMigration(shouldMigrate: false)
-                        }
-                        .buttonStyle(.bordered)
-                    }
-                }
-            } else {
-                if errorMessage == nil {
-                    if migrationCompleted {
-                        Button("完成") {
-                            onDismiss()
-                        }
-                        .buttonStyle(.borderedProminent)
-                    } else {
-                        Button("取消迁移") {
-                            if let window = NSApp.keyWindow {
-                                let alert = NSAlert()
-                                alert.messageText = "确要取消迁移吗？"
-                                alert.informativeText = "取消迁移可能会导致数据不完整，建议等待迁移完成。"
-                                alert.alertStyle = .warning
-                                alert.addButton(withTitle: "继续迁移")
-                                alert.addButton(withTitle: "确定取消")
-
-                                alert.beginSheetModal(for: window) { response in
-                                    if response == .alertSecondButtonReturn {
-                                        migrationManager.cancelMigration()
-                                        onDismiss()
-                                    }
-                                }
+                            Group {
+                                Text("• 迁移时间取决于数据量大小，可能需要较长时间")
+                                Text("• 如果源数据在iCloud中且有未下载的文件，需要等待下载完成")
+                                Text("• 迁移过程中请勿关闭应用")
+                                Text("• 取消迁移可能导致数据不完整")
+                                Text("• 请确保目标位置有足够的存储空间")
                             }
+                            .font(.caption)
+                            .foregroundColor(.secondary)
                         }
-                        .buttonStyle(.borderless)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical)
                     }
-                } else {
-                    HStack(spacing: 16) {
-                        Button("重试") {
-                            errorMessage = nil
-                            showConfirmation = true
-                        }
-                        .buttonStyle(.borderedProminent)
 
-                        Button("放弃") {
-                            onDismiss()
+                    // 只在非确认状态下显示迁移状态
+                    if !showConfirmation {
+                        GroupBox {
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("迁移状态")
+                                    .font(.headline)
+                                    .foregroundColor(.primary)
+
+                                if migrationCompleted {
+                                    Text("迁移已完成")
+                                        .font(.subheadline)
+                                        .foregroundColor(.green)
+                                } else if let errorMessage = errorMessage {
+                                    Text("迁移出现问题: \(errorMessage)")
+                                        .font(.subheadline)
+                                        .foregroundColor(.red)
+                                } else {
+                                    Text("迁移中...")
+                                        .font(.subheadline)
+                                        .foregroundColor(.blue)
+                                }
+
+                                ProgressView(value: migrationProgress)
+                                    .padding(.top, 4)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical)
                         }
-                        .buttonStyle(.bordered)
                     }
                 }
+                .padding()
+            }
+
+            // 底部按钮固定在底部
+            if showConfirmation {
+                confirmationButtons
+            } else {
+                actionButtons
             }
         }
-        .padding()
-        .frame(width: 520)
+        .frame(width: 520, height: 700)
         .onAppear {
             loadSourceFiles()
             loadTargetFiles()
@@ -287,7 +235,7 @@ struct MigrationProgressView: View {
         } else {
             // 更新当前处理的文件状态
             if let index = processedFiles.firstIndex(where: { $0.name == fileName }) {
-                // 当前文件设置为处理中，保持下载状态不变
+                // 当前文件设置为处理中，保持下载状态不��
                 processedFiles[index] = FileStatus(
                     name: fileName, 
                     status: .processing,
@@ -315,6 +263,82 @@ struct MigrationProgressView: View {
                 status: processedFiles[index].status,
                 downloadStatus: downloadStatus
             )
+        }
+    }
+
+    // 将按钮部分提取为单独的视图
+    private var confirmationButtons: some View {
+        VStack(spacing: 16) {
+            Text("是否将现有数据迁移到新位置？")
+                .font(.headline)
+            Text("选择\"不迁移\"将在新位置创建空白仓库。")
+                .font(.caption)
+                .foregroundColor(.secondary)
+
+            HStack(spacing: 16) {
+                Button("迁移数据") {
+                    showConfirmation = false
+                    startMigration(shouldMigrate: true)
+                }
+                .buttonStyle(.borderedProminent)
+
+                Button("不迁移") {
+                    showConfirmation = false
+                    startMigration(shouldMigrate: false)
+                }
+                .buttonStyle(.bordered)
+            }
+        }
+        .padding(.bottom)
+    }
+
+    private var actionButtons: some View {
+        Group {
+            if errorMessage == nil {
+                if migrationCompleted {
+                    Button("完成") {
+                        onDismiss()
+                    }
+                    .buttonStyle(.borderedProminent)
+                } else {
+                    Button("取消迁移") {
+                        showCancelAlert()
+                    }
+                    .buttonStyle(.borderless)
+                }
+            } else {
+                HStack(spacing: 16) {
+                    Button("重试") {
+                        errorMessage = nil
+                        showConfirmation = true
+                    }
+                    .buttonStyle(.borderedProminent)
+
+                    Button("放弃") {
+                        onDismiss()
+                    }
+                    .buttonStyle(.bordered)
+                }
+            }
+        }
+        .padding(.bottom)
+    }
+
+    private func showCancelAlert() {
+        if let window = NSApp.keyWindow {
+            let alert = NSAlert()
+            alert.messageText = "确要取消迁移吗？"
+            alert.informativeText = "取消迁移可能会导致数据不完整，建议等待迁移完成。"
+            alert.alertStyle = .warning
+            alert.addButton(withTitle: "继续迁移")
+            alert.addButton(withTitle: "确定取消")
+
+            alert.beginSheetModal(for: window) { response in
+                if response == .alertSecondButtonReturn {
+                    migrationManager.cancelMigration()
+                    onDismiss()
+                }
+            }
         }
     }
 }
