@@ -44,14 +44,22 @@ class CopyPlugin: SuperPlugin, SuperLog {
     }
 
     func addStatusView() -> AnyView? {
-        os_log("\(self.t)🖥️🖥️🖥️ AddStatusView")
+        let verbose = false
+
+        if verbose {
+            os_log("\(self.t)🖥️🖥️🖥️ AddStatusView")
+        }
 
         return AnyView(CopyStatusView()
             .modelContainer(CopyConfig.getContainer))
     }
 
-    func onInit(storage: StorageLocation?) {
-        os_log("\(self.t)🛫🛫🛫 OnInit")
+    func onWillAppear(playMan: PlayMan, currentGroup: (any SuperPlugin)?, storage: StorageLocation?) async {
+        let verbose = false
+
+        if verbose {
+            os_log("\(self.a)")
+        }
 
         self.db = CopyDB(CopyConfig.getContainer, reason: self.author + ".onInit", verbose: true)
         self.worker = CopyWorker(db: self.db!)

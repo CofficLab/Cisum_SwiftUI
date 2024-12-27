@@ -31,7 +31,7 @@ class CopyWorker: SuperLog, SuperThread, ObservableObject {
     }
 
     func run() {
-        let verbose = true
+        let verbose = false
 
         if running {
             return

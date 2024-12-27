@@ -55,7 +55,11 @@ struct CopyRootView: View, SuperEvent, SuperLog, SuperThread {
 
 extension CopyRootView {
     func onAppear() {
+        let verbose = false 
+
+        if verbose {
         os_log("\(self.a)")
+        }
     }
 
     func onDrop(_ providers: [NSItemProvider]) -> Bool {

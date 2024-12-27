@@ -27,20 +27,25 @@ class CloudProvider: NSObject, ObservableObject, @preconcurrency SuperLog, Super
         )
     }
     
-    private func updateAccountStatus() {
+    private func updateAccountStatus(verbose: Bool = false) {
         Task {
             let status = FileManager.default.ubiquityIdentityToken != nil
             await MainActor.run {
                 self.isSignedIn = status
                 self.accountStatus = status ? "已登录" : "未登录"
                 
-                os_log("\(self.t)🍋🍋🍋 iCloud 状态更新: isSignedIn=\(status), accountStatus=\(self.accountStatus)")
+                if verbose {
+                    os_log("\(self.t)🍋🍋🍋 iCloud 状态更新: isSignedIn=\(status), accountStatus=\(self.accountStatus)")
+                }
             }
         }
     }
     
-    @objc private func handleAccountChange() {
-        os_log("\(self.t)检测到 iCloud 账户变化")
-        updateAccountStatus()
+    @objc private func handleAccountChange(verbose: Bool = false) {
+        if verbose {
+            os_log("\(self.t)🍋🍋🍋 检测到 iCloud 账户变化")
+        }
+        
+        updateAccountStatus(verbose: verbose)
     }
 }

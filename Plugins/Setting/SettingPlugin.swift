@@ -41,10 +41,6 @@ class SettingPlugin: SuperPlugin, SuperLog {
         []
     }
 
-    func onInit(storage: StorageLocation?) {
-        os_log("\(self.t)🛫🛫🛫 OnInit")
-    }
-
     func onPause(playMan: PlayMan) {
         Task { @MainActor in
             AudioPlugin.storeCurrentTime(playMan.currentTime)
@@ -64,7 +60,7 @@ class SettingPlugin: SuperPlugin, SuperLog {
     func onPlayModeChange(mode: PlayMode, asset: PlayAsset?) async throws {
     }
 
-    func onAppear(playMan: PlayMan, currentGroup: SuperPlugin?) async {
+    func onWillAppear(playMan: PlayMan, currentGroup: SuperPlugin?, storage: StorageLocation?) async {
     }
 
     func onPlayPrev(playMan: PlayMan, current: PlayAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws { }

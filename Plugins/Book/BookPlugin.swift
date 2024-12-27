@@ -60,9 +60,13 @@ class BookPlugin: SuperPlugin, SuperLog {
             BookPoster()
         )
     }
-
-    func onInit(storage: StorageLocation?) {
-        os_log("\(self.t)onInit")
+    
+    func onWillAppear(playMan: PlayMan, currentGroup: SuperPlugin?, storage: StorageLocation?) {
+        if currentGroup?.id != self.id {
+            return
+        }
+        
+        os_log("\(self.t)📺📺📺")
         if self.initialized {
             return
         }
@@ -71,12 +75,6 @@ class BookPlugin: SuperPlugin, SuperLog {
         self.bookDB = BookDB(db: self.db, disk: disk!, verbose: true)
         self.bookProvider = BookProvider(disk: disk!)
         self.initialized = true
-    }
-
-    func onAppear(playMan: PlayMan, currentGroup: SuperPlugin?) {
-        if currentGroup?.id != self.id {
-            return
-        }
 
         Task { @MainActor in
             if let url = BookPlugin.getCurrent(), let book = await self.bookDB?.find(url) {

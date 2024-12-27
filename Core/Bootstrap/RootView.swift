@@ -141,9 +141,7 @@ extension RootView {
                 try? self.p.restoreCurrent()
 
                 for plugin in p.plugins {
-                    await plugin.onAppear(playMan: man, currentGroup: p.current)
-
-                    plugin.onInit(storage: c.getStorageLocation())
+                    await plugin.onWillAppear(playMan: man, currentGroup: p.current, storage: c.getStorageLocation())
                 }
 
                 #if os(iOS)

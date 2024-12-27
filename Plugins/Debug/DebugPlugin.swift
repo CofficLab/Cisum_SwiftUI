@@ -28,11 +28,7 @@ class DebugPlugin: SuperPlugin, SuperLog {
         os_log("\(self.t)OnPlayAssetUpdate")
     }
 
-    func onInit(storage: StorageLocation?) {
-        os_log("\(self.t)OnInit")
-    }
-
-    func onAppear(playMan: PlayMan, currentGroup: SuperPlugin?) {
+    func onWillAppear(playMan: PlayMan, currentGroup: SuperPlugin?, storage: StorageLocation?) {
         os_log("\(self.t)OnAppear, currentGroup: \(currentGroup?.id ?? "nil")")
     }
 
