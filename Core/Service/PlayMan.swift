@@ -39,6 +39,7 @@ class PlayMan: NSObject, ObservableObject, @preconcurrency SuperLog, SuperThread
     }
 
     var hasError: Bool { error != nil }
+    var hasAsset: Bool { asset != nil }
     var isAudioWorker: Bool { (self.worker as? AudioWorker) != nil }
     var isVideoWorker: Bool { (self.worker as? VideoWorker) != nil }
     var duration: TimeInterval { worker.duration }
@@ -108,8 +109,12 @@ class PlayMan: NSObject, ObservableObject, @preconcurrency SuperLog, SuperThread
         setPlayingInfo()
     }
 
-    func toggleLike() throws {
-        try self.asset?.toggleLike()
+    func toggleLike() async throws {
+        guard let asset = asset else {
+            throw PlayManError.NoAsset
+        }
+
+        try await asset.toggleLike()
     }
 
     func stop(reason: String, verbose: Bool) {
@@ -206,7 +211,7 @@ extension PlayMan {
             let duration: TimeInterval = self.duration
             let currentTime: TimeInterval = self.currentTime
             var image = Self.defaultImage
-            
+
             if let cover = try? await asset?.getPlatformImage() {
                 image = cover
             }
@@ -327,18 +332,18 @@ extension PlayMan {
         c.likeCommand.addTarget { _ in
             os_log("\(self.t)点击了喜欢按钮")
 
-            do {
-                try self.toggleLike()
+            Task {
+                do {
+                    try await self.toggleLike()
 
-                self.c.likeCommand.isActive = self.asset?.like ?? false
-                self.c.dislikeCommand.isActive = self.asset?.notLike ?? true
-
-                return .success
-            } catch {
-                self.setError(.ToggleLikeError(error))
-
-                return .commandFailed
+                    self.c.likeCommand.isActive = self.asset?.like ?? false
+                    self.c.dislikeCommand.isActive = self.asset?.notLike ?? true
+                } catch {
+                    self.setError(.ToggleLikeError(error))
+                }
             }
+
+            return .success
         }
 
         c.ratingCommand.addTarget { _ in

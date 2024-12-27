@@ -60,14 +60,12 @@ struct PlayAsset: FileBox, Identifiable, SuperEvent, SuperLog {
         return updated
     }
     
-    func toggleLike() throws {
+    func toggleLike() async throws {
         guard let source = source else {
             throw PlayAssetError.sourceNotFound
         }
 
-        Task {
-            try await source.toggleLike()
-        }
+        try await source.toggleLike()
     }
 }
 

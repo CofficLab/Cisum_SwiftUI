@@ -613,6 +613,8 @@ extension AudioRecordDB {
                 try context.save()
             } catch let e {
                 os_log(.error, "\(e.localizedDescription)")
+                
+                throw e
             }
 
             emit(name: .AudioUpdatedNotification, object: dbAudio)

@@ -52,8 +52,11 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                                         if let asset = man.asset {
                                             BtnShowInFinder(url: asset.url, autoResize: false)
                                         }
-                                        ForEach(p.getToolBarButtons(), id: \.id) { item in
-                                            item.view
+                                        
+                                        if let asset = man.asset {
+                                            ForEach(p.getToolBarButtons(), id: \.id) { item in
+                                                item.view
+                                            }
                                         }
                                     }
                                 })

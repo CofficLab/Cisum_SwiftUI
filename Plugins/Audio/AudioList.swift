@@ -14,12 +14,13 @@ import SwiftUI
  */
 struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     static let emoji = "📬"
-    
+
     @Environment(\.modelContext) private var modelContext
 
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var man: PlayMan
     @EnvironmentObject var audioManager: AudioProvider
+    @EnvironmentObject var audioDB: AudioDB
 
     @State var selection: URL? = nil
     @State var isSorting = false
@@ -28,7 +29,8 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     @Query(sort: \AudioModel.order, animation: .default) var audios: [AudioModel]
 
     var total: Int { audios.count }
-    var assets: [PlayAsset] { audios.map { $0.toPlayAsset() } }
+    var assets: [PlayAsset] { audiosWithDB.map { $0.toPlayAsset() } }
+    var audiosWithDB: [AudioModel] { audios.map { $0.setDB(audioDB); return $0; } }
 
     init(verbose: Bool, reason: String) {
         if verbose {
@@ -97,7 +99,6 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
 
 extension AudioList {
     func handleAudioDeleted(_ notification: Notification) {
-        
     }
 
     func handleOnAppear() {

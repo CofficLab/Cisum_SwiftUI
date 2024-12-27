@@ -113,7 +113,7 @@ extension AudioModel: Identifiable {
 extension AudioModel {
     func toPlayAsset(verbose: Bool = false) -> PlayAsset {
         if verbose {
-            os_log("\(self.t)ToPlayAsset: size(\(self.size.debugDescription))")
+            os_log("\(self.t)ToPlayAsset: like (\(self.like))")
         }
 
         return PlayAsset(url: self.url, like: self.like, size: size).setSource(self)

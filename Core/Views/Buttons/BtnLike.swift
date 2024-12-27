@@ -6,25 +6,32 @@ struct BtnLike: View {
     @EnvironmentObject var m: MessageProvider
 
     @State var like: Bool = false
-    
+
     var autoResize = false
     var title: String { like ? "取消喜欢" : "标记喜欢" }
 
     var body: some View {
-        ControlButton(
-            title: title,
-            image: getImageName(),
-            dynamicSize: autoResize,
-            onTap: {
-                do {
-                    try man.toggleLike()
-                    m.hub(like ? "已取消喜欢" : "已标记为喜欢")
-                    self.like.toggle()
-                } catch {
-                    self.m.error(error)
-                }
+        Group {
+            if man.hasAsset {
+                ControlButton(
+                    title: title,
+                    image: getImageName(),
+                    dynamicSize: autoResize,
+                    onTap: {
+                        Task {
+                            do {
+                                try await man.toggleLike()
+                                m.hub(like ? "已取消喜欢" : "已标记为喜欢")
+                                self.like.toggle()
+                            } catch {
+                                self.m.error(error)
+                            }
+                        }
+                    })
+            } else {
+                EmptyView()
             }
-        )
+        }
         .onAppear {
             self.like = man.asset?.like ?? false
         }
