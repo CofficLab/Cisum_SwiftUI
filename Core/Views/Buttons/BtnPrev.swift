@@ -1,5 +1,6 @@
 import OSLog
 import MagicKit
+import MagicUI
 import SwiftUI
 
 struct BtnPrev: View {
@@ -26,7 +27,7 @@ struct BtnPrev: View {
 
 #Preview {
     RootView(content: {
-        Centered {
+        MagicCentered {
             BtnPrev()
         }
     })

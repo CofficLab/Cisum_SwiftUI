@@ -1,5 +1,6 @@
 import AlertToast
 import MagicKit
+import MagicUI
 import OSLog
 import SwiftUI
 import UniformTypeIdentifiers

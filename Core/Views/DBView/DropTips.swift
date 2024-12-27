@@ -1,4 +1,5 @@
 import MagicKit
+import MagicUI
 import SwiftUI
 
 struct DropTips: View {
@@ -10,7 +11,7 @@ struct DropTips: View {
     }
 
     var body: some View {
-        CardView(background: BackgroundView.type2.background(.background)) {
+        MagicCard(background: MagicBackground.aurora.background(.background)) {
             VStack(spacing: 0) {
                 HStack {
                     Image(systemName: "info.circle.fill")
@@ -52,5 +53,5 @@ struct DropTips: View {
 #Preview {
     DBTips()
         .frame(width: 300, height: 300)
-        .background(BackgroundView.type1)
+        .background(MagicBackground.aurora)
 }

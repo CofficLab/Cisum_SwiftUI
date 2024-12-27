@@ -3,6 +3,7 @@ import OSLog
 import SwiftData
 import SwiftUI
 import MagicKit
+import MagicUI
 
 actor DBSynced: ModelActor, ObservableObject, SuperLog {
     static let emoji = "📦"

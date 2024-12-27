@@ -1,5 +1,6 @@
 import SwiftUI
 import MagicKit
+import MagicUI
 
 struct BtnShowInFinder: View, SuperThread {
     var url: URL

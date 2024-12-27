@@ -1,6 +1,7 @@
 import Foundation
 import SwiftData
 import MagicKit
+import MagicUI
 
 @Model
 class CopyTask: FileBox {

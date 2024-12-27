@@ -1,5 +1,6 @@
 import SwiftUI
 import MagicKit
+import MagicUI
 
 struct ErrorViewFatal: View {
     var error: Error
@@ -51,8 +52,6 @@ struct ErrorViewFatal: View {
         VStack(spacing: 10) {
             Section(content: {
                 GroupBox {
-                    makeKeyValueItem(key: "使用iCloud", value: Config.iCloudEnabled ? "是" : "否")
-                    Divider()
                     makeKeyValueItem(key: "启用iCloud云盘", value: iCloudHelper.iCloudDiskEnabled() ? "是" : "否")
                 }
             }, header: { makeTitle("iCloud") })

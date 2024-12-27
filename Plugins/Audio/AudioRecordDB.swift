@@ -3,6 +3,7 @@ import OSLog
 import SwiftData
 import SwiftUI
 import MagicKit
+import MagicUI
 
 actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     static let emoji = "📦"

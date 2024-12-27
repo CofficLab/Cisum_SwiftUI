@@ -1,5 +1,6 @@
 import SwiftUI
 import MagicKit
+import MagicUI
 
 struct SettingRootView: View {
     @EnvironmentObject var c: ConfigProvider
@@ -15,7 +16,7 @@ struct SettingRootView: View {
                     )
                     .shadow(radius: 8)
             }.frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(BackgroundView.type2.opacity(0.95))
+                .background(MagicBackground.aurora.opacity(0.95))
         }
     }
 }

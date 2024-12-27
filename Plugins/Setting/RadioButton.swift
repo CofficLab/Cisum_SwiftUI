@@ -1,5 +1,6 @@
 import Foundation
 import MagicKit
+import MagicUI
 import SwiftUI
 
 struct RadioButton: View {
@@ -73,7 +74,7 @@ struct RadioButton: View {
                                 }
                             }
                             .padding(8)
-                            .background(BackgroundView.type2A.opacity(0.2))
+                            .background(MagicBackground.deepPurple.opacity(0.2))
                             .cornerRadius(6)
                         }
 

@@ -1,4 +1,5 @@
 import MagicKit
+import MagicUI
 import SwiftUI
 
 struct BtnDownload: View, SuperThread {

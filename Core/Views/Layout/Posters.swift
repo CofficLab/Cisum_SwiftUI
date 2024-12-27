@@ -2,6 +2,7 @@ import OSLog
 import SwiftData
 import SwiftUI
 import MagicKit
+import MagicUI
 
 struct Posters: View, SuperLog {
     static let emoji = "🪧"

@@ -1,6 +1,7 @@
 import Foundation
 import OSLog
 import MagicKit
+import MagicUI
 
 protocol DiskDelegate {
     func onUpdate(_ items: DiskFileGroup) async -> Void
@@ -17,9 +18,9 @@ protocol SuperStorage: FileBox {
 
     func clearFolderContents(atPath path: String)
 
-    func deleteFile(_ url: URL)
+    func deleteFile(_ url: URL) throws
 
-    func deleteFiles(_ urls: [URL])
+    func deleteFiles(_ urls: [URL]) throws
     
     func download(_ url: URL, reason: String, verbose: Bool) async throws
 

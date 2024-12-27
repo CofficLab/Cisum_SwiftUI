@@ -1,5 +1,6 @@
 import SwiftUI
 import MagicKit
+import MagicUI
 
 struct FileIconView: View {
     let url: URL

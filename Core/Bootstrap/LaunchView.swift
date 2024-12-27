@@ -1,12 +1,13 @@
 import SwiftUI
 import MagicKit
+import MagicUI
 
 struct LanuchView: View {
     var errorMessage: String? = nil
 
     var body: some View {
         GeometryReader { geo in
-            Centered {
+            MagicCentered {
                 Image("PlayingAlbum")
                     .resizable()
                     .frame(width: geo.size.width*0.8)

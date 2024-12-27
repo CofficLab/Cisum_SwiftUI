@@ -1,6 +1,7 @@
 import Foundation
 import SwiftUI
 import MagicKit
+import MagicUI
 
 extension Config {
     // MARK: Root Background
@@ -9,9 +10,9 @@ extension Config {
         ZStack {
             Color.black.opacity(0.5)
             if debug && false {
-                BackgroundView.forest
+                MagicBackground.aurora
             } else {
-                BackgroundView.type2A
+                MagicBackground.aurora
             }
         }
     }

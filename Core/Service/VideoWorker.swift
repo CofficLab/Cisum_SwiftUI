@@ -3,6 +3,7 @@ import Foundation
 import OSLog
 import SwiftUI
 import MagicKit
+import MagicUI
 
 class VideoWorker: NSObject, ObservableObject, SuperPlayWorker, SuperLog {
     // MARK: 成员

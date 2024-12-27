@@ -1,5 +1,6 @@
 import Foundation
 import MagicKit
+import MagicUI
 
 struct DiskFileGroup: Equatable {
     static func == (lhs: DiskFileGroup, rhs: DiskFileGroup) -> Bool {

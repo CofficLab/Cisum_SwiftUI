@@ -4,6 +4,7 @@ import SwiftData
 import SwiftUI
 import UniformTypeIdentifiers
 import MagicKit
+import MagicUI
 
 struct VideoDB: View, SuperLog {
     @EnvironmentObject var app: AppProvider

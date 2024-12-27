@@ -1,5 +1,6 @@
 import SwiftUI
 import MagicKit
+import MagicUI
 
 struct Coffee: View {
     @State private var rotationAngle: Double = 0
@@ -90,7 +91,7 @@ struct Coffee: View {
         Coffee()
 //        Coffee(rotate: true)
     }.frame(width: 400, height: 400)
-        .background(BackgroundView.type1)
+        .background(MagicBackground.aurora)
 }
 
 #Preview {
@@ -98,7 +99,7 @@ struct Coffee: View {
         Coffee()
 //        Coffee(rotate: true)
     }.frame(width: 300, height: 100)
-        .background(BackgroundView.type1)
+        .background(MagicBackground.aurora)
 }
 
 #Preview {
@@ -106,5 +107,5 @@ struct Coffee: View {
         Coffee()
         Coffee(rotate: true)
     }.frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(BackgroundView.type1)
+        .background(MagicBackground.aurora)
 }

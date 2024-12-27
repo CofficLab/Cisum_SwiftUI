@@ -1,4 +1,5 @@
 import MagicKit
+import MagicUI
 import OSLog
 import SwiftData
 import SwiftUI
@@ -34,7 +35,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
 
     init(verbose: Bool, reason: String) {
         if verbose {
-            os_log("\(Logger.initLog)AudioList 🐛 \(reason)")
+            os_log("\(Self.i)AudioList 🐛 \(reason)")
         }
     }
 

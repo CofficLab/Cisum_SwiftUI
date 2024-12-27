@@ -1,5 +1,6 @@
 import Foundation
 import MagicKit
+import MagicUI
 import OSLog
 
 class CloudStorage: ObservableObject, SuperStorage, SuperLog, SuperThread {    
@@ -18,7 +19,7 @@ class CloudStorage: ObservableObject, SuperStorage, SuperLog, SuperThread {
         }
 
         if verbose {
-//            os_log("\(self.t)磁盘的根目录是 \(cloudRoot.path())")
+            os_log("\(self.t)磁盘的根目录是 \(cloudRoot.path())")
         }
 
         if FileManager.default.fileExists(atPath: cloudRoot.path(percentEncoded: false)) == false {
@@ -68,22 +69,18 @@ extension CloudStorage {
 // MARK: Delete
 
 extension CloudStorage {
-    func deleteFiles(_ urls: [URL]) {
+    func deleteFiles(_ urls: [URL]) throws {
         for url in urls {
             if verbose {
                 os_log("\(self.t)删除 \(url.lastPathComponent)")
             }
 
-            if fileManager.fileExists(atPath: url.path) == false {
-                continue
-            }
-
-            try? fileManager.removeItem(at: url)
+            try url.delete()
         }
     }
 
-    func deleteFile(_ url: URL) {
-        deleteFiles([url])
+    func deleteFile(_ url: URL) throws {
+        try deleteFiles([url])
     }
 }
 

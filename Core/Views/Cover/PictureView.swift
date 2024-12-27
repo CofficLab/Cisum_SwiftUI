@@ -1,6 +1,8 @@
 import OSLog
 import SwiftUI
 import MagicKit
+import MagicUI
+import MagicUI
 
 struct PictureView: View, SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
@@ -115,7 +117,7 @@ struct PictureView: View, SuperLog, SuperThread {
 #Preview("ProgressView") {
     PictureView.makeProgressView()
         .frame(width: 300, height: 300)
-        .background(BackgroundView.type2)
+        .background(MagicBackground.aurora)
 }
 
 #Preview("List") {
@@ -134,5 +136,5 @@ struct PictureView: View, SuperLog, SuperThread {
             )
             Text("2")
         }.background(.blue.opacity(0.2))
-    }.background(BackgroundView.type4)
+    }.background(MagicBackground.aurora)
 }

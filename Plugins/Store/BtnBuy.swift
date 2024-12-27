@@ -2,6 +2,7 @@ import OSLog
 import StoreKit
 import SwiftUI
 import MagicKit
+import MagicUI
 
 struct BtnBuy: View, SuperLog {
     static var emoji: String = "🎩"

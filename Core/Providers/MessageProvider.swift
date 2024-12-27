@@ -1,5 +1,6 @@
 import Foundation
 import MagicKit
+import MagicUI
 import OSLog
 import SwiftData
 import SwiftUI
@@ -35,7 +36,7 @@ class MessageProvider: ObservableObject, @preconcurrency SuperLog, SuperThread, 
     init() {
         let verbose = false
         if verbose {
-            os_log("\(Logger.initLog) MessageProvider")
+            os_log("\(Self.i) MessageProvider")
         }
     }
 

@@ -2,6 +2,7 @@ import AVKit
 import OSLog
 import SwiftUI
 import MagicKit
+import MagicUI
 
 struct BookLayout: View, SuperLog {
     static let emoji = "🖥️"
@@ -23,7 +24,7 @@ struct BookLayout: View, SuperLog {
         let verbose = false
         
         if verbose {
-            os_log("\(Logger.initLog) BookLayout")
+            os_log("\(Self.i) BookLayout")
         }
     }
 

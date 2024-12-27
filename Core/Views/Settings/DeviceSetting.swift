@@ -2,6 +2,7 @@ import SwiftUI
 import OSLog
 import SwiftData
 import MagicKit
+import MagicUI
 
 struct DeviceSetting: View, SuperLog {
     @Environment(\.modelContext) private var modelContext
@@ -33,7 +34,7 @@ struct DeviceSetting: View, SuperLog {
                 }
             }.padding(10)
         }
-        .background(BackgroundView.type1.opacity(0.1))
+        .background(MagicBackground.aurora.opacity(0.1))
     }
 }
 

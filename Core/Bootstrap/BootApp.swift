@@ -1,6 +1,7 @@
 import OSLog
 import SwiftUI
 import MagicKit
+import MagicUI
 
 @main
 struct BootApp: App, SuperLog {

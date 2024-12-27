@@ -1,5 +1,6 @@
 import SwiftUI
 import MagicKit
+import MagicUI
 
 struct CoverDirSetting: View {
     var body: some View {
@@ -25,7 +26,7 @@ struct CoverDirSetting: View {
                     })
                 #endif
             }.padding(10)
-        }.background(BackgroundView.type1.opacity(0.1))
+        }.background(MagicBackground.aurora.opacity(0.1))
     }
 }
 

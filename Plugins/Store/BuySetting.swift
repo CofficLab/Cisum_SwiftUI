@@ -1,4 +1,5 @@
 import MagicKit
+import MagicUI
 import OSLog
 import StoreKit
 import SwiftUI
@@ -32,15 +33,15 @@ struct BuySetting: View, SuperLog {
                 }
             }
             .padding()
-            .background(BackgroundView.type1.opacity(0.1))
+            .background(MagicBackground.aurora.opacity(0.1))
 
             SubscriptionSetting()
                 .padding()
-                .background(BackgroundView.type1.opacity(0.1))
+                .background(MagicBackground.aurora.opacity(0.1))
             
             RestoreView()
                 .padding()
-                .background(BackgroundView.type1.opacity(0.1))
+                .background(MagicBackground.aurora.opacity(0.1))
 
             footerView
         }
@@ -62,7 +63,7 @@ struct BuySetting: View, SuperLog {
         .padding(.vertical, 12)
 
         .font(.footnote)
-        .background(BackgroundView.type1.opacity(0.1))
+        .background(MagicBackground.aurora.opacity(0.1))
     }
 }
 

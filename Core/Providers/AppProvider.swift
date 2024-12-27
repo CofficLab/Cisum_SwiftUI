@@ -5,6 +5,7 @@ import MediaPlayer
 import OSLog
 import SwiftUI
 import MagicKit
+import MagicUI
 
 class AppProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLog, SuperThread {
     static let emoji: String = "🐮"

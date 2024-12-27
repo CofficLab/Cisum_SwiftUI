@@ -1,6 +1,7 @@
 import Foundation
 import OSLog
 import MagicKit
+import MagicUI
 
 class LocalStorage: ObservableObject, SuperStorage {
     static let emoji = "🛖"

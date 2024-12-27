@@ -1,5 +1,6 @@
 import AVKit
 import MagicKit
+import MagicUI
 import OSLog
 import SwiftUI
 
@@ -22,7 +23,7 @@ struct MainView: View, SuperLog, SuperThread {
     init() {
         let verbose = false
         if verbose {
-            os_log("\(Logger.initLog)AudioLayout")
+            os_log("\(Self.i)")
         }
     }
 

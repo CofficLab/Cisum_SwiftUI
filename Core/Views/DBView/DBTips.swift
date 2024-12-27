@@ -1,5 +1,6 @@
 import SwiftUI
 import MagicKit
+import MagicUI
 
 struct DBTips: View {
     @EnvironmentObject var app: AppProvider
@@ -9,7 +10,7 @@ struct DBTips: View {
     }
 
     var body: some View {
-        CardView(background: BackgroundView.type3) {
+        MagicCard(background: MagicBackground.aurora) {
                 VStack {
                     VStack(spacing: 20) {
                         HStack {
@@ -55,5 +56,5 @@ struct DBTips: View {
 #Preview {
     DBTips()
         .frame(width: 300, height: 300)
-        .background(BackgroundView.type1)
+        .background(MagicBackground.aurora)
 }

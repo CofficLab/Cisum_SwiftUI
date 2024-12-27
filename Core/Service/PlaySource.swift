@@ -1,6 +1,7 @@
 import Foundation
 import SwiftUI
 import MagicKit
+import MagicUI
 
 protocol PlaySource {
     func delete() async throws

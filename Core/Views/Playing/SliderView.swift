@@ -1,6 +1,7 @@
 import AVKit
 import Combine
 import MagicKit
+import MagicUI
 import OSLog
 import SwiftUI
 

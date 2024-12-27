@@ -1,4 +1,5 @@
 import MagicKit
+import MagicUI
 import OSLog
 import SwiftUI
 
@@ -67,7 +68,7 @@ struct BookTile: View, SuperThread, SuperLog {
             if let cover = cover {
                 cover.resizable().scaledToFit()
             } else {
-                BackgroundView.type2A
+                MagicBackground.auroraGreen
             }
         }
         .clipShape(RoundedRectangle(cornerSize: CGSize(width: 10, height: 10)))

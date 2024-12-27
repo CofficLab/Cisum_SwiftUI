@@ -1,4 +1,5 @@
 import MagicKit
+import MagicUI
 import SwiftUI
 
 struct ProTips: View {
@@ -10,7 +11,7 @@ struct ProTips: View {
     }
 
     var body: some View {
-        CardView(background: BackgroundView.yellow) {
+        MagicCard(background: MagicBackground.aurora) {
             VStack {
                 VStack(spacing: 20) {
                     HStack {
@@ -33,5 +34,5 @@ struct ProTips: View {
 #Preview {
     DBTips()
         .frame(width: 300, height: 300)
-        .background(BackgroundView.type1)
+        .background(MagicBackground.aurora)
 }

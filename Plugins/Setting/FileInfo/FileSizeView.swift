@@ -1,5 +1,6 @@
 import SwiftUI
 import MagicKit
+import MagicUI
 import OSLog
 
 struct FileSizeView: View, SuperLog {

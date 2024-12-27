@@ -1,5 +1,6 @@
 import Foundation
 import MagicKit
+import MagicUI
 import OSLog
 
 class BookCopyJob: SuperLog, SuperThread {

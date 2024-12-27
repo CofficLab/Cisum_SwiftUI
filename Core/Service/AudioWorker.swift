@@ -1,6 +1,7 @@
 import AVKit
 import Foundation
 import MagicKit
+import MagicUI
 import MediaPlayer
 import OSLog
 import SwiftUI

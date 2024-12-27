@@ -1,10 +1,11 @@
 import OSLog
 import MagicKit
+import MagicUI
 import SwiftUI
 
 struct SyncingView: View {
     var body: some View {
-        CardView(background: BackgroundView.type4) {
+        MagicCard(background: MagicBackground.aurora) {
             Text("正在读取仓库")
                 .font(.title)
                 .foregroundStyle(.white)

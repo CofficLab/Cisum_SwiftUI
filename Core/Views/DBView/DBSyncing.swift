@@ -1,9 +1,10 @@
 import SwiftUI
 import MagicKit
+import MagicUI
 
 struct DBSyncing: View {
     var body: some View {
-        Centered {
+        MagicCentered {
             ProgressView()
         }
     }
@@ -17,5 +18,5 @@ struct DBSyncing: View {
 #Preview {
     DBSyncing()
         .frame(width: 300, height: 300)
-        .background(BackgroundView.type1)
+        .background(MagicBackground.aurora)
 }

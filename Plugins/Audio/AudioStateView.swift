@@ -1,4 +1,5 @@
 import MagicKit
+import MagicUI
 import OSLog
 import SwiftData
 import SwiftUI
@@ -39,7 +40,7 @@ struct AudioStateView: View, SuperLog, SuperThread {
     }
 
     func makeInfoView(_ i: String) -> some View {
-        CardView(background: BackgroundView.type3, paddingVertical: 6) {
+        MagicCard(background: MagicBackground.aurora, paddingVertical: 6) {
             HStack {
                 Image(systemName: "info.circle")
                     .foregroundStyle(.white)
@@ -51,7 +52,7 @@ struct AudioStateView: View, SuperLog, SuperThread {
     }
 
     func makeErrorView(_ e: Error) -> some View {
-        CardView(background: BackgroundView.type5, paddingVertical: 6) {
+        MagicCard(background: MagicBackground.aurora, paddingVertical: 6) {
             HStack {
                 Image(systemName: "info.circle")
                     .foregroundStyle(.white)

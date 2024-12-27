@@ -2,6 +2,8 @@ import AVKit
 import OSLog
 import SwiftUI
 import MagicKit
+import MagicUI
+import MagicUI
 
 struct VideoView: View, SuperLog {
     @EnvironmentObject var app: AppProvider
@@ -41,7 +43,7 @@ struct VideoView: View, SuperLog {
 #Preview("ProgressView") {
     PictureView.makeProgressView()
         .frame(width: 300, height: 300)
-        .background(BackgroundView.type2)
+        .background(MagicBackground.aurora)
 }
 
 #Preview("List") {
@@ -60,5 +62,5 @@ struct VideoView: View, SuperLog {
             )
             Text("2")
         }.background(.blue.opacity(0.2))
-    }.background(BackgroundView.type4)
+    }.background(MagicBackground.aurora)
 }

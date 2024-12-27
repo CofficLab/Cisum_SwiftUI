@@ -2,6 +2,7 @@ import AVFoundation
 import CryptoKit
 import Foundation
 import MagicKit
+import MagicUI
 import OSLog
 import SwiftData
 import SwiftUI

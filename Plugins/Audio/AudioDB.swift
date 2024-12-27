@@ -1,5 +1,6 @@
 import Foundation
 import MagicKit
+import MagicUI
 import OSLog
 import SwiftData
 
@@ -30,7 +31,7 @@ class AudioDB: ObservableObject, SuperEvent, SuperLog {
     }
     
     func delete(_ audio: AudioModel, verbose: Bool) async throws {
-        self.disk.deleteFile(audio.url)
+        try self.disk.deleteFile(audio.url)
         try await self.db.deleteAudio(audio, verbose: verbose)
         self.emit(.audioDeleted)
     }
@@ -758,7 +759,7 @@ extension AudioRecordDB {
                 }
 
                 // 从磁盘删除
-                disk.deleteFile(audio.url)
+                try disk.deleteFile(audio.url)
 
                 // 从磁盘删除后，因为数据库监听了磁盘的变动，会自动删除
                 // 但自动删除可能不及时，所以这里及时删除

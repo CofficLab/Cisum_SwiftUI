@@ -1,6 +1,7 @@
 import OSLog
 import SwiftUI
 import MagicKit
+import MagicUI
 
 struct BtnNext: View, SuperEvent {
     @EnvironmentObject var playMan: PlayMan

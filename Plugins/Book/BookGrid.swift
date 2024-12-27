@@ -2,6 +2,7 @@ import OSLog
 import SwiftData
 import SwiftUI
 import MagicKit
+import MagicUI
 
 struct BookGrid: View, SuperLog, SuperThread {
     static let emoji = "📖"

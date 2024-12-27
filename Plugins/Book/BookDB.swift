@@ -1,5 +1,6 @@
 import Foundation
 import MagicKit
+import MagicUI
 import OSLog
 
 class BookDB: ObservableObject, SuperEvent, SuperLog {
@@ -11,7 +12,7 @@ class BookDB: ObservableObject, SuperEvent, SuperLog {
     
     init(db: BookRecordDB, disk: any SuperStorage, verbose: Bool) {
         if verbose {
-            os_log("\(Logger.initLog)BookDB")
+            os_log("\(Self.i)BookDB")
         }
 
         self.db = db
@@ -36,8 +37,7 @@ class BookDB: ObservableObject, SuperEvent, SuperLog {
     }
     
     func delete(_ book: Book, verbose: Bool) async {
-        self.disk.deleteFile(book.url)
-        await self.db
+        try? self.disk.deleteFile(book.url)
         self.emit(.audioDeleted)
     }
     

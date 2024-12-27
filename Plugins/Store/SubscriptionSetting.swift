@@ -1,4 +1,5 @@
 import MagicKit
+import MagicUI
 import OSLog
 import StoreKit
 import SwiftUI

@@ -1,6 +1,7 @@
 import Foundation
 import OSLog
 import MagicKit
+import MagicUI
 import SwiftUI
 
 class DebugPlugin: SuperPlugin, SuperLog {

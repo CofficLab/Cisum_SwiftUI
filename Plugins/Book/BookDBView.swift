@@ -1,5 +1,6 @@
 import Foundation
 import MagicKit
+import MagicUI
 import OSLog
 import SwiftData
 import SwiftUI
@@ -20,7 +21,7 @@ struct BookDBView: View, SuperLog, SuperThread {
 
     init(verbose: Bool = false, disk: any SuperStorage) {
         if verbose {
-            os_log("\(Logger.initLog)BookDBView")
+            os_log("\(Self.i)BookDBView")
         }
 
         self.disk = disk

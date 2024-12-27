@@ -1,4 +1,5 @@
 import MagicKit
+import MagicUI
 import OSLog
 import SwiftData
 import SwiftUI
@@ -28,13 +29,13 @@ struct CopyStateView: View, SuperLog, SuperThread {
             .font(.callout)
             .padding(.horizontal, 16)
             .padding(.vertical, 6)
-            .background(BackgroundView.type3)
+            .background(MagicBackground.aurora)
             .clipShape(RoundedRectangle(cornerRadius: 8))
         }
     }
 
     func makeInfoView(_ i: String) -> some View {
-        CardView(background: BackgroundView.type3, paddingVertical: 6) {
+        MagicCard(background: MagicBackground.aurora, paddingVertical: 6) {
             HStack {
                 Image(systemName: "info.circle")
                     .foregroundStyle(.white)

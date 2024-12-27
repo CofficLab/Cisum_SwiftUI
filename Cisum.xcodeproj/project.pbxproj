@@ -49,6 +49,8 @@
 		0B8113B12C2C38AD007CA124 /* BtnScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8113B02C2C38AD007CA124 /* BtnScene.swift */; };
 		0B8113B42C2C430B007CA124 /* Migrate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8113B32C2C430B007CA124 /* Migrate.swift */; };
 		0B8113B62C2C4342007CA124 /* v25.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8113B52C2C4342007CA124 /* v25.swift */; };
+		0B8583272D1EE8FE0035989F /* MagicKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0B8583262D1EE8FE0035989F /* MagicKit */; };
+		0B8583292D1EE8FE0035989F /* MagicUI in Frameworks */ = {isa = PBXBuildFile; productRef = 0B8583282D1EE8FE0035989F /* MagicUI */; };
 		0B8C36AA2BEA2EC700C47567 /* SuperStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C36A92BEA2EC600C47567 /* SuperStorage.swift */; };
 		0B8C36AC2BEC6E0F00C47567 /* StateExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C36AB2BEC6E0F00C47567 /* StateExt.swift */; };
 		0B8C36B02BEC6E6500C47567 /* DBExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C36AF2BEC6E6500C47567 /* DBExt.swift */; };
@@ -138,7 +140,6 @@
 		F53ED8DA2D19098300F8E42D /* MagicKit in Frameworks */ = {isa = PBXBuildFile; productRef = F53ED8D92D19098300F8E42D /* MagicKit */; };
 		F54522252BFF3C780027CF55 /* Products.storekit in Resources */ = {isa = PBXBuildFile; fileRef = F54522242BFF3C770027CF55 /* Products.storekit */; };
 		F54522272BFF3CCE0027CF55 /* Products.plist in Resources */ = {isa = PBXBuildFile; fileRef = F54522262BFF3CCE0027CF55 /* Products.plist */; };
-		F545D1752C1FCAD0006A6AFA /* CloudExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F545D1742C1FCAD0006A6AFA /* CloudExt.swift */; };
 		F545D1772C1FCC86006A6AFA /* UserExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F545D1762C1FCC86006A6AFA /* UserExt.swift */; };
 		F54DFA522CA4E41600F81BE3 /* VideoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA512CA4E41600F81BE3 /* VideoApp.swift */; };
 		F54DFA582CA4E59B00F81BE3 /* VideoLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA572CA4E59B00F81BE3 /* VideoLayout.swift */; };
@@ -160,7 +161,6 @@
 		F566BD742D1B8EE0005D7F54 /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = F566BD732D1B8EE0005D7F54 /* AlertToast */; };
 		F573B1882C0411E4004C34CC /* DeviceDataExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B1872C0411E4004C34CC /* DeviceDataExt.swift */; };
 		F573B18C2C042E08004C34CC /* DeviceExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B18B2C042E08004C34CC /* DeviceExt.swift */; };
-		F5847C1F2C3778570080887B /* ErrorViewCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5847C1E2C3778570080887B /* ErrorViewCloud.swift */; };
 		F586DCD52C2BFE9E0078580B /* BtnOpenFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F586DCD42C2BFE9E0078580B /* BtnOpenFolder.swift */; };
 		F586DCD72C2C01FF0078580B /* ErrorViewFatal.swift in Sources */ = {isa = PBXBuildFile; fileRef = F586DCD62C2C01FF0078580B /* ErrorViewFatal.swift */; };
 		F59DC6EC2CB4C1F40052AEC8 /* PlanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F59DC6EB2CB4C1F40052AEC8 /* PlanView.swift */; };
@@ -208,7 +208,6 @@
 		F5C2EB832D1AC16900798B46 /* ConfigProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C2EB822D1AC16500798B46 /* ConfigProvider.swift */; };
 		F5D3EF0F2D06B5F600548889 /* PlayManDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D3EF0E2D06B5F000548889 /* PlayManDelegate.swift */; };
 		F5D3EF112D06B7DD00548889 /* AudioConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D3EF102D06B7D300548889 /* AudioConfig.swift */; };
-		F5D3EF132D06C70000548889 /* PluginExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D3EF122D06C6FD00548889 /* PluginExt.swift */; };
 		F5D3EF192D06F4A200548889 /* PlaySource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D3EF182D06F49D00548889 /* PlaySource.swift */; };
 		F5D3EF1D2D080DE100548889 /* BookConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D3EF1C2D080DE100548889 /* BookConfig.swift */; };
 		F5D3EF1F2D080E9400548889 /* BookRecordDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D3EF1E2D080E9400548889 /* BookRecordDB.swift */; };
@@ -353,7 +352,6 @@
 		F53BE0332C2024BE003CBA29 /* DiskFileGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskFileGroup.swift; sourceTree = "<group>"; };
 		F54522242BFF3C770027CF55 /* Products.storekit */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Products.storekit; sourceTree = "<group>"; };
 		F54522262BFF3CCE0027CF55 /* Products.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Products.plist; sourceTree = "<group>"; };
-		F545D1742C1FCAD0006A6AFA /* CloudExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudExt.swift; sourceTree = "<group>"; };
 		F545D1762C1FCC86006A6AFA /* UserExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserExt.swift; sourceTree = "<group>"; };
 		F54DFA512CA4E41600F81BE3 /* VideoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoApp.swift; sourceTree = "<group>"; };
 		F54DFA572CA4E59B00F81BE3 /* VideoLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoLayout.swift; sourceTree = "<group>"; };
@@ -373,7 +371,6 @@
 		F5511BC92C2BACC000400900 /* TopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopView.swift; sourceTree = "<group>"; };
 		F573B1872C0411E4004C34CC /* DeviceDataExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceDataExt.swift; sourceTree = "<group>"; };
 		F573B18B2C042E08004C34CC /* DeviceExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceExt.swift; sourceTree = "<group>"; };
-		F5847C1E2C3778570080887B /* ErrorViewCloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorViewCloud.swift; sourceTree = "<group>"; };
 		F586DCD42C2BFE9E0078580B /* BtnOpenFolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnOpenFolder.swift; sourceTree = "<group>"; };
 		F586DCD62C2C01FF0078580B /* ErrorViewFatal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorViewFatal.swift; sourceTree = "<group>"; };
 		F59DC6EB2CB4C1F40052AEC8 /* PlanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanView.swift; sourceTree = "<group>"; };
@@ -417,7 +414,6 @@
 		F5C2EB822D1AC16500798B46 /* ConfigProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigProvider.swift; sourceTree = "<group>"; };
 		F5D3EF0E2D06B5F000548889 /* PlayManDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayManDelegate.swift; sourceTree = "<group>"; };
 		F5D3EF102D06B7D300548889 /* AudioConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioConfig.swift; sourceTree = "<group>"; };
-		F5D3EF122D06C6FD00548889 /* PluginExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginExt.swift; sourceTree = "<group>"; };
 		F5D3EF182D06F49D00548889 /* PlaySource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaySource.swift; sourceTree = "<group>"; };
 		F5D3EF1C2D080DE100548889 /* BookConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookConfig.swift; sourceTree = "<group>"; };
 		F5D3EF1E2D080E9400548889 /* BookRecordDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookRecordDB.swift; sourceTree = "<group>"; };
@@ -441,7 +437,9 @@
 				F5C2EB7E2D1AB49700798B46 /* AlertToast in Frameworks */,
 				0B382A9F2D1C2F3B0075391C /* AlertToast in Frameworks */,
 				0B27EAE72D1D9E9E00242B78 /* MagicKit in Frameworks */,
+				0B8583292D1EE8FE0035989F /* MagicUI in Frameworks */,
 				F566BD742D1B8EE0005D7F54 /* AlertToast in Frameworks */,
+				0B8583272D1EE8FE0035989F /* MagicKit in Frameworks */,
 				F53ED8DA2D19098300F8E42D /* MagicKit in Frameworks */,
 				F500793F2CA635B900C9D3D4 /* MagicKit in Frameworks */,
 				0B00F4672BB840C1000833B9 /* AsyncAlgorithms in Frameworks */,
@@ -667,7 +665,6 @@
 				0B1D5A8C2AB3E8290010DDF2 /* AppDelegate.swift */,
 				0BAB300D2AB814F70012D837 /* BootApp.swift */,
 				0B5E51E42AD912B5000650CF /* DebugCommand.swift */,
-				F5847C1E2C3778570080887B /* ErrorViewCloud.swift */,
 				F586DCD62C2C01FF0078580B /* ErrorViewFatal.swift */,
 				0B1165E82ABBC6C0005C5CBB /* LaunchView.swift */,
 				0B604AE72AD6384300929DD8 /* RootView.swift */,
@@ -682,6 +679,7 @@
 			children = (
 				0B1D5A732AB302600010DDF2 /* ContentView.swift */,
 				F54DFA662CA4EA1700F81BE3 /* ControlView.swift */,
+				0B6B8B982BBA39F500F65B23 /* ControlButton.swift */,
 				0BBC157B2AB84C21006E82C4 /* MainView.swift */,
 				F52A98F62C439D6C003559F1 /* Posters.swift */,
 				F5B64D032C32546F00DE55AD /* SyncingView.swift */,
@@ -692,8 +690,6 @@
 		0BBAD0702BBBDC22005834A3 /* Component */ = {
 			isa = PBXGroup;
 			children = (
-				0B6B8B9C2BBA4D0600F65B23 /* Coffee.swift */,
-				0B6B8B982BBA39F500F65B23 /* ControlButton.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -790,12 +786,10 @@
 		0BEBCBAC2B352A2D00F2116E /* Config */ = {
 			isa = PBXGroup;
 			children = (
-				F545D1742C1FCAD0006A6AFA /* CloudExt.swift */,
 				0B1D5A752AB302600010DDF2 /* Config.swift */,
 				0B8C36AF2BEC6E6500C47567 /* DBExt.swift */,
 				0B4DFC712BD740B4001CEF32 /* Device.swift */,
 				F573B18B2C042E08004C34CC /* DeviceExt.swift */,
-				F5D3EF122D06C6FD00548889 /* PluginExt.swift */,
 				0B8C36AB2BEC6E0F00C47567 /* StateExt.swift */,
 				F545D1762C1FCC86006A6AFA /* UserExt.swift */,
 				0B8C36B32BEC6EAB00C47567 /* ViewExt.swift */,
@@ -824,6 +818,7 @@
 				0BC29EAE2CA5893800E4813F /* HeroView.swift */,
 				0BFB38822BCCCC780055E38B /* OperationView.swift */,
 				0B8FC26F2BBC559500839C75 /* PlayingAlbum.swift */,
+				0B6B8B9C2BBA4D0600F65B23 /* Coffee.swift */,
 				F59DC6F32CB4D8F10052AEC8 /* PlayingCover.swift */,
 				0BC29EB22CA59E8B00E4813F /* SliderView.swift */,
 				0B220F6E2BB051F50077255A /* TitleView.swift */,
@@ -958,6 +953,8 @@
 				0B27EAE62D1D9E9E00242B78 /* MagicKit */,
 				F5DCEB0B2D1E787600FB4F02 /* MagicKit */,
 				F5E5A8CC2D1E8BE80049945B /* MagicKit */,
+				0B8583262D1EE8FE0035989F /* MagicKit */,
+				0B8583282D1EE8FE0035989F /* MagicUI */,
 			);
 			productName = Cisum;
 			productReference = 0B1D5A4B2AB301AD0010DDF2 /* Cisum.app */;
@@ -992,7 +989,7 @@
 			packageReferences = (
 				0B00F4652BB840C1000833B9 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */,
 				0B382A9D2D1C2F3B0075391C /* XCRemoteSwiftPackageReference "MagicMessage" */,
-				F5E5A8CB2D1E8BE80049945B /* XCLocalSwiftPackageReference "../MagicKit" */,
+				0B8583252D1EE8FE0035989F /* XCLocalSwiftPackageReference "../MagicKit" */,
 			);
 			productRefGroup = 0B9C1C3E2AAF18FE001A26AF /* Products */;
 			projectDirPath = "";
@@ -1090,7 +1087,6 @@
 				0BC29EB32CA59E8B00E4813F /* SliderView.swift in Sources */,
 				F54DFA5F2CA4E75D00F81BE3 /* SuperPlugin.swift in Sources */,
 				F5D3EF272D082ECF00548889 /* BookStateView.swift in Sources */,
-				F545D1752C1FCAD0006A6AFA /* CloudExt.swift in Sources */,
 				F54DFA632CA4E84500F81BE3 /* VideoBtns.swift in Sources */,
 				0B6DDCE32D198861001473E3 /* DBSynced.swift in Sources */,
 				F507F5172C09541B00CB9A3A /* DeviceSetting.swift in Sources */,
@@ -1164,7 +1160,6 @@
 				F5B64D152C328F3900DE55AD /* SuperPlayWorker.swift in Sources */,
 				F52A98FE2C43BC99003559F1 /* AudioTile.swift in Sources */,
 				0BFB38852BCCD26F0055E38B /* BtnLike.swift in Sources */,
-				F5847C1F2C3778570080887B /* ErrorViewCloud.swift in Sources */,
 				F518F6FB2C34F06000844E62 /* BookRead.swift in Sources */,
 				F5B64D132C3288D300DE55AD /* PlayMan.swift in Sources */,
 				F5C2C7492D1C141D0094157C /* MigrationManager.swift in Sources */,
@@ -1191,7 +1186,6 @@
 				0BB9D2442C32E3E60027DDAD /* BtnChapters.swift in Sources */,
 				0B8C36AC2BEC6E0F00C47567 /* StateExt.swift in Sources */,
 				F5D3EF112D06B7DD00548889 /* AudioConfig.swift in Sources */,
-				F5D3EF132D06C70000548889 /* PluginExt.swift in Sources */,
 				F5B64D042C32546F00DE55AD /* SyncingView.swift in Sources */,
 				0B382A9C2D1AF6160075391C /* SettingRootView.swift in Sources */,
 				0BB543F42BE8E38300D7A2B2 /* Duplicates.swift in Sources */,
@@ -1464,7 +1458,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		F5E5A8CB2D1E8BE80049945B /* XCLocalSwiftPackageReference "../MagicKit" */ = {
+		0B8583252D1EE8FE0035989F /* XCLocalSwiftPackageReference "../MagicKit" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../MagicKit;
 		};
@@ -1503,6 +1497,14 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 0B382A9D2D1C2F3B0075391C /* XCRemoteSwiftPackageReference "MagicMessage" */;
 			productName = AlertToast;
+		};
+		0B8583262D1EE8FE0035989F /* MagicKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MagicKit;
+		};
+		0B8583282D1EE8FE0035989F /* MagicUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MagicUI;
 		};
 		F500793E2CA635B900C9D3D4 /* MagicKit */ = {
 			isa = XCSwiftPackageProductDependency;

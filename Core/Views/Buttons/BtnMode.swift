@@ -1,5 +1,6 @@
 import SwiftUI
 import MagicKit
+import MagicUI
 
 struct BtnMode: View {
     @EnvironmentObject var app: AppProvider
@@ -28,7 +29,7 @@ struct BtnMode: View {
 
 #Preview {
     RootView {
-        Centered {
+        MagicCentered {
             BtnMode()
         }
     }

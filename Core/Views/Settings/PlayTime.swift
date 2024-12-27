@@ -1,5 +1,6 @@
 import SwiftUI
 import MagicKit
+import MagicUI
 
 struct PlayTime: View {
     @State var playTime = 0
@@ -13,7 +14,7 @@ struct PlayTime: View {
                 }
                 Spacer()
             }.padding(10)
-        }.background(BackgroundView.type1.opacity(0.1))
+        }.background(MagicBackground.aurora.opacity(0.1))
             .onAppear {
                 getTime()
             }

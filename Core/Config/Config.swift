@@ -1,5 +1,6 @@
 import Foundation
 import MagicKit
+import MagicUI
 import OSLog
 import SwiftData
 import SwiftUI
@@ -48,7 +49,7 @@ enum Config: SuperLog {
     static let coversDirName = "covers"
 
     static let appSupportDir = fm.urls(for: .applicationSupportDirectory, in: .userDomainMask).last
-    static let localContainer = localDocumentsDir?.deletingLastPathComponent()
+    static let localContainer: URL? = localDocumentsDir?.deletingLastPathComponent()
     static let localDocumentsDir = fm.urls(for: .documentDirectory, in: .userDomainMask).first
 
     // MARK: iCloud 容器里的 Documents
@@ -61,6 +62,16 @@ enum Config: SuperLog {
         }
 
         fatalError()
+    }
+    
+    static func getPlugins() -> [SuperPlugin] {
+        return [
+            SettingPlugin(),
+            // DebugPlugin(),
+            AudioPlugin(),
+//            BookPlugin()
+            CopyPlugin(),
+        ]
     }
 }
 

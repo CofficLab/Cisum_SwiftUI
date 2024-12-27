@@ -1,4 +1,5 @@
 import MagicKit
+import MagicUI
 import SwiftUI
 
 protocol SuperSetting {
@@ -25,7 +26,7 @@ extension SuperSetting {
             .frame(maxWidth: .infinity)
             .padding(10)
         }
-        .background(BackgroundView.type1.opacity(0.1))
+        .background(MagicBackground.aurora.opacity(0.1))
     }
     
     func makeSettingView<Content: View>(

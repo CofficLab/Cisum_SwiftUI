@@ -1,5 +1,6 @@
 import SwiftUI
 import MagicKit
+import MagicUI
 
 /**
  展示从磁盘读取的图书数据
@@ -23,7 +24,7 @@ struct BookTileBackup: View {
             }
             Spacer()
         }
-        .background(BackgroundView.type2A)
+        .background(MagicBackground.auroraBlue)
         .foregroundStyle(.white)
         .clipShape(RoundedRectangle(cornerSize: CGSize(width: 10, height: 10)))
         .onTapGesture {
