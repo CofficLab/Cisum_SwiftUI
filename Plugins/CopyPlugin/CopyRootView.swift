@@ -60,6 +60,8 @@ extension CopyRootView {
     }
 
     func onDrop(_ providers: [NSItemProvider]) -> Bool {
+        let verbose = true
+        
         if outOfLimit {
             return false
         }
@@ -78,7 +80,10 @@ extension CopyRootView {
             return result
         }
 
-        os_log("\(self.t)添加 \(urls.count) 个文件到复制队列")
+        if verbose {
+            os_log("\(self.t)添加 \(urls.count) 个文件到复制队列")
+        }
+        
         self.emitCopyFiles(urls)
 
         guard let disk = p.current?.getDisk() else {
@@ -87,7 +92,9 @@ extension CopyRootView {
             return false
         }
 
-        self.m.toast("复制 \(urls.count) 个文件")
+        if verbose {
+            self.m.toast("复制 \(urls.count) 个文件")
+        }
 
         self.worker.append(urls, folder: disk.root)
 

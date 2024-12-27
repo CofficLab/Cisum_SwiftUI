@@ -26,7 +26,7 @@ class CopyPlugin: SuperPlugin, SuperLog {
     }
 
     func addRootView() -> AnyView? {
-        os_log("\(self.t)🖥️🖥️🖥️ AddRootView")
+        //os_log("\(self.t)🖥️🖥️🖥️ AddRootView")
         
         guard let db = self.db else {
             assert(false, "DB is nil")

@@ -26,9 +26,6 @@ struct CopyStatusView: View, SuperLog, SuperThread {
                 taskList
             }
         }
-        .onChange(of: tasks.count) {
-            os_log("\(self.t)Task count changed to \(tasks.count)")
-        }
     }
 
     private var taskList: some View {
