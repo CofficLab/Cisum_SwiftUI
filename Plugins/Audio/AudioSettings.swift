@@ -32,24 +32,6 @@ struct AudioSettings: View, SuperSetting, SuperLog {
         .task {
             diskSize = audioManager.disk.getFileSizeReadable()
         }
-        
-        // 注释掉的 GroupBox 保持不变
-//        GroupBox {
-//            VStack {
-//                ForEach(Array(DiskScene.allCases.filter({
-//                    $0.available
-//                }).enumerated()), id: \.offset) { (index, s) in
-//                    DirScene(scene: s)
-//
-//                    // 如果不是最后一个元素,才显示分割线
-//                    if index < DiskScene.allCases.count - 1 {
-//                        Divider()
-//                    }
-//                }
-//            }
-//            .padding(10)
-//        }
-//        .labelStyle(.iconOnly)
     }
 }
 

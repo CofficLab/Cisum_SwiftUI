@@ -22,9 +22,11 @@ struct FileSizeView: View, SuperLog {
         }
     }
 
-    private func updateSize() {
+    private func updateSize(verbose: Bool = false) {
         Task.detached(priority: .background) {
-            os_log("\(self.t) updateSize: \(url.path)")
+            if verbose {
+                os_log("\(self.t)UpdateSize: \(url.path)")
+            }
             
             let size: Int64 = {
                 var totalSize: Int64 = 0

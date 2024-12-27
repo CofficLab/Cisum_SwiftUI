@@ -1,6 +1,6 @@
-import SwiftUI
 import Foundation
 import MagicKit
+import SwiftUI
 
 struct RadioButton: View {
     @State private var isHovering = false
@@ -10,6 +10,8 @@ struct RadioButton: View {
     let isSelected: Binding<Bool>
     let trailing: (() -> AnyView)?
     let showURL: Bool
+    let isEnabled: Bool
+    let disabledReason: String?
 
     init(
         text: String,
@@ -17,7 +19,9 @@ struct RadioButton: View {
         url: URL?,
         isSelected: Binding<Bool>,
         trailing: (() -> AnyView)? = nil,
-        showURL: Bool = false
+        showURL: Bool = false,
+        isEnabled: Bool = true,
+        disabledReason: String? = nil
     ) {
         self.title = text
         self.description = description
@@ -25,6 +29,8 @@ struct RadioButton: View {
         self.isSelected = isSelected
         self.trailing = trailing
         self.showURL = showURL
+        self.isEnabled = isEnabled
+        self.disabledReason = disabledReason
     }
 
     var body: some View {
@@ -52,7 +58,7 @@ struct RadioButton: View {
                         Text(description)
                             .font(.caption)
                             .foregroundColor(.secondary)
-                        
+
                         if showURL {
                             HStack {
                                 Text(url?.path ?? "未设置路径")
@@ -61,7 +67,7 @@ struct RadioButton: View {
                                     .fixedSize(horizontal: false, vertical: true)
                                     .lineLimit(nil)
                                 Spacer()
-                                
+
                                 if let url = url {
                                     BtnOpenFolder(url: url).labelStyle(.iconOnly)
                                 }
@@ -70,25 +76,40 @@ struct RadioButton: View {
                             .background(BackgroundView.type2A.opacity(0.2))
                             .cornerRadius(6)
                         }
+
+                        if !isEnabled, let reason = disabledReason {
+                            HStack(spacing: 4) {
+                                Image(systemName: "exclamationmark.triangle.fill")
+                                    .foregroundColor(.orange)
+                                    .imageScale(.small)
+                                Text(reason)
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            .padding(.top, 4)
+                        }
                     }
                 }
             }
             .contentShape(Rectangle())
             .onTapGesture {
-                isSelected.wrappedValue = true
+                if isEnabled {
+                    isSelected.wrappedValue = true
+                }
             }
             .padding(8)
             .background(
                 RoundedRectangle(cornerRadius: 8)
                     .fill(Color.primary)
-                    .opacity(isHovering ? 0.05 : 0.0001)
+                    .opacity(isEnabled && isHovering ? 0.05 : 0.0001)
                     .overlay(
                         RoundedRectangle(cornerRadius: 8)
-                            .stroke(Color.primary.opacity(0.1), lineWidth: 1)
+                            .stroke(Color.primary.opacity(isEnabled ? 0.1 : 0.05), lineWidth: 1)
                     )
             )
+            .opacity(isEnabled ? 1 : 0.5)
             .onHover { hovering in
-                isHovering = hovering
+                isHovering = isEnabled ? hovering : false
             }
         }
     }

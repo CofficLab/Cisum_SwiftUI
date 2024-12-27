@@ -9,6 +9,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     let a = AppProvider()
     let s = StoreProvider()
     let c = ConfigProvider()
+    let cloudProvider = CloudProvider()
 
     @State var isDropping: Bool = false
     @State var error: Error? = nil
@@ -66,6 +67,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                     .environmentObject(p)
                     .environmentObject(m)
                     .environmentObject(c)
+                    .environmentObject(cloudProvider)
                 }
             }
         }

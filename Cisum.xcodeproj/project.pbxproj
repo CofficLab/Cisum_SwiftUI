@@ -221,6 +221,7 @@
 		F5E17A762D03074500473CB8 /* MessageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E17A752D03074500473CB8 /* MessageProvider.swift */; };
 		F5E17A782D03075E00473CB8 /* SmartMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E17A772D03075E00473CB8 /* SmartMessage.swift */; };
 		F5E5A8CD2D1E8BE80049945B /* MagicKit in Frameworks */ = {isa = PBXBuildFile; productRef = F5E5A8CC2D1E8BE80049945B /* MagicKit */; };
+		F5E5A8CF2D1E99620049945B /* CloudProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E5A8CE2D1E99610049945B /* CloudProvider.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -428,6 +429,7 @@
 		F5D3EF262D082ECF00548889 /* BookStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookStateView.swift; sourceTree = "<group>"; };
 		F5E17A752D03074500473CB8 /* MessageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageProvider.swift; sourceTree = "<group>"; };
 		F5E17A772D03075E00473CB8 /* SmartMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmartMessage.swift; sourceTree = "<group>"; };
+		F5E5A8CE2D1E99610049945B /* CloudProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudProvider.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -486,6 +488,7 @@
 		0B1D5A5E2AB3025E0010DDF2 /* Providers */ = {
 			isa = PBXGroup;
 			children = (
+				F5E5A8CE2D1E99610049945B /* CloudProvider.swift */,
 				F5C2EB822D1AC16500798B46 /* ConfigProvider.swift */,
 				0B1165EF2ABBCCB0005C5CBB /* AppProvider.swift */,
 				F5E17A752D03074500473CB8 /* MessageProvider.swift */,
@@ -1169,6 +1172,7 @@
 				F518F6FB2C34F06000844E62 /* BookRead.swift in Sources */,
 				F5B64D132C3288D300DE55AD /* PlayMan.swift in Sources */,
 				F5C2C7492D1C141D0094157C /* MigrationManager.swift in Sources */,
+				F5E5A8CF2D1E99620049945B /* CloudProvider.swift in Sources */,
 				F52A98F22C410C41003559F1 /* BookUpdate.swift in Sources */,
 				0B8C36B02BEC6E6500C47567 /* DBExt.swift in Sources */,
 				0B9FA2992BC81EFF007B235A /* NotDownloadedAlbum.swift in Sources */,

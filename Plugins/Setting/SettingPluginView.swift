@@ -5,7 +5,9 @@ import OSLog
 struct SettingPluginView: View, SuperSetting, SuperLog {
     static var emoji: String = "🍴"
     
+    @EnvironmentObject var cloudManager: CloudProvider
     @EnvironmentObject var c: ConfigProvider
+    
     @State private var showMigrationProgress = false
     @State private var tempStorageLocation: StorageLocation
     @State private var hasChanges = false
@@ -21,7 +23,7 @@ struct SettingPluginView: View, SuperSetting, SuperLog {
                 // iCloud 选项
                 RadioButton(
                     text: "iCloud 云盘",
-                    description: "将媒体文件存储在 iCloud 云盘中，可在其他设备上访问。确保 iCloud 账户已登录且存储空间足够",
+                    description: "☁️ 将媒体文件存储在 iCloud 云盘中 \n🔄 可在其他设备上访问 \n🗄️ 确保 iCloud 账户已登录且存储空间足够",
                     url: c.getStorageRoot(for: .icloud),
                     isSelected: Binding(
                         get: { tempStorageLocation == .icloud },
@@ -37,13 +39,15 @@ struct SettingPluginView: View, SuperSetting, SuperLog {
                                 }
                             }
                         )
-                    }
+                    },
+                    isEnabled: cloudManager.isSignedIn || c.storageLocation != .icloud,
+                    disabledReason: "在系统设置中登录 iCloud 账户后，此选项可用"
                 )
 
                 // APP 内部存储选项
                 RadioButton(
                     text: "APP 内部存储",
-                    description: "存储在 APP 中，删除 APP 后数据将丢失",
+                    description: "🛖 存储在 APP 中，删除 APP 后数据将丢失",
                     url: c.getStorageRoot(for: .local),
                     isSelected: Binding(
                         get: { tempStorageLocation == .local },
@@ -103,8 +107,8 @@ struct SettingPluginView: View, SuperSetting, SuperLog {
                 hasChanges = false
                 storageRoot = c.getStorageRoot()
             }
-            .onChange(of: tempStorageLocation) { newValue in
-                hasChanges = newValue != (c.storageLocation ?? .local)
+            .onChange(of: tempStorageLocation) {
+                hasChanges = tempStorageLocation != (c.storageLocation ?? .local)
                 storageRoot = c.getStorageRoot()
             }
         } trailing: {
