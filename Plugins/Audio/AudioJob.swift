@@ -49,7 +49,7 @@ extension AudioRecordDB {
     func emitCoverUpdated(_ audio: AudioModel) {
         DispatchQueue.main.async {
             os_log("\(self.t) -> \(audio.title) CoverUpdated 🍋🍋🍋")
-            self.emitAudioUpdate(audio)
+            self.emit(.AudioUpdatedNotification, object: audio)
         }
     }
 }

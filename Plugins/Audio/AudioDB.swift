@@ -165,7 +165,7 @@ extension AudioRecordDB {
                 os_log(.error, "\(e.localizedDescription)")
             }
 
-            emitAudioUpdate(dbAudio)
+            emit(.AudioUpdatedNotification, object: dbAudio)
         }
     }
 
@@ -381,7 +381,7 @@ extension AudioRecordDB {
                 os_log(.error, "\(e.localizedDescription)")
             }
 
-            emitAudioUpdate(dbAudio)
+            emit(name: .AudioUpdatedNotification, object: dbAudio)
         }
     }
 
@@ -615,7 +615,7 @@ extension AudioRecordDB {
                 os_log(.error, "\(e.localizedDescription)")
             }
 
-            emitAudioUpdate(dbAudio)
+            emit(name: .AudioUpdatedNotification, object: dbAudio)
         } else {
             throw AudioRecordDBError.ToggleLikeError(AudioRecordDBError.AudioNotFound(url))
         }
