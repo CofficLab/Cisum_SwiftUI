@@ -7,7 +7,6 @@ import MagicKit
 
 struct VideoDB: View, SuperLog {
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var data: DataProvider
     @EnvironmentObject var message: MessageProvider
     @EnvironmentObject var db: AudioRecordDB
 

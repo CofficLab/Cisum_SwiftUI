@@ -5,7 +5,6 @@ import SwiftUI
 struct BookPlayingCover: View, SuperLog, SuperThread {
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var data: DataProvider
 
     @State var image: Image?
     @State var downloadingPercent: Double = -1

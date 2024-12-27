@@ -5,7 +5,6 @@ import SwiftUI
 
 struct AudioStateView: View, SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var data: DataProvider
     @EnvironmentObject var messageManager: MessageProvider
     @EnvironmentObject var audioManager: AudioProvider
     @EnvironmentObject var playMan: PlayMan

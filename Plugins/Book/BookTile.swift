@@ -6,7 +6,6 @@ import SwiftUI
  展示从数据库读取的图书数据
  */
 struct BookTile: View, SuperThread, SuperLog {
-    @EnvironmentObject var data: DataProvider
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var db: BookDB
 

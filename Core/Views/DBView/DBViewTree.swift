@@ -6,7 +6,6 @@ struct DBViewTree: View {
     static var label = "📬 DBTreeView::"
 
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var dataManager: DataProvider
     @EnvironmentObject var messageManager: MessageProvider
     @EnvironmentObject var playMan: PlayMan
 

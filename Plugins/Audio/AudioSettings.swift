@@ -3,7 +3,6 @@ import MagicKit
 
 struct AudioSettings: View, SuperSetting, SuperLog {
     static let emoji = "🔊"
-    @EnvironmentObject var dataManager: DataProvider
     @EnvironmentObject var audioManager: AudioProvider
     
     @State var diskSize: String?

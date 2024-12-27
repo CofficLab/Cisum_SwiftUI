@@ -3,7 +3,6 @@ import SwiftUI
 struct BtnDel: View {
     @EnvironmentObject var appManager: AppProvider
     @EnvironmentObject var playMan: PlayMan
-    @EnvironmentObject var dataManager: DataProvider
     @EnvironmentObject var messageManager: MessageProvider
 
     var assets: [PlayAsset]

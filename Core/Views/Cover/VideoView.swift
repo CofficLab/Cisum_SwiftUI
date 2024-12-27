@@ -5,7 +5,6 @@ import MagicKit
 
 struct VideoView: View, SuperLog {
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var data: DataProvider
     @EnvironmentObject var playMan: PlayMan
 
     static var emoji = "🎬"

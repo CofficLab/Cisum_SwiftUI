@@ -10,7 +10,6 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     let s = StoreProvider()
     let c = ConfigProvider()
 
-    @State var dataManager: DataProvider?
     @State var isDropping: Bool = false
     @State var error: Error? = nil
     @State var loading = true
@@ -30,53 +29,43 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                 ProgressView()
             } else {
                 if let e = self.error {
-                    if e.isCloudError {
-                        ErrorViewCloud(error: e)
-                            .onChange(of: iCloudAvailable, onChangeOfiCloud)
-                    } else {
-                        ErrorViewFatal(error: e)
-                    }
+                    ErrorViewFatal(error: e)
                 } else {
-                    if let dataManager = dataManager {
-                        ZStack {
-                            content
-                                .toolbar(content: {
-                                    if p.groupPlugins.count > 1 {
-                                        ToolbarItem(placement: .navigation) {
-                                            BtnScene()
-                                        }
+                    ZStack {
+                        content
+                            .toolbar(content: {
+                                if p.groupPlugins.count > 1 {
+                                    ToolbarItem(placement: .navigation) {
+                                        BtnScene()
+                                    }
+                                }
+
+                                ToolbarItemGroup(placement: .cancellationAction) {
+                                    Spacer()
+                                    if let asset = man.asset {
+                                        BtnShowInFinder(url: asset.url, autoResize: false)
                                     }
 
-                                    ToolbarItemGroup(placement: .cancellationAction) {
-                                        Spacer()
-                                        if let asset = man.asset {
-                                            BtnShowInFinder(url: asset.url, autoResize: false)
-                                        }
-                                        
-                                        if let asset = man.asset {
-                                            ForEach(p.getToolBarButtons(), id: \.id) { item in
-                                                item.view
-                                            }
+                                    if man.asset != nil {
+                                        ForEach(p.getToolBarButtons(), id: \.id) { item in
+                                            item.view
                                         }
                                     }
-                                })
-                                .frame(minWidth: Config.minWidth, minHeight: Config.minHeight)
-                                .blendMode(.normal)
+                                }
+                            })
+                            .frame(minWidth: Config.minWidth, minHeight: Config.minHeight)
+                            .blendMode(.normal)
 
-                            ForEach(Array(p.getRootViews().enumerated()), id: \.offset) { _, view in
-                                view
-                            }
+                        ForEach(Array(p.getRootViews().enumerated()), id: \.offset) { _, view in
+                            view
                         }
-                        .environmentObject(man)
-                        .environmentObject(a)
-                        .environmentObject(s)
-                        .environmentObject(p)
-                        .environmentObject(dataManager)
-                        .environmentObject(m)
-                        .environmentObject(c)
-                    } else {
-                        Text("启动失败")
                     }
+                    .environmentObject(man)
+                    .environmentObject(a)
+                    .environmentObject(s)
+                    .environmentObject(p)
+                    .environmentObject(m)
+                    .environmentObject(c)
                 }
             }
         }
@@ -119,7 +108,6 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     private func reloadView() {
         loading = true
         error = nil
-        dataManager = nil
     }
 }
 
@@ -144,8 +132,6 @@ extension RootView {
 
         Task(priority: .userInitiated) {
             do {
-                dataManager = DataProvider(verbose: true)
-
                 try Config.getPlugins().forEach({
                     try self.p.append($0, reason: self.className)
                 })
@@ -154,7 +140,7 @@ extension RootView {
 
                 for plugin in p.plugins {
                     await plugin.onAppear(playMan: man, currentGroup: p.current)
-                    
+
                     plugin.onInit(storage: c.getStorageLocation())
                 }
 
@@ -188,7 +174,7 @@ extension RootView {
 
     func onPlayAssetChange() {
         os_log("\(self.t)🍋🍋🍋 Play Asset Change")
-        
+
         Task {
             if let asset = man.asset, asset.isNotDownloaded {
                 do {

@@ -1,8 +1,6 @@
 import SwiftUI
 
 struct DirScene: View {
-    @EnvironmentObject var dataManager: DataProvider
-    
     @State var diskSize: String?
 //    
 //    var scene: DiskScene

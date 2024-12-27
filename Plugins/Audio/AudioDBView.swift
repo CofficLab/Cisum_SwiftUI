@@ -7,7 +7,6 @@ import UniformTypeIdentifiers
 
 struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var data: DataProvider
     @EnvironmentObject var messageManager: MessageProvider
     @EnvironmentObject var s: StoreProvider
     @EnvironmentObject var db: AudioDB

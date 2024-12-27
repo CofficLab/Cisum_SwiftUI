@@ -52,16 +52,6 @@ extension Error {
     var isSmartError: Bool {
         self is SmartError
     }
-
-    var isCloudError: Bool {
-        guard let e = self as? DataProviderError else {
-            return false
-        }
-
-        return e == .iCloudAccountTemporarilyUnavailable
-            || e == .NoiCloudAccount
-            || e == .NoiCloudDisk
-    }
 }
 
 #Preview {

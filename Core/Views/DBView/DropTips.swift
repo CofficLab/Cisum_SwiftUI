@@ -3,7 +3,6 @@ import SwiftUI
 
 struct DropTips: View {
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var data: DataProvider
     @EnvironmentObject var s: StoreProvider
 
     var supportedFormats: String {

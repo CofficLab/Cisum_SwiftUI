@@ -86,9 +86,6 @@
         }
       }
     },
-    "Error: %@" : {
-
-    },
     "Features" : {
       "localizations" : {
         "en" : {
@@ -281,6 +278,7 @@
 
     },
     "启动失败" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

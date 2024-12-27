@@ -2,8 +2,6 @@ import MagicKit
 import SwiftUI
 
 struct BtnDownload: View, SuperThread {
-    @EnvironmentObject var dataManager: DataProvider
-    
     var asset: PlayAsset
 //    var disk: (any SuperDisk)? { l.current.getDisk() }
     let queue = DispatchQueue(label: "cisum.btnDownload")

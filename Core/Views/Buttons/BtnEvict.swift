@@ -2,7 +2,6 @@ import SwiftUI
 
 struct BtnEvict: View {
     @EnvironmentObject var playMan: PlayMan
-    @EnvironmentObject var data: DataProvider
 
     var asset: PlayAsset
     var inUse: Bool { asset.url == playMan.asset?.url }

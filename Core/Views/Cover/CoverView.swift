@@ -4,7 +4,6 @@ import MagicKit
 
 struct CoverView: View {
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var data: DataProvider
     @EnvironmentObject var playMan: PlayMan
     
     enum Role {

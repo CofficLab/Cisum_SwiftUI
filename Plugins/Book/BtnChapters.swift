@@ -4,7 +4,6 @@ import SwiftUI
 
 struct BtnChapters: View {
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var data: DataProvider
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var m: MessageProvider
     @EnvironmentObject var db: DBSynced

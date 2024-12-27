@@ -3,7 +3,6 @@ import SwiftUI
 
 struct ControlView: View {
     @EnvironmentObject var appManager: AppProvider
-    @EnvironmentObject var data: DataProvider
     @EnvironmentObject var message: MessageProvider
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var p: PluginProvider

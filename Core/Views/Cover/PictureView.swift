@@ -4,7 +4,6 @@ import MagicKit
 
 struct PictureView: View, SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var data: DataProvider
     
     static let emoji = "🐰"
     

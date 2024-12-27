@@ -13,7 +13,6 @@ struct CopyRootView: View, SuperEvent, SuperLog, SuperThread {
     @EnvironmentObject var p: PluginProvider
     @EnvironmentObject var worker: CopyWorker
 
-    @State var dataManager: DataProvider?
     @State var isDropping: Bool = false
     @State var error: Error? = nil
     @State var iCloudAvailable = true

@@ -5,7 +5,6 @@ import SwiftUI
 
 struct BookStateView: View, SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var data: DataProvider
     @EnvironmentObject var messageManager: MessageProvider
     @EnvironmentObject var bookManager: BookProvider
     @EnvironmentObject var playMan: PlayMan

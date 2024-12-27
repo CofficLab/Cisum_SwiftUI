@@ -7,7 +7,6 @@ import SwiftUI
 struct SliderView: View, SuperThread, SuperLog {
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var data: DataProvider
 
     @State private var value: Double = 0
     @State private var isEditing: Bool = false

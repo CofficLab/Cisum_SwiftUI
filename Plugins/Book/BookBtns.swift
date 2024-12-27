@@ -2,7 +2,6 @@ import SwiftUI
 
 struct BookBtns: View {
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var data: DataProvider
     
     var body: some View {
         GeometryReader { geo in

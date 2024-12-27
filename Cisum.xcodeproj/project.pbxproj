@@ -138,7 +138,6 @@
 		F53ED8DA2D19098300F8E42D /* MagicKit in Frameworks */ = {isa = PBXBuildFile; productRef = F53ED8D92D19098300F8E42D /* MagicKit */; };
 		F54522252BFF3C780027CF55 /* Products.storekit in Resources */ = {isa = PBXBuildFile; fileRef = F54522242BFF3C770027CF55 /* Products.storekit */; };
 		F54522272BFF3CCE0027CF55 /* Products.plist in Resources */ = {isa = PBXBuildFile; fileRef = F54522262BFF3CCE0027CF55 /* Products.plist */; };
-		F545D1732C1FC9F0006A6AFA /* CloudSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = F545D1722C1FC9F0006A6AFA /* CloudSetting.swift */; };
 		F545D1752C1FCAD0006A6AFA /* CloudExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F545D1742C1FCAD0006A6AFA /* CloudExt.swift */; };
 		F545D1772C1FCC86006A6AFA /* UserExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F545D1762C1FCC86006A6AFA /* UserExt.swift */; };
 		F54DFA522CA4E41600F81BE3 /* VideoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA512CA4E41600F81BE3 /* VideoApp.swift */; };
@@ -160,7 +159,6 @@
 		F5511BCA2C2BACC000400900 /* TopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5511BC92C2BACC000400900 /* TopView.swift */; };
 		F566BD742D1B8EE0005D7F54 /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = F566BD732D1B8EE0005D7F54 /* AlertToast */; };
 		F5675C352C22CB3C00326664 /* DBViewTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C342C22CB3C00326664 /* DBViewTree.swift */; };
-		F5675C402C25456300326664 /* DataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C3F2C25456300326664 /* DataProvider.swift */; };
 		F573B1882C0411E4004C34CC /* DeviceDataExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B1872C0411E4004C34CC /* DeviceDataExt.swift */; };
 		F573B18C2C042E08004C34CC /* DeviceExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B18B2C042E08004C34CC /* DeviceExt.swift */; };
 		F5847C1F2C3778570080887B /* ErrorViewCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5847C1E2C3778570080887B /* ErrorViewCloud.swift */; };
@@ -355,7 +353,6 @@
 		F53BE0332C2024BE003CBA29 /* DiskFileGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskFileGroup.swift; sourceTree = "<group>"; };
 		F54522242BFF3C770027CF55 /* Products.storekit */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Products.storekit; sourceTree = "<group>"; };
 		F54522262BFF3CCE0027CF55 /* Products.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Products.plist; sourceTree = "<group>"; };
-		F545D1722C1FC9F0006A6AFA /* CloudSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudSetting.swift; sourceTree = "<group>"; };
 		F545D1742C1FCAD0006A6AFA /* CloudExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudExt.swift; sourceTree = "<group>"; };
 		F545D1762C1FCC86006A6AFA /* UserExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserExt.swift; sourceTree = "<group>"; };
 		F54DFA512CA4E41600F81BE3 /* VideoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoApp.swift; sourceTree = "<group>"; };
@@ -375,7 +372,6 @@
 		F5511BBF2C2953C200400900 /* BtnToggleCopying.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnToggleCopying.swift; sourceTree = "<group>"; };
 		F5511BC92C2BACC000400900 /* TopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopView.swift; sourceTree = "<group>"; };
 		F5675C342C22CB3C00326664 /* DBViewTree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBViewTree.swift; sourceTree = "<group>"; };
-		F5675C3F2C25456300326664 /* DataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataProvider.swift; sourceTree = "<group>"; };
 		F573B1872C0411E4004C34CC /* DeviceDataExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceDataExt.swift; sourceTree = "<group>"; };
 		F573B18B2C042E08004C34CC /* DeviceExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceExt.swift; sourceTree = "<group>"; };
 		F5847C1E2C3778570080887B /* ErrorViewCloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorViewCloud.swift; sourceTree = "<group>"; };
@@ -492,7 +488,6 @@
 			children = (
 				F5C2EB822D1AC16500798B46 /* ConfigProvider.swift */,
 				0B1165EF2ABBCCB0005C5CBB /* AppProvider.swift */,
-				F5675C3F2C25456300326664 /* DataProvider.swift */,
 				F5E17A752D03074500473CB8 /* MessageProvider.swift */,
 				0BC29EA82CA4599500E4813F /* PluginProvider.swift */,
 				0BE6958F2BFE325400CEFFEB /* StoreProvider.swift */,
@@ -767,7 +762,6 @@
 		0BE93F2F2BFB8E1C00F25445 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				F545D1722C1FC9F0006A6AFA /* CloudSetting.swift */,
 				0BA9FB6D2BFE155B008074CB /* CoverDirSetting.swift */,
 				F507F5162C09541B00CB9A3A /* DeviceSetting.swift */,
 				0B59FF3D2C2F108500F04728 /* DirScene.swift */,
@@ -1174,7 +1168,6 @@
 				F5847C1F2C3778570080887B /* ErrorViewCloud.swift in Sources */,
 				F518F6FB2C34F06000844E62 /* BookRead.swift in Sources */,
 				F5B64D132C3288D300DE55AD /* PlayMan.swift in Sources */,
-				F545D1732C1FC9F0006A6AFA /* CloudSetting.swift in Sources */,
 				F5C2C7492D1C141D0094157C /* MigrationManager.swift in Sources */,
 				F52A98F22C410C41003559F1 /* BookUpdate.swift in Sources */,
 				0B8C36B02BEC6E6500C47567 /* DBExt.swift in Sources */,
@@ -1208,7 +1201,6 @@
 				F5511BCA2C2BACC000400900 /* TopView.swift in Sources */,
 				0BB9D2462C32E4F20027DDAD /* DBViewNavigation.swift in Sources */,
 				F5C2C7692D1D41380094157C /* FileExpandButton.swift in Sources */,
-				F5675C402C25456300326664 /* DataProvider.swift in Sources */,
 				0B382A9A2D1AED960075391C /* SettingPluginView.swift in Sources */,
 				F5B64D0A2C327D8600DE55AD /* VideoWorker.swift in Sources */,
 				F5B64D0F2C3280DE00DE55AD /* VideoView.swift in Sources */,
