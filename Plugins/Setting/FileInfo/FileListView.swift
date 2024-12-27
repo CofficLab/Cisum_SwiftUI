@@ -62,7 +62,7 @@ struct FileListView: View, SuperLog {
                     }
                 }
             }
-            .width(min: 120)
+            .width(min: 200)
 
             TableColumn("大小") { item in
                 FileSizeView(url: item.url)
@@ -120,6 +120,20 @@ struct FileListView: View, SuperLog {
         updateVisibleItems(reason: "toggleExpanded")
     }
 
+    private func addItemsRecursively(from item: FileItem, into result: inout [FileItem]) {
+        if let cachedChildren = itemCache[item.url] {
+            for child in cachedChildren {
+                let isExpanded = expandedItems.contains { $0.url == child.url }
+                let childItem = FileItem(url: child.url, level: child.level, isExpanded: isExpanded)
+                result.append(childItem)
+
+                if childItem.isExpanded {
+                    addItemsRecursively(from: childItem, into: &result)
+                }
+            }
+        }
+    }
+
     private func updateVisibleItems(reason: String) {
         Task.detached(priority: .high, operation: {
             os_log("\(self.t)🔄 Updating visible items with reason: \(reason)")
@@ -132,21 +146,7 @@ struct FileListView: View, SuperLog {
             result.append(rootItem)
 
             if rootItem.isExpanded {
-                func addItems(from item: FileItem) {
-                    if let cachedChildren = itemCache[item.url] {
-                        for child in cachedChildren {
-                            let isExpanded = expandedItems.contains { $0.url == child.url }
-                            let childItem = FileItem(url: child.url, level: child.level, isExpanded: isExpanded)
-                            result.append(childItem)
-
-                            if childItem.isExpanded {
-                                addItems(from: childItem)
-                            }
-                        }
-                    }
-                }
-
-                addItems(from: rootItem)
+                await addItemsRecursively(from: rootItem, into: &result)
             }
 
             await setVisibleItems(result)
