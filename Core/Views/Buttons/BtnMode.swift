@@ -1,4 +1,5 @@
 import SwiftUI
+import MagicKit
 
 struct BtnMode: View {
     @EnvironmentObject var app: AppProvider

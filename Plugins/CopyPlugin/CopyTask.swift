@@ -13,7 +13,7 @@ class CopyTask: FileBox {
     var isRunning: Bool = false
     
     var title: String { url.lastPathComponent }
-    var time: String { TimeHelper.getTimeString2() }
+    var time: String { Date.nowWithCommonFormat() }
     var message: String {
         if isRunning {
             return "进行中"

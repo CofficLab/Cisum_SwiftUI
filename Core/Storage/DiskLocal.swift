@@ -1,5 +1,6 @@
 import Foundation
 import OSLog
+import MagicKit
 
 class DiskLocal: ObservableObject, SuperDisk {
     static var label: String = "DiskLocal"
