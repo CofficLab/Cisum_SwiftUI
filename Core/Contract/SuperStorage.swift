@@ -6,9 +6,9 @@ protocol DiskDelegate {
     func onUpdate(_ items: DiskFileGroup) async -> Void
 }
 
-protocol SuperDisk: FileBox {
+protocol SuperStorage: FileBox {
     static var label: String { get }
-    static func make(_ subDirName: String, delegate: DiskDelegate?, verbose: Bool, reason: String) -> (any SuperDisk)?
+    static func make(_ subDirName: String, delegate: DiskDelegate?, verbose: Bool, reason: String) -> (any SuperStorage)?
     static func getMountedURL(verbose: Bool) -> URL?
 
     var root: URL { get }
@@ -46,11 +46,19 @@ protocol SuperDisk: FileBox {
     func setDelegate(_ d: DiskDelegate)
 }
 
-extension SuperDisk {
+extension SuperStorage {
     var url: URL { root }
+    
+    public static var label: String {
+        let fullName = String(describing: Self.self)
+        if let genericStart = fullName.firstIndex(of: "<") {
+            return String(fullName[..<genericStart])
+        }
+        return fullName
+    }
 
     var name: String {
-        self.t + url.pathComponents.suffix(2).joined(separator: "/")
+        Self.label + url.pathComponents.suffix(2).joined(separator: "/")
     }
 
     func getMountedURL() -> URL? {
@@ -81,7 +89,7 @@ extension SuperDisk {
 
     // MARK: 创建磁盘
 
-    static func make(_ subDirName: String, delegate: DiskDelegate? = nil, verbose: Bool, reason: String) -> (any SuperDisk)? {
+    static func make(_ subDirName: String, delegate: DiskDelegate? = nil, verbose: Bool, reason: String) -> (any SuperStorage)? {
         if verbose {
             os_log("\(self.t)创建Disk: \(subDirName) 🐛 \(reason)")
         }
@@ -107,7 +115,7 @@ extension SuperDisk {
         return Self(root: subRoot, delegate: delegate)
     }
 
-    func make(_ subDirName: String, verbose: Bool, reason: String) -> (any SuperDisk)? {
+    func make(_ subDirName: String, verbose: Bool, reason: String) -> (any SuperStorage)? {
         Self.make(subDirName, verbose: verbose, reason: reason)
     }
 }

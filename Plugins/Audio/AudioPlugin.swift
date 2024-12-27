@@ -16,7 +16,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
     var iconName: String = "music.note"
     var isGroup: Bool = true
 
-    var disk: (any SuperDisk)?
+    var disk: (any SuperStorage)?
     var audioProvider: AudioProvider?
     var audioDB: AudioDB?
     var initialized: Bool = false
@@ -94,7 +94,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
         AudioPlugin.storeCurrent(asset?.url)
     }
 
-    func getDisk() -> (any SuperDisk)? {
+    func getDisk() -> (any SuperStorage)? {
         self.disk
     }
 
@@ -130,11 +130,11 @@ class AudioPlugin: SuperPlugin, SuperLog {
 
         switch storage {
         case .local, .none:
-            disk = DiskLocal.make(self.dirName, verbose: false, reason: self.className + ".onInit")
+            disk = LocalStorage.make(self.dirName, verbose: false, reason: self.className + ".onInit")
         case .icloud:
-            disk = DiskiCloud.make(self.dirName, verbose: false, reason: self.className + ".onInit")
+            disk = CloudStorage.make(self.dirName, verbose: false, reason: self.className + ".onInit")
         case .custom:
-            disk = DiskLocal.make(self.dirName, verbose: false, reason: self.className + ".onInit")
+            disk = LocalStorage.make(self.dirName, verbose: false, reason: self.className + ".onInit")
         }
 
         guard let disk = disk else {

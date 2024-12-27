@@ -2,11 +2,10 @@ import Foundation
 import OSLog
 import MagicKit
 
-class DiskLocal: ObservableObject, SuperDisk {
-    static var label: String = "DiskLocal"
+class LocalStorage: ObservableObject, SuperStorage {
     static let emoji = "🛖"
     static let localRoot = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-    static let null = DiskLocal(root: URL(string: "/dev/null")!) 
+    static let null = LocalStorage(root: URL(string: "/dev/null")!) 
     
     static func getMountedURL(verbose: Bool) -> URL? {
         guard let localRoot = Self.localRoot else {

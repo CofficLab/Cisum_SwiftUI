@@ -11,12 +11,12 @@ class BookProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
     private var debounceTimer: Timer?
     
     static let emoji = "🌿"
-    let disk: (any SuperDisk)
+    let disk: (any SuperStorage)
 
     @Published var files: [DiskFile] = []
     @Published var isSyncing: Bool = true
 
-    init(disk: any SuperDisk) {
+    init(disk: any SuperStorage) {
         self.disk = disk
         self.nc.publisher(for: .dbSyncing)
             .sink { [weak self] notification in

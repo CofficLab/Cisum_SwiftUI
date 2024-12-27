@@ -16,9 +16,9 @@ struct BookDBView: View, SuperLog, SuperThread {
     static var emoji = "🐘"
 
     var dropping: Bool { app.isDropping }
-    var disk: any SuperDisk
+    var disk: any SuperStorage
 
-    init(verbose: Bool = false, disk: any SuperDisk) {
+    init(verbose: Bool = false, disk: any SuperStorage) {
         if verbose {
             os_log("\(Logger.initLog)BookDBView")
         }

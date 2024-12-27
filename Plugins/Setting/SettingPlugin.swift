@@ -53,7 +53,7 @@ class SettingPlugin: SuperPlugin, SuperLog {
     func onPlayAssetUpdate(asset: PlayAsset?, currentGroup: SuperPlugin?) async throws {
     }
 
-    func getDisk() -> (any SuperDisk)? {
+    func getDisk() -> (any SuperStorage)? {
         nil
     }
 

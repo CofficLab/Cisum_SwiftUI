@@ -16,7 +16,7 @@ class BookPlugin: SuperPlugin, SuperLog {
     let isGroup: Bool = true
     lazy var db = BookRecordDB(BookConfig.getContainer, reason: "BookPlugin")
 
-    var disk: (any SuperDisk)?
+    var disk: (any SuperStorage)?
     var bookDB: BookDB?
     var bookProvider: BookProvider?
     var initialized = false
@@ -71,7 +71,7 @@ class BookPlugin: SuperPlugin, SuperLog {
             return
         }
 
-        self.disk = DiskiCloud.make(self.dirName, verbose: true, reason: self.className)
+        self.disk = CloudStorage.make(self.dirName, verbose: true, reason: self.className)
         self.bookDB = BookDB(db: self.db, disk: disk!, verbose: true)
         self.bookProvider = BookProvider(disk: disk!)
         self.initialized = true

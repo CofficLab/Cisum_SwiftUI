@@ -11,7 +11,7 @@ struct AudioSettings: View, SuperSetting, SuperLog {
         makeSettingView(
             title: "\(Self.emoji) 歌曲仓库目录",
             content: {
-                if audioManager.disk is DiskiCloud {
+                if audioManager.disk is CloudStorage {
                     Text("是 iCloud 云盘目录，会保持同步")
                 } else {
                     Text("是本地目录，不会同步")

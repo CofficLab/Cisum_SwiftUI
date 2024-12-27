@@ -6,10 +6,10 @@ class BookDB: ObservableObject, SuperEvent, SuperLog {
     static var emoji = "📖"
     
     var db: BookRecordDB
-    var disk: any SuperDisk
+    var disk: any SuperStorage
     let worker: BookWorker
     
-    init(db: BookRecordDB, disk: any SuperDisk, verbose: Bool) {
+    init(db: BookRecordDB, disk: any SuperStorage, verbose: Bool) {
         if verbose {
             os_log("\(Logger.initLog)BookDB")
         }

@@ -17,7 +17,7 @@ protocol SuperPlugin {
     func addStatusView() -> AnyView?
     func addToolBarButtons() -> [(id: String, view: AnyView)]
 
-    func getDisk() -> (any SuperDisk)?
+    func getDisk() -> (any SuperStorage)?
 
     func onWillAppear(playMan: PlayMan, currentGroup: SuperPlugin?, storage: StorageLocation?) async -> Void
     func onDisappear() -> Void
@@ -67,7 +67,7 @@ extension SuperPlugin {
         return nil
     }
 
-    func getDisk() -> (any SuperDisk)? {
+    func getDisk() -> (any SuperStorage)? {
         return nil
     }
 

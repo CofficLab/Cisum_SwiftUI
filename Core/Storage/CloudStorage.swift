@@ -2,9 +2,7 @@ import Foundation
 import MagicKit
 import OSLog
 
-class DiskiCloud: ObservableObject, SuperDisk, SuperLog, SuperThread {    
-    static var label: String = "DiskiCloud"
-    
+class CloudStorage: ObservableObject, SuperStorage, SuperLog, SuperThread {    
     static var emoji = "☁️"
     static let cloudRoot = Config.cloudDocumentsDir
 
@@ -53,7 +51,7 @@ class DiskiCloud: ObservableObject, SuperDisk, SuperLog, SuperThread {
 
 // MARK: GetTree
 
-extension DiskiCloud {
+extension CloudStorage {
     func getRoot() -> DiskFile {
         DiskFile.fromURL(root)
     }
@@ -69,7 +67,7 @@ extension DiskiCloud {
 
 // MARK: Delete
 
-extension DiskiCloud {
+extension CloudStorage {
     func deleteFiles(_ urls: [URL]) {
         for url in urls {
             if verbose {
@@ -89,7 +87,7 @@ extension DiskiCloud {
     }
 }
 
-extension DiskiCloud {
+extension CloudStorage {
     func clearFolderContents(atPath path: String) {
         let fileManager = FileManager.default
         do {
@@ -106,7 +104,7 @@ extension DiskiCloud {
 
 // MARK: Copy
 
-extension DiskiCloud {
+extension CloudStorage {
     func copyTo(url: URL, reason: String) throws {
         let verbose = true
         if verbose {
@@ -215,7 +213,7 @@ extension DiskiCloud {
 
 // MARK: Watch
 
-extension DiskiCloud {
+extension CloudStorage {
     func stopWatch(reason: String) {
         let emoji = "🌛🌛🌛"
         let verbose = false
@@ -271,7 +269,7 @@ extension DiskiCloud {
 
 // MARK: Move
 
-extension DiskiCloud {
+extension CloudStorage {
     func moveFile(at sourceURL: URL, to destinationURL: URL) async {
         do {
             try await self.cloudHandler.moveFile(at: sourceURL, to: destinationURL)
@@ -283,7 +281,7 @@ extension DiskiCloud {
 
 // MARK: MakeURL
 
-extension DiskiCloud {
+extension CloudStorage {
     func makeURL(_ fileName: String) -> URL {
         self.root.appending(component: fileName)
     }

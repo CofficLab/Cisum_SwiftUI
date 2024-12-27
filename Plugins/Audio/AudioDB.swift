@@ -6,9 +6,9 @@ import SwiftData
 class AudioDB: ObservableObject, SuperEvent, SuperLog {
     static var emoji = "🎵"
     var db: AudioRecordDB
-    var disk: (any SuperDisk)
+    var disk: (any SuperStorage)
     
-    init(disk: any SuperDisk, reason: String, verbose: Bool) {
+    init(disk: any SuperStorage, reason: String, verbose: Bool) {
         if verbose {
             os_log("\(Self.i) with reason: 🐛 \(reason)")
         }
@@ -734,7 +734,7 @@ extension AudioRecordDB {
         return next
     }
 
-    func deleteAudiosByURL(disk: any SuperDisk, urls: [URL]) throws -> AudioModel? {
+    func deleteAudiosByURL(disk: any SuperStorage, urls: [URL]) throws -> AudioModel? {
         // 本批次的最后一个删除后的下一个
         var next: AudioModel?
 
