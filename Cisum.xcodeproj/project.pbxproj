@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0B00F4672BB840C1000833B9 /* AsyncAlgorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 0B00F4662BB840C1000833B9 /* AsyncAlgorithms */; };
 		0B0FA20E2D03328E004D4D41 /* PlayManError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0FA20D2D03328E004D4D41 /* PlayManError.swift */; };
 		0B0FA2122D034440004D4D41 /* DebugPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0FA2112D03443C004D4D41 /* DebugPlugin.swift */; };
 		0B0FA2292D034867004D4D41 /* AudioPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0FA2282D034867004D4D41 /* AudioPlugin.swift */; };
@@ -442,7 +441,6 @@
 				0B8583272D1EE8FE0035989F /* MagicKit in Frameworks */,
 				F53ED8DA2D19098300F8E42D /* MagicKit in Frameworks */,
 				F500793F2CA635B900C9D3D4 /* MagicKit in Frameworks */,
-				0B00F4672BB840C1000833B9 /* AsyncAlgorithms in Frameworks */,
 				F5DCEB0C2D1E787600FB4F02 /* MagicKit in Frameworks */,
 				F5ADFF702D1AA25C003CF664 /* MagicKit in Frameworks */,
 				F54DFA792CA630BE00F81BE3 /* MagicKit in Frameworks */,
@@ -940,7 +938,6 @@
 			);
 			name = Cisum;
 			packageProductDependencies = (
-				0B00F4662BB840C1000833B9 /* AsyncAlgorithms */,
 				F54DFA782CA630BE00F81BE3 /* MagicKit */,
 				F500793E2CA635B900C9D3D4 /* MagicKit */,
 				F53ED8D92D19098300F8E42D /* MagicKit */,
@@ -987,9 +984,8 @@
 			);
 			mainGroup = 0B9C1C342AAF18FE001A26AF;
 			packageReferences = (
-				0B00F4652BB840C1000833B9 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */,
 				0B382A9D2D1C2F3B0075391C /* XCRemoteSwiftPackageReference "MagicMessage" */,
-				0B8583252D1EE8FE0035989F /* XCLocalSwiftPackageReference "../MagicKit" */,
+				0BB5F13F2D1EEE6200EA91BB /* XCRemoteSwiftPackageReference "MagicKit" */,
 			);
 			productRefGroup = 0B9C1C3E2AAF18FE001A26AF /* Products */;
 			projectDirPath = "";
@@ -1457,22 +1453,7 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCLocalSwiftPackageReference section */
-		0B8583252D1EE8FE0035989F /* XCLocalSwiftPackageReference "../MagicKit" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../MagicKit;
-		};
-/* End XCLocalSwiftPackageReference section */
-
 /* Begin XCRemoteSwiftPackageReference section */
-		0B00F4652BB840C1000833B9 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/apple/swift-async-algorithms";
-			requirement = {
-				kind = exactVersion;
-				version = 0.1.0;
-			};
-		};
 		0B382A9D2D1C2F3B0075391C /* XCRemoteSwiftPackageReference "MagicMessage" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/nookery/MagicMessage.git";
@@ -1481,14 +1462,17 @@
 				kind = branch;
 			};
 		};
+		0BB5F13F2D1EEE6200EA91BB /* XCRemoteSwiftPackageReference "MagicKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/CofficLab/MagicKit";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		0B00F4662BB840C1000833B9 /* AsyncAlgorithms */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 0B00F4652BB840C1000833B9 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */;
-			productName = AsyncAlgorithms;
-		};
 		0B27EAE62D1D9E9E00242B78 /* MagicKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MagicKit;
