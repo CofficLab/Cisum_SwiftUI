@@ -21,9 +21,7 @@ struct DiskFile: FileBox, Hashable, Identifiable, Playable {
     var contentType: String?
     var size: Int64?
     var isPlaceholder: Bool = false
-}
 
-extension DiskFile {
     static func fromURL(_ url: URL) -> Self {
         DiskFile(url: url, isDownloading: false, downloadProgress: 1)
     }
@@ -43,11 +41,7 @@ extension DiskFile {
             isPlaceholder: meta.isPlaceholder
         )
     }
-}
 
-// MARK: OnChage
-
-extension DiskFile {
     func onChange(_ callback: @escaping () -> Void) {
         let presenter = FilePresenter(fileURL: self.url)
         
@@ -57,51 +51,36 @@ extension DiskFile {
             callback()
         }
     }
-}
-
-// MARK: Children
-
-extension DiskFile {
-    var children: [DiskFile]? {
-        if let c = getChildren() {
-            return c.map({DiskFile(url: $0)})
-        } else {
-            return nil
-        }
+    
+    var childrenOptional: [DiskFile]? {
+        children
     }
-}
 
-// MARK: Next
+    var children: [DiskFile] {
+        let c: [URL] = url.getChildren() 
+        return c.map({DiskFile(url: $0)})
+    }
 
-extension DiskFile {
     func nextDiskFile(verbose: Bool = false) -> DiskFile? {
         if verbose {
             os_log("\(t)Next of \(fileName)")
         }
 
-        if let nextURL = self.next() {
+        if let nextURL = self.url.next() {
             return DiskFile(url: nextURL)
         } else {
             return nil
         }
     }
-}
 
-// MARK: Prev
-
-extension DiskFile {
     func prevDiskFile() -> DiskFile? {
-        if let prevURL = self.prev() {
+        if let prevURL = self.url.getPrevFile() {
             DiskFile(url: prevURL)
         } else {
             nil
         }
     }
-}
 
-// MARK: Parent
-
-extension DiskFile {
     var parent: DiskFile? {
         guard let parentURL = url.deletingLastPathComponent() as URL? else {
             return nil
@@ -109,11 +88,7 @@ extension DiskFile {
 
         return DiskFile.fromURL(parentURL)
     }
-}
 
-// MARK: Tramsform
-
-extension DiskFile {
     func toPlayAsset() -> PlayAsset {
         PlayAsset(url: url)
     }

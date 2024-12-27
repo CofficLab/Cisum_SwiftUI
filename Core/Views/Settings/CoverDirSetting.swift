@@ -15,7 +15,7 @@ struct CoverDirSetting: View {
                 Spacer()
                 #if os(macOS)
                     Button(action: {
-                        FileHelper.openFolder(url: Config.coverDir)
+                        Config.coverDir.openFolder()
                     }, label: {
                         Label(title: {
                             Text("打开")

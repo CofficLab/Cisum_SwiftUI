@@ -66,7 +66,7 @@ class AudioModel: FileBox {
         if let size = size {
             self.size = size
         } else {
-            self.size = FileHelper.getFileSize(url)
+            self.size = Int64(url.getSize())
         }
     }
 
@@ -128,7 +128,7 @@ extension AudioModel {
 
 extension AudioModel {
     func getFileSizeReadable() -> String {
-        FileHelper.getFileSizeReadable(size ?? getFileSize())
+        url.getSizeReadable()
     }
 }
 

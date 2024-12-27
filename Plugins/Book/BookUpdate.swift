@@ -27,7 +27,7 @@ extension BookRecordDB {
     func updateChildCount(verbose: Bool = true) {
         do {
             try context.enumerate(Book.descriptorOfNeedUpdateParent(), block: { book in
-                book.childCount = book.children?.count ?? 0
+                book.childCount = book.childCount
             })
             
             try context.save()

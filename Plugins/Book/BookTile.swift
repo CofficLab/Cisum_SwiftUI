@@ -107,7 +107,7 @@ extension BookTile {
                     playMan.play(PlayAsset(url: current), reason: self.className, verbose: true)
                     playMan.seek(time)
                 } else {
-                    if let first = DiskFile(url: book.url).children?.first, let book = await self.db.find(first.url) {
+                    if let first = DiskFile(url: book.url).children.first, let book = await self.db.find(first.url) {
                         playMan.play(book.toPlayAsset(), reason: self.className, verbose: true)
                         //                        data.updateBookState(book.url, first.url)
                     } else {

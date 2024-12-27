@@ -158,7 +158,6 @@
 		F5511BC02C2953C200400900 /* BtnToggleCopying.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5511BBF2C2953C200400900 /* BtnToggleCopying.swift */; };
 		F5511BCA2C2BACC000400900 /* TopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5511BC92C2BACC000400900 /* TopView.swift */; };
 		F566BD742D1B8EE0005D7F54 /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = F566BD732D1B8EE0005D7F54 /* AlertToast */; };
-		F5675C352C22CB3C00326664 /* DBViewTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5675C342C22CB3C00326664 /* DBViewTree.swift */; };
 		F573B1882C0411E4004C34CC /* DeviceDataExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B1872C0411E4004C34CC /* DeviceDataExt.swift */; };
 		F573B18C2C042E08004C34CC /* DeviceExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = F573B18B2C042E08004C34CC /* DeviceExt.swift */; };
 		F5847C1F2C3778570080887B /* ErrorViewCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5847C1E2C3778570080887B /* ErrorViewCloud.swift */; };
@@ -372,7 +371,6 @@
 		F5511BAF2C29050300400900 /* Playable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playable.swift; sourceTree = "<group>"; };
 		F5511BBF2C2953C200400900 /* BtnToggleCopying.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnToggleCopying.swift; sourceTree = "<group>"; };
 		F5511BC92C2BACC000400900 /* TopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopView.swift; sourceTree = "<group>"; };
-		F5675C342C22CB3C00326664 /* DBViewTree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBViewTree.swift; sourceTree = "<group>"; };
 		F573B1872C0411E4004C34CC /* DeviceDataExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceDataExt.swift; sourceTree = "<group>"; };
 		F573B18B2C042E08004C34CC /* DeviceExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceExt.swift; sourceTree = "<group>"; };
 		F5847C1E2C3778570080887B /* ErrorViewCloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorViewCloud.swift; sourceTree = "<group>"; };
@@ -812,7 +810,6 @@
 				0BAB7C3E2AD3BBAA00C5AEB5 /* DBTips.swift */,
 				0BB9D2472C32E53B0027DDAD /* DBViewMenuTile.swift */,
 				0BB9D2452C32E4F20027DDAD /* DBViewNavigation.swift */,
-				F5675C342C22CB3C00326664 /* DBViewTree.swift */,
 				0BB543F32BE8E38300D7A2B2 /* Duplicates.swift */,
 				0BEE7C732CA99CE000DC1DCF /* ProTips.swift */,
 				0BEE7C752CA99D0D00DC1DCF /* DropTips.swift */,
@@ -1115,7 +1112,6 @@
 				F518F6FD2C34F18500844E62 /* BookGrid.swift in Sources */,
 				0BE6959F2BFE3DCC00CEFFEB /* NonRenewables.swift in Sources */,
 				0BC29EA72CA4597100E4813F /* PluginBookState.swift in Sources */,
-				F5675C352C22CB3C00326664 /* DBViewTree.swift in Sources */,
 				F5ADFF622D1951D7003CF664 /* CopyPlugin.swift in Sources */,
 				0BC29EAF2CA5893800E4813F /* HeroView.swift in Sources */,
 				F5ADFF642D195404003CF664 /* CopyConfig.swift in Sources */,

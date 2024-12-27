@@ -79,11 +79,7 @@ extension PlayAsset: Equatable {
 
 extension PlayAsset {
     func getFileSizeReadable(verbose: Bool = false) -> String {
-        if verbose {
-            os_log("\(self.t) GetFileSizeReadable: \(FileHelper.getFileSizeReadable(size ?? getFileSize()))")
-        }
-
-        return FileHelper.getFileSizeReadable(size ?? getFileSize())
+        self.url.getSizeReadable()
     }
 }
 

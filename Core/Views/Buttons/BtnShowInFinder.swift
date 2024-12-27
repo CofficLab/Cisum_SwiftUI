@@ -12,7 +12,7 @@ struct BtnShowInFinder: View, SuperThread {
             dynamicSize: autoResize,
             onTap: {
                 self.bg.async {
-                    FileHelper.showInFinder(url: url)
+                    url.showInFinder()
                 }
             })
     }}

@@ -41,7 +41,7 @@ enum StorageLocation: String, Codable {
 }
 
 @MainActor
-class ConfigProvider: NSObject, ObservableObject, SuperLog, SuperThread {
+class ConfigProvider: NSObject, ObservableObject, @preconcurrency SuperLog, SuperThread {
     static let emoji: String = "🔩"
     static let keyOfStorageLocation = "StorageLocation"
 

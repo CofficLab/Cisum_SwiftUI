@@ -21,9 +21,9 @@ struct VideoGrid: View {
     var body: some View {
         ZStack {
             if let disk = disk {
-                List(disk.getRoot().children ?? [],
+                List(disk.getRoot().children,
                      id: \.self,
-                     children: \.children,
+                     children: \.childrenOptional,
                      selection: $selection
                 ) { file in
                     VideoTile(selection: $selection, file: file)
@@ -49,7 +49,7 @@ struct VideoGrid: View {
                 
 //                )
                 
-                if app.isDropping || m.flashMessage.isEmpty && disk.getRoot().getChildren()?.isEmpty ?? true {
+                if app.isDropping || m.flashMessage.isEmpty && disk.getRoot().children.isEmpty {
                     DBTips()
                 }
             }

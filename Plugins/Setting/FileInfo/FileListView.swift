@@ -133,7 +133,6 @@ struct FileListView: View, SuperLog {
 
             if rootItem.isExpanded {
                 func addItems(from item: FileItem) {
-                    // 使用缓存的子��目
                     if let cachedChildren = itemCache[item.url] {
                         for child in cachedChildren {
                             let isExpanded = expandedItems.contains { $0.url == child.url }

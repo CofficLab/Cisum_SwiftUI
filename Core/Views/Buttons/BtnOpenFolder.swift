@@ -12,7 +12,7 @@ struct BtnOpenFolder: View, SuperThread {
             dynamicSize: autoResize,
             onTap: {
                 self.bg.async {
-                    FileHelper.openFolder(url: url)
+                    url.openFolder()
                 }
             })
     }
