@@ -51,11 +51,7 @@ struct PlayAsset: FileBox, Identifiable, SuperEvent, SuperLog {
     }
 
     func download() async throws {
-        guard let source = source else {
-            throw PlayAssetError.sourceNotFound
-        }
-
-        try await source.download()
+        try await url.download()
     }
 
     func setSource(_ source: PlaySource) -> PlayAsset {

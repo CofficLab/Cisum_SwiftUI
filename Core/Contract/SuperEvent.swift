@@ -1,5 +1,6 @@
 
 import Foundation
+import MagicKit
 
 protocol SuperEvent {
 }

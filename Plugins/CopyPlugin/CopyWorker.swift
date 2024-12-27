@@ -4,7 +4,7 @@ import OSLog
 
 class CopyWorker: SuperLog, SuperThread, ObservableObject {
     static let emoji = "👷"
-    
+
     let fm = FileManager.default
     let db: CopyDB
     var running = false
@@ -32,7 +32,7 @@ class CopyWorker: SuperLog, SuperThread, ObservableObject {
 
     func run() {
         let verbose = true
-        
+
         if running {
             return
         }
@@ -48,11 +48,11 @@ class CopyWorker: SuperLog, SuperThread, ObservableObject {
 
             if tasks.isEmpty {
                 self.running = false
-                
+
                 if verbose {
                     os_log("\(self.t)🎉🎉🎉 Done")
                 }
-                
+
                 return
             }
 
@@ -62,18 +62,17 @@ class CopyWorker: SuperLog, SuperThread, ObservableObject {
                         do {
                             let url = task.url
                             let destination = task.destination.appendingPathComponent(url.lastPathComponent)
-                            
+
+                            try await url.copyTo(destination) { progress in
+                                if verbose {
+                                    os_log("\(self.t)📊 iCloud download \(url.lastPathComponent): \(Int(progress))%")
+                                }
+                            }
+
                             if verbose {
-                                os_log("\(self.t)Copy -> \(url.path(percentEncoded: false)) -> \(destination.path(percentEncoded: false))")
+                                os_log("\(self.t)🎉 Successfully copied iCloud file -> \(url.lastPathComponent)")
                             }
-                            
-                            let isICloudFile = (try? url.resourceValues(forKeys: [.isUbiquitousItemKey]).isUbiquitousItem) ?? false
-                            if isICloudFile {
-                                try await self.copyiCloudFile(url: url, to: destination, verbose: verbose)
-                            } else {
-                                try self.fm.copyItem(at: url, to: destination)
-                            }
-                            
+
                             await self.db.deleteCopyTasks([url])
                         } catch let e {
                             await self.db.setTaskError(task, e)
@@ -83,47 +82,6 @@ class CopyWorker: SuperLog, SuperThread, ObservableObject {
             }
 
             self.running = false
-        }
-    }
-    
-    private func copyiCloudFile(url: URL, to destination: URL, verbose: Bool) async throws {
-        if verbose {
-            os_log("\(self.t)🌩️🌩️🌩️ Copy iCloud file -> \(url.lastPathComponent)")
-        }
-
-        try fm.startDownloadingUbiquitousItem(at: url)
-        if verbose {
-            os_log("\(self.t)📥 Started download request for -> \(url.lastPathComponent)")
-        }
-        
-        let queue = OperationQueue()
-        queue.maxConcurrentOperationCount = 1
-        let itemQuery = ItemQuery(queue: queue)
-        itemQuery.verbose = verbose
-        
-        let result = itemQuery.searchMetadataItems(predicates: [
-            NSPredicate(format: "%K == %@", NSMetadataItemURLKey, url as NSURL)
-        ])
-        
-        for try await collection in result {
-            if let item = collection.first {
-                if verbose {
-                    os_log("\(self.t)📊 iCloud download \(url.lastPathComponent): \(Int(item.downloadProgress))%")
-                }
-                
-                if item.isDownloaded {
-                    if verbose {
-                        os_log("\(self.t)✅ Download complete for -> \(url.lastPathComponent)")
-                        os_log("\(self.t)📋 Copying file to destination -> \(destination.lastPathComponent)")
-                    }
-                    itemQuery.stop()
-                    try fm.copyItem(at: url, to: destination)
-                    if verbose {
-                        os_log("\(self.t)🎉 Successfully copied iCloud file -> \(url.lastPathComponent)")
-                    }
-                    break
-                }
-            }
         }
     }
 }

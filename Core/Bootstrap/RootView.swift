@@ -185,6 +185,17 @@ extension RootView {
 
     func onPlayAssetChange() {
         os_log("\(self.t)🍋🍋🍋 Play Asset Change")
+        
+        Task {
+            if let asset = man.asset, asset.isNotDownloaded {
+                do {
+                    try await asset.download()
+                    os_log("\(self.t)onPlayAssetUpdate: 开始下载")
+                } catch let e {
+                    os_log(.error, "\(self.t)onPlayAssetUpdate: \(e.localizedDescription)")
+                }
+            }
+        }
 
         for plugin in p.plugins {
             Task {

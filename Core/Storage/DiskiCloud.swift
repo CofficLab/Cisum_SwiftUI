@@ -175,11 +175,7 @@ extension DiskiCloud {
             throw error
         }
     }
-}
 
-// MARK: Download
-
-extension DiskiCloud {
     func evict(_ url: URL) {
         Task {
             os_log("\(self.t)🏃🏃🏃 Evit \(url.lastPathComponent)")
@@ -196,45 +192,7 @@ extension DiskiCloud {
             os_log("\(self.t)Download ⏬⏬⏬ \(url.lastPathComponent) 🐛 \(reason)")
         }
 
-        // 检查是否为 iCloud 项目
-        do {
-            let resourceValues = try url.resourceValues(forKeys: [.isUbiquitousItemKey])
-            guard let isUbiquitousItem = resourceValues.isUbiquitousItem, isUbiquitousItem else {
-                if verbose {
-                    os_log("\(self.t)不是 iCloud 项目: \(url.lastPathComponent)")
-                }
-                return
-            }
-        } catch {
-            os_log(.error, "\(self.t)检查 iCloud 项目时出错: \(error.localizedDescription)")
-            return
-        }
-
-        // 检查文件是否已下载
-        if iCloudHelper.isDownloaded(url) {
-            if verbose {
-                os_log("\(self.t)Download \(url.lastPathComponent) -> Already downloaded ✅✅✅")
-            }
-            return
-        }
-
-        // 检查文件是否正在下载
-        if iCloudHelper.isDownloading(url) {
-            if verbose {
-                os_log("\(self.t)Download \(url.lastPathComponent) -> Already downloading ⚠️⚠️⚠️")
-            }
-            return
-        }
-
-        let downloadingCount = getDownloadingCount()
-
-        if downloadingCount > 1000 {
-            os_log("\(self.t)Download \(url.lastPathComponent) -> Ignore ❄️❄️❄️ -> Downloading.count=\(downloadingCount)")
-
-            return
-        }
-
-        try await cloudHandler.download(url: url)
+        try await url.download()
     }
 
     func getDownloadingCount() -> Int {

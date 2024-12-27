@@ -113,14 +113,6 @@ class AudioPlugin: SuperPlugin, SuperLog {
         }
 
         AudioPlugin.storeCurrent(asset?.url)
-        if let asset = asset, asset.isNotDownloaded {
-            do {
-                try await asset.download()
-                os_log("\(self.t)onPlayAssetUpdate: 开始下载")
-            } catch let e {
-                os_log("\(self.t)onPlayAssetUpdate: \(e.localizedDescription)")
-            }
-        }
     }
 
     func getDisk() -> (any SuperDisk)? {

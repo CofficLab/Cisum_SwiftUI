@@ -51,16 +51,13 @@
 		0B8113B12C2C38AD007CA124 /* BtnScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8113B02C2C38AD007CA124 /* BtnScene.swift */; };
 		0B8113B42C2C430B007CA124 /* Migrate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8113B32C2C430B007CA124 /* Migrate.swift */; };
 		0B8113B62C2C4342007CA124 /* v25.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8113B52C2C4342007CA124 /* v25.swift */; };
-		0B8C369F2BEA011700C47567 /* MetaWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C369E2BEA011700C47567 /* MetaWrapper.swift */; };
 		0B8C36AA2BEA2EC700C47567 /* SuperDisk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C36A92BEA2EC600C47567 /* SuperDisk.swift */; };
 		0B8C36AC2BEC6E0F00C47567 /* StateExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C36AB2BEC6E0F00C47567 /* StateExt.swift */; };
 		0B8C36B02BEC6E6500C47567 /* DBExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C36AF2BEC6E6500C47567 /* DBExt.swift */; };
 		0B8C36B42BEC6EAB00C47567 /* ViewExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C36B32BEC6EAB00C47567 /* ViewExt.swift */; };
 		0B8C36B62BEDAB5E00C47567 /* BtnMore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C36B52BEDAB5E00C47567 /* BtnMore.swift */; };
 		0B8FC2702BBC559500839C75 /* PlayingAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8FC26F2BBC559500839C75 /* PlayingAlbum.swift */; };
-		0B901D862BB83BA2003AC253 /* iCloudHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B901D852BB83BA2003AC253 /* iCloudHandler.swift */; };
 		0B901D882BB83BC3003AC253 /* FilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B901D872BB83BC3003AC253 /* FilePresenter.swift */; };
-		0B901D8A2BB83E28003AC253 /* ItemQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B901D892BB83E28003AC253 /* ItemQuery.swift */; };
 		0B92ACCA2BBA80F300F1A74F /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 0B92ACC92BBA80F300F1A74F /* README.md */; };
 		0B9EA3592C21B41C00A4059A /* PlayAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9EA3582C21B41C00A4059A /* PlayAsset.swift */; };
 		0B9EA35B2C21C72800A4059A /* AudioWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9EA35A2C21C72800A4059A /* AudioWorker.swift */; };
@@ -232,6 +229,7 @@
 		F5D3EF232D081A6D00548889 /* BookWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D3EF222D081A5E00548889 /* BookWorker.swift */; };
 		F5D3EF252D082E5300548889 /* BookProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D3EF242D082E5300548889 /* BookProvider.swift */; };
 		F5D3EF272D082ECF00548889 /* BookStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D3EF262D082ECF00548889 /* BookStateView.swift */; };
+		F5DCEB0C2D1E787600FB4F02 /* MagicKit in Frameworks */ = {isa = PBXBuildFile; productRef = F5DCEB0B2D1E787600FB4F02 /* MagicKit */; };
 		F5E17A762D03074500473CB8 /* MessageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E17A752D03074500473CB8 /* MessageProvider.swift */; };
 		F5E17A782D03075E00473CB8 /* SmartMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E17A772D03075E00473CB8 /* SmartMessage.swift */; };
 /* End PBXBuildFile section */
@@ -281,16 +279,13 @@
 		0B8113B02C2C38AD007CA124 /* BtnScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnScene.swift; sourceTree = "<group>"; };
 		0B8113B32C2C430B007CA124 /* Migrate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Migrate.swift; sourceTree = "<group>"; };
 		0B8113B52C2C4342007CA124 /* v25.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = v25.swift; sourceTree = "<group>"; };
-		0B8C369E2BEA011700C47567 /* MetaWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetaWrapper.swift; sourceTree = "<group>"; };
 		0B8C36A92BEA2EC600C47567 /* SuperDisk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperDisk.swift; sourceTree = "<group>"; };
 		0B8C36AB2BEC6E0F00C47567 /* StateExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateExt.swift; sourceTree = "<group>"; };
 		0B8C36AF2BEC6E6500C47567 /* DBExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBExt.swift; sourceTree = "<group>"; };
 		0B8C36B32BEC6EAB00C47567 /* ViewExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExt.swift; sourceTree = "<group>"; };
 		0B8C36B52BEDAB5E00C47567 /* BtnMore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnMore.swift; sourceTree = "<group>"; };
 		0B8FC26F2BBC559500839C75 /* PlayingAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayingAlbum.swift; sourceTree = "<group>"; };
-		0B901D852BB83BA2003AC253 /* iCloudHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iCloudHandler.swift; sourceTree = "<group>"; };
 		0B901D872BB83BC3003AC253 /* FilePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilePresenter.swift; sourceTree = "<group>"; };
-		0B901D892BB83E28003AC253 /* ItemQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemQuery.swift; sourceTree = "<group>"; };
 		0B92ACC92BBA80F300F1A74F /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		0B9EA3582C21B41C00A4059A /* PlayAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayAsset.swift; sourceTree = "<group>"; };
 		0B9EA35A2C21C72800A4059A /* AudioWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioWorker.swift; sourceTree = "<group>"; };
@@ -472,6 +467,7 @@
 				F53ED8DA2D19098300F8E42D /* MagicKit in Frameworks */,
 				F500793F2CA635B900C9D3D4 /* MagicKit in Frameworks */,
 				0B00F4672BB840C1000833B9 /* AsyncAlgorithms in Frameworks */,
+				F5DCEB0C2D1E787600FB4F02 /* MagicKit in Frameworks */,
 				F5ADFF702D1AA25C003CF664 /* MagicKit in Frameworks */,
 				F54DFA792CA630BE00F81BE3 /* MagicKit in Frameworks */,
 			);
@@ -526,7 +522,6 @@
 			isa = PBXGroup;
 			children = (
 				F5675C3C2C24087100326664 /* View */,
-				F5675C3B2C24083700326664 /* iCloud */,
 				F5675C382C2404B000326664 /* File */,
 				0B1D5A6E2AB302600010DDF2 /* Extensions.swift */,
 				0B22158D2BB6BC8F000EB36F /* SmartProgress.swift */,
@@ -924,16 +919,6 @@
 			path = File;
 			sourceTree = "<group>";
 		};
-		F5675C3B2C24083700326664 /* iCloud */ = {
-			isa = PBXGroup;
-			children = (
-				0B901D852BB83BA2003AC253 /* iCloudHandler.swift */,
-				0B8C369E2BEA011700C47567 /* MetaWrapper.swift */,
-				0B901D892BB83E28003AC253 /* ItemQuery.swift */,
-			);
-			path = iCloud;
-			sourceTree = "<group>";
-		};
 		F5675C3C2C24087100326664 /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -1029,6 +1014,7 @@
 				F566BD732D1B8EE0005D7F54 /* AlertToast */,
 				0B382A9E2D1C2F3B0075391C /* AlertToast */,
 				0B27EAE62D1D9E9E00242B78 /* MagicKit */,
+				F5DCEB0B2D1E787600FB4F02 /* MagicKit */,
 			);
 			productName = Cisum;
 			productReference = 0B1D5A4B2AB301AD0010DDF2 /* Cisum.app */;
@@ -1063,7 +1049,7 @@
 			packageReferences = (
 				0B00F4652BB840C1000833B9 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */,
 				0B382A9D2D1C2F3B0075391C /* XCRemoteSwiftPackageReference "MagicMessage" */,
-				0B27EAE82D1DA12A00242B78 /* XCRemoteSwiftPackageReference "MagicKit" */,
+				F5DCEB0A2D1E787600FB4F02 /* XCLocalSwiftPackageReference "../MagicKit" */,
 			);
 			productRefGroup = 0B9C1C3E2AAF18FE001A26AF /* Products */;
 			projectDirPath = "";
@@ -1243,10 +1229,8 @@
 				F5B64D152C328F3900DE55AD /* SuperPlayWorker.swift in Sources */,
 				F52A98FE2C43BC99003559F1 /* AudioTile.swift in Sources */,
 				0BFB38852BCCD26F0055E38B /* BtnLike.swift in Sources */,
-				0B8C369F2BEA011700C47567 /* MetaWrapper.swift in Sources */,
 				F5847C1F2C3778570080887B /* ErrorViewCloud.swift in Sources */,
 				F518F6FB2C34F06000844E62 /* BookRead.swift in Sources */,
-				0B901D862BB83BA2003AC253 /* iCloudHandler.swift in Sources */,
 				F5B64D132C3288D300DE55AD /* PlayMan.swift in Sources */,
 				F545D1732C1FC9F0006A6AFA /* CloudSetting.swift in Sources */,
 				F5C2C7492D1C141D0094157C /* MigrationManager.swift in Sources */,
@@ -1286,7 +1270,6 @@
 				F5C2C7692D1D41380094157C /* FileExpandButton.swift in Sources */,
 				F5675C402C25456300326664 /* DataProvider.swift in Sources */,
 				0B382A9A2D1AED960075391C /* SettingPluginView.swift in Sources */,
-				0B901D8A2BB83E28003AC253 /* ItemQuery.swift in Sources */,
 				F5B64D0A2C327D8600DE55AD /* VideoWorker.swift in Sources */,
 				F5B64D0F2C3280DE00DE55AD /* VideoView.swift in Sources */,
 				0B6B8B9D2BBA4D0600F65B23 /* Coffee.swift in Sources */,
@@ -1549,6 +1532,13 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		F5DCEB0A2D1E787600FB4F02 /* XCLocalSwiftPackageReference "../MagicKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../MagicKit;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		0B00F4652BB840C1000833B9 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -1556,14 +1546,6 @@
 			requirement = {
 				kind = exactVersion;
 				version = 0.1.0;
-			};
-		};
-		0B27EAE82D1DA12A00242B78 /* XCRemoteSwiftPackageReference "MagicKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/CofficLab/MagicKit";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
 			};
 		};
 		0B382A9D2D1C2F3B0075391C /* XCRemoteSwiftPackageReference "MagicMessage" */ = {
@@ -1620,6 +1602,10 @@
 			productName = AlertToast;
 		};
 		F5C2EB802D1AB51100798B46 /* MagicKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MagicKit;
+		};
+		F5DCEB0B2D1E787600FB4F02 /* MagicKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MagicKit;
 		};
