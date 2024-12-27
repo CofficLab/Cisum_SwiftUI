@@ -10,22 +10,24 @@ struct FileStatusColumnView: View, SuperLog {
     @State private var isChecking: Bool = true
     @State private var statusColor: Color = .gray
 
-    // 添加静态缓存
+    // 将缓存标记为 actor 隔离
+    @MainActor
     private static var statusCache: [String: (status: String, color: Color)] = [:]
 
     var body: some View {
         Text(fileStatus)
             .foregroundColor(statusColor)
-            .task(priority: .background) {
+            .task(priority: .background, { 
                 checkFileStatus(verbose: true)
-            }
+            })
     }
 
     private func checkFileStatus(verbose: Bool = false) {
         Task.detached(priority: .high) {
-            // 检查缓存
             let path = url.path(percentEncoded: false)
-            if let cached = Self.statusCache[path] {
+            
+            // 在 MainActor 上检查缓存
+            if let cached = await MainActor.run(body: { Self.statusCache[path] }) {
                 await updateState(fileStatus: cached.status, statusColor: cached.color, isChecking: false)
                 if verbose {
                     os_log("\(Self.t)📦 Using cached status for \(path)")
@@ -38,23 +40,24 @@ struct FileStatusColumnView: View, SuperLog {
             }
             
             // 获取文件状态信息
-            let resourceValues = try? url.resourceValues(forKeys: [
+            if let resourceValues = try? url.resourceValues(forKeys: [
                 .ubiquitousItemDownloadingStatusKey,
                 .ubiquitousItemIsDownloadingKey,
                 .isDirectoryKey,
-            ])
-
-            // 根据获取的状态信息更新UI
-            if let resourceValues {
+            ]) {
                 if resourceValues.isDirectory == true {
                     await checkDirectoryStatus(url)
                 } else {
-                    await checkSingleFileStatus(resourceValues)
+                    // 移除参数标签
+                    await checkSingleFileStatus(resourceValues.ubiquitousItemDownloadingStatus)
                 }
             } else {
                 let status = "本地文件"
                 let color: Color = .primary
-                Self.statusCache[path] = (status, color)
+                // 在 MainActor 上更新缓存
+                await MainActor.run {
+                    Self.statusCache[path] = (status, color)
+                }
                 await updateState(fileStatus: status, statusColor: color, isChecking: false)
             }
         }
@@ -97,21 +100,23 @@ struct FileStatusColumnView: View, SuperLog {
                 ("本地目录", Color.primary)
             }
 
-            // 保存结果到缓存
+            // 在 MainActor 上更新缓存
             let path = directoryURL.path(percentEncoded: false)
-            Self.statusCache[path] = (status, color)
+            await MainActor.run {
+                Self.statusCache[path] = (status, color)
+            }
             
             await updateState(fileStatus: status, statusColor: color, isChecking: false)
         }
     }
 
-    private func checkSingleFileStatus(_ resourceValues: URLResourceValues, verbose: Bool = false) {
+    private func checkSingleFileStatus(_ downloadStatus: URLUbiquitousItemDownloadingStatus?, verbose: Bool = false) {
         Task.detached(priority: .background) {
             if verbose {
                 os_log("\(Self.t)🔍 Checking single file status for \(url.path(percentEncoded: false))")
             }
 
-            let (status, color) = if let downloadStatus = resourceValues.ubiquitousItemDownloadingStatus {
+            let (status, color) = if let downloadStatus {
                 switch downloadStatus {
                 case .current, .downloaded:
                     ("已下载", Color.green)
@@ -124,9 +129,11 @@ struct FileStatusColumnView: View, SuperLog {
                 ("本地文件", Color.primary)
             }
 
-            // 保存结果到缓存
+            // 在 MainActor 上更新缓存
             let path = url.path(percentEncoded: false)
-            Self.statusCache[path] = (status, color)
+            await MainActor.run {
+                Self.statusCache[path] = (status, color)
+            }
             
             await updateState(fileStatus: status, statusColor: color, isChecking: false)
         }

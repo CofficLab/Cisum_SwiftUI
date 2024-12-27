@@ -82,7 +82,7 @@ struct FileStatus: Identifiable {
                 }
             case .checkingDirectory(let name, let current, let total):
                 return "正在检查目录 \(name) (\(current)/\(total))"
-            case .directoryStatus(let total, let downloaded, let downloading, let notDownloaded):
+            case .directoryStatus(_, let downloaded, let downloading, let notDownloaded):
                 var parts: [String] = []
                 if downloaded > 0 {
                     parts.append("\(downloaded) 已下载")
