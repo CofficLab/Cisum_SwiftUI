@@ -12,6 +12,7 @@ class AppProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLog, 
     
     @Published var showDB: Bool = Config.showDB
     @Published var showCopying: Bool = false
+    @Published var showSheet: Bool = true
     @Published var isImporting: Bool = false
     @Published var isDropping: Bool = false
     @Published var error: Error? = nil

@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -28,7 +28,6 @@
 		0B22158E2BB6BC8F000EB36F /* SmartProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B22158D2BB6BC8F000EB36F /* SmartProgress.swift */; };
 		0B27EAE72D1D9E9E00242B78 /* MagicKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0B27EAE62D1D9E9E00242B78 /* MagicKit */; };
 		0B382A9A2D1AED960075391C /* SettingPluginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B382A992D1AED920075391C /* SettingPluginView.swift */; };
-		0B382A9C2D1AF6160075391C /* SettingRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B382A9B2D1AF6160075391C /* SettingRootView.swift */; };
 		0B382A9F2D1C2F3B0075391C /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = 0B382A9E2D1C2F3B0075391C /* AlertToast */; };
 		0B4788A12D1ADE3200E984C5 /* SettingPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4788A02D1ADE3200E984C5 /* SettingPlugin.swift */; };
 		0B4DFC722BD740B4001CEF32 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4DFC712BD740B4001CEF32 /* Device.swift */; };
@@ -245,7 +244,6 @@
 		0B220F742BB1BBDB0077255A /* SmartError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmartError.swift; sourceTree = "<group>"; };
 		0B22158D2BB6BC8F000EB36F /* SmartProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmartProgress.swift; sourceTree = "<group>"; };
 		0B382A992D1AED920075391C /* SettingPluginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingPluginView.swift; sourceTree = "<group>"; };
-		0B382A9B2D1AF6160075391C /* SettingRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingRootView.swift; sourceTree = "<group>"; };
 		0B4788A02D1ADE3200E984C5 /* SettingPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingPlugin.swift; sourceTree = "<group>"; };
 		0B4DFC712BD740B4001CEF32 /* Device.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		0B4E246E2BCAB8020033CC07 /* AppPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppPreview.swift; sourceTree = "<group>"; };
@@ -425,6 +423,10 @@
 		F5E5A8CE2D1E99610049945B /* CloudProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudProvider.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		0BE9835F2D1FA97400ABDF0F /* Welcome */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Welcome; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
 		0B1D5A482AB301AD0010DDF2 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -515,7 +517,6 @@
 				F5C2C7562D1CDF6D0094157C /* Migrate */,
 				0B4788A02D1ADE3200E984C5 /* SettingPlugin.swift */,
 				0B382A992D1AED920075391C /* SettingPluginView.swift */,
-				0B382A9B2D1AF6160075391C /* SettingRootView.swift */,
 			);
 			path = Setting;
 			sourceTree = "<group>";
@@ -695,6 +696,7 @@
 		0BC29EA22CA458BB00E4813F /* Plugins */ = {
 			isa = PBXGroup;
 			children = (
+				0BE9835F2D1FA97400ABDF0F /* Welcome */,
 				0B4788992D1ADCA400E984C5 /* Setting */,
 				0B6DDCDF2D198845001473E3 /* DevicePlugin */,
 				F5ADFF602D1951C6003CF664 /* CopyPlugin */,
@@ -935,6 +937,9 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				0BE9835F2D1FA97400ABDF0F /* Welcome */,
 			);
 			name = Cisum;
 			packageProductDependencies = (
@@ -1183,7 +1188,6 @@
 				0B8C36AC2BEC6E0F00C47567 /* StateExt.swift in Sources */,
 				F5D3EF112D06B7DD00548889 /* AudioConfig.swift in Sources */,
 				F5B64D042C32546F00DE55AD /* SyncingView.swift in Sources */,
-				0B382A9C2D1AF6160075391C /* SettingRootView.swift in Sources */,
 				0BB543F42BE8E38300D7A2B2 /* Duplicates.swift in Sources */,
 				0B0FA20E2D03328E004D4D41 /* PlayManError.swift in Sources */,
 				F5C2C7592D1CF1A40094157C /* FileIconView.swift in Sources */,

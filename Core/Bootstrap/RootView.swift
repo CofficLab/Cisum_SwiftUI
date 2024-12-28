@@ -7,7 +7,6 @@ import SwiftUI
 struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content: View {
     var content: Content
     static var emoji: String { "🌳" }
-    let a = AppProvider()
     let s = StoreProvider()
     let c = ConfigProvider()
     let cloudProvider = CloudProvider()
@@ -19,6 +18,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
 
     @StateObject var m = MessageProvider()
     @StateObject var p = PluginProvider()
+    @StateObject var a = AppProvider()
     @StateObject var man: PlayMan = PlayMan(delegate: nil)
 
     init(@ViewBuilder content: () -> Content) {
@@ -69,6 +69,20 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                     .environmentObject(m)
                     .environmentObject(c)
                     .environmentObject(cloudProvider)
+                    .sheet(isPresented: $a.showSheet, content: {
+                        VStack {
+                            ForEach(Array(p.getSheetViews(storage: c.storageLocation).enumerated()), id: \.offset) { _, view in
+                                view
+                            }
+                        }
+                        .environmentObject(man)
+                        .environmentObject(a)
+                        .environmentObject(s)
+                        .environmentObject(p)
+                        .environmentObject(m)
+                        .environmentObject(c)
+                        .environmentObject(cloudProvider)
+                    })
                 }
             }
         }
@@ -144,6 +158,8 @@ extension RootView {
                 for plugin in p.plugins {
                     await plugin.onWillAppear(playMan: man, currentGroup: p.current, storage: c.getStorageLocation())
                 }
+                
+                a.showSheet = p.getSheetViews(storage: c.storageLocation).isNotEmpty
 
                 #if os(iOS)
                     self.main.async {

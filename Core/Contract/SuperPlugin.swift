@@ -10,6 +10,7 @@ protocol SuperPlugin {
     var isGroup: Bool { get }
 
     func addRootView() -> AnyView?
+    func addSheetView(storage: StorageLocation?) -> AnyView?
     func addDBView(reason: String) -> AnyView?
     func addPosterView() -> AnyView
     func addStateView(currentGroup: SuperPlugin?) -> AnyView?
@@ -37,6 +38,10 @@ extension SuperPlugin {
 
     var isGroup: Bool {
         return false
+    }
+    
+    func addSheetView(storage: StorageLocation?) -> AnyView? {
+        return nil
     }
 
     func addPosterView() -> AnyView {
@@ -99,5 +104,9 @@ extension SuperPlugin {
     }
 
     func onPlayPrev(playMan: PlayMan, current: PlayAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws {
+    }
+    
+    func onWillAppear(playMan: PlayMan, currentGroup: (any SuperPlugin)?, storage: StorageLocation?) async {
+        
     }
 }

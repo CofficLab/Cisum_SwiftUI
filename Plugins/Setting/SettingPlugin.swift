@@ -30,10 +30,6 @@ class SettingPlugin: SuperPlugin, SuperLog {
         AnyView(SettingPluginView())
     }
 
-    func addRootView() -> AnyView? {
-        AnyView(SettingRootView())
-    }
-
     func addStateView(currentGroup: SuperPlugin?) -> AnyView? {
         nil
     }

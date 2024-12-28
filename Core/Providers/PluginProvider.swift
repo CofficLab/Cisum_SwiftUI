@@ -53,6 +53,14 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
         
         return items
     }
+    
+    func getSheetViews(storage: StorageLocation?) -> [AnyView] {
+        let items = plugins.compactMap { $0.addSheetView(storage: storage) }
+        
+        //os_log("\(self.t)GetRootViews: \(items.count)")
+        
+        return items
+    }
 
     func getToolBarButtons() -> [(id: String, view: AnyView)] {
         return current?.addToolBarButtons() ?? []
