@@ -43,7 +43,6 @@ struct PlanView: View {
             .padding(.top)
         }
         .padding()
-        .background(plan.name == "专业版本" ? Color.gray.opacity(0.2) : Color.clear)
         .cornerRadius(12)
     }
 }
