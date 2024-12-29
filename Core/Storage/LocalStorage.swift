@@ -124,7 +124,7 @@ class LocalStorage: ObservableObject, SuperStorage {
     
     func watch(reason: String, verbose: Bool) async {
         if verbose {
-            os_log("\(self.t)WatchAudiosFolder because of \(reason)")
+            os_log("\(self.t)👀👀👀 WatchAudiosFolder because of \(reason)")
         }
 
         let presenter = FilePresenter(fileURL: self.root)

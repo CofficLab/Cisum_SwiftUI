@@ -3,7 +3,7 @@ import MagicKit
 import MagicUI
 import OSLog
 
-class CloudStorage: ObservableObject, SuperStorage, SuperLog, SuperThread {    
+class CloudStorage: ObservableObject, SuperStorage, SuperLog, SuperThread {
     static var emoji = "☁️"
     static let cloudRoot = Config.cloudDocumentsDir
 
@@ -35,7 +35,7 @@ class CloudStorage: ObservableObject, SuperStorage, SuperLog, SuperThread {
     var cloudHandler = iCloudHandler()
     var query: ItemQuery
     var verbose = true
-    
+
     required init(root: URL, delegate: DiskDelegate?) {
         let queue = OperationQueue()
         queue.maxConcurrentOperationCount = 1
@@ -44,15 +44,11 @@ class CloudStorage: ObservableObject, SuperStorage, SuperLog, SuperThread {
         self.delegate = delegate
         self.query = ItemQuery(queue: queue)
     }
-    
+
     func setDelegate(_ delegate: DiskDelegate) {
         self.delegate = delegate
     }
-}
 
-// MARK: GetTree
-
-extension CloudStorage {
     func getRoot() -> DiskFile {
         DiskFile.fromURL(root)
     }
@@ -64,11 +60,7 @@ extension CloudStorage {
     func getTotal() -> Int {
         0
     }
-}
 
-// MARK: Delete
-
-extension CloudStorage {
     func deleteFiles(_ urls: [URL]) throws {
         for url in urls {
             if verbose {
@@ -82,9 +74,7 @@ extension CloudStorage {
     func deleteFile(_ url: URL) throws {
         try deleteFiles([url])
     }
-}
 
-extension CloudStorage {
     func clearFolderContents(atPath path: String) {
         let fileManager = FileManager.default
         do {
@@ -97,11 +87,7 @@ extension CloudStorage {
             os_log("\(self.t)clearFolderContents error: \(error.localizedDescription)")
         }
     }
-}
 
-// MARK: Copy
-
-extension CloudStorage {
     func copyTo(url: URL, reason: String) throws {
         let verbose = true
         if verbose {
@@ -206,11 +192,7 @@ extension CloudStorage {
 
         return count
     }
-}
 
-// MARK: Watch
-
-extension CloudStorage {
     func stopWatch(reason: String) {
         let emoji = "🌛🌛🌛"
         let verbose = false
@@ -218,7 +200,7 @@ extension CloudStorage {
         if verbose {
             os_log("\(self.t)\(emoji) 停止监听 🐛 \(reason)")
         }
-        
+
         self.query.stop()
     }
 
@@ -262,11 +244,7 @@ extension CloudStorage {
             await self.delegate?.onUpdate(DiskFileGroup.fromMetaCollection(collection, disk: self))
         }
     }
-}
 
-// MARK: Move
-
-extension CloudStorage {
     func moveFile(at sourceURL: URL, to destinationURL: URL) async {
         do {
             try await self.cloudHandler.moveFile(at: sourceURL, to: destinationURL)
@@ -274,11 +252,7 @@ extension CloudStorage {
             os_log(.error, "\(e.localizedDescription)")
         }
     }
-}
 
-// MARK: MakeURL
-
-extension CloudStorage {
     func makeURL(_ fileName: String) -> URL {
         self.root.appending(component: fileName)
     }
