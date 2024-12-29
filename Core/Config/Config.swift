@@ -72,6 +72,7 @@ enum Config: SuperLog {
             AudioPlugin(),
 //            BookPlugin()
             CopyPlugin(),
+            ResetPlugin()
         ]
     }
 }

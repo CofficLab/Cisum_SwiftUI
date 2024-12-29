@@ -107,6 +107,8 @@
 		0BE695A02BFE3DCC00CEFFEB /* OneTimeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE695972BFE3DCC00CEFFEB /* OneTimeView.swift */; };
 		0BE695A12BFE3DCC00CEFFEB /* ProductCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE695982BFE3DCC00CEFFEB /* ProductCell.swift */; };
 		0BE695C02C01E88E00CEFFEB /* DeviceData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE695BF2C01E88E00CEFFEB /* DeviceData.swift */; };
+		0BE8C4B52D20F92A003556D1 /* MagicKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0BE8C4B42D20F92A003556D1 /* MagicKit */; };
+		0BE8C4B72D20F92A003556D1 /* MagicUI in Frameworks */ = {isa = PBXBuildFile; productRef = 0BE8C4B62D20F92A003556D1 /* MagicUI */; };
 		0BE93F312BFB8E3200F25445 /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE93F302BFB8E3200F25445 /* SettingView.swift */; };
 		0BEE7C6F2CA8343800DC1DCF /* CopyStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEE7C6E2CA8343800DC1DCF /* CopyStatusView.swift */; };
 		0BEE7C722CA838D600DC1DCF /* CopyWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEE7C712CA838D100DC1DCF /* CopyWorker.swift */; };
@@ -425,6 +427,7 @@
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		0BE9835F2D1FA97400ABDF0F /* Welcome */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Welcome; sourceTree = "<group>"; };
+		0BE983632D1FB25200ABDF0F /* Reset */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Reset; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -432,11 +435,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0BE8C4B52D20F92A003556D1 /* MagicKit in Frameworks */,
 				F5E5A8CD2D1E8BE80049945B /* MagicKit in Frameworks */,
 				F5C2EB812D1AB51100798B46 /* MagicKit in Frameworks */,
 				F5AF31952D1B8D41000448F0 /* MagicKit in Frameworks */,
 				F5C2EB7E2D1AB49700798B46 /* AlertToast in Frameworks */,
 				0B382A9F2D1C2F3B0075391C /* AlertToast in Frameworks */,
+				0BE8C4B72D20F92A003556D1 /* MagicUI in Frameworks */,
 				0B27EAE72D1D9E9E00242B78 /* MagicKit in Frameworks */,
 				0B8583292D1EE8FE0035989F /* MagicUI in Frameworks */,
 				F566BD742D1B8EE0005D7F54 /* AlertToast in Frameworks */,
@@ -696,6 +701,7 @@
 		0BC29EA22CA458BB00E4813F /* Plugins */ = {
 			isa = PBXGroup;
 			children = (
+				0BE983632D1FB25200ABDF0F /* Reset */,
 				0BE9835F2D1FA97400ABDF0F /* Welcome */,
 				0B4788992D1ADCA400E984C5 /* Setting */,
 				0B6DDCDF2D198845001473E3 /* DevicePlugin */,
@@ -940,6 +946,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				0BE9835F2D1FA97400ABDF0F /* Welcome */,
+				0BE983632D1FB25200ABDF0F /* Reset */,
 			);
 			name = Cisum;
 			packageProductDependencies = (
@@ -957,6 +964,8 @@
 				F5E5A8CC2D1E8BE80049945B /* MagicKit */,
 				0B8583262D1EE8FE0035989F /* MagicKit */,
 				0B8583282D1EE8FE0035989F /* MagicUI */,
+				0BE8C4B42D20F92A003556D1 /* MagicKit */,
+				0BE8C4B62D20F92A003556D1 /* MagicUI */,
 			);
 			productName = Cisum;
 			productReference = 0B1D5A4B2AB301AD0010DDF2 /* Cisum.app */;
@@ -990,7 +999,7 @@
 			mainGroup = 0B9C1C342AAF18FE001A26AF;
 			packageReferences = (
 				0B382A9D2D1C2F3B0075391C /* XCRemoteSwiftPackageReference "MagicMessage" */,
-				0BB5F13F2D1EEE6200EA91BB /* XCRemoteSwiftPackageReference "MagicKit" */,
+				0BE8C4B32D20F92A003556D1 /* XCRemoteSwiftPackageReference "MagicKit" */,
 			);
 			productRefGroup = 0B9C1C3E2AAF18FE001A26AF /* Products */;
 			projectDirPath = "";
@@ -1466,12 +1475,12 @@
 				kind = branch;
 			};
 		};
-		0BB5F13F2D1EEE6200EA91BB /* XCRemoteSwiftPackageReference "MagicKit" */ = {
+		0BE8C4B32D20F92A003556D1 /* XCRemoteSwiftPackageReference "MagicKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/CofficLab/MagicKit";
 			requirement = {
-				branch = main;
-				kind = branch;
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -1492,6 +1501,16 @@
 		};
 		0B8583282D1EE8FE0035989F /* MagicUI */ = {
 			isa = XCSwiftPackageProductDependency;
+			productName = MagicUI;
+		};
+		0BE8C4B42D20F92A003556D1 /* MagicKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0BE8C4B32D20F92A003556D1 /* XCRemoteSwiftPackageReference "MagicKit" */;
+			productName = MagicKit;
+		};
+		0BE8C4B62D20F92A003556D1 /* MagicUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0BE8C4B32D20F92A003556D1 /* XCRemoteSwiftPackageReference "MagicKit" */;
 			productName = MagicUI;
 		};
 		F500793E2CA635B900C9D3D4 /* MagicKit */ = {
