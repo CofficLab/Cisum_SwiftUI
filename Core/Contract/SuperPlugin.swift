@@ -29,6 +29,7 @@ protocol SuperPlugin {
     func onPlayAssetUpdate(asset: PlayAsset?, currentGroup: SuperPlugin?) async throws -> Void
     func onPlayNext(playMan: PlayMan, current: PlayAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws -> Void
     func onPlayPrev(playMan: PlayMan, current: PlayAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws -> Void
+    func onStorageLocationChange(storage: StorageLocation?) async throws -> Void
 }
 
 extension SuperPlugin {
@@ -109,4 +110,6 @@ extension SuperPlugin {
     func onWillAppear(playMan: PlayMan, currentGroup: (any SuperPlugin)?, storage: StorageLocation?) async {
         
     }
+    
+    func onStorageLocationChange(storage: StorageLocation?) async throws -> Void {}
 }
