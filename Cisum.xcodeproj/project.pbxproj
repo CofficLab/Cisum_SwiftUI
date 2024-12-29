@@ -9,17 +9,13 @@
 /* Begin PBXBuildFile section */
 		0B0FA20E2D03328E004D4D41 /* PlayManError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0FA20D2D03328E004D4D41 /* PlayManError.swift */; };
 		0B0FA2122D034440004D4D41 /* DebugPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0FA2112D03443C004D4D41 /* DebugPlugin.swift */; };
-		0B0FA2292D034867004D4D41 /* AudioPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0FA2282D034867004D4D41 /* AudioPlugin.swift */; };
 		0B11262A2AC6F7B20093DFFA /* BtnToggleDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1126292AC6F7B20093DFFA /* BtnToggleDB.swift */; };
 		0B1165E92ABBC6C0005C5CBB /* LaunchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1165E82ABBC6C0005C5CBB /* LaunchView.swift */; };
 		0B1165F02ABBCCB0005C5CBB /* AppProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1165EF2ABBCCB0005C5CBB /* AppProvider.swift */; };
 		0B1498742BC4C5CB0075DA61 /* PlayMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1498732BC4C5CB0075DA61 /* PlayMode.swift */; };
-		0B1498792BC4DF940075DA61 /* AudioJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1498782BC4DF940075DA61 /* AudioJob.swift */; };
-		0B1D5A7F2AB302610010DDF2 /* AudioModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1D5A672AB3025F0010DDF2 /* AudioModel.swift */; };
 		0B1D5A882AB302610010DDF2 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1D5A732AB302600010DDF2 /* ContentView.swift */; };
 		0B1D5A8A2AB302610010DDF2 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1D5A752AB302600010DDF2 /* Config.swift */; };
 		0B1D5A8D2AB3E8290010DDF2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1D5A8C2AB3E8290010DDF2 /* AppDelegate.swift */; };
-		0B220F6D2BB051140077255A /* AudioStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B220F6C2BB051140077255A /* AudioStateView.swift */; };
 		0B220F6F2BB051F50077255A /* TitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B220F6E2BB051F50077255A /* TitleView.swift */; };
 		0B220F732BB1A3D70077255A /* ControlBtns.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B220F722BB1A3D70077255A /* ControlBtns.swift */; };
 		0B220F752BB1BBDB0077255A /* SmartError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B220F742BB1BBDB0077255A /* SmartError.swift */; };
@@ -33,8 +29,6 @@
 		0B5786342BCB8DC00064F66A /* PlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B5786332BCB8DC00064F66A /* PlayView.swift */; };
 		0B59FF3E2C2F108500F04728 /* DirScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B59FF3D2C2F108500F04728 /* DirScene.swift */; };
 		0B5D09952D05EE4C00224E6B /* BookPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B5D09942D05EE4C00224E6B /* BookPlugin.swift */; };
-		0B5D099F2D07193100224E6B /* AudioDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B5D099E2D07192F00224E6B /* AudioDB.swift */; };
-		0B5D09A12D0735C000224E6B /* AudioProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B5D09A02D0735BC00224E6B /* AudioProvider.swift */; };
 		0B5E51E52AD912B5000650CF /* DebugCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B5E51E42AD912B5000650CF /* DebugCommand.swift */; };
 		0B604AE82AD6384300929DD8 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B604AE72AD6384300929DD8 /* RootView.swift */; };
 		0B6B8B992BBA39F500F65B23 /* ControlButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6B8B982BBA39F500F65B23 /* ControlButton.swift */; };
@@ -59,7 +53,6 @@
 		0B9EA35D2C21C9AB00A4059A /* PlayState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9EA35C2C21C9AB00A4059A /* PlayState.swift */; };
 		0B9FA2992BC81EFF007B235A /* NotDownloadedAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9FA2982BC81EFF007B235A /* NotDownloadedAlbum.swift */; };
 		0B9FA29B2BC81F53007B235A /* DefaultAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9FA29A2BC81F53007B235A /* DefaultAlbum.swift */; };
-		0BA9FB6C2BFE14B4008074CB /* AudioSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA9FB6B2BFE14B4008074CB /* AudioSettings.swift */; };
 		0BA9FB6E2BFE155B008074CB /* CoverDirSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA9FB6D2BFE155B008074CB /* CoverDirSetting.swift */; };
 		0BA9FB702BFE223A008074CB /* VersionSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA9FB6F2BFE223A008074CB /* VersionSetting.swift */; };
 		0BAABEB12BC79C4E00DF4A31 /* CopyTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAABEB02BC79C4E00DF4A31 /* CopyTask.swift */; };
@@ -72,7 +65,6 @@
 		0BB5871D2AD820FA0071AEBD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0BB5871C2AD820FA0071AEBD /* Assets.xcassets */; };
 		0BB889D22AC042EC004788D5 /* BtnDownload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB889D12AC042EC004788D5 /* BtnDownload.swift */; };
 		0BB889D72AC046B5004788D5 /* BtnShowInFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB889D62AC046B5004788D5 /* BtnShowInFinder.swift */; };
-		0BB889DB2AC06C54004788D5 /* AudioRecordDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB889DA2AC06C54004788D5 /* AudioRecordDB.swift */; };
 		0BB9D2442C32E3E60027DDAD /* BtnChapters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB9D2432C32E3E60027DDAD /* BtnChapters.swift */; };
 		0BB9D2462C32E4F20027DDAD /* DBViewNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB9D2452C32E4F20027DDAD /* DBViewNavigation.swift */; };
 		0BB9D2482C32E53B0027DDAD /* DBViewMenuTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB9D2472C32E53B0027DDAD /* DBViewMenuTile.swift */; };
@@ -82,7 +74,6 @@
 		0BBA42272AC2A8B800C0B977 /* BtnAdd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA42262AC2A8B800C0B977 /* BtnAdd.swift */; };
 		0BBA422F2AC2BAE300C0B977 /* PictureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBA422E2AC2BAE300C0B977 /* PictureView.swift */; };
 		0BBC157C2AB84C21006E82C4 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC157B2AB84C21006E82C4 /* MainView.swift */; };
-		0BBC15802AB854A8006E82C4 /* AudioDBView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC157F2AB854A8006E82C4 /* AudioDBView.swift */; };
 		0BBC158D2ABAC0C7006E82C4 /* BtnToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC158C2ABAC0C7006E82C4 /* BtnToggle.swift */; };
 		0BBC158F2ABAC146006E82C4 /* BtnNext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC158E2ABAC146006E82C4 /* BtnNext.swift */; };
 		0BBC15912ABAC19F006E82C4 /* BtnPrev.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBC15902ABAC19F006E82C4 /* BtnPrev.swift */; };
@@ -121,9 +112,6 @@
 		F52A98F22C410C41003559F1 /* BookUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F52A98F12C410C41003559F1 /* BookUpdate.swift */; };
 		F52A98F52C43988D003559F1 /* BookPoster.swift in Sources */ = {isa = PBXBuildFile; fileRef = F52A98F42C43988D003559F1 /* BookPoster.swift */; };
 		F52A98F72C439D6C003559F1 /* Posters.swift in Sources */ = {isa = PBXBuildFile; fileRef = F52A98F62C439D6C003559F1 /* Posters.swift */; };
-		F52A98FB2C43AA63003559F1 /* AudioPoster.swift in Sources */ = {isa = PBXBuildFile; fileRef = F52A98FA2C43AA63003559F1 /* AudioPoster.swift */; };
-		F52A98FE2C43BC99003559F1 /* AudioTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = F52A98FD2C43BC99003559F1 /* AudioTile.swift */; };
-		F52A99002C43C0DA003559F1 /* AudioList.swift in Sources */ = {isa = PBXBuildFile; fileRef = F52A98FF2C43C0DA003559F1 /* AudioList.swift */; };
 		F53BE0322C202420003CBA29 /* DiskFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53BE0312C202420003CBA29 /* DiskFile.swift */; };
 		F53BE0342C2024BE003CBA29 /* DiskFileGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53BE0332C2024BE003CBA29 /* DiskFileGroup.swift */; };
 		F53ED8DA2D19098300F8E42D /* MagicKit in Frameworks */ = {isa = PBXBuildFile; productRef = F53ED8D92D19098300F8E42D /* MagicKit */; };
@@ -142,7 +130,6 @@
 		F54DFA6D2CA4FCB500F81BE3 /* BookDBView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA6C2CA4FCB500F81BE3 /* BookDBView.swift */; };
 		F54DFA702CA5007600F81BE3 /* VideoGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA6F2CA5007600F81BE3 /* VideoGrid.swift */; };
 		F54DFA742CA559F200F81BE3 /* VideoTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA732CA559F200F81BE3 /* VideoTile.swift */; };
-		F54DFA762CA56B4000F81BE3 /* AudioAvatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54DFA752CA56B4000F81BE3 /* AudioAvatar.swift */; };
 		F54DFA792CA630BE00F81BE3 /* MagicKit in Frameworks */ = {isa = PBXBuildFile; productRef = F54DFA782CA630BE00F81BE3 /* MagicKit */; };
 		F5511BB02C29050300400900 /* Playable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5511BAF2C29050300400900 /* Playable.swift */; };
 		F5511BC02C2953C200400900 /* BtnToggleCopying.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5511BBF2C2953C200400900 /* BtnToggleCopying.swift */; };
@@ -191,7 +178,6 @@
 		F5C2EB812D1AB51100798B46 /* MagicKit in Frameworks */ = {isa = PBXBuildFile; productRef = F5C2EB802D1AB51100798B46 /* MagicKit */; };
 		F5C2EB832D1AC16900798B46 /* ConfigProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C2EB822D1AC16500798B46 /* ConfigProvider.swift */; };
 		F5D3EF0F2D06B5F600548889 /* PlayManDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D3EF0E2D06B5F000548889 /* PlayManDelegate.swift */; };
-		F5D3EF112D06B7DD00548889 /* AudioConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D3EF102D06B7D300548889 /* AudioConfig.swift */; };
 		F5D3EF192D06F4A200548889 /* PlaySource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D3EF182D06F49D00548889 /* PlaySource.swift */; };
 		F5D3EF1D2D080DE100548889 /* BookConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D3EF1C2D080DE100548889 /* BookConfig.swift */; };
 		F5D3EF1F2D080E9400548889 /* BookRecordDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D3EF1E2D080E9400548889 /* BookRecordDB.swift */; };
@@ -209,20 +195,16 @@
 /* Begin PBXFileReference section */
 		0B0FA20D2D03328E004D4D41 /* PlayManError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayManError.swift; sourceTree = "<group>"; };
 		0B0FA2112D03443C004D4D41 /* DebugPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugPlugin.swift; sourceTree = "<group>"; };
-		0B0FA2282D034867004D4D41 /* AudioPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlugin.swift; sourceTree = "<group>"; };
 		0B1126292AC6F7B20093DFFA /* BtnToggleDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnToggleDB.swift; sourceTree = "<group>"; };
 		0B1165E82ABBC6C0005C5CBB /* LaunchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchView.swift; sourceTree = "<group>"; };
 		0B1165EF2ABBCCB0005C5CBB /* AppProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppProvider.swift; sourceTree = "<group>"; };
 		0B1498732BC4C5CB0075DA61 /* PlayMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayMode.swift; sourceTree = "<group>"; };
-		0B1498782BC4DF940075DA61 /* AudioJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioJob.swift; sourceTree = "<group>"; };
 		0B1D5A4B2AB301AD0010DDF2 /* Cisum.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cisum.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0B1D5A5D2AB3025E0010DDF2 /* Signing.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = Signing.entitlements; sourceTree = "<group>"; };
-		0B1D5A672AB3025F0010DDF2 /* AudioModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioModel.swift; sourceTree = "<group>"; };
 		0B1D5A732AB302600010DDF2 /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		0B1D5A752AB302600010DDF2 /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		0B1D5A8B2AB305D70010DDF2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0B1D5A8C2AB3E8290010DDF2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		0B220F6C2BB051140077255A /* AudioStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioStateView.swift; sourceTree = "<group>"; };
 		0B220F6E2BB051F50077255A /* TitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleView.swift; sourceTree = "<group>"; };
 		0B220F722BB1A3D70077255A /* ControlBtns.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlBtns.swift; sourceTree = "<group>"; };
 		0B220F742BB1BBDB0077255A /* SmartError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmartError.swift; sourceTree = "<group>"; };
@@ -234,8 +216,6 @@
 		0B5786332BCB8DC00064F66A /* PlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayView.swift; sourceTree = "<group>"; };
 		0B59FF3D2C2F108500F04728 /* DirScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirScene.swift; sourceTree = "<group>"; };
 		0B5D09942D05EE4C00224E6B /* BookPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookPlugin.swift; sourceTree = "<group>"; };
-		0B5D099E2D07192F00224E6B /* AudioDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioDB.swift; sourceTree = "<group>"; };
-		0B5D09A02D0735BC00224E6B /* AudioProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioProvider.swift; sourceTree = "<group>"; };
 		0B5E51E42AD912B5000650CF /* DebugCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugCommand.swift; sourceTree = "<group>"; };
 		0B604AE72AD6384300929DD8 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		0B6B8B982BBA39F500F65B23 /* ControlButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlButton.swift; sourceTree = "<group>"; };
@@ -258,7 +238,6 @@
 		0B9EA35C2C21C9AB00A4059A /* PlayState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayState.swift; sourceTree = "<group>"; };
 		0B9FA2982BC81EFF007B235A /* NotDownloadedAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotDownloadedAlbum.swift; sourceTree = "<group>"; };
 		0B9FA29A2BC81F53007B235A /* DefaultAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultAlbum.swift; sourceTree = "<group>"; };
-		0BA9FB6B2BFE14B4008074CB /* AudioSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSettings.swift; sourceTree = "<group>"; };
 		0BA9FB6D2BFE155B008074CB /* CoverDirSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverDirSetting.swift; sourceTree = "<group>"; };
 		0BA9FB6F2BFE223A008074CB /* VersionSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionSetting.swift; sourceTree = "<group>"; };
 		0BAABEB02BC79C4E00DF4A31 /* CopyTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyTask.swift; sourceTree = "<group>"; };
@@ -271,7 +250,6 @@
 		0BB5871C2AD820FA0071AEBD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0BB889D12AC042EC004788D5 /* BtnDownload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnDownload.swift; sourceTree = "<group>"; };
 		0BB889D62AC046B5004788D5 /* BtnShowInFinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnShowInFinder.swift; sourceTree = "<group>"; };
-		0BB889DA2AC06C54004788D5 /* AudioRecordDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecordDB.swift; sourceTree = "<group>"; };
 		0BB9D2432C32E3E60027DDAD /* BtnChapters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnChapters.swift; sourceTree = "<group>"; };
 		0BB9D2452C32E4F20027DDAD /* DBViewNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBViewNavigation.swift; sourceTree = "<group>"; };
 		0BB9D2472C32E53B0027DDAD /* DBViewMenuTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBViewMenuTile.swift; sourceTree = "<group>"; };
@@ -281,7 +259,6 @@
 		0BBA42262AC2A8B800C0B977 /* BtnAdd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnAdd.swift; sourceTree = "<group>"; };
 		0BBA422E2AC2BAE300C0B977 /* PictureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureView.swift; sourceTree = "<group>"; };
 		0BBC157B2AB84C21006E82C4 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
-		0BBC157F2AB854A8006E82C4 /* AudioDBView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioDBView.swift; sourceTree = "<group>"; };
 		0BBC158C2ABAC0C7006E82C4 /* BtnToggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnToggle.swift; sourceTree = "<group>"; };
 		0BBC158E2ABAC146006E82C4 /* BtnNext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnNext.swift; sourceTree = "<group>"; };
 		0BBC15902ABAC19F006E82C4 /* BtnPrev.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnPrev.swift; sourceTree = "<group>"; };
@@ -317,9 +294,6 @@
 		F52A98F12C410C41003559F1 /* BookUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookUpdate.swift; sourceTree = "<group>"; };
 		F52A98F42C43988D003559F1 /* BookPoster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookPoster.swift; sourceTree = "<group>"; };
 		F52A98F62C439D6C003559F1 /* Posters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Posters.swift; sourceTree = "<group>"; };
-		F52A98FA2C43AA63003559F1 /* AudioPoster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPoster.swift; sourceTree = "<group>"; };
-		F52A98FD2C43BC99003559F1 /* AudioTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioTile.swift; sourceTree = "<group>"; };
-		F52A98FF2C43C0DA003559F1 /* AudioList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioList.swift; sourceTree = "<group>"; };
 		F53BE0312C202420003CBA29 /* DiskFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskFile.swift; sourceTree = "<group>"; };
 		F53BE0332C2024BE003CBA29 /* DiskFileGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskFileGroup.swift; sourceTree = "<group>"; };
 		F54522242BFF3C770027CF55 /* Products.storekit */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Products.storekit; sourceTree = "<group>"; };
@@ -337,7 +311,6 @@
 		F54DFA6C2CA4FCB500F81BE3 /* BookDBView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookDBView.swift; sourceTree = "<group>"; };
 		F54DFA6F2CA5007600F81BE3 /* VideoGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoGrid.swift; sourceTree = "<group>"; };
 		F54DFA732CA559F200F81BE3 /* VideoTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTile.swift; sourceTree = "<group>"; };
-		F54DFA752CA56B4000F81BE3 /* AudioAvatar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioAvatar.swift; sourceTree = "<group>"; };
 		F5511BAF2C29050300400900 /* Playable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playable.swift; sourceTree = "<group>"; };
 		F5511BBF2C2953C200400900 /* BtnToggleCopying.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnToggleCopying.swift; sourceTree = "<group>"; };
 		F5511BC92C2BACC000400900 /* TopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopView.swift; sourceTree = "<group>"; };
@@ -380,7 +353,6 @@
 		F5C2C76E2D1D5F230094157C /* MigrationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationError.swift; sourceTree = "<group>"; };
 		F5C2EB822D1AC16500798B46 /* ConfigProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigProvider.swift; sourceTree = "<group>"; };
 		F5D3EF0E2D06B5F000548889 /* PlayManDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayManDelegate.swift; sourceTree = "<group>"; };
-		F5D3EF102D06B7D300548889 /* AudioConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioConfig.swift; sourceTree = "<group>"; };
 		F5D3EF182D06F49D00548889 /* PlaySource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaySource.swift; sourceTree = "<group>"; };
 		F5D3EF1C2D080DE100548889 /* BookConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookConfig.swift; sourceTree = "<group>"; };
 		F5D3EF1E2D080E9400548889 /* BookRecordDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookRecordDB.swift; sourceTree = "<group>"; };
@@ -395,6 +367,7 @@
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		0BE8C4C82D20FBA8003556D1 /* Store */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Store; sourceTree = "<group>"; };
+		0BE8C4E72D2142A5003556D1 /* Audio */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Audio; sourceTree = "<group>"; };
 		0BE9835F2D1FA97400ABDF0F /* Welcome */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Welcome; sourceTree = "<group>"; };
 		0BE983632D1FB25200ABDF0F /* Reset */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Reset; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -432,27 +405,6 @@
 				0B0FA2112D03443C004D4D41 /* DebugPlugin.swift */,
 			);
 			path = Debug;
-			sourceTree = "<group>";
-		};
-		0B0FA2272D03485C004D4D41 /* Audio */ = {
-			isa = PBXGroup;
-			children = (
-				F54DFA752CA56B4000F81BE3 /* AudioAvatar.swift */,
-				F5D3EF102D06B7D300548889 /* AudioConfig.swift */,
-				0B5D099E2D07192F00224E6B /* AudioDB.swift */,
-				0BBC157F2AB854A8006E82C4 /* AudioDBView.swift */,
-				0B1498782BC4DF940075DA61 /* AudioJob.swift */,
-				F52A98FF2C43C0DA003559F1 /* AudioList.swift */,
-				0B1D5A672AB3025F0010DDF2 /* AudioModel.swift */,
-				0B0FA2282D034867004D4D41 /* AudioPlugin.swift */,
-				F52A98FA2C43AA63003559F1 /* AudioPoster.swift */,
-				0B5D09A02D0735BC00224E6B /* AudioProvider.swift */,
-				0BB889DA2AC06C54004788D5 /* AudioRecordDB.swift */,
-				0BA9FB6B2BFE14B4008074CB /* AudioSettings.swift */,
-				0B220F6C2BB051140077255A /* AudioStateView.swift */,
-				F52A98FD2C43BC99003559F1 /* AudioTile.swift */,
-			);
-			path = Audio;
 			sourceTree = "<group>";
 		};
 		0B1D5A5E2AB3025E0010DDF2 /* Providers */ = {
@@ -670,13 +622,13 @@
 		0BC29EA22CA458BB00E4813F /* Plugins */ = {
 			isa = PBXGroup;
 			children = (
+				0BE8C4E72D2142A5003556D1 /* Audio */,
 				0BE8C4C82D20FBA8003556D1 /* Store */,
 				0BE983632D1FB25200ABDF0F /* Reset */,
 				0BE9835F2D1FA97400ABDF0F /* Welcome */,
 				0B4788992D1ADCA400E984C5 /* Setting */,
 				0B6DDCDF2D198845001473E3 /* DevicePlugin */,
 				F5ADFF602D1951C6003CF664 /* CopyPlugin */,
-				0B0FA2272D03485C004D4D41 /* Audio */,
 				0B5D09932D05EE4400224E6B /* Book */,
 				0BC29EA32CA458FC00E4813F /* BookState */,
 				0B0FA2102D034431004D4D41 /* Debug */,
@@ -892,6 +844,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				0BE8C4C82D20FBA8003556D1 /* Store */,
+				0BE8C4E72D2142A5003556D1 /* Audio */,
 				0BE9835F2D1FA97400ABDF0F /* Welcome */,
 				0BE983632D1FB25200ABDF0F /* Reset */,
 			);
@@ -1002,18 +955,13 @@
 				F54DFA612CA4E81200F81BE3 /* VideoControl.swift in Sources */,
 				F518F7012C34FB0400844E62 /* BookState.swift in Sources */,
 				0B4788A12D1ADE3200E984C5 /* SettingPlugin.swift in Sources */,
-				F54DFA762CA56B4000F81BE3 /* AudioAvatar.swift in Sources */,
-				0B220F6D2BB051140077255A /* AudioStateView.swift in Sources */,
 				F54DFA702CA5007600F81BE3 /* VideoGrid.swift in Sources */,
 				0B1D5A8D2AB3E8290010DDF2 /* AppDelegate.swift in Sources */,
 				F5A076632C2E9C2D00DD4621 /* MigrateView.swift in Sources */,
-				F52A99002C43C0DA003559F1 /* AudioList.swift in Sources */,
 				0BA9FB702BFE223A008074CB /* VersionSetting.swift in Sources */,
 				0B8C36AA2BEA2EC700C47567 /* SuperStorage.swift in Sources */,
 				0BBC158F2ABAC146006E82C4 /* BtnNext.swift in Sources */,
-				0BBC15802AB854A8006E82C4 /* AudioDBView.swift in Sources */,
 				0BE93F312BFB8E3200F25445 /* SettingView.swift in Sources */,
-				0B5D099F2D07193100224E6B /* AudioDB.swift in Sources */,
 				0BB889D72AC046B5004788D5 /* BtnShowInFinder.swift in Sources */,
 				F53BE0322C202420003CBA29 /* DiskFile.swift in Sources */,
 				F54DFA582CA4E59B00F81BE3 /* VideoLayout.swift in Sources */,
@@ -1040,14 +988,11 @@
 				0B6DDCE32D198861001473E3 /* DBSynced.swift in Sources */,
 				F507F5172C09541B00CB9A3A /* DeviceSetting.swift in Sources */,
 				F5C2C7452D1BF59A0094157C /* FileStatus.swift in Sources */,
-				0B1498792BC4DF940075DA61 /* AudioJob.swift in Sources */,
 				F5C2C7652D1D2ACA0094157C /* FileSizeView.swift in Sources */,
-				0B0FA2292D034867004D4D41 /* AudioPlugin.swift in Sources */,
 				0BE695C02C01E88E00CEFFEB /* DeviceData.swift in Sources */,
 				F518F6FF2C34F1D200844E62 /* BookTile.swift in Sources */,
 				F518F7032C34FD5F00844E62 /* BookStateExt.swift in Sources */,
 				0BAB300E2AB814F70012D837 /* BootApp.swift in Sources */,
-				0B5D09A12D0735C000224E6B /* AudioProvider.swift in Sources */,
 				0BBA42212AC1802C00C0B977 /* ButtonCancelSelected.swift in Sources */,
 				0B9EA35B2C21C72800A4059A /* AudioWorker.swift in Sources */,
 				F5AEE0612CB68CA80007825B /* BookUpdateCoverJob.swift in Sources */,
@@ -1077,7 +1022,6 @@
 				0B1498742BC4C5CB0075DA61 /* PlayMode.swift in Sources */,
 				0B6B8B992BBA39F500F65B23 /* ControlButton.swift in Sources */,
 				F5AEE0652CB7C61D0007825B /* BookTitle.swift in Sources */,
-				0BA9FB6C2BFE14B4008074CB /* AudioSettings.swift in Sources */,
 				0BEE7C762CA99D1400DC1DCF /* DropTips.swift in Sources */,
 				0BE695902BFE325400CEFFEB /* StoreProvider.swift in Sources */,
 				F5AEE05C2CB519C90007825B /* BookPlayingCover.swift in Sources */,
@@ -1091,7 +1035,6 @@
 				F5E17A762D03074500473CB8 /* MessageProvider.swift in Sources */,
 				0B1D5A8A2AB302610010DDF2 /* Config.swift in Sources */,
 				0B220F752BB1BBDB0077255A /* SmartError.swift in Sources */,
-				0BB889DB2AC06C54004788D5 /* AudioRecordDB.swift in Sources */,
 				F54DFA5A2CA4E5C800F81BE3 /* BookLayout.swift in Sources */,
 				0BBA42192ABD5D9200C0B977 /* BtnMode.swift in Sources */,
 				F5C2C7672D1D2DCD0094157C /* FileStatusColumnView.swift in Sources */,
@@ -1101,7 +1044,6 @@
 				F5D3EF212D080F2300548889 /* BookDB.swift in Sources */,
 				0BFB38832BCCCC780055E38B /* OperationView.swift in Sources */,
 				F5B64D152C328F3900DE55AD /* SuperPlayWorker.swift in Sources */,
-				F52A98FE2C43BC99003559F1 /* AudioTile.swift in Sources */,
 				0BFB38852BCCD26F0055E38B /* BtnLike.swift in Sources */,
 				F518F6FB2C34F06000844E62 /* BookRead.swift in Sources */,
 				F5B64D132C3288D300DE55AD /* PlayMan.swift in Sources */,
@@ -1118,7 +1060,6 @@
 				F5B64D112C3280F300DE55AD /* CoverView.swift in Sources */,
 				F5AEE0632CB7BD550007825B /* BookCopyJob.swift in Sources */,
 				0B5E51E52AD912B5000650CF /* DebugCommand.swift in Sources */,
-				0B1D5A7F2AB302610010DDF2 /* AudioModel.swift in Sources */,
 				F573B1882C0411E4004C34CC /* DeviceDataExt.swift in Sources */,
 				0BB427912BED0B38004E6F82 /* LocalStorage.swift in Sources */,
 				0B1165F02ABBCCB0005C5CBB /* AppProvider.swift in Sources */,
@@ -1127,7 +1068,6 @@
 				0BBA42252AC1813D00C0B977 /* BtnDel.swift in Sources */,
 				0BB9D2442C32E3E60027DDAD /* BtnChapters.swift in Sources */,
 				0B8C36AC2BEC6E0F00C47567 /* StateExt.swift in Sources */,
-				F5D3EF112D06B7DD00548889 /* AudioConfig.swift in Sources */,
 				F5B64D042C32546F00DE55AD /* SyncingView.swift in Sources */,
 				0BB543F42BE8E38300D7A2B2 /* Duplicates.swift in Sources */,
 				0B0FA20E2D03328E004D4D41 /* PlayManError.swift in Sources */,
@@ -1150,7 +1090,6 @@
 				F5B64D062C32597B00DE55AD /* DBSyncing.swift in Sources */,
 				0BC29EA92CA4599500E4813F /* PluginProvider.swift in Sources */,
 				F518F6F92C34ECEF00844E62 /* BookSync.swift in Sources */,
-				F52A98FB2C43AA63003559F1 /* AudioPoster.swift in Sources */,
 				0B59FF3E2C2F108500F04728 /* DirScene.swift in Sources */,
 				F5C2C7632D1D22840094157C /* FileTitleView.swift in Sources */,
 			);

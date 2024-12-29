@@ -19,7 +19,6 @@ class LocalStorage: ObservableObject, SuperStorage {
     var fileManager = FileManager.default
     var root: URL
     var delegate: DiskDelegate?
-    var onUpdated: (_ collection: DiskFileGroup) -> Void = { collection in }
     
     required init(root: URL, delegate: DiskDelegate? = nil) {
         self.root = root
@@ -129,10 +128,12 @@ class LocalStorage: ObservableObject, SuperStorage {
 
         let presenter = FilePresenter(fileURL: self.root)
         
-        self.onUpdated(.fromURLs(presenter.getFiles(), isFullLoad: true, disk: self))
+        await self.delegate?.onUpdate(.fromURLs(presenter.getFiles(), isFullLoad: true, disk: self))
         
         presenter.onDidChange = {
-            self.onUpdated(.fromURLs(presenter.getFiles(), isFullLoad: true, disk: self))
+            Task {
+                await self.delegate?.onUpdate(.fromURLs(presenter.getFiles(), isFullLoad: true, disk: self))
+            }
         }
     }
 
