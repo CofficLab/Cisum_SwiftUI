@@ -31,10 +31,12 @@ class CopyPlugin: SuperPlugin, SuperLog {
         
         guard let db = self.db else {
             assert(false, "DB is nil")
+            return nil
         }
 
         guard let worker = self.worker else {
             assert(false, "Worker is nil")
+            return nil
         }
 
         return AnyView(CopyRootView()
