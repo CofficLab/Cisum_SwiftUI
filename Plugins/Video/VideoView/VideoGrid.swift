@@ -50,7 +50,7 @@ struct VideoGrid: View {
 //                )
                 
                 if app.isDropping || m.flashMessage.isEmpty && disk.getRoot().children.isEmpty {
-                    DBTips()
+//                    DBTips()
                 }
             }
             

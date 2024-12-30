@@ -31,7 +31,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
 
     var total: Int { audios.count }
     var assets: [PlayAsset] { audiosWithDB.map { $0.toPlayAsset() } }
-    var audiosWithDB: [AudioModel] { audios.map { $0.setDB(audioDB); return $0; } }
+    var audiosWithDB: [AudioModel] { audios.map { $0.setDB(audioDB); return $0 } }
 
     init(verbose: Bool, reason: String) {
         if verbose {
@@ -59,6 +59,8 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
                     Spacer()
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else if total == 0 {
+                AudioDBTips()
             } else {
                 List(selection: $selection) {
                     Section(header: HStack {

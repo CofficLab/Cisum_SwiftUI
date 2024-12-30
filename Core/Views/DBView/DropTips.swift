@@ -49,9 +49,3 @@ struct DropTips: View {
         }
     }
 }
-
-#Preview {
-    DBTips()
-        .frame(width: 300, height: 300)
-        .background(MagicBackground.aurora)
-}

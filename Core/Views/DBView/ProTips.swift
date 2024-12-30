@@ -30,9 +30,3 @@ struct ProTips: View {
         }.shadow(radius: 8)
     }
 }
-
-#Preview {
-    DBTips()
-        .frame(width: 300, height: 300)
-        .background(MagicBackground.aurora)
-}
