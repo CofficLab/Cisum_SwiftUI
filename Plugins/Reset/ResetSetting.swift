@@ -5,7 +5,10 @@ import SwiftUI
 struct ResetSetting: View, SuperSetting, SuperLog {
     static let emoji = "🫙"
 
+    @EnvironmentObject var app: AppProvider
     @EnvironmentObject var configProvider: ConfigProvider
+    @EnvironmentObject var pluginProvider: PluginProvider
+    @EnvironmentObject var m: MessageProvider
 
     @State var diskSize: String?
 
@@ -16,10 +19,13 @@ struct ResetSetting: View, SuperSetting, SuperLog {
                 Text("重置设置，恢复成系统默认状态")
                 
                 Button(action: {
+                    app.setResetting(true)
+                    
                     configProvider.resetStorageLocation()
-                    MagicApp.quit()
+                    
+                    app.setResetting(false)
                 }) {
-                    Label("重置所有设置并退出 APP", systemImage: "arrow.counterclockwise")
+                    Label("重置所有设置", systemImage: "arrow.counterclockwise")
                         .foregroundColor(.red)
                 }
                 .buttonStyle(.bordered)

@@ -41,7 +41,7 @@ struct SettingPluginView: View, SuperSetting, SuperLog {
                             }
                         )
                     },
-                    isEnabled: cloudManager.isSignedIn || c.storageLocation != .icloud,
+                    isEnabled: cloudManager.isSignedIn == true || c.storageLocation != .icloud,
                     disabledReason: "在系统设置中登录 iCloud 账户后，此选项可用"
                 )
 
@@ -109,6 +109,10 @@ struct SettingPluginView: View, SuperSetting, SuperLog {
                 storageRoot = c.getStorageRoot()
             }
             .onChange(of: tempStorageLocation) {
+                hasChanges = tempStorageLocation != (c.storageLocation ?? .local)
+                storageRoot = c.getStorageRoot()
+            }
+            .onChange(of: c.storageLocation) {
                 hasChanges = tempStorageLocation != (c.storageLocation ?? .local)
                 storageRoot = c.getStorageRoot()
             }

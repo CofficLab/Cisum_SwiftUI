@@ -1,8 +1,12 @@
 import Foundation
 import SwiftUI
 import SwiftData
+import OSLog
+import MagicKit
 
-struct AudioConfig {
+struct AudioConfig: SuperLog {
+    static let emoji = "😊"
+    
     /// iCloud容器的ID
     static let containerIdentifier = "iCloud.yueyi.cisum"
     
@@ -51,13 +55,21 @@ struct AudioConfig {
     // MARK: Local Container
     
     static var getContainer: ModelContainer = {
+        let verbose = true
+        
+        if verbose {
+            os_log("\(Self.t)🍋🍋🍋 getContainer")
+        }
+        
         guard let url = getDBUrl() else {
+            os_log(.error, "\(Self.t)⚠️ Could not create ModelContainer")
             fatalError("Could not create ModelContainer")
         }
 
         let schema = Schema([
             AudioModel.self,
         ])
+        
         let modelConfiguration = ModelConfiguration(
             schema: schema,
             url: url,
@@ -66,8 +78,10 @@ struct AudioConfig {
         )
 
         do {
+            os_log("\(Self.t)🍋🍋🍋 ModelContainer")
             return try ModelContainer(for: schema, configurations: [modelConfiguration])
         } catch {
+            os_log(.error, "\(Self.t)⚠️ Could not create ModelContainer: \(error)")
             fatalError("Could not create ModelContainer: \(error)")
         }
     }()

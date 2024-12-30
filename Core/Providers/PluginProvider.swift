@@ -28,7 +28,15 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
     }
 
     func append(_ plugin: SuperPlugin, reason: String) throws {
-        os_log("\(self.t)➕➕➕ Append: \(plugin.id) with reason: \(reason)")
+        let verbose = false
+        
+        if verbose {
+            os_log("\(self.t)➕➕➕ Append: \(plugin.id) with reason: \(reason)")
+        }
+        
+        if plugin.id.isEmpty {
+            throw PluginProviderError.PluginIDIsEmpty(plugin: plugin)
+        }
         
         // Check if plugin with same ID already exists
         if plugins.contains(where: { $0.id == plugin.id }) {
@@ -67,7 +75,7 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
     }
 
     func setCurrentGroup(_ plugin: SuperPlugin) throws {
-        //os_log("\(self.t)🏃🏃🏃 SetCurrentGroup: \(plugin.id)")
+        os_log("\(self.t)🏃🏃🏃 SetCurrentGroup: \(plugin.id)")
 
         if plugin.isGroup {
             self.current = plugin
@@ -76,16 +84,27 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
             throw PluginProviderError.PluginIsNotGroup(plugin: plugin)
         }
     }
+    
+    func reset() {
+        self.plugins = []
+        self.current = nil
+    }
 
     func restoreCurrent() throws {
-        //os_log("\(self.t)🏃🏃🏃 RestoreCurrent")
+        os_log("\(self.t)🏃🏃🏃 RestoreCurrent")
         
         let currentPluginId = Self.getPluginId()
 
+        os_log("\(self.t)🏃🏃🏃 RestoreCurrent: current plugin id is -> \(currentPluginId)")
+
         if let plugin = plugins.first(where: { $0.id == currentPluginId }) {
+            os_log("\(self.t)🏃🏃🏃 RestoreCurrent: \(plugin.id)")
             try self.setCurrentGroup(plugin)
         } else if let first = plugins.first(where: { $0.isGroup }) {
+            os_log("\(self.t)🏃🏃🏃 RestoreCurrent: set current to first group -> \(first.id)")
             try self.setCurrentGroup(first)
+        } else {
+            os_log(.error, "\(self.t)⚠️⚠️⚠️ No current plugin found")
         }
     }
 
@@ -119,6 +138,7 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
 enum PluginProviderError: Error, LocalizedError {
     case PluginIsNotGroup(plugin: SuperPlugin)
     case duplicatePluginID(plugin: SuperPlugin)
+    case PluginIDIsEmpty(plugin: SuperPlugin)
 
     var errorDescription: String? {
         switch self {
@@ -126,6 +146,8 @@ enum PluginProviderError: Error, LocalizedError {
             return "Plugin \(plugin.id) is not a group"
         case let .duplicatePluginID(plugin):
             return "Plugin with ID \(plugin.id) already exists"
+        case let .PluginIDIsEmpty(plugin):
+            return "Plugin \(plugin.id) has an empty ID"
         }
     }
 }

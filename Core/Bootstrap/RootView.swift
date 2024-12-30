@@ -29,6 +29,8 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
         Group {
             if self.loading {
                 ProgressView()
+            } else if a.isResetting {
+                Text("正在重置")
             } else {
                 if let e = self.error {
                     ErrorViewFatal(error: e)
@@ -67,8 +69,6 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                     .environmentObject(s)
                     .environmentObject(p)
                     .environmentObject(m)
-                    .environmentObject(c)
-                    .environmentObject(cloudProvider)
                     .sheet(isPresented: $a.showSheet, content: {
                         VStack {
                             ForEach(Array(p.getSheetViews(storage: c.storageLocation).enumerated()), id: \.offset) { _, view in
@@ -80,12 +80,12 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                         .environmentObject(s)
                         .environmentObject(p)
                         .environmentObject(m)
-                        .environmentObject(c)
-                        .environmentObject(cloudProvider)
                     })
                 }
             }
         }
+        .environmentObject(c)
+        .environmentObject(cloudProvider)
         .toast(isPresenting: $m.showHub, alert: {
             AlertToast(displayMode: .hud, type: .regular, title: m.hub)
         })
@@ -112,15 +112,12 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
         .frame(maxWidth: .infinity)
         .frame(maxHeight: .infinity)
         .background(Config.rootBackground)
-        #if os(iOS)
-            .ignoresSafeArea()
-        #endif
-            .onReceive(nc.publisher(for: NSUbiquitousKeyValueStore.didChangeExternallyNotification), perform: onCloudAccountStateChanged)
-            .onAppear(perform: onAppear)
-            .onDisappear(perform: onDisappear)
-            .onChange(of: man.asset, onPlayAssetChange)
-            .onChange(of: man.playing, onPlayingChange)
-            .onChange(of: c.storageLocation, onStorageLocationChange)
+        .onReceive(nc.publisher(for: NSUbiquitousKeyValueStore.didChangeExternallyNotification), perform: onCloudAccountStateChanged)
+        .onAppear(perform: onAppear)
+        .onDisappear(perform: onDisappear)
+        .onChange(of: man.asset, onPlayAssetChange)
+        .onChange(of: man.playing, onPlayingChange)
+        .onChange(of: c.storageLocation, onStorageLocationChange)
     }
 
     private func reloadView() {
@@ -137,9 +134,16 @@ extension RootView {
             reloadView()
         }
     }
-    
+
     func onStorageLocationChange() {
         os_log("\(self.t)🍋🍋🍋 Storage Location Change")
+
+        if c.storageLocation == nil {
+            a.showSheet = true
+
+            return
+        }
+
         for plugin in p.plugins {
             Task {
                 try await plugin.onStorageLocationChange(storage: c.storageLocation)
@@ -166,9 +170,9 @@ extension RootView {
                 try? self.p.restoreCurrent()
 
                 for plugin in p.plugins {
-                    await plugin.onWillAppear(playMan: man, currentGroup: p.current, storage: c.getStorageLocation())
+                    try await plugin.onWillAppear(playMan: man, currentGroup: p.current, storage: c.getStorageLocation())
                 }
-                
+
                 a.showSheet = p.getSheetViews(storage: c.storageLocation).isNotEmpty
 
                 #if os(iOS)

@@ -10,6 +10,7 @@ class DebugPlugin: SuperPlugin, SuperLog {
     static let emoji = "🥣"
     var iconName: String = "play"
     var label: String = ""
+    let id = "DebugPlugin"
 
     func addDBView(reason: String) -> AnyView {
         os_log("\(self.t)AddDBView")
@@ -30,7 +31,7 @@ class DebugPlugin: SuperPlugin, SuperLog {
     }
 
     func onWillAppear(playMan: PlayMan, currentGroup: SuperPlugin?, storage: StorageLocation?) {
-        os_log("\(self.t)OnAppear, currentGroup: \(currentGroup?.id ?? "nil")")
+        os_log("\(self.a)currentGroup: \(currentGroup?.id ?? "nil")")
     }
 
     func onDisappear() {

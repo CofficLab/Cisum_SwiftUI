@@ -63,17 +63,39 @@ enum Config: SuperLog {
 
         fatalError()
     }
-    
+
     static func getPlugins() -> [SuperPlugin] {
         return [
             WelcomePlugin(),
             SettingPlugin(),
-            // DebugPlugin(),
+            DebugPlugin(),
             AudioPlugin(),
 //            BookPlugin()
-            CopyPlugin(),
-            ResetPlugin()
+//            CopyPlugin(),
+//            ResetPlugin()
         ]
+    }
+
+    static let containerIdentifier = "iCloud.yueyi.cisum"
+
+    static let dbDirName = debug ? "db_debug" : "db_production"
+
+    static func getDBRootDir() -> URL? {
+        guard let url = Config.appSupportDir?
+            .appendingPathComponent("Cisum_Database")
+            .appendingPathComponent(dbDirName) else { return nil }
+
+        // 如果目录不存在则创建
+        if !fm.fileExists(atPath: url.path) {
+            os_log("\(self.t) Creating database directory: \(url.path)")
+
+            try? FileManager.default.createDirectory(
+                at: url,
+                withIntermediateDirectories: true
+            )
+        }
+
+        return url
     }
 }
 

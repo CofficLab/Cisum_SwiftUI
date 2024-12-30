@@ -7,8 +7,6 @@ struct DiskFileGroup: Equatable {
         lhs.files == rhs.files
     }
     
-    static var empty = DiskFileGroup(disk: LocalStorage.null, files: [], isFullLoad: true)
-    
     var disk: any SuperStorage
     var files: [DiskFile]
     var isFullLoad: Bool

@@ -21,7 +21,7 @@ struct VideoView: View, SuperLog {
     var isDownloaded: Bool { downloadingPercent == 100 }
 
     var asset: PlayAsset
-    var updating: DiskFileGroup = .empty
+    var updating: [DiskFile] = []
 
     init(_ asset: PlayAsset) {
         self.asset = asset

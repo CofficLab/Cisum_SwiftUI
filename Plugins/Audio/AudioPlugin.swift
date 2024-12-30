@@ -37,7 +37,9 @@ class AudioPlugin: SuperPlugin, SuperLog {
             return AnyView(EmptyView())
         }
 
-        return AnyView(AudioDBView(verbose: false, reason: reason)
+        os_log("\(self.t)🍋🍋🍋 AddDBView")
+
+        return AnyView(AudioDBView(verbose: true, reason: reason)
             .modelContainer(AudioConfig.getContainer)
             .environmentObject(audioDB)
             .environmentObject(audioProvider)
@@ -45,10 +47,12 @@ class AudioPlugin: SuperPlugin, SuperLog {
     }
 
     func addPosterView() -> AnyView {
-        AnyView(AudioPoster())
+        os_log("\(self.t)🍋🍋🍋 AddPosterView")
+        return AnyView(AudioPoster())
     }
 
     func addSettingView() -> AnyView? {
+        os_log("\(self.t)🍋🍋🍋 AddSettingView")
         guard let audioProvider = self.audioProvider else {
             return nil
         }
@@ -57,6 +61,8 @@ class AudioPlugin: SuperPlugin, SuperLog {
     }
 
     func addStateView(currentGroup: SuperPlugin?) -> AnyView? {
+        os_log("\(self.t)🍋🍋🍋 AddStateView")
+
         if currentGroup?.id != self.id {
             return nil
         }
@@ -69,6 +75,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
     }
 
     func addToolBarButtons() -> [(id: String, view: AnyView)] {
+        os_log("\(self.t)🍋🍋🍋 AddToolBarButtons")
         return [
             (id: "like", view: AnyView(
                 BtnLike(autoResize: false)
@@ -122,7 +129,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
         }
     }
 
-    func onWillAppear(playMan: PlayMan, currentGroup: SuperPlugin?, storage: StorageLocation?) async {
+    func onWillAppear(playMan: PlayMan, currentGroup: SuperPlugin?, storage: StorageLocation?) async throws {
         if currentGroup?.id != self.id {
             return
         }
@@ -139,10 +146,12 @@ class AudioPlugin: SuperPlugin, SuperLog {
         }
 
         guard let disk = disk else {
-            fatalError("AudioPlugin.onInit: disk == nil")
+            os_log(.error, "\(self.t)⚠️ AudioPlugin.onInit: disk == nil")
+            
+            throw AudioPluginError.NoDisk
         }
 
-        self.audioDB = AudioDB(disk: disk, reason: self.className + ".onInit", verbose: false)
+        self.audioDB = AudioDB(disk: disk, reason: self.className + ".onInit", verbose: true)
         self.audioProvider = AudioProvider(disk: disk)
         self.initialized = true
 
@@ -153,17 +162,17 @@ class AudioPlugin: SuperPlugin, SuperLog {
                 await playMan.seek(time)
             }
         } else {
-            os_log("\(self.t)⚠️ No current audio URL, try find first")
+            os_log("\(self.t)⚠️⚠️⚠️ No current audio URL, try find first")
 
             guard let audioDB = audioDB else {
-                os_log("\(self.t)⚠️ AudioDB not found")
+                os_log("\(self.t)⚠️⚠️⚠️ AudioDB not found")
                 return
             }
 
             if let first = try? await audioDB.getFirst() {
                 await playMan.play(first.toPlayAsset(), reason: self.className + ".OnAppear", verbose: true)
             } else {
-                os_log("\(self.t)⚠️ No audio found")
+                os_log("\(self.t)⚠️⚠️⚠️ No audio found")
             }
         }
 
@@ -241,7 +250,7 @@ extension AudioPlugin {
         NSUbiquitousKeyValueStore.default.synchronize()
     }
 
-    static func storeCurrent(_ url: URL?, verbose: Bool = false) {
+    static func storeCurrent(_ url: URL?, verbose: Bool = true) {
         if verbose {
             os_log("\(Self.t)🍋🍋🍋 Store current audio URL: \(url?.absoluteString ?? "")")
         }
@@ -323,6 +332,7 @@ extension Notification.Name {
 enum AudioPluginError: Error, LocalizedError {
     case NoNextAsset
     case NoPrevAsset
+    case NoDisk
 
     var errorDescription: String? {
         switch self {
@@ -330,6 +340,8 @@ enum AudioPluginError: Error, LocalizedError {
             return "No next asset"
         case .NoPrevAsset:
             return "No prev asset"
+        case .NoDisk:
+            return "No disk"
         }
     }
 }

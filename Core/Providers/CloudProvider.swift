@@ -11,8 +11,16 @@ import SwiftUI
 class CloudProvider: NSObject, ObservableObject, @preconcurrency SuperLog, SuperThread, SuperEvent {
     static let emoji: String = "☃️"
     
-    @Published private(set) var isSignedIn: Bool = false
+    @Published private(set) var isSignedIn: Bool?
     @Published private(set) var accountStatus: String = ""
+    
+    var isSignedInDescription: String {
+        if let isSignedIn = isSignedIn {
+            return isSignedIn ? "已登录" : "未登录"
+        }
+        
+        return "未知"
+    }
     
     override init() {
         super.init()
@@ -28,7 +36,7 @@ class CloudProvider: NSObject, ObservableObject, @preconcurrency SuperLog, Super
         )
     }
     
-    private func updateAccountStatus(verbose: Bool = false) {
+    private func updateAccountStatus(verbose: Bool = true) {
         Task {
             let status = FileManager.default.ubiquityIdentityToken != nil
             await MainActor.run {

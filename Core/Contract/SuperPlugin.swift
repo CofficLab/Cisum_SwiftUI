@@ -20,7 +20,7 @@ protocol SuperPlugin {
 
     func getDisk() -> (any SuperStorage)?
 
-    func onWillAppear(playMan: PlayMan, currentGroup: SuperPlugin?, storage: StorageLocation?) async -> Void
+    func onWillAppear(playMan: PlayMan, currentGroup: SuperPlugin?, storage: StorageLocation?) async throws -> Void
     func onDisappear() -> Void
     func onPlay() -> Void
     func onPause(playMan: PlayMan) async -> Void

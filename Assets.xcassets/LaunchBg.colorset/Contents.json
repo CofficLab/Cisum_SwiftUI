@@ -3,7 +3,7 @@
     {
       "color" : {
         "platform" : "ios",
-        "reference" : "systemTealColor"
+        "reference" : "systemMintColor"
       },
       "idiom" : "iphone"
     },
@@ -19,6 +19,26 @@
         "reference" : "opaqueSeparatorColor"
       },
       "idiom" : "iphone"
+    },
+    {
+      "color" : {
+        "platform" : "ios",
+        "reference" : "systemTealColor"
+      },
+      "idiom" : "ipad"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "color" : {
+        "platform" : "ios",
+        "reference" : "opaqueSeparatorColor"
+      },
+      "idiom" : "ipad"
     }
   ],
   "info" : {

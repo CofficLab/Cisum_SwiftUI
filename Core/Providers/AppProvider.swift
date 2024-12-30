@@ -15,6 +15,7 @@ class AppProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLog, 
     @Published var showSheet: Bool = true
     @Published var isImporting: Bool = false
     @Published var isDropping: Bool = false
+    @Published var isResetting: Bool = false
     @Published var error: Error? = nil
     @Published var rightAlbumVisible = false
     @Published var dbViewType: DBViewType = .init(rawValue: Config.currentDBViewType)!
@@ -58,6 +59,12 @@ class AppProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLog, 
     func setPlayManError(_ error: PlayManError) {
         self.main.async {
             self.error = error as Error
+        }
+    }
+
+    func setResetting(_ value: Bool) {
+        self.main.async {
+            self.isResetting = value
         }
     }
 }
