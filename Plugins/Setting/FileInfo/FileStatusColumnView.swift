@@ -18,11 +18,11 @@ struct FileStatusColumnView: View, SuperLog {
         Text(fileStatus)
             .foregroundColor(statusColor)
             .task {
-                checkFileStatus(verbose: true)
+                checkFileStatus(verbose: false)
             }
     }
 
-    private func checkFileStatus(verbose: Bool = false) {
+    private func checkFileStatus(verbose: Bool) {
         Task.detached(priority: .high) {
             let path = url.path(percentEncoded: false)
             

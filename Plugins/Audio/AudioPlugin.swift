@@ -211,6 +211,23 @@ class AudioPlugin: SuperPlugin, SuperLog {
             throw AudioPluginError.NoNextAsset
         }
     }
+    
+    func onStorageLocationChange(storage: StorageLocation?) async throws {
+        switch storage {
+        case .local, .none:
+            disk = LocalStorage.make(self.dirName, verbose: false, reason: self.className + ".onInit")
+        case .icloud:
+            disk = CloudStorage.make(self.dirName, verbose: false, reason: self.className + ".onInit")
+        case .custom:
+            disk = LocalStorage.make(self.dirName, verbose: false, reason: self.className + ".onInit")
+        }
+        
+        guard let disk = disk else {
+            fatalError("AudioPlugin.onInit: disk == nil")
+        }
+        
+        self.audioDB?.changeDisk(disk: disk)
+    }
 }
 
 // MARK: Store

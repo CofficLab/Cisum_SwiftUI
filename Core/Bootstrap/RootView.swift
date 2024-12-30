@@ -8,7 +8,6 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     var content: Content
     static var emoji: String { "🌳" }
     let s = StoreProvider()
-    let c = ConfigProvider()
     let cloudProvider = CloudProvider()
 
     @State var isDropping: Bool = false
@@ -20,6 +19,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     @StateObject var p = PluginProvider()
     @StateObject var a = AppProvider()
     @StateObject var man: PlayMan = PlayMan(delegate: nil)
+    @StateObject var c = ConfigProvider()
 
     init(@ViewBuilder content: () -> Content) {
         self.content = content()
@@ -120,6 +120,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
             .onDisappear(perform: onDisappear)
             .onChange(of: man.asset, onPlayAssetChange)
             .onChange(of: man.playing, onPlayingChange)
+            .onChange(of: c.storageLocation, onStorageLocationChange)
     }
 
     private func reloadView() {
@@ -134,6 +135,15 @@ extension RootView {
     func onChangeOfiCloud() {
         if iCloudAvailable {
             reloadView()
+        }
+    }
+    
+    func onStorageLocationChange() {
+        os_log("\(self.t)🍋🍋🍋 Storage Location Change")
+        for plugin in p.plugins {
+            Task {
+                try await plugin.onStorageLocationChange(storage: c.storageLocation)
+            }
         }
     }
 
