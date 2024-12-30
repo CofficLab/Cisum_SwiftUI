@@ -4,6 +4,7 @@ import SwiftUI
 
 struct AudioDBTips: View {
     @EnvironmentObject var app: AppProvider
+    @EnvironmentObject var audioManager: AudioProvider
 
     var supportedFormats: String {
         Config.supportedExtensions.joined(separator: ",")
@@ -31,7 +32,7 @@ struct AudioDBTips: View {
 
                         Button(
                             action: {
-//                                    FileHelper.openFolder(url: data.disk.root)
+                                audioManager.disk.root.openFolder()
                             },
                             label: {
                                 Label(

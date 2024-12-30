@@ -121,7 +121,10 @@ struct SettingPluginView: View, SuperSetting, SuperLog {
                 if let root = storageRoot {
                     FileSizeView(url: root)
                         .id(root.path)
-                    BtnOpenFolder(url: root).labelStyle(.iconOnly)
+                    
+                    if Config.isDesktop {
+                        BtnOpenFolder(url: root).labelStyle(.iconOnly)
+                    }
                 }
             }
         }

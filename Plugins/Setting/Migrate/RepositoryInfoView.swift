@@ -32,7 +32,7 @@ struct RepositoryInfoView: View {
                 .foregroundColor(.primary)
             Spacer()
 
-            if let path = url?.path {
+            if let path = url?.path, Config.isDesktop {
                 Text(path)
                     .font(.caption)
                     .foregroundColor(.secondary)
@@ -43,7 +43,7 @@ struct RepositoryInfoView: View {
 
             Spacer()
 
-            if let root = url {
+            if let root = url, Config.isDesktop {
                 BtnOpenFolder(url: root).labelStyle(.iconOnly)
             }
         }

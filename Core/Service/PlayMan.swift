@@ -77,6 +77,19 @@ class PlayMan: NSObject, ObservableObject, @preconcurrency SuperLog, SuperThread
         }
         
         self.setAsset(asset)
+        
+        if asset.isDownloading {
+            self.stop(reason: "Play.Downloading", verbose: true)
+            self.setError(.Downloading)
+            return
+        }
+
+        if asset.isNotDownloaded {
+            self.stop(reason: "Play.NotDownloaded", verbose: true)
+            self.setError(.NotDownloaded)
+            return
+        }
+        
         try self.worker.prepare(asset, reason: self.className + ".prepare", verbose: false)
     }
 
@@ -346,8 +359,7 @@ extension PlayMan {
                 do {
                     try await self.toggleLike()
 
-                    self.c.likeCommand.isActive = self.asset?.like ?? false
-                    self.c.dislikeCommand.isActive = self.asset?.notLike ?? true
+                    self.c.likeCommand.isActive.toggle()
                 } catch {
                     self.setError(.ToggleLikeError(error))
                 }

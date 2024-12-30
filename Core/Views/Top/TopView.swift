@@ -2,12 +2,16 @@ import SwiftUI
 
 struct TopView: View {
     @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var p: PluginProvider
 
     var asset: PlayAsset? { playMan.asset }
 
     var body: some View {
         HStack {
-            BtnMode()
+            if p.groupPlugins.count > 1 {
+                BtnScene()
+            }
+
             Spacer()
             if let asset = asset {
                 HStack {

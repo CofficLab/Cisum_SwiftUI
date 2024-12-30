@@ -84,10 +84,9 @@ struct MigrationProgressView: View {
                 }.frame(maxWidth: .infinity)
             }
             .frame(maxWidth: .infinity)
-            .padding(.horizontal)
 
             if !showConfirmation {
-                migrationStatusView.padding(.horizontal)
+                migrationStatusView
             }
 
             if showConfirmation {
@@ -96,6 +95,7 @@ struct MigrationProgressView: View {
                 actionButtons
             }
         }
+        .padding()
         .onAppear {
             loadSourceFiles()
             loadTargetFiles()
