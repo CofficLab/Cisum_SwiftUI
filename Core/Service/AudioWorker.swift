@@ -18,13 +18,13 @@ protocol AudioWorkerDelegate: AnyObject {
 
 class AudioWorker: NSObject, ObservableObject, SuperPlayWorker, SuperLog, SuperThread {
     static let emoji = "👷"
-    var player = AVAudioPlayer()
+    var player: AVAudioPlayer?
     var delegate: AudioWorkerDelegate?
     var verbose = false
     var queue = DispatchQueue(label: "AudioWorker", qos: .userInteractive)
     var state: PlayState = .Stopped
-    var duration: TimeInterval { player.duration }
-    var currentTime: TimeInterval { player.currentTime }
+    var duration: TimeInterval { player?.duration ?? 0 }
+    var currentTime: TimeInterval { player?.currentTime ?? 0 }
     var leftTime: TimeInterval { duration - currentTime }
     var currentTimeDisplay: String {
         DateComponentsFormatter.positional.string(from: currentTime) ?? "0:00"
@@ -38,16 +38,26 @@ class AudioWorker: NSObject, ObservableObject, SuperPlayWorker, SuperLog, SuperT
         self.delegate = delegate
     }
 
-    func goto(_ time: TimeInterval) {
-        player.currentTime = time
+    func seek(_ time: TimeInterval) {
+        player?.currentTime = time
     }
 
+    private func prepare(_ asset: PlayAsset, reason: String) throws -> AVAudioPlayer {
+        let player = try makePlayer(asset, reason: reason, verbose: true)
+        player.prepareToPlay()
+        
+        self.player = player
+        
+        return player
+    }
+    
     func prepare(_ asset: PlayAsset, reason: String, verbose: Bool) throws {
         if verbose {
             os_log("\(self.t)Prepare \(asset.fileName) 🐛 \(reason)")
         }
         
-        self.player.prepareToPlay()
+        self.player = try prepare(asset, reason: reason)
+        self.player!.delegate = self
     }
 
     func play(_ asset: PlayAsset, reason: String, verbose: Bool) throws {
@@ -55,9 +65,8 @@ class AudioWorker: NSObject, ObservableObject, SuperPlayWorker, SuperLog, SuperT
             os_log("\(self.t)Play \(asset.fileName) 🐛 \(reason)")
         }
 
-        try player = makePlayer(asset, reason: reason, verbose: true)
-        self.player.prepareToPlay()
-        self.player.play()
+        try self.prepare(asset, reason: reason, verbose: true)
+        self.resume()
     }
 
     func pause(verbose: Bool) {
@@ -65,7 +74,7 @@ class AudioWorker: NSObject, ObservableObject, SuperPlayWorker, SuperLog, SuperT
             os_log("\(self.t)Pause")
         }
         
-        self.player.pause()
+        self.player?.pause()
     }
     
     func resume() {
@@ -74,12 +83,12 @@ class AudioWorker: NSObject, ObservableObject, SuperPlayWorker, SuperLog, SuperT
             os_log("\(self.t)Resume")
         }
         
-        self.player.play()
+        self.player?.play()
     }
 
     func stop(reason: String, verbose: Bool) {
-        self.player.stop()
-        self.goto(0)
+        self.player?.stop()
+        self.seek(0)
     }
 
     func toggle() throws {
@@ -90,10 +99,6 @@ class AudioWorker: NSObject, ObservableObject, SuperPlayWorker, SuperLog, SuperT
 // MARK: 控制 AVAudioPlayer
 
 extension AudioWorker {
-    func makeEmptyPlayer() -> AVAudioPlayer {
-        AVAudioPlayer()
-    }
-
     func makePlayer(_ asset: PlayAsset, reason: String, verbose: Bool) throws -> AVAudioPlayer {
         if asset.isNotDownloaded {
             os_log(.error, "\(self.t)未下载，等待下载 -> \(asset.title)")
@@ -110,15 +115,11 @@ extension AudioWorker {
                 try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
                 try AVAudioSession.sharedInstance().setActive(true)
             #endif
-            player = try AVAudioPlayer(contentsOf: asset.url)
+            return try AVAudioPlayer(contentsOf: asset.url)
         } catch {
             os_log(.error, "\(self.t)初始化播放器失败 ->\(asset.fileName)->\(error)")
-            player = AVAudioPlayer()
+            throw error
         }
-
-        player.delegate = self
-
-        return player
     }
 }
 
@@ -178,5 +179,17 @@ extension AudioWorker: AVAudioPlayerDelegate {
     func audioPlayerEndInterruption(_ player: AVAudioPlayer, withOptions flags: Int) {
         os_log("\(self.t)audioPlayerEndInterruption")
         self.resume()
+    }
+}
+
+enum AudioWorkerError: Error, LocalizedError {
+    case NoAsset
+    case NoPlayer
+
+    var description: String {
+        switch self {
+        case .NoAsset: return "No asset"
+        case .NoPlayer: return "No player"
+        }
     }
 }

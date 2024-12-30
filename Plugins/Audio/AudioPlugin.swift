@@ -27,6 +27,8 @@ class AudioPlugin: SuperPlugin, SuperLog {
     }
 
     func addDBView(reason: String) -> AnyView? {
+        let verbose = false
+
         guard let audioProvider = self.audioProvider else {
             os_log(.error, "\(self.t)AddDBView, AudioProvider not found")
             return AnyView(EmptyView())
@@ -37,7 +39,9 @@ class AudioPlugin: SuperPlugin, SuperLog {
             return AnyView(EmptyView())
         }
 
-        os_log("\(self.t)🍋🍋🍋 AddDBView")
+        if verbose {
+            os_log("\(self.t)🍋🍋🍋 AddDBView")
+        }
 
         return AnyView(AudioDBView(verbose: true, reason: reason)
             .modelContainer(AudioConfig.getContainer)
@@ -52,7 +56,12 @@ class AudioPlugin: SuperPlugin, SuperLog {
     }
 
     func addSettingView() -> AnyView? {
-        os_log("\(self.t)🍋🍋🍋 AddSettingView")
+        let verbose = false
+
+        if verbose {
+            os_log("\(self.t)🍋🍋🍋 AddSettingView")
+        }
+
         guard let audioProvider = self.audioProvider else {
             return nil
         }
@@ -61,7 +70,11 @@ class AudioPlugin: SuperPlugin, SuperLog {
     }
 
     func addStateView(currentGroup: SuperPlugin?) -> AnyView? {
-        os_log("\(self.t)🍋🍋🍋 AddStateView")
+        let verbose = false
+
+        if verbose {
+            os_log("\(self.t)🍋🍋🍋 AddStateView")
+        }
 
         if currentGroup?.id != self.id {
             return nil
@@ -154,12 +167,15 @@ class AudioPlugin: SuperPlugin, SuperLog {
         self.audioDB = AudioDB(disk: disk, reason: self.className + ".onInit", verbose: true)
         self.audioProvider = AudioProvider(disk: disk)
         self.initialized = true
+        
+        var audioTarget: AudioModel?
+        var timeTarget: TimeInterval = 0
 
         if let url = AudioPlugin.getCurrent(), let audio = await self.audioDB?.find(url) {
-            await playMan.play(audio.toPlayAsset(), reason: self.className + ".OnAppear", verbose: true)
+            audioTarget = audio
 
             if let time = AudioPlugin.getCurrentTime() {
-                await playMan.seek(time)
+                timeTarget = time
             }
         } else {
             os_log("\(self.t)⚠️⚠️⚠️ No current audio URL, try find first")
@@ -170,10 +186,15 @@ class AudioPlugin: SuperPlugin, SuperLog {
             }
 
             if let first = try? await audioDB.getFirst() {
-                await playMan.play(first.toPlayAsset(), reason: self.className + ".OnAppear", verbose: true)
+                audioTarget = first
             } else {
                 os_log("\(self.t)⚠️⚠️⚠️ No audio found")
             }
+        }
+        
+        if let audioTarget = audioTarget {
+            try await playMan.prepare(audioTarget.toPlayAsset(), verbose: true)
+            await playMan.seek(timeTarget)
         }
 
         let mode = AudioPlugin.getPlayMode()

@@ -5,7 +5,7 @@ protocol SuperPlayWorker {
     var currentTime: TimeInterval { get }
     var state: PlayState { get }
     
-    func goto(_ time: TimeInterval)
+    func seek(_ time: TimeInterval)
     func prepare(_ asset: PlayAsset, reason: String, verbose: Bool) throws
     func play(_ asset: PlayAsset, reason: String, verbose: Bool) throws
     func pause(verbose: Bool) throws

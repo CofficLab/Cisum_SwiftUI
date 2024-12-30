@@ -67,6 +67,19 @@ class PlayMan: NSObject, ObservableObject, @preconcurrency SuperLog, SuperThread
         }
     }
 
+    func next() async {
+        await self.delegate?.onPlayNext(current: self.asset, mode: mode)
+    }
+
+    func prepare(_ asset: PlayAsset, verbose: Bool) throws {
+        if verbose {
+            os_log("\(self.t)🐢🐢🐢 Prepare 「\(asset.fileName)」")
+        }
+        
+        self.setAsset(asset)
+        try self.worker.prepare(asset, reason: self.className + ".prepare", verbose: false)
+    }
+
     func pause(verbose: Bool) throws {
         if verbose {
             os_log("\(self.t)⏸️⏸️⏸️ Pause")
@@ -74,6 +87,10 @@ class PlayMan: NSObject, ObservableObject, @preconcurrency SuperLog, SuperThread
 
         try self.worker.pause(verbose: verbose)
         setPlaying(false)
+    }
+
+    func prev() {
+        self.delegate?.onPlayPrev(current: self.asset)
     }
 
     func play(_ asset: PlayAsset, reason: String, verbose: Bool) {
@@ -105,35 +122,6 @@ class PlayMan: NSObject, ObservableObject, @preconcurrency SuperLog, SuperThread
         }
     }
 
-    func seek(_ to: TimeInterval) {
-        self.worker.goto(to)
-        setPlayingInfo()
-    }
-
-    func toggleLike() async throws {
-        guard let asset = asset else {
-            throw PlayManError.NoAsset
-        }
-
-        try await asset.toggleLike()
-    }
-
-    func stop(reason: String, verbose: Bool) {
-        if verbose {
-            os_log("\(self.t)Stop ⏹️⏹️⏹️ 🐛 \(reason)")
-        }
-        self.worker.stop(reason: reason, verbose: verbose)
-        setPlaying(false)
-    }
-
-    func toggle() throws {
-        if playing {
-            try self.pause(verbose: true)
-        } else {
-            self.resume()
-        }
-    }
-
     func resume() {
         guard self.asset != nil else {
             self.stop(reason: "Play.NoAsset", verbose: true)
@@ -149,12 +137,33 @@ class PlayMan: NSObject, ObservableObject, @preconcurrency SuperLog, SuperThread
         }
     }
 
-    func prev() {
-        self.delegate?.onPlayPrev(current: self.asset)
+    func stop(reason: String, verbose: Bool) {
+        if verbose {
+            os_log("\(self.t)Stop ⏹️⏹️⏹️ 🐛 \(reason)")
+        }
+        self.worker.stop(reason: reason, verbose: verbose)
+        setPlaying(false)
     }
 
-    func next() async {
-        await self.delegate?.onPlayNext(current: self.asset, mode: mode)
+    func seek(_ to: TimeInterval) {
+        self.worker.seek(to)
+        setPlayingInfo()
+    }
+
+    func toggleLike() async throws {
+        guard let asset = asset else {
+            throw PlayManError.NoAsset
+        }
+
+        try await asset.toggleLike()
+    }
+
+    func toggle() throws {
+        if playing {
+            try self.pause(verbose: true)
+        } else {
+            self.resume()
+        }
     }
 }
 

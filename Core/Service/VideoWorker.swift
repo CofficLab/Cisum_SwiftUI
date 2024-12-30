@@ -121,7 +121,7 @@ extension VideoWorker {
         state = .Error(e, asset)
     }
 
-    func goto(_ time: TimeInterval) {
+    func seek(_ time: TimeInterval) {
 //        player.currentTime = time
     }
 
