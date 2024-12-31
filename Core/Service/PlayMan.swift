@@ -157,11 +157,13 @@ class PlayMan: NSObject, ObservableObject, @preconcurrency SuperLog, SuperThread
     }
 
     func toggleLike() async throws {
-        guard let asset = asset else {
+        guard var asset = asset else {
             throw PlayManError.NoAsset
         }
 
         try await asset.toggleLike()
+        self.setAsset(asset)
+        self.setPlayingInfo()
     }
 
     func toggle() throws {
@@ -346,12 +348,11 @@ extension PlayMan {
         }
 
         c.likeCommand.addTarget { _ in
-            os_log("\(self.t)点击了喜欢按钮")
+            os_log("\(self.t)❤️❤️❤️ 点击了喜欢按钮")
 
             Task {
                 do {
                     try await self.toggleLike()
-
                     self.c.likeCommand.isActive.toggle()
                 } catch {
                     self.setError(.ToggleLikeError(error))

@@ -62,27 +62,6 @@ extension Book: SuperCover {
     }
 }
 
-extension Book: PlaySource {    
-    func delete() async throws {
-        guard let db = db else {
-            throw BookModelError.dbNotFound
-        }
-
-        await db.delete(self, verbose: true)
-    }
-
-    func download() async throws {
-        guard let db = db else {
-            throw BookModelError.dbNotFound
-        }
-
-        try await db.download(self, verbose: true)
-    }
-
-    func toggleLike() async throws {
-    }
-}
-
 // MARK: Transform
 
 extension Book {
@@ -91,11 +70,17 @@ extension Book {
             os_log("\(self.t)ToPlayAsset: title(\(self.title))")
         }
 
-        return PlayAsset(url: self.url, like: false).setSource(self)
+        return PlayAsset(url: self.url, like: false, delegate: self)
     }
 
     static func fromDiskFile(_ file: DiskFile) -> Book {
         file.toBook()
+    }
+}
+
+extension Book: PlayAssetDelegate {
+    func onLikeChange() {
+        
     }
 }
 

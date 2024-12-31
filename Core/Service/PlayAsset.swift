@@ -11,7 +11,7 @@ import SwiftUI
       一个文件URL
  */
 
-struct PlayAsset: FileBox, Identifiable, SuperEvent, SuperLog {    
+struct PlayAsset: FileBox, Identifiable, SuperEvent, SuperLog {
     static let emoji = "🎹"
 
     var id: URL { self.url }
@@ -23,7 +23,7 @@ struct PlayAsset: FileBox, Identifiable, SuperEvent, SuperLog {
     var like: Bool = false
     var size: Int64?
     var notLike: Bool { !like }
-    var source: PlaySource?
+    var delegate: PlayAssetDelegate
 
     func isSupported() -> Bool {
         self.isFolder() || Config.supportedExtensions.contains(ext.lowercased())
@@ -34,39 +34,24 @@ struct PlayAsset: FileBox, Identifiable, SuperEvent, SuperLog {
     }
     
     func getCoverImage() async throws -> Image? {
-        return try await self.source?.getCoverImage(verbose: false)
+        return try await self.getCoverImage(verbose: false)
     }
     
     func getPlatformImage() async throws -> PlatformImage? {
-        return try await self.source?.getPlatformImage()
+        nil
     }
 
     func delete() async throws {
-        guard let source = source else {
-            throw PlayAssetError.sourceNotFound
-        }
-
-        try await source.delete()
-
-        emit(name: .playAssetDeleted, object: self)
+        try await self.delegate.delete()
     }
 
     func download() async throws {
         try await url.download()
     }
-
-    func setSource(_ source: PlaySource) -> PlayAsset {
-        var updated = self
-        updated.source = source
-        return updated
-    }
     
-    func toggleLike() async throws {
-        guard let source = source else {
-            throw PlayAssetError.sourceNotFound
-        }
-
-        try await source.toggleLike()
+    mutating func toggleLike() async throws {
+        self.like.toggle()
+        try await self.delegate.onLikeChange(like: self.like, asset: self)
     }
 }
 
@@ -84,21 +69,35 @@ extension PlayAsset {
     }
 }
 
-// MARK: Transform
-
-extension PlayAsset {
-    static func fromURL(_ url: URL) -> PlayAsset {
-        PlayAsset(url: url)
+extension PlayAsset: SuperCover {
+    var coverFolder: URL { AudioConfig.getCoverFolderUrl() }
+    var defaultImage: Image {
+        #if os(macOS)
+            Image(nsImage: NSImage(named: "DefaultAlbum")!)
+        #else
+            Image(uiImage: UIImage(imageLiteralResourceName: "DefaultAlbum"))
+        #endif
     }
 }
 
+// MARK: Transform
+
+//extension PlayAsset {
+//    static func fromURL(_ url: URL) -> PlayAsset {
+//        PlayAsset(url: url)
+//    }
+//}
+
 enum PlayAssetError: Error, LocalizedError {
     case sourceNotFound
+    case notImplemented
 
     var errorDescription: String? {
         switch self {
         case .sourceNotFound:
             return "PlayAsset: Source not found"
+        case .notImplemented:
+            return "PlayAsset: Not implemented"
         }
     }
 }

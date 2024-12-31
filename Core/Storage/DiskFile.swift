@@ -87,7 +87,7 @@ struct DiskFile: FileBox, Hashable, Identifiable, Playable {
     }
 
     func toPlayAsset() -> PlayAsset {
-        PlayAsset(url: url)
+        PlayAsset(url: url, delegate: self)
     }
     
     func toAudio(verbose: Bool = false) -> AudioModel {
@@ -104,5 +104,11 @@ struct DiskFile: FileBox, Hashable, Identifiable, Playable {
         }
         
         return Book(url: url)
+    }
+}
+
+extension DiskFile: PlayAssetDelegate {
+    func onLikeChange() {
+        
     }
 }

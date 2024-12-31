@@ -5,8 +5,7 @@ struct BtnLike: View {
     @EnvironmentObject var man: PlayMan
     @EnvironmentObject var m: MessageProvider
 
-    @State var like: Bool = false
-
+    var like: Bool { man.asset?.like ?? false}
     var autoResize = false
     var title: String { like ? "取消喜欢" : "标记喜欢" }
 
@@ -21,8 +20,7 @@ struct BtnLike: View {
                         Task {
                             do {
                                 try await man.toggleLike()
-                                m.hub(like ? "已取消喜欢" : "已标记为喜欢")
-                                self.like.toggle()
+                                m.hub(like ? "已标记为喜欢" : "已取消喜欢")
                             } catch {
                                 self.m.error(error)
                             }
@@ -32,12 +30,6 @@ struct BtnLike: View {
                 EmptyView()
             }
         }
-        .onAppear {
-            self.like = man.asset?.like ?? false
-        }
-        .onChange(of: man.asset, {
-            self.like = man.asset?.like ?? false
-        })
     }
 
     private func getImageName() -> String {

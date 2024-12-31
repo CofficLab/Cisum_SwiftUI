@@ -30,8 +30,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     @Query(sort: \AudioModel.order, animation: .default) var audios: [AudioModel]
 
     var total: Int { audios.count }
-    var assets: [PlayAsset] { audiosWithDB.map { $0.toPlayAsset() } }
-    var audiosWithDB: [AudioModel] { audios.map { $0.setDB(audioDB); return $0 } }
+    var assets: [PlayAsset] { audios.map { $0.toPlayAsset(delegate: audioDB) } }
 
     init(verbose: Bool, reason: String) {
         if verbose {

@@ -651,6 +651,13 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
     }
 
+    func updateLike(_ url: URL, like: Bool) throws {
+        if let dbAudio = findAudio(url) {
+            dbAudio.like = like
+            try context.save()
+        }
+    }
+
     func updateCover(_ audio: AudioModel, hasCover: Bool) {
         guard let dbAudio = context.model(for: audio.id) as? AudioModel else {
             return

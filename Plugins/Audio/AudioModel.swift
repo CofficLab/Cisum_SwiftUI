@@ -112,12 +112,12 @@ extension AudioModel: Identifiable {
 // MARK: Transform
 
 extension AudioModel {
-    func toPlayAsset(verbose: Bool = false) -> PlayAsset {
+    func toPlayAsset(verbose: Bool = false, delegate: PlayAssetDelegate) -> PlayAsset {
         if verbose {
             os_log("\(self.t)ToPlayAsset: like (\(self.like))")
         }
 
-        return PlayAsset(url: self.url, like: self.like, size: size).setSource(self)
+        return PlayAsset(url: self.url, like: self.like, size: size, delegate: delegate)
     }
 
     static func fromPlayAsset(_ asset: PlayAsset) -> AudioModel {
@@ -133,35 +133,7 @@ extension AudioModel {
     }
 }
 
-extension AudioModel: PlaySource {    
-    func getCoverImage(verbose: Bool) async throws -> Image? {
-        try await self.getCoverImage()
-    }
-
-    func delete() async throws {
-        guard let db = db else {
-            throw AudioModelError.dbNotFound
-        }
-
-        try await db.delete(self, verbose: true)
-    }
-
-    func download() async throws {
-        guard let db = db else {
-            throw AudioModelError.dbNotFound
-        }
-
-        try await db.download(self, verbose: true)
-    }
-
-    func toggleLike() async throws {
-        guard let db = db else {
-            throw AudioModelError.dbNotFound
-        }
-
-        try await db.toggleLike(self.url)
-    }
-}
+// MARK: Error
 
 enum AudioModelError: Error, LocalizedError {
     case deleteFailed

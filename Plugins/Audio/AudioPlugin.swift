@@ -168,11 +168,11 @@ class AudioPlugin: SuperPlugin, SuperLog {
         self.audioProvider = AudioProvider(disk: disk)
         self.initialized = true
         
-        var audioTarget: AudioModel?
+        var assetTarget: PlayAsset?
         var timeTarget: TimeInterval = 0
 
         if let url = AudioPlugin.getCurrent(), let audio = await self.audioDB?.find(url) {
-            audioTarget = audio
+            assetTarget = audio
 
             if let time = AudioPlugin.getCurrentTime() {
                 timeTarget = time
@@ -186,14 +186,14 @@ class AudioPlugin: SuperPlugin, SuperLog {
             }
 
             if let first = try? await audioDB.getFirst() {
-                audioTarget = first
+                assetTarget = first
             } else {
                 os_log("\(self.t)⚠️⚠️⚠️ No audio found")
             }
         }
         
-        if let audioTarget = audioTarget {
-            try await playMan.prepare(audioTarget.toPlayAsset(), verbose: true)
+        if let asset = assetTarget {
+            try await playMan.prepare(asset, verbose: true)
             await playMan.seek(timeTarget)
         }
 
@@ -210,10 +210,10 @@ class AudioPlugin: SuperPlugin, SuperLog {
             return
         }
 
-        let audio = try await audioDB.getPrevOf(current?.url, verbose: false)
+        let asset = try await audioDB.getPrevOf(current?.url, verbose: false)
 
-        if let audio = audio {
-            await playMan.play(audio.toPlayAsset(), reason: "OnPlayPrev", verbose: true)
+        if let asset = asset {
+            await playMan.play(asset, reason: "OnPlayPrev", verbose: true)
         } else {
             throw AudioPluginError.NoPrevAsset
         }
@@ -234,9 +234,9 @@ class AudioPlugin: SuperPlugin, SuperLog {
             return
         }
 
-        let audio = try await audioDB.getNextOf(current?.url, verbose: false)
-        if let audio = audio {
-            await playMan.play(audio.toPlayAsset(), reason: "OnPlayNext", verbose: true)
+        let asset = try await audioDB.getNextOf(current?.url, verbose: false)
+        if let asset = asset {
+            await playMan.play(asset, reason: "OnPlayNext", verbose: true)
         } else {
             throw AudioPluginError.NoNextAsset
         }

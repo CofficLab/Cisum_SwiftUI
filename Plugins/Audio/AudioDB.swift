@@ -2,6 +2,7 @@ import Foundation
 import MagicKit
 import MagicUI
 import OSLog
+import SwiftUI
 import SwiftData
 
 class AudioDB: ObservableObject, SuperEvent, SuperLog {
@@ -51,23 +52,29 @@ class AudioDB: ObservableObject, SuperEvent, SuperLog {
         try await self.disk.download(audio.url, reason: "AudioDB.download", verbose: verbose)
     }
     
-    func find(_ url: URL) async -> AudioModel? {
+    func find(_ url: URL) async -> PlayAsset? {
         let audio = await self.db.findAudio(url)
         audio?.setDB(self)
         
-        return audio
+        return audio?.toPlayAsset(delegate: self)
     }
     
-    func getFirst() async throws -> AudioModel? {
-        try await self.db.firstAudio()
+    func getFirst() async throws -> PlayAsset? {
+        let audio = try await self.db.firstAudio()
+        
+        return audio?.toPlayAsset(delegate: self)
     }
     
-    func getNextOf(_ url: URL?, verbose: Bool = false) async throws -> AudioModel? {
-        try await self.db.getNextOf(url, verbose: verbose)
+    func getNextOf(_ url: URL?, verbose: Bool = false) async throws -> PlayAsset? {
+        let audio = try await self.db.getNextOf(url, verbose: verbose)
+        
+        return audio?.toPlayAsset(delegate: self)
     }
     
-    func getPrevOf(_ url: URL?, verbose: Bool = false) async throws -> AudioModel? {
-        try await self.db.getPrevOf(url, verbose: verbose)
+    func getPrevOf(_ url: URL?, verbose: Bool = false) async throws -> PlayAsset? {
+        let audio = try await self.db.getPrevOf(url, verbose: verbose)
+        
+        return audio?.toPlayAsset(delegate: self)
     }
     
     func getTotalCount() async -> Int {
@@ -100,6 +107,18 @@ extension AudioDB: DiskDelegate {
         os_log("\(self.t)🍋🍋🍋 OnDiskUpdate")
         
         await self.db.sync(items)
+    }
+}
+
+extension AudioDB: PlayAssetDelegate {
+    func getPlatformImage() async throws -> MagicKit.PlatformImage? {
+        nil
+    }
+    
+    func onLikeChange(like: Bool, asset: PlayAsset) async throws {
+        os_log("\(self.t)🍋🍋🍋 OnLikeChange")
+        
+        try await self.db.updateLike(asset.url, like: like)
     }
 }
 
