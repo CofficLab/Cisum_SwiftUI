@@ -81,6 +81,10 @@ class AudioDB: ObservableObject, SuperEvent, SuperLog {
         await self.db.getTotalOfAudio()
     }
     
+    func getStorageRoot() async -> URL {
+        self.disk.root
+    }
+    
     func sort(_ sticky: AudioModel?, reason: String) async {
         await self.db.sort(sticky, reason: reason)
     }

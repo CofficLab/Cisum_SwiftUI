@@ -20,7 +20,7 @@ struct CopyRootView: View, SuperEvent, SuperLog, SuperThread {
     @State var count: Int = 0
 
     init() {
-        // os_log("\(Self.i)")
+         os_log("\(Self.i)")
     }
 
     var outOfLimit: Bool {
@@ -49,6 +49,7 @@ struct CopyRootView: View, SuperEvent, SuperLog, SuperThread {
         .frame(maxHeight: .infinity)
         .onAppear(perform: onAppear)
         .onDrop(of: [UTType.fileURL], isTargeted: self.$isDropping, perform: onDrop)
+        .onReceive(NotificationCenter.default.publisher(for: .CopyFiles), perform: onCopyFiles)
     }
 }
 
@@ -56,16 +57,26 @@ struct CopyRootView: View, SuperEvent, SuperLog, SuperThread {
 
 extension CopyRootView {
     func onAppear() {
-        let verbose = false 
+        let verbose = false
 
         if verbose {
-        os_log("\(self.a)")
+            os_log("\(self.a)")
+        }
+    }
+
+    func onCopyFiles(_ notification: Notification) {
+        os_log("\(self.t)🍋🍋🍋 onCopyFiles")
+
+        if let urls = notification.userInfo?["urls"] as? [URL],
+           let folder = notification.userInfo?["folder"] as? URL {
+            os_log("\(self.t)🍋🍋🍋 onCopyFiles, urls: \(urls.count), folder: \(folder.path)")
+            self.worker.append(urls, folder: folder)
         }
     }
 
     func onDrop(_ providers: [NSItemProvider]) -> Bool {
         let verbose = true
-        
+
         if outOfLimit {
             return false
         }
@@ -87,8 +98,6 @@ extension CopyRootView {
         if verbose {
             os_log("\(self.t)添加 \(urls.count) 个文件到复制队列")
         }
-        
-        self.emitCopyFiles(urls)
 
         guard let disk = p.current?.getDisk() else {
             os_log(.error, "\(self.t)No Disk")
@@ -103,16 +112,6 @@ extension CopyRootView {
         self.worker.append(urls, folder: disk.root)
 
         return true
-    }
-}
-
-// MARK: Event Emit
-
-extension CopyRootView {
-    func emitCopyFiles(_ urls: [URL]) {
-        self.main.async {
-            NotificationCenter.default.post(name: .CopyFiles, object: self, userInfo: ["urls": urls])
-        }
     }
 }
 

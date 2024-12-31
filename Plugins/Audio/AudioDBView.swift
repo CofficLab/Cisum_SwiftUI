@@ -49,15 +49,19 @@ struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
     }
 }
 
-// MARK: - Helper Methods
-
 extension AudioDBView {
     private func handleFileImport(result: Result<[URL], Error>) {
-        switch result {
-        case let .success(urls):
-            emitCopyFiles(urls)
-        case let .failure(error):
-            os_log(.error, "导入文件失败Error: \(error.localizedDescription)")
+        Task {
+            switch result {
+            case let .success(urls):
+                os_log("\(self.t)🍋🍋🍋 handleFileImport, urls: \(urls.count)")
+                await self.emit(name: .CopyFiles, object: self, userInfo: [
+                    "urls": urls,
+                    "folder": self.db.getStorageRoot()
+                ])
+            case let .failure(error):
+                os_log(.error, "导入文件失败Error: \(error.localizedDescription)")
+            }
         }
     }
 }
@@ -66,16 +70,6 @@ extension AudioDBView {
 
 extension Notification.Name {
     static let CopyFiles = Notification.Name("CopyFiles")
-}
-
-// MARK: Event Emit
-
-extension AudioDBView {
-    func emitCopyFiles(_ urls: [URL]) {
-        self.main.async {
-            NotificationCenter.default.post(name: .CopyFiles, object: self, userInfo: ["urls": urls])
-        }
-    }
 }
 
 #Preview("APP") {
