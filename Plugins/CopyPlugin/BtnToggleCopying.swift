@@ -1,7 +1,10 @@
 import SwiftUI
+import MagicUI
 
 struct BtnToggleCopying: View {
     @EnvironmentObject var app: AppProvider
+    
+    @Binding var isActive: Bool
     
     var autoResize = false
 
@@ -11,8 +14,7 @@ struct BtnToggleCopying: View {
             image: "list.bullet",
             dynamicSize: autoResize,
             onTap: {
-                app.showDB = true
-                app.showCopying.toggle()
+                isActive.toggle()
         })
     }
 }

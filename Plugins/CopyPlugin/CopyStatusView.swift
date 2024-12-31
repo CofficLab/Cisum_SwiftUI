@@ -46,10 +46,6 @@ struct CopyStatusView: View, SuperLog, SuperThread {
         HStack {
             Text("正在复制 \(tasks.count)")
             Spacer()
-            Button("关闭", systemImage: "xmark.circle") {
-                app.showCopying = false
-            }
-            .labelStyle(.iconOnly)
         }
     }
 

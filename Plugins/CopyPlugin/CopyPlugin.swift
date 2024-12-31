@@ -46,17 +46,6 @@ class CopyPlugin: SuperPlugin, SuperLog {
         )
     }
 
-    func addStatusView() -> AnyView? {
-        let verbose = false
-
-        if verbose {
-            os_log("\(self.t)🖥️🖥️🖥️ AddStatusView")
-        }
-
-        return AnyView(CopyStatusView()
-            .modelContainer(CopyConfig.getContainer))
-    }
-
     func onWillAppear(playMan: PlayMan, currentGroup: (any SuperPlugin)?, storage: StorageLocation?) async {
         let verbose = false
 

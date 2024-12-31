@@ -11,7 +11,6 @@ class AppProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLog, 
     static let emoji: String = "🐮"
     
     @Published var showDB: Bool = Config.showDB
-    @Published var showCopying: Bool = false
     @Published var showSheet: Bool = true
     @Published var isImporting: Bool = false
     @Published var isDropping: Bool = false
