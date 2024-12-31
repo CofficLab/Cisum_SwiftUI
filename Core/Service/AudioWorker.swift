@@ -23,6 +23,7 @@ class AudioWorker: NSObject, ObservableObject, SuperPlayWorker, SuperLog, SuperT
     var verbose = false
     var queue = DispatchQueue(label: "AudioWorker", qos: .userInteractive)
     var state: PlayState = .Stopped
+    var url: URL? { self.player?.url }
     var duration: TimeInterval { player?.duration ?? 0 }
     var currentTime: TimeInterval { player?.currentTime ?? 0 }
     var leftTime: TimeInterval { duration - currentTime }
@@ -66,7 +67,7 @@ class AudioWorker: NSObject, ObservableObject, SuperPlayWorker, SuperLog, SuperT
         }
 
         try self.prepare(asset, reason: reason, verbose: true)
-        self.resume()
+        try self.resume()
     }
 
     func pause(verbose: Bool) {
@@ -77,10 +78,14 @@ class AudioWorker: NSObject, ObservableObject, SuperPlayWorker, SuperLog, SuperT
         self.player?.pause()
     }
     
-    func resume() {
+    func resume(_ asset: PlayAsset? = nil) throws {
         let verbose = true
         if verbose {
             os_log("\(self.t)Resume")
+        }
+        
+        if let asset = asset, asset.url != self.url {
+            try self.prepare(asset, reason: self.className + ".resume", verbose: false)
         }
         
         self.player?.play()
@@ -92,7 +97,7 @@ class AudioWorker: NSObject, ObservableObject, SuperPlayWorker, SuperLog, SuperT
     }
 
     func toggle() throws {
-        isPlaying ? pause(verbose: true) : self.resume()
+        isPlaying ? pause(verbose: true) : try self.resume()
     }
 }
 
@@ -178,7 +183,7 @@ extension AudioWorker: AVAudioPlayerDelegate {
 
     func audioPlayerEndInterruption(_ player: AVAudioPlayer, withOptions flags: Int) {
         os_log("\(self.t)audioPlayerEndInterruption")
-        self.resume()
+        try? self.resume()
     }
 }
 

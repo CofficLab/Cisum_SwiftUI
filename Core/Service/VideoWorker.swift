@@ -5,7 +5,7 @@ import SwiftUI
 import MagicKit
 import MagicUI
 
-class VideoWorker: NSObject, ObservableObject, SuperPlayWorker, SuperLog {
+class VideoWorker: NSObject, ObservableObject, SuperPlayWorker, SuperLog {    
     // MARK: 成员
 
     static var emoji = "💿"
@@ -135,7 +135,7 @@ extension VideoWorker {
         updateDuration()
     }
 
-    func resume() {
+    func resume(_ asset: PlayAsset? = nil) {
         os_log("\(self.t)Resume while current is \(self.state.des)")
         switch state {
         case .Playing, .Error:

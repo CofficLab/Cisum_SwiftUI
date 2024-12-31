@@ -79,13 +79,13 @@ class PlayMan: NSObject, ObservableObject, @preconcurrency SuperLog, SuperThread
         self.setAsset(asset)
         
         if asset.isDownloading {
-            self.stop(reason: "Play.Downloading", verbose: true)
+            self.stop(reason: "Play.Downloading", verbose: false)
             self.setError(.Downloading)
             throw PlayManError.Downloading
         }
 
         if asset.isNotDownloaded {
-            self.stop(reason: self.className + ".NotDownloaded", verbose: true)
+            self.stop(reason: self.className + ".NotDownloaded", verbose: false)
             self.setError(.NotDownloaded)
             throw PlayManError.NotDownloaded
         }
@@ -123,14 +123,20 @@ class PlayMan: NSObject, ObservableObject, @preconcurrency SuperLog, SuperThread
     }
 
     func resume() {
-        guard self.asset != nil else {
+        guard let asset = self.asset else {
             self.stop(reason: "Play.NoAsset", verbose: true)
             self.setError(.NoAsset)
             return
         }
+        
+        guard asset.isDownloaded else {
+            self.stop(reason: self.className + ".isNotDownloaded", verbose: true)
+            self.setError(.NotDownloaded)
+            return
+        }
 
         do {
-            try self.worker.resume()
+            try self.worker.resume(self.asset)
             self.setPlaying(true)
         } catch {
             self.setError(.PlayFailed(error))

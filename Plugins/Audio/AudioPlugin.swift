@@ -271,7 +271,7 @@ extension AudioPlugin {
         NSUbiquitousKeyValueStore.default.synchronize()
     }
 
-    static func storeCurrent(_ url: URL?, verbose: Bool = true) {
+    static func storeCurrent(_ url: URL?, verbose: Bool = false) {
         if verbose {
             os_log("\(Self.t)🍋🍋🍋 Store current audio URL: \(url?.absoluteString ?? "")")
         }
