@@ -79,7 +79,7 @@ class AudioWorker: NSObject, ObservableObject, SuperPlayWorker, SuperLog, SuperT
     }
     
     func resume(_ asset: PlayAsset? = nil) throws {
-        let verbose = true
+        let verbose = false
         if verbose {
             os_log("\(self.t)Resume")
         }

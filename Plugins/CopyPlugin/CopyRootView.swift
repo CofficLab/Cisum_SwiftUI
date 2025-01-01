@@ -19,8 +19,10 @@ struct CopyRootView: View, SuperEvent, SuperLog, SuperThread {
     @State var iCloudAvailable = true
     @State var count: Int = 0
 
-    init() {
-         os_log("\(Self.i)")
+    init(verbose: Bool = false) {
+        if verbose {
+            os_log("\(Self.i)")
+        }
     }
 
     var outOfLimit: Bool {

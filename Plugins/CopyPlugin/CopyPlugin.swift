@@ -15,10 +15,6 @@ class CopyPlugin: SuperPlugin, SuperLog {
     var db: CopyDB?
     var worker: CopyWorker?
 
-    init() {
-        os_log("\(self.i)")
-    }
-
     func addStateView(currentGroup: SuperPlugin?) -> AnyView? {
         return AnyView(
             CopyStateView()
@@ -53,7 +49,7 @@ class CopyPlugin: SuperPlugin, SuperLog {
             os_log("\(self.a)")
         }
 
-        self.db = CopyDB(CopyConfig.getContainer, reason: self.author + ".onInit", verbose: true)
+        self.db = CopyDB(CopyConfig.getContainer, reason: self.author, verbose: false)
         self.worker = CopyWorker(db: self.db!)
     }
 }

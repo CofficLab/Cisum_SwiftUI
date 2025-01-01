@@ -15,7 +15,7 @@ actor CopyDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
 
     init(_ container: ModelContainer, reason: String, verbose: Bool) {
         if verbose {
-            os_log("\(Self.i)")
+            os_log("\(Self.i) 🐛 \(reason)")
         }
 
         modelContainer = container

@@ -22,10 +22,6 @@ class AudioPlugin: SuperPlugin, SuperLog {
     var audioDB: AudioDB?
     var initialized: Bool = false
 
-    init() {
-        os_log("\(self.i)")
-    }
-
     func addDBView(reason: String) -> AnyView? {
         let verbose = false
 
@@ -43,7 +39,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
             os_log("\(self.t)🍋🍋🍋 AddDBView")
         }
 
-        return AnyView(AudioDBView(verbose: true, reason: reason)
+        return AnyView(AudioDBView(verbose: false, reason: self.className)
             .modelContainer(AudioConfig.getContainer)
             .environmentObject(audioDB)
             .environmentObject(audioProvider)
@@ -88,7 +84,12 @@ class AudioPlugin: SuperPlugin, SuperLog {
     }
 
     func addToolBarButtons() -> [(id: String, view: AnyView)] {
-        os_log("\(self.t)🍋🍋🍋 AddToolBarButtons")
+        let verbose = false
+        
+        if verbose {
+            os_log("\(self.t)🍋🍋🍋 AddToolBarButtons")
+        }
+        
         return [
             (id: "like", view: AnyView(
                 BtnLike(autoResize: false)
@@ -102,11 +103,12 @@ class AudioPlugin: SuperPlugin, SuperLog {
         }
     }
 
-    func onPlay() {
-    }
-
     func onPlayAssetUpdate(asset: PlayAsset?, currentGroup: SuperPlugin?) async throws {
-        os_log("\(self.t)🍋🍋🍋 OnPlayAssetUpdate with asset \(asset?.title ?? "nil")")
+        let verbose = false
+        
+        if verbose {
+            os_log("\(self.t)🍋🍋🍋 OnPlayAssetUpdate with asset \(asset?.title ?? "nil")")
+        }
 
         if currentGroup?.id != self.id {
             return
@@ -143,11 +145,15 @@ class AudioPlugin: SuperPlugin, SuperLog {
     }
 
     func onWillAppear(playMan: PlayMan, currentGroup: SuperPlugin?, storage: StorageLocation?) async throws {
+        let verbose = false
+        
         if currentGroup?.id != self.id {
             return
         }
 
-        os_log("\(self.a)with storage \(storage?.emojiTitle ?? "nil")")
+        if verbose {
+            os_log("\(self.a)with storage \(storage?.emojiTitle ?? "nil")")
+        }
 
         switch storage {
         case .local, .none:
@@ -164,7 +170,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
             throw AudioPluginError.NoDisk
         }
 
-        self.audioDB = AudioDB(disk: disk, reason: self.className + ".onInit", verbose: true)
+        self.audioDB = AudioDB(disk: disk, reason: self.className + ".onInit", verbose: false)
         self.audioProvider = AudioProvider(disk: disk)
         self.initialized = true
         
@@ -178,7 +184,9 @@ class AudioPlugin: SuperPlugin, SuperLog {
                 timeTarget = time
             }
         } else {
-            os_log("\(self.t)⚠️⚠️⚠️ No current audio URL, try find first")
+            if verbose {
+                os_log("\(self.t)⚠️⚠️⚠️ No current audio URL, try find first")
+            }
 
             guard let audioDB = audioDB else {
                 os_log("\(self.t)⚠️⚠️⚠️ AudioDB not found")

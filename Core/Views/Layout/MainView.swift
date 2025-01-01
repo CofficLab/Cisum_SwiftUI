@@ -64,7 +64,7 @@ struct MainView: View, SuperLog, SuperThread {
 
     func getTabView() -> some View {
         TabView(selection: $tab) {
-            p.current?.addDBView(reason: self.className + ".getTabView")
+            p.current?.addDBView(reason: self.className)
                 .tag("DB")
                 .tabItem {
                     Label("仓库", systemImage: "music.note.list")

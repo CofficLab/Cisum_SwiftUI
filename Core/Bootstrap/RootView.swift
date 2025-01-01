@@ -206,7 +206,11 @@ extension RootView {
     }
 
     func onPlayAssetChange() {
-        os_log("\(self.t)🍋🍋🍋 Play Asset Change")
+        let verbose = false
+        
+        if verbose {
+            os_log("\(self.t)🍋🍋🍋 Play Asset Change")
+        }
 
         Task {
             if let asset = man.asset, asset.isNotDownloaded {

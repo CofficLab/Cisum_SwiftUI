@@ -20,7 +20,7 @@ class AudioDB: ObservableObject, SuperEvent, SuperLog {
         self.disk.setDelegate(self)
         
         Task(priority: .userInitiated) {
-            await disk.watch(reason: "AudioDB.init", verbose: true)
+            await disk.watch(reason: self.className, verbose: false)
         }
     }
     
@@ -108,7 +108,11 @@ class AudioDB: ObservableObject, SuperEvent, SuperLog {
 
 extension AudioDB: DiskDelegate {
     public func onUpdate(_ items: DiskFileGroup) async {
-        os_log("\(self.t)🍋🍋🍋 OnDiskUpdate")
+        let verbose = false
+        
+        if verbose {
+            os_log("\(self.t)🍋🍋🍋 OnDiskUpdate")
+        }
         
         await self.db.sync(items)
     }

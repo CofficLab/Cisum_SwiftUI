@@ -30,7 +30,6 @@ class PlayMan: NSObject, ObservableObject, @preconcurrency SuperLog, SuperThread
     var delegate: PlayManDelegate?
     var audioWorker: AudioWorker = AudioWorker(delegate: nil)
     var videoWorker: VideoWorker = VideoWorker()
-    var verbose = true
     var worker: SuperPlayWorker {
         guard let asset = asset, asset.isNotFolder() else {
             return audioWorker
@@ -123,6 +122,8 @@ class PlayMan: NSObject, ObservableObject, @preconcurrency SuperLog, SuperThread
     }
 
     func resume() {
+        let verbose = true
+        
         guard let asset = self.asset else {
             self.stop(reason: "Play.NoAsset", verbose: true)
             self.setError(.NoAsset)
@@ -136,6 +137,10 @@ class PlayMan: NSObject, ObservableObject, @preconcurrency SuperLog, SuperThread
         }
 
         do {
+            if verbose {
+                os_log("\(self.t)🎵🎵🎵 Resume \(asset.title)")
+            }
+            
             try self.worker.resume(self.asset)
             self.setPlaying(true)
         } catch {
@@ -195,9 +200,9 @@ extension PlayMan {
         self.asset = a
     }
 
-    func setMode(_ mode: PlayMode, reason: String) {
+    func setMode(_ mode: PlayMode, reason: String, verbose: Bool = false) {
         if verbose {
-            os_log("\(self.t)♻️♻️♻️ SetMode 🐛 \(reason)")
+            os_log("\(self.t)♻️♻️♻️ SetMode to -> \(mode.description) 🐛 \(reason)")
         }
 
         if self.mode == mode {

@@ -22,9 +22,13 @@ class CloudProvider: NSObject, ObservableObject, @preconcurrency SuperLog, Super
         return "未知"
     }
     
-    override init() {
+    init(verbose: Bool = false) {
         super.init()
-        os_log("\(self.i)")
+        
+        if verbose {
+            os_log("\(Self.i)")
+        }
+        
         updateAccountStatus()
         
         // 监听 iCloud 状态变化
@@ -36,7 +40,7 @@ class CloudProvider: NSObject, ObservableObject, @preconcurrency SuperLog, Super
         )
     }
     
-    private func updateAccountStatus(verbose: Bool = true) {
+    private func updateAccountStatus(verbose: Bool = false) {
         Task {
             let status = FileManager.default.ubiquityIdentityToken != nil
             await MainActor.run {

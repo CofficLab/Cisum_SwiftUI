@@ -18,7 +18,7 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
     }
 
     init() {
-        //os_log("\(self.i)")
+        // os_log("\(self.i)")
 
         let currentPluginId = Self.getPluginId()
 
@@ -29,44 +29,44 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
 
     func append(_ plugin: SuperPlugin, reason: String) throws {
         let verbose = false
-        
+
         if verbose {
             os_log("\(self.t)➕➕➕ Append: \(plugin.id) with reason: \(reason)")
         }
-        
+
         if plugin.id.isEmpty {
             throw PluginProviderError.PluginIDIsEmpty(plugin: plugin)
         }
-        
+
         // Check if plugin with same ID already exists
         if plugins.contains(where: { $0.id == plugin.id }) {
             throw PluginProviderError.duplicatePluginID(plugin: plugin)
         }
-        
+
         self.plugins.append(plugin)
     }
-    
+
     func getStatusViews() -> [AnyView] {
         let items = plugins.compactMap { $0.addStatusView() }
-        
-        //os_log("\(self.t)GetRootViews: \(items.count)")
-        
+
+        // os_log("\(self.t)GetRootViews: \(items.count)")
+
         return items
     }
-    
+
     func getRootViews() -> [AnyView] {
         let items = plugins.compactMap { $0.addRootView() }
-        
-        //os_log("\(self.t)GetRootViews: \(items.count)")
-        
+
+        // os_log("\(self.t)GetRootViews: \(items.count)")
+
         return items
     }
-    
+
     func getSheetViews(storage: StorageLocation?) -> [AnyView] {
         let items = plugins.compactMap { $0.addSheetView(storage: storage) }
-        
-        //os_log("\(self.t)GetRootViews: \(items.count)")
-        
+
+        // os_log("\(self.t)GetRootViews: \(items.count)")
+
         return items
     }
 
@@ -84,24 +84,18 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
             throw PluginProviderError.PluginIsNotGroup(plugin: plugin)
         }
     }
-    
+
     func reset() {
         self.plugins = []
         self.current = nil
     }
 
     func restoreCurrent() throws {
-        os_log("\(self.t)🏃🏃🏃 RestoreCurrent")
-        
         let currentPluginId = Self.getPluginId()
 
-        os_log("\(self.t)🏃🏃🏃 RestoreCurrent: current plugin id is -> \(currentPluginId)")
-
         if let plugin = plugins.first(where: { $0.id == currentPluginId }) {
-            os_log("\(self.t)🏃🏃🏃 RestoreCurrent: \(plugin.id)")
             try self.setCurrentGroup(plugin)
         } else if let first = plugins.first(where: { $0.isGroup }) {
-            os_log("\(self.t)🏃🏃🏃 RestoreCurrent: set current to first group -> \(first.id)")
             try self.setCurrentGroup(first)
         } else {
             os_log(.error, "\(self.t)⚠️⚠️⚠️ No current plugin found")

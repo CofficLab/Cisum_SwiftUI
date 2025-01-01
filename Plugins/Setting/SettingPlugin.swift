@@ -14,10 +14,6 @@ class SettingPlugin: SuperPlugin, SuperLog {
     var iconName: String = "music.note"
     var isGroup: Bool = false
 
-    init() {
-        os_log("\(self.i)")
-    }
-
     func addDBView(reason: String) -> AnyView? {
         nil
     }
