@@ -1,5 +1,6 @@
 import OSLog
 import SwiftUI
+import MagicPlayMan
 
 protocol SuperPlugin {
     var id: String { get }
@@ -20,15 +21,15 @@ protocol SuperPlugin {
 
     func getDisk() -> (any SuperStorage)?
 
-    func onWillAppear(playMan: PlayMan, currentGroup: SuperPlugin?, storage: StorageLocation?) async throws -> Void
+    func onWillAppear(playMan: MagicPlayMan, currentGroup: SuperPlugin?, storage: StorageLocation?) async throws -> Void
     func onDisappear() -> Void
     func onPlay() -> Void
-    func onPause(playMan: PlayMan) async -> Void
+    func onPause(playMan: MagicPlayMan) async -> Void
     func onPlayStateUpdate() async throws -> Void
-    func onPlayModeChange(mode: PlayMode, asset: PlayAsset?) async throws -> Void
-    func onPlayAssetUpdate(asset: PlayAsset?, currentGroup: SuperPlugin?) async throws -> Void
-    func onPlayNext(playMan: PlayMan, current: PlayAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws -> Void
-    func onPlayPrev(playMan: PlayMan, current: PlayAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws -> Void
+    func onPlayModeChange(mode: PlayMode, asset: MagicAsset?) async throws -> Void
+    func onPlayAssetUpdate(asset: MagicAsset?, currentGroup: SuperPlugin?) async throws -> Void
+    func onPlayNext(playMan: MagicPlayMan, current: MagicAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws -> Void
+    func onPlayPrev(playMan: MagicPlayMan, current: MagicAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws -> Void
     func onStorageLocationChange(storage: StorageLocation?) async throws -> Void
 }
 
@@ -77,13 +78,13 @@ extension SuperPlugin {
         return nil
     }
 
-    func onWillAppear(playMan: PlayMan, currentGroup: SuperPlugin?) {
+    func onWillAppear(playMan: MagicPlayMan, currentGroup: SuperPlugin?) {
     }
 
     func onInit() {
     }
 
-    func onPlayAssetUpdate(asset: PlayAsset?, currentGroup: SuperPlugin?) {
+    func onPlayAssetUpdate(asset: MagicAsset?, currentGroup: SuperPlugin?) {
     }
 
     func onDisappear() {
@@ -92,22 +93,22 @@ extension SuperPlugin {
     func onPlay() {
     }
 
-    func onPlayModeChange(mode: PlayMode, asset: PlayAsset?) async throws {
+    func onPlayModeChange(mode: PlayMode, asset: MagicAsset?) async throws {
     }
 
-    func onPause(playMan: PlayMan) async {
+    func onPause(playMan: MagicPlayMan) async {
     }
 
     func onPlayStateUpdate() async throws {
     }
 
-    func onPlayNext(playMan: PlayMan, current: PlayAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws {
+    func onPlayNext(playMan: MagicPlayMan, current: MagicAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws {
     }
 
-    func onPlayPrev(playMan: PlayMan, current: PlayAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws {
+    func onPlayPrev(playMan: MagicPlayMan, current: MagicAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws {
     }
     
-    func onWillAppear(playMan: PlayMan, currentGroup: (any SuperPlugin)?, storage: StorageLocation?) async {
+    func onWillAppear(playMan: MagicPlayMan, currentGroup: (any SuperPlugin)?, storage: StorageLocation?) async {
         
     }
     

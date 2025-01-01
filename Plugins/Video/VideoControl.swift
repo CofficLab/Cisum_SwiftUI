@@ -4,7 +4,7 @@ import SwiftUI
 struct VideoControl: View {
     @EnvironmentObject var appManager: AppProvider
     @EnvironmentObject var messageManager: MessageProvider
-    @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var playMan: MagicPlayMan
 
     @State var showHeroView = true
     @State var showBtnsView = true

@@ -3,9 +3,10 @@ import MagicUI
 import OSLog
 import SwiftData
 import SwiftUI
+import MagicPlayMan
 
 struct BookTitle: View, SuperLog, SuperThread {
-    @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var playMan: MagicPlayMan
 
     @State var title: String = ""
 

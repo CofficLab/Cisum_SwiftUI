@@ -3,7 +3,7 @@ import OSLog
 
 struct BookHero: View {
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var playMan: MagicPlayMan
 
     @State var topAlbumHeight: CGFloat = 0
     @State var showTitleView = true

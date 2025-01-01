@@ -4,6 +4,7 @@ import MagicUI
 import OSLog
 import SwiftData
 import SwiftUI
+import MagicPlayMan
 
 /**
  记录一本有声书的数据
@@ -65,7 +66,7 @@ extension Book: SuperCover {
 // MARK: Transform
 
 extension Book {
-    func toPlayAsset(verbose: Bool = false) -> PlayAsset {
+    func toPlayAsset(verbose: Bool = false) -> MagicAsset {
         if verbose {
             os_log("\(self.t)ToPlayAsset: title(\(self.title))")
         }

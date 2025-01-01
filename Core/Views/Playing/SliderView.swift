@@ -6,7 +6,7 @@ import OSLog
 import SwiftUI
 
 struct SliderView: View, SuperThread, SuperLog {
-    @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var playMan: MagicPlayMan
     @EnvironmentObject var app: AppProvider
 
     @State private var value: Double = 0

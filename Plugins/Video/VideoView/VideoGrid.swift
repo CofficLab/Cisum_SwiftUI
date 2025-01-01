@@ -7,7 +7,7 @@ struct VideoGrid: View {
 
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var m: MessageProvider
-    @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var playMan: MagicPlayMan
     @EnvironmentObject var p: PluginProvider
 
     @State var selection: DiskFile?

@@ -8,7 +8,7 @@ struct AudioStateView: View, SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var messageManager: MessageProvider
     @EnvironmentObject var audioManager: AudioProvider
-    @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var playMan: MagicPlayMan
     @EnvironmentObject var db: AudioRecordDB
     @Environment(\.modelContext) private var modelContext
 

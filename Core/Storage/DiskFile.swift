@@ -3,6 +3,7 @@ import SwiftUI
 import OSLog
 import AVKit
 import MagicKit
+import MagicPlayMan
 import MagicUI
 
 struct DiskFile: FileBox, Hashable, Identifiable, Playable {
@@ -86,7 +87,7 @@ struct DiskFile: FileBox, Hashable, Identifiable, Playable {
         DiskFile.fromURL(url.getParent())
     }
 
-    func toPlayAsset() -> PlayAsset {
+    func toPlayAsset() -> MagicAsset {
         PlayAsset(url: url, delegate: self)
     }
     

@@ -2,10 +2,11 @@ import OSLog
 import SwiftUI
 import MagicKit
 import MagicUI
+import MagicPlayMan
 
 struct CoverView: View {
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var playMan: MagicPlayMan
     
     enum Role {
         case Icon
@@ -25,11 +26,11 @@ struct CoverView: View {
             if role == .Icon {
                 PictureView(asset, role: role)
             } else {
-                if playMan.isVideoWorker {
-                    VideoView(asset)
-                } else {
+//                if playMan.isVideoWorker {
+//                    VideoView(asset)
+//                } else {
                     PictureView(asset, role: role)
-                }
+//                }
             }
             
         }

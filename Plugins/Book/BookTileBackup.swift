@@ -1,12 +1,13 @@
 import SwiftUI
 import MagicKit
 import MagicUI
+import MagicPlayMan
 
 /**
  展示从磁盘读取的图书数据
  */
 struct BookTileBackup: View {
-    @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var playMan: MagicPlayMan
     
     var file: DiskFile
     

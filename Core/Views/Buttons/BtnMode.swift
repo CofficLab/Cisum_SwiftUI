@@ -1,10 +1,11 @@
 import SwiftUI
 import MagicKit
 import MagicUI
+import MagicPlayMan
 
 struct BtnMode: View {
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var playMan: MagicPlayMan
     @EnvironmentObject var messageManager: MessageProvider
 
     var autoResize = false
@@ -12,11 +13,11 @@ struct BtnMode: View {
     var body: some View {
         ControlButton(
             title: "模式",
-            image: playMan.mode.getImageName(),
+            image: playMan.playMode.icon,
             dynamicSize: autoResize,
             onTap: {
-                playMan.switchMode()
-                messageManager.hub("\(playMan.mode.description)")
+                playMan.togglePlayMode()
+                messageManager.hub("\(playMan.playMode.description)")
             })
         .foregroundStyle(.white)
     }

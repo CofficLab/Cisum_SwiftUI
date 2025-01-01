@@ -2,9 +2,10 @@ import OSLog
 import MagicKit
 import MagicUI
 import SwiftUI
+import MagicPlayMan
 
 struct BtnPrev: View {
-    @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var playMan: MagicPlayMan
 
     var autoResize = false
 
@@ -14,7 +15,7 @@ struct BtnPrev: View {
             image: "backward.fill",
             dynamicSize: autoResize,
             onTap: {
-                playMan.prev()
+//                playMan.prev()
             })
         .foregroundStyle(.white)
     }

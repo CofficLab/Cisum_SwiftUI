@@ -4,10 +4,11 @@ import SwiftUI
 import MagicKit
 import MagicUI
 import MagicUI
+import MagicPlayMan
 
 struct VideoView: View, SuperLog {
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var playMan: MagicPlayMan
 
     static var emoji = "🎬"
 

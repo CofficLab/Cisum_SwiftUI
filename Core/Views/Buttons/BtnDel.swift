@@ -1,11 +1,12 @@
 import SwiftUI
+import MagicPlayMan
 
 struct BtnDel: View {
     @EnvironmentObject var appManager: AppProvider
-    @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var playMan: MagicPlayMan
     @EnvironmentObject var messageManager: MessageProvider
 
-    var assets: [PlayAsset]
+    var assets: [MagicAsset]
     var callback: () -> Void = {}
     var autoResize = false
 
@@ -19,7 +20,7 @@ struct BtnDel: View {
                 assets.forEach { asset in
                     Task {
                         do {
-                            try await asset.delete()
+//                            try await asset.delete()
                         } catch {
                             messageManager.alert(error.localizedDescription)
                         }

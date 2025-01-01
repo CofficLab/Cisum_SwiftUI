@@ -1,9 +1,10 @@
 import SwiftUI
+import MagicPlayMan
 
 struct BtnEvict: View {
-    @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var playMan: MagicPlayMan
 
-    var asset: PlayAsset
+    var asset: MagicAsset
     var inUse: Bool { asset.url == playMan.asset?.url }
     var title = "移除下载项"
         

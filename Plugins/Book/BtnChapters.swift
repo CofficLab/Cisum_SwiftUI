@@ -1,17 +1,18 @@
 import OSLog
 import SwiftData
 import SwiftUI
+import MagicPlayMan
 
 struct BtnChapters: View {
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var playMan: MagicPlayMan
     @EnvironmentObject var m: MessageProvider
     @EnvironmentObject var db: DBSynced
 
     @State var isPresented = false
     @State var selection: DiskFile?
 
-    var asset: PlayAsset? { playMan.asset }
+    var asset: MagicAsset? { playMan.asset }
     var parent: URL? { asset?.url.deletingLastPathComponent() ?? nil }
     var items: [DiskFile] {
         guard let bookURL = parent else {

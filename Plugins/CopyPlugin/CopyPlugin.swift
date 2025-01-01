@@ -3,6 +3,7 @@ import MagicKit
 import MagicUI
 import OSLog
 import SwiftUI
+import MagicPlayMan
 
 class CopyPlugin: SuperPlugin, SuperLog {
     static let emoji = "🚛"
@@ -42,7 +43,7 @@ class CopyPlugin: SuperPlugin, SuperLog {
         )
     }
 
-    func onWillAppear(playMan: PlayMan, currentGroup: (any SuperPlugin)?, storage: StorageLocation?) async {
+    func onWillAppear(playMan: MagicPlayMan, currentGroup: (any SuperPlugin)?, storage: StorageLocation?) async {
         let verbose = false
 
         if verbose {

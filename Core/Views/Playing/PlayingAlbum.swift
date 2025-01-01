@@ -2,7 +2,7 @@ import OSLog
 import SwiftUI
 
 struct PlayingAlbum: View {
-    @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var playMan: MagicPlayMan
     
     var alignTop = false
 

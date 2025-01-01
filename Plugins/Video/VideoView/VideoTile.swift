@@ -4,7 +4,7 @@ import OSLog
 import SwiftUI
 
 struct VideoTile: View, SuperThread {
-    @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var playMan: MagicPlayMan
 
     @State var hovered = false
     

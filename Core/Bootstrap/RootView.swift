@@ -1,4 +1,5 @@
 import AlertToast
+import MagicPlayMan
 import MagicKit
 import MagicUI
 import OSLog
@@ -18,7 +19,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     @StateObject var m = MessageProvider()
     @StateObject var p = PluginProvider()
     @StateObject var a = AppProvider()
-    @StateObject var man: PlayMan = PlayMan(delegate: nil)
+    @StateObject var man: MagicPlayMan = MagicPlayMan()
     @StateObject var c = ConfigProvider()
 
     init(@ViewBuilder content: () -> Content) {
@@ -159,7 +160,7 @@ extension RootView {
     }
 
     func onAppear() {
-        man.delegate = self
+//        man.delegate = self
 
         Task(priority: .userInitiated) {
             do {
@@ -212,16 +213,16 @@ extension RootView {
             os_log("\(self.t)🍋🍋🍋 Play Asset Change")
         }
 
-        Task {
-            if let asset = man.asset, asset.isNotDownloaded {
-                do {
-                    try await asset.download()
-                    os_log("\(self.t)onPlayAssetUpdate: 开始下载")
-                } catch let e {
-                    os_log(.error, "\(self.t)onPlayAssetUpdate: \(e.localizedDescription)")
-                }
-            }
-        }
+//        Task {
+//            if let asset = man.asset, asset.isNotDownloaded {
+//                do {
+//                    try await asset.download()
+//                    os_log("\(self.t)onPlayAssetUpdate: 开始下载")
+//                } catch let e {
+//                    os_log(.error, "\(self.t)onPlayAssetUpdate: \(e.localizedDescription)")
+//                }
+//            }
+//        }
 
         for plugin in p.plugins {
             Task {
@@ -245,41 +246,41 @@ extension RootView {
 
 // MARK: PlayManDelegate
 
-extension RootView: PlayManDelegate {
-    func onPlayPrev(current: PlayAsset?) {
-        Task {
-            for plugin in p.plugins {
-                do {
-                    try await plugin.onPlayPrev(playMan: man, current: current, currentGroup: p.current, verbose: true)
-                } catch let e {
-                    m.error(e)
-                }
-            }
-        }
-    }
-
-    func onPlayNext(current: PlayAsset?, mode: PlayMode) async {
-        for plugin in p.plugins {
-            do {
-                try await plugin.onPlayNext(playMan: man, current: current, currentGroup: p.current, verbose: true)
-            } catch let e {
-                m.alert(e.localizedDescription)
-            }
-        }
-    }
-
-    func onPlayModeChange(mode: PlayMode) {
-        Task {
-            for plugin in p.plugins {
-                do {
-                    try await plugin.onPlayModeChange(mode: mode, asset: man.asset)
-                } catch let e {
-                    m.error(e)
-                }
-            }
-        }
-    }
-}
+//extension RootView: PlayManDelegate {
+//    func onPlayPrev(current: MagicAsset?) {
+//        Task {
+//            for plugin in p.plugins {
+//                do {
+//                    try await plugin.onPlayPrev(playMan: man, current: current, currentGroup: p.current, verbose: true)
+//                } catch let e {
+//                    m.error(e)
+//                }
+//            }
+//        }
+//    }
+//
+//    func onPlayNext(current: MagicAsset?, mode: PlayMode) async {
+//        for plugin in p.plugins {
+//            do {
+//                try await plugin.onPlayNext(playMan: man, current: current, currentGroup: p.current, verbose: true)
+//            } catch let e {
+//                m.alert(e.localizedDescription)
+//            }
+//        }
+//    }
+//
+//    func onPlayModeChange(mode: PlayMode) {
+//        Task {
+//            for plugin in p.plugins {
+//                do {
+//                    try await plugin.onPlayModeChange(mode: mode, asset: man.asset)
+//                } catch let e {
+//                    m.error(e)
+//                }
+//            }
+//        }
+//    }
+//}
 
 #Preview("App") {
     AppPreview()

@@ -4,7 +4,7 @@ import OSLog
 import SwiftUI
 
 struct BookPlayingCover: View, SuperLog, SuperThread {
-    @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var playMan: MagicPlayMan
     @EnvironmentObject var app: AppProvider
 
     @State var image: Image?

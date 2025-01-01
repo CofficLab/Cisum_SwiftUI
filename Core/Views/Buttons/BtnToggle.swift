@@ -3,9 +3,10 @@ import MagicKit
 import MagicUI
 import OSLog
 import SwiftUI
+import MagicPlayMan
 
 struct BtnToggle: View, SuperThread, SuperLog {
-    @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var playMan: MagicPlayMan
     @EnvironmentObject var m: MessageProvider
 
     static let emoji = "🔊"

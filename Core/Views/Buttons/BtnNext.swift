@@ -2,9 +2,10 @@ import OSLog
 import SwiftUI
 import MagicKit
 import MagicUI
+import MagicPlayMan
 
 struct BtnNext: View, SuperEvent {
-    @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var playMan: MagicPlayMan
 
     var autoResize = false
 

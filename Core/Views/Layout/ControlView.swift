@@ -1,10 +1,11 @@
 import SwiftData
 import SwiftUI
+import MagicPlayMan
 
 struct ControlView: View {
     @EnvironmentObject var appManager: AppProvider
     @EnvironmentObject var message: MessageProvider
-    @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var playMan: MagicPlayMan
     @EnvironmentObject var p: PluginProvider
 
     @State var showHeroView = true
@@ -16,7 +17,7 @@ struct ControlView: View {
 
     var showDB: Bool { appManager.showDB }
     var showStateMessage: Bool { message.stateMessage.count > 0 }
-    var showSliderView: Bool { playMan.isAudioWorker }
+    var showSliderView: Bool { false }
 
     var body: some View {
         GeometryReader { geo in

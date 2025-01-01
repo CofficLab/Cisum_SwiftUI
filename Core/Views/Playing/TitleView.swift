@@ -5,7 +5,7 @@ import SwiftData
 import SwiftUI
 
 struct TitleView: View, SuperLog, SuperThread {
-    @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var playMan: MagicPlayMan
 
     var title: String { playMan.asset?.title ?? "" }
     var width: CGFloat

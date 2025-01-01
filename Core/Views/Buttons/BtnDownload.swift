@@ -1,9 +1,10 @@
 import MagicKit
 import MagicUI
 import SwiftUI
+import MagicPlayMan
 
 struct BtnDownload: View, SuperThread {
-    var asset: PlayAsset
+    var asset: MagicAsset
 //    var disk: (any SuperDisk)? { l.current.getDisk() }
     let queue = DispatchQueue(label: "cisum.btnDownload")
 
@@ -14,7 +15,6 @@ struct BtnDownload: View, SuperThread {
             Label("下载", systemImage: getImageName())
                 .font(.system(size: 24))
         }
-        .disabled(asset.isLocal)
     }
 
     private func getImageName() -> String {

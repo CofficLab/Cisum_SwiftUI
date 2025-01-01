@@ -4,7 +4,7 @@ import MagicUI
 import OSLog
 import SwiftUI
 
-class WelcomePlugin: SuperPlugin, SuperLog {
+class WelcomePlugin: SuperPlugin, SuperLog {    
     static let emoji = "👏"
 
     let label: String = "Welcome"

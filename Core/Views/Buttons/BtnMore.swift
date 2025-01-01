@@ -1,18 +1,19 @@
 import OSLog
 import SwiftUI
+import MagicPlayMan
 
 struct BtnMore: View {
     @EnvironmentObject var appManager: AppProvider
-    @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var playMan: MagicPlayMan
 
     @State var isDownloaded = true
 
-    var asset: PlayAsset
+    var asset: MagicAsset
     var autoResize = true
 
     var body: some View {
         ControlButton(
-            title: "播放 「\(asset.fileName)」",
+            title: "播放 「\(asset.title)」",
             image: getImageName(),
             dynamicSize: autoResize,
             onTap: {
