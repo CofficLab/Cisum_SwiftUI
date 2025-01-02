@@ -79,8 +79,11 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
                         }
                     }, content: {
                         ForEach(urls, id: \.self) { url in
-                            url.makePreviewView(shape: .rectangle)
-                                .tag(url as URL?)
+                            url.makePreviewView(
+                                size: CGSize(width: 70, height: 70),
+                                shape: .rectangle
+                            )
+                            .tag(url as URL?)
                         }
                     })
                 }
