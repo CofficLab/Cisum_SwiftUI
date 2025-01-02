@@ -46,10 +46,13 @@ struct MainView: View, SuperLog, SuperThread {
                         } else {
                             getTabView()
                         }
-                        
-                        ForEach(Array(p.getStatusViews().enumerated()), id: \.offset) { index, view in
-                            view
-                        }
+                    }
+                }
+
+                HStack {
+                    Spacer()
+                    ForEach(Array(p.getStatusViews().enumerated()), id: \.offset) { _, view in
+                        view
                     }
                 }
             }
@@ -133,7 +136,7 @@ extension MainView {
             app.closeDBView()
         }
     }
-    
+
     func onShowDBChanged(_ geo: GeometryProxy) {
         // 高度被自动修改过了，重置
         if !showDB && geo.size.height != self.height {
@@ -151,11 +154,11 @@ extension MainView {
     func onAppear() {
         self.bg.async {
             let verbose = false
-            
+
             if verbose {
                 os_log("\(self.t)OnAppear")
             }
-            
+
             if autoResizing == false {
                 // 说明是用户主动调整
                 self.main.async {
@@ -164,7 +167,6 @@ extension MainView {
             }
         }
     }
-
 }
 
 #Preview("App") {
