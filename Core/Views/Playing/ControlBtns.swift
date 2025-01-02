@@ -8,7 +8,7 @@ struct ControlBtns: View {
     var body: some View {
         HStack {
             Spacer()
-            BtnToggleDB(autoResize: true)
+            BtnToggleDB()
             man.makePreviousButton()
             man.makePlayPauseButton()
             man.makeNextButton()

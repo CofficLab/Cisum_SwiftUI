@@ -7,14 +7,7 @@ extension Config {
     // MARK: Root Background
     
     static var rootBackground: some View {
-        ZStack {
-            Color.black.opacity(0.5)
-            if debug && false {
-                MagicBackground.aurora
-            } else {
-                MagicBackground.aurora
-            }
-        }
+        MagicBackground.darkForest
     }
 
     static var getBackground: Color {

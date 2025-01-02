@@ -53,15 +53,6 @@ struct VideoControl: View {
                             .padding()
                             .background(Config.background(.black))
                     }
-
-                    // MARK: 控制栏
-
-                    if showBtnsView {
-                        VideoBtns()
-                            .frame(height: getButtonsHeight(geo))
-                            .padding(.bottom, getBottomHeight(geo))
-                            .background(Config.background(.red))
-                    }
                 }
 
                 // MARK: 横向的封面图
