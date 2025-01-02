@@ -13,7 +13,7 @@ class DebugPlugin: SuperPlugin, SuperLog {
     let label = "debug"
     let id = "Debug"
     
-    func addStateView(currentGroup: (any SuperPlugin)?) -> AnyView? {
+    func addStatusView() -> AnyView? {
         AnyView(DebugStateView())
     }
 }

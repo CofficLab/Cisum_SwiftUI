@@ -174,41 +174,41 @@ class AudioPlugin: SuperPlugin, SuperLog {
         self.audioProvider = AudioProvider(disk: disk)
         self.initialized = true
         
-        var assetTarget: PlayAsset?
+        var assetTarget: URL?
         var timeTarget: TimeInterval = 0
 
-//        if let url = AudioPlugin.getCurrent(), let audio = await self.audioDB?.find(url) {
-//            assetTarget = audio
-//
-//            if let time = AudioPlugin.getCurrentTime() {
-//                timeTarget = time
-//            }
-//        } else {
-//            if verbose {
-//                os_log("\(self.t)⚠️⚠️⚠️ No current audio URL, try find first")
-//            }
-//
-//            guard let audioDB = audioDB else {
-//                os_log("\(self.t)⚠️⚠️⚠️ AudioDB not found")
-//                return
-//            }
-//
-//            if let first = try? await audioDB.getFirst() {
-//                assetTarget = first
-//            } else {
-//                os_log("\(self.t)⚠️⚠️⚠️ No audio found")
-//            }
-//        }
-//        
-//        if let asset = assetTarget {
-//            try await playMan.prepare(asset, verbose: true)
-//            await playMan.seek(timeTarget)
-//        }
-//
-//        let mode = AudioPlugin.getPlayMode()
-//        if let mode = mode {
-//            await playMan.setMode(mode, reason: self.className + ".OnAppear")
-//        }
+        if let url = AudioPlugin.getCurrent(), let audio = await self.audioDB?.find(url) {
+            assetTarget = audio
+
+            if let time = AudioPlugin.getCurrentTime() {
+                timeTarget = time
+            }
+        } else {
+            if verbose {
+                os_log("\(self.t)⚠️⚠️⚠️ No current audio URL, try find first")
+            }
+
+            guard let audioDB = audioDB else {
+                os_log("\(self.t)⚠️⚠️⚠️ AudioDB not found")
+                return
+            }
+
+            if let first = try? await audioDB.getFirst() {
+                assetTarget = first
+            } else {
+                os_log("\(self.t)⚠️⚠️⚠️ No audio found")
+            }
+        }
+        
+        if let asset = assetTarget {
+            await playMan.play(url: asset)
+            await playMan.seek(time: timeTarget)
+        }
+
+        let mode = AudioPlugin.getPlayMode()
+        if let mode = mode {
+            playMan.setPlayMode(mode)
+        }
     }
 
     func onPlayPrev(playMan: PlayMan, current: PlayAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws {
