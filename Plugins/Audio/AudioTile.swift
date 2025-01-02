@@ -18,10 +18,10 @@ struct AudioTile: View {
                 AudioAvatar(asset).frame(width: 36, height: 36)
 
                 VStack(alignment: .leading, spacing: 0) {
-                    Text(asset.fileName)
+                    Text(asset.title)
 
                     HStack {
-                        Text(asset.getFileSizeReadable())
+                        Text(asset.url.getSizeReadable())
 //                        if audio.like {
 //                            Image(systemName: "star.fill")
 //                        }

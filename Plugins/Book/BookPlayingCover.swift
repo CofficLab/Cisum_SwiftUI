@@ -4,7 +4,7 @@ import OSLog
 import SwiftUI
 
 struct BookPlayingCover: View, SuperLog, SuperThread {
-    @EnvironmentObject var playMan: MagicPlayMan
+    @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var app: AppProvider
 
     @State var image: Image?
@@ -43,7 +43,7 @@ struct BookPlayingCover: View, SuperLog, SuperThread {
             }
         }
         .onAppear(perform: onAppear)
-        .onReceive(NotificationCenter.default.publisher(for: .PlayManStateChange), perform: onPlayStateChange)
+//        .onReceive(NotificationCenter.default.publisher(for: .PlayManStateChange), perform: onPlayStateChange)
         .onChange(of: isDownloaded, onDownloadedChange)
         .onChange(of: updating, onUpdatingChange)
     }
@@ -61,7 +61,7 @@ struct BookPlayingCover: View, SuperLog, SuperThread {
     var bookImage: some View {
         ZStack {
             if let asset = asset {
-                if asset.isNotExists() {
+                if asset.url.isNotFileExist {
                     Image(systemName: "minus.circle").resizable().scaledToFit()
                 } else if isDownloading {
                     Self.makeProgressView(downloadingPercent / 100)
@@ -88,7 +88,7 @@ struct BookPlayingCover: View, SuperLog, SuperThread {
             os_log("\(t)UpdateCover for \(title) 🐛 \(reason)")
         }
         
-        self.downloadingPercent = asset.isDownloaded ? 100 : 0
+        self.downloadingPercent = asset.url.isDownloaded ? 100 : 0
 
 //        Task {
 //            guard let book = await self.data.db.findBook(asset.url) else {
@@ -139,7 +139,7 @@ extension BookPlayingCover {
         self.asset = playMan.asset
 
         if let asset = self.asset {
-            self.downloadingPercent = asset.isDownloaded ? 100 : 0
+            self.downloadingPercent = asset.url.isDownloaded ? 100 : 0
         }
     }
 

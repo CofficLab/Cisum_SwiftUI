@@ -7,7 +7,7 @@ struct VideoGrid: View {
 
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var m: MessageProvider
-    @EnvironmentObject var playMan: MagicPlayMan
+    @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var p: PluginProvider
 
     @State var selection: DiskFile?
@@ -35,7 +35,7 @@ struct VideoGrid: View {
                     .onChange(of: selection, {
                         if let s = selection, s.isNotFolder() {
                             if playMan.playing {
-                                playMan.play(s.toPlayAsset(), reason: "点击了", verbose: true)
+                                playMan.play(url: s.url)
                             }
                         }
                     })

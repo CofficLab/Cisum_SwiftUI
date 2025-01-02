@@ -109,22 +109,6 @@ extension AudioModel: Identifiable {
     var id: PersistentIdentifier { persistentModelID }
 }
 
-// MARK: Transform
-
-extension AudioModel {
-    func toPlayAsset(verbose: Bool = false, delegate: PlayAssetDelegate) -> PlayAsset {
-        if verbose {
-            os_log("\(self.t)ToPlayAsset: like (\(self.like))")
-        }
-
-        return PlayAsset(url: self.url, like: self.like, size: size, delegate: delegate)
-    }
-
-    static func fromPlayAsset(_ asset: PlayAsset) -> AudioModel {
-        AudioModel(asset.url)
-    }
-}
-
 // MARK: Size
 
 extension AudioModel {

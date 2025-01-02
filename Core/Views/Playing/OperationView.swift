@@ -2,10 +2,10 @@ import SwiftData
 import SwiftUI
 
 struct OperationView: View {
-    @EnvironmentObject var playMan: MagicPlayMan
+    @EnvironmentObject var playMan: PlayMan
 
     var asset: PlayAsset? { playMan.asset }
-    var characterCount: Int { asset?.fileName.count ?? 0 }
+    var characterCount: Int { asset?.title.count ?? 0 }
     var geo: GeometryProxy
 
     var body: some View {

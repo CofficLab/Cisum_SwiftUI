@@ -53,7 +53,7 @@ extension BtnChapters {
 
     func onSelectionChange() {
         if let s = selection, s.url != asset?.url {
-            playMan.play(s.toPlayAsset(), reason: "BtnChapters的Selection变了", verbose: true)
+//            playMan.play(s.toPlayAsset(), reason: "BtnChapters的Selection变了", verbose: true)
         }
     }
 }

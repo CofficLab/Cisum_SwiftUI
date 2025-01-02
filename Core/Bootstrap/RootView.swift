@@ -182,9 +182,9 @@ extension RootView {
                     }
                 #endif
             } catch let e {
-                if !(e is PlayManError) {
+//                if !(e is PlayManError) {
                     self.error = e
-                }
+//                }
             }
 
             self.loading = false

@@ -2,6 +2,11 @@ import OSLog
 import SwiftUI
 import MagicKit
 import MagicUI
+import MagicPlayMan
+
+typealias PlayMan = MagicPlayMan
+typealias PlayAsset = MagicAsset
+typealias PlayMode = MagicPlayMode
 
 @main
 struct BootApp: App, SuperLog {

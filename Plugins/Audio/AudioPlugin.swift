@@ -134,14 +134,14 @@ class AudioPlugin: SuperPlugin, SuperLog {
             return
         }
 
-        switch mode {
-        case .Loop:
-            break
-        case .Order:
-            await audioDB.sort(asset?.url, reason: self.className + ".OnPlayModeChange")
-        case .Random:
-            try await audioDB.sortRandom(asset?.url, reason: self.className + ".OnPlayModeChange", verbose: true)
-        }
+//        switch mode {
+//        case .Loop:
+//            break
+//        case .Order:
+//            await audioDB.sort(asset?.url, reason: self.className + ".OnPlayModeChange")
+//        case .Random:
+//            try await audioDB.sortRandom(asset?.url, reason: self.className + ".OnPlayModeChange", verbose: true)
+//        }
     }
 
     func onWillAppear(playMan: PlayMan, currentGroup: SuperPlugin?, storage: StorageLocation?) async throws {
@@ -177,38 +177,38 @@ class AudioPlugin: SuperPlugin, SuperLog {
         var assetTarget: PlayAsset?
         var timeTarget: TimeInterval = 0
 
-        if let url = AudioPlugin.getCurrent(), let audio = await self.audioDB?.find(url) {
-            assetTarget = audio
-
-            if let time = AudioPlugin.getCurrentTime() {
-                timeTarget = time
-            }
-        } else {
-            if verbose {
-                os_log("\(self.t)⚠️⚠️⚠️ No current audio URL, try find first")
-            }
-
-            guard let audioDB = audioDB else {
-                os_log("\(self.t)⚠️⚠️⚠️ AudioDB not found")
-                return
-            }
-
-            if let first = try? await audioDB.getFirst() {
-                assetTarget = first
-            } else {
-                os_log("\(self.t)⚠️⚠️⚠️ No audio found")
-            }
-        }
-        
-        if let asset = assetTarget {
-            try await playMan.prepare(asset, verbose: true)
-            await playMan.seek(timeTarget)
-        }
-
-        let mode = AudioPlugin.getPlayMode()
-        if let mode = mode {
-            await playMan.setMode(mode, reason: self.className + ".OnAppear")
-        }
+//        if let url = AudioPlugin.getCurrent(), let audio = await self.audioDB?.find(url) {
+//            assetTarget = audio
+//
+//            if let time = AudioPlugin.getCurrentTime() {
+//                timeTarget = time
+//            }
+//        } else {
+//            if verbose {
+//                os_log("\(self.t)⚠️⚠️⚠️ No current audio URL, try find first")
+//            }
+//
+//            guard let audioDB = audioDB else {
+//                os_log("\(self.t)⚠️⚠️⚠️ AudioDB not found")
+//                return
+//            }
+//
+//            if let first = try? await audioDB.getFirst() {
+//                assetTarget = first
+//            } else {
+//                os_log("\(self.t)⚠️⚠️⚠️ No audio found")
+//            }
+//        }
+//        
+//        if let asset = assetTarget {
+//            try await playMan.prepare(asset, verbose: true)
+//            await playMan.seek(timeTarget)
+//        }
+//
+//        let mode = AudioPlugin.getPlayMode()
+//        if let mode = mode {
+//            await playMan.setMode(mode, reason: self.className + ".OnAppear")
+//        }
     }
 
     func onPlayPrev(playMan: PlayMan, current: PlayAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws {
@@ -221,7 +221,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
         let asset = try await audioDB.getPrevOf(current?.url, verbose: false)
 
         if let asset = asset {
-            await playMan.play(asset, reason: "OnPlayPrev", verbose: true)
+            await playMan.play(url: asset)
         } else {
             throw AudioPluginError.NoPrevAsset
         }
@@ -232,22 +232,22 @@ class AudioPlugin: SuperPlugin, SuperLog {
             return
         }
 
-        let mode = await playMan.mode
-
-        if verbose {
-            os_log("\(self.t)OnPlayNext with mode \(mode.description)")
-        }
-
-        guard let audioDB = audioDB else {
-            return
-        }
-
-        let asset = try await audioDB.getNextOf(current?.url, verbose: false)
-        if let asset = asset {
-            await playMan.play(asset, reason: "OnPlayNext", verbose: true)
-        } else {
-            throw AudioPluginError.NoNextAsset
-        }
+//        let mode = await playMan.mode
+//
+//        if verbose {
+//            os_log("\(self.t)OnPlayNext with mode \(mode.description)")
+//        }
+//
+//        guard let audioDB = audioDB else {
+//            return
+//        }
+//
+//        let asset = try await audioDB.getNextOf(current?.url, verbose: false)
+//        if let asset = asset {
+//            await playMan.play(asset, reason: "OnPlayNext", verbose: true)
+//        } else {
+//            throw AudioPluginError.NoNextAsset
+//        }
     }
     
     func onStorageLocationChange(storage: StorageLocation?) async throws {
@@ -275,7 +275,7 @@ extension AudioPlugin {
         UserDefaults.standard.set(mode.rawValue, forKey: keyOfCurrentPlayMode)
 
         // Store mode as string for CloudKit
-        NSUbiquitousKeyValueStore.default.set(mode.description, forKey: keyOfCurrentPlayMode)
+        NSUbiquitousKeyValueStore.default.set(mode.shortName, forKey: keyOfCurrentPlayMode)
         NSUbiquitousKeyValueStore.default.synchronize()
     }
 

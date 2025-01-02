@@ -29,9 +29,9 @@ struct BookStateView: View, SuperLog, SuperThread {
             }
 
             // 播放过程中出现的错误
-            if let e = playMan.error {
-                makeErrorView(e)
-            }
+//            if let e = playMan.error {
+//                makeErrorView(e)
+//            }
         }
         .onChange(of: bookManager.isSyncing, {
             os_log("\(self.t)isSyncing: \(bookManager.isSyncing)")

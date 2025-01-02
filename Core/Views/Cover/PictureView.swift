@@ -41,7 +41,7 @@ struct PictureView: View, SuperLog, SuperThread {
 
     var body: some View {
         ZStack {
-            if asset.isNotExists() {
+            if asset.url.isNotFileExist {
                 Image(systemName: "minus.circle").resizable().scaledToFit()
             } else if isDownloading {
                 Self.makeProgressView(downloadingPercent / 100)
@@ -58,7 +58,7 @@ struct PictureView: View, SuperLog, SuperThread {
             if let file = updating.first(where: { $0.url == asset.url}) {
                 self.downloadingPercent = file.downloadProgress
             } else {
-                self.downloadingPercent = asset.isDownloaded ? 100 : 0
+                self.downloadingPercent = asset.url.isDownloaded ? 100 : 0
             }
         }
         .onChange(of: isDownloaded, {
@@ -83,7 +83,7 @@ struct PictureView: View, SuperLog, SuperThread {
             }
             
             do {
-                let image =  try await asset.getCoverImage()
+                let image =  try await asset.url.thumbnail()
 
                 DispatchQueue.main.async {
                     self.image = image

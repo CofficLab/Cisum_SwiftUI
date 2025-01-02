@@ -8,7 +8,7 @@ struct AudioStateView: View, SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var messageManager: MessageProvider
     @EnvironmentObject var audioManager: AudioProvider
-    @EnvironmentObject var playMan: MagicPlayMan
+    @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var db: AudioRecordDB
     @Environment(\.modelContext) private var modelContext
 
@@ -28,14 +28,14 @@ struct AudioStateView: View, SuperLog, SuperThread {
             }
 
             // 播放过程中出现的错误
-            if let e = playMan.error {
-                makeErrorView(e)
-            }
+//            if let e = playMan.error {
+//                makeErrorView(e)
+//            }
         }
         .onChange(of: audioManager.isSyncing, {
-            if playMan.hasError, let asset = playMan.asset, asset.isDownloaded {
-                playMan.play(asset, reason: self.className, verbose: true)
-            }
+//            if playMan.hasError, let asset = playMan.asset, asset.isDownloaded {
+//                playMan.play(asset, reason: self.className, verbose: true)
+//            }
         })
     }
 

@@ -55,12 +55,6 @@ class AppProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLog, 
         }
     }
 
-    func setPlayManError(_ error: PlayManError) {
-        self.main.async {
-            self.error = error as Error
-        }
-    }
-
     func setResetting(_ value: Bool) {
         self.main.async {
             self.isResetting = value

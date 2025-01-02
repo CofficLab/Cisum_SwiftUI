@@ -30,7 +30,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     @Query(sort: \AudioModel.order, animation: .default) var audios: [AudioModel]
 
     var total: Int { audios.count }
-    var assets: [PlayAsset] { audios.map { $0.toPlayAsset(delegate: audioDB) } }
+    var urls: [URL] { audios.map { $0.url } }
 
     init(verbose: Bool, reason: String) {
         if verbose {
@@ -78,9 +78,9 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
                                 .labelStyle(.iconOnly)
                         }
                     }, content: {
-                        ForEach(assets, id: \.url) { a in
-                            AudioTile(asset: a)
-                                .tag(a.url as URL?)
+                        ForEach(urls, id: \.self) { url in
+                            url.makePreviewView(shape: .rectangle)
+                                .tag(url as URL?)
                         }
                     })
                 }
@@ -90,7 +90,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
         .onAppear(perform: handleOnAppear)
         .onChange(of: selection, handleSelectionChange)
         .onChange(of: man.asset, handlePlayAssetChange)
-        .onReceive(nc.publisher(for: .PlayManStateChange), perform: handlePlayManStateChange)
+//        .onReceive(nc.publisher(for: .PlayManStateChange), perform: handlePlayManStateChange)
         .onReceive(nc.publisher(for: .audioDeleted), perform: handleAudioDeleted)
         .onReceive(nc.publisher(for: .DBSorting), perform: onSorting)
         .onReceive(nc.publisher(for: .DBSortDone), perform: onSortDone)
@@ -116,12 +116,12 @@ extension AudioList {
     }
 
     func handleSelectionChange() {
-        guard let url = selection, let asset = assets.first(where: { $0.url == url }) else {
+        guard let url = selection, urls.contains(url) else {
             return
         }
 
         if url != man.asset?.url {
-            self.man.play(asset, reason: self.className + ".SelectionChange", verbose: true)
+            self.man.play(url: url)
         }
     }
 

@@ -66,22 +66,8 @@ extension Book: SuperCover {
 // MARK: Transform
 
 extension Book {
-    func toPlayAsset(verbose: Bool = false) -> MagicAsset {
-        if verbose {
-            os_log("\(self.t)ToPlayAsset: title(\(self.title))")
-        }
-
-        return PlayAsset(url: self.url, like: false, delegate: self)
-    }
-
     static func fromDiskFile(_ file: DiskFile) -> Book {
         file.toBook()
-    }
-}
-
-extension Book: PlayAssetDelegate {
-    func onLikeChange() {
-        
     }
 }
 

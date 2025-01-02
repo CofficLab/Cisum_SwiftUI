@@ -13,11 +13,11 @@ struct BtnMode: View {
     var body: some View {
         ControlButton(
             title: "模式",
-            image: playMan.playMode.icon,
+            image: playMan.playMode.iconName,
             dynamicSize: autoResize,
             onTap: {
                 playMan.togglePlayMode()
-                messageManager.hub("\(playMan.playMode.description)")
+                messageManager.hub("\(playMan.playMode.displayName)")
             })
         .foregroundStyle(.white)
     }

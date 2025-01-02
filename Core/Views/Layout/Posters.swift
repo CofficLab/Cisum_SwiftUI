@@ -47,7 +47,7 @@ struct Posters: View, SuperLog {
         
                 Button("选择") {
                     do {
-                        self.man.stop(reason: self.className, verbose: true)
+                        self.man.stop()
                         try p.setCurrentGroup(currentLayout)
                         self.isPresented = false
                     } catch {

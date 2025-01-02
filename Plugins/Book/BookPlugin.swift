@@ -79,10 +79,10 @@ class BookPlugin: SuperPlugin, SuperLog {
 
         Task { @MainActor in
             if let url = BookPlugin.getCurrent(), let book = await self.bookDB?.find(url) {
-                playMan.play(book.toPlayAsset(), reason: self.className, verbose: true)
+                playMan.play(url: book.url)
 
                 if let time = BookPlugin.getCurrentTime() {
-                    playMan.seek(time)
+                    playMan.seek(time: time)
                 }
             } else {
                 os_log("\(self.t)No current book URL")
@@ -109,9 +109,9 @@ class BookPlugin: SuperPlugin, SuperLog {
         }
 
         Self.storeCurrent(asset?.url)
-        if let asset = asset, asset.isNotDownloaded {
+        if let asset = asset, asset.url.isNotDownloaded {
             do {
-                try await asset.download()
+                try await asset.url.download()
                 os_log("\(self.t)onPlayAssetUpdate: 开始下载")
             } catch let e {
                 os_log("\(self.t)onPlayAssetUpdate: \(e.localizedDescription)")
@@ -134,7 +134,7 @@ class BookPlugin: SuperPlugin, SuperLog {
             }
 
             if let next = next, let book = await self.bookDB?.find(next) {
-                await playMan.play(book.toPlayAsset(), reason: "onPlayNext", verbose: true)
+                await playMan.play(url: book.url)
             }
         }
     }

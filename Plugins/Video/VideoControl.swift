@@ -4,7 +4,7 @@ import SwiftUI
 struct VideoControl: View {
     @EnvironmentObject var appManager: AppProvider
     @EnvironmentObject var messageManager: MessageProvider
-    @EnvironmentObject var playMan: MagicPlayMan
+    @EnvironmentObject var playMan: PlayMan
 
     @State var showHeroView = true
     @State var showBtnsView = true
@@ -15,7 +15,7 @@ struct VideoControl: View {
 
     var showDB: Bool { appManager.showDB }
     var showStateMessage: Bool { messageManager.stateMessage.count > 0 }
-    var showSliderView: Bool { playMan.isAudioWorker }
+    var showSliderView: Bool { false }
 
     var body: some View {
         GeometryReader { geo in

@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct TopView: View {
-    @EnvironmentObject var playMan: MagicPlayMan
+    @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var p: PluginProvider
 
     var asset: PlayAsset? { playMan.asset }

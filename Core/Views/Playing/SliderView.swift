@@ -6,7 +6,7 @@ import OSLog
 import SwiftUI
 
 struct SliderView: View, SuperThread, SuperLog {
-    @EnvironmentObject var playMan: MagicPlayMan
+    @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var app: AppProvider
 
     @State private var value: Double = 0
@@ -21,8 +21,8 @@ struct SliderView: View, SuperThread, SuperLog {
 
     var geo: GeometryProxy
     var duration: TimeInterval { playMan.duration }
-    var current: String { playMan.currentTimeDisplay }
-    var left: String { playMan.leftTimeDisplay }
+    var current: String { playMan.currentTimeForDisplay }
+    var left: String { playMan.durationForDisplay }
 
     var body: some View {
         HStack {
@@ -32,7 +32,7 @@ struct SliderView: View, SuperThread, SuperLog {
             Slider(value: $value, in: 0 ... duration) { editing in
                 isEditing = editing
                 if !editing {
-                    playMan.seek(value)
+                    playMan.seek(time: value)
                 }
             }
             .disabled(shouldDisable)
@@ -44,7 +44,7 @@ struct SliderView: View, SuperThread, SuperLog {
         .padding(.horizontal, 10)
         .foregroundStyle(.white)
         .onReceive(timer, perform: handleTimer)
-        .onReceive(NotificationCenter.default.publisher(for: .PlayManStateChange), perform: handlePlayManStateChange)
+//        .onReceive(NotificationCenter.default.publisher(for: .PlayManStateChange), perform: handlePlayManStateChange)
     }
 
     func enable() {

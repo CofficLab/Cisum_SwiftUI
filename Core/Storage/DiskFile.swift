@@ -3,10 +3,9 @@ import SwiftUI
 import OSLog
 import AVKit
 import MagicKit
-import MagicPlayMan
 import MagicUI
 
-struct DiskFile: FileBox, Hashable, Identifiable, Playable {
+struct DiskFile: FileBox, Hashable, Identifiable {
     static var home: DiskFile = DiskFile(url: URL.homeDirectory)
     static var emoji = "👶"
     
@@ -86,10 +85,6 @@ struct DiskFile: FileBox, Hashable, Identifiable, Playable {
     var parent: DiskFile? {
         DiskFile.fromURL(url.getParent())
     }
-
-    func toPlayAsset() -> MagicAsset {
-        PlayAsset(url: url, delegate: self)
-    }
     
     func toAudio(verbose: Bool = false) -> AudioModel {
         if verbose {
@@ -105,11 +100,5 @@ struct DiskFile: FileBox, Hashable, Identifiable, Playable {
         }
         
         return Book(url: url)
-    }
-}
-
-extension DiskFile: PlayAssetDelegate {
-    func onLikeChange() {
-        
     }
 }

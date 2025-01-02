@@ -39,7 +39,7 @@ struct AudioAvatar: View, SuperLog, SuperThread {
 
     private var avatarContent: some View {
         Group {
-            if asset.isNotExists() {
+            if asset.url.isFileExist {
                 Image(systemName: "minus.circle").resizable().scaledToFit()
             } else if isDownloading {
                 ProgressView(value: downloadingPercent, total: 100) {
@@ -70,7 +70,7 @@ struct AudioAvatar: View, SuperLog, SuperThread {
             }
 
             do {
-                let image = try await asset.getCoverImage()
+                let image = try await asset.url.thumbnail()
 
                 await MainActor.run {
                     self.image = image
@@ -101,7 +101,7 @@ struct AudioAvatar: View, SuperLog, SuperThread {
 
 extension AudioAvatar {
     func handleOnAppear() {
-        self.downloadingPercent = asset.isDownloaded ? 100 : 0
+        self.downloadingPercent = asset.url.isDownloaded ? 100 : 0
     }
 
     private func handleDownloadCompletion() {

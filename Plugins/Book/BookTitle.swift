@@ -22,7 +22,7 @@ struct BookTitle: View, SuperLog, SuperThread {
                 .font(getFont(width: width))
         }
         .onAppear(perform: onAppear)
-        .onReceive(NotificationCenter.default.publisher(for: .PlayManStateChange), perform: onPlayManStateChange)
+//        .onReceive(NotificationCenter.default.publisher(for: .PlayManStateChange), perform: onPlayManStateChange)
     }
 
     /// 根据宽度来决定字体的大小

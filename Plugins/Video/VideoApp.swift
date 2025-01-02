@@ -53,13 +53,13 @@ class VideoApp: SuperLog {
     }
 
     func setCurrentPlayMode(mode: PlayMode) {
-        UserDefaults.standard.set(mode.rawValue, forKey: "currentVideoPlayMode")
+//        UserDefaults.standard.set(mode.rawValue, forKey: "currentVideoPlayMode")
     }
 
     func getCurrentPlayMode() -> PlayMode? {
-        if let mode = UserDefaults.standard.string(forKey: "currentVideoPlayMode") {
-            return PlayMode(rawValue: mode)
-        }
+//        if let mode = UserDefaults.standard.string(forKey: "currentVideoPlayMode") {
+//            return PlayMode(rawValue: mode)
+//        }
         return nil
     }
 

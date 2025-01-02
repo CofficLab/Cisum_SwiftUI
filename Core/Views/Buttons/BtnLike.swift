@@ -5,7 +5,7 @@ struct BtnLike: View {
     @EnvironmentObject var man: PlayMan
     @EnvironmentObject var m: MessageProvider
 
-    var like: Bool { man.asset?.like ?? false}
+    var like: Bool { false}
     var autoResize = false
     var title: String { like ? "取消喜欢" : "标记喜欢" }
 
@@ -19,7 +19,7 @@ struct BtnLike: View {
                     onTap: {
                         Task {
                             do {
-                                try await man.toggleLike()
+//                                try await man.toggleLike()
                                 m.hub(like ? "已标记为喜欢" : "已取消喜欢")
                             } catch {
                                 self.m.error(error)

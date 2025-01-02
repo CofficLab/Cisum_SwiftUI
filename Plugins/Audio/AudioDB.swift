@@ -52,29 +52,29 @@ class AudioDB: ObservableObject, SuperEvent, SuperLog {
         try await self.disk.download(audio.url, reason: "AudioDB.download", verbose: verbose)
     }
     
-    func find(_ url: URL) async -> PlayAsset? {
+    func find(_ url: URL) async -> URL? {
         let audio = await self.db.findAudio(url)
         audio?.setDB(self)
         
-        return audio?.toPlayAsset(delegate: self)
+        return url
     }
     
-    func getFirst() async throws -> PlayAsset? {
+    func getFirst() async throws -> URL? {
         let audio = try await self.db.firstAudio()
         
-        return audio?.toPlayAsset(delegate: self)
+        return audio?.url
     }
     
-    func getNextOf(_ url: URL?, verbose: Bool = false) async throws -> PlayAsset? {
+    func getNextOf(_ url: URL?, verbose: Bool = false) async throws -> URL? {
         let audio = try await self.db.getNextOf(url, verbose: verbose)
         
-        return audio?.toPlayAsset(delegate: self)
+        return audio?.url
     }
     
-    func getPrevOf(_ url: URL?, verbose: Bool = false) async throws -> PlayAsset? {
+    func getPrevOf(_ url: URL?, verbose: Bool = false) async throws -> URL? {
         let audio = try await self.db.getPrevOf(url, verbose: verbose)
         
-        return audio?.toPlayAsset(delegate: self)
+        return audio?.url
     }
     
     func getTotalCount() async -> Int {
@@ -115,18 +115,6 @@ extension AudioDB: DiskDelegate {
         }
         
         await self.db.sync(items)
-    }
-}
-
-extension AudioDB: PlayAssetDelegate {
-    func getPlatformImage() async throws -> MagicKit.PlatformImage? {
-        nil
-    }
-    
-    func onLikeChange(like: Bool, asset: PlayAsset) async throws {
-        os_log("\(self.t)🍋🍋🍋 OnLikeChange")
-        
-        try await self.db.updateLike(asset.url, like: like)
     }
 }
 

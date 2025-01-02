@@ -17,7 +17,7 @@ struct ControlView: View {
 
     var showDB: Bool { appManager.showDB }
     var showStateMessage: Bool { message.stateMessage.count > 0 }
-    var showSliderView: Bool { false }
+    var showSliderView: Bool { true }
 
     var body: some View {
         GeometryReader { geo in
@@ -33,7 +33,7 @@ struct ControlView: View {
 
                     // MARK: 状态
                     if showStateView {
-                        VStack {
+                        VStack(spacing: 10) {
                             ForEach(p.plugins, id: \.id) { plugin in
                                 plugin.addStateView(currentGroup: p.current)
                             }
@@ -53,9 +53,8 @@ struct ControlView: View {
                     // MARK: 进度栏
 
                     if showSliderView {
-                        SliderView(geo: geo)
+                        playMan.makeProgressView()
                             .padding()
-                            .background(Config.background(.black))
                     }
 
                     // MARK: 控制栏

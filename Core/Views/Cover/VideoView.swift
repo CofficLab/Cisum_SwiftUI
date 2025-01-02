@@ -29,10 +29,7 @@ struct VideoView: View, SuperLog {
     }
 
     var body: some View {
-        VideoPlayer(player: playMan.videoWorker.player)
-            .onAppear {
-                playMan.play(asset, reason: "OnAppear", verbose: true)
-            }
+        EmptyView()
     }
 }
 
