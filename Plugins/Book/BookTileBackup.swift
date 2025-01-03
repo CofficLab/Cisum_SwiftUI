@@ -25,7 +25,7 @@ struct BookTileBackup: View {
             }
             Spacer()
         }
-        .background(MagicBackground.auroraBlue)
+        .background(MagicBackground.blueberry)
         .foregroundStyle(.white)
         .clipShape(RoundedRectangle(cornerSize: CGSize(width: 10, height: 10)))
         .onTapGesture {

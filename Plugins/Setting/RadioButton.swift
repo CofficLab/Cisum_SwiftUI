@@ -74,7 +74,7 @@ struct RadioButton: View {
                                 }
                             }
                             .padding(8)
-                            .background(MagicBackground.deepPurple.opacity(0.2))
+                            .background(MagicBackground.acousticMorning.opacity(0.2))
                             .cornerRadius(6)
                         }
 

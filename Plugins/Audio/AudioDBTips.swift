@@ -11,7 +11,7 @@ struct AudioDBTips: View {
     }
 
     var body: some View {
-        MagicCard(background: MagicBackground.techGradient) {
+        MagicCard(background: MagicBackground.mountainStream) {
             VStack {
                 VStack(spacing: 20) {
                     HStack {

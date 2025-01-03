@@ -19,7 +19,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     @StateObject var m = MessageProvider()
     @StateObject var p = PluginProvider()
     @StateObject var a = AppProvider()
-    @StateObject var man: MagicPlayMan = MagicPlayMan()
+    @StateObject var man = MagicPlayMan(playlistEnabled: false)
     @StateObject var c = ConfigProvider()
 
     init(@ViewBuilder content: () -> Content) {
@@ -47,6 +47,9 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
 
                                 ToolbarItemGroup(placement: .cancellationAction) {
                                     Spacer()
+                                    
+                                    man.makeSubscribersButton()
+                                    
                                     if let asset = man.asset {
                                         BtnShowInFinder(url: asset.url, autoResize: false)
                                     }
@@ -160,8 +163,6 @@ extension RootView {
     }
 
     func onAppear() {
-//        man.delegate = self
-
         Task(priority: .userInitiated) {
             do {
                 try Config.getPlugins().forEach({
@@ -181,10 +182,18 @@ extension RootView {
                         UIApplication.shared.beginReceivingRemoteControlEvents()
                     }
                 #endif
+                
+                self.man.subscribe(
+                    name: self.className,
+                    onPreviousRequested: { asset in
+                        self.onPlayPrev(current: asset)
+                    },
+                    onNextRequested: { asset in
+                        self.onPlayNext(current: asset, mode: self.man.playMode)
+                    }
+                )
             } catch let e {
-//                if !(e is PlayManError) {
-                    self.error = e
-//                }
+                self.error = e
             }
 
             self.loading = false
@@ -244,43 +253,45 @@ extension RootView {
     }
 }
 
-// MARK: PlayManDelegate
+// MARK: PlayMan Event
 
-//extension RootView: PlayManDelegate {
-//    func onPlayPrev(current: MagicAsset?) {
-//        Task {
-//            for plugin in p.plugins {
-//                do {
-//                    try await plugin.onPlayPrev(playMan: man, current: current, currentGroup: p.current, verbose: true)
-//                } catch let e {
-//                    m.error(e)
-//                }
-//            }
-//        }
-//    }
-//
-//    func onPlayNext(current: MagicAsset?, mode: PlayMode) async {
-//        for plugin in p.plugins {
-//            do {
-//                try await plugin.onPlayNext(playMan: man, current: current, currentGroup: p.current, verbose: true)
-//            } catch let e {
-//                m.alert(e.localizedDescription)
-//            }
-//        }
-//    }
-//
-//    func onPlayModeChange(mode: PlayMode) {
-//        Task {
-//            for plugin in p.plugins {
-//                do {
-//                    try await plugin.onPlayModeChange(mode: mode, asset: man.asset)
-//                } catch let e {
-//                    m.error(e)
-//                }
-//            }
-//        }
-//    }
-//}
+extension RootView {
+    func onPlayPrev(current: MagicAsset?) {
+        Task {
+            for plugin in p.plugins {
+                do {
+                    try await plugin.onPlayPrev(playMan: man, current: current, currentGroup: p.current, verbose: true)
+                } catch let e {
+                    m.error(e)
+                }
+            }
+        }
+    }
+
+    func onPlayNext(current: MagicAsset?, mode: PlayMode) {
+        Task {
+            for plugin in p.plugins {
+                do {
+                    try await plugin.onPlayNext(playMan: man, current: current, currentGroup: p.current, verbose: true)
+                } catch let e {
+                    m.alert(e.localizedDescription)
+                }
+            }
+        }
+    }
+
+    func onPlayModeChange(mode: PlayMode) {
+        Task {
+            for plugin in p.plugins {
+                do {
+                    try await plugin.onPlayModeChange(mode: mode, asset: man.asset)
+                } catch let e {
+                    m.error(e)
+                }
+            }
+        }
+    }
+}
 
 #Preview("App") {
     AppPreview()

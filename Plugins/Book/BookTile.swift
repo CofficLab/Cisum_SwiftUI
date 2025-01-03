@@ -69,7 +69,7 @@ struct BookTile: View, SuperThread, SuperLog {
             if let cover = cover {
                 cover.resizable().scaledToFit()
             } else {
-                MagicBackground.auroraGreen
+                MagicBackground.colorGreen
             }
         }
         .clipShape(RoundedRectangle(cornerSize: CGSize(width: 10, height: 10)))

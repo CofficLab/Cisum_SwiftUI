@@ -6,9 +6,7 @@ import MagicUI
 extension Config {
     // MARK: Root Background
     
-    static var rootBackground: some View {
-        MagicBackground.darkForest
-    }
+   
 
     static var getBackground: Color {
         #if os(macOS)

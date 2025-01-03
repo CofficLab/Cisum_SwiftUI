@@ -30,10 +30,10 @@ struct CopyStateView: View, SuperLog, SuperThread {
             .foregroundStyle(.white)
             .padding(.horizontal, 16)
             .padding(.vertical, 6)
-            .background(MagicBackground.darkForest)
+            .background(MagicBackground.deepForest)
             .clipShape(RoundedRectangle(cornerRadius: 8))
             .popover(isPresented: $showCopying) {
-                CopyStatusView()
+                CopyList()
             }
         }
     }

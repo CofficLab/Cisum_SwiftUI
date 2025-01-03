@@ -29,6 +29,10 @@ enum Config: SuperLog {
     static var isDebug: Bool {
         debug
     }
+    
+    static var rootBackground: some View {
+        MagicBackground.mint
+    }
 
     // MARK: UUID
 

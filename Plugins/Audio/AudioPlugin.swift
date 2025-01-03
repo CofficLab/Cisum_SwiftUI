@@ -232,22 +232,22 @@ class AudioPlugin: SuperPlugin, SuperLog {
             return
         }
 
-//        let mode = await playMan.mode
-//
-//        if verbose {
-//            os_log("\(self.t)OnPlayNext with mode \(mode.description)")
-//        }
-//
-//        guard let audioDB = audioDB else {
-//            return
-//        }
-//
-//        let asset = try await audioDB.getNextOf(current?.url, verbose: false)
-//        if let asset = asset {
-//            await playMan.play(asset, reason: "OnPlayNext", verbose: true)
-//        } else {
-//            throw AudioPluginError.NoNextAsset
-//        }
+        let mode = playMan.playMode
+
+        if verbose {
+            os_log("\(self.t)OnPlayNext with mode \(mode.displayName)")
+        }
+
+        guard let audioDB = audioDB else {
+            return
+        }
+
+        let asset = try await audioDB.getNextOf(current?.url, verbose: false)
+        if let asset = asset {
+            await playMan.play(url: asset)
+        } else {
+            throw AudioPluginError.NoNextAsset
+        }
     }
     
     func onStorageLocationChange(storage: StorageLocation?) async throws {

@@ -4,7 +4,7 @@ import SwiftUI
 import MagicKit
 import MagicUI
 
-struct CopyStatusView: View, SuperLog, SuperThread {
+struct CopyList: View, SuperLog, SuperThread {
     static let emoji = "📬"
 
     @EnvironmentObject var app: AppProvider
@@ -33,7 +33,14 @@ struct CopyStatusView: View, SuperLog, SuperThread {
         List(selection: $selection) {
             Section {
                 ForEach(tasks, id: \.url.relativeString) { task in
-                    CopyRow(task)
+                    task.url.copyView(destination: task.destination, onCompletion: { error in
+                        if let error = error {
+                            task.error = error.localizedDescription
+                            try? context.save()
+                        } else {
+                            context.delete(task)
+                        }
+                    })
                 }
                 .onDelete(perform: deleteTasks)
             } header: {

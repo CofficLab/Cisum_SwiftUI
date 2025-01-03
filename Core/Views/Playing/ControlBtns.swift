@@ -13,7 +13,6 @@ struct ControlBtns: View {
             man.makePlayPauseButton()
             man.makeNextButton()
             man.makePlayModeButton()
-            man.makePlaylistButton()
             Spacer()
         }
         .labelStyle(.iconOnly)
