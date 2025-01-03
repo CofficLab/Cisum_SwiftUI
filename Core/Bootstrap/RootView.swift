@@ -48,8 +48,6 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                                 ToolbarItemGroup(placement: .cancellationAction) {
                                     Spacer()
                                     
-                                    man.makeSubscribersButton()
-                                    
                                     if let asset = man.asset {
                                         BtnShowInFinder(url: asset.url, autoResize: false)
                                     }
