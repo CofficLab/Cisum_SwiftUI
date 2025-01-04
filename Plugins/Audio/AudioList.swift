@@ -26,6 +26,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     @State var selection: URL? = nil
     @State var isSorting = false
     @State var sortMode: SortMode = .none
+    @State private var progressMap = [URL: Double]()
 
     @Query(sort: \AudioModel.order, animation: .default) var audios: [AudioModel]
 
@@ -79,9 +80,15 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
                         }
                     }, content: {
                         ForEach(urls, id: \.self) { url in
+                            let progress = Binding(
+                                get: { progressMap[url] ?? 1.0 },
+                                set: { progressMap[url] = $0 }
+                            )
                             url.makeMediaView()
-                                .noBackground()
-                                .verticalPadding(2)
+                                .magicAvatarDownloadProgress(progress)
+                                .magicPadding(horizontal: 0, vertical: 0)
+                                .magicDisableDownloadMonitor()
+                                .magicAvatarSize(.small)
                                 .tag(url as URL?)
                         }
                     })
@@ -92,10 +99,26 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
         .onAppear(perform: handleOnAppear)
         .onChange(of: selection, handleSelectionChange)
         .onChange(of: man.asset, handlePlayAssetChange)
-//        .onReceive(nc.publisher(for: .PlayManStateChange), perform: handlePlayManStateChange)
         .onReceive(nc.publisher(for: .audioDeleted), perform: handleAudioDeleted)
         .onReceive(nc.publisher(for: .DBSorting), perform: onSorting)
         .onReceive(nc.publisher(for: .DBSortDone), perform: onSortDone)
+        .onReceive(NotificationCenter.default.publisher(for: .dbSyncing), perform: handleDBSyncing)
+    }
+    
+    func handleDBSyncing(_ notification: Notification) {
+        if let group = notification.userInfo?["group"] as? DiskFileGroup {
+            for file in group.files {
+                if file.isDownloading {
+                    main.async {
+                        progressMap[file.url] = file.downloadProgress
+                    }
+                } else if file.isDownloaded {
+                    main.async {
+                        progressMap[file.url] = 1.0
+                    }
+                }
+            }
+        }
     }
 }
 
