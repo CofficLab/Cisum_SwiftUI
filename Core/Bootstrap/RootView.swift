@@ -49,6 +49,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                                     Spacer()
                                     
                                     man.makeLogButton(shape: .roundedRectangle)
+                                    man.makeLikeButton()
 
                                     if man.asset != nil {
                                         ForEach(p.getToolBarButtons(), id: \.id) { item in

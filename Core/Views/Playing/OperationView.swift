@@ -12,7 +12,7 @@ struct OperationView: View {
         HStack(spacing: 0, content: {
             Spacer()
             if let asset = asset {
-                BtnLike(autoResize: true)
+                playMan.makeLikeButton()
                 if Config.isDesktop {
                     BtnShowInFinder(url: asset.url, autoResize: true)
                 }

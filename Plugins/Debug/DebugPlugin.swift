@@ -12,8 +12,4 @@ class DebugPlugin: SuperPlugin, SuperLog {
     let iconName = "play"
     let label = "debug"
     let id = "Debug"
-    
-    func addStatusView() -> AnyView? {
-        AnyView(DebugStateView())
-    }
 }

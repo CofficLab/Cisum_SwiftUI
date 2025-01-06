@@ -123,7 +123,7 @@ struct SettingPluginView: View, SuperSetting, SuperLog {
                         .id(root.path)
                     
                     if Config.isDesktop {
-                        BtnOpenFolder(url: root).labelStyle(.iconOnly)
+                        root.makeOpenButton()
                     }
                 }
             }

@@ -70,7 +70,7 @@ struct RadioButton: View {
                                 Spacer()
 
                                 if let url = url {
-                                    BtnOpenFolder(url: url).labelStyle(.iconOnly)
+                                    url.makeOpenButton()
                                 }
                             }
                             .padding(8)

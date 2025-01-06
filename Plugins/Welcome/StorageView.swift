@@ -89,7 +89,7 @@ struct StorageView: View, SuperSetting, SuperLog {
                 if let root = storageRoot {
                     FileSizeView(url: root)
                         .id(root.path)
-                    BtnOpenFolder(url: root).labelStyle(.iconOnly)
+                    root.makeOpenButton()
                 }
             }
         }

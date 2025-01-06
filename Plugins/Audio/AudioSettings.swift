@@ -24,8 +24,7 @@ struct AudioSettings: View, SuperSetting, SuperLog {
                         Text(diskSize)
                     }
                     if Config.isDesktop {
-                        BtnOpenFolder(url: audioManager.disk.getRoot().url)
-                            .labelStyle(.iconOnly)
+                        audioManager.disk.getRoot().url.makeOpenButton()
                     }
                 }
             }

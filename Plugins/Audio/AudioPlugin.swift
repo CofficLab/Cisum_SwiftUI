@@ -65,38 +65,6 @@ class AudioPlugin: SuperPlugin, SuperLog {
         return AnyView(AudioSettings().environmentObject(audioProvider))
     }
 
-    func addStateView(currentGroup: SuperPlugin?) -> AnyView? {
-        let verbose = false
-
-        if verbose {
-            os_log("\(self.t)🍋🍋🍋 AddStateView")
-        }
-
-        if currentGroup?.id != self.id {
-            return nil
-        }
-
-        guard let audioProvider = self.audioProvider else {
-            return nil
-        }
-
-        return AnyView(AudioStateView().environmentObject(audioProvider))
-    }
-
-    func addToolBarButtons() -> [(id: String, view: AnyView)] {
-        let verbose = false
-        
-        if verbose {
-            os_log("\(self.t)🍋🍋🍋 AddToolBarButtons")
-        }
-        
-        return [
-            (id: "like", view: AnyView(
-                BtnLike(autoResize: false)
-            )),
-        ]
-    }
-
     func onPause(playMan: PlayMan) {
         Task { @MainActor in
             AudioPlugin.storeCurrentTime(playMan.currentTime)
