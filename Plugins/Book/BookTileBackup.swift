@@ -18,7 +18,7 @@ struct BookTileBackup: View {
             Spacer()
             VStack {
                 Spacer()
-                Text(file.title).font(.title)
+                Text(file.url.title).font(.title)
                 Spacer()
                 Text("共 \(chapters.count)")
                 Spacer()

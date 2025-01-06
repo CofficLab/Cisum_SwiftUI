@@ -24,6 +24,8 @@ class Book: SuperLog {
     var order: Int = 0
     var coverData: Data?
     var hasGetCover = false
+    
+    var title: String { bookTitle }
 
     @Relationship(deleteRule: .noAction)
     var parent: Book?
@@ -34,9 +36,9 @@ class Book: SuperLog {
     init(url: URL, currentURL: URL? = nil) {
         self.url = url
         self.currentURL = currentURL
-        self.bookTitle = self.title
-        self.isCollection = self.isFolder()
-        self.parentBookURL = self.parentURL
+        self.bookTitle = self.url.title
+        self.isCollection = self.url.isFolder
+        self.parentBookURL = self.url.getParent()
     }
 
     func getParentURL() -> URL? {
@@ -49,17 +51,6 @@ class Book: SuperLog {
 
     func setDB(_ db: BookDB?) {
         self.db = db
-    }
-}
-
-extension Book: SuperCover {
-    var coverFolder: URL { BookConfig.getCoverFolderUrl() }
-    var defaultImage: Image {
-        #if os(macOS)
-            Image(nsImage: NSImage(named: "DefaultAlbum")!)
-        #else
-            Image(uiImage: UIImage(imageLiteralResourceName: "DefaultAlbum"))
-        #endif
     }
 }
 
@@ -76,7 +67,7 @@ extension Book {
 extension Book {
     func getBookCoverFromDB(verbose: Bool = false) async -> Image? {
         if verbose {
-            os_log("\(self.t)GetBookCover for \(self.title)")
+            os_log("\(self.t)GetBookCover for \(self.bookTitle)")
         }
 
         if let coverData = self.coverData {

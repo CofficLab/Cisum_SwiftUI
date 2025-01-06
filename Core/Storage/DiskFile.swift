@@ -5,7 +5,7 @@ import AVKit
 import MagicKit
 import MagicUI
 
-struct DiskFile: FileBox, Hashable, Identifiable {
+struct DiskFile: Hashable, Identifiable, SuperLog {
     static var home: DiskFile = DiskFile(url: URL.homeDirectory)
     static var emoji = "👶"
     
@@ -64,7 +64,7 @@ struct DiskFile: FileBox, Hashable, Identifiable {
 
     func nextDiskFile(verbose: Bool = false) -> DiskFile? {
         if verbose {
-            os_log("\(t)Next of \(fileName)")
+            os_log("\(t)Next of \(self.url.title)")
         }
 
         if let nextURL = self.url.next() {
@@ -96,7 +96,7 @@ struct DiskFile: FileBox, Hashable, Identifiable {
 
     func toBook(verbose: Bool = false) -> Book {
         if verbose {
-            os_log("\(self.t)ToBook: title(\(title))")
+            os_log("\(self.t)ToBook: title(\(self.url.title))")
         }
         
         return Book(url: url)

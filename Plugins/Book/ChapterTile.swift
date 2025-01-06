@@ -12,7 +12,7 @@ struct ChapterTile: View {
     var chapters: [DiskFile] { file.children ?? []}
     
     var body: some View {
-        Text(file.title)
+        Text(file.url.title)
     }
 }
 

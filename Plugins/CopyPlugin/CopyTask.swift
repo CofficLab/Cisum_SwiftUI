@@ -4,7 +4,7 @@ import MagicKit
 import MagicUI
 
 @Model
-class CopyTask: FileBox {
+class CopyTask {
     static var emoji: String = "🍁"
     
     var url: URL
@@ -14,13 +14,13 @@ class CopyTask: FileBox {
     var isRunning: Bool = false
     
     var title: String { url.lastPathComponent }
-    var time: String { Date.nowWithCommonFormat() }
+    var time: String { Date.now }
     var message: String {
         if isRunning {
             return "进行中"
         }
         
-        if self.isDownloading {
+        if self.url.isDownloading {
             return "正在从 iCloud 下载"
         }
     

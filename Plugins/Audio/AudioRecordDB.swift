@@ -674,7 +674,7 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
     }
 
     func updateHash(_ audio: AudioModel, verbose: Bool = false) {
-        if audio.isNotDownloaded {
+        if audio.url.isNotDownloaded {
             return
         }
 
@@ -682,7 +682,7 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
             os_log("\(self.t)UpdateHash for \(audio.title) 🌾🌾🌾 \(audio.getFileSizeReadable())")
         }
 
-        let fileHash = audio.getHash()
+        let fileHash = audio.url.getHash()
         if fileHash.isEmpty {
             return
         }

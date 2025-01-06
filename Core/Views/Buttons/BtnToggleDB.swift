@@ -11,6 +11,7 @@ struct BtnToggleDB: View {
             action: {
                 app.toggleDBView()
             })
+        .magicShape(.circle)
     }
 }
 

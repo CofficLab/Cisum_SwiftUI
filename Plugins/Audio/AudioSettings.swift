@@ -31,7 +31,7 @@ struct AudioSettings: View, SuperSetting, SuperLog {
             }
         )
         .task {
-            diskSize = audioManager.disk.getFileSizeReadable()
+            diskSize = audioManager.disk.url.getSizeReadable()
         }
     }
 }

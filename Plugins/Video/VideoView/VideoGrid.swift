@@ -33,11 +33,11 @@ struct VideoGrid: View {
 //                        self.icon = dataManager.isiCloudDisk ? "icloud" : "folder"
 //                    }
                     .onChange(of: selection, {
-                        if let s = selection, s.isNotFolder() {
-                            if playMan.playing {
-                                playMan.play(url: s.url)
-                            }
-                        }
+//                        if let s = selection, s.isNotFolder() {
+//                            if playMan.playing {
+//                                playMan.play(url: s.url)
+//                            }
+//                        }
                     })
                 //     .onChange(of: playMan.asset?.url, {
                 //         if let asset = playMan.asset {

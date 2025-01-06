@@ -12,7 +12,7 @@ extension BookRecordDB {
         var message = "\(labelForBookSync) SyncBook(\(group.count))"
 
         if let first = group.first, first.isDownloading == true {
-            message += " -> \(first.fileName) -> \(String(format: "%.0f", first.downloadProgress))% ⏬⏬⏬"
+            message += " -> \(first.url.title) -> \(String(format: "%.0f", first.downloadProgress))% ⏬⏬⏬"
         }
         
         if group.isFullLoad {

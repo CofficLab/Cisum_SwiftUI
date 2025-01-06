@@ -7,7 +7,7 @@ protocol DiskDelegate {
     func onUpdate(_ items: DiskFileGroup) async -> Void
 }
 
-protocol SuperStorage: FileBox {
+protocol SuperStorage: SuperLog {
     static var label: String { get }
     static func make(_ subDirName: String, delegate: DiskDelegate?, verbose: Bool, reason: String) -> (any SuperStorage)?
     static func getMountedURL(verbose: Bool) -> URL?

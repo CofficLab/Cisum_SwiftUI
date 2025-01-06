@@ -98,7 +98,7 @@ extension BookRecordDB {
 //    }
 //
     func updateParent(_ book: Book, verbose: Bool = true) {
-        guard let parentURL = book.parentURL else {
+        guard let parentURL = book.parentBookURL else {
             if verbose {
                 os_log("\(self.t)UpdateBookParent for \(book.bookTitle) ignore because of no parentURL")
             }
@@ -110,7 +110,7 @@ extension BookRecordDB {
         book.parent = parent
 
         if verbose {
-            os_log("\(self.t)UpdateBookParent for \(book.bookTitle) with \(parent?.title ?? "nil")")
+            os_log("\(self.t)UpdateBookParent for \(book.bookTitle) with \(parent?.bookTitle ?? "nil")")
         }
 
         do {

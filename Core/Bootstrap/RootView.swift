@@ -48,9 +48,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                                 ToolbarItemGroup(placement: .cancellationAction) {
                                     Spacer()
                                     
-                                    if let asset = man.asset {
-                                        BtnShowInFinder(url: asset.url, autoResize: false)
-                                    }
+                                    man.makeLogButton(shape: .roundedRectangle)
 
                                     if man.asset != nil {
                                         ForEach(p.getToolBarButtons(), id: \.id) { item in

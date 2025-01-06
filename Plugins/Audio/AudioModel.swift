@@ -10,7 +10,7 @@ import SwiftUI
 /* 存储音频数据，尤其是将计算出来的属性存储下来 */
 
 @Model
-class AudioModel: FileBox {
+class AudioModel {
     static var verbose = false
 
     @Transient let fileManager = FileManager.default
@@ -78,17 +78,6 @@ class AudioModel: FileBox {
 
 extension AudioModel: SuperLog {
     static var emoji: String { "🪖" }
-}
-
-extension AudioModel: SuperCover {
-    var coverFolder: URL { AudioConfig.getCoverFolderUrl() }
-    var defaultImage: Image {
-        #if os(macOS)
-            Image(nsImage: NSImage(named: "DefaultAlbum")!)
-        #else
-            Image(uiImage: UIImage(imageLiteralResourceName: "DefaultAlbum"))
-        #endif
-    }
 }
 
 // MARK: Order
