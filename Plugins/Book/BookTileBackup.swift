@@ -32,7 +32,7 @@ struct BookTileBackup: View {
 //            playMan.play(file.toPlayAsset(), reason: "点击了书本", verbose: true)
         }
         .contextMenu(menuItems: {
-            BtnShowInFinder(url: file.url, autoResize: false)
+            file.url.makeOpenButton()
         })
     }
 }

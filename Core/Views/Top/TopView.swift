@@ -17,7 +17,7 @@ struct TopView: View {
                 HStack {
                     man.makeLikeButton()
                     if Config.isDesktop {
-                        BtnShowInFinder(url: asset.url, autoResize: false)
+                        asset.url.makeOpenButton()
                     }
                     BtnDel(assets: [asset], autoResize: false)
                 }

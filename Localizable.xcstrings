@@ -170,6 +170,7 @@
       }
     },
     "下载" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

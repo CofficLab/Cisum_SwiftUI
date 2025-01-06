@@ -14,7 +14,7 @@ struct OperationView: View {
             if let asset = asset {
                 playMan.makeLikeButton()
                 if Config.isDesktop {
-                    BtnShowInFinder(url: asset.url, autoResize: true)
+                    asset.url.makeOpenButton()
                 }
                 BtnDel(assets: [asset], autoResize: true)
             }

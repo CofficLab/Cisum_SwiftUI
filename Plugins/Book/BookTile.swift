@@ -57,7 +57,7 @@ struct BookTile: View, SuperThread, SuperLog {
         .scaleEffect(CGSize(width: scale, height: scale))
         .opacity(opacity)
         .contextMenu(menuItems: {
-            BtnShowInFinder(url: book.url, autoResize: false)
+            book.url.makeOpenButton()
         })
         .onHover(perform: onHover)
         .onAppear(perform: onAppear)

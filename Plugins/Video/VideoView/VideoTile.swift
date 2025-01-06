@@ -44,8 +44,7 @@ struct VideoTile: View, SuperThread {
             if hovered {
                 HStack {
                     Spacer()
-                    BtnToggle()
-                    BtnShowInFinder(url: url, autoResize: false)
+                    url.makeOpenButton()
 //                    BtnMore(asset: asset, autoResize: false)
                 }.labelStyle(.iconOnly)
             }
@@ -55,7 +54,6 @@ struct VideoTile: View, SuperThread {
             self.selection = file
         }
         .contextMenu(menuItems: {
-            BtnToggle()
 //            Divider()
 //            BtnDownload(asset: asset)
 //            BtnEvict(asset: asset)
