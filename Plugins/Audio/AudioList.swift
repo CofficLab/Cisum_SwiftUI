@@ -84,11 +84,14 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
                                 get: { progressMap[url] ?? 1.0 },
                                 set: { progressMap[url] = $0 }
                             )
-                            url.makeMediaView()
+                            url.makeMediaView(verbose: false)
                                 .magicAvatarDownloadProgress(progress)
                                 .magicPadding(horizontal: 0, vertical: 0)
                                 .magicDisableDownloadMonitor()
                                 .magicAvatarSize(.small)
+                                .magicHideActions()
+                                .magicHideFileStatus()
+                                .magicHideFileSize()
                                 .tag(url as URL?)
                         }
                     })

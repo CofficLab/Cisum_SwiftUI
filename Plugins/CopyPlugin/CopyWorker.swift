@@ -69,7 +69,7 @@ class CopyWorker: SuperLog, SuperThread, ObservableObject {
                                 os_log("\(self.t)🍋🍋🍋 Copying iCloud file -> \(url.lastPathComponent)")
                             }
 
-                            try await url.copyTo(destination, reason: Self.emoji + " " + self.className)
+                            try await url.copyTo(destination, caller: self.className)
 
                             if self.verbose {
                                 os_log("\(self.t)🎉🎉🎉 Successfully copied iCloud file -> \(url.lastPathComponent)")

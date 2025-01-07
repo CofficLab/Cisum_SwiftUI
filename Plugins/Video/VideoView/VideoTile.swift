@@ -64,7 +64,7 @@ struct VideoTile: View, SuperThread {
 //            BtnDel(assets: [asset], autoResize: false)
         })
         .task {
-            self.image = try? await url.thumbnail()
+            self.image = try? await url.thumbnail(verbose: true)
         }
     }
 }

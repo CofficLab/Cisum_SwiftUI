@@ -1,23 +1,22 @@
-import OSLog
-import SwiftUI
 import MagicKit
 import MagicUI
-import MagicUI
+import OSLog
+import SwiftUI
 
 struct PictureView: View, SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
-    
+
     static let emoji = "🐰"
-    
+
     @State var image: Image?
     @State var downloadingPercent: Double = -1
-    
+
     // MARK: Download
-    
-    var isDownloading: Bool { downloadingPercent > 0 && downloadingPercent < 100}
+
+    var isDownloading: Bool { downloadingPercent > 0 && downloadingPercent < 100 }
     var isNotDownloaded: Bool { !isDownloaded }
     var isDownloaded: Bool { downloadingPercent == 100 }
-    
+
     var asset: PlayAsset
     var role: CoverView.Role = .Icon
     var updating: [DiskFile] = []
@@ -28,7 +27,7 @@ struct PictureView: View, SuperLog, SuperThread {
             } else {
                 RoundedRectangle(cornerSize: CGSize(width: 0, height: 0))
             }
-            
+
         } else {
             RoundedRectangle(cornerSize: CGSize(width: 20, height: 10))
         }
@@ -55,7 +54,7 @@ struct PictureView: View, SuperLog, SuperThread {
         }
         .clipShape(shape)
         .onAppear {
-            if let file = updating.first(where: { $0.url == asset.url}) {
+            if let file = updating.first(where: { $0.url == asset.url }) {
                 self.downloadingPercent = file.downloadProgress
             } else {
                 self.downloadingPercent = asset.url.isDownloaded ? 100 : 0
@@ -81,15 +80,14 @@ struct PictureView: View, SuperLog, SuperThread {
             if verbose {
                 os_log("\(self.t)UpdateCover for \(title) Because of \(reason)")
             }
-            
+
             do {
-                let image =  try await asset.url.thumbnail()
+                let image = try await asset.url.thumbnail(verbose: true)
 
                 DispatchQueue.main.async {
                     self.image = image
                 }
             } catch {
-                
             }
         }
     }
