@@ -84,14 +84,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
                                 get: { progressMap[url] ?? 1.0 },
                                 set: { progressMap[url] = $0 }
                             )
-                            url.makeMediaView(verbose: false)
-                                .magicAvatarDownloadProgress(progress)
-                                .magicPadding(horizontal: 0, vertical: 0)
-                                .magicDisableDownloadMonitor()
-                                .magicAvatarSize(.small)
-                                .magicHideActions()
-                                .magicHideFileStatus()
-                                .magicHideFileSize()
+                            MediaViewWrapper(url: url, progress: progress)
                                 .tag(url as URL?)
                         }
                     })
@@ -195,6 +188,21 @@ extension AudioList {
             case .none: return "正在排序..."
             }
         }
+    }
+}
+
+private struct MediaViewWrapper: View, Equatable {
+    let url: URL
+    let progress: Binding<Double>
+    
+    var body: some View {
+        url.makeMediaView(verbose: true)
+            .magicAvatarDownloadProgress(progress)
+            .magicPadding(horizontal: 0, vertical: 0)
+    }
+    
+    static func == (lhs: MediaViewWrapper, rhs: MediaViewWrapper) -> Bool {
+        return lhs.url == rhs.url
     }
 }
 

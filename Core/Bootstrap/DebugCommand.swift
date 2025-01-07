@@ -13,6 +13,7 @@ struct DebugCommand: Commands {
                 Button("打开数据库目录") { Config.getDBRootDir()?.openFolder() }
                 Button("打开iCloud Documents") { Config.cloudDocumentsDir?.openFolder() }
                 Button("打开封面图目录") { Config.coverDir.openFolder() }
+                Button("打开缩略图目录") { URL.cachesDirectory.openFolder() }
             }
         #endif
     }
