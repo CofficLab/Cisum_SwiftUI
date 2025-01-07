@@ -16,7 +16,6 @@ struct OperationView: View {
                 if Config.isDesktop {
                     asset.url.makeOpenButton()
                 }
-                BtnDel(assets: [asset], autoResize: true)
             }
             Spacer()
         })

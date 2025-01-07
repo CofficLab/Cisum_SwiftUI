@@ -102,14 +102,14 @@ class AudioPlugin: SuperPlugin, SuperLog {
             return
         }
 
-//        switch mode {
-//        case .Loop:
-//            break
-//        case .Order:
-//            await audioDB.sort(asset?.url, reason: self.className + ".OnPlayModeChange")
-//        case .Random:
-//            try await audioDB.sortRandom(asset?.url, reason: self.className + ".OnPlayModeChange", verbose: true)
-//        }
+        switch mode {
+        case .loop:
+            break
+        case .sequence, .repeatAll:
+            await audioDB.sort(asset?.url, reason: self.className + ".OnPlayModeChange")
+        case .shuffle:
+            try await audioDB.sortRandom(asset?.url, reason: self.className + ".OnPlayModeChange", verbose: true)
+        }
     }
 
     func onWillAppear(playMan: PlayMan, currentGroup: SuperPlugin?, storage: StorageLocation?) async throws {

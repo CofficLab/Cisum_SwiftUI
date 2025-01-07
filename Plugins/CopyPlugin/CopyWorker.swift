@@ -9,8 +9,11 @@ class CopyWorker: SuperLog, SuperThread, ObservableObject {
     let fm = FileManager.default
     let db: CopyDB
     var running = false
+    let verbose: Bool
 
-    init(db: CopyDB, verbose: Bool = false) {
+    init(db: CopyDB, verbose: Bool = true) {
+        self.verbose = verbose
+
         if verbose {
             os_log("\(Self.i)")
         }
@@ -32,8 +35,6 @@ class CopyWorker: SuperLog, SuperThread, ObservableObject {
     }
 
     func run() {
-        let verbose = false
-
         if running {
             return
         }
@@ -64,14 +65,14 @@ class CopyWorker: SuperLog, SuperThread, ObservableObject {
                             let url = task.url
                             let destination = task.destination.appendingPathComponent(url.lastPathComponent)
 
-                            try await url.copyTo(destination) { progress in
-                                if verbose {
-                                    os_log("\(self.t)📊 iCloud download \(url.lastPathComponent): \(Int(progress))%")
-                                }
+                            if self.verbose {
+                                os_log("\(self.t)🍋🍋🍋 Copying iCloud file -> \(url.lastPathComponent)")
                             }
 
-                            if verbose {
-                                os_log("\(self.t)🎉 Successfully copied iCloud file -> \(url.lastPathComponent)")
+                            try await url.copyTo(destination, reason: Self.emoji + " " + self.className)
+
+                            if self.verbose {
+                                os_log("\(self.t)🎉🎉🎉 Successfully copied iCloud file -> \(url.lastPathComponent)")
                             }
 
                             await self.db.deleteCopyTasks([url])

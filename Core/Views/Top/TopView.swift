@@ -19,7 +19,6 @@ struct TopView: View {
                     if Config.isDesktop {
                         asset.url.makeOpenButton()
                     }
-                    BtnDel(assets: [asset], autoResize: false)
                 }
             }
         }

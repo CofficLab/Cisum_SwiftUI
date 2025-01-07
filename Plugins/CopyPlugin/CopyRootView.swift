@@ -97,22 +97,20 @@ extension CopyRootView {
             return result
         }
 
-        if verbose {
-            os_log("\(self.t)添加 \(urls.count) 个文件到复制队列")
-        }
-
         guard let disk = p.current?.getDisk() else {
             os_log(.error, "\(self.t)No Disk")
             self.m.toast("No Disk")
             return false
         }
+        
+        Task.detached(priority: .background, operation: {
+            if verbose {
+                os_log("\(self.t)➕➕➕ 添加 \(urls.count) 个文件到复制队列")
+            }
 
-        if verbose {
-            self.m.toast("复制 \(urls.count) 个文件")
-        }
-
-        self.worker.append(urls, folder: disk.root)
-
+            await self.worker.append(urls, folder: disk.root)
+        })
+        
         return true
     }
 }

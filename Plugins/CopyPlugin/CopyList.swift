@@ -33,20 +33,16 @@ struct CopyList: View, SuperLog, SuperThread {
         List(selection: $selection) {
             Section {
                 ForEach(tasks, id: \.url.relativeString) { task in
-                    task.url.copyView(destination: task.destination, onCompletion: { error in
-                        if let error = error {
-                            task.error = error.localizedDescription
-                            try? context.save()
-                        } else {
-                            context.delete(task)
-                        }
-                    })
+                    task.url.makeMediaView()
+                        .magicShowDownloadButton(false)
+                        .magicDisableDownloadMonitor()
                 }
                 .onDelete(perform: deleteTasks)
             } header: {
                 listHeader
             }
         }
+        .frame(minWidth: 400)
     }
 
     private var listHeader: some View {

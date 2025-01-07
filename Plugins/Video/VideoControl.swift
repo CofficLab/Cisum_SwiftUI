@@ -1,5 +1,6 @@
 import SwiftData
 import SwiftUI
+import MagicKit
 
 struct VideoControl: View {
     @EnvironmentObject var appManager: AppProvider
@@ -129,7 +130,7 @@ struct VideoControl: View {
     // MARK: 是否显示右侧的封面图
 
     private func shouldShowRightAlbum(_ geo: GeometryProxy) -> Bool {
-        geo.size.width > Device.iPad_mini.width
+        geo.size.width > MagicDevice.iPad_mini.width
     }
 }
 

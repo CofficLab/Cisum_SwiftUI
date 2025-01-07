@@ -160,7 +160,7 @@ class CloudStorage: ObservableObject, SuperStorage, SuperLog, SuperThread {
         Task {
             os_log("\(self.t)🏃🏃🏃 Evit \(url.lastPathComponent)")
             do {
-                try await url.evict()
+                try url.evict()
             } catch {
                 os_log(.error, "\(error.localizedDescription)")
             }

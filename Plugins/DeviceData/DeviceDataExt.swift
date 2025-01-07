@@ -9,10 +9,10 @@ extension DBSynced {
         let deviceData = DeviceData(uuid: deviceId)
         deviceData.firstOpenTime = .now
         deviceData.lastOpenTime = .now
-        deviceData.name = DeviceHelper.getDeviceName()
-        deviceData.model = DeviceHelper.getDeviceModel()
-        deviceData.os = DeviceHelper.getSystemName()
-        deviceData.version = DeviceHelper.getSystemVersion()
+        deviceData.name = MagicApp.getDeviceName()
+        deviceData.model = MagicApp.getDeviceModel()
+        deviceData.os = MagicApp.getSystemName()
+        deviceData.version = MagicApp.getSystemVersion()
         
         do {
             self.context.insert(deviceData)

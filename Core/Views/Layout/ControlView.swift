@@ -1,6 +1,7 @@
 import SwiftData
 import SwiftUI
 import MagicPlayMan
+import MagicKit
 
 struct ControlView: View {
     @EnvironmentObject var appManager: AppProvider
@@ -143,7 +144,7 @@ struct ControlView: View {
     // MARK: 是否显示右侧的封面图
 
     private func shouldShowRightAlbum(_ geo: GeometryProxy) -> Bool {
-        geo.size.width > Device.iPad_mini.width
+        geo.size.width > MagicDevice.iPad_mini.width
     }
 }
 
