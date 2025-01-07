@@ -59,7 +59,7 @@ struct ErrorViewFatal: View {
         VStack(spacing: 10) {
             Section(content: {
                 GroupBox {
-                    makeKeyValueItem(key: "启用iCloud云盘", value: iCloudHelper.iCloudDiskEnabled() ? "是" : "否")
+                    makeKeyValueItem(key: "启用iCloud云盘", value: MagicApp.isICloudAvailable() ? "是" : "否")
                     Divider()
                     makeKeyValueItem(key: "登录 iCloud", value: cloud.isSignedInDescription)
                 }

@@ -15,7 +15,6 @@ struct ControlBtns: View {
             man.makePlayModeButton()
             Spacer()
         }
-        .labelStyle(.iconOnly)
     }
 }
 

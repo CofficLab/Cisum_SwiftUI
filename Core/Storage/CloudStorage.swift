@@ -32,7 +32,6 @@ class CloudStorage: ObservableObject, SuperStorage, SuperLog, SuperThread {
     var root: URL
     var queue = DispatchQueue(label: "DiskiCloud", qos: .background)
     var fileManager = FileManager.default
-    var cloudHandler = iCloudHandler()
     var query: ItemQuery
     var verbose = true
 
@@ -161,7 +160,7 @@ class CloudStorage: ObservableObject, SuperStorage, SuperLog, SuperThread {
         Task {
             os_log("\(self.t)🏃🏃🏃 Evit \(url.lastPathComponent)")
             do {
-                try await cloudHandler.evict(url: url)
+                try await url.evict()
             } catch {
                 os_log(.error, "\(error.localizedDescription)")
             }
@@ -182,7 +181,7 @@ class CloudStorage: ObservableObject, SuperStorage, SuperLog, SuperThread {
         do {
             let files = try FileManager.default.contentsOfDirectory(atPath: self.root.path)
             for file in files {
-                if iCloudHelper.isDownloading(URL(fileURLWithPath: root.path).appendingPathComponent(file)) {
+                if URL(fileURLWithPath: root.path).appendingPathComponent(file).isDownloading {
                     count += 1
                 }
             }
@@ -247,7 +246,7 @@ class CloudStorage: ObservableObject, SuperStorage, SuperLog, SuperThread {
 
     func moveFile(at sourceURL: URL, to destinationURL: URL) async {
         do {
-            try await self.cloudHandler.moveFile(at: sourceURL, to: destinationURL)
+            try await sourceURL.moveTo(destinationURL)
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
         }

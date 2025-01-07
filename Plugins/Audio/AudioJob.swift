@@ -31,7 +31,7 @@ extension AudioRecordDB {
                 os_log("\(self.t) UpdateHash \(i + 1)/\(total) -> \(url.lastPathComponent)")
             }
 
-            guard iCloudHelper.isDownloaded(url), let audio = findAudio(url) else {
+            guard url.isDownloaded, let audio = findAudio(url) else {
                 continue
             }
 
