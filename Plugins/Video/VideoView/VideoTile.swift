@@ -9,11 +9,11 @@ struct VideoTile: View, SuperThread {
     @State var hovered = false
     @State var image: Image?
 
-    @Binding var selection: DiskFile?
+    @Binding var selection: URL?
 
-    var file: DiskFile
+    var file: URL
 
-    var url: URL { file.url }
+    var url: URL { file }
 
     var body: some View {
         ZStack {

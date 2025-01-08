@@ -32,7 +32,7 @@ struct AudioDBTips: View {
 
                         Button(
                             action: {
-                                audioManager.disk.root.openFolder()
+                                audioManager.disk.openFolder()
                             },
                             label: {
                                 Label(

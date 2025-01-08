@@ -19,7 +19,7 @@ protocol SuperPlugin: Actor {
     @MainActor func addStatusView() -> AnyView?
     @MainActor func addToolBarButtons() -> [(id: String, view: AnyView)]
 
-    @MainActor func getDisk() -> (any SuperStorage)?
+    @MainActor func getDisk() -> URL?
 
     func onWillAppear(playMan: PlayManWrapper, currentGroup: SuperPlugin?, storage: StorageLocation?) async throws
     func onDisappear()
@@ -74,7 +74,7 @@ extension SuperPlugin {
         return nil
     }
 
-    @MainActor func getDisk() -> (any SuperStorage)? {
+    @MainActor func getDisk() -> URL? {
         return nil
     }
 

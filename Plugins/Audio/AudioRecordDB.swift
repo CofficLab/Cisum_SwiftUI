@@ -111,6 +111,10 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
     }
 
+    func allAudioURLs(reason: String) -> [URL] {
+        self.allAudios(reason: reason).map { $0.url }
+    }
+
     func randomAudios(count: Int = 100, reason: String) -> [AudioModel] {
         os_log("\(self.t)GetRandomAudios 🐛 \(reason)")
 
@@ -209,11 +213,11 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
     }
 
-    func emitDBSyncing(_ group: DiskFileGroup) {
-        self.main.async {
-            NotificationCenter.default.post(name: .dbSyncing, object: self, userInfo: ["group": group])
-        }
-    }
+//    func emitDBSyncing(_ group: DiskFileGroup) {
+//        self.main.async {
+//            NotificationCenter.default.post(name: .dbSyncing, object: self, userInfo: ["group": group])
+//        }
+//    }
 
     func emitSortDone(verbose: Bool = false) {
         if verbose {
@@ -513,33 +517,33 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
     }
 
-    func sync(_ group: DiskFileGroup, verbose: Bool = false) {
-        if verbose {
-            os_log("\(self.t)🔄🔄🔄 Sync")
-        }
-
-        self.emitDBSyncing(group)
-
-        if verbose {
-            os_log("\(self.t) Sync(\(group.count))")
-        }
-
-        if group.isFullLoad {
-            syncWithDisk(group)
-        } else {
-            syncWithUpdatedItems(group)
-        }
-
+//    func sync(_ group: DiskFileGroup, verbose: Bool = false) {
 //        if verbose {
-//            os_log("\(self.tForSync) 计算刚刚同步的项目的 Hash(\(group.count))")
+//            os_log("\(self.t)🔄🔄🔄 Sync")
 //        }
 //
-//        self.updateGroupForURLs(group.urls)
+//        self.emitDBSyncing(group)
+//
+//        if verbose {
+//            os_log("\(self.t) Sync(\(group.count))")
+//        }
+//
+//        if group.isFullLoad {
+//            syncWithDisk(group)
+//        } else {
+//            syncWithUpdatedItems(group)
+//        }
+//
+////        if verbose {
+////            os_log("\(self.tForSync) 计算刚刚同步的项目的 Hash(\(group.count))")
+////        }
+////
+////        self.updateGroupForURLs(group.urls)
+//
+//        self.emitDBSynced()
+//    }
 
-        self.emitDBSynced()
-    }
-
-    func syncWithDisk(_ group: DiskFileGroup, verbose: Bool = false) {
+//    func syncWithDisk(_ group: DiskFileGroup, verbose: Bool = false) {
 //        let verbose = false
 //        let startTime: DispatchTime = .now()
 //
@@ -576,39 +580,39 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
 //        if verbose {
 //            os_log("\(self.jobEnd(startTime, title: "\(self.t) SyncWithDisk(\(group.count))", tolerance: 0.01))")
 //        }
-    }
+//    }
 
-    func syncWithUpdatedItems(_ metas: DiskFileGroup, verbose: Bool = false) {
-        if verbose {
-            os_log("\(self.t)SyncWithUpdatedItems with count=\(metas.count)")
-        }
-
-        // 如果url属性为unique，数据库已存在相同url的记录，再执行context.insert，发现已存在的被替换成新的了
-        // 但在这里，希望如果存在，就不要插入
-        for (_, meta) in metas.files.enumerated() {
-            if meta.isDeleted {
-                let deletedURL = meta.url
-
-                do {
-                    try context.delete(model: AudioModel.self, where: #Predicate { audio in
-                        audio.url == deletedURL
-                    })
-                } catch let e {
-                    os_log(.error, "\(e.localizedDescription)")
-                }
-            } else {
-                if findAudio(meta.url) == nil {
-                    context.insert(meta.toAudio())
-                }
-            }
-        }
-
-        do {
-            try context.save()
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-        }
-    }
+//    func syncWithUpdatedItems(_ metas: DiskFileGroup, verbose: Bool = false) {
+//        if verbose {
+//            os_log("\(self.t)SyncWithUpdatedItems with count=\(metas.count)")
+//        }
+//
+//        // 如果url属性为unique，数据库已存在相同url的记录，再执行context.insert，发现已存在的被替换成新的了
+//        // 但在这里，希望如果存在，就不要插入
+//        for (_, meta) in metas.files.enumerated() {
+//            if meta.isDeleted {
+//                let deletedURL = meta.url
+//
+//                do {
+//                    try context.delete(model: AudioModel.self, where: #Predicate { audio in
+//                        audio.url == deletedURL
+//                    })
+//                } catch let e {
+//                    os_log(.error, "\(e.localizedDescription)")
+//                }
+//            } else {
+//                if findAudio(meta.url) == nil {
+//                    context.insert(meta.toAudio())
+//                }
+//            }
+//        }
+//
+//        do {
+//            try context.save()
+//        } catch let e {
+//            os_log(.error, "\(e.localizedDescription)")
+//        }
+//    }
 
     func toggleLike(_ url: URL) throws {
         if let dbAudio = findAudio(url) {
@@ -743,43 +747,44 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         return next
     }
 
-    func deleteAudiosByURL(disk: any SuperStorage, urls: [URL]) throws -> AudioModel? {
+    func deleteAudiosByURL(disk: URL, urls: [URL]) throws -> AudioModel? {
         // 本批次的最后一个删除后的下一个
-        var next: AudioModel?
-
-        for (index, url) in urls.enumerated() {
-            do {
-                guard let audio = try context.fetch(FetchDescriptor(predicate: #Predicate<AudioModel> {
-                    $0.url == url
-                })).first else {
-                    os_log(.error, "\(self.t)删除时找不到")
-                    continue
-                }
-
-                // 找出本批次的最后一个删除后的下一个
-                if index == urls.count - 1 {
-                    next = try nextOf(audio: audio)
-
-                    // 如果下一个等于当前，设为空
-                    if next?.url == url {
-                        next = nil
-                    }
-                }
-
-                // 从磁盘删除
-                try disk.deleteFile(audio.url)
-
-                // 从磁盘删除后，因为数据库监听了磁盘的变动，会自动删除
-                // 但自动删除可能不及时，所以这里及时删除
-                context.delete(audio)
-
-                try context.save()
-            } catch let e {
-                os_log(.error, "\(self.t)删除出错 \(e)")
-            }
-        }
-
-        return next
+//        var next: AudioModel?
+//
+//        for (index, url) in urls.enumerated() {
+//            do {
+//                guard let audio = try context.fetch(FetchDescriptor(predicate: #Predicate<AudioModel> {
+//                    $0.url == url
+//                })).first else {
+//                    os_log(.error, "\(self.t)删除时找不到")
+//                    continue
+//                }
+//
+//                // 找出本批次的最后一个删除后的下一个
+//                if index == urls.count - 1 {
+//                    next = try nextOf(audio: audio)
+//
+//                    // 如果下一个等于当前，设为空
+//                    if next?.url == url {
+//                        next = nil
+//                    }
+//                }
+//
+//                // 从磁盘删除
+//                try disk.deleteFile(audio.url)
+//
+//                // 从磁盘删除后，因为数据库监听了磁盘的变动，会自动删除
+//                // 但自动删除可能不及时，所以这里及时删除
+//                context.delete(audio)
+//
+//                try context.save()
+//            } catch let e {
+//                os_log(.error, "\(self.t)删除出错 \(e)")
+//            }
+//        }
+//
+//        return next
+        nil
     }
 
     static func findAudio(_ url: URL, context: ModelContext, verbose: Bool = false) -> AudioModel? {

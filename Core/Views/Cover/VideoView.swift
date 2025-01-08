@@ -22,7 +22,7 @@ struct VideoView: View, @preconcurrency SuperLog {
     var isDownloaded: Bool { downloadingPercent == 100 }
 
     var asset: PlayAsset
-    var updating: [DiskFile] = []
+    var updating: [URL] = []
 
     init(_ asset: PlayAsset) {
         self.asset = asset

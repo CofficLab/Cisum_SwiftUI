@@ -7,10 +7,10 @@ class BookDB: ObservableObject, SuperEvent, SuperLog {
     static let emoji = "📖"
     
     var db: BookRecordDB
-    var disk: any SuperStorage
+    var disk: URL
     let worker: BookWorker
     
-    init(db: BookRecordDB, disk: any SuperStorage, verbose: Bool) {
+    init(db: BookRecordDB, disk: URL, verbose: Bool) {
         if verbose {
             os_log("\(Self.i)BookDB")
         }
@@ -38,12 +38,12 @@ class BookDB: ObservableObject, SuperEvent, SuperLog {
     }
     
     func delete(_ book: Book, verbose: Bool) async {
-        try? self.disk.deleteFile(book.url)
-        self.emit(.audioDeleted)
+//        try? self.disk.deleteFile(book.url)
+//        self.emit(.audioDeleted)
     }
     
     func download(_ book: Book, verbose: Bool) async throws {
-        try await self.disk.download(book.url, reason: "BookDB.download", verbose: verbose)
+//        try await self.disk.download(book.url, reason: "BookDB.download", verbose: verbose)
     }
     
     func find(_ url: URL) async -> Book? {

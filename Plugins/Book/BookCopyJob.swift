@@ -6,10 +6,10 @@ import OSLog
 class BookCopyJob: SuperLog, SuperThread {
     static let emoji = "🔄"
     let db: AudioRecordDB
-    let disk: (any SuperStorage)?
+    let disk: URL?
     var running = false
     
-    init(db: AudioRecordDB, disk: (any SuperStorage)?) {
+    init(db: AudioRecordDB, disk: URL?) {
         self.db = db
         self.disk = disk
 

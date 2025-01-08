@@ -8,33 +8,33 @@ extension BookRecordDB {
         "\(t)📖📖📖"
     }
 
-    func bookSync(_ group: DiskFileGroup, verbose: Bool = false) {
-        var message = "\(labelForBookSync) SyncBook(\(group.count))"
-
-        if let first = group.first, first.isDownloading == true {
-            message += " -> \(first.url.title) -> \(String(format: "%.0f", first.downloadProgress))% ⏬⏬⏬"
-        }
-        
-        if group.isFullLoad {
-            message += " Full"
-        } else {
-            message += " Update"
-        }
-
-        if verbose {
-            os_log("\(message)")
-        }
-
-        if group.isFullLoad {
-            bookSyncWithDisk(group)
-        } else {
-            bookSyncWithUpdatedItems(group)
-        }
+    func bookSync(_ group: [URL], verbose: Bool = false) {
+//        var message = "\(labelForBookSync) SyncBook(\(group.count))"
+//
+//        if let first = group.first, first.isDownloading == true {
+//            message += " -> \(first.url.title) -> \(String(format: "%.0f", first.downloadProgress))% ⏬⏬⏬"
+//        }
+//        
+//        if group.isFullLoad {
+//            message += " Full"
+//        } else {
+//            message += " Update"
+//        }
+//
+//        if verbose {
+//            os_log("\(message)")
+//        }
+//
+//        if group.isFullLoad {
+//            bookSyncWithDisk(group)
+//        } else {
+//            bookSyncWithUpdatedItems(group)
+//        }
     }
 
     // MARK: SyncWithDisk
 
-    func bookSyncWithDisk(_ group: DiskFileGroup) {
+    func bookSyncWithDisk(_ group: [URL]) {
 //        let verbose = true
 //        let startTime: DispatchTime = .now()
 //
@@ -80,36 +80,36 @@ extension BookRecordDB {
 
     // MARK: SyncWithUpdatedItems
 
-    func bookSyncWithUpdatedItems(_ metas: DiskFileGroup, verbose: Bool = false) {
-        if verbose {
-            os_log("\(self.t)SyncWithUpdatedItems with count=\(metas.count)")
-        }
-        
-        // 如果url属性为unique，数据库已存在相同url的记录，再执行context.insert，发现已存在的被替换成新的了
-        // 但在这里，希望如果存在，就不要插入
-        for (_, meta) in metas.files.enumerated() {
-            if meta.isDeleted {
-                let deletedURL = meta.url
-
-                do {
-                    try context.delete(model: Book.self, where: #Predicate { book in
-                        book.url == deletedURL
-                    })
-                } catch let e {
-                    os_log(.error, "\(e.localizedDescription)")
-                }
-            } else {
-                if findBook(meta.url) == nil {
-                    context.insert(meta.toBook())
-                }
-            }
-        }
-
-        do {
-            try context.save()
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-        }
+    func bookSyncWithUpdatedItems(_ metas: [URL], verbose: Bool = false) {
+//        if verbose {
+//            os_log("\(self.t)SyncWithUpdatedItems with count=\(metas.count)")
+//        }
+//        
+//        // 如果url属性为unique，数据库已存在相同url的记录，再执行context.insert，发现已存在的被替换成新的了
+//        // 但在这里，希望如果存在，就不要插入
+//        for (_, meta) in metas.files.enumerated() {
+//            if meta.isDeleted {
+//                let deletedURL = meta.url
+//
+//                do {
+//                    try context.delete(model: Book.self, where: #Predicate { book in
+//                        book.url == deletedURL
+//                    })
+//                } catch let e {
+//                    os_log(.error, "\(e.localizedDescription)")
+//                }
+//            } else {
+//                if findBook(meta.url) == nil {
+//                    context.insert(meta.toBook())
+//                }
+//            }
+//        }
+//
+//        do {
+//            try context.save()
+//        } catch let e {
+//            os_log(.error, "\(e.localizedDescription)")
+//        }
     }
 }
 

@@ -17,7 +17,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
     let isGroup = true
 
     @MainActor var dirName: String { Config.isDebug ? "audios_debug" : "audios" }
-    @MainActor var disk: (any SuperStorage)?
+    @MainActor var disk: URL?
     @MainActor var audioProvider: AudioProvider?
     @MainActor var audioDB: AudioDB?
     @MainActor var initialized: Bool = false
@@ -83,7 +83,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
         AudioPlugin.storeCurrent(asset?.url)
     }
 
-    @MainActor func getDisk() -> (any SuperStorage)? {
+    @MainActor func getDisk() -> URL? {
         self.disk
     }
 
@@ -124,11 +124,11 @@ actor AudioPlugin: SuperPlugin, SuperLog {
 
         switch storage {
         case .local, .none:
-            disk = LocalStorage.make(self.dirName, verbose: false, reason: self.className + ".onInit")
+            disk = Config.localDocumentsDir?.appendingPathComponent(self.dirName)
         case .icloud:
-            disk = CloudStorage.make(self.dirName, verbose: false, reason: self.className + ".onInit")
+            disk = Config.cloudDocumentsDir?.appendingPathComponent(self.dirName)
         case .custom:
-            disk = LocalStorage.make(self.dirName, verbose: false, reason: self.className + ".onInit")
+            disk =  Config.localDocumentsDir?.appendingPathComponent(self.dirName)
         }
 
         guard let disk = disk else {
@@ -214,18 +214,17 @@ actor AudioPlugin: SuperPlugin, SuperLog {
     @MainActor func onStorageLocationChange(storage: StorageLocation?) async throws {
         switch storage {
         case .local, .none:
-            disk = LocalStorage.make(self.dirName, verbose: false, reason: self.className + ".onInit")
+            disk = Config.localDocumentsDir?.appendingPathComponent(self.dirName)
         case .icloud:
-            disk = CloudStorage.make(self.dirName, verbose: false, reason: self.className + ".onInit")
+            disk = Config.cloudDocumentsDir?.appendingPathComponent(self.dirName)
         case .custom:
-            disk = LocalStorage.make(self.dirName, verbose: false, reason: self.className + ".onInit")
+            disk =  Config.localDocumentsDir?.appendingPathComponent(self.dirName)
         }
-        
         guard let disk = disk else {
             fatalError("AudioPlugin.onInit: disk == nil")
         }
         
-        self.audioDB?.changeDisk(disk: disk)
+        self.audioDB?.changeRoot(url: disk)
     }
 }
 

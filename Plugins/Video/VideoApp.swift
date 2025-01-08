@@ -68,8 +68,9 @@ class VideoApp: @preconcurrency SuperLog {
         os_log("%@👻👻👻 boot", t)
     }
     
-    func getDisk() -> (any SuperStorage)? {
-        CloudStorage.make("videos", verbose: true, reason: "VideoApp")
+    func getDisk() -> URL? {
+        nil
+//        CloudStorage.make("videos", verbose: true, reason: "VideoApp")
     }
     
     // MARK: 恢复上次播放的

@@ -14,7 +14,7 @@ struct BookPlayingCover: View, @preconcurrency SuperLog, SuperThread {
     var isDownloading: Bool { downloadingPercent > 0 && downloadingPercent < 100 }
     var isNotDownloaded: Bool { !isDownloaded }
     var isDownloaded: Bool { downloadingPercent == 100 }
-    var updating: [DiskFile] = []
+    var updating: [URL] = []
     var shape: RoundedRectangle {
         if Config.isiOS {
             RoundedRectangle(cornerSize: CGSize(width: 20, height: 10))
@@ -155,8 +155,8 @@ extension BookPlayingCover {
         }
 
         for file in updating {
-            if file.url == asset.url {
-                self.downloadingPercent = file.downloadProgress
+            if file == asset.url {
+//                self.downloadingPercent = file.downloadProgress
             }
         }
     }

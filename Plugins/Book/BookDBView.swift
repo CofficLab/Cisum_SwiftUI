@@ -17,9 +17,9 @@ struct BookDBView: View, @preconcurrency SuperLog, SuperThread {
     static let emoji = "🐘"
 
     var dropping: Bool { app.isDropping }
-    var disk: any SuperStorage
+    var disk: URL
 
-    init(verbose: Bool = false, disk: any SuperStorage) {
+    init(verbose: Bool = false, disk: URL) {
         if verbose {
             os_log("\(Self.i)BookDBView")
         }

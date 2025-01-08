@@ -10,16 +10,16 @@ struct BtnChapters: View {
     @EnvironmentObject var db: DBSynced
 
     @State var isPresented = false
-    @State var selection: DiskFile?
+    @State var selection: URL?
 
     var asset: MagicAsset? { playMan.asset }
     var parent: URL? { asset?.url.deletingLastPathComponent() ?? nil }
-    var items: [DiskFile] {
+    var items: [URL] {
         guard let bookURL = parent else {
             return []
         }
 
-        return DiskFile(url: bookURL).children ?? []
+        return bookURL.getChildren()
     }
 
     var body: some View {
@@ -34,7 +34,7 @@ struct BtnChapters: View {
             .popover(isPresented: $isPresented, content: {
                 List(items, id: \.self, selection: $selection) { file in
                     ChapterTile(file: file)
-                        .tag(file as DiskFile?)
+                        .tag(file as URL?)
                 }
                 .onAppear(perform: onAppear)
                 .onChange(of: selection, onSelectionChange)
@@ -47,12 +47,12 @@ struct BtnChapters: View {
 extension BtnChapters {
     func onAppear() {
         if let asset = asset {
-            selection = DiskFile(url: asset.url)
+            selection = asset.url
         }
     }
 
     func onSelectionChange() {
-        if let s = selection, s.url != asset?.url {
+        if let s = selection, s != asset?.url {
 //            playMan.play(s.toPlayAsset(), reason: "BtnChapters的Selection变了", verbose: true)
         }
     }

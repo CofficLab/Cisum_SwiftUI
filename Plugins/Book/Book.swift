@@ -56,11 +56,11 @@ class Book: SuperLog {
 
 // MARK: Transform
 
-extension Book {
-    static func fromDiskFile(_ file: DiskFile) -> Book {
-        file.toBook()
-    }
-}
+//extension Book {
+//    static func fromDiskFile(_ file: URL) -> Book {
+//        file.toBook()
+//    }
+//}
 
 // MARK: Cover
 

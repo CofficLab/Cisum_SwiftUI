@@ -18,7 +18,7 @@ actor BookPlugin: SuperPlugin, SuperLog {
 //    let db = BookRecordDB(BookConfig.getContainer, reason: "BookPlugin")
     let db: BookRecordDB? = nil
 
-    var disk: (any SuperStorage)?
+    var disk: URL?
     var bookDB: BookDB?
     var bookProvider: BookProvider?
     var initialized = false

@@ -12,11 +12,11 @@ struct AudioSettings: View, SuperSetting, @preconcurrency SuperLog {
         makeSettingView(
             title: "\(Self.emoji) 歌曲仓库目录",
             content: {
-                if audioManager.disk is CloudStorage {
+//                if audioManager.disk is CloudStorage {
                     Text("是 iCloud 云盘目录，会保持同步")
-                } else {
+//                } else {
                     Text("是本地目录，不会同步")
-                }
+//                }
             },
             trailing: {
                 HStack {
@@ -24,13 +24,13 @@ struct AudioSettings: View, SuperSetting, @preconcurrency SuperLog {
                         Text(diskSize)
                     }
                     if Config.isDesktop {
-                        audioManager.disk.getRoot().url.makeOpenButton()
+//                        audioManager.disk.getRoot().url.makeOpenButton()
                     }
                 }
             }
         )
         .task {
-            diskSize = audioManager.disk.url.getSizeReadable()
+//            diskSize = audioManager.disk.url.getSizeReadable()
         }
     }
 }

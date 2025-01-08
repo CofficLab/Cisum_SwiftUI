@@ -12,12 +12,12 @@ class AudioProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
     private var debounceTimer: Timer?
     
     static let emoji = "🌿"
-    let disk: (any SuperStorage)
+    let disk: URL
 
-    @Published var files: [DiskFile] = []
+    @Published var files: [URL] = []
     @Published var isSyncing: Bool = false
 
-    init(disk: any SuperStorage) {
+    init(disk: URL) {
         self.disk = disk
         self.nc.publisher(for: .dbSyncing)
             .sink { [weak self] notification in
@@ -33,8 +33,8 @@ class AudioProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
     }
     
     private func handleDBSyncing(_ notification: Notification) {
-        if let group = notification.userInfo?["group"] as? DiskFileGroup {
-            self.files = group.files
+        if let group = notification.userInfo?["group"] as? [URL] {
+            self.files = group
             self.setSyncing(true)
         }
     }

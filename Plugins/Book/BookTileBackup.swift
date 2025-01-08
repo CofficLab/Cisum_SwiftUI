@@ -9,16 +9,16 @@ import MagicPlayMan
 struct BookTileBackup: View {
     @EnvironmentObject var playMan: MagicPlayMan
     
-    var file: DiskFile
+    var file: URL
     
-    var chapters: [DiskFile] { file.children ?? []}
+    var chapters: [URL] { file.getChildren() }
     
     var body: some View {
         HStack {
             Spacer()
             VStack {
                 Spacer()
-                Text(file.url.title).font(.title)
+                Text(file.title).font(.title)
                 Spacer()
                 Text("共 \(chapters.count)")
                 Spacer()
@@ -32,7 +32,7 @@ struct BookTileBackup: View {
 //            playMan.play(file.toPlayAsset(), reason: "点击了书本", verbose: true)
         }
         .contextMenu(menuItems: {
-            file.url.makeOpenButton()
+            file.makeOpenButton()
         })
     }
 }

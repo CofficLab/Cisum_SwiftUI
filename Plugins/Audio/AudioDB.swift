@@ -5,35 +5,30 @@ import OSLog
 import SwiftUI
 import SwiftData
 
-@MainActor
-class AudioDB: ObservableObject, SuperEvent, @preconcurrency SuperLog {
+@MainActor class AudioDB: ObservableObject, SuperEvent, @preconcurrency SuperLog {
     static let emoji = "🎵"
     private var db: AudioRecordDB
-    private var disk: (any SuperStorage)
+    private var disk: URL
     
-    init(disk: any SuperStorage, reason: String, verbose: Bool) {
+    init(disk: URL, reason: String, verbose: Bool) {
         if verbose {
             os_log("\(Self.i) with reason: 🐛 \(reason)")
         }
         
         self.db = AudioRecordDB(AudioConfig.getContainer, reason: "AudioPlugin", verbose: verbose)
-        self.disk = disk
-        self.disk.setDelegate(self)
+        self.disk = disk//        self.disk.setDelegate(self)
         
-        Task(priority: .userInitiated) {
-            await disk.watch(reason: self.className, verbose: false)
-        }
-    }
-    
-    func allAudios(reason: String) async -> [AudioModel] {
-//        await self.db.allAudios(reason: reason).map { audio in
-//            audio.setDB(self)
-//            return audio
+//        Task(priority: .userInitiated) {
+//            await disk.watch(reason: self.className, verbose: false)
 //        }
     }
     
-    func changeDisk(disk: any SuperStorage) {
-        os_log("\(Self.t)🍋🍋🍋 Change disk to \(disk.name)")
+    func allAudios(reason: String) async -> [URL] {
+        await self.db.allAudioURLs(reason: reason)
+    }
+    
+    func changeRoot(url: URL) {
+        os_log("\(Self.t)🍋🍋🍋 Change disk to \(url.title)")
         
 //        self.disk.stopWatch(reason: self.className + ".changeDisk")
 //        self.disk = disk
@@ -87,7 +82,7 @@ class AudioDB: ObservableObject, SuperEvent, @preconcurrency SuperLog {
     }
     
     func getStorageRoot() async -> URL {
-        self.disk.root
+        self.disk
     }
     
     func sort(_ sticky: AudioModel?, reason: String) async {
@@ -111,17 +106,17 @@ class AudioDB: ObservableObject, SuperEvent, @preconcurrency SuperLog {
     }
 }
 
-extension AudioDB: DiskDelegate {
-//    public func onUpdate(_ items: DiskFileGroup) async {
-//        let verbose = false
-//        
-//        if verbose {
-//            os_log("\(self.t)🍋🍋🍋 OnDiskUpdate")
-//        }
-//        
-//        await self.db.sync(items)
-//    }
-}
+//extension AudioDB: DiskDelegate {
+////    public func onUpdate(_ items: DiskFileGroup) async {
+////        let verbose = false
+////        
+////        if verbose {
+////            os_log("\(self.t)🍋🍋🍋 OnDiskUpdate")
+////        }
+////        
+////        await self.db.sync(items)
+////    }
+//}
 
 extension Notification.Name {
     static let audioDeleted = Notification.Name("audioDeleted")

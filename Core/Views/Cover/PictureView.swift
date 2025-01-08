@@ -19,7 +19,7 @@ struct PictureView: View, @preconcurrency SuperLog, SuperThread {
 
     var asset: PlayAsset
     var role: CoverView.Role = .Icon
-    var updating: [DiskFile] = []
+    var updating: [URL] = []
     var shape: RoundedRectangle {
         if role == .Hero {
             if Config.isiOS {
@@ -54,10 +54,10 @@ struct PictureView: View, @preconcurrency SuperLog, SuperThread {
         }
         .clipShape(shape)
         .onAppear {
-            if let file = updating.first(where: { $0.url == asset.url }) {
-                self.downloadingPercent = file.downloadProgress
+            if let file = updating.first(where: { $0 == asset.url }) {
+//                self.downloadingPercent = file.downloadProgress
             } else {
-                self.downloadingPercent = asset.url.isDownloaded ? 100 : 0
+//                self.downloadingPercent = asset.url.isDownloaded ? 100 : 0
             }
         }
         .onChange(of: isDownloaded, {
@@ -66,11 +66,11 @@ struct PictureView: View, @preconcurrency SuperLog, SuperThread {
             }
         })
         .onChange(of: updating, {
-            for file in updating {
-                if file.url == asset.url {
-                    self.downloadingPercent = file.downloadProgress
-                }
-            }
+//            for file in updating {
+//                if file == asset.url {
+//                    self.downloadingPercent = file.downloadProgress
+//                }
+//            }
         })
     }
 

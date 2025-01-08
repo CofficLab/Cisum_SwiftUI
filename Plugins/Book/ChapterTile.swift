@@ -7,12 +7,12 @@ import MagicPlayMan
 struct ChapterTile: View {
     @EnvironmentObject var playMan: MagicPlayMan
     
-    var file: DiskFile
+    var file: URL
     
-    var chapters: [DiskFile] { file.children ?? []}
+    var chapters: [URL] { file.getChildren() }
     
     var body: some View {
-        Text(file.url.title)
+        Text(file.title)
     }
 }
 
