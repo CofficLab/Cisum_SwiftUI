@@ -21,7 +21,7 @@ protocol SuperPlugin: Actor {
 
     func getDisk() -> (any SuperStorage)?
 
-    func onWillAppear(playMan: MagicPlayMan, currentGroup: SuperPlugin?, storage: StorageLocation?) async throws
+    func onWillAppear(playMan: PlayManWrapper, currentGroup: SuperPlugin?, storage: StorageLocation?) async throws
     func onDisappear()
     func onPlay()
     func onPause(playMan: MagicPlayMan) async
@@ -78,7 +78,7 @@ extension SuperPlugin {
         return nil
     }
 
-    func onWillAppear(playMan: MagicPlayMan, currentGroup: SuperPlugin?) {
+    func onWillAppear(playMan: PlayManWrapper, currentGroup: SuperPlugin?) {
     }
 
     func onInit() {
@@ -108,7 +108,7 @@ extension SuperPlugin {
     func onPlayPrev(playMan: MagicPlayMan, current: MagicAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws {
     }
     
-    func onWillAppear(playMan: MagicPlayMan, currentGroup: (any SuperPlugin)?, storage: StorageLocation?) async {
+    func onWillAppear(playMan: PlayManWrapper, currentGroup: (any SuperPlugin)?, storage: StorageLocation?) async {
         
     }
     

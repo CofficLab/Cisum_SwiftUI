@@ -5,6 +5,23 @@ import MagicUI
 import OSLog
 import SwiftUI
 
+// 1. 添加一个 actor 来安全地包装 MagicPlayMan 的访问
+public actor PlayManWrapper {
+    private weak var playMan: MagicPlayMan?
+    
+    init(playMan: MagicPlayMan) {
+        self.playMan = playMan
+    }
+    
+    func configure(for plugin: SuperPlugin) async {
+        await MainActor.run {
+            // 在这里安全地访问 playMan
+            // 所有对 playMan 的操作都会在主线程执行
+//            playMan?.someOperation()
+        }
+    }
+}
+
 struct RootView<Content>: View, SuperEvent, @preconcurrency SuperLog, SuperThread where Content: View {
     var content: Content
     static var emoji: String { "🌳" }
@@ -21,9 +38,13 @@ struct RootView<Content>: View, SuperEvent, @preconcurrency SuperLog, SuperThrea
     @StateObject var a = AppProvider()
     @StateObject var man = MagicPlayMan(playlistEnabled: false)
     @StateObject var c = ConfigProvider()
+    private let playManWrapper: PlayManWrapper
 
     init(@ViewBuilder content: () -> Content) {
+        let man = MagicPlayMan(playlistEnabled: false)
         self.content = content()
+        self._man = StateObject(wrappedValue: man)
+        self.playManWrapper = PlayManWrapper(playMan: man)
     }
 
     var body: some View {
@@ -162,37 +183,38 @@ extension RootView {
 
     func onAppear() {
         Task {
-//            do {
-//                try Config.getPlugins().forEach({
-//                    try self.p.append($0, reason: self.className)
-//                })
-//                
-//                try? self.p.restoreCurrent()
-//                
-//                for plugin in p.plugins {
-//                    try await plugin.onWillAppear(playMan: man, currentGroup: p.current, storage: c.getStorageLocation())
-//                }
-//                
-//                a.showSheet = p.getSheetViews(storage: c.storageLocation).isNotEmpty
-//                
-//#if os(iOS)
-//                self.main.async {
-//                    UIApplication.shared.beginReceivingRemoteControlEvents()
-//                }
-//#endif
-//                
-//                self.man.subscribe(
-//                    name: self.className,
-//                    onPreviousRequested: { asset in
-//                        self.onPlayPrev(current: asset)
-//                    },
-//                    onNextRequested: { asset in
-//                        self.onPlayNext(current: asset, mode: self.man.playMode)
-//                    }
-//                )
-//            } catch let e {
-//                self.error = e
-//            }
+            do {
+                try Config.getPlugins().forEach({
+                    try self.p.append($0, reason: self.className)
+                })
+                
+                try? self.p.restoreCurrent()
+                
+                // 使用 wrapper 来安全地访问 man
+                for plugin in p.plugins {
+                    try await plugin.onWillAppear(playMan: playManWrapper, currentGroup: p.current, storage: c.getStorageLocation())
+                }
+                
+                a.showSheet = p.getSheetViews(storage: c.storageLocation).isNotEmpty
+                
+#if os(iOS)
+                self.main.async {
+                    UIApplication.shared.beginReceivingRemoteControlEvents()
+                }
+#endif
+                
+                self.man.subscribe(
+                    name: self.className,
+                    onPreviousRequested: { asset in
+                        self.onPlayPrev(current: asset)
+                    },
+                    onNextRequested: { asset in
+                        self.onPlayNext(current: asset, mode: self.man.playMode)
+                    }
+                )
+            } catch let e {
+                self.error = e
+            }
             
             self.loading = false
             os_log("\(self.t)👌👌👌 Ready")

@@ -17,10 +17,11 @@ actor CopyPlugin: SuperPlugin, SuperLog {
     let worker: CopyWorker? = nil
 
     @MainActor func addStateView(currentGroup: SuperPlugin?) -> AnyView? {
-        return AnyView(
-            CopyStateView()
-                .environmentObject(self.worker!)
-                .modelContainer(CopyConfig.getContainer))
+        return nil
+//        return AnyView(
+//            CopyStateView()
+//                .environmentObject(self.worker!)
+//                .modelContainer(CopyConfig.getContainer))
     }
 
     @MainActor func addRootView() -> AnyView? {
@@ -43,7 +44,7 @@ actor CopyPlugin: SuperPlugin, SuperLog {
 //        )
     }
 
-    func onWillAppear(playMan: MagicPlayMan, currentGroup: (any SuperPlugin)?, storage: StorageLocation?) async {
+    func onWillAppear(playMan: PlayManWrapper, currentGroup: (any SuperPlugin)?, storage: StorageLocation?) async {
         let verbose = false
 
         if verbose {
