@@ -1,5 +1,6 @@
 import Foundation
 import MagicKit
+import MagicPlayMan
 import MagicUI
 import OSLog
 import StoreKit
@@ -128,7 +129,11 @@ class PluginProvider: ObservableObject, @preconcurrency SuperLog, SuperThread {
 
         return ""
     }
+}
 
+// MARK: Event
+
+extension PluginProvider {
     func executePluginOperation(_ operation: @Sendable (SuperPlugin) async throws -> Void) async {
         for plugin in plugins {
             do {
@@ -153,14 +158,45 @@ class PluginProvider: ObservableObject, @preconcurrency SuperLog, SuperThread {
 
     func handleOnDisappear() async throws {
         for plugin in plugins {
-            try await plugin.onDisappear()
+            await plugin.onDisappear()
         }
     }
-    
+
     func handleOnAppear(playMan: PlayManWrapper, current: SuperPlugin?, storage: StorageLocation?) async throws {
         for plugin in plugins {
             try await plugin.onWillAppear(playMan: playMan, currentGroup: current, storage: storage)
         }
+    }
+
+    func onPlayNext(current: URL?, mode: PlayMode, man: PlayManWrapper) async throws {
+        let currentGroupId = self.current?.id
+        for plugin in plugins {
+            try await plugin.onPlayNext(playMan: man, current: current, currentGroup: currentGroupId, verbose: true)
+        }
+    }
+
+    func onPlayPrev(current: MagicAsset?) {
+//        Task {
+//            for plugin in p.plugins {
+//                do {
+//                    try await plugin.onPlayPrev(playMan: man, current: current, currentGroup: p.current, verbose: true)
+//                } catch let e {
+//                    m.error(e)
+//                }
+//            }
+//        }
+    }
+
+    func onPlayModeChange(mode: PlayMode) {
+//        Task {
+//            for plugin in p.plugins {
+//                do {
+//                    try await plugin.onPlayModeChange(mode: mode, asset: man.asset)
+//                } catch let e {
+//                    m.error(e)
+//                }
+//            }
+//        }
     }
 }
 
@@ -178,5 +214,30 @@ enum PluginProviderError: Error, LocalizedError {
         case .pluginIDIsEmpty:
             return "Plugin has an empty ID"
         }
+    }
+}
+
+@MainActor
+public class PlayManWrapper {
+    let playMan: MagicPlayMan
+
+    init(playMan: MagicPlayMan) {
+        self.playMan = playMan
+    }
+
+    func play(url: URL) async {
+        playMan.play(url: url)
+    }
+
+    func seek(time: TimeInterval) async {
+        playMan.seek(time: time)
+    }
+
+    func setPlayMode(_ mode: PlayMode) {
+        playMan.setPlayMode(mode)
+    }
+
+    func getPlayMode() -> PlayMode {
+        playMan.playMode
     }
 }

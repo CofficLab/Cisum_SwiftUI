@@ -10,14 +10,13 @@ actor AudioPlugin: SuperPlugin, SuperLog {
     static let keyOfCurrentPlayMode = "AudioPluginCurrentPlayMode"
     static let emoji = "🎧"
 
-    @MainActor
-    var dirName: String { Config.isDebug ? "audios_debug" : "audios" }
     let label = "Audio"
     let hasPoster = true
     let description = "作为歌曲仓库，只关注文件，文件夹将被忽略"
     let iconName = "music.note"
     let isGroup = true
 
+    @MainActor var dirName: String { Config.isDebug ? "audios_debug" : "audios" }
     @MainActor var disk: (any SuperStorage)?
     @MainActor var audioProvider: AudioProvider?
     @MainActor var audioDB: AudioDB?
@@ -47,8 +46,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
         )
     }
 
-    @MainActor
-    func addPosterView() -> AnyView {
+    @MainActor func addPosterView() -> AnyView {
         os_log("\(self.t)🍋🍋🍋 AddPosterView")
         return AnyView(AudioPoster())
     }
@@ -213,23 +211,22 @@ actor AudioPlugin: SuperPlugin, SuperLog {
         }
     }
     
-//    @MainActor
-//    func onStorageLocationChange(storage: StorageLocation?) async throws {
-//        switch storage {
-//        case .local, .none:
-//            disk = LocalStorage.make(self.dirName, verbose: false, reason: self.className + ".onInit")
-//        case .icloud:
-//            disk = CloudStorage.make(self.dirName, verbose: false, reason: self.className + ".onInit")
-//        case .custom:
-//            disk = LocalStorage.make(self.dirName, verbose: false, reason: self.className + ".onInit")
-//        }
-//        
-//        guard let disk = disk else {
-//            fatalError("AudioPlugin.onInit: disk == nil")
-//        }
-//        
-//        self.audioDB?.changeDisk(disk: disk)
-//    }
+    @MainActor func onStorageLocationChange(storage: StorageLocation?) async throws {
+        switch storage {
+        case .local, .none:
+            disk = LocalStorage.make(self.dirName, verbose: false, reason: self.className + ".onInit")
+        case .icloud:
+            disk = CloudStorage.make(self.dirName, verbose: false, reason: self.className + ".onInit")
+        case .custom:
+            disk = LocalStorage.make(self.dirName, verbose: false, reason: self.className + ".onInit")
+        }
+        
+        guard let disk = disk else {
+            fatalError("AudioPlugin.onInit: disk == nil")
+        }
+        
+        self.audioDB?.changeDisk(disk: disk)
+    }
 }
 
 // MARK: Store

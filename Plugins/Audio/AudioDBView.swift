@@ -77,7 +77,7 @@ extension AudioDBView {
             case let .success(urls):
                 os_log("\(self.t)🍋🍋🍋 handleFileImport, urls: \(urls.count)")
                 let storageRoot = await fetchStorageRoot()
-                await self.emit(name: .CopyFiles, object: self, userInfo: [
+                self.emit(name: .CopyFiles, object: self, userInfo: [
                     "urls": urls,
                     "folder": storageRoot
                 ])

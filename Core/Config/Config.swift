@@ -51,22 +51,11 @@ enum Config: @preconcurrency SuperLog {
 
     /// 封面图文件夹
     static let coversDirName = "covers"
-
-    static let appSupportDir = fm.urls(for: .applicationSupportDirectory, in: .userDomainMask).last
-    static let localContainer: URL? = localDocumentsDir?.deletingLastPathComponent()
-    static let localDocumentsDir = fm.urls(for: .documentDirectory, in: .userDomainMask).first
-
-    // MARK: iCloud 容器里的 Documents
-
-    static var cloudDocumentsDir: URL? = fm.url(forUbiquityContainerIdentifier: containerIdentifier)?.appendingPathComponent("Documents")
-
-    static var coverDir: URL {
-        if let localDocumentsDir = Config.localDocumentsDir {
-            return localDocumentsDir.appendingPathComponent(coversDirName)
-        }
-
-        fatalError()
-    }
+    static let appSupportDir: URL? = MagicApp.getAppSpecificSupportDirectory()
+    static let localContainer: URL? = MagicApp.getContainerDirectory()
+    static let localDocumentsDir: URL? = MagicApp.getDocumentsDirectory()
+    static let cloudDocumentsDir: URL? = MagicApp.getCloudDocumentsDirectory()
+    static let databaseDir: URL? = MagicApp.getDatabaseDirectory()
 
     static func getPlugins() -> [SuperPlugin] {
         return [
@@ -85,21 +74,10 @@ enum Config: @preconcurrency SuperLog {
     static let dbDirName = debug ? "db_debug" : "db_production"
 
     static func getDBRootDir() -> URL? {
-        guard let url = Config.appSupportDir?
-            .appendingPathComponent("Cisum_Database")
+        guard let url = Config.databaseDir?
             .appendingPathComponent(dbDirName) else { return nil }
 
-        // 如果目录不存在则创建
-        if !fm.fileExists(atPath: url.path) {
-            os_log("\(self.t) Creating database directory: \(url.path)")
-
-            try? FileManager.default.createDirectory(
-                at: url,
-                withIntermediateDirectories: true
-            )
-        }
-
-        return url
+        return try? url.createIfNotExist()
     }
 }
 

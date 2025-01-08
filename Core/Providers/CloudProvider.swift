@@ -32,12 +32,12 @@ class CloudProvider: NSObject, ObservableObject, @preconcurrency SuperLog, Super
         updateAccountStatus()
         
         // 监听 iCloud 状态变化
-        nc.addObserver(
-            self,
-            selector: #selector(handleAccountChange),
-            name: NSNotification.Name.CKAccountChanged,
-            object: nil
-        )
+//        nc.addObserver(
+//            self,
+//            selector: #selector(handleAccountChange),
+//            name: NSNotification.Name.CKAccountChanged,
+//            object: nil
+//        )
     }
     
     private func updateAccountStatus(verbose: Bool = false) {

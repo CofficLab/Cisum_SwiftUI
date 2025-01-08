@@ -3,7 +3,7 @@ import MagicKit
 import MagicUI
 import OSLog
 
-class CloudStorage: ObservableObject, @preconcurrency SuperStorage, @preconcurrency SuperLog, SuperThread {
+class CloudStorage: ObservableObject, @preconcurrency SuperStorage, SuperLog, SuperThread {
     static let emoji = "☁️"
     @MainActor
     static var cloudRoot: URL? {

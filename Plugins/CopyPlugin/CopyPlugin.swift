@@ -5,7 +5,7 @@ import OSLog
 import SwiftUI
 import MagicPlayMan
 
-actor CopyPlugin: SuperPlugin, SuperLog {
+actor CopyPlugin: SuperPlugin, SuperLog {    
     static let emoji = "🚛"
 
     let label: String = "Copy"

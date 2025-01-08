@@ -1,16 +1,16 @@
 import AVKit
 import Combine
 import Foundation
+import MagicKit
+import MagicUI
 import MediaPlayer
 import OSLog
 import SwiftUI
-import MagicKit
-import MagicUI
 
 @MainActor
 class AppProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, @preconcurrency SuperLog, SuperThread {
     static let emoji: String = "🐮"
-    
+
     @Published var showDB: Bool = Config.showDB
     @Published var showSheet: Bool = true
     @Published var isImporting: Bool = false
@@ -19,31 +19,27 @@ class AppProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, @preconcur
     @Published var error: Error? = nil
     @Published var rightAlbumVisible = false
     @Published var dbViewType: DBViewType = .init(rawValue: Config.currentDBViewType)!
-    
+
     func showDBView() {
         withAnimation {
             self.showDB = true
         }
-        
-        Task {
-            await Config.setShowDB(true)
-        }
+
+        Config.setShowDB(true)
     }
-    
+
     func closeDBView() {
         withAnimation {
             self.showDB = false
         }
-        
-        Task {
-            await Config.setShowDB(false)
-        }
+
+        Config.setShowDB(false)
     }
-    
+
     func toggleDBView() {
         showDB ? self.closeDBView() : self.showDBView()
     }
-    
+
     func clearError() {
         self.error = nil
     }

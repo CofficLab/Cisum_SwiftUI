@@ -26,7 +26,6 @@ class AudioDB: ObservableObject, SuperEvent, @preconcurrency SuperLog {
     }
     
     func allAudios(reason: String) async -> [AudioModel] {
-        return []
 //        await self.db.allAudios(reason: reason).map { audio in
 //            audio.setDB(self)
 //            return audio

@@ -28,8 +28,8 @@ protocol SuperPlugin: Actor {
     func onPlayStateUpdate() async throws
     func onPlayModeChange(mode: PlayMode, asset: MagicAsset?) async throws
     func onPlayAssetUpdate(asset: MagicAsset?, currentGroup: SuperPlugin?) async throws
-    func onPlayNext(playMan: MagicPlayMan, current: MagicAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws
-    func onPlayPrev(playMan: PlayManWrapper, current: MagicAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws
+    func onPlayNext(playMan: PlayManWrapper, current: URL?, currentGroup: String?, verbose: Bool) async throws
+    func onPlayPrev(playMan: PlayManWrapper, current: URL?, currentGroup: SuperPlugin?, verbose: Bool) async throws
     func onStorageLocationChange(storage: StorageLocation?) async throws
 }
 
@@ -102,10 +102,10 @@ extension SuperPlugin {
     func onPlayStateUpdate() async throws {
     }
 
-    func onPlayNext(playMan: MagicPlayMan, current: MagicAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws {
+    func onPlayNext(playMan: PlayManWrapper, current: URL?, currentGroup: String?, verbose: Bool) async throws {
     }
 
-    func onPlayPrev(playMan: PlayManWrapper, current: MagicAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws {
+    func onPlayPrev(playMan: PlayManWrapper, current: URL?, currentGroup: SuperPlugin?, verbose: Bool) async throws {
     }
 
     func onWillAppear(playMan: PlayManWrapper, currentGroup: (any SuperPlugin)?, storage: StorageLocation?) async {
