@@ -4,7 +4,7 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-struct StateView: View, SuperLog, SuperThread {
+struct StateView: View, @preconcurrency SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var messageManager: MessageProvider
     @EnvironmentObject var audioManager: AudioProvider

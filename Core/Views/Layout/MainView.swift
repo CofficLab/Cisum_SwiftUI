@@ -4,7 +4,7 @@ import MagicUI
 import OSLog
 import SwiftUI
 
-struct MainView: View, SuperLog, SuperThread {
+struct MainView: View, @preconcurrency SuperLog, SuperThread {
     static let emoji = "🖥️"
 
     @EnvironmentObject var app: AppProvider
@@ -152,20 +152,11 @@ extension MainView {
     }
 
     func onAppear() {
-        self.bg.async {
-            let verbose = false
-
-            if verbose {
-                os_log("\(self.t)OnAppear")
-            }
-
-            if autoResizing == false {
-                // 说明是用户主动调整
-                self.main.async {
-                    self.height = Config.getWindowHeight()
-                }
-            }
+        let verbose = false
+        if verbose {
+            os_log("\(self.t)OnAppear")
         }
+        height = Config.getWindowHeight()
     }
 }
 

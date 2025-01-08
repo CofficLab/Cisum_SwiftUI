@@ -4,7 +4,7 @@ import SwiftUI
 import MagicKit
 import MagicUI
 
-struct BookLayout: View, SuperLog {
+struct BookLayout: View, @preconcurrency SuperLog {
     static let emoji = "🖥️"
 
     @EnvironmentObject var appManager: AppProvider

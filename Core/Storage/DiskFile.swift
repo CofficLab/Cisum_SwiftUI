@@ -6,8 +6,8 @@ import MagicKit
 import MagicUI
 
 struct DiskFile: Hashable, Identifiable, SuperLog {
-    static var home: DiskFile = DiskFile(url: URL.homeDirectory)
-    static var emoji = "👶"
+    @MainActor static let home: DiskFile = DiskFile(url: URL.homeDirectory)
+    static let emoji = "👶"
     
     var fileManager = FileManager.default
     var id: URL { url }

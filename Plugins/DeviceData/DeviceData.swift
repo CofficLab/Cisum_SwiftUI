@@ -3,7 +3,7 @@ import SwiftData
 
 @Model
 class DeviceData {
-    static var descriptorAll = FetchDescriptor(predicate: #Predicate<DeviceData> { _ in
+    static let descriptorAll = FetchDescriptor(predicate: #Predicate<DeviceData> { _ in
         return true
     }, sortBy: [
         SortDescriptor(\.firstOpenTime, order: .forward)

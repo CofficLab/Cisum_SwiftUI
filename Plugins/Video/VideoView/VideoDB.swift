@@ -6,7 +6,7 @@ import UniformTypeIdentifiers
 import MagicKit
 import MagicUI
 
-struct VideoDB: View, SuperLog {
+struct VideoDB: View, @preconcurrency SuperLog {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var message: MessageProvider
     @EnvironmentObject var db: AudioRecordDB
@@ -15,7 +15,7 @@ struct VideoDB: View, SuperLog {
 
     @Query(AudioModel.descriptorAll, animation: .default) var audios: [AudioModel]
 
-    static var emoji = "🐘"
+    static let emoji = "🐘"
 
     var dropping: Bool { app.isDropping }
 
@@ -42,28 +42,6 @@ struct VideoDB: View, SuperLog {
                 }
             }
         )
-        .onDrop(of: [UTType.fileURL], isTargeted: $app.isDropping) { providers -> Bool in
-            let dispatchGroup = DispatchGroup()
-            var dropedFiles: [URL] = []
-            for provider in providers {
-                dispatchGroup.enter()
-                // 这是异步操作
-                _ = provider.loadObject(ofClass: URL.self) { object, _ in
-                    if let url = object {
-                        os_log("\(self.t)添加 \(url.lastPathComponent) 到复制队列")
-                        dropedFiles.append(url)
-                    }
-
-                    dispatchGroup.leave()
-                }
-            }
-
-            dispatchGroup.notify(queue: .main) {
-                copy(dropedFiles)
-            }
-
-            return true
-        }
     }
 }
 

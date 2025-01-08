@@ -4,7 +4,8 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-struct AudioConfig: SuperLog {
+@MainActor
+struct AudioConfig: @preconcurrency SuperLog {
     static let emoji = "😊"
 
     /// iCloud容器的ID

@@ -3,7 +3,7 @@ import SwiftUI
 import MagicKit
 import MagicUI
 
-struct ContentView: View, SuperLog, SuperThread {
+struct ContentView: View, @preconcurrency SuperLog, SuperThread {
     static let emoji = "🐮"
     
     @EnvironmentObject var app: AppProvider

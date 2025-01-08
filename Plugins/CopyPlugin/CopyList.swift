@@ -4,7 +4,7 @@ import SwiftUI
 import MagicKit
 import MagicUI
 
-struct CopyList: View, SuperLog, SuperThread {
+struct CopyList: View, @preconcurrency SuperLog, SuperThread {
     static let emoji = "📬"
 
     @EnvironmentObject var app: AppProvider

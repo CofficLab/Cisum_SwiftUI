@@ -4,7 +4,7 @@ import OSLog
 import StoreKit
 import SwiftUI
 
-struct SubscriptionSetting: View, SuperEvent, SuperLog, SuperThread {
+struct SubscriptionSetting: View, SuperEvent, @preconcurrency SuperLog, SuperThread {
     @EnvironmentObject var store: StoreProvider
     @EnvironmentObject var app: AppProvider
     @Environment(\.colorScheme) var colorScheme: ColorScheme

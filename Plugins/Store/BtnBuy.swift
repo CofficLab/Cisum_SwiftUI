@@ -4,8 +4,8 @@ import SwiftUI
 import MagicKit
 import MagicUI
 
-struct BtnBuy: View, SuperLog {
-    static var emoji: String = "🎩"
+struct BtnBuy: View, @preconcurrency SuperLog {
+    static let emoji: String = "🎩"
     
     @EnvironmentObject var app: AppProvider
     

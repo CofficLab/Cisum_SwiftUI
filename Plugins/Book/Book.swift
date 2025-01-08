@@ -93,15 +93,15 @@ extension Book {
 // MARK: Descriptor
 
 extension Book {
-    static var descriptorIsFolder = FetchDescriptor(predicate: #Predicate<Book> { book in
+    static let descriptorIsFolder = FetchDescriptor(predicate: #Predicate<Book> { book in
         book.isCollection == true
     }, sortBy: [])
 
-    static var descriptorNotFolder = FetchDescriptor(predicate: #Predicate<Book> { book in
+    static let descriptorNotFolder = FetchDescriptor(predicate: #Predicate<Book> { book in
         book.isCollection == false
     }, sortBy: [])
 
-    static var descriptorAll = FetchDescriptor(predicate: #Predicate<Book> { _ in
+    static let descriptorAll = FetchDescriptor(predicate: #Predicate<Book> { _ in
         true
     }, sortBy: [])
 

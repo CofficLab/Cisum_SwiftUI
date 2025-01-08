@@ -5,7 +5,7 @@ import SwiftData
 import SwiftUI
 import MagicPlayMan
 
-struct BookStateView: View, SuperLog, SuperThread {
+struct BookStateView: View, @preconcurrency SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var messageManager: MessageProvider
     @EnvironmentObject var bookManager: BookProvider

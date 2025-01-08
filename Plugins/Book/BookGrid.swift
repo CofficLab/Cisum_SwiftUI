@@ -4,7 +4,7 @@ import SwiftUI
 import MagicKit
 import MagicUI
 
-struct BookGrid: View, SuperLog, SuperThread {
+struct BookGrid: View, @preconcurrency SuperLog, SuperThread {
     static let emoji = "📖"
 
     @EnvironmentObject var appManager: AppProvider
@@ -42,9 +42,9 @@ struct BookGrid: View, SuperLog, SuperThread {
     }
     
     func handleOnAppear() {
-        Task {
-            self.books = await db.getRootBooks()
-        }
+//        Task {
+//            self.books = await db.getRootBooks()
+//        }
     }
 }
 

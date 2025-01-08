@@ -5,7 +5,7 @@ import OSLog
 import SwiftUI
 import MagicPlayMan
 
-class CopyPlugin: SuperPlugin, SuperLog {
+class CopyPlugin: @preconcurrency SuperPlugin, SuperLog {
     static let emoji = "🚛"
 
     let label: String = "Copy"
@@ -16,14 +16,14 @@ class CopyPlugin: SuperPlugin, SuperLog {
     var db: CopyDB?
     var worker: CopyWorker?
 
-    func addStateView(currentGroup: SuperPlugin?) -> AnyView? {
+    @MainActor func addStateView(currentGroup: SuperPlugin?) -> AnyView? {
         return AnyView(
             CopyStateView()
                 .environmentObject(self.worker!)
                 .modelContainer(CopyConfig.getContainer))
     }
 
-    func addRootView() -> AnyView? {
+    @MainActor func addRootView() -> AnyView? {
         //os_log("\(self.t)🖥️🖥️🖥️ AddRootView")
         
         guard let db = self.db else {
@@ -50,7 +50,7 @@ class CopyPlugin: SuperPlugin, SuperLog {
             os_log("\(self.a)")
         }
 
-        self.db = CopyDB(CopyConfig.getContainer, reason: self.author, verbose: false)
-        self.worker = CopyWorker(db: self.db!)
+        self.db = await CopyDB(CopyConfig.getContainer, reason: self.author, verbose: false)
+        self.worker = await CopyWorker(db: self.db!)
     }
 }

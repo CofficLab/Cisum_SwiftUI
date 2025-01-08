@@ -48,10 +48,10 @@ extension AudioRecordDB {
     var labelForGetCovers: String { "\(self.t)🌽🌽🌽 GetCovers" }
 
     func emitCoverUpdated(_ audio: AudioModel) {
-        DispatchQueue.main.async {
-            os_log("\(self.t) -> \(audio.title) CoverUpdated 🍋🍋🍋")
-            self.emit(.AudioUpdatedNotification, object: audio)
-        }
+//        DispatchQueue.main.async {
+//            os_log("\(self.t) -> \(audio.title) CoverUpdated 🍋🍋🍋")
+//            self.emit(.AudioUpdatedNotification, object: audio)
+//        }
     }
 }
 

@@ -5,11 +5,11 @@ import SwiftData
 struct CopyConfig {
     // MARK: 数据库存储名称
     
-    static var dbFileName = "copy_task.db"
+    static let dbFileName = "copy_task.db"
         
     // MARK: 本地的数据库的存储路径
     
-    static func getDBUrl() -> URL? {
+    @MainActor static func getDBUrl() -> URL? {
         guard let rootURL = Config.getDBRootDir() else { return nil }
         
         let dbDirURL = rootURL.appendingPathComponent("copy_db")
@@ -27,7 +27,7 @@ struct CopyConfig {
     
     // MARK: Local Container
     
-    static var getContainer: ModelContainer = {
+    @MainActor static var getContainer: ModelContainer = {
         guard let url = getDBUrl() else {
             fatalError("Could not create ModelContainer")
         }

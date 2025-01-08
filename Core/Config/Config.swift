@@ -5,12 +5,13 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-enum Config: SuperLog {
-    static var emoji = "🧲"
+@MainActor
+enum Config: @preconcurrency SuperLog {
+    static let emoji = "🧲"
     static let id = "com.yueyi.cisum"
-    static let fm = FileManager.default
     static let logger = Logger.self
-    static var maxAudioCount = 5
+    static let maxAudioCount = 5
+    static let fm = FileManager.default
     static let supportedExtensions = [
         "mp3",
         "m4a",
@@ -35,7 +36,7 @@ enum Config: SuperLog {
     }
 
     // MARK: UUID
-
+    
     @AppStorage("App.UUID")
     static var uuid: String = ""
 
@@ -45,7 +46,6 @@ enum Config: SuperLog {
         }
 
         uuid = UUID().uuidString
-
         return uuid
     }
 

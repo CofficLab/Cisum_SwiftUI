@@ -7,7 +7,7 @@ import MagicPlayMan
 /**
  展示从数据库读取的图书数据
  */
-struct BookTile: View, SuperThread, SuperLog {
+struct BookTile: View, SuperThread, @preconcurrency SuperLog {
     @EnvironmentObject var playMan: MagicPlayMan
     @EnvironmentObject var db: BookDB
 
@@ -81,11 +81,11 @@ struct BookTile: View, SuperThread, SuperLog {
 
 extension BookTile {
     func updateCover() {
-        if self.cover == nil {
-            Task {
-                self.cover = await book.getBookCoverFromDB()
-            }
-        }
+//        if self.cover == nil {
+//            Task {
+//                self.cover = await book.getBookCoverFromDB()
+//            }
+//        }
     }
 }
 
@@ -103,31 +103,29 @@ extension BookTile {
     }
 
     func onTap() {
-        withAnimation(.spring()) {
-            Task {
-                if let s = self.state, let current = s.currentURL, let time = s.time {
-//                    playMan.play(PlayAsset(url: current), reason: self.className, verbose: true)
-                    playMan.seek(time: time)
-                } else {
-                    if let first = DiskFile(url: book.url).children.first, let book = await self.db.find(first.url) {
-                        playMan.play(url: book.url)
-                        //                        data.updateBookState(book.url, first.url)
-                    } else {
-                        playMan.play(url: book.url)
-                    }
-                }
-
-                scale = 0.95
-                opacity = 0.95
-
-                self.main.asyncAfter(deadline: .now() + 0.5) {
-                    withAnimation(.spring()) {
-                        scale = 1.0
-                        opacity = 1.0
-                    }
-                }
-            }
-        }
+//        withAnimation(.spring()) {
+//            Task { @MainActor in
+//                if let s = self.state, let current = s.currentURL, let time = s.time {
+//                    playMan.seek(time: time)
+//                } else {
+//                    if let first = DiskFile(url: book.url).children.first, let book = await self.db.find(first.url) {
+//                        playMan.play(url: book.url)
+//                    } else {
+//                        playMan.play(url: book.url)
+//                    }
+//                }
+//
+//                scale = 0.95
+//                opacity = 0.95
+//
+//                self.main.asyncAfter(deadline: .now() + 0.5) {
+//                    withAnimation(.spring()) {
+//                        scale = 1.0
+//                        opacity = 1.0
+//                    }
+//                }
+//            }
+//        }
     }
 }
 

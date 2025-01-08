@@ -35,12 +35,12 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
         }
 
         if plugin.id.isEmpty {
-            throw PluginProviderError.PluginIDIsEmpty(plugin: plugin)
+            throw PluginProviderError.pluginIDIsEmpty
         }
 
         // Check if plugin with same ID already exists
         if plugins.contains(where: { $0.id == plugin.id }) {
-            throw PluginProviderError.duplicatePluginID(plugin: plugin)
+            throw PluginProviderError.duplicatePluginID(pluginId: plugin.id)
         }
 
         self.plugins.append(plugin)
@@ -81,7 +81,7 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
             self.current = plugin
             Self.storeCurrent(plugin)
         } else {
-            throw PluginProviderError.PluginIsNotGroup(plugin: plugin)
+            throw PluginProviderError.pluginIsNotGroup(pluginId: plugin.id)
         }
     }
 
@@ -130,18 +130,18 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
 }
 
 enum PluginProviderError: Error, LocalizedError {
-    case PluginIsNotGroup(plugin: SuperPlugin)
-    case duplicatePluginID(plugin: SuperPlugin)
-    case PluginIDIsEmpty(plugin: SuperPlugin)
+    case pluginIsNotGroup(pluginId: String)
+    case duplicatePluginID(pluginId: String)
+    case pluginIDIsEmpty
 
     var errorDescription: String? {
         switch self {
-        case let .PluginIsNotGroup(plugin):
-            return "Plugin \(plugin.id) is not a group"
-        case let .duplicatePluginID(plugin):
-            return "Plugin with ID \(plugin.id) already exists"
-        case let .PluginIDIsEmpty(plugin):
-            return "Plugin \(plugin.id) has an empty ID"
+        case let .pluginIsNotGroup(pluginId):
+            return "Plugin \(pluginId) is not a group"
+        case let .duplicatePluginID(pluginId):
+            return "Plugin with ID \(pluginId) already exists"
+        case .pluginIDIsEmpty:
+            return "Plugin has an empty ID"
         }
     }
 }

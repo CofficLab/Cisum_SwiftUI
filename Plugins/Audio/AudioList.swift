@@ -13,7 +13,7 @@ import SwiftUI
       B1               B2
       B2
  */
-struct AudioList: View, SuperThread, SuperLog, SuperEvent {
+struct AudioList: View, SuperThread, @preconcurrency SuperLog, SuperEvent {
     static let emoji = "📬"
 
     @Environment(\.modelContext) private var modelContext
@@ -102,19 +102,19 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     }
     
     func handleDBSyncing(_ notification: Notification) {
-        if let group = notification.userInfo?["group"] as? DiskFileGroup {
-            for file in group.files {
-                if file.isDownloading {
-                    main.async {
-                        progressMap[file.url] = file.downloadProgress
-                    }
-                } else if file.isDownloaded {
-                    main.async {
-                        progressMap[file.url] = 1.0
-                    }
-                }
-            }
-        }
+//        if let group = notification.userInfo?["group"] as? DiskFileGroup {
+//            for file in group.files {
+//                if file.isDownloading {
+//                    main.async {
+//                        progressMap[file.url] = file.downloadProgress
+//                    }
+//                } else if file.isDownloaded {
+//                    main.async {
+//                        progressMap[file.url] = 1.0
+//                    }
+//                }
+//            }
+//        }
     }
 }
 
@@ -163,9 +163,9 @@ extension AudioList {
     func onSortDone(_ notification: Notification) {
         os_log("\(t)onSortDone")
 
-        self.main.asyncAfter(deadline: .now() + 1.0) {
-            isSorting = false
-        }
+//        self.main.asyncAfter(deadline: .now() + 1.0) {
+//            isSorting = false
+//        }
     }
 }
 
@@ -201,7 +201,7 @@ private struct MediaViewWrapper: View, Equatable {
             .magicPadding(horizontal: 0, vertical: 0)
     }
     
-    static func == (lhs: MediaViewWrapper, rhs: MediaViewWrapper) -> Bool {
+    nonisolated static func == (lhs: MediaViewWrapper, rhs: MediaViewWrapper) -> Bool {
         return lhs.url == rhs.url
     }
 }

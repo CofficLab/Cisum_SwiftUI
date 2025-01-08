@@ -3,7 +3,7 @@ import MagicUI
 import OSLog
 import SwiftUI
 
-struct FileListView: View, SuperLog {
+struct FileListView: View, @preconcurrency SuperLog {
     static let emoji = "📂"
 
     let url: URL

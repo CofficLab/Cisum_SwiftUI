@@ -4,7 +4,7 @@ import MagicUI
 import OSLog
 import SwiftUI
 
-class BookPlugin: SuperPlugin, SuperLog {
+class BookPlugin: @preconcurrency SuperPlugin, SuperLog {
     static let keyOfCurrentBookURL = "com.bookplugin.currentBookURL"
     static let keyOfCurrentBookTime = "com.bookplugin.currentBookTime"
 
@@ -15,14 +15,15 @@ class BookPlugin: SuperPlugin, SuperLog {
     let iconName: String = "book"
     let dirName = "audios_book"
     let isGroup: Bool = true
-    lazy var db = BookRecordDB(BookConfig.getContainer, reason: "BookPlugin")
+//    let db = BookRecordDB(BookConfig.getContainer, reason: "BookPlugin")
+    let db: BookRecordDB? = nil
 
     var disk: (any SuperStorage)?
     var bookDB: BookDB?
     var bookProvider: BookProvider?
     var initialized = false
 
-    func addDBView(reason: String) -> AnyView {
+    @MainActor func addDBView(reason: String) -> AnyView {
         os_log("\(self.t)addDBView")
 
         guard let disk = disk else {
@@ -44,7 +45,7 @@ class BookPlugin: SuperPlugin, SuperLog {
         )
     }
     
-    func addStateView(currentGroup: SuperPlugin?) -> AnyView? {
+    @MainActor func addStateView(currentGroup: SuperPlugin?) -> AnyView? {
         if currentGroup?.id != self.id {
             return nil
         }
@@ -72,31 +73,31 @@ class BookPlugin: SuperPlugin, SuperLog {
             return
         }
 
-        self.disk = CloudStorage.make(self.dirName, verbose: true, reason: self.className)
-        self.bookDB = BookDB(db: self.db, disk: disk!, verbose: true)
-        self.bookProvider = BookProvider(disk: disk!)
-        self.initialized = true
+//        self.disk = CloudStorage.make(self.dirName, verbose: true, reason: self.className)
+//        self.bookDB = BookDB(db: self.db, disk: disk!, verbose: true)
+//        self.bookProvider = BookProvider(disk: disk!)
+//        self.initialized = true
 
-        Task { @MainActor in
-            if let url = BookPlugin.getCurrent(), let book = await self.bookDB?.find(url) {
-                playMan.play(url: book.url)
-
-                if let time = BookPlugin.getCurrentTime() {
-                    playMan.seek(time: time)
-                }
-            } else {
-                os_log("\(self.t)No current book URL")
-            }
-        }
+//        Task { @MainActor in
+//            if let url = BookPlugin.getCurrent(), let book = await self.bookDB?.find(url) {
+//                playMan.play(url: book.url)
+//
+//                if let time = BookPlugin.getCurrentTime() {
+//                    playMan.seek(time: time)
+//                }
+//            } else {
+//                os_log("\(self.t)No current book URL")
+//            }
+//        }
     }
 
     func onPlay() {
     }
 
     func onPause(playMan: PlayMan) {
-        Task { @MainActor in
-            BookPlugin.storeCurrentTime(playMan.currentTime)
-        }
+//        Task { @MainActor in
+//            BookPlugin.storeCurrentTime(playMan.currentTime)
+//        }
     }
 
     func onPlayModeChange(mode: PlayMode) {
@@ -126,17 +127,17 @@ class BookPlugin: SuperPlugin, SuperLog {
             return
         }
 
-        if let asset = current {
-            let next = asset.url.getNextFile()
-
-            if verbose {
-                os_log("\(self.t)播放下一个 -> \(next?.lastPathComponent ?? "")")
-            }
-
-            if let next = next, let book = await self.bookDB?.find(next) {
-                await playMan.play(url: book.url)
-            }
-        }
+//        if let asset = current {
+//            let next = asset.url.getNextFile()
+//
+//            if verbose {
+//                os_log("\(self.t)播放下一个 -> \(next?.lastPathComponent ?? "")")
+//            }
+//
+//            if let next = next, let book = await self.bookDB?.find(next) {
+//                await playMan.play(url: book.url)
+//            }
+//        }
     }
 
     func onPlayPrev(playMan: PlayMan, current: PlayAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws {

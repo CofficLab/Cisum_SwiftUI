@@ -5,7 +5,7 @@ import SwiftData
 import SwiftUI
 import MagicPlayMan
 
-struct BookTitle: View, SuperLog, SuperThread {
+struct BookTitle: View, @preconcurrency SuperLog, SuperThread {
     @EnvironmentObject var playMan: MagicPlayMan
 
     @State var title: String = ""

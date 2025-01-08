@@ -5,8 +5,9 @@ import OSLog
 import SwiftUI
 import SwiftData
 
-class AudioDB: ObservableObject, SuperEvent, SuperLog {
-    static var emoji = "🎵"
+@MainActor
+class AudioDB: ObservableObject, SuperEvent, @preconcurrency SuperLog {
+    static let emoji = "🎵"
     private var db: AudioRecordDB
     private var disk: (any SuperStorage)
     
@@ -25,56 +26,61 @@ class AudioDB: ObservableObject, SuperEvent, SuperLog {
     }
     
     func allAudios(reason: String) async -> [AudioModel] {
-        (await self.db.allAudios(reason: reason)).map { audio in
-            audio.setDB(self)
-            return audio
-        }
+        return []
+//        await self.db.allAudios(reason: reason).map { audio in
+//            audio.setDB(self)
+//            return audio
+//        }
     }
     
     func changeDisk(disk: any SuperStorage) {
         os_log("\(Self.t)🍋🍋🍋 Change disk to \(disk.name)")
         
-        self.disk.stopWatch(reason: self.className + ".changeDisk")
-        self.disk = disk
-        self.disk.setDelegate(self)
-        Task(priority: .userInitiated) {
-            await self.disk.watch(reason: self.className + ".changeDisk", verbose: true)
-        }
+//        self.disk.stopWatch(reason: self.className + ".changeDisk")
+//        self.disk = disk
+//        self.disk.setDelegate(self)
+//        Task(priority: .userInitiated) {
+//            await self.disk.watch(reason: self.className + ".changeDisk", verbose: true)
+//        }
     }
     
     func delete(_ audio: AudioModel, verbose: Bool) async throws {
-        try self.disk.deleteFile(audio.url)
-        try await self.db.deleteAudio(audio, verbose: verbose)
-        self.emit(.audioDeleted)
+//        try self.disk.deleteFile(audio.url)
+//        try await self.db.deleteAudio(audio, verbose: verbose)
+//        self.emit(.audioDeleted)
     }
     
     func download(_ audio: AudioModel, verbose: Bool) async throws {
-        try await self.disk.download(audio.url, reason: "AudioDB.download", verbose: verbose)
+//        try await self.disk.download(audio.url, reason: "AudioDB.download", verbose: verbose)
     }
     
     func find(_ url: URL) async -> URL? {
-        let audio = await self.db.findAudio(url)
-        audio?.setDB(self)
-        
-        return url
+        return nil
+//        let audio = await self.db.findAudio(url)
+//        audio?.setDB(self)
+//        
+//        return url
     }
     
     func getFirst() async throws -> URL? {
-        let audio = try await self.db.firstAudio()
-        
-        return audio?.url
+        return nil
+//        let audio = try await self.db.firstAudio()
+//        
+//        return audio?.url
     }
     
     func getNextOf(_ url: URL?, verbose: Bool = false) async throws -> URL? {
-        let audio = try await self.db.getNextOf(url, verbose: verbose)
-        
-        return audio?.url
+        return nil
+//        let audio = try await self.db.getNextOf(url, verbose: verbose)
+//        
+//        return audio?.url
     }
     
     func getPrevOf(_ url: URL?, verbose: Bool = false) async throws -> URL? {
-        let audio = try await self.db.getPrevOf(url, verbose: verbose)
-        
-        return audio?.url
+        return nil
+//        let audio = try await self.db.getPrevOf(url, verbose: verbose)
+//        
+//        return audio?.url
     }
     
     func getTotalCount() async -> Int {
@@ -86,7 +92,7 @@ class AudioDB: ObservableObject, SuperEvent, SuperLog {
     }
     
     func sort(_ sticky: AudioModel?, reason: String) async {
-        await self.db.sort(sticky, reason: reason)
+//        await self.db.sort(sticky, reason: reason)
     }
 
     func sort(_ url: URL?, reason: String) async {
@@ -94,7 +100,7 @@ class AudioDB: ObservableObject, SuperEvent, SuperLog {
     }
 
     func sortRandom(_ sticky: AudioModel?, reason: String, verbose: Bool) async throws {
-        try await self.db.sortRandom(sticky, reason: reason, verbose: verbose)
+//        try await self.db.sortRandom(sticky, reason: reason, verbose: verbose)
     }
 
     func sortRandom(_ url: URL?, reason: String, verbose: Bool) async throws {
@@ -107,15 +113,15 @@ class AudioDB: ObservableObject, SuperEvent, SuperLog {
 }
 
 extension AudioDB: DiskDelegate {
-    public func onUpdate(_ items: DiskFileGroup) async {
-        let verbose = false
-        
-        if verbose {
-            os_log("\(self.t)🍋🍋🍋 OnDiskUpdate")
-        }
-        
-        await self.db.sync(items)
-    }
+//    public func onUpdate(_ items: DiskFileGroup) async {
+//        let verbose = false
+//        
+//        if verbose {
+//            os_log("\(self.t)🍋🍋🍋 OnDiskUpdate")
+//        }
+//        
+//        await self.db.sync(items)
+//    }
 }
 
 extension Notification.Name {

@@ -44,17 +44,17 @@ class AudioProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
     }
 
     func setSyncing(_ syncing: Bool) {
-        if syncing {
-            debounceTimer?.invalidate()
-            withAnimation {
-                self.isSyncing = true
-            }
-        } else {
-            debounceTimer = Timer.scheduledTimer(withTimeInterval: 1.5, repeats: false) { [weak self] _ in
-                withAnimation {
-                    self?.isSyncing = false
-                }
-            }
-        }
+//        if syncing {
+//            debounceTimer?.invalidate()
+//            withAnimation {
+//                self.isSyncing = true
+//            }
+//        } else {
+//            debounceTimer = Timer.scheduledTimer(withTimeInterval: 1.5, repeats: false) { [weak self] _ in
+//                withAnimation {
+//                    self?.isSyncing = false
+//                }
+//            }
+//        }
     }
 }

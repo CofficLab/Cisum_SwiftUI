@@ -3,7 +3,7 @@ import MagicKit
 import MagicUI
 import OSLog
 
-struct FileSizeView: View, SuperLog {
+struct FileSizeView: View, @preconcurrency SuperLog {
     static let emoji = "🫘"
     
     let url: URL

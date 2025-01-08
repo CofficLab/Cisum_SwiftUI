@@ -6,7 +6,7 @@ protocol SuperSetting {
 }
 
 extension SuperSetting {
-    func makeSettingView<Content: View, Trailing: View>(
+    @MainActor func makeSettingView<Content: View, Trailing: View>(
         title: String,
         @ViewBuilder content: () -> Content,
         @ViewBuilder trailing: () -> Trailing
@@ -29,7 +29,7 @@ extension SuperSetting {
         .background(MagicBackground.aurora.opacity(0.1))
     }
     
-    func makeSettingView<Content: View>(
+    @MainActor func makeSettingView<Content: View>(
         title: String,
         @ViewBuilder content: () -> Content
     ) -> some View {

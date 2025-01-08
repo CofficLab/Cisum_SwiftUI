@@ -35,47 +35,47 @@ extension BookRecordDB {
     // MARK: SyncWithDisk
 
     func bookSyncWithDisk(_ group: DiskFileGroup) {
-        let verbose = true
-        let startTime: DispatchTime = .now()
-
-        // 将数组转换成哈希表，方便通过键来快速查找元素，这样可以将时间复杂度降低到：O(m+n)
-        var hashMap = group.hashMap
-
-        do {
-            try context.enumerate(FetchDescriptor<Book>(), block: { book in
-                if let item = hashMap[book.url] {
-                    // 更新数据库记录
-                    book.isCollection = item.isFolder
-                    book.bookTitle = book.bookTitle
-                    
-                    // 记录存在哈希表中，同步完成，删除哈希表记录
-                    hashMap.removeValue(forKey: book.url)
-                } else {
-                    // 记录不存在哈希表中，数据库删除
-                    if verbose {
-                        os_log("\(self.t) 删除 \(book.bookTitle)")
-                    }
-                    context.delete(book)
-                }
-            })
-
-            // 余下的是需要插入数据库的
-            for (_, value) in hashMap {
-                context.insert(value.toBook())
-            }
-        } catch {
-            os_log(.error, "\(error.localizedDescription)")
-        }
-        
-        do {
-            try context.save()
-        } catch {
-            os_log(.error, "\(error.localizedDescription)")
-        }
-
-        os_log("\(self.jobEnd(startTime, title: "\(self.t)SyncBookWithDisk(\(group.count))", tolerance: 0.01))")
-        
-        self.updateBookParent()
+//        let verbose = true
+//        let startTime: DispatchTime = .now()
+//
+//        // 将数组转换成哈希表，方便通过键来快速查找元素，这样可以将时间复杂度降低到：O(m+n)
+//        var hashMap = group.hashMap
+//
+//        do {
+//            try context.enumerate(FetchDescriptor<Book>(), block: { book in
+//                if let item = hashMap[book.url] {
+//                    // 更新数据库记录
+//                    book.isCollection = item.isFolder
+//                    book.bookTitle = book.bookTitle
+//                    
+//                    // 记录存在哈希表中，同步完成，删除哈希表记录
+//                    hashMap.removeValue(forKey: book.url)
+//                } else {
+//                    // 记录不存在哈希表中，数据库删除
+//                    if verbose {
+//                        os_log("\(self.t) 删除 \(book.bookTitle)")
+//                    }
+//                    context.delete(book)
+//                }
+//            })
+//
+//            // 余下的是需要插入数据库的
+//            for (_, value) in hashMap {
+//                context.insert(value.toBook())
+//            }
+//        } catch {
+//            os_log(.error, "\(error.localizedDescription)")
+//        }
+//        
+//        do {
+//            try context.save()
+//        } catch {
+//            os_log(.error, "\(error.localizedDescription)")
+//        }
+//
+//        os_log("\(self.jobEnd(startTime, title: "\(self.t)SyncBookWithDisk(\(group.count))", tolerance: 0.01))")
+//        
+//        self.updateBookParent()
     }
 
     // MARK: SyncWithUpdatedItems

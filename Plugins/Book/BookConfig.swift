@@ -5,17 +5,17 @@ import SwiftData
 struct BookConfig {
     // MARK: 数据库存储名称
     
-    static var dbFileName = "books.db"
+    @MainActor static var dbFileName = "books.db"
         
     // MARK: 本地的数据库的存储路径
     
-    static func getDBUrl() -> URL? {
+    @MainActor static func getDBUrl() -> URL? {
         Config.getDBRootDir()?
             .appendingPathComponent("books_db")
             .appendingPathComponent(dbFileName)
     }
     
-    static func getCoverFolderUrl() -> URL {
+    @MainActor static func getCoverFolderUrl() -> URL {
         guard let dir = Config.getDBRootDir()?
             .appendingPathComponent("books_cover") else {
             fatalError("Could not create cover folder")
@@ -26,7 +26,8 @@ struct BookConfig {
     
     // MARK: Local Container
     
-    static var getContainer: ModelContainer = {
+    @MainActor
+    static let getContainer: ModelContainer = {
         guard let url = getDBUrl() else {
             fatalError("Could not create ModelContainer")
         }

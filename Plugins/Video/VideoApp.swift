@@ -4,7 +4,8 @@ import OSLog
 import MagicKit
 import MagicUI
 
-class VideoApp: SuperLog {
+@MainActor
+class VideoApp: @preconcurrency SuperLog {
     static let emoji = "🎥"
     var id = "Video"
 

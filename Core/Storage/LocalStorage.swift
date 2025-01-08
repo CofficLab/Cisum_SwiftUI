@@ -127,13 +127,13 @@ class LocalStorage: ObservableObject, SuperStorage {
 
         let presenter = FilePresenter(fileURL: self.root)
         
-        await self.delegate?.onUpdate(.fromURLs(presenter.getFiles(), isFullLoad: true, disk: self))
-        
-        presenter.onDidChange = {
-            Task {
-                await self.delegate?.onUpdate(.fromURLs(presenter.getFiles(), isFullLoad: true, disk: self))
-            }
-        }
+//        await self.delegate?.onUpdate(.fromURLs(presenter.getFiles(), isFullLoad: true, disk: self))
+//        
+//        presenter.onDidChange = {
+//            Task {
+//                await self.delegate?.onUpdate(.fromURLs(presenter.getFiles(), isFullLoad: true, disk: self))
+//            }
+//        }
     }
 
     func moveFile(at sourceURL: URL, to destinationURL: URL) async {

@@ -4,13 +4,14 @@ import MagicUI
 import OSLog
 import SwiftUI
 
-class AudioPlugin: SuperPlugin, SuperLog {
+class AudioPlugin: @preconcurrency SuperPlugin, SuperLog {
     static let keyOfCurrentAudioURL = "AudioPluginCurrentAudioURL"
     static let keyOfCurrentAudioTime = "AudioPluginCurrentAudioTime"
     static let keyOfCurrentPlayMode = "AudioPluginCurrentPlayMode"
     static let emoji = "🎧"
 
-    let dirName = Config.isDebug ? "audios_debug" : "audios"
+    @MainActor
+    var dirName: String { Config.isDebug ? "audios_debug" : "audios" }
     let label: String = "Audio"
     var hasPoster: Bool = true
     let description: String = "作为歌曲仓库，只关注文件，文件夹将被忽略"
@@ -22,7 +23,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
     var audioDB: AudioDB?
     var initialized: Bool = false
 
-    func addDBView(reason: String) -> AnyView? {
+    @MainActor func addDBView(reason: String) -> AnyView? {
         let verbose = false
 
         guard let audioProvider = self.audioProvider else {
@@ -51,7 +52,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
         return AnyView(AudioPoster())
     }
 
-    func addSettingView() -> AnyView? {
+    @MainActor func addSettingView() -> AnyView? {
         let verbose = false
 
         if verbose {
@@ -66,9 +67,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
     }
 
     func onPause(playMan: PlayMan) {
-        Task { @MainActor in
-            AudioPlugin.storeCurrentTime(playMan.currentTime)
-        }
+        AudioPlugin.storeCurrentTime(playMan.currentTime)
     }
 
     func onPlayAssetUpdate(asset: PlayAsset?, currentGroup: SuperPlugin?) async throws {
@@ -112,6 +111,7 @@ class AudioPlugin: SuperPlugin, SuperLog {
         }
     }
 
+    @MainActor
     func onWillAppear(playMan: PlayMan, currentGroup: SuperPlugin?, storage: StorageLocation?) async throws {
         let verbose = false
         
@@ -125,11 +125,11 @@ class AudioPlugin: SuperPlugin, SuperLog {
 
         switch storage {
         case .local, .none:
-            disk = LocalStorage.make(self.dirName, verbose: false, reason: self.className + ".onInit")
+            disk = await LocalStorage.make(self.dirName, verbose: false, reason: self.className + ".onInit")
         case .icloud:
-            disk = CloudStorage.make(self.dirName, verbose: false, reason: self.className + ".onInit")
+            disk = await CloudStorage.make(self.dirName, verbose: false, reason: self.className + ".onInit")
         case .custom:
-            disk = LocalStorage.make(self.dirName, verbose: false, reason: self.className + ".onInit")
+            disk = await LocalStorage.make(self.dirName, verbose: false, reason: self.className + ".onInit")
         }
 
         guard let disk = disk else {
@@ -188,11 +188,11 @@ class AudioPlugin: SuperPlugin, SuperLog {
 
         let asset = try await audioDB.getPrevOf(current?.url, verbose: false)
 
-        if let asset = asset {
-            await playMan.play(url: asset)
-        } else {
-            throw AudioPluginError.NoPrevAsset
-        }
+//        if let asset = asset {
+//            await playMan.play(url: asset)
+//        } else {
+//            throw AudioPluginError.NoPrevAsset
+//        }
     }
 
     func onPlayNext(playMan: PlayMan, current: PlayAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws {
@@ -210,14 +210,15 @@ class AudioPlugin: SuperPlugin, SuperLog {
             return
         }
 
-        let asset = try await audioDB.getNextOf(current?.url, verbose: false)
-        if let asset = asset {
-            await playMan.play(url: asset)
-        } else {
-            throw AudioPluginError.NoNextAsset
-        }
+//        let asset = try await audioDB.getNextOf(current?.url, verbose: false)
+//        if let asset = asset {
+//            await playMan.play(url: asset)
+//        } else {
+//            throw AudioPluginError.NoNextAsset
+//        }
     }
     
+    @MainActor
     func onStorageLocationChange(storage: StorageLocation?) async throws {
         switch storage {
         case .local, .none:

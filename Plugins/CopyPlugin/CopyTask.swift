@@ -5,7 +5,7 @@ import MagicUI
 
 @Model
 class CopyTask {
-    static var emoji: String = "🍁"
+    static let emoji: String = "🍁"
     
     var url: URL
     var destination: URL
@@ -38,4 +38,17 @@ class CopyTask {
 
 extension CopyTask: Identifiable {
     var id: PersistentIdentifier { persistentModelID }
+}
+
+// 添加一个新的值类型结构体用于数据传输
+struct CopyTaskDTO: Sendable {
+    let url: URL
+    let destination: URL
+    let error: String
+    
+    init(from model: CopyTask) {
+        self.url = model.url
+        self.destination = model.destination
+        self.error = model.error
+    }
 }

@@ -5,7 +5,7 @@ import MagicUI
 import OSLog
 import SwiftUI
 
-struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content: View {
+struct RootView<Content>: View, SuperEvent, @preconcurrency SuperLog, SuperThread where Content: View {
     var content: Content
     static var emoji: String { "🌳" }
     let s = StoreProvider()
@@ -160,42 +160,42 @@ extension RootView {
     }
 
     func onAppear() {
-        Task(priority: .userInitiated) {
-            do {
-                try Config.getPlugins().forEach({
-                    try self.p.append($0, reason: self.className)
-                })
-
-                try? self.p.restoreCurrent()
-
-                for plugin in p.plugins {
-                    try await plugin.onWillAppear(playMan: man, currentGroup: p.current, storage: c.getStorageLocation())
-                }
-
-                a.showSheet = p.getSheetViews(storage: c.storageLocation).isNotEmpty
-
-                #if os(iOS)
-                    self.main.async {
-                        UIApplication.shared.beginReceivingRemoteControlEvents()
-                    }
-                #endif
-                
-                self.man.subscribe(
-                    name: self.className,
-                    onPreviousRequested: { asset in
-                        self.onPlayPrev(current: asset)
-                    },
-                    onNextRequested: { asset in
-                        self.onPlayNext(current: asset, mode: self.man.playMode)
-                    }
-                )
-            } catch let e {
-                self.error = e
-            }
-
-            self.loading = false
-            os_log("\(self.t)👌👌👌 Ready")
-        }
+//        Task(priority: .userInitiated) {
+//            do {
+//                try Config.getPlugins().forEach({
+//                    try self.p.append($0, reason: self.className)
+//                })
+//
+//                try? self.p.restoreCurrent()
+//
+//                for plugin in p.plugins {
+//                    try await plugin.onWillAppear(playMan: man, currentGroup: p.current, storage: c.getStorageLocation())
+//                }
+//
+//                a.showSheet = p.getSheetViews(storage: c.storageLocation).isNotEmpty
+//
+//                #if os(iOS)
+//                    self.main.async {
+//                        UIApplication.shared.beginReceivingRemoteControlEvents()
+//                    }
+//                #endif
+//                
+//                self.man.subscribe(
+//                    name: self.className,
+//                    onPreviousRequested: { asset in
+//                        self.onPlayPrev(current: asset)
+//                    },
+//                    onNextRequested: { asset in
+//                        self.onPlayNext(current: asset, mode: self.man.playMode)
+//                    }
+//                )
+//            } catch let e {
+//                self.error = e
+//            }
+//
+//            self.loading = false
+//            os_log("\(self.t)👌👌👌 Ready")
+//        }
     }
 
     func onDisappear() {
@@ -230,23 +230,23 @@ extension RootView {
 //            }
 //        }
 
-        for plugin in p.plugins {
-            Task {
-                try await plugin.onPlayAssetUpdate(asset: man.asset, currentGroup: p.current)
-            }
-        }
+//        for plugin in p.plugins {
+//            Task {
+//                try await plugin.onPlayAssetUpdate(asset: man.asset, currentGroup: p.current)
+//            }
+//        }
     }
 
     func onPlayingChange() {
-        Task {
-            for plugin in p.plugins {
-                if man.playing {
-                    plugin.onPlay()
-                } else {
-                    await plugin.onPause(playMan: man)
-                }
-            }
-        }
+//        Task {
+//            for plugin in p.plugins {
+//                if man.playing {
+//                    plugin.onPlay()
+//                } else {
+//                    await plugin.onPause(playMan: man)
+//                }
+//            }
+//        }
     }
 }
 
@@ -254,39 +254,39 @@ extension RootView {
 
 extension RootView {
     func onPlayPrev(current: MagicAsset?) {
-        Task {
-            for plugin in p.plugins {
-                do {
-                    try await plugin.onPlayPrev(playMan: man, current: current, currentGroup: p.current, verbose: true)
-                } catch let e {
-                    m.error(e)
-                }
-            }
-        }
+//        Task {
+//            for plugin in p.plugins {
+//                do {
+//                    try await plugin.onPlayPrev(playMan: man, current: current, currentGroup: p.current, verbose: true)
+//                } catch let e {
+//                    m.error(e)
+//                }
+//            }
+//        }
     }
 
     func onPlayNext(current: MagicAsset?, mode: PlayMode) {
-        Task {
-            for plugin in p.plugins {
-                do {
-                    try await plugin.onPlayNext(playMan: man, current: current, currentGroup: p.current, verbose: true)
-                } catch let e {
-                    m.alert(e.localizedDescription)
-                }
-            }
-        }
+//        Task {
+//            for plugin in p.plugins {
+//                do {
+//                    try await plugin.onPlayNext(playMan: man, current: current, currentGroup: p.current, verbose: true)
+//                } catch let e {
+//                    m.alert(e.localizedDescription)
+//                }
+//            }
+//        }
     }
 
     func onPlayModeChange(mode: PlayMode) {
-        Task {
-            for plugin in p.plugins {
-                do {
-                    try await plugin.onPlayModeChange(mode: mode, asset: man.asset)
-                } catch let e {
-                    m.error(e)
-                }
-            }
-        }
+//        Task {
+//            for plugin in p.plugins {
+//                do {
+//                    try await plugin.onPlayModeChange(mode: mode, asset: man.asset)
+//                } catch let e {
+//                    m.error(e)
+//                }
+//            }
+//        }
     }
 }
 

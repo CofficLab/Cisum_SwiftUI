@@ -4,7 +4,7 @@ import MagicKit
 import MagicUI
 
 protocol DiskDelegate {
-    func onUpdate(_ items: DiskFileGroup) async -> Void
+//    func onUpdate(_ items: DiskFileGroup) async -> Void
 }
 
 protocol SuperStorage: SuperLog {
@@ -69,23 +69,23 @@ extension SuperStorage {
     // MARK: 下载
 
     func downloadNextBatch(_ url: URL, count: Int = 6, reason: String) {
-        Task {
-            do {
-                var currentIndex = 0
-                var currentURL: URL = url
-
-                while currentIndex < count {
-                    try await download(currentURL, reason: "downloadNext 🐛 \(reason)", verbose: false)
-
-                    currentIndex = currentIndex + 1
-                    if let next = self.next(currentURL) {
-                        currentURL = next.url
-                    }
-                }
-            } catch {
-                os_log(.error, "downloadNext 🐛 \(reason) -> \(error.localizedDescription)")
-            }
-        }
+//        Task {
+//            do {
+//                var currentIndex = 0
+//                var currentURL: URL = url
+//
+//                while currentIndex < count {
+//                    try await download(currentURL, reason: "downloadNext 🐛 \(reason)", verbose: false)
+//
+//                    currentIndex = currentIndex + 1
+//                    if let next = self.next(currentURL) {
+//                        currentURL = next.url
+//                    }
+//                }
+//            } catch {
+//                os_log(.error, "downloadNext 🐛 \(reason) -> \(error.localizedDescription)")
+//            }
+//        }
     }
 
     // MARK: 创建磁盘

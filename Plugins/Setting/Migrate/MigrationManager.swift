@@ -7,7 +7,7 @@ typealias ProgressCallback = (Double, String) -> Void
 typealias DownloadProgressCallback = (String, FileStatus.DownloadStatus) -> Void
 
 class MigrationManager: ObservableObject, SuperLog, SuperThread {
-    static var emoji: String = "👵"
+    static let emoji: String = "👵"
     
     @Published private(set) var isCancelled = false
     
@@ -51,18 +51,18 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread {
                 
                 os_log(.info, "\(self.t)开始迁移文件: \(fileName) (\(index + 1)/\(files.count))")
                 
-                await MainActor.run {
-                    progressCallback?(progress, fileName)
-                }
-                
-                let targetFile = targetRoot.appendingPathComponent(fileName)
-                do {
-                    try FileManager.default.moveItem(at: sourceFile, to: targetFile)
-                    os_log(.info, "\(self.t)成功迁移: \(fileName)")
-                } catch {
-                    os_log(.error, "\(self.t)迁移失败: \(fileName) - \(error.localizedDescription)")
-                    throw MigrationError.fileOperationFailed("\(fileName): \(error.localizedDescription)")
-                }
+//                await MainActor.run {
+//                    progressCallback?(progress, fileName)
+//                }
+//                
+//                let targetFile = targetRoot.appendingPathComponent(fileName)
+//                do {
+//                    try FileManager.default.moveItem(at: sourceFile, to: targetFile)
+//                    os_log(.info, "\(self.t)成功迁移: \(fileName)")
+//                } catch {
+//                    os_log(.error, "\(self.t)迁移失败: \(fileName) - \(error.localizedDescription)")
+//                    throw MigrationError.fileOperationFailed("\(fileName): \(error.localizedDescription)")
+//                }
             }
 
             try FileManager.default.removeItem(at: sourceRoot)

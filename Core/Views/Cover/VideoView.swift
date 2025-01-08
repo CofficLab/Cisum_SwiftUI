@@ -6,11 +6,11 @@ import MagicUI
 import MagicUI
 import MagicPlayMan
 
-struct VideoView: View, SuperLog {
+struct VideoView: View, @preconcurrency SuperLog {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var playMan: MagicPlayMan
 
-    static var emoji = "🎬"
+    static let emoji = "🎬"
 
     @State var image: Image?
     @State var downloadingPercent: Double = -1

@@ -355,21 +355,21 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
     }
 
     func insertAudio(_ audio: AudioModel, force: Bool = false) {
-        if force == false && (findAudio(audio.url) != nil) {
-            return
-        }
-
-        context.insert(audio)
-
-        do {
-            try context.save()
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-        }
-
-        Task {
-            self.updateHash(audio)
-        }
+//        if force == false && (findAudio(audio.url) != nil) {
+//            return
+//        }
+//
+//        context.insert(audio)
+//
+//        do {
+//            try context.save()
+//        } catch let e {
+//            os_log(.error, "\(e.localizedDescription)")
+//        }
+//
+//        Task {
+//            self.updateHash(audio)
+//        }
     }
 
     func isAllInCloud() -> Bool {
@@ -540,42 +540,42 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
     }
 
     func syncWithDisk(_ group: DiskFileGroup, verbose: Bool = false) {
-        let verbose = false
-        let startTime: DispatchTime = .now()
-
-        // 将数组转换成哈希表，方便通过键来快速查找元素，这样可以将时间复杂度降低到：O(m+n)
-        var hashMap = group.hashMap
-
-        do {
-            try context.enumerate(FetchDescriptor<AudioModel>(), block: { audio in
-                if let item = hashMap[audio.url] {
-                    // 更新数据库记录
-                    audio.size = item.size
-
-                    // 记录存在哈希表中，同步完成，删除哈希表记录
-                    hashMap.removeValue(forKey: audio.url)
-                } else {
-                    // 记录不存在哈希表中，��据库删除
-                    if verbose {
-                        os_log("\(self.t)删除 \(audio.title)")
-                    }
-                    context.delete(audio)
-                }
-            })
-
-            // 余下的是需要插入数据库的
-            for (_, value) in hashMap {
-                context.insert(value.toAudio())
-            }
-
-            try self.context.save()
-        } catch {
-            os_log(.error, "\(error.localizedDescription)")
-        }
-
-        if verbose {
-            os_log("\(self.jobEnd(startTime, title: "\(self.t) SyncWithDisk(\(group.count))", tolerance: 0.01))")
-        }
+//        let verbose = false
+//        let startTime: DispatchTime = .now()
+//
+//        // 将数组转换成哈希表，方便通过键来快速查找元素，这样可以将时间复杂度降低到：O(m+n)
+//        var hashMap = group.hashMap
+//
+//        do {
+//            try context.enumerate(FetchDescriptor<AudioModel>(), block: { audio in
+//                if let item = hashMap[audio.url] {
+//                    // 更新数据库记录
+//                    audio.size = item.size
+//
+//                    // 记录存在哈希表中，同步完成，删除哈希表记录
+//                    hashMap.removeValue(forKey: audio.url)
+//                } else {
+//                    // 记录不存在哈希表中，��据库删除
+//                    if verbose {
+//                        os_log("\(self.t)删除 \(audio.title)")
+//                    }
+//                    context.delete(audio)
+//                }
+//            })
+//
+//            // 余下的是需要插入数据库的
+//            for (_, value) in hashMap {
+//                context.insert(value.toAudio())
+//            }
+//
+//            try self.context.save()
+//        } catch {
+//            os_log(.error, "\(error.localizedDescription)")
+//        }
+//
+//        if verbose {
+//            os_log("\(self.jobEnd(startTime, title: "\(self.t) SyncWithDisk(\(group.count))", tolerance: 0.01))")
+//        }
     }
 
     func syncWithUpdatedItems(_ metas: DiskFileGroup, verbose: Bool = false) {

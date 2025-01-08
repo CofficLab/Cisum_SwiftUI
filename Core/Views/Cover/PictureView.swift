@@ -3,7 +3,7 @@ import MagicUI
 import OSLog
 import SwiftUI
 
-struct PictureView: View, SuperLog, SuperThread {
+struct PictureView: View, @preconcurrency SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
 
     static let emoji = "🐰"
@@ -76,13 +76,15 @@ struct PictureView: View, SuperLog, SuperThread {
 
     func updateCover(reason: String, verbose: Bool = true) {
         let title = asset.title
+        let url = asset.url
+        
         Task.detached(priority: .background) {
             if verbose {
                 os_log("\(self.t)UpdateCover for \(title) Because of \(reason)")
             }
 
             do {
-                let image = try await asset.url.thumbnail(verbose: true)
+                let image = try await url.thumbnail(verbose: true)
 
                 DispatchQueue.main.async {
                     self.image = image

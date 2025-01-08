@@ -3,7 +3,7 @@ import MagicUI
 import OSLog
 import SwiftUI
 
-struct PlayingCover: View, SuperLog {
+struct PlayingCover: View, @preconcurrency SuperLog {
     @EnvironmentObject var man: PlayMan
 
     private var asset: PlayAsset? { man.asset }

@@ -4,7 +4,8 @@ import MagicUI
 import OSLog
 import SwiftUI
 
-class SettingPlugin: SuperPlugin, SuperLog {
+@MainActor
+class SettingPlugin: @preconcurrency SuperPlugin, @preconcurrency SuperLog {
     static let emoji = "⚙️"
 
     let dirName = "audios"
@@ -35,9 +36,7 @@ class SettingPlugin: SuperPlugin, SuperLog {
     }
 
     func onPause(playMan: PlayMan) {
-        Task { @MainActor in
-            AudioPlugin.storeCurrentTime(playMan.currentTime)
-        }
+        AudioPlugin.storeCurrentTime(playMan.currentTime)
     }
 
     func onPlay() {

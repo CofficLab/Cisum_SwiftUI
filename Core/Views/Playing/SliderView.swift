@@ -5,7 +5,7 @@ import MagicUI
 import OSLog
 import SwiftUI
 
-struct SliderView: View, SuperThread, SuperLog {
+struct SliderView: View, SuperThread, @preconcurrency SuperLog {
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var app: AppProvider
 

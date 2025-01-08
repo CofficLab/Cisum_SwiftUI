@@ -7,7 +7,8 @@ import SwiftUI
 import MagicKit
 import MagicUI
 
-class AppProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLog, SuperThread {
+@MainActor
+class AppProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, @preconcurrency SuperLog, SuperThread {
     static let emoji: String = "🐮"
     
     @Published var showDB: Bool = Config.showDB
@@ -25,7 +26,7 @@ class AppProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLog, 
         }
         
         Task {
-            Config.setShowDB(true)
+            await Config.setShowDB(true)
         }
     }
     
@@ -35,7 +36,7 @@ class AppProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLog, 
         }
         
         Task {
-            Config.setShowDB(false)
+            await Config.setShowDB(false)
         }
     }
     
@@ -44,20 +45,14 @@ class AppProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLog, 
     }
     
     func clearError() {
-        self.main.async {
-            self.error = nil
-        }
+        self.error = nil
     }
 
     func setError(_ error: Error) {
-        self.main.async {
-            self.error = error
-        }
+        self.error = error
     }
 
     func setResetting(_ value: Bool) {
-        self.main.async {
-            self.isResetting = value
-        }
+        self.isResetting = value
     }
 }

@@ -3,15 +3,18 @@ import MagicKit
 import MagicUI
 import OSLog
 
-class CloudStorage: ObservableObject, SuperStorage, SuperLog, SuperThread {
-    static var emoji = "☁️"
-    static let cloudRoot = Config.cloudDocumentsDir
+class CloudStorage: ObservableObject, @preconcurrency SuperStorage, @preconcurrency SuperLog, SuperThread {
+    static let emoji = "☁️"
+    @MainActor
+    static var cloudRoot: URL? {
+        Config.cloudDocumentsDir
+    }
 
     var delegate: DiskDelegate?
 
     // MARK: 磁盘的挂载目录
 
-    static func getMountedURL(verbose: Bool) -> URL? {
+    @MainActor static func getMountedURL(verbose: Bool) -> URL? {
         guard let cloudRoot = Self.cloudRoot else {
             os_log(.error, "\(Self.t)无法获取根目录，因为 CloudRoot=nil")
 
@@ -157,13 +160,11 @@ class CloudStorage: ObservableObject, SuperStorage, SuperLog, SuperThread {
     }
 
     func evict(_ url: URL) {
-        Task {
-            os_log("\(self.t)🏃🏃🏃 Evit \(url.lastPathComponent)")
-            do {
-                try url.evict()
-            } catch {
-                os_log(.error, "\(error.localizedDescription)")
-            }
+        os_log("\(self.t)🏃🏃🏃 Evit \(url.lastPathComponent)")
+        do {
+            try url.evict()
+        } catch {
+            os_log(.error, "\(error.localizedDescription)")
         }
     }
 
@@ -240,7 +241,7 @@ class CloudStorage: ObservableObject, SuperStorage, SuperLog, SuperThread {
                 }
             }
 
-            await self.delegate?.onUpdate(DiskFileGroup.fromMetaCollection(collection, disk: self))
+//            await self.delegate?.onUpdate(DiskFileGroup.fromMetaCollection(collection, disk: self))
         }
     }
 

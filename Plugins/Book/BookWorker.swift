@@ -11,9 +11,9 @@ class BookWorker {
     }
     
     func addJob(_ job: any BookJob) {
-        taskQueue.async {
-            job.run(verbose: false)
-        }
+//        taskQueue.async {
+//            job.run(verbose: false)
+//        }
     }
     
     func runJobs() {
@@ -21,7 +21,7 @@ class BookWorker {
         isRunning = true
         
         // Add your jobs here
-        addJob(BookUpdateCoverJob(db: self.db))
+//        addJob(BookUpdateCoverJob(db: self.db))
         // Add more jobs as needed
         // addJob(AnotherJob(db: self.db))
     }

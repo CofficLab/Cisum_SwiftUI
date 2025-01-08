@@ -4,7 +4,7 @@ import MagicUI
 import OSLog
 
 class BookDB: ObservableObject, SuperEvent, SuperLog {
-    static var emoji = "📖"
+    static let emoji = "📖"
     
     var db: BookRecordDB
     var disk: any SuperStorage
@@ -19,17 +19,18 @@ class BookDB: ObservableObject, SuperEvent, SuperLog {
         self.disk = disk
         self.worker = BookWorker(db: db)
 
-        Task {
-            self.worker.runJobs()
-            await disk.watch(reason: "AudioDB.init", verbose: true)
-        }
+//        Task {
+//            self.worker.runJobs()
+//            await disk.watch(reason: "AudioDB.init", verbose: true)
+//        }
     }
 
     func getRootBooks() async -> [Book] {
-        (await self.db.getBooksOfCollectionType()).map { book in
-            book.setDB(self)
-            return book
-        }
+        []
+//        (await self.db.getBooksOfCollectionType()).map { book in
+//            book.setDB(self)
+//            return book
+//        }
     }
     
     func getTotal() async -> Int {
@@ -46,9 +47,10 @@ class BookDB: ObservableObject, SuperEvent, SuperLog {
     }
     
     func find(_ url: URL) async -> Book? {
-        let book = await self.db.findBook(url)
-        book?.setDB(self)
-        
-        return book
+        nil
+//        let book = await self.db.findBook(url)
+//        book?.setDB(self)
+//        
+//        return book
     }
 }

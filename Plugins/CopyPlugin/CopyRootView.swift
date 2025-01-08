@@ -1,12 +1,12 @@
-import AlertToast
-import MagicKit
-import MagicUI
-import OSLog
-import SwiftUI
-import UniformTypeIdentifiers
+@preconcurrency import AlertToast
+@preconcurrency import MagicKit
+@preconcurrency import MagicUI
+@preconcurrency import OSLog
+@preconcurrency import SwiftUI
+@preconcurrency import UniformTypeIdentifiers
 
-struct CopyRootView: View, SuperEvent, SuperLog, SuperThread {
-    static var emoji = "🚛"
+struct CopyRootView: View, SuperEvent, @preconcurrency SuperLog, SuperThread {
+    static let emoji = "🚛"
 
     @EnvironmentObject var db: CopyDB
     @EnvironmentObject var s: StoreProvider
@@ -50,8 +50,21 @@ struct CopyRootView: View, SuperEvent, SuperLog, SuperThread {
         .frame(maxWidth: .infinity)
         .frame(maxHeight: .infinity)
         .onAppear(perform: onAppear)
-        .onDrop(of: [UTType.fileURL], isTargeted: self.$isDropping, perform: onDrop)
+        .onDrop(of: [UTType.fileURL], isTargeted: self.$isDropping) { providers in
+            Task {
+                await handleDrop(providers)
+            }
+            return true
+        }
         .onReceive(NotificationCenter.default.publisher(for: .CopyFiles), perform: onCopyFiles)
+    }
+
+    @MainActor
+    private func handleDrop(_ providers: [NSItemProvider]) async {
+        let result = await onDrop(providers)
+        if !result {
+            os_log(.error, "\(self.t)Drop operation failed")
+        }
     }
 }
 
@@ -76,41 +89,49 @@ extension CopyRootView {
         }
     }
 
-    func onDrop(_ providers: [NSItemProvider]) -> Bool {
+    func onDrop(_ providers: [NSItemProvider]) async -> Bool {
         let verbose = true
 
         if outOfLimit {
             return false
         }
 
-        // Extract URLs from providers on the main thread
-        let urls = providers.compactMap { provider -> URL? in
-            var result: URL?
-            let semaphore = DispatchSemaphore(value: 0)
-
-            _ = provider.loadObject(ofClass: URL.self) { url, _ in
-                result = url
-                semaphore.signal()
-            }
-
-            semaphore.wait()
-            return result
-        }
-
         guard let disk = p.current?.getDisk() else {
             os_log(.error, "\(self.t)No Disk")
-            self.m.toast("No Disk")
+            await MainActor.run {
+                self.m.toast("No Disk")
+            }
             return false
         }
-        
-        Task.detached(priority: .background, operation: {
-            if verbose {
-                os_log("\(self.t)➕➕➕ 添加 \(urls.count) 个文件到复制队列")
-            }
 
-            await self.worker.append(urls, folder: disk.root)
-        })
-        
+        let diskRoot = disk.root
+
+        if verbose {
+            os_log("\(self.t)开始处理拖放文件")
+        }
+
+        var urls: [URL] = []
+
+        // Handle each provider separately and safely
+        for provider in providers {
+            if let itemProvider = try? await provider.loadItem(forTypeIdentifier: UTType.fileURL.identifier) {
+                if let urlData = itemProvider as? Data,
+                   let url = URL(dataRepresentation: urlData, relativeTo: nil) {
+                    urls.append(url)
+                } else if let url = itemProvider as? URL {
+                    urls.append(url)
+                }
+            }
+        }
+
+        if verbose {
+            os_log("\(self.t)➕➕➕ 添加 \(urls.count) 个文件到复制队列")
+        }
+
+        await MainActor.run {
+            self.worker.append(urls, folder: diskRoot)
+        }
+
         return true
     }
 }

@@ -4,7 +4,7 @@ import SwiftUI
 import MagicKit
 import MagicUI
 
-struct AllSubscriptions: View, SuperLog {
+struct AllSubscriptions: View, @preconcurrency SuperLog {
     @EnvironmentObject var store: StoreProvider
     @EnvironmentObject var app: AppProvider
     @Environment(\.colorScheme) var colorScheme: ColorScheme
@@ -13,7 +13,7 @@ struct AllSubscriptions: View, SuperLog {
     @State private var refreshing = false
     @State private var error: Error? = nil
     
-    static var emoji = "🖥️"
+    static let emoji = "🖥️"
 
     var body: some View {
         GroupBox {

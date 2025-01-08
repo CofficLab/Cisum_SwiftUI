@@ -6,7 +6,7 @@ import SwiftData
 import SwiftUI
 import UniformTypeIdentifiers
 
-struct BookDBView: View, SuperLog, SuperThread {
+struct BookDBView: View, @preconcurrency SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var bookManager: BookProvider
     @EnvironmentObject var db: BookDB
@@ -14,7 +14,7 @@ struct BookDBView: View, SuperLog, SuperThread {
     @State var treeView = false
     @State var total: Int = 0
 
-    static var emoji = "🐘"
+    static let emoji = "🐘"
 
     var dropping: Bool { app.isDropping }
     var disk: any SuperStorage
@@ -57,7 +57,7 @@ struct BookDBView: View, SuperLog, SuperThread {
             }
         )
         .task {
-            self.total = await db.getTotal()
+//            self.total = await db.getTotal()
         }
         .onDrop(of: [UTType.fileURL], isTargeted: $app.isDropping) { providers -> Bool in
             let dispatchGroup = DispatchGroup()

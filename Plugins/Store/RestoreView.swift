@@ -4,7 +4,7 @@ import OSLog
 import StoreKit
 import SwiftUI
 
-struct RestoreView: View, SuperEvent, SuperLog, SuperThread {
+struct RestoreView: View, SuperEvent, @preconcurrency SuperLog, SuperThread {
     @EnvironmentObject var store: StoreProvider
     @EnvironmentObject var app: AppProvider
     @Environment(\.colorScheme) var colorScheme: ColorScheme
@@ -13,7 +13,7 @@ struct RestoreView: View, SuperEvent, SuperLog, SuperThread {
     @State private var refreshing = false
     @State private var error: Error? = nil
 
-    static var emoji = "🖥️"
+    static let emoji = "🖥️"
 
     var body: some View {
         VStack {

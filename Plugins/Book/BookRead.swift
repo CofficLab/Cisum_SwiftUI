@@ -205,17 +205,17 @@ extension BookRecordDB {
 
 extension BookRecordDB {
     func getCover(_ bookURL: URL) async -> Image? {
-        guard let book = self.findBook(bookURL) else {
-            return nil
-        }
-        
-        if let image = await book.getBookCoverFromDB() {
-            return image
-        }
-        
-        if let parent = self.findBook(bookURL.deletingLastPathComponent()) {
-            return await self.getCover(parent.url)
-        }
+//        guard let book = self.findBook(bookURL) else {
+//            return nil
+//        }
+//        
+//        if let image = await book.getBookCoverFromDB() {
+//            return image
+//        }
+//        
+//        if let parent = self.findBook(bookURL.deletingLastPathComponent()) {
+//            return await self.getCover(parent.url)
+//        }
         
         return nil
     }

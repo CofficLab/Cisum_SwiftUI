@@ -4,7 +4,7 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-struct CopyStateView: View, SuperLog, SuperThread {
+struct CopyStateView: View, @preconcurrency SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var messageManager: MessageProvider
     @Environment(\.modelContext) private var modelContext
