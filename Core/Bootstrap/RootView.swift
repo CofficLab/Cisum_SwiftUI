@@ -6,19 +6,28 @@ import OSLog
 import SwiftUI
 
 // 1. 添加一个 actor 来安全地包装 MagicPlayMan 的访问
-public actor PlayManWrapper {
-    private weak var playMan: MagicPlayMan?
+@MainActor
+public class PlayManWrapper {
+    let playMan: MagicPlayMan
     
     init(playMan: MagicPlayMan) {
         self.playMan = playMan
     }
     
-    func configure(for plugin: SuperPlugin) async {
-        await MainActor.run {
-            // 在这里安全地访问 playMan
-            // 所有对 playMan 的操作都会在主线程执行
-//            playMan?.someOperation()
-        }
+    func play(url: URL) async {
+        playMan.play(url: url)
+    }
+
+    func seek(time: TimeInterval) async {
+        playMan.seek(time: time)
+    }
+
+    func setPlayMode(_ mode: PlayMode) {
+        playMan.setPlayMode(mode)
+    }
+    
+    func getPlayMode() -> PlayMode {
+        playMan.playMode
     }
 }
 
@@ -190,10 +199,7 @@ extension RootView {
                 
                 try? self.p.restoreCurrent()
                 
-                // 使用 wrapper 来安全地访问 man
-                for plugin in p.plugins {
-                    try await plugin.onWillAppear(playMan: playManWrapper, currentGroup: p.current, storage: c.getStorageLocation())
-                }
+                try await p.handleOnAppear(playMan: playManWrapper, current: p.current, storage: c.getStorageLocation())
                 
                 a.showSheet = p.getSheetViews(storage: c.storageLocation).isNotEmpty
                 

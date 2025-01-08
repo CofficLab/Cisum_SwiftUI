@@ -156,6 +156,12 @@ class PluginProvider: ObservableObject, @preconcurrency SuperLog, SuperThread {
             try await plugin.onDisappear()
         }
     }
+    
+    func handleOnAppear(playMan: PlayManWrapper, current: SuperPlugin?, storage: StorageLocation?) async throws {
+        for plugin in plugins {
+            try await plugin.onWillAppear(playMan: playMan, currentGroup: current, storage: storage)
+        }
+    }
 }
 
 enum PluginProviderError: Error, LocalizedError {
