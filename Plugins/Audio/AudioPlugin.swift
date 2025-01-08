@@ -23,7 +23,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
     @MainActor var initialized: Bool = false
 
     @MainActor func addDBView(reason: String) -> AnyView? {
-        let verbose = true
+        let verbose = false
 
         guard let audioProvider = self.audioProvider else {
             os_log(.error, "\(self.t)AddDBView, AudioProvider not found")
@@ -137,7 +137,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
             throw AudioPluginError.NoDisk
         }
 
-        self.audioDB = AudioDB(disk: disk, reason: self.className + ".onInit", verbose: false)
+        self.audioDB = AudioDB(disk: disk, reason: self.className + ".onInit", verbose: true)
         self.audioProvider = AudioProvider(disk: disk)
         self.initialized = true
         

@@ -517,102 +517,101 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
     }
 
-//    func sync(_ group: DiskFileGroup, verbose: Bool = false) {
+    func sync(_ items: [MetaWrapper], verbose: Bool = false, isFirst: Bool) {
+        if verbose {
+            os_log("\(self.t)🔄🔄🔄 Sync(\(items.count))")
+        }
+
+        if isFirst {
+        syncWithDisk(items)
+        } else {
+            syncWithUpdatedItems(items)
+        }
+
 //        if verbose {
-//            os_log("\(self.t)🔄🔄🔄 Sync")
+//            os_log("\(self.tForSync) 计算刚刚同步的项目的 Hash(\(group.count))")
 //        }
 //
-//        self.emitDBSyncing(group)
-//
-//        if verbose {
-//            os_log("\(self.t) Sync(\(group.count))")
-//        }
-//
-//        if group.isFullLoad {
-//            syncWithDisk(group)
-//        } else {
-//            syncWithUpdatedItems(group)
-//        }
-//
-////        if verbose {
-////            os_log("\(self.tForSync) 计算刚刚同步的项目的 Hash(\(group.count))")
-////        }
-////
-////        self.updateGroupForURLs(group.urls)
-//
+//        self.updateGroupForURLs(group.urls)
+
 //        self.emitDBSynced()
-//    }
+    }
 
-//    func syncWithDisk(_ group: DiskFileGroup, verbose: Bool = false) {
-//        let verbose = false
-//        let startTime: DispatchTime = .now()
-//
-//        // 将数组转换成哈希表，方便通过键来快速查找元素，这样可以将时间复杂度降低到：O(m+n)
-//        var hashMap = group.hashMap
-//
-//        do {
-//            try context.enumerate(FetchDescriptor<AudioModel>(), block: { audio in
-//                if let item = hashMap[audio.url] {
-//                    // 更新数据库记录
+    func syncWithDisk(_ items: [MetaWrapper], verbose: Bool = false) {
+        let verbose = false
+        let startTime: DispatchTime = .now()
+
+        // 将数组转换成哈希表，方便通过键来快速查找元素，这样可以将时间复杂度降低到：O(m+n)
+
+            var hashMap = [URL: MetaWrapper]()
+                for element in items {
+                    hashMap[element.url!] = element
+                }
+            
+
+        do {
+            try context.enumerate(FetchDescriptor<AudioModel>(), block: { audio in
+                if let item = hashMap[audio.url] {
+                    // 更新数据库记录
 //                    audio.size = item.size
-//
-//                    // 记录存在哈希表中，同步完成，删除哈希表记录
-//                    hashMap.removeValue(forKey: audio.url)
-//                } else {
-//                    // 记录不存在哈希表中，��据库删除
-//                    if verbose {
-//                        os_log("\(self.t)删除 \(audio.title)")
-//                    }
-//                    context.delete(audio)
-//                }
-//            })
-//
-//            // 余下的是需要插入数据库的
-//            for (_, value) in hashMap {
-//                context.insert(value.toAudio())
-//            }
-//
-//            try self.context.save()
-//        } catch {
-//            os_log(.error, "\(error.localizedDescription)")
-//        }
-//
-//        if verbose {
-//            os_log("\(self.jobEnd(startTime, title: "\(self.t) SyncWithDisk(\(group.count))", tolerance: 0.01))")
-//        }
-//    }
 
-//    func syncWithUpdatedItems(_ metas: DiskFileGroup, verbose: Bool = false) {
-//        if verbose {
-//            os_log("\(self.t)SyncWithUpdatedItems with count=\(metas.count)")
-//        }
-//
-//        // 如果url属性为unique，数据库已存在相同url的记录，再执行context.insert，发现已存在的被替换成新的了
-//        // 但在这里，希望如果存在，就不要插入
-//        for (_, meta) in metas.files.enumerated() {
-//            if meta.isDeleted {
-//                let deletedURL = meta.url
-//
-//                do {
-//                    try context.delete(model: AudioModel.self, where: #Predicate { audio in
-//                        audio.url == deletedURL
-//                    })
-//                } catch let e {
-//                    os_log(.error, "\(e.localizedDescription)")
-//                }
-//            } else {
-//                if findAudio(meta.url) == nil {
-//                    context.insert(meta.toAudio())
-//                }
-//            }
-//        }
-//
-//        do {
-//            try context.save()
-//        } catch let e {
-//            os_log(.error, "\(e.localizedDescription)")
-//        }
-//    }
+                    // 记录存在哈希表中，同步完成，删除哈希表记录
+                    hashMap.removeValue(forKey: audio.url)
+                } else {
+                    // 记录不存在哈希表中，��据库删除
+                    if verbose {
+                        os_log("\(self.t)删除 \(audio.title)")
+                    }
+                    context.delete(audio)
+                }
+            })
+
+            // 余下的是需要插入数据库的
+            for (_, value) in hashMap {
+                context.insert(AudioModel(value.url!))
+            }
+
+            try self.context.save()
+        } catch {
+            os_log(.error, "\(error.localizedDescription)")
+        }
+
+        if verbose {
+            os_log("\(self.jobEnd(startTime, title: "\(self.t) SyncWithDisk(\(items.count))", tolerance: 0.01))")
+        }
+    }
+
+    func syncWithUpdatedItems(_ metas: [MetaWrapper], verbose: Bool = false) {
+        if verbose {
+            os_log("\(self.t)SyncWithUpdatedItems with count=\(metas.count)")
+        }
+
+        // 如果url属性为unique，数据库已存在相同url的记录，再执行context.insert，发现已存在的被替换成新的了
+        // 但在这里，希望如果存在，就不要插入
+        for (_, meta) in metas.enumerated() {
+            if meta.isDeleted {
+                let deletedURL = meta.url!
+
+                do {
+                    try context.delete(model: AudioModel.self, where: #Predicate { audio in
+                        audio.url == deletedURL
+                    })
+                } catch let e {
+                    os_log(.error, "\(e.localizedDescription)")
+                }
+            } else {
+                if let url = meta.url, findAudio(url) == nil {
+                    context.insert(AudioModel(url))
+                }
+            }
+        }
+
+        do {
+            try context.save()
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
+    }
 
     func toggleLike(_ url: URL) throws {
         if let dbAudio = findAudio(url) {
