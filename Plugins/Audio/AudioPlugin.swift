@@ -4,7 +4,7 @@ import MagicUI
 import OSLog
 import SwiftUI
 
-class AudioPlugin: @preconcurrency SuperPlugin, SuperLog {
+actor AudioPlugin: @preconcurrency SuperPlugin, SuperLog {
     static let keyOfCurrentAudioURL = "AudioPluginCurrentAudioURL"
     static let keyOfCurrentAudioTime = "AudioPluginCurrentAudioTime"
     static let keyOfCurrentPlayMode = "AudioPluginCurrentPlayMode"
@@ -12,11 +12,11 @@ class AudioPlugin: @preconcurrency SuperPlugin, SuperLog {
 
     @MainActor
     var dirName: String { Config.isDebug ? "audios_debug" : "audios" }
-    let label: String = "Audio"
-    var hasPoster: Bool = true
-    let description: String = "作为歌曲仓库，只关注文件，文件夹将被忽略"
-    var iconName: String = "music.note"
-    var isGroup: Bool = true
+    let label = "Audio"
+    let hasPoster = true
+    let description = "作为歌曲仓库，只关注文件，文件夹将被忽略"
+    let iconName = "music.note"
+    let isGroup = true
 
     var disk: (any SuperStorage)?
     var audioProvider: AudioProvider?
@@ -25,46 +25,48 @@ class AudioPlugin: @preconcurrency SuperPlugin, SuperLog {
 
     @MainActor func addDBView(reason: String) -> AnyView? {
         let verbose = false
+        
+        return nil
 
-        guard let audioProvider = self.audioProvider else {
-            os_log(.error, "\(self.t)AddDBView, AudioProvider not found")
-            return AnyView(EmptyView())
-        }
-
-        guard let audioDB = audioDB else {
-            os_log(.error, "\(self.t)AddDBView, AudioDB not found")
-            return AnyView(EmptyView())
-        }
-
-        if verbose {
-            os_log("\(self.t)🍋🍋🍋 AddDBView")
-        }
-
-        return AnyView(AudioDBView(verbose: false, reason: self.className)
-            .modelContainer(AudioConfig.getContainer)
-            .environmentObject(audioDB)
-            .environmentObject(audioProvider)
-        )
+//        guard let audioProvider = self.audioProvider else {
+//            os_log(.error, "\(self.t)AddDBView, AudioProvider not found")
+//            return AnyView(EmptyView())
+//        }
+//
+//        guard let audioDB = audioDB else {
+//            os_log(.error, "\(self.t)AddDBView, AudioDB not found")
+//            return AnyView(EmptyView())
+//        }
+//
+//        if verbose {
+//            os_log("\(self.t)🍋🍋🍋 AddDBView")
+//        }
+//
+//        return AnyView(AudioDBView(verbose: false, reason: self.className)
+//            .modelContainer(AudioConfig.getContainer)
+//            .environmentObject(audioDB)
+//            .environmentObject(audioProvider)
+//        )
     }
 
-    func addPosterView() -> AnyView {
-        os_log("\(self.t)🍋🍋🍋 AddPosterView")
-        return AnyView(AudioPoster())
-    }
+//    func addPosterView() -> AnyView {
+//        os_log("\(self.t)🍋🍋🍋 AddPosterView")
+//        return AnyView(AudioPoster())
+//    }
 
-    @MainActor func addSettingView() -> AnyView? {
-        let verbose = false
-
-        if verbose {
-            os_log("\(self.t)🍋🍋🍋 AddSettingView")
-        }
-
-        guard let audioProvider = self.audioProvider else {
-            return nil
-        }
-
-        return AnyView(AudioSettings().environmentObject(audioProvider))
-    }
+//    @MainActor func addSettingView() -> AnyView? {
+//        let verbose = false
+//
+//        if verbose {
+//            os_log("\(self.t)🍋🍋🍋 AddSettingView")
+//        }
+//
+//        guard let audioProvider = self.audioProvider else {
+//            return nil
+//        }
+//
+//        return AnyView(AudioSettings().environmentObject(audioProvider))
+//    }
 
     func onPause(playMan: PlayMan) {
         AudioPlugin.storeCurrentTime(playMan.currentTime)
@@ -111,73 +113,73 @@ class AudioPlugin: @preconcurrency SuperPlugin, SuperLog {
         }
     }
 
-    @MainActor
-    func onWillAppear(playMan: PlayMan, currentGroup: SuperPlugin?, storage: StorageLocation?) async throws {
-        let verbose = false
-        
-        if currentGroup?.id != self.id {
-            return
-        }
-
-        if verbose {
-            os_log("\(self.a)with storage \(storage?.emojiTitle ?? "nil")")
-        }
-
-        switch storage {
-        case .local, .none:
-            disk = await LocalStorage.make(self.dirName, verbose: false, reason: self.className + ".onInit")
-        case .icloud:
-            disk = await CloudStorage.make(self.dirName, verbose: false, reason: self.className + ".onInit")
-        case .custom:
-            disk = await LocalStorage.make(self.dirName, verbose: false, reason: self.className + ".onInit")
-        }
-
-        guard let disk = disk else {
-            os_log(.error, "\(self.t)⚠️ AudioPlugin.onInit: disk == nil")
-            
-            throw AudioPluginError.NoDisk
-        }
-
-        self.audioDB = AudioDB(disk: disk, reason: self.className + ".onInit", verbose: false)
-        self.audioProvider = AudioProvider(disk: disk)
-        self.initialized = true
-        
-        var assetTarget: URL?
-        var timeTarget: TimeInterval = 0
-
-        if let url = AudioPlugin.getCurrent(), let audio = await self.audioDB?.find(url) {
-            assetTarget = audio
-
-            if let time = AudioPlugin.getCurrentTime() {
-                timeTarget = time
-            }
-        } else {
-            if verbose {
-                os_log("\(self.t)⚠️⚠️⚠️ No current audio URL, try find first")
-            }
-
-            guard let audioDB = audioDB else {
-                os_log("\(self.t)⚠️⚠️⚠️ AudioDB not found")
-                return
-            }
-
-            if let first = try? await audioDB.getFirst() {
-                assetTarget = first
-            } else {
-                os_log("\(self.t)⚠️⚠️⚠️ No audio found")
-            }
-        }
-        
-        if let asset = assetTarget {
-            await playMan.play(url: asset)
-            await playMan.seek(time: timeTarget)
-        }
-
-        let mode = AudioPlugin.getPlayMode()
-        if let mode = mode {
-            playMan.setPlayMode(mode)
-        }
-    }
+//    @MainActor
+//    func onWillAppear(playMan: PlayMan, currentGroup: SuperPlugin?, storage: StorageLocation?) async throws {
+//        let verbose = false
+//        
+//        if currentGroup?.id != self.id {
+//            return
+//        }
+//
+//        if verbose {
+//            os_log("\(self.a)with storage \(storage?.emojiTitle ?? "nil")")
+//        }
+//
+//        switch storage {
+//        case .local, .none:
+//            disk = await LocalStorage.make(self.dirName, verbose: false, reason: self.className + ".onInit")
+//        case .icloud:
+//            disk = await CloudStorage.make(self.dirName, verbose: false, reason: self.className + ".onInit")
+//        case .custom:
+//            disk = await LocalStorage.make(self.dirName, verbose: false, reason: self.className + ".onInit")
+//        }
+//
+//        guard let disk = disk else {
+//            os_log(.error, "\(self.t)⚠️ AudioPlugin.onInit: disk == nil")
+//            
+//            throw AudioPluginError.NoDisk
+//        }
+//
+//        self.audioDB = AudioDB(disk: disk, reason: self.className + ".onInit", verbose: false)
+//        self.audioProvider = AudioProvider(disk: disk)
+//        self.initialized = true
+//        
+//        var assetTarget: URL?
+//        var timeTarget: TimeInterval = 0
+//
+//        if let url = AudioPlugin.getCurrent(), let audio = await self.audioDB?.find(url) {
+//            assetTarget = audio
+//
+//            if let time = AudioPlugin.getCurrentTime() {
+//                timeTarget = time
+//            }
+//        } else {
+//            if verbose {
+//                os_log("\(self.t)⚠️⚠️⚠️ No current audio URL, try find first")
+//            }
+//
+//            guard let audioDB = audioDB else {
+//                os_log("\(self.t)⚠️⚠️⚠️ AudioDB not found")
+//                return
+//            }
+//
+//            if let first = try? await audioDB.getFirst() {
+//                assetTarget = first
+//            } else {
+//                os_log("\(self.t)⚠️⚠️⚠️ No audio found")
+//            }
+//        }
+//        
+//        if let asset = assetTarget {
+//            await playMan.play(url: asset)
+//            await playMan.seek(time: timeTarget)
+//        }
+//
+//        let mode = AudioPlugin.getPlayMode()
+//        if let mode = mode {
+//            playMan.setPlayMode(mode)
+//        }
+//    }
 
     func onPlayPrev(playMan: PlayMan, current: PlayAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws {
         os_log("\(self.t)OnPlayPrev")
@@ -218,23 +220,23 @@ class AudioPlugin: @preconcurrency SuperPlugin, SuperLog {
 //        }
     }
     
-    @MainActor
-    func onStorageLocationChange(storage: StorageLocation?) async throws {
-        switch storage {
-        case .local, .none:
-            disk = LocalStorage.make(self.dirName, verbose: false, reason: self.className + ".onInit")
-        case .icloud:
-            disk = CloudStorage.make(self.dirName, verbose: false, reason: self.className + ".onInit")
-        case .custom:
-            disk = LocalStorage.make(self.dirName, verbose: false, reason: self.className + ".onInit")
-        }
-        
-        guard let disk = disk else {
-            fatalError("AudioPlugin.onInit: disk == nil")
-        }
-        
-        self.audioDB?.changeDisk(disk: disk)
-    }
+//    @MainActor
+//    func onStorageLocationChange(storage: StorageLocation?) async throws {
+//        switch storage {
+//        case .local, .none:
+//            disk = LocalStorage.make(self.dirName, verbose: false, reason: self.className + ".onInit")
+//        case .icloud:
+//            disk = CloudStorage.make(self.dirName, verbose: false, reason: self.className + ".onInit")
+//        case .custom:
+//            disk = LocalStorage.make(self.dirName, verbose: false, reason: self.className + ".onInit")
+//        }
+//        
+//        guard let disk = disk else {
+//            fatalError("AudioPlugin.onInit: disk == nil")
+//        }
+//        
+//        self.audioDB?.changeDisk(disk: disk)
+//    }
 }
 
 // MARK: Store

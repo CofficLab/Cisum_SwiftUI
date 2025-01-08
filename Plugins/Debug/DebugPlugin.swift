@@ -4,7 +4,7 @@ import MagicKit
 import MagicUI
 import SwiftUI
 
-class DebugPlugin: SuperPlugin, SuperLog {
+actor DebugPlugin: SuperPlugin, SuperLog {
     static let emoji = "🥣"
     
     let hasPoster = false

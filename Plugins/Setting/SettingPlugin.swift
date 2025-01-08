@@ -4,58 +4,32 @@ import MagicUI
 import OSLog
 import SwiftUI
 
-@MainActor
-class SettingPlugin: @preconcurrency SuperPlugin, @preconcurrency SuperLog {
+actor SettingPlugin: SuperPlugin, @preconcurrency SuperLog {
     static let emoji = "⚙️"
 
     let dirName = "audios"
     let label: String = "Setting"
-    var hasPoster: Bool = true
+    let hasPoster: Bool = true
     let description: String = "设置"
-    var iconName: String = "music.note"
-    var isGroup: Bool = false
+    let iconName: String = "music.note"
+    let isGroup: Bool = false
 
+    @MainActor
     func addDBView(reason: String) -> AnyView? {
         nil
     }
 
+    @MainActor
     func addPosterView() -> AnyView {
         AnyView(EmptyView())
     }
 
+    @MainActor
     func addSettingView() -> AnyView? {
         AnyView(SettingPluginView())
-    }
-
-    func addStateView(currentGroup: SuperPlugin?) -> AnyView? {
-        nil
-    }
-
-    func addToolBarButtons() -> [(id: String, view: AnyView)] {
-        []
     }
 
     func onPause(playMan: PlayMan) {
         AudioPlugin.storeCurrentTime(playMan.currentTime)
     }
-
-    func onPlay() {
-    }
-
-    func onPlayAssetUpdate(asset: PlayAsset?, currentGroup: SuperPlugin?) async throws {
-    }
-
-    func getDisk() -> (any SuperStorage)? {
-        nil
-    }
-
-    func onPlayModeChange(mode: PlayMode, asset: PlayAsset?) async throws {
-    }
-
-    func onWillAppear(playMan: PlayMan, currentGroup: SuperPlugin?, storage: StorageLocation?) async {
-    }
-
-    func onPlayPrev(playMan: PlayMan, current: PlayAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws { }
-
-    func onPlayNext(playMan: PlayMan, current: PlayAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws { }
 }

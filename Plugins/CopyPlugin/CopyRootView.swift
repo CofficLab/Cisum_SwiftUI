@@ -96,42 +96,42 @@ extension CopyRootView {
             return false
         }
 
-        guard let disk = p.current?.getDisk() else {
-            os_log(.error, "\(self.t)No Disk")
-            await MainActor.run {
-                self.m.toast("No Disk")
-            }
-            return false
-        }
-
-        let diskRoot = disk.root
-
-        if verbose {
-            os_log("\(self.t)开始处理拖放文件")
-        }
-
-        var urls: [URL] = []
-
-        // Handle each provider separately and safely
-        for provider in providers {
-            if let itemProvider = try? await provider.loadItem(forTypeIdentifier: UTType.fileURL.identifier) {
-                if let urlData = itemProvider as? Data,
-                   let url = URL(dataRepresentation: urlData, relativeTo: nil) {
-                    urls.append(url)
-                } else if let url = itemProvider as? URL {
-                    urls.append(url)
-                }
-            }
-        }
-
-        if verbose {
-            os_log("\(self.t)➕➕➕ 添加 \(urls.count) 个文件到复制队列")
-        }
-
-        await MainActor.run {
-            self.worker.append(urls, folder: diskRoot)
-        }
-
+//        guard let disk = await p.current?.getDisk() else {
+//            os_log(.error, "\(self.t)No Disk")
+//            await MainActor.run {
+//                self.m.toast("No Disk")
+//            }
+//            return false
+//        }
+//
+//        let diskRoot = disk.root
+//
+//        if verbose {
+//            os_log("\(self.t)开始处理拖放文件")
+//        }
+//
+//        var urls: [URL] = []
+//
+//        // Handle each provider separately and safely
+//        for provider in providers {
+//            if let itemProvider = try? await provider.loadItem(forTypeIdentifier: UTType.fileURL.identifier) {
+//                if let urlData = itemProvider as? Data,
+//                   let url = URL(dataRepresentation: urlData, relativeTo: nil) {
+//                    urls.append(url)
+//                } else if let url = itemProvider as? URL {
+//                    urls.append(url)
+//                }
+//            }
+//        }
+//
+//        if verbose {
+//            os_log("\(self.t)➕➕➕ 添加 \(urls.count) 个文件到复制队列")
+//        }
+//
+//        await MainActor.run {
+//            self.worker.append(urls, folder: diskRoot)
+//        }
+//
         return true
     }
 }

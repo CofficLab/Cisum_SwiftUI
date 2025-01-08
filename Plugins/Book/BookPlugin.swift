@@ -4,7 +4,7 @@ import MagicUI
 import OSLog
 import SwiftUI
 
-class BookPlugin: @preconcurrency SuperPlugin, SuperLog {
+actor BookPlugin: SuperPlugin, SuperLog {
     static let keyOfCurrentBookURL = "com.bookplugin.currentBookURL"
     static let keyOfCurrentBookTime = "com.bookplugin.currentBookTime"
 
@@ -25,24 +25,26 @@ class BookPlugin: @preconcurrency SuperPlugin, SuperLog {
 
     @MainActor func addDBView(reason: String) -> AnyView {
         os_log("\(self.t)addDBView")
-
-        guard let disk = disk else {
-            return AnyView(EmptyView())
-        }
-
-        guard let bookDB = self.bookDB else {
-            return AnyView(EmptyView())
-        }
         
-        guard let bookProvider = self.bookProvider else {
-            return AnyView(EmptyView())
-        }
+        return AnyView(EmptyView())
 
-        return AnyView(
-            BookDBView(verbose: true, disk: disk)
-                .environmentObject(bookDB)
-                .environmentObject(bookProvider)
-        )
+//        guard let disk = disk else {
+//            return AnyView(EmptyView())
+//        }
+//
+//        guard let bookDB = self.bookDB else {
+//            return AnyView(EmptyView())
+//        }
+//        
+//        guard let bookProvider = self.bookProvider else {
+//            return AnyView(EmptyView())
+//        }
+
+//        return AnyView(
+//            BookDBView(verbose: true, disk: disk)
+//                .environmentObject(bookDB)
+//                .environmentObject(bookProvider)
+//        )
     }
     
     @MainActor func addStateView(currentGroup: SuperPlugin?) -> AnyView? {
@@ -50,13 +52,15 @@ class BookPlugin: @preconcurrency SuperPlugin, SuperLog {
             return nil
         }
         
-        guard let bookProvider = self.bookProvider else {
-            return nil
-        }
+        return nil
+//        guard let bookProvider = self.bookProvider else {
+//            return nil
+//        }
 
-        return AnyView(BookStateView().environmentObject(bookProvider))
+//        return AnyView(BookStateView().environmentObject(bookProvider))
     }
 
+    @MainActor
     func addPosterView() -> AnyView {
         return AnyView(
             BookPoster()

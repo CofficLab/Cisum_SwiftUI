@@ -6,7 +6,8 @@ import StoreKit
 import SwiftData
 import SwiftUI
 
-class PluginProvider: ObservableObject, SuperLog, SuperThread {
+@MainActor
+class PluginProvider: ObservableObject, @preconcurrency SuperLog, SuperThread {
     static let keyOfCurrentPluginID = "currentPluginID"
     static let emoji = "🧩"
 
@@ -126,6 +127,34 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
         }
 
         return ""
+    }
+
+    func executePluginOperation(_ operation: @Sendable (SuperPlugin) async throws -> Void) async {
+        for plugin in plugins {
+            do {
+                try await operation(plugin)
+            } catch {
+                os_log(.error, "\(self.t)Plugin operation failed: \(error.localizedDescription)")
+            }
+        }
+    }
+
+    func handleStorageLocationChange(storage: StorageLocation?) async throws {
+        for plugin in plugins {
+            try await plugin.onStorageLocationChange(storage: storage)
+        }
+    }
+
+    func handlePlayStateUpdate() async throws {
+        for plugin in plugins {
+            try await plugin.onPlayStateUpdate()
+        }
+    }
+
+    func handleOnDisappear() async throws {
+        for plugin in plugins {
+            try await plugin.onDisappear()
+        }
     }
 }
 

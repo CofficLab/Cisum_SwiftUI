@@ -4,19 +4,20 @@ import MagicUI
 import OSLog
 import SwiftUI
 
-class ResetPlugin: @preconcurrency SuperPlugin, SuperLog {
+actor ResetPlugin: SuperPlugin, SuperLog {
     static let emoji = "⚙️"
 
-    let label: String = "Reset"
-    var hasPoster: Bool = true
+    let label = "Reset"
+    let hasPoster = true
     let description: String = "恢复默认配置"
-    var iconName: String = "music.note"
+    let iconName = "music.note"
 
     init() {
         os_log("\(self.i)")
     }
     
-    @MainActor func addSettingView() -> AnyView? {
+    @MainActor
+    func addSettingView() -> AnyView? {
         AnyView(ResetSetting())
     }
 }

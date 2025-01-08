@@ -15,7 +15,8 @@ struct VideoGrid: View {
     @State var icon: String = ""
 
     var disk: (any SuperStorage)? {
-        p.current?.getDisk()
+//        p.current?.getDisk()
+        nil
     }
 
     var body: some View {

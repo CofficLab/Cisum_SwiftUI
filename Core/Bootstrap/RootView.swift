@@ -141,13 +141,14 @@ extension RootView {
 
         if c.storageLocation == nil {
             a.showSheet = true
-
             return
         }
 
-        for plugin in p.plugins {
-            Task {
-                try await plugin.onStorageLocationChange(storage: c.storageLocation)
+        Task {
+            do {
+                try await p.handleStorageLocationChange(storage: c.storageLocation)
+            } catch {
+                m.error(error)
             }
         }
     }
@@ -160,25 +161,25 @@ extension RootView {
     }
 
     func onAppear() {
-//        Task(priority: .userInitiated) {
+        Task {
 //            do {
 //                try Config.getPlugins().forEach({
 //                    try self.p.append($0, reason: self.className)
 //                })
-//
+//                
 //                try? self.p.restoreCurrent()
-//
+//                
 //                for plugin in p.plugins {
 //                    try await plugin.onWillAppear(playMan: man, currentGroup: p.current, storage: c.getStorageLocation())
 //                }
-//
+//                
 //                a.showSheet = p.getSheetViews(storage: c.storageLocation).isNotEmpty
-//
-//                #if os(iOS)
-//                    self.main.async {
-//                        UIApplication.shared.beginReceivingRemoteControlEvents()
-//                    }
-//                #endif
+//                
+//#if os(iOS)
+//                self.main.async {
+//                    UIApplication.shared.beginReceivingRemoteControlEvents()
+//                }
+//#endif
 //                
 //                self.man.subscribe(
 //                    name: self.className,
@@ -192,16 +193,16 @@ extension RootView {
 //            } catch let e {
 //                self.error = e
 //            }
-//
-//            self.loading = false
-//            os_log("\(self.t)👌👌👌 Ready")
-//        }
+            
+            self.loading = false
+            os_log("\(self.t)👌👌👌 Ready")
+        }
     }
 
     func onDisappear() {
-        p.plugins.forEach({
-            $0.onDisappear()
-        })
+        Task {
+            try? await self.p.handleOnDisappear()
+        }
     }
 
     func onPlayManStateChange() {
