@@ -49,10 +49,6 @@ actor BookPlugin: SuperPlugin, SuperLog {
 
     @MainActor
     func onWillAppear(playMan: PlayManWrapper, currentGroup: (any SuperPlugin)?, storage: StorageLocation?) async throws {
-        if currentGroup?.id != self.id {
-            return
-        }
-
         os_log("\(self.t)📺📺📺")
         if self.initialized {
             return

@@ -118,11 +118,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
 
     @MainActor
     func onWillAppear(playMan: PlayManWrapper, currentGroup: SuperPlugin?, storage: StorageLocation?) async throws {
-        let verbose = true
-
-        if currentGroup?.id != self.id {
-            return
-        }
+        let verbose = false
 
         if verbose {
             os_log("\(self.a)with storage \(storage?.emojiTitle ?? "nil")")
