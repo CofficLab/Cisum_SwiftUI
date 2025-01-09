@@ -21,6 +21,9 @@ struct BookTile: View, SuperThread, @preconcurrency SuperLog {
     var noCover: Bool { cover == nil }
     var book: BookModel
 
+    @Environment(\.dynamicTypeSize) var dynamicTypeSize
+    @State private var tileSize: CGSize = .zero
+
     var body: some View {
         HStack {
             Spacer()
@@ -36,6 +39,8 @@ struct BookTile: View, SuperThread, @preconcurrency SuperLog {
                 if book.childCount > 0, noCover {
                     Text("共 \(book.childCount)")
                 }
+                
+                book.url.makeOpenButton()
 
                 Spacer()
                 if let s = self.state, noCover, s.currentURL != nil {
@@ -74,6 +79,13 @@ struct BookTile: View, SuperThread, @preconcurrency SuperLog {
         }
         .clipShape(RoundedRectangle(cornerSize: CGSize(width: 10, height: 10)))
         .shadow(radius: 5)
+        .background(
+            GeometryReader { geometry in
+                Color.clear.onAppear {
+                    tileSize = geometry.size
+                }
+            }
+        )
     }
 }
 
@@ -81,11 +93,47 @@ struct BookTile: View, SuperThread, @preconcurrency SuperLog {
 
 extension BookTile {
     func updateCover() {
-//        if self.cover == nil {
-//            Task {
-//                self.cover = await book.getBookCoverFromDB()
-//            }
-//        }
+        if self.cover == nil {
+            Task {
+                do {
+                    self.cover = try await findCoverRecursively(in: book.url)
+                } catch {
+                    os_log("\(self.t)Failed to find cover: \(error.localizedDescription)")
+                }
+            }
+        }
+    }
+    
+    private func findCoverRecursively(in url: URL) async throws -> Image? {
+        // 获取当前目录下的所有文件
+        let children = url.getChildren()
+        
+        // 计算合适的缩略图尺寸
+        let thumbnailSize = CGSize(
+            width: max(120, tileSize.width * 2),  // 使用 2x 分辨率作为默认值
+            height: max(120, tileSize.height * 2)
+        )
+        
+        // 首先检查当前层级的文件
+        for child in children where !child.hasDirectoryPath {
+            // 跳过未下载的 iCloud 文件
+            if child.isiCloud && child.isNotDownloaded {
+                continue
+            }
+            
+            if let cover = try await child.thumbnail(size: thumbnailSize, verbose: true) {
+                return cover
+            }
+        }
+        
+        // 如果当前层级没有找到封面，递归查找子文件夹
+        for child in children where child.hasDirectoryPath {
+            if let cover = try await findCoverRecursively(in: child) {
+                return cover
+            }
+        }
+        
+        return nil
     }
 }
 

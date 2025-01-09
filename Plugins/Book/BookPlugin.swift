@@ -22,8 +22,6 @@ actor BookPlugin: SuperPlugin, SuperLog {
     @MainActor var initialized = false
 
     @MainActor func addDBView(reason: String) -> AnyView? {
-        os_log("\(self.t)addDBView")
-
         guard let disk = disk else {
             os_log("\(self.t)⚠️ disk is nil")
             return AnyView(EmptyView())
@@ -67,7 +65,7 @@ actor BookPlugin: SuperPlugin, SuperLog {
 
         Task { @MainActor in
             if let url = BookPlugin.getCurrent(), let book = await self.bookDB?.find(url) {
-                await playMan.play(url: book.url)
+                await playMan.play(url: book)
 
                 if let time = BookPlugin.getCurrentTime() {
                     await playMan.seek(time: time)
@@ -108,22 +106,22 @@ actor BookPlugin: SuperPlugin, SuperLog {
         }
     }
 
-    func onPlayNext(playMan: PlayMan, current: PlayAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws {
-        if currentGroup?.id != self.id {
+    func onPlayNext(playMan: PlayManWrapper, current: URL?, currentGroup: String?, verbose: Bool) async throws {
+        if currentGroup != self.id {
             return
         }
 
-//        if let asset = current {
-//            let next = asset.url.getNextFile()
-//
-//            if verbose {
-//                os_log("\(self.t)播放下一个 -> \(next?.lastPathComponent ?? "")")
-//            }
-//
-//            if let next = next, let book = await self.bookDB?.find(next) {
-//                await playMan.play(url: book.url)
-//            }
-//        }
+        if let asset = current {
+            let next = asset.getNextFile()
+
+            if verbose {
+                os_log("\(self.t)播放下一个 -> \(next?.title ?? "")")
+            }
+
+            if let next = next, let book = await self.bookDB?.find(next) {
+                await playMan.play(url: next)
+            }
+        }
     }
 
     func onPlayPrev(playMan: PlayMan, current: PlayAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws {

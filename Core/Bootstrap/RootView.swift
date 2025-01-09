@@ -199,6 +199,11 @@ extension RootView {
                     },
                     onLikeStatusChanged: { asset, like in
                         os_log("\(self.t)🍋🍋🍋 onLikeStatusChanged: \(asset.url.lastPathComponent) \(like)")
+                    },
+                    onPlayModeChanged: { mode in
+                        Task {
+                            try? await self.p.onPlayModeChange(mode: mode, asset: man.currentAsset?.url)
+                        }
                     }
                 )
             } catch let e {

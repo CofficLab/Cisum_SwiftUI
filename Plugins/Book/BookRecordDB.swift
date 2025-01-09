@@ -202,7 +202,7 @@ extension BookRecordDB {
     }
 
     func sync(_ items: [MetaWrapper], verbose: Bool = false, isFirst: Bool) {
-        var message = "\(self.t) SyncBook(\(items.count))"
+        var message = "\(self.t)SyncBook(\(items.count))"
 
         if let first = items.first, first.isDownloading == true {
             message += " -> \(first.url!.title) -> \(String(format: "%.0f", first.downloadProgress))% ⏬⏬⏬"

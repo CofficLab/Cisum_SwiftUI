@@ -47,12 +47,8 @@ class BookDB: ObservableObject, SuperEvent, @preconcurrency SuperLog {
 //        try await self.disk.download(book.url, reason: "BookDB.download", verbose: verbose)
     }
     
-    func find(_ url: URL) async -> BookModel? {
-        nil
-//        let book = await self.db.findBook(url)
-//        book?.setDB(self)
-//        
-//        return book
+    func find(_ url: URL) async -> URL? {
+        await self.db.hasBook(url) ? url : nil
     }
     
     func makeMonitor() -> Cancellable {
@@ -72,10 +68,17 @@ class BookDB: ObservableObject, SuperEvent, @preconcurrency SuperLog {
 
 extension BookDB {
     func emitDBSyncing(_ items: [MetaWrapper]) {
-        self.emit(name: .dbSyncing, object: self, userInfo: ["items": items])
+        self.emit(name: .bookDBSyncing, object: self, userInfo: ["items": items])
     }
     
     func emitDBSynced() {
-        self.emit(name: .dbSynced, object: nil)
+        self.emit(name: .bookDBSynced, object: nil)
     }
+}
+
+// MARK: Event
+
+extension Notification.Name {
+    static let bookDBSyncing = Notification.Name("bookDBSyncing")
+    static let bookDBSynced = Notification.Name("bookDBSynced")
 }

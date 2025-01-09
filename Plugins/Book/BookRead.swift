@@ -116,6 +116,10 @@ extension BookRecordDB {
 //            return self.findBook(url)
         }
     }
+    
+    func hasBook(_ url: URL) -> Bool {
+        self.findBook(url) != nil
+    }
 }
 
 // MARK: Children
