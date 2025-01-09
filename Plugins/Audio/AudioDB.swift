@@ -68,6 +68,22 @@ import Combine
         self.disk
     }
 
+    func isLiked(_ url: URL) async -> Bool {
+        await self.db.isLiked(url)
+    }
+
+    func like(_ url: URL?, liked: Bool) async {
+        guard let url = url else { return }
+        
+        if liked {
+            os_log("\(self.t)👍 Like \(url.lastPathComponent)")
+            await self.db.like(url)
+        } else {
+            os_log("\(self.t)👎 Dislike \(url.lastPathComponent)")
+            await self.db.dislike(url)
+        }
+    }
+
     func sort(_ sticky: AudioModel?, reason: String) async {
         await self.db.sort(sticky?.url, reason: reason)
     }

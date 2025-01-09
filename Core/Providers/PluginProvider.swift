@@ -187,6 +187,12 @@ extension PluginProvider {
             try await plugin.onPlayModeChange(mode: mode.rawValue, asset: asset)
         }
     }
+
+    func onLike(asset: URL?, liked: Bool) async throws {
+        for plugin in plugins {
+            try await plugin.onLike(asset: asset, liked: liked)
+        }
+    }
 }
 
 enum PluginProviderError: Error, LocalizedError {
@@ -228,5 +234,9 @@ public class PlayManWrapper {
 
     func getPlayMode() -> PlayMode {
         playMan.playMode
+    }
+
+    func setLike(_ isLiked: Bool) {
+        playMan.setLike(isLiked)
     }
 }

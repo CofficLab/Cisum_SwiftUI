@@ -53,8 +53,14 @@ struct RootView<Content>: View, SuperEvent, @preconcurrency SuperLog, SuperThrea
                                 ToolbarItemGroup(placement: .cancellationAction) {
                                     Spacer()
 
-                                    man.makeLogButton(shape: .roundedRectangle)
+                                    man.makeLogButton()
+                                        .magicShape(.circle)
+                                        .magicShapeVisibility(.onHover)
+                                        .magicSize(.small)
                                     man.makeLikeButton()
+                                        .magicShape(.circle)
+                                        .magicShapeVisibility(.onHover)
+                                        .magicSize(.small)
 
                                     if man.asset != nil {
                                         ForEach(p.getToolBarButtons(), id: \.id) { item in
@@ -199,6 +205,10 @@ extension RootView {
                     },
                     onLikeStatusChanged: { asset, like in
                         os_log("\(self.t)🍋🍋🍋 onLikeStatusChanged: \(asset.url.lastPathComponent) \(like)")
+                        
+                        Task {
+                            try? await self.p.onLike(asset: asset.url, liked: like)
+                        }
                     },
                     onPlayModeChanged: { mode in
                         Task {

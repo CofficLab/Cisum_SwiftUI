@@ -183,6 +183,12 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
     }
 
+    func dislike(_ url: URL) {
+        if let audio = findAudio(url) {
+            dislike(audio)
+        }
+    }
+
     func downloadNext(_ audio: AudioModel, reason: String) async throws {
         try await downloadNextBatch(audio, count: 2, reason: reason)
     }
@@ -382,6 +388,10 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         getTotalOfAudio() > 0
     }
 
+    func isLiked(_ url: URL) -> Bool {
+        findAudio(url)?.like ?? false
+    }
+
     func like(_ audio: AudioModel) {
         if let dbAudio = findAudio(audio.id) {
             dbAudio.like = true
@@ -392,6 +402,12 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
             }
 
             emit(name: .AudioUpdatedNotification, object: dbAudio)
+        }
+    }
+
+    func like(_ url: URL) {
+        if let audio = findAudio(url) {
+            like(audio)
         }
     }
 

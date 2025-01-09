@@ -110,7 +110,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
         case .sequence, .repeatAll:
             await audioDB.sort(asset?.url, reason: self.className + ".OnPlayModeChange")
         case .shuffle:
-            try await audioDB.sortRandom(asset?.url, reason: self.className + ".OnPlayModeChange", verbose: true)
+            try await audioDB.sortRandom(asset?.url, reason: self.className + ".OnPlayModeChange", verbose: false)
         case .none:
             break
         }
@@ -140,15 +140,17 @@ actor AudioPlugin: SuperPlugin, SuperLog {
         }
 
         self.container = try AudioConfig.getContainer()
-        self.audioDB = try AudioDB(disk: disk, reason: self.className + ".onInit", verbose: true)
+        self.audioDB = try AudioDB(disk: disk, reason: self.className + ".onInit", verbose: false)
         self.audioProvider = AudioProvider(disk: disk)
         self.initialized = true
 
         var assetTarget: URL?
         var timeTarget: TimeInterval = 0
+        var liked = false
 
         if let url = AudioPlugin.getCurrent(), let audio = await self.audioDB?.find(url) {
             assetTarget = audio
+            liked = await self.audioDB?.isLiked(audio) ?? false
 
             if let time = AudioPlugin.getCurrentTime() {
                 timeTarget = time
@@ -165,6 +167,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
 
             if let first = try? await audioDB.getFirst() {
                 assetTarget = first
+                liked = await audioDB.isLiked(first)
             } else {
                 os_log("\(self.t)⚠️⚠️⚠️ No audio found")
             }
@@ -173,6 +176,9 @@ actor AudioPlugin: SuperPlugin, SuperLog {
         if let asset = assetTarget {
             await playMan.play(url: asset)
             await playMan.seek(time: timeTarget)
+
+            os_log("\(self.t)🍋🍋🍋 Set like to \(liked)")
+            playMan.setLike(liked)
         }
 
         let mode = AudioPlugin.getPlayMode()
@@ -232,6 +238,15 @@ actor AudioPlugin: SuperPlugin, SuperLog {
         }
 
         self.audioDB?.changeRoot(url: disk)
+    }
+
+    func onLike(asset: URL?, liked: Bool) async throws {
+        guard let audioDB = await audioDB else {
+            os_log("\(self.t)⚠️ AudioDB not found")
+            return
+        }
+
+        await audioDB.like(asset, liked: liked)
     }
 }
 

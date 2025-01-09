@@ -65,7 +65,7 @@ enum Config: @preconcurrency SuperLog {
             DebugPlugin(),
             AudioPlugin(),
             CopyPlugin(),
-            BookPlugin()
+//            BookPlugin()
 //            ResetPlugin()
         ]
     }
