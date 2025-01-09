@@ -121,7 +121,7 @@ extension BookTile {
                 continue
             }
             
-            if let cover = try await child.thumbnail(size: thumbnailSize, verbose: true) {
+            if let cover = try await child.coverFromMetadata(size: thumbnailSize, verbose: true) {
                 return cover
             }
         }
