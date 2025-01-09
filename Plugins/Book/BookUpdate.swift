@@ -8,8 +8,8 @@ extension BookRecordDB {
         }
         
         do {
-            try context.enumerate(Book.descriptorOfNeedUpdateParent(), block: { book in
-                book.parent = try context.fetch(Book.descriptorOf(book.parentBookURL!)).first
+            try context.enumerate(BookModel.descriptorOfNeedUpdateParent(), block: { book in
+                book.parent = try context.fetch(BookModel.descriptorOf(book.parentBookURL!)).first
             })
             
             try context.save()
@@ -26,7 +26,7 @@ extension BookRecordDB {
     
     func updateChildCount(verbose: Bool = true) {
         do {
-            try context.enumerate(Book.descriptorOfNeedUpdateParent(), block: { book in
+            try context.enumerate(BookModel.descriptorOfNeedUpdateParent(), block: { book in
                 book.childCount = book.childCount
             })
             
@@ -97,7 +97,7 @@ extension BookRecordDB {
 //        }
 //    }
 //
-    func updateParent(_ book: Book, verbose: Bool = true) {
+    func updateParent(_ book: BookModel, verbose: Bool = true) {
         guard let parentURL = book.parentBookURL else {
             if verbose {
                 os_log("\(self.t)UpdateBookParent for \(book.bookTitle) ignore because of no parentURL")

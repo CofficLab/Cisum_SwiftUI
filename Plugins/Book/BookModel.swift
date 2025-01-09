@@ -10,7 +10,7 @@ import MagicPlayMan
  记录一本有声书的数据
  */
 @Model
-class Book: SuperLog {
+class BookModel: SuperLog {
     static let emoji = "📖"
     @Transient var db: BookDB?
 
@@ -28,10 +28,10 @@ class Book: SuperLog {
     var title: String { bookTitle }
 
     @Relationship(deleteRule: .noAction)
-    var parent: Book?
+    var parent: BookModel?
 
-    @Relationship(deleteRule: .noAction, inverse: \Book.parent)
-    var childBooks: [Book]?
+    @Relationship(deleteRule: .noAction, inverse: \BookModel.parent)
+    var childBooks: [BookModel]?
 
     init(url: URL, currentURL: URL? = nil) {
         self.url = url
@@ -39,6 +39,7 @@ class Book: SuperLog {
         self.bookTitle = self.url.title
         self.isCollection = self.url.isFolder
         self.parentBookURL = self.url.getParent()
+        self.childCount = self.url.getChildren().count
     }
 
     func getParentURL() -> URL? {
@@ -54,17 +55,9 @@ class Book: SuperLog {
     }
 }
 
-// MARK: Transform
-
-//extension Book {
-//    static func fromDiskFile(_ file: URL) -> Book {
-//        file.toBook()
-//    }
-//}
-
 // MARK: Cover
 
-extension Book {
+extension BookModel {
     func getBookCoverFromDB(verbose: Bool = false) async -> Image? {
         if verbose {
             os_log("\(self.t)GetBookCover for \(self.bookTitle)")
@@ -92,39 +85,39 @@ extension Book {
 
 // MARK: Descriptor
 
-extension Book {
-    static let descriptorIsFolder = FetchDescriptor(predicate: #Predicate<Book> { book in
+extension BookModel {
+    static let descriptorIsFolder = FetchDescriptor(predicate: #Predicate<BookModel> { book in
         book.isCollection == true
     }, sortBy: [])
 
-    static let descriptorNotFolder = FetchDescriptor(predicate: #Predicate<Book> { book in
+    static let descriptorNotFolder = FetchDescriptor(predicate: #Predicate<BookModel> { book in
         book.isCollection == false
     }, sortBy: [])
 
-    static let descriptorAll = FetchDescriptor(predicate: #Predicate<Book> { _ in
+    static let descriptorAll = FetchDescriptor(predicate: #Predicate<BookModel> { _ in
         true
     }, sortBy: [])
 
-    static func descriptorOf(_ url: URL) -> FetchDescriptor<Book> {
-        FetchDescriptor(predicate: #Predicate<Book> { s in
+    static func descriptorOf(_ url: URL) -> FetchDescriptor<BookModel> {
+        FetchDescriptor(predicate: #Predicate<BookModel> { s in
             s.url == url
         }, sortBy: [])
     }
 
-    static func descriptorOfParentBookURL(_ url: URL) -> FetchDescriptor<Book> {
-        FetchDescriptor(predicate: #Predicate<Book> { s in
+    static func descriptorOfParentBookURL(_ url: URL) -> FetchDescriptor<BookModel> {
+        FetchDescriptor(predicate: #Predicate<BookModel> { s in
             s.parentBookURL == url
         }, sortBy: [])
     }
 
-    static func descriptorOfHasParentBookURL() -> FetchDescriptor<Book> {
-        FetchDescriptor(predicate: #Predicate<Book> { s in
+    static func descriptorOfHasParentBookURL() -> FetchDescriptor<BookModel> {
+        FetchDescriptor(predicate: #Predicate<BookModel> { s in
             s.parentBookURL != nil
         }, sortBy: [])
     }
 
-    static func descriptorOfNeedUpdateParent() -> FetchDescriptor<Book> {
-        FetchDescriptor(predicate: #Predicate<Book> { s in
+    static func descriptorOfNeedUpdateParent() -> FetchDescriptor<BookModel> {
+        FetchDescriptor(predicate: #Predicate<BookModel> { s in
             s.parentBookURL != nil && s.parent == nil
         }, sortBy: [])
     }

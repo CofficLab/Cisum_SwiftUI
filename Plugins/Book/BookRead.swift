@@ -6,7 +6,7 @@ import SwiftData
 extension BookRecordDB {
     func getBookCount() -> Int {
         do {
-            return try context.fetchCount(Book.descriptorAll)
+            return try context.fetchCount(BookModel.descriptorAll)
         } catch {
             os_log(.error, "\(error.localizedDescription)")
             
@@ -16,7 +16,7 @@ extension BookRecordDB {
 
     func getBookCountOfNoCoverData() -> Int {
         do {
-            return try context.fetchCount(Book.descriptorOfShouldUpdateCover)
+            return try context.fetchCount(BookModel.descriptorOfShouldUpdateCover)
         } catch {
             os_log(.error, "\(error.localizedDescription)")
             
@@ -24,9 +24,9 @@ extension BookRecordDB {
         }
     }
 
-    func getBooksShouldUpdateCover() -> [Book] {
+    func getBooksShouldUpdateCover() -> [BookModel] {
         do {
-            return try context.fetch(Book.descriptorOfShouldUpdateCover)
+            return try context.fetch(BookModel.descriptorOfShouldUpdateCover)
         } catch {
             os_log(.error, "\(error.localizedDescription)")
             
@@ -34,22 +34,26 @@ extension BookRecordDB {
         }
     }
     
-    func getBooksOfCollectionType() -> [Book] {
+    func getBooksOfCollectionType() -> [BookModel] {
         do {
-            return try context.fetch(Book.descriptorOfFolder)
+            return try context.fetch(BookModel.descriptorOfFolder)
         } catch {
             os_log(.error, "\(error.localizedDescription)")
             
             return []
         }
     }
+    
+    func getBooks() -> [URL] {
+        self.getBooksOfCollectionType().map(\.url)
+    }
 }
 
 // MARK: First
 
 extension BookRecordDB {
-    static func firstBook(context: ModelContext) -> Book? {
-        var descriptor = FetchDescriptor<Book>(predicate: #Predicate<Book> {
+    static func firstBook(context: ModelContext) -> BookModel? {
+        var descriptor = FetchDescriptor<BookModel>(predicate: #Predicate<BookModel> {
             $0.bookTitle != ""
         }, sortBy: [
             SortDescriptor(\.order, order: .forward),
@@ -66,7 +70,7 @@ extension BookRecordDB {
     }
 
     /// 第一个
-    nonisolated func firstBook() -> Book? {
+    nonisolated func firstBook() -> BookModel? {
         Self.firstBook(context: ModelContext(self.modelContainer))
     }
 }
@@ -74,13 +78,13 @@ extension BookRecordDB {
 // MARK: Find
 
 extension BookRecordDB {
-    static func findBook(_ url: URL, context: ModelContext, verbose: Bool = false) -> Book? {
+    static func findBook(_ url: URL, context: ModelContext, verbose: Bool = false) -> BookModel? {
         if verbose {
             os_log("\(self.t)FindBook -> \(url.lastPathComponent)")
         }
         
         do {
-            return try context.fetch(Book.descriptorOf(url)).first
+            return try context.fetch(BookModel.descriptorOf(url)).first
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
         }
@@ -88,20 +92,20 @@ extension BookRecordDB {
         return nil
     }
     
-    func findBook(_ url: URL) -> Book? {
+    func findBook(_ url: URL) -> BookModel? {
         Self.findBook(url, context: context)
     }
     
-    func findBook(_ id: Book.ID) -> Book? {
-        context.model(for: id) as? Book
+    func findBook(_ id: BookModel.ID) -> BookModel? {
+        context.model(for: id) as? BookModel
     }
     
-    func findOrCreateBook(_ url: URL) -> Book? {
+    func findOrCreateBook(_ url: URL) -> BookModel? {
         if let book = self.findBook(url) {
             return book
         } else {
-            let book = Book(url: url)
-            context.insert(Book(url: url))
+            let book = BookModel(url: url)
+            context.insert(BookModel(url: url))
             
 //            do {
 //                try context.save()
@@ -117,13 +121,13 @@ extension BookRecordDB {
 // MARK: Children
 
 extension BookRecordDB {
-    func getChildren(_ url: URL, verbose: Bool = true) -> [Book] {
+    func getChildren(_ url: URL, verbose: Bool = true) -> [BookModel] {
         if verbose {
             os_log("\(self.t)GetChildren -> \(url.lastPathComponent)")
         }
         
         do {
-            return try context.fetch(FetchDescriptor<Book>(predicate: #Predicate<Book> {
+            return try context.fetch(FetchDescriptor<BookModel>(predicate: #Predicate<BookModel> {
                 $0.url.absoluteString == url.absoluteString
             }))
         } catch let e {
@@ -138,7 +142,7 @@ extension BookRecordDB {
 // MARK: Next
 
 extension BookRecordDB {
-    nonisolated func getNextBookOf(_ url: URL?, verbose: Bool = false) -> Book? {
+    nonisolated func getNextBookOf(_ url: URL?, verbose: Bool = false) -> BookModel? {
         if verbose {
             os_log("\(self.t)NextBookOf -> \(url?.lastPathComponent ?? "-")")
         }
@@ -156,7 +160,7 @@ extension BookRecordDB {
     }
     
     /// The next one of provided URL
-    func nextBookOf(_ url: URL?, verbose: Bool = false) -> Book? {
+    func nextBookOf(_ url: URL?, verbose: Bool = false) -> BookModel? {
         if verbose {
             os_log("\(self.t)NextBookOf -> \(url?.lastPathComponent ?? "-")")
         }
@@ -173,15 +177,15 @@ extension BookRecordDB {
     }
 
     /// The next one of provided Book
-    func nextBookOf(_ book: Book) -> Book? {
+    func nextBookOf(_ book: BookModel) -> BookModel? {
         Self.nextBookOf(context: context, book: book)
     }
     
-    static func nextBookOf(context: ModelContext, book: Book) -> Book? {
+    static func nextBookOf(context: ModelContext, book: BookModel) -> BookModel? {
         //os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title)")
         let order = 1
         let url = book.url
-        var descriptor = FetchDescriptor<Book>()
+        var descriptor = FetchDescriptor<BookModel>()
         descriptor.sortBy.append(.init(\.order, order: .forward))
         descriptor.fetchLimit = 1
         descriptor.predicate = #Predicate {
@@ -223,15 +227,15 @@ extension BookRecordDB {
 
 // MARK: Descriptor
 
-extension Book {
-    static var descriptorOfShouldUpdateCover: FetchDescriptor<Book> {
-        FetchDescriptor<Book>(predicate: #Predicate<Book> {
+extension BookModel {
+    static var descriptorOfShouldUpdateCover: FetchDescriptor<BookModel> {
+        FetchDescriptor<BookModel>(predicate: #Predicate<BookModel> {
             $0.hasGetCover == false
         })
     }
 
-    static var descriptorOfFolder: FetchDescriptor<Book> {
-        FetchDescriptor<Book>(predicate: #Predicate<Book> {
+    static var descriptorOfFolder: FetchDescriptor<BookModel> {
+        FetchDescriptor<BookModel>(predicate: #Predicate<BookModel> {
             $0.isCollection == true
         })
     }

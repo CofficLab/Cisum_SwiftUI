@@ -8,21 +8,11 @@ actor SettingPlugin: SuperPlugin, SuperLog {
     static let emoji = "⚙️"
 
     let dirName = "audios"
-    let label: String = "Setting"
-    let hasPoster: Bool = true
-    let description: String = "设置"
-    let iconName: String = "music.note"
-    let isGroup: Bool = false
-
-    @MainActor
-    func addDBView(reason: String) -> AnyView? {
-        nil
-    }
-
-    @MainActor
-    func addPosterView() -> AnyView {
-        AnyView(EmptyView())
-    }
+    let label = "Setting"
+    let hasPoster = false
+    let description = "设置"
+    let iconName: String = .iconSettings
+    let isGroup = false
 
     @MainActor
     func addSettingView() -> AnyView? {

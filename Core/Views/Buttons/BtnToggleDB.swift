@@ -6,7 +6,7 @@ struct BtnToggleDB: View {
 
     var body: some View {
         MagicButton(
-            icon: "ellipsis",
+            icon: .iconMore,
             style: .secondary,
             action: {
                 app.toggleDBView()

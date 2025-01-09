@@ -1,17 +1,22 @@
+import MagicUI
 import SwiftUI
 
 struct BtnAdd: View {
     @EnvironmentObject var appManager: AppProvider
 
     var body: some View {
-        Button("添加", systemImage: "plus.circle") {
-            withAnimation {
-                if appManager.showDB {
-                    appManager.isImporting = true
-                } else {
-                    appManager.showDBView()
+        MagicButton(
+            icon: .iconAdd,
+            title: "添加",
+            action: {
+                withAnimation {
+                    if appManager.showDB {
+                        appManager.isImporting = true
+                    } else {
+                        appManager.showDBView()
+                    }
                 }
             }
-        }
+        )
     }
 }

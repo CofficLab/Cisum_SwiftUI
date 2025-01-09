@@ -5,13 +5,13 @@ import MagicKit
 import MagicUI
 
 extension AudioRecordDB {
-    func prepareJob() throws {
+    func prepareJob() async throws {
         os_log("\(self.t) 🚀🚀🚀 Prepare")
 
         let audio = try firstAudio()
 
         if let audio = audio {
-            self.downloadNextBatch(audio, reason: "\(self.t)prepare")
+            try await self.downloadNextBatch(audio, reason: "\(self.t)prepare")
         }
     }
 }
@@ -41,17 +41,6 @@ extension AudioRecordDB {
         if verbose {
             os_log("\(self.jobEnd(startTime, title: title))")
         }
-    }
-}
-
-extension AudioRecordDB {
-    var labelForGetCovers: String { "\(self.t)🌽🌽🌽 GetCovers" }
-
-    func emitCoverUpdated(_ audio: AudioModel) {
-//        DispatchQueue.main.async {
-//            os_log("\(self.t) -> \(audio.title) CoverUpdated 🍋🍋🍋")
-//            self.emit(.AudioUpdatedNotification, object: audio)
-//        }
     }
 }
 

@@ -12,6 +12,13 @@ enum Config: @preconcurrency SuperLog {
     static let logger = Logger.self
     static let maxAudioCount = 5
     static let fm = FileManager.default
+    static let appSupportDir: URL? = MagicApp.getAppSpecificSupportDirectory()
+    static let localContainer: URL? = MagicApp.getContainerDirectory()
+    static let localDocumentsDir: URL? = MagicApp.getDocumentsDirectory()
+    static let cloudDocumentsDir: URL? = MagicApp.getCloudDocumentsDirectory()
+    static let databaseDir: URL = MagicApp.getDatabaseDirectory()
+    static let containerIdentifier = "iCloud.yueyi.cisum"
+    static let dbDirName = debug ? "db_debug" : "db_production"
     static let supportedExtensions = [
         "mp3",
         "m4a",
@@ -27,15 +34,11 @@ enum Config: @preconcurrency SuperLog {
         #endif
     }
 
-    static var isDebug: Bool {
-        debug
-    }
+    static var isDebug: Bool { debug }
     
     static var rootBackground: some View {
         MagicBackground.mint
     }
-
-    // MARK: UUID
     
     @AppStorage("App.UUID")
     static var uuid: String = ""
@@ -49,14 +52,12 @@ enum Config: @preconcurrency SuperLog {
         return uuid
     }
 
-    /// 封面图文件夹
-    static let coversDirName = "covers"
-    static let appSupportDir: URL? = MagicApp.getAppSpecificSupportDirectory()
-    static let localContainer: URL? = MagicApp.getContainerDirectory()
-    static let localDocumentsDir: URL? = MagicApp.getDocumentsDirectory()
-    static let cloudDocumentsDir: URL? = MagicApp.getCloudDocumentsDirectory()
-    static let databaseDir: URL? = MagicApp.getDatabaseDirectory()
-
+    static func getDBRootDir() throws -> URL {
+        try Config.databaseDir
+            .appendingPathComponent(dbDirName, isDirectory: true)
+            .createIfNotExist()
+    }
+    
     static func getPlugins() -> [SuperPlugin] {
         return [
             WelcomePlugin(),
@@ -64,20 +65,9 @@ enum Config: @preconcurrency SuperLog {
             DebugPlugin(),
             AudioPlugin(),
             CopyPlugin(),
-//            BookPlugin()
+            BookPlugin()
 //            ResetPlugin()
         ]
-    }
-
-    static let containerIdentifier = "iCloud.yueyi.cisum"
-
-    static let dbDirName = debug ? "db_debug" : "db_production"
-
-    static func getDBRootDir() -> URL? {
-        guard let url = Config.databaseDir?
-            .appendingPathComponent(dbDirName) else { return nil }
-
-        return try? url.createIfNotExist()
     }
 }
 

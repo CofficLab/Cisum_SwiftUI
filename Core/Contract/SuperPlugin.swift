@@ -13,7 +13,7 @@ protocol SuperPlugin: Actor {
     @MainActor func addRootView() -> AnyView?
     @MainActor func addSheetView(storage: StorageLocation?) -> AnyView?
     @MainActor func addDBView(reason: String) -> AnyView?
-    @MainActor func addPosterView() -> AnyView
+    @MainActor func addPosterView() -> AnyView?
     @MainActor func addStateView(currentGroup: SuperPlugin?) -> AnyView?
     @MainActor func addSettingView() -> AnyView?
     @MainActor func addStatusView() -> AnyView?
@@ -26,10 +26,10 @@ protocol SuperPlugin: Actor {
     func onPlay()
     func onPause(playMan: MagicPlayMan) async
     func onPlayStateUpdate() async throws
-    func onPlayModeChange(mode: PlayMode, asset: MagicAsset?) async throws
+    func onPlayModeChange(mode: String, asset: URL?) async throws
     func onPlayAssetUpdate(asset: MagicAsset?, currentGroup: SuperPlugin?) async throws
     func onPlayNext(playMan: PlayManWrapper, current: URL?, currentGroup: String?, verbose: Bool) async throws
-    func onPlayPrev(playMan: PlayManWrapper, current: URL?, currentGroup: SuperPlugin?, verbose: Bool) async throws
+    func onPlayPrev(playMan: PlayManWrapper, current: URL?, currentGroup: String?, verbose: Bool) async throws
     func onStorageLocationChange(storage: StorageLocation?) async throws
 }
 
@@ -42,13 +42,9 @@ extension SuperPlugin {
         return false
     }
 
-    nonisolated func addSheetView(storage: StorageLocation?) -> AnyView? {
-        return nil
-    }
+    nonisolated func addSheetView(storage: StorageLocation?) -> AnyView? { nil }
 
-    nonisolated func addPosterView() -> AnyView {
-        return AnyView(EmptyView())
-    }
+    nonisolated func addPosterView() -> AnyView? { nil }
 
     nonisolated func addToolBarButtons() -> [(id: String, view: AnyView)] {
         return []
@@ -78,8 +74,7 @@ extension SuperPlugin {
         return nil
     }
 
-    func onWillAppear(playMan: PlayManWrapper, currentGroup: SuperPlugin?) {
-    }
+    func onWillAppear(playMan: PlayManWrapper, currentGroup: SuperPlugin?) {}
 
     func onInit() {
     }
@@ -93,19 +88,16 @@ extension SuperPlugin {
     func onPlay() {
     }
 
-    func onPlayModeChange(mode: PlayMode, asset: MagicAsset?) async throws {
-    }
+    func onPlayModeChange(mode: String, asset: URL?) async throws { }
 
-    func onPause(playMan: MagicPlayMan) async {
-    }
+    func onPause(playMan: MagicPlayMan) async { }
 
-    func onPlayStateUpdate() async throws {
-    }
+    func onPlayStateUpdate() async throws {}
 
     func onPlayNext(playMan: PlayManWrapper, current: URL?, currentGroup: String?, verbose: Bool) async throws {
     }
 
-    func onPlayPrev(playMan: PlayManWrapper, current: URL?, currentGroup: SuperPlugin?, verbose: Bool) async throws {
+    func onPlayPrev(playMan: PlayManWrapper, current: URL?, currentGroup: String?, verbose: Bool) async throws {
     }
 
     func onWillAppear(playMan: PlayManWrapper, currentGroup: (any SuperPlugin)?, storage: StorageLocation?) async {

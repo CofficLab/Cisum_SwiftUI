@@ -144,6 +144,12 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         nil
     }
 
+    func deleteAudio(url: URL) throws {
+        if let audio = findAudio(url) {
+            try deleteAudio(id: audio.id)
+        }
+    }
+
     func deleteAudio(_ audio: AudioModel, verbose: Bool) throws {
         try deleteAudio(id: audio.id)
     }
@@ -177,22 +183,16 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
     }
 
-    func download(_ url: URL, reason: String) {
-        Task.detached(priority: .background) {
-//            await self.disk.download(url, reason: reason)
-        }
+    func downloadNext(_ audio: AudioModel, reason: String) async throws {
+        try await downloadNextBatch(audio, count: 2, reason: reason)
     }
 
-    func downloadNext(_ audio: AudioModel, reason: String) {
-        downloadNextBatch(audio, count: 2, reason: reason)
-    }
-
-    func downloadNextBatch(_ audio: AudioModel, count: Int = 6, reason: String) {
+    func downloadNextBatch(_ audio: AudioModel, count: Int = 6, reason: String) async throws {
         var currentIndex = 0
         var currentAudio: AudioModel = audio
 
         while currentIndex < count {
-            download(currentAudio.url, reason: "downloadNext 🐛 \(reason)")
+            try await currentAudio.url.download()
 
             currentIndex = currentIndex + 1
             if let next = self.nextOf(currentAudio) {
@@ -201,23 +201,11 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
     }
 
-    func downloadNextBatch(_ url: URL, count: Int = 6, reason: String) {
+    func downloadNextBatch(_ url: URL, count: Int = 6, reason: String) async throws {
         if let audio = findAudio(url) {
-            downloadNextBatch(audio, count: count, reason: reason)
+            try await downloadNextBatch(audio, count: count, reason: reason)
         }
     }
-
-    func emitDBSynced() {
-        self.main.async {
-            NotificationCenter.default.post(name: .dbSynced, object: nil)
-        }
-    }
-
-//    func emitDBSyncing(_ group: DiskFileGroup) {
-//        self.main.async {
-//            NotificationCenter.default.post(name: .dbSyncing, object: self, userInfo: ["group": group])
-//        }
-//    }
 
     func emitSortDone(verbose: Bool = false) {
         if verbose {
@@ -239,10 +227,6 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
     }
 
-    func evict(_ url: URL) {
-//        disk.evict(url)
-    }
-
     func findAudio(_ id: AudioModel.ID) -> AudioModel? {
         context.model(for: id) as? AudioModel
     }
@@ -255,8 +239,16 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         try context.fetch(AudioModel.descriptorFirst).first
     }
 
+    func firstAudioURL() throws -> URL? {
+        try context.fetch(AudioModel.descriptorFirst).first?.url
+    }
+
     func get(_ i: Int) -> AudioModel? {
         Self.get(context: ModelContext(self.modelContainer), i)
+    }
+
+    func hasAudio(_ url: URL) -> Bool {
+        self.findAudio(url) != nil
     }
 
     func getAllURLs() -> [URL] {
@@ -320,6 +312,10 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         return try nextOf(audio: audio)
     }
 
+    func getNextAudioURLOf(_ url: URL?, verbose: Bool = false) throws -> URL? {
+        try self.getNextOf(url, verbose: verbose)?.url
+    }
+
     func getPrevOf(_ url: URL?, verbose: Bool = false) throws -> AudioModel? {
         if verbose {
             os_log("\(self.t)PrevOf -> \(url?.lastPathComponent ?? "-")")
@@ -334,6 +330,10 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
 
         return try prev(audio)
+    }
+
+    func getPrevAudioURLOf(_ url: URL?, verbose: Bool = false) throws -> URL? {
+        try self.getPrevOf(url, verbose: verbose)?.url
     }
 
     func getTotalOfAudio() -> Int {
@@ -359,21 +359,23 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
     }
 
     func insertAudio(_ audio: AudioModel, force: Bool = false) {
-//        if force == false && (findAudio(audio.url) != nil) {
-//            return
-//        }
-//
-//        context.insert(audio)
-//
-//        do {
-//            try context.save()
-//        } catch let e {
-//            os_log(.error, "\(e.localizedDescription)")
-//        }
-//
-//        Task {
-//            self.updateHash(audio)
-//        }
+        let url = audio.url
+
+        if force == false && (findAudio(url) != nil) {
+            return
+        }
+
+        context.insert(audio)
+
+        do {
+            try context.save()
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
+
+        Task {
+            self.updateHash(audio)
+        }
     }
 
     func isAllInCloud() -> Bool {
@@ -523,7 +525,7 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
 
         if isFirst {
-        syncWithDisk(items)
+            syncWithDisk(items)
         } else {
             syncWithUpdatedItems(items)
         }
@@ -533,8 +535,6 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
 //        }
 //
 //        self.updateGroupForURLs(group.urls)
-
-//        self.emitDBSynced()
     }
 
     func syncWithDisk(_ items: [MetaWrapper], verbose: Bool = false) {
@@ -543,22 +543,20 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
 
         // 将数组转换成哈希表，方便通过键来快速查找元素，这样可以将时间复杂度降低到：O(m+n)
 
-            var hashMap = [URL: MetaWrapper]()
-                for element in items {
-                    hashMap[element.url!] = element
-                }
-            
+        var hashMap = [URL: MetaWrapper]()
+        for element in items {
+            hashMap[element.url!] = element
+        }
 
         do {
             try context.enumerate(FetchDescriptor<AudioModel>(), block: { audio in
                 if let item = hashMap[audio.url] {
                     // 更新数据库记录
-//                    audio.size = item.size
+                    audio.size = item.fileSize
 
                     // 记录存在哈希表中，同步完成，删除哈希表记录
                     hashMap.removeValue(forKey: audio.url)
                 } else {
-                    // 记录不存在哈希表中，��据库删除
                     if verbose {
                         os_log("\(self.t)删除 \(audio.title)")
                     }
@@ -748,42 +746,41 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
 
     func deleteAudiosByURL(disk: URL, urls: [URL]) throws -> AudioModel? {
         // 本批次的最后一个删除后的下一个
-//        var next: AudioModel?
-//
-//        for (index, url) in urls.enumerated() {
-//            do {
-//                guard let audio = try context.fetch(FetchDescriptor(predicate: #Predicate<AudioModel> {
-//                    $0.url == url
-//                })).first else {
-//                    os_log(.error, "\(self.t)删除时找不到")
-//                    continue
-//                }
-//
-//                // 找出本批次的最后一个删除后的下一个
-//                if index == urls.count - 1 {
-//                    next = try nextOf(audio: audio)
-//
-//                    // 如果下一个等于当前，设为空
-//                    if next?.url == url {
-//                        next = nil
-//                    }
-//                }
-//
-//                // 从磁盘删除
-//                try disk.deleteFile(audio.url)
-//
-//                // 从磁盘删除后，因为数据库监听了磁盘的变动，会自动删除
-//                // 但自动删除可能不及时，所以这里及时删除
-//                context.delete(audio)
-//
-//                try context.save()
-//            } catch let e {
-//                os_log(.error, "\(self.t)删除出错 \(e)")
-//            }
-//        }
-//
-//        return next
-        nil
+        var next: AudioModel?
+
+        for (index, url) in urls.enumerated() {
+            do {
+                guard let audio = try context.fetch(FetchDescriptor(predicate: #Predicate<AudioModel> {
+                    $0.url == url
+                })).first else {
+                    os_log(.error, "\(self.t)删除时找不到")
+                    continue
+                }
+
+                // 找出本批次的最后一个删除后的下一个
+                if index == urls.count - 1 {
+                    next = try nextOf(audio: audio)
+
+                    // 如果下一个等于当前，设为空
+                    if next?.url == url {
+                        next = nil
+                    }
+                }
+
+                // 从磁盘删除
+                try audio.url.delete()
+
+                // 从磁盘删除后，因为数据库监听了磁盘的变动，会自动删除
+                // 但自动删除可能不及时，所以这里及时删除
+                context.delete(audio)
+
+                try context.save()
+            } catch let e {
+                os_log(.error, "\(self.t)删除出错 \(e)")
+            }
+        }
+
+        return next
     }
 
     static func findAudio(_ url: URL, context: ModelContext, verbose: Bool = false) -> AudioModel? {

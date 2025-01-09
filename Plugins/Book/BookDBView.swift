@@ -20,10 +20,6 @@ struct BookDBView: View, @preconcurrency SuperLog, SuperThread {
     var disk: URL
 
     init(verbose: Bool = false, disk: URL) {
-        if verbose {
-            os_log("\(Self.i)BookDBView")
-        }
-
         self.disk = disk
     }
 
@@ -57,7 +53,7 @@ struct BookDBView: View, @preconcurrency SuperLog, SuperThread {
             }
         )
         .task {
-//            self.total = await db.getTotal()
+            self.total = await db.getTotal()
         }
         .onDrop(of: [UTType.fileURL], isTargeted: $app.isDropping) { providers -> Bool in
             let dispatchGroup = DispatchGroup()

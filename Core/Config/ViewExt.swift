@@ -1,13 +1,9 @@
 import Foundation
-import SwiftUI
 import MagicKit
 import MagicUI
+import SwiftUI
 
 extension Config {
-    // MARK: Root Background
-    
-   
-
     static var getBackground: Color {
         #if os(macOS)
             Color(.controlBackgroundColor)
@@ -15,25 +11,10 @@ extension Config {
             Color(.systemBackground)
         #endif
     }
-}
 
-extension Config {
-    static var isDesktop: Bool {
-        #if os(macOS)
-            true
-        #else
-            false
-        #endif
-    }
-
-    static var isNotDesktop: Bool { !isDesktop }
-    static var isiOS: Bool {
-        #if os(iOS)
-            true
-        #else
-            false
-        #endif
-    }
+    static var isDesktop = MagicApp.isDesktop
+    static var isNotDesktop = MagicApp.isNotDesktop
+    static var isiOS = MagicApp.isiOS
 
     @AppStorage("UI.ShowDB")
     static var showDB: Bool = false
@@ -41,11 +22,7 @@ extension Config {
     static func setShowDB(_ value: Bool) {
         Config.showDB = value
     }
-}
 
-// MARK: 背景
-
-extension Config {
     /// 开发时如果不想显示背景，改成true
     static var noBackground = true
 
@@ -53,11 +30,7 @@ extension Config {
     static func background(_ color: Color = .red) -> Color {
         Config.debug && !noBackground ? color.opacity(0.3) : Color.clear
     }
-}
 
-// MARK: 响应式配置
-
-extension Config {
     /// 上半部分播放控制的最小高度
     static var controlViewMinHeight: CGFloat = Self.minHeight
     static var databaseViewHeightMin: CGFloat = 200

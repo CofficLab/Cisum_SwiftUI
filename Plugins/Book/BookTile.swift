@@ -1,8 +1,8 @@
 import MagicKit
+import MagicPlayMan
 import MagicUI
 import OSLog
 import SwiftUI
-import MagicPlayMan
 
 /**
  展示从数据库读取的图书数据
@@ -19,7 +19,7 @@ struct BookTile: View, SuperThread, @preconcurrency SuperLog {
     static let emoji = "🖥️"
     var hasCover: Bool { cover != nil }
     var noCover: Bool { cover == nil }
-    var book: Book
+    var book: BookModel
 
     var body: some View {
         HStack {
@@ -69,7 +69,7 @@ struct BookTile: View, SuperThread, @preconcurrency SuperLog {
             if let cover = cover {
                 cover.resizable().scaledToFit()
             } else {
-                MagicBackground.colorGreen
+                MagicBackground.deepForest
             }
         }
         .clipShape(RoundedRectangle(cornerSize: CGSize(width: 10, height: 10)))
@@ -96,36 +96,34 @@ extension BookTile {
         self.updateCover()
     }
 
+    @MainActor
     func onHover(_ hovering: Bool) {
         withAnimation {
             scale = hovering ? 1.02 : 1
         }
     }
 
+    @MainActor
     func onTap() {
-//        withAnimation(.spring()) {
-//            Task { @MainActor in
-//                if let s = self.state, let current = s.currentURL, let time = s.time {
-//                    playMan.seek(time: time)
-//                } else {
-//                    if let first = DiskFile(url: book.url).children.first, let book = await self.db.find(first.url) {
-//                        playMan.play(url: book.url)
-//                    } else {
-//                        playMan.play(url: book.url)
-//                    }
-//                }
-//
-//                scale = 0.95
-//                opacity = 0.95
-//
-//                self.main.asyncAfter(deadline: .now() + 0.5) {
-//                    withAnimation(.spring()) {
-//                        scale = 1.0
-//                        opacity = 1.0
-//                    }
-//                }
-//            }
-//        }
+        // 首先执行动画
+        withAnimation(.spring()) {
+            scale = 0.95
+            opacity = 0.95
+        }
+
+        if let first = book.url.getChildren().first {
+            playMan.play(url: first)
+        } else {
+            playMan.play(url: book.url)
+        }
+
+        // 延迟恢复动画
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { @MainActor in
+            withAnimation(.spring()) {
+                scale = 1.0
+                opacity = 1.0
+            }
+        }
     }
 }
 

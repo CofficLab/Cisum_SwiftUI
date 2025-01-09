@@ -12,22 +12,14 @@ import Combine
     private var disk: URL
     private var monitor: Cancellable? = nil
 
-    init(disk: URL, reason: String, verbose: Bool) {
+    init(disk: URL, reason: String, verbose: Bool) throws {
         if verbose {
             os_log("\(Self.i) with reason: 🐛 \(reason) 💾 with disk: \(disk.shortPath())")
         }
 
-        self.db = AudioRecordDB(AudioConfig.getContainer, reason: "AudioPlugin", verbose: verbose)
+        self.db = AudioRecordDB(try AudioConfig.getContainer(), reason: reason, verbose: verbose)
         self.disk = disk
-        self.monitor = self.disk.onDirectoryChanged(verbose: verbose, caller: self.className, { items, isFirst in
-            Task {
-                if verbose {
-                    os_log("\(self.t)🍋🍋🍋 OnDiskUpdate")
-                }
-
-                await self.db.sync(items, verbose: true, isFirst: isFirst)
-            }
-        })
+        self.monitor = self.makeMonitor()
     }
 
     func allAudios(reason: String) async -> [URL] {
@@ -37,51 +29,35 @@ import Combine
     func changeRoot(url: URL) {
         os_log("\(Self.t)🍋🍋🍋 Change disk to \(url.title)")
 
-//        self.disk.stopWatch(reason: self.className + ".changeDisk")
-//        self.disk = disk
-//        self.disk.setDelegate(self)
-//        Task(priority: .userInitiated) {
-//            await self.disk.watch(reason: self.className + ".changeDisk", verbose: true)
-//        }
+        self.monitor?.cancel()
+        self.disk = url
+        self.monitor = self.makeMonitor()
     }
 
     func delete(_ audio: AudioModel, verbose: Bool) async throws {
-//        try self.disk.deleteFile(audio.url)
-//        try await self.db.deleteAudio(audio, verbose: verbose)
-//        self.emit(.audioDeleted)
+        try self.disk.delete()
+        try await self.db.deleteAudio(url: audio.url)
+        self.emit(.audioDeleted)
     }
 
     func download(_ audio: AudioModel, verbose: Bool) async throws {
-//        try await self.disk.download(audio.url, reason: "AudioDB.download", verbose: verbose)
+        try await audio.url.download()
     }
 
     func find(_ url: URL) async -> URL? {
-        return nil
-//        let audio = await self.db.findAudio(url)
-//        audio?.setDB(self)
-//
-//        return url
+        await self.db.hasAudio(url) ? url : nil
     }
 
     func getFirst() async throws -> URL? {
-        return nil
-//        let audio = try await self.db.firstAudio()
-//
-//        return audio?.url
+        try await self.db.firstAudioURL()
     }
 
     func getNextOf(_ url: URL?, verbose: Bool = false) async throws -> URL? {
-        return nil
-//        let audio = try await self.db.getNextOf(url, verbose: verbose)
-//
-//        return audio?.url
+        try await self.db.getNextAudioURLOf(url, verbose: verbose)
     }
 
     func getPrevOf(_ url: URL?, verbose: Bool = false) async throws -> URL? {
-        return nil
-//        let audio = try await self.db.getPrevOf(url, verbose: verbose)
-//
-//        return audio?.url
+        try await self.db.getPrevAudioURLOf(url, verbose: verbose)
     }
 
     func getTotalCount() async -> Int {
@@ -93,7 +69,7 @@ import Combine
     }
 
     func sort(_ sticky: AudioModel?, reason: String) async {
-//        await self.db.sort(sticky, reason: reason)
+        await self.db.sort(sticky?.url, reason: reason)
     }
 
     func sort(_ url: URL?, reason: String) async {
@@ -101,7 +77,7 @@ import Combine
     }
 
     func sortRandom(_ sticky: AudioModel?, reason: String, verbose: Bool) async throws {
-//        try await self.db.sortRandom(sticky, reason: reason, verbose: verbose)
+        try await self.db.sortRandom(sticky?.url, reason: reason, verbose: verbose)
     }
 
     func sortRandom(_ url: URL?, reason: String, verbose: Bool) async throws {
@@ -111,15 +87,36 @@ import Combine
     func toggleLike(_ url: URL) async throws {
         try await self.db.toggleLike(url)
     }
+
+    func makeMonitor() -> Cancellable {
+        self.disk.onDirectoryChanged(verbose: true, caller: self.className, { items, isFirst in
+            Task {
+                os_log("\(self.t)🍋🍋🍋 OnDiskUpdate")
+                self.emitDBSyncing(items)
+                await self.db.sync(items, verbose: true, isFirst: isFirst)
+                self.emitDBSynced()
+                os_log("\(self.t)✅✅✅ OnDBSynced")
+            }
+        })
+    }
 }
 
-extension Notification.Name {
-    static let audioDeleted = Notification.Name("audioDeleted")
+// MARK: Emit
+
+extension AudioDB {
+    func emitDBSyncing(_ items: [MetaWrapper]) {
+        self.emit(name: .dbSyncing, object: self, userInfo: ["items": items])
+    }
+    
+    func emitDBSynced() {
+        self.emit(name: .dbSynced, object: nil)
+    }
 }
 
 // MARK: Event
 
 extension Notification.Name {
+    static let audioDeleted = Notification.Name("audioDeleted")
     static let dbSyncing = Notification.Name("dbSyncing")
     static let dbSynced = Notification.Name("dbSynced")
     static let DBSorting = Notification.Name("DBSorting")

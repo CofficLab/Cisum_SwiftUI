@@ -77,6 +77,7 @@
       }
     },
     "EEEEEE" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -417,6 +418,7 @@
       }
     },
     "打开" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

@@ -8,7 +8,7 @@ actor WelcomePlugin: SuperPlugin, SuperLog {
     static let emoji = "👏"
 
     let label = "Welcome"
-    let hasPoster = true
+    let hasPoster = false
     let description = "设置"
     let iconName = "music.note"
     

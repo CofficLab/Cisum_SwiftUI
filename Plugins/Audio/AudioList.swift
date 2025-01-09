@@ -26,7 +26,7 @@ struct AudioList: View, SuperThread, @preconcurrency SuperLog, SuperEvent {
     @State var selection: URL? = nil
     @State var isSorting = false
     @State var sortMode: SortMode = .none
-    @State private var progressMap = [URL: Double]()
+    @State var progressMap = [URL: Double]()
 
     @Query(sort: \AudioModel.order, animation: .default) var audios: [AudioModel]
 
@@ -100,21 +100,17 @@ struct AudioList: View, SuperThread, @preconcurrency SuperLog, SuperEvent {
         .onReceive(nc.publisher(for: .DBSortDone), perform: onSortDone)
         .onReceive(NotificationCenter.default.publisher(for: .dbSyncing), perform: handleDBSyncing)
     }
-    
+
     func handleDBSyncing(_ notification: Notification) {
-//        if let group = notification.userInfo?["group"] as? DiskFileGroup {
-//            for file in group.files {
-//                if file.isDownloading {
-//                    main.async {
-//                        progressMap[file.url] = file.downloadProgress
-//                    }
-//                } else if file.isDownloaded {
-//                    main.async {
-//                        progressMap[file.url] = 1.0
-//                    }
-//                }
-//            }
-//        }
+        if let items = notification.userInfo?["items"] as? [MetaWrapper] {
+            for file in items {
+                if file.isDownloading {
+                    setProgress(for: file.url!, value: file.downloadProgress)
+                } else if file.isDownloaded {
+                    setProgress(for: file.url!, value: 1.0)
+                }
+            }
+        }
     }
 }
 
@@ -126,13 +122,13 @@ extension AudioList {
 
     func handleOnAppear() {
         if let asset = man.asset {
-            selection = asset.url
+            setSelection(asset.url)
         }
     }
 
     func handlePlayManStateChange(_ notification: Notification) {
         if let asset = man.asset, asset.url != self.selection {
-            selection = asset.url
+            setSelection(asset.url)
         }
     }
 
@@ -148,24 +144,20 @@ extension AudioList {
 
     func handlePlayAssetChange() {
         if let asset = man.asset {
-            selection = asset.url
+            setSelection(asset.url)
         }
     }
 
     func onSorting(_ notification: Notification) {
         os_log("\(t)onSorting")
-        isSorting = true
+        setIsSorting(true)
         if let mode = notification.userInfo?["mode"] as? String {
-            sortMode = SortMode(rawValue: mode) ?? .none
+            setSortMode(SortMode(rawValue: mode) ?? .none)
         }
     }
 
     func onSortDone(_ notification: Notification) {
         os_log("\(t)onSortDone")
-
-//        self.main.asyncAfter(deadline: .now() + 1.0) {
-//            isSorting = false
-//        }
     }
 }
 
@@ -194,13 +186,13 @@ extension AudioList {
 private struct MediaViewWrapper: View, Equatable {
     let url: URL
     let progress: Binding<Double>
-    
+
     var body: some View {
         url.makeMediaView(verbose: true)
             .magicAvatarDownloadProgress(progress)
             .magicPadding(horizontal: 0, vertical: 0)
     }
-    
+
     nonisolated static func == (lhs: MediaViewWrapper, rhs: MediaViewWrapper) -> Bool {
         return lhs.url == rhs.url
     }
@@ -214,4 +206,22 @@ private struct MediaViewWrapper: View, Equatable {
 #Preview {
     LayoutView(width: 400, height: 800)
         .frame(height: 800)
+}
+
+extension AudioList {
+    private func setSelection(_ newValue: URL?) {
+        selection = newValue
+    }
+
+    private func setIsSorting(_ newValue: Bool) {
+        isSorting = newValue
+    }
+
+    private func setSortMode(_ newValue: SortMode) {
+        sortMode = newValue
+    }
+
+    private func setProgress(for url: URL, value: Double) {
+        progressMap[url] = value
+    }
 }

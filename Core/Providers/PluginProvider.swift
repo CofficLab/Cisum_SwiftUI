@@ -175,28 +175,17 @@ extension PluginProvider {
         }
     }
 
-    func onPlayPrev(current: MagicAsset?) {
-//        Task {
-//            for plugin in p.plugins {
-//                do {
-//                    try await plugin.onPlayPrev(playMan: man, current: current, currentGroup: p.current, verbose: true)
-//                } catch let e {
-//                    m.error(e)
-//                }
-//            }
-//        }
+    func onPlayPrev(current: URL?, mode: PlayMode, man: PlayManWrapper) async throws {
+        let currentGroupId = self.current?.id
+        for plugin in plugins {
+            try await plugin.onPlayPrev(playMan: man, current: current, currentGroup: currentGroupId, verbose: true)
+        }
     }
 
-    func onPlayModeChange(mode: PlayMode) {
-//        Task {
-//            for plugin in p.plugins {
-//                do {
-//                    try await plugin.onPlayModeChange(mode: mode, asset: man.asset)
-//                } catch let e {
-//                    m.error(e)
-//                }
-//            }
-//        }
+    func onPlayModeChange(mode: PlayMode, asset: URL?) async throws {
+        for plugin in plugins {
+            try await plugin.onPlayModeChange(mode: mode.rawValue, asset: asset)
+        }
     }
 }
 

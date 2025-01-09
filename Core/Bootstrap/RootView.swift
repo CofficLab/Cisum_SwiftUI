@@ -187,11 +187,13 @@ extension RootView {
                     },
                     onPreviousRequested: { asset in
                         Task {
-                            try? await self.p.onPlayNext(current: asset.url, mode: man.playMode, man: playManWrapper)
+                            os_log("\(self.t)🍋🍋🍋 onPreviousRequested: \(asset.url.lastPathComponent)")
+                            try? await self.p.onPlayPrev(current: asset.url, mode: man.playMode, man: playManWrapper)
                         }
                     },
                     onNextRequested: { asset in
                         Task {
+                            os_log("\(self.t)🍋🍋🍋 onNextRequested: \(asset.url.lastPathComponent)")
                             try? await self.p.onPlayNext(current: asset.url, mode: man.playMode, man: playManWrapper)
                         }
                     },

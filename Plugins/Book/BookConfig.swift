@@ -3,38 +3,24 @@ import SwiftUI
 import SwiftData
 
 struct BookConfig {
-    // MARK: 数据库存储名称
-    
-    @MainActor static var dbFileName = "books.db"
-        
-    // MARK: 本地的数据库的存储路径
-    
-    @MainActor static func getDBUrl() -> URL? {
-        Config.getDBRootDir()?
+    @MainActor static func getDBUrl() throws -> URL {
+        try Config.getDBRootDir()
             .appendingPathComponent("books_db")
-            .appendingPathComponent(dbFileName)
+            .appendingPathComponent("books.db")
     }
     
-    @MainActor static func getCoverFolderUrl() -> URL {
-        guard let dir = Config.getDBRootDir()?
-            .appendingPathComponent("books_cover") else {
-            fatalError("Could not create cover folder")
-        }
-          
-        return dir
+    @MainActor static func getCoverFolderUrl() throws -> URL {
+         try Config.getDBRootDir()
+            .appendingPathComponent("books_cover")
     }
-    
-    // MARK: Local Container
-    
-    @MainActor
-    static let getContainer: ModelContainer = {
-        guard let url = getDBUrl() else {
-            fatalError("Could not create ModelContainer")
-        }
+ 
+    @MainActor static func getContainer() throws -> ModelContainer {
+        let url = try getDBUrl()
 
         let schema = Schema([
-            Book.self,
+            BookModel.self,
         ])
+        
         let modelConfiguration = ModelConfiguration(
             schema: schema,
             url: url,
@@ -42,10 +28,6 @@ struct BookConfig {
             cloudKitDatabase: .none
         )
 
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
+        return try ModelContainer(for: schema, configurations: [modelConfiguration])
+    }
 }

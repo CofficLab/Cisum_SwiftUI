@@ -1,40 +1,24 @@
 import Foundation
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct CopyConfig {
-    // MARK: 数据库存储名称
-    
     static let dbFileName = "copy_task.db"
-        
-    // MARK: 本地的数据库的存储路径
-    
-    @MainActor static func getDBUrl() -> URL? {
-        guard let rootURL = Config.getDBRootDir() else { return nil }
-        
-        let dbDirURL = rootURL.appendingPathComponent("copy_db")
-        
-        // 创建目录如果不存在
-        do {
-            try FileManager.default.createDirectory(at: dbDirURL, withIntermediateDirectories: true)
-        } catch {
-            print("Error creating directory: \(error)")
-            return nil
-        }
-        
-        return dbDirURL.appendingPathComponent(dbFileName)
+
+    @MainActor static func getDBUrl() throws -> URL {
+        try Config.getDBRootDir()
+            .appendingPathComponent("copy_db")
+            .appendingPathComponent(dbFileName)
+            .createIfNotExist()
     }
     
-    // MARK: Local Container
-    
-    @MainActor static var getContainer: ModelContainer = {
-        guard let url = getDBUrl() else {
-            fatalError("Could not create ModelContainer")
-        }
+    @MainActor static func getContainer() throws -> ModelContainer {
+        let url = try getDBUrl()
 
         let schema = Schema([
-            CopyTask.self
+            CopyTask.self,
         ])
+        
         let modelConfiguration = ModelConfiguration(
             schema: schema,
             url: url,
@@ -42,10 +26,6 @@ struct CopyConfig {
             cloudKitDatabase: .none
         )
 
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
+        return try ModelContainer(for: schema, configurations: [modelConfiguration])
+    }
 }

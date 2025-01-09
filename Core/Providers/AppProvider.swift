@@ -18,7 +18,6 @@ class AppProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, @preconcur
     @Published var isResetting: Bool = false
     @Published var error: Error? = nil
     @Published var rightAlbumVisible = false
-    @Published var dbViewType: DBViewType = .init(rawValue: Config.currentDBViewType)!
 
     func showDBView() {
         withAnimation {

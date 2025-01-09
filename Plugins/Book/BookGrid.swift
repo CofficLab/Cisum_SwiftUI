@@ -1,8 +1,8 @@
+import MagicKit
+import MagicUI
 import OSLog
 import SwiftData
 import SwiftUI
-import MagicKit
-import MagicUI
 
 struct BookGrid: View, @preconcurrency SuperLog, SuperThread {
     static let emoji = "📖"
@@ -14,8 +14,8 @@ struct BookGrid: View, @preconcurrency SuperLog, SuperThread {
     @State var selection: AudioModel? = nil
     @State var syncingTotal: Int = 0
     @State var syncingCurrent: Int = 0
-    @State var books: [Book] = []
-    
+    @State var books: [BookModel] = []
+
     var total: Int { books.count }
     var showTips: Bool {
         if appManager.isDropping {
@@ -40,15 +40,13 @@ struct BookGrid: View, @preconcurrency SuperLog, SuperThread {
         }
         .onAppear(perform: handleOnAppear)
     }
-    
+
     func handleOnAppear() {
-//        Task {
-//            self.books = await db.getRootBooks()
-//        }
+        Task {
+            self.books = await db.getRootBooks()
+        }
     }
 }
-
-
 
 #Preview("App") {
     AppPreview()

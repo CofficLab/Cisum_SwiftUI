@@ -28,14 +28,16 @@ struct ErrorViewFatal: View {
                         .font(.title)
                         .padding(.bottom, 10)
 
-                    Text("\(error.localizedDescription)")
-                        .font(.subheadline)
-                        .padding(.bottom, 10)
+                    GroupBox {
+                        Text("\(error.localizedDescription)")
+                            .font(.subheadline)
+                            .padding(.bottom, 10)
 
-                    Text(String(describing: type(of: error)))
-                        .padding(.bottom, 10)
+                        Text(String(describing: type(of: error)))
+                            .padding(.bottom, 10)
 
-                    Text(String(describing: error))
+                        Text(String(describing: error))
+                    }.padding()
 
                     Spacer()
 
@@ -70,6 +72,13 @@ struct ErrorViewFatal: View {
                     makeKeyValueItem(key: "仓库位置", value: c.storageLocation?.title ?? "未设置")
                 }
             }, header: { makeTitle("设置") })
+            
+            Section(content: {
+                GroupBox {
+                    makeKeyValueItem(key: "APP 容器", value: MagicApp.getContainerDirectory().path(percentEncoded: false))
+                    makeKeyValueItem(key: "数据库文件夹", value: MagicApp.getDatabaseDirectory().path(percentEncoded: false))
+                }
+            }, header: { makeTitle("文件夹") })
 
             GroupBox {
                 Button("恢复默认设置") {
