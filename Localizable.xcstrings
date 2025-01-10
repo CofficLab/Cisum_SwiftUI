@@ -137,9 +137,6 @@
     "Setting" : {
 
     },
-    "Video" : {
-
-    },
     "一次性产品" : {
       "localizations" : {
         "en" : {
@@ -511,6 +508,7 @@
 
     },
     "播放次数" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -638,6 +636,7 @@
 
     },
     "测试" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -766,6 +765,7 @@
       }
     },
     "设备" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

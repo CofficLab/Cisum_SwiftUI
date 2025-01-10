@@ -16,7 +16,6 @@ class AppProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLog, 
     @Published var isImporting: Bool = false
     @Published var isDropping: Bool = false
     @Published var isResetting: Bool = false
-    @Published var error: Error? = nil
     @Published var rightAlbumVisible = false
 
     func showDBView() {
@@ -39,13 +38,13 @@ class AppProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLog, 
         showDB ? self.closeDBView() : self.showDBView()
     }
 
-    func clearError() {
-        self.error = nil
-    }
-
-    func setError(_ error: Error) {
-        self.error = error
-    }
+//    func clearError() {
+//        self.error = nil
+//    }
+//
+//    func setError(_ error: Error) {
+//        self.error = error
+//    }
 
     func setResetting(_ value: Bool) {
         self.isResetting = value

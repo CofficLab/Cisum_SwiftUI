@@ -10,20 +10,8 @@ struct SettingView: View {
                     p.plugins[index].addSettingView().padding(.horizontal)
                 }
                 
-                //CloudSetting().padding(.horizontal)
                 VersionSetting()
                     .padding(.horizontal)
-                
-//                if Config.debug {
-//                    PlayTime()
-//                        .padding(.horizontal)
-//                }
-                
-//                if Config.isDebug {
-//                    DeviceSetting()
-//                        .padding(.horizontal)
-//                        .padding(.bottom)
-//                }
             }.padding(.top)
         }
     }

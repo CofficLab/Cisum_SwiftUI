@@ -35,59 +35,37 @@ protocol SuperPlugin: Actor {
 }
 
 extension SuperPlugin {
-    nonisolated var id: String {
-        return self.label
-    }
+    nonisolated var id: String { self.label }
 
-    nonisolated var isGroup: Bool {
-        return false
-    }
+    nonisolated var isGroup: Bool { false }
 
     nonisolated func addSheetView(storage: StorageLocation?) -> AnyView? { nil }
 
     nonisolated func addPosterView() -> AnyView? { nil }
 
-    nonisolated func addToolBarButtons() -> [(id: String, view: AnyView)] {
-        return []
-    }
+    nonisolated func addToolBarButtons() -> [(id: String, view: AnyView)] { [] }
 
-    nonisolated func addStateView(currentGroup: SuperPlugin?) -> AnyView? {
-        return nil
-    }
+    nonisolated func addStateView(currentGroup: SuperPlugin?) -> AnyView? { nil }
 
-    nonisolated func addStatusView() -> AnyView? {
-        return nil
-    }
+    nonisolated func addStatusView() -> AnyView? { nil }
 
-    nonisolated func addRootView() -> AnyView? {
-        return nil
-    }
+    nonisolated func addRootView() -> AnyView? { nil }
 
-    nonisolated func addDBView(reason: String) -> AnyView? {
-        return nil
-    }
+    nonisolated func addDBView(reason: String) -> AnyView? { nil }
 
-    nonisolated func addSettingView() -> AnyView? {
-        return nil
-    }
+    nonisolated func addSettingView() -> AnyView? { nil }
 
-    @MainActor func getDisk() -> URL? {
-        return nil
-    }
+    @MainActor func getDisk() -> URL? { nil }
 
     func onWillAppear(playMan: PlayManWrapper, currentGroup: SuperPlugin?) {}
 
-    func onInit() {
-    }
+    func onInit() {}
 
-    func onCurrentURLChanged(url: URL) {
-    }
+    func onCurrentURLChanged(url: URL) { }
 
-    func onDisappear() {
-    }
+    func onDisappear() { }
 
-    func onPlay() {
-    }
+    func onPlay() { }
 
     func onPlayModeChange(mode: String, asset: URL?) async throws { }
 
@@ -97,14 +75,11 @@ extension SuperPlugin {
 
     func onPlayStateUpdate() async throws {}
 
-    func onPlayNext(playMan: PlayManWrapper, current: URL?, currentGroup: String?, verbose: Bool) async throws {
-    }
+    func onPlayNext(playMan: PlayManWrapper, current: URL?, currentGroup: String?, verbose: Bool) async throws { }
 
-    func onPlayPrev(playMan: PlayManWrapper, current: URL?, currentGroup: String?, verbose: Bool) async throws {
-    }
+    func onPlayPrev(playMan: PlayManWrapper, current: URL?, currentGroup: String?, verbose: Bool) async throws { }
 
-    func onWillAppear(playMan: PlayManWrapper, currentGroup: (any SuperPlugin)?, storage: StorageLocation?) async {
-    }
+    func onWillAppear(playMan: PlayManWrapper, currentGroup: (any SuperPlugin)?, storage: StorageLocation?) async { }
 
     func onStorageLocationChange(storage: StorageLocation?) async throws {}
 }
