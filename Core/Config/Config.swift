@@ -60,8 +60,8 @@ enum Config: SuperLog {
     
     static func getPlugins() -> [SuperPlugin] {
         return [
-            WelcomePlugin(),
-            SettingPlugin(),
+//            WelcomePlugin(),
+//            SettingPlugin(),
             AudioPlugin(),
             CopyPlugin(),
 //            BookPlugin()

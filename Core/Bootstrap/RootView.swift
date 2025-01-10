@@ -34,7 +34,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     var body: some View {
         Group {
             if self.loading {
-                ProgressView()
+                LaunchView()
             } else if a.isResetting {
                 Text("正在重置")
             } else {
@@ -178,11 +178,11 @@ extension RootView {
 
                 a.showSheet = p.getSheetViews(storage: c.storageLocation).isNotEmpty
 
-                #if os(iOS)
-                    self.main.async {
-                        UIApplication.shared.beginReceivingRemoteControlEvents()
-                    }
-                #endif
+//                #if os(iOS)
+//                    self.main.async {
+//                        UIApplication.shared.beginReceivingRemoteControlEvents()
+//                    }
+//                #endif
 
                 self.man.subscribe(
                     name: self.className,
