@@ -6,7 +6,7 @@ import SwiftData
 import SwiftUI
 import UniformTypeIdentifiers
 
-struct BookDBView: View, @preconcurrency SuperLog, SuperThread {
+struct BookDBView: View, SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var bookManager: BookProvider
     @EnvironmentObject var db: BookDB
@@ -14,7 +14,7 @@ struct BookDBView: View, @preconcurrency SuperLog, SuperThread {
     @State var treeView = false
     @State var total: Int = 0
 
-    static let emoji = "🐘"
+    nonisolated static let emoji = "🐘"
 
     var dropping: Bool { app.isDropping }
     var disk: URL

@@ -8,8 +8,8 @@ import OSLog
 import SwiftUI
 
 @MainActor
-class CloudProvider: NSObject, ObservableObject, @preconcurrency SuperLog, SuperThread, SuperEvent {
-    static let emoji: String = "☃️"
+class CloudProvider: NSObject, ObservableObject, SuperLog, SuperThread, SuperEvent {
+    nonisolated static let emoji = "☃️"
     
     @Published private(set) var isSignedIn: Bool?
     @Published private(set) var accountStatus: String = ""

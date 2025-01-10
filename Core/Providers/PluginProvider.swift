@@ -8,9 +8,9 @@ import SwiftData
 import SwiftUI
 
 @MainActor
-class PluginProvider: ObservableObject, @preconcurrency SuperLog, SuperThread {
+class PluginProvider: ObservableObject, SuperLog, SuperThread {
     static let keyOfCurrentPluginID = "currentPluginID"
-    static let emoji = "🧩"
+    nonisolated static let emoji = "🧩"
 
     @Published private(set) var plugins: [SuperPlugin] = []
     @Published private(set) var current: SuperPlugin?

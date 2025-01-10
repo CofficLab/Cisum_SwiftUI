@@ -8,8 +8,8 @@ import OSLog
 import SwiftUI
 
 @MainActor
-class ConfigProvider: NSObject, ObservableObject, @preconcurrency SuperLog, SuperThread {
-    static let emoji: String = "🔩"
+class ConfigProvider: NSObject, ObservableObject, SuperLog, SuperThread {
+    nonisolated static let emoji = "🔩"
     static let keyOfStorageLocation = "StorageLocation"
 
     @Published var storageLocation: StorageLocation?

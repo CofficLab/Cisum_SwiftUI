@@ -6,8 +6,8 @@ import SwiftData
 import SwiftUI
 
 @MainActor
-enum Config: @preconcurrency SuperLog {
-    static let emoji = "🧲"
+enum Config: SuperLog {
+    nonisolated static let emoji = "🧲"
     static let id = "com.yueyi.cisum"
     static let logger = Logger.self
     static let maxAudioCount = 5

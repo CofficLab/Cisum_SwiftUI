@@ -2,8 +2,8 @@ import MagicKit
 
 import SwiftUI
 
-struct ResetSetting: View, SuperSetting, @preconcurrency SuperLog {
-    static let emoji = "🫙"
+struct ResetSetting: View, SuperSetting, SuperLog {
+    nonisolated static let emoji = "🫙"
 
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var configProvider: ConfigProvider

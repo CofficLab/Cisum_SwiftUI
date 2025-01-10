@@ -3,8 +3,8 @@ import MagicKit
 import OSLog
 import SwiftUI
 
-struct StorageView: View, SuperSetting, @preconcurrency SuperLog {
-    static let emoji: String = "🍴"
+struct StorageView: View, SuperSetting, SuperLog {
+    nonisolated static let emoji = "🍴"
 
     @EnvironmentObject var cloudManager: CloudProvider
     @EnvironmentObject var c: ConfigProvider

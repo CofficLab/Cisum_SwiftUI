@@ -13,8 +13,8 @@ import SwiftUI
       B1               B2
       B2
  */
-struct AudioList: View, SuperThread, @preconcurrency SuperLog, SuperEvent {
-    static let emoji = "📬"
+struct AudioList: View, SuperThread, SuperLog, SuperEvent {
+    nonisolated static let emoji = "📬"
 
     @Environment(\.modelContext) private var modelContext
 

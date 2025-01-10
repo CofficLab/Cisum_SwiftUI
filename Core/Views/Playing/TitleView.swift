@@ -4,11 +4,11 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-struct TitleView: View, @preconcurrency SuperLog, SuperThread {
+struct TitleView: View, SuperLog, SuperThread {
     @EnvironmentObject var playMan: PlayMan
 
     var title: String { playMan.asset?.title ?? "" }
-    static let emoji = "📺"
+    nonisolated static let emoji = "📺"
 
     var body: some View {
         GeometryReader { geo in

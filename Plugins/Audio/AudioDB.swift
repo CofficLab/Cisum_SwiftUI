@@ -6,8 +6,8 @@ import SwiftData
 import SwiftUI
 import Combine
 
-@MainActor class AudioDB: ObservableObject, SuperEvent, @preconcurrency SuperLog {
-    static let emoji = "🎵"
+@MainActor class AudioDB: ObservableObject, SuperEvent, SuperLog {
+    nonisolated static let emoji = "🎵"
     private var db: AudioRecordDB
     private var disk: URL
     private var monitor: Cancellable? = nil

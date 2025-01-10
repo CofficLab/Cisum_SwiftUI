@@ -4,8 +4,8 @@ import MagicKit
 import OSLog
 import SwiftUI
 
-struct MainView: View, @preconcurrency SuperLog, SuperThread {
-    static let emoji = "🖥️"
+struct MainView: View, SuperLog, SuperThread {
+    nonisolated static let emoji = "🖥️"
 
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var p: PluginProvider

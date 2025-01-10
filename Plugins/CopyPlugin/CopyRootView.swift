@@ -1,11 +1,11 @@
-@preconcurrency import AlertToast
-@preconcurrency import MagicKit
-@preconcurrency import OSLog
-@preconcurrency import SwiftUI
-@preconcurrency import UniformTypeIdentifiers
+import AlertToast
+import MagicKit
+import OSLog
+import SwiftUI
+import UniformTypeIdentifiers
 
-struct CopyRootView: View, SuperEvent, @preconcurrency SuperLog, SuperThread {
-    static let emoji = "🚛"
+struct CopyRootView: View, SuperEvent, SuperLog, SuperThread {
+    nonisolated static let emoji = "🚛"
 
     @EnvironmentObject var db: CopyDB
     @EnvironmentObject var s: StoreProvider
@@ -90,47 +90,51 @@ extension CopyRootView {
 
     func onDrop(_ providers: [NSItemProvider]) async -> Bool {
         let verbose = false
-
-        if outOfLimit {
-            return false
-        }
-
-        guard let disk = p.current?.getDisk() else {
-            os_log(.error, "\(self.t)No Disk")
-            await MainActor.run {
-                self.m.toast("No Disk")
-            }
-            return false
-        }
-
-        let diskRoot = disk
-
         if verbose {
             os_log("\(self.t)开始处理拖放文件")
         }
 
-        var urls: [URL] = []
+        if outOfLimit { return false }
+        
+        guard let disk = await MainActor.run(body: { p.current?.getDisk() }) else {
+            os_log(.error, "\(self.t)No Disk")
+            await MainActor.run { self.m.toast("No Disk") }
+            return false
+        }
 
-        // Handle each provider separately and safely
+        var urls: [URL] = []
         for provider in providers {
-            if let itemProvider = try? await provider.loadItem(forTypeIdentifier: UTType.fileURL.identifier) {
-                if let urlData = itemProvider as? Data,
-                   let url = URL(dataRepresentation: urlData, relativeTo: nil) {
-                    urls.append(url)
-                } else if let url = itemProvider as? URL {
-                    urls.append(url)
+            if provider.hasItemConformingToTypeIdentifier(UTType.fileURL.identifier) {
+                do {
+                    let urlData: Data = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Data, Error>) in
+                        provider.loadDataRepresentation(forTypeIdentifier: UTType.fileURL.identifier) { data, error in
+                            if let error = error {
+                                continuation.resume(throwing: error)
+                            } else if let data = data {
+                                continuation.resume(returning: data)
+                            } else {
+                                continuation.resume(throwing: NSError(domain: "", code: -1))
+                            }
+                        }
+                    }
+                    if let url = URL(dataRepresentation: urlData, relativeTo: nil) {
+                        urls.append(url)
+                    }
+                } catch {
+                    os_log(.error, "\(self.t)Failed to load URL: \(error.localizedDescription)")
                 }
             }
         }
-
+        
         if verbose {
-            os_log("\(self.t)➕➕➕ 添加 \(urls.count) 个文件到复制队列")
+            os_log("\(self.t)获取到 \(urls.count) 个文件")
         }
         
-        self.m.toast("\(urls.count) 个文件开始复制")
-
-        await MainActor.run {
-            self.worker.append(urls, folder: diskRoot)
+        if !urls.isEmpty {
+            await MainActor.run {
+                self.m.toast("\(urls.count) 个文件开始复制")
+                self.worker.append(urls, folder: disk)
+            }
         }
 
         return true

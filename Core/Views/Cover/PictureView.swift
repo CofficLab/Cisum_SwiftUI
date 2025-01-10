@@ -3,10 +3,10 @@ import MagicKit
 import OSLog
 import SwiftUI
 
-struct PictureView: View, @preconcurrency SuperLog, SuperThread {
+struct PictureView: View, SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
 
-    static let emoji = "🐰"
+    nonisolated static let emoji = "🐰"
 
     @State var image: Image?
     @State var downloadingPercent: Double = -1

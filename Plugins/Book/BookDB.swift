@@ -5,8 +5,8 @@ import MagicKit
 import OSLog
 
 @MainActor
-class BookDB: ObservableObject, SuperEvent, @preconcurrency SuperLog {
-    static let emoji = "📖"
+class BookDB: ObservableObject, SuperEvent, SuperLog {
+    nonisolated static let emoji = "📖"
     
     private let db: BookRecordDB
     private var disk: URL

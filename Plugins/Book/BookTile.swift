@@ -7,7 +7,7 @@ import SwiftUI
 /**
  展示从数据库读取的图书数据
  */
-struct BookTile: View, SuperThread, @preconcurrency SuperLog {
+struct BookTile: View, SuperThread, SuperLog {
     @EnvironmentObject var playMan: MagicPlayMan
     @EnvironmentObject var db: BookDB
 
@@ -16,7 +16,7 @@ struct BookTile: View, SuperThread, @preconcurrency SuperLog {
     @State var opacity: Double = 1.0
     @State var cover: Image? = nil
 
-    static let emoji = "🖥️"
+    nonisolated static let emoji = "🖥️"
     var hasCover: Bool { cover != nil }
     var noCover: Bool { cover == nil }
     var book: BookModel

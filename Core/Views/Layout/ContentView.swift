@@ -2,8 +2,8 @@ import MagicKit
 import OSLog
 import SwiftUI
 
-struct ContentView: View, @preconcurrency SuperLog, SuperThread {
-    static let emoji = "🐮"
+struct ContentView: View, SuperLog, SuperThread {
+    nonisolated static let emoji = "🐮"
 
     var body: some View {
         VStack(spacing: 0) {

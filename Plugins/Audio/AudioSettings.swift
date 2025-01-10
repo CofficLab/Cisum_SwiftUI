@@ -2,8 +2,8 @@ import SwiftUI
 import MagicKit
 
 
-struct AudioSettings: View, SuperSetting, @preconcurrency SuperLog {
-    static let emoji = "🔊"
+struct AudioSettings: View, SuperSetting, SuperLog {
+    nonisolated static let emoji = "🔊"
     @EnvironmentObject var audioManager: AudioProvider
     
     @State var diskSize: String?

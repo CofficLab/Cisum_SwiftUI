@@ -3,8 +3,8 @@ import MagicKit
 
 import OSLog
 
-struct FileSizeView: View, @preconcurrency SuperLog {
-    static let emoji = "🫘"
+struct FileSizeView: View, SuperLog {
+    nonisolated static let emoji = "🫘"
     
     let url: URL
     @State private var size: Int64?

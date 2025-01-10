@@ -4,8 +4,8 @@ import OSLog
 import StoreKit
 import SwiftUI
 
-struct BuySetting: View, @preconcurrency SuperLog {
-    static let emoji = "🛒"
+struct BuySetting: View, SuperLog {
+    nonisolated static let emoji = "🛒"
     
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     @State var closeBtnHovered: Bool = false

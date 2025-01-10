@@ -4,7 +4,7 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-struct CopyStateView: View, @preconcurrency SuperLog, SuperThread {
+struct CopyStateView: View, SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var messageManager: MessageProvider
     @Environment(\.modelContext) private var modelContext
@@ -15,7 +15,7 @@ struct CopyStateView: View, @preconcurrency SuperLog, SuperThread {
 
     var taskCount: Int { tasks.count }
     var showCopyMessage: Bool { tasks.count > 0 }
-    static let emoji = "🖥️"
+    nonisolated static let emoji = "🖥️"
     let verbose = true
 
     var body: some View {

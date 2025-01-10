@@ -7,7 +7,7 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 @MainActor
-struct AudioDBView: View, @preconcurrency SuperLog, SuperThread, SuperEvent {
+struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var messageManager: MessageProvider
     @EnvironmentObject var s: StoreProvider
@@ -18,7 +18,7 @@ struct AudioDBView: View, @preconcurrency SuperLog, SuperThread, SuperEvent {
     @State var count: Int = 0
     @State var loading: Bool = true
 
-    static let emoji = "🐘"
+    nonisolated static let emoji = "🐘"
 
     init(verbose: Bool, reason: String) {
         if verbose {

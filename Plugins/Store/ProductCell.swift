@@ -4,7 +4,7 @@ import OSLog
 import StoreKit
 import SwiftUI
 
-struct ProductCell: View, @preconcurrency SuperLog {
+struct ProductCell: View, SuperLog {
     @EnvironmentObject var store: StoreProvider
     @State var isPurchased: Bool = false
     @State var errorTitle = ""
@@ -36,7 +36,7 @@ struct ProductCell: View, @preconcurrency SuperLog {
         return false
     }
 
-    static let emoji = "🖥️"
+    nonisolated static let emoji = "🖥️"
 
     init(product: Product, purchasingEnabled: Bool = true, showStatus: Bool = false) {
         self.product = product

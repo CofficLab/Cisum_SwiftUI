@@ -4,8 +4,8 @@ import SwiftUI
 import MagicKit
 
 
-struct Posters: View, @preconcurrency SuperLog {
-    static let emoji = "🪧"
+struct Posters: View, SuperLog {
+    nonisolated static let emoji = "🪧"
     
     @EnvironmentObject var p: PluginProvider
     @EnvironmentObject var m: MessageProvider

@@ -6,7 +6,7 @@ import UniformTypeIdentifiers
 import MagicKit
 
 
-struct VideoDB: View, @preconcurrency SuperLog {
+struct VideoDB: View, SuperLog {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var message: MessageProvider
     @EnvironmentObject var db: AudioRecordDB
@@ -15,7 +15,7 @@ struct VideoDB: View, @preconcurrency SuperLog {
 
     @Query(AudioModel.descriptorAll, animation: .default) var audios: [AudioModel]
 
-    static let emoji = "🐘"
+    nonisolated static let emoji = "🐘"
 
     var dropping: Bool { app.isDropping }
 

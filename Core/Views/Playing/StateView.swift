@@ -4,7 +4,7 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-struct StateView: View, @preconcurrency SuperLog, SuperThread {
+struct StateView: View, SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var messageManager: MessageProvider
     @EnvironmentObject var audioManager: AudioProvider
@@ -18,7 +18,7 @@ struct StateView: View, @preconcurrency SuperLog, SuperThread {
     var showCopyMessage: Bool { tasks.count > 0 }
     var asset: URL? { playMan.asset }
     var font: Font { asset == nil ? .title3 : .callout }
-    static let emoji = "🖥️"
+    nonisolated static let emoji = "🖥️"
     let verbose = true
 
     var body: some View {

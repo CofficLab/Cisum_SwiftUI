@@ -4,8 +4,8 @@ import SwiftUI
 import MagicKit
 
 
-struct VideoLayout: View, @preconcurrency SuperLog {
-    static let emoji = "🖥️"
+struct VideoLayout: View, SuperLog {
+    nonisolated static let emoji = "🖥️"
 
     @EnvironmentObject var appManager: AppProvider
 

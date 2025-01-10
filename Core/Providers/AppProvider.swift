@@ -8,8 +8,8 @@ import OSLog
 import SwiftUI
 
 @MainActor
-class AppProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, @preconcurrency SuperLog, SuperThread {
-    static let emoji: String = "🐮"
+class AppProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLog, SuperThread {
+    nonisolated static let emoji = "🐮"
 
     @Published var showDB: Bool = Config.showDB
     @Published var showSheet: Bool = true

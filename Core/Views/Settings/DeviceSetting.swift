@@ -4,7 +4,7 @@ import SwiftData
 import MagicKit
 
 
-struct DeviceSetting: View, @preconcurrency SuperLog {
+struct DeviceSetting: View, SuperLog {
     @Environment(\.modelContext) private var modelContext
     
     @State var playTime = 0
@@ -12,7 +12,7 @@ struct DeviceSetting: View, @preconcurrency SuperLog {
 
     var verbose: Bool = false
     
-    static let emoji: String = "🖥️"
+    nonisolated static let emoji = "🖥️"
     
     var body: some View {
         GroupBox {

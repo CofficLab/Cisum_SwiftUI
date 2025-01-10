@@ -9,14 +9,14 @@ typealias PlayAsset = MagicAsset
 typealias PlayMode = MagicPlayMode
 
 @main
-struct BootApp: App, @preconcurrency SuperLog {
+struct BootApp: App, SuperLog {
     #if os(macOS)
         @NSApplicationDelegateAdaptor var appDelegate: AppDelegate
     #else
         @UIApplicationDelegateAdaptor var appDelegate: AppDelegate
     #endif
 
-    static let emoji = "🍎"
+    nonisolated static let emoji = "🍎"
 
     var body: some Scene {
         #if os(macOS)

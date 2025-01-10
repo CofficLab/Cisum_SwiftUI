@@ -5,8 +5,8 @@ import MagicKit
 
 
 @MainActor
-class VideoApp: @preconcurrency SuperLog {
-    static let emoji = "🎥"
+class VideoApp: SuperLog {
+    nonisolated static let emoji = "🎥"
     var id = "Video"
 
     var iconName: String = "video"

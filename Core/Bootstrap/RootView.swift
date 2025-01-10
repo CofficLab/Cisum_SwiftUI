@@ -5,8 +5,8 @@ import MagicPlayMan
 import OSLog
 import SwiftUI
 
-struct RootView<Content>: View, SuperEvent, @preconcurrency SuperLog, SuperThread where Content: View {
-    static var emoji: String { "🌳" }
+struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content: View {
+    nonisolated static var emoji: String { "🌳" }
     
     var content: Content
     let s = StoreProvider()

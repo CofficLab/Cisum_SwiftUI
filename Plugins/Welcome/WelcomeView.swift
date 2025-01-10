@@ -3,8 +3,8 @@ import MagicKit
 import OSLog
 import SwiftUI
 
-struct WelcomeView: View, SuperSetting, @preconcurrency SuperLog {
-    static let emoji: String = "🎉"
+struct WelcomeView: View, SuperSetting, SuperLog {
+    nonisolated static let emoji = "🎉"
 
     var body: some View {
         VStack {

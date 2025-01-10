@@ -4,8 +4,8 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-struct BookGrid: View, @preconcurrency SuperLog, SuperThread {
-    static let emoji = "📖"
+struct BookGrid: View, SuperLog, SuperThread {
+    nonisolated static let emoji = "📖"
 
     @EnvironmentObject var appManager: AppProvider
     @EnvironmentObject var messageManager: MessageProvider

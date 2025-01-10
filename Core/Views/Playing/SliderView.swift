@@ -5,7 +5,7 @@ import MagicKit
 import OSLog
 import SwiftUI
 
-struct SliderView: View, SuperThread, @preconcurrency SuperLog {
+struct SliderView: View, SuperThread, SuperLog {
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var app: AppProvider
 
@@ -14,7 +14,7 @@ struct SliderView: View, SuperThread, @preconcurrency SuperLog {
     @State private var shouldDisable = false
     @State private var lastDownloadTime: Date = .now
 
-    static let emoji = "👀"
+    nonisolated static let emoji = "👀"
     let timer = Timer
         .publish(every: 0.1, on: .main, in: .common)
         .autoconnect()

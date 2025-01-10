@@ -3,8 +3,8 @@ import MagicKit
 import OSLog
 import SwiftUI
 
-struct FileStatusColumnView: View, @preconcurrency SuperLog {
-    static let emoji: String = "🥩"
+struct FileStatusColumnView: View, SuperLog {
+    nonisolated static let emoji: String = "🥩"
 
     let url: URL
     @State private var fileStatus: String = "检查中..."
