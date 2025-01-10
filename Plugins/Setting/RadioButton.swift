@@ -1,6 +1,6 @@
 import Foundation
 import MagicKit
-import MagicUI
+
 import SwiftUI
 
 struct RadioButton: View {

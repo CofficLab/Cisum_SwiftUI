@@ -1,5 +1,5 @@
 import MagicKit
-import MagicUI
+
 import OSLog
 import SwiftData
 import SwiftUI
@@ -16,7 +16,7 @@ struct StateView: View, @preconcurrency SuperLog, SuperThread {
 
     var taskCount: Int { tasks.count }
     var showCopyMessage: Bool { tasks.count > 0 }
-    var asset: PlayAsset? { playMan.asset }
+    var asset: URL? { playMan.asset }
     var font: Font { asset == nil ? .title3 : .callout }
     static let emoji = "🖥️"
     let verbose = true

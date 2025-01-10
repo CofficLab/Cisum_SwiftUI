@@ -1,4 +1,4 @@
-import MagicUI
+import MagicKit
 import SwiftUI
 
 struct BtnAdd: View {

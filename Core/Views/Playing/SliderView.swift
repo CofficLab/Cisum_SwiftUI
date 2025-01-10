@@ -1,7 +1,7 @@
 import AVKit
 import Combine
 import MagicKit
-import MagicUI
+
 import OSLog
 import SwiftUI
 
@@ -66,7 +66,7 @@ struct SliderView: View, SuperThread, @preconcurrency SuperLog {
 
 extension SliderView {
     func handlePlayManStateChange(_ notification: Notification) {
-        if playMan.asset == nil {
+        if playMan.currentURL == nil {
             disable()
         }
     }

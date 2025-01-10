@@ -1,7 +1,7 @@
 import Foundation
 import MagicKit
 import MagicPlayMan
-import MagicUI
+
 import OSLog
 import StoreKit
 import SwiftData
@@ -193,6 +193,12 @@ extension PluginProvider {
             try await plugin.onLike(asset: asset, liked: liked)
         }
     }
+
+    func onCurrentURLChanged(url: URL) async throws {
+        for plugin in plugins {
+            try await plugin.onCurrentURLChanged(url: url)
+        }
+    }
 }
 
 enum PluginProviderError: Error, LocalizedError {
@@ -220,8 +226,12 @@ public class PlayManWrapper {
         self.playMan = playMan
     }
 
-    func play(url: URL) async {
-        playMan.play(url: url)
+    var playing: Bool {
+        playMan.playing
+    }
+
+    func play(url: URL, autoPlay: Bool = true) async {
+        playMan.play(url: url, autoPlay: autoPlay)
     }
 
     func seek(time: TimeInterval) async {

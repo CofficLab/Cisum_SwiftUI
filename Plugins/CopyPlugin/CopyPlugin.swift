@@ -1,11 +1,11 @@
 import Foundation
 import MagicKit
-import MagicUI
-import OSLog
-import SwiftUI
 import MagicPlayMan
+import OSLog
+import SwiftData
+import SwiftUI
 
-actor CopyPlugin: SuperPlugin, SuperLog {    
+actor CopyPlugin: SuperPlugin, SuperLog {
     static let emoji = "🚛"
 
     let label: String = "Copy"
@@ -13,45 +13,59 @@ actor CopyPlugin: SuperPlugin, SuperLog {
     let description: String = "作为歌曲仓库，只关注文件，文件夹将被忽略"
     let iconName: String = "music.note"
     let isGroup: Bool = false
-    var db: CopyDB? = nil
-    let worker: CopyWorker? = nil
+    @MainActor var db: CopyDB? = nil
+    @MainActor var worker: CopyWorker? = nil
+    @MainActor var container: ModelContainer?
 
     @MainActor func addStateView(currentGroup: SuperPlugin?) -> AnyView? {
-        return nil
-//        return AnyView(
-//            CopyStateView()
-//                .environmentObject(self.worker!)
-//                .modelContainer(CopyConfig.getContainer))
+        guard let worker = self.worker else {
+            return nil
+        }
+
+        guard let container = try? CopyConfig.getContainer() else {
+            return nil
+        }
+
+        return AnyView(
+            CopyStateView()
+                .environmentObject(worker)
+                .modelContainer(container)
+        )
     }
 
     @MainActor func addRootView() -> AnyView? {
-        //os_log("\(self.t)🖥️🖥️🖥️ AddRootView")
-        nil
-//        guard let db = self.db else {
-//            assert(false, "DB is nil")
-//            return nil
-//        }
-//
-//        guard let worker = self.worker else {
-//            assert(false, "Worker is nil")
-//            return nil
-//        }
-//
-//        return AnyView(CopyRootView()
-//            .environmentObject(db)
-//            .environmentObject(worker)
-//            .modelContainer(CopyConfig.getContainer)
-//        )
+        guard let db = self.db else {
+            return nil
+        }
+
+        guard let worker = self.worker else {
+            return nil
+        }
+
+        guard let container = try? CopyConfig.getContainer() else {
+            return nil
+        }
+
+        return AnyView(CopyRootView()
+            .environmentObject(db)
+            .environmentObject(worker)
+            .modelContainer(container)
+        )
     }
 
-    func onWillAppear(playMan: PlayManWrapper, currentGroup: (any SuperPlugin)?, storage: StorageLocation?) async {
+    @MainActor
+    func onWillAppear(playMan: PlayManWrapper, currentGroup: (any SuperPlugin)?, storage: StorageLocation?) async throws {
         let verbose = false
 
         if verbose {
             os_log("\(self.a)")
         }
 
-//        self.db = await CopyDB(CopyConfig.getContainer, reason: self.author, verbose: false)
-//        self.worker = await CopyWorker(db: self.db!)
+        let container = try CopyConfig.getContainer()
+        let db = CopyDB(container, reason: self.author, verbose: false)
+
+        self.container = container
+        self.db = db
+        self.worker = CopyWorker(db: db)
     }
 }

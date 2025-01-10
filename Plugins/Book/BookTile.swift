@@ -1,6 +1,6 @@
 import MagicKit
 import MagicPlayMan
-import MagicUI
+
 import OSLog
 import SwiftUI
 

@@ -1,7 +1,7 @@
 import Combine
 import Foundation
 import MagicKit
-import MagicUI
+
 import OSLog
 import StoreKit
 import SwiftData

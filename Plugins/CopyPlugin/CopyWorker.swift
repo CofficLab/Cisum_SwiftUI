@@ -1,6 +1,6 @@
 import Foundation
 import MagicKit
-import MagicUI
+
 import OSLog
 
 @MainActor
@@ -12,7 +12,7 @@ class CopyWorker: SuperLog, SuperThread, ObservableObject {
     var running = false
     let verbose: Bool
 
-    init(db: CopyDB, verbose: Bool = true) {
+    init(db: CopyDB, verbose: Bool = false) {
         self.verbose = verbose
 
         if verbose {
@@ -68,7 +68,7 @@ class CopyWorker: SuperLog, SuperThread, ObservableObject {
                             os_log("\(self.t)🍋🍋🍋 Copying iCloud file -> \(url.lastPathComponent)")
                         }
 
-                        try await url.copyTo(destination, caller: self.className)
+                        try await url.copyTo(destination, verbose: false, caller: self.className)
 
                         if self.verbose {
                             os_log("\(self.t)🎉🎉🎉 Successfully copied iCloud file -> \(url.lastPathComponent)")

@@ -2,7 +2,7 @@ import OSLog
 import StoreKit
 import SwiftUI
 import MagicKit
-import MagicUI
+
 
 struct BtnBuy: View, @preconcurrency SuperLog {
     static let emoji: String = "🎩"

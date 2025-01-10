@@ -1,6 +1,6 @@
 import SwiftUI
 import MagicKit
-import MagicUI
+
 
 struct AudioSettings: View, SuperSetting, @preconcurrency SuperLog {
     static let emoji = "🔊"

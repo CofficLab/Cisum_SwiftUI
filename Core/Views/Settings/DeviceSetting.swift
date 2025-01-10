@@ -2,7 +2,7 @@ import SwiftUI
 import OSLog
 import SwiftData
 import MagicKit
-import MagicUI
+
 
 struct DeviceSetting: View, @preconcurrency SuperLog {
     @Environment(\.modelContext) private var modelContext

@@ -2,7 +2,7 @@ import OSLog
 import StoreKit
 import SwiftUI
 import MagicKit
-import MagicUI
+
 
 struct AllSubscriptions: View, @preconcurrency SuperLog {
     @EnvironmentObject var store: StoreProvider

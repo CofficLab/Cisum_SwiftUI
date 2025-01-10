@@ -4,7 +4,7 @@ import SwiftData
 import SwiftUI
 import UniformTypeIdentifiers
 import MagicKit
-import MagicUI
+
 
 struct VideoDB: View, @preconcurrency SuperLog {
     @EnvironmentObject var app: AppProvider

@@ -1,6 +1,6 @@
 import SwiftUI
 import MagicKit
-import MagicUI
+
 
 struct LanuchView: View {
     var errorMessage: String? = nil

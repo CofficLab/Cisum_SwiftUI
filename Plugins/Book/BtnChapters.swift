@@ -12,8 +12,8 @@ struct BtnChapters: View {
     @State var isPresented = false
     @State var selection: URL?
 
-    var asset: MagicAsset? { playMan.asset }
-    var parent: URL? { asset?.url.deletingLastPathComponent() ?? nil }
+    var asset: URL? { playMan.asset }
+    var parent: URL? { asset?.getParent() }
     var items: [URL] {
         guard let bookURL = parent else {
             return []
@@ -47,12 +47,12 @@ struct BtnChapters: View {
 extension BtnChapters {
     func onAppear() {
         if let asset = asset {
-            selection = asset.url
+            selection = asset
         }
     }
 
     func onSelectionChange() {
-        if let s = selection, s != asset?.url {
+        if let s = selection, s != asset {
 //            playMan.play(s.toPlayAsset(), reason: "BtnChapters的Selection变了", verbose: true)
         }
     }

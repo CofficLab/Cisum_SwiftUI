@@ -4,7 +4,7 @@ struct TopView: View {
     @EnvironmentObject var man: PlayMan
     @EnvironmentObject var p: PluginProvider
 
-    var asset: PlayAsset? { man.asset }
+    var asset: URL? { man.currentURL }
 
     var body: some View {
         HStack {
@@ -17,7 +17,7 @@ struct TopView: View {
                 HStack {
                     man.makeLikeButton()
                     if Config.isDesktop {
-                        asset.url.makeOpenButton()
+                        asset.makeOpenButton()
                     }
                 }
             }

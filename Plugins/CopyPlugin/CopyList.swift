@@ -2,7 +2,7 @@ import OSLog
 import SwiftData
 import SwiftUI
 import MagicKit
-import MagicUI
+
 
 struct CopyList: View, @preconcurrency SuperLog, SuperThread {
     static let emoji = "📬"

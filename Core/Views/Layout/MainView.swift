@@ -1,6 +1,6 @@
 import AVKit
 import MagicKit
-import MagicUI
+
 import OSLog
 import SwiftUI
 
@@ -63,6 +63,7 @@ struct MainView: View, @preconcurrency SuperLog, SuperThread {
                 onGeoHeightChange(geo)
             }
             .onAppear(perform: onAppear)
+            .background(Config.background(.teal))
         }
     }
 

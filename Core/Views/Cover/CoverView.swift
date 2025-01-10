@@ -1,7 +1,7 @@
 import OSLog
 import SwiftUI
 import MagicKit
-import MagicUI
+
 import MagicPlayMan
 
 struct CoverView: View {

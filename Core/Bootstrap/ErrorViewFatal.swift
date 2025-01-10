@@ -1,5 +1,5 @@
 import MagicKit
-import MagicUI
+
 import SwiftUI
 
 struct ErrorViewFatal: View {

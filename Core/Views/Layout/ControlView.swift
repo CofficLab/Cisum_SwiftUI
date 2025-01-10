@@ -65,6 +65,7 @@ struct ControlView: View {
                     if showBtnsView {
                         ControlBtns()
                             .frame(height: getButtonsHeight(geo))
+                            .frame(maxWidth: .infinity)
                             .padding(.bottom, getBottomHeight(geo))
                             .background(Config.background(.red))
                     }
@@ -75,8 +76,8 @@ struct ControlView: View {
                 if shouldShowRightAlbum(geo) {
                     // 最大宽度=控制栏的高度+系统标题栏高度
                     HStack {
-                        Spacer()
-                        PlayingAlbum()
+                        Spacer(minLength: 0)
+                        playMan.makeHeroView()
                             .background(Config.background(.yellow))
                     }
                     .frame(maxWidth: geo.size.height * 1.3)
@@ -92,7 +93,7 @@ struct ControlView: View {
             .padding(.horizontal, 0)
             .frame(maxHeight: .infinity)
         }
-//        .ignoresSafeArea(edges: appManager.showDB || Config.isNotDesktop ? .horizontal : .all)
+        .ignoresSafeArea(edges: Config.isDesktop ? .horizontal : .all)
         .frame(minHeight: Config.controlViewMinHeight)
         .onAppear {
             showHeroView = true

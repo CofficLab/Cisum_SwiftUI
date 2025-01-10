@@ -2,7 +2,7 @@ import AVKit
 import OSLog
 import SwiftUI
 import MagicKit
-import MagicUI
+
 
 struct VideoLayout: View, @preconcurrency SuperLog {
     static let emoji = "🖥️"

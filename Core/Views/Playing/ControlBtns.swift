@@ -7,14 +7,19 @@ struct ControlBtns: View {
 
     var body: some View {
         HStack {
-            Spacer()
+            Spacer(minLength: 50)
             BtnToggleDB()
             man.makePreviousButton()
+                .magicSize(.auto)
             man.makePlayPauseButton()
+                .magicSize(.auto)
             man.makeNextButton()
+                .magicSize(.auto)
             man.makePlayModeButton()
-            Spacer()
+                .magicSize(.auto)
+            Spacer(minLength: 50)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 

@@ -2,7 +2,7 @@ import SwiftUI
 import Foundation
 import OSLog
 import MagicKit
-import MagicUI
+
 
 @MainActor
 class VideoApp: @preconcurrency SuperLog {

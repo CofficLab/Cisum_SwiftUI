@@ -2,7 +2,7 @@ import Foundation
 import OSLog
 import SwiftData
 import MagicKit
-import MagicUI
+
 
 extension AudioRecordDB {
     func prepareJob() async throws {

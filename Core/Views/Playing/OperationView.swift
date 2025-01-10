@@ -4,7 +4,7 @@ import SwiftUI
 struct OperationView: View {
     @EnvironmentObject var playMan: PlayMan
 
-    var asset: PlayAsset? { playMan.asset }
+    var asset: URL? { playMan.currentURL }
     var characterCount: Int { asset?.title.count ?? 0 }
     var geo: GeometryProxy
 
@@ -14,7 +14,7 @@ struct OperationView: View {
             if let asset = asset {
                 playMan.makeLikeButton()
                 if Config.isDesktop {
-                    asset.url.makeOpenButton()
+                    asset.makeOpenButton()
                 }
             }
             Spacer()

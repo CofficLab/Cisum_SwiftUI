@@ -1,5 +1,5 @@
 import MagicKit
-import MagicUI
+
 import OSLog
 import SwiftData
 import SwiftUI
@@ -122,13 +122,13 @@ extension AudioList {
 
     func handleOnAppear() {
         if let asset = man.asset {
-            setSelection(asset.url)
+            setSelection(asset)
         }
     }
 
     func handlePlayManStateChange(_ notification: Notification) {
-        if let asset = man.asset, asset.url != self.selection {
-            setSelection(asset.url)
+        if let asset = man.asset, asset != self.selection {
+            setSelection(asset)
         }
     }
 
@@ -137,14 +137,14 @@ extension AudioList {
             return
         }
 
-        if url != man.asset?.url {
+        if url != man.asset {
             self.man.play(url: url)
         }
     }
 
     func handlePlayAssetChange() {
         if let asset = man.asset {
-            setSelection(asset.url)
+            setSelection(asset)
         }
     }
 
@@ -188,7 +188,7 @@ private struct MediaViewWrapper: View, Equatable {
     let progress: Binding<Double>
 
     var body: some View {
-        url.makeMediaView(verbose: true)
+        url.makeMediaView(verbose: false)
             .magicAvatarDownloadProgress(progress)
             .magicPadding(horizontal: 0, vertical: 0)
     }

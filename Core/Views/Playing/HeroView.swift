@@ -1,92 +1,39 @@
-import SwiftUI
 import OSLog
+import SwiftUI
 
 struct HeroView: View {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var playMan: PlayMan
 
-    @State var topAlbumHeight: CGFloat = 0
-    @State var showTitleView = true
-    
-    var verbose = false
-    var showErrorView: Bool { false }
+    private let titleViewHeight: CGFloat = 60
+    private let verbose = true
 
     var body: some View {
         GeometryReader { geo in
             VStack(spacing: 0) {
                 if shouldShowAlbum(geo) {
-                    PlayingCover()
+                    playMan.makeHeroView()
                         .frame(maxWidth: .infinity)
-                        .frame(maxHeight: geo.size.width)
-                        .background(GeometryReader { geo in
-                            Config.background(.yellow)
-                                .onAppear {
-                                    self.topAlbumHeight = geo.size.height
-                                    if verbose {
-                                        os_log("\(self.topAlbumHeight)")
-                                    }
-                                }
-                                .onDisappear {
-                                    self.topAlbumHeight = 0
-                                    if verbose {
-                                        os_log("\(self.topAlbumHeight)")
-                                    }
-                                }
-                                .onChange(of: geo.size.width) {
-                                    self.topAlbumHeight = geo.size.height
-                                    if verbose {
-                                        os_log("\(self.topAlbumHeight)")
-                                    }
-                                }
-                                .onChange(of: geo.size.height) {
-                                    self.topAlbumHeight = geo.size.height
-                                    if verbose {
-                                        os_log("\(self.topAlbumHeight)")
-                                    }
-                                }
-                        })
-                }
-
-                if showTitleView {
-                    TitleView(width: getTitleViewWidth(geo))
-                        .frame(maxWidth: .infinity)
-                        .frame(height: getTitleViewHeight(geo))
-                        .background(Config.background(.red))
-                        .frame(alignment: .center)
+                        .frame(height: getAlbumHeight(geo))
+                        .clipped()
                         .background(Config.background(.indigo))
                 }
+
+                TitleView()
+                    .frame(maxWidth: .infinity)
+                    .frame(height: titleViewHeight)
+                    .background(Config.background(.blue))
             }
-            .onChange(of: geo.size.width) {
-                if verbose {
-                    os_log("Geo withd \(geo.size.width)")
-                }
-            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-        .frame(maxWidth: .infinity)
-        .frame(maxHeight: .infinity)
+        .ignoresSafeArea()
         .foregroundStyle(.white)
     }
 
-    func getTitleViewHeight(_ geo: GeometryProxy) -> CGFloat {
-        if shouldShowAlbum(geo) == false {
-            return geo.size.height
-        }
-        
-        return max(geo.size.height - geo.size.width, 50)
-    }
-
-    // MARK: 标题栏的宽度
-
-    private func getTitleViewWidth(_ geo: GeometryProxy) -> CGFloat {
-        // 理想宽度
-        var width = geo.size.width
-
-        // 如果高度特别小，宽度也减小一些以让字体变小
-        if getTitleViewHeight(geo) <= Config.minHeight * 1.5 {
-            width = Config.minWidth
-        }
-
-        return width
+    // 计算专辑封面高度
+    private func getAlbumHeight(_ geo: GeometryProxy) -> CGFloat {
+        // 总高度减去标题高度就是封面可用空间
+        return max(0, geo.size.height - titleViewHeight)
     }
 
     private func shouldShowAlbum(_ geo: GeometryProxy) -> Bool {

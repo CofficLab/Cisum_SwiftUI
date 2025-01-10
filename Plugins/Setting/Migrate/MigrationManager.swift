@@ -1,7 +1,7 @@
 import Foundation
 import OSLog
 import MagicKit
-import MagicUI
+
 
 typealias ProgressCallback = (Double, String) -> Void
 typealias DownloadProgressCallback = (String, FileStatus.DownloadStatus) -> Void

@@ -1,5 +1,5 @@
 import SwiftUI
-import MagicUI
+
 
 struct BtnToggleCopying: View {
     @EnvironmentObject var app: AppProvider

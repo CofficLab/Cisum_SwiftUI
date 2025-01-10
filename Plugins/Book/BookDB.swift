@@ -1,7 +1,7 @@
 import Foundation
 import Combine
 import MagicKit
-import MagicUI
+
 import OSLog
 
 @MainActor

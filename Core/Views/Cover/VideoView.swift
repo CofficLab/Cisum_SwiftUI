@@ -2,8 +2,8 @@ import AVKit
 import OSLog
 import SwiftUI
 import MagicKit
-import MagicUI
-import MagicUI
+
+
 import MagicPlayMan
 
 struct VideoView: View, @preconcurrency SuperLog {

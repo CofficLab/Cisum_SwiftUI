@@ -1,6 +1,6 @@
 import Foundation
 import MagicKit
-import MagicUI
+
 import OSLog
 import SwiftData
 import SwiftUI
@@ -62,7 +62,6 @@ enum Config: @preconcurrency SuperLog {
         return [
             WelcomePlugin(),
             SettingPlugin(),
-            DebugPlugin(),
             AudioPlugin(),
             CopyPlugin(),
 //            BookPlugin()

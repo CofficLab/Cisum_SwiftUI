@@ -1,7 +1,7 @@
 import AlertToast
 import MagicKit
 import MagicPlayMan
-import MagicUI
+
 import OSLog
 import SwiftUI
 
@@ -21,7 +21,7 @@ struct RootView<Content>: View, SuperEvent, @preconcurrency SuperLog, SuperThrea
     @StateObject var m = MessageProvider()
     @StateObject var p = PluginProvider()
     @StateObject var a = AppProvider()
-    @StateObject var man = MagicPlayMan(playlistEnabled: false)
+    @StateObject var man = MagicPlayMan(playlistEnabled: false, verbose: false)
     @StateObject var c = ConfigProvider()
 
     init(@ViewBuilder content: () -> Content) {
@@ -145,8 +145,6 @@ extension RootView {
     }
 
     func onStorageLocationChange() {
-        os_log("\(self.t)🍋🍋🍋 Storage Location Change")
-
         if c.storageLocation == nil {
             a.showSheet = true
             return
@@ -189,30 +187,32 @@ extension RootView {
                 self.man.subscribe(
                     name: self.className,
                     onStateChanged: { state in
+                        
                         os_log("\(self.t)🍋🍋🍋 onStateChanged: \(state.stateText)")
                     },
                     onPreviousRequested: { asset in
                         Task {
-                            os_log("\(self.t)🍋🍋🍋 onPreviousRequested: \(asset.url.lastPathComponent)")
-                            try? await self.p.onPlayPrev(current: asset.url, mode: man.playMode, man: playManWrapper)
+                            try? await self.p.onPlayPrev(current: asset, mode: man.playMode, man: playManWrapper)
                         }
                     },
                     onNextRequested: { asset in
                         Task {
-                            os_log("\(self.t)🍋🍋🍋 onNextRequested: \(asset.url.lastPathComponent)")
-                            try? await self.p.onPlayNext(current: asset.url, mode: man.playMode, man: playManWrapper)
+                            try? await self.p.onPlayNext(current: asset, mode: man.playMode, man: playManWrapper)
                         }
                     },
                     onLikeStatusChanged: { asset, like in
-                        os_log("\(self.t)🍋🍋🍋 onLikeStatusChanged: \(asset.url.lastPathComponent) \(like)")
-                        
                         Task {
-                            try? await self.p.onLike(asset: asset.url, liked: like)
+                            try? await self.p.onLike(asset: asset, liked: like)
                         }
                     },
                     onPlayModeChanged: { mode in
                         Task {
-                            try? await self.p.onPlayModeChange(mode: mode, asset: man.currentAsset?.url)
+                            try? await self.p.onPlayModeChange(mode: mode, asset: man.currentAsset)
+                        }
+                    },
+                    onCurrentURLChanged: { url in
+                        Task {
+                            try? await self.p.onCurrentURLChanged(url: url)
                         }
                     }
                 )

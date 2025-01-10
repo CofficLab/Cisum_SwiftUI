@@ -1,6 +1,6 @@
 import SwiftUI
 import MagicKit
-import MagicUI
+
 import OSLog
 
 struct SettingPluginView: View, SuperSetting, @preconcurrency SuperLog {

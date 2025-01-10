@@ -1,4 +1,4 @@
-import MagicUI
+import MagicKit
 import SwiftUI
 
 struct BtnToggleDB: View {
@@ -12,6 +12,7 @@ struct BtnToggleDB: View {
                 app.toggleDBView()
             })
         .magicShape(.circle)
+        .magicSize(.auto)
     }
 }
 

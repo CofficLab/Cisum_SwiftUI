@@ -62,7 +62,7 @@ struct VideoControl: View {
                     // 最大宽度=控制栏的高度+系统标题栏高度
                     HStack {
                         Spacer()
-                        PlayingAlbum()
+//                        PlayingAlbum()
                             .background(Config.background(.yellow))
                     }
                     .frame(maxWidth: geo.size.height * 1.3)

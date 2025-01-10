@@ -1,6 +1,6 @@
 import Foundation
 import MagicKit
-import MagicUI
+
 import OSLog
 import SwiftData
 import SwiftUI
@@ -105,13 +105,11 @@ import Combine
     }
 
     func makeMonitor() -> Cancellable {
-        self.disk.onDirectoryChanged(verbose: true, caller: self.className, { items, isFirst in
+        self.disk.onDirectoryChanged(verbose: false, caller: self.className, { items, isFirst in
             Task {
-                os_log("\(self.t)🍋🍋🍋 OnDiskUpdate")
                 self.emitDBSyncing(items)
-                await self.db.sync(items, verbose: true, isFirst: isFirst)
+                await self.db.sync(items, verbose: false, isFirst: isFirst)
                 self.emitDBSynced()
-                os_log("\(self.t)✅✅✅ OnDBSynced")
             }
         })
     }

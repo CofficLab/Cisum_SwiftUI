@@ -1,6 +1,6 @@
 import Foundation
 import MagicKit
-import MagicUI
+
 import OSLog
 import SwiftData
 import SwiftUI
@@ -73,18 +73,14 @@ actor AudioPlugin: SuperPlugin, SuperLog {
         AudioPlugin.storeCurrentTime(playMan.currentTime)
     }
 
-    func onPlayAssetUpdate(asset: PlayAsset?, currentGroup: SuperPlugin?) async throws {
-        let verbose = false
+    func onCurrentURLChanged(url: URL) {
+        let verbose = true
 
         if verbose {
-            os_log("\(self.t)🍋🍋🍋 OnPlayAssetUpdate with asset \(asset?.title ?? "nil")")
+            os_log("\(self.t)🍋🍋🍋 OnPlayAssetUpdate with asset \(url.title)")
         }
 
-        if currentGroup?.id != self.id {
-            return
-        }
-
-        AudioPlugin.storeCurrent(asset?.url)
+        AudioPlugin.storeCurrent(url)
     }
 
     @MainActor func getDisk() -> URL? {
@@ -174,7 +170,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
         }
 
         if let asset = assetTarget {
-            await playMan.play(url: asset)
+            await playMan.play(url: asset, autoPlay: false)
             await playMan.seek(time: timeTarget)
 
             os_log("\(self.t)🍋🍋🍋 Set like to \(liked)")
@@ -200,7 +196,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
         let asset = try await audioDB.getPrevOf(current, verbose: false)
 
         if let asset = asset {
-            await playMan.play(url: asset)
+            await playMan.play(url: asset, autoPlay: playMan.playing)
         } else {
             throw AudioPluginError.NoPrevAsset
         }
@@ -218,7 +214,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
 
         let asset = try await audioDB.getNextOf(current, verbose: false)
         if let asset = asset {
-            await playMan.play(url: asset)
+            await playMan.play(url: asset, autoPlay: playMan.playing)
         } else {
             throw AudioPluginError.NoNextAsset
         }

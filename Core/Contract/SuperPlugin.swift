@@ -27,7 +27,7 @@ protocol SuperPlugin: Actor {
     func onPause(playMan: MagicPlayMan) async
     func onPlayStateUpdate() async throws
     func onPlayModeChange(mode: String, asset: URL?) async throws
-    func onPlayAssetUpdate(asset: MagicAsset?, currentGroup: SuperPlugin?) async throws
+    func onCurrentURLChanged(url: URL) async throws
     func onPlayNext(playMan: PlayManWrapper, current: URL?, currentGroup: String?, verbose: Bool) async throws
     func onPlayPrev(playMan: PlayManWrapper, current: URL?, currentGroup: String?, verbose: Bool) async throws
     func onStorageLocationChange(storage: StorageLocation?) async throws
@@ -80,7 +80,7 @@ extension SuperPlugin {
     func onInit() {
     }
 
-    func onPlayAssetUpdate(asset: MagicAsset?, currentGroup: SuperPlugin?) {
+    func onCurrentURLChanged(url: URL) {
     }
 
     func onDisappear() {
