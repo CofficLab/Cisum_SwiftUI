@@ -80,11 +80,14 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
                         }
                     }, content: {
                         ForEach(urls, id: \.self) { url in
-                            let progress = Binding(
-                                get: { progressMap[url] ?? 1.0 },
-                                set: { progressMap[url] = $0 }
-                            )
-                            MediaViewWrapper(url: url, progress: progress)
+                            url.makeMediaView()
+                                .magicAvatarDownloadProgress(Binding(
+                                    get: { progressMap[url] ?? 1.1 },
+                                    set: { progressMap[url] = $0 }
+                                ))
+                                .magicPadding(horizontal: 0, vertical: 0)
+                                .magicVerbose(false)
+                                .showAvatar(true)
                                 .tag(url as URL?)
                         }
                     })
@@ -98,7 +101,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
         .onReceive(nc.publisher(for: .audioDeleted), perform: handleAudioDeleted)
         .onReceive(nc.publisher(for: .DBSorting), perform: onSorting)
         .onReceive(nc.publisher(for: .DBSortDone), perform: onSortDone)
-        .onReceive(NotificationCenter.default.publisher(for: .dbSyncing), perform: handleDBSyncing)
+        .onReceive(nc.publisher(for: .dbSyncing), perform: handleDBSyncing)
     }
 
     func handleDBSyncing(_ notification: Notification) {
@@ -110,6 +113,8 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
                     setProgress(for: file.url!, value: 1.0)
                 }
             }
+        } else {
+            os_log("\(t)⚠️ handleDBSyncing: no items")
         }
     }
 }
@@ -180,21 +185,6 @@ extension AudioList {
             case .none: return "正在排序..."
             }
         }
-    }
-}
-
-private struct MediaViewWrapper: View, Equatable {
-    let url: URL
-    let progress: Binding<Double>
-
-    var body: some View {
-        url.makeMediaView(verbose: true)
-            .magicAvatarDownloadProgress(progress)
-            .magicPadding(horizontal: 0, vertical: 0)
-    }
-
-    nonisolated static func == (lhs: MediaViewWrapper, rhs: MediaViewWrapper) -> Bool {
-        return lhs.url == rhs.url
     }
 }
 
