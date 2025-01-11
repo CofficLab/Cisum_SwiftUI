@@ -13,6 +13,7 @@ struct ControlBtns: View {
                 .magicSize(.auto)
             man.makePlayPauseButton()
                 .magicSize(.auto)
+                .magicShapeVisibility(.always)
             man.makeNextButton()
                 .magicSize(.auto)
             man.makePlayModeButton()

@@ -1,4 +1,5 @@
 import MagicKit
+import MagicAsset
 import SwiftUI
 
 struct LaunchView: View {
