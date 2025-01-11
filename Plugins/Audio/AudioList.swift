@@ -188,7 +188,7 @@ private struct MediaViewWrapper: View, Equatable {
     let progress: Binding<Double>
 
     var body: some View {
-        url.makeMediaView(verbose: false)
+        url.makeMediaView(verbose: true)
             .magicAvatarDownloadProgress(progress)
             .magicPadding(horizontal: 0, vertical: 0)
     }
