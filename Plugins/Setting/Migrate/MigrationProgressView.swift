@@ -102,54 +102,52 @@ struct MigrationProgressView: View {
         }
     }
 
-    private func startMigration(shouldMigrate: Bool) {
-//        Task.detached(priority: .background) {
-//            do {
-//                if shouldMigrate {
-//                    guard let sourceRoot = await c.getStorageRoot() else {
-//                        throw MigrationError.sourceDirectoryNotFound
-//                    }
-//                    guard let targetRoot = await c.getStorageRoot(for: targetLocation) else {
-//                        throw MigrationError.targetDirectoryNotFound
-//                    }
-//
-//                    try await migrationManager.migrate(
-//                        from: sourceRoot,
-//                        to: targetRoot,
-//                        progressCallback: { progress, file in
-//                            Task { @MainActor in
-//                                self.migrationProgress = progress
-//                                self.currentMigratingFile = file
-//                                self.updateFileStatus(file)
-//                            }
-//                        },
-//                        downloadProgressCallback: { file, downloadStatus in
-//                            Task { @MainActor in
-//                                self.updateFileDownloadStatus(file, downloadStatus: downloadStatus)
-//                            }
-//                        },
-//                        verbose: true
-//                    )
-//                } else {
-//                    // 如果选择直接使用，立即将进度设置为 100%
-//                    await MainActor.run {
-//                        self.migrationProgress = 1.0
-//                    }
-//                }
-//
-//                // 更新存储位置
-//                await MainActor.run {
-//                    c.updateStorageLocation(targetLocation)
-//                    self.migrationCompleted = true
-//                    self.currentMigratingFile = shouldMigrate ? "迁移完成" : "已切换到新位置"
-//                }
-//            } catch {
-//                await MainActor.run {
-//                    self.errorMessage = error.localizedDescription
-//                    self.updateFileStatus(self.currentMigratingFile, error: error.localizedDescription)
-//                }
-//            }
-//        }
+    private func startMigration(shouldMigrate: Bool) async {
+        do {
+            if shouldMigrate {
+                guard let sourceRoot = c.getStorageRoot() else {
+                    throw MigrationError.sourceDirectoryNotFound
+                }
+                guard let targetRoot = c.getStorageRoot(for: targetLocation) else {
+                    throw MigrationError.targetDirectoryNotFound
+                }
+
+                try migrationManager.migrate(
+                    from: sourceRoot,
+                    to: targetRoot,
+                    progressCallback: { progress, file in
+                        Task { @MainActor in
+                            self.migrationProgress = progress
+                            self.currentMigratingFile = file
+                            self.updateFileStatus(file)
+                        }
+                    },
+                    downloadProgressCallback: { file, downloadStatus in
+                        Task { @MainActor in
+                            self.updateFileDownloadStatus(file, downloadStatus: downloadStatus)
+                        }
+                    },
+                    verbose: true
+                )
+            } else {
+                // 如果选择直接使用，立即将进度设置为 100%
+                await MainActor.run {
+                    self.migrationProgress = 1.0
+                }
+            }
+
+            // 更新存储位置
+            await MainActor.run {
+                c.updateStorageLocation(targetLocation)
+                self.migrationCompleted = true
+                self.currentMigratingFile = shouldMigrate ? "迁移完成" : "已切换到新位置"
+            }
+        } catch {
+            await MainActor.run {
+                self.errorMessage = error.localizedDescription
+                self.updateFileStatus(self.currentMigratingFile, error: error.localizedDescription)
+            }
+        }
     }
 
     private func loadSourceFiles() {
@@ -240,14 +238,20 @@ struct MigrationProgressView: View {
 
             Button("直接使用") {
                 showConfirmation = false
-                startMigration(shouldMigrate: false)
+                
+                Task {
+                    await startMigration(shouldMigrate: false)
+                }
             }
             .buttonStyle(.borderedProminent)
             .help("直接使用新位置，原有数据保持不变")
 
             Button("迁移数据") {
                 showConfirmation = false
-                startMigration(shouldMigrate: true)
+                
+                Task {
+                    await startMigration(shouldMigrate: true)
+                }
             }
             .buttonStyle(.bordered)
             .help("将现有数据迁移到新位置")
@@ -341,4 +345,3 @@ struct MigrationProgressView: View {
         }
     }
 }
-

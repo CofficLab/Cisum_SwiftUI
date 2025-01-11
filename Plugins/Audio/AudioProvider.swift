@@ -12,7 +12,7 @@ class AudioProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
     private var debounceTimer: Timer?
 
     static let emoji = "🌿"
-    let disk: URL
+    private(set) var disk: URL
 
     @Published private(set) var files: [MetaWrapper] = []
     @Published private(set) var isSyncing: Bool = false
@@ -30,6 +30,15 @@ class AudioProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
                 self?.handleDBSynced(notification)
             }
             .store(in: &cancellables)
+    }
+    
+    /// 更新音频文件目录路径
+    /// - Parameter newDisk: 新的目录路径
+    func updateDisk(_ newDisk: URL) {
+        os_log("\(self.t)🍋🍋🍋 updateDisk to \(newDisk.path)")
+
+        self.cancellables.removeAll()
+        self.disk = newDisk
     }
 }
 

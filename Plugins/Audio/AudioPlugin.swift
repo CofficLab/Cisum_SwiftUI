@@ -221,6 +221,8 @@ actor AudioPlugin: SuperPlugin, SuperLog {
     }
 
     @MainActor func onStorageLocationChange(storage: StorageLocation?) async throws {
+        os_log("\(self.t)🍋🍋🍋 OnStorageLocationChange to \(storage?.emojiTitle ?? "nil")")
+
         switch storage {
         case .local, .none:
             disk = Config.localDocumentsDir?.appendingPathComponent(self.dirName)
@@ -229,11 +231,15 @@ actor AudioPlugin: SuperPlugin, SuperLog {
         case .custom:
             disk = Config.localDocumentsDir?.appendingPathComponent(self.dirName)
         }
+
         guard let disk = disk else {
             fatalError("AudioPlugin.onInit: disk == nil")
         }
 
+        os_log("\(self.t)🍋🍋🍋 OnStorageLocationChange to \(disk.absoluteString)")
+
         self.audioDB?.changeRoot(url: disk)
+        self.audioProvider?.updateDisk(disk)
     }
 
     func onLike(asset: URL?, liked: Bool) async throws {
