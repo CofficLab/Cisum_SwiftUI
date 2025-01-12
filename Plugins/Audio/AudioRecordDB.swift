@@ -536,16 +536,18 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
     }
 
     func sync(_ items: [MetaWrapper], verbose: Bool = false, isFirst: Bool) {
-        if verbose {
-            os_log("\(self.t)🔄🔄🔄 Sync(\(items.count))")
-        }
+        Task.detached(priority: .low) {
+            if verbose {
+                os_log("\(self.t)🔄🔄🔄 Sync(\(items.count))")
+            }
 
-        if isFirst {
-            syncWithDisk(items)
-        } else {
-            syncWithUpdatedItems(items)
-        }
+            if isFirst {
+                await self.syncWithDisk(items)
+            } else {
+                await self.syncWithUpdatedItems(items)
+            }
 
+        }
 //        if verbose {
 //            os_log("\(self.tForSync) 计算刚刚同步的项目的 Hash(\(group.count))")
 //        }

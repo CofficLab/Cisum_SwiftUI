@@ -106,10 +106,11 @@ import Combine
 
     func makeMonitor() -> Cancellable {
         self.disk.onDirectoryChanged(verbose: true, caller: self.className, { items, isFirst in
-            Task {
-                self.emitDBSyncing(items)
+            Task.detached(priority: .low) {
+                os_log("\(self.t)DBSyncing, items count: \(items.count)")
+                await self.emitDBSyncing(items)
                 await self.db.sync(items, verbose: true, isFirst: isFirst)
-                self.emitDBSynced()
+                await self.emitDBSynced()
             }
         })
     }
