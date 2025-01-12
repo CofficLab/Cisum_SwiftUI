@@ -1,7 +1,6 @@
 import AlertToast
 import MagicKit
 import MagicPlayMan
-
 import OSLog
 import SwiftUI
 
@@ -57,6 +56,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                                         .magicShape(.circle)
                                         .magicShapeVisibility(.onHover)
                                         .magicSize(.small)
+                                        .onlyDebug()
                                     man.makeLikeButton()
                                         .magicShape(.circle)
                                         .magicShapeVisibility(.onHover)

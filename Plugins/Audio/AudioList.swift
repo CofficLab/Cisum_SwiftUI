@@ -88,6 +88,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
                                 .magicPadding(horizontal: 0, vertical: 0)
                                 .magicVerbose(false)
                                 .showAvatar(true)
+                                .magicShowLogButtonInDebug()
                                 .tag(url as URL?)
                         }
                     })

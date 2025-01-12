@@ -14,7 +14,5 @@ struct VersionSetting: View, SuperSetting {
 }
 
 #Preview {
-    MagicThemePreview {
-        VersionSetting().padding()
-    }
+    VersionSetting().padding().inMagicContainer()
 }
