@@ -1,6 +1,6 @@
 import Foundation
 import MagicKit
-import MagicUI
+
 import OSLog
 import SwiftData
 import SwiftUI
@@ -14,16 +14,12 @@ struct BookDBView: View, SuperLog, SuperThread {
     @State var treeView = false
     @State var total: Int = 0
 
-    static var emoji = "🐘"
+    nonisolated static let emoji = "🐘"
 
     var dropping: Bool { app.isDropping }
-    var disk: any SuperStorage
+    var disk: URL
 
-    init(verbose: Bool = false, disk: any SuperStorage) {
-        if verbose {
-            os_log("\(Self.i)BookDBView")
-        }
-
+    init(verbose: Bool = false, disk: URL) {
         self.disk = disk
     }
 

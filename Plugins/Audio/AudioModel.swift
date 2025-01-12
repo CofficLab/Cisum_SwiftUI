@@ -2,7 +2,7 @@ import AVFoundation
 import CryptoKit
 import Foundation
 import MagicKit
-import MagicUI
+
 import OSLog
 import SwiftData
 import SwiftUI
@@ -10,8 +10,9 @@ import SwiftUI
 /* 存储音频数据，尤其是将计算出来的属性存储下来 */
 
 @Model
-class AudioModel: FileBox {
-    static var verbose = false
+final class AudioModel: SuperLog {
+    static let emoji = "🔔"
+    static let verbose = false
 
     @Transient let fileManager = FileManager.default
     @Transient var db: AudioDB?
@@ -76,21 +77,6 @@ class AudioModel: FileBox {
     }
 }
 
-extension AudioModel: SuperLog {
-    static var emoji: String { "🪖" }
-}
-
-extension AudioModel: SuperCover {
-    var coverFolder: URL { AudioConfig.getCoverFolderUrl() }
-    var defaultImage: Image {
-        #if os(macOS)
-            Image(nsImage: NSImage(named: "DefaultAlbum")!)
-        #else
-            Image(uiImage: UIImage(imageLiteralResourceName: "DefaultAlbum"))
-        #endif
-    }
-}
-
 // MARK: Order
 
 extension AudioModel {
@@ -107,22 +93,6 @@ extension AudioModel {
 
 extension AudioModel: Identifiable {
     var id: PersistentIdentifier { persistentModelID }
-}
-
-// MARK: Transform
-
-extension AudioModel {
-    func toPlayAsset(verbose: Bool = false, delegate: PlayAssetDelegate) -> PlayAsset {
-        if verbose {
-            os_log("\(self.t)ToPlayAsset: like (\(self.like))")
-        }
-
-        return PlayAsset(url: self.url, like: self.like, size: size, delegate: delegate)
-    }
-
-    static func fromPlayAsset(_ asset: PlayAsset) -> AudioModel {
-        AudioModel(asset.url)
-    }
 }
 
 // MARK: Size
@@ -191,17 +161,17 @@ extension AudioModel {
         return descriptor
     }
 
-    static var descriptorAll = FetchDescriptor(predicate: #Predicate<AudioModel> { _ in
+    static let descriptorAll = FetchDescriptor(predicate: #Predicate<AudioModel> { _ in
         true
     }, sortBy: [
         SortDescriptor(\.order, order: .forward),
     ])
 
-    static var descriptorNotFolder = FetchDescriptor(predicate: predicateNotFolder, sortBy: [
+    static let descriptorNotFolder = FetchDescriptor(predicate: predicateNotFolder, sortBy: [
         SortDescriptor(\.order, order: .forward),
     ])
 
-    static var predicateNotFolder = #Predicate<AudioModel> { audio in
+    static let predicateNotFolder = #Predicate<AudioModel> { audio in
         audio.isFolder == false
     }
 }

@@ -1,19 +1,18 @@
+import MagicKit
 import SwiftUI
 
 struct BtnToggleDB: View {
     @EnvironmentObject var app: AppProvider
 
-    var autoResize = false
-
     var body: some View {
-        ControlButton(
-            title: "仓库",
-            image: "list.bullet",
-            dynamicSize: autoResize,
-            onTap: {
+        MagicButton(
+            icon: .iconMore,
+            style: .secondary,
+            action: {
                 app.toggleDBView()
             })
-        .foregroundStyle(.white)
+        .magicShape(.circle)
+        .magicSize(.auto)
     }
 }
 

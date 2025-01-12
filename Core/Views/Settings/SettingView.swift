@@ -7,24 +7,11 @@ struct SettingView: View {
         ScrollView {
             VStack {
                 ForEach(p.plugins.indices, id: \.self) { index in
-                    p.plugins[index].addSettingView().padding(.horizontal)
+                    p.plugins[index].addSettingView()
                 }
                 
-                //CloudSetting().padding(.horizontal)
                 VersionSetting()
-                    .padding(.horizontal)
-                
-//                if Config.debug {
-//                    PlayTime()
-//                        .padding(.horizontal)
-//                }
-                
-//                if Config.isDebug {
-//                    DeviceSetting()
-//                        .padding(.horizontal)
-//                        .padding(.bottom)
-//                }
-            }.padding(.top)
+            }.padding()
         }
     }
 }

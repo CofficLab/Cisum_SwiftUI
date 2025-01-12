@@ -1,5 +1,5 @@
 import MagicKit
-import MagicUI
+
 import OSLog
 import SwiftData
 import SwiftUI
@@ -15,7 +15,7 @@ struct CopyStateView: View, SuperLog, SuperThread {
 
     var taskCount: Int { tasks.count }
     var showCopyMessage: Bool { tasks.count > 0 }
-    static let emoji = "🖥️"
+    nonisolated static let emoji = "🖥️"
     let verbose = true
 
     var body: some View {
@@ -30,10 +30,10 @@ struct CopyStateView: View, SuperLog, SuperThread {
             .foregroundStyle(.white)
             .padding(.horizontal, 16)
             .padding(.vertical, 6)
-            .background(MagicBackground.darkForest)
+            .background(MagicBackground.deepForest)
             .clipShape(RoundedRectangle(cornerRadius: 8))
             .popover(isPresented: $showCopying) {
-                CopyStatusView()
+                CopyList()
             }
         }
     }

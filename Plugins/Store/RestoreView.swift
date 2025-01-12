@@ -1,5 +1,5 @@
 import MagicKit
-import MagicUI
+
 import OSLog
 import StoreKit
 import SwiftUI
@@ -8,12 +8,13 @@ struct RestoreView: View, SuperEvent, SuperLog, SuperThread {
     @EnvironmentObject var store: StoreProvider
     @EnvironmentObject var app: AppProvider
     @Environment(\.colorScheme) var colorScheme: ColorScheme
+    @EnvironmentObject var m: MessageProvider
 
     @State private var subscriptions: [Product] = []
     @State private var refreshing = false
     @State private var error: Error? = nil
 
-    static var emoji = "🖥️"
+    nonisolated static let emoji = "🖥️"
 
     var body: some View {
         VStack {
@@ -37,7 +38,7 @@ struct RestoreView: View, SuperEvent, SuperLog, SuperThread {
                         os_log("\(self.t)恢复购买完成")
                         postRestore()
                     } catch {
-                        app.setError(error)
+                        m.error(error)
                     }
                 }
             })

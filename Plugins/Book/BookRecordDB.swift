@@ -1,9 +1,9 @@
 import Foundation
+import MagicKit
+
 import OSLog
 import SwiftData
 import SwiftUI
-import MagicKit
-import MagicUI
 
 actor BookRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     static let emoji = "📦"
@@ -17,7 +17,7 @@ actor BookRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThr
     init(_ container: ModelContainer, reason: String, verbose: Bool = false) {
         if verbose {
             let message = "\(Self.t)🚩🚩🚩 初始化(\(reason))"
-            
+
             os_log("\(message)")
         }
 
@@ -109,7 +109,7 @@ extension BookRecordDB {
             os_log("\(self.t)\(title) cost \(timeInterval) 秒 🐢🐢🐢")
         }
     }
-    
+
     nonisolated func jobEnd(_ startTime: DispatchTime, title: String, tolerance: Double = 1.0) -> String {
         // 计算代码执行时间
         let nanoTime = DispatchTime.now().uptimeNanoseconds - startTime.uptimeNanoseconds
@@ -118,14 +118,14 @@ extension BookRecordDB {
         if timeInterval > tolerance {
             return "\(title) \(timeInterval) 秒 🐢🐢🐢"
         }
-        
+
         return "\(title) \(timeInterval) 秒 🐢🐢🐢"
     }
 }
 
 extension BookRecordDB {
-    static func first(context: ModelContext) -> Book? {
-        var descriptor = FetchDescriptor<Book>(predicate: #Predicate<Book> {
+    static func first(context: ModelContext) -> BookModel? {
+        var descriptor = FetchDescriptor<BookModel>(predicate: #Predicate<BookModel> {
             $0.bookTitle != ""
         }, sortBy: [
             SortDescriptor(\.order, order: .forward),
@@ -140,12 +140,12 @@ extension BookRecordDB {
 
         return nil
     }
-    
-    static func nextOf(context: ModelContext, book: Book) -> Book? {
+
+    static func nextOf(context: ModelContext, book: BookModel) -> BookModel? {
         os_log("🍋 DB::nextOf [\(book.order)] \(book.bookTitle)")
         let order = book.order
         let url = book.url
-        var descriptor = FetchDescriptor<Book>()
+        var descriptor = FetchDescriptor<BookModel>()
         descriptor.sortBy.append(.init(\.order, order: .forward))
         descriptor.fetchLimit = 1
         descriptor.predicate = #Predicate {
@@ -164,16 +164,16 @@ extension BookRecordDB {
         return nil
     }
 
-    func delete(ids: [Book.ID],verbose: Bool) -> Book? {
+    func delete(ids: [BookModel.ID], verbose: Bool) -> BookModel? {
         if verbose {
             os_log("\(self.t)删除")
         }
 
         // 本批次的最后一个删除后的下一个
-        var next: Book?
+        var next: BookModel?
 
         for (index, id) in ids.enumerated() {
-            guard let book = context.model(for: id) as? Book else {
+            guard let book = context.model(for: id) as? BookModel else {
                 os_log(.error, "\(self.t)删除时找不到")
                 continue
             }
@@ -199,6 +199,113 @@ extension BookRecordDB {
         }
 
         return next
+    }
+
+    func sync(_ items: [MetaWrapper], verbose: Bool = false, isFirst: Bool) {
+        var message = "\(self.t)SyncBook(\(items.count))"
+
+        if let first = items.first, first.isDownloading == true {
+            message += " -> \(first.url!.title) -> \(String(format: "%.0f", first.downloadProgress))% ⏬⏬⏬"
+        }
+
+        if isFirst {
+            message += " Full"
+        } else {
+            message += " Update"
+        }
+
+        if verbose {
+            os_log("\(message)")
+        }
+
+        if isFirst {
+            bookSyncWithDisk(items)
+        } else {
+            bookSyncWithUpdatedItems(items)
+        }
+    }
+
+    // MARK: SyncWithDisk
+
+    private func bookSyncWithDisk(_ items: [MetaWrapper]) {
+        let verbose = true
+        let startTime: DispatchTime = .now()
+
+        // 将数组转换成哈希表，方便通过键来快速查找元素，这样可以将时间复杂度降低到：O(m+n)
+        var hashMap = [URL: MetaWrapper]()
+        for element in items {
+            hashMap[element.url!] = element
+        }
+
+        do {
+            try context.enumerate(FetchDescriptor<BookModel>(), block: { book in
+                if let item = hashMap[book.url] {
+                    // 更新数据库记录
+                    book.isCollection = item.isDirectory
+                    book.bookTitle = book.bookTitle
+
+                    // 记录存在哈希表中，同步完成，删除哈希表记录
+                    hashMap.removeValue(forKey: book.url)
+                } else {
+                    // 记录不存在哈希表中，数据库删除
+                    if verbose {
+                        os_log("\(self.t) 删除 \(book.bookTitle)")
+                    }
+                    context.delete(book)
+                }
+            })
+
+            // 余下的是需要插入数据库的
+            for (_, value) in hashMap {
+                context.insert(BookModel(url: value.url!))
+            }
+        } catch {
+            os_log(.error, "\(error.localizedDescription)")
+        }
+
+        do {
+            try context.save()
+        } catch {
+            os_log(.error, "\(error.localizedDescription)")
+        }
+
+        os_log("\(self.jobEnd(startTime, title: "\(self.t)SyncBookWithDisk(\(items.count))", tolerance: 0.01))")
+
+        self.updateBookParent()
+    }
+
+    // MARK: SyncWithUpdatedItems
+
+    func bookSyncWithUpdatedItems(_ metas: [MetaWrapper], verbose: Bool = false) {
+//        if verbose {
+//            os_log("\(self.t)SyncWithUpdatedItems with count=\(metas.count)")
+//        }
+//
+//        // 如果url属性为unique，数据库已存在相同url的记录，再执行context.insert，发现已存在的被替换成新的了
+//        // 但在这里，希望如果存在，就不要插入
+//        for (_, meta) in metas.files.enumerated() {
+//            if meta.isDeleted {
+//                let deletedURL = meta.url
+//
+//                do {
+//                    try context.delete(model: Book.self, where: #Predicate { book in
+//                        book.url == deletedURL
+//                    })
+//                } catch let e {
+//                    os_log(.error, "\(e.localizedDescription)")
+//                }
+//            } else {
+//                if findBook(meta.url) == nil {
+//                    context.insert(meta.toBook())
+//                }
+//            }
+//        }
+//
+//        do {
+//            try context.save()
+//        } catch let e {
+//            os_log(.error, "\(e.localizedDescription)")
+//        }
     }
 }
 

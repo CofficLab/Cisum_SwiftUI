@@ -1,5 +1,5 @@
 import MagicKit
-import MagicUI
+
 import OSLog
 import SwiftData
 import SwiftUI
@@ -8,48 +8,23 @@ struct TitleView: View, SuperLog, SuperThread {
     @EnvironmentObject var playMan: PlayMan
 
     var title: String { playMan.asset?.title ?? "" }
-    var width: CGFloat
-    static let emoji = "📺"
+    nonisolated static let emoji = "📺"
 
     var body: some View {
-        ZStack {
-            Text(playMan.asset?.title ?? "")
-                .multilineTextAlignment(.leading)
-                .lineLimit(nil)
-                .foregroundStyle(.white)
-                .font(getFont(width: width))
-        }
-    }
-
-    /// 根据宽度来决定字体的大小
-    func getFont(width: CGFloat) -> Font {
-        let verbose = false
-        guard title.isNotEmpty else {
-            return .title
-        }
-
-        // 防止字较少时字体很大
-        let characterCount = max(getCountCharacters(title), 5)
-
-        if verbose {
-            os_log("\(self.t)GetFont width -> \(width), characterCount=\(characterCount)")
-        }
-
-        return .system(size: max(width / CGFloat(characterCount) * 1.1, 20))
-    }
-
-    func getCountCharacters(_ input: String) -> Double {
-        var count: Double = 0
-
-        for char in input {
-            if char.isASCII {
-                count += 1
-            } else {
-                count += 2 // 其他字符算2个
+        GeometryReader { geo in
+            ZStack {
+                Text(title)
+                    .font(.system(size: 24))
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.3)
+                    .multilineTextAlignment(.center)
+                    .frame(width: geo.size.width - 32)
+                    .frame(maxHeight: .infinity)
+                    .position(x: geo.size.width / 2, y: geo.size.height / 2)
+                    .padding(.vertical)
             }
         }
-
-        return count
+        .background(Config.background(.red))
     }
 }
 

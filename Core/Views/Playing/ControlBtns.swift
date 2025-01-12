@@ -3,26 +3,24 @@ import SwiftUI
 struct ControlBtns: View {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var message: MessageProvider
-    
-    var body: some View {
-        GeometryReader { geo in
-            VStack {
-                HStack(spacing: 0, content: {
-                    Spacer()
-                    BtnToggleDB(autoResize: true)
-                    BtnPrev(autoResize: true)
-                    BtnToggle(foregroundStyle: .white, autoResize: true)
-                    BtnNext(autoResize: true)
-                    BtnMode(autoResize: true)
-                    Spacer()
-                })
-                .labelStyle(.iconOnly)
-            }
-        }
-    }
+    @EnvironmentObject var man: PlayMan
 
-    func getHeight(_ geo: GeometryProxy) -> CGFloat {
-        return geo.size.height
+    var body: some View {
+        HStack {
+            Spacer(minLength: 50)
+            BtnToggleDB()
+            man.makePreviousButton()
+                .magicSize(.auto)
+            man.makePlayPauseButton()
+                .magicSize(.auto)
+                .magicShapeVisibility(.always)
+            man.makeNextButton()
+                .magicSize(.auto)
+            man.makePlayModeButton()
+                .magicSize(.auto)
+            Spacer(minLength: 50)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 

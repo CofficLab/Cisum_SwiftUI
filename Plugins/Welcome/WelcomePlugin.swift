@@ -1,21 +1,18 @@
 import Foundation
 import MagicKit
-import MagicUI
+
 import OSLog
 import SwiftUI
 
-class WelcomePlugin: SuperPlugin, SuperLog {
-    static let emoji = "⚙️"
+actor WelcomePlugin: SuperPlugin, SuperLog {
+    static let emoji = "👏"
 
-    let label: String = "Welcome"
-    var hasPoster: Bool = true
-    let description: String = "设置"
-    var iconName: String = "music.note"
-
-    init() {
-        os_log("\(self.i)")
-    }
+    let label = "Welcome"
+    let hasPoster = false
+    let description = "设置"
+    let iconName = "music.note"
     
+    @MainActor
     func addSheetView(storage: StorageLocation?) -> AnyView? {
         guard storage == nil else { return nil}
         

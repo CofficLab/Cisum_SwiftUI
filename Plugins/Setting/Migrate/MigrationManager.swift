@@ -1,36 +1,35 @@
 import Foundation
-import OSLog
 import MagicKit
-import MagicUI
+import OSLog
 
 typealias ProgressCallback = (Double, String) -> Void
 typealias DownloadProgressCallback = (String, FileStatus.DownloadStatus) -> Void
 
 class MigrationManager: ObservableObject, SuperLog, SuperThread {
-    static var emoji: String = "👵"
-    
+    static let emoji: String = "👵"
+
     @Published private(set) var isCancelled = false
-    
+
     func cancelMigration() {
         isCancelled = true
     }
-    
+
     func migrate(
         from sourceRoot: URL,
         to targetRoot: URL,
         progressCallback: ProgressCallback?,
         downloadProgressCallback: DownloadProgressCallback?,
         verbose: Bool
-    ) async throws {
+    ) throws {
         os_log(.info, "\(self.t)开始迁移任务")
-        
+
         do {
             // 获取所有文件并过滤掉 .DS_Store
             var files = try FileManager.default.contentsOfDirectory(
                 at: sourceRoot,
                 includingPropertiesForKeys: nil
             ).filter { $0.lastPathComponent != ".DS_Store" }
-            
+
             files.sort { $0.lastPathComponent < $1.lastPathComponent }
             os_log(.info, "\(self.t)找到 \(files.count) 个待迁移文件（已排除 .DS_Store）")
 
@@ -48,13 +47,11 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread {
 
                 let progress = Double(index + 1) / Double(files.count)
                 let fileName = sourceFile.lastPathComponent
-                
+
                 os_log(.info, "\(self.t)开始迁移文件: \(fileName) (\(index + 1)/\(files.count))")
-                
-                await MainActor.run {
-                    progressCallback?(progress, fileName)
-                }
-                
+
+                progressCallback?(progress, fileName)
+
                 let targetFile = targetRoot.appendingPathComponent(fileName)
                 do {
                     try FileManager.default.moveItem(at: sourceFile, to: targetFile)
@@ -76,7 +73,7 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread {
                 throw MigrationError.fileOperationFailed(error.localizedDescription)
             }
         }
-        
+
         os_log(.info, "\(self.t)迁移任务结束")
     }
-} 
+}

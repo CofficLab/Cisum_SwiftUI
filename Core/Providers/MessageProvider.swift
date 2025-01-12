@@ -1,13 +1,13 @@
 import Foundation
 import MagicKit
-import MagicUI
+
 import OSLog
 import SwiftData
 import SwiftUI
 
 @MainActor
-class MessageProvider: ObservableObject, @preconcurrency SuperLog, SuperThread, SuperEvent {
-    static let emoji = "📪"
+class MessageProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
+    nonisolated static let emoji = "📪"
     
     let maxMessageCount = 100
 

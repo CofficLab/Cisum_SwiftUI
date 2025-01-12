@@ -1,6 +1,6 @@
 import Foundation
 import MagicKit
-import MagicUI
+
 import OSLog
 import StoreKit
 import SwiftUI
@@ -34,7 +34,7 @@ public enum SubscriptionTier: Int, Comparable {
 }
 
 class StoreProvider: ObservableObject, SuperLog {
-    static var emoji = "💰"
+    static let emoji = "💰"
 
     @Published private(set) var cars: [Product]
     @Published private(set) var fuel: [Product]
@@ -71,10 +71,10 @@ class StoreProvider: ObservableObject, SuperLog {
 
         Task(priority: .low) {
             // 从 AppStore获取产品列表
-            try? await requestProducts("🐛 Store 初始化")
+//            try? await requestProducts("🐛 Store 初始化")
             // 更新用户已购产品列表
-            await updatePurchased("🐛 Store 初始化")
-            await updateSubscriptionStatus("🐛 Store 初始化")
+//            await updatePurchased("🐛 Store 初始化")
+//            await updateSubscriptionStatus("🐛 Store 初始化")
         }
     }
 
@@ -234,20 +234,20 @@ class StoreProvider: ObservableObject, SuperLog {
 
         return Task.detached {
             // Iterate through any transactions that don't come from a direct call to `purchase()`.
-            for await result in Transaction.updates {
-                do {
-                    let transaction = try self.checkVerified(result)
-
-                    // Deliver products to the user.
-                    await self.updatePurchased("\(reason) -> 🐛 ListenForTransactions")
-
-                    // Always finish a transaction.
-                    await transaction.finish()
-                } catch {
-                    // StoreKit has a transaction that fails verification. Don't deliver content to the user.
-                    print("Transaction failed verification")
-                }
-            }
+//            for await result in Transaction.updates {
+//                do {
+//                    let transaction = try self.checkVerified(result)
+//
+//                    // Deliver products to the user.
+//                    await self.updatePurchased("\(reason) -> 🐛 ListenForTransactions")
+//
+//                    // Always finish a transaction.
+//                    await transaction.finish()
+//                } catch {
+//                    // StoreKit has a transaction that fails verification. Don't deliver content to the user.
+//                    print("Transaction failed verification")
+//                }
+//            }
         }
     }
 

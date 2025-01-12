@@ -1,9 +1,9 @@
 import Foundation
+import MagicKit
+
 import OSLog
 import SwiftData
 import SwiftUI
-import MagicKit
-import MagicUI
 
 actor CopyDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     static let emoji = "🛖"
@@ -15,7 +15,7 @@ actor CopyDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
 
     init(_ container: ModelContainer, reason: String, verbose: Bool) {
         if verbose {
-            os_log("\(Self.i)")
+            os_log("\(Self.i) 🐛 \(reason)")
         }
 
         modelContainer = container
@@ -156,8 +156,17 @@ actor CopyDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
             os_log(.error, "\(e.localizedDescription)")
         }
     }
-}
 
+    func setTaskError(url: URL, error: String) {
+        if let task = findCopyTask(url) {
+            setTaskError(task, NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: error]))
+        }
+    }
+
+    func allCopyTaskDTOs() async -> [CopyTaskDTO] {
+        allCopyTasks().map { CopyTaskDTO(from: $0) }
+    }
+}
 
 #Preview {
     RootView {

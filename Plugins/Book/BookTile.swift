@@ -1,5 +1,6 @@
 import MagicKit
-import MagicUI
+import MagicPlayMan
+
 import OSLog
 import SwiftUI
 
@@ -7,7 +8,7 @@ import SwiftUI
  展示从数据库读取的图书数据
  */
 struct BookTile: View, SuperThread, SuperLog {
-    @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var playMan: MagicPlayMan
     @EnvironmentObject var db: BookDB
 
     @State var state: BookState? = nil
@@ -15,10 +16,13 @@ struct BookTile: View, SuperThread, SuperLog {
     @State var opacity: Double = 1.0
     @State var cover: Image? = nil
 
-    static let emoji = "🖥️"
+    nonisolated static let emoji = "🖥️"
     var hasCover: Bool { cover != nil }
     var noCover: Bool { cover == nil }
-    var book: Book
+    var book: BookModel
+
+    @Environment(\.dynamicTypeSize) var dynamicTypeSize
+    @State private var tileSize: CGSize = .zero
 
     var body: some View {
         HStack {
@@ -35,6 +39,8 @@ struct BookTile: View, SuperThread, SuperLog {
                 if book.childCount > 0, noCover {
                     Text("共 \(book.childCount)")
                 }
+                
+                book.url.makeOpenButton()
 
                 Spacer()
                 if let s = self.state, noCover, s.currentURL != nil {
@@ -56,7 +62,7 @@ struct BookTile: View, SuperThread, SuperLog {
         .scaleEffect(CGSize(width: scale, height: scale))
         .opacity(opacity)
         .contextMenu(menuItems: {
-            BtnShowInFinder(url: book.url, autoResize: false)
+            book.url.makeOpenButton()
         })
         .onHover(perform: onHover)
         .onAppear(perform: onAppear)
@@ -68,11 +74,18 @@ struct BookTile: View, SuperThread, SuperLog {
             if let cover = cover {
                 cover.resizable().scaledToFit()
             } else {
-                MagicBackground.auroraGreen
+                MagicBackground.deepForest
             }
         }
         .clipShape(RoundedRectangle(cornerSize: CGSize(width: 10, height: 10)))
         .shadow(radius: 5)
+        .background(
+            GeometryReader { geometry in
+                Color.clear.onAppear {
+                    tileSize = geometry.size
+                }
+            }
+        )
     }
 }
 
@@ -82,9 +95,45 @@ extension BookTile {
     func updateCover() {
         if self.cover == nil {
             Task {
-                self.cover = await book.getBookCoverFromDB()
+                do {
+                    self.cover = try await findCoverRecursively(in: book.url)
+                } catch {
+                    os_log("\(self.t)Failed to find cover: \(error.localizedDescription)")
+                }
             }
         }
+    }
+    
+    private func findCoverRecursively(in url: URL) async throws -> Image? {
+        // 获取当前目录下的所有文件
+        let children = url.getChildren()
+        
+        // 计算合适的缩略图尺寸
+        let thumbnailSize = CGSize(
+            width: max(120, tileSize.width * 2),  // 使用 2x 分辨率作为默认值
+            height: max(120, tileSize.height * 2)
+        )
+        
+        // 首先检查当前层级的文件
+        for child in children where !child.hasDirectoryPath {
+            // 跳过未下载的 iCloud 文件
+            if child.isiCloud && child.isNotDownloaded {
+                continue
+            }
+            
+            if let cover = try await child.coverFromMetadata(size: thumbnailSize, verbose: true) {
+                return cover
+            }
+        }
+        
+        // 如果当前层级没有找到封面，递归查找子文件夹
+        for child in children where child.hasDirectoryPath {
+            if let cover = try await findCoverRecursively(in: child) {
+                return cover
+            }
+        }
+        
+        return nil
     }
 }
 
@@ -95,36 +144,32 @@ extension BookTile {
         self.updateCover()
     }
 
+    @MainActor
     func onHover(_ hovering: Bool) {
         withAnimation {
             scale = hovering ? 1.02 : 1
         }
     }
 
+    @MainActor
     func onTap() {
+        // 首先执行动画
         withAnimation(.spring()) {
-            Task {
-                if let s = self.state, let current = s.currentURL, let time = s.time {
-//                    playMan.play(PlayAsset(url: current), reason: self.className, verbose: true)
-                    playMan.seek(time)
-                } else {
-                    if let first = DiskFile(url: book.url).children.first, let book = await self.db.find(first.url) {
-                        playMan.play(book.toPlayAsset(), reason: self.className, verbose: true)
-                        //                        data.updateBookState(book.url, first.url)
-                    } else {
-                        playMan.play(book.toPlayAsset(), reason: self.className, verbose: true)
-                    }
-                }
+            scale = 0.95
+            opacity = 0.95
+        }
 
-                scale = 0.95
-                opacity = 0.95
+        if let first = book.url.getChildren().first {
+            playMan.play(url: first)
+        } else {
+            playMan.play(url: book.url)
+        }
 
-                self.main.asyncAfter(deadline: .now() + 0.5) {
-                    withAnimation(.spring()) {
-                        scale = 1.0
-                        opacity = 1.0
-                    }
-                }
+        // 延迟恢复动画
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { @MainActor in
+            withAnimation(.spring()) {
+                scale = 1.0
+                opacity = 1.0
             }
         }
     }

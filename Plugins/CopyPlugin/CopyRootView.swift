@@ -1,12 +1,11 @@
 import AlertToast
 import MagicKit
-import MagicUI
 import OSLog
 import SwiftUI
 import UniformTypeIdentifiers
 
 struct CopyRootView: View, SuperEvent, SuperLog, SuperThread {
-    static var emoji = "🚛"
+    nonisolated static let emoji = "🚛"
 
     @EnvironmentObject var db: CopyDB
     @EnvironmentObject var s: StoreProvider
@@ -14,13 +13,15 @@ struct CopyRootView: View, SuperEvent, SuperLog, SuperThread {
     @EnvironmentObject var p: PluginProvider
     @EnvironmentObject var worker: CopyWorker
 
-    @State var isDropping: Bool = false
+    @State var isDropping = false
     @State var error: Error? = nil
     @State var iCloudAvailable = true
-    @State var count: Int = 0
+    @State var count = 0
 
-    init() {
-         os_log("\(Self.i)")
+    init(verbose: Bool = false) {
+        if verbose {
+            os_log("\(Self.i)")
+        }
     }
 
     var outOfLimit: Bool {
@@ -48,8 +49,21 @@ struct CopyRootView: View, SuperEvent, SuperLog, SuperThread {
         .frame(maxWidth: .infinity)
         .frame(maxHeight: .infinity)
         .onAppear(perform: onAppear)
-        .onDrop(of: [UTType.fileURL], isTargeted: self.$isDropping, perform: onDrop)
+        .onDrop(of: [UTType.fileURL], isTargeted: self.$isDropping) { providers in
+            Task {
+                await handleDrop(providers)
+            }
+            return true
+        }
         .onReceive(NotificationCenter.default.publisher(for: .CopyFiles), perform: onCopyFiles)
+    }
+
+    @MainActor
+    private func handleDrop(_ providers: [NSItemProvider]) async {
+        let result = await onDrop(providers)
+        if !result {
+            os_log(.error, "\(self.t)Drop operation failed")
+        }
     }
 }
 
@@ -74,42 +88,54 @@ extension CopyRootView {
         }
     }
 
-    func onDrop(_ providers: [NSItemProvider]) -> Bool {
-        let verbose = true
-
-        if outOfLimit {
-            return false
-        }
-
-        // Extract URLs from providers on the main thread
-        let urls = providers.compactMap { provider -> URL? in
-            var result: URL?
-            let semaphore = DispatchSemaphore(value: 0)
-
-            _ = provider.loadObject(ofClass: URL.self) { url, _ in
-                result = url
-                semaphore.signal()
-            }
-
-            semaphore.wait()
-            return result
-        }
-
+    func onDrop(_ providers: [NSItemProvider]) async -> Bool {
+        let verbose = false
         if verbose {
-            os_log("\(self.t)添加 \(urls.count) 个文件到复制队列")
+            os_log("\(self.t)开始处理拖放文件")
         }
 
-        guard let disk = p.current?.getDisk() else {
+        if outOfLimit { return false }
+        
+        guard let disk = await MainActor.run(body: { p.current?.getDisk() }) else {
             os_log(.error, "\(self.t)No Disk")
-            self.m.toast("No Disk")
+            await MainActor.run { self.m.toast("No Disk") }
             return false
         }
 
-        if verbose {
-            self.m.toast("复制 \(urls.count) 个文件")
+        var urls: [URL] = []
+        for provider in providers {
+            if provider.hasItemConformingToTypeIdentifier(UTType.fileURL.identifier) {
+                do {
+                    let urlData: Data = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Data, Error>) in
+                        provider.loadDataRepresentation(forTypeIdentifier: UTType.fileURL.identifier) { data, error in
+                            if let error = error {
+                                continuation.resume(throwing: error)
+                            } else if let data = data {
+                                continuation.resume(returning: data)
+                            } else {
+                                continuation.resume(throwing: NSError(domain: "", code: -1))
+                            }
+                        }
+                    }
+                    if let url = URL(dataRepresentation: urlData, relativeTo: nil) {
+                        urls.append(url)
+                    }
+                } catch {
+                    os_log(.error, "\(self.t)Failed to load URL: \(error.localizedDescription)")
+                }
+            }
         }
-
-        self.worker.append(urls, folder: disk.root)
+        
+        if verbose {
+            os_log("\(self.t)获取到 \(urls.count) 个文件")
+        }
+        
+        if !urls.isEmpty {
+            await MainActor.run {
+                self.m.toast("\(urls.count) 个文件开始复制")
+                self.worker.append(urls, folder: disk)
+            }
+        }
 
         return true
     }

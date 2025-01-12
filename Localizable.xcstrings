@@ -77,6 +77,7 @@
       }
     },
     "EEEEEE" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -107,6 +108,7 @@
       }
     },
     "Hi" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -133,9 +135,6 @@
 
     },
     "Setting" : {
-
-    },
-    "Video" : {
 
     },
     "一次性产品" : {
@@ -169,6 +168,7 @@
       }
     },
     "下载" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -241,9 +241,6 @@
           }
         }
       }
-    },
-    "准备迁移" : {
-
     },
     "刷新" : {
       "localizations" : {
@@ -335,6 +332,7 @@
       }
     },
     "封面图目录" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -414,6 +412,7 @@
       }
     },
     "打开" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -424,6 +423,7 @@
       }
     },
     "打开App Support目录" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -434,6 +434,7 @@
       }
     },
     "打开iCloud Documents" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -454,6 +455,7 @@
       }
     },
     "打开容器目录" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -464,6 +466,7 @@
       }
     },
     "打开封面图目录" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -473,10 +476,8 @@
         }
       }
     },
-    "打开数据库目录" : {
-
-    },
     "打开文档目录" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -504,6 +505,7 @@
 
     },
     "播放次数" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -577,6 +579,7 @@
       }
     },
     "根据文件自动生成封面图" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -630,6 +633,7 @@
 
     },
     "测试" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -758,6 +762,7 @@
       }
     },
     "设备" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -792,6 +797,7 @@
 
     },
     "调试" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -815,9 +821,6 @@
 
     },
     "迁移出现问题: %@" : {
-
-    },
-    "迁移完成" : {
 
     },
     "迁移已取消" : {
@@ -861,9 +864,6 @@
           }
         }
       }
-    },
-    "重置所有设置" : {
-
     },
     "重置设置，恢复成系统默认状态" : {
 

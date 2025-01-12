@@ -1,7 +1,12 @@
 import OSLog
 import SwiftUI
 import MagicKit
-import MagicUI
+
+import MagicPlayMan
+
+typealias PlayMan = MagicPlayMan
+typealias PlayAsset = MagicAsset
+typealias PlayMode = MagicPlayMode
 
 @main
 struct BootApp: App, SuperLog {
@@ -11,7 +16,7 @@ struct BootApp: App, SuperLog {
         @UIApplicationDelegateAdaptor var appDelegate: AppDelegate
     #endif
 
-    static var emoji = "🍎"
+    nonisolated static let emoji = "🍎"
 
     var body: some Scene {
         #if os(macOS)
@@ -24,7 +29,8 @@ struct BootApp: App, SuperLog {
             .windowToolbarStyle(.unifiedCompact(showsTitle: false))
             .defaultSize(width: Config.minWidth, height: Config.defaultHeight)
             .commands {
-                DebugCommand()
+                SidebarCommands()
+                MagicApp.debugCommand()
             }
         #else
             WindowGroup {

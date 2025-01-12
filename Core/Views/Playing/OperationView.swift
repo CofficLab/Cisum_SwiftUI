@@ -4,19 +4,18 @@ import SwiftUI
 struct OperationView: View {
     @EnvironmentObject var playMan: PlayMan
 
-    var asset: PlayAsset? { playMan.asset }
-    var characterCount: Int { asset?.fileName.count ?? 0 }
+    var asset: URL? { playMan.currentURL }
+    var characterCount: Int { asset?.title.count ?? 0 }
     var geo: GeometryProxy
 
     var body: some View {
         HStack(spacing: 0, content: {
             Spacer()
             if let asset = asset {
-                BtnLike(autoResize: true)
+                playMan.makeLikeButton()
                 if Config.isDesktop {
-                    BtnShowInFinder(url: asset.url, autoResize: true)
+                    asset.makeOpenButton()
                 }
-                BtnDel(assets: [asset], autoResize: true)
             }
             Spacer()
         })

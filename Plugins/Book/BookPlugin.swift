@@ -1,10 +1,10 @@
 import Foundation
 import MagicKit
-import MagicUI
+
 import OSLog
 import SwiftUI
 
-class BookPlugin: SuperPlugin, SuperLog {
+actor BookPlugin: SuperPlugin, SuperLog {
     static let keyOfCurrentBookURL = "com.bookplugin.currentBookURL"
     static let keyOfCurrentBookTime = "com.bookplugin.currentBookTime"
 
@@ -15,25 +15,25 @@ class BookPlugin: SuperPlugin, SuperLog {
     let iconName: String = "book"
     let dirName = "audios_book"
     let isGroup: Bool = true
-    lazy var db = BookRecordDB(BookConfig.getContainer, reason: "BookPlugin")
+    
+    @MainActor var disk: URL?
+    @MainActor var bookDB: BookDB?
+    @MainActor var bookProvider: BookProvider?
+    @MainActor var initialized = false
 
-    var disk: (any SuperStorage)?
-    var bookDB: BookDB?
-    var bookProvider: BookProvider?
-    var initialized = false
-
-    func addDBView(reason: String) -> AnyView {
-        os_log("\(self.t)addDBView")
-
+    @MainActor func addDBView(reason: String) -> AnyView? {
         guard let disk = disk else {
+            os_log("\(self.t)⚠️ disk is nil")
             return AnyView(EmptyView())
         }
 
         guard let bookDB = self.bookDB else {
+            os_log("\(self.t)⚠️ bookDB is nil")
             return AnyView(EmptyView())
         }
-        
+
         guard let bookProvider = self.bookProvider else {
+            os_log("\(self.t)⚠️ bookProvider is nil")
             return AnyView(EmptyView())
         }
 
@@ -43,46 +43,28 @@ class BookPlugin: SuperPlugin, SuperLog {
                 .environmentObject(bookProvider)
         )
     }
-    
-    func addStateView(currentGroup: SuperPlugin?) -> AnyView? {
-        if currentGroup?.id != self.id {
-            return nil
-        }
-        
-        guard let bookProvider = self.bookProvider else {
-            return nil
-        }
 
-        return AnyView(BookStateView().environmentObject(bookProvider))
-    }
+    @MainActor
+    func addPosterView() -> AnyView? { AnyView(BookPoster()) }
 
-    func addPosterView() -> AnyView {
-        return AnyView(
-            BookPoster()
-        )
-    }
-    
-    func onWillAppear(playMan: PlayMan, currentGroup: SuperPlugin?, storage: StorageLocation?) {
-        if currentGroup?.id != self.id {
-            return
-        }
-        
+    @MainActor
+    func onWillAppear(playMan: PlayManWrapper, currentGroup: (any SuperPlugin)?, storage: StorageLocation?) async throws {
         os_log("\(self.t)📺📺📺")
         if self.initialized {
             return
         }
 
-        self.disk = CloudStorage.make(self.dirName, verbose: true, reason: self.className)
-        self.bookDB = BookDB(db: self.db, disk: disk!, verbose: true)
+        self.disk = Config.cloudDocumentsDir?.appendingFolder(self.dirName)
+        self.bookDB = try BookDB(disk: disk!, verbose: true)
         self.bookProvider = BookProvider(disk: disk!)
         self.initialized = true
 
         Task { @MainActor in
             if let url = BookPlugin.getCurrent(), let book = await self.bookDB?.find(url) {
-                playMan.play(book.toPlayAsset(), reason: self.className, verbose: true)
+                await playMan.play(url: book)
 
                 if let time = BookPlugin.getCurrentTime() {
-                    playMan.seek(time)
+                    await playMan.seek(time: time)
                 }
             } else {
                 os_log("\(self.t)No current book URL")
@@ -94,13 +76,12 @@ class BookPlugin: SuperPlugin, SuperLog {
     }
 
     func onPause(playMan: PlayMan) {
-        Task { @MainActor in
-            BookPlugin.storeCurrentTime(playMan.currentTime)
-        }
+//        Task { @MainActor in
+//            BookPlugin.storeCurrentTime(playMan.currentTime)
+//        }
     }
 
     func onPlayModeChange(mode: PlayMode) {
-
     }
 
     func onPlayAssetUpdate(asset: PlayAsset?, currentGroup: SuperPlugin?) async throws {
@@ -109,9 +90,9 @@ class BookPlugin: SuperPlugin, SuperLog {
         }
 
         Self.storeCurrent(asset?.url)
-        if let asset = asset, asset.isNotDownloaded {
+        if let asset = asset, asset.url.isNotDownloaded {
             do {
-                try await asset.download()
+                try await asset.url.download()
                 os_log("\(self.t)onPlayAssetUpdate: 开始下载")
             } catch let e {
                 os_log("\(self.t)onPlayAssetUpdate: \(e.localizedDescription)")
@@ -121,20 +102,20 @@ class BookPlugin: SuperPlugin, SuperLog {
         }
     }
 
-    func onPlayNext(playMan: PlayMan, current: PlayAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws {
-        if currentGroup?.id != self.id {
+    func onPlayNext(playMan: PlayManWrapper, current: URL?, currentGroup: String?, verbose: Bool) async throws {
+        if currentGroup != self.id {
             return
         }
 
         if let asset = current {
-            let next = asset.url.getNextFile()
+            let next = asset.getNextFile()
 
             if verbose {
-                os_log("\(self.t)播放下一个 -> \(next?.lastPathComponent ?? "")")
+                os_log("\(self.t)播放下一个 -> \(next?.title ?? "")")
             }
 
             if let next = next, let book = await self.bookDB?.find(next) {
-                await playMan.play(book.toPlayAsset(), reason: "onPlayNext", verbose: true)
+                await playMan.play(url: next)
             }
         }
     }

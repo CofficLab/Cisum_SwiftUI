@@ -1,11 +1,12 @@
 import Foundation
 import MagicKit
-import MagicUI
+
 import OSLog
 import SwiftData
 import SwiftUI
 import UniformTypeIdentifiers
 
+@MainActor
 struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var messageManager: MessageProvider
@@ -17,11 +18,31 @@ struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
     @State var count: Int = 0
     @State var loading: Bool = true
 
-    static let emoji = "🐘"
+    nonisolated static let emoji = "🐘"
 
     init(verbose: Bool, reason: String) {
         if verbose {
             os_log("\(Self.i) 🐛 \(reason)")
+        }
+    }
+
+    private func fetchDBCount() async -> Int {
+        let database = db
+        return await withCheckedContinuation { continuation in
+            Task {
+                let count = await database.getTotalCount()
+                continuation.resume(returning: count)
+            }
+        }
+    }
+    
+    private func fetchStorageRoot() async -> URL {
+        let database = db
+        return await withCheckedContinuation { continuation in
+            Task {
+                let root = await database.getStorageRoot()
+                continuation.resume(returning: root)
+            }
         }
     }
 
@@ -43,7 +64,7 @@ struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
             onCompletion: handleFileImport
         )
         .task {
-            self.count = await db.getTotalCount()
+            self.count = await fetchDBCount()
             self.loading = false
         }
     }
@@ -55,9 +76,10 @@ extension AudioDBView {
             switch result {
             case let .success(urls):
                 os_log("\(self.t)🍋🍋🍋 handleFileImport, urls: \(urls.count)")
-                await self.emit(name: .CopyFiles, object: self, userInfo: [
+                let storageRoot = await fetchStorageRoot()
+                self.emit(name: .CopyFiles, object: self, userInfo: [
                     "urls": urls,
-                    "folder": self.db.getStorageRoot()
+                    "folder": storageRoot
                 ])
             case let .failure(error):
                 os_log(.error, "导入文件失败Error: \(error.localizedDescription)")

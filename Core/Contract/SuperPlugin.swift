@@ -1,115 +1,85 @@
+import MagicPlayMan
 import OSLog
 import SwiftUI
 
-protocol SuperPlugin {
-    var id: String { get }
-    var label: String { get }
-    var hasPoster: Bool { get }
-    var description: String { get }
-    var iconName: String { get }
-    var isGroup: Bool { get }
+protocol SuperPlugin: Actor {
+    nonisolated var id: String { get }
+    nonisolated var label: String { get }
+    nonisolated var hasPoster: Bool { get }
+    nonisolated var description: String { get }
+    nonisolated var iconName: String { get }
+    nonisolated var isGroup: Bool { get }
 
-    func addRootView() -> AnyView?
-    func addSheetView(storage: StorageLocation?) -> AnyView?
-    func addDBView(reason: String) -> AnyView?
-    func addPosterView() -> AnyView
-    func addStateView(currentGroup: SuperPlugin?) -> AnyView?
-    func addSettingView() -> AnyView?
-    func addStatusView() -> AnyView?
-    func addToolBarButtons() -> [(id: String, view: AnyView)]
+    @MainActor func addRootView() -> AnyView?
+    @MainActor func addSheetView(storage: StorageLocation?) -> AnyView?
+    @MainActor func addDBView(reason: String) -> AnyView?
+    @MainActor func addPosterView() -> AnyView?
+    @MainActor func addStateView(currentGroup: SuperPlugin?) -> AnyView?
+    @MainActor func addSettingView() -> AnyView?
+    @MainActor func addStatusView() -> AnyView?
+    @MainActor func addToolBarButtons() -> [(id: String, view: AnyView)]
 
-    func getDisk() -> (any SuperStorage)?
+    @MainActor func getDisk() -> URL?
 
-    func onWillAppear(playMan: PlayMan, currentGroup: SuperPlugin?, storage: StorageLocation?) async throws -> Void
-    func onDisappear() -> Void
-    func onPlay() -> Void
-    func onPause(playMan: PlayMan) async -> Void
-    func onPlayStateUpdate() async throws -> Void
-    func onPlayModeChange(mode: PlayMode, asset: PlayAsset?) async throws -> Void
-    func onPlayAssetUpdate(asset: PlayAsset?, currentGroup: SuperPlugin?) async throws -> Void
-    func onPlayNext(playMan: PlayMan, current: PlayAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws -> Void
-    func onPlayPrev(playMan: PlayMan, current: PlayAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws -> Void
-    func onStorageLocationChange(storage: StorageLocation?) async throws -> Void
+    func onWillAppear(playMan: PlayManWrapper, currentGroup: SuperPlugin?, storage: StorageLocation?) async throws
+    func onDisappear()
+    func onPlay()
+    func onPause(playMan: MagicPlayMan) async
+    func onPlayStateUpdate() async throws
+    func onPlayModeChange(mode: String, asset: URL?) async throws
+    func onCurrentURLChanged(url: URL) async throws
+    func onPlayNext(playMan: PlayManWrapper, current: URL?, currentGroup: String?, verbose: Bool) async throws
+    func onPlayPrev(playMan: PlayManWrapper, current: URL?, currentGroup: String?, verbose: Bool) async throws
+    func onStorageLocationChange(storage: StorageLocation?) async throws
+    func onLike(asset: URL?, liked: Bool) async throws
 }
 
 extension SuperPlugin {
-    var id: String {
-        return self.label
-    }
+    nonisolated var id: String { self.label }
 
-    var isGroup: Bool {
-        return false
-    }
-    
-    func addSheetView(storage: StorageLocation?) -> AnyView? {
-        return nil
-    }
+    nonisolated var isGroup: Bool { false }
 
-    func addPosterView() -> AnyView {
-        return AnyView(EmptyView())
-    }
+    nonisolated func addSheetView(storage: StorageLocation?) -> AnyView? { nil }
 
-    func addToolBarButtons() -> [(id: String, view: AnyView)] {
-        return []
-    }
+    nonisolated func addPosterView() -> AnyView? { nil }
 
-    func addStateView(currentGroup: SuperPlugin?) -> AnyView? {
-        return nil
-    }
+    nonisolated func addToolBarButtons() -> [(id: String, view: AnyView)] { [] }
 
-    func addStatusView() -> AnyView? {
-        return nil
-    }
+    nonisolated func addStateView(currentGroup: SuperPlugin?) -> AnyView? { nil }
 
-    func addRootView() -> AnyView? {
-        return nil
-    }
+    nonisolated func addStatusView() -> AnyView? { nil }
 
-    func addDBView(reason: String) -> AnyView? {
-        return nil
-    }
+    nonisolated func addRootView() -> AnyView? { nil }
 
-    func addSettingView() -> AnyView? {
-        return nil
-    }
+    nonisolated func addDBView(reason: String) -> AnyView? { nil }
 
-    func getDisk() -> (any SuperStorage)? {
-        return nil
-    }
+    nonisolated func addSettingView() -> AnyView? { nil }
 
-    func onWillAppear(playMan: PlayMan, currentGroup: SuperPlugin?) {
-    }
+    @MainActor func getDisk() -> URL? { nil }
 
-    func onInit() {
-    }
+    func onWillAppear(playMan: PlayManWrapper, currentGroup: SuperPlugin?) {}
 
-    func onPlayAssetUpdate(asset: PlayAsset?, currentGroup: SuperPlugin?) {
-    }
+    func onInit() {}
 
-    func onDisappear() {
-    }
+    func onCurrentURLChanged(url: URL) { }
 
-    func onPlay() {
-    }
+    func onDisappear() { }
 
-    func onPlayModeChange(mode: PlayMode, asset: PlayAsset?) async throws {
-    }
+    func onPlay() { }
 
-    func onPause(playMan: PlayMan) async {
-    }
+    func onPlayModeChange(mode: String, asset: URL?) async throws { }
 
-    func onPlayStateUpdate() async throws {
-    }
+    func onPause(playMan: MagicPlayMan) async { }
 
-    func onPlayNext(playMan: PlayMan, current: PlayAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws {
-    }
+    func onLike(asset: URL?, liked: Bool) async throws { }
 
-    func onPlayPrev(playMan: PlayMan, current: PlayAsset?, currentGroup: SuperPlugin?, verbose: Bool) async throws {
-    }
-    
-    func onWillAppear(playMan: PlayMan, currentGroup: (any SuperPlugin)?, storage: StorageLocation?) async {
-        
-    }
-    
-    func onStorageLocationChange(storage: StorageLocation?) async throws -> Void {}
+    func onPlayStateUpdate() async throws {}
+
+    func onPlayNext(playMan: PlayManWrapper, current: URL?, currentGroup: String?, verbose: Bool) async throws { }
+
+    func onPlayPrev(playMan: PlayManWrapper, current: URL?, currentGroup: String?, verbose: Bool) async throws { }
+
+    func onWillAppear(playMan: PlayManWrapper, currentGroup: (any SuperPlugin)?, storage: StorageLocation?) async { }
+
+    func onStorageLocationChange(storage: StorageLocation?) async throws {}
 }

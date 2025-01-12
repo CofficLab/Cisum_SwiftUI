@@ -2,7 +2,7 @@ import OSLog
 import StoreKit
 import SwiftUI
 import MagicKit
-import MagicUI
+
 
 struct AllSubscriptions: View, SuperLog {
     @EnvironmentObject var store: StoreProvider
@@ -13,7 +13,7 @@ struct AllSubscriptions: View, SuperLog {
     @State private var refreshing = false
     @State private var error: Error? = nil
     
-    static var emoji = "🖥️"
+    nonisolated static let emoji = "🖥️"
 
     var body: some View {
         GroupBox {

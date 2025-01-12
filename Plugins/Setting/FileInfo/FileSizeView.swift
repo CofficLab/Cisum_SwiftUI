@@ -1,10 +1,10 @@
 import SwiftUI
 import MagicKit
-import MagicUI
+
 import OSLog
 
 struct FileSizeView: View, SuperLog {
-    static let emoji = "🫘"
+    nonisolated static let emoji = "🫘"
     
     let url: URL
     @State private var size: Int64?

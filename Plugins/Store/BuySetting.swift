@@ -1,11 +1,11 @@
 import MagicKit
-import MagicUI
+
 import OSLog
 import StoreKit
 import SwiftUI
 
 struct BuySetting: View, SuperLog {
-    static let emoji = "🛒"
+    nonisolated static let emoji = "🛒"
     
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     @State var closeBtnHovered: Bool = false

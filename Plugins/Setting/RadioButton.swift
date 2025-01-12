@@ -1,6 +1,6 @@
 import Foundation
 import MagicKit
-import MagicUI
+
 import SwiftUI
 
 struct RadioButton: View {
@@ -70,11 +70,11 @@ struct RadioButton: View {
                                 Spacer()
 
                                 if let url = url {
-                                    BtnOpenFolder(url: url).labelStyle(.iconOnly)
+                                    url.makeOpenButton()
                                 }
                             }
                             .padding(8)
-                            .background(MagicBackground.deepPurple.opacity(0.2))
+                            .background(MagicBackground.acousticMorning.opacity(0.2))
                             .cornerRadius(6)
                         }
 

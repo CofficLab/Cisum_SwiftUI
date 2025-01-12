@@ -1,11 +1,12 @@
 import SwiftUI
+import MagicKit
 
 struct LayoutView: View {
     var minWidth = Config.minWidth
     var minHeight = Config.minHeight
     var width: CGFloat?
     var height: CGFloat?
-    var device: Device?
+    var device: MagicDevice?
 
     var body: some View {
         ZStack {
@@ -30,7 +31,7 @@ struct LayoutView: View {
     }
 
     func forManyDevices() -> some View {
-        let devices: [Device] = [
+        let devices: [MagicDevice] = [
             .iMac,
 //            .MacBook,
             .iPad_mini,
@@ -79,7 +80,7 @@ struct LayoutView: View {
         .frame(height: 800)
     }
 
-    func makeItemForDevice(_ device: Device) -> some View {
+    func makeItemForDevice(_ device: MagicDevice) -> some View {
         makeItem(width: device.width, height: device.height)
     }
 

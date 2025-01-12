@@ -1,5 +1,5 @@
 import MagicKit
-import MagicUI
+
 import SwiftUI
 
 struct RepositoryInfoView: View {
@@ -44,7 +44,7 @@ struct RepositoryInfoView: View {
             Spacer()
 
             if let root = url, Config.isDesktop {
-                BtnOpenFolder(url: root).labelStyle(.iconOnly)
+                root.makeOpenButton()
             }
         }
         .padding(.horizontal)

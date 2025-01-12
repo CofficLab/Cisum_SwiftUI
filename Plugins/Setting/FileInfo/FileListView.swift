@@ -1,10 +1,10 @@
 import MagicKit
-import MagicUI
+
 import OSLog
 import SwiftUI
 
 struct FileListView: View, SuperLog {
-    static let emoji = "📂"
+    nonisolated static let emoji = "📂"
 
     let url: URL
     let expandByDefault: Bool

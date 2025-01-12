@@ -1,14 +1,16 @@
 import Foundation
 import MagicKit
-import MagicUI
+import MagicPlayMan
+
 import OSLog
 import StoreKit
 import SwiftData
 import SwiftUI
 
+@MainActor
 class PluginProvider: ObservableObject, SuperLog, SuperThread {
     static let keyOfCurrentPluginID = "currentPluginID"
-    static let emoji = "🧩"
+    nonisolated static let emoji = "🧩"
 
     @Published private(set) var plugins: [SuperPlugin] = []
     @Published private(set) var current: SuperPlugin?
@@ -18,7 +20,7 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
     }
 
     init() {
-        //os_log("\(self.i)")
+        // os_log("\(self.i)")
 
         let currentPluginId = Self.getPluginId()
 
@@ -29,44 +31,44 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
 
     func append(_ plugin: SuperPlugin, reason: String) throws {
         let verbose = false
-        
+
         if verbose {
             os_log("\(self.t)➕➕➕ Append: \(plugin.id) with reason: \(reason)")
         }
-        
+
         if plugin.id.isEmpty {
-            throw PluginProviderError.PluginIDIsEmpty(plugin: plugin)
+            throw PluginProviderError.pluginIDIsEmpty
         }
-        
+
         // Check if plugin with same ID already exists
         if plugins.contains(where: { $0.id == plugin.id }) {
-            throw PluginProviderError.duplicatePluginID(plugin: plugin)
+            throw PluginProviderError.duplicatePluginID(pluginId: plugin.id)
         }
-        
+
         self.plugins.append(plugin)
     }
-    
+
     func getStatusViews() -> [AnyView] {
         let items = plugins.compactMap { $0.addStatusView() }
-        
-        //os_log("\(self.t)GetRootViews: \(items.count)")
-        
+
+        // os_log("\(self.t)GetRootViews: \(items.count)")
+
         return items
     }
-    
+
     func getRootViews() -> [AnyView] {
         let items = plugins.compactMap { $0.addRootView() }
-        
-        //os_log("\(self.t)GetRootViews: \(items.count)")
-        
+
+        // os_log("\(self.t)GetRootViews: \(items.count)")
+
         return items
     }
-    
+
     func getSheetViews(storage: StorageLocation?) -> [AnyView] {
         let items = plugins.compactMap { $0.addSheetView(storage: storage) }
-        
-        //os_log("\(self.t)GetRootViews: \(items.count)")
-        
+
+        // os_log("\(self.t)GetRootViews: \(items.count)")
+
         return items
     }
 
@@ -81,27 +83,21 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
             self.current = plugin
             Self.storeCurrent(plugin)
         } else {
-            throw PluginProviderError.PluginIsNotGroup(plugin: plugin)
+            throw PluginProviderError.pluginIsNotGroup(pluginId: plugin.id)
         }
     }
-    
+
     func reset() {
         self.plugins = []
         self.current = nil
     }
 
     func restoreCurrent() throws {
-        os_log("\(self.t)🏃🏃🏃 RestoreCurrent")
-        
         let currentPluginId = Self.getPluginId()
 
-        os_log("\(self.t)🏃🏃🏃 RestoreCurrent: current plugin id is -> \(currentPluginId)")
-
         if let plugin = plugins.first(where: { $0.id == currentPluginId }) {
-            os_log("\(self.t)🏃🏃🏃 RestoreCurrent: \(plugin.id)")
             try self.setCurrentGroup(plugin)
         } else if let first = plugins.first(where: { $0.isGroup }) {
-            os_log("\(self.t)🏃🏃🏃 RestoreCurrent: set current to first group -> \(first.id)")
             try self.setCurrentGroup(first)
         } else {
             os_log(.error, "\(self.t)⚠️⚠️⚠️ No current plugin found")
@@ -135,19 +131,122 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
     }
 }
 
+// MARK: Event
+
+extension PluginProvider {
+    func executePluginOperation(_ operation: @Sendable (SuperPlugin) async throws -> Void) async {
+        for plugin in plugins {
+            do {
+                try await operation(plugin)
+            } catch {
+                os_log(.error, "\(self.t)Plugin operation failed: \(error.localizedDescription)")
+            }
+        }
+    }
+
+    func handleStorageLocationChange(storage: StorageLocation?) async throws {
+        for plugin in plugins {
+            try await plugin.onStorageLocationChange(storage: storage)
+        }
+    }
+
+    func handlePlayStateUpdate() async throws {
+        for plugin in plugins {
+            try await plugin.onPlayStateUpdate()
+        }
+    }
+
+    func handleOnDisappear() async throws {
+        for plugin in plugins {
+            await plugin.onDisappear()
+        }
+    }
+
+    func handleOnAppear(playMan: PlayManWrapper, current: SuperPlugin?, storage: StorageLocation?) async throws {
+        for plugin in plugins {
+            try await plugin.onWillAppear(playMan: playMan, currentGroup: current, storage: storage)
+        }
+    }
+
+    func onPlayNext(current: URL?, mode: PlayMode, man: PlayManWrapper) async throws {
+        let currentGroupId = self.current?.id
+        for plugin in plugins {
+            try await plugin.onPlayNext(playMan: man, current: current, currentGroup: currentGroupId, verbose: true)
+        }
+    }
+
+    func onPlayPrev(current: URL?, mode: PlayMode, man: PlayManWrapper) async throws {
+        let currentGroupId = self.current?.id
+        for plugin in plugins {
+            try await plugin.onPlayPrev(playMan: man, current: current, currentGroup: currentGroupId, verbose: true)
+        }
+    }
+
+    func onPlayModeChange(mode: PlayMode, asset: URL?) async throws {
+        for plugin in plugins {
+            try await plugin.onPlayModeChange(mode: mode.rawValue, asset: asset)
+        }
+    }
+
+    func onLike(asset: URL?, liked: Bool) async throws {
+        for plugin in plugins {
+            try await plugin.onLike(asset: asset, liked: liked)
+        }
+    }
+
+    func onCurrentURLChanged(url: URL) async throws {
+        for plugin in plugins {
+            try await plugin.onCurrentURLChanged(url: url)
+        }
+    }
+}
+
 enum PluginProviderError: Error, LocalizedError {
-    case PluginIsNotGroup(plugin: SuperPlugin)
-    case duplicatePluginID(plugin: SuperPlugin)
-    case PluginIDIsEmpty(plugin: SuperPlugin)
+    case pluginIsNotGroup(pluginId: String)
+    case duplicatePluginID(pluginId: String)
+    case pluginIDIsEmpty
 
     var errorDescription: String? {
         switch self {
-        case let .PluginIsNotGroup(plugin):
-            return "Plugin \(plugin.id) is not a group"
-        case let .duplicatePluginID(plugin):
-            return "Plugin with ID \(plugin.id) already exists"
-        case let .PluginIDIsEmpty(plugin):
-            return "Plugin \(plugin.id) has an empty ID"
+        case let .pluginIsNotGroup(pluginId):
+            return "Plugin \(pluginId) is not a group"
+        case let .duplicatePluginID(pluginId):
+            return "Plugin with ID \(pluginId) already exists"
+        case .pluginIDIsEmpty:
+            return "Plugin has an empty ID"
         }
+    }
+}
+
+@MainActor
+public class PlayManWrapper {
+    let playMan: MagicPlayMan
+
+    init(playMan: MagicPlayMan) {
+        self.playMan = playMan
+    }
+
+    var playing: Bool {
+        playMan.playing
+    }
+
+    func play(url: URL, autoPlay: Bool = true) async {
+        playMan.play(url: url, autoPlay: autoPlay)
+    }
+
+    func seek(time: TimeInterval) async {
+        playMan.seek(time: time)
+    }
+
+    func setPlayMode(_ mode: PlayMode) {
+        playMan.setPlayMode(mode)
+    }
+
+    func getPlayMode() -> PlayMode {
+        playMan.playMode
+    }
+
+    func setLike(_ isLiked: Bool) {
+        playMan.setLike(isLiked)
     }
 }

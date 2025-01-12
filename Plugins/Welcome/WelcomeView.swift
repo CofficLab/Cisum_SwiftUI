@@ -1,10 +1,10 @@
 import MagicKit
-import MagicUI
+
 import OSLog
 import SwiftUI
 
 struct WelcomeView: View, SuperSetting, SuperLog {
-    static var emoji: String = "🎉"
+    nonisolated static let emoji = "🎉"
 
     var body: some View {
         VStack {

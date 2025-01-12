@@ -1,5 +1,5 @@
 import MagicKit
-import MagicUI
+
 import OSLog
 import StoreKit
 import SwiftUI
@@ -13,7 +13,7 @@ struct SubscriptionSetting: View, SuperEvent, SuperLog, SuperThread {
     @State private var refreshing = false
     @State private var error: Error? = nil
 
-    static let emoji = "🖥️"
+    nonisolated static let emoji = "🖥️"
 
     var body: some View {
         VStack {

@@ -2,10 +2,10 @@ import OSLog
 import SwiftData
 import SwiftUI
 import MagicKit
-import MagicUI
+
 
 struct Posters: View, SuperLog {
-    static let emoji = "🪧"
+    nonisolated static let emoji = "🪧"
     
     @EnvironmentObject var p: PluginProvider
     @EnvironmentObject var m: MessageProvider
@@ -47,7 +47,7 @@ struct Posters: View, SuperLog {
         
                 Button("选择") {
                     do {
-                        self.man.stop(reason: self.className, verbose: true)
+                        self.man.stop()
                         try p.setCurrentGroup(currentLayout)
                         self.isPresented = false
                     } catch {

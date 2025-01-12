@@ -1,23 +1,23 @@
+import Combine
 import Foundation
 import MagicKit
-import MagicUI
+
 import OSLog
 import StoreKit
 import SwiftData
 import SwiftUI
-import Combine
 
 class AudioProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
     private var cancellables = Set<AnyCancellable>()
     private var debounceTimer: Timer?
-    
+
     static let emoji = "🌿"
-    let disk: (any SuperStorage)
+    private(set) var disk: URL
 
-    @Published var files: [DiskFile] = []
-    @Published var isSyncing: Bool = false
+    @Published private(set) var files: [MetaWrapper] = []
+    @Published private(set) var isSyncing: Bool = false
 
-    init(disk: any SuperStorage) {
+    init(disk: URL) {
         self.disk = disk
         self.nc.publisher(for: .dbSyncing)
             .sink { [weak self] notification in
@@ -32,9 +32,22 @@ class AudioProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
             .store(in: &cancellables)
     }
     
+    /// 更新音频文件目录路径
+    /// - Parameter newDisk: 新的目录路径
+    func updateDisk(_ newDisk: URL) {
+        os_log("\(self.t)🍋🍋🍋 updateDisk to \(newDisk.path)")
+
+        self.cancellables.removeAll()
+        self.disk = newDisk
+    }
+}
+
+// MARK: Event Handler
+
+extension AudioProvider {
     private func handleDBSyncing(_ notification: Notification) {
-        if let group = notification.userInfo?["group"] as? DiskFileGroup {
-            self.files = group.files
+        if let items = notification.userInfo?["items"] as? [MetaWrapper] {
+            self.setFiles(items)
             self.setSyncing(true)
         }
     }
@@ -42,8 +55,12 @@ class AudioProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
     private func handleDBSynced(_ notification: Notification) {
         self.setSyncing(false)
     }
+}
 
-    func setSyncing(_ syncing: Bool) {
+// MARK: State Updater
+
+extension AudioProvider {
+    private func setSyncing(_ syncing: Bool) {
         if syncing {
             debounceTimer?.invalidate()
             withAnimation {
@@ -51,10 +68,16 @@ class AudioProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
             }
         } else {
             debounceTimer = Timer.scheduledTimer(withTimeInterval: 1.5, repeats: false) { [weak self] _ in
-                withAnimation {
-                    self?.isSyncing = false
+                Task { @MainActor in
+                    withAnimation {
+                        self?.isSyncing = false
+                    }
                 }
             }
         }
+    }
+
+    private func setFiles(_ files: [MetaWrapper]) {
+        self.files = files
     }
 }

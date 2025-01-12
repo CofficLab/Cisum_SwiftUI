@@ -1,10 +1,12 @@
 import SwiftData
 import SwiftUI
+import MagicPlayMan
+import MagicKit
 
 struct ControlView: View {
     @EnvironmentObject var appManager: AppProvider
     @EnvironmentObject var message: MessageProvider
-    @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var playMan: MagicPlayMan
     @EnvironmentObject var p: PluginProvider
 
     @State var showHeroView = true
@@ -16,7 +18,7 @@ struct ControlView: View {
 
     var showDB: Bool { appManager.showDB }
     var showStateMessage: Bool { message.stateMessage.count > 0 }
-    var showSliderView: Bool { playMan.isAudioWorker }
+    var showSliderView: Bool { true }
 
     var body: some View {
         GeometryReader { geo in
@@ -32,7 +34,9 @@ struct ControlView: View {
 
                     // MARK: 状态
                     if showStateView {
-                        VStack {
+                        VStack(spacing: 10) {
+                            StateView()
+                            
                             ForEach(p.plugins, id: \.id) { plugin in
                                 plugin.addStateView(currentGroup: p.current)
                             }
@@ -52,9 +56,8 @@ struct ControlView: View {
                     // MARK: 进度栏
 
                     if showSliderView {
-                        SliderView(geo: geo)
+                        playMan.makeProgressView()
                             .padding()
-                            .background(Config.background(.black))
                     }
 
                     // MARK: 控制栏
@@ -62,6 +65,7 @@ struct ControlView: View {
                     if showBtnsView {
                         ControlBtns()
                             .frame(height: getButtonsHeight(geo))
+                            .frame(maxWidth: .infinity)
                             .padding(.bottom, getBottomHeight(geo))
                             .background(Config.background(.red))
                     }
@@ -72,8 +76,8 @@ struct ControlView: View {
                 if shouldShowRightAlbum(geo) {
                     // 最大宽度=控制栏的高度+系统标题栏高度
                     HStack {
-                        Spacer()
-                        PlayingAlbum()
+                        Spacer(minLength: 0)
+                        playMan.makeHeroView()
                             .background(Config.background(.yellow))
                     }
                     .frame(maxWidth: geo.size.height * 1.3)
@@ -89,7 +93,7 @@ struct ControlView: View {
             .padding(.horizontal, 0)
             .frame(maxHeight: .infinity)
         }
-//        .ignoresSafeArea(edges: appManager.showDB || Config.isNotDesktop ? .horizontal : .all)
+        .ignoresSafeArea(edges: Config.isDesktop ? .horizontal : .all)
         .frame(minHeight: Config.controlViewMinHeight)
         .onAppear {
             showHeroView = true
@@ -141,7 +145,7 @@ struct ControlView: View {
     // MARK: 是否显示右侧的封面图
 
     private func shouldShowRightAlbum(_ geo: GeometryProxy) -> Bool {
-        geo.size.width > Device.iPad_mini.width
+        geo.size.width > MagicDevice.iPad_mini.width
     }
 }
 

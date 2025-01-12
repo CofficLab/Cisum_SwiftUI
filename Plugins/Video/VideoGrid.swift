@@ -10,35 +10,36 @@ struct VideoGrid: View {
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var p: PluginProvider
 
-    @State var selection: DiskFile?
+    @State var selection: URL?
     @State var collapsed: Bool = false
     @State var icon: String = ""
 
-    var disk: (any SuperStorage)? {
-        p.current?.getDisk()
+    var disk: URL? {
+//        p.current?.getDisk()
+        nil
     }
 
     var body: some View {
         ZStack {
             if let disk = disk {
-                List(disk.getRoot().children,
-                     id: \.self,
-                     children: \.childrenOptional,
-                     selection: $selection
-                ) { file in
-                    VideoTile(selection: $selection, file: file)
-                        .tag(file as DiskFile?)
-                }
+//                List(disk.getChildren(),
+//                     id: \.self,
+//                     children: \.childrenOptional,
+//                     selection: $selection
+//                ) { file in
+//                    VideoTile(selection: $selection, file: file)
+//                        .tag(file as DiskFile?)
+//                }
 //                    .onAppear {
 //                        self.icon = dataManager.isiCloudDisk ? "icloud" : "folder"
 //                    }
-                    .onChange(of: selection, {
-                        if let s = selection, s.isNotFolder() {
-                            if playMan.playing {
-                                playMan.play(s.toPlayAsset(), reason: "点击了", verbose: true)
-                            }
-                        }
-                    })
+//                    .onChange(of: selection, {
+//                        if let s = selection, s.isNotFolder() {
+//                            if playMan.playing {
+//                                playMan.play(url: s.url)
+//                            }
+//                        }
+//                    })
                 //     .onChange(of: playMan.asset?.url, {
                 //         if let asset = playMan.asset {
                 //             self.selection = DiskFile(url: asset.url)
@@ -49,7 +50,7 @@ struct VideoGrid: View {
                 
 //                )
                 
-                if app.isDropping || m.flashMessage.isEmpty && disk.getRoot().children.isEmpty {
+                if app.isDropping || m.flashMessage.isEmpty && disk.getChildren().isEmpty {
 //                    DBTips()
                 }
             }

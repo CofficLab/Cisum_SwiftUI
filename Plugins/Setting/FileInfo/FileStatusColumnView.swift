@@ -1,10 +1,10 @@
 import MagicKit
-import MagicUI
+
 import OSLog
 import SwiftUI
 
 struct FileStatusColumnView: View, SuperLog {
-    static let emoji: String = "🥩"
+    nonisolated static let emoji: String = "🥩"
 
     let url: URL
     @State private var fileStatus: String = "检查中..."

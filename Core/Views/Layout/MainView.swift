@@ -1,14 +1,15 @@
 import AVKit
 import MagicKit
-import MagicUI
+
 import OSLog
 import SwiftUI
 
 struct MainView: View, SuperLog, SuperThread {
-    static let emoji = "🖥️"
+    nonisolated static let emoji = "🖥️"
 
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var p: PluginProvider
+    @EnvironmentObject var man: PlayMan
     @State private var databaseViewHeight: CGFloat = 300
 
     // 记录用户调整的窗口的高度
@@ -45,10 +46,13 @@ struct MainView: View, SuperLog, SuperThread {
                         } else {
                             getTabView()
                         }
-                        
-                        ForEach(Array(p.getStatusViews().enumerated()), id: \.offset) { index, view in
-                            view
-                        }
+                    }
+                }
+
+                HStack {
+                    Spacer()
+                    ForEach(Array(p.getStatusViews().enumerated()), id: \.offset) { _, view in
+                        view
                     }
                 }
             }
@@ -59,12 +63,13 @@ struct MainView: View, SuperLog, SuperThread {
                 onGeoHeightChange(geo)
             }
             .onAppear(perform: onAppear)
+            .background(Config.background(.teal))
         }
     }
 
     func getTabView() -> some View {
         TabView(selection: $tab) {
-            p.current?.addDBView(reason: self.className + ".getTabView")
+            p.current?.addDBView(reason: self.className)
                 .tag("DB")
                 .tabItem {
                     Label("仓库", systemImage: "music.note.list")
@@ -132,7 +137,7 @@ extension MainView {
             app.closeDBView()
         }
     }
-    
+
     func onShowDBChanged(_ geo: GeometryProxy) {
         // 高度被自动修改过了，重置
         if !showDB && geo.size.height != self.height {
@@ -148,22 +153,12 @@ extension MainView {
     }
 
     func onAppear() {
-        self.bg.async {
-            let verbose = false
-            
-            if verbose {
-                os_log("\(self.t)OnAppear")
-            }
-            
-            if autoResizing == false {
-                // 说明是用户主动调整
-                self.main.async {
-                    self.height = Config.getWindowHeight()
-                }
-            }
+        let verbose = false
+        if verbose {
+            os_log("\(self.t)OnAppear")
         }
+        height = Config.getWindowHeight()
     }
-
 }
 
 #Preview("App") {

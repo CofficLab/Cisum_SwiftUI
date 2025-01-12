@@ -1,10 +1,10 @@
 import MagicKit
-import MagicUI
+
 import OSLog
 import SwiftData
 import SwiftUI
 
-struct AudioStateView: View, SuperLog, SuperThread {
+struct StateView: View, SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var messageManager: MessageProvider
     @EnvironmentObject var audioManager: AudioProvider
@@ -16,9 +16,9 @@ struct AudioStateView: View, SuperLog, SuperThread {
 
     var taskCount: Int { tasks.count }
     var showCopyMessage: Bool { tasks.count > 0 }
-    var asset: PlayAsset? { playMan.asset }
+    var asset: URL? { playMan.asset }
     var font: Font { asset == nil ? .title3 : .callout }
-    static let emoji = "🖥️"
+    nonisolated static let emoji = "🖥️"
     let verbose = true
 
     var body: some View {
@@ -28,15 +28,10 @@ struct AudioStateView: View, SuperLog, SuperThread {
             }
 
             // 播放过程中出现的错误
-            if let e = playMan.error {
+            if let e = playMan.currentError {
                 makeErrorView(e)
             }
         }
-        .onChange(of: audioManager.isSyncing, {
-            if playMan.hasError, let asset = playMan.asset, asset.isDownloaded {
-                playMan.play(asset, reason: self.className, verbose: true)
-            }
-        })
     }
 
     func makeInfoView(_ i: String) -> some View {

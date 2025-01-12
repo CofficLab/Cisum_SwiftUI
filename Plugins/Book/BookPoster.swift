@@ -1,6 +1,6 @@
 import SwiftUI
 import MagicKit
-import MagicUI
+
 
 struct BookPoster: View {
     var books: [String] = [
@@ -56,7 +56,7 @@ struct BookPoster: View {
                     }
                     Spacer()
                 }
-                .background(MagicBackground.auroraGreen)
+                .background(MagicBackground.deepOceanCurrent)
                 .clipShape(RoundedRectangle(cornerSize: CGSize(width: 10, height: 10)))
                 .frame(width: 130)
                 .frame(height: 180)

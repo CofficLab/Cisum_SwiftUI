@@ -1,92 +1,91 @@
 import Foundation
 import MagicKit
-import MagicUI
-import OSLog
-import SwiftUI
-import SwiftData
 
-class AudioDB: ObservableObject, SuperEvent, SuperLog {
-    static var emoji = "🎵"
+import OSLog
+import SwiftData
+import SwiftUI
+import Combine
+
+@MainActor class AudioDB: ObservableObject, SuperEvent, SuperLog {
+    nonisolated static let emoji = "🎵"
     private var db: AudioRecordDB
-    private var disk: (any SuperStorage)
-    
-    init(disk: any SuperStorage, reason: String, verbose: Bool) {
+    private var disk: URL
+    private var monitor: Cancellable? = nil
+
+    init(disk: URL, reason: String, verbose: Bool) throws {
         if verbose {
-            os_log("\(Self.i) with reason: 🐛 \(reason)")
+            os_log("\(Self.i) with reason: 🐛 \(reason) 💾 with disk: \(disk.shortPath())")
         }
-        
-        self.db = AudioRecordDB(AudioConfig.getContainer, reason: "AudioPlugin", verbose: verbose)
+
+        self.db = AudioRecordDB(try AudioConfig.getContainer(), reason: reason, verbose: verbose)
         self.disk = disk
-        self.disk.setDelegate(self)
-        
-        Task(priority: .userInitiated) {
-            await disk.watch(reason: "AudioDB.init", verbose: true)
-        }
+        self.monitor = self.makeMonitor()
     }
-    
-    func allAudios(reason: String) async -> [AudioModel] {
-        (await self.db.allAudios(reason: reason)).map { audio in
-            audio.setDB(self)
-            return audio
-        }
+
+    func allAudios(reason: String) async -> [URL] {
+        await self.db.allAudioURLs(reason: reason)
     }
-    
-    func changeDisk(disk: any SuperStorage) {
-        os_log("\(Self.t)🍋🍋🍋 Change disk to \(disk.name)")
-        
-        self.disk.stopWatch(reason: self.className + ".changeDisk")
-        self.disk = disk
-        self.disk.setDelegate(self)
-        Task(priority: .userInitiated) {
-            await self.disk.watch(reason: self.className + ".changeDisk", verbose: true)
-        }
+
+    func changeRoot(url: URL) {
+        os_log("\(Self.t)🍋🍋🍋 Change disk to \(url.title)")
+
+        self.monitor?.cancel()
+        self.disk = url
+        self.monitor = self.makeMonitor()
     }
-    
+
     func delete(_ audio: AudioModel, verbose: Bool) async throws {
-        try self.disk.deleteFile(audio.url)
-        try await self.db.deleteAudio(audio, verbose: verbose)
+        try self.disk.delete()
+        try await self.db.deleteAudio(url: audio.url)
         self.emit(.audioDeleted)
     }
-    
+
     func download(_ audio: AudioModel, verbose: Bool) async throws {
-        try await self.disk.download(audio.url, reason: "AudioDB.download", verbose: verbose)
+        try await audio.url.download()
     }
-    
-    func find(_ url: URL) async -> PlayAsset? {
-        let audio = await self.db.findAudio(url)
-        audio?.setDB(self)
-        
-        return audio?.toPlayAsset(delegate: self)
+
+    func find(_ url: URL) async -> URL? {
+        await self.db.hasAudio(url) ? url : nil
     }
-    
-    func getFirst() async throws -> PlayAsset? {
-        let audio = try await self.db.firstAudio()
-        
-        return audio?.toPlayAsset(delegate: self)
+
+    func getFirst() async throws -> URL? {
+        try await self.db.firstAudioURL()
     }
-    
-    func getNextOf(_ url: URL?, verbose: Bool = false) async throws -> PlayAsset? {
-        let audio = try await self.db.getNextOf(url, verbose: verbose)
-        
-        return audio?.toPlayAsset(delegate: self)
+
+    func getNextOf(_ url: URL?, verbose: Bool = false) async throws -> URL? {
+        try await self.db.getNextAudioURLOf(url, verbose: verbose)
     }
-    
-    func getPrevOf(_ url: URL?, verbose: Bool = false) async throws -> PlayAsset? {
-        let audio = try await self.db.getPrevOf(url, verbose: verbose)
-        
-        return audio?.toPlayAsset(delegate: self)
+
+    func getPrevOf(_ url: URL?, verbose: Bool = false) async throws -> URL? {
+        try await self.db.getPrevAudioURLOf(url, verbose: verbose)
     }
-    
+
     func getTotalCount() async -> Int {
         await self.db.getTotalOfAudio()
     }
-    
+
     func getStorageRoot() async -> URL {
-        self.disk.root
+        self.disk
     }
-    
+
+    func isLiked(_ url: URL) async -> Bool {
+        await self.db.isLiked(url)
+    }
+
+    func like(_ url: URL?, liked: Bool) async {
+        guard let url = url else { return }
+        
+        if liked {
+            os_log("\(self.t)👍 Like \(url.lastPathComponent)")
+            await self.db.like(url)
+        } else {
+            os_log("\(self.t)👎 Dislike \(url.lastPathComponent)")
+            await self.db.dislike(url)
+        }
+    }
+
     func sort(_ sticky: AudioModel?, reason: String) async {
-        await self.db.sort(sticky, reason: reason)
+        await self.db.sort(sticky?.url, reason: reason)
     }
 
     func sort(_ url: URL?, reason: String) async {
@@ -94,45 +93,44 @@ class AudioDB: ObservableObject, SuperEvent, SuperLog {
     }
 
     func sortRandom(_ sticky: AudioModel?, reason: String, verbose: Bool) async throws {
-        try await self.db.sortRandom(sticky, reason: reason, verbose: verbose)
+        try await self.db.sortRandom(sticky?.url, reason: reason, verbose: verbose)
     }
 
     func sortRandom(_ url: URL?, reason: String, verbose: Bool) async throws {
         try await self.db.sortRandom(url, reason: reason, verbose: verbose)
     }
-    
+
     func toggleLike(_ url: URL) async throws {
         try await self.db.toggleLike(url)
     }
-}
 
-extension AudioDB: DiskDelegate {
-    public func onUpdate(_ items: DiskFileGroup) async {
-        os_log("\(self.t)🍋🍋🍋 OnDiskUpdate")
-        
-        await self.db.sync(items)
+    func makeMonitor() -> Cancellable {
+        self.disk.onDirectoryChanged(verbose: true, caller: self.className, { items, isFirst in
+            Task {
+                self.emitDBSyncing(items)
+                await self.db.sync(items, verbose: true, isFirst: isFirst)
+                self.emitDBSynced()
+            }
+        })
     }
 }
 
-extension AudioDB: PlayAssetDelegate {
-    func getPlatformImage() async throws -> MagicKit.PlatformImage? {
-        nil
+// MARK: Emit
+
+extension AudioDB {
+    func emitDBSyncing(_ items: [MetaWrapper]) {
+        self.emit(name: .dbSyncing, object: self, userInfo: ["items": items])
     }
     
-    func onLikeChange(like: Bool, asset: PlayAsset) async throws {
-        os_log("\(self.t)🍋🍋🍋 OnLikeChange")
-        
-        try await self.db.updateLike(asset.url, like: like)
+    func emitDBSynced() {
+        self.emit(name: .dbSynced, object: nil)
     }
-}
-
-extension Notification.Name {
-    static let audioDeleted = Notification.Name("audioDeleted")
 }
 
 // MARK: Event
 
 extension Notification.Name {
+    static let audioDeleted = Notification.Name("audioDeleted")
     static let dbSyncing = Notification.Name("dbSyncing")
     static let dbSynced = Notification.Name("dbSynced")
     static let DBSorting = Notification.Name("DBSorting")

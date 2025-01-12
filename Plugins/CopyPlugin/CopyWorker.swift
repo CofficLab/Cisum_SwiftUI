@@ -1,39 +1,42 @@
 import Foundation
 import MagicKit
-import MagicUI
+
 import OSLog
 
+@MainActor
 class CopyWorker: SuperLog, SuperThread, ObservableObject {
-    static let emoji = "👷"
+    nonisolated static let emoji = "👷"
 
     let fm = FileManager.default
     let db: CopyDB
     var running = false
+    let verbose: Bool
 
     init(db: CopyDB, verbose: Bool = false) {
+        self.verbose = verbose
+
         if verbose {
             os_log("\(Self.i)")
         }
 
         self.db = db
-        self.bg.async {
-            self.run()
+        Task { [weak self] in
+            await self?.run()
         }
     }
 
     func append(_ urls: [URL], folder: URL) {
-        Task {
+        Task { [weak self] in
+            guard let self else { return }
             for url in urls {
                 await db.newCopyTask(url, destination: folder)
             }
 
-            self.run()
+            await self.run()
         }
     }
 
-    func run() {
-        let verbose = false
-
+    func run() async {
         if running {
             return
         }
@@ -44,45 +47,41 @@ class CopyWorker: SuperLog, SuperThread, ObservableObject {
             os_log("\(self.t)🛫🛫🛫 Run")
         }
 
-        Task {
-            let tasks = await self.db.allCopyTasks()
+        let tasks = await db.allCopyTaskDTOs()
 
-            if tasks.isEmpty {
-                self.running = false
-
-                if verbose {
-                    os_log("\(self.t)🎉🎉🎉 Done")
-                }
-
-                return
+        if tasks.isEmpty {
+            self.running = false
+            if verbose {
+                os_log("\(self.t)🎉🎉🎉 Done")
             }
+            return
+        }
 
-            await withTaskGroup(of: Void.self) { group in
-                for task in tasks {
-                    group.addTask {
-                        do {
-                            let url = task.url
-                            let destination = task.destination.appendingPathComponent(url.lastPathComponent)
+        await withTaskGroup(of: Void.self) { group in
+            for task in tasks {
+                group.addTask {
+                    do {
+                        let url = task.url
+                        let destination = task.destination.appendingPathComponent(url.lastPathComponent)
 
-                            try await url.copyTo(destination) { progress in
-                                if verbose {
-                                    os_log("\(self.t)📊 iCloud download \(url.lastPathComponent): \(Int(progress))%")
-                                }
-                            }
-
-                            if verbose {
-                                os_log("\(self.t)🎉 Successfully copied iCloud file -> \(url.lastPathComponent)")
-                            }
-
-                            await self.db.deleteCopyTasks([url])
-                        } catch let e {
-                            await self.db.setTaskError(task, e)
+                        if self.verbose {
+                            os_log("\(self.t)🍋🍋🍋 Copying iCloud file -> \(url.lastPathComponent)")
                         }
+
+                        try await url.copyTo(destination, verbose: false, caller: self.className)
+
+                        if self.verbose {
+                            os_log("\(self.t)🎉🎉🎉 Successfully copied iCloud file -> \(url.lastPathComponent)")
+                        }
+
+                        await self.db.deleteCopyTasks([url])
+                    } catch let e {
+                        await self.db.setTaskError(url: task.url, error: e.localizedDescription)
                     }
                 }
             }
-
-            self.running = false
         }
+
+        self.running = false
     }
 }

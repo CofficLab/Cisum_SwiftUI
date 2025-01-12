@@ -14,7 +14,7 @@ typealias AppOrNotification = UIApplication
 
 class AppDelegate: NSObject, ApplicationDelegate {
     var verbose = false
-    static var emoji: String = "🍎" 
+    static let emoji: String = "🍎" 
     var queue = DispatchQueue(label: "AppDelegate", qos: .background)
 
     func applicationWillHide(_ notification: Notification) {

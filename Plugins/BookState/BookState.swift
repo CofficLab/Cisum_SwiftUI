@@ -45,7 +45,7 @@ class BookState {
 // MARK: Descriptor
 
 extension BookState {
-    static var descriptorAll = FetchDescriptor(predicate: #Predicate<BookState> { _ in
+    static let descriptorAll = FetchDescriptor(predicate: #Predicate<BookState> { _ in
         return true
     }, sortBy: [])
     

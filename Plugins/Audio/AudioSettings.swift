@@ -1,37 +1,34 @@
-import SwiftUI
 import MagicKit
-import MagicUI
+import SwiftUI
 
 struct AudioSettings: View, SuperSetting, SuperLog {
-    static let emoji = "🔊"
+    nonisolated static let emoji = "🔊"
     @EnvironmentObject var audioManager: AudioProvider
-    
+
     @State var diskSize: String?
+    @State var description: String = ""
 
     var body: some View {
-        makeSettingView(
-            title: "\(Self.emoji) 歌曲仓库目录",
-            content: {
-                if audioManager.disk is CloudStorage {
-                    Text("是 iCloud 云盘目录，会保持同步")
-                } else {
-                    Text("是本地目录，不会同步")
-                }
-            },
-            trailing: {
+        MagicSettingSection {
+            MagicSettingRow(title: "歌曲仓库", description: description, icon: .iconMusicLibrary, content: {
                 HStack {
                     if let diskSize = diskSize {
                         Text(diskSize)
                     }
                     if Config.isDesktop {
-                        BtnOpenFolder(url: audioManager.disk.getRoot().url)
-                            .labelStyle(.iconOnly)
+                        audioManager.disk.makeOpenButton()
                     }
                 }
+
+            })
+            .task {
+                diskSize = audioManager.disk.getSizeReadable()
+                if audioManager.disk.isiCloud {
+                    description = "是 iCloud 云盘目录，会保持同步"
+                } else {
+                    description = "是本地目录，不会同步"
+                }
             }
-        )
-        .task {
-            diskSize = audioManager.disk.getFileSizeReadable()
         }
     }
 }
@@ -41,5 +38,5 @@ struct AudioSettings: View, SuperSetting, SuperLog {
         SettingView()
             .background(.background)
     }
-        .frame(height: 1200)
+    .frame(height: 1200)
 }

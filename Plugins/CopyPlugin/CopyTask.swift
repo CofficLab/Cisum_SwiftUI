@@ -1,11 +1,11 @@
 import Foundation
 import SwiftData
 import MagicKit
-import MagicUI
+
 
 @Model
-class CopyTask: FileBox {
-    static var emoji: String = "🍁"
+class CopyTask {
+    static let emoji: String = "🍁"
     
     var url: URL
     var destination: URL
@@ -14,13 +14,13 @@ class CopyTask: FileBox {
     var isRunning: Bool = false
     
     var title: String { url.lastPathComponent }
-    var time: String { Date.nowWithCommonFormat() }
+    var time: String { Date.now }
     var message: String {
         if isRunning {
             return "进行中"
         }
         
-        if self.isDownloading {
+        if self.url.isDownloading {
             return "正在从 iCloud 下载"
         }
     
@@ -38,4 +38,17 @@ class CopyTask: FileBox {
 
 extension CopyTask: Identifiable {
     var id: PersistentIdentifier { persistentModelID }
+}
+
+// 添加一个新的值类型结构体用于数据传输
+struct CopyTaskDTO: Sendable {
+    let url: URL
+    let destination: URL
+    let error: String
+    
+    init(from model: CopyTask) {
+        self.url = model.url
+        self.destination = model.destination
+        self.error = model.error
+    }
 }

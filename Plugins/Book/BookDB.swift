@@ -1,54 +1,84 @@
 import Foundation
+import Combine
 import MagicKit
-import MagicUI
+
 import OSLog
 
+@MainActor
 class BookDB: ObservableObject, SuperEvent, SuperLog {
-    static var emoji = "📖"
+    nonisolated static let emoji = "📖"
     
-    var db: BookRecordDB
-    var disk: any SuperStorage
-    let worker: BookWorker
+    private let db: BookRecordDB
+    private var disk: URL
+    private let verbose: Bool
+    private var monitor: Cancellable? = nil
     
-    init(db: BookRecordDB, disk: any SuperStorage, verbose: Bool) {
+    init(disk: URL, verbose: Bool) throws {
         if verbose {
             os_log("\(Self.i)BookDB")
         }
 
-        self.db = db
+        self.verbose = verbose
+        self.db = BookRecordDB(try BookConfig.getContainer(), reason: "BookDB")
         self.disk = disk
-        self.worker = BookWorker(db: db)
-
-        Task {
-            self.worker.runJobs()
-            await disk.watch(reason: "AudioDB.init", verbose: true)
-        }
+        self.monitor = self.makeMonitor()
+    }
+    
+    func getRootBooks() async -> [BookModel] {
+        let urls:[URL] = await self.db.getBooks()
+        
+        return urls.map{BookModel(url: $0)}
     }
 
-    func getRootBooks() async -> [Book] {
-        (await self.db.getBooksOfCollectionType()).map { book in
-            book.setDB(self)
-            return book
-        }
+    func getRootBookURLs() async -> [URL] {
+        await self.db.getBooks()
     }
     
     func getTotal() async -> Int {
         await self.getRootBooks().count
     }
     
-    func delete(_ book: Book, verbose: Bool) async {
-        try? self.disk.deleteFile(book.url)
-        self.emit(.audioDeleted)
+    func delete(_ book: BookModel, verbose: Bool) async {
+//        try? self.disk.deleteFile(book.url)
+//        self.emit(.audioDeleted)
     }
     
-    func download(_ book: Book, verbose: Bool) async throws {
-        try await self.disk.download(book.url, reason: "BookDB.download", verbose: verbose)
+    func download(_ book: BookModel, verbose: Bool) async throws {
+//        try await self.disk.download(book.url, reason: "BookDB.download", verbose: verbose)
     }
     
-    func find(_ url: URL) async -> Book? {
-        let book = await self.db.findBook(url)
-        book?.setDB(self)
-        
-        return book
+    func find(_ url: URL) async -> URL? {
+        await self.db.hasBook(url) ? url : nil
     }
+    
+    func makeMonitor() -> Cancellable {
+        self.disk.onDirectoryChanged(verbose: true, caller: self.className, { items, isFirst in
+            Task {
+                os_log("\(self.t)🍋🍋🍋 OnDiskUpdate")
+                self.emitDBSyncing(items)
+                await self.db.sync(items, verbose: true, isFirst: isFirst)
+                self.emitDBSynced()
+                os_log("\(self.t)✅✅✅ OnDBSynced")
+            }
+        })
+    }
+}
+
+// MARK: Emit
+
+extension BookDB {
+    func emitDBSyncing(_ items: [MetaWrapper]) {
+        self.emit(name: .bookDBSyncing, object: self, userInfo: ["items": items])
+    }
+    
+    func emitDBSynced() {
+        self.emit(name: .bookDBSynced, object: nil)
+    }
+}
+
+// MARK: Event
+
+extension Notification.Name {
+    static let bookDBSyncing = Notification.Name("bookDBSyncing")
+    static let bookDBSynced = Notification.Name("bookDBSynced")
 }

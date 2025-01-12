@@ -1,16 +1,24 @@
 import Foundation
 import MagicKit
-import MagicUI
+
 import OSLog
 import SwiftData
 import SwiftUI
 
+@MainActor
 enum Config: SuperLog {
-    static var emoji = "🧲"
+    nonisolated static let emoji = "🧲"
     static let id = "com.yueyi.cisum"
-    static let fm = FileManager.default
     static let logger = Logger.self
-    static var maxAudioCount = 5
+    static let maxAudioCount = 5
+    static let fm = FileManager.default
+    static let appSupportDir: URL? = MagicApp.getAppSpecificSupportDirectory()
+    static let localContainer: URL? = MagicApp.getContainerDirectory()
+    static let localDocumentsDir: URL? = MagicApp.getDocumentsDirectory()
+    static let cloudDocumentsDir: URL? = MagicApp.getCloudDocumentsDirectory()
+    static let databaseDir: URL = MagicApp.getDatabaseDirectory()
+    static let containerIdentifier = "iCloud.yueyi.cisum"
+    static let dbDirName = debug ? "db_debug" : "db_production"
     static let supportedExtensions = [
         "mp3",
         "m4a",
@@ -26,12 +34,12 @@ enum Config: SuperLog {
         #endif
     }
 
-    static var isDebug: Bool {
-        debug
+    static var isDebug: Bool { debug }
+    
+    static var rootBackground: some View {
+        MagicBackground.mint
     }
-
-    // MARK: UUID
-
+    
     @AppStorage("App.UUID")
     static var uuid: String = ""
 
@@ -41,61 +49,24 @@ enum Config: SuperLog {
         }
 
         uuid = UUID().uuidString
-
         return uuid
     }
 
-    /// 封面图文件夹
-    static let coversDirName = "covers"
-
-    static let appSupportDir = fm.urls(for: .applicationSupportDirectory, in: .userDomainMask).last
-    static let localContainer: URL? = localDocumentsDir?.deletingLastPathComponent()
-    static let localDocumentsDir = fm.urls(for: .documentDirectory, in: .userDomainMask).first
-
-    // MARK: iCloud 容器里的 Documents
-
-    static var cloudDocumentsDir: URL? = fm.url(forUbiquityContainerIdentifier: containerIdentifier)?.appendingPathComponent("Documents")
-
-    static var coverDir: URL {
-        if let localDocumentsDir = Config.localDocumentsDir {
-            return localDocumentsDir.appendingPathComponent(coversDirName)
-        }
-
-        fatalError()
+    static func getDBRootDir() throws -> URL {
+        try Config.databaseDir
+            .appendingPathComponent(dbDirName, isDirectory: true)
+            .createIfNotExist()
     }
-
+    
     static func getPlugins() -> [SuperPlugin] {
         return [
             WelcomePlugin(),
             SettingPlugin(),
-            DebugPlugin(),
             AudioPlugin(),
             CopyPlugin(),
 //            BookPlugin()
-//            ResetPlugin()
+            ResetPlugin()
         ]
-    }
-
-    static let containerIdentifier = "iCloud.yueyi.cisum"
-
-    static let dbDirName = debug ? "db_debug" : "db_production"
-
-    static func getDBRootDir() -> URL? {
-        guard let url = Config.appSupportDir?
-            .appendingPathComponent("Cisum_Database")
-            .appendingPathComponent(dbDirName) else { return nil }
-
-        // 如果目录不存在则创建
-        if !fm.fileExists(atPath: url.path) {
-            os_log("\(self.t) Creating database directory: \(url.path)")
-
-            try? FileManager.default.createDirectory(
-                at: url,
-                withIntermediateDirectories: true
-            )
-        }
-
-        return url
     }
 }
 

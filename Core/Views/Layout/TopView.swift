@@ -1,10 +1,10 @@
 import SwiftUI
 
 struct TopView: View {
-    @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var man: PlayMan
     @EnvironmentObject var p: PluginProvider
 
-    var asset: PlayAsset? { playMan.asset }
+    var asset: URL? { man.currentURL }
 
     var body: some View {
         HStack {
@@ -15,11 +15,10 @@ struct TopView: View {
             Spacer()
             if let asset = asset {
                 HStack {
-                    BtnLike(autoResize: false)
+                    man.makeLikeButton()
                     if Config.isDesktop {
-                        BtnShowInFinder(url: asset.url, autoResize: false)
+                        asset.makeOpenButton()
                     }
-                    BtnDel(assets: [asset], autoResize: false)
                 }
             }
         }

@@ -1,5 +1,5 @@
 import MagicKit
-import MagicUI
+
 import SwiftUI
 
 struct AudioDBTips: View {
@@ -11,7 +11,7 @@ struct AudioDBTips: View {
     }
 
     var body: some View {
-        MagicCard(background: MagicBackground.techGradient) {
+        MagicCard(background: MagicBackground.mountainStream) {
             VStack {
                 VStack(spacing: 20) {
                     HStack {
@@ -32,7 +32,7 @@ struct AudioDBTips: View {
 
                         Button(
                             action: {
-                                audioManager.disk.root.openFolder()
+                                audioManager.disk.openFolder()
                             },
                             label: {
                                 Label(

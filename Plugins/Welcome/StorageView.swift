@@ -1,10 +1,10 @@
 import MagicKit
-import MagicUI
+
 import OSLog
 import SwiftUI
 
 struct StorageView: View, SuperSetting, SuperLog {
-    static var emoji: String = "🍴"
+    nonisolated static let emoji = "🍴"
 
     @EnvironmentObject var cloudManager: CloudProvider
     @EnvironmentObject var c: ConfigProvider
@@ -89,7 +89,7 @@ struct StorageView: View, SuperSetting, SuperLog {
                 if let root = storageRoot {
                     FileSizeView(url: root)
                         .id(root.path)
-                    BtnOpenFolder(url: root).labelStyle(.iconOnly)
+                    root.makeOpenButton()
                 }
             }
         }

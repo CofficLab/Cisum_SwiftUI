@@ -1,15 +1,16 @@
 import Foundation
 import MagicKit
-import MagicUI
+
 import OSLog
 import SwiftData
 import SwiftUI
+import MagicPlayMan
 
 /**
  记录一本有声书的数据
  */
 @Model
-class Book: SuperLog {
+class BookModel: SuperLog {
     static let emoji = "📖"
     @Transient var db: BookDB?
 
@@ -23,19 +24,22 @@ class Book: SuperLog {
     var order: Int = 0
     var coverData: Data?
     var hasGetCover = false
+    
+    var title: String { bookTitle }
 
     @Relationship(deleteRule: .noAction)
-    var parent: Book?
+    var parent: BookModel?
 
-    @Relationship(deleteRule: .noAction, inverse: \Book.parent)
-    var childBooks: [Book]?
+    @Relationship(deleteRule: .noAction, inverse: \BookModel.parent)
+    var childBooks: [BookModel]?
 
     init(url: URL, currentURL: URL? = nil) {
         self.url = url
         self.currentURL = currentURL
-        self.bookTitle = self.title
-        self.isCollection = self.isFolder()
-        self.parentBookURL = self.parentURL
+        self.bookTitle = self.url.title
+        self.isCollection = self.url.isFolder
+        self.parentBookURL = self.url.getParent()
+        self.childCount = self.url.getChildren().count
     }
 
     func getParentURL() -> URL? {
@@ -51,45 +55,12 @@ class Book: SuperLog {
     }
 }
 
-extension Book: SuperCover {
-    var coverFolder: URL { BookConfig.getCoverFolderUrl() }
-    var defaultImage: Image {
-        #if os(macOS)
-            Image(nsImage: NSImage(named: "DefaultAlbum")!)
-        #else
-            Image(uiImage: UIImage(imageLiteralResourceName: "DefaultAlbum"))
-        #endif
-    }
-}
-
-// MARK: Transform
-
-extension Book {
-    func toPlayAsset(verbose: Bool = false) -> PlayAsset {
-        if verbose {
-            os_log("\(self.t)ToPlayAsset: title(\(self.title))")
-        }
-
-        return PlayAsset(url: self.url, like: false, delegate: self)
-    }
-
-    static func fromDiskFile(_ file: DiskFile) -> Book {
-        file.toBook()
-    }
-}
-
-extension Book: PlayAssetDelegate {
-    func onLikeChange() {
-        
-    }
-}
-
 // MARK: Cover
 
-extension Book {
+extension BookModel {
     func getBookCoverFromDB(verbose: Bool = false) async -> Image? {
         if verbose {
-            os_log("\(self.t)GetBookCover for \(self.title)")
+            os_log("\(self.t)GetBookCover for \(self.bookTitle)")
         }
 
         if let coverData = self.coverData {
@@ -114,39 +85,39 @@ extension Book {
 
 // MARK: Descriptor
 
-extension Book {
-    static var descriptorIsFolder = FetchDescriptor(predicate: #Predicate<Book> { book in
+extension BookModel {
+    static let descriptorIsFolder = FetchDescriptor(predicate: #Predicate<BookModel> { book in
         book.isCollection == true
     }, sortBy: [])
 
-    static var descriptorNotFolder = FetchDescriptor(predicate: #Predicate<Book> { book in
+    static let descriptorNotFolder = FetchDescriptor(predicate: #Predicate<BookModel> { book in
         book.isCollection == false
     }, sortBy: [])
 
-    static var descriptorAll = FetchDescriptor(predicate: #Predicate<Book> { _ in
+    static let descriptorAll = FetchDescriptor(predicate: #Predicate<BookModel> { _ in
         true
     }, sortBy: [])
 
-    static func descriptorOf(_ url: URL) -> FetchDescriptor<Book> {
-        FetchDescriptor(predicate: #Predicate<Book> { s in
+    static func descriptorOf(_ url: URL) -> FetchDescriptor<BookModel> {
+        FetchDescriptor(predicate: #Predicate<BookModel> { s in
             s.url == url
         }, sortBy: [])
     }
 
-    static func descriptorOfParentBookURL(_ url: URL) -> FetchDescriptor<Book> {
-        FetchDescriptor(predicate: #Predicate<Book> { s in
+    static func descriptorOfParentBookURL(_ url: URL) -> FetchDescriptor<BookModel> {
+        FetchDescriptor(predicate: #Predicate<BookModel> { s in
             s.parentBookURL == url
         }, sortBy: [])
     }
 
-    static func descriptorOfHasParentBookURL() -> FetchDescriptor<Book> {
-        FetchDescriptor(predicate: #Predicate<Book> { s in
+    static func descriptorOfHasParentBookURL() -> FetchDescriptor<BookModel> {
+        FetchDescriptor(predicate: #Predicate<BookModel> { s in
             s.parentBookURL != nil
         }, sortBy: [])
     }
 
-    static func descriptorOfNeedUpdateParent() -> FetchDescriptor<Book> {
-        FetchDescriptor(predicate: #Predicate<Book> { s in
+    static func descriptorOfNeedUpdateParent() -> FetchDescriptor<BookModel> {
+        FetchDescriptor(predicate: #Predicate<BookModel> { s in
             s.parentBookURL != nil && s.parent == nil
         }, sortBy: [])
     }

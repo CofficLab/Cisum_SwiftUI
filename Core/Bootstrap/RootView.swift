@@ -1,14 +1,16 @@
 import AlertToast
 import MagicKit
-import MagicUI
+import MagicPlayMan
 import OSLog
 import SwiftUI
 
 struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content: View {
+    nonisolated static var emoji: String { "🌳" }
+    
     var content: Content
-    static var emoji: String { "🌳" }
     let s = StoreProvider()
     let cloudProvider = CloudProvider()
+    private let playManWrapper: PlayManWrapper
 
     @State var isDropping: Bool = false
     @State var error: Error? = nil
@@ -18,17 +20,20 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     @StateObject var m = MessageProvider()
     @StateObject var p = PluginProvider()
     @StateObject var a = AppProvider()
-    @StateObject var man: PlayMan = PlayMan(delegate: nil)
+    @StateObject var man = MagicPlayMan(playlistEnabled: false, verbose: false)
     @StateObject var c = ConfigProvider()
 
     init(@ViewBuilder content: () -> Content) {
+        let man = MagicPlayMan(playlistEnabled: false)
         self.content = content()
+        self._man = StateObject(wrappedValue: man)
+        self.playManWrapper = PlayManWrapper(playMan: man)
     }
 
     var body: some View {
         Group {
             if self.loading {
-                ProgressView()
+                LaunchView()
             } else if a.isResetting {
                 Text("正在重置")
             } else {
@@ -46,9 +51,16 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
 
                                 ToolbarItemGroup(placement: .cancellationAction) {
                                     Spacer()
-                                    if let asset = man.asset {
-                                        BtnShowInFinder(url: asset.url, autoResize: false)
-                                    }
+
+                                    man.makeLogButton()
+                                        .magicShape(.circle)
+                                        .magicShapeVisibility(.onHover)
+                                        .magicSize(.small)
+                                        .onlyDebug()
+                                    man.makeLikeButton()
+                                        .magicShape(.circle)
+                                        .magicShapeVisibility(.onHover)
+                                        .magicSize(.small)
 
                                     if man.asset != nil {
                                         ForEach(p.getToolBarButtons(), id: \.id) { item in
@@ -114,9 +126,6 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
         .background(Config.rootBackground)
         .onReceive(nc.publisher(for: NSUbiquitousKeyValueStore.didChangeExternallyNotification), perform: onCloudAccountStateChanged)
         .onAppear(perform: onAppear)
-        .onDisappear(perform: onDisappear)
-        .onChange(of: man.asset, onPlayAssetChange)
-        .onChange(of: man.playing, onPlayingChange)
         .onChange(of: c.storageLocation, onStorageLocationChange)
     }
 
@@ -136,17 +145,16 @@ extension RootView {
     }
 
     func onStorageLocationChange() {
-        os_log("\(self.t)🍋🍋🍋 Storage Location Change")
-
         if c.storageLocation == nil {
             a.showSheet = true
-
             return
         }
 
-        for plugin in p.plugins {
-            Task {
-                try await plugin.onStorageLocationChange(storage: c.storageLocation)
+        Task {
+            do {
+                try await p.handleStorageLocationChange(storage: c.storageLocation)
+            } catch {
+                m.error(error)
             }
         }
     }
@@ -159,120 +167,61 @@ extension RootView {
     }
 
     func onAppear() {
-        man.delegate = self
-
-        Task(priority: .userInitiated) {
+        Task {
             do {
                 try Config.getPlugins().forEach({
                     try self.p.append($0, reason: self.className)
                 })
 
                 try? self.p.restoreCurrent()
-
-                for plugin in p.plugins {
-                    try await plugin.onWillAppear(playMan: man, currentGroup: p.current, storage: c.getStorageLocation())
-                }
+                try await p.handleOnAppear(playMan: playManWrapper, current: p.current, storage: c.getStorageLocation())
 
                 a.showSheet = p.getSheetViews(storage: c.storageLocation).isNotEmpty
 
-                #if os(iOS)
-                    self.main.async {
-                        UIApplication.shared.beginReceivingRemoteControlEvents()
+//                #if os(iOS)
+//                    self.main.async {
+//                        UIApplication.shared.beginReceivingRemoteControlEvents()
+//                    }
+//                #endif
+
+                self.man.subscribe(
+                    name: self.className,
+                    onStateChanged: { state in
+                        
+                        os_log("\(self.t)🍋🍋🍋 onStateChanged: \(state.stateText)")
+                    },
+                    onPreviousRequested: { asset in
+                        Task {
+                            try? await self.p.onPlayPrev(current: asset, mode: man.playMode, man: playManWrapper)
+                        }
+                    },
+                    onNextRequested: { asset in
+                        Task {
+                            try? await self.p.onPlayNext(current: asset, mode: man.playMode, man: playManWrapper)
+                        }
+                    },
+                    onLikeStatusChanged: { asset, like in
+                        Task {
+                            try? await self.p.onLike(asset: asset, liked: like)
+                        }
+                    },
+                    onPlayModeChanged: { mode in
+                        Task {
+                            try? await self.p.onPlayModeChange(mode: mode, asset: man.currentAsset)
+                        }
+                    },
+                    onCurrentURLChanged: { url in
+                        Task {
+                            try? await self.p.onCurrentURLChanged(url: url)
+                        }
                     }
-                #endif
+                )
             } catch let e {
-                if !(e is PlayManError) {
-                    self.error = e
-                }
+                self.error = e
             }
 
             self.loading = false
             os_log("\(self.t)👌👌👌 Ready")
-        }
-    }
-
-    func onDisappear() {
-        p.plugins.forEach({
-            $0.onDisappear()
-        })
-    }
-
-    func onPlayManStateChange() {
-        for plugin in p.plugins {
-            Task {
-                try await plugin.onPlayStateUpdate()
-            }
-        }
-    }
-
-    func onPlayAssetChange() {
-        os_log("\(self.t)🍋🍋🍋 Play Asset Change")
-
-        Task {
-            if let asset = man.asset, asset.isNotDownloaded {
-                do {
-                    try await asset.download()
-                    os_log("\(self.t)onPlayAssetUpdate: 开始下载")
-                } catch let e {
-                    os_log(.error, "\(self.t)onPlayAssetUpdate: \(e.localizedDescription)")
-                }
-            }
-        }
-
-        for plugin in p.plugins {
-            Task {
-                try await plugin.onPlayAssetUpdate(asset: man.asset, currentGroup: p.current)
-            }
-        }
-    }
-
-    func onPlayingChange() {
-        Task {
-            for plugin in p.plugins {
-                if man.playing {
-                    plugin.onPlay()
-                } else {
-                    await plugin.onPause(playMan: man)
-                }
-            }
-        }
-    }
-}
-
-// MARK: PlayManDelegate
-
-extension RootView: PlayManDelegate {
-    func onPlayPrev(current: PlayAsset?) {
-        Task {
-            for plugin in p.plugins {
-                do {
-                    try await plugin.onPlayPrev(playMan: man, current: current, currentGroup: p.current, verbose: true)
-                } catch let e {
-                    m.error(e)
-                }
-            }
-        }
-    }
-
-    func onPlayNext(current: PlayAsset?, mode: PlayMode) async {
-        for plugin in p.plugins {
-            do {
-                try await plugin.onPlayNext(playMan: man, current: current, currentGroup: p.current, verbose: true)
-            } catch let e {
-                m.alert(e.localizedDescription)
-            }
-        }
-    }
-
-    func onPlayModeChange(mode: PlayMode) {
-        Task {
-            for plugin in p.plugins {
-                do {
-                    try await plugin.onPlayModeChange(mode: mode, asset: man.asset)
-                } catch let e {
-                    m.error(e)
-                }
-            }
         }
     }
 }

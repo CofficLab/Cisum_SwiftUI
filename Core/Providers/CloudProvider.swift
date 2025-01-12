@@ -2,14 +2,14 @@ import AVKit
 import Combine
 import Foundation
 import MagicKit
-import MagicUI
+
 import MediaPlayer
 import OSLog
 import SwiftUI
 
 @MainActor
-class CloudProvider: NSObject, ObservableObject, @preconcurrency SuperLog, SuperThread, SuperEvent {
-    static let emoji: String = "☃️"
+class CloudProvider: NSObject, ObservableObject, SuperLog, SuperThread, SuperEvent {
+    nonisolated static let emoji = "☃️"
     
     @Published private(set) var isSignedIn: Bool?
     @Published private(set) var accountStatus: String = ""
@@ -22,23 +22,27 @@ class CloudProvider: NSObject, ObservableObject, @preconcurrency SuperLog, Super
         return "未知"
     }
     
-    override init() {
+    init(verbose: Bool = false) {
         super.init()
-        os_log("\(self.i)")
+        
+        if verbose {
+            os_log("\(Self.i)")
+        }
+        
         updateAccountStatus()
         
         // 监听 iCloud 状态变化
-        nc.addObserver(
-            self,
-            selector: #selector(handleAccountChange),
-            name: NSNotification.Name.CKAccountChanged,
-            object: nil
-        )
+//        nc.addObserver(
+//            self,
+//            selector: #selector(handleAccountChange),
+//            name: NSNotification.Name.CKAccountChanged,
+//            object: nil
+//        )
     }
     
-    private func updateAccountStatus(verbose: Bool = true) {
+    private func updateAccountStatus(verbose: Bool = false) {
         Task {
-            let status = FileManager.default.ubiquityIdentityToken != nil
+            let status = MagicApp.isICloudAvailable()
             await MainActor.run {
                 self.isSignedIn = status
                 self.accountStatus = status ? "已登录" : "未登录"

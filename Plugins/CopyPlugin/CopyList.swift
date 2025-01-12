@@ -2,10 +2,10 @@ import OSLog
 import SwiftData
 import SwiftUI
 import MagicKit
-import MagicUI
 
-struct CopyStatusView: View, SuperLog, SuperThread {
-    static let emoji = "📬"
+
+struct CopyList: View, SuperLog, SuperThread {
+    nonisolated static let emoji = "📬"
 
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var audioManager: AudioProvider
@@ -33,13 +33,16 @@ struct CopyStatusView: View, SuperLog, SuperThread {
         List(selection: $selection) {
             Section {
                 ForEach(tasks, id: \.url.relativeString) { task in
-                    CopyRow(task)
+                    task.url.makeMediaView()
+                        .magicShowDownloadButton(false)
+                        .magicDisableDownloadMonitor()
                 }
                 .onDelete(perform: deleteTasks)
             } header: {
                 listHeader
             }
         }
+        .frame(minWidth: 400)
     }
 
     private var listHeader: some View {
