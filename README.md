@@ -4,8 +4,7 @@
 
 Drop your audio files in, and let Cisum play and manage them for you.
 
-![Cisum](./docs/feature-3.png)
-![Cisum](./docs/feature-4.png)
+![Cisum](./docs/feature-3.png) ![Cisum](./docs/feature-4.png)
 
 ## About
 
@@ -27,6 +26,5 @@ We decided to make our own app to keep software simple and pure.
 
 ## Our Other Projects
 
-- [Cisum Flutter](https://github.com/CofficLab/CisumPlayer)
-- [macOS Network Control](https://github.com/CofficLab/TravelMode)
+- [macOS Network Control](https://github.com/CofficLab/Netto)
 - [Git-based Project Management Tool](https://github.com/CofficLab/GitOK)
