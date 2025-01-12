@@ -173,16 +173,14 @@ extension RootView {
                     try self.p.append($0, reason: self.className)
                 })
 
-                try? self.p.restoreCurrent()
+                try self.p.restoreCurrent()
                 try await p.handleOnAppear(playMan: playManWrapper, current: p.current, storage: c.getStorageLocation())
 
                 a.showSheet = p.getSheetViews(storage: c.storageLocation).isNotEmpty
 
-//                #if os(iOS)
-//                    self.main.async {
-//                        UIApplication.shared.beginReceivingRemoteControlEvents()
-//                    }
-//                #endif
+                #if os(iOS)
+                        UIApplication.shared.beginReceivingRemoteControlEvents()
+                #endif
 
                 self.man.subscribe(
                     name: self.className,
