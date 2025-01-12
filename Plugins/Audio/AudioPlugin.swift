@@ -1,6 +1,5 @@
 import Foundation
 import MagicKit
-
 import OSLog
 import SwiftData
 import SwiftUI
@@ -119,6 +118,8 @@ actor AudioPlugin: SuperPlugin, SuperLog {
         if verbose {
             os_log("\(self.a)with storage \(storage?.emojiTitle ?? "nil")")
         }
+        
+        info("init with storage  \(storage?.emojiTitle ?? "nil")")
 
         switch storage {
         case .local, .none:

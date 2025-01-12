@@ -1,11 +1,10 @@
 import SwiftUI
-import MagicPlayMan
 
 /**
  展示图书的章节
  */
 struct ChapterTile: View {
-    @EnvironmentObject var playMan: MagicPlayMan
+    @EnvironmentObject var playMan: PlayMan
     
     var file: URL
     

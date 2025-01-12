@@ -1,6 +1,4 @@
 import MagicKit
-import MagicPlayMan
-
 import OSLog
 import SwiftUI
 
@@ -8,7 +6,7 @@ import SwiftUI
  展示从数据库读取的图书数据
  */
 struct BookTile: View, SuperThread, SuperLog {
-    @EnvironmentObject var playMan: MagicPlayMan
+    @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var db: BookDB
 
     @State var state: BookState? = nil

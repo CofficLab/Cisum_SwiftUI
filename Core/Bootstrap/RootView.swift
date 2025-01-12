@@ -1,6 +1,5 @@
 import AlertToast
 import MagicKit
-import MagicPlayMan
 import OSLog
 import SwiftUI
 
@@ -20,11 +19,11 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     @StateObject var m = MessageProvider()
     @StateObject var p = PluginProvider()
     @StateObject var a = AppProvider()
-    @StateObject var man = MagicPlayMan(playlistEnabled: false, verbose: false)
+    @StateObject var man = PlayMan(playlistEnabled: false, verbose: false)
     @StateObject var c = ConfigProvider()
 
     init(@ViewBuilder content: () -> Content) {
-        let man = MagicPlayMan(playlistEnabled: false)
+        let man = PlayMan(playlistEnabled: false)
         self.content = content()
         self._man = StateObject(wrappedValue: man)
         self.playManWrapper = PlayManWrapper(playMan: man)
@@ -219,7 +218,9 @@ extension RootView {
             }
 
             self.loading = false
+            
             os_log("\(self.t)👌👌👌 Ready")
+            self.m.append("Ready")
         }
     }
 }

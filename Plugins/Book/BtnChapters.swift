@@ -1,11 +1,10 @@
 import OSLog
 import SwiftData
 import SwiftUI
-import MagicPlayMan
 
 struct BtnChapters: View {
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var playMan: MagicPlayMan
+    @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var m: MessageProvider
     @EnvironmentObject var db: DBSynced
 

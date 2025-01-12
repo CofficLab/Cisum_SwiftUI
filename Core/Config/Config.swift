@@ -1,6 +1,5 @@
 import Foundation
 import MagicKit
-
 import OSLog
 import SwiftData
 import SwiftUI
@@ -65,7 +64,8 @@ enum Config: SuperLog {
             AudioPlugin(),
             CopyPlugin(),
 //            BookPlugin()
-            ResetPlugin()
+            ResetPlugin(),
+            MessagePlugin()
         ]
     }
 }

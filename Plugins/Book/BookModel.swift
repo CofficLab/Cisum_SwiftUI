@@ -1,10 +1,8 @@
 import Foundation
 import MagicKit
-
 import OSLog
 import SwiftData
 import SwiftUI
-import MagicPlayMan
 
 /**
  记录一本有声书的数据

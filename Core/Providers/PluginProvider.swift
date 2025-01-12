@@ -1,7 +1,5 @@
 import Foundation
 import MagicKit
-import MagicPlayMan
-
 import OSLog
 import StoreKit
 import SwiftData
@@ -73,7 +71,7 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
     }
 
     func getToolBarButtons() -> [(id: String, view: AnyView)] {
-        return current?.addToolBarButtons() ?? []
+        return plugins.flatMap { $0.addToolBarButtons() }
     }
 
     func setCurrentGroup(_ plugin: SuperPlugin) throws {
@@ -220,9 +218,9 @@ enum PluginProviderError: Error, LocalizedError {
 
 @MainActor
 public class PlayManWrapper {
-    let playMan: MagicPlayMan
+    let playMan: PlayMan
 
-    init(playMan: MagicPlayMan) {
+    init(playMan: PlayMan) {
         self.playMan = playMan
     }
 

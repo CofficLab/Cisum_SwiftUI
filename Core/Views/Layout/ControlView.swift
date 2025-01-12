@@ -1,12 +1,11 @@
 import SwiftData
 import SwiftUI
-import MagicPlayMan
 import MagicKit
 
 struct ControlView: View {
     @EnvironmentObject var appManager: AppProvider
     @EnvironmentObject var message: MessageProvider
-    @EnvironmentObject var playMan: MagicPlayMan
+    @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var p: PluginProvider
 
     @State var showHeroView = true

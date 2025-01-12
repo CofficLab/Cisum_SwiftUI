@@ -10,8 +10,8 @@ class MessageProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
     nonisolated static let emoji = "📪"
     
     let maxMessageCount = 100
+    let logger = MagicLogger.shared
 
-    @Published var messages: [SmartMessage] = []
     @Published var alert: String?
     @Published var error: Error?
     @Published var toast: String?
@@ -54,10 +54,7 @@ class MessageProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
             assertionFailure("append called from background thread")
         }
 
-        self.messages.insert(SmartMessage(description: message, channel: channel, isError: isError), at: 0)
-        if self.messages.count > self.maxMessageCount {
-            self.messages.removeLast()
-        }
+        logger.info(message)
     }
 
     func done(_ message: String) {
@@ -110,7 +107,7 @@ class MessageProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
             assertionFailure("clearMessages called from background thread")
         }
 
-        self.messages = []
+        self.logger.clearLogs()
     }
 
     func error(_ error: Error) {
@@ -120,19 +117,6 @@ class MessageProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
 
         self.error = error
         self.showError = true
-    }
-
-    func getAllChannels() -> [String] {
-        let channels = Set(messages.map { $0.channel })
-        return Array(channels).sorted()
-    }
-
-    func getMessages(channel: String) -> [SmartMessage] {
-        if channel == "all" {
-            return messages
-        }
-
-        return messages.filter { $0.channel == channel }
     }
     
     func hub(_ title: String) {
