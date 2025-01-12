@@ -19,15 +19,16 @@
 		0B84A0AF2D2519490001BAF5 /* MagicKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0B84A0AE2D2519490001BAF5 /* MagicKit */; };
 		0B8583272D1EE8FE0035989F /* MagicKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0B8583262D1EE8FE0035989F /* MagicKit */; };
 		0B92ACCA2BBA80F300F1A74F /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 0B92ACC92BBA80F300F1A74F /* README.md */; };
-		0BA216942D32BA0500B3EB3F /* MagicAsset in Frameworks */ = {isa = PBXBuildFile; productRef = 0BA216932D32BA0500B3EB3F /* MagicAsset */; };
-		0BA216962D32BA0500B3EB3F /* MagicKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0BA216952D32BA0500B3EB3F /* MagicKit */; };
-		0BA216982D32BA0500B3EB3F /* MagicPlayMan in Frameworks */ = {isa = PBXBuildFile; productRef = 0BA216972D32BA0500B3EB3F /* MagicPlayMan */; };
 		0BB5871D2AD820FA0071AEBD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0BB5871C2AD820FA0071AEBD /* Assets.xcassets */; };
 		0BDA9C692D2578D300A99623 /* MagicKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0BDA9C682D2578D300A99623 /* MagicKit */; };
 		0BDA9C6B2D2578D300A99623 /* MagicPlayMan in Frameworks */ = {isa = PBXBuildFile; productRef = 0BDA9C6A2D2578D300A99623 /* MagicPlayMan */; };
 		0BDC79D12D282159008403FC /* MagicKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0BDC79D02D282159008403FC /* MagicKit */; };
 		0BDC79D32D282159008403FC /* MagicPlayMan in Frameworks */ = {isa = PBXBuildFile; productRef = 0BDC79D22D282159008403FC /* MagicPlayMan */; };
 		0BE048112D251B6E0012012C /* MagicKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0BE048102D251B6E0012012C /* MagicKit */; };
+		0BFE653D2D33C9CF00AB3FBF /* MagicAsset in Frameworks */ = {isa = PBXBuildFile; productRef = 0BFE653C2D33C9CF00AB3FBF /* MagicAsset */; };
+		0BFE653F2D33C9CF00AB3FBF /* MagicKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0BFE653E2D33C9CF00AB3FBF /* MagicKit */; };
+		0BFE65412D33C9CF00AB3FBF /* MagicPlayMan in Frameworks */ = {isa = PBXBuildFile; productRef = 0BFE65402D33C9CF00AB3FBF /* MagicPlayMan */; };
+		0BFE65432D33C9CF00AB3FBF /* MagicWeb in Frameworks */ = {isa = PBXBuildFile; productRef = 0BFE65422D33C9CF00AB3FBF /* MagicWeb */; };
 		F500793F2CA635B900C9D3D4 /* MagicKit in Frameworks */ = {isa = PBXBuildFile; productRef = F500793E2CA635B900C9D3D4 /* MagicKit */; };
 		F50859122D2CD6510089DC96 /* MagicKit in Frameworks */ = {isa = PBXBuildFile; productRef = F50859112D2CD6510089DC96 /* MagicKit */; };
 		F50859142D2CD6510089DC96 /* MagicPlayMan in Frameworks */ = {isa = PBXBuildFile; productRef = F50859132D2CD6510089DC96 /* MagicPlayMan */; };
@@ -75,21 +76,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				0B84A0AA2D25193B0001BAF5 /* MagicKit in Frameworks */,
-				0BA216982D32BA0500B3EB3F /* MagicPlayMan in Frameworks */,
+				0BFE65412D33C9CF00AB3FBF /* MagicPlayMan in Frameworks */,
 				F5883B9C2D2FC38C00BF4476 /* MagicPlayMan in Frameworks */,
 				0B4C5E912D313E98008A5248 /* MagicPlayMan in Frameworks */,
 				F5E5A8CD2D1E8BE80049945B /* MagicKit in Frameworks */,
 				F5C080282D31147600F67EBC /* MagicPlayMan in Frameworks */,
 				0B84A0AF2D2519490001BAF5 /* MagicKit in Frameworks */,
 				0BDC79D32D282159008403FC /* MagicPlayMan in Frameworks */,
-				0BA216942D32BA0500B3EB3F /* MagicAsset in Frameworks */,
+				0BFE653D2D33C9CF00AB3FBF /* MagicAsset in Frameworks */,
 				F5C0801E2D30F1EF00F67EBC /* MagicPlayMan in Frameworks */,
 				F5C2EB812D1AB51100798B46 /* MagicKit in Frameworks */,
 				0B4C5E9B2D3206F0008A5248 /* MagicPlayMan in Frameworks */,
 				F5C080232D30FE0E00F67EBC /* MagicPlayMan in Frameworks */,
 				F5AF31952D1B8D41000448F0 /* MagicKit in Frameworks */,
 				0B65818E2D251AB90092F21C /* MagicKit in Frameworks */,
-				0BA216962D32BA0500B3EB3F /* MagicKit in Frameworks */,
+				0BFE653F2D33C9CF00AB3FBF /* MagicKit in Frameworks */,
 				F5C2EB7E2D1AB49700798B46 /* AlertToast in Frameworks */,
 				0B382A9F2D1C2F3B0075391C /* AlertToast in Frameworks */,
 				0BDA9C692D2578D300A99623 /* MagicKit in Frameworks */,
@@ -106,6 +107,7 @@
 				F53ED8DA2D19098300F8E42D /* MagicKit in Frameworks */,
 				F500793F2CA635B900C9D3D4 /* MagicKit in Frameworks */,
 				F5C080212D30FE0E00F67EBC /* MagicKit in Frameworks */,
+				0BFE65432D33C9CF00AB3FBF /* MagicWeb in Frameworks */,
 				F5DCEB0C2D1E787600FB4F02 /* MagicKit in Frameworks */,
 				F5ADFF702D1AA25C003CF664 /* MagicKit in Frameworks */,
 				F50859122D2CD6510089DC96 /* MagicKit in Frameworks */,
@@ -200,9 +202,10 @@
 				0B4C5E902D313E98008A5248 /* MagicPlayMan */,
 				0B4C5E982D3206F0008A5248 /* MagicKit */,
 				0B4C5E9A2D3206F0008A5248 /* MagicPlayMan */,
-				0BA216932D32BA0500B3EB3F /* MagicAsset */,
-				0BA216952D32BA0500B3EB3F /* MagicKit */,
-				0BA216972D32BA0500B3EB3F /* MagicPlayMan */,
+				0BFE653C2D33C9CF00AB3FBF /* MagicAsset */,
+				0BFE653E2D33C9CF00AB3FBF /* MagicKit */,
+				0BFE65402D33C9CF00AB3FBF /* MagicPlayMan */,
+				0BFE65422D33C9CF00AB3FBF /* MagicWeb */,
 			);
 			productName = Cisum;
 			productReference = 0B1D5A4B2AB301AD0010DDF2 /* Cisum.app */;
@@ -236,7 +239,7 @@
 			mainGroup = 0B9C1C342AAF18FE001A26AF;
 			packageReferences = (
 				0B382A9D2D1C2F3B0075391C /* XCRemoteSwiftPackageReference "MagicMessage" */,
-				0BA216922D32BA0500B3EB3F /* XCRemoteSwiftPackageReference "MagicKit" */,
+				0BFE653B2D33C9CF00AB3FBF /* XCRemoteSwiftPackageReference "MagicKit" */,
 			);
 			productRefGroup = 0B9C1C3E2AAF18FE001A26AF /* Products */;
 			projectDirPath = "";
@@ -520,7 +523,7 @@
 				kind = branch;
 			};
 		};
-		0BA216922D32BA0500B3EB3F /* XCRemoteSwiftPackageReference "MagicKit" */ = {
+		0BFE653B2D33C9CF00AB3FBF /* XCRemoteSwiftPackageReference "MagicKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/CofficLab/MagicKit";
 			requirement = {
@@ -572,21 +575,6 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = MagicKit;
 		};
-		0BA216932D32BA0500B3EB3F /* MagicAsset */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 0BA216922D32BA0500B3EB3F /* XCRemoteSwiftPackageReference "MagicKit" */;
-			productName = MagicAsset;
-		};
-		0BA216952D32BA0500B3EB3F /* MagicKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 0BA216922D32BA0500B3EB3F /* XCRemoteSwiftPackageReference "MagicKit" */;
-			productName = MagicKit;
-		};
-		0BA216972D32BA0500B3EB3F /* MagicPlayMan */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 0BA216922D32BA0500B3EB3F /* XCRemoteSwiftPackageReference "MagicKit" */;
-			productName = MagicPlayMan;
-		};
 		0BDA9C682D2578D300A99623 /* MagicKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MagicKit;
@@ -606,6 +594,26 @@
 		0BE048102D251B6E0012012C /* MagicKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MagicKit;
+		};
+		0BFE653C2D33C9CF00AB3FBF /* MagicAsset */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0BFE653B2D33C9CF00AB3FBF /* XCRemoteSwiftPackageReference "MagicKit" */;
+			productName = MagicAsset;
+		};
+		0BFE653E2D33C9CF00AB3FBF /* MagicKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0BFE653B2D33C9CF00AB3FBF /* XCRemoteSwiftPackageReference "MagicKit" */;
+			productName = MagicKit;
+		};
+		0BFE65402D33C9CF00AB3FBF /* MagicPlayMan */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0BFE653B2D33C9CF00AB3FBF /* XCRemoteSwiftPackageReference "MagicKit" */;
+			productName = MagicPlayMan;
+		};
+		0BFE65422D33C9CF00AB3FBF /* MagicWeb */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0BFE653B2D33C9CF00AB3FBF /* XCRemoteSwiftPackageReference "MagicKit" */;
+			productName = MagicWeb;
 		};
 		F500793E2CA635B900C9D3D4 /* MagicKit */ = {
 			isa = XCSwiftPackageProductDependency;
