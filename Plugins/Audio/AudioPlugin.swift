@@ -45,7 +45,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
             os_log("\(self.t)🍋🍋🍋 AddDBView")
         }
 
-        return AnyView(AudioDBView(verbose: verbose, reason: self.className)
+        return AnyView(AudioDBView()
             .modelContainer(container)
             .environmentObject(audioDB)
             .environmentObject(audioProvider)

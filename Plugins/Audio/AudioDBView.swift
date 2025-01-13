@@ -13,29 +13,10 @@ struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
     @EnvironmentObject var s: StoreProvider
     @EnvironmentObject var db: AudioDB
 
-    @State var treeView = false
     @State var isDropping: Bool = false
-    @State var count: Int = 0
-    @State var loading: Bool = true
 
     nonisolated static let emoji = "🐘"
 
-    init(verbose: Bool, reason: String) {
-        if verbose {
-            os_log("\(Self.i) 🐛 \(reason)")
-        }
-    }
-
-    private func fetchDBCount() async -> Int {
-        let database = db
-        return await withCheckedContinuation { continuation in
-            Task {
-                let count = await database.getTotalCount()
-                continuation.resume(returning: count)
-            }
-        }
-    }
-    
     private func fetchStorageRoot() async -> URL {
         let database = db
         return await withCheckedContinuation { continuation in
@@ -47,26 +28,14 @@ struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
     }
 
     var body: some View {
-        ZStack {
-            if loading {
-                ProgressView()
-            } else {
-                VStack {
-                    AudioList(verbose: false, reason: self.className)
-                        .frame(maxHeight: .infinity)
-                }
-            }
-        }
-        .fileImporter(
-            isPresented: $app.isImporting,
-            allowedContentTypes: [.audio],
-            allowsMultipleSelection: true,
-            onCompletion: handleFileImport
-        )
-        .task {
-            self.count = await fetchDBCount()
-            self.loading = false
-        }
+        AudioList()
+            .frame(maxHeight: .infinity)
+            .fileImporter(
+                isPresented: $app.isImporting,
+                allowedContentTypes: [.audio],
+                allowsMultipleSelection: true,
+                onCompletion: handleFileImport
+            )
     }
 }
 
@@ -79,7 +48,7 @@ extension AudioDBView {
                 let storageRoot = await fetchStorageRoot()
                 self.emit(name: .CopyFiles, object: self, userInfo: [
                     "urls": urls,
-                    "folder": storageRoot
+                    "folder": storageRoot,
                 ])
             case let .failure(error):
                 os_log(.error, "导入文件失败Error: \(error.localizedDescription)")

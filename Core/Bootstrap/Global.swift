@@ -9,6 +9,7 @@ typealias Logger = MagicLogger
 typealias MagicCard = MagicKit.MagicCard
 typealias MagicApp = MagicKit.MagicApp
 typealias SuperLog = MagicKit.SuperLog
+typealias MagicLoading = MagicKit.MagicLoading
 
 // 创建便捷的日志函数
 func info(_ message: String) {

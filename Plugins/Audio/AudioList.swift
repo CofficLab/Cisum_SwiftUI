@@ -33,12 +33,6 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     var total: Int { audios.count }
     var urls: [URL] { audios.map { $0.url } }
 
-    init(verbose: Bool, reason: String) {
-        if verbose {
-            os_log("\(Self.i)AudioList 🐛 \(reason)")
-        }
-    }
-
     var body: some View {
         Group {
             if isSorting {
@@ -89,6 +83,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
                                 .magicVerbose(false)
                                 .showAvatar(true)
                                 .magicShowLogButtonInDebug()
+                                .magicHideActions()
                                 .tag(url as URL?)
                         }
                     })
@@ -99,7 +94,6 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
         .onAppear(perform: handleOnAppear)
         .onChange(of: selection, handleSelectionChange)
         .onChange(of: man.asset, handlePlayAssetChange)
-        .onReceive(nc.publisher(for: .audioDeleted), perform: handleAudioDeleted)
         .onReceive(nc.publisher(for: .DBSorting), perform: onSorting)
         .onReceive(nc.publisher(for: .DBSortDone), perform: onSortDone)
         .onReceive(nc.publisher(for: .dbSyncing), perform: handleDBSyncing)
@@ -123,17 +117,8 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
 // MARK: Event Handler
 
 extension AudioList {
-    func handleAudioDeleted(_ notification: Notification) {
-    }
-
     func handleOnAppear() {
         if let asset = man.asset {
-            setSelection(asset)
-        }
-    }
-
-    func handlePlayManStateChange(_ notification: Notification) {
-        if let asset = man.asset, asset != self.selection {
             setSelection(asset)
         }
     }
