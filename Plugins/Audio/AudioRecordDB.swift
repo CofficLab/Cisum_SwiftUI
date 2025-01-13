@@ -535,7 +535,7 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
     }
 
-    func syncWithDisk(_ items: [MetaWrapper], verbose: Bool = false) {
+    func initItems(_ items: [MetaWrapper], verbose: Bool = false) {
         let startTime: DispatchTime = .now()
 
         // 将数组转换成哈希表，方便通过键来快速查找元素，这样可以将时间复杂度降低到：O(m+n)

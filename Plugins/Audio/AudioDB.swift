@@ -104,15 +104,18 @@ actor AudioDB: ObservableObject, SuperEvent, SuperLog {
     func sync(_ items: [MetaWrapper], verbose: Bool = false, isFirst: Bool) async {
         Task.detached(priority: .userInitiated) {
             if verbose {
-                os_log("\(self.t)🔄🔄🔄 Sync(\(items.count))")
+                os_log("\(self.t)🔄🔄🔄 Sync(\(items.count)), isFirst: \(isFirst)")
             }
 
+            info("Sync(\(items.count)), isFirst: \(isFirst)")
+
             if isFirst {
-                await self.db.syncWithDisk(items, verbose: verbose)
+                await self.db.initItems(items, verbose: verbose)
             } else {
                 await self.db.syncWithUpdatedItems(items, verbose: verbose)
             }
 
+            info("Sync Done")
             await self.emitDBSynced()
         }
     }
@@ -122,7 +125,9 @@ actor AudioDB: ObservableObject, SuperEvent, SuperLog {
     }
 
     func makeMonitor() -> Cancellable {
-        self.disk.onDirectoryChanged(verbose: true, caller: self.className, { [weak self] items, isFirst in
+        info("Make monitor for: \(self.disk.shortPath())")
+        
+        return self.disk.onDirectoryChanged(verbose: true, caller: self.className, { [weak self] items, isFirst in
             guard let self = self else { return }
             await self.emitDBSyncing(items)
             await self.sync(items, verbose: true, isFirst: isFirst)

@@ -5,7 +5,7 @@ import SwiftUI
 
 struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content: View {
     nonisolated static var emoji: String { "🌳" }
-    
+
     var content: Content
     let s = StoreProvider()
     let cloudProvider = CloudProvider()
@@ -55,11 +55,17 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                                         .magicShape(.circle)
                                         .magicShapeVisibility(.onHover)
                                         .magicSize(.small)
-                                        .onlyDebug()
+                                    // .onlyDebug()
                                     man.makeLikeButton()
                                         .magicShape(.circle)
                                         .magicShapeVisibility(.onHover)
                                         .magicSize(.small)
+
+                                    MagicLogger
+                                        .logButton()
+                                        .magicSize(.small)
+                                        .magicShapeVisibility(.onHover)
+                                    // .onlyDebug()
 
                                     if man.asset != nil {
                                         ForEach(p.getToolBarButtons(), id: \.id) { item in
@@ -178,13 +184,13 @@ extension RootView {
                 a.showSheet = p.getSheetViews(storage: c.storageLocation).isNotEmpty
 
                 #if os(iOS)
-                        UIApplication.shared.beginReceivingRemoteControlEvents()
+                    UIApplication.shared.beginReceivingRemoteControlEvents()
                 #endif
 
                 self.man.subscribe(
                     name: self.className,
                     onStateChanged: { state in
-                        
+
                         os_log("\(self.t)🍋🍋🍋 onStateChanged: \(state.stateText)")
                     },
                     onPreviousRequested: { asset in
@@ -218,7 +224,7 @@ extension RootView {
             }
 
             self.loading = false
-            
+
             os_log("\(self.t)👌👌👌 Ready")
             self.m.append("Ready")
         }

@@ -65,7 +65,6 @@ enum Config: SuperLog {
             CopyPlugin(),
 //            BookPlugin()
             ResetPlugin(),
-            MessagePlugin(),
         ]
     }
 
