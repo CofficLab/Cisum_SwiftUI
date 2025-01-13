@@ -191,7 +191,6 @@ extension RootView {
                     name: self.className,
                     onStateChanged: { state in
 
-                        os_log("\(self.t)🍋🍋🍋 onStateChanged: \(state.stateText)")
                     },
                     onPreviousRequested: { asset in
                         Task {

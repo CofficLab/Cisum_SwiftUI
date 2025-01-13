@@ -11,6 +11,8 @@ actor AudioDB: ObservableObject, SuperEvent, SuperLog {
     private var db: AudioRecordDB
     private var disk: URL
     private var monitor: Cancellable?
+    private var currentSyncTask: Task<Void, Never>?
+    private var isShuttingDown: Bool = false
 
     init(disk: URL, reason: String, verbose: Bool) async throws {
         if verbose {
@@ -27,10 +29,16 @@ actor AudioDB: ObservableObject, SuperEvent, SuperLog {
         await self.db.allAudioURLs(reason: reason)
     }
 
-    func changeRoot(url: URL) {
+    nonisolated func changeRoot(url: URL) {
         os_log("\(Self.t)🍋🍋🍋 Change disk to \(url.title)")
 
-        self.monitor?.cancel()
+        Task { [weak self] in
+            await self?.cleanup()
+            await self?.updateDisk(url)
+        }
+    }
+
+    private func updateDisk(_ url: URL) {
         self.disk = url
         self.monitor = self.makeMonitor()
     }
@@ -39,10 +47,6 @@ actor AudioDB: ObservableObject, SuperEvent, SuperLog {
         try self.disk.delete()
         try await self.db.deleteAudio(url: audio.url)
         self.emit(.audioDeleted)
-    }
-
-    func download(_ audio: AudioModel, verbose: Bool) async throws {
-        try await audio.url.download()
     }
 
     func find(_ url: URL) async -> URL? {
@@ -102,22 +106,32 @@ actor AudioDB: ObservableObject, SuperEvent, SuperLog {
     }
 
     func sync(_ items: [MetaWrapper], verbose: Bool = false, isFirst: Bool) async {
-        Task.detached(priority: .userInitiated) {
+        guard !isShuttingDown else { return }
+        
+        currentSyncTask?.cancel()
+        
+        let task = Task(priority: .utility) { [weak self] in
+            guard let self = self else { return }
+            
+            let shouldContinue = await Task.detached { await !self.isShuttingDown }.value
+            guard shouldContinue == true else { return }
+            
             if verbose {
-                os_log("\(self.t)🔄🔄🔄 Sync(\(items.count)), isFirst: \(isFirst)")
+                info("Sync(\(items.count)), isFirst: \(isFirst)")
             }
-
-            info("Sync(\(items.count)), isFirst: \(isFirst)")
 
             if isFirst {
                 await self.db.initItems(items, verbose: verbose)
             } else {
                 await self.db.syncWithUpdatedItems(items, verbose: verbose)
             }
-
-            info("Sync Done")
+            
+            let shouldEmit = await Task.detached { await !self.isShuttingDown }.value
+            guard shouldEmit == true else { return }
             await self.emitDBSynced()
         }
+        
+        currentSyncTask = task
     }
 
     func toggleLike(_ url: URL) async throws {
@@ -127,27 +141,64 @@ actor AudioDB: ObservableObject, SuperEvent, SuperLog {
     func makeMonitor() -> Cancellable {
         info("Make monitor for: \(self.disk.shortPath())")
         
-        return self.disk.onDirectoryChanged(verbose: true, caller: self.className, { [weak self] items, isFirst in
+        let debounceInterval = 2.0
+        
+        return self.disk.onDirectoryChanged(verbose: false, caller: self.className, { [weak self] items, isFirst in
             guard let self = self else { return }
-            await self.emitDBSyncing(items)
-            await self.sync(items, verbose: true, isFirst: isFirst)
+            
+            @Sendable func handleChange() async {
+                guard !(await self.isShuttingDown) else { return }
+                
+                if let lastTime = UserDefaults.standard.object(forKey: "LastUpdateTime") as? Date {
+                    let now = Date()
+                    guard now.timeIntervalSince(lastTime) >= debounceInterval else { return }
+                }
+                UserDefaults.standard.set(Date(), forKey: "LastUpdateTime")
+                
+                await self.onDBSyncing(items)
+                await self.sync(items, verbose: true, isFirst: isFirst)
+            }
+            
+            Task {
+                await handleChange()
+            }
         })
     }
-}
 
-// MARK: Emit
-
-extension AudioDB {
-    func emitDBSyncing(_ items: [MetaWrapper]) {
-        self.emit(name: .dbSyncing, object: self, userInfo: ["items": items])
+    nonisolated func prepareForDeinit() {
+        Task { [weak self] in
+            await self?.cleanup()
+        }
     }
 
-    func emitDBSynced() {
-        self.emit(name: .dbSynced, object: nil)
+    private func cleanup() async {
+        isShuttingDown = true
+        currentSyncTask?.cancel()
+        monitor?.cancel()
+        monitor = nil
+        currentSyncTask = nil
+    }
+
+    deinit {
+        prepareForDeinit()
     }
 }
 
 // MARK: Event
+
+extension AudioDB {
+    func onDBSyncing(_ items: [MetaWrapper]) {
+        info("Syncing \(items.count) items")
+        self.emit(name: .dbSyncing, object: self, userInfo: ["items": items])
+    }
+
+    func emitDBSynced() {
+        info("Sync Done")
+        self.emit(name: .dbSynced, object: nil)
+    }
+}
+
+// MARK: Event Name
 
 extension Notification.Name {
     static let audioDeleted = Notification.Name("audioDeleted")

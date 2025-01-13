@@ -239,7 +239,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
 
         os_log("\(self.t)🍋🍋🍋 OnStorageLocationChange to \(disk.absoluteString)")
 
-        await self.audioDB?.changeRoot(url: disk)
+        self.audioDB?.changeRoot(url: disk)
         self.audioProvider?.updateDisk(disk)
     }
 
