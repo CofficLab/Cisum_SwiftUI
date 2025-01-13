@@ -16,7 +16,6 @@ struct HeroView: View {
                         .frame(maxWidth: .infinity)
                         .frame(height: getAlbumHeight(geo))
                         .clipped()
-                        .background(Config.background(.indigo))
                 }
 
                 TitleView()
