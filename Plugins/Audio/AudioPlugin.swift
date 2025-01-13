@@ -339,8 +339,8 @@ extension Notification.Name {
     static let AudiosUpdatedNotification = Notification.Name("AudiosUpdatedNotification")
     static let AudioUpdatedNotification = Notification.Name("AudioUpdatedNotification")
     static let SyncingNotification = Notification.Name("SyncingNotification")
-    static let MetaWrapperDeletedNotification = Notification.Name("MetaWrapperDeletedNotification")
-    static let MetaWrappersDeletedNotification = Notification.Name("MetaWrappersDeletedNotification")
+    static let URLDeletedNotification = Notification.Name("URLDeletedNotification")
+    static let URLsDeletedNotification = Notification.Name("URLsDeletedNotification")
 }
 
 enum AudioPluginError: Error, LocalizedError {

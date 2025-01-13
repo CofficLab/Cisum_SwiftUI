@@ -100,12 +100,12 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     }
 
     func handleDBSyncing(_ notification: Notification) {
-        if let items = notification.userInfo?["items"] as? [MetaWrapper] {
+        if let items = notification.userInfo?["items"] as? [URL] {
             for file in items {
                 if file.isDownloading {
-                    setProgress(for: file.url!, value: file.downloadProgress)
+                    setProgress(for: file, value: file.downloadProgress)
                 } else if file.isDownloaded {
-                    setProgress(for: file.url!, value: 1.0)
+                    setProgress(for: file, value: 1.0)
                 }
             }
         } else {

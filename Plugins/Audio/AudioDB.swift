@@ -105,7 +105,7 @@ actor AudioDB: ObservableObject, SuperEvent, SuperLog {
         try await self.db.sortRandom(url, reason: reason, verbose: verbose)
     }
 
-    func sync(_ items: [MetaWrapper], verbose: Bool = false, isFirst: Bool) async {
+    func sync(_ items: [URL], verbose: Bool = false, isFirst: Bool) async {
         guard !isShuttingDown else { return }
         
         currentSyncTask?.cancel()
@@ -143,7 +143,7 @@ actor AudioDB: ObservableObject, SuperEvent, SuperLog {
         
         let debounceInterval = 2.0
         
-        return self.disk.onDirectoryChanged(verbose: false, caller: self.className, { [weak self] items, isFirst in
+        return self.disk.onDirectoryChanged(verbose: true, caller: self.className, { [weak self] items, isFirst, error in
             guard let self = self else { return }
             
             @Sendable func handleChange() async {
@@ -187,13 +187,15 @@ actor AudioDB: ObservableObject, SuperEvent, SuperLog {
 // MARK: Event
 
 extension AudioDB {
-    func onDBSyncing(_ items: [MetaWrapper]) {
+    func onDBSyncing(_ items: [URL]) {
         info("Syncing \(items.count) items")
+        os_log("\(self.t)Syncing \(items.count) items")
         self.emit(name: .dbSyncing, object: self, userInfo: ["items": items])
     }
 
     func emitDBSynced() {
         info("Sync Done")
+        os_log("\(self.t)Sync Done")
         self.emit(name: .dbSynced, object: nil)
     }
 }

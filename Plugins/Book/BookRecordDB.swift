@@ -1,6 +1,5 @@
 import Foundation
 import MagicKit
-
 import OSLog
 import SwiftData
 import SwiftUI
@@ -201,11 +200,11 @@ extension BookRecordDB {
         return next
     }
 
-    func sync(_ items: [MetaWrapper], verbose: Bool = false, isFirst: Bool) {
+    func sync(_ items: [URL], verbose: Bool = false, isFirst: Bool) {
         var message = "\(self.t)SyncBook(\(items.count))"
 
         if let first = items.first, first.isDownloading == true {
-            message += " -> \(first.url!.title) -> \(String(format: "%.0f", first.downloadProgress))% ⏬⏬⏬"
+            message += " -> \(first.title) -> \(String(format: "%.0f", first.downloadProgress))% ⏬⏬⏬"
         }
 
         if isFirst {
@@ -227,14 +226,14 @@ extension BookRecordDB {
 
     // MARK: SyncWithDisk
 
-    private func bookSyncWithDisk(_ items: [MetaWrapper]) {
+    private func bookSyncWithDisk(_ items: [URL]) {
         let verbose = true
         let startTime: DispatchTime = .now()
 
         // 将数组转换成哈希表，方便通过键来快速查找元素，这样可以将时间复杂度降低到：O(m+n)
-        var hashMap = [URL: MetaWrapper]()
+        var hashMap = [URL: URL]()
         for element in items {
-            hashMap[element.url!] = element
+            hashMap[element] = element
         }
 
         do {
@@ -257,7 +256,7 @@ extension BookRecordDB {
 
             // 余下的是需要插入数据库的
             for (_, value) in hashMap {
-                context.insert(BookModel(url: value.url!))
+                context.insert(BookModel(url: value))
             }
         } catch {
             os_log(.error, "\(error.localizedDescription)")
@@ -276,7 +275,7 @@ extension BookRecordDB {
 
     // MARK: SyncWithUpdatedItems
 
-    func bookSyncWithUpdatedItems(_ metas: [MetaWrapper], verbose: Bool = false) {
+    func bookSyncWithUpdatedItems(_ metas: [URL], verbose: Bool = false) {
 //        if verbose {
 //            os_log("\(self.t)SyncWithUpdatedItems with count=\(metas.count)")
 //        }

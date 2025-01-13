@@ -14,7 +14,7 @@ class AudioProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
     static let emoji = "🌿"
     private(set) var disk: URL
 
-    @Published private(set) var files: [MetaWrapper] = []
+    @Published private(set) var files: [URL] = []
     @Published private(set) var isSyncing: Bool = false
 
     init(disk: URL) {
@@ -46,7 +46,7 @@ class AudioProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
 
 extension AudioProvider {
     private func handleDBSyncing(_ notification: Notification) {
-        if let items = notification.userInfo?["items"] as? [MetaWrapper] {
+        if let items = notification.userInfo?["items"] as? [URL] {
             self.setFiles(items)
             self.setSyncing(true)
         }
@@ -77,7 +77,7 @@ extension AudioProvider {
         }
     }
 
-    private func setFiles(_ files: [MetaWrapper]) {
+    private func setFiles(_ files: [URL]) {
         self.files = files
     }
 }

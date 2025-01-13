@@ -535,21 +535,21 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
     }
 
-    func initItems(_ items: [MetaWrapper], verbose: Bool = false) {
+    func initItems(_ items: [URL], verbose: Bool = false) {
         let startTime: DispatchTime = .now()
 
         // 将数组转换成哈希表，方便通过键来快速查找元素，这样可以将时间复杂度降低到：O(m+n)
 
-        var hashMap = [URL: MetaWrapper]()
+        var hashMap = [URL: URL]()
         for element in items {
-            hashMap[element.url!] = element
+            hashMap[element] = element
         }
 
         do {
             try context.enumerate(FetchDescriptor<AudioModel>(), block: { audio in
                 if let item = hashMap[audio.url] {
                     // 更新数据库记录
-                    audio.size = item.fileSize
+                    audio.size = item.getSize()
 
                     // 记录存在哈希表中，同步完成，删除哈希表记录
                     hashMap.removeValue(forKey: audio.url)
@@ -563,7 +563,7 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
 
             // 余下的是需要插入数据库的
             for (_, value) in hashMap {
-                context.insert(AudioModel(value.url!))
+                context.insert(AudioModel(value))
             }
 
             try self.context.save()
@@ -572,11 +572,11 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
 
         if verbose {
-            os_log("\(self.jobEnd(startTime, title: "\(self.t) SyncWithDisk(\(items.count))", tolerance: 0.01))")
+            os_log("\(self.jobEnd(startTime, title: "\(self.t)SyncWithDisk(\(items.count))", tolerance: 0.01))")
         }
     }
 
-    func syncWithUpdatedItems(_ metas: [MetaWrapper], verbose: Bool = false) {
+    func syncWithUpdatedItems(_ metas: [URL], verbose: Bool = false) {
         if verbose {
             os_log("\(self.t)SyncWithUpdatedItems with count=\(metas.count)")
         }
@@ -584,21 +584,22 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         // 如果url属性为unique，数据库已存在相同url的记录，再执行context.insert，发现已存在的被替换成新的了
         // 但在这里，希望如果存在，就不要插入
         for (_, meta) in metas.enumerated() {
-            if meta.isDeleted {
-                let deletedURL = meta.url!
-
-                do {
-                    try context.delete(model: AudioModel.self, where: #Predicate { audio in
-                        audio.url == deletedURL
-                    })
-                } catch let e {
-                    os_log(.error, "\(e.localizedDescription)")
-                }
-            } else {
-                if let url = meta.url, findAudio(url) == nil {
-                    context.insert(AudioModel(url))
-                }
-            }
+//            if meta.isDeleted {
+//                let deletedURL = meta
+//
+//                do {
+//                    try context.delete(model: AudioModel.self, where: #Predicate { audio in
+//                        audio.url == deletedURL
+//                    })
+//                } catch let e {
+//                    os_log(.error, "\(e.localizedDescription)")
+//                }
+//            } else {
+//                if findAudio(meta) == nil {
+//                    context.insert(AudioModel(meta))
+//                }
+//                
+//            }
         }
 
         do {
