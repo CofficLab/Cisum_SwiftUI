@@ -535,28 +535,7 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
     }
 
-    func sync(_ items: [MetaWrapper], verbose: Bool = false, isFirst: Bool) {
-        Task.detached(priority: .low) {
-            if verbose {
-                os_log("\(self.t)🔄🔄🔄 Sync(\(items.count))")
-            }
-
-            if isFirst {
-                await self.syncWithDisk(items)
-            } else {
-                await self.syncWithUpdatedItems(items)
-            }
-
-        }
-//        if verbose {
-//            os_log("\(self.tForSync) 计算刚刚同步的项目的 Hash(\(group.count))")
-//        }
-//
-//        self.updateGroupForURLs(group.urls)
-    }
-
     func syncWithDisk(_ items: [MetaWrapper], verbose: Bool = false) {
-        let verbose = false
         let startTime: DispatchTime = .now()
 
         // 将数组转换成哈希表，方便通过键来快速查找元素，这样可以将时间复杂度降低到：O(m+n)

@@ -137,7 +137,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
         }
 
         self.container = try AudioConfig.getContainer()
-        self.audioDB = try AudioDB(disk: disk, reason: self.className + ".onInit", verbose: false)
+        self.audioDB = try await AudioDB(disk: disk, reason: self.className + ".onInit", verbose: false)
         self.audioProvider = AudioProvider(disk: disk)
         self.initialized = true
 
@@ -239,7 +239,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
 
         os_log("\(self.t)🍋🍋🍋 OnStorageLocationChange to \(disk.absoluteString)")
 
-        self.audioDB?.changeRoot(url: disk)
+        await self.audioDB?.changeRoot(url: disk)
         self.audioProvider?.updateDisk(disk)
     }
 

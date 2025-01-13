@@ -1,23 +1,24 @@
 import Foundation
 import MagicKit
 
+import Combine
 import OSLog
 import SwiftData
 import SwiftUI
-import Combine
 
-@MainActor class AudioDB: ObservableObject, SuperEvent, SuperLog {
+actor AudioDB: ObservableObject, SuperEvent, SuperLog {
     nonisolated static let emoji = "🎵"
     private var db: AudioRecordDB
     private var disk: URL
-    private var monitor: Cancellable? = nil
+    private var monitor: Cancellable?
 
-    init(disk: URL, reason: String, verbose: Bool) throws {
+    init(disk: URL, reason: String, verbose: Bool) async throws {
         if verbose {
             os_log("\(Self.i) with reason: 🐛 \(reason) 💾 with disk: \(disk.shortPath())")
         }
 
-        self.db = AudioRecordDB(try AudioConfig.getContainer(), reason: reason, verbose: verbose)
+        let container = try await AudioConfig.getContainer()
+        self.db = AudioRecordDB(container, reason: reason, verbose: verbose)
         self.disk = disk
         self.monitor = self.makeMonitor()
     }
@@ -74,7 +75,7 @@ import Combine
 
     func like(_ url: URL?, liked: Bool) async {
         guard let url = url else { return }
-        
+
         if liked {
             os_log("\(self.t)👍 Like \(url.lastPathComponent)")
             await self.db.like(url)
@@ -100,18 +101,31 @@ import Combine
         try await self.db.sortRandom(url, reason: reason, verbose: verbose)
     }
 
+    func sync(_ items: [MetaWrapper], verbose: Bool = false, isFirst: Bool) async {
+        Task.detached(priority: .userInitiated) {
+            if verbose {
+                os_log("\(self.t)🔄🔄🔄 Sync(\(items.count))")
+            }
+
+            if isFirst {
+                await self.db.syncWithDisk(items, verbose: verbose)
+            } else {
+                await self.db.syncWithUpdatedItems(items, verbose: verbose)
+            }
+
+            await self.emitDBSynced()
+        }
+    }
+
     func toggleLike(_ url: URL) async throws {
         try await self.db.toggleLike(url)
     }
 
     func makeMonitor() -> Cancellable {
-        self.disk.onDirectoryChanged(verbose: true, caller: self.className, { items, isFirst in
-            Task.detached(priority: .low) {
-                os_log("\(self.t)DBSyncing, items count: \(items.count)")
-                await self.emitDBSyncing(items)
-                await self.db.sync(items, verbose: true, isFirst: isFirst)
-                await self.emitDBSynced()
-            }
+        self.disk.onDirectoryChanged(verbose: true, caller: self.className, { [weak self] items, isFirst in
+            guard let self = self else { return }
+            await self.emitDBSyncing(items)
+            await self.sync(items, verbose: true, isFirst: isFirst)
         })
     }
 }
@@ -122,7 +136,7 @@ extension AudioDB {
     func emitDBSyncing(_ items: [MetaWrapper]) {
         self.emit(name: .dbSyncing, object: self, userInfo: ["items": items])
     }
-    
+
     func emitDBSynced() {
         self.emit(name: .dbSynced, object: nil)
     }
