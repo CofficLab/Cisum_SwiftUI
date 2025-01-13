@@ -197,6 +197,12 @@ extension PluginProvider {
             try await plugin.onCurrentURLChanged(url: url)
         }
     }
+
+    func onPause(man: PlayManWrapper) async throws {
+        for plugin in plugins {
+            try await plugin.onPause(playMan: man)
+        }
+    }
 }
 
 enum PluginProviderError: Error, LocalizedError {
@@ -226,6 +232,10 @@ public class PlayManWrapper {
 
     var playing: Bool {
         playMan.playing
+    }
+
+    var currentTime: TimeInterval {
+        playMan.currentTime
     }
 
     func play(url: URL, autoPlay: Bool = true) async {

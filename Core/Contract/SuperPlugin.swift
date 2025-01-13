@@ -23,7 +23,7 @@ protocol SuperPlugin: Actor {
     func onWillAppear(playMan: PlayManWrapper, currentGroup: SuperPlugin?, storage: StorageLocation?) async throws
     func onDisappear()
     func onPlay()
-    func onPause(playMan: PlayMan) async
+    func onPause(playMan: PlayManWrapper) async
     func onPlayStateUpdate() async throws
     func onPlayModeChange(mode: String, asset: URL?) async throws
     func onCurrentURLChanged(url: URL) async throws
@@ -68,7 +68,7 @@ extension SuperPlugin {
 
     func onPlayModeChange(mode: String, asset: URL?) async throws { }
 
-    func onPause(playMan: PlayMan) async { }
+    func onPause(playMan: PlayManWrapper) async { }
 
     func onLike(asset: URL?, liked: Bool) async throws { }
 

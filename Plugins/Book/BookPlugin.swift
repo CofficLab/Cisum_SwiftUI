@@ -75,12 +75,6 @@ actor BookPlugin: SuperPlugin, SuperLog {
     func onPlay() {
     }
 
-    func onPause(playMan: PlayMan) {
-//        Task { @MainActor in
-//            BookPlugin.storeCurrentTime(playMan.currentTime)
-//        }
-    }
-
     func onPlayModeChange(mode: PlayMode) {
     }
 

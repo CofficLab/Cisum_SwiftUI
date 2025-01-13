@@ -190,7 +190,13 @@ extension RootView {
                 self.man.subscribe(
                     name: self.className,
                     onStateChanged: { state in
-
+                        if state == .paused {
+                            Task {
+                                do { try await self.p.onPause(man: playManWrapper) } catch {
+                                    os_log(.error, "\(self.t)🎵 Error in onPause: \(error.localizedDescription)")
+                                }
+                            }
+                        }
                     },
                     onPreviousRequested: { asset in
                         Task {

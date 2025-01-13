@@ -68,7 +68,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
         return AnyView(AudioSettings().environmentObject(audioProvider))
     }
 
-    func onPause(playMan: PlayMan) {
+    @MainActor func onPause(playMan: PlayManWrapper) {
         AudioPlugin.storeCurrentTime(playMan.currentTime)
     }
 
