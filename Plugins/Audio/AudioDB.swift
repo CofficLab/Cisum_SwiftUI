@@ -121,6 +121,7 @@ actor AudioDB: ObservableObject, SuperEvent, SuperLog {
                 await self.emitDBSynced()
             } else {
                 await self.db.syncWithUpdatedItems(items, verbose: verbose)
+                await self.emitUpdated()
             }
 
             let shouldEmit = await Task.detached { await !self.isShuttingDown }.value
@@ -217,6 +218,12 @@ extension AudioDB {
         self.emit(name: .dbSynced, object: nil)
     }
 
+    func emitUpdated() {
+        info("Updated")
+        os_log("\(self.t)🍋 Updated")
+        self.emit(name: .dbUpdated, object: nil)
+    }
+
     func emitDownloadProgress(url: URL, progress: Double) {
         self.emit(name: .audioDownloadProgress,
                   object: nil,
@@ -236,6 +243,7 @@ extension Notification.Name {
     static let dbSyncing = Notification.Name("dbSyncing")
     static let dbSynced = Notification.Name("dbSynced")
     static let dbDeleted = Notification.Name("dbDeleted")
+    static let dbUpdated = Notification.Name("dbUpdated")
     static let DBSorting = Notification.Name("DBSorting")
     static let DBSortDone = Notification.Name("DBSortDone")
     static let audioDownloadProgress = Notification.Name("audioDownloadProgress")

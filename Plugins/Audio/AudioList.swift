@@ -85,6 +85,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
         .onReceive(nc.publisher(for: .DBSortDone), perform: onSortDone)
         .onReceive(nc.publisher(for: .dbDeleted), perform: onDeleted)
         .onReceive(nc.publisher(for: .dbSynced), perform: onSynced)
+        .onReceive(nc.publisher(for: .dbUpdated), perform: onUpdated)
     }
     
     private func updateURLs() {
@@ -152,6 +153,11 @@ extension AudioList {
 
     func onSynced(_ notification: Notification) {
         os_log("\(t)🍋 onSynced")
+        self.updateURLs()
+    }
+
+    func onUpdated(_ notification: Notification) {
+        os_log("\(t)🍋 onUpdated")
         self.updateURLs()
     }
     
