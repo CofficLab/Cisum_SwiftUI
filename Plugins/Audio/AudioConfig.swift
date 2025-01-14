@@ -11,7 +11,7 @@ struct AudioConfig {
             .createIfNotExist()
     }
     
-    static var dbDirName = Config.isDebug ? "audios" : "audios"
+    static var dbDirName = Config.isDebug ? "audios_debug" : "audios"
 
     static func getContainer() throws -> ModelContainer {
         let url = try getDBUrl()

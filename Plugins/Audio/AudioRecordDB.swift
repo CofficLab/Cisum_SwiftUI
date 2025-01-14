@@ -709,7 +709,7 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
     @discardableResult
     func deleteAudios(ids: [AudioModel.ID], verbose: Bool = true) throws -> AudioModel? {
         if verbose {
-            os_log("\(self.t)数据库删除")
+            os_log("\(self.t)🗑️ 数据库删除")
         }
 
         // 本批次的最后一个删除后的下一个

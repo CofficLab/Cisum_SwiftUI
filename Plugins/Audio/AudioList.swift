@@ -20,6 +20,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     @EnvironmentObject var man: PlayMan
     @EnvironmentObject var audioManager: AudioProvider
     @EnvironmentObject var audioDB: AudioDB
+    @EnvironmentObject var m: MessageProvider
 
     @State var selection: URL? = nil
     @State var isSorting = false
@@ -71,6 +72,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
                         ForEach(urls, id: \.self) { url in
                             AudioItemView(url: url)
                         }
+                        .onDelete(perform: onDeleteItems)
                     })
                 }
                 .listStyle(.plain)
@@ -81,12 +83,23 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
         .onChange(of: man.asset, handlePlayAssetChange)
         .onReceive(nc.publisher(for: .DBSorting), perform: onSorting)
         .onReceive(nc.publisher(for: .DBSortDone), perform: onSortDone)
+        .onReceive(nc.publisher(for: .dbDeleted), perform: onDeleted)
+        .onReceive(nc.publisher(for: .dbSynced), perform: onSynced)
     }
     
     private func updateURLs() {
-        Task {
-            self.urls = await audioDB.allAudios(reason: self.className)
+        Task.detached(priority: .background) {
+            let urls = await audioDB.allAudios(reason: self.className)
+
+            await self.setUrls(urls)
         }
+    }
+}
+
+extension AudioList {
+    @MainActor
+    private func setUrls(_ newValue: [URL]) {
+        urls = newValue
     }
 }
 
@@ -120,7 +133,7 @@ extension AudioList {
     }
 
     func onSorting(_ notification: Notification) {
-        os_log("\(t)onSorting")
+        os_log("\(t)🍋 onSorting")
         setIsSorting(true)
         if let mode = notification.userInfo?["mode"] as? String {
             setSortMode(SortMode(rawValue: mode) ?? .none)
@@ -128,8 +141,39 @@ extension AudioList {
     }
 
     func onSortDone(_ notification: Notification) {
-        os_log("\(t)onSortDone")
-//        self.updateURLs()
+        os_log("\(t)🍋 onSortDone")
+        self.updateURLs()
+    }
+
+    func onDeleted(_ notification: Notification) {
+        os_log("\(t)🍋 onDeleted")
+        self.updateURLs()
+    }
+
+    func onSynced(_ notification: Notification) {
+        os_log("\(t)🍋 onSynced")
+        self.updateURLs()
+    }
+    
+    func onDeleteItems(at offsets: IndexSet) {
+        withAnimation {
+            // 获取要删除的 URLs
+            let urlsToDelete = offsets.map { urls[$0] }
+            
+            // 从数据库中删除对应的 AudioModel
+            for url in urlsToDelete {
+                os_log("\(t)deleteItems: \(url.shortPath())")
+                do {
+                    try url.delete()
+
+                    m.toast("已删除 \(url.title)")
+                } catch {
+                    os_log(.error, "\(t)deleteItems: \(error)")
+
+                    m.error(error)
+                }
+            }
+        }
     }
 }
 

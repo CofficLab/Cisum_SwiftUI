@@ -45,7 +45,7 @@ actor AudioDB: ObservableObject, SuperEvent, SuperLog {
     func delete(_ audio: AudioModel, verbose: Bool) async throws {
         try self.disk.delete()
         try await self.db.deleteAudio(url: audio.url)
-        self.emit(.audioDeleted)
+        self.emit(.dbDeleted)
     }
 
     func find(_ url: URL) async -> URL? {
@@ -169,7 +169,10 @@ actor AudioDB: ObservableObject, SuperEvent, SuperLog {
                 guard let self = self else { return }
 
                 Task {
-                    try? await self.db.deleteAudios(urls)
+                    if urls.count > 0 {
+                        try? await self.db.deleteAudios(urls)
+                        await self.emitDeleted(urls)
+                    }
                 }
             },
             onProgress: { [weak self] url, progress in
@@ -219,14 +222,20 @@ extension AudioDB {
                   object: nil,
                   userInfo: ["url": url, "progress": progress])
     }
+
+    func emitDeleted(_ urls: [URL]) {
+        self.emit(name: .dbDeleted,
+                  object: nil,
+                  userInfo: ["urls": urls])
+    }
 }
 
 // MARK: Event Name
 
 extension Notification.Name {
-    static let audioDeleted = Notification.Name("audioDeleted")
     static let dbSyncing = Notification.Name("dbSyncing")
     static let dbSynced = Notification.Name("dbSynced")
+    static let dbDeleted = Notification.Name("dbDeleted")
     static let DBSorting = Notification.Name("DBSorting")
     static let DBSortDone = Notification.Name("DBSortDone")
     static let audioDownloadProgress = Notification.Name("audioDownloadProgress")

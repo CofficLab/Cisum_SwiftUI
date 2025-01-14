@@ -28,7 +28,7 @@ struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
     }
 
     var body: some View {
-        AudioList2()
+        AudioList()
             .frame(maxHeight: .infinity)
             .fileImporter(
                 isPresented: $app.isImporting,
