@@ -204,8 +204,6 @@ extension AudioDB {
     }
 
     func emitDownloadProgress(url: URL, progress: Double) {
-        info("Download progress: \(url.lastPathComponent) - \(Int(progress * 100))%")
-        os_log("\(self.t)📥 Download progress: \(url.lastPathComponent) - \(Int(progress * 100))%")
         self.emit(name: .audioDownloadProgress, 
                  object: nil, 
                  userInfo: ["url": url, "progress": progress])

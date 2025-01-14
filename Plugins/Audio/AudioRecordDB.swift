@@ -577,10 +577,6 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
     }
 
     func syncWithUpdatedItems(_ metas: [URL], verbose: Bool = false) {
-        if verbose {
-            os_log("\(self.t)SyncWithUpdatedItems with count=\(metas.count)")
-        }
-
         // 如果url属性为unique，数据库已存在相同url的记录，再执行context.insert，发现已存在的被替换成新的了
         // 但在这里，希望如果存在，就不要插入
         for (_, meta) in metas.enumerated() {
