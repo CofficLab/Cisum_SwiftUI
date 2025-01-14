@@ -99,7 +99,7 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
     }
 
     func allAudios(reason: String) -> [AudioModel] {
-        os_log("\(self.t)GetAllAudios 🐛 \(reason)")
+        os_log("\(self.t)🚛 GetAllAudios 🐛 \(reason)")
 
         do {
             let audios: [AudioModel] = try context.fetch(AudioModel.descriptorOrderAsc)
@@ -572,7 +572,7 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
 
         if verbose {
-            os_log("\(self.jobEnd(startTime, title: "\(self.t)SyncWithDisk(\(items.count))", tolerance: 0.01))")
+            os_log("\(self.jobEnd(startTime, title: "\(self.t)✅ SyncWithDisk(\(items.count))", tolerance: 0.01))")
         }
     }
 

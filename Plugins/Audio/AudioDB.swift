@@ -114,10 +114,6 @@ actor AudioDB: ObservableObject, SuperEvent, SuperLog {
             
             let shouldContinue = await Task.detached { await !self.isShuttingDown }.value
             guard shouldContinue == true else { return }
-            
-            if verbose {
-                info("Sync(\(items.count)), isFirst: \(isFirst)")
-            }
 
             if isFirst {
                 await self.onDBSyncing(items)
@@ -193,13 +189,13 @@ actor AudioDB: ObservableObject, SuperEvent, SuperLog {
 extension AudioDB {
     func onDBSyncing(_ items: [URL]) {
         info("Syncing \(items.count) items")
-        os_log("\(self.t)Syncing \(items.count) items")
+        os_log("\(self.t)🔄 Syncing \(items.count) items")
         self.emit(name: .dbSyncing, object: self, userInfo: ["items": items])
     }
 
     func emitDBSynced() {
         info("Sync Done")
-        os_log("\(self.t)Sync Done")
+        os_log("\(self.t)✅ Sync Done")
         self.emit(name: .dbSynced, object: nil)
     }
 
