@@ -3,7 +3,9 @@ import MagicKit
 import OSLog
 import SwiftUI
 
-struct VideoTile: View, SuperThread {
+struct VideoTile: View, SuperThread, SuperLog {
+    nonisolated static let emoji = "🎬"
+    
     @EnvironmentObject var playMan: PlayMan
 
     @State var hovered = false
@@ -64,7 +66,7 @@ struct VideoTile: View, SuperThread {
 //            BtnDel(assets: [asset], autoResize: false)
         })
         .task {
-            self.image = try? await url.thumbnail(verbose: true)
+            self.image = try? await url.thumbnail(verbose: true, reason: self.className)
         }
     }
 }

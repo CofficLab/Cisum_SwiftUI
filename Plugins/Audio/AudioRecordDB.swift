@@ -555,7 +555,7 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
                     hashMap.removeValue(forKey: audio.url)
                 } else {
                     if verbose {
-                        os_log("\(self.t)删除 \(audio.title)")
+                        os_log("\(self.t)🗑️ 删除 \(audio.title)")
                     }
                     context.delete(audio)
                 }
@@ -580,22 +580,22 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         // 如果url属性为unique，数据库已存在相同url的记录，再执行context.insert，发现已存在的被替换成新的了
         // 但在这里，希望如果存在，就不要插入
         for (_, meta) in metas.enumerated() {
-//            if meta.isDeleted {
-//                let deletedURL = meta
-//
-//                do {
-//                    try context.delete(model: AudioModel.self, where: #Predicate { audio in
-//                        audio.url == deletedURL
-//                    })
-//                } catch let e {
-//                    os_log(.error, "\(e.localizedDescription)")
-//                }
-//            } else {
-//                if findAudio(meta) == nil {
-//                    context.insert(AudioModel(meta))
-//                }
-//                
-//            }
+            if meta.isNotFileExist {
+                let deletedURL = meta
+
+                do {
+                    try context.delete(model: AudioModel.self, where: #Predicate { audio in
+                        audio.url == deletedURL
+                    })
+                } catch let e {
+                    os_log(.error, "\(e.localizedDescription)")
+                }
+            } else {
+                if findAudio(meta) == nil {
+                    context.insert(AudioModel(meta))
+                }
+                
+            }
         }
 
         do {

@@ -13,8 +13,10 @@ import SwiftUI
       B1               B2
       B2
  */
-struct AudioList: View, SuperThread, SuperLog, SuperEvent {
+struct AudioList2: View, SuperThread, SuperLog, SuperEvent {
     nonisolated static let emoji = "📬"
+
+    @Environment(\.modelContext) private var modelContext
 
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var man: PlayMan
@@ -24,9 +26,11 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     @State var selection: URL? = nil
     @State var isSorting = false
     @State var sortMode: SortMode = .none
-    @State var urls: [URL] = []
+
+    @Query(sort: \AudioModel.order, animation: .default) var audios: [AudioModel]
 
     var total: Int { urls.count }
+    var urls: [URL] { audios.map({ $0.url }) }
 
     var body: some View {
         Group {
@@ -82,20 +86,12 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
         .onReceive(nc.publisher(for: .DBSorting), perform: onSorting)
         .onReceive(nc.publisher(for: .DBSortDone), perform: onSortDone)
     }
-    
-    private func updateURLs() {
-        Task {
-            self.urls = await audioDB.allAudios(reason: self.className)
-        }
-    }
 }
 
 // MARK: Event Handler
 
-extension AudioList {
+extension AudioList2 {
     func handleOnAppear() {
-        updateURLs()
-        
         if let asset = man.asset {
             setSelection(asset)
         }
@@ -133,22 +129,7 @@ extension AudioList {
     }
 }
 
-extension AudioList {
-    private func setSelection(_ newValue: URL?) {
-        selection = newValue
-    }
-
-    private func setIsSorting(_ newValue: Bool) {
-        isSorting = newValue
-    }
-
-    private func setSortMode(_ newValue: SortMode) {
-        sortMode = newValue
-    }
-}
-
-
-extension AudioList {
+extension AudioList2 {
     enum SortMode: String {
         case random, order, none
 
@@ -167,6 +148,20 @@ extension AudioList {
             case .none: return "正在排序..."
             }
         }
+    }
+}
+
+extension AudioList2 {
+    private func setSelection(_ newValue: URL?) {
+        selection = newValue
+    }
+
+    private func setIsSorting(_ newValue: Bool) {
+        isSorting = newValue
+    }
+
+    private func setSortMode(_ newValue: SortMode) {
+        sortMode = newValue
     }
 }
 

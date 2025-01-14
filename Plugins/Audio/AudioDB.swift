@@ -143,7 +143,7 @@ actor AudioDB: ObservableObject, SuperEvent, SuperLog {
         
         let debounceInterval = 2.0
         
-        return self.disk.onDirChange(verbose: false, caller: self.className, { [weak self] items, isFirst, error in
+        return self.disk.onDirChange(verbose: true, caller: self.className, { [weak self] items, isFirst, error in
             guard let self = self else { return }
             
             @Sendable func handleChange() async {

@@ -54,6 +54,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                                     man.currentURL?
                                         .makeOpenButton()
                                         .magicShapeVisibility(.onHover)
+                                        .magicSize(.small)
 
                                     man.makeLogButton()
                                         .magicShape(.circle)
