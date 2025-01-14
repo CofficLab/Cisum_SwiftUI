@@ -123,11 +123,11 @@ actor AudioPlugin: SuperPlugin, SuperLog {
 
         switch storage {
         case .local, .none:
-            disk = Config.localDocumentsDir?.appendingPathComponent(self.dirName)
+            disk = Config.localDocumentsDir?.appendingFolder(self.dirName)
         case .icloud:
-            disk = Config.cloudDocumentsDir?.appendingPathComponent(self.dirName)
+            disk = Config.cloudDocumentsDir?.appendingFolder(self.dirName)
         case .custom:
-            disk = Config.localDocumentsDir?.appendingPathComponent(self.dirName)
+            disk = Config.localDocumentsDir?.appendingFolder(self.dirName)
         }
 
         guard let disk = disk else {
@@ -136,6 +136,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
             throw AudioPluginError.NoDisk
         }
 
+        self.disk = try disk.createIfNotExist()
         self.container = try AudioConfig.getContainer()
         self.audioDB = try await AudioDB(disk: disk, reason: self.className + ".onInit", verbose: false)
         self.audioProvider = AudioProvider(disk: disk)

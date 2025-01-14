@@ -136,6 +136,10 @@ actor AudioDB: ObservableObject, SuperEvent, SuperLog {
 
     func makeMonitor() -> Cancellable {
         info("Make monitor for: \(self.disk.shortPath())")
+
+        if self.disk.isNotDirExist {
+            info("Error: \(self.disk.shortPath()) not exist")
+        }
         
         let debounceInterval = 2.0
         
