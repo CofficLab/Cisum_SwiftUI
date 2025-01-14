@@ -7,38 +7,67 @@ import StoreKit
 import SwiftData
 import SwiftUI
 
+@MainActor
 class AudioProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
     private var cancellables = Set<AnyCancellable>()
     private var debounceTimer: Timer?
 
-    static let emoji = "🌿"
+    nonisolated static let emoji = "🌿"
     private(set) var disk: URL
 
     @Published private(set) var files: [URL] = []
     @Published private(set) var isSyncing: Bool = false
+    @Published private(set) var downloadProgress: [String: Double] = [:]
 
-    init(disk: URL) {
+    nonisolated init(disk: URL) {
         self.disk = disk
+        
+        Task { @MainActor in
+            self.setupNotifications()
+        }
+    }
+    
+    private func setupNotifications() {
         self.nc.publisher(for: .dbSyncing)
+            .receive(on: RunLoop.main)
             .sink { [weak self] notification in
-                self?.handleDBSyncing(notification)
+                guard let self = self else { return }
+                if let items = notification.userInfo?["items"] as? [URL] {
+                    self.files = items
+                    self.setSyncing(true)
+                }
             }
             .store(in: &cancellables)
 
         self.nc.publisher(for: .dbSynced)
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.setSyncing(false)
+            }
+            .store(in: &cancellables)
+
+        self.nc.publisher(for: .audioDownloadProgress)
+            .receive(on: RunLoop.main)
             .sink { [weak self] notification in
-                self?.handleDBSynced(notification)
+                guard let self = self,
+                      let url = notification.userInfo?["url"] as? URL,
+                      let progress = notification.userInfo?["progress"] as? Double
+                else { return }
+                
+                if progress >= 1.0 {
+                    self.downloadProgress.removeValue(forKey: url.path)
+                } else {
+                    self.downloadProgress[url.path] = progress
+                }
             }
             .store(in: &cancellables)
     }
-    
-    /// 更新音频文件目录路径
-    /// - Parameter newDisk: 新的目录路径
+
     func updateDisk(_ newDisk: URL) {
         os_log("\(self.t)🍋🍋🍋 updateDisk to \(newDisk.path)")
-
         self.cancellables.removeAll()
         self.disk = newDisk
+        self.setupNotifications()
     }
 }
 
@@ -47,13 +76,32 @@ class AudioProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
 extension AudioProvider {
     private func handleDBSyncing(_ notification: Notification) {
         if let items = notification.userInfo?["items"] as? [URL] {
-            self.setFiles(items)
-            self.setSyncing(true)
+            Task {
+                await self.setFiles(items)
+                await self.setSyncing(true)
+            }
         }
     }
 
     private func handleDBSynced(_ notification: Notification) {
-        self.setSyncing(false)
+        Task {
+            await self.setSyncing(false)
+        }
+    }
+
+    private func handleDownloadProgress(_ notification: Notification) {
+        guard let url = notification.userInfo?["url"] as? URL,
+              let progress = notification.userInfo?["progress"] as? Double else { return }
+
+        let progressUpdate = (path: url.path, value: progress)
+
+        Task { @MainActor in
+            if progressUpdate.value >= 1.0 {
+                self.downloadProgress.removeValue(forKey: progressUpdate.path)
+            } else {
+                self.downloadProgress[progressUpdate.path] = progressUpdate.value
+            }
+        }
     }
 }
 
@@ -61,19 +109,8 @@ extension AudioProvider {
 
 extension AudioProvider {
     private func setSyncing(_ syncing: Bool) {
-        if syncing {
-            debounceTimer?.invalidate()
-            withAnimation {
-                self.isSyncing = true
-            }
-        } else {
-            debounceTimer = Timer.scheduledTimer(withTimeInterval: 1.5, repeats: false) { [weak self] _ in
-                Task { @MainActor in
-                    withAnimation {
-                        self?.isSyncing = false
-                    }
-                }
-            }
+        withAnimation {
+            self.isSyncing = syncing
         }
     }
 

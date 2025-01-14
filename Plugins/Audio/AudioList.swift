@@ -26,7 +26,6 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     @State var selection: URL? = nil
     @State var isSorting = false
     @State var sortMode: SortMode = .none
-    @State var progressMap = [URL: Double]()
 
     @Query(sort: \AudioModel.order, animation: .default) var audios: [AudioModel]
 
@@ -76,8 +75,8 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
                         ForEach(urls, id: \.self) { url in
                             url.makeMediaView()
                                 .magicAvatarDownloadProgress(Binding(
-                                    get: { progressMap[url] ?? 1.1 },
-                                    set: { progressMap[url] = $0 }
+                                    get: { audioManager.downloadProgress[url.path] ?? 1.1 },
+                                    set: { _ in }
                                 ))
                                 .magicPadding(horizontal: 0, vertical: 0)
                                 .magicVerbose(false)
@@ -96,21 +95,6 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
         .onChange(of: man.asset, handlePlayAssetChange)
         .onReceive(nc.publisher(for: .DBSorting), perform: onSorting)
         .onReceive(nc.publisher(for: .DBSortDone), perform: onSortDone)
-        .onReceive(nc.publisher(for: .dbSyncing), perform: handleDBSyncing)
-    }
-
-    func handleDBSyncing(_ notification: Notification) {
-        if let items = notification.userInfo?["items"] as? [URL] {
-            for file in items {
-                if file.isDownloading {
-                    setProgress(for: file, value: file.downloadProgress)
-                } else if file.isDownloaded {
-                    setProgress(for: file, value: 1.0)
-                }
-            }
-        } else {
-            os_log("\(t)⚠️ handleDBSyncing: no items")
-        }
     }
 }
 
@@ -195,9 +179,5 @@ extension AudioList {
 
     private func setSortMode(_ newValue: SortMode) {
         sortMode = newValue
-    }
-
-    private func setProgress(for url: URL, value: Double) {
-        progressMap[url] = value
     }
 }

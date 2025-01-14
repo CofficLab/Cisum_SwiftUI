@@ -73,7 +73,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
     }
 
     func onCurrentURLChanged(url: URL) {
-        let verbose = true
+        let verbose = false
 
         if verbose {
             os_log("\(self.t)🍋🍋🍋 OnPlayAssetUpdate with asset \(url.title)")

@@ -52,7 +52,7 @@ class BookDB: ObservableObject, SuperEvent, SuperLog {
     }
     
     func makeMonitor() -> Cancellable {
-        self.disk.onDirectoryChanged(verbose: true, caller: self.className, { items, isFirst, error in
+        self.disk.onDirChange(verbose: true, caller: self.className, { items, isFirst, error in
             Task {
                 os_log("\(self.t)🍋🍋🍋 OnDiskUpdate")
                 self.emitDBSyncing(items)

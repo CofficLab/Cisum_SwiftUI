@@ -1,6 +1,5 @@
 import Foundation
 import MagicKit
-
 import Combine
 import OSLog
 import SwiftData
@@ -22,7 +21,7 @@ actor AudioDB: ObservableObject, SuperEvent, SuperLog {
         let container = try await AudioConfig.getContainer()
         self.db = AudioRecordDB(container, reason: reason, verbose: verbose)
         self.disk = disk
-        self.monitor = self.makeMonitor()
+//        self.monitor = self.makeMonitor()
     }
 
     func allAudios(reason: String) async -> [URL] {
@@ -121,14 +120,15 @@ actor AudioDB: ObservableObject, SuperEvent, SuperLog {
             }
 
             if isFirst {
+                await self.onDBSyncing(items)
                 await self.db.initItems(items, verbose: verbose)
+                await self.emitDBSynced()
             } else {
                 await self.db.syncWithUpdatedItems(items, verbose: verbose)
             }
             
             let shouldEmit = await Task.detached { await !self.isShuttingDown }.value
             guard shouldEmit == true else { return }
-            await self.emitDBSynced()
         }
         
         currentSyncTask = task
@@ -143,7 +143,7 @@ actor AudioDB: ObservableObject, SuperEvent, SuperLog {
         
         let debounceInterval = 2.0
         
-        return self.disk.onDirectoryChanged(verbose: true, caller: self.className, { [weak self] items, isFirst, error in
+        return self.disk.onDirChange(verbose: false, caller: self.className, { [weak self] items, isFirst, error in
             guard let self = self else { return }
             
             @Sendable func handleChange() async {
@@ -155,12 +155,16 @@ actor AudioDB: ObservableObject, SuperEvent, SuperLog {
                 }
                 UserDefaults.standard.set(Date(), forKey: "LastUpdateTime")
                 
-                await self.onDBSyncing(items)
                 await self.sync(items, verbose: true, isFirst: isFirst)
             }
             
             Task {
                 await handleChange()
+            }
+        }, onProgress: { [weak self] url, progress in
+            guard let self = self else { return }
+            Task {
+                await self.emitDownloadProgress(url: url, progress: progress)
             }
         })
     }
@@ -198,6 +202,14 @@ extension AudioDB {
         os_log("\(self.t)Sync Done")
         self.emit(name: .dbSynced, object: nil)
     }
+
+    func emitDownloadProgress(url: URL, progress: Double) {
+        info("Download progress: \(url.lastPathComponent) - \(Int(progress * 100))%")
+        os_log("\(self.t)📥 Download progress: \(url.lastPathComponent) - \(Int(progress * 100))%")
+        self.emit(name: .audioDownloadProgress, 
+                 object: nil, 
+                 userInfo: ["url": url, "progress": progress])
+    }
 }
 
 // MARK: Event Name
@@ -208,4 +220,5 @@ extension Notification.Name {
     static let dbSynced = Notification.Name("dbSynced")
     static let DBSorting = Notification.Name("DBSorting")
     static let DBSortDone = Notification.Name("DBSortDone")
+    static let audioDownloadProgress = Notification.Name("audioDownloadProgress")
 }
