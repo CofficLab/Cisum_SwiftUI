@@ -200,7 +200,7 @@ extension PluginProvider {
 
     func onPause(man: PlayManWrapper) async throws {
         for plugin in plugins {
-            try await plugin.onPause(playMan: man)
+            await plugin.onPause(playMan: man)
         }
     }
 }

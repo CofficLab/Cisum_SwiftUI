@@ -16,8 +16,6 @@ import SwiftUI
 struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     nonisolated static let emoji = "📬"
 
-    @Environment(\.modelContext) private var modelContext
-
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var man: PlayMan
     @EnvironmentObject var audioManager: AudioProvider
@@ -26,11 +24,9 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     @State var selection: URL? = nil
     @State var isSorting = false
     @State var sortMode: SortMode = .none
+    @State var urls: [URL] = []
 
-    @Query(sort: \AudioModel.order, animation: .default) var audios: [AudioModel]
-
-    var total: Int { audios.count }
-    var urls: [URL] { audios.map { $0.url } }
+    var total: Int { urls.count }
 
     var body: some View {
         Group {
@@ -73,17 +69,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
                         }
                     }, content: {
                         ForEach(urls, id: \.self) { url in
-                            url.makeMediaView()
-                                .magicAvatarDownloadProgress(Binding(
-                                    get: { audioManager.downloadProgress[url.path] ?? 1.1 },
-                                    set: { _ in }
-                                ))
-                                .magicPadding(horizontal: 0, vertical: 0)
-                                .magicVerbose(false)
-                                .showAvatar(true)
-                                .magicShowLogButtonInDebug()
-                                .magicHideActions()
-                                .tag(url as URL?)
+                            AudioItemView(url: url)
                         }
                     })
                 }
@@ -96,12 +82,20 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
         .onReceive(nc.publisher(for: .DBSorting), perform: onSorting)
         .onReceive(nc.publisher(for: .DBSortDone), perform: onSortDone)
     }
+    
+    private func updateURLs() {
+        Task {
+            self.urls = await audioDB.allAudios(reason: self.className)
+        }
+    }
 }
 
 // MARK: Event Handler
 
 extension AudioList {
     func handleOnAppear() {
+        updateURLs()
+        
         if let asset = man.asset {
             setSelection(asset)
         }
@@ -133,6 +127,7 @@ extension AudioList {
 
     func onSortDone(_ notification: Notification) {
         os_log("\(t)onSortDone")
+        self.updateURLs()
     }
 }
 

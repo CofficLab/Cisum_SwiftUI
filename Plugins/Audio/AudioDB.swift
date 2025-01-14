@@ -21,7 +21,7 @@ actor AudioDB: ObservableObject, SuperEvent, SuperLog {
         let container = try await AudioConfig.getContainer()
         self.db = AudioRecordDB(container, reason: reason, verbose: verbose)
         self.disk = disk
-//        self.monitor = self.makeMonitor()
+        self.monitor = self.makeMonitor()
     }
 
     func allAudios(reason: String) async -> [URL] {
