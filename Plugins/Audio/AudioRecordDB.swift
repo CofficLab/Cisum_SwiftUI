@@ -578,7 +578,7 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
 
         if verbose {
-            os_log("\(self.jobEnd(startTime, title: "\(self.t)✅ SyncWithDisk(\(items.count))", tolerance: 0.01))")
+            os_log("\(self.jobEnd(startTime, title: "\(self.t)✅ Sync(\(items.count))", tolerance: 0.01))")
         }
     }
 

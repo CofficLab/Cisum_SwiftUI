@@ -144,7 +144,8 @@ actor AudioDB: ObservableObject, SuperEvent, SuperLog {
         let debounceInterval = 2.0
 
         return self.disk.onDirChange(
-            verbose: true, caller: self.className,
+            verbose: false,
+            caller: self.className,
             onChange: { [weak self] items, isFirst, _ in
                 guard let self = self else { return }
 
@@ -157,7 +158,7 @@ actor AudioDB: ObservableObject, SuperEvent, SuperLog {
                     }
                     UserDefaults.standard.set(Date(), forKey: "LastUpdateTime")
 
-                    await self.sync(items, verbose: true, isFirst: isFirst)
+                    await self.sync(items, verbose: false, isFirst: isFirst)
                 }
 
                 Task {

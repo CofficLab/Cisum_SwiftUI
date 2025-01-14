@@ -23,7 +23,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     @StateObject var c = ConfigProvider()
 
     init(@ViewBuilder content: () -> Content) {
-        let man = PlayMan(playlistEnabled: false, verbose: true)
+        let man = PlayMan(playlistEnabled: false, verbose: false)
         self.content = content()
         self._man = StateObject(wrappedValue: man)
         self.playManWrapper = PlayManWrapper(playMan: man)
