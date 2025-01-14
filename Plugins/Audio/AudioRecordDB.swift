@@ -162,6 +162,12 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         try deleteAudios(ids: ids)
     }
 
+    func deleteAudios(_ urls: [URL]) throws {
+        for url in urls {
+            try deleteAudio(url: url)
+        }
+    }
+
     func destroyAudios() {
         do {
             try destroy(for: AudioModel.self)

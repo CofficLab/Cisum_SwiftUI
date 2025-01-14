@@ -22,6 +22,7 @@ struct AudioList2: View, SuperThread, SuperLog, SuperEvent {
     @EnvironmentObject var man: PlayMan
     @EnvironmentObject var audioManager: AudioProvider
     @EnvironmentObject var audioDB: AudioDB
+    @EnvironmentObject var m: MessageProvider
 
     @State var selection: URL? = nil
     @State var isSorting = false
@@ -75,6 +76,7 @@ struct AudioList2: View, SuperThread, SuperLog, SuperEvent {
                         ForEach(urls, id: \.self) { url in
                             AudioItemView(url: url)
                         }
+                        .onDelete(perform: deleteItems)
                     })
                 }
                 .listStyle(.plain)
@@ -126,6 +128,27 @@ extension AudioList2 {
     func onSortDone(_ notification: Notification) {
         os_log("\(t)onSortDone")
 //        self.updateURLs()
+    }
+
+    func deleteItems(at offsets: IndexSet) {
+        withAnimation {
+            // 获取要删除的 URLs
+            let urlsToDelete = offsets.map { urls[$0] }
+            
+            // 从数据库中删除对应的 AudioModel
+            for url in urlsToDelete {
+                os_log("\(t)deleteItems: \(url.shortPath())")
+                do {
+                    try url.delete()
+
+                    m.toast("已删除 \(url.title)")
+                } catch {
+                    os_log(.error, "\(t)deleteItems: \(error)")
+
+                    m.error(error)
+                }
+            }
+        }
     }
 }
 

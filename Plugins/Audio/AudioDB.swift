@@ -1,6 +1,6 @@
+import Combine
 import Foundation
 import MagicKit
-import Combine
 import OSLog
 import SwiftData
 import SwiftUI
@@ -106,12 +106,12 @@ actor AudioDB: ObservableObject, SuperEvent, SuperLog {
 
     func sync(_ items: [URL], verbose: Bool = false, isFirst: Bool) async {
         guard !isShuttingDown else { return }
-        
+
         currentSyncTask?.cancel()
-        
+
         let task = Task(priority: .utility) { [weak self] in
             guard let self = self else { return }
-            
+
             let shouldContinue = await Task.detached { await !self.isShuttingDown }.value
             guard shouldContinue == true else { return }
 
@@ -122,11 +122,11 @@ actor AudioDB: ObservableObject, SuperEvent, SuperLog {
             } else {
                 await self.db.syncWithUpdatedItems(items, verbose: verbose)
             }
-            
+
             let shouldEmit = await Task.detached { await !self.isShuttingDown }.value
             guard shouldEmit == true else { return }
         }
-        
+
         currentSyncTask = task
     }
 
@@ -140,33 +140,43 @@ actor AudioDB: ObservableObject, SuperEvent, SuperLog {
         if self.disk.isNotDirExist {
             info("Error: \(self.disk.shortPath()) not exist")
         }
-        
+
         let debounceInterval = 2.0
-        
-        return self.disk.onDirChange(verbose: true, caller: self.className, { [weak self] items, isFirst, error in
-            guard let self = self else { return }
-            
-            @Sendable func handleChange() async {
-                guard !(await self.isShuttingDown) else { return }
-                
-                if let lastTime = UserDefaults.standard.object(forKey: "LastUpdateTime") as? Date {
-                    let now = Date()
-                    guard now.timeIntervalSince(lastTime) >= debounceInterval else { return }
+
+        return self.disk.onDirChange(
+            verbose: true, caller: self.className,
+            onChange: { [weak self] items, isFirst, _ in
+                guard let self = self else { return }
+
+                @Sendable func handleChange() async {
+                    guard !(await self.isShuttingDown) else { return }
+
+                    if let lastTime = UserDefaults.standard.object(forKey: "LastUpdateTime") as? Date {
+                        let now = Date()
+                        guard now.timeIntervalSince(lastTime) >= debounceInterval else { return }
+                    }
+                    UserDefaults.standard.set(Date(), forKey: "LastUpdateTime")
+
+                    await self.sync(items, verbose: true, isFirst: isFirst)
                 }
-                UserDefaults.standard.set(Date(), forKey: "LastUpdateTime")
-                
-                await self.sync(items, verbose: true, isFirst: isFirst)
-            }
-            
-            Task {
-                await handleChange()
-            }
-        }, onProgress: { [weak self] url, progress in
-            guard let self = self else { return }
-            Task {
-                await self.emitDownloadProgress(url: url, progress: progress)
-            }
-        })
+
+                Task {
+                    await handleChange()
+                }
+            },
+            onDeleted: { [weak self] urls in
+                guard let self = self else { return }
+
+                Task {
+                    try? await self.db.deleteAudios(urls)
+                }
+            },
+            onProgress: { [weak self] url, progress in
+                guard let self = self else { return }
+                Task {
+                    await self.emitDownloadProgress(url: url, progress: progress)
+                }
+            })
     }
 
     nonisolated func prepareForDeinit() {
@@ -204,9 +214,9 @@ extension AudioDB {
     }
 
     func emitDownloadProgress(url: URL, progress: Double) {
-        self.emit(name: .audioDownloadProgress, 
-                 object: nil, 
-                 userInfo: ["url": url, "progress": progress])
+        self.emit(name: .audioDownloadProgress,
+                  object: nil,
+                  userInfo: ["url": url, "progress": progress])
     }
 }
 
