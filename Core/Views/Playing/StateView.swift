@@ -21,7 +21,7 @@ struct StateView: View, SuperLog, SuperThread {
             }
             
             if playMan.isBuffering {
-                makeInfoView("正在缓冲")
+                makeInfoView(playMan.state.stateText)
             }
 
             // 播放过程中出现的错误

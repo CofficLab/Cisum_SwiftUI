@@ -19,11 +19,11 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     @StateObject var m = MessageProvider()
     @StateObject var p = PluginProvider()
     @StateObject var a = AppProvider()
-    @StateObject var man = PlayMan(playlistEnabled: false, verbose: false)
+    @StateObject var man: PlayMan
     @StateObject var c = ConfigProvider()
 
     init(@ViewBuilder content: () -> Content) {
-        let man = PlayMan(playlistEnabled: false)
+        let man = PlayMan(playlistEnabled: false, verbose: true)
         self.content = content()
         self._man = StateObject(wrappedValue: man)
         self.playManWrapper = PlayManWrapper(playMan: man)
@@ -50,6 +50,10 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
 
                                 ToolbarItemGroup(placement: .cancellationAction) {
                                     Spacer()
+                                    
+                                    man.currentURL?
+                                        .makeOpenButton()
+                                        .magicShapeVisibility(.onHover)
 
                                     man.makeLogButton()
                                         .magicShape(.circle)
@@ -229,8 +233,6 @@ extension RootView {
             }
 
             self.loading = false
-
-            os_log("\(self.t)👌👌👌 Ready")
             self.m.append("Ready")
         }
     }

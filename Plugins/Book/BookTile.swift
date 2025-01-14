@@ -157,11 +157,11 @@ extension BookTile {
             opacity = 0.95
         }
 
-        if let first = book.url.getChildren().first {
-            playMan.play(url: first)
-        } else {
-            playMan.play(url: book.url)
-        }
+//        if let first = book.url.getChildren().first {
+//            playMan.play(url: first)
+//        } else {
+//            playMan.play(url: book.url)
+//        }
 
         // 延迟恢复动画
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { @MainActor in

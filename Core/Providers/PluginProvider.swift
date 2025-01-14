@@ -74,8 +74,10 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
         return plugins.flatMap { $0.addToolBarButtons() }
     }
 
-    func setCurrentGroup(_ plugin: SuperPlugin) throws {
-        os_log("\(self.t)🏃🏃🏃 SetCurrentGroup: \(plugin.id)")
+    func setCurrentGroup(_ plugin: SuperPlugin, verbose: Bool = false) throws {
+        if verbose {
+            os_log("\(self.t)🏃🏃🏃 SetCurrentGroup: \(plugin.id)")
+        }
 
         if plugin.isGroup {
             self.current = plugin
@@ -239,7 +241,7 @@ public class PlayManWrapper {
     }
 
     func play(url: URL, autoPlay: Bool = true) async {
-        playMan.play(url: url, autoPlay: autoPlay)
+        await playMan.play(url: url, autoPlay: autoPlay)
     }
 
     func seek(time: TimeInterval) async {
@@ -247,7 +249,7 @@ public class PlayManWrapper {
     }
 
     func setPlayMode(_ mode: PlayMode) {
-        playMan.setPlayMode(mode)
+        playMan.changePlayMode(mode)
     }
 
     func getPlayMode() -> PlayMode {

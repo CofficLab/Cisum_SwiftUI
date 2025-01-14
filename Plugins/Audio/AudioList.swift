@@ -107,7 +107,9 @@ extension AudioList {
         }
 
         if url != man.asset {
-            self.man.play(url: url)
+            Task {
+                await self.man.play(url: url)
+            }
         }
     }
 
@@ -127,7 +129,7 @@ extension AudioList {
 
     func onSortDone(_ notification: Notification) {
         os_log("\(t)onSortDone")
-        self.updateURLs()
+//        self.updateURLs()
     }
 }
 

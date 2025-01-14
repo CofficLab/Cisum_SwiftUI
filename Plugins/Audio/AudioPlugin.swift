@@ -173,8 +173,6 @@ actor AudioPlugin: SuperPlugin, SuperLog {
         if let asset = assetTarget {
             await playMan.play(url: asset, autoPlay: false)
             await playMan.seek(time: timeTarget)
-
-            os_log("\(self.t)🍋🍋🍋 Set like to \(liked)")
             playMan.setLike(liked)
         }
 
