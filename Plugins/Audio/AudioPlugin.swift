@@ -16,7 +16,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
     let iconName = "music.note"
     let isGroup = true
 
-    @MainActor var dirName: String { Config.isDebug ? "audios_debug" : "audios" }
+    @MainActor var dirName: String = AudioConfig.dbDirName
     @MainActor var disk: URL?
     @MainActor var audioProvider: AudioProvider?
     @MainActor var audioDB: AudioDB?
