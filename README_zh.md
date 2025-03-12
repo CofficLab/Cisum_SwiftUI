@@ -8,7 +8,7 @@
 
 ## 关于
 
-[产品介绍](https://cofficlab.github.io/en/cisum)
+[产品介绍](https://coffic.zone.id/cisum)
 
 [App Store](https://apps.apple.com/cn/app/cisum/id6466401036)
 

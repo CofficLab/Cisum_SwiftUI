@@ -8,7 +8,7 @@ Drop your audio files in, and let Cisum play and manage them for you.
 
 ## About
 
-[Product Introduction](https://cofficlab.github.io/en/cisum)
+[Product Introduction](https://coffic.zone.id/en/cisum)
 
 [App Store](https://apps.apple.com/cn/app/cisum/id6466401036)
 
