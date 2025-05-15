@@ -19,7 +19,7 @@
         {
           "description" : "专业版1年使用许可",
           "displayName" : "专业版1年",
-          "locale" : "zh_CN"
+          "locale" : "zh_Hans"
         }
       ],
       "productID" : "com.yueyi.kuaiyizhi.pro.year.1",
@@ -34,7 +34,7 @@
         {
           "description" : "专业版1月使用许可",
           "displayName" : "专业版1月",
-          "locale" : "zh_CN"
+          "locale" : "zh_Hans"
         }
       ],
       "productID" : "com.yueyi.kuaiyizhi.pro.month.1",
@@ -49,7 +49,7 @@
         {
           "description" : "专业版7天使用许可",
           "displayName" : "专业版7天使用许可",
-          "locale" : "zh_CN"
+          "locale" : "zh_Hans"
         }
       ],
       "productID" : "com.yueyi.kuaiyizhi.pro.day.7",
@@ -155,7 +155,7 @@
       "3" : 6
     },
     "_failTransactionsEnabled" : false,
-    "_locale" : "zh_CN",
+    "_locale" : "zh_Hans",
     "_storefront" : "CHN",
     "_storeKitErrors" : [
       {
@@ -235,7 +235,7 @@
             {
               "description" : "",
               "displayName" : "专业版按月订阅",
-              "locale" : "zh_CN"
+              "locale" : "zh_Hans"
             }
           ],
           "productID" : "com.yueyi.cisum.pro.monthly",
@@ -269,7 +269,7 @@
             {
               "description" : "",
               "displayName" : "专业版按年订阅",
-              "locale" : "zh_CN"
+              "locale" : "zh_Hans"
             },
             {
               "description" : "",

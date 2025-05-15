@@ -1,6 +1,10 @@
 # Cisum
 
-🇨🇳 中文 | [🌍 English](README.md)
+[![English](https://img.shields.io/badge/English-violet)](README.md)
+[![简体中文](https://img.shields.io/badge/中文文档-gray)](README-zh.md)
+[![Coffic](https://img.shields.io/badge/Coffic-green)](https://coffic.cn)
+[![Maintainer](https://img.shields.io/badge/Maintainer-blue)](https://github.com/nookery)
+[![AppStore](https://img.shields.io/badge/AppStore-red)](https://apps.apple.com/cn/app/cisum/id6466401036)
 
 把音频文件放进去，让 Cisum 为你播放和管理。
 
