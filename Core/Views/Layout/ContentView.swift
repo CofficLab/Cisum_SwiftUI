@@ -2,7 +2,7 @@ import MagicKit
 import OSLog
 import SwiftUI
 
-struct ContentView: View, SuperLog, SuperThread {
+struct ContentView: View, MagicKit.SuperLog, SuperThread {
     nonisolated static let emoji = "🐮"
 
     var body: some View {
