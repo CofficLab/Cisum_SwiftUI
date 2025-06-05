@@ -7,33 +7,42 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     nonisolated static var emoji: String { "🌳" }
 
     var content: Content
-    let s = StoreProvider()
-    let cloudProvider = CloudProvider()
-    private let playManWrapper: PlayManWrapper
 
     @State var isDropping: Bool = false
     @State var error: Error? = nil
     @State var loading = true
     @State var iCloudAvailable = true
-
-    @StateObject var m = MessageProvider()
-    @StateObject var p = PluginProvider()
-    @StateObject var a = AppProvider()
-    @StateObject var man: PlayMan
-    @StateObject var c = ConfigProvider()
+    
+    @StateObject var a: AppProvider
+    @StateObject var m: MessageProvider
+    
+    var p: PluginProvider
+    var man: PlayMan
+    var playManWrapper: PlayManWrapper
+    var c: ConfigProvider
+    var s: StoreProvider
+    var cloudProvider: CloudProvider
 
     init(@ViewBuilder content: () -> Content) {
-        let man = PlayMan(playlistEnabled: false, verbose: false)
+        os_log("\(Self.onInit)")
+        
+        let box = RootBox.shared
         self.content = content()
-        self._man = StateObject(wrappedValue: man)
-        self.playManWrapper = PlayManWrapper(playMan: man)
+        self._a = StateObject(wrappedValue: box.app)
+        self._m = StateObject(wrappedValue: box.message)
+        self.p = box.plugin
+        self.c = box.config
+        self.man = box.man
+        self.playManWrapper = box.playManWrapper
+        self.s = box.store
+        self.cloudProvider = box.cloud
     }
 
     var body: some View {
         Group {
             if self.loading {
                 LaunchView()
-            } else if a.isResetting {
+            } else if self.a.isResetting {
                 Text("正在重置")
             } else {
                 if let e = self.error {
@@ -87,18 +96,18 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                         }
                     }
                     .environmentObject(man)
-                    .environmentObject(a)
+                    .environmentObject(self.a)
                     .environmentObject(s)
                     .environmentObject(p)
                     .environmentObject(m)
-                    .sheet(isPresented: $a.showSheet, content: {
+                    .sheet(isPresented: self.$a.showSheet, content: {
                         VStack {
                             ForEach(Array(p.getSheetViews(storage: c.storageLocation).enumerated()), id: \.offset) { _, view in
                                 view
                             }
                         }
                         .environmentObject(man)
-                        .environmentObject(a)
+                        .environmentObject(self.a)
                         .environmentObject(s)
                         .environmentObject(p)
                         .environmentObject(m)

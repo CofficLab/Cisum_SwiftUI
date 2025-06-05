@@ -14,12 +14,27 @@ final class RootBox: SuperLog {
     nonisolated static let emoji = "🚉"
 
     let app: AppProvider
+    let message: MessageProvider
+    let plugin: PluginProvider
+    let config: ConfigProvider
+    let man: PlayMan
+    let store: StoreProvider
+    let playManWrapper: PlayManWrapper
+    let cloud: CloudProvider
 
     private init(reason: String) {
         os_log("\(Self.onInit)(\(reason))")
 
         // Providers
         self.app = AppProvider()
+        self.message = MessageProvider()
+        self.plugin = PluginProvider()
+        self.config = ConfigProvider()
+        self.store = StoreProvider()
+        self.cloud = CloudProvider()
+        
+        self.man = PlayMan(playlistEnabled: false, verbose: false)
+        self.playManWrapper = PlayManWrapper(playMan: self.man)
     }
 }
 
