@@ -2,7 +2,7 @@ import Foundation
 import OSLog
 import SwiftData
 import MagicCore
-
+import SwiftUI
 
 extension AudioRecordDB {
     func prepareJob() async throws {
@@ -164,4 +164,12 @@ extension DispatchGroup {
     var count: Int {
         debugDescription.components(separatedBy: ",").filter { $0.contains("count") }.first?.components(separatedBy: CharacterSet.decimalDigits.inverted).compactMap { Int($0) }.first ?? 0
     }
+}
+
+#Preview("Big Screen") {
+    RootView {
+        ContentView()
+    }
+    .frame(width: 1200)
+    .frame(height: 1200)
 }

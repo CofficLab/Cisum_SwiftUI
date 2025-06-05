@@ -1,7 +1,6 @@
 import Combine
 import Foundation
 import MagicCore
-
 import OSLog
 import StoreKit
 import SwiftData
@@ -77,15 +76,15 @@ extension AudioProvider {
     private func handleDBSyncing(_ notification: Notification) {
         if let items = notification.userInfo?["items"] as? [URL] {
             Task {
-                await self.setFiles(items)
-                await self.setSyncing(true)
+                self.setFiles(items)
+                self.setSyncing(true)
             }
         }
     }
 
     private func handleDBSynced(_ notification: Notification) {
         Task {
-            await self.setSyncing(false)
+            self.setSyncing(false)
         }
     }
 
@@ -118,3 +117,12 @@ extension AudioProvider {
         self.files = files
     }
 }
+
+#Preview("Big Screen") {
+    RootView {
+        ContentView()
+    }
+    .frame(width: 1200)
+    .frame(height: 1200)
+}
+

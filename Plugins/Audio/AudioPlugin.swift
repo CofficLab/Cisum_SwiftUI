@@ -334,6 +334,8 @@ extension AudioPlugin {
     }
 }
 
+// MARK: - Notification
+
 extension Notification.Name {
     static let AudiosUpdatedNotification = Notification.Name("AudiosUpdatedNotification")
     static let AudioUpdatedNotification = Notification.Name("AudioUpdatedNotification")
@@ -341,6 +343,8 @@ extension Notification.Name {
     static let URLDeletedNotification = Notification.Name("URLDeletedNotification")
     static let URLsDeletedNotification = Notification.Name("URLsDeletedNotification")
 }
+
+// MARK: - Error
 
 enum AudioPluginError: Error, LocalizedError {
     case NoNextAsset
@@ -357,4 +361,20 @@ enum AudioPluginError: Error, LocalizedError {
             return "No disk"
         }
     }
+}
+
+#Preview("Small Screen") {
+    RootView {
+        UserDefaultsDebugView()
+    }
+    .frame(width: 500)
+    .frame(height: 600)
+}
+
+#Preview("Big Screen") {
+    RootView {
+        UserDefaultsDebugView()
+    }
+    .frame(width: 800)
+    .frame(height: 1200)
 }
