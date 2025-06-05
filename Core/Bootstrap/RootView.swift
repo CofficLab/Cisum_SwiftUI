@@ -201,7 +201,7 @@ extension RootView {
                 self.man.subscribe(
                     name: self.className,
                     onStateChanged: { state in
-                        os_log("\(self.t)♻️ 当前播放状态 -> \(state.stateText)")
+                        os_log("\(self.t)🐯 当前播放状态 -> \(state.stateText)")
                         if state == .paused {
                             Task {
                                 do { try await self.p.onPause(man: playManWrapper) } catch {

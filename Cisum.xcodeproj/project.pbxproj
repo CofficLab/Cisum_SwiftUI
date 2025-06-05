@@ -10,19 +10,12 @@
 		0B7792462D15ADF500D78FF4 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 0B7792452D15ADF500D78FF4 /* Localizable.xcstrings */; };
 		0B92ACCA2BBA80F300F1A74F /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 0B92ACC92BBA80F300F1A74F /* README.md */; };
 		0BB5871D2AD820FA0071AEBD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0BB5871C2AD820FA0071AEBD /* Assets.xcassets */; };
-		F50D44602DF149A100008E72 /* MagicAsset in Frameworks */ = {isa = PBXBuildFile; productRef = F50D445F2DF149A100008E72 /* MagicAsset */; };
-		F50D44642DF149A100008E72 /* MagicPlayMan in Frameworks */ = {isa = PBXBuildFile; productRef = F50D44632DF149A100008E72 /* MagicPlayMan */; };
 		F54522252BFF3C780027CF55 /* Products.storekit in Resources */ = {isa = PBXBuildFile; fileRef = F54522242BFF3C770027CF55 /* Products.storekit */; };
 		F54522272BFF3CCE0027CF55 /* Products.plist in Resources */ = {isa = PBXBuildFile; fileRef = F54522262BFF3CCE0027CF55 /* Products.plist */; };
-		F56A2D922DF149DD003B9EAE /* MagicPlayMan in Frameworks */ = {isa = PBXBuildFile; productRef = 0B8902DF2D3689DD002E84B1 /* MagicPlayMan */; };
-		F56A2EB52DF14A49003B9EAE /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = F56A2EB42DF14A49003B9EAE /* AlertToast */; };
-		F5B8C0892DF14A7000C35A76 /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = F5C2EB7D2D1AB49700798B46 /* AlertToast */; };
-		F5B8C08A2DF14A7000C35A76 /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = F566BD732D1B8EE0005D7F54 /* AlertToast */; };
-		F5B8C08C2DF14A7000C35A76 /* MagicPlayMan in Frameworks */ = {isa = PBXBuildFile; productRef = 0BDA9C6A2D2578D300A99623 /* MagicPlayMan */; };
-		F5B8C08D2DF14A7000C35A76 /* MagicPlayMan in Frameworks */ = {isa = PBXBuildFile; productRef = F50859132D2CD6510089DC96 /* MagicPlayMan */; };
-		F5B8C08E2DF14A7000C35A76 /* MagicPlayMan in Frameworks */ = {isa = PBXBuildFile; productRef = F5B580852D34C12800FD80D7 /* MagicPlayMan */; };
-		F5B8C08F2DF14A7000C35A76 /* MagicPlayMan in Frameworks */ = {isa = PBXBuildFile; productRef = F541B3B42D351009009300A9 /* MagicPlayMan */; };
-		F5B8C0902DF14A7000C35A76 /* MagicCore in Frameworks */ = {isa = PBXBuildFile; productRef = F50D44612DF149A100008E72 /* MagicCore */; };
+		F59E30CA2DF1870D00F794A7 /* MagicAsset in Frameworks */ = {isa = PBXBuildFile; productRef = F59E30C92DF1870D00F794A7 /* MagicAsset */; };
+		F59E30CC2DF1870D00F794A7 /* MagicCore in Frameworks */ = {isa = PBXBuildFile; productRef = F59E30CB2DF1870D00F794A7 /* MagicCore */; };
+		F59E30CE2DF1870D00F794A7 /* MagicPlayMan in Frameworks */ = {isa = PBXBuildFile; productRef = F59E30CD2DF1870D00F794A7 /* MagicPlayMan */; };
+		F59E30D12DF1871900F794A7 /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = F59E30D02DF1871900F794A7 /* AlertToast */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,17 +40,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F5B8C0902DF14A7000C35A76 /* MagicCore in Frameworks */,
-				F5B8C08F2DF14A7000C35A76 /* MagicPlayMan in Frameworks */,
-				F5B8C08E2DF14A7000C35A76 /* MagicPlayMan in Frameworks */,
-				F5B8C08D2DF14A7000C35A76 /* MagicPlayMan in Frameworks */,
-				F5B8C08C2DF14A7000C35A76 /* MagicPlayMan in Frameworks */,
-				F5B8C08A2DF14A7000C35A76 /* AlertToast in Frameworks */,
-				F5B8C0892DF14A7000C35A76 /* AlertToast in Frameworks */,
-				F56A2D922DF149DD003B9EAE /* MagicPlayMan in Frameworks */,
-				F56A2EB52DF14A49003B9EAE /* AlertToast in Frameworks */,
-				F50D44602DF149A100008E72 /* MagicAsset in Frameworks */,
-				F50D44642DF149A100008E72 /* MagicPlayMan in Frameworks */,
+				F59E30CA2DF1870D00F794A7 /* MagicAsset in Frameworks */,
+				F59E30D12DF1871900F794A7 /* AlertToast in Frameworks */,
+				F59E30CC2DF1870D00F794A7 /* MagicCore in Frameworks */,
+				F59E30CE2DF1870D00F794A7 /* MagicPlayMan in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,19 +105,15 @@
 			);
 			name = Cisum;
 			packageProductDependencies = (
-				F54DFA782CA630BE00F81BE3 /* MagicKit */,
-				F5ADFF6F2D1AA25C003CF664 /* MagicKit */,
 				F5C2EB7D2D1AB49700798B46 /* AlertToast */,
 				F566BD732D1B8EE0005D7F54 /* AlertToast */,
 				0BDA9C6A2D2578D300A99623 /* MagicPlayMan */,
 				F50859132D2CD6510089DC96 /* MagicPlayMan */,
-				F5B580852D34C12800FD80D7 /* MagicPlayMan */,
-				F541B3B42D351009009300A9 /* MagicPlayMan */,
 				0B8902DF2D3689DD002E84B1 /* MagicPlayMan */,
-				F50D445F2DF149A100008E72 /* MagicAsset */,
-				F50D44612DF149A100008E72 /* MagicCore */,
-				F50D44632DF149A100008E72 /* MagicPlayMan */,
-				F56A2EB42DF14A49003B9EAE /* AlertToast */,
+				F59E30C92DF1870D00F794A7 /* MagicAsset */,
+				F59E30CB2DF1870D00F794A7 /* MagicCore */,
+				F59E30CD2DF1870D00F794A7 /* MagicPlayMan */,
+				F59E30D02DF1871900F794A7 /* AlertToast */,
 			);
 			productName = Cisum;
 			productReference = 0B1D5A4B2AB301AD0010DDF2 /* Cisum.app */;
@@ -164,8 +146,8 @@
 			);
 			mainGroup = 0B9C1C342AAF18FE001A26AF;
 			packageReferences = (
-				F50D445E2DF149A100008E72 /* XCRemoteSwiftPackageReference "MagicKit" */,
-				F56A2EB32DF14A49003B9EAE /* XCRemoteSwiftPackageReference "AlertToast" */,
+				F59E30C22DF186D000F794A7 /* XCLocalSwiftPackageReference "../MagicKit" */,
+				F59E30CF2DF1871900F794A7 /* XCRemoteSwiftPackageReference "AlertToast" */,
 			);
 			productRefGroup = 0B9C1C3E2AAF18FE001A26AF /* Products */;
 			projectDirPath = "";
@@ -440,16 +422,15 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCRemoteSwiftPackageReference section */
-		F50D445E2DF149A100008E72 /* XCRemoteSwiftPackageReference "MagicKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/CofficLab/MagicKit";
-			requirement = {
-				branch = dev;
-				kind = branch;
-			};
+/* Begin XCLocalSwiftPackageReference section */
+		F59E30C22DF186D000F794A7 /* XCLocalSwiftPackageReference "../MagicKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../MagicKit;
 		};
-		F56A2EB32DF14A49003B9EAE /* XCRemoteSwiftPackageReference "AlertToast" */ = {
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		F59E30CF2DF1871900F794A7 /* XCRemoteSwiftPackageReference "AlertToast" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/elai950/AlertToast";
 			requirement = {
@@ -472,25 +453,6 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = MagicPlayMan;
 		};
-		F50D445F2DF149A100008E72 /* MagicAsset */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F50D445E2DF149A100008E72 /* XCRemoteSwiftPackageReference "MagicKit" */;
-			productName = MagicAsset;
-		};
-		F50D44612DF149A100008E72 /* MagicCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F50D445E2DF149A100008E72 /* XCRemoteSwiftPackageReference "MagicKit" */;
-			productName = MagicCore;
-		};
-		F50D44632DF149A100008E72 /* MagicPlayMan */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F50D445E2DF149A100008E72 /* XCRemoteSwiftPackageReference "MagicKit" */;
-			productName = MagicPlayMan;
-		};
-		F541B3B42D351009009300A9 /* MagicPlayMan */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = MagicPlayMan;
-		};
 		F54DFA782CA630BE00F81BE3 /* MagicKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MagicKit;
@@ -499,18 +461,26 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = AlertToast;
 		};
-		F56A2EB42DF14A49003B9EAE /* AlertToast */ = {
+		F59E30C92DF1870D00F794A7 /* MagicAsset */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = F56A2EB32DF14A49003B9EAE /* XCRemoteSwiftPackageReference "AlertToast" */;
+			productName = MagicAsset;
+		};
+		F59E30CB2DF1870D00F794A7 /* MagicCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MagicCore;
+		};
+		F59E30CD2DF1870D00F794A7 /* MagicPlayMan */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MagicPlayMan;
+		};
+		F59E30D02DF1871900F794A7 /* AlertToast */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F59E30CF2DF1871900F794A7 /* XCRemoteSwiftPackageReference "AlertToast" */;
 			productName = AlertToast;
 		};
 		F5ADFF6F2D1AA25C003CF664 /* MagicKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MagicKit;
-		};
-		F5B580852D34C12800FD80D7 /* MagicPlayMan */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = MagicPlayMan;
 		};
 		F5C2EB7D2D1AB49700798B46 /* AlertToast */ = {
 			isa = XCSwiftPackageProductDependency;
