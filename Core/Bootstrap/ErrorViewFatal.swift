@@ -7,6 +7,7 @@ struct ErrorViewFatal: View {
     var error: Error
 
     @State private var showAlert = false
+    @State private var isCopied = false
 
     var body: some View {
         ScrollView {
@@ -27,14 +28,36 @@ struct ErrorViewFatal: View {
                         .padding(.bottom, 10)
 
                     GroupBox {
+                        Text(String(describing: type(of: error)))
+                            .padding(.bottom, 20)
+                            .font(.title2)
+                        
                         Text("\(error.localizedDescription)")
                             .font(.subheadline)
                             .padding(.bottom, 10)
-
-                        Text(String(describing: type(of: error)))
-                            .padding(.bottom, 10)
-
-                        Text(String(describing: error))
+                        
+                        // 复制错误信息按钮
+                        Button(action: {
+                            copyErrorToClipboard()
+                        }) {
+                            HStack {
+                                Image(systemName: isCopied ? "checkmark.circle.fill" : "doc.on.doc")
+                                    .foregroundColor(isCopied ? .green : .blue)
+                                Text(isCopied ? "已复制" : "复制错误信息")
+                                    .foregroundColor(isCopied ? .green : .blue)
+                            }
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 8)
+                            .background(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .fill(Color.gray.opacity(0.1))
+                                    .stroke(isCopied ? Color.green : Color.blue, lineWidth: 1)
+                            )
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                        .scaleEffect(isCopied ? 1.1 : 1.0)
+                        .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isCopied)
+                        .padding(.top, 10)
                     }.padding()
 
                     Spacer()
@@ -70,7 +93,7 @@ struct ErrorViewFatal: View {
                     makeKeyValueItem(key: "仓库位置", value: c.storageLocation?.title ?? "未设置")
                 }
             }, header: { makeTitle("设置") })
-            
+
             Section(content: {
                 GroupBox {
                     makeKeyValueItem(key: "APP 容器", value: MagicApp.getContainerDirectory().path(percentEncoded: false))
@@ -120,6 +143,28 @@ struct ErrorViewFatal: View {
     private func isDirExist(_ url: URL) -> String {
         var isDir: ObjCBool = true
         return FileManager.default.fileExists(atPath: url.path(), isDirectory: &isDir) ? "是" : "否"
+    }
+    
+    /// 复制错误信息到剪贴板
+    private func copyErrorToClipboard() {
+        let errorInfo = """
+        错误类型: \(String(describing: type(of: error)))
+        错误描述: \(error.localizedDescription)
+        """
+        
+        errorInfo.copy()
+        
+        // 显示复制成功状态
+        withAnimation {
+            isCopied = true
+        }
+        
+        // 2秒后重置状态
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            withAnimation {
+                isCopied = false
+            }
+        }
     }
 }
 
