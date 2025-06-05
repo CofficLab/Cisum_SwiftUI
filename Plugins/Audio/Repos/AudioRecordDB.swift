@@ -303,11 +303,12 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
     ///   - reason: 下载原因，用于日志记录
     /// - Throws: 如果下载操作失败则抛出错误
     func downloadNextBatch(_ audio: AudioModel, count: Int = 6, reason: String) async throws {
+        info("\(self.t)Download Next Batch(\(reason))")
         var currentIndex = 0
         var currentAudio: AudioModel = audio
 
         while currentIndex < count {
-            try await currentAudio.url.download()
+            try await currentAudio.url.download(verbose: true)
 
             currentIndex = currentIndex + 1
             if let next = self.nextOf(currentAudio) {
@@ -468,9 +469,9 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
             return nil
         }
 
-//        Task {
-//            try? await self.downloadNext(audio, reason: "getNextOf")
-//        }
+        Task {
+            try? await self.downloadNext(audio, reason: "getNextOf")
+        }
         return try nextOf(audio: audio)
     }
 
@@ -632,7 +633,7 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
             return nil
         }
 
-        return self.nextOf(audio)
+        return audio
     }
 
     /// 获取指定音频模型的上一个音频模型
