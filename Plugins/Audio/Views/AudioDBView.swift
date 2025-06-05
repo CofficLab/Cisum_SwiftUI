@@ -63,10 +63,22 @@ extension Notification.Name {
     static let CopyFiles = Notification.Name("CopyFiles")
 }
 
-#Preview("APP") {
-    AppPreview()
-        .frame(height: 800)
+#Preview("Small Screen") {
+    RootView {
+        ContentView()
+    }
+    .frame(width: 500)
+    .frame(height: 1200)
 }
+
+#Preview("Big Screen") {
+    RootView {
+        ContentView()
+    }
+    .frame(width: 1200)
+    .frame(height: 1200)
+}
+
 
 #Preview("Layout") {
     LayoutView()

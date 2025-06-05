@@ -166,6 +166,14 @@ extension DispatchGroup {
     }
 }
 
+#Preview("Small Screen") {
+    RootView {
+        ContentView()
+    }
+    .frame(width: 500)
+    .frame(height: 1200)
+}
+
 #Preview("Big Screen") {
     RootView {
         ContentView()

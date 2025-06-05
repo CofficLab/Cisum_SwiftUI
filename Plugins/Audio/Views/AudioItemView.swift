@@ -31,3 +31,19 @@ struct AudioItemView: View {
     AudioItemView(url: URL(fileURLWithPath: "/tmp/test.mp3"))
         .environmentObject(AudioProvider(disk: URL(fileURLWithPath: "/tmp")))
 } 
+
+#Preview("Small Screen") {
+    RootView {
+        ContentView()
+    }
+    .frame(width: 500)
+    .frame(height: 1200)
+}
+
+#Preview("Big Screen") {
+    RootView {
+        ContentView()
+    }
+    .frame(width: 1200)
+    .frame(height: 1200)
+}

@@ -3,11 +3,9 @@ import MagicCore
 import OSLog
 import SwiftData
 import SwiftUI
+import Foundation
 
 actor AudioPlugin: SuperPlugin, SuperLog {
-    static let keyOfCurrentAudioURL = "AudioPluginCurrentAudioURL"
-    static let keyOfCurrentAudioTime = "AudioPluginCurrentAudioTime"
-    static let keyOfCurrentPlayMode = "AudioPluginCurrentPlayMode"
     static let emoji = "🎧"
 
     let label = "Audio"
@@ -69,7 +67,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
     }
 
     @MainActor func onPause(playMan: PlayManWrapper) {
-        AudioPlugin.storeCurrentTime(playMan.currentTime)
+        AudioRepo.storeCurrentTime(playMan.currentTime)
     }
 
     func onCurrentURLChanged(url: URL) {
@@ -79,7 +77,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
             os_log("\(self.t)🍋🍋🍋 OnPlayAssetUpdate with asset \(url.title)")
         }
 
-        AudioPlugin.storeCurrent(url)
+        AudioRepo.storeCurrent(url)
     }
 
     @MainActor func getDisk() -> URL? {
@@ -93,7 +91,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
 
         os_log("\(self.t)🍋🍋🍋 OnPlayModelChange with asset \(asset?.title ?? "nil")")
 
-        AudioPlugin.storePlayMode(mode)
+        AudioRepo.storePlayMode(mode)
 
         guard let audioDB = await audioDB else {
             return
@@ -146,11 +144,11 @@ actor AudioPlugin: SuperPlugin, SuperLog {
         var timeTarget: TimeInterval = 0
         var liked = false
 
-        if let url = AudioPlugin.getCurrent(), let audio = await self.audioDB?.find(url) {
+        if let url = AudioRepo.getCurrent(), let audio = await self.audioDB?.find(url) {
             assetTarget = audio
             liked = await self.audioDB?.isLiked(audio) ?? false
 
-            if let time = AudioPlugin.getCurrentTime() {
+            if let time = AudioRepo.getCurrentTime() {
                 timeTarget = time
             }
         } else {
@@ -177,7 +175,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
             playMan.setLike(liked)
         }
 
-        let mode = AudioPlugin.getPlayMode()
+        let mode = AudioRepo.getPlayMode()
         if let mode = mode {
             playMan.setPlayMode(mode)
         }
@@ -252,87 +250,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
     }
 }
 
-// MARK: Store
 
-extension AudioPlugin {
-    static func storePlayMode(_ mode: String) {
-        UserDefaults.standard.set(mode, forKey: keyOfCurrentPlayMode)
-
-        // Store mode as string for CloudKit
-        NSUbiquitousKeyValueStore.default.set(mode, forKey: keyOfCurrentPlayMode)
-        NSUbiquitousKeyValueStore.default.synchronize()
-    }
-
-    static func storeCurrent(_ url: URL?, verbose: Bool = false) {
-        if verbose {
-            os_log("\(Self.t)🍋🍋🍋 Store current audio URL: \(url?.absoluteString ?? "")")
-        }
-
-        UserDefaults.standard.set(url, forKey: keyOfCurrentAudioURL)
-
-        // Store URL as string for CloudKit
-        NSUbiquitousKeyValueStore.default.set(url?.absoluteString ?? "", forKey: keyOfCurrentAudioURL)
-        NSUbiquitousKeyValueStore.default.synchronize()
-    }
-
-    static func storeCurrentTime(_ time: TimeInterval) {
-        UserDefaults.standard.set(time, forKey: keyOfCurrentAudioTime)
-
-        // Store time as string for CloudKit
-        NSUbiquitousKeyValueStore.default.set(String(time), forKey: keyOfCurrentAudioTime)
-        NSUbiquitousKeyValueStore.default.synchronize()
-    }
-
-    static func getPlayMode() -> PlayMode? {
-        // First, try to get the mode from UserDefaults
-        if let mode = UserDefaults.standard.string(forKey: keyOfCurrentPlayMode) {
-            return PlayMode(rawValue: mode)
-        }
-
-        // If not found in UserDefaults, try to get from iCloud
-        if let modeString = NSUbiquitousKeyValueStore.default.string(forKey: keyOfCurrentPlayMode),
-           let mode = PlayMode(rawValue: modeString) {
-            return mode
-        }
-
-        return nil
-    }
-
-    static func getCurrent() -> URL? {
-        // First, try to get the URL from UserDefaults
-        if let url = UserDefaults.standard.url(forKey: keyOfCurrentAudioURL) {
-            return url
-        }
-
-        // If not found in UserDefaults, try to get from iCloud
-        if let urlString = NSUbiquitousKeyValueStore.default.string(forKey: keyOfCurrentAudioURL),
-           let url = URL(string: urlString) {
-            // If found in iCloud, update UserDefaults for future local access
-            UserDefaults.standard.set(url, forKey: keyOfCurrentAudioURL)
-            return url
-        }
-
-        return nil
-    }
-
-    static func getCurrentTime() -> TimeInterval? {
-        // First, try to get the time from UserDefaults
-        let time = UserDefaults.standard.double(forKey: keyOfCurrentAudioTime)
-        if time > 0 { // Since 0 is the default value when key doesn't exist
-            return time
-        }
-
-        // If not found in UserDefaults, try to get from iCloud
-        if let timeString = NSUbiquitousKeyValueStore.default.string(forKey: keyOfCurrentAudioTime),
-           let time = TimeInterval(timeString) {
-            // If found in iCloud, update UserDefaults for future local access
-            UserDefaults.standard.set(time, forKey: keyOfCurrentAudioTime)
-            return time
-        }
-
-        return nil
-    }
-}
 
 // MARK: - Notification
 
@@ -365,7 +283,7 @@ enum AudioPluginError: Error, LocalizedError {
 
 #Preview("Small Screen") {
     RootView {
-        UserDefaultsDebugView()
+        UserDefaultsDebugView(defaultSearchText: "AudioPlugin")
     }
     .frame(width: 500)
     .frame(height: 600)
