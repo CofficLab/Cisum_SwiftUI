@@ -1,15 +1,6 @@
 {
-  "originHash" : "92dcfaae771d8f3aae2415cbbdeddb44f2b2bb12624760c0a06f722b689ef0ca",
+  "originHash" : "ca9aab88b4640be15437bb8c2b59e6483234d2c01d7a00c9eb02529bb9cef987",
   "pins" : [
-    {
-      "identity" : "alerttoast",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/elai950/AlertToast",
-      "state" : {
-        "revision" : "b39252eacd159904afd7d718bba0afabb87f2f2f",
-        "version" : "1.3.9"
-      }
-    },
     {
       "identity" : "id3tageditor",
       "kind" : "remoteSourceControl",
@@ -25,7 +16,16 @@
       "location" : "https://github.com/CofficLab/MagicKit",
       "state" : {
         "branch" : "dev",
-        "revision" : "0a9253154412462effd5c01756faa0cf320e0635"
+        "revision" : "0af6093490db656bb1dae8538a909ba973ddf189"
+      }
+    },
+    {
+      "identity" : "magicmessage",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/nookery/MagicMessage",
+      "state" : {
+        "branch" : "main",
+        "revision" : "d57ee1f9efc7336b31638f980670566a4a1d2441"
       }
     },
     {

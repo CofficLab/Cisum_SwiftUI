@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0B3CCAA92DF1C94000E22263 /* MagicPlayMan in Frameworks */ = {isa = PBXBuildFile; productRef = 0BDA9C6A2D2578D300A99623 /* MagicPlayMan */; };
+		0B3CCAAA2DF1C94000E22263 /* MagicPlayMan in Frameworks */ = {isa = PBXBuildFile; productRef = F50859132D2CD6510089DC96 /* MagicPlayMan */; };
+		0B3CCAAB2DF1C94000E22263 /* MagicAsset in Frameworks */ = {isa = PBXBuildFile; productRef = F59E30C92DF1870D00F794A7 /* MagicAsset */; };
+		0B3CCAAC2DF1C94000E22263 /* MagicCore in Frameworks */ = {isa = PBXBuildFile; productRef = F59E30CB2DF1870D00F794A7 /* MagicCore */; };
+		0B3CCAAD2DF1C94000E22263 /* MagicPlayMan in Frameworks */ = {isa = PBXBuildFile; productRef = F59E30CD2DF1870D00F794A7 /* MagicPlayMan */; };
+		0B3CCBE32DF1D0BF00E22263 /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = 0B3CCBE22DF1D0BF00E22263 /* AlertToast */; };
 		0B7792462D15ADF500D78FF4 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 0B7792452D15ADF500D78FF4 /* Localizable.xcstrings */; };
 		0B92ACCA2BBA80F300F1A74F /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 0B92ACC92BBA80F300F1A74F /* README.md */; };
 		0BB5871D2AD820FA0071AEBD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0BB5871C2AD820FA0071AEBD /* Assets.xcassets */; };
@@ -17,7 +23,6 @@
 		F544744A2DF1A93600FA4553 /* MagicPlayMan in Frameworks */ = {isa = PBXBuildFile; productRef = F54474492DF1A93600FA4553 /* MagicPlayMan */; };
 		F54522252BFF3C780027CF55 /* Products.storekit in Resources */ = {isa = PBXBuildFile; fileRef = F54522242BFF3C770027CF55 /* Products.storekit */; };
 		F54522272BFF3CCE0027CF55 /* Products.plist in Resources */ = {isa = PBXBuildFile; fileRef = F54522262BFF3CCE0027CF55 /* Products.plist */; };
-		F59E30D12DF1871900F794A7 /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = F59E30D02DF1871900F794A7 /* AlertToast */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,9 +47,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0B3CCAAD2DF1C94000E22263 /* MagicPlayMan in Frameworks */,
+				0B3CCBE32DF1D0BF00E22263 /* AlertToast in Frameworks */,
+				0B3CCAAC2DF1C94000E22263 /* MagicCore in Frameworks */,
+				0B3CCAAB2DF1C94000E22263 /* MagicAsset in Frameworks */,
+				0B3CCAAA2DF1C94000E22263 /* MagicPlayMan in Frameworks */,
+				0B3CCAA92DF1C94000E22263 /* MagicPlayMan in Frameworks */,
 				F544730C2DF1A8FA00FA4553 /* AlertToast in Frameworks */,
 				F544730B2DF1A8FA00FA4553 /* AlertToast in Frameworks */,
-				F59E30D12DF1871900F794A7 /* AlertToast in Frameworks */,
 				F54474482DF1A93600FA4553 /* MagicCore in Frameworks */,
 				F54474462DF1A93600FA4553 /* MagicAsset in Frameworks */,
 				F544744A2DF1A93600FA4553 /* MagicPlayMan in Frameworks */,
@@ -116,10 +126,10 @@
 				F59E30C92DF1870D00F794A7 /* MagicAsset */,
 				F59E30CB2DF1870D00F794A7 /* MagicCore */,
 				F59E30CD2DF1870D00F794A7 /* MagicPlayMan */,
-				F59E30D02DF1871900F794A7 /* AlertToast */,
 				F54474452DF1A93600FA4553 /* MagicAsset */,
 				F54474472DF1A93600FA4553 /* MagicCore */,
 				F54474492DF1A93600FA4553 /* MagicPlayMan */,
+				0B3CCBE22DF1D0BF00E22263 /* AlertToast */,
 			);
 			productName = Cisum;
 			productReference = 0B1D5A4B2AB301AD0010DDF2 /* Cisum.app */;
@@ -152,8 +162,8 @@
 			);
 			mainGroup = 0B9C1C342AAF18FE001A26AF;
 			packageReferences = (
-				F59E30CF2DF1871900F794A7 /* XCRemoteSwiftPackageReference "AlertToast" */,
 				F54474442DF1A93600FA4553 /* XCRemoteSwiftPackageReference "MagicKit" */,
+				0B3CCBE12DF1D0BF00E22263 /* XCRemoteSwiftPackageReference "MagicMessage" */,
 			);
 			productRefGroup = 0B9C1C3E2AAF18FE001A26AF /* Products */;
 			projectDirPath = "";
@@ -429,6 +439,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		0B3CCBE12DF1D0BF00E22263 /* XCRemoteSwiftPackageReference "MagicMessage" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/nookery/MagicMessage";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		F54474442DF1A93600FA4553 /* XCRemoteSwiftPackageReference "MagicKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/CofficLab/MagicKit";
@@ -437,17 +455,14 @@
 				kind = branch;
 			};
 		};
-		F59E30CF2DF1871900F794A7 /* XCRemoteSwiftPackageReference "AlertToast" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/elai950/AlertToast";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.3.9;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		0B3CCBE22DF1D0BF00E22263 /* AlertToast */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0B3CCBE12DF1D0BF00E22263 /* XCRemoteSwiftPackageReference "MagicMessage" */;
+			productName = AlertToast;
+		};
 		0BDA9C6A2D2578D300A99623 /* MagicPlayMan */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MagicPlayMan;
@@ -486,11 +501,6 @@
 		F59E30CD2DF1870D00F794A7 /* MagicPlayMan */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MagicPlayMan;
-		};
-		F59E30D02DF1871900F794A7 /* AlertToast */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F59E30CF2DF1871900F794A7 /* XCRemoteSwiftPackageReference "AlertToast" */;
-			productName = AlertToast;
 		};
 		F5C2EB7D2D1AB49700798B46 /* AlertToast */ = {
 			isa = XCSwiftPackageProductDependency;
