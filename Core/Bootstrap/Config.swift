@@ -80,13 +80,6 @@ enum Config: SuperLog {
     static let isNotDesktop = MagicApp.isNotDesktop
     static let isiOS = MagicApp.isiOS
 
-    @AppStorage("UI.ShowDB")
-    static var showDB: Bool = false
-
-    static func setShowDB(_ value: Bool) {
-        Config.showDB = value
-    }
-
     /// 开发时如果不想显示背景，改成true
     static let noBackground = true
 

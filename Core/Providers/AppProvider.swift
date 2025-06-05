@@ -11,27 +11,33 @@ import SwiftUI
 class AppProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLog, SuperThread {
     nonisolated static let emoji = "🐮"
 
-    @Published var showDB: Bool = Config.showDB
+    // 使用 UIRepo 来管理 UI 相关的数据
+    private let uiRepo = UIRepo()
+    
+    @Published var showDB: Bool
     @Published var showSheet: Bool = true
     @Published var isImporting: Bool = false
     @Published var isDropping: Bool = false
     @Published var isResetting: Bool = false
     @Published var rightAlbumVisible = false
+    
+    override init() {
+        self.showDB = uiRepo.getShowDB()
+        super.init()
+    }
 
     func showDBView() {
         withAnimation {
             self.showDB = true
+            self.uiRepo.setShowDB(true)
         }
-
-        Config.setShowDB(true)
     }
 
     func closeDBView() {
         withAnimation {
             self.showDB = false
+            self.uiRepo.setShowDB(false)
         }
-
-        Config.setShowDB(false)
     }
 
     func toggleDBView() {

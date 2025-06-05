@@ -7,8 +7,15 @@ struct UserDefaultsDebugView: View, SuperLog {
     nonisolated static let emoji = "🔍"
     
     @State private var keyValuePairs: [(key: String, value: String)] = []
-    @State private var searchText: String = ""
+    @State private var searchText: String
     @State private var showingICloudValues: Bool = false
+    
+    /// 初始化方法
+    /// - Parameter defaultSearchText: 默认的搜索文本，如果提供则在视图加载时自动填充到搜索框
+    init(defaultSearchText: String = "") {
+        // 使用 _searchText 初始化 @State 变量
+        self._searchText = State(initialValue: defaultSearchText)
+    }
     
     var filteredPairs: [(key: String, value: String)] {
         if searchText.isEmpty {
@@ -115,8 +122,14 @@ struct UserDefaultsDebugView: View, SuperLog {
 
 #Preview("UserDefaults 调试") {
     UserDefaultsDebugView()
-        .frame(width: 500)
-        .frame(height: 600)
+        .frame(width: 600)
+        .frame(height: 800)
+}
+
+#Preview("带默认搜索值") {
+    UserDefaultsDebugView(defaultSearchText: "UI.")
+        .frame(width: 600)
+        .frame(height: 800)
 }
 
 #Preview("Small Screen") {
