@@ -24,7 +24,7 @@ struct AudioSettings: View, SuperSetting, SuperLog {
             .task {
                 diskSize = audioManager.disk.getSizeReadable()
                 if audioManager.disk.isiCloud {
-                    description = "是 iCloud 云盘目录，会保持同步"
+                    description = "是 iCloud 云盘，会同步"
                 } else {
                     description = "是本地目录，不会同步"
                 }

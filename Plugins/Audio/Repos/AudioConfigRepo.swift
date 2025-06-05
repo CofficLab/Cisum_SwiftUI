@@ -3,7 +3,7 @@ import SwiftData
 import SwiftUI
 
 @MainActor
-struct AudioConfig {
+struct AudioConfigRepo {
     static func getDBUrl() throws -> URL {
         try Config.getDBRootDir()
             .appendingPathComponent("audios_db")

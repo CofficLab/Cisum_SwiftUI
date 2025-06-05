@@ -11,7 +11,7 @@ struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var messageManager: MessageProvider
     @EnvironmentObject var s: StoreProvider
-    @EnvironmentObject var db: AudioDB
+    @EnvironmentObject var db: AudioService
 
     @State var isDropping: Bool = false
 

@@ -144,8 +144,20 @@ struct SmartButtonStyle: ButtonStyle {
     .frame(width: 300)
 }
 
-#Preview("App") {
-    AppPreview()
+#Preview("Small Screen") {
+    RootView {
+        ContentView()
+    }
+    .frame(width: 500)
+    .frame(height: 1200)
+}
+
+#Preview("Big Screen") {
+    RootView {
+        ContentView()
+    }
+    .frame(width: 1200)
+    .frame(height: 1200)
 }
 
 #Preview("Layout") {

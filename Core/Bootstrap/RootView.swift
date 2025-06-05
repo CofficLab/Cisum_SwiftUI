@@ -12,11 +12,11 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     @State var error: Error? = nil
     @State var loading = true
     @State var iCloudAvailable = true
-    
+
     @StateObject var a: AppProvider
     @StateObject var m: MessageProvider
     @StateObject var p: PluginProvider
-    
+
     var man: PlayMan
     var playManWrapper: PlayManWrapper
     var c: ConfigProvider
@@ -25,7 +25,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
 
     init(@ViewBuilder content: () -> Content) {
         os_log("\(Self.onInit)")
-        
+
         let box = RootBox.shared
         self.content = content()
         self._a = StateObject(wrappedValue: box.app)
@@ -59,7 +59,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
 
                                 ToolbarItemGroup(placement: .cancellationAction) {
                                     Spacer()
-                                    
+
                                     man.currentURL?
                                         .makeOpenButton()
                                         .magicShapeVisibility(.onHover)
@@ -197,9 +197,11 @@ extension RootView {
                     UIApplication.shared.beginReceivingRemoteControlEvents()
                 #endif
 
+                os_log("\(self.t)👀 订阅 PlayMan 状态")
                 self.man.subscribe(
                     name: self.className,
                     onStateChanged: { state in
+                        os_log("\(self.t)♻️ 当前播放状态 -> \(state.stateText)")
                         if state == .paused {
                             Task {
                                 do { try await self.p.onPause(man: playManWrapper) } catch {
@@ -209,26 +211,32 @@ extension RootView {
                         }
                     },
                     onPreviousRequested: { asset in
+                        os_log("\(self.t)⏮️ 上一首")
                         Task {
                             try? await self.p.onPlayPrev(current: asset, mode: man.playMode, man: playManWrapper)
                         }
                     },
                     onNextRequested: { asset in
+                        os_log("\(self.t)⏭️ 下一首")
                         Task {
                             try? await self.p.onPlayNext(current: asset, mode: man.playMode, man: playManWrapper)
                         }
                     },
                     onLikeStatusChanged: { asset, like in
+                        os_log("\(self.t)❤️ 喜欢状态 -> \(like)")
                         Task {
                             try? await self.p.onLike(asset: asset, liked: like)
                         }
                     },
                     onPlayModeChanged: { mode in
+                        os_log("\(self.t)♾️ 播放模式 -> \(mode.shortName)")
                         Task {
                             try? await self.p.onPlayModeChange(mode: mode, asset: man.currentAsset)
+                            self.m.toast(mode.displayName)
                         }
                     },
                     onCurrentURLChanged: { url in
+                        os_log("\(self.t)🎵 当前播放 -> \(url.title)")
                         Task {
                             try? await self.p.onCurrentURLChanged(url: url)
                         }

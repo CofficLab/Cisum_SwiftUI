@@ -5,7 +5,7 @@ import OSLog
 
 /// 音频播放状态存储库
 /// 负责存储和获取音频播放相关的状态，如当前播放URL、播放时间、播放模式等
-class AudioRepo: SuperLog {
+class AudioStateRepo: SuperLog {
     static let emoji = "🗄️"
     
     // 存储键名

@@ -19,7 +19,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var man: PlayMan
     @EnvironmentObject var audioManager: AudioProvider
-    @EnvironmentObject var audioDB: AudioDB
+    @EnvironmentObject var audioDB: AudioService
     @EnvironmentObject var m: MessageProvider
 
     @State var selection: URL? = nil

@@ -5,13 +5,27 @@ import OSLog
 import SwiftData
 import SwiftUI
 
+/// 音频记录数据库，负责管理音频模型的持久化存储和检索
+/// 实现了 ModelActor 协议以支持 SwiftData 操作
+/// 实现了 ObservableObject 协议以支持 SwiftUI 绑定
+/// 实现了 SuperLog, SuperEvent, SuperThread 协议以支持日志记录、事件发送和线程管理
 actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
+    /// 用于日志输出的表情符号
     static let emoji = "📦"
+    /// SwiftData 模型容器
     let modelContainer: ModelContainer
+    /// 模型执行器，用于执行模型操作
     let modelExecutor: any ModelExecutor
+    /// 模型上下文，用于管理持久化存储
     let context: ModelContext
+    /// 用于数据库操作的串行队列
     let queue = DispatchQueue(label: "DB")
 
+    /// 初始化音频记录数据库
+    /// - Parameters:
+    ///   - container: SwiftData 模型容器
+    ///   - reason: 初始化原因，用于日志记录
+    ///   - verbose: 是否输出详细日志
     init(_ container: ModelContainer, reason: String, verbose: Bool) {
         self.modelContainer = container
         self.context = ModelContext(container)
@@ -25,49 +39,77 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
     }
 
+    /// 检查模型上下文是否有未保存的更改
+    /// - Returns: 如果有未保存的更改则返回 true，否则返回 false
     func hasChanges() -> Bool {
         context.hasChanges
     }
 
+    /// 插入一个持久化模型并保存上下文
+    /// - Parameter model: 要插入的持久化模型
+    /// - Throws: 如果插入或保存失败则抛出错误
     func insertModel(_ model: any PersistentModel) throws {
         context.insert(model)
         try context.save()
     }
 
+    /// 删除指定类型的所有模型
+    /// - Parameter model: 要删除的模型类型
+    /// - Throws: 如果删除操作失败则抛出错误
     func destroy<T>(for model: T.Type) throws where T: PersistentModel {
         try context.delete(model: T.self)
     }
 
-    /// 所有指定的model
+    /// 获取指定类型的所有模型
+    /// - Returns: 指定类型的所有模型数组
+    /// - Throws: 如果获取操作失败则抛出错误
     func all<T: PersistentModel>() throws -> [T] {
         try context.fetch(FetchDescriptor<T>())
     }
 
-    /// 分页的方式查询model
+    /// 以分页方式查询模型
+    /// - Parameter page: 页码
+    /// - Returns: 指定页的模型数组
+    /// - Throws: 如果查询操作失败则抛出错误
+    /// - Note: 当前实现未考虑分页参数，返回所有模型
     func paginate<T: PersistentModel>(page: Int) throws -> [T] {
         try context.fetch(FetchDescriptor<T>())
     }
 
-    /// 获取指定条件的数量
+    /// 获取符合指定条件的模型数量
+    /// - Parameter predicate: 查询条件
+    /// - Returns: 符合条件的模型数量
+    /// - Throws: 如果查询操作失败则抛出错误
     func getCount<T: PersistentModel>(for predicate: Predicate<T>) throws -> Int {
         let descriptor = FetchDescriptor<T>(predicate: predicate)
         return try context.fetchCount(descriptor)
     }
 
-    /// 按照指定条件查询多个model
+    /// 按照指定条件查询多个模型
+    /// - Parameter predicate: 查询条件
+    /// - Returns: 符合条件的模型数组
+    /// - Throws: 如果查询操作失败则抛出错误
     func get<T: PersistentModel>(for predicate: Predicate<T>) throws -> [T] {
         // os_log("\(self.isMain) 🏠 LocalDB.get")
         let descriptor = FetchDescriptor<T>(predicate: predicate)
         return try context.fetch(descriptor)
     }
 
-    /// 某个model的总条数
+    /// 获取指定类型模型的总数量
+    /// - Parameter model: 模型类型
+    /// - Returns: 模型总数量
+    /// - Throws: 如果查询操作失败则抛出错误
     func count<T>(for model: T.Type) throws -> Int where T: PersistentModel {
         let descriptor = FetchDescriptor<T>(predicate: .true)
         return try context.fetchCount(descriptor)
     }
 
-    /// 执行并输出耗时
+    /// 执行代码并输出执行耗时
+    /// - Parameters:
+    ///   - title: 操作标题，用于日志输出
+    ///   - tolerance: 耗时容忍度，超过此值才会输出耗时日志
+    ///   - verbose: 是否输出详细日志
+    ///   - code: 要执行的代码闭包
     func printRunTime(_ title: String, tolerance: Double = 0.1, verbose: Bool = false, _ code: () -> Void) {
         if verbose {
             os_log("\(self.t)\(title)")
@@ -86,6 +128,13 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
     }
 
+    /// 计算任务结束时的耗时并返回格式化的日志字符串
+    /// - Parameters:
+    ///   - startTime: 任务开始时间
+    ///   - title: 任务标题
+    ///   - tolerance: 耗时容忍度，用于判断是否为耗时操作
+    /// - Returns: 格式化的日志字符串，包含任务标题和耗时
+    /// - Note: 使用 nonisolated 修饰符允许在非隔离上下文中调用
     nonisolated func jobEnd(_ startTime: DispatchTime, title: String, tolerance: Double = 1.0) -> String {
         // 计算代码执行时间
         let nanoTime = DispatchTime.now().uptimeNanoseconds - startTime.uptimeNanoseconds
@@ -98,6 +147,9 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         return "\(title) \(timeInterval) 秒 🐢🐢🐢"
     }
 
+    /// 获取所有音频模型
+    /// - Parameter reason: 获取原因，用于日志记录
+    /// - Returns: 所有音频模型数组，按顺序排序；如果获取失败则返回空数组
     func allAudios(reason: String) -> [AudioModel] {
         os_log("\(self.t)🚛 GetAllAudios 🐛 \(reason)")
 
@@ -111,10 +163,18 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
     }
 
+    /// 获取所有音频的 URL
+    /// - Parameter reason: 获取原因，用于日志记录
+    /// - Returns: 所有音频 URL 数组
     func allAudioURLs(reason: String) -> [URL] {
         self.allAudios(reason: reason).map { $0.url }
     }
 
+    /// 获取随机音频模型
+    /// - Parameters:
+    ///   - count: 要获取的音频数量，默认为 100
+    ///   - reason: 获取原因，用于日志记录
+    /// - Returns: 随机音频模型数组；如果获取失败则返回空数组
     func randomAudios(count: Int = 100, reason: String) -> [AudioModel] {
         os_log("\(self.t)GetRandomAudios 🐛 \(reason)")
 
@@ -127,6 +187,9 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
     }
 
+    /// 获取指定 URL 的音频数量
+    /// - Parameter url: 音频 URL
+    /// - Returns: 匹配该 URL 的音频数量；如果查询失败则返回 0
     func countOfURL(_ url: URL) -> Int {
         let descriptor = FetchDescriptor<AudioModel>(predicate: #Predicate<AudioModel> {
             $0.url == url
@@ -140,34 +203,58 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
     }
 
+    /// 删除指定 ID 的音频模型
+    /// - Parameter id: 音频模型 ID
+    /// - Returns: 删除后的下一个音频模型，当前实现始终返回 nil
     func delete(_ id: AudioModel.ID) -> AudioModel? {
         nil
     }
 
+    /// 删除指定 URL 的音频
+    /// - Parameter url: 音频 URL
+    /// - Throws: 如果删除操作失败则抛出错误
     func deleteAudio(url: URL) throws {
         if let audio = findAudio(url) {
             try deleteAudio(id: audio.id)
         }
     }
 
+    /// 删除指定的音频模型
+    /// - Parameters:
+    ///   - audio: 要删除的音频模型
+    ///   - verbose: 是否输出详细日志
+    /// - Throws: 如果删除操作失败则抛出错误
     func deleteAudio(_ audio: AudioModel, verbose: Bool) throws {
         try deleteAudio(id: audio.id)
     }
 
+    /// 删除多个音频模型
+    /// - Parameter audios: 要删除的音频模型数组
+    /// - Returns: 删除后的下一个音频模型
+    /// - Throws: 如果删除操作失败则抛出错误
     func deleteAudios(_ audios: [AudioModel]) throws -> AudioModel? {
         try deleteAudios(ids: audios.map { $0.id })
     }
 
+    /// 删除多个音频模型
+    /// - Parameter ids: 要删除的音频模型 ID 数组
+    /// - Returns: 删除后的下一个音频模型
+    /// - Throws: 如果删除操作失败则抛出错误
     func deleteAudios(_ ids: [AudioModel.ID]) throws -> AudioModel? {
         try deleteAudios(ids: ids)
     }
 
+    /// 删除多个 URL 对应的音频
+    /// - Parameter urls: 要删除的音频 URL 数组
+    /// - Throws: 如果删除操作失败则抛出错误
     func deleteAudios(_ urls: [URL]) throws {
         for url in urls {
             try deleteAudio(url: url)
         }
     }
 
+    /// 删除所有音频模型
+    /// - Note: 如果删除操作失败，会记录错误但不会抛出异常
     func destroyAudios() {
         do {
             try destroy(for: AudioModel.self)
@@ -176,6 +263,9 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
     }
 
+    /// 取消喜欢指定的音频模型
+    /// - Parameter audio: 要取消喜欢的音频模型
+    /// - Note: 操作成功后会发送 AudioUpdatedNotification 通知
     func dislike(_ audio: AudioModel) {
         if let dbAudio = findAudio(audio.id) {
             dbAudio.like = false
@@ -189,16 +279,29 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
     }
 
+    /// 取消喜欢指定 URL 的音频
+    /// - Parameter url: 音频 URL
     func dislike(_ url: URL) {
         if let audio = findAudio(url) {
             dislike(audio)
         }
     }
 
+    /// 下载指定音频模型之后的下一个音频
+    /// - Parameters:
+    ///   - audio: 起始音频模型
+    ///   - reason: 下载原因，用于日志记录
+    /// - Throws: 如果下载操作失败则抛出错误
     func downloadNext(_ audio: AudioModel, reason: String) async throws {
         try await downloadNextBatch(audio, count: 2, reason: reason)
     }
 
+    /// 批量下载指定音频模型之后的多个音频
+    /// - Parameters:
+    ///   - audio: 起始音频模型
+    ///   - count: 要下载的音频数量，默认为 6
+    ///   - reason: 下载原因，用于日志记录
+    /// - Throws: 如果下载操作失败则抛出错误
     func downloadNextBatch(_ audio: AudioModel, count: Int = 6, reason: String) async throws {
         var currentIndex = 0
         var currentAudio: AudioModel = audio
@@ -213,12 +316,20 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
     }
 
+    /// 批量下载指定 URL 之后的多个音频
+    /// - Parameters:
+    ///   - url: 起始音频 URL
+    ///   - count: 要下载的音频数量，默认为 6
+    ///   - reason: 下载原因，用于日志记录
+    /// - Throws: 如果下载操作失败则抛出错误
     func downloadNextBatch(_ url: URL, count: Int = 6, reason: String) async throws {
         if let audio = findAudio(url) {
             try await downloadNextBatch(audio, count: count, reason: reason)
         }
     }
 
+    /// 发送排序完成事件
+    /// - Parameter verbose: 是否输出详细日志
     func emitSortDone(verbose: Bool = false) {
         if verbose {
             os_log("\(self.t)🚀🚀🚀 EmitSortDone")
@@ -229,6 +340,10 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
     }
 
+    /// 发送正在排序事件
+    /// - Parameters:
+    ///   - mode: 排序模式
+    ///   - verbose: 是否输出详细日志
     func emitSorting(_ mode: String, verbose: Bool = false) {
         if verbose {
             os_log("\(self.t)🚀🚀🚀 EmitSorting")
@@ -239,30 +354,50 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
     }
 
+    /// 根据 ID 查找音频模型
+    /// - Parameter id: 音频模型 ID
+    /// - Returns: 找到的音频模型，如果未找到则返回 nil
     func findAudio(_ id: AudioModel.ID) -> AudioModel? {
         context.model(for: id) as? AudioModel
     }
 
+    /// 根据 URL 查找音频模型
+    /// - Parameter url: 音频 URL
+    /// - Returns: 找到的音频模型，如果未找到则返回 nil
     func findAudio(_ url: URL) -> AudioModel? {
         Self.findAudio(url, context: context)
     }
 
+    /// 获取第一个音频模型
+    /// - Returns: 第一个音频模型，如果没有音频则返回 nil
+    /// - Throws: 如果查询操作失败则抛出错误
     func firstAudio() throws -> AudioModel? {
         try context.fetch(AudioModel.descriptorFirst).first
     }
 
+    /// 获取第一个音频的 URL
+    /// - Returns: 第一个音频的 URL，如果没有音频则返回 nil
+    /// - Throws: 如果查询操作失败则抛出错误
     func firstAudioURL() throws -> URL? {
         try context.fetch(AudioModel.descriptorFirst).first?.url
     }
 
+    /// 获取指定索引的音频模型
+    /// - Parameter i: 音频索引
+    /// - Returns: 指定索引的音频模型，如果未找到则返回 nil
     func get(_ i: Int) -> AudioModel? {
         Self.get(context: ModelContext(self.modelContainer), i)
     }
 
+    /// 检查是否存在指定 URL 的音频
+    /// - Parameter url: 音频 URL
+    /// - Returns: 如果存在则返回 true，否则返回 false
     func hasAudio(_ url: URL) -> Bool {
         self.findAudio(url) != nil
     }
 
+    /// 获取所有有标题的音频 URL
+    /// - Returns: 所有有标题的音频 URL 数组，如果查询失败则返回空数组
     func getAllURLs() -> [URL] {
         let context = ModelContext(self.modelContainer)
 
@@ -278,6 +413,8 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
     }
 
+    /// 获取所有音频的播放次数总和
+    /// - Returns: 所有音频的播放次数总和
     func getAudioPlayTime() -> Int {
         var time = 0
 
@@ -294,6 +431,10 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         return time
     }
 
+    /// 获取指定音频的子音频
+    /// - Parameter audio: 父音频模型
+    /// - Returns: 子音频模型数组，如果查询失败则返回空数组
+    /// - Note: 子音频是指 URL 的父路径与给定音频 URL 相同的音频
     func getChildren(_ audio: AudioModel) -> [AudioModel] {
         do {
             let result = try context.fetch(AudioModel.descriptorAll).filter({
@@ -308,6 +449,12 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         return []
     }
 
+    /// 获取指定 URL 的下一个音频模型
+    /// - Parameters:
+    ///   - url: 当前音频 URL
+    ///   - verbose: 是否输出详细日志
+    /// - Returns: 下一个音频模型，如果未找到则返回 nil
+    /// - Throws: 如果查询操作失败则抛出错误
     func getNextOf(_ url: URL?, verbose: Bool = false) throws -> AudioModel? {
         if verbose {
             os_log("\(self.t)NextOf -> \(url?.lastPathComponent ?? "-")")
@@ -321,13 +468,28 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
             return nil
         }
 
+//        Task {
+//            try? await self.downloadNext(audio, reason: "getNextOf")
+//        }
         return try nextOf(audio: audio)
     }
 
+    /// 获取指定 URL 的下一个音频 URL
+    /// - Parameters:
+    ///   - url: 当前音频 URL
+    ///   - verbose: 是否输出详细日志
+    /// - Returns: 下一个音频 URL，如果未找到则返回 nil
+    /// - Throws: 如果查询操作失败则抛出错误
     func getNextAudioURLOf(_ url: URL?, verbose: Bool = false) throws -> URL? {
         try self.getNextOf(url, verbose: verbose)?.url
     }
 
+    /// 获取指定 URL 的上一个音频模型
+    /// - Parameters:
+    ///   - url: 当前音频 URL
+    ///   - verbose: 是否输出详细日志
+    /// - Returns: 上一个音频模型，如果未找到则返回 nil
+    /// - Throws: 如果查询操作失败则抛出错误
     func getPrevOf(_ url: URL?, verbose: Bool = false) throws -> AudioModel? {
         if verbose {
             os_log("\(self.t)PrevOf -> \(url?.lastPathComponent ?? "-")")
@@ -344,14 +506,24 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         return try prev(audio)
     }
 
+    /// 获取指定 URL 的上一个音频 URL
+    /// - Parameters:
+    ///   - url: 当前音频 URL
+    ///   - verbose: 是否输出详细日志
+    /// - Returns: 上一个音频 URL，如果未找到则返回 nil
+    /// - Throws: 如果查询操作失败则抛出错误
     func getPrevAudioURLOf(_ url: URL?, verbose: Bool = false) throws -> URL? {
         try self.getPrevOf(url, verbose: verbose)?.url
     }
 
+    /// 获取音频总数
+    /// - Returns: 音频总数
     func getTotalOfAudio() -> Int {
         Self.getTotal(context: context)
     }
 
+    /// 增加指定 URL 音频的播放次数
+    /// - Parameter url: 音频 URL
     func increasePlayCount(_ url: URL) {
         if let a = findAudio(url) {
             a.playCount += 1
@@ -364,12 +536,19 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
     }
 
+    /// 增加指定可选 URL 音频的播放次数
+    /// - Parameter url: 可选音频 URL
     func increasePlayCount(_ url: URL?) {
         if let url = url {
             increasePlayCount(url)
         }
     }
 
+    /// 插入音频模型
+    /// - Parameters:
+    ///   - audio: 要插入的音频模型
+    ///   - force: 是否强制插入，即使已存在相同 URL 的音频
+    /// - Note: 插入成功后会异步更新音频的哈希值
     func insertAudio(_ audio: AudioModel, force: Bool = false) {
         let url = audio.url
 
@@ -390,14 +569,23 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
     }
 
+    /// 检查是否所有音频都在云端
+    /// - Returns: 如果有音频则返回 true，否则返回 false
+    /// - Note: 当前实现仅检查是否有音频，而不是真正检查是否所有音频都在云端
     func isAllInCloud() -> Bool {
         getTotalOfAudio() > 0
     }
 
+    /// 检查指定 URL 的音频是否被喜欢
+    /// - Parameter url: 音频 URL
+    /// - Returns: 如果被喜欢则返回 true，否则返回 false
     func isLiked(_ url: URL) -> Bool {
         findAudio(url)?.like ?? false
     }
 
+    /// 将指定的音频模型标记为喜欢
+    /// - Parameter audio: 要标记为喜欢的音频模型
+    /// - Note: 操作成功后会发送 AudioUpdatedNotification 通知
     func like(_ audio: AudioModel) {
         if let dbAudio = findAudio(audio.id) {
             dbAudio.like = true
@@ -411,16 +599,26 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
     }
 
+    /// 将指定 URL 的音频标记为喜欢
+    /// - Parameter url: 音频 URL
     func like(_ url: URL) {
         if let audio = findAudio(url) {
             like(audio)
         }
     }
 
+    /// 获取指定音频模型的下一个音频模型
+    /// - Parameter audio: 当前音频模型
+    /// - Returns: 下一个音频模型，如果未找到则返回 nil
     func nextOf(_ audio: AudioModel) -> AudioModel? {
         nextOf(audio.url, verbose: true)
     }
 
+    /// 获取指定 URL 的下一个音频模型
+    /// - Parameters:
+    ///   - url: 当前音频 URL
+    ///   - verbose: 是否输出详细日志
+    /// - Returns: 下一个音频模型，如果未找到则返回 nil
     func nextOf(_ url: URL?, verbose: Bool = false) -> AudioModel? {
         if verbose {
             os_log("\(self.t)NextOf -> \(url?.lastPathComponent ?? "-")")
@@ -437,6 +635,10 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         return self.nextOf(audio)
     }
 
+    /// 获取指定音频模型的上一个音频模型
+    /// - Parameter audio: 当前音频模型
+    /// - Returns: 上一个音频模型，如果未找到或当前音频为 nil 则返回第一个音频
+    /// - Throws: 如果查询操作失败则抛出错误
     func prev(_ audio: AudioModel?) throws -> AudioModel? {
         guard let audio = audio else {
             return try firstAudio()
@@ -446,10 +648,18 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         return result.first
     }
 
+    /// 刷新音频模型，从数据库获取最新状态
+    /// - Parameter audio: 要刷新的音频模型
+    /// - Returns: 刷新后的音频模型，如果在数据库中未找到则返回原音频模型
     func refresh(_ audio: AudioModel) -> AudioModel {
         findAudio(audio.id) ?? audio
     }
 
+    /// 按标题对音频进行排序，并可选择将特定音频置顶
+    /// - Parameters:
+    ///   - sticky: 要置顶的音频模型，如果为 nil 则不置顶任何音频
+    ///   - reason: 排序原因，用于日志记录
+    /// - Note: 排序会将置顶音频的顺序设为 0，其他音频从 100 开始递增
     func sort(_ sticky: AudioModel?, reason: String) {
         os_log("\(self.t)Sort with reason: \(reason)")
 
@@ -478,6 +688,10 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
     }
 
+    /// 按标题对音频进行排序，并可选择将特定 URL 的音频置顶
+    /// - Parameters:
+    ///   - url: 要置顶的音频 URL，如果为 nil 则不置顶任何音频
+    ///   - reason: 排序原因，用于日志记录
     func sort(_ url: URL?, reason: String) {
         if let url = url {
             sort(findAudio(url), reason: reason)
@@ -486,6 +700,12 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
     }
 
+    /// 随机排序音频，并可选择将特定音频置顶
+    /// - Parameters:
+    ///   - sticky: 要置顶的音频模型，如果为 nil 则不置顶任何音频
+    ///   - reason: 排序原因，用于日志记录
+    ///   - verbose: 是否输出详细日志
+    /// - Throws: 如果排序操作失败则抛出错误
     func sortRandom(_ sticky: AudioModel?, reason: String, verbose: Bool) throws {
         if verbose {
             os_log("\(self.t)🐳🐳🐳 SortRandom with sticky: \(sticky?.title ?? "nil") 🐛 \(reason)")
@@ -506,6 +726,12 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         emitSortDone()
     }
 
+    /// 随机排序音频，并可选择将特定 URL 的音频置顶
+    /// - Parameters:
+    ///   - url: 要置顶的音频 URL，如果为 nil 则不置顶任何音频
+    ///   - reason: 排序原因，用于日志记录
+    ///   - verbose: 是否输出详细日志
+    /// - Throws: 如果排序操作失败则抛出错误
     func sortRandom(_ url: URL?, reason: String, verbose: Bool) throws {
         if let url = url {
             try sortRandom(findAudio(url), reason: reason, verbose: verbose)
@@ -514,6 +740,11 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
     }
 
+    /// 将指定 URL 的音频置顶
+    /// - Parameters:
+    ///   - url: 要置顶的音频 URL
+    ///   - reason: 置顶原因，用于日志记录
+    /// - Note: 置顶会将指定音频的顺序设为 0，原置顶音频的顺序设为 1
     func sticky(_ url: URL?, reason: String) {
         guard let url = url else {
             return
@@ -541,6 +772,11 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
     }
 
+    /// 初始化音频项目，同步数据库与提供的 URL 列表
+    /// - Parameters:
+    ///   - items: 音频 URL 列表
+    ///   - verbose: 是否输出详细日志
+    /// - Note: 此方法会更新已存在的音频，删除不在列表中的音频，并添加新的音频
     func initItems(_ items: [URL], verbose: Bool = false) {
         let startTime: DispatchTime = .now()
 
@@ -582,6 +818,11 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
     }
 
+    /// 同步更新的音频项目
+    /// - Parameters:
+    ///   - metas: 更新的音频 URL 列表
+    ///   - verbose: 是否输出详细日志
+    /// - Note: 此方法会删除不存在的音频，并添加新的音频，但不会更新已存在的音频
     func syncWithUpdatedItems(_ metas: [URL], verbose: Bool = false) {
         // 如果url属性为unique，数据库已存在相同url的记录，再执行context.insert，发现已存在的被替换成新的了
         // 但在这里，希望如果存在，就不要插入
@@ -611,6 +852,10 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
     }
 
+    /// 切换指定 URL 音频的喜欢状态
+    /// - Parameter url: 音频 URL
+    /// - Throws: 如果音频不存在或保存失败则抛出错误
+    /// - Note: 操作成功后会发送 AudioUpdatedNotification 通知
     func toggleLike(_ url: URL) throws {
         if let dbAudio = findAudio(url) {
             dbAudio.like.toggle()
@@ -628,6 +873,11 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
     }
 
+    /// 更新音频模型
+    /// - Parameters:
+    ///   - audio: 要更新的音频模型
+    ///   - verbose: 是否输出详细日志
+    /// - Note: 如果音频标记为已删除，则会从数据库中删除；如果未找到音频，则不执行任何操作
     func update(_ audio: AudioModel, verbose: Bool = false) {
         if verbose {
             os_log("\(self.t)update \(audio.title)")
@@ -652,6 +902,11 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
     }
 
+    /// 更新指定 URL 音频的喜欢状态
+    /// - Parameters:
+    ///   - url: 音频 URL
+    ///   - like: 是否喜欢
+    /// - Throws: 如果保存失败则抛出错误
     func updateLike(_ url: URL, like: Bool) throws {
         if let dbAudio = findAudio(url) {
             dbAudio.like = like
@@ -659,6 +914,11 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
     }
 
+    /// 更新音频模型的封面状态
+    /// - Parameters:
+    ///   - audio: 音频模型
+    ///   - hasCover: 是否有封面
+    /// - Note: 如果保存失败，会记录错误但不会抛出异常
     func updateCover(_ audio: AudioModel, hasCover: Bool) {
         guard let dbAudio = context.model(for: audio.id) as? AudioModel else {
             return
@@ -674,6 +934,11 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
     }
 
+    /// 更新音频模型的文件哈希值
+    /// - Parameters:
+    ///   - audio: 音频模型
+    ///   - verbose: 是否输出详细日志
+    /// - Note: 如果音频未下载或获取哈希值失败，则不执行更新
     func updateHash(_ audio: AudioModel, verbose: Bool = false) {
         if audio.url.isNotDownloaded {
             return
@@ -701,11 +966,21 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
     }
 
+    /// 删除指定 ID 的音频
+    /// - Parameter id: 音频模型 ID
+    /// - Returns: 删除后的下一个音频模型
+    /// - Throws: 如果删除操作失败则抛出错误
     @discardableResult
     func deleteAudio(id: AudioModel.ID) throws -> AudioModel? {
         try deleteAudios(ids: [id])
     }
 
+    /// 删除多个 ID 的音频
+    /// - Parameters:
+    ///   - ids: 音频模型 ID 数组
+    ///   - verbose: 是否输出详细日志
+    /// - Returns: 删除后的下一个音频模型
+    /// - Throws: 如果删除操作失败则抛出错误
     @discardableResult
     func deleteAudios(ids: [AudioModel.ID], verbose: Bool = true) throws -> AudioModel? {
         if verbose {
@@ -744,6 +1019,12 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         return next
     }
 
+    /// 通过 URL 删除音频，同时从磁盘和数据库中删除
+    /// - Parameters:
+    ///   - disk: 磁盘 URL
+    ///   - urls: 要删除的音频 URL 数组
+    /// - Returns: 删除后的下一个音频模型
+    /// - Throws: 如果删除操作失败则抛出错误
     func deleteAudiosByURL(disk: URL, urls: [URL]) throws -> AudioModel? {
         // 本批次的最后一个删除后的下一个
         var next: AudioModel?
@@ -783,6 +1064,12 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         return next
     }
 
+    /// 根据 URL 查找音频模型（静态方法）
+    /// - Parameters:
+    ///   - url: 音频 URL
+    ///   - context: 模型上下文
+    ///   - verbose: 是否输出详细日志
+    /// - Returns: 找到的音频模型，如果未找到则返回 nil
     static func findAudio(_ url: URL, context: ModelContext, verbose: Bool = false) -> AudioModel? {
         if verbose {
             os_log("\(self.t)FindAudio -> \(url.lastPathComponent)")
@@ -799,6 +1086,11 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         return nil
     }
 
+    /// 获取指定索引的音频模型（静态方法）
+    /// - Parameters:
+    ///   - context: 模型上下文
+    ///   - i: 音频索引
+    /// - Returns: 指定索引的音频模型，如果未找到则返回 nil
     static func get(context: ModelContext, _ i: Int) -> AudioModel? {
         var descriptor = FetchDescriptor<AudioModel>()
         descriptor.fetchLimit = 1
@@ -818,6 +1110,9 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         return nil
     }
 
+    /// 获取音频总数（静态方法）
+    /// - Parameter context: 模型上下文
+    /// - Returns: 音频总数，如果查询失败则返回 0
     static func getTotal(context: ModelContext) -> Int {
         let descriptor = FetchDescriptor(predicate: #Predicate<AudioModel> {
             $0.order != -1
@@ -831,6 +1126,10 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
         }
     }
 
+    /// 获取指定音频模型的下一个音频模型
+    /// - Parameter audio: 当前音频模型
+    /// - Returns: 下一个音频模型，如果未找到则返回第一个音频
+    /// - Throws: 如果查询操作失败则抛出错误
     func nextOf(audio: AudioModel) throws -> AudioModel? {
         let result = try context.fetch(AudioModel.descriptorNext(order: audio.order))
         if let first = result.first {
@@ -839,13 +1138,6 @@ actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
 
         return try firstAudio()
     }
-}
-
-// MARK: Error
-
-enum AudioRecordDBError: Error {
-    case ToggleLikeError(Error)
-    case AudioNotFound(URL)
 }
 
 #Preview("Small Screen") {

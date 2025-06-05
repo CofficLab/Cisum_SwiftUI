@@ -148,9 +148,20 @@ struct ControlView: View {
     }
 }
 
-#Preview("App") {
-    AppPreview()
-        .frame(height: 800)
+#Preview("Small Screen") {
+    RootView {
+        ContentView()
+    }
+    .frame(width: 500)
+    .frame(height: 1200)
+}
+
+#Preview("Big Screen") {
+    RootView {
+        ContentView()
+    }
+    .frame(width: 1200)
+    .frame(height: 1200)
 }
 
 #Preview("iMac") {

@@ -5,7 +5,7 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-actor AudioDB: ObservableObject, SuperEvent, SuperLog {
+actor AudioService: ObservableObject, SuperEvent, SuperLog {
     nonisolated static let emoji = "🎵"
     private var db: AudioRecordDB
     private var disk: URL
@@ -18,7 +18,7 @@ actor AudioDB: ObservableObject, SuperEvent, SuperLog {
             os_log("\(Self.i) with reason: 🐛 \(reason) 💾 with disk: \(disk.shortPath())")
         }
 
-        let container = try await AudioConfig.getContainer()
+        let container = try await AudioConfigRepo.getContainer()
         self.db = AudioRecordDB(container, reason: reason, verbose: verbose)
         self.disk = disk
         self.monitor = self.makeMonitor()
@@ -205,7 +205,7 @@ actor AudioDB: ObservableObject, SuperEvent, SuperLog {
 
 // MARK: Event
 
-extension AudioDB {
+extension AudioService {
     func onDBSyncing(_ items: [URL]) {
         info("Syncing \(items.count) items")
         os_log("\(self.t)🔄 Syncing \(items.count) items")
@@ -235,18 +235,6 @@ extension AudioDB {
                   object: nil,
                   userInfo: ["urls": urls])
     }
-}
-
-// MARK: Event Name
-
-extension Notification.Name {
-    static let dbSyncing = Notification.Name("dbSyncing")
-    static let dbSynced = Notification.Name("dbSynced")
-    static let dbDeleted = Notification.Name("dbDeleted")
-    static let dbUpdated = Notification.Name("dbUpdated")
-    static let DBSorting = Notification.Name("DBSorting")
-    static let DBSortDone = Notification.Name("DBSortDone")
-    static let audioDownloadProgress = Notification.Name("audioDownloadProgress")
 }
 
 #Preview("Small Screen") {

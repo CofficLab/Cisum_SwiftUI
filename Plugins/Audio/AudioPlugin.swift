@@ -14,10 +14,10 @@ actor AudioPlugin: SuperPlugin, SuperLog {
     let iconName = "music.note"
     let isGroup = true
 
-    @MainActor var dirName: String = AudioConfig.dbDirName
+    @MainActor var dirName: String = AudioConfigRepo.dbDirName
     @MainActor var disk: URL?
     @MainActor var audioProvider: AudioProvider?
-    @MainActor var audioDB: AudioDB?
+    @MainActor var audioDB: AudioService?
     @MainActor var initialized: Bool = false
     @MainActor var container: ModelContainer?
 
@@ -67,7 +67,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
     }
 
     @MainActor func onPause(playMan: PlayManWrapper) {
-        AudioRepo.storeCurrentTime(playMan.currentTime)
+        AudioStateRepo.storeCurrentTime(playMan.currentTime)
     }
 
     func onCurrentURLChanged(url: URL) {
@@ -77,7 +77,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
             os_log("\(self.t)🍋🍋🍋 OnPlayAssetUpdate with asset \(url.title)")
         }
 
-        AudioRepo.storeCurrent(url)
+        AudioStateRepo.storeCurrent(url)
     }
 
     @MainActor func getDisk() -> URL? {
@@ -91,7 +91,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
 
         os_log("\(self.t)🍋🍋🍋 OnPlayModelChange with asset \(asset?.title ?? "nil")")
 
-        AudioRepo.storePlayMode(mode)
+        AudioStateRepo.storePlayMode(mode)
 
         guard let audioDB = await audioDB else {
             return
@@ -135,8 +135,8 @@ actor AudioPlugin: SuperPlugin, SuperLog {
         }
 
         self.disk = try disk.createIfNotExist()
-        self.container = try AudioConfig.getContainer()
-        self.audioDB = try await AudioDB(disk: disk, reason: self.className + ".onInit", verbose: false)
+        self.container = try AudioConfigRepo.getContainer()
+        self.audioDB = try await AudioService(disk: disk, reason: self.className + ".onInit", verbose: false)
         self.audioProvider = AudioProvider(disk: disk)
         self.initialized = true
 
@@ -144,11 +144,11 @@ actor AudioPlugin: SuperPlugin, SuperLog {
         var timeTarget: TimeInterval = 0
         var liked = false
 
-        if let url = AudioRepo.getCurrent(), let audio = await self.audioDB?.find(url) {
+        if let url = AudioStateRepo.getCurrent(), let audio = await self.audioDB?.find(url) {
             assetTarget = audio
             liked = await self.audioDB?.isLiked(audio) ?? false
 
-            if let time = AudioRepo.getCurrentTime() {
+            if let time = AudioStateRepo.getCurrentTime() {
                 timeTarget = time
             }
         } else {
@@ -175,7 +175,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
             playMan.setLike(liked)
         }
 
-        let mode = AudioRepo.getPlayMode()
+        let mode = AudioStateRepo.getPlayMode()
         if let mode = mode {
             playMan.setPlayMode(mode)
         }
@@ -247,37 +247,6 @@ actor AudioPlugin: SuperPlugin, SuperLog {
         }
 
         await audioDB.like(asset, liked: liked)
-    }
-}
-
-
-
-// MARK: - Notification
-
-extension Notification.Name {
-    static let AudiosUpdatedNotification = Notification.Name("AudiosUpdatedNotification")
-    static let AudioUpdatedNotification = Notification.Name("AudioUpdatedNotification")
-    static let SyncingNotification = Notification.Name("SyncingNotification")
-    static let URLDeletedNotification = Notification.Name("URLDeletedNotification")
-    static let URLsDeletedNotification = Notification.Name("URLsDeletedNotification")
-}
-
-// MARK: - Error
-
-enum AudioPluginError: Error, LocalizedError {
-    case NoNextAsset
-    case NoPrevAsset
-    case NoDisk
-
-    var errorDescription: String? {
-        switch self {
-        case .NoNextAsset:
-            return "No next asset"
-        case .NoPrevAsset:
-            return "No prev asset"
-        case .NoDisk:
-            return "No disk"
-        }
     }
 }
 
