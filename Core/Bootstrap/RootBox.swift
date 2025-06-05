@@ -27,9 +27,10 @@ final class RootBox: SuperLog {
         
         // Repos
         let pluginRepo = PluginRepo()
+        let uiRepo = UIRepo()
 
         // Providers
-        self.app = AppProvider()
+        self.app = AppProvider(uiRepo: uiRepo)
         self.message = MessageProvider()
         self.plugin = PluginProvider(plugins: Config.getPlugins(), repo: pluginRepo)
         self.config = ConfigProvider()

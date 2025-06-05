@@ -12,7 +12,7 @@ class AppProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLog, 
     nonisolated static let emoji = "🐮"
 
     // 使用 UIRepo 来管理 UI 相关的数据
-    private let uiRepo = UIRepo()
+    private let uiRepo: UIRepo
     
     @Published var showDB: Bool
     @Published var showSheet: Bool = true
@@ -21,9 +21,9 @@ class AppProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLog, 
     @Published var isResetting: Bool = false
     @Published var rightAlbumVisible = false
     
-    override init() {
+    init(uiRepo: UIRepo) {
+        self.uiRepo = uiRepo
         self.showDB = uiRepo.getShowDB()
-        super.init()
     }
 
     func showDBView() {
