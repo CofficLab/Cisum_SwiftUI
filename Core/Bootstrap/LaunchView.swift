@@ -24,6 +24,7 @@ struct LaunchView: View {
     VStack {
         LaunchView()
     }
+    .frame(height: 800)
 }
 
 #Preview {

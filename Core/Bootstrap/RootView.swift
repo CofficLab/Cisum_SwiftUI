@@ -15,8 +15,8 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     
     @StateObject var a: AppProvider
     @StateObject var m: MessageProvider
+    @StateObject var p: PluginProvider
     
-    var p: PluginProvider
     var man: PlayMan
     var playManWrapper: PlayManWrapper
     var c: ConfigProvider
@@ -30,7 +30,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
         self.content = content()
         self._a = StateObject(wrappedValue: box.app)
         self._m = StateObject(wrappedValue: box.message)
-        self.p = box.plugin
+        self._p = StateObject(wrappedValue: box.plugin)
         self.c = box.config
         self.man = box.man
         self.playManWrapper = box.playManWrapper

@@ -3,7 +3,6 @@ import SwiftData
 import SwiftUI
 import MagicCore
 
-
 struct Posters: View, SuperLog {
     nonisolated static let emoji = "🪧"
     
@@ -64,4 +63,11 @@ struct Posters: View, SuperLog {
             id = plugins.first?.label ?? ""
         }
     }
+}
+
+#Preview("App") {
+    AppPreview()
+    #if os(macOS)
+        .frame(height: 800)
+    #endif
 }

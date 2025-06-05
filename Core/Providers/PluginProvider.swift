@@ -18,7 +18,7 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
     }
 
     init() {
-        // os_log("\(self.i)")
+        os_log("\(Self.onInit)")
 
         let currentPluginId = Self.getPluginId()
 
@@ -40,7 +40,9 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
 
         // Check if plugin with same ID already exists
         if plugins.contains(where: { $0.id == plugin.id }) {
-            throw PluginProviderError.duplicatePluginID(pluginId: plugin.id)
+            throw PluginProviderError.duplicatePluginID(pluginId: plugin.id, collection: plugins.map({
+                $0.id
+            }))
         }
 
         self.plugins.append(plugin)
@@ -209,54 +211,26 @@ extension PluginProvider {
 
 enum PluginProviderError: Error, LocalizedError {
     case pluginIsNotGroup(pluginId: String)
-    case duplicatePluginID(pluginId: String)
+    case duplicatePluginID(pluginId: String, collection: [String])
     case pluginIDIsEmpty
 
     var errorDescription: String? {
         switch self {
         case let .pluginIsNotGroup(pluginId):
             return "Plugin \(pluginId) is not a group"
-        case let .duplicatePluginID(pluginId):
-            return "Plugin with ID \(pluginId) already exists"
+        case let .duplicatePluginID(pluginId, collection):
+            return "Plugin with ID \(pluginId) already exists in collection: \(collection)"
         case .pluginIDIsEmpty:
             return "Plugin has an empty ID"
         }
     }
 }
 
-@MainActor
-public class PlayManWrapper {
-    let playMan: PlayMan
-
-    init(playMan: PlayMan) {
-        self.playMan = playMan
+#Preview("Big Screen") {
+    RootView {
+        ContentView()
     }
-
-    var playing: Bool {
-        playMan.playing
-    }
-
-    var currentTime: TimeInterval {
-        playMan.currentTime
-    }
-
-    func play(url: URL, autoPlay: Bool = true) async {
-        await playMan.play(url: url, autoPlay: autoPlay)
-    }
-
-    func seek(time: TimeInterval) async {
-        playMan.seek(time: time)
-    }
-
-    func setPlayMode(_ mode: PlayMode) {
-        playMan.changePlayMode(mode)
-    }
-
-    func getPlayMode() -> PlayMode {
-        playMan.playMode
-    }
-
-    func setLike(_ isLiked: Bool) {
-        playMan.setLike(isLiked)
-    }
+    .frame(width: 1200)
+    .frame(height: 1200)
 }
+

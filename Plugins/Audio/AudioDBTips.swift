@@ -58,3 +58,12 @@ struct AudioDBTips: View {
     AudioDBTips()
         .frame(width: 300, height: 300)
 }
+
+#Preview("Big Screen") {
+    RootView {
+        ContentView()
+    }
+    .frame(width: 1200)
+    .frame(height: 1200)
+}
+

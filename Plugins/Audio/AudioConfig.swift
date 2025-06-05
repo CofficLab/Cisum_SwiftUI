@@ -30,3 +30,11 @@ struct AudioConfig {
         return try ModelContainer(for: schema, configurations: [modelConfiguration])
     }
 }
+
+#Preview("Big Screen") {
+    RootView {
+        ContentView()
+    }
+    .frame(width: 1200)
+    .frame(height: 1200)
+}
