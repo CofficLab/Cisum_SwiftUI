@@ -1,6 +1,6 @@
 import Foundation
 import SwiftData
-import MagicKit
+import MagicCore
 
 
 @Model

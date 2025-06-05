@@ -1,5 +1,5 @@
 import AlertToast
-import MagicKit
+import MagicCore
 import OSLog
 import SwiftUI
 

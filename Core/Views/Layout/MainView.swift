@@ -1,5 +1,5 @@
 import AVKit
-import MagicKit
+import MagicCore
 
 import OSLog
 import SwiftUI

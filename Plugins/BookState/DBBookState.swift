@@ -2,7 +2,7 @@ import Foundation
 import OSLog
 import SwiftData
 import SwiftUI
-import MagicKit
+import MagicCore
 
 
 actor DBBookState: ModelActor, ObservableObject, SuperLog {

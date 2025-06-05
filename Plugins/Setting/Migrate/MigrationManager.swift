@@ -1,5 +1,5 @@
 import Foundation
-import MagicKit
+import MagicCore
 import OSLog
 
 typealias ProgressCallback = (Double, String) -> Void

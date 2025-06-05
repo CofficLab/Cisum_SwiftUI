@@ -1,6 +1,6 @@
 import SwiftData
 import SwiftUI
-import MagicKit
+import MagicCore
 
 struct ControlView: View {
     @EnvironmentObject var appManager: AppProvider

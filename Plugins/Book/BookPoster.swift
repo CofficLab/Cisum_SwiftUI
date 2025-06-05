@@ -1,5 +1,5 @@
 import SwiftUI
-import MagicKit
+import MagicCore
 
 
 struct BookPoster: View {

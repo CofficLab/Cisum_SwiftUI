@@ -1,5 +1,5 @@
 import SwiftUI
-import MagicKit
+import MagicCore
 
 struct LayoutView: View {
     var minWidth = Config.minWidth

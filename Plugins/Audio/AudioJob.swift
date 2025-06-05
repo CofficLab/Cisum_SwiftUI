@@ -1,7 +1,7 @@
 import Foundation
 import OSLog
 import SwiftData
-import MagicKit
+import MagicCore
 
 
 extension AudioRecordDB {

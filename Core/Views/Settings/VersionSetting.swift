@@ -1,4 +1,4 @@
-import MagicKit
+import MagicCore
 import SwiftUI
 
 struct VersionSetting: View, SuperSetting {
@@ -14,5 +14,5 @@ struct VersionSetting: View, SuperSetting {
 }
 
 #Preview {
-    VersionSetting().padding().inMagicContainer()
+    VersionSetting().padding()
 }

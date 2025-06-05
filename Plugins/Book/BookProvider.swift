@@ -1,6 +1,6 @@
 import Combine
 import Foundation
-import MagicKit
+import MagicCore
 
 import OSLog
 import StoreKit

@@ -8,3 +8,4 @@ xcuserdata/
 .DS_Store
 
 *.log
+.build/

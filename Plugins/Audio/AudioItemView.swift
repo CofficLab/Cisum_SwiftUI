@@ -1,4 +1,4 @@
-import MagicKit
+import MagicCore
 import SwiftUI
 
 /// 音频列表项视图组件

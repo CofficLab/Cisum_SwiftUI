@@ -1,3 +1,4 @@
+import MagicCore
 import MagicAsset
 import SwiftUI
 

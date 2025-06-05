@@ -1,4 +1,4 @@
-import MagicKit
+import MagicCore
 import SwiftUI
 
 struct BtnToggleDB: View {

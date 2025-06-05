@@ -1,4 +1,4 @@
-import MagicKit
+import MagicCore
 import MagicPlayMan
 import OSLog
 
@@ -6,10 +6,10 @@ typealias PlayMan = MagicPlayMan
 typealias PlayAsset = MagicAsset
 typealias PlayMode = MagicPlayMode
 typealias Logger = MagicLogger
-typealias MagicCard = MagicKit.MagicCard
-typealias MagicApp = MagicKit.MagicApp
-typealias SuperLog = MagicKit.SuperLog
-typealias MagicLoading = MagicKit.MagicLoading
+typealias MagicCard = MagicCore.MagicCard
+typealias MagicApp = MagicCore.MagicApp
+typealias SuperLog = MagicCore.SuperLog
+typealias MagicLoading = MagicCore.MagicLoading
 
 // 创建便捷的日志函数
 func info(_ message: String) {

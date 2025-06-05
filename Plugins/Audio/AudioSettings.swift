@@ -1,4 +1,4 @@
-import MagicKit
+import MagicCore
 import SwiftUI
 
 struct AudioSettings: View, SuperSetting, SuperLog {

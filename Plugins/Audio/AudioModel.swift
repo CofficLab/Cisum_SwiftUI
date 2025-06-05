@@ -1,7 +1,7 @@
 import AVFoundation
 import CryptoKit
 import Foundation
-import MagicKit
+import MagicCore
 
 import OSLog
 import SwiftData
