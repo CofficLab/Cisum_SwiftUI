@@ -24,11 +24,14 @@ final class RootBox: SuperLog {
 
     private init(reason: String) {
         os_log("\(Self.onInit)(\(reason))")
+        
+        // Repos
+        let pluginRepo = PluginRepo()
 
         // Providers
         self.app = AppProvider()
         self.message = MessageProvider()
-        self.plugin = PluginProvider(plugins: Config.getPlugins())
+        self.plugin = PluginProvider(plugins: Config.getPlugins(), repo: pluginRepo)
         self.config = ConfigProvider()
         self.store = StoreProvider()
         self.cloud = CloudProvider()

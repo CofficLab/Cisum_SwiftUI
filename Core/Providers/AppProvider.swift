@@ -38,15 +38,23 @@ class AppProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLog, 
         showDB ? self.closeDBView() : self.showDBView()
     }
 
-//    func clearError() {
-//        self.error = nil
-//    }
-//
-//    func setError(_ error: Error) {
-//        self.error = error
-//    }
-
     func setResetting(_ value: Bool) {
         self.isResetting = value
     }
+}
+
+#Preview("Small Screen") {
+    RootView {
+        ContentView()
+    }
+    .frame(width: 500)
+    .frame(height: 600)
+}
+
+#Preview("Big Screen") {
+    RootView {
+        ContentView()
+    }
+    .frame(width: 800)
+    .frame(height: 1200)
 }

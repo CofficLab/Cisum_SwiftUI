@@ -7,8 +7,9 @@ import SwiftUI
 
 @MainActor
 class PluginProvider: ObservableObject, SuperLog, SuperThread {
-    static let keyOfCurrentPluginID = "currentPluginID"
     nonisolated static let emoji = "🧩"
+    
+    private let repo: PluginRepo
 
     @Published private(set) var plugins: [SuperPlugin] = []
     @Published private(set) var current: SuperPlugin?
@@ -17,11 +18,12 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
         plugins.filter { $0.isGroup }
     }
 
-    init(plugins: [SuperPlugin]) {
+    init(plugins: [SuperPlugin], repo: PluginRepo) {
         os_log("\(Self.onInit)")
 
         self.plugins = plugins
-        let currentPluginId = Self.getPluginId()
+        self.repo = repo
+        let currentPluginId = repo.getCurrentPluginId()
 
         if let plugin = plugins.first(where: { $0.id == currentPluginId }) {
             try? self.setCurrentGroup(plugin)
@@ -63,7 +65,7 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
 
         if plugin.isGroup {
             self.current = plugin
-            Self.storeCurrent(plugin)
+            repo.storeCurrentPluginId(plugin.id)
         } else {
             throw PluginProviderError.pluginIsNotGroup(pluginId: plugin.id)
         }
@@ -75,7 +77,7 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
     }
 
     func restoreCurrent() throws {
-        let currentPluginId = Self.getPluginId()
+        let currentPluginId = repo.getCurrentPluginId()
 
         if let plugin = plugins.first(where: { $0.id == currentPluginId }) {
             try self.setCurrentGroup(plugin)
@@ -84,32 +86,6 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
         } else {
             os_log(.error, "\(self.t)⚠️⚠️⚠️ No current plugin found")
         }
-    }
-
-    static func storeCurrent(_ plugin: SuperPlugin) {
-        let id = plugin.id
-
-        UserDefaults.standard.set(id, forKey: keyOfCurrentPluginID)
-
-        // Synchronize with CloudKit
-        NSUbiquitousKeyValueStore.default.set(id, forKey: keyOfCurrentPluginID)
-        NSUbiquitousKeyValueStore.default.synchronize()
-    }
-
-    static func getPluginId() -> String {
-        // First, try to get the layout ID from UserDefaults
-        if let id = UserDefaults.standard.string(forKey: keyOfCurrentPluginID) {
-            return id
-        }
-
-        // If not found in UserDefaults, try to get from iCloud
-        if let id = NSUbiquitousKeyValueStore.default.string(forKey: keyOfCurrentPluginID) {
-            // If found in iCloud, update UserDefaults for future local access
-            UserDefaults.standard.set(id, forKey: keyOfCurrentPluginID)
-            return id
-        }
-
-        return ""
     }
 }
 
@@ -189,6 +165,8 @@ extension PluginProvider {
     }
 }
 
+// MARK: - Error
+
 enum PluginProviderError: Error, LocalizedError {
     case pluginIsNotGroup(pluginId: String)
     case duplicatePluginID(pluginId: String, collection: [String])
@@ -218,7 +196,7 @@ enum PluginProviderError: Error, LocalizedError {
     RootView {
         ContentView()
     }
-    .frame(width: 1200)
+    .frame(width: 800)
     .frame(height: 1200)
 }
 

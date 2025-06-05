@@ -1,6 +1,5 @@
 import Foundation
 import MagicCore
-
 import OSLog
 import SwiftData
 import SwiftUI
@@ -146,3 +145,20 @@ extension Notification.Name {
     static let messageError = Notification.Name("messageError")
     static let error = Notification.Name("error")
 }
+
+#Preview("Small Screen") {
+    RootView {
+        ContentView()
+    }
+    .frame(width: 500)
+    .frame(height: 600)
+}
+
+#Preview("Big Screen") {
+    RootView {
+        ContentView()
+    }
+    .frame(width: 800)
+    .frame(height: 1200)
+}
+
