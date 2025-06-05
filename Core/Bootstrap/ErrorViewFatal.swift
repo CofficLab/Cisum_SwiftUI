@@ -29,11 +29,13 @@ struct ErrorViewFatal: View {
 
                     GroupBox {
                         Text(String(describing: type(of: error)))
+                            .padding(.top, 20)
                             .padding(.bottom, 20)
                             .font(.title2)
                         
                         Text("\(error.localizedDescription)")
                             .font(.subheadline)
+                            .foregroundStyle(.red)
                             .padding(.bottom, 10)
                         
                         // 复制错误信息按钮
@@ -58,6 +60,7 @@ struct ErrorViewFatal: View {
                         .scaleEffect(isCopied ? 1.1 : 1.0)
                         .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isCopied)
                         .padding(.top, 10)
+                        .padding(.bottom, 10)
                     }.padding()
 
                     Spacer()

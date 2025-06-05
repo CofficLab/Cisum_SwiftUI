@@ -28,11 +28,11 @@ final class RootBox: SuperLog {
         // Providers
         self.app = AppProvider()
         self.message = MessageProvider()
-        self.plugin = PluginProvider()
+        self.plugin = PluginProvider(plugins: Config.getPlugins())
         self.config = ConfigProvider()
         self.store = StoreProvider()
         self.cloud = CloudProvider()
-        
+
         self.man = PlayMan(playlistEnabled: false, verbose: false)
         self.playManWrapper = PlayManWrapper(playMan: self.man)
     }
@@ -42,7 +42,7 @@ final class RootBox: SuperLog {
     RootView(content: {
         ContentView()
     })
-    .frame(width: 800, height: 800)
+    .frame(width: 600, height: 800)
 }
 
 #Preview("Big Screen") {

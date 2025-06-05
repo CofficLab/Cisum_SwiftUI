@@ -188,10 +188,6 @@ extension RootView {
     func onAppear() {
         Task {
             do {
-                try Config.getPlugins().forEach({
-                    try self.p.append($0, reason: self.className)
-                })
-
                 try self.p.restoreCurrent()
                 try await p.handleOnAppear(playMan: playManWrapper, current: p.current, storage: c.getStorageLocation())
 

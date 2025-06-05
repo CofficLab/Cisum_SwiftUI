@@ -17,35 +17,15 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
         plugins.filter { $0.isGroup }
     }
 
-    init() {
+    init(plugins: [SuperPlugin]) {
         os_log("\(Self.onInit)")
 
+        self.plugins = plugins
         let currentPluginId = Self.getPluginId()
 
         if let plugin = plugins.first(where: { $0.id == currentPluginId }) {
             try? self.setCurrentGroup(plugin)
         }
-    }
-
-    func append(_ plugin: SuperPlugin, reason: String) throws {
-        let verbose = false
-
-        if verbose {
-            os_log("\(self.t)➕➕➕ Append: \(plugin.id) with reason: \(reason)")
-        }
-
-        if plugin.id.isEmpty {
-            throw PluginProviderError.pluginIDIsEmpty
-        }
-
-        // Check if plugin with same ID already exists
-        if plugins.contains(where: { $0.id == plugin.id }) {
-            throw PluginProviderError.duplicatePluginID(pluginId: plugin.id, collection: plugins.map({
-                $0.id
-            }))
-        }
-
-        self.plugins.append(plugin)
     }
 
     func getStatusViews() -> [AnyView] {
@@ -224,6 +204,14 @@ enum PluginProviderError: Error, LocalizedError {
             return "Plugin has an empty ID"
         }
     }
+}
+
+#Preview("Small Screen") {
+    RootView {
+        ContentView()
+    }
+    .frame(width: 500)
+    .frame(height: 600)
 }
 
 #Preview("Big Screen") {
