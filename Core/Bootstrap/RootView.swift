@@ -1,4 +1,3 @@
-import AlertToast
 import MagicCore
 import OSLog
 import SwiftUI

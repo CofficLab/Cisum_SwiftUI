@@ -70,7 +70,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
                         }
                     }, content: {
                         ForEach(urls, id: \.self) { url in
-                            AudioItemView(url: url)
+                            AudioItemView(url)
                         }
                         .onDelete(perform: onDeleteItems)
                     })

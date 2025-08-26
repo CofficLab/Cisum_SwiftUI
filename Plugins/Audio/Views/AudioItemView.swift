@@ -14,6 +14,10 @@ struct AudioItemView: View {
             set: { _ in }
         )
     }
+
+    init(_ url: URL) {
+        self.url = url
+    }
     
     var body: some View {
         url.makeMediaView()
@@ -27,23 +31,18 @@ struct AudioItemView: View {
     }
 }
 
-#Preview {
-    AudioItemView(url: URL(fileURLWithPath: "/tmp/test.mp3"))
-        .environmentObject(AudioProvider(disk: URL(fileURLWithPath: "/tmp")))
-} 
-
-#Preview("Small Screen") {
-    RootView {
-        ContentView()
-    }
-    .frame(width: 500)
-    .frame(height: 1200)
+#Preview("App - Large") {
+    AppPreview()
+        .frame(width: 600, height: 1000)
 }
 
-#Preview("Big Screen") {
-    RootView {
-        ContentView()
-    }
-    .frame(width: 1200)
-    .frame(height: 1200)
+#Preview("App - Small") {
+    AppPreview()
+        .frame(width: 600, height: 600)
 }
+
+#if os(iOS)
+#Preview("iPhone") {
+    AppPreview()
+}
+#endif

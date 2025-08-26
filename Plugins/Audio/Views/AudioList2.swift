@@ -1,5 +1,4 @@
 import MagicCore
-
 import OSLog
 import SwiftData
 import SwiftUI
@@ -74,7 +73,7 @@ struct AudioList2: View, SuperThread, SuperLog, SuperEvent {
                         }
                     }, content: {
                         ForEach(urls, id: \.self) { url in
-                            AudioItemView(url: url)
+                            AudioItemView(url)
                         }
                         .onDelete(perform: deleteItems)
                     })
