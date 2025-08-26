@@ -204,7 +204,7 @@ extension RootView {
                         }
                     },
                     onNextRequested: { asset in
-                        os_log("\(self.t)⏭️ 下一首")
+                        m.info("下一首")
                         Task {
                             do {
                                 try await self.p.onPlayNext(current: asset, mode: man.playMode, man: playManWrapper)
@@ -224,14 +224,13 @@ extension RootView {
                         }
                     },
                     onPlayModeChanged: { mode in
-                        os_log("\(self.t)♾️ 播放模式 -> \(mode.shortName)")
+                        m.info("播放模式 -> \(mode.shortName)")
                         Task {
                             do {
                                 try await self.p.onPlayModeChange(mode: mode, asset: man.currentAsset)
                             } catch {
                                 self.m.error(error)
                             }
-                            m.info(mode.displayName)
                         }
                     },
                     onCurrentURLChanged: { url in

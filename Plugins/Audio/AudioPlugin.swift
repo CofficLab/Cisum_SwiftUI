@@ -212,7 +212,8 @@ actor AudioPlugin: SuperPlugin, SuperLog {
 
         let asset = try await audioDB.getNextOf(current, verbose: false)
         if let asset = asset {
-            await playMan.play(url: asset, autoPlay: playMan.playing)
+            MagicMessageProvider.shared.info("\(asset.title)")
+            await playMan.play(url: asset, autoPlay: true)
         } else {
             throw AudioPluginError.NoNextAsset
         }
@@ -250,7 +251,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
     }
 }
 
-#Preview("Small Screen") {
+#Preview("UserDefaultsDebugView") {
     RootView {
         UserDefaultsDebugView(defaultSearchText: "AudioPlugin")
     }
@@ -258,10 +259,19 @@ actor AudioPlugin: SuperPlugin, SuperLog {
     .frame(height: 600)
 }
 
-#Preview("Big Screen") {
-    RootView {
-        UserDefaultsDebugView()
-    }
-    .frame(width: 800)
-    .frame(height: 1200)
+#Preview("App - Large") {
+    AppPreview()
+        .frame(width: 600, height: 1000)
 }
+
+#Preview("App - Small") {
+    AppPreview()
+        .frame(width: 600, height: 600)
+}
+
+#if os(iOS)
+#Preview("iPhone") {
+    AppPreview()
+}
+#endif
+
