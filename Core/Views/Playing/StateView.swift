@@ -20,7 +20,7 @@ struct StateView: View, SuperLog, SuperThread {
                 makeInfoView(messageManager.stateMessage)
             }
             
-            if playMan.isBuffering {
+            if playMan.state.isDownloading {
                 makeInfoView(playMan.state.stateText)
             }
 

@@ -14,6 +14,7 @@ struct ControlBtns: View {
             man.makePlayPauseButton()
                 .magicSize(.auto)
                 .magicShapeVisibility(.always)
+                .id(man.state.stateText)
             man.makeNextButton()
                 .magicSize(.auto)
             man.makePlayModeButton()
@@ -25,20 +26,24 @@ struct ControlBtns: View {
     }
 }
 
-#Preview("Small Screen") {
-    RootView {
-        ContentView()
-    }
-    .frame(width: 500)
-    .frame(height: 1200)
+// MARK: - Preview
+
+#if os(macOS)
+#Preview("App - Large") {
+    AppPreview()
+        .frame(width: 600, height: 1000)
 }
 
-#Preview("Big Screen") {
-    RootView {
-        ContentView()
-    }
-    .frame(width: 1200)
-    .frame(height: 1200)
+#Preview("App - Small") {
+    AppPreview()
+        .frame(width: 500, height: 800)
 }
+#endif
+
+#if os(iOS)
+#Preview("iPhone") {
+    AppPreview()
+}
+#endif
 
 

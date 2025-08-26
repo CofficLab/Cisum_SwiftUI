@@ -122,7 +122,7 @@ extension AudioList {
 
         if url != man.asset {
             Task {
-                await self.man.play(url: url)
+                await self.man.play(url)
             }
         }
     }

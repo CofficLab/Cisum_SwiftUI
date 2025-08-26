@@ -746,6 +746,7 @@
 
     },
     "订阅" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

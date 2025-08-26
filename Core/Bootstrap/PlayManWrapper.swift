@@ -17,7 +17,7 @@ public class PlayManWrapper {
     }
 
     func play(url: URL, autoPlay: Bool = true) async {
-        await playMan.play(url: url, autoPlay: autoPlay)
+        await playMan.play(url, autoPlay: autoPlay)
     }
 
     func seek(time: TimeInterval) async {
