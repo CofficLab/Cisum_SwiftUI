@@ -204,16 +204,3 @@ extension Config {
         return false
     }
 }
-
-
-#Preview {
-    LayoutView()
-}
-
-#Preview("500") {
-    LayoutView(width: 500)
-}
-
-#Preview("1000") {
-    LayoutView(width: 1000)
-}

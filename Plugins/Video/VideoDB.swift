@@ -58,6 +58,4 @@ extension VideoDB {
         .frame(height: 800)
 }
 
-#Preview("Layout") {
-    LayoutView()
-}
+

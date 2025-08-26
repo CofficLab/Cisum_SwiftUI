@@ -163,27 +163,3 @@ struct ControlView: View {
     .frame(width: 1200)
     .frame(height: 1200)
 }
-
-#Preview("iMac") {
-    LayoutView(device: .iMac)
-}
-
-#Preview("iPhone 15") {
-    LayoutView(device: .iPhone_15)
-}
-
-#Preview("iPad") {
-    LayoutView(device: .iPad_mini)
-}
-
-#Preview("Layout") {
-    LayoutView()
-}
-
-#Preview("Layout-500") {
-    LayoutView(width: 500)
-}
-
-#Preview("Layout-1500") {
-    LayoutView(width: 1500)
-}

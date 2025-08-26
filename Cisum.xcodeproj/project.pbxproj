@@ -39,7 +39,6 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		F54D53832D223ED000CA53BE /* Plugins */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Plugins; sourceTree = "<group>"; };
 		F54D54552D223F2400CA53BE /* Core */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Core; sourceTree = "<group>"; };
-		F54D54B32D223F8700CA53BE /* Dev */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Dev; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,7 +68,6 @@
 			children = (
 				0BB5871C2AD820FA0071AEBD /* Assets.xcassets */,
 				F54D54552D223F2400CA53BE /* Core */,
-				F54D54B32D223F8700CA53BE /* Dev */,
 				0B1D5A8B2AB305D70010DDF2 /* Info.plist */,
 				0B7792452D15ADF500D78FF4 /* Localizable.xcstrings */,
 				F54D53832D223ED000CA53BE /* Plugins */,
@@ -115,7 +113,6 @@
 			fileSystemSynchronizedGroups = (
 				F54D53832D223ED000CA53BE /* Plugins */,
 				F54D54552D223F2400CA53BE /* Core */,
-				F54D54B32D223F8700CA53BE /* Dev */,
 			);
 			name = Cisum;
 			packageProductDependencies = (

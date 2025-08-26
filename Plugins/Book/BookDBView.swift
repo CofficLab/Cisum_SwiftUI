@@ -93,6 +93,4 @@ extension BookDBView {
         .frame(height: 800)
 }
 
-#Preview("Layout") {
-    LayoutView()
-}
+

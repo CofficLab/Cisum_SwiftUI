@@ -44,7 +44,3 @@ struct HeroView: View {
     AppPreview()
         .frame(height: 800)
 }
-
-#Preview("500") {
-    LayoutView(width: 500)
-}

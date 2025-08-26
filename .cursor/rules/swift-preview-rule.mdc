@@ -1,0 +1,55 @@
+---
+globs: *.swift
+alwaysApply: false
+---
+
+# Swift 文件预览代码规则
+
+每个 Swift 文件底部都必须添加多个尺寸的预览代码，以适应不同屏幕尺寸的开发者需求
+
+## 规则说明
+
+- 所有 Swift 文件（包括 SwiftUI 视图文件）都必须在文件末尾添加多个尺寸的预览代码
+- 使用 `AppPreview()` 作为默认预览内容
+- 尺寸可根据实际需要调整
+- 预览代码应该放在文件的最后，在所有其他代码之后
+- 如果文件已经有其他预览代码，确保至少包含这四种尺寸的 `AppPreview()` 预览
+
+## 示例
+
+```swift
+import SwiftUI
+
+struct MyView: View {
+    var body: some View {
+        Text("Hello World")
+    }
+}
+
+#if os(macOS)
+#Preview("App - Large") {
+    AppPreview()
+        .frame(width: 600, height: 1000) // 尺寸可根据需要调整
+}
+
+#Preview("App - Small") {
+    AppPreview()
+        .frame(width: 600, height: 600) // 尺寸可根据需要调整
+}
+#endif
+
+#if os(iOS)
+#Preview("iPhone") {
+    AppPreview()
+}
+#endif
+```
+
+## 注意事项
+
+- 确保 `AppPreview` 结构体在项目中可用
+- 预览代码应该简洁明了，便于开发者快速切换不同尺寸进行预览
+- 如果文件包含多个视图，可以为每个视图添加单独的预览
+- macOS 预览使用 `#if os(macOS)` 条件编译，确保只在 macOS 系统下编译
+- iPhone 预览使用 `#if os(iOS)` 条件编译，确保只在 iOS 系统下编译
+- **尺寸调整**：提供的尺寸是建议值，开发者可以根据实际需要调整（如 600x600 改为 620x620）

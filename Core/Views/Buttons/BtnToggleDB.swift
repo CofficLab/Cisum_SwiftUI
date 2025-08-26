@@ -21,6 +21,4 @@ struct BtnToggleDB: View {
         .frame(height: 800)
 }
 
-#Preview("Layout") {
-    LayoutView()
-}
+

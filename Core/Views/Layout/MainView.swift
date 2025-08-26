@@ -167,15 +167,3 @@ extension MainView {
         .frame(height: 600)
     #endif
 }
-
-#Preview("Layout") {
-    LayoutView()
-}
-
-#Preview("iPhone 15") {
-    LayoutView(device: .iPhone_15)
-}
-
-#Preview("iPad") {
-    LayoutView(device: .iPad_mini)
-}

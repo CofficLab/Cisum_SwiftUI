@@ -5,7 +5,6 @@ struct AppPreview: View {
         RootView {
             ContentView()
         }
-        .frame(width: 800, height: 800)
     }
 }
 
@@ -13,6 +12,4 @@ struct AppPreview: View {
     AppPreview()
 }
 
-#Preview("Layout") {
-    LayoutView()
-}
+

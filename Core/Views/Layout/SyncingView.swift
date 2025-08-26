@@ -17,7 +17,3 @@ struct SyncingView: View {
     AppPreview()
         .frame(height: 800)
 }
-
-#Preview("App") {
-    LayoutView()
-}

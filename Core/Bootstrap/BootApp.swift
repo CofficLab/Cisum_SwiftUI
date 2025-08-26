@@ -35,10 +35,18 @@ struct BootApp: App, SuperLog {
     }
 }
 
-#Preview {
+#Preview("App - Large") {
     AppPreview()
+        .frame(width: 600, height: 1000)
 }
 
-#Preview {
-    LayoutView()
+#Preview("App - Small") {
+    AppPreview()
+        .frame(width: 600, height: 600)
 }
+
+#if os(iOS)
+#Preview("iPhone") {
+    AppPreview()
+}
+#endif

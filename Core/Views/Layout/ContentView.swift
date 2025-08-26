@@ -20,7 +20,3 @@ struct ContentView: View, MagicCore.SuperLog, SuperThread {
     AppPreview()
         .frame(height: 800)
 }
-
-#Preview("App") {
-    LayoutView()
-}

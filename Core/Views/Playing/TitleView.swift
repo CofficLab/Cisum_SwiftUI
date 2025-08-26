@@ -34,22 +34,3 @@ struct TitleView: View, SuperLog, SuperThread {
     }
 }
 
-#Preview("Layout") {
-    LayoutView()
-}
-
-#Preview("Layout-350") {
-    LayoutView(width: 350)
-}
-
-#Preview("iPhone 15") {
-    LayoutView(device: .iPhone_15)
-}
-
-#Preview("iPad") {
-    LayoutView(device: .iPad_mini)
-}
-
-#Preview("iMac") {
-    LayoutView(device: .iMac)
-}

@@ -252,8 +252,18 @@ extension RootView {
     }
 }
 
-#Preview("App") {
+#Preview("App - Large") {
     AppPreview()
-        .frame(height: 800)
-        .frame(width: 800)
+        .frame(width: 600, height: 1000)
 }
+
+#Preview("App - Small") {
+    AppPreview()
+        .frame(width: 600, height: 600)
+}
+
+#if os(iOS)
+#Preview("iPhone") {
+    AppPreview()
+}
+#endif

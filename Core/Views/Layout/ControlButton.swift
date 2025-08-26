@@ -160,6 +160,4 @@ struct SmartButtonStyle: ButtonStyle {
     .frame(height: 1200)
 }
 
-#Preview("Layout") {
-    LayoutView()
-}
+

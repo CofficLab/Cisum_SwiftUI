@@ -193,7 +193,3 @@ extension AudioList2 {
         .frame(height: 800)
 }
 
-#Preview {
-    LayoutView(width: 400, height: 800)
-        .frame(height: 800)
-}

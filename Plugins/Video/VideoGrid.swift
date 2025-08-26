@@ -63,8 +63,3 @@ struct VideoGrid: View {
     AppPreview()
         .frame(height: 820)
 }
-
-#Preview {
-    LayoutView(width: 400, height: 800)
-        .frame(height: 820)
-}
