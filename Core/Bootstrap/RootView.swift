@@ -203,7 +203,6 @@ extension RootView {
                         }
                     },
                     onNextRequested: { asset in
-                        m.info("下一首")
                         Task {
                             do {
                                 try await self.p.onPlayNext(current: asset, mode: man.playMode, man: playManWrapper)
@@ -233,7 +232,6 @@ extension RootView {
                         }
                     },
                     onCurrentURLChanged: { url in
-                        m.info(url.title)
                         Task {
                             do {
                                 try await self.p.onCurrentURLChanged(url: url)

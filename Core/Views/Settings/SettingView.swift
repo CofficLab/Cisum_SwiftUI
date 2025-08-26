@@ -9,7 +9,8 @@ struct SettingView: View {
                 ForEach(p.plugins.indices, id: \.self) { index in
                     p.plugins[index].addSettingView()
                 }
-                
+                BuySetting()
+
                 VersionSetting()
             }.padding()
         }
