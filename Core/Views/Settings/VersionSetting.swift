@@ -7,7 +7,6 @@ struct VersionSetting: View, SuperSetting {
             MagicSettingRow(title: "版本", description: "APP 的版本", icon: .iconVersionInfo, content: {
                 Text(MagicApp.getVersion())
                     .font(.footnote)
-
             })
         }
     }
