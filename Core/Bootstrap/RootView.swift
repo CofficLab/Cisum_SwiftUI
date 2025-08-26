@@ -182,11 +182,13 @@ extension RootView {
                 self.man.subscribe(
                     name: self.className,
                     onStateChanged: { state in
-                        os_log("\(self.t)🐯 当前播放状态 -> \(state.stateText)")
+                        os_log("\(self.t)🐯 播放状态变为 -> \(state.stateText)")
                         if state == .paused {
                             Task {
-                                do { try await self.p.onPause(man: playManWrapper) } catch {
-                                    os_log(.error, "\(self.t)🎵 Error in onPause: \(error.localizedDescription)")
+                                do {
+                                    try await self.p.onPause(man: playManWrapper)
+                                } catch {
+                                    m.error(error)
                                 }
                             }
                         }
@@ -194,32 +196,52 @@ extension RootView {
                     onPreviousRequested: { asset in
                         os_log("\(self.t)⏮️ 上一首")
                         Task {
-                            try? await self.p.onPlayPrev(current: asset, mode: man.playMode, man: playManWrapper)
+                            do {
+                                try await self.p.onPlayPrev(current: asset, mode: man.playMode, man: playManWrapper)
+                            } catch {
+                                m.error(error)
+                            }
                         }
                     },
                     onNextRequested: { asset in
                         os_log("\(self.t)⏭️ 下一首")
                         Task {
-                            try? await self.p.onPlayNext(current: asset, mode: man.playMode, man: playManWrapper)
+                            do {
+                                try await self.p.onPlayNext(current: asset, mode: man.playMode, man: playManWrapper)
+                            } catch {
+                                m.error(error)
+                            }
                         }
                     },
                     onLikeStatusChanged: { asset, like in
                         os_log("\(self.t)❤️ 喜欢状态 -> \(like)")
                         Task {
-                            try? await self.p.onLike(asset: asset, liked: like)
+                            do {
+                                try await self.p.onLike(asset: asset, liked: like)
+                            } catch {
+                                m.error(error)
+                            }
                         }
                     },
                     onPlayModeChanged: { mode in
                         os_log("\(self.t)♾️ 播放模式 -> \(mode.shortName)")
                         Task {
-                            try? await self.p.onPlayModeChange(mode: mode, asset: man.currentAsset)
-                            self.m.info(mode.displayName)
+                            do {
+                                try await self.p.onPlayModeChange(mode: mode, asset: man.currentAsset)
+                            } catch {
+                                self.m.error(error)
+                            }
+                            m.info(mode.displayName)
                         }
                     },
                     onCurrentURLChanged: { url in
                         os_log("\(self.t)🎵 当前播放 -> \(url.title)")
                         Task {
-                            try? await self.p.onCurrentURLChanged(url: url)
+                            do {
+                                try await self.p.onCurrentURLChanged(url: url)
+                            } catch {
+                                m.error(error)
+                            }
                         }
                     }
                 )
@@ -228,7 +250,6 @@ extension RootView {
             }
 
             self.loading = false
-            self.m.info("Ready")
         }
     }
 }
@@ -244,7 +265,7 @@ extension RootView {
 }
 
 #if os(iOS)
-#Preview("iPhone") {
-    AppPreview()
-}
+    #Preview("iPhone") {
+        AppPreview()
+    }
 #endif
