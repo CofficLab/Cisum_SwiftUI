@@ -6,7 +6,7 @@ import SwiftUI
 
 struct StateView: View, SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var messageManager: MessageProvider
+    @EnvironmentObject var messageManager: StateMessageProvider
     @EnvironmentObject var playMan: PlayMan
 
     var asset: URL? { playMan.asset }

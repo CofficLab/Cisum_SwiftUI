@@ -14,8 +14,9 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     @State var iCloudAvailable = true
 
     @StateObject var a: AppProvider
-    @StateObject var m: MessageProvider
+    @StateObject var m: MagicMessageProvider
     @StateObject var p: PluginProvider
+    @StateObject var stateMessageProvider: StateMessageProvider
 
     var man: PlayMan
     var playManWrapper: PlayManWrapper
@@ -29,7 +30,8 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
         let box = RootBox.shared
         self.content = content()
         self._a = StateObject(wrappedValue: box.app)
-        self._m = StateObject(wrappedValue: box.message)
+        self._m = StateObject(wrappedValue: box.messageProvider)
+        self._stateMessageProvider = StateObject(wrappedValue: box.stateMessageProvider)
         self._p = StateObject(wrappedValue: box.plugin)
         self.c = box.config
         self.man = box.man
@@ -100,6 +102,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                     .environmentObject(s)
                     .environmentObject(p)
                     .environmentObject(m)
+                    .environmentObject(self.stateMessageProvider)
                     .sheet(isPresented: self.$a.showSheet, content: {
                         VStack {
                             ForEach(Array(p.getSheetViews(storage: c.storageLocation).enumerated()), id: \.offset) { _, view in
@@ -117,29 +120,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
         }
         .environmentObject(c)
         .environmentObject(cloudProvider)
-        .toast(isPresenting: $m.showHub, alert: {
-            AlertToast(displayMode: .hud, type: .regular, title: m.hub)
-        })
-        .toast(isPresenting: $m.showToast, alert: {
-            AlertToast(type: .systemImage("info.circle", .blue), title: m.toast)
-        }, completion: {
-            m.clearToast()
-        })
-        .toast(isPresenting: $m.showAlert, alert: {
-            AlertToast(displayMode: .alert, type: .error(.red), title: m.alert)
-        }, completion: {
-            m.clearAlert()
-        })
-        .toast(isPresenting: $m.showDone, alert: {
-            AlertToast(type: .complete(.green), title: m.doneMessage)
-        }, completion: {
-            m.clearDoneMessage()
-        })
-        .toast(isPresenting: $m.showError, duration: 0, tapToDismiss: true, alert: {
-            AlertToast(displayMode: .alert, type: .error(.indigo), title: m.error?.localizedDescription)
-        }, completion: {
-            m.clearError()
-        })
+        .withMagicToast()
         .frame(maxWidth: .infinity)
         .frame(maxHeight: .infinity)
         .background(Config.rootBackground)
@@ -232,7 +213,7 @@ extension RootView {
                         os_log("\(self.t)♾️ 播放模式 -> \(mode.shortName)")
                         Task {
                             try? await self.p.onPlayModeChange(mode: mode, asset: man.currentAsset)
-                            self.m.toast(mode.displayName)
+                            self.m.info(mode.displayName)
                         }
                     },
                     onCurrentURLChanged: { url in
@@ -247,7 +228,7 @@ extension RootView {
             }
 
             self.loading = false
-            self.m.append("Ready")
+            self.m.info("Ready")
         }
     }
 }

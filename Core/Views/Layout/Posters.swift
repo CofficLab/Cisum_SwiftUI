@@ -7,7 +7,7 @@ struct Posters: View, SuperLog {
     nonisolated static let emoji = "🪧"
     
     @EnvironmentObject var p: PluginProvider
-    @EnvironmentObject var m: MessageProvider
+    @EnvironmentObject var m: MagicMessageProvider
     @EnvironmentObject var man: PlayMan
     
     @Binding var isPresented: Bool

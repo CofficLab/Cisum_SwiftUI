@@ -2,7 +2,7 @@ import SwiftUI
 
 struct ControlBtns: View {
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var message: MessageProvider
+    @EnvironmentObject var message: StateMessageProvider
     @EnvironmentObject var man: PlayMan
 
     var body: some View {

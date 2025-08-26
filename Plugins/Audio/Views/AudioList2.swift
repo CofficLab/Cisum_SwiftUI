@@ -22,7 +22,7 @@ struct AudioList2: View, SuperThread, SuperLog, SuperEvent {
     @EnvironmentObject var man: PlayMan
     @EnvironmentObject var audioManager: AudioProvider
     @EnvironmentObject var audioDB: AudioService
-    @EnvironmentObject var m: MessageProvider
+    @EnvironmentObject var m: MagicMessageProvider
 
     @State var selection: URL? = nil
     @State var isSorting = false
@@ -141,7 +141,7 @@ extension AudioList2 {
                 do {
                     try url.delete()
 
-                    m.toast("已删除 \(url.title)")
+                    m.info("已删除 \(url.title)")
                 } catch {
                     os_log(.error, "\(t)deleteItems: \(error)")
 

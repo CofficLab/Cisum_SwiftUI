@@ -8,7 +8,7 @@ struct BookGrid: View, SuperLog, SuperThread {
     nonisolated static let emoji = "📖"
 
     @EnvironmentObject var appManager: AppProvider
-    @EnvironmentObject var messageManager: MessageProvider
+    @EnvironmentObject var messageManager: StateMessageProvider
     @EnvironmentObject var db: BookDB
 
     @State var selection: AudioModel? = nil
@@ -22,7 +22,7 @@ struct BookGrid: View, SuperLog, SuperThread {
             return true
         }
 
-        return messageManager.flashMessage.isEmpty && total == 0
+        return false
     }
 
     var body: some View {

@@ -6,7 +6,7 @@ struct VideoGrid: View {
     static var label = "📬 DBTreeView::"
 
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var m: MessageProvider
+    @EnvironmentObject var m: StateMessageProvider
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var p: PluginProvider
 
@@ -50,7 +50,7 @@ struct VideoGrid: View {
                 
 //                )
                 
-                if app.isDropping || m.flashMessage.isEmpty && disk.getChildren().isEmpty {
+                if app.isDropping || m.stateMessage.isEmpty && disk.getChildren().isEmpty {
 //                    DBTips()
                 }
             }

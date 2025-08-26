@@ -10,16 +10,6 @@
     "%lld" : {
 
     },
-    "%lld x %lld" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$lld x %2$lld"
-          }
-        }
-      }
-    },
     "%lld 下载中" : {
 
     },
@@ -67,6 +57,7 @@
 
     },
     "Button" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -98,6 +89,7 @@
       }
     },
     "Hello, World!" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -132,9 +124,6 @@
 
     },
     "Migrate" : {
-
-    },
-    "OK" : {
 
     },
     "Setting" : {
@@ -340,6 +329,7 @@
 
     },
     "宽度至少 %lf" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

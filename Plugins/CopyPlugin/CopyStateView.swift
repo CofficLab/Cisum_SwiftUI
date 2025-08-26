@@ -6,7 +6,7 @@ import SwiftUI
 
 struct CopyStateView: View, SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var messageManager: MessageProvider
+    @EnvironmentObject var messageManager: StateMessageProvider
     @Environment(\.modelContext) private var modelContext
 
     @Query(sort: \CopyTask.createdAt, animation: .default) var tasks: [CopyTask]

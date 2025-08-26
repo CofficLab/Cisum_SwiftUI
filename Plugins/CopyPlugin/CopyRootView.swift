@@ -9,7 +9,7 @@ struct CopyRootView: View, SuperEvent, SuperLog, SuperThread {
 
     @EnvironmentObject var db: CopyDB
     @EnvironmentObject var s: StoreProvider
-    @EnvironmentObject var m: MessageProvider
+    @EnvironmentObject var m: MagicMessageProvider
     @EnvironmentObject var p: PluginProvider
     @EnvironmentObject var worker: CopyWorker
 
@@ -98,7 +98,7 @@ extension CopyRootView {
         
         guard let disk = await MainActor.run(body: { p.current?.getDisk() }) else {
             os_log(.error, "\(self.t)No Disk")
-            await MainActor.run { self.m.toast("No Disk") }
+            await MainActor.run { self.m.info("No Disk") }
             return false
         }
 
@@ -132,7 +132,7 @@ extension CopyRootView {
         
         if !urls.isEmpty {
             await MainActor.run {
-                self.m.toast("\(urls.count) 个文件开始复制")
+                self.m.info("\(urls.count) 个文件开始复制")
                 self.worker.append(urls, folder: disk)
             }
         }

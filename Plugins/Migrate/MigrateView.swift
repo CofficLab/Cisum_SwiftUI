@@ -5,7 +5,7 @@ import SwiftUI
 
 struct MigrateView: View, SuperThread {
     @EnvironmentObject var appManager: AppProvider
-    @EnvironmentObject var m: MessageProvider
+    @EnvironmentObject var m: StateMessageProvider
 
     var body: some View {
         ZStack {

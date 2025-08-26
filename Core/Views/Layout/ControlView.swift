@@ -4,7 +4,7 @@ import MagicCore
 
 struct ControlView: View {
     @EnvironmentObject var appManager: AppProvider
-    @EnvironmentObject var message: MessageProvider
+    @EnvironmentObject var message: StateMessageProvider
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var p: PluginProvider
 
