@@ -66,21 +66,21 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                                         .magicShapeVisibility(.onHover)
                                         .magicSize(.small)
 
-                                    man.makeLogButton()
-                                        .magicShape(.circle)
-                                        .magicShapeVisibility(.onHover)
-                                        .magicSize(.small)
-                                    // .onlyDebug()
-                                    man.makeLikeButton()
-                                        .magicShape(.circle)
-                                        .magicShapeVisibility(.onHover)
-                                        .magicSize(.small)
+//                                    man.makeLogButton()
+//                                        .magicShape(.circle)
+//                                        .magicShapeVisibility(.onHover)
+//                                        .magicSize(.small)
+//                                        .onlyDebug()
+//                                    man.makeLikeButton()
+//                                        .magicShape(.circle)
+//                                        .magicShapeVisibility(.onHover)
+//                                        .magicSize(.small)
 
-                                    MagicLogger
-                                        .logButton()
-                                        .magicSize(.small)
-                                        .magicShapeVisibility(.onHover)
-                                    // .onlyDebug()
+//                                    MagicLogger
+//                                        .logButton()
+//                                        .magicSize(.small)
+//                                        .magicShapeVisibility(.onHover)
+//                                        .onlyDebug()
 
                                     if man.asset != nil {
                                         ForEach(p.getToolBarButtons(), id: \.id) { item in
@@ -257,7 +257,7 @@ extension RootView {
 
 #Preview("App - Small") {
     AppPreview()
-        .frame(width: 600, height: 600)
+        .frame(width: 500, height: 800)
 }
 
 #if os(iOS)

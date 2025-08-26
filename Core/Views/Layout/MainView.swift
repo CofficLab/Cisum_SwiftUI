@@ -36,16 +36,12 @@ struct MainView: View, SuperLog, SuperThread {
 
                 if showDB {
                     VStack(spacing: 0) {
-                        if #available(macOS 15.0, *) {
-                            #if os(macOS)
-                                getTabView()
-                                    .tabViewStyle(GroupedTabViewStyle())
-                            #else
-                                getTabView()
-                            #endif
-                        } else {
+                        #if os(macOS)
                             getTabView()
-                        }
+                                .tabViewStyle(GroupedTabViewStyle())
+                        #else
+                            getTabView()
+                        #endif
                     }
                 }
 
@@ -155,9 +151,18 @@ extension MainView {
     }
 }
 
-#Preview("App") {
+#Preview("App - Large") {
     AppPreview()
-    #if os(macOS)
-        .frame(height: 600)
-    #endif
+        .frame(width: 600, height: 1000)
 }
+
+#Preview("App - Small") {
+    AppPreview()
+        .frame(width: 500, height: 800)
+}
+
+#if os(iOS)
+    #Preview("iPhone") {
+        AppPreview()
+    }
+#endif

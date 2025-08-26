@@ -20,13 +20,18 @@ struct LaunchView: View {
     }
 }
 
-#Preview {
-    VStack {
-        LaunchView()
-    }
-    .frame(height: 800)
+#Preview("App - Large") {
+    AppPreview()
+        .frame(width: 600, height: 1000)
 }
 
-#Preview {
+#Preview("App - Small") {
+    AppPreview()
+        .frame(width: 500, height: 800)
+}
+
+#if os(iOS)
+#Preview("iPhone") {
     AppPreview()
 }
+#endif

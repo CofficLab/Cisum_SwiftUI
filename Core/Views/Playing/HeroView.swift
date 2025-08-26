@@ -25,7 +25,7 @@ struct HeroView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-        .ignoresSafeArea()
+        .ignoresSafeArea(edges: Config.isDesktop ? .horizontal : .all)
         .foregroundStyle(.white)
     }
 
@@ -40,7 +40,18 @@ struct HeroView: View {
     }
 }
 
-#Preview("App") {
+#Preview("App - Large") {
     AppPreview()
-        .frame(height: 800)
+        .frame(width: 600, height: 1000)
 }
+
+#Preview("App - Small") {
+    AppPreview()
+        .frame(width: 500, height: 800)
+}
+
+#if os(iOS)
+#Preview("iPhone") {
+    AppPreview()
+}
+#endif
