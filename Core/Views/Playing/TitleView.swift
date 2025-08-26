@@ -7,7 +7,7 @@ import SwiftUI
 struct TitleView: View, SuperLog, SuperThread {
     @EnvironmentObject var playMan: PlayMan
 
-    var title: String { playMan.asset?.title ?? "" }
+    var title: String { playMan.asset?.deletingPathExtension().title ?? "" }
     nonisolated static let emoji = "📺"
 
     var body: some View {
@@ -28,9 +28,19 @@ struct TitleView: View, SuperLog, SuperThread {
     }
 }
 
-#Preview("APP") {
-    RootView {
-        ContentView()
-    }
+#Preview("App - Large") {
+    AppPreview()
+        .frame(width: 600, height: 1000)
 }
+
+#Preview("App - Small") {
+    AppPreview()
+        .frame(width: 500, height: 800)
+}
+
+#if os(iOS)
+#Preview("iPhone") {
+    AppPreview()
+}
+#endif
 
