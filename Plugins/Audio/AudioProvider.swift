@@ -118,6 +118,7 @@ extension AudioProvider {
     }
 }
 
+#if os(macOS)
 #Preview("App - Large") {
     AppPreview()
         .frame(width: 600, height: 1000)
@@ -127,6 +128,7 @@ extension AudioProvider {
     AppPreview()
         .frame(width: 600, height: 600)
 }
+#endif
 
 #if os(iOS)
 #Preview("iPhone") {
