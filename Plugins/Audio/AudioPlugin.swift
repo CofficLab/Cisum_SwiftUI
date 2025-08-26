@@ -212,7 +212,6 @@ actor AudioPlugin: SuperPlugin, SuperLog {
 
         let asset = try await audioDB.getNextOf(current, verbose: false)
         if let asset = asset {
-            MagicMessageProvider.shared.info("\(asset.title)")
             await playMan.play(url: asset, autoPlay: true)
         } else {
             throw AudioPluginError.NoNextAsset

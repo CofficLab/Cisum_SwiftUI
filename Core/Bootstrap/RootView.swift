@@ -233,7 +233,7 @@ extension RootView {
                         }
                     },
                     onCurrentURLChanged: { url in
-                        os_log("\(self.t)🎵 当前播放 -> \(url.title)")
+                        m.info(url.title)
                         Task {
                             do {
                                 try await self.p.onCurrentURLChanged(url: url)
