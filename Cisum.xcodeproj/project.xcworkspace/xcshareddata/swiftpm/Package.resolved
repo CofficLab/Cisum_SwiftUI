@@ -1,5 +1,5 @@
 {
-  "originHash" : "ca9aab88b4640be15437bb8c2b59e6483234d2c01d7a00c9eb02529bb9cef987",
+  "originHash" : "98946d647760bcd85635d0e2476c1517566165c94d536ccee2476139e685d1c1",
   "pins" : [
     {
       "identity" : "id3tageditor",
@@ -17,15 +17,6 @@
       "state" : {
         "branch" : "dev",
         "revision" : "c8a9e68c597894ddc4f63c6ba0568e5478da5e54"
-      }
-    },
-    {
-      "identity" : "magicmessage",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/nookery/MagicMessage",
-      "state" : {
-        "branch" : "main",
-        "revision" : "d57ee1f9efc7336b31638f980670566a4a1d2441"
       }
     },
     {
