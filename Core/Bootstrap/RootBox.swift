@@ -14,7 +14,7 @@ final class RootBox: SuperLog {
     nonisolated static let emoji = "🚉"
 
     let app: AppProvider
-    let stateMessageProvider: StateMessageProvider
+    let stateMessageProvider: StateProvider
     let messageProvider: MagicMessageProvider
     let plugin: PluginProvider
     let config: ConfigProvider
@@ -32,7 +32,7 @@ final class RootBox: SuperLog {
 
         // Providers
         self.app = AppProvider(uiRepo: uiRepo)
-        self.stateMessageProvider = StateMessageProvider()
+        self.stateMessageProvider = StateProvider()
         self.messageProvider = MagicMessageProvider.shared
         self.plugin = PluginProvider(plugins: Config.getPlugins(), repo: pluginRepo)
         self.config = ConfigProvider()

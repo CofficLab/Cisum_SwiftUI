@@ -8,7 +8,7 @@ import MagicCore
 
 struct VideoDB: View, SuperLog {
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var message: StateMessageProvider
+    @EnvironmentObject var message: StateProvider
     @EnvironmentObject var db: AudioRecordDB
 
     @State var treeView = false

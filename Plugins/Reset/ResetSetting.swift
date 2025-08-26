@@ -7,7 +7,7 @@ struct ResetSetting: View, SuperSetting, SuperLog {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var configProvider: ConfigProvider
     @EnvironmentObject var pluginProvider: PluginProvider
-    @EnvironmentObject var m: StateMessageProvider
+    @EnvironmentObject var m: StateProvider
 
     var body: some View {
         MagicSettingSection {

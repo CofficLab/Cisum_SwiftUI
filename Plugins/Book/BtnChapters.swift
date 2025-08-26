@@ -5,7 +5,7 @@ import SwiftUI
 struct BtnChapters: View {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var playMan: PlayMan
-    @EnvironmentObject var m: StateMessageProvider
+    @EnvironmentObject var m: StateProvider
     @EnvironmentObject var db: DBSynced
 
     @State var isPresented = false

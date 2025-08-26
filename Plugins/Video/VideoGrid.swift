@@ -6,7 +6,7 @@ struct VideoGrid: View {
     static var label = "📬 DBTreeView::"
 
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var m: StateMessageProvider
+    @EnvironmentObject var m: StateProvider
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var p: PluginProvider
 

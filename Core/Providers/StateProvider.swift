@@ -5,7 +5,7 @@ import SwiftData
 import SwiftUI
 
 @MainActor
-class StateMessageProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
+class StateProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
     nonisolated static let emoji = "📪"
     
     let maxMessageCount = 100

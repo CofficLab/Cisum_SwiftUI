@@ -16,7 +16,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     @StateObject var a: AppProvider
     @StateObject var m: MagicMessageProvider
     @StateObject var p: PluginProvider
-    @StateObject var stateMessageProvider: StateMessageProvider
+    @StateObject var stateProvider: StateProvider
 
     var man: PlayMan
     var playManWrapper: PlayManWrapper
@@ -31,7 +31,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
         self.content = content()
         self._a = StateObject(wrappedValue: box.app)
         self._m = StateObject(wrappedValue: box.messageProvider)
-        self._stateMessageProvider = StateObject(wrappedValue: box.stateMessageProvider)
+        self._stateProvider = StateObject(wrappedValue: box.stateMessageProvider)
         self._p = StateObject(wrappedValue: box.plugin)
         self.c = box.config
         self.man = box.man
@@ -102,7 +102,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                     .environmentObject(s)
                     .environmentObject(p)
                     .environmentObject(m)
-                    .environmentObject(self.stateMessageProvider)
+                    .environmentObject(self.stateProvider)
                     .sheet(isPresented: self.$a.showSheet, content: {
                         VStack {
                             ForEach(Array(p.getSheetViews(storage: c.storageLocation).enumerated()), id: \.offset) { _, view in
