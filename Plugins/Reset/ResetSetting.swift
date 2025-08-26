@@ -12,10 +12,11 @@ struct ResetSetting: View, SuperSetting, SuperLog {
     var body: some View {
         MagicSettingSection {
             MagicSettingRow(title: "重置", description: "重置设置，恢复成系统默认状态", icon: .iconReset) {
-                MagicButton(icon: .iconReset, action: {
+                MagicButton(icon: .iconReset, action: { done in
                     app.setResetting(true)
                     configProvider.resetStorageLocation()
                     app.setResetting(false)
+                    done()
                 })
                 .magicShape(.circle)
                 .magicSize(.small)

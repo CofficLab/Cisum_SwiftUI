@@ -8,8 +8,9 @@ struct BtnToggleDB: View {
         MagicButton(
             icon: .iconMore,
             style: .secondary,
-            action: {
+            action: { done in
                 app.toggleDBView()
+                done()
             })
         .magicShape(.circle)
         .magicSize(.auto)

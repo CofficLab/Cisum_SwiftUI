@@ -8,15 +8,33 @@ struct BtnAdd: View {
         MagicButton(
             icon: .iconAdd,
             title: "添加",
-            action: {
+            action: { done in
                 withAnimation {
                     if appManager.showDB {
                         appManager.isImporting = true
                     } else {
                         appManager.showDBView()
                     }
+                    
+                    done()
                 }
             }
         )
     }
 }
+
+#Preview("App - Large") {
+    AppPreview()
+        .frame(width: 600, height: 1000)
+}
+
+#Preview("App - Small") {
+    AppPreview()
+        .frame(width: 600, height: 600)
+}
+
+#if os(iOS)
+#Preview("iPhone") {
+    AppPreview()
+}
+#endif
