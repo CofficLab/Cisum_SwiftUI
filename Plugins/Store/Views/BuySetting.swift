@@ -57,7 +57,7 @@ struct BuySetting: View, SuperLog {
                 }
                 #endif
             }
-            .padding(.vertical)
+            .padding(.vertical, 2)
             
             HStack(alignment: .top, spacing: 20) {
                 ForEach(plans) { plan in
