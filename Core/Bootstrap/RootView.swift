@@ -191,6 +191,19 @@ extension RootView {
                                 }
                             }
                         }
+                        
+                        if state.isUnsupportedFormat {
+                            m.info("不支持的格式，自动播放下一首")
+                            Task {
+                                // 不支持的格式，1秒后自动播放下一首
+                                try await Task.sleep(nanoseconds: 1_000_000_000) // 1秒延迟
+                                do {
+                                    try await self.p.onPlayNext(current: man.currentAsset, mode: man.playMode, man: playManWrapper)
+                                } catch {
+                                    m.error(error)
+                                }
+                            }
+                        }
                     },
                     onPreviousRequested: { asset in
                         os_log("\(self.t)⏮️ 上一首")
