@@ -40,7 +40,8 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     }
 
     var body: some View {
-        Group {
+        os_log("\(self.t)开始渲染")
+        return Group {
             if self.loading {
                 LaunchView()
             } else if self.a.isResetting {

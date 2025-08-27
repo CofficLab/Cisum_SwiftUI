@@ -26,11 +26,13 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     @State var isSorting = false
     @State var sortMode: SortMode = .none
     @State var urls: [URL] = []
+    @State private var isSyncing: Bool = false
 
     var total: Int { urls.count }
 
     var body: some View {
-        Group {
+        os_log("\(self.t)开始渲染")
+        return Group {
             if isSorting {
                 VStack(spacing: 0) {
                     Spacer()
@@ -56,10 +58,13 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
                     Section(header: HStack {
                         Text("共 \(total.description)")
                         Spacer()
-                        if audioManager.isSyncing {
-                            HStack {
-                                Image(systemName: "arrow.triangle.2.circlepath")
+                        if isSyncing {
+                            HStack(spacing: 6) {
+                                ProgressView()
+                                    .controlSize(.small)
                                 Text("正在读取仓库")
+                                    .font(.footnote)
+                                    .foregroundStyle(.secondary)
                             }
                         }
 
@@ -86,6 +91,13 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
         .onReceive(nc.publisher(for: .dbDeleted), perform: onDeleted)
         .onReceive(nc.publisher(for: .dbSynced), perform: onSynced)
         .onReceive(nc.publisher(for: .dbUpdated), perform: onUpdated)
+        // 新增：自己监听同步事件，不再读取 audioManager.isSyncing
+        .onReceive(nc.publisher(for: .dbSyncing)) { _ in
+            isSyncing = true
+        }
+        .onReceive(nc.publisher(for: .dbSynced)) { _ in
+            isSyncing = false
+        }
     }
     
     private func updateURLs() {

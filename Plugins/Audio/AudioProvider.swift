@@ -13,9 +13,9 @@ class AudioProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
 
     nonisolated static let emoji = "🌿"
     private(set) var disk: URL
+    var verbose: Bool = true
 
     @Published private(set) var files: [URL] = []
-    @Published private(set) var isSyncing: Bool = false
     @Published private(set) var downloadProgress: [String: Double] = [:]
 
     nonisolated init(disk: URL) {
@@ -32,38 +32,36 @@ class AudioProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
             .sink { [weak self] notification in
                 guard let self = self else { return }
                 if let items = notification.userInfo?["items"] as? [URL] {
+                    if verbose { os_log("\(self.t)从 \(self.files.count) 个变为 \(items.count) 个") }
                     self.files = items
-                    self.setSyncing(true)
                 }
             }
             .store(in: &cancellables)
 
-        self.nc.publisher(for: .dbSynced)
-            .receive(on: RunLoop.main)
-            .sink { [weak self] _ in
-                self?.setSyncing(false)
-            }
-            .store(in: &cancellables)
 
-        self.nc.publisher(for: .audioDownloadProgress)
-            .receive(on: RunLoop.main)
-            .sink { [weak self] notification in
-                guard let self = self,
-                      let url = notification.userInfo?["url"] as? URL,
-                      let progress = notification.userInfo?["progress"] as? Double
-                else { return }
-                
-                if progress >= 1.0 {
-                    self.downloadProgress.removeValue(forKey: url.path)
-                } else {
-                    self.downloadProgress[url.path] = progress
-                }
-            }
-            .store(in: &cancellables)
+
+//        self.nc.publisher(for: .audioDownloadProgress)
+//            .receive(on: RunLoop.main)
+//            .sink { [weak self] notification in
+//                guard let self = self,
+//                      let url = notification.userInfo?["url"] as? URL,
+//                      let progress = notification.userInfo?["progress"] as? Double
+//                else { return }
+//                
+//                let timestamp = Date().timeIntervalSince1970
+//                if progress >= 1.0 {
+//                    if verbose { os_log("🚨 [⬇️\(String(format: "%.3f", timestamp))] AudioProvider.downloadProgress 移除完成项：\(url.lastPathComponent)") }
+//                    self.downloadProgress.removeValue(forKey: url.path)
+//                } else {
+//                    if verbose { os_log("🚨 [⬇️\(String(format: "%.3f", timestamp))] AudioProvider.downloadProgress 更新：\(url.lastPathComponent) = \(String(format: "%.2f", progress * 100))%") }
+//                    self.downloadProgress[url.path] = progress
+//                }
+//            }
+//            .store(in: &cancellables)
     }
 
     func updateDisk(_ newDisk: URL) {
-        os_log("\(self.t)🍋🍋🍋 updateDisk to \(newDisk.path)")
+        if verbose { os_log("\(self.t)🍋🍋🍋 updateDisk to \(newDisk.path)") }
         self.cancellables.removeAll()
         self.disk = newDisk
         self.setupNotifications()
@@ -77,14 +75,7 @@ extension AudioProvider {
         if let items = notification.userInfo?["items"] as? [URL] {
             Task {
                 self.setFiles(items)
-                self.setSyncing(true)
             }
-        }
-    }
-
-    private func handleDBSynced(_ notification: Notification) {
-        Task {
-            self.setSyncing(false)
         }
     }
 
@@ -107,13 +98,11 @@ extension AudioProvider {
 // MARK: State Updater
 
 extension AudioProvider {
-    private func setSyncing(_ syncing: Bool) {
-        withAnimation {
-            self.isSyncing = syncing
-        }
-    }
+
 
     private func setFiles(_ files: [URL]) {
+        let timestamp = Date().timeIntervalSince1970
+        if verbose { os_log("\(self.t)文件列表变更：从 \(self.files.count) 个变为 \(files.count) 个") }
         self.files = files
     }
 }
