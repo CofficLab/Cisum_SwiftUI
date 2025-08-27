@@ -602,6 +602,9 @@
     "显示 iCloud 值" : {
 
     },
+    "查看订阅" : {
+
+    },
     "根据文件自动生成封面图" : {
       "extractionState" : "stale",
       "localizations" : {
