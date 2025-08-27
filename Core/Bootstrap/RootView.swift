@@ -66,21 +66,10 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                                         .magicShapeVisibility(.onHover)
                                         .magicSize(.small)
 
-                                    man.makeLogButton()
+                                    man.makeLikeButton()
                                         .magicShape(.circle)
                                         .magicShapeVisibility(.onHover)
                                         .magicSize(.small)
-                                        .onlyDebug()
-//                                    man.makeLikeButton()
-//                                        .magicShape(.circle)
-//                                        .magicShapeVisibility(.onHover)
-//                                        .magicSize(.small)
-
-                                    MagicLogger
-                                        .logButton()
-                                        .magicSize(.small)
-                                        .magicShapeVisibility(.onHover)
-                                        .onlyDebug()
 
                                     if man.asset != nil {
                                         ForEach(p.getToolBarButtons(), id: \.id) { item in
