@@ -63,17 +63,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
 
                                 ToolbarItemGroup(placement: .cancellationAction) {
                                     Spacer()
-
-                                    man.currentURL?
-                                        .makeOpenButton()
-                                        .magicShapeVisibility(.onHover)
-                                        .magicSize(.small)
-
-                                    man.makeLikeButton()
-                                        .magicShape(.circle)
-                                        .magicShapeVisibility(.onHover)
-                                        .magicSize(.small)
-
+                                    
                                     if man.asset != nil {
                                         ForEach(p.getToolBarButtons(), id: \.id) { item in
                                             item.view

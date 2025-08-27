@@ -8,11 +8,13 @@ actor DebugPlugin: SuperPlugin {
     let hasPoster = false
     let description: String = "调试专用"
     let iconName: String = .iconDebug
+    nonisolated(unsafe) var enabled: Bool = false
 
     @MainActor
     func addSettingView() -> AnyView? {
         #if DEBUG
-        AnyView(MagicSettingSection {
+        guard enabled else { return nil }
+        return AnyView(MagicSettingSection {
             MagicSettingRow(title: "调试", description: "调试相关", icon: .iconDebug) {
                 Logger.logButton().magicSize(.small)
             }
