@@ -16,7 +16,9 @@ struct AudioSettings: View, SuperSetting, SuperLog {
                         Text(diskSize)
                     }
                     if Config.isDesktop {
-                        audioManager.disk.makeOpenButton()
+                        audioManager.disk
+                            .makeOpenButton()
+                            .magicSize(.small)
                     }
                 }
 
@@ -40,3 +42,21 @@ struct AudioSettings: View, SuperSetting, SuperLog {
     }
     .frame(height: 1200)
 }
+
+#if os(macOS)
+    #Preview("App - Large") {
+        AppPreview()
+            .frame(width: 600, height: 1000)
+    }
+
+    #Preview("App - Small") {
+        AppPreview()
+            .frame(width: 600, height: 600)
+    }
+#endif
+
+#if os(iOS)
+    #Preview("iPhone") {
+        AppPreview()
+    }
+#endif
