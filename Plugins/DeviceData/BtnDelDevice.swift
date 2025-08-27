@@ -9,15 +9,15 @@ struct BtnDelDevice: View {
     var autoResize = false
 
     var body: some View {
-        ControlButton(
-            title: "删除设备",
-            image: getImageName(),
-            dynamicSize: autoResize,
-            onTap: {
-//                Task {
-//                    await DBSynced(Config.getSyncedContainer).deleteDevice(deviceData)
-//                }
-            })
+//        ControlButton(
+//            title: "删除设备",
+//            image: getImageName(),
+//            dynamicSize: autoResize,
+//            onTap: {
+////                Task {
+////                    await DBSynced(Config.getSyncedContainer).deleteDevice(deviceData)
+////                }
+//            })
     }
 
     private func getImageName() -> String {

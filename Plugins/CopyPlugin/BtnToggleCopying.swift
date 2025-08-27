@@ -9,13 +9,13 @@ struct BtnToggleCopying: View {
     var autoResize = false
 
     var body: some View {
-        ControlButton(
-            title: "仓库",
-            image: "list.bullet",
-            dynamicSize: autoResize,
-            onTap: {
-                isActive.toggle()
-        })
+//        ControlButton(
+//            title: "仓库",
+//            image: "list.bullet",
+//            dynamicSize: autoResize,
+//            onTap: {
+//                isActive.toggle()
+//        })
     }
 }
 

@@ -16,24 +16,24 @@ struct Duplicates: View {
 
     var body: some View {
         ZStack {
-            if duplicates.count > 0 {
-                ControlButton(
-                    title: "\(duplicates.count)",
-                    image: getImageName(),
-                    dynamicSize: false,
-                    onTap: {
-                        showDumplicates.toggle()
-                    })
-                    .popover(isPresented: $showDumplicates, content: {
-                        List {
-//                            Section("共 \(duplicates.count) 个重复文件",content: {
-//                                ForEach(duplicates, content: { a in
-//                                    AudioTile(a.toPlayAsset())
-//                                })
-//                            })
-                        }
-                    })
-            }
+//            if duplicates.count > 0 {
+//                ControlButton(
+//                    title: "\(duplicates.count)",
+//                    image: getImageName(),
+//                    dynamicSize: false,
+//                    onTap: {
+//                        showDumplicates.toggle()
+//                    })
+//                    .popover(isPresented: $showDumplicates, content: {
+//                        List {
+////                            Section("共 \(duplicates.count) 个重复文件",content: {
+////                                ForEach(duplicates, content: { a in
+////                                    AudioTile(a.toPlayAsset())
+////                                })
+////                            })
+//                        }
+//                    })
+//            }
         }
     }
 

@@ -22,22 +22,22 @@ struct BtnChapters: View {
     }
 
     var body: some View {
-        ControlButton(
-            title: "章节",
-            image: "book",
-            dynamicSize: true,
-            onTap: {
-                isPresented = true
-            })
-            .foregroundStyle(.white)
-            .popover(isPresented: $isPresented, content: {
-                List(items, id: \.self, selection: $selection) { file in
-                    ChapterTile(file: file)
-                        .tag(file as URL?)
-                }
-                .onAppear(perform: onAppear)
-                .onChange(of: selection, onSelectionChange)
-            })
+//        ControlButton(
+//            title: "章节",
+//            image: "book",
+//            dynamicSize: true,
+//            onTap: {
+//                isPresented = true
+//            })
+//            .foregroundStyle(.white)
+//            .popover(isPresented: $isPresented, content: {
+//                List(items, id: \.self, selection: $selection) { file in
+//                    ChapterTile(file: file)
+//                        .tag(file as URL?)
+//                }
+//                .onAppear(perform: onAppear)
+//                .onChange(of: selection, onSelectionChange)
+//            })
     }
 }
 

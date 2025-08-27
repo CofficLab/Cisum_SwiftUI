@@ -8,17 +8,17 @@ struct BtnDelTask: View {
     var autoResize = false
 
     var body: some View {
-        ControlButton(
-            title: "删除 \(tasks.count) 个",
-            image: getImageName(),
-            dynamicSize: autoResize,
-            onTap: {
-                for task in tasks {
-                    Task {
-                        context.delete(task)
-                    }
-                }
-            })
+//        ControlButton(
+//            title: "删除 \(tasks.count) 个",
+//            image: getImageName(),
+//            dynamicSize: autoResize,
+//            onTap: {
+//                for task in tasks {
+//                    Task {
+//                        context.delete(task)
+//                    }
+//                }
+//            })
     }
 
     private func getImageName() -> String {
