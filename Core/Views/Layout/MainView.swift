@@ -9,7 +9,6 @@ struct MainView: View, SuperLog, SuperThread {
 
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var p: PluginProvider
-    @EnvironmentObject var man: PlayMan
     @State private var databaseViewHeight: CGFloat = 300
 
     // 记录用户调整的窗口的高度
