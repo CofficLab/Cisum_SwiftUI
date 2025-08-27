@@ -20,7 +20,7 @@ enum Config: SuperLog {
     nonisolated static let emoji = "🧲"
     static let id = "com.yueyi.cisum"
     static let logger = Logger.self
-    static let maxAudioCount = 5
+    static let maxAudioCount = 100
     static let appSupportDir: URL? = MagicApp.getAppSpecificSupportDirectory()
     static let localContainer: URL? = MagicApp.getContainerDirectory()
     static let localDocumentsDir: URL? = MagicApp.getDocumentsDirectory()
