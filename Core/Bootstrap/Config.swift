@@ -64,7 +64,8 @@ enum Config: SuperLog {
             AudioPlugin(),
             CopyPlugin(),
             ResetPlugin(),
-            DebugPlugin()
+            DebugPlugin(),
+            VersionPlugin()
         ]
     }
 
