@@ -5,13 +5,20 @@ import SwiftData
 import SwiftUI
 
 /*
- 将仓库中的文件扁平化展示，文件夹将被忽略
-    A
-      A1               A1
-      A2               A2
-    B           =>     B1
-      B1               B2
-      B2
+ 展示策略（扁平化列表）：
+ - 仅展示仓库中的音频文件；文件夹不会作为分组出现
+ - 所有子目录中的文件被“拍平”后按统一规则排序与展示
+
+ 示例：
+   根目录
+   ├─ A/
+   │  ├─ A1
+   │  └─ A2
+   └─ B/
+      ├─ B1
+      └─ B2
+
+   扁平化后展示为：A1、A2、B1、B2（不显示 A、B 目录本身）
  */
 struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     nonisolated static let emoji = "📬"
@@ -91,7 +98,6 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
         .onReceive(nc.publisher(for: .dbDeleted), perform: onDeleted)
         .onReceive(nc.publisher(for: .dbSynced), perform: onSynced)
         .onReceive(nc.publisher(for: .dbUpdated), perform: onUpdated)
-        // 新增：自己监听同步事件，不再读取 audioManager.isSyncing
         .onReceive(nc.publisher(for: .dbSyncing)) { _ in
             isSyncing = true
         }
@@ -109,10 +115,24 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     }
 }
 
+// MARK: - Setter
+
 extension AudioList {
     @MainActor
     private func setUrls(_ newValue: [URL]) {
         urls = newValue
+    }
+
+    private func setSelection(_ newValue: URL?) {
+        selection = newValue
+    }
+
+    private func setIsSorting(_ newValue: Bool) {
+        isSorting = newValue
+    }
+
+    private func setSortMode(_ newValue: SortMode) {
+        sortMode = newValue
     }
 }
 
@@ -192,20 +212,6 @@ extension AudioList {
                 }
             }
         }
-    }
-}
-
-extension AudioList {
-    private func setSelection(_ newValue: URL?) {
-        selection = newValue
-    }
-
-    private func setIsSorting(_ newValue: Bool) {
-        isSorting = newValue
-    }
-
-    private func setSortMode(_ newValue: SortMode) {
-        sortMode = newValue
     }
 }
 

@@ -16,7 +16,6 @@ class AudioProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
     var verbose: Bool = true
 
     @Published private(set) var files: [URL] = []
-    @Published private(set) var downloadProgress: [String: Double] = [:]
 
     nonisolated init(disk: URL) {
         self.disk = disk
@@ -37,27 +36,6 @@ class AudioProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
                 }
             }
             .store(in: &cancellables)
-
-
-
-//        self.nc.publisher(for: .audioDownloadProgress)
-//            .receive(on: RunLoop.main)
-//            .sink { [weak self] notification in
-//                guard let self = self,
-//                      let url = notification.userInfo?["url"] as? URL,
-//                      let progress = notification.userInfo?["progress"] as? Double
-//                else { return }
-//                
-//                let timestamp = Date().timeIntervalSince1970
-//                if progress >= 1.0 {
-//                    if verbose { os_log("🚨 [⬇️\(String(format: "%.3f", timestamp))] AudioProvider.downloadProgress 移除完成项：\(url.lastPathComponent)") }
-//                    self.downloadProgress.removeValue(forKey: url.path)
-//                } else {
-//                    if verbose { os_log("🚨 [⬇️\(String(format: "%.3f", timestamp))] AudioProvider.downloadProgress 更新：\(url.lastPathComponent) = \(String(format: "%.2f", progress * 100))%") }
-//                    self.downloadProgress[url.path] = progress
-//                }
-//            }
-//            .store(in: &cancellables)
     }
 
     func updateDisk(_ newDisk: URL) {
@@ -78,31 +56,12 @@ extension AudioProvider {
             }
         }
     }
-
-    private func handleDownloadProgress(_ notification: Notification) {
-        guard let url = notification.userInfo?["url"] as? URL,
-              let progress = notification.userInfo?["progress"] as? Double else { return }
-
-        let progressUpdate = (path: url.path, value: progress)
-
-        Task { @MainActor in
-            if progressUpdate.value >= 1.0 {
-                self.downloadProgress.removeValue(forKey: progressUpdate.path)
-            } else {
-                self.downloadProgress[progressUpdate.path] = progressUpdate.value
-            }
-        }
-    }
 }
 
 // MARK: State Updater
 
 extension AudioProvider {
-
-
     private func setFiles(_ files: [URL]) {
-        let timestamp = Date().timeIntervalSince1970
-        if verbose { os_log("\(self.t)文件列表变更：从 \(self.files.count) 个变为 \(files.count) 个") }
         self.files = files
     }
 }
