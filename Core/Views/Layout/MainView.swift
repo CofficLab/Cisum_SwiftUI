@@ -22,14 +22,15 @@ struct MainView: View, SuperLog, SuperThread {
     var databaseViewHeightMin = Config.databaseViewHeightMin
 
     init() {
-        let verbose = false
+        let verbose = true
         if verbose {
             os_log("\(Self.i)")
         }
     }
 
     var body: some View {
-        GeometryReader { geo in
+        os_log("\(self.t)开始渲染")
+        return GeometryReader { geo in
             VStack(spacing: 0) {
                 ControlView()
                     .frame(height: showDB ? Config.controlViewMinHeight : geo.size.height)

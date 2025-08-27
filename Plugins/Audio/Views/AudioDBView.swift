@@ -28,7 +28,8 @@ struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
     }
 
     var body: some View {
-        AudioList()
+        os_log("\(self.t)开始渲染")
+        return AudioList()
             .frame(maxHeight: .infinity)
             .fileImporter(
                 isPresented: $app.isImporting,

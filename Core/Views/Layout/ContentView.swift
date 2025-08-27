@@ -6,7 +6,8 @@ struct ContentView: View, MagicCore.SuperLog, SuperThread {
     nonisolated static let emoji = "🐮"
 
     var body: some View {
-        VStack(spacing: 0) {
+        os_log("\(self.t)开始渲染")
+        return VStack(spacing: 0) {
             if Config.isNotDesktop {
                 TopView()
             }

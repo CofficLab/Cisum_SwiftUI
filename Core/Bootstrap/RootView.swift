@@ -22,6 +22,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     var c: ConfigProvider
     var s: StoreProvider
     var cloudProvider: CloudProvider
+    var playManController: PlayManController
 
     init(@ViewBuilder content: () -> Content) {
         os_log("\(Self.onInit)")
@@ -37,6 +38,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
         self.playManWrapper = box.playManWrapper
         self.s = box.store
         self.cloudProvider = box.cloud
+        self.playManController = box.playManController
     }
 
     var body: some View {
@@ -87,6 +89,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                         }
                     }
                     .environmentObject(man)
+                    .environmentObject(playManController)
                     .environmentObject(self.a)
                     .environmentObject(s)
                     .environmentObject(p)
@@ -99,6 +102,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                             }
                         }
                         .environmentObject(man)
+                        .environmentObject(playManController)
                         .environmentObject(self.a)
                         .environmentObject(s)
                         .environmentObject(p)

@@ -21,6 +21,7 @@ final class RootBox: SuperLog {
     let man: PlayMan
     let store: StoreProvider
     let playManWrapper: PlayManWrapper
+    let playManController: PlayManController
     let cloud: CloudProvider
 
     private init(reason: String) {
@@ -41,6 +42,7 @@ final class RootBox: SuperLog {
 
         self.man = PlayMan(playlistEnabled: false, verbose: true)
         self.playManWrapper = PlayManWrapper(playMan: self.man)
+        self.playManController = PlayManController(playMan: self.man)
     }
 }
 

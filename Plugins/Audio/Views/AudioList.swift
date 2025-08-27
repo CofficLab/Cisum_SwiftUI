@@ -24,8 +24,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     nonisolated static let emoji = "📬"
 
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var man: PlayMan
-    @EnvironmentObject var audioManager: AudioProvider
+    @EnvironmentObject var playManController: PlayManController
     @EnvironmentObject var audioDB: AudioService
     @EnvironmentObject var m: MagicMessageProvider
 
@@ -92,7 +91,6 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
         }
         .onAppear(perform: handleOnAppear)
         .onChange(of: selection, handleSelectionChange)
-        .onChange(of: man.asset, handlePlayAssetChange)
         .onReceive(nc.publisher(for: .DBSorting), perform: onSorting)
         .onReceive(nc.publisher(for: .DBSortDone), perform: onSortDone)
         .onReceive(nc.publisher(for: .dbDeleted), perform: onDeleted)
@@ -104,6 +102,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
         .onReceive(nc.publisher(for: .dbSynced)) { _ in
             isSyncing = false
         }
+        .onPlayManAssetChanged(handlePlayAssetChange)
     }
     
     private func updateURLs() {
@@ -142,7 +141,7 @@ extension AudioList {
     func handleOnAppear() {
         updateURLs()
         
-        if let asset = man.asset {
+        if let asset = playManController.getAsset() {
             setSelection(asset)
         }
     }
@@ -152,16 +151,16 @@ extension AudioList {
             return
         }
 
-        if url != man.asset {
+        if url != playManController.getAsset() {
             Task {
-                await self.man.play(url)
+                await self.playManController.play(url: url)
             }
         }
     }
 
-    func handlePlayAssetChange() {
-        if let asset = man.asset {
-            setSelection(asset)
+    func handlePlayAssetChange(url: URL?) {
+        if let asset = url {
+            self.setSelection(asset)
         }
     }
 

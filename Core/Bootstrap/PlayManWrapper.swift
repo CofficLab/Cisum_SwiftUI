@@ -1,6 +1,27 @@
 import SwiftUI
 
 @MainActor
+public class PlayManController:ObservableObject {
+    let playMan: PlayMan
+    
+    init(playMan: PlayMan) {
+        self.playMan = playMan
+    }
+
+    func getAsset() -> URL? {
+        playMan.asset
+    }
+
+    func play(url: URL, autoPlay: Bool = true) async {
+        await playMan.play(url, autoPlay: autoPlay)
+    }
+
+    func seek(time: TimeInterval) async {
+        playMan.seek(time: time)
+    }
+}
+
+@MainActor
 public class PlayManWrapper {
     let playMan: PlayMan
 
