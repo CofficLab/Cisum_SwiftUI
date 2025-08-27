@@ -8,6 +8,7 @@ struct BuySetting: View, SuperLog {
     nonisolated static let emoji = "🛒"
     
     @Environment(\.colorScheme) var colorScheme: ColorScheme
+    @Environment(\.dismiss) private var dismiss
     @State var closeBtnHovered: Bool = false
 
     let features: [Feature] = [
@@ -27,6 +28,37 @@ struct BuySetting: View, SuperLog {
 
     var body: some View {
         VStack {
+            // 添加关闭按钮
+            HStack {
+                Spacer()
+                Button(action: {
+                    dismiss()
+                }) {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.title2)
+                        .foregroundColor(.secondary)
+                }
+                .buttonStyle(.plain)
+                #if os(macOS)
+                .onHover { hovering in
+                    closeBtnHovered = hovering
+                }
+                .scaleEffect(closeBtnHovered ? 1.1 : 1.0)
+                .animation(.easeInOut(duration: 0.2), value: closeBtnHovered)
+                #endif
+                #if os(iOS)
+                .scaleEffect(closeBtnHovered ? 0.9 : 1.0)
+                .animation(.easeInOut(duration: 0.1), value: closeBtnHovered)
+                .onTapGesture {
+                    closeBtnHovered = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        closeBtnHovered = false
+                    }
+                }
+                #endif
+            }
+            .padding(.horizontal)
+            
             HStack(alignment: .top, spacing: 20) {
                 ForEach(plans) { plan in
                     PlanView(plan: plan)

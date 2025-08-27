@@ -113,12 +113,3 @@ struct MySubscription: View {
         }
     }
 }
-
-#Preview {
-    RootView {
-        BuyView()
-    }
-    #if os(macOS)
-    .frame(height: 400)
-    #endif
-}

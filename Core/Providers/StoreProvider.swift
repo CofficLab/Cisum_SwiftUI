@@ -311,6 +311,7 @@ class StoreProvider: ObservableObject, SuperLog {
 
     // MARK: 购买与支付
 
+    @MainActor
     func purchase(_ product: Product) async throws -> Transaction? {
         os_log("\(self.t)去支付")
 
@@ -345,6 +346,7 @@ class StoreProvider: ObservableObject, SuperLog {
         #endif
     }
 
+    @MainActor
     func isPurchased(_ product: Product) async throws -> Bool {
         // Determine whether the user purchases a given product.
         switch product.type {
@@ -523,13 +525,6 @@ class StoreProvider: ObservableObject, SuperLog {
 
         return Date.distantPast
     }
-}
-
-#Preview {
-    RootView {
-        BuyView()
-    }
-    .frame(height: 800)
 }
 
 #Preview("App - Large") {

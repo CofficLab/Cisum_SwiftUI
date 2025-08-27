@@ -17,9 +17,3 @@ struct OneTimeView: View {
         }
     }
 }
-
-#Preview {
-    RootView {
-        BuyView()
-    }
-}

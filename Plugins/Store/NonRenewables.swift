@@ -77,9 +77,3 @@ struct NonRenewables: View {
         }
     }
 }
-
-#Preview {
-    RootView {
-        BuyView()
-    }.frame(height: 400)
-}

@@ -37,9 +37,6 @@
     "☹️ 暂不能从App Store获取产品列表" : {
 
     },
-    "♾️" : {
-
-    },
     "⚠️ 重要提示：" : {
 
     },
@@ -52,9 +49,6 @@
           }
         }
       }
-    },
-    "💗" : {
-
     },
     "Button" : {
       "extractionState" : "stale",
@@ -234,6 +228,7 @@
 
     },
     "关闭" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -546,6 +541,7 @@
       }
     },
     "支持我们持续开发" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -590,6 +586,7 @@
       }
     },
     "显示 DB" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -760,6 +757,7 @@
       }
     },
     "订阅专业版" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -839,6 +837,7 @@
       }
     },
     "软件功能全无限制" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

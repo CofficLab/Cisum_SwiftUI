@@ -101,10 +101,3 @@ struct AllSubscriptions: View, SuperLog {
         .font(.footnote)
     }
 }
-
-#Preview("Buy") {
-    RootView {
-        BuyView()
-    }
-    .frame(height: 800)
-}

@@ -148,29 +148,29 @@ struct ProductCell: View, SuperLog {
     // MARK: 去购买
 
     func buy() async {
-//        purchasing = true
-//
-//        do {
-//            os_log("\(self.t)点击了购买按钮")
-//
-//            let result = try await store.purchase(product)
-//            if result != nil {
-//                withAnimation {
-//                    os_log("\(self.t)购买回调，更新购买状态为 true")
-//                    isPurchased = true
-//                }
-//            } else {
-//                os_log("\(self.t)购买回调，结果为空，表示取消了")
-//            }
-//        } catch StoreError.failedVerification {
-//            errorTitle = "App Store 验证失败"
-//            isShowingError = true
-//        } catch {
-//            errorTitle = error.localizedDescription
-//            isShowingError = true
-//        }
-//
-//        purchasing = false
+        purchasing = true
+
+        do {
+            os_log("\(self.t)点击了购买按钮")
+
+            let result = try await store.purchase(product)
+            if result != nil {
+                withAnimation {
+                    os_log("\(self.t)购买回调，更新购买状态为 true")
+                    isPurchased = true
+                }
+            } else {
+                os_log("\(self.t)购买回调，结果为空，表示取消了")
+            }
+        } catch StoreError.failedVerification {
+            errorTitle = "App Store 验证失败"
+            isShowingError = true
+        } catch {
+            errorTitle = error.localizedDescription
+            isShowingError = true
+        }
+
+        purchasing = false
     }
 }
 
@@ -179,18 +179,12 @@ struct ProductCell: View, SuperLog {
 extension ProductCell {
     func onAppear() {
         let verbose = false
-//        Task {
-//            isPurchased = (try? await store.isPurchased(product)) ?? false
-//
-//            if verbose {
-//                os_log("\(self.t)OnAppear 检查购买状态 -> \(product.displayName) -> \(isPurchased)")
-//            }
-//        }
-    }
-}
+        Task {
+            isPurchased = (try? await store.isPurchased(product)) ?? false
 
-#Preview {
-    RootView {
-        BuyView()
+            if verbose {
+                os_log("\(self.t)OnAppear 检查购买状态 -> \(product.displayName) -> \(isPurchased)")
+            }
+        }
     }
 }
