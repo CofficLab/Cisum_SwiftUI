@@ -1,11 +1,12 @@
 import SwiftData
 import SwiftUI
+import OSLog
 import MagicCore
 
-struct ControlView: View {
+struct ControlView: View, SuperLog {
     @EnvironmentObject var appManager: AppProvider
     @EnvironmentObject var message: StateProvider
-    @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var playMan: PlayManController
     @EnvironmentObject var p: PluginProvider
 
     @State var showHeroView = true
@@ -20,7 +21,8 @@ struct ControlView: View {
     var showSliderView: Bool { true }
 
     var body: some View {
-        GeometryReader { geo in
+        os_log("\(self.t)开始渲染")
+        return GeometryReader { geo in
             HStack(spacing: 0) {
                 VStack(spacing: 0) {
                     // MARK: 封面图和标题
@@ -55,7 +57,7 @@ struct ControlView: View {
                     // MARK: 进度栏
 
                     if showSliderView {
-                        playMan.makeProgressView()
+                        playMan.playMan.makeProgressView()
                             .padding()
                     }
 
@@ -76,7 +78,7 @@ struct ControlView: View {
                     // 最大宽度=控制栏的高度+系统标题栏高度
                     HStack {
                         Spacer(minLength: 0)
-                        playMan.makeHeroView()
+                        playMan.playMan.makeHeroView()
                             .background(Config.background(.yellow))
                     }
                     .frame(maxWidth: geo.size.height * 1.3)

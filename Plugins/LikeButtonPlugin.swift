@@ -20,11 +20,8 @@ private struct LikeToggleButtonView: View {
     @EnvironmentObject var man: PlayMan
 
     var body: some View {
-        man.makeLikeButton()
-            .magicShape(.circle)
-            .magicShapeVisibility(.onHover)
-            .magicSize(.small)
-            .id(man.currentAsset?.absoluteString ?? "")
+        os_log("LikeToggleButtonView 开始渲染")
+        return man.makeLikeButtonView()
     }
 }
 

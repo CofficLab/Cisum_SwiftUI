@@ -5,25 +5,23 @@ import SwiftUI
 struct ControlBtns: View, SuperLog {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var message: StateProvider
-    @EnvironmentObject var man: PlayMan
+    @EnvironmentObject var man: PlayManController
 
     nonisolated static let emoji = "🎵"
+
+    init() {
+        os_log("ControlBtns 初始化")
+    }
 
     var body: some View {
         os_log("\(self.t)开始渲染")
         return HStack {
             Spacer(minLength: 50)
             BtnToggleDB()
-            man.makePreviousButton()
-                .magicSize(.auto)
-            man.makePlayPauseButton()
-                .magicSize(.auto)
-                .magicShapeVisibility(.always)
-                .id(man.state.stateText)
-            man.makeNextButton()
-                .magicSize(.auto)
-            man.makePlayModeButton()
-                .magicSize(.auto)
+            man.playMan.makePreviousButtonView(size: .auto)
+            man.playMan.makePlayPauseButtonView(size: .auto)
+            man.playMan.makeNextButtonView(size: .auto)
+            man.playMan.makePlayModeButtonView(size: .auto)
             Spacer(minLength: 50)
         }
         .padding(.bottom, 20)

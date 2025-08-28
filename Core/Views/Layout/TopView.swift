@@ -15,7 +15,7 @@ struct TopView: View {
             Spacer()
             if let asset = asset {
                 HStack {
-                    man.makeLikeButton()
+                    man.makeLikeButtonView()
                     if Config.isDesktop {
                         asset.makeOpenButton()
                     }

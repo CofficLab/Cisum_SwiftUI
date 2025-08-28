@@ -12,7 +12,7 @@ struct OperationView: View {
         HStack(spacing: 0, content: {
             Spacer()
             if let asset = asset {
-                playMan.makeLikeButton()
+                playMan.makeLikeButtonView()
                 if Config.isDesktop {
                     asset.makeOpenButton()
                 }

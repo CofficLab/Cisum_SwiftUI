@@ -20,7 +20,8 @@ private struct OpenCurrentButtonView: View {
     @EnvironmentObject var man: PlayMan
 
     var body: some View {
-        Group {
+        os_log("OpenCurrentButtonView 开始渲染")
+        return Group {
             if let url = man.currentURL {
                 url.makeOpenButton()
                     .magicShapeVisibility(.onHover)
