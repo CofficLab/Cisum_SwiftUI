@@ -5,16 +5,6 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-// MARK: - Notification Names
-
-extension Notification.Name {
-    static let dbSyncing = Notification.Name("dbSyncing")
-    static let dbSynced = Notification.Name("dbSynced")
-    static let dbDeleted = Notification.Name("dbDeleted")
-    static let dbUpdated = Notification.Name("dbUpdated")
-    static let audioDownloadProgress = Notification.Name("audioDownloadProgress")
-}
-
 actor AudioService: SuperLog {
     nonisolated static let emoji = "🎵"
     private var db: AudioRecordDB

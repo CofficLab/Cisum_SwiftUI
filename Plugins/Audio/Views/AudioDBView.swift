@@ -56,12 +56,6 @@ extension AudioDBView {
     }
 }
 
-// MARK: Event Name
-
-extension Notification.Name {
-    static let CopyFiles = Notification.Name("CopyFiles")
-}
-
 #Preview("App - Large") {
     AppPreview()
         .frame(width: 600, height: 1000)
