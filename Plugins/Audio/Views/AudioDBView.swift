@@ -9,8 +9,6 @@ import UniformTypeIdentifiers
 @MainActor
 struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var messageManager: StateProvider
-    @EnvironmentObject var s: StoreProvider
     @EnvironmentObject var audioProvider: AudioProvider
 
     @State var isDropping: Bool = false
