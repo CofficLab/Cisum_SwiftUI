@@ -172,7 +172,7 @@ enum AudioModelError: Error, LocalizedError {
 
 // MARK: - 音频服务错误
 
-enum AudioServiceError: Error, LocalizedError {
+enum AudioRepoError: Error, LocalizedError {
     case fileSystemError(operation: String, path: String)
     case networkError(url: URL, underlying: String)
     case invalidState(expected: String, actual: String)

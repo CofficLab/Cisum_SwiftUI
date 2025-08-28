@@ -5,7 +5,7 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-actor AudioService: SuperLog {
+actor AudioRepo: SuperLog {
     nonisolated static let emoji = "🎵"
     private var db: AudioRecordDB
     private var disk: URL
@@ -205,7 +205,7 @@ actor AudioService: SuperLog {
 
 // MARK: Event
 
-extension AudioService {
+extension AudioRepo {
     func onDBSyncing(_ items: [URL]) {
         info("Syncing \(items.count) items")
         os_log("\(self.t)🔄 Syncing \(items.count) items")

@@ -10,7 +10,7 @@ import SwiftUI
 class AudioProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
     private var cancellables = Set<AnyCancellable>()
     private var debounceTimer: Timer?
-    var db: AudioService
+    var db: AudioRepo
 
     nonisolated static let emoji = "🌿"
     private(set) var disk: URL
@@ -18,7 +18,7 @@ class AudioProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
 
     @Published private(set) var files: [URL] = []
 
-    nonisolated init(disk: URL, db: AudioService) {
+    nonisolated init(disk: URL, db: AudioRepo) {
         self.disk = disk
         self.db = db
         

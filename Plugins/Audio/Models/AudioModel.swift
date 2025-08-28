@@ -15,7 +15,7 @@ final class AudioModel: SuperLog {
     static let verbose = false
 
     @Transient let fileManager = FileManager.default
-    @Transient var db: AudioService?
+    @Transient var db: AudioRepo?
 
     // MARK: Properties
 
@@ -72,7 +72,7 @@ final class AudioModel: SuperLog {
         }
     }
 
-    func setDB(_ db: AudioService?) {
+    func setDB(_ db: AudioRepo?) {
         self.db = db
     }
 }

@@ -17,7 +17,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
     @MainActor var dirName: String = AudioConfigRepo.dbDirName
     @MainActor var disk: URL?
     @MainActor var audioProvider: AudioProvider?
-    @MainActor var audioDB: AudioService?
+    @MainActor var audioDB: AudioRepo?
     @MainActor var initialized: Bool = false
     @MainActor var container: ModelContainer?
 
@@ -26,17 +26,38 @@ actor AudioPlugin: SuperPlugin, SuperLog {
 
         guard let audioProvider = self.audioProvider else {
             os_log(.error, "\(self.t)AddDBView, AudioProvider not found")
-            return AnyView(EmptyView())
+            return AnyView(AudioErrorView(
+                error: AudioPluginError.initialization(reason: "AudioProvider 未找到"),
+                title: "音频提供者初始化失败",
+                onRetry: {
+                    // 这里可以添加重试逻辑
+                    os_log(.info, "\(self.t)AddDBView, retrying AudioProvider initialization")
+                }
+            ))
         }
 
-        guard let audioDB = audioDB else {
+        guard audioDB != nil else {
             os_log(.error, "\(self.t)AddDBView, AudioDB not found")
-            return AnyView(EmptyView())
+            return AnyView(AudioErrorView(
+                error: AudioPluginError.initialization(reason: "AudioDB 未找到"),
+                title: "音频数据库初始化失败",
+                onRetry: {
+                    // 这里可以添加重试逻辑
+                    os_log(.info, "\(self.t)AddDBView, retrying AudioDB initialization")
+                }
+            ))
         }
 
         guard let container = self.container else {
             os_log(.error, "\(self.t)AddDBView, ModelContainer not found")
-            return AnyView(EmptyView())
+            return AnyView(AudioErrorView(
+                error: AudioPluginError.initialization(reason: "ModelContainer 未找到"),
+                title: "数据容器初始化失败",
+                onRetry: {
+                    // 这里可以添加重试逻辑
+                    os_log(.info, "\(self.t)AddDBView, retrying ModelContainer initialization")
+                }
+            ))
         }
 
         if verbose {
@@ -135,7 +156,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
 
         self.disk = try disk.createIfNotExist()
         self.container = try AudioConfigRepo.getContainer()
-        self.audioDB = try await AudioService(disk: disk, reason: self.className + ".onInit", verbose: false)
+        self.audioDB = try await AudioRepo(disk: disk, reason: self.className + ".onInit", verbose: false)
         self.audioProvider = AudioProvider(disk: disk, db: self.audioDB!)
         self.initialized = true
 
