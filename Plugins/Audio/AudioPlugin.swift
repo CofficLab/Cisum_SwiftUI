@@ -74,14 +74,15 @@ actor AudioPlugin: SuperPlugin, SuperLog {
         self.disk
     }
 
+    @MainActor
     func onPlayModeChange(mode: String, asset: PlayAsset?) async throws {
-        guard await self.initialized else {
+        guard self.initialized else {
             return
         }
 
         AudioStateRepo.storePlayMode(mode)
 
-        guard let audioDB = await audioDB else {
+        guard let audioDB = audioDB else {
             return
         }
 
@@ -122,7 +123,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
 
         self.disk = try disk.createIfNotExist()
         self.container = try AudioConfigRepo.getContainer()
-        self.audioDB = try await AudioRepo(disk: disk, reason: self.className + ".onInit", verbose: false)
+        self.audioDB = try AudioRepo(disk: disk, reason: self.className + ".onInit", verbose: false)
         self.audioProvider = AudioProvider(disk: disk, db: self.audioDB!)
         self.initialized = true
 
@@ -167,12 +168,13 @@ actor AudioPlugin: SuperPlugin, SuperLog {
         }
     }
 
+    @MainActor
     func onPlayPrev(playMan: PlayManWrapper, current: URL?, currentGroup: String?, verbose: Bool) async throws {
         if currentGroup != self.id {
             return
         }
 
-        guard let audioDB = await audioDB else {
+        guard let audioDB = audioDB else {
             os_log("\(self.t)⚠️ AudioDB not found")
             return
         }
@@ -186,12 +188,13 @@ actor AudioPlugin: SuperPlugin, SuperLog {
         }
     }
 
+    @MainActor
     func onPlayNext(playMan: PlayManWrapper, current: URL?, currentGroup: String?, verbose: Bool) async throws {
         if currentGroup != self.id {
             return
         }
 
-        guard let audioDB = await audioDB else {
+        guard let audioDB = audioDB else {
             os_log("\(self.t)⚠️ AudioDB not found")
             return
         }
@@ -222,8 +225,9 @@ actor AudioPlugin: SuperPlugin, SuperLog {
         self.audioProvider?.updateDisk(disk)
     }
 
+    @MainActor
     func onLike(asset: URL?, liked: Bool) async throws {
-        guard let audioDB = await audioDB else {
+        guard let audioDB = audioDB else {
             os_log("\(self.t)⚠️ AudioDB not found")
             return
         }

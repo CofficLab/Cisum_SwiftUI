@@ -5,20 +5,39 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-actor AudioRepo: SuperLog {
+@preconcurrency import Combine
+
+// MARK: - Sync Status Enum
+enum SyncStatus: Equatable {
+    case idle
+    case syncing(items: [URL])
+    case synced
+    case updated
+    case error(String)
+}
+
+@MainActor
+class AudioRepo: ObservableObject, SuperLog {
     nonisolated static let emoji = "🎵"
     private var db: AudioDB
     private var disk: URL
     private var monitor: Cancellable?
     private var currentSyncTask: Task<Void, Never>?
     private var isShuttingDown: Bool = false
+    
+    // MARK: - Published Properties for State Management
+    @Published var syncStatus: SyncStatus = .idle
+    @Published var files: [URL] = []
+    @Published var downloadProgress: [URL: Double] = [:]
+    @Published var isSyncing: Bool = false
+    @Published var syncProgress: Double = 0.0
 
-    init(disk: URL, reason: String, verbose: Bool) async throws {
+    init(disk: URL, reason: String, verbose: Bool) throws {
         if verbose {
             os_log("\(Self.i) with reason: 🐛 \(reason) 💾 with disk: \(disk.shortPath())")
         }
 
-        let container = try await AudioConfigRepo.getContainer()
+        let container = try AudioConfigRepo.getContainer()
         self.db = AudioDB(container, reason: reason, verbose: verbose)
         self.disk = disk
         self.monitor = self.makeMonitor()
@@ -28,44 +47,46 @@ actor AudioRepo: SuperLog {
         await self.db.allAudioURLs(reason: reason)
     }
 
-    nonisolated func changeRoot(url: URL) {
-        os_log("\(Self.t)🍋🍋🍋 Change disk to \(url.title)")
+    func changeRoot(url: URL) {
+        os_log("\(self.t)🍋🍋🍋 Change disk to \(url.title)")
 
         Task { [weak self] in
             await self?.cleanup()
-            await self?.updateDisk(url)
+            self?.updateDisk(url)
         }
     }
 
-    private func updateDisk(_ url: URL) {
+    func updateDisk(_ url: URL) {
         self.disk = url
         self.monitor = self.makeMonitor()
     }
 
     func delete(_ audio: AudioModel, verbose: Bool) async throws {
         try self.disk.delete()
-        try await self.db.deleteAudio(url: audio.url)
-        NotificationCenter.default.post(name: .dbDeleted, object: nil)
+        try await db.deleteAudio(url: audio.url)
+        // 更新状态而不是发送通知
+        self.files.removeAll { $0 == audio.url }
+        self.downloadProgress.removeValue(forKey: audio.url)
     }
 
     func find(_ url: URL) async -> URL? {
-        await self.db.hasAudio(url) ? url : nil
+        await db.hasAudio(url) ? url : nil
     }
 
     func getFirst() async throws -> URL? {
-        try await self.db.firstAudioURL()
+        try await db.firstAudioURL()
     }
 
     func getNextOf(_ url: URL?, verbose: Bool = false) async throws -> URL? {
-        try await self.db.getNextAudioURLOf(url, verbose: verbose)
+        try await db.getNextAudioURLOf(url, verbose: verbose)
     }
 
     func getPrevOf(_ url: URL?, verbose: Bool = false) async throws -> URL? {
-        try await self.db.getPrevAudioURLOf(url, verbose: verbose)
+        try await db.getPrevAudioURLOf(url, verbose: verbose)
     }
 
     func getTotalCount() async -> Int {
-        await self.db.getTotalOfAudio()
+        await db.getTotalOfAudio()
     }
 
     func getStorageRoot() async -> URL {
@@ -73,7 +94,7 @@ actor AudioRepo: SuperLog {
     }
 
     func isLiked(_ url: URL) async -> Bool {
-        await self.db.isLiked(url)
+        await db.isLiked(url)
     }
 
     func like(_ url: URL?, liked: Bool) async {
@@ -81,33 +102,38 @@ actor AudioRepo: SuperLog {
 
         if liked {
             os_log("\(self.t)👍 Like \(url.lastPathComponent)")
-            await self.db.like(url)
+            await db.like(url)
         } else {
             os_log("\(self.t)👎 Dislike \(url.lastPathComponent)")
-            await self.db.dislike(url)
+            await db.dislike(url)
         }
     }
 
     func sort(_ sticky: AudioModel?, reason: String) async {
-        await self.db.sort(sticky?.url, reason: reason)
+        await db.sort(sticky?.url, reason: reason)
     }
 
     func sort(_ url: URL?, reason: String) async {
-        await self.db.sort(url, reason: reason)
+        await db.sort(url, reason: reason)
     }
 
     func sortRandom(_ sticky: AudioModel?, reason: String, verbose: Bool) async throws {
-        try await self.db.sortRandom(sticky?.url, reason: reason, verbose: verbose)
+        try await db.sortRandom(sticky?.url, reason: reason, verbose: verbose)
     }
 
     func sortRandom(_ url: URL?, reason: String, verbose: Bool) async throws {
-        try await self.db.sortRandom(url, reason: reason, verbose: verbose)
+        try await db.sortRandom(url, reason: reason, verbose: verbose)
     }
 
     func sync(_ items: [URL], verbose: Bool = false, isFirst: Bool) async {
         guard !isShuttingDown else { return }
 
         currentSyncTask?.cancel()
+        
+        // 更新状态而不是发送通知
+        self.isSyncing = true
+        self.syncStatus = .syncing(items: items)
+        self.files = items
 
         let task = Task(priority: .utility) { [weak self] in
             guard let self = self else { return }
@@ -116,12 +142,11 @@ actor AudioRepo: SuperLog {
             guard shouldContinue == true else { return }
 
             if isFirst {
-                await self.onDBSyncing(items)
-                await self.db.initItems(items, verbose: verbose)
-                await self.emitDBSynced()
+                await db.initItems(items, verbose: verbose)
+                self.updateSyncStatus(.synced)
             } else {
-                await self.db.syncWithUpdatedItems(items, verbose: verbose)
-                await self.emitUpdated()
+                await db.syncWithUpdatedItems(items, verbose: verbose)
+                self.updateSyncStatus(.updated)
             }
 
             let shouldEmit = await Task.detached { await !self.isShuttingDown }.value
@@ -130,9 +155,25 @@ actor AudioRepo: SuperLog {
 
         currentSyncTask = task
     }
+    
+    // MARK: - State Update Methods
+    private func updateSyncStatus(_ status: SyncStatus) {
+        self.syncStatus = status
+        self.isSyncing = false
+        
+        switch status {
+        case .synced, .updated:
+            // 同步完成，可以在这里添加其他逻辑
+            break
+        case .error(let message):
+            os_log(.error, "\(self.t)Sync error: \(message)")
+        default:
+            break
+        }
+    }
 
     func toggleLike(_ url: URL) async throws {
-        try await self.db.toggleLike(url)
+        try await db.toggleLike(url)
     }
 
     func makeMonitor() -> Cancellable {
@@ -169,28 +210,31 @@ actor AudioRepo: SuperLog {
             onDeleted: { [weak self] urls in
                 guard let self = self else { return }
 
-                Task {
+                Task { @MainActor in
                     if urls.count > 0 {
-                        try? await self.db.deleteAudios(urls)
-                        await self.emitDeleted(urls)
+                        try? await db.deleteAudios(urls)
+                        // 更新文件列表，移除已删除的文件
+                        self.files.removeAll { urls.contains($0) }
+                        // 清理下载进度
+                        urls.forEach { self.downloadProgress.removeValue(forKey: $0) }
                     }
                 }
             },
             onProgress: { [weak self] url, progress in
                 guard let self = self else { return }
-                Task {
-                    await self.emitDownloadProgress(url: url, progress: progress)
+                Task { @MainActor in
+                    self.downloadProgress[url] = progress
                 }
             })
     }
 
-    nonisolated func prepareForDeinit() {
+    func prepareForDeinit() {
         Task { [weak self] in
             await self?.cleanup()
         }
     }
 
-    private func cleanup() async {
+    func cleanup() async {
         isShuttingDown = true
         currentSyncTask?.cancel()
         monitor?.cancel()
@@ -199,60 +243,34 @@ actor AudioRepo: SuperLog {
     }
 
     deinit {
-        prepareForDeinit()
+        // 在 deinit 中不能调用 async 方法，直接清理资源
+        isShuttingDown = true
+        currentSyncTask?.cancel()
+        // 注意：在 deinit 中不能安全地访问 monitor，因为它不是 Sendable
     }
 }
 
-// MARK: Event
+// MARK: - State Management Methods
 
 extension AudioRepo {
-    func onDBSyncing(_ items: [URL]) {
-        info("Syncing \(items.count) items")
-        os_log("\(self.t)🔄 Syncing \(items.count) items")
-        // 确保在主线程上发送通知，避免 "Publishing changes from background threads" 错误
-        Task { @MainActor in
-            NotificationCenter.default.post(name: .dbSyncing, object: self, userInfo: ["items": items])
-        }
+    /// 获取当前同步状态
+    var currentSyncStatus: SyncStatus {
+        syncStatus
     }
-
-    func emitDBSynced() {
-        info("Sync Done")
-        os_log("\(self.t)✅ Sync Done")
-        // 确保在主线程上发送通知，避免 "Publishing changes from background threads" 错误
-        Task { @MainActor in
-            NotificationCenter.default.post(name: .dbSynced, object: nil)
-        }
+    
+    /// 获取当前文件列表
+    var currentFiles: [URL] {
+        files
     }
-
-    func emitUpdated() {
-        info("Updated")
-        os_log("\(self.t)🍋 Updated")
-        // 确保在主线程上发送通知，避免 "Publishing changes from background threads" 错误
-        Task { @MainActor in
-            NotificationCenter.default.post(name: .dbUpdated, object: nil)
-        }
+    
+    /// 获取指定URL的下载进度
+    func getDownloadProgress(for url: URL) -> Double {
+        downloadProgress[url] ?? 0.0
     }
-
-    /// 发送下载进度通知
-    /// - Parameters:
-    ///   - url: 下载的 URL
-    ///   - progress: 下载进度 (0-100)
-    func emitDownloadProgress(url: URL, progress: Double) {
-        // 确保在主线程上发送通知，避免 "Publishing changes from background threads" 错误
-        Task { @MainActor in
-            NotificationCenter.default.post(
-                name: .audioDownloadProgress,
-                object: url,
-                userInfo: ["progress": progress]
-            )
-        }
-    }
-
-    func emitDeleted(_ urls: [URL]) {
-        // 确保在主线程上发送通知，避免 "Publishing changes from background threads" 错误
-        Task { @MainActor in
-            NotificationCenter.default.post(name: .dbDeleted, object: nil, userInfo: ["urls": urls])
-        }
+    
+    /// 清理下载进度
+    func clearDownloadProgress(for url: URL) {
+        downloadProgress.removeValue(forKey: url)
     }
 }
 

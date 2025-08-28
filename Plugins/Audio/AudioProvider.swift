@@ -16,26 +16,26 @@ class AudioProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
     private(set) var disk: URL
     var verbose: Bool = true
 
-    @Published private(set) var files: [URL] = []
+    // 移除 @Published files，因为现在从 db 获取
+    private(set) var files: [URL] = []
 
     nonisolated init(disk: URL, db: AudioRepo) {
         self.disk = disk
         self.db = db
         
         Task { @MainActor in
-            self.setupNotifications()
+            self.setupStateObservation()
         }
     }
     
-    private func setupNotifications() {
-        self.nc.publisher(for: .dbSyncing)
+    private func setupStateObservation() {
+        // 观察 db 的状态变化
+        db.$files
             .receive(on: RunLoop.main)
-            .sink { [weak self] notification in
+            .sink { [weak self] files in
                 guard let self = self else { return }
-                if let items = notification.userInfo?["items"] as? [URL] {
-                    if verbose { os_log("\(self.t)从 \(self.files.count) 个变为 \(items.count) 个") }
-                    self.files = items
-                }
+                if verbose { os_log("\(self.t)从 \(self.files.count) 个变为 \(files.count) 个") }
+                self.files = files
             }
             .store(in: &cancellables)
     }
@@ -44,27 +44,26 @@ class AudioProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
         if verbose { os_log("\(self.t)🍋🍋🍋 updateDisk to \(newDisk.path)") }
         self.cancellables.removeAll()
         self.disk = newDisk
-        self.setupNotifications()
+        self.setupStateObservation()
     }
 }
 
-// MARK: Event Handler
+// MARK: - State Management
 
 extension AudioProvider {
-    private func handleDBSyncing(_ notification: Notification) {
-        if let items = notification.userInfo?["items"] as? [URL] {
-            Task {
-                self.setFiles(items)
-            }
-        }
+    /// 获取当前同步状态
+    var syncStatus: SyncStatus {
+        db.syncStatus
     }
-}
-
-// MARK: State Updater
-
-extension AudioProvider {
-    private func setFiles(_ files: [URL]) {
-        self.files = files
+    
+    /// 获取下载进度
+    var downloadProgress: [URL: Double] {
+        db.downloadProgress
+    }
+    
+    /// 检查是否正在同步
+    var isSyncing: Bool {
+        db.isSyncing
     }
 }
 
