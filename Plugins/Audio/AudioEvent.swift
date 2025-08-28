@@ -10,13 +10,8 @@ extension Notification.Name {
 }
 
 extension Notification.Name {
-    static let dbSyncing = Notification.Name("dbSyncing")
-    static let dbSynced = Notification.Name("dbSynced")
-    static let dbDeleted = Notification.Name("dbDeleted")
-    static let dbUpdated = Notification.Name("dbUpdated")
     static let DBSorting = Notification.Name("DBSorting")
     static let DBSortDone = Notification.Name("DBSortDone")
-    static let audioDownloadProgress = Notification.Name("audioDownloadProgress")
 }
 
 #Preview("Small Screen") {

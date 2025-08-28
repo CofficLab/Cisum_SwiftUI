@@ -5,7 +5,17 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-actor AudioService: ObservableObject, SuperEvent, SuperLog {
+// MARK: - Notification Names
+
+extension Notification.Name {
+    static let dbSyncing = Notification.Name("dbSyncing")
+    static let dbSynced = Notification.Name("dbSynced")
+    static let dbDeleted = Notification.Name("dbDeleted")
+    static let dbUpdated = Notification.Name("dbUpdated")
+    static let audioDownloadProgress = Notification.Name("audioDownloadProgress")
+}
+
+actor AudioService: ObservableObject, SuperLog {
     nonisolated static let emoji = "🎵"
     private var db: AudioRecordDB
     private var disk: URL
@@ -206,34 +216,52 @@ actor AudioService: ObservableObject, SuperEvent, SuperLog {
 // MARK: Event
 
 extension AudioService {
+    /// 发送通知
+    /// - Parameters:
+    ///   - name: 通知名称
+    ///   - object: 发送通知的对象（可选）
+    ///   - userInfo: 随通知一起发送的用户信息字典（可选）
+    nonisolated func emit(_ name: Notification.Name, object: Any? = nil, userInfo: [AnyHashable: Any]? = nil) {
+        // 确保在主线程上发送通知，避免 "Publishing changes from background threads" 错误
+        // 使用静态方法来避免所有数据竞争和 actor 隔离问题
+        AudioService.emitNotification(name: name, object: object, userInfo: userInfo)
+    }
+    
+    /// 静态方法：发送通知到主线程
+    /// - Parameters:
+    ///   - name: 通知名称
+    ///   - object: 发送通知的对象（可选）
+    ///   - userInfo: 随通知一起发送的用户信息字典（可选）
+    private static func emitNotification(name: Notification.Name, object: Any? = nil, userInfo: [AnyHashable: Any]? = nil) {
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: name, object: object, userInfo: userInfo)
+        }
+    }
+
     func onDBSyncing(_ items: [URL]) {
         info("Syncing \(items.count) items")
         os_log("\(self.t)🔄 Syncing \(items.count) items")
-        self.emit(name: .dbSyncing, object: self, userInfo: ["items": items])
+        self.emit(.dbSyncing, object: self, userInfo: ["items": items])
     }
 
     func emitDBSynced() {
         info("Sync Done")
         os_log("\(self.t)✅ Sync Done")
-        self.emit(name: .dbSynced, object: nil)
+        self.emit(.dbSynced)
     }
 
     func emitUpdated() {
         info("Updated")
         os_log("\(self.t)🍋 Updated")
-        self.emit(name: .dbUpdated, object: nil)
+        self.emit(.dbUpdated)
     }
 
     func emitDownloadProgress(url: URL, progress: Double) {
-        self.emit(name: .audioDownloadProgress,
-                  object: nil,
-                  userInfo: ["url": url, "progress": progress])
+        self.emit(.audioDownloadProgress, userInfo: ["url": url, "progress": progress])
     }
 
     func emitDeleted(_ urls: [URL]) {
-        self.emit(name: .dbDeleted,
-                  object: nil,
-                  userInfo: ["urls": urls])
+        self.emit(.dbDeleted, userInfo: ["urls": urls])
     }
 }
 
@@ -248,7 +276,7 @@ extension AudioService {
 }
 
 #if os(iOS)
-#Preview("iPhone") {
-    AppPreview()
-}
+    #Preview("iPhone") {
+        AppPreview()
+    }
 #endif
