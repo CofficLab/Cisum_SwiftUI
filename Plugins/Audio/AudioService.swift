@@ -55,7 +55,7 @@ actor AudioService: ObservableObject, SuperLog {
     func delete(_ audio: AudioModel, verbose: Bool) async throws {
         try self.disk.delete()
         try await self.db.deleteAudio(url: audio.url)
-        self.emit(.dbDeleted)
+        NotificationCenter.default.post(name: .dbDeleted, object: nil)
     }
 
     func find(_ url: URL) async -> URL? {
@@ -216,52 +216,38 @@ actor AudioService: ObservableObject, SuperLog {
 // MARK: Event
 
 extension AudioService {
-    /// 发送通知
-    /// - Parameters:
-    ///   - name: 通知名称
-    ///   - object: 发送通知的对象（可选）
-    ///   - userInfo: 随通知一起发送的用户信息字典（可选）
-    nonisolated func emit(_ name: Notification.Name, object: Any? = nil, userInfo: [AnyHashable: Any]? = nil) {
-        // 确保在主线程上发送通知，避免 "Publishing changes from background threads" 错误
-        // 使用静态方法来避免所有数据竞争和 actor 隔离问题
-        AudioService.emitNotification(name: name, object: object, userInfo: userInfo)
-    }
-    
-    /// 静态方法：发送通知到主线程
-    /// - Parameters:
-    ///   - name: 通知名称
-    ///   - object: 发送通知的对象（可选）
-    ///   - userInfo: 随通知一起发送的用户信息字典（可选）
-    private static func emitNotification(name: Notification.Name, object: Any? = nil, userInfo: [AnyHashable: Any]? = nil) {
-        DispatchQueue.main.async {
-            NotificationCenter.default.post(name: name, object: object, userInfo: userInfo)
-        }
-    }
-
     func onDBSyncing(_ items: [URL]) {
         info("Syncing \(items.count) items")
         os_log("\(self.t)🔄 Syncing \(items.count) items")
-        self.emit(.dbSyncing, object: self, userInfo: ["items": items])
+        NotificationCenter.default.post(name: .dbSyncing, object: self, userInfo: ["items": items])
     }
 
     func emitDBSynced() {
         info("Sync Done")
         os_log("\(self.t)✅ Sync Done")
-        self.emit(.dbSynced)
+        NotificationCenter.default.post(name: .dbSynced, object: nil)
     }
 
     func emitUpdated() {
         info("Updated")
         os_log("\(self.t)🍋 Updated")
-        self.emit(.dbUpdated)
+        NotificationCenter.default.post(name: .dbUpdated, object: nil)
     }
 
+    /// 发送下载进度通知
+    /// - Parameters:
+    ///   - url: 下载的 URL
+    ///   - progress: 下载进度 (0-100)
     func emitDownloadProgress(url: URL, progress: Double) {
-        self.emit(.audioDownloadProgress, userInfo: ["url": url, "progress": progress])
+        NotificationCenter.default.post(
+            name: .audioDownloadProgress,
+            object: url,
+            userInfo: ["progress": progress]
+        )
     }
 
     func emitDeleted(_ urls: [URL]) {
-        self.emit(.dbDeleted, userInfo: ["urls": urls])
+        NotificationCenter.default.post(name: .dbDeleted, object: nil, userInfo: ["urls": urls])
     }
 }
 
