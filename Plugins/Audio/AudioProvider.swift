@@ -8,62 +8,20 @@ import SwiftUI
 
 @MainActor
 class AudioProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
-    private var cancellables = Set<AnyCancellable>()
-    private var debounceTimer: Timer?
     var repo: AudioRepo
 
     nonisolated static let emoji = "🌿"
     private(set) var disk: URL
     var verbose: Bool = true
 
-    // 移除 @Published files，因为现在从 db 获取
-    private(set) var files: [URL] = []
-
     nonisolated init(disk: URL, db: AudioRepo) {
         self.disk = disk
         self.repo = db
-        
-        Task { @MainActor in
-            self.setupStateObservation()
-        }
-    }
-    
-    private func setupStateObservation() {
-        // 观察 db 的状态变化
-        repo.$files
-            .receive(on: RunLoop.main)
-            .sink { [weak self] files in
-                guard let self = self else { return }
-                if verbose { os_log("\(self.t)从 \(self.files.count) 个变为 \(files.count) 个") }
-                self.files = files
-            }
-            .store(in: &cancellables)
     }
 
     func updateDisk(_ newDisk: URL) {
         if verbose { os_log("\(self.t)🍋🍋🍋 updateDisk to \(newDisk.path)") }
-        self.cancellables.removeAll()
         self.disk = newDisk
-        self.setupStateObservation()
-    }
-}
-
-// MARK: - State Management
-
-extension AudioProvider {
-    /// 获取当前同步状态
-    var syncStatus: SyncStatus {
-        repo.syncStatus
-    }
-    
-    /// 获取下载进度
-    var downloadProgress: [URL: Double] {
-        repo.downloadProgress
-    }
-    
-    /// 检查是否正在同步
-    var isSyncing: Bool {
-        repo.isSyncing
     }
 }
 
