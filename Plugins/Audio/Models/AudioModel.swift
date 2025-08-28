@@ -103,22 +103,6 @@ extension AudioModel {
     }
 }
 
-// MARK: Error
-
-enum AudioModelError: Error, LocalizedError {
-    case deleteFailed
-    case dbNotFound
-
-    var errorDescription: String? {
-        switch self {
-        case .deleteFailed:
-            return "Delete failed"
-        case .dbNotFound:
-            return "AudioModel: DB not found"
-        }
-    }
-}
-
 // MARK: Descriptor
 
 extension AudioModel {
