@@ -9,14 +9,14 @@ struct AudioItemView: View, Equatable {
     nonisolated static func == (lhs: AudioItemView, rhs: AudioItemView) -> Bool {
         lhs.url == rhs.url
     }
-    
+
     // 本地进度状态，1.1 表示无进度/已完成
     @State private var progress: Double = 1.1
 
     init(_ url: URL) {
         self.url = url
     }
-    
+
     var body: some View {
         url.makeMediaView()
             .magicAvatarDownloadProgress($progress)
@@ -48,7 +48,7 @@ struct AudioItemView: View, Equatable {
 }
 
 #if os(iOS)
-#Preview("iPhone") {
-    AppPreview()
-}
+    #Preview("iPhone") {
+        AppPreview()
+    }
 #endif

@@ -9,7 +9,7 @@ import SwiftUI
 /// 实现了 ModelActor 协议以支持 SwiftData 操作
 /// 实现了 ObservableObject 协议以支持 SwiftUI 绑定
 /// 实现了 SuperLog, SuperEvent, SuperThread 协议以支持日志记录、事件发送和线程管理
-actor AudioRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
+actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     /// 用于日志输出的表情符号
     static let emoji = "📦"
     /// SwiftData 模型容器

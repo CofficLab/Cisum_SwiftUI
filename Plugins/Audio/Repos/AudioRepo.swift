@@ -7,7 +7,7 @@ import SwiftUI
 
 actor AudioRepo: SuperLog {
     nonisolated static let emoji = "🎵"
-    private var db: AudioRecordDB
+    private var db: AudioDB
     private var disk: URL
     private var monitor: Cancellable?
     private var currentSyncTask: Task<Void, Never>?
@@ -19,7 +19,7 @@ actor AudioRepo: SuperLog {
         }
 
         let container = try await AudioConfigRepo.getContainer()
-        self.db = AudioRecordDB(container, reason: reason, verbose: verbose)
+        self.db = AudioDB(container, reason: reason, verbose: verbose)
         self.disk = disk
         self.monitor = self.makeMonitor()
     }

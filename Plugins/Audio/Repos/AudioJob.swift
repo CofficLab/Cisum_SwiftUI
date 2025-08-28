@@ -4,7 +4,7 @@ import SwiftData
 import MagicCore
 import SwiftUI
 
-extension AudioRecordDB {
+extension AudioDB {
     func prepareJob() async throws {
         os_log("\(self.t) 🚀🚀🚀 Prepare")
 
@@ -16,7 +16,7 @@ extension AudioRecordDB {
     }
 }
 
-extension AudioRecordDB {
+extension AudioDB {
     func updateGroupForURLs(_ urls: [URL], verbose: Bool = true) {
         let total = urls.count
         let title = "\(t) UpdateHash(\(total))"
@@ -44,7 +44,7 @@ extension AudioRecordDB {
     }
 }
 
-extension AudioRecordDB {
+extension AudioDB {
     var labelForDelete: String { "\(t)🗑️🗑️🗑️" }
 
     func runDeleteInvalidJob() throws {
@@ -63,7 +63,7 @@ extension AudioRecordDB {
     }
 }
 
-extension AudioRecordDB {
+extension AudioDB {
     // MARK: 运行任务
 
     func runJob(
