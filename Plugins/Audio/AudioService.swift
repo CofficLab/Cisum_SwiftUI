@@ -219,19 +219,28 @@ extension AudioService {
     func onDBSyncing(_ items: [URL]) {
         info("Syncing \(items.count) items")
         os_log("\(self.t)🔄 Syncing \(items.count) items")
-        NotificationCenter.default.post(name: .dbSyncing, object: self, userInfo: ["items": items])
+        // 确保在主线程上发送通知，避免 "Publishing changes from background threads" 错误
+        Task { @MainActor in
+            NotificationCenter.default.post(name: .dbSyncing, object: self, userInfo: ["items": items])
+        }
     }
 
     func emitDBSynced() {
         info("Sync Done")
         os_log("\(self.t)✅ Sync Done")
-        NotificationCenter.default.post(name: .dbSynced, object: nil)
+        // 确保在主线程上发送通知，避免 "Publishing changes from background threads" 错误
+        Task { @MainActor in
+            NotificationCenter.default.post(name: .dbSynced, object: nil)
+        }
     }
 
     func emitUpdated() {
         info("Updated")
         os_log("\(self.t)🍋 Updated")
-        NotificationCenter.default.post(name: .dbUpdated, object: nil)
+        // 确保在主线程上发送通知，避免 "Publishing changes from background threads" 错误
+        Task { @MainActor in
+            NotificationCenter.default.post(name: .dbUpdated, object: nil)
+        }
     }
 
     /// 发送下载进度通知
@@ -239,15 +248,21 @@ extension AudioService {
     ///   - url: 下载的 URL
     ///   - progress: 下载进度 (0-100)
     func emitDownloadProgress(url: URL, progress: Double) {
-        NotificationCenter.default.post(
-            name: .audioDownloadProgress,
-            object: url,
-            userInfo: ["progress": progress]
-        )
+        // 确保在主线程上发送通知，避免 "Publishing changes from background threads" 错误
+        Task { @MainActor in
+            NotificationCenter.default.post(
+                name: .audioDownloadProgress,
+                object: url,
+                userInfo: ["progress": progress]
+            )
+        }
     }
 
     func emitDeleted(_ urls: [URL]) {
-        NotificationCenter.default.post(name: .dbDeleted, object: nil, userInfo: ["urls": urls])
+        // 确保在主线程上发送通知，避免 "Publishing changes from background threads" 错误
+        Task { @MainActor in
+            NotificationCenter.default.post(name: .dbDeleted, object: nil, userInfo: ["urls": urls])
+        }
     }
 }
 
