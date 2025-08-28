@@ -10,12 +10,20 @@ actor ResetPlugin: SuperPlugin, SuperLog {
     let hasPoster = false
     let description: String = "恢复默认配置"
     let iconName: String = .iconReset
-    nonisolated(unsafe) var enabled: Bool = false
+    nonisolated(unsafe) var enabled: Bool = true
     
     @MainActor
     func addSettingView() -> AnyView? {
         guard enabled else { return nil }
         return AnyView(ResetSetting())
+    }
+}
+
+#Preview("ResetConfirmContent") {
+    RootView {
+        ResetConfirmContent(onCancel: {}, onConfirm: {})
+            .padding()
+            .frame(width: 400)
     }
 }
 

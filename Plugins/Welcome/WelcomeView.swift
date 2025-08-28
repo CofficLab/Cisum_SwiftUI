@@ -19,6 +19,7 @@ struct WelcomeView: View, SuperSetting, SuperLog {
     RootView {
         WelcomeView()
     }
+    .frame(height: 800)
 }
 
 #Preview("App - Large") {

@@ -46,8 +46,6 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
         return Group {
             if self.loading {
                 LaunchView()
-            } else if self.a.isResetting {
-                Text("正在重置")
             } else {
                 if let e = self.error {
                     ErrorViewFatal(error: e)

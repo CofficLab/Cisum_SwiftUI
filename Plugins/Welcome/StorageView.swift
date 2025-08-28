@@ -1,5 +1,4 @@
 import MagicCore
-
 import OSLog
 import SwiftUI
 
@@ -100,6 +99,7 @@ struct StorageView: View, SuperSetting, SuperLog {
     RootView {
         WelcomeView()
     }
+    .frame(height: 800)
 }
 
 #Preview("App - Large") {

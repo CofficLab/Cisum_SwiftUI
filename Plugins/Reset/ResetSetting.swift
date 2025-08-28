@@ -6,27 +6,54 @@ struct ResetSetting: View, SuperSetting, SuperLog {
 
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var configProvider: ConfigProvider
-    @EnvironmentObject var pluginProvider: PluginProvider
-    @EnvironmentObject var m: StateProvider
+    @State private var isResetting: Bool = false
+    @State private var showConfirmSheet: Bool = false
 
     var body: some View {
         MagicSettingSection {
             MagicSettingRow(title: "重置", description: "重置设置，恢复成系统默认状态", icon: .iconReset) {
-                MagicButton(icon: .iconReset, action: { done in
-                    app.setResetting(true)
-                    configProvider.resetStorageLocation()
-                    app.setResetting(false)
-                    done()
+                MagicButton.simple(icon: .iconReset, action: {
+                    showConfirmSheet = true
                 })
                 .magicShape(.circle)
+                .magicStyle(.secondary)
                 .magicSize(.small)
+            }
+        }
+        .sheet(isPresented: $showConfirmSheet) {
+            if isResetting {
+                ResetProgressContent()
+                    .padding(24)
+                    .frame(minWidth: 380)
+            } else {
+                ResetConfirmContent(
+                    onCancel: { showConfirmSheet = false },
+                    onConfirm: {
+                        isResetting = true
+                        app.setResetting(true)
+                        Task {
+                            configProvider.resetStorageLocation()
+                            await MainActor.run {
+                                app.setResetting(false)
+                                isResetting = false
+                                showConfirmSheet = false
+                            }
+                        }
+                    }
+                )
+                .padding(24)
+                .frame(minWidth: 380)
             }
         }
     }
 }
 
-#Preview {
-    AppPreview()
+#Preview("ResetConfirmContent") {
+    RootView {
+        ResetConfirmContent(onCancel: {}, onConfirm: {})
+            .padding()
+            .frame(width: 400)
+    }
 }
 
 #Preview("Setting") {
