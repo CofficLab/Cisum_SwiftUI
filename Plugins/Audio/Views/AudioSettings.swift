@@ -9,11 +9,12 @@ struct AudioSettings: View, SuperLog {
     @State var description: String = ""
 
     var body: some View {
-        MagicSettingSection {
-            MagicSettingRow(title: "歌曲仓库", description: description, icon: .iconMusicLibrary, content: {
+        MagicSettingSection(title: "歌曲仓库") {
+            MagicSettingRow(title: "仓库大小", description: description, icon: .iconMusicLibrary, content: {
                 HStack {
                     if let diskSize = diskSize {
                         Text(diskSize)
+                            .font(.footnote)
                     }
                     if Config.isDesktop {
                         audioManager.disk
@@ -31,6 +32,16 @@ struct AudioSettings: View, SuperLog {
                     description = "是本地目录，不会同步"
                 }
             }
+
+            MagicSettingRow(title: "文件数量", description: "当前仓库内的文件总数", icon: .iconDocument, content: {
+                HStack {
+                    Text("\(audioManager.disk.filesCountRecursively()) 个文件")
+                        .font(.footnote)
+                }
+            })
+            .task {
+                // 这里假设 getFileCount() 是同步方法，如果是异步请调整
+            }
         }
     }
 }
@@ -40,7 +51,7 @@ struct AudioSettings: View, SuperLog {
         SettingView()
             .background(.background)
     }
-    .frame(height: 1200)
+    .frame(height: 800)
 }
 
 #if os(macOS)
