@@ -18,7 +18,6 @@ class AppProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLog, 
     @Published var showSheet: Bool = true
     @Published var isImporting: Bool = false
     @Published var isDropping: Bool = false
-    @Published var isResetting: Bool = false
     @Published var rightAlbumVisible = false
     
     init(uiRepo: UIRepo) {
@@ -42,10 +41,6 @@ class AppProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLog, 
 
     func toggleDBView() {
         showDB ? self.closeDBView() : self.showDBView()
-    }
-
-    func setResetting(_ value: Bool) {
-        self.isResetting = value
     }
 }
 

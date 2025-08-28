@@ -30,11 +30,9 @@ struct ResetSetting: View, SuperLog {
                     onCancel: { showConfirmSheet = false },
                     onConfirm: {
                         isResetting = true
-                        app.setResetting(true)
                         Task {
                             configProvider.resetStorageLocation()
                             await MainActor.run {
-                                app.setResetting(false)
                                 isResetting = false
                                 showConfirmSheet = false
                             }

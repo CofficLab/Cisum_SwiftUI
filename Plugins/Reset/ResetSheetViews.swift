@@ -1,23 +1,23 @@
-import SwiftUI
 import MagicCore
+import SwiftUI
 
 struct ResetConfirmContent: View {
     let onCancel: () -> Void
     let onConfirm: () -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            HStack(spacing: 14) {
+        VStack(alignment: .center, spacing: 20) {
+            VStack(spacing: 14) {
                 ZStack {
                     RoundedRectangle(cornerRadius: 14)
                         .fill(.quaternary)
-                        .frame(width: 60, height: 60)
+                        .frame(width: 90, height: 90)
                     Image(systemName: .iconReset)
                         .symbolRenderingMode(.hierarchical)
-                        .font(.system(size: 28, weight: .semibold))
+                        .font(.system(size: 48, weight: .semibold))
                         .foregroundStyle(.tint)
                 }
-                VStack(alignment: .leading, spacing: 6) {
+                VStack(alignment: .center, spacing: 6) {
                     Text("确认重置？")
                         .font(.title3)
                         .fontWeight(.semibold)
@@ -66,7 +66,7 @@ struct ResetConfirmContent: View {
 struct ResetProgressContent: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
-            HStack(spacing: 14) {
+            VStack(spacing: 14) {
                 ZStack {
                     RoundedRectangle(cornerRadius: 14)
                         .fill(.quaternary)
@@ -76,18 +76,12 @@ struct ResetProgressContent: View {
                         .font(.system(size: 28, weight: .semibold))
                         .foregroundStyle(.tint)
                 }
-                VStack(alignment: .leading, spacing: 6) {
-                    Text("正在重置…")
-                        .font(.title3)
-                        .fontWeight(.semibold)
-                    Text("请稍候，数据仓库将恢复为默认，用户偏好将被重置。")
-                        .foregroundStyle(.secondary)
-                        .font(.body)
-                }
+                
+                Text("正在重置…")
+                    .font(.title3)
+                    .fontWeight(.semibold)
             }
             .padding(.bottom, 8)
-            ProgressView()
-                .tint(.accentColor)
         }
         .padding(16)
         .background(.ultraThinMaterial)
@@ -99,9 +93,12 @@ struct ResetProgressContent: View {
     }
 }
 
-#Preview("ResetConfirmContent", traits: .sizeThatFitsLayout) {
-    ResetConfirmContent(onCancel: {}, onConfirm: {})
-        .padding()
+#Preview("ResetConfirmContent") {
+    RootView {
+        ResetConfirmContent(onCancel: {}, onConfirm: {})
+            .padding()
+            .frame(width: 400)
+    }
 }
 
 #Preview("ResetProgressContent", traits: .sizeThatFitsLayout) {
@@ -120,9 +117,7 @@ struct ResetProgressContent: View {
 }
 
 #if os(iOS)
-#Preview("iPhone") {
-    AppPreview()
-}
+    #Preview("iPhone") {
+        AppPreview()
+    }
 #endif
-
-
