@@ -95,15 +95,15 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
         .onReceive(nc.publisher(for: .dbDeleted), perform: onDeleted)
         .onReceive(nc.publisher(for: .dbSynced), perform: onSynced)
         .onReceive(nc.publisher(for: .dbUpdated), perform: onUpdated)
-        .onReceive(nc.publisher(for: .dbSyncing)) { _ in
-            isSyncing = true
-        }
-        .onReceive(nc.publisher(for: .dbSynced)) { _ in
-            isSyncing = false
-        }
+        .onReceive(nc.publisher(for: .dbSyncing), perform: onSyncing)
+        .onReceive(nc.publisher(for: .dbSynced), perform: onSynced)
         .onPlayManAssetChanged(handlePlayAssetChange)
     }
-    
+}
+
+// MARK: - Action
+
+extension AudioList {
     private func updateURLs() {
         Task.detached(priority: .background) {
             let urls = await audioProvider.db.allAudios(reason: self.className)
@@ -139,7 +139,7 @@ extension AudioList {
 extension AudioList {
     func handleOnAppear() {
         updateURLs()
-        
+
         if let asset = playManController.getAsset() {
             setSelection(asset)
         }
@@ -184,18 +184,24 @@ extension AudioList {
     func onSynced(_ notification: Notification) {
         os_log("\(t)🍋 onSynced")
         self.updateURLs()
+        self.isSyncing = false
     }
 
     func onUpdated(_ notification: Notification) {
         os_log("\(t)🍋 onUpdated")
         self.updateURLs()
     }
-    
+
+    func onSyncing(_ notification: Notification) {
+        os_log("\(t)🍋 onSyncing")
+        self.isSyncing = true
+    }
+
     func onDeleteItems(at offsets: IndexSet) {
         withAnimation {
             // 获取要删除的 URLs
             let urlsToDelete = offsets.map { urls[$0] }
-            
+
             // 从数据库中删除对应的 AudioModel
             for url in urlsToDelete {
                 os_log("\(t)deleteItems: \(url.shortPath())")
@@ -212,7 +218,6 @@ extension AudioList {
         }
     }
 }
-
 
 extension AudioList {
     enum SortMode: String {
@@ -251,4 +256,3 @@ extension AudioList {
     .frame(width: 1200)
     .frame(height: 1200)
 }
-
