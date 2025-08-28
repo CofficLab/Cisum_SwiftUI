@@ -3,7 +3,6 @@ import MagicCore
 import OSLog
 import SwiftData
 import SwiftUI
-import Foundation
 
 actor AudioPlugin: SuperPlugin, SuperLog {
     static let emoji = "🎧"
@@ -13,6 +12,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
     let description = "作为歌曲仓库，只关注文件，文件夹将被忽略"
     let iconName = "music.note"
     let isGroup = true
+    let verbose = true
 
     @MainActor var dirName: String = AudioConfigRepo.dbDirName
     @MainActor var disk: URL?
@@ -22,42 +22,16 @@ actor AudioPlugin: SuperPlugin, SuperLog {
     @MainActor var container: ModelContainer?
 
     @MainActor func addDBView(reason: String) -> AnyView? {
-        let verbose = false
-
         guard let audioProvider = self.audioProvider else {
-            os_log(.error, "\(self.t)AddDBView, AudioProvider not found")
-            return AnyView(AudioErrorView(
-                error: AudioPluginError.initialization(reason: "AudioProvider 未找到"),
-                title: "音频提供者初始化失败",
-                onRetry: {
-                    // 这里可以添加重试逻辑
-                    os_log(.info, "\(self.t)AddDBView, retrying AudioProvider initialization")
-                }
-            ))
+            return AnyView(AudioPluginError.initialization(reason: "AudioProvider 未找到").makeView())
         }
 
         guard audioDB != nil else {
-            os_log(.error, "\(self.t)AddDBView, AudioDB not found")
-            return AnyView(AudioErrorView(
-                error: AudioPluginError.initialization(reason: "AudioDB 未找到"),
-                title: "音频数据库初始化失败",
-                onRetry: {
-                    // 这里可以添加重试逻辑
-                    os_log(.info, "\(self.t)AddDBView, retrying AudioDB initialization")
-                }
-            ))
+            return AnyView(AudioPluginError.initialization(reason: "AudioDB 未找到").makeView(title: "音频数据库初始化失败"))
         }
 
         guard let container = self.container else {
-            os_log(.error, "\(self.t)AddDBView, ModelContainer not found")
-            return AnyView(AudioErrorView(
-                error: AudioPluginError.initialization(reason: "ModelContainer 未找到"),
-                title: "数据容器初始化失败",
-                onRetry: {
-                    // 这里可以添加重试逻辑
-                    os_log(.info, "\(self.t)AddDBView, retrying ModelContainer initialization")
-                }
-            ))
+            return AnyView(AudioPluginError.initialization(reason: "ModelContainer 未找到").makeView(title: "数据容器初始化失败"))
         }
 
         if verbose {
@@ -70,11 +44,9 @@ actor AudioPlugin: SuperPlugin, SuperLog {
         )
     }
 
-    @MainActor func addPosterView() -> AnyView? {  AnyView(AudioPoster()) }
+    @MainActor func addPosterView() -> AnyView? { AnyView(AudioPoster()) }
 
     @MainActor func addSettingView() -> AnyView? {
-        let verbose = false
-
         if verbose {
             os_log("\(self.t)🍋🍋🍋 AddSettingView")
         }
@@ -91,8 +63,6 @@ actor AudioPlugin: SuperPlugin, SuperLog {
     }
 
     func onCurrentURLChanged(url: URL) {
-        let verbose = false
-
         if verbose {
             os_log("\(self.t)🍋🍋🍋 OnPlayAssetUpdate with asset \(url.title)")
         }
@@ -108,8 +78,6 @@ actor AudioPlugin: SuperPlugin, SuperLog {
         guard await self.initialized else {
             return
         }
-
-        os_log("\(self.t)🍋🍋🍋 OnPlayModelChange with asset \(asset?.title ?? "nil")")
 
         AudioStateRepo.storePlayMode(mode)
 
@@ -131,12 +99,10 @@ actor AudioPlugin: SuperPlugin, SuperLog {
 
     @MainActor
     func onWillAppear(playMan: PlayManWrapper, currentGroup: SuperPlugin?, storage: StorageLocation?) async throws {
-        let verbose = false
-
         if verbose {
             os_log("\(self.a)with storage \(storage?.emojiTitle ?? "nil")")
         }
-        
+
         info("init with storage  \(storage?.emojiTitle ?? "nil")")
 
         switch storage {
@@ -239,8 +205,6 @@ actor AudioPlugin: SuperPlugin, SuperLog {
     }
 
     @MainActor func onStorageLocationChange(storage: StorageLocation?) async throws {
-        os_log("\(self.t)🍋🍋🍋 OnStorageLocationChange to \(storage?.emojiTitle ?? "nil")")
-
         switch storage {
         case .local, .none:
             disk = Config.localDocumentsDir?.appendingPathComponent(self.dirName)
@@ -253,9 +217,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
         guard let disk = disk else {
             fatalError("AudioPlugin.onInit: disk == nil")
         }
-
-        os_log("\(self.t)🍋🍋🍋 OnStorageLocationChange to \(disk.absoluteString)")
-
+        
         self.audioDB?.changeRoot(url: disk)
         self.audioProvider?.updateDisk(disk)
     }
@@ -289,8 +251,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
 }
 
 #if os(iOS)
-#Preview("iPhone") {
-    AppPreview()
-}
+    #Preview("iPhone") {
+        AppPreview()
+    }
 #endif
-
