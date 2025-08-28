@@ -9,16 +9,27 @@ struct StoreSettingEntry: View {
     var body: some View {
         MagicSettingSection {
             MagicSettingRow(title: "应用内购买", description: "订阅专业版，解锁所有功能", icon: "cart", content: {
-                Button("查看订阅") {
+                MagicButton.simple(title: "查看订阅") {
                     showBuySheet = true
                 }
-                .buttonStyle(.borderedProminent)
+                .magicIcon("app.gift")
+                .magicShape(.circle)
+                .magicStyle(.secondary)
+                .magicSize(.small)
             })
         }
         .sheet(isPresented: $showBuySheet) {
             BuySetting()
         }
     }
+}
+
+#Preview("Setting") {
+    RootView {
+        SettingView()
+            .background(.background)
+    }
+    .frame(height: 800)
 }
 
 #if os(macOS)

@@ -6,7 +6,7 @@ import SwiftUI
 
 struct BuySetting: View, SuperLog {
     nonisolated static let emoji = "🛒"
-    
+
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     @Environment(\.dismiss) private var dismiss
     @State var closeBtnHovered: Bool = false
@@ -31,20 +31,20 @@ struct BuySetting: View, SuperLog {
             // 添加关闭按钮
             HStack {
                 Spacer()
-                Button(action: {
+                MagicButton.simple(action: {
                     dismiss()
-                }) {
-                    Image(systemName: "xmark.circle.fill")
-                        .font(.title2)
-                        .foregroundColor(.secondary)
-                }
-                .buttonStyle(.plain)
+                })
+                .magicIcon(.iconClose)
+                .magicShape(.circle)
+                .magicStyle(.danger)
+                .magicShapeVisibility(.always)
+
                 #if os(macOS)
-                .onHover { hovering in
-                    closeBtnHovered = hovering
-                }
-                .scaleEffect(closeBtnHovered ? 1.1 : 1.0)
-                .animation(.easeInOut(duration: 0.2), value: closeBtnHovered)
+                    .onHover { hovering in
+                        closeBtnHovered = hovering
+                    }
+                    .scaleEffect(closeBtnHovered ? 1.1 : 1.0)
+                    .animation(.easeInOut(duration: 0.2), value: closeBtnHovered)
                 #endif
                 #if os(iOS)
                 .scaleEffect(closeBtnHovered ? 0.9 : 1.0)
@@ -58,7 +58,7 @@ struct BuySetting: View, SuperLog {
                 #endif
             }
             .padding(.vertical, 2)
-            
+
             HStack(alignment: .top, spacing: 20) {
                 ForEach(plans) { plan in
                     PlanView(plan: plan)
@@ -70,7 +70,7 @@ struct BuySetting: View, SuperLog {
             SubscriptionSetting()
                 .padding()
                 .background(MagicBackground.aurora.opacity(0.1))
-            
+
             RestoreView()
                 .padding()
                 .background(MagicBackground.aurora.opacity(0.1))
@@ -98,6 +98,21 @@ struct BuySetting: View, SuperLog {
         .font(.footnote)
         .background(MagicBackground.aurora.opacity(0.1))
     }
+}
+
+#Preview("BuyView") {
+    RootView {
+        BuySetting()
+    }
+    .frame(height: 800)
+}
+
+#Preview("Setting") {
+    RootView {
+        SettingView()
+            .background(.background)
+    }
+    .frame(height: 800)
 }
 
 #Preview("App") {
