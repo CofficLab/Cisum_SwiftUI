@@ -67,8 +67,8 @@ enum Config: SuperLog {
             CopyPlugin(),
             ResetPlugin(),
             DebugPlugin(),
+            StorePlugin(),
             VersionPlugin(),
-            StorePlugin()
         ]
     }
 
