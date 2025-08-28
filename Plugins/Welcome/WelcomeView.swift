@@ -36,7 +36,7 @@ struct WelcomeView: View, SuperLog {
                 .padding(.top, 8)
 
                 StorageView()
-                    .background(.ultraThinMaterial)
+                    .background(.background)
                     .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
                     .overlay {
                         RoundedRectangle(cornerRadius: 20, style: .continuous)

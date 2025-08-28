@@ -65,11 +65,10 @@ struct StorageView: View, SuperLog {
 
                 MagicButton.simple(
                     icon: .iconCheckmark,
-                    title: "应用更改",
+                    title: "确定",
                     style: .primary,
                     size: .auto,
-                    shape: .roundedRectangle,
-                    disabledReason: hasChanges ? nil : "无更改"
+                    shape: .roundedRectangle
                 ) {
                     c.updateStorageLocation(tempStorageLocation)
                     a.showSheet = false
@@ -78,8 +77,10 @@ struct StorageView: View, SuperLog {
                 .frame(maxWidth: .infinity)
                 .frame(height: 48)
                 .padding(.top, 8)
+                .padding(.horizontal, 0)
             }
-            .padding(.vertical, 8)
+            .padding(.vertical, 12)
+            .padding(.horizontal, 12)
             .onAppear {
                 tempStorageLocation = c.storageLocation ?? .local
                 hasChanges = false
