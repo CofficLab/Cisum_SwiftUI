@@ -13,9 +13,39 @@ actor SettingPlugin: SuperPlugin, SuperLog {
     let description = "设置"
     let iconName: String = .iconSettings
     let isGroup = false
+    nonisolated(unsafe) var enabled: Bool = false
 
     @MainActor
     func addSettingView() -> AnyView? {
-        AnyView(SettingPluginView())
+        guard enabled else { return nil }
+        return AnyView(SettingPluginView())
     }
 }
+
+#Preview("Setting") {
+    RootView {
+        SettingView()
+            .background(.background)
+    }
+    .frame(height: 800)
+}
+
+// MARK: - Preview
+
+#if os(macOS)
+#Preview("App - Large") {
+    AppPreview()
+        .frame(width: 600, height: 1000)
+}
+
+#Preview("App - Small") {
+    AppPreview()
+        .frame(width: 500, height: 800)
+}
+#endif
+
+#if os(iOS)
+#Preview("iPhone") {
+    AppPreview()
+}
+#endif
