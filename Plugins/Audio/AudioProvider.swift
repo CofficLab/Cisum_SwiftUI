@@ -10,7 +10,7 @@ import SwiftUI
 class AudioProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
     private var cancellables = Set<AnyCancellable>()
     private var debounceTimer: Timer?
-    var db: AudioRepo
+    var repo: AudioRepo
 
     nonisolated static let emoji = "🌿"
     private(set) var disk: URL
@@ -21,7 +21,7 @@ class AudioProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
 
     nonisolated init(disk: URL, db: AudioRepo) {
         self.disk = disk
-        self.db = db
+        self.repo = db
         
         Task { @MainActor in
             self.setupStateObservation()
@@ -30,7 +30,7 @@ class AudioProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
     
     private func setupStateObservation() {
         // 观察 db 的状态变化
-        db.$files
+        repo.$files
             .receive(on: RunLoop.main)
             .sink { [weak self] files in
                 guard let self = self else { return }
@@ -53,17 +53,17 @@ class AudioProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
 extension AudioProvider {
     /// 获取当前同步状态
     var syncStatus: SyncStatus {
-        db.syncStatus
+        repo.syncStatus
     }
     
     /// 获取下载进度
     var downloadProgress: [URL: Double] {
-        db.downloadProgress
+        repo.downloadProgress
     }
     
     /// 检查是否正在同步
     var isSyncing: Bool {
-        db.isSyncing
+        repo.isSyncing
     }
 }
 

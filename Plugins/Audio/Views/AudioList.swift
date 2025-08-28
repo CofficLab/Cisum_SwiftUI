@@ -27,11 +27,12 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     @EnvironmentObject var audioProvider: AudioProvider
     @EnvironmentObject var m: MagicMessageProvider
 
-    @State var selection: URL? = nil
-    @State var isSorting = false
-    @State var sortMode: SortMode = .none
-    @State var urls: [URL] = []
+    @State private var selection: URL? = nil
+    @State private var isSorting = false
+    @State private var sortMode: SortMode = .none
+    @State private var urls: [URL] = []
     @State private var isSyncing: Bool = false
+    @State private var isLoading: Bool = true
 
     var total: Int { urls.count }
 
@@ -56,8 +57,10 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
                     Spacer()
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else if isLoading {
+                AudioDBTips(variant: .loading)
             } else if total == 0 {
-                AudioDBTips()
+                AudioDBTips(variant: .empty)
             } else {
                 List(selection: $selection) {
                     Section(header: HStack {
@@ -106,7 +109,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
 extension AudioList {
     private func updateURLs() {
         Task.detached(priority: .background) {
-            let urls = await audioProvider.db.allAudios(reason: self.className)
+            let urls = await audioProvider.repo.getAll(reason: self.className)
 
             await self.setUrls(urls)
         }
@@ -119,6 +122,7 @@ extension AudioList {
     @MainActor
     private func setUrls(_ newValue: [URL]) {
         urls = newValue
+        isLoading = false
     }
 
     private func setSelection(_ newValue: URL?) {
@@ -138,6 +142,7 @@ extension AudioList {
 
 extension AudioList {
     func handleOnAppear() {
+        isLoading = true
         updateURLs()
 
         if let asset = playManController.getAsset() {

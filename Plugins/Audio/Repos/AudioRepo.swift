@@ -43,7 +43,7 @@ class AudioRepo: ObservableObject, SuperLog {
         self.monitor = self.makeMonitor()
     }
 
-    func allAudios(reason: String) async -> [URL] {
+    func getAll(reason: String) async -> [URL] {
         await self.db.allAudioURLs(reason: reason)
     }
 
