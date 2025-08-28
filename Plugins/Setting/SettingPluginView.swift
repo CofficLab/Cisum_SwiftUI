@@ -3,7 +3,7 @@ import SwiftUI
 
 import OSLog
 
-struct SettingPluginView: View, SuperSetting, SuperLog {
+struct SettingPluginView: View, SuperLog {
     nonisolated static let emoji: String = "🍴"
 
     @EnvironmentObject var cloudManager: CloudProvider

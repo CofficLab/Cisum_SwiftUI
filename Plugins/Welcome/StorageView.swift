@@ -2,7 +2,7 @@ import MagicCore
 import OSLog
 import SwiftUI
 
-struct StorageView: View, SuperSetting, SuperLog {
+struct StorageView: View, SuperLog {
     nonisolated static let emoji = "🍴"
 
     @EnvironmentObject var cloudManager: CloudProvider
@@ -19,11 +19,11 @@ struct StorageView: View, SuperSetting, SuperLog {
     }
 
     var body: some View {
-        makeSettingView(title: "📺 媒体仓库位置") {
-            VStack(alignment: .leading, spacing: 16) {
+        MagicSettingSection(title: "媒体仓库位置") {
+            VStack(alignment: .leading, spacing: 20) {
                 RadioButton(
                     text: "☁️ iCloud 云盘",
-                    description: "将媒体文件存储在 iCloud 云盘中 \n 可在其他设备上访问 \n 确保 iCloud 账户已登录且存储空间足够",
+                    description: "将媒体文件存储在 iCloud 云盘中\n可在其他设备上访问\n确保 iCloud 账户已登录且存储空间足够",
                     url: c.getStorageRoot(for: .icloud),
                     isSelected: Binding(
                         get: { tempStorageLocation == .icloud },
@@ -63,15 +63,21 @@ struct StorageView: View, SuperSetting, SuperLog {
                     }
                 )
 
-                Button(action: {
+                MagicButton.simple(
+                    icon: .iconCheckmark,
+                    title: "应用更改",
+                    style: .primary,
+                    size: .auto,
+                    shape: .roundedRectangle,
+                    disabledReason: hasChanges ? nil : "无更改"
+                ) {
                     c.updateStorageLocation(tempStorageLocation)
                     a.showSheet = false
-                }) {
-                    Text("确定")
-                        .frame(maxWidth: .infinity)
                 }
-                .buttonStyle(.borderedProminent)
-                .padding(.top, 16)
+                .magicShapeVisibility(.always)
+                .frame(maxWidth: .infinity)
+                .frame(height: 48)
+                .padding(.top, 8)
             }
             .padding(.vertical, 8)
             .onAppear {
@@ -83,14 +89,8 @@ struct StorageView: View, SuperSetting, SuperLog {
                 hasChanges = tempStorageLocation != (c.storageLocation ?? .local)
                 storageRoot = c.getStorageRoot()
             }
-        } trailing: {
-            HStack {
-                if let root = storageRoot {
-                    FileSizeView(url: root)
-                        .id(root.path)
-                    root.makeOpenButton()
-                }
-            }
+            .animation(.easeInOut(duration: 0.2), value: hasChanges)
+            .animation(.easeInOut(duration: 0.2), value: tempStorageLocation)
         }
     }
 }
