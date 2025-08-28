@@ -48,7 +48,7 @@ enum Config: SuperLog {
     @MainActor
     @ViewBuilder
     static var rootBackground: some View {
-        MagicBackground.coral.opacity(0.1)
+        MagicBackground.forest.opacity(0.8)
     }
 
     static func getDBRootDir() throws -> URL {
