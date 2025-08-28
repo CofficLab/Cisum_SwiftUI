@@ -23,7 +23,6 @@ import SwiftUI
 struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     nonisolated static let emoji = "📬"
 
-    @EnvironmentObject var app: AppProvider
     @EnvironmentObject var playManController: PlayManController
     @EnvironmentObject var audioProvider: AudioProvider
     @EnvironmentObject var m: MagicMessageProvider
