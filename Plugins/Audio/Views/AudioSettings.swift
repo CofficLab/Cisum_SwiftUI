@@ -16,11 +16,6 @@ struct AudioSettings: View, SuperLog {
                         Text(diskSize)
                             .font(.footnote)
                     }
-                    if Config.isDesktop {
-                        audioManager.disk
-                            .makeOpenButton()
-                            .magicSize(.small)
-                    }
                 }
 
             })
@@ -32,6 +27,17 @@ struct AudioSettings: View, SuperLog {
                     description = "是本地目录，不会同步"
                 }
             }
+
+            #if os(macOS)
+                MagicSettingRow(title: "打开仓库", description: "在Finder中查看", icon: .iconShowInFinder, content: {
+                    HStack {
+                        audioManager.disk
+                            .makeOpenButton()
+                            .magicSize(.small)
+                    }
+
+                })
+            #endif
 
             MagicSettingRow(title: "文件数量", description: "当前仓库内的文件总数", icon: .iconDocument, content: {
                 HStack {
