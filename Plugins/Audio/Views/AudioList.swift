@@ -25,7 +25,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
 
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var playManController: PlayManController
-    @EnvironmentObject var audioDB: AudioService
+    @EnvironmentObject var audioProvider: AudioProvider
     @EnvironmentObject var m: MagicMessageProvider
 
     @State var selection: URL? = nil
@@ -107,7 +107,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     
     private func updateURLs() {
         Task.detached(priority: .background) {
-            let urls = await audioDB.allAudios(reason: self.className)
+            let urls = await audioProvider.db.allAudios(reason: self.className)
 
             await self.setUrls(urls)
         }

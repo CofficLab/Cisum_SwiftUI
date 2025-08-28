@@ -45,7 +45,6 @@ actor AudioPlugin: SuperPlugin, SuperLog {
 
         return AnyView(AudioDBView()
             .modelContainer(container)
-            .environmentObject(audioDB)
             .environmentObject(audioProvider)
         )
     }
@@ -137,7 +136,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
         self.disk = try disk.createIfNotExist()
         self.container = try AudioConfigRepo.getContainer()
         self.audioDB = try await AudioService(disk: disk, reason: self.className + ".onInit", verbose: false)
-        self.audioProvider = AudioProvider(disk: disk)
+        self.audioProvider = AudioProvider(disk: disk, db: self.audioDB!)
         self.initialized = true
 
         var assetTarget: URL?

@@ -10,6 +10,7 @@ import SwiftUI
 class AudioProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
     private var cancellables = Set<AnyCancellable>()
     private var debounceTimer: Timer?
+    var db: AudioService
 
     nonisolated static let emoji = "🌿"
     private(set) var disk: URL
@@ -17,8 +18,9 @@ class AudioProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
 
     @Published private(set) var files: [URL] = []
 
-    nonisolated init(disk: URL) {
+    nonisolated init(disk: URL, db: AudioService) {
         self.disk = disk
+        self.db = db
         
         Task { @MainActor in
             self.setupNotifications()

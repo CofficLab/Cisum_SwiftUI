@@ -11,17 +11,17 @@ struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var messageManager: StateProvider
     @EnvironmentObject var s: StoreProvider
-    @EnvironmentObject var db: AudioService
+    @EnvironmentObject var audioProvider: AudioProvider
 
     @State var isDropping: Bool = false
 
     nonisolated static let emoji = "🐘"
 
     private func fetchStorageRoot() async -> URL {
-        let database = db
+        let database = audioProvider.disk
         return await withCheckedContinuation { continuation in
             Task {
-                let root = await database.getStorageRoot()
+                let root = database
                 continuation.resume(returning: root)
             }
         }

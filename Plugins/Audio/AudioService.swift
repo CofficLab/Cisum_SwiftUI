@@ -15,7 +15,7 @@ extension Notification.Name {
     static let audioDownloadProgress = Notification.Name("audioDownloadProgress")
 }
 
-actor AudioService: ObservableObject, SuperLog {
+actor AudioService: SuperLog {
     nonisolated static let emoji = "🎵"
     private var db: AudioRecordDB
     private var disk: URL
