@@ -16,7 +16,7 @@ struct StorageView: View, SuperLog {
     }
 
     var body: some View {
-        MagicSettingSection(title: "媒体仓库位置") {
+        MagicSettingSection(title: "媒体仓库位置", titleAlignment: .center) {
             VStack(alignment: .leading, spacing: 20) {
                 RadioButton(
                     text: "☁️ iCloud 云盘",
