@@ -12,7 +12,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
     let description = "作为歌曲仓库，只关注文件，文件夹将被忽略"
     let iconName = "music.note"
     let isGroup = true
-    let verbose = true
+    let verbose = false
 
     @MainActor var dirName: String = AudioConfigRepo.dbDirName
     @MainActor var disk: URL?

@@ -92,7 +92,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
             }
         }
         .onAppear(perform: handleOnAppear)
-        .onChange(of: selection, handleSelectionChange)
+        .onChange(of: selection, onSelectionChange)
         .onReceive(nc.publisher(for: .DBSorting), perform: onSorting)
         .onReceive(nc.publisher(for: .DBSortDone), perform: onSortDone)
         .onReceive(nc.publisher(for: .dbDeleted), perform: onDeleted)
@@ -100,7 +100,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
         .onReceive(nc.publisher(for: .dbUpdated), perform: onUpdated)
         .onReceive(nc.publisher(for: .dbSyncing), perform: onSyncing)
         .onReceive(nc.publisher(for: .dbSynced), perform: onSynced)
-        .onPlayManAssetChanged(handlePlayAssetChange)
+        .onPlayManAssetChanged(onPlayAssetChange)
     }
 }
 
@@ -109,6 +109,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
 extension AudioList {
     private func updateURLs() {
         Task.detached(priority: .background) {
+            os_log("\(t)🍋 getAllURLs")
             let urls = await audioProvider.repo.getAll(reason: self.className)
 
             await self.setUrls(urls)
@@ -123,6 +124,11 @@ extension AudioList {
     private func setUrls(_ newValue: [URL]) {
         urls = newValue
         isLoading = false
+
+        // 如果当前选中的URL不在新的URL列表中，重置相关状态
+        if let currentSelection = selection, !newValue.contains(currentSelection) {
+            selection = nil
+        }
     }
 
     private func setSelection(_ newValue: URL?) {
@@ -150,20 +156,16 @@ extension AudioList {
         }
     }
 
-    func handleSelectionChange() {
-        guard let url = selection, urls.contains(url) else {
-            return
-        }
-
-        if url != playManController.getAsset() {
+    func onSelectionChange() {
+        if let url = selection {
             Task {
                 await self.playManController.play(url: url)
             }
         }
     }
 
-    func handlePlayAssetChange(url: URL?) {
-        if let asset = url {
+    func onPlayAssetChange(url: URL?) {
+        if let asset = url, asset != selection {
             self.setSelection(asset)
         }
     }

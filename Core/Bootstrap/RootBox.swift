@@ -40,7 +40,7 @@ final class RootBox: SuperLog {
         self.store = StoreProvider()
         self.cloud = CloudProvider()
 
-        self.man = PlayMan(playlistEnabled: false, verbose: true)
+        self.man = PlayMan(playlistEnabled: false, verbose: false)
         self.playManWrapper = PlayManWrapper(playMan: self.man)
         self.playManController = PlayManController(playMan: self.man)
     }

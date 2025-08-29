@@ -23,6 +23,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     var s: StoreProvider
     var cloudProvider: CloudProvider
     var playManController: PlayManController
+    private var verbose = false
 
     init(@ViewBuilder content: () -> Content) {
         os_log("\(Self.onInit)")
@@ -163,7 +164,9 @@ extension RootView {
                 self.man.subscribe(
                     name: self.className,
                     onStateChanged: { state in
+                        if verbose {
                         os_log("\(self.t)🐯 播放状态变为 -> \(state.stateText)")
+                        }
                         if state == .paused {
                             Task {
                                 do {
