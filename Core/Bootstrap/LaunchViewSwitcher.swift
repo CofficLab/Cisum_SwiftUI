@@ -17,8 +17,7 @@ struct LaunchViewSwitcher: View {
                 ZStack {
                     launchView
                     
-                    // 为每个插件页面添加滑动提示（除了最后一个插件页面）
-                    if index < pluginLaunchViews.count - 1 {
+                    // 为每个插件页面添加滑动提示
                         VStack {
                             Spacer()
                             
@@ -33,7 +32,6 @@ struct LaunchViewSwitcher: View {
                             }
                             .padding(.bottom, 16)
                         }
-                    }
                 }
                 .tag(index)
             }

@@ -9,10 +9,7 @@ struct StorageView: View, SuperLog {
     @EnvironmentObject var c: ConfigProvider
     @EnvironmentObject var a: AppProvider
 
-    @State private var showMigrationProgress = false
     @State private var tempStorageLocation: StorageLocation
-    @State private var hasChanges = false
-    @State private var storageRoot: URL?
 
     init() {
         _tempStorageLocation = State(initialValue: StorageLocation.icloud)
@@ -27,7 +24,10 @@ struct StorageView: View, SuperLog {
                     url: c.getStorageRoot(for: .icloud),
                     isSelected: Binding(
                         get: { tempStorageLocation == .icloud },
-                        set: { _ in tempStorageLocation = .icloud }
+                        set: { _ in 
+                            tempStorageLocation = .icloud
+                            c.updateStorageLocation(.icloud)
+                        }
                     ),
                     trailing: {
                         AnyView(
@@ -50,7 +50,10 @@ struct StorageView: View, SuperLog {
                     url: c.getStorageRoot(for: .local),
                     isSelected: Binding(
                         get: { tempStorageLocation == .local },
-                        set: { _ in tempStorageLocation = .local }
+                        set: { _ in 
+                            tempStorageLocation = .local
+                            c.updateStorageLocation(.local)
+                        }
                     ),
                     trailing: {
                         AnyView(
@@ -63,34 +66,13 @@ struct StorageView: View, SuperLog {
                     }
                 )
 
-                MagicButton.simple(
-                    icon: .iconCheckmark,
-                    title: "确定",
-                    style: .primary,
-                    size: .auto,
-                    shape: .roundedRectangle
-                ) {
-                    c.updateStorageLocation(tempStorageLocation)
-                }
-                .magicShapeVisibility(.always)
-                .frame(maxWidth: .infinity)
-                .frame(height: 48)
-                .padding(.top, 8)
-                .padding(.horizontal, 0)
+
             }
             .padding(.vertical, 12)
             .padding(.horizontal, 12)
             .onAppear {
                 tempStorageLocation = c.storageLocation ?? .local
-                hasChanges = false
-                storageRoot = c.getStorageRoot()
             }
-            .onChange(of: tempStorageLocation) {
-                hasChanges = tempStorageLocation != (c.storageLocation ?? .local)
-                storageRoot = c.getStorageRoot()
-            }
-            .animation(.easeInOut(duration: 0.2), value: hasChanges)
-            .animation(.easeInOut(duration: 0.2), value: tempStorageLocation)
         }
     }
 }
