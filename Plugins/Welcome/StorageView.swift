@@ -71,7 +71,6 @@ struct StorageView: View, SuperLog {
                     shape: .roundedRectangle
                 ) {
                     c.updateStorageLocation(tempStorageLocation)
-                    a.showSheet = false
                 }
                 .magicShapeVisibility(.always)
                 .frame(maxWidth: .infinity)

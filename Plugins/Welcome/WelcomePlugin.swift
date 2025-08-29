@@ -13,8 +13,8 @@ actor WelcomePlugin: SuperPlugin, SuperLog {
     nonisolated(unsafe) var enabled = true
     
     @MainActor
-    func addSheetView(storage: StorageLocation?) -> AnyView? {
-        guard enabled, storage == nil else { return nil }
+    func addLaunchView() -> AnyView? {
+        guard enabled else { return nil }
         return AnyView(WelcomeView())
     }
 }
@@ -26,6 +26,7 @@ actor WelcomePlugin: SuperPlugin, SuperLog {
     .frame(height: 800)
 }
 
+#if os(macOS)
 #Preview("App - Large") {
     AppPreview()
         .frame(width: 600, height: 1000)
@@ -35,6 +36,7 @@ actor WelcomePlugin: SuperPlugin, SuperLog {
     AppPreview()
         .frame(width: 500, height: 800)
 }
+#endif
 
 #if os(iOS)
 #Preview("iPhone") {

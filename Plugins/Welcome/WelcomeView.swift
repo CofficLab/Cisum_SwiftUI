@@ -58,6 +58,7 @@ struct WelcomeView: View, SuperLog {
     .frame(height: 800)
 }
 
+#if os(macOS)
 #Preview("App - Large") {
     AppPreview()
         .frame(width: 600, height: 1000)
@@ -67,9 +68,10 @@ struct WelcomeView: View, SuperLog {
     AppPreview()
         .frame(width: 500, height: 800)
 }
+#endif
 
 #if os(iOS)
-    #Preview("iPhone") {
-        AppPreview()
-    }
+#Preview("iPhone") {
+    AppPreview()
+}
 #endif

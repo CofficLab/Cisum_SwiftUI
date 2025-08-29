@@ -184,6 +184,7 @@ enum PluginProviderError: Error, LocalizedError {
     }
 }
 
+#if os(macOS)
 #Preview("Small Screen") {
     RootView {
         ContentView()
@@ -199,4 +200,10 @@ enum PluginProviderError: Error, LocalizedError {
     .frame(width: 800)
     .frame(height: 1200)
 }
+#endif
 
+#if os(iOS)
+#Preview("iPhone") {
+    AppPreview()
+}
+#endif

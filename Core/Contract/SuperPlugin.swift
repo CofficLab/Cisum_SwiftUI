@@ -10,6 +10,7 @@ protocol SuperPlugin: Actor {
     nonisolated var isGroup: Bool { get }
 
     @MainActor func addRootView() -> AnyView?
+    @MainActor func addLaunchView() -> AnyView?
     @MainActor func addSheetView(storage: StorageLocation?) -> AnyView?
     @MainActor func addDBView(reason: String) -> AnyView?
     @MainActor func addPosterView() -> AnyView?
@@ -37,6 +38,8 @@ extension SuperPlugin {
     nonisolated var id: String { self.label }
 
     nonisolated var isGroup: Bool { false }
+
+    nonisolated func addLaunchView() -> AnyView? { nil }
 
     nonisolated func addSheetView(storage: StorageLocation?) -> AnyView? { nil }
 

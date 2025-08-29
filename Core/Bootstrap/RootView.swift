@@ -11,6 +11,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     @State var error: Error? = nil
     @State var loading = true
     @State var iCloudAvailable = true
+    @State var currentLaunchPageIndex: Int = 0
 
     @StateObject var a: AppProvider
     @StateObject var m: MagicMessageProvider
@@ -46,7 +47,11 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
         os_log("\(self.t)开始渲染")
         return Group {
             if self.loading {
-                LaunchView()
+                LaunchViewSwitcher(
+                    currentLaunchPageIndex: $currentLaunchPageIndex,
+                    plugins: p.plugins,
+                    onAppear: onAppear
+                )
             } else {
                 if let e = self.error {
                     ErrorViewFatal(error: e)
@@ -107,7 +112,6 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
         .frame(maxHeight: .infinity)
         .background(Config.rootBackground)
         .onReceive(nc.publisher(for: NSUbiquitousKeyValueStore.didChangeExternallyNotification), perform: onCloudAccountStateChanged)
-        .onAppear(perform: onAppear)
         .onChange(of: c.storageLocation, onStorageLocationChange)
     }
 
