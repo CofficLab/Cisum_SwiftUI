@@ -20,6 +20,10 @@ struct LaunchView: View {
     }
 }
 
+#Preview("LaunchView") {
+    LaunchView()
+}
+
 #Preview("App - Large") {
     AppPreview()
         .frame(width: 600, height: 1000)

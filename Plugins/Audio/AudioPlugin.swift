@@ -105,11 +105,15 @@ actor AudioPlugin: SuperPlugin, SuperLog {
         }
 
         info("init with storage  \(storage?.emojiTitle ?? "nil")")
+        
+        guard let storage = storage else {
+            return
+        }
 
         switch storage {
         case .local:
             disk = Config.localDocumentsDir?.appendingFolder(self.dirName)
-        case .icloud, .none:
+        case .icloud:
             disk = Config.cloudDocumentsDir?.appendingFolder(self.dirName)
         case .custom:
             disk = Config.localDocumentsDir?.appendingFolder(self.dirName)

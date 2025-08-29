@@ -10,7 +10,7 @@ actor WelcomePlugin: SuperPlugin, SuperLog {
     let hasPoster = false
     let description = "欢迎界面"
     let iconName = "music.note"
-    nonisolated(unsafe) var enabled = false
+    nonisolated(unsafe) var enabled = true
     
     @MainActor
     func addSheetView(storage: StorageLocation?) -> AnyView? {

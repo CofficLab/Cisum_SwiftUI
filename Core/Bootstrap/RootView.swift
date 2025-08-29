@@ -62,7 +62,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
 
                                 ToolbarItemGroup(placement: .cancellationAction) {
                                     Spacer()
-                                    
+
                                     if man.asset != nil {
                                         ForEach(p.getToolBarButtons(), id: \.id) { item in
                                             item.view
@@ -160,12 +160,11 @@ extension RootView {
                     UIApplication.shared.beginReceivingRemoteControlEvents()
                 #endif
 
-                os_log("\(self.t)👀 订阅 PlayMan 状态")
                 self.man.subscribe(
                     name: self.className,
                     onStateChanged: { state in
                         if verbose {
-                        os_log("\(self.t)🐯 播放状态变为 -> \(state.stateText)")
+                            os_log("\(self.t)🐯 播放状态变为 -> \(state.stateText)")
                         }
                         if state == .paused {
                             Task {
@@ -176,12 +175,12 @@ extension RootView {
                                 }
                             }
                         }
-                        
+
                         if state.isUnsupportedFormat {
                             m.info("不支持的格式，自动播放下一首")
                             Task {
                                 // 不支持的格式，1秒后自动播放下一首
-                                try await Task.sleep(nanoseconds: 1_000_000_000) // 1秒延迟
+                                try await Task.sleep(nanoseconds: 1000000000) // 1秒延迟
                                 do {
                                     try await self.p.onPlayNext(current: man.currentAsset, mode: man.playMode, man: playManWrapper)
                                 } catch {
@@ -248,6 +247,7 @@ extension RootView {
     }
 }
 
+#if os(macOS)
 #Preview("App - Large") {
     AppPreview()
         .frame(width: 600, height: 1000)
@@ -257,6 +257,7 @@ extension RootView {
     AppPreview()
         .frame(width: 500, height: 800)
 }
+#endif
 
 #if os(iOS)
     #Preview("iPhone") {
