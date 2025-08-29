@@ -3,7 +3,7 @@
     {
       "color" : {
         "platform" : "ios",
-        "reference" : "systemMintColor"
+        "reference" : "systemOrangeColor"
       },
       "idiom" : "iphone"
     },

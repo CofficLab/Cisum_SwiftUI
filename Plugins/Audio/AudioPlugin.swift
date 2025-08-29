@@ -12,7 +12,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
     let description = "作为歌曲仓库，只关注文件，文件夹将被忽略"
     let iconName = "music.note"
     let isGroup = true
-    let verbose = false
+    let verbose = true
 
     @MainActor var dirName: String = AudioConfigRepo.dbDirName
     @MainActor var disk: URL?
@@ -103,8 +103,6 @@ actor AudioPlugin: SuperPlugin, SuperLog {
         if verbose {
             os_log("\(self.a)with storage \(storage?.emojiTitle ?? "nil")")
         }
-
-        info("init with storage  \(storage?.emojiTitle ?? "nil")")
         
         guard let storage = storage else {
             return

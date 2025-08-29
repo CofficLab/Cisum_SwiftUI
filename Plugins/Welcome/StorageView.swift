@@ -24,7 +24,7 @@ struct StorageView: View, SuperLog {
                     url: c.getStorageRoot(for: .icloud),
                     isSelected: Binding(
                         get: { tempStorageLocation == .icloud },
-                        set: { _ in 
+                        set: { _ in
                             tempStorageLocation = .icloud
                             c.updateStorageLocation(.icloud)
                         }
@@ -50,7 +50,7 @@ struct StorageView: View, SuperLog {
                     url: c.getStorageRoot(for: .local),
                     isSelected: Binding(
                         get: { tempStorageLocation == .local },
-                        set: { _ in 
+                        set: { _ in
                             tempStorageLocation = .local
                             c.updateStorageLocation(.local)
                         }
@@ -65,14 +65,34 @@ struct StorageView: View, SuperLog {
                         )
                     }
                 )
-
-
             }
             .padding(.vertical, 12)
             .padding(.horizontal, 12)
             .onAppear {
-                tempStorageLocation = c.storageLocation ?? .local
+                // 自动设置存储位置
+                autoSetStorageLocation()
             }
+        }
+    }
+
+    // MARK: - 自动设置存储位置
+
+    private func autoSetStorageLocation() {
+        // 如果已经有存储位置设置，则使用现有设置
+        if let currentLocation = c.storageLocation {
+            tempStorageLocation = currentLocation
+            return
+        }
+
+        // 如果没有设置，则自动选择
+        if cloudManager.isSignedIn == true {
+            // iCloud 可用，选择 iCloud
+            tempStorageLocation = .icloud
+            c.updateStorageLocation(.icloud)
+        } else {
+            // iCloud 不可用，选择本地存储
+            tempStorageLocation = .local
+            c.updateStorageLocation(.local)
         }
     }
 }
@@ -95,7 +115,7 @@ struct StorageView: View, SuperLog {
 }
 
 #if os(iOS)
-#Preview("iPhone") {
-    AppPreview()
-}
+    #Preview("iPhone") {
+        AppPreview()
+    }
 #endif
