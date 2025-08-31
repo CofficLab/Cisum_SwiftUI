@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "20231016222829-macOS-512x512.png",
+      "filename" : "20250831212512-1x.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "20231016222829-macOS-512x512 2.png",
+      "filename" : "20250831212512-2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "20231016222829-macOS-512x512 1.png",
+      "filename" : "20250831212512-3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
