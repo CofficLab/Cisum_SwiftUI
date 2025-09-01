@@ -5,7 +5,6 @@ struct ResetSetting: View, SuperLog {
     nonisolated static let emoji = "🫙"
 
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var configProvider: ConfigProvider
     @State private var isResetting: Bool = false
     @State private var showConfirmSheet: Bool = false
 
@@ -31,7 +30,7 @@ struct ResetSetting: View, SuperLog {
                     onConfirm: {
                         isResetting = true
                         Task {
-                            configProvider.resetStorageLocation()
+                            Config.resetStorageLocation()
                             await MainActor.run {
                                 isResetting = false
                                 showConfirmSheet = false

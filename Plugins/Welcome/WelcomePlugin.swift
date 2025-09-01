@@ -15,6 +15,10 @@ actor WelcomePlugin: SuperPlugin, SuperLog {
     @MainActor
     func addLaunchView() -> AnyView? {
         guard enabled else { return nil }
+        guard Config.getStorageLocation() == nil else {
+            return nil
+        }
+        
         return AnyView(WelcomeView())
     }
 }

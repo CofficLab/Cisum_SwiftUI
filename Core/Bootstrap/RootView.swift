@@ -20,7 +20,6 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
 
     var man: PlayMan
     var playManWrapper: PlayManWrapper
-    var c: ConfigProvider
     var s: StoreProvider
     var cloudProvider: CloudProvider
     var playManController: PlayManController
@@ -35,7 +34,6 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
         self._m = StateObject(wrappedValue: box.messageProvider)
         self._stateProvider = StateObject(wrappedValue: box.stateMessageProvider)
         self._p = StateObject(wrappedValue: box.plugin)
-        self.c = box.config
         self.man = box.man
         self.playManWrapper = box.playManWrapper
         self.s = box.store
@@ -91,7 +89,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                     .environmentObject(self.stateProvider)
                     .sheet(isPresented: self.$a.showSheet, content: {
                         VStack {
-                            ForEach(Array(p.getSheetViews(storage: c.storageLocation).enumerated()), id: \.offset) { _, view in
+                            ForEach(Array(p.getSheetViews(storage: Config.getStorageLocation()).enumerated()), id: \.offset) { _, view in
                                 view
                             }
                         }
@@ -105,14 +103,13 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                 }
             }
         }
-        .environmentObject(c)
         .environmentObject(cloudProvider)
         .withMagicToast()
         .frame(maxWidth: .infinity)
         .frame(maxHeight: .infinity)
         .background(Config.rootBackground)
         .onReceive(nc.publisher(for: NSUbiquitousKeyValueStore.didChangeExternallyNotification), perform: onCloudAccountStateChanged)
-        .onChange(of: c.storageLocation, onStorageLocationChange)
+        .onChange(of: Config.getStorageLocation(), onStorageLocationChange)
     }
 
     private func reloadView() {
@@ -131,14 +128,14 @@ extension RootView {
     }
 
     func onStorageLocationChange() {
-        if c.storageLocation == nil {
+        if Config.getStorageLocation() == nil {
             a.showSheet = true
             return
         }
 
         Task {
             do {
-                try await p.handleStorageLocationChange(storage: c.storageLocation)
+                try await p.handleStorageLocationChange(storage: Config.getStorageLocation())
             } catch {
                 m.error(error)
             }
@@ -156,9 +153,9 @@ extension RootView {
         Task {
             do {
                 try self.p.restoreCurrent()
-                try await p.handleOnAppear(playMan: playManWrapper, current: p.current, storage: c.getStorageLocation())
+                try await p.handleOnAppear(playMan: playManWrapper, current: p.current, storage: Config.getStorageLocation())
 
-                a.showSheet = p.getSheetViews(storage: c.storageLocation).isNotEmpty
+                a.showSheet = p.getSheetViews(storage: Config.getStorageLocation()).isNotEmpty
 
                 #if os(iOS)
                     UIApplication.shared.beginReceivingRemoteControlEvents()

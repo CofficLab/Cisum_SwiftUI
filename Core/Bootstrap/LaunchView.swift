@@ -10,8 +10,7 @@ struct LaunchView: View {
             MagicLoading()
                 .magicTitle(MagicApp.getAppName())
                 .magicCustomView {
-                    Image.makeCoffeeReelIcon()
-                        .clipShape(RoundedRectangle(cornerSize: CGSize(width: 32, height: 32)))
+                    Image.makeCoffeeReelIcon(useDefaultBackground: false)
                         .frame(width: min(geo.size.width * 0.8, geo.size.height * 0.8))
                         .frame(height: min(geo.size.width * 0.8, geo.size.height * 0.8))
                         .padding()

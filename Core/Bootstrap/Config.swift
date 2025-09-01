@@ -4,16 +4,17 @@ import OSLog
 import SwiftData
 import SwiftUI
 import Foundation
-
+import AVKit
+import Combine
+import MediaPlayer
+import LocalAuthentication
+import Foundation
+import OSLog
 #if os(macOS)
 import AppKit
 #elseif os(iOS)
 import UIKit
 #endif
-
-import LocalAuthentication
-import Foundation
-import OSLog
 
 @MainActor
 enum Config: SuperLog {
@@ -48,7 +49,7 @@ enum Config: SuperLog {
     @MainActor
     @ViewBuilder
     static var rootBackground: some View {
-        MagicBackground.forest.opacity(0.95)
+        MagicBackground.sunset.opacity(0.9)
     }
 
     static func getDBRootDir() throws -> URL {
@@ -91,6 +92,47 @@ enum Config: SuperLog {
     static func background(_ color: Color = .red) -> Color {
         Config.debug && !noBackground ? color.opacity(0.3) : Color.clear
     }
+    
+    // MARK: - Storage Configuration
+    
+    static let keyOfStorageLocation = "StorageLocation"
+    
+    /// 获取当前存储位置设置
+    static func getStorageLocation() -> StorageLocation? {
+        guard let savedLocation = UserDefaults.standard.string(forKey: keyOfStorageLocation),
+              let location = StorageLocation(rawValue: savedLocation) else {
+            return nil
+        }
+        return location
+    }
+    
+    /// 更新存储位置设置
+    static func updateStorageLocation(_ location: StorageLocation?) {
+        UserDefaults.standard.set(location?.rawValue, forKey: keyOfStorageLocation)
+    }
+    
+    /// 获取存储根目录
+    static func getStorageRoot() -> URL? {
+        guard let location = getStorageLocation() else { return nil }
+        return getStorageRoot(for: location)
+    }
+    
+    /// 根据指定位置获取存储根目录
+    static func getStorageRoot(for location: StorageLocation) -> URL? {
+        switch location {
+        case .icloud:
+            return cloudDocumentsDir
+        case .local:
+            return localDocumentsDir
+        case .custom:
+            return nil
+        }
+    }
+    
+    /// 重置存储位置设置
+    static func resetStorageLocation() {
+        UserDefaults.standard.removeObject(forKey: keyOfStorageLocation)
+    }
 
     /// 上半部分播放控制的最小高度
     static let controlViewMinHeight: CGFloat = Self.minHeight
@@ -108,7 +150,6 @@ enum Config: SuperLog {
         static let canResize = false
     #endif
 }
-
 
 extension Config {
     static func getWindowHeight() -> CGFloat {

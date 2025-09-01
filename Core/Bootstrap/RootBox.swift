@@ -17,7 +17,6 @@ final class RootBox: SuperLog {
     let stateMessageProvider: StateProvider
     let messageProvider: MagicMessageProvider
     let plugin: PluginProvider
-    let config: ConfigProvider
     let man: PlayMan
     let store: StoreProvider
     let playManWrapper: PlayManWrapper
@@ -36,7 +35,6 @@ final class RootBox: SuperLog {
         self.stateMessageProvider = StateProvider()
         self.messageProvider = MagicMessageProvider.shared
         self.plugin = PluginProvider(plugins: Config.getPlugins(), repo: pluginRepo)
-        self.config = ConfigProvider()
         self.store = StoreProvider()
         self.cloud = CloudProvider()
 

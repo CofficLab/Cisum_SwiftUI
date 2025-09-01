@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct ErrorViewFatal: View {
-    @EnvironmentObject var c: ConfigProvider
     @EnvironmentObject var cloud: CloudProvider
 
     var error: Error
@@ -93,7 +92,7 @@ struct ErrorViewFatal: View {
 
             Section(content: {
                 GroupBox {
-                    makeKeyValueItem(key: "仓库位置", value: c.storageLocation?.title ?? "未设置")
+                    makeKeyValueItem(key: "仓库位置", value: Config.getStorageLocation()?.title ?? "未设置")
                 }
             }, header: { makeTitle("设置") })
 
@@ -106,7 +105,7 @@ struct ErrorViewFatal: View {
 
             GroupBox {
                 Button("恢复默认设置") {
-                    c.resetStorageLocation()
+                    Config.resetStorageLocation()
                     showAlert = true
                 }
                 .alert(isPresented: $showAlert) {

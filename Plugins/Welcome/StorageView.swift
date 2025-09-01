@@ -6,10 +6,11 @@ struct StorageView: View, SuperLog {
     nonisolated static let emoji = "🍴"
 
     @EnvironmentObject var cloudManager: CloudProvider
-    @EnvironmentObject var c: ConfigProvider
     @EnvironmentObject var a: AppProvider
 
     @State private var tempStorageLocation: StorageLocation
+    
+    private var c = Config.self
 
     init() {
         _tempStorageLocation = State(initialValue: StorageLocation.icloud)
@@ -23,7 +24,7 @@ struct StorageView: View, SuperLog {
                     description: "将媒体文件存储在 iCloud 云盘中\n可在其他设备上访问\n确保 iCloud 账户已登录且存储空间足够",
                     icon: .iconCloud,
                     action: {
-                        if cloudManager.isSignedIn == true && c.storageLocation != .icloud {
+                        if cloudManager.isSignedIn == true && c.getStorageLocation() != .icloud {
                             tempStorageLocation = .icloud
                             c.updateStorageLocation(.icloud)
                         }
@@ -85,7 +86,7 @@ struct StorageView: View, SuperLog {
 
     private func autoSetStorageLocation() {
         // 如果已经有存储位置设置，则使用现有设置
-        if let currentLocation = c.storageLocation {
+        if let currentLocation = c.getStorageLocation() {
             tempStorageLocation = currentLocation
             return
         }

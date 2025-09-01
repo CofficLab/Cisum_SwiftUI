@@ -4,7 +4,6 @@ import OSLog
 import SwiftUI
 
 struct MigrationProgressView: View {
-    @EnvironmentObject var c: ConfigProvider
     @StateObject private var migrationManager = MigrationManager()
     let sourceLocation: StorageLocation
     let targetLocation: StorageLocation
@@ -105,10 +104,10 @@ struct MigrationProgressView: View {
     private func startMigration(shouldMigrate: Bool) async {
         do {
             if shouldMigrate {
-                guard let sourceRoot = c.getStorageRoot() else {
+                guard let sourceRoot = Config.getStorageRoot() else {
                     throw MigrationError.sourceDirectoryNotFound
                 }
-                guard let targetRoot = c.getStorageRoot(for: targetLocation) else {
+                guard let targetRoot = Config.getStorageRoot(for: targetLocation) else {
                     throw MigrationError.targetDirectoryNotFound
                 }
 
@@ -138,7 +137,7 @@ struct MigrationProgressView: View {
 
             // 更新存储位置
             await MainActor.run {
-                c.updateStorageLocation(targetLocation)
+                Config.updateStorageLocation(targetLocation)
                 self.migrationCompleted = true
                 self.currentMigratingFile = shouldMigrate ? "迁移完成" : "已切换到新位置"
             }

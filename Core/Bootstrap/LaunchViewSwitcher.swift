@@ -59,6 +59,15 @@ struct LaunchViewSwitcher: View {
                         LaunchView()
                             .frame(width: geometry.size.width)
                             .id(pluginLaunchViews.count)
+                            .onAppear {
+                                // 当没有插件视图时（pluginLaunchViews.count == 0），
+                                // 并且当前索引为0时，直接执行 onAppear 回调
+                                if pluginLaunchViews.count == 0 && currentLaunchPageIndex == 0 {
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                        onAppear()
+                                    }
+                                }
+                            }
                     }
                 }
                 .onChange(of: currentLaunchPageIndex) {

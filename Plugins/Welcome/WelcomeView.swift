@@ -16,6 +16,7 @@ struct WelcomeView: View, SuperLog {
                 .ignoresSafeArea()
 
             VStack(spacing: 24) {
+                Spacer()
                 VStack(spacing: 12) {
                     Image(systemName: "sparkles")
                         .font(.system(size: 48, weight: .semibold))
@@ -44,7 +45,7 @@ struct WelcomeView: View, SuperLog {
                     }
                     .shadow(color: .black.opacity(0.12), radius: 24, y: 12)
 
-                Spacer(minLength: 0)
+                Spacer()
             }
             .padding(24)
         }

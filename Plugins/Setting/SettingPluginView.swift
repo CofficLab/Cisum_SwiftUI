@@ -7,7 +7,6 @@ struct SettingPluginView: View, SuperLog {
     nonisolated static let emoji: String = "🍴"
 
     @EnvironmentObject var cloudManager: CloudProvider
-    @EnvironmentObject var c: ConfigProvider
 
     @State private var showMigrationProgress = false
     @State private var tempStorageLocation: StorageLocation
@@ -30,7 +29,7 @@ struct SettingPluginView: View, SuperLog {
                         tempStorageLocation = .icloud
                     }
                 ) {
-                    if c.storageLocation == .icloud {
+                    if Config.getStorageLocation() == .icloud {
                         Image(systemName: .iconCheckmarkSimple)
                             .foregroundColor(.accentColor)
                     }
@@ -46,7 +45,7 @@ struct SettingPluginView: View, SuperLog {
                         tempStorageLocation = .local
                     }
                 ) {
-                    if c.storageLocation == .local {
+                    if Config.getStorageLocation() == .local {
                         Image(systemName: .iconCheckmarkSimple)
                             .foregroundColor(.accentColor)
                     }
@@ -55,32 +54,32 @@ struct SettingPluginView: View, SuperLog {
         }
         .sheet(isPresented: $showMigrationProgress) {
             MigrationProgressView(
-                sourceLocation: c.storageLocation ?? .local,
+                sourceLocation: Config.getStorageLocation() ?? .local,
                 targetLocation: tempStorageLocation,
-                sourceURL: c.getStorageRoot(),
-                targetURL: c.getStorageRoot(for: tempStorageLocation),
+                sourceURL: Config.getStorageRoot(),
+                targetURL: Config.getStorageRoot(for: tempStorageLocation),
                 onDismiss: {
                     showMigrationProgress = false
-                    self.hasChanges = tempStorageLocation != c.storageLocation
-                    storageRoot = c.getStorageRoot()
+                    self.hasChanges = tempStorageLocation != Config.getStorageLocation()
+                    storageRoot = Config.getStorageRoot()
 
                     os_log("\(self.t) Current Storage Root \(storageRoot?.path ?? "nil")")
                 }
             )
         }.onAppear {
-            tempStorageLocation = c.storageLocation ?? .local
+            tempStorageLocation = Config.getStorageLocation() ?? .local
             hasChanges = false
-            storageRoot = c.getStorageRoot()
+            storageRoot = Config.getStorageRoot()
             
-            os_log("\(self.t) Current Storage Type: \(c.storageLocation?.rawValue ?? "nil")")
+            os_log("\(self.t) Current Storage Type: \(Config.getStorageLocation()?.rawValue ?? "nil")")
         }
         .onChange(of: tempStorageLocation) {
-            hasChanges = tempStorageLocation != (c.storageLocation ?? .local)
-            storageRoot = c.getStorageRoot()
+            hasChanges = tempStorageLocation != (Config.getStorageLocation() ?? .local)
+            storageRoot = Config.getStorageRoot()
         }
-        .onChange(of: c.storageLocation) {
-            hasChanges = tempStorageLocation != (c.storageLocation ?? .local)
-            storageRoot = c.getStorageRoot()
+        .onChange(of: Config.getStorageLocation()) {
+            hasChanges = tempStorageLocation != (Config.getStorageLocation() ?? .local)
+            storageRoot = Config.getStorageRoot()
         }
     }
 }
