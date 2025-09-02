@@ -1,3 +1,4 @@
+import MagicAsset
 import OSLog
 import SwiftUI
 
@@ -12,10 +13,12 @@ struct HeroView: View {
         GeometryReader { geo in
             VStack(spacing: 0) {
                 if shouldShowAlbum(geo) {
-                    playMan.makeHeroView()
-                        .frame(maxWidth: .infinity)
-                        .frame(height: getAlbumHeight(geo))
-                        .clipped()
+                    playMan.makeHeroView(verbose: true, defaultView: {
+                        Image.makeCoffeeReelIcon(useDefaultBackground: false)
+                    })
+                    .frame(maxWidth: .infinity)
+                    .frame(height: getAlbumHeight(geo))
+                    .clipped()
                 }
 
                 TitleView()
@@ -42,7 +45,7 @@ struct HeroView: View {
 
 #Preview("App - Large") {
     AppPreview()
-        .frame(width: 600, height: 1000)
+        .frame(width: 600, height: 800)
 }
 
 #Preview("App - Small") {
@@ -51,7 +54,7 @@ struct HeroView: View {
 }
 
 #if os(iOS)
-#Preview("iPhone") {
-    AppPreview()
-}
+    #Preview("iPhone") {
+        AppPreview()
+    }
 #endif
