@@ -5,12 +5,11 @@ struct BtnToggleDB: View {
     @EnvironmentObject var app: AppProvider
 
     var body: some View {
-        MagicButton(
+        MagicButton.simple(
             icon: .iconMore,
             style: .secondary,
-            action: { done in
+            action: {
                 app.toggleDBView()
-                done()
             })
         .magicShape(.circle)
         .magicSize(.auto)

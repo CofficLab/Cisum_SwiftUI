@@ -33,6 +33,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     @State private var urls: [URL] = []
     @State private var isSyncing: Bool = false
     @State private var isLoading: Bool = true
+    @State private var updateURLsDebounceTask: Task<Void, Never>? = nil
 
     var total: Int { urls.count }
 
@@ -84,6 +85,9 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
                     }, content: {
                         ForEach(urls, id: \.self) { url in
                             AudioItemView(url)
+                                .onTapGesture {
+                                    Task { await self.playManController.play(url: url) }
+                                }
                         }
                         .onDelete(perform: onDeleteItems)
                     })
@@ -99,8 +103,8 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
         .onReceive(nc.publisher(for: .dbSynced), perform: onSynced)
         .onReceive(nc.publisher(for: .dbUpdated), perform: onUpdated)
         .onReceive(nc.publisher(for: .dbSyncing), perform: onSyncing)
-        .onReceive(nc.publisher(for: .dbSynced), perform: onSynced)
         .onPlayManAssetChanged(onPlayAssetChange)
+        .onDisappear(perform: onDisappear)
     }
 }
 
@@ -115,6 +119,16 @@ extension AudioList {
             await self.setUrls(urls)
         }
     }
+
+    @MainActor
+    private func scheduleUpdateURLsDebounced(delay seconds: Double = 0.25) {
+        updateURLsDebounceTask?.cancel()
+        updateURLsDebounceTask = Task { @MainActor in
+            try? await Task.sleep(nanoseconds: UInt64(seconds * 1_000_000_000))
+            guard !Task.isCancelled else { return }
+            self.updateURLs()
+        }
+    }
 }
 
 // MARK: - Setter
@@ -123,7 +137,6 @@ extension AudioList {
     @MainActor
     private func setUrls(_ newValue: [URL]) {
         urls = newValue
-        isLoading = false
 
         // 如果当前选中的URL不在新的URL列表中，重置相关状态
         if let currentSelection = selection, !newValue.contains(currentSelection) {
@@ -142,26 +155,32 @@ extension AudioList {
     private func setSortMode(_ newValue: SortMode) {
         sortMode = newValue
     }
+
+    private func setIsLoading(_ newValue: Bool) {
+        isLoading = newValue
+    }
+
+    private func setIsSyncing(_ newValue: Bool) {
+        isSyncing = newValue
+    }
 }
 
 // MARK: - Event Handler
 
 extension AudioList {
     func OnAppear() {
-        isLoading = true
-        updateURLs()
+        setIsLoading(true)
+        scheduleUpdateURLsDebounced()
 
         if let asset = playManController.getAsset() {
             setSelection(asset)
         }
+        
+        setIsLoading(false)
     }
 
     func onSelectionChange() {
-        if let url = selection {
-            Task {
-                await self.playManController.play(url: url)
-            }
-        }
+        
     }
 
     func onPlayAssetChange(url: URL?) {
@@ -180,28 +199,28 @@ extension AudioList {
 
     func onSortDone(_ notification: Notification) {
         os_log("\(t)🍋 onSortDone")
-        self.updateURLs()
+        self.scheduleUpdateURLsDebounced()
     }
 
     func onDeleted(_ notification: Notification) {
         os_log("\(t)🍋 onDeleted")
-        self.updateURLs()
+        self.scheduleUpdateURLsDebounced()
     }
 
     func onSynced(_ notification: Notification) {
         os_log("\(t)🍋 onSynced")
-        self.updateURLs()
-        self.isSyncing = false
+        self.scheduleUpdateURLsDebounced()
+        self.setIsSyncing(false)
     }
 
     func onUpdated(_ notification: Notification) {
         os_log("\(t)🍋 onUpdated")
-        self.updateURLs()
+        self.scheduleUpdateURLsDebounced()
     }
 
     func onSyncing(_ notification: Notification) {
         os_log("\(t)🍋 onSyncing")
-        self.isSyncing = true
+        self.setIsSyncing(true)
     }
 
     func onDeleteItems(at offsets: IndexSet) {
@@ -223,6 +242,11 @@ extension AudioList {
                 }
             }
         }
+    }
+
+    func onDisappear() {
+        updateURLsDebounceTask?.cancel()
+        updateURLsDebounceTask = nil
     }
 }
 

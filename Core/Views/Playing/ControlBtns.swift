@@ -10,7 +10,7 @@ struct ControlBtns: View, SuperLog {
     nonisolated static let emoji = "🎵"
 
     init() {
-        os_log("ControlBtns 初始化")
+        os_log("\(Self.i)")
     }
 
     var body: some View {
