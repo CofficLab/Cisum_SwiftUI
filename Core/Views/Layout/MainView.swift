@@ -34,16 +34,19 @@ struct MainView: View, SuperLog, SuperThread {
                 ControlView()
                     .frame(height: showDB ? Config.controlViewMinHeight : geo.size.height)
 
-                if showDB {
-                    VStack(spacing: 0) {
-                        #if os(macOS)
-                            getTabView()
-                                .tabViewStyle(GroupedTabViewStyle())
-                        #else
-                            getTabView()
-                        #endif
-                    }
+                // 隐藏时高度为 0，避免销毁/重建，同时保持组件常驻
+                VStack(spacing: 0) {
+                    #if os(macOS)
+                        getTabView()
+                            .tabViewStyle(GroupedTabViewStyle())
+                    #else
+                        getTabView()
+                    #endif
                 }
+                .frame(height: showDB ? (geo.size.height - Config.controlViewMinHeight) : 0)
+                .opacity(showDB ? 1 : 0)
+                .allowsHitTesting(showDB)
+                .accessibilityHidden(!showDB)
 
                 HStack {
                     Spacer()

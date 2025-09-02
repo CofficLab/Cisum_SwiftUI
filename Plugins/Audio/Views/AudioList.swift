@@ -85,9 +85,6 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
                     }, content: {
                         ForEach(urls, id: \.self) { url in
                             AudioItemView(url)
-                                .onTapGesture {
-                                    Task { await self.playManController.play(url: url) }
-                                }
                         }
                         .onDelete(perform: onDeleteItems)
                     })
@@ -124,7 +121,7 @@ extension AudioList {
     private func scheduleUpdateURLsDebounced(delay seconds: Double = 0.25) {
         updateURLsDebounceTask?.cancel()
         updateURLsDebounceTask = Task { @MainActor in
-            try? await Task.sleep(nanoseconds: UInt64(seconds * 1_000_000_000))
+            try? await Task.sleep(nanoseconds: UInt64(seconds * 1000000000))
             guard !Task.isCancelled else { return }
             self.updateURLs()
         }
@@ -175,12 +172,16 @@ extension AudioList {
         if let asset = playManController.getAsset() {
             setSelection(asset)
         }
-        
+
         setIsLoading(false)
     }
 
     func onSelectionChange() {
-        
+        if let url = selection {
+            Task {
+                await self.playManController.play(url: url)
+            }
+        }
     }
 
     func onPlayAssetChange(url: URL?) {
