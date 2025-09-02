@@ -91,7 +91,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
                 .listStyle(.plain)
             }
         }
-        .onAppear(perform: handleOnAppear)
+        .onAppear(perform: OnAppear)
         .onChange(of: selection, onSelectionChange)
         .onReceive(nc.publisher(for: .DBSorting), perform: onSorting)
         .onReceive(nc.publisher(for: .DBSortDone), perform: onSortDone)
@@ -147,7 +147,7 @@ extension AudioList {
 // MARK: - Event Handler
 
 extension AudioList {
-    func handleOnAppear() {
+    func OnAppear() {
         isLoading = true
         updateURLs()
 
@@ -247,6 +247,8 @@ extension AudioList {
         }
     }
 }
+
+// MARK: - Preview
 
 #Preview("Small Screen") {
     RootView {
