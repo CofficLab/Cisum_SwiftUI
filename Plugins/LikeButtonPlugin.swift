@@ -17,16 +17,16 @@ actor LikeButtonPlugin: SuperPlugin {
 }
 
 private struct LikeToggleButtonView: View {
-    @EnvironmentObject var man: PlayMan
+    @EnvironmentObject var man: PlayManController
 
     var body: some View {
         os_log("LikeToggleButtonView 开始渲染")
         
         return Group {
-            if man.asset == nil {
+            if man.playMan.asset == nil {
                 EmptyView()
             } else {
-                man.makeLikeButtonView(size: .mini, shape: .circle, shapeVisibility: .onHover)
+                man.playMan.makeLikeButtonView(size: .mini, shape: .circle, shapeVisibility: .onHover)
             }
         }
     }

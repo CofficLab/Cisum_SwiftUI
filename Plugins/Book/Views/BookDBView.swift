@@ -13,6 +13,7 @@ struct BookDBView: View, SuperLog, SuperThread {
 
     @State var treeView = false
     @State var total: Int = 0
+    @State var isSyncing = false
 
     nonisolated static let emoji = "🐘"
 
@@ -24,11 +25,12 @@ struct BookDBView: View, SuperLog, SuperThread {
     }
 
     var body: some View {
-        VStack(spacing: 0) {
+        os_log("\(self.t)开始渲染")
+        return VStack(spacing: 0) {
             HStack {
                 Text("共 \(total.description)")
                 Spacer()
-                if bookManager.isSyncing {
+                if isSyncing {
                     Image(systemName: "arrow.triangle.2.circlepath")
                     Text("正在读取仓库")
                 }
@@ -54,6 +56,9 @@ struct BookDBView: View, SuperLog, SuperThread {
         )
         .task {
             self.total = await db.getTotal()
+        }
+        .onBookDBSyncing {
+            self.isSyncing = true
         }
         .onDrop(of: [UTType.fileURL], isTargeted: $app.isDropping) { providers -> Bool in
             let dispatchGroup = DispatchGroup()

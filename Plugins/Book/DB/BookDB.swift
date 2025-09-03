@@ -76,9 +76,3 @@ extension BookDB {
     }
 }
 
-// MARK: Event
-
-extension Notification.Name {
-    static let bookDBSyncing = Notification.Name("bookDBSyncing")
-    static let bookDBSynced = Notification.Name("bookDBSynced")
-}

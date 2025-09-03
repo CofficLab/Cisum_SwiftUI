@@ -19,12 +19,12 @@ actor OpenButtonPlugin: SuperPlugin {
 }
 
 private struct OpenCurrentButtonView: View {
-    @EnvironmentObject var man: PlayMan
+    @EnvironmentObject var man: PlayManController
 
     var body: some View {
         os_log("OpenCurrentButtonView 开始渲染")
         return Group {
-            if let url = man.currentURL {
+            if let url = man.playMan.currentURL {
                 url.makeOpenButton()
                     .magicShapeVisibility(.onHover)
                     .magicSize(.small)

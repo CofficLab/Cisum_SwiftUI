@@ -52,9 +52,8 @@ struct Posters: View, SuperLog {
                         }
                         try p.setCurrentGroup(currentLayout)
                         self.isPresented = false
+                        self.m.info("当前模式 \(self.p.current?.description ?? "")")
                     } catch {
-                        os_log("🐷 PluginProvider::setCurrentGroup, error: \(error)")
-
                         m.error(error)
                     }
                 }.controlSize(.extraLarge)

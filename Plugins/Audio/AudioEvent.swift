@@ -93,24 +93,6 @@ extension View {
         }
     }
 
-    /// 监听书籍数据库同步完成事件
-    /// - Parameter action: 书籍数据库同步完成时执行的操作
-    /// - Returns: 添加了监听器的视图
-    func onBookDBSynced(perform action: @escaping () -> Void) -> some View {
-        self.onReceive(NotificationCenter.default.publisher(for: .bookDBSynced)) { _ in
-            action()
-        }
-    }
-
-    /// 监听书籍数据库同步开始事件
-    /// - Parameter action: 书籍数据库同步开始时执行的操作
-    /// - Returns: 添加了监听器的视图
-    func onBookDBSyncing(perform action: @escaping () -> Void) -> some View {
-        self.onReceive(NotificationCenter.default.publisher(for: .bookDBSyncing)) { _ in
-            action()
-        }
-    }
-
     /// 监听数据库删除事件
     /// - Parameter action: 数据库删除时执行的操作
     /// - Returns: 添加了监听器的视图
