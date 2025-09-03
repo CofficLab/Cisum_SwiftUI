@@ -13,7 +13,6 @@ struct LaunchView: View {
             }
             Spacer()
         }
-        .frame(height: .infinity)
     }
 }
 
