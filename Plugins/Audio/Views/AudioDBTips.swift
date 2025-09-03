@@ -17,7 +17,7 @@ struct AudioDBTips: View {
     }
 
     var body: some View {
-        MagicCard(background: MagicBackground.mountainStream) {
+        MagicCard(background: MagicBackground.mountainStream.opacity(0.7)) {
             VStack {
                 switch variant {
                 case .empty:
@@ -80,10 +80,20 @@ struct AudioDBTips: View {
         .frame(width: 300, height: 300)
 }
 
-#Preview("Big Screen") {
-    RootView {
-        ContentView()
+#if os(macOS)
+    #Preview("App - Large") {
+        AppPreview()
+            .frame(width: 600, height: 1000)
     }
-    .frame(width: 1200)
-    .frame(height: 1200)
-}
+
+    #Preview("App - Small") {
+        AppPreview()
+            .frame(width: 500, height: 800)
+    }
+#endif
+
+#if os(iOS)
+    #Preview("iPhone") {
+        AppPreview()
+    }
+#endif
