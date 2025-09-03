@@ -7,7 +7,7 @@ actor LikeButtonPlugin: SuperPlugin {
     let hasPoster = false
     let description: String = "喜欢/取消喜欢 按钮"
     let iconName: String = .iconHeart
-    nonisolated(unsafe) var enabled: Bool = false
+    nonisolated(unsafe) var enabled = false
 
     @MainActor
     func addToolBarButtons() -> [(id: String, view: AnyView)] {

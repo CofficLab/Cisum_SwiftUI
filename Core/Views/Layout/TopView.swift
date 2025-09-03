@@ -7,26 +7,31 @@ struct TopView: View {
     var asset: URL? { man.currentURL }
 
     var body: some View {
-        HStack {
-            if p.groupPlugins.count > 1 {
-                BtnScene()
-            }
-
-            Spacer()
-            if let asset = asset {
-                HStack {
-                    man.makeLikeButtonView()
-                    if Config.isDesktop {
-                        asset.makeOpenButton()
+        if Config.isNotDesktop {
+            HStack {
+                if p.groupPlugins.count > 1 {
+                    BtnScene()
+                }
+                
+                Spacer()
+                if let asset = asset {
+                    HStack {
+                        man.makeLikeButtonView()
+                        if Config.isDesktop {
+                            asset.makeOpenButton()
+                        }
                     }
                 }
             }
+            .padding(.horizontal)
+            .labelStyle(.iconOnly)
+        } else {
+            EmptyView()
         }
-        .padding(.horizontal)
-        .labelStyle(.iconOnly)
     }
 }
 
+#if os(macOS)
 #Preview("App - Large") {
     AppPreview()
         .frame(width: 600, height: 1000)
@@ -36,6 +41,7 @@ struct TopView: View {
     AppPreview()
         .frame(width: 500, height: 800)
 }
+#endif
 
 #if os(iOS)
 #Preview("iPhone") {
