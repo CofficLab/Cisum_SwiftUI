@@ -10,17 +10,19 @@ struct BtnScene: View {
 
     var body: some View {
         if let plugin = p.current {
-            MagicButton(
+            MagicButton.simple(
                 icon: plugin.iconName,
                 title: plugin.description,
-                popoverContent: AnyView(
-                    Posters(
-                        isPresented: $isPresented
-                    )
-                    .frame(minWidth: Config.minWidth)
-                )
-            )
+            ) {
+                self.isPresented.toggle()
+            }
             .magicSize(.mini)
+            .popover(isPresented: self.$isPresented, content: {
+                Posters(
+                    isPresented: $isPresented
+                )
+                .frame(minWidth: Config.minWidth)
+            })
         }
     }
 }
