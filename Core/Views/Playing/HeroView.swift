@@ -14,7 +14,7 @@ struct HeroView: View {
             VStack(spacing: 0) {
                 if shouldShowAlbum(geo) {
                     playMan.makeHeroView(verbose: true, defaultView: {
-                        Image.makeCoffeeReelIcon(useDefaultBackground: false)
+                        LogoView(background: .blue.opacity(0.1),rotationSpeed: 0.001, backgroundShape: .circle)
                     })
                     .frame(maxWidth: .infinity)
                     .frame(height: getAlbumHeight(geo))

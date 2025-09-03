@@ -6,21 +6,21 @@ struct LaunchView: View {
     var errorMessage: String? = nil
 
     var body: some View {
-        GeometryReader { geo in
-            MagicLoading()
-                .magicTitle(MagicApp.getAppName())
-                .magicCustomView {
-                    Image.makeCoffeeReelIcon(useDefaultBackground: false)
-                        .frame(width: min(geo.size.width * 0.8, geo.size.height * 0.8))
-                        .frame(height: min(geo.size.width * 0.8, geo.size.height * 0.8))
-                        .padding()
-                }
+        VStack {
+            Spacer()
+            MagicLoading(showProgress: false) {
+                LogoView(background: .orange.opacity(0.8), rotationSpeed: 0.02, backgroundShape: .circle)
+            }
+            Spacer()
         }
+        .frame(height: .infinity)
     }
 }
 
 #Preview("LaunchView") {
     LaunchView()
+        .frame(width: 300, height: 600)
+        .inMagicContainer(containerHeight: 600)
 }
 
 #Preview("App - Large") {
