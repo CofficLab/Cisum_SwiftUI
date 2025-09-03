@@ -7,18 +7,22 @@ import SwiftUI
 struct BookGrid: View, SuperLog, SuperThread {
     nonisolated static let emoji = "📖"
 
-    @EnvironmentObject var appManager: AppProvider
+    @EnvironmentObject var a: AppProvider
     @EnvironmentObject var messageManager: StateProvider
-    @EnvironmentObject var db: BookRepo
 
     @State var selection: AudioModel? = nil
     @State var syncingTotal: Int = 0
     @State var syncingCurrent: Int = 0
-    @State var books: [BookModel] = []
+    
+    @Query(
+        filter: #Predicate<BookModel> { $0.isCollection == true },
+        sort: \BookModel.order,
+        animation: .default
+    ) var books: [BookModel]
 
     var total: Int { books.count }
     var showTips: Bool {
-        if appManager.isDropping {
+        if a.isDropping {
             return true
         }
 
@@ -26,7 +30,7 @@ struct BookGrid: View, SuperLog, SuperThread {
     }
 
     var body: some View {
-        os_log("\(self.t)开始渲染")
+//        os_log("\(self.t)开始渲染")
         return ScrollView {
             LazyVGrid(columns: [
                 GridItem(.adaptive(minimum: 150), spacing: 10),
@@ -39,18 +43,25 @@ struct BookGrid: View, SuperLog, SuperThread {
             }
             .padding()
         }
-        .task(handleOnAppear)
-    }
-
-    func handleOnAppear() async {
-
-            self.books = await db.getRootBooks()
     }
 }
 
-#Preview("App") {
+// MARK: - Preview
+
+#if os(macOS)
+#Preview("App - Large") {
     AppPreview()
-        .frame(width: 800)
-        .frame(height: 800)
+        .frame(width: 600, height: 1000)
 }
 
+#Preview("App - Small") {
+    AppPreview()
+        .frame(width: 600, height: 600)
+}
+#endif
+
+#if os(iOS)
+#Preview("iPhone") {
+    AppPreview()
+}
+#endif

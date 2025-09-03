@@ -33,12 +33,17 @@ actor BookPlugin: SuperPlugin, SuperLog {
             return AnyView(BookPluginError.initialization(reason: "BookProvider 未找到").makeView(title: "书籍数据库初始化失败"))
         }
         
+        guard let container = try? BookConfig.getContainer() else {
+            return AnyView(BookPluginError.initialization(reason: "Container 未找到").makeView(title: "书籍数据库初始化失败"))
+        }
+        
         os_log("\(self.t)生成DBView")
 
         return AnyView(
             BookDBView(verbose: true, disk: disk)
                 .environmentObject(bookDB)
                 .environmentObject(bookProvider)
+                .modelContainer(container)
         )
     }
 

@@ -16,7 +16,6 @@ struct BookTile: View, SuperThread, SuperLog, Equatable {
     @State private var cover: Image? = nil
     @State private var isLoadingCover: Bool = false
     @State private var tileSize: CGSize = .zero
-    @State private var childCount = 0
 
     nonisolated static let emoji = "🖥️"
     var hasCover: Bool { cover != nil }
@@ -54,7 +53,7 @@ struct BookTile: View, SuperThread, SuperLog, Equatable {
 
                     Spacer()
 
-                    if childCount > 0, noCover {
+                    if book.childCount > 0, noCover {
                         Text("共 \(book.childCount)")
                     }
 
@@ -146,10 +145,6 @@ extension BookTile {
 extension BookTile {
     func onAppear() {
         self.updateCover()
-        Task {
-            let localChildCount = self.book.childCount
-            await MainActor.run { self.childCount = localChildCount }
-        }
     }
 
     @MainActor
