@@ -7,7 +7,7 @@ actor LikeButtonPlugin: SuperPlugin {
     let hasPoster = false
     let description: String = "喜欢/取消喜欢 按钮"
     let iconName: String = .iconHeart
-    nonisolated(unsafe) var enabled = false
+    nonisolated(unsafe) var enabled = true
 
     @MainActor
     func addToolBarButtons() -> [(id: String, view: AnyView)] {
@@ -21,7 +21,14 @@ private struct LikeToggleButtonView: View {
 
     var body: some View {
         os_log("LikeToggleButtonView 开始渲染")
-        return man.makeLikeButtonView()
+        
+        return Group {
+            if man.asset == nil {
+                EmptyView()
+            } else {
+                man.makeLikeButtonView(size: .mini, shape: .circle, shapeVisibility: .onHover)
+            }
+        }
     }
 }
 

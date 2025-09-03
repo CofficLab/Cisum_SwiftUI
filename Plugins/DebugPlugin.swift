@@ -8,7 +8,7 @@ actor DebugPlugin: SuperPlugin {
     let hasPoster = false
     let description: String = "调试专用"
     let iconName: String = .iconDebug
-    nonisolated(unsafe) var enabled: Bool = false
+    nonisolated(unsafe) var enabled = true
 
     @MainActor
     func addSettingView() -> AnyView? {

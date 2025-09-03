@@ -7,7 +7,7 @@ actor OpenButtonPlugin: SuperPlugin {
     let hasPoster = false
     let description: String = "当前资源打开按钮"
     let iconName: String = .iconFinder
-    nonisolated(unsafe) var enabled: Bool = false
+    nonisolated(unsafe) var enabled = true
 
     @MainActor
     func addToolBarButtons() -> [(id: String, view: AnyView)] {

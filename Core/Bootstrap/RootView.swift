@@ -54,32 +54,24 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                 if let e = self.error {
                     ErrorViewFatal(error: e)
                 } else {
-                    ZStack {
-                        content
-                            .toolbar(content: {
-                                if p.groupPlugins.count > 1 {
-                                    ToolbarItem(placement: .navigation) {
-                                        BtnScene()
-                                    }
+                    NavigationStack {
+                        ZStack {
+                            content
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                .frame(minWidth: Config.minWidth, minHeight: Config.minHeight)
+                                .toolbar {
+                                    RootToolbar()
                                 }
+                                .blendMode(.normal)
+                                .background(Config.rootBackground)
 
-                                ToolbarItemGroup(placement: .cancellationAction) {
-                                    Spacer()
-
-                                    if man.asset != nil {
-                                        ForEach(p.getToolBarButtons(), id: \.id) { item in
-                                            item.view
-                                        }
-                                    }
-                                }
-                            })
-                            .frame(minWidth: Config.minWidth, minHeight: Config.minHeight)
-                            .blendMode(.normal)
-
-                        ForEach(Array(p.getRootViews().enumerated()), id: \.offset) { _, view in
-                            view
+                            ForEach(Array(p.getRootViews().enumerated()), id: \.offset) { _, view in
+                                view
+                            }
                         }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .environmentObject(man)
                     .environmentObject(playManController)
                     .environmentObject(self.a)
@@ -259,15 +251,15 @@ extension View {
 }
 
 #if os(macOS)
-#Preview("App - Large") {
-    AppPreview()
-        .frame(width: 600, height: 1000)
-}
+    #Preview("App - Large") {
+        AppPreview()
+            .frame(width: 600, height: 1000)
+    }
 
-#Preview("App - Small") {
-    AppPreview()
-        .frame(width: 500, height: 800)
-}
+    #Preview("App - Small") {
+        AppPreview()
+            .frame(width: 500, height: 800)
+    }
 #endif
 
 #if os(iOS)

@@ -31,8 +31,6 @@ struct ContentView: View, SuperLog, SuperThread {
         os_log("\(self.t)开始渲染")
         return GeometryReader { geo in
             VStack(spacing: 0) {
-                TopView()
-                
                 ControlView()
                     .frame(height: showDB ? Config.controlViewMinHeight : geo.size.height)
 
@@ -57,6 +55,7 @@ struct ContentView: View, SuperLog, SuperThread {
                     }
                 }
             }
+            .frame(width: geo.size.width, height: geo.size.height)
             .onChange(of: showDB) {
                 onShowDBChanged(geo)
             }
@@ -66,6 +65,7 @@ struct ContentView: View, SuperLog, SuperThread {
             .onAppear(perform: onAppear)
             .background(Config.background(.teal))
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     func getTabView() -> some View {
