@@ -10,19 +10,21 @@ actor OpenButtonPlugin: SuperPlugin {
     nonisolated(unsafe) var enabled = true
 
     #if os(macOS)
-    @MainActor
-    func addToolBarButtons() -> [(id: String, view: AnyView)] {
-        guard enabled else { return [] }
-        return [(id: "open-current", view: AnyView(OpenCurrentButtonView()))]
-    }
+        @MainActor
+        func addToolBarButtons() -> [(id: String, view: AnyView)] {
+            guard enabled else { return [] }
+            return [(id: "open-current", view: AnyView(OpenCurrentButtonView()))]
+        }
     #endif
 }
 
-private struct OpenCurrentButtonView: View {
+private struct OpenCurrentButtonView: View, SuperLog {
+    nonisolated static let emoji = "😜"
+
     @EnvironmentObject var man: PlayManController
 
     var body: some View {
-        os_log("OpenCurrentButtonView 开始渲染")
+        os_log("\(self.t)开始渲染")
         return Group {
             if let url = man.playMan.currentURL {
                 url.makeOpenButton()
@@ -37,21 +39,19 @@ private struct OpenCurrentButtonView: View {
 // MARK: - Preview
 
 #if os(macOS)
-#Preview("App - Large") {
-    AppPreview()
-        .frame(width: 600, height: 1000)
-}
+    #Preview("App - Large") {
+        AppPreview()
+            .frame(width: 600, height: 1000)
+    }
 
-#Preview("App - Small") {
-    AppPreview()
-        .frame(width: 500, height: 800)
-}
+    #Preview("App - Small") {
+        AppPreview()
+            .frame(width: 500, height: 800)
+    }
 #endif
 
 #if os(iOS)
-#Preview("iPhone") {
-    AppPreview()
-}
+    #Preview("iPhone") {
+        AppPreview()
+    }
 #endif
-
-

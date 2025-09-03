@@ -32,6 +32,8 @@ actor BookPlugin: SuperPlugin, SuperLog {
         guard let bookProvider = self.bookProvider else {
             return AnyView(BookPluginError.initialization(reason: "BookProvider 未找到").makeView(title: "书籍数据库初始化失败"))
         }
+        
+        os_log("\(self.t)生成DBView")
 
         return AnyView(
             BookDBView(verbose: true, disk: disk)

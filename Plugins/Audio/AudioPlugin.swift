@@ -100,6 +100,10 @@ actor AudioPlugin: SuperPlugin, SuperLog {
 
     @MainActor
     func onWillAppear(playMan: PlayManWrapper, currentGroup: SuperPlugin?, storage: StorageLocation?) async throws {
+        guard let currentGroup = currentGroup, currentGroup.label == self.label else {
+            return
+        }
+        
         if verbose {
             os_log("\(self.a)with storage \(storage?.emojiTitle ?? "nil")")
         }

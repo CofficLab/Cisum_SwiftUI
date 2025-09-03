@@ -26,7 +26,8 @@ struct BookGrid: View, SuperLog, SuperThread {
     }
 
     var body: some View {
-        ScrollView {
+        os_log("\(self.t)开始渲染")
+        return ScrollView {
             LazyVGrid(columns: [
                 GridItem(.adaptive(minimum: 150), spacing: 10),
             ], pinnedViews: [.sectionHeaders]) {
@@ -34,17 +35,17 @@ struct BookGrid: View, SuperLog, SuperThread {
                     BookTile(book: item)
                         .frame(width: 150)
                         .frame(height: 200)
+                        .id(item.url)
                 }
             }
             .padding()
         }
-        .onAppear(perform: handleOnAppear)
+        .task(handleOnAppear)
     }
 
-    func handleOnAppear() {
-        Task {
+    func handleOnAppear() async {
+
             self.books = await db.getRootBooks()
-        }
     }
 }
 

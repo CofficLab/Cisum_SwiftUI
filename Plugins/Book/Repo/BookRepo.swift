@@ -14,6 +14,7 @@ class BookRepo: ObservableObject, SuperEvent, SuperLog {
     private var monitor: Cancellable?
     private var currentSyncTask: Task<Void, Never>?
     private var isShuttingDown: Bool = false
+    private var quietFinishTask: Task<Void, Never>?
 
     // MARK: - State
 
@@ -57,7 +58,7 @@ class BookRepo: ObservableObject, SuperEvent, SuperLog {
             info("Error: \(self.disk.shortPath()) not exist")
         }
 
-        let debounceInterval = 2.0
+        let debounceInterval = 2.5
 
         return self.disk.onDirChange(
             verbose: true,
@@ -75,6 +76,7 @@ class BookRepo: ObservableObject, SuperEvent, SuperLog {
                     UserDefaults.standard.set(Date(), forKey: "BookLastUpdateTime")
 
                     await self.sync(items, isFirst: isFirst)
+                    await self.scheduleQuietFinish()
                 }
 
                 Task { await handleChange() }
@@ -114,11 +116,26 @@ extension BookRepo {
             let shouldEmit = await Task.detached { await !self.isShuttingDown }.value
             guard shouldEmit == true else { return }
 
-            self.setSyncStatus(isFirst ? .synced : .updated)
-            self.setIsSyncing(false)
+            // 不立即翻转为完成，交由静默期任务统一收束
         }
 
         currentSyncTask = task
+    }
+
+    @MainActor
+    private func scheduleQuietFinish() async {
+        quietFinishTask?.cancel()
+        let quietWindow: UInt64 = 1_500_000_000 // 1.5s
+
+        let task = Task { @MainActor in
+            do {
+                try await Task.sleep(nanoseconds: quietWindow)
+                self.setSyncStatus(.updated)
+                self.setIsSyncing(false)
+            } catch { }
+        }
+
+        quietFinishTask = task
     }
 
     func getRootBooks() async -> [BookModel] {

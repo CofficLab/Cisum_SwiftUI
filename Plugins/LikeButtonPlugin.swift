@@ -16,11 +16,12 @@ actor LikeButtonPlugin: SuperPlugin {
     }
 }
 
-private struct LikeToggleButtonView: View {
+private struct LikeToggleButtonView: View, SuperLog {
+    nonisolated static let emoji = "🦁"
     @EnvironmentObject var man: PlayManController
 
     var body: some View {
-        os_log("LikeToggleButtonView 开始渲染")
+        os_log("\(self.t)开始渲染")
         
         return Group {
             if man.playMan.asset == nil {
