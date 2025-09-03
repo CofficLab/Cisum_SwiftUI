@@ -17,7 +17,6 @@ actor BookPlugin: SuperPlugin, SuperLog {
 
     @MainActor var disk: URL?
     @MainActor var bookDB: BookRepo?
-    @MainActor var bookProvider: BookProvider?
     @MainActor var initialized = false
 
     @MainActor func addDBView(reason: String) -> AnyView? {
@@ -27,10 +26,6 @@ actor BookPlugin: SuperPlugin, SuperLog {
 
         guard let bookDB = self.bookDB else {
             return AnyView(BookPluginError.initialization(reason: "BookDB 未找到").makeView(title: "书籍数据库初始化失败"))
-        }
-
-        guard let bookProvider = self.bookProvider else {
-            return AnyView(BookPluginError.initialization(reason: "BookProvider 未找到").makeView(title: "书籍数据库初始化失败"))
         }
         
         guard let container = try? BookConfig.getContainer() else {
@@ -42,7 +37,6 @@ actor BookPlugin: SuperPlugin, SuperLog {
         return AnyView(
             BookDBView(verbose: true, disk: disk)
                 .environmentObject(bookDB)
-                .environmentObject(bookProvider)
                 .modelContainer(container)
         )
     }
@@ -63,7 +57,6 @@ actor BookPlugin: SuperPlugin, SuperLog {
 
         self.disk = Config.cloudDocumentsDir?.appendingFolder(self.dirName)
         self.bookDB = try BookRepo(disk: disk!, verbose: true)
-        self.bookProvider = BookProvider(disk: disk!)
         self.initialized = true
 
         Task { @MainActor in

@@ -8,12 +8,18 @@ import UniformTypeIdentifiers
 
 struct BookDBView: View, SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var bookManager: BookProvider
-    @EnvironmentObject var db: BookRepo
 
     @State var treeView = false
-    @State var total: Int = 0
     @State var isSyncing = false
+    
+    // 使用 @Query 直接从 SwiftData 获取集合类型的书籍总数
+    @Query(
+        filter: #Predicate<BookModel> { $0.isCollection == true },
+        animation: .default
+    ) var books: [BookModel]
+    
+    // 计算属性：从 @Query 结果获取总数
+    var total: Int { books.count }
 
     nonisolated static let emoji = "🐘"
 
@@ -54,9 +60,6 @@ struct BookDBView: View, SuperLog, SuperThread {
                 }
             }
         )
-        .task {
-            self.total = await db.getTotal()
-        }
         .onBookDBSyncing {
             self.isSyncing = true
         }
@@ -93,9 +96,24 @@ extension BookDBView {
     }
 }
 
-#Preview("APP") {
+// MARK: - Preview
+
+#if os(macOS)
+#Preview("App - Large") {
     AppPreview()
-        .frame(height: 800)
+        .frame(width: 600, height: 1000)
 }
+
+#Preview("App - Small") {
+    AppPreview()
+        .frame(width: 600, height: 600)
+}
+#endif
+
+#if os(iOS)
+#Preview("iPhone") {
+    AppPreview()
+}
+#endif
 
 

@@ -138,20 +138,6 @@ extension BookRepo {
         quietFinishTask = task
     }
 
-    func getRootBooks() async -> [BookModel] {
-        let urls: [URL] = await self.db.getBooks()
-
-        return urls.map { BookModel(url: $0) }
-    }
-
-    func getRootBookURLs() async -> [URL] {
-        await self.db.getBooks()
-    }
-
-    func getTotal() async -> Int {
-        await self.getRootBooks().count
-    }
-
     func delete(_ book: BookModel, verbose: Bool) async {
 //        try? self.disk.deleteFile(book.url)
 //        self.emit(.audioDeleted)
