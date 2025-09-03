@@ -60,17 +60,17 @@ enum Config: SuperLog {
 
     static func getPlugins() -> [SuperPlugin] {
         return [
-            WelcomePlugin(),
-            SettingPlugin(),
+//            WelcomePlugin(),
+//            SettingPlugin(),
             AudioPlugin(),
             BookPlugin(),
-            OpenButtonPlugin(),
-            LikeButtonPlugin(),
-            CopyPlugin(),
-            ResetPlugin(),
-            DebugPlugin(),
-            StorePlugin(),
-            VersionPlugin(),
+//            OpenButtonPlugin(),
+//            LikeButtonPlugin(),
+//            CopyPlugin(),
+//            ResetPlugin(),
+//            DebugPlugin(),
+//            StorePlugin(),
+//            VersionPlugin(),
         ]
     }
 

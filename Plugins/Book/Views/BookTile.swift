@@ -5,7 +5,11 @@ import SwiftUI
 /**
  展示从数据库读取的图书数据
  */
-struct BookTile: View, SuperThread, SuperLog {
+struct BookTile: View, SuperThread, SuperLog, Equatable {
+    nonisolated static func == (lhs: BookTile, rhs: BookTile) -> Bool {
+        lhs.url == rhs.url
+    }
+    
     @State private var state: BookState? = nil
     @State private var scale: CGFloat = 1.0
     @State private var opacity: Double = 1.0
@@ -17,6 +21,7 @@ struct BookTile: View, SuperThread, SuperLog {
     nonisolated static let emoji = "🖥️"
     var hasCover: Bool { cover != nil }
     var noCover: Bool { cover == nil }
+    var url: URL
     var book: BookModel
 
     var body: some View {
