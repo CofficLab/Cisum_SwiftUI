@@ -24,7 +24,6 @@ struct BookTile: View, SuperThread, SuperLog, Equatable {
     var book: BookModel
 
     var body: some View {
-        os_log("\(self.t)开始渲染 \(self.book.bookTitle)")
         return ZStack {
             ZStack {
                 if let cover = cover {

@@ -4,7 +4,6 @@ import MagicCore
 import OSLog
 import SwiftUI
 
-@MainActor
 class BookRepo: ObservableObject, SuperEvent, SuperLog {
     nonisolated static let emoji = "📖"
 
@@ -14,7 +13,6 @@ class BookRepo: ObservableObject, SuperEvent, SuperLog {
     private var monitor: Cancellable?
     private var currentSyncTask: Task<Void, Never>?
     private var isShuttingDown: Bool = false
-    private var quietFinishTask: Task<Void, Never>?
     private var syncStatus: SyncStatusBook = .idle
     private var isSyncing: Bool = false
 
@@ -38,13 +36,13 @@ class BookRepo: ObservableObject, SuperEvent, SuperLog {
         }
     }
 
-    init(disk: URL, verbose: Bool) throws {
+    init(disk: URL, verbose: Bool, db: BookDB) throws {
         if verbose {
             os_log("\(Self.i)BookDB")
         }
 
         self.verbose = verbose
-        self.db = BookDB(try BookConfig.getContainer(), reason: "BookDB")
+        self.db = db
         self.disk = disk
         self.monitor = self.makeMonitor()
     }
@@ -61,23 +59,16 @@ class BookRepo: ObservableObject, SuperEvent, SuperLog {
         return self.disk.onDirChange(
             verbose: true,
             caller: self.className,
-            onChange: { [weak self] items, isFirst, _ in
-                guard let self = self else { return }
+            onChange: { items, isFirst, _ in
 
-                @Sendable func handleChange() async {
-                    guard !(await self.isShuttingDown) else { return }
-
-                    if let lastTime = UserDefaults.standard.object(forKey: "BookLastUpdateTime") as? Date {
-                        let now = Date()
-                        guard now.timeIntervalSince(lastTime) >= debounceInterval else { return }
-                    }
-                    UserDefaults.standard.set(Date(), forKey: "BookLastUpdateTime")
-
-                    await self.sync(items, isFirst: isFirst)
-                    await self.scheduleQuietFinish()
+                if let lastTime = UserDefaults.standard.object(forKey: "BookLastUpdateTime") as? Date {
+                    let now = Date()
+                    guard now.timeIntervalSince(lastTime) >= debounceInterval else { return }
                 }
+                UserDefaults.standard.set(Date(), forKey: "BookLastUpdateTime")
 
-                Task { await handleChange() }
+                await self.sync(items, isFirst: isFirst)
+
             },
             onDeleted: { [weak self] _ in
                 // Book 模块暂不处理删除后的额外逻辑
@@ -96,43 +87,19 @@ extension BookRepo {
     private func sync(_ items: [URL], isFirst: Bool) async {
         guard !isShuttingDown else { return }
 
-        currentSyncTask?.cancel()
-
         // 更新状态（一次性写入，减少主线程抖动）
         self.setSyncStatus(.syncing(items: items))
         self.setIsSyncing(true)
 
-        let task = Task(priority: .utility) { [weak self] in
-            guard let self = self else { return }
 
-            let shouldContinue = await Task.detached { await !self.isShuttingDown }.value
-            guard shouldContinue == true else { return }
+        await self.db.sync(items, verbose: self.verbose, isFirst: isFirst)
 
-            await self.db.sync(items, verbose: self.verbose, isFirst: isFirst)
 
-            let shouldEmit = await Task.detached { await !self.isShuttingDown }.value
-            guard shouldEmit == true else { return }
 
-            // 不立即翻转为完成，交由静默期任务统一收束
-        }
+        // 同步完成后立即更新状态
 
-        currentSyncTask = task
-    }
-
-    @MainActor
-    private func scheduleQuietFinish() async {
-        quietFinishTask?.cancel()
-        let quietWindow: UInt64 = 1500000000 // 1.5s
-
-        let task = Task { @MainActor in
-            do {
-                try await Task.sleep(nanoseconds: quietWindow)
-                self.setSyncStatus(.updated)
-                self.setIsSyncing(false)
-            } catch { }
-        }
-
-        quietFinishTask = task
+        self.setSyncStatus(.updated)
+        self.setIsSyncing(false)
     }
 
     func delete(_ book: BookModel, verbose: Bool) async {

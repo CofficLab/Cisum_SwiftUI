@@ -42,7 +42,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     }
 
     var body: some View {
-        os_log("\(self.t)开始渲染")
+        os_log("\(self.t)开始渲染, isLoading: \(self.loading)")
         return Group {
             if self.loading {
                 LaunchViewSwitcher(
@@ -56,6 +56,10 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                 } else {
                     NavigationStack {
                         ZStack {
+                            ForEach(Array(p.getRootViews().enumerated()), id: \.offset) { _, view in
+                                view
+                            }
+                            
                             content
                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                                 .frame(minWidth: Config.minWidth, minHeight: Config.minHeight)
@@ -63,11 +67,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                                     RootToolbar()
                                 }
                                 .blendMode(.normal)
-                                .background(Config.rootBackground)
-
-                            ForEach(Array(p.getRootViews().enumerated()), id: \.offset) { _, view in
-                                view
-                            }
+                                .background(Config.rootBackground)                            
                         }
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
