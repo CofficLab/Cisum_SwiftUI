@@ -9,10 +9,10 @@ struct BookTile: View, SuperThread, SuperLog, Equatable {
     nonisolated static func == (lhs: BookTile, rhs: BookTile) -> Bool {
         lhs.url == rhs.url
     }
-    
+
+    @EnvironmentObject var man: PlayManController
+
     @State private var state: BookState? = nil
-    @State private var scale: CGFloat = 1.0
-    @State private var opacity: Double = 1.0
     @State private var cover: Image? = nil
     @State private var isLoadingCover: Bool = false
     @State private var tileSize: CGSize = .zero
@@ -76,8 +76,6 @@ struct BookTile: View, SuperThread, SuperLog, Equatable {
             }
         }
         .foregroundStyle(.white)
-        .scaleEffect(CGSize(width: scale, height: scale))
-        .opacity(opacity)
         .onAppear(perform: onAppear)
         .onTapGesture(perform: onTap)
     }
@@ -149,23 +147,11 @@ extension BookTile {
 
     @MainActor
     func onTap() {
-        // 首先执行动画
-        withAnimation(.spring()) {
-            scale = 0.95
-            opacity = 0.95
-        }
-
-//        if let first = book.url.getChildren().first {
-//            playMan.play(url: first)
-//        } else {
-//            playMan.play(url: book.url)
-//        }
-
-        // 延迟恢复动画
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { @MainActor in
-            withAnimation(.spring()) {
-                scale = 1.0
-                opacity = 1.0
+        Task {
+            if let first = book.url.getChildren().first {
+                await man.play(url: first)
+            } else {
+                await man.play(url: book.url)
             }
         }
     }
