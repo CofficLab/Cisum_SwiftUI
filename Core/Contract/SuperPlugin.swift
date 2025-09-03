@@ -9,7 +9,7 @@ protocol SuperPlugin: Actor {
     nonisolated var iconName: String { get }
     nonisolated var isGroup: Bool { get }
 
-    @MainActor func addRootView() -> AnyView?
+    @MainActor func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View
     @MainActor func addLaunchView() -> AnyView?
     @MainActor func addSheetView(storage: StorageLocation?) -> AnyView?
     @MainActor func addDBView(reason: String) -> AnyView?
@@ -51,7 +51,7 @@ extension SuperPlugin {
 
     nonisolated func addStatusView() -> AnyView? { nil }
 
-    nonisolated func addRootView() -> AnyView? { nil }
+    nonisolated func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View { nil }
 
     nonisolated func addDBView(reason: String) -> AnyView? { nil }
 

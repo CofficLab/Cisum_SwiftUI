@@ -35,9 +35,10 @@ struct BookRootView<Content>: View, SuperLog where Content: View {
             }
             .modelContainer(container)
             .onAppear {
-                os_log("\(self.i)")
+                os_log("\(self.a)")
                 self.subscribe()
                 self.restore()
+                self.initRepo()
             }
         }
     }
@@ -46,12 +47,18 @@ struct BookRootView<Content>: View, SuperLog where Content: View {
 // MARK: 操作
 
 extension BookRootView {
+    private func initRepo() {
+        let db = BookDB(self.container!, reason: self.className)
+        let disk = Config.cloudDocumentsDir?.appendingFolder(BookPlugin().dirName)
+        let repo = try? BookRepo(disk: disk!, verbose: true, db: db)
+    }
+    
     private func restore() {
         Task {
-            if let url = BookPlugin.getCurrent() {
+            if let url = BookSettingRepo.getCurrent() {
                 await self.man.play(url: url)
 
-                if let time = BookPlugin.getCurrentTime() {
+                if let time = BookSettingRepo.getCurrentTime() {
                     await self.man.seek(time: time)
                 }
             } else {
@@ -111,7 +118,7 @@ extension BookRootView {
                 }
 
                 Task {
-                    BookPlugin.storeCurrent(url)
+                    BookSettingRepo.storeCurrent(url)
 
                     if url.isNotDownloaded {
                         do {

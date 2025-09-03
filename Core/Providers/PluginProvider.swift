@@ -38,12 +38,9 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
         return items
     }
 
-    func getRootViews() -> [AnyView] {
-        let items = plugins.compactMap { $0.addRootView() }
-
-        // os_log("\(self.t)GetRootViews: \(items.count)")
-
-        return items
+    func wrapWithCurrentRoot<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {
+        guard let current = current else { return nil }
+        return current.addRootView { content() }
     }
 
     func getSheetViews(storage: StorageLocation?) -> [AnyView] {

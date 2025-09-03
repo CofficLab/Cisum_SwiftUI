@@ -24,11 +24,6 @@ struct BookDBView: View, SuperLog, SuperThread {
     nonisolated static let emoji = "🐘"
 
     var dropping: Bool { app.isDropping }
-    var disk: URL
-
-    init(verbose: Bool = false, disk: URL) {
-        self.disk = disk
-    }
 
     var body: some View {
         os_log("\(self.t)开始渲染")

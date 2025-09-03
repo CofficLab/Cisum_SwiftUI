@@ -56,18 +56,20 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                 } else {
                     NavigationStack {
                         ZStack {
-                            ForEach(Array(p.getRootViews().enumerated()), id: \.offset) { _, view in
-                                view
-                            }
-                            
-                            content
-                                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                .frame(minWidth: Config.minWidth, minHeight: Config.minHeight)
-                                .toolbar {
-                                    RootToolbar()
+                            Group {
+                                if let wrapped = p.wrapWithCurrentRoot { content } {
+                                    wrapped
+                                } else {
+                                    content
                                 }
-                                .blendMode(.normal)
-                                .background(Config.rootBackground)                            
+                            }
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .frame(minWidth: Config.minWidth, minHeight: Config.minHeight)
+                            .toolbar {
+                                RootToolbar()
+                            }
+                            .blendMode(.normal)
+                            .background(Config.rootBackground)
                         }
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
