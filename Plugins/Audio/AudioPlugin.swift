@@ -20,28 +20,17 @@ actor AudioPlugin: SuperPlugin, SuperLog {
     @MainActor var audioDB: AudioRepo?
     @MainActor var initialized: Bool = false
     @MainActor var container: ModelContainer?
+    
+    @MainActor func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {
+        AnyView(AudioRootView { content() })
+    }
 
     @MainActor func addDBView(reason: String) -> AnyView? {
-        guard let audioProvider = self.audioProvider else {
-            return AnyView(AudioPluginError.initialization(reason: "AudioProvider 未找到").makeView())
-        }
-
-        guard audioDB != nil else {
-            return AnyView(AudioPluginError.initialization(reason: "AudioDB 未找到").makeView(title: "音频数据库初始化失败"))
-        }
-
-        guard let container = self.container else {
-            return AnyView(AudioPluginError.initialization(reason: "ModelContainer 未找到").makeView(title: "数据容器初始化失败"))
-        }
-
         if verbose {
             os_log("\(self.t)🍋🍋🍋 AddDBView")
         }
 
-        return AnyView(AudioDBView()
-            .modelContainer(container)
-            .environmentObject(audioProvider)
-        )
+        return AnyView(AudioDBView())
     }
 
     @MainActor func addPosterView() -> AnyView? { AnyView(AudioPoster()) }

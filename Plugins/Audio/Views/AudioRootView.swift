@@ -6,26 +6,51 @@ import SwiftData
 import SwiftUI
 import UniformTypeIdentifiers
 
-struct BookRootView<Content>: View, SuperLog where Content: View {
+struct AudioRootView<Content>: View, SuperLog where Content: View {
     @EnvironmentObject var man: PlayManController
     @EnvironmentObject var m: MagicMessageProvider
     @EnvironmentObject var p: PluginProvider
+    @EnvironmentObject var app: AppProvider
 
-    @State private var error: BookPluginError? = nil
+    @State private var error: AudioPluginError? = nil
     private var content: Content
 
-    nonisolated static var emoji: String { "🏓" }
+    nonisolated static var emoji: String { "📢" }
     let verbose = true
-    var container: ModelContainer?
+    var container: ModelContainer? = nil
+    var disk: URL? = nil
+    var repo: AudioRepo? = nil
+    var audioProvider: AudioProvider? = nil
 
     init(@ViewBuilder content: () -> Content) {
         self.content = content()
-        guard let container = try? BookConfig.getContainer() else {
-            self.error = BookPluginError.initialization(reason: "Container 未找到")
+        guard let container = try? AudioConfigRepo.getContainer() else {
+            self.error = AudioPluginError.initialization(reason: "Container 未找到")
             return
         }
 
         self.container = container
+        
+        let storage = Config.getStorageLocation()
+        
+        guard let storage = storage else {
+            self.error = AudioPluginError.initialization(reason: "Storage 未找到")
+            return
+        }
+        
+        switch storage {
+        case .local:
+            disk = Config.localDocumentsDir?.appendingFolder(AudioPlugin().dirName)
+        case .icloud:
+            disk = Config.cloudDocumentsDir?.appendingFolder(AudioPlugin().dirName)
+        case .custom:
+            disk = Config.localDocumentsDir?.appendingFolder(AudioPlugin().dirName)
+        }
+        
+        self.disk = try? disk!.createIfNotExist()
+        self.container = try? AudioConfigRepo.getContainer()
+        self.repo = try? AudioRepo(disk: disk!, reason: "onInit", verbose: false)
+        self.audioProvider = AudioProvider(disk: disk!, db: self.repo!)
     }
 
     var body: some View {
@@ -34,6 +59,7 @@ struct BookRootView<Content>: View, SuperLog where Content: View {
                 content
             }
             .modelContainer(container)
+            .environmentObject(self.audioProvider!)
             .onAppear {
                 os_log("\(self.a)")
                 self.subscribe()
@@ -49,29 +75,29 @@ struct BookRootView<Content>: View, SuperLog where Content: View {
 
 // MARK: 操作
 
-extension BookRootView {
+extension AudioRootView {
     private func initRepo() {
-        let disk = Config.cloudDocumentsDir?.appendingFolder(BookPlugin().dirName)
-        let container = self.container!
-        let reason = self.className
-        Task.detached {
-            let db = BookDB(container, reason: reason)
-            _ = try? BookRepo(disk: disk!, verbose: true, db: db)
-        }
+//        let disk = Config.cloudDocumentsDir?.appendingFolder(BookPlugin().dirName)
+//        let container = self.container!
+//        let reason = self.className
+//        Task.detached {
+//            let db = BookDB(container, reason: reason)
+//            _ = try? BookRepo(disk: disk!, verbose: true, db: db)
+//        }
     }
     
     private func restore() {
-        Task {
-            if let url = BookSettingRepo.getCurrent() {
-                await self.man.play(url: url)
-
-                if let time = BookSettingRepo.getCurrentTime() {
-                    await self.man.seek(time: time)
-                }
-            } else {
-                os_log("\(self.t)No current book URL")
-            }
-        }
+//        Task {
+//            if let url = BookSettingRepo.getCurrent() {
+//                await self.man.play(url: url)
+//
+//                if let time = BookSettingRepo.getCurrentTime() {
+//                    await self.man.seek(time: time)
+//                }
+//            } else {
+//                os_log("\(self.t)No current book URL")
+//            }
+//        }
     }
 
     private func subscribe() {
