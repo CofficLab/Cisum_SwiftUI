@@ -48,9 +48,13 @@ struct BookRootView<Content>: View, SuperLog where Content: View {
 
 extension BookRootView {
     private func initRepo() {
-        let db = BookDB(self.container!, reason: self.className)
         let disk = Config.cloudDocumentsDir?.appendingFolder(BookPlugin().dirName)
-        let repo = try? BookRepo(disk: disk!, verbose: true, db: db)
+        let container = self.container!
+        let reason = self.className
+        Task.detached {
+            let db = BookDB(container, reason: reason)
+            _ = try? BookRepo(disk: disk!, verbose: true, db: db)
+        }
     }
     
     private func restore() {
