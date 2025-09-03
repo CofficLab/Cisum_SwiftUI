@@ -58,7 +58,7 @@ class BookDB: ObservableObject, SuperEvent, SuperLog {
                 self.emitDBSyncing(items)
                 await self.db.sync(items, verbose: true, isFirst: isFirst)
                 self.emitDBSynced()
-                os_log("\(self.t)✅✅✅ OnDBSynced")
+                os_log("\(self.t)✅ OnDBSynced")
             }
         })
     }

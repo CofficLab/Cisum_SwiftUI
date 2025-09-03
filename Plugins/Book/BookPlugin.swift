@@ -1,6 +1,5 @@
 import Foundation
 import MagicCore
-
 import OSLog
 import SwiftUI
 
@@ -23,18 +22,15 @@ actor BookPlugin: SuperPlugin, SuperLog {
 
     @MainActor func addDBView(reason: String) -> AnyView? {
         guard let disk = disk else {
-            os_log("\(self.t)⚠️ disk is nil")
-            return AnyView(EmptyView())
+            return AnyView(BookPluginError.initialization(reason: "磁盘未就绪").makeView(title: "书籍数据库初始化失败"))
         }
 
         guard let bookDB = self.bookDB else {
-            os_log("\(self.t)⚠️ bookDB is nil")
-            return AnyView(EmptyView())
+            return AnyView(BookPluginError.initialization(reason: "BookDB 未找到").makeView(title: "书籍数据库初始化失败"))
         }
 
         guard let bookProvider = self.bookProvider else {
-            os_log("\(self.t)⚠️ bookProvider is nil")
-            return AnyView(EmptyView())
+            return AnyView(BookPluginError.initialization(reason: "BookProvider 未找到").makeView(title: "书籍数据库初始化失败"))
         }
 
         return AnyView(
@@ -70,12 +66,6 @@ actor BookPlugin: SuperPlugin, SuperLog {
                 os_log("\(self.t)No current book URL")
             }
         }
-    }
-
-    func onPlay() {
-    }
-
-    func onPlayModeChange(mode: PlayMode) {
     }
 
     func onPlayAssetUpdate(asset: PlayAsset?, currentGroup: SuperPlugin?) async throws {
