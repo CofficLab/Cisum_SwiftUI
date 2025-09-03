@@ -14,7 +14,7 @@ class AppProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLog, 
     // 使用 UIRepo 来管理 UI 相关的数据
     private let uiRepo: UIRepo
     
-    @Published var showDB: Bool
+    @Published private(set) var showDB: Bool
     @Published var showSheet: Bool = true
     @Published var isImporting: Bool = false
     @Published var isDropping: Bool = false

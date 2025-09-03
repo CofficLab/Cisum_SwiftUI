@@ -108,7 +108,7 @@ actor BookPlugin: SuperPlugin, SuperLog {
                 os_log("\(self.t)播放下一个 -> \(next?.title ?? "")")
             }
 
-            if let next = next, let book = await self.bookDB?.find(next) {
+            if let next = next, let _ = await self.bookDB?.find(next) {
                 await playMan.play(url: next)
             }
         }

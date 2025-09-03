@@ -33,6 +33,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     @State private var urls: [URL] = []
     @State private var isSyncing: Bool = false
     @State private var isLoading: Bool = true
+    @State private var updateURLsDebounceTask: Task<Void, Never>? = nil
 
     var total: Int { urls.count }
 
@@ -91,7 +92,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
                 .listStyle(.plain)
             }
         }
-        .onAppear(perform: handleOnAppear)
+        .onAppear(perform: OnAppear)
         .onChange(of: selection, onSelectionChange)
         .onDBSorting(perform: onSorting)
         .onDBSortDone(perform: onSortDone)
@@ -100,6 +101,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
         .onDBUpdated(perform: onUpdated)
         .onDBSyncing(perform: onSyncing)
         .onPlayManAssetChanged(onPlayAssetChange)
+        .onDisappear(perform: onDisappear)
     }
 }
 
@@ -114,6 +116,16 @@ extension AudioList {
             await self.setUrls(urls)
         }
     }
+
+    @MainActor
+    private func scheduleUpdateURLsDebounced(delay seconds: Double = 0.25) {
+        updateURLsDebounceTask?.cancel()
+        updateURLsDebounceTask = Task { @MainActor in
+            try? await Task.sleep(nanoseconds: UInt64(seconds * 1000000000))
+            guard !Task.isCancelled else { return }
+            self.updateURLs()
+        }
+    }
 }
 
 // MARK: - Setter
@@ -122,7 +134,6 @@ extension AudioList {
     @MainActor
     private func setUrls(_ newValue: [URL]) {
         urls = newValue
-        isLoading = false
 
         // 如果当前选中的URL不在新的URL列表中，重置相关状态
         if let currentSelection = selection, !newValue.contains(currentSelection) {
@@ -141,18 +152,28 @@ extension AudioList {
     private func setSortMode(_ newValue: SortMode) {
         sortMode = newValue
     }
+
+    private func setIsLoading(_ newValue: Bool) {
+        isLoading = newValue
+    }
+
+    private func setIsSyncing(_ newValue: Bool) {
+        isSyncing = newValue
+    }
 }
 
 // MARK: - Event Handler
 
 extension AudioList {
-    func handleOnAppear() {
-        isLoading = true
-        updateURLs()
+    func OnAppear() {
+        setIsLoading(true)
+        scheduleUpdateURLsDebounced()
 
         if let asset = playManController.getAsset() {
             setSelection(asset)
         }
+
+        setIsLoading(false)
     }
 
     func onSelectionChange() {
@@ -179,28 +200,28 @@ extension AudioList {
 
     func onSortDone(_ notification: Notification) {
         os_log("\(t)🍋 onSortDone")
-        self.updateURLs()
+        self.scheduleUpdateURLsDebounced()
     }
 
     func onDeleted(_ notification: Notification) {
         os_log("\(t)🍋 onDeleted")
-        self.updateURLs()
+        self.scheduleUpdateURLsDebounced()
     }
 
     func onSynced(_ notification: Notification) {
         os_log("\(t)🍋 onSynced")
-        self.updateURLs()
-        self.isSyncing = false
+        self.scheduleUpdateURLsDebounced()
+        self.setIsSyncing(false)
     }
 
     func onUpdated(_ notification: Notification) {
         os_log("\(t)🍋 onUpdated")
-        self.updateURLs()
+        self.scheduleUpdateURLsDebounced()
     }
 
     func onSyncing(_ notification: Notification) {
         os_log("\(t)🍋 onSyncing")
-        self.isSyncing = true
+        self.setIsSyncing(true)
     }
 
     func onDeleteItems(at offsets: IndexSet) {
@@ -222,6 +243,11 @@ extension AudioList {
                 }
             }
         }
+    }
+
+    func onDisappear() {
+        updateURLsDebounceTask?.cancel()
+        updateURLsDebounceTask = nil
     }
 }
 
@@ -246,6 +272,8 @@ extension AudioList {
         }
     }
 }
+
+// MARK: - Preview
 
 #Preview("Small Screen") {
     RootView {

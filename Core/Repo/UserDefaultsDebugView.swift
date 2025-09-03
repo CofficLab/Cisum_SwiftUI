@@ -37,7 +37,7 @@ struct UserDefaultsDebugView: View, SuperLog {
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                 
                 Toggle("显示 iCloud 值", isOn: $showingICloudValues)
-                    .onChange(of: showingICloudValues) { _ in
+                    .onChange(of: showingICloudValues) {
                         refreshData()
                     }
             }
