@@ -24,7 +24,7 @@ struct BookTile: View, SuperThread, SuperLog, Equatable {
     var book: BookModel
 
     var body: some View {
-        os_log("\(self.t)开始渲染 \(self.book.title)")
+        os_log("\(self.t)开始渲染 \(self.book.bookTitle)")
         return ZStack {
             ZStack {
                 if let cover = cover {
@@ -57,8 +57,6 @@ struct BookTile: View, SuperThread, SuperLog, Equatable {
                         Text("共 \(book.childCount)")
                     }
 
-                    book.url.makeOpenButton()
-
                     Spacer()
                     if let s = self.state, noCover, s.currentURL != nil {
                         VStack(spacing: 0) {
@@ -89,7 +87,7 @@ extension BookTile {
             self.isLoadingCover = true
             // 预先在主线程捕获必要的 Sendable 值，避免非 Sendable 的 self/book 跨 actor 逃逸
             let url = self.book.url
-            let title = self.book.title
+            let title = self.book.bookTitle
             let thumbnailSize = CGSize(
                 width: max(120, tileSize.width * 2),
                 height: max(120, tileSize.height * 2)

@@ -22,8 +22,6 @@ class BookModel: SuperLog {
     var order: Int = 0
     var coverData: Data?
     var hasGetCover = false
-    
-    var title: String { bookTitle }
 
     @Relationship(deleteRule: .noAction)
     var parent: BookModel?

@@ -32,12 +32,11 @@ class BookRepo: ObservableObject, SuperEvent, SuperLog {
             case .synced: return "synced"
             case .updated: return "updated"
             case .error: return "error"
-        }
+            }
         }
     }
 
     @Published private(set) var syncStatus: SyncStatusBook = .idle
-    @Published private(set) var files: [URL] = []
     @Published private(set) var isSyncing: Bool = false
 
     init(disk: URL, verbose: Bool) throws {
@@ -103,7 +102,6 @@ extension BookRepo {
         // 更新状态（一次性写入，减少主线程抖动）
         self.setSyncStatus(.syncing(items: items))
         self.setIsSyncing(true)
-        self.setFiles(items)
 
         let task = Task(priority: .utility) { [weak self] in
             guard let self = self else { return }
@@ -125,7 +123,7 @@ extension BookRepo {
     @MainActor
     private func scheduleQuietFinish() async {
         quietFinishTask?.cancel()
-        let quietWindow: UInt64 = 1_500_000_000 // 1.5s
+        let quietWindow: UInt64 = 1500000000 // 1.5s
 
         let task = Task { @MainActor in
             do {
@@ -162,13 +160,6 @@ extension BookRepo {
         self.isSyncing = isSyncing
     }
 
-    private func setFiles(_ files: [URL]) {
-        if self.files == files { return }
-
-        os_log("\(self.t) setFiles: \(files.count)")
-        self.files = files
-    }
-
     private func setSyncStatus(_ syncStatus: SyncStatusBook) {
         if self.syncStatus == syncStatus { return }
 
@@ -184,7 +175,6 @@ extension BookRepo {
         self.isSyncing = (status == .syncing(items: [])) ? true : false
         if case let .syncing(items) = status {
             self.setIsSyncing(true)
-            self.setFiles(items)
         } else {
             self.setIsSyncing(false)
         }
