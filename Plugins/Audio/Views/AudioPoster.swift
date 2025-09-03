@@ -1,3 +1,4 @@
+import MagicCore
 import SwiftUI
 
 struct AudioPoster: View {
@@ -15,9 +16,15 @@ struct AudioPoster: View {
         VStack {
             ForEach(books, id: \.self) { item in
                 HStack {
-                    Image("DefaultAlbum")
+                    Image.musicNote
                         .resizable()
                         .scaledToFit()
+                        .frame(width: 20, height: 20)
+                        .padding(8)
+                        .background(
+                            Circle()
+                                .fill(Color.blue.opacity(0.15))
+                        )
                     Text(item)
                     Spacer()
                 }
@@ -30,17 +37,25 @@ struct AudioPoster: View {
 }
 
 #Preview("Poster") {
-    RootView {
-        AudioPoster()
-    }
-    .frame(width: 1200)
-    .frame(height: 1200)
+    AudioPoster()
+        .frame(width: 600)
+        .frame(height: 600)
 }
 
-#Preview("Big Screen") {
-    RootView {
-        ContentView()
+#if os(macOS)
+    #Preview("App - Large") {
+        AppPreview()
+            .frame(width: 600, height: 1000)
     }
-    .frame(width: 1200)
-    .frame(height: 1200)
-}
+
+    #Preview("App - Small") {
+        AppPreview()
+            .frame(width: 500, height: 800)
+    }
+#endif
+
+#if os(iOS)
+    #Preview("iPhone") {
+        AppPreview()
+    }
+#endif

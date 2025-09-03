@@ -17,23 +17,29 @@ struct LogoView: View {
     var background: Color? = nil
     var rotationSpeed: Double = 0.0
     var backgroundShape: BackgroundShape = .none
+    var size: CGFloat = 200
     
     @State private var rotationAngle: Double = 0.0
 
-    init(background: Color? = nil, rotationSpeed: Double = 0.0, backgroundShape: BackgroundShape = .none) {
+    init(
+        background: Color? = nil,
+        rotationSpeed: Double = 0.0,
+        backgroundShape: BackgroundShape = .none,
+        size: CGFloat = 200
+    ) {
         self.background = background
         self.rotationSpeed = rotationSpeed
         self.backgroundShape = backgroundShape
+        self.size = size
     }
 
     var body: some View {
         Image.makeCoffeeReelIcon(
             useDefaultBackground: false,
             // x版本指向x点钟方向
-            handleRotation: 0
+            handleRotation: 0,
+            size: size
         )
-        .frame(height: 200)
-        .frame(width: 200)
         .background(backgroundShapeView)
         .rotationEffect(.degrees(rotationAngle))
         .onAppear {

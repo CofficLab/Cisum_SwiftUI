@@ -63,6 +63,7 @@ enum Config: SuperLog {
             WelcomePlugin(),
             SettingPlugin(),
             AudioPlugin(),
+            BookPlugin(),
             OpenButtonPlugin(),
             LikeButtonPlugin(),
             CopyPlugin(),
