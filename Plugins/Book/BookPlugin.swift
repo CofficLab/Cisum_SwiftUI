@@ -16,7 +16,7 @@ actor BookPlugin: SuperPlugin, SuperLog {
     let isGroup: Bool = true
 
     @MainActor var disk: URL?
-    @MainActor var bookDB: BookDB?
+    @MainActor var bookDB: BookRepo?
     @MainActor var bookProvider: BookProvider?
     @MainActor var initialized = false
 
@@ -51,7 +51,7 @@ actor BookPlugin: SuperPlugin, SuperLog {
         }
 
         self.disk = Config.cloudDocumentsDir?.appendingFolder(self.dirName)
-        self.bookDB = try BookDB(disk: disk!, verbose: true)
+        self.bookDB = try BookRepo(disk: disk!, verbose: true)
         self.bookProvider = BookProvider(disk: disk!)
         self.initialized = true
 

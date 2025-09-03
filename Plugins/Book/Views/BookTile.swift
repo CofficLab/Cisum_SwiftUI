@@ -7,7 +7,7 @@ import SwiftUI
  */
 struct BookTile: View, SuperThread, SuperLog {
     @EnvironmentObject var playMan: PlayMan
-    @EnvironmentObject var db: BookDB
+    @EnvironmentObject var db: BookRepo
 
     @State var state: BookState? = nil
     @State var scale: CGFloat = 1.0

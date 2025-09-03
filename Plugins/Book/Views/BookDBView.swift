@@ -9,7 +9,7 @@ import UniformTypeIdentifiers
 struct BookDBView: View, SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var bookManager: BookProvider
-    @EnvironmentObject var db: BookDB
+    @EnvironmentObject var db: BookRepo
 
     @State var treeView = false
     @State var total: Int = 0

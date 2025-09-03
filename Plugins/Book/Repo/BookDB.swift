@@ -4,7 +4,7 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-actor BookRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
+actor BookDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     static let emoji = "📦"
 
     let modelContainer: ModelContainer
@@ -39,7 +39,7 @@ actor BookRecordDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThr
 
 // MARK: 增加
 
-extension BookRecordDB {
+extension BookDB {
     func insertModel(_ model: any PersistentModel) throws {
         context.insert(model)
         try context.save()
@@ -48,7 +48,7 @@ extension BookRecordDB {
 
 // MARK: 删除
 
-extension BookRecordDB {
+extension BookDB {
     func destroy<T>(for model: T.Type) throws where T: PersistentModel {
         try context.delete(model: T.self)
     }
@@ -56,7 +56,7 @@ extension BookRecordDB {
 
 // MARK: 查询
 
-extension BookRecordDB {
+extension BookDB {
     /// 所有指定的model
     func all<T: PersistentModel>() throws -> [T] {
         try context.fetch(FetchDescriptor<T>())
@@ -89,7 +89,7 @@ extension BookRecordDB {
 
 // MARK: 辅助类函数
 
-extension BookRecordDB {
+extension BookDB {
     /// 执行并输出耗时
     func printRunTime(_ title: String, tolerance: Double = 0.1, verbose: Bool = false, _ code: () -> Void) {
         if verbose {
@@ -122,7 +122,7 @@ extension BookRecordDB {
     }
 }
 
-extension BookRecordDB {
+extension BookDB {
     static func first(context: ModelContext) -> BookModel? {
         var descriptor = FetchDescriptor<BookModel>(predicate: #Predicate<BookModel> {
             $0.bookTitle != ""

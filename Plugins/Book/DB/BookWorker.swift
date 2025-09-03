@@ -3,10 +3,10 @@ import OSLog
 
 class BookWorker {
     private let taskQueue = DispatchQueue(label: "com.bookworker.taskQueue")
-    private let db: BookRecordDB
+    private let db: BookDB
     private var isRunning = false
     
-    init(db: BookRecordDB) {
+    init(db: BookDB) {
         self.db = db
     }
     

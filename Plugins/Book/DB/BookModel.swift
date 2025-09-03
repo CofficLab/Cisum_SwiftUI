@@ -10,7 +10,7 @@ import SwiftUI
 @Model
 class BookModel: SuperLog {
     static let emoji = "📖"
-    @Transient var db: BookDB?
+    @Transient var db: BookRepo?
 
     @Attribute(.unique)
     var url: URL
@@ -48,7 +48,7 @@ class BookModel: SuperLog {
         url.getNextFile()
     }
 
-    func setDB(_ db: BookDB?) {
+    func setDB(_ db: BookRepo?) {
         self.db = db
     }
 }

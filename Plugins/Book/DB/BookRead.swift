@@ -3,7 +3,7 @@ import SwiftUI
 import OSLog
 import SwiftData
 
-extension BookRecordDB {
+extension BookDB {
     func getBookCount() -> Int {
         do {
             return try context.fetchCount(BookModel.descriptorAll)
@@ -51,7 +51,7 @@ extension BookRecordDB {
 
 // MARK: First
 
-extension BookRecordDB {
+extension BookDB {
     static func firstBook(context: ModelContext) -> BookModel? {
         var descriptor = FetchDescriptor<BookModel>(predicate: #Predicate<BookModel> {
             $0.bookTitle != ""
@@ -77,7 +77,7 @@ extension BookRecordDB {
 
 // MARK: Find
 
-extension BookRecordDB {
+extension BookDB {
     static func findBook(_ url: URL, context: ModelContext, verbose: Bool = false) -> BookModel? {
         if verbose {
             os_log("\(self.t)FindBook -> \(url.lastPathComponent)")
@@ -124,7 +124,7 @@ extension BookRecordDB {
 
 // MARK: Children
 
-extension BookRecordDB {
+extension BookDB {
     func getChildren(_ url: URL, verbose: Bool = true) -> [BookModel] {
         if verbose {
             os_log("\(self.t)GetChildren -> \(url.lastPathComponent)")
@@ -145,7 +145,7 @@ extension BookRecordDB {
 
 // MARK: Next
 
-extension BookRecordDB {
+extension BookDB {
     nonisolated func getNextBookOf(_ url: URL?, verbose: Bool = false) -> BookModel? {
         if verbose {
             os_log("\(self.t)NextBookOf -> \(url?.lastPathComponent ?? "-")")
@@ -211,7 +211,7 @@ extension BookRecordDB {
 
 // MARK: Cover
 
-extension BookRecordDB {
+extension BookDB {
     func getCover(_ bookURL: URL) async -> Image? {
 //        guard let book = self.findBook(bookURL) else {
 //            return nil
