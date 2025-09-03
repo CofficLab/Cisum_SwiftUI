@@ -15,6 +15,8 @@ class BookRepo: ObservableObject, SuperEvent, SuperLog {
     private var currentSyncTask: Task<Void, Never>?
     private var isShuttingDown: Bool = false
     private var quietFinishTask: Task<Void, Never>?
+    private var syncStatus: SyncStatusBook = .idle
+    private var isSyncing: Bool = false
 
     // MARK: - State
 
@@ -35,9 +37,6 @@ class BookRepo: ObservableObject, SuperEvent, SuperLog {
             }
         }
     }
-
-    @Published private(set) var syncStatus: SyncStatusBook = .idle
-    @Published private(set) var isSyncing: Bool = false
 
     init(disk: URL, verbose: Bool) throws {
         if verbose {
