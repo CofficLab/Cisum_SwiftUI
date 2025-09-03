@@ -93,13 +93,12 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
         }
         .onAppear(perform: handleOnAppear)
         .onChange(of: selection, onSelectionChange)
-        .onReceive(nc.publisher(for: .DBSorting), perform: onSorting)
-        .onReceive(nc.publisher(for: .DBSortDone), perform: onSortDone)
-        .onReceive(nc.publisher(for: .dbDeleted), perform: onDeleted)
-        .onReceive(nc.publisher(for: .dbSynced), perform: onSynced)
-        .onReceive(nc.publisher(for: .dbUpdated), perform: onUpdated)
-        .onReceive(nc.publisher(for: .dbSyncing), perform: onSyncing)
-        .onReceive(nc.publisher(for: .dbSynced), perform: onSynced)
+        .onDBSorting(perform: onSorting)
+        .onDBSortDone(perform: onSortDone)
+        .onDBDeleted(perform: onDeleted)
+        .onDBSynced(perform: onSynced)
+        .onDBUpdated(perform: onUpdated)
+        .onDBSyncing(perform: onSyncing)
         .onPlayManAssetChanged(onPlayAssetChange)
     }
 }
