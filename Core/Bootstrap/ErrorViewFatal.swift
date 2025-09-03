@@ -1,3 +1,4 @@
+import MagicAsset
 import SwiftUI
 
 struct ErrorViewFatal: View {
@@ -13,11 +14,13 @@ struct ErrorViewFatal: View {
             VStack {
                 Spacer(minLength: 20)
 
-                Image("PlayingAlbum")
-                    .resizable()
+                Image.makeCoffeeReelIcon(useDefaultBackground: false)
                     .scaledToFit()
-                    .padding()
-                    .frame(maxHeight: 150)
+                    .background(
+                        Circle()
+                            .fill(.red.opacity(0.1))
+                    )
+                    .frame(maxHeight: 120)
 
                 Spacer()
 
@@ -31,12 +34,12 @@ struct ErrorViewFatal: View {
                             .padding(.top, 20)
                             .padding(.bottom, 20)
                             .font(.title2)
-                        
+
                         Text("\(error.localizedDescription)")
                             .font(.subheadline)
                             .foregroundStyle(.red)
                             .padding(.bottom, 10)
-                        
+
                         // 复制错误信息按钮
                         Button(action: {
                             copyErrorToClipboard()
@@ -138,29 +141,20 @@ struct ErrorViewFatal: View {
         }).padding(5)
     }
 
-    private func isFileExist(_ url: URL) -> String {
-        FileManager.default.fileExists(atPath: url.path) ? "是" : "否"
-    }
-
-    private func isDirExist(_ url: URL) -> String {
-        var isDir: ObjCBool = true
-        return FileManager.default.fileExists(atPath: url.path(), isDirectory: &isDir) ? "是" : "否"
-    }
-    
     /// 复制错误信息到剪贴板
     private func copyErrorToClipboard() {
         let errorInfo = """
         错误类型: \(String(describing: type(of: error)))
         错误描述: \(error.localizedDescription)
         """
-        
+
         errorInfo.copy()
-        
+
         // 显示复制成功状态
         withAnimation {
             isCopied = true
         }
-        
+
         // 2秒后重置状态
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
             withAnimation {
@@ -170,7 +164,54 @@ struct ErrorViewFatal: View {
     }
 }
 
-#Preview("App") {
-    AppPreview()
-        .frame(height: 800)
+// MARK: - Private Helpers
+
+extension ErrorViewFatal {
+    private func isFileExist(_ url: URL) -> String {
+        FileManager.default.fileExists(atPath: url.path) ? "是" : "否"
+    }
+
+    private func isDirExist(_ url: URL) -> String {
+        var isDir: ObjCBool = true
+        return FileManager.default.fileExists(atPath: url.path(), isDirectory: &isDir) ? "是" : "否"
+    }
 }
+
+// MARK: - Preview
+
+#if os(macOS)
+    #Preview("ErrorViewFatal - Large") {
+        ErrorViewFatal(error: NSError(domain: "TestError", code: 1001, userInfo: [NSLocalizedDescriptionKey: "这是一个测试错误，用于预览界面效果"]))
+            .inRootView()
+            .frame(width: 600, height: 1000)
+    }
+
+    #Preview("ErrorViewFatal - Small") {
+        ErrorViewFatal(error: NSError(domain: "TestError", code: 1001, userInfo: [NSLocalizedDescriptionKey: "测试错误"]))
+            .inRootView()
+            .frame(width: 500, height: 800)
+    }
+#endif
+
+#if os(iOS)
+    #Preview("ErrorViewFatal - iPhone") {
+        ErrorViewFatal(error: NSError(domain: "TestError", code: 1001, userInfo: [NSLocalizedDescriptionKey: "这是一个测试错误，用于预览界面效果"]))
+            .inRootView()
+    }
+#endif
+
+#Preview("App - Large") {
+    AppPreview()
+        .frame(width: 600, height: 1000)
+}
+
+#Preview("App - Small") {
+    AppPreview()
+        .frame(width: 500, height: 800)
+}
+
+#if os(iOS)
+    #Preview("iPhone") {
+        AppPreview()
+    }
+#endif
