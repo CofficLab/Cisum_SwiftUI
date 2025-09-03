@@ -9,11 +9,13 @@ actor OpenButtonPlugin: SuperPlugin {
     let iconName: String = .iconFinder
     nonisolated(unsafe) var enabled = true
 
+    #if os(macOS)
     @MainActor
     func addToolBarButtons() -> [(id: String, view: AnyView)] {
         guard enabled else { return [] }
         return [(id: "open-current", view: AnyView(OpenCurrentButtonView()))]
     }
+    #endif
 }
 
 private struct OpenCurrentButtonView: View {

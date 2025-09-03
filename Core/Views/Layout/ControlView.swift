@@ -1,7 +1,7 @@
+import MagicCore
+import OSLog
 import SwiftData
 import SwiftUI
-import OSLog
-import MagicCore
 
 struct ControlView: View, SuperLog {
     @EnvironmentObject var appManager: AppProvider
@@ -34,10 +34,11 @@ struct ControlView: View, SuperLog {
                     }
 
                     // MARK: 状态
+
                     if showStateView {
                         VStack(spacing: 10) {
                             StateView()
-                            
+
                             ForEach(p.plugins, id: \.id) { plugin in
                                 plugin.addStateView(currentGroup: p.current)
                             }
@@ -137,7 +138,7 @@ struct ControlView: View, SuperLog {
 
     private func getBottomHeight(_ geo: GeometryProxy) -> CGFloat {
         if Config.hasHomeIndicator() && Config.isNotDesktop && showDB == false {
-            return 0
+            return 10
         }
 
         return 0
@@ -150,18 +151,20 @@ struct ControlView: View, SuperLog {
     }
 }
 
-#Preview("App - Large") {
-    AppPreview()
-        .frame(width: 600, height: 1000)
-}
+#if os(macOS)
+    #Preview("App - Large") {
+        AppPreview()
+            .frame(width: 600, height: 1000)
+    }
 
-#Preview("App - Small") {
-    AppPreview()
-        .frame(width: 500, height: 600)
-}
+    #Preview("App - Small") {
+        AppPreview()
+            .frame(width: 500, height: 600)
+    }
+#endif
 
 #if os(iOS)
-#Preview("iPhone") {
-    AppPreview()
-}
+    #Preview("iPhone") {
+        AppPreview()
+    }
 #endif
