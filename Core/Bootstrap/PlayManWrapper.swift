@@ -37,7 +37,7 @@ public class PlayManWrapper {
         playMan.currentTime
     }
 
-    func play(url: URL, autoPlay: Bool = true) async {
+    func play(_ url: URL, autoPlay: Bool = true) async {
         await playMan.play(url, autoPlay: autoPlay)
     }
 

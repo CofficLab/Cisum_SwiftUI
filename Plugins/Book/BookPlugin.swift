@@ -61,7 +61,7 @@ actor BookPlugin: SuperPlugin, SuperLog {
 
         Task { @MainActor in
             if let url = BookPlugin.getCurrent(), let book = await self.bookDB?.find(url) {
-                await playMan.play(url: book)
+                await playMan.play(book)
 
                 if let time = BookPlugin.getCurrentTime() {
                     await playMan.seek(time: time)
@@ -109,7 +109,7 @@ actor BookPlugin: SuperPlugin, SuperLog {
             }
 
             if let next = next, let _ = await self.bookDB?.find(next) {
-                await playMan.play(url: next)
+                await playMan.play(next)
             }
         }
     }

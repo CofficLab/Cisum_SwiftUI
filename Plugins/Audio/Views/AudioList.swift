@@ -134,6 +134,7 @@ extension AudioList {
     @MainActor
     private func setUrls(_ newValue: [URL]) {
         urls = newValue
+        self.setIsLoading(false)
 
         // 如果当前选中的URL不在新的URL列表中，重置相关状态
         if let currentSelection = selection, !newValue.contains(currentSelection) {
@@ -172,12 +173,10 @@ extension AudioList {
         if let asset = playManController.getAsset() {
             setSelection(asset)
         }
-
-        setIsLoading(false)
     }
 
     func onSelectionChange() {
-        if let url = selection {
+        if let url = selection, isLoading == false {
             Task {
                 await self.playManController.play(url: url)
             }
@@ -275,18 +274,20 @@ extension AudioList {
 
 // MARK: - Preview
 
-#Preview("Small Screen") {
-    RootView {
-        ContentView()
-    }
-    .frame(width: 500)
-    .frame(height: 1200)
+#if os(macOS)
+#Preview("App - Large") {
+    AppPreview()
+        .frame(width: 600, height: 1000)
 }
 
-#Preview("Big Screen") {
-    RootView {
-        ContentView()
-    }
-    .frame(width: 1200)
-    .frame(height: 1200)
+#Preview("App - Small") {
+    AppPreview()
+        .frame(width: 600, height: 600)
 }
+#endif
+
+#if os(iOS)
+#Preview("iPhone") {
+    AppPreview()
+}
+#endif

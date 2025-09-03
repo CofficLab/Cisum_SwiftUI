@@ -159,7 +159,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
         }
 
         if let asset = assetTarget {
-            await playMan.play(url: asset, autoPlay: false)
+            await playMan.play(asset, autoPlay: false)
             await playMan.seek(time: timeTarget)
             playMan.setLike(liked)
         }
@@ -184,7 +184,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
         let asset = try await audioDB.getPrevOf(current, verbose: false)
 
         if let asset = asset {
-            await playMan.play(url: asset, autoPlay: playMan.playing)
+            await playMan.play(asset, autoPlay: playMan.playing)
         } else {
             throw AudioPluginError.NoPrevAsset
         }
@@ -203,7 +203,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
 
         let asset = try await audioDB.getNextOf(current, verbose: false)
         if let asset = asset {
-            await playMan.play(url: asset, autoPlay: true)
+            await playMan.play(asset, autoPlay: true)
         } else {
             throw AudioPluginError.NoNextAsset
         }
