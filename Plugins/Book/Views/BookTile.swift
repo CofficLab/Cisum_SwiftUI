@@ -93,7 +93,7 @@ extension BookTile {
                 height: max(120, tileSize.height * 2)
             )
 
-            Task.detached(priority: .utility) {
+            Task.detached(priority: .background) {
                 do {
                     os_log("\(self.t)开始获取封面图 \(title)")
                     let cover = try await Self.findCoverRecursively(in: url, thumbnailSize: thumbnailSize)
