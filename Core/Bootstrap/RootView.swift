@@ -57,7 +57,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                     NavigationStack {
                         ZStack {
                             Group {
-                                if let wrapped = p.wrapWithCurrentRoot { content } {
+                                if let wrapped = p.wrapWithCurrentRoot(content: { content }) {
                                     wrapped
                                 } else {
                                     content
