@@ -20,6 +20,8 @@ actor OpenButtonPlugin: SuperPlugin {
 
 private struct OpenCurrentButtonView: View, SuperLog {
     nonisolated static let emoji = "😜"
+    
+    @EnvironmentObject var man: PlayManController
 
     @State private var url: URL? = nil
 
@@ -36,6 +38,11 @@ private struct OpenCurrentButtonView: View, SuperLog {
         .onPlayManAssetChanged({
             self.url = $0
         })
+        .onAppear {
+            if let url = man.getAsset() {
+                self.url = url
+            }
+        }
     }
 }
 

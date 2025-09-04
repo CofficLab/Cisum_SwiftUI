@@ -6,6 +6,11 @@ import SwiftUI
 
 actor AudioPlugin: SuperPlugin, SuperLog {
     static let emoji = "🎧"
+    #if DEBUG
+        static let dbDirName = "audios_debug"
+    #else
+        static let dbDirName = "audios"
+    #endif
 
     let label = "Audio"
     let hasPoster = true
@@ -14,13 +19,12 @@ actor AudioPlugin: SuperPlugin, SuperLog {
     let isGroup = true
     let verbose = true
 
-    @MainActor var dirName: String = AudioConfigRepo.dbDirName
     @MainActor var disk: URL?
     @MainActor var audioProvider: AudioProvider?
     @MainActor var audioDB: AudioRepo?
     @MainActor var initialized: Bool = false
     @MainActor var container: ModelContainer?
-    
+
     @MainActor func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {
         AnyView(AudioRootView { content() })
     }
@@ -53,7 +57,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
 
     func onCurrentURLChanged(url: URL) {
         if verbose {
-            os_log("\(self.t)🍋🍋🍋 OnPlayAssetUpdate with asset \(url.title)")
+            os_log("\(self.t)🍋 OnPlayAssetUpdate with asset \(url.title)")
         }
 
         AudioStateRepo.storeCurrent(url)
@@ -92,22 +96,22 @@ actor AudioPlugin: SuperPlugin, SuperLog {
         guard let currentGroup = currentGroup, currentGroup.label == self.label else {
             return
         }
-        
+
         if verbose {
             os_log("\(self.a)with storage \(storage?.emojiTitle ?? "nil")")
         }
-        
+
         guard let storage = storage else {
             return
         }
 
         switch storage {
         case .local:
-            disk = Config.localDocumentsDir?.appendingFolder(self.dirName)
+            disk = Config.localDocumentsDir?.appendingFolder(Self.dbDirName)
         case .icloud:
-            disk = Config.cloudDocumentsDir?.appendingFolder(self.dirName)
+            disk = Config.cloudDocumentsDir?.appendingFolder(Self.dbDirName)
         case .custom:
-            disk = Config.localDocumentsDir?.appendingFolder(self.dirName)
+            disk = Config.localDocumentsDir?.appendingFolder(Self.dbDirName)
         }
 
         guard let disk = disk else {
@@ -205,17 +209,17 @@ actor AudioPlugin: SuperPlugin, SuperLog {
     @MainActor func onStorageLocationChange(storage: StorageLocation?) async throws {
         switch storage {
         case .local, .none:
-            disk = Config.localDocumentsDir?.appendingPathComponent(self.dirName)
+            disk = Config.localDocumentsDir?.appendingPathComponent(Self.dbDirName)
         case .icloud:
-            disk = Config.cloudDocumentsDir?.appendingPathComponent(self.dirName)
+            disk = Config.cloudDocumentsDir?.appendingPathComponent(Self.dbDirName)
         case .custom:
-            disk = Config.localDocumentsDir?.appendingPathComponent(self.dirName)
+            disk = Config.localDocumentsDir?.appendingPathComponent(Self.dbDirName)
         }
 
         guard let disk = disk else {
             fatalError("AudioPlugin.onInit: disk == nil")
         }
-        
+
         self.audioDB?.changeRoot(url: disk)
         self.audioProvider?.updateDisk(disk)
     }

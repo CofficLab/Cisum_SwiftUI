@@ -40,11 +40,11 @@ struct AudioRootView<Content>: View, SuperLog where Content: View {
         
         switch storage {
         case .local:
-            disk = Config.localDocumentsDir?.appendingFolder(AudioPlugin().dirName)
+            disk = Config.localDocumentsDir?.appendingFolder(AudioPlugin.dbDirName)
         case .icloud:
-            disk = Config.cloudDocumentsDir?.appendingFolder(AudioPlugin().dirName)
+            disk = Config.cloudDocumentsDir?.appendingFolder(AudioPlugin.dbDirName)
         case .custom:
-            disk = Config.localDocumentsDir?.appendingFolder(AudioPlugin().dirName)
+            disk = Config.localDocumentsDir?.appendingFolder(AudioPlugin.dbDirName)
         }
         
         self.disk = try? disk!.createIfNotExist()
