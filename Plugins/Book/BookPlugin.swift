@@ -12,13 +12,22 @@ actor BookPlugin: SuperPlugin, SuperLog {
     let hasPoster: Bool = true
     let description: String = "适用于听有声书的场景"
     let iconName: String = "book"
-    let dirName = "audios_book"
+    static let dirName = "audios_book"
     let isGroup: Bool = true
+    let verbose = true
 
     @MainActor var disk: URL?
 
     @MainActor func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {
         AnyView(BookRootView { content() })
+    }
+    
+    @MainActor func addSettingView() -> AnyView? {
+        if verbose {
+            os_log("\(self.t)🍋🍋🍋 AddSettingView")
+        }
+
+        return AnyView(BookSettings())
     }
 
     @MainActor func addDBView(reason: String) -> AnyView? {
@@ -36,8 +45,18 @@ actor BookPlugin: SuperPlugin, SuperLog {
             return
         }
 
-        self.disk = Config.cloudDocumentsDir?.appendingFolder(self.dirName)
+        self.disk = Config.cloudDocumentsDir?.appendingFolder(Self.dirName)
     }
+    
+    @MainActor
+    static func getBookDisk() -> URL? {
+        guard let storageRoot = Config.getStorageRoot() else {
+            return nil
+        }
+        
+        return storageRoot.appendingPathComponent(Self.dirName)
+    }
+
 }
 
 #if os(macOS)

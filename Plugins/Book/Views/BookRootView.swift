@@ -59,7 +59,7 @@ extension BookRootView {
 
 extension BookRootView {
     private func initRepo() {
-        let disk = Config.cloudDocumentsDir?.appendingFolder(BookPlugin().dirName)
+        let disk = BookPlugin.getBookDisk()
         let container = self.container!
         let reason = self.className
         Task.detached(priority: .background) {
