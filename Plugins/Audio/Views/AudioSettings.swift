@@ -50,7 +50,7 @@ struct AudioSettings: View, SuperLog {
                 }
             }
         }
-        .onAppear {
+        .task {
             self.updateDisk()
             self.updateDescription()
             self.updateFileCount()
