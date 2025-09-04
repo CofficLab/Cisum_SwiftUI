@@ -27,7 +27,7 @@ struct BookList: View, SuperLog, SuperThread {
     var body: some View {
 //        os_log("\(self.t)开始渲染")
         return List(books) { item in
-            BookTile(url: item.url, book: item, title: item.bookTitle, childCount: item.childCount)
+            BookTile(url: item.url, title: item.bookTitle, childCount: item.childCount)
         }
     }
 }

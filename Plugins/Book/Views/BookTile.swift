@@ -19,7 +19,6 @@ struct BookTile: View, SuperThread, SuperLog, Equatable {
     var hasCover: Bool { cover != nil }
     var noCover: Bool { cover == nil }
     var url: URL
-    var book: BookModel
     var title: String
     var childCount: Int
 
@@ -86,8 +85,8 @@ extension BookTile {
         if self.cover == nil {
             self.isLoadingCover = true
             // 预先在主线程捕获必要的 Sendable 值，避免非 Sendable 的 self/book 跨 actor 逃逸
-            let url = self.book.url
-            let title = self.book.bookTitle
+            let url = self.url
+            let title = self.title
             let thumbnailSize = CGSize(
                 width: max(120, tileSize.width * 2),
                 height: max(120, tileSize.height * 2)

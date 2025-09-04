@@ -36,9 +36,9 @@ struct BookRootView<Content>: View, SuperLog where Content: View {
             .modelContainer(container)
             .onAppear {
                 os_log("\(self.a)")
-//                self.subscribe()
-//                self.restore()
-//                self.initRepo()
+                self.subscribe()
+                self.restore()
+                self.initRepo()
             }
             .onDisappear {
                 os_log("\(self.t)Disappear")

@@ -37,7 +37,7 @@ struct BookGrid: View, SuperLog, SuperThread {
                 GridItem(.adaptive(minimum: 150), spacing: 10),
             ], pinnedViews: [.sectionHeaders]) {
                 ForEach(books) { item in
-                    BookTile(url: item.url, book: item, title: item.bookTitle, childCount: item.childCount)
+                    BookTile(url: item.url, title: item.bookTitle, childCount: item.childCount)
                         .onTapGesture {
                             Task {
                                 if let first = item.url.getChildren().first {
