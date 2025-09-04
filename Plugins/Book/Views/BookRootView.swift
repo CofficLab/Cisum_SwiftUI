@@ -13,6 +13,7 @@ struct BookRootView<Content>: View, SuperLog where Content: View {
 
     @State private var error: Error? = nil
     private var content: Content
+    @State private var repo: BookRepo? = nil
 
     nonisolated static var emoji: String { "🏓" }
     let verbose = true
@@ -29,20 +30,27 @@ struct BookRootView<Content>: View, SuperLog where Content: View {
     }
 
     var body: some View {
-        if let container = self.container {
-            ZStack {
-                content
+        ZStack {
+            if let container = self.container {
+                ZStack {
+                    content
+                }
+                .modelContainer(container)
+                .onAppear {
+                    os_log("\(self.a)")
+                    self.subscribe()
+                    self.restore()
+                    self.initRepo()
+                }
+                .onDisappear {
+                    os_log("\(self.t)Disappear")
+                }
+            } else if let error = self.error {
+                error.makeView()
             }
-            .modelContainer(container)
-            .onAppear {
-                os_log("\(self.a)")
-                self.subscribe()
-                self.restore()
-                self.initRepo()
-            }
-            .onDisappear {
-                os_log("\(self.t)Disappear")
-            }
+        }
+        .onStorageLocationChanged {
+            self.initRepo()
         }
     }
 }
@@ -59,15 +67,16 @@ extension BookRootView {
 
 extension BookRootView {
     private func initRepo() {
+        os_log("\(self.t)InitRepo")
         let disk = BookPlugin.getBookDisk()
         let container = self.container!
         let reason = self.className
-        Task.detached(priority: .background) {
+        Task {
             let db = BookDB(container, reason: reason)
             do {
-                _ = try BookRepo(disk: disk!, verbose: true, db: db)
+                self.repo = try BookRepo(disk: disk!, verbose: true, db: db)
             } catch {
-                await self.setError(error)
+                self.setError(error)
             }
         }
     }

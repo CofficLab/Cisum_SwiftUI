@@ -54,7 +54,9 @@ actor BookPlugin: SuperPlugin, SuperLog {
             return nil
         }
         
-        return storageRoot.appendingPathComponent(Self.dirName)
+        let disk = try? storageRoot.appendingPathComponent(Self.dirName, isDirectory: true).createIfNotExist()
+        
+        return disk
     }
 
 }

@@ -40,14 +40,15 @@ class BookRepo: ObservableObject, SuperEvent, SuperLog {
         self.verbose = verbose
         self.db = db
         self.disk = disk
-        self.monitor = self.makeMonitor()
+        self.monitor = try self.makeMonitor()
     }
 
-    func makeMonitor() -> Cancellable {
-        info("Make monitor for: \(self.disk.shortPath())")
+    func makeMonitor() throws -> Cancellable {
+        os_log("\(self.t)📸 Make monitor for: \(self.disk.shortPath())")
 
         if self.disk.isNotDirExist {
-            info("Error: \(self.disk.shortPath()) not exist")
+            os_log(.error, "\(self.t)Error: \(self.disk.absoluteString) not exist")
+            throw BookPluginError.DiskNotFound
         }
 
         let debounceInterval = 2.5
@@ -56,7 +57,7 @@ class BookRepo: ObservableObject, SuperEvent, SuperLog {
             verbose: true,
             caller: self.className,
             onChange: { items, isFirst, _ in
-
+                os_log("\(self.t) Disk changed, with items \(items.count)")
                 if let lastTime = UserDefaults.standard.object(forKey: "BookLastUpdateTime") as? Date {
                     let now = Date()
                     guard now.timeIntervalSince(lastTime) >= debounceInterval else { return }
@@ -64,7 +65,6 @@ class BookRepo: ObservableObject, SuperEvent, SuperLog {
                 UserDefaults.standard.set(Date(), forKey: "BookLastUpdateTime")
 
                 await self.sync(items, isFirst: isFirst)
-
             },
             onDeleted: { [weak self] _ in
                 // Book 模块暂不处理删除后的额外逻辑

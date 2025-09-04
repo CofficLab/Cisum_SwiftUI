@@ -8,6 +8,7 @@ import SwiftUI
 @preconcurrency import Combine
 
 // MARK: - Sync Status Enum
+
 enum SyncStatus: Equatable {
     case idle
     case syncing(items: [URL])
@@ -24,8 +25,9 @@ class AudioRepo: ObservableObject, SuperLog {
     private var monitor: Cancellable?
     private var currentSyncTask: Task<Void, Never>?
     private var isShuttingDown: Bool = false
-    
+
     // MARK: - Published Properties for State Management
+
     @Published var syncStatus: SyncStatus = .idle
     @Published var files: [URL] = []
     @Published var downloadProgress: [URL: Double] = [:]
@@ -129,7 +131,7 @@ class AudioRepo: ObservableObject, SuperLog {
         guard !isShuttingDown else { return }
 
         currentSyncTask?.cancel()
-        
+
         // 更新状态而不是发送通知
         self.isSyncing = true
         self.syncStatus = .syncing(items: items)
@@ -155,17 +157,18 @@ class AudioRepo: ObservableObject, SuperLog {
 
         currentSyncTask = task
     }
-    
+
     // MARK: - State Update Methods
+
     private func updateSyncStatus(_ status: SyncStatus) {
         self.syncStatus = status
         self.isSyncing = false
-        
+
         switch status {
         case .synced, .updated:
             // 同步完成，可以在这里添加其他逻辑
             break
-        case .error(let message):
+        case let .error(message):
             os_log(.error, "\(self.t)Sync error: \(message)")
         default:
             break
@@ -177,10 +180,10 @@ class AudioRepo: ObservableObject, SuperLog {
     }
 
     func makeMonitor() -> Cancellable {
-        info("Make monitor for: \(self.disk.shortPath())")
+        os_log("\(self.t)Make monitor for: \(self.disk.shortPath())")
 
         if self.disk.isNotDirExist {
-            info("Error: \(self.disk.shortPath()) not exist")
+            os_log(.error, "Error: \(self.disk.shortPath()) not exist")
         }
 
         let debounceInterval = 2.0
@@ -189,6 +192,7 @@ class AudioRepo: ObservableObject, SuperLog {
             verbose: false,
             caller: self.className,
             onChange: { [weak self] items, isFirst, _ in
+                os_log(" Disk changed, with items \(items.count)")
                 guard let self = self else { return }
 
                 @Sendable func handleChange() async {
@@ -257,17 +261,17 @@ extension AudioRepo {
     var currentSyncStatus: SyncStatus {
         syncStatus
     }
-    
+
     /// 获取当前文件列表
     var currentFiles: [URL] {
         files
     }
-    
+
     /// 获取指定URL的下载进度
     func getDownloadProgress(for url: URL) -> Double {
         downloadProgress[url] ?? 0.0
     }
-    
+
     /// 清理下载进度
     func clearDownloadProgress(for url: URL) {
         downloadProgress.removeValue(forKey: url)
