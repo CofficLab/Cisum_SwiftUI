@@ -24,7 +24,7 @@ struct BookDBView: View, SuperLog, SuperThread {
     var total: Int { books.count }
     var dropping: Bool { app.isDropping }
     
-    private var useListView = false
+    private var useListView = true
 
     var body: some View {
         os_log("\(self.t)开始渲染")

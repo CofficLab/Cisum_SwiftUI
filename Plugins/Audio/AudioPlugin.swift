@@ -82,20 +82,20 @@ actor AudioPlugin: SuperPlugin, SuperLog {
     }
 
     @MainActor func onStorageLocationChange(storage: StorageLocation?) async throws {
-        switch storage {
-        case .local, .none:
-            disk = Config.localDocumentsDir?.appendingPathComponent(Self.dbDirName)
-        case .icloud:
-            disk = Config.cloudDocumentsDir?.appendingPathComponent(Self.dbDirName)
-        case .custom:
-            disk = Config.localDocumentsDir?.appendingPathComponent(Self.dbDirName)
-        }
-
-        guard let disk = disk else {
+        guard let disk = Self.getAudioDisk() else {
             fatalError("AudioPlugin.onInit: disk == nil")
         }
 
         self.audioDB?.changeRoot(url: disk)
+    }
+    
+    @MainActor
+    static func getAudioDisk() -> URL? {
+        guard let storageRoot = Config.getStorageRoot() else {
+            return nil
+        }
+        
+        return storageRoot.appendingPathComponent(Self.dbDirName)
     }
 }
 

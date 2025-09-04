@@ -139,7 +139,7 @@ extension BookTile {
 
 extension BookTile {
     func onAppear() {
-        self.updateCover()
+//        self.updateCover()
     }
 }
 

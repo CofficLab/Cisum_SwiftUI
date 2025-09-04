@@ -51,6 +51,7 @@ struct AudioRootView<Content>: View, SuperLog where Content: View {
         self.container = try? AudioConfigRepo.getContainer()
         self.repo = try? AudioRepo(disk: disk!, reason: "onInit", verbose: false)
         self.audioProvider = AudioProvider(disk: disk!, db: self.repo!)
+        self.audioProvider?.updateDisk(disk!)
     }
 
     var body: some View {

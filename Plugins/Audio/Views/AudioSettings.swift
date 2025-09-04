@@ -3,50 +3,59 @@ import SwiftUI
 
 struct AudioSettings: View, SuperLog {
     nonisolated static let emoji = "🔊"
-    @EnvironmentObject var audioManager: AudioProvider
 
     @State var diskSize: String?
     @State var description: String = ""
+    @State var fileCount: Int = 0
 
     var body: some View {
-        MagicSettingSection(title: "歌曲仓库") {
-            MagicSettingRow(title: "仓库大小", description: description, icon: .iconMusicLibrary, content: {
-                HStack {
-                    if let diskSize = diskSize {
-                        Text(diskSize)
-                            .font(.footnote)
-                    }
-                }
-
-            })
-            .task {
-                diskSize = audioManager.disk.getSizeReadable()
-                if audioManager.disk.isiCloud {
-                    description = "是 iCloud 云盘，会同步"
-                } else {
-                    description = "是本地目录，不会同步"
-                }
-            }
-
-            #if os(macOS)
-                MagicSettingRow(title: "打开仓库", description: "在Finder中查看", icon: .iconShowInFinder, content: {
+        if let disk = AudioPlugin.getAudioDisk() {
+            MagicSettingSection(title: "歌曲仓库") {
+                MagicSettingRow(title: "仓库大小", description: description, icon: .iconMusicLibrary, content: {
                     HStack {
-                        audioManager.disk
-                            .makeOpenButton()
-                            .magicSize(.small)
+                        if let diskSize = diskSize {
+                            Text(diskSize)
+                                .font(.footnote)
+                        }
                     }
 
                 })
-            #endif
-
-            MagicSettingRow(title: "文件数量", description: "当前仓库内的文件总数", icon: .iconDocument, content: {
-                HStack {
-                    Text("\(audioManager.disk.filesCountRecursively()) 个文件")
-                        .font(.footnote)
+                .task {
+                    diskSize = disk.getSizeReadable()
+                    if disk.isiCloud {
+                        description = "是 iCloud 云盘，会同步"
+                    } else {
+                        description = "是本地目录，不会同步"
+                    }
                 }
-            })
-            .task {
-                // 这里假设 getFileCount() 是同步方法，如果是异步请调整
+
+                #if os(macOS)
+                    MagicSettingRow(title: "打开仓库", description: "在Finder中查看", icon: .iconShowInFinder, content: {
+                        HStack {
+                            disk.makeOpenButton()
+                                .magicSize(.small)
+                        }
+
+                    })
+                #endif
+
+                MagicSettingRow(title: "文件数量", description: "当前仓库内的文件总数", icon: .iconDocument, content: {
+                    HStack {
+                        Text("\(fileCount) 个文件")
+                            .font(.footnote)
+                    }
+                })
+                .task {
+                    self.fileCount = disk.filesCountRecursively()
+                }
+            }
+        } else {
+            MagicSettingSection(title: "歌曲仓库") {
+                MagicSettingRow(title: "出现错误", description: description, icon: .iconMusicLibrary, content: {
+                    Text("暂时不能获取歌曲仓库信息")
+                        .font(.footnote)
+
+                })
             }
         }
     }
