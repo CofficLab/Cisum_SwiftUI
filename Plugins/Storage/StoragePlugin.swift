@@ -18,7 +18,7 @@ actor StoragePlugin: SuperPlugin, SuperLog {
     @MainActor
     func addSettingView() -> AnyView? {
         guard enabled else { return nil }
-        return AnyView(SettingPluginView())
+        return AnyView(StorageSettingView())
     }
 }
 

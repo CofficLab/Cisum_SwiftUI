@@ -3,19 +3,18 @@ import SwiftUI
 
 import OSLog
 
-struct SettingPluginView: View, SuperLog {
+struct StorageSettingView: View, SuperLog {
     nonisolated static let emoji: String = "🍴"
 
     @EnvironmentObject var cloudManager: CloudProvider
 
     @State private var showMigrationProgress = false
-    @State private var tempStorageLocation: StorageLocation
+    @State private var targetLocation: StorageLocation
     @State private var hasChanges = false
-    @State private var storageRoot: URL?
     @State private var location: StorageLocation = .local
 
     init() {
-        _tempStorageLocation = State(initialValue: .local)
+        _targetLocation = State(initialValue: .local)
     }
 
     var body: some View {
@@ -27,7 +26,7 @@ struct SettingPluginView: View, SuperLog {
                     icon: .iconCloud,
                     action: {
                         showMigrationProgress = true
-                        tempStorageLocation = .icloud
+                        targetLocation = .icloud
                     }
                 ) {
                     if location == .icloud {
@@ -43,7 +42,7 @@ struct SettingPluginView: View, SuperLog {
                     icon: .iconFolder,
                     action: {
                         showMigrationProgress = true
-                        tempStorageLocation = .local
+                        targetLocation = .local
                     }
                 ) {
                     if location == .local {
@@ -56,32 +55,21 @@ struct SettingPluginView: View, SuperLog {
         .sheet(isPresented: $showMigrationProgress) {
             MigrationProgressView(
                 sourceLocation: Config.getStorageLocation() ?? .local,
-                targetLocation: tempStorageLocation,
+                targetLocation: targetLocation,
                 sourceURL: Config.getStorageRoot(),
-                targetURL: Config.getStorageRoot(for: tempStorageLocation),
+                targetURL: Config.getStorageRoot(for: targetLocation),
                 onDismiss: {
                     showMigrationProgress = false
-                    self.hasChanges = tempStorageLocation != Config.getStorageLocation()
-                    storageRoot = Config.getStorageRoot()
-
-                    os_log("\(self.t) Current Storage Root \(storageRoot?.path ?? "nil")")
+                    self.hasChanges = targetLocation != Config.getStorageLocation()
                 }
             )
-        }.onAppear {
+        }
+        .onAppear {
             location = Config.getStorageLocation() ?? location
-            tempStorageLocation = Config.getStorageLocation() ?? .local
-            hasChanges = false
-            storageRoot = Config.getStorageRoot()
-            
-            os_log("\(self.t) Current Storage Type: \(Config.getStorageLocation()?.rawValue ?? "nil")")
+            targetLocation = Config.getStorageLocation() ?? .local
         }
-        .onChange(of: tempStorageLocation) {
-            hasChanges = tempStorageLocation != (Config.getStorageLocation() ?? .local)
-            storageRoot = Config.getStorageRoot()
-        }
-        .onChange(of: Config.getStorageLocation()) {
-            hasChanges = tempStorageLocation != (Config.getStorageLocation() ?? .local)
-            storageRoot = Config.getStorageRoot()
+        .onChange(of: targetLocation) {
+            hasChanges = targetLocation != (Config.getStorageLocation() ?? .local)
         }
         .onStorageLocationChanged {
             location = Config.getStorageLocation() ?? location
