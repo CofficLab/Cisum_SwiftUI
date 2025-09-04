@@ -4,16 +4,16 @@ import MagicCore
 import OSLog
 import SwiftUI
 
-actor SettingPlugin: SuperPlugin, SuperLog {
+actor StoragePlugin: SuperPlugin, SuperLog {
     static let emoji = "⚙️"
 
     let dirName = "audios"
     let label = "Setting"
     let hasPoster = false
-    let description = "设置"
+    let description = "存储设置"
     let iconName: String = .iconSettings
     let isGroup = false
-    nonisolated(unsafe) var enabled: Bool = false
+    nonisolated(unsafe) var enabled = true
 
     @MainActor
     func addSettingView() -> AnyView? {

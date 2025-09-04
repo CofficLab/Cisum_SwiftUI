@@ -12,6 +12,7 @@ struct SettingPluginView: View, SuperLog {
     @State private var tempStorageLocation: StorageLocation
     @State private var hasChanges = false
     @State private var storageRoot: URL?
+    @State private var location: StorageLocation = .local
 
     init() {
         _tempStorageLocation = State(initialValue: .local)
@@ -29,7 +30,7 @@ struct SettingPluginView: View, SuperLog {
                         tempStorageLocation = .icloud
                     }
                 ) {
-                    if Config.getStorageLocation() == .icloud {
+                    if location == .icloud {
                         Image(systemName: .iconCheckmarkSimple)
                             .foregroundColor(.accentColor)
                     }
@@ -45,7 +46,7 @@ struct SettingPluginView: View, SuperLog {
                         tempStorageLocation = .local
                     }
                 ) {
-                    if Config.getStorageLocation() == .local {
+                    if location == .local {
                         Image(systemName: .iconCheckmarkSimple)
                             .foregroundColor(.accentColor)
                     }
@@ -67,6 +68,7 @@ struct SettingPluginView: View, SuperLog {
                 }
             )
         }.onAppear {
+            location = Config.getStorageLocation() ?? location
             tempStorageLocation = Config.getStorageLocation() ?? .local
             hasChanges = false
             storageRoot = Config.getStorageRoot()
@@ -80,6 +82,9 @@ struct SettingPluginView: View, SuperLog {
         .onChange(of: Config.getStorageLocation()) {
             hasChanges = tempStorageLocation != (Config.getStorageLocation() ?? .local)
             storageRoot = Config.getStorageRoot()
+        }
+        .onStorageLocationChanged {
+            location = Config.getStorageLocation() ?? location
         }
     }
 }

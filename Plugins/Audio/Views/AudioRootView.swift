@@ -67,6 +67,9 @@ struct AudioRootView<Content>: View, SuperLog where Content: View {
                 self.restorePlayMode()
                 self.initRepo()
             }
+            .onStorageLocationChanged {
+                self.m.info("存储位置发生了变化")
+            }
             .onDisappear {
                 os_log("\(self.t)Disappear")
             }
@@ -133,7 +136,7 @@ extension AudioRootView {
             name: self.className,
             onStateChanged: { state in
                 if verbose {
-                    os_log("\(self.t)🐯 播放状态变为 -> \(state.stateText)")
+                    os_log("\(self.t)🔈 播放状态变为 -> \(state.stateText)")
                 }
 
                 if state == .paused {

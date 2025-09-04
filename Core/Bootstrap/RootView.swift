@@ -214,7 +214,6 @@ extension RootView {
                         }
                     },
                     onPlayModeChanged: { mode in
-                        m.info("播放模式 -> \(mode.shortName)")
                         Task {
                             do {
                                 try await self.p.onPlayModeChange(mode: mode, asset: man.currentAsset)

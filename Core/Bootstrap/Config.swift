@@ -61,7 +61,7 @@ enum Config: SuperLog {
     static func getPlugins() -> [SuperPlugin] {
         return [
             WelcomePlugin(),
-            SettingPlugin(),
+            StoragePlugin(),
             AudioPlugin(),
             BookPlugin(),
             OpenButtonPlugin(),
