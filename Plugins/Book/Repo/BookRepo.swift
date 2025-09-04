@@ -11,10 +11,6 @@ class BookRepo: ObservableObject, SuperEvent, SuperLog {
     private var disk: URL
     private let verbose: Bool
     private var monitor: Cancellable?
-    private var currentSyncTask: Task<Void, Never>?
-    private var isShuttingDown: Bool = false
-    private var syncStatus: SyncStatusBook = .idle
-    private var isSyncing: Bool = false
 
     // MARK: - State
 
@@ -85,21 +81,7 @@ class BookRepo: ObservableObject, SuperEvent, SuperLog {
 
 extension BookRepo {
     private func sync(_ items: [URL], isFirst: Bool) async {
-        guard !isShuttingDown else { return }
-
-        // 更新状态（一次性写入，减少主线程抖动）
-        self.setSyncStatus(.syncing(items: items))
-        self.setIsSyncing(true)
-
-
         await self.db.sync(items, verbose: self.verbose, isFirst: isFirst)
-
-
-
-        // 同步完成后立即更新状态
-
-        self.setSyncStatus(.updated)
-        self.setIsSyncing(false)
     }
 
     func delete(_ book: BookModel, verbose: Bool) async {
@@ -119,32 +101,6 @@ extension BookRepo {
 // MARK: - Setter
 
 extension BookRepo {
-    private func setIsSyncing(_ isSyncing: Bool) {
-        if self.isSyncing == isSyncing { return }
-
-        os_log("\(self.t) setIsSyncing: \(isSyncing)")
-        self.isSyncing = isSyncing
-    }
-
-    private func setSyncStatus(_ syncStatus: SyncStatusBook) {
-        if self.syncStatus == syncStatus { return }
-
-        os_log("\(self.t) setSyncStatus: \(syncStatus.description)")
-        self.syncStatus = syncStatus
-    }
-
-    private func updateSyncStatus(_ status: SyncStatusBook) {
-        if self.syncStatus == status { return }
-
-        os_log("\(self.t) updateSyncStatus: \(status.description)")
-        self.syncStatus = status
-        self.isSyncing = (status == .syncing(items: [])) ? true : false
-        if case let .syncing(items) = status {
-            self.setIsSyncing(true)
-        } else {
-            self.setIsSyncing(false)
-        }
-    }
 }
 
 // MARK: - Preview
