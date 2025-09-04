@@ -1,9 +1,9 @@
 import SwiftUI
 
 @MainActor
-public class PlayManController:ObservableObject {
+public class PlayManController: ObservableObject {
     let playMan: PlayMan
-    
+
     init(playMan: PlayMan) {
         self.playMan = playMan
     }
@@ -18,6 +18,14 @@ public class PlayManController:ObservableObject {
 
     func seek(time: TimeInterval) async {
         playMan.seek(time: time)
+    }
+
+    func setPlayMode(_ mode: PlayMode) {
+        playMan.changePlayMode(mode)
+    }
+    
+    func setLike(_ isLiked: Bool) {
+        playMan.setLike(isLiked)
     }
 }
 

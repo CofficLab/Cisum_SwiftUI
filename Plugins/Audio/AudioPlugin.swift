@@ -20,7 +20,6 @@ actor AudioPlugin: SuperPlugin, SuperLog {
     let verbose = true
 
     @MainActor var disk: URL?
-    @MainActor var audioProvider: AudioProvider?
     @MainActor var audioDB: AudioRepo?
     @MainActor var initialized: Bool = false
     @MainActor var container: ModelContainer?
@@ -44,51 +43,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
             os_log("\(self.t)🍋🍋🍋 AddSettingView")
         }
 
-        guard let audioProvider = self.audioProvider else {
-            return nil
-        }
-
-        return AnyView(AudioSettings().environmentObject(audioProvider))
-    }
-
-    @MainActor func onPause(playMan: PlayManWrapper) {
-        AudioStateRepo.storeCurrentTime(playMan.currentTime)
-    }
-
-    func onCurrentURLChanged(url: URL) {
-        if verbose {
-            os_log("\(self.t)🍋 OnPlayAssetUpdate with asset \(url.title)")
-        }
-
-        AudioStateRepo.storeCurrent(url)
-    }
-
-    @MainActor func getDisk() -> URL? {
-        self.disk
-    }
-
-    @MainActor
-    func onPlayModeChange(mode: String, asset: PlayAsset?) async throws {
-        guard self.initialized else {
-            return
-        }
-
-        AudioStateRepo.storePlayMode(mode)
-
-        guard let audioDB = audioDB else {
-            return
-        }
-
-        switch PlayMode(rawValue: mode) {
-        case .loop:
-            break
-        case .sequence, .repeatAll:
-            await audioDB.sort(asset?.url, reason: self.className + ".OnPlayModeChange")
-        case .shuffle:
-            try await audioDB.sortRandom(asset?.url, reason: self.className + ".OnPlayModeChange", verbose: false)
-        case .none:
-            break
-        }
+        return AnyView(AudioSettings())
     }
 
     @MainActor
@@ -123,87 +78,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
         self.disk = try disk.createIfNotExist()
         self.container = try AudioConfigRepo.getContainer()
         self.audioDB = try AudioRepo(disk: disk, reason: self.className + ".onInit", verbose: false)
-        self.audioProvider = AudioProvider(disk: disk, db: self.audioDB!)
         self.initialized = true
-
-        var assetTarget: URL?
-        var timeTarget: TimeInterval = 0
-        var liked = false
-
-        if let url = AudioStateRepo.getCurrent(), let audio = await self.audioDB?.find(url) {
-            assetTarget = audio
-            liked = await self.audioDB?.isLiked(audio) ?? false
-
-            if let time = AudioStateRepo.getCurrentTime() {
-                timeTarget = time
-            }
-        } else {
-            if verbose {
-                os_log("\(self.t)⚠️⚠️⚠️ No current audio URL, try find first")
-            }
-
-            guard let audioDB = audioDB else {
-                os_log("\(self.t)⚠️⚠️⚠️ AudioDB not found")
-                return
-            }
-
-            if let first = try? await audioDB.getFirst() {
-                assetTarget = first
-                liked = await audioDB.isLiked(first)
-            } else {
-                os_log("\(self.t)⚠️⚠️⚠️ No audio found")
-            }
-        }
-
-        if let asset = assetTarget {
-            await playMan.play(asset, autoPlay: false)
-            await playMan.seek(time: timeTarget)
-            playMan.setLike(liked)
-        }
-
-        let mode = AudioStateRepo.getPlayMode()
-        if let mode = mode {
-            playMan.setPlayMode(mode)
-        }
-    }
-
-    @MainActor
-    func onPlayPrev(playMan: PlayManWrapper, current: URL?, currentGroup: String?, verbose: Bool) async throws {
-        if currentGroup != self.id {
-            return
-        }
-
-        guard let audioDB = audioDB else {
-            os_log("\(self.t)⚠️ AudioDB not found")
-            return
-        }
-
-        let asset = try await audioDB.getPrevOf(current, verbose: false)
-
-        if let asset = asset {
-            await playMan.play(asset, autoPlay: playMan.playing)
-        } else {
-            throw AudioPluginError.NoPrevAsset
-        }
-    }
-
-    @MainActor
-    func onPlayNext(playMan: PlayManWrapper, current: URL?, currentGroup: String?, verbose: Bool) async throws {
-        if currentGroup != self.id {
-            return
-        }
-
-        guard let audioDB = audioDB else {
-            os_log("\(self.t)⚠️ AudioDB not found")
-            return
-        }
-
-        let asset = try await audioDB.getNextOf(current, verbose: false)
-        if let asset = asset {
-            await playMan.play(asset, autoPlay: true)
-        } else {
-            throw AudioPluginError.NoNextAsset
-        }
     }
 
     @MainActor func onStorageLocationChange(storage: StorageLocation?) async throws {
@@ -221,17 +96,6 @@ actor AudioPlugin: SuperPlugin, SuperLog {
         }
 
         self.audioDB?.changeRoot(url: disk)
-        self.audioProvider?.updateDisk(disk)
-    }
-
-    @MainActor
-    func onLike(asset: URL?, liked: Bool) async throws {
-        guard let audioDB = audioDB else {
-            os_log("\(self.t)⚠️ AudioDB not found")
-            return
-        }
-
-        await audioDB.like(asset, liked: liked)
     }
 }
 
