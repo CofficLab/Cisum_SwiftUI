@@ -7,6 +7,8 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct BookDBView: View, SuperLog, SuperThread {
+    nonisolated static let emoji = "🐘"
+    
     @EnvironmentObject var app: AppProvider
 
     @State var treeView = false
@@ -20,10 +22,9 @@ struct BookDBView: View, SuperLog, SuperThread {
     
     // 计算属性：从 @Query 结果获取总数
     var total: Int { books.count }
-
-    nonisolated static let emoji = "🐘"
-
     var dropping: Bool { app.isDropping }
+    
+    private var useListView = false
 
     var body: some View {
         os_log("\(self.t)开始渲染")
@@ -39,8 +40,11 @@ struct BookDBView: View, SuperLog, SuperThread {
             .padding(.horizontal)
             .padding(.bottom, 5)
 
-            BookGrid()
-                .frame(maxHeight: .infinity)
+            if useListView {
+                BookList()
+            } else {
+                BookGrid()
+            }
         }
         .fileImporter(
             isPresented: $app.isImporting,

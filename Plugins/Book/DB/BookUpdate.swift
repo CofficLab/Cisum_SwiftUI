@@ -106,7 +106,7 @@ extension BookDB {
             return
         }
 
-        let parent = findBook(parentURL)
+        let parent = findBook(url: parentURL)
         book.parent = parent
 
         if verbose {
@@ -122,7 +122,7 @@ extension BookDB {
 
     func updateBookCover(bookURL: URL, coverData: Data) {
         let verbose = true
-        guard let book = findBook(bookURL) else {
+        guard let book = findBook(url: bookURL) else {
             if verbose {
                 os_log("Failed to find book at URL: \(bookURL)")
             }
@@ -145,7 +145,7 @@ extension BookDB {
     
     func updateBookSetNoCover(bookURL: URL) {
         let verbose = true
-        guard let book = findBook(bookURL) else {
+        guard let book = findBook(url: bookURL) else {
             if verbose {
                 os_log("Failed to find book at URL: \(bookURL)")
             }

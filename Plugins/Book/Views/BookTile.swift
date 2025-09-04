@@ -10,8 +10,6 @@ struct BookTile: View, SuperThread, SuperLog, Equatable {
         lhs.url == rhs.url
     }
 
-    @EnvironmentObject var man: PlayManController
-
     @State private var state: BookState? = nil
     @State private var cover: Image? = nil
     @State private var isLoadingCover: Bool = false
@@ -22,6 +20,8 @@ struct BookTile: View, SuperThread, SuperLog, Equatable {
     var noCover: Bool { cover == nil }
     var url: URL
     var book: BookModel
+    var title: String
+    var childCount: Int
 
     var body: some View {
         return ZStack {
@@ -29,7 +29,7 @@ struct BookTile: View, SuperThread, SuperLog, Equatable {
                 if let cover = cover {
                     cover.resizable().scaledToFit()
                 } else {
-                    MagicBackground.deepForest
+                    MagicBackground.deepForest.opacity(0.8)
                 }
             }
             .clipShape(RoundedRectangle(cornerSize: CGSize(width: 10, height: 10)))
@@ -41,19 +41,20 @@ struct BookTile: View, SuperThread, SuperLog, Equatable {
                     }
                 }
             )
+            
             HStack {
                 Spacer()
                 VStack {
                     Spacer()
 
                     if noCover {
-                        Text(book.bookTitle).font(.title)
+                        Text(title).font(.title)
                     }
 
                     Spacer()
 
-                    if book.childCount > 0, noCover {
-                        Text("共 \(book.childCount)")
+                    if childCount > 0, noCover {
+                        Text("共 \(childCount)")
                     }
 
                     Spacer()
@@ -72,9 +73,9 @@ struct BookTile: View, SuperThread, SuperLog, Equatable {
                 Spacer()
             }
         }
-        .foregroundStyle(.white)
+        .frame(width: 150)
+        .frame(height: 200)
         .onAppear(perform: onAppear)
-        .onTapGesture(perform: onTap)
     }
 }
 
@@ -141,20 +142,24 @@ extension BookTile {
     func onAppear() {
         self.updateCover()
     }
-
-    @MainActor
-    func onTap() {
-        Task {
-            if let first = book.url.getChildren().first {
-                await man.play(url: first)
-            } else {
-                await man.play(url: book.url)
-            }
-        }
-    }
 }
 
-#Preview {
+// MARK: - Preview
+
+#if os(macOS)
+#Preview("App - Large") {
     AppPreview()
-        .frame(height: 800)
+        .frame(width: 600, height: 1000)
 }
+
+#Preview("App - Small") {
+    AppPreview()
+        .frame(width: 600, height: 600)
+}
+#endif
+
+#if os(iOS)
+#Preview("iPhone") {
+    AppPreview()
+}
+#endif

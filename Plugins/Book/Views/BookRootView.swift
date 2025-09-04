@@ -11,7 +11,7 @@ struct BookRootView<Content>: View, SuperLog where Content: View {
     @EnvironmentObject var m: MagicMessageProvider
     @EnvironmentObject var p: PluginProvider
 
-    @State private var error: BookPluginError? = nil
+    @State private var error: Error? = nil
     private var content: Content
 
     nonisolated static var emoji: String { "🏓" }
@@ -36,14 +36,22 @@ struct BookRootView<Content>: View, SuperLog where Content: View {
             .modelContainer(container)
             .onAppear {
                 os_log("\(self.a)")
-                self.subscribe()
-                self.restore()
-                self.initRepo()
+//                self.subscribe()
+//                self.restore()
+//                self.initRepo()
             }
             .onDisappear {
                 os_log("\(self.t)Disappear")
             }
         }
+    }
+}
+
+// MARK: Setter
+
+extension BookRootView {
+    @MainActor private func setError(_ e: Error?) {
+        self.error = e
     }
 }
 
@@ -54,14 +62,18 @@ extension BookRootView {
         let disk = Config.cloudDocumentsDir?.appendingFolder(BookPlugin().dirName)
         let container = self.container!
         let reason = self.className
-        Task.detached {
+        Task.detached(priority: .background) {
             let db = BookDB(container, reason: reason)
-            _ = try? BookRepo(disk: disk!, verbose: true, db: db)
+            do {
+                _ = try BookRepo(disk: disk!, verbose: true, db: db)
+            } catch {
+                await self.setError(error)
+            }
         }
     }
     
     private func restore() {
-        Task {
+        Task.detached(priority: .background) {
             if let url = BookSettingRepo.getCurrent() {
                 await self.man.play(url: url)
 

@@ -36,9 +36,7 @@ struct BookGrid: View, SuperLog, SuperThread {
                 GridItem(.adaptive(minimum: 150), spacing: 10),
             ], pinnedViews: [.sectionHeaders]) {
                 ForEach(books) { item in
-                    BookTile(url: item.url, book: item)
-                        .frame(width: 150)
-                        .frame(height: 200)
+                    BookTile(url: item.url, book: item, title: item.bookTitle, childCount: item.childCount)
                 }
             }
             .padding()

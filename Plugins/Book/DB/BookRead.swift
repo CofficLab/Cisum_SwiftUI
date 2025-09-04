@@ -92,16 +92,16 @@ extension BookDB {
         return nil
     }
     
-    func findBook(_ url: URL) -> BookModel? {
+    func findBook(url: URL) -> BookModel? {
         Self.findBook(url, context: context)
     }
     
-    func findBook(_ id: BookModel.ID) -> BookModel? {
-        context.model(for: id) as? BookModel
-    }
+//    func findBook(_ id: BookModel.ID) -> BookModel? {
+//        context.model(for: id) as? BookModel
+//    }
     
     func findOrCreateBook(_ url: URL) -> BookModel? {
-        if let book = self.findBook(url) {
+        if let book = self.findBook(url: url) {
             return book
         } else {
             let book = BookModel(url: url)
@@ -118,7 +118,7 @@ extension BookDB {
     }
     
     func hasBook(_ url: URL) -> Bool {
-        self.findBook(url) != nil
+        self.findBook(url: url) != nil
     }
 }
 
@@ -173,7 +173,7 @@ extension BookDB {
             return nil
         }
         
-        guard let book = self.findBook(url) else {
+        guard let book = self.findBook(url: url) else {
             return nil
         }
         

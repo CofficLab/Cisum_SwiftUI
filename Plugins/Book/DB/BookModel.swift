@@ -8,12 +8,13 @@ import SwiftUI
  记录一本有声书的数据
  */
 @Model
-class BookModel: SuperLog {
+class BookModel: SuperLog, Equatable {
     static let emoji = "📖"
     @Transient var db: BookRepo?
 
     @Attribute(.unique)
     var url: URL
+    
     var currentURL: URL?
     var isCollection: Bool = false
     var parentBookURL: URL?
@@ -48,6 +49,12 @@ class BookModel: SuperLog {
 
     func setDB(_ db: BookRepo?) {
         self.db = db
+    }
+    
+    // MARK: - Equatable
+    
+    static func == (lhs: BookModel, rhs: BookModel) -> Bool {
+        return lhs.url == rhs.url
     }
 }
 
