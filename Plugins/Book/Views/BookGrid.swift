@@ -1,5 +1,5 @@
 import MagicCore
-
+import MagicPlayMan
 import OSLog
 import SwiftData
 import SwiftUI
@@ -14,6 +14,7 @@ struct BookGrid: View, SuperLog, SuperThread {
     @State var selection: AudioModel? = nil
     @State var syncingTotal: Int = 0
     @State var syncingCurrent: Int = 0
+    @State private var selectedBookURL: URL? = nil
 
     @Query(
         filter: #Predicate<BookModel> { $0.isCollection == true },
@@ -38,7 +39,17 @@ struct BookGrid: View, SuperLog, SuperThread {
             ], pinnedViews: [.sectionHeaders]) {
                 ForEach(books) { item in
                     BookTile(url: item.url, title: item.bookTitle, childCount: item.childCount)
+                        .overlay(
+                            // 高亮边框
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(
+                                    selectedBookURL == item.url ? Color.accentColor : Color.clear,
+                                    lineWidth: selectedBookURL == item.url ? 3 : 0
+                                )
+                        )
+                        .animation(.easeInOut(duration: 0.2), value: selectedBookURL)
                         .onTapGesture {
+                            selectedBookURL = item.url
                             Task {
                                 if let first = item.url.getChildren().first {
                                     await man.play(url: first)
@@ -50,6 +61,38 @@ struct BookGrid: View, SuperLog, SuperThread {
                 }
             }
             .padding()
+        }
+        .onAppear(perform: onAppear)
+        .onPlayManAssetChanged({
+            if let url = $0 {
+                self.updateSelectedBook(for: url)
+            }
+        })
+    }
+}
+
+// MARK: - Action
+
+extension BookGrid {
+    private func updateSelectedBook(for url: URL) {
+        // 查找包含该URL的书籍
+        for book in books {
+            if book.url == url || book.url.getChildren().contains(url) {
+                selectedBookURL = book.url
+                return
+            }
+        }
+        selectedBookURL = nil
+    }
+}
+
+// MARK: - Event Handler
+
+extension BookGrid {
+    func onAppear() {
+        // 初始化时检查当前播放的音频
+        if let currentAsset = man.getAsset() {
+            updateSelectedBook(for: currentAsset)
         }
     }
 }
