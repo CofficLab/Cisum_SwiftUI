@@ -64,7 +64,7 @@ enum Config: SuperLog {
 //            SettingPlugin(),
             AudioPlugin(),
             BookPlugin(),
-//            OpenButtonPlugin(),
+            OpenButtonPlugin(),
 //            LikeButtonPlugin(),
 //            CopyPlugin(),
 //            ResetPlugin(),

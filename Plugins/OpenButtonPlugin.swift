@@ -21,18 +21,21 @@ actor OpenButtonPlugin: SuperPlugin {
 private struct OpenCurrentButtonView: View, SuperLog {
     nonisolated static let emoji = "😜"
 
-    @EnvironmentObject var man: PlayManController
+    @State private var url: URL? = nil
 
     var body: some View {
         os_log("\(self.t)开始渲染")
         return Group {
-            if let url = man.playMan.currentURL {
+            if let url = url {
                 url.makeOpenButton()
                     .magicShapeVisibility(.onHover)
                     .magicSize(.small)
                     .id(url.absoluteString)
             }
         }
+        .onPlayManAssetChanged({
+            self.url = $0
+        })
     }
 }
 

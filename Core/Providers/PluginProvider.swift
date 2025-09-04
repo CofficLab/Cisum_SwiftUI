@@ -51,8 +51,14 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
         return items
     }
 
-    func getToolBarButtons() -> [(id: String, view: AnyView)] {
-        return plugins.flatMap { $0.addToolBarButtons() }
+    func getToolBarButtons(verbose: Bool = true) -> [(id: String, view: AnyView)] {
+        let buttons =  plugins.flatMap { $0.addToolBarButtons() }
+        
+        if verbose {
+            os_log("\(self.t)🏃🏃🏃 getToolBarButtons: \(buttons.count)")
+        }
+        
+        return buttons
     }
 
     func setCurrentGroup(_ plugin: SuperPlugin, verbose: Bool = false) throws {

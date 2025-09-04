@@ -2,7 +2,6 @@ import MagicCore
 import SwiftUI
 
 struct RootToolbar: ToolbarContent {
-    @EnvironmentObject var man: PlayMan
     @EnvironmentObject var p: PluginProvider
 
     var body: some ToolbarContent {
