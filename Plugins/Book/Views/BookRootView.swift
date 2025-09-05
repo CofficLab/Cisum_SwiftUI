@@ -52,6 +52,9 @@ struct BookRootView<Content>: View, SuperLog where Content: View {
         .onStorageLocationChanged {
             self.initRepo()
         }
+        .onPlayManTimeUpdate({ _, _ in
+            self.rememberCurrentTime()
+        })
     }
 }
 
@@ -66,6 +69,16 @@ extension BookRootView {
 // MARK: 操作
 
 extension BookRootView {
+    private func rememberCurrentTime() {
+        // 预先在主线程捕获当前时间，避免跨线程访问
+        let currentTime = man.playMan.currentTime
+        
+        // 在后台线程执行存储操作，避免阻塞UI
+        Task.detached(priority: .background) {
+            BookSettingRepo.storeCurrentTime(currentTime)
+        }
+    }
+
     private func initRepo() {
         os_log("\(self.t)InitRepo")
         let disk = BookPlugin.getBookDisk()
