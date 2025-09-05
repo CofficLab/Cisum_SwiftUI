@@ -46,7 +46,13 @@ class BookCoverRepo: ObservableObject, SuperLog {
                             continue
                         }
 
-                        if let cover = try await child.coverFromMetadata(size: thumbnailSize, verbose: true) {
+                        // 使用 MagicKit 的 thumbnail 方法（内置缓存）
+                        if let cover = try await child.thumbnail(
+                            size: thumbnailSize, 
+                            useDefaultIcon: false, 
+                            verbose: true, 
+                            reason: "BookCoverRepo"
+                        ) {
                             continuation.resume(returning: cover)
                             return
                         }

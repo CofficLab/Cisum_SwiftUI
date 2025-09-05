@@ -99,7 +99,6 @@ extension BookTile {
 
 extension BookTile {
     func setCover(_ cover: Image?) {
-        os_log("\(self.t)SetCover for \(title)")
         self.cover = cover
     }
 }
