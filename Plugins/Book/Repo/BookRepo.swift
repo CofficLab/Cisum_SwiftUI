@@ -11,6 +11,7 @@ class BookRepo: ObservableObject, SuperEvent, SuperLog {
     private var disk: URL
     private let verbose: Bool
     private var monitor: Cancellable?
+    private let coverRepo: BookCoverRepo
 
     // MARK: - State
 
@@ -40,6 +41,7 @@ class BookRepo: ObservableObject, SuperEvent, SuperLog {
         self.verbose = verbose
         self.db = db
         self.disk = disk
+        self.coverRepo = BookCoverRepo()
         self.monitor = try self.makeMonitor()
     }
 
@@ -95,6 +97,15 @@ extension BookRepo {
 
     func find(_ url: URL) async -> URL? {
         await self.db.hasBook(url) ? url : nil
+    }
+    
+    /// 获取书籍封面图
+    /// - Parameters:
+    ///   - url: 书籍URL
+    ///   - thumbnailSize: 缩略图尺寸
+    /// - Returns: 封面图，如果未找到则返回nil
+    func getCover(for url: URL, thumbnailSize: CGSize) async -> Image? {
+        return await coverRepo.getCover(for: url, thumbnailSize: thumbnailSize)
     }
 }
 

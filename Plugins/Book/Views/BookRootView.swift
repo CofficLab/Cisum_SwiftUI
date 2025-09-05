@@ -6,6 +6,10 @@ import SwiftData
 import SwiftUI
 import UniformTypeIdentifiers
 
+class BookRepoState: ObservableObject {
+    @Published var repo: BookRepo? = nil
+}
+
 struct BookRootView<Content>: View, SuperLog where Content: View {
     @EnvironmentObject var man: PlayManController
     @EnvironmentObject var m: MagicMessageProvider
@@ -14,6 +18,7 @@ struct BookRootView<Content>: View, SuperLog where Content: View {
     @State private var error: Error? = nil
     private var content: Content
     @State private var repo: BookRepo? = nil
+    @StateObject private var bookRepoState = BookRepoState()
 
     nonisolated static var emoji: String { "🏓" }
     let verbose = true
@@ -36,6 +41,7 @@ struct BookRootView<Content>: View, SuperLog where Content: View {
                     content
                 }
                 .modelContainer(container)
+                .environmentObject(bookRepoState)
                 .onAppear {
                     os_log("\(self.a)")
                     self.subscribe()
@@ -87,7 +93,11 @@ extension BookRootView {
         Task {
             let db = BookDB(container, reason: reason)
             do {
-                self.repo = try BookRepo(disk: disk!, verbose: true, db: db)
+                let repo = try BookRepo(disk: disk!, verbose: true, db: db)
+                await MainActor.run {
+                    self.repo = repo
+                    self.bookRepoState.repo = repo
+                }
             } catch {
                 self.setError(error)
             }

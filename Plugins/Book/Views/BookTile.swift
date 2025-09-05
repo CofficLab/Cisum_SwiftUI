@@ -10,6 +10,7 @@ struct BookTile: View, SuperThread, SuperLog, Equatable {
         lhs.url == rhs.url
     }
 
+    @EnvironmentObject var bookRepoState: BookRepoState
     @State private var state: BookState? = nil
     @State private var cover: Image? = nil
     @State private var tileSize: CGSize = .init(width: 150, height: 200)
@@ -75,56 +76,23 @@ extension BookTile {
             let url = self.url
             let title = self.title
             let thumbnailSize = tileSize
+            let repo = self.bookRepoState.repo
+            let logPrefix = self.t
 
-            Task.detached(priority: .background) {
-                do {
-                    os_log("\(self.t)开始获取封面图 \(title)")
-                    let cover = try await Self.findCoverRecursively(in: url, thumbnailSize: thumbnailSize)
-                    await self.setCover(cover)
-                } catch {
-                    os_log(.error, "\(self.t)Failed to find cover: \(error.localizedDescription)")
+            Task {
+                os_log("\(logPrefix)开始获取封面图 \(title)")
+                if let repo = repo {
+                    let cover = await repo.getCover(for: url, thumbnailSize: thumbnailSize)
+                    await MainActor.run {
+                        self.setCover(cover)
+                    }
+                } else {
+                    os_log("\(logPrefix)BookRepo not available yet")
                 }
             }
         }
     }
 
-    private static func findCoverRecursively(in url: URL, thumbnailSize: CGSize) async throws -> Image? {
-        // 确保在后台线程执行文件系统操作
-        return try await withCheckedThrowingContinuation { continuation in
-            Task.detached(priority: .background) {
-                do {
-                    os_log("\(self.t)findCoverRecursively \(url.title)")
-                    // 获取当前目录下的所有文件
-                    let children = url.getChildren()
-
-                    // 首先检查当前层级的文件
-                    for child in children where !child.hasDirectoryPath {
-                        // 跳过未下载的 iCloud 文件
-                        if child.isiCloud && child.isNotDownloaded {
-                            continue
-                        }
-
-                        if let cover = try await child.coverFromMetadata(size: thumbnailSize, verbose: true) {
-                            continuation.resume(returning: cover)
-                            return
-                        }
-                    }
-
-                    // 如果当前层级没有找到封面，递归查找子文件夹
-                    for child in children where child.hasDirectoryPath {
-                        if let cover = try await findCoverRecursively(in: child, thumbnailSize: thumbnailSize) {
-                            continuation.resume(returning: cover)
-                            return
-                        }
-                    }
-
-                    continuation.resume(returning: nil)
-                } catch {
-                    continuation.resume(throwing: error)
-                }
-            }
-        }
-    }
 }
 
 // MARK: - Setter
