@@ -10,7 +10,8 @@ struct BookTile: View, SuperThread, SuperLog, Equatable {
         lhs.url == rhs.url
     }
 
-    @EnvironmentObject var bookRepoState: BookRepoState
+    @EnvironmentObject var repo: BookRepo
+
     @State private var state: BookState? = nil
     @State private var cover: Image? = nil
     @State private var tileSize: CGSize = .init(width: 150, height: 200)
@@ -76,23 +77,19 @@ extension BookTile {
             let url = self.url
             let title = self.title
             let thumbnailSize = tileSize
-            let repo = self.bookRepoState.repo
+            let repo = self.repo
             let logPrefix = self.t
 
             Task {
                 os_log("\(logPrefix)开始获取封面图 \(title)")
-                if let repo = repo {
-                    let cover = await repo.getCover(for: url, thumbnailSize: thumbnailSize)
-                    await MainActor.run {
-                        self.setCover(cover)
-                    }
-                } else {
-                    os_log("\(logPrefix)BookRepo not available yet")
+
+                let cover = await repo.getCover(for: url, thumbnailSize: thumbnailSize)
+                await MainActor.run {
+                    self.setCover(cover)
                 }
             }
         }
     }
-
 }
 
 // MARK: - Setter

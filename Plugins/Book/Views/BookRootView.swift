@@ -8,6 +8,9 @@ import UniformTypeIdentifiers
 
 class BookRepoState: ObservableObject {
     @Published var repo: BookRepo? = nil
+    @Published var container: ModelContainer? = nil
+    @Published var error: Error? = nil
+    @Published var isLoading: Bool = true
 }
 
 struct BookRootView<Content>: View, SuperLog where Content: View {
@@ -15,95 +18,117 @@ struct BookRootView<Content>: View, SuperLog where Content: View {
     @EnvironmentObject var m: MagicMessageProvider
     @EnvironmentObject var p: PluginProvider
 
-    @State private var error: Error? = nil
     private var content: Content
-    @State private var repo: BookRepo? = nil
     @StateObject private var bookRepoState = BookRepoState()
 
     nonisolated static var emoji: String { "🏓" }
     let verbose = true
-    var container: ModelContainer?
 
     init(@ViewBuilder content: () -> Content) {
         self.content = content()
-        guard let container = try? BookConfig.getContainer() else {
-            self.error = BookPluginError.initialization(reason: "Container 未找到")
-            return
-        }
-
-        self.container = container
     }
 
     var body: some View {
-        ZStack {
-            if let container = self.container {
+        Group {
+            if let error = bookRepoState.error {
+                error.makeView()
+            } else if bookRepoState.isLoading {
+                ProgressView("正在初始化...")
+            } else if let container = bookRepoState.container, let repo = bookRepoState.repo {
                 ZStack {
                     content
                 }
                 .modelContainer(container)
-                .environmentObject(bookRepoState)
+                .environmentObject(repo)
                 .onAppear {
                     os_log("\(self.a)")
                     self.subscribe()
                     self.restore()
-                    self.initRepo()
                 }
                 .onDisappear {
                     os_log("\(self.t)Disappear")
                 }
-            } else if let error = self.error {
-                error.makeView()
+                .onStorageLocationChanged {
+                    self.initAll()
+                }
+                .onPlayManTimeUpdate({ _, _ in
+                    self.rememberCurrentTime()
+                })
+            } else {
+                Text("初始化失败")
             }
         }
-        .onStorageLocationChanged {
-            self.initRepo()
+        .onAppear {
+            self.initAll()
         }
-        .onPlayManTimeUpdate({ _, _ in
-            self.rememberCurrentTime()
-        })
     }
 }
 
-// MARK: Setter
+// MARK: - Setter
 
 extension BookRootView {
-    @MainActor private func setError(_ e: Error?) {
-        self.error = e
+    @MainActor private func setBookRepoState(_ repo: BookRepo?, container: ModelContainer?, error: Error? = nil) {
+        bookRepoState.repo = repo
+        bookRepoState.container = container
+        bookRepoState.error = error
+        bookRepoState.isLoading = false
     }
 }
 
-// MARK: 操作
+// MARK: - Action
+
+extension BookRootView {
+    private func initAll() {
+        os_log("\(self.t)InitAll")
+        bookRepoState.isLoading = true
+        bookRepoState.error = nil
+        
+        Task {
+            do {
+                // 1. 初始化 Container
+                let container = try BookConfig.getContainer()
+                os_log("🎉Container 初始化成功")
+                
+                // 2. 获取 Disk
+                guard let disk = BookPlugin.getBookDisk() else {
+                    await MainActor.run {
+                        self.setBookRepoState(nil, container: nil, error: BookPluginError.initialization(reason: "Disk 未找到"))
+                    }
+                    return
+                }
+                os_log("🎉Disk 获取成功: \(disk.shortPath())")
+                
+                // 3. 初始化 BookRepo
+                let db = BookDB(container, reason: self.className)
+                let repo = try BookRepo(disk: disk, verbose: true, db: db)
+                
+                await MainActor.run {
+                    self.setBookRepoState(repo, container: container)
+                    os_log("🎉BookRepo 初始化成功")
+                }
+            } catch {
+                await MainActor.run {
+                    self.setBookRepoState(nil, container: nil, error: error)
+                    os_log("❌初始化失败: \(error.localizedDescription)")
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Event Handler
 
 extension BookRootView {
     private func rememberCurrentTime() {
         // 预先在主线程捕获当前时间，避免跨线程访问
         let currentTime = man.playMan.currentTime
-        
+
         // 在后台线程执行存储操作，避免阻塞UI
         Task.detached(priority: .background) {
             BookSettingRepo.storeCurrentTime(currentTime)
         }
     }
 
-    private func initRepo() {
-        os_log("\(self.t)InitRepo")
-        let disk = BookPlugin.getBookDisk()
-        let container = self.container!
-        let reason = self.className
-        Task {
-            let db = BookDB(container, reason: reason)
-            do {
-                let repo = try BookRepo(disk: disk!, verbose: true, db: db)
-                await MainActor.run {
-                    self.repo = repo
-                    self.bookRepoState.repo = repo
-                }
-            } catch {
-                self.setError(error)
-            }
-        }
-    }
-    
     private func restore() {
         Task.detached(priority: .background) {
             if let url = BookSettingRepo.getCurrent() {
