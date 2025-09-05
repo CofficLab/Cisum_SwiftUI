@@ -137,7 +137,6 @@ struct MigrationProgressView: View {
 
             // 更新存储位置
             await MainActor.run {
-                let oldLocation = Config.getStorageLocation()
                 Config.updateStorageLocation(targetLocation)
                 self.migrationCompleted = true
                 self.currentMigratingFile = shouldMigrate ? "迁移完成" : "已切换到新位置"
@@ -145,12 +144,7 @@ struct MigrationProgressView: View {
                 // 发送存储位置更新通知
                 NotificationCenter.default.post(
                     name: .storageLocationUpdated,
-                    object: nil,
-                    userInfo: [
-                        StorageEventKeys.newLocation: targetLocation,
-                        StorageEventKeys.oldLocation: oldLocation,
-                        StorageEventKeys.migrationCompleted: shouldMigrate
-                    ]
+                    object: nil
                 )
             }
         } catch {

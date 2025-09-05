@@ -132,7 +132,7 @@ extension BookRootView {
     private func restore() {
         Task.detached(priority: .background) {
             if let url = BookSettingRepo.getCurrent() {
-                await self.man.play(url: url)
+                await self.man.play(url: url, autoPlay: false)
 
                 if let time = BookSettingRepo.getCurrentTime() {
                     await self.man.seek(time: time)
