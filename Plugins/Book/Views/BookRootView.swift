@@ -130,15 +130,16 @@ extension BookRootView {
     }
 
     private func restore() {
+        // 提取需要的数据到局部变量，避免在 Task.detached 中捕获 self
+        let playMan = self.man
+        
         Task.detached(priority: .background) {
             if let url = BookSettingRepo.getCurrent() {
-                await self.man.play(url: url, autoPlay: false)
+                await playMan.play(url: url, autoPlay: false)
 
                 if let time = BookSettingRepo.getCurrentTime() {
-                    await self.man.seek(time: time)
+                    await playMan.seek(time: time)
                 }
-            } else {
-                os_log("\(self.t)No current book URL")
             }
         }
     }
