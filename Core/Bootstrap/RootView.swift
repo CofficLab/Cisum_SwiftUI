@@ -11,7 +11,6 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     @State var error: Error? = nil
     @State var loading = true
     @State var iCloudAvailable = true
-    @State var currentLaunchPageIndex: Int = 0
 
     @StateObject var a: AppProvider
     @StateObject var m: MagicMessageProvider
@@ -46,9 +45,8 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
         return Group {
             if self.loading {
                 LaunchViewSwitcher(
-                    currentLaunchPageIndex: $currentLaunchPageIndex,
                     plugins: p.plugins,
-                    onAppear: onAppear
+                    onEnd: boot
                 )
             } else {
                 if let e = self.error {
@@ -112,38 +110,13 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     }
 }
 
-// MARK: Event Handler
+// MARK: - Actions
 
 extension RootView {
-    func onChangeOfiCloud() {
-        if iCloudAvailable {
-            reloadView()
+    func boot() {
+        if verbose {
+            os_log("\(self.t)🚀 Boot")
         }
-    }
-
-    func onStorageLocationChange() {
-        if Config.getStorageLocation() == nil {
-            a.showSheet = true
-            return
-        }
-
-        Task {
-            do {
-                try await p.handleStorageLocationChange(storage: Config.getStorageLocation())
-            } catch {
-                m.error(error)
-            }
-        }
-    }
-
-    func onCloudAccountStateChanged(_ n: Notification) {
-        let newAvailability = FileManager.default.ubiquityIdentityToken != nil
-        if newAvailability != iCloudAvailable {
-            iCloudAvailable = newAvailability
-        }
-    }
-
-    func onAppear() {
         Task {
             do {
                 try self.p.restoreCurrent()
@@ -237,6 +210,38 @@ extension RootView {
             }
 
             self.loading = false
+        }
+    }
+}
+
+// MARK: Event Handler
+
+extension RootView {
+    func onChangeOfiCloud() {
+        if iCloudAvailable {
+            reloadView()
+        }
+    }
+
+    func onStorageLocationChange() {
+        if Config.getStorageLocation() == nil {
+            a.showSheet = true
+            return
+        }
+
+        Task {
+            do {
+                try await p.handleStorageLocationChange(storage: Config.getStorageLocation())
+            } catch {
+                m.error(error)
+            }
+        }
+    }
+
+    func onCloudAccountStateChanged(_ n: Notification) {
+        let newAvailability = FileManager.default.ubiquityIdentityToken != nil
+        if newAvailability != iCloudAvailable {
+            iCloudAvailable = newAvailability
         }
     }
 }
