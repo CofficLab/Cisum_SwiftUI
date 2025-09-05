@@ -35,13 +35,13 @@ struct BookGrid: View, SuperLog, SuperThread {
 //        os_log("\(self.t)开始渲染")
         return ScrollView {
             LazyVGrid(columns: [
-                GridItem(.adaptive(minimum: 150), spacing: 10),
-            ], pinnedViews: [.sectionHeaders]) {
+                GridItem(.adaptive(minimum: 150), spacing: 12),
+            ], alignment: .center, spacing: 16, pinnedViews: [.sectionHeaders]) {
                 ForEach(books) { item in
                     BookTile(url: item.url, title: item.bookTitle, childCount: item.childCount)
                         .overlay(
                             // 高亮边框
-                            RoundedRectangle(cornerRadius: 10)
+                            Rectangle()
                                 .stroke(
                                     selectedBookURL == item.url ? Color.accentColor : Color.clear,
                                     lineWidth: selectedBookURL == item.url ? 3 : 0
