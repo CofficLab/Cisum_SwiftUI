@@ -6,6 +6,8 @@ struct LaunchViewSwitcher: View {
     let plugins: [SuperPlugin]
     let onAppear: () -> Void
     
+    @State private var hasTriggeredOnAppear = false
+    
     var body: some View {
         let pluginLaunchViews = plugins.compactMap { $0.addLaunchView() }
         
@@ -53,6 +55,16 @@ struct LaunchViewSwitcher: View {
                             }
                             .frame(width: geometry.size.width)
                             .id(index)
+                            .onAppear {
+                                // 当插件页面出现时，延迟执行 onAppear 回调
+                                // 这样新设备在显示欢迎页面时也能正常进入应用
+                                if !hasTriggeredOnAppear {
+                                    hasTriggeredOnAppear = true
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                        onAppear()
+                                    }
+                                }
+                            }
                         }
                         
                         // 默认的 LaunchView 作为最后一个
@@ -62,7 +74,8 @@ struct LaunchViewSwitcher: View {
                             .onAppear {
                                 // 当没有插件视图时（pluginLaunchViews.count == 0），
                                 // 并且当前索引为0时，直接执行 onAppear 回调
-                                if pluginLaunchViews.count == 0 && currentLaunchPageIndex == 0 {
+                                if pluginLaunchViews.count == 0 && currentLaunchPageIndex == 0 && !hasTriggeredOnAppear {
+                                    hasTriggeredOnAppear = true
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                                         onAppear()
                                     }
@@ -76,7 +89,8 @@ struct LaunchViewSwitcher: View {
                     }
                     
                     // 当切换到 LaunchView 时，延迟执行 onAppear 回调
-                    if currentLaunchPageIndex == pluginLaunchViews.count {
+                    if currentLaunchPageIndex == pluginLaunchViews.count && !hasTriggeredOnAppear {
+                        hasTriggeredOnAppear = true
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                             onAppear()
                         }
