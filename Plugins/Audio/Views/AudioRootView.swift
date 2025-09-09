@@ -49,7 +49,7 @@ struct AudioRootView<Content>: View, SuperLog where Content: View {
 
         self.disk = try? disk!.createIfNotExist()
         self.container = try? AudioConfigRepo.getContainer()
-        self.repo = try? AudioRepo(disk: disk!, reason: "onInit", verbose: false)
+        self.repo = try? AudioRepo(disk: disk!, reason: "onInit", verbose: true)
         self.audioProvider = AudioProvider(disk: disk!, db: self.repo!)
         self.audioProvider?.updateDisk(disk!)
     }
@@ -66,7 +66,6 @@ struct AudioRootView<Content>: View, SuperLog where Content: View {
                 self.subscribe()
                 self.restorePlaying()
                 self.restorePlayMode()
-                self.initRepo()
             }
             .onStorageLocationChanged {
                 self.m.info("存储位置发生了变化")
@@ -87,17 +86,7 @@ extension AudioRootView {
             self.man.setPlayMode(mode)
         }
     }
-
-    private func initRepo() {
-//        let disk = Config.cloudDocumentsDir?.appendingFolder(BookPlugin().dirName)
-//        let container = self.container!
-//        let reason = self.className
-//        Task.detached {
-//            let db = BookDB(container, reason: reason)
-//            _ = try? BookRepo(disk: disk!, verbose: true, db: db)
-//        }
-    }
-
+    
     private func restorePlaying() {
         var assetTarget: URL?
         var timeTarget: TimeInterval = 0

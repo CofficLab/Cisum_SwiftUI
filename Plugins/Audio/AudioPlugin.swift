@@ -20,7 +20,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
     let verbose = true
 
     @MainActor var disk: URL?
-    @MainActor var audioDB: AudioRepo?
+    @MainActor var repo: AudioRepo?
     @MainActor var initialized: Bool = false
     @MainActor var container: ModelContainer?
 
@@ -77,7 +77,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
 
         self.disk = try disk.createIfNotExist()
         self.container = try AudioConfigRepo.getContainer()
-        self.audioDB = try AudioRepo(disk: disk, reason: self.className + ".onInit", verbose: false)
+        self.repo = try AudioRepo(disk: disk, reason: self.className + ".onInit", verbose: false)
         self.initialized = true
     }
 
@@ -86,7 +86,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
             fatalError("AudioPlugin.onInit: disk == nil")
         }
 
-        self.audioDB?.changeRoot(url: disk)
+        self.repo?.changeRoot(url: disk)
     }
     
     @MainActor
