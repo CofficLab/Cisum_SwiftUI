@@ -3,7 +3,7 @@ import MagicCore
 import OSLog
 import SwiftUI
 
-actor StorePlugin: SuperPlugin, SuperLog {
+actor StorePlugin: SuperPlugin, SuperLog, PluginRegistrant {
     static let emoji = "🛒"
 
     let label: String = "Store"
@@ -15,6 +15,17 @@ actor StorePlugin: SuperPlugin, SuperLog {
     @MainActor
     func addSettingView() -> AnyView? {
         AnyView(StoreSettingEntry())
+    }
+}
+
+// MARK: - PluginRegistrant
+extension StorePlugin {
+    @objc static func register() {
+        Task {
+            await PluginRegistry.shared.register(id: "Store", order: 80) {
+                StorePlugin()
+            }
+        }
     }
 }
 

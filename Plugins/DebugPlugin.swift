@@ -3,7 +3,7 @@ import MagicCore
 import OSLog
 import SwiftUI
 
-actor DebugPlugin: SuperPlugin {
+actor DebugPlugin: SuperPlugin, PluginRegistrant {
     let label = "Debug"
     let hasPoster = false
     let description: String = "调试专用"
@@ -22,6 +22,17 @@ actor DebugPlugin: SuperPlugin {
         #else
         return nil
         #endif
+    }
+}
+
+// MARK: - PluginRegistrant
+extension DebugPlugin {
+    @objc static func register() {
+        Task {
+            await PluginRegistry.shared.register(id: "Debug", order: 100) {
+                DebugPlugin()
+            }
+        }
     }
 }
 

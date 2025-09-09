@@ -3,7 +3,7 @@ import MagicCore
 import OSLog
 import SwiftUI
 
-actor WelcomePlugin: SuperPlugin, SuperLog {
+actor WelcomePlugin: SuperPlugin, SuperLog, PluginRegistrant {
     static let emoji = "👏"
 
     let label = "Welcome"
@@ -20,6 +20,17 @@ actor WelcomePlugin: SuperPlugin, SuperLog {
         }
         
         return AnyView(WelcomeView())
+    }
+}
+
+// MARK: - PluginRegistrant
+extension WelcomePlugin {
+    @objc static func register() {
+        Task {
+            await PluginRegistry.shared.register(id: "Welcome", order: -100) {
+                WelcomePlugin()
+            }
+        }
     }
 }
 

@@ -4,7 +4,7 @@ import MagicCore
 import OSLog
 import SwiftUI
 
-actor StoragePlugin: SuperPlugin, SuperLog {
+actor StoragePlugin: SuperPlugin, SuperLog, PluginRegistrant {
     static let emoji = "⚙️"
 
     let dirName = "audios"
@@ -19,6 +19,17 @@ actor StoragePlugin: SuperPlugin, SuperLog {
     func addSettingView() -> AnyView? {
         guard enabled else { return nil }
         return AnyView(StorageSettingView())
+    }
+}
+
+// MARK: - PluginRegistrant
+extension StoragePlugin {
+    @objc static func register() {
+        Task {
+            await PluginRegistry.shared.register(id: "Storage", order: 10) {
+                StoragePlugin()
+            }
+        }
     }
 }
 

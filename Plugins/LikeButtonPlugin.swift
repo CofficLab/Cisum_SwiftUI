@@ -2,7 +2,7 @@ import MagicCore
 import OSLog
 import SwiftUI
 
-actor LikeButtonPlugin: SuperPlugin {
+actor LikeButtonPlugin: SuperPlugin, PluginRegistrant {
     let label = "LikeButton"
     let hasPoster = false
     let description: String = "喜欢/取消喜欢 按钮"
@@ -28,6 +28,17 @@ private struct LikeToggleButtonView: View, SuperLog {
                 EmptyView()
             } else {
                 man.playMan.makeLikeButtonView(size: .mini, shape: .circle, shapeVisibility: .onHover)
+            }
+        }
+    }
+}
+
+// MARK: - PluginRegistrant
+extension LikeButtonPlugin {
+    @objc static func register() {
+        Task {
+            await PluginRegistry.shared.register(id: "LikeButton", order: 21) {
+                LikeButtonPlugin()
             }
         }
     }

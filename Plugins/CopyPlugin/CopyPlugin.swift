@@ -4,7 +4,7 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-actor CopyPlugin: SuperPlugin, SuperLog {
+actor CopyPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     static let emoji = "🚛"
 
     let label: String = "Copy"
@@ -66,5 +66,16 @@ actor CopyPlugin: SuperPlugin, SuperLog {
         self.container = container
         self.db = db
         self.worker = CopyWorker(db: db)
+    }
+}
+
+// MARK: - PluginRegistrant
+extension CopyPlugin {
+    @objc static func register() {
+        Task {
+            await PluginRegistry.shared.register(id: "Copy", order: 30) {
+                CopyPlugin()
+            }
+        }
     }
 }

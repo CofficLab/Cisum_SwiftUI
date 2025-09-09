@@ -3,7 +3,7 @@ import MagicCore
 import OSLog
 import SwiftUI
 
-actor BookPlugin: SuperPlugin, SuperLog {
+actor BookPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     static let keyOfCurrentBookURL = "com.bookplugin.currentBookURL"
     static let keyOfCurrentBookTime = "com.bookplugin.currentBookTime"
 
@@ -58,7 +58,17 @@ actor BookPlugin: SuperPlugin, SuperLog {
         
         return disk
     }
+}
 
+// MARK: - PluginRegistrant
+extension BookPlugin {
+    @objc static func register() {
+        Task {
+            await PluginRegistry.shared.register(id: "Book", order: 1) {
+                BookPlugin()
+            }
+        }
+    }
 }
 
 #if os(macOS)

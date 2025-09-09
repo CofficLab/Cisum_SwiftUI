@@ -2,7 +2,7 @@ import MagicCore
 import OSLog
 import SwiftUI
 
-actor OpenButtonPlugin: SuperPlugin {
+actor OpenButtonPlugin: SuperPlugin, PluginRegistrant {
     let label = "OpenButton"
     let hasPoster = false
     let description: String = "当前资源打开按钮"
@@ -16,6 +16,17 @@ actor OpenButtonPlugin: SuperPlugin {
             return [(id: "open-current", view: AnyView(OpenCurrentButtonView()))]
         }
     #endif
+}
+
+// MARK: - PluginRegistrant
+extension OpenButtonPlugin {
+    @objc static func register() {
+        Task {
+            await PluginRegistry.shared.register(id: "OpenButton", order: 20) {
+                OpenButtonPlugin()
+            }
+        }
+    }
 }
 
 private struct OpenCurrentButtonView: View, SuperLog {

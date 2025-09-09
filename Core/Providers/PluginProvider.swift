@@ -29,6 +29,33 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
             try? self.setCurrentGroup(plugin)
         }
     }
+    
+    /// 使用自动发现插件的初始化方法
+    init(autoDiscover: Bool = true, repo: PluginRepo) {
+        os_log("\(Self.onInit)")
+        
+        self.repo = repo
+        
+        if autoDiscover {
+            autoRegisterPlugins()
+            Task { [weak self] in
+                guard let self else { return }
+                let discoveredPlugins = await PluginRegistry.shared.buildAll()
+                await MainActor.run {
+                    self.plugins = discoveredPlugins
+                    let currentPluginId = self.repo.getCurrentPluginId()
+                    
+                    if let plugin = discoveredPlugins.first(where: { $0.id == currentPluginId }) {
+                        try? self.setCurrentGroup(plugin)
+                    } else if let first = discoveredPlugins.first(where: { $0.isGroup }) {
+                        try? self.setCurrentGroup(first)
+                    }
+                }
+            }
+        } else {
+            self.plugins = []
+        }
+    }
 
     func getStatusViews() -> [AnyView] {
         let items = plugins.compactMap { $0.addStatusView() }

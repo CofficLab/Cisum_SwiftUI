@@ -3,7 +3,7 @@ import MagicCore
 import OSLog
 import SwiftUI
 
-actor VersionPlugin: SuperPlugin, SuperLog {
+actor VersionPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     static let emoji = "📱"
 
     let label: String = "Version"
@@ -20,6 +20,17 @@ actor VersionPlugin: SuperPlugin, SuperLog {
                     .font(.footnote)
             })
         })
+    }
+}
+
+// MARK: - PluginRegistrant
+extension VersionPlugin {
+    @objc static func register() {
+        Task {
+            await PluginRegistry.shared.register(id: "Version", order: 90) {
+                VersionPlugin()
+            }
+        }
     }
 }
 

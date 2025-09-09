@@ -58,22 +58,6 @@ enum Config: SuperLog {
             .createIfNotExist()
     }
 
-    static func getPlugins() -> [SuperPlugin] {
-        return [
-            WelcomePlugin(),
-            StoragePlugin(),
-            AudioPlugin(),
-            BookPlugin(),
-            OpenButtonPlugin(),
-            LikeButtonPlugin(),
-            CopyPlugin(),
-            ResetPlugin(),
-            DebugPlugin(),
-            StorePlugin(),
-            VersionPlugin(),
-        ]
-    }
-
     static var getBackground: Color {
         #if os(macOS)
             Color(.controlBackgroundColor)

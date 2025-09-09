@@ -3,7 +3,7 @@ import MagicCore
 import OSLog
 import SwiftUI
 
-actor ResetPlugin: SuperPlugin, SuperLog {
+actor ResetPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     static let emoji = "⚙️"
 
     let label = "Reset"
@@ -16,6 +16,17 @@ actor ResetPlugin: SuperPlugin, SuperLog {
     func addSettingView() -> AnyView? {
         guard enabled else { return nil }
         return AnyView(ResetSetting())
+    }
+}
+
+// MARK: - PluginRegistrant
+extension ResetPlugin {
+    @objc static func register() {
+        Task {
+            await PluginRegistry.shared.register(id: "Reset", order: 95) {
+                ResetPlugin()
+            }
+        }
     }
 }
 

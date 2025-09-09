@@ -4,7 +4,7 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-actor AudioPlugin: SuperPlugin, SuperLog {
+actor AudioPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     static let emoji = "🎧"
     #if DEBUG
         static let dbDirName = "audios_debug"
@@ -96,6 +96,17 @@ actor AudioPlugin: SuperPlugin, SuperLog {
         }
         
         return storageRoot.appendingPathComponent(Self.dbDirName)
+    }
+}
+
+// MARK: - PluginRegistrant
+extension AudioPlugin {
+    @objc static func register() {
+        Task {
+            await PluginRegistry.shared.register(id: "Audio", order: 0) {
+                AudioPlugin()
+            }
+        }
     }
 }
 
