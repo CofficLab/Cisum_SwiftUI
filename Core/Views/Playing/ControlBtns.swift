@@ -8,13 +8,18 @@ struct ControlBtns: View, SuperLog {
     @EnvironmentObject var man: PlayManController
 
     nonisolated static let emoji = "🎵"
+    static let verbose = false
 
     init() {
-        os_log("\(Self.i)")
+        if Self.verbose {
+            os_log("\(Self.i)")
+        }
     }
 
     var body: some View {
-        os_log("\(self.t)开始渲染")
+        if Self.verbose {
+            os_log("\(self.t)开始渲染")
+        }
         return HStack {
             Spacer(minLength: 50)
             BtnToggleDB()

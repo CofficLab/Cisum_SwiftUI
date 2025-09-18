@@ -18,11 +18,6 @@ actor AudioPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     let isGroup = true
     let verbose = true
 
-    @MainActor var disk: URL?
-    @MainActor var repo: AudioRepo?
-    @MainActor var initialized: Bool = false
-    @MainActor var container: ModelContainer?
-
     @MainActor func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {
         AnyView(AudioRootView { content() })
     }
@@ -44,20 +39,21 @@ actor AudioPlugin: SuperPlugin, SuperLog, PluginRegistrant {
 
         return AnyView(AudioSettings())
     }
-    
+
     @MainActor func getDisk() -> URL? { Self.getAudioDisk() }
-    
+
     @MainActor
     static func getAudioDisk() -> URL? {
         guard let storageRoot = Config.getStorageRoot() else {
             return nil
         }
-        
+
         return storageRoot.appendingPathComponent(Self.dbDirName)
     }
 }
 
 // MARK: - PluginRegistrant
+
 extension AudioPlugin {
     @objc static func register() {
         PluginRegistry.registerSync(order: 0) { Self() }

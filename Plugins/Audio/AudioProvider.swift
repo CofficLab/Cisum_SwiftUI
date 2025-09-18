@@ -20,7 +20,7 @@ class AudioProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
     }
 
     func updateDisk(_ newDisk: URL) {
-        if verbose { os_log("\(self.t)🍋🍋🍋 updateDisk to \(newDisk.path)") }
+        if verbose { os_log("\(self.t)🍋 updateDisk to \(newDisk.path)") }
         self.disk = newDisk
     }
 }

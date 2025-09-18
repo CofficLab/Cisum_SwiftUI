@@ -5,52 +5,70 @@ import OSLog
 import SwiftUI
 
 #if os(macOS)
-typealias ApplicationDelegate = NSApplicationDelegate
-typealias AppOrNotification = Notification
+    typealias ApplicationDelegate = NSApplicationDelegate
+    typealias AppOrNotification = Notification
 #else
-typealias ApplicationDelegate = UIApplicationDelegate
-typealias AppOrNotification = UIApplication
+    typealias ApplicationDelegate = UIApplicationDelegate
+    typealias AppOrNotification = UIApplication
 #endif
 
 class AppDelegate: NSObject, ApplicationDelegate, SuperLog {
     var verbose = false
-    nonisolated static let emoji: String = "🍎" 
+    nonisolated static let emoji: String = "🍎"
     var queue = DispatchQueue(label: "AppDelegate", qos: .background)
 
     func applicationWillHide(_ notification: Notification) {
-        os_log("\(self.t)WillHide")
+        if self.verbose {
+            os_log("\(self.t)WillHide")
+        }
     }
 
     func applicationDidHide(_ notification: Notification) {
-        os_log("\(self.t)Did Hide 🐱🐱🐱")
+        if self.verbose {
+            os_log("\(self.t)Did Hide 🐱🐱🐱")
+        }
     }
 
     func applicationWillBecomeActive(_ notification: Notification) {
-        os_log("\(self.t)WillBecomeActive")
+        if self.verbose {
+            os_log("\(self.t)WillBecomeActive")
+        }
     }
 
     func applicationDidFinishLaunching(_ notification: AppOrNotification) {
-        os_log("\(self.t)applicationDidFinishLaunching")
+        if self.verbose {
+            os_log("\(self.t)applicationDidFinishLaunching")
+        }
     }
 
     func applicationWillTerminate(_ notification: AppOrNotification) {
-        os_log("\(self.t)Will Terminate")
+        if self.verbose {
+            os_log("\(self.t)Will Terminate")
+        }
     }
 
     func applicationWillUpdate(_ notification: Notification) {
-//         os_log("\(self.t)Will Update")
+        if self.verbose {
+            os_log("\(self.t)Will Update")
+        }
     }
 
     func applicationDidBecomeActive(_ notification: AppOrNotification) {
-        os_log("\(self.t)Did Become Active")
+        if self.verbose {
+            os_log("\(self.t)Did Become Active")
+        }
     }
 
     func applicationWillResignActive(_ application: AppOrNotification) {
-        os_log("\(self.t)WillResignActive")
+        if self.verbose {
+            os_log("\(self.t)WillResignActive")
+        }
     }
 
     func applicationDidResignActive(_ notification: Notification) {
-        os_log("\(self.t)DidResignActive")
+        if self.verbose {
+            os_log("\(self.t)DidResignActive")
+        }
     }
 }
 
@@ -58,14 +76,18 @@ class AppDelegate: NSObject, ApplicationDelegate, SuperLog {
 
 #if os(macOS)
 
-extension AppDelegate: NSWindowDelegate {
-    func windowDidMove(_ notification: Notification) {
-        //os_log("移动窗口")
-    }
+    extension AppDelegate: NSWindowDelegate {
+        func windowDidMove(_ notification: Notification) {
+            if self.verbose {
+                os_log("移动窗口")
+            }
+        }
 
-    func windowDidResize(_ notification: Notification) {
-        //os_log("调整窗口")
+        func windowDidResize(_ notification: Notification) {
+            if self.verbose {
+                os_log("调整窗口")
+            }
+        }
     }
-}
 
 #endif

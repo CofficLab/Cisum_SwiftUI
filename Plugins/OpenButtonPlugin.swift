@@ -30,13 +30,16 @@ extension OpenButtonPlugin {
 
 private struct OpenCurrentButtonView: View, SuperLog {
     nonisolated static let emoji = "😜"
+    static let verbose = false
     
     @EnvironmentObject var man: PlayManController
 
     @State private var url: URL? = nil
 
     var body: some View {
-        os_log("\(self.t)开始渲染")
+        if Self.verbose {
+            os_log("\(self.t)开始渲染")
+        }
         return Group {
             if let url = url {
                 url.makeOpenButton()

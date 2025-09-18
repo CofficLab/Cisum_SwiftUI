@@ -17,10 +17,13 @@ actor LikeButtonPlugin: SuperPlugin, PluginRegistrant {
 
 private struct LikeToggleButtonView: View, SuperLog {
     nonisolated static let emoji = "🦁"
+    static let verbose = false
     @EnvironmentObject var man: PlayManController
 
     var body: some View {
-        os_log("\(self.t)开始渲染")
+        if Self.verbose {
+            os_log("\(self.t)开始渲染")
+        }
         
         return Group {
             if man.playMan.asset == nil {

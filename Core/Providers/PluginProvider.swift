@@ -8,6 +8,7 @@ import SwiftUI
 @MainActor
 class PluginProvider: ObservableObject, SuperLog, SuperThread {
     nonisolated static let emoji = "🧩"
+    static let verbose = false
     
     private let repo: PluginRepo
 
@@ -90,10 +91,10 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
         return items
     }
 
-    func getToolBarButtons(verbose: Bool = true) -> [(id: String, view: AnyView)] {
+    func getToolBarButtons() -> [(id: String, view: AnyView)] {
         let buttons =  plugins.flatMap { $0.addToolBarButtons() }
         
-        if verbose {
+        if Self.verbose {
             os_log("\(self.t)🏃🏃🏃 getToolBarButtons: \(buttons.count)")
         }
         
@@ -102,7 +103,7 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
 
     func setCurrentGroup(_ plugin: SuperPlugin, verbose: Bool = false) throws {
         if verbose {
-            os_log("\(self.t)🏃🏃🏃 SetCurrentGroup: \(plugin.id)")
+            os_log("\(self.t)🏃 SetCurrentGroup: \(plugin.id)")
         }
 
         if plugin.isGroup {

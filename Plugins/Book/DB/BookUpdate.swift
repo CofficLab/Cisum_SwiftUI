@@ -24,7 +24,7 @@ extension BookDB {
         self.updateChildCount()
     }
     
-    func updateChildCount(verbose: Bool = true) {
+    func updateChildCount() {
         do {
             try context.enumerate(BookModel.descriptorOfNeedUpdateParent(), block: { book in
                 book.childCount = book.childCount
@@ -35,7 +35,7 @@ extension BookDB {
             os_log(.error, "\(error.localizedDescription)")
         }
         
-        if verbose {
+        if Self.verbose {
             os_log("\(self.t)UpdateChildCount done")
         }
     }

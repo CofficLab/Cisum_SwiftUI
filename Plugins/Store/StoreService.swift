@@ -12,6 +12,8 @@ public typealias RenewalState = StoreKit.Product.SubscriptionInfo.RenewalState
 public typealias PaymentMode = StoreKit.Product.SubscriptionOffer.PaymentMode
 
 public enum StoreService: SuperLog {
+    static let verbose = false
+    
     // MARK: - Bootstrap
     /// 开始监听交易更新，APP启动时应该调用这个方法
     public static func bootstrap() {
@@ -25,7 +27,8 @@ public enum StoreService: SuperLog {
     /// 这是 StoreKit 2 的最佳实践，确保不会错过任何交易
     public static func startTransactionListener() {
         Task {
-            os_log("\(self.t)👀 开始监听交易更新")
+            if verbose {
+                os_log("\(self.t)👀 开始监听交易更新")}
             for await result in Transaction.updates {
                 do {
                     let transaction = try checkVerified(result)

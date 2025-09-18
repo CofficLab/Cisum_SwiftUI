@@ -106,7 +106,7 @@ class AudioRepo: ObservableObject, SuperLog {
             os_log("\(self.t)👍 Like \(url.lastPathComponent)")
             await db.like(url)
         } else {
-            os_log("\(self.t)👎 Dislike \(url.lastPathComponent)")
+            os_log("\(self.t)😁 Cancel like \(url.lastPathComponent)")
             await db.dislike(url)
         }
     }
@@ -192,7 +192,7 @@ class AudioRepo: ObservableObject, SuperLog {
             verbose: false,
             caller: self.className,
             onChange: { [weak self] items, isFirst, _ in
-                os_log(" Disk changed, with items \(items.count)")
+                os_log("\(Self.t)🍋 Disk changed, with items \(items.count)")
                 guard let self = self else { return }
 
                 @Sendable func handleChange() async {

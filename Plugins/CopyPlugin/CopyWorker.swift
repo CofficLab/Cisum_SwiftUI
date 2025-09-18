@@ -12,7 +12,7 @@ class CopyWorker: SuperLog, SuperThread, ObservableObject {
     var running = false
     let verbose: Bool
 
-    init(db: CopyDB, verbose: Bool = true) {
+    init(db: CopyDB, verbose: Bool = false) {
         self.verbose = verbose
 
         if verbose {

@@ -6,10 +6,11 @@ import SwiftUI
 
 class BookRepo: ObservableObject, SuperEvent, SuperLog {
     nonisolated static let emoji = "📖"
+    static let verbose = false
 
     private let db: BookDB
     private var disk: URL
-    private let verbose: Bool
+    private let verbose: Bool = false
     private var monitor: Cancellable?
     private let coverRepo: BookCoverRepo
 
@@ -33,12 +34,7 @@ class BookRepo: ObservableObject, SuperEvent, SuperLog {
         }
     }
 
-    init(disk: URL, verbose: Bool, db: BookDB) throws {
-        if verbose {
-            os_log("\(Self.i)BookDB")
-        }
-
-        self.verbose = verbose
+    init(disk: URL, db: BookDB) throws {
         self.db = db
         self.disk = disk
         self.coverRepo = BookCoverRepo()
@@ -46,7 +42,9 @@ class BookRepo: ObservableObject, SuperEvent, SuperLog {
     }
 
     func makeMonitor() throws -> Cancellable {
-        os_log("\(self.t)📸 Make monitor for: \(self.disk.shortPath())")
+        if verbose {
+            os_log("\(self.t)📸 Make monitor for: \(self.disk.shortPath())")
+        }
 
         if self.disk.isNotDirExist {
             os_log(.error, "\(self.t)Error: \(self.disk.absoluteString) not exist")
@@ -56,10 +54,12 @@ class BookRepo: ObservableObject, SuperEvent, SuperLog {
         let debounceInterval = 2.5
 
         return self.disk.onDirChange(
-            verbose: true,
+            verbose: self.verbose,
             caller: self.className,
             onChange: { items, isFirst, _ in
-                os_log("\(self.t) Disk changed, with items \(items.count)")
+                if Self.verbose {
+                    os_log("\(self.t) Disk changed, with items \(items.count)")
+                }
                 if let lastTime = UserDefaults.standard.object(forKey: "BookLastUpdateTime") as? Date {
                     let now = Date()
                     guard now.timeIntervalSince(lastTime) >= debounceInterval else { return }
@@ -98,7 +98,7 @@ extension BookRepo {
     func find(_ url: URL) async -> URL? {
         await self.db.hasBook(url) ? url : nil
     }
-    
+
     /// 获取书籍封面图
     /// - Parameters:
     ///   - url: 书籍URL

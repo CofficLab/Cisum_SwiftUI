@@ -6,6 +6,7 @@ import SwiftUI
 
 actor BookDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     static let emoji = "📦"
+    static let verbose = false
 
     let modelContainer: ModelContainer
     let modelExecutor: any ModelExecutor
@@ -13,8 +14,8 @@ actor BookDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     let queue = DispatchQueue(label: "DB")
     var onUpdated: () -> Void = { os_log("🍋 DB::updated") }
 
-    init(_ container: ModelContainer, reason: String, verbose: Bool = false) {
-        if verbose {
+    init(_ container: ModelContainer, reason: String) {
+        if Self.verbose {
             let message = "\(Self.t)🚩🚩🚩 初始化(\(reason))"
 
             os_log("\(message)")
@@ -268,7 +269,9 @@ extension BookDB {
             os_log(.error, "\(error.localizedDescription)")
         }
 
-        os_log("\(self.jobEnd(startTime, title: "\(self.t)SyncBookWithDisk(\(items.count))", tolerance: 0.01))")
+        if Self.verbose {
+            os_log("\(self.jobEnd(startTime, title: "\(self.t)SyncBookWithDisk(\(items.count))", tolerance: 0.01))")
+        }
 
         self.updateBookParent()
     }

@@ -22,7 +22,7 @@ struct BookRootView<Content>: View, SuperLog where Content: View {
     @StateObject private var bookRepoState = BookRepoState()
 
     nonisolated static var emoji: String { "🏓" }
-    let verbose = true
+    let verbose = false
 
     init(@ViewBuilder content: () -> Content) {
         self.content = content()
@@ -41,12 +41,16 @@ struct BookRootView<Content>: View, SuperLog where Content: View {
                 .modelContainer(container)
                 .environmentObject(repo)
                 .onAppear {
-                    os_log("\(self.a)")
+                    if self.verbose {
+                        os_log("\(self.a)")
+                    }
                     self.subscribe()
                     self.restore()
                 }
                 .onDisappear {
-                    os_log("\(self.t)Disappear")
+                    if self.verbose {
+                        os_log("\(self.t)Disappear")
+                    }
                 }
                 .onStorageLocationChanged {
                     self.initAll()
@@ -79,16 +83,20 @@ extension BookRootView {
 
 extension BookRootView {
     private func initAll() {
-        os_log("\(self.t)InitAll")
+        if self.verbose {
+            os_log("\(self.t)InitAll")
+        }
         bookRepoState.isLoading = true
         bookRepoState.error = nil
-        
+
         Task {
             do {
                 // 1. 初始化 Container
                 let container = try BookConfig.getContainer()
-                os_log("🎉Container 初始化成功")
-                
+                if verbose {
+                    os_log("\(self.t)🎉 Container 初始化成功")
+                }
+
                 // 2. 获取 Disk
                 guard let disk = BookPlugin.getBookDisk() else {
                     await MainActor.run {
@@ -96,15 +104,19 @@ extension BookRootView {
                     }
                     return
                 }
-                os_log("🎉Disk 获取成功: \(disk.shortPath())")
-                
+                if verbose {
+                    os_log("\(self.t)🎉 Disk 获取成功: \(disk.shortPath())")
+                }
+
                 // 3. 初始化 BookRepo
                 let db = BookDB(container, reason: self.className)
-                let repo = try BookRepo(disk: disk, verbose: true, db: db)
-                
+                let repo = try BookRepo(disk: disk, db: db)
+
                 await MainActor.run {
                     self.setBookRepoState(repo, container: container)
-                    os_log("🎉BookRepo 初始化成功")
+                    if self.verbose {
+                        os_log("\(self.t)🎉 BookRepo 初始化成功")
+                    }
                 }
             } catch {
                 await MainActor.run {
@@ -132,7 +144,7 @@ extension BookRootView {
     private func restore() {
         // 提取需要的数据到局部变量，避免在 Task.detached 中捕获 self
         let playMan = self.man
-        
+
         Task.detached(priority: .background) {
             if let url = BookSettingRepo.getCurrent() {
                 await playMan.play(url: url, autoPlay: false)

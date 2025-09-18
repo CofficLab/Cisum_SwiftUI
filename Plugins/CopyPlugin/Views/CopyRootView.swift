@@ -21,7 +21,7 @@ struct CopyRootView<Content>: View, SuperEvent, SuperLog, SuperThread where Cont
     private var container: ModelContainer?
     private var db: CopyDB
     private var worker: CopyWorker
-    private var verbose = true
+    private var verbose = false
 
     init(@ViewBuilder content: () -> Content) {
         os_log("\(Self.i)")
@@ -102,13 +102,15 @@ struct CopyRootView<Content>: View, SuperEvent, SuperLog, SuperThread where Cont
 
 extension CopyRootView {
     func onAppear() {
-        if verbose {
+        if self.verbose {
             os_log("\(self.a)")
         }
     }
 
     func onCopyFiles(_ notification: Notification) {
+        if self.verbose {
         os_log("\(self.t)🍋🍋🍋 onCopyFiles")
+        }
 
         if let urls = notification.userInfo?["urls"] as? [URL],
            let folder = notification.userInfo?["folder"] as? URL {
