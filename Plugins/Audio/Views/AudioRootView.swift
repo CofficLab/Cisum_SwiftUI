@@ -74,6 +74,15 @@ struct AudioRootView<Content>: View, SuperLog where Content: View {
             .onDisappear {
                 os_log("\(self.t)Disappear")
             }
+            .onPlayManStateChanged({ isPlaying in
+                if verbose {
+                    os_log("\(self.t)🔈 播放状态变为 -> \(self.man.playMan.state.stateText)")
+                }
+
+                if self.man.playMan.state == .paused {
+                    AudioStateRepo.storeCurrentTime(man.playMan.currentTime)
+                }
+            })
         }
     }
 }
@@ -125,15 +134,6 @@ extension AudioRootView {
     private func subscribe() {
         self.man.playMan.subscribe(
             name: self.className,
-            onStateChanged: { state in
-                if verbose {
-                    os_log("\(self.t)🔈 播放状态变为 -> \(state.stateText)")
-                }
-
-                if state == .paused {
-                    AudioStateRepo.storeCurrentTime(man.playMan.currentTime)
-                }
-            },
             onPreviousRequested: { asset in
                 if verbose {
                     os_log("\(self.t)⏮️ 上一首")
