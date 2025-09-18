@@ -16,67 +16,20 @@ actor CopyPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     @MainActor var container: ModelContainer?
 
     @MainActor func addStateView(currentGroup: SuperPlugin?) -> AnyView? {
-        guard let worker = self.worker else {
-            return nil
-        }
-
-        guard let container = try? CopyConfig.getContainer() else {
-            return nil
-        }
-
         return AnyView(
             CopyStateView()
-                .environmentObject(worker)
-                .modelContainer(container)
         )
     }
 
     @MainActor func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {
-        guard let db = self.db else {
-            os_log("\(self.t)No DB")
-            return nil
-        }
-
-        guard let worker = self.worker else {
-            os_log("\(self.t)No Worker")
-            return nil
-        }
-
-        guard let container = try? CopyConfig.getContainer() else {
-            os_log("\(self.t)No Container")
-            return nil
-        }
-
-        os_log("\(self.t)Add Root View (wrapping content)")
         return AnyView(
-            ZStack {
-                content()
-                CopyRootView()
-            }
-            .environmentObject(db)
-            .environmentObject(worker)
-            .modelContainer(container)
+            CopyRootView { content() }
         )
-    }
-
-    @MainActor
-    func onWillAppear(playMan: PlayManWrapper, currentGroup: (any SuperPlugin)?, storage: StorageLocation?) async throws {
-        let verbose = false
-
-        if verbose {
-            os_log("\(self.a)")
-        }
-
-        let container = try CopyConfig.getContainer()
-        let db = CopyDB(container, reason: self.author, verbose: false)
-
-        self.container = container
-        self.db = db
-        self.worker = CopyWorker(db: db)
     }
 }
 
 // MARK: - PluginRegistrant
+
 extension CopyPlugin {
     @objc static func register() {
         PluginRegistry.registerSync(order: 0) { Self() }

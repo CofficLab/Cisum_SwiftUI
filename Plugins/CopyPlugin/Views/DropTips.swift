@@ -10,7 +10,7 @@ struct DropTips: View {
     }
 
     var body: some View {
-        MagicCard(background: MagicBackground.aurora.background(.background)) {
+        MagicCard(background: MagicBackground.aurora.opacity(0.5).background(.background)) {
             VStack(spacing: 0) {
                 HStack {
                     Image(systemName: "info.circle.fill")
@@ -28,7 +28,7 @@ struct DropTips: View {
 //
 //                        Button(
 //                            action: {
-                ////                                FileHelper.openFolder(url: data.disk.root)
+//                                                FileHelper.openFolder(url: data.disk.root)
 //                            },
 //                            label: {
 //                                Label(

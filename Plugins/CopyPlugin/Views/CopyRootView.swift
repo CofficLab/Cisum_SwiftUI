@@ -1,26 +1,48 @@
 import MagicCore
+import SwiftData
 import MagicUI
 import MagicAlert
 import OSLog
 import SwiftUI
 import UniformTypeIdentifiers
 
-struct CopyRootView: View, SuperEvent, SuperLog, SuperThread {
-    nonisolated static let emoji = "🚛"
+struct CopyRootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content: View {
+    nonisolated static var emoji: String {"🚛"}
 
-    @EnvironmentObject var db: CopyDB
     @EnvironmentObject var m: MagicMessageProvider
     @EnvironmentObject var p: PluginProvider
-    @EnvironmentObject var worker: CopyWorker
 
     @State var isDropping = false
     @State var error: Error? = nil
     @State var iCloudAvailable = true
     @State var count = 0
 
-    init(verbose: Bool = true) {
-        if verbose {
-            os_log("\(Self.i)")
+    private var content: Content
+    private var container: ModelContainer?
+    private var db: CopyDB
+    private var worker: CopyWorker
+
+    init(@ViewBuilder content: () -> Content) {
+        os_log("\(Self.i)")
+        self.content = content()
+
+        // 初始化容器/依赖
+        let container = try? CopyConfig.getContainer()
+        self.container = container
+
+        if let container {
+            let db = CopyDB(container, reason: "CopyRootView", verbose: false)
+            let worker = CopyWorker(db: db)
+            self.db = db
+            self.worker = worker
+        } else {
+            // 兜底占位，避免未初始化使用崩溃
+            let placeholder = try? CopyConfig.getContainer()
+            let db = CopyDB(placeholder!, reason: "CopyRootViewFallback", verbose: false)
+            let worker = CopyWorker(db: db)
+            self.db = db
+            self.worker = worker
+            os_log(.error, "\(Self.t)No Container")
         }
     }
 
@@ -56,6 +78,14 @@ struct CopyRootView: View, SuperEvent, SuperLog, SuperThread {
             return true
         }
         .onReceive(NotificationCenter.default.publisher(for: .CopyFiles), perform: onCopyFiles)
+        .background(
+            ZStack {
+                content
+            }
+            .environmentObject(db)
+            .environmentObject(worker)
+            .modelContainer(container!)
+        )
     }
 
     @MainActor
@@ -98,7 +128,7 @@ extension CopyRootView {
         
         guard let disk = await MainActor.run(body: { p.current?.getDisk() }) else {
             os_log(.error, "\(self.t)No Disk")
-            await MainActor.run { self.m.info("No Disk") }
+            await MainActor.run { self.m.error("No Disk") }
             return false
         }
 
