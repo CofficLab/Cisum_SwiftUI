@@ -13,6 +13,7 @@ protocol MagicSuperPlugin: Actor {
 
 extension MagicSuperPlugin {
     nonisolated var id: String { self.label }
+    nonisolated var label: String { String(describing: type(of: self)) }
 
     nonisolated var isGroup: Bool { false }
 

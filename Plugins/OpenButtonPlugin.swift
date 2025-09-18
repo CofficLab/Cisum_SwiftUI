@@ -3,7 +3,6 @@ import OSLog
 import SwiftUI
 
 actor OpenButtonPlugin: SuperPlugin, PluginRegistrant {
-    let label = "OpenButton"
     let hasPoster = false
     let description: String = "当前资源打开按钮"
     let iconName: String = .iconFinder

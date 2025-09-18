@@ -12,7 +12,6 @@ actor AudioPlugin: SuperPlugin, SuperLog, PluginRegistrant {
         static let dbDirName = "audios"
     #endif
 
-    let label = "Audio"
     let hasPoster = true
     let description = "作为歌曲仓库，只关注文件，文件夹将被忽略"
     let iconName = "music.note"

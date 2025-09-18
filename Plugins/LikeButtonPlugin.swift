@@ -3,7 +3,6 @@ import OSLog
 import SwiftUI
 
 actor LikeButtonPlugin: SuperPlugin, PluginRegistrant {
-    let label = "LikeButton"
     let hasPoster = false
     let description: String = "喜欢/取消喜欢 按钮"
     let iconName: String = .iconHeart

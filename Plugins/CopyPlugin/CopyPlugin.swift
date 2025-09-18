@@ -7,7 +7,6 @@ import SwiftUI
 actor CopyPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     static let emoji = "🚛"
 
-    let label: String = "Copy"
     let hasPoster: Bool = false
     let description: String = "作为歌曲仓库，只关注文件，文件夹将被忽略"
     let iconName: String = "music.note"
