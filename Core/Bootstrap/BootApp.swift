@@ -10,6 +10,10 @@ struct BootApp: App, SuperLog {
     #endif
 
     nonisolated static let emoji = "🍎"
+    
+    init() {
+        StoreService.bootstrap()
+    }
 
     var body: some Scene {
         #if os(macOS)

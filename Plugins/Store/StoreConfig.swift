@@ -79,10 +79,8 @@ enum StoreConfig: Sendable {
         "nonconsumable.racecar": .none,
 
         // subscription
-        "com.coffic.netto.monthly": .pro,
-        "com.coffic.netto.annual": .pro,
-//        "com.yueyi.netto.ultimate.monthly": .ultimate,
-//        "com.yueyi.netto.ultimate.annual": .ultimate,
+        "com.yueyi.cisum.monthly": .pro,
+        "com.yueyi.cisum.yearly": .pro,
     ]
 
     // 全部商品ID列表（用于请求产品）

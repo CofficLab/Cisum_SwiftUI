@@ -56,9 +56,6 @@ struct ProductCell: View, SuperLog {
             VStack(alignment: .leading) {
                 Text(product.displayName)
                     .bold()
-                Text(product.id)
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
                 // 试用期信息
                 if let introOffer = product.subscription?.introductoryOffer {
                     Text(formatIntroductoryOffer(introOffer))
@@ -79,9 +76,6 @@ struct ProductCell: View, SuperLog {
             VStack(alignment: .leading) {
                 Text(product.description)
                     .frame(alignment: .leading)
-                Text(product.id)
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
             }
         }
     }
