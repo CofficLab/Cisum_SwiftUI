@@ -85,3 +85,22 @@ extension SuperPlugin {
 
     func onStorageLocationChange(storage: StorageLocation?) async throws {}
 }
+
+// MARK: - Convenience
+extension SuperPlugin {
+    /// 非泛型便捷方法：用于在存在 existential 时避免直接调用泛型方法的匹配问题
+    @MainActor
+    func provideRootView(_ content: AnyView) -> AnyView? {
+        self.addRootView { content }
+    }
+
+    /// 用于链式包裹内容的便捷方法。
+    /// 若插件未提供 Root 包裹，则直接返回原内容。
+    @MainActor
+    func wrapRoot(_ content: AnyView) -> AnyView {
+        if let wrapped = self.provideRootView(content) {
+            return wrapped
+        }
+        return content
+    }
+}

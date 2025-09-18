@@ -65,9 +65,21 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
         return items
     }
 
+    /// 将内容依序用所有插件的 RootView 包裹（链式装配）。
+    ///
+    /// 说明：
+    /// - 旧行为：仅使用当前分组插件 `current` 的 `addRootView` 包裹。
+    /// - 新行为：遍历 `plugins`，对 `content` 连续应用每个插件的 `addRootView`。
+    ///   若某插件未提供 RootView（返回 `nil`），则跳过。
+    /// - 顺序：与 `plugins` 数组一致（即注册时的 `order` 排序结果）。
     func wrapWithCurrentRoot<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {
-        guard let current = current else { return nil }
-        return current.addRootView { content() }
+        var wrapped: AnyView = AnyView(content())
+
+        for plugin in plugins {
+            wrapped = plugin.wrapRoot(wrapped)
+        }
+
+        return wrapped
     }
 
     func getSheetViews(storage: StorageLocation?) -> [AnyView] {

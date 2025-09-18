@@ -18,15 +18,14 @@ struct CopyRootView: View, SuperEvent, SuperLog, SuperThread {
     @State var iCloudAvailable = true
     @State var count = 0
 
-    init(verbose: Bool = false) {
+    init(verbose: Bool = true) {
         if verbose {
             os_log("\(Self.i)")
         }
     }
 
     var outOfLimit: Bool {
-        false
-//        count >= Config.maxAudioCount && s.currentSubscription == nil
+        count >= Config.maxAudioCount && StoreService.tierCached().isFreeVersion
     }
 
     var showDropTips: Bool {
@@ -34,8 +33,7 @@ struct CopyRootView: View, SuperEvent, SuperLog, SuperThread {
     }
 
     var showProTips: Bool {
-        false
-//        count >= Config.maxAudioCount && s.currentSubscription == nil && isDropping
+        count >= Config.maxAudioCount && StoreService.tierCached().isFreeVersion && isDropping
     }
 
     var body: some View {

@@ -32,20 +32,28 @@ actor CopyPlugin: SuperPlugin, SuperLog, PluginRegistrant {
         )
     }
 
-    @MainActor func addRootView() -> AnyView? {
+    @MainActor func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {
         guard let db = self.db else {
+            os_log("\(self.t)No DB")
             return nil
         }
 
         guard let worker = self.worker else {
+            os_log("\(self.t)No Worker")
             return nil
         }
 
         guard let container = try? CopyConfig.getContainer() else {
+            os_log("\(self.t)No Container")
             return nil
         }
 
-        return AnyView(CopyRootView()
+        os_log("\(self.t)Add Root View (wrapping content)")
+        return AnyView(
+            ZStack {
+                content()
+                CopyRootView()
+            }
             .environmentObject(db)
             .environmentObject(worker)
             .modelContainer(container)
