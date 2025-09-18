@@ -1,5 +1,6 @@
 import Foundation
 import MagicCore
+import MagicAlert
 import MagicPlayMan
 import OSLog
 import SwiftData

@@ -1,5 +1,6 @@
 import MagicCore
 import MagicAsset
+import MagicContainer
 import SwiftUI
 
 struct LaunchView: View {
@@ -19,7 +20,7 @@ struct LaunchView: View {
 #Preview("LaunchView") {
     LaunchView()
         .frame(width: 300, height: 600)
-        .inMagicContainer(containerHeight: 600)
+        .inMagicContainer(.iMac27)
 }
 
 #Preview("App - Large") {

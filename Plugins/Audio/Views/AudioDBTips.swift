@@ -1,5 +1,5 @@
 import MagicCore
-
+import MagicBackground
 import SwiftUI
 
 struct AudioDBTips: View {

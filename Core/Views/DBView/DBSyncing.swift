@@ -1,6 +1,7 @@
 import SwiftUI
 import MagicCore
-
+import MagicUI
+import MagicBackground
 
 struct DBSyncing: View {
     var body: some View {

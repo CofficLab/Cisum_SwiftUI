@@ -1,4 +1,5 @@
 import MagicCore
+import MagicUI
 import SwiftUI
 
 struct BtnAdd: View {

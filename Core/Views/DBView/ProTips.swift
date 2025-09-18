@@ -1,4 +1,6 @@
 import MagicCore
+import MagicUI
+import MagicBackground
 import SwiftUI
 
 struct ProTips: View {

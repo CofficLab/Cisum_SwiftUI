@@ -1,4 +1,6 @@
 import MagicCore
+import MagicUI
+import MagicAlert
 import OSLog
 import SwiftUI
 import UniformTypeIdentifiers

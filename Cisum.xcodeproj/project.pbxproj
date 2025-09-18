@@ -27,10 +27,12 @@
 		0BE0A5FF2E5E037700A9BE9C /* MagicPlayMan in Frameworks */ = {isa = PBXBuildFile; productRef = 0BE0A5FE2E5E037700A9BE9C /* MagicPlayMan */; };
 		F53E1A822E5E8BD800253866 /* MagicCore in Frameworks */ = {isa = PBXBuildFile; productRef = F53E1A812E5E8BD800253866 /* MagicCore */; };
 		F53E1A842E5E8BD800253866 /* MagicPlayMan in Frameworks */ = {isa = PBXBuildFile; productRef = F53E1A832E5E8BD800253866 /* MagicPlayMan */; };
-		F54522252BFF3C780027CF55 /* Products.storekit in Resources */ = {isa = PBXBuildFile; fileRef = F54522242BFF3C770027CF55 /* Products.storekit */; };
-		F54522272BFF3CCE0027CF55 /* Products.plist in Resources */ = {isa = PBXBuildFile; fileRef = F54522262BFF3CCE0027CF55 /* Products.plist */; };
 		F54883EA2E5DA4B00017949F /* MagicCore in Frameworks */ = {isa = PBXBuildFile; productRef = F54883E92E5DA4B00017949F /* MagicCore */; };
 		F54883EC2E5DA4B00017949F /* MagicPlayMan in Frameworks */ = {isa = PBXBuildFile; productRef = F54883EB2E5DA4B00017949F /* MagicPlayMan */; };
+		F58CBB312E7BB8A900522F75 /* MagicBackground in Frameworks */ = {isa = PBXBuildFile; productRef = F58CBB302E7BB8A900522F75 /* MagicBackground */; };
+		F58CBB332E7BB8B000522F75 /* MagicDesktop in Frameworks */ = {isa = PBXBuildFile; productRef = F58CBB322E7BB8B000522F75 /* MagicDesktop */; };
+		F58CBB352E7BB8D300522F75 /* MagicAlert in Frameworks */ = {isa = PBXBuildFile; productRef = F58CBB342E7BB8D300522F75 /* MagicAlert */; };
+		F58CBB442E7BB9EB00522F75 /* MagicContainer in Frameworks */ = {isa = PBXBuildFile; productRef = F58CBB432E7BB9EB00522F75 /* MagicContainer */; };
 		F5E34E522E67D9D800DAF78A /* MagicAsset in Frameworks */ = {isa = PBXBuildFile; productRef = F5E34E512E67D9D800DAF78A /* MagicAsset */; };
 		F5E34E542E67D9D800DAF78A /* MagicCore in Frameworks */ = {isa = PBXBuildFile; productRef = F5E34E532E67D9D800DAF78A /* MagicCore */; };
 		F5E34E562E67D9D800DAF78A /* MagicPlayMan in Frameworks */ = {isa = PBXBuildFile; productRef = F5E34E552E67D9D800DAF78A /* MagicPlayMan */; };
@@ -51,8 +53,6 @@
 		0B7792452D15ADF500D78FF4 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		0B92ACC92BBA80F300F1A74F /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		0BB5871C2AD820FA0071AEBD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		F54522242BFF3C770027CF55 /* Products.storekit */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Products.storekit; sourceTree = "<group>"; };
-		F54522262BFF3CCE0027CF55 /* Products.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Products.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -72,8 +72,10 @@
 				0BE0A5FF2E5E037700A9BE9C /* MagicPlayMan in Frameworks */,
 				0BD3F81A2E67255A00E533B7 /* MagicCore in Frameworks */,
 				F5F38B1B2E6A837E00BE9CAE /* MagicPlayMan in Frameworks */,
+				F58CBB332E7BB8B000522F75 /* MagicDesktop in Frameworks */,
 				F54883EC2E5DA4B00017949F /* MagicPlayMan in Frameworks */,
 				0BE0A5FD2E5E037700A9BE9C /* MagicCore in Frameworks */,
+				F58CBB442E7BB9EB00522F75 /* MagicContainer in Frameworks */,
 				0BD3F8152E67252200E533B7 /* MagicPlayMan in Frameworks */,
 				0B36460E2E5DF97E0092486E /* MagicCore in Frameworks */,
 				0B3CCAAC2DF1C94000E22263 /* MagicCore in Frameworks */,
@@ -91,10 +93,12 @@
 				0B3CCAAA2DF1C94000E22263 /* MagicPlayMan in Frameworks */,
 				F5F38B172E6A837E00BE9CAE /* MagicAsset in Frameworks */,
 				0B3CCAA92DF1C94000E22263 /* MagicPlayMan in Frameworks */,
+				F58CBB352E7BB8D300522F75 /* MagicAlert in Frameworks */,
 				F5E41B312E5ED11D0072FBE3 /* MagicCore in Frameworks */,
 				F5E41B332E5ED11D0072FBE3 /* MagicPlayMan in Frameworks */,
 				F5E34E562E67D9D800DAF78A /* MagicPlayMan in Frameworks */,
 				F5F38B222E6A8A0100BE9CAE /* MagicPlayMan in Frameworks */,
+				F58CBB312E7BB8A900522F75 /* MagicBackground in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -110,8 +114,6 @@
 				0B7792452D15ADF500D78FF4 /* Localizable.xcstrings */,
 				F54D53832D223ED000CA53BE /* Plugins */,
 				0B9C1C3E2AAF18FE001A26AF /* Products */,
-				F54522262BFF3CCE0027CF55 /* Products.plist */,
-				F54522242BFF3C770027CF55 /* Products.storekit */,
 				0B92ACC92BBA80F300F1A74F /* README.md */,
 				0B1D5A5D2AB3025E0010DDF2 /* Signing.entitlements */,
 				F50D44542DF146F300008E72 /* Frameworks */,
@@ -184,6 +186,10 @@
 				F5F38B1D2E6A8A0100BE9CAE /* MagicAsset */,
 				F5F38B1F2E6A8A0100BE9CAE /* MagicCore */,
 				F5F38B212E6A8A0100BE9CAE /* MagicPlayMan */,
+				F58CBB302E7BB8A900522F75 /* MagicBackground */,
+				F58CBB322E7BB8B000522F75 /* MagicDesktop */,
+				F58CBB342E7BB8D300522F75 /* MagicAlert */,
+				F58CBB432E7BB9EB00522F75 /* MagicContainer */,
 			);
 			productName = Cisum;
 			productReference = 0B1D5A4B2AB301AD0010DDF2 /* Cisum.app */;
@@ -232,10 +238,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F54522272BFF3CCE0027CF55 /* Products.plist in Resources */,
 				0B7792462D15ADF500D78FF4 /* Localizable.xcstrings in Resources */,
 				0B92ACCA2BBA80F300F1A74F /* README.md in Resources */,
-				F54522252BFF3C780027CF55 /* Products.storekit in Resources */,
 				0BB5871D2AD820FA0071AEBD /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -566,6 +570,26 @@
 		F54883EB2E5DA4B00017949F /* MagicPlayMan */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MagicPlayMan;
+		};
+		F58CBB302E7BB8A900522F75 /* MagicBackground */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F5F38B1C2E6A8A0100BE9CAE /* XCRemoteSwiftPackageReference "MagicKit" */;
+			productName = MagicBackground;
+		};
+		F58CBB322E7BB8B000522F75 /* MagicDesktop */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F5F38B1C2E6A8A0100BE9CAE /* XCRemoteSwiftPackageReference "MagicKit" */;
+			productName = MagicDesktop;
+		};
+		F58CBB342E7BB8D300522F75 /* MagicAlert */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F5F38B1C2E6A8A0100BE9CAE /* XCRemoteSwiftPackageReference "MagicKit" */;
+			productName = MagicAlert;
+		};
+		F58CBB432E7BB9EB00522F75 /* MagicContainer */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F5F38B1C2E6A8A0100BE9CAE /* XCRemoteSwiftPackageReference "MagicKit" */;
+			productName = MagicContainer;
 		};
 		F59E30C92DF1870D00F794A7 /* MagicAsset */ = {
 			isa = XCSwiftPackageProductDependency;

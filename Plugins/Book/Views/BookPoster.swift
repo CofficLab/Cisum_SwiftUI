@@ -1,6 +1,6 @@
 import SwiftUI
 import MagicCore
-
+import MagicBackground
 
 struct BookPoster: View {
     var books: [String] = [
