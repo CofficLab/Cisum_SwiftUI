@@ -162,12 +162,6 @@ extension PluginProvider {
         }
     }
 
-    func handleOnAppear(playMan: PlayManWrapper, current: SuperPlugin?, storage: StorageLocation?) async throws {
-        for plugin in plugins {
-            try await plugin.onWillAppear(playMan: playMan, currentGroup: current, storage: storage)
-        }
-    }
-
     func onPlayNext(current: URL?, mode: PlayMode, man: PlayManWrapper) async throws {
         let currentGroupId = self.current?.id
         for plugin in plugins {
@@ -197,12 +191,6 @@ extension PluginProvider {
     func onCurrentURLChanged(url: URL) async throws {
         for plugin in plugins {
             try await plugin.onCurrentURLChanged(url: url)
-        }
-    }
-
-    func onPause(man: PlayManWrapper) async throws {
-        for plugin in plugins {
-            await plugin.onPause(playMan: man)
         }
     }
 }

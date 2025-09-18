@@ -116,7 +116,6 @@ extension RootView {
         Task {
             do {
                 try self.p.restoreCurrent()
-                try await p.handleOnAppear(playMan: playManWrapper, current: p.current, storage: Config.getStorageLocation())
 
                 a.showSheet = p.getSheetViews(storage: Config.getStorageLocation()).isNotEmpty
 
@@ -129,15 +128,6 @@ extension RootView {
                     onStateChanged: { state in
                         if verbose {
                             os_log("\(self.t)🐯 播放状态变为 -> \(state.stateText)")
-                        }
-                        if state == .paused {
-                            Task {
-                                do {
-                                    try await self.p.onPause(man: playManWrapper)
-                                } catch {
-                                    m.error(error)
-                                }
-                            }
                         }
 
                         if state.isUnsupportedFormat {

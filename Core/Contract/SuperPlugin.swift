@@ -12,10 +12,8 @@ protocol SuperPlugin: MagicSuperPlugin {
     @MainActor func addToolBarButtons() -> [(id: String, view: AnyView)]
     @MainActor func getDisk() -> URL?
 
-    func onWillAppear(playMan: PlayManWrapper, currentGroup: SuperPlugin?, storage: StorageLocation?) async throws
     func onDisappear()
     func onPlay()
-    func onPause(playMan: PlayManWrapper) async
     func onPlayStateUpdate() async throws
     func onPlayModeChange(mode: String, asset: URL?) async throws
     func onCurrentURLChanged(url: URL) async throws
@@ -55,8 +53,6 @@ extension SuperPlugin {
 
     func onPlayModeChange(mode: String, asset: URL?) async throws { }
 
-    func onPause(playMan: PlayManWrapper) async { }
-
     func onLike(asset: URL?, liked: Bool) async throws { }
 
     func onPlayStateUpdate() async throws {}
@@ -64,8 +60,6 @@ extension SuperPlugin {
     func onPlayNext(playMan: PlayManWrapper, current: URL?, currentGroup: String?, verbose: Bool) async throws { }
 
     func onPlayPrev(playMan: PlayManWrapper, current: URL?, currentGroup: String?, verbose: Bool) async throws { }
-
-    func onWillAppear(playMan: PlayManWrapper, currentGroup: (any SuperPlugin)?, storage: StorageLocation?) async { }
 
     func onStorageLocationChange(storage: StorageLocation?) async throws {}
 }
