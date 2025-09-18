@@ -53,6 +53,12 @@
         }
       }
     },
+    "2个订阅选项" : {
+
+    },
+    "App Demo" : {
+
+    },
     "Button" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -120,10 +126,16 @@
     "iCloud 值: %@" : {
 
     },
+    "ID: 3F19ED53" : {
+
+    },
     "Migrate" : {
 
     },
     "Setting" : {
+
+    },
+    "Software Services Pro" : {
 
     },
     "UserDefaults 值: %@" : {
@@ -331,6 +343,9 @@
           }
         }
       }
+    },
+    "如果您之前在其他设备上购买过订阅,可以通过点击下方的\"恢复购买\"按钮来恢复您的订阅。请确保您使用的是购买时所用的Apple ID 账号。" : {
+
     },
     "完成" : {
 

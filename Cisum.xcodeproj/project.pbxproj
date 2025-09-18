@@ -58,6 +58,7 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		F54D53832D223ED000CA53BE /* Plugins */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Plugins; sourceTree = "<group>"; };
 		F54D54552D223F2400CA53BE /* Core */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Core; sourceTree = "<group>"; };
+		F58CBB4C2E7BBC2F00522F75 /* AppStore */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = AppStore; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,6 +109,7 @@
 		0B9C1C342AAF18FE001A26AF = {
 			isa = PBXGroup;
 			children = (
+				F58CBB4C2E7BBC2F00522F75 /* AppStore */,
 				0BB5871C2AD820FA0071AEBD /* Assets.xcassets */,
 				F54D54552D223F2400CA53BE /* Core */,
 				0B1D5A8B2AB305D70010DDF2 /* Info.plist */,
@@ -153,6 +155,7 @@
 			fileSystemSynchronizedGroups = (
 				F54D53832D223ED000CA53BE /* Plugins */,
 				F54D54552D223F2400CA53BE /* Core */,
+				F58CBB4C2E7BBC2F00522F75 /* AppStore */,
 			);
 			name = Cisum;
 			packageProductDependencies = (
