@@ -58,6 +58,7 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		F54D53832D223ED000CA53BE /* Plugins */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Plugins; sourceTree = "<group>"; };
 		F54D54552D223F2400CA53BE /* Core */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Core; sourceTree = "<group>"; };
+		F58768052E7C00B70095783E /* MagicFramework */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = MagicFramework; sourceTree = "<group>"; };
 		F58CBB4C2E7BBC2F00522F75 /* AppStore */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = AppStore; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
@@ -109,6 +110,7 @@
 		0B9C1C342AAF18FE001A26AF = {
 			isa = PBXGroup;
 			children = (
+				F58768052E7C00B70095783E /* MagicFramework */,
 				F58CBB4C2E7BBC2F00522F75 /* AppStore */,
 				0BB5871C2AD820FA0071AEBD /* Assets.xcassets */,
 				F54D54552D223F2400CA53BE /* Core */,
@@ -155,6 +157,7 @@
 			fileSystemSynchronizedGroups = (
 				F54D53832D223ED000CA53BE /* Plugins */,
 				F54D54552D223F2400CA53BE /* Core */,
+				F58768052E7C00B70095783E /* MagicFramework */,
 				F58CBB4C2E7BBC2F00522F75 /* AppStore */,
 			);
 			name = Cisum;
