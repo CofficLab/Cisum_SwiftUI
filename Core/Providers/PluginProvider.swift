@@ -143,56 +143,6 @@ extension PluginProvider {
             }
         }
     }
-
-    func handleStorageLocationChange(storage: StorageLocation?) async throws {
-        for plugin in plugins {
-            try await plugin.onStorageLocationChange(storage: storage)
-        }
-    }
-
-    func handlePlayStateUpdate() async throws {
-        for plugin in plugins {
-            try await plugin.onPlayStateUpdate()
-        }
-    }
-
-    func handleOnDisappear() async throws {
-        for plugin in plugins {
-            await plugin.onDisappear()
-        }
-    }
-
-    func onPlayNext(current: URL?, mode: PlayMode, man: PlayManWrapper) async throws {
-        let currentGroupId = self.current?.id
-        for plugin in plugins {
-            try await plugin.onPlayNext(playMan: man, current: current, currentGroup: currentGroupId, verbose: true)
-        }
-    }
-
-    func onPlayPrev(current: URL?, mode: PlayMode, man: PlayManWrapper) async throws {
-        let currentGroupId = self.current?.id
-        for plugin in plugins {
-            try await plugin.onPlayPrev(playMan: man, current: current, currentGroup: currentGroupId, verbose: true)
-        }
-    }
-
-    func onPlayModeChange(mode: PlayMode, asset: URL?) async throws {
-        for plugin in plugins {
-            try await plugin.onPlayModeChange(mode: mode.rawValue, asset: asset)
-        }
-    }
-
-    func onLike(asset: URL?, liked: Bool) async throws {
-        for plugin in plugins {
-            try await plugin.onLike(asset: asset, liked: liked)
-        }
-    }
-
-    func onCurrentURLChanged(url: URL) async throws {
-        for plugin in plugins {
-            try await plugin.onCurrentURLChanged(url: url)
-        }
-    }
 }
 
 // MARK: - Error

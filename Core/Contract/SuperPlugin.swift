@@ -11,16 +11,6 @@ protocol SuperPlugin: MagicSuperPlugin {
     @MainActor func addStatusView() -> AnyView?
     @MainActor func addToolBarButtons() -> [(id: String, view: AnyView)]
     @MainActor func getDisk() -> URL?
-
-    func onDisappear()
-    func onPlay()
-    func onPlayStateUpdate() async throws
-    func onPlayModeChange(mode: String, asset: URL?) async throws
-    func onCurrentURLChanged(url: URL) async throws
-    func onPlayNext(playMan: PlayManWrapper, current: URL?, currentGroup: String?, verbose: Bool) async throws
-    func onPlayPrev(playMan: PlayManWrapper, current: URL?, currentGroup: String?, verbose: Bool) async throws
-    func onStorageLocationChange(storage: StorageLocation?) async throws
-    func onLike(asset: URL?, liked: Bool) async throws
 }
 
 extension SuperPlugin {
@@ -40,26 +30,4 @@ extension SuperPlugin {
     nonisolated func addSettingView() -> AnyView? { nil }
 
     @MainActor func getDisk() -> URL? { nil }
-
-    func onWillAppear(playMan: PlayManWrapper, currentGroup: SuperPlugin?) {}
-
-    func onInit() {}
-
-    func onCurrentURLChanged(url: URL) { }
-
-    func onDisappear() { }
-
-    func onPlay() { }
-
-    func onPlayModeChange(mode: String, asset: URL?) async throws { }
-
-    func onLike(asset: URL?, liked: Bool) async throws { }
-
-    func onPlayStateUpdate() async throws {}
-
-    func onPlayNext(playMan: PlayManWrapper, current: URL?, currentGroup: String?, verbose: Bool) async throws { }
-
-    func onPlayPrev(playMan: PlayManWrapper, current: URL?, currentGroup: String?, verbose: Bool) async throws { }
-
-    func onStorageLocationChange(storage: StorageLocation?) async throws {}
 }

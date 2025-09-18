@@ -122,75 +122,6 @@ extension RootView {
                 #if os(iOS)
                     UIApplication.shared.beginReceivingRemoteControlEvents()
                 #endif
-
-                self.man.subscribe(
-                    name: self.className,
-                    onStateChanged: { state in
-                        if verbose {
-                            os_log("\(self.t)🐯 播放状态变为 -> \(state.stateText)")
-                        }
-
-                        if state.isUnsupportedFormat {
-                            m.info("不支持的格式，自动播放下一首")
-                            Task {
-                                // 不支持的格式，1秒后自动播放下一首
-                                try await Task.sleep(nanoseconds: 1000000000) // 1秒延迟
-                                do {
-                                    try await self.p.onPlayNext(current: man.currentAsset, mode: man.playMode, man: playManWrapper)
-                                } catch {
-                                    m.error(error)
-                                }
-                            }
-                        }
-                    },
-                    onPreviousRequested: { asset in
-                        os_log("\(self.t)⏮️ 上一首")
-                        Task {
-                            do {
-                                try await self.p.onPlayPrev(current: asset, mode: man.playMode, man: playManWrapper)
-                            } catch {
-                                m.error(error)
-                            }
-                        }
-                    },
-                    onNextRequested: { asset in
-                        Task {
-                            do {
-                                try await self.p.onPlayNext(current: asset, mode: man.playMode, man: playManWrapper)
-                            } catch {
-                                m.error(error)
-                            }
-                        }
-                    },
-                    onLikeStatusChanged: { asset, like in
-                        os_log("\(self.t)❤️ 喜欢状态 -> \(like)")
-                        Task {
-                            do {
-                                try await self.p.onLike(asset: asset, liked: like)
-                            } catch {
-                                m.error(error)
-                            }
-                        }
-                    },
-                    onPlayModeChanged: { mode in
-                        Task {
-                            do {
-                                try await self.p.onPlayModeChange(mode: mode, asset: man.currentAsset)
-                            } catch {
-                                self.m.error(error)
-                            }
-                        }
-                    },
-                    onCurrentURLChanged: { url in
-                        Task {
-                            do {
-                                try await self.p.onCurrentURLChanged(url: url)
-                            } catch {
-                                m.error(error)
-                            }
-                        }
-                    }
-                )
             } catch let e {
                 self.error = e
             }
@@ -213,14 +144,6 @@ extension RootView {
         if Config.getStorageLocation() == nil {
             a.showSheet = true
             return
-        }
-
-        Task {
-            do {
-                try await p.handleStorageLocationChange(storage: Config.getStorageLocation())
-            } catch {
-                m.error(error)
-            }
         }
     }
 

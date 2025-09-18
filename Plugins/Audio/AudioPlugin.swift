@@ -45,49 +45,6 @@ actor AudioPlugin: SuperPlugin, SuperLog, PluginRegistrant {
 
         return AnyView(AudioSettings())
     }
-
-    @MainActor
-    func onWillAppear(playMan: PlayManWrapper, currentGroup: SuperPlugin?, storage: StorageLocation?) async throws {
-        guard let currentGroup = currentGroup, currentGroup.label == self.label else {
-            return
-        }
-
-        if verbose {
-            os_log("\(self.a)with storage \(storage?.emojiTitle ?? "nil")")
-        }
-
-        guard let storage = storage else {
-            return
-        }
-
-        switch storage {
-        case .local:
-            disk = Config.localDocumentsDir?.appendingFolder(Self.dbDirName)
-        case .icloud:
-            disk = Config.cloudDocumentsDir?.appendingFolder(Self.dbDirName)
-        case .custom:
-            disk = Config.localDocumentsDir?.appendingFolder(Self.dbDirName)
-        }
-
-        guard let disk = disk else {
-            os_log(.error, "\(self.t)⚠️ AudioPlugin.onInit: disk == nil")
-
-            throw AudioPluginError.NoDisk
-        }
-
-        self.disk = try disk.createIfNotExist()
-        self.container = try AudioConfigRepo.getContainer()
-        self.repo = try AudioRepo(disk: disk, reason: self.className + ".onInit", verbose: false)
-        self.initialized = true
-    }
-
-    @MainActor func onStorageLocationChange(storage: StorageLocation?) async throws {
-        guard let disk = Self.getAudioDisk() else {
-            fatalError("AudioPlugin.onInit: disk == nil")
-        }
-
-        self.repo?.changeRoot(url: disk)
-    }
     
     @MainActor
     static func getAudioDisk() -> URL? {
