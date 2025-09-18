@@ -45,6 +45,8 @@ actor AudioPlugin: SuperPlugin, SuperLog, PluginRegistrant {
         return AnyView(AudioSettings())
     }
     
+    @MainActor func getDisk() -> URL? { Self.getAudioDisk() }
+    
     @MainActor
     static func getAudioDisk() -> URL? {
         guard let storageRoot = Config.getStorageRoot() else {
