@@ -75,10 +75,6 @@ struct AudioRootView<Content>: View, SuperLog where Content: View {
                 os_log("\(self.t)Disappear")
             }
             .onPlayManStateChanged({ isPlaying in
-                if verbose {
-                    os_log("\(self.t)🔈 播放状态变为 -> \(self.man.playMan.state.stateText)")
-                }
-
                 if self.man.playMan.state == .paused {
                     AudioStateRepo.storeCurrentTime(man.playMan.currentTime)
                 }

@@ -40,14 +40,14 @@ actor MagicPluginRegistry<Plugin> {
     private struct FactoryItem {
         let id: String
         let order: Int
-        let factory: () -> Plugin
+        let factory: @Sendable () -> Plugin
     }
 
     private var factoryItems: [FactoryItem] = []
 
     // MARK: - Registry API
 
-    func register(id: String, order: Int = 0, factory: @escaping () -> Plugin) {
+    func register(id: String, order: Int = 0, factory: @escaping @Sendable () -> Plugin) {
         factoryItems.append(FactoryItem(id: id, order: order, factory: factory))
     }
 
@@ -73,6 +73,15 @@ func magicAutoRegisterPlugins() {
         if class_conformsToProtocol(cls, MagicPluginRegistrant.self) {
             (cls as? MagicPluginRegistrant.Type)?.register()
         }
+    }
+}
+
+// MARK: - Convenience for MagicSuperPlugin
+extension MagicPluginRegistry where Plugin: MagicSuperPlugin {
+    /// 使用实例自身的 `id` 自动登记，并复用该实例避免重复构建。
+    func register(order: Int = 0, factory: @escaping @Sendable () -> Plugin) {
+        let instance = factory()
+        self.register(id: instance.id, order: order) { instance }
     }
 }
 

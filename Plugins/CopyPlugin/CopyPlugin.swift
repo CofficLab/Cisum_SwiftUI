@@ -79,10 +79,6 @@ actor CopyPlugin: SuperPlugin, SuperLog, PluginRegistrant {
 // MARK: - PluginRegistrant
 extension CopyPlugin {
     @objc static func register() {
-        Task {
-            await PluginRegistry.shared.register(id: "Copy", order: 30) {
-                CopyPlugin()
-            }
-        }
+        PluginRegistry.registerSync(order: 0) { Self() }
     }
 }

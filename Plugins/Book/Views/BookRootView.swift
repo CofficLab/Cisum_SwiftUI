@@ -147,11 +147,6 @@ extension BookRootView {
     private func subscribe() {
         self.man.playMan.subscribe(
             name: self.className,
-            onStateChanged: { state in
-                if verbose {
-                    os_log("\(self.t)🐯 播放状态变为 -> \(state.stateText)")
-                }
-            },
             onPreviousRequested: { asset in
                 if verbose {
                     os_log("\(self.t)⏮️ 上一首")

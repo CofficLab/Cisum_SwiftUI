@@ -63,7 +63,7 @@ actor BookPlugin: SuperPlugin, SuperLog, PluginRegistrant {
 extension BookPlugin {
     @objc static func register() {
         Task {
-            await PluginRegistry.shared.register(id: "Book", order: 1) {
+            await PluginRegistry.shared.register(order: 1) {
                 BookPlugin()
             }
         }

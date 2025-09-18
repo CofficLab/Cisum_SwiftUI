@@ -58,11 +58,7 @@ actor AudioPlugin: SuperPlugin, SuperLog, PluginRegistrant {
 // MARK: - PluginRegistrant
 extension AudioPlugin {
     @objc static func register() {
-        Task {
-            await PluginRegistry.shared.register(id: "Audio", order: 0) {
-                AudioPlugin()
-            }
-        }
+        PluginRegistry.registerSync(order: 0) { Self() }
     }
 }
 

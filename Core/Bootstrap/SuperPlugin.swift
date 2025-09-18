@@ -15,6 +15,7 @@ protocol SuperPlugin: MagicSuperPlugin {
 
 extension SuperPlugin {
     nonisolated func addLaunchView() -> AnyView? { nil }
+    
     nonisolated func addSheetView(storage: StorageLocation?) -> AnyView? { nil }
 
     nonisolated func addStateView(currentGroup: SuperPlugin?) -> AnyView? { nil }
