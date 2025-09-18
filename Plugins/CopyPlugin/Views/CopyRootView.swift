@@ -21,6 +21,7 @@ struct CopyRootView<Content>: View, SuperEvent, SuperLog, SuperThread where Cont
     private var container: ModelContainer?
     private var db: CopyDB
     private var worker: CopyWorker
+    private var verbose = true
 
     init(@ViewBuilder content: () -> Content) {
         os_log("\(Self.i)")
@@ -101,8 +102,6 @@ struct CopyRootView<Content>: View, SuperEvent, SuperLog, SuperThread where Cont
 
 extension CopyRootView {
     func onAppear() {
-        let verbose = false
-
         if verbose {
             os_log("\(self.a)")
         }
@@ -119,7 +118,6 @@ extension CopyRootView {
     }
 
     func onDrop(_ providers: [NSItemProvider]) async -> Bool {
-        let verbose = false
         if verbose {
             os_log("\(self.t)开始处理拖放文件")
         }

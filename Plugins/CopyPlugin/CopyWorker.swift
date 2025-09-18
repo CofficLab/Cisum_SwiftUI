@@ -12,7 +12,7 @@ class CopyWorker: SuperLog, SuperThread, ObservableObject {
     var running = false
     let verbose: Bool
 
-    init(db: CopyDB, verbose: Bool = false) {
+    init(db: CopyDB, verbose: Bool = true) {
         self.verbose = verbose
 
         if verbose {
@@ -68,7 +68,7 @@ class CopyWorker: SuperLog, SuperThread, ObservableObject {
                             os_log("\(self.t)🍋🍋🍋 Copying iCloud file -> \(url.lastPathComponent)")
                         }
 
-                        try await url.copyTo(destination, verbose: false, caller: self.className)
+                        try await url.copyTo(destination, verbose: true, caller: self.className)
 
                         if self.verbose {
                             os_log("\(self.t)🎉🎉🎉 Successfully copied iCloud file -> \(url.lastPathComponent)")
@@ -76,6 +76,7 @@ class CopyWorker: SuperLog, SuperThread, ObservableObject {
 
                         await self.db.deleteCopyTasks([url])
                     } catch let e {
+                        os_log(.error, "\(self.t)\(e)")
                         await self.db.setTaskError(url: task.url, error: e.localizedDescription)
                     }
                 }
