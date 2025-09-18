@@ -3,47 +3,40 @@ import StoreKit
 import SwiftUI
 
 struct MySubscription: View {
-    @EnvironmentObject var store: StoreProvider
     @EnvironmentObject var app: AppProvider
 
     @State private var error: Error? = nil
     @State private var refreshing: Bool = false
     @State private var description: String = ""
+    @State private var status: RenewalState.RawValue?
+    @State private var product: ProductDTO?
 
-    private var status: Product.SubscriptionInfo.RenewalState? {
-        store.subscriptionGroupStatus
-    }
-    
-    private var product: Product? {
-        store.currentSubscription
-    }
-    
     private var statusDescription: String {
         guard let status = status else {
             return "无状态"
         }
 
         switch status {
-        case .subscribed:
+        case RenewalState.subscribed.rawValue:
             return "订阅中"
-        case .expired:
+        case RenewalState.expired.rawValue:
             return "已过期"
-        case .revoked:
+        case RenewalState.revoked.rawValue:
             return "被撤回"
-        case .inGracePeriod:
+        case RenewalState.inGracePeriod.rawValue:
             return "在账单宽限期"
-        case .inBillingRetryPeriod:
+        case RenewalState.inBillingRetryPeriod.rawValue:
             return "在账单支付期，App Store 会自动扣费"
         default:
             return "状态未知"
         }
     }
-    
+
     private var productDescription: String {
         guard let product = product else {
             return "无订阅产品"
         }
-        
+
         return product.displayName
     }
 
@@ -63,11 +56,11 @@ struct MySubscription: View {
                 }
             }
         }
-        .onChange(of: store.purchasedSubscriptions, {
-            refresh("🐛 已购订阅变了")
-        })
+        .task {
+            await refresh("🐛 初始化我的订阅")
+        }
     }
-    
+
     private var header: some View {
         ZStack {
             if status != nil {
@@ -75,7 +68,7 @@ struct MySubscription: View {
             } else {
                 Text("现在没有订阅").font(.title3)
             }
-            
+
             HStack {
                 Spacer()
                 ZStack {
@@ -93,7 +86,9 @@ struct MySubscription: View {
 
     private var refreshButton: some View {
         Button(action: {
-            refresh("🐛 点击了我的订阅中的刷新按钮")
+            Task {
+                await refresh("🐛 点击了我的订阅中的刷新按钮")
+            }
         }, label: {
             Label(
                 title: { Text("刷新") },
@@ -101,15 +96,35 @@ struct MySubscription: View {
             ).labelStyle(.iconOnly)
         }).disabled(refreshing).buttonStyle(.plain)
     }
-    
-    private func refresh(_ reason: String) {
+
+    private func refresh(_ reason: String) async {
         refreshing = true
-        Task {
-            await store.updatePurchased(reason)
-            await store.updateSubscriptionStatus(reason)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
-                refreshing = false
-            })
+
+        do {
+            let result = try await StoreService.inspectSubscriptionStatus(reason)
+            self.status = result.highestStatus?.state
+            self.product = result.highestProduct
+        } catch {
+            self.error = error
         }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
+            refreshing = false
+        })
     }
+}
+
+// MARK: - Preview
+
+#Preview("PurchaseView") {
+    PurchaseView()
+        .inRootView()
+        .frame(height: 800)
+}
+
+#Preview("APP") {
+    ContentView()
+        .inRootView()
+        .frame(width: 700)
+        .frame(height: 800)
 }

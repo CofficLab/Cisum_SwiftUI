@@ -14,7 +14,7 @@ actor StorePlugin: SuperPlugin, SuperLog, PluginRegistrant {
 
     @MainActor
     func addSettingView() -> AnyView? {
-        AnyView(StoreSettingEntry())
+        nil
     }
 }
 

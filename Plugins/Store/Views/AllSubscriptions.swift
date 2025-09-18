@@ -5,11 +5,9 @@ import MagicCore
 
 
 struct AllSubscriptions: View, SuperLog {
-    @EnvironmentObject var store: StoreProvider
-    @EnvironmentObject var app: AppProvider
     @Environment(\.colorScheme) var colorScheme: ColorScheme
 
-    @State private var subscriptions: [Product] = []
+    @State private var subscriptions: [ProductDTO] = []
     @State private var refreshing = false
     @State private var error: Error? = nil
     
@@ -41,7 +39,9 @@ struct AllSubscriptions: View, SuperLog {
         }
         .onAppear {
             refreshing = true
-            getProducts("AllSubscription OnAppear")
+            Task {
+                getProducts("AllSubscription OnAppear")
+            }
         }
     }
 
@@ -53,7 +53,9 @@ struct AllSubscriptions: View, SuperLog {
                     ProgressView().scaleEffect(0.4)
                 } else {
                     Button(action: {
-                        getProducts("点击了重试按钮")
+                        Task {
+                            getProducts("点击了重试按钮")
+                        }
                     }, label: {
                         Label("重试", systemImage: "arrow.clockwise")
                             .labelStyle(.iconOnly)
@@ -71,19 +73,18 @@ struct AllSubscriptions: View, SuperLog {
         }
         
         refreshing = true
-
         Task {
             do {
-                try await store.requestProducts(reason)
-                self.subscriptions = store.subscriptions
+                let groups = try await StoreService.fetchAllProducts()
+                self.subscriptions = groups.subscriptions
             } catch {
                 self.error = error
             }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
+                refreshing = false
+            })
         }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
-            refreshing = false
-        })
     }
 
     private var footerView: some View {
@@ -100,4 +101,19 @@ struct AllSubscriptions: View, SuperLog {
         .padding(.top, 12)
         .font(.footnote)
     }
+}
+
+// MARK: - Preview
+
+#Preview("Buy") {
+    PurchaseView()
+        .inRootView()
+        .frame(height: 800)
+}
+
+#Preview("APP") {
+    ContentView()
+        .inRootView()
+        .frame(width: 700)
+        .frame(height: 800)
 }

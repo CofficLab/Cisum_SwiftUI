@@ -5,7 +5,6 @@ import SwiftUI
 
 struct ProTips: View {
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var s: StoreProvider
 
     var supportedFormats: String {
         Config.supportedExtensions.joined(separator: ",")
@@ -24,9 +23,9 @@ struct ProTips: View {
                     }
                 }
 
-                HStack {
-                    Text("当前订阅：" + (s.currentSubscription?.displayName ?? "无"))
-                }
+//                HStack {
+//                    Text("当前订阅：" + (s.currentSubscription?.displayName ?? "无"))
+//                }
             }
         }.shadow(radius: 8)
     }

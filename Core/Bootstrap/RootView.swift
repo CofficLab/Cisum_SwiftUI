@@ -19,7 +19,6 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
 
     var man: PlayMan
     var playManWrapper: PlayManWrapper
-    var s: StoreProvider
     var cloudProvider: CloudProvider
     var playManController: PlayManController
     private var verbose = false
@@ -35,7 +34,6 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
         self._p = StateObject(wrappedValue: box.plugin)
         self.man = box.man
         self.playManWrapper = box.playManWrapper
-        self.s = box.store
         self.cloudProvider = box.cloud
         self.playManController = box.playManController
     }
@@ -75,7 +73,6 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                     .environmentObject(man)
                     .environmentObject(playManController)
                     .environmentObject(self.a)
-                    .environmentObject(s)
                     .environmentObject(p)
                     .environmentObject(m)
                     .environmentObject(self.stateProvider)
@@ -88,7 +85,6 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                         .environmentObject(man)
                         .environmentObject(playManController)
                         .environmentObject(self.a)
-                        .environmentObject(s)
                         .environmentObject(p)
                         .environmentObject(m)
                     })

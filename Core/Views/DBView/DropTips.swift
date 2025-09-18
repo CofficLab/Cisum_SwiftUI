@@ -4,7 +4,6 @@ import SwiftUI
 
 struct DropTips: View {
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var s: StoreProvider
 
     var supportedFormats: String {
         Config.supportedExtensions.joined(separator: ",")

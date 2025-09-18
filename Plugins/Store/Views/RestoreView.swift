@@ -1,11 +1,10 @@
 import MagicCore
-
+import MagicAlert
 import OSLog
 import StoreKit
 import SwiftUI
 
 struct RestoreView: View, SuperEvent, SuperLog, SuperThread {
-    @EnvironmentObject var store: StoreProvider
     @EnvironmentObject var app: AppProvider
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     @EnvironmentObject var m: MagicMessageProvider
@@ -60,8 +59,17 @@ extension RestoreView {
     }
 }
 
+// MARK: - Preview
+
 #Preview("Buy") {
-    BuySetting()
-        .environmentObject(StoreProvider())
+    PurchaseView()
+        .inRootView()
+        .frame(height: 800)
+}
+
+#Preview("APP") {
+    ContentView()
+        .inRootView()
+        .frame(width: 700)
         .frame(height: 800)
 }

@@ -5,10 +5,9 @@ import StoreKit
 import SwiftUI
 
 struct NonRenewables: View {
-    @EnvironmentObject var store: StoreProvider
     @EnvironmentObject var app: AppProvider
 
-    @State private var nonRenewables: [Product] = []
+    @State private var nonRenewables: [ProductDTO] = []
     @State private var refreshing = false
     @State private var error: Error? = nil
 
@@ -65,8 +64,8 @@ struct NonRenewables: View {
 
         Task {
             do {
-                try await store.requestProducts(reason)
-                self.nonRenewables = store.nonRenewables
+                let groups = try await StoreService.fetchAllProducts()
+                self.nonRenewables = groups.nonRenewables
             } catch {
                 self.error = error
             }
@@ -76,4 +75,19 @@ struct NonRenewables: View {
             })
         }
     }
+}
+
+// MARK: - Preview
+
+#Preview("Buy") {
+    PurchaseView()
+        .inRootView()
+        .frame(height: 800)
+}
+
+#Preview("APP") {
+    ContentView()
+        .inRootView()
+        .frame(width: 700)
+        .frame(height: 800)
 }

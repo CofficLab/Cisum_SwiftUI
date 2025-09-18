@@ -9,7 +9,6 @@ struct CopyRootView: View, SuperEvent, SuperLog, SuperThread {
     nonisolated static let emoji = "🚛"
 
     @EnvironmentObject var db: CopyDB
-    @EnvironmentObject var s: StoreProvider
     @EnvironmentObject var m: MagicMessageProvider
     @EnvironmentObject var p: PluginProvider
     @EnvironmentObject var worker: CopyWorker
@@ -26,7 +25,8 @@ struct CopyRootView: View, SuperEvent, SuperLog, SuperThread {
     }
 
     var outOfLimit: Bool {
-        count >= Config.maxAudioCount && s.currentSubscription == nil
+        false
+//        count >= Config.maxAudioCount && s.currentSubscription == nil
     }
 
     var showDropTips: Bool {
@@ -34,7 +34,8 @@ struct CopyRootView: View, SuperEvent, SuperLog, SuperThread {
     }
 
     var showProTips: Bool {
-        count >= Config.maxAudioCount && s.currentSubscription == nil && isDropping
+        false
+//        count >= Config.maxAudioCount && s.currentSubscription == nil && isDropping
     }
 
     var body: some View {

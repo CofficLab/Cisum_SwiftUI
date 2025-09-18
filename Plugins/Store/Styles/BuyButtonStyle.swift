@@ -40,3 +40,18 @@ struct BuyButtonStyle: ButtonStyle {
         .buttonStyle(BuyButtonStyle(isPurchased: true))
     }
 }
+
+// MARK: - Preview
+
+#Preview("Buy") {
+    PurchaseView()
+        .inRootView()
+        .frame(height: 800)
+}
+
+#Preview("APP") {
+    ContentView()
+        .inRootView()
+        .frame(width: 700)
+        .frame(height: 800)
+}
