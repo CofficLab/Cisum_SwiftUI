@@ -200,6 +200,7 @@ extension AudioList {
     func onSortDone(_ notification: Notification) {
         os_log("\(t)🍋 onSortDone")
         self.scheduleUpdateURLsDebounced()
+        self.setIsSorting(false)
     }
 
     func onDeleted(_ notification: Notification) {
