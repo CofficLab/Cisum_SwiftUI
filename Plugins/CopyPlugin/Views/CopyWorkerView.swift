@@ -1,3 +1,4 @@
+#if os(macOS)
 import MagicAlert
 import MagicCore
 import MagicUI
@@ -160,3 +161,4 @@ extension CopyWorkerView {
         .frame(height: 800)
         .frame(width: 800)
 }
+#endif

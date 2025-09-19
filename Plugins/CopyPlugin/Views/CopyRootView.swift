@@ -1,3 +1,4 @@
+#if os(macOS)
 import MagicAlert
 import MagicCore
 import MagicUI
@@ -53,3 +54,4 @@ struct CopyRootView<Content>: View, SuperEvent, SuperLog, SuperThread where Cont
         .frame(height: 800)
         .frame(width: 800)
 }
+#endif

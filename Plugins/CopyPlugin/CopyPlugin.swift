@@ -4,6 +4,7 @@ import OSLog
 import SwiftData
 import SwiftUI
 
+#if os(macOS)
 actor CopyPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     static let emoji = "🚛"
 
@@ -35,3 +36,4 @@ extension CopyPlugin {
         PluginRegistry.registerSync(order: 0) { Self() }
     }
 }
+#endif

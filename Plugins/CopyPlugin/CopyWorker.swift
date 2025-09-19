@@ -1,3 +1,4 @@
+#if os(macOS)
 import Foundation
 import MagicCore
 import OSLog
@@ -103,3 +104,4 @@ class CopyWorker: SuperLog, SuperThread, ObservableObject {
         self.running = false
     }
 }
+#endif
