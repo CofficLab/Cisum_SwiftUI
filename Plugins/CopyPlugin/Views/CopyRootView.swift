@@ -26,8 +26,8 @@ struct CopyRootView<Content>: View, SuperEvent, SuperLog, SuperThread where Cont
     var body: some View {
         if let worker = self.worker {
             ZStack {
-                CopyWorkerView()
                 content
+                CopyWorkerView()
             }
             .environmentObject(worker)
         } else {

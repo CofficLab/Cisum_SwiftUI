@@ -20,7 +20,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     var playManWrapper: PlayManWrapper
     var cloudProvider: CloudProvider
     var playManController: PlayManController
-    private var verbose = false
+    private var verbose = true
 
     init(@ViewBuilder content: () -> Content) {
         os_log("\(Self.onInit)")
@@ -38,7 +38,9 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     }
 
     var body: some View {
-        os_log("\(self.t)👷 开始渲染, isLoading: \(self.loading)")
+        if self.verbose {
+            os_log("\(self.t)👷 开始渲染, isLoading: \(self.loading)")
+        }
         return Group {
             if self.loading {
                 LaunchViewSwitcher(
