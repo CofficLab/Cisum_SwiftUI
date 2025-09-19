@@ -13,7 +13,8 @@ struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var audioProvider: AudioProvider
 
-    @State var isDropping: Bool = false
+    @State private var isSorting: Bool = false
+    @State private var sortMode: SortMode = .none
 
     nonisolated static let emoji = "🐘"
 
@@ -31,7 +32,14 @@ struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
         if Self.verbose {
             os_log("\(self.t)开始渲染")
         }
+        
         return AudioList()
+            .overlay(alignment: .center) {
+                if isSorting {
+                    AudioSortingTips(sortModeIcon: sortMode.icon, description: sortMode.description, isAnimating: isSorting)
+                        .transition(.opacity)
+                }
+            }
             .frame(maxHeight: .infinity)
             .fileImporter(
                 isPresented: $app.isImporting,
@@ -39,10 +47,32 @@ struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
                 allowsMultipleSelection: true,
                 onCompletion: handleFileImport
             )
+            .onDBSorting(perform: onSorting)
+            .onDBSortDone(perform: onSortDone)
     }
 }
 
 extension AudioDBView {
+    enum SortMode: String {
+        case random, order, none
+
+        var icon: String {
+            switch self {
+            case .random: return "shuffle"
+            case .order: return "arrow.up.arrow.down"
+            case .none: return "arrow.triangle.2.circlepath"
+            }
+        }
+
+        var description: String {
+            switch self {
+            case .random: return "正在随机排序..."
+            case .order: return "正在顺序排序..."
+            case .none: return "正在排序..."
+            }
+        }
+    }
+
     private func handleFileImport(result: Result<[URL], Error>) {
         Task {
             switch result {
@@ -57,6 +87,23 @@ extension AudioDBView {
                 os_log(.error, "导入文件失败Error: \(error.localizedDescription)")
             }
         }
+    }
+}
+
+// MARK: - Event Handler
+
+extension AudioDBView {
+    func onSorting(_ notification: Notification) {
+        os_log("\(t)🍋 onSorting")
+        withAnimation { isSorting = true }
+        if let mode = notification.userInfo?["mode"] as? String {
+            sortMode = SortMode(rawValue: mode) ?? .none
+        }
+    }
+
+    func onSortDone(_ notification: Notification) {
+        os_log("\(t)🍋 onSortDone")
+        withAnimation { isSorting = false }
     }
 }
 

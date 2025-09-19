@@ -29,8 +29,6 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     @EnvironmentObject var m: MagicMessageProvider
 
     @State private var selection: URL? = nil
-    @State private var isSorting = false
-    @State private var sortMode: SortMode = .none
     @State private var urls: [URL] = []
     @State private var isSyncing: Bool = false
     @State private var isLoading: Bool = true
@@ -40,12 +38,10 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
 
     var body: some View {
         if Self.verbose {
-            os_log("\(self.t)🖥️ 开始渲染 isSorting: \(self.isSorting)")
+            os_log("\(self.t)🖥️ 开始渲染")
         }
         return Group {
-            if isSorting {
-                AudioSortingTips(sortModeIcon: sortMode.icon, description: sortMode.description, isAnimating: isSorting)
-            } else if isLoading {
+            if isLoading {
                 AudioDBTips(variant: .loading)
             } else if total == 0 {
                 AudioDBTips(variant: .empty)
@@ -81,10 +77,9 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
         }
         .onAppear(perform: OnAppear)
         .onChange(of: selection, onSelectionChange)
-        .onDBSorting(perform: onSorting)
-        .onDBSortDone(perform: onSortDone)
         .onDBDeleted(perform: onDeleted)
         .onDBSynced(perform: onSynced)
+        .onDBSortDone(perform: onSortDone)
         .onDBUpdated(perform: onUpdated)
         .onDBSyncing(perform: onSyncing)
         .onPlayManAssetChanged(onPlayAssetChange)
@@ -135,14 +130,6 @@ extension AudioList {
         selection = newValue
     }
 
-    private func setIsSorting(_ newValue: Bool) {
-        isSorting = newValue
-    }
-
-    private func setSortMode(_ newValue: SortMode) {
-        sortMode = newValue
-    }
-
     private func setIsLoading(_ newValue: Bool) {
         isLoading = newValue
     }
@@ -178,18 +165,9 @@ extension AudioList {
         }
     }
 
-    func onSorting(_ notification: Notification) {
-        os_log("\(t)🍋 onSorting")
-        setIsSorting(true)
-        if let mode = notification.userInfo?["mode"] as? String {
-            setSortMode(SortMode(rawValue: mode) ?? .none)
-        }
-    }
-
     func onSortDone(_ notification: Notification) {
         os_log("\(t)🍋 onSortDone")
         self.scheduleUpdateURLsDebounced()
-        self.setIsSorting(false)
     }
 
     func onDeleted(_ notification: Notification) {
