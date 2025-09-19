@@ -39,24 +39,24 @@ actor CopyDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
         try? context.save()
     }
 
-    func addCopyTasks(_ urls: [URL], folder: URL) {
+    func addCopyTasks(tasks: [(bookmark: Data, filename: String)], folder: URL) {
         let verbose = true
         if verbose {
-            os_log("\(self.t)添加复制任务(\(urls.count)个)")
+            os_log("\(self.t)添加复制任务(\(tasks.count)个)")
         }
 
-        for url in urls {
-            newCopyTask(url, destination: folder.appendingPathComponent(url.lastPathComponent))
+        for taskInfo in tasks {
+            newCopyTask(bookmark: taskInfo.bookmark, destination: folder, originalFilename: taskInfo.filename)
         }
     }
 
     /// 将文件从外部复制到应用中
-    func newCopyTask(_ url: URL, destination: URL) {
-        if self.findCopyTask(url) != nil {
+    func newCopyTask(bookmark: Data, destination: URL, originalFilename: String) {
+        if self.findCopyTask(bookmark: bookmark) != nil {
             return
         }
 
-        let task = CopyTask(url: url, destination: destination)
+        let task = CopyTask(bookmark: bookmark, destination: destination, originalFilename: originalFilename)
         context.insert(task)
         do {
             try context.save()
@@ -83,9 +83,9 @@ actor CopyDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
         }
     }
 
-    func deleteCopyTasks(_ urls: [URL]) {
+    func deleteCopyTasks(bookmarks: [Data]) {
         try? self.context.delete(model: CopyTask.self, where: #Predicate {
-            urls.contains($0.url)
+            bookmarks.contains($0.bookmark)
         })
 
         do {
@@ -121,9 +121,9 @@ actor CopyDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
         return []
     }
 
-    func findCopyTask(_ url: URL) -> CopyTask? {
+    func findCopyTask(bookmark: Data) -> CopyTask? {
         let predicate = #Predicate<CopyTask> {
-            $0.url == url
+            $0.bookmark == bookmark
         }
         var descriptor = FetchDescriptor<CopyTask>(predicate: predicate)
         descriptor.fetchLimit = 1
@@ -157,8 +157,8 @@ actor CopyDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
         }
     }
 
-    func setTaskError(url: URL, error: String) {
-        if let task = findCopyTask(url) {
+    func setTaskError(bookmark: Data, error: String) {
+        if let task = findCopyTask(bookmark: bookmark) {
             setTaskError(task, NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: error]))
         }
     }

@@ -8,6 +8,7 @@ import UniformTypeIdentifiers
 
 struct CopyRootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content: View {
     nonisolated static var emoji: String {"🚛"}
+    nonisolated static var verbose: Bool { true }
 
     @EnvironmentObject var m: MagicMessageProvider
     @EnvironmentObject var p: PluginProvider
@@ -19,31 +20,30 @@ struct CopyRootView<Content>: View, SuperEvent, SuperLog, SuperThread where Cont
 
     private var content: Content
     private var container: ModelContainer?
-    private var db: CopyDB
-    private var worker: CopyWorker
+    private var db: CopyDB? = nil
+    private var worker: CopyWorker? = nil
     private var verbose = false
 
     init(@ViewBuilder content: () -> Content) {
-        os_log("\(Self.i)")
+        if verbose {
+            os_log("\(Self.i)")
+        }
+        
         self.content = content()
 
         // 初始化容器/依赖
-        let container = try? CopyConfig.getContainer()
-        self.container = container
-
-        if let container {
+        do {
+            let container = try CopyConfig.getContainer()
             let db = CopyDB(container, reason: "CopyRootView", verbose: false)
-            let worker = CopyWorker(db: db)
+            let worker = CopyWorker(db: db, reason: self.className)
+            
+            self.container = container
             self.db = db
             self.worker = worker
-        } else {
-            // 兜底占位，避免未初始化使用崩溃
-            let placeholder = try? CopyConfig.getContainer()
-            let db = CopyDB(placeholder!, reason: "CopyRootViewFallback", verbose: false)
-            let worker = CopyWorker(db: db)
-            self.db = db
-            self.worker = worker
-            os_log(.error, "\(Self.t)No Container")
+        } catch {
+            os_log(.error, "\(error)")
+            self.error = error
+            self.container = nil
         }
     }
 
@@ -60,33 +60,35 @@ struct CopyRootView<Content>: View, SuperEvent, SuperLog, SuperThread where Cont
     }
 
     var body: some View {
-        VStack {
-            if showProTips {
-                ProTips()
+        if let db = self.db, let worker = self.worker, let container = self.container {
+            VStack {
+                if showProTips {
+                    ProTips()
+                }
+                
+                if showDropTips {
+                    DropTips()
+                }
             }
-
-            if showDropTips {
-                DropTips()
+            .frame(maxWidth: .infinity)
+            .frame(maxHeight: .infinity)
+            .onAppear(perform: onAppear)
+            .onDrop(of: [UTType.fileURL], isTargeted: self.$isDropping) { providers in
+                Task {
+                    await handleDrop(providers)
+                }
+                return true
             }
+            .onReceive(NotificationCenter.default.publisher(for: .CopyFiles), perform: onCopyFiles)
+            .background(
+                ZStack {
+                    content
+                }
+                    .environmentObject(db)
+                    .environmentObject(worker)
+                    .modelContainer(container)
+            )
         }
-        .frame(maxWidth: .infinity)
-        .frame(maxHeight: .infinity)
-        .onAppear(perform: onAppear)
-        .onDrop(of: [UTType.fileURL], isTargeted: self.$isDropping) { providers in
-            Task {
-                await handleDrop(providers)
-            }
-            return true
-        }
-        .onReceive(NotificationCenter.default.publisher(for: .CopyFiles), perform: onCopyFiles)
-        .background(
-            ZStack {
-                content
-            }
-            .environmentObject(db)
-            .environmentObject(worker)
-            .modelContainer(container!)
-        )
     }
 
     @MainActor
@@ -109,19 +111,44 @@ extension CopyRootView {
 
     func onCopyFiles(_ notification: Notification) {
         if self.verbose {
-        os_log("\(self.t)🍋🍋🍋 onCopyFiles")
+            os_log("\(self.t)🍋🍋🍋 onCopyFiles")
+        }
+        
+        guard let worker = self.worker else {
+            os_log(.error,"\(self.t) no worker")
+            return
         }
 
-        if let urls = notification.userInfo?["urls"] as? [URL],
-           let folder = notification.userInfo?["folder"] as? URL {
-            os_log("\(self.t)🍋🍋🍋 onCopyFiles, urls: \(urls.count), folder: \(folder.path)")
-            self.worker.append(urls, folder: folder)
+        guard let urls = notification.userInfo?["urls"] as? [URL],
+              let folder = notification.userInfo?["folder"] as? URL else {
+            return
+        }
+
+        os_log("\(self.t)🍋🍋🍋 onCopyFiles, urls: \(urls.count), folder: \(folder.path)")
+
+        var tasks: [(bookmark: Data, filename: String)] = []
+        for url in urls {
+            do {
+                let bookmarkData = try url.bookmarkData(options: .withSecurityScope, includingResourceValuesForKeys: nil, relativeTo: nil)
+                tasks.append((bookmark: bookmarkData, filename: url.lastPathComponent))
+            } catch {
+                os_log(.error, "\(self.t)Failed to create bookmark for url: \(url.path). Error: \(error.localizedDescription)")
+            }
+        }
+
+        if !tasks.isEmpty {
+            worker.append(tasks: tasks, folder: folder)
         }
     }
 
     func onDrop(_ providers: [NSItemProvider]) async -> Bool {
         if verbose {
             os_log("\(self.t)开始处理拖放文件")
+        }
+
+        guard let worker = self.worker else {
+            os_log(.error, "\(self.t) no worker")
+            return false
         }
 
         if outOfLimit { return false }
@@ -132,7 +159,7 @@ extension CopyRootView {
             return false
         }
 
-        var urls: [URL] = []
+        var tasks: [(bookmark: Data, filename: String)] = []
         for provider in providers {
             if provider.hasItemConformingToTypeIdentifier(UTType.fileURL.identifier) {
                 do {
@@ -148,22 +175,24 @@ extension CopyRootView {
                         }
                     }
                     if let url = URL(dataRepresentation: urlData, relativeTo: nil) {
-                        urls.append(url)
+                        // Create a security-scoped bookmark
+                        let bookmarkData = try url.bookmarkData(options: .withSecurityScope, includingResourceValuesForKeys: nil, relativeTo: nil)
+                        tasks.append((bookmark: bookmarkData, filename: url.lastPathComponent))
                     }
                 } catch {
-                    os_log(.error, "\(self.t)Failed to load URL: \(error.localizedDescription)")
+                    os_log(.error, "\(self.t)Failed to load URL or create bookmark: \(error.localizedDescription)")
                 }
             }
         }
         
         if verbose {
-            os_log("\(self.t)获取到 \(urls.count) 个文件")
+            os_log("\(self.t)获取到 \(tasks.count) 个文件")
         }
         
-        if !urls.isEmpty {
+        if !tasks.isEmpty {
             await MainActor.run {
-                self.m.info("\(urls.count) 个文件开始复制")
-                self.worker.append(urls, folder: disk)
+                self.m.info("\(tasks.count) 个文件开始复制")
+                    worker.append(tasks: tasks, folder: disk)
             }
         }
 

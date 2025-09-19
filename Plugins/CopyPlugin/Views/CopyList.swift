@@ -32,10 +32,14 @@ struct CopyList: View, SuperLog, SuperThread {
     private var taskList: some View {
         List(selection: $selection) {
             Section {
-                ForEach(tasks, id: \.url.relativeString) { task in
-                    task.url.makeMediaView()
-                        .magicShowDownloadButton(false)
-                        .magicDisableDownloadMonitor()
+                ForEach(tasks) { task in
+                    VStack(alignment: .leading) {
+                        Text(task.originalFilename)
+                            .lineLimit(1)
+                        Text(task.message)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
                 }
                 .onDelete(perform: deleteTasks)
             } header: {
