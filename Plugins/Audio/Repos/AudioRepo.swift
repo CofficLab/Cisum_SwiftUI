@@ -184,7 +184,9 @@ class AudioRepo: ObservableObject, SuperLog {
     }
 
     func makeMonitor() -> Cancellable {
-        os_log("\(self.t)Make monitor for: \(self.disk.shortPath())")
+        if Self.verbose {
+            os_log("\(self.t)Make monitor for: \(self.disk.shortPath())")
+        }
 
         if self.disk.isNotDirExist {
             os_log(.error, "Error: \(self.disk.shortPath()) not exist")

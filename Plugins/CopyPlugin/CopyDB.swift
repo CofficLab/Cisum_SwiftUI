@@ -40,11 +40,6 @@ actor CopyDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     }
 
     func addCopyTasks(tasks: [(bookmark: Data, filename: String)], folder: URL) {
-        let verbose = true
-        if verbose {
-            os_log("\(self.t)添加复制任务(\(tasks.count)个)")
-        }
-
         for taskInfo in tasks {
             newCopyTask(bookmark: taskInfo.bookmark, destination: folder, originalFilename: taskInfo.filename)
         }

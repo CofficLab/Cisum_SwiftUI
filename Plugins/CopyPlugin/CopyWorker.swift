@@ -9,7 +9,7 @@ class CopyWorker: SuperLog, SuperThread, ObservableObject {
     let fm = FileManager.default
     let db: CopyDB
     var running = false
-    let verbose: Bool = true
+    let verbose: Bool = false
 
     init(db: CopyDB, reason: String) {
         if verbose {
@@ -88,7 +88,7 @@ class CopyWorker: SuperLog, SuperThread, ObservableObject {
                         try await url.copyTo(destination, verbose: self.verbose, caller: self.className)
 
                         if self.verbose {
-                            os_log("\(self.t)🎉 Successfully copied file -> \(task.originalFilename)")
+                            os_log("\(self.t)🎉 Copied file -> \(task.originalFilename)")
                         }
 
                         await self.db.deleteCopyTasks(bookmarks: [task.bookmark])
