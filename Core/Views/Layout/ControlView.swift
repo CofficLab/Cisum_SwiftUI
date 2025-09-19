@@ -4,6 +4,8 @@ import SwiftData
 import SwiftUI
 
 struct ControlView: View, SuperLog {
+    static let verbose = false
+    
     @EnvironmentObject var appManager: AppProvider
     @EnvironmentObject var message: StateProvider
     @EnvironmentObject var playMan: PlayManController
@@ -21,7 +23,9 @@ struct ControlView: View, SuperLog {
     var showSliderView: Bool { true }
 
     var body: some View {
-        os_log("\(self.t)开始渲染")
+        if Self.verbose {
+            os_log("\(self.t)开始渲染")
+        }
         return GeometryReader { geo in
             HStack(spacing: 0) {
                 VStack(spacing: 0) {

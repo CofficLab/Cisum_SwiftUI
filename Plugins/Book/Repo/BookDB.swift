@@ -228,7 +228,7 @@ extension BookDB {
     // MARK: SyncWithDisk
 
     private func bookSyncWithDisk(_ items: [URL]) {
-        let verbose = true
+        let verbose = false
         let startTime: DispatchTime = .now()
 
         // 将数组转换成哈希表，方便通过键来快速查找元素，这样可以将时间复杂度降低到：O(m+n)

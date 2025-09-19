@@ -6,6 +6,7 @@ import SwiftUI
 
 struct ContentView: View, SuperLog, SuperThread {
     nonisolated static let emoji = "🖥️"
+    nonisolated static let verbose = false
 
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var p: PluginProvider
@@ -21,14 +22,15 @@ struct ContentView: View, SuperLog, SuperThread {
     var databaseViewHeightMin = Config.databaseViewHeightMin
 
     init() {
-        let verbose = true
-        if verbose {
+        if Self.verbose {
             os_log("\(Self.i)")
         }
     }
 
     var body: some View {
-        os_log("\(self.t)开始渲染")
+        if Self.verbose {
+            os_log("\(self.t)开始渲染")
+        }
         return GeometryReader { geo in
             VStack(spacing: 0) {
                 ControlView()

@@ -22,6 +22,7 @@ import SwiftUI
  */
 struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     nonisolated static let emoji = "📬"
+    nonisolated static let verbose = false
 
     @EnvironmentObject var playManController: PlayManController
     @EnvironmentObject var audioProvider: AudioProvider
@@ -38,7 +39,9 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     var total: Int { urls.count }
 
     var body: some View {
-        os_log("\(self.t)开始渲染")
+        if Self.verbose {
+            os_log("\(self.t)开始渲染")
+        }
         return Group {
             if isSorting {
                 VStack(spacing: 0) {
@@ -110,7 +113,9 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
 extension AudioList {
     private func updateURLs() {
         Task.detached(priority: .background) {
-            os_log("\(t)🍋 getAllURLs")
+            if Self.verbose {
+                os_log("\(t)🍋 getAllURLs")
+            }
             let urls = await audioProvider.repo.getAll(reason: self.className)
 
             await self.setUrls(urls)

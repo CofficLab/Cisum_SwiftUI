@@ -12,6 +12,8 @@ import SwiftUI
 actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     /// 用于日志输出的表情符号
     static let emoji = "📦"
+    static let verbose = false
+    
     /// SwiftData 模型容器
     let modelContainer: ModelContainer
     /// 模型执行器，用于执行模型操作
@@ -26,7 +28,7 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     ///   - container: SwiftData 模型容器
     ///   - reason: 初始化原因，用于日志记录
     ///   - verbose: 是否输出详细日志
-    init(_ container: ModelContainer, reason: String, verbose: Bool) {
+    init(_ container: ModelContainer, reason: String) {
         self.modelContainer = container
         self.context = ModelContext(container)
         self.context.autosaveEnabled = false
@@ -34,7 +36,7 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
             modelContext: self.context
         )
 
-        if verbose {
+        if Self.verbose {
             os_log("\(Self.i) with reason: \(reason)")
         }
     }
@@ -151,7 +153,9 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     /// - Parameter reason: 获取原因，用于日志记录
     /// - Returns: 所有音频模型数组，按顺序排序；如果获取失败则返回空数组
     func allAudios(reason: String) -> [AudioModel] {
-        os_log("\(self.t)🚛 GetAllAudios 🐛 \(reason)")
+        if Self.verbose {
+            os_log("\(self.t)🚛 GetAllAudios 🐛 \(reason)")
+        }
 
         do {
             let audios: [AudioModel] = try context.fetch(AudioModel.descriptorOrderAsc)

@@ -8,6 +8,8 @@ import UniformTypeIdentifiers
 
 @MainActor
 struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
+    static let verbose = false
+    
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var audioProvider: AudioProvider
 
@@ -26,7 +28,9 @@ struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
     }
 
     var body: some View {
-        os_log("\(self.t)开始渲染")
+        if Self.verbose {
+            os_log("\(self.t)开始渲染")
+        }
         return AudioList()
             .frame(maxHeight: .infinity)
             .fileImporter(

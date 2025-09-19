@@ -20,6 +20,8 @@ enum SyncStatus: Equatable {
 @MainActor
 class AudioRepo: ObservableObject, SuperLog {
     nonisolated static let emoji = "🎵"
+    nonisolated static let verbose = false
+    
     private var db: AudioDB
     private var disk: URL
     private var monitor: Cancellable?
@@ -34,13 +36,13 @@ class AudioRepo: ObservableObject, SuperLog {
     @Published var isSyncing: Bool = false
     @Published var syncProgress: Double = 0.0
 
-    init(disk: URL, reason: String, verbose: Bool) throws {
-        if verbose {
+    init(disk: URL, reason: String) throws {
+        if Self.verbose {
             os_log("\(Self.i) with reason: 🐛 \(reason) 💾 with disk: \(disk.shortPath())")
         }
 
         let container = try AudioConfigRepo.getContainer()
-        self.db = AudioDB(container, reason: reason, verbose: verbose)
+        self.db = AudioDB(container, reason: reason)
         self.disk = disk
         self.monitor = self.makeMonitor()
     }
@@ -106,7 +108,9 @@ class AudioRepo: ObservableObject, SuperLog {
             os_log("\(self.t)👍 Like \(url.lastPathComponent)")
             await db.like(url)
         } else {
-            os_log("\(self.t)😁 Cancel like \(url.lastPathComponent)")
+            if Self.verbose {
+                os_log("\(self.t)😁 Cancel like \(url.lastPathComponent)")
+            }
             await db.dislike(url)
         }
     }
@@ -192,7 +196,9 @@ class AudioRepo: ObservableObject, SuperLog {
             verbose: false,
             caller: self.className,
             onChange: { [weak self] items, isFirst, _ in
-                os_log("\(Self.t)🍋 Disk changed, with items \(items.count)")
+                if Self.verbose {
+                    os_log("\(Self.t)🍋 Disk changed, with items \(items.count)")
+                }
                 guard let self = self else { return }
 
                 @Sendable func handleChange() async {

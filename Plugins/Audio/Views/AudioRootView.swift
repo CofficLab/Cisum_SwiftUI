@@ -17,7 +17,7 @@ struct AudioRootView<Content>: View, SuperLog where Content: View {
     private var content: Content
 
     nonisolated static var emoji: String { "📢" }
-    let verbose = true
+    let verbose = false
     var container: ModelContainer?
     var disk: URL?
     var repo: AudioRepo?
@@ -50,7 +50,7 @@ struct AudioRootView<Content>: View, SuperLog where Content: View {
 
         self.disk = try? disk!.createIfNotExist()
         self.container = try? AudioConfigRepo.getContainer()
-        self.repo = try? AudioRepo(disk: disk!, reason: "onInit", verbose: true)
+        self.repo = try? AudioRepo(disk: disk!, reason: "onInit")
         self.audioProvider = AudioProvider(disk: disk!, db: self.repo!)
         self.audioProvider?.updateDisk(disk!)
     }
@@ -63,7 +63,9 @@ struct AudioRootView<Content>: View, SuperLog where Content: View {
             .modelContainer(container)
             .environmentObject(self.audioProvider!)
             .onAppear {
-                os_log("\(self.a)")
+                if self.verbose {
+                    os_log("\(self.a)")
+                }
                 self.subscribe()
                 self.restorePlaying()
                 self.restorePlayMode()
