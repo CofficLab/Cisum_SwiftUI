@@ -12,7 +12,7 @@ class AudioProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
 
     nonisolated static let emoji = "🌿"
     private(set) var disk: URL
-    var verbose: Bool = true
+    var verbose: Bool = false
 
     nonisolated init(disk: URL, db: AudioRepo) {
         self.disk = disk

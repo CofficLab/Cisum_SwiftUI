@@ -33,7 +33,9 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
     
     /// 使用自动发现插件的初始化方法
     init(autoDiscover: Bool = true, repo: PluginRepo) {
-        os_log("\(Self.onInit)")
+        if Self.verbose {
+            os_log("\(Self.onInit)")
+        }
         
         self.repo = repo
         

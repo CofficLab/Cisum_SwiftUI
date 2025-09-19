@@ -13,7 +13,7 @@ actor BookPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     let iconName: String = "book"
     static let dirName = "audios_book"
     let isGroup: Bool = true
-    let verbose = true
+    let verbose = false
 
     @MainActor var disk: URL?
 

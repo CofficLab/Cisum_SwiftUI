@@ -20,10 +20,12 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     var playManWrapper: PlayManWrapper
     var cloudProvider: CloudProvider
     var playManController: PlayManController
-    private var verbose = true
+    private var verbose = false
 
     init(@ViewBuilder content: () -> Content) {
-        os_log("\(Self.onInit)")
+        if self.verbose {
+            os_log("\(Self.onInit)")
+        }
 
         let box = RootBox.shared
         self.content = content()

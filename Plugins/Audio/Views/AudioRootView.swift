@@ -1,6 +1,6 @@
 import Foundation
-import MagicCore
 import MagicAlert
+import MagicCore
 import MagicPlayMan
 import OSLog
 import SwiftData
@@ -17,7 +17,7 @@ struct AudioRootView<Content>: View, SuperLog where Content: View {
     private var content: Content
 
     nonisolated static var emoji: String { "📢" }
-    let verbose = false
+    let verbose = true
     var container: ModelContainer?
     var disk: URL?
     var repo: AudioRepo?
@@ -62,30 +62,16 @@ struct AudioRootView<Content>: View, SuperLog where Content: View {
             }
             .modelContainer(container)
             .environmentObject(self.audioProvider!)
-            .onAppear {
-                if self.verbose {
-                    os_log("\(self.a)")
-                }
-                self.subscribe()
-                self.restorePlaying()
-                self.restorePlayMode()
-            }
-            .onStorageLocationChanged {
-                self.m.info("存储位置发生了变化")
-            }
-            .onDisappear {
-                os_log("\(self.t)Disappear")
-            }
-            .onPlayManStateChanged({ isPlaying in
-                if self.man.playMan.state == .paused {
-                    AudioStateRepo.storeCurrentTime(man.playMan.currentTime)
-                }
-            })
+            .onAppear(perform: handleOnAppear)
+            .onStorageLocationChanged(perform: handleStorageLocationChanged)
+            .onDisappear(perform: self.handleOnDisappear)
+            .onPlayManStateChanged(self.handlePlayManStateChanged(_:))
+            .onPlayManAssetChanged(self.handlePlayManAssetChanged(_:))
         }
     }
 }
 
-// MARK: 操作
+// MARK: - Action
 
 extension AudioRootView {
     private func restorePlayMode() {
@@ -94,7 +80,7 @@ extension AudioRootView {
             self.man.setPlayMode(mode)
         }
     }
-    
+
     private func restorePlaying() {
         var assetTarget: URL?
         var timeTarget: TimeInterval = 0
@@ -110,14 +96,14 @@ extension AudioRootView {
                 }
             } else {
                 if verbose {
-                    os_log("\(self.t)⚠️⚠️⚠️ No current audio URL, try find first")
+                    os_log("\(self.t)⚠️ No current audio URL, try find first")
                 }
 
                 if let first = try? await repo!.getFirst() {
                     assetTarget = first
                     liked = await repo!.isLiked(first)
                 } else {
-                    os_log("\(self.t)⚠️⚠️⚠️ No audio found")
+                    os_log("\(self.t)⚠️ No audio found")
                 }
             }
 
@@ -182,7 +168,7 @@ extension AudioRootView {
             },
             onPlayModeChanged: { mode in
                 if verbose {
-                    os_log("\(self.t)播放模式 -> \(mode.shortName)")
+                    os_log("\(self.t)🍋 播放模式 -> \(mode.shortName)")
                 }
 
                 AudioStateRepo.storePlayMode(mode.rawValue)
@@ -198,30 +184,63 @@ extension AudioRootView {
                         try await repo!.sortRandom(currentURL, reason: self.className + ".OnPlayModeChange", verbose: false)
                     }
                 }
-            },
-            onCurrentURLChanged: { url in
-                guard p.current?.label == BookPlugin().label else {
-                    return
-                }
-
-                if verbose {
-                    os_log("\(self.t)CurrentURLChanged -> \(url.shortPath())")
-                }
-
-                Task {
-                    AudioStateRepo.storeCurrent(url)
-
-                    if url.isNotDownloaded {
-                        do {
-                            try await url.download()
-                            os_log("\(self.t)onPlayAssetUpdate: 开始下载")
-                        } catch let e {
-                            os_log("\(self.t)onPlayAssetUpdate: \(e.localizedDescription)")
-                        }
-                    }
-                }
             }
         )
+    }
+}
+
+// MARK: - Event Handler
+
+extension AudioRootView {
+    func handleOnAppear() {
+        if self.verbose {
+            os_log("\(self.a)")
+        }
+        self.subscribe()
+        self.restorePlaying()
+        self.restorePlayMode()
+    }
+
+    func handleStorageLocationChanged() {
+        self.m.info("存储位置发生了变化")
+    }
+
+    func handleOnDisappear() {
+        os_log("\(self.t)Disappear")
+    }
+
+    func handlePlayManStateChanged(_ isPlaying: Bool) {
+        os_log("\(self.t)🍋 播放状态变为 \(self.man.playMan.state.stateText)")
+        if self.man.playMan.state == .paused {
+            AudioStateRepo.storeCurrentTime(man.playMan.currentTime)
+        }
+    }
+
+    func handlePlayManAssetChanged(_ url: URL?) {
+        guard p.current?.label == AudioPlugin().label else {
+            return
+        }
+
+        guard let url = url else {
+            return
+        }
+
+        if verbose {
+            os_log("\(self.t)🍋 CurrentURLChanged -> \(url.shortPath())")
+        }
+
+        Task {
+            AudioStateRepo.storeCurrent(url)
+
+            if url.isNotDownloaded {
+                do {
+                    try await url.download()
+                    os_log("\(self.t)🍋 onPlayAssetUpdate: 开始下载")
+                } catch let e {
+                    os_log(.error, "\(self.t)❌ onPlayAssetUpdate: \(e.localizedDescription)")
+                }
+            }
+        }
     }
 }
 
