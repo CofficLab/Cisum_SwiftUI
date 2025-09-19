@@ -10,7 +10,7 @@ struct DropTips: View {
     }
 
     var body: some View {
-        MagicCard(background: MagicBackground.aurora.opacity(0.5).background(.background)) {
+        MagicCard(background: MagicBackground.aurora.opacity(0.8).background(.background)) {
             VStack(spacing: 0) {
                 HStack {
                     Image(systemName: "info.circle.fill")
@@ -20,26 +20,6 @@ struct DropTips: View {
                 }
                 Text("支持的格式：\(supportedFormats)")
                     .font(.subheadline)
-                
-//                    #if os(macOS)
-//                        HStack {
-//                            Text("或").foregroundStyle(.white)
-//                        }
-//
-//                        Button(
-//                            action: {
-//                                                FileHelper.openFolder(url: data.disk.root)
-//                            },
-//                            label: {
-//                                Label(
-//                                    title: {
-//                                        Text("打开仓库目录并放入文件")
-//                                    },
-//                                    icon: {
-//                                        Image(systemName: "doc.viewfinder.fill")
-//                                    })
-//                            })
-//                    #endif
 
                 if Config.isNotDesktop {
                     BtnAdd().buttonStyle(.bordered).foregroundStyle(.white)
