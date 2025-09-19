@@ -22,7 +22,7 @@ import SwiftUI
  */
 struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     nonisolated static let emoji = "📬"
-    nonisolated static let verbose = false
+    nonisolated static let verbose = true
 
     @EnvironmentObject var playManController: PlayManController
     @EnvironmentObject var audioProvider: AudioProvider
@@ -40,27 +40,11 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
 
     var body: some View {
         if Self.verbose {
-            os_log("\(self.t)开始渲染")
+            os_log("\(self.t)🖥️ 开始渲染 isSorting: \(self.isSorting)")
         }
         return Group {
             if isSorting {
-                VStack(spacing: 0) {
-                    Spacer()
-
-                    Image(systemName: sortMode.icon)
-                        .font(.system(size: 40))
-                        .foregroundStyle(.tint)
-                        .rotationEffect(.degrees(360))
-                        .animation(.linear(duration: 2).repeatForever(autoreverses: false), value: isSorting)
-
-                    Text(sortMode.description)
-                        .font(.headline)
-                        .foregroundStyle(.secondary)
-                        .padding(.top, 24)
-
-                    Spacer()
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                AudioSortingTips(sortModeIcon: sortMode.icon, description: sortMode.description, isAnimating: isSorting)
             } else if isLoading {
                 AudioDBTips(variant: .loading)
             } else if total == 0 {
