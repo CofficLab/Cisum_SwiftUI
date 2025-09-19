@@ -218,28 +218,6 @@ extension AudioList {
     }
 }
 
-extension AudioList {
-    enum SortMode: String {
-        case random, order, none
-
-        var icon: String {
-            switch self {
-            case .random: return "shuffle"
-            case .order: return "arrow.up.arrow.down"
-            case .none: return "arrow.triangle.2.circlepath"
-            }
-        }
-
-        var description: String {
-            switch self {
-            case .random: return "正在随机排序..."
-            case .order: return "正在顺序排序..."
-            case .none: return "正在排序..."
-            }
-        }
-    }
-}
-
 // MARK: - Preview
 
 #if os(macOS)

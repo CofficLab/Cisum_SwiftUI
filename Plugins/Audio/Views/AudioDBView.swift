@@ -1,6 +1,5 @@
 import Foundation
 import MagicCore
-
 import OSLog
 import SwiftData
 import SwiftUI
@@ -9,7 +8,7 @@ import UniformTypeIdentifiers
 @MainActor
 struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
     static let verbose = false
-    
+
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var audioProvider: AudioProvider
 
@@ -32,7 +31,7 @@ struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
         if Self.verbose {
             os_log("\(self.t)开始渲染")
         }
-        
+
         return AudioList()
             .overlay(alignment: .center) {
                 if isSorting {
@@ -83,6 +82,10 @@ extension AudioDBView {
                     "urls": urls,
                     "folder": storageRoot,
                 ])
+
+                for url in urls {
+                    try await url.copyTo(storageRoot.appendingPathComponent(url.lastPathComponent), caller: self.className)
+                }
             case let .failure(error):
                 os_log(.error, "导入文件失败Error: \(error.localizedDescription)")
             }
@@ -118,11 +121,7 @@ extension AudioDBView {
 }
 
 #if os(iOS)
-#Preview("iPhone") {
-    AppPreview()
-}
+    #Preview("iPhone") {
+        AppPreview()
+    }
 #endif
-
-
-
-
