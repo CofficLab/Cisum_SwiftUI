@@ -13,7 +13,7 @@ actor AudioPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     #endif
 
     let hasPoster = true
-    let description = "作为歌曲仓库，只关注文件，文件夹将被忽略"
+    let description = "歌曲仓库"
     let iconName = "music.note"
     let isGroup = true
     let verbose = false
