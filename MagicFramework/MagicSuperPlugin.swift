@@ -3,6 +3,7 @@ import SwiftUI
 protocol MagicSuperPlugin: Actor {
     nonisolated var id: String { get }
     nonisolated var label: String { get }
+    nonisolated var title: String { get }
     nonisolated var hasPoster: Bool { get }
     nonisolated var description: String { get }
     nonisolated var iconName: String { get }
@@ -14,6 +15,7 @@ protocol MagicSuperPlugin: Actor {
 extension MagicSuperPlugin {
     nonisolated var id: String { self.label }
     nonisolated var label: String { String(describing: type(of: self)) }
+    nonisolated var title: String { self.label }
 
     nonisolated var isGroup: Bool { false }
 

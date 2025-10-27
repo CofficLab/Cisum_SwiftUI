@@ -8,6 +8,7 @@ actor BookPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     static let keyOfCurrentBookTime = "com.bookplugin.currentBookTime"
 
     static let emoji = "🎺"
+    let title: String = "有声书"
     let hasPoster: Bool = true
     let description: String = "适用于听有声书的场景"
     let iconName: String = "book"

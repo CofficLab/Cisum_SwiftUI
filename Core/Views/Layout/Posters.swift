@@ -23,7 +23,7 @@ struct Posters: View, SuperLog {
         VStack {
             Picker("", selection: $id) {
                 ForEach(plugins, id: \.label) { item in
-                    Text(item.label)
+                    Text(item.title)
                         .tag(item.label)
                 }
             }
@@ -32,12 +32,6 @@ struct Posters: View, SuperLog {
 
             if let currentLayout = plugins.first(where: { $0.label == id }) {
                 VStack {
-                    HStack {
-                        Text(currentLayout.label)
-                    }
-                    .font(.title)
-                    .padding()
-        
                     Text(currentLayout.description)
         
                     GroupBox {

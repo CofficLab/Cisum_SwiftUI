@@ -12,6 +12,7 @@ actor AudioPlugin: SuperPlugin, SuperLog, PluginRegistrant {
         static let dbDirName = "audios"
     #endif
 
+    let title = "音乐库"
     let hasPoster = true
     let description = "歌曲仓库"
     let iconName = "music.note"
