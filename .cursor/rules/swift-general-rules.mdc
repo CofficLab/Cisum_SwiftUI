@@ -277,4 +277,3 @@ class ExampleClassTests: XCTestCase {
 - 包含视图名称和显示状态
 - 对于不同尺寸的预览，在标题中说明尺寸信息
 - 保持标题简洁明了，便于快速识别
-
