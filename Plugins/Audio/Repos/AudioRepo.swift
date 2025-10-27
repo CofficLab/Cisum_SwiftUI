@@ -20,7 +20,7 @@ enum SyncStatus: Equatable {
 @MainActor
 class AudioRepo: ObservableObject, SuperLog {
     nonisolated static let emoji = "🎵"
-    nonisolated static let verbose = true
+    nonisolated static let verbose = false
     
     private var db: AudioDB
     private var disk: URL

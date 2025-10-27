@@ -4,13 +4,14 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-struct BookGrid: View, SuperLog, SuperThread {
+struct BookGrid: View, SuperLog, SuperThread, SuperEvent {
     nonisolated static let emoji = "📖"
     nonisolated static let verbose = true
 
     @EnvironmentObject var a: AppProvider
     @EnvironmentObject var messageManager: StateProvider
     @EnvironmentObject var man: PlayManController
+    @EnvironmentObject var repo: BookRepo
 
     @State var selection: AudioModel? = nil
     @State var syncingTotal: Int = 0
@@ -18,13 +19,18 @@ struct BookGrid: View, SuperLog, SuperThread {
     
     /// 当前选中的书籍 URL
     @State private var selectedBookURL: URL? = nil
-
-    /// 从数据库查询所有集合类型的书籍，按顺序排序
-    @Query(
-        filter: #Predicate<BookModel> { $0.isCollection == true },
-        sort: \BookModel.order,
-        animation: .default
-    ) var books: [BookModel]
+    
+    /// 书籍集合列表数组（文件夹类型的书籍）
+    @State private var books: [BookDTO] = []
+    
+    /// 是否正在加载
+    @State private var isLoading: Bool = true
+    
+    /// 是否正在同步数据
+    @State private var isSyncing: Bool = false
+    
+    /// 防抖更新任务
+    @State private var updateBooksDebounceTask: Task<Void, Never>? = nil
 
     /// 书籍总数
     var total: Int { books.count }
@@ -42,36 +48,99 @@ struct BookGrid: View, SuperLog, SuperThread {
         if Self.verbose {
             os_log("\(self.t)📺 开始渲染")
         }
-        return ScrollView {
-            LazyVGrid(columns: [
-                GridItem(.adaptive(minimum: 150), spacing: 12),
-            ], alignment: .center, spacing: 16, pinnedViews: [.sectionHeaders]) {
-                ForEach(books) { item in
-                    BookTile(url: item.url, title: item.bookTitle, childCount: item.childCount)
-                        .overlay(
-                            // 高亮边框
-                            Rectangle()
-                                .stroke(
-                                    selectedBookURL == item.url ? Color.accentColor : Color.clear,
-                                    lineWidth: selectedBookURL == item.url ? 3 : 0
+        return Group {
+            if isLoading {
+                ProgressView("加载中...")
+            } else if total == 0 {
+                VStack(spacing: 16) {
+                    Image(systemName: "book.closed")
+                        .font(.system(size: 60))
+                        .foregroundStyle(.secondary)
+                    Text("暂无书籍")
+                        .font(.title2)
+                        .foregroundStyle(.secondary)
+                }
+            } else {
+                ScrollView {
+                    LazyVGrid(columns: [
+                        GridItem(.adaptive(minimum: 150), spacing: 12),
+                    ], alignment: .center, spacing: 16, pinnedViews: [.sectionHeaders]) {
+                        ForEach(books) { item in
+                            BookTile(url: item.url, title: item.bookTitle, childCount: item.childCount)
+                                .overlay(
+                                    // 高亮边框
+                                    Rectangle()
+                                        .stroke(
+                                            selectedBookURL == item.url ? Color.accentColor : Color.clear,
+                                            lineWidth: selectedBookURL == item.url ? 3 : 0
+                                        )
                                 )
-                        )
-                        .animation(.easeInOut(duration: 0.2), value: selectedBookURL)
-                        .onTapGesture {
-                            handleBookTap(book: item)
+                                .animation(.easeInOut(duration: 0.2), value: selectedBookURL)
+                                .onTapGesture {
+                                    handleBookTap(book: item)
+                                }
                         }
+                    }
+                    .padding()
                 }
             }
-            .padding()
         }
         .onAppear(perform: handleOnAppear)
         .onPlayManAssetChanged(handleAssetChanged)
+        .onBookDBDeleted(perform: handleBookDBDeleted)
+        .onBookDBSynced(perform: handleBookDBSynced)
+        .onBookDBSortDone(perform: handleBookDBSortDone)
+        .onBookDBUpdated(perform: handleBookDBUpdated)
+        .onBookDBSyncing(perform: handleBookDBSyncing)
+        .onDisappear(perform: handleOnDisappear)
     }
 }
 
 // MARK: - Action
 
 extension BookGrid {
+    /// 更新书籍列表
+    ///
+    /// 从数据仓库异步获取所有书籍数据并更新界面。
+    /// 只获取集合类型的书籍（文件夹），按顺序排序。
+    /// 使用后台优先级执行，避免阻塞主线程。
+    private func updateBooks() {
+        let currentRepo = self.repo
+        Task.detached(priority: .background) {
+            if Self.verbose {
+                os_log("\(self.t)🔄 开始获取书籍列表")
+            }
+            
+            let books = await currentRepo.getAll(reason: self.className)
+            
+            if Self.verbose {
+                os_log("\(self.t)✅ 获取到 \(books.count) 本书籍")
+            }
+
+            await self.setBooks(books)
+        }
+    }
+
+    /// 调度防抖更新
+    ///
+    /// 使用防抖机制延迟更新书籍列表，避免频繁刷新。
+    /// 如果在延迟期间再次调用，会取消之前的任务并重新开始计时。
+    ///
+    /// - Parameter seconds: 延迟秒数，默认为 0.25 秒
+    @MainActor
+    private func scheduleUpdateBooksDebounced(delay seconds: Double = 0.25) {
+        if Self.verbose {
+            os_log("\(self.t)⏱️ 调度防抖更新，延迟 \(seconds) 秒")
+        }
+        
+        updateBooksDebounceTask?.cancel()
+        updateBooksDebounceTask = Task { @MainActor in
+            try? await Task.sleep(nanoseconds: UInt64(seconds * 1000000000))
+            guard !Task.isCancelled else { return }
+            self.updateBooks()
+        }
+    }
+    
     /// 更新选中的书籍
     ///
     /// 根据给定的音频 URL，查找并高亮显示包含该音频的书籍。
@@ -105,8 +174,8 @@ extension BookGrid {
     /// 点击书籍时触发播放操作。如果书籍有子文件，播放第一个子文件；
     /// 否则直接播放书籍本身。
     ///
-    /// - Parameter book: 要播放的书籍模型
-    private func playBook(_ book: BookModel) async {
+    /// - Parameter book: 要播放的书籍 DTO
+    private func playBook(_ book: BookDTO) async {
         if Self.verbose {
             os_log("\(self.t)▶️ 准备播放书籍: \(book.bookTitle)")
         }
@@ -125,17 +194,68 @@ extension BookGrid {
     }
 }
 
+// MARK: - Setter
+
+extension BookGrid {
+    /// 设置书籍列表
+    ///
+    /// 更新书籍列表并结束加载状态。
+    /// 如果当前选中的书籍不在新列表中，会自动清除选中状态。
+    ///
+    /// - Parameter newValue: 新的书籍 DTO 列表
+    @MainActor
+    private func setBooks(_ newValue: [BookDTO]) {
+        if Self.verbose {
+            os_log("\(self.t)📋 设置书籍列表，数量: \(newValue.count)")
+        }
+        
+        books = newValue
+        self.setIsLoading(false)
+
+        // 如果当前选中的书籍不在新的列表中，重置相关状态
+        if let currentSelection = selectedBookURL, !newValue.contains(where: { $0.url == currentSelection }) {
+            if Self.verbose {
+                os_log("\(self.t)⚠️ 当前选中的书籍不在列表中，清除选中状态")
+            }
+            selectedBookURL = nil
+        }
+    }
+
+    /// 设置加载状态
+    ///
+    /// - Parameter newValue: 是否正在加载
+    private func setIsLoading(_ newValue: Bool) {
+        if Self.verbose {
+            os_log("\(self.t)⏳ 加载状态: \(newValue ? "加载中" : "完成")")
+        }
+        isLoading = newValue
+    }
+
+    /// 设置同步状态
+    ///
+    /// - Parameter newValue: 是否正在同步
+    private func setIsSyncing(_ newValue: Bool) {
+        if Self.verbose {
+            os_log("\(self.t)🔄 同步状态: \(newValue ? "同步中" : "完成")")
+        }
+        isSyncing = newValue
+    }
+}
+
 // MARK: - Event Handler
 
 extension BookGrid {
     /// 处理视图出现事件
     ///
-    /// 当视图首次出现时，检查播放器当前播放的音频，
-    /// 并高亮显示对应的书籍。
+    /// 当视图首次出现时，开始加载书籍列表。
+    /// 如果播放器有当前音频，会自动选中对应的书籍。
     func handleOnAppear() {
         if Self.verbose {
-            os_log("\(self.t)👀 视图已出现，书籍总数: \(total)")
+            os_log("\(self.t)👀 视图已出现")
         }
+        
+        setIsLoading(true)
+        scheduleUpdateBooksDebounced()
         
         // 初始化时检查当前播放的音频
         if let currentAsset = man.getAsset() {
@@ -150,8 +270,8 @@ extension BookGrid {
     ///
     /// 当用户点击书籍卡片时触发，更新选中状态并开始播放。
     ///
-    /// - Parameter book: 被点击的书籍模型
-    func handleBookTap(book: BookModel) {
+    /// - Parameter book: 被点击的书籍 DTO
+    func handleBookTap(book: BookDTO) {
         if Self.verbose {
             os_log("\(self.t)👆 点击书籍: \(book.bookTitle)")
         }
@@ -180,6 +300,79 @@ extension BookGrid {
         if let url = url {
             updateSelectedBook(for: url)
         }
+    }
+    
+    /// 处理书籍删除事件
+    ///
+    /// 当书籍被删除时触发，刷新书籍列表。
+    ///
+    /// - Parameter notification: 删除完成的通知
+    func handleBookDBDeleted(_ notification: Notification) {
+        if Self.verbose {
+            os_log("\(self.t)🗑️ 书籍已删除")
+        }
+        scheduleUpdateBooksDebounced()
+    }
+    
+    /// 处理数据同步完成事件
+    ///
+    /// 当数据库同步完成时触发，刷新书籍列表并结束同步状态。
+    ///
+    /// - Parameter notification: 同步完成的通知
+    func handleBookDBSynced(_ notification: Notification) {
+        if Self.verbose {
+            os_log("\(self.t)✅ 数据同步完成")
+        }
+        scheduleUpdateBooksDebounced()
+        setIsSyncing(false)
+    }
+    
+    /// 处理排序完成事件
+    ///
+    /// 当数据库排序完成时触发，刷新书籍列表。
+    ///
+    /// - Parameter notification: 排序完成的通知
+    func handleBookDBSortDone(_ notification: Notification) {
+        if Self.verbose {
+            os_log("\(self.t)✅ 排序完成")
+        }
+        scheduleUpdateBooksDebounced()
+    }
+    
+    /// 处理数据更新事件
+    ///
+    /// 当书籍数据有更新时触发，刷新书籍列表。
+    ///
+    /// - Parameter notification: 更新完成的通知
+    func handleBookDBUpdated(_ notification: Notification) {
+        if Self.verbose {
+            os_log("\(self.t)🔄 数据已更新")
+        }
+        scheduleUpdateBooksDebounced()
+    }
+    
+    /// 处理数据同步开始事件
+    ///
+    /// 当数据库开始同步时触发，显示同步状态。
+    ///
+    /// - Parameter notification: 同步开始的通知
+    func handleBookDBSyncing(_ notification: Notification) {
+        if Self.verbose {
+            os_log("\(self.t)🔄 开始同步数据")
+        }
+        setIsSyncing(true)
+    }
+    
+    /// 处理视图消失事件
+    ///
+    /// 当视图从屏幕上消失时触发，取消待处理的防抖任务。
+    func handleOnDisappear() {
+        if Self.verbose {
+            os_log("\(self.t)👋 视图已消失")
+        }
+        
+        updateBooksDebounceTask?.cancel()
+        updateBooksDebounceTask = nil
     }
 }
 

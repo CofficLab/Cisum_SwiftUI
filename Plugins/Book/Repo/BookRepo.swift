@@ -4,15 +4,16 @@ import MagicCore
 import OSLog
 import SwiftUI
 
+@MainActor
 class BookRepo: ObservableObject, SuperEvent, SuperLog {
     nonisolated static let emoji = "📖"
-    static let verbose = false
+    static let verbose = true
 
     private let db: BookDB
     private var disk: URL
     private let verbose: Bool = false
     private var monitor: Cancellable?
-    private let coverRepo: BookCoverRepo
+    private nonisolated let coverRepo: BookCoverRepo
 
     // MARK: - State
 
@@ -83,7 +84,7 @@ class BookRepo: ObservableObject, SuperEvent, SuperLog {
 
 extension BookRepo {
     private func sync(_ items: [URL], isFirst: Bool) async {
-        await self.db.sync(items, verbose: self.verbose, isFirst: isFirst)
+        await self.db.sync(items, isFirst: isFirst)
     }
 
     func delete(_ book: BookModel, verbose: Bool) async {
@@ -106,6 +107,30 @@ extension BookRepo {
     /// - Returns: 封面图，如果未找到则返回nil
     func getCover(for url: URL, thumbnailSize: CGSize) async -> Image? {
         return await coverRepo.getCover(for: url, thumbnailSize: thumbnailSize)
+    }
+    
+    /// 获取所有集合类型的书籍（文件夹）
+    /// - Parameter reason: 调用原因，用于日志记录
+    /// - Returns: 按顺序排序的书籍 DTO 列表
+    func getAll(reason: String) async -> [BookDTO] {
+        if verbose {
+            os_log("\(self.t)📚 获取所有书籍集合 - 来源: \(reason)")
+        }
+        
+        do {
+            // 获取所有书籍的数据传输对象，只保留集合类型（文件夹）
+            let allBooks = try await db.allBookDTOs()
+            let books = allBooks.filter { $0.isCollection }.sorted { $0.order < $1.order }
+            
+            if Self.verbose {
+                os_log("\(self.t)✅ 获取到 \(books.count) 本书籍")
+            }
+            
+            return books
+        } catch {
+            os_log(.error, "\(self.t)❌ 获取书籍失败: \(error.localizedDescription)")
+            return []
+        }
     }
 }
 

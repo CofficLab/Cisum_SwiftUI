@@ -4,7 +4,7 @@ import OSLog
 import SwiftUI
 
 /// 专门负责书籍封面图获取的仓库类
-class BookCoverRepo: ObservableObject, SuperLog {
+final class BookCoverRepo: ObservableObject, SuperLog, @unchecked Sendable {
     nonisolated static let emoji = "🖼️"
     
     // MARK: - Public Methods

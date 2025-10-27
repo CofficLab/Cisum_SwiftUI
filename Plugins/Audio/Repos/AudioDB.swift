@@ -12,7 +12,7 @@ import SwiftUI
 actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     /// 用于日志输出的表情符号
     static let emoji = "📦"
-    static let verbose = true
+    static let verbose = false
     
     /// SwiftData 模型容器
     let modelContainer: ModelContainer

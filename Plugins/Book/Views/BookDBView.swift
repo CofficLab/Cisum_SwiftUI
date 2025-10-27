@@ -123,7 +123,7 @@ extension BookDBView {
     /// 处理数据库同步开始事件
     ///
     /// 当书籍数据库开始同步时触发，更新 UI 显示同步状态。
-    func handleSyncingStarted() {
+    func handleSyncingStarted(_ notification: Notification) {
         if Self.verbose {
             os_log("\(self.t)🔄 数据库开始同步")
         }

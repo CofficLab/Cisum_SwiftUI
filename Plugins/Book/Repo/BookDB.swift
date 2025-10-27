@@ -6,7 +6,7 @@ import SwiftUI
 
 actor BookDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     static let emoji = "📦"
-    static let verbose = false
+    static let verbose = true
 
     let modelContainer: ModelContainer
     let modelExecutor: any ModelExecutor
@@ -85,6 +85,13 @@ extension BookDB {
     func count<T>(for model: T.Type) throws -> Int where T: PersistentModel {
         let descriptor = FetchDescriptor<T>(predicate: .true)
         return try context.fetchCount(descriptor)
+    }
+    
+    /// 获取所有书籍的数据传输对象
+    /// - Returns: 所有书籍的 BookDTO 数组
+    func allBookDTOs() throws -> [BookDTO] {
+        let books: [BookModel] = try context.fetch(FetchDescriptor<BookModel>())
+        return books.toDTOs()
     }
 }
 
@@ -201,7 +208,7 @@ extension BookDB {
         return next
     }
 
-    func sync(_ items: [URL], verbose: Bool = false, isFirst: Bool) {
+    func sync(_ items: [URL], isFirst: Bool) {
         var message = "\(self.t)SyncBook(\(items.count))"
 
         if let first = items.first, first.isDownloading == true {
@@ -214,7 +221,7 @@ extension BookDB {
             message += " Update"
         }
 
-        if verbose {
+        if Self.verbose {
             os_log("\(message)")
         }
 
