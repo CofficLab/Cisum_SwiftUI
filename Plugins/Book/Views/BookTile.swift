@@ -4,7 +4,14 @@ import OSLog
 import SwiftUI
 
 /**
- 展示从数据库读取的图书数据
+ * 用途：展示从数据库读取的图书数据，以磁贴形式呈现图书封面和基本信息
+ * 属性说明：
+ *   - url: 图书的 URL 路径
+ *   - title: 图书标题
+ *   - childCount: 图书包含的音频文件数量
+ *   - cover: 图书封面图片（异步加载）
+ *   - state: 图书的播放状态（记录上次播放位置）
+ * 使用场景：在图书列表中展示图书，支持显示封面、标题、文件数量和播放记录
  */
 struct BookTile: View, SuperThread, SuperLog, Equatable {
     nonisolated static func == (lhs: BookTile, rhs: BookTile) -> Bool {
@@ -18,14 +25,17 @@ struct BookTile: View, SuperThread, SuperLog, Equatable {
     @State private var tileSize: CGSize = .init(width: 150, height: 200)
 
     nonisolated static let emoji = "🖥️"
-    var hasCover: Bool { cover != nil }
-    var noCover: Bool { cover == nil }
+    private let verbose = false
+    
+    private var hasCover: Bool { cover != nil }
+    private var noCover: Bool { cover == nil }
+    
     var url: URL
     var title: String
     var childCount: Int
 
     var body: some View {
-        return ZStack {
+        ZStack {
             if let cover = cover {
                 cover
             } else {
@@ -69,7 +79,7 @@ struct BookTile: View, SuperThread, SuperLog, Equatable {
     }
 }
 
-// MARK: Action
+// MARK: - Action
 
 extension BookTile {
     func updateCover() {
@@ -82,7 +92,9 @@ extension BookTile {
             let logPrefix = self.t
 
             Task {
-                os_log("\(logPrefix)开始获取封面图 \(title)")
+                if verbose {
+                    os_log("\(logPrefix)开始获取封面图 \(title)")
+                }
 
                 let cover = await repo.getCover(for: url, thumbnailSize: thumbnailSize)
                 await MainActor.run {
@@ -96,12 +108,13 @@ extension BookTile {
 // MARK: - Setter
 
 extension BookTile {
+    @MainActor
     func setCover(_ cover: Image?) {
         self.cover = cover
     }
 }
 
-// MARK: Event Handler
+// MARK: - Event Handler
 
 extension BookTile {
     func onAppear() {

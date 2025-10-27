@@ -6,6 +6,7 @@ import SwiftUI
 /// 专门负责书籍封面图获取的仓库类
 final class BookCoverRepo: ObservableObject, SuperLog, @unchecked Sendable {
     nonisolated static let emoji = "🖼️"
+    private let verbose = false
     
     // MARK: - Public Methods
     
@@ -16,7 +17,7 @@ final class BookCoverRepo: ObservableObject, SuperLog, @unchecked Sendable {
     /// - Returns: 封面图，如果未找到则返回nil
     func getCover(for url: URL, thumbnailSize: CGSize) async -> Image? {
         do {
-            return try await Self.findCoverRecursively(in: url, thumbnailSize: thumbnailSize)
+            return try await Self.findCoverRecursively(in: url, thumbnailSize: thumbnailSize, verbose: verbose)
         } catch {
             os_log(.error, "\(self.t)Failed to find cover for \(url.lastPathComponent): \(error.localizedDescription)")
             return nil
@@ -29,13 +30,16 @@ final class BookCoverRepo: ObservableObject, SuperLog, @unchecked Sendable {
     /// - Parameters:
     ///   - url: 目录URL
     ///   - thumbnailSize: 缩略图尺寸
+    ///   - verbose: 是否输出详细日志
     /// - Returns: 封面图，如果未找到则返回nil
-    private static func findCoverRecursively(in url: URL, thumbnailSize: CGSize) async throws -> Image? {
+    private static func findCoverRecursively(in url: URL, thumbnailSize: CGSize, verbose: Bool) async throws -> Image? {
         // 确保在后台线程执行文件系统操作
         return try await withCheckedThrowingContinuation { continuation in
             Task.detached(priority: .background) {
                 do {
-                    os_log("\(Self.t)findCoverRecursively \(url.title)")
+                    if verbose {
+                        os_log("\(Self.t)findCoverRecursively \(url.title)")
+                    }
                     // 获取当前目录下的所有文件
                     let children = url.getChildren()
 
@@ -50,7 +54,7 @@ final class BookCoverRepo: ObservableObject, SuperLog, @unchecked Sendable {
                         if let cover = try await child.thumbnail(
                             size: thumbnailSize, 
                             useDefaultIcon: false, 
-                            verbose: true, 
+                            verbose: verbose, 
                             reason: "BookCoverRepo"
                         ) {
                             continuation.resume(returning: cover)
@@ -60,7 +64,7 @@ final class BookCoverRepo: ObservableObject, SuperLog, @unchecked Sendable {
 
                     // 如果当前层级没有找到封面，递归查找子文件夹
                     for child in children where child.hasDirectoryPath {
-                        if let cover = try await findCoverRecursively(in: child, thumbnailSize: thumbnailSize) {
+                        if let cover = try await findCoverRecursively(in: child, thumbnailSize: thumbnailSize, verbose: verbose) {
                             continuation.resume(returning: cover)
                             return
                         }
