@@ -46,7 +46,6 @@ struct Posters: View, SuperLog {
                         }
                         try p.setCurrentGroup(currentLayout)
                         self.isPresented = false
-                        self.m.info("当前模式 \(self.p.current?.description ?? "")")
                     } catch {
                         m.error(error)
                     }

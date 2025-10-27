@@ -13,16 +13,6 @@ struct BookDBView: View, SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
 
     @State var treeView = false
-    @State var isSyncing = false
-    
-    /// 使用 @Query 直接从 SwiftData 获取集合类型的书籍总数
-    @Query(
-        filter: #Predicate<BookModel> { $0.isCollection == true },
-        animation: .default
-    ) var books: [BookModel]
-    
-    /// 书籍总数
-    var total: Int { books.count }
     
     /// 是否正在拖拽文件
     var dropping: Bool { app.isDropping }
@@ -35,17 +25,6 @@ struct BookDBView: View, SuperLog, SuperThread {
             os_log("\(self.t)📺 开始渲染")
         }
         return VStack(spacing: 0) {
-            HStack {
-                Text("共 \(total.description)")
-                Spacer()
-                if isSyncing {
-                    Image(systemName: "arrow.triangle.2.circlepath")
-                    Text("正在读取仓库")
-                }
-            }
-            .padding(.horizontal)
-            .padding(.bottom, 5)
-
             if useListView {
                 BookList()
             } else {
@@ -58,7 +37,6 @@ struct BookDBView: View, SuperLog, SuperThread {
             allowsMultipleSelection: true,
             onCompletion: handleFileImport
         )
-        .onBookDBSyncing(perform: handleSyncingStarted)
         .onDrop(of: [UTType.fileURL], isTargeted: $app.isDropping, perform: handleDrop)
         .onAppear(perform: handleOnAppear)
     }
@@ -89,7 +67,7 @@ extension BookDBView {
     /// 当视图首次出现在屏幕上时触发，用于执行初始化操作。
     func handleOnAppear() {
         if Self.verbose {
-            os_log("\(self.t)👀 视图已出现，书籍总数: \(total)")
+            os_log("\(self.t)👀 视图已出现")
         }
         
         // TODO: 可以在这里执行初始化逻辑，例如：
@@ -120,16 +98,6 @@ extension BookDBView {
         }
     }
     
-    /// 处理数据库同步开始事件
-    ///
-    /// 当书籍数据库开始同步时触发，更新 UI 显示同步状态。
-    func handleSyncingStarted(_ notification: Notification) {
-        if Self.verbose {
-            os_log("\(self.t)🔄 数据库开始同步")
-        }
-        
-        self.isSyncing = true
-    }
     
     /// 处理文件拖拽事件
     ///

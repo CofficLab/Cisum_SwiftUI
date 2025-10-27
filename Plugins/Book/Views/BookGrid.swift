@@ -50,38 +50,49 @@ struct BookGrid: View, SuperLog, SuperThread, SuperEvent {
         }
         return Group {
             if isLoading {
-                ProgressView("加载中...")
+                BookDBTips(variant: .loading)
             } else if total == 0 {
-                VStack(spacing: 16) {
-                    Image(systemName: "book.closed")
-                        .font(.system(size: 60))
-                        .foregroundStyle(.secondary)
-                    Text("暂无书籍")
-                        .font(.title2)
-                        .foregroundStyle(.secondary)
-                }
+                BookDBTips(variant: .empty)
             } else {
-                ScrollView {
-                    LazyVGrid(columns: [
-                        GridItem(.adaptive(minimum: 150), spacing: 12),
-                    ], alignment: .center, spacing: 16, pinnedViews: [.sectionHeaders]) {
-                        ForEach(books) { item in
-                            BookTile(url: item.url, title: item.bookTitle, childCount: item.childCount)
-                                .overlay(
-                                    // 高亮边框
-                                    Rectangle()
-                                        .stroke(
-                                            selectedBookURL == item.url ? Color.accentColor : Color.clear,
-                                            lineWidth: selectedBookURL == item.url ? 3 : 0
-                                        )
-                                )
-                                .animation(.easeInOut(duration: 0.2), value: selectedBookURL)
-                                .onTapGesture {
-                                    handleBookTap(book: item)
-                                }
+                VStack(spacing: 0) {
+                    HStack {
+                        Text("共 \(total)")
+                        Spacer()
+                        if isSyncing {
+                            HStack(spacing: 6) {
+                                ProgressView()
+                                    .controlSize(.small)
+                                Text("正在读取仓库")
+                                    .font(.footnote)
+                                    .foregroundStyle(.secondary)
+                            }
                         }
                     }
-                    .padding()
+                    .padding(.horizontal)
+                    .padding(.bottom, 5)
+                    
+                    ScrollView {
+                        LazyVGrid(columns: [
+                            GridItem(.adaptive(minimum: 150), spacing: 12),
+                        ], alignment: .center, spacing: 16, pinnedViews: [.sectionHeaders]) {
+                            ForEach(books) { item in
+                                BookTile(url: item.url, title: item.bookTitle, childCount: item.childCount)
+                                    .overlay(
+                                        // 高亮边框
+                                        Rectangle()
+                                            .stroke(
+                                                selectedBookURL == item.url ? Color.accentColor : Color.clear,
+                                                lineWidth: selectedBookURL == item.url ? 3 : 0
+                                            )
+                                    )
+                                    .animation(.easeInOut(duration: 0.2), value: selectedBookURL)
+                                    .onTapGesture {
+                                        handleBookTap(book: item)
+                                    }
+                            }
+                        }
+                        .padding()
+                    }
                 }
             }
         }
