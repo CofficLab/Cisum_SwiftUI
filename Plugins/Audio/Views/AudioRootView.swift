@@ -17,7 +17,7 @@ struct AudioRootView<Content>: View, SuperLog where Content: View {
     private var content: Content
 
     nonisolated static var emoji: String { "📢" }
-    let verbose = true
+    let verbose = false
     var container: ModelContainer?
     var disk: URL?
     var repo: AudioRepo?

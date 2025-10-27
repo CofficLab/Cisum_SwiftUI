@@ -666,7 +666,9 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     ///   - reason: 排序原因，用于日志记录
     /// - Note: 排序会将置顶音频的顺序设为 0，其他音频从 100 开始递增
     func sort(_ sticky: AudioModel?, reason: String) {
-        os_log("\(self.t)Sort with reason: \(reason)")
+        if AudioDB.verbose {
+            os_log("\(self.t)Sort with reason: \(reason)")
+        }
 
         emitSorting("order")
 

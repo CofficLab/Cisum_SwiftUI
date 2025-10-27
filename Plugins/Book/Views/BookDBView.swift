@@ -25,9 +25,12 @@ struct BookDBView: View, SuperLog, SuperThread {
     var dropping: Bool { app.isDropping }
     
     private var useListView = false
+    private var verbose = false
 
     var body: some View {
-        os_log("\(self.t)开始渲染")
+        if verbose {
+            os_log("\(self.t)开始渲染")
+        }
         return VStack(spacing: 0) {
             HStack {
                 Text("共 \(total.description)")

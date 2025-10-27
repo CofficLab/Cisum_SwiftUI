@@ -30,7 +30,9 @@ actor BookPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     }
 
     @MainActor func addDBView(reason: String) -> AnyView? {
-        os_log("\(self.t)生成DBView")
+        if verbose {
+            os_log("\(self.t)生成DBView")
+        }
 
         return AnyView(BookDBView())
     }
