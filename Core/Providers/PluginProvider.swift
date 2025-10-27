@@ -5,20 +5,46 @@ import StoreKit
 import SwiftData
 import SwiftUI
 
+/// 插件提供者
+///
+/// 负责管理应用中的所有插件，包括插件的注册、发现、激活和生命周期管理。
+/// 提供插件视图的包裹、工具栏按钮、状态视图和弹窗视图的统一管理。
+///
+/// ## 主要功能
+/// - 自动发现和注册插件
+/// - 管理当前激活的分组插件
+/// - 提供插件视图的链式包裹功能
+/// - 统一管理插件提供的各类视图组件
+///
+/// ## 注意事项
+/// - 该类必须在主线程上使用（`@MainActor`）
+/// - 插件按注册顺序进行视图包裹
 @MainActor
 class PluginProvider: ObservableObject, SuperLog, SuperThread {
     nonisolated static let emoji = "🧩"
     static let verbose = false
     
+    /// 插件仓库，用于持久化插件配置
     private let repo: PluginRepo
 
+    /// 所有已注册的插件列表
     @Published private(set) var plugins: [SuperPlugin] = []
+    
+    /// 当前激活的分组插件
     @Published private(set) var current: SuperPlugin?
 
+    /// 获取所有分组类型的插件
     var groupPlugins: [SuperPlugin] {
         plugins.filter { $0.isGroup }
     }
 
+    /// 初始化插件提供者
+    ///
+    /// 使用预定义的插件列表初始化，并尝试恢复上次激活的插件。
+    ///
+    /// - Parameters:
+    ///   - plugins: 预定义的插件列表
+    ///   - repo: 插件仓库，用于持久化插件配置
     init(plugins: [SuperPlugin], repo: PluginRepo) {
         os_log("\(Self.onInit)")
 
@@ -31,7 +57,14 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
         }
     }
     
-    /// 使用自动发现插件的初始化方法
+    /// 初始化插件提供者（支持自动发现）
+    ///
+    /// 如果启用自动发现，将通过 `PluginRegistry` 自动注册和构建所有插件。
+    /// 这是推荐的初始化方式，可以自动发现项目中的所有插件。
+    ///
+    /// - Parameters:
+    ///   - autoDiscover: 是否自动发现和注册插件，默认为 `true`
+    ///   - repo: 插件仓库，用于持久化插件配置
     init(autoDiscover: Bool = true, repo: PluginRepo) {
         if Self.verbose {
             os_log("\(Self.onInit)")
@@ -60,6 +93,12 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
         }
     }
 
+    /// 获取所有插件提供的状态视图
+    ///
+    /// 遍历所有已注册的插件，收集它们提供的状态视图（如果有）。
+    /// 状态视图通常显示在应用的状态栏或顶部区域。
+    ///
+    /// - Returns: 包含所有插件状态视图的数组
     func getStatusViews() -> [AnyView] {
         let items = plugins.compactMap { $0.addStatusView() }
 
@@ -68,13 +107,25 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
         return items
     }
 
-    /// 将内容依序用所有插件的 RootView 包裹（链式装配）。
+    /// 将内容依序用所有插件的 RootView 包裹（链式装配）
     ///
-    /// 说明：
-    /// - 旧行为：仅使用当前分组插件 `current` 的 `addRootView` 包裹。
-    /// - 新行为：遍历 `plugins`，对 `content` 连续应用每个插件的 `addRootView`。
-    ///   若某插件未提供 RootView（返回 `nil`），则跳过。
-    /// - 顺序：与 `plugins` 数组一致（即注册时的 `order` 排序结果）。
+    /// 按照插件注册顺序，依次用每个插件的 `addRootView` 方法包裹内容视图。
+    /// 这实现了类似中间件的功能，每个插件可以在视图层级中添加自己的包装层。
+    ///
+    /// ## 工作原理
+    /// 1. 从原始内容开始
+    /// 2. 按 `plugins` 数组顺序遍历
+    /// 3. 每个插件可以选择包裹当前视图或直接返回
+    /// 4. 最终返回完全包裹后的视图
+    ///
+    /// ## 示例
+    /// ```swift
+    /// // 假设有三个插件 A, B, C
+    /// // 最终视图层级：A(B(C(原始内容)))
+    /// ```
+    ///
+    /// - Parameter content: 需要被包裹的原始视图内容
+    /// - Returns: 经过所有插件包裹后的视图，如果没有插件则返回原始内容
     func wrapWithCurrentRoot<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {
         var wrapped: AnyView = AnyView(content())
 
@@ -85,6 +136,12 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
         return wrapped
     }
 
+    /// 获取所有插件提供的弹窗视图
+    ///
+    /// 遍历所有已注册的插件，收集它们提供的弹窗视图（如设置面板、信息窗口等）。
+    ///
+    /// - Parameter storage: 当前的存储位置，某些插件可能需要根据存储位置提供不同的弹窗视图
+    /// - Returns: 包含所有插件弹窗视图的数组
     func getSheetViews(storage: StorageLocation?) -> [AnyView] {
         let items = plugins.compactMap { $0.addSheetView(storage: storage) }
 
@@ -93,6 +150,12 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
         return items
     }
 
+    /// 获取所有插件提供的工具栏按钮
+    ///
+    /// 遍历所有已注册的插件，收集它们提供的工具栏按钮。
+    /// 每个按钮包含唯一的 ID 和对应的视图。
+    ///
+    /// - Returns: 包含按钮 ID 和视图的元组数组
     func getToolBarButtons() -> [(id: String, view: AnyView)] {
         let buttons =  plugins.flatMap { $0.addToolBarButtons() }
         
@@ -103,24 +166,56 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
         return buttons
     }
 
+    /// 设置当前激活的分组插件
+    ///
+    /// 将指定的插件设置为当前激活的分组插件，并持久化该选择。
+    /// 只有标记为分组类型（`isGroup = true`）的插件才能被设置为当前插件。
+    ///
+    /// - Parameters:
+    ///   - plugin: 要激活的插件，必须是分组类型
+    ///   - verbose: 是否输出详细日志，默认为 `false`
+    /// - Throws: `PluginProviderError.pluginIsNotGroup` 如果插件不是分组类型
     func setCurrentGroup(_ plugin: SuperPlugin, verbose: Bool = false) throws {
-        if verbose {
-            os_log("\(self.t)🏃 SetCurrentGroup: \(plugin.id)")
+        let oldPluginId = self.current?.id ?? "nil"
+        let newPluginId = plugin.id
+        
+        if verbose || Self.verbose {
+            os_log("\(self.t)🏃 SetCurrentGroup: \(oldPluginId) -> \(newPluginId)")
         }
 
         if plugin.isGroup {
             self.current = plugin
             repo.storeCurrentPluginId(plugin.id)
+            
+            if verbose || Self.verbose {
+                os_log("\(self.t)✅ 插件切换成功，将触发依赖视图更新")
+            }
         } else {
+            os_log(.error, "\(self.t)❌ 插件切换失败: \(plugin.id) 不是分组类型")
             throw PluginProviderError.pluginIsNotGroup(pluginId: plugin.id)
         }
     }
 
+    /// 重置插件提供者
+    ///
+    /// 清空所有插件列表和当前激活的插件。
+    /// 通常用于应用重置或重新初始化场景。
     func reset() {
         self.plugins = []
         self.current = nil
     }
 
+    /// 恢复上次激活的插件
+    ///
+    /// 从持久化存储中读取上次激活的插件 ID，并尝试恢复该插件为当前插件。
+    /// 如果找不到上次的插件，则激活第一个可用的分组插件。
+    ///
+    /// ## 恢复逻辑
+    /// 1. 尝试恢复存储的插件 ID
+    /// 2. 如果找不到，使用第一个分组插件
+    /// 3. 如果都没有，记录错误日志
+    ///
+    /// - Throws: `PluginProviderError` 如果插件不是分组类型
     func restoreCurrent() throws {
         let currentPluginId = repo.getCurrentPluginId()
 
@@ -134,9 +229,15 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
     }
 }
 
-// MARK: Event
+// MARK: - Event Handler
 
 extension PluginProvider {
+    /// 对所有插件执行异步操作
+    ///
+    /// 遍历所有已注册的插件，对每个插件执行指定的异步操作。
+    /// 如果某个插件的操作失败，会捕获错误并记录日志，然后继续处理下一个插件。
+    ///
+    /// - Parameter operation: 要对每个插件执行的异步操作闭包
     func executePluginOperation(_ operation: @Sendable (SuperPlugin) async throws -> Void) async {
         for plugin in plugins {
             do {
@@ -150,9 +251,29 @@ extension PluginProvider {
 
 // MARK: - Error
 
+/// 插件提供者错误类型
+///
+/// 定义了插件管理过程中可能出现的错误情况。
 enum PluginProviderError: Error, LocalizedError {
+    /// 插件不是分组类型
+    ///
+    /// 当尝试将非分组插件设置为当前插件时抛出此错误。
+    ///
+    /// - Parameter pluginId: 插件的唯一标识符
     case pluginIsNotGroup(pluginId: String)
+    
+    /// 插件 ID 重复
+    ///
+    /// 当尝试注册具有重复 ID 的插件时抛出此错误。
+    ///
+    /// - Parameters:
+    ///   - pluginId: 重复的插件 ID
+    ///   - collection: 已存在的插件 ID 集合
     case duplicatePluginID(pluginId: String, collection: [String])
+    
+    /// 插件 ID 为空
+    ///
+    /// 当插件的 ID 为空字符串时抛出此错误。
     case pluginIDIsEmpty
 
     var errorDescription: String? {

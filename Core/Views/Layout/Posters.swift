@@ -47,7 +47,6 @@ struct Posters: View, SuperLog {
         
                 Button("选择") {
                     do {
-                        // 使用 Task 调用异步的 stop 方法
                         Task {
                             await self.man.stop()
                         }

@@ -6,7 +6,7 @@ import SwiftUI
 
 struct ContentView: View, SuperLog, SuperThread {
     nonisolated static let emoji = "🖥️"
-    nonisolated static let verbose = false
+    nonisolated static let verbose = true
 
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var p: PluginProvider
@@ -16,6 +16,9 @@ struct ContentView: View, SuperLog, SuperThread {
     @State private var height: CGFloat = 0
     @State private var autoResizing = false
     @State private var tab: String = "DB"
+    
+    /// 当前的 TabView，由插件变化事件驱动更新
+    @State private var currentTabView: AnyView?
 
     var showDB: Bool { app.showDB }
     var controlViewHeightMin = Config.controlViewMinHeight
@@ -38,12 +41,17 @@ struct ContentView: View, SuperLog, SuperThread {
 
                 // 隐藏时高度为 0，避免销毁/重建，同时保持组件常驻
                 VStack(spacing: 0) {
-                    #if os(macOS)
-                        getTabView()
-                            .tabViewStyle(GroupedTabViewStyle())
-                    #else
-                        getTabView()
-                    #endif
+                    if let tabView = currentTabView {
+                        #if os(macOS)
+                            tabView
+                                .tabViewStyle(GroupedTabViewStyle())
+                        #else
+                            tabView
+                        #endif
+                    } else {
+                        // 占位视图，等待插件加载
+                        ProgressView("加载中...")
+                    }
                 }
                 .frame(height: showDB ? (geo.size.height - Config.controlViewMinHeight) : 0)
                 .opacity(showDB ? 1 : 0)
@@ -64,14 +72,27 @@ struct ContentView: View, SuperLog, SuperThread {
             .onChange(of: geo.size.height) {
                 onGeoHeightChange(geo)
             }
+            .onChange(of: p.current?.id) { oldValue, newValue in
+                onCurrentPluginChanged(oldValue: oldValue, newValue: newValue)
+            }
             .onAppear(perform: onAppear)
             .background(Config.background(.teal))
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
-    func getTabView() -> some View {
-        TabView(selection: $tab) {
+    /// 构建 TabView
+    ///
+    /// 根据当前插件构建 TabView，包含数据库视图和设置视图。
+    /// 此方法被事件驱动调用，而非响应式触发。
+    ///
+    /// - Returns: 包装好的 TabView
+    private func buildTabView() -> AnyView {
+        if Self.verbose {
+            os_log("\(self.t)🏗️ buildTabView() 构建新的 TabView - 当前插件: \(p.current?.id ?? "nil")")
+        }
+        
+        let tabView = TabView(selection: $tab) {
             p.current?.addDBView(reason: self.className)
                 .tag("DB")
                 .tabItem {
@@ -89,6 +110,8 @@ struct ContentView: View, SuperLog, SuperThread {
             .padding(.top, 2)
         #endif
             .background(.background)
+        
+        return AnyView(tabView)
     }
 }
 
@@ -118,9 +141,38 @@ extension ContentView {
     }
 }
 
-// MARK: 事件处理
+// MARK: - Event Handler
 
 extension ContentView {
+    /// 当前插件变化时的处理（事件驱动）
+    ///
+    /// 当 `PluginProvider.current` 变化时触发，主动重新构建 TabView。
+    /// 这是一个明确的、事件驱动的更新流程。
+    ///
+    /// ## 更新流程
+    /// 1. 检测到插件变化
+    /// 2. 记录日志
+    /// 3. 调用 `buildTabView()` 构建新视图
+    /// 4. 更新 `currentTabView` 状态
+    /// 5. SwiftUI 重新渲染界面
+    ///
+    /// - Parameters:
+    ///   - oldValue: 旧的插件 ID
+    ///   - newValue: 新的插件 ID
+    func onCurrentPluginChanged(oldValue: String?, newValue: String?) {
+        if Self.verbose {
+            os_log("\(self.t)🔄 插件变化事件: \(oldValue ?? "nil") -> \(newValue ?? "nil")")
+            os_log("\(self.t)📱 开始重新构建 TabView...")
+        }
+        
+        // 事件驱动：主动更新视图
+        currentTabView = buildTabView()
+        
+        if Self.verbose {
+            os_log("\(self.t)✅ TabView 已更新完成")
+        }
+    }
+    
     func onGeoHeightChange(_ geo: GeometryProxy) {
         if autoResizing == false {
             // 说明是用户主动调整
@@ -154,7 +206,16 @@ extension ContentView {
         if verbose {
             os_log("\(self.t)OnAppear")
         }
+        
         height = Config.getWindowHeight()
+        
+        // 初始化 TabView
+        if currentTabView == nil {
+            if Self.verbose {
+                os_log("\(self.t)🚀 初始化 TabView")
+            }
+            currentTabView = buildTabView()
+        }
     }
 }
 

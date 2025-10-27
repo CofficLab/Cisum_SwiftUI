@@ -7,7 +7,7 @@ import SwiftUI
 struct BtnScene: View {
     @EnvironmentObject var p: PluginProvider
 
-    @State var isPresented: Bool = false
+    @State private var isPresented: Bool = false
 
     var body: some View {
         if let plugin = p.current {
