@@ -1,8 +1,8 @@
 ---
-globs: *.swift
 description: 统一 Swift/SwiftUI 视图文件的 MARK 分组规范（Action / Setter / Event Handler / Preview）
+globs: *.swift
+alwaysApply: false
 ---
-
 # Swift 文件 MARK 分组规范（基于 `AudioList.swift`）
 
 本规则约束 Swift/SwiftUI 文件的组织结构，统一用 `// MARK: -` 对函数进行分组，以便快速导航与维护。请参考示例文件：

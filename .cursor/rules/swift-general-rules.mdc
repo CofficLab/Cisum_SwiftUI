@@ -1,8 +1,7 @@
 ---
-globs: .swift
+globs: *.swift
 alwaysApply: false
 ---
-
 # Swift 通用代码规范
 
 ## 类和结构体注释规范
