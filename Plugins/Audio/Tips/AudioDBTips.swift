@@ -25,7 +25,7 @@ struct AudioDBTips: View {
                         HStack {
                             Image(systemName: "info.circle.fill")
                                 .foregroundStyle(.yellow)
-                            Text(Config.isDesktop ? "将音乐文件拖到这里可添加" : "仓库为空")
+                            Text(Config.isDesktop ? "将音乐文件拖到这里可添加" : "歌曲仓库为空")
                                 .font(.title3)
                                 .foregroundStyle(.white)
                         }
@@ -52,7 +52,7 @@ struct AudioDBTips: View {
                         HStack {
                             Image(systemName: "info.circle.fill")
                                 .foregroundStyle(.yellow)
-                            Text(Config.isDesktop ? "将音乐文件拖到这里可添加" : "仓库为空")
+                            Text(Config.isDesktop ? "将音乐文件拖到这里可添加" : "歌曲仓库为空")
                                 .font(.title3)
                                 .foregroundStyle(.white)
                         }

@@ -61,7 +61,7 @@ struct BookDBTips: View {
                         HStack {
                             Image(systemName: "info.circle.fill")
                                 .foregroundStyle(.yellow)
-                            Text(Config.isDesktop ? "将有声书文件夹拖到这里可添加" : "仓库为空")
+                            Text(Config.isDesktop ? "将有声书文件夹拖到这里可添加" : "有声书仓库为空")
                                 .font(.title3)
                                 .foregroundStyle(.white)
                         }
