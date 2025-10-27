@@ -6,7 +6,7 @@ import SwiftUI
 
 actor BookDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     static let emoji = "📦"
-    static let verbose = true
+    static let verbose = false
 
     let modelContainer: ModelContainer
     let modelExecutor: any ModelExecutor

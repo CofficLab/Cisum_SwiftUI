@@ -121,7 +121,7 @@ extension BookDB {
     }
 
     func updateBookCover(bookURL: URL, coverData: Data) {
-        let verbose = true
+        let verbose = false
         guard let book = findBook(url: bookURL) else {
             if verbose {
                 os_log("Failed to find book at URL: \(bookURL)")
@@ -144,7 +144,7 @@ extension BookDB {
     }
     
     func updateBookSetNoCover(bookURL: URL) {
-        let verbose = true
+        let verbose = false
         guard let book = findBook(url: bookURL) else {
             if verbose {
                 os_log("Failed to find book at URL: \(bookURL)")

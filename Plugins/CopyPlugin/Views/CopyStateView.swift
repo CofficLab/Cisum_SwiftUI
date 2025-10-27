@@ -17,7 +17,7 @@ struct CopyStateView: View, SuperLog, SuperThread {
     var taskCount: Int { tasks.count }
     var showCopyMessage: Bool { tasks.count > 0 }
     nonisolated static let emoji = "🖥️"
-    let verbose = true
+    let verbose = false
 
     var body: some View {
         if tasks.count > 0 {

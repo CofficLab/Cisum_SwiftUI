@@ -12,7 +12,7 @@ struct StateView: View, SuperLog, SuperThread {
     var asset: URL? { playMan.asset }
     var font: Font { asset == nil ? .title3 : .callout }
     nonisolated static let emoji = "🖥️"
-    let verbose = true
+    let verbose = false
 
     var body: some View {
         VStack {

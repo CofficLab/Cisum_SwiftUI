@@ -7,7 +7,7 @@ import SwiftUI
 @MainActor
 class BookRepo: ObservableObject, SuperEvent, SuperLog {
     nonisolated static let emoji = "📖"
-    static let verbose = true
+    static let verbose = false
 
     private let db: BookDB
     private var disk: URL

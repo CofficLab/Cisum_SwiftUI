@@ -11,6 +11,7 @@ import SwiftUI
 @MainActor
 final class RootBox: SuperLog {
     static let shared = RootBox(reason: "Shared")
+    static let verbose = false
     nonisolated static let emoji = "🚉"
 
     let app: AppProvider
@@ -23,7 +24,9 @@ final class RootBox: SuperLog {
     let cloud: CloudProvider
 
     private init(reason: String) {
-        os_log("\(Self.onInit)(\(reason))")
+        if Self.verbose {
+            os_log("\(Self.onInit)(\(reason))")
+        }
         
         // Repos
         let pluginRepo = PluginRepo()

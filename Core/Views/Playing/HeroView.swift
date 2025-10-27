@@ -7,7 +7,7 @@ struct HeroView: View {
     @EnvironmentObject var playMan: PlayMan
 
     private let titleViewHeight: CGFloat = 60
-    private let verbose = true
+    private let verbose = false
 
     var body: some View {
         GeometryReader { geo in
