@@ -8,28 +8,31 @@ import UniformTypeIdentifiers
 
 struct BookDBView: View, SuperLog, SuperThread {
     nonisolated static let emoji = "🐘"
+    nonisolated static let verbose = false
     
     @EnvironmentObject var app: AppProvider
 
     @State var treeView = false
     @State var isSyncing = false
     
-    // 使用 @Query 直接从 SwiftData 获取集合类型的书籍总数
+    /// 使用 @Query 直接从 SwiftData 获取集合类型的书籍总数
     @Query(
         filter: #Predicate<BookModel> { $0.isCollection == true },
         animation: .default
     ) var books: [BookModel]
     
-    // 计算属性：从 @Query 结果获取总数
+    /// 书籍总数
     var total: Int { books.count }
+    
+    /// 是否正在拖拽文件
     var dropping: Bool { app.isDropping }
     
+    /// 是否使用列表视图，默认为网格视图
     private var useListView = false
-    private var verbose = false
 
     var body: some View {
-        if verbose {
-            os_log("\(self.t)开始渲染")
+        if Self.verbose {
+            os_log("\(self.t)📺 开始渲染")
         }
         return VStack(spacing: 0) {
             HStack {
@@ -53,48 +56,128 @@ struct BookDBView: View, SuperLog, SuperThread {
             isPresented: $app.isImporting,
             allowedContentTypes: [.audio],
             allowsMultipleSelection: true,
-            onCompletion: { result in
-                switch result {
-                case let .success(urls):
-                    copy(urls)
-                case let .failure(error):
-                    os_log(.error, "导入文件失败Error: \(error.localizedDescription)")
-                }
-            }
+            onCompletion: handleFileImport
         )
-        .onBookDBSyncing {
-            self.isSyncing = true
-        }
-        .onDrop(of: [UTType.fileURL], isTargeted: $app.isDropping) { providers -> Bool in
-            let dispatchGroup = DispatchGroup()
-            var dropedFiles: [URL] = []
-            for provider in providers {
-                dispatchGroup.enter()
-                // 这是异步操作
-                _ = provider.loadObject(ofClass: URL.self) { object, _ in
-                    if let url = object {
-                        os_log("\(self.t)添加 \(url.lastPathComponent) 到复制队列")
-                        dropedFiles.append(url)
-                    }
-
-                    dispatchGroup.leave()
-                }
-            }
-
-            dispatchGroup.notify(queue: .main) {
-                copy(dropedFiles)
-            }
-
-            return true
-        }
+        .onBookDBSyncing(perform: handleSyncingStarted)
+        .onDrop(of: [UTType.fileURL], isTargeted: $app.isDropping, perform: handleDrop)
+        .onAppear(perform: handleOnAppear)
     }
 }
 
-// MARK: 操作
+// MARK: - Action
 
 extension BookDBView {
+    /// 复制文件到仓库
+    ///
+    /// 将选中或拖拽的文件复制到书籍仓库中。
+    ///
+    /// - Parameter files: 要复制的文件 URL 数组
     func copy(_ files: [URL]) {
+        if Self.verbose {
+            os_log("\(self.t)📂 准备复制 \(files.count) 个文件")
+        }
+        
+        // TODO: 实现文件复制逻辑
+    }
+}
 
+// MARK: - Event Handler
+
+extension BookDBView {
+    /// 处理视图出现事件
+    ///
+    /// 当视图首次出现在屏幕上时触发，用于执行初始化操作。
+    func handleOnAppear() {
+        if Self.verbose {
+            os_log("\(self.t)👀 视图已出现，书籍总数: \(total)")
+        }
+        
+        // TODO: 可以在这里执行初始化逻辑，例如：
+        // - 检查数据完整性
+        // - 加载缓存数据
+        // - 更新统计信息
+    }
+    
+    /// 处理文件导入结果
+    ///
+    /// 当用户通过文件选择器导入文件后触发。
+    ///
+    /// - Parameter result: 文件导入的结果，包含选中的文件 URL 或错误信息
+    func handleFileImport(_ result: Result<[URL], Error>) {
+        if Self.verbose {
+            os_log("\(self.t)📥 处理文件导入")
+        }
+        
+        switch result {
+        case let .success(urls):
+            if Self.verbose {
+                os_log("\(self.t)✅ 成功导入 \(urls.count) 个文件")
+            }
+            copy(urls)
+            
+        case let .failure(error):
+            os_log(.error, "\(self.t)❌ 导入文件失败: \(error.localizedDescription)")
+        }
+    }
+    
+    /// 处理数据库同步开始事件
+    ///
+    /// 当书籍数据库开始同步时触发，更新 UI 显示同步状态。
+    func handleSyncingStarted() {
+        if Self.verbose {
+            os_log("\(self.t)🔄 数据库开始同步")
+        }
+        
+        self.isSyncing = true
+    }
+    
+    /// 处理文件拖拽事件
+    ///
+    /// 当用户拖拽文件到视图上时触发，异步加载所有拖拽的文件 URL 并复制。
+    ///
+    /// ## 处理流程
+    /// 1. 创建 DispatchGroup 协调所有异步加载
+    /// 2. 遍历所有 provider，异步加载文件 URL
+    /// 3. 收集所有成功加载的文件
+    /// 4. 在主线程调用 copy 方法批量复制
+    ///
+    /// - Parameter providers: 拖拽提供者数组，每个包含一个文件引用
+    /// - Returns: 始终返回 `true` 表示接受拖拽
+    func handleDrop(_ providers: [NSItemProvider]) -> Bool {
+        if Self.verbose {
+            os_log("\(self.t)🎯 处理文件拖拽，提供者数量: \(providers.count)")
+        }
+        
+        let dispatchGroup = DispatchGroup()
+        var droppedFiles: [URL] = []
+        
+        for provider in providers {
+            dispatchGroup.enter()
+            
+            // 异步加载文件对象
+            _ = provider.loadObject(ofClass: URL.self) { object, error in
+                defer { dispatchGroup.leave() }
+                
+                if let url = object {
+                    if Self.verbose {
+                        os_log("\(self.t)📎 添加 \(url.lastPathComponent) 到复制队列")
+                    }
+                    droppedFiles.append(url)
+                } else if let error = error {
+                    os_log(.error, "\(self.t)⚠️ 加载文件失败: \(error.localizedDescription)")
+                }
+            }
+        }
+        
+        // 所有文件加载完成后，在主线程执行复制
+        dispatchGroup.notify(queue: .main) {
+            if Self.verbose {
+                os_log("\(self.t)✅ 所有文件加载完成，开始复制")
+            }
+            copy(droppedFiles)
+        }
+        
+        return true
     }
 }
 

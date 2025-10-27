@@ -6,7 +6,7 @@ import SwiftUI
 
 struct ContentView: View, SuperLog, SuperThread {
     nonisolated static let emoji = "🖥️"
-    nonisolated static let verbose = true
+    nonisolated static let verbose = false
 
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var p: PluginProvider
@@ -32,7 +32,7 @@ struct ContentView: View, SuperLog, SuperThread {
 
     var body: some View {
         if Self.verbose {
-            os_log("\(self.t)开始渲染")
+            os_log("\(self.t)📺 开始渲染")
         }
         return GeometryReader { geo in
             VStack(spacing: 0) {

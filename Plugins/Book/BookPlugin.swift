@@ -13,7 +13,7 @@ actor BookPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     let iconName: String = "book"
     static let dirName = "audios_book"
     let isGroup: Bool = true
-    let verbose = false
+    let verbose = true
 
     @MainActor var disk: URL?
 
@@ -31,7 +31,7 @@ actor BookPlugin: SuperPlugin, SuperLog, PluginRegistrant {
 
     @MainActor func addDBView(reason: String) -> AnyView? {
         if verbose {
-            os_log("\(self.t)生成DBView")
+            os_log("\(self.t)🔨 生成DBView")
         }
 
         return AnyView(BookDBView())

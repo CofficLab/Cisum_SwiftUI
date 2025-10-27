@@ -22,7 +22,7 @@ import SwiftUI
  */
 struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     nonisolated static let emoji = "📬"
-    nonisolated static let verbose = true
+    nonisolated static let verbose = false
 
     @EnvironmentObject var playManController: PlayManController
     @EnvironmentObject var audioProvider: AudioProvider

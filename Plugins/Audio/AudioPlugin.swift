@@ -16,7 +16,7 @@ actor AudioPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     let description = "作为歌曲仓库，只关注文件，文件夹将被忽略"
     let iconName = "music.note"
     let isGroup = true
-    let verbose = false
+    let verbose = true
 
     @MainActor func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {
         AnyView(AudioRootView { content() })
