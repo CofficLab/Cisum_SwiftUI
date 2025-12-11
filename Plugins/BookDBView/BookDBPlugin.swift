@@ -11,21 +11,18 @@ import SwiftUI
 actor BookDBPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     nonisolated static let emoji = "📚📂"
     private nonisolated static let targetPluginId = String(describing: BookPlugin.self)
+    private static let verbose = false
 
     let title = "有声书仓库"
     let description = "有声书数据库视图"
     let iconName = "books.vertical"
     let isGroup = false
-    let verbose = true
 
     @MainActor
     func addDBView(reason: String, currentPluginId: String?) -> AnyView? {
-        if verbose {
-            os_log("\(self.t)📂 请求有声书数据库视图 reason=\(reason) currentId=\(currentPluginId ?? "nil")")
-        }
         guard currentPluginId == nil || currentPluginId == Self.targetPluginId else { return nil }
 
-        if verbose {
+        if BookDBPlugin.verbose {
             os_log("\(self.t)✅ 返回 BookDBView")
         }
         return AnyView(BookDBView())
@@ -37,7 +34,9 @@ actor BookDBPlugin: SuperPlugin, SuperLog, PluginRegistrant {
 extension BookDBPlugin {
     @objc static func register() {
         // 紧随 BookPlugin 之后注册
-        os_log("\(Self.t)注册 BookDBPlugin")
+        if Self.verbose {
+            os_log("\(self.t)🚀 注册 BookDBPlugin")
+        }
         PluginRegistry.registerSync(order: 2) { Self() }
     }
 }

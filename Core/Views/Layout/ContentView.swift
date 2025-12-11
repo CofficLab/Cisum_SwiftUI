@@ -93,27 +93,14 @@ struct ContentView: View, SuperLog, SuperThread {
         }
 
         let currentId = p.current?.id
-        if Self.verbose {
-            let labels = p.plugins.map { $0.label }.joined(separator: ", ")
-            os_log("\(self.t)可用插件: \(labels)")
-        }
 
         // 直接使用其他插件提供的第一个 DB 视图
         var dbView: AnyView?
         for plugin in p.plugins {
-            if Self.verbose {
-                os_log("\(self.t)尝试 DB 视图: \(plugin.label)")
-            }
             if let view = plugin.addDBView(reason: self.className, currentPluginId: currentId) {
                 dbView = view
-                if Self.verbose {
-                    os_log("\(self.t)✅ 选择 DB 视图来自: \(plugin.label)")
-                }
                 break
             }
-        }
-        if dbView == nil && Self.verbose {
-            os_log(.error, "\(self.t)❌ 未找到任何 DB 视图，currentId=\(currentId ?? "nil")")
         }
 
         let tabView = TabView(selection: $tab) {
