@@ -91,9 +91,13 @@ struct ContentView: View, SuperLog, SuperThread {
         if Self.verbose {
             os_log("\(self.t)🏗️ buildTabView() 构建新的 TabView - 当前插件: \(p.current?.id ?? "nil")")
         }
-        
+
+        // 优先使用当前分组插件的 DB 视图；若为空，回退到其他插件提供的第一个 DB 视图
+        let dbView = p.current?.addDBView(reason: self.className)
+            ?? p.plugins.compactMap { $0.addDBView(reason: self.className) }.first
+
         let tabView = TabView(selection: $tab) {
-            p.current?.addDBView(reason: self.className)
+            dbView
                 .tag("DB")
                 .tabItem {
                     Label("仓库", systemImage: "music.note.list")

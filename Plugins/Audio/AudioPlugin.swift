@@ -23,14 +23,6 @@ actor AudioPlugin: SuperPlugin, SuperLog, PluginRegistrant {
         AnyView(AudioRootView { content() })
     }
 
-    @MainActor func addDBView(reason: String) -> AnyView? {
-        if verbose {
-            os_log("\(self.t)🍋🍋🍋 AddDBView")
-        }
-
-        return AnyView(AudioDBView())
-    }
-
     @MainActor func getDisk() -> URL? { Self.getAudioDisk() }
 
     @MainActor
