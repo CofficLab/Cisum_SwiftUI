@@ -20,24 +20,50 @@ struct AudioPoster: View {
         VStack(spacing: 16) {
             VStack(spacing: 0) {
                 ForEach(books, id: \.self) { item in
-                    HStack {
-                        Image.musicNote
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 20, height: 20)
-                            .padding(8)
-                            .background(
-                                Circle()
-                                    .fill(Color.blue.opacity(0.15))
+                    HStack(spacing: 12) {
+                        Circle()
+                            .fill(iconGradient)
+                            .frame(width: 34, height: 34)
+                            .overlay(
+                                Image.musicNote
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 18, height: 18)
+                                    .foregroundStyle(.blue.opacity(0.8))
                             )
                         Text(item)
+                            .font(.headline)
+                            .foregroundStyle(.primary)
                         Spacer()
                     }
-                    .frame(height: 30)
-                    Divider()
+                    .padding(.horizontal, 12)
+                    .frame(height: 44)
+
+                    if item != books.last {
+                        Divider()
+                            .padding(.leading, 58)
+                    }
                 }
             }
+            .padding(.vertical, 12)
+            .background(
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(
+                        LinearGradient(
+                            colors: [
+                                Color.blue.opacity(0.12),
+                                Color.cyan.opacity(0.12),
+                                Color.teal.opacity(0.10),
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .shadow(color: .black.opacity(0.05), radius: 6, y: 2)
+            )
             
+            Spacer()
+
             MagicButton.simple(action: {
                 do {
                     try pluginProvider.setCurrentGroup(id: AudioPlugin().id)
@@ -49,10 +75,21 @@ struct AudioPoster: View {
             .magicSize(.auto)
             .magicTitle("进入音乐仓库")
             .magicIcon(.iconArrowUpCircle)
-            .frame(width: 120)
+            .frame(width: 130)
             .frame(height: 40)
         }
         .padding()
+    }
+
+    private var iconGradient: LinearGradient {
+        LinearGradient(
+            colors: [
+                Color.blue.opacity(0.18),
+                Color.cyan.opacity(0.22),
+            ],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
     }
 }
 
