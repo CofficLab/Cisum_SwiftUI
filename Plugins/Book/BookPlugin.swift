@@ -9,7 +9,7 @@ actor BookPlugin: SuperPlugin, SuperLog, PluginRegistrant {
 
     static let emoji = "🎺"
     let title: String = "有声书"
-    let hasPoster: Bool = true
+    let hasPoster: Bool = false
     let description: String = "适用于听有声书的场景"
     let iconName: String = "book"
     static let dirName = "audios_book"
@@ -21,14 +21,6 @@ actor BookPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     @MainActor func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {
         AnyView(BookRootView { content() })
     }
-    
-    @MainActor func addSettingView() -> AnyView? {
-        if verbose {
-            os_log("\(self.t)🍋🍋🍋 AddSettingView")
-        }
-
-        return AnyView(BookSettings())
-    }
 
     @MainActor func addDBView(reason: String) -> AnyView? {
         if verbose {
@@ -37,9 +29,6 @@ actor BookPlugin: SuperPlugin, SuperLog, PluginRegistrant {
 
         return AnyView(BookDBView())
     }
-
-    @MainActor
-    func addPosterView() -> AnyView? { AnyView(BookPoster()) }
 
     @MainActor
     func onWillAppear(playMan: PlayManWrapper, currentGroup: (any SuperPlugin)?, storage: StorageLocation?) async throws {

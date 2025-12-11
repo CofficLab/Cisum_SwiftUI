@@ -2,6 +2,7 @@ import MagicCore
 import OSLog
 import SwiftUI
 
+/// 有声书设置视图：展示仓库大小、位置与文件数量。
 struct BookSettings: View, SuperLog {
     nonisolated static let emoji = "🔊"
 
@@ -128,3 +129,4 @@ extension BookSettings {
         AppPreview()
     }
 #endif
+

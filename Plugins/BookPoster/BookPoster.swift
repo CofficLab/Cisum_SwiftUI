@@ -2,6 +2,7 @@ import SwiftUI
 import MagicCore
 import MagicBackground
 
+/// 有声书海报视图，展示示例书目。
 struct BookPoster: View {
     var books: [String] = [
         "巴黎圣母院",
@@ -65,3 +66,4 @@ struct BookPoster: View {
         .padding()
     }
 }
+
