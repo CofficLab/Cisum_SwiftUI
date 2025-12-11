@@ -14,7 +14,6 @@ actor AudioPosterPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     let description = "展示音频列表的封面海报"
     let iconName = "photo.on.rectangle"
     let isGroup = false
-    let hasPoster = true
     let verbose = false
 
     @MainActor

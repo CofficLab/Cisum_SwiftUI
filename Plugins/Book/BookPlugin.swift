@@ -9,7 +9,6 @@ actor BookPlugin: SuperPlugin, SuperLog, PluginRegistrant {
 
     static let emoji = "🎺"
     let title: String = "有声书"
-    let hasPoster: Bool = false
     let description: String = "适用于听有声书的场景"
     let iconName: String = "book"
     static let dirName = "audios_book"

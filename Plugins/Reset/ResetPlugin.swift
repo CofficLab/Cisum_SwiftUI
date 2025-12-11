@@ -7,7 +7,6 @@ actor ResetPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     static let emoji = "⚙️"
 
     let label = "Reset"
-    let hasPoster = false
     let description: String = "恢复默认配置"
     let iconName: String = .iconReset
     nonisolated(unsafe) var enabled: Bool = true

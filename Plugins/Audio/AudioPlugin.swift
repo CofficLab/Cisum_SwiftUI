@@ -13,7 +13,6 @@ actor AudioPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     #endif
 
     let title = "音乐库"
-    let hasPoster = false
     let description = "歌曲仓库"
     let iconName = "music.note"
     let isGroup = true

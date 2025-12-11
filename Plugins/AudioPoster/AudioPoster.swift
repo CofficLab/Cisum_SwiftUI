@@ -3,6 +3,9 @@ import SwiftUI
 
 /// 音频海报视图，展示示例曲目列表。
 struct AudioPoster: View {
+    @EnvironmentObject private var pluginProvider: PluginProvider
+    @EnvironmentObject private var m: MagicMessageProvider
+
     var books: [String] = [
         "挪威的森林",
         "歌唱祖国",
@@ -14,24 +17,39 @@ struct AudioPoster: View {
     ]
 
     var body: some View {
-        VStack {
-            ForEach(books, id: \.self) { item in
-                HStack {
-                    Image.musicNote
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 20, height: 20)
-                        .padding(8)
-                        .background(
-                            Circle()
-                                .fill(Color.blue.opacity(0.15))
-                        )
-                    Text(item)
-                    Spacer()
+        VStack(spacing: 16) {
+            VStack(spacing: 0) {
+                ForEach(books, id: \.self) { item in
+                    HStack {
+                        Image.musicNote
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 20, height: 20)
+                            .padding(8)
+                            .background(
+                                Circle()
+                                    .fill(Color.blue.opacity(0.15))
+                            )
+                        Text(item)
+                        Spacer()
+                    }
+                    .frame(height: 30)
+                    Divider()
                 }
-                .frame(height: 30)
-                Divider()
             }
+
+            Button {
+                do {
+                    // 明确由海报决定切换到 AudioPlugin
+                    try pluginProvider.setCurrentGroup(id: AudioPlugin().id)
+                } catch {
+                    m.error(error)
+                }
+            } label: {
+                Label("进入音乐仓库", systemImage: "arrow.right.circle.fill")
+                    .font(.headline)
+            }
+            .buttonStyle(.borderedProminent)
         }
         .padding()
     }

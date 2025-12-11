@@ -7,7 +7,6 @@ actor StorePlugin: SuperPlugin, SuperLog, PluginRegistrant {
     static let emoji = "🛒"
 
     let label: String = "Store"
-    let hasPoster: Bool = false
     let description: String = "应用内购买和订阅"
     let iconName: String = "cart"
     let isGroup: Bool = false

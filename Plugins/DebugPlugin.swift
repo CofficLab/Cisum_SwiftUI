@@ -5,7 +5,6 @@ import OSLog
 import SwiftUI
 
 actor DebugPlugin: SuperPlugin, PluginRegistrant {
-    let hasPoster = false
     let description: String = "调试专用"
     let iconName: String = .iconDebug
     nonisolated(unsafe) var enabled = true

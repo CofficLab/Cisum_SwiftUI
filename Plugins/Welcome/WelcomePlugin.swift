@@ -7,7 +7,6 @@ actor WelcomePlugin: SuperPlugin, SuperLog, PluginRegistrant {
     static let emoji = "👏"
 
     let label = "Welcome"
-    let hasPoster = false
     let description = "欢迎界面"
     let iconName = "music.note"
     nonisolated(unsafe) var enabled = true

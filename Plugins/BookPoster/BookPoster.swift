@@ -4,6 +4,9 @@ import MagicBackground
 
 /// 有声书海报视图，展示示例书目。
 struct BookPoster: View {
+    @EnvironmentObject private var pluginProvider: PluginProvider
+    @EnvironmentObject private var m: MagicMessageProvider
+
     var books: [String] = [
         "巴黎圣母院",
         "海底两万里",
@@ -14,7 +17,21 @@ struct BookPoster: View {
     ]
 
     var body: some View {
-        hstackView
+        VStack(spacing: 16) {
+            hstackView
+
+            Button {
+                do {
+                    try pluginProvider.setCurrentGroup(id: BookPlugin().id)
+                } catch {
+                    m.error(error)
+                }
+            } label: {
+                Label("进入有声书仓库", systemImage: "arrow.right.circle.fill")
+                    .font(.headline)
+            }
+            .buttonStyle(.borderedProminent)
+        }
     }
 
     var hstackView: some View {

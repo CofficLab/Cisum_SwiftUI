@@ -14,7 +14,6 @@ actor BookSettingsPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     let description = "有声书插件的设置入口"
     let iconName = "gearshape"
     let isGroup = false
-    let hasPoster = false
     let verbose = false
 
     @MainActor

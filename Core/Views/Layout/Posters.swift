@@ -15,47 +15,38 @@ struct Posters: View, SuperLog {
     
     @State var id: String = ""
 
-    var plugins: [SuperPlugin] {
-        return p.plugins.filter { $0.hasPoster }
+    var posterItems: [(plugin: SuperPlugin, view: AnyView)] {
+        p.plugins.compactMap { plugin in
+            guard let poster = plugin.addPosterView() else { return nil }
+            return (plugin, poster)
+        }
     }
     
     var body: some View {
         VStack {
             Picker("", selection: $id) {
-                ForEach(plugins, id: \.label) { item in
-                    Text(item.title)
-                        .tag(item.label)
+                ForEach(posterItems, id: \.plugin.label) { item in
+                    Text(item.plugin.title)
+                        .tag(item.plugin.label)
                 }
             }
             .pickerStyle(SegmentedPickerStyle())
             .padding()
 
-            if let currentLayout = plugins.first(where: { $0.label == id }) {
+            if let current = posterItems.first(where: { $0.plugin.label == id }) {
                 VStack {
-                    Text(currentLayout.description)
+                    Text(current.plugin.description)
         
                     GroupBox {
-                        AnyView(currentLayout.addPosterView())
-                    }.padding()
-                }
-        
-                Button("选择") {
-                    do {
-                        Task {
-                            await self.man.stop()
-                        }
-                        try p.setCurrentGroup(currentLayout)
-                        self.isPresented = false
-                    } catch {
-                        m.error(error)
+                        current.view
                     }
-                }.controlSize(.extraLarge)
-        
+                    .padding()
+                }
                 Spacer()
             }
         }
         .onAppear {
-            id = plugins.first?.label ?? ""
+            id = posterItems.first?.plugin.label ?? ""
         }
     }
 }

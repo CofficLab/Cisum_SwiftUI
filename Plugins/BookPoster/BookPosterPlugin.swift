@@ -14,7 +14,6 @@ actor BookPosterPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     let description = "展示有声书海报"
     let iconName = "photo.on.rectangle"
     let isGroup = false
-    let hasPoster = true
     let verbose = false
 
     @MainActor

@@ -15,7 +15,6 @@ actor AudioDBPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     let description = "音频文件数据库视图"
     let iconName = "externaldrive"
     let isGroup = false
-    let hasPoster = false
     
     private let verbose = true
 

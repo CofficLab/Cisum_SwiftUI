@@ -9,7 +9,6 @@ actor StoragePlugin: SuperPlugin, SuperLog, PluginRegistrant {
 
     let dirName = "audios"
     let label = "Setting"
-    let hasPoster = false
     let description = "存储设置"
     let iconName: String = .iconSettings
     let isGroup = false

@@ -15,7 +15,6 @@ actor BookDBPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     let description = "有声书数据库视图"
     let iconName = "books.vertical"
     let isGroup = false
-    let hasPoster = false
     let verbose = false
 
     @MainActor

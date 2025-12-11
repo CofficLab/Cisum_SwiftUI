@@ -196,6 +196,17 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
         }
     }
 
+    /// 根据插件 ID 切换当前分组插件
+    ///
+    /// - Parameter id: 分组插件的唯一标识
+    func setCurrentGroup(id: String, verbose: Bool = false) throws {
+        guard let target = plugins.first(where: { $0.id == id }) else {
+            os_log(.error, "\(self.t)❌ 插件切换失败: 未找到 id=\(id)")
+            throw PluginProviderError.pluginNotFound(pluginId: id)
+        }
+        try setCurrentGroup(target, verbose: verbose)
+    }
+
     /// 重置插件提供者
     ///
     /// 清空所有插件列表和当前激活的插件。
@@ -255,6 +266,13 @@ extension PluginProvider {
 ///
 /// 定义了插件管理过程中可能出现的错误情况。
 enum PluginProviderError: Error, LocalizedError {
+    /// 插件未找到
+    ///
+    /// 当根据 ID 查找插件失败时抛出此错误。
+    ///
+    /// - Parameter pluginId: 插件的唯一标识符
+    case pluginNotFound(pluginId: String)
+    
     /// 插件不是分组类型
     ///
     /// 当尝试将非分组插件设置为当前插件时抛出此错误。
@@ -278,6 +296,8 @@ enum PluginProviderError: Error, LocalizedError {
 
     var errorDescription: String? {
         switch self {
+        case let .pluginNotFound(pluginId):
+            return "Plugin \(pluginId) not found"
         case let .pluginIsNotGroup(pluginId):
             return "Plugin \(pluginId) is not a group"
         case let .duplicatePluginID(pluginId, collection):

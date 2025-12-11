@@ -4,7 +4,6 @@ protocol MagicSuperPlugin: Actor {
     nonisolated var id: String { get }
     nonisolated var label: String { get }
     nonisolated var title: String { get }
-    nonisolated var hasPoster: Bool { get }
     nonisolated var description: String { get }
     nonisolated var iconName: String { get }
     nonisolated var isGroup: Bool { get }

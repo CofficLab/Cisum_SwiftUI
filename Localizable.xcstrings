@@ -1014,6 +1014,12 @@
     "迁移状态" : {
 
     },
+    "进入有声书仓库" : {
+
+    },
+    "进入音乐仓库" : {
+
+    },
     "退出" : {
       "localizations" : {
         "en" : {
@@ -1025,6 +1031,7 @@
       }
     },
     "选择" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

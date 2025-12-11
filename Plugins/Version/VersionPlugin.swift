@@ -7,7 +7,6 @@ actor VersionPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     static let emoji = "📱"
 
     let label: String = "Version"
-    let hasPoster: Bool = false
     let description: String = "版本信息"
     let iconName: String = .iconVersionInfo
     let isGroup: Bool = false
