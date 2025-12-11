@@ -257,6 +257,7 @@
       }
     },
     "仓库" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

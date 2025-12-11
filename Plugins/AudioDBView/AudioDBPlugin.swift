@@ -19,13 +19,13 @@ actor AudioDBPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     let isGroup = false
 
     @MainActor
-    func addDBView(reason: String, currentPluginId: String?) -> AnyView? {
+    func addDBView(reason: String, currentPluginId: String?) -> (view: AnyView, label: String)? {
         guard currentPluginId == nil || currentPluginId == Self.targetPluginId else { return nil }
 
         if Self.verbose {
             os_log("\(self.t)✅ 返回 AudioDBView")
         }
-        return AnyView(AudioDBView())
+        return (AnyView(AudioDBView()), "音乐仓库")
     }
 }
 

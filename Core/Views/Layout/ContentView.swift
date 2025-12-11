@@ -6,7 +6,7 @@ import SwiftUI
 
 struct ContentView: View, SuperLog, SuperThread {
     nonisolated static let emoji = "🖥️"
-    nonisolated static let verbose = true
+    nonisolated static let verbose = false
 
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var p: PluginProvider
@@ -94,21 +94,19 @@ struct ContentView: View, SuperLog, SuperThread {
 
         let currentId = p.current?.id
 
-        // 直接使用其他插件提供的第一个 DB 视图
-        var dbView: AnyView?
-        for plugin in p.plugins {
-            if let view = plugin.addDBView(reason: self.className, currentPluginId: currentId) {
-                dbView = view
-                break
-            }
+        // 收集所有提供的 DB 视图及标签
+        let dbViews = p.plugins.compactMap { plugin in
+            plugin.addDBView(reason: self.className, currentPluginId: currentId)
         }
 
         let tabView = TabView(selection: $tab) {
-            dbView
-                .tag("DB")
-                .tabItem {
-                    Label("仓库", systemImage: "music.note.list")
-                }
+            ForEach(Array(dbViews.enumerated()), id: \.offset) { index, item in
+                item.view
+                    .tag("DB\(index)")
+                    .tabItem {
+                        Label(item.label, systemImage: "music.note.list")
+                    }
+            }
 
             SettingView()
                 .tag("Setting")
