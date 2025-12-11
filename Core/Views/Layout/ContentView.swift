@@ -6,7 +6,7 @@ import SwiftUI
 
 struct ContentView: View, SuperLog, SuperThread {
     nonisolated static let emoji = "🖥️"
-    nonisolated static let verbose = false
+    nonisolated static let verbose = true
 
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var p: PluginProvider
@@ -92,9 +92,29 @@ struct ContentView: View, SuperLog, SuperThread {
             os_log("\(self.t)🏗️ buildTabView() 构建新的 TabView - 当前插件: \(p.current?.id ?? "nil")")
         }
 
-        // 优先使用当前分组插件的 DB 视图；若为空，回退到其他插件提供的第一个 DB 视图
-        let dbView = p.current?.addDBView(reason: self.className)
-            ?? p.plugins.compactMap { $0.addDBView(reason: self.className) }.first
+        let currentId = p.current?.id
+        if Self.verbose {
+            let labels = p.plugins.map { $0.label }.joined(separator: ", ")
+            os_log("\(self.t)可用插件: \(labels)")
+        }
+
+        // 直接使用其他插件提供的第一个 DB 视图
+        var dbView: AnyView?
+        for plugin in p.plugins {
+            if Self.verbose {
+                os_log("\(self.t)尝试 DB 视图: \(plugin.label)")
+            }
+            if let view = plugin.addDBView(reason: self.className, currentPluginId: currentId) {
+                dbView = view
+                if Self.verbose {
+                    os_log("\(self.t)✅ 选择 DB 视图来自: \(plugin.label)")
+                }
+                break
+            }
+        }
+        if dbView == nil && Self.verbose {
+            os_log(.error, "\(self.t)❌ 未找到任何 DB 视图，currentId=\(currentId ?? "nil")")
+        }
 
         let tabView = TabView(selection: $tab) {
             dbView

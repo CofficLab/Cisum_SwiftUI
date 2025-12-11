@@ -10,6 +10,7 @@ import SwiftUI
  */
 actor AudioDBPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     nonisolated static let emoji = "📂🎵"
+    private nonisolated static let targetPluginId = String(describing: AudioPlugin.self)
 
     let title = "音频仓库"
     let description = "音频文件数据库视图"
@@ -19,11 +20,15 @@ actor AudioDBPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     private let verbose = true
 
     @MainActor
-    func addDBView(reason: String) -> AnyView? {
+    func addDBView(reason: String, currentPluginId: String?) -> AnyView? {
         if verbose {
-            os_log("\(self.t)📂 加载音频数据库视图 \(reason)")
+            os_log("\(self.t)📂 请求音频数据库视图 reason=\(reason) currentId=\(currentPluginId ?? "nil")")
         }
+        guard currentPluginId == nil || currentPluginId == Self.targetPluginId else { return nil }
 
+        if verbose {
+            os_log("\(self.t)✅ 返回 AudioDBView")
+        }
         return AnyView(AudioDBView())
     }
 }
@@ -33,6 +38,7 @@ actor AudioDBPlugin: SuperPlugin, SuperLog, PluginRegistrant {
 extension AudioDBPlugin {
     @objc static func register() {
         // 紧随 AudioPlugin 之后注册
+        os_log("\(Self.t)注册 AudioDBPlugin")
         PluginRegistry.registerSync(order: 1) { Self() }
     }
 }

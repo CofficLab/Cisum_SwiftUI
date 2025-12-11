@@ -4,9 +4,9 @@ import SwiftUI
 protocol SuperPlugin: MagicSuperPlugin {
     @MainActor func addLaunchView() -> AnyView?
     @MainActor func addSheetView(storage: StorageLocation?) -> AnyView?
-    @MainActor func addDBView(reason: String) -> AnyView?
     @MainActor func addStateView(currentGroup: SuperPlugin?) -> AnyView?
     @MainActor func addPosterView() -> AnyView?
+    @MainActor func addDBView(reason: String, currentPluginId: String?) -> AnyView?
     @MainActor func addSettingView() -> AnyView?
     @MainActor func addStatusView() -> AnyView?
     @MainActor func addToolBarButtons() -> [(id: String, view: AnyView)]
@@ -20,7 +20,7 @@ extension SuperPlugin {
 
     nonisolated func addStateView(currentGroup: SuperPlugin?) -> AnyView? { nil }
 
-    nonisolated func addDBView(reason: String) -> AnyView? { nil }
+    nonisolated func addDBView(reason: String, currentPluginId: String?) -> AnyView? { nil }
 
     nonisolated func addPosterView() -> AnyView? { nil }
 
