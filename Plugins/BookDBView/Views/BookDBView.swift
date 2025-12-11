@@ -1,6 +1,5 @@
 import Foundation
 import MagicCore
-
 import OSLog
 import SwiftData
 import SwiftUI
@@ -11,7 +10,7 @@ struct BookDBView: View, SuperLog, SuperThread {
     nonisolated static let verbose = false
     
     @EnvironmentObject var app: AppProvider
-
+    
     @State var treeView = false
     
     /// 是否正在拖拽文件
@@ -168,5 +167,4 @@ extension BookDBView {
     AppPreview()
 }
 #endif
-
 

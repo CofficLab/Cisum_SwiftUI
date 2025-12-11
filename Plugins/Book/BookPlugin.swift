@@ -22,14 +22,6 @@ actor BookPlugin: SuperPlugin, SuperLog, PluginRegistrant {
         AnyView(BookRootView { content() })
     }
 
-    @MainActor func addDBView(reason: String) -> AnyView? {
-        if verbose {
-            os_log("\(self.t)🔨 生成DBView")
-        }
-
-        return AnyView(BookDBView())
-    }
-
     @MainActor
     func onWillAppear(playMan: PlayManWrapper, currentGroup: (any SuperPlugin)?, storage: StorageLocation?) async throws {
         guard let currentGroup = currentGroup, currentGroup.label == self.label else {
