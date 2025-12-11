@@ -1,5 +1,7 @@
 import MagicAsset
 import SwiftUI
+import MagicCore
+import OSLog
 
 // MARK: - Types
 
@@ -13,7 +15,10 @@ extension LogoView {
     }
 }
 
-struct LogoView: View {
+struct LogoView: View,SuperLog {
+    nonisolated static let verbose = true
+    nonisolated static let emoji = "🎨"
+
     var background: Color? = nil
     var rotationSpeed: Double = 0.0
     var backgroundShape: BackgroundShape = .none
@@ -34,7 +39,11 @@ struct LogoView: View {
     }
 
     var body: some View {
-        Image.makeCoffeeReelIcon(
+        if Self.verbose {
+            os_log("\(self.t)开始渲染")
+        }
+
+        return Image.makeCoffeeReelIcon(
             useDefaultBackground: false,
             // x版本指向x点钟方向
             handleRotation: 0,

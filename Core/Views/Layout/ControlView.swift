@@ -5,7 +5,7 @@ import SwiftData
 import SwiftUI
 
 struct ControlView: View, SuperLog {
-    static let verbose = false
+    static let verbose = true
     
     @EnvironmentObject var appManager: AppProvider
     @EnvironmentObject var message: StateProvider
@@ -102,11 +102,6 @@ struct ControlView: View, SuperLog {
         }
         .ignoresSafeArea(edges: Config.isDesktop ? .horizontal : .all)
         .frame(minHeight: Config.controlViewMinHeight)
-        .onAppear {
-            showHeroView = true
-            showBtnsView = true
-            showStateView = true
-        }
     }
 
     // MARK: 状态栏的高度

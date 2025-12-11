@@ -5,13 +5,19 @@ import SwiftData
 import SwiftUI
 
 struct TitleView: View, SuperLog, SuperThread {
+    nonisolated static let verbose = false
+    nonisolated static let emoji = "📺"
+
     @EnvironmentObject var playMan: PlayMan
 
     var title: String { playMan.asset?.deletingPathExtension().title ?? "" }
-    nonisolated static let emoji = "📺"
 
     var body: some View {
-        GeometryReader { geo in
+        if Self.verbose {
+            os_log("\(self.t)开始渲染")
+        }
+
+        return GeometryReader { geo in
             ZStack {
                 Text(title)
                     .font(.system(size: 24))

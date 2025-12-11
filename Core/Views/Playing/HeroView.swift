@@ -3,17 +3,18 @@ import OSLog
 import SwiftUI
 
 struct HeroView: View {
+    nonisolated static let verbose = false
+
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var playMan: PlayMan
 
     private let titleViewHeight: CGFloat = 60
-    private let verbose = false
 
     var body: some View {
         GeometryReader { geo in
             VStack(spacing: 0) {
                 if shouldShowAlbum(geo) {
-                    playMan.makeHeroView(verbose: false, defaultView: {
+                    playMan.makeHeroView(verbose: Self.verbose, defaultView: {
                         LogoView(background: .blue.opacity(0.1),rotationSpeed: 0.001, backgroundShape: .circle)
                     })
                     .frame(maxWidth: .infinity)

@@ -6,9 +6,9 @@ import SwiftUI
  * 音频数据库插件：提供音频仓库列表视图。
  */
 actor AudioDBPlugin: SuperPlugin, SuperLog, PluginRegistrant {
-    nonisolated static let emoji = "📂🎵"
+    nonisolated static let emoji = "🎵"
     private nonisolated static let targetPluginId = String(describing: AudioPlugin.self)
-    private static let verbose = false
+    private static let verbose = true
 
     let title = "音频仓库"
     let description = "音频文件数据库视图"
