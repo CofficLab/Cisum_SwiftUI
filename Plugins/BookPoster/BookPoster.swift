@@ -14,27 +14,34 @@ struct BookPoster: View {
         "西游记",
         "红楼梦",
         "水浒传",
+        "三体",
+        "百年孤独",
+        "追风筝的人",
+        "白夜行",
+        "挪威的森林",
     ]
 
     var body: some View {
         VStack(spacing: 16) {
-            hstackView
+            hStackView
 
-            Button {
+            MagicButton.simple(action: {
                 do {
                     try pluginProvider.setCurrentGroup(id: BookPlugin().id)
                 } catch {
                     m.error(error)
                 }
-            } label: {
-                Label("进入有声书仓库", systemImage: "arrow.right.circle.fill")
-                    .font(.headline)
-            }
-            .buttonStyle(.borderedProminent)
+            })
+            .magicShape(.roundedRectangle)
+            .magicSize(.auto)
+            .magicTitle("进入有声书仓库")
+            .magicIcon(.iconArrowUpCircle)
+            .frame(width: 130)
+            .frame(height: 40)
         }
     }
 
-    var hstackView: some View {
+    var hStackView: some View {
         ScrollView(.horizontal) {
             HStack {
                 ForEach(books, id: \.self) { item in
@@ -84,3 +91,26 @@ struct BookPoster: View {
     }
 }
 
+#Preview("Poster") {
+    BookPoster()
+        .frame(width: 600)
+        .frame(height: 600)
+}
+
+#if os(macOS)
+#Preview("App - Large") {
+    AppPreview()
+        .frame(width: 600, height: 1000)
+}
+
+#Preview("App - Small") {
+    AppPreview()
+        .frame(width: 600, height: 600)
+}
+#endif
+
+#if os(iOS)
+#Preview("iPhone") {
+    AppPreview()
+}
+#endif

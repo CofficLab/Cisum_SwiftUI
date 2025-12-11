@@ -37,19 +37,20 @@ struct AudioPoster: View {
                     Divider()
                 }
             }
-
-            Button {
+            
+            MagicButton.simple(action: {
                 do {
-                    // 明确由海报决定切换到 AudioPlugin
                     try pluginProvider.setCurrentGroup(id: AudioPlugin().id)
                 } catch {
                     m.error(error)
                 }
-            } label: {
-                Label("进入音乐仓库", systemImage: "arrow.right.circle.fill")
-                    .font(.headline)
-            }
-            .buttonStyle(.borderedProminent)
+            })
+            .magicShape(.roundedRectangle)
+            .magicSize(.auto)
+            .magicTitle("进入音乐仓库")
+            .magicIcon(.iconArrowUpCircle)
+            .frame(width: 120)
+            .frame(height: 40)
         }
         .padding()
     }

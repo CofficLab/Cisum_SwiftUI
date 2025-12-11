@@ -11,7 +11,7 @@ actor AudioPosterPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     nonisolated static let emoji = "🖼️"
 
     let title = "音乐仓库"
-    let description = "展示音频列表的封面海报"
+    let description = "适用于听歌的场景"
     let iconName = "photo.on.rectangle"
     let isGroup = false
     let verbose = false
