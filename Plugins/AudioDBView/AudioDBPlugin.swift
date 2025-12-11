@@ -4,9 +4,6 @@ import SwiftUI
 
 /**
  * 音频数据库插件：提供音频仓库列表视图。
- *
- * 复用现有的 `AudioDBView`，不重新创建仓库或监听。
- * 需要宿主注入同一个 `AudioProvider` 环境对象。
  */
 actor AudioDBPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     nonisolated static let emoji = "📂🎵"
@@ -19,7 +16,7 @@ actor AudioDBPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     let isGroup = false
 
     @MainActor
-    func addDBView(reason: String, currentPluginId: String?) -> (view: AnyView, label: String)? {
+    func addTabView(reason: String, currentPluginId: String?) -> (view: AnyView, label: String)? {
         guard currentPluginId == nil || currentPluginId == Self.targetPluginId else { return nil }
 
         if Self.verbose {

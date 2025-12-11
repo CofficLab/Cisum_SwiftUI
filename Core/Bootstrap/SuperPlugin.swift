@@ -6,7 +6,7 @@ protocol SuperPlugin: MagicSuperPlugin {
     @MainActor func addSheetView(storage: StorageLocation?) -> AnyView?
     @MainActor func addStateView(currentGroup: SuperPlugin?) -> AnyView?
     @MainActor func addPosterView() -> AnyView?
-    @MainActor func addDBView(reason: String, currentPluginId: String?) -> (view: AnyView, label: String)?
+    @MainActor func addTabView(reason: String, currentPluginId: String?) -> (view: AnyView, label: String)?
     @MainActor func addSettingView() -> AnyView?
     @MainActor func addStatusView() -> AnyView?
     @MainActor func addToolBarButtons() -> [(id: String, view: AnyView)]
@@ -20,7 +20,7 @@ extension SuperPlugin {
 
     nonisolated func addStateView(currentGroup: SuperPlugin?) -> AnyView? { nil }
 
-    @MainActor func addDBView(reason: String, currentPluginId: String?) -> (view: AnyView, label: String)? { nil }
+    @MainActor func addTabView(reason: String, currentPluginId: String?) -> (view: AnyView, label: String)? { nil }
 
     nonisolated func addPosterView() -> AnyView? { nil }
 

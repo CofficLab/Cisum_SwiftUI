@@ -94,15 +94,15 @@ struct ContentView: View, SuperLog, SuperThread {
 
         let currentId = p.current?.id
 
-        // 收集所有提供的 DB 视图及标签
-        let dbViews = p.plugins.compactMap { plugin in
-            plugin.addDBView(reason: self.className, currentPluginId: currentId)
+        // 收集所有提供的 Tab 视图及标签
+        let tabViews = p.plugins.compactMap { plugin in
+            plugin.addTabView(reason: self.className, currentPluginId: currentId)
         }
 
         let tabView = TabView(selection: $tab) {
-            ForEach(Array(dbViews.enumerated()), id: \.offset) { index, item in
+            ForEach(Array(tabViews.enumerated()), id: \.offset) { index, item in
                 item.view
-                    .tag("DB\(index)")
+                    .tag("TAB\(index)")
                     .tabItem {
                         Label(item.label, systemImage: "music.note.list")
                     }
