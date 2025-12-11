@@ -1,6 +1,7 @@
 import MagicCore
 import SwiftUI
 
+/// 音频海报视图，展示示例曲目列表。
 struct AudioPoster: View {
     var books: [String] = [
         "挪威的森林",
@@ -59,3 +60,4 @@ struct AudioPoster: View {
         AppPreview()
     }
 #endif
+

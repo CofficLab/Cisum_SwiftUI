@@ -2,6 +2,7 @@ import MagicCore
 import OSLog
 import SwiftUI
 
+/// 音频设置视图：展示仓库大小、位置与文件数量。
 struct AudioSettings: View, SuperLog {
     nonisolated static let emoji = "🔊"
 
@@ -128,3 +129,4 @@ extension AudioSettings {
         AppPreview()
     }
 #endif
+

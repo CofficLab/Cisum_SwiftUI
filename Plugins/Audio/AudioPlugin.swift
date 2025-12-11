@@ -13,7 +13,7 @@ actor AudioPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     #endif
 
     let title = "音乐库"
-    let hasPoster = true
+    let hasPoster = false
     let description = "歌曲仓库"
     let iconName = "music.note"
     let isGroup = true
@@ -29,16 +29,6 @@ actor AudioPlugin: SuperPlugin, SuperLog, PluginRegistrant {
         }
 
         return AnyView(AudioDBView())
-    }
-
-    @MainActor func addPosterView() -> AnyView? { AnyView(AudioPoster()) }
-
-    @MainActor func addSettingView() -> AnyView? {
-        if verbose {
-            os_log("\(self.t)🍋🍋🍋 AddSettingView")
-        }
-
-        return AnyView(AudioSettings())
     }
 
     @MainActor func getDisk() -> URL? { Self.getAudioDisk() }
