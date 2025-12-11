@@ -2,7 +2,6 @@ import Foundation
 import SwiftUI
 
 /// 音频插件的所有通知名称
-/// 统一管理，避免重复定义和命名冲突
 extension Notification.Name {
     // MARK: - 音频数据同步相关
 
