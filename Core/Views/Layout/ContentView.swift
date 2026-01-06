@@ -6,7 +6,7 @@ import SwiftUI
 
 struct ContentView: View, SuperLog, SuperThread {
     nonisolated static let emoji = "🖥️"
-    nonisolated static let verbose = true
+    nonisolated static let verbose = false
 
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var p: PluginProvider

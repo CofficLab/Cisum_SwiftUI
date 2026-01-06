@@ -132,7 +132,7 @@ extension BookTile {
 
     #Preview("App - Small") {
         AppPreview()
-            .frame(width: 600, height: 600)
+            .frame(width: 500, height: 700)
     }
 #endif
 

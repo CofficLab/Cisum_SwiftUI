@@ -8,7 +8,7 @@ import SwiftUI
 actor AudioDBPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     nonisolated static let emoji = "🎵"
     private nonisolated static let targetPluginId = String(describing: AudioPlugin.self)
-    private static let verbose = true
+    private static let verbose = false
 
     let title = "音频仓库"
     let description = "音频文件数据库视图"

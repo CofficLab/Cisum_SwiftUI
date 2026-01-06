@@ -3,54 +3,83 @@ import MagicCore
 import OSLog
 import SwiftUI
 
-class BookSettingRepo {
+class BookSettingRepo: SuperLog {
+    nonisolated static let emoji = "🔊"
+    nonisolated static let verbose = false
+
+    /// 当前书籍URL的存储键
     static let keyOfCurrentBookURL = "com.bookplugin.currentBookURL"
+    /// 当前书籍播放时间的存储键
     static let keyOfCurrentBookTime = "com.bookplugin.currentBookTime"
 
+    /// 存储当前书籍的URL
+    /// - Parameter url: 书籍的URL，如果为nil则清除存储
     static func storeCurrent(_ url: URL?) {
+        if Self.verbose {
+            os_log("\(Self.t)🍋🍋🍋 存储当前书籍URL: \(url?.shortPath() ?? "")")
+        }
+
         UserDefaults.standard.set(url, forKey: keyOfCurrentBookURL)
 
-        // Store URL as string for CloudKit
+        // 将URL作为字符串存储到iCloud
         NSUbiquitousKeyValueStore.default.set(url?.absoluteString ?? "", forKey: keyOfCurrentBookURL)
         NSUbiquitousKeyValueStore.default.synchronize()
     }
 
+    /// 存储当前书籍的播放时间
+    /// - Parameter time: 播放时间（秒）
     static func storeCurrentTime(_ time: TimeInterval) {
+        if Self.verbose {
+            os_log("\(Self.t)🍋🍋🍋 存储当前书籍播放时间: \(time)")
+        }
+
         UserDefaults.standard.set(time, forKey: keyOfCurrentBookTime)
 
-        // Store time as string for CloudKit
+        // 将时间作为字符串存储到iCloud
         NSUbiquitousKeyValueStore.default.set(String(time), forKey: keyOfCurrentBookTime)
         NSUbiquitousKeyValueStore.default.synchronize()
     }
 
+    /// 获取当前书籍的URL
+    /// - Returns: 当前书籍的URL，如果没有存储则返回nil
     static func getCurrent() -> URL? {
-        // First, try to get the URL from UserDefaults
+        // 首先尝试从UserDefaults获取URL
         if let url = UserDefaults.standard.url(forKey: keyOfCurrentBookURL) {
+            if Self.verbose {
+                os_log("\(Self.t)🍋🍋🍋 获取当前书籍URL: \(url.shortPath())")
+            }
+
             return url
         }
 
-        // If not found in UserDefaults, try to get from iCloud
+        // 如果在UserDefaults中未找到，尝试从iCloud获取
         if let urlString = NSUbiquitousKeyValueStore.default.string(forKey: keyOfCurrentBookURL),
            let url = URL(string: urlString) {
-            // If found in iCloud, update UserDefaults for future local access
+            // 如果在iCloud中找到，更新UserDefaults以便后续本地访问
             UserDefaults.standard.set(url, forKey: keyOfCurrentBookURL)
+            if Self.verbose {
+                os_log("\(Self.t)🍋🍋🍋 从iCloud获取当前书籍URL: \(url.absoluteString)")
+            }
+
             return url
         }
 
         return nil
     }
 
+    /// 获取当前书籍的播放时间
+    /// - Returns: 当前书籍的播放时间（秒），如果没有存储则返回nil
     static func getCurrentTime() -> TimeInterval? {
-        // First, try to get the time from UserDefaults
+        // 首先尝试从UserDefaults获取时间
         let time = UserDefaults.standard.double(forKey: keyOfCurrentBookTime)
-        if time > 0 { // Since 0 is the default value when key doesn't exist
+        if time > 0 { // 0是键不存在时的默认值
             return time
         }
 
-        // If not found in UserDefaults, try to get from iCloud
+        // 如果在UserDefaults中未找到，尝试从iCloud获取
         if let timeString = NSUbiquitousKeyValueStore.default.string(forKey: keyOfCurrentBookTime),
            let time = TimeInterval(timeString) {
-            // If found in iCloud, update UserDefaults for future local access
+            // 如果在iCloud中找到，更新UserDefaults以便后续本地访问
             UserDefaults.standard.set(time, forKey: keyOfCurrentBookTime)
             return time
         }

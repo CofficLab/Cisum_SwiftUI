@@ -158,7 +158,7 @@ extension BookDBView {
 
 #Preview("App - Small") {
     AppPreview()
-        .frame(width: 600, height: 600)
+        .frame(width: 600, height: 700)
 }
 #endif
 

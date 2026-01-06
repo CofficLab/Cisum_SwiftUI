@@ -268,8 +268,22 @@ extension AudioRootView {
     /// 2. 恢复上次播放状态
     /// 3. 恢复播放模式
     func handleOnAppear() {
+        guard p.current?.label == AudioPlugin().label else {
+            if verbose {
+                os_log("\(self.t)⏭️ 跳过：当前插件不是音频插件")
+            }
+            return
+        }
+        
         if verbose {
             os_log("\(self.t)👀 视图已出现，开始初始化")
+        }
+        
+        guard p.current?.label == AudioPlugin().label else {
+            if verbose {
+                os_log("\(self.t)⏭️ 跳过：当前插件不是音频插件")
+            }
+            return
         }
         
         self.subscribe()
@@ -308,6 +322,13 @@ extension AudioRootView {
     ///
     /// - Parameter isPlaying: 是否正在播放
     func handlePlayManStateChanged(_ isPlaying: Bool) {
+        guard p.current?.label == AudioPlugin().label else {
+            if verbose {
+                os_log("\(self.t)⏭️ 跳过：当前插件不是音频插件")
+            }
+            return
+        }
+        
         if verbose {
             os_log("\(self.t)🎵 播放状态变化 -> \(self.man.playMan.state.stateText)")
         }

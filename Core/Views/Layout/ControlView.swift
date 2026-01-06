@@ -5,7 +5,7 @@ import SwiftData
 import SwiftUI
 
 struct ControlView: View, SuperLog {
-    static let verbose = true
+    static let verbose = false
     
     @EnvironmentObject var appManager: AppProvider
     @EnvironmentObject var message: StateProvider

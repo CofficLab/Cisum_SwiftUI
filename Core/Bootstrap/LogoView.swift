@@ -16,7 +16,7 @@ extension LogoView {
 }
 
 struct LogoView: View,SuperLog {
-    nonisolated static let verbose = true
+    nonisolated static let verbose = false
     nonisolated static let emoji = "🎨"
 
     var background: Color? = nil
