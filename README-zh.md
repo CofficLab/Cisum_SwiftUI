@@ -12,7 +12,7 @@
 
 ## 关于
 
-[产品介绍](https://coffic.zone.id/cisum)
+[产品介绍](https://coffic.cn/cisum)
 
 [App Store](https://apps.apple.com/cn/app/cisum/id6466401036)
 

@@ -12,7 +12,7 @@ Drop your audio files in, and let Cisum play and manage them for you.
 
 ## About
 
-[Product Introduction](https://coffic.zone.id/en/cisum)
+[Product Introduction](https://coffic.cn/cisum)
 
 [App Store](https://apps.apple.com/cn/app/cisum/id6466401036)
 
