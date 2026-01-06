@@ -63,7 +63,7 @@ extension BookPlugin {
         AppPreview()
             .frame(width: 500, height: 800)
     }
-#endif
+#endif // os(macOS)
 
 #if os(iOS)
     #Preview("iPhone") {
