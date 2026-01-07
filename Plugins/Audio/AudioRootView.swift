@@ -78,21 +78,9 @@ struct AudioRootView<Content>: View, SuperLog where Content: View {
     }
 }
 
-// MARK: - Action
-
-
 // MARK: - Event Handler
 
 extension AudioRootView {
-    /// 处理视图出现事件
-    ///
-    /// 当视图首次出现时触发，执行初始化操作。
-    ///
-    /// ## 初始化流程
-    /// 1. 订阅播放器事件
-    /// 2. 恢复上次播放状态
-    /// 3. 恢复播放模式
-
     /// 处理存储位置变化事件
     ///
     /// 当用户切换存储位置（本地/iCloud）时触发，提示用户存储位置已变化。
@@ -112,8 +100,6 @@ extension AudioRootView {
             os_log("\(self.t)👋 视图已消失")
         }
     }
-
-
 }
 
 // MARK: - Preview
