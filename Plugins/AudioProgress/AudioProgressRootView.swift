@@ -1,0 +1,227 @@
+import Foundation
+import MagicAlert
+import MagicCore
+import MagicPlayMan
+import OSLog
+import SwiftData
+import SwiftUI
+import UniformTypeIdentifiers
+
+struct AudioProgressRootView<Content>: View, SuperLog where Content: View {
+    nonisolated static var emoji: String { "💾" }
+    private static var verbose: Bool { false }
+
+    @EnvironmentObject var man: PlayManController
+    @EnvironmentObject var m: MagicMessageProvider
+    @EnvironmentObject var p: PluginProvider
+    @EnvironmentObject var audioProvider: AudioProvider
+
+    private var content: Content
+
+    init(@ViewBuilder content: () -> Content) {
+        self.content = content()
+    }
+
+    var body: some View {
+        content
+            .onAppear(perform: handleOnAppear)
+            .onStorageLocationChanged(perform: handleStorageLocationChanged)
+            .onPlayManStateChanged(handlePlayManStateChanged)
+            .onPlayManAssetChanged(handlePlayManAssetChanged)
+    }
+
+    /// 检查是否应该激活进度管理功能
+    private var shouldActivateProgress: Bool {
+        p.current?.label == AudioPlugin().label
+    }
+}
+
+// MARK: - Action
+
+extension AudioProgressRootView {
+    /// 恢复播放模式
+    ///
+    /// 从持久化存储中读取上次的播放模式并应用到播放器。
+    /// 播放模式包括：顺序播放、单曲循环、随机播放等。
+    private func restorePlayMode() {
+        if Self.verbose {
+            os_log("\(self.t)🔄 恢复播放模式")
+        }
+
+        let mode = AudioStateRepo.getPlayMode()
+        if let mode = mode {
+            if Self.verbose {
+                os_log("\(self.t)✅ 播放模式: \(mode.shortName)")
+            }
+            self.man.setPlayMode(mode)
+        }
+    }
+
+    /// 恢复上次播放状态
+    ///
+    /// 从持久化存储中恢复上次播放的音频、播放进度和喜欢状态。
+    /// 如果没有上次播放记录，则播放第一首音频。
+    ///
+    /// ## 恢复流程
+    /// 1. 读取上次播放的 URL 和时间
+    /// 2. 如果找到，恢复该音频和进度
+    /// 3. 如果没找到，播放第一首音频
+    /// 4. 恢复喜欢状态
+    private func restorePlaying() {
+        var assetTarget: URL?
+        var timeTarget: TimeInterval = 0
+        var liked = false
+
+        Task {
+            if let url = AudioStateRepo.getCurrent() {
+                assetTarget = url
+                liked = await self.audioProvider.repo.isLiked(url)
+
+                if let time = AudioStateRepo.getCurrentTime() {
+                    timeTarget = time
+                }
+
+                if Self.verbose {
+                    os_log("\(self.t)✅ 恢复播放: \(url.lastPathComponent) @ \(timeTarget)s")
+                }
+            } else {
+                if Self.verbose {
+                    os_log("\(self.t)⚠️ 没有上次播放记录")
+                }
+            }
+
+            if let asset = assetTarget {
+                await man.play(url: asset, autoPlay: false)
+                await man.seek(time: timeTarget)
+                man.setLike(liked)
+            }
+        }
+    }
+}
+
+// MARK: - Event Handler
+
+extension AudioProgressRootView {
+    /// 处理视图出现事件
+    ///
+    /// 当视图首次出现时触发，执行初始化操作。
+    ///
+    /// ## 初始化流程
+    /// 1. 恢复上次播放状态
+    /// 2. 恢复播放模式
+    func handleOnAppear() {
+        guard shouldActivateProgress else {
+            if Self.verbose {
+                os_log("\(self.t)⏭️ 进度管理跳过：当前插件不是音频插件")
+            }
+            return
+        }
+
+        if Self.verbose {
+            os_log("\(self.t)👀 视图已出现，开始恢复进度")
+        }
+
+        self.restorePlaying()
+        self.restorePlayMode()
+
+        if Self.verbose {
+            os_log("\(self.t)✅ 进度恢复完成")
+        }
+    }
+
+    /// 处理存储位置变化事件
+    ///
+    /// 当用户切换存储位置（本地/iCloud）时触发，提示用户存储位置已变化。
+    func handleStorageLocationChanged() {
+        guard shouldActivateProgress else { return }
+
+        if Self.verbose {
+            os_log("\(self.t)📂 存储位置已变化")
+        }
+
+        self.m.info("存储位置发生了变化")
+    }
+
+    /// 处理播放器状态变化事件
+    ///
+    /// 当播放器状态改变时触发（播放/暂停/停止等）。
+    /// 在暂停时会保存当前播放进度。
+    ///
+    /// - Parameter isPlaying: 是否正在播放
+    func handlePlayManStateChanged(_ isPlaying: Bool) {
+        guard shouldActivateProgress else { return }
+
+        if Self.verbose {
+            os_log("\(self.t)🎵 播放状态变化 -> \(self.man.playMan.state.stateText)")
+        }
+
+        if self.man.playMan.state == .paused {
+            AudioStateRepo.storeCurrentTime(man.playMan.currentTime)
+
+            if Self.verbose {
+                os_log("\(self.t)💾 保存播放进度: \(man.playMan.currentTime)s")
+            }
+        }
+    }
+
+    /// 处理播放资源变化事件
+    ///
+    /// 当播放器的音频资源改变时触发，保存当前播放的 URL。
+    /// 如果资源在 iCloud 且未下载，会自动触发下载。
+    ///
+    /// - Parameter url: 新的音频资源 URL，如果为 nil 则表示停止播放
+    func handlePlayManAssetChanged(_ url: URL?) {
+        guard shouldActivateProgress else { return }
+
+        guard let url = url else {
+            if Self.verbose {
+                os_log("\(self.t)⏹️ 播放已停止")
+            }
+            return
+        }
+
+        if Self.verbose {
+            os_log("\(self.t)🎵 播放资源变化 -> \(url.lastPathComponent)")
+        }
+
+        Task {
+            AudioStateRepo.storeCurrent(url)
+
+            if url.isNotDownloaded {
+                if Self.verbose {
+                    os_log("\(self.t)☁️ 文件未下载，开始下载")
+                }
+
+                do {
+                    try await url.download()
+
+                    if Self.verbose {
+                        os_log("\(self.t)✅ 下载完成")
+                    }
+                } catch let e {
+                    os_log(.error, "\(self.t)❌ 下载失败: \(e.localizedDescription)")
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Preview
+
+#if os(macOS)
+#Preview("App - Large") {
+    AppPreview()
+        .frame(width: 600, height: 1000)
+}
+
+#Preview("App - Small") {
+    AppPreview()
+        .frame(width: 600, height: 600)
+}
+#endif
+
+#if os(iOS)
+#Preview("iPhone") {
+    AppPreview()
+}
+#endif

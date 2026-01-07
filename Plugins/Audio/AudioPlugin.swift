@@ -38,7 +38,9 @@ actor AudioPlugin: SuperPlugin, SuperLog, PluginRegistrant {
 
 extension AudioPlugin {
     @objc static func register() {
-        PluginRegistry.registerSync(order: 0) { Self() }
+        // 注册顺序设为 1，确保在 AudioProgressPlugin (order: 0) 之后执行
+        // 这样内核会先应用进度管理，再应用音频功能
+        PluginRegistry.registerSync(order: 1) { Self() }
     }
 }
 
