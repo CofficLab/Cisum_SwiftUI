@@ -7,7 +7,7 @@ import SwiftUI
  */
 actor AudioSettingsPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     nonisolated static let emoji = "🛠️"
-    private static var enabled: Bool { false }
+    private static var enabled: Bool { true }
     private static let verbose = true
 
     let title = "音频设置"
@@ -31,6 +31,10 @@ extension AudioSettingsPlugin {
     @objc static func register() {
         guard Self.enabled else {
             return
+        }
+
+        if Self.verbose {
+            os_log("\(self.t)🚀 Register")
         }
 
         // 放在主 AudioPlugin 之后注册即可

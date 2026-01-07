@@ -103,15 +103,7 @@ extension AudioProgressRootView {
             return
         }
 
-        if Self.verbose {
-            os_log("\(self.t)👀 视图已出现，开始恢复进度")
-        }
-
         self.restorePlaying()
-
-        if Self.verbose {
-            os_log("\(self.t)✅ 进度恢复完成")
-        }
     }
 
 

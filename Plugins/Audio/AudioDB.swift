@@ -614,10 +614,16 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     }
 
     /// 获取指定音频模型的下一个音频模型
-    /// - Parameter audio: 当前音频模型
+    /// - Parameters:
+    ///   - audio: 当前音频模型
+    ///   - verbose: 是否输出详细日志
     /// - Returns: 下一个音频模型，如果未找到则返回 nil
-    func nextOf(_ audio: AudioModel) -> AudioModel? {
-        nextOf(audio.url, verbose: true)
+    func nextOf(_ audio: AudioModel, verbose: Bool = false) -> AudioModel? {
+        if verbose {
+            os_log("\(self.t)NextOf -> \(audio.url.lastPathComponent)")
+        }
+
+        return nextOf(audio.url, verbose: verbose)
     }
 
     /// 获取指定 URL 的下一个音频模型

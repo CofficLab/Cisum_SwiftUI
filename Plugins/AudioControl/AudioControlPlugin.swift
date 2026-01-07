@@ -6,7 +6,7 @@ import SwiftUI
 actor AudioControlPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     static let emoji = "🎮"
     static let verbose = true
-    private static var enabled: Bool { false }
+    private static var enabled: Bool { true }
 
     let title = "音频播放控制"
     let description = "负责音频播放控制功能，如上一首、下一首"
@@ -29,7 +29,7 @@ extension AudioControlPlugin {
 
         Task {
             if Self.verbose {
-                os_log("\(self.t)🚀🚀🚀 Register")
+                os_log("\(self.t)🚀 Register")
             }
             // 注册顺序设为 4，确保在其他音频相关插件之后
             await PluginRegistry.shared.register(order: 4) { Self() }

@@ -7,7 +7,7 @@ import SwiftUI
 actor AudioPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     static let emoji = "🎧"
     static let verbose = true
-    private static var enabled: Bool { false }
+    private static var enabled: Bool { true }
 
     #if DEBUG
         static let dbDirName = "audios_debug"
@@ -45,7 +45,7 @@ extension AudioPlugin {
         }
 
         if Self.verbose {
-            os_log("\(self.t)🚀🚀🚀 Register")
+            os_log("\(self.t)🚀 Register")
         }
         // 注册顺序设为 1，确保在 AudioProgressPlugin (order: 0) 之后执行
         // 这样内核会先应用进度管理，再应用音频功能

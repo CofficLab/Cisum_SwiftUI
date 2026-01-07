@@ -9,7 +9,7 @@ actor AudioDBPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     nonisolated static let emoji = "🎵"
     private nonisolated static let targetPluginId = String(describing: AudioPlugin.self)
     private static let verbose = true
-    private static var enabled: Bool { false }
+    private static var enabled: Bool { true }
 
     let title = "音频仓库"
     let description = "音频文件数据库视图"
@@ -20,9 +20,6 @@ actor AudioDBPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     func addTabView(reason: String, currentPluginId: String?) -> (view: AnyView, label: String)? {
         guard currentPluginId == nil || currentPluginId == Self.targetPluginId else { return nil }
 
-        if Self.verbose {
-            os_log("\(self.t)✅ 返回 AudioDBView")
-        }
         return (AnyView(AudioDBView()), "音乐仓库")
     }
 }
@@ -37,7 +34,7 @@ extension AudioDBPlugin {
 
         // 紧随 AudioPlugin 之后注册
         if Self.verbose {
-            os_log("\(self.t)🚀 注册 AudioDBPlugin")
+            os_log("\(self.t)🚀 Register")
         }
         PluginRegistry.registerSync(order: 1) { Self() }
     }

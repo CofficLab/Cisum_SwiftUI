@@ -6,7 +6,7 @@ import SwiftUI
 actor AudioProgressPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     static let emoji = "💾"
     static let verbose = true
-    private static var enabled: Bool { false }
+    private static var enabled: Bool { true }
 
     let title = "音频进度管理"
     let description = "负责音频播放进度的保存和恢复"
@@ -29,7 +29,7 @@ extension AudioProgressPlugin {
 
         Task {
             if Self.verbose {
-                os_log("\(self.t)🚀🚀🚀 Register")
+                os_log("\(self.t)🚀 Register")
             }
 
             // 注册顺序设为 0，确保在 AudioPlugin (order: 0) 之前执行
