@@ -6,14 +6,15 @@ import SwiftUI
 actor BookPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     static let keyOfCurrentBookURL = "com.bookplugin.currentBookURL"
     static let keyOfCurrentBookTime = "com.bookplugin.currentBookTime"
+    nonisolated static var emoji: String { "🎺" }
+    private static var verbose: Bool { true }
+    private static var enabled: Bool { false }
 
-    static let emoji = "🎺"
     let title: String = "有声书"
     let description: String = "适用于听有声书的场景"
     let iconName: String = "book"
     static let dirName = "audios_book"
-    let isGroup: Bool = true
-    let verbose = false
+    let isGroup: Bool = true    
 
     @MainActor var disk: URL?
 
@@ -45,7 +46,15 @@ actor BookPlugin: SuperPlugin, SuperLog, PluginRegistrant {
 // MARK: - PluginRegistrant
 extension BookPlugin {
     @objc static func register() {
+        guard Self.enabled else {
+            return
+        }
+
         Task {
+            if Self.verbose {
+                os_log("\(self.t)🚀🚀🚀 Register")
+            }
+
             await PluginRegistry.shared.register(order: 1) {
                 BookPlugin()
             }

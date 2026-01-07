@@ -5,7 +5,8 @@ import SwiftUI
 
 actor BookControlPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     static let emoji = "🎮📚"
-    static let verbose = false
+    static let verbose = true
+    private static var enabled: Bool { true }
 
     let title = "书籍播放控制"
     let description = "负责书籍播放控制功能，如上一章、下一章"
@@ -22,6 +23,10 @@ actor BookControlPlugin: SuperPlugin, SuperLog, PluginRegistrant {
 
 extension BookControlPlugin {
     @objc static func register() {
+        guard Self.enabled else {
+            return
+        }
+
         Task {
             // 注册顺序设为 8，确保在其他书籍相关插件之后
             await PluginRegistry.shared.register(order: 8) { Self() }

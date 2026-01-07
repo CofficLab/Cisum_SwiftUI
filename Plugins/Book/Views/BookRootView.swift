@@ -40,17 +40,6 @@ struct BookRootView<Content>: View, SuperLog where Content: View {
                 }
                 .modelContainer(container)
                 .environmentObject(repo)
-                .onAppear {
-                    if Self.verbose {
-                        os_log("\(self.a)")
-                    }
-                    self.subscribe()
-                }
-                .onDisappear {
-                    if Self.verbose {
-                        os_log("\(self.t)Disappear")
-                    }
-                }
                 .onStorageLocationChanged {
                     self.initAll()
                 }
@@ -125,16 +114,6 @@ extension BookRootView {
 }
 
 // MARK: - Event Handler
-
-extension BookRootView {
-
-
-    private func subscribe() {
-        self.man.playMan.subscribe(
-            name: self.className,
-        )
-    }
-}
 
 // MARK: - Preview
 

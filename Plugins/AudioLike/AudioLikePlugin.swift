@@ -7,6 +7,7 @@ import SwiftUI
 actor AudioLikePlugin: SuperPlugin, SuperLog, PluginRegistrant {
     static let emoji = "❤️"
     static let verbose = false
+    private static var enabled: Bool { true }
 
     let title = "音频喜欢管理"
     let description = "负责音频喜欢状态的独立管理和存储"
@@ -28,6 +29,10 @@ actor AudioLikePlugin: SuperPlugin, SuperLog, PluginRegistrant {
 
 extension AudioLikePlugin {
     @objc static func register() {
+        guard Self.enabled else {
+            return
+        }
+
         Task {
             // 注册顺序设为 2，确保在 AudioProgressPlugin (order: 0) 和 AudioPlugin (order: 1) 之后
             await PluginRegistry.shared.register(order: 2) { Self() }

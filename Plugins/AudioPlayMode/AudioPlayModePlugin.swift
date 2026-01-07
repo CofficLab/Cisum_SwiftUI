@@ -6,6 +6,7 @@ import SwiftUI
 actor AudioPlayModePlugin: SuperPlugin, SuperLog, PluginRegistrant {
     static let emoji = "🔄"
     static let verbose = false
+    private static var enabled: Bool { true }
 
     let title = "音频播放模式管理"
     let description = "负责音频播放模式的设置和管理"
@@ -22,6 +23,10 @@ actor AudioPlayModePlugin: SuperPlugin, SuperLog, PluginRegistrant {
 
 extension AudioPlayModePlugin {
     @objc static func register() {
+        guard Self.enabled else {
+            return
+        }
+
         Task {
             if Self.verbose {
                 os_log("\(self.t)🚀🚀🚀 Register")

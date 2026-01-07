@@ -313,7 +313,7 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
         var currentAudio: AudioModel = audio
 
         while currentIndex < count {
-            try await currentAudio.url.download(verbose: true)
+            try await currentAudio.url.download(verbose: false)
 
             currentIndex = currentIndex + 1
             if let next = self.nextOf(currentAudio) {

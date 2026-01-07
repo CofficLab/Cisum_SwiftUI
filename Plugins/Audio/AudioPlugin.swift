@@ -7,7 +7,8 @@ import SwiftUI
 actor AudioPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     static let emoji = "🎧"
     static let verbose = true
-    
+    private static var enabled: Bool { true }
+
     #if DEBUG
         static let dbDirName = "audios_debug"
     #else
@@ -39,6 +40,10 @@ actor AudioPlugin: SuperPlugin, SuperLog, PluginRegistrant {
 
 extension AudioPlugin {
     @objc static func register() {
+        guard Self.enabled else {
+            return
+        }
+
         if Self.verbose {
             os_log("\(self.t)🚀🚀🚀 Register")
         }
