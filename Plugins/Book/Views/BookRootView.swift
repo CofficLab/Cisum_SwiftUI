@@ -132,27 +132,6 @@ extension BookRootView {
     private func subscribe() {
         self.man.playMan.subscribe(
             name: self.className,
-            onPreviousRequested: { asset in
-                if Self.verbose {
-                    os_log("\(self.t)⏮️ 上一首")
-                }
-                if let prev = asset.getPrevFile() {
-                    Task {
-                        await self.man.play(url: prev)
-                    }
-                }
-
-            },
-            onNextRequested: { asset in
-                if Self.verbose {
-                    os_log("\(self.t)⏭️ 下一首")
-                }
-                if let next = asset.getNextFile() {
-                    Task {
-                        await self.man.play(url: next)
-                    }
-                }
-            },
         )
     }
 }
