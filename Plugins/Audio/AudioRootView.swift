@@ -105,34 +105,6 @@ extension AudioRootView {
             os_log("\(self.t)👀 视图已出现，开始初始化")
         }
 
-        // 调用 subscribe 方法
-        self.man.playMan.subscribe(
-            name: self.className,
-            onPreviousRequested: { asset in
-                if Self.verbose {
-                    os_log("\(self.t)⏮️ 请求上一首")
-                }
-
-                guard let repo = self.repo else {
-                    os_log("\(self.t)⚠️ AudioDB 未找到")
-                    return
-                }
-
-                Task {
-                    let previous = try await repo.getPrevOf(asset, verbose: false)
-                    if let previous = previous {
-                        if Self.verbose {
-                            os_log("\(self.t)✅ 播放上一首: \(previous.lastPathComponent)")
-                        }
-                        await self.man.play(url: previous, autoPlay: true)
-                    }
-                }
-            },
-            onNextRequested: { asset in
-                self.handleNextRequested(asset)
-            }
-        )
-
         if Self.verbose {
             os_log("\(self.t)✅ 初始化完成")
         }
@@ -158,39 +130,6 @@ extension AudioRootView {
         }
     }
 
-    /// 处理下一首请求事件
-    ///
-    /// 当用户请求播放下一首音频时触发。
-    /// 从数据库中查找当前音频的后一首音频并播放。
-    ///
-    /// - Parameter asset: 当前播放的音频资源
-    func handleNextRequested(_ asset: URL) {
-        guard p.current?.label == AudioPlugin().label else {
-            if Self.verbose {
-                os_log("\(self.t)⏭️ 请求下一首被跳过：当前插件不是音频插件")
-            }
-            return
-        }
-
-        if Self.verbose {
-            os_log("\(self.t)⏭️ 请求下一首")
-        }
-
-        guard let repo = self.repo else {
-            os_log("\(self.t)⚠️ AudioDB 未找到")
-            return
-        }
-
-        Task {
-            let next = try await repo.getNextOf(asset, verbose: false)
-            if let next = next {
-                if Self.verbose {
-                    os_log("\(self.t)✅ 播放下一首: \(next.lastPathComponent)")
-                }
-                await man.play(url: next, autoPlay: true)
-            }
-        }
-    }
 
 }
 
