@@ -131,19 +131,6 @@ extension AudioRootView {
             onNextRequested: { asset in
                 self.handleNextRequested(asset)
             },
-            onLikeStatusChanged: { url, like in
-                if Self.verbose {
-                    os_log("\(self.t)❤️ 喜欢状态变化 -> \(like ? "喜欢" : "取消喜欢")")
-                }
-
-                guard let repo = self.repo else {
-                    os_log("\(self.t)⚠️ AudioDB 未找到")
-                    return
-                }
-                Task {
-                    await repo.like(url, liked: like)
-                }
-            },
             onPlayModeChanged: { (mode: PlayMode) in
                 // 播放模式处理已移至 AudioPlayModePlugin
                 // 发送通知让播放模式插件处理
