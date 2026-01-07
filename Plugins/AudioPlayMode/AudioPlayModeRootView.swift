@@ -8,7 +8,7 @@ import UniformTypeIdentifiers
 
 struct AudioPlayModeRootView<Content>: View, SuperLog where Content: View {
     nonisolated static var emoji: String { "🔄" }
-    private static var verbose: Bool { true }
+    private static var verbose: Bool { false }
 
     @EnvironmentObject var man: PlayManController
     @EnvironmentObject var m: MagicMessageProvider

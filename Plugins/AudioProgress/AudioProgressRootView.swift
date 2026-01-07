@@ -9,7 +9,7 @@ import UniformTypeIdentifiers
 
 struct AudioProgressRootView<Content>: View, SuperLog where Content: View {
     nonisolated static var emoji: String { "💾" }
-    private static var verbose: Bool { false }
+    private static var verbose: Bool { true }
 
     @EnvironmentObject var man: PlayManController
     @EnvironmentObject var m: MagicMessageProvider

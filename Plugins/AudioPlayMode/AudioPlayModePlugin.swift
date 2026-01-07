@@ -5,7 +5,7 @@ import SwiftUI
 
 actor AudioPlayModePlugin: SuperPlugin, SuperLog, PluginRegistrant {
     static let emoji = "🔄"
-    static let verbose = true
+    static let verbose = false
 
     let title = "音频播放模式管理"
     let description = "负责音频播放模式的设置和管理"
@@ -23,6 +23,9 @@ actor AudioPlayModePlugin: SuperPlugin, SuperLog, PluginRegistrant {
 extension AudioPlayModePlugin {
     @objc static func register() {
         Task {
+            if Self.verbose {
+                os_log("\(self.t)🚀🚀🚀 Register")
+            }
             // 注册顺序设为 3，确保在 AudioProgressPlugin (order: 0) 和 AudioPlugin (order: 1) 之后
             await PluginRegistry.shared.register(order: 3) { Self() }
         }

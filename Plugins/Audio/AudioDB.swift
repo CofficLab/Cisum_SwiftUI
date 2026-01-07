@@ -305,7 +305,10 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     ///   - reason: 下载原因，用于日志记录
     /// - Throws: 如果下载操作失败则抛出错误
     func downloadNextBatch(_ audio: AudioModel, count: Int = 6, reason: String) async throws {
-        os_log("\(self.t)Download Next Batch(\(reason))")
+        if Self.verbose {
+            os_log("\(self.t)Download Next Batch(\(reason))")
+        }
+
         var currentIndex = 0
         var currentAudio: AudioModel = audio
 
