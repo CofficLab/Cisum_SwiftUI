@@ -6,6 +6,8 @@ import SwiftUI
 
 actor AudioPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     static let emoji = "🎧"
+    static let verbose = true
+    
     #if DEBUG
         static let dbDirName = "audios_debug"
     #else
@@ -16,7 +18,6 @@ actor AudioPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     let description = "歌曲仓库"
     let iconName = "music.note"
     let isGroup = true
-    let verbose = false
 
     @MainActor func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {
         AnyView(AudioRootView { content() })
@@ -38,6 +39,9 @@ actor AudioPlugin: SuperPlugin, SuperLog, PluginRegistrant {
 
 extension AudioPlugin {
     @objc static func register() {
+        if Self.verbose {
+            os_log("\(self.t)🚀🚀🚀 Register")
+        }
         // 注册顺序设为 1，确保在 AudioProgressPlugin (order: 0) 之后执行
         // 这样内核会先应用进度管理，再应用音频功能
         PluginRegistry.registerSync(order: 1) { Self() }

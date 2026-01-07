@@ -13,9 +13,27 @@ struct AudioControlRootView<Content>: View, SuperLog where Content: View {
     @EnvironmentObject var man: PlayManController
     @EnvironmentObject var m: MagicMessageProvider
     @EnvironmentObject var p: PluginProvider
-    @EnvironmentObject var audioProvider: AudioProvider
 
     private var content: Content
+
+    // 直接创建 AudioRepo 实例，避免依赖 AudioProvider
+    private var audioRepo: AudioRepo? {
+        guard let disk = AudioPlugin.getAudioDisk() else {
+            if Self.verbose {
+                os_log(.error, "\(self.t)❌ 获取音频磁盘路径失败")
+            }
+            return nil
+        }
+
+        do {
+            return try AudioRepo(disk: disk, reason: "AudioControlPlugin")
+        } catch {
+            if Self.verbose {
+                os_log(.error, "\(self.t)❌ 创建 AudioRepo 失败: \(error.localizedDescription)")
+            }
+            return nil
+        }
+    }
 
     init(@ViewBuilder content: () -> Content) {
         self.content = content()
@@ -71,7 +89,12 @@ extension AudioControlRootView {
             os_log("\(self.t)⏮️ 请求上一首")
         }
 
-        let repo = audioProvider.repo
+        guard let repo = audioRepo else {
+            if Self.verbose {
+                os_log("\(self.t)⚠️ AudioRepo 未初始化")
+            }
+            return
+        }
 
         Task {
             let previous = try await repo.getPrevOf(asset, verbose: false)
@@ -93,7 +116,12 @@ extension AudioControlRootView {
             os_log("\(self.t)⏭️ 请求下一首")
         }
 
-        let repo = audioProvider.repo
+        guard let repo = audioRepo else {
+            if Self.verbose {
+                os_log("\(self.t)⚠️ AudioRepo 未初始化")
+            }
+            return
+        }
 
         Task {
             let next = try await repo.getNextOf(asset, verbose: false)
