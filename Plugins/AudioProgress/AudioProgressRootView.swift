@@ -43,19 +43,6 @@ extension AudioProgressRootView {
     ///
     /// 从持久化存储中读取上次的播放模式并应用到播放器。
     /// 播放模式包括：顺序播放、单曲循环、随机播放等。
-    private func restorePlayMode() {
-        if Self.verbose {
-            os_log("\(self.t)🔄 恢复播放模式")
-        }
-
-        let mode = AudioStateRepo.getPlayMode()
-        if let mode = mode {
-            if Self.verbose {
-                os_log("\(self.t)✅ 播放模式: \(mode.shortName)")
-            }
-            self.man.setPlayMode(mode)
-        }
-    }
 
     /// 恢复上次播放状态
     ///
@@ -122,7 +109,6 @@ extension AudioProgressRootView {
         }
 
         self.restorePlaying()
-        self.restorePlayMode()
 
         if Self.verbose {
             os_log("\(self.t)✅ 进度恢复完成")

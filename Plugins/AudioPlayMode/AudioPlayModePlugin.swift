@@ -5,7 +5,7 @@ import SwiftUI
 
 actor AudioPlayModePlugin: SuperPlugin, SuperLog, PluginRegistrant {
     static let emoji = "🔄"
-    static let verbose = false
+    static let verbose = true
 
     let title = "音频播放模式管理"
     let description = "负责音频播放模式的设置和管理"

@@ -8,7 +8,7 @@ import UniformTypeIdentifiers
 
 struct AudioPlayModeRootView<Content>: View, SuperLog where Content: View {
     nonisolated static var emoji: String { "🔄" }
-    private static var verbose: Bool { false }
+    private static var verbose: Bool { true }
 
     @EnvironmentObject var man: PlayManController
     @EnvironmentObject var m: MagicMessageProvider
@@ -70,32 +70,34 @@ extension AudioPlayModeRootView {
         }
 
         // 存储播放模式设置
-        AudioStateRepo.storePlayMode(mode.rawValue)
+        Task {
+            await AudioPlayModeRepo.shared.storePlayMode(mode)
+        }
 
         // 根据播放模式重新排序音频列表
-        Task {
-            let currentURL = self.man.playMan.currentURL
+        // Task {
+        //     let currentURL = self.man.playMan.currentURL
 
-            switch mode {
-            case .loop:
-                if Self.verbose {
-                    os_log("\(self.t)🔁 单曲循环模式")
-                }
-                // 单曲循环模式不需要重新排序
+        //     switch mode {
+        //     case .loop:
+        //         if Self.verbose {
+        //             os_log("\(self.t)🔁 单曲循环模式")
+        //         }
+        //         // 单曲循环模式不需要重新排序
 
-            case .sequence, .repeatAll:
-                if Self.verbose {
-                    os_log("\(self.t)📋 顺序播放，重新排序")
-                }
-                await self.audioProvider.repo.sort(currentURL, reason: "PlayModeChanged")
+        //     case .sequence, .repeatAll:
+        //         if Self.verbose {
+        //             os_log("\(self.t)📋 顺序播放，重新排序")
+        //         }
+        //         await self.audioProvider.repo.sort(currentURL, reason: "PlayModeChanged")
 
-            case .shuffle:
-                if Self.verbose {
-                    os_log("\(self.t)🔀 随机播放，打乱顺序")
-                }
-                try await self.audioProvider.repo.sortRandom(currentURL, reason: "PlayModeChanged", verbose: false)
-            }
-        }
+        //     case .shuffle:
+        //         if Self.verbose {
+        //             os_log("\(self.t)🔀 随机播放，打乱顺序")
+        //         }
+        //         try await self.audioProvider.repo.sortRandom(currentURL, reason: "PlayModeChanged", verbose: false)
+        //     }
+        // }
     }
 }
 
