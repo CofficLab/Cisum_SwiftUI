@@ -4,7 +4,7 @@ import OSLog
 import SwiftUI
 
 actor BookProgressPlugin: SuperPlugin, SuperLog, PluginRegistrant {
-    static let emoji = "📖💾"
+    static let emoji = "📖"
     static let verbose = true
 
     let title = "书籍进度管理"
@@ -23,6 +23,9 @@ actor BookProgressPlugin: SuperPlugin, SuperLog, PluginRegistrant {
 extension BookProgressPlugin {
     @objc static func register() {
         Task {
+            if Self.verbose {
+                os_log("\(self.t)🚀🚀🚀 Register")
+            }
             // 注册顺序设为 5，确保在 BookPlugin (order: 1) 之后
             await PluginRegistry.shared.register(order: 5) { Self() }
         }

@@ -153,18 +153,6 @@ extension BookRootView {
                     }
                 }
             },
-            onLikeStatusChanged: { _, like in
-                if Self.verbose {
-                    os_log("\(self.t)❤️ 喜欢状态 -> \(like)")
-                }
-
-            },
-            onPlayModeChanged: { mode in
-                if Self.verbose {
-                    os_log("\(self.t)播放模式 -> \(mode.shortName)")
-                }
-
-            },
         )
     }
 }

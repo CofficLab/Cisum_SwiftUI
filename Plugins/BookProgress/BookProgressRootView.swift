@@ -8,7 +8,7 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct BookProgressRootView<Content>: View, SuperLog where Content: View {
-    nonisolated static var emoji: String { "📖💾" }
+    nonisolated static var emoji: String { "📖" }
     private let verbose = true
 
     @EnvironmentObject var man: PlayManController
