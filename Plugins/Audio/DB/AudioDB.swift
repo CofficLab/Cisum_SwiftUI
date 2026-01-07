@@ -271,23 +271,21 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     /// - Parameter audio: 要取消喜欢的音频模型
     /// - Note: 操作成功后会发送 AudioUpdatedNotification 通知
     func dislike(_ audio: AudioModel) {
-        if let dbAudio = findAudio(audio.id) {
-            dbAudio.like = false
-            do {
-                try context.save()
-            } catch let e {
-                os_log(.error, "\(e.localizedDescription)")
-            }
-
-            emit(.AudioUpdatedNotification, object: dbAudio)
+        // 喜欢状态现在由 AudioLikePlugin 管理
+        // 此方法保留以保持兼容性，但不再修改 AudioModel
+        if Self.verbose {
+            os_log("\(self.t)⚠️ dislike(_:) 方法已废弃，请使用 AudioLikePlugin")
         }
     }
 
     /// 取消喜欢指定 URL 的音频
     /// - Parameter url: 音频 URL
+    /// - Note: 喜欢状态现在由 AudioLikePlugin 管理，此方法已废弃
     func dislike(_ url: URL) {
-        if let audio = findAudio(url) {
-            dislike(audio)
+        // 喜欢状态现在由 AudioLikePlugin 管理
+        // 此方法保留以保持兼容性，但不再修改 AudioModel
+        if Self.verbose {
+            os_log("\(self.t)⚠️ dislike(_:) 方法已废弃，请使用 AudioLikePlugin")
         }
     }
 
@@ -585,30 +583,30 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     /// - Parameter url: 音频 URL
     /// - Returns: 如果被喜欢则返回 true，否则返回 false
     func isLiked(_ url: URL) -> Bool {
-        findAudio(url)?.like ?? false
+        // 喜欢状态现在由 AudioLikePlugin 管理
+        // 这里返回 false，因为 AudioModel 不再存储喜欢状态
+        false
     }
 
     /// 将指定的音频模型标记为喜欢
     /// - Parameter audio: 要标记为喜欢的音频模型
-    /// - Note: 操作成功后会发送 AudioUpdatedNotification 通知
+    /// - Note: 喜欢状态现在由 AudioLikePlugin 管理，此方法已废弃
     func like(_ audio: AudioModel) {
-        if let dbAudio = findAudio(audio.id) {
-            dbAudio.like = true
-            do {
-                try context.save()
-            } catch let e {
-                os_log(.error, "\(e.localizedDescription)")
-            }
-
-            emit(name: .AudioUpdatedNotification, object: dbAudio)
+        // 喜欢状态现在由 AudioLikePlugin 管理
+        // 此方法保留以保持兼容性，但不再修改 AudioModel
+        if Self.verbose {
+            os_log("\(self.t)⚠️ like(_:) 方法已废弃，请使用 AudioLikePlugin")
         }
     }
 
     /// 将指定 URL 的音频标记为喜欢
     /// - Parameter url: 音频 URL
+    /// - Note: 喜欢状态现在由 AudioLikePlugin 管理，此方法已废弃
     func like(_ url: URL) {
-        if let audio = findAudio(url) {
-            like(audio)
+        // 喜欢状态现在由 AudioLikePlugin 管理
+        // 此方法保留以保持兼容性，但不再修改 AudioModel
+        if Self.verbose {
+            os_log("\(self.t)⚠️ like(_:) 方法已废弃，请使用 AudioLikePlugin")
         }
     }
 
@@ -862,22 +860,14 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     /// 切换指定 URL 音频的喜欢状态
     /// - Parameter url: 音频 URL
     /// - Throws: 如果音频不存在或保存失败则抛出错误
-    /// - Note: 操作成功后会发送 AudioUpdatedNotification 通知
+    /// - Note: 喜欢状态现在由 AudioLikePlugin 管理，此方法已废弃
     func toggleLike(_ url: URL) throws {
-        if let dbAudio = findAudio(url) {
-            dbAudio.like.toggle()
-            do {
-                try context.save()
-            } catch let e {
-                os_log(.error, "\(e.localizedDescription)")
-
-                throw e
-            }
-
-            emit(name: .AudioUpdatedNotification, object: dbAudio)
-        } else {
-            throw AudioRecordDBError.ToggleLikeError(AudioRecordDBError.AudioNotFound(url))
+        // 喜欢状态现在由 AudioLikePlugin 管理
+        // 此方法保留以保持兼容性，但不再修改 AudioModel
+        if Self.verbose {
+            os_log("\(self.t)⚠️ toggleLike(_:) 方法已废弃，请使用 AudioLikePlugin")
         }
+        throw AudioRecordDBError.ToggleLikeError(AudioRecordDBError.AudioNotFound(url))
     }
 
     /// 更新音频模型
@@ -914,10 +904,12 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     ///   - url: 音频 URL
     ///   - like: 是否喜欢
     /// - Throws: 如果保存失败则抛出错误
+    /// - Note: 喜欢状态现在由 AudioLikePlugin 管理，此方法已废弃
     func updateLike(_ url: URL, like: Bool) throws {
-        if let dbAudio = findAudio(url) {
-            dbAudio.like = like
-            try context.save()
+        // 喜欢状态现在由 AudioLikePlugin 管理
+        // 此方法保留以保持兼容性，但不再修改 AudioModel
+        if Self.verbose {
+            os_log("\(self.t)⚠️ updateLike(_:_:) 方法已废弃，请使用 AudioLikePlugin")
         }
     }
 

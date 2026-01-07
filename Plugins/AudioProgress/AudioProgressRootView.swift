@@ -75,7 +75,7 @@ extension AudioProgressRootView {
         Task {
             if let url = AudioStateRepo.getCurrent() {
                 assetTarget = url
-                liked = await self.audioProvider.repo.isLiked(url)
+                liked = await AudioLikeRepo.shared.isLiked(url: url)
 
                 if let time = AudioStateRepo.getCurrentTime() {
                     timeTarget = time

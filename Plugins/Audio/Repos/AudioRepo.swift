@@ -98,20 +98,25 @@ class AudioRepo: ObservableObject, SuperLog {
     }
 
     func isLiked(_ url: URL) async -> Bool {
-        await db.isLiked(url)
+        await AudioLikeRepo.shared.isLiked(url: url)
     }
 
     func like(_ url: URL?, liked: Bool) async {
         guard let url = url else { return }
 
-        if liked {
-            os_log("\(self.t)👍 Like \(url.lastPathComponent)")
-            await db.like(url)
-        } else {
-            if Self.verbose {
-                os_log("\(self.t)😁 Cancel like \(url.lastPathComponent)")
+        do {
+            let audioId = url.absoluteString
+            try await AudioLikeRepo.shared.updateLikeStatus(audioId: audioId, liked: liked)
+
+            if liked {
+                os_log("\(self.t)👍 Like \(url.lastPathComponent)")
+            } else {
+                if Self.verbose {
+                    os_log("\(self.t)😁 Cancel like \(url.lastPathComponent)")
+                }
             }
-            await db.dislike(url)
+        } catch {
+            os_log(.error, "\(self.t)❌ 更新喜欢状态失败: \(error.localizedDescription)")
         }
     }
 

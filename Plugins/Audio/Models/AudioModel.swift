@@ -25,7 +25,6 @@ final class AudioModel: SuperLog {
     var url: URL
     var order: Int
     var isPlaceholder: Bool = false
-    var like: Bool = false
     var title: String = ""
     var playCount: Int = 0
     var size: Int64?
@@ -36,7 +35,7 @@ final class AudioModel: SuperLog {
     var isFolder: Bool = false
 
     var verbose: Bool { Self.verbose }
-    var dislike: Bool { !like }
+
     var children: [AudioModel]? {
         if url == .applicationDirectory {
             return nil
