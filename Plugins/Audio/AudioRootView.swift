@@ -68,7 +68,6 @@ struct AudioRootView<Content>: View, SuperLog where Content: View {
                 }
                 .modelContainer(container)
                 .environmentObject(self.audioProvider!)
-                .onAppear(perform: handleOnAppear)
                 .onStorageLocationChanged(perform: handleStorageLocationChanged)
                 .onDisappear(perform: handleOnDisappear)
             } else {
@@ -93,22 +92,6 @@ extension AudioRootView {
     /// 1. 订阅播放器事件
     /// 2. 恢复上次播放状态
     /// 3. 恢复播放模式
-    func handleOnAppear() {
-        guard p.current?.label == AudioPlugin().label else {
-            if Self.verbose {
-                os_log("\(self.t)⏭️ 跳过：当前插件不是音频插件")
-            }
-            return
-        }
-
-        if Self.verbose {
-            os_log("\(self.t)👀 视图已出现，开始初始化")
-        }
-
-        if Self.verbose {
-            os_log("\(self.t)✅ 初始化完成")
-        }
-    }
 
     /// 处理存储位置变化事件
     ///
