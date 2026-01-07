@@ -5,6 +5,7 @@ import SwiftUI
 
 actor StorePlugin: SuperPlugin, SuperLog, PluginRegistrant {
     static let emoji = "🛒"
+    private static var enabled: Bool { false }
 
     let label: String = "Store"
     let description: String = "应用内购买和订阅"
@@ -20,6 +21,10 @@ actor StorePlugin: SuperPlugin, SuperLog, PluginRegistrant {
 // MARK: - PluginRegistrant
 extension StorePlugin {
     @objc static func register() {
+        guard Self.enabled else {
+            return
+        }
+
         Task {
             await PluginRegistry.shared.register(id: "Store", order: 80) {
                 StorePlugin()

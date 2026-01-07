@@ -8,7 +8,8 @@ import SwiftUI
 actor BookDBPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     nonisolated static let emoji = "📚📂"
     private nonisolated static let targetPluginId = String(describing: BookPlugin.self)
-    private static let verbose = false
+    private static let verbose = true
+    private static var enabled: Bool { false }
 
     let title = "有声书仓库"
     let description = "有声书数据库视图"
@@ -30,6 +31,10 @@ actor BookDBPlugin: SuperPlugin, SuperLog, PluginRegistrant {
 
 extension BookDBPlugin {
     @objc static func register() {
+        guard Self.enabled else {
+            return
+        }
+
         // 紧随 BookPlugin 之后注册
         if Self.verbose {
             os_log("\(self.t)🚀 注册 BookDBPlugin")

@@ -19,10 +19,6 @@ actor AudioLikePlugin: SuperPlugin, SuperLog, PluginRegistrant {
         AnyView(AudioLikeRootView { content() })
     }
 
-    /// 提供喜欢状态的设置视图
-    @MainActor func addSettingView() -> AnyView? {
-        AnyView(AudioLikeSettingsView())
-    }
 }
 
 // MARK: - PluginRegistrant

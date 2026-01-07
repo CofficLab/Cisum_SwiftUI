@@ -6,7 +6,7 @@ import SwiftUI
 actor AudioProgressPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     static let emoji = "💾"
     static let verbose = true
-    private static var enabled: Bool { true }
+    private static var enabled: Bool { false }
 
     let title = "音频进度管理"
     let description = "负责音频播放进度的保存和恢复"

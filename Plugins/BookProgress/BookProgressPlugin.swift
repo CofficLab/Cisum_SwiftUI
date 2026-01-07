@@ -6,7 +6,7 @@ import SwiftUI
 actor BookProgressPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     static let emoji = "📖"
     static let verbose = true
-    private static var enabled: Bool { true }
+    private static var enabled: Bool { false }
 
     let title = "书籍进度管理"
     let description = "负责书籍播放进度的保存和恢复"

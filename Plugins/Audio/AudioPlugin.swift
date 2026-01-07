@@ -7,7 +7,7 @@ import SwiftUI
 actor AudioPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     static let emoji = "🎧"
     static let verbose = true
-    private static var enabled: Bool { true }
+    private static var enabled: Bool { false }
 
     #if DEBUG
         static let dbDirName = "audios_debug"

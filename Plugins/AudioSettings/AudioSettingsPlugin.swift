@@ -7,16 +7,17 @@ import SwiftUI
  */
 actor AudioSettingsPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     nonisolated static let emoji = "🛠️"
+    private static var enabled: Bool { false }
+    private static let verbose = true
 
     let title = "音频设置"
     let description = "音频插件的设置入口"
     let iconName = "gearshape"
     let isGroup = false
-    let verbose = false
 
     @MainActor
     func addSettingView() -> AnyView? {
-        if verbose {
+        if Self.verbose {
             os_log("\(self.t)⚙️ 加载音频设置视图")
         }
 
@@ -28,6 +29,10 @@ actor AudioSettingsPlugin: SuperPlugin, SuperLog, PluginRegistrant {
 
 extension AudioSettingsPlugin {
     @objc static func register() {
+        guard Self.enabled else {
+            return
+        }
+
         // 放在主 AudioPlugin 之后注册即可
         PluginRegistry.registerSync(order: 1) { Self() }
     }

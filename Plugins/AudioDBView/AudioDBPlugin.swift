@@ -8,7 +8,8 @@ import SwiftUI
 actor AudioDBPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     nonisolated static let emoji = "🎵"
     private nonisolated static let targetPluginId = String(describing: AudioPlugin.self)
-    private static let verbose = false
+    private static let verbose = true
+    private static var enabled: Bool { false }
 
     let title = "音频仓库"
     let description = "音频文件数据库视图"
@@ -30,6 +31,10 @@ actor AudioDBPlugin: SuperPlugin, SuperLog, PluginRegistrant {
 
 extension AudioDBPlugin {
     @objc static func register() {
+        guard Self.enabled else {
+            return
+        }
+
         // 紧随 AudioPlugin 之后注册
         if Self.verbose {
             os_log("\(self.t)🚀 注册 AudioDBPlugin")
