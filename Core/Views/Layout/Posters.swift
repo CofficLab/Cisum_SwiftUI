@@ -4,8 +4,22 @@ import SwiftData
 import SwiftUI
 import MagicCore
 
+// MARK: - Environment Key for Poster Dismiss Action
+
+private struct PosterDismissActionKey: EnvironmentKey {
+    static let defaultValue: @MainActor () -> Void = {}
+}
+
+extension EnvironmentValues {
+    var posterDismissAction: @MainActor () -> Void {
+        get { self[PosterDismissActionKey.self] }
+        set { self[PosterDismissActionKey.self] = newValue }
+    }
+}
+
 struct Posters: View, SuperLog {
     nonisolated static let emoji = "🪧"
+    nonisolated static let verbose = false
     
     @EnvironmentObject var p: PluginProvider
     @EnvironmentObject var m: MagicMessageProvider
@@ -21,7 +35,7 @@ struct Posters: View, SuperLog {
             return (plugin, poster)
         }
     }
-    
+
     var body: some View {
         VStack {
             Picker("", selection: $id) {
@@ -39,21 +53,41 @@ struct Posters: View, SuperLog {
         
                     GroupBox {
                         current.view
+                            .environment(\.posterDismissAction, { self.isPresented = false })
                     }
                     .padding()
                 }
                 Spacer()
             }
         }
-        .onAppear {
-            id = posterItems.first?.plugin.label ?? ""
-        }
+        .onAppear(perform: handleOnAppear)
     }
 }
 
-#Preview("App") {
-    AppPreview()
-    #if os(macOS)
-        .frame(height: 800)
-    #endif
+// MARK: - Event Handler
+
+extension Posters {
+    func handleOnAppear() {
+        id = posterItems.first?.plugin.label ?? ""
+    }
 }
+
+// MARK: - Preview
+
+#if os(macOS)
+#Preview("App - Large") {
+    AppPreview()
+        .frame(width: 600, height: 1000)
+}
+
+#Preview("App - Small") {
+    AppPreview()
+        .frame(width: 600, height: 600)
+}
+#endif
+
+#if os(iOS)
+#Preview("iPhone") {
+    AppPreview()
+}
+#endif

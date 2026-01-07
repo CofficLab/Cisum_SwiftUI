@@ -6,6 +6,7 @@ import MagicBackground
 struct BookPoster: View {
     @EnvironmentObject private var pluginProvider: PluginProvider
     @EnvironmentObject private var m: MagicMessageProvider
+    @Environment(\.posterDismissAction) private var dismissAction
 
     var books: [String] = [
         "巴黎圣母院",
@@ -30,6 +31,7 @@ struct BookPoster: View {
             MagicButton.simple(action: {
                 do {
                     try pluginProvider.setCurrentGroup(id: BookPlugin().id)
+                    dismissAction()
                 } catch {
                     m.error(error)
                 }

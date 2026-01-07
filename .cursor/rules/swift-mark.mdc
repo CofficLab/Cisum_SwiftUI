@@ -3,20 +3,19 @@ description: 统一 Swift/SwiftUI 视图文件的 MARK 分组规范（Action / S
 globs: *.swift
 alwaysApply: false
 ---
-# Swift 文件 MARK 分组规范（基于 `AudioList.swift`）
+# Swift 文件 MARK 分组规范
 
-本规则约束 Swift/SwiftUI 文件的组织结构，统一用 `// MARK: -` 对函数进行分组，以便快速导航与维护。请参考示例文件：
-
-[Plugins/Audio/Views/AudioList.swift](mdc:Plugins/Audio/Views/AudioList.swift)
+本规则约束 Swift/SwiftUI 文件的组织结构，统一用 `// MARK: -` 对函数进行分组，以便快速导航与维护。
 
 ## 分组顺序与命名
 
 在一个 Swift 文件（尤其是 SwiftUI 视图）中，建议采用如下分组，并保持顺序一致：
 
-1. `// MARK: - Action`：用户交互触发的行为、对外暴露的动作、业务命令。
-2. `// MARK: - Setter`：状态/属性的集中更新方法（尽量 `@MainActor` 明确 UI 线程修改）。
-3. `// MARK: - Event Handler`：订阅通知、Combine 流、回调等事件处理函数。
-4. `// MARK: - Preview`：文件结尾处的多尺寸预览（遵循预览规则）。
+1. `// MARK: - View`：SwiftUI View 的主体实现，包括布局、修饰符和子视图。
+2. `// MARK: - Action`：用户交互触发的行为、对外暴露的动作、业务命令。
+3. `// MARK: - Setter`：状态/属性的集中更新方法（尽量 `@MainActor` 明确 UI 线程修改）。
+4. `// MARK: - Event Handler`：订阅通知、Combine 流、回调等事件处理函数。
+5. `// MARK: - Preview`：文件结尾处的多尺寸预览（遵循预览规则）。
 
 可选分组（如有需要）：
 
@@ -32,31 +31,9 @@ alwaysApply: false
 - 事件处理函数命名请语义化：`onXxx`/`handleXxx`。
 - 上层交互动作用动词短语：`play()`, `refresh()`, `delete(at:)`。
 
-## 预览（与 swift-preview-rule 协同）
+## 预览（与 swift-preview-协同）
 
-文件末尾必须包含多尺寸预览，使用 `AppPreview()` 作为默认内容，满足不同设备调试需求。若已有其他预览，至少补齐以下四种：
-
-```swift
-#if os(macOS)
-#Preview("App - Large") {
-    AppPreview()
-        .frame(width: 600, height: 1000)
-}
-
-#Preview("App - Small") {
-    AppPreview()
-        .frame(width: 600, height: 600)
-}
-#endif
-
-#if os(iOS)
-#Preview("iPhone") {
-    AppPreview()
-}
-#endif
-```
-
-请同时参照项目内的预览规则文件：`swift-preview-rule`。
+请同时参照项目内的预览规则文件：`swift-preview`。
 
 ## 模板示例（视图文件骨架）
 
@@ -71,6 +48,14 @@ struct MyView: View {
         List(items, id: \.
 self) { Text($0) }
             .onAppear(perform: handleOnAppear)
+    }
+}
+
+// MARK: - View
+extension MyView {
+    // View 相关的辅助计算属性和方法
+    private var filteredItems: [String] {
+        items.filter { !$0.isEmpty }
     }
 }
 
@@ -121,6 +106,6 @@ extension MyView {
 ## 注意事项
 
 - 保持分组顺序统一，便于团队协作与代码审查。
+- View 主体通常在 struct 定义中，View 扩展包含辅助的计算属性和视图构建方法。
 - 仅在分组顶部使用 `// MARK: -`，避免在函数内部穿插标记造成干扰。
 - 分组函数尽量语义单一，避免混合业务与状态更新；必要时将状态更新抽到 `Setter`。
-- 参考实现可见：[Plugins/Audio/Views/AudioList.swift](mdc:Plugins/Audio/Views/AudioList.swift)

@@ -5,6 +5,7 @@ import SwiftUI
 struct AudioPoster: View {
     @EnvironmentObject private var pluginProvider: PluginProvider
     @EnvironmentObject private var m: MagicMessageProvider
+    @Environment(\.posterDismissAction) private var dismissAction
 
     var books: [String] = [
         "挪威的森林",
@@ -67,6 +68,7 @@ struct AudioPoster: View {
             MagicButton.simple(action: {
                 do {
                     try pluginProvider.setCurrentGroup(id: AudioPlugin().id)
+                    dismissAction()
                 } catch {
                     m.error(error)
                 }
