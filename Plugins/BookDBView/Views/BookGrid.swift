@@ -182,23 +182,37 @@ extension BookGrid {
     
     /// 播放书籍
     ///
-    /// 点击书籍时触发播放操作。如果书籍有子文件，播放第一个子文件；
-    /// 否则直接播放书籍本身。
+    /// 点击书籍时触发播放操作。优先使用保存的播放进度继续播放，
+    /// 如果没有保存状态，则从头开始播放。
     ///
     /// - Parameter book: 要播放的书籍 DTO
     private func playBook(_ book: BookDTO) async {
         if Self.verbose {
             os_log("\(self.t)▶️ 准备播放书籍: \(book.bookTitle)")
         }
-        
+
+        // 检查是否有保存的播放状态
+        if let savedURL = BookSettingRepo.getCurrent(),
+           let savedTime = BookSettingRepo.getCurrentTime(),
+           book.url == savedURL || book.url.getChildren().contains(savedURL) {
+            // 当前保存的URL属于这本书，继续播放
+            if Self.verbose {
+                os_log("\(self.t)📖 继续播放: \(savedURL.lastPathComponent) @ \(savedTime)s")
+            }
+            await man.play(url: savedURL, autoPlay: false)
+            await man.seek(time: savedTime)
+            return
+        }
+
+        // 没有保存状态，从头开始播放
         if let first = book.url.getChildren().first {
             if Self.verbose {
-                os_log("\(self.t)🎵 播放第一个子文件: \(first.lastPathComponent)")
+                os_log("\(self.t)🎵 从头播放第一个子文件: \(first.lastPathComponent)")
             }
             await man.play(url: first)
         } else {
             if Self.verbose {
-                os_log("\(self.t)🎵 播放书籍文件: \(book.url.lastPathComponent)")
+                os_log("\(self.t)🎵 从头播放书籍文件: \(book.url.lastPathComponent)")
             }
             await man.play(url: book.url)
         }
