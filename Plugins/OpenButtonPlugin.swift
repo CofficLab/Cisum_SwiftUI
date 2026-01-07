@@ -2,15 +2,16 @@ import MagicCore
 import OSLog
 import SwiftUI
 
-actor OpenButtonPlugin: SuperPlugin, PluginRegistrant {
+actor OpenButtonPlugin: SuperPlugin, PluginRegistrant, SuperLog {
     let description: String = "当前资源打开按钮"
     let iconName: String = .iconFinder
-    nonisolated(unsafe) var enabled = true
+    private static var enabled: Bool { false }
+    private static var verbose: Bool { false }
+    nonisolated static let emoji = "😜"
 
     #if os(macOS)
         @MainActor
         func addToolBarButtons() -> [(id: String, view: AnyView)] {
-            guard enabled else { return [] }
             return [(id: "open-current", view: AnyView(OpenCurrentButtonView()))]
         }
     #endif
@@ -19,7 +20,15 @@ actor OpenButtonPlugin: SuperPlugin, PluginRegistrant {
 // MARK: - PluginRegistrant
 extension OpenButtonPlugin {
     @objc static func register() {
+        guard Self.enabled else {
+            return
+        }
+
         Task {
+            if Self.verbose {
+                os_log("\(self.t)🚀🚀🚀 Register")
+            }
+            
             await PluginRegistry.shared.register(id: "OpenButton", order: 20) {
                 OpenButtonPlugin()
             }

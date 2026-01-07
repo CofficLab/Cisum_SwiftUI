@@ -2,14 +2,15 @@ import MagicCore
 import OSLog
 import SwiftUI
 
-actor LikeButtonPlugin: SuperPlugin, PluginRegistrant {
+actor LikeButtonPlugin: SuperPlugin, PluginRegistrant, SuperLog {
     let description: String = "喜欢/取消喜欢 按钮"
     let iconName: String = .iconHeart
-    nonisolated(unsafe) var enabled = true
+    private static var enabled: Bool { false }
+    private static var verbose: Bool { false }
+    nonisolated static let emoji = "🦁"
 
     @MainActor
     func addToolBarButtons() -> [(id: String, view: AnyView)] {
-        guard enabled else { return [] }
         return [(id: "like-toggle", view: AnyView(LikeToggleButtonView()))]
     }
 }
@@ -17,13 +18,14 @@ actor LikeButtonPlugin: SuperPlugin, PluginRegistrant {
 private struct LikeToggleButtonView: View, SuperLog {
     nonisolated static let emoji = "🦁"
     static let verbose = false
+    
     @EnvironmentObject var man: PlayManController
 
     var body: some View {
         if Self.verbose {
             os_log("\(self.t)开始渲染")
         }
-        
+
         return Group {
             if man.playMan.asset == nil {
                 EmptyView()
@@ -35,9 +37,18 @@ private struct LikeToggleButtonView: View, SuperLog {
 }
 
 // MARK: - PluginRegistrant
+
 extension LikeButtonPlugin {
     @objc static func register() {
+        guard Self.enabled else {
+            return
+        }
+
         Task {
+            if Self.verbose {
+                os_log("\(self.t)🚀🚀🚀 Register")
+            }
+
             await PluginRegistry.shared.register(id: "LikeButton", order: 21) {
                 LikeButtonPlugin()
             }
@@ -48,21 +59,19 @@ extension LikeButtonPlugin {
 // MARK: - Preview
 
 #if os(macOS)
-#Preview("App - Large") {
-    AppPreview()
-        .frame(width: 600, height: 1000)
-}
+    #Preview("App - Large") {
+        AppPreview()
+            .frame(width: 600, height: 1000)
+    }
 
-#Preview("App - Small") {
-    AppPreview()
-        .frame(width: 500, height: 800)
-}
+    #Preview("App - Small") {
+        AppPreview()
+            .frame(width: 500, height: 800)
+    }
 #endif
 
 #if os(iOS)
-#Preview("iPhone") {
-    AppPreview()
-}
+    #Preview("iPhone") {
+        AppPreview()
+    }
 #endif
-
-
