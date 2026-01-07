@@ -30,5 +30,5 @@
 
 ## 我们的其他作品
 
-- [macOS 联网控制](https://github.com/CofficLab/TravelMode)
-- [基于 Git 的项目管理工具](https://github.com/CofficLab/GitOK)
+- [macOS 联网控制](https://coffic.cn/zh-cn/products/travelmode)
+- [基于 Git 的项目管理工具](https://coffic.cn/zh-cn/products/gitok)

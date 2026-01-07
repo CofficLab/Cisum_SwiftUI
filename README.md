@@ -30,5 +30,5 @@ We decided to make our own app to keep software simple and pure.
 
 ## Our Other Projects
 
-- [macOS Network Control](https://github.com/CofficLab/Netto)
-- [Git-based Project Management Tool](https://github.com/CofficLab/GitOK)
+- [macOS Network Control](https://coffic.cn/en/products/travelmode)
+- [Git-based Project Management Tool](https://coffic.cn/en/products/gitok)
