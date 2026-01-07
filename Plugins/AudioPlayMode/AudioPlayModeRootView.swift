@@ -1,0 +1,107 @@
+import Foundation
+import MagicAlert
+import MagicCore
+import MagicPlayMan
+import OSLog
+import SwiftUI
+import UniformTypeIdentifiers
+
+struct AudioPlayModeRootView<Content>: View, SuperLog where Content: View {
+    nonisolated static var emoji: String { "🔄" }
+    private static var verbose: Bool { false }
+
+    @EnvironmentObject var man: PlayManController
+    @EnvironmentObject var m: MagicMessageProvider
+    @EnvironmentObject var p: PluginProvider
+    @EnvironmentObject var audioProvider: AudioProvider
+
+    private var content: Content
+
+    init(@ViewBuilder content: () -> Content) {
+        self.content = content()
+    }
+
+    var body: some View {
+        content
+            .onAppear(perform: handleOnAppear)
+            .onReceive(NotificationCenter.default.publisher(for: .AudioPlayModeChanged)) { notification in
+                if let userInfo = notification.userInfo,
+                   let mode = userInfo["mode"] as? PlayMode {
+                    handlePlayModeChanged(mode)
+                }
+            }
+    }
+
+    /// 检查是否应该激活播放模式管理功能
+    private var shouldActivatePlayMode: Bool {
+        p.current?.label == AudioPlugin().label
+    }
+}
+
+// MARK: - Action
+
+extension AudioPlayModeRootView {
+    /// 处理视图出现事件
+    ///
+    /// 当视图首次出现时触发，执行初始化操作。
+    func handleOnAppear() {
+        guard shouldActivatePlayMode else {
+            if Self.verbose {
+                os_log("\(self.t)⏭️ 播放模式管理跳过：当前插件不是音频插件")
+            }
+            return
+        }
+
+        if Self.verbose {
+            os_log("\(self.t)👀 视图已出现，开始初始化播放模式管理")
+        }
+    }
+
+    /// 处理播放模式变化事件
+    ///
+    /// 当播放模式改变时触发，根据新模式重新排序音频列表。
+    ///
+    /// - Parameter mode: 新的播放模式
+    func handlePlayModeChanged(_ mode: PlayMode) {
+        guard shouldActivatePlayMode else { return }
+
+        if Self.verbose {
+            os_log("\(self.t)🔄 播放模式变化 -> \(mode.shortName)")
+        }
+
+        // 存储播放模式设置
+        AudioStateRepo.storePlayMode(mode.rawValue)
+
+        // 根据播放模式重新排序音频列表
+        Task {
+            let currentURL = self.man.playMan.currentURL
+
+            switch mode {
+            case .loop:
+                if Self.verbose {
+                    os_log("\(self.t)🔁 单曲循环模式")
+                }
+                // 单曲循环模式不需要重新排序
+
+            case .sequence, .repeatAll:
+                if Self.verbose {
+                    os_log("\(self.t)📋 顺序播放，重新排序")
+                }
+                await self.audioProvider.repo.sort(currentURL, reason: "PlayModeChanged")
+
+            case .shuffle:
+                if Self.verbose {
+                    os_log("\(self.t)🔀 随机播放，打乱顺序")
+                }
+                try await self.audioProvider.repo.sortRandom(currentURL, reason: "PlayModeChanged", verbose: false)
+            }
+        }
+    }
+}
+
+// MARK: - Notification Names
+
+extension Notification.Name {
+    /// 音频播放模式变化通知
+    static let AudioPlayModeChanged = Notification.Name("AudioPlayModeChanged")
+}

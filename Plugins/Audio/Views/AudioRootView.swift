@@ -145,32 +145,13 @@ extension AudioRootView {
                 }
             },
             onPlayModeChanged: { (mode: PlayMode) in
-
-                if Self.verbose {
-                    os_log("\(self.t)🔄 播放模式变化 -> \(mode.shortName)")
-                }
-
-                AudioStateRepo.storePlayMode(mode.rawValue)
-
-                Task {
-                    let currentURL = self.man.playMan.currentURL
-                    switch mode {
-                    case .loop:
-                        if Self.verbose {
-                            os_log("\(self.t)🔁 单曲循环模式")
-                        }
-                    case .sequence, .repeatAll:
-                        if Self.verbose {
-                            os_log("\(self.t)📋 顺序播放，重新排序")
-                        }
-                        await self.repo!.sort(currentURL, reason: self.className + ".OnPlayModeChange")
-                    case .shuffle:
-                        if Self.verbose {
-                            os_log("\(self.t)🔀 随机播放，打乱顺序")
-                        }
-                        try await self.repo!.sortRandom(currentURL, reason: self.className + ".OnPlayModeChange", verbose: false)
-                    }
-                }
+                // 播放模式处理已移至 AudioPlayModePlugin
+                // 发送通知让播放模式插件处理
+                NotificationCenter.default.post(
+                    name: .AudioPlayModeChanged,
+                    object: nil,
+                    userInfo: ["mode": mode]
+                )
             }
         )
 
