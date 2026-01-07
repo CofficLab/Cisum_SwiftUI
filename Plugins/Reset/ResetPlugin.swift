@@ -5,15 +5,15 @@ import SwiftUI
 
 actor ResetPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     static let emoji = "⚙️"
+    private static var enabled: Bool { false }
 
     let label = "Reset"
     let description: String = "恢复默认配置"
     let iconName: String = .iconReset
-    nonisolated(unsafe) var enabled: Bool = true
     
     @MainActor
     func addSettingView() -> AnyView? {
-        guard enabled else { return nil }
+        guard Self.enabled else { return nil }
         return AnyView(ResetSetting())
     }
 }
@@ -21,6 +21,10 @@ actor ResetPlugin: SuperPlugin, SuperLog, PluginRegistrant {
 // MARK: - PluginRegistrant
 extension ResetPlugin {
     @objc static func register() {
+        guard Self.enabled else {
+            return
+        }
+
         Task {
             await PluginRegistry.shared.register(id: "Reset", order: 95) {
                 ResetPlugin()

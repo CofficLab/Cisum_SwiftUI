@@ -8,6 +8,7 @@ actor DebugPlugin: SuperPlugin, PluginRegistrant {
     let description: String = "调试专用"
     let iconName: String = .iconDebug
     nonisolated(unsafe) var enabled = true
+    private static var enabled: Bool { false }
 
     @MainActor
     func addSettingView() -> AnyView? {
@@ -27,6 +28,10 @@ actor DebugPlugin: SuperPlugin, PluginRegistrant {
 // MARK: - PluginRegistrant
 extension DebugPlugin {
     @objc static func register() {
+        guard Self.enabled else {
+            return
+        }
+
         Task {
             await PluginRegistry.shared.register(id: "Debug", order: 100) {
                 DebugPlugin()

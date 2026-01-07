@@ -18,10 +18,6 @@ actor BookLikePlugin: SuperPlugin, SuperLog, PluginRegistrant {
         AnyView(BookLikeRootView { content() })
     }
 
-    /// 提供喜欢状态的设置视图
-    @MainActor func addSettingView() -> AnyView? {
-        AnyView(BookLikeSettingsView())
-    }
 }
 
 // MARK: - PluginRegistrant
