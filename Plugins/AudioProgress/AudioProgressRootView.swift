@@ -25,7 +25,6 @@ struct AudioProgressRootView<Content>: View, SuperLog where Content: View {
     var body: some View {
         content
             .onAppear(perform: handleOnAppear)
-            .onStorageLocationChanged(perform: handleStorageLocationChanged)
             .onPlayManStateChanged(handlePlayManStateChanged)
             .onPlayManAssetChanged(handlePlayManAssetChanged)
     }
@@ -115,18 +114,6 @@ extension AudioProgressRootView {
         }
     }
 
-    /// 处理存储位置变化事件
-    ///
-    /// 当用户切换存储位置（本地/iCloud）时触发，提示用户存储位置已变化。
-    func handleStorageLocationChanged() {
-        guard shouldActivateProgress else { return }
-
-        if Self.verbose {
-            os_log("\(self.t)📂 存储位置已变化")
-        }
-
-        self.m.info("存储位置发生了变化")
-    }
 
     /// 处理播放器状态变化事件
     ///
