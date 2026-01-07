@@ -17,9 +17,14 @@ alwaysApply: false
 
 ```swift
 struct MyView: View, SuperLog {
-    // 实现必需的静态属性
-    nonisolated static let emoji = "🎯"  // 使用合适的 emoji
-    nonisolated static let verbose = false  // 控制详细日志输出
+    // 实现必需的静态属性（可以使用存储属性或计算属性）
+    nonisolated static var emoji: String = "🎯"  // 使用合适的 emoji（存储属性）
+    // 或者使用计算属性（适用于泛型类型）：
+    // nonisolated static var emoji: String { "🎯" }
+
+    nonisolated static var verbose: Bool = false  // 控制详细日志输出（存储属性）
+    // 或者使用计算属性（适用于泛型类型）：
+    // nonisolated static var verbose: Bool { false }
 
     // 使用 self.t 进行日志记录
     func someFunction() {

@@ -9,6 +9,7 @@ import UniformTypeIdentifiers
 
 struct AudioRootView<Content>: View, SuperLog where Content: View {
     nonisolated static var emoji: String { "📢" }
+    nonisolated static var verbose: Bool { false }
     
     @EnvironmentObject var man: PlayManController
     @EnvironmentObject var m: MagicMessageProvider
@@ -17,9 +18,6 @@ struct AudioRootView<Content>: View, SuperLog where Content: View {
 
     @State private var error: AudioPluginError? = nil
     private var content: Content
-    
-    /// 是否输出详细日志
-    private let verbose = false
 
     var container: ModelContainer?
     var disk: URL?
@@ -59,7 +57,7 @@ struct AudioRootView<Content>: View, SuperLog where Content: View {
     }
 
     var body: some View {
-        if verbose {
+        if Self.verbose {
             os_log("\(self.t)📺 开始渲染")
         }
         
@@ -91,13 +89,13 @@ extension AudioRootView {
     /// 从持久化存储中读取上次的播放模式并应用到播放器。
     /// 播放模式包括：顺序播放、单曲循环、随机播放等。
     private func restorePlayMode() {
-        if verbose {
+        if Self.verbose {
             os_log("\(self.t)🔄 恢复播放模式")
         }
         
         let mode = AudioStateRepo.getPlayMode()
         if let mode = mode {
-            if verbose {
+            if Self.verbose {
                 os_log("\(self.t)✅ 播放模式: \(mode.shortName)")
             }
             self.man.setPlayMode(mode)
@@ -128,11 +126,11 @@ extension AudioRootView {
                     timeTarget = time
                 }
                 
-                if verbose {
+                if Self.verbose {
                     os_log("\(self.t)✅ 恢复播放: \(url.lastPathComponent) @ \(timeTarget)s")
                 }
             } else {
-                if verbose {
+                if Self.verbose {
                     os_log("\(self.t)⚠️ 没有上次播放记录，尝试播放第一首")
                 }
 
@@ -140,7 +138,7 @@ extension AudioRootView {
                     assetTarget = first
                     liked = await repo!.isLiked(first)
                     
-                    if verbose {
+                    if Self.verbose {
                         os_log("\(self.t)✅ 找到第一首音频")
                     }
                 } else {
@@ -172,7 +170,7 @@ extension AudioRootView {
         self.man.playMan.subscribe(
             name: self.className,
             onPreviousRequested: { asset in
-                if verbose {
+                if Self.verbose {
                     os_log("\(self.t)⏮️ 请求上一首")
                 }
 
@@ -185,7 +183,7 @@ extension AudioRootView {
                     let prev = try await repo.getPrevOf(asset, verbose: false)
 
                     if let prev = prev {
-                        if verbose {
+                        if Self.verbose {
                             os_log("\(self.t)✅ 播放上一首: \(prev.lastPathComponent)")
                         }
                         await man.play(url: prev, autoPlay: self.man.playMan.playing)
@@ -193,27 +191,10 @@ extension AudioRootView {
                 }
             },
             onNextRequested: { asset in
-                if verbose {
-                    os_log("\(self.t)⏭️ 请求下一首")
-                }
-
-                guard let repo = self.repo else {
-                    os_log("\(self.t)⚠️ AudioDB 未找到")
-                    return
-                }
-
-                Task {
-                    let next = try await repo.getNextOf(asset, verbose: false)
-                    if let next = next {
-                        if verbose {
-                            os_log("\(self.t)✅ 播放下一首: \(next.lastPathComponent)")
-                        }
-                        await man.play(url: next, autoPlay: true)
-                    }
-                }
+                self.handleNextRequested(asset)
             },
             onLikeStatusChanged: { url, like in
-                if verbose {
+                if Self.verbose {
                     os_log("\(self.t)❤️ 喜欢状态变化 -> \(like ? "喜欢" : "取消喜欢")")
                 }
 
@@ -226,7 +207,7 @@ extension AudioRootView {
                 }
             },
             onPlayModeChanged: { mode in
-                if verbose {
+                if Self.verbose {
                     os_log("\(self.t)🔄 播放模式变化 -> \(mode.shortName)")
                 }
 
@@ -236,16 +217,16 @@ extension AudioRootView {
                     let currentURL = man.playMan.currentURL
                     switch mode {
                     case .loop:
-                        if verbose {
+                        if Self.verbose {
                             os_log("\(self.t)🔁 单曲循环模式")
                         }
                     case .sequence, .repeatAll:
-                        if verbose {
+                        if Self.verbose {
                             os_log("\(self.t)📋 顺序播放，重新排序")
                         }
                         await repo!.sort(currentURL, reason: self.className + ".OnPlayModeChange")
                     case .shuffle:
-                        if verbose {
+                        if Self.verbose {
                             os_log("\(self.t)🔀 随机播放，打乱顺序")
                         }
                         try await repo!.sortRandom(currentURL, reason: self.className + ".OnPlayModeChange", verbose: false)
@@ -269,18 +250,18 @@ extension AudioRootView {
     /// 3. 恢复播放模式
     func handleOnAppear() {
         guard p.current?.label == AudioPlugin().label else {
-            if verbose {
+            if Self.verbose {
                 os_log("\(self.t)⏭️ 跳过：当前插件不是音频插件")
             }
             return
         }
-        
-        if verbose {
+
+        if Self.verbose {
             os_log("\(self.t)👀 视图已出现，开始初始化")
         }
-        
+
         guard p.current?.label == AudioPlugin().label else {
-            if verbose {
+            if Self.verbose {
                 os_log("\(self.t)⏭️ 跳过：当前插件不是音频插件")
             }
             return
@@ -290,7 +271,7 @@ extension AudioRootView {
         self.restorePlaying()
         self.restorePlayMode()
         
-        if verbose {
+        if Self.verbose {
             os_log("\(self.t)✅ 初始化完成")
         }
     }
@@ -299,7 +280,7 @@ extension AudioRootView {
     ///
     /// 当用户切换存储位置（本地/iCloud）时触发，提示用户存储位置已变化。
     func handleStorageLocationChanged() {
-        if verbose {
+        if Self.verbose {
             os_log("\(self.t)📂 存储位置已变化")
         }
         
@@ -310,8 +291,42 @@ extension AudioRootView {
     ///
     /// 当视图从屏幕上消失时触发，用于清理资源。
     func handleOnDisappear() {
-        if verbose {
+        if Self.verbose {
             os_log("\(self.t)👋 视图已消失")
+        }
+    }
+
+    /// 处理下一首请求事件
+    ///
+    /// 当用户请求播放下一首音频时触发。
+    /// 从数据库中查找当前音频的后一首音频并播放。
+    ///
+    /// - Parameter asset: 当前播放的音频资源
+    func handleNextRequested(_ asset: URL) {
+        guard p.current?.label == AudioPlugin().label else {
+            if Self.verbose {
+                os_log("\(self.t)⏭️ 请求下一首被跳过：当前插件不是音频插件")
+            }
+            return
+        }
+
+        if Self.verbose {
+            os_log("\(self.t)⏭️ 请求下一首")
+        }
+
+        guard let repo = self.repo else {
+            os_log("\(self.t)⚠️ AudioDB 未找到")
+            return
+        }
+
+        Task {
+            let next = try await repo.getNextOf(asset, verbose: false)
+            if let next = next {
+                if Self.verbose {
+                    os_log("\(self.t)✅ 播放下一首: \(next.lastPathComponent)")
+                }
+                await man.play(url: next, autoPlay: true)
+            }
         }
     }
 
@@ -323,20 +338,20 @@ extension AudioRootView {
     /// - Parameter isPlaying: 是否正在播放
     func handlePlayManStateChanged(_ isPlaying: Bool) {
         guard p.current?.label == AudioPlugin().label else {
-            if verbose {
+            if Self.verbose {
                 os_log("\(self.t)⏭️ 跳过：当前插件不是音频插件")
             }
             return
         }
         
-        if verbose {
+        if Self.verbose {
             os_log("\(self.t)🎵 播放状态变化 -> \(self.man.playMan.state.stateText)")
         }
         
         if self.man.playMan.state == .paused {
             AudioStateRepo.storeCurrentTime(man.playMan.currentTime)
             
-            if verbose {
+            if Self.verbose {
                 os_log("\(self.t)💾 保存播放进度: \(man.playMan.currentTime)s")
             }
         }
@@ -350,20 +365,20 @@ extension AudioRootView {
     /// - Parameter url: 新的音频资源 URL，如果为 nil 则表示停止播放
     func handlePlayManAssetChanged(_ url: URL?) {
         guard p.current?.label == AudioPlugin().label else {
-            if verbose {
+            if Self.verbose {
                 os_log("\(self.t)⏭️ 跳过：当前插件不是音频插件")
             }
             return
         }
 
         guard let url = url else {
-            if verbose {
+            if Self.verbose {
                 os_log("\(self.t)⏹️ 播放已停止")
             }
             return
         }
 
-        if verbose {
+        if Self.verbose {
             os_log("\(self.t)🎵 播放资源变化 -> \(url.lastPathComponent)")
         }
 
@@ -371,14 +386,14 @@ extension AudioRootView {
             AudioStateRepo.storeCurrent(url)
 
             if url.isNotDownloaded {
-                if verbose {
+                if Self.verbose {
                     os_log("\(self.t)☁️ 文件未下载，开始下载")
                 }
                 
                 do {
                     try await url.download()
                     
-                    if verbose {
+                    if Self.verbose {
                         os_log("\(self.t)✅ 下载完成")
                     }
                 } catch let e {

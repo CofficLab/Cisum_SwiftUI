@@ -12,6 +12,8 @@ actor BookDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     let modelExecutor: any ModelExecutor
     let context: ModelContext
     let queue = DispatchQueue(label: "DB")
+
+
     var onUpdated: () -> Void = { os_log("🍋 DB::updated") }
 
     init(_ container: ModelContainer, reason: String) {
@@ -315,6 +317,52 @@ extension BookDB {
 //        } catch let e {
 //            os_log(.error, "\(e.localizedDescription)")
 //        }
+    }
+}
+
+// MARK: - BookState Operations
+
+extension BookDB {
+    /// 查找书籍状态
+    func findBookState(_ url: URL) -> BookState? {
+        do {
+            let descriptor = BookState.descriptorOf(url)
+            let result = try context.fetch(descriptor)
+            return result.first
+        } catch {
+            os_log(.error, "\(self.t)查找书籍状态失败: \(error.localizedDescription)")
+            return nil
+        }
+    }
+
+    /// 更新书籍当前播放的URL
+    func updateBookCurrent(_ bookURL: URL, currentURL: URL?, time: TimeInterval? = nil) {
+        if let existingState = findBookState(bookURL) {
+            // 更新现有状态
+            existingState.currentURL = currentURL
+            if let time = time {
+                existingState.time = time
+            }
+            existingState.updateAt = .now
+        } else {
+            // 创建新状态
+            let newState = BookState(url: bookURL, currentURL: currentURL, time: time ?? 0)
+            context.insert(newState)
+        }
+
+        do {
+            try context.save()
+            if Self.verbose {
+                os_log("\(self.t)💾 保存书籍状态: \(bookURL.lastPathComponent)")
+            }
+        } catch {
+            os_log(.error, "\(self.t)保存书籍状态失败: \(error.localizedDescription)")
+        }
+    }
+
+    /// 获取书籍的播放时间
+    func getBookTime(_ bookURL: URL) -> TimeInterval? {
+        findBookState(bookURL)?.time
     }
 }
 

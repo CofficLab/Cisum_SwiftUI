@@ -19,6 +19,7 @@ struct BookConfig {
 
         let schema = Schema([
             BookModel.self,
+            BookState.self,
         ])
         
         let modelConfiguration = ModelConfiguration(

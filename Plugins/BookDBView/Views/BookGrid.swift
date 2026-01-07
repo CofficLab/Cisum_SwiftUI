@@ -34,7 +34,22 @@ struct BookGrid: View, SuperLog, SuperThread, SuperEvent {
 
     /// 书籍总数
     var total: Int { books.count }
-    
+
+    /// 查找书籍状态
+    private func findBookState(_ bookURL: URL, in container: ModelContainer) async -> BookState? {
+        let context = ModelContext(container)
+        do {
+            let descriptor = BookState.descriptorOf(bookURL)
+            let result = try context.fetch(descriptor)
+            return result.first
+        } catch {
+            if Self.verbose {
+                os_log("\(self.t)⚠️ 查询书籍状态失败: \(error.localizedDescription)")
+            }
+            return nil
+        }
+    }
+
     /// 是否显示提示信息
     var showTips: Bool {
         if a.isDropping {
@@ -191,13 +206,33 @@ extension BookGrid {
             os_log("\(self.t)▶️ 准备播放书籍: \(book.bookTitle)")
         }
 
-        // 检查是否有保存的播放状态
+        // 首先尝试从 BookState 恢复该书的进度
+        do {
+            let container = try BookConfig.getContainer()
+            if let bookState = await findBookState(book.url, in: container),
+               let savedURL = bookState.currentURL,
+               let savedTime = bookState.time {
+                // 该书有保存的进度，继续播放
+                if Self.verbose {
+                    os_log("\(self.t)📖 继续播放书籍进度: \(savedURL.lastPathComponent) @ \(savedTime)s")
+                }
+                await man.play(url: savedURL, autoPlay: false)
+                await man.seek(time: savedTime)
+                return
+            }
+        } catch {
+            if Self.verbose {
+                os_log("\(self.t)⚠️ 无法访问书籍数据库: \(error.localizedDescription)")
+            }
+        }
+
+        // 其次检查全局状态是否属于这本书
         if let savedURL = BookSettingRepo.getCurrent(),
            let savedTime = BookSettingRepo.getCurrentTime(),
            book.url == savedURL || book.url.getChildren().contains(savedURL) {
             // 当前保存的URL属于这本书，继续播放
             if Self.verbose {
-                os_log("\(self.t)📖 继续播放: \(savedURL.lastPathComponent) @ \(savedTime)s")
+                os_log("\(self.t)📖 从全局状态继续播放: \(savedURL.lastPathComponent) @ \(savedTime)s")
             }
             await man.play(url: savedURL, autoPlay: false)
             await man.seek(time: savedTime)
