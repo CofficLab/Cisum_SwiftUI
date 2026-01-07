@@ -24,12 +24,6 @@ struct AudioPlayModeRootView<Content>: View, SuperLog where Content: View {
     var body: some View {
         content
             .onAppear(perform: handleOnAppear)
-            .onReceive(NotificationCenter.default.publisher(for: .AudioPlayModeChanged)) { notification in
-                if let userInfo = notification.userInfo,
-                   let mode = userInfo["mode"] as? PlayMode {
-                    handlePlayModeChanged(mode)
-                }
-            }
     }
 
     /// 检查是否应该激活播放模式管理功能
@@ -55,6 +49,14 @@ extension AudioPlayModeRootView {
         if Self.verbose {
             os_log("\(self.t)👀 视图已出现，开始初始化播放模式管理")
         }
+
+        // 订阅播放器事件
+        man.playMan.subscribe(
+            name: "AudioPlayModePlugin",
+            onPlayModeChanged: { mode in
+                handlePlayModeChanged(mode)
+            }
+        )
     }
 
     /// 处理播放模式变化事件

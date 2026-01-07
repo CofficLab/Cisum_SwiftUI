@@ -130,15 +130,6 @@ extension AudioRootView {
             },
             onNextRequested: { asset in
                 self.handleNextRequested(asset)
-            },
-            onPlayModeChanged: { (mode: PlayMode) in
-                // 播放模式处理已移至 AudioPlayModePlugin
-                // 发送通知让播放模式插件处理
-                NotificationCenter.default.post(
-                    name: .AudioPlayModeChanged,
-                    object: nil,
-                    userInfo: ["mode": mode]
-                )
             }
         )
 
