@@ -1,5 +1,5 @@
 {
-  "originHash" : "98946d647760bcd85635d0e2476c1517566165c94d536ccee2476139e685d1c1",
+  "originHash" : "a29913adab184484e26c23b3df361cd0d5f461f8f61ba33e88495d8cbea2a0a4",
   "pins" : [
     {
       "identity" : "id3tageditor",
@@ -11,12 +11,39 @@
       }
     },
     {
+      "identity" : "magicalert",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/nookery/MagicAlert.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "b691b781abce7f2fc728158ba7a26847e787ed28"
+      }
+    },
+    {
+      "identity" : "magicdevice",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/nookery/MagicDevice.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "60c9bf7cd59566ec64b7088fa8672a6b1c2c5cf2"
+      }
+    },
+    {
       "identity" : "magickit",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/CofficLab/MagicKit",
       "state" : {
         "branch" : "dev",
-        "revision" : "878f434cb719857575e2c6c5543f0c08d3bb2f7f"
+        "revision" : "1cd3bd7efc6d756a0d288fa993e353d0efcb62ab"
+      }
+    },
+    {
+      "identity" : "magicplayman",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/nookery/MagicPlayMan",
+      "state" : {
+        "branch" : "main",
+        "revision" : "ae1c22ef1554bba5f71099329d7d3c1e86ccd4c5"
       }
     },
     {
