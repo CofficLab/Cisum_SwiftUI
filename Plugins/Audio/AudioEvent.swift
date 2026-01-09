@@ -128,6 +128,20 @@ extension View {
             action()
         }
     }
+
+    /// 监听音频下载进度事件（带进度信息）
+    /// - Parameter action: 接收进度信息的操作，参数为 (url: URL, progress: Double)
+    /// - Returns: 添加了监听器的视图
+    func onAudioDownloadProgress(perform action: @escaping (URL, Double) -> Void) -> some View {
+        self.onReceive(NotificationCenter.default.publisher(for: .audioDownloadProgress)) { notification in
+            guard
+                let eventURL = notification.userInfo?["url"] as? URL,
+                let progress = notification.userInfo?["progress"] as? Double
+            else { return }
+
+            action(eventURL, progress)
+        }
+    }
 }
 
 #Preview("Small Screen") {

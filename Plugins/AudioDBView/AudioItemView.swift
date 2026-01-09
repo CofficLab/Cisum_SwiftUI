@@ -26,12 +26,8 @@ struct AudioItemView: View, Equatable {
             .magicShowLogButtonInDebug()
             .magicHideActions()
             .tag(url as URL?)
-            .onReceive(NotificationCenter.default.publisher(for: .audioDownloadProgress)) { notification in
-                guard
-                    let eventURL = notification.userInfo?["url"] as? URL,
-                    let progress = notification.userInfo?["progress"] as? Double,
-                    eventURL == self.url
-                else { return }
+            .onAudioDownloadProgress { eventURL, progress in
+                guard eventURL == self.url else { return }
                 self.progress = (progress >= 1.0) ? 1.1 : progress
             }
     }
