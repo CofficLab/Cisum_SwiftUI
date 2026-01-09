@@ -1,4 +1,4 @@
-import MagicCore
+import MagicKit
 import OSLog
 import SwiftUI
 
@@ -24,7 +24,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
 
     init(@ViewBuilder content: () -> Content) {
         if self.verbose {
-            os_log("\(Self.onInit)")
+            
         }
 
         let box = RootBox.shared

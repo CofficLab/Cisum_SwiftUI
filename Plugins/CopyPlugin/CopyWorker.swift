@@ -1,6 +1,6 @@
 #if os(macOS)
 import Foundation
-import MagicCore
+import MagicKit
 import OSLog
 
 @MainActor

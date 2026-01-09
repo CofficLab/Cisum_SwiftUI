@@ -1,7 +1,5 @@
-import MagicBackground
-import MagicContainer
-import MagicCore
 import MagicUI
+import MagicKit
 import SwiftUI
 
 /// 第四个宣传图：用流量上网时，按需禁止部分应用联网

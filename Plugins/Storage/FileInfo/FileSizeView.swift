@@ -1,5 +1,5 @@
 import SwiftUI
-import MagicCore
+import MagicKit
 
 import OSLog
 

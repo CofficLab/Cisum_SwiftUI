@@ -1,6 +1,6 @@
-import MagicCore
+import MagicKit
 import MagicUI
-import MagicBackground
+import MagicUI
 import OSLog
 import SwiftData
 import SwiftUI

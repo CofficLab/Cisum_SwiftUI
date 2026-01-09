@@ -1,5 +1,5 @@
-import MagicBackground
-import MagicCore
+import MagicUI
+import MagicKit
 import MagicUI
 import OSLog
 import StoreKit

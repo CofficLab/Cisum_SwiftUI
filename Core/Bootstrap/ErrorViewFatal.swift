@@ -1,4 +1,5 @@
-import MagicAsset
+import MagicUI
+import MagicKit
 import SwiftUI
 
 struct ErrorViewFatal: View {

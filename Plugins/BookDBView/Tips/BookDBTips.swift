@@ -1,5 +1,5 @@
-import MagicCore
-import MagicBackground
+import MagicKit
+import MagicUI
 import SwiftUI
 
 /**
@@ -41,7 +41,7 @@ struct BookDBTips: View {
                         #if os(macOS)
                             HStack { Text("或").foregroundStyle(.white) }
                             Button(
-                                action: { 
+                                action: {
                                     if let disk = BookPlugin.getBookDisk() {
                                         disk.openFolder()
                                     }
@@ -97,20 +97,19 @@ struct BookDBTips: View {
 }
 
 #if os(macOS)
-#Preview("App - Large") {
-    AppPreview()
-        .frame(width: 600, height: 1000)
-}
+    #Preview("App - Large") {
+        AppPreview()
+            .frame(width: 600, height: 1000)
+    }
 
-#Preview("App - Small") {
-    AppPreview()
-        .frame(width: 500, height: 800)
-}
+    #Preview("App - Small") {
+        AppPreview()
+            .frame(width: 500, height: 800)
+    }
 #endif
 
 #if os(iOS)
-#Preview("iPhone") {
-    AppPreview()
-}
+    #Preview("iPhone") {
+        AppPreview()
+    }
 #endif
-

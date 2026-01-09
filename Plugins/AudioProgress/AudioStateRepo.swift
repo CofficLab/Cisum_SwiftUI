@@ -1,6 +1,6 @@
 import Foundation
 import SwiftUI
-import MagicCore
+import MagicKit
 import OSLog
 
 /// 音频播放状态存储库

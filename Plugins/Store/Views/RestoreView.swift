@@ -1,4 +1,4 @@
-import MagicCore
+import MagicKit
 import MagicAlert
 import OSLog
 import StoreKit

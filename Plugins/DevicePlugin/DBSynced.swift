@@ -2,7 +2,7 @@ import Foundation
 import OSLog
 import SwiftData
 import SwiftUI
-import MagicCore
+import MagicKit
 
 
 actor DBSynced: ModelActor, ObservableObject, SuperLog {

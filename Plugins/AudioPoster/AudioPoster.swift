@@ -1,4 +1,4 @@
-import MagicCore
+import MagicKit
 import SwiftUI
 
 /// 音频海报视图，展示示例曲目列表。

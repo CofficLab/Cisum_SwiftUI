@@ -1,6 +1,5 @@
-import MagicAsset
+import MagicKit
 import SwiftUI
-import MagicCore
 import OSLog
 
 // MARK: - Types

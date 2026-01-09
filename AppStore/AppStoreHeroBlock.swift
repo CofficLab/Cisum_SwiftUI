@@ -1,6 +1,4 @@
-import MagicBackground
-import MagicContainer
-import MagicCore
+import MagicKit
 import MagicUI
 import SwiftUI
 

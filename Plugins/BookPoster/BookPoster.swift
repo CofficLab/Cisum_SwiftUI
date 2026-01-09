@@ -1,6 +1,6 @@
 import SwiftUI
-import MagicCore
-import MagicBackground
+import MagicKit
+import MagicUI
 
 /// 有声书海报视图，展示示例书目。
 struct BookPoster: View {

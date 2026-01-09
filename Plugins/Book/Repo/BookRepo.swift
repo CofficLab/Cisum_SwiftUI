@@ -1,6 +1,6 @@
 import Combine
 import Foundation
-import MagicCore
+import MagicKit
 import OSLog
 import SwiftUI
 

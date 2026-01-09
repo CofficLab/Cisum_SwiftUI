@@ -1,4 +1,4 @@
-import MagicCore
+import MagicKit
 import OSLog
 import SwiftUI
 
@@ -26,7 +26,7 @@ extension OpenButtonPlugin {
 
         Task {
             if Self.verbose {
-                os_log("\(self.t)🚀🚀🚀 Register")
+                os_log("\(self.t)🚀 Register")
             }
             
             await PluginRegistry.shared.register(id: "OpenButton", order: 20) {

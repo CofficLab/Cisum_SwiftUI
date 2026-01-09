@@ -1,5 +1,5 @@
 import OSLog
-import MagicCore
+import MagicKit
 
 
 struct Migrate: SuperLog {

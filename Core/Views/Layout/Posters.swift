@@ -2,7 +2,7 @@ import OSLog
 import MagicAlert
 import SwiftData
 import SwiftUI
-import MagicCore
+import MagicKit
 
 // MARK: - Environment Key for Poster Dismiss Action
 

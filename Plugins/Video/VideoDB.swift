@@ -3,7 +3,7 @@ import OSLog
 import SwiftData
 import SwiftUI
 import UniformTypeIdentifiers
-import MagicCore
+import MagicKit
 
 
 struct VideoDB: View, SuperLog {

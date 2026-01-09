@@ -1,6 +1,6 @@
 import OSLog
 import SwiftUI
-import MagicCore
+import MagicKit
 
 /// Store 插件的 RootView
 /// 用于执行 Store 相关的初始化操作

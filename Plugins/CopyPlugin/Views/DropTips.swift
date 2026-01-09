@@ -1,5 +1,5 @@
-import MagicCore
-import MagicBackground
+import MagicKit
+import MagicUI
 import SwiftUI
 
 struct DropTips: View {

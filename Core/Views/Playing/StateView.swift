@@ -1,5 +1,5 @@
-import MagicCore
-import MagicBackground
+import MagicKit
+import MagicUI
 import OSLog
 import SwiftData
 import SwiftUI
@@ -19,7 +19,7 @@ struct StateView: View, SuperLog, SuperThread {
             if messageManager.stateMessage.count > 0 {
                 makeInfoView(messageManager.stateMessage)
             }
-            
+
             if playMan.state.isDownloading {
                 makeInfoView(playMan.state.stateText)
             }
@@ -57,19 +57,19 @@ struct StateView: View, SuperLog, SuperThread {
 }
 
 #if os(macOS)
-#Preview("App - Large") {
-    AppPreview()
-        .frame(width: 600, height: 1000)
-}
+    #Preview("App - Large") {
+        AppPreview()
+            .frame(width: 600, height: 1000)
+    }
 
-#Preview("App - Small") {
-    AppPreview()
-        .frame(width: 500, height: 800)
-}
+    #Preview("App - Small") {
+        AppPreview()
+            .frame(width: 500, height: 800)
+    }
 #endif
 
 #if os(iOS)
-#Preview("iPhone") {
-    AppPreview()
-}
+    #Preview("iPhone") {
+        AppPreview()
+    }
 #endif

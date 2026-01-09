@@ -1,7 +1,7 @@
 import OSLog
 import SwiftData
 import SwiftUI
-import MagicCore
+import MagicKit
 
 
 struct CopyList: View, SuperLog, SuperThread {

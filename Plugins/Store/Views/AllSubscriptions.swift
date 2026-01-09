@@ -1,7 +1,7 @@
 import OSLog
 import StoreKit
 import SwiftUI
-import MagicCore
+import MagicKit
 
 
 struct AllSubscriptions: View, SuperLog {

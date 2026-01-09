@@ -1,4 +1,5 @@
-import MagicCore
+import MagicKit
+import MagicUI
 import MagicDevice
 import OSLog
 import SwiftData

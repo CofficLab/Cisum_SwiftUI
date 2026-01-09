@@ -1,4 +1,4 @@
-import MagicCore
+import MagicKit
 import OSLog
 import SwiftUI
 

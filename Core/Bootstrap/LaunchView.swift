@@ -1,6 +1,4 @@
-import MagicCore
-import MagicAsset
-import MagicContainer
+import MagicKit
 import SwiftUI
 
 struct LaunchView: View {

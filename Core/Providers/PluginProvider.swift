@@ -1,5 +1,5 @@
 import Foundation
-import MagicCore
+import MagicKit
 import OSLog
 import StoreKit
 import SwiftData
@@ -46,7 +46,7 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
     ///   - plugins: 预定义的插件列表
     ///   - repo: 插件仓库，用于持久化插件配置
     init(plugins: [SuperPlugin], repo: PluginRepo) {
-        os_log("\(Self.onInit)")
+        
 
         self.plugins = plugins
         self.repo = repo
@@ -67,7 +67,7 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
     ///   - repo: 插件仓库，用于持久化插件配置
     init(autoDiscover: Bool = true, repo: PluginRepo) {
         if Self.verbose {
-            os_log("\(Self.onInit)")
+            
         }
         
         self.repo = repo
