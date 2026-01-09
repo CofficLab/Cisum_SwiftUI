@@ -1,5 +1,5 @@
-import MagicCore
 import MagicAlert
+import MagicCore
 import OSLog
 import SwiftData
 import SwiftUI
@@ -30,16 +30,16 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
 
     /// 当前选中的音频 URL
     @State private var selection: URL? = nil
-    
+
     /// 音频列表 URL 数组
     @State private var urls: [URL] = []
-    
+
     /// 是否正在同步数据
     @State private var isSyncing: Bool = false
-    
+
     /// 是否正在加载
     @State private var isLoading: Bool = true
-    
+
     /// 防抖更新任务
     @State private var updateURLsDebounceTask: Task<Void, Never>? = nil
 
@@ -109,9 +109,9 @@ extension AudioList {
             if Self.verbose {
                 os_log("\(self.t)🔄 获取所有音频 URL")
             }
-            
+
             let urls = await audioProvider.repo.getAll(reason: self.className)
-            
+
             if Self.verbose {
                 os_log("\(self.t)✅ 获取到 \(urls.count) 个音频")
             }
@@ -131,7 +131,7 @@ extension AudioList {
         if Self.verbose {
             os_log("\(self.t)⏱️ 调度防抖更新，延迟 \(seconds) 秒")
         }
-        
+
         updateURLsDebounceTask?.cancel()
         updateURLsDebounceTask = Task { @MainActor in
             try? await Task.sleep(nanoseconds: UInt64(seconds * 1000000000))
@@ -155,7 +155,7 @@ extension AudioList {
         if Self.verbose {
             os_log("\(self.t)📋 设置 URLs，数量: \(newValue.count)")
         }
-        
+
         urls = newValue
         self.setIsLoading(false)
 
@@ -214,7 +214,7 @@ extension AudioList {
         if Self.verbose {
             os_log("\(self.t)👀 视图已出现")
         }
-        
+
         setIsLoading(true)
         scheduleUpdateURLsDebounced()
 
@@ -235,7 +235,7 @@ extension AudioList {
             if Self.verbose {
                 os_log("\(self.t)▶️ 选中变化，播放: \(url.lastPathComponent)")
             }
-            
+
             Task {
                 await self.playManController.play(url: url)
             }
@@ -336,11 +336,11 @@ extension AudioList {
                 if Self.verbose {
                     os_log("\(self.t)📄 删除文件: \(url.shortPath())")
                 }
-                
+
                 do {
                     try url.delete()
                     m.info("已删除 \(url.title)")
-                    
+
                     if Self.verbose {
                         os_log("\(self.t)✅ 删除成功: \(url.lastPathComponent)")
                     }
@@ -359,7 +359,7 @@ extension AudioList {
         if Self.verbose {
             os_log("\(self.t)👋 视图已消失")
         }
-        
+
         updateURLsDebounceTask?.cancel()
         updateURLsDebounceTask = nil
     }
@@ -368,20 +368,19 @@ extension AudioList {
 // MARK: - Preview
 
 #if os(macOS)
-#Preview("App - Large") {
-    AppPreview()
-        .frame(width: 600, height: 1000)
-}
+    #Preview("App - Large") {
+        AppPreview()
+            .frame(width: 600, height: 1000)
+    }
 
-#Preview("App - Small") {
-    AppPreview()
-        .frame(width: 600, height: 600)
-}
+    #Preview("App - Small") {
+        AppPreview()
+            .frame(width: 600, height: 600)
+    }
 #endif
 
 #if os(iOS)
-#Preview("iPhone") {
-    AppPreview()
-}
+    #Preview("iPhone") {
+        AppPreview()
+    }
 #endif
-

@@ -1,5 +1,5 @@
-import SwiftUI
 import MagicCore
+import SwiftUI
 
 struct BtnAdd: View {
     @EnvironmentObject var app: AppProvider
@@ -17,3 +17,22 @@ struct BtnAdd: View {
     }
 }
 
+// MARK: - Preview
+
+#if os(macOS)
+    #Preview("App - Large") {
+        AppPreview()
+            .frame(width: 600, height: 1000)
+    }
+
+    #Preview("App - Small") {
+        AppPreview()
+            .frame(width: 600, height: 600)
+    }
+#endif
+
+#if os(iOS)
+    #Preview("iPhone") {
+        AppPreview()
+    }
+#endif

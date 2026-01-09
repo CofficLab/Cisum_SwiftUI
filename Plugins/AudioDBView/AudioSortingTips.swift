@@ -1,5 +1,5 @@
-import SwiftUI
 import MagicCore
+import SwiftUI
 
 struct AudioSortingTips: View {
     let icon: String
@@ -36,29 +36,28 @@ struct AudioSortingTips: View {
 // MARK: - Preview
 
 #if os(macOS)
-#Preview("App - Large") {
-    AppPreview()
-        .overlay {
-            AudioSortingTips(sortModeIcon: "shuffle", description: "正在排序...", isAnimating: true)
-        }
-        .frame(width: 600, height: 1000)
-}
+    #Preview("App - Large") {
+        AppPreview()
+            .overlay {
+                AudioSortingTips(sortModeIcon: "shuffle", description: "正在排序...", isAnimating: true)
+            }
+            .frame(width: 600, height: 1000)
+    }
 
-#Preview("App - Small") {
-    AppPreview()
-        .overlay {
-            AudioSortingTips(sortModeIcon: "arrow.triangle.2.circlepath", description: "正在排序...", isAnimating: true)
-        }
-        .frame(width: 600, height: 600)
-}
+    #Preview("App - Small") {
+        AppPreview()
+            .overlay {
+                AudioSortingTips(sortModeIcon: "arrow.triangle.2.circlepath", description: "正在排序...", isAnimating: true)
+            }
+            .frame(width: 600, height: 600)
+    }
 #endif
 
 #if os(iOS)
-#Preview("iPhone") {
-    AppPreview()
-        .overlay {
-            AudioSortingTips(sortModeIcon: "shuffle", description: "正在排序...", isAnimating: true)
-        }
-}
+    #Preview("iPhone") {
+        AppPreview()
+            .overlay {
+                AudioSortingTips(sortModeIcon: "shuffle", description: "正在排序...", isAnimating: true)
+            }
+    }
 #endif
-

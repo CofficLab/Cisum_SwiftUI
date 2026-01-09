@@ -174,6 +174,31 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
         self.allAudios(reason: reason).map { $0.url }
     }
 
+    /// 分页获取音频的 URL
+    /// - Parameters:
+    ///   - offset: 偏移量
+    ///   - limit: 限制数量
+    ///   - reason: 获取原因，用于日志记录
+    /// - Returns: 音频 URL 数组
+    func paginateAudioURLs(offset: Int, limit: Int, reason: String) -> [URL] {
+        if Self.verbose {
+            os_log("\(self.t)🚛 PaginateAudioURLs offset: \(offset), limit: \(limit) 🐛 \(reason)")
+        }
+
+        do {
+            var descriptor = FetchDescriptor<AudioModel>()
+            descriptor.fetchOffset = offset
+            descriptor.fetchLimit = limit
+            descriptor.sortBy.append(.init(\.order, order: .forward))
+
+            let audios: [AudioModel] = try context.fetch(descriptor)
+            return audios.map { $0.url }
+        } catch let error {
+            os_log(.error, "\(error.localizedDescription)")
+            return []
+        }
+    }
+
     /// 获取随机音频模型
     /// - Parameters:
     ///   - count: 要获取的音频数量，默认为 100

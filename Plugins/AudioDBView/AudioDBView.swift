@@ -15,7 +15,7 @@ struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
 
     /// 是否正在排序
     @State private var isSorting: Bool = false
-    
+
     /// 当前排序模式
     @State private var sortMode: SortMode = .none
 
@@ -24,7 +24,7 @@ struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
             os_log("\(self.t)📺 开始渲染")
         }
 
-        return AudioList()
+        return AudioListPaginated()
             .overlay(alignment: .center) {
                 if isSorting {
                     AudioSortingTips(sortModeIcon: sortMode.icon, description: sortMode.description, isAnimating: isSorting)
@@ -41,7 +41,7 @@ struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
             .onDBSorting(perform: handleSorting)
             .onDBSortDone(perform: handleSortDone)
     }
-    
+
     /// 排序模式枚举
     ///
     /// 定义音频列表的排序方式和对应的 UI 显示。
@@ -85,21 +85,21 @@ extension AudioDBView {
         if Self.verbose {
             os_log("\(self.t)📂 获取存储根目录")
         }
-        
+
         let database = audioProvider.disk
         return await withCheckedContinuation { continuation in
             Task {
                 let root = database
-                
+
                 if Self.verbose {
                     os_log("\(self.t)✅ 存储根目录: \(root.path)")
                 }
-                
+
                 continuation.resume(returning: root)
             }
         }
     }
-    
+
     /// 复制文件到存储目录
     ///
     /// 将选中的音频文件复制到应用的存储目录中。
@@ -111,24 +111,24 @@ extension AudioDBView {
         if Self.verbose {
             os_log("\(self.t)📋 准备复制 \(urls.count) 个文件")
         }
-        
+
         // 发送复制文件事件
         self.emit(name: .CopyFiles, object: self, userInfo: [
             "urls": urls,
             "folder": storageRoot,
         ])
-        
+
         // 逐个复制文件
         for url in urls {
             let destination = storageRoot.appendingPathComponent(url.lastPathComponent)
-            
+
             if Self.verbose {
                 os_log("\(self.t)📄 复制: \(url.lastPathComponent)")
             }
-            
+
             try await url.copyTo(destination, caller: self.className)
         }
-        
+
         if Self.verbose {
             os_log("\(self.t)✅ 全部文件复制完成")
         }
@@ -151,21 +151,21 @@ extension AudioDBView {
                 if Self.verbose {
                     os_log("\(self.t)📥 处理文件导入，文件数量: \(urls.count)")
                 }
-                
+
                 let storageRoot = await fetchStorageRoot()
-                
+
                 do {
                     try await copyFiles(urls, to: storageRoot)
                 } catch {
                     os_log(.error, "\(self.t)❌ 复制文件失败: \(error.localizedDescription)")
                 }
-                
+
             case let .failure(error):
                 os_log(.error, "\(self.t)❌ 导入文件失败: \(error.localizedDescription)")
             }
         }
     }
-    
+
     /// 处理排序开始事件
     ///
     /// 当数据库开始排序时触发，显示排序动画和提示。
@@ -175,14 +175,14 @@ extension AudioDBView {
         if Self.verbose {
             os_log("\(self.t)🔄 开始排序")
         }
-        
-        withAnimation { 
-            isSorting = true 
+
+        withAnimation {
+            isSorting = true
         }
-        
+
         if let mode = notification.userInfo?["mode"] as? String {
             sortMode = SortMode(rawValue: mode) ?? .none
-            
+
             if Self.verbose {
                 os_log("\(self.t)📋 排序模式: \(mode)")
             }
@@ -198,10 +198,29 @@ extension AudioDBView {
         if Self.verbose {
             os_log("\(self.t)✅ 排序完成")
         }
-        
-        withAnimation { 
-            isSorting = false 
+
+        withAnimation {
+            isSorting = false
         }
     }
 }
 
+// MARK: - Preview
+
+#if os(macOS)
+    #Preview("App - Large") {
+        AppPreview()
+            .frame(width: 600, height: 1000)
+    }
+
+    #Preview("App - Small") {
+        AppPreview()
+            .frame(width: 600, height: 600)
+    }
+#endif
+
+#if os(iOS)
+    #Preview("iPhone") {
+        AppPreview()
+    }
+#endif

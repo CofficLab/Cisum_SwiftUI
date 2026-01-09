@@ -51,6 +51,10 @@ class AudioRepo: ObservableObject, SuperLog {
         await self.db.allAudioURLs(reason: reason)
     }
 
+    func get(offset: Int, limit: Int, reason: String) async -> [URL] {
+        await self.db.paginateAudioURLs(offset: offset, limit: limit, reason: reason)
+    }
+
     func changeRoot(url: URL) {
         os_log("\(self.t)🍋🍋🍋 Change disk to \(url.title)")
 

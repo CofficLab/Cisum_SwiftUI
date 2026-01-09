@@ -1,5 +1,5 @@
-import MagicCore
 import MagicBackground
+import MagicCore
 import SwiftUI
 
 struct AudioDBTips: View {
@@ -17,7 +17,7 @@ struct AudioDBTips: View {
     }
 
     var body: some View {
-        MagicCard(background: MagicBackground.mountainStream.opacity(0.7)) {
+        MagicCard(background: MagicBackground.mountainStream.opacity(0.9)) {
             VStack {
                 switch variant {
                 case .empty:
@@ -97,4 +97,3 @@ struct AudioDBTips: View {
         AppPreview()
     }
 #endif
-

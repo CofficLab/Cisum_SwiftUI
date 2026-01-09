@@ -1,0 +1,415 @@
+import MagicAlert
+import MagicCore
+import OSLog
+import SwiftData
+import SwiftUI
+
+/*
+ 展示策略（扁平化列表 + 分页加载）：
+ - 仅展示仓库中的音频文件；文件夹不会作为分组出现
+ - 所有子目录中的文件被"拍平"后按统一规则排序与展示
+ - 采用分页加载策略，滚动到 80% 位置时自动加载下一页
+
+ 示例：
+   根目录
+   ├─ A/
+   │  ├─ A1
+   │  └─ A2
+   └─ B/
+      ├─ B1
+      └─ B2
+
+   扁平化后展示为：A1、A2、B1、B2（不显示 A、B 目录本身）
+
+ 分页加载：
+   - 初始加载：50 条（或根据屏幕高度动态计算）
+   - 触发加载：滚动到倒数 10 条或 80% 位置
+   - 自动去重：防止重复加载相同数据
+ */
+struct AudioListPaginated: View, SuperThread, SuperLog, SuperEvent {
+    nonisolated static let emoji = "📬"
+    nonisolated static let verbose = true
+
+    @EnvironmentObject var playManController: PlayManController
+    @EnvironmentObject var audioProvider: AudioProvider
+    @EnvironmentObject var m: MagicMessageProvider
+
+    /// 当前选中的音频 URL
+    @State private var selection: URL? = nil
+
+    /// 音频列表 URL 数组（已加载的数据）
+    @State private var urls: [URL] = []
+
+    /// 是否正在加载
+    @State private var isLoading: Bool = false
+
+    /// 是否正在加载更多
+    @State private var isLoadingMore: Bool = false
+
+    /// 是否还有更多数据可加载
+    @State private var hasMore: Bool = true
+
+    /// 当前页码
+    @State private var currentPage: Int = 0
+
+    /// 每页大小
+    @State private var pageSize: Int = 50
+
+    /// 是否正在同步数据
+    @State private var isSyncing: Bool = false
+
+    /// 音频总数（显示用）
+    @State private var totalCount: Int = 0
+
+    var body: some View {
+        if Self.verbose {
+            os_log("\(self.t)📺 开始渲染")
+        }
+        return Group {
+            if isLoading && urls.isEmpty {
+                AudioDBTips(variant: .loading)
+            } else if urls.isEmpty && !isLoading {
+                AudioDBTips(variant: .empty)
+            } else {
+                audioListView
+            }
+        }
+        .onAppear(perform: handleOnAppear)
+        .onChange(of: selection, handleSelectionChange)
+        .onDBDeleted(perform: handleDBDeleted)
+        .onDBSynced(perform: handleDBSynced)
+        .onDBSortDone(perform: handleDBSortDone)
+        .onDBUpdated(perform: handleDBUpdated)
+        .onDBSyncing(perform: handleDBSyncing)
+        .onPlayManAssetChanged(handleAssetChanged)
+    }
+
+    /// 音频列表视图
+    private var audioListView: some View {
+        List(selection: $selection) {
+            Section(header: HStack {
+                Text("共 \(totalCount.description)")
+                Spacer()
+                if isSyncing {
+                    HStack(spacing: 6) {
+                        ProgressView()
+                            .controlSize(.small)
+                        Text("正在读取仓库")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+
+                if Config.isNotDesktop {
+                    BtnAdd()
+                        .font(.title2)
+                        .labelStyle(.iconOnly)
+                }
+            }, content: {
+                ForEach(urls, id: \.self) { url in
+                    AudioItemView(url)
+                        .onAppear {
+                            // 获取当前 url 的索引
+                            if let index = urls.firstIndex(of: url) {
+                                // 只在最后几个 item 出现时触发加载更多
+                                let threshold = max(urls.count - 10, Int(Double(urls.count) * 0.8))
+
+                                if index >= threshold && hasMore && !isLoadingMore {
+                                    if Self.verbose {
+                                        os_log("\(self.t)👁️ Item \(index) appeared, triggering loadMore")
+                                    }
+                                    loadMore()
+                                }
+                            }
+                        }
+                }
+                .onDelete(perform: handleDeleteItems)
+
+                // 加载更多指示器
+                if isLoadingMore && !urls.isEmpty {
+                    HStack {
+                        Spacer()
+                        ProgressView()
+                            .controlSize(.small)
+                        Text("正在加载更多...")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                        Spacer()
+                    }
+                    .frame(height: 44)
+                }
+            })
+        }
+        .listStyle(.plain)
+    }
+}
+
+// MARK: - Action
+
+extension AudioListPaginated {
+    /// 加载第一页数据
+    private func loadInitial() {
+        guard !isLoading else { return }
+
+        isLoading = true
+
+        Task.detached(priority: .background) {
+            if Self.verbose {
+                os_log("\(self.t)🔄 加载初始数据")
+            }
+
+            // 首先获取总数
+            let allUrls = await audioProvider.repo.getAll(reason: "获取总数")
+            let count = allUrls.count
+
+            // 然后加载第一页
+            let urls = await audioProvider.repo.get(
+                offset: 0,
+                limit: self.pageSize,
+                reason: self.className
+            )
+
+            if Self.verbose {
+                os_log("\(self.t)✅ 加载初始数据: \(urls.count) 条，总数: \(count)")
+            }
+
+            await MainActor.run {
+                self.urls = urls
+                self.totalCount = count
+                self.currentPage = 1
+                self.hasMore = urls.count == self.pageSize
+                self.isLoading = false
+            }
+        }
+    }
+
+    /// 加载更多数据
+    private func loadMore() {
+        guard !isLoadingMore, hasMore else {
+            if Self.verbose {
+                os_log("\(self.t)🔄 LoadMore skipped - isLoadingMore: \(isLoadingMore), hasMore: \(hasMore)")
+            }
+            return
+        }
+
+        if Self.verbose {
+            os_log("\(self.t)🔄 LoadMore started - page: \(currentPage), current: \(urls.count)")
+        }
+
+        isLoadingMore = true
+
+        Task.detached(priority: .background) {
+            let currentPage = await self.currentPage
+            let pageSize = await self.pageSize
+            let offset = currentPage * pageSize
+
+            if Self.verbose {
+                os_log("\(self.t)🔄 LoadMore - offset: \(offset), limit: \(pageSize)")
+            }
+
+            let newUrls = await audioProvider.repo.get(
+                offset: offset,
+                limit: pageSize,
+                reason: self.className
+            )
+
+            if Self.verbose {
+                os_log("\(self.t)🔄 LoadMore - fetched: \(newUrls.count) urls")
+            }
+
+            await MainActor.run {
+                // 去重处理
+                let uniqueNewUrls = newUrls.filter { newUrl in
+                    !self.urls.contains { existingUrl in
+                        existingUrl == newUrl
+                    }
+                }
+
+                if Self.verbose {
+                    os_log("\(self.t)🔄 LoadMore - fetched: \(newUrls.count), unique: \(uniqueNewUrls.count)")
+                }
+
+                if !uniqueNewUrls.isEmpty {
+                    self.urls.append(contentsOf: uniqueNewUrls)
+                    self.currentPage += 1
+                    self.hasMore = uniqueNewUrls.count == self.pageSize
+                } else {
+                    self.hasMore = false
+                }
+
+                self.isLoadingMore = false
+            }
+        }
+    }
+
+    /// 刷新数据
+    private func refresh() {
+        if Self.verbose {
+            os_log("\(self.t)🍋 Refresh")
+        }
+
+        // 重置状态
+        currentPage = 0
+        hasMore = true
+        urls = []
+
+        loadInitial()
+    }
+}
+
+// MARK: - Setter
+
+extension AudioListPaginated {
+    /// 设置选中的音频
+    private func setSelection(_ newValue: URL?) {
+        if Self.verbose {
+            if let url = newValue {
+                os_log("\(self.t)🎯 选中音频: \(url.lastPathComponent)")
+            } else {
+                os_log("\(self.t)🎯 清除选中")
+            }
+        }
+        selection = newValue
+    }
+
+    /// 设置同步状态
+    private func setIsSyncing(_ newValue: Bool) {
+        if Self.verbose {
+            os_log("\(self.t)🔄 同步状态: \(newValue ? "同步中" : "完成")")
+        }
+        isSyncing = newValue
+    }
+}
+
+// MARK: - Event Handler
+
+extension AudioListPaginated {
+    /// 处理视图出现事件
+    func handleOnAppear() {
+        if Self.verbose {
+            os_log("\(self.t)👀 视图已出现")
+        }
+
+        loadInitial()
+
+        if let asset = playManController.getAsset() {
+            if Self.verbose {
+                os_log("\(self.t)🎵 恢复选中当前播放的音频")
+            }
+            setSelection(asset)
+        }
+    }
+
+    /// 处理选中项变化事件
+    func handleSelectionChange() {
+        if let url = selection, isLoading == false {
+            Task {
+                if Self.verbose {
+                    os_log("\(self.t)▶️ 选中变化，播放: \(url.lastPathComponent)")
+                }
+                await self.playManController.play(url: url)
+            }
+        }
+    }
+
+    /// 处理播放资源变化事件
+    func handleAssetChanged(url: URL?) {
+        if let asset = url, asset != selection {
+            if Self.verbose {
+                os_log("\(self.t)🔄 播放资源变化，更新选中: \(asset.lastPathComponent)")
+            }
+            self.setSelection(asset)
+        }
+    }
+
+    /// 处理排序完成事件
+    func handleDBSortDone(_ notification: Notification) {
+        if Self.verbose {
+            os_log("\(self.t)✅ 排序完成")
+        }
+        refresh()
+    }
+
+    /// 处理音频删除事件
+    func handleDBDeleted(_ notification: Notification) {
+        if Self.verbose {
+            os_log("\(self.t)🗑️ 音频已删除")
+        }
+        refresh()
+    }
+
+    /// 处理数据同步完成事件
+    func handleDBSynced(_ notification: Notification) {
+        if Self.verbose {
+            os_log("\(self.t)✅ 数据同步完成")
+        }
+        refresh()
+        setIsSyncing(false)
+    }
+
+    /// 处理数据更新事件
+    func handleDBUpdated(_ notification: Notification) {
+        if Self.verbose {
+            os_log("\(self.t)🔄 数据已更新")
+        }
+        refresh()
+    }
+
+    /// 处理数据同步开始事件
+    func handleDBSyncing(_ notification: Notification) {
+        if Self.verbose {
+            os_log("\(self.t)🔄 开始同步数据")
+        }
+        setIsSyncing(true)
+    }
+
+    /// 处理删除列表项事件
+    ///
+    /// 当用户通过列表滑动删除音频时触发，删除文件并显示提示。
+    ///
+    /// - Parameter offsets: 要删除的项目索引集合
+    func handleDeleteItems(at offsets: IndexSet) {
+        withAnimation {
+            // 获取要删除的 URLs
+            let urlsToDelete = offsets.map { urls[$0] }
+
+            if Self.verbose {
+                os_log("\(self.t)🗑️ 删除 \(urlsToDelete.count) 个项目")
+            }
+
+            // 从数据库中删除对应的 AudioModel
+            for url in urlsToDelete {
+                if Self.verbose {
+                    os_log("\(self.t)📄 删除文件: \(url.shortPath())")
+                }
+
+                do {
+                    try url.delete()
+                    m.info("已删除 \(url.title)")
+                } catch {
+                    m.error(error)
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Preview
+
+#if os(macOS)
+    #Preview("App - Large") {
+        AppPreview()
+            .frame(width: 600, height: 1000)
+    }
+
+    #Preview("App - Small") {
+        AppPreview()
+            .frame(width: 600, height: 600)
+    }
+#endif
+
+#if os(iOS)
+    #Preview("iPhone") {
+        AppPreview()
+    }
+#endif
