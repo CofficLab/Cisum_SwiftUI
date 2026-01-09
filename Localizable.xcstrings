@@ -78,9 +78,6 @@
     "All Statuses (%lld)" : {
 
     },
-    "App Demo" : {
-
-    },
     "Button" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -93,6 +90,9 @@
       }
     },
     "Cars (%lld)" : {
+
+    },
+    "Cisum Pro" : {
 
     },
     "EEEEEE" : {
@@ -167,7 +167,7 @@
     "ID: %@" : {
 
     },
-    "ID: 3F19ED53" : {
+    "ID: CISUM001" : {
 
     },
     "Migrate" : {
@@ -183,9 +183,6 @@
 
     },
     "Setting" : {
-
-    },
-    "Software Services Pro" : {
 
     },
     "state=" : {

@@ -5,8 +5,8 @@ import SwiftUI
 actor OpenButtonPlugin: SuperPlugin, PluginRegistrant, SuperLog {
     let description: String = "当前资源打开按钮"
     let iconName: String = .iconFinder
-    private static var enabled: Bool { false }
-    private static var verbose: Bool { false }
+    private static var enabled: Bool { true }
+    private static var verbose: Bool { true }
     nonisolated static let emoji = "😜"
 
     #if os(macOS)
