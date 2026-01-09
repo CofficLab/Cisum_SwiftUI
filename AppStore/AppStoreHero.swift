@@ -11,9 +11,9 @@ import SwiftUI
 struct AppStoreHero: View {
     var body: some View {
         AppStoreHeroContainer(
-            title: "Title",
-            subtitleTop: "实时监控，简单可靠。",
-            subtitleBottom: "看得见的网络安全，清晰而从容。"
+            title: "Cisum",
+            subtitleTop: "纯净播放，简单纯粹。",
+            subtitleBottom: "没有广告，没有干扰，只有音乐。"
         ) {
             AppDemo()
         }

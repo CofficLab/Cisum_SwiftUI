@@ -2,14 +2,11 @@ import SwiftUI
 
 struct AppPreview: View {
     var body: some View {
-        RootView {
-            ContentView()
-        }
+        ContentView()
+            .inRootView()
     }
 }
 
 #Preview {
     AppPreview()
 }
-
-
