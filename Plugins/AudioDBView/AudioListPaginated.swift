@@ -28,7 +28,7 @@ import SwiftUI
  */
 struct AudioListPaginated: View, SuperThread, SuperLog, SuperEvent {
     nonisolated static let emoji = "📬"
-    nonisolated static let verbose = true
+    nonisolated static let verbose = false
 
     @EnvironmentObject var playManController: PlayManController
     @EnvironmentObject var audioProvider: AudioProvider
@@ -332,10 +332,36 @@ extension AudioListPaginated {
 
     /// 处理音频删除事件
     func handleDBDeleted(_ notification: Notification) {
-        if Self.verbose {
-            os_log("\(self.t)🗑️ 音频已删除")
+        guard let urlsToDelete = notification.userInfo?["urls"] as? [URL] else {
+            if Self.verbose {
+                os_log("\(self.t)⚠️ 删除通知中没有 URL 信息")
+            }
+            return
         }
-        refresh()
+
+        if Self.verbose {
+            os_log("\(self.t)🗑️ 收到删除通知: \(urlsToDelete.count) 个文件")
+        }
+
+        // 使用动画效果移除已删除的文件
+        withAnimation(.easeInOut(duration: 0.3)) {
+            // 从 urls 数组中移除被删除的 URL
+            urls.removeAll { url in
+                urlsToDelete.contains(url)
+            }
+
+            // 更新总数
+            totalCount = max(0, totalCount - urlsToDelete.count)
+
+            // 如果删除的是当前选中的文件，清除选中状态
+            if let selected = selection, urlsToDelete.contains(selected) {
+                selection = nil
+            }
+        }
+
+        if Self.verbose {
+            os_log("\(self.t)✅ 已移除 \(urlsToDelete.count) 个文件，剩余 \(urls.count) 个")
+        }
     }
 
     /// 处理数据同步完成事件

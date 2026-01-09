@@ -1021,6 +1021,7 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
 
         // 本批次的最后一个删除后的下一个
         var next: AudioModel?
+        var deletedUrls: [URL] = []
 
         for (index, id) in ids.enumerated() {
             guard let audio = context.model(for: id) as? AudioModel else {
@@ -1029,6 +1030,7 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
             }
 
             let url = audio.url
+            deletedUrls.append(url)
 
             // 找出本批次的最后一个删除后的下一个
             if index == ids.count - 1 {
@@ -1048,7 +1050,24 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
             }
         }
 
+        // 发送删除完成通知，让 UI 知道需要刷新
+        emitDeleted(urls: deletedUrls)
+
         return next
+    }
+
+    /// 发送删除完成事件
+    /// - Parameters:
+    ///   - urls: 被删除的音频 URL 列表
+    ///   - verbose: 是否输出详细日志
+    func emitDeleted(urls: [URL], verbose: Bool = false) {
+        if verbose {
+            os_log("\(self.t)🚀🚀🚀 EmitDeleted: \(urls.count) URLs")
+        }
+
+        self.main.async {
+            self.emit(name: .dbDeleted, object: nil, userInfo: ["urls": urls])
+        }
     }
 
     /// 通过 URL 删除音频，同时从磁盘和数据库中删除
