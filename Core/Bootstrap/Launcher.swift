@@ -2,7 +2,7 @@ import MagicKit
 import OSLog
 import SwiftUI
 
-struct LaunchViewSwitcher: View, SuperLog {
+struct Launcher: View, SuperLog {
     nonisolated static let emoji = "🦭"
     nonisolated static let verbose = true
 
@@ -58,7 +58,7 @@ struct LaunchViewSwitcher: View, SuperLog {
 
 // MARK: - Actions
 
-extension LaunchViewSwitcher {
+extension Launcher {
     func emitLaunchDone() {
         NotificationCenter.default.post(name: .launchDone, object: nil)
     }
@@ -71,7 +71,7 @@ extension Notification.Name {
 
 // MARK: - View Builder
 
-extension LaunchViewSwitcher {
+extension Launcher {
     /// 生成带有导航按钮的插件视图
     /// - Parameter geometry: 几何信息，用于设置视图宽度
     /// - Returns: 包含导航按钮的插件视图数组

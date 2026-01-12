@@ -4,7 +4,7 @@ import SwiftUI
 
 struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content: View {
     nonisolated static var emoji: String { "🌳" }
-    nonisolated static var verbose: Bool { true }
+    nonisolated static var verbose: Bool { false }
 
     var content: Content
 
@@ -44,7 +44,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     var body: some View {
         Group {
             if self.launching {
-                LaunchViewSwitcher(plugins: p.plugins)
+                Launcher(plugins: p.plugins)
             } else {
                 if let e = self.error {
                     ErrorViewFatal(error: e)
