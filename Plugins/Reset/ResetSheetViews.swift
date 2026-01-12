@@ -76,7 +76,7 @@ struct ResetProgressContent: View {
                         .font(.system(size: 28, weight: .semibold))
                         .foregroundStyle(.tint)
                 }
-                
+
                 Text("正在重置…")
                     .font(.title3)
                     .fontWeight(.semibold)
@@ -92,6 +92,8 @@ struct ResetProgressContent: View {
         }
     }
 }
+
+// MARK: - Preview
 
 #Preview("ResetConfirmContent") {
     RootView {

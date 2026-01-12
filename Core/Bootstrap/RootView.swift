@@ -42,10 +42,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     }
 
     var body: some View {
-        if Self.verbose {
-            os_log("\(self.t)👷 开始渲染, launching = \(self.launching)")
-        }
-        return Group {
+        Group {
             if self.launching {
                 LaunchViewSwitcher(plugins: p.plugins)
             } else {
@@ -78,6 +75,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                     .environmentObject(p)
                     .environmentObject(m)
                     .environmentObject(self.stateProvider)
+                    .onStorageLocationDidReset(perform: onResetStorageLocation)
 //                    .sheet(isPresented: self.$a.showSheet, content: {
 //                        VStack {
 //                            ForEach(Array(p.getSheetViews(storage: Config.getStorageLocation()).enumerated()), id: \.offset) { _, view in
@@ -158,6 +156,13 @@ extension RootView {
 // MARK: Event Handler
 
 extension RootView {
+    func onResetStorageLocation() {
+        if Self.verbose {
+            os_log("\(self.t)🔄 Reset Storage Location")
+        }
+        setLoading(true, reason: "resetStorageLocation")
+    }
+
     func onLaunchEnd() {
         if Self.verbose {
             os_log("\(self.t)✅ Launch Done")
