@@ -7,8 +7,7 @@ struct WelcomeView: View, SuperLog {
     static let verbose = false
 
     var body: some View {
-        os_log("\(self.t)开始渲染")
-        return ZStack {
+        ZStack {
             LinearGradient(colors: [
                 Color.indigo.opacity(0.85),
                 Color.purple.opacity(0.85),
@@ -81,7 +80,7 @@ struct WelcomeView: View, SuperLog {
 #endif
 
 #if os(iOS)
-#Preview("iPhone") {
-    AppPreview()
-}
+    #Preview("iPhone") {
+        AppPreview()
+    }
 #endif

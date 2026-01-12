@@ -23,13 +23,13 @@ import SwiftUI
 class PluginProvider: ObservableObject, SuperLog, SuperThread {
     nonisolated static let emoji = "🧩"
     static let verbose = false
-    
+
     /// 插件仓库，用于持久化插件配置
     private let repo: PluginRepo
 
     /// 所有已注册的插件列表
     @Published private(set) var plugins: [SuperPlugin] = []
-    
+
     /// 当前激活的分组插件
     @Published private(set) var current: SuperPlugin?
 
@@ -46,8 +46,6 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
     ///   - plugins: 预定义的插件列表
     ///   - repo: 插件仓库，用于持久化插件配置
     init(plugins: [SuperPlugin], repo: PluginRepo) {
-        
-
         self.plugins = plugins
         self.repo = repo
         let currentPluginId = repo.getCurrentPluginId()
@@ -56,40 +54,34 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
             try? self.setCurrentGroup(plugin)
         }
     }
-    
+
     /// 初始化插件提供者（支持自动发现）
     ///
     /// 如果启用自动发现，将通过 `PluginRegistry` 自动注册和构建所有插件。
     /// 这是推荐的初始化方式，可以自动发现项目中的所有插件。
     ///
     /// - Parameters:
-    ///   - autoDiscover: 是否自动发现和注册插件，默认为 `true`
     ///   - repo: 插件仓库，用于持久化插件配置
-    init(autoDiscover: Bool = true, repo: PluginRepo) {
+    init(repo: PluginRepo) {
         if Self.verbose {
-            
+            os_log("\(Self.t)🚀 初始化开始")
         }
-        
+
         self.repo = repo
-        
-        if autoDiscover {
-            autoRegisterPlugins()
-            Task { [weak self] in
-                guard let self else { return }
-                let discoveredPlugins = await PluginRegistry.shared.buildAll()
-                await MainActor.run {
-                    self.plugins = discoveredPlugins
-                    let currentPluginId = self.repo.getCurrentPluginId()
-                    
-                    if let plugin = discoveredPlugins.first(where: { $0.id == currentPluginId }) {
-                        try? self.setCurrentGroup(plugin)
-                    } else if let first = discoveredPlugins.first(where: { $0.isGroup }) {
-                        try? self.setCurrentGroup(first)
-                    }
-                }
-            }
-        } else {
-            self.plugins = []
+
+        autoRegisterPlugins()
+        let discoveredPlugins = PluginRegistry.shared.buildAll()
+        self.plugins = discoveredPlugins
+
+        let currentPluginId = self.repo.getCurrentPluginId()
+        if let plugin = discoveredPlugins.first(where: { $0.id == currentPluginId }) {
+            try? self.setCurrentGroup(plugin)
+        } else if let first = discoveredPlugins.first(where: { $0.isGroup }) {
+            try? self.setCurrentGroup(first)
+        }
+
+        if Self.verbose {
+            os_log("\(Self.t)✅ 初始化完成，插件数量: \(self.plugins.count)")
         }
     }
 
@@ -157,12 +149,12 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
     ///
     /// - Returns: 包含按钮 ID 和视图的元组数组
     func getToolBarButtons() -> [(id: String, view: AnyView)] {
-        let buttons =  plugins.flatMap { $0.addToolBarButtons() }
-        
+        let buttons = plugins.flatMap { $0.addToolBarButtons() }
+
         if Self.verbose {
             os_log("\(self.t)🏃🏃🏃 getToolBarButtons: \(buttons.count)")
         }
-        
+
         return buttons
     }
 
@@ -178,7 +170,7 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
     func setCurrentGroup(_ plugin: SuperPlugin, verbose: Bool = false) throws {
         let oldPluginId = self.current?.id ?? "nil"
         let newPluginId = plugin.id
-        
+
         if verbose || Self.verbose {
             os_log("\(self.t)🏃 SetCurrentGroup: \(oldPluginId) -> \(newPluginId)")
         }
@@ -186,10 +178,6 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
         if plugin.isGroup {
             self.current = plugin
             repo.storeCurrentPluginId(plugin.id)
-            
-            if verbose || Self.verbose {
-                os_log("\(self.t)✅ 插件切换成功，将触发依赖视图更新")
-            }
         } else {
             os_log(.error, "\(self.t)❌ 插件切换失败: \(plugin.id) 不是分组类型")
             throw PluginProviderError.pluginIsNotGroup(pluginId: plugin.id)
@@ -272,14 +260,14 @@ enum PluginProviderError: Error, LocalizedError {
     ///
     /// - Parameter pluginId: 插件的唯一标识符
     case pluginNotFound(pluginId: String)
-    
+
     /// 插件不是分组类型
     ///
     /// 当尝试将非分组插件设置为当前插件时抛出此错误。
     ///
     /// - Parameter pluginId: 插件的唯一标识符
     case pluginIsNotGroup(pluginId: String)
-    
+
     /// 插件 ID 重复
     ///
     /// 当尝试注册具有重复 ID 的插件时抛出此错误。
@@ -288,7 +276,7 @@ enum PluginProviderError: Error, LocalizedError {
     ///   - pluginId: 重复的插件 ID
     ///   - collection: 已存在的插件 ID 集合
     case duplicatePluginID(pluginId: String, collection: [String])
-    
+
     /// 插件 ID 为空
     ///
     /// 当插件的 ID 为空字符串时抛出此错误。
@@ -309,25 +297,25 @@ enum PluginProviderError: Error, LocalizedError {
 }
 
 #if os(macOS)
-#Preview("Small Screen") {
-    RootView {
-        ContentView()
+    #Preview("Small Screen") {
+        RootView {
+            ContentView()
+        }
+        .frame(width: 500)
+        .frame(height: 600)
     }
-    .frame(width: 500)
-    .frame(height: 600)
-}
 
-#Preview("Big Screen") {
-    RootView {
-        ContentView()
+    #Preview("Big Screen") {
+        RootView {
+            ContentView()
+        }
+        .frame(width: 800)
+        .frame(height: 1200)
     }
-    .frame(width: 800)
-    .frame(height: 1200)
-}
 #endif
 
 #if os(iOS)
-#Preview("iPhone") {
-    AppPreview()
-}
+    #Preview("iPhone") {
+        AppPreview()
+    }
 #endif

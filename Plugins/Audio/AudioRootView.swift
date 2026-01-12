@@ -25,9 +25,14 @@ struct AudioRootView<Content>: View, SuperLog where Content: View {
     var audioProvider: AudioProvider?
 
     init(@ViewBuilder content: () -> Content) {
+        if Self.verbose {
+            os_log("\(Self.t)初始化开始")
+        }
+
         self.content = content()
         guard let container = try? AudioConfigRepo.getContainer() else {
             self.error = AudioPluginError.initialization(reason: "Container 未找到")
+                os_log(.error,"\(Self.t)初始化失败: Container 未找到")
             return
         }
 
@@ -37,6 +42,9 @@ struct AudioRootView<Content>: View, SuperLog where Content: View {
 
         guard let storage = storage else {
             self.error = AudioPluginError.initialization(reason: "Storage 未找到")
+            if Self.verbose {
+                os_log("\(Self.t)放弃初始化，因为: Storage 未找到")
+            }
             return
         }
 
@@ -54,27 +62,58 @@ struct AudioRootView<Content>: View, SuperLog where Content: View {
         self.repo = try? AudioRepo(disk: disk!, reason: "onInit")
         self.audioProvider = AudioProvider(disk: disk!, db: self.repo!)
         self.audioProvider?.updateDisk(disk!)
+
+        if Self.verbose {
+            os_log("\(Self.t)初始化完成")
+        }
     }
 
     var body: some View {
         if Self.verbose {
             os_log("\(self.t)📺 开始渲染")
         }
-        
+
         return Group {
-            if let container = self.container {
+            if let container = self.container, let provider = self.audioProvider {
                 ZStack {
                     content
                 }
                 .modelContainer(container)
-                .environmentObject(self.audioProvider!)
+                .environmentObject(provider)
                 .onStorageLocationChanged(perform: handleStorageLocationChanged)
                 .onDisappear(perform: handleOnDisappear)
             } else {
-                Text("初始化失败")
-                    .foregroundColor(.red)
+                storageErrorView
             }
         }
+    }
+
+    // MARK: - Error View
+
+    private var storageErrorView: some View {
+        VStack(spacing: 20) {
+            Spacer()
+
+            Image(systemName: "externaldrive.badge.exclamationmark")
+                .font(.system(size: 64))
+                .foregroundStyle(.secondary)
+                .symbolRenderingMode(.hierarchical)
+
+            VStack(spacing: 8) {
+                Text("存储位置未设置")
+                    .font(.title2.bold())
+                    .foregroundStyle(.primary)
+
+                Text("请先设置媒体仓库的存储位置")
+                    .font(.body)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+            }
+
+            Spacer()
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding()
     }
 }
 
@@ -105,19 +144,19 @@ extension AudioRootView {
 // MARK: - Preview
 
 #if os(macOS)
-    #Preview("App - Large") {
-        AppPreview()
-            .frame(width: 600, height: 1000)
-    }
+#Preview("App - Large") {
+    AppPreview()
+        .frame(width: 600, height: 1000)
+}
 
-    #Preview("App - Small") {
-        AppPreview()
-            .frame(width: 600, height: 600)
-    }
+#Preview("App - Small") {
+    AppPreview()
+        .frame(width: 600, height: 600)
+}
 #endif
 
 #if os(iOS)
-    #Preview("iPhone") {
-        AppPreview()
-    }
+#Preview("iPhone") {
+    AppPreview()
+}
 #endif

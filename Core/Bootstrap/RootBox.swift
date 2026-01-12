@@ -36,7 +36,7 @@ final class RootBox: SuperLog {
         self.app = AppProvider(uiRepo: uiRepo)
         self.stateMessageProvider = StateProvider()
         self.messageProvider = MagicMessageProvider.shared
-        self.plugin = PluginProvider(autoDiscover: true, repo: pluginRepo)
+        self.plugin = PluginProvider(repo: pluginRepo)
         self.cloud = CloudProvider()
 
         self.man = PlayMan(playlistEnabled: false, verbose: false)

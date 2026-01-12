@@ -4,13 +4,13 @@ import SwiftUI
 
 struct StorageView: View, SuperLog {
     nonisolated static let emoji = "🍴"
-    static let verbose = false
+    static let verbose = true
 
     @EnvironmentObject var cloudManager: CloudProvider
     @EnvironmentObject var a: AppProvider
 
     @State private var tempStorageLocation: StorageLocation
-    
+
     private var c = Config.self
 
     init() {
@@ -86,6 +86,10 @@ struct StorageView: View, SuperLog {
     // MARK: - 自动设置存储位置
 
     private func autoSetStorageLocation() {
+        if Self.verbose {
+            os_log("\(Self.t)💾 自动设置存储位置")
+        }
+
         // 如果已经有存储位置设置，则使用现有设置
         if let currentLocation = c.getStorageLocation() {
             tempStorageLocation = currentLocation
@@ -123,19 +127,19 @@ struct StorageView: View, SuperLog {
 }
 
 #if os(macOS)
-#Preview("App - Large") {
-    AppPreview()
-        .frame(width: 600, height: 1000)
-}
+    #Preview("App - Large") {
+        AppPreview()
+            .frame(width: 600, height: 1000)
+    }
 
-#Preview("App - Small") {
-    AppPreview()
-        .frame(width: 600, height: 600)
-}
+    #Preview("App - Small") {
+        AppPreview()
+            .frame(width: 600, height: 600)
+    }
 #endif
 
 #if os(iOS)
-#Preview("iPhone") {
-    AppPreview()
-}
+    #Preview("iPhone") {
+        AppPreview()
+    }
 #endif
