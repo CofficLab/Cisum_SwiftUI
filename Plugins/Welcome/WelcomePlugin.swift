@@ -5,6 +5,8 @@ import SwiftUI
 
 actor WelcomePlugin: SuperPlugin, SuperLog, PluginRegistrant {
     static let emoji = "👏"
+    static let verbose = true
+    private static var enabled: Bool { true }
 
     let label = "Welcome"
     let description = "欢迎界面"
@@ -13,9 +15,15 @@ actor WelcomePlugin: SuperPlugin, SuperLog, PluginRegistrant {
     
     @MainActor
     func addLaunchView() -> AnyView? {
-        guard enabled else { return nil }
         guard Config.getStorageLocation() == nil else {
+            if Self.verbose {
+                os_log("\(self.t)🔍 StorageLocation is not nil")
+            }
             return nil
+        }
+
+        if Self.verbose {
+            os_log("\(self.t)🔍 StorageLocation is nil, show WelcomeView")
         }
         
         return AnyView(WelcomeView())
@@ -25,7 +33,15 @@ actor WelcomePlugin: SuperPlugin, SuperLog, PluginRegistrant {
 // MARK: - PluginRegistrant
 extension WelcomePlugin {
     @objc static func register() {
+        guard Self.enabled else {
+            return 
+        }
+
         Task {
+            if Self.verbose {
+                os_log("\(self.t)🚀 Register")
+            }
+
             await PluginRegistry.shared.register(id: "Welcome", order: -100) {
                 WelcomePlugin()
             }
@@ -33,11 +49,19 @@ extension WelcomePlugin {
     }
 }
 
-#Preview("Welcome") {
+#Preview("WelcomePlugin") {
     RootView {
         WelcomeView()
     }
     .frame(height: 800)
+}
+
+#Preview("WelcomePlugin - Dark") {
+    RootView {
+        WelcomeView()
+    }
+    .frame(height: 800)
+    .preferredColorScheme(.dark)
 }
 
 #if os(macOS)
@@ -48,7 +72,7 @@ extension WelcomePlugin {
 
 #Preview("App - Small") {
     AppPreview()
-        .frame(width: 500, height: 800)
+        .frame(width: 600, height: 600)
 }
 #endif
 

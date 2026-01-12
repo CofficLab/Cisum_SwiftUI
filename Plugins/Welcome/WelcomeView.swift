@@ -4,6 +4,7 @@ import SwiftUI
 
 struct WelcomeView: View, SuperLog {
     nonisolated static let emoji = "🎉"
+    static let verbose = false
 
     var body: some View {
         os_log("\(self.t)开始渲染")
@@ -52,11 +53,19 @@ struct WelcomeView: View, SuperLog {
     }
 }
 
-#Preview("Welcome") {
+#Preview("WelcomeView") {
     RootView {
         WelcomeView()
     }
     .frame(height: 800)
+}
+
+#Preview("WelcomeView - Dark") {
+    RootView {
+        WelcomeView()
+    }
+    .frame(height: 800)
+    .preferredColorScheme(.dark)
 }
 
 #if os(macOS)
@@ -67,7 +76,7 @@ struct WelcomeView: View, SuperLog {
 
 #Preview("App - Small") {
     AppPreview()
-        .frame(width: 500, height: 800)
+        .frame(width: 600, height: 600)
 }
 #endif
 

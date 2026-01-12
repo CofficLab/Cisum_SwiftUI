@@ -72,7 +72,7 @@ struct ResetSetting: View, SuperLog {
 }
 
 #if os(iOS)
-#Preview("iPhone") {
-    AppPreview()
-}
+    #Preview("iPhone") {
+        AppPreview()
+    }
 #endif

@@ -4,6 +4,7 @@ import SwiftUI
 
 struct StorageView: View, SuperLog {
     nonisolated static let emoji = "🍴"
+    static let verbose = false
 
     @EnvironmentObject var cloudManager: CloudProvider
     @EnvironmentObject var a: AppProvider
@@ -104,13 +105,24 @@ struct StorageView: View, SuperLog {
     }
 }
 
-#Preview("Welcome") {
+#Preview("StorageView") {
     RootView {
-        WelcomeView()
+        StorageView()
+            .padding()
+            .frame(width: 400)
     }
-    .frame(height: 800)
 }
 
+#Preview("StorageView - Dark") {
+    RootView {
+        StorageView()
+            .padding()
+            .frame(width: 400)
+    }
+    .preferredColorScheme(.dark)
+}
+
+#if os(macOS)
 #Preview("App - Large") {
     AppPreview()
         .frame(width: 600, height: 1000)
@@ -118,11 +130,12 @@ struct StorageView: View, SuperLog {
 
 #Preview("App - Small") {
     AppPreview()
-        .frame(width: 500, height: 800)
+        .frame(width: 600, height: 600)
 }
+#endif
 
 #if os(iOS)
-    #Preview("iPhone") {
-        AppPreview()
-    }
+#Preview("iPhone") {
+    AppPreview()
+}
 #endif
