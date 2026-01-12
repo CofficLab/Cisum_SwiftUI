@@ -5,7 +5,7 @@ import SwiftUI
 
 actor ResetPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     static let emoji = "⚙️"
-    private static var enabled: Bool { false }
+    private static var enabled: Bool { true }
 
     let label = "Reset"
     let description: String = "恢复默认配置"

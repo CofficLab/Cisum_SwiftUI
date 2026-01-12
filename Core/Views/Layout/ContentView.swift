@@ -16,7 +16,7 @@ struct ContentView: View, SuperLog, SuperThread {
     @State private var height: CGFloat = 0
     @State private var autoResizing = false
     @State private var tab: String = "DB"
-    
+
     /// 当前的 TabView，由插件变化事件驱动更新
     @State private var currentTabView: AnyView?
 
@@ -119,7 +119,7 @@ struct ContentView: View, SuperLog, SuperThread {
             .padding(.top, 2)
         #endif
             .background(.background)
-        
+
         return AnyView(tabView)
     }
 }
@@ -173,15 +173,15 @@ extension ContentView {
             os_log("\(self.t)🔄 插件变化事件: \(oldValue ?? "nil") -> \(newValue ?? "nil")")
             os_log("\(self.t)📱 开始重新构建 TabView...")
         }
-        
+
         // 事件驱动：主动更新视图
         currentTabView = buildTabView()
-        
+
         if Self.verbose {
             os_log("\(self.t)✅ TabView 已更新完成")
         }
     }
-    
+
     func onGeoHeightChange(_ geo: GeometryProxy) {
         if autoResizing == false {
             // 说明是用户主动调整
@@ -215,9 +215,9 @@ extension ContentView {
         if verbose {
             os_log("\(self.t)OnAppear")
         }
-        
+
         height = Config.getWindowHeight()
-        
+
         // 初始化 TabView
         if currentTabView == nil {
             if Self.verbose {
@@ -229,15 +229,15 @@ extension ContentView {
 }
 
 #if os(macOS)
-#Preview("App - Large") {
-    AppPreview()
-        .frame(width: 600, height: 1000)
-}
+    #Preview("App - Large") {
+        AppPreview()
+            .frame(width: 600, height: 1000)
+    }
 
-#Preview("App - Small") {
-    AppPreview()
-        .frame(width: 500, height: 800)
-}
+    #Preview("App - Small") {
+        AppPreview()
+            .frame(width: 500, height: 800)
+    }
 #endif
 
 #if os(iOS)

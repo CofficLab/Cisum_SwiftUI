@@ -7,7 +7,7 @@ import ObjectiveC.runtime
 
 typealias PluginRegistry = MagicPluginRegistry<any SuperPlugin>
 extension PluginRegistry {
-    static let shared = PluginRegistry()
+    nonisolated(unsafe) static let shared = PluginRegistry()
 }
 
 // App-layer convenience: use instance id as key while keeping existential storage
@@ -18,11 +18,10 @@ extension PluginRegistry {
         self.register(id: id, order: order) { instance }
     }
 
-    /// 同步包装，隐藏插件侧的 Task/await 细节
+    /// 同步注册插件（已改为真正的同步）
     static func registerSync(order: Int = 0, factory: @escaping @Sendable () -> any SuperPlugin) {
-        Task { await PluginRegistry.shared.register(order: order, factory: factory) }
+        PluginRegistry.shared.register(order: order, factory: factory)
     }
 }
 
-@MainActor
 func autoRegisterPlugins() { magicAutoRegisterPlugins() }

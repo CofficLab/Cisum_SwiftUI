@@ -4,12 +4,13 @@ import SwiftUI
 
 struct StorageView: View, SuperLog {
     nonisolated static let emoji = "🍴"
+    static let verbose = true
 
     @EnvironmentObject var cloudManager: CloudProvider
     @EnvironmentObject var a: AppProvider
 
     @State private var tempStorageLocation: StorageLocation
-    
+
     private var c = Config.self
 
     init() {
@@ -26,7 +27,6 @@ struct StorageView: View, SuperLog {
                     action: {
                         if cloudManager.isSignedIn == true && c.getStorageLocation() != .icloud {
                             tempStorageLocation = .icloud
-                            c.updateStorageLocation(.icloud)
                         }
                     }
                 ) {
@@ -64,7 +64,6 @@ struct StorageView: View, SuperLog {
                     icon: .iconFolder,
                     action: {
                         tempStorageLocation = .local
-                        c.updateStorageLocation(.local)
                     }
                 ) {
                     HStack {
@@ -79,6 +78,7 @@ struct StorageView: View, SuperLog {
                 // 自动设置存储位置
                 autoSetStorageLocation()
             }
+            .onDisappear(perform: onDisappear)
         }
     }
 
@@ -90,36 +90,47 @@ struct StorageView: View, SuperLog {
             tempStorageLocation = currentLocation
             return
         }
-
-        // 如果没有设置，则自动选择
-        if cloudManager.isSignedIn == true {
-            // iCloud 可用，选择 iCloud
-            tempStorageLocation = .icloud
-            c.updateStorageLocation(.icloud)
-        } else {
-            // iCloud 不可用，选择本地存储
-            tempStorageLocation = .local
-            c.updateStorageLocation(.local)
-        }
     }
 }
 
-#Preview("Welcome") {
+// MARK: - Events Handling
+
+extension StorageView {
+    func onDisappear() {
+        c.updateStorageLocation(tempStorageLocation)
+    }
+}
+
+// MARK: - Preview
+
+#Preview("StorageView") {
     RootView {
-        WelcomeView()
+        StorageView()
+            .padding()
+            .frame(width: 400)
     }
-    .frame(height: 800)
 }
 
-#Preview("App - Large") {
-    AppPreview()
-        .frame(width: 600, height: 1000)
+#Preview("StorageView - Dark") {
+    RootView {
+        StorageView()
+            .padding()
+            .frame(width: 400)
+    }
+    .preferredColorScheme(.dark)
 }
 
-#Preview("App - Small") {
-    AppPreview()
-        .frame(width: 500, height: 800)
-}
+#if os(macOS)
+    #Preview("App - Large") {
+        AppPreview()
+            .frame(width: 600, height: 1000)
+    }
+
+    #Preview("App - Small") {
+        AppPreview()
+            .frame(width: 600, height: 600)
+    }
+#endif
 
 #if os(iOS)
     #Preview("iPhone") {

@@ -20,6 +20,8 @@ import UIKit
 @MainActor
 enum Config: SuperLog {
     nonisolated static let emoji = "🧲"
+    nonisolated static let verbose = true
+    
     static let id = "com.yueyi.cisum"
     static let logger = Logger.self
     static let maxAudioCount = 100
@@ -82,6 +84,9 @@ enum Config: SuperLog {
     // MARK: - Storage Configuration
     
     static let keyOfStorageLocation = "StorageLocation"
+
+    /// 存储位置重置通知
+    static let storageLocationDidReset = Notification.Name("ConfigStorageLocationDidReset")
     
     /// 获取当前存储位置设置
     static func getStorageLocation() -> StorageLocation? {
@@ -94,6 +99,9 @@ enum Config: SuperLog {
     
     /// 更新存储位置设置
     static func updateStorageLocation(_ location: StorageLocation?) {
+        if Self.verbose {
+            os_log("\(Self.t)💾 更新存储位置设置: \(location?.rawValue ?? "nil")")
+        }
         UserDefaults.standard.set(location?.rawValue, forKey: keyOfStorageLocation)
     }
     
@@ -118,6 +126,7 @@ enum Config: SuperLog {
     /// 重置存储位置设置
     static func resetStorageLocation() {
         UserDefaults.standard.removeObject(forKey: keyOfStorageLocation)
+        NotificationCenter.default.post(name: Config.storageLocationDidReset, object: nil)
     }
 
     /// 上半部分播放控制的最小高度
@@ -251,3 +260,14 @@ extension Config {
     AppPreview()
 }
 #endif
+
+// MARK: - View Extensions
+
+extension View {
+    /// 当存储位置重置时执行操作
+    func onStorageLocationDidReset(perform action: @escaping () -> Void) -> some View {
+        self.onReceive(NotificationCenter.default.publisher(for: Config.storageLocationDidReset)) { _ in
+            action()
+        }
+    }
+}

@@ -76,7 +76,7 @@ struct ResetProgressContent: View {
                         .font(.system(size: 28, weight: .semibold))
                         .foregroundStyle(.tint)
                 }
-                
+
                 Text("正在重置…")
                     .font(.title3)
                     .fontWeight(.semibold)
@@ -93,6 +93,8 @@ struct ResetProgressContent: View {
     }
 }
 
+// MARK: - Preview
+
 #Preview("ResetConfirmContent") {
     RootView {
         ResetConfirmContent(onCancel: {}, onConfirm: {})
@@ -106,6 +108,22 @@ struct ResetProgressContent: View {
         .padding()
 }
 
+#Preview("ResetConfirmContent - Dark") {
+    RootView {
+        ResetConfirmContent(onCancel: {}, onConfirm: {})
+            .padding()
+            .frame(width: 400)
+    }
+    .preferredColorScheme(.dark)
+}
+
+#Preview("ResetProgressContent - Dark", traits: .sizeThatFitsLayout) {
+    ResetProgressContent()
+        .padding()
+        .preferredColorScheme(.dark)
+}
+
+#if os(macOS)
 #Preview("App - Large") {
     AppPreview()
         .frame(width: 600, height: 1000)
@@ -113,11 +131,12 @@ struct ResetProgressContent: View {
 
 #Preview("App - Small") {
     AppPreview()
-        .frame(width: 500, height: 800)
+        .frame(width: 600, height: 600)
 }
+#endif
 
 #if os(iOS)
-    #Preview("iPhone") {
-        AppPreview()
-    }
+#Preview("iPhone") {
+    AppPreview()
+}
 #endif

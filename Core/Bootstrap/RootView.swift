@@ -4,11 +4,14 @@ import SwiftUI
 
 struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content: View {
     nonisolated static var emoji: String { "🌳" }
+    nonisolated static var verbose: Bool { false }
 
     var content: Content
 
     @State var error: Error? = nil
-    @State var loading = true
+
+    /// 启动状态，表示LaunchViewSwitcher正在显示
+    @State var launching = true
     @State var iCloudAvailable = true
 
     @StateObject var a: AppProvider
@@ -20,11 +23,10 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     var playManWrapper: PlayManWrapper
     var cloudProvider: CloudProvider
     var playManController: PlayManController
-    private var verbose = false
 
     init(@ViewBuilder content: () -> Content) {
-        if self.verbose {
-            
+        if Self.verbose {
+            os_log("\(Self.t)🚀 初始化开始")
         }
 
         let box = RootBox.shared
@@ -40,15 +42,9 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     }
 
     var body: some View {
-        if self.verbose {
-            os_log("\(self.t)👷 开始渲染, isLoading: \(self.loading)")
-        }
-        return Group {
-            if self.loading {
-                LaunchViewSwitcher(
-                    plugins: p.plugins,
-                    onEnd: boot
-                )
+        Group {
+            if self.launching {
+                Launcher(plugins: p.plugins)
             } else {
                 if let e = self.error {
                     ErrorViewFatal(error: e)
@@ -79,18 +75,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                     .environmentObject(p)
                     .environmentObject(m)
                     .environmentObject(self.stateProvider)
-                    .sheet(isPresented: self.$a.showSheet, content: {
-                        VStack {
-                            ForEach(Array(p.getSheetViews(storage: Config.getStorageLocation()).enumerated()), id: \.offset) { _, view in
-                                view
-                            }
-                        }
-                        .environmentObject(man)
-                        .environmentObject(playManController)
-                        .environmentObject(self.a)
-                        .environmentObject(p)
-                        .environmentObject(m)
-                    })
+                    .onStorageLocationDidReset(perform: onResetStorageLocation)
                 }
             }
         }
@@ -101,10 +86,11 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
         .background(Config.rootBackground)
         .onReceive(nc.publisher(for: NSUbiquitousKeyValueStore.didChangeExternallyNotification), perform: onCloudAccountStateChanged)
         .onChange(of: Config.getStorageLocation(), onStorageLocationChange)
+        .onLaunchDone(perform: onLaunchEnd)
     }
 
     private func reloadView() {
-        loading = true
+        launching = true
         error = nil
     }
 }
@@ -113,14 +99,12 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
 
 extension RootView {
     func boot() {
-        if verbose {
+        if Self.verbose {
             os_log("\(self.t)🚀 Boot")
         }
         Task {
             do {
                 try self.p.restoreCurrent()
-
-                a.showSheet = p.getSheetViews(storage: Config.getStorageLocation()).isNotEmpty
 
                 #if os(iOS)
                     UIApplication.shared.beginReceivingRemoteControlEvents()
@@ -128,15 +112,44 @@ extension RootView {
             } catch let e {
                 self.error = e
             }
-
-            self.loading = false
         }
+    }
+}
+
+// MARK: - Setters
+
+extension RootView {
+    func setError(_ e: Error) {
+        self.error = e
+    }
+
+    func setLoading(_ l: Bool, reason: String) {
+        if Self.verbose {
+            os_log("\(self.t)👷 设置加载状态: \(l), reason: \(reason)")
+        }
+        self.launching = l
     }
 }
 
 // MARK: Event Handler
 
 extension RootView {
+    func onResetStorageLocation() {
+        if Self.verbose {
+            os_log("\(self.t)🔄 Reset Storage Location")
+        }
+        setLoading(true, reason: "resetStorageLocation")
+    }
+
+    func onLaunchEnd() {
+        if Self.verbose {
+            os_log("\(self.t)✅ Launch Done")
+        }
+
+        setLoading(false, reason: "launchEnd")
+        boot()
+    }
+
     func onChangeOfiCloud() {
         if iCloudAvailable {
             reloadView()
@@ -145,7 +158,6 @@ extension RootView {
 
     func onStorageLocationChange() {
         if Config.getStorageLocation() == nil {
-            a.showSheet = true
             return
         }
     }
