@@ -11,7 +11,7 @@ struct WelcomeView: View, SuperLog {
             LinearGradient(colors: [
                 Color.indigo.opacity(0.85),
                 Color.purple.opacity(0.85),
-                Color.blue.opacity(0.85),
+                Color.blue.opacity(0.1),
             ], startPoint: .topLeading, endPoint: .bottomTrailing)
                 .ignoresSafeArea()
 

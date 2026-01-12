@@ -27,7 +27,6 @@ struct StorageView: View, SuperLog {
                     action: {
                         if cloudManager.isSignedIn == true && c.getStorageLocation() != .icloud {
                             tempStorageLocation = .icloud
-                            c.updateStorageLocation(.icloud)
                         }
                     }
                 ) {
@@ -65,7 +64,6 @@ struct StorageView: View, SuperLog {
                     icon: .iconFolder,
                     action: {
                         tempStorageLocation = .local
-                        c.updateStorageLocation(.local)
                     }
                 ) {
                     HStack {
@@ -80,34 +78,30 @@ struct StorageView: View, SuperLog {
                 // 自动设置存储位置
                 autoSetStorageLocation()
             }
+            .onDisappear(perform: onDisappear)
         }
     }
 
     // MARK: - 自动设置存储位置
 
     private func autoSetStorageLocation() {
-        if Self.verbose {
-            os_log("\(Self.t)💾 自动设置存储位置")
-        }
-
         // 如果已经有存储位置设置，则使用现有设置
         if let currentLocation = c.getStorageLocation() {
             tempStorageLocation = currentLocation
             return
         }
-
-        // 如果没有设置，则自动选择
-        if cloudManager.isSignedIn == true {
-            // iCloud 可用，选择 iCloud
-            tempStorageLocation = .icloud
-            c.updateStorageLocation(.icloud)
-        } else {
-            // iCloud 不可用，选择本地存储
-            tempStorageLocation = .local
-            c.updateStorageLocation(.local)
-        }
     }
 }
+
+// MARK: - Events Handling
+
+extension StorageView {
+    func onDisappear() {
+        c.updateStorageLocation(tempStorageLocation)
+    }
+}
+
+// MARK: - Preview
 
 #Preview("StorageView") {
     RootView {

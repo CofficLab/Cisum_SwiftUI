@@ -20,6 +20,8 @@ import UIKit
 @MainActor
 enum Config: SuperLog {
     nonisolated static let emoji = "🧲"
+    nonisolated static let verbose = true
+    
     static let id = "com.yueyi.cisum"
     static let logger = Logger.self
     static let maxAudioCount = 100
@@ -97,6 +99,9 @@ enum Config: SuperLog {
     
     /// 更新存储位置设置
     static func updateStorageLocation(_ location: StorageLocation?) {
+        if Self.verbose {
+            os_log("\(Self.t)💾 更新存储位置设置: \(location?.rawValue ?? "nil")")
+        }
         UserDefaults.standard.set(location?.rawValue, forKey: keyOfStorageLocation)
     }
     
