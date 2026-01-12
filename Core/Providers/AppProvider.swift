@@ -15,7 +15,6 @@ class AppProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLog, 
     private let uiRepo: UIRepo
 
     @Published private(set) var showDB: Bool
-    @Published var showSheet: Bool = true
     @Published var isImporting: Bool = false
     @Published var isDropping: Bool = false
     @Published var rightAlbumVisible = false

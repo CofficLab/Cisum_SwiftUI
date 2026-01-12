@@ -128,19 +128,6 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
         return wrapped
     }
 
-    /// 获取所有插件提供的弹窗视图
-    ///
-    /// 遍历所有已注册的插件，收集它们提供的弹窗视图（如设置面板、信息窗口等）。
-    ///
-    /// - Parameter storage: 当前的存储位置，某些插件可能需要根据存储位置提供不同的弹窗视图
-    /// - Returns: 包含所有插件弹窗视图的数组
-    func getSheetViews(storage: StorageLocation?) -> [AnyView] {
-        let items = plugins.compactMap { $0.addSheetView(storage: storage) }
-
-        // os_log("\(self.t)GetRootViews: \(items.count)")
-
-        return items
-    }
 
     /// 获取所有插件提供的工具栏按钮
     ///

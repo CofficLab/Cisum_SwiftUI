@@ -76,18 +76,6 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                     .environmentObject(m)
                     .environmentObject(self.stateProvider)
                     .onStorageLocationDidReset(perform: onResetStorageLocation)
-//                    .sheet(isPresented: self.$a.showSheet, content: {
-//                        VStack {
-//                            ForEach(Array(p.getSheetViews(storage: Config.getStorageLocation()).enumerated()), id: \.offset) { _, view in
-//                                view
-//                            }
-//                        }
-//                        .environmentObject(man)
-//                        .environmentObject(playManController)
-//                        .environmentObject(self.a)
-//                        .environmentObject(p)
-//                        .environmentObject(m)
-//                    })
                 }
             }
         }
@@ -96,8 +84,8 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
         .frame(maxWidth: .infinity)
         .frame(maxHeight: .infinity)
         .background(Config.rootBackground)
-//        .onReceive(nc.publisher(for: NSUbiquitousKeyValueStore.didChangeExternallyNotification), perform: onCloudAccountStateChanged)
-//        .onChange(of: Config.getStorageLocation(), onStorageLocationChange)
+        .onReceive(nc.publisher(for: NSUbiquitousKeyValueStore.didChangeExternallyNotification), perform: onCloudAccountStateChanged)
+        .onChange(of: Config.getStorageLocation(), onStorageLocationChange)
         .onLaunchDone(perform: onLaunchEnd)
     }
 
@@ -118,19 +106,9 @@ extension RootView {
             do {
                 try self.p.restoreCurrent()
 
-                a.showSheet = p.getSheetViews(storage: Config.getStorageLocation()).isNotEmpty
-
                 #if os(iOS)
                     UIApplication.shared.beginReceivingRemoteControlEvents()
                 #endif
-
-                if a.showSheet == false {
-                    setLoading(false, reason: "boot done")
-                } else {
-                    if Self.verbose {
-                        os_log("\(self.t)显示 Sheet")
-                    }
-                }
             } catch let e {
                 self.error = e
             }
@@ -180,7 +158,6 @@ extension RootView {
 
     func onStorageLocationChange() {
         if Config.getStorageLocation() == nil {
-            a.showSheet = true
             return
         }
     }
