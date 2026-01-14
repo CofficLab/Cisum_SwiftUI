@@ -96,11 +96,10 @@ struct ResetProgressContent: View {
 // MARK: - Preview
 
 #Preview("ResetConfirmContent") {
-    RootView {
-        ResetConfirmContent(onCancel: {}, onConfirm: {})
-            .padding()
-            .frame(width: 400)
-    }
+    ResetConfirmContent(onCancel: {}, onConfirm: {})
+        .padding()
+        .frame(width: 400)
+        .inRootView()
 }
 
 #Preview("ResetProgressContent", traits: .sizeThatFitsLayout) {
@@ -109,12 +108,11 @@ struct ResetProgressContent: View {
 }
 
 #Preview("ResetConfirmContent - Dark") {
-    RootView {
-        ResetConfirmContent(onCancel: {}, onConfirm: {})
-            .padding()
-            .frame(width: 400)
-    }
-    .preferredColorScheme(.dark)
+    ResetConfirmContent(onCancel: {}, onConfirm: {})
+        .padding()
+        .frame(width: 400)
+        .inRootView()
+        .preferredColorScheme(.dark)
 }
 
 #Preview("ResetProgressContent - Dark", traits: .sizeThatFitsLayout) {

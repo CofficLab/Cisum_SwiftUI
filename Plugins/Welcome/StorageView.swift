@@ -104,20 +104,18 @@ extension StorageView {
 // MARK: - Preview
 
 #Preview("StorageView") {
-    RootView {
-        StorageView()
-            .padding()
-            .frame(width: 400)
-    }
+    StorageView()
+        .inRootView()
+        .padding()
+        .frame(width: 400)
 }
 
 #Preview("StorageView - Dark") {
-    RootView {
-        StorageView()
-            .padding()
-            .frame(width: 400)
-    }
-    .preferredColorScheme(.dark)
+    StorageView()
+        .inRootView()
+        .padding()
+        .frame(width: 400)
+        .preferredColorScheme(.dark)
 }
 
 #if os(macOS)

@@ -46,19 +46,17 @@ struct ResetSetting: View, SuperLog {
 }
 
 #Preview("ResetConfirmContent") {
-    RootView {
-        ResetConfirmContent(onCancel: {}, onConfirm: {})
-            .padding()
-            .frame(width: 400)
-    }
+    ResetConfirmContent(onCancel: {}, onConfirm: {})
+        .padding()
+        .frame(width: 400)
+        .inRootView()
 }
 
 #Preview("Setting") {
-    RootView {
-        SettingView()
-            .background(.background)
-    }
-    .frame(height: 1200)
+    SettingView()
+        .background(.background)
+        .frame(height: 1200)
+        .inRootView()
 }
 
 #Preview("App - Large") {

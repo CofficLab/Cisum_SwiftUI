@@ -48,18 +48,16 @@ extension Notification.Name {
 }
 
 #Preview("Small Screen") {
-    RootView {
-        ContentView()
-    }
-    .frame(width: 500)
-    .frame(height: 600)
+    ContentView()
+        .frame(width: 500)
+        .frame(height: 600)
+        .inRootView()
 }
 
 #Preview("Big Screen") {
-    RootView {
-        ContentView()
-    }
-    .frame(width: 800)
-    .frame(height: 1200)
+    ContentView()
+        .frame(width: 800)
+        .frame(height: 1200)
+        .inRootView()
 }
 

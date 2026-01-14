@@ -284,21 +284,19 @@ enum PluginProviderError: Error, LocalizedError {
 }
 
 #if os(macOS)
-    #Preview("Small Screen") {
-        RootView {
-            ContentView()
-        }
+#Preview("Small Screen") {
+    ContentView()
         .frame(width: 500)
         .frame(height: 600)
-    }
+        .inRootView()
+}
 
-    #Preview("Big Screen") {
-        RootView {
-            ContentView()
-        }
+#Preview("Big Screen") {
+    ContentView()
         .frame(width: 800)
         .frame(height: 1200)
-    }
+        .inRootView()
+}
 #endif
 
 #if os(iOS)
