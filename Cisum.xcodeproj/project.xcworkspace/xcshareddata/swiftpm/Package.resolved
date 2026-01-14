@@ -34,7 +34,7 @@
       "location" : "https://github.com/CofficLab/MagicKit",
       "state" : {
         "branch" : "dev",
-        "revision" : "7fd7cbcccfb939beb63989c2f2b0401d442dd17f"
+        "revision" : "9d70346ebba7a25e03f4d2c5bfbb4fd5a57eee18"
       }
     },
     {
@@ -52,7 +52,7 @@
       "location" : "https://github.com/nookery/MagicUI.git",
       "state" : {
         "branch" : "main",
-        "revision" : "37a6d798df97ea97c398feababdf4cb2b51ecb7e"
+        "revision" : "f787084a5b6833dfa09f13f56650d997b450980c"
       }
     },
     {
