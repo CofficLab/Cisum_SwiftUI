@@ -263,11 +263,3 @@ extension Config {
 
 // MARK: - View Extensions
 
-extension View {
-    /// 当存储位置重置时执行操作
-    func onStorageLocationDidReset(perform action: @escaping () -> Void) -> some View {
-        self.onReceive(NotificationCenter.default.publisher(for: Config.storageLocationDidReset)) { _ in
-            action()
-        }
-    }
-}

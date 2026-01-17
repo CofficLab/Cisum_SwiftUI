@@ -43,17 +43,6 @@ extension Notification.Name {
     static let launchDone = Notification.Name("launchDone")
 }
 
-/// SwiftUI View 扩展，提供 LaunchView 事件监听
-extension View {
-    /// 监听 LaunchView 显示事件
-    /// - Parameter action: LaunchView 显示时执行的操作
-    /// - Returns: 添加了监听器的视图
-    func onLaunchDone(perform action: @escaping () -> Void) -> some View {
-        self.onReceive(NotificationCenter.default.publisher(for: .launchDone)) { _ in
-            action()
-        }
-    }
-}
 
 // MARK: - Preview
 

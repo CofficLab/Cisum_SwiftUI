@@ -28,7 +28,7 @@ struct ProductsSubscription: View, SuperEvent, SuperLog, SuperThread {
                     .padding()
                 }
             }.onAppear(perform: onAppear)
-                .onReceive(NotificationCenter.default.publisher(for: .Restored), perform: onRestore)
+                .onRestored(perform: onRestore)
         }
     }
 

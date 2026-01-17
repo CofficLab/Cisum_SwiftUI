@@ -7,6 +7,16 @@ alwaysApply: false
 
 本规则约束当 Swift 文件中抛出事件时，必须为 View 扩展添加相应的监听方法，提供便捷的事件监听 API。
 
+## 文件组织规范
+
+**所有事件相关代码必须统一放在 `Core/Events/` 目录中：**
+
+- `AppEvents.swift` - 应用生命周期事件定义和扩展
+- `SettingEvents.swift` - 设置相关事件定义和扩展
+- 其他领域事件文件按需添加
+
+**禁止将事件扩展代码放在其他位置**，确保事件系统的集中管理和维护。
+
 ## 核心原则
 
 **当 Swift 文件通过 NotificationCenter 或其他方式抛出事件时，必须为 View 扩展添加一个以 `on` 开头的便捷监听方法。**
@@ -63,9 +73,17 @@ extension View {
 
 ### 5. 实现要求
 
+#### 文件组织结构
+**所有事件相关代码必须放在 `Core/Events` 目录中：**
+
+- `AppEvents.swift` - 应用生命周期事件
+- `SettingEvents.swift` - 设置相关事件
+- 其他特定领域的事件文件
+
 #### View 扩展实现
 
 ```swift
+// 在 Core/Events/ 目录的相应文件中实现
 extension View {
     func onEventName(perform action: @escaping (ProjectEventInfo) -> Void) -> some View {
         self.onReceive(NotificationCenter.default.publisher(for: .eventName)) { notification in
@@ -114,58 +132,38 @@ extension View {
 ### 6. 使用示例
 
 ```swift
-struct MyView: View {
+// ContentView.swift - 使用事件监听
+struct ContentView: View {
     var body: some View {
-        Text("Hello")
-            .onApplicationDidBecomeActive(perform: handleAppDidBecomeActive)
-            .onProjectDidCommit(perform: handleCommitSuccess)
+        VStack {
+            Text("Hello")
+        }
+        .onApplicationDidFinishLaunching(perform: handleAppLaunch)
+        .onOpenSettings(perform: handleOpenSettings)
     }
 }
 
 // MARK: - Event Handlers
 
-extension MyView {
-    func handleAppDidBecomeActive(_ eventInfo: ProjectEventInfo) {
-        // 处理应用激活事件
-        print("App became active!")
-        refreshData()
+extension ContentView {
+    func handleAppLaunch() {
+        // 处理应用启动完成事件
+        print("Application launched successfully!")
+        // 执行应用初始化逻辑
     }
 
-    func handleCommitSuccess(_ eventInfo: ProjectEventInfo) {
-        // 处理提交成功事件
-        print("Commit successful: \(eventInfo.additionalInfo?["message"] ?? "unknown")")
-        updateCommitList()
+    func handleOpenSettings() {
+        // 处理打开设置事件
+        showSettings = true
     }
 }
 ```
-
-## 规则优势
-
-### 1. 提升开发体验
-
-- **语义化 API**：`onEventName` 比 `onReceive(notificationPublisher)` 更直观
-- **减少样板代码**：避免在每个 View 中重复编写监听逻辑
-- **类型安全**：编译时检查，无运行时错误风险
-
-### 2. 统一代码风格
-
-- **一致性**：所有事件监听都使用相同的命名模式
-- **可维护性**：集中管理事件监听逻辑
-- **可发现性**：IDE 自动补全 `onXxx` 方法
-
-### 3. 最佳实践
-
-- **解耦合**：View 不需要知道具体的 NotificationCenter 实现
-- **可测试性**：事件监听逻辑独立，便于单元测试
-- **可重用性**：扩展方法可在项目任何地方使用
-- **类型安全**：使用 `ProjectEventInfo` 提供强类型事件数据
-- **代码简洁**：一行代码完成事件监听，逻辑分离到独立方法
 
 ## 注意事项
 
 - **调用语法**：必须使用 `perform:` 参数语法，一行代码完成事件监听
 - **方法签名**：事件处理方法必须接受 `ProjectEventInfo` 参数
-- **作用域**：扩展方法应放在抛出事件的同一个文件中，或相关工具文件中
+- **文件组织**：所有事件扩展方法必须放在 `Core/Events/` 目录中相应的文件中
 - **命名冲突**：确保 `onXxx` 方法名在项目中唯一
 - **线程安全**：确保事件监听在主线程执行 UI 更新操作
 - **内存管理**：注意避免循环引用，特别是使用 Combine Publisher 时
@@ -175,54 +173,87 @@ extension MyView {
 
 ### 应用生命周期事件
 
+**文件位置**: `Core/Events/AppEvents.swift`
+
 ```swift
+// 应用生命周期事件扩展
 extension View {
-    func onApplicationDidBecomeActive(perform action: @escaping () -> Void) -> some View {
-        self.onReceive(NotificationCenter.default.publisher(for: .appDidBecomeActive)) { _ in
+    func onApplicationDidFinishLaunching(perform action: @escaping () -> Void) -> some View {
+        self.onReceive(NotificationCenter.default.publisher(for: .applicationDidFinishLaunching)) { _ in
             action()
         }
     }
 
-    func onApplicationWillBecomeActive(perform action: @escaping () -> Void) -> some View {
-        self.onReceive(NotificationCenter.default.publisher(for: .appWillBecomeActive)) { _ in
+    func onApplicationWillTerminate(perform action: @escaping () -> Void) -> some View {
+        self.onReceive(NotificationCenter.default.publisher(for: .applicationWillTerminate)) { _ in
+            action()
+        }
+    }
+
+    func onApplicationDidBecomeActive(perform action: @escaping () -> Void) -> some View {
+        self.onReceive(NotificationCenter.default.publisher(for: .applicationDidBecomeActive)) { _ in
+            action()
+        }
+    }
+
+    func onApplicationDidResignActive(perform action: @escaping () -> Void) -> some View {
+        self.onReceive(NotificationCenter.default.publisher(for: .applicationDidResignActive)) { _ in
             action()
         }
     }
 }
 ```
 
-### 业务事件监听
+### 设置相关事件
+
+**文件位置**: `Core/Events/SettingEvents.swift`
 
 ```swift
+// 设置相关事件扩展
 extension View {
-    func onProjectLoaded(perform action: @escaping (ProjectEventInfo) -> Void) -> some View {
-        self.onReceive(NotificationCenter.default.publisher(for: .projectLoaded)) { notification in
-            if let userInfo = notification.userInfo, let eventInfo = userInfo["eventInfo"] as? ProjectEventInfo {
-                action(eventInfo)
+    func onOpenSettings(perform action: @escaping () -> Void) -> some View {
+        self.onReceive(NotificationCenter.default.publisher(for: .openSettings)) { _ in
+            action()
+        }
+    }
+
+    func onDismissSettings(perform action: @escaping () -> Void) -> some View {
+        self.onReceive(NotificationCenter.default.publisher(for: .dismissSettings)) { _ in
+            action()
+        }
+    }
+}
+```
+
+### 使用示例
+
+```swift
+// 在任意View中使用事件监听
+struct MyView: View {
+    @State private var showSettings = false
+
+    var body: some View {
+        VStack {
+            Text("Welcome to SwiftUI Template")
+            Button("Open Settings") {
+                NotificationCenter.postOpenSettings()
             }
         }
+        .sheet(isPresented: $showSettings) {
+            SettingView()
+        }
+        .onOpenSettings(perform: handleOpenSettings)
+        .onApplicationDidBecomeActive(perform: handleAppActivated)
     }
 }
 
-// 使用示例
-struct ProjectListView: View {
-    var body: some View {
-        List(projects) { project in
-            Text(project.title)
-        }
-        .onProjectLoaded(perform: handleProjectLoaded)
+extension MyView {
+    func handleOpenSettings() {
+        showSettings = true
     }
-}
 
-extension ProjectListView {
-    func handleProjectLoaded(_ eventInfo: ProjectEventInfo) {
-        if eventInfo.success {
-            // 刷新项目列表
-            loadProjects()
-        } else {
-            // 处理加载失败
-            showError(eventInfo.error)
-        }
+    func handleAppActivated() {
+        print("App became active - refresh data if needed")
     }
 }
 ```
