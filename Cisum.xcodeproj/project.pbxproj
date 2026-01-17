@@ -455,26 +455,26 @@
 /* Begin XCRemoteSwiftPackageReference section */
 		F5C4A3092F110F4A0005C730 /* XCRemoteSwiftPackageReference "MagicKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/CofficLab/MagicKit";
+			repositoryURL = "https://github.com/nookery/MagicKit";
 			requirement = {
-				branch = dev;
-				kind = branch;
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
 			};
 		};
 		F5C4A30C2F110F560005C730 /* XCRemoteSwiftPackageReference "MagicPlayMan" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/nookery/MagicPlayMan";
 			requirement = {
-				branch = main;
-				kind = branch;
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.0.0;
 			};
 		};
 		F5D179F42F10D996005CA21F /* XCRemoteSwiftPackageReference "MagicDevice" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/nookery/MagicDevice";
 			requirement = {
-				branch = main;
-				kind = branch;
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.0.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
