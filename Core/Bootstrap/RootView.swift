@@ -45,7 +45,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                 Launcher(plugins: pluginProvider.plugins)
             } else {
                 if let e = self.error {
-                    ErrorViewFatal(error: e)
+                    CrashedView(error: e)
                 } else {
                     NavigationStack {
                         ZStack {
@@ -62,24 +62,21 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                                 RootToolbar()
                             }
                             .blendMode(.normal)
-                            .background(Config.rootBackground)
                         }
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    
-                    
                 }
             }
         }
         .withMagicToast()
-        .frame(maxWidth: .infinity)
-        .frame(maxHeight: .infinity)
-        .background(Config.rootBackground)
         .onStorageLocationChanged(perform: onStorageLocationChange)
         .onLaunchDone(perform: onLaunchEnd)
         .onCloudAccountStateChanged(perform: onCloudAccountStateChanged)
         .onStorageLocationDidReset(perform: onResetStorageLocation)
+        .frame(maxWidth: .infinity)
+        .frame(maxHeight: .infinity)
+        .background(Config.rootBackground)
         .environmentObject(cloudProvider)
         .environmentObject(man)
         .environmentObject(playManController)

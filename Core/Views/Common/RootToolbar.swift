@@ -37,7 +37,7 @@ struct RootToolbar: ToolbarContent {
     #Preview("App - Small") {
         ContentView()
             .inRootView()
-            .frame(width: 500, height: 800)
+            .frame(width: 400, height: 700)
     }
 #endif
 

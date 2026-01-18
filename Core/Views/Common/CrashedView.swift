@@ -2,7 +2,7 @@ import MagicKit
 import MagicUI
 import SwiftUI
 
-struct ErrorViewFatal: View {
+struct CrashedView: View {
     @EnvironmentObject var cloud: CloudProvider
 
     var error: Error
@@ -167,7 +167,7 @@ struct ErrorViewFatal: View {
 
 // MARK: - Private Helpers
 
-extension ErrorViewFatal {
+extension CrashedView {
     private func isFileExist(_ url: URL) -> String {
         FileManager.default.fileExists(atPath: url.path) ? "是" : "否"
     }
@@ -182,13 +182,13 @@ extension ErrorViewFatal {
 
 #if os(macOS)
     #Preview("ErrorViewFatal - Large") {
-        ErrorViewFatal(error: NSError(domain: "TestError", code: 1001, userInfo: [NSLocalizedDescriptionKey: "这是一个测试错误，用于预览界面效果"]))
+        CrashedView(error: NSError(domain: "TestError", code: 1001, userInfo: [NSLocalizedDescriptionKey: "这是一个测试错误，用于预览界面效果"]))
             .inRootView()
             .frame(width: 600, height: 1000)
     }
 
     #Preview("ErrorViewFatal - Small") {
-        ErrorViewFatal(error: NSError(domain: "TestError", code: 1001, userInfo: [NSLocalizedDescriptionKey: "测试错误"]))
+        CrashedView(error: NSError(domain: "TestError", code: 1001, userInfo: [NSLocalizedDescriptionKey: "测试错误"]))
             .inRootView()
             .frame(width: 500, height: 800)
     }
