@@ -1,13 +1,142 @@
 import Foundation
 import SwiftUI
 
+// MARK: - Notification Names
+
+extension Notification.Name {
+    /// 应用将要隐藏
+    static let applicationWillHide = Notification.Name("applicationWillHide")
+
+    /// 应用已隐藏
+    static let applicationDidHide = Notification.Name("applicationDidHide")
+
+    /// 应用将要变为活动状态
+    static let applicationWillBecomeActive = Notification.Name("applicationWillBecomeActive")
+
+    /// 应用启动完成
+    static let applicationDidFinishLaunching = Notification.Name("applicationDidFinishLaunching")
+
+    /// 应用将要终止
+    static let applicationWillTerminate = Notification.Name("applicationWillTerminate")
+
+    /// 应用将要更新
+    static let applicationWillUpdate = Notification.Name("applicationWillUpdate")
+
+    /// 应用已成为活动状态
+    static let applicationDidBecomeActive = Notification.Name("applicationDidBecomeActive")
+
+    /// 应用将要失去活动状态
+    static let applicationWillResignActive = Notification.Name("applicationWillResignActive")
+
+    /// 应用已失去活动状态
+    static let applicationDidResignActive = Notification.Name("applicationDidResignActive")
+
+    /// 窗口已移动
+    static let windowDidMove = Notification.Name("windowDidMove")
+
+    /// 窗口已调整大小
+    static let windowDidResize = Notification.Name("windowDidResize")
+}
+
+// MARK: - View Extensions
+
 /// SwiftUI View 扩展，提供便捷的应用生命周期事件监听
 extension View {
     /// 监听应用启动完成事件
     /// - Parameter action: 应用启动完成时执行的操作
     /// - Returns: 添加了监听器的视图
     func onLaunchDone(perform action: @escaping () -> Void) -> some View {
-        self.onReceive(NotificationCenter.default.publisher(for: .launchDone)) { _ in
+        self.onReceive(NotificationCenter.default.publisher(for: .applicationDidFinishLaunching)) { _ in
+            action()
+        }
+    }
+
+    /// 监听应用将要隐藏事件
+    /// - Parameter action: 应用将要隐藏时执行的操作
+    /// - Returns: 添加了监听器的视图
+    func onApplicationWillHide(perform action: @escaping () -> Void) -> some View {
+        self.onReceive(NotificationCenter.default.publisher(for: .applicationWillHide)) { _ in
+            action()
+        }
+    }
+
+    /// 监听应用已隐藏事件
+    /// - Parameter action: 应用已隐藏时执行的操作
+    /// - Returns: 添加了监听器的视图
+    func onApplicationDidHide(perform action: @escaping () -> Void) -> some View {
+        self.onReceive(NotificationCenter.default.publisher(for: .applicationDidHide)) { _ in
+            action()
+        }
+    }
+
+    /// 监听应用将要变为活动状态事件
+    /// - Parameter action: 应用将要变为活动状态时执行的操作
+    /// - Returns: 添加了监听器的视图
+    func onApplicationWillBecomeActive(perform action: @escaping () -> Void) -> some View {
+        self.onReceive(NotificationCenter.default.publisher(for: .applicationWillBecomeActive)) { _ in
+            action()
+        }
+    }
+
+    /// 监听应用已成为活动状态事件
+    /// - Parameter action: 应用已成为活动状态时执行的操作
+    /// - Returns: 添加了监听器的视图
+    func onApplicationDidBecomeActive(perform action: @escaping () -> Void) -> some View {
+        self.onReceive(NotificationCenter.default.publisher(for: .applicationDidBecomeActive)) { _ in
+            action()
+        }
+    }
+
+    /// 监听应用将要终止事件
+    /// - Parameter action: 应用将要终止时执行的操作
+    /// - Returns: 添加了监听器的视图
+    func onApplicationWillTerminate(perform action: @escaping () -> Void) -> some View {
+        self.onReceive(NotificationCenter.default.publisher(for: .applicationWillTerminate)) { _ in
+            action()
+        }
+    }
+
+    /// 监听应用将要更新事件
+    /// - Parameter action: 应用将要更新时执行的操作
+    /// - Returns: 添加了监听器的视图
+    func onApplicationWillUpdate(perform action: @escaping () -> Void) -> some View {
+        self.onReceive(NotificationCenter.default.publisher(for: .applicationWillUpdate)) { _ in
+            action()
+        }
+    }
+
+    /// 监听应用将要失去活动状态事件
+    /// - Parameter action: 应用将要失去活动状态时执行的操作
+    /// - Returns: 添加了监听器的视图
+    func onApplicationWillResignActive(perform action: @escaping () -> Void) -> some View {
+        self.onReceive(NotificationCenter.default.publisher(for: .applicationWillResignActive)) { _ in
+            action()
+        }
+    }
+
+    /// 监听应用已失去活动状态事件
+    /// - Parameter action: 应用已失去活动状态时执行的操作
+    /// - Returns: 添加了监听器的视图
+    func onApplicationDidResignActive(perform action: @escaping () -> Void) -> some View {
+        self.onReceive(NotificationCenter.default.publisher(for: .applicationDidResignActive)) { _ in
+            action()
+        }
+    }
+
+    /// 监听窗口移动事件
+    /// - Parameter action: 窗口移动时执行的操作
+    /// - Returns: 添加了监听器的视图
+    func onWindowDidMove(perform action: @escaping () -> Void) -> some View {
+        self.onReceive(NotificationCenter.default.publisher(for: .windowDidMove)) { _ in
+            action()
+        }
+    }
+
+    /// 监听窗口调整大小事件
+    /// - Parameter action: 窗口调整大小时执行的操作
+    /// - Returns: 添加了监听器的视图
+    func onWindowDidResize(perform action: @escaping () -> Void) -> some View {
+        self.onReceive(NotificationCenter.default.publisher(for: .windowDidResize)) { _ in
             action()
         }
     }
