@@ -183,13 +183,13 @@ extension View {
 #if os(macOS)
     #Preview("App - Large") {
         ContentView()
-    .inRootView()
+            .inRootView()
             .frame(width: 600, height: 1000)
     }
 
     #Preview("App - Small") {
         ContentView()
-    .inRootView()
+            .inRootView()
             .frame(width: 500, height: 800)
     }
 #endif
@@ -197,6 +197,6 @@ extension View {
 #if os(iOS)
     #Preview("iPhone") {
         ContentView()
-    .inRootView()
+            .inRootView()
     }
 #endif
