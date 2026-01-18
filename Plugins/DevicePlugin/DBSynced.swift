@@ -127,7 +127,8 @@ extension DBSynced {
 }
 
 #Preview {
-    AppPreview()
+    ContentView()
+    .inRootView()
     #if os(macOS)
         .frame(height: 800)
     #endif

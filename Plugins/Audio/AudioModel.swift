@@ -160,7 +160,8 @@ extension AudioModel {
 }
 
 #Preview("App") {
-    AppPreview()
+    ContentView()
+    .inRootView()
         .frame(height: 800)
 }
 

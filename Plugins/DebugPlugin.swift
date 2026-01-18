@@ -41,17 +41,20 @@ extension DebugPlugin {
 }
 
 #Preview("App - Large") {
-    AppPreview()
+    ContentView()
+    .inRootView()
         .frame(width: 600, height: 1000)
 }
 
 #Preview("App - Small") {
-    AppPreview()
+    ContentView()
+    .inRootView()
         .frame(width: 500, height: 800)
 }
 
 #if os(iOS)
 #Preview("iPhone") {
-    AppPreview()
+    ContentView()
+    .inRootView()
 }
 #endif

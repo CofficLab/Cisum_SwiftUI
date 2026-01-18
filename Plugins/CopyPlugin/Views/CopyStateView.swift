@@ -53,7 +53,8 @@ struct CopyStateView: View, SuperLog, SuperThread {
 }
 
 #Preview("APP") {
-    AppPreview()
+    ContentView()
+    .inRootView()
         .frame(height: 800)
 }
 

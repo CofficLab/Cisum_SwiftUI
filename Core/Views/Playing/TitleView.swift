@@ -9,8 +9,15 @@ struct TitleView: View, SuperLog, SuperThread {
     nonisolated static let emoji = "📺"
 
     @EnvironmentObject var playMan: PlayMan
+    @Environment(\.demoMode) var isDemoMode
 
-    var title: String { playMan.asset?.deletingPathExtension().title ?? "" }
+    var title: String {
+        if isDemoMode {
+            return "美丽的歌曲标题"
+        } else {
+            return playMan.asset?.deletingPathExtension().title ?? ""
+        }
+    }
 
     var body: some View {
         if Self.verbose {
@@ -35,18 +42,27 @@ struct TitleView: View, SuperLog, SuperThread {
 }
 
 #Preview("App - Large") {
-    AppPreview()
+    ContentView()
+        .inRootView()
         .frame(width: 600, height: 1000)
 }
 
 #Preview("App - Small") {
-    AppPreview()
+    ContentView()
+        .inRootView()
+        .frame(width: 500, height: 800)
+}
+
+#Preview("Demo Mode") {
+    ContentView()
+        .inRootView()
+        .inDemoMode()
         .frame(width: 500, height: 800)
 }
 
 #if os(iOS)
-#Preview("iPhone") {
-    AppPreview()
-}
+    #Preview("iPhone") {
+        ContentView()
+            .inRootView()
+    }
 #endif
-

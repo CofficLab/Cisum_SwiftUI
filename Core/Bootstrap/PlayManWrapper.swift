@@ -67,6 +67,7 @@ public class PlayManWrapper {
 }
 
 #Preview("App") {
-    AppPreview()
+    ContentView()
+    .inRootView()
         .frame(height: 800)
 }

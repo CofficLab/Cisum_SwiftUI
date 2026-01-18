@@ -157,7 +157,8 @@ extension CopyWorkerView {
 }
 
 #Preview("App") {
-    AppPreview()
+    ContentView()
+    .inRootView()
         .frame(height: 800)
         .frame(width: 800)
 }

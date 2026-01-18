@@ -72,6 +72,7 @@ struct VideoTile: View, SuperThread, SuperLog {
 }
 
 #Preview("App") {
-    AppPreview()
+    ContentView()
+    .inRootView()
         .frame(height: 800)
 }

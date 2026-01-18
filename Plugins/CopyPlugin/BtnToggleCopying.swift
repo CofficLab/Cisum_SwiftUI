@@ -20,7 +20,8 @@ struct BtnToggleCopying: View {
 }
 
 #Preview("App") {
-    AppPreview()
+    ContentView()
+    .inRootView()
         .frame(height: 800)
 }
 

@@ -54,7 +54,8 @@ extension VideoDB {
 }
 
 #Preview("APP") {
-    AppPreview()
+    ContentView()
+    .inRootView()
         .frame(height: 800)
 }
 

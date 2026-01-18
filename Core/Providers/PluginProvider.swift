@@ -301,6 +301,7 @@ enum PluginProviderError: Error, LocalizedError {
 
 #if os(iOS)
     #Preview("iPhone") {
-        AppPreview()
+        ContentView()
+    .inRootView()
     }
 #endif

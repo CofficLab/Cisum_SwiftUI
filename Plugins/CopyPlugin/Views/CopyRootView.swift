@@ -50,7 +50,8 @@ struct CopyRootView<Content>: View, SuperEvent, SuperLog, SuperThread where Cont
 }
 
 #Preview("App") {
-    AppPreview()
+    ContentView()
+    .inRootView()
         .frame(height: 800)
         .frame(width: 800)
 }

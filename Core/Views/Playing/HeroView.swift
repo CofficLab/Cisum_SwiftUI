@@ -15,7 +15,7 @@ struct HeroView: View {
             VStack(spacing: 0) {
                 if shouldShowAlbum(geo) {
                     playMan.makeHeroView(verbose: Self.verbose, defaultView: {
-                        LogoView(background: .blue.opacity(0.1),rotationSpeed: 0.001, backgroundShape: .circle)
+                        LogoView(background: .blue.opacity(0.1), rotationSpeed: 0.001, backgroundShape: .circle)
                     })
                     .frame(maxWidth: .infinity)
                     .frame(height: getAlbumHeight(geo))
@@ -45,17 +45,20 @@ struct HeroView: View {
 }
 
 #Preview("App - Large") {
-    AppPreview()
+    ContentView()
+        .inRootView()
         .frame(width: 600, height: 800)
 }
 
 #Preview("App - Small") {
-    AppPreview()
+    ContentView()
+        .inRootView()
         .frame(width: 500, height: 800)
 }
 
 #if os(iOS)
     #Preview("iPhone") {
-        AppPreview()
+        ContentView()
+            .inRootView()
     }
 #endif

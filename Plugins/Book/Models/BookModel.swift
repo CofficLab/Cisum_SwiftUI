@@ -141,6 +141,7 @@ enum BookModelError: Error, LocalizedError {
 }
 
 #Preview("App") {
-    AppPreview()
+    ContentView()
+    .inRootView()
         .frame(height: 800)
 }

@@ -6,6 +6,7 @@ struct AppDemo: View {
 
     var body: some View {
         ContentView()
+            .inDemoMode()
             .inRootView()
     }
 }
