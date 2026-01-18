@@ -80,14 +80,18 @@ struct ContentView: View, SuperLog, SuperThread {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
+}
 
+// MARK: - Action
+
+extension ContentView {
     /// 构建 TabView
     ///
     /// 根据当前插件构建 TabView，包含数据库视图和设置视图。
     /// 此方法被事件驱动调用，而非响应式触发。
     ///
     /// - Returns: 包装好的 TabView
-    private func buildTabView() -> AnyView {
+    func buildTabView() -> AnyView {
         if Self.verbose {
             os_log("\(self.t)🏗️ buildTabView() 构建新的 TabView - 当前插件: \(p.current?.id ?? "nil")")
         }
@@ -124,8 +128,10 @@ struct ContentView: View, SuperLog, SuperThread {
     }
 }
 
+// MARK: - Setter
+
 extension ContentView {
-    private func increaseHeightToShowDB(_ geo: GeometryProxy, verbose: Bool = true) {
+    func increaseHeightToShowDB(_ geo: GeometryProxy, verbose: Bool = true) {
         os_log("\(self.t)增加 Height 以展开数据库视图")
         let space = geo.size.height - controlViewHeightMin
 
@@ -140,7 +146,7 @@ extension ContentView {
         }
     }
 
-    private func resetHeight(verbose: Bool = false) {
+    func resetHeight(verbose: Bool = false) {
         if verbose {
             os_log("\(self.t)减少 Height 以折叠数据库视图")
         }
@@ -228,23 +234,25 @@ extension ContentView {
     }
 }
 
+// MARK: - Preview
+
 #if os(macOS)
     #Preview("App - Large") {
         ContentView()
-    .inRootView()
+            .inRootView()
             .frame(width: 600, height: 1000)
     }
 
     #Preview("App - Small") {
         ContentView()
-    .inRootView()
-            .frame(width: 500, height: 800)
+            .inRootView()
+            .frame(width: 600, height: 600)
     }
 #endif
 
 #if os(iOS)
     #Preview("iPhone") {
         ContentView()
-    .inRootView()
+            .inRootView()
     }
 #endif

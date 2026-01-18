@@ -10,10 +10,10 @@ alwaysApply: false
 ## 规则说明
 
 - 所有 Swift 文件（包括 SwiftUI 视图文件）都必须在文件末尾添加多个尺寸的预览代码
-- 使用 `AppPreview()` 作为默认预览内容
+- 使用 `ContentView().inRootView()` 作为默认预览内容
 - 尺寸可根据实际需要调整
 - 预览代码应该放在文件的最后，在所有其他代码之后
-- 如果文件已经有其他预览代码，确保至少包含这四种尺寸的 `AppPreview()` 预览
+- 如果文件已经有其他预览代码，确保至少包含这四种尺寸的 `ContentView().inRootView()` 预览
 
 ## 示例
 
@@ -28,19 +28,22 @@ struct MyView: View {
 
 #if os(macOS)
 #Preview("App - Large") {
-    AppPreview()
+    ContentView()
+        .inRootView()
         .frame(width: 600, height: 1000) // 尺寸可根据需要调整
 }
 
 #Preview("App - Small") {
-    AppPreview()
+    ContentView()
+        .inRootView()
         .frame(width: 600, height: 600) // 尺寸可根据需要调整
 }
 #endif
 
 #if os(iOS)
 #Preview("iPhone") {
-    AppPreview()
+    ContentView()
+        .inRootView()
 }
 #endif
 ```

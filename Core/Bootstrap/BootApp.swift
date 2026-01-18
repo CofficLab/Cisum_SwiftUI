@@ -18,10 +18,9 @@ struct BootApp: App, SuperLog {
     var body: some Scene {
         #if os(macOS)
             Window("", id: "Cisum") {
-                RootView {
-                    ContentView()
-                }
-                .frame(minWidth: Config.minWidth, minHeight: Config.minHeight)
+                ContentView()
+                    .inRootView()
+                    .frame(minWidth: Config.minWidth, minHeight: Config.minHeight)
             }
             .windowToolbarStyle(.unifiedCompact(showsTitle: false))
             .defaultSize(width: Config.minWidth, height: Config.defaultHeight)
