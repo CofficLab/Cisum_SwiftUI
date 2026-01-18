@@ -175,6 +175,14 @@ extension View {
             self
         }
     }
+
+    /// 隐藏TabView
+    /// 通过修改AppProvider的showDB属性为false来隐藏TabView
+    func hideTabView() -> some View {
+        self.onAppear {
+            ProviderManager.shared.app.closeDBView()
+        }
+    }
 }
 
 #if os(macOS)
