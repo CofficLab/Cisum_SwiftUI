@@ -76,7 +76,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
         .frame(maxWidth: .infinity)
         .frame(maxHeight: .infinity)
         .background(Config.rootBackground)
-        .onChange(of: Config.getStorageLocation(), onStorageLocationChange)
+        .onStorageLocationChanged(perform: onStorageLocationChange)
         .onLaunchDone(perform: onLaunchEnd)
         .onCloudAccountStateChanged(perform: onCloudAccountStateChanged)
         .onStorageLocationDidReset(perform: onResetStorageLocation)

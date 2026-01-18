@@ -100,6 +100,9 @@ enum Config: SuperLog {
             os_log("\(Self.t)💾 更新存储位置设置: \(location?.rawValue ?? "nil")")
         }
         UserDefaults.standard.set(location?.rawValue, forKey: keyOfStorageLocation)
+
+        // 发送存储位置更新通知
+        NotificationCenter.postStorageLocationUpdated()
     }
 
     /// 获取存储根目录
