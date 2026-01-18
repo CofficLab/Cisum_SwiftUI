@@ -25,10 +25,6 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     var playManController: PlayManController
 
     init(@ViewBuilder content: () -> Content) {
-        if Self.verbose {
-            os_log("\(Self.t)🚀 初始化开始")
-        }
-
         // 从 ProviderManager 获取共享的服务实例
         let manager = ProviderManager.shared
 
@@ -86,7 +82,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
         .frame(maxWidth: .infinity)
         .frame(maxHeight: .infinity)
         .background(Config.rootBackground)
-        .onReceive(nc.publisher(for: NSUbiquitousKeyValueStore.didChangeExternallyNotification), perform: onCloudAccountStateChanged)
+        .onCloudAccountStateChanged(perform: onCloudAccountStateChanged)
         .onChange(of: Config.getStorageLocation(), onStorageLocationChange)
         .onLaunchDone(perform: onLaunchEnd)
     }
