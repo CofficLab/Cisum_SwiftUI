@@ -1,5 +1,4 @@
 import MagicKit
-import MagicUI
 import SwiftUI
 
 /**
@@ -8,20 +7,39 @@ import SwiftUI
  */
 struct AppStoreHero: View {
     var body: some View {
-        Text("Cisum")
-            .font(.system(size: 50))
-            .withPosterSubTitle("纯净播放，简单纯粹。")
-            .withPosterPreview(
+        GeometryReader { geo in
+            HStack(spacing: 120) {
+                // 左侧：标题和副标题
+                VStack(alignment: .leading, spacing: 40) {
+                    Spacer()
+
+                    Text("Cisum")
+                        .font(.system(size: 100, weight: .bold, design: .rounded))
+                        .magicOceanGradient()
+
+                    Text("纯净播放，简单纯粹。")
+                        .font(.system(size: 34, weight: .semibold, design: .rounded))
+                        .foregroundColor(.primary)
+
+                    Spacer()
+                }
+                .frame(width: geo.size.width * 0.3)
+
+                // 右侧：预览内容
                 ContentView()
                     .inRootView()
                     .inDemoMode()
                     .hideTabView()
                     .frame(width: Config.minWidth)
                     .frame(height: 650)
-            )
-            .withPosterLogo(false)
-            .withPosterBackground(LinearGradient.pastel)
-            .asPoster()
+                    .background(.background.opacity(0.5))
+                    .magicRoundedLarge()
+            }
+            .padding(.horizontal, 60)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .withBackgroundDecorations()
+        .background(LinearGradient.pastel)
     }
 }
 
@@ -30,4 +48,5 @@ struct AppStoreHero: View {
 #Preview("App Store Hero") {
     AppStoreHero()
         .inMagicContainer(.macBook13, scale: 0.4)
+    
 }

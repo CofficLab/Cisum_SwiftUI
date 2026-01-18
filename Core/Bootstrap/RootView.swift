@@ -68,10 +68,10 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .withMagicToast()
                 }
             }
         }
-        .withMagicToast()
         .onStorageLocationChanged(perform: onStorageLocationChange)
         .onGuideDone(perform: onLaunchEnd)
         .onCloudAccountStateChanged(perform: onCloudAccountStateChanged)

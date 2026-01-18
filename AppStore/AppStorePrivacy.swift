@@ -1,5 +1,4 @@
 import MagicKit
-import MagicUI
 import SwiftUI
 
 /**
@@ -8,12 +7,36 @@ import SwiftUI
  */
 struct AppStorePrivacy: View {
     var body: some View {
-        Text("尊重用户")
-            .font(.system(size: 50))
-            .withPosterSubTitle("无需注册，无需登录。")
-            .withPosterBottomSubTitle("没有广告，没有弹窗，只有纯净的音乐体验。")
-            .withPosterPreview(
-                VStack(spacing: 32) {
+        GeometryReader { geo in
+            HStack(spacing: 120) {
+                // 左侧：标题和副标题
+                VStack(alignment: .leading, spacing: 40) {
+                    Spacer()
+
+                    Text("尊重用户")
+                        .font(.system(size: 100, weight: .bold, design: .rounded))
+                        .foregroundStyle(
+                            LinearGradient(
+                                colors: [.blue, .purple],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+
+                    Text("无需注册，无需登录。")
+                        .font(.system(size: 34, weight: .semibold, design: .rounded))
+                        .foregroundColor(.primary)
+
+                    Text("没有广告，没有弹窗，只有纯净的音乐体验。")
+                        .font(.system(size: 24))
+                        .foregroundColor(.secondary)
+
+                    Spacer()
+                }
+                .frame(width: geo.size.width * 0.3)
+
+                // 右侧：自定义卡片内容
+                HStack(spacing: 24) {
                     PrivacyFeatureCard(
                         icon: "person.badge.plus",
                         title: "无需注册",
@@ -45,10 +68,12 @@ struct AppStorePrivacy: View {
                 .frame(width: Config.minWidth, height: 500)
                 .background(.background)
                 .magicRoundedLarge()
-            )
-            .withPosterLogo(false)
-            .withPosterBackground(LinearGradient.pastel)
-            .asPoster()
+            }
+            .padding(.horizontal, 60)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .withBackgroundDecorations()
+        .background(LinearGradient.pastel)
     }
 }
 
