@@ -16,11 +16,7 @@ struct ContentView: View, SuperLog, SuperThread {
     // 记录用户调整的窗口的高度
     @State private var height: CGFloat = 0
     @State private var autoResizing = false
-    @State private var tab: String = "DB"
     @State private var geo: GeometryProxy?
-
-    /// 当前的 TabView，由插件变化事件驱动更新
-    @State private var currentTabView: AnyView?
 
     var showDB: Bool { app.showDB || isDemoMode }
     var controlViewHeightMin = Config.controlViewMinHeight
@@ -32,84 +28,23 @@ struct ContentView: View, SuperLog, SuperThread {
                 ControlView()
                     .frame(height: showDB ? Config.controlViewMinHeight : geo.size.height)
 
-                // 隐藏时高度为 0，避免销毁/重建，同时保持组件常驻
-                VStack(spacing: 0) {
-                    if let tabView = currentTabView {
-                        #if os(macOS)
-                            tabView
-                                .tabViewStyle(GroupedTabViewStyle())
-                        #else
-                            tabView
-                        #endif
-                    } else {
-                        // Demo 模式下直接显示视图，不显示加载过程
-                        if isDemoMode {
-                            buildTabView()
-                                #if os(macOS)
-                                    .tabViewStyle(GroupedTabViewStyle())
-                                #endif
-                        } else {
-                            ProgressView("加载中...")
-                        }
-                    }
-                }
-                .frame(height: showDB ? (geo.size.height - Config.controlViewMinHeight) : 0)
-                .opacity(showDB ? 1 : 0)
-                .allowsHitTesting(showDB)
-                .accessibilityHidden(!showDB)
+                // TabView
+                AppTabView()
+                    .frame(height: showDB ? (geo.size.height - Config.controlViewMinHeight) : 0)
+                    .opacity(showDB ? 1 : 0)
+                    .allowsHitTesting(showDB)
+                    .accessibilityHidden(!showDB)
 
-                HStack {
-                    Spacer()
-                    ForEach(Array(p.getStatusViews().enumerated()), id: \.offset) { _, view in
-                        view
-                    }
-                }
+                // Status bar
+                StatusView()
             }
             .frame(width: geo.size.width, height: geo.size.height)
             .onAppear { handleOnAppear(geo) }
             .onChange(of: showDB, onChangeOfShowDB)
             .onChange(of: geo.size.height, onChangeOfGeoHeight)
-            .onChange(of: p.current?.id, onChangeOfCurrentPlugin)
             .background(Config.background(.teal))
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-    }
-}
-
-// MARK: - Action
-
-extension ContentView {
-    /// 构建 TabView
-    func buildTabView() -> AnyView {
-        let currentId = p.current?.id
-
-        // 收集所有提供的 Tab 视图及标签
-        let tabViews = p.plugins.compactMap { plugin in
-            plugin.addTabView(reason: self.className, currentPluginId: currentId)
-        }
-
-        let tabView = TabView(selection: $tab) {
-            ForEach(Array(tabViews.enumerated()), id: \.offset) { index, item in
-                item.view
-                    .tag("TAB\(index)")
-                    .tabItem {
-                        Label(item.label, systemImage: "music.note.list")
-                    }
-            }
-
-            SettingView()
-                .tag("Setting")
-                .tabItem {
-                    Label("设置", systemImage: "gear")
-                }
-        }
-        .frame(maxHeight: .infinity)
-        #if os(macOS)
-            .padding(.top, 2)
-        #endif
-            .background(.background)
-
-        return AnyView(tabView)
     }
 }
 
@@ -135,11 +70,6 @@ extension ContentView {
 // MARK: - Event Handler
 
 extension ContentView {
-    /// 当前插件变化时的处理（事件驱动）
-    func onChangeOfCurrentPlugin(oldValue: String?, newValue: String?) {
-        currentTabView = buildTabView()
-    }
-
     func handleOnAppear(_ geo: GeometryProxy) {
         self.geo = geo
         onAppear()
@@ -179,11 +109,6 @@ extension ContentView {
 
     func onAppear() {
         height = Config.getWindowHeight()
-
-        // 初始化 TabView
-        if currentTabView == nil {
-            currentTabView = buildTabView()
-        }
     }
 }
 
