@@ -20,7 +20,7 @@ struct LaunchDoneView: View, SuperLog {
                 emitLaunchDone()
             }
         }
-        .onAppear() {
+        .onAppear {
             if isActive {
                 emitLaunchDone()
             }
@@ -33,16 +33,10 @@ struct LaunchDoneView: View, SuperLog {
 extension LaunchDoneView {
     func emitLaunchDone() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            NotificationCenter.default.post(name: .launchDone, object: nil)
+            NotificationCenter.postLaunchDone()
         }
     }
 }
-
-/// LaunchView 完成通知
-extension Notification.Name {
-    static let launchDone = Notification.Name("launchDone")
-}
-
 
 // MARK: - Preview
 

@@ -15,9 +15,6 @@ struct Launcher: View, SuperLog {
         let views = plugins.compactMap { $0.addLaunchView() }
         self.plugins = plugins
         self.views = views
-        if Self.verbose {
-            os_log("\(Self.t)✅ 初始化完成, LaunchView 数量: \(views.count)")
-        }
     }
 
     var body: some View {
@@ -89,7 +86,7 @@ extension Launcher {
     #Preview("App - Small") {
         ContentView()
             .inRootView()
-            .frame(width: 600, height: 600)
+            .frame(width: 400, height: 700)
     }
 #endif
 

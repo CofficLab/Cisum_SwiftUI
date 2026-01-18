@@ -4,6 +4,9 @@ import SwiftUI
 // MARK: - Notification Names
 
 extension Notification.Name {
+    /// 启动完成通知
+    static let launchDone = Notification.Name("launchDone")
+
     /// 应用将要隐藏
     static let applicationWillHide = Notification.Name("applicationWillHide")
 
@@ -42,6 +45,11 @@ extension Notification.Name {
 
 /// NotificationCenter 扩展，提供便捷的事件发送方法
 extension NotificationCenter {
+    /// 发送启动完成事件
+    static func postLaunchDone() {
+        NotificationCenter.default.post(name: .launchDone, object: nil)
+    }
+
     /// 发送应用将要隐藏事件
     static func postApplicationWillHide() {
         NotificationCenter.default.post(name: .applicationWillHide, object: nil)
