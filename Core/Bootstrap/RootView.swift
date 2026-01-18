@@ -67,24 +67,26 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .environmentObject(man)
-                    .environmentObject(playManController)
-                    .environmentObject(self.appProvider)
-                    .environmentObject(pluginProvider)
-                    .environmentObject(messageProvider)
-                    .environmentObject(self.stateProvider)
-                    .onStorageLocationDidReset(perform: onResetStorageLocation)
+                    
+                    
                 }
             }
         }
-        .environmentObject(cloudProvider)
         .withMagicToast()
         .frame(maxWidth: .infinity)
         .frame(maxHeight: .infinity)
         .background(Config.rootBackground)
-        .onCloudAccountStateChanged(perform: onCloudAccountStateChanged)
         .onChange(of: Config.getStorageLocation(), onStorageLocationChange)
         .onLaunchDone(perform: onLaunchEnd)
+        .onCloudAccountStateChanged(perform: onCloudAccountStateChanged)
+        .onStorageLocationDidReset(perform: onResetStorageLocation)
+        .environmentObject(cloudProvider)
+        .environmentObject(man)
+        .environmentObject(playManController)
+        .environmentObject(self.appProvider)
+        .environmentObject(pluginProvider)
+        .environmentObject(messageProvider)
+        .environmentObject(self.stateProvider)
     }
 
     private func reloadView() {
@@ -188,7 +190,7 @@ extension View {
     #Preview("App - Small") {
         ContentView()
             .inRootView()
-            .frame(width: 500, height: 800)
+            .frame(width: 400, height: 700)
     }
 #endif
 

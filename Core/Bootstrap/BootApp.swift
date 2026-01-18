@@ -64,7 +64,7 @@ struct BootApp: App, SuperLog {
 #Preview("App - Small") {
     ContentView()
         .inRootView()
-        .frame(width: 400, height: 600)
+        .frame(width: 400, height: 700)
 }
 
 #if os(iOS)
