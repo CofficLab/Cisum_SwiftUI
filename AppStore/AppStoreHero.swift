@@ -12,7 +12,7 @@ struct AppStoreHero: View {
             subtitleTop: "纯净播放，简单纯粹。",
             subtitleBottom: "没有广告，没有干扰，只有音乐。"
         ) {
-            AppDemo()
+            AppDemo().hideTabView()
         }
     }
 }

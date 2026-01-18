@@ -1,6 +1,5 @@
 import AVKit
 import MagicKit
-
 import OSLog
 import SwiftUI
 
@@ -120,7 +119,7 @@ extension ContentView {
     #Preview("App - Small") {
         ContentView()
             .inRootView()
-            .frame(width: 400, height: 700)
+            .frame(width: 350, height: 700)
     }
 
     #Preview("Demo Mode") {
@@ -128,6 +127,13 @@ extension ContentView {
             .inRootView()
             .inDemoMode()
             .frame(width: 600, height: 1000)
+    }
+
+    #Preview("Hide Tab View") {
+        ContentView()
+            .inRootView()
+            .hideTabView()
+            .frame(width: 350, height: 700)
     }
 #endif
 

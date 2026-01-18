@@ -23,6 +23,18 @@ struct AppDemo: View {
         AppDemo()
             .frame(width: 600, height: 600)
     }
+
+    #Preview("Show Tab View") {
+        AppDemo()
+            .showTabView()
+            .frame(width: 350, height: 700)
+    }
+
+    #Preview("Hide Tab View") {
+        AppDemo()
+            .hideTabView()
+            .frame(width: 350, height: 700)
+    }
 #endif
 
 #if os(iOS)
