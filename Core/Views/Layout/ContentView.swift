@@ -10,6 +10,7 @@ struct ContentView: View, SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var p: PluginProvider
     @Environment(\.demoMode) var isDemoMode
+    @Environment(\.showTabView) var showTabView
     @State private var databaseViewHeight: CGFloat = 300
 
     // 记录用户调整的窗口的高度
@@ -104,6 +105,10 @@ extension ContentView {
 
     func onAppear() {
         height = Config.getWindowHeight()
+
+        if !showTabView {
+            app.closeDBView()
+        }
     }
 }
 

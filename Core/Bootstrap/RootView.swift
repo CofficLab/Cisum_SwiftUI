@@ -201,22 +201,6 @@ extension View {
             self
         }
     }
-
-    /// 显示TabView
-    /// 通过修改AppProvider的showDB属性为true来显示TabView
-    func showTabView() -> some View {
-        self.onAppear {
-            ProviderManager.shared.app.showDBView()
-        }
-    }
-
-    /// 隐藏TabView
-    /// 通过修改AppProvider的showDB属性为false来隐藏TabView
-    func hideTabView() -> some View {
-        self.onAppear {
-            ProviderManager.shared.app.closeDBView()
-        }
-    }
 }
 
 #if os(macOS)

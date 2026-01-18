@@ -13,8 +13,8 @@ struct AppStoreHero: View {
             subtitleBottom: "没有广告，没有干扰，只有音乐。"
         ) {
             ContentView()
-                .inDemoMode()
                 .inRootView()
+                .inDemoMode()
                 .hideTabView()
         }
     }

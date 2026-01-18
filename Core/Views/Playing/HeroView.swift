@@ -53,7 +53,7 @@ struct HeroView: View {
 #Preview("App - Small") {
     ContentView()
         .inRootView()
-        .frame(width: 500, height: 800)
+        .frame(width: Config.minWidth, height: 700)
 }
 
 #if os(iOS)
