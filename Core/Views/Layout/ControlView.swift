@@ -1,13 +1,13 @@
+import MagicDevice
 import MagicKit
 import MagicUI
-import MagicDevice
 import OSLog
 import SwiftData
 import SwiftUI
 
 struct ControlView: View, SuperLog {
     static let verbose = false
-    
+
     @EnvironmentObject var appManager: AppProvider
     @EnvironmentObject var message: StateProvider
     @EnvironmentObject var playMan: PlayManController
@@ -155,13 +155,13 @@ struct ControlView: View, SuperLog {
 #if os(macOS)
     #Preview("App - Large") {
         ContentView()
-    .inRootView()
+            .inRootView()
             .frame(width: 600, height: 1000)
     }
 
     #Preview("App - Small") {
         ContentView()
-    .inRootView()
+            .inRootView()
             .frame(width: 500, height: 600)
     }
 #endif
@@ -169,6 +169,6 @@ struct ControlView: View, SuperLog {
 #if os(iOS)
     #Preview("iPhone") {
         ContentView()
-    .inRootView()
+            .inRootView()
     }
 #endif

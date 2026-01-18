@@ -17,6 +17,7 @@ struct ContentView: View, SuperLog, SuperThread {
     @State private var height: CGFloat = 0
     @State private var autoResizing = false
     @State private var tab: String = "DB"
+    @State private var geo: GeometryProxy?
 
     /// 当前的 TabView，由插件变化事件驱动更新
     @State private var currentTabView: AnyView?
@@ -48,7 +49,6 @@ struct ContentView: View, SuperLog, SuperThread {
                                     .tabViewStyle(GroupedTabViewStyle())
                                 #endif
                         } else {
-                            // 占位视图，等待插件加载
                             ProgressView("加载中...")
                         }
                     }
@@ -66,16 +66,10 @@ struct ContentView: View, SuperLog, SuperThread {
                 }
             }
             .frame(width: geo.size.width, height: geo.size.height)
-            .onChange(of: showDB) {
-                onShowDBChanged(geo)
-            }
-            .onChange(of: geo.size.height) {
-                onGeoHeightChange(geo)
-            }
-            .onChange(of: p.current?.id) { oldValue, newValue in
-                onCurrentPluginChanged(oldValue: oldValue, newValue: newValue)
-            }
-            .onAppear(perform: onAppear)
+            .onAppear { handleOnAppear(geo) }
+            .onChange(of: showDB, onChangeOfShowDB)
+            .onChange(of: geo.size.height, onChangeOfGeoHeight)
+            .onChange(of: p.current?.id, onChangeOfCurrentPlugin)
             .background(Config.background(.teal))
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -87,10 +81,6 @@ struct ContentView: View, SuperLog, SuperThread {
 extension ContentView {
     /// 构建 TabView
     func buildTabView() -> AnyView {
-        if Self.verbose {
-            os_log("\(self.t)🏗️ buildTabView() 构建新的 TabView - 当前插件: \(p.current?.id ?? "nil")")
-        }
-
         let currentId = p.current?.id
 
         // 收集所有提供的 Tab 视图及标签
@@ -146,11 +136,18 @@ extension ContentView {
 
 extension ContentView {
     /// 当前插件变化时的处理（事件驱动）
-    func onCurrentPluginChanged(oldValue: String?, newValue: String?) {
+    func onChangeOfCurrentPlugin(oldValue: String?, newValue: String?) {
         currentTabView = buildTabView()
     }
 
-    func onGeoHeightChange(_ geo: GeometryProxy) {
+    func handleOnAppear(_ geo: GeometryProxy) {
+        self.geo = geo
+        onAppear()
+    }
+
+    func onChangeOfGeoHeight() {
+        guard let geo = geo else { return }
+
         if autoResizing == false {
             // 说明是用户主动调整
             self.height = Config.getWindowHeight()
@@ -164,7 +161,9 @@ extension ContentView {
         }
     }
 
-    func onShowDBChanged(_ geo: GeometryProxy) {
+    func onChangeOfShowDB() {
+        guard let geo = geo else { return }
+
         // 高度被自动修改过了，重置
         if !showDB && geo.size.height != self.height {
             resetHeight()
