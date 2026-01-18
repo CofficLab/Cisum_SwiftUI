@@ -16,9 +16,7 @@ struct LaunchDoneView: View, SuperLog {
             }
             Spacer()
         }
-        .onChange(of: isActive) { _, newValue in
-            handleActiveChange(newValue)
-        }
+        .onChange(of: isActive, handleActiveChange)
         .onAppear(perform: handleOnAppear)
     }
 }
@@ -27,33 +25,19 @@ struct LaunchDoneView: View, SuperLog {
 
 extension LaunchDoneView {
     /// 处理激活状态变化
-    /// - Parameter newValue: 新的激活状态值
-    func handleActiveChange(_ newValue: Bool) {
+    /// - Parameters:
+    ///   - oldValue: 旧的激活状态值
+    ///   - newValue: 新的激活状态值
+    func handleActiveChange(_ oldValue: Bool, _ newValue: Bool) {
         if newValue {
-            emitLaunchDone()
+            NotificationCenter.postLaunchDone()
         }
     }
 
     /// 处理视图出现事件
     func handleOnAppear() {
         if isActive {
-            emitLaunchDone()
-        }
-    }
-}
-
-// MARK: - Actions
-
-extension LaunchDoneView {
-    func emitLaunchDone() {
-        if Self.verbose {
-            os_log("\(Self.t)🚀 准备发送启动完成通知")
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             NotificationCenter.postLaunchDone()
-            if LaunchDoneView.verbose {
-                os_log("\(LaunchDoneView.t)✅ 启动完成通知已发送")
-            }
         }
     }
 }
