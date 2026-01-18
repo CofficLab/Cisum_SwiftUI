@@ -38,6 +38,66 @@ extension Notification.Name {
     static let windowDidResize = Notification.Name("windowDidResize")
 }
 
+// MARK: - NotificationCenter Extensions
+
+/// NotificationCenter 扩展，提供便捷的事件发送方法
+extension NotificationCenter {
+    /// 发送应用将要隐藏事件
+    static func postApplicationWillHide() {
+        NotificationCenter.default.post(name: .applicationWillHide, object: nil)
+    }
+
+    /// 发送应用已隐藏事件
+    static func postApplicationDidHide() {
+        NotificationCenter.default.post(name: .applicationDidHide, object: nil)
+    }
+
+    /// 发送应用将要变为活动状态事件
+    static func postApplicationWillBecomeActive() {
+        NotificationCenter.default.post(name: .applicationWillBecomeActive, object: nil)
+    }
+
+    /// 发送应用启动完成事件
+    static func postApplicationDidFinishLaunching() {
+        NotificationCenter.default.post(name: .applicationDidFinishLaunching, object: nil)
+    }
+
+    /// 发送应用将要终止事件
+    static func postApplicationWillTerminate() {
+        NotificationCenter.default.post(name: .applicationWillTerminate, object: nil)
+    }
+
+    /// 发送应用将要更新事件
+    static func postApplicationWillUpdate() {
+        NotificationCenter.default.post(name: .applicationWillUpdate, object: nil)
+    }
+
+    /// 发送应用已成为活动状态事件
+    static func postApplicationDidBecomeActive() {
+        NotificationCenter.default.post(name: .applicationDidBecomeActive, object: nil)
+    }
+
+    /// 发送应用将要失去活动状态事件
+    static func postApplicationWillResignActive() {
+        NotificationCenter.default.post(name: .applicationWillResignActive, object: nil)
+    }
+
+    /// 发送应用已失去活动状态事件
+    static func postApplicationDidResignActive() {
+        NotificationCenter.default.post(name: .applicationDidResignActive, object: nil)
+    }
+
+    /// 发送窗口移动事件
+    static func postWindowDidMove() {
+        NotificationCenter.default.post(name: .windowDidMove, object: nil)
+    }
+
+    /// 发送窗口调整大小事件
+    static func postWindowDidResize() {
+        NotificationCenter.default.post(name: .windowDidResize, object: nil)
+    }
+}
+
 // MARK: - View Extensions
 
 /// SwiftUI View 扩展，提供便捷的应用生命周期事件监听
