@@ -44,15 +44,23 @@ extension LaunchDoneView {
 
 // MARK: - Preview
 
-#Preview("LaunchView") {
-    LaunchDoneView()
-        .frame(width: 300, height: 600)
-        .inMagicContainer(.iMac27)
-}
+#if os(macOS)
+    #Preview("App - Large") {
+        ContentView()
+            .inRootView()
+            .frame(width: 600, height: 1000)
+    }
 
-#Preview("LaunchView - Dark") {
-    LaunchDoneView()
-        .frame(width: 300, height: 600)
-        .inMagicContainer(.iMac27)
-        .preferredColorScheme(.dark)
-}
+    #Preview("App - Small") {
+        ContentView()
+            .inRootView()
+            .frame(width: 400, height: 700)
+    }
+#endif
+
+#if os(iOS)
+    #Preview("iPhone") {
+        ContentView()
+            .inRootView()
+    }
+#endif
