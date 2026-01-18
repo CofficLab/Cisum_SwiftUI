@@ -12,27 +12,15 @@ struct AppStoreHeroMetered: View {
             overlayLogoAlignment: .topLeading
         ) {
             // 右侧用列表示意，并高亮一个“禁止联网”的状态
-            AppDemo()
+            ContentView()
+                .inDemoMode()
+                .inRootView()
+                .hideTabView()
         }
     }
 }
 
 // MARK: - Preview
-
-#Preview("App Store Hero") {
-    AppStoreHero()
-        .inMagicContainer(.macBook13, scale: 0.4)
-}
-
-#Preview("App Store Hero - One Tap Block") {
-    AppStoreHeroBlock()
-        .inMagicContainer(.macBook13, scale: 0.4)
-}
-
-#Preview("App Store Hero - Menu Bar") {
-    AppStoreHeroMenuBar()
-        .inMagicContainer(.macBook13, scale: 0.4)
-}
 
 #Preview("App Store Hero - Metered") {
     AppStoreHeroMetered()

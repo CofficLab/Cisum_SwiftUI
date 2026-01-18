@@ -180,13 +180,3 @@ extension PurchaseViewDemo {
     AppStorePurchaseView()
         .inMagicContainer(CGSizeMake(1280, 800), scale:1)
 }
-
-#Preview("PurchaseViewDemo - Large") {
-    PurchaseViewDemo()
-        .frame(width: 600, height: 1000)
-}
-
-#Preview("PurchaseViewDemo - Small") {
-    PurchaseViewDemo()
-        .frame(width: 600, height: 600)
-}

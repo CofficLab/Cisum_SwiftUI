@@ -120,13 +120,3 @@ struct AppStoreHeroContainer<RightContent: View>: View {
     AppStoreHero()
         .inMagicContainer(.macBook13, scale: 0.4)
 }
-
-#Preview("App Store Hero - One Tap Block") {
-    AppStoreHeroBlock()
-        .inMagicContainer(.macBook13, scale: 0.4)
-}
-
-#Preview("App Store Hero - Menu Bar") {
-    AppStoreHeroMenuBar()
-        .inMagicContainer(.macBook13, scale: 0.4)
-}

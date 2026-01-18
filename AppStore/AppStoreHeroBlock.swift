@@ -10,7 +10,10 @@ struct AppStoreHeroBlock: View {
             subtitleTop: "点击，即安心。",
             subtitleBottom: "无需设置，重要时刻，立刻静音网络。"
         ) {
-            AppDemo()
+            ContentView()
+                .inDemoMode()
+                .inRootView()
+                .hideTabView()
         }
     }
 }
@@ -21,14 +24,3 @@ struct AppStoreHeroBlock: View {
     AppStoreHero()
         .inMagicContainer(.macBook13, scale: 0.4)
 }
-
-#Preview("App Store Hero - One Tap Block") {
-    AppStoreHeroBlock()
-        .inMagicContainer(.macBook13, scale: 0.4)
-}
-
-#Preview("App Store Hero - Menu Bar") {
-    AppStoreHeroMenuBar()
-        .inMagicContainer(.macBook13, scale: 0.4)
-}
-

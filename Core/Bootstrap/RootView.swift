@@ -12,6 +12,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
 
     /// 启动状态，表示LaunchViewSwitcher正在显示
     @State var launching = true
+    @Environment(\.demoMode) var isDemoMode
     @State var iCloudAvailable = true
 
     @StateObject var appProvider: AppProvider
@@ -41,7 +42,32 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
 
     var body: some View {
         Group {
-            if self.launching {
+            if isDemoMode {
+                // 预览模式直接显示内容，不显示 GuideView
+                if let e = self.error {
+                    CrashedView(error: e)
+                } else {
+                    NavigationStack {
+                        ZStack {
+                            Group {
+                                if let wrapped = pluginProvider.wrapWithCurrentRoot(content: { content }) {
+                                    wrapped
+                                } else {
+                                    content
+                                }
+                            }
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .frame(minWidth: Config.minWidth, minHeight: Config.minHeight)
+                            .toolbar {
+                                RootToolbar()
+                            }
+                            .blendMode(.normal)
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
+            } else if self.launching {
                 Guide()
             } else {
                 if let e = self.error {
@@ -80,10 +106,10 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
         .environmentObject(cloudProvider)
         .environmentObject(man)
         .environmentObject(playManController)
-        .environmentObject(self.appProvider)
+        .environmentObject(appProvider)
         .environmentObject(pluginProvider)
         .environmentObject(messageProvider)
-        .environmentObject(self.stateProvider)
+        .environmentObject(stateProvider)
     }
 
     private func reloadView() {
@@ -197,13 +223,20 @@ extension View {
     #Preview("App - Large") {
         ContentView()
             .inRootView()
-            .frame(width: 600, height: 1000)
+            .frame(width: Config.minWidth, height: 1000)
     }
 
     #Preview("App - Small") {
         ContentView()
             .inRootView()
-            .frame(width: 400, height: 700)
+            .frame(width: Config.minWidth, height: 700)
+    }
+
+    #Preview("Demo Mode") {
+        ContentView()
+            .inRootView()
+            .inDemoMode()
+            .frame(width: Config.minWidth, height: 1000)
     }
 #endif
 

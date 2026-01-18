@@ -12,7 +12,10 @@ struct AppStoreHero: View {
             subtitleTop: "纯净播放，简单纯粹。",
             subtitleBottom: "没有广告，没有干扰，只有音乐。"
         ) {
-            AppDemo().hideTabView()
+            ContentView()
+                .inDemoMode()
+                .inRootView()
+                .hideTabView()
         }
     }
 }
@@ -21,15 +24,5 @@ struct AppStoreHero: View {
 
 #Preview("App Store Hero") {
     AppStoreHero()
-        .inMagicContainer(.macBook13, scale: 0.4)
-}
-
-#Preview("App Store Hero - One Tap Block") {
-    AppStoreHeroBlock()
-        .inMagicContainer(.macBook13, scale: 0.4)
-}
-
-#Preview("App Store Hero - Menu Bar") {
-    AppStoreHeroMenuBar()
         .inMagicContainer(.macBook13, scale: 0.4)
 }
