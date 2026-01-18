@@ -26,7 +26,6 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     var playManController: PlayManController
 
     init(@ViewBuilder content: () -> Content) {
-        // 从 ProviderManager 获取共享的服务实例
         let manager = ProviderManager.shared
 
         self.content = content()
@@ -43,30 +42,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     var body: some View {
         Group {
             if isDemoMode {
-                // 预览模式直接显示内容，不显示 GuideView
-                if let e = self.error {
-                    CrashedView(error: e)
-                } else {
-                    NavigationStack {
-                        ZStack {
-                            Group {
-                                if let wrapped = pluginProvider.wrapWithCurrentRoot(content: { content }) {
-                                    wrapped
-                                } else {
-                                    content
-                                }
-                            }
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            .frame(minWidth: Config.minWidth, minHeight: Config.minHeight)
-                            .toolbar {
-                                RootToolbar()
-                            }
-                            .blendMode(.normal)
-                        }
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                }
+                content
             } else if self.launching {
                 Guide()
             } else {

@@ -16,6 +16,8 @@ struct AppStoreHero: View {
                 .inRootView()
                 .inDemoMode()
                 .hideTabView()
+                .frame(width: Config.minWidth)
+                .frame(height: 700)
         }
     }
 }
@@ -24,5 +26,5 @@ struct AppStoreHero: View {
 
 #Preview("App Store Hero") {
     AppStoreHero()
-        .inMagicContainer(.macBook13, scale: 0.4)
+        .inMagicContainer(.macBook13, scale: 0.2)
 }

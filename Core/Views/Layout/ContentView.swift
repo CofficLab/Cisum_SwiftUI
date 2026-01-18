@@ -140,6 +140,11 @@ extension ContentView {
             .hideTabView()
             .frame(width: 350, height: 700)
     }
+
+    #Preview("App Store Hero") {
+        AppStoreHero()
+            .inMagicContainer(.macBook13, scale: 0.4)
+    }
 #endif
 
 #if os(iOS)

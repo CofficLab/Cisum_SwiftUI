@@ -13,7 +13,7 @@ struct TitleView: View, SuperLog, SuperThread {
 
     var title: String {
         if isDemoMode {
-            return "美丽的歌曲标题"
+            return "清风徐来"
         } else {
             return playMan.asset?.deletingPathExtension().title ?? ""
         }
