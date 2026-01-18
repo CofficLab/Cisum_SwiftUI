@@ -1,3 +1,4 @@
+import MagicKit
 import MagicUI
 import SwiftUI
 
@@ -7,17 +8,19 @@ import SwiftUI
  */
 struct AppStoreCollection: View {
     var body: some View {
-        AppStoreHeroContainer(
-            title: "收藏喜爱",
-            subtitleTop: "标记你喜爱的歌曲。",
-            subtitleBottom: "一键收藏，随时重温你的最爱。"
-        ) {
-            ContentView()
-                .inRootView()
-                .inDemoMode()
-                .frame(width: Config.minWidth)
-                .frame(height: 800)
-        }
+        Text("收藏喜爱")
+            .withPosterSubTitle("标记你喜爱的歌曲。")
+            .withPosterBottomSubTitle("一键收藏，随时重温你的最爱。")
+            .withPosterPreview(
+                ContentView()
+                    .inRootView()
+                    .inDemoMode()
+                    .frame(width: Config.minWidth)
+                    .frame(height: 800)
+            )
+            .withPosterLogo(false)
+            .withPosterBackground(LinearGradient.pastel)
+            .asPoster()
     }
 }
 
@@ -25,5 +28,5 @@ struct AppStoreCollection: View {
 
 #Preview("App Store Collection") {
     AppStoreCollection()
-        .inMagicContainer(.macBook13, scale: 0.2)
+        .inMagicContainer(.macBook13, scale: 0.4)
 }

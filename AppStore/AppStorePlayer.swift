@@ -1,3 +1,4 @@
+import MagicKit
 import MagicUI
 import SwiftUI
 
@@ -7,18 +8,21 @@ import SwiftUI
  */
 struct AppStorePlayer: View {
     var body: some View {
-        AppStoreHeroContainer(
-            title: "播放控制",
-            subtitleTop: "简单直观的控制方式。",
-            subtitleBottom: "播放、暂停、上一曲、下一曲，一触即达。"
-        ) {
-            ContentView()
-                .inRootView()
-                .inDemoMode()
-                .hideTabView()
-                .frame(width: Config.minWidth)
-                .frame(height: 700)
-        }
+        Text("播放控制")
+            .showTabView()
+            .withPosterSubTitle("简单直观的控制方式。")
+            .withPosterBottomSubTitle("播放、暂停、上一曲、下一曲，一触即达。")
+            .withPosterPreview(
+                ContentView()
+                    .inRootView()
+                    .inDemoMode()
+                    .hideTabView()
+                    .frame(width: Config.minWidth)
+                    .frame(height: 650)
+            )
+            .withPosterLogo(false)
+            .withPosterBackground(LinearGradient.pastel)
+            .asPoster()
     }
 }
 
@@ -26,5 +30,5 @@ struct AppStorePlayer: View {
 
 #Preview("App Store Player") {
     AppStorePlayer()
-        .inMagicContainer(.macBook13, scale: 0.2)
+        .inMagicContainer(.macBook13, scale: 0.4)
 }

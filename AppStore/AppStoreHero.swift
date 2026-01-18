@@ -8,18 +8,20 @@ import SwiftUI
  */
 struct AppStoreHero: View {
     var body: some View {
-        AppStoreHeroContainer(
-            title: "Cisum",
-            subtitleTop: "纯净播放，简单纯粹。",
-            subtitleBottom: "没有广告，没有干扰，只有音乐。"
-        ) {
-            ContentView()
-                .inRootView()
-                .inDemoMode()
-                .hideTabView()
-                .frame(width: Config.minWidth)
-                .frame(height: 700)
-        }
+        Text("Cisum")
+            .font(.system(size: 50))
+            .withPosterSubTitle("纯净播放，简单纯粹。")
+            .withPosterPreview(
+                ContentView()
+                    .inRootView()
+                    .inDemoMode()
+                    .hideTabView()
+                    .frame(width: Config.minWidth)
+                    .frame(height: 650)
+            )
+            .withPosterLogo(false)
+            .withPosterBackground(LinearGradient.pastel)
+            .asPoster()
     }
 }
 

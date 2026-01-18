@@ -1,6 +1,6 @@
-import SwiftUI
 import MagicKit
 import MagicUI
+import SwiftUI
 
 /**
  * App Store - 隐私与尊重页面
@@ -8,14 +8,12 @@ import MagicUI
  */
 struct AppStorePrivacy: View {
     var body: some View {
-        AppStoreHeroContainer(
-            title: "尊重用户",
-            subtitleTop: "无需注册，无需登录。",
-            subtitleBottom: "没有广告，没有弹窗，只有纯净的音乐体验。"
-        ) {
-            VStack(spacing: 32) {
-                // 特点卡片网格
-                HStack(spacing: 24) {
+        Text("尊重用户")
+            .font(.system(size: 50))
+            .withPosterSubTitle("无需注册，无需登录。")
+            .withPosterBottomSubTitle("没有广告，没有弹窗，只有纯净的音乐体验。")
+            .withPosterPreview(
+                VStack(spacing: 32) {
                     PrivacyFeatureCard(
                         icon: "person.badge.plus",
                         title: "无需注册",
@@ -44,11 +42,13 @@ struct AppStorePrivacy: View {
                         color: .purple
                     )
                 }
-            }
-            .frame(width: Config.minWidth, height: 500)
-            .background(.background)
-            .magicRoundedLarge()
-        }
+                .frame(width: Config.minWidth, height: 500)
+                .background(.background)
+                .magicRoundedLarge()
+            )
+            .withPosterLogo(false)
+            .withPosterBackground(LinearGradient.pastel)
+            .asPoster()
     }
 }
 

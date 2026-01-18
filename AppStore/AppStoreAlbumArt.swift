@@ -1,3 +1,4 @@
+import MagicKit
 import MagicUI
 import SwiftUI
 
@@ -7,18 +8,20 @@ import SwiftUI
  */
 struct AppStoreAlbumArt: View {
     var body: some View {
-        AppStoreHeroContainer(
-            title: "专辑封面",
-            subtitleTop: "精美的专辑封面展示。",
-            subtitleBottom: "大尺寸封面，沉浸式视觉体验。"
-        ) {
-            ContentView()
-                .inRootView()
-                .inDemoMode()
-                .hideTabView()
-                .frame(width: Config.minWidth)
-                .frame(height: 800)
-        }
+        Text("专辑封面")
+            .withPosterSubTitle("精美的专辑封面展示。")
+            .withPosterBottomSubTitle("大尺寸封面，沉浸式视觉体验。")
+            .withPosterPreview(
+                ContentView()
+                    .inRootView()
+                    .inDemoMode()
+                    .hideTabView()
+                    .frame(width: Config.minWidth)
+                    .frame(height: 800)
+            )
+            .withPosterLogo(false)
+            .withPosterBackground(LinearGradient.pastel)
+            .asPoster()
     }
 }
 
@@ -26,5 +29,5 @@ struct AppStoreAlbumArt: View {
 
 #Preview("App Store Album Art") {
     AppStoreAlbumArt()
-        .inMagicContainer(.macBook13, scale: 0.2)
+        .inMagicContainer(.macBook13, scale: 0.4)
 }

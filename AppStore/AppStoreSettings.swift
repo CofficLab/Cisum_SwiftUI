@@ -1,3 +1,4 @@
+import MagicKit
 import MagicUI
 import SwiftUI
 
@@ -7,17 +8,19 @@ import SwiftUI
  */
 struct AppStoreSettings: View {
     var body: some View {
-        AppStoreHeroContainer(
-            title: "个性定制",
-            subtitleTop: "丰富的设置选项。",
-            subtitleBottom: "按照你的喜好，定制专属体验。"
-        ) {
-            ContentView()
-                .inRootView()
-                .inDemoMode()
-                .frame(width: Config.minWidth)
-                .frame(height: 800)
-        }
+        Text("个性定制")
+            .withPosterSubTitle("丰富的设置选项。")
+            .withPosterBottomSubTitle("按照你的喜好，定制专属体验。")
+            .withPosterPreview(
+                ContentView()
+                    .inRootView()
+                    .inDemoMode()
+                    .frame(width: Config.minWidth)
+                    .frame(height: 800)
+            )
+            .withPosterLogo(false)
+            .withPosterBackground(LinearGradient.pastel)
+            .asPoster()
     }
 }
 
@@ -25,5 +28,5 @@ struct AppStoreSettings: View {
 
 #Preview("App Store Settings") {
     AppStoreSettings()
-        .inMagicContainer(.macBook13, scale: 0.2)
+        .inMagicContainer(.macBook13, scale: 0.4)
 }
