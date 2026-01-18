@@ -14,9 +14,9 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     @State var launching = true
     @State var iCloudAvailable = true
 
-    @StateObject var a: AppProvider
-    @StateObject var m: MagicMessageProvider
-    @StateObject var p: PluginProvider
+    @StateObject var appProvider: AppProvider
+    @StateObject var messageProvider: MagicMessageProvider
+    @StateObject var pluginProvider: PluginProvider
     @StateObject var stateProvider: StateProvider
 
     var man: PlayMan
@@ -29,22 +29,24 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
             os_log("\(Self.t)🚀 初始化开始")
         }
 
-        let box = RootBox.shared
+        // 从 ProviderManager 获取共享的服务实例
+        let manager = ProviderManager.shared
+
         self.content = content()
-        self._a = StateObject(wrappedValue: box.app)
-        self._m = StateObject(wrappedValue: box.messageProvider)
-        self._stateProvider = StateObject(wrappedValue: box.stateMessageProvider)
-        self._p = StateObject(wrappedValue: box.plugin)
-        self.man = box.man
-        self.playManWrapper = box.playManWrapper
-        self.cloudProvider = box.cloud
-        self.playManController = box.playManController
+        self._appProvider = StateObject(wrappedValue: manager.app)
+        self._messageProvider = StateObject(wrappedValue: manager.messageProvider)
+        self._stateProvider = StateObject(wrappedValue: manager.stateMessageProvider)
+        self._pluginProvider = StateObject(wrappedValue: manager.plugin)
+        self.man = manager.man
+        self.playManWrapper = manager.playManWrapper
+        self.cloudProvider = manager.cloud
+        self.playManController = manager.playManController
     }
 
     var body: some View {
         Group {
             if self.launching {
-                Launcher(plugins: p.plugins)
+                Launcher(plugins: pluginProvider.plugins)
             } else {
                 if let e = self.error {
                     ErrorViewFatal(error: e)
@@ -52,7 +54,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                     NavigationStack {
                         ZStack {
                             Group {
-                                if let wrapped = p.wrapWithCurrentRoot(content: { content }) {
+                                if let wrapped = pluginProvider.wrapWithCurrentRoot(content: { content }) {
                                     wrapped
                                 } else {
                                     content
@@ -71,9 +73,9 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .environmentObject(man)
                     .environmentObject(playManController)
-                    .environmentObject(self.a)
-                    .environmentObject(p)
-                    .environmentObject(m)
+                    .environmentObject(self.appProvider)
+                    .environmentObject(pluginProvider)
+                    .environmentObject(messageProvider)
                     .environmentObject(self.stateProvider)
                     .onStorageLocationDidReset(perform: onResetStorageLocation)
                 }
@@ -104,7 +106,7 @@ extension RootView {
         }
         Task {
             do {
-                try self.p.restoreCurrent()
+                try self.pluginProvider.restoreCurrent()
 
                 #if os(iOS)
                     UIApplication.shared.beginReceivingRemoteControlEvents()

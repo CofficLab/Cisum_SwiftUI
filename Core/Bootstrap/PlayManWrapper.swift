@@ -23,7 +23,7 @@ public class PlayManController: ObservableObject {
     func setPlayMode(_ mode: PlayMode) {
         playMan.changePlayMode(mode)
     }
-    
+
     func setLike(_ isLiked: Bool) {
         playMan.setLike(isLiked)
     }
@@ -68,6 +68,6 @@ public class PlayManWrapper {
 
 #Preview("App") {
     ContentView()
-    .inRootView()
+        .inRootView()
         .frame(height: 800)
 }

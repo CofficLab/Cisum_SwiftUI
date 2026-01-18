@@ -28,14 +28,12 @@ struct ContentView: View, SuperLog, SuperThread {
                 ControlView()
                     .frame(height: showDB ? Config.controlViewMinHeight : geo.size.height)
 
-                // TabView
                 AppTabView()
                     .frame(height: showDB ? (geo.size.height - Config.controlViewMinHeight) : 0)
                     .opacity(showDB ? 1 : 0)
                     .allowsHitTesting(showDB)
                     .accessibilityHidden(!showDB)
 
-                // Status bar
                 StatusView()
             }
             .frame(width: geo.size.width, height: geo.size.height)
@@ -124,7 +122,7 @@ extension ContentView {
     #Preview("App - Small") {
         ContentView()
             .inRootView()
-            .frame(width: 600, height: 600)
+            .frame(width: 400, height: 700)
     }
 
     #Preview("Demo Mode") {

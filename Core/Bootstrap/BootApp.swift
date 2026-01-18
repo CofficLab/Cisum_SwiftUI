@@ -1,5 +1,22 @@
+import MagicAlert
+import MagicKit
+import MagicPlayMan
+import MagicUI
 import OSLog
 import SwiftUI
+
+typealias PlayMan = MagicPlayMan
+typealias PlayAsset = MagicAsset
+typealias PlayMode = MagicPlayMode
+typealias Logger = MagicLogger
+typealias MagicCard = MagicUI.MagicCard
+typealias MagicApp = MagicKit.MagicApp
+typealias SuperLog = MagicKit.SuperLog
+typealias MagicLoading = MagicUI.MagicLoading
+typealias MagicMessageProvider = MagicAlert.MagicMessageProvider
+typealias MagicSettingSection = MagicUI.MagicSettingSection
+typealias MagicSettingRow = MagicUI.MagicSettingRow
+typealias MagicButton = MagicUI.MagicButton
 
 @main
 struct BootApp: App, SuperLog {
@@ -47,7 +64,7 @@ struct BootApp: App, SuperLog {
 #Preview("App - Small") {
     ContentView()
         .inRootView()
-        .frame(width: 600, height: 600)
+        .frame(width: 400, height: 600)
 }
 
 #if os(iOS)
