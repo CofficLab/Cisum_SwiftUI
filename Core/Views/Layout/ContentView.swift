@@ -18,7 +18,7 @@ struct ContentView: View, SuperLog, SuperThread {
     @State private var autoResizing = false
     @State private var geo: GeometryProxy?
 
-    var showDB: Bool { app.showDB || isDemoMode }
+    var showDB: Bool { app.showDB }
     var controlViewHeightMin = Config.controlViewMinHeight
     var databaseViewHeightMin = Config.databaseViewHeightMin
 
@@ -28,11 +28,9 @@ struct ContentView: View, SuperLog, SuperThread {
                 ControlView()
                     .frame(height: showDB ? Config.controlViewMinHeight : geo.size.height)
 
-                AppTabView()
-                    .frame(height: showDB ? (geo.size.height - Config.controlViewMinHeight) : 0)
-                    .opacity(showDB ? 1 : 0)
-                    .allowsHitTesting(showDB)
-                    .accessibilityHidden(!showDB)
+                if showDB {
+                    AppTabView()
+                }
 
                 StatusView()
             }
