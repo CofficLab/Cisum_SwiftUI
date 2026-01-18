@@ -1,5 +1,4 @@
 import MagicKit
-import MagicUI
 import OSLog
 import SwiftData
 import SwiftUI
@@ -37,27 +36,25 @@ struct StateView: View, SuperLog, SuperThread {
     }
 
     func makeInfoView(_ i: String) -> some View {
-        MagicCard(background: MagicBackground.aurora, paddingVertical: 6) {
-            HStack {
-                Image.info
-                    .foregroundStyle(.white)
-                Text(i)
-                    .foregroundStyle(.white)
-            }
-            .font(font)
+        HStack {
+            Image.info
+                .foregroundStyle(.white)
+            Text(i)
+                .foregroundStyle(.white)
         }
+        .font(font)
+        .inCard()
     }
 
     func makeErrorView(_ e: Error) -> some View {
-        MagicCard(background: MagicBackground.aurora, paddingVertical: 6) {
-            HStack {
-                Image.info
-                    .foregroundStyle(.white)
-                Text(e.localizedDescription)
-                    .foregroundStyle(.white)
-            }
-            .font(font)
+        HStack {
+            Image.info
+                .foregroundStyle(.white)
+            Text(e.localizedDescription)
+                .foregroundStyle(.white)
         }
+        .font(font)
+        .inCard()
     }
 }
 

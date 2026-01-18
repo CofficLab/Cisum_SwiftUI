@@ -1,6 +1,4 @@
 import MagicKit
-import MagicUI
-import MagicUI
 import SwiftUI
 
 struct ProTips: View {
@@ -11,7 +9,6 @@ struct ProTips: View {
     }
 
     var body: some View {
-        MagicCard(background: MagicBackground.aurora) {
             VStack {
                 VStack(spacing: 20) {
                     HStack {
@@ -27,6 +24,7 @@ struct ProTips: View {
 //                    Text("当前订阅：" + (s.currentSubscription?.displayName ?? "无"))
 //                }
             }
-        }.shadow(radius: 8)
+            .inCard()
+        .shadow(radius: 8)
     }
 }

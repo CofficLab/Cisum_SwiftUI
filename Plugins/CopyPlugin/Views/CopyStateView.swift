@@ -1,6 +1,5 @@
 import MagicKit
 import MagicUI
-import MagicUI
 import OSLog
 import SwiftData
 import SwiftUI
@@ -40,21 +39,20 @@ struct CopyStateView: View, SuperLog, SuperThread {
     }
 
     func makeInfoView(_ i: String) -> some View {
-        MagicCard(background: MagicBackground.aurora, paddingVertical: 6) {
-            HStack {
-                Image(systemName: "info.circle")
-                    .foregroundStyle(.white)
-                Text(i)
-                    .foregroundStyle(.white)
-            }
-            .font(.title3)
+        HStack {
+            Image(systemName: "info.circle")
+                .foregroundStyle(.white)
+            Text(i)
+                .foregroundStyle(.white)
         }
+        .inCard()
+        .font(.title3)
     }
 }
 
 #Preview("APP") {
     ContentView()
-    .inRootView()
+        .inRootView()
         .frame(height: 800)
 }
 
@@ -62,5 +60,5 @@ struct CopyStateView: View, SuperLog, SuperThread {
     RootView {
         CopyStateView()
     }
-        .frame(height: 800)
+    .frame(height: 800)
 }
