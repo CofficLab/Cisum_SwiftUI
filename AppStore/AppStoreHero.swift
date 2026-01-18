@@ -1,3 +1,4 @@
+import MagicKit
 import MagicUI
 import SwiftUI
 
@@ -26,5 +27,5 @@ struct AppStoreHero: View {
 
 #Preview("App Store Hero") {
     AppStoreHero()
-        .inMagicContainer(.macBook13, scale: 0.2)
+        .inMagicContainer(.macBook13, scale: 0.4)
 }
