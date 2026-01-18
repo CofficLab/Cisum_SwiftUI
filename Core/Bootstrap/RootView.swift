@@ -42,7 +42,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     var body: some View {
         Group {
             if self.launching {
-                Launcher(plugins: pluginProvider.plugins)
+                Launcher()
             } else {
                 if let e = self.error {
                     CrashedView(error: e)
@@ -98,7 +98,6 @@ extension RootView {
     func boot() {
         if Self.verbose {
             os_log("\(self.t)🚀 Boot")
-            print("\(self.t)🚀 Boot")
         }
         Task {
             do {
@@ -124,7 +123,6 @@ extension RootView {
     func setLoading(_ l: Bool, reason: String) {
         if Self.verbose {
             os_log("\(self.t)👷 设置加载状态: \(l), reason: \(reason)")
-            print("\(self.t)👷 设置加载状态: \(l), reason: \(reason)")
         }
         self.launching = l
     }
@@ -136,7 +134,6 @@ extension RootView {
     func onResetStorageLocation() {
         if Self.verbose {
             os_log("\(self.t)🔄 Reset Storage Location")
-            print("\(self.t)🔄 Reset Storage Location")
         }
         setLoading(true, reason: "resetStorageLocation")
     }
@@ -144,7 +141,6 @@ extension RootView {
     func onLaunchEnd() {
         if Self.verbose {
             os_log("\(self.t)✅ Launch Done")
-            print("\(self.t)✅ Launch Done")
         }
 
         setLoading(false, reason: "launchEnd")

@@ -8,6 +8,8 @@ struct LaunchDoneView: View, SuperLog {
     var errorMessage: String? = nil
     var isActive: Bool = false
 
+    @State private var hasScheduledNotification = false
+
     var body: some View {
         VStack {
             Spacer()
@@ -30,13 +32,25 @@ extension LaunchDoneView {
     ///   - newValue: 新的激活状态值
     func handleActiveChange(_ oldValue: Bool, _ newValue: Bool) {
         if newValue {
-            NotificationCenter.postLaunchDone()
+            scheduleNotification()
         }
     }
 
     /// 处理视图出现事件
     func handleOnAppear() {
         if isActive {
+            scheduleNotification()
+        }
+    }
+
+    /// 调度通知发送（延迟1秒）
+    private func scheduleNotification() {
+        // 避免重复调度
+        guard !hasScheduledNotification else { return }
+
+        hasScheduledNotification = true
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             NotificationCenter.postLaunchDone()
         }
     }

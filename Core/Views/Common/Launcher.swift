@@ -6,15 +6,11 @@ struct Launcher: View, SuperLog {
     nonisolated static let emoji = "🦭"
     nonisolated static let verbose = true
 
+    @EnvironmentObject var pluginProvider: PluginProvider
     @State var currentLaunchPageIndex: Int = 0
 
-    let plugins: [SuperPlugin]
-    private let views: [AnyView]
-
-    init(plugins: [SuperPlugin]) {
-        let views = plugins.compactMap { $0.addLaunchView() }
-        self.plugins = plugins
-        self.views = views
+    private var views: [AnyView] {
+        pluginProvider.plugins.compactMap { $0.addLaunchView() }
     }
 
     var body: some View {

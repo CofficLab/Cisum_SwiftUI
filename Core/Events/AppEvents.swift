@@ -114,7 +114,7 @@ extension View {
     /// - Parameter action: 应用启动完成时执行的操作
     /// - Returns: 添加了监听器的视图
     func onLaunchDone(perform action: @escaping () -> Void) -> some View {
-        self.onReceive(NotificationCenter.default.publisher(for: .applicationDidFinishLaunching)) { _ in
+        self.onReceive(NotificationCenter.default.publisher(for: .launchDone)) { _ in
             action()
         }
     }
