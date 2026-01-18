@@ -4,8 +4,8 @@ import SwiftUI
 // MARK: - Notification Names
 
 extension Notification.Name {
-    /// 启动完成通知
-    static let launchDone = Notification.Name("launchDone")
+    /// 引导完成（应用引导/设置流程完成）
+    static let guideDone = Notification.Name("guideDone")
 
     /// 应用将要隐藏
     static let applicationWillHide = Notification.Name("applicationWillHide")
@@ -45,9 +45,9 @@ extension Notification.Name {
 
 /// NotificationCenter 扩展，提供便捷的事件发送方法
 extension NotificationCenter {
-    /// 发送启动完成事件
-    static func postLaunchDone() {
-        NotificationCenter.default.post(name: .launchDone, object: nil)
+    /// 发送引导完成事件
+    static func postGuideDone() {
+        NotificationCenter.default.post(name: .guideDone, object: nil)
     }
 
     /// 发送应用将要隐藏事件
@@ -110,11 +110,11 @@ extension NotificationCenter {
 
 /// SwiftUI View 扩展，提供便捷的应用生命周期事件监听
 extension View {
-    /// 监听应用启动完成事件
-    /// - Parameter action: 应用启动完成时执行的操作
+    /// 监听引导完成事件
+    /// - Parameter action: 引导完成时执行的操作
     /// - Returns: 添加了监听器的视图
-    func onLaunchDone(perform action: @escaping () -> Void) -> some View {
-        self.onReceive(NotificationCenter.default.publisher(for: .launchDone)) { _ in
+    func onGuideDone(perform action: @escaping () -> Void) -> some View {
+        self.onReceive(NotificationCenter.default.publisher(for: .guideDone)) { _ in
             action()
         }
     }

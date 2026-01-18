@@ -2,33 +2,33 @@ import MagicKit
 import OSLog
 import SwiftUI
 
-struct Launcher: View, SuperLog {
-    nonisolated static let emoji = "🦭"
-    nonisolated static let verbose = true
+struct Guide: View, SuperLog {
+    nonisolated static let emoji = "🧭"
+    nonisolated static let verbose = false
 
     @EnvironmentObject var pluginProvider: PluginProvider
-    @State var currentLaunchPageIndex: Int = 0
+    @State var currentGuidePageIndex: Int = 0
 
     private var views: [AnyView] {
-        pluginProvider.plugins.compactMap { $0.addLaunchView() }
+        pluginProvider.plugins.compactMap { $0.addGuideView() }
     }
 
     var body: some View {
         ZStack {
             // 显示当前页面
-            if currentLaunchPageIndex < views.count {
-                pluginViewWithNavigation(at: currentLaunchPageIndex)
+            if currentGuidePageIndex < views.count {
+                pluginViewWithNavigation(at: currentGuidePageIndex)
             } else {
-                LaunchDoneView(isActive: true)
+                GuideDoneView(isActive: true)
             }
         }
-        .animation(.easeInOut(duration: 0.3), value: currentLaunchPageIndex)
+        .animation(.easeInOut(duration: 0.3), value: currentGuidePageIndex)
     }
 }
 
 // MARK: - View Builder
 
-extension Launcher {
+extension Guide {
     /// 生成带有导航按钮的插件视图
     /// - Parameter index: 视图索引
     /// - Returns: 包含导航按钮的插件视图
@@ -46,7 +46,7 @@ extension Launcher {
                     // 上一页按钮
                     if index > 0 {
                         MagicButton.simple(icon: .iconPreviousPage) {
-                            currentLaunchPageIndex = index - 1
+                            currentGuidePageIndex = index - 1
                         }
                         .magicStyle(.warning)
                         .magicShape(.circle)
@@ -56,7 +56,7 @@ extension Launcher {
 
                     // 下一页按钮
                     MagicButton.simple(icon: .iconNextPage) {
-                        currentLaunchPageIndex = index + 1
+                        currentGuidePageIndex = index + 1
                     }
                     .magicStyle(.primary)
                     .magicShape(.circle)
@@ -71,27 +71,6 @@ extension Launcher {
 }
 
 // MARK: - Preview
-
-#if os(macOS)
-    #Preview("App - Large") {
-        ContentView()
-            .inRootView()
-            .frame(width: 600, height: 1000)
-    }
-
-    #Preview("App - Small") {
-        ContentView()
-            .inRootView()
-            .frame(width: 400, height: 700)
-    }
-#endif
-
-#if os(iOS)
-    #Preview("iPhone") {
-        ContentView()
-            .inRootView()
-    }
-#endif
 
 #if os(macOS)
     #Preview("App - Large") {

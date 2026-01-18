@@ -1,9 +1,9 @@
 import OSLog
 import SwiftUI
 
-struct LaunchDoneView: View, SuperLog {
-    nonisolated static let verbose = true
-    nonisolated static let emoji = "🚀"
+struct GuideDoneView: View, SuperLog {
+    nonisolated static let verbose = false
+    nonisolated static let emoji = "🎯"
 
     var errorMessage: String? = nil
     var isActive: Bool = false
@@ -25,7 +25,7 @@ struct LaunchDoneView: View, SuperLog {
 
 // MARK: - Event Handler
 
-extension LaunchDoneView {
+extension GuideDoneView {
     /// 处理激活状态变化
     /// - Parameters:
     ///   - oldValue: 旧的激活状态值
@@ -51,7 +51,7 @@ extension LaunchDoneView {
         hasScheduledNotification = true
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            NotificationCenter.postLaunchDone()
+            NotificationCenter.postGuideDone()
         }
     }
 }

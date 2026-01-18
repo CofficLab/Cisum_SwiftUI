@@ -42,7 +42,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     var body: some View {
         Group {
             if self.launching {
-                Launcher()
+                Guide()
             } else {
                 if let e = self.error {
                     CrashedView(error: e)
@@ -71,7 +71,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
         }
         .withMagicToast()
         .onStorageLocationChanged(perform: onStorageLocationChange)
-        .onLaunchDone(perform: onLaunchEnd)
+        .onGuideDone(perform: onLaunchEnd)
         .onCloudAccountStateChanged(perform: onCloudAccountStateChanged)
         .onStorageLocationDidReset(perform: onResetStorageLocation)
         .frame(maxWidth: .infinity)

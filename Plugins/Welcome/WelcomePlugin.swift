@@ -14,7 +14,7 @@ actor WelcomePlugin: SuperPlugin, SuperLog, PluginRegistrant {
     nonisolated(unsafe) var enabled = true
     
     @MainActor
-    func addLaunchView() -> AnyView? {
+    func addGuideView() -> AnyView? {
         guard Config.getStorageLocation() == nil else {
             if Self.verbose {
                 os_log("\(self.t)🔍 StorageLocation is not nil")
@@ -25,7 +25,7 @@ actor WelcomePlugin: SuperPlugin, SuperLog, PluginRegistrant {
         if Self.verbose {
             os_log("\(self.t)🔍 StorageLocation is nil, show WelcomeView")
         }
-        
+
         return AnyView(WelcomeView())
     }
 }
