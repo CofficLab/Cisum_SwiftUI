@@ -19,10 +19,6 @@ actor WelcomePlugin: SuperPlugin, SuperLog, PluginRegistrant {
             return nil
         }
 
-        if Self.verbose {
-            os_log("\(self.t)🔍 StorageLocation is nil, show WelcomeView")
-        }
-
         return AnyView(WelcomeView())
     }
 }

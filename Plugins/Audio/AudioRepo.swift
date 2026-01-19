@@ -20,7 +20,7 @@ enum SyncStatus: Equatable {
 @MainActor
 class AudioRepo: ObservableObject, SuperLog {
     nonisolated static let emoji = "🎵"
-    nonisolated static let verbose = false
+    nonisolated static let verbose = true
 
     private var db: AudioDB
     private var disk: URL
@@ -56,7 +56,9 @@ class AudioRepo: ObservableObject, SuperLog {
     }
 
     func changeRoot(url: URL) {
-        os_log("\(self.t)🍋🍋🍋 Change disk to \(url.title)")
+        if Self.verbose {
+            os_log("\(Self.t)🍋 Change disk to \(url.title)")
+        }
 
         Task { [weak self] in
             await self?.cleanup()
@@ -72,7 +74,6 @@ class AudioRepo: ObservableObject, SuperLog {
     func delete(_ audio: AudioModel, verbose: Bool) async throws {
         try self.disk.delete()
         try await db.deleteAudio(url: audio.url)
-        // 更新状态而不是发送通知
         self.files.removeAll { $0 == audio.url }
         self.downloadProgress.removeValue(forKey: audio.url)
     }

@@ -17,7 +17,7 @@ import SwiftUI
 @MainActor
 enum Config: SuperLog {
     nonisolated static let emoji = "🧲"
-    nonisolated static let verbose = true
+    nonisolated static let verbose = false
 
     static let id = "com.yueyi.cisum"
     static let logger = Logger.self
