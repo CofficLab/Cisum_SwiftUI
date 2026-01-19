@@ -34,7 +34,7 @@ final class ProviderManager: SuperLog {
         self.cloud = CloudProvider()
 
         // PlayMan
-        self.man = PlayMan(playlistEnabled: false, verbose: false)
+        self.man = PlayMan(playlistEnabled: false, verbose: true, locale: .current)
 
         if Self.verbose {
             os_log("\(Self.t)✅ 服务提供者初始化完成")

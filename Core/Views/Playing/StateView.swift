@@ -1,4 +1,5 @@
 import MagicKit
+import MagicPlayMan
 import OSLog
 import SwiftData
 import SwiftUI
@@ -24,7 +25,7 @@ struct StateView: View, SuperLog, SuperThread {
                 }
 
                 if playMan.state.isDownloading {
-                    makeInfoView(playMan.state.stateText)
+                    makeInfoView(playMan.state.localizedStateText(localization: playMan.localization))
                 }
 
                 // 播放过程中出现的错误
@@ -50,8 +51,14 @@ struct StateView: View, SuperLog, SuperThread {
         HStack {
             Image.info
                 .foregroundStyle(.white)
-            Text(e.localizedDescription)
-                .foregroundStyle(.white)
+            // 如果是 PlaybackError，使用本地化描述
+            if let playbackError = e as? PlaybackState.PlaybackError {
+                Text(playbackError.localizedDescription(localization: playMan.localization))
+                    .foregroundStyle(.white)
+            } else {
+                Text(e.localizedDescription)
+                    .foregroundStyle(.white)
+            }
         }
         .font(font)
         .inCard()
