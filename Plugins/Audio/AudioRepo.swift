@@ -233,7 +233,7 @@ class AudioRepo: ObservableObject, SuperLog {
 
                 Task { @MainActor in
                     if urls.count > 0 {
-                        try? await db.deleteAudios(urls)
+                        try? await db.deleteAudios(urls, verbose: false)
                         // 更新文件列表，移除已删除的文件
                         self.files.removeAll { urls.contains($0) }
                         // 清理下载进度

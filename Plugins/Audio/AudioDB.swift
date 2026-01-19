@@ -239,11 +239,17 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     }
 
     /// 删除指定 URL 的音频
-    /// - Parameter url: 音频 URL
+    /// - Parameter 
+    ///   - url: 音频 URL
+    ///   - verbose: 是否输出详细日志
     /// - Throws: 如果删除操作失败则抛出错误
-    func deleteAudio(url: URL) throws {
+    func deleteAudio(url: URL, verbose: Bool = false) throws {
+        if verbose {
+            os_log("\(self.t)🚛 DeleteAudio \(url) 🐛")
+        }
+
         if let audio = findAudio(url) {
-            try deleteAudio(id: audio.id)
+            try deleteAudio(id: audio.id, verbose: verbose)
         }
     }
 
@@ -252,16 +258,26 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     ///   - audio: 要删除的音频模型
     ///   - verbose: 是否输出详细日志
     /// - Throws: 如果删除操作失败则抛出错误
-    func deleteAudio(_ audio: AudioModel, verbose: Bool) throws {
-        try deleteAudio(id: audio.id)
+    func deleteAudio(_ audio: AudioModel, verbose: Bool = false) throws {
+        if verbose {
+            os_log("\(self.t)🚛 DeleteAudio \(audio.url) 🐛")
+        }
+
+        try deleteAudio(id: audio.id, verbose: verbose)
     }
 
     /// 删除多个音频模型
-    /// - Parameter audios: 要删除的音频模型数组
+    /// - Parameter 
+    ///   - audios: 要删除的音频模型数组
+    ///   - verbose: 是否输出详细日志
     /// - Returns: 删除后的下一个音频模型
     /// - Throws: 如果删除操作失败则抛出错误
-    func deleteAudios(_ audios: [AudioModel]) throws -> AudioModel? {
-        try deleteAudios(ids: audios.map { $0.id })
+    func deleteAudios(_ audios: [AudioModel], verbose: Bool = false) throws -> AudioModel? {
+        if verbose {
+            os_log("\(self.t)🚛 DeleteAudios \(audios.count) 🐛")
+        }
+
+        return try deleteAudios(ids: audios.map { $0.id }, verbose: verbose)
     }
 
     /// 删除多个音频模型
@@ -273,11 +289,17 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     }
 
     /// 删除多个 URL 对应的音频
-    /// - Parameter urls: 要删除的音频 URL 数组
+    /// - Parameter 
+    ///   - urls: 要删除的音频 URL 数组
+    ///   - verbose: 是否输出详细日志
     /// - Throws: 如果删除操作失败则抛出错误
-    func deleteAudios(_ urls: [URL]) throws {
+    func deleteAudios(_ urls: [URL], verbose: Bool = false) throws {
+        if verbose {
+            os_log("\(self.t)🚛 DeleteAudios \(urls.count) 🐛")
+        }
+
         for url in urls {
-            try deleteAudio(url: url)
+            try deleteAudio(url: url, verbose: verbose)
         }
     }
 
@@ -1003,8 +1025,8 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     /// - Returns: 删除后的下一个音频模型
     /// - Throws: 如果删除操作失败则抛出错误
     @discardableResult
-    func deleteAudio(id: AudioModel.ID) throws -> AudioModel? {
-        try deleteAudios(ids: [id])
+    func deleteAudio(id: AudioModel.ID, verbose: Bool = false) throws -> AudioModel? {
+        return try deleteAudios(ids: [id], verbose: verbose)
     }
 
     /// 删除多个 ID 的音频
