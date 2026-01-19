@@ -3,6 +3,7 @@ import SwiftUI
 
 struct ResetSetting: View, SuperLog {
     nonisolated static let emoji = "🫙"
+    nonisolated static let verbose = false
 
     @EnvironmentObject var app: AppProvider
     @State private var isResetting: Bool = false
@@ -45,6 +46,8 @@ struct ResetSetting: View, SuperLog {
     }
 }
 
+// MARK: - Preview
+
 #Preview("ResetConfirmContent") {
     ResetConfirmContent(onCancel: {}, onConfirm: {})
         .padding()
@@ -61,19 +64,19 @@ struct ResetSetting: View, SuperLog {
 
 #Preview("App - Large") {
     ContentView()
-    .inRootView()
+        .inRootView()
         .frame(width: 600, height: 1000)
 }
 
 #Preview("App - Small") {
     ContentView()
-    .inRootView()
-        .frame(width: 500, height: 800)
+        .inRootView()
+        .frame(width: 600, height: 600)
 }
 
 #if os(iOS)
     #Preview("iPhone") {
         ContentView()
-    .inRootView()
+            .inRootView()
     }
 #endif

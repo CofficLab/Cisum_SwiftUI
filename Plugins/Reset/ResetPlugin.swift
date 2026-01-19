@@ -10,7 +10,7 @@ actor ResetPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     let label = "Reset"
     let description: String = "恢复默认配置"
     let iconName: String = .iconReset
-    
+
     @MainActor
     func addSettingView() -> AnyView? {
         guard Self.enabled else { return nil }
@@ -19,6 +19,7 @@ actor ResetPlugin: SuperPlugin, SuperLog, PluginRegistrant {
 }
 
 // MARK: - PluginRegistrant
+
 extension ResetPlugin {
     @objc static func register() {
         guard Self.enabled else {
@@ -26,7 +27,7 @@ extension ResetPlugin {
         }
 
         Task {
-            await PluginRegistry.shared.register(id: "Reset", order: 95) {
+            PluginRegistry.shared.register(id: "Reset", order: 95) {
                 ResetPlugin()
             }
         }
@@ -43,20 +44,19 @@ extension ResetPlugin {
 
 #Preview("App - Large") {
     ContentView()
-    .inRootView()
+        .inRootView()
         .frame(width: 600, height: 1000)
 }
 
 #Preview("App - Small") {
     ContentView()
-    .inRootView()
+        .inRootView()
         .frame(width: 500, height: 800)
 }
 
 #if os(iOS)
-#Preview("iPhone") {
-    ContentView()
-    .inRootView()
-}
+    #Preview("iPhone") {
+        ContentView()
+            .inRootView()
+    }
 #endif
-

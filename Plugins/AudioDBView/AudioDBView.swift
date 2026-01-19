@@ -210,13 +210,13 @@ extension AudioDBView {
 #if os(macOS)
     #Preview("App - Large") {
         ContentView()
-    .inRootView()
+            .inRootView()
             .frame(width: 600, height: 1000)
     }
 
     #Preview("App - Small") {
         ContentView()
-    .inRootView()
+            .inRootView()
             .frame(width: 600, height: 600)
     }
 #endif
@@ -224,6 +224,6 @@ extension AudioDBView {
 #if os(iOS)
     #Preview("iPhone") {
         ContentView()
-    .inRootView()
+            .inRootView()
     }
 #endif

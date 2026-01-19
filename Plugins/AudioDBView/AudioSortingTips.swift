@@ -38,7 +38,7 @@ struct AudioSortingTips: View {
 #if os(macOS)
     #Preview("App - Large") {
         ContentView()
-    .inRootView()
+            .inRootView()
             .overlay {
                 AudioSortingTips(sortModeIcon: "shuffle", description: "正在排序...", isAnimating: true)
             }
@@ -47,7 +47,7 @@ struct AudioSortingTips: View {
 
     #Preview("App - Small") {
         ContentView()
-    .inRootView()
+            .inRootView()
             .overlay {
                 AudioSortingTips(sortModeIcon: "arrow.triangle.2.circlepath", description: "正在排序...", isAnimating: true)
             }
@@ -58,7 +58,7 @@ struct AudioSortingTips: View {
 #if os(iOS)
     #Preview("iPhone") {
         ContentView()
-    .inRootView()
+            .inRootView()
             .overlay {
                 AudioSortingTips(sortModeIcon: "shuffle", description: "正在排序...", isAnimating: true)
             }

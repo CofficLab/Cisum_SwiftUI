@@ -53,13 +53,6 @@ struct ResetConfirmContent: View {
             }
             .frame(maxWidth: .infinity, alignment: .trailing)
         }
-        .padding(16)
-        .background(.ultraThinMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-        .overlay {
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .strokeBorder(.white.opacity(0.15))
-        }
     }
 }
 
@@ -122,22 +115,22 @@ struct ResetProgressContent: View {
 }
 
 #if os(macOS)
-#Preview("App - Large") {
-    ContentView()
-    .inRootView()
-        .frame(width: 600, height: 1000)
-}
+    #Preview("App - Large") {
+        ContentView()
+            .inRootView()
+            .frame(width: 600, height: 1000)
+    }
 
-#Preview("App - Small") {
-    ContentView()
-    .inRootView()
-        .frame(width: 600, height: 600)
-}
+    #Preview("App - Small") {
+        ContentView()
+            .inRootView()
+            .frame(width: 600, height: 600)
+    }
 #endif
 
 #if os(iOS)
-#Preview("iPhone") {
-    ContentView()
-    .inRootView()
-}
+    #Preview("iPhone") {
+        ContentView()
+            .inRootView()
+    }
 #endif
