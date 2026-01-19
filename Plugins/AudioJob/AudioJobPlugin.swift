@@ -28,18 +28,22 @@ actor AudioJobPlugin: SuperPlugin, SuperLog, PluginRegistrant {
             os_log("\(self.t)🚀 注册音频后台任务插件")
         }
 
-        // 注册示例任务（演示框架使用）
+        // 注册任务
         Task {
-            await registerExampleJob()
+            await registerJobs()
         }
     }
 
-    /// 注册示例任务
-    private func registerExampleJob() async {
+    /// 注册任务
+    private func registerJobs() async {
         let manager = AudioJobManager.shared
 
         // 注册示例任务
         await manager.register(ExampleJob())
+
+        // 注册文件系统监控任务
+        let fsMonitorJob = FileSystemMonitorJob()
+        await manager.register(fsMonitorJob)
 
         if Self.verbose {
             let allJobs = await manager.getAllJobStatus()
@@ -48,6 +52,12 @@ actor AudioJobPlugin: SuperPlugin, SuperLog, PluginRegistrant {
                 os_log("\(self.t)  • \(job.name)")
             }
         }
+
+        // 自动启动文件系统监控任务
+        if Self.verbose {
+            os_log("\(self.t)🚀 自动启动文件系统监控任务")
+        }
+        await manager.startJob(fsMonitorJob.identifier)
     }
 
     /// 启动指定任务

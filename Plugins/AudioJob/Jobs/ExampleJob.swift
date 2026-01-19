@@ -9,9 +9,9 @@ import OSLog
 final class ExampleJob: AudioJob, SuperLog {
     static let verbose = true
 
-    let identifier = "com.cisum.audio.job.example"
-    let name = "示例任务"
-    let description = "这是一个示例后台任务，用于演示框架的使用"
+    nonisolated let identifier = "com.cisum.audio.job.example"
+    nonisolated let name = "示例任务"
+    nonisolated let description = "这是一个示例后台任务，用于演示框架的使用"
 
     private var task: Task<Void, Never>?
 

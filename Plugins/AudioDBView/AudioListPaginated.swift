@@ -28,7 +28,7 @@ import SwiftUI
  */
 struct AudioListPaginated: View, SuperThread, SuperLog, SuperEvent {
     nonisolated static let emoji = "📬"
-    nonisolated static let verbose = false
+    nonisolated static let verbose = true
 
     @EnvironmentObject var playManController: PlayManController
     @EnvironmentObject var m: MagicMessageProvider
@@ -360,6 +360,21 @@ extension AudioListPaginated {
         if Self.verbose {
             os_log("\(self.t)✅ 数据同步完成")
         }
+
+        // 更新总数
+        Task {
+            guard let repo = await AudioPlugin.getAudioRepo() else { return }
+
+            let newTotalCount = await repo.getTotalCount()
+
+            await MainActor.run {
+                self.totalCount = newTotalCount
+                if Self.verbose {
+                    os_log("\(self.t)🔄 更新总数: \(newTotalCount)")
+                }
+            }
+        }
+
         refresh()
         setIsSyncing(false)
     }
