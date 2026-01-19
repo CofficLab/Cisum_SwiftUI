@@ -13,7 +13,6 @@ struct AudioPlayModeRootView<Content>: View, SuperLog where Content: View {
     @EnvironmentObject var man: PlayManController
     @EnvironmentObject var m: MagicMessageProvider
     @EnvironmentObject var p: PluginProvider
-    @EnvironmentObject var audioProvider: AudioProvider
 
     private var content: Content
 

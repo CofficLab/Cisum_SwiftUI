@@ -28,10 +28,9 @@ import SwiftUI
  */
 struct AudioListPaginated: View, SuperThread, SuperLog, SuperEvent {
     nonisolated static let emoji = "📬"
-    nonisolated static let verbose = true
+    nonisolated static let verbose = false
 
     @EnvironmentObject var playManController: PlayManController
-    @EnvironmentObject var audioProvider: AudioProvider
     @EnvironmentObject var m: MagicMessageProvider
 
     /// 当前选中的音频 URL
@@ -149,14 +148,18 @@ extension AudioListPaginated {
         guard !isLoading else { return }
 
         isLoading = true
+        
+        guard let repo = AudioPlugin.getAudioRepo() else {
+            return
+        }
 
         Task.detached(priority: .background) {
             if Self.verbose {
                 os_log("\(self.t)🔄 加载初始数据")
             }
 
-            let count = await audioProvider.repo.getTotalCount()
-            let urls = await audioProvider.repo.get(
+            let count = await repo.getTotalCount()
+            let urls = await repo.get(
                 offset: 0,
                 limit: self.pageSize,
                 reason: self.className
@@ -190,6 +193,10 @@ extension AudioListPaginated {
         }
 
         isLoadingMore = true
+        
+        guard let repo = AudioPlugin.getAudioRepo() else {
+            return
+        }
 
         Task.detached(priority: .background) {
             let currentPage = await self.currentPage
@@ -200,7 +207,7 @@ extension AudioListPaginated {
                 os_log("\(self.t)🔄 LoadMore - offset: \(offset), limit: \(pageSize)")
             }
 
-            let newUrls = await audioProvider.repo.get(
+            let newUrls = await repo.get(
                 offset: offset,
                 limit: pageSize,
                 reason: self.className

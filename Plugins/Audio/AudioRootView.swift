@@ -20,9 +20,7 @@ struct AudioRootView<Content>: View, SuperLog where Content: View {
     private var content: Content
 
     var container: ModelContainer?
-    var disk: URL?
     var repo: AudioRepo?
-    var audioProvider: AudioProvider?
 
     init(@ViewBuilder content: () -> Content) {
         if Self.verbose {
@@ -40,7 +38,7 @@ struct AudioRootView<Content>: View, SuperLog where Content: View {
 
         let storage = Config.getStorageLocation()
 
-        guard let storage = storage else {
+        guard storage != nil else {
             self.error = AudioPluginError.initialization(reason: "Storage 未找到")
             if Self.verbose {
                 os_log("\(Self.t)放弃初始化，因为: Storage 未找到")
@@ -48,20 +46,7 @@ struct AudioRootView<Content>: View, SuperLog where Content: View {
             return
         }
 
-        switch storage {
-        case .local:
-            disk = Config.localDocumentsDir?.appendingFolder(AudioPlugin.dbDirName)
-        case .icloud:
-            disk = Config.cloudDocumentsDir?.appendingFolder(AudioPlugin.dbDirName)
-        case .custom:
-            disk = Config.localDocumentsDir?.appendingFolder(AudioPlugin.dbDirName)
-        }
-
-        self.disk = try? disk!.createIfNotExist()
         self.container = try? AudioConfigRepo.getContainer()
-        self.repo = try? AudioRepo(disk: disk!, reason: "onInit")
-        self.audioProvider = AudioProvider(disk: disk!, db: self.repo!)
-        self.audioProvider?.updateDisk(disk!)
 
         if Self.verbose {
             os_log("\(Self.t)初始化完成")
@@ -69,17 +54,12 @@ struct AudioRootView<Content>: View, SuperLog where Content: View {
     }
 
     var body: some View {
-        if Self.verbose {
-            os_log("\(self.t)📺 开始渲染")
-        }
-
-        return Group {
-            if let container = self.container, let provider = self.audioProvider {
+        Group {
+            if let container = self.container {
                 ZStack {
                     content
                 }
                 .modelContainer(container)
-                .environmentObject(provider)
                 .onStorageLocationChanged(perform: handleStorageLocationChanged)
                 .onDisappear(perform: handleOnDisappear)
             } else {

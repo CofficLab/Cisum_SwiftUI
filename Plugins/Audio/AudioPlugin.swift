@@ -26,13 +26,24 @@ actor AudioPlugin: SuperPlugin, SuperLog, PluginRegistrant {
 
     @MainActor func getDisk() -> URL? { Self.getAudioDisk() }
 
-    @MainActor
-    static func getAudioDisk() -> URL? {
+    @MainActor static func getAudioDisk() -> URL? {
         guard let storageRoot = Config.getStorageRoot() else {
             return nil
         }
 
         return storageRoot.appendingPathComponent(Self.dbDirName)
+    }
+
+    @MainActor static func getAudioRepo() -> AudioRepo? {
+        guard let disk = Self.getAudioDisk() else {
+            return nil
+        }
+
+        guard let repo = try? AudioRepo(disk: disk, reason: "AudioPlugin") else {
+            return nil
+        }
+        
+        return repo
     }
 }
 

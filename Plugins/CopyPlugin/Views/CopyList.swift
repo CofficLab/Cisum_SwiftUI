@@ -8,7 +8,6 @@ struct CopyList: View, SuperLog, SuperThread {
     nonisolated static let emoji = "📬"
 
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var audioManager: AudioProvider
     @Environment(\.modelContext) private var context
 
     @State private var selection: String?

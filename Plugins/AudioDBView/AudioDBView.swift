@@ -8,10 +8,9 @@ import UniformTypeIdentifiers
 @MainActor
 struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
     nonisolated static let emoji = "🐘"
-    nonisolated static let verbose = true
+    nonisolated static let verbose = false
 
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var audioProvider: AudioProvider
 
     /// 是否正在排序
     @State private var isSorting: Bool = false
@@ -81,23 +80,8 @@ extension AudioDBView {
     /// 异步获取音频文件的存储根目录路径。
     ///
     /// - Returns: 存储根目录的 URL
-    private func fetchStorageRoot() async -> URL {
-        if Self.verbose {
-            os_log("\(self.t)📂 获取存储根目录")
-        }
-
-        let database = audioProvider.disk
-        return await withCheckedContinuation { continuation in
-            Task {
-                let root = database
-
-                if Self.verbose {
-                    os_log("\(self.t)✅ 存储根目录: \(root.path)")
-                }
-
-                continuation.resume(returning: root)
-            }
-        }
+    private func fetchStorageRoot() async -> URL? {
+        AudioPlugin.getAudioDisk()
     }
 
     /// 复制文件到存储目录
@@ -152,7 +136,9 @@ extension AudioDBView {
                     os_log("\(self.t)📥 处理文件导入，文件数量: \(urls.count)")
                 }
 
-                let storageRoot = await fetchStorageRoot()
+                guard let storageRoot = await fetchStorageRoot() else {
+                    return
+                }
 
                 do {
                     try await copyFiles(urls, to: storageRoot)

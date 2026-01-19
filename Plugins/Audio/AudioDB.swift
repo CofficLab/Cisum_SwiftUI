@@ -91,7 +91,6 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     /// - Returns: 符合条件的模型数组
     /// - Throws: 如果查询操作失败则抛出错误
     func get<T: PersistentModel>(for predicate: Predicate<T>) throws -> [T] {
-        // os_log("\(self.isMain) 🏠 LocalDB.get")
         let descriptor = FetchDescriptor<T>(predicate: predicate)
         return try context.fetch(descriptor)
     }
@@ -628,37 +627,6 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
         getTotalOfAudio() > 0
     }
 
-    /// 检查指定 URL 的音频是否被喜欢
-    /// - Parameter url: 音频 URL
-    /// - Returns: 如果被喜欢则返回 true，否则返回 false
-    func isLiked(_ url: URL) -> Bool {
-        // 喜欢状态现在由 AudioLikePlugin 管理
-        // 这里返回 false，因为 AudioModel 不再存储喜欢状态
-        false
-    }
-
-    /// 将指定的音频模型标记为喜欢
-    /// - Parameter audio: 要标记为喜欢的音频模型
-    /// - Note: 喜欢状态现在由 AudioLikePlugin 管理，此方法已废弃
-    func like(_ audio: AudioModel) {
-        // 喜欢状态现在由 AudioLikePlugin 管理
-        // 此方法保留以保持兼容性，但不再修改 AudioModel
-        if Self.verbose {
-            os_log("\(self.t)⚠️ like(_:) 方法已废弃，请使用 AudioLikePlugin")
-        }
-    }
-
-    /// 将指定 URL 的音频标记为喜欢
-    /// - Parameter url: 音频 URL
-    /// - Note: 喜欢状态现在由 AudioLikePlugin 管理，此方法已废弃
-    func like(_ url: URL) {
-        // 喜欢状态现在由 AudioLikePlugin 管理
-        // 此方法保留以保持兼容性，但不再修改 AudioModel
-        if Self.verbose {
-            os_log("\(self.t)⚠️ like(_:) 方法已废弃，请使用 AudioLikePlugin")
-        }
-    }
-
     /// 获取指定音频模型的下一个音频模型
     /// - Parameters:
     ///   - audio: 当前音频模型
@@ -912,19 +880,6 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
         }
     }
 
-    /// 切换指定 URL 音频的喜欢状态
-    /// - Parameter url: 音频 URL
-    /// - Throws: 如果音频不存在或保存失败则抛出错误
-    /// - Note: 喜欢状态现在由 AudioLikePlugin 管理，此方法已废弃
-    func toggleLike(_ url: URL) throws {
-        // 喜欢状态现在由 AudioLikePlugin 管理
-        // 此方法保留以保持兼容性，但不再修改 AudioModel
-        if Self.verbose {
-            os_log("\(self.t)⚠️ toggleLike(_:) 方法已废弃，请使用 AudioLikePlugin")
-        }
-        throw AudioRecordDBError.ToggleLikeError(AudioRecordDBError.AudioNotFound(url))
-    }
-
     /// 更新音频模型
     /// - Parameters:
     ///   - audio: 要更新的音频模型
@@ -951,20 +906,6 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
             try? context.save()
         } else {
             os_log("\(self.t)🍋 DB::update nothing changed 👌")
-        }
-    }
-
-    /// 更新指定 URL 音频的喜欢状态
-    /// - Parameters:
-    ///   - url: 音频 URL
-    ///   - like: 是否喜欢
-    /// - Throws: 如果保存失败则抛出错误
-    /// - Note: 喜欢状态现在由 AudioLikePlugin 管理，此方法已废弃
-    func updateLike(_ url: URL, like: Bool) throws {
-        // 喜欢状态现在由 AudioLikePlugin 管理
-        // 此方法保留以保持兼容性，但不再修改 AudioModel
-        if Self.verbose {
-            os_log("\(self.t)⚠️ updateLike(_:_:) 方法已废弃，请使用 AudioLikePlugin")
         }
     }
 

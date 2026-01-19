@@ -21,7 +21,7 @@ enum SyncStatus: Equatable {
 class AudioRepo: ObservableObject, SuperLog {
     nonisolated static let emoji = "🎵"
     nonisolated static let verbose = false
-    
+
     private var db: AudioDB
     private var disk: URL
     private var monitor: Cancellable?
@@ -188,10 +188,6 @@ class AudioRepo: ObservableObject, SuperLog {
         }
     }
 
-    func toggleLike(_ url: URL) async throws {
-        try await db.toggleLike(url)
-    }
-
     func makeMonitor() -> Cancellable {
         if Self.verbose {
             os_log("\(self.t)Make monitor for: \(self.disk.shortPath())")
@@ -297,19 +293,19 @@ extension AudioRepo {
 
 #Preview("App - Large") {
     ContentView()
-    .inRootView()
+        .inRootView()
         .frame(width: 600, height: 1000)
 }
 
 #Preview("App - Small") {
     ContentView()
-    .inRootView()
+        .inRootView()
         .frame(width: 500, height: 800)
 }
 
 #if os(iOS)
     #Preview("iPhone") {
         ContentView()
-    .inRootView()
+            .inRootView()
     }
 #endif

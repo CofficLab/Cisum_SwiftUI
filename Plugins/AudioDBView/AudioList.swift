@@ -25,7 +25,6 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     nonisolated static let verbose = false
 
     @EnvironmentObject var playManController: PlayManController
-    @EnvironmentObject var audioProvider: AudioProvider
     @EnvironmentObject var m: MagicMessageProvider
 
     /// 当前选中的音频 URL
@@ -105,12 +104,16 @@ extension AudioList {
     /// 从数据仓库异步获取所有音频文件的 URL 列表并更新界面。
     /// 使用后台优先级执行，避免阻塞主线程。
     private func updateURLs() {
+        guard let repo = AudioPlugin.getAudioRepo() else {
+            return
+        }
+        
         Task.detached(priority: .background) {
             if Self.verbose {
                 os_log("\(self.t)🔄 获取所有音频 URL")
             }
 
-            let urls = await audioProvider.repo.getAll(reason: self.className)
+            let urls = await repo.getAll(reason: self.className)
 
             if Self.verbose {
                 os_log("\(self.t)✅ 获取到 \(urls.count) 个音频")

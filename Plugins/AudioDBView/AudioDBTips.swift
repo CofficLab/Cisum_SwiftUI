@@ -8,7 +8,6 @@ struct AudioDBTips: View {
     }
 
     @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var audioManager: AudioProvider
     var variant: Variant = .empty
 
     var supportedFormats: String {
@@ -31,13 +30,15 @@ struct AudioDBTips: View {
                     .foregroundStyle(.white)
 
                 #if os(macOS)
-                    HStack { Text("或").foregroundStyle(.white) }
-                    Button(
-                        action: { audioManager.disk.openFolder() },
-                        label: {
-                            Label { Text("打开仓库目录并放入文件") } icon: { Image(systemName: "doc.viewfinder.fill") }
-                        }
-                    )
+//                if guard let disk = AudioPlugin.getAudioDisk() {
+//                    HStack { Text("或").foregroundStyle(.white) }
+//                        Button(
+//                            action: { disk.openFolder() },
+//                            label: {
+//                                Label { Text("打开仓库目录并放入文件") } icon: { Image(systemName: "doc.viewfinder.fill") }
+//                            }
+//                        )
+//                    }
                 #endif
 
                 if Config.isNotDesktop {
