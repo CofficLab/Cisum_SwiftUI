@@ -159,9 +159,10 @@ extension AudioModel {
     }
 }
 
+#if DEBUG
 #Preview("App") {
     ContentView()
-    .inRootView()
+        .inRootView()
         .frame(height: 800)
 }
 
@@ -172,3 +173,4 @@ extension AudioModel {
     .frame(width: 1200)
     .frame(height: 1200)
 }
+#endif
