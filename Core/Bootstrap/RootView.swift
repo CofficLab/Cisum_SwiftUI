@@ -4,7 +4,7 @@ import SwiftUI
 
 struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content: View {
     nonisolated static var emoji: String { "🌳" }
-    nonisolated static var verbose: Bool { false }
+    nonisolated static var verbose: Bool { true }
 
     var content: Content
 

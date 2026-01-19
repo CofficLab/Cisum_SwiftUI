@@ -28,7 +28,7 @@ import SwiftUI
  */
 struct AudioListPaginated: View, SuperThread, SuperLog, SuperEvent {
     nonisolated static let emoji = "📬"
-    nonisolated static let verbose = false
+    nonisolated static let verbose = true
 
     @EnvironmentObject var playManController: PlayManController
     @EnvironmentObject var audioProvider: AudioProvider
@@ -62,10 +62,7 @@ struct AudioListPaginated: View, SuperThread, SuperLog, SuperEvent {
     @State private var totalCount: Int = 0
 
     var body: some View {
-        if Self.verbose {
-            os_log("\(self.t)📺 开始渲染")
-        }
-        return Group {
+        Group {
             if isLoading && urls.isEmpty {
                 AudioDBTips(variant: .loading)
             } else if urls.isEmpty && !isLoading {
@@ -158,11 +155,7 @@ extension AudioListPaginated {
                 os_log("\(self.t)🔄 加载初始数据")
             }
 
-            // 首先获取总数
-            let allUrls = await audioProvider.repo.getAll(reason: "获取总数")
-            let count = allUrls.count
-
-            // 然后加载第一页
+            let count = await audioProvider.repo.getTotalCount()
             let urls = await audioProvider.repo.get(
                 offset: 0,
                 limit: self.pageSize,
@@ -261,18 +254,16 @@ extension AudioListPaginated {
 
 extension AudioListPaginated {
     /// 设置选中的音频
-    private func setSelection(_ newValue: URL?) {
+    @MainActor
+    private func setSelection(_ newValue: URL?, reason: String  ) {
         if Self.verbose {
-            if let url = newValue {
-                os_log("\(self.t)🎯 选中音频: \(url.lastPathComponent)")
-            } else {
-                os_log("\(self.t)🎯 清除选中")
-            }
+            os_log("\(self.t)🔄 设置选中音频: \(newValue?.lastPathComponent ?? "nil") - \(reason)")
         }
         selection = newValue
     }
 
     /// 设置同步状态
+    @MainActor
     private func setIsSyncing(_ newValue: Bool) {
         if Self.verbose {
             os_log("\(self.t)🔄 同步状态: \(newValue ? "同步中" : "完成")")
@@ -286,17 +277,13 @@ extension AudioListPaginated {
 extension AudioListPaginated {
     /// 处理视图出现事件
     func handleOnAppear() {
-        if Self.verbose {
-            os_log("\(self.t)👀 视图已出现")
-        }
-
         loadInitial()
 
         if let asset = playManController.getAsset() {
             if Self.verbose {
                 os_log("\(self.t)🎵 恢复选中当前播放的音频")
             }
-            setSelection(asset)
+            setSelection(asset, reason: "handleOnAppear")
         }
     }
 
@@ -315,10 +302,7 @@ extension AudioListPaginated {
     /// 处理播放资源变化事件
     func handleAssetChanged(url: URL?) {
         if let asset = url, asset != selection {
-            if Self.verbose {
-                os_log("\(self.t)🔄 播放资源变化，更新选中: \(asset.lastPathComponent)")
-            }
-            self.setSelection(asset)
+            self.setSelection(asset, reason: "handleAssetChanged")
         }
     }
 

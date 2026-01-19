@@ -8,7 +8,7 @@ import UniformTypeIdentifiers
 @MainActor
 struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
     nonisolated static let emoji = "🐘"
-    nonisolated static let verbose = false
+    nonisolated static let verbose = true
 
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var audioProvider: AudioProvider
