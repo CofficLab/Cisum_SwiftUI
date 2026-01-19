@@ -42,14 +42,6 @@ actor AudioJobPlugin: SuperPlugin, SuperLog, PluginRegistrant {
         let fsMonitorJob = FileSystemMonitorJob()
         await manager.register(fsMonitorJob)
 
-        if Self.verbose {
-            let allJobs = await manager.getAllJobStatus()
-            os_log("\(self.t)📋 已注册 \(allJobs.count) 个任务")
-            for job in allJobs {
-                os_log("\(self.t)  • \(job.name)")
-            }
-        }
-
         // 自动启动文件系统监控任务
         await manager.startJob(fsMonitorJob.identifier)
     }
