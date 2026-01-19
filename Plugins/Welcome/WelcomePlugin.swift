@@ -1,10 +1,12 @@
 import Foundation
-import MagicCore
+import MagicKit
 import OSLog
 import SwiftUI
 
 actor WelcomePlugin: SuperPlugin, SuperLog, PluginRegistrant {
     static let emoji = "👏"
+    static let verbose = true
+    private static var enabled: Bool { true }
 
     let label = "Welcome"
     let description = "欢迎界面"
@@ -12,12 +14,11 @@ actor WelcomePlugin: SuperPlugin, SuperLog, PluginRegistrant {
     nonisolated(unsafe) var enabled = true
     
     @MainActor
-    func addLaunchView() -> AnyView? {
-        guard enabled else { return nil }
+    func addGuideView() -> AnyView? {
         guard Config.getStorageLocation() == nil else {
             return nil
         }
-        
+
         return AnyView(WelcomeView())
     }
 }
@@ -25,7 +26,15 @@ actor WelcomePlugin: SuperPlugin, SuperLog, PluginRegistrant {
 // MARK: - PluginRegistrant
 extension WelcomePlugin {
     @objc static func register() {
+        guard Self.enabled else {
+            return 
+        }
+
         Task {
+            if Self.verbose {
+                os_log("\(self.t)🚀 Register")
+            }
+
             await PluginRegistry.shared.register(id: "Welcome", order: -100) {
                 WelcomePlugin()
             }
@@ -33,27 +42,38 @@ extension WelcomePlugin {
     }
 }
 
-#Preview("Welcome") {
+#Preview("WelcomePlugin") {
     RootView {
         WelcomeView()
     }
     .frame(height: 800)
 }
 
+#Preview("WelcomePlugin - Dark") {
+    RootView {
+        WelcomeView()
+    }
+    .frame(height: 800)
+    .preferredColorScheme(.dark)
+}
+
 #if os(macOS)
 #Preview("App - Large") {
-    AppPreview()
+    ContentView()
+    .inRootView()
         .frame(width: 600, height: 1000)
 }
 
 #Preview("App - Small") {
-    AppPreview()
-        .frame(width: 500, height: 800)
+    ContentView()
+    .inRootView()
+        .frame(width: 600, height: 600)
 }
 #endif
 
 #if os(iOS)
 #Preview("iPhone") {
-    AppPreview()
+    ContentView()
+    .inRootView()
 }
 #endif

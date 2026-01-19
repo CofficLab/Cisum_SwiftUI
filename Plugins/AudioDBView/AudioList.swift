@@ -1,5 +1,5 @@
 import MagicAlert
-import MagicCore
+import MagicKit
 import OSLog
 import SwiftData
 import SwiftUI
@@ -25,7 +25,6 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     nonisolated static let verbose = false
 
     @EnvironmentObject var playManController: PlayManController
-    @EnvironmentObject var audioProvider: AudioProvider
     @EnvironmentObject var m: MagicMessageProvider
 
     /// 当前选中的音频 URL
@@ -105,12 +104,16 @@ extension AudioList {
     /// 从数据仓库异步获取所有音频文件的 URL 列表并更新界面。
     /// 使用后台优先级执行，避免阻塞主线程。
     private func updateURLs() {
+        guard let repo = AudioPlugin.getAudioRepo() else {
+            return
+        }
+        
         Task.detached(priority: .background) {
             if Self.verbose {
                 os_log("\(self.t)🔄 获取所有音频 URL")
             }
 
-            let urls = await audioProvider.repo.getAll(reason: self.className)
+            let urls = await repo.getAll(reason: self.className)
 
             if Self.verbose {
                 os_log("\(self.t)✅ 获取到 \(urls.count) 个音频")
@@ -270,14 +273,41 @@ extension AudioList {
 
     /// 处理音频删除事件
     ///
-    /// 当音频文件被删除时触发，刷新音频列表。
+    /// 当音频文件被删除时触发，使用动画效果从列表中移除对应的项。
     ///
     /// - Parameter notification: 删除完成的通知
     func handleDBDeleted(_ notification: Notification) {
-        if Self.verbose {
-            os_log("\(self.t)🗑️ 音频已删除")
+        guard let urlsToDelete = notification.userInfo?["urls"] as? [URL] else {
+            if Self.verbose {
+                os_log("\(self.t)⚠️ 删除通知中没有 URL 信息")
+            }
+            // 回退到防抖更新
+            self.scheduleUpdateURLsDebounced()
+            return
         }
-        self.scheduleUpdateURLsDebounced()
+
+        if Self.verbose {
+            os_log("\(self.t)🗑️ 收到删除通知: \(urlsToDelete.count) 个文件")
+        }
+
+        // 取消防抖任务，直接更新
+        updateURLsDebounceTask?.cancel()
+
+        // 使用动画效果移除已删除的文件
+        withAnimation(.easeInOut(duration: 0.3)) {
+            urls.removeAll { url in
+                urlsToDelete.contains(url)
+            }
+
+            // 如果删除的是当前选中的文件，清除选中状态
+            if let selected = selection, urlsToDelete.contains(selected) {
+                selection = nil
+            }
+        }
+
+        if Self.verbose {
+            os_log("\(self.t)✅ 已移除 \(urlsToDelete.count) 个文件，剩余 \(urls.count) 个")
+        }
     }
 
     /// 处理数据同步完成事件
@@ -369,18 +399,21 @@ extension AudioList {
 
 #if os(macOS)
     #Preview("App - Large") {
-        AppPreview()
+        ContentView()
+            .inRootView()
             .frame(width: 600, height: 1000)
     }
 
     #Preview("App - Small") {
-        AppPreview()
+        ContentView()
+            .inRootView()
             .frame(width: 600, height: 600)
     }
 #endif
 
 #if os(iOS)
     #Preview("iPhone") {
-        AppPreview()
+        ContentView()
+            .inRootView()
     }
 #endif

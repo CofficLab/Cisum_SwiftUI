@@ -1,6 +1,6 @@
 import Foundation
 import MagicAlert
-import MagicCore
+import MagicKit
 import MagicPlayMan
 import OSLog
 import SwiftData
@@ -24,12 +24,7 @@ struct AudioLikeRootView<Content>: View, SuperLog where Content: View {
     var body: some View {
         content
             .onAppear(perform: handleOnAppear)
-            .onReceive(NotificationCenter.default.publisher(for: .AudioLikeStatusChanged)) { notification in
-                if let userInfo = notification.userInfo,
-                   let liked = userInfo["liked"] as? Bool {
-                    handleLikeStatusChanged(liked)
-                }
-            }
+            .onAudioLikeStatusChanged(perform: handleLikeStatusChanged)
     }
 
     /// 检查是否应该激活喜欢管理功能
@@ -62,7 +57,7 @@ extension AudioLikeRootView {
     /// 当用户点击喜欢/取消喜欢按钮时触发，更新独立的数据表。
     ///
     /// - Parameter liked: 是否喜欢
-    func handleLikeStatusChanged(_ liked: Bool) {
+    func handleLikeStatusChanged(audioId: String, url: URL?, liked: Bool) {
         guard shouldActivateLike else { return }
 
         guard let currentURL = man.playMan.currentURL else {

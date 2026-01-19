@@ -1,7 +1,7 @@
 import AVFoundation
 import CryptoKit
 import Foundation
-import MagicCore
+import MagicKit
 
 import OSLog
 import SwiftData
@@ -159,8 +159,10 @@ extension AudioModel {
     }
 }
 
+#if DEBUG
 #Preview("App") {
-    AppPreview()
+    ContentView()
+        .inRootView()
         .frame(height: 800)
 }
 
@@ -171,3 +173,4 @@ extension AudioModel {
     .frame(width: 1200)
     .frame(height: 1200)
 }
+#endif

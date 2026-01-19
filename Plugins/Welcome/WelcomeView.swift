@@ -1,17 +1,17 @@
-import MagicCore
+import MagicKit
 import OSLog
 import SwiftUI
 
 struct WelcomeView: View, SuperLog {
     nonisolated static let emoji = "🎉"
+    static let verbose = false
 
     var body: some View {
-        os_log("\(self.t)开始渲染")
-        return ZStack {
+        ZStack {
             LinearGradient(colors: [
                 Color.indigo.opacity(0.85),
                 Color.purple.opacity(0.85),
-                Color.blue.opacity(0.85),
+                Color.blue.opacity(0.1),
             ], startPoint: .topLeading, endPoint: .bottomTrailing)
                 .ignoresSafeArea()
 
@@ -52,27 +52,38 @@ struct WelcomeView: View, SuperLog {
     }
 }
 
-#Preview("Welcome") {
+#Preview("WelcomeView") {
     RootView {
         WelcomeView()
     }
     .frame(height: 800)
 }
 
+#Preview("WelcomeView - Dark") {
+    RootView {
+        WelcomeView()
+    }
+    .frame(height: 800)
+    .preferredColorScheme(.dark)
+}
+
 #if os(macOS)
 #Preview("App - Large") {
-    AppPreview()
+    ContentView()
+    .inRootView()
         .frame(width: 600, height: 1000)
 }
 
 #Preview("App - Small") {
-    AppPreview()
-        .frame(width: 500, height: 800)
+    ContentView()
+    .inRootView()
+        .frame(width: 600, height: 600)
 }
 #endif
 
 #if os(iOS)
-#Preview("iPhone") {
-    AppPreview()
-}
+    #Preview("iPhone") {
+        ContentView()
+    .inRootView()
+    }
 #endif

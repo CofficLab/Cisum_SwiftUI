@@ -1,7 +1,5 @@
-import MagicBackground
-import MagicContainer
-import MagicDesktop
-import MagicCore
+import MagicKit
+import MagicKit
 import MagicUI
 import SwiftUI
 
@@ -50,38 +48,38 @@ extension PurchaseViewDemo {
             // 标题区域
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Software Services Pro")
+                    Text("Cisum Pro")
                         .font(.title2)
                         .fontWeight(.bold)
                         .foregroundColor(.primary)
-                    
+
                     Text("2个订阅选项")
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
-                
+
                 Spacer()
-                
-                Text("ID: 3F19ED53")
+
+                Text("ID: CISUM001")
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
             .padding(.bottom, 20)
-            
+
             // 订阅选项
             VStack(spacing: 16) {
                 subscriptionOption(
                     title: "专业版按月订阅",
-                    productId: "com.coffic.netto.monthly",
+                    productId: "com.coffic.cisum.monthly",
                     offer: "首月免费",
-                    price: "¥2.00/月"
+                    price: "¥6.00/月"
                 )
-                
+
                 subscriptionOption(
                     title: "专业版按年订阅",
-                    productId: "com.coffic.netto.annual",
+                    productId: "com.coffic.cisum.annual",
                     offer: "首3月免费",
-                    price: "¥20.00/年"
+                    price: "¥58.00/年"
                 )
             }
         }
@@ -89,7 +87,7 @@ extension PurchaseViewDemo {
         .background(Color(red: 0.95, green: 0.96, blue: 0.98))
         .cornerRadius(12)
     }
-    
+
     private func subscriptionOption(title: String, productId: String, offer: String, price: String) -> some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
@@ -97,18 +95,18 @@ extension PurchaseViewDemo {
                     .font(.headline)
                     .fontWeight(.semibold)
                     .foregroundColor(.primary)
-                
+
                 Text(productId)
                     .font(.caption)
                     .foregroundColor(.secondary)
-                
+
                 Text(offer)
                     .font(.caption)
                     .foregroundColor(.primary)
             }
-            
+
             Spacer()
-            
+
             Button(action: {}) {
                 Text(price)
                     .font(.headline)
@@ -181,14 +179,4 @@ extension PurchaseViewDemo {
 #Preview("App Store PurchaseView") {
     AppStorePurchaseView()
         .inMagicContainer(CGSizeMake(1280, 800), scale:1)
-}
-
-#Preview("PurchaseViewDemo - Large") {
-    PurchaseViewDemo()
-        .frame(width: 600, height: 1000)
-}
-
-#Preview("PurchaseViewDemo - Small") {
-    PurchaseViewDemo()
-        .frame(width: 600, height: 600)
 }

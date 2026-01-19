@@ -1,6 +1,5 @@
 import Foundation
-import MagicCore
-
+import MagicKit
 import OSLog
 import SwiftData
 import SwiftUI
@@ -92,7 +91,6 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     /// - Returns: 符合条件的模型数组
     /// - Throws: 如果查询操作失败则抛出错误
     func get<T: PersistentModel>(for predicate: Predicate<T>) throws -> [T] {
-        // os_log("\(self.isMain) 🏠 LocalDB.get")
         let descriptor = FetchDescriptor<T>(predicate: predicate)
         return try context.fetch(descriptor)
     }
@@ -240,11 +238,17 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     }
 
     /// 删除指定 URL 的音频
-    /// - Parameter url: 音频 URL
+    /// - Parameter 
+    ///   - url: 音频 URL
+    ///   - verbose: 是否输出详细日志
     /// - Throws: 如果删除操作失败则抛出错误
-    func deleteAudio(url: URL) throws {
+    func deleteAudio(url: URL, verbose: Bool = false) throws {
+        if verbose {
+            os_log("\(self.t)🚛 DeleteAudio \(url) 🐛")
+        }
+
         if let audio = findAudio(url) {
-            try deleteAudio(id: audio.id)
+            try deleteAudio(id: audio.id, verbose: verbose)
         }
     }
 
@@ -253,16 +257,26 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     ///   - audio: 要删除的音频模型
     ///   - verbose: 是否输出详细日志
     /// - Throws: 如果删除操作失败则抛出错误
-    func deleteAudio(_ audio: AudioModel, verbose: Bool) throws {
-        try deleteAudio(id: audio.id)
+    func deleteAudio(_ audio: AudioModel, verbose: Bool = false) throws {
+        if verbose {
+            os_log("\(self.t)🚛 DeleteAudio \(audio.url) 🐛")
+        }
+
+        try deleteAudio(id: audio.id, verbose: verbose)
     }
 
     /// 删除多个音频模型
-    /// - Parameter audios: 要删除的音频模型数组
+    /// - Parameter 
+    ///   - audios: 要删除的音频模型数组
+    ///   - verbose: 是否输出详细日志
     /// - Returns: 删除后的下一个音频模型
     /// - Throws: 如果删除操作失败则抛出错误
-    func deleteAudios(_ audios: [AudioModel]) throws -> AudioModel? {
-        try deleteAudios(ids: audios.map { $0.id })
+    func deleteAudios(_ audios: [AudioModel], verbose: Bool = false) throws -> AudioModel? {
+        if verbose {
+            os_log("\(self.t)🚛 DeleteAudios \(audios.count) 🐛")
+        }
+
+        return try deleteAudios(ids: audios.map { $0.id }, verbose: verbose)
     }
 
     /// 删除多个音频模型
@@ -274,11 +288,17 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     }
 
     /// 删除多个 URL 对应的音频
-    /// - Parameter urls: 要删除的音频 URL 数组
+    /// - Parameter 
+    ///   - urls: 要删除的音频 URL 数组
+    ///   - verbose: 是否输出详细日志
     /// - Throws: 如果删除操作失败则抛出错误
-    func deleteAudios(_ urls: [URL]) throws {
+    func deleteAudios(_ urls: [URL], verbose: Bool = false) throws {
+        if verbose {
+            os_log("\(self.t)🚛 DeleteAudios \(urls.count) 🐛")
+        }
+
         for url in urls {
-            try deleteAudio(url: url)
+            try deleteAudio(url: url, verbose: verbose)
         }
     }
 
@@ -607,37 +627,6 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
         getTotalOfAudio() > 0
     }
 
-    /// 检查指定 URL 的音频是否被喜欢
-    /// - Parameter url: 音频 URL
-    /// - Returns: 如果被喜欢则返回 true，否则返回 false
-    func isLiked(_ url: URL) -> Bool {
-        // 喜欢状态现在由 AudioLikePlugin 管理
-        // 这里返回 false，因为 AudioModel 不再存储喜欢状态
-        false
-    }
-
-    /// 将指定的音频模型标记为喜欢
-    /// - Parameter audio: 要标记为喜欢的音频模型
-    /// - Note: 喜欢状态现在由 AudioLikePlugin 管理，此方法已废弃
-    func like(_ audio: AudioModel) {
-        // 喜欢状态现在由 AudioLikePlugin 管理
-        // 此方法保留以保持兼容性，但不再修改 AudioModel
-        if Self.verbose {
-            os_log("\(self.t)⚠️ like(_:) 方法已废弃，请使用 AudioLikePlugin")
-        }
-    }
-
-    /// 将指定 URL 的音频标记为喜欢
-    /// - Parameter url: 音频 URL
-    /// - Note: 喜欢状态现在由 AudioLikePlugin 管理，此方法已废弃
-    func like(_ url: URL) {
-        // 喜欢状态现在由 AudioLikePlugin 管理
-        // 此方法保留以保持兼容性，但不再修改 AudioModel
-        if Self.verbose {
-            os_log("\(self.t)⚠️ like(_:) 方法已废弃，请使用 AudioLikePlugin")
-        }
-    }
-
     /// 获取指定音频模型的下一个音频模型
     /// - Parameters:
     ///   - audio: 当前音频模型
@@ -891,19 +880,6 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
         }
     }
 
-    /// 切换指定 URL 音频的喜欢状态
-    /// - Parameter url: 音频 URL
-    /// - Throws: 如果音频不存在或保存失败则抛出错误
-    /// - Note: 喜欢状态现在由 AudioLikePlugin 管理，此方法已废弃
-    func toggleLike(_ url: URL) throws {
-        // 喜欢状态现在由 AudioLikePlugin 管理
-        // 此方法保留以保持兼容性，但不再修改 AudioModel
-        if Self.verbose {
-            os_log("\(self.t)⚠️ toggleLike(_:) 方法已废弃，请使用 AudioLikePlugin")
-        }
-        throw AudioRecordDBError.ToggleLikeError(AudioRecordDBError.AudioNotFound(url))
-    }
-
     /// 更新音频模型
     /// - Parameters:
     ///   - audio: 要更新的音频模型
@@ -930,20 +906,6 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
             try? context.save()
         } else {
             os_log("\(self.t)🍋 DB::update nothing changed 👌")
-        }
-    }
-
-    /// 更新指定 URL 音频的喜欢状态
-    /// - Parameters:
-    ///   - url: 音频 URL
-    ///   - like: 是否喜欢
-    /// - Throws: 如果保存失败则抛出错误
-    /// - Note: 喜欢状态现在由 AudioLikePlugin 管理，此方法已废弃
-    func updateLike(_ url: URL, like: Bool) throws {
-        // 喜欢状态现在由 AudioLikePlugin 管理
-        // 此方法保留以保持兼容性，但不再修改 AudioModel
-        if Self.verbose {
-            os_log("\(self.t)⚠️ updateLike(_:_:) 方法已废弃，请使用 AudioLikePlugin")
         }
     }
 
@@ -1004,8 +966,8 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     /// - Returns: 删除后的下一个音频模型
     /// - Throws: 如果删除操作失败则抛出错误
     @discardableResult
-    func deleteAudio(id: AudioModel.ID) throws -> AudioModel? {
-        try deleteAudios(ids: [id])
+    func deleteAudio(id: AudioModel.ID, verbose: Bool = false) throws -> AudioModel? {
+        return try deleteAudios(ids: [id], verbose: verbose)
     }
 
     /// 删除多个 ID 的音频
@@ -1022,6 +984,7 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
 
         // 本批次的最后一个删除后的下一个
         var next: AudioModel?
+        var deletedUrls: [URL] = []
 
         for (index, id) in ids.enumerated() {
             guard let audio = context.model(for: id) as? AudioModel else {
@@ -1030,6 +993,7 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
             }
 
             let url = audio.url
+            deletedUrls.append(url)
 
             // 找出本批次的最后一个删除后的下一个
             if index == ids.count - 1 {
@@ -1049,7 +1013,24 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
             }
         }
 
+        // 发送删除完成通知，让 UI 知道需要刷新
+        emitDeleted(urls: deletedUrls)
+
         return next
+    }
+
+    /// 发送删除完成事件
+    /// - Parameters:
+    ///   - urls: 被删除的音频 URL 列表
+    ///   - verbose: 是否输出详细日志
+    func emitDeleted(urls: [URL], verbose: Bool = false) {
+        if verbose {
+            os_log("\(self.t)🚀🚀🚀 EmitDeleted: \(urls.count) URLs")
+        }
+
+        self.main.async {
+            self.emit(name: .dbDeleted, object: nil, userInfo: ["urls": urls])
+        }
     }
 
     /// 通过 URL 删除音频，同时从磁盘和数据库中删除
@@ -1171,20 +1152,4 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
 
         return try firstAudio()
     }
-}
-
-#Preview("Small Screen") {
-    RootView {
-        ContentView()
-    }
-    .frame(width: 500)
-    .frame(height: 1200)
-}
-
-#Preview("Big Screen") {
-    RootView {
-        ContentView()
-    }
-    .frame(width: 1200)
-    .frame(height: 1200)
 }

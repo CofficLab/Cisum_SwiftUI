@@ -1,62 +1,58 @@
-import MagicCore
+import MagicKit
 import OSLog
 import SwiftUI
 
 struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content: View {
     nonisolated static var emoji: String { "🌳" }
+    nonisolated static var verbose: Bool { false }
 
     var content: Content
 
     @State var error: Error? = nil
-    @State var loading = true
+
+    /// 启动状态，表示LaunchViewSwitcher正在显示
+    @State var launching = true
+    @Environment(\.demoMode) var isDemoMode
     @State var iCloudAvailable = true
 
-    @StateObject var a: AppProvider
-    @StateObject var m: MagicMessageProvider
-    @StateObject var p: PluginProvider
+    @StateObject var appProvider: AppProvider
+    @StateObject var messageProvider: MagicMessageProvider
+    @StateObject var pluginProvider: PluginProvider
     @StateObject var stateProvider: StateProvider
 
     var man: PlayMan
     var playManWrapper: PlayManWrapper
     var cloudProvider: CloudProvider
     var playManController: PlayManController
-    private var verbose = false
 
     init(@ViewBuilder content: () -> Content) {
-        if self.verbose {
-            os_log("\(Self.onInit)")
-        }
+        let manager = ProviderManager.shared
 
-        let box = RootBox.shared
         self.content = content()
-        self._a = StateObject(wrappedValue: box.app)
-        self._m = StateObject(wrappedValue: box.messageProvider)
-        self._stateProvider = StateObject(wrappedValue: box.stateMessageProvider)
-        self._p = StateObject(wrappedValue: box.plugin)
-        self.man = box.man
-        self.playManWrapper = box.playManWrapper
-        self.cloudProvider = box.cloud
-        self.playManController = box.playManController
+        self._appProvider = StateObject(wrappedValue: manager.app)
+        self._messageProvider = StateObject(wrappedValue: manager.messageProvider)
+        self._stateProvider = StateObject(wrappedValue: manager.stateMessageProvider)
+        self._pluginProvider = StateObject(wrappedValue: manager.plugin)
+        self.man = manager.man
+        self.playManWrapper = manager.playManWrapper
+        self.cloudProvider = manager.cloud
+        self.playManController = manager.playManController
     }
 
     var body: some View {
-        if self.verbose {
-            os_log("\(self.t)👷 开始渲染, isLoading: \(self.loading)")
-        }
-        return Group {
-            if self.loading {
-                LaunchViewSwitcher(
-                    plugins: p.plugins,
-                    onEnd: boot
-                )
+        Group {
+            if isDemoMode {
+                content
+            } else if self.launching {
+                Guide()
             } else {
                 if let e = self.error {
-                    ErrorViewFatal(error: e)
+                    CrashedView(error: e)
                 } else {
                     NavigationStack {
                         ZStack {
                             Group {
-                                if let wrapped = p.wrapWithCurrentRoot(content: { content }) {
+                                if let wrapped = pluginProvider.wrapWithCurrentRoot(content: { content }) {
                                     wrapped
                                 } else {
                                     content
@@ -68,43 +64,32 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                                 RootToolbar()
                             }
                             .blendMode(.normal)
-                            .background(Config.rootBackground)
                         }
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .environmentObject(man)
-                    .environmentObject(playManController)
-                    .environmentObject(self.a)
-                    .environmentObject(p)
-                    .environmentObject(m)
-                    .environmentObject(self.stateProvider)
-                    .sheet(isPresented: self.$a.showSheet, content: {
-                        VStack {
-                            ForEach(Array(p.getSheetViews(storage: Config.getStorageLocation()).enumerated()), id: \.offset) { _, view in
-                                view
-                            }
-                        }
-                        .environmentObject(man)
-                        .environmentObject(playManController)
-                        .environmentObject(self.a)
-                        .environmentObject(p)
-                        .environmentObject(m)
-                    })
+                    .withMagicToast()
                 }
             }
         }
-        .environmentObject(cloudProvider)
-        .withMagicToast()
+        .onStorageLocationChanged(perform: onStorageLocationChange)
+        .onGuideDone(perform: onLaunchEnd)
+        .onCloudAccountStateChanged(perform: onCloudAccountStateChanged)
+        .onStorageLocationDidReset(perform: onResetStorageLocation)
         .frame(maxWidth: .infinity)
         .frame(maxHeight: .infinity)
         .background(Config.rootBackground)
-        .onReceive(nc.publisher(for: NSUbiquitousKeyValueStore.didChangeExternallyNotification), perform: onCloudAccountStateChanged)
-        .onChange(of: Config.getStorageLocation(), onStorageLocationChange)
+        .environmentObject(cloudProvider)
+        .environmentObject(man)
+        .environmentObject(playManController)
+        .environmentObject(appProvider)
+        .environmentObject(pluginProvider)
+        .environmentObject(messageProvider)
+        .environmentObject(stateProvider)
     }
 
     private func reloadView() {
-        loading = true
+        launching = true
         error = nil
     }
 }
@@ -113,14 +98,12 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
 
 extension RootView {
     func boot() {
-        if verbose {
+        if Self.verbose {
             os_log("\(self.t)🚀 Boot")
         }
         Task {
             do {
-                try self.p.restoreCurrent()
-
-                a.showSheet = p.getSheetViews(storage: Config.getStorageLocation()).isNotEmpty
+                try self.pluginProvider.restoreCurrent()
 
                 #if os(iOS)
                     UIApplication.shared.beginReceivingRemoteControlEvents()
@@ -128,15 +111,44 @@ extension RootView {
             } catch let e {
                 self.error = e
             }
-
-            self.loading = false
         }
+    }
+}
+
+// MARK: - Setters
+
+extension RootView {
+    func setError(_ e: Error) {
+        self.error = e
+    }
+
+    func setLoading(_ l: Bool, reason: String) {
+        if Self.verbose {
+            os_log("\(self.t)👷 设置加载状态: \(l), reason: \(reason)")
+        }
+        self.launching = l
     }
 }
 
 // MARK: Event Handler
 
 extension RootView {
+    func onResetStorageLocation() {
+        if Self.verbose {
+            os_log("\(self.t)🔄 Reset Storage Location")
+        }
+        setLoading(true, reason: "resetStorageLocation")
+    }
+
+    func onLaunchEnd() {
+        if Self.verbose {
+            os_log("\(self.t)✅ Launch Done")
+        }
+
+        setLoading(false, reason: "launchEnd")
+        boot()
+    }
+
     func onChangeOfiCloud() {
         if iCloudAvailable {
             reloadView()
@@ -145,7 +157,6 @@ extension RootView {
 
     func onStorageLocationChange() {
         if Config.getStorageLocation() == nil {
-            a.showSheet = true
             return
         }
     }
@@ -170,18 +181,28 @@ extension View {
 
 #if os(macOS)
     #Preview("App - Large") {
-        AppPreview()
-            .frame(width: 600, height: 1000)
+        ContentView()
+            .inRootView()
+            .frame(width: Config.minWidth, height: 1000)
     }
 
     #Preview("App - Small") {
-        AppPreview()
-            .frame(width: 500, height: 800)
+        ContentView()
+            .inRootView()
+            .frame(width: Config.minWidth, height: 700)
+    }
+
+    #Preview("Demo Mode") {
+        ContentView()
+            .inRootView()
+            .inDemoMode()
+            .frame(width: Config.minWidth, height: 1000)
     }
 #endif
 
 #if os(iOS)
     #Preview("iPhone") {
-        AppPreview()
+        ContentView()
+            .inRootView()
     }
 #endif

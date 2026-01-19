@@ -3,7 +3,7 @@ import OSLog
 import SwiftData
 import SwiftUI
 import UniformTypeIdentifiers
-import MagicCore
+import MagicKit
 
 
 struct VideoDB: View, SuperLog {
@@ -54,7 +54,8 @@ extension VideoDB {
 }
 
 #Preview("APP") {
-    AppPreview()
+    ContentView()
+    .inRootView()
         .frame(height: 800)
 }
 

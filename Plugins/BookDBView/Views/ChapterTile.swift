@@ -16,7 +16,8 @@ struct ChapterTile: View {
 }
 
 #Preview {
-    AppPreview()
+    ContentView()
+    .inRootView()
         .frame(height: 800)
 }
 

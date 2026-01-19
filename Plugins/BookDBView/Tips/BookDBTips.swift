@@ -1,5 +1,4 @@
-import MagicCore
-import MagicBackground
+import MagicKit
 import SwiftUI
 
 /**
@@ -22,65 +21,65 @@ struct BookDBTips: View {
     }
 
     var body: some View {
-        MagicCard(background: MagicBackground.mountainStream.opacity(0.7)) {
-            VStack {
-                switch variant {
-                case .empty:
-                    VStack(spacing: 20) {
-                        HStack {
-                            Image(systemName: "info.circle.fill")
-                                .foregroundStyle(.yellow)
-                            Text(Config.isDesktop ? "将有声书文件夹拖到这里可添加" : "仓库为空")
-                                .font(.title3)
-                                .foregroundStyle(.white)
-                        }
-                        Text("支持的格式：\(supportedFormats)")
-                            .font(.subheadline)
+        VStack {
+            switch variant {
+            case .empty:
+                VStack(spacing: 20) {
+                    HStack {
+                        Image(systemName: "info.circle.fill")
+                            .foregroundStyle(.yellow)
+                        Text(Config.isDesktop ? "将有声书文件夹拖到这里可添加" : "仓库为空")
+                            .font(.title3)
                             .foregroundStyle(.white)
-
-                        #if os(macOS)
-                            HStack { Text("或").foregroundStyle(.white) }
-                            Button(
-                                action: { 
-                                    if let disk = BookPlugin.getBookDisk() {
-                                        disk.openFolder()
-                                    }
-                                },
-                                label: {
-                                    Label { Text("打开仓库目录并放入文件") } icon: { Image(systemName: "doc.viewfinder.fill") }
-                                }
-                            )
-                        #endif
-
-                        if Config.isNotDesktop {
-                            BtnAdd().buttonStyle(.bordered).foregroundStyle(.white)
-                        }
                     }
-                case .loading:
-                    VStack(spacing: 16) {
-                        HStack {
-                            Image(systemName: "info.circle.fill")
-                                .foregroundStyle(.yellow)
-                            Text(Config.isDesktop ? "将有声书文件夹拖到这里可添加" : "有声书仓库为空")
-                                .font(.title3)
-                                .foregroundStyle(.white)
-                        }
-                        ProgressView()
-                            .controlSize(.large)
-                            .tint(.white)
-                        Text("正在读取仓库")
-                            .font(.headline)
-                            .foregroundStyle(.white)
-                        VStack(spacing: 10) {
-                            Text("支持的格式：\(supportedFormats)")
-                                .font(.footnote)
-                                .foregroundStyle(.white.opacity(0.9))
-                        }
-                        .padding(.top, 6)
+                    Text("支持的格式：\(supportedFormats)")
+                        .font(.subheadline)
+                        .foregroundStyle(.white)
+
+                    #if os(macOS)
+                        HStack { Text("或").foregroundStyle(.white) }
+                        Button(
+                            action: {
+                                if let disk = BookPlugin.getBookDisk() {
+                                    disk.openFolder()
+                                }
+                            },
+                            label: {
+                                Label { Text("打开仓库目录并放入文件") } icon: { Image(systemName: "doc.viewfinder.fill") }
+                            }
+                        )
+                    #endif
+
+                    if Config.isNotDesktop {
+                        BtnAdd().buttonStyle(.bordered).foregroundStyle(.white)
                     }
                 }
+            case .loading:
+                VStack(spacing: 16) {
+                    HStack {
+                        Image(systemName: "info.circle.fill")
+                            .foregroundStyle(.yellow)
+                        Text(Config.isDesktop ? "将有声书文件夹拖到这里可添加" : "有声书仓库为空")
+                            .font(.title3)
+                            .foregroundStyle(.white)
+                    }
+                    ProgressView()
+                        .controlSize(.large)
+                        .tint(.white)
+                    Text("正在读取仓库")
+                        .font(.headline)
+                        .foregroundStyle(.white)
+                    VStack(spacing: 10) {
+                        Text("支持的格式：\(supportedFormats)")
+                            .font(.footnote)
+                            .foregroundStyle(.white.opacity(0.9))
+                    }
+                    .padding(.top, 6)
+                }
             }
-        }.shadow(radius: 8)
+        }
+        .inCard()
+        .shadow(radius: 8)
     }
 }
 
@@ -97,20 +96,22 @@ struct BookDBTips: View {
 }
 
 #if os(macOS)
-#Preview("App - Large") {
-    AppPreview()
-        .frame(width: 600, height: 1000)
-}
+    #Preview("App - Large") {
+        ContentView()
+            .inRootView()
+            .frame(width: 600, height: 1000)
+    }
 
-#Preview("App - Small") {
-    AppPreview()
-        .frame(width: 500, height: 800)
-}
+    #Preview("App - Small") {
+        ContentView()
+            .inRootView()
+            .frame(width: 500, height: 800)
+    }
 #endif
 
 #if os(iOS)
-#Preview("iPhone") {
-    AppPreview()
-}
+    #Preview("iPhone") {
+        ContentView()
+            .inRootView()
+    }
 #endif
-

@@ -1,4 +1,4 @@
-import MagicCore
+import MagicKit
 import SwiftUI
 
 struct PurchaseInfo: Codable, Equatable {

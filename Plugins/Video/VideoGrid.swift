@@ -60,6 +60,7 @@ struct VideoGrid: View {
 }
 
 #Preview("App") {
-    AppPreview()
+    ContentView()
+    .inRootView()
         .frame(height: 820)
 }

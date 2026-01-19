@@ -1,5 +1,5 @@
 import MagicAlert
-import MagicCore
+import MagicKit
 import OSLog
 import SwiftData
 import SwiftUI
@@ -31,7 +31,6 @@ struct AudioListPaginated: View, SuperThread, SuperLog, SuperEvent {
     nonisolated static let verbose = true
 
     @EnvironmentObject var playManController: PlayManController
-    @EnvironmentObject var audioProvider: AudioProvider
     @EnvironmentObject var m: MagicMessageProvider
 
     /// 当前选中的音频 URL
@@ -62,10 +61,7 @@ struct AudioListPaginated: View, SuperThread, SuperLog, SuperEvent {
     @State private var totalCount: Int = 0
 
     var body: some View {
-        if Self.verbose {
-            os_log("\(self.t)📺 开始渲染")
-        }
-        return Group {
+        Group {
             if isLoading && urls.isEmpty {
                 AudioDBTips(variant: .loading)
             } else if urls.isEmpty && !isLoading {
@@ -153,17 +149,13 @@ extension AudioListPaginated {
 
         isLoading = true
 
+        guard let repo = AudioPlugin.getAudioRepo() else {
+            return
+        }
+
         Task.detached(priority: .background) {
-            if Self.verbose {
-                os_log("\(self.t)🔄 加载初始数据")
-            }
-
-            // 首先获取总数
-            let allUrls = await audioProvider.repo.getAll(reason: "获取总数")
-            let count = allUrls.count
-
-            // 然后加载第一页
-            let urls = await audioProvider.repo.get(
+            let count = await repo.getTotalCount()
+            let urls = await repo.get(
                 offset: 0,
                 limit: self.pageSize,
                 reason: self.className
@@ -198,6 +190,10 @@ extension AudioListPaginated {
 
         isLoadingMore = true
 
+        guard let repo = AudioPlugin.getAudioRepo() else {
+            return
+        }
+
         Task.detached(priority: .background) {
             let currentPage = await self.currentPage
             let pageSize = await self.pageSize
@@ -207,7 +203,7 @@ extension AudioListPaginated {
                 os_log("\(self.t)🔄 LoadMore - offset: \(offset), limit: \(pageSize)")
             }
 
-            let newUrls = await audioProvider.repo.get(
+            let newUrls = await repo.get(
                 offset: offset,
                 limit: pageSize,
                 reason: self.className
@@ -242,10 +238,16 @@ extension AudioListPaginated {
         }
     }
 
-    /// 刷新数据
-    private func refresh() {
+    /// 刷新当前页数据（保持分页状态）
+    private func refreshCurrentPage(reason: String) {
+        // 重新加载当前页的数据，但保持分页状态
+        loadCurrentPageData(reason: reason)
+    }
+
+    /// 完全重置并刷新
+    private func refresh(reason: String) {
         if Self.verbose {
-            os_log("\(self.t)🍋 Refresh")
+            os_log("\(self.t)🍋 Refresh with reason: \(reason)")
         }
 
         // 重置状态
@@ -261,23 +263,65 @@ extension AudioListPaginated {
 
 extension AudioListPaginated {
     /// 设置选中的音频
-    private func setSelection(_ newValue: URL?) {
+    @MainActor
+    private func setSelection(_ newValue: URL?, reason: String) {
         if Self.verbose {
-            if let url = newValue {
-                os_log("\(self.t)🎯 选中音频: \(url.lastPathComponent)")
-            } else {
-                os_log("\(self.t)🎯 清除选中")
-            }
+            os_log("\(self.t)🔄 设置选中音频: \(newValue?.lastPathComponent ?? "nil") - \(reason)")
         }
         selection = newValue
     }
 
     /// 设置同步状态
+    @MainActor
     private func setIsSyncing(_ newValue: Bool) {
         if Self.verbose {
             os_log("\(self.t)🔄 同步状态: \(newValue ? "同步中" : "完成")")
         }
         isSyncing = newValue
+    }
+
+    /// 加载当前页数据（用于刷新当前已加载的内容）
+    private func loadCurrentPageData(reason: String) {
+        guard let repo = AudioPlugin.getAudioRepo() else {
+            return
+        }
+
+        Task.detached(priority: .background) {
+            if Self.verbose {
+                os_log("\(self.t)🔄 重新加载当前页数据 - \(reason)")
+            }
+
+            // 重新获取总数
+            let totalCount = await repo.getTotalCount()
+
+            // 重新加载当前所有已加载的页面数据
+            let currentUrls = await self.urls
+            let totalItemsNeeded = currentUrls.count
+
+            if totalItemsNeeded > 0 {
+                let refreshedUrls = await repo.get(
+                    offset: 0,
+                    limit: totalItemsNeeded,
+                    reason: self.className
+                )
+
+                await MainActor.run {
+                    // 更新数据，但保持分页状态
+                    self.urls = refreshedUrls
+                    self.totalCount = totalCount
+
+                    if Self.verbose {
+                        os_log("\(self.t)✅ 当前页数据刷新完成，项目数: \(refreshedUrls.count)")
+                    }
+                }
+            } else {
+                // 如果没有已加载的数据，直接重新初始化
+                await MainActor.run {
+                    self.totalCount = totalCount
+                    self.loadInitial()
+                }
+            }
+        }
     }
 }
 
@@ -286,17 +330,13 @@ extension AudioListPaginated {
 extension AudioListPaginated {
     /// 处理视图出现事件
     func handleOnAppear() {
-        if Self.verbose {
-            os_log("\(self.t)👀 视图已出现")
-        }
-
         loadInitial()
 
         if let asset = playManController.getAsset() {
             if Self.verbose {
                 os_log("\(self.t)🎵 恢复选中当前播放的音频")
             }
-            setSelection(asset)
+            setSelection(asset, reason: "handleOnAppear")
         }
     }
 
@@ -315,10 +355,7 @@ extension AudioListPaginated {
     /// 处理播放资源变化事件
     func handleAssetChanged(url: URL?) {
         if let asset = url, asset != selection {
-            if Self.verbose {
-                os_log("\(self.t)🔄 播放资源变化，更新选中: \(asset.lastPathComponent)")
-            }
-            self.setSelection(asset)
+            self.setSelection(asset, reason: "handleAssetChanged")
         }
     }
 
@@ -327,32 +364,53 @@ extension AudioListPaginated {
         if Self.verbose {
             os_log("\(self.t)✅ 排序完成")
         }
-        refresh()
+        refresh(reason: "handleDBSortDone")
     }
 
     /// 处理音频删除事件
     func handleDBDeleted(_ notification: Notification) {
-        if Self.verbose {
-            os_log("\(self.t)🗑️ 音频已删除")
+        guard let urlsToDelete = notification.userInfo?["urls"] as? [URL] else {
+            if Self.verbose {
+                os_log("\(self.t)⚠️ 删除通知中没有 URL 信息")
+            }
+            return
         }
-        refresh()
+
+        if Self.verbose {
+            os_log("\(self.t)🗑️ 收到删除通知: \(urlsToDelete.count) 个文件")
+        }
+
+        // 使用动画效果移除已删除的文件
+        withAnimation(.easeInOut(duration: 0.3)) {
+            // 从 urls 数组中移除被删除的 URL
+            urls.removeAll { url in
+                urlsToDelete.contains(url)
+            }
+
+            // 更新总数
+            totalCount = max(0, totalCount - urlsToDelete.count)
+
+            // 如果删除的是当前选中的文件，清除选中状态
+            if let selected = selection, urlsToDelete.contains(selected) {
+                selection = nil
+            }
+        }
+
+        if Self.verbose {
+            os_log("\(self.t)✅ 已移除 \(urlsToDelete.count) 个文件，剩余 \(urls.count) 个")
+        }
     }
 
     /// 处理数据同步完成事件
     func handleDBSynced(_ notification: Notification) {
-        if Self.verbose {
-            os_log("\(self.t)✅ 数据同步完成")
-        }
-        refresh()
+        refreshCurrentPage(reason: "handleDBSynced")
         setIsSyncing(false)
     }
 
     /// 处理数据更新事件
     func handleDBUpdated(_ notification: Notification) {
-        if Self.verbose {
-            os_log("\(self.t)🔄 数据已更新")
-        }
-        refresh()
+        refreshCurrentPage(reason: "handleDBUpdated")
+        setIsSyncing(false)
     }
 
     /// 处理数据同步开始事件
@@ -398,18 +456,21 @@ extension AudioListPaginated {
 
 #if os(macOS)
     #Preview("App - Large") {
-        AppPreview()
+        ContentView()
+            .inRootView()
             .frame(width: 600, height: 1000)
     }
 
     #Preview("App - Small") {
-        AppPreview()
+        ContentView()
+            .inRootView()
             .frame(width: 600, height: 600)
     }
 #endif
 
 #if os(iOS)
     #Preview("iPhone") {
-        AppPreview()
+        ContentView()
+            .inRootView()
     }
 #endif

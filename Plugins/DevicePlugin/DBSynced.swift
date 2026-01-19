@@ -2,7 +2,7 @@ import Foundation
 import OSLog
 import SwiftData
 import SwiftUI
-import MagicCore
+import MagicKit
 
 
 actor DBSynced: ModelActor, ObservableObject, SuperLog {
@@ -127,7 +127,8 @@ extension DBSynced {
 }
 
 #Preview {
-    AppPreview()
+    ContentView()
+    .inRootView()
     #if os(macOS)
         .frame(height: 800)
     #endif

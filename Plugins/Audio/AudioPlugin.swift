@@ -1,5 +1,5 @@
 import Foundation
-import MagicCore
+import MagicKit
 import OSLog
 import SwiftData
 import SwiftUI
@@ -26,13 +26,24 @@ actor AudioPlugin: SuperPlugin, SuperLog, PluginRegistrant {
 
     @MainActor func getDisk() -> URL? { Self.getAudioDisk() }
 
-    @MainActor
-    static func getAudioDisk() -> URL? {
+    @MainActor static func getAudioDisk() -> URL? {
         guard let storageRoot = Config.getStorageRoot() else {
             return nil
         }
 
         return storageRoot.appendingPathComponent(Self.dbDirName)
+    }
+
+    @MainActor static func getAudioRepo() -> AudioRepo? {
+        guard let disk = Self.getAudioDisk() else {
+            return nil
+        }
+
+        guard let repo = try? AudioRepo(disk: disk, reason: "AudioPlugin") else {
+            return nil
+        }
+        
+        return repo
     }
 }
 
@@ -62,17 +73,20 @@ extension AudioPlugin {
 }
 
 #Preview("App - Large") {
-    AppPreview()
+    ContentView()
+    .inRootView()
         .frame(width: 600, height: 1000)
 }
 
 #Preview("App - Small") {
-    AppPreview()
+    ContentView()
+    .inRootView()
         .frame(width: 600, height: 600)
 }
 
 #if os(iOS)
     #Preview("iPhone") {
-        AppPreview()
+        ContentView()
+    .inRootView()
     }
 #endif

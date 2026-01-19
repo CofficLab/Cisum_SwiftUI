@@ -1,4 +1,4 @@
-import MagicCore
+import MagicKit
 import MagicUI
 import SwiftUI
 
@@ -18,7 +18,8 @@ struct BtnToggleDB: View {
 }
 
 #Preview("App") {
-    AppPreview()
+    ContentView()
+    .inRootView()
         .frame(height: 800)
 }
 

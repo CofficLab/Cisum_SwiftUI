@@ -1,4 +1,4 @@
-import MagicCore
+import MagicKit
 import SwiftUI
 
 struct ResetConfirmContent: View {
@@ -53,13 +53,6 @@ struct ResetConfirmContent: View {
             }
             .frame(maxWidth: .infinity, alignment: .trailing)
         }
-        .padding(16)
-        .background(.ultraThinMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-        .overlay {
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .strokeBorder(.white.opacity(0.15))
-        }
     }
 }
 
@@ -76,7 +69,7 @@ struct ResetProgressContent: View {
                         .font(.system(size: 28, weight: .semibold))
                         .foregroundStyle(.tint)
                 }
-                
+
                 Text("正在重置…")
                     .font(.title3)
                     .fontWeight(.semibold)
@@ -93,12 +86,13 @@ struct ResetProgressContent: View {
     }
 }
 
+// MARK: - Preview
+
 #Preview("ResetConfirmContent") {
-    RootView {
-        ResetConfirmContent(onCancel: {}, onConfirm: {})
-            .padding()
-            .frame(width: 400)
-    }
+    ResetConfirmContent(onCancel: {}, onConfirm: {})
+        .padding()
+        .frame(width: 400)
+        .inRootView()
 }
 
 #Preview("ResetProgressContent", traits: .sizeThatFitsLayout) {
@@ -106,18 +100,37 @@ struct ResetProgressContent: View {
         .padding()
 }
 
-#Preview("App - Large") {
-    AppPreview()
-        .frame(width: 600, height: 1000)
+#Preview("ResetConfirmContent - Dark") {
+    ResetConfirmContent(onCancel: {}, onConfirm: {})
+        .padding()
+        .frame(width: 400)
+        .inRootView()
+        .preferredColorScheme(.dark)
 }
 
-#Preview("App - Small") {
-    AppPreview()
-        .frame(width: 500, height: 800)
+#Preview("ResetProgressContent - Dark", traits: .sizeThatFitsLayout) {
+    ResetProgressContent()
+        .padding()
+        .preferredColorScheme(.dark)
 }
+
+#if os(macOS)
+    #Preview("App - Large") {
+        ContentView()
+            .inRootView()
+            .frame(width: 600, height: 1000)
+    }
+
+    #Preview("App - Small") {
+        ContentView()
+            .inRootView()
+            .frame(width: 600, height: 600)
+    }
+#endif
 
 #if os(iOS)
     #Preview("iPhone") {
-        AppPreview()
+        ContentView()
+            .inRootView()
     }
 #endif

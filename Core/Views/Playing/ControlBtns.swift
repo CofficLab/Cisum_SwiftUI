@@ -1,4 +1,4 @@
-import MagicCore
+import MagicKit
 import OSLog
 import SwiftUI
 
@@ -10,17 +10,8 @@ struct ControlBtns: View, SuperLog {
     nonisolated static let emoji = "🎵"
     static let verbose = false
 
-    init() {
-        if Self.verbose {
-            os_log("\(Self.i)")
-        }
-    }
-
     var body: some View {
-        if Self.verbose {
-            os_log("\(self.t)开始渲染")
-        }
-        return HStack {
+        HStack {
             Spacer(minLength: 50)
             BtnToggleDB()
             man.playMan.makePreviousButtonView(size: .auto)
@@ -37,21 +28,22 @@ struct ControlBtns: View, SuperLog {
 // MARK: - Preview
 
 #if os(macOS)
-#Preview("App - Large") {
-    AppPreview()
-        .frame(width: 600, height: 1000)
-}
+    #Preview("App - Large") {
+        ContentView()
+            .inRootView()
+            .frame(width: 600, height: 1000)
+    }
 
-#Preview("App - Small") {
-    AppPreview()
-        .frame(width: 500, height: 800)
-}
+    #Preview("App - Small") {
+        ContentView()
+            .inRootView()
+            .frame(width: 500, height: 800)
+    }
 #endif
 
 #if os(iOS)
-#Preview("iPhone") {
-    AppPreview()
-}
+    #Preview("iPhone") {
+        ContentView()
+            .inRootView()
+    }
 #endif
-
-

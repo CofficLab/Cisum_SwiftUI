@@ -1,4 +1,4 @@
-import MagicCore
+import MagicKit
 
 import OSLog
 import SwiftUI
@@ -17,6 +17,7 @@ struct MigrateView: View, SuperThread {
 }
 
 #Preview("App") {
-    AppPreview()
+    ContentView()
+    .inRootView()
         .frame(height: 800)
 }

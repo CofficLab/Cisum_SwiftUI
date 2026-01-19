@@ -1,5 +1,21 @@
+import MagicAlert
+import MagicKit
+import MagicPlayMan
+import MagicUI
 import OSLog
 import SwiftUI
+
+typealias PlayMan = MagicPlayMan
+typealias PlayAsset = MagicAsset
+typealias PlayMode = MagicPlayMode
+typealias Logger = MagicLogger
+typealias MagicApp = MagicKit.MagicApp
+typealias SuperLog = MagicKit.SuperLog
+typealias MagicLoading = MagicUI.MagicLoading
+typealias MagicMessageProvider = MagicAlert.MagicMessageProvider
+typealias MagicSettingSection = MagicUI.MagicSettingSection
+typealias MagicSettingRow = MagicUI.MagicSettingRow
+typealias MagicButton = MagicUI.MagicButton
 
 @main
 struct BootApp: App, SuperLog {
@@ -10,7 +26,7 @@ struct BootApp: App, SuperLog {
     #endif
 
     nonisolated static let emoji = "🍎"
-    
+
     init() {
         StoreService.bootstrap()
     }
@@ -18,10 +34,9 @@ struct BootApp: App, SuperLog {
     var body: some Scene {
         #if os(macOS)
             Window("", id: "Cisum") {
-                RootView {
-                    ContentView()
-                }
-                .frame(minWidth: Config.minWidth, minHeight: Config.minHeight)
+                ContentView()
+                    .inRootView()
+                    .frame(minWidth: Config.minWidth, minHeight: Config.minHeight)
             }
             .windowToolbarStyle(.unifiedCompact(showsTitle: false))
             .defaultSize(width: Config.minWidth, height: Config.defaultHeight)
@@ -40,17 +55,20 @@ struct BootApp: App, SuperLog {
 }
 
 #Preview("App - Large") {
-    AppPreview()
+    ContentView()
+        .inRootView()
         .frame(width: 600, height: 1000)
 }
 
 #Preview("App - Small") {
-    AppPreview()
-        .frame(width: 600, height: 600)
+    ContentView()
+        .inRootView()
+        .frame(width: 400, height: 700)
 }
 
 #if os(iOS)
-#Preview("iPhone") {
-    AppPreview()
-}
+    #Preview("iPhone") {
+        ContentView()
+            .inRootView()
+    }
 #endif

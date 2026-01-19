@@ -1,18 +1,16 @@
+import MagicKit
 import SwiftUI
-import MagicCore
-import MagicUI
-import MagicBackground
 
 struct DBSyncing: View {
     var body: some View {
-        MagicCentered {
-            ProgressView()
-        }
+        ProgressView()
+            .magicCentered()
     }
 }
 
 #Preview("App") {
-    AppPreview()
+    ContentView()
+        .inRootView()
         .frame(height: 800)
 }
 

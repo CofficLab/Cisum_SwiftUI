@@ -1,12 +1,12 @@
-import MagicCore
+import MagicKit
 import OSLog
 import SwiftUI
 
 actor OpenButtonPlugin: SuperPlugin, PluginRegistrant, SuperLog {
     let description: String = "当前资源打开按钮"
     let iconName: String = .iconFinder
-    private static var enabled: Bool { false }
-    private static var verbose: Bool { false }
+    private static var enabled: Bool { true }
+    private static var verbose: Bool { true }
     nonisolated static let emoji = "😜"
 
     #if os(macOS)
@@ -26,7 +26,7 @@ extension OpenButtonPlugin {
 
         Task {
             if Self.verbose {
-                os_log("\(self.t)🚀🚀🚀 Register")
+                os_log("\(self.t)🚀 Register")
             }
             
             await PluginRegistry.shared.register(id: "OpenButton", order: 20) {
@@ -71,18 +71,21 @@ private struct OpenCurrentButtonView: View, SuperLog {
 
 #if os(macOS)
     #Preview("App - Large") {
-        AppPreview()
+        ContentView()
+    .inRootView()
             .frame(width: 600, height: 1000)
     }
 
     #Preview("App - Small") {
-        AppPreview()
+        ContentView()
+    .inRootView()
             .frame(width: 500, height: 800)
     }
 #endif
 
 #if os(iOS)
     #Preview("iPhone") {
-        AppPreview()
+        ContentView()
+    .inRootView()
     }
 #endif

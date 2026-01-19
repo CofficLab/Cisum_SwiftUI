@@ -1,4 +1,4 @@
-import MagicCore
+import MagicKit
 import SwiftUI
 
 struct AudioSortingTips: View {
@@ -37,7 +37,8 @@ struct AudioSortingTips: View {
 
 #if os(macOS)
     #Preview("App - Large") {
-        AppPreview()
+        ContentView()
+            .inRootView()
             .overlay {
                 AudioSortingTips(sortModeIcon: "shuffle", description: "正在排序...", isAnimating: true)
             }
@@ -45,7 +46,8 @@ struct AudioSortingTips: View {
     }
 
     #Preview("App - Small") {
-        AppPreview()
+        ContentView()
+            .inRootView()
             .overlay {
                 AudioSortingTips(sortModeIcon: "arrow.triangle.2.circlepath", description: "正在排序...", isAnimating: true)
             }
@@ -55,7 +57,8 @@ struct AudioSortingTips: View {
 
 #if os(iOS)
     #Preview("iPhone") {
-        AppPreview()
+        ContentView()
+            .inRootView()
             .overlay {
                 AudioSortingTips(sortModeIcon: "shuffle", description: "正在排序...", isAnimating: true)
             }

@@ -1,0 +1,70 @@
+import OSLog
+import SwiftData
+import SwiftUI
+import MagicKit
+
+
+struct CopyList: View, SuperLog, SuperThread {
+    nonisolated static let emoji = "📬"
+
+    @EnvironmentObject var app: AppProvider
+    @Environment(\.modelContext) private var context
+
+    @State private var selection: String?
+
+    @Query(sort: \CopyTask.createdAt, animation: .default) private var tasks: [CopyTask]
+
+    init(verbose: Bool = false) {
+        if verbose {
+            os_log("\(Self.i)")
+        }
+    }
+
+    var body: some View {
+        Group {
+            if !tasks.isEmpty {
+                taskList
+            }
+        }
+    }
+
+    private var taskList: some View {
+        List(selection: $selection) {
+            Section {
+                ForEach(tasks) { task in
+                    VStack(alignment: .leading) {
+                        Text(task.originalFilename)
+                            .lineLimit(1)
+                        Text(task.message)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                .onDelete(perform: deleteTasks)
+            } header: {
+                listHeader
+            }
+        }
+        .frame(minWidth: 400)
+    }
+
+    private var listHeader: some View {
+        HStack {
+            Text("正在复制 \(tasks.count)")
+            Spacer()
+        }
+    }
+
+    private func deleteTasks(at offsets: IndexSet) {
+        for index in offsets {
+            context.delete(tasks[index])
+        }
+    }
+}
+
+#Preview("App") {
+    ContentView()
+    .inRootView()
+        .frame(height: 800)
+}
+

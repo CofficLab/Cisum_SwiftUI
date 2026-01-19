@@ -1,6 +1,6 @@
 import Foundation
 import MagicAlert
-import MagicCore
+import MagicKit
 import MagicPlayMan
 import OSLog
 import SwiftUI
@@ -42,6 +42,8 @@ struct AudioControlRootView<Content>: View, SuperLog where Content: View {
     var body: some View {
         content
             .onAppear(perform: handleOnAppear)
+            .onDBDeleted(perform: handleDBDeleted)
+            .onStorageLocationDidReset(perform: handleStorageLocationDidReset)
     }
 
     /// 检查是否应该激活播放控制功能
@@ -114,6 +116,7 @@ extension AudioControlRootView {
 
         if Self.verbose {
             os_log("\(self.t)⏭️ 请求下一首")
+            os_log("\(self.t)📍 当前播放: \(asset.lastPathComponent)")
         }
 
         guard let repo = audioRepo else {
@@ -124,12 +127,128 @@ extension AudioControlRootView {
         }
 
         Task {
-            let next = try await repo.getNextOf(asset, verbose: false)
-            if let next = next {
-                if Self.verbose {
-                    os_log("\(self.t)✅ 播放下一首: \(next.lastPathComponent)")
+            do {
+                let next = try await repo.getNextOf(asset, verbose: Self.verbose)
+                if let next = next {
+                    if Self.verbose {
+                        os_log("\(self.t)✅ 找到下一首: \(next.lastPathComponent)")
+                        os_log("\(self.t)▶️ 开始播放下一首")
+                    }
+                    await man.play(url: next, autoPlay: true)
+                } else {
+                    // 没有下一首的情况
+                    if Self.verbose {
+                        os_log("\(self.t)⚠️ 没有找到下一首")
+
+                        // 获取总文件数用于调试
+                        let allUrls = await repo.getAll(reason: "调试")
+                        os_log("\(self.t)📊 仓库中共有 \(allUrls.count) 个文件")
+                    }
+
+                    // 停止播放
+                    await man.playMan.stop()
+
+                    // 显示提示
+                    await MainActor.run {
+                        m.info("已是最后一首，没有更多文件")
+                    }
                 }
-                await man.play(url: next, autoPlay: true)
+            } catch {
+                if Self.verbose {
+                    os_log("\(self.t)❌ 获取下一首失败: \(error.localizedDescription)")
+                }
+            }
+        }
+    }
+
+    /// 处理存储位置重置事件
+    ///
+    /// 当存储位置被重置时，停止当前播放。
+    func handleStorageLocationDidReset() {
+        guard shouldActivateControl else { return }
+
+        if Self.verbose {
+            os_log("\(self.t)🛑 存储位置重置，停止播放")
+        }
+
+        Task {
+            // 停止播放
+            await man.playMan.stop()
+
+            // 显示提示信息
+            await MainActor.run {
+                m.info("存储位置已重置，已停止播放")
+            }
+        }
+    }
+
+    /// 处理音频删除事件
+    ///
+    /// 当音频文件被删除时，检查是否是正在播放的文件。
+    /// 如果是，则自动播放第一首。
+    /// - Parameter notification: 删除完成的通知
+    func handleDBDeleted(_ notification: Notification) {
+        guard shouldActivateControl else { return }
+
+        guard let urlsToDelete = notification.userInfo?["urls"] as? [URL],
+              let currentAsset = man.getAsset() else {
+            return
+        }
+
+        // 检查正在播放的文件是否在被删除列表中
+        if urlsToDelete.contains(currentAsset) {
+            if Self.verbose {
+                os_log("\(self.t)⚠️ 正在播放的文件（\(currentAsset.lastPathComponent)）被删除，自动播放第一首")
+            }
+
+            guard let repo = audioRepo else {
+                if Self.verbose {
+                    os_log("\(self.t)⚠️ AudioRepo 未初始化")
+                }
+                return
+            }
+
+            Task {
+                do {
+                    // 获取第一首文件
+                    let firstUrl = try await repo.getFirst()
+
+                    if let first = firstUrl {
+                        if Self.verbose {
+                            os_log("\(self.t)✅ 播放第一首: \(first.lastPathComponent)")
+                        }
+
+                        // 显示提示信息
+                        await MainActor.run {
+                            m.warning("正在播放的文件已被删除，自动播放第一首")
+                        }
+
+                        // 播放第一首
+                        await man.play(url: first, autoPlay: true)
+                    } else {
+                        if Self.verbose {
+                            os_log("\(self.t)⚠️ 仓库中没有文件")
+                        }
+
+                        // 仓库为空，停止播放
+                        await man.playMan.stop()
+
+                        await MainActor.run {
+                            m.info("仓库中没有文件")
+                        }
+                    }
+                } catch {
+                    if Self.verbose {
+                        os_log("\(self.t)❌ 获取第一首失败: \(error.localizedDescription)")
+                    }
+
+                    // 获取失败，停止播放
+                    await man.playMan.stop()
+
+                    await MainActor.run {
+                        m.error("无法播放下一首: \(error.localizedDescription)")
+                    }
+                }
             }
         }
     }

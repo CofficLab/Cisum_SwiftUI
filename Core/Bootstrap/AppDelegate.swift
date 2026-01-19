@@ -21,54 +21,63 @@ class AppDelegate: NSObject, ApplicationDelegate, SuperLog {
         if self.verbose {
             os_log("\(self.t)WillHide")
         }
+        NotificationCenter.postApplicationWillHide()
     }
 
     func applicationDidHide(_ notification: Notification) {
         if self.verbose {
             os_log("\(self.t)Did Hide 🐱🐱🐱")
         }
+        NotificationCenter.postApplicationDidHide()
     }
 
     func applicationWillBecomeActive(_ notification: Notification) {
         if self.verbose {
             os_log("\(self.t)WillBecomeActive")
         }
+        NotificationCenter.postApplicationWillBecomeActive()
     }
 
     func applicationDidFinishLaunching(_ notification: AppOrNotification) {
         if self.verbose {
             os_log("\(self.t)applicationDidFinishLaunching")
         }
+        NotificationCenter.postApplicationDidFinishLaunching()
     }
 
     func applicationWillTerminate(_ notification: AppOrNotification) {
         if self.verbose {
             os_log("\(self.t)Will Terminate")
         }
+        NotificationCenter.postApplicationWillTerminate()
     }
 
     func applicationWillUpdate(_ notification: Notification) {
         if self.verbose {
             os_log("\(self.t)Will Update")
         }
+        NotificationCenter.postApplicationWillUpdate()
     }
 
     func applicationDidBecomeActive(_ notification: AppOrNotification) {
         if self.verbose {
             os_log("\(self.t)Did Become Active")
         }
+        NotificationCenter.postApplicationDidBecomeActive()
     }
 
     func applicationWillResignActive(_ application: AppOrNotification) {
         if self.verbose {
             os_log("\(self.t)WillResignActive")
         }
+        NotificationCenter.postApplicationWillResignActive()
     }
 
     func applicationDidResignActive(_ notification: Notification) {
         if self.verbose {
             os_log("\(self.t)DidResignActive")
         }
+        NotificationCenter.postApplicationDidResignActive()
     }
 }
 
@@ -81,12 +90,14 @@ class AppDelegate: NSObject, ApplicationDelegate, SuperLog {
             if self.verbose {
                 os_log("移动窗口")
             }
+            NotificationCenter.postWindowDidMove()
         }
 
         func windowDidResize(_ notification: Notification) {
             if self.verbose {
                 os_log("调整窗口")
             }
+            NotificationCenter.postWindowDidResize()
         }
     }
 

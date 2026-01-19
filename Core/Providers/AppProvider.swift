@@ -1,7 +1,7 @@
 import AVKit
 import Combine
 import Foundation
-import MagicCore
+import MagicKit
 
 import MediaPlayer
 import OSLog
@@ -13,13 +13,16 @@ class AppProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLog, 
 
     // 使用 UIRepo 来管理 UI 相关的数据
     private let uiRepo: UIRepo
-    
+
     @Published private(set) var showDB: Bool
-    @Published var showSheet: Bool = true
     @Published var isImporting: Bool = false
     @Published var isDropping: Bool = false
     @Published var rightAlbumVisible = false
-    
+
+    /// 是否为演示模式
+    /// 用于 App Store 展示等场景，显示固定的示例数据而非真实数据库
+    @Published var isDemoMode: Bool = false
+
     init(uiRepo: UIRepo) {
         self.uiRepo = uiRepo
         self.showDB = uiRepo.getShowDB()

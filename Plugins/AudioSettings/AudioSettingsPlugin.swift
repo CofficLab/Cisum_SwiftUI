@@ -1,4 +1,4 @@
-import MagicCore
+import MagicKit
 import OSLog
 import SwiftUI
 
@@ -8,7 +8,7 @@ import SwiftUI
 actor AudioSettingsPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     nonisolated static let emoji = "🛠️"
     private static var enabled: Bool { true }
-    private static let verbose = true
+    private static let verbose = false
 
     let title = "音频设置"
     let description = "音频插件的设置入口"

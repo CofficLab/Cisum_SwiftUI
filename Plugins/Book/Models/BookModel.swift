@@ -1,5 +1,5 @@
 import Foundation
-import MagicCore
+import MagicKit
 import OSLog
 import SwiftData
 import SwiftUI
@@ -141,6 +141,7 @@ enum BookModelError: Error, LocalizedError {
 }
 
 #Preview("App") {
-    AppPreview()
+    ContentView()
+    .inRootView()
         .frame(height: 800)
 }

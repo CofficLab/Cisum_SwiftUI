@@ -1,5 +1,5 @@
 import Foundation
-import MagicCore
+import MagicKit
 import OSLog
 import SwiftData
 import SwiftUI
@@ -152,19 +152,22 @@ extension BookDBView {
 
 #if os(macOS)
 #Preview("App - Large") {
-    AppPreview()
+    ContentView()
+    .inRootView()
         .frame(width: 600, height: 1000)
 }
 
 #Preview("App - Small") {
-    AppPreview()
+    ContentView()
+    .inRootView()
         .frame(width: 600, height: 700)
 }
 #endif
 
 #if os(iOS)
 #Preview("iPhone") {
-    AppPreview()
+    ContentView()
+    .inRootView()
 }
 #endif
 

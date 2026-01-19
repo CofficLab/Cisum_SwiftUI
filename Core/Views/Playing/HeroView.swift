@@ -1,4 +1,4 @@
-import MagicAsset
+import MagicKit
 import OSLog
 import SwiftUI
 
@@ -7,19 +7,45 @@ struct HeroView: View {
 
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var playMan: PlayMan
+    @Environment(\.demoMode) var isDemoMode
 
     private let titleViewHeight: CGFloat = 60
+
+    // Demo mode 的静态演示封面
+    private var demoAlbumView: some View {
+        ZStack {
+            LinearGradient(
+                colors: [.blue.opacity(0.8), .blue.opacity(0.1)],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+
+            LogoView(
+                background: .white.opacity(0.1),
+                backgroundShape: .circle,
+                size: 200
+            )
+        }
+    }
 
     var body: some View {
         GeometryReader { geo in
             VStack(spacing: 0) {
                 if shouldShowAlbum(geo) {
-                    playMan.makeHeroView(verbose: Self.verbose, defaultView: {
-                        LogoView(background: .blue.opacity(0.1),rotationSpeed: 0.001, backgroundShape: .circle)
-                    })
-                    .frame(maxWidth: .infinity)
-                    .frame(height: getAlbumHeight(geo))
-                    .clipped()
+                    if isDemoMode {
+                        // Demo mode: 显示静态演示封面
+                        demoAlbumView
+                            .frame(maxWidth: .infinity)
+                            .frame(height: getAlbumHeight(geo))
+                            .clipped()
+                    } else {
+                        playMan.makeHeroView(verbose: Self.verbose, defaultView: {
+                            LogoView(background: .blue.opacity(0.1), rotationSpeed: 0.001, backgroundShape: .circle)
+                        })
+                        .frame(maxWidth: .infinity)
+                        .frame(height: getAlbumHeight(geo))
+                        .clipped()
+                    }
                 }
 
                 TitleView()
@@ -45,17 +71,27 @@ struct HeroView: View {
 }
 
 #Preview("App - Large") {
-    AppPreview()
+    ContentView()
+        .inRootView()
         .frame(width: 600, height: 800)
 }
 
 #Preview("App - Small") {
-    AppPreview()
-        .frame(width: 500, height: 800)
+    ContentView()
+        .inRootView()
+        .frame(width: Config.minWidth, height: 700)
+}
+
+#Preview("Demo Mode") {
+    ContentView()
+        .inRootView()
+        .inDemoMode()
+        .frame(width: Config.minWidth, height: 700)
 }
 
 #if os(iOS)
     #Preview("iPhone") {
-        AppPreview()
+        ContentView()
+            .inRootView()
     }
 #endif

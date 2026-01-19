@@ -1,8 +1,9 @@
-import MagicCore
+import MagicKit
 import SwiftUI
 
 struct ResetSetting: View, SuperLog {
     nonisolated static let emoji = "🫙"
+    nonisolated static let verbose = false
 
     @EnvironmentObject var app: AppProvider
     @State private var isResetting: Bool = false
@@ -11,9 +12,7 @@ struct ResetSetting: View, SuperLog {
     var body: some View {
         MagicSettingSection {
             MagicSettingRow(title: "重置", description: "重置设置，恢复成系统默认状态", icon: .iconReset) {
-                MagicButton.simple(icon: .iconReset, action: {
-                    showConfirmSheet = true
-                })
+                MagicButton.simple(icon: .iconReset, action: showResetConfirm)
                 .magicShape(.circle)
                 .magicStyle(.secondary)
                 .magicSize(.small)
@@ -27,16 +26,7 @@ struct ResetSetting: View, SuperLog {
             } else {
                 ResetConfirmContent(
                     onCancel: { showConfirmSheet = false },
-                    onConfirm: {
-                        isResetting = true
-                        Task {
-                            Config.resetStorageLocation()
-                            await MainActor.run {
-                                isResetting = false
-                                showConfirmSheet = false
-                            }
-                        }
-                    }
+                    onConfirm: performReset
                 )
                 .padding(24)
                 .frame(minWidth: 380)
@@ -45,34 +35,56 @@ struct ResetSetting: View, SuperLog {
     }
 }
 
-#Preview("ResetConfirmContent") {
-    RootView {
-        ResetConfirmContent(onCancel: {}, onConfirm: {})
-            .padding()
-            .frame(width: 400)
+// MARK: - Action
+
+extension ResetSetting {
+    func showResetConfirm() {
+        showConfirmSheet = true
     }
+
+    func performReset() {
+        isResetting = true
+        Task {
+            Config.resetStorageLocation()
+            await MainActor.run {
+                isResetting = false
+                showConfirmSheet = false
+            }
+        }
+    }
+}
+
+// MARK: - Preview
+
+#Preview("ResetConfirmContent") {
+    ResetConfirmContent(onCancel: {}, onConfirm: {})
+        .padding()
+        .frame(width: 400)
+        .inRootView()
 }
 
 #Preview("Setting") {
-    RootView {
-        SettingView()
-            .background(.background)
-    }
-    .frame(height: 1200)
+    SettingView()
+        .background(.background)
+        .frame(height: 1200)
+        .inRootView()
 }
 
 #Preview("App - Large") {
-    AppPreview()
+    ContentView()
+        .inRootView()
         .frame(width: 600, height: 1000)
 }
 
 #Preview("App - Small") {
-    AppPreview()
-        .frame(width: 500, height: 800)
+    ContentView()
+        .inRootView()
+        .frame(width: 600, height: 600)
 }
 
 #if os(iOS)
-#Preview("iPhone") {
-    AppPreview()
-}
+    #Preview("iPhone") {
+        ContentView()
+            .inRootView()
+    }
 #endif
