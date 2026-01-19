@@ -8,7 +8,7 @@ import SwiftUI
 @MainActor
 final class ProviderManager: SuperLog {
     static let shared = ProviderManager()
-    static let verbose = false
+    static let verbose = true
     nonisolated static let emoji = "🔧"
 
     // Providers
@@ -20,14 +20,8 @@ final class ProviderManager: SuperLog {
 
     // PlayMan
     let man: PlayMan
-    let playManWrapper: PlayManWrapper
-    let playManController: PlayManController
 
     private init() {
-        if Self.verbose {
-            os_log("\(Self.onInit)初始化服务提供者")
-        }
-
         // Repos
         let pluginRepo = PluginRepo()
         let uiRepo = UIRepo()
@@ -41,8 +35,6 @@ final class ProviderManager: SuperLog {
 
         // PlayMan
         self.man = PlayMan(playlistEnabled: false, verbose: false)
-        self.playManWrapper = PlayManWrapper(playMan: self.man)
-        self.playManController = PlayManController(playMan: self.man)
 
         if Self.verbose {
             os_log("\(Self.t)✅ 服务提供者初始化完成")

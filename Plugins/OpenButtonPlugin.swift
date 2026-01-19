@@ -40,7 +40,7 @@ private struct OpenCurrentButtonView: View, SuperLog {
     nonisolated static let emoji = "😜"
     static let verbose = false
     
-    @EnvironmentObject var man: PlayManController
+    @EnvironmentObject var man: PlayMan
 
     @State private var url: URL? = nil
 
@@ -60,7 +60,7 @@ private struct OpenCurrentButtonView: View, SuperLog {
             self.url = $0
         })
         .onAppear {
-            if let url = man.getAsset() {
+            if let url = man.asset {
                 self.url = url
             }
         }

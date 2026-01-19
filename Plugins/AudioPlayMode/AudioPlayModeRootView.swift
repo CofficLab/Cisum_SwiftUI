@@ -10,7 +10,7 @@ struct AudioPlayModeRootView<Content>: View, SuperLog where Content: View {
     nonisolated static var emoji: String { "🔄" }
     private static var verbose: Bool { false }
 
-    @EnvironmentObject var man: PlayManController
+    @EnvironmentObject var man: PlayMan
     @EnvironmentObject var m: MagicMessageProvider
     @EnvironmentObject var p: PluginProvider
 
@@ -50,7 +50,7 @@ extension AudioPlayModeRootView {
         }
 
         // 订阅播放器事件
-        man.playMan.subscribe(
+        man.subscribe(
             name: "AudioPlayModePlugin",
             onPlayModeChanged: { mode in
                 handlePlayModeChanged(mode)
@@ -77,7 +77,7 @@ extension AudioPlayModeRootView {
 
         // 根据播放模式重新排序音频列表
         // Task {
-        //     let currentURL = self.man.playMan.currentURL
+        //     let currentURL = self.man.currentURL
 
         //     switch mode {
         //     case .loop:

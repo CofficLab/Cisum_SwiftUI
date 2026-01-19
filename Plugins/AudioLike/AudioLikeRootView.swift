@@ -11,7 +11,7 @@ struct AudioLikeRootView<Content>: View, SuperLog where Content: View {
     nonisolated static var emoji: String { "❤️" }
     private static var verbose: Bool { false }
 
-    @EnvironmentObject var man: PlayManController
+    @EnvironmentObject var man: PlayMan
     @EnvironmentObject var m: MagicMessageProvider
     @EnvironmentObject var p: PluginProvider
 
@@ -60,7 +60,7 @@ extension AudioLikeRootView {
     func handleLikeStatusChanged(audioId: String, url: URL?, liked: Bool) {
         guard shouldActivateLike else { return }
 
-        guard let currentURL = man.playMan.currentURL else {
+        guard let currentURL = man.currentURL else {
             if Self.verbose {
                 os_log("\(self.t)⚠️ 没有当前播放的音频")
             }

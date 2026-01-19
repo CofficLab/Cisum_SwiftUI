@@ -11,7 +11,7 @@ struct AudioRootView<Content>: View, SuperLog where Content: View {
     nonisolated static var emoji: String { "📢" }
     nonisolated static var verbose: Bool { false }
     
-    @EnvironmentObject var man: PlayManController
+    @EnvironmentObject var man: PlayMan
     @EnvironmentObject var m: MagicMessageProvider
     @EnvironmentObject var p: PluginProvider
     @EnvironmentObject var app: AppProvider

@@ -5,7 +5,7 @@ import SwiftUI
 struct ControlBtns: View, SuperLog {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var message: StateProvider
-    @EnvironmentObject var man: PlayManController
+    @EnvironmentObject var man: PlayMan
 
     nonisolated static let emoji = "🎵"
     static let verbose = false
@@ -14,10 +14,10 @@ struct ControlBtns: View, SuperLog {
         HStack {
             Spacer(minLength: 50)
             BtnToggleDB()
-            man.playMan.makePreviousButtonView(size: .auto)
-            man.playMan.makePlayPauseButtonView(size: .auto)
-            man.playMan.makeNextButtonView(size: .auto)
-            man.playMan.makePlayModeButtonView(size: .auto)
+            man.makePreviousButtonView(size: .auto)
+            man.makePlayPauseButtonView(size: .auto)
+            man.makeNextButtonView(size: .auto)
+            man.makePlayModeButtonView(size: .auto)
             Spacer(minLength: 50)
         }
         .padding(.bottom, 20)

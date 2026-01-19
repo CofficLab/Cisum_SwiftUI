@@ -24,7 +24,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     nonisolated static let emoji = "📬"
     nonisolated static let verbose = false
 
-    @EnvironmentObject var playManController: PlayManController
+    @EnvironmentObject var playManController: PlayMan
     @EnvironmentObject var m: MagicMessageProvider
 
     /// 当前选中的音频 URL
@@ -221,7 +221,7 @@ extension AudioList {
         setIsLoading(true)
         scheduleUpdateURLsDebounced()
 
-        if let asset = playManController.getAsset() {
+        if let asset = playManController.asset {
             if Self.verbose {
                 os_log("\(self.t)🎵 恢复选中当前播放的音频")
             }
@@ -240,7 +240,7 @@ extension AudioList {
             }
 
             Task {
-                await self.playManController.play(url: url)
+                await self.playManController.play(url)
             }
         }
     }

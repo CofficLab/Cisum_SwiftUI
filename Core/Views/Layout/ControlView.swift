@@ -10,7 +10,7 @@ struct ControlView: View, SuperLog {
 
     @EnvironmentObject var appManager: AppProvider
     @EnvironmentObject var message: StateProvider
-    @EnvironmentObject var playMan: PlayManController
+    @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var p: PluginProvider
 
     @State var showHeroView = true
@@ -64,7 +64,7 @@ struct ControlView: View, SuperLog {
                     // MARK: 进度栏
 
                     if showSliderView {
-                        playMan.playMan.makeProgressView()
+                        playMan.makeProgressView()
                             .padding()
                     }
 
@@ -85,7 +85,7 @@ struct ControlView: View, SuperLog {
                     // 最大宽度=控制栏的高度+系统标题栏高度
                     HStack {
                         Spacer(minLength: 0)
-                        playMan.playMan.makeHeroView()
+                        playMan.makeHeroView()
                             .background(Config.background(.yellow))
                     }
                     .frame(maxWidth: geo.size.height * 1.3)

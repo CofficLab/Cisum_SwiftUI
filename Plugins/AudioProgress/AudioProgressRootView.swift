@@ -11,7 +11,7 @@ struct AudioProgressRootView<Content>: View, SuperLog where Content: View {
     nonisolated static var emoji: String { "💾" }
     private static var verbose: Bool { false }
 
-    @EnvironmentObject var man: PlayManController
+    @EnvironmentObject var man: PlayMan
     @EnvironmentObject var m: MagicMessageProvider
     @EnvironmentObject var p: PluginProvider
 
@@ -76,7 +76,7 @@ extension AudioProgressRootView {
             }
 
             if let asset = assetTarget {
-                await man.play(url: asset, autoPlay: false)
+                await man.play(asset, autoPlay: false)
                 await man.seek(time: timeTarget)
                 man.setLike(liked)
             }
@@ -116,14 +116,14 @@ extension AudioProgressRootView {
         guard shouldActivateProgress else { return }
 
         if Self.verbose {
-            os_log("\(self.t)🎵 播放状态变化 -> \(self.man.playMan.state.stateText)")
+            os_log("\(self.t)🎵 播放状态变化 -> \(self.man.state.stateText)")
         }
 
-        if self.man.playMan.state == .paused {
-            AudioStateRepo.storeCurrentTime(man.playMan.currentTime)
+        if self.man.state == .paused {
+            AudioStateRepo.storeCurrentTime(man.currentTime)
 
             if Self.verbose {
-                os_log("\(self.t)💾 保存播放进度: \(man.playMan.currentTime)s")
+                os_log("\(self.t)💾 保存播放进度: \(man.currentTime)s")
             }
         }
     }
