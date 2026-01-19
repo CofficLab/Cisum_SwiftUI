@@ -1,11 +1,12 @@
 import MagicKit
 import SwiftUI
+import OSLog
 
 /// 音频列表项视图组件
 /// 用于在 AudioList 中展示单个音频文件
 struct AudioItemView: View, Equatable, SuperLog {
     nonisolated static let emoji = "🎵"
-    nonisolated static let verbose = false
+    nonisolated static let verbose = true
 
     let url: URL
 
@@ -24,16 +25,11 @@ struct AudioItemView: View, Equatable, SuperLog {
 
     var body: some View {
         url.makeMediaView(verbose: Self.verbose)
-            .magicAvatarDownloadProgress($progress)
             .magicPadding(horizontal: 0, vertical: 0)
-            .magicVerbose(Self.verbose)
+            .magicVerbose(Self.verbose && true)
             .showAvatar(true)
             .magicHideActions()
             .tag(url as URL?)
-            .onAudioDownloadProgress { eventURL, progress in
-                guard eventURL == self.url else { return }
-                self.progress = (progress >= 1.0) ? 1.1 : progress
-            }
     }
 }
 

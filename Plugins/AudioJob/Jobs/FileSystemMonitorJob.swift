@@ -68,7 +68,7 @@ final class FileSystemMonitorJob: AudioJob, SuperLog, @unchecked Sendable {
         // 创建监控器
         await withCheckedContinuation { continuation in
             monitor = disk.onDirChange(
-                verbose: true,
+                verbose: Self.verbose,
                 caller: "FileSystemMonitorJob",
                 onChange: { @Sendable [weak self] items, isFirst, _ in
                     guard let self = self else { return }

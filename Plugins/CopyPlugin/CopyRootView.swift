@@ -9,7 +9,7 @@
 
     struct CopyRootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content: View {
         nonisolated static var emoji: String { "🚛" }
-        nonisolated static var verbose: Bool { true }
+        nonisolated static var verbose: Bool { false }
 
         @State var error: Error? = nil
 

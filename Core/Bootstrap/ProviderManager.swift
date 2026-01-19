@@ -8,7 +8,7 @@ import SwiftUI
 @MainActor
 final class ProviderManager: SuperLog {
     static let shared = ProviderManager()
-    static let verbose = true
+    static let verbose = false
     nonisolated static let emoji = "🔧"
 
     // Providers
@@ -34,7 +34,7 @@ final class ProviderManager: SuperLog {
         self.cloud = CloudProvider()
 
         // PlayMan
-        self.man = PlayMan(playlistEnabled: false, verbose: true, locale: .current)
+        self.man = PlayMan(playlistEnabled: false, verbose: Self.verbose, locale: .current)
 
         if Self.verbose {
             os_log("\(Self.t)✅ 服务提供者初始化完成")
