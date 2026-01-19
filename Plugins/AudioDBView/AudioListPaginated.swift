@@ -415,9 +415,6 @@ extension AudioListPaginated {
 
     /// 处理数据同步开始事件
     func handleDBSyncing(_ notification: Notification) {
-        if Self.verbose {
-            os_log("\(self.t)🔄 开始同步数据")
-        }
         setIsSyncing(true)
     }
 

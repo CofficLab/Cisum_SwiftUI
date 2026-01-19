@@ -38,9 +38,6 @@ actor AudioJobPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     private func registerJobs() async {
         let manager = AudioJobManager.shared
 
-        // 注册示例任务
-        await manager.register(ExampleJob())
-
         // 注册文件系统监控任务
         let fsMonitorJob = FileSystemMonitorJob()
         await manager.register(fsMonitorJob)

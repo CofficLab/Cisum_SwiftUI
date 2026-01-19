@@ -172,26 +172,36 @@ extension View {
 extension NotificationCenter {
     /// 发送数据库同步开始事件
     static func postDBSyncing() {
-        NotificationCenter.default.post(name: .dbSyncing, object: nil)
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .dbSyncing, object: nil)
+        }
     }
 
     /// 发送数据库同步完成事件
     static func postDBSynced() {
-        NotificationCenter.default.post(name: .dbSynced, object: nil)
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .dbSynced, object: nil)
+        }
     }
 
     /// 发送数据库更新完成事件
     static func postDBUpdated() {
-        NotificationCenter.default.post(name: .dbUpdated, object: nil)
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .dbUpdated, object: nil)
+        }
     }
 
     /// 发送文件系统同步完成事件
     static func postFileSystemSynced() {
-        NotificationCenter.default.post(name: .fileSystemSynced, object: nil)
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .fileSystemSynced, object: nil)
+        }
     }
 
     /// 发送文件系统删除完成事件
     static func postFileSystemDeleted() {
-        NotificationCenter.default.post(name: .fileSystemDeleted, object: nil)
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .fileSystemDeleted, object: nil)
+        }
     }
 }
