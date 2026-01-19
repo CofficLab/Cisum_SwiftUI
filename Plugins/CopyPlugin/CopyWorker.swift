@@ -10,7 +10,7 @@
         let fm = FileManager.default
         let db: CopyDB
         var running = false
-        let verbose: Bool = true
+        let verbose: Bool = false
 
         init(db: CopyDB, reason: String) {
             if verbose {

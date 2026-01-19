@@ -170,6 +170,11 @@ extension View {
 
 /// NotificationCenter 扩展，提供便捷的音频事件发送方法
 extension NotificationCenter {
+    /// 发送数据库同步开始事件
+    static func postDBSyncing() {
+        NotificationCenter.default.post(name: .dbSyncing, object: nil)
+    }
+
     /// 发送数据库同步完成事件
     static func postDBSynced() {
         NotificationCenter.default.post(name: .dbSynced, object: nil)

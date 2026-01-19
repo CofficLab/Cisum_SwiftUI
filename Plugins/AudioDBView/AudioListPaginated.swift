@@ -148,16 +148,12 @@ extension AudioListPaginated {
         guard !isLoading else { return }
 
         isLoading = true
-        
+
         guard let repo = AudioPlugin.getAudioRepo() else {
             return
         }
 
         Task.detached(priority: .background) {
-            if Self.verbose {
-                os_log("\(self.t)🔄 加载初始数据")
-            }
-
             let count = await repo.getTotalCount()
             let urls = await repo.get(
                 offset: 0,
@@ -193,7 +189,7 @@ extension AudioListPaginated {
         }
 
         isLoadingMore = true
-        
+
         guard let repo = AudioPlugin.getAudioRepo() else {
             return
         }
@@ -242,10 +238,16 @@ extension AudioListPaginated {
         }
     }
 
-    /// 刷新数据
-    private func refresh() {
+    /// 刷新当前页数据（保持分页状态）
+    private func refreshCurrentPage(reason: String) {
+        // 重新加载当前页的数据，但保持分页状态
+        loadCurrentPageData(reason: reason)
+    }
+
+    /// 完全重置并刷新
+    private func refresh(reason: String) {
         if Self.verbose {
-            os_log("\(self.t)🍋 Refresh")
+            os_log("\(self.t)🍋 Refresh with reason: \(reason)")
         }
 
         // 重置状态
@@ -262,7 +264,7 @@ extension AudioListPaginated {
 extension AudioListPaginated {
     /// 设置选中的音频
     @MainActor
-    private func setSelection(_ newValue: URL?, reason: String  ) {
+    private func setSelection(_ newValue: URL?, reason: String) {
         if Self.verbose {
             os_log("\(self.t)🔄 设置选中音频: \(newValue?.lastPathComponent ?? "nil") - \(reason)")
         }
@@ -276,6 +278,50 @@ extension AudioListPaginated {
             os_log("\(self.t)🔄 同步状态: \(newValue ? "同步中" : "完成")")
         }
         isSyncing = newValue
+    }
+
+    /// 加载当前页数据（用于刷新当前已加载的内容）
+    private func loadCurrentPageData(reason: String) {
+        guard let repo = AudioPlugin.getAudioRepo() else {
+            return
+        }
+
+        Task.detached(priority: .background) {
+            if Self.verbose {
+                os_log("\(self.t)🔄 重新加载当前页数据 - \(reason)")
+            }
+
+            // 重新获取总数
+            let totalCount = await repo.getTotalCount()
+
+            // 重新加载当前所有已加载的页面数据
+            let currentUrls = await self.urls
+            let totalItemsNeeded = currentUrls.count
+
+            if totalItemsNeeded > 0 {
+                let refreshedUrls = await repo.get(
+                    offset: 0,
+                    limit: totalItemsNeeded,
+                    reason: self.className
+                )
+
+                await MainActor.run {
+                    // 更新数据，但保持分页状态
+                    self.urls = refreshedUrls
+                    self.totalCount = totalCount
+
+                    if Self.verbose {
+                        os_log("\(self.t)✅ 当前页数据刷新完成，项目数: \(refreshedUrls.count)")
+                    }
+                }
+            } else {
+                // 如果没有已加载的数据，直接重新初始化
+                await MainActor.run {
+                    self.totalCount = totalCount
+                    self.loadInitial()
+                }
+            }
+        }
     }
 }
 
@@ -318,7 +364,7 @@ extension AudioListPaginated {
         if Self.verbose {
             os_log("\(self.t)✅ 排序完成")
         }
-        refresh()
+        refresh(reason: "handleDBSortDone")
     }
 
     /// 处理音频删除事件
@@ -357,34 +403,14 @@ extension AudioListPaginated {
 
     /// 处理数据同步完成事件
     func handleDBSynced(_ notification: Notification) {
-        if Self.verbose {
-            os_log("\(self.t)✅ 数据同步完成")
-        }
-
-        // 更新总数
-        Task {
-            guard let repo = await AudioPlugin.getAudioRepo() else { return }
-
-            let newTotalCount = await repo.getTotalCount()
-
-            await MainActor.run {
-                self.totalCount = newTotalCount
-                if Self.verbose {
-                    os_log("\(self.t)🔄 更新总数: \(newTotalCount)")
-                }
-            }
-        }
-
-        refresh()
+        refreshCurrentPage(reason: "handleDBSynced")
         setIsSyncing(false)
     }
 
     /// 处理数据更新事件
     func handleDBUpdated(_ notification: Notification) {
-        if Self.verbose {
-            os_log("\(self.t)🔄 数据已更新")
-        }
-        refresh()
+        refreshCurrentPage(reason: "handleDBUpdated")
+        setIsSyncing(false)
     }
 
     /// 处理数据同步开始事件

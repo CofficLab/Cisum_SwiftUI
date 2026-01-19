@@ -8,7 +8,7 @@ import OSLog
 /// 监听音频文件系统变化，调用 AudioRepo 操作数据库。
 /// 负责将文件系统变化同步到数据库。
 final class FileSystemMonitorJob: AudioJob, SuperLog, @unchecked Sendable {
-    static let verbose = true
+    static let verbose = false
 
     nonisolated let identifier = "com.cisum.audio.job.filesystem-monitor"
     nonisolated let name = "文件系统监控"
@@ -74,6 +74,9 @@ final class FileSystemMonitorJob: AudioJob, SuperLog, @unchecked Sendable {
                     guard let self = self else { return }
 
                     Task {
+                        // 发送数据库同步开始事件
+                        NotificationCenter.postDBSyncing()
+
                         // 防抖处理
                         guard await self.state.shouldSync() else {
                             if Self.verbose {
