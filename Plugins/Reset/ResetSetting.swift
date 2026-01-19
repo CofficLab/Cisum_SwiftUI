@@ -12,9 +12,7 @@ struct ResetSetting: View, SuperLog {
     var body: some View {
         MagicSettingSection {
             MagicSettingRow(title: "重置", description: "重置设置，恢复成系统默认状态", icon: .iconReset) {
-                MagicButton.simple(icon: .iconReset, action: {
-                    showConfirmSheet = true
-                })
+                MagicButton.simple(icon: .iconReset, action: showResetConfirm)
                 .magicShape(.circle)
                 .magicStyle(.secondary)
                 .magicSize(.small)
@@ -28,19 +26,29 @@ struct ResetSetting: View, SuperLog {
             } else {
                 ResetConfirmContent(
                     onCancel: { showConfirmSheet = false },
-                    onConfirm: {
-                        isResetting = true
-                        Task {
-                            Config.resetStorageLocation()
-                            await MainActor.run {
-                                isResetting = false
-                                showConfirmSheet = false
-                            }
-                        }
-                    }
+                    onConfirm: performReset
                 )
                 .padding(24)
                 .frame(minWidth: 380)
+            }
+        }
+    }
+}
+
+// MARK: - Action
+
+extension ResetSetting {
+    func showResetConfirm() {
+        showConfirmSheet = true
+    }
+
+    func performReset() {
+        isResetting = true
+        Task {
+            Config.resetStorageLocation()
+            await MainActor.run {
+                isResetting = false
+                showConfirmSheet = false
             }
         }
     }

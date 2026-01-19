@@ -16,9 +16,6 @@ actor WelcomePlugin: SuperPlugin, SuperLog, PluginRegistrant {
     @MainActor
     func addGuideView() -> AnyView? {
         guard Config.getStorageLocation() == nil else {
-            if Self.verbose {
-                os_log("\(self.t)🔍 StorageLocation is not nil")
-            }
             return nil
         }
 

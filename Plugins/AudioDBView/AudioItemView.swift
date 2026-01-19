@@ -18,7 +18,7 @@ struct AudioItemView: View, Equatable {
     }
 
     var body: some View {
-        url.makeMediaView()
+        url.makeMediaView(verbose: false)
             .magicAvatarDownloadProgress($progress)
             .magicPadding(horizontal: 0, vertical: 0)
             .magicVerbose(false)

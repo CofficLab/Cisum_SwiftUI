@@ -82,9 +82,6 @@ enum Config: SuperLog {
 
     static let keyOfStorageLocation = "StorageLocation"
 
-    /// 存储位置重置通知
-    static let storageLocationDidReset = Notification.Name("ConfigStorageLocationDidReset")
-
     /// 获取当前存储位置设置
     static func getStorageLocation() -> StorageLocation? {
         guard let savedLocation = UserDefaults.standard.string(forKey: keyOfStorageLocation),
@@ -126,7 +123,7 @@ enum Config: SuperLog {
     /// 重置存储位置设置
     static func resetStorageLocation() {
         UserDefaults.standard.removeObject(forKey: keyOfStorageLocation)
-        NotificationCenter.default.post(name: Config.storageLocationDidReset, object: nil)
+        NotificationCenter.postStorageLocationDidReset()
     }
 
     /// 上半部分播放控制的最小高度
