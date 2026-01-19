@@ -180,6 +180,7 @@ extension CrashedView {
 
 // MARK: - Preview
 
+#if DEBUG
 #if os(macOS)
     #Preview("ErrorViewFatal - Large") {
         CrashedView(error: NSError(domain: "TestError", code: 1001, userInfo: [NSLocalizedDescriptionKey: "这是一个测试错误，用于预览界面效果"]))
@@ -196,7 +197,7 @@ extension CrashedView {
 
 #if os(iOS)
     #Preview("ErrorViewFatal - iPhone") {
-        ErrorViewFatal(error: NSError(domain: "TestError", code: 1001, userInfo: [NSLocalizedDescriptionKey: "这是一个测试错误，用于预览界面效果"]))
+        CrashedView(error: NSError(domain: "TestError", code: 1001, userInfo: [NSLocalizedDescriptionKey: "这是一个测试错误，用于预览界面效果"]))
             .inRootView()
     }
 #endif
@@ -218,4 +219,5 @@ extension CrashedView {
         ContentView()
             .inRootView()
     }
+#endif
 #endif
