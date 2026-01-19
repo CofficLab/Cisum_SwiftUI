@@ -43,6 +43,7 @@ struct AudioControlRootView<Content>: View, SuperLog where Content: View {
         content
             .onAppear(perform: handleOnAppear)
             .onDBDeleted(perform: handleDBDeleted)
+            .onStorageLocationDidReset(perform: handleStorageLocationDidReset)
     }
 
     /// 检查是否应该激活播放控制功能
@@ -156,6 +157,27 @@ extension AudioControlRootView {
                 if Self.verbose {
                     os_log("\(self.t)❌ 获取下一首失败: \(error.localizedDescription)")
                 }
+            }
+        }
+    }
+
+    /// 处理存储位置重置事件
+    ///
+    /// 当存储位置被重置时，停止当前播放。
+    func handleStorageLocationDidReset() {
+        guard shouldActivateControl else { return }
+
+        if Self.verbose {
+            os_log("\(self.t)🛑 存储位置重置，停止播放")
+        }
+
+        Task {
+            // 停止播放
+            await man.playMan.stop()
+
+            // 显示提示信息
+            await MainActor.run {
+                m.info("存储位置已重置，已停止播放")
             }
         }
     }
