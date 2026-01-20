@@ -62,18 +62,22 @@ extension AudioDownloadRootView {
             return
         }
 
-        Task {
-            if url.isNotDownloaded {
-                if Self.verbose {
-                    os_log("\(self.t)☁️ 文件未下载，开始下载")
-                }
+        let verbose = Self.verbose
 
-                do {
-                    try await url.download(verbose: Self.verbose, reason: "AudioDownloadRootView")
-                } catch let e {
-                    os_log(.error, "\(self.t)❌ 下载失败: \(e.localizedDescription)")
+        Task {
+            await Task.detached(priority: .utility) {
+                if url.isNotDownloaded {
+                    if verbose {
+                        os_log("\(Self.t)☁️ 文件未下载，开始下载")
+                    }
+
+                    do {
+                        try await url.download(verbose: verbose, reason: "AudioDownloadRootView")
+                    } catch let e {
+                        os_log(.error, "\(Self.t)❌ 下载失败: \(e.localizedDescription)")
+                    }
                 }
-            }
+            }.value
         }
     }
 }
