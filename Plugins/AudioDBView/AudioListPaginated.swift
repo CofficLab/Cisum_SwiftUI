@@ -102,19 +102,13 @@ struct AudioListPaginated: View, SuperThread, SuperLog, SuperEvent {
                         .labelStyle(.iconOnly)
                 }
             }, content: {
-                ForEach(Array(urls.enumerated()), id: \.element) { index, url in
-                    AudioItemView(url, index: index)
+                // 使用 URL 作为 id，确保 List selection 能正确工作
+                ForEach(urls, id: \.self) { url in
+                    AudioItemView(url)
                         .equatable() // 使用 Equatable 优化，减少不必要的重绘
                         .onAppear {
-                            // 只在最后几个 item 出现时触发加载更多
-                            let threshold = max(urls.count - 10, Int(Double(urls.count) * 0.8))
-
-                            if index >= threshold && hasMore && !isLoadingMore {
-                                if Self.verbose {
-                                    os_log("\(self.t)👁️ Item \(index) appeared, triggering loadMore")
-                                }
-                                loadMore()
-                            }
+                            // 仅在接近列表末尾时检查是否需要加载更多
+                            checkLoadMore(for: url)
                         }
                 }
                 .onDelete(perform: handleDeleteItems)
@@ -173,6 +167,24 @@ extension AudioListPaginated {
         }
     }
 
+    /// 检查是否需要加载更多数据
+    /// - Parameter url: 当前可见项的 URL
+    private func checkLoadMore(for url: URL) {
+        // 获取当前 URL 的索引
+        guard let currentIndex = urls.firstIndex(of: url) else { return }
+        
+        // 计算阈值：最后 10 条或 80% 位置
+        let threshold = max(urls.count - 10, Int(Double(urls.count) * 0.8))
+        
+        // 仅当接近末尾且有更多数据且未在加载中时触发
+        guard currentIndex >= threshold, hasMore, !isLoadingMore else { return }
+        
+        if Self.verbose {
+            os_log("\(self.t)👁️ Item \(currentIndex) appeared, triggering loadMore")
+        }
+        loadMore()
+    }
+    
     /// 加载更多数据
     private func loadMore() {
         guard !isLoadingMore, hasMore else {
@@ -189,6 +201,7 @@ extension AudioListPaginated {
         isLoadingMore = true
 
         guard let repo = AudioPlugin.getAudioRepo() else {
+            isLoadingMore = false
             return
         }
 

@@ -102,7 +102,7 @@ extension BookProgressRootView {
             // 如果文件未下载，自动下载
             if url.isNotDownloaded {
                 do {
-                    try await url.download()
+                    try await url.download(reason: "BookProgressRootView")
                     if self.verbose {
                         os_log("\(self.t)✅ 书籍文件下载完成")
                     }

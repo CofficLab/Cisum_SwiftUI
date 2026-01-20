@@ -10,43 +10,36 @@ struct AudioItemView: View, Equatable, SuperLog {
     nonisolated static let verbose = false
 
     let url: URL
-    let index: Int // 添加索引参数，用于分页加载检测
 
     nonisolated static func == (lhs: AudioItemView, rhs: AudioItemView) -> Bool {
-        lhs.url == rhs.url && lhs.index == rhs.index
+        lhs.url == rhs.url
     }
 
-    init(_ url: URL, index: Int = 0) {
+    init(_ url: URL) {
         self.url = url
-        self.index = index
     }
 
     var body: some View {
         HStack(alignment: .center, spacing: 12) {
-            // 头像部分 - MagicKit 内部使用全局监控器，无需手动管理
+            // 头像部分 - 添加延迟加载优化滚动性能
             url.makeAvatarView(verbose: Self.verbose)
                 .magicSize(.init(width: 40, height: 40))
                 .magicAvatarShape(.circle)
                 .magicBackground(.blue.opacity(0.1))
                 .magicDownloadMonitor(true)
+                .magicLoadDelay(150) // 150ms 延迟，避免快速滚动时触发过多加载
 
             // 文件信息部分
             VStack(alignment: .leading, spacing: 4) {
-                // Text(url.lastPathComponent)
-                //     .font(.headline)
-                //     .lineLimit(1)
+                 Text(url.lastPathComponent)
+                     .font(.headline)
+                     .lineLimit(1)
 
-                // HStack {
-                //     Text(url.getSizeReadable())
-                //         .font(.caption)
-                //         .foregroundStyle(.secondary)
-
-                //     if let status = url.magicFileStatus {
-                //         Text(status)
-                //             .font(.caption)
-                //             .foregroundStyle(.secondary)
-                //     }
-                // }
+                 HStack {
+                     Text(url.getSizeReadable())
+                         .font(.caption)
+                         .foregroundStyle(.secondary)
+                 }
             }
 
             Spacer()

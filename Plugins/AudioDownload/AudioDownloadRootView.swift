@@ -69,7 +69,7 @@ extension AudioDownloadRootView {
                 }
 
                 do {
-                    try await url.download()
+                    try await url.download(verbose: Self.verbose, reason: "AudioDownloadRootView")
                 } catch let e {
                     os_log(.error, "\(self.t)❌ 下载失败: \(e.localizedDescription)")
                 }

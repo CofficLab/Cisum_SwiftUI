@@ -122,20 +122,11 @@ class AudioRepo: ObservableObject, SuperLog {
         }
     }
 
-    func sync(_ items: [URL], verbose: Bool = false, isFirst: Bool) async {
-        // 发送数据库同步开始事件
-        NotificationCenter.postDBSyncing()
-        
+    func sync(_ items: [URL], verbose: Bool = false, isFirst: Bool) async {        
         if isFirst {
             await db.initItems(items, verbose: verbose)
-
-            // 发送数据库同步完成事件
-            NotificationCenter.postDBSynced()
         } else {
             await db.syncWithUpdatedItems(items, verbose: verbose)
-
-            // 发送数据库更新完成事件
-            NotificationCenter.postDBUpdated()
         }
     }
 }

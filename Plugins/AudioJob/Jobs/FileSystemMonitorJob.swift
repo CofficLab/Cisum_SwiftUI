@@ -8,7 +8,7 @@ import OSLog
 /// 监听音频文件系统变化，调用 AudioRepo 操作数据库。
 /// 负责将文件系统变化同步到数据库。
 final class FileSystemMonitorJob: AudioJob, SuperLog, @unchecked Sendable {
-    static let verbose = false
+    static let verbose = true
 
     nonisolated let identifier = "com.cisum.audio.job.filesystem-monitor"
     nonisolated let name = "文件系统监控"
@@ -76,9 +76,6 @@ final class FileSystemMonitorJob: AudioJob, SuperLog, @unchecked Sendable {
                     Task {
                         // 防抖处理
                         guard await self.state.shouldSync() else {
-                            if Self.verbose {
-                                os_log("\(self.t)⏸️ 防抖：跳过本次同步")
-                            }
                             return
                         }
 
@@ -97,13 +94,6 @@ final class FileSystemMonitorJob: AudioJob, SuperLog, @unchecked Sendable {
                         }
 
                         await repo.sync(items, verbose: Self.verbose, isFirst: isFirst)
-
-                        // 发送文件系统同步完成事件
-                        NotificationCenter.postFileSystemSynced()
-
-                        if Self.verbose {
-                            os_log("\(self.t)✅ 数据库同步完成")
-                        }
                     }
                 },
                 onDeleted: { @Sendable [weak self] urls in
@@ -145,16 +135,8 @@ final class FileSystemMonitorJob: AudioJob, SuperLog, @unchecked Sendable {
                         }
                     }
                 },
-                onProgress: { @Sendable [weak self] url, progress in
-                    guard let self = self else { return }
-
-                    if Self.verbose {
-                        // 只在某些关键进度点记录，避免日志过多
-                        let progressInt = Int(progress * 100)
-                        if progressInt == 0 || progressInt == 50 || progressInt == 100 {
-                            os_log("\(self.t)📥 文件下载进度: \(url.lastPathComponent) - \(progressInt)%")
-                        }
-                    }
+                onProgress: {url,progress in 
+                    // 对下载进度不感兴趣
                 }
             )
 

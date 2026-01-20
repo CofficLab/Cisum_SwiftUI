@@ -358,7 +358,7 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
         var currentAudio: AudioModel = audio
 
         while currentIndex < count {
-            try await currentAudio.url.download(verbose: false)
+            try await currentAudio.url.download(verbose: false, reason: "downloadNextBatch")
 
             currentIndex = currentIndex + 1
             if let next = self.nextOf(currentAudio) {
@@ -852,6 +852,8 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     ///   - verbose: 是否输出详细日志
     /// - Note: 此方法会删除不存在的音频，并添加新的音频，但不会更新已存在的音频
     func syncWithUpdatedItems(_ metas: [URL], verbose: Bool = false) {
+        let startTime: DispatchTime = .now()
+        
         // 如果url属性为unique，数据库已存在相同url的记录，再执行context.insert，发现已存在的被替换成新的了
         // 但在这里，希望如果存在，就不要插入
         for (_, meta) in metas.enumerated() {
@@ -877,6 +879,10 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
             try context.save()
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
+        }
+        
+        if verbose {
+            os_log("\(self.jobEnd(startTime, title: "\(self.t)✅ SyncWithUpdatedItems(\(metas.count))", tolerance: 0.01))")
         }
     }
 
