@@ -24,10 +24,6 @@ actor AudioJobPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     // MARK: - Plugin Life Cycle
 
     func onRegister() {
-        if Self.verbose {
-            os_log("\(self.t)🚀 注册音频后台任务插件")
-        }
-
         // 注册任务
         Task {
             await registerJobs()

@@ -9,7 +9,7 @@ import UniformTypeIdentifiers
 
 struct AudioProgressRootView<Content>: View, SuperLog where Content: View {
     nonisolated static var emoji: String { "💾" }
-    private static var verbose: Bool { false }
+    private static var verbose: Bool { true }
 
     @EnvironmentObject var man: PlayMan
     @EnvironmentObject var m: MagicMessageProvider
@@ -77,7 +77,7 @@ extension AudioProgressRootView {
 
             if let asset = assetTarget {
                 await man.play(asset, autoPlay: false)
-                await man.seek(time: timeTarget)
+                man.seek(time: timeTarget)
                 man.setLike(liked)
             }
         }
@@ -115,10 +115,6 @@ extension AudioProgressRootView {
     func handlePlayManStateChanged(_ isPlaying: Bool) {
         guard shouldActivateProgress else { return }
 
-        if Self.verbose {
-            os_log("\(self.t)🎵 播放状态变化 -> \(self.man.state.stateText)")
-        }
-
         if self.man.state == .paused {
             AudioStateRepo.storeCurrentTime(man.currentTime)
 
@@ -131,7 +127,6 @@ extension AudioProgressRootView {
     /// 处理播放资源变化事件
     ///
     /// 当播放器的音频资源改变时触发，保存当前播放的 URL。
-    /// 如果资源在 iCloud 且未下载，会自动触发下载。
     ///
     /// - Parameter url: 新的音频资源 URL，如果为 nil 则表示停止播放
     func handlePlayManAssetChanged(_ url: URL?) {
@@ -144,28 +139,8 @@ extension AudioProgressRootView {
             return
         }
 
-        if Self.verbose {
-            os_log("\(self.t)🎵 播放资源变化 -> \(url.lastPathComponent)")
-        }
-
         Task {
             AudioStateRepo.storeCurrent(url)
-
-            if url.isNotDownloaded {
-                if Self.verbose {
-                    os_log("\(self.t)☁️ 文件未下载，开始下载")
-                }
-
-                do {
-                    try await url.download()
-
-                    if Self.verbose {
-                        os_log("\(self.t)✅ 下载完成")
-                    }
-                } catch let e {
-                    os_log(.error, "\(self.t)❌ 下载失败: \(e.localizedDescription)")
-                }
-            }
         }
     }
 }

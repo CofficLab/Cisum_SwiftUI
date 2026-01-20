@@ -38,11 +38,11 @@ struct FileStatusColumnView: View, SuperLog {
             if verbose {
                 os_log("\(Self.t)🔍 Checking file status for \(path)")
             }
-            
+
             // 使用新的 URL 扩展方法
             if url.isFolder {
                 await checkDirectoryStatus(url)
-            } else if url.isiCloud {
+            } else if url.checkIsICloud(verbose: false) {
                 await checkSingleFileStatus(url.isDownloaded)
             } else {
                 let status = "本地文件"
@@ -71,7 +71,7 @@ struct FileStatusColumnView: View, SuperLog {
             await MainActor.run {
                 Self.statusCache[path] = (status, color)
             }
-            
+
             await updateState(fileStatus: status, statusColor: color, isChecking: false)
         }
     }
@@ -86,7 +86,7 @@ struct FileStatusColumnView: View, SuperLog {
             let files = directoryURL.flatten()
             var fileStats = (downloaded: 0, notDownloaded: 0)
 
-            for file in files where file.isiCloud {
+            for file in files where file.checkIsICloud(verbose: false) {
                 if file.isDownloaded {
                     fileStats.downloaded += 1
                 } else {

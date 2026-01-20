@@ -74,9 +74,6 @@ final class FileSystemMonitorJob: AudioJob, SuperLog, @unchecked Sendable {
                     guard let self = self else { return }
 
                     Task {
-                        // 发送数据库同步开始事件
-                        NotificationCenter.postDBSyncing()
-
                         // 防抖处理
                         guard await self.state.shouldSync() else {
                             if Self.verbose {

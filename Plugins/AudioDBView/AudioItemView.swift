@@ -1,35 +1,57 @@
+import Foundation
 import MagicKit
-import SwiftUI
 import OSLog
+import SwiftUI
 
 /// 音频列表项视图组件
 /// 用于在 AudioList 中展示单个音频文件
 struct AudioItemView: View, Equatable, SuperLog {
     nonisolated static let emoji = "🎵"
-    nonisolated static let verbose = true
+    nonisolated static let verbose = false
 
     let url: URL
+    let index: Int // 添加索引参数，用于分页加载检测
 
     nonisolated static func == (lhs: AudioItemView, rhs: AudioItemView) -> Bool {
-        lhs.url == rhs.url
+        lhs.url == rhs.url && lhs.index == rhs.index
     }
 
-    // 本地进度状态，1.1 表示无进度/已完成
-    @State private var progress: Double = 1.1
-    // 延迟显示头像，避免同时加载大量缩略图
-    @State private var showAvatarDelayed: Bool = false
-
-    init(_ url: URL) {
+    init(_ url: URL, index: Int = 0) {
         self.url = url
+        self.index = index
     }
 
     var body: some View {
-        url.makeMediaView(verbose: Self.verbose)
-            .magicPadding(horizontal: 0, vertical: 0)
-            .magicVerbose(Self.verbose && true)
-            .showAvatar(true)
-            .magicHideActions()
-            .tag(url as URL?)
+        HStack(alignment: .center, spacing: 12) {
+            // 头像部分 - MagicKit 内部使用全局监控器，无需手动管理
+            url.makeAvatarView(verbose: Self.verbose)
+                .magicSize(.init(width: 40, height: 40))
+                .magicAvatarShape(.circle)
+                .magicBackground(.blue.opacity(0.1))
+                .magicDownloadMonitor(true)
+
+            // 文件信息部分
+            VStack(alignment: .leading, spacing: 4) {
+                // Text(url.lastPathComponent)
+                //     .font(.headline)
+                //     .lineLimit(1)
+
+                // HStack {
+                //     Text(url.getSizeReadable())
+                //         .font(.caption)
+                //         .foregroundStyle(.secondary)
+
+                //     if let status = url.magicFileStatus {
+                //         Text(status)
+                //             .font(.caption)
+                //             .foregroundStyle(.secondary)
+                //     }
+                // }
+            }
+
+            Spacer()
+        }
+        .tag(url as URL?)
     }
 }
 

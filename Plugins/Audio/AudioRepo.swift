@@ -123,6 +123,9 @@ class AudioRepo: ObservableObject, SuperLog {
     }
 
     func sync(_ items: [URL], verbose: Bool = false, isFirst: Bool) async {
+        // 发送数据库同步开始事件
+        NotificationCenter.postDBSyncing()
+        
         if isFirst {
             await db.initItems(items, verbose: verbose)
 
