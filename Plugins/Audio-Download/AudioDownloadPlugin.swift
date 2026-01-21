@@ -6,7 +6,8 @@ import SwiftUI
 actor AudioDownloadPlugin: SuperPlugin, SuperLog {
     static let emoji = "⬇️"
     static let verbose = true
-    
+    static var shouldRegister: Bool { true }
+
     /// 注册顺序设为 2，在 AudioPlugin (order: 1) 之后执行
     static var order: Int { 2 }
 

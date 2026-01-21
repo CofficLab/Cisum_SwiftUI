@@ -89,9 +89,6 @@ extension SuperPlugin {
         return 9999
     }
 
-    /// 默认应该注册
-    static var shouldRegister: Bool { true }
-
     // MARK: - View Methods Defaults
 
     nonisolated func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View { nil }

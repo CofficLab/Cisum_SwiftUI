@@ -6,6 +6,7 @@ import SwiftUI
 actor BookLikePlugin: SuperPlugin, SuperLog {
     static let emoji = "📚❤️"
     static let verbose = false
+    static var shouldRegister: Bool { true }
 
     /// 注册顺序设为 6，在 BookPlugin 相关插件之后执行
     static var order: Int { 6 }

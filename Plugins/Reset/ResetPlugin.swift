@@ -6,6 +6,7 @@ import SwiftUI
 actor ResetPlugin: SuperPlugin, SuperLog {
     static let emoji = "🔄"
     static let verbose = false
+    static var shouldRegister: Bool { true }
 
     /// 注册顺序设为 95，最后执行
     static var order: Int { 95 }

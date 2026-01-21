@@ -7,6 +7,7 @@ import SwiftUI
 actor BookScenePlugin: SuperPlugin, SuperLog {
     static let emoji = "📚"
     static let verbose = true
+    static var shouldRegister: Bool { true }
 
     /// 注册顺序设为 0，确保最先执行，先提供场景
     static var order: Int { 0 }

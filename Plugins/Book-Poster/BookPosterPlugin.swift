@@ -10,6 +10,7 @@ import SwiftUI
 actor BookPosterPlugin: SuperPlugin, SuperLog {
     nonisolated static let emoji = "🖼️"
     static let verbose = false
+    static var shouldRegister: Bool { true }
 
     /// 注册顺序设为 9，在其他书籍插件之后执行
     static var order: Int { 9 }

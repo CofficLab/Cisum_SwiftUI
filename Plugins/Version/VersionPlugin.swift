@@ -6,6 +6,7 @@ import SwiftUI
 actor VersionPlugin: SuperPlugin, SuperLog {
     static let emoji = "📱"
     static let verbose = false
+    static var shouldRegister: Bool { true }
 
     /// 注册顺序设为 90，在其他插件之后执行
     static var order: Int { 90 }

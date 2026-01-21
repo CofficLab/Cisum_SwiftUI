@@ -6,7 +6,7 @@ import SwiftUI
 actor AudioControlPlugin: SuperPlugin, SuperLog {
     static let emoji = "🎮"
     static let verbose = true
-    private static var enabled: Bool { true }
+    static var shouldRegister: Bool { true }
 
     let title = "音频播放控制"
     let description = "负责音频播放控制功能，如上一首、下一首"

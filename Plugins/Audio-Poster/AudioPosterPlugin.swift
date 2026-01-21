@@ -10,6 +10,7 @@ import SwiftUI
 actor AudioPosterPlugin: SuperPlugin, SuperLog {
     nonisolated static let emoji = "🖼️"
     static let verbose = false
+    static var shouldRegister: Bool { true }
 
     /// 注册顺序设为 6，在音频插件之后执行
     static var order: Int { 6 }

@@ -6,7 +6,8 @@ import SwiftUI
 actor AudioProgressPlugin: SuperPlugin, SuperLog {
     static let emoji = "💾"
     static let verbose = true
-    
+    static var shouldRegister: Bool { true }
+
     /// 注册顺序设为 0，确保在 AudioPlugin (order: 1) 之前执行
     /// 内核会按顺序应用插件，进度管理先于音频功能
     static var order: Int { 0 }

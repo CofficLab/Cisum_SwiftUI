@@ -10,6 +10,7 @@ import SwiftUI
 actor AudioJobPlugin: SuperPlugin, SuperLog {
     static let emoji = "⚙️"
     static let verbose = true
+    static var shouldRegister: Bool { true }
 
     /// 注册顺序设为 5，在其他音频插件之后执行
     static var order: Int { 5 }

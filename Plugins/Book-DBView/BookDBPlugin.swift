@@ -8,6 +8,7 @@ import SwiftUI
 actor BookDBPlugin: SuperPlugin, SuperLog {
     nonisolated static let emoji = "📚📂"
     private static let verbose = true
+    static var shouldRegister: Bool { true }
     /// 注册顺序设为 12，在其他插件之后执行
     static var order: Int { 12 }
 

@@ -6,6 +6,7 @@ import SwiftUI
 actor BookControlPlugin: SuperPlugin, SuperLog {
     static let emoji = "🎮📚"
     static let verbose = true
+    static var shouldRegister: Bool { true }
 
     /// 注册顺序设为 8，在其他书籍相关插件之后执行
     static var order: Int { 8 }

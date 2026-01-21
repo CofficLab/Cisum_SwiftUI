@@ -7,7 +7,7 @@ import SwiftUI
  */
 actor AudioSettingsPlugin: SuperPlugin, SuperLog {
     nonisolated static let emoji = "🛠️"
-    private static var enabled: Bool { true }
+    static var shouldRegister: Bool { true }
     private static let verbose = false
     /// 注册顺序设为 10，在其他音频插件之后执行
     static var order: Int { 10 }
