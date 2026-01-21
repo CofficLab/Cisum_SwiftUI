@@ -29,7 +29,7 @@ struct AudioLikeRootView<Content>: View, SuperLog where Content: View {
 
     /// 检查是否应该激活喜欢管理功能
     private var shouldActivateLike: Bool {
-        p.current?.label == AudioPlugin().label
+        p.currentSceneName == "音乐库"
     }
 }
 

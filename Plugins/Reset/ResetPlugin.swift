@@ -3,36 +3,25 @@ import MagicKit
 import OSLog
 import SwiftUI
 
-actor ResetPlugin: SuperPlugin, SuperLog, PluginRegistrant {
-    static let emoji = "⚙️"
-    private static var enabled: Bool { true }
+actor ResetPlugin: SuperPlugin, SuperLog {
+    static let emoji = "🔄"
+    static let verbose = false
 
-    let label = "Reset"
-    let description: String = "恢复默认配置"
-    let iconName: String = .iconReset
+    /// 注册顺序设为 95，最后执行
+    static var order: Int { 95 }
+
+    let title = "重置"
+    let description = "恢复默认配置"
+    let iconName = "arrow.counterclockwise"
+    
 
     @MainActor
     func addSettingView() -> AnyView? {
-        guard Self.enabled else { return nil }
         return AnyView(ResetSetting())
     }
 }
 
-// MARK: - PluginRegistrant
 
-extension ResetPlugin {
-    @objc static func register() {
-        guard Self.enabled else {
-            return
-        }
-
-        Task {
-            PluginRegistry.shared.register(id: "Reset", order: 95) {
-                ResetPlugin()
-            }
-        }
-    }
-}
 
 #Preview("ResetConfirmContent") {
     RootView {

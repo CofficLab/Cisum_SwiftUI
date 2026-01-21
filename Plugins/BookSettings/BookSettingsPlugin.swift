@@ -7,15 +7,16 @@ import SwiftUI
  *
  * 复用 `BookSettings` 视图，不重新创建仓库或监听。
  */
-actor BookSettingsPlugin: SuperPlugin, SuperLog, PluginRegistrant {
+actor BookSettingsPlugin: SuperPlugin, SuperLog {
     nonisolated static let emoji = "⚙️"
     private static var enabled: Bool { false }
     private static let verbose = true
-
+    /// 注册顺序设为 11，在其他插件之后执行
+    static var order: Int { 11 }
     let title = "有声书设置"
     let description = "有声书插件的设置入口"
     let iconName = "gearshape"
-    let isGroup = false
+    
 
     @MainActor
     func addSettingView() -> AnyView? {
@@ -25,17 +26,3 @@ actor BookSettingsPlugin: SuperPlugin, SuperLog, PluginRegistrant {
         return AnyView(BookSettings())
     }
 }
-
-// MARK: - PluginRegistrant
-
-extension BookSettingsPlugin {
-    @objc static func register() {
-        guard Self.enabled else {
-            return
-        }
-
-        // 紧随 BookPlugin 之后注册
-        PluginRegistry.registerSync(order: 2) { Self() }
-    }
-}
-

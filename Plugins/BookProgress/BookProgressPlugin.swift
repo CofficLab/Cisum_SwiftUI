@@ -3,15 +3,17 @@ import MagicKit
 import OSLog
 import SwiftUI
 
-actor BookProgressPlugin: SuperPlugin, SuperLog, PluginRegistrant {
+actor BookProgressPlugin: SuperPlugin, SuperLog {
     static let emoji = "📖"
     static let verbose = true
-    private static var enabled: Bool { false }
+
+    /// 注册顺序设为 5，在 BookPlugin 之后执行
+    static var order: Int { 5 }
 
     let title = "书籍进度管理"
     let description = "负责书籍播放进度的保存和恢复"
     let iconName = "book.closed"
-    let isGroup = false
+    
 
     /// 提供进度管理功能的根视图包装器
     @MainActor func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {
@@ -19,23 +21,7 @@ actor BookProgressPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     }
 }
 
-// MARK: - PluginRegistrant
 
-extension BookProgressPlugin {
-    @objc static func register() {
-        guard Self.enabled else {
-            return
-        }
-
-        Task {
-            if Self.verbose {
-                os_log("\(self.t)🚀🚀🚀 Register")
-            }
-            // 注册顺序设为 5，确保在 BookPlugin (order: 1) 之后
-            await PluginRegistry.shared.register(order: 5) { Self() }
-        }
-    }
-}
 
 // MARK: - Preview
 

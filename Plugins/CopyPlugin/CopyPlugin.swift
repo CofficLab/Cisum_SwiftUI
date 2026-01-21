@@ -5,18 +5,19 @@ import SwiftData
 import SwiftUI
 
 #if os(macOS)
-    actor CopyPlugin: SuperPlugin, SuperLog, PluginRegistrant {
+    actor CopyPlugin: SuperPlugin, SuperLog {
         static let emoji = "🚛"
         static let verbose = true
-
+    /// 注册顺序设为 0，优先执行
+    static var order: Int { 0 }
         let description: String = "作为歌曲仓库，只关注文件，文件夹将被忽略"
         let iconName: String = "music.note"
-        let isGroup: Bool = false
+        
         @MainActor var db: CopyDB? = nil
         @MainActor var worker: CopyWorker? = nil
         @MainActor var container: ModelContainer?
 
-        @MainActor func addStateView(currentGroup: SuperPlugin?) -> AnyView? {
+        @MainActor func addStateView(currentSceneName: String?) -> AnyView? {
             return AnyView(
                 CopyStateView()
             )
@@ -26,18 +27,6 @@ import SwiftUI
             return AnyView(
                 CopyRootView { content() }
             )
-        }
-    }
-
-    // MARK: - PluginRegistrant
-
-    extension CopyPlugin {
-        @objc static func register() {
-            if Self.verbose {
-                os_log("\(self.t)🚀 Register")
-            }
-
-            PluginRegistry.registerSync(order: 0) { Self() }
         }
     }
 #endif

@@ -5,16 +5,17 @@ import SwiftUI
 /**
  * 有声书数据库插件：提供书籍仓库视图。
  */
-actor BookDBPlugin: SuperPlugin, SuperLog, PluginRegistrant {
+actor BookDBPlugin: SuperPlugin, SuperLog {
     nonisolated static let emoji = "📚📂"
     private nonisolated static let targetPluginId = String(describing: BookPlugin.self)
     private static let verbose = true
-    private static var enabled: Bool { false }
+    /// 注册顺序设为 12，在其他插件之后执行
+    static var order: Int { 12 }
 
     let title = "有声书仓库"
     let description = "有声书数据库视图"
     let iconName = "books.vertical"
-    let isGroup = false
+    
 
     @MainActor
     func addTabView(reason: String, currentPluginId: String?) -> (view: AnyView, label: String)? {
@@ -26,20 +27,3 @@ actor BookDBPlugin: SuperPlugin, SuperLog, PluginRegistrant {
         return (AnyView(BookDBView()), "有声书仓库")
     }
 }
-
-// MARK: - PluginRegistrant
-
-extension BookDBPlugin {
-    @objc static func register() {
-        guard Self.enabled else {
-            return
-        }
-
-        // 紧随 BookPlugin 之后注册
-        if Self.verbose {
-            os_log("\(self.t)🚀 注册 BookDBPlugin")
-        }
-        PluginRegistry.registerSync(order: 2) { Self() }
-    }
-}
-

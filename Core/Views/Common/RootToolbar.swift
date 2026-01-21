@@ -7,7 +7,7 @@ struct RootToolbar: ToolbarContent {
     var body: some ToolbarContent {
         Group {
             Group {
-                if p.groupPlugins.count > 1 {
+                if p.sceneNames.count > 1 {
                     ToolbarItem(placement: .navigation) {
                         BtnScene()
                     }

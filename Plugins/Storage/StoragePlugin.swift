@@ -4,45 +4,28 @@ import MagicKit
 import OSLog
 import SwiftUI
 
-actor StoragePlugin: SuperPlugin, SuperLog, PluginRegistrant {
-    nonisolated static let emoji = "⚙️"
-    private static var enabled: Bool { false }
-    private static let verbose = true
+actor StoragePlugin: SuperPlugin, SuperLog {
+    nonisolated static let emoji = "💾"
+    static let verbose = true
 
-    let dirName = "audios"
-    let label = "Setting"
+    /// 注册顺序设为 10，在其他插件之后执行
+    static var order: Int { 10 }
+
+    let title = "存储设置"
     let description = "存储设置"
-    let iconName: String = .iconSettings
-    let isGroup = false
+    let iconName = "internaldrive"
+    
 
     @MainActor
     func addSettingView() -> AnyView? {
         if Self.verbose {
-            os_log("\(self.t)⚙️ 加载存储设置视图")
+            os_log("\(self.t)💾 加载存储设置视图")
         }
 
         return AnyView(StorageSettingView())
     }
 }
 
-// MARK: - PluginRegistrant
-extension StoragePlugin {
-    @objc static func register() {
-        guard Self.enabled else {
-            return
-        }
-
-        if Self.verbose {
-            os_log("\(self.t)🚀 Register")
-        }
-
-        Task {
-            await PluginRegistry.shared.register(id: "Storage", order: 10) {
-                StoragePlugin()
-            }
-        }
-    }
-}
 
 #Preview("Setting") {
     RootView {

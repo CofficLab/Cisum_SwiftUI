@@ -7,14 +7,17 @@ import SwiftUI
  *
  * 复用 `BookPoster` 视图，不额外创建仓库或监听。
  */
-actor BookPosterPlugin: SuperPlugin, SuperLog, PluginRegistrant {
+actor BookPosterPlugin: SuperPlugin, SuperLog {
     nonisolated static let emoji = "🖼️"
     static let verbose = false
 
-    let title = "有声书"
-    let description = "适用于听有声书的场景"
+    /// 注册顺序设为 9，在其他书籍插件之后执行
+    static var order: Int { 9 }
+
+    let title = "有声书海报"
+    let description = "提供有声书的封面视图"
     let iconName = "photo.on.rectangle"
-    let isGroup = false
+    
 
     @MainActor
     func addPosterView() -> AnyView? {
@@ -23,17 +26,6 @@ actor BookPosterPlugin: SuperPlugin, SuperLog, PluginRegistrant {
         }
 
         return AnyView(BookPoster())
-    }
-}
-
-// MARK: - PluginRegistrant
-
-extension BookPosterPlugin {
-    @objc static func register() {
-        if Self.verbose {
-            os_log("\(self.t)🚀 注册 BookPosterPlugin")
-        }
-        PluginRegistry.registerSync(order: 2) { Self() }
     }
 }
 

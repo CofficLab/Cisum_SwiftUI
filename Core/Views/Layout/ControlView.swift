@@ -46,7 +46,7 @@ struct ControlView: View, SuperLog {
                             StateView()
 
                             ForEach(p.plugins, id: \.id) { plugin in
-                                plugin.addStateView(currentGroup: p.current)
+                                plugin.addStateView(currentSceneName: p.currentSceneName)
                             }
                         }
                         .frame(height: getStateHeight(geo))

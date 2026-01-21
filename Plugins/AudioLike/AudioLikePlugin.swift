@@ -4,35 +4,21 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-actor AudioLikePlugin: SuperPlugin, SuperLog, PluginRegistrant {
+actor AudioLikePlugin: SuperPlugin, SuperLog {
     static let emoji = "❤️"
     static let verbose = false
-    private static var enabled: Bool { true }
+
+    /// 注册顺序设为 3，在 AudioPlugin (order: 1) 之后执行
+    static var order: Int { 3 }
 
     let title = "音频喜欢管理"
     let description = "负责音频喜欢状态的独立管理和存储"
     let iconName = "heart"
-    let isGroup = false
+    
 
     /// 提供喜欢管理功能的根视图包装器
     @MainActor func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {
         AnyView(AudioLikeRootView { content() })
-    }
-
-}
-
-// MARK: - PluginRegistrant
-
-extension AudioLikePlugin {
-    @objc static func register() {
-        guard Self.enabled else {
-            return
-        }
-
-        Task {
-            // 注册顺序设为 2，确保在 AudioProgressPlugin (order: 0) 和 AudioPlugin (order: 1) 之后
-            await PluginRegistry.shared.register(order: 2) { Self() }
-        }
     }
 }
 

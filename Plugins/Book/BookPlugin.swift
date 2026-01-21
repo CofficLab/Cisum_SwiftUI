@@ -3,18 +3,25 @@ import MagicKit
 import OSLog
 import SwiftUI
 
-actor BookPlugin: SuperPlugin, SuperLog, PluginRegistrant {
+actor BookPlugin: SuperPlugin, SuperLog {
     static let keyOfCurrentBookURL = "com.bookplugin.currentBookURL"
     static let keyOfCurrentBookTime = "com.bookplugin.currentBookTime"
     nonisolated static var emoji: String { "🎺" }
     private static var verbose: Bool { true }
-    private static var enabled: Bool { false }
+    static var shouldRegister: Bool { false } // 暂时禁用有声书插件
+
+    /// 注册顺序设为 1，与 AudioPlugin 相同优先级
+    static var order: Int { 1 }
 
     let title: String = "有声书"
-    let description: String = "适用于听有声书的场景"
+    let description: String = "有声书播放功能"
     let iconName: String = "book"
     static let dirName = "audios_book"
-    let isGroup: Bool = true    
+
+    /// 提供"有声书"场景
+    @MainActor func addSceneItem() -> String? {
+        return "有声书"
+    }
 
     @MainActor var disk: URL?
 
@@ -23,8 +30,8 @@ actor BookPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     }
 
     @MainActor
-    func onWillAppear(playMan: PlayMan, currentGroup: (any SuperPlugin)?, storage: StorageLocation?) async throws {
-        guard let currentGroup = currentGroup, currentGroup.label == self.label else {
+    func onWillAppear(playMan: PlayMan, currentSceneName: String?, storage: StorageLocation?) async throws {
+        guard currentSceneName == self.addSceneItem() else {
             return
         }
 
@@ -43,24 +50,6 @@ actor BookPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     }
 }
 
-// MARK: - PluginRegistrant
-extension BookPlugin {
-    @objc static func register() {
-        guard Self.enabled else {
-            return
-        }
-
-        Task {
-            if Self.verbose {
-                os_log("\(self.t)🚀🚀🚀 Register")
-            }
-
-            await PluginRegistry.shared.register(order: 1) {
-                BookPlugin()
-            }
-        }
-    }
-}
 
 #if os(macOS)
     #Preview("App - Large") {

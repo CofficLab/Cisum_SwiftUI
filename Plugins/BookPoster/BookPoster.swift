@@ -29,11 +29,13 @@ struct BookPoster: View {
             Spacer()
 
             MagicButton.simple(action: {
-                do {
-                    try pluginProvider.setCurrentGroup(id: BookPlugin().id)
-                    dismissAction()
-                } catch {
-                    m.error(error)
+                Task { @MainActor in
+                    do {
+                        try pluginProvider.setCurrentScene("有声书")
+                        dismissAction()
+                    } catch {
+                        m.error(error)
+                    }
                 }
             })
             .magicShape(.roundedRectangle)

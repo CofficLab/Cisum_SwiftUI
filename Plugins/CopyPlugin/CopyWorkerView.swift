@@ -106,7 +106,7 @@
 
             if self.outOfLimit { return false }
 
-            guard let disk = await MainActor.run(body: { p.current?.getDisk() }) else {
+            guard let disk = await MainActor.run(body: { self.getCurrentSceneDisk() }) else {
                 os_log(.error, "\(self.t)No Disk")
                 await MainActor.run { self.m.error("No Disk") }
                 return false
@@ -176,3 +176,19 @@
         }
     #endif
 #endif
+
+// MARK: - Helper Methods
+
+extension CopyWorkerView {
+    /// 获取当前场景对应的磁盘路径
+    private func getCurrentSceneDisk() -> URL? {
+        guard let sceneName = p.currentSceneName else { return nil }
+
+        // 根据场景名称找到对应的插件
+        let plugin = p.plugins.first { plugin in
+            plugin.addSceneItem() == sceneName
+        }
+
+        return plugin?.getDisk()
+    }
+}

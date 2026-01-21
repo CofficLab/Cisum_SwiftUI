@@ -4,7 +4,7 @@ import MagicUI
 import OSLog
 import SwiftUI
 
-actor DebugPlugin: SuperPlugin, PluginRegistrant {
+actor DebugPlugin: SuperPlugin {
     let description: String = "调试专用"
     let iconName: String = .iconDebug
     nonisolated(unsafe) var enabled = true
@@ -22,21 +22,6 @@ actor DebugPlugin: SuperPlugin, PluginRegistrant {
         #else
         return nil
         #endif
-    }
-}
-
-// MARK: - PluginRegistrant
-extension DebugPlugin {
-    @objc static func register() {
-        guard Self.enabled else {
-            return
-        }
-
-        Task {
-            await PluginRegistry.shared.register(id: "Debug", order: 100) {
-                DebugPlugin()
-            }
-        }
     }
 }
 

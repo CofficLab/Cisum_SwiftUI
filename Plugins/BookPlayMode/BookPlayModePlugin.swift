@@ -3,34 +3,21 @@ import MagicKit
 import OSLog
 import SwiftUI
 
-actor BookPlayModePlugin: SuperPlugin, SuperLog, PluginRegistrant {
+actor BookPlayModePlugin: SuperPlugin, SuperLog {
     static let emoji = "📖🔄"
     static let verbose = true
-    private static var enabled: Bool { true }
+
+    /// 注册顺序设为 7，在 BookPlugin 相关插件之后执行
+    static var order: Int { 7 }
 
     let title = "书籍播放模式管理"
     let description = "负责书籍播放模式的设置和管理"
     let iconName = "repeat"
-    let isGroup = false
+    
 
     /// 提供播放模式管理功能的根视图包装器
     @MainActor func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {
         AnyView(BookPlayModeRootView { content() })
-    }
-}
-
-// MARK: - PluginRegistrant
-
-extension BookPlayModePlugin {
-    @objc static func register() {
-        guard Self.enabled else {
-            return
-        }
-
-        Task {
-            // 注册顺序设为 7，确保在其他书籍相关插件之后
-            await PluginRegistry.shared.register(order: 7) { Self() }
-        }
     }
 }
 

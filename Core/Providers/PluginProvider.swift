@@ -1,5 +1,6 @@
 import Foundation
 import MagicKit
+import ObjectiveC.runtime
 import OSLog
 import StoreKit
 import SwiftData
@@ -22,7 +23,7 @@ import SwiftUI
 @MainActor
 class PluginProvider: ObservableObject, SuperLog, SuperThread {
     nonisolated static let emoji = "🧩"
-    static let verbose = false
+    static let verbose = true
 
     /// 插件仓库，用于持久化插件配置
     private let repo: PluginRepo
@@ -30,17 +31,29 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
     /// 所有已注册的插件列表
     @Published private(set) var plugins: [SuperPlugin] = []
 
-    /// 当前激活的分组插件
-    @Published private(set) var current: SuperPlugin?
+    /// 当前激活的场景名称
+    @Published private(set) var currentSceneName: String?
 
-    /// 获取所有分组类型的插件
-    var groupPlugins: [SuperPlugin] {
-        plugins.filter { $0.isGroup }
+    /// 获取所有可用的场景名称
+    @MainActor
+    var sceneNames: [String] {
+        plugins.compactMap { $0.addSceneItem() }
     }
+    
+    // MARK: - Plugin Registration
+    
+    /// 已注册的插件实例列表
+    private var registeredPlugins: [any SuperPlugin] = []
+    
+    /// 已使用的插件 ID 集合（用于检测重复）
+    private var usedIds: Set<String> = []
+    
+    /// 线程安全的注册队列
+    private let registrationQueue = DispatchQueue(label: "com.cofficlab.pluginprovider.registration", attributes: .concurrent)
 
     /// 初始化插件提供者
     ///
-    /// 使用预定义的插件列表初始化，并尝试恢复上次激活的插件。
+    /// 使用预定义的插件列表初始化，并尝试恢复上次激活的场景。
     ///
     /// - Parameters:
     ///   - plugins: 预定义的插件列表
@@ -48,16 +61,20 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
     init(plugins: [SuperPlugin], repo: PluginRepo) {
         self.plugins = plugins
         self.repo = repo
-        let currentPluginId = repo.getCurrentPluginId()
 
-        if let plugin = plugins.first(where: { $0.id == currentPluginId }) {
-            try? self.setCurrentGroup(plugin)
+        // 恢复上次激活的场景
+        let savedSceneName = repo.getCurrentSceneName()
+        if sceneNames.contains(savedSceneName) {
+            self.currentSceneName = savedSceneName
+        } else if let firstScene = sceneNames.first {
+            self.currentSceneName = firstScene
+            repo.storeCurrentSceneName(firstScene)
         }
     }
 
     /// 初始化插件提供者（支持自动发现）
     ///
-    /// 如果启用自动发现，将通过 `PluginRegistry` 自动注册和构建所有插件。
+    /// 如果启用自动发现，将自动扫描并注册所有插件。
     /// 这是推荐的初始化方式，可以自动发现项目中的所有插件。
     ///
     /// - Parameters:
@@ -69,15 +86,19 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
 
         self.repo = repo
 
-        autoRegisterPlugins()
-        let discoveredPlugins = PluginRegistry.shared.buildAll()
-        self.plugins = discoveredPlugins
+        // 自动发现并注册所有插件
+        autoDiscoverAndRegisterPlugins()
+        
+        // 从内部注册表获取所有已注册的插件实例
+        self.plugins = getAllPlugins()
 
-        let currentPluginId = self.repo.getCurrentPluginId()
-        if let plugin = discoveredPlugins.first(where: { $0.id == currentPluginId }) {
-            try? self.setCurrentGroup(plugin)
-        } else if let first = discoveredPlugins.first(where: { $0.isGroup }) {
-            try? self.setCurrentGroup(first)
+        // 恢复上次激活的场景
+        let savedSceneName = self.repo.getCurrentSceneName()
+        if sceneNames.contains(savedSceneName) {
+            self.currentSceneName = savedSceneName
+        } else if let firstScene = sceneNames.first {
+            self.currentSceneName = firstScene
+            repo.storeCurrentSceneName(firstScene)
         }
 
         if Self.verbose {
@@ -145,73 +166,188 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
         return buttons
     }
 
-    /// 设置当前激活的分组插件
+    /// 设置当前激活的场景
     ///
-    /// 将指定的插件设置为当前激活的分组插件，并持久化该选择。
-    /// 只有标记为分组类型（`isGroup = true`）的插件才能被设置为当前插件。
+    /// 将指定的场景名称设置为当前激活的场景，并持久化该选择。
     ///
-    /// - Parameters:
-    ///   - plugin: 要激活的插件，必须是分组类型
-    ///   - verbose: 是否输出详细日志，默认为 `false`
-    /// - Throws: `PluginProviderError.pluginIsNotGroup` 如果插件不是分组类型
-    func setCurrentGroup(_ plugin: SuperPlugin, verbose: Bool = false) throws {
-        let oldPluginId = self.current?.id ?? "nil"
-        let newPluginId = plugin.id
+    /// - Parameter sceneName: 要激活的场景名称
+    /// - Throws: `PluginProviderError.sceneNotFound` 如果场景不存在
+    @MainActor
+    func setCurrentScene(_ sceneName: String) throws {
+        let oldSceneName = self.currentSceneName ?? "nil"
 
-        if verbose || Self.verbose {
-            os_log("\(self.t)🏃 SetCurrentGroup: \(oldPluginId) -> \(newPluginId)")
+        if Self.verbose {
+            os_log("\(self.t)🏃 SetCurrentScene: \(oldSceneName) -> \(sceneName)")
         }
 
-        if plugin.isGroup {
-            self.current = plugin
-            repo.storeCurrentPluginId(plugin.id)
-        } else {
-            os_log(.error, "\(self.t)❌ 插件切换失败: \(plugin.id) 不是分组类型")
-            throw PluginProviderError.pluginIsNotGroup(pluginId: plugin.id)
+        guard sceneNames.contains(sceneName) else {
+            os_log(.error, "\(self.t)❌ 场景切换失败: 场景 \(sceneName) 不存在")
+            throw PluginProviderError.sceneNotFound(sceneName: sceneName)
         }
-    }
 
-    /// 根据插件 ID 切换当前分组插件
-    ///
-    /// - Parameter id: 分组插件的唯一标识
-    func setCurrentGroup(id: String, verbose: Bool = false) throws {
-        guard let target = plugins.first(where: { $0.id == id }) else {
-            os_log(.error, "\(self.t)❌ 插件切换失败: 未找到 id=\(id)")
-            throw PluginProviderError.pluginNotFound(pluginId: id)
-        }
-        try setCurrentGroup(target, verbose: verbose)
+        self.currentSceneName = sceneName
+        repo.storeCurrentSceneName(sceneName)
     }
 
     /// 重置插件提供者
     ///
-    /// 清空所有插件列表和当前激活的插件。
+    /// 清空所有插件列表和当前激活的场景。
     /// 通常用于应用重置或重新初始化场景。
     func reset() {
         self.plugins = []
-        self.current = nil
+        self.currentSceneName = nil
     }
 
-    /// 恢复上次激活的插件
+    /// 恢复上次激活的场景
     ///
-    /// 从持久化存储中读取上次激活的插件 ID，并尝试恢复该插件为当前插件。
-    /// 如果找不到上次的插件，则激活第一个可用的分组插件。
+    /// 从持久化存储中读取上次激活的场景名称，并尝试恢复该场景。
+    /// 如果找不到上次的场景，则激活第一个可用的场景。
     ///
     /// ## 恢复逻辑
-    /// 1. 尝试恢复存储的插件 ID
-    /// 2. 如果找不到，使用第一个分组插件
+    /// 1. 尝试恢复存储的场景名称
+    /// 2. 如果找不到，使用第一个可用场景
     /// 3. 如果都没有，记录错误日志
     ///
-    /// - Throws: `PluginProviderError` 如果插件不是分组类型
+    /// - Throws: `PluginProviderError.sceneNotFound` 如果场景不存在
+    @MainActor
     func restoreCurrent() throws {
-        let currentPluginId = repo.getCurrentPluginId()
+        let savedSceneName = repo.getCurrentSceneName()
 
-        if let plugin = plugins.first(where: { $0.id == currentPluginId }) {
-            try self.setCurrentGroup(plugin)
-        } else if let first = plugins.first(where: { $0.isGroup }) {
-            try self.setCurrentGroup(first)
+        if sceneNames.contains(savedSceneName) {
+            try self.setCurrentScene(savedSceneName)
+        } else if let firstScene = sceneNames.first {
+            try self.setCurrentScene(firstScene)
         } else {
-            os_log(.error, "\(self.t)⚠️⚠️⚠️ No current plugin found")
+            os_log(.error, "\(self.t)⚠️⚠️⚠️ No scenes available")
         }
+    }
+    
+    // MARK: - Plugin Registration Methods
+    
+    /// 注册一个插件实例
+    /// - Parameter plugin: 要注册的插件实例
+    private func register(_ plugin: any SuperPlugin) {
+        let id = plugin.id
+        
+        // 检查 ID 是否已存在
+        if usedIds.contains(id) {
+            let pluginType = String(describing: type(of: plugin))
+            os_log(.error, "\(Self.t)❌ Duplicate plugin id '\(id)' in \(pluginType)")
+            assertionFailure("Duplicate plugin id: \(id)")
+            return
+        }
+        
+        // 标记该 ID 已使用
+        usedIds.insert(id)
+        registeredPlugins.append(plugin)
+    }
+    
+    /// 获取所有已注册的插件实例，按 order 排序
+    /// - Returns: 排序后的插件实例数组
+    private func getAllPlugins() -> [any SuperPlugin] {
+        registeredPlugins.sorted { type(of: $0).order < type(of: $1).order }
+    }
+    
+    /// 清空所有注册的插件
+    private func clearRegisteredPlugins() {
+        registeredPlugins.removeAll()
+        usedIds.removeAll()
+    }
+    
+    /// 已注册插件数量
+    private var registeredCount: Int {
+        registeredPlugins.count
+    }
+    
+    /// 自动发现并注册所有插件
+    /// 通过扫描 Objective-C runtime 中所有以 "Plugin" 结尾的类
+    private func autoDiscoverAndRegisterPlugins() {
+        // 清空已有注册（防止重复注册）
+        clearRegisteredPlugins()
+        
+        var count: UInt32 = 0
+        guard let classList = objc_copyClassList(&count) else {
+            os_log(.error, "\(self.t)❌ Failed to get class list")
+            return
+        }
+        defer { free(UnsafeMutableRawPointer(classList)) }
+        
+        if Self.verbose { os_log("\(self.t)🔍 Scanning classes for plugins...") }
+        
+        let classes = UnsafeBufferPointer(start: classList, count: Int(count))
+        
+        // 临时存储发现的插件，用于排序
+        var discoveredPlugins: [(plugin: any SuperPlugin, className: String, order: Int)] = []
+        
+        for i in 0 ..< classes.count {
+            let cls: AnyClass = classes[i]
+            let className = NSStringFromClass(cls)
+            
+            // 只检查 Cisum 命名空间下以 "Plugin" 结尾的类
+            guard className.hasPrefix("Cisum."), className.hasSuffix("Plugin") else { continue }
+            
+            // 尝试通过 Objective-C Runtime 创建实例
+            guard let instance = createActorInstance(cls: cls, className: className) as? any SuperPlugin else {
+                if Self.verbose { os_log("\(self.t)⚠️ Failed to create instance for \(className)") }
+                continue
+            }
+            
+            // 获取插件类型
+            let pluginType = type(of: instance)
+            let pluginOrder = pluginType.order
+            
+            // 检查插件是否应该注册
+            if !pluginType.shouldRegister {
+                if Self.verbose { os_log("\(self.t)⏭️ Skipping plugin (shouldRegister=false): \(className)") }
+                continue
+            }
+            
+            // 添加到临时数组，稍后按 order 排序
+            discoveredPlugins.append((instance, className, pluginOrder))
+        }
+        
+        // 按 order 排序后注册
+        discoveredPlugins.sort { $0.order < $1.order }
+        
+        for (plugin, className, order) in discoveredPlugins {
+            register(plugin)
+            if Self.verbose { os_log("\(self.t)🚀 #\(order) Registered: \(className)") }
+        }
+        
+        if Self.verbose {
+            os_log("\(self.t)📊 Registered \(self.registeredCount) plugins total")
+        }
+    }
+    
+    /// 创建 actor 实例的辅助函数
+    /// 由于 actor 的特殊性，我们需要使用 Objective-C Runtime 来创建实例
+    /// 注意：actor 的 init() 方法可能不能通过 Objective-C Runtime 直接调用
+    /// 这里我们尝试使用 alloc + init 的方式
+    private func createActorInstance(cls: AnyClass, className: String) -> AnyObject? {
+        // 尝试获取 alloc 方法
+        let allocSelector = NSSelectorFromString("alloc")
+        guard let allocMethod = class_getClassMethod(cls, allocSelector) else {
+            return nil
+        }
+        
+        // 调用 alloc
+        typealias AllocMethod = @convention(c) (AnyClass, Selector) -> AnyObject?
+        let allocImpl = unsafeBitCast(method_getImplementation(allocMethod), to: AllocMethod.self)
+        guard let instance = allocImpl(cls, allocSelector) else {
+            return nil
+        }
+        
+        // 尝试获取 init() 方法
+        let initSelector = NSSelectorFromString("init")
+        guard let initMethod = class_getInstanceMethod(cls, initSelector) else {
+            return instance
+        }
+        
+        // 调用 init
+        typealias InitMethod = @convention(c) (AnyObject, Selector) -> AnyObject?
+        let initImpl = unsafeBitCast(method_getImplementation(initMethod), to: InitMethod.self)
+        
+        return initImpl(instance, initSelector) ?? instance
     }
 }
 
@@ -248,12 +384,19 @@ enum PluginProviderError: Error, LocalizedError {
     /// - Parameter pluginId: 插件的唯一标识符
     case pluginNotFound(pluginId: String)
 
-    /// 插件不是分组类型
+    /// 插件不提供场景
     ///
-    /// 当尝试将非分组插件设置为当前插件时抛出此错误。
+    /// 当尝试将不提供场景的插件设置为当前场景时抛出此错误。
     ///
     /// - Parameter pluginId: 插件的唯一标识符
-    case pluginIsNotGroup(pluginId: String)
+    case pluginDoesNotProvideScene(pluginId: String)
+
+    /// 场景未找到
+    ///
+    /// 当根据场景名称查找插件失败时抛出此错误。
+    ///
+    /// - Parameter sceneName: 场景名称
+    case sceneNotFound(sceneName: String)
 
     /// 插件 ID 重复
     ///
@@ -273,8 +416,10 @@ enum PluginProviderError: Error, LocalizedError {
         switch self {
         case let .pluginNotFound(pluginId):
             return "Plugin \(pluginId) not found"
-        case let .pluginIsNotGroup(pluginId):
-            return "Plugin \(pluginId) is not a group"
+        case let .pluginDoesNotProvideScene(pluginId):
+            return "Plugin \(pluginId) does not provide a scene"
+        case let .sceneNotFound(sceneName):
+            return "Scene \(sceneName) not found"
         case let .duplicatePluginID(pluginId, collection):
             return "Plugin with ID \(pluginId) already exists in collection: \(collection)"
         case .pluginIDIsEmpty:

@@ -27,7 +27,7 @@ struct BookPlayModeRootView<Content>: View, SuperLog where Content: View {
 
     /// 检查是否应该激活书籍播放模式管理功能
     private var shouldActivatePlayMode: Bool {
-        p.current?.label == BookPlugin().label
+        p.currentSceneName == "有声书"
     }
 }
 

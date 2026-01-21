@@ -27,7 +27,7 @@ struct AudioPlayModeRootView<Content>: View, SuperLog where Content: View {
 
     /// 检查是否应该激活播放模式管理功能
     private var shouldActivatePlayMode: Bool {
-        p.current?.label == AudioPlugin().label
+        p.currentSceneName == "音乐库"
     }
 }
 

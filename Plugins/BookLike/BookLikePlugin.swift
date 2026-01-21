@@ -3,35 +3,21 @@ import MagicKit
 import OSLog
 import SwiftUI
 
-actor BookLikePlugin: SuperPlugin, SuperLog, PluginRegistrant {
+actor BookLikePlugin: SuperPlugin, SuperLog {
     static let emoji = "📚❤️"
     static let verbose = false
-    private static var enabled: Bool { true }
+
+    /// 注册顺序设为 6，在 BookPlugin 相关插件之后执行
+    static var order: Int { 6 }
 
     let title = "书籍喜欢管理"
     let description = "负责书籍喜欢状态的独立管理和存储"
     let iconName = "heart"
-    let isGroup = false
+    
 
     /// 提供喜欢管理功能的根视图包装器
     @MainActor func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {
         AnyView(BookLikeRootView { content() })
-    }
-
-}
-
-// MARK: - PluginRegistrant
-
-extension BookLikePlugin {
-    @objc static func register() {
-        guard Self.enabled else {
-            return
-        }
-
-        Task {
-            // 注册顺序设为 6，确保在其他书籍相关插件之后
-            await PluginRegistry.shared.register(order: 6) { Self() }
-        }
     }
 }
 

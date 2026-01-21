@@ -4,10 +4,13 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-actor AudioPlugin: SuperPlugin, SuperLog, PluginRegistrant {
+actor AudioPlugin: SuperPlugin, SuperLog {
     static let emoji = "🎧"
     static let verbose = true
-    private static var enabled: Bool { true }
+    
+    /// 注册顺序设为 1，确保在 AudioProgressPlugin (order: 0) 之后执行
+    /// 这样内核会先应用进度管理，再应用音频功能
+    static var order: Int { 1 }
 
     #if DEBUG
         static let dbDirName = "audios_debug"
@@ -15,10 +18,14 @@ actor AudioPlugin: SuperPlugin, SuperLog, PluginRegistrant {
         static let dbDirName = "audios"
     #endif
 
-    let title = "音乐库"
-    let description = "歌曲仓库"
+    let title = "音乐"
+    let description = "音频播放功能"
     let iconName = "music.note"
-    let isGroup = true
+
+    /// 提供"音乐库"场景
+    @MainActor func addSceneItem() -> String? {
+        return "音乐库"
+    }
 
     @MainActor func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {
         AnyView(AudioRootView { content() })
@@ -44,23 +51,6 @@ actor AudioPlugin: SuperPlugin, SuperLog, PluginRegistrant {
         }
         
         return repo
-    }
-}
-
-// MARK: - PluginRegistrant
-
-extension AudioPlugin {
-    @objc static func register() {
-        guard Self.enabled else {
-            return
-        }
-
-        if Self.verbose {
-            os_log("\(self.t)🚀 Register")
-        }
-        // 注册顺序设为 1，确保在 AudioProgressPlugin (order: 0) 之后执行
-        // 这样内核会先应用进度管理，再应用音频功能
-        PluginRegistry.registerSync(order: 1) { Self() }
     }
 }
 

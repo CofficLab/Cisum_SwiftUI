@@ -7,31 +7,25 @@ import SwiftUI
  *
  * 复用现有的 `AudioPoster` 视图，不额外创建仓库或监听。
  */
-actor AudioPosterPlugin: SuperPlugin, SuperLog, PluginRegistrant {
+actor AudioPosterPlugin: SuperPlugin, SuperLog {
     nonisolated static let emoji = "🖼️"
+    static let verbose = false
 
-    let title = "音乐仓库"
-    let description = "适用于听歌的场景"
+    /// 注册顺序设为 6，在音频插件之后执行
+    static var order: Int { 6 }
+
+    let title = "音频海报"
+    let description = "提供音频的海报视图"
     let iconName = "photo.on.rectangle"
-    let isGroup = false
-    let verbose = false
+    
 
     @MainActor
     func addPosterView() -> AnyView? {
-        if verbose {
+        if Self.verbose {
             os_log("\(self.t)🖼️ 加载海报视图")
         }
 
         return AnyView(AudioPoster())
-    }
-}
-
-// MARK: - PluginRegistrant
-
-extension AudioPosterPlugin {
-    @objc static func register() {
-        // 紧随 AudioPlugin 之后注册
-        PluginRegistry.registerSync(order: 1) { Self() }
     }
 }
 

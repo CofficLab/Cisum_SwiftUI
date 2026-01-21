@@ -15,7 +15,7 @@ struct VideoGrid: View {
     @State var icon: String = ""
 
     var disk: URL? {
-//        p.current?.getDisk()
+//        p.currentScene?.getDisk()
         nil
     }
 

@@ -10,10 +10,10 @@ struct BtnScene: View {
     @State private var isPresented: Bool = false
 
     var body: some View {
-        if let plugin = p.current {
+        if let sceneName = p.currentSceneName {
             MagicButton.simple(
-                icon: plugin.iconName,
-                title: plugin.description,
+                icon: sceneIcon(for: sceneName),
+                title: sceneName,
             ) {
                 self.isPresented.toggle()
             }
@@ -24,6 +24,18 @@ struct BtnScene: View {
                 )
                 .frame(minWidth: Config.minWidth)
             })
+        }
+    }
+
+    /// 根据场景名称返回对应的图标
+    private func sceneIcon(for sceneName: String) -> String {
+        switch sceneName {
+        case "音乐库":
+            return "music.note"
+        case "有声书":
+            return "book"
+        default:
+            return "circle"
         }
     }
 }

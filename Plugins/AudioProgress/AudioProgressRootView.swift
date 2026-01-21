@@ -30,7 +30,7 @@ struct AudioProgressRootView<Content>: View, SuperLog where Content: View {
 
     /// 检查是否应该激活进度管理功能
     private var shouldActivateProgress: Bool {
-        p.current?.label == AudioPlugin().label
+        p.currentSceneName == "音乐库"
     }
 }
 

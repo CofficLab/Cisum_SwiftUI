@@ -27,7 +27,7 @@ struct BookLikeRootView<Content>: View, SuperLog where Content: View {
 
     /// 检查是否应该激活书籍喜欢管理功能
     private var shouldActivateLike: Bool {
-        p.current?.label == BookPlugin().label
+        p.currentSceneName == "有声书"
     }
 }
 
