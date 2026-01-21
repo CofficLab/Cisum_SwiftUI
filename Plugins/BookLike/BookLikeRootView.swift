@@ -10,7 +10,7 @@ struct BookLikeRootView<Content>: View, SuperLog where Content: View {
     nonisolated static var emoji: String { "📚❤️" }
     private let verbose = false
 
-    @EnvironmentObject var man: PlayManController
+    @EnvironmentObject var man: PlayMan
     @EnvironmentObject var m: MagicMessageProvider
     @EnvironmentObject var p: PluginProvider
 
@@ -50,7 +50,7 @@ extension BookLikeRootView {
         }
 
         // 订阅播放器事件，监听喜欢状态变化
-        man.playMan.subscribe(
+        man.subscribe(
             name: "BookLikePlugin",
             onLikeStatusChanged: { url, liked in
                 handleLikeStatusChanged(url: url, liked: liked)

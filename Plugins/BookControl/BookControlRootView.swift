@@ -10,7 +10,7 @@ struct BookControlRootView<Content>: View, SuperLog where Content: View {
     nonisolated static var emoji: String { "🎮📚" }
     private let verbose = false
 
-    @EnvironmentObject var man: PlayManController
+    @EnvironmentObject var man: PlayMan
     @EnvironmentObject var m: MagicMessageProvider
     @EnvironmentObject var p: PluginProvider
 
@@ -50,7 +50,7 @@ extension BookControlRootView {
         }
 
         // 订阅播放器事件
-        man.playMan.subscribe(
+        man.subscribe(
             name: "BookControlPlugin",
             onPreviousRequested: { asset in
                 handlePreviousRequested(asset)
@@ -72,7 +72,7 @@ extension BookControlRootView {
 
         if let prev = asset.getPrevFile() {
             Task {
-                await man.play(url: prev)
+                await man.play(prev)
                 if verbose {
                     os_log("\(self.t)✅ 播放上一章: \(prev.lastPathComponent)")
                 }
@@ -95,7 +95,7 @@ extension BookControlRootView {
 
         if let next = asset.getNextFile() {
             Task {
-                await man.play(url: next)
+                await man.play(next)
                 if verbose {
                     os_log("\(self.t)✅ 播放下一章: \(next.lastPathComponent)")
                 }

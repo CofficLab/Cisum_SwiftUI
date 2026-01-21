@@ -28,9 +28,9 @@ import SwiftUI
  */
 struct AudioListPaginated: View, SuperThread, SuperLog, SuperEvent {
     nonisolated static let emoji = "📬"
-    nonisolated static let verbose = true
+    nonisolated static let verbose = false
 
-    @EnvironmentObject var playManController: PlayManController
+    @EnvironmentObject var playManController: PlayMan
     @EnvironmentObject var m: MagicMessageProvider
 
     /// 当前选中的音频 URL
@@ -102,21 +102,13 @@ struct AudioListPaginated: View, SuperThread, SuperLog, SuperEvent {
                         .labelStyle(.iconOnly)
                 }
             }, content: {
+                // 使用 URL 作为 id，确保 List selection 能正确工作
                 ForEach(urls, id: \.self) { url in
                     AudioItemView(url)
+                        .equatable() // 使用 Equatable 优化，减少不必要的重绘
                         .onAppear {
-                            // 获取当前 url 的索引
-                            if let index = urls.firstIndex(of: url) {
-                                // 只在最后几个 item 出现时触发加载更多
-                                let threshold = max(urls.count - 10, Int(Double(urls.count) * 0.8))
-
-                                if index >= threshold && hasMore && !isLoadingMore {
-                                    if Self.verbose {
-                                        os_log("\(self.t)👁️ Item \(index) appeared, triggering loadMore")
-                                    }
-                                    loadMore()
-                                }
-                            }
+                            // 仅在接近列表末尾时检查是否需要加载更多
+                            checkLoadMore(for: url)
                         }
                 }
                 .onDelete(perform: handleDeleteItems)
@@ -175,6 +167,24 @@ extension AudioListPaginated {
         }
     }
 
+    /// 检查是否需要加载更多数据
+    /// - Parameter url: 当前可见项的 URL
+    private func checkLoadMore(for url: URL) {
+        // 获取当前 URL 的索引
+        guard let currentIndex = urls.firstIndex(of: url) else { return }
+        
+        // 计算阈值：最后 10 条或 80% 位置
+        let threshold = max(urls.count - 10, Int(Double(urls.count) * 0.8))
+        
+        // 仅当接近末尾且有更多数据且未在加载中时触发
+        guard currentIndex >= threshold, hasMore, !isLoadingMore else { return }
+        
+        if Self.verbose {
+            os_log("\(self.t)👁️ Item \(currentIndex) appeared, triggering loadMore")
+        }
+        loadMore()
+    }
+    
     /// 加载更多数据
     private func loadMore() {
         guard !isLoadingMore, hasMore else {
@@ -191,6 +201,7 @@ extension AudioListPaginated {
         isLoadingMore = true
 
         guard let repo = AudioPlugin.getAudioRepo() else {
+            isLoadingMore = false
             return
         }
 
@@ -198,6 +209,7 @@ extension AudioListPaginated {
             let currentPage = await self.currentPage
             let pageSize = await self.pageSize
             let offset = currentPage * pageSize
+            let existingUrls = await self.urls
 
             if Self.verbose {
                 os_log("\(self.t)🔄 LoadMore - offset: \(offset), limit: \(pageSize)")
@@ -213,18 +225,15 @@ extension AudioListPaginated {
                 os_log("\(self.t)🔄 LoadMore - fetched: \(newUrls.count) urls")
             }
 
+            // 在后台线程进行去重处理（O(n) 而不是 O(n²)）
+            let existingUrlsSet = Set(existingUrls)
+            let uniqueNewUrls = newUrls.filter { !existingUrlsSet.contains($0) }
+
+            if Self.verbose {
+                os_log("\(self.t)🔄 LoadMore - fetched: \(newUrls.count), unique: \(uniqueNewUrls.count)")
+            }
+
             await MainActor.run {
-                // 去重处理
-                let uniqueNewUrls = newUrls.filter { newUrl in
-                    !self.urls.contains { existingUrl in
-                        existingUrl == newUrl
-                    }
-                }
-
-                if Self.verbose {
-                    os_log("\(self.t)🔄 LoadMore - fetched: \(newUrls.count), unique: \(uniqueNewUrls.count)")
-                }
-
                 if !uniqueNewUrls.isEmpty {
                     self.urls.append(contentsOf: uniqueNewUrls)
                     self.currentPage += 1
@@ -332,7 +341,7 @@ extension AudioListPaginated {
     func handleOnAppear() {
         loadInitial()
 
-        if let asset = playManController.getAsset() {
+        if let asset = playManController.asset {
             if Self.verbose {
                 os_log("\(self.t)🎵 恢复选中当前播放的音频")
             }
@@ -347,7 +356,7 @@ extension AudioListPaginated {
                 if Self.verbose {
                     os_log("\(self.t)▶️ 选中变化，播放: \(url.lastPathComponent)")
                 }
-                await self.playManController.play(url: url)
+                await self.playManController.play(url)
             }
         }
     }
@@ -415,9 +424,6 @@ extension AudioListPaginated {
 
     /// 处理数据同步开始事件
     func handleDBSyncing(_ notification: Notification) {
-        if Self.verbose {
-            os_log("\(self.t)🔄 开始同步数据")
-        }
         setIsSyncing(true)
     }
 
@@ -427,25 +433,47 @@ extension AudioListPaginated {
     ///
     /// - Parameter offsets: 要删除的项目索引集合
     func handleDeleteItems(at offsets: IndexSet) {
-        withAnimation {
-            // 获取要删除的 URLs
-            let urlsToDelete = offsets.map { urls[$0] }
+        // 获取要删除的 URLs
+        let urlsToDelete = offsets.map { urls[$0] }
 
-            if Self.verbose {
-                os_log("\(self.t)🗑️ 删除 \(urlsToDelete.count) 个项目")
+        if Self.verbose {
+            os_log("\(self.t)🗑️ 删除 \(urlsToDelete.count) 个项目")
+        }
+
+        // 立即更新 UI（在主线程）
+        withAnimation {
+            // 从 urls 数组中移除被删除的 URL
+            urls.removeAll { url in
+                urlsToDelete.contains(url)
             }
 
-            // 从数据库中删除对应的 AudioModel
+            // 更新总数
+            totalCount = max(0, totalCount - urlsToDelete.count)
+
+            // 如果删除的是当前选中的文件，清除选中状态
+            if let selected = selection, urlsToDelete.contains(selected) {
+                selection = nil
+            }
+        }
+
+        // 在后台执行文件删除操作
+        Task.detached(priority: .userInitiated) {
             for url in urlsToDelete {
                 if Self.verbose {
-                    os_log("\(self.t)📄 删除文件: \(url.shortPath())")
+                    os_log("\(AudioListPaginated.t)📄 删除文件: \(url.shortPath())")
                 }
 
                 do {
                     try url.delete()
-                    m.info("已删除 \(url.title)")
+
+                    // 切换回主线程更新 UI
+                    await MainActor.run {
+                        self.m.info("已删除 \(url.title)")
+                    }
                 } catch {
-                    m.error(error)
+                    await MainActor.run {
+                        self.m.error(error)
+                    }
                 }
             }
         }

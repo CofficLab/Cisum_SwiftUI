@@ -21,9 +21,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     @StateObject var stateProvider: StateProvider
 
     var man: PlayMan
-    var playManWrapper: PlayManWrapper
     var cloudProvider: CloudProvider
-    var playManController: PlayManController
 
     init(@ViewBuilder content: () -> Content) {
         let manager = ProviderManager.shared
@@ -34,9 +32,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
         self._stateProvider = StateObject(wrappedValue: manager.stateMessageProvider)
         self._pluginProvider = StateObject(wrappedValue: manager.plugin)
         self.man = manager.man
-        self.playManWrapper = manager.playManWrapper
         self.cloudProvider = manager.cloud
-        self.playManController = manager.playManController
     }
 
     var body: some View {
@@ -81,7 +77,6 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
         .background(Config.rootBackground)
         .environmentObject(cloudProvider)
         .environmentObject(man)
-        .environmentObject(playManController)
         .environmentObject(appProvider)
         .environmentObject(pluginProvider)
         .environmentObject(messageProvider)

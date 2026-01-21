@@ -8,7 +8,7 @@ import OSLog
 actor AudioJobManager: SuperLog {
     static let shared = AudioJobManager()
 
-    nonisolated static let verbose = true
+    nonisolated static let verbose = false
 
     /// 所有注册的任务
     private var jobs: [String: any AudioJob] = [:]

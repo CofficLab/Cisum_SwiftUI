@@ -46,7 +46,7 @@ final class BookCoverRepo: ObservableObject, SuperLog, @unchecked Sendable {
                     // 首先检查当前层级的文件
                     for child in children where !child.hasDirectoryPath {
                         // 跳过未下载的 iCloud 文件
-                        if child.isiCloud && child.isNotDownloaded {
+                        if child.checkIsICloud(verbose: false) && child.isNotDownloaded {
                             continue
                         }
 

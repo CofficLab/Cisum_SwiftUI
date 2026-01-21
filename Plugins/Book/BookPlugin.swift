@@ -23,7 +23,7 @@ actor BookPlugin: SuperPlugin, SuperLog, PluginRegistrant {
     }
 
     @MainActor
-    func onWillAppear(playMan: PlayManWrapper, currentGroup: (any SuperPlugin)?, storage: StorageLocation?) async throws {
+    func onWillAppear(playMan: PlayMan, currentGroup: (any SuperPlugin)?, storage: StorageLocation?) async throws {
         guard let currentGroup = currentGroup, currentGroup.label == self.label else {
             return
         }

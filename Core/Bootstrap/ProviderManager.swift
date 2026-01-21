@@ -20,14 +20,8 @@ final class ProviderManager: SuperLog {
 
     // PlayMan
     let man: PlayMan
-    let playManWrapper: PlayManWrapper
-    let playManController: PlayManController
 
     private init() {
-        if Self.verbose {
-            os_log("\(Self.onInit)初始化服务提供者")
-        }
-
         // Repos
         let pluginRepo = PluginRepo()
         let uiRepo = UIRepo()
@@ -40,9 +34,7 @@ final class ProviderManager: SuperLog {
         self.cloud = CloudProvider()
 
         // PlayMan
-        self.man = PlayMan(playlistEnabled: false, verbose: false)
-        self.playManWrapper = PlayManWrapper(playMan: self.man)
-        self.playManController = PlayManController(playMan: self.man)
+        self.man = PlayMan(playlistEnabled: false, verbose: Self.verbose, locale: .current)
 
         if Self.verbose {
             os_log("\(Self.t)✅ 服务提供者初始化完成")

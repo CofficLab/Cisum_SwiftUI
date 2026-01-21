@@ -10,7 +10,7 @@ struct AudioControlRootView<Content>: View, SuperLog where Content: View {
     nonisolated static var emoji: String { "🎮" }
     private static var verbose: Bool { false }
 
-    @EnvironmentObject var man: PlayManController
+    @EnvironmentObject var man: PlayMan
     @EnvironmentObject var m: MagicMessageProvider
     @EnvironmentObject var p: PluginProvider
 
@@ -71,7 +71,7 @@ extension AudioControlRootView {
         }
 
         // 订阅播放器事件
-        man.playMan.subscribe(
+        man.subscribe(
             name: "AudioControlPlugin",
             onPreviousRequested: { asset in
                 handlePreviousRequested(asset)
@@ -104,7 +104,7 @@ extension AudioControlRootView {
                 if Self.verbose {
                     os_log("\(self.t)✅ 播放上一首: \(previous.lastPathComponent)")
                 }
-                await man.play(url: previous, autoPlay: true)
+                await man.play(previous, autoPlay: true)
             }
         }
     }
@@ -134,7 +134,7 @@ extension AudioControlRootView {
                         os_log("\(self.t)✅ 找到下一首: \(next.lastPathComponent)")
                         os_log("\(self.t)▶️ 开始播放下一首")
                     }
-                    await man.play(url: next, autoPlay: true)
+                    await man.play(next, autoPlay: true)
                 } else {
                     // 没有下一首的情况
                     if Self.verbose {
@@ -146,7 +146,7 @@ extension AudioControlRootView {
                     }
 
                     // 停止播放
-                    await man.playMan.stop()
+                    await man.stop()
 
                     // 显示提示
                     await MainActor.run {
@@ -173,7 +173,7 @@ extension AudioControlRootView {
 
         Task {
             // 停止播放
-            await man.playMan.stop()
+            await man.stop()
 
             // 显示提示信息
             await MainActor.run {
@@ -191,7 +191,7 @@ extension AudioControlRootView {
         guard shouldActivateControl else { return }
 
         guard let urlsToDelete = notification.userInfo?["urls"] as? [URL],
-              let currentAsset = man.getAsset() else {
+              let currentAsset = man.asset else {
             return
         }
 
@@ -224,14 +224,14 @@ extension AudioControlRootView {
                         }
 
                         // 播放第一首
-                        await man.play(url: first, autoPlay: true)
+                        await man.play(first, autoPlay: true)
                     } else {
                         if Self.verbose {
                             os_log("\(self.t)⚠️ 仓库中没有文件")
                         }
 
                         // 仓库为空，停止播放
-                        await man.playMan.stop()
+                        await man.stop()
 
                         await MainActor.run {
                             m.info("仓库中没有文件")
@@ -243,7 +243,7 @@ extension AudioControlRootView {
                     }
 
                     // 获取失败，停止播放
-                    await man.playMan.stop()
+                    await man.stop()
 
                     await MainActor.run {
                         m.error("无法播放下一首: \(error.localizedDescription)")

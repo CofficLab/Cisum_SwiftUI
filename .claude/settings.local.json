@@ -8,7 +8,11 @@
       "Bash(git commit:*)",
       "Bash(find:*)",
       "Bash(ls:*)",
-      "mcp__zread__get_repo_structure"
+      "mcp__zread__get_repo_structure",
+      "Bash(grep:*)",
+      "Bash(git restore:*)",
+      "Bash(git rm:*)",
+      "Bash(mkdir:*)"
     ]
   }
 }

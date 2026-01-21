@@ -11,7 +11,7 @@ struct BookProgressRootView<Content>: View, SuperLog where Content: View {
     nonisolated static var emoji: String { "📖" }
     private let verbose = true
 
-    @EnvironmentObject var man: PlayManController
+    @EnvironmentObject var man: PlayMan
     @EnvironmentObject var m: MagicMessageProvider
     @EnvironmentObject var p: PluginProvider
 
@@ -53,7 +53,7 @@ extension BookProgressRootView {
         restoreBookProgress()
 
         // 订阅播放器事件，监听URL变化
-        man.playMan.subscribe(
+        man.subscribe(
             name: "BookProgressPlugin",
             onCurrentURLChanged: { url in
                 handleCurrentURLChanged(url)
@@ -65,9 +65,9 @@ extension BookProgressRootView {
     ///
     /// 从持久化存储中恢复上次播放的书籍和时间进度。
     private func restoreBookProgress() {
-        Task.detached(priority: .background) {
+        Task {
             if let url = BookSettingRepo.getCurrent() {
-                await man.play(url: url, autoPlay: false)
+                await man.play(url, autoPlay: false)
 
                 if let time = BookSettingRepo.getCurrentTime() {
                     await man.seek(time: time)
@@ -102,7 +102,7 @@ extension BookProgressRootView {
             // 如果文件未下载，自动下载
             if url.isNotDownloaded {
                 do {
-                    try await url.download()
+                    try await url.download(reason: "BookProgressRootView")
                     if self.verbose {
                         os_log("\(self.t)✅ 书籍文件下载完成")
                     }
@@ -129,7 +129,7 @@ extension BookProgressRootView {
         }
 
         // 获取当前播放时间
-        let currentTime = man.playMan.currentTime
+        let currentTime = man.currentTime
 
         // 更新书籍状态（保存当前章节和时间）
         if self.verbose {

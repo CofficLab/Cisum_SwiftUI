@@ -10,7 +10,7 @@ struct BookGrid: View, SuperLog, SuperThread, SuperEvent {
 
     @EnvironmentObject var a: AppProvider
     @EnvironmentObject var messageManager: StateProvider
-    @EnvironmentObject var man: PlayManController
+    @EnvironmentObject var man: PlayMan
     @EnvironmentObject var repo: BookRepo
 
     @State var selection: AudioModel? = nil
@@ -216,7 +216,7 @@ extension BookGrid {
                 if Self.verbose {
                     os_log("\(self.t)📖 继续播放书籍进度: \(savedURL.lastPathComponent) @ \(savedTime)s")
                 }
-                await man.play(url: savedURL, autoPlay: false)
+                await man.play(savedURL, autoPlay: false)
                 await man.seek(time: savedTime)
                 return
             }
@@ -234,7 +234,7 @@ extension BookGrid {
             if Self.verbose {
                 os_log("\(self.t)📖 从全局状态继续播放: \(savedURL.lastPathComponent) @ \(savedTime)s")
             }
-            await man.play(url: savedURL, autoPlay: false)
+            await man.play(savedURL, autoPlay: false)
             await man.seek(time: savedTime)
             return
         }
@@ -244,12 +244,12 @@ extension BookGrid {
             if Self.verbose {
                 os_log("\(self.t)🎵 从头播放第一个子文件: \(first.lastPathComponent)")
             }
-            await man.play(url: first)
+            await man.play(first)
         } else {
             if Self.verbose {
                 os_log("\(self.t)🎵 从头播放书籍文件: \(book.url.lastPathComponent)")
             }
-            await man.play(url: book.url)
+            await man.play(book.url)
         }
     }
 }
@@ -318,7 +318,7 @@ extension BookGrid {
         scheduleUpdateBooksDebounced()
         
         // 初始化时检查当前播放的音频
-        if let currentAsset = man.getAsset() {
+        if let currentAsset = man.asset {
             if Self.verbose {
                 os_log("\(self.t)🎵 检测到当前播放: \(currentAsset.lastPathComponent)")
             }

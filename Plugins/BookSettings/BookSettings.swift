@@ -94,7 +94,7 @@ extension BookSettings {
             return
         }
 
-        if disk.isiCloud {
+        if disk.checkIsICloud(verbose: false) {
             description = "是 iCloud 云盘，会同步"
         } else {
             description = "是本地目录，不会同步"

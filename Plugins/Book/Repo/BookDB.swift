@@ -213,7 +213,7 @@ extension BookDB {
     func sync(_ items: [URL], isFirst: Bool) {
         var message = "\(self.t)SyncBook(\(items.count))"
 
-        if let first = items.first, first.isDownloading == true {
+        if let first = items.first, first.checkIsDownloading() == true {
             message += " -> \(first.title) -> \(String(format: "%.0f", first.downloadProgress))% ⏬⏬⏬"
         }
 
