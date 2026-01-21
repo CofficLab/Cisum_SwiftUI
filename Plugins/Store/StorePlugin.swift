@@ -3,10 +3,8 @@ import MagicKit
 import OSLog
 import SwiftUI
 
-actor StorePlugin: SuperPlugin, SuperLog {
-    static let emoji = "🛒"
-    static let verbose = false
-    static var shouldRegister: Bool { true }
+actor StorePlugin: SuperPlugin {
+    static var shouldRegister: Bool { false }
 
     /// 注册顺序设为 80，在其他插件之后执行
     static var order: Int { 80 }
@@ -14,7 +12,6 @@ actor StorePlugin: SuperPlugin, SuperLog {
     let title = "商店"
     let description = "应用内购买和订阅"
     let iconName = "cart"
-    
 
     @MainActor
     func addSettingView() -> AnyView? {

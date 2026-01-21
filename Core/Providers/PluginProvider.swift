@@ -23,7 +23,7 @@ import SwiftUI
 @MainActor
 class PluginProvider: ObservableObject, SuperLog, SuperThread {
     nonisolated static let emoji = "🧩"
-    static let verbose = false
+    static let verbose = true
 
     /// 插件仓库，用于持久化插件配置
     private let repo: PluginRepo
