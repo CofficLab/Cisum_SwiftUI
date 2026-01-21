@@ -160,7 +160,7 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
         let buttons = plugins.flatMap { $0.addToolBarButtons() }
 
         if Self.verbose {
-            os_log("\(self.t)🏃🏃🏃 getToolBarButtons: \(buttons.count)")
+            os_log("\(self.t)🏃 getToolBarButtons: \(buttons.count)")
         }
 
         return buttons

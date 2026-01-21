@@ -7,7 +7,6 @@ import SwiftUI
  */
 actor BookDBPlugin: SuperPlugin, SuperLog {
     nonisolated static let emoji = "📚📂"
-    private nonisolated static let targetPluginId = String(describing: BookPlugin.self)
     private static let verbose = true
     /// 注册顺序设为 12，在其他插件之后执行
     static var order: Int { 12 }
@@ -18,8 +17,8 @@ actor BookDBPlugin: SuperPlugin, SuperLog {
     
 
     @MainActor
-    func addTabView(reason: String, currentPluginId: String?) -> (view: AnyView, label: String)? {
-        guard currentPluginId == nil || currentPluginId == Self.targetPluginId else { return nil }
+    func addTabView(reason: String, currentSceneName: String?) -> (view: AnyView, label: String)? {
+        guard currentSceneName == BookScenePlugin.sceneName else { return nil }
 
         if BookDBPlugin.verbose {
             os_log("\(self.t)✅ 返回 BookDBView")

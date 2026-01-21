@@ -10,18 +10,13 @@ actor BookPlugin: SuperPlugin, SuperLog {
     private static var verbose: Bool { true }
     static var shouldRegister: Bool { false } // 暂时禁用有声书插件
 
-    /// 注册顺序设为 1，与 AudioPlugin 相同优先级
+    /// 注册顺序设为 1，在 BookScenePlugin (order: 0) 之后执行
     static var order: Int { 1 }
 
     let title: String = "有声书"
     let description: String = "有声书播放功能"
     let iconName: String = "book"
     static let dirName = "audios_book"
-
-    /// 提供"有声书"场景
-    @MainActor func addSceneItem() -> String? {
-        return "有声书"
-    }
 
     @MainActor var disk: URL?
 
@@ -31,7 +26,7 @@ actor BookPlugin: SuperPlugin, SuperLog {
 
     @MainActor
     func onWillAppear(playMan: PlayMan, currentSceneName: String?, storage: StorageLocation?) async throws {
-        guard currentSceneName == self.addSceneItem() else {
+        guard currentSceneName == BookScenePlugin.sceneName else {
             return
         }
 

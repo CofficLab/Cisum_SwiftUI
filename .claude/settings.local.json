@@ -12,7 +12,8 @@
       "Bash(grep:*)",
       "Bash(git restore:*)",
       "Bash(git rm:*)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "Bash(git mv:*)"
     ]
   }
 }

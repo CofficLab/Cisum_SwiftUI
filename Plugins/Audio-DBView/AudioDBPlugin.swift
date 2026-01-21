@@ -15,11 +15,10 @@ actor AudioDBPlugin: SuperPlugin, SuperLog {
     let title = "音频仓库"
     let description = "音频文件数据库视图"
     let iconName = "externaldrive"
-    
 
     @MainActor
-    func addTabView(reason: String, currentPluginId: String?) -> (view: AnyView, label: String)? {
-        guard currentPluginId == nil || currentPluginId == Self.targetPluginId else { return nil }
+    func addTabView(reason: String, currentSceneName: String?) -> (view: AnyView, label: String)? {
+        guard currentSceneName == AudioScenePlugin.sceneName else { return nil }
 
         return (AnyView(AudioDBView()), "音乐仓库")
     }
