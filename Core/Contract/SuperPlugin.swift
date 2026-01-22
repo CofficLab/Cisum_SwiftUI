@@ -68,6 +68,32 @@ protocol SuperPlugin: Actor {
 
     /// 获取磁盘路径
     @MainActor func getDisk() -> URL?
+
+    // MARK: - Lifecycle Methods
+
+    /// 插件注册完成后的回调
+    ///
+    /// 在插件成功注册到 PluginProvider 后调用。
+    /// 用于执行初始化操作，如启动后台任务、注册监听器、初始化资源等。
+    ///
+    /// ## 使用示例
+    /// ```swift
+    /// actor MyPlugin: SuperPlugin {
+    ///     nonisolated func onRegister() {
+    ///         Task {
+    ///             // 启动后台任务
+    ///             await startBackgroundJob()
+    ///         }
+    ///     }
+    /// }
+    /// ```
+    ///
+    /// ## 注意事项
+    /// - 此方法不在主线程上执行（使用 `nonisolated`）
+    /// - 适合执行轻量级初始化和启动异步任务
+    /// - 如果需要访问 actor 隔离状态，请使用 `Task { await ... }`
+    /// - 不要在此方法中执行阻塞操作
+    nonisolated func onRegister()
 }
 
 // MARK: - Default Implementations
@@ -110,6 +136,15 @@ extension SuperPlugin {
     nonisolated func addSettingView() -> AnyView? { nil }
 
     @MainActor func getDisk() -> URL? { nil }
+
+    // MARK: - Lifecycle Defaults
+
+    /// 默认的注册回调实现
+    ///
+    /// 默认不做任何事，子插件可以重写此方法以自定义注册后的行为。
+    nonisolated func onRegister() {
+        // 默认空实现，子类可以重写
+    }
 }
 
 // MARK: - Convenience
