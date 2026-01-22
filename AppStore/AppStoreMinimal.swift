@@ -9,11 +9,15 @@ struct AppStoreMinimal: View {
                     .bold()
                     .font(.system(size: 100, design: .rounded))
                     .magicOceanGradient()
-                    .padding(.bottom, 20)
+                    .padding(.bottom, 40)
 
-                Text("没有广告，没有干扰")
-                    .font(.system(size: 34, design: .rounded))
-                    .foregroundColor(.primary)
+                VStack(spacing: 16) {
+                    FeatureItem(icon: .iconTrash, title: "没有广告", description: "纯净体验，专注音乐")
+                    FeatureItem(icon: .iconPhoneCall, title: "不需要注册", description: "打开即用，快速上手")
+                    FeatureItem(icon: .iconMinusCircle, title: "不需要登录", description: "保护隐私，无需账号")
+                    FeatureItem(icon: .iconShowInFinder, title: "没有弹窗", description: "简洁界面，无干扰")
+                }
+                .padding(.vertical, 20)
             }
             .inMagicVStackCenter()
 
@@ -31,6 +35,48 @@ struct AppStoreMinimal: View {
         .magicCentered()
         .withBackgroundDecorations()
         .background(LinearGradient.pastel)
+    }
+}
+
+// MARK: - Feature Item
+
+private struct FeatureItem: View {
+    let icon: String
+    let title: String
+    let description: String
+
+    var body: some View {
+        HStack(spacing: 16) {
+            Image(systemName: icon)
+                .font(.system(size: 28))
+                .foregroundStyle(
+                    LinearGradient(
+                        colors: [.blue, .cyan],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+                .frame(width: 44)
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(.system(size: 20, weight: .semibold, design: .rounded))
+                    .foregroundColor(.primary)
+
+                Text(description)
+                    .font(.system(size: 14))
+                    .foregroundColor(.secondary)
+            }
+
+            Spacer()
+        }
+        .padding(16)
+        .frame(width: 360)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(.ultraThinMaterial)
+                .shadow(color: .black.opacity(0.05), radius: 4, y: 2)
+        )
     }
 }
 
