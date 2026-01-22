@@ -7,7 +7,7 @@ import SwiftUI
 actor StoragePlugin: SuperPlugin, SuperLog {
     nonisolated static let emoji = "💾"
     static let verbose = true
-    static var shouldRegister: Bool { true }
+    static var shouldRegister: Bool { false }
 
     /// 注册顺序设为 10，在其他插件之后执行
     static var order: Int { 10 }
