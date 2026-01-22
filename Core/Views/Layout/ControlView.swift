@@ -8,6 +8,7 @@ import SwiftUI
 struct ControlView: View, SuperLog {
     static let verbose = false
 
+    @Environment(\.demoMode) var isDemoMode
     @EnvironmentObject var appManager: AppProvider
     @EnvironmentObject var message: StateProvider
     @EnvironmentObject var playMan: PlayMan
@@ -64,7 +65,7 @@ struct ControlView: View, SuperLog {
                     // MARK: 进度栏
 
                     if showSliderView {
-                        playMan.makeProgressView()
+                        PlayingProgressView()
                             .padding()
                     }
 
@@ -152,6 +153,7 @@ struct ControlView: View, SuperLog {
     }
 }
 
+#if DEBUG
 #if os(macOS)
     #Preview("App - Large") {
         ContentView()
@@ -171,4 +173,5 @@ struct ControlView: View, SuperLog {
         ContentView()
             .inRootView()
     }
+#endif
 #endif
