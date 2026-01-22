@@ -36,6 +36,7 @@ struct AppStoreLibrary: View {
         .magicCentered()
         .withBackgroundDecorations()
         .background(LinearGradient.forest.opacity(0.3))
+        .shadow(color: .black.opacity(0.2), radius: 4, y: 2)
     }
 }
 

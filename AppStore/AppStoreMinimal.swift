@@ -31,6 +31,7 @@ struct AppStoreMinimal: View {
                 .frame(height: 650)
                 .background(.background.opacity(0.5))
                 .magicRoundedLarge()
+                .shadow(color: .black.opacity(0.2), radius: 4, y: 2)
         }
         .magicCentered()
         .withBackgroundDecorations()
@@ -75,7 +76,7 @@ private struct FeatureItem: View {
         .background(
             RoundedRectangle(cornerRadius: 12)
                 .fill(.ultraThinMaterial)
-                .shadow(color: .black.opacity(0.05), radius: 4, y: 2)
+                .shadow(color: .black.opacity(0.2), radius: 4, y: 2)
         )
     }
 }
