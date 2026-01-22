@@ -36,7 +36,7 @@
                     .onAppear {
                         do {
                             let container = try CopyConfig.getContainer()
-                            let db = CopyDB(container, reason: "CopyRootView", verbose: false)
+                            let db = CopyDB(container, reason: self.className, verbose: false)
                             let worker = CopyWorker(db: db, reason: self.className)
 
                             self.worker = worker
