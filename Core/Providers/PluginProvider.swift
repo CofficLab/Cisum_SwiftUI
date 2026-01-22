@@ -88,9 +88,12 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
 
         // 自动发现并注册所有插件
         autoDiscoverAndRegisterPlugins()
-        
+
         // 从内部注册表获取所有已注册的插件实例
         self.plugins = getAllPlugins()
+
+        // 验证插件架构约束
+        validatePluginArchitecture()
 
         // 恢复上次激活的场景
         let savedSceneName = self.repo.getCurrentSceneName()
@@ -348,6 +351,32 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
         let initImpl = unsafeBitCast(method_getImplementation(initMethod), to: InitMethod.self)
         
         return initImpl(instance, initSelector) ?? instance
+    }
+
+    /// 验证插件架构约束
+    ///
+    /// 强制执行架构规则：提供场景的插件必须同时提供海报视图。
+    /// 如果违反规则，应用将停止运行，确保架构一致性。
+    private func validatePluginArchitecture() {
+        for plugin in plugins {
+            let hasScene = plugin.addSceneItem() != nil
+            let hasPoster = plugin.addPosterView() != nil
+
+            if hasScene && !hasPoster {
+                let pluginType = String(describing: type(of: plugin))
+                let sceneName = plugin.addSceneItem() ?? "Unknown"
+                let message = """
+                ❌ 架构约束违规：插件 '\(pluginType)' 提供了场景 '\(sceneName)' 但未提供海报视图。
+
+                架构规则要求：任何提供场景（addSceneItem）的插件必须同时提供海报视图（addPosterView）。
+
+                请修改该插件，添加 addPosterView() 方法。
+                """
+
+                os_log(.fault, "\(Self.t)\(message)")
+                fatalError(message)
+            }
+        }
     }
 }
 

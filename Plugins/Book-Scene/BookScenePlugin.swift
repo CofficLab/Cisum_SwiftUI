@@ -23,6 +23,16 @@ actor BookScenePlugin: SuperPlugin, SuperLog {
     @MainActor func addSceneItem() -> String? {
         return Self.sceneName
     }
+
+    /// 提供有声书封面视图
+    @MainActor
+    func addPosterView() -> AnyView? {
+        if Self.verbose {
+            os_log("\(self.t)🖼️ 加载有声书海报视图")
+        }
+
+        return AnyView(BookPoster())
+    }
 }
 
 // MARK: - Preview

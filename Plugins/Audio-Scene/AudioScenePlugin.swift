@@ -23,6 +23,16 @@ actor AudioScenePlugin: SuperPlugin, SuperLog {
     @MainActor func addSceneItem() -> String? {
         return Self.sceneName
     }
+
+    /// 提供音频海报视图
+    @MainActor
+    func addPosterView() -> AnyView? {
+        if Self.verbose {
+            os_log("\(self.t)🖼️ 加载海报视图")
+        }
+
+        return AnyView(AudioPoster())
+    }
 }
 
 // MARK: - Preview
