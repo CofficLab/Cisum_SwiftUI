@@ -12,3 +12,6 @@ xcuserdata/
 
 ## Generated reports
 .reports/
+
+## Swift Package Manager
+.swiftpm/
