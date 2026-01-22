@@ -28,7 +28,7 @@ struct BookProgressRootView<Content>: View, SuperLog where Content: View {
 
     /// 检查是否应该激活书籍进度管理功能
     private var shouldActivateProgress: Bool {
-        p.currentSceneName == "有声书"
+        p.currentSceneName == BookScenePlugin.sceneName
     }
 }
 
@@ -40,9 +40,6 @@ extension BookProgressRootView {
     /// 当视图首次出现时触发，恢复上次播放的书籍和进度。
     func handleOnAppear() {
         guard shouldActivateProgress else {
-            if self.verbose {
-                os_log("\(self.t)⏭️ 书籍进度管理跳过：当前插件不是书籍插件")
-            }
             return
         }
 

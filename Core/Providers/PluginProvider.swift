@@ -106,6 +106,12 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
 
         if Self.verbose {
             os_log("\(Self.t)✅ 初始化完成，插件数量: \(self.plugins.count)")
+
+            let scenePlugins = plugins.compactMap { plugin -> String? in
+                plugin.addSceneItem()
+            }
+
+            os_log("\(Self.t)🎭 场景插件: \(scenePlugins.joined(separator: ", "))")
         }
     }
 
@@ -315,10 +321,6 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
         for (plugin, className, order) in discoveredPlugins {
             register(plugin)
             if Self.verbose { os_log("\(self.t)🚀 #\(order) Registered: \(className)") }
-        }
-        
-        if Self.verbose {
-            os_log("\(self.t)📊 Registered \(self.registeredCount) plugins total")
         }
     }
     

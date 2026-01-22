@@ -1,8 +1,8 @@
-import OSLog
 import MagicAlert
+import MagicKit
+import OSLog
 import SwiftData
 import SwiftUI
-import MagicKit
 
 // MARK: - Environment Key for Poster Dismiss Action
 
@@ -19,38 +19,34 @@ extension EnvironmentValues {
 
 struct Posters: View, SuperLog {
     nonisolated static let emoji = "🪧"
-    nonisolated static let verbose = false
-    
+    nonisolated static let verbose = true
+
     @EnvironmentObject var p: PluginProvider
     @EnvironmentObject var m: MagicMessageProvider
     @EnvironmentObject var man: PlayMan
-    
-    @Binding var isPresented: Bool
-    
-    @State var id: String = ""
 
-    var posterItems: [(plugin: SuperPlugin, view: AnyView)] {
-        p.plugins.compactMap { plugin in
-            guard let poster = plugin.addPosterView() else { return nil }
-            return (plugin, poster)
-        }
-    }
+    @Binding var isPresented: Bool
+
+    @State var id: String = ""
+    @State private var posterItems: [(label: String, title: String, description: String, view: AnyView)] = []
 
     var body: some View {
         VStack {
             Picker("", selection: $id) {
-                ForEach(posterItems, id: \.plugin.label) { item in
-                    Text(item.plugin.title)
-                        .tag(item.plugin.label)
+                ForEach(posterItems, id: \.label) { item in
+                    Text(item.title.isEmpty ? item.label : item.title)
+                        .tag(item.label)
                 }
             }
             .pickerStyle(SegmentedPickerStyle())
             .padding()
 
-            if let current = posterItems.first(where: { $0.plugin.label == id }) {
+            if let current = posterItems.first(where: { $0.label == id }) {
                 VStack {
-                    Text(current.plugin.description)
-        
+                    if !current.description.isEmpty {
+                        Text(current.description)
+                    }
+
                     GroupBox {
                         current.view
                             .environment(\.posterDismissAction, { self.isPresented = false })
@@ -68,29 +64,39 @@ struct Posters: View, SuperLog {
 
 extension Posters {
     func handleOnAppear() {
-        id = posterItems.first?.plugin.label ?? ""
+        // 预先提取插件属性避免在视图渲染期间访问 Actor 属性导致的问题
+        posterItems = p.plugins.compactMap { plugin in
+            guard let poster = plugin.addPosterView() else { return nil }
+            return (
+                label: plugin.label,
+                title: plugin.title,
+                description: plugin.description,
+                view: poster
+            )
+        }
+        id = posterItems.first?.label ?? ""
     }
 }
 
 // MARK: - Preview
 
 #if os(macOS)
-#Preview("App - Large") {
-    ContentView()
-    .inRootView()
-        .frame(width: 600, height: 1000)
-}
+    #Preview("App - Large") {
+        ContentView()
+            .inRootView()
+            .frame(width: 600, height: 1000)
+    }
 
-#Preview("App - Small") {
-    ContentView()
-    .inRootView()
-        .frame(width: 600, height: 600)
-}
+    #Preview("App - Small") {
+        ContentView()
+            .inRootView()
+            .frame(width: 600, height: 600)
+    }
 #endif
 
 #if os(iOS)
-#Preview("iPhone") {
-    ContentView()
-    .inRootView()
-}
+    #Preview("iPhone") {
+        ContentView()
+            .inRootView()
+    }
 #endif

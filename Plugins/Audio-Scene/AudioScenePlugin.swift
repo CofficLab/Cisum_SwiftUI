@@ -4,19 +4,12 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-actor AudioScenePlugin: SuperPlugin, SuperLog {
-    static let emoji = "🎵"
-    static let verbose = true
+actor AudioScenePlugin: SuperPlugin {
     static var shouldRegister: Bool { true }
-
-    /// 注册顺序设为 0，确保最先执行，先提供场景
     static var order: Int { 0 }
-
     let title = "音乐场景"
     let description = "提供音乐库场景"
     let iconName = "music.note.list"
-
-    /// 场景名称
     static let sceneName = "音乐库"
 
     /// 提供"音乐库"场景
@@ -27,11 +20,7 @@ actor AudioScenePlugin: SuperPlugin, SuperLog {
     /// 提供音频海报视图
     @MainActor
     func addPosterView() -> AnyView? {
-        if Self.verbose {
-            os_log("\(self.t)🖼️ 加载海报视图")
-        }
-
-        return AnyView(AudioPoster())
+        AnyView(AudioPoster())
     }
 }
 

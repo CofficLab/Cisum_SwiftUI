@@ -4,19 +4,12 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-actor BookScenePlugin: SuperPlugin, SuperLog {
-    static let emoji = "📚"
-    static let verbose = true
-    static var shouldRegister: Bool { true }
-
-    /// 注册顺序设为 0，确保最先执行，先提供场景
+actor BookScenePlugin: SuperPlugin {
+    static var shouldRegister: Bool { false }
     static var order: Int { 0 }
-
     let title = "有声书场景"
     let description = "提供有声书场景"
     let iconName = "book.closed"
-
-    /// 场景名称
     static let sceneName = "有声书"
 
     /// 提供"有声书"场景
@@ -27,11 +20,7 @@ actor BookScenePlugin: SuperPlugin, SuperLog {
     /// 提供有声书封面视图
     @MainActor
     func addPosterView() -> AnyView? {
-        if Self.verbose {
-            os_log("\(self.t)🖼️ 加载有声书海报视图")
-        }
-
-        return AnyView(BookPoster())
+        AnyView(BookPoster())
     }
 }
 
