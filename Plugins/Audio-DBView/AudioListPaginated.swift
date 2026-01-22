@@ -172,19 +172,19 @@ extension AudioListPaginated {
     private func checkLoadMore(for url: URL) {
         // 获取当前 URL 的索引
         guard let currentIndex = urls.firstIndex(of: url) else { return }
-        
+
         // 计算阈值：最后 10 条或 80% 位置
         let threshold = max(urls.count - 10, Int(Double(urls.count) * 0.8))
-        
+
         // 仅当接近末尾且有更多数据且未在加载中时触发
         guard currentIndex >= threshold, hasMore, !isLoadingMore else { return }
-        
+
         if Self.verbose {
             os_log("\(self.t)👁️ Item \(currentIndex) appeared, triggering loadMore")
         }
         loadMore()
     }
-    
+
     /// 加载更多数据
     private func loadMore() {
         guard !isLoadingMore, hasMore else {
@@ -275,7 +275,7 @@ extension AudioListPaginated {
     @MainActor
     private func setSelection(_ newValue: URL?, reason: String) {
         if Self.verbose {
-            os_log("\(self.t)🔄 设置选中音频: \(newValue?.lastPathComponent ?? "nil") - \(reason)")
+            os_log("\(self.t)🔄 (\(reason)) 设置选中音频: \(newValue?.lastPathComponent ?? "nil")")
         }
         selection = newValue
     }
@@ -353,10 +353,11 @@ extension AudioListPaginated {
     func handleSelectionChange() {
         if let url = selection, isLoading == false {
             Task {
+                let reason = self.className + ".选中项目变了"
                 if Self.verbose {
-                    os_log("\(self.t)▶️ 选中变化，播放: \(url.lastPathComponent)")
+                    os_log("\(self.t)▶️ (\(reason)) 选中变化，播放: \(url.lastPathComponent)")
                 }
-                await self.playManController.play(url)
+                await self.playManController.play(url, reason: reason)
             }
         }
     }
@@ -364,7 +365,7 @@ extension AudioListPaginated {
     /// 处理播放资源变化事件
     func handleAssetChanged(url: URL?) {
         if let asset = url, asset != selection {
-            self.setSelection(asset, reason: "handleAssetChanged")
+            self.setSelection(asset, reason: self.className + ".handleAssetChanged")
         }
     }
 

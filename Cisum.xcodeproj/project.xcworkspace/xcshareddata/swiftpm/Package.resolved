@@ -33,8 +33,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/CofficLab/MagicKit",
       "state" : {
-        "revision" : "fe900566bf45fcc146f6874d50d68f1bea54ec4f",
-        "version" : "1.2.7"
+        "revision" : "6f079806b27fc3f7cd33270a93f3ed7f573dc961",
+        "version" : "1.2.8"
       }
     },
     {
@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/nookery/MagicPlayMan",
       "state" : {
-        "revision" : "4675d7d2d0bc0394d2fae306da5143c5bcec2cc3",
-        "version" : "1.0.1"
+        "revision" : "11144b9c46a71675d2c6536e611e9c17589ce320",
+        "version" : "1.0.2"
       }
     },
     {

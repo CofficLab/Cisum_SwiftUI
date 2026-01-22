@@ -64,10 +64,10 @@ extension BookProgressRootView {
     private func restoreBookProgress() {
         Task {
             if let url = BookSettingRepo.getCurrent() {
-                await man.play(url, autoPlay: false)
+                await man.play(url, autoPlay: false, reason: "restoreBookProgress")
 
                 if let time = BookSettingRepo.getCurrentTime() {
-                    await man.seek(time: time)
+                    await man.seek(time: time, reason: self.className + ".restoreBookProgress")
                 }
 
                 if self.verbose {

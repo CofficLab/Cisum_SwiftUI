@@ -76,9 +76,10 @@ extension AudioProgressRootView {
             }
 
             if let asset = assetTarget {
-                await man.play(asset, autoPlay: false)
-                man.seek(time: timeTarget)
-                man.setLike(liked)
+                let reason = self.className + ".初始化播放数据"
+                await man.play(asset, autoPlay: false, reason: reason)
+                man.seek(time: timeTarget, reason: reason)
+                man.setLike(liked, reason: reason)
             }
         }
     }

@@ -240,7 +240,7 @@ extension AudioList {
             }
 
             Task {
-                await self.playManController.play(url)
+                await self.playManController.play(url, reason: self.className)
             }
         }
     }

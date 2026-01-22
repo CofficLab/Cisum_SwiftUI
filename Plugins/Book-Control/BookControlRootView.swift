@@ -72,7 +72,7 @@ extension BookControlRootView {
 
         if let prev = asset.getPrevFile() {
             Task {
-                await man.play(prev)
+                await man.play(prev, reason: "handlePreviousRequested")
                 if verbose {
                     os_log("\(self.t)✅ 播放上一章: \(prev.lastPathComponent)")
                 }
@@ -95,7 +95,7 @@ extension BookControlRootView {
 
         if let next = asset.getNextFile() {
             Task {
-                await man.play(next)
+                await man.play(next, reason: "handleNextRequested")
                 if verbose {
                     os_log("\(self.t)✅ 播放下一章: \(next.lastPathComponent)")
                 }

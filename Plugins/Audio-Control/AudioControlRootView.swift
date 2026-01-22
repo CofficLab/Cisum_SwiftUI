@@ -72,7 +72,7 @@ extension AudioControlRootView {
 
         // 订阅播放器事件
         man.subscribe(
-            name: "AudioControlPlugin",
+            name: Self.author,
             onPreviousRequested: { asset in
                 handlePreviousRequested(asset)
             },
@@ -104,7 +104,7 @@ extension AudioControlRootView {
                 if Self.verbose {
                     os_log("\(self.t)✅ 播放上一首: \(previous.lastPathComponent)")
                 }
-                await man.play(previous, autoPlay: true)
+                await man.play(previous, autoPlay: true, reason: self.className)
             }
         }
     }
@@ -134,7 +134,7 @@ extension AudioControlRootView {
                         os_log("\(self.t)✅ 找到下一首: \(next.lastPathComponent)")
                         os_log("\(self.t)▶️ 开始播放下一首")
                     }
-                    await man.play(next, autoPlay: true)
+                    await man.play(next, autoPlay: true, reason: self.className + ".handleNextRequested")
                 } else {
                     // 没有下一首的情况
                     if Self.verbose {
@@ -146,7 +146,7 @@ extension AudioControlRootView {
                     }
 
                     // 停止播放
-                    await man.stop()
+                    await man.stop(reason: self.className)
 
                     // 显示提示
                     await MainActor.run {
@@ -173,7 +173,7 @@ extension AudioControlRootView {
 
         Task {
             // 停止播放
-            await man.stop()
+            await man.stop(reason: self.className)
 
             // 显示提示信息
             await MainActor.run {
@@ -224,14 +224,14 @@ extension AudioControlRootView {
                         }
 
                         // 播放第一首
-                        await man.play(first, autoPlay: true)
+                        await man.play(first, autoPlay: true, reason: self.className)
                     } else {
                         if Self.verbose {
                             os_log("\(self.t)⚠️ 仓库中没有文件")
                         }
 
                         // 仓库为空，停止播放
-                        await man.stop()
+                        await man.stop(reason: self.className + ".仓库为空")
 
                         await MainActor.run {
                             m.info("仓库中没有文件")
@@ -243,7 +243,7 @@ extension AudioControlRootView {
                     }
 
                     // 获取失败，停止播放
-                    await man.stop()
+                    await man.stop(reason: self.className + ".获取第一首失败")
 
                     await MainActor.run {
                         m.error("无法播放下一首: \(error.localizedDescription)")

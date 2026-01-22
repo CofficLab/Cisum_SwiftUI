@@ -10,10 +10,11 @@ struct StateView: View, SuperLog, SuperThread {
     @EnvironmentObject var playMan: PlayMan
     @Environment(\.demoMode) var isDemoMode
 
+    nonisolated static let emoji = "🖥️"
+    nonisolated static let verbose = false
+
     var asset: URL? { playMan.asset }
     var font: Font { asset == nil ? .title3 : .callout }
-    nonisolated static let emoji = "🖥️"
-    let verbose = false
 
     var body: some View {
         if isDemoMode {
@@ -35,7 +36,11 @@ struct StateView: View, SuperLog, SuperThread {
             }
         }
     }
+}
 
+// MARK: - View
+
+extension StateView {
     func makeInfoView(_ i: String) -> some View {
         HStack {
             Image.info
@@ -64,6 +69,23 @@ struct StateView: View, SuperLog, SuperThread {
         .inCard()
     }
 }
+
+// MARK: - Action
+
+extension StateView {
+}
+
+// MARK: - Setter
+
+extension StateView {
+}
+
+// MARK: - Event Handler
+
+extension StateView {
+}
+
+// MARK: - Preview
 
 #if os(macOS)
     #Preview("App - Large") {

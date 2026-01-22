@@ -216,8 +216,8 @@ extension BookGrid {
                 if Self.verbose {
                     os_log("\(self.t)📖 继续播放书籍进度: \(savedURL.lastPathComponent) @ \(savedTime)s")
                 }
-                await man.play(savedURL, autoPlay: false)
-                await man.seek(time: savedTime)
+                await man.play(savedURL, autoPlay: false, reason: self.className)
+                await man.seek(time: savedTime, reason: self.className)
                 return
             }
         } catch {
@@ -234,8 +234,8 @@ extension BookGrid {
             if Self.verbose {
                 os_log("\(self.t)📖 从全局状态继续播放: \(savedURL.lastPathComponent) @ \(savedTime)s")
             }
-            await man.play(savedURL, autoPlay: false)
-            await man.seek(time: savedTime)
+            await man.play(savedURL, autoPlay: false, reason: self.className)
+            await man.seek(time: savedTime, reason: self.className)
             return
         }
 
@@ -244,12 +244,12 @@ extension BookGrid {
             if Self.verbose {
                 os_log("\(self.t)🎵 从头播放第一个子文件: \(first.lastPathComponent)")
             }
-            await man.play(first)
+            await man.play(first, reason: self.className)
         } else {
             if Self.verbose {
                 os_log("\(self.t)🎵 从头播放书籍文件: \(book.url.lastPathComponent)")
             }
-            await man.play(book.url)
+            await man.play(book.url, reason: self.className)
         }
     }
 }
