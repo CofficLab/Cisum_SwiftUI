@@ -23,7 +23,7 @@ import SwiftUI
 @MainActor
 class PluginProvider: ObservableObject, SuperLog, SuperThread {
     nonisolated static let emoji = "🧩"
-    static let verbose = true
+    static let verbose = false
 
     /// 插件仓库，用于持久化插件配置
     private let repo: PluginRepo
@@ -289,8 +289,6 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
             return
         }
         defer { free(UnsafeMutableRawPointer(classList)) }
-        
-        if Self.verbose { os_log("\(self.t)🔍 Scanning classes for plugins...") }
         
         let classes = UnsafeBufferPointer(start: classList, count: Int(count))
         

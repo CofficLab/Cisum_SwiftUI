@@ -1,5 +1,5 @@
 {
-  "originHash" : "16a679743cb0b361fb7dca2325c1fedfb1ca61eadde2cf6daf7a0434f2261fb8",
+  "originHash" : "6af482a74466950b601a70d14810c3aa952bba68e85b1bb29ca05873dc06f6f7",
   "pins" : [
     {
       "identity" : "id3tageditor",
@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/nookery/MagicPlayMan",
       "state" : {
-        "revision" : "79f498edb70bc2b4fe208cf3750c8d455f29ae14",
-        "version" : "0.0.6"
+        "revision" : "4675d7d2d0bc0394d2fae306da5143c5bcec2cc3",
+        "version" : "1.0.1"
       }
     },
     {
