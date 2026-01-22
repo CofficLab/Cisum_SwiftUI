@@ -5,12 +5,8 @@ import SwiftUI
 /**
  * 音频数据库插件：提供音频仓库列表视图。
  */
-actor AudioDBPlugin: SuperPlugin, SuperLog {
-    nonisolated static let emoji = "🎵"
-    private nonisolated static let targetPluginId = String(describing: AudioPlugin.self)
-    private static let verbose = true
+actor AudioDBPlugin: SuperPlugin {
     static var shouldRegister: Bool { true }
-    /// 注册顺序设为 1，在 CopyPlugin 之后执行
     static var order: Int { 1 }
 
     let title = "音频仓库"
