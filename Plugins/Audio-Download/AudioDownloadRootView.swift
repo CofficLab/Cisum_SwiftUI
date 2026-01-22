@@ -7,7 +7,7 @@ import SwiftUI
 
 struct AudioDownloadRootView<Content>: View, SuperLog where Content: View {
     nonisolated static var emoji: String { "⬇️" }
-    private static var verbose: Bool { false }
+    private static var verbose: Bool { true }
 
     @EnvironmentObject var man: PlayMan
     @EnvironmentObject var m: MagicMessageProvider
@@ -64,20 +64,18 @@ extension AudioDownloadRootView {
 
         let verbose = Self.verbose
 
-        Task {
-            await Task.detached(priority: .utility) {
-                if url.isNotDownloaded {
-                    if verbose {
-                        os_log("\(Self.t)☁️ 文件未下载，开始下载")
-                    }
-
-                    do {
-                        try await url.download(verbose: verbose, reason: "AudioDownloadRootView")
-                    } catch let e {
-                        os_log(.error, "\(Self.t)❌ 下载失败: \(e.localizedDescription)")
-                    }
+        Task.detached(priority: .utility) {
+            if url.isNotDownloaded {
+                if verbose {
+                    os_log("\(Self.t)☁️ 文件未下载，开始下载")
                 }
-            }.value
+
+                do {
+                    try await url.download(verbose: verbose, reason: Self.author)
+                } catch let e {
+                    os_log(.error, "\(Self.t)❌ 下载失败: \(e.localizedDescription)")
+                }
+            }
         }
     }
 }
@@ -85,22 +83,22 @@ extension AudioDownloadRootView {
 // MARK: - Preview
 
 #if os(macOS)
-#Preview("App - Large") {
-    ContentView()
-    .inRootView()
-        .frame(width: 600, height: 1000)
-}
+    #Preview("App - Large") {
+        ContentView()
+            .inRootView()
+            .frame(width: 600, height: 1000)
+    }
 
-#Preview("App - Small") {
-    ContentView()
-    .inRootView()
-        .frame(width: 600, height: 600)
-}
+    #Preview("App - Small") {
+        ContentView()
+            .inRootView()
+            .frame(width: 600, height: 600)
+    }
 #endif
 
 #if os(iOS)
-#Preview("iPhone") {
-    ContentView()
-    .inRootView()
-}
+    #Preview("iPhone") {
+        ContentView()
+            .inRootView()
+    }
 #endif
