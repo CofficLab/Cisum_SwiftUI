@@ -4,15 +4,8 @@ import SwiftUI
 
 @MainActor
 struct AudioConfigRepo {
-    static func getDBUrl() throws -> URL {
-        try Config.getDBRootDir()
-            .appendingPathComponent("audios_db")
-            .appendingPathComponent("audios.db")
-            .createIfNotExist()
-    }
-    
     static func getContainer() throws -> ModelContainer {
-        let url = try getDBUrl()
+        let url = try Config.createDatabaseFile(name: "audio")
 
         let schema = Schema([
             AudioModel.self,

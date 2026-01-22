@@ -19,7 +19,7 @@ actor AudioLikeRepo: SuperLog {
                 let schema = Schema([AudioLikeModel.self])
                 let modelConfiguration = ModelConfiguration(
                     schema: schema,
-                    url: Self.getDBURL(),
+                    url: try Config.createDatabaseFile(name: "audio_like"),
                     allowsSave: true,
                     cloudKitDatabase: .none
                 )
@@ -28,14 +28,6 @@ actor AudioLikeRepo: SuperLog {
                 os_log(.error, "\(self.t)❌ 初始化 AudioLikeRepo 失败: \(error.localizedDescription)")
             }
         }
-    }
-
-    /// 获取数据库 URL
-    private static func getDBURL() -> URL {
-        let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
-        let appDir = appSupport.appendingPathComponent("Cisum")
-        try? FileManager.default.createDirectory(at: appDir, withIntermediateDirectories: true)
-        return appDir.appendingPathComponent("AudioLikes.sqlite")
     }
 
     /// 获取模型上下文

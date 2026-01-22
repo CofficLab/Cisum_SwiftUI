@@ -122,7 +122,7 @@ class AudioRepo: ObservableObject, SuperLog {
         }
     }
 
-    func sync(_ items: [URL], verbose: Bool = false, isFirst: Bool) async {        
+    func sync(_ items: [URL], verbose: Bool = false, isFirst: Bool) async {
         if isFirst {
             await db.initItems(items, verbose: verbose)
         } else {
