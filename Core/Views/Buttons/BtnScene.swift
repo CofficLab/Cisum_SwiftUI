@@ -29,14 +29,12 @@ struct BtnScene: View {
 
     /// 根据场景名称返回对应的图标
     private func sceneIcon(for sceneName: String) -> String {
-        switch sceneName {
-        case "音乐库":
-            return "music.note"
-        case "有声书":
-            return "book"
-        default:
-            return "circle"
+        // 从插件系统中获取图标
+        if let plugin = p.plugin(for: sceneName) {
+            return plugin.iconName
         }
+        // 如果找不到插件，使用默认图标
+        return "circle"
     }
 }
 

@@ -267,6 +267,15 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
     private var registeredCount: Int {
         registeredPlugins.count
     }
+
+    /// 根据场景名称查找对应的插件
+    /// - Parameter sceneName: 场景名称
+    /// - Returns: 提供该场景的插件，如果不存在则返回 nil
+    func plugin(for sceneName: String) -> (any SuperPlugin)? {
+        plugins.first { plugin in
+            plugin.addSceneItem() == sceneName
+        }
+    }
     
     /// 自动发现并注册所有插件
     /// 通过扫描 Objective-C runtime 中所有以 "Plugin" 结尾的类
