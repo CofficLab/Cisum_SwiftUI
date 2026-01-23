@@ -20,12 +20,14 @@ model: opus
 ## 您可用的工具
 
 ### 检测工具
+
 - **Periphery** - 查找未使用的 Swift 文件、函数、属性
 - **SwiftLint** - Swift 代码质量检查、未使用的变量检测
 - **Xcode Static Analyzer** - Xcode 内置的静态分析
 - **Swift Package Manager** - 依赖管理
 
 ### 分析命令
+
 ```bash
 # 使用 Periphery 查找未使用的代码
 periphery --setupFiles "Cisum.xcodeproj/project.pbxproj" \
@@ -40,32 +42,35 @@ xcodebuild test -scheme Cisum -destination 'platform=macOS'
 
 # 构建项目
 swift build
-```
+```bash
 
 ## 重构流程
 
 ### 1. 分析阶段
-```
+
+```markdown
 a) 并行运行检测工具
 b) 收集所有发现
 c) 按风险级别分类：
    - 安全：未使用的私有函数、未使用的导入
    - 谨慎：可能通过反射使用
    - 风险：公共 API、SuperPlugin 插件、共享工具
-```
+```markdown
 
 ### 2. 风险评估
-```
+
+```markdown
 对于每个要移除的项目：
 - 检查是否在任何地方导入（grep 搜索）
 - 验证没有反射调用（@objc、Mirror）
 - 检查是否是公共 API 的一部分
 - 审查 git 历史记录以获取上下文
 - 测试对构建/测试的影响
-```
+```markdown
 
 ### 3. 安全移除流程
-```
+
+```markdown
 a) 仅从安全项目开始
 b) 一次移除一个类别：
    1. 未使用的 Swift 包依赖
@@ -74,10 +79,11 @@ b) 一次移除一个类别：
    4. 重复代码
 c) 每批后运行测试
 d) 为每批创建 git 提交
-```
+```markdown
 
 ### 4. 重复整合
-```
+
+```markdown
 a) 查找重复的组件/工具
 b) 选择最佳实现：
    - 功能最完整
@@ -86,7 +92,7 @@ b) 选择最佳实现：
 c) 更新所有导入以使用选定版本
 d) 删除重复项
 e) 验证测试仍然通过
-```
+```markdown
 
 ## 删除日志格式
 
@@ -123,11 +129,12 @@ e) 验证测试仍然通过
 - 所有单元测试通过：✓
 - 构建成功：✓
 - 手动测试完成：✓
-```
+```markdown
 
 ## 安全检查清单
 
 移除任何内容之前：
+
 - [ ] 运行检测工具
 - [ ] Grep 搜索所有引用
 - [ ] 检查反射调用（@objc、Mirror）
@@ -138,6 +145,7 @@ e) 验证测试仍然通过
 - [ ] 在 DELETION_LOG.md 中记录
 
 每次移除后：
+
 - [ ] 构建成功
 - [ ] 测试通过
 - [ ] 无编译警告
@@ -147,6 +155,7 @@ e) 验证测试仍然通过
 ## 常见移除模式
 
 ### 1. 未使用的导入
+
 ```swift
 // ❌ 移除未使用的导入
 import SwiftUI
@@ -156,9 +165,10 @@ import Foundation  // 未使用
 // ✅ 只保留使用的
 import SwiftUI
 import Combine
-```
+```swift
 
 ### 2. 死代码分支
+
 ```swift
 // ❌ 移除不可达代码
 if false {
@@ -170,9 +180,10 @@ if false {
 private func unusedHelper() {
     // 代码库中没有引用
 }
-```
+```swift
 
 ### 3. 重复组件
+
 ```swift
 // ❌ 多个相似组件
 struct PlayerButton1 { }
@@ -181,20 +192,22 @@ struct PlayerButton3 { }
 
 // ✅ 整合为一个
 struct PlayerButton { }
-```
+```swift
 
 ### 4. 未使用的依赖
+
 ```swift
 // Package.swift
 // ❌ 包已安装但未导入
 .package(url: "https://github.com/example/unused", from: "1.0.0")
 
 // ✅ 移除未使用的依赖
-```
+```swift
 
 ## 项目特定规则示例
 
 **关键 - 绝不删除：**
+
 - SuperPlugin 协议定义
 - 核心框架（Core/Bootstrap、Core/Contract）
 - 插件自动发现机制
@@ -203,6 +216,7 @@ struct PlayerButton { }
 - 状态管理（StateProvider、PluginProvider）
 
 **可以安全删除：**
+
 - 已弃用的插件
 - 未使用的视图组件
 - 已删除功能的辅助函数
@@ -210,6 +224,7 @@ struct PlayerButton { }
 - 未使用的私有函数
 
 **始终验证：**
+
 - 插件加载机制
 - 核心事件系统（Core/Events/*）
 - 数据持久化（SwiftData、iCloud）
@@ -245,13 +260,14 @@ struct PlayerButton { }
 🟢 低 - 仅移除经验证未使用的代码
 
 完整详细信息见 DELETION_LOG.md。
-```
+```markdown
 
 ## 错误恢复
 
 如果移除后出现问题：
 
 1. **立即回滚：**
+
    ```bash
    git revert HEAD
    swift build
@@ -259,6 +275,7 @@ struct PlayerButton { }
    ```
 
 2. **调查：**
+
    - 什么失败了？
    - 是反射调用吗？
    - 是否以检测工具遗漏的方式使用？
@@ -295,6 +312,7 @@ struct PlayerButton { }
 ## 成功指标
 
 清理会话后：
+
 - ✅ 所有测试通过
 - ✅ 构建成功
 - ✅ 无编译警告

@@ -15,6 +15,7 @@ Cisum 是一个用 SwiftUI 开发的音频播放器，支持本地音频播放�
 ### 第一步：理解项目
 
 在开发任何功能前：
+
 1. 阅读项目根目录的 README.md 和 CLAUDE.md
 2. 理解插件化架构（SuperPlugin 协议）
 3. 查看 Core/ 目录了解核心框架
@@ -23,6 +24,7 @@ Cisum 是一个用 SwiftUI 开发的音频播放器，支持本地音频播放�
 ### 第二步：代码编写
 
 **语言和框架：**
+
 - 使用最新的 Swift 和 SwiftUI
 - 遵循 Apple Human Interface Guidelines
 - 使用 Combine 进行响应式编程
@@ -30,6 +32,7 @@ Cisum 是一个用 SwiftUI 开发的音频播放器，支持本地音频播放�
 - 实现自适应布局
 
 **代码质量：**
+
 - 添加详细代码注释（中文）
 - 使用 OSLog 进行日志记录
 - 实现 SuperLog 协议
@@ -37,6 +40,7 @@ Cisum 是一个用 SwiftUI 开发的音频播放器，支持本地音频播放�
 - 避免内存泄漏
 
 **特殊注意：**
+
 - NSMetadataUbiquitousItemPercentDownloadedKey 返回 0-100，而非 0-1
 
 ### 第三步：遵循规范
@@ -52,18 +56,21 @@ Cisum 是一个用 SwiftUI 开发的音频播放器，支持本地音频播放�
 ## 技术栈
 
 **核心框架：**
+
 - SwiftUI - UI 框架
 - Combine - 响应式编程
 - SwiftData - 数据持久化
 - OSLog - 日志记录
 
 **项目架构：**
+
 - 插件系统（SuperPlugin 协议）
 - MVVM + Combine
 - Actor-based 并发
 - Protocol-oriented design
 
 **关键依赖：**
+
 - MagicKit (1.2.7) - 核心工具
 - MagicPlayMan - 音频播放
 - MagicUI - UI 组件
@@ -89,6 +96,7 @@ Cisum 是一个用 SwiftUI 开发的音频播放器，支持本地音频播放�
 ## 快速参考
 
 ### 可用命令
+
 - `/plan` - 规划实施
 - `/swift-check` - 检查代码规范
 - `/commit` - 生成 commit message
@@ -96,10 +104,12 @@ Cisum 是一个用 SwiftUI 开发的音频播放器，支持本地音频播放�
 - `/learn` - 提取模式
 
 ### 可用技能
+
 - `swiftui-standards` - SwiftUI 开发标准
 - `changelog-generator` - 生成变更日志
 
 ### 可用代理
+
 - `architect` - 软件架构
 - `code-reviewer` - 代码审查
 - `planner` - 规划
@@ -108,23 +118,27 @@ Cisum 是一个用 SwiftUI 开发的音频播放器，支持本地音频播放�
 ## 最佳实践
 
 **代码质量：**
+
 - 详细代码注释（中文）
 - 适当的错误处理和日志（OSLog）
 - 严格的类型检查
 - 避免内存泄漏
 
 **用户界面：**
+
 - 自适应布局
 - 遵循 HIG
 - 流畅的动画
 - 响应式交互
 
 **性能优化：**
+
 - 启动时间优化
 - 内存使用优化
 - 电池消耗优化
 
 **语言偏好：**
+
 - 使用中文编写用户可见的字符串和注释
 - UI 文本、错误消息使用中文
 
