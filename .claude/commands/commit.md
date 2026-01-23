@@ -22,13 +22,15 @@
 
 4. **生成 Commit Message**
    - 基于 Conventional Commits 规范：
-     ```
+
+     ```text
      <type>(<scope>): <subject>
 
      <body>
 
      <footer>
      ```
+
    - **Type（类型）**：
      - `feat`: 新功能
      - `fix`: 修复 bug
@@ -79,12 +81,14 @@
 ## Commit Message 模板
 
 ### 简单更改
-```
+
+```text
 feat(components): add button component
 ```
 
 ### 中等更改
-```
+
+```text
 feat(auth): implement OAuth2 login flow
 
 Add support for Google and GitHub OAuth2 authentication.
@@ -98,7 +102,8 @@ these providers.
 ```
 
 ### 复杂更改
-```
+
+```text
 feat(api): implement rate limiting for all endpoints
 
 Add rate limiting to prevent API abuse and ensure fair usage.
@@ -113,7 +118,8 @@ Closes #123
 ```
 
 ### Bug 修复
-```
+
+```text
 fix(auth): resolve token expiration issue
 
 Fix authentication failing prematurely due to incorrect
@@ -127,7 +133,7 @@ Fixes #456
 
 ## 示例输出
 
-```
+```text
 📝 建议的 Commit Message:
 
 feat(pages): add market search page
@@ -152,6 +158,7 @@ Modified files:
 
 ## 注意事项
 
+- ✅ 使用英文的 commit message
 - ✅ 始终分析实际的代码差异
 - ✅ 遵循项目的现有 commit 风格
 - ✅ 使用清晰、描述性的语言

@@ -8,6 +8,7 @@
         "externaldrive",
         "fileprivate",
         "nonisolated",
+        "oneline",
         "pbxproj",
         "softprops"
     ],
