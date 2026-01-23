@@ -8,6 +8,8 @@ import SwiftUI
 struct AudioItemView: View, Equatable, SuperLog {
     nonisolated static let emoji = "🎵"
     nonisolated static let verbose = true
+    
+    @EnvironmentObject var m: MagicMessageProvider
 
     let url: URL
 
@@ -54,6 +56,13 @@ extension AudioItemView {
         }
         .tag(url as URL?)
         .onAppear(perform: handleOnAppear)
+        .contextMenu {
+            Button(action: {
+                exportToDownloads()
+            }) {
+                Label("导出到下载目录", systemImage: "arrow.down.doc")
+            }
+        }
     }
 }
 
@@ -80,6 +89,49 @@ extension AudioItemView {
 
             await MainActor.run {
                 sizeText = size
+            }
+        }
+    }
+
+    /// 导出到下载目录
+    private func exportToDownloads() {
+        Task {
+            do {
+                // 获取下载目录
+                let downloadsURL = try FileManager.default.url(
+                    for: .downloadsDirectory,
+                    in: .userDomainMask,
+                    appropriateFor: nil,
+                    create: false
+                )
+
+                // 目标文件路径
+                let destinationURL = downloadsURL.appendingPathComponent(url.lastPathComponent)
+
+                // 如果目标文件已存在，添加序号
+                var finalDestinationURL = destinationURL
+                var counter = 1
+                while FileManager.default.fileExists(atPath: finalDestinationURL.path) {
+                    let fileNameWithoutExtension = url.deletingPathExtension().lastPathComponent
+                    let fileExtension = url.pathExtension
+                    let newFileName = fileExtension.isEmpty
+                        ? "\(fileNameWithoutExtension) \(counter)"
+                        : "\(fileNameWithoutExtension) \(counter).\(fileExtension)"
+                    finalDestinationURL = downloadsURL.appendingPathComponent(newFileName)
+                    counter += 1
+                }
+
+                // 复制文件
+                try await url.copyTo(finalDestinationURL, caller: self.className)
+                if Self.verbose {
+                    os_log("\(Self.t)✅ 文件已导出到: \(finalDestinationURL.path)")
+                    self.m.info("文件已复制到下载目录")
+                }
+            } catch {
+                if Self.verbose {
+                    os_log("\(Self.t)❌ 导出文件失败: \(error.localizedDescription)")
+                    self.m.error("导出文件失败: \(error.localizedDescription)")
+                }
             }
         }
     }

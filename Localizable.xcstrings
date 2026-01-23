@@ -460,6 +460,9 @@
         }
       }
     },
+    "导出到下载目录" : {
+
+    },
     "封面图目录" : {
       "extractionState" : "stale",
       "localizations" : {
