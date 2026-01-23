@@ -43,7 +43,8 @@ struct ControlBtns: View, SuperLog {
                     .frame(width: 44, height: 44)
             }
             .buttonStyle(.plain)
-            
+            .shadowSm()
+
             // 上一曲按钮
             Button(action: {}) {
                 Image(systemName: "backward.fill")
@@ -52,6 +53,7 @@ struct ControlBtns: View, SuperLog {
                     .frame(width: 44, height: 44)
             }
             .buttonStyle(.plain)
+            .shadowSm()
 
             // 播放/暂停按钮
             Button(action: {}) {
@@ -61,6 +63,7 @@ struct ControlBtns: View, SuperLog {
                     .frame(width: 56, height: 56)
             }
             .buttonStyle(.plain)
+            .shadowSm()
 
             // 下一曲按钮
             Button(action: {}) {
@@ -70,6 +73,7 @@ struct ControlBtns: View, SuperLog {
                     .frame(width: 44, height: 44)
             }
             .buttonStyle(.plain)
+            .shadowSm()
 
             // 播放模式按钮
             Button(action: {}) {
@@ -79,6 +83,7 @@ struct ControlBtns: View, SuperLog {
                     .frame(width: 40, height: 40)
             }
             .buttonStyle(.plain)
+            .shadowSm()
         }
     }
 }

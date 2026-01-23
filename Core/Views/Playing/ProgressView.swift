@@ -31,6 +31,7 @@ struct PlayingProgressView: View {
                 }
             }
             .frame(height: 4)
+            .shadow3xl()
 
             // 时间标签
             HStack {
