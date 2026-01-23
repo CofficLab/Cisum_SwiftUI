@@ -237,7 +237,7 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
     /// - Parameter plugin: 要注册的插件实例
     private func register(_ plugin: any SuperPlugin) {
         let id = plugin.id
-        
+
         // 检查 ID 是否已存在
         if usedIds.contains(id) {
             let pluginType = String(describing: type(of: plugin))
@@ -245,10 +245,16 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
             assertionFailure("Duplicate plugin id: \(id)")
             return
         }
-        
+
         // 标记该 ID 已使用
         usedIds.insert(id)
         registeredPlugins.append(plugin)
+
+        // 调用插件的生命周期钩子
+        if Self.verbose {
+            os_log("\(Self.t)🔔 Calling onRegister() for \(plugin.id)")
+        }
+        plugin.onRegister()
     }
     
     /// 获取所有已注册的插件实例，按 order 排序

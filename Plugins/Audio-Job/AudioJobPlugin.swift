@@ -6,24 +6,19 @@ import SwiftUI
 /// 音频后台任务插件
 ///
 /// 负责管理音频相关的后台任务，如文件大小计算、哈希计算等。
-/// 当前版本仅提供框架，具体业务任务待后续添加。
 actor AudioJobPlugin: SuperPlugin, SuperLog {
     static let emoji = "⚙️"
     static let verbose = true
     static var shouldRegister: Bool { true }
-
-    /// 注册顺序设为 5，在其他音频插件之后执行
     static var order: Int { 5 }
 
-    let title = "音频后台任务"
     let description = "处理音频文件的后台任务"
     let iconName = "gearshape.2"
     
 
     // MARK: - Plugin Life Cycle
 
-    func onRegister() {
-        // 注册任务
+    nonisolated func onRegister() {
         Task {
             await registerJobs()
         }
@@ -39,6 +34,10 @@ actor AudioJobPlugin: SuperPlugin, SuperLog {
 
         // 自动启动文件系统监控任务
         await manager.startJob(fsMonitorJob.identifier)
+
+        if Self.verbose {
+            os_log("\(Self.t)🚀 File system monitor job started")
+        }
     }
 
     /// 启动指定任务
@@ -46,7 +45,3 @@ actor AudioJobPlugin: SuperPlugin, SuperLog {
         await AudioJobManager.shared.startJob(identifier)
     }
 }
-
-
-// MARK: - Public API
-

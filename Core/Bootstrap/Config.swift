@@ -209,6 +209,17 @@ extension Config {
     }
 }
 
+// MARK: Database
+
+extension Config {
+    static func createDatabaseFile(name: String) throws -> URL {
+        try Config.getDBRootDir()
+            .appendingPathComponent(name)
+            .appendingPathComponent("\(name).db")
+            .createIfNotExist()
+    }
+}
+
 // MARK: FACEID
 
 extension Config {

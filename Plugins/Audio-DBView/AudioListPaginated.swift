@@ -300,34 +300,54 @@ extension AudioListPaginated {
                 os_log("\(self.t)🔄 重新加载当前页数据 - \(reason)")
             }
 
+            // 获取当前状态
+            let currentCount = await self.urls.count
+            let currentTotalCount = await self.totalCount
+
             // 重新获取总数
-            let totalCount = await repo.getTotalCount()
+            let newTotalCount = await repo.getTotalCount()
 
-            // 重新加载当前所有已加载的页面数据
-            let currentUrls = await self.urls
-            let totalItemsNeeded = currentUrls.count
+            if Self.verbose {
+                os_log("\(self.t)📊 计数变化：\(currentTotalCount) → \(newTotalCount)，当前已加载：\(currentCount)")
+            }
 
-            if totalItemsNeeded > 0 {
-                let refreshedUrls = await repo.get(
-                    offset: 0,
-                    limit: totalItemsNeeded,
-                    reason: self.className
-                )
-
-                await MainActor.run {
-                    // 更新数据，但保持分页状态
-                    self.urls = refreshedUrls
-                    self.totalCount = totalCount
-
+            await MainActor.run {
+                // 如果总数增加（新增文件），需要完全重新加载
+                if newTotalCount > currentTotalCount {
                     if Self.verbose {
-                        os_log("\(self.t)✅ 当前页数据刷新完成，项目数: \(refreshedUrls.count)")
+                        os_log("\(self.t)✨ 检测到新增文件，完全重新加载")
                     }
+                    self.refresh(reason: "新增文件 - \(reason)")
+                    return
                 }
-            } else {
-                // 如果没有已加载的数据，直接重新初始化
-                await MainActor.run {
-                    self.totalCount = totalCount
-                    self.loadInitial()
+
+                // 如果总数减少（删除文件），也需要完全重新加载
+                if newTotalCount < currentTotalCount {
+                    if Self.verbose {
+                        os_log("\(self.t)🗑️ 检测到删除文件，完全重新加载")
+                    }
+                    self.refresh(reason: "删除文件 - \(reason)")
+                    return
+                }
+
+                // 总数不变，只刷新当前页数据
+                if currentCount > 0 {
+                    Task.detached(priority: .background) {
+                        let refreshedUrls = await repo.get(
+                            offset: 0,
+                            limit: currentCount,
+                            reason: self.className
+                        )
+
+                        await MainActor.run {
+                            self.urls = refreshedUrls
+                            self.totalCount = newTotalCount
+
+                            if Self.verbose {
+                                os_log("\(self.t)✅ 当前页数据刷新完成，项目数: \(refreshedUrls.count)")
+                            }
+                        }
+                    }
                 }
             }
         }

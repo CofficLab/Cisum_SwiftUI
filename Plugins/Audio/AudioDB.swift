@@ -844,6 +844,8 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
         if verbose {
             os_log("\(self.jobEnd(startTime, title: "\(self.t)✅ Sync(\(items.count))", tolerance: 0.01))")
         }
+        
+        NotificationCenter.postDBSynced()
     }
 
     /// 同步更新的音频项目
@@ -884,6 +886,8 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
         if verbose {
             os_log("\(self.jobEnd(startTime, title: "\(self.t)✅ SyncWithUpdatedItems(\(metas.count))", tolerance: 0.01))")
         }
+        
+        NotificationCenter.postDBUpdated()
     }
 
     /// 更新音频模型
