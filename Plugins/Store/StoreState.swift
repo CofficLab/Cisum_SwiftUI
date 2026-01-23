@@ -2,6 +2,7 @@ import Foundation
 import MagicKit
 import OSLog
 import StoreKit
+import SwiftUI
 
 final class StoreState: ObservableObject, SuperLog {
     nonisolated static let emoji = "💰"
@@ -33,10 +34,11 @@ final class StoreState: ObservableObject, SuperLog {
             defaults.set(data, forKey: Keys.purchase)
         }
         defaults.set(Date().timeIntervalSince1970, forKey: Keys.lastCheckedAt)
-        
+
         if self.verbose {
             os_log("\(self.t)🍋 Updated tier=\(entitlement.tier.rawValue), expiresAt=\(entitlement.expiresAtString)")
-        }}
+        }
+    }
 
     static func clear() {
         update(entitlement: .none)
@@ -77,7 +79,7 @@ final class StoreState: ObservableObject, SuperLog {
                     } else {
                         detectedExpire = exp
                     }
-                    
+
                     if self.verbose {
                         os_log("\(self.t)⏰ 过期时间: \(exp.fullDateTime)")
                     }
@@ -85,7 +87,7 @@ final class StoreState: ObservableObject, SuperLog {
             case .nonRenewable:
                 let t = StoreService.tier(for: transaction.productID)
                 detectedTier = max(detectedTier, t)
-                
+
                 if self.verbose {
                     os_log("\(self.t)✅ 非续费订阅: \(transaction.productID), tier: \(t.rawValue)")
                 }
@@ -109,10 +111,31 @@ final class StoreState: ObservableObject, SuperLog {
                 continue
             }
         }
-        
+
         if self.verbose {
             os_log("\(self.t)🎯 校准结果: detectedTier=\(detectedTier.rawValue), detectedExpire=\(detectedExpire?.description ?? "nil")")
         }
         update(entitlement: PurchaseInfo(tier: detectedTier, expiresAt: detectedExpire))
     }
 }
+
+#if os(macOS)
+    #Preview("App - Large") {
+        ContentView()
+            .inRootView()
+            .frame(width: 600, height: 1000)
+    }
+
+    #Preview("App - Small") {
+        ContentView()
+            .inRootView()
+            .frame(width: 500, height: 800)
+    }
+#endif
+
+#if os(iOS)
+    #Preview("iPhone") {
+        ContentView()
+            .inRootView()
+    }
+#endif

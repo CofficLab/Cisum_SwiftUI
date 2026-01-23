@@ -94,8 +94,25 @@ enum StoreConfig: Sendable {
     }
 }
 
-#Preview("APP") {
-    ContentView()
-        .inRootView()
-        .frame(height: 600)
-}
+// MARK: Preview
+
+#if os(macOS)
+    #Preview("App - Large") {
+        ContentView()
+            .inRootView()
+            .frame(width: 600, height: 1000)
+    }
+
+    #Preview("App - Small") {
+        ContentView()
+            .inRootView()
+            .frame(width: 500, height: 800)
+    }
+#endif
+
+#if os(iOS)
+    #Preview("iPhone") {
+        ContentView()
+            .inRootView()
+    }
+#endif

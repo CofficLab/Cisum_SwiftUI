@@ -1,11 +1,11 @@
-import SwiftUI
-import StoreKit
 import OSLog
+import StoreKit
+import SwiftUI
 
 struct OneTimeView: View {
     @State private var products: [ProductDTO] = []
     @State private var purchasedSubscriptions: [ProductDTO] = []
-    
+
     var body: some View {
         Section("一次性订阅") {
             ForEach(products) { product in
@@ -16,12 +16,12 @@ struct OneTimeView: View {
             await loadProducts()
         }
     }
-    
+
     private func loadProducts() async {
         do {
             let groups = try await StoreService.fetchAllProducts()
             self.products = groups.nonRenewables
-            
+
             let purchasedLists = await StoreService.fetchPurchasedLists(
                 cars: groups.cars,
                 subscriptions: groups.subscriptions,
@@ -36,15 +36,57 @@ struct OneTimeView: View {
 
 // MARK: - Preview
 
+#Preview("PurchaseView - All") {
+    PurchaseView(showCloseButton: false)
+        .inRootView()
+        .frame(height: 800)
+}
+
+#Preview("PurchaseView - Subscription Only") {
+    PurchaseView(showCloseButton: false,
+                 showSubscription: true,
+                 showOneTime: false,
+                 showNonRenewable: false,
+                 showConsumable: false)
+        .inRootView()
+        .frame(height: 800)
+}
+
+#Preview("Store Debug") {
+    DebugView()
+        .inRootView()
+        .frame(width: 500, height: 700)
+}
+
+#Preview("Debug") {
+    DebugView()
+        .inRootView()
+        .frame(height: 800)
+}
+
 #Preview("Buy") {
     PurchaseView()
         .inRootView()
         .frame(height: 800)
 }
 
-#Preview("APP") {
-    ContentView()
-        .inRootView()
-        .frame(width: 700)
-        .frame(height: 800)
-}
+#if os(macOS)
+    #Preview("App - Large") {
+        ContentView()
+            .inRootView()
+            .frame(width: 600, height: 1000)
+    }
+
+    #Preview("App - Small") {
+        ContentView()
+            .inRootView()
+            .frame(width: 500, height: 800)
+    }
+#endif
+
+#if os(iOS)
+    #Preview("iPhone") {
+        ContentView()
+            .inRootView()
+    }
+#endif

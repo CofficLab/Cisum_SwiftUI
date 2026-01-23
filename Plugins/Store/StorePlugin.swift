@@ -4,9 +4,7 @@ import OSLog
 import SwiftUI
 
 actor StorePlugin: SuperPlugin {
-    static var shouldRegister: Bool { false }
-
-    /// 注册顺序设为 80，在其他插件之后执行
+    static var shouldRegister: Bool { true }
     static var order: Int { 80 }
 
     let title = "商店"

@@ -36,4 +36,37 @@ struct SubscriptionProductsView: View {
     }
 }
 
+// MARK: - Preview
 
+#Preview("Debug") {
+    DebugView()
+        .inRootView()
+        .frame(height: 800)
+}
+
+#Preview("Buy") {
+    PurchaseView()
+        .inRootView()
+        .frame(height: 800)
+}
+
+#if os(macOS)
+    #Preview("App - Large") {
+        ContentView()
+            .inRootView()
+            .frame(width: 600, height: 1000)
+    }
+
+    #Preview("App - Small") {
+        ContentView()
+            .inRootView()
+            .frame(width: 500, height: 800)
+    }
+#endif
+
+#if os(iOS)
+    #Preview("iPhone") {
+        ContentView()
+            .inRootView()
+    }
+#endif

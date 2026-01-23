@@ -278,7 +278,7 @@ extension DebugView {
         VStack(alignment: .leading, spacing: 8) {
             Text("Subscription Groups (\(subscriptionGroups.count))")
                 .font(.headline)
-            
+
             if subscriptionGroups.isEmpty {
                 Text("空")
                     .foregroundStyle(.secondary)
@@ -302,7 +302,7 @@ extension DebugView {
                         .padding(.vertical, 4)
                         .background(Color.gray.opacity(0.1))
                         .cornerRadius(4)
-                        
+
                         // 订阅组下的订阅产品
                         VStack(alignment: .leading, spacing: 2) {
                             ForEach(group.subscriptions, id: \.id) { subscription in
@@ -379,8 +379,57 @@ extension DebugView {
 
 // MARK: - Preview
 
+#Preview("PurchaseView - All") {
+    PurchaseView(showCloseButton: false)
+        .inRootView()
+        .frame(height: 800)
+}
+
+#Preview("PurchaseView - Subscription Only") {
+    PurchaseView(showCloseButton: false,
+                 showSubscription: true,
+                 showOneTime: false,
+                 showNonRenewable: false,
+                 showConsumable: false)
+        .inRootView()
+        .frame(height: 800)
+}
+
 #Preview("Store Debug") {
     DebugView()
         .inRootView()
-        .frame(width: 800, height: 1000)
+        .frame(width: 500, height: 700)
 }
+
+#Preview("Debug") {
+    DebugView()
+        .inRootView()
+        .frame(height: 800)
+}
+
+#Preview("Buy") {
+    PurchaseView()
+        .inRootView()
+        .frame(height: 800)
+}
+
+#if os(macOS)
+    #Preview("App - Large") {
+        ContentView()
+            .inRootView()
+            .frame(width: 600, height: 1000)
+    }
+
+    #Preview("App - Small") {
+        ContentView()
+            .inRootView()
+            .frame(width: 500, height: 800)
+    }
+#endif
+
+#if os(iOS)
+    #Preview("iPhone") {
+        ContentView()
+            .inRootView()
+    }
+#endif

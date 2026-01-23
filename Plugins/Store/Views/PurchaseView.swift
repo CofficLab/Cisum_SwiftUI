@@ -1,4 +1,3 @@
-import MagicUI
 import MagicKit
 import MagicUI
 import OSLog
@@ -12,14 +11,15 @@ struct PurchaseView: View, SuperLog {
     @Environment(\.dismiss) private var dismiss
     @State var closeBtnHovered = false
     var showCloseButton = false
-    
+
     // MARK: - Product Type Configuration
+
     var showSubscription: Bool = true
     var showOneTime: Bool = false
     var showNonRenewable: Bool = false
     var showConsumable: Bool = false
-    
-    init(showCloseButton: Bool = false, 
+
+    init(showCloseButton: Bool = false,
          showSubscription: Bool = true,
          showOneTime: Bool = false,
          showNonRenewable: Bool = false,
@@ -72,7 +72,7 @@ struct PurchaseView: View, SuperLog {
                     ProductsSubscription()
                         .tabItem { Label("订阅", systemImage: "repeat") }
                 }
-                
+
                 if showOneTime {
                     ProductsOfOneTime()
                         .tabItem { Label("一次性购买", systemImage: "car") }
@@ -120,6 +120,8 @@ struct PurchaseView: View, SuperLog {
     }
 }
 
+// MARK: - Preview
+
 #Preview("PurchaseView - All") {
     PurchaseView(showCloseButton: false)
         .inRootView()
@@ -127,7 +129,7 @@ struct PurchaseView: View, SuperLog {
 }
 
 #Preview("PurchaseView - Subscription Only") {
-    PurchaseView(showCloseButton: false, 
+    PurchaseView(showCloseButton: false,
                  showSubscription: true,
                  showOneTime: false,
                  showNonRenewable: false,
@@ -141,3 +143,36 @@ struct PurchaseView: View, SuperLog {
         .inRootView()
         .frame(width: 500, height: 700)
 }
+
+#Preview("Debug") {
+    DebugView()
+        .inRootView()
+        .frame(height: 800)
+}
+
+#Preview("Buy") {
+    PurchaseView()
+        .inRootView()
+        .frame(height: 800)
+}
+
+#if os(macOS)
+    #Preview("App - Large") {
+        ContentView()
+            .inRootView()
+            .frame(width: 600, height: 1000)
+    }
+
+    #Preview("App - Small") {
+        ContentView()
+            .inRootView()
+            .frame(width: 500, height: 800)
+    }
+#endif
+
+#if os(iOS)
+    #Preview("iPhone") {
+        ContentView()
+            .inRootView()
+    }
+#endif

@@ -13,8 +13,9 @@ public typealias PaymentMode = StoreKit.Product.SubscriptionOffer.PaymentMode
 
 public enum StoreService: SuperLog {
     static let verbose = false
-    
+
     // MARK: - Bootstrap
+
     /// 开始监听交易更新，APP启动时应该调用这个方法
     public static func bootstrap() {
         startTransactionListener()
@@ -22,21 +23,22 @@ public enum StoreService: SuperLog {
     }
 
     // MARK: - Transaction Updates
-    
+
     /// 开始监听交易更新，APP启动时应该调用这个方法
     /// 这是 StoreKit 2 的最佳实践，确保不会错过任何交易
     public static func startTransactionListener() {
         Task {
             if verbose {
-                os_log("\(self.t)👀 开始监听交易更新")}
+                os_log("\(self.t)👀 开始监听交易更新")
+            }
             for await result in Transaction.updates {
                 do {
                     let transaction = try checkVerified(result)
                     os_log("\(self.t)📱 收到交易更新: \(transaction.productID)")
-                    
+
                     // 处理交易更新
                     await handleTransactionUpdate(transaction)
-                    
+
                     // 完成交易
                     await transaction.finish()
                 } catch {
@@ -45,7 +47,7 @@ public enum StoreService: SuperLog {
             }
         }
     }
-    
+
     /// 处理交易更新
     private static func handleTransactionUpdate(_ transaction: Transaction) async {
         os_log("\(self.t)✅ 处理交易更新: \(transaction.productID)")
@@ -58,21 +60,21 @@ public enum StoreService: SuperLog {
     }
 
     // MARK: - Store State Updates
-    
+
     /// 支付成功后更新 StoreState
     private static func updateStoreStateAfterPurchase(_ transaction: Transaction) async {
         let tier = tier(for: transaction.productID)
         let expiresAt = transaction.expirationDate
-        
+
         os_log("\(self.t)🔄 更新 StoreState")
-        
+
         await MainActor.run {
             StoreState.update(entitlement: PurchaseInfo(tier: tier, expiresAt: expiresAt))
         }
     }
 
     // MARK: - Public State Accessors
-    
+
     static func cachedPurchaseInfo() -> PurchaseInfo {
         return StoreState.cachedPurchaseInfo()
     }
@@ -85,7 +87,7 @@ public enum StoreService: SuperLog {
     public static func expiresAtCached() -> Date? {
         cachedPurchaseInfo().expiresAt
     }
-    
+
     // MARK: - Data Sources
 
     /// 全部商品 ID 列表
@@ -401,6 +403,7 @@ public enum StoreService: SuperLog {
 }
 
 // MARK: - Notifications
+
 extension Notification.Name {
     static let storeTransactionUpdated = Notification.Name("store.transaction.updated")
 }
@@ -435,9 +438,23 @@ public enum StoreError: Error, LocalizedError {
         .frame(height: 800)
 }
 
-#Preview("APP") {
-    ContentView()
-        .inRootView()
-        .frame(width: 700)
-        .frame(height: 800)
-}
+#if os(macOS)
+    #Preview("App - Large") {
+        ContentView()
+            .inRootView()
+            .frame(width: 600, height: 1000)
+    }
+
+    #Preview("App - Small") {
+        ContentView()
+            .inRootView()
+            .frame(width: 500, height: 800)
+    }
+#endif
+
+#if os(iOS)
+    #Preview("iPhone") {
+        ContentView()
+            .inRootView()
+    }
+#endif

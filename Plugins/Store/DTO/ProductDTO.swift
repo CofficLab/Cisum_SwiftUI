@@ -2,7 +2,7 @@ import Foundation
 import StoreKit
 import SwiftUI
 
-public struct ProductDTO: Identifiable, Hashable,Sendable {
+public struct ProductDTO: Identifiable, Hashable, Sendable {
     public enum ProductKind: String, Codable, Sendable {
         case consumable
         case nonConsumable
@@ -30,7 +30,7 @@ public struct ProductDTO: Identifiable, Hashable,Sendable {
     }
 
     public static func toDTO(_ product: Product, kind: ProductDTO.ProductKind) -> ProductDTO {
-        var subscriptionDTO: SubscriptionInfoDTO? = nil
+        var subscriptionDTO: SubscriptionInfoDTO?
         if kind == .autoRenewable, let info = product.subscription {
             subscriptionDTO = info.toDTO()
         }
@@ -59,4 +59,3 @@ extension Product {
         .inRootView()
         .frame(height: 800)
 }
-

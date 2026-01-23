@@ -17,11 +17,11 @@ public struct ProductGroupsDTO: Hashable, Sendable {
 
     public init(cars: [Product], subscriptions: [Product], nonRenewables: [Product], fuel: [Product]) {
         self.cars = cars.map { ProductDTO.toDTO($0, kind: .nonConsumable) }
-        
+
         // 将订阅产品按组聚合
         let subscriptionDTOs = subscriptions.map { ProductDTO.toDTO($0, kind: .autoRenewable) }
         self.subscriptionGroups = Self.createSubscriptionGroups(from: subscriptionDTOs)
-        
+
         self.nonRenewables = nonRenewables.map { ProductDTO.toDTO($0, kind: .nonRenewable) }
         self.fuel = fuel.map { ProductDTO.toDTO($0, kind: .consumable) }
     }
@@ -48,17 +48,18 @@ public struct ProductGroupsDTO: Hashable, Sendable {
         }
 
         self.cars = newCars.map { ProductDTO.toDTO($0, kind: .nonConsumable) }
-        
+
         // 将订阅产品按组聚合
         let subscriptionDTOs = newSubscriptions.map { ProductDTO.toDTO($0, kind: .autoRenewable) }
         self.subscriptionGroups = Self.createSubscriptionGroups(from: subscriptionDTOs)
-        
+
         self.nonRenewables = newNonRenewables.map { ProductDTO.toDTO($0, kind: .nonRenewable) }
         self.fuel = newFuel.map { ProductDTO.toDTO($0, kind: .consumable) }
     }
 }
 
 // MARK: - Subscription Groups
+
 extension ProductGroupsDTO {
     /// 创建订阅组（按订阅组 ID 聚合订阅类商品）
     ///
@@ -76,25 +77,25 @@ extension ProductGroupsDTO {
         let groups: [SubscriptionGroupDTO] = grouped.map { groupId, items in
             let nameFromProduct = items.first?.subscription?.groupDisplayName
             let displayName = nameFromProduct ?? groupId
-            
+
             // 按价格从低到高排序订阅产品
             let sortedItems = items.sorted { (first: ProductDTO, second: ProductDTO) in
-                return first.price < second.price
+                first.price < second.price
             }
-            
+
             return SubscriptionGroupDTO(name: displayName, id: groupId, subscriptions: sortedItems)
         }
 
         return groups
     }
-    
+
     /// 获取所有订阅产品（扁平化所有订阅组中的订阅）
     ///
     /// - Returns: 所有订阅产品的列表
     public var subscriptions: [ProductDTO] {
         return subscriptionGroups.flatMap { $0.subscriptions }
     }
-    
+
     /// 根据订阅组 ID 查找订阅组
     ///
     /// - Parameter groupId: 订阅组 ID
