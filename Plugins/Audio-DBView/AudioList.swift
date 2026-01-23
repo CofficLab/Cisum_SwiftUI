@@ -26,7 +26,7 @@ import SwiftUI
    - 触发加载：滚动到倒数 10 条或 80% 位置
    - 自动去重：防止重复加载相同数据
  */
-struct AudioListPaginated: View, SuperThread, SuperLog, SuperEvent {
+struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     nonisolated static let emoji = "📬"
     nonisolated static let verbose = false
 
@@ -134,7 +134,7 @@ struct AudioListPaginated: View, SuperThread, SuperLog, SuperEvent {
 
 // MARK: - Action
 
-extension AudioListPaginated {
+extension AudioList {
     /// 加载第一页数据
     private func loadInitial() {
         guard !isLoading else { return }
@@ -270,7 +270,7 @@ extension AudioListPaginated {
 
 // MARK: - Setter
 
-extension AudioListPaginated {
+extension AudioList {
     /// 设置选中的音频
     @MainActor
     private func setSelection(_ newValue: URL?, reason: String) {
@@ -356,7 +356,7 @@ extension AudioListPaginated {
 
 // MARK: - Event Handler
 
-extension AudioListPaginated {
+extension AudioList {
     /// 处理视图出现事件
     func handleOnAppear() {
         loadInitial()
@@ -481,7 +481,7 @@ extension AudioListPaginated {
         Task.detached(priority: .userInitiated) {
             for url in urlsToDelete {
                 if Self.verbose {
-                    os_log("\(AudioListPaginated.t)📄 删除文件: \(url.shortPath())")
+                    os_log("\(AudioList.t)📄 删除文件: \(url.shortPath())")
                 }
 
                 do {

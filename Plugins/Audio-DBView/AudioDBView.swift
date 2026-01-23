@@ -23,7 +23,7 @@ struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
             os_log("\(self.t)📺 开始渲染")
         }
 
-        return AudioListPaginated()
+        return AudioList()
             .overlay(alignment: .center) {
                 if isSorting {
                     AudioDBTips(variant: .sorting)
