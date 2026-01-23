@@ -38,7 +38,6 @@ struct TitleView: View, SuperLog, SuperThread {
                     .shadow3xl()
             }
         }
-        .background(Config.background(.red))
     }
 }
 

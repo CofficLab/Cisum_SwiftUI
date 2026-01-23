@@ -43,7 +43,6 @@ struct HeroView: View {
                 TitleView()
                     .frame(maxWidth: .infinity)
                     .frame(height: titleViewHeight)
-                    .background(Config.background(.blue))
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }

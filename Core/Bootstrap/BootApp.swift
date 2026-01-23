@@ -46,9 +46,8 @@ struct BootApp: App, SuperLog {
             }
         #else
             WindowGroup {
-                RootView {
-                    ContentView()
-                }
+                ContentView()
+                    .inRootView()
             }
         #endif
     }

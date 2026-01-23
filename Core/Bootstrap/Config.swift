@@ -63,14 +63,6 @@ enum Config: SuperLog {
     static let isNotDesktop = MagicApp.isNotDesktop
     static let isiOS = MagicApp.isiOS
 
-    /// 开发时如果不想显示背景，改成true
-    static let noBackground = true
-
-    /// 生产环境一定不会显示背景
-    static func background(_ color: Color = .red) -> Color {
-        Config.debug && !noBackground ? color.opacity(0.3) : Color.clear
-    }
-
     // MARK: - Storage Configuration
 
     static let keyOfStorageLocation = "StorageLocation"
