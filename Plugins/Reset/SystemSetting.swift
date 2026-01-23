@@ -1,8 +1,8 @@
 import MagicKit
 import SwiftUI
 
-struct ResetSetting: View, SuperLog {
-    nonisolated static let emoji = "🫙"
+struct SystemSetting: View, SuperLog {
+    nonisolated static let emoji = "⚙️"
     nonisolated static let verbose = false
 
     @EnvironmentObject var app: AppProvider
@@ -10,12 +10,19 @@ struct ResetSetting: View, SuperLog {
     @State private var showConfirmSheet: Bool = false
 
     var body: some View {
-        MagicSettingSection {
-            MagicSettingRow(title: "重置", description: "重置设置，恢复成系统默认状态", icon: .iconReset) {
+        MagicSettingSection(title: "APP 信息") {
+            // 版本信息
+            MagicSettingRow(title: "当前版本", description: "APP 的版本", icon: "info.circle", content: {
+                Text(MagicApp.getVersion())
+                    .font(.footnote)
+            })
+
+            // 重置设置
+            MagicSettingRow(title: "重置设置", description: "重置设置，恢复成系统默认状态", icon: .iconReset) {
                 MagicButton.simple(icon: .iconReset, action: showResetConfirm)
-                .magicShape(.circle)
-                .magicStyle(.secondary)
-                .magicSize(.small)
+                    .magicShape(.circle)
+                    .magicStyle(.secondary)
+                    .magicSize(.small)
             }
         }
         .sheet(isPresented: $showConfirmSheet) {
@@ -37,7 +44,7 @@ struct ResetSetting: View, SuperLog {
 
 // MARK: - Action
 
-extension ResetSetting {
+extension SystemSetting {
     func showResetConfirm() {
         showConfirmSheet = true
     }
@@ -63,11 +70,10 @@ extension ResetSetting {
         .inRootView()
 }
 
-#Preview("Setting") {
-    SettingView()
-        .background(.background)
-        .frame(height: 1200)
+#Preview("SystemSetting") {
+    SystemSetting()
         .inRootView()
+        .frame(height: 800)
 }
 
 #Preview("App - Large") {

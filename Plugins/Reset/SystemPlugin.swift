@@ -3,26 +3,25 @@ import MagicKit
 import OSLog
 import SwiftUI
 
-actor ResetPlugin: SuperPlugin, SuperLog {
-    static let emoji = "🔄"
+actor SystemPlugin: SuperPlugin, SuperLog {
+    static let emoji = "⚙️"
     static let verbose = false
     static var shouldRegister: Bool { true }
 
-    /// 注册顺序设为 95，最后执行
-    static var order: Int { 95 }
+    /// 注册顺序设为 90，在其他插件之后执行
+    static var order: Int { 90 }
 
-    let title = "重置"
-    let description = "恢复默认配置"
-    let iconName = "arrow.counterclockwise"
-    
+    let title = "系统"
+    let description = "系统设置"
+    let iconName = "gearshape"
 
     @MainActor
     func addSettingView() -> AnyView? {
-        return AnyView(ResetSetting())
+        return AnyView(SystemSetting())
     }
 }
 
-
+// MARK: Preview
 
 #Preview("ResetConfirmContent") {
     RootView {
