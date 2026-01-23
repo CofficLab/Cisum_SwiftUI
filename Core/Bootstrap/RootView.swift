@@ -47,6 +47,10 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                 } else {
                     NavigationStack {
                         ZStack {
+                            // iOS 的 NavigationStack 需要放这里才能设置背景
+                            Config.rootBackground
+                                .edgesIgnoringSafeArea(.all)
+
                             Group {
                                 if let wrapped = pluginProvider.wrapWithCurrentRoot(content: { content }) {
                                     wrapped
@@ -68,13 +72,13 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                 }
             }
         }
+        .background(Config.rootBackground)
         .onStorageLocationChanged(perform: onStorageLocationChange)
         .onGuideDone(perform: onLaunchEnd)
         .onCloudAccountStateChanged(perform: onCloudAccountStateChanged)
         .onStorageLocationDidReset(perform: onResetStorageLocation)
         .frame(maxWidth: .infinity)
         .frame(maxHeight: .infinity)
-        .background(Config.rootBackground)
         .environmentObject(cloudProvider)
         .environmentObject(man)
         .environmentObject(appProvider)
