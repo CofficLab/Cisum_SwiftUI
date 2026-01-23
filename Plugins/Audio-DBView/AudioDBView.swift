@@ -26,7 +26,7 @@ struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
         return AudioListPaginated()
             .overlay(alignment: .center) {
                 if isSorting {
-                    AudioSortingTips(sortModeIcon: sortMode.icon, description: sortMode.description, isAnimating: isSorting)
+                    AudioDBTips(variant: .sorting)
                         .transition(.opacity)
                 }
             }

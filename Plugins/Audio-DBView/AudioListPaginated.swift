@@ -61,13 +61,13 @@ struct AudioListPaginated: View, SuperThread, SuperLog, SuperEvent {
     @State private var totalCount: Int = 0
 
     var body: some View {
-        Group {
+        ZStack {
+            audioListView
+
             if isLoading && urls.isEmpty {
                 AudioDBTips(variant: .loading)
             } else if urls.isEmpty && !isLoading {
                 AudioDBTips(variant: .empty)
-            } else {
-                audioListView
             }
         }
         .onAppear(perform: handleOnAppear)
