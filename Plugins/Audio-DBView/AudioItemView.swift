@@ -8,13 +8,16 @@ import SwiftUI
 struct AudioItemView: View, Equatable, SuperLog {
     nonisolated static let emoji = "🎵"
     nonisolated static let verbose = true
-    
+
     @EnvironmentObject var m: MagicMessageProvider
+    @EnvironmentObject var playMan: PlayMan
 
     let url: URL
 
     /// 文件大小显示文本
     @State private var sizeText: String = ""
+    /// 删除确认对话框
+    @State private var showDeleteConfirmation = false
 
     nonisolated static func == (lhs: AudioItemView, rhs: AudioItemView) -> Bool {
         lhs.url == rhs.url
@@ -58,10 +61,42 @@ extension AudioItemView {
         .onAppear(perform: handleOnAppear)
         .contextMenu {
             Button(action: {
+                playAudio()
+            }) {
+                Label("播放", systemImage: "play.fill")
+            }
+
+            Button(action: {
+                showInFinder()
+            }) {
+                Label("在 Finder 中显示", systemImage: "finder")
+            }
+
+            Button(action: {
                 exportToDownloads()
             }) {
                 Label("导出到下载目录", systemImage: "arrow.down.doc")
             }
+
+            Divider()
+
+            Button(role: .destructive, action: {
+                showDeleteConfirmation = true
+            }) {
+                Label("删除", systemImage: "trash")
+            }
+        }
+        .confirmationDialog(
+            "确定要删除这个文件吗？",
+            isPresented: $showDeleteConfirmation,
+            titleVisibility: .visible
+        ) {
+            Button("取消", role: .cancel) {}
+            Button("删除", role: .destructive) {
+                deleteFile()
+            }
+        } message: {
+            Text(url.lastPathComponent)
         }
     }
 }
@@ -132,6 +167,60 @@ extension AudioItemView {
                     os_log("\(Self.t)❌ 导出文件失败: \(error.localizedDescription)")
                     self.m.error("导出文件失败: \(error.localizedDescription)")
                 }
+            }
+        }
+    }
+
+    /// 播放音频
+    private func playAudio() {
+        Task {
+            await playMan.play(url, reason: "音频列表右键菜单")
+            if Self.verbose {
+                os_log("\(Self.t)▶️ 播放音频: \(url.lastPathComponent)")
+            }
+        }
+    }
+
+    /// 在 Finder 中显示
+    private func showInFinder() {
+        #if os(macOS)
+        NSWorkspace.shared.activateFileViewerSelecting([url])
+        if Self.verbose {
+            os_log("\(Self.t)🔍 在 Finder 中显示: \(url.path)")
+        }
+        #endif
+    }
+
+    /// 删除文件
+    private func deleteFile() {
+        Task {
+            do {
+                // 如果正在播放这个文件，先停止播放
+                if playMan.currentURL == url {
+                    await playMan.stop(reason: "删除文件")
+                    if Self.verbose {
+                        os_log("\(Self.t)⏹️ 停止播放当前文件")
+                    }
+                }
+
+                // 删除文件
+                try FileManager.default.removeItem(at: url)
+
+                if Self.verbose {
+                    os_log("\(Self.t)🗑️ 文件已删除: \(url.path)")
+                }
+                self.m.info("文件已删除")
+
+                // 发送通知刷新列表
+                NotificationCenter.default.post(
+                    name: NSNotification.Name("AudioFilesDidChange"),
+                    object: nil
+                )
+            } catch {
+                if Self.verbose {
+                    os_log("\(Self.t)❌ 删除文件失败: \(error.localizedDescription)")
+                }
+                self.m.error("删除文件失败: \(error.localizedDescription)")
             }
         }
     }
