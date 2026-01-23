@@ -21,7 +21,6 @@ enum Config: SuperLog {
 
     static let id = "com.yueyi.cisum"
     static let logger = Logger.self
-    static let maxAudioCount = 100
     static let appSupportDir: URL? = MagicApp.getAppSpecificSupportDirectory()
     static let localContainer: URL? = MagicApp.getContainerDirectory()
     static let localDocumentsDir: URL? = MagicApp.getDocumentsDirectory()
@@ -29,12 +28,6 @@ enum Config: SuperLog {
     static let databaseDir: URL = MagicApp.getDatabaseDirectory()
     static let containerIdentifier = "iCloud.yueyi.cisum"
     static let dbDirName = debug ? "db_debug" : "db_production"
-    static let supportedExtensions = [
-        "mp3",
-        "m4a",
-        "flac",
-        "wav",
-    ]
 
     static var debug: Bool {
         #if DEBUG
@@ -206,6 +199,17 @@ extension Config {
 
             window.setFrame(frame, display: true)
         #endif
+    }
+}
+
+// MARK: Database
+
+extension Config {
+    static func createDatabaseFile(name: String) throws -> URL {
+        try Config.getDBRootDir()
+            .appendingPathComponent(name)
+            .appendingPathComponent("\(name).db")
+            .createIfNotExist()
     }
 }
 

@@ -3,16 +3,19 @@ import MagicKit
 import OSLog
 import SwiftUI
 
-actor WelcomePlugin: SuperPlugin, SuperLog, PluginRegistrant {
+actor WelcomePlugin: SuperPlugin, SuperLog {
     static let emoji = "👏"
     static let verbose = true
-    private static var enabled: Bool { true }
+    static var shouldRegister: Bool { true }
 
-    let label = "Welcome"
+    /// 注册顺序设为 -100，最先执行
+    static var order: Int { -100 }
+
+    let title = "欢迎"
     let description = "欢迎界面"
-    let iconName = "music.note"
-    nonisolated(unsafe) var enabled = true
+    let iconName = "hand.wave"
     
+
     @MainActor
     func addGuideView() -> AnyView? {
         guard Config.getStorageLocation() == nil else {
@@ -20,25 +23,6 @@ actor WelcomePlugin: SuperPlugin, SuperLog, PluginRegistrant {
         }
 
         return AnyView(WelcomeView())
-    }
-}
-
-// MARK: - PluginRegistrant
-extension WelcomePlugin {
-    @objc static func register() {
-        guard Self.enabled else {
-            return 
-        }
-
-        Task {
-            if Self.verbose {
-                os_log("\(self.t)🚀 Register")
-            }
-
-            await PluginRegistry.shared.register(id: "Welcome", order: -100) {
-                WelcomePlugin()
-            }
-        }
     }
 }
 
@@ -58,22 +42,22 @@ extension WelcomePlugin {
 }
 
 #if os(macOS)
-#Preview("App - Large") {
-    ContentView()
-    .inRootView()
-        .frame(width: 600, height: 1000)
-}
+    #Preview("App - Large") {
+        ContentView()
+            .inRootView()
+            .frame(width: 600, height: 1000)
+    }
 
-#Preview("App - Small") {
-    ContentView()
-    .inRootView()
-        .frame(width: 600, height: 600)
-}
+    #Preview("App - Small") {
+        ContentView()
+            .inRootView()
+            .frame(width: 600, height: 600)
+    }
 #endif
 
 #if os(iOS)
-#Preview("iPhone") {
-    ContentView()
-    .inRootView()
-}
+    #Preview("iPhone") {
+        ContentView()
+            .inRootView()
+    }
 #endif

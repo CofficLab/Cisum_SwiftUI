@@ -49,6 +49,7 @@ struct LogoView: View,SuperLog {
             size: size
         )
         .background(backgroundShapeView)
+        .shadow3xl()
         .rotationEffect(.degrees(rotationAngle))
         .onAppear {
             if rotationSpeed > 0 {

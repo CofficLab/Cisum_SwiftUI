@@ -7,9 +7,16 @@
         "Coffic",
         "externaldrive",
         "fileprivate",
+        "MVVM",
         "nonisolated",
+        "oneline",
         "pbxproj",
-        "softprops"
+        "pgvector",
+        "softprops",
+        "Supabase",
+        "swiftlint",
+        "swiftui",
+        "xcodeproj"
     ],
     "editor.quickSuggestions": {
         "comments": "off",

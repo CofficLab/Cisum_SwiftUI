@@ -2,11 +2,11 @@ import MagicKit
 import OSLog
 import SwiftUI
 
-actor LikeButtonPlugin: SuperPlugin, PluginRegistrant, SuperLog {
+actor LikeButtonPlugin: SuperPlugin, SuperLog {
     let description: String = "喜欢/取消喜欢 按钮"
     let iconName: String = .iconHeart
-    private static var enabled: Bool { false }
-    private static var verbose: Bool { false }
+    static var shouldRegister: Bool { false }
+    static var verbose: Bool { false }
     nonisolated static let emoji = "🦁"
 
     @MainActor
@@ -18,7 +18,8 @@ actor LikeButtonPlugin: SuperPlugin, PluginRegistrant, SuperLog {
 private struct LikeToggleButtonView: View, SuperLog {
     nonisolated static let emoji = "🦁"
     static let verbose = false
-    
+    /// 注册顺序设为 21，在其他插件之后执行
+    static var order: Int { 21 }    
     @EnvironmentObject var man: PlayMan
 
     var body: some View {
@@ -31,26 +32,6 @@ private struct LikeToggleButtonView: View, SuperLog {
                 EmptyView()
             } else {
                 man.makeLikeButtonView(size: .mini, shape: .circle, shapeVisibility: .onHover)
-            }
-        }
-    }
-}
-
-// MARK: - PluginRegistrant
-
-extension LikeButtonPlugin {
-    @objc static func register() {
-        guard Self.enabled else {
-            return
-        }
-
-        Task {
-            if Self.verbose {
-                os_log("\(self.t)🚀🚀🚀 Register")
-            }
-
-            await PluginRegistry.shared.register(id: "LikeButton", order: 21) {
-                LikeButtonPlugin()
             }
         }
     }

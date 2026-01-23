@@ -33,7 +33,7 @@ struct AppTabView: View, SuperLog, SuperThread {
                 }
             }
         }
-        .onChange(of: p.current?.id, onChangeOfCurrentPlugin)
+        .onChange(of: p.currentSceneName, onChangeOfCurrentScene)
         .onAppear(perform: onAppear)
     }
 }
@@ -44,14 +44,12 @@ extension AppTabView {
     /// 构建 TabView
     func buildTabView() -> AnyView {
         if Self.verbose {
-            os_log("\(self.t)🏗️ buildTabView() 构建新的 TabView - 当前插件: \(p.current?.id ?? "nil")")
+            os_log("\(self.t)🏗️ buildTabView() 构建新的 TabView - 当前场景: \(p.currentSceneName ?? "nil")")
         }
-
-        let currentId = p.current?.id
 
         // 收集所有提供的 Tab 视图及标签
         let tabViews = p.plugins.compactMap { plugin in
-            plugin.addTabView(reason: self.className, currentPluginId: currentId)
+            plugin.addTabView(reason: self.className, currentSceneName: p.currentSceneName)
         }
 
         let tabView = TabView(selection: $tab) {
@@ -82,10 +80,10 @@ extension AppTabView {
 // MARK: - Event Handler
 
 extension AppTabView {
-    /// 当前插件变化时的处理（事件驱动）
-    func onChangeOfCurrentPlugin(oldValue: String?, newValue: String?) {
+    /// 当前场景变化时的处理（事件驱动）
+    func onChangeOfCurrentScene(oldValue: String?, newValue: String?) {
         if Self.verbose {
-            os_log("\(self.t)🔄 插件变化事件: \(oldValue ?? "nil") -> \(newValue ?? "nil")")
+            os_log("\(self.t)🔄 场景变化事件: \(oldValue ?? "nil") -> \(newValue ?? "nil")")
             os_log("\(self.t)📱 开始重新构建 TabView...")
         }
 

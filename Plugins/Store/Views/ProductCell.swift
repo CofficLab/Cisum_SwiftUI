@@ -91,9 +91,9 @@ struct ProductCell: View, SuperLog {
                 .bold()
         }
     }
-    
+
     // MARK: 格式化周期单位
-    
+
     private func formatPeriodUnit(_ period: StoreSubscriptionPeriodDTO) -> String {
         let plural = 1 < period.value
         switch period.unit {
@@ -109,13 +109,13 @@ struct ProductCell: View, SuperLog {
             return "period"
         }
     }
-    
+
     // MARK: 格式化试用期信息
-    
+
     private func formatIntroductoryOffer(_ offer: IntroductoryOfferDTO) -> String {
         let periodText: String
         let plural = offer.subscriptionPeriod.value > 1
-        
+
         switch offer.subscriptionPeriod.unit {
         case "day":
             periodText = plural ? "\(offer.subscriptionPeriod.value) 天" : "天"
@@ -128,7 +128,7 @@ struct ProductCell: View, SuperLog {
         default:
             periodText = "period"
         }
-        
+
         switch offer.paymentMode {
         case "FreeTrial":
             return "首\(periodText)免费"
@@ -233,15 +233,57 @@ extension ProductCell {
 
 // MARK: - Preview
 
-#Preview("Buy") {
+#Preview("PurchaseView - All") {
     PurchaseView(showCloseButton: false)
         .inRootView()
         .frame(height: 800)
 }
 
-#Preview("APP") {
-    ContentView()
+#Preview("PurchaseView - Subscription Only") {
+    PurchaseView(showCloseButton: false,
+                 showSubscription: true,
+                 showOneTime: false,
+                 showNonRenewable: false,
+                 showConsumable: false)
         .inRootView()
-        .frame(width: 700)
         .frame(height: 800)
 }
+
+#Preview("Store Debug") {
+    DebugView()
+        .inRootView()
+        .frame(width: 500, height: 700)
+}
+
+#Preview("Debug") {
+    DebugView()
+        .inRootView()
+        .frame(height: 800)
+}
+
+#Preview("Buy") {
+    PurchaseView()
+        .inRootView()
+        .frame(height: 800)
+}
+
+#if os(macOS)
+    #Preview("App - Large") {
+        ContentView()
+            .inRootView()
+            .frame(width: 600, height: 1000)
+    }
+
+    #Preview("App - Small") {
+        ContentView()
+            .inRootView()
+            .frame(width: 500, height: 800)
+    }
+#endif
+
+#if os(iOS)
+    #Preview("iPhone") {
+        ContentView()
+            .inRootView()
+    }
+#endif

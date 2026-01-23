@@ -2,11 +2,11 @@ import MagicKit
 import OSLog
 import SwiftUI
 
-actor OpenButtonPlugin: SuperPlugin, PluginRegistrant, SuperLog {
+actor OpenButtonPlugin: SuperPlugin, SuperLog {
     let description: String = "当前资源打开按钮"
     let iconName: String = .iconFinder
-    private static var enabled: Bool { true }
-    private static var verbose: Bool { true }
+    static var shouldRegister: Bool { true }
+    static var verbose: Bool { true }
     nonisolated static let emoji = "😜"
 
     #if os(macOS)
@@ -17,29 +17,11 @@ actor OpenButtonPlugin: SuperPlugin, PluginRegistrant, SuperLog {
     #endif
 }
 
-// MARK: - PluginRegistrant
-extension OpenButtonPlugin {
-    @objc static func register() {
-        guard Self.enabled else {
-            return
-        }
-
-        Task {
-            if Self.verbose {
-                os_log("\(self.t)🚀 Register")
-            }
-            
-            await PluginRegistry.shared.register(id: "OpenButton", order: 20) {
-                OpenButtonPlugin()
-            }
-        }
-    }
-}
-
 private struct OpenCurrentButtonView: View, SuperLog {
     nonisolated static let emoji = "😜"
     static let verbose = false
-    
+    /// 注册顺序设为 20，在其他插件之后执行
+    static var order: Int { 20 }    
     @EnvironmentObject var man: PlayMan
 
     @State private var url: URL? = nil

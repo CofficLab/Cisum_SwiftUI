@@ -3,14 +3,13 @@ import MagicKit
 import OSLog
 import SwiftUI
 
-actor StorePlugin: SuperPlugin, SuperLog, PluginRegistrant {
-    static let emoji = "🛒"
-    private static var enabled: Bool { false }
+actor StorePlugin: SuperPlugin {
+    static var shouldRegister: Bool { true }
+    static var order: Int { 80 }
 
-    let label: String = "Store"
-    let description: String = "应用内购买和订阅"
-    let iconName: String = "cart"
-    let isGroup: Bool = false
+    let title = "商店"
+    let description = "应用内购买和订阅"
+    let iconName = "cart"
 
     @MainActor
     func addSettingView() -> AnyView? {
@@ -18,38 +17,23 @@ actor StorePlugin: SuperPlugin, SuperLog, PluginRegistrant {
     }
 }
 
-// MARK: - PluginRegistrant
-extension StorePlugin {
-    @objc static func register() {
-        guard Self.enabled else {
-            return
-        }
-
-        Task {
-            await PluginRegistry.shared.register(id: "Store", order: 80) {
-                StorePlugin()
-            }
-        }
-    }
-}
-
 #if os(macOS)
-#Preview("App - Large") {
-    ContentView()
-    .inRootView()
-        .frame(width: 600, height: 1000)
-}
+    #Preview("App - Large") {
+        ContentView()
+            .inRootView()
+            .frame(width: 600, height: 1000)
+    }
 
-#Preview("App - Small") {
-    ContentView()
-    .inRootView()
-        .frame(width: 500, height: 800)
-}
+    #Preview("App - Small") {
+        ContentView()
+            .inRootView()
+            .frame(width: 500, height: 800)
+    }
 #endif
 
 #if os(iOS)
-#Preview("iPhone") {
-    ContentView()
-    .inRootView()
-}
+    #Preview("iPhone") {
+        ContentView()
+            .inRootView()
+    }
 #endif

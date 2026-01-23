@@ -1,8 +1,7 @@
+import MagicKit
 import OSLog
 import StoreKit
 import SwiftUI
-import MagicKit
-
 
 struct AllSubscriptions: View, SuperLog {
     @Environment(\.colorScheme) var colorScheme: ColorScheme
@@ -10,7 +9,7 @@ struct AllSubscriptions: View, SuperLog {
     @State private var subscriptions: [ProductDTO] = []
     @State private var refreshing = false
     @State private var error: Error? = nil
-    
+
     nonisolated static let emoji = "🖥️"
 
     var body: some View {
@@ -71,7 +70,7 @@ struct AllSubscriptions: View, SuperLog {
         if verbose {
             os_log("\(self.t)GetProducts because of \(reason)")
         }
-        
+
         refreshing = true
         Task {
             do {
@@ -80,7 +79,7 @@ struct AllSubscriptions: View, SuperLog {
             } catch {
                 self.error = error
             }
-            
+
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
                 refreshing = false
             })
@@ -105,15 +104,57 @@ struct AllSubscriptions: View, SuperLog {
 
 // MARK: - Preview
 
+#Preview("PurchaseView - All") {
+    PurchaseView(showCloseButton: false)
+        .inRootView()
+        .frame(height: 800)
+}
+
+#Preview("PurchaseView - Subscription Only") {
+    PurchaseView(showCloseButton: false,
+                 showSubscription: true,
+                 showOneTime: false,
+                 showNonRenewable: false,
+                 showConsumable: false)
+        .inRootView()
+        .frame(height: 800)
+}
+
+#Preview("Store Debug") {
+    DebugView()
+        .inRootView()
+        .frame(width: 500, height: 700)
+}
+
+#Preview("Debug") {
+    DebugView()
+        .inRootView()
+        .frame(height: 800)
+}
+
 #Preview("Buy") {
     PurchaseView()
         .inRootView()
         .frame(height: 800)
 }
 
-#Preview("APP") {
-    ContentView()
-        .inRootView()
-        .frame(width: 700)
-        .frame(height: 800)
-}
+#if os(macOS)
+    #Preview("App - Large") {
+        ContentView()
+            .inRootView()
+            .frame(width: 600, height: 1000)
+    }
+
+    #Preview("App - Small") {
+        ContentView()
+            .inRootView()
+            .frame(width: 500, height: 800)
+    }
+#endif
+
+#if os(iOS)
+    #Preview("iPhone") {
+        ContentView()
+            .inRootView()
+    }
+#endif

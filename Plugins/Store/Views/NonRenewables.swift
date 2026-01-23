@@ -69,7 +69,7 @@ struct NonRenewables: View {
             } catch {
                 self.error = error
             }
-            
+
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
                 refreshing = false
             })
@@ -79,15 +79,57 @@ struct NonRenewables: View {
 
 // MARK: - Preview
 
+#Preview("PurchaseView - All") {
+    PurchaseView(showCloseButton: false)
+        .inRootView()
+        .frame(height: 800)
+}
+
+#Preview("PurchaseView - Subscription Only") {
+    PurchaseView(showCloseButton: false,
+                 showSubscription: true,
+                 showOneTime: false,
+                 showNonRenewable: false,
+                 showConsumable: false)
+        .inRootView()
+        .frame(height: 800)
+}
+
+#Preview("Store Debug") {
+    DebugView()
+        .inRootView()
+        .frame(width: 500, height: 700)
+}
+
+#Preview("Debug") {
+    DebugView()
+        .inRootView()
+        .frame(height: 800)
+}
+
 #Preview("Buy") {
     PurchaseView()
         .inRootView()
         .frame(height: 800)
 }
 
-#Preview("APP") {
-    ContentView()
-        .inRootView()
-        .frame(width: 700)
-        .frame(height: 800)
-}
+#if os(macOS)
+    #Preview("App - Large") {
+        ContentView()
+            .inRootView()
+            .frame(width: 600, height: 1000)
+    }
+
+    #Preview("App - Small") {
+        ContentView()
+            .inRootView()
+            .frame(width: 500, height: 800)
+    }
+#endif
+
+#if os(iOS)
+    #Preview("iPhone") {
+        ContentView()
+            .inRootView()
+    }
+#endif

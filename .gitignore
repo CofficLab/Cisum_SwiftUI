@@ -9,3 +9,9 @@ xcuserdata/
 
 *.log
 .build/
+
+## Generated reports
+.reports/
+
+## Swift Package Manager
+.swiftpm/

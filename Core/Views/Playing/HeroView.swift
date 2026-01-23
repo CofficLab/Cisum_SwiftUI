@@ -13,19 +13,11 @@ struct HeroView: View {
 
     // Demo mode 的静态演示封面
     private var demoAlbumView: some View {
-        ZStack {
-            LinearGradient(
-                colors: [.blue.opacity(0.8), .blue.opacity(0.1)],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-
-            LogoView(
-                background: .white.opacity(0.1),
-                backgroundShape: .circle,
-                size: 200
-            )
-        }
+        LogoView(
+            background: .white.opacity(0.3),
+            backgroundShape: .circle,
+            size: 200
+        )
     }
 
     var body: some View {
@@ -87,6 +79,11 @@ struct HeroView: View {
         .inRootView()
         .inDemoMode()
         .frame(width: Config.minWidth, height: 700)
+}
+
+#Preview("App Store Hero") {
+    AppStoreHero()
+        .inMagicContainer(.macBook13, scale: 1)
 }
 
 #if os(iOS)

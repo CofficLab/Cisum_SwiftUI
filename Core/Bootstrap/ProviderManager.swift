@@ -34,10 +34,52 @@ final class ProviderManager: SuperLog {
         self.cloud = CloudProvider()
 
         // PlayMan
-        self.man = PlayMan(playlistEnabled: false, verbose: Self.verbose, locale: .current)
+        self.man = PlayMan(
+            playlistEnabled: false,
+            verbose: Self.verbose,
+            locale: .current,
+            defaultArtwork: Image.musicFill,
+            defaultArtworkBuilder: {
+                LogoView(
+                    background: .white.opacity(0.3),
+                    backgroundShape: .circle,
+                    size: 200
+                )
+            }
+        )
 
         if Self.verbose {
             os_log("\(Self.t)✅ 服务提供者初始化完成")
         }
     }
 }
+
+// MARK: Preview
+
+#if os(macOS)
+    #Preview("App - Large") {
+        ContentView()
+            .inRootView()
+            .frame(width: Config.minWidth, height: 1000)
+    }
+
+    #Preview("App - Small") {
+        ContentView()
+            .inRootView()
+            .frame(width: Config.minWidth, height: 700)
+    }
+
+    #Preview("Demo Mode") {
+        ContentView()
+            .inRootView()
+            .inDemoMode()
+            .frame(width: Config.minWidth, height: 1000)
+    }
+#endif
+
+#if os(iOS)
+    #Preview("iPhone") {
+        ContentView()
+            .inRootView()
+    }
+#endif
