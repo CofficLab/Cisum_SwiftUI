@@ -1,15 +1,61 @@
 import Foundation
 import MagicKit
 import OSLog
+import StoreKit
 import SwiftUI
 
-struct StoreSettingEntry: View {
+struct StoreSettingEntry: View, SuperLog {
+    nonisolated static let emoji = "💰"
+
     @State private var showBuySheet = false
+    @State private var purchaseInfo: PurchaseInfo = .none
+    @State private var tierDisplayName: String = "免费版"
+    @State private var statusDescription: String = "当前使用免费版本"
 
     var body: some View {
-        MagicSettingSection {
+        MagicSettingSection(title: "订阅信息") {
+            // 当前版本
+            MagicSettingRow(title: "当前版本", description: "您正在使用的版本", icon: "star.fill", content: {
+                HStack {
+                    Text(tierDisplayName)
+                        .font(.footnote)
+                }
+            })
+
+            // 订阅状态
+            MagicSettingRow(title: "订阅状态", description: statusDescription, icon: "info.circle", content: {
+                HStack {
+                    if purchaseInfo.isProOrHigher {
+                        if purchaseInfo.isExpired {
+                            Text("已过期")
+                                .font(.footnote)
+                                .foregroundStyle(.red)
+                        } else {
+                            Text("有效")
+                                .font(.footnote)
+                                .foregroundStyle(.green)
+                        }
+                    } else {
+                        Text("免费版")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            })
+
+            // 到期时间（如果有订阅）
+            if let expiresAt = purchaseInfo.expiresAt {
+                MagicSettingRow(title: "到期时间", description: "订阅到期日期", icon: "calendar", content: {
+                    HStack {
+                        Text(expiresAt.fullDateTime)
+                            .font(.footnote)
+                    }
+                })
+            }
+
+            // 购买入口
             MagicSettingRow(title: "应用内购买", description: "订阅专业版，解锁所有功能", icon: "cart", content: {
-                MagicButton.simple(title: "查看订阅") {
+                MagicButton.simple(title: purchaseInfo.isNotProOrHigher ? "查看订阅" : "升级订阅") {
                     showBuySheet = true
                 }
                 .magicIcon("app.gift")
@@ -21,13 +67,38 @@ struct StoreSettingEntry: View {
         .sheet(isPresented: $showBuySheet) {
             PurchaseView(showCloseButton: true)
         }
+        .task {
+            self.updatePurchaseInfo()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .storeTransactionUpdated)) { _ in
+            self.updatePurchaseInfo()
+        }
+    }
+}
+
+// MARK: - Actions
+
+extension StoreSettingEntry {
+    private func updatePurchaseInfo() {
+        purchaseInfo = StoreService.cachedPurchaseInfo()
+        tierDisplayName = purchaseInfo.effectiveTier.displayName
+
+        if purchaseInfo.isProOrHigher {
+            if purchaseInfo.isExpired {
+                statusDescription = "订阅已过期，请续费"
+            } else {
+                statusDescription = "订阅有效，享受完整功能"
+            }
+        } else {
+            statusDescription = "当前使用免费版本"
+        }
     }
 }
 
 // MARK: - Preview
 
-#Preview("Debug") {
-    DebugView()
+#Preview("Store Settings") {
+    StoreSettingEntry()
         .inRootView()
         .frame(height: 800)
 }
