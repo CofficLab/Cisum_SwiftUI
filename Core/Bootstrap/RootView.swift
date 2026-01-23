@@ -47,6 +47,9 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                 } else {
                     NavigationStack {
                         ZStack {
+                            // iOS 背景必须放这里
+                            Config.rootBackground
+                            
                             Group {
                                 if let wrapped = pluginProvider.wrapWithCurrentRoot(content: { content }) {
                                     wrapped
@@ -173,6 +176,8 @@ extension View {
         }
     }
 }
+
+// MARK: Preview
 
 #if os(macOS)
     #Preview("App - Large") {

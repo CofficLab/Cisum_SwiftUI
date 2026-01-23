@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/nookery/MagicPlayMan",
       "state" : {
-        "revision" : "11144b9c46a71675d2c6536e611e9c17589ce320",
-        "version" : "1.0.2"
+        "revision" : "5b9d3edda13f93fe7ad3e679b738d50ee205c42f",
+        "version" : "1.0.4"
       }
     },
     {

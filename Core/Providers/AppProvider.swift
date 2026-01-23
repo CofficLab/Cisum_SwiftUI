@@ -47,18 +47,32 @@ class AppProvider: NSObject, ObservableObject, AVAudioPlayerDelegate, SuperLog, 
     }
 }
 
-#Preview("Small Screen") {
-    RootView {
-        ContentView()
-    }
-    .frame(width: 500)
-    .frame(height: 600)
-}
+// MARK: Preview
 
-#Preview("Big Screen") {
-    RootView {
+#if os(macOS)
+    #Preview("App - Large") {
         ContentView()
+            .inRootView()
+            .frame(width: Config.minWidth, height: 1000)
     }
-    .frame(width: 800)
-    .frame(height: 1200)
-}
+
+    #Preview("App - Small") {
+        ContentView()
+            .inRootView()
+            .frame(width: Config.minWidth, height: 700)
+    }
+
+    #Preview("Demo Mode") {
+        ContentView()
+            .inRootView()
+            .inDemoMode()
+            .frame(width: Config.minWidth, height: 1000)
+    }
+#endif
+
+#if os(iOS)
+    #Preview("iPhone") {
+        ContentView()
+            .inRootView()
+    }
+#endif

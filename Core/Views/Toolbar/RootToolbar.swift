@@ -5,18 +5,22 @@ struct RootToolbar: ToolbarContent {
     @EnvironmentObject var p: PluginProvider
 
     var body: some ToolbarContent {
-        Group {
-            Group {
-                if p.sceneNames.count > 1 {
-                    ToolbarItem(placement: .navigation) {
-                        BtnScene()
-                    }
-                }
+        // 提前计算，避免重复调用
+        let sceneNames = p.sceneNames
+        let toolbarButtons = p.getToolBarButtons()
 
+        if !(sceneNames.isEmpty && toolbarButtons.isEmpty) {
+            if sceneNames.count > 1 {
+                ToolbarItem(placement: .navigation) {
+                    BtnScene()
+                }
+            }
+
+            if !toolbarButtons.isEmpty {
                 ToolbarItemGroup(placement: .cancellationAction) {
                     Spacer()
 
-                    ForEach(p.getToolBarButtons(), id: \.id) { item in
+                    ForEach(toolbarButtons, id: \.id) { item in
                         item.view
                     }
                 }
