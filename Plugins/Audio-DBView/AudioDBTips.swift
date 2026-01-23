@@ -30,15 +30,15 @@ struct AudioDBTips: View {
                     .foregroundStyle(.white)
 
                 #if os(macOS)
-//                if guard let disk = AudioPlugin.getAudioDisk() {
-//                    HStack { Text("或").foregroundStyle(.white) }
-//                        Button(
-//                            action: { disk.openFolder() },
-//                            label: {
-//                                Label { Text("打开仓库目录并放入文件") } icon: { Image(systemName: "doc.viewfinder.fill") }
-//                            }
-//                        )
-//                    }
+                    if let disk = AudioPlugin.getAudioDisk() {
+                        HStack { Text("或").foregroundStyle(.white) }
+                        Button(
+                            action: { disk.openFolder() },
+                            label: {
+                                Label { Text("打开仓库目录并放入文件") } icon: { Image(systemName: "doc.viewfinder.fill") }
+                            }
+                        )
+                    }
                 #endif
 
                 if Config.isNotDesktop {
@@ -46,6 +46,7 @@ struct AudioDBTips: View {
                 }
             }
             .inCard(color: .autumnOrange)
+            .shadow2xl()
         case .loading:
             VStack(spacing: 16) {
                 HStack {
@@ -69,6 +70,7 @@ struct AudioDBTips: View {
                 .padding(.top, 6)
             }
             .inCard(color: .springGreen)
+            .shadow2xl()
         }
     }
 }
