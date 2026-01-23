@@ -17,7 +17,7 @@ struct BookDBTips: View {
     var variant: Variant = .empty
 
     var supportedFormats: String {
-        Config.supportedExtensions.joined(separator: ",")
+        BookPlugin.supportedExtensions.joined(separator: ",")
     }
 
     var body: some View {

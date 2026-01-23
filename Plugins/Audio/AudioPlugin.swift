@@ -8,6 +8,14 @@ actor AudioPlugin: SuperPlugin, SuperLog {
     static let emoji = "🎧"
     static let verbose = true
     static var shouldRegister: Bool { true }
+    /// 免费版本最大音频数量
+    static let maxAudioCount = 100
+    static let supportedExtensions = [
+        "mp3",
+        "m4a",
+        "flac",
+        "wav",
+    ]
 
     /// 注册顺序设为 1，确保在 AudioScenePlugin (order: 0) 之后执行
     static var order: Int { 1 }
@@ -44,7 +52,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
         guard let repo = try? AudioRepo(disk: disk, reason: "AudioPlugin") else {
             return nil
         }
-        
+
         return repo
     }
 }
@@ -59,19 +67,19 @@ actor AudioPlugin: SuperPlugin, SuperLog {
 
 #Preview("App - Large") {
     ContentView()
-    .inRootView()
+        .inRootView()
         .frame(width: 600, height: 1000)
 }
 
 #Preview("App - Small") {
     ContentView()
-    .inRootView()
+        .inRootView()
         .frame(width: 600, height: 600)
 }
 
 #if os(iOS)
     #Preview("iPhone") {
         ContentView()
-    .inRootView()
+            .inRootView()
     }
 #endif

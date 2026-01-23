@@ -12,7 +12,7 @@ struct AudioDBTips: View {
     var variant: Variant = .empty
 
     var supportedFormats: String {
-        Config.supportedExtensions.joined(separator: ",")
+        AudioPlugin.supportedExtensions.joined(separator: ",")
     }
 
     var body: some View {

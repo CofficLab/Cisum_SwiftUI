@@ -63,6 +63,17 @@ public enum SubscriptionTier: Int, Comparable, Sendable, Codable {
     public var isUltimateOrHigher: Bool {
         self >= .ultimate
     }
+
+    public var displayName: String {
+        switch self {
+        case .none:
+            return "免费版"
+        case .pro:
+            return "专业版"
+        case .ultimate:
+            return "旗舰版"
+        }
+    }
 }
 
 enum StoreConfig: Sendable {

@@ -17,6 +17,13 @@ actor BookPlugin: SuperPlugin, SuperLog {
     let description: String = "有声书播放功能"
     let iconName: String = "book"
     static let dirName = "audios_book"
+    static let supportedExtensions = [
+        "mp3",
+        "m4a",
+        "m4b",
+        "aac",
+        "wav"
+    ]
 
     @MainActor var disk: URL?
 

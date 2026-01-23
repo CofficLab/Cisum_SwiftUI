@@ -23,11 +23,11 @@
         var body: some View {
             VStack {
                 if showProTips {
-                    ProTips()
+                    AudioCopyTips(variant: .pro)
                 }
 
                 if self.isDropping {
-                    DropTips()
+                    AudioCopyTips(variant: .drop)
                 }
             }
             .frame(maxWidth: .infinity)
@@ -55,11 +55,11 @@
 
     extension CopyWorkerView {
         private var outOfLimit: Bool {
-            count >= Config.maxAudioCount && StoreService.tierCached().isFreeVersion
+            count >= AudioPlugin.maxAudioCount && StoreService.tierCached().isFreeVersion
         }
 
         private var showProTips: Bool {
-            count >= Config.maxAudioCount && StoreService.tierCached().isFreeVersion && isDropping
+            count >= AudioPlugin.maxAudioCount && StoreService.tierCached().isFreeVersion && isDropping
         }
     }
 
