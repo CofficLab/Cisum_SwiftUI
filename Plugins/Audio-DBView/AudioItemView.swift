@@ -39,7 +39,7 @@ extension AudioItemView {
                 .magicAvatarShape(.circle)
                 .magicBackground(.blue.opacity(0.1))
                 .magicDownloadMonitor(true)
-                .magicContextMenu(false)
+//                .magicContextMenu(false)
                 .magicLoadDelay(150) // 150ms 延迟，避免快速滚动时触发过多加载
 
             // 文件信息部分

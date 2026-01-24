@@ -8,7 +8,7 @@ import SwiftUI
 @MainActor
 final class ProviderManager: SuperLog {
     static let shared = ProviderManager()
-    static let verbose = false
+    static let verbose = true
     nonisolated static let emoji = "🔧"
 
     // Providers
