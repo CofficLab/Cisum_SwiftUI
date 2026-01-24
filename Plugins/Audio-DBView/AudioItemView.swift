@@ -7,7 +7,7 @@ import SwiftUI
 /// 用于在 AudioList 中展示单个音频文件
 struct AudioItemView: View, Equatable, SuperLog {
     nonisolated static let emoji = "🎵"
-    nonisolated static let verbose = true
+    nonisolated static let verbose = false
 
     @EnvironmentObject var m: MagicMessageProvider
     @EnvironmentObject var playMan: PlayMan
@@ -34,13 +34,11 @@ extension AudioItemView {
     var body: some View {
         HStack(alignment: .center, spacing: 12) {
             // 头像部分
-            url.makeAvatarView(verbose: Self.verbose && true)
+            url.makeAvatarView(verbose: Self.verbose)
                 .magicSize(.init(width: 40, height: 40))
                 .magicAvatarShape(.circle)
                 .magicBackground(.blue.opacity(0.1))
                 .magicDownloadMonitor(true)
-//                .magicContextMenu(false)
-                .magicLoadDelay(150) // 150ms 延迟，避免快速滚动时触发过多加载
 
             // 文件信息部分
             VStack(alignment: .leading, spacing: 4) {
