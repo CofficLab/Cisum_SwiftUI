@@ -1,5 +1,5 @@
 {
-  "originHash" : "daad4fc00244d219f73271cd995989028f899c77d79cd6150730e9b4005d9a24",
+  "originHash" : "b9aafd424da6637395ce7be05311904f7b5983adcb57aa7e1f98ac1935bcf6e8",
   "pins" : [
     {
       "identity" : "id3tageditor",
@@ -31,10 +31,10 @@
     {
       "identity" : "magickit",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/nookery/MagicKit.git",
+      "location" : "https://github.com/nookery/MagicKit",
       "state" : {
-        "revision" : "0822501edb5fe2327238db67896a2debabb9ab7b",
-        "version" : "1.3.4"
+        "revision" : "6c3f4c7b0444bb18a6b6746c76446355e2f2fb2b",
+        "version" : "1.3.5"
       }
     },
     {
@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/nookery/MagicPlayMan",
       "state" : {
-        "revision" : "2316e426c203e00c4be8b31caf4fe3e87f1b6dba",
-        "version" : "1.0.6"
+        "revision" : "ff6899e0ebc25e0bb293aaef6281b9fab512ad48",
+        "version" : "1.0.7"
       }
     },
     {
