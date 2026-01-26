@@ -31,9 +31,7 @@ struct HeroView: View {
                             .frame(height: getAlbumHeight(geo))
                             .clipped()
                     } else {
-                        playMan.makeHeroView(verbose: Self.verbose, defaultView: {
-                            LogoView(background: .blue.opacity(0.1), rotationSpeed: 0.001, backgroundShape: .circle)
-                        })
+                        playMan.makeHeroView(verbose: Self.verbose)
                         .frame(maxWidth: .infinity)
                         .frame(height: getAlbumHeight(geo))
                         .clipped()
@@ -43,7 +41,6 @@ struct HeroView: View {
                 TitleView()
                     .frame(maxWidth: .infinity)
                     .frame(height: titleViewHeight)
-                    .background(Config.background(.blue))
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }

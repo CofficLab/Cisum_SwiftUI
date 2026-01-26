@@ -27,9 +27,9 @@ enum Config: SuperLog {
     static let cloudDocumentsDir: URL? = MagicApp.getCloudDocumentsDirectory()
     static let databaseDir: URL = MagicApp.getDatabaseDirectory()
     static let containerIdentifier = "iCloud.yueyi.cisum"
-    static let dbDirName = debug ? "db_debug" : "db_production"
+    static let dbDirName = isDebug ? "db_debug" : "db_production"
 
-    static var debug: Bool {
+    static var isDebug: Bool {
         #if DEBUG
             true
         #else
@@ -37,12 +37,10 @@ enum Config: SuperLog {
         #endif
     }
 
-    static var isDebug: Bool { debug }
-
     @MainActor
     @ViewBuilder
     static var rootBackground: some View {
-        MagicBackground.sunset.opacity(0.9)
+        MagicBackground.sunset.opacity(0.8)
     }
 
     static func getDBRootDir() throws -> URL {
@@ -62,14 +60,6 @@ enum Config: SuperLog {
     static let isDesktop = MagicApp.isDesktop
     static let isNotDesktop = MagicApp.isNotDesktop
     static let isiOS = MagicApp.isiOS
-
-    /// 开发时如果不想显示背景，改成true
-    static let noBackground = true
-
-    /// 生产环境一定不会显示背景
-    static func background(_ color: Color = .red) -> Color {
-        Config.debug && !noBackground ? color.opacity(0.3) : Color.clear
-    }
 
     // MARK: - Storage Configuration
 

@@ -38,7 +38,6 @@ struct ContentView: View, SuperLog, SuperThread {
             .onAppear { handleOnAppear(geo) }
             .onChange(of: showDB, onChangeOfShowDB)
             .onChange(of: geo.size.height, onChangeOfGeoHeight)
-            .background(Config.background(.teal))
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }

@@ -45,24 +45,25 @@ extension Guide {
                 HStack(spacing: 16) {
                     // 上一页按钮
                     if index > 0 {
-                        MagicButton.simple(icon: .iconPreviousPage) {
+                        Button(action: {
                             currentGuidePageIndex = index - 1
+                        }) {
+                            Image(systemName: "chevron.left")
+                                .font(.title2)
+                                .frame(width: 50, height: 50)
+                                .background(.ultraThinMaterial, in: Circle())
                         }
-                        .magicStyle(.warning)
-                        .magicShape(.circle)
-                        .magicSize(.large)
-                        .magicShapeVisibility(.always)
                     }
 
                     // 下一页按钮
-                    MagicButton.simple(icon: .iconNextPage) {
+                    Button(action: {
                         currentGuidePageIndex = index + 1
+                    }) {
+                        Image(systemName: "chevron.right")
+                            .font(.title2)
+                            .frame(width: 50, height: 50)
+                            .background(.ultraThinMaterial, in: Circle())
                     }
-                    .magicStyle(.primary)
-                    .magicShape(.circle)
-                    .magicSize(.large)
-                    .magicShapeVisibility(.always)
-                    .magicBackground(Color.primary.opacity(0.5))
                 }
                 .padding(.bottom, 16)
             }

@@ -1,28 +1,22 @@
 import MagicKit
-import OSLog
+import MagicPlayMan
 import SwiftUI
 
-struct ControlBtns: View, SuperLog {
-    @EnvironmentObject var app: AppProvider
-    @EnvironmentObject var message: StateProvider
-
-    nonisolated static let emoji = "🎵"
-    static let verbose = false
+/// 下一曲按钮
+struct NextButton: View {
+    @EnvironmentObject var man: PlayMan
+    @Environment(\.demoMode) var isDemoMode
 
     var body: some View {
-        HStack(spacing: 4) {
-            Spacer(minLength: 1)
-
-            BtnMore()
-            PreviousButton()
-            PlayPauseButton()
-            NextButton()
-            PlayModeButton()
-
-            Spacer(minLength: 1)
-        }
-        .padding(.bottom, 20)
-        .infinite()
+        Image.forward
+            .frame(width: 32, height: 32)
+            .inCard()
+            .roundedFull()
+            .hoverScale(110)
+            .inButtonWithAction {
+                man.next()
+            }
+            .shadowSm()
     }
 }
 

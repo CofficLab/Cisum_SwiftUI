@@ -21,7 +21,7 @@ private struct OpenCurrentButtonView: View, SuperLog {
     nonisolated static let emoji = "😜"
     static let verbose = false
     /// 注册顺序设为 20，在其他插件之后执行
-    static var order: Int { 20 }    
+    static var order: Int { 20 }
     @EnvironmentObject var man: PlayMan
 
     @State private var url: URL? = nil
@@ -33,8 +33,6 @@ private struct OpenCurrentButtonView: View, SuperLog {
         return Group {
             if let url = url {
                 url.makeOpenButton()
-                    .magicShapeVisibility(.onHover)
-                    .magicSize(.small)
                     .id(url.absoluteString)
             }
         }
@@ -54,13 +52,13 @@ private struct OpenCurrentButtonView: View, SuperLog {
 #if os(macOS)
     #Preview("App - Large") {
         ContentView()
-    .inRootView()
+            .inRootView()
             .frame(width: 600, height: 1000)
     }
 
     #Preview("App - Small") {
         ContentView()
-    .inRootView()
+            .inRootView()
             .frame(width: 500, height: 800)
     }
 #endif
@@ -68,6 +66,6 @@ private struct OpenCurrentButtonView: View, SuperLog {
 #if os(iOS)
     #Preview("iPhone") {
         ContentView()
-    .inRootView()
+            .inRootView()
     }
 #endif

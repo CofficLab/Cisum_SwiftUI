@@ -34,10 +34,6 @@ actor AudioJobPlugin: SuperPlugin, SuperLog {
 
         // 自动启动文件系统监控任务
         await manager.startJob(fsMonitorJob.identifier)
-
-        if Self.verbose {
-            os_log("\(Self.t)🚀 File system monitor job started")
-        }
     }
 
     /// 启动指定任务

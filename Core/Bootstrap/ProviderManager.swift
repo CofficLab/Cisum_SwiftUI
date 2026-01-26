@@ -35,7 +35,6 @@ final class ProviderManager: SuperLog {
 
         // PlayMan
         self.man = PlayMan(
-            playlistEnabled: false,
             verbose: Self.verbose,
             locale: .current,
             defaultArtwork: Image.musicFill,

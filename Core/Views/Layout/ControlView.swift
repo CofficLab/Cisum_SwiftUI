@@ -59,7 +59,6 @@ struct ControlView: View, SuperLog {
                     if showOperationView {
                         OperationView(geo: geo)
                             .frame(height: getOperationHeight(geo))
-                            .background(Config.background(.white))
                     }
 
                     // MARK: 进度栏
@@ -76,7 +75,6 @@ struct ControlView: View, SuperLog {
                             .frame(height: getButtonsHeight(geo))
                             .frame(maxWidth: .infinity)
                             .padding(.bottom, getBottomHeight(geo))
-                            .background(Config.background(.red))
                     }
                 }
 
@@ -87,7 +85,6 @@ struct ControlView: View, SuperLog {
                     HStack {
                         Spacer(minLength: 0)
                         playMan.makeHeroView()
-                            .background(Config.background(.yellow))
                     }
                     .frame(maxWidth: geo.size.height * 1.3)
                     .onAppear {
@@ -154,24 +151,29 @@ struct ControlView: View, SuperLog {
 }
 
 #if DEBUG
-#if os(macOS)
-    #Preview("App - Large") {
-        ContentView()
-            .inRootView()
-            .frame(width: 600, height: 1000)
-    }
+    #if os(macOS)
+        #Preview("App - Large") {
+            ContentView()
+                .inRootView()
+                .frame(width: 600, height: 1000)
+        }
 
-    #Preview("App - Small") {
-        ContentView()
-            .inRootView()
-            .frame(width: 500, height: 600)
-    }
-#endif
+        #Preview("App - Small") {
+            ContentView()
+                .inRootView()
+                .frame(width: 500, height: 600)
+        }
+    #endif
 
-#if os(iOS)
-    #Preview("iPhone") {
-        ContentView()
-            .inRootView()
-    }
-#endif
+    #if os(iOS)
+        #Preview("iPhone - ControlView") {
+            ControlView()
+                .inRootView()
+        }
+
+        #Preview("iPhone") {
+            ContentView()
+                .inRootView()
+        }
+    #endif
 #endif

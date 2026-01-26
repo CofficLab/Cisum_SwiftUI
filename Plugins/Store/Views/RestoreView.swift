@@ -1,5 +1,5 @@
-import MagicKit
 import MagicAlert
+import MagicKit
 import OSLog
 import StoreKit
 import SwiftUI
@@ -7,48 +7,183 @@ import SwiftUI
 struct RestoreView: View, SuperEvent, SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
     @Environment(\.colorScheme) var colorScheme: ColorScheme
+    @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var m: MagicMessageProvider
 
     @State private var subscriptions: [Product] = []
     @State private var refreshing = false
     @State private var error: Error? = nil
+    @State private var isRestoring = false
+    @State var closeBtnHovered = false
+    var showCloseButton = false
 
     nonisolated static let emoji = "🖥️"
 
+    init(showCloseButton: Bool = false) {
+        self.showCloseButton = showCloseButton
+    }
+
     var body: some View {
-        VStack {
-            ZStack {
-                Text("恢复购买").font(.title3)
+        VStack(spacing: 16) {
+            // 添加关闭按钮（可配置）
+            if showCloseButton {
+                HStack {
+                    Spacer()
+                    closeButton
+                }
+                .padding(.top, 8)
             }
 
-            Divider()
+            // 标题区域
+            HStack(spacing: 12) {
+                Image(systemName: "arrow.clockwise.circle.fill")
+                    .font(.title2)
+                    .foregroundStyle(.blue)
 
-            Text("如果您之前在其他设备上购买过订阅，可以通过点击下方的\"恢复购买\"按钮来恢复您的订阅。\n\n请确保您使用的是购买时所用的 Apple ID 账号。\n\n恢复成功后，您将重新获得所有已购买的功能权限。")
-                .padding()
-                .multilineTextAlignment(.center)
+                Text("恢复购买")
+                    .font(.title3)
+                    .fontWeight(.semibold)
 
-            Button("恢复购买", action: {
-                Task {
-                    // This call displays a system prompt that asks users to authenticate with their App Store credentials.
-                    // Call this function only in response to an explicit user action, such as tapping a button.
-                    do {
-                        os_log("\(self.t)恢复购买")
-                        try await AppStore.sync()
-                        os_log("\(self.t)恢复购买完成")
-                        postRestore()
-                    } catch {
-                        m.error(error)
-                    }
+                Spacer()
+            }
+
+            // 说明文字
+            VStack(alignment: .leading, spacing: 12) {
+                InfoRow(
+                    icon: "iphone.and.arrow.forward",
+                    title: "跨设备恢复",
+                    description: "在其他设备上购买后，可在此恢复"
+                )
+
+                InfoRow(
+                    icon: "person.circle",
+                    title: "Apple ID 验证",
+                    description: "请使用购买时的 Apple ID 账号"
+                )
+
+                InfoRow(
+                    icon: "checkmark.circle",
+                    title: "功能恢复",
+                    description: "恢复成功后将获得所有已购买的功能"
+                )
+            }
+            .padding(.vertical, 8)
+
+            // 恢复购买按钮
+
+            HStack(spacing: 8) {
+                if isRestoring {
+                    ProgressView()
+                        .progressViewStyle(.circular)
+                        .scaleEffect(0.8)
+                    Text("正在恢复...")
+                } else {
+                    Image(systemName: "arrow.clockwise")
+                        .fontWeight(.semibold)
+                    Text("恢复购买")
+                        .fontWeight(.semibold)
                 }
-            })
+            }
+            .inCard()
+            .hoverScale(110)
+            .inButtonWithAction {
+                restorePurchase()
+            }
+            .disabled(isRestoring)
+            #if os(macOS)
+                .scaleEffect(isRestoring ? 0.98 : 1.0)
+                .animation(.easeInOut(duration: 0.1), value: isRestoring)
+            #endif
+        }
+        .padding(20)
+        .inCard()
+        .infinite()
+        .inScrollView()
+    }
+
+    // MARK: - 子视图组件
+
+    /// 关闭按钮 - 现代化圆形设计
+    private var closeButton: some View {
+        Button(action: { dismiss() }) {
+            Image.close
+                .font(.system(size: 12, weight: .medium))
+                .frame(width: 32, height: 32)
+                .foregroundStyle(.secondary)
+                .background(.ultraThinMaterial, in: Circle())
+                .shadow(color: .black.opacity(0.1), radius: 4, y: 2)
+        }
+        .buttonStyle(.plain)
+        #if os(macOS)
+            .onHover { hovering in
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    closeBtnHovered = hovering
+                }
+            }
+            .scaleEffect(closeBtnHovered ? 1.1 : 1.0)
+        #endif
+        #if os(iOS)
+        .scaleEffect(closeBtnHovered ? 0.95 : 1.0)
+        .onTapGesture {
+            withAnimation(.easeOut(duration: 0.1)) {
+                closeBtnHovered = true
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                withAnimation { closeBtnHovered = false }
+            }
+        }
+        #endif
+    }
+
+    // MARK: - Actions
+
+    private func restorePurchase() {
+        isRestoring = true
+        Task {
+            do {
+                os_log("\(self.t)恢复购买")
+                try await AppStore.sync()
+                os_log("\(self.t)恢复购买完成")
+                postRestore()
+            } catch {
+                m.error(error)
+            }
+            await MainActor.run {
+                isRestoring = false
+            }
         }
     }
 }
 
-// MARK: Event Name
+// MARK: - Supporting Views
 
-extension Notification.Name {
-    static let Restored = Notification.Name("Restored")
+/// 信息行组件
+struct InfoRow: View {
+    let icon: String
+    let title: String
+    let description: String
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 12) {
+            Image(systemName: icon)
+                .font(.system(size: 20))
+                .foregroundStyle(.blue)
+                .frame(width: 28, height: 28)
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+
+                Text(description)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
+            Spacer()
+        }
+        .padding(.vertical, 4)
+    }
 }
 
 // MARK: Event Emitter
@@ -61,13 +196,19 @@ extension RestoreView {
 
 // MARK: - Preview
 
+#Preview("Restore") {
+    RestoreView()
+        .inRootView()
+        .frame(height: 800)
+}
+
 #Preview("Debug") {
     DebugView()
         .inRootView()
         .frame(height: 800)
 }
 
-#Preview("Buy") {
+#Preview("Purchase") {
     PurchaseView()
         .inRootView()
         .frame(height: 800)

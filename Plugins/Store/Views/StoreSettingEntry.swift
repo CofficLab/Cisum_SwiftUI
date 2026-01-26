@@ -1,16 +1,20 @@
 import Foundation
+import MagicAlert
 import MagicKit
 import OSLog
 import StoreKit
 import SwiftUI
 
-struct StoreSettingEntry: View, SuperLog {
+struct StoreSettingEntry: View, SuperLog, SuperEvent {
     nonisolated static let emoji = "💰"
 
     @State private var showBuySheet = false
+    @State private var showRestoreSheet = false
     @State private var purchaseInfo: PurchaseInfo = .none
     @State private var tierDisplayName: String = "免费版"
     @State private var statusDescription: String = "当前使用免费版本"
+
+    @EnvironmentObject var m: MagicMessageProvider
 
     var body: some View {
         MagicSettingSection(title: "订阅信息") {
@@ -55,22 +59,46 @@ struct StoreSettingEntry: View, SuperLog {
 
             // 购买入口
             MagicSettingRow(title: "应用内购买", description: "订阅专业版，解锁所有功能", icon: "cart", content: {
-                MagicButton.simple(title: purchaseInfo.isNotProOrHigher ? "查看订阅" : "升级订阅") {
-                    showBuySheet = true
-                }
-                .magicIcon("app.gift")
-                .magicShape(.circle)
-                .magicStyle(.secondary)
-                .magicSize(.small)
+                Image(systemName: "app.gift")
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .inCard()
+                    .roundedFull()
+                    .hoverScale(105)
+                    .inButtonWithAction({
+                        showBuySheet = true
+                    })
+            })
+
+            // 恢复购买
+            MagicSettingRow(title: "恢复购买", description: "在其他设备上购买后可在此恢复", icon: "arrow.clockwise", content: {
+                Image.reset
+                    .foregroundStyle(.blue)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .inCard()
+                    .roundedFull()
+                    .hoverScale(105)
+                    .inButtonWithAction({
+                        showRestoreSheet = true
+                    })
             })
         }
         .sheet(isPresented: $showBuySheet) {
-            PurchaseView(showCloseButton: true)
+            PurchaseView(showCloseButton: Config.isDesktop)
+                .background(Config.rootBackground)
+        }
+        .sheet(isPresented: $showRestoreSheet) {
+            RestoreView(showCloseButton: Config.isDesktop)
+                .background(Config.rootBackground)
         }
         .task {
             self.updatePurchaseInfo()
         }
         .onReceive(NotificationCenter.default.publisher(for: .storeTransactionUpdated)) { _ in
+            self.updatePurchaseInfo()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .Restored)) { _ in
             self.updatePurchaseInfo()
         }
     }
@@ -100,10 +128,11 @@ extension StoreSettingEntry {
 #Preview("Store Settings") {
     StoreSettingEntry()
         .inRootView()
+        .frame(width: 400)
         .frame(height: 800)
 }
 
-#Preview("Buy") {
+#Preview("Purchase") {
     PurchaseView()
         .inRootView()
         .frame(height: 800)

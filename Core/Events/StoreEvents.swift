@@ -1,6 +1,18 @@
 import Foundation
 import SwiftUI
 
+// MARK: - Store Events
+
+extension Notification.Name {
+    /// 商店交易更新事件
+    static let storeTransactionUpdated = Notification.Name("store.transaction.updated")
+
+    /// 商店恢复购买完成事件
+    static let Restored = Notification.Name("store.restored")
+}
+
+// MARK: - View Extensions
+
 /// SwiftUI View 扩展，提供便捷的商店相关事件监听
 extension View {
     /// 监听商店恢复完成事件

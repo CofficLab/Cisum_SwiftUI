@@ -27,31 +27,25 @@ struct ResetConfirmContent: View {
                 }
             }
             HStack(spacing: 12) {
-                MagicButton.simple(
-                    icon: .systemName("xmark"),
-                    title: "取消",
-                    style: .secondary,
-                    size: .auto,
-                    shape: .roundedRectangle
-                ) {
-                    onCancel()
+                HStack(spacing: 8) {
+                    Image(systemName: "xmark")
+                    Text("取消")
                 }
-                .magicShapeVisibility(.always)
-                .frame(height: 44)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+                .inCard()
+                .inButtonWithAction(onCancel)
 
-                MagicButton.simple(
-                    icon: .systemName("checkmark.circle.fill"),
-                    title: "继续重置",
-                    style: .primary,
-                    size: .auto,
-                    shape: .roundedRectangle
-                ) {
-                    onConfirm()
+                HStack(spacing: 8) {
+                    Image(systemName: "checkmark.circle.fill")
+                    Text("继续重置")
                 }
-                .magicShapeVisibility(.always)
-                .frame(height: 44)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+                .inCard()
+                .inButtonWithAction(onConfirm)
             }
-            .frame(maxWidth: .infinity, alignment: .trailing)
+            .frame(maxWidth: .infinity, alignment: .center)
         }
     }
 }

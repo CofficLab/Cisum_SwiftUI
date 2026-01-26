@@ -31,7 +31,7 @@ private struct LikeToggleButtonView: View, SuperLog {
             if man.asset == nil {
                 EmptyView()
             } else {
-                man.makeLikeButtonView(size: .mini, shape: .circle, shapeVisibility: .onHover)
+                man.makeLikeButtonView(size: 24)
             }
         }
     }

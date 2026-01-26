@@ -19,10 +19,10 @@ struct SystemSetting: View, SuperLog {
 
             // 重置设置
             MagicSettingRow(title: "重置设置", description: "重置设置，恢复成系统默认状态", icon: .iconReset) {
-                MagicButton.simple(icon: .iconReset, action: showResetConfirm)
-                    .magicShape(.circle)
-                    .magicStyle(.secondary)
-                    .magicSize(.small)
+                Image(systemName: .iconReset)
+                    .frame(width: 28, height: 28)
+                    .background(.ultraThinMaterial, in: Circle())
+                    .inButtonWithAction(showResetConfirm)
             }
         }
         .sheet(isPresented: $showConfirmSheet) {
@@ -66,7 +66,9 @@ extension SystemSetting {
 #Preview("ResetConfirmContent") {
     ResetConfirmContent(onCancel: {}, onConfirm: {})
         .padding()
-        .frame(width: 400)
+        .infinite()
+        .frame(width: 500)
+        .frame(height: 800)
         .inRootView()
 }
 

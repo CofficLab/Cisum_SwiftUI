@@ -214,7 +214,7 @@ extension BookDB {
         var message = "\(self.t)SyncBook(\(items.count))"
 
         if let first = items.first, first.checkIsDownloading() == true {
-            message += " -> \(first.title) -> \(String(format: "%.0f", first.downloadProgress))% ⏬⏬⏬"
+            message += " -> \(first.title) -> \(String(format: "%.0f", first.getDownloadProgressSnapshot()))% ⏬⏬⏬"
         }
 
         if isFirst {

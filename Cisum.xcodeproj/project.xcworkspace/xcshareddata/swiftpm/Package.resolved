@@ -33,8 +33,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/nookery/MagicKit.git",
       "state" : {
-        "revision" : "048a7d6207065b0b1d92e9e23e326befe2c75eab",
-        "version" : "1.2.9"
+        "revision" : "0d22d6a8bb491dc036e21b94f7e67d3a43835484",
+        "version" : "1.4.0"
       }
     },
     {
@@ -42,17 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/nookery/MagicPlayMan",
       "state" : {
-        "revision" : "5b9d3edda13f93fe7ad3e679b738d50ee205c42f",
-        "version" : "1.0.4"
-      }
-    },
-    {
-      "identity" : "magicui",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/nookery/MagicUI.git",
-      "state" : {
-        "revision" : "ab8c4d1c4e0d0bfb768a08644321acb935bcd45d",
-        "version" : "1.0.4"
+        "revision" : "b97e0107343dc72cfc64f039affba41322e69eba",
+        "version" : "1.1.3"
       }
     },
     {

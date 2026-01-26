@@ -9,7 +9,7 @@
 
     struct CopyWorkerView: View, SuperEvent, SuperLog, SuperThread {
         nonisolated static var emoji: String { "🖥️" }
-        nonisolated static let verbose = true
+        nonisolated static let verbose = false
 
         @EnvironmentObject var m: MagicMessageProvider
         @EnvironmentObject var p: PluginProvider
