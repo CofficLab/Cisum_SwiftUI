@@ -31,8 +31,8 @@ if [ -z "$CURRENT_VERSION" ]; then
   exit 1
 fi
 
-echo "📦 Current Version: $CURRENT_VERSION"
-echo "📊 Increment Type: $INCREMENT_TYPE"
+echo "📦 Current Version: $CURRENT_VERSION" >&2
+echo "📊 Increment Type: $INCREMENT_TYPE" >&2
 
 # Parse the version components
 IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT_VERSION"
@@ -57,7 +57,7 @@ case $INCREMENT_TYPE in
     ;;
 esac
 
-echo "🆕 New Version: $NEW_VERSION"
+echo "🆕 New Version: $NEW_VERSION" >&2
 
 # Update the Xcode project file
 sed -i '' "s/MARKETING_VERSION = $CURRENT_VERSION/MARKETING_VERSION = $NEW_VERSION/" "$PROJECT_FILE"
@@ -70,7 +70,7 @@ if [ "$UPDATED_VERSION" != "$NEW_VERSION" ]; then
   exit 1
 fi
 
-echo "✅ Version updated successfully in project file"
+echo "✅ Version updated successfully in project file" >&2
 
 # Output the new version
 echo "$NEW_VERSION"
