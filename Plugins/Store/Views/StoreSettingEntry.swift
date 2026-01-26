@@ -59,12 +59,11 @@ struct StoreSettingEntry: View, SuperLog, SuperEvent {
 
             // 购买入口
             MagicSettingRow(title: "应用内购买", description: "订阅专业版，解锁所有功能", icon: "cart", content: {
-                Image(systemName: "app.gift")
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .inCard()
-                    .roundedFull()
-                    .hoverScale(105)
+                Image.appStore
+                    .frame(width: 28)
+                    .frame(height: 28)
+                    .background(.ultraThinMaterial, in: .circle)
+                    .hoverScale(110)
                     .inButtonWithAction({
                         showBuySheet = true
                     })
@@ -73,12 +72,10 @@ struct StoreSettingEntry: View, SuperLog, SuperEvent {
             // 恢复购买
             MagicSettingRow(title: "恢复购买", description: "在其他设备上购买后可在此恢复", icon: "arrow.clockwise", content: {
                 Image.reset
-                    .foregroundStyle(.blue)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .inCard()
-                    .roundedFull()
-                    .hoverScale(105)
+                    .frame(width: 28)
+                    .frame(height: 28)
+                    .background(.ultraThinMaterial, in: .circle)
+                    .hoverScale(110)
                     .inButtonWithAction({
                         showRestoreSheet = true
                     })

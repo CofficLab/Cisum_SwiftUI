@@ -19,25 +19,30 @@ struct SystemSetting: View, SuperLog {
 
             // 重置设置
             MagicSettingRow(title: "重置设置", description: "重置设置，恢复成系统默认状态", icon: .iconReset) {
-                Image(systemName: .iconReset)
+                Image.reset
                     .frame(width: 28, height: 28)
                     .background(.ultraThinMaterial, in: Circle())
+                    .roundedFull()
+                    .hoverScale(110)
                     .inButtonWithAction(showResetConfirm)
             }
         }
         .sheet(isPresented: $showConfirmSheet) {
-            if isResetting {
-                ResetProgressContent()
+            ZStack {
+                if isResetting {
+                    ResetProgressContent()
+                        .padding(24)
+                        .frame(minWidth: 380)
+                } else {
+                    ResetConfirmContent(
+                        onCancel: { showConfirmSheet = false },
+                        onConfirm: performReset
+                    )
                     .padding(24)
                     .frame(minWidth: 380)
-            } else {
-                ResetConfirmContent(
-                    onCancel: { showConfirmSheet = false },
-                    onConfirm: performReset
-                )
-                .padding(24)
-                .frame(minWidth: 380)
+                }
             }
+            .background(Config.rootBackground)
         }
     }
 }
