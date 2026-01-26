@@ -34,7 +34,7 @@ actor AudioPlayModeRepo: SuperLog {
     /// 保存播放模式
     /// - Parameter mode: 要保存的播放模式
     func storePlayMode(_ mode: PlayMode) {
-        let modeString = mode.rawValue as! String
+        let modeString = mode.rawValue 
         UserDefaults.standard.set(modeString, forKey: Self.playModeKey)
 
         // 将模式同步到 CloudKit

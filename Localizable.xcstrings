@@ -818,6 +818,7 @@
 
     },
     "正在使用" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

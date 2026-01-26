@@ -235,7 +235,7 @@ extension BookGrid {
                 os_log("\(self.t)📖 从全局状态继续播放: \(savedURL.lastPathComponent) @ \(savedTime)s")
             }
             await man.play(savedURL, autoPlay: false, reason: self.className)
-            await man.seek(time: savedTime, reason: self.className)
+            man.seek(time: savedTime, reason: self.className)
             return
         }
 

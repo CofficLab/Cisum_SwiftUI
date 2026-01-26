@@ -57,7 +57,7 @@ actor AudioJobScheduler: SuperLog {
             os_log("\(self.t)🔄 执行挂起的任务")
         }
 
-        let manager = await AudioJobManager.shared
+        let manager = AudioJobManager.shared
         let allJobs = await manager.getAllJobStatus()
 
         for job in allJobs {

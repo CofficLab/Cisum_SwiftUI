@@ -67,7 +67,7 @@ extension BookProgressRootView {
                 await man.play(url, autoPlay: false, reason: "restoreBookProgress")
 
                 if let time = BookSettingRepo.getCurrentTime() {
-                    await man.seek(time: time, reason: self.className + ".restoreBookProgress")
+                    man.seek(time: time, reason: self.className + ".restoreBookProgress")
                 }
 
                 if self.verbose {
