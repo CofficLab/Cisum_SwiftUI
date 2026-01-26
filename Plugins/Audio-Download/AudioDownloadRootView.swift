@@ -65,19 +65,19 @@ extension AudioDownloadRootView {
         let verbose = Self.verbose
         let reason = Self.author
 
-        Task.detached(priority: .utility) {
-            if url.isNotDownloaded {
-                if verbose {
-                    os_log("\(Self.t)☁️ <\(url.lastPathComponent)> 文件未下载，开始下载")
-                }
-
-                do {
-                    try await url.download(verbose: verbose, reason: reason)
-                } catch let e {
-                    os_log(.error, "\(Self.t)❌ 下载失败: \(e.localizedDescription)")
-                }
-            }
-        }
+//        Task.detached(priority: .utility) {
+//            if url.isNotDownloaded {
+//                if verbose {
+//                    os_log("\(Self.t)☁️ <\(url.lastPathComponent)> 文件未下载，开始下载")
+//                }
+//
+//                do {
+//                    try await url.download(verbose: verbose, reason: reason)
+//                } catch let e {
+//                    os_log(.error, "\(Self.t)❌ 下载失败: \(e.localizedDescription)")
+//                }
+//            }
+//        }
     }
 }
 

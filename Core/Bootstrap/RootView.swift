@@ -178,6 +178,8 @@ extension View {
     }
 }
 
+// MARK: Preview
+
 #if os(macOS)
     #Preview("App - Large") {
         ContentView()

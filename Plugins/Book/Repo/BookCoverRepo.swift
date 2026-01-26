@@ -50,9 +50,8 @@ final class BookCoverRepo: ObservableObject, SuperLog, @unchecked Sendable {
                             continue
                         }
 
-                        // 使用 MagicKit 的 thumbnail 方法（内置缓存）
-                        if let cover = try await child.thumbnail(
-                            size: thumbnailSize, 
+                        if let cover = try await child.thumbnailImage(
+                            size: thumbnailSize,
                             useDefaultIcon: false, 
                             verbose: verbose, 
                             reason: "BookCoverRepo"
