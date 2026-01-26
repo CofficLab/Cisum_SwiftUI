@@ -5,13 +5,12 @@ import SwiftUI
 
 struct PurchaseView: View, SuperLog {
     nonisolated static let emoji = "🛒"
+    nonisolated static let verbose = false
 
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     @Environment(\.dismiss) private var dismiss
     @State var closeBtnHovered = false
     var showCloseButton = false
-
-    // MARK: - Product Type Configuration
 
     var showSubscription: Bool = true
     var showOneTime: Bool = false
@@ -31,91 +30,130 @@ struct PurchaseView: View, SuperLog {
     }
 
     var body: some View {
-        VStack {
+        VStack(spacing: 24) {
             // 添加关闭按钮（可配置）
             if showCloseButton {
                 HStack {
                     Spacer()
-                    Button(action: {
-                        dismiss()
-                    }) {
-                        Image(systemName: "xmark")
-                            .frame(width: 28, height: 28)
-                            .background(.ultraThinMaterial, in: Circle())
-                    }
-
-                    #if os(macOS)
-                        .onHover { hovering in
-                            closeBtnHovered = hovering
-                        }
-                        .scaleEffect(closeBtnHovered ? 1.1 : 1.0)
-                        .animation(.easeInOut(duration: 0.2), value: closeBtnHovered)
-                    #endif
-                    #if os(iOS)
-                    .scaleEffect(closeBtnHovered ? 0.9 : 1.0)
-                    .animation(.easeInOut(duration: 0.1), value: closeBtnHovered)
-                    .onTapGesture {
-                        closeBtnHovered = true
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                            closeBtnHovered = false
-                        }
-                    }
-                    #endif
+                    closeButton
                 }
-                .padding(.vertical, 2)
+                .padding(.top, 8)
             }
 
             // 商品分组
-            TabView {
-                if showSubscription {
-                    ProductsSubscription()
-                        .tabItem { Label("订阅", systemImage: "repeat") }
+            if enabledProductGroupCount > 1 {
+                productTabs
+            } else {
+                singleProductGroup
+            }
+
+            // 底部链接
+            HStack(spacing: 20) {
+                Link(destination: URL(string: "https://www.kuaiyizhi.cn/privacy")!) {
+                    Label("隐私政策", systemImage: "hand.raised.fill")
+                        .font(.footnote)
                 }
 
-                if showOneTime {
-                    ProductsOfOneTime()
-                        .tabItem { Label("一次性购买", systemImage: "car") }
-                }
+                Divider()
+                    .frame(height: 12)
 
-                if showNonRenewable {
-                    ProductsNonRenewable()
-                        .tabItem { Label("非续订", systemImage: "clock") }
-                }
-
-                if showConsumable {
-                    ProductsConsumable()
-                        .tabItem { Label("消耗品", systemImage: "drop") }
+                Link(destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!) {
+                    Label("许可协议", systemImage: "doc.text.fill")
+                        .font(.footnote)
                 }
             }
-            .padding()
-            .background(MagicBackground.ocean.opacity(0.1))
-
-            RestoreView()
-                .padding()
-                .background(MagicBackground.aurora.opacity(0.1))
-
-            footerView
+            .foregroundStyle(.secondary)
+            .buttonStyle(.plain)
+            .padding(.vertical, 16)
+            .infiniteWidth()
         }
         .padding()
     }
 
-    // MARK: Footer
+    // MARK: - 子视图组件
 
-    private var footerView: some View {
-        HStack {
-            Spacer()
-            Link("隐私政策", destination: URL(string: "https://www.kuaiyizhi.cn/privacy")!)
-            Link("许可协议", destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!)
-            Spacer()
+    /// 关闭按钮 - 现代化圆形设计
+    private var closeButton: some View {
+        Button(action: { dismiss() }) {
+            Image.close
+                .font(.system(size: 12, weight: .medium))
+                .frame(width: 32, height: 32)
+                .foregroundStyle(.secondary)
+                .background(.ultraThinMaterial, in: Circle())
+                .shadow(color: .black.opacity(0.1), radius: 4, y: 2)
         }
-        .foregroundStyle(
-            colorScheme == .light ?
-                .black.opacity(0.8) :
-                .white.opacity(0.8))
-        .padding(.vertical, 12)
+        .buttonStyle(.plain)
+        #if os(macOS)
+            .onHover { hovering in
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    closeBtnHovered = hovering
+                }
+            }
+            .scaleEffect(closeBtnHovered ? 1.1 : 1.0)
+        #endif
+        #if os(iOS)
+        .scaleEffect(closeBtnHovered ? 0.95 : 1.0)
+        .onTapGesture {
+            withAnimation(.easeOut(duration: 0.1)) {
+                closeBtnHovered = true
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                withAnimation { closeBtnHovered = false }
+            }
+        }
+        #endif
+    }
 
-        .font(.footnote)
-        .background(MagicBackground.aurora.opacity(0.1))
+    /// 多个商品组的TabView
+    private var productTabs: some View {
+        TabView {
+            if showSubscription {
+                ProductsSubscription()
+                    .tabItem { Label("订阅", systemImage: .iconRepeatAll) }
+            }
+
+            if showOneTime {
+                ProductsOfOneTime()
+                    .tabItem { Label("一次性购买", systemImage: .iconRepeat1) }
+            }
+
+            if showNonRenewable {
+                ProductsNonRenewable()
+                    .tabItem { Label("非续订", systemImage: .iconClock) }
+            }
+
+            if showConsumable {
+                ProductsConsumable()
+                    .tabItem { Label("消耗品", systemImage: .iconDoc) }
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(.ultraThinMaterial)
+                .shadow(color: .black.opacity(0.05), radius: 8, y: 4)
+        )
+    }
+
+    /// 单个商品组展示
+    private var singleProductGroup: some View {
+        Group {
+            if showSubscription {
+                ProductsSubscription()
+            } else if showOneTime {
+                ProductsOfOneTime()
+            } else if showNonRenewable {
+                ProductsNonRenewable()
+            } else if showConsumable {
+                ProductsConsumable()
+            }
+        }
+    }
+
+    // MARK: - Computed Properties
+
+    private var enabledProductGroupCount: Int {
+        [showSubscription, showOneTime, showNonRenewable, showConsumable].filter { $0 }.count
     }
 }
 

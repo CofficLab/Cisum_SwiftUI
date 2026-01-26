@@ -9,7 +9,7 @@ struct SubscriptionProductsView: View {
                 await loadProducts()
             }
     }
-    
+
     private func loadProducts() async {
         do {
             let groups = try await StoreService.fetchAllProducts()

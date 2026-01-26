@@ -402,12 +402,6 @@ public enum StoreService: SuperLog {
     }
 }
 
-// MARK: - Notifications
-
-extension Notification.Name {
-    static let storeTransactionUpdated = Notification.Name("store.transaction.updated")
-}
-
 // MARK: - Error
 
 public enum StoreError: Error, LocalizedError {

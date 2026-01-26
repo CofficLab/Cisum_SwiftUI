@@ -1,5 +1,4 @@
 import MagicKit
-
 import OSLog
 import StoreKit
 import SwiftUI
@@ -15,23 +14,67 @@ struct ProductsSubscription: View, SuperEvent, SuperLog, SuperThread {
     nonisolated static let emoji = "🖥️"
 
     var body: some View {
-        ScrollView {
-            VStack {
-                if refreshing == false && subscriptionGroups.isEmpty {
-                    Text("🏃 暂无")
-                } else {
-                    VStack(spacing: 16) {
-                        ForEach(subscriptionGroups, id: \.id) { group in
-                            subscriptionGroupView(group: group)
+        Group {
+            if !refreshing && subscriptionGroups.isEmpty {
+                emptyStateView
+            } else {
+                LazyVStack(spacing: 20) {
+                    ForEach(subscriptionGroups, id: \.id) { group in
+                        VStack(alignment: .leading, spacing: 16) {
+                            // 订阅组头部
+                            HStack(alignment: .center, spacing: 12) {
+                                VStack(alignment: .leading, spacing: 6) {
+                                    Text(group.name)
+                                        .font(.title3)
+                                        .fontWeight(.semibold)
+                                        .if(group.name.isNotEmpty)
+
+                                    Text("\(group.subscriptions.count) 个订阅选项")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+
+                                Spacer()
+
+                                // 订阅组ID标签
+                                Text("ID: \(group.id)")
+                                    .font(.system(.caption2, design: .monospaced))
+                                    .foregroundStyle(.secondary)
+                            }
+
+                            // 订阅产品列表
+                            VStack(spacing: 12) {
+                                ForEach(group.subscriptions, id: \.id) { subscription in
+                                    ProductCell(product: subscription)
+                                }
+                            }
                         }
+                        .padding(10)
+                        .background(.background.opacity(0.4))
+                        .roundedMedium()
+                        .shadowSm()
                     }
-                    .padding()
-                }
-            }.onAppear(perform: onAppear)
-                .onRestored(perform: onRestore)
+                }.inScrollView()
+            }
         }
+        .onAppear(perform: onAppear)
+        .onRestored(perform: onRestore)
     }
 
+    // MARK: - 子视图
+
+    /// 空状态视图
+    private var emptyStateView: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "cart.circle")
+                .font(.system(size: 64))
+                .foregroundStyle(.tertiary)
+            Text("暂无订阅选项")
+                .font(.headline)
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
 
     // MARK: 获取可用的订阅
 
@@ -49,49 +92,10 @@ struct ProductsSubscription: View, SuperEvent, SuperLog, SuperThread {
             } catch {
                 self.error = error
             }
-            
+
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
                 self.refreshing = false
             })
-        }
-    }
-    
-    @ViewBuilder
-    private func subscriptionGroupView(group: SubscriptionGroupDTO) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            // 订阅组标题
-            HStack {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(group.name)
-                        .font(.headline)
-                        .fontWeight(.semibold)
-                    
-                    Text("\(group.subscriptions.count) 个订阅选项")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-                
-                Spacer()
-                
-                Text("ID: \(group.id)")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(Color.gray.opacity(0.1))
-                    .cornerRadius(4)
-            }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 12)
-            .background(Color.blue.opacity(0.1))
-            .cornerRadius(8)
-            
-            // 订阅组下的订阅产品
-            VStack(spacing: 8) {
-                ForEach(group.subscriptions, id: \.id) { subscription in
-                    ProductCell(product: subscription)
-                }
-            }
         }
     }
 }
@@ -106,7 +110,6 @@ extension ProductsSubscription {
             }
         }
     }
-
 
     func onRestore(_ notification: Notification) {
         self.bg.async {

@@ -1,5 +1,4 @@
 import MagicKit
-
 import OSLog
 import StoreKit
 import SwiftUI
@@ -34,13 +33,73 @@ struct ProductCell: View, SuperLog {
     }
 
     var body: some View {
-        HStack {
+        HStack(spacing: 16) {
+            // 产品详情
+            VStack(alignment: .leading, spacing: 8) {
+                // 产品名称
+                Text(product.displayName)
+                    .font(.body)
+                    .fontWeight(.medium)
+
+                // 价格信息
+                if let subscription = product.subscription {
+                    HStack(spacing: 4) {
+                        Text(product.displayPrice)
+                            .font(.title3)
+                            .fontWeight(.bold)
+                        Text("/")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                        Text(formatPeriodUnit(subscription.subscriptionPeriod))
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                } else {
+                    Text(product.displayPrice)
+                        .font(.title3)
+                        .fontWeight(.bold)
+                }
+
+                // 试用期信息
+                if let introOffer = product.subscription?.introductoryOffer {
+                    HStack(spacing: 4) {
+                        Image(systemName: "gift.fill")
+                            .font(.caption2)
+                        Text(formatIntroductoryOffer(introOffer))
+                            .font(.caption)
+                    }
+                    .foregroundStyle(.blue)
+                }
+            }
+
+            Spacer()
+
+            // 购买按钮
             if purchasingEnabled {
-                productDetail
-                Spacer()
                 buyButton
-            } else {
-                productDetail
+            }
+        }
+        .padding(16)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(.regularMaterial)
+                .stroke(borderColor, lineWidth: 1)
+        )
+        .overlay {
+            // 购买状态徽章
+            if isCurrent || isPurchased {
+                VStack {
+                    HStack {
+                        Spacer()
+                        if isCurrent {
+                            StatusBadge(text: "正在使用", color: .green)
+                        } else if isPurchased {
+                            StatusBadge(text: "已购买", color: .green)
+                        }
+                    }
+                    Spacer()
+                }
+                .padding(8)
             }
         }
         .alert(isPresented: $isShowingError, content: {
@@ -48,36 +107,14 @@ struct ProductCell: View, SuperLog {
         })
     }
 
-    // MARK: 中间的产品介绍
+    // MARK: 子视图
 
-    @ViewBuilder
-    var productDetail: some View {
-        if product.kind == .autoRenewable {
-            VStack(alignment: .leading) {
-                Text(product.displayName)
-                    .bold()
-                // 试用期信息
-                if let introOffer = product.subscription?.introductoryOffer {
-                    Text(formatIntroductoryOffer(introOffer))
-                        .font(.caption)
-                }
-                if isCurrent {
-                    Text("正在使用")
-                        .font(.footnote)
-                        .foregroundStyle(.green)
-                }
-                if isPurchased {
-                    Text("已购买")
-                        .font(.footnote)
-                        .foregroundStyle(.green)
-                }
-            }
-        } else {
-            VStack(alignment: .leading) {
-                Text(product.description)
-                    .frame(alignment: .leading)
-            }
+    /// 边框颜色
+    private var borderColor: Color {
+        if isCurrent || isPurchased {
+            return .green.opacity(0.3)
         }
+        return .clear
     }
 
     // MARK: 购买按钮的提示词
@@ -147,26 +184,37 @@ struct ProductCell: View, SuperLog {
         Button(action: {
             buy()
         }) {
-            if purchasing {
-                Text("支付中...")
-                    .bold()
-                    .foregroundColor(.white)
-            } else {
-                if let subscription = product.subscription {
-                    subscribeButton(subscription)
+            HStack(spacing: 6) {
+                if purchasing {
+                    ProgressView()
+                        .scaleEffect(0.8)
+                    Text("处理中...")
+                } else if isPurchased {
+                    Text(product.kind == .autoRenewable ? "已订阅" : "已购买")
                 } else {
-                    Text(product.displayPrice)
-                        .foregroundColor(.white)
-                        .bold()
+                    Text(product.kind == .autoRenewable ? "订阅" : "购买")
                 }
             }
+            .fontWeight(.semibold)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 10)
+            .background(.background)
+            .hoverScale(110)
+            .roundedLarge()
+            .shadowMd()
         }
-        .buttonStyle(BuyButtonStyle(isPurchased: isPurchased, hovered: btnHovered))
-        .disabled(purchasing)
-        .onHover(perform: { hovering in
-            self.btnHovered = hovering
-        })
-        .onAppear(perform: onAppear)
+        .buttonStyle(.plain)
+        .disabled(purchasing || isPurchased)
+        .opacity(isPurchased ? 0.6 : 1.0)
+        #if os(macOS)
+            .onHover { hovering in
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    btnHovered = hovering
+                }
+            }
+            .scaleEffect(btnHovered ? 1.05 : 1.0)
+        #endif
+            .onAppear(perform: onAppear)
     }
 
     // MARK: 去购买
@@ -287,3 +335,29 @@ extension ProductCell {
             .inRootView()
     }
 #endif
+
+// MARK: - Supporting Views
+
+/// 状态徽章组件
+struct StatusBadge: View {
+    let text: String
+    let color: Color
+
+    var body: some View {
+        HStack(spacing: 4) {
+            Circle()
+                .fill(color)
+                .frame(width: 6, height: 6)
+            Text(text)
+                .font(.caption2)
+                .fontWeight(.medium)
+                .foregroundStyle(color)
+        }
+        .padding(.horizontal, 8)
+        .padding(.vertical, 4)
+        .background(
+            Capsule()
+                .fill(color.opacity(0.15))
+        )
+    }
+}
