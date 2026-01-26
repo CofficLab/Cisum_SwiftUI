@@ -7,67 +7,59 @@ import SwiftUI
 struct RestoreView: View, SuperEvent, SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
     @Environment(\.colorScheme) var colorScheme: ColorScheme
-    @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var m: MagicMessageProvider
 
     @State private var subscriptions: [Product] = []
     @State private var refreshing = false
     @State private var error: Error? = nil
     @State private var isRestoring = false
-    @State var closeBtnHovered = false
-    var showCloseButton = false
 
     nonisolated static let emoji = "🖥️"
 
-    init(showCloseButton: Bool = false) {
-        self.showCloseButton = showCloseButton
-    }
+    init() {}
 
     var body: some View {
-        VStack(spacing: 16) {
-            // 添加关闭按钮（可配置）
-            if showCloseButton {
-                HStack {
+        SheetContainer {
+            VStack {
+                // 标题区域
+                HStack(spacing: 12) {
+                    Image(systemName: "arrow.clockwise.circle.fill")
+                        .font(.title2)
+                        .foregroundStyle(.blue)
+
+                    Text("恢复购买")
+                        .font(.title3)
+                        .fontWeight(.semibold)
+
                     Spacer()
-                    closeButton
                 }
-                .padding(.top, 8)
+
+                // 说明文字
+                VStack(alignment: .leading, spacing: 12) {
+                    InfoRow(
+                        icon: "iphone.and.arrow.forward",
+                        title: "跨设备恢复",
+                        description: "在其他设备上购买后，可在此恢复"
+                    )
+
+                    InfoRow(
+                        icon: "person.circle",
+                        title: "Apple ID 验证",
+                        description: "请使用购买时的 Apple ID 账号"
+                    )
+
+                    InfoRow(
+                        icon: "checkmark.circle",
+                        title: "功能恢复",
+                        description: "恢复成功后将获得所有已购买的功能"
+                    )
+                }
+                .padding(.vertical, 8)
             }
-
-            // 标题区域
-            HStack(spacing: 12) {
-                Image(systemName: "arrow.clockwise.circle.fill")
-                    .font(.title2)
-                    .foregroundStyle(.blue)
-
-                Text("恢复购买")
-                    .font(.title3)
-                    .fontWeight(.semibold)
-
-                Spacer()
-            }
-
-            // 说明文字
-            VStack(alignment: .leading, spacing: 12) {
-                InfoRow(
-                    icon: "iphone.and.arrow.forward",
-                    title: "跨设备恢复",
-                    description: "在其他设备上购买后，可在此恢复"
-                )
-
-                InfoRow(
-                    icon: "person.circle",
-                    title: "Apple ID 验证",
-                    description: "请使用购买时的 Apple ID 账号"
-                )
-
-                InfoRow(
-                    icon: "checkmark.circle",
-                    title: "功能恢复",
-                    description: "恢复成功后将获得所有已购买的功能"
-                )
-            }
-            .padding(.vertical, 8)
+            .padding()
+            .background(.background.opacity(0.4))
+            .roundedMedium()
+            .shadow2xl()
 
             // 恢复购买按钮
 
@@ -95,44 +87,6 @@ struct RestoreView: View, SuperEvent, SuperLog, SuperThread {
                 .animation(.easeInOut(duration: 0.1), value: isRestoring)
             #endif
         }
-        .padding(20)
-        .inCard()
-        .infinite()
-        .inScrollView()
-    }
-
-    // MARK: - 子视图组件
-
-    /// 关闭按钮 - 现代化圆形设计
-    private var closeButton: some View {
-        Button(action: { dismiss() }) {
-            Image.close
-                .font(.system(size: 12, weight: .medium))
-                .frame(width: 32, height: 32)
-                .foregroundStyle(.secondary)
-                .background(.ultraThinMaterial, in: Circle())
-                .shadow(color: .black.opacity(0.1), radius: 4, y: 2)
-        }
-        .buttonStyle(.plain)
-        #if os(macOS)
-            .onHover { hovering in
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    closeBtnHovered = hovering
-                }
-            }
-            .scaleEffect(closeBtnHovered ? 1.1 : 1.0)
-        #endif
-        #if os(iOS)
-        .scaleEffect(closeBtnHovered ? 0.95 : 1.0)
-        .onTapGesture {
-            withAnimation(.easeOut(duration: 0.1)) {
-                closeBtnHovered = true
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                withAnimation { closeBtnHovered = false }
-            }
-        }
-        #endif
     }
 
     // MARK: - Actions

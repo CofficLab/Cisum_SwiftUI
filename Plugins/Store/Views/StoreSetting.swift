@@ -5,7 +5,7 @@ import OSLog
 import StoreKit
 import SwiftUI
 
-struct StoreSettingEntry: View, SuperLog, SuperEvent {
+struct StoreSetting: View, SuperLog, SuperEvent {
     nonisolated static let emoji = "💰"
 
     @State private var showBuySheet = false
@@ -82,12 +82,10 @@ struct StoreSettingEntry: View, SuperLog, SuperEvent {
             })
         }
         .sheet(isPresented: $showBuySheet) {
-            PurchaseView(showCloseButton: Config.isDesktop)
-                .background(Config.rootBackground)
+            PurchaseView()
         }
         .sheet(isPresented: $showRestoreSheet) {
-            RestoreView(showCloseButton: Config.isDesktop)
-                .background(Config.rootBackground)
+            RestoreView()
         }
         .task {
             self.updatePurchaseInfo()
@@ -103,7 +101,7 @@ struct StoreSettingEntry: View, SuperLog, SuperEvent {
 
 // MARK: - Actions
 
-extension StoreSettingEntry {
+extension StoreSetting {
     private func updatePurchaseInfo() {
         purchaseInfo = StoreService.cachedPurchaseInfo()
         tierDisplayName = purchaseInfo.effectiveTier.displayName
@@ -123,7 +121,7 @@ extension StoreSettingEntry {
 // MARK: - Preview
 
 #Preview("Store Settings") {
-    StoreSettingEntry()
+    StoreSetting()
         .inRootView()
         .frame(width: 400)
         .frame(height: 800)

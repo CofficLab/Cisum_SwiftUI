@@ -49,12 +49,13 @@ struct ProductsSubscription: View, SuperEvent, SuperLog, SuperThread {
                                 }
                             }
                         }
-                        .padding(10)
+                        .padding()
                         .background(.background.opacity(0.4))
                         .roundedMedium()
                         .shadowSm()
                     }
-                }.inScrollView()
+                }
+                .inScrollView()
             }
         }
         .onAppear(perform: onAppear)
@@ -123,17 +124,17 @@ extension ProductsSubscription {
 // MARK: - Preview
 
 #Preview("PurchaseView - All") {
-    PurchaseView(showCloseButton: false)
+    PurchaseView()
         .inRootView()
         .frame(height: 800)
 }
 
 #Preview("PurchaseView - Subscription Only") {
-    PurchaseView(showCloseButton: false,
-                 showSubscription: true,
-                 showOneTime: false,
-                 showNonRenewable: false,
-                 showConsumable: false)
+    PurchaseView(
+        showSubscription: true,
+        showOneTime: false,
+        showNonRenewable: false,
+        showConsumable: false)
         .inRootView()
         .frame(height: 800)
 }

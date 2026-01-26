@@ -6,7 +6,7 @@ struct ResetConfirmContent: View {
     let onConfirm: () -> Void
 
     var body: some View {
-        VStack(alignment: .center, spacing: 20) {
+        SheetContainer {
             VStack(spacing: 14) {
                 ZStack {
                     RoundedRectangle(cornerRadius: 14)
@@ -17,6 +17,7 @@ struct ResetConfirmContent: View {
                         .font(.system(size: 48, weight: .semibold))
                         .foregroundStyle(.tint)
                 }
+                
                 VStack(alignment: .center, spacing: 6) {
                     Text("确认重置？")
                         .font(.title3)
@@ -26,6 +27,11 @@ struct ResetConfirmContent: View {
                         .font(.body)
                 }
             }
+            .padding()
+            .background(.background.opacity(0.4))
+            .roundedMedium()
+            .shadowSm()
+            
             HStack(spacing: 12) {
                 HStack(spacing: 8) {
                     Image(systemName: "xmark")
@@ -50,42 +56,12 @@ struct ResetConfirmContent: View {
     }
 }
 
-struct ResetProgressContent: View {
-    var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            VStack(spacing: 14) {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 14)
-                        .fill(.quaternary)
-                        .frame(width: 60, height: 60)
-                    Image(systemName: .iconReset)
-                        .symbolRenderingMode(.hierarchical)
-                        .font(.system(size: 28, weight: .semibold))
-                        .foregroundStyle(.tint)
-                }
-
-                Text("正在重置…")
-                    .font(.title3)
-                    .fontWeight(.semibold)
-            }
-            .padding(.bottom, 8)
-        }
-        .padding(16)
-        .background(.ultraThinMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-        .overlay {
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .strokeBorder(.white.opacity(0.15))
-        }
-    }
-}
-
 // MARK: - Preview
 
 #Preview("ResetConfirmContent") {
     ResetConfirmContent(onCancel: {}, onConfirm: {})
-        .padding()
         .frame(width: 400)
+        .frame(height: 600)
         .inRootView()
 }
 
@@ -96,7 +72,6 @@ struct ResetProgressContent: View {
 
 #Preview("ResetConfirmContent - Dark") {
     ResetConfirmContent(onCancel: {}, onConfirm: {})
-        .padding()
         .frame(width: 400)
         .inRootView()
         .preferredColorScheme(.dark)

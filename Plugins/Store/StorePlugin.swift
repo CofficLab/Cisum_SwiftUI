@@ -13,7 +13,7 @@ actor StorePlugin: SuperPlugin {
 
     @MainActor
     func addSettingView() -> AnyView? {
-        AnyView(StoreSettingEntry())
+        AnyView(StoreSetting())
     }
 }
 

@@ -28,21 +28,16 @@ struct SystemSetting: View, SuperLog {
             }
         }
         .sheet(isPresented: $showConfirmSheet) {
-            ZStack {
-                if isResetting {
-                    ResetProgressContent()
-                        .padding(24)
-                        .frame(minWidth: 380)
-                } else {
-                    ResetConfirmContent(
-                        onCancel: { showConfirmSheet = false },
-                        onConfirm: performReset
-                    )
-                    .padding(24)
+            if isResetting {
+                ResetProgressContent()
                     .frame(minWidth: 380)
-                }
+            } else {
+                ResetConfirmContent(
+                    onCancel: { showConfirmSheet = false },
+                    onConfirm: performReset
+                )
+                .frame(minWidth: 380)
             }
-            .background(Config.rootBackground)
         }
     }
 }
