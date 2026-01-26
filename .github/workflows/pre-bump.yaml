@@ -14,61 +14,61 @@ env:
 jobs:
   bump:
     runs-on: macos-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      increment: ${{ steps.version.outputs.increment }}
     steps:
       - uses: actions/checkout@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-      - name: 更新版本号
+          fetch-depth: 0
+
+      - name: 配置 Git
         run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # 读取配置文件路径
+      - name: 计算新版本号
+        id: version
+        run: |
+          chmod +x scripts/bump-version.sh
+          chmod +x scripts/calculate-version.sh
+          INCREMENT=$(./scripts/bump-version.sh)
+          VERSION=$(./scripts/calculate-version.sh)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "increment=$INCREMENT" >> $GITHUB_OUTPUT
+          echo "📦 Version Increment: $INCREMENT"
+          echo "🏷️  New Version: $VERSION"
+
+      - name: 显示变更摘要
+        run: |
+          echo "### 🎯 版本更新信息 (Pre-release)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **增量类型**: ${{ steps.version.outputs.increment }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **新版本**: ${{ steps.version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📝 自上次标签以来的提交:" >> $GITHUB_STEP_SUMMARY
+          git log $(git describe --tags --abbrev=0 2>/dev/null || echo "0.0.0")..HEAD --pretty=format:'- %s' | head -20 >> $GITHUB_STEP_SUMMARY
+
+      - name: 验证版本更新
+        run: |
           projectFile=$(find $(pwd) -type f -name "*.pbxproj" | head -n 1)
-
-          # 读取文件中的版本号
-          version=$(grep -o 'MARKETING_VERSION = [^"]*' $projectFile | head -n 1 | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+')
-
-          echo "旧版本号->$version"
-
-          # 将版本号拆分为数组
-          IFS='.' read -r -a versionArray <<< "$version"
-
-          # 递增最后一位数字
-          ((versionArray[2]++))
-
-          # 重新组合版本号
-          newVersion="${versionArray[0]}.${versionArray[1]}.${versionArray[2]}"
-
-          echo "新版本号->$newVersion"
-
-          # 新版本号写入文件
-          echo "新版本号将要写入文件->$projectFile"
-
-          sed -i '' "s/MARKETING_VERSION = $version/MARKETING_VERSION = $newVersion/" "$projectFile"
-
           updatedVersion=$(grep -o 'MARKETING_VERSION = [^"]*' $projectFile | head -n 1 | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+')
-          echo "更新后的版本号->$updatedVersion"
-
+          echo "✅ 验证版本号: $updatedVersion"
           git status
       - name: 更新构建号
         uses: yanamura/ios-bump-version@v1
       - name: 生成标签
         run: |
-
-          # 读取配置文件路径
-          projectFile=$(find $(pwd) -type f -name "*.pbxproj" | head -n 1)
-
-          # 读取文件中的版本号
-          version=$(grep -o 'MARKETING_VERSION = [^"]*' $projectFile | head -n 1 | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+')
-
-          echo "版本号->$version"
-
-          build=$(agvtool what-version -terse)
-
-          echo "tag=p$version" >> $GITHUB_ENV
+          VERSION=${{ steps.version.outputs.version }}
+          BUILD=$(agvtool what-version -terse)
+          echo "🏷️  Tag: p$VERSION"
+          echo "🔢 Build: $BUILD"
+          echo "tag=p$VERSION" >> $GITHUB_ENV
       - name: 打标签并推送到仓库
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: '👷 CI: Bump a new version'
+          commit_message: "ci: bump a new version"
           commit_user_name: GitHub Action
           tagging_message: ${{ env.tag }}
   rebase:
