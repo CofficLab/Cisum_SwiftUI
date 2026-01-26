@@ -85,23 +85,6 @@ struct ProductCell: View, SuperLog {
                 .fill(.regularMaterial)
                 .stroke(borderColor, lineWidth: 1)
         )
-        .overlay {
-            // 购买状态徽章
-            if isCurrent || isPurchased {
-                VStack {
-                    HStack {
-                        Spacer()
-                        if isCurrent {
-                            StatusBadge(text: "正在使用", color: .green)
-                        } else if isPurchased {
-                            StatusBadge(text: "已购买", color: .green)
-                        }
-                    }
-                    Spacer()
-                }
-                .padding(8)
-            }
-        }
         .alert(isPresented: $isShowingError, content: {
             Alert(title: Text(errorTitle), message: nil, dismissButton: .default(Text("好")))
         })

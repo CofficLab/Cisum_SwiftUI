@@ -7,17 +7,33 @@ import SwiftUI
 struct RestoreView: View, SuperEvent, SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
     @Environment(\.colorScheme) var colorScheme: ColorScheme
+    @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var m: MagicMessageProvider
 
     @State private var subscriptions: [Product] = []
     @State private var refreshing = false
     @State private var error: Error? = nil
     @State private var isRestoring = false
+    @State var closeBtnHovered = false
+    var showCloseButton = false
 
     nonisolated static let emoji = "🖥️"
 
+    init(showCloseButton: Bool = false) {
+        self.showCloseButton = showCloseButton
+    }
+
     var body: some View {
         VStack(spacing: 16) {
+            // 添加关闭按钮（可配置）
+            if showCloseButton {
+                HStack {
+                    Spacer()
+                    closeButton
+                }
+                .padding(.top, 8)
+            }
+
             // 标题区域
             HStack(spacing: 12) {
                 Image(systemName: "arrow.clockwise.circle.fill")
@@ -69,6 +85,7 @@ struct RestoreView: View, SuperEvent, SuperLog, SuperThread {
                 }
             }
             .inCard()
+            .hoverScale(110)
             .inButtonWithAction {
                 restorePurchase()
             }
@@ -82,6 +99,40 @@ struct RestoreView: View, SuperEvent, SuperLog, SuperThread {
         .inCard()
         .infinite()
         .inScrollView()
+    }
+
+    // MARK: - 子视图组件
+
+    /// 关闭按钮 - 现代化圆形设计
+    private var closeButton: some View {
+        Button(action: { dismiss() }) {
+            Image.close
+                .font(.system(size: 12, weight: .medium))
+                .frame(width: 32, height: 32)
+                .foregroundStyle(.secondary)
+                .background(.ultraThinMaterial, in: Circle())
+                .shadow(color: .black.opacity(0.1), radius: 4, y: 2)
+        }
+        .buttonStyle(.plain)
+        #if os(macOS)
+            .onHover { hovering in
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    closeBtnHovered = hovering
+                }
+            }
+            .scaleEffect(closeBtnHovered ? 1.1 : 1.0)
+        #endif
+        #if os(iOS)
+        .scaleEffect(closeBtnHovered ? 0.95 : 1.0)
+        .onTapGesture {
+            withAnimation(.easeOut(duration: 0.1)) {
+                closeBtnHovered = true
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                withAnimation { closeBtnHovered = false }
+            }
+        }
+        #endif
     }
 
     // MARK: - Actions

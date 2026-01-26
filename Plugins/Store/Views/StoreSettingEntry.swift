@@ -89,7 +89,7 @@ struct StoreSettingEntry: View, SuperLog, SuperEvent {
                 .background(Config.rootBackground)
         }
         .sheet(isPresented: $showRestoreSheet) {
-            RestoreView()
+            RestoreView(showCloseButton: Config.isDesktop)
                 .background(Config.rootBackground)
         }
         .task {
