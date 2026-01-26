@@ -45,25 +45,27 @@ extension Guide {
                 HStack(spacing: 16) {
                     // 上一页按钮
                     if index > 0 {
-                        Button(action: {
-                            currentGuidePageIndex = index - 1
-                        }) {
-                            Image(systemName: "chevron.left")
-                                .font(.title2)
-                                .frame(width: 50, height: 50)
-                                .background(.ultraThinMaterial, in: Circle())
-                        }
-                    }
-
-                    // 下一页按钮
-                    Button(action: {
-                        currentGuidePageIndex = index + 1
-                    }) {
-                        Image(systemName: "chevron.right")
+                        Image.previousPage
                             .font(.title2)
                             .frame(width: 50, height: 50)
                             .background(.ultraThinMaterial, in: Circle())
+                            .hoverScale(110)
+                            .shadow2xl()
+                            .inButtonWithAction {
+                                currentGuidePageIndex = index - 1
+                            }
                     }
+
+                    // 下一页按钮
+                    Image.nextPage
+                        .font(.title2)
+                        .frame(width: 50, height: 50)
+                        .background(.ultraThinMaterial, in: Circle())
+                        .hoverScale(110)
+                        .shadow2xl()
+                        .inButtonWithAction {
+                            currentGuidePageIndex = index + 1
+                        }
                 }
                 .padding(.bottom, 16)
             }
