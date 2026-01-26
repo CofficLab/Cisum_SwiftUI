@@ -28,7 +28,7 @@ struct BookPoster: View {
 
             Spacer()
 
-            MagicButton.simple(action: {
+            Button(action: {
                 Task { @MainActor in
                     do {
                         try pluginProvider.setCurrentScene("有声书")
@@ -37,11 +37,16 @@ struct BookPoster: View {
                         m.error(error)
                     }
                 }
-            })
-            .magicShape(.roundedRectangle)
-            .magicSize(.auto)
-            .magicTitle("进入有声书仓库")
-            .magicIcon(.iconArrowUpCircle)
+            }) {
+                HStack(spacing: 8) {
+                    Image(systemName: .iconArrowUpCircle)
+                    Text("进入有声书仓库")
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 10)
+                .background(.blue, in: RoundedRectangle(cornerRadius: 10))
+                .foregroundStyle(.white)
+            }
             .frame(width: 130)
             .frame(height: 40)
         }

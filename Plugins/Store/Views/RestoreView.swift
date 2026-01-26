@@ -1,5 +1,5 @@
-import MagicKit
 import MagicAlert
+import MagicKit
 import OSLog
 import StoreKit
 import SwiftUI
@@ -27,20 +27,21 @@ struct RestoreView: View, SuperEvent, SuperLog, SuperThread {
                 .padding()
                 .multilineTextAlignment(.center)
 
-            Button("恢复购买", action: {
-                Task {
-                    // This call displays a system prompt that asks users to authenticate with their App Store credentials.
-                    // Call this function only in response to an explicit user action, such as tapping a button.
-                    do {
-                        os_log("\(self.t)恢复购买")
-                        try await AppStore.sync()
-                        os_log("\(self.t)恢复购买完成")
-                        postRestore()
-                    } catch {
-                        m.error(error)
+            Text("恢复购买")
+                .inButtonWithAction {
+                    Task {
+                        // This call displays a system prompt that asks users to authenticate with their App Store credentials.
+                        // Call this function only in response to an explicit user action, such as tapping a button.
+                        do {
+                            os_log("\(self.t)恢复购买")
+                            try await AppStore.sync()
+                            os_log("\(self.t)恢复购买完成")
+                            postRestore()
+                        } catch {
+                            m.error(error)
+                        }
                     }
                 }
-            })
         }
     }
 }

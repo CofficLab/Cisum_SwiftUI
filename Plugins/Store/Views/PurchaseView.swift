@@ -1,5 +1,4 @@
 import MagicKit
-import MagicUI
 import OSLog
 import StoreKit
 import SwiftUI
@@ -37,13 +36,13 @@ struct PurchaseView: View, SuperLog {
             if showCloseButton {
                 HStack {
                     Spacer()
-                    MagicButton.simple(action: {
+                    Button(action: {
                         dismiss()
-                    })
-                    .magicIcon(.iconClose)
-                    .magicShape(.circle)
-                    .magicStyle(.danger)
-                    .magicShapeVisibility(.always)
+                    }) {
+                        Image(systemName: "xmark")
+                            .frame(width: 28, height: 28)
+                            .background(.ultraThinMaterial, in: Circle())
+                    }
 
                     #if os(macOS)
                         .onHover { hovering in

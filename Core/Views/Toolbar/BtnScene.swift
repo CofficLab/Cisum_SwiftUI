@@ -1,5 +1,4 @@
 import MagicKit
-import MagicUI
 import OSLog
 import SwiftData
 import SwiftUI
@@ -11,13 +10,18 @@ struct BtnScene: View {
 
     var body: some View {
         if let sceneName = p.currentSceneName {
-            MagicButton.simple(
-                icon: sceneIcon(for: sceneName),
-                title: sceneName,
-            ) {
+            Button(action: {
                 self.isPresented.toggle()
+            }) {
+                HStack(spacing: 4) {
+                    Image(systemName: sceneIcon(for: sceneName))
+                    Text(sceneName)
+                        .font(.caption)
+                }
+                .padding(.horizontal, 8)
+                .padding(.vertical, 4)
+                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 6))
             }
-            .magicSize(.mini)
             .popover(isPresented: self.$isPresented, content: {
                 Posters(
                     isPresented: $isPresented

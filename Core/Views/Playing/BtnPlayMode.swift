@@ -8,32 +8,20 @@ struct PlayModeButton: View {
     @Environment(\.demoMode) var isDemoMode
 
     var body: some View {
-        if isDemoMode {
-            // 演示模式
-            Button(action: {}) {
-                Image(systemName: "repeat")
-                    .font(.system(size: 20))
-                    .foregroundColor(.secondary)
-                    .frame(width: 40, height: 40)
+        Group {
+            switch man.playMode {
+            case .sequence:
+                modeIcon(systemName: .iconMusicNoteList)
+            case .repeatAll:
+                modeIcon(systemName: .iconRepeatAll)
+            case .loop:
+                modeIcon(systemName: .iconRepeat1)
+            case .shuffle:
+                modeIcon(systemName: .iconShuffle)
             }
-            .buttonStyle(.plain)
-            .shadowSm()
-        } else {
-            // 正常模式
-            Group {
-                switch man.playMode {
-                case .sequence:
-                    modeIcon(systemName: .iconSequence)
-                case .repeatAll:
-                    modeIcon(systemName: .iconRepeatAll)
-                case .loop:
-                    modeIcon(systemName: .iconRepeat1)
-                case .shuffle:
-                    modeIcon(systemName: .iconShuffle)
-                }
-            }
-            .hoverScale(110)
         }
+        .hoverScale(110)
+        .shadowSm()
     }
 
     private func modeIcon(systemName: String) -> some View {

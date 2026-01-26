@@ -65,7 +65,7 @@ struct AudioPoster: View {
             
             Spacer()
 
-            MagicButton.simple(action: {
+            Button(action: {
                 Task { @MainActor in
                     do {
                         try pluginProvider.setCurrentScene("音乐库")
@@ -74,13 +74,14 @@ struct AudioPoster: View {
                         m.error(error)
                     }
                 }
-            })
-            .magicShape(.roundedRectangle)
-            .magicSize(.auto)
-            .magicTitle("进入音乐仓库")
-            .magicIcon(.iconArrowUpCircle)
-            .frame(width: 130)
-            .frame(height: 40)
+            }) {
+                HStack(spacing: 4) {
+                    Image(systemName: "arrow.up.circle")
+                    Text("进入音乐仓库")
+                }
+                .frame(width: 130, height: 40)
+                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 10))
+            }
         }
         .padding()
     }

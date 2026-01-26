@@ -8,7 +8,7 @@ import SwiftUI
 @MainActor
 final class ProviderManager: SuperLog {
     static let shared = ProviderManager()
-    static let verbose = true
+    static let verbose = false
     nonisolated static let emoji = "🔧"
 
     // Providers
@@ -35,7 +35,6 @@ final class ProviderManager: SuperLog {
 
         // PlayMan
         self.man = PlayMan(
-            playlistEnabled: false,
             verbose: Self.verbose,
             locale: .current,
             defaultArtwork: Image.musicFill,

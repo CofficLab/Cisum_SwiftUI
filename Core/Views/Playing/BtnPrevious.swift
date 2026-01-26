@@ -8,43 +8,56 @@ struct PreviousButton: View {
     @Environment(\.demoMode) var isDemoMode
 
     var body: some View {
-        if isDemoMode {
-            // 演示模式
-            Button(action: {}) {
-                Image(systemName: "backward.fill")
-                    .font(.system(size: 24))
-                    .foregroundColor(.secondary)
-                    .frame(width: 44, height: 44)
+        Image.backward
+            .foregroundColor(.secondary)
+            .frame(width: 32, height: 32)
+            .inCard()
+            .roundedFull()
+            .hoverScale(110)
+            .inButtonWithAction {
+                man.previous()
             }
-            .buttonStyle(.plain)
             .shadowSm()
-        } else {
-            // 正常模式
-            Image(systemName: "backward.fill")
-                .font(.system(size: 24))
-                .foregroundColor(.secondary)
-                .frame(width: 44, height: 44)
-                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
-                .hoverScale(110)
-                .inButtonWithAction {
-                    man.previous()
-                }
-        }
     }
 }
 
-
 // MARK: - Preview
 
-#Preview("PreviousButton") {
-    PreviousButton()
-        .inRootView()
-        .frame(height: 800)
-}
+#if os(macOS)
+    #Preview("App - Large") {
+        ContentView()
+            .inRootView()
+            .frame(width: 600, height: 1000)
+    }
 
-#Preview("PreviousButton - Demo") {
-    PreviousButton()
-        .inRootView()
-        .inDemoMode()
-        .frame(height: 800)
-}
+    #Preview("App - Small") {
+        ContentView()
+            .inRootView()
+            .frame(width: 500, height: 800)
+    }
+
+    #Preview("App Store Hero") {
+        AppStoreHero()
+            .inMagicContainer(.macBook13, scale: 1)
+    }
+
+    #Preview("PreviousButton") {
+        PreviousButton()
+            .inRootView()
+            .frame(height: 800)
+    }
+
+    #Preview("PreviousButton - Demo") {
+        PreviousButton()
+            .inRootView()
+            .inDemoMode()
+            .frame(height: 800)
+    }
+#endif
+
+#if os(iOS)
+    #Preview("iPhone") {
+        ContentView()
+            .inRootView()
+    }
+#endif

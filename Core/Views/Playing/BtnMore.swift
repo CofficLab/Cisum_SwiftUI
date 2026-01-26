@@ -6,22 +6,15 @@ struct BtnMore: View {
     @Environment(\.demoMode) var isDemoMode
 
     var body: some View {
-        if isDemoMode {
-            // 演示模式
-            Image.more
-                .font(.system(size: 24))
-                .foregroundColor(.secondary)
-                .frame(width: 44, height: 44)
-        } else {
-            // 正常模式
-            Image.more
-                .frame(width: 32, height: 32)
-                .background(.ultraThinMaterial, in: Circle())
-                .hoverScale(110)
-                .inButtonWithAction {
-                    app.toggleDBView()
-                }
-        }
+        Image.more
+            .frame(width: 32, height: 32)
+            .inCard()
+            .roundedFull()
+            .hoverScale(110)
+            .inButtonWithAction {
+                app.toggleDBView()
+            }
+            .shadowSm()
     }
 }
 

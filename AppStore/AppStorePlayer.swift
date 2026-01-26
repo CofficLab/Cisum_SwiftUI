@@ -25,13 +25,12 @@ struct AppStorePlayer: View {
                 .hideTabView()
                 .frame(width: Config.minWidth)
                 .frame(height: 650)
-                .background(.background.opacity(0.5))
-                .magicRoundedLarge()
+                .shadowSm()
+                .roundedLarge()
         }
         .magicCentered()
         .withBackgroundDecorations()
         .background(LinearGradient.pastel)
-        .shadow(color: .black.opacity(0.2), radius: 4, y: 2)
     }
 }
 

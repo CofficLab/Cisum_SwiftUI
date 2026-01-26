@@ -11,15 +11,15 @@ struct ControlBtns: View, SuperLog {
 
     var body: some View {
         HStack(spacing: 4) {
-            Spacer(minLength: 50)
+            Spacer(minLength: 1)
 
-            BtnToggleDB()
+            BtnMore()
             PreviousButton()
             PlayPauseButton()
             NextButton()
             PlayModeButton()
 
-            Spacer(minLength: 50)
+            Spacer(minLength: 1)
         }
         .padding(.bottom, 20)
         .infinite()

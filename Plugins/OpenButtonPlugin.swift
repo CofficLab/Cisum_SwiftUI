@@ -33,8 +33,6 @@ private struct OpenCurrentButtonView: View, SuperLog {
         return Group {
             if let url = url {
                 url.makeOpenButton()
-                    .magicShapeVisibility(.onHover)
-                    .magicSize(.small)
                     .id(url.absoluteString)
             }
         }

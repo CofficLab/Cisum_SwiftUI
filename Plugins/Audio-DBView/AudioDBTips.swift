@@ -33,12 +33,13 @@ struct AudioDBTips: View {
                 #if os(macOS)
                     if let disk = AudioPlugin.getAudioDisk() {
                         HStack { Text("或").foregroundStyle(.white) }
-                        Button(
-                            action: { disk.openFolder() },
-                            label: {
-                                Label { Text("打开仓库目录并放入文件") } icon: { Image(systemName: "doc.viewfinder.fill") }
+
+                        Label { Text("打开仓库目录并放入文件") } icon: { Image(systemName: "doc.viewfinder.fill") }
+                            .inCard()
+                            .hoverScale(105)
+                            .inButtonWithAction {
+                                disk.openFolder()
                             }
-                        )
                     }
                 #endif
 
@@ -107,16 +108,18 @@ struct AudioDBTips: View {
 #Preview {
     Group {
         AudioDBTips(variant: .empty)
-            .frame(width: 300, height: 300)
+            .frame(width: 300, height: 200)
 
         AudioDBTips(variant: .loading)
-            .frame(width: 300, height: 300)
+            .frame(width: 300, height: 200)
 
         AudioDBTips(variant: .sorting)
-            .frame(width: 300, height: 300)
+            .frame(width: 300, height: 200)
     }
+    .infinite()
     .inScrollView()
     .frame(height: 800)
+    .frame(width: 500)
 }
 
 #if os(macOS)

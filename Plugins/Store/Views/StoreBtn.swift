@@ -1,7 +1,6 @@
 import Foundation
 import MagicKit
 import MagicAlert
-import MagicUI
 import OSLog
 import SwiftUI
 
@@ -29,13 +28,16 @@ struct StoreBtn: View, SuperLog {
                 }
                 .buttonStyle(.plain)
             } else {
-                MagicButton.simple(icon: icon, size: .auto, action: {
+                Button(action: {
                     action()
-                })
-                .magicTitle("商店")
-                .magicShape(.roundedRectangle)
-                .frame(width: 150)
-                .frame(height: 50)
+                }) {
+                    HStack(spacing: 8) {
+                        Image(systemName: icon)
+                        Text("商店")
+                    }
+                    .frame(width: 150, height: 50)
+                    .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 10))
+                }
             }
         }
     }

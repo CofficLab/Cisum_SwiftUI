@@ -29,7 +29,6 @@ struct AudioSettings: View, SuperLog {
                         MagicSettingRow(title: "打开仓库", description: "在Finder中查看", icon: .iconShowInFinder, content: {
                             HStack {
                                 disk.makeOpenButton()
-                                    .magicSize(.small)
                             }
 
                         })

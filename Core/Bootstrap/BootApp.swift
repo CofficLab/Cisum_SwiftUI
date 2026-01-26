@@ -15,7 +15,6 @@ typealias MagicLoading = MagicUI.MagicLoading
 typealias MagicMessageProvider = MagicAlert.MagicMessageProvider
 typealias MagicSettingSection = MagicUI.MagicSettingSection
 typealias MagicSettingRow = MagicUI.MagicSettingRow
-typealias MagicButton = MagicUI.MagicButton
 
 @main
 struct BootApp: App, SuperLog {

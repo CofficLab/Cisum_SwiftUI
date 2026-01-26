@@ -55,13 +55,15 @@ struct StoreSettingEntry: View, SuperLog {
 
             // 购买入口
             MagicSettingRow(title: "应用内购买", description: "订阅专业版，解锁所有功能", icon: "cart", content: {
-                MagicButton.simple(title: purchaseInfo.isNotProOrHigher ? "查看订阅" : "升级订阅") {
-                    showBuySheet = true
-                }
-                .magicIcon("app.gift")
-                .magicShape(.circle)
-                .magicStyle(.secondary)
-                .magicSize(.small)
+                Image(systemName: "app.gift")
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .inCard()
+                    .roundedFull()
+                    .hoverScale(105)
+                    .inButtonWithAction({
+                        showBuySheet = true
+                    })
             })
         }
         .sheet(isPresented: $showBuySheet) {
@@ -100,6 +102,7 @@ extension StoreSettingEntry {
 #Preview("Store Settings") {
     StoreSettingEntry()
         .inRootView()
+        .frame(width: 400)
         .frame(height: 800)
 }
 

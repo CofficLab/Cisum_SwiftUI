@@ -8,43 +8,42 @@ struct NextButton: View {
     @Environment(\.demoMode) var isDemoMode
 
     var body: some View {
-        if isDemoMode {
-            // 演示模式
-            Button(action: {}) {
-                Image(systemName: "forward.fill")
-                    .font(.system(size: 24))
-                    .foregroundColor(.secondary)
-                    .frame(width: 44, height: 44)
+        Image.forward
+            .frame(width: 32, height: 32)
+            .inCard()
+            .roundedFull()
+            .hoverScale(110)
+            .inButtonWithAction {
+                man.next()
             }
-            .buttonStyle(.plain)
             .shadowSm()
-        } else {
-            // 正常模式
-            Image(systemName: "forward.fill")
-                .font(.system(size: 24))
-                .foregroundColor(.secondary)
-                .frame(width: 44, height: 44)
-                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
-                .hoverScale(110)
-                .inButtonWithAction {
-                    man.next()
-                }
-        }
     }
 }
 
 // MARK: - Preview
 
-#Preview("NextButton") {
-    NextButton()
-        .inRootView()
-        .frame(height: 800)
-}
+#if os(macOS)
+    #Preview("App - Large") {
+        ContentView()
+            .inRootView()
+            .frame(width: 600, height: 1000)
+    }
 
-#Preview("NextButton - Demo") {
-    NextButton()
-        .inRootView()
-        .inDemoMode()
-        .frame(height: 800)
-}
+    #Preview("App - Small") {
+        ContentView()
+            .inRootView()
+            .frame(width: 500, height: 800)
+    }
 
+    #Preview("App Store Hero") {
+        AppStoreHero()
+            .inMagicContainer(.macBook13, scale: 1)
+    }
+#endif
+
+#if os(iOS)
+    #Preview("iPhone") {
+        ContentView()
+            .inRootView()
+    }
+#endif
