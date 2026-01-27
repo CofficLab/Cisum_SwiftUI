@@ -31,10 +31,9 @@ struct HeroView: View {
                             .frame(height: getAlbumHeight(geo))
                             .clipped()
                     } else {
-                        playMan.makeHeroView(verbose: Self.verbose)
+                        playMan.makeHeroView(verbose: Self.verbose, avatarShape: .roundedRectangle(cornerRadius: 8))
                             .frame(maxWidth: .infinity)
                             .frame(height: getAlbumHeight(geo))
-                            .clipped()
                     }
                 }
 
@@ -42,7 +41,7 @@ struct HeroView: View {
                     .frame(maxWidth: .infinity)
                     .frame(height: titleViewHeight)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .infinite()
         }
         .ignoresSafeArea(edges: Config.isDesktop ? .horizontal : .all)
     }
