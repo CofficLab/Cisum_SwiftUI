@@ -27,5 +27,5 @@ struct BtnMore: View {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .inPreviewMode(vertical: true)
 }
