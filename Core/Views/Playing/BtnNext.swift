@@ -11,7 +11,7 @@ struct NextButton: View {
 
     var body: some View {
         Image.forward
-            .font(.system(size: self.size * 0.7))
+            .font(.system(size: self.size * 0.6))
             .foregroundStyle(.secondary)
             .frame(width: size, height: size)
             .inCard(.ultraThinMaterial)

@@ -28,7 +28,7 @@ struct PlayModeButton: View {
 
     private func modeIcon(systemName: String) -> some View {
         Image(systemName: systemName)
-            .font(.system(size: self.size * 0.7))
+            .font(.system(size: self.size * 0.6))
             .frame(width: size, height: size)
             .foregroundStyle(.secondary)
             .inCard(.ultraThinMaterial)

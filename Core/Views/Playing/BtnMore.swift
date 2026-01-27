@@ -9,7 +9,7 @@ struct BtnMore: View {
 
     var body: some View {
         Image.more
-            .font(.system(size: self.size * 0.7))
+            .font(.system(size: self.size * 0.6))
             .frame(width: size, height: size)
             .foregroundStyle(.secondary)
             .inCard(.ultraThinMaterial)

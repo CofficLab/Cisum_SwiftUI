@@ -23,7 +23,7 @@ struct PlayPauseButton: View {
 
     private var playButton: some View {
         Image.playFill
-            .font(.system(size: self.size * 0.7))
+            .font(.system(size: self.size * 0.6))
             .foregroundStyle(.secondary)
             .frame(width: size, height: size)
             .inCard(.ultraThinMaterial)
@@ -35,7 +35,7 @@ struct PlayPauseButton: View {
 
     private var pauseButton: some View {
         Image.pauseFill
-            .font(.system(size: self.size * 0.7))
+            .font(.system(size: self.size * 0.6))
             .foregroundStyle(.secondary)
             .frame(width: size, height: size)
             .inCard(.ultraThinMaterial)
