@@ -23,9 +23,9 @@ actor SystemPlugin: SuperPlugin, SuperLog {
 
 // MARK: Preview
 
-#Preview("ResetConfirmContent") {
+#Preview("ResetConfirm") {
     RootView {
-        ResetConfirmContent(onCancel: {}, onConfirm: {})
+        ResetConfirm()
             .padding()
             .frame(width: 400)
     }

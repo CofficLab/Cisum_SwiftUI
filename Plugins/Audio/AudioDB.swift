@@ -824,9 +824,6 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
                     // 记录存在哈希表中，同步完成，删除哈希表记录
                     hashMap.removeValue(forKey: audio.url)
                 } else {
-                    if verbose {
-                        os_log("\(self.t)🗑️ 删除 \(audio.title)")
-                    }
                     context.delete(audio)
                 }
             })

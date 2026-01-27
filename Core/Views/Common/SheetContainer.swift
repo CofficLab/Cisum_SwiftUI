@@ -44,7 +44,7 @@ struct SheetContainer<Content: View>: View {
             // 用户内容
             content
                 .padding(.horizontal, 8)
-                .padding(.bottom, 12)
+                .padding(.bottom, 24)
         }
         .background(Config.rootBackground)
         .infinite()

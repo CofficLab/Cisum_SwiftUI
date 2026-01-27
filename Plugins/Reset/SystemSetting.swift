@@ -6,7 +6,6 @@ struct SystemSetting: View, SuperLog {
     nonisolated static let verbose = false
 
     @EnvironmentObject var app: AppProvider
-    @State private var isResetting: Bool = false
     @State private var showConfirmSheet: Bool = false
 
     var body: some View {
@@ -24,53 +23,19 @@ struct SystemSetting: View, SuperLog {
                     .background(.regularMaterial, in: Circle())
                     .shadowSm()
                     .hoverScale(105)
-                    .inButtonWithAction(showResetConfirm)
+                    .inButtonWithAction {
+                        showConfirmSheet = true
+                    }
             }
         }
         .sheet(isPresented: $showConfirmSheet) {
-            if isResetting {
-                ResetProgressContent()
-                    .frame(minWidth: 380)
-            } else {
-                ResetConfirmContent(
-                    onCancel: { showConfirmSheet = false },
-                    onConfirm: performReset
-                )
-                .frame(minWidth: 380)
-            }
-        }
-    }
-}
-
-// MARK: - Action
-
-extension SystemSetting {
-    func showResetConfirm() {
-        showConfirmSheet = true
-    }
-
-    func performReset() {
-        isResetting = true
-        Task {
-            Config.resetStorageLocation()
-            await MainActor.run {
-                isResetting = false
-                showConfirmSheet = false
-            }
+            ResetConfirm()
+                .frame(width: 400)
         }
     }
 }
 
 // MARK: - Preview
-
-#Preview("ResetConfirmContent") {
-    ResetConfirmContent(onCancel: {}, onConfirm: {})
-        .padding()
-        .infinite()
-        .frame(width: 500)
-        .frame(height: 800)
-        .inRootView()
-}
 
 #Preview("SystemSetting") {
     SystemSetting()

@@ -50,7 +50,7 @@ extension Guide {
                             .frame(width: 50, height: 50)
                             .background(.regularMaterial, in: Circle())
                             .hoverScale(105)
-                            .shadow2xl()
+                            .shadowSm()
                             .inButtonWithAction {
                                 currentGuidePageIndex = index - 1
                             }
@@ -62,7 +62,7 @@ extension Guide {
                         .frame(width: 50, height: 50)
                         .background(.regularMaterial, in: Circle())
                         .hoverScale(105)
-                        .shadow2xl()
+                        .shadowSm()
                         .inButtonWithAction {
                             currentGuidePageIndex = index + 1
                         }
