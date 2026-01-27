@@ -28,6 +28,16 @@ import SwiftUI
                 CopyRootView { content() }
             )
         }
+
+        /// 检查是否超出音频数量限制
+        /// - Returns: 如果超出限制则返回 true，否则返回 false
+        @MainActor static func isOutOfLimit() async -> Bool {
+            guard let repo = AudioPlugin.getAudioRepo() else {
+                return false
+            }
+            let count = await repo.getTotalCount()
+            return count >= AudioPlugin.maxAudioCount && StoreService.tierCached().isFreeVersion
+        }
     }
 #endif
 

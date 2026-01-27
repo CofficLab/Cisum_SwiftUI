@@ -18,7 +18,11 @@
         @State var isDropping = false
         @State var error: Error? = nil
         @State var iCloudAvailable = true
-        @State var count = 0
+        @State private var outOfLimit = false
+
+        private var showProTips: Bool {
+            outOfLimit && isDropping
+        }
 
         var body: some View {
             VStack {
@@ -32,19 +36,6 @@
             .onAppear(perform: onAppear)
             .onDrop(of: [UTType.fileURL], isTargeted: self.$isDropping, perform: onDropProviders)
             .onCopyFiles(perform: onCopyFiles)
-        }
-
-    }
-
-    // MARK: - View
-
-    extension CopyWorkerView {
-        private var outOfLimit: Bool {
-            count >= AudioPlugin.maxAudioCount && StoreService.tierCached().isFreeVersion
-        }
-
-        private var showProTips: Bool {
-            count >= AudioPlugin.maxAudioCount && StoreService.tierCached().isFreeVersion && isDropping
         }
     }
 
@@ -71,7 +62,14 @@
                 os_log("\(self.t)🚀 开始处理拖放文件")
             }
 
-            if self.outOfLimit { return false }
+            // 检查是否超出限制
+            let isOutOfLimit = await CopyPlugin.isOutOfLimit()
+            await MainActor.run {
+                self.outOfLimit = isOutOfLimit
+            }
+            if isOutOfLimit {
+                return false
+            }
 
             guard let disk = await MainActor.run(body: { AudioPlugin.getAudioDisk() }) else {
                 os_log(.error, "\(self.t)No Disk")
@@ -126,6 +124,13 @@
         func onAppear() {
             if Self.verbose {
                 os_log("\(self.t)onAppear")
+            }
+            // 检查是否超出限制
+            Task {
+                let isOutOfLimit = await CopyPlugin.isOutOfLimit()
+                await MainActor.run {
+                    self.outOfLimit = isOutOfLimit
+                }
             }
         }
 
