@@ -8,7 +8,7 @@ import UniformTypeIdentifiers
 
 struct AudioControlRootView<Content>: View, SuperLog where Content: View {
     nonisolated static var emoji: String { "🎮" }
-    private static var verbose: Bool { false }
+    private static var verbose: Bool { true }
 
     @EnvironmentObject var man: PlayMan
     @EnvironmentObject var m: MagicMessageProvider
@@ -115,8 +115,7 @@ extension AudioControlRootView {
         guard shouldActivateControl else { return }
 
         if Self.verbose {
-            os_log("\(self.t)⏭️ 请求下一首")
-            os_log("\(self.t)📍 当前播放: \(asset.lastPathComponent)")
+            os_log("\(self.t)⏭️ [\(asset.lastPathComponent)] 请求下一首")
         }
 
         guard let repo = audioRepo else {
@@ -132,25 +131,39 @@ extension AudioControlRootView {
                 if let next = next {
                     if Self.verbose {
                         os_log("\(self.t)✅ 找到下一首: \(next.lastPathComponent)")
-                        os_log("\(self.t)▶️ 开始播放下一首")
                     }
                     await man.play(next, autoPlay: true, reason: self.className + ".handleNextRequested")
                 } else {
-                    // 没有下一首的情况
+                    // 没有下一首，播放第一首
                     if Self.verbose {
-                        os_log("\(self.t)⚠️ 没有找到下一首")
-
-                        // 获取总文件数用于调试
-                        let allUrls = await repo.getAll(reason: "调试")
-                        os_log("\(self.t)📊 仓库中共有 \(allUrls.count) 个文件")
+                        os_log("\(self.t)⚠️ 没有找到下一首，尝试播放第一首")
                     }
 
-                    // 停止播放
-                    await man.stop(reason: self.className)
+                    let firstUrl = try await repo.getFirst()
 
-                    // 显示提示
-                    await MainActor.run {
-                        m.info("已是最后一首，没有更多文件")
+                    if let first = firstUrl {
+                        if Self.verbose {
+                            os_log("\(self.t)✅ 播放第一首: \(first.lastPathComponent)")
+                        }
+
+                        // 显示提示信息
+                        await MainActor.run {
+                            m.info("已播放最后一首，自动播放第一首")
+                        }
+
+                        // 播放第一首
+                        await man.play(first, autoPlay: true, reason: self.className + ".循环播放")
+                    } else {
+                        if Self.verbose {
+                            os_log("\(self.t)⚠️ 仓库中没有文件")
+                        }
+
+                        // 仓库为空，停止播放
+                        await man.stop(reason: self.className + ".仓库为空")
+
+                        await MainActor.run {
+                            m.info("仓库中没有文件")
+                        }
                     }
                 }
             } catch {

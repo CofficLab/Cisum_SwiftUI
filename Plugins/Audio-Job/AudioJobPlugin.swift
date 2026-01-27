@@ -54,10 +54,6 @@ actor AudioJobPlugin: SuperPlugin, SuperLog {
 
     /// 设置存储位置变化监听
     private func setupStorageLocationObserver() async {
-        if Self.verbose {
-            os_log("\(Self.t)🔍 设置存储位置变化监听")
-        }
-
         await MainActor.run {
             // 监听存储位置重置事件
             NotificationCenter.default.publisher(for: .storageLocationDidReset)
