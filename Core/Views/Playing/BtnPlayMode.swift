@@ -30,6 +30,7 @@ struct PlayModeButton: View {
         Image(systemName: systemName)
             .font(.system(size: self.size * 0.7))
             .frame(width: size, height: size)
+            .foregroundStyle(.secondary)
             .inCard(.ultraThinMaterial)
             .roundedFull()
             .inButtonWithAction {
@@ -43,5 +44,5 @@ struct PlayModeButton: View {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .inPreviewMode(vertical: true)
 }
