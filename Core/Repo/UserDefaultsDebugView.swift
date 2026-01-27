@@ -125,7 +125,7 @@ struct UserDefaultsDebugView: View, SuperLog {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }
 
 #Preview("UserDefaults 调试") {

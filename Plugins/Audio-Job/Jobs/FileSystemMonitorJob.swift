@@ -177,5 +177,5 @@ final class FileSystemMonitorJob: AudioJob, SuperLog, @unchecked Sendable {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }

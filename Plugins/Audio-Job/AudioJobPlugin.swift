@@ -108,5 +108,5 @@ actor AudioJobPlugin: SuperPlugin, SuperLog {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }

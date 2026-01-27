@@ -55,5 +55,5 @@ struct CopyStateView: View, SuperLog, SuperThread {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }

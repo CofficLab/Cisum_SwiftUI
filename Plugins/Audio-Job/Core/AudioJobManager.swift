@@ -135,5 +135,5 @@ actor AudioJobManager: SuperLog {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }

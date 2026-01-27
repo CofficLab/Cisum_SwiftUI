@@ -108,5 +108,5 @@ class AppDelegate: NSObject, ApplicationDelegate, SuperLog {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }

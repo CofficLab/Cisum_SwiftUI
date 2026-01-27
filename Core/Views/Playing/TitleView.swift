@@ -47,5 +47,5 @@ struct TitleView: View, SuperLog, SuperThread {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }

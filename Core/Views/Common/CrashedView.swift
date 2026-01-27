@@ -183,7 +183,7 @@ extension CrashedView {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }
 
 #if DEBUG

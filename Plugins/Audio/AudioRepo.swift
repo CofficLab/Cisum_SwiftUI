@@ -136,5 +136,5 @@ class AudioRepo: ObservableObject, SuperLog {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }

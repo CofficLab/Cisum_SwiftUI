@@ -101,7 +101,7 @@ struct SettingsItem: Identifiable, Hashable {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }
 
 #Preview {

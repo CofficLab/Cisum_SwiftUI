@@ -22,5 +22,5 @@ struct StatusView: View, SuperLog, SuperThread {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }

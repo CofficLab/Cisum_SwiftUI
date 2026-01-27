@@ -196,5 +196,5 @@ extension AudioDBView {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }

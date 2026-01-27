@@ -42,5 +42,5 @@ private struct LikeToggleButtonView: View, SuperLog {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }

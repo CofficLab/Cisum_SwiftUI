@@ -34,5 +34,5 @@ struct JobStatus {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }

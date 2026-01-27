@@ -52,7 +52,7 @@ struct PluginRepoDebugView: View {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }
 
 #Preview("插件仓库调试") {

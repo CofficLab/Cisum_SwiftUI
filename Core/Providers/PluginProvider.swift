@@ -477,5 +477,5 @@ enum PluginProviderError: Error, LocalizedError {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }

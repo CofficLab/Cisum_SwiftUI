@@ -160,5 +160,5 @@ extension ProductsSubscription {
 #Preview("App - Large") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }

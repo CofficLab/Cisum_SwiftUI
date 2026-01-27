@@ -300,17 +300,17 @@ extension RestoreView {
 #Preview("Restore") {
     RestoreView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }
 
 #Preview("Debug") {
     DebugView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }
 
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }

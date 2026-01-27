@@ -141,7 +141,7 @@ struct AllSubscriptions: View, SuperLog {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }
 
 #if os(iOS)

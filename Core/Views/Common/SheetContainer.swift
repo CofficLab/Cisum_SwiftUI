@@ -87,5 +87,5 @@ struct SheetContainer<Content: View>: View {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }

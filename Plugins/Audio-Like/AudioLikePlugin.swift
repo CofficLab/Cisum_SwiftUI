@@ -25,5 +25,5 @@ actor AudioLikePlugin: SuperPlugin, SuperLog {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }

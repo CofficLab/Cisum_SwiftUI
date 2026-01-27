@@ -27,5 +27,5 @@ struct AudioConfigRepo {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }

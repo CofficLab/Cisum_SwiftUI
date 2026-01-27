@@ -29,7 +29,7 @@ class UIRepo: SuperLog, SuperThread {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }
 
 #Preview("UserDefaults 调试") {

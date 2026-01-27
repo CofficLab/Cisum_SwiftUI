@@ -122,5 +122,5 @@ extension Notification.Name {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }

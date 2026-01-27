@@ -112,5 +112,5 @@ extension AppTabView {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }

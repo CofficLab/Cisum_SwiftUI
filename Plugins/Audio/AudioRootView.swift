@@ -126,5 +126,5 @@ extension AudioRootView {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }

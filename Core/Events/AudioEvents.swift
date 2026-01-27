@@ -211,5 +211,5 @@ extension NotificationCenter {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }

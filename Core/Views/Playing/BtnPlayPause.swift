@@ -51,5 +51,5 @@ struct PlayPauseButton: View {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode(vertical: true)
+        .withDebugBar()
 }

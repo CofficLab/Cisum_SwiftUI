@@ -69,5 +69,5 @@ struct AudioLikeSettingsView: View, SuperLog {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }

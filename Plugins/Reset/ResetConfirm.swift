@@ -153,11 +153,11 @@ private struct ResetInfoRow: View {
 #Preview("ResetConfirm") {
     ResetConfirm()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }
 
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }

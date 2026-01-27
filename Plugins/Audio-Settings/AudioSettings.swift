@@ -110,5 +110,5 @@ extension AudioSettings {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }

@@ -76,5 +76,5 @@ actor AudioPlayModeRepo: SuperLog {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }

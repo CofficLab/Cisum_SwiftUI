@@ -26,5 +26,5 @@ actor AudioDownloadPlugin: SuperPlugin, SuperLog {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }

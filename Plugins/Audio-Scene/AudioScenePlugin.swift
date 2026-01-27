@@ -29,5 +29,5 @@ actor AudioScenePlugin: SuperPlugin {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }

@@ -72,5 +72,5 @@ actor AudioJobScheduler: SuperLog {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }

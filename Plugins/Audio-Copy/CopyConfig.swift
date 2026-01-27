@@ -28,5 +28,5 @@ struct CopyConfig {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }

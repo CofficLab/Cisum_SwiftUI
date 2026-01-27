@@ -115,7 +115,7 @@ class AudioStateRepo: SuperLog {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }
 
 #Preview("UserDefaults 调试") {

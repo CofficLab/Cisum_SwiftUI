@@ -42,5 +42,5 @@ enum StorageLocation: String, Codable {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }

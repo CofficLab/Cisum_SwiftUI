@@ -57,5 +57,5 @@ struct CopyTaskDTO: Sendable {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }

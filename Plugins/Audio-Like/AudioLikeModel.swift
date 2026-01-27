@@ -78,5 +78,5 @@ extension AudioLikeModel {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }

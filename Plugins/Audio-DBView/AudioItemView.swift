@@ -229,5 +229,5 @@ extension AudioItemView {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }

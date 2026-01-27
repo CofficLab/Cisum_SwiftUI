@@ -67,5 +67,5 @@ class CloudProvider: NSObject, ObservableObject, SuperLog, SuperThread, SuperEve
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }

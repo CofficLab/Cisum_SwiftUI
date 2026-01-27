@@ -151,5 +151,5 @@ extension AudioProgressRootView {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }

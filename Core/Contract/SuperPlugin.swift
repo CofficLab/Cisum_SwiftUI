@@ -169,5 +169,5 @@ extension SuperPlugin {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }

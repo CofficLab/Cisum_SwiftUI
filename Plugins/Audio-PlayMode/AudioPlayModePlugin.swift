@@ -21,5 +21,5 @@ actor AudioPlayModePlugin: SuperPlugin {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }
