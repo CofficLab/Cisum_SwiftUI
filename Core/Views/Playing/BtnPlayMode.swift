@@ -20,7 +20,7 @@ struct PlayModeButton: View {
                 modeIcon(systemName: .iconShuffle)
             }
         }
-        .hoverScale(110)
+        .hoverScale(105)
         .shadowSm()
     }
 

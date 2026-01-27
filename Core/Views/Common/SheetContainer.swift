@@ -29,23 +29,26 @@ struct SheetContainer<Content: View>: View {
     var body: some View {
         VStack(spacing: spacing) {
             // 关闭按钮区域（仅 macOS 显示）
-            if Config.isDesktop {
-                HStack {
-                    Spacer()
-                    closeButton
-                }
-                .padding(.top, 8)
+            HStack {
+                Spacer()
+                closeButton
             }
+            .padding(.top, 8)
+            .padding(.trailing, 8)
+            .if(Config.isDesktop)
 
             // iOS 上需要一些空白，方便用户下拉关闭
             Spacer(minLength: 20)
+                .if(Config.isiOS)
 
             // 用户内容
             content
+                .padding(.horizontal, 8)
+                .padding(.bottom, 12)
         }
-        .padding()
         .background(Config.rootBackground)
         .infinite()
+        .ignoresSafeArea()
     }
 
     // MARK: - 子视图组件
@@ -54,33 +57,27 @@ struct SheetContainer<Content: View>: View {
     private var closeButton: some View {
         @State var hovered = false
 
-        return Button(action: { dismiss() }) {
+        return
             Image.close
-                .font(.system(size: 12, weight: .medium))
+                .font(.system(size: 20, weight: .medium))
                 .frame(width: 32, height: 32)
                 .foregroundStyle(.secondary)
-                .background(.ultraThinMaterial, in: Circle())
-                .shadow(color: .black.opacity(0.1), radius: 4, y: 2)
-        }
-        .buttonStyle(.plain)
-        #if os(macOS)
-            .onHover { hovering in
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    hovered = hovering
+                .background(.regularMaterial, in: Circle())
+                .shadowSm()
+                .inButtonWithAction {
+                    dismiss()
+                }
+                .hoverScale(105)
+        #if os(iOS)
+            .scaleEffect(hovered ? 0.95 : 1.0)
+            .onTapGesture {
+                withAnimation(.easeOut(duration: 0.1)) {
+                    hovered = true
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    withAnimation { hovered = false }
                 }
             }
-            .scaleEffect(hovered ? 1.1 : 1.0)
-        #endif
-        #if os(iOS)
-        .scaleEffect(hovered ? 0.95 : 1.0)
-        .onTapGesture {
-            withAnimation(.easeOut(duration: 0.1)) {
-                hovered = true
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                withAnimation { hovered = false }
-            }
-        }
         #endif
     }
 }

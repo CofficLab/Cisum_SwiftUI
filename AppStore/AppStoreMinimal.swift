@@ -74,7 +74,7 @@ private struct FeatureItem: View {
         .frame(width: 360)
         .background(
             RoundedRectangle(cornerRadius: 12)
-                .fill(.ultraThinMaterial)
+                .fill(.regularMaterial)
                 .shadow(color: .black.opacity(0.2), radius: 4, y: 2)
         )
     }

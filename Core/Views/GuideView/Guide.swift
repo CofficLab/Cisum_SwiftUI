@@ -48,8 +48,8 @@ extension Guide {
                         Image.previousPage
                             .font(.title2)
                             .frame(width: 50, height: 50)
-                            .background(.ultraThinMaterial, in: Circle())
-                            .hoverScale(110)
+                            .background(.regularMaterial, in: Circle())
+                            .hoverScale(105)
                             .shadow2xl()
                             .inButtonWithAction {
                                 currentGuidePageIndex = index - 1
@@ -60,8 +60,8 @@ extension Guide {
                     Image.nextPage
                         .font(.title2)
                         .frame(width: 50, height: 50)
-                        .background(.ultraThinMaterial, in: Circle())
-                        .hoverScale(110)
+                        .background(.regularMaterial, in: Circle())
+                        .hoverScale(105)
                         .shadow2xl()
                         .inButtonWithAction {
                             currentGuidePageIndex = index + 1

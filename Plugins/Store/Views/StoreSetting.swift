@@ -62,8 +62,9 @@ struct StoreSetting: View, SuperLog, SuperEvent {
                 Image.appStore
                     .frame(width: 28)
                     .frame(height: 28)
-                    .background(.ultraThinMaterial, in: .circle)
-                    .hoverScale(110)
+                    .background(.regularMaterial, in: .circle)
+                    .shadowSm()
+                    .hoverScale(105)
                     .inButtonWithAction({
                         showBuySheet = true
                     })
@@ -74,8 +75,9 @@ struct StoreSetting: View, SuperLog, SuperEvent {
                 Image.reset
                     .frame(width: 28)
                     .frame(height: 28)
-                    .background(.ultraThinMaterial, in: .circle)
-                    .hoverScale(110)
+                    .background(.regularMaterial, in: .circle)
+                    .shadowSm()
+                    .hoverScale(105)
                     .inButtonWithAction({
                         showRestoreSheet = true
                     })

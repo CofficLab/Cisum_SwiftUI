@@ -13,7 +13,7 @@ struct PreviousButton: View {
             .frame(width: 32, height: 32)
             .inCard()
             .roundedFull()
-            .hoverScale(110)
+            .hoverScale(105)
             .inButtonWithAction {
                 man.previous()
             }

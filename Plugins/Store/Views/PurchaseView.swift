@@ -25,7 +25,7 @@ struct PurchaseView: View, SuperLog {
     }
 
     var body: some View {
-        SheetContainer() {
+        SheetContainer {
             // 商品分组
             if enabledProductGroupCount > 1 {
                 productTabs
@@ -80,12 +80,8 @@ struct PurchaseView: View, SuperLog {
                     .tabItem { Label("消耗品", systemImage: .iconDoc) }
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(
-            RoundedRectangle(cornerRadius: 16)
-                .fill(.ultraThinMaterial)
-                .shadow(color: .black.opacity(0.05), radius: 8, y: 4)
-        )
+        .infinite()
+        .shadowSm()
     }
 
     /// 单个商品组展示

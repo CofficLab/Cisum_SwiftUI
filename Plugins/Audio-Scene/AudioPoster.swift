@@ -80,7 +80,7 @@ struct AudioPoster: View {
                     Text("进入音乐仓库")
                 }
                 .frame(width: 130, height: 40)
-                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 10))
+                .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 10))
             }
         }
         .padding()

@@ -21,9 +21,9 @@ struct SystemSetting: View, SuperLog {
             MagicSettingRow(title: "重置设置", description: "重置设置，恢复成系统默认状态", icon: .iconReset) {
                 Image.reset
                     .frame(width: 28, height: 28)
-                    .background(.ultraThinMaterial, in: Circle())
-                    .roundedFull()
-                    .hoverScale(110)
+                    .background(.regularMaterial, in: Circle())
+                    .shadowSm()
+                    .hoverScale(105)
                     .inButtonWithAction(showResetConfirm)
             }
         }

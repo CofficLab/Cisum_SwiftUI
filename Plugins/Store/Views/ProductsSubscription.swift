@@ -50,7 +50,7 @@ struct ProductsSubscription: View, SuperEvent, SuperLog, SuperThread {
                             }
                         }
                         .padding()
-                        .background(.background.opacity(0.4))
+                        .background(.regularMaterial)
                         .roundedMedium()
                         .shadowSm()
                     }
@@ -157,23 +157,8 @@ extension ProductsSubscription {
         .frame(height: 800)
 }
 
-#if os(macOS)
-    #Preview("App - Large") {
-        ContentView()
-            .inRootView()
-            .frame(width: 600, height: 1000)
-    }
-
-    #Preview("App - Small") {
-        ContentView()
-            .inRootView()
-            .frame(width: 500, height: 800)
-    }
-#endif
-
-#if os(iOS)
-    #Preview("iPhone") {
-        ContentView()
-            .inRootView()
-    }
-#endif
+#Preview("App - Large") {
+    ContentView()
+        .inRootView()
+        .inPreviewMode()
+}

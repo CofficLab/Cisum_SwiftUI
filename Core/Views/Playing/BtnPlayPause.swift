@@ -15,7 +15,7 @@ struct PlayPauseButton: View {
                 playButton
             }
         }
-        .hoverScale(110)
+        .hoverScale(105)
         .shadowSm()
     }
 

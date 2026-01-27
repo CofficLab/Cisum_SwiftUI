@@ -20,7 +20,7 @@ struct BtnScene: View {
                 }
                 .padding(.horizontal, 8)
                 .padding(.vertical, 4)
-                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 6))
+                .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 6))
             }
             .popover(isPresented: self.$isPresented, content: {
                 Posters(

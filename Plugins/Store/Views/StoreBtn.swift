@@ -36,7 +36,7 @@ struct StoreBtn: View, SuperLog {
                         Text("商店")
                     }
                     .frame(width: 150, height: 50)
-                    .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 10))
+                    .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 10))
                 }
             }
         }
