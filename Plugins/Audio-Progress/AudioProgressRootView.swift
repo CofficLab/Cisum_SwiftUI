@@ -9,7 +9,7 @@ import UniformTypeIdentifiers
 
 struct AudioProgressRootView<Content>: View, SuperLog where Content: View {
     nonisolated static var emoji: String { "💾" }
-    private static var verbose: Bool { false }
+    private static var verbose: Bool { true }
 
     @EnvironmentObject var man: PlayMan
     @EnvironmentObject var m: MagicMessageProvider
@@ -112,6 +112,10 @@ extension AudioProgressRootView {
                 await man.play(asset, autoPlay: false, reason: reason)
                 man.seek(time: timeTarget, reason: reason)
                 man.setLike(liked, reason: reason)
+            } else {
+                if Self.verbose {
+                    os_log("\(self.t)⚠️ 没有初始化播放数据")
+                }
             }
         }
     }
