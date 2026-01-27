@@ -217,6 +217,7 @@ struct PreviewSizeSelector: View {
                     )
                 }
         )
+        #if os(macOS)
         .draggableCursor()
         .onChange(of: isDragging) { _, newValue in
             if newValue {
@@ -225,6 +226,7 @@ struct PreviewSizeSelector: View {
                 NSCursor.pop()
             }
         }
+        #endif
     }
 
     @ViewBuilder
@@ -273,9 +275,9 @@ private struct DynamicPreviewSizingView<Content: View>: View {
     }
 
     var body: some View {
+        #if os(macOS)
         ZStack {
             content
-                #if os(macOS)
                 .frame(width: size.width, height: size.height)
                 .overlay(alignment: .bottomTrailing) {
                     PreviewSizeSelector(containerSize: size) {
@@ -283,7 +285,6 @@ private struct DynamicPreviewSizingView<Content: View>: View {
                     }
                     .padding(20)
                 }
-                #endif
 
             // 提示在整个预览窗口中心显示
             if showTip {
@@ -298,6 +299,10 @@ private struct DynamicPreviewSizingView<Content: View>: View {
                     }
             }
         }
+        #else
+        // iOS 平台直接返回原内容
+        content
+        #endif
     }
 }
 
