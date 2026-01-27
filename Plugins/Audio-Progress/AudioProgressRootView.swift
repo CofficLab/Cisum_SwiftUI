@@ -9,7 +9,7 @@ import UniformTypeIdentifiers
 
 struct AudioProgressRootView<Content>: View, SuperLog where Content: View {
     nonisolated static var emoji: String { "💾" }
-    private static var verbose: Bool { true }
+    private static var verbose: Bool { false }
 
     @EnvironmentObject var man: PlayMan
     @EnvironmentObject var m: MagicMessageProvider
@@ -26,6 +26,8 @@ struct AudioProgressRootView<Content>: View, SuperLog where Content: View {
             .onAppear(perform: handleOnAppear)
             .onPlayManStateChanged(handlePlayManStateChanged)
             .onPlayManAssetChanged(handlePlayManAssetChanged)
+            // 注意：存储位置变更时，本RootView会被卸载掉，光靠 onPlayManAssetChanged 无法监听到
+            .onStorageLocationDidReset(perform: handleStorageLocationDidReset)
     }
 
     /// 检查是否应该激活进度管理功能
@@ -172,6 +174,20 @@ extension AudioProgressRootView {
         Task {
             AudioStateRepo.storeCurrent(url)
         }
+    }
+
+    /// 处理存储位置重置事件
+    ///
+    /// 当存储位置被重置时，停止当前播放。
+    func handleStorageLocationDidReset() {
+        guard shouldActivateProgress else { return }
+
+        if Self.verbose {
+            os_log("\(self.t)🛑 存储位置重置，记录播放进度")
+        }
+
+        // 直接在主线程上调用，避免后台线程发布 @Published 属性
+        AudioStateRepo.storeCurrentTime(man.currentTime)
     }
 }
 

@@ -167,18 +167,11 @@ extension AudioControlRootView {
         guard shouldActivateControl else { return }
 
         if Self.verbose {
-            os_log("\(self.t)🛑 存储位置重置，停止播放")
+            os_log("\(self.t)🛑 存储位置重置，暂停播放")
         }
 
-        Task {
-            // 停止播放
-            await man.stop(reason: self.className)
-
-            // 显示提示信息
-            await MainActor.run {
-                m.info("存储位置已重置，已停止播放")
-            }
-        }
+        // 直接在主线程上调用，避免后台线程发布 @Published 属性
+        man.pause(reason: self.className + ".存储位置重置")
     }
 
     /// 处理音频删除事件

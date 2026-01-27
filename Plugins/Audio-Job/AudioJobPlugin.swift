@@ -18,7 +18,7 @@ private final class NotificationObserverHolder {
 actor AudioJobPlugin: SuperPlugin, SuperLog {
     static let emoji = "⚙️"
     static let verbose = true
-    static var shouldRegister: Bool { true }
+    static var shouldRegister: Bool { false }
     static var order: Int { 5 }
 
     let description = "处理音频文件的后台任务"
