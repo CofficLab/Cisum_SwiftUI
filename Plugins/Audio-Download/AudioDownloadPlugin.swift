@@ -14,7 +14,6 @@ actor AudioDownloadPlugin: SuperPlugin, SuperLog {
     let title = "音频下载管理"
     let description = "负责音频文件的自动下载"
     let iconName = "icloud.and.arrow.down"
-    
 
     /// 只有当当前插件是音频插件时才提供下载管理
     @MainActor func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {
@@ -22,25 +21,10 @@ actor AudioDownloadPlugin: SuperPlugin, SuperLog {
     }
 }
 
-// MARK: - Preview
+// MARK: Preview
 
-#if os(macOS)
-#Preview("App - Large") {
+#Preview("App") {
     ContentView()
-    .inRootView()
-        .frame(width: 600, height: 1000)
+        .inRootView()
+        .withDebugBar()
 }
-
-#Preview("App - Small") {
-    ContentView()
-    .inRootView()
-        .frame(width: 600, height: 600)
-}
-#endif
-
-#if os(iOS)
-#Preview("iPhone") {
-    ContentView()
-    .inRootView()
-}
-#endif

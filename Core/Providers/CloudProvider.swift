@@ -61,3 +61,11 @@ class CloudProvider: NSObject, ObservableObject, SuperLog, SuperThread, SuperEve
         updateAccountStatus(verbose: verbose)
     }
 }
+
+// MARK: Preview
+
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .withDebugBar()
+}

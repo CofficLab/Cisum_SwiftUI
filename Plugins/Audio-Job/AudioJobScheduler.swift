@@ -1,6 +1,7 @@
 import Foundation
 import MagicKit
 import OSLog
+import SwiftUI
 
 /// 跨平台后台任务调度器
 ///
@@ -23,32 +24,32 @@ actor AudioJobScheduler: SuperLog {
         guard !isSetup else { return }
 
         #if os(iOS)
-        setupiOS()
+            setupiOS()
         #elseif os(macOS)
-        setupmacOS()
+            setupmacOS()
         #endif
 
         isSetup = true
     }
 
     #if os(iOS)
-    private func setupiOS() {
-        if Self.verbose {
-            os_log("\(self.t)📱 设置 iOS 后台任务")
-        }
+        private func setupiOS() {
+            if Self.verbose {
+                os_log("\(self.t)📱 设置 iOS 后台任务")
+            }
 
-        // TODO: 注册 BGTaskScheduler
-        // 后续可以根据需要添加 iOS 特定的后台任务处理
-    }
+            // TODO: 注册 BGTaskScheduler
+            // 后续可以根据需要添加 iOS 特定的后台任务处理
+        }
     #endif
 
     #if os(macOS)
-    private func setupmacOS() {
-        if Self.verbose {
-            os_log("\(self.t)🖥️ macOS 平台，后台任务直接执行")
+        private func setupmacOS() {
+            if Self.verbose {
+                os_log("\(self.t)🖥️ macOS 平台，后台任务直接执行")
+            }
+            // macOS 不需要特殊设置
         }
-        // macOS 不需要特殊设置
-    }
     #endif
 
     /// 执行所有挂起的任务
@@ -57,11 +58,19 @@ actor AudioJobScheduler: SuperLog {
             os_log("\(self.t)🔄 执行挂起的任务")
         }
 
-        let manager = await AudioJobManager.shared
+        let manager = AudioJobManager.shared
         let allJobs = await manager.getAllJobStatus()
 
         for job in allJobs {
             await manager.startJob(job.identifier)
         }
     }
+}
+
+// MARK: Preview
+
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .withDebugBar()
 }

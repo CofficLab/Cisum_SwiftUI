@@ -253,3 +253,11 @@ extension AudioControlRootView {
         }
     }
 }
+
+// MARK: Preview
+
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .withDebugBar()
+}

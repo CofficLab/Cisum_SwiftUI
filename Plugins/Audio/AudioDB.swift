@@ -12,7 +12,7 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     /// 用于日志输出的表情符号
     static let emoji = "📦"
     static let verbose = false
-    
+
     /// SwiftData 模型容器
     let modelContainer: ModelContainer
     /// 模型执行器，用于执行模型操作
@@ -238,7 +238,7 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     }
 
     /// 删除指定 URL 的音频
-    /// - Parameter 
+    /// - Parameter
     ///   - url: 音频 URL
     ///   - verbose: 是否输出详细日志
     /// - Throws: 如果删除操作失败则抛出错误
@@ -266,7 +266,7 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     }
 
     /// 删除多个音频模型
-    /// - Parameter 
+    /// - Parameter
     ///   - audios: 要删除的音频模型数组
     ///   - verbose: 是否输出详细日志
     /// - Returns: 删除后的下一个音频模型
@@ -288,7 +288,7 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     }
 
     /// 删除多个 URL 对应的音频
-    /// - Parameter 
+    /// - Parameter
     ///   - urls: 要删除的音频 URL 数组
     ///   - verbose: 是否输出详细日志
     /// - Throws: 如果删除操作失败则抛出错误
@@ -824,9 +824,6 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
                     // 记录存在哈希表中，同步完成，删除哈希表记录
                     hashMap.removeValue(forKey: audio.url)
                 } else {
-                    if verbose {
-                        os_log("\(self.t)🗑️ 删除 \(audio.title)")
-                    }
                     context.delete(audio)
                 }
             })
@@ -844,7 +841,7 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
         if verbose {
             os_log("\(self.jobEnd(startTime, title: "\(self.t)✅ Sync(\(items.count))", tolerance: 0.01))")
         }
-        
+
         NotificationCenter.postDBSynced()
     }
 
@@ -855,7 +852,7 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     /// - Note: 此方法会删除不存在的音频，并添加新的音频，但不会更新已存在的音频
     func syncWithUpdatedItems(_ metas: [URL], verbose: Bool = false) {
         let startTime: DispatchTime = .now()
-        
+
         // 如果url属性为unique，数据库已存在相同url的记录，再执行context.insert，发现已存在的被替换成新的了
         // 但在这里，希望如果存在，就不要插入
         for (_, meta) in metas.enumerated() {
@@ -873,7 +870,6 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
                 if findAudio(meta) == nil {
                     context.insert(AudioModel(meta))
                 }
-                
             }
         }
 
@@ -882,11 +878,11 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
         }
-        
+
         if verbose {
             os_log("\(self.jobEnd(startTime, title: "\(self.t)✅ SyncWithUpdatedItems(\(metas.count))", tolerance: 0.01))")
         }
-        
+
         NotificationCenter.postDBUpdated()
     }
 
@@ -1162,4 +1158,12 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
 
         return try firstAudio()
     }
+}
+
+// MARK: Preview
+
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .withDebugBar()
 }

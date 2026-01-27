@@ -22,3 +22,11 @@ struct CopyConfig {
         return try ModelContainer(for: schema, configurations: [modelConfiguration])
     }
 }
+
+// MARK: Preview
+
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .withDebugBar()
+}

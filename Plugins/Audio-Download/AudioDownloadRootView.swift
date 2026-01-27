@@ -27,7 +27,7 @@ struct AudioDownloadRootView<Content>: View, SuperLog where Content: View {
 
     /// 检查是否应该激活下载功能
     private var shouldActivateDownload: Bool {
-        p.currentSceneName == "音乐库"
+        p.currentSceneName == AudioScenePlugin.sceneName
     }
 }
 
@@ -54,52 +54,13 @@ extension AudioDownloadRootView {
     /// - Parameter url: 新的音频资源 URL，如果为 nil 则表示停止播放
     func handlePlayManAssetChanged(_ url: URL?) {
         guard shouldActivateDownload else { return }
-
-        guard let url = url else {
-            if Self.verbose {
-                os_log("\(self.t)⏹️ 播放已停止")
-            }
-            return
-        }
-
-        let verbose = Self.verbose
-        let reason = Self.author
-
-//        Task.detached(priority: .utility) {
-//            if url.isNotDownloaded {
-//                if verbose {
-//                    os_log("\(Self.t)☁️ <\(url.lastPathComponent)> 文件未下载，开始下载")
-//                }
-//
-//                do {
-//                    try await url.download(verbose: verbose, reason: reason)
-//                } catch let e {
-//                    os_log(.error, "\(Self.t)❌ 下载失败: \(e.localizedDescription)")
-//                }
-//            }
-//        }
     }
 }
 
-// MARK: - Preview
+// MARK: Preview
 
-#if os(macOS)
-    #Preview("App - Large") {
-        ContentView()
-            .inRootView()
-            .frame(width: 600, height: 1000)
-    }
-
-    #Preview("App - Small") {
-        ContentView()
-            .inRootView()
-            .frame(width: 600, height: 600)
-    }
-#endif
-
-#if os(iOS)
-    #Preview("iPhone") {
-        ContentView()
-            .inRootView()
-    }
-#endif
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .withDebugBar()
+}

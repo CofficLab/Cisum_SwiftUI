@@ -85,6 +85,7 @@ struct ProductCell: View, SuperLog {
                 .fill(.regularMaterial)
                 .stroke(borderColor, lineWidth: 1)
         )
+        .shadowSm()
         .alert(isPresented: $isShowingError, content: {
             Alert(title: Text(errorTitle), message: nil, dismissButton: .default(Text("好")))
         })
@@ -164,40 +165,28 @@ struct ProductCell: View, SuperLog {
     // MARK: 购买按钮
 
     var buyButton: some View {
-        Button(action: {
-            buy()
-        }) {
-            HStack(spacing: 6) {
-                if purchasing {
-                    ProgressView()
-                        .scaleEffect(0.8)
-                    Text("处理中...")
-                } else if isPurchased {
-                    Text(product.kind == .autoRenewable ? "已订阅" : "已购买")
-                } else {
-                    Text(product.kind == .autoRenewable ? "订阅" : "购买")
-                }
+        HStack(spacing: 6) {
+            if purchasing {
+                ProgressView()
+                    .scaleEffect(0.8)
+                Text("处理中...")
+            } else if isPurchased {
+                Text(product.kind == .autoRenewable ? "已订阅" : "已购买")
+            } else {
+                Text(product.kind == .autoRenewable ? "订阅" : "购买")
             }
-            .fontWeight(.semibold)
-            .padding(.horizontal, 16)
-            .padding(.vertical, 10)
-            .background(.background)
-            .hoverScale(110)
-            .roundedLarge()
-            .shadowMd()
         }
-        .buttonStyle(.plain)
+        .fontWeight(.semibold)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 10)
+        .background(.regularMaterial)
+        .hoverScale(105)
+        .roundedMedium()
+        .shadowSm()
+        .inButtonWithAction(buy)
         .disabled(purchasing || isPurchased)
         .opacity(isPurchased ? 0.6 : 1.0)
-        #if os(macOS)
-            .onHover { hovering in
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    btnHovered = hovering
-                }
-            }
-            .scaleEffect(btnHovered ? 1.05 : 1.0)
-        #endif
-            .onAppear(perform: onAppear)
+        .onAppear(perform: onAppear)
     }
 
     // MARK: 去购买
@@ -265,17 +254,17 @@ extension ProductCell {
 // MARK: - Preview
 
 #Preview("PurchaseView - All") {
-    PurchaseView(showCloseButton: false)
+    PurchaseView()
         .inRootView()
         .frame(height: 800)
 }
 
 #Preview("PurchaseView - Subscription Only") {
-    PurchaseView(showCloseButton: false,
-                 showSubscription: true,
-                 showOneTime: false,
-                 showNonRenewable: false,
-                 showConsumable: false)
+    PurchaseView(
+        showSubscription: true,
+        showOneTime: false,
+        showNonRenewable: false,
+        showConsumable: false)
         .inRootView()
         .frame(height: 800)
 }

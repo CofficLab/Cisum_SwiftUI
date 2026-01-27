@@ -25,14 +25,18 @@ struct AudioSettings: View, SuperLog {
 
                     })
 
-                    #if os(macOS)
-                        MagicSettingRow(title: "打开仓库", description: "在Finder中查看", icon: .iconShowInFinder, content: {
-                            HStack {
-                                disk.makeOpenButton()
+                    MagicSettingRow(title: "打开仓库", description: "在Finder中查看", icon: .iconShowInFinder, content: {
+                        Image(systemName: .iconShowInFinder)
+                            .frame(width: 28)
+                            .frame(height: 28)
+                            .background(.regularMaterial, in: .circle)
+                            .shadowSm()
+                            .hoverScale(105)
+                            .inButtonWithAction {
+                                disk.openInFinder()
                             }
-
-                        })
-                    #endif
+                    })
+                    .if(Config.isDesktop)
 
                     MagicSettingRow(title: "文件数量", description: "当前仓库内的文件总数", icon: .iconDocument, content: {
                         HStack {
@@ -103,32 +107,8 @@ extension AudioSettings {
 
 // MARK: - Preview
 
-#Preview("Setting") {
-    RootView {
-        SettingView()
-            .background(.background)
-    }
-    .frame(height: 800)
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .withDebugBar()
 }
-
-#if os(macOS)
-    #Preview("App - Large") {
-        ContentView()
-    .inRootView()
-            .frame(width: 600, height: 1000)
-    }
-
-    #Preview("App - Small") {
-        ContentView()
-    .inRootView()
-            .frame(width: 600, height: 600)
-    }
-#endif
-
-#if os(iOS)
-    #Preview("iPhone") {
-        ContentView()
-    .inRootView()
-    }
-#endif
-

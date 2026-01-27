@@ -1,20 +1,20 @@
 import Foundation
-import SwiftUI
 import MagicKit
 import OSLog
+import SwiftUI
 
 /// 音频播放状态存储库
 /// 负责存储和获取音频播放相关的状态，如当前播放URL、播放时间、播放模式等
 class AudioStateRepo: SuperLog {
     static let emoji = "🗄️"
-    
+
     // 存储键名
     private static let keyOfCurrentAudioURL = "AudioPluginCurrentAudioURL"
     private static let keyOfCurrentAudioTime = "AudioPluginCurrentAudioTime"
     private static let keyOfCurrentPlayMode = "AudioPluginCurrentPlayMode"
-    
+
     // MARK: - 存储方法
-    
+
     /// 存储播放模式
     /// - Parameter mode: 播放模式的原始值
     static func storePlayMode(_ mode: String) {
@@ -50,7 +50,7 @@ class AudioStateRepo: SuperLog {
         NSUbiquitousKeyValueStore.default.set(String(time), forKey: keyOfCurrentAudioTime)
         NSUbiquitousKeyValueStore.default.synchronize()
     }
-    
+
     // MARK: - 获取方法
 
     /// 获取播放模式
@@ -112,26 +112,11 @@ class AudioStateRepo: SuperLog {
 
 // MARK: - Preview
 
-#if os(macOS)
-#Preview("App - Large") {
+#Preview("App") {
     ContentView()
-    .inRootView()
-        .frame(width: 600, height: 1000)
+        .inRootView()
+        .withDebugBar()
 }
-
-#Preview("App - Small") {
-    ContentView()
-    .inRootView()
-        .frame(width: 600, height: 600)
-}
-#endif
-
-#if os(iOS)
-#Preview("iPhone") {
-    ContentView()
-    .inRootView()
-}
-#endif
 
 #Preview("UserDefaults 调试") {
     UserDefaultsDebugView(defaultSearchText: "AudioPlugin")

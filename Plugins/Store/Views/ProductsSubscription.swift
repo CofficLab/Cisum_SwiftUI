@@ -49,12 +49,13 @@ struct ProductsSubscription: View, SuperEvent, SuperLog, SuperThread {
                                 }
                             }
                         }
-                        .padding(10)
-                        .background(.background.opacity(0.4))
+                        .padding()
+                        .background(.regularMaterial)
                         .roundedMedium()
                         .shadowSm()
                     }
-                }.inScrollView()
+                }
+                .inScrollView()
             }
         }
         .onAppear(perform: onAppear)
@@ -123,17 +124,17 @@ extension ProductsSubscription {
 // MARK: - Preview
 
 #Preview("PurchaseView - All") {
-    PurchaseView(showCloseButton: false)
+    PurchaseView()
         .inRootView()
         .frame(height: 800)
 }
 
 #Preview("PurchaseView - Subscription Only") {
-    PurchaseView(showCloseButton: false,
-                 showSubscription: true,
-                 showOneTime: false,
-                 showNonRenewable: false,
-                 showConsumable: false)
+    PurchaseView(
+        showSubscription: true,
+        showOneTime: false,
+        showNonRenewable: false,
+        showConsumable: false)
         .inRootView()
         .frame(height: 800)
 }
@@ -156,23 +157,8 @@ extension ProductsSubscription {
         .frame(height: 800)
 }
 
-#if os(macOS)
-    #Preview("App - Large") {
-        ContentView()
-            .inRootView()
-            .frame(width: 600, height: 1000)
-    }
-
-    #Preview("App - Small") {
-        ContentView()
-            .inRootView()
-            .frame(width: 500, height: 800)
-    }
-#endif
-
-#if os(iOS)
-    #Preview("iPhone") {
-        ContentView()
-            .inRootView()
-    }
-#endif
+#Preview("App - Large") {
+    ContentView()
+        .inRootView()
+        .withDebugBar()
+}

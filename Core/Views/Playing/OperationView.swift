@@ -37,21 +37,10 @@ struct OperationView: View {
     }
 }
 
-#Preview("App - Large") {
+// MARK: Preview
+
+#Preview("App") {
     ContentView()
         .inRootView()
-        .frame(width: 600, height: 1000)
+        .withDebugBar()
 }
-
-#Preview("App - Small") {
-    ContentView()
-        .inRootView()
-        .frame(width: 500, height: 600)
-}
-
-#if os(iOS)
-    #Preview("iPhone") {
-        ContentView()
-            .inRootView()
-    }
-#endif

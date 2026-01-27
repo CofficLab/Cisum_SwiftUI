@@ -1,5 +1,6 @@
 import Foundation
 import OSLog
+import SwiftUI
 
 /// 音频后台任务协议
 ///
@@ -26,4 +27,12 @@ struct JobStatus {
     let identifier: String
     let name: String
     let isRunning: Bool
+}
+
+// MARK: Preview
+
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .withDebugBar()
 }

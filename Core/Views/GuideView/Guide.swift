@@ -45,25 +45,27 @@ extension Guide {
                 HStack(spacing: 16) {
                     // 上一页按钮
                     if index > 0 {
-                        Button(action: {
-                            currentGuidePageIndex = index - 1
-                        }) {
-                            Image(systemName: "chevron.left")
-                                .font(.title2)
-                                .frame(width: 50, height: 50)
-                                .background(.ultraThinMaterial, in: Circle())
-                        }
+                        Image.previousPage
+                            .font(.title2)
+                            .frame(width: 50, height: 50)
+                            .background(.regularMaterial, in: Circle())
+                            .hoverScale(105)
+                            .shadowSm()
+                            .inButtonWithAction {
+                                currentGuidePageIndex = index - 1
+                            }
                     }
 
                     // 下一页按钮
-                    Button(action: {
-                        currentGuidePageIndex = index + 1
-                    }) {
-                        Image(systemName: "chevron.right")
-                            .font(.title2)
-                            .frame(width: 50, height: 50)
-                            .background(.ultraThinMaterial, in: Circle())
-                    }
+                    Image.nextPage
+                        .font(.title2)
+                        .frame(width: 50, height: 50)
+                        .background(.regularMaterial, in: Circle())
+                        .hoverScale(105)
+                        .shadowSm()
+                        .inButtonWithAction {
+                            currentGuidePageIndex = index + 1
+                        }
                 }
                 .padding(.bottom, 16)
             }
@@ -71,25 +73,10 @@ extension Guide {
     }
 }
 
-// MARK: - Preview
+// MARK: Preview
 
-#if os(macOS)
-    #Preview("App - Large") {
-        ContentView()
-            .inRootView()
-            .frame(width: 600, height: 1000)
-    }
-
-    #Preview("App - Small") {
-        ContentView()
-            .inRootView()
-            .frame(width: 400, height: 700)
-    }
-#endif
-
-#if os(iOS)
-    #Preview("iPhone") {
-        ContentView()
-            .inRootView()
-    }
-#endif
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .withDebugBar()
+}

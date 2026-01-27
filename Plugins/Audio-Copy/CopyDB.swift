@@ -163,8 +163,10 @@ actor CopyDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     }
 }
 
-#Preview {
-    RootView {
-        ContentView()
-    }
+// MARK: Preview
+
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .withDebugBar()
 }

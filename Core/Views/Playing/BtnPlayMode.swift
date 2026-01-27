@@ -7,6 +7,8 @@ struct PlayModeButton: View {
     @EnvironmentObject var man: PlayMan
     @Environment(\.demoMode) var isDemoMode
 
+    private let size: CGFloat = 32
+
     var body: some View {
         Group {
             switch man.playMode {
@@ -20,14 +22,16 @@ struct PlayModeButton: View {
                 modeIcon(systemName: .iconShuffle)
             }
         }
-        .hoverScale(110)
+        .hoverScale(105)
         .shadowSm()
     }
 
     private func modeIcon(systemName: String) -> some View {
         Image(systemName: systemName)
-            .frame(width: 32, height: 32)
-            .inCard()
+            .font(.system(size: self.size * 0.6))
+            .frame(width: size, height: size)
+            .foregroundStyle(.secondary)
+            .inCard(.ultraThinMaterial)
             .roundedFull()
             .inButtonWithAction {
                 man.togglePlayMode()
@@ -35,30 +39,10 @@ struct PlayModeButton: View {
     }
 }
 
-// MARK: - Preview
+// MARK: Preview
 
-#if os(macOS)
-    #Preview("App - Large") {
-        ContentView()
-            .inRootView()
-            .frame(width: 600, height: 1000)
-    }
-
-    #Preview("App - Small") {
-        ContentView()
-            .inRootView()
-            .frame(width: 500, height: 800)
-    }
-
-    #Preview("App Store Hero") {
-        AppStoreHero()
-            .inMagicContainer(.macBook13, scale: 1)
-    }
-#endif
-
-#if os(iOS)
-    #Preview("iPhone") {
-        ContentView()
-            .inRootView()
-    }
-#endif
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .withDebugBar()
+}

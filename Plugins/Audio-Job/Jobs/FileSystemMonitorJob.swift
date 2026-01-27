@@ -1,6 +1,7 @@
 @preconcurrency import Combine
 import Foundation
 import MagicKit
+import SwiftUI
 import OSLog
 
 /// 文件系统监控任务
@@ -108,7 +109,7 @@ final class FileSystemMonitorJob: AudioJob, SuperLog, @unchecked Sendable {
                             let previewCount = min(5, urls.count)
                             if previewCount > 0 {
                                 os_log("\(self.t)  • 删除文件预览:")
-                                for i in 0..<previewCount {
+                                for i in 0 ..< previewCount {
                                     os_log("\(self.t)    \(i + 1). \(urls[i].lastPathComponent)")
                                 }
                                 if urls.count > previewCount {
@@ -135,7 +136,7 @@ final class FileSystemMonitorJob: AudioJob, SuperLog, @unchecked Sendable {
                         }
                     }
                 },
-                onProgress: {url,progress in 
+                onProgress: { _, _ in
                     // 对下载进度不感兴趣
                 }
             )
@@ -148,7 +149,7 @@ final class FileSystemMonitorJob: AudioJob, SuperLog, @unchecked Sendable {
         // 保持任务运行，直到被取消
         while await state.getRunning() {
             try Task.checkCancellation()
-            try await Task.sleep(nanoseconds: 1_000_000_000) // 每秒检查一次
+            try await Task.sleep(nanoseconds: 1000000000) // 每秒检查一次
         }
 
         if Self.verbose {
@@ -169,4 +170,12 @@ final class FileSystemMonitorJob: AudioJob, SuperLog, @unchecked Sendable {
             os_log("\(self.t)⏹️ 文件系统监控已停止")
         }
     }
+}
+
+// MARK: Preview
+
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .withDebugBar()
 }

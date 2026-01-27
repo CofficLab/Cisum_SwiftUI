@@ -50,15 +50,10 @@ struct CopyStateView: View, SuperLog, SuperThread {
     }
 }
 
-#Preview("APP") {
+// MARK: Preview
+
+#Preview("App") {
     ContentView()
         .inRootView()
-        .frame(height: 800)
-}
-
-#Preview("APP") {
-    RootView {
-        CopyStateView()
-    }
-    .frame(height: 800)
+        .withDebugBar()
 }

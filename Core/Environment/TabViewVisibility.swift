@@ -29,3 +29,11 @@ extension View {
         self.environment(\.showTabView, true)
     }
 }
+
+// MARK: Preview
+
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .withDebugBar()
+}

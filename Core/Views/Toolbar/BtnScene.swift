@@ -20,7 +20,7 @@ struct BtnScene: View {
                 }
                 .padding(.horizontal, 8)
                 .padding(.vertical, 4)
-                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 6))
+                .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 6))
             }
             .popover(isPresented: self.$isPresented, content: {
                 Posters(
@@ -42,23 +42,10 @@ struct BtnScene: View {
     }
 }
 
-#if os(macOS)
-#Preview("App - Large") {
-    ContentView()
-    .inRootView()
-        .frame(width: 600, height: 1000)
-}
+// MARK: Preview
 
-#Preview("App - Small") {
+#Preview("App") {
     ContentView()
-    .inRootView()
-        .frame(width: 500, height: 800)
+        .inRootView()
+        .withDebugBar()
 }
-#endif
-
-#if os(iOS)
-    #Preview("iPhone") {
-        ContentView()
-    .inRootView()
-    }
-#endif

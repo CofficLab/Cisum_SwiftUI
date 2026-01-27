@@ -32,7 +32,15 @@ private struct OpenCurrentButtonView: View, SuperLog {
         }
         return Group {
             if let url = url {
-                url.makeOpenButton()
+                Image(systemName: .iconShowInFinder)
+                    .frame(width: 28)
+                    .frame(height: 28)
+                    .background(.regularMaterial, in: .circle)
+                    .shadowSm()
+                    .hoverScale(105)
+                    .inButtonWithAction {
+                        url.openInFinder()
+                    }
                     .id(url.absoluteString)
             }
         }
@@ -49,23 +57,8 @@ private struct OpenCurrentButtonView: View, SuperLog {
 
 // MARK: - Preview
 
-#if os(macOS)
-    #Preview("App - Large") {
-        ContentView()
-            .inRootView()
-            .frame(width: 600, height: 1000)
-    }
-
-    #Preview("App - Small") {
-        ContentView()
-            .inRootView()
-            .frame(width: 500, height: 800)
-    }
-#endif
-
-#if os(iOS)
-    #Preview("iPhone") {
-        ContentView()
-            .inRootView()
-    }
-#endif
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .withDebugBar()
+}

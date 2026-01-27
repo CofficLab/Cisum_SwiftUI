@@ -96,6 +96,14 @@ struct SettingsItem: Identifiable, Hashable {
     }
 }
 
+// MARK: Preview
+
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .withDebugBar()
+}
+
 #Preview {
     DBViewNavigation()
 }

@@ -16,95 +16,76 @@ struct AudioCopyTips: View {
     }
 
     var body: some View {
-        switch variant {
-        case .drop:
-            VStack(spacing: 20) {
-                HStack {
-                    Image(systemName: "info.circle.fill")
-                        .foregroundStyle(.yellow)
-                    Text(Config.isDesktop ? "将音乐文件拖到这里可添加" : "仓库为空")
-                        .font(.title3)
-                        .foregroundStyle(.black)
-                }
-                Text("支持的格式：\(supportedFormats)")
-                    .font(.subheadline)
-                    .foregroundStyle(.black)
-
-                #if os(macOS)
-                    if let disk = AudioPlugin.getAudioDisk() {
-                        HStack { Text("或").foregroundStyle(.black) }
-                        Button(
-                            action: { disk.openFolder() },
-                            label: {
-                                Label { Text("打开仓库目录并放入文件") } icon: { Image(systemName: "doc.viewfinder.fill") }
-                            }
-                        )
+        ZStack {
+            switch variant {
+            case .drop:
+                VStack(spacing: 20) {
+                    HStack {
+                        Image.info
+                            .foregroundStyle(.blue)
+                        Text(Config.isDesktop ? "将音乐文件拖到这里可添加" : "仓库为空")
+                            .font(.title3)
+                            .foregroundStyle(.black)
                     }
-                #endif
+                    Text("支持的格式：\(supportedFormats)")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
 
-                if Config.isNotDesktop {
-                    BtnAdd().buttonStyle(.bordered).foregroundStyle(.white)
+                    #if os(macOS)
+                        if let disk = AudioPlugin.getAudioDisk() {
+                            HStack { Text("或").foregroundStyle(.black) }
+                            Button(
+                                action: { disk.openFolder() },
+                                label: {
+                                    Label { Text("打开仓库目录并放入文件") } icon: { Image(systemName: "doc.viewfinder.fill") }
+                                }
+                            )
+                        }
+                    #endif
+
+                    if Config.isNotDesktop {
+                        BtnAdd().buttonStyle(.bordered).foregroundStyle(.white)
+                    }
+                }
+
+            case .pro:
+                VStack(spacing: 20) {
+                    HStack {
+                        Image.info
+                            .foregroundStyle(.blue)
+                        Text("基础版本最多支持 \(AudioPlugin.maxAudioCount) 个文件")
+                            .font(.title3)
+                    }
+
+                    Text("支持的格式：\(supportedFormats)")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+
+                    HStack {
+                        Text("当前订阅：" + StoreService.tierCached().displayName)
+                    }
                 }
             }
-            .inCard(color: .winterBlue)
-            .shadow3xl()
-
-        case .pro:
-            VStack(spacing: 20) {
-                HStack {
-                    Image(systemName: "info.circle.fill")
-                        .foregroundStyle(.blue)
-                    Text("基础版本最多支持 \(AudioPlugin.maxAudioCount) 个文件")
-                        .font(.title3)
-                        .foregroundStyle(.white)
-                }
-
-                Text("支持的格式：\(supportedFormats)")
-                    .font(.subheadline)
-                    .foregroundStyle(.white)
-
-                HStack {
-                    Text("当前订阅：" + StoreService.tierCached().displayName)
-                        .foregroundStyle(.white)
-                }
-            }
-            .inCard(color: .orangeFruit)
-            .shadow3xl()
         }
+        .inCard(.regularMaterial)
+        .shadowMd()
     }
 }
 
-// MARK: - Preview
+// MARK: Preview
 
-#Preview {
-    Group {
-        AudioCopyTips(variant: .drop)
-            .frame(width: 300, height: 200)
-
-        AudioCopyTips(variant: .pro)
-            .frame(width: 300, height: 150)
-    }
-    .inScrollView()
-    .frame(height: 600)
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .withDebugBar()
 }
 
-#if os(macOS)
-    #Preview("App - Large") {
-        ContentView()
-            .inRootView()
-            .frame(width: 600, height: 1000)
-    }
+#Preview("AudioCopyTips - Drop Variant") {
+    AudioCopyTips(variant: .drop)
+        .inRootView()
+}
 
-    #Preview("App - Small") {
-        ContentView()
-            .inRootView()
-            .frame(width: 600, height: 600)
-    }
-#endif
-
-#if os(iOS)
-    #Preview("iPhone") {
-        ContentView()
-            .inRootView()
-    }
-#endif
+#Preview("AudioCopyTips - Pro Variant") {
+    AudioCopyTips(variant: .pro)
+        .inRootView()
+}

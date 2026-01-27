@@ -111,44 +111,10 @@ extension ContentView {
     }
 }
 
-// MARK: - Preview
+// MARK: Preview
 
-#if os(macOS)
-    #Preview("App - Large") {
-        ContentView()
-            .inRootView()
-            .frame(width: 600, height: 1000)
-    }
-
-    #Preview("App - Small") {
-        ContentView()
-            .inRootView()
-            .frame(width: 350, height: 700)
-    }
-
-    #Preview("Demo Mode") {
-        ContentView()
-            .inRootView()
-            .inDemoMode()
-            .frame(width: 600, height: 1000)
-    }
-
-    #Preview("Hide Tab View") {
-        ContentView()
-            .inRootView()
-            .hideTabView()
-            .frame(width: 350, height: 700)
-    }
-
-    #Preview("App Store Hero") {
-        AppStoreHero()
-            .inMagicContainer(.macBook13, scale: 0.4)
-    }
-#endif
-
-#if os(iOS)
-    #Preview("iPhone") {
-        ContentView()
-            .inRootView()
-    }
-#endif
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .withDebugBar()
+}

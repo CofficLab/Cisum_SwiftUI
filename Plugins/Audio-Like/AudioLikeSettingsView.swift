@@ -1,5 +1,5 @@
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct AudioLikeSettingsView: View, SuperLog {
     nonisolated static var emoji: String { "⚙️❤️" }
@@ -62,4 +62,12 @@ struct AudioLikeSettingsView: View, SuperLog {
             }
         }
     }
+}
+
+// MARK: Preview
+
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .withDebugBar()
 }

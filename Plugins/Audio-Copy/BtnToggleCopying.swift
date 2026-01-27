@@ -1,11 +1,10 @@
 import SwiftUI
 
-
 struct BtnToggleCopying: View {
     @EnvironmentObject var app: AppProvider
-    
+
     @Binding var isActive: Bool
-    
+
     var autoResize = false
 
     var body: some View {
@@ -19,10 +18,10 @@ struct BtnToggleCopying: View {
     }
 }
 
+// MARK: Preview
+
 #Preview("App") {
     ContentView()
-    .inRootView()
-        .frame(height: 800)
+        .inRootView()
+        .withDebugBar()
 }
-
-

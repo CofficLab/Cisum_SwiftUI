@@ -13,146 +13,247 @@ struct RestoreView: View, SuperEvent, SuperLog, SuperThread {
     @State private var subscriptions: [Product] = []
     @State private var refreshing = false
     @State private var error: Error? = nil
-    @State private var isRestoring = false
-    @State var closeBtnHovered = false
-    var showCloseButton = false
+    @State private var restoreState: RestoreState = .idle
 
     nonisolated static let emoji = "🖥️"
+    nonisolated static let verbose = true
 
-    init(showCloseButton: Bool = false) {
-        self.showCloseButton = showCloseButton
-    }
+    init() {}
 
     var body: some View {
-        VStack(spacing: 16) {
-            // 添加关闭按钮（可配置）
-            if showCloseButton {
-                HStack {
-                    Spacer()
-                    closeButton
+        SheetContainer {
+            VStack(spacing: 16) {
+                // 说明文字
+                VStack {
+                    // 标题区域
+                    HStack(spacing: 12) {
+                        Image.restart
+                            .font(.title2)
+                            .foregroundStyle(.blue)
+
+                        Text("恢复购买")
+                            .font(.title3)
+                            .fontWeight(.semibold)
+
+                        Spacer()
+                    }
+                    VStack(alignment: .leading, spacing: 12) {
+                        InfoRow(
+                            icon: "iphone.and.arrow.forward",
+                            title: "跨设备恢复",
+                            description: "在其他设备上购买后，可在此恢复"
+                        )
+
+                        InfoRow(
+                            icon: "person.circle",
+                            title: "Apple ID 验证",
+                            description: "请使用购买时的 Apple ID 账号"
+                        )
+
+                        InfoRow(
+                            icon: "checkmark.circle",
+                            title: "功能恢复",
+                            description: "恢复成功后将获得所有已购买的功能"
+                        )
+                    }
+                    .padding(.vertical, 8)
                 }
-                .padding(.top, 8)
-            }
+                .padding()
+                .background(.regularMaterial)
+                .roundedMedium()
+                .shadowSm()
 
-            // 标题区域
-            HStack(spacing: 12) {
-                Image(systemName: "arrow.clockwise.circle.fill")
-                    .font(.title2)
-                    .foregroundStyle(.blue)
-
-                Text("恢复购买")
-                    .font(.title3)
-                    .fontWeight(.semibold)
-
-                Spacer()
-            }
-
-            // 说明文字
-            VStack(alignment: .leading, spacing: 12) {
-                InfoRow(
-                    icon: "iphone.and.arrow.forward",
-                    title: "跨设备恢复",
-                    description: "在其他设备上购买后，可在此恢复"
-                )
-
-                InfoRow(
-                    icon: "person.circle",
-                    title: "Apple ID 验证",
-                    description: "请使用购买时的 Apple ID 账号"
-                )
-
-                InfoRow(
-                    icon: "checkmark.circle",
-                    title: "功能恢复",
-                    description: "恢复成功后将获得所有已购买的功能"
-                )
-            }
-            .padding(.vertical, 8)
-
-            // 恢复购买按钮
-
-            HStack(spacing: 8) {
-                if isRestoring {
-                    ProgressView()
-                        .progressViewStyle(.circular)
-                        .scaleEffect(0.8)
-                    Text("正在恢复...")
-                } else {
-                    Image(systemName: "arrow.clockwise")
-                        .fontWeight(.semibold)
-                    Text("恢复购买")
-                        .fontWeight(.semibold)
+                // 状态提示区域
+                if restoreState != .idle {
+                    statusBanner
                 }
+
+                // 按钮区域
+                successButtons
+                    .if(self.restoreState == .success)
+
+                restoreButton
+                    .if(self.restoreState == .failed || self.restoreState == .idle)
             }
-            .inCard()
-            .hoverScale(110)
-            .inButtonWithAction {
-                restorePurchase()
-            }
-            .disabled(isRestoring)
-            #if os(macOS)
-                .scaleEffect(isRestoring ? 0.98 : 1.0)
-                .animation(.easeInOut(duration: 0.1), value: isRestoring)
-            #endif
         }
-        .padding(20)
-        .inCard()
-        .infinite()
-        .inScrollView()
     }
 
-    // MARK: - 子视图组件
+    // MARK: - View
 
-    /// 关闭按钮 - 现代化圆形设计
-    private var closeButton: some View {
-        Button(action: { dismiss() }) {
-            Image.close
-                .font(.system(size: 12, weight: .medium))
-                .frame(width: 32, height: 32)
-                .foregroundStyle(.secondary)
-                .background(.ultraThinMaterial, in: Circle())
-                .shadow(color: .black.opacity(0.1), radius: 4, y: 2)
-        }
-        .buttonStyle(.plain)
-        #if os(macOS)
-            .onHover { hovering in
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    closeBtnHovered = hovering
+    @ViewBuilder
+    private var statusBanner: some View {
+        switch restoreState {
+        case .idle:
+            EmptyView()
+        case .restoring:
+            HStack(spacing: 12) {
+                ProgressView()
+                    .progressViewStyle(.circular)
+                    .scaleEffect(0.9)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("正在恢复购买")
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                    Text("请稍候，正在验证您的购买记录...")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                 }
+                Spacer()
             }
-            .scaleEffect(closeBtnHovered ? 1.1 : 1.0)
-        #endif
-        #if os(iOS)
-        .scaleEffect(closeBtnHovered ? 0.95 : 1.0)
-        .onTapGesture {
-            withAnimation(.easeOut(duration: 0.1)) {
-                closeBtnHovered = true
+            .padding()
+            .background(.regularMaterial)
+            .roundedMedium()
+            .shadowSm()
+        case .success:
+            HStack(spacing: 12) {
+                Image(systemName: "checkmark.circle.fill")
+                    .font(.title3)
+                    .foregroundStyle(.green)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("恢复成功")
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                    Text("已成功恢复您的购买记录，所有功能已解锁")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                Spacer()
             }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                withAnimation { closeBtnHovered = false }
+            .padding()
+            .background(.regularMaterial)
+            .roundedMedium()
+            .shadowSm()
+        case .failed:
+            HStack(spacing: 12) {
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .font(.title3)
+                    .foregroundStyle(.red)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("恢复失败")
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                    if let error = error {
+                        Text(error.localizedDescription)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    } else {
+                        Text("恢复购买时发生错误，请稍后重试")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                Spacer()
+            }
+            .padding()
+            .background(.regularMaterial)
+            .roundedMedium()
+            .shadowSm()
+        }
+    }
+
+    @ViewBuilder
+    private var restoreButton: some View {
+        HStack(spacing: 8) {
+            switch restoreState {
+            case .idle:
+                Image.reset
+                    .fontWeight(.semibold)
+                Text("恢复购买")
+                    .fontWeight(.semibold)
+            case .restoring:
+                EmptyView()
+            case .success:
+                EmptyView() // 成功状态使用 successButtons
+            case .failed:
+                Image.reset
+                    .fontWeight(.semibold)
+                Text("重试恢复")
+                    .fontWeight(.semibold)
             }
         }
-        #endif
+        .inCard(.regularMaterial)
+        .hoverScale(restoreState == .idle || restoreState == .failed ? 105 : 1.0)
+        .shadowSm()
+        .inButtonWithAction {
+            restorePurchase()
+        }
+        .disabled(restoreState == .restoring)
+    }
+
+    @ViewBuilder
+    private var successButtons: some View {
+        HStack(spacing: 12) {
+            // 完成按钮
+            HStack(spacing: 8) {
+                Image(systemName: "checkmark.circle.fill")
+                    .fontWeight(.semibold)
+                Text("完成")
+                    .fontWeight(.semibold)
+            }
+            .inCard(.regularMaterial)
+            .hoverScale(105)
+            .shadowSm()
+            .inButtonWithAction {
+                dismiss()
+            }
+
+            // 再试一次按钮
+            HStack(spacing: 8) {
+                Image.reset
+                    .fontWeight(.semibold)
+                Text("再试一次")
+                    .fontWeight(.semibold)
+            }
+            .inCard(.regularMaterial)
+            .hoverScale(105)
+            .shadowSm()
+            .inButtonWithAction {
+                restoreState = .idle
+                restorePurchase()
+            }
+        }
     }
 
     // MARK: - Actions
 
     private func restorePurchase() {
-        isRestoring = true
+        restoreState = .restoring
+        error = nil // 清除之前的错误
         Task {
             do {
-                os_log("\(self.t)恢复购买")
+                if Self.verbose {
+                    os_log("\(self.t)🚀 开始恢复购买")
+                }
                 try await AppStore.sync()
-                os_log("\(self.t)恢复购买完成")
-                postRestore()
+                if Self.verbose {
+                    os_log("\(self.t)✅ 恢复购买完成")
+                }
+                await MainActor.run {
+                    restoreState = .success
+                    error = nil // 清除错误信息
+                    postRestore()
+                }
             } catch {
-                m.error(error)
-            }
-            await MainActor.run {
-                isRestoring = false
+                await MainActor.run {
+                    restoreState = .failed
+                    self.error = error
+                    if Self.verbose {
+                        os_log("\(self.t)❌ 恢复购买失败: \(error.localizedDescription)")
+                    }
+                }
             }
         }
     }
+}
+
+// MARK: - Types
+
+/// 恢复购买状态
+private enum RestoreState {
+    case idle // 恢复前
+    case restoring // 恢复中
+    case success // 恢复成功
+    case failed // 恢复失败
 }
 
 // MARK: - Supporting Views
@@ -186,7 +287,7 @@ struct InfoRow: View {
     }
 }
 
-// MARK: Event Emitter
+// MARK: - Event Emitter
 
 extension RestoreView {
     func postRestore() {
@@ -199,38 +300,17 @@ extension RestoreView {
 #Preview("Restore") {
     RestoreView()
         .inRootView()
-        .frame(height: 800)
+        .withDebugBar()
 }
 
 #Preview("Debug") {
     DebugView()
         .inRootView()
-        .frame(height: 800)
+        .withDebugBar()
 }
 
-#Preview("Purchase") {
-    PurchaseView()
+#Preview("App") {
+    ContentView()
         .inRootView()
-        .frame(height: 800)
+        .withDebugBar()
 }
-
-#if os(macOS)
-    #Preview("App - Large") {
-        ContentView()
-            .inRootView()
-            .frame(width: 600, height: 1000)
-    }
-
-    #Preview("App - Small") {
-        ContentView()
-            .inRootView()
-            .frame(width: 500, height: 800)
-    }
-#endif
-
-#if os(iOS)
-    #Preview("iPhone") {
-        ContentView()
-            .inRootView()
-    }
-#endif

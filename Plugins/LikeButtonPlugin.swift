@@ -19,7 +19,7 @@ private struct LikeToggleButtonView: View, SuperLog {
     nonisolated static let emoji = "🦁"
     static let verbose = false
     /// 注册顺序设为 21，在其他插件之后执行
-    static var order: Int { 21 }    
+    static var order: Int { 21 }
     @EnvironmentObject var man: PlayMan
 
     var body: some View {
@@ -39,23 +39,8 @@ private struct LikeToggleButtonView: View, SuperLog {
 
 // MARK: - Preview
 
-#if os(macOS)
-    #Preview("App - Large") {
-        ContentView()
-    .inRootView()
-            .frame(width: 600, height: 1000)
-    }
-
-    #Preview("App - Small") {
-        ContentView()
-    .inRootView()
-            .frame(width: 500, height: 800)
-    }
-#endif
-
-#if os(iOS)
-    #Preview("iPhone") {
-        ContentView()
-    .inRootView()
-    }
-#endif
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .withDebugBar()
+}

@@ -117,13 +117,13 @@ struct MySubscription: View {
 // MARK: - Preview
 
 #Preview("PurchaseView - All") {
-    PurchaseView(showCloseButton: false)
+    PurchaseView()
         .inRootView()
         .frame(height: 800)
 }
 
 #Preview("PurchaseView - Subscription Only") {
-    PurchaseView(showCloseButton: false,
+    PurchaseView(
                  showSubscription: true,
                  showOneTime: false,
                  showNonRenewable: false,

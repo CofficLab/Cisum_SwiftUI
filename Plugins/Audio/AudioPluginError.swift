@@ -22,15 +22,15 @@ enum AudioPluginError: Error, LocalizedError {
             return "没有上一个音频文件"
         case .NoDisk:
             return "无法访问磁盘"
-        case .initialization(let reason):
+        case let .initialization(reason):
             return "初始化失败: \(reason)"
-        case .diskAccess(let url, let underlying):
+        case let .diskAccess(url, underlying):
             return "磁盘访问失败 [\(url.lastPathComponent)]: \(underlying)"
-        case .configurationError(let setting, let reason):
+        case let .configurationError(setting, reason):
             return "配置错误 [\(setting)]: \(reason)"
         }
     }
-    
+
     var failureReason: String? {
         switch self {
         case .NoNextAsset:
@@ -47,7 +47,7 @@ enum AudioPluginError: Error, LocalizedError {
             return "应用配置存在问题"
         }
     }
-    
+
     var recoverySuggestion: String? {
         switch self {
         case .NoNextAsset, .NoPrevAsset:
@@ -77,22 +77,22 @@ enum AudioRecordDBError: Error, LocalizedError {
     case saveFailed(Error)
     /// 数据删除失败
     case deleteFailed(Error)
-    
+
     var errorDescription: String? {
         switch self {
-        case .ToggleLikeError(let error):
+        case let .ToggleLikeError(error):
             return "切换喜欢状态失败: \(error.localizedDescription)"
-        case .AudioNotFound(let url):
+        case let .AudioNotFound(url):
             return "音频未找到: \(url.lastPathComponent)"
-        case .databaseOperation(let operation, let underlying):
+        case let .databaseOperation(operation, underlying):
             return "数据库操作失败 [\(operation)]: \(underlying)"
-        case .saveFailed(let error):
+        case let .saveFailed(error):
             return "数据保存失败: \(error.localizedDescription)"
-        case .deleteFailed(let error):
+        case let .deleteFailed(error):
             return "数据删除失败: \(error.localizedDescription)"
         }
     }
-    
+
     var failureReason: String? {
         switch self {
         case .ToggleLikeError:
@@ -107,7 +107,7 @@ enum AudioRecordDBError: Error, LocalizedError {
             return "数据删除操作失败"
         }
     }
-    
+
     var recoverySuggestion: String? {
         switch self {
         case .ToggleLikeError:
@@ -129,20 +129,20 @@ enum AudioModelError: Error, LocalizedError {
     case dbNotFound
     case invalidData(String)
     case fileCorrupted(URL)
-    
+
     var errorDescription: String? {
         switch self {
         case .deleteFailed:
             return "删除操作失败"
         case .dbNotFound:
             return "数据库未找到"
-        case .invalidData(let reason):
+        case let .invalidData(reason):
             return "数据无效: \(reason)"
-        case .fileCorrupted(let url):
+        case let .fileCorrupted(url):
             return "文件损坏: \(url.lastPathComponent)"
         }
     }
-    
+
     var failureReason: String? {
         switch self {
         case .deleteFailed:
@@ -155,7 +155,7 @@ enum AudioModelError: Error, LocalizedError {
             return "音频文件可能已损坏或不完整"
         }
     }
-    
+
     var recoverySuggestion: String? {
         switch self {
         case .deleteFailed:
@@ -178,22 +178,22 @@ enum AudioRepoError: Error, LocalizedError {
     case invalidState(expected: String, actual: String)
     case syncFailed(Error)
     case monitorFailed(Error)
-    
+
     var errorDescription: String? {
         switch self {
-        case .fileSystemError(let operation, let path):
+        case let .fileSystemError(operation, path):
             return "文件系统错误 [\(operation)]: \(path)"
-        case .networkError(let url, let underlying):
+        case let .networkError(url, underlying):
             return "网络错误 [\(url.absoluteString)]: \(underlying)"
-        case .invalidState(let expected, let actual):
+        case let .invalidState(expected, actual):
             return "状态无效，期望: \(expected)，实际: \(actual)"
-        case .syncFailed(let error):
+        case let .syncFailed(error):
             return "同步失败: \(error.localizedDescription)"
-        case .monitorFailed(let error):
+        case let .monitorFailed(error):
             return "文件监控失败: \(error.localizedDescription)"
         }
     }
-    
+
     var failureReason: String? {
         switch self {
         case .fileSystemError:
@@ -208,7 +208,7 @@ enum AudioRepoError: Error, LocalizedError {
             return "文件系统监控服务失败"
         }
     }
-    
+
     var recoverySuggestion: String? {
         switch self {
         case .fileSystemError:
@@ -225,18 +225,10 @@ enum AudioRepoError: Error, LocalizedError {
     }
 }
 
-#Preview("Small Screen") {
-    RootView {
-        UserDefaultsDebugView(defaultSearchText: "AudioPlugin")
-    }
-    .frame(width: 500)
-    .frame(height: 600)
-}
+// MARK: Preview
 
-#Preview("Big Screen") {
-    RootView {
-        UserDefaultsDebugView()
-    }
-    .frame(width: 800)
-    .frame(height: 1200)
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .withDebugBar()
 }

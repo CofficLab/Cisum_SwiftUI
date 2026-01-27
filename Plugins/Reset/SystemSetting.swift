@@ -6,7 +6,6 @@ struct SystemSetting: View, SuperLog {
     nonisolated static let verbose = false
 
     @EnvironmentObject var app: AppProvider
-    @State private var isResetting: Bool = false
     @State private var showConfirmSheet: Bool = false
 
     var body: some View {
@@ -19,58 +18,24 @@ struct SystemSetting: View, SuperLog {
 
             // 重置设置
             MagicSettingRow(title: "重置设置", description: "重置设置，恢复成系统默认状态", icon: .iconReset) {
-                Image(systemName: .iconReset)
+                Image.reset
                     .frame(width: 28, height: 28)
-                    .background(.ultraThinMaterial, in: Circle())
-                    .inButtonWithAction(showResetConfirm)
+                    .background(.regularMaterial, in: Circle())
+                    .shadowSm()
+                    .hoverScale(105)
+                    .inButtonWithAction {
+                        showConfirmSheet = true
+                    }
             }
         }
         .sheet(isPresented: $showConfirmSheet) {
-            if isResetting {
-                ResetProgressContent()
-                    .padding(24)
-                    .frame(minWidth: 380)
-            } else {
-                ResetConfirmContent(
-                    onCancel: { showConfirmSheet = false },
-                    onConfirm: performReset
-                )
-                .padding(24)
-                .frame(minWidth: 380)
-            }
-        }
-    }
-}
-
-// MARK: - Action
-
-extension SystemSetting {
-    func showResetConfirm() {
-        showConfirmSheet = true
-    }
-
-    func performReset() {
-        isResetting = true
-        Task {
-            Config.resetStorageLocation()
-            await MainActor.run {
-                isResetting = false
-                showConfirmSheet = false
-            }
+            ResetConfirm()
+                .frame(width: 400)
         }
     }
 }
 
 // MARK: - Preview
-
-#Preview("ResetConfirmContent") {
-    ResetConfirmContent(onCancel: {}, onConfirm: {})
-        .padding()
-        .infinite()
-        .frame(width: 500)
-        .frame(height: 800)
-        .inRootView()
-}
 
 #Preview("SystemSetting") {
     SystemSetting()

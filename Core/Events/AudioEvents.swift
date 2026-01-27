@@ -205,3 +205,11 @@ extension NotificationCenter {
         }
     }
 }
+
+// MARK: Preview
+
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .withDebugBar()
+}

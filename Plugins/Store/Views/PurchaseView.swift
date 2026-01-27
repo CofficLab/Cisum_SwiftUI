@@ -8,21 +8,16 @@ struct PurchaseView: View, SuperLog {
     nonisolated static let verbose = false
 
     @Environment(\.colorScheme) var colorScheme: ColorScheme
-    @Environment(\.dismiss) private var dismiss
-    @State var closeBtnHovered = false
-    var showCloseButton = false
 
     var showSubscription: Bool = true
     var showOneTime: Bool = false
     var showNonRenewable: Bool = false
     var showConsumable: Bool = false
 
-    init(showCloseButton: Bool = false,
-         showSubscription: Bool = true,
+    init(showSubscription: Bool = true,
          showOneTime: Bool = false,
          showNonRenewable: Bool = false,
          showConsumable: Bool = false) {
-        self.showCloseButton = showCloseButton
         self.showSubscription = showSubscription
         self.showOneTime = showOneTime
         self.showNonRenewable = showNonRenewable
@@ -30,16 +25,7 @@ struct PurchaseView: View, SuperLog {
     }
 
     var body: some View {
-        VStack(spacing: 24) {
-            // 添加关闭按钮（可配置）
-            if showCloseButton {
-                HStack {
-                    Spacer()
-                    closeButton
-                }
-                .padding(.top, 8)
-            }
-
+        SheetContainer {
             // 商品分组
             if enabledProductGroupCount > 1 {
                 productTabs
@@ -67,42 +53,9 @@ struct PurchaseView: View, SuperLog {
             .padding(.vertical, 16)
             .infiniteWidth()
         }
-        .padding()
     }
 
     // MARK: - 子视图组件
-
-    /// 关闭按钮 - 现代化圆形设计
-    private var closeButton: some View {
-        Button(action: { dismiss() }) {
-            Image.close
-                .font(.system(size: 12, weight: .medium))
-                .frame(width: 32, height: 32)
-                .foregroundStyle(.secondary)
-                .background(.ultraThinMaterial, in: Circle())
-                .shadow(color: .black.opacity(0.1), radius: 4, y: 2)
-        }
-        .buttonStyle(.plain)
-        #if os(macOS)
-            .onHover { hovering in
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    closeBtnHovered = hovering
-                }
-            }
-            .scaleEffect(closeBtnHovered ? 1.1 : 1.0)
-        #endif
-        #if os(iOS)
-        .scaleEffect(closeBtnHovered ? 0.95 : 1.0)
-        .onTapGesture {
-            withAnimation(.easeOut(duration: 0.1)) {
-                closeBtnHovered = true
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                withAnimation { closeBtnHovered = false }
-            }
-        }
-        #endif
-    }
 
     /// 多个商品组的TabView
     private var productTabs: some View {
@@ -127,12 +80,8 @@ struct PurchaseView: View, SuperLog {
                     .tabItem { Label("消耗品", systemImage: .iconDoc) }
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(
-            RoundedRectangle(cornerRadius: 16)
-                .fill(.ultraThinMaterial)
-                .shadow(color: .black.opacity(0.05), radius: 8, y: 4)
-        )
+        .infinite()
+        .shadowSm()
     }
 
     /// 单个商品组展示
@@ -160,14 +109,13 @@ struct PurchaseView: View, SuperLog {
 // MARK: - Preview
 
 #Preview("PurchaseView - All") {
-    PurchaseView(showCloseButton: false)
+    PurchaseView()
         .inRootView()
         .frame(height: 800)
 }
 
 #Preview("PurchaseView - Subscription Only") {
-    PurchaseView(showCloseButton: false,
-                 showSubscription: true,
+    PurchaseView(showSubscription: true,
                  showOneTime: false,
                  showNonRenewable: false,
                  showConsumable: false)

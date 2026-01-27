@@ -18,30 +18,30 @@
         @State var isDropping = false
         @State var error: Error? = nil
         @State var iCloudAvailable = true
-        @State var count = 0
+        @State private var outOfLimit = false
+
+        private var showProTips: Bool {
+            outOfLimit && isDropping
+        }
 
         var body: some View {
             VStack {
-                if showProTips {
-                    AudioCopyTips(variant: .pro)
-                }
+                AudioCopyTips(variant: .pro)
+                    .if(showProTips)
 
-                if self.isDropping {
-                    AudioCopyTips(variant: .drop)
-                }
+                AudioCopyTips(variant: .drop)
+                    .if(isDropping)
             }
-            .frame(maxWidth: .infinity)
-            .frame(maxHeight: .infinity)
+            .infinite()
             .onAppear(perform: onAppear)
-            .onDrop(of: [UTType.fileURL], isTargeted: self.$isDropping) { providers in
-                Task {
-                    await handleDrop(providers)
-                }
-                return true
-            }
+            .onDrop(of: [UTType.fileURL], isTargeted: self.$isDropping, perform: onDropProviders)
             .onCopyFiles(perform: onCopyFiles)
         }
+    }
 
+    // MARK: - Action
+
+    extension CopyWorkerView {
         @MainActor
         private func handleDrop(_ providers: [NSItemProvider]) async {
             let result = await onDrop(providers)
@@ -49,54 +49,12 @@
                 os_log(.error, "\(self.t)Drop operation failed")
             }
         }
-    }
 
-    // MARK: - View
-
-    extension CopyWorkerView {
-        private var outOfLimit: Bool {
-            count >= AudioPlugin.maxAudioCount && StoreService.tierCached().isFreeVersion
-        }
-
-        private var showProTips: Bool {
-            count >= AudioPlugin.maxAudioCount && StoreService.tierCached().isFreeVersion && isDropping
-        }
-    }
-
-    // MARK: - Event Handler
-
-    extension CopyWorkerView {
-        func onAppear() {
-            if Self.verbose {
-                os_log("\(self.a)")
+        private func onDropProviders(_ providers: [NSItemProvider]) -> Bool {
+            Task {
+                await handleDrop(providers)
             }
-        }
-
-        func onCopyFiles(_ notification: Notification) {
-            if Self.verbose {
-                os_log("\(self.t)🍋🍋🍋 onCopyFiles")
-            }
-
-            guard let urls = notification.userInfo?["urls"] as? [URL],
-                  let folder = notification.userInfo?["folder"] as? URL else {
-                return
-            }
-
-            os_log("\(self.t)🍋🍋🍋 onCopyFiles, urls: \(urls.count), folder: \(folder.path)")
-
-            var tasks: [(bookmark: Data, filename: String)] = []
-            for url in urls {
-                do {
-                    let bookmarkData = try url.bookmarkData(options: .withSecurityScope, includingResourceValuesForKeys: nil, relativeTo: nil)
-                    tasks.append((bookmark: bookmarkData, filename: url.lastPathComponent))
-                } catch {
-                    os_log(.error, "\(self.t)Failed to create bookmark for url: \(url.path). Error: \(error.localizedDescription)")
-                }
-            }
-
-            if !tasks.isEmpty {
-                worker.append(tasks: tasks, folder: folder)
-            }
+            return true
         }
 
         func onDrop(_ providers: [NSItemProvider]) async -> Bool {
@@ -104,7 +62,14 @@
                 os_log("\(self.t)🚀 开始处理拖放文件")
             }
 
-            if self.outOfLimit { return false }
+            // 检查是否超出限制
+            let isOutOfLimit = await CopyPlugin.isOutOfLimit()
+            await MainActor.run {
+                self.outOfLimit = isOutOfLimit
+            }
+            if isOutOfLimit {
+                return false
+            }
 
             guard let disk = await MainActor.run(body: { AudioPlugin.getAudioDisk() }) else {
                 os_log(.error, "\(self.t)No Disk")
@@ -153,26 +118,55 @@
         }
     }
 
+    // MARK: - Event Handler
+
+    extension CopyWorkerView {
+        func onAppear() {
+            if Self.verbose {
+                os_log("\(self.t)onAppear")
+            }
+            // 检查是否超出限制
+            Task {
+                let isOutOfLimit = await CopyPlugin.isOutOfLimit()
+                await MainActor.run {
+                    self.outOfLimit = isOutOfLimit
+                }
+            }
+        }
+
+        func onCopyFiles(_ notification: Notification) {
+            if Self.verbose {
+                os_log("\(self.t)🍋🍋🍋 onCopyFiles")
+            }
+
+            guard let urls = notification.userInfo?["urls"] as? [URL],
+                  let folder = notification.userInfo?["folder"] as? URL else {
+                return
+            }
+
+            os_log("\(self.t)🍋🍋🍋 onCopyFiles, urls: \(urls.count), folder: \(folder.path)")
+
+            var tasks: [(bookmark: Data, filename: String)] = []
+            for url in urls {
+                do {
+                    let bookmarkData = try url.bookmarkData(options: .withSecurityScope, includingResourceValuesForKeys: nil, relativeTo: nil)
+                    tasks.append((bookmark: bookmarkData, filename: url.lastPathComponent))
+                } catch {
+                    os_log(.error, "\(self.t)Failed to create bookmark for url: \(url.path). Error: \(error.localizedDescription)")
+                }
+            }
+
+            if !tasks.isEmpty {
+                worker.append(tasks: tasks, folder: folder)
+            }
+        }
+    }
+
     // MARK: - Preview
 
-    #if os(macOS)
-        #Preview("App - Large") {
-            ContentView()
-                .inRootView()
-                .frame(width: 600, height: 1000)
-        }
-
-        #Preview("App - Small") {
-            ContentView()
-                .inRootView()
-                .frame(width: 600, height: 600)
-        }
-    #endif
-
-    #if os(iOS)
-        #Preview("iPhone") {
-            ContentView()
-                .inRootView()
-        }
-    #endif
+    #Preview("App") {
+        ContentView()
+            .inRootView()
+            .withDebugBar()
+    }
 #endif

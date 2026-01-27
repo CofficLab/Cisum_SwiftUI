@@ -57,29 +57,10 @@ actor AudioPlugin: SuperPlugin, SuperLog {
     }
 }
 
-#Preview("UserDefaultsDebugView") {
-    RootView {
-        UserDefaultsDebugView(defaultSearchText: "AudioPlugin")
-    }
-    .frame(width: 500)
-    .frame(height: 600)
-}
+// MARK: Preview
 
-#Preview("App - Large") {
+#Preview("App") {
     ContentView()
         .inRootView()
-        .frame(width: 600, height: 1000)
+        .withDebugBar()
 }
-
-#Preview("App - Small") {
-    ContentView()
-        .inRootView()
-        .frame(width: 600, height: 600)
-}
-
-#if os(iOS)
-    #Preview("iPhone") {
-        ContentView()
-            .inRootView()
-    }
-#endif

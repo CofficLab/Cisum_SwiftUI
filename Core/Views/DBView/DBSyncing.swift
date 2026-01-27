@@ -8,10 +8,12 @@ struct DBSyncing: View {
     }
 }
 
+// MARK: Preview
+
 #Preview("App") {
     ContentView()
         .inRootView()
-        .frame(height: 800)
+        .withDebugBar()
 }
 
 #Preview {

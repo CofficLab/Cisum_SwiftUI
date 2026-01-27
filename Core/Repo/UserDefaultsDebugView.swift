@@ -120,6 +120,14 @@ struct UserDefaultsDebugView: View, SuperLog {
     }
 }
 
+// MARK: Preview
+
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .withDebugBar()
+}
+
 #Preview("UserDefaults 调试") {
     UserDefaultsDebugView()
         .frame(width: 600)

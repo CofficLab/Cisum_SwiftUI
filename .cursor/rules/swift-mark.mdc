@@ -15,7 +15,7 @@ alwaysApply: false
 2. `// MARK: - Action`：用户交互触发的行为、对外暴露的动作、业务命令。
 3. `// MARK: - Setter`：状态/属性的集中更新方法（尽量 `@MainActor` 明确 UI 线程修改）。
 4. `// MARK: - Event Handler`：订阅通知、Combine 流、回调等事件处理函数。
-5. `// MARK: - Preview`：文件结尾处的多尺寸预览（遵循预览规则）。
+5. `// MARK: - Preview`：文件结尾处的标准预览（遵循预览规则）。
 
 可选分组（如有需要）：
 
@@ -84,23 +84,11 @@ extension MyView {
 }
 
 // MARK: - Preview
-#if os(macOS)
-#Preview("App - Large") {
-    AppPreview()
-        .frame(width: 600, height: 1000)
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .withDebugBar()
 }
-
-#Preview("App - Small") {
-    AppPreview()
-        .frame(width: 600, height: 600)
-}
-#endif
-
-#if os(iOS)
-#Preview("iPhone") {
-    AppPreview()
-}
-#endif
 ```
 
 ## 注意事项

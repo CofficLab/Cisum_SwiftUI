@@ -29,13 +29,9 @@ struct WelcomeView: View, SuperLog {
             .padding(.top, 8)
 
             StorageView()
-                .background(.background)
-                .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
-                .overlay {
-                    RoundedRectangle(cornerRadius: 20, style: .continuous)
-                        .strokeBorder(.white.opacity(0.15))
-                }
-                .shadow(color: .black.opacity(0.12), radius: 24, y: 12)
+                .background(.regularMaterial)
+                .roundedMedium()
+                .shadowSm()
 
             Spacer()
         }
@@ -57,23 +53,8 @@ struct WelcomeView: View, SuperLog {
         .preferredColorScheme(.dark)
 }
 
-#if os(macOS)
-    #Preview("App - Large") {
-        ContentView()
-            .inRootView()
-            .frame(width: 600, height: 1000)
-    }
-
-    #Preview("App - Small") {
-        ContentView()
-            .inRootView()
-            .frame(width: 600, height: 600)
-    }
-#endif
-
-#if os(iOS)
-    #Preview("iPhone") {
-        ContentView()
-            .inRootView()
-    }
-#endif
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .withDebugBar()
+}

@@ -36,8 +36,7 @@ struct ControlView: View, SuperLog {
 
                     if showHeroView {
                         HeroView()
-                            .frame(maxWidth: .infinity)
-                            .frame(maxHeight: .infinity)
+                            .infinite()
                     }
 
                     // MARK: 状态
@@ -150,30 +149,10 @@ struct ControlView: View, SuperLog {
     }
 }
 
-#if DEBUG
-    #if os(macOS)
-        #Preview("App - Large") {
-            ContentView()
-                .inRootView()
-                .frame(width: 600, height: 1000)
-        }
+// MARK: Preview
 
-        #Preview("App - Small") {
-            ContentView()
-                .inRootView()
-                .frame(width: 500, height: 600)
-        }
-    #endif
-
-    #if os(iOS)
-        #Preview("iPhone - ControlView") {
-            ControlView()
-                .inRootView()
-        }
-
-        #Preview("iPhone") {
-            ContentView()
-                .inRootView()
-        }
-    #endif
-#endif
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .withDebugBar()
+}

@@ -67,22 +67,14 @@ class PluginRepo: SuperLog, SuperThread {
     }
 }
 
+// MARK: Preview
+
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .withDebugBar()
+}
+
 #Preview("插件仓库调试") {
     PluginRepoDebugView()
-}
-
-#Preview("Small Screen") {
-    RootView {
-        ContentView()
-    }
-    .frame(width: 500)
-    .frame(height: 600)
-}
-
-#Preview("Big Screen") {
-    RootView {
-        ContentView()
-    }
-    .frame(width: 800)
-    .frame(height: 1200)
 }

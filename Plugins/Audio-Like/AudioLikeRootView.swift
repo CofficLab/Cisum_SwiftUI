@@ -98,7 +98,7 @@ extension AudioLikeRootView {
                     object: nil,
                     userInfo: [
                         "url": currentURL,
-                        "liked": liked
+                        "liked": liked,
                     ]
                 )
 
@@ -115,4 +115,12 @@ extension AudioLikeRootView {
 extension Notification.Name {
     /// 音频喜欢状态变化通知
     static let AudioLikeStatusChanged = Notification.Name("AudioLikeStatusChanged")
+}
+
+// MARK: Preview
+
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .withDebugBar()
 }

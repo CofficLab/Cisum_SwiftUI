@@ -182,10 +182,10 @@ extension AudioItemView {
     /// 在 Finder 中显示
     private func showInFinder() {
         #if os(macOS)
-        NSWorkspace.shared.activateFileViewerSelecting([url])
-        if Self.verbose {
-            os_log("\(Self.t)🔍 在 Finder 中显示: \(url.path)")
-        }
+            NSWorkspace.shared.activateFileViewerSelecting([url])
+            if Self.verbose {
+                os_log("\(Self.t)🔍 在 Finder 中显示: \(url.path)")
+            }
         #endif
     }
 
@@ -224,25 +224,10 @@ extension AudioItemView {
     }
 }
 
-// MARK: - Preview
+// MARK: Preview
 
-#if os(macOS)
-    #Preview("App - Large") {
-        ContentView()
-            .inRootView()
-            .frame(width: 600, height: 1000)
-    }
-
-    #Preview("App - Small") {
-        ContentView()
-            .inRootView()
-            .frame(width: 600, height: 600)
-    }
-#endif
-
-#if os(iOS)
-    #Preview("iPhone") {
-        ContentView()
-            .inRootView()
-    }
-#endif
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .withDebugBar()
+}

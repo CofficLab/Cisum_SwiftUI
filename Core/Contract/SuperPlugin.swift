@@ -163,3 +163,11 @@ extension SuperPlugin {
         return content
     }
 }
+
+// MARK: Preview
+
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .withDebugBar()
+}

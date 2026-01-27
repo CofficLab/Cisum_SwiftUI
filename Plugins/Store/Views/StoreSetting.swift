@@ -5,7 +5,7 @@ import OSLog
 import StoreKit
 import SwiftUI
 
-struct StoreSettingEntry: View, SuperLog, SuperEvent {
+struct StoreSetting: View, SuperLog, SuperEvent {
     nonisolated static let emoji = "💰"
 
     @State private var showBuySheet = false
@@ -59,11 +59,11 @@ struct StoreSettingEntry: View, SuperLog, SuperEvent {
 
             // 购买入口
             MagicSettingRow(title: "应用内购买", description: "订阅专业版，解锁所有功能", icon: "cart", content: {
-                Image(systemName: "app.gift")
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .inCard()
-                    .roundedFull()
+                Image.appStore
+                    .frame(width: 28)
+                    .frame(height: 28)
+                    .background(.regularMaterial, in: .circle)
+                    .shadowSm()
                     .hoverScale(105)
                     .inButtonWithAction({
                         showBuySheet = true
@@ -73,11 +73,10 @@ struct StoreSettingEntry: View, SuperLog, SuperEvent {
             // 恢复购买
             MagicSettingRow(title: "恢复购买", description: "在其他设备上购买后可在此恢复", icon: "arrow.clockwise", content: {
                 Image.reset
-                    .foregroundStyle(.blue)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .inCard()
-                    .roundedFull()
+                    .frame(width: 28)
+                    .frame(height: 28)
+                    .background(.regularMaterial, in: .circle)
+                    .shadowSm()
                     .hoverScale(105)
                     .inButtonWithAction({
                         showRestoreSheet = true
@@ -85,12 +84,10 @@ struct StoreSettingEntry: View, SuperLog, SuperEvent {
             })
         }
         .sheet(isPresented: $showBuySheet) {
-            PurchaseView(showCloseButton: Config.isDesktop)
-                .background(Config.rootBackground)
+            PurchaseView()
         }
         .sheet(isPresented: $showRestoreSheet) {
-            RestoreView(showCloseButton: Config.isDesktop)
-                .background(Config.rootBackground)
+            RestoreView()
         }
         .task {
             self.updatePurchaseInfo()
@@ -106,7 +103,7 @@ struct StoreSettingEntry: View, SuperLog, SuperEvent {
 
 // MARK: - Actions
 
-extension StoreSettingEntry {
+extension StoreSetting {
     private func updatePurchaseInfo() {
         purchaseInfo = StoreService.cachedPurchaseInfo()
         tierDisplayName = purchaseInfo.effectiveTier.displayName
@@ -126,7 +123,7 @@ extension StoreSettingEntry {
 // MARK: - Preview
 
 #Preview("Store Settings") {
-    StoreSettingEntry()
+    StoreSetting()
         .inRootView()
         .frame(width: 400)
         .frame(height: 800)

@@ -10,7 +10,7 @@ import UniformTypeIdentifiers
 struct AudioRootView<Content>: View, SuperLog where Content: View {
     nonisolated static var emoji: String { "📢" }
     nonisolated static var verbose: Bool { false }
-    
+
     @EnvironmentObject var man: PlayMan
     @EnvironmentObject var m: MagicMessageProvider
     @EnvironmentObject var p: PluginProvider
@@ -30,7 +30,7 @@ struct AudioRootView<Content>: View, SuperLog where Content: View {
         self.content = content()
         guard let container = try? AudioConfigRepo.getContainer() else {
             self.error = AudioPluginError.initialization(reason: "Container 未找到")
-                os_log(.error,"\(Self.t)初始化失败: Container 未找到")
+            os_log(.error, "\(Self.t)初始化失败: Container 未找到")
             return
         }
 
@@ -107,7 +107,7 @@ extension AudioRootView {
         if Self.verbose {
             os_log("\(self.t)📂 存储位置已变化")
         }
-        
+
         self.m.info("存储位置发生了变化")
     }
 
@@ -121,25 +121,10 @@ extension AudioRootView {
     }
 }
 
-// MARK: - Preview
+// MARK: Preview
 
-#if os(macOS)
-#Preview("App - Large") {
+#Preview("App") {
     ContentView()
-    .inRootView()
-        .frame(width: 600, height: 1000)
+        .inRootView()
+        .withDebugBar()
 }
-
-#Preview("App - Small") {
-    ContentView()
-    .inRootView()
-        .frame(width: 600, height: 600)
-}
-#endif
-
-#if os(iOS)
-#Preview("iPhone") {
-    ContentView()
-    .inRootView()
-}
-#endif

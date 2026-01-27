@@ -102,3 +102,11 @@ class AppDelegate: NSObject, ApplicationDelegate, SuperLog {
     }
 
 #endif
+
+// MARK: Preview
+
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .withDebugBar()
+}

@@ -7,6 +7,8 @@ struct PlayPauseButton: View {
     @EnvironmentObject var man: PlayMan
     @Environment(\.demoMode) var isDemoMode
 
+    private let size: CGFloat = 32
+
     var body: some View {
         Group {
             if man.state == .playing {
@@ -15,15 +17,16 @@ struct PlayPauseButton: View {
                 playButton
             }
         }
-        .hoverScale(110)
+        .hoverScale(105)
         .shadowSm()
     }
 
     private var playButton: some View {
         Image.playFill
-            .frame(width: 32, height: 32)
-            .foregroundColor(.blue)
-            .inCard()
+            .font(.system(size: self.size * 0.6))
+            .foregroundStyle(.secondary)
+            .frame(width: size, height: size)
+            .inCard(.ultraThinMaterial)
             .roundedFull()
             .inButtonWithAction {
                 man.playCurrent(reason: "PlayPauseButton")
@@ -32,9 +35,10 @@ struct PlayPauseButton: View {
 
     private var pauseButton: some View {
         Image.pauseFill
-            .frame(width: 32, height: 32)
-            .foregroundColor(.blue)
-            .inCard()
+            .font(.system(size: self.size * 0.6))
+            .foregroundStyle(.secondary)
+            .frame(width: size, height: size)
+            .inCard(.ultraThinMaterial)
             .roundedFull()
             .inButtonWithAction {
                 man.pause(reason: "PlayPauseButton")
@@ -42,30 +46,10 @@ struct PlayPauseButton: View {
     }
 }
 
-// MARK: - Preview
+// MARK: Preview
 
-#if os(macOS)
-    #Preview("App - Large") {
-        ContentView()
-            .inRootView()
-            .frame(width: 600, height: 1000)
-    }
-
-    #Preview("App - Small") {
-        ContentView()
-            .inRootView()
-            .frame(width: 500, height: 800)
-    }
-
-    #Preview("App Store Hero") {
-        AppStoreHero()
-            .inMagicContainer(.macBook13, scale: 1)
-    }
-#endif
-
-#if os(iOS)
-    #Preview("iPhone") {
-        ContentView()
-            .inRootView()
-    }
-#endif
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .withDebugBar()
+}

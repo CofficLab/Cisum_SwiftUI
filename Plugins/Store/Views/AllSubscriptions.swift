@@ -105,17 +105,17 @@ struct AllSubscriptions: View, SuperLog {
 // MARK: - Preview
 
 #Preview("PurchaseView - All") {
-    PurchaseView(showCloseButton: false)
+    PurchaseView()
         .inRootView()
         .frame(height: 800)
 }
 
 #Preview("PurchaseView - Subscription Only") {
-    PurchaseView(showCloseButton: false,
-                 showSubscription: true,
-                 showOneTime: false,
-                 showNonRenewable: false,
-                 showConsumable: false)
+    PurchaseView(
+        showSubscription: true,
+        showOneTime: false,
+        showNonRenewable: false,
+        showConsumable: false)
         .inRootView()
         .frame(height: 800)
 }
@@ -138,19 +138,11 @@ struct AllSubscriptions: View, SuperLog {
         .frame(height: 800)
 }
 
-#if os(macOS)
-    #Preview("App - Large") {
-        ContentView()
-            .inRootView()
-            .frame(width: 600, height: 1000)
-    }
-
-    #Preview("App - Small") {
-        ContentView()
-            .inRootView()
-            .frame(width: 500, height: 800)
-    }
-#endif
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .withDebugBar()
+}
 
 #if os(iOS)
     #Preview("iPhone") {

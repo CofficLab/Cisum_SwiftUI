@@ -36,33 +36,16 @@ struct TitleView: View, SuperLog, SuperThread {
                     .position(x: geo.size.width / 2, y: geo.size.height / 2)
                     .padding(.vertical)
                     .shadow3xl()
+                    .foregroundStyle(.white)
             }
         }
     }
 }
 
-#Preview("App - Large") {
+// MARK: Preview
+
+#Preview("App") {
     ContentView()
         .inRootView()
-        .frame(width: 600, height: 1000)
+        .withDebugBar()
 }
-
-#Preview("App - Small") {
-    ContentView()
-        .inRootView()
-        .frame(width: 500, height: 800)
-}
-
-#Preview("Demo Mode") {
-    ContentView()
-        .inRootView()
-        .inDemoMode()
-        .frame(width: 500, height: 800)
-}
-
-#if os(iOS)
-    #Preview("iPhone") {
-        ContentView()
-            .inRootView()
-    }
-#endif

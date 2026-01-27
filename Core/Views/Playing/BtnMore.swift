@@ -5,12 +5,16 @@ struct BtnMore: View {
     @EnvironmentObject var app: AppProvider
     @Environment(\.demoMode) var isDemoMode
 
+    private let size: CGFloat = 32
+
     var body: some View {
         Image.more
-            .frame(width: 32, height: 32)
-            .inCard()
+            .font(.system(size: self.size * 0.6))
+            .frame(width: size, height: size)
+            .foregroundStyle(.secondary)
+            .inCard(.ultraThinMaterial)
             .roundedFull()
-            .hoverScale(110)
+            .hoverScale(105)
             .inButtonWithAction {
                 app.toggleDBView()
             }
@@ -18,15 +22,10 @@ struct BtnMore: View {
     }
 }
 
+// MARK: Preview
+
 #Preview("App") {
     ContentView()
         .inRootView()
-        .frame(height: 800)
-}
-
-#Preview("App - Demo") {
-    ContentView()
-        .inRootView()
-        .inDemoMode()
-        .frame(height: 800)
+        .withDebugBar()
 }
