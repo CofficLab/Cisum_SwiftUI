@@ -7,6 +7,8 @@ struct PlayModeButton: View {
     @EnvironmentObject var man: PlayMan
     @Environment(\.demoMode) var isDemoMode
 
+    private let size: CGFloat = 32
+
     var body: some View {
         Group {
             switch man.playMode {
@@ -26,7 +28,8 @@ struct PlayModeButton: View {
 
     private func modeIcon(systemName: String) -> some View {
         Image(systemName: systemName)
-            .frame(width: 32, height: 32)
+            .font(.system(size: self.size * 0.7))
+            .frame(width: size, height: size)
             .inCard(.ultraThinMaterial)
             .roundedFull()
             .inButtonWithAction {

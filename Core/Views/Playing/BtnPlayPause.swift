@@ -7,6 +7,8 @@ struct PlayPauseButton: View {
     @EnvironmentObject var man: PlayMan
     @Environment(\.demoMode) var isDemoMode
 
+    private let size: CGFloat = 32
+
     var body: some View {
         Group {
             if man.state == .playing {
@@ -21,8 +23,9 @@ struct PlayPauseButton: View {
 
     private var playButton: some View {
         Image.playFill
-            .frame(width: 32, height: 32)
-            .foregroundColor(.blue)
+            .font(.system(size: self.size * 0.7))
+            .foregroundStyle(.secondary)
+            .frame(width: size, height: size)
             .inCard(.ultraThinMaterial)
             .roundedFull()
             .inButtonWithAction {
@@ -47,5 +50,5 @@ struct PlayPauseButton: View {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .inPreviewMode(vertical: true)
 }

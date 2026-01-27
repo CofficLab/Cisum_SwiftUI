@@ -5,9 +5,13 @@ struct BtnMore: View {
     @EnvironmentObject var app: AppProvider
     @Environment(\.demoMode) var isDemoMode
 
+    private let size: CGFloat = 32
+
     var body: some View {
         Image.more
-            .frame(width: 32, height: 32)
+            .font(.system(size: self.size * 0.7))
+            .frame(width: size, height: size)
+            .foregroundStyle(.secondary)
             .inCard(.ultraThinMaterial)
             .roundedFull()
             .hoverScale(105)

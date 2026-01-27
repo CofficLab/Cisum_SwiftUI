@@ -36,8 +36,7 @@ struct ControlView: View, SuperLog {
 
                     if showHeroView {
                         HeroView()
-                            .frame(maxWidth: .infinity)
-                            .frame(maxHeight: .infinity)
+                            .infinite()
                     }
 
                     // MARK: 状态

@@ -45,7 +45,6 @@ struct HeroView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .ignoresSafeArea(edges: Config.isDesktop ? .horizontal : .all)
-        .foregroundStyle(.white)
     }
 
     // 计算专辑封面高度

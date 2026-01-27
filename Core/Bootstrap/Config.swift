@@ -40,21 +40,13 @@ enum Config: SuperLog {
     @MainActor
     @ViewBuilder
     static var rootBackground: some View {
-        MagicBackground.sunset.opacity(0.8)
+        MagicBackground.sunset.opacity(1)
     }
 
     static func getDBRootDir() throws -> URL {
         try Config.databaseDir
             .appendingPathComponent(dbDirName, isDirectory: true)
             .createIfNotExist()
-    }
-
-    static var getBackground: Color {
-        #if os(macOS)
-            Color(.controlBackgroundColor)
-        #else
-            Color(.systemBackground)
-        #endif
     }
 
     static let isDesktop = MagicApp.isDesktop
