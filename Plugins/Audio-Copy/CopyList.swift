@@ -1,8 +1,7 @@
+import MagicKit
 import OSLog
 import SwiftData
 import SwiftUI
-import MagicKit
-
 
 struct CopyList: View, SuperLog, SuperThread {
     nonisolated static let emoji = "📬"
@@ -62,9 +61,10 @@ struct CopyList: View, SuperLog, SuperThread {
     }
 }
 
+// MARK: Preview
+
 #Preview("App") {
     ContentView()
-    .inRootView()
-        .frame(height: 800)
+        .inRootView()
+        .inPreviewMode()
 }
-

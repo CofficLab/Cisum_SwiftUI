@@ -31,3 +31,11 @@ extension View {
         }
     }
 }
+
+// MARK: Preview
+
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .inPreviewMode()
+}

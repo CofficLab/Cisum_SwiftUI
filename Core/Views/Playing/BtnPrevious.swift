@@ -21,43 +21,10 @@ struct PreviousButton: View {
     }
 }
 
-// MARK: - Preview
+// MARK: Preview
 
-#if os(macOS)
-    #Preview("App - Large") {
-        ContentView()
-            .inRootView()
-            .frame(width: 600, height: 1000)
-    }
-
-    #Preview("App - Small") {
-        ContentView()
-            .inRootView()
-            .frame(width: 500, height: 800)
-    }
-
-    #Preview("App Store Hero") {
-        AppStoreHero()
-            .inMagicContainer(.macBook13, scale: 1)
-    }
-
-    #Preview("PreviousButton") {
-        PreviousButton()
-            .inRootView()
-            .frame(height: 800)
-    }
-
-    #Preview("PreviousButton - Demo") {
-        PreviousButton()
-            .inRootView()
-            .inDemoMode()
-            .frame(height: 800)
-    }
-#endif
-
-#if os(iOS)
-    #Preview("iPhone") {
-        ContentView()
-            .inRootView()
-    }
-#endif
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .inPreviewMode()
+}

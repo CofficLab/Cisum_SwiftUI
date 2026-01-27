@@ -49,10 +49,11 @@
         }
     }
 
+    // MARK: Preview
+
     #Preview("App") {
         ContentView()
             .inRootView()
-            .frame(height: 800)
-            .frame(width: 800)
+            .inPreviewMode()
     }
 #endif

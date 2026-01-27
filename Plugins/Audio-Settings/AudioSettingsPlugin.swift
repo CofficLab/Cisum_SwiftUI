@@ -25,3 +25,9 @@ actor AudioSettingsPlugin: SuperPlugin, SuperLog {
         return AnyView(AudioSettings())
     }
 }
+
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .inPreviewMode()
+}

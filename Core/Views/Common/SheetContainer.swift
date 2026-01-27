@@ -24,7 +24,7 @@ struct SheetContainer<Content: View>: View {
     @ViewBuilder var content: Content
 
     /// VStack 的间距
-    private var spacing: CGFloat { 20 }
+    private var spacing: CGFloat { 40 }
 
     var body: some View {
         VStack(spacing: spacing) {
@@ -36,6 +36,9 @@ struct SheetContainer<Content: View>: View {
                 }
                 .padding(.top, 8)
             }
+
+            // iOS 上需要一些空白，方便用户下拉关闭
+            Spacer(minLength: 20)
 
             // 用户内容
             content
@@ -82,39 +85,10 @@ struct SheetContainer<Content: View>: View {
     }
 }
 
-// MARK: - Preview
+// MARK: Preview
 
-#if os(macOS)
-    #Preview("SheetContainer - macOS") {
-        SheetContainer {
-            VStack(alignment: .leading, spacing: 12) {
-                Text("标题")
-                    .font(.title3)
-                    .fontWeight(.semibold)
-
-                Text("这是内容区域，可以放置任意视图")
-                    .font(.body)
-                    .foregroundStyle(.secondary)
-            }
-        }
-        .frame(width: 400, height: 300)
-    }
-#endif
-
-#if os(iOS)
-    #Preview("SheetContainer - iPhone") {
-        SheetContainer {
-            VStack(alignment: .leading, spacing: 12) {
-                Text("标题")
-                    .font(.title3)
-                    .fontWeight(.semibold)
-
-                Text("这是内容区域，可以放置任意视图")
-                    .font(.body)
-                    .foregroundStyle(.secondary)
-            }
-            .padding()
-        }
-        .inCard()
-    }
-#endif
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .inPreviewMode()
+}

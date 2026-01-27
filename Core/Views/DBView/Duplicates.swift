@@ -1,10 +1,10 @@
 import OSLog
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct Duplicates: View {
     @State var showDumplicates = false
-    
+
     @Query var audios: [AudioModel]
 
     var audio: AudioModel
@@ -26,11 +26,11 @@ struct Duplicates: View {
 //                    })
 //                    .popover(isPresented: $showDumplicates, content: {
 //                        List {
-////                            Section("共 \(duplicates.count) 个重复文件",content: {
-////                                ForEach(duplicates, content: { a in
-////                                    AudioTile(a.toPlayAsset())
-////                                })
-////                            })
+            ////                            Section("共 \(duplicates.count) 个重复文件",content: {
+            ////                                ForEach(duplicates, content: { a in
+            ////                                    AudioTile(a.toPlayAsset())
+            ////                                })
+            ////                            })
 //                        }
 //                    })
 //            }
@@ -42,8 +42,10 @@ struct Duplicates: View {
     }
 }
 
-#Preview {
-    RootView {
-        ContentView()
-    }
+// MARK: Preview
+
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .inPreviewMode()
 }

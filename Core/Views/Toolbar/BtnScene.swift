@@ -42,23 +42,10 @@ struct BtnScene: View {
     }
 }
 
-#if os(macOS)
-#Preview("App - Large") {
-    ContentView()
-    .inRootView()
-        .frame(width: 600, height: 1000)
-}
+// MARK: Preview
 
-#Preview("App - Small") {
+#Preview("App") {
     ContentView()
-    .inRootView()
-        .frame(width: 500, height: 800)
+        .inRootView()
+        .inPreviewMode()
 }
-#endif
-
-#if os(iOS)
-    #Preview("iPhone") {
-        ContentView()
-    .inRootView()
-    }
-#endif

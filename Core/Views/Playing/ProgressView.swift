@@ -50,28 +50,10 @@ struct PlayingProgressView: View {
     }
 }
 
-#if os(macOS)
-    #Preview("App - Large") {
-        ContentView()
-            .inRootView()
-            .frame(width: 600, height: 1000)
-    }
+// MARK: Preview
 
-    #Preview("App - Small") {
-        ContentView()
-            .inRootView()
-            .frame(width: 500, height: 600)
-    }
-
-    #Preview("App Store Hero") {
-        AppStoreHero()
-            .inMagicContainer(.macBook13, scale: 1)
-    }
-#endif
-
-#if os(iOS)
-    #Preview("iPhone") {
-        ContentView()
-            .inRootView()
-    }
-#endif
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .inPreviewMode()
+}

@@ -26,23 +26,8 @@ actor AudioScenePlugin: SuperPlugin {
 
 // MARK: - Preview
 
-#if os(macOS)
-#Preview("App - Large") {
+#Preview("App") {
     ContentView()
-    .inRootView()
-        .frame(width: 600, height: 1000)
+        .inRootView()
+        .inPreviewMode()
 }
-
-#Preview("App - Small") {
-    ContentView()
-    .inRootView()
-        .frame(width: 600, height: 600)
-}
-#endif
-
-#if os(iOS)
-#Preview("iPhone") {
-    ContentView()
-    .inRootView()
-}
-#endif

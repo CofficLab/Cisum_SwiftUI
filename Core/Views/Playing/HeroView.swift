@@ -32,9 +32,9 @@ struct HeroView: View {
                             .clipped()
                     } else {
                         playMan.makeHeroView(verbose: Self.verbose)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: getAlbumHeight(geo))
-                        .clipped()
+                            .frame(maxWidth: .infinity)
+                            .frame(height: getAlbumHeight(geo))
+                            .clipped()
                     }
                 }
 
@@ -59,33 +59,10 @@ struct HeroView: View {
     }
 }
 
-#Preview("App - Large") {
+// MARK: Preview
+
+#Preview("App") {
     ContentView()
         .inRootView()
-        .frame(width: 600, height: 800)
+        .inPreviewMode()
 }
-
-#Preview("App - Small") {
-    ContentView()
-        .inRootView()
-        .frame(width: Config.minWidth, height: 700)
-}
-
-#Preview("Demo Mode") {
-    ContentView()
-        .inRootView()
-        .inDemoMode()
-        .frame(width: Config.minWidth, height: 700)
-}
-
-#Preview("App Store Hero") {
-    AppStoreHero()
-        .inMagicContainer(.macBook13, scale: 1)
-}
-
-#if os(iOS)
-    #Preview("iPhone") {
-        ContentView()
-            .inRootView()
-    }
-#endif

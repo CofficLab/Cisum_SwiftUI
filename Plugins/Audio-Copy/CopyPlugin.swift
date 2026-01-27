@@ -30,3 +30,11 @@ import SwiftUI
         }
     }
 #endif
+
+// MARK: Preview
+
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .inPreviewMode()
+}

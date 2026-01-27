@@ -178,46 +178,52 @@ extension CrashedView {
     }
 }
 
-// MARK: - Preview
+// MARK: Preview
+
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .inPreviewMode()
+}
 
 #if DEBUG
-#if os(macOS)
-    #Preview("ErrorViewFatal - Large") {
-        CrashedView(error: NSError(domain: "TestError", code: 1001, userInfo: [NSLocalizedDescriptionKey: "这是一个测试错误，用于预览界面效果"]))
+    #if os(macOS)
+        #Preview("ErrorViewFatal - Large") {
+            CrashedView(error: NSError(domain: "TestError", code: 1001, userInfo: [NSLocalizedDescriptionKey: "这是一个测试错误，用于预览界面效果"]))
+                .inRootView()
+                .frame(width: 600, height: 1000)
+        }
+
+        #Preview("ErrorViewFatal - Small") {
+            CrashedView(error: NSError(domain: "TestError", code: 1001, userInfo: [NSLocalizedDescriptionKey: "测试错误"]))
+                .inRootView()
+                .frame(width: 500, height: 800)
+        }
+    #endif
+
+    #if os(iOS)
+        #Preview("ErrorViewFatal - iPhone") {
+            CrashedView(error: NSError(domain: "TestError", code: 1001, userInfo: [NSLocalizedDescriptionKey: "这是一个测试错误，用于预览界面效果"]))
+                .inRootView()
+        }
+    #endif
+
+    #Preview("App - Large") {
+        ContentView()
             .inRootView()
             .frame(width: 600, height: 1000)
     }
 
-    #Preview("ErrorViewFatal - Small") {
-        CrashedView(error: NSError(domain: "TestError", code: 1001, userInfo: [NSLocalizedDescriptionKey: "测试错误"]))
+    #Preview("App - Small") {
+        ContentView()
             .inRootView()
             .frame(width: 500, height: 800)
     }
-#endif
 
-#if os(iOS)
-    #Preview("ErrorViewFatal - iPhone") {
-        CrashedView(error: NSError(domain: "TestError", code: 1001, userInfo: [NSLocalizedDescriptionKey: "这是一个测试错误，用于预览界面效果"]))
-            .inRootView()
-    }
-#endif
-
-#Preview("App - Large") {
-    ContentView()
-        .inRootView()
-        .frame(width: 600, height: 1000)
-}
-
-#Preview("App - Small") {
-    ContentView()
-        .inRootView()
-        .frame(width: 500, height: 800)
-}
-
-#if os(iOS)
-    #Preview("iPhone") {
-        ContentView()
-            .inRootView()
-    }
-#endif
+    #if os(iOS)
+        #Preview("iPhone") {
+            ContentView()
+                .inRootView()
+        }
+    #endif
 #endif

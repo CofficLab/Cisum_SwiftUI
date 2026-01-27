@@ -62,7 +62,7 @@ struct AudioPoster: View {
                     )
                     .shadow(color: .black.opacity(0.05), radius: 6, y: 2)
             )
-            
+
             Spacer()
 
             Button(action: {
@@ -104,24 +104,8 @@ struct AudioPoster: View {
         .frame(height: 600)
 }
 
-#if os(macOS)
-    #Preview("App - Large") {
-        ContentView()
-    .inRootView()
-            .frame(width: 600, height: 1000)
-    }
-
-    #Preview("App - Small") {
-        ContentView()
-    .inRootView()
-            .frame(width: 500, height: 800)
-    }
-#endif
-
-#if os(iOS)
-    #Preview("iPhone") {
-        ContentView()
-    .inRootView()
-    }
-#endif
-
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .inPreviewMode()
+}

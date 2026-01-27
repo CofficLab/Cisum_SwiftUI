@@ -52,21 +52,10 @@ struct BootApp: App, SuperLog {
     }
 }
 
-#Preview("App - Large") {
+// MARK: Preview
+
+#Preview("App") {
     ContentView()
         .inRootView()
-        .frame(width: 600, height: 1000)
+        .inPreviewMode()
 }
-
-#Preview("App - Small") {
-    ContentView()
-        .inRootView()
-        .frame(width: 400, height: 700)
-}
-
-#if os(iOS)
-    #Preview("iPhone") {
-        ContentView()
-            .inRootView()
-    }
-#endif

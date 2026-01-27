@@ -25,9 +25,9 @@ struct AppTabView: View, SuperLog, SuperThread {
                 // Demo 模式下直接显示视图，不显示加载过程
                 if isDemoMode {
                     buildTabView()
-                        #if os(macOS)
-                            .tabViewStyle(GroupedTabViewStyle())
-                        #endif
+                    #if os(macOS)
+                        .tabViewStyle(GroupedTabViewStyle())
+                    #endif
                 } else {
                     ProgressView("加载中...")
                 }
@@ -107,32 +107,10 @@ extension AppTabView {
     }
 }
 
-// MARK: - Preview
+// MARK: Preview
 
-#if os(macOS)
-    #Preview("App - Large") {
-        ContentView()
-            .inRootView()
-            .frame(width: 600, height: 1000)
-    }
-
-    #Preview("App - Small") {
-        ContentView()
-            .inRootView()
-            .frame(width: 600, height: 600)
-    }
-
-    #Preview("Demo Mode") {
-        ContentView()
-            .inRootView()
-            .inDemoMode()
-            .frame(width: 600, height: 1000)
-    }
-#endif
-
-#if os(iOS)
-    #Preview("iPhone") {
-        ContentView()
-            .inRootView()
-    }
-#endif
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .inPreviewMode()
+}

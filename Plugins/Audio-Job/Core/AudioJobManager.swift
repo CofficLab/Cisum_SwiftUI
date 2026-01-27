@@ -1,6 +1,7 @@
 import Foundation
 import MagicKit
 import OSLog
+import SwiftUI
 
 /// 音频后台任务管理器
 ///
@@ -127,4 +128,12 @@ actor AudioJobManager: SuperLog {
             isRunning: runningJobs.contains(identifier)
         )
     }
+}
+
+// MARK: Preview
+
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .inPreviewMode()
 }

@@ -20,3 +20,11 @@ extension View {
         self.environment(\.demoMode, true)
     }
 }
+
+// MARK: Preview
+
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .inPreviewMode()
+}

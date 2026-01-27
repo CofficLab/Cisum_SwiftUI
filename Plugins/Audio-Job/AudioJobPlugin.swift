@@ -14,7 +14,6 @@ actor AudioJobPlugin: SuperPlugin, SuperLog {
 
     let description = "处理音频文件的后台任务"
     let iconName = "gearshape.2"
-    
 
     // MARK: - Plugin Life Cycle
 
@@ -40,4 +39,12 @@ actor AudioJobPlugin: SuperPlugin, SuperLog {
     func startJob(identifier: String) async {
         await AudioJobManager.shared.startJob(identifier)
     }
+}
+
+// MARK: Preview
+
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .inPreviewMode()
 }

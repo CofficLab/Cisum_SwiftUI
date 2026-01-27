@@ -16,7 +16,8 @@
         "Supabase",
         "swiftlint",
         "swiftui",
-        "xcodeproj"
+        "xcodeproj",
+        "xlarge"
     ],
     "editor.quickSuggestions": {
         "comments": "off",

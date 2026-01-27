@@ -45,3 +45,11 @@ extension View {
         self.onReceive(NotificationCenter.default.publisher(for: .bookDBSortDone), perform: action)
     }
 }
+
+// MARK: Preview
+
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .inPreviewMode()
+}

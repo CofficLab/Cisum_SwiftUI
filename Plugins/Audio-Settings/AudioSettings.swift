@@ -103,32 +103,8 @@ extension AudioSettings {
 
 // MARK: - Preview
 
-#Preview("Setting") {
-    RootView {
-        SettingView()
-            .background(.background)
-    }
-    .frame(height: 800)
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .inPreviewMode()
 }
-
-#if os(macOS)
-    #Preview("App - Large") {
-        ContentView()
-    .inRootView()
-            .frame(width: 600, height: 1000)
-    }
-
-    #Preview("App - Small") {
-        ContentView()
-    .inRootView()
-            .frame(width: 600, height: 600)
-    }
-#endif
-
-#if os(iOS)
-    #Preview("iPhone") {
-        ContentView()
-    .inRootView()
-    }
-#endif
-

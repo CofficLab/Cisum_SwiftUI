@@ -1,12 +1,12 @@
 import Foundation
-import SwiftData
 import MagicKit
-
+import SwiftData
+import SwiftUI
 
 @Model
 class CopyTask {
     static let emoji: String = "🍁"
-    
+
     var bookmark: Data
     var destination: URL
     var createdAt: Date
@@ -22,7 +22,7 @@ class CopyTask {
         }
         return error
     }
-    
+
     init(bookmark: Data, destination: URL, originalFilename: String) {
         self.bookmark = bookmark
         self.destination = destination
@@ -43,11 +43,19 @@ struct CopyTaskDTO: Sendable {
     let destination: URL
     let error: String
     let originalFilename: String
-    
+
     init(from model: CopyTask) {
         self.bookmark = model.bookmark
         self.destination = model.destination
         self.error = model.error
         self.originalFilename = model.originalFilename
     }
+}
+
+// MARK: Preview
+
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .inPreviewMode()
 }

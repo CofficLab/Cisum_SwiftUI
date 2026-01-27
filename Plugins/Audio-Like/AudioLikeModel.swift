@@ -1,5 +1,6 @@
 import Foundation
 import SwiftData
+import SwiftUI
 
 /**
  音频喜欢状态数据模型
@@ -70,4 +71,12 @@ extension AudioLikeModel {
         },
         sortBy: [SortDescriptor(\.updatedAt, order: .reverse)]
     )
+}
+
+// MARK: Preview
+
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .inPreviewMode()
 }

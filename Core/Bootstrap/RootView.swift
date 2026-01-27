@@ -180,30 +180,8 @@ extension View {
 
 // MARK: Preview
 
-#if os(macOS)
-    #Preview("App - Large") {
-        ContentView()
-            .inRootView()
-            .frame(width: Config.minWidth, height: 1000)
-    }
-
-    #Preview("App - Small") {
-        ContentView()
-            .inRootView()
-            .frame(width: Config.minWidth, height: 700)
-    }
-
-    #Preview("Demo Mode") {
-        ContentView()
-            .inRootView()
-            .inDemoMode()
-            .frame(width: Config.minWidth, height: 1000)
-    }
-#endif
-
-#if os(iOS)
-    #Preview("iPhone") {
-        ContentView()
-            .inRootView()
-    }
-#endif
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .inPreviewMode()
+}

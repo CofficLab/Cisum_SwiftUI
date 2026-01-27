@@ -2,6 +2,7 @@
     import Foundation
     import MagicKit
     import OSLog
+    import SwiftUI
 
     @MainActor
     class CopyWorker: SuperLog, SuperThread, ObservableObject {
@@ -103,5 +104,13 @@
 
             self.running = false
         }
+    }
+
+    // MARK: Preview
+
+    #Preview("App") {
+        ContentView()
+            .inRootView()
+            .inPreviewMode()
     }
 #endif

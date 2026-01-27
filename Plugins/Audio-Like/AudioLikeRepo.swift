@@ -1,6 +1,7 @@
 import Foundation
 import OSLog
 import SwiftData
+import SwiftUI
 
 actor AudioLikeRepo: SuperLog {
     static let emoji = "💖"
@@ -148,4 +149,12 @@ enum AudioLikeRepoError: Error, LocalizedError {
             return "数据容器不可用"
         }
     }
+}
+
+// MARK: Preview
+
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .inPreviewMode()
 }

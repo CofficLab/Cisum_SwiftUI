@@ -472,25 +472,10 @@ enum PluginProviderError: Error, LocalizedError {
     }
 }
 
-#if os(macOS)
-#Preview("Small Screen") {
-    ContentView()
-        .frame(width: 500)
-        .frame(height: 600)
-        .inRootView()
-}
+// MARK: Preview
 
-#Preview("Big Screen") {
+#Preview("App") {
     ContentView()
-        .frame(width: 800)
-        .frame(height: 1200)
         .inRootView()
+        .inPreviewMode()
 }
-#endif
-
-#if os(iOS)
-    #Preview("iPhone") {
-        ContentView()
-    .inRootView()
-    }
-#endif

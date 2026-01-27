@@ -74,37 +74,10 @@ struct AudioCopyTips: View {
     }
 }
 
-// MARK: - Preview
+// MARK: Preview
 
-#Preview {
-    Group {
-        AudioCopyTips(variant: .drop)
-            .frame(width: 300, height: 200)
-
-        AudioCopyTips(variant: .pro)
-            .frame(width: 300, height: 150)
-    }
-    .inScrollView()
-    .frame(height: 600)
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .inPreviewMode()
 }
-
-#if os(macOS)
-    #Preview("App - Large") {
-        ContentView()
-            .inRootView()
-            .frame(width: 600, height: 1000)
-    }
-
-    #Preview("App - Small") {
-        ContentView()
-            .inRootView()
-            .frame(width: 600, height: 600)
-    }
-#endif
-
-#if os(iOS)
-    #Preview("iPhone") {
-        ContentView()
-            .inRootView()
-    }
-#endif

@@ -18,15 +18,10 @@ struct BtnMore: View {
     }
 }
 
+// MARK: Preview
+
 #Preview("App") {
     ContentView()
         .inRootView()
-        .frame(height: 800)
-}
-
-#Preview("App - Demo") {
-    ContentView()
-        .inRootView()
-        .inDemoMode()
-        .frame(height: 800)
+        .inPreviewMode()
 }

@@ -254,6 +254,9 @@
         }
       }
     },
+    "下次预览生效" : {
+
+    },
     "下载" : {
       "extractionState" : "stale",
       "localizations" : {

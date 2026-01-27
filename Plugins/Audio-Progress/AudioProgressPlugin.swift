@@ -15,7 +15,6 @@ actor AudioProgressPlugin: SuperPlugin, SuperLog {
     let title = "音频进度管理"
     let description = "负责音频播放进度的保存和恢复"
     let iconName = "waveform"
-    
 
     /// 只有当当前插件是音频插件时才提供进度管理
     @MainActor func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {
@@ -26,22 +25,22 @@ actor AudioProgressPlugin: SuperPlugin, SuperLog {
 // MARK: - Preview
 
 #if os(macOS)
-#Preview("App - Large") {
-    ContentView()
-    .inRootView()
-        .frame(width: 600, height: 1000)
-}
+    #Preview("App - Large") {
+        ContentView()
+            .inRootView()
+            .frame(width: 600, height: 1000)
+    }
 
-#Preview("App - Small") {
-    ContentView()
-    .inRootView()
-        .frame(width: 600, height: 600)
-}
+    #Preview("App - Small") {
+        ContentView()
+            .inRootView()
+            .frame(width: 600, height: 600)
+    }
 #endif
 
 #if os(iOS)
-#Preview("iPhone") {
-    ContentView()
-    .inRootView()
-}
+    #Preview("iPhone") {
+        ContentView()
+            .inRootView()
+    }
 #endif
