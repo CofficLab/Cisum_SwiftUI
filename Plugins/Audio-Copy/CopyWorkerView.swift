@@ -22,33 +22,18 @@
 
         var body: some View {
             VStack {
-                if showProTips {
-                    AudioCopyTips(variant: .pro)
-                }
+                AudioCopyTips(variant: .pro)
+                    .if(showProTips)
 
-                if self.isDropping {
-                    AudioCopyTips(variant: .drop)
-                }
+                AudioCopyTips(variant: .drop)
+                    .if(isDropping)
             }
-            .frame(maxWidth: .infinity)
-            .frame(maxHeight: .infinity)
+            .infinite()
             .onAppear(perform: onAppear)
-            .onDrop(of: [UTType.fileURL], isTargeted: self.$isDropping) { providers in
-                Task {
-                    await handleDrop(providers)
-                }
-                return true
-            }
+            .onDrop(of: [UTType.fileURL], isTargeted: self.$isDropping, perform: onDropProviders)
             .onCopyFiles(perform: onCopyFiles)
         }
 
-        @MainActor
-        private func handleDrop(_ providers: [NSItemProvider]) async {
-            let result = await onDrop(providers)
-            if !result {
-                os_log(.error, "\(self.t)Drop operation failed")
-            }
-        }
     }
 
     // MARK: - View
@@ -63,40 +48,22 @@
         }
     }
 
-    // MARK: - Event Handler
+    // MARK: - Action
 
     extension CopyWorkerView {
-        func onAppear() {
-            if Self.verbose {
-                os_log("\(self.a)")
+        @MainActor
+        private func handleDrop(_ providers: [NSItemProvider]) async {
+            let result = await onDrop(providers)
+            if !result {
+                os_log(.error, "\(self.t)Drop operation failed")
             }
         }
 
-        func onCopyFiles(_ notification: Notification) {
-            if Self.verbose {
-                os_log("\(self.t)🍋🍋🍋 onCopyFiles")
+        private func onDropProviders(_ providers: [NSItemProvider]) -> Bool {
+            Task {
+                await handleDrop(providers)
             }
-
-            guard let urls = notification.userInfo?["urls"] as? [URL],
-                  let folder = notification.userInfo?["folder"] as? URL else {
-                return
-            }
-
-            os_log("\(self.t)🍋🍋🍋 onCopyFiles, urls: \(urls.count), folder: \(folder.path)")
-
-            var tasks: [(bookmark: Data, filename: String)] = []
-            for url in urls {
-                do {
-                    let bookmarkData = try url.bookmarkData(options: .withSecurityScope, includingResourceValuesForKeys: nil, relativeTo: nil)
-                    tasks.append((bookmark: bookmarkData, filename: url.lastPathComponent))
-                } catch {
-                    os_log(.error, "\(self.t)Failed to create bookmark for url: \(url.path). Error: \(error.localizedDescription)")
-                }
-            }
-
-            if !tasks.isEmpty {
-                worker.append(tasks: tasks, folder: folder)
-            }
+            return true
         }
 
         func onDrop(_ providers: [NSItemProvider]) async -> Bool {
@@ -153,7 +120,44 @@
         }
     }
 
-    // MARK: Preview
+    // MARK: - Event Handler
+
+    extension CopyWorkerView {
+        func onAppear() {
+            if Self.verbose {
+                os_log("\(self.t)onAppear")
+            }
+        }
+
+        func onCopyFiles(_ notification: Notification) {
+            if Self.verbose {
+                os_log("\(self.t)🍋🍋🍋 onCopyFiles")
+            }
+
+            guard let urls = notification.userInfo?["urls"] as? [URL],
+                  let folder = notification.userInfo?["folder"] as? URL else {
+                return
+            }
+
+            os_log("\(self.t)🍋🍋🍋 onCopyFiles, urls: \(urls.count), folder: \(folder.path)")
+
+            var tasks: [(bookmark: Data, filename: String)] = []
+            for url in urls {
+                do {
+                    let bookmarkData = try url.bookmarkData(options: .withSecurityScope, includingResourceValuesForKeys: nil, relativeTo: nil)
+                    tasks.append((bookmark: bookmarkData, filename: url.lastPathComponent))
+                } catch {
+                    os_log(.error, "\(self.t)Failed to create bookmark for url: \(url.path). Error: \(error.localizedDescription)")
+                }
+            }
+
+            if !tasks.isEmpty {
+                worker.append(tasks: tasks, folder: folder)
+            }
+        }
+    }
+
+    // MARK: - Preview
 
     #Preview("App") {
         ContentView()

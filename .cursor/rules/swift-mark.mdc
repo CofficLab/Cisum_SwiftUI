@@ -87,7 +87,7 @@ extension MyView {
 #Preview("App") {
     ContentView()
         .inRootView()
-        .inPreviewMode()
+        .withDebugBar()
 }
 ```
 
