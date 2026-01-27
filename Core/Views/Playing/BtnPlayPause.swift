@@ -35,8 +35,9 @@ struct PlayPauseButton: View {
 
     private var pauseButton: some View {
         Image.pauseFill
-            .frame(width: 32, height: 32)
-            .foregroundColor(.blue)
+            .font(.system(size: self.size * 0.7))
+            .foregroundStyle(.secondary)
+            .frame(width: size, height: size)
             .inCard(.ultraThinMaterial)
             .roundedFull()
             .inButtonWithAction {

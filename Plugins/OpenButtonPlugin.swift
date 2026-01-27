@@ -32,7 +32,15 @@ private struct OpenCurrentButtonView: View, SuperLog {
         }
         return Group {
             if let url = url {
-                url.makeOpenButton()
+                Image(systemName: .iconShowInFinder)
+                    .frame(width: 28)
+                    .frame(height: 28)
+                    .background(.regularMaterial, in: .circle)
+                    .shadowSm()
+                    .hoverScale(105)
+                    .inButtonWithAction {
+                        url.openInFinder()
+                    }
                     .id(url.absoluteString)
             }
         }
