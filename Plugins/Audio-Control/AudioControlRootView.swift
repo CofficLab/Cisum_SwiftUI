@@ -16,23 +16,9 @@ struct AudioControlRootView<Content>: View, SuperLog where Content: View {
 
     private var content: Content
 
-    // 直接创建 AudioRepo 实例，避免依赖 AudioProvider
+    // 从 AudioPlugin 获取 AudioRepo 实例
     private var audioRepo: AudioRepo? {
-        guard let disk = AudioPlugin.getAudioDisk() else {
-            if Self.verbose {
-                os_log(.error, "\(self.t)❌ 获取音频磁盘路径失败")
-            }
-            return nil
-        }
-
-        do {
-            return try AudioRepo(disk: disk, reason: "AudioControlPlugin")
-        } catch {
-            if Self.verbose {
-                os_log(.error, "\(self.t)❌ 创建 AudioRepo 失败: \(error.localizedDescription)")
-            }
-            return nil
-        }
+        AudioPlugin.getAudioRepo()
     }
 
     init(@ViewBuilder content: () -> Content) {

@@ -120,6 +120,6 @@ class AudioStateRepo: SuperLog {
 
 #Preview("UserDefaults 调试") {
     UserDefaultsDebugView(defaultSearchText: "AudioPlugin")
-        .frame(width: 600)
-        .frame(height: 800)
+        .frame(width: 500)
+        .frame(height: 600)
 }
