@@ -23,7 +23,7 @@ struct PlayPauseButton: View {
         Image.playFill
             .frame(width: 32, height: 32)
             .foregroundColor(.blue)
-            .inCard()
+            .inCard(.ultraThinMaterial)
             .roundedFull()
             .inButtonWithAction {
                 man.playCurrent(reason: "PlayPauseButton")
@@ -34,7 +34,7 @@ struct PlayPauseButton: View {
         Image.pauseFill
             .frame(width: 32, height: 32)
             .foregroundColor(.blue)
-            .inCard()
+            .inCard(.ultraThinMaterial)
             .roundedFull()
             .inButtonWithAction {
                 man.pause(reason: "PlayPauseButton")

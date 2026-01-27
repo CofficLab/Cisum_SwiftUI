@@ -27,7 +27,7 @@ struct PlayModeButton: View {
     private func modeIcon(systemName: String) -> some View {
         Image(systemName: systemName)
             .frame(width: 32, height: 32)
-            .inCard()
+            .inCard(.ultraThinMaterial)
             .roundedFull()
             .inButtonWithAction {
                 man.togglePlayMode()

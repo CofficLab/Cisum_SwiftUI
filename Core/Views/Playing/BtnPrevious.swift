@@ -11,7 +11,7 @@ struct PreviousButton: View {
         Image.backward
             .foregroundColor(.secondary)
             .frame(width: 32, height: 32)
-            .inCard()
+            .inCard(.ultraThinMaterial)
             .roundedFull()
             .hoverScale(105)
             .inButtonWithAction {

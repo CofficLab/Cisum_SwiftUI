@@ -10,7 +10,7 @@ struct NextButton: View {
     var body: some View {
         Image.forward
             .frame(width: 32, height: 32)
-            .inCard()
+            .inCard(.ultraThinMaterial)
             .roundedFull()
             .hoverScale(105)
             .inButtonWithAction {

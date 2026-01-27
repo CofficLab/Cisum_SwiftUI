@@ -8,7 +8,7 @@ struct BtnMore: View {
     var body: some View {
         Image.more
             .frame(width: 32, height: 32)
-            .inCard()
+            .inCard(.ultraThinMaterial)
             .roundedFull()
             .hoverScale(105)
             .inButtonWithAction {
