@@ -42,6 +42,9 @@ struct CopyList: View, SuperLog, SuperThread {
             return
         }
         tasks = CopyDB.getAllTasks(from: container)
+        
+        // 将最新数量通知出去，因为CopyWorker的数量通知有延迟
+        NotificationCenter.postCopyTaskCountChanged(count: tasks.count)
     }
 
     /// 空视图

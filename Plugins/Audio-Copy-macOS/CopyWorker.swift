@@ -11,7 +11,7 @@
         let fm = FileManager.default
         let db: CopyDB
         var running = false
-        let verbose: Bool = false
+        let verbose: Bool = true
 
         init(db: CopyDB, reason: String) {
             if verbose {
@@ -132,9 +132,6 @@
 
             self.running = false
 
-            // 等待数据库保存完成
-            try? await Task.sleep(nanoseconds: 100000000) // 0.1秒
-
             // 检查剩余任务数量，发送完成事件
             let remainingCount = await db.allCopyTaskDTOs().count
             if verbose {
@@ -148,6 +145,8 @@
             } else {
                 // 还有任务，发送数量更新事件
                 NotificationCenter.postCopyTaskCountChanged(count: remainingCount)
+                
+                await self.run()
             }
         }
     }
