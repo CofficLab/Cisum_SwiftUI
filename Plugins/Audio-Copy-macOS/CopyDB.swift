@@ -116,6 +116,36 @@ actor CopyDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
         return []
     }
 
+    /// 同步获取所有复制任务（供 UI 使用）
+    /// - Parameter container: ModelContainer 实例
+    /// - Returns: CopyTask 数组
+    static func getAllTasks(from container: ModelContainer) -> [CopyTask] {
+        let context = ModelContext(container)
+        let descriptor = FetchDescriptor<CopyTask>()
+        do {
+            return try context.fetch(descriptor)
+        } catch {
+            os_log(.error, "Failed to fetch tasks: \(error.localizedDescription)")
+            return []
+        }
+    }
+
+    /// 同步删除指定的任务（供 UI 使用）
+    /// - Parameters:
+    ///   - tasks: 要删除的任务数组
+    ///   - container: ModelContainer 实例
+    static func deleteTasks(_ tasks: [CopyTask], from container: ModelContainer) {
+        let context = ModelContext(container)
+        for task in tasks {
+            context.delete(task)
+        }
+        do {
+            try context.save()
+        } catch {
+            os_log(.error, "Failed to delete tasks: \(error.localizedDescription)")
+        }
+    }
+
     func findCopyTask(bookmark: Data) -> CopyTask? {
         let predicate = #Predicate<CopyTask> {
             $0.bookmark == bookmark
@@ -159,7 +189,15 @@ actor CopyDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     }
 
     func allCopyTaskDTOs() async -> [CopyTaskDTO] {
-        allCopyTasks().map { CopyTaskDTO(from: $0) }
+        // 创建新context以确保获取最新数据
+        let context = ModelContext(modelContainer)
+        let descriptor = FetchDescriptor<CopyTask>()
+        do {
+            return try context.fetch(descriptor).map { CopyTaskDTO(from: $0) }
+        } catch {
+            os_log(.error, "Failed to fetch DTOs: \(error.localizedDescription)")
+            return []
+        }
     }
 }
 

@@ -7,11 +7,9 @@ struct CopyList: View, SuperLog, SuperThread {
     nonisolated static let emoji = "📬"
 
     @EnvironmentObject var app: AppProvider
-    @Environment(\.modelContext) private var context
 
     @State private var selection: String?
-
-    @Query(sort: \CopyTask.createdAt, animation: .default) private var tasks: [CopyTask]
+    @State private var tasks: [CopyTask] = []
 
     init(verbose: Bool = false) {
         if verbose {
@@ -23,8 +21,42 @@ struct CopyList: View, SuperLog, SuperThread {
         Group {
             if !tasks.isEmpty {
                 taskList
+            } else {
+                emptyView
             }
         }
+        .onAppear {
+            refreshTasks()
+        }
+        .onCopyTaskCountChanged { _ in
+            refreshTasks()
+        }
+        .background(.regularMaterial)
+        .shadowSm()
+    }
+
+    /// 刷新任务列表
+    private func refreshTasks() {
+        guard let container = CopyPlugin.container else {
+            tasks = []
+            return
+        }
+        tasks = CopyDB.getAllTasks(from: container)
+    }
+
+    /// 空视图
+    private var emptyView: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "tray")
+                .font(.system(size: 48))
+                .foregroundStyle(.secondary)
+
+            Text("暂无复制任务")
+                .font(.title3)
+                .foregroundStyle(.primary)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(40)
     }
 
     private var taskList: some View {
@@ -55,9 +87,10 @@ struct CopyList: View, SuperLog, SuperThread {
     }
 
     private func deleteTasks(at offsets: IndexSet) {
-        for index in offsets {
-            context.delete(tasks[index])
-        }
+        guard let container = CopyPlugin.container else { return }
+        let tasksToDelete = offsets.map { tasks[$0] }
+        CopyDB.deleteTasks(tasksToDelete, from: container)
+        refreshTasks()
     }
 }
 

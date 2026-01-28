@@ -37,7 +37,7 @@ extension CopyTask: Identifiable {
     var id: PersistentIdentifier { persistentModelID }
 }
 
-// 添加一个新的值类型结构体用于数据传输
+// 用于数据传输
 struct CopyTaskDTO: Sendable {
     let bookmark: Data
     let destination: URL
