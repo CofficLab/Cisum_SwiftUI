@@ -66,9 +66,6 @@ protocol SuperPlugin: Actor {
     /// 添加工具栏按钮
     @MainActor func addToolBarButtons() -> [(id: String, view: AnyView)]
 
-    /// 获取磁盘路径
-    @MainActor func getDisk() -> URL?
-
     // MARK: - Lifecycle Methods
 
     /// 插件注册完成后的回调
@@ -134,8 +131,6 @@ extension SuperPlugin {
     nonisolated func addStatusView() -> AnyView? { nil }
 
     nonisolated func addSettingView() -> AnyView? { nil }
-
-    @MainActor func getDisk() -> URL? { nil }
 
     // MARK: - Lifecycle Defaults
 
