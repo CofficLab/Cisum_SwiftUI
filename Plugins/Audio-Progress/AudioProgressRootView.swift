@@ -26,11 +26,13 @@ struct AudioProgressRootView<Content>: View, SuperLog where Content: View {
             .onAppear(perform: handleOnAppear)
             .onPlayManStateChanged(handlePlayManStateChanged)
             .onPlayManAssetChanged(handlePlayManAssetChanged)
+            // 注意：存储位置变更时，本RootView会被卸载掉，光靠 onPlayManAssetChanged 无法监听到
+            .onStorageLocationDidReset(perform: handleStorageLocationDidReset)
     }
 
     /// 检查是否应该激活进度管理功能
     private var shouldActivateProgress: Bool {
-        p.currentSceneName == "音乐库"
+        p.currentSceneName == AudioScenePlugin.sceneName
     }
 }
 
@@ -45,29 +47,61 @@ extension AudioProgressRootView {
     /// 恢复上次播放状态
     ///
     /// 从持久化存储中恢复上次播放的音频、播放进度和喜欢状态。
-    /// 如果没有上次播放记录，则播放第一首音频。
+    /// 如果没有上次播放记录，或该文件已不存在，则播放第一首音频。
     ///
     /// ## 恢复流程
     /// 1. 读取上次播放的 URL 和时间
-    /// 2. 如果找到，恢复该音频和进度
-    /// 3. 如果没找到，播放第一首音频
-    /// 4. 恢复喜欢状态
+    /// 2. 检查该 URL 是否存在于 AudioRepo
+    /// 3. 如果存在，恢复该音频和进度
+    /// 4. 如果不存在或没找到记录，播放第一首音频
+    /// 5. 恢复喜欢状态
     private func restorePlaying() {
         var assetTarget: URL?
         var timeTarget: TimeInterval = 0
         var liked = false
 
         Task {
-            if let url = AudioStateRepo.getCurrent() {
-                assetTarget = url
-                liked = await AudioLikeRepo.shared.isLiked(url: url)
-
-                if let time = AudioStateRepo.getCurrentTime() {
-                    timeTarget = time
-                }
-
+            // 从 AudioPlugin 获取 AudioRepo 实例
+            guard let repo = AudioPlugin.getAudioRepo() else {
                 if Self.verbose {
-                    os_log("\(self.t)✅ 恢复播放: \(url.lastPathComponent) @ \(timeTarget)s")
+                    os_log(.error, "\(self.t)❌ 获取 AudioRepo 失败")
+                }
+                return
+            }
+
+            // 尝试恢复上次播放
+            if let url = AudioStateRepo.getCurrent() {
+                // 检查该 URL 是否存在于 AudioRepo
+                if await repo.find(url) != nil {
+                    // 文件存在，恢复播放
+                    assetTarget = url
+                    liked = await AudioLikeRepo.shared.isLiked(url: url)
+
+                    if let time = AudioStateRepo.getCurrentTime() {
+                        timeTarget = time
+                    }
+
+                    if Self.verbose {
+                        os_log("\(self.t)✅ 恢复播放: \(url.lastPathComponent) @ \(timeTarget)s")
+                    }
+                } else {
+                    // 文件不存在，播放第一首
+                    if Self.verbose {
+                        os_log("\(self.t)⚠️ 上次播放的文件不存在: \(url.lastPathComponent)")
+                    }
+
+                    if let firstUrl = try? await repo.getFirst() {
+                        assetTarget = firstUrl
+                        liked = await AudioLikeRepo.shared.isLiked(url: firstUrl)
+
+                        if Self.verbose {
+                            os_log("\(self.t)✅ 播放第一首: \(firstUrl.lastPathComponent)")
+                        }
+
+                        await MainActor.run {
+                            m.info("上次播放的文件已不存在，自动播放第一首")
+                        }
+                    }
                 }
             } else {
                 if Self.verbose {
@@ -80,6 +114,10 @@ extension AudioProgressRootView {
                 await man.play(asset, autoPlay: false, reason: reason)
                 man.seek(time: timeTarget, reason: reason)
                 man.setLike(liked, reason: reason)
+            } else {
+                if Self.verbose {
+                    os_log("\(self.t)⚠️ 没有初始化播放数据")
+                }
             }
         }
     }
@@ -97,15 +135,11 @@ extension AudioProgressRootView {
     /// 2. 恢复播放模式
     func handleOnAppear() {
         guard shouldActivateProgress else {
-            if Self.verbose {
-                os_log("\(self.t)⏭️ 进度管理跳过：当前插件不是音频插件")
-            }
             return
         }
 
         self.restorePlaying()
     }
-
 
     /// 处理播放器状态变化事件
     ///
@@ -134,15 +168,26 @@ extension AudioProgressRootView {
         guard shouldActivateProgress else { return }
 
         guard let url = url else {
-            if Self.verbose {
-                os_log("\(self.t)⏹️ 播放已停止")
-            }
             return
         }
 
         Task {
             AudioStateRepo.storeCurrent(url)
         }
+    }
+
+    /// 处理存储位置重置事件
+    ///
+    /// 当存储位置被重置时，停止当前播放。
+    func handleStorageLocationDidReset() {
+        guard shouldActivateProgress else { return }
+
+        if Self.verbose {
+            os_log("\(self.t)🛑 存储位置重置，记录播放进度")
+        }
+
+        // 直接在主线程上调用，避免后台线程发布 @Published 属性
+        AudioStateRepo.storeCurrentTime(man.currentTime)
     }
 }
 

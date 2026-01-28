@@ -17,7 +17,7 @@ private final class NotificationObserverHolder {
 /// 负责管理音频相关的后台任务，如文件大小计算、哈希计算等。
 actor AudioJobPlugin: SuperPlugin, SuperLog {
     static let emoji = "⚙️"
-    static let verbose = true
+    static let verbose = false
     static var shouldRegister: Bool { true }
     static var order: Int { 5 }
 
@@ -54,10 +54,6 @@ actor AudioJobPlugin: SuperPlugin, SuperLog {
 
     /// 设置存储位置变化监听
     private func setupStorageLocationObserver() async {
-        if Self.verbose {
-            os_log("\(Self.t)🔍 设置存储位置变化监听")
-        }
-
         await MainActor.run {
             // 监听存储位置重置事件
             NotificationCenter.default.publisher(for: .storageLocationDidReset)

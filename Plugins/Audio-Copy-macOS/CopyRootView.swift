@@ -7,41 +7,52 @@
     import SwiftUI
     import UniformTypeIdentifiers
 
-    struct CopyWorkerView: View, SuperEvent, SuperLog, SuperThread {
-        nonisolated static var emoji: String { "🖥️" }
-        nonisolated static let verbose = false
+    struct CopyRootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content: View {
+        nonisolated static var emoji: String { "🚛" }
+        nonisolated static var verbose: Bool { false }
+
+        @State var error: Error? = nil
+
+        private var content: Content
+
+        // CopyWorkerView 的状态
+        @State private var isDropping = false
+        @State private var outOfLimit = false
 
         @EnvironmentObject var m: MagicMessageProvider
-        @EnvironmentObject var p: PluginProvider
-        @EnvironmentObject private var worker: CopyWorker
 
-        @State var isDropping = false
-        @State var error: Error? = nil
-        @State var iCloudAvailable = true
-        @State private var outOfLimit = false
+        init(@ViewBuilder content: () -> Content) {
+            if Self.verbose {
+                os_log("\(Self.i)")
+            }
+
+            self.content = content()
+        }
 
         private var showProTips: Bool {
             outOfLimit && isDropping
         }
 
         var body: some View {
-            VStack {
-                AudioCopyTips(variant: .pro)
-                    .if(showProTips)
+            ZStack {
+                content
+                VStack {
+                    AudioCopyTips(variant: .pro)
+                        .if(showProTips)
 
-                AudioCopyTips(variant: .drop)
-                    .if(isDropping)
+                    AudioCopyTips(variant: .drop)
+                        .if(isDropping)
+                }
+                .infinite()
+                .onAppear(perform: onAppear)
+                .onDrop(of: [UTType.fileURL], isTargeted: self.$isDropping, perform: onDropProviders)
             }
-            .infinite()
-            .onAppear(perform: onAppear)
-            .onDrop(of: [UTType.fileURL], isTargeted: self.$isDropping, perform: onDropProviders)
-            .onCopyFiles(perform: onCopyFiles)
         }
     }
 
     // MARK: - Action
 
-    extension CopyWorkerView {
+    extension CopyRootView {
         @MainActor
         private func handleDrop(_ providers: [NSItemProvider]) async {
             let result = await onDrop(providers)
@@ -77,6 +88,12 @@
                 return false
             }
 
+            // 从 CopyPlugin 获取 worker
+            guard let worker = CopyPlugin.getWorker() else {
+                os_log(.error, "\(self.t)Failed to get worker")
+                return false
+            }
+
             var tasks: [(bookmark: Data, filename: String)] = []
             for provider in providers {
                 if provider.hasItemConformingToTypeIdentifier(UTType.fileURL.identifier) {
@@ -107,11 +124,8 @@
                 os_log("\(self.t)🎁 获取到 \(tasks.count) 个文件")
             }
 
-            if !tasks.isEmpty {
-                await MainActor.run {
-                    self.m.info("\(tasks.count) 个文件开始复制")
-                    worker.append(tasks: tasks, folder: disk)
-                }
+            if tasks.isNotEmpty {
+                await worker.append(tasks: tasks, folder: disk)
             }
 
             return true
@@ -120,10 +134,10 @@
 
     // MARK: - Event Handler
 
-    extension CopyWorkerView {
+    extension CopyRootView {
         func onAppear() {
             if Self.verbose {
-                os_log("\(self.t)onAppear")
+                os_log("\(self.t)🖥️ onAppear")
             }
             // 检查是否超出限制
             Task {
@@ -131,33 +145,6 @@
                 await MainActor.run {
                     self.outOfLimit = isOutOfLimit
                 }
-            }
-        }
-
-        func onCopyFiles(_ notification: Notification) {
-            if Self.verbose {
-                os_log("\(self.t)🍋🍋🍋 onCopyFiles")
-            }
-
-            guard let urls = notification.userInfo?["urls"] as? [URL],
-                  let folder = notification.userInfo?["folder"] as? URL else {
-                return
-            }
-
-            os_log("\(self.t)🍋🍋🍋 onCopyFiles, urls: \(urls.count), folder: \(folder.path)")
-
-            var tasks: [(bookmark: Data, filename: String)] = []
-            for url in urls {
-                do {
-                    let bookmarkData = try url.bookmarkData(options: .withSecurityScope, includingResourceValuesForKeys: nil, relativeTo: nil)
-                    tasks.append((bookmark: bookmarkData, filename: url.lastPathComponent))
-                } catch {
-                    os_log(.error, "\(self.t)Failed to create bookmark for url: \(url.path). Error: \(error.localizedDescription)")
-                }
-            }
-
-            if !tasks.isEmpty {
-                worker.append(tasks: tasks, folder: folder)
             }
         }
     }

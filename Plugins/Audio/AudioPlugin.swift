@@ -28,13 +28,11 @@ actor AudioPlugin: SuperPlugin, SuperLog {
 
     let title = "音乐"
     let description = "音频播放功能"
-    let iconName = "music.note"
+    let iconName: String = .iconMusicNote
 
     @MainActor func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {
         AnyView(AudioRootView { content() })
     }
-
-    @MainActor func getDisk() -> URL? { Self.getAudioDisk() }
 
     @MainActor static func getAudioDisk() -> URL? {
         guard let storageRoot = Config.getStorageRoot() else {

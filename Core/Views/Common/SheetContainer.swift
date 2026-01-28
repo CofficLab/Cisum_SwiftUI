@@ -23,11 +23,8 @@ struct SheetContainer<Content: View>: View {
     /// 内容视图
     @ViewBuilder var content: Content
 
-    /// VStack 的间距
-    private var spacing: CGFloat { 40 }
-
     var body: some View {
-        VStack(spacing: spacing) {
+        VStack(spacing: 40) {
             // 关闭按钮区域（仅 macOS 显示）
             HStack {
                 Spacer()
@@ -43,7 +40,7 @@ struct SheetContainer<Content: View>: View {
 
             // 用户内容
             content
-                .padding(.horizontal, 8)
+                .padding(.horizontal, 16)
                 .padding(.bottom, 24)
         }
         .background(Config.rootBackground)

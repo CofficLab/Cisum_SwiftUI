@@ -17,7 +17,6 @@ struct ControlView: View, SuperLog {
     @State var showHeroView = true
     @State var showBtnsView = true
     @State var showOperationView = false
-    @State var showStateView = true
 
     // MARK: 子视图是否展示
 
@@ -41,17 +40,9 @@ struct ControlView: View, SuperLog {
 
                     // MARK: 状态
 
-                    if showStateView {
-                        VStack(spacing: 10) {
-                            StateView()
-
-                            ForEach(p.plugins, id: \.id) { plugin in
-                                plugin.addStateView(currentSceneName: p.currentSceneName)
-                            }
-                        }
+                    StateView()
                         .frame(height: getStateHeight(geo))
                         .frame(maxWidth: .infinity)
-                    }
 
                     // MARK: 操作栏
 

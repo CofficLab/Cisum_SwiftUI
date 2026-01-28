@@ -8,6 +8,7 @@ struct StateView: View, SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var messageManager: StateProvider
     @EnvironmentObject var playMan: PlayMan
+    @EnvironmentObject var p: PluginProvider
     @Environment(\.demoMode) var isDemoMode
 
     nonisolated static let emoji = "🖥️"
@@ -20,7 +21,8 @@ struct StateView: View, SuperLog, SuperThread {
         if isDemoMode {
             EmptyView()
         } else {
-            VStack {
+            VStack(spacing: 10) {
+                // 内部状态消息
                 if messageManager.stateMessage.count > 0 {
                     makeInfoView(messageManager.stateMessage)
                 }
@@ -32,6 +34,11 @@ struct StateView: View, SuperLog, SuperThread {
                 // 播放过程中出现的错误
                 if let e = playMan.currentError {
                     makeErrorView(e)
+                }
+
+                // 各个插件提供的 state view
+                ForEach(p.plugins, id: \.id) { plugin in
+                    plugin.addStateView(currentSceneName: p.currentSceneName)
                 }
             }
         }
