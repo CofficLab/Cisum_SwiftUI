@@ -30,6 +30,10 @@ struct ContentView: View, SuperLog, SuperThread {
 
                 if showDB {
                     AppTabView()
+                        .if(isDemoMode == false)
+                    
+                    AppTabDemo()
+                        .if(isDemoMode)
                 }
 
                 StatusView()
@@ -105,8 +109,8 @@ extension ContentView {
     func onAppear() {
         height = Config.getWindowHeight()
 
-        if !showTabView {
-            app.closeDBView()
+        if showTabView && app.showDB == false {
+            app.showDBView()
         }
     }
 }
@@ -117,4 +121,16 @@ extension ContentView {
     ContentView()
         .inRootView()
         .withDebugBar()
+}
+
+#Preview("App - ShowTab") {
+    ContentView()
+        .inRootView()
+        .showTabView()
+        .withDebugBar()
+}
+
+#Preview("App Store Album Art") {
+    AppStoreAlbumArt()
+        .inMagicContainer(.macBook13, scale: 1)
 }

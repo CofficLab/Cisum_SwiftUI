@@ -10,6 +10,7 @@ struct AppStoreMinimal: View {
                     .font(.system(size: 100, design: .rounded))
                     .magicOceanGradient()
                     .padding(.bottom, 40)
+                    .shadowSm()
 
                 VStack(spacing: 16) {
                     FeatureItem(icon: .iconTrash, title: "没有广告", description: "纯净体验，专注音乐")
@@ -18,6 +19,7 @@ struct AppStoreMinimal: View {
                     FeatureItem(icon: .iconShowInFinder, title: "没有弹窗", description: "简洁界面，无干扰")
                 }
                 .padding(.vertical, 20)
+                .shadowSm()
             }
             .inMagicVStackCenter()
 
@@ -34,7 +36,17 @@ struct AppStoreMinimal: View {
         }
         .magicCentered()
         .withBackgroundDecorations()
-        .background(LinearGradient.pastel)
+        .background(
+            LinearGradient(
+                colors: [
+                    Color.orange.opacity(0.3),
+                    Color.pink.opacity(0.2),
+                    Color.purple.opacity(0.15)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        )
     }
 }
 

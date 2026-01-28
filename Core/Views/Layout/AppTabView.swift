@@ -114,3 +114,8 @@ extension AppTabView {
         .inRootView()
         .withDebugBar()
 }
+
+#Preview("App Store Album Art") {
+    AppStoreAlbumArt()
+        .inMagicContainer(.macBook13, scale: 1)
+}

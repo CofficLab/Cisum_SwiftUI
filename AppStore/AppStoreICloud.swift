@@ -1,47 +1,47 @@
 import MagicKit
 import SwiftUI
 
-struct AppStoreAlbumArt: View {
+struct AppStoreICloud: View {
     var body: some View {
         Group {
             Group {
-                Text("专辑封面")
+                Text("iCloud 云同步")
                     .bold()
                     .font(.system(size: 100, design: .rounded))
                     .foregroundStyle(
                         LinearGradient(
-                            colors: [.purple, .pink],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
+                            colors: [.blue, .cyan],
+                            startPoint: .leading,
+                            endPoint: .trailing
                         )
                     )
                     .padding(.bottom, 40)
                     .shadowSm()
 
                 VStack(spacing: 16) {
-                    AlbumFeatureItem(
-                        icon: "photo.fill",
-                        title: "高清封面",
-                        description: "自动获取专辑封面，无需手动添加",
-                        color: .purple
+                    ICFeatureItem(
+                        icon: "icloud",
+                        title: "云端同步",
+                        description: "音乐库实时同步，随时随地访问",
+                        color: .blue
                     )
-                    AlbumFeatureItem(
-                        icon: "square.grid.3x3.fill",
-                        title: "网格布局",
-                        description: "整洁的网格展示，快速浏览专辑",
-                        color: .pink
+                    ICFeatureItem(
+                        icon: "ipad.and.iphone",
+                        title: "多设备同步",
+                        description: "iPhone、iPad、Mac 数据无缝流转",
+                        color: .cyan
                     )
-                    AlbumFeatureItem(
-                        icon: "sparkles",
-                        title: "毛玻璃效果",
-                        description: "精美的毛玻璃质感，视觉享受",
-                        color: .red
+                    ICFeatureItem(
+                        icon: "shield",
+                        title: "安全备份",
+                        description: "自动备份到 iCloud，数据永不丢失",
+                        color: .teal
                     )
-                    AlbumFeatureItem(
-                        icon: "arrow.down.circle.fill",
-                        title: "封面下载",
-                        description: "自动下载并缓存，离线也能查看",
-                        color: .orange
+                    ICFeatureItem(
+                        icon: "arrow.clockwise",
+                        title: "自动同步",
+                        description: "添加或修改后自动同步，无需手动操作",
+                        color: .mint
                     )
                 }
                 .padding(.vertical, 20)
@@ -54,10 +54,9 @@ struct AppStoreAlbumArt: View {
             ContentView()
                 .inRootView()
                 .inDemoMode()
-                .showTabView()
+                .hideTabView()
                 .frame(width: Config.minWidth)
                 .frame(height: 650)
-                .background(.background.opacity(0.5))
                 .roundedLarge()
                 .shadowSm()
         }
@@ -66,9 +65,9 @@ struct AppStoreAlbumArt: View {
         .background(
             LinearGradient(
                 colors: [
-                    Color.purple.opacity(0.3),
-                    Color.pink.opacity(0.25),
-                    Color.red.opacity(0.2)
+                    Color.blue.opacity(0.3),
+                    Color.cyan.opacity(0.2),
+                    Color.teal.opacity(0.1)
                 ],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
@@ -77,9 +76,9 @@ struct AppStoreAlbumArt: View {
     }
 }
 
-// MARK: - Album Feature Item
+// MARK: - ICFeature Item
 
-private struct AlbumFeatureItem: View {
+private struct ICFeatureItem: View {
     let icon: String
     let title: String
     let description: String
@@ -127,7 +126,7 @@ private struct AlbumFeatureItem: View {
 
 // MARK: - Preview
 
-#Preview("App Store Album Art") {
-    AppStoreAlbumArt()
+#Preview("App Store iCloud") {
+    AppStoreICloud()
         .inMagicContainer(.macBook13, scale: 1)
 }
