@@ -226,7 +226,6 @@
 			packageReferences = (
 				F5D179F42F10D996005CA21F /* XCRemoteSwiftPackageReference "MagicDevice" */,
 				0B4A0AEE2F2906CD007265A6 /* XCRemoteSwiftPackageReference "MagicPlayMan" */,
-				F54D180B2F29BA55004D4A65 /* XCLocalSwiftPackageReference "../MagicKit" */,
 			);
 			productRefGroup = 0B9C1C342AAF18FE001A26AF;
 			projectDirPath = "";
@@ -522,13 +521,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCLocalSwiftPackageReference section */
-		F54D180B2F29BA55004D4A65 /* XCLocalSwiftPackageReference "../MagicKit" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../MagicKit;
-		};
-/* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
 		0B4A0AEE2F2906CD007265A6 /* XCRemoteSwiftPackageReference "MagicPlayMan" */ = {
