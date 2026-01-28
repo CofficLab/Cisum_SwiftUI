@@ -9,49 +9,16 @@ struct AppTabDemo: View, SuperLog, SuperThread {
     @EnvironmentObject var p: PluginProvider
     @Environment(\.demoMode) var isDemoMode
 
-    @State private var tab: String = "DB"
-    @State private var currentTabView: AnyView?
-
     var body: some View {
-            buildTabView()
-            #if os(macOS)
-                .tabViewStyle(GroupedTabViewStyle())
-            #endif
-    }
-}
+        // 收集所有提供的 Tab 视图，只显示第一个
+        let tabViews = p.getTabViews(reason: self.className)
 
-// MARK: - Builder
-
-extension AppTabDemo {
-    /// 构建 TabView
-    func buildTabView() -> AnyView {
-        // 收集所有提供的 Tab 视图及标签
-        let tabViews = p.plugins.compactMap { plugin in
-            plugin.addTabView(reason: self.className, currentSceneName: p.currentSceneName)
-        }
-
-        let tabView = TabView(selection: $tab) {
-            ForEach(Array(tabViews.enumerated()), id: \.offset) { index, item in
-                item.view
-                    .tag("TAB\(index)")
-                    .tabItem {
-                        Label(item.label, systemImage: "music.note.list")
-                    }
+        return VStack {
+            if let firstTab = tabViews.last {
+                firstTab.view
             }
-
-            SettingView()
-                .tag("Setting")
-                .tabItem {
-                    Label("设置", systemImage: "gear")
-                }
         }
-        .frame(maxHeight: .infinity)
-        #if os(macOS)
-            .padding(.top, 2)
-        #endif
-            .background(.background)
-
-        return AnyView(tabView)
+        .infinite()
     }
 }
 
@@ -60,6 +27,14 @@ extension AppTabDemo {
 #Preview("App") {
     ContentView()
         .inRootView()
+        .withDebugBar()
+}
+
+#Preview("App - Demo") {
+    ContentView()
+        .inRootView()
+        .showTabView()
+        .inDemoMode()
         .withDebugBar()
 }
 
