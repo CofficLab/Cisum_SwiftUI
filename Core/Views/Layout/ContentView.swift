@@ -30,10 +30,6 @@ struct ContentView: View, SuperLog, SuperThread {
 
                 if showDB {
                     AppTabView()
-                        .if(isDemoMode == false)
-                    
-                    AppTabDemo()
-                        .if(isDemoMode)
                 }
 
                 StatusView()
@@ -131,5 +127,5 @@ extension ContentView {
 
 #Preview("App Store Album Art") {
     AppStoreAlbumArt()
-        .inMagicContainer(.macBook13, scale: 1)
+        .inMagicContainer(.macBook13, scale: 0.5)
 }

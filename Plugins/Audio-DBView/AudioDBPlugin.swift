@@ -28,3 +28,11 @@ actor AudioDBPlugin: SuperPlugin {
         .inRootView()
         .withDebugBar()
 }
+
+#Preview("App - Demo") {
+    ContentView()
+        .inRootView()
+        .showTabView()
+        .inDemoMode()
+        .withDebugBar()
+}
