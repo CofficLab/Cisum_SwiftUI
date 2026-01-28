@@ -1,3 +1,4 @@
+#if os(macOS)
 import MagicKit
 import MagicUI
 import OSLog
@@ -85,3 +86,4 @@ extension CopyStateView {
         .inRootView()
         .withDebugBar()
 }
+#endif

@@ -1,3 +1,4 @@
+#if os(macOS)
 import MagicKit
 import OSLog
 import SwiftData
@@ -104,3 +105,4 @@ struct CopyList: View, SuperLog, SuperThread {
         .inRootView()
         .withDebugBar()
 }
+#endif
