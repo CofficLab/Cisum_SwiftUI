@@ -74,6 +74,7 @@ struct AppStoreAlbumArt: View {
                 endPoint: .bottomTrailing
             )
         )
+        .background(.background)
     }
 }
 
@@ -129,5 +130,5 @@ private struct AlbumFeatureItem: View {
 
 #Preview("App Store Album Art") {
     AppStoreAlbumArt()
-        .inMagicContainer(.macBook13, scale: 1)
+        .inMagicContainer(.macBook13, scale: 0.5)
 }

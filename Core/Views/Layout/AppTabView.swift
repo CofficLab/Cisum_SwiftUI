@@ -117,5 +117,5 @@ extension AppTabView {
 
 #Preview("App Store Album Art") {
     AppStoreAlbumArt()
-        .inMagicContainer(.macBook13, scale: 1)
+        .inMagicContainer(.macBook13, scale: 0.4)
 }
