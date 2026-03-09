@@ -508,7 +508,7 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     /// - Throws: 如果查询操作失败则抛出错误
     func getNextOf(_ url: URL?, verbose: Bool = false) throws -> AudioModel? {
         if verbose {
-            os_log("\(self.t)NextOf -> \(url?.lastPathComponent ?? "-")")
+            os_log("\(self.t)⏩ [\(url?.lastPathComponent ?? "-")] NextOf")
         }
 
         guard let url = url else {

@@ -88,7 +88,7 @@ final class StoreState: ObservableObject, SuperLog {
                 let t = StoreService.tier(for: transaction.productID)
                 detectedTier = max(detectedTier, t)
 
-                if self.verbose {
+                if verbose {
                     os_log("\(self.t)✅ 非续费订阅: \(transaction.productID), tier: \(t.rawValue)")
                 }
 
@@ -115,7 +115,11 @@ final class StoreState: ObservableObject, SuperLog {
         if self.verbose {
             os_log("\(self.t)🎯 校准结果: detectedTier=\(detectedTier.rawValue), detectedExpire=\(detectedExpire?.description ?? "nil")")
         }
-        update(entitlement: PurchaseInfo(tier: detectedTier, expiresAt: detectedExpire))
+
+        // 在主线程上更新状态
+        await MainActor.run {
+            update(entitlement: PurchaseInfo(tier: detectedTier, expiresAt: detectedExpire))
+        }
     }
 }
 

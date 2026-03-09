@@ -7,7 +7,7 @@ import WidgetKit
 struct WidgetData: Codable, SuperLog {
     static let suiteName = "group.com.yueyi.cisum"
     static let emoji = "🐶"
-    static let verbose = true
+    static let verbose = false
 
     var title: String
     var artist: String

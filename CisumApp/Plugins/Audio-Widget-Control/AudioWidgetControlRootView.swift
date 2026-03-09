@@ -8,7 +8,7 @@ import CoreFoundation
 /// 本视图不可见，仅用于监听通知并执行播放控制
 struct AudioWidgetControlRootView: View, SuperLog {
     nonisolated static let emoji = "🎛️"
-    private static var verbose: Bool { true }
+    private static var verbose: Bool { false }
 
     @EnvironmentObject var man: MagicPlayMan
 
