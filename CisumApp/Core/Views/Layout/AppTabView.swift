@@ -1,5 +1,4 @@
 import CisumUI
-import MagicKit
 import OSLog
 import SwiftUI
 
@@ -44,7 +43,7 @@ extension AppTabView {
                 item.view
                     .tag(index)
                     .tabItem {
-                        Label(item.label, systemImage: .iconMusicNote)
+                        Label(item.label, systemImage: .cisumIconMusicNote)
                     }
             }
 
@@ -73,7 +72,7 @@ extension AppTabView {
             tabs: Array(allTabs.enumerated()).map { index, item in
                 AppTabBar.Tab(
                     title: item.label,
-                    icon: index < tabViews.count ? .iconMusicNote : "gear",
+                    icon: index < tabViews.count ? .cisumIconMusicNote : "gear",
                     id: String(index)
                 )
             },
@@ -86,8 +85,8 @@ extension AppTabView {
             )
         )
         .padding(6)
-        .pt1()
-        .withDivider(spacing: 2)
+        .cisumPt1()
+        .cisumDivider(spacing: 2)
 
         let contentView: AnyView = {
             guard selectedTabIndex < allTabs.count else {
@@ -129,7 +128,7 @@ extension AppTabView {
             .padding(.vertical, 8)
             .foregroundColor(isSelected ? .accentColor : .secondary)
             .background(isSelected ? Color.accentColor.opacity(0.1) : Color.clear)
-            .roundedMedium()
+            .cisumRoundedMedium()
         }
         .buttonStyle(.plain)
     }
@@ -173,5 +172,5 @@ extension AppTabView {
 
 #Preview("App Store Album Art") {
     AppStoreAlbumArt()
-        .inMagicContainer(.macBook13, scale: 1)
+        .cisumPreviewContainer(.cisumMacBook13, scale: 1)
 }

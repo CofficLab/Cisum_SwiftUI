@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import OSLog
 import StoreKit
@@ -36,7 +37,7 @@ struct ProductsSubscription: View, SuperEvent, SuperLog, SuperThread {
                                         Text(group.name)
                                             .font(.title3)
                                             .fontWeight(.semibold)
-                                            .if(group.name.isNotEmpty)
+                                            .cisumIf(group.name.isNotEmpty)
 
                                         Text("\(group.subscriptions.count) 个订阅选项", tableName: "Store")
                                             .font(.caption)
@@ -61,7 +62,7 @@ struct ProductsSubscription: View, SuperEvent, SuperLog, SuperThread {
                         }
                     }
                 }
-                .inScrollView()
+                .cisumScrollView()
             }
         }
         .onAppear(perform: onAppear)

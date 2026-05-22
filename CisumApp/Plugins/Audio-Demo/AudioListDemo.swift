@@ -1,3 +1,4 @@
+import CisumUI
 import MagicAlert
 import MagicKit
 import OSLog
@@ -75,7 +76,7 @@ struct AudioListDemo: View, SuperLog {
                 }
             }
         }
-        .if(self.isDemoMode)
+        .cisumIf(self.isDemoMode)
     }
 }
 
@@ -85,10 +86,10 @@ struct AudioListDemo: View, SuperLog {
     AudioListDemo()
         .inRootView()
         .inDemoMode()
-        .inMagicContainer()
+        .cisumPreviewContainer()
 }
 
 #Preview("App Store Album Art") {
     AppStoreAlbumArt()
-        .inMagicContainer(.macBook13, scale: 1)
+        .cisumPreviewContainer(.cisumMacBook13, scale: 1)
 }

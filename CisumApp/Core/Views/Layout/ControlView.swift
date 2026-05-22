@@ -1,5 +1,4 @@
 import CisumUI
-import MagicKit
 import OSLog
 import SwiftData
 import SwiftUI
@@ -35,7 +34,7 @@ struct ControlView: View, SuperLog {
 
                     if showHeroView {
                         HeroView()
-                            .infinite()
+                            .cisumInfinite()
                     }
 
                     // MARK: 状态

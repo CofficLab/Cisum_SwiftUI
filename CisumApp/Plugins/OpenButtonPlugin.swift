@@ -1,11 +1,10 @@
 import CisumUI
-import MagicKit
 import OSLog
 import SwiftUI
 
 actor OpenButtonPlugin: SuperPlugin, SuperLog {
     let description: String = "当前资源打开按钮"
-    let iconName: String = .iconFinder
+    let iconName: String = .cisumIconFinder
     static var shouldRegister: Bool { true }
     static var verbose: Bool { true }
     nonisolated static let emoji = "😜"
@@ -33,7 +32,7 @@ private struct OpenCurrentButtonView: View, SuperLog {
         }
         return Group {
             if let url = url {
-                AppIconButton(systemImage: .iconShowInFinder, size: .regular) {
+                AppIconButton(systemImage: .cisumIconShowInFinder, size: .regular) {
                     url.openInFinder()
                 }
                     .id(url.absoluteString)

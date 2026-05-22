@@ -10,6 +10,8 @@ typealias PlayAsset = MagicAsset
 typealias PlayMode = MagicPlayMode
 typealias MagicApp = MagicKit.MagicApp
 typealias SuperLog = MagicKit.SuperLog
+typealias SuperEvent = MagicKit.SuperEvent
+typealias SuperThread = MagicKit.SuperThread
 typealias MagicSettingSection = CisumUI.MagicSettingSection
 typealias MagicSettingRow = CisumUI.MagicSettingRow
 

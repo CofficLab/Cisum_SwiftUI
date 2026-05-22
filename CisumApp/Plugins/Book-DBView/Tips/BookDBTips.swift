@@ -1,5 +1,4 @@
 import CisumUI
-import MagicKit
 import SwiftUI
 
 /**
@@ -62,7 +61,7 @@ struct BookDBTips: View {
         }
         .padding()
         .background(appTheme.surface.opacity(0.85))
-        .roundedMedium()
+        .cisumRoundedMedium()
         .shadow(radius: 8)
     }
 }

@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import SwiftUI
 
@@ -32,10 +33,10 @@ struct AppStoreICloud: View {
                         )
                     }
                     .frame(width: geo.size.width * 0.4)
-                    .py4()
+                    .cisumPy4()
                 }
                 .frame(width: geo.size.width * 0.5)
-                .inMagicVStackCenter()
+                .cisumVStackCenter()
 
                 ContentView()
                     .inRootView()
@@ -43,8 +44,8 @@ struct AppStoreICloud: View {
                     .inDownloadingMode()
                     .frame(width: max(Config.minWidth, geo.size.width * 0.15))
                     .frame(height: geo.size.height * 0.4)
-                    .roundedLarge()
-                    .shadowSm()
+                    .cisumRoundedLarge()
+                    .cisumShadowSm()
                     .frame(width: geo.size.width * 0.5)
                     .scaleEffect(2)
             }
@@ -57,5 +58,5 @@ struct AppStoreICloud: View {
 
 #Preview("App Store iCloud") {
     AppStoreICloud()
-        .inMagicContainer(.macBook13, scale: 0.5)
+        .cisumPreviewContainer(.cisumMacBook13, scale: 0.5)
 }

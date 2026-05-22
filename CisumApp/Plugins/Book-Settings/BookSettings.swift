@@ -1,5 +1,4 @@
 import CisumUI
-import MagicKit
 import OSLog
 import SwiftUI
 
@@ -16,27 +15,27 @@ struct BookSettings: View, SuperLog {
         Group {
             if let disk = disk {
                 AppSettingsSection(title: "Audiobook Library") {
-                    AppSettingsInfoRow(title: "Library Size", description: description, systemImage: .iconMusicLibrary) {
+                    AppSettingsInfoRow(title: "Library Size", description: description, systemImage: .cisumIconMusicLibrary) {
                         if let diskSize = diskSize {
                             Text(diskSize)
                         }
                     }
 
                     #if os(macOS)
-                        AppSettingsInfoRow(title: "Open Library", description: "View in Finder", systemImage: .iconShowInFinder, action: {
+                        AppSettingsInfoRow(title: "Open Library", description: "View in Finder", systemImage: .cisumIconShowInFinder, action: {
                             disk.openInFinder()
                         }) {
-                            Image(systemName: .iconShowInFinder)
+                            Image(systemName: .cisumIconShowInFinder)
                         }
                     #endif
 
-                    AppSettingsInfoRow(title: "File Count", description: "Total files in library", systemImage: .iconDocument) {
+                    AppSettingsInfoRow(title: "File Count", description: "Total files in library", systemImage: .cisumIconDocument) {
                         Text("\(fileCount) files")
                     }
                 }
             } else {
                 AppSettingsSection(title: "Music Library") {
-                    AppSettingsInfoRow(title: "Error", description: description, systemImage: .iconMusicLibrary) {
+                    AppSettingsInfoRow(title: "Error", description: description, systemImage: .cisumIconMusicLibrary) {
                         Text("Cannot get music library information")
                     }
                 }

@@ -1,6 +1,5 @@
 import CisumUI
 import MagicAlert
-import MagicKit
 import OSLog
 import StoreKit
 import SwiftUI
@@ -60,11 +59,11 @@ struct RestoreView: View, SuperEvent, SuperLog, SuperThread {
 
                 // Button area
                 successButtons
-                    .if(self.restoreState == .success)
+                    .cisumIf(self.restoreState == .success)
 
                 restoreButton
-                    .if(self.restoreState == .failed || self.restoreState == .idle)
-            }.inMagicVStackCenter()
+                    .cisumIf(self.restoreState == .failed || self.restoreState == .idle)
+            }.cisumVStackCenter()
         }
     }
 

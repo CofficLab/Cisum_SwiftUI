@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import OSLog
 import SwiftUI
@@ -38,7 +39,7 @@ struct BookTile: View, SuperThread, SuperLog, Equatable {
             if let cover = cover {
                 cover
             } else {
-                MagicBackground.deepForest.opacity(0.2)
+                CisumMagicBackground.deepForest.opacity(0.2)
             }
 
             HStack {

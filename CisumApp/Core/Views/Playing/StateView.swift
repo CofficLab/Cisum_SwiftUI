@@ -1,5 +1,4 @@
 import CisumUI
-import MagicKit
 import MagicPlayMan
 import OSLog
 import SwiftData
@@ -52,7 +51,7 @@ struct StateView: View, SuperLog, SuperThread {
 extension StateView {
     func makeInfoView(_ i: String) -> some View {
         HStack {
-            Image.info
+            Image.cisumInfo
                 .foregroundStyle(appTheme.primary)
             Text(i)
                 .foregroundStyle(appTheme.textSecondary)
@@ -69,7 +68,7 @@ extension StateView {
 
     func makeErrorView(_ e: Error) -> some View {
         HStack {
-            Image.info
+            Image.cisumInfo
                 .foregroundStyle(appTheme.error)
             // 如果是 PlaybackError，使用本地化描述
             if let playbackError = e as? PlaybackState.PlaybackError {

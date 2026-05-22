@@ -1,3 +1,4 @@
+import CisumUI
 import OSLog
 import SwiftUI
 
@@ -13,7 +14,7 @@ struct GuideDoneView: View, SuperLog {
     var body: some View {
         LogoView(rotationSpeed: 0.1)
             .padding()
-            .inMagicVStackCenter()
+            .cisumVStackCenter()
             .onChange(of: isActive, handleActiveChange)
             .onAppear(perform: handleOnAppear)
     }

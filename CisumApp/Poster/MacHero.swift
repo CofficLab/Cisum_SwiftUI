@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import SwiftUI
 
@@ -13,7 +14,7 @@ struct AppStoreHero: View {
                         .asPosterSubTitle()
                 }
                 .frame(width: geo.size.width * 0.5)
-                .inMagicVStackCenter()
+                .cisumVStackCenter()
 
                 ZStack {
                     ContentLayout()
@@ -22,7 +23,7 @@ struct AppStoreHero: View {
                         .inDemoMode()
                         .frame(width: max(Config.minWidth, geo.size.width * 0.15))
                         .frame(height: geo.size.height * 0.4)
-                        .roundedLarge()
+                        .cisumRoundedLarge()
                         .rotation3DEffect(
                             .degrees(-8),
                             axis: (x: 0, y: 0, z: 1),
@@ -30,7 +31,7 @@ struct AppStoreHero: View {
                             perspective: 1.0
                         )
                         .offset(x: -70, y: -20)
-                        .shadowSm()
+                        .cisumShadowSm()
                         .scaleEffect(2)
 
                     ContentLayout()
@@ -40,8 +41,8 @@ struct AppStoreHero: View {
                         .frame(width: max(Config.minWidth, geo.size.width * 0.15))
                         .frame(height: geo.size.height * 0.4)
                         .background(.background.opacity(0.5))
-                        .roundedLarge()
-                        .shadowXl()
+                        .cisumRoundedLarge()
+                        .cisumShadowXl()
                         .rotation3DEffect(
                             .degrees(8),
                             axis: (x: 0, y: 0, z: 1),
@@ -62,5 +63,5 @@ struct AppStoreHero: View {
 
 #Preview("App Store Hero") {
     AppStoreHero()
-        .inMagicContainer(.macBook13, scale: 0.5)
+        .cisumPreviewContainer(.cisumMacBook13, scale: 0.5)
 }

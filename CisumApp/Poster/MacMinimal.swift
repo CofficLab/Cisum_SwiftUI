@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import SwiftUI
 
@@ -26,23 +27,23 @@ struct AppStoreMinimal: View {
                             description: "保护隐私，无需账号"
                         )
                         AppStoreFeatureItem(
-                            icon: .iconInfo,
+                            icon: .cisumIconInfo,
                             title: "没有弹窗",
                             description: "简洁界面，无干扰"
                         )
                     }
                     .frame(width: geo.size.width * 0.4)
-                    .py4()
+                    .cisumPy4()
                 }
                 .frame(width: geo.size.width * 0.5)
-                .inMagicVStackCenter()
+                .cisumVStackCenter()
 
                 ContentLayout()
                     .hideDetail()
                     .inRootView()
                     .inDemoMode()
-                    .roundedLarge()
-                    .shadowSm()
+                    .cisumRoundedLarge()
+                    .cisumShadowSm()
                     .frame(width: max(Config.minWidth, geo.size.width * 0.15))
                     .frame(height: geo.size.height * 0.4)
                     .frame(width: geo.size.width * 0.5)
@@ -57,5 +58,5 @@ struct AppStoreMinimal: View {
 
 #Preview("App Store Minimal") {
     AppStoreMinimal()
-        .inMagicContainer(.macBook13, scale: 0.5)
+        .cisumPreviewContainer(.cisumMacBook13, scale: 0.5)
 }

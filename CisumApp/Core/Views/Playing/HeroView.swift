@@ -1,5 +1,4 @@
 import CisumUI
-import MagicKit
 import OSLog
 import SwiftUI
 
@@ -41,7 +40,7 @@ struct HeroView: View, SuperLog {
                     .frame(maxWidth: .infinity)
                     .frame(height: titleViewHeight)
             }
-            .infinite()
+            .cisumInfinite()
         }
         .ignoresSafeArea(edges: Config.isDesktop ? .horizontal : .all)
     }

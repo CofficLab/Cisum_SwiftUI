@@ -1,3 +1,4 @@
+import CisumUI
 import SwiftUI
 import MagicAlert
 import MagicKit
@@ -38,7 +39,7 @@ struct BookPoster: View {
                 }
             }) {
                 HStack(spacing: 8) {
-                    Image(systemName: .iconArrowUpCircle)
+                    Image(systemName: .cisumIconArrowUpCircle)
                     Text("进入有声书仓库")
                 }
                 .frame(maxWidth: .infinity)
@@ -110,7 +111,7 @@ struct BookPoster: View {
                     }
                     Spacer()
                 }
-                .background(MagicBackground.deepOceanCurrent)
+                .background(CisumMagicBackground.deepOceanCurrent)
                 .clipShape(RoundedRectangle(cornerSize: CGSize(width: 10, height: 10)))
                 .frame(width: 130)
                 .frame(height: 180)

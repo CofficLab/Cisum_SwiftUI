@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import SwiftUI
 
@@ -186,6 +187,6 @@ extension PurchaseViewDemo {
 
 #Preview("App Store PurchaseView") {
     AppStorePurchaseView()
-        .inMagicContainer(.macBook13, scale: 0.5)
+        .cisumPreviewContainer(.cisumMacBook13, scale: 0.5)
         .colorScheme(.light)
 }

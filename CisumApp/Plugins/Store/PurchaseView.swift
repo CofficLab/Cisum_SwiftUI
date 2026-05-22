@@ -1,5 +1,4 @@
 import CisumUI
-import MagicKit
 import OSLog
 import StoreKit
 import SwiftUI
@@ -50,7 +49,7 @@ struct PurchaseView: View, SuperLog {
                 .padding(.vertical, 16)
                 .infiniteWidth()
             }
-            .px2()
+            .cisumPx2()
         }
     }
 }

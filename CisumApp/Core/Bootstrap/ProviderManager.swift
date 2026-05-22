@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import OSLog
 import SwiftData
@@ -39,7 +40,7 @@ final class ProviderManager: SuperLog {
         self.man = PlayMan(
             verbose: Self.verbose,
             locale: .current,
-            defaultArtwork: Image.musicFill,
+            defaultArtwork: Image.cisumMusicFill,
             defaultArtworkBuilder: {
                 LogoView()
             }

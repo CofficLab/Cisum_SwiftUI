@@ -35,7 +35,14 @@ actor AudioPlayModeRepo: SuperLog {
     /// 保存播放模式
     /// - Parameter mode: 要保存的播放模式
     func storePlayMode(_ mode: PlayMode) {
-        let modeString = mode.rawValue
+        storePlayModeRawValue(mode.rawValue, shortName: mode.shortName)
+    }
+
+    /// 保存播放模式
+    /// - Parameters:
+    ///   - modeString: 播放模式的原始值
+    ///   - shortName: 用于日志输出的模式名称
+    func storePlayModeRawValue(_ modeString: String, shortName: String) {
         UserDefaults.standard.set(modeString, forKey: Self.playModeKey)
 
         // 将模式同步到 CloudKit
@@ -43,7 +50,7 @@ actor AudioPlayModeRepo: SuperLog {
         NSUbiquitousKeyValueStore.default.synchronize()
 
         if Self.verbose {
-            os_log("\(self.t)💾 保存播放模式: \(mode.shortName)")
+            os_log("\(self.t)💾 保存播放模式: \(shortName)")
         }
     }
 
