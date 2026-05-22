@@ -3,7 +3,7 @@ import SwiftUI
 
 actor ThemeSettingsPlugin: SuperPlugin {
     static var shouldRegister: Bool { true }
-    static var order: Int { 126 }
+    static var order: Int { 140 }
 
     let title = "主题"
     let description = "切换应用主题"
