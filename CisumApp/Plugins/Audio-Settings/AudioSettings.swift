@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import OSLog
 import SwiftUI
@@ -14,43 +15,29 @@ struct AudioSettings: View, SuperLog {
     var body: some View {
         Group {
             if let disk = disk {
-                MagicSettingSection(title: String(localized: "Music Library", table: "Audio-Settings")) {
-                    MagicSettingRow(title: String(localized: "Library Size", table: "Audio-Settings"), description: description, icon: .iconMusicLibrary, content: {
-                        HStack {
-                            if let diskSize = diskSize {
-                                Text(diskSize)
-                                    .font(.footnote)
-                            }
+                AppSettingsSection(title: String(localized: "Music Library", table: "Audio-Settings")) {
+                    AppSettingsInfoRow(title: String(localized: "Library Size", table: "Audio-Settings"), description: description, systemImage: .iconMusicLibrary) {
+                        if let diskSize = diskSize {
+                            Text(diskSize)
                         }
+                    }
 
-                    })
-
-                    MagicSettingRow(title: String(localized: "Open Library", table: "Audio-Settings"), description: String(localized: "View in Finder", table: "Audio-Settings"), icon: .iconShowInFinder, content: {
+                    AppSettingsInfoRow(title: String(localized: "Open Library", table: "Audio-Settings"), description: String(localized: "View in Finder", table: "Audio-Settings"), systemImage: .iconShowInFinder, action: {
+                        disk.openInFinder()
+                    }) {
                         Image(systemName: .iconShowInFinder)
-                            .frame(width: 28)
-                            .frame(height: 28)
-                            .background(.regularMaterial, in: .circle)
-                            .shadowSm()
-                            .hoverScale(105)
-                            .inButtonWithAction {
-                                disk.openInFinder()
-                            }
-                    })
+                    }
                     .if(Config.isDesktop)
 
-                    MagicSettingRow(title: String(localized: "File Count", table: "Audio-Settings"), description: String(localized: "Total files in library", table: "Audio-Settings"), icon: .iconDocument, content: {
-                        HStack {
-                            Text("\(fileCount) files", tableName: "Audio-Settings")
-                                .font(.footnote)
-                        }
-                    })
+                    AppSettingsInfoRow(title: String(localized: "File Count", table: "Audio-Settings"), description: String(localized: "Total files in library", table: "Audio-Settings"), systemImage: .iconDocument) {
+                        Text("\(fileCount) files", tableName: "Audio-Settings")
+                    }
                 }
             } else {
-                MagicSettingSection(title: String(localized: "Music Library", table: "Audio-Settings")) {
-                    MagicSettingRow(title: String(localized: "Error", table: "Audio-Settings"), description: description, icon: .iconMusicLibrary, content: {
+                AppSettingsSection(title: String(localized: "Music Library", table: "Audio-Settings")) {
+                    AppSettingsInfoRow(title: String(localized: "Error", table: "Audio-Settings"), description: description, systemImage: .iconMusicLibrary) {
                         Text("Cannot get music library information", tableName: "Audio-Settings")
-                            .font(.footnote)
-                    })
+                    }
                 }
             }
         }

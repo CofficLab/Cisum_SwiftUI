@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import SwiftUI
 
@@ -18,12 +19,13 @@ struct StorageSettingView: View, SuperLog {
     }
 
     var body: some View {
-        MagicSettingSection(title: "Media Storage Location") {
+        AppSettingsSection(title: "Media Storage Location") {
             VStack(spacing: 0) {
-                MagicSettingRow(
+                AppSettingsInfoRow(
                     title: "iCloud Drive",
                     description: "Store media files in iCloud Drive",
-                    icon: .iconCloud,
+                    systemImage: .iconCloud,
+                    isSelected: location == .icloud,
                     action: {
                         showMigrationProgress = true
                         targetLocation = .icloud
@@ -34,12 +36,12 @@ struct StorageSettingView: View, SuperLog {
                             .foregroundColor(.accentColor)
                     }
                 }
-                Divider().padding(5)
 
-                MagicSettingRow(
+                AppSettingsInfoRow(
                     title: "Local",
                     description: "Store within app, data will be lost if app is deleted",
-                    icon: .iconFolder,
+                    systemImage: .iconFolder,
+                    isSelected: location == .local,
                     action: {
                         showMigrationProgress = true
                         targetLocation = .local

@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import SwiftUI
 
@@ -14,6 +15,7 @@ struct BookDBTips: View {
     }
 
     @EnvironmentObject var app: AppProvider
+    @LumiTheme private var appTheme
     var variant: Variant = .empty
 
     var supportedFormats: String {
@@ -21,64 +23,46 @@ struct BookDBTips: View {
     }
 
     var body: some View {
-        VStack {
+        VStack(spacing: 20) {
             switch variant {
             case .empty:
-                VStack(spacing: 20) {
-                    HStack {
-                        Image(systemName: "info.circle.fill")
-                            .foregroundStyle(.yellow)
-                        Text(Config.isDesktop ? "将有声书文件夹拖到这里可添加" : "仓库为空", tableName: "Book-DBView")
-                            .font(.title3)
-                            .foregroundStyle(.white)
-                    }
-                    Text("支持的格式：\(supportedFormats)", tableName: "Book-DBView")
-                        .font(.subheadline)
-                        .foregroundStyle(.white)
+                AppEmptyState(
+                    icon: "book.closed",
+                    title: Config.isDesktop ? "将有声书文件夹拖到这里可添加" : "仓库为空",
+                    description: String(localized: "支持的格式：\(supportedFormats)", table: "Book-DBView")
+                )
+                .frame(minHeight: 160)
 
-                    #if os(macOS)
-                        HStack { Text("或", tableName: "Book-DBView").foregroundStyle(.white) }
-                        Button(
-                            action: {
-                                if let disk = BookPlugin.getBookDisk() {
-                                    disk.openFolder()
-                                }
-                            },
-                            label: {
-                                Label { Text("打开仓库目录并放入文件", tableName: "Book-DBView") } icon: { Image(systemName: "doc.viewfinder.fill") }
+                #if os(macOS)
+                    Text("或", tableName: "Book-DBView")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    Button(
+                        action: {
+                            if let disk = BookPlugin.getBookDisk() {
+                                disk.openFolder()
                             }
-                        )
-                    #endif
+                        },
+                        label: {
+                            Label { Text("打开仓库目录并放入文件", tableName: "Book-DBView") } icon: { Image(systemName: "doc.viewfinder.fill") }
+                        }
+                    )
+                #endif
 
-                    if Config.isNotDesktop {
-                        BtnAdd().buttonStyle(.bordered).foregroundStyle(.white)
-                    }
+                if Config.isNotDesktop {
+                    BtnAdd().buttonStyle(.bordered)
                 }
             case .loading:
-                VStack(spacing: 16) {
-                    HStack {
-                        Image(systemName: "info.circle.fill")
-                            .foregroundStyle(.yellow)
-                        Text(Config.isDesktop ? "将有声书文件夹拖到这里可添加" : "有声书仓库为空", tableName: "Book-DBView")
-                            .font(.title3)
-                            .foregroundStyle(.white)
-                    }
-                    ProgressView()
-                        .controlSize(.large)
-                        .tint(.white)
-                    Text("正在读取仓库", tableName: "Book-DBView")
-                        .font(.headline)
-                        .foregroundStyle(.white)
-                    VStack(spacing: 10) {
-                        Text("支持的格式：\(supportedFormats)", tableName: "Book-DBView")
-                            .font(.footnote)
-                            .foregroundStyle(.white.opacity(0.9))
-                    }
-                    .padding(.top, 6)
-                }
+                AppLoadingOverlay(message: "正在读取仓库", size: .large)
+                    .frame(height: 120)
+                Text("支持的格式：\(supportedFormats)", tableName: "Book-DBView")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
             }
         }
-        .inCard()
+        .padding()
+        .background(appTheme.surface.opacity(0.85))
+        .roundedMedium()
         .shadow(radius: 8)
     }
 }

@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import OSLog
 import SwiftUI
@@ -14,39 +15,30 @@ struct BookSettings: View, SuperLog {
     var body: some View {
         Group {
             if let disk = disk {
-                MagicSettingSection(title: "Audiobook Library") {
-                    MagicSettingRow(title: "Library Size", description: description, icon: .iconMusicLibrary, content: {
-                        HStack {
-                            if let diskSize = diskSize {
-                                Text(diskSize)
-                                    .font(.footnote)
-                            }
+                AppSettingsSection(title: "Audiobook Library") {
+                    AppSettingsInfoRow(title: "Library Size", description: description, systemImage: .iconMusicLibrary) {
+                        if let diskSize = diskSize {
+                            Text(diskSize)
                         }
-
-                    })
+                    }
 
                     #if os(macOS)
-                        MagicSettingRow(title: "Open Library", description: "View in Finder", icon: .iconShowInFinder, content: {
-                            HStack {
-                                disk.makeOpenButton()
-                            }
-
-                        })
+                        AppSettingsInfoRow(title: "Open Library", description: "View in Finder", systemImage: .iconShowInFinder, action: {
+                            disk.openInFinder()
+                        }) {
+                            Image(systemName: .iconShowInFinder)
+                        }
                     #endif
 
-                    MagicSettingRow(title: "File Count", description: "Total files in library", icon: .iconDocument, content: {
-                        HStack {
-                            Text("\(fileCount) files")
-                                .font(.footnote)
-                        }
-                    })
+                    AppSettingsInfoRow(title: "File Count", description: "Total files in library", systemImage: .iconDocument) {
+                        Text("\(fileCount) files")
+                    }
                 }
             } else {
-                MagicSettingSection(title: "Music Library") {
-                    MagicSettingRow(title: "Error", description: description, icon: .iconMusicLibrary, content: {
+                AppSettingsSection(title: "Music Library") {
+                    AppSettingsInfoRow(title: "Error", description: description, systemImage: .iconMusicLibrary) {
                         Text("Cannot get music library information")
-                            .font(.footnote)
-                    })
+                    }
                 }
             }
         }

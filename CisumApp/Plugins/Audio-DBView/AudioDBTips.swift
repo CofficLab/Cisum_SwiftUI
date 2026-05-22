@@ -21,17 +21,18 @@ struct AudioDBTips: View {
         VStack(spacing: 20) {
             switch variant {
             case .empty:
-                HStack {
-                    Image(systemName: "info.circle.fill").foregroundStyle(.blue)
-                    Text(Config.isDesktop ? "将音乐文件拖到这里可添加" : "歌曲仓库为空", tableName: "Audio-DBView")
-                        .font(.title3)
-                }
-                Text("支持的格式：\(supportedFormats)", tableName: "Audio-DBView")
-                    .font(.subheadline)
+                AppEmptyState(
+                    icon: "music.note.list",
+                    title: Config.isDesktop ? "将音乐文件拖到这里可添加" : "歌曲仓库为空",
+                    description: String(localized: "支持的格式：\(supportedFormats)", table: "Audio-DBView")
+                )
+                .frame(minHeight: 160)
 
                 #if os(macOS)
                     if let disk = AudioPlugin.getAudioDisk() {
-                        HStack { Text("或", tableName: "Audio-DBView") }
+                        Text("或", tableName: "Audio-DBView")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
 
                         Label { Text("打开仓库目录并放入文件", tableName: "Audio-DBView") } icon: { Image(systemName: "doc.viewfinder.fill") }
                             .inCard(.regularMaterial)
@@ -46,38 +47,18 @@ struct AudioDBTips: View {
                 BtnAdd().buttonStyle(.bordered).if(Config.isNotDesktop)
 
             case .loading:
-                HStack {
-                    Image(systemName: "info.circle.fill")
-                        .foregroundStyle(.yellow)
-                    Text(Config.isDesktop ? "将音乐文件拖到这里可添加" : "歌曲仓库为空", tableName: "Audio-DBView")
-                        .font(.title3)
-                }
-                ProgressView()
-                    .controlSize(.large)
-                Text("正在读取仓库", tableName: "Audio-DBView")
-                    .font(.headline)
-                VStack(spacing: 10) {
-                    Text("支持的格式：\(supportedFormats)", tableName: "Audio-DBView")
-                        .font(.footnote)
-                }
-                .padding(.top, 6)
+                AppLoadingOverlay(message: "正在读取仓库", size: .large)
+                    .frame(height: 120)
+                Text("支持的格式：\(supportedFormats)", tableName: "Audio-DBView")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
 
             case .sorting:
-                HStack {
-                    Image(systemName: "info.circle.fill")
-                        .foregroundStyle(.yellow)
-                    Text(Config.isDesktop ? "将音乐文件拖到这里可添加" : "歌曲仓库为空", tableName: "Audio-DBView")
-                        .font(.title3)
-                }
-                ProgressView()
-                    .controlSize(.large)
-                Text("正在排序", tableName: "Audio-DBView")
-                    .font(.headline)
-                VStack(spacing: 10) {
-                    Text("支持的格式：\(supportedFormats)", tableName: "Audio-DBView")
-                        .font(.footnote)
-                }
-                .padding(.top, 6)
+                AppLoadingOverlay(message: "正在排序", size: .large)
+                    .frame(height: 120)
+                Text("支持的格式：\(supportedFormats)", tableName: "Audio-DBView")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
             }
         }
         .padding()
