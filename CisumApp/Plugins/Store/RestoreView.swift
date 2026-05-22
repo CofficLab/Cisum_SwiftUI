@@ -1,3 +1,4 @@
+import CisumUI
 import MagicAlert
 import MagicKit
 import OSLog
@@ -23,76 +24,34 @@ struct RestoreView: View, SuperEvent, SuperLog, SuperThread {
         SheetContainer {
             VStack(spacing: 16) {
                 // 说明文字
-                VStack(spacing: 16) {
-                    // 插画区域
-                    VStack(spacing: 0) {
-                        ZStack {
-                            // 背景圆形装饰
-                            Circle()
-                                .fill(
-                                    LinearGradient(
-                                        colors: [
-                                            Color.blue.opacity(0.15),
-                                            Color.cyan.opacity(0.1)
-                                        ],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    )
-                                )
-                                .frame(width: 120, height: 120)
-
-                            // 主图标（云同步/恢复）
-                            Image(systemName: "icloud.and.arrow.down.fill")
-                                .font(.system(size: 60))
-                                .foregroundStyle(
-                                    LinearGradient(
-                                        colors: [.blue, .cyan],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    )
-                                )
-                        }
-                        .frame(height: 120)
-                    }
-                    .padding(.top, 8)
-
-                    // Title area
-                    HStack(spacing: 12) {
-                        Image.restart
-                            .font(.title2)
-                            .foregroundStyle(.blue)
-
-                        Text("Restore Purchase", tableName: "Store")
-                            .font(.title3)
-                            .fontWeight(.semibold)
-
-                        Spacer()
-                    }
+                AppSheetPanel {
+                    VStack(spacing: 16) {
+                    AppSheetIconHeader(systemImage: "icloud.and.arrow.down.fill", title: "Restore Purchase", tint: .blue)
                     VStack(alignment: .leading, spacing: 12) {
-                        InfoRow(
+                        AppInfoRow(
                             icon: "iphone.and.arrow.forward",
                             title: String(localized: "Cross-Device Restore", table: "Store"),
-                            description: String(localized: "Restore purchases made on other devices", table: "Store")
+                            description: String(localized: "Restore purchases made on other devices", table: "Store"),
+                            tint: .blue
                         )
 
-                        InfoRow(
+                        AppInfoRow(
                             icon: "person.circle",
                             title: String(localized: "Apple ID Verification", table: "Store"),
-                            description: String(localized: "Use the same Apple ID used for purchase", table: "Store")
+                            description: String(localized: "Use the same Apple ID used for purchase", table: "Store"),
+                            tint: .blue
                         )
 
-                        InfoRow(
+                        AppInfoRow(
                             icon: "checkmark.circle",
                             title: String(localized: "Feature Restore", table: "Store"),
-                            description: String(localized: "Get all purchased features after successful restore", table: "Store")
+                            description: String(localized: "Get all purchased features after successful restore", table: "Store"),
+                            tint: .blue
                         )
                     }
                     .padding(.vertical, 8)
+                    }
                 }
-                .padding()
-                .background(.regularMaterial)
-                .roundedMedium()
-                .shadowSm()
 
                 // Status banner area
                 if restoreState != .idle {
@@ -117,95 +76,20 @@ struct RestoreView: View, SuperEvent, SuperLog, SuperThread {
         case .idle:
             EmptyView()
         case .restoring:
-            HStack(spacing: 12) {
-                ProgressView()
-                    .progressViewStyle(.circular)
-                    .scaleEffect(0.9)
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Restoring Purchase", tableName: "Store")
-                        .font(.subheadline)
-                        .fontWeight(.medium)
-                    Text("Please wait, verifying your purchase records...", tableName: "Store")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-                Spacer()
-            }
-            .padding()
-            .background(.regularMaterial)
-            .roundedMedium()
-            .shadowSm()
+            AppStatusBanner(kind: .loading, title: "Restoring Purchase", message: "Please wait, verifying your purchase records...")
         case .success:
-            HStack(spacing: 12) {
-                Image(systemName: "checkmark.circle.fill")
-                    .font(.title3)
-                    .foregroundStyle(.green)
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Restore Successful", tableName: "Store")
-                        .font(.subheadline)
-                        .fontWeight(.medium)
-                    Text("Successfully restored your purchase records, all features unlocked", tableName: "Store")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-                Spacer()
-            }
-            .padding()
-            .background(.regularMaterial)
-            .roundedMedium()
-            .shadowSm()
+            AppStatusBanner(kind: .success, title: "Restore Successful", message: "Successfully restored your purchase records, all features unlocked")
         case .failed:
-            HStack(spacing: 12) {
-                Image(systemName: "exclamationmark.triangle.fill")
-                    .font(.title3)
-                    .foregroundStyle(.red)
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Restore Failed", tableName: "Store")
-                        .font(.subheadline)
-                        .fontWeight(.medium)
-                    if let error = error {
-                        Text(error.localizedDescription)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    } else {
-                        Text("An error occurred while restoring, please try again later", tableName: "Store")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                }
-                Spacer()
-            }
-            .padding()
-            .background(.regularMaterial)
-            .roundedMedium()
-            .shadowSm()
+            AppStatusBanner(kind: .error, title: "Restore Failed", message: error?.localizedDescription ?? String(localized: "An error occurred while restoring, please try again later", table: "Store"))
         }
     }
 
     @ViewBuilder
     private var restoreButton: some View {
-        HStack(spacing: 8) {
-            switch restoreState {
-            case .idle:
-                Image.reset
-                    .fontWeight(.semibold)
-                Text("Restore Purchase", tableName: "Store")
-                    .fontWeight(.semibold)
-            case .restoring:
-                EmptyView()
-            case .success:
-                EmptyView() // Use successButtons for success state
-            case .failed:
-                Image.reset
-                    .fontWeight(.semibold)
-                Text("Retry Restore", tableName: "Store")
-                    .fontWeight(.semibold)
-            }
-        }
-        .inCard(.regularMaterial)
-        .hoverScale(restoreState == .idle || restoreState == .failed ? 105 : 1.0)
-        .shadowSm()
-        .inButtonWithAction {
+        AppSheetActionButton(
+            restoreState == .failed ? "Retry Restore" : "Restore Purchase",
+            systemImage: "arrow.clockwise"
+        ) {
             restorePurchase()
         }
         .disabled(restoreState == .restoring)
@@ -214,31 +98,11 @@ struct RestoreView: View, SuperEvent, SuperLog, SuperThread {
     @ViewBuilder
     private var successButtons: some View {
         HStack(spacing: 12) {
-            // Done button
-            HStack(spacing: 8) {
-                Image(systemName: "checkmark.circle.fill")
-                    .fontWeight(.semibold)
-                Text("Done", tableName: "Store")
-                    .fontWeight(.semibold)
-            }
-            .inCard(.regularMaterial)
-            .hoverScale(105)
-            .shadowSm()
-            .inButtonWithAction {
+            AppSheetActionButton("Done", systemImage: "checkmark.circle.fill") {
                 dismiss()
             }
 
-            // Try again button
-            HStack(spacing: 8) {
-                Image.reset
-                    .fontWeight(.semibold)
-                Text("Try Again", tableName: "Store")
-                    .fontWeight(.semibold)
-            }
-            .inCard(.regularMaterial)
-            .hoverScale(105)
-            .shadowSm()
-            .inButtonWithAction {
+            AppSheetActionButton("Try Again", systemImage: "arrow.clockwise") {
                 restoreState = .idle
                 restorePurchase()
             }
@@ -288,35 +152,6 @@ private enum RestoreState {
 }
 
 // MARK: - Supporting Views
-
-/// 信息行组件
-struct InfoRow: View {
-    let icon: String
-    let title: String
-    let description: String
-
-    var body: some View {
-        HStack(alignment: .top, spacing: 12) {
-            Image(systemName: icon)
-                .font(.system(size: 20))
-                .foregroundStyle(.blue)
-                .frame(width: 28, height: 28)
-
-            VStack(alignment: .leading, spacing: 4) {
-                Text(title)
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-
-                Text(description)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-
-            Spacer()
-        }
-        .padding(.vertical, 4)
-    }
-}
 
 // MARK: - Event Emitter
 

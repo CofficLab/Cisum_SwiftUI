@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import OSLog
 import StoreKit
@@ -10,44 +11,15 @@ struct PurchaseView: View, SuperLog {
     var body: some View {
         SheetContainer {
             VStack {
-                VStack(spacing: 16) {
-                    // 插画区域
-                    VStack(spacing: 0) {
-                        ZStack {
-                            // 背景圆形装饰
-                            Circle()
-                                .fill(
-                                    LinearGradient(
-                                        colors: [
-                                            Color.blue.opacity(0.15),
-                                            Color.purple.opacity(0.1),
-                                        ],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    )
-                                )
-                                .frame(width: 120, height: 120)
-
-                            // 主图标（购物/礼品）
-                            Image(systemName: "giftcard.fill")
-                                .font(.system(size: 60))
-                                .foregroundStyle(
-                                    LinearGradient(
-                                        colors: [.blue, .purple],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    )
-                                )
-                        }
-                        .frame(height: 120)
-                    }
-                    .padding(.top, 8)
-
+                AppSheetPanel {
+                    VStack(spacing: 16) {
+                        AppSheetIconHeader(systemImage: "giftcard.fill", title: nil as String?, tint: .blue)
                     // 版本对比
-                    VersionComparisonView()
+                        VersionComparisonView()
 
                     // 商品
-                    ProductsSubscription(showHeader: false)
+                        ProductsSubscription(showHeader: false)
+                    }
                 }
 
                 // Bottom links
@@ -79,8 +51,6 @@ struct PurchaseView: View, SuperLog {
                 .infiniteWidth()
             }
             .px2()
-            .background(.regularMaterial)
-            .roundedMedium()
         }
     }
 }

@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import OSLog
 import SwiftUI
@@ -14,107 +15,44 @@ struct ResetConfirm: View, SuperLog {
         SheetContainer {
             VStack(spacing: 16) {
                 // 说明文字
-                VStack(spacing: 16) {
-                    // 插画区域
-                    VStack(spacing: 0) {
-                        ZStack {
-                            // 背景圆形装饰
-                            Circle()
-                                .fill(
-                                    LinearGradient(
-                                        colors: [
-                                            Color.orange.opacity(0.15),
-                                            Color.red.opacity(0.1)
-                                        ],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    )
-                                )
-                                .frame(width: 120, height: 120)
-
-                            // 主图标（重置/警告）
-                            Image(systemName: "arrow.clockwise.circle.fill")
-                                .font(.system(size: 60))
-                                .foregroundStyle(
-                                    LinearGradient(
-                                        colors: [.green, .red],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    )
-                                )
-                        }
-                        .frame(height: 120)
-                    }
-                    .padding(.top, 8)
-
-                    // Title area
-                    HStack(spacing: 12) {
-                        Image(systemName: .iconReset)
-                            .font(.title2)
-                            .foregroundStyle(.orange)
-
-                        Text("Reset Settings", tableName: "Reset")
-                            .font(.title3)
-                            .fontWeight(.semibold)
-
-                        Spacer()
-                    }
+                AppSheetPanel {
+                    VStack(spacing: 16) {
+                    AppSheetIconHeader(systemImage: .iconReset, title: "Reset Settings", tint: .orange)
 
                     if isResetting {
                         // Resetting state
-                        HStack(spacing: 12) {
-                            ProgressView()
-                                .progressViewStyle(.circular)
-                                .scaleEffect(0.9)
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("Resetting…", tableName: "Reset")
-                                    .font(.subheadline)
-                                    .fontWeight(.medium)
-                                Text("Restoring default settings, please wait", tableName: "Reset")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                            }
-                            Spacer()
-                        }
-                        .padding(.vertical, 8)
+                        AppStatusBanner(kind: .loading, title: "Resetting…", message: "Restoring default settings, please wait")
                     } else {
                         // Reset description
                         VStack(alignment: .leading, spacing: 12) {
-                            ResetInfoRow(
+                            AppInfoRow(
                                 icon: "externaldrive.fill",
                                 title: String(localized: "Data Storage Reset", table: "Reset"),
-                                description: String(localized: "Data storage will be restored to default location", table: "Reset")
+                                description: String(localized: "Data storage will be restored to default location", table: "Reset"),
+                                tint: .orange
                             )
 
-                            ResetInfoRow(
+                            AppInfoRow(
                                 icon: "slider.horizontal.3",
                                 title: String(localized: "Preferences Reset", table: "Reset"),
-                                description: String(localized: "All user preferences will be reset", table: "Reset")
+                                description: String(localized: "All user preferences will be reset", table: "Reset"),
+                                tint: .orange
                             )
 
-                            ResetInfoRow(
+                            AppInfoRow(
                                 icon: "exclamationmark.triangle.fill",
                                 title: String(localized: "Irreversible", table: "Reset"),
-                                description: String(localized: "This action cannot be undone, proceed with caution", table: "Reset")
+                                description: String(localized: "This action cannot be undone, proceed with caution", table: "Reset"),
+                                tint: .orange
                             )
                         }
                         .padding(.vertical, 8)
                     }
+                    }
                 }
-                .padding()
-                .background(.regularMaterial)
-                .roundedMedium()
-                .shadowSm()
 
                 // Confirm button
-                HStack(spacing: 8) {
-                    Image.checkmark
-                    Text("Continue Reset", tableName: "Reset")
-                }
-                .inCard(.regularMaterial)
-                .hoverScale(105)
-                .shadowSm()
-                .inButtonWithAction {
+                AppSheetActionButton("Continue Reset", systemImage: "checkmark") {
                     performReset()
                 }
                 .if(!isResetting)
@@ -146,37 +84,6 @@ struct ResetConfirm: View, SuperLog {
                 dismiss()
             }
         }
-    }
-}
-
-// MARK: - Supporting Views
-
-/// 信息行组件
-private struct ResetInfoRow: View {
-    let icon: String
-    let title: String
-    let description: String
-
-    var body: some View {
-        HStack(alignment: .top, spacing: 12) {
-            Image(systemName: icon)
-                .font(.system(size: 20))
-                .foregroundStyle(.orange)
-                .frame(width: 28, height: 28)
-
-            VStack(alignment: .leading, spacing: 4) {
-                Text(title)
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-
-                Text(description)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-
-            Spacer()
-        }
-        .padding(.vertical, 4)
     }
 }
 
