@@ -1,6 +1,6 @@
 import SwiftUI
 import Testing
-@testable import LumiUI
+@testable import CisumUI
 
 struct AppDualSegmentBarTests {
     @Test

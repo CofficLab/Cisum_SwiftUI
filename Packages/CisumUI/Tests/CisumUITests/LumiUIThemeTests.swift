@@ -1,7 +1,7 @@
 import AppKit
 import SwiftUI
 import Testing
-@testable import LumiUI
+@testable import CisumUI
 
 private struct TestTheme: LumiUITheme {
     let id = "test-theme"
@@ -31,20 +31,20 @@ struct LumiUIThemeTests {
     @Test
     @MainActor
     func defaultThemeIsAvailable() {
-        LumiUI.setTheme(LumiDefaultTheme())
+        setTheme(LumiDefaultTheme())
 
-        #expect(LumiUI.currentTheme.id == "lumi-default")
-        #expect(LumiUI.currentTheme.name == "Lumi Default")
+        #expect(currentTheme.id == "lumi-default")
+        #expect(currentTheme.name == "Lumi Default")
     }
 
     @Test
     @MainActor
     func setThemeReplacesCurrentTheme() {
-        LumiUI.setTheme(TestTheme())
-        defer { LumiUI.setTheme(LumiDefaultTheme()) }
+        setTheme(TestTheme())
+        defer { setTheme(LumiDefaultTheme()) }
 
-        #expect(LumiUI.currentTheme.id == "test-theme")
-        #expect(LumiUI.currentTheme.name == "Test Theme")
+        #expect(currentTheme.id == "test-theme")
+        #expect(currentTheme.name == "Test Theme")
     }
 
     @Test
@@ -86,8 +86,8 @@ struct LumiUIThemeTests {
     @Test
     @MainActor
     func lumiThemePropertyWrapperReflectsCurrentStore() {
-        LumiUI.setTheme(TestTheme())
-        defer { LumiUI.setTheme(LumiDefaultTheme()) }
+        setTheme(TestTheme())
+        defer { setTheme(LumiDefaultTheme()) }
 
         let wrapper = LumiTheme()
         #expect(wrapper.wrappedValue.id == "test-theme")

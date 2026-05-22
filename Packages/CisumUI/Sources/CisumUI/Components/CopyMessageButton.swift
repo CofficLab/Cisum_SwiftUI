@@ -1,5 +1,9 @@
-import AppKit
 import SwiftUI
+#if os(macOS)
+    import AppKit
+#elseif os(iOS)
+    import UIKit
+#endif
 
 public struct CopyMessageButton: View {
     @LumiMotionPreferenceReader private var motionPreference
@@ -64,8 +68,12 @@ public struct CopyMessageButton: View {
     }
 
     private func copyToClipboard() {
+        #if os(macOS)
         NSPasteboard.general.clearContents()
         NSPasteboard.general.setString(content, forType: .string)
+        #elseif os(iOS)
+        UIPasteboard.general.string = content
+        #endif
 
         AppUI.Motion.animate(AppUI.Motion.enabled(AppUI.Motion.statusPresentation, preference: motionPreference)) {
             showFeedback = true

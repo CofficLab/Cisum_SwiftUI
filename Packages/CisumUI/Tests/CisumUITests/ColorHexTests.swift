@@ -1,7 +1,7 @@
 import AppKit
 import SwiftUI
 import Testing
-@testable import LumiUI
+@testable import CisumUI
 
 private struct RGBA: Equatable {
     let red: CGFloat

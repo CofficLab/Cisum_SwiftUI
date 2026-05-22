@@ -1,6 +1,6 @@
 import Foundation
 import Testing
-@testable import LumiUI
+@testable import CisumUI
 
 struct AppSizeLabelTests {
     @Test

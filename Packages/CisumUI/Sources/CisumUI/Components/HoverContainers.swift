@@ -1,6 +1,8 @@
-import AppKit
 import Combine
 import SwiftUI
+#if os(macOS)
+    import AppKit
+#endif
 
 @MainActor
 public final class HoverCoordinator: ObservableObject {
@@ -201,8 +203,7 @@ public struct HoverableContainerView<Content: View, Detail: View>: View {
                 coordinator.onHover(id: self.id, isHovering: hovering)
             }
             .popover(isPresented: $isPresented, arrowEdge: .leading) {
-                detailView
-                    .background(SpaceAwarePopoverWindowConfigurator())
+                configuredDetailView
                     .onHover { hovering in
                         coordinator.onHover(id: self.id, isHovering: hovering)
                     }
@@ -230,14 +231,28 @@ public struct HoverableContainerView<Content: View, Detail: View>: View {
         ZStack {
             if isHovering {
                 Rectangle()
+                    #if os(macOS)
                     .fill(Color(nsColor: .selectedContentBackgroundColor).opacity(0.2))
+                    #else
+                    .fill(Color.accentColor.opacity(0.12))
+                    #endif
             } else {
                 EmptyView()
             }
         }
     }
+
+    @ViewBuilder
+    private var configuredDetailView: some View {
+        #if os(macOS)
+            detailView.background(SpaceAwarePopoverWindowConfigurator())
+        #else
+            detailView
+        #endif
+    }
 }
 
+#if os(macOS)
 private struct SpaceAwarePopoverWindowConfigurator: NSViewRepresentable {
     func makeNSView(context: Context) -> NSView {
         ConfigView()
@@ -254,3 +269,4 @@ private struct SpaceAwarePopoverWindowConfigurator: NSViewRepresentable {
         }
     }
 }
+#endif

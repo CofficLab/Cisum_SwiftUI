@@ -1,5 +1,5 @@
 import Testing
-@testable import LumiUI
+@testable import CisumUI
 
 struct AppIconButtonTests {
     @Test

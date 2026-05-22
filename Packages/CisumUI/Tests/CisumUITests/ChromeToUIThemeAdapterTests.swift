@@ -1,6 +1,6 @@
 import SwiftUI
 import Testing
-@testable import LumiUI
+@testable import CisumUI
 
 private struct ChromeFixture: LumiAppChromeTheme {
     let identifier = "fixture"

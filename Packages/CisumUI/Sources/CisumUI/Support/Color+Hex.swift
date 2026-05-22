@@ -1,5 +1,9 @@
-import AppKit
 import SwiftUI
+#if os(macOS)
+    import AppKit
+#elseif os(iOS)
+    import UIKit
+#endif
 
 extension Color {
     public init(hex: String) {
@@ -33,6 +37,7 @@ extension Color {
     }
 
     public init(light: String, dark: String) {
+        #if os(macOS)
         self.init(nsColor: NSColor(name: nil) { appearance in
             if appearance.bestMatch(from: [.aqua, .darkAqua]) == .darkAqua {
                 return NSColor(Color(hex: dark))
@@ -40,6 +45,15 @@ extension Color {
                 return NSColor(Color(hex: light))
             }
         })
+        #elseif os(iOS)
+        self.init(uiColor: UIColor { traitCollection in
+            traitCollection.userInterfaceStyle == .dark
+                ? UIColor(Color(hex: dark))
+                : UIColor(Color(hex: light))
+        })
+        #else
+        self.init(hex: light)
+        #endif
     }
 
     /// 基于字符串（如人名）生成固定的自适应颜色，同一输入始终映射到同一色板项。
@@ -71,11 +85,25 @@ extension Color {
     ///
     /// 使用 NSColor 解析后计算相对亮度，支持自适应颜色（adaptive color）。
     public var isLightColor: Bool {
+        #if os(macOS)
         let nsColor = NSColor(self)
         guard let rgbColor = nsColor.usingColorSpace(.sRGB) else { return false }
         let r = Double(rgbColor.redComponent)
         let g = Double(rgbColor.greenComponent)
         let b = Double(rgbColor.blueComponent)
+        #elseif os(iOS)
+        let uiColor = UIColor(self)
+        var red: CGFloat = 0
+        var green: CGFloat = 0
+        var blue: CGFloat = 0
+        var alpha: CGFloat = 0
+        guard uiColor.getRed(&red, green: &green, blue: &blue, alpha: &alpha) else { return false }
+        let r = Double(red)
+        let g = Double(green)
+        let b = Double(blue)
+        #else
+        return false
+        #endif
         // ITU-R BT.601 感知亮度公式
         let luminance = 0.299 * r + 0.587 * g + 0.114 * b
         return luminance > 0.5

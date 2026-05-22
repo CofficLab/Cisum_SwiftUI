@@ -1,9 +1,15 @@
-import AppKit
 import SwiftUI
+#if os(macOS)
+    import AppKit
+    private typealias PlatformImage = NSImage
+#elseif os(iOS)
+    import UIKit
+    private typealias PlatformImage = UIImage
+#endif
 
 public struct AppImagePreviewGrid: View {
     let imageDataList: [Data]
-    @State private var previewingImage: NSImage?
+    @State private var previewingImage: PlatformImage?
 
     public init(imageDataList: [Data]) {
         self.imageDataList = imageDataList
@@ -17,11 +23,11 @@ public struct AppImagePreviewGrid: View {
             spacing: 8
         ) {
             ForEach(Array(imageDataList.enumerated()), id: \.offset) { _, data in
-                if let nsImage = NSImage(data: data) {
+                if let image = PlatformImage(data: data) {
                     Button {
-                        previewingImage = nsImage
+                        previewingImage = image
                     } label: {
-                        Image(nsImage: nsImage)
+                        platformImage(image)
                             .resizable()
                             .aspectRatio(contentMode: .fill)
                             .frame(width: 180, height: 120)
@@ -55,7 +61,7 @@ public struct AppImagePreviewGrid: View {
 }
 
 private struct AppImagePreviewSheet: View {
-    let image: NSImage
+    let image: PlatformImage
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
@@ -73,15 +79,25 @@ private struct AppImagePreviewSheet: View {
             Divider()
 
             GeometryReader { geometry in
-                Image(nsImage: image)
+                platformImage(image)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(maxWidth: geometry.size.width, maxHeight: geometry.size.height)
                     .padding(20)
             }
         }
+        #if os(macOS)
         .frame(minWidth: 640, minHeight: 480)
+        #endif
     }
+}
+
+private func platformImage(_ image: PlatformImage) -> Image {
+    #if os(macOS)
+        Image(nsImage: image)
+    #else
+        Image(uiImage: image)
+    #endif
 }
 
 #Preview {
