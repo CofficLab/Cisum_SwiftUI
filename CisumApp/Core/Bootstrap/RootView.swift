@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import OSLog
 import SwiftUI
@@ -18,6 +19,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     @StateObject var appProvider: AppProvider
     @StateObject var pluginProvider: PluginProvider
     @StateObject var stateProvider: StateProvider
+    @StateObject var themeProvider: AppThemeProvider
 
     var man: PlayMan
     var cloudProvider: CloudProvider
@@ -34,6 +36,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
         self._appProvider = StateObject(wrappedValue: manager.app)
         self._stateProvider = StateObject(wrappedValue: manager.stateMessageProvider)
         self._pluginProvider = StateObject(wrappedValue: manager.plugin)
+        self._themeProvider = StateObject(wrappedValue: manager.theme)
         self.man = manager.man
         self.cloudProvider = manager.cloud
     }
@@ -49,33 +52,37 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                     CrashedView(error: e)
                 } else {
                     NavigationStack {
-                        ZStack {
+                        GeometryReader { proxy in
+                            ZStack {
                             // iOS 的 NavigationStack 需要放这里才能设置背景
-                            Config.rootBackground
-                                .edgesIgnoringSafeArea(.all)
+                                themeProvider.activeChromeTheme
+                                    .makeGlobalBackground(proxy: proxy)
+                                    .ignoresSafeArea()
 
-                            Group {
-                                if let wrapped = pluginProvider.wrapWithCurrentRoot(content: { content }) {
-                                    wrapped
-                                } else {
-                                    content
+                                Group {
+                                    if let wrapped = pluginProvider.wrapWithCurrentRoot(content: { content }) {
+                                        wrapped
+                                    } else {
+                                        content
+                                    }
                                 }
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                .frame(minWidth: Config.minWidth, minHeight: Config.minHeight)
+                                .toolbar {
+                                    RootToolbar()
+                                }
+                                .blendMode(.normal)
                             }
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            .frame(minWidth: Config.minWidth, minHeight: Config.minHeight)
-                            .toolbar {
-                                RootToolbar()
-                            }
-                            .blendMode(.normal)
                         }
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .withMagicToast()
                 }
             }
         }
-        .background(Config.rootBackground)
+        .background(themeProvider.activeChromeTheme.workspaceBackgroundColor())
+        .preferredColorScheme(themeProvider.preferredColorScheme)
         .onStorageLocationChanged(perform: onStorageLocationChange)
         .onGuideDone(perform: onLaunchEnd)
         .onCloudAccountStateChanged(perform: onCloudAccountStateChanged)
@@ -87,6 +94,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
         .environmentObject(appProvider)
         .environmentObject(pluginProvider)
         .environmentObject(stateProvider)
+        .environmentObject(themeProvider)
     }
 
     private func reloadView() {

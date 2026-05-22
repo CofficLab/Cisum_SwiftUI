@@ -15,6 +15,7 @@ final class ProviderManager: SuperLog {
     let app: AppProvider
     let stateMessageProvider: StateProvider
     let plugin: PluginProvider
+    let theme: AppThemeProvider
     let cloud: CloudProvider
 
     // PlayMan
@@ -31,6 +32,7 @@ final class ProviderManager: SuperLog {
         self.app = AppProvider(uiRepo: uiRepo)
         self.stateMessageProvider = StateProvider()
         self.plugin = PluginProvider(repo: pluginRepo)
+        self.theme = AppThemeProvider(pluginProvider: self.plugin)
         self.cloud = CloudProvider()
 
         // PlayMan

@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import SwiftUI
 
@@ -9,6 +10,7 @@ struct AudioDBTips: View {
     }
 
     @EnvironmentObject var app: AppProvider
+    @LumiTheme private var appTheme
     var variant: Variant = .empty
 
     var supportedFormats: String {
@@ -79,8 +81,8 @@ struct AudioDBTips: View {
             }
         }
         .padding()
-        .background(Config.rootBackground.opacity(0.8))
-        .background(.background.opacity(0.5))
+        .background(appTheme.surface.opacity(0.85))
+        .background(appTheme.background.opacity(0.5))
         .roundedMedium()
         .shadowXl()
     }
