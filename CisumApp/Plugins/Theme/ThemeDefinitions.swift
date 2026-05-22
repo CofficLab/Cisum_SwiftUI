@@ -58,7 +58,22 @@ struct CisumChromeTheme: LumiAppChromeTheme {
     }
 
     func makeGlobalBackground(proxy: GeometryProxy) -> AnyView {
-        AnyView(
+        if identifier == "cisum" {
+            return AnyView(
+                LinearGradient(
+                    gradient: Gradient(colors: [
+                        Color(hex: "FF512F").opacity(0.7),
+                        Color(hex: "F09819").opacity(0.7),
+                    ]),
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                .background(.ultraThinMaterial)
+                .ignoresSafeArea()
+            )
+        }
+
+        return AnyView(
             LinearGradient(
                 colors: [deep, medium, light.opacity(0.82), medium],
                 startPoint: .topLeading,
@@ -74,20 +89,20 @@ extension CisumChromeTheme {
         identifier: "cisum",
         displayName: "Cisum",
         compactName: "Cisum",
-        description: "简洁默认主题，随系统明暗自动适配",
-        iconName: "circle.hexagonpath.fill",
-        iconColor: .adaptive(light: "2563EB", dark: "60A5FA"),
+        description: "沿用原始日落渐变配色",
+        iconName: "sunset.fill",
+        iconColor: Color(hex: "FF512F"),
         isDarkTheme: false,
         followsSystemAppearance: true,
-        primary: .adaptive(light: "2563EB", dark: "60A5FA"),
-        secondary: .adaptive(light: "14B8A6", dark: "2DD4BF"),
-        tertiary: .adaptive(light: "8B5CF6", dark: "A78BFA"),
-        deep: .adaptive(light: "F3F4F6", dark: "05070B"),
-        medium: .adaptive(light: "FFFFFF", dark: "10131A"),
-        light: .adaptive(light: "E5E7EB", dark: "1F2937"),
-        text: .adaptive(light: "111827", dark: "F9FAFB"),
-        secondaryText: .adaptive(light: "4B5563", dark: "D1D5DB"),
-        tertiaryText: .adaptive(light: "9CA3AF", dark: "9CA3AF")
+        primary: Color(hex: "FF512F"),
+        secondary: Color(hex: "F09819"),
+        tertiary: Color(hex: "4A90E2"),
+        deep: Color(hex: "FF512F").opacity(0.18),
+        medium: Color(hex: "F09819").opacity(0.14),
+        light: Color(hex: "FFFFFF").opacity(0.34),
+        text: .adaptive(light: "1C1C1E", dark: "FFFFFF"),
+        secondaryText: .adaptive(light: "3A2A22", dark: "F5E6DC"),
+        tertiaryText: .adaptive(light: "6F5147", dark: "D7B7A5")
     )
 
     static let midnight = CisumChromeTheme(
