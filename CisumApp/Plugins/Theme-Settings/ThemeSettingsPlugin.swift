@@ -42,13 +42,7 @@ private struct ThemeOptionCard: View {
     let action: () -> Void
 
     var body: some View {
-        GlassSelectionCard(
-            isSelected: isSelected,
-            checkmarkColor: theme.iconColor,
-            selectedBackgroundColor: theme.iconColor.opacity(0.14),
-            selectedBorderColor: theme.iconColor,
-            action: action
-        ) {
+        Button(action: action) {
             HStack(spacing: 14) {
                 Image(systemName: theme.iconName)
                     .font(.system(size: 22, weight: .semibold))
@@ -59,17 +53,36 @@ private struct ThemeOptionCard: View {
                     Text(theme.displayName)
                         .font(.appBody)
                         .foregroundColor(appTheme.textPrimary)
+                        .lineLimit(1)
+                        .truncationMode(.tail)
 
                     Text(theme.description)
                         .font(.appCaption)
                         .foregroundColor(appTheme.textTertiary)
+                        .lineLimit(1)
+                        .truncationMode(.tail)
                 }
-
-                Spacer(minLength: 12)
+                .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
 
                 ThemeSwatches(theme: theme.chromeTheme)
+                    .fixedSize()
+                    .layoutPriority(1)
             }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 12)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .fill(isSelected ? theme.iconColor.opacity(0.14) : Color.clear)
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .stroke(isSelected ? theme.iconColor : appTheme.textTertiary.opacity(0.08), lineWidth: isSelected ? 2 : 1)
+            )
+            .contentShape(Rectangle())
         }
+        .buttonStyle(.plain)
+        .frame(maxWidth: .infinity)
     }
 }
 
@@ -104,4 +117,3 @@ private struct ThemeSwatches: View {
         .inRootView()
         .withDebugBar()
 }
-
