@@ -82,7 +82,7 @@ private struct ThemeSwatches: View {
 
         HStack(spacing: 4) {
             swatch(atmosphere.deep)
-            swatch(atmosphere.medium)
+            swatch(atmosphere.light)
             swatch(accent.primary)
             swatch(accent.secondary)
         }
@@ -96,3 +96,12 @@ private struct ThemeSwatches: View {
             .overlay(Circle().stroke(Color.white.opacity(0.25), lineWidth: 1))
     }
 }
+
+// MARK: Preview
+
+#Preview("App") {
+    ContentView()
+        .inRootView()
+        .withDebugBar()
+}
+
