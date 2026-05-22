@@ -13,11 +13,6 @@ actor ThemeSettingsPlugin: SuperPlugin {
     func addSettingView() -> AnyView? {
         AnyView(ThemeSettingView())
     }
-
-    @MainActor
-    func addStatusView() -> AnyView? {
-        AnyView(ThemeStatusView())
-    }
 }
 
 struct ThemeSettingView: View {
@@ -99,33 +94,5 @@ private struct ThemeSwatches: View {
             .fill(color)
             .frame(width: 14, height: 14)
             .overlay(Circle().stroke(Color.white.opacity(0.25), lineWidth: 1))
-    }
-}
-
-struct ThemeStatusView: View {
-    @EnvironmentObject private var themeProvider: AppThemeProvider
-
-    var body: some View {
-        Menu {
-            ForEach(themeProvider.themes) { theme in
-                Button {
-                    themeProvider.selectTheme(theme.id)
-                } label: {
-                    Label(theme.displayName, systemImage: themeProvider.currentThemeId == theme.id ? "checkmark" : theme.iconName)
-                }
-            }
-        } label: {
-            HStack(spacing: 5) {
-                Image(systemName: "paintbrush")
-                Text(themeProvider.currentTheme?.compactName ?? "主题")
-                    .lineLimit(1)
-            }
-            .font(.caption)
-            .foregroundStyle(.secondary)
-            .padding(.horizontal, 8)
-            .padding(.vertical, 4)
-        }
-        .menuStyle(.borderlessButton)
-        .fixedSize()
     }
 }
