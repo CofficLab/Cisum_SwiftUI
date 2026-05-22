@@ -11,41 +11,41 @@
 
 ## 第一阶段：设置页
 
-- [ ] 将 `CisumApp/Core/Views/Layout/SettingView.swift` 从裸 `ScrollView + VStack` 整理为统一设置容器。
-- [ ] 将 `CisumApp/Plugins/Storage/StorageSettingView.swift` 中的 `MagicSettingSection` / `MagicSettingRow` 替换为 `CisumUI.AppSettingsSection` / `AppSettingsRow`。
-- [ ] 将 `CisumApp/Plugins/Audio-Settings/AudioSettings.swift` 迁移到 `CisumUI` 设置组件。
-- [ ] 将 `CisumApp/Plugins/Book-Settings/BookSettings.swift` 迁移到 `CisumUI` 设置组件。
-- [ ] 如现有 `AppSettingsRow` 不够表达右侧操作按钮或状态值，先在 `CisumUI` 增补设置行变体。
+- [x] 将 `CisumApp/Core/Views/Layout/SettingView.swift` 从裸 `ScrollView + VStack` 整理为统一设置容器。
+- [x] 将 `CisumApp/Plugins/Storage/StorageSettingView.swift` 中的 `MagicSettingSection` / `MagicSettingRow` 替换为 `CisumUI.AppSettingsSection` / `AppSettingsRow`。
+- [x] 将 `CisumApp/Plugins/Audio-Settings/AudioSettings.swift` 迁移到 `CisumUI` 设置组件。
+- [x] 将 `CisumApp/Plugins/Book-Settings/BookSettings.swift` 迁移到 `CisumUI` 设置组件。
+- [x] 如现有 `AppSettingsRow` 不够表达右侧操作按钮或状态值，先在 `CisumUI` 增补设置行变体。
 
 ## 第二阶段：空状态和加载状态
 
-- [ ] 用 `CisumUI.AppEmptyState` / `AppLoadingOverlay` 替换 `CisumApp/Plugins/Audio-DBView/AudioDBTips.swift` 的空仓库、加载、排序状态。
-- [ ] 用 `CisumUI.AppEmptyState` / `AppLoadingOverlay` 替换 `CisumApp/Plugins/Book-DBView/Tips/BookDBTips.swift` 的空仓库、加载状态。
-- [ ] 保留 macOS 打开仓库目录、iOS 添加按钮等现有平台行为。
-- [ ] 如果 `AppEmptyState` 不能承载辅助操作区，给 `CisumUI` 增加 trailing/action slot。
+- [x] 用 `CisumUI.AppEmptyState` / `AppLoadingOverlay` 替换 `CisumApp/Plugins/Audio-DBView/AudioDBTips.swift` 的空仓库、加载、排序状态。
+- [x] 用 `CisumUI.AppEmptyState` / `AppLoadingOverlay` 替换 `CisumApp/Plugins/Book-DBView/Tips/BookDBTips.swift` 的空仓库、加载状态。
+- [x] 保留 macOS 打开仓库目录、iOS 添加按钮等现有平台行为。
+- [x] 如果 `AppEmptyState` 不能承载辅助操作区，给 `CisumUI` 增加 trailing/action slot。
 
 ## 第三阶段：Sheet 和确认弹窗
 
-- [ ] 将 `CisumApp/Core/Views/Common/SheetContainer.swift` 下沉或映射到 `CisumUI` 的通用 sheet 容器。
-- [ ] 为 `CisumUI` 增加通用组件：图标头部、信息行、状态横幅、底部操作按钮组。
-- [ ] 用新增组件重构 `CisumApp/Plugins/Store/PurchaseView.swift`。
-- [ ] 用新增组件重构 `CisumApp/Plugins/Store/RestoreView.swift`。
-- [ ] 用新增组件重构 `CisumApp/Plugins/Reset/ResetConfirm.swift`。
-- [ ] 保留 StoreKit 购买、恢复购买、重置设置等业务逻辑不变。
+- [x] 将 `CisumApp/Core/Views/Common/SheetContainer.swift` 下沉或映射到 `CisumUI` 的通用 sheet 容器。
+- [x] 为 `CisumUI` 增加通用组件：图标头部、信息行、状态横幅、底部操作按钮组。
+- [x] 用新增组件重构 `CisumApp/Plugins/Store/PurchaseView.swift`。
+- [x] 用新增组件重构 `CisumApp/Plugins/Store/RestoreView.swift`。
+- [x] 用新增组件重构 `CisumApp/Plugins/Reset/ResetConfirm.swift`。
+- [x] 保留 StoreKit 购买、恢复购买、重置设置等业务逻辑不变。
 
 ## 第四阶段：列表和条目
 
-- [ ] 用 `CisumUI.AppListRow` / `AppContextMenuRow` / `AppSizeLabel` 替换 `CisumApp/Plugins/Audio-DBView/AudioItemView.swift` 的通用行样式。
-- [ ] 评估 `CisumApp/Plugins/Book-DBView/Views/BookList.swift` 是否可迁移到统一列表行。
-- [ ] 评估 `CisumApp/Plugins/Audio-Copy-macOS/CopyList.swift` 是否可迁移到统一列表行。
-- [ ] 保留 `List(selection:)`、删除、分页加载、右键菜单和同步事件处理。
-- [ ] 如 `AppListRow` 不能用于系统 `List` selection，给 `CisumUI` 增加专用的 selectable row。
+- [x] 用 `CisumUI.AppListRow` / `AppContextMenuRow` / `AppSizeLabel` 替换 `CisumApp/Plugins/Audio-DBView/AudioItemView.swift` 的通用行样式。
+- [x] 评估 `CisumApp/Plugins/Book-DBView/Views/BookList.swift` 是否可迁移到统一列表行。
+- [x] 评估 `CisumApp/Plugins/Audio-Copy-macOS/CopyList.swift` 是否可迁移到统一列表行。
+- [x] 保留 `List(selection:)`、删除、分页加载、右键菜单和同步事件处理。
+- [x] 如 `AppListRow` 不能用于系统 `List` selection，给 `CisumUI` 增加专用的 selectable row。
 
 ## 第五阶段：Tab 和通用按钮
 
-- [ ] 将 `CisumApp/Core/Views/Layout/AppTabView.swift` 的 demo 模式自定义 tab 替换为 `CisumUI.AppTabBar`。
-- [ ] 正常模式的系统 `TabView` 先保留，避免破坏平台默认导航行为。
-- [ ] 将常见图标按钮逐步替换为 `CisumUI.AppIconButton`。
+- [x] 将 `CisumApp/Core/Views/Layout/AppTabView.swift` 的 demo 模式自定义 tab 替换为 `CisumUI.AppTabBar`。
+- [x] 正常模式的系统 `TabView` 先保留，避免破坏平台默认导航行为。
+- [x] 将常见图标按钮逐步替换为 `CisumUI.AppIconButton`。
 - [ ] 如播放区需要统一按钮外观，先在 `CisumUI` 增加 `PlayerIconButton`，再迁移 app 侧按钮。
 
 ## 第六阶段：主题体系
