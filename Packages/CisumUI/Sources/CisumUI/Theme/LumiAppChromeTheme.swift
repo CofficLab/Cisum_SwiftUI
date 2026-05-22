@@ -80,8 +80,8 @@ public extension LumiAppChromeTheme {
                     .blur(radius: 140)
                     .position(x: proxy.size.width, y: 0)
             }
-            .frame(width: proxy.size.width, height: proxy.size.height)
-            .clipped()
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .ignoresSafeArea()
             .allowsHitTesting(false)
         )
     }
