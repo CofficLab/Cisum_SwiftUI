@@ -8,7 +8,7 @@ import UniformTypeIdentifiers
 
 struct AudioControlRootView<Content>: View, SuperLog where Content: View {
     nonisolated static var emoji: String { "🎮" }
-    private static var verbose: Bool { false }
+    private static var verbose: Bool { true }
 
     @EnvironmentObject var man: PlayMan
     @EnvironmentObject var p: PluginProvider
@@ -33,7 +33,7 @@ struct AudioControlRootView<Content>: View, SuperLog where Content: View {
 
     /// 检查是否应该激活播放控制功能
     private var shouldActivateControl: Bool {
-        p.currentSceneName == "音乐库"
+        p.currentSceneName == AudioScenePlugin.sceneName
     }
 }
 
@@ -52,7 +52,7 @@ extension AudioControlRootView {
         }
 
         if Self.verbose {
-            os_log("\(self.t)👀 视图已出现，开始初始化播放控制")
+            os_log("\(self.t)👀 视图已出现，初始化播放控制")
         }
 
         // 订阅播放器事件
@@ -211,7 +211,7 @@ extension AudioControlRootView {
 
                         // 显示提示信息
                         await MainActor.run {
-                        alert_warning("正在播放的文件已被删除，自动播放第一首")
+                            alert_warning("正在播放的文件已被删除，自动播放第一首")
                         }
 
                         // 播放第一首

@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import MagicPlayMan
 import OSLog
@@ -10,6 +11,7 @@ struct StateView: View, SuperLog, SuperThread {
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var p: PluginProvider
     @Environment(\.demoMode) var isDemoMode
+    @LumiTheme private var appTheme
 
     nonisolated static let emoji = "🖥️"
     nonisolated static let verbose = false
@@ -51,29 +53,41 @@ extension StateView {
     func makeInfoView(_ i: String) -> some View {
         HStack {
             Image.info
-                .foregroundStyle(.white)
+                .foregroundStyle(appTheme.primary)
             Text(i)
-                .foregroundStyle(.white)
+                .foregroundStyle(appTheme.textSecondary)
         }
         .font(font)
-        .inCard()
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .background(appTheme.elevatedSurface.opacity(0.72), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .stroke(appTheme.divider, lineWidth: 1)
+        )
     }
 
     func makeErrorView(_ e: Error) -> some View {
         HStack {
             Image.info
-                .foregroundStyle(.white)
+                .foregroundStyle(appTheme.error)
             // 如果是 PlaybackError，使用本地化描述
             if let playbackError = e as? PlaybackState.PlaybackError {
                 Text(playbackError.localizedDescription(localization: playMan.localization))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(appTheme.textSecondary)
             } else {
                 Text(e.localizedDescription)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(appTheme.textSecondary)
             }
         }
         .font(font)
-        .inCard()
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .background(appTheme.error.opacity(0.08), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .stroke(appTheme.error.opacity(0.18), lineWidth: 1)
+        )
     }
 }
 

@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import OSLog
 import SwiftUI
@@ -32,15 +33,9 @@ private struct OpenCurrentButtonView: View, SuperLog {
         }
         return Group {
             if let url = url {
-                Image(systemName: .iconShowInFinder)
-                    .frame(width: 28)
-                    .frame(height: 28)
-                    .background(.regularMaterial, in: .circle)
-                    .shadowSm()
-                    .hoverScale(105)
-                    .inButtonWithAction {
-                        url.openInFinder()
-                    }
+                AppIconButton(systemImage: .iconShowInFinder, size: .regular) {
+                    url.openInFinder()
+                }
                     .id(url.absoluteString)
             }
         }

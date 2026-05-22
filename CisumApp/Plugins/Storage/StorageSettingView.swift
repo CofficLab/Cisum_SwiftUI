@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import SwiftUI
 
@@ -18,12 +19,13 @@ struct StorageSettingView: View, SuperLog {
     }
 
     var body: some View {
-        MagicSettingSection(title: "媒体仓库位置") {
+        AppSettingsSection(title: "Media Storage Location") {
             VStack(spacing: 0) {
-                MagicSettingRow(
-                    title: "iCloud 云盘",
-                    description: "将媒体文件存储在 iCloud 云盘中",
-                    icon: .iconCloud,
+                AppSettingsInfoRow(
+                    title: "iCloud Drive",
+                    description: "Store media files in iCloud Drive",
+                    systemImage: .iconCloud,
+                    isSelected: location == .icloud,
                     action: {
                         showMigrationProgress = true
                         targetLocation = .icloud
@@ -34,12 +36,12 @@ struct StorageSettingView: View, SuperLog {
                             .foregroundColor(.accentColor)
                     }
                 }
-                Divider().padding(5)
 
-                MagicSettingRow(
-                    title: "本机",
-                    description: "存储在 APP 中，删除 APP 后数据将丢失",
-                    icon: .iconFolder,
+                AppSettingsInfoRow(
+                    title: "Local",
+                    description: "Store within app, data will be lost if app is deleted",
+                    systemImage: .iconFolder,
+                    isSelected: location == .local,
                     action: {
                         showMigrationProgress = true
                         targetLocation = .local

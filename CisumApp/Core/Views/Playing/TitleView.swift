@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 
 import OSLog
@@ -10,10 +11,11 @@ struct TitleView: View, SuperLog, SuperThread {
 
     @EnvironmentObject var playMan: PlayMan
     @Environment(\.demoMode) var isDemoMode
+    @LumiTheme private var appTheme
 
     var title: String {
         if isDemoMode {
-            return "清风徐来"
+            return String(localized: "清风徐来", table: "Core")
         } else {
             return playMan.asset?.deletingPathExtension().title ?? ""
         }
@@ -35,8 +37,8 @@ struct TitleView: View, SuperLog, SuperThread {
                     .frame(maxHeight: .infinity)
                     .position(x: geo.size.width / 2, y: geo.size.height / 2)
                     .padding(.vertical)
-                    .shadow3xl()
-                    .foregroundStyle(.white)
+                    .shadow(color: appTheme.background.opacity(0.18), radius: 8, y: 2)
+                    .foregroundStyle(appTheme.textPrimary)
             }
         }
     }

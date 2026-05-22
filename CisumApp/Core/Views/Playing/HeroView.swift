@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import OSLog
 import SwiftUI
@@ -10,6 +11,7 @@ struct HeroView: View, SuperLog {
     @EnvironmentObject var playMan: PlayMan
     @Environment(\.demoMode) var isDemoMode
     @Environment(\.downloadingMode) var isDownloadingMode
+    @LumiTheme private var appTheme
 
     private let titleViewHeight: CGFloat = 60
 
@@ -54,7 +56,7 @@ extension HeroView {
             // 背景圆形
             Circle()
                 .stroke(
-                    Color.secondary.opacity(0.2),
+                    appTheme.textTertiary.opacity(0.18),
                     lineWidth: 8
                 )
                 .frame(width: 200, height: 200)
@@ -63,7 +65,7 @@ extension HeroView {
             Circle()
                 .trim(from: 0, to: 0.5)
                 .stroke(
-                    Color.blue,
+                    appTheme.primary,
                     style: StrokeStyle(lineWidth: 8, lineCap: .round)
                 )
                 .frame(width: 200, height: 200)
@@ -72,17 +74,17 @@ extension HeroView {
 
             // 中心文字
             VStack(spacing: 8) {
-                Text("50%")
+                Text("50%", tableName: "Core")
                     .font(.system(size: 36, weight: .bold, design: .rounded))
-                    .foregroundColor(.primary)
+                    .foregroundColor(appTheme.textPrimary)
 
-                Text("正在从 iCloud 下载")
+                Text("正在从 iCloud 下载", tableName: "Core")
                     .font(.system(size: 14))
-                    .foregroundColor(.secondary)
+                    .foregroundColor(appTheme.textSecondary)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.secondary.opacity(0.1))
+        .background(appTheme.elevatedSurface.opacity(0.55))
     }
 
     // Demo mode 的静态演示封面

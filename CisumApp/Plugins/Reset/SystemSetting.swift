@@ -9,15 +9,15 @@ struct SystemSetting: View, SuperLog {
     @State private var showConfirmSheet: Bool = false
 
     var body: some View {
-        MagicSettingSection(title: "APP 信息") {
-            // 版本信息
-            MagicSettingRow(title: "当前版本", description: "APP 的版本", icon: "info.circle", content: {
+        MagicSettingSection(title: String(localized: "App Information", table: "Reset")) {
+            // Version information
+            MagicSettingRow(title: String(localized: "Current Version", table: "Reset"), description: String(localized: "App version", table: "Reset"), icon: "info.circle", content: {
                 Text(MagicApp.getVersion())
                     .font(.footnote)
             })
 
-            // 重置设置
-            MagicSettingRow(title: "重置设置", description: "重置设置，恢复成系统默认状态", icon: .iconReset) {
+            // Reset settings
+            MagicSettingRow(title: String(localized: "Reset Settings", table: "Reset"), description: String(localized: "Reset settings to system default state", table: "Reset"), icon: .iconReset) {
                 Image.reset
                     .frame(width: 28, height: 28)
                     .background(.regularMaterial, in: Circle())

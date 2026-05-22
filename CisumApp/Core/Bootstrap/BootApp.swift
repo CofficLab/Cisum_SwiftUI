@@ -1,3 +1,4 @@
+import CisumUI
 import MagicAlert
 import MagicKit
 import MagicPlayMan
@@ -9,8 +10,8 @@ typealias PlayAsset = MagicAsset
 typealias PlayMode = MagicPlayMode
 typealias MagicApp = MagicKit.MagicApp
 typealias SuperLog = MagicKit.SuperLog
-typealias MagicSettingSection = MagicKit.MagicSettingSection
-typealias MagicSettingRow = MagicKit.MagicSettingRow
+typealias MagicSettingSection = CisumUI.MagicSettingSection
+typealias MagicSettingRow = CisumUI.MagicSettingRow
 
 @main
 struct BootApp: App, SuperLog {

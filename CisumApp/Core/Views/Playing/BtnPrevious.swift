@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import MagicPlayMan
 import SwiftUI
@@ -6,13 +7,14 @@ import SwiftUI
 struct PreviousButton: View {
     @EnvironmentObject var man: PlayMan
     @Environment(\.demoMode) var isDemoMode
+    @LumiTheme private var appTheme
 
     private let size: CGFloat = 32
 
     var body: some View {
         Image.backward
             .font(.system(size: self.size * 0.6))
-            .foregroundStyle(.secondary)
+            .foregroundStyle(appTheme.textSecondary)
             .frame(width: size, height: size)
             .inCard(.ultraThinMaterial)
             .roundedFull()
@@ -20,7 +22,7 @@ struct PreviousButton: View {
             .inButtonWithAction {
                 man.previous()
             }
-            .shadowSm()
+            .shadow(color: appTheme.background.opacity(0.10), radius: 4, y: 1)
     }
 }
 

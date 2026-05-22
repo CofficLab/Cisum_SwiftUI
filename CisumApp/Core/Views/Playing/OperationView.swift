@@ -1,8 +1,10 @@
+import CisumUI
 import SwiftData
 import SwiftUI
 
 struct OperationView: View {
     @EnvironmentObject var playMan: PlayMan
+    @LumiTheme private var appTheme
 
     var asset: URL? { playMan.currentURL }
     var characterCount: Int { asset?.title.count ?? 0 }
@@ -20,7 +22,7 @@ struct OperationView: View {
             Spacer()
         })
         .frame(maxWidth: .infinity)
-        .foregroundStyle(.white)
+        .foregroundStyle(appTheme.textSecondary)
         .labelStyle(.iconOnly)
     }
 

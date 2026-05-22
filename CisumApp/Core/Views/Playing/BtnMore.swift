@@ -1,9 +1,11 @@
+import CisumUI
 import MagicKit
 import SwiftUI
 
 struct BtnMore: View {
     @EnvironmentObject var app: AppProvider
     @Environment(\.demoMode) var isDemoMode
+    @LumiTheme private var appTheme
 
     private let size: CGFloat = 32
 
@@ -11,14 +13,14 @@ struct BtnMore: View {
         Image.more
             .font(.system(size: self.size * 0.6))
             .frame(width: size, height: size)
-            .foregroundStyle(.secondary)
+            .foregroundStyle(appTheme.textSecondary)
             .inCard(.ultraThinMaterial)
             .roundedFull()
             .hoverScale(105)
             .inButtonWithAction {
                 app.toggleDBView()
             }
-            .shadowSm()
+            .shadow(color: appTheme.background.opacity(0.10), radius: 4, y: 1)
     }
 }
 

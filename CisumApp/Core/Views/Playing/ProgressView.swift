@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import SwiftUI
 
@@ -5,6 +6,7 @@ struct PlayingProgressView: View {
     @Environment(\.demoMode) var isDemoMode
     @Environment(\.downloadingMode) var isDownloadingMode
     @EnvironmentObject var playMan: PlayMan
+    @LumiTheme private var appTheme
 
     var body: some View {
         if isDownloadingMode {
@@ -25,28 +27,27 @@ struct PlayingProgressView: View {
                 ZStack(alignment: .leading) {
                     // 背景条
                     RoundedRectangle(cornerRadius: 2)
-                        .fill(Color.secondary.opacity(0.2))
+                        .fill(appTheme.textTertiary.opacity(0.18))
 
                     // 进度（起点，即进度为0）
                     RoundedRectangle(cornerRadius: 2)
-                        .fill(Color.secondary.opacity(0.3))
+                        .fill(appTheme.primary.opacity(0.28))
                         .frame(width: 0)
                 }
             }
             .frame(height: 4)
-            .shadow3xl()
 
             // 时间标签（显示为未知）
             HStack {
-                Text("--:--")
+                Text("--:--", tableName: "Core")
                     .font(.system(size: 12))
-                    .foregroundColor(.secondary.opacity(0.5))
+                    .foregroundColor(appTheme.textTertiary)
 
                 Spacer()
 
-                Text("--:--")
+                Text("--:--", tableName: "Core")
                     .font(.system(size: 12))
-                    .foregroundColor(.secondary.opacity(0.5))
+                    .foregroundColor(appTheme.textTertiary)
             }
         }
         .frame(maxWidth: .infinity)
@@ -61,28 +62,27 @@ struct PlayingProgressView: View {
                 ZStack(alignment: .leading) {
                     // 背景条
                     RoundedRectangle(cornerRadius: 2)
-                        .fill(Color.secondary.opacity(0.2))
+                        .fill(appTheme.textTertiary.opacity(0.18))
 
                     // 进度
                     RoundedRectangle(cornerRadius: 2)
-                        .fill(Color.blue)
+                        .fill(appTheme.primary)
                         .frame(width: geometry.size.width * 0.35)
                 }
             }
             .frame(height: 4)
-            .shadow3xl()
 
             // 时间标签
             HStack {
-                Text("1:24")
+                Text("1:24", tableName: "Core")
                     .font(.system(size: 12))
-                    .foregroundColor(.secondary)
+                    .foregroundColor(appTheme.textTertiary)
 
                 Spacer()
 
-                Text("3:45")
+                Text("3:45", tableName: "Core")
                     .font(.system(size: 12))
-                    .foregroundColor(.secondary)
+                    .foregroundColor(appTheme.textTertiary)
             }
         }
         .frame(maxWidth: .infinity)

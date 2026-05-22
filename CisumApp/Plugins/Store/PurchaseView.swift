@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import OSLog
 import StoreKit
@@ -10,50 +11,25 @@ struct PurchaseView: View, SuperLog {
     var body: some View {
         SheetContainer {
             VStack {
-                VStack(spacing: 16) {
-                    // 插画区域
-                    VStack(spacing: 0) {
-                        ZStack {
-                            // 背景圆形装饰
-                            Circle()
-                                .fill(
-                                    LinearGradient(
-                                        colors: [
-                                            Color.blue.opacity(0.15),
-                                            Color.purple.opacity(0.1),
-                                        ],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    )
-                                )
-                                .frame(width: 120, height: 120)
-
-                            // 主图标（购物/礼品）
-                            Image(systemName: "giftcard.fill")
-                                .font(.system(size: 60))
-                                .foregroundStyle(
-                                    LinearGradient(
-                                        colors: [.blue, .purple],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    )
-                                )
-                        }
-                        .frame(height: 120)
-                    }
-                    .padding(.top, 8)
-
+                AppSheetPanel {
+                    VStack(spacing: 16) {
+                        AppSheetIconHeader(systemImage: "giftcard.fill", title: nil as String?, tint: .blue)
                     // 版本对比
-                    VersionComparisonView()
+                        VersionComparisonView()
 
                     // 商品
-                    ProductsSubscription(showHeader: false)
+                        ProductsSubscription(showHeader: false)
+                    }
                 }
 
-                // 底部链接
+                // Bottom links
                 HStack(spacing: 20) {
                     Link(destination: URL(string: "https://www.kuaiyizhi.cn/privacy")!) {
-                        Label("隐私政策", systemImage: "hand.raised.fill")
+                        Label {
+                            Text("Privacy Policy", tableName: "Store")
+                        } icon: {
+                            Image(systemName: "hand.raised.fill")
+                        }
                             .font(.footnote)
                     }
 
@@ -61,7 +37,11 @@ struct PurchaseView: View, SuperLog {
                         .frame(height: 12)
 
                     Link(destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!) {
-                        Label("许可协议", systemImage: "doc.text.fill")
+                        Label {
+                            Text("License Agreement", tableName: "Store")
+                        } icon: {
+                            Image(systemName: "doc.text.fill")
+                        }
                             .font(.footnote)
                     }
                 }
@@ -71,8 +51,6 @@ struct PurchaseView: View, SuperLog {
                 .infiniteWidth()
             }
             .px2()
-            .background(.regularMaterial)
-            .roundedMedium()
         }
     }
 }

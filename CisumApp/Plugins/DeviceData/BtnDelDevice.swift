@@ -1,4 +1,5 @@
 import SwiftUI
+import CisumDeviceData
 
 struct BtnDelDevice: View {
     @Environment(\.modelContext) private var modelContext
@@ -30,5 +31,4 @@ struct BtnDelDevice: View {
     .inRootView()
         .frame(height: 800)
 }
-
 

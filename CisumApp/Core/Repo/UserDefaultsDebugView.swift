@@ -30,22 +30,26 @@ struct UserDefaultsDebugView: View, SuperLog {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("UserDefaults 调试视图").font(.headline)
-            
+            Text("UserDefaults Debug View", tableName: "Core").font(.headline)
+
             HStack {
-                TextField("搜索键或值", text: $searchText)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                
-                Toggle("显示 iCloud 值", isOn: $showingICloudValues)
-                    .onChange(of: showingICloudValues) {
-                        refreshData()
-                    }
+                TextField(text: $searchText) {
+                    Text("Search keys or values", tableName: "Core")
+                }
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+
+                Toggle(isOn: $showingICloudValues) {
+                    Text("Show iCloud values", tableName: "Core")
+                }
+                .onChange(of: showingICloudValues) {
+                    refreshData()
+                }
             }
             
             Divider()
             
             if filteredPairs.isEmpty {
-                Text("没有找到匹配的键值对")
+                Text("No matching key-value pairs found", tableName: "Core")
                     .foregroundColor(.secondary)
                     .padding()
             } else {
@@ -70,14 +74,16 @@ struct UserDefaultsDebugView: View, SuperLog {
             Divider()
             
             HStack {
-                Button("刷新数据") {
+                Button {
                     refreshData()
+                } label: {
+                    Text("Refresh Data", tableName: "Core")
                 }
                 .buttonStyle(.borderedProminent)
-                
+
                 Spacer()
-                
-                Text("共 \(filteredPairs.count) 项")
+
+                Text("Total: \(filteredPairs.count) items", tableName: "Core")
                     .foregroundColor(.secondary)
                     .font(.caption)
             }
@@ -128,13 +134,13 @@ struct UserDefaultsDebugView: View, SuperLog {
         .withDebugBar()
 }
 
-#Preview("UserDefaults 调试") {
+#Preview("UserDefaults Debug") {
     UserDefaultsDebugView()
         .frame(width: 600)
         .frame(height: 800)
 }
 
-#Preview("带默认搜索值") {
+#Preview("With Default Search Value") {
     UserDefaultsDebugView(defaultSearchText: "UI.")
         .frame(width: 600)
         .frame(height: 800)

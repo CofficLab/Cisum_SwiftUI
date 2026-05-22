@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import SwiftUI
 
@@ -19,6 +20,7 @@ import SwiftUI
 /// ```
 struct SheetContainer<Content: View>: View {
     @Environment(\.dismiss) private var dismiss
+    @LumiTheme private var appTheme
 
     /// 内容视图
     @ViewBuilder var content: Content
@@ -43,7 +45,7 @@ struct SheetContainer<Content: View>: View {
                 .padding(.horizontal, 16)
                 .padding(.bottom, 24)
         }
-        .background(Config.rootBackground)
+        .background(appTheme.background)
         .infinite()
         .ignoresSafeArea()
     }

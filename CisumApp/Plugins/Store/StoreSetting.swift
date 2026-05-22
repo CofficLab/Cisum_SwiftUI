@@ -11,44 +11,44 @@ struct StoreSetting: View, SuperLog, SuperEvent {
     @State private var showBuySheet = false
     @State private var showRestoreSheet = false
     @State private var purchaseInfo: PurchaseInfo = .none
-    @State private var tierDisplayName: String = "免费版"
-    @State private var statusDescription: String = "当前使用免费版本"
+    @State private var tierDisplayName: String = "Free"
+    @State private var statusDescription: String = "Currently using free version"
 
 
     var body: some View {
-        MagicSettingSection(title: "订阅信息") {
-            // 当前版本
-            MagicSettingRow(title: "当前版本", description: "您正在使用的版本", icon: "star.fill", content: {
+        MagicSettingSection(title: String(localized: "Subscription Information", table: "Store")) {
+            // Current version
+            MagicSettingRow(title: String(localized: "Current Version", table: "Store"), description: String(localized: "Version you are using", table: "Store"), icon: "star.fill", content: {
                 HStack {
                     Text(tierDisplayName)
                         .font(.footnote)
                 }
             })
 
-            // 订阅状态
-            MagicSettingRow(title: "订阅状态", description: statusDescription, icon: "info.circle", content: {
+            // Subscription status
+            MagicSettingRow(title: String(localized: "Subscription Status", table: "Store"), description: statusDescription, icon: "info.circle", content: {
                 HStack {
                     if purchaseInfo.isProOrHigher {
                         if purchaseInfo.isExpired {
-                            Text("已过期")
+                            Text("Expired", tableName: "Store")
                                 .font(.footnote)
                                 .foregroundStyle(.red)
                         } else {
-                            Text("有效")
+                            Text("Active", tableName: "Store")
                                 .font(.footnote)
                                 .foregroundStyle(.green)
                         }
                     } else {
-                        Text("免费版")
+                        Text("Free", tableName: "Store")
                             .font(.footnote)
                             .foregroundStyle(.secondary)
                     }
                 }
             })
 
-            // 到期时间（如果有订阅）
+            // Expiration date (if has subscription)
             if let expiresAt = purchaseInfo.expiresAt {
-                MagicSettingRow(title: "到期时间", description: "订阅到期日期", icon: "calendar", content: {
+                MagicSettingRow(title: String(localized: "Expiration Date", table: "Store"), description: String(localized: "Subscription expiration date", table: "Store"), icon: "calendar", content: {
                     HStack {
                         Text(expiresAt.fullDateTime)
                             .font(.footnote)
@@ -56,8 +56,8 @@ struct StoreSetting: View, SuperLog, SuperEvent {
                 })
             }
 
-            // 购买入口
-            MagicSettingRow(title: "应用内购买", description: "订阅专业版，解锁所有功能", icon: "cart", content: {
+            // Purchase entry
+            MagicSettingRow(title: String(localized: "In-App Purchase", table: "Store"), description: String(localized: "Subscribe to Pro to unlock all features", table: "Store"), icon: "cart", content: {
                 Image.appStore
                     .frame(width: 28)
                     .frame(height: 28)
@@ -69,8 +69,8 @@ struct StoreSetting: View, SuperLog, SuperEvent {
                     })
             })
 
-            // 恢复购买
-            MagicSettingRow(title: "恢复购买", description: "在其他设备上购买后可在此恢复", icon: "arrow.clockwise", content: {
+            // Restore purchase
+            MagicSettingRow(title: String(localized: "Restore Purchase", table: "Store"), description: String(localized: "Restore purchases made on other devices", table: "Store"), icon: "arrow.clockwise", content: {
                 Image.reset
                     .frame(width: 28)
                     .frame(height: 28)
@@ -104,17 +104,22 @@ struct StoreSetting: View, SuperLog, SuperEvent {
 
 extension StoreSetting {
     private func updatePurchaseInfo() {
-        purchaseInfo = StoreService.cachedPurchaseInfo()
-        tierDisplayName = purchaseInfo.effectiveTier.displayName
+        Task {
+            let info = await StoreService.getPurchaseInfo()
+            await MainActor.run {
+                self.purchaseInfo = info
+                self.tierDisplayName = StoreService.tierCached().displayName
 
-        if purchaseInfo.isProOrHigher {
-            if purchaseInfo.isExpired {
-                statusDescription = "订阅已过期，请续费"
-            } else {
-                statusDescription = "订阅有效，享受完整功能"
+                if info.isProOrHigher {
+                    if info.isExpired {
+                        self.statusDescription = String(localized: "Subscription has expired, please renew to continue using Pro features", table: "Store")
+                    } else {
+                        self.statusDescription = String(localized: "Subscription is active, thank you for your support", table: "Store")
+                    }
+                } else {
+                    self.statusDescription = String(localized: "Currently using free version", table: "Store")
+                }
             }
-        } else {
-            statusDescription = "当前使用免费版本"
         }
     }
 }

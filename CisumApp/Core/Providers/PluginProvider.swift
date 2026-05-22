@@ -1,3 +1,4 @@
+import CisumUI
 import Foundation
 import MagicKit
 import ObjectiveC.runtime
@@ -194,6 +195,44 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
         }
 
         return buttons
+    }
+
+    /// 获取所有插件提供的主题贡献。
+    ///
+    /// 主题贡献按插件 `order` 排序，并将排序信息写入 `ThemeSortKey`，让 `CisumUI`
+    /// 的主题注册表只负责校验、选择和同步当前主题。
+    func getThemeContributions() -> [LumiUIThemeContribution] {
+        var merged: [(pluginOrder: Int, item: LumiUIThemeContribution)] = []
+
+        for plugin in plugins {
+            let pluginOrder = type(of: plugin).order
+            for item in plugin.addThemeContributions() {
+                merged.append((
+                    pluginOrder,
+                    LumiUIThemeContribution(
+                        sortKey: ThemeSortKey(pluginOrder: pluginOrder, themeId: item.id),
+                        chromeTheme: item.chromeTheme,
+                        uiTheme: item.uiTheme
+                    )
+                ))
+            }
+        }
+
+        let sorted = merged.sorted { lhs, rhs in
+            if lhs.pluginOrder != rhs.pluginOrder {
+                return lhs.pluginOrder < rhs.pluginOrder
+            }
+            return lhs.item.id.localizedCaseInsensitiveCompare(rhs.item.id) == .orderedAscending
+        }
+
+        var seen = Set<String>()
+        var result: [LumiUIThemeContribution] = []
+        for item in sorted.map(\.item) {
+            guard !seen.contains(item.id) else { continue }
+            seen.insert(item.id)
+            result.append(item)
+        }
+        return result
     }
 
     /// 设置当前激活的场景
