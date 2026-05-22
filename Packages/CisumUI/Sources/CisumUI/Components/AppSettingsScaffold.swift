@@ -192,6 +192,128 @@ public struct AppSettingsToggleRow: View {
     }
 }
 
+public struct AppSettingsInfoRow<Trailing: View>: View {
+    @LumiTheme private var theme
+
+    let title: Text
+    let description: Text?
+    let systemImage: String?
+    let isSelected: Bool
+    let action: (() -> Void)?
+    let trailing: Trailing
+
+    public init(
+        title: String,
+        description: String? = nil,
+        systemImage: String? = nil,
+        isSelected: Bool = false,
+        action: (() -> Void)? = nil,
+        @ViewBuilder trailing: () -> Trailing
+    ) {
+        self.title = Text(title)
+        self.description = description.map(Text.init)
+        self.systemImage = systemImage
+        self.isSelected = isSelected
+        self.action = action
+        self.trailing = trailing()
+    }
+
+    public init(
+        _ title: LocalizedStringKey,
+        description: LocalizedStringKey? = nil,
+        systemImage: String? = nil,
+        isSelected: Bool = false,
+        action: (() -> Void)? = nil,
+        @ViewBuilder trailing: () -> Trailing
+    ) {
+        self.title = Text(title)
+        self.description = description.map { Text($0) }
+        self.systemImage = systemImage
+        self.isSelected = isSelected
+        self.action = action
+        self.trailing = trailing()
+    }
+
+    public var body: some View {
+        if let action {
+            rowContent
+                .contentShape(Rectangle())
+                .onTapGesture(perform: action)
+        } else {
+            rowContent
+        }
+    }
+
+    private var rowContent: some View {
+        AppSettingsRow(isSelected: isSelected) {
+            HStack(spacing: 12) {
+                if let systemImage {
+                    Image(systemName: systemImage)
+                        .font(.appCallout)
+                        .foregroundColor(theme.primary)
+                        .frame(width: 24)
+                }
+
+                VStack(alignment: .leading, spacing: 2) {
+                    title
+                        .font(.appBody)
+                        .foregroundColor(theme.textPrimary)
+
+                    if let description {
+                        description
+                            .font(.appCaption)
+                            .foregroundColor(theme.textSecondary)
+                    }
+                }
+
+                Spacer(minLength: 12)
+
+                trailing
+                    .font(.appCaption)
+                    .foregroundColor(theme.textSecondary)
+            }
+        }
+    }
+}
+
+public extension AppSettingsInfoRow where Trailing == EmptyView {
+    init(
+        title: String,
+        description: String? = nil,
+        systemImage: String? = nil,
+        isSelected: Bool = false,
+        action: (() -> Void)? = nil
+    ) {
+        self.init(
+            title: title,
+            description: description,
+            systemImage: systemImage,
+            isSelected: isSelected,
+            action: action
+        ) {
+            EmptyView()
+        }
+    }
+
+    init(
+        _ title: LocalizedStringKey,
+        description: LocalizedStringKey? = nil,
+        systemImage: String? = nil,
+        isSelected: Bool = false,
+        action: (() -> Void)? = nil
+    ) {
+        self.init(
+            title,
+            description: description,
+            systemImage: systemImage,
+            isSelected: isSelected,
+            action: action
+        ) {
+            EmptyView()
+        }
+    }
+}
+
 #Preview {
     struct PreviewWrapper: View {
         @State private var enabled = true

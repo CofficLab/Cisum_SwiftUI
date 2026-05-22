@@ -23,24 +23,34 @@ public struct AppListRow<Content: View>: View {
     }
 
     public var body: some View {
-        Button(action: { action?() }) {
-            content
-                .padding(.horizontal, AppUI.Spacing.md)
-                .padding(.vertical, AppUI.Spacing.sm)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(rowBackground)
-                .overlay(rowBorder)
-                .cornerRadius(AppUI.Radius.sm)
-                .scaleEffect(isHovered && motionPreference.allowsMotion ? AppUI.Motion.rowHoverScale : 1.0)
-                .shadow(color: Color.black.opacity(isHovered ? 0.06 : 0), radius: isHovered ? 8 : 0, y: isHovered ? 3 : 0)
+        Group {
+            if let action {
+                Button(action: action) {
+                    rowContent
+                }
+                .buttonStyle(.plain)
+            } else {
+                rowContent
+            }
         }
-        .buttonStyle(.plain)
         .contentShape(Rectangle())
         .onHover { hovering in
             AppUI.Motion.animate(AppUI.Motion.enabled(AppUI.Motion.hover, preference: motionPreference)) {
                 isHovered = hovering
             }
         }
+    }
+
+    private var rowContent: some View {
+        content
+            .padding(.horizontal, AppUI.Spacing.md)
+            .padding(.vertical, AppUI.Spacing.sm)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(rowBackground)
+            .overlay(rowBorder)
+            .cornerRadius(AppUI.Radius.sm)
+            .scaleEffect(isHovered && motionPreference.allowsMotion ? AppUI.Motion.rowHoverScale : 1.0)
+            .shadow(color: Color.black.opacity(isHovered ? 0.06 : 0), radius: isHovered ? 8 : 0, y: isHovered ? 3 : 0)
     }
 
     @ViewBuilder

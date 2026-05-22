@@ -26,6 +26,18 @@ public struct AppEmptyState: View {
 
     public init(
         icon: String,
+        title: String,
+        description: String? = nil
+    ) {
+        self.icon = icon
+        self.title = LocalizedStringKey(title)
+        self.description = description.map { LocalizedStringKey($0) }
+        self.actionTitle = nil
+        self.action = nil
+    }
+
+    public init(
+        icon: String,
         title: LocalizedStringKey,
         description: LocalizedStringKey? = nil,
         actionTitle: LocalizedStringKey,
@@ -35,6 +47,20 @@ public struct AppEmptyState: View {
         self.title = title
         self.description = description
         self.actionTitle = actionTitle
+        self.action = action
+    }
+
+    public init(
+        icon: String,
+        title: String,
+        description: String? = nil,
+        actionTitle: String,
+        action: @escaping () -> Void
+    ) {
+        self.icon = icon
+        self.title = LocalizedStringKey(title)
+        self.description = description.map { LocalizedStringKey($0) }
+        self.actionTitle = LocalizedStringKey(actionTitle)
         self.action = action
     }
 
