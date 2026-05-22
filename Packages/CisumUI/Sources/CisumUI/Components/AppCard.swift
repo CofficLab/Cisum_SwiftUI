@@ -87,9 +87,9 @@ public struct AppCard<Content: View>: View {
             .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
             .scaleEffect(isHovering && motionPreference.allowsMotion ? AppUI.Motion.hoverScale : 1.0)
             .shadow(
-                color: Color.black.opacity(isHovering ? 0.08 : 0.02),
-                radius: isHovering ? 12 : 4,
-                y: isHovering ? 6 : 2
+                color: Color.black.opacity(isHovering ? 0.06 : 0.015),
+                radius: isHovering ? 10 : 3,
+                y: isHovering ? 5 : 1
             )
             .animation(AppUI.Motion.enabled(AppUI.Motion.hover, preference: motionPreference), value: isHovering)
             .onHover { hovering in
@@ -151,12 +151,12 @@ public struct AppCard<Content: View>: View {
 
     private var subtleBackground: some View {
         RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-            .fill(theme.textSecondary.opacity(0.06))
+            .fill(theme.elevatedSurface.opacity(0.74))
     }
 
     private var subtleBorder: some View {
         RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-            .stroke(theme.textTertiary.opacity(0.06), lineWidth: 1)
+            .stroke(theme.divider.opacity(0.8), lineWidth: 1)
     }
 
     // MARK: - Shared Helpers

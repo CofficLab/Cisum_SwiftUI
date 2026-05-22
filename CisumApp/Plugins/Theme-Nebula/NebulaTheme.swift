@@ -4,7 +4,7 @@ import SwiftUI
 struct NebulaTheme: LumiAppChromeTheme {
     let identifier = "nebula"
     let displayName = "星云粉"
-    let description = "柔和粉紫氛围，保留清晰文本对比"
+    let description = "柔和粉色点缀，保持干净阅读层次"
     let iconName = "cloud.moon.fill"
     let iconColor = Color.adaptive(light: "C026D3", dark: "F0ABFC")
     let isDarkTheme = false
@@ -12,38 +12,39 @@ struct NebulaTheme: LumiAppChromeTheme {
 
     func accentColors() -> (primary: Color, secondary: Color, tertiary: Color) {
         (
-            .adaptive(light: "C026D3", dark: "F0ABFC"),
-            .adaptive(light: "E11D48", dark: "FB7185"),
-            .adaptive(light: "7C3AED", dark: "C4B5FD")
+            .adaptive(light: "FF2D55", dark: "FF375F"),
+            .adaptive(light: "AF52DE", dark: "BF5AF2"),
+            .adaptive(light: "FF9F0A", dark: "FF9F0A")
         )
     }
 
     func atmosphereColors() -> (deep: Color, medium: Color, light: Color) {
         (
-            .adaptive(light: "FDF4FF", dark: "1E1024"),
-            .adaptive(light: "FFFFFF", dark: "2A1733"),
-            .adaptive(light: "FAE8FF", dark: "3B2247")
+            .adaptive(light: "FAF5F7", dark: "130E12"),
+            .adaptive(light: "FFFFFF", dark: "1D171D"),
+            .adaptive(light: "F6EEF2", dark: "29212A")
         )
     }
 
     func glowColors() -> (subtle: Color, medium: Color, intense: Color) {
         let accents = accentColors()
-        return (accents.primary.opacity(0.12), accents.secondary.opacity(0.2), accents.tertiary.opacity(0.32))
+        return (accents.primary.opacity(0.05), accents.secondary.opacity(0.08), accents.tertiary.opacity(0.12))
     }
 
-    func workspaceTextColor() -> Color { .adaptive(light: "4A044E", dark: "FDF4FF") }
-    func workspaceSecondaryTextColor() -> Color { .adaptive(light: "86198F", dark: "F5D0FE") }
-    func workspaceTertiaryTextColor() -> Color { .adaptive(light: "C026D3", dark: "C084FC") }
+    func workspaceTextColor() -> Color { .adaptive(light: "1D1D1F", dark: "F5F5F7") }
+    func workspaceSecondaryTextColor() -> Color { .adaptive(light: "515154", dark: "A1A1A6") }
+    func workspaceTertiaryTextColor() -> Color { .adaptive(light: "86868B", dark: "74747A") }
 
     func makeGlobalBackground(proxy: GeometryProxy) -> AnyView {
         let colors = atmosphereColors()
+        let accents = accentColors()
         return AnyView(
-            LinearGradient(
-                colors: [colors.deep, colors.medium, colors.light],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-            .background(.ultraThinMaterial)
+            ZStack {
+                LinearGradient(colors: [colors.medium, colors.deep, colors.light], startPoint: .top, endPoint: .bottom)
+                RadialGradient(colors: [accents.primary.opacity(0.10), Color.clear], center: .topTrailing, startRadius: 0, endRadius: 560)
+            }
+            .frame(width: proxy.size.width, height: proxy.size.height)
+            .clipped()
             .ignoresSafeArea()
         )
     }

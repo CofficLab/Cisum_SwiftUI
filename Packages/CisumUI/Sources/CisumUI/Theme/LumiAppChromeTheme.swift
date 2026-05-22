@@ -35,7 +35,7 @@ public extension LumiAppChromeTheme {
     var followsSystemAppearance: Bool { false }
 
     func workspaceBackgroundColor() -> Color {
-        atmosphereColors().medium
+        atmosphereColors().deep
     }
 
     func workspaceTextColor() -> Color {
@@ -53,16 +53,16 @@ public extension LumiAppChromeTheme {
     func backgroundGradient() -> LinearGradient {
         let colors = atmosphereColors()
         return LinearGradient(
-            colors: [colors.deep, colors.medium, colors.light, colors.medium, colors.deep],
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
+            colors: [colors.medium, colors.deep, colors.light],
+            startPoint: .top,
+            endPoint: .bottom
         )
     }
 
     func glowGradient() -> RadialGradient {
         let colors = glowColors()
         return RadialGradient(
-            colors: [colors.intense, colors.medium, colors.subtle, Color.clear],
+            colors: [colors.medium, colors.subtle, Color.clear],
             center: .center,
             startRadius: 0,
             endRadius: 250
@@ -76,22 +76,9 @@ public extension LumiAppChromeTheme {
 
                 Circle()
                     .fill(glowGradient())
-                    .frame(width: 600, height: 600)
-                    .blur(radius: 120)
-                    .position(x: 0, y: 0)
-
-                Circle()
-                    .fill(
-                        RadialGradient(
-                            colors: [glowColors().intense, glowColors().medium, Color.clear],
-                            center: .center,
-                            startRadius: 0,
-                            endRadius: 250
-                        )
-                    )
-                    .frame(width: 500, height: 500)
-                    .blur(radius: 120)
-                    .position(x: proxy.size.width, y: proxy.size.height)
+                    .frame(width: 520, height: 520)
+                    .blur(radius: 140)
+                    .position(x: proxy.size.width, y: 0)
             }
             .frame(width: proxy.size.width, height: proxy.size.height)
             .clipped()

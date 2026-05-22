@@ -4,7 +4,7 @@ public extension View {
     func glowEffect(
         color: SwiftUI.Color,
         radius: CGFloat = 8,
-        intensity: Double = 0.3
+        intensity: Double = 0.18
     ) -> some View {
         shadow(
             color: color.opacity(intensity),
