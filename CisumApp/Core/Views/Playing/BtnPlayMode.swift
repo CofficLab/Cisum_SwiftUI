@@ -7,6 +7,7 @@ struct PlayModeButton: View {
     @EnvironmentObject var man: PlayMan
     @Environment(\.demoMode) var isDemoMode
     @LumiTheme private var appTheme
+    @LumiMotionPreferenceReader private var motionPreference
 
     private let size: CGFloat = 32
 
@@ -23,7 +24,11 @@ struct PlayModeButton: View {
                 modeIcon(systemName: .cisumIconShuffle)
             }
         }
-        .cisumHoverScale(105)
+        .appPlaybackIconTransition(preference: motionPreference)
+        .animation(
+            LumiMotion.enabled(LumiMotion.playbackControl, preference: motionPreference),
+            value: man.playMode
+        )
         .shadow(color: appTheme.background.opacity(0.10), radius: 4, y: 1)
     }
 
@@ -34,7 +39,10 @@ struct PlayModeButton: View {
             .foregroundStyle(appTheme.textSecondary)
             .cisumCard(.ultraThinMaterial)
             .cisumRoundedFull()
-            .cisumButton {
+            #if os(iOS)
+            .contentTransition(.symbolEffect(.replace))
+            #endif
+            .cisumPlaybackControl {
                 man.togglePlayMode()
             }
     }

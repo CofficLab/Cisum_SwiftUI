@@ -11,6 +11,7 @@ struct TitleView: View, SuperLog, SuperThread {
     @EnvironmentObject var playMan: PlayMan
     @Environment(\.demoMode) var isDemoMode
     @LumiTheme private var appTheme
+    @LumiMotionPreferenceReader private var motionPreference
 
     var title: String {
         if isDemoMode {
@@ -38,6 +39,12 @@ struct TitleView: View, SuperLog, SuperThread {
                     .padding(.vertical)
                     .shadow(color: appTheme.background.opacity(0.18), radius: 8, y: 2)
                     .foregroundStyle(appTheme.textPrimary)
+                    .id(title)
+                    .appTrackChangeTransition(preference: motionPreference)
+                    .animation(
+                        LumiMotion.enabled(LumiMotion.trackChange, preference: motionPreference),
+                        value: title
+                    )
             }
         }
     }

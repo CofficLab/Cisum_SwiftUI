@@ -25,6 +25,45 @@ public enum LumiTransition {
             )
     }
 
+    /// 切歌时标题等文本切换
+    public static func trackChange(reduceMotion: Bool) -> AnyTransition {
+        reduceMotion
+            ? .opacity
+            : .asymmetric(
+                insertion: .opacity.combined(with: .offset(y: 6)),
+                removal: .opacity.combined(with: .offset(y: -6))
+            )
+    }
+
+    /// 播放/暂停图标切换
+    public static func playbackIcon(reduceMotion: Bool) -> AnyTransition {
+        reduceMotion
+            ? .opacity
+            : .scale(scale: 0.82).combined(with: .opacity)
+    }
+
+    /// 曲库面板展开
+    public static func panelReveal(reduceMotion: Bool) -> AnyTransition {
+        reduceMotion
+            ? .opacity
+            : .asymmetric(
+                insertion: .move(edge: .bottom).combined(with: .opacity),
+                removal: .opacity
+            )
+    }
+
+    public static func trackChange(preference: LumiMotionPreference) -> AnyTransition {
+        trackChange(reduceMotion: !preference.allowsMotion)
+    }
+
+    public static func playbackIcon(preference: LumiMotionPreference) -> AnyTransition {
+        playbackIcon(reduceMotion: !preference.allowsMotion)
+    }
+
+    public static func panelReveal(preference: LumiMotionPreference) -> AnyTransition {
+        panelReveal(reduceMotion: !preference.allowsMotion)
+    }
+
     public static func messageInsertion(preference: LumiMotionPreference) -> AnyTransition {
         messageInsertion(reduceMotion: !preference.allowsListMotion)
     }
@@ -61,5 +100,17 @@ public extension View {
 
     func appStatusPresentationTransition(preference: LumiMotionPreference) -> some View {
         transition(LumiTransition.statusPresentation(preference: preference))
+    }
+
+    func appTrackChangeTransition(preference: LumiMotionPreference) -> some View {
+        transition(LumiTransition.trackChange(preference: preference))
+    }
+
+    func appPlaybackIconTransition(preference: LumiMotionPreference) -> some View {
+        transition(LumiTransition.playbackIcon(preference: preference))
+    }
+
+    func appPanelRevealTransition(preference: LumiMotionPreference) -> some View {
+        transition(LumiTransition.panelReveal(preference: preference))
     }
 }

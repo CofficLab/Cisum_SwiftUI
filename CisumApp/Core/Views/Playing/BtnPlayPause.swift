@@ -7,43 +7,39 @@ struct PlayPauseButton: View {
     @EnvironmentObject var man: PlayMan
     @Environment(\.demoMode) var isDemoMode
     @LumiTheme private var appTheme
+    @LumiMotionPreferenceReader private var motionPreference
 
-    private let size: CGFloat = 32
+    private let size: CGFloat = 36
+    private var isPlaying: Bool { man.state == .playing }
 
     var body: some View {
         Group {
-            if man.state == .playing {
-                pauseButton
+            if isPlaying {
+                controlIcon(Image.cisumPauseFill)
+                    .cisumPlaybackControl { man.pause(reason: "PlayPauseButton") }
             } else {
-                playButton
+                controlIcon(Image.cisumPlayFill)
+                    .cisumPlaybackControl { man.playCurrent(reason: "PlayPauseButton") }
             }
         }
-        .cisumHoverScale(105)
+        .appPlaybackIconTransition(preference: motionPreference)
+        .animation(
+            LumiMotion.enabled(LumiMotion.playbackControl, preference: motionPreference),
+            value: isPlaying
+        )
         .shadow(color: appTheme.background.opacity(0.12), radius: 5, y: 1)
     }
 
-    private var playButton: some View {
-        Image.cisumPlayFill
-            .font(.system(size: self.size * 0.6))
+    private func controlIcon(_ image: Image) -> some View {
+        image
+            .font(.system(size: size * 0.58))
             .foregroundStyle(appTheme.textPrimary)
             .frame(width: size, height: size)
             .cisumCard(.ultraThinMaterial)
             .cisumRoundedFull()
-            .cisumButton {
-                man.playCurrent(reason: "PlayPauseButton")
-            }
-    }
-
-    private var pauseButton: some View {
-        Image.cisumPauseFill
-            .font(.system(size: self.size * 0.6))
-            .foregroundStyle(appTheme.textPrimary)
-            .frame(width: size, height: size)
-            .cisumCard(.ultraThinMaterial)
-            .cisumRoundedFull()
-            .cisumButton {
-                man.pause(reason: "PlayPauseButton")
-            }
+            #if os(iOS)
+            .contentTransition(.symbolEffect(.replace))
+            #endif
     }
 }
 

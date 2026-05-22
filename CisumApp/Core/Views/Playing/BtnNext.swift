@@ -17,8 +17,7 @@ struct NextButton: View {
             .frame(width: size, height: size)
             .cisumCard(.ultraThinMaterial)
             .cisumRoundedFull()
-            .cisumHoverScale(105)
-            .cisumButton {
+            .cisumPlaybackControl {
                 man.next()
             }
             .shadow(color: appTheme.background.opacity(0.10), radius: 4, y: 1)

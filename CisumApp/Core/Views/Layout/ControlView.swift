@@ -12,6 +12,7 @@ struct ControlView: View, SuperLog {
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var p: PluginProvider
     @LumiTheme private var appTheme
+    @LumiMotionPreferenceReader private var motionPreference
 
     @State var showHeroView = true
     @State var showBtnsView = true
@@ -84,6 +85,7 @@ struct ControlView: View, SuperLog {
                         playMan.makeHeroView()
                     }
                     .frame(maxWidth: geo.size.height * 1.3)
+                    .transition(LumiTransition.trackChange(preference: motionPreference))
                     .onAppear {
                         appManager.rightAlbumVisible = true
                     }
@@ -95,6 +97,10 @@ struct ControlView: View, SuperLog {
             .padding(.bottom, 0)
             .padding(.horizontal, 0)
             .frame(maxHeight: .infinity)
+            .animation(
+                LumiMotion.enabled(LumiMotion.trackChange, preference: motionPreference),
+                value: shouldShowRightAlbum(geo)
+            )
         }
         .ignoresSafeArea(edges: Config.isDesktop ? .horizontal : .all)
         .frame(minHeight: Config.controlViewMinHeight)
