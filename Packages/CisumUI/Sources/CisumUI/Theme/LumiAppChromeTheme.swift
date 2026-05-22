@@ -103,11 +103,13 @@ public extension LumiAppChromeTheme {
     func makeGlobalBackground(proxy: GeometryProxy) -> AnyView {
         AnyView(
             ZStack {
+                backgroundGradient()
+
                 Circle()
                     .fill(glowGradient())
                     .frame(width: 600, height: 600)
                     .blur(radius: 120)
-                    .offset(x: -200, y: -200)
+                    .position(x: 0, y: 0)
 
                 Circle()
                     .fill(
@@ -122,6 +124,9 @@ public extension LumiAppChromeTheme {
                     .blur(radius: 120)
                     .position(x: proxy.size.width, y: proxy.size.height)
             }
+            .frame(width: proxy.size.width, height: proxy.size.height)
+            .clipped()
+            .allowsHitTesting(false)
         )
     }
 }
