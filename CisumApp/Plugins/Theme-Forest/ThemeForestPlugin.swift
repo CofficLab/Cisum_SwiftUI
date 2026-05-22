@@ -12,7 +12,7 @@ actor ThemeForestPlugin: SuperPlugin {
 
     @MainActor
     func addThemeContributions() -> [LumiUIThemeContribution] {
-        [LumiUIThemeContribution(appTheme: ForestTheme(), editorThemeId: "forest")]
+        [LumiUIThemeContribution(appTheme: ForestTheme())]
     }
 }
 
@@ -23,4 +23,3 @@ actor ThemeForestPlugin: SuperPlugin {
         .inRootView()
         .withDebugBar()
 }
-

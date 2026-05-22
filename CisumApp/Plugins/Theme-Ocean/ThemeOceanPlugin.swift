@@ -12,7 +12,7 @@ actor ThemeOceanPlugin: SuperPlugin {
 
     @MainActor
     func addThemeContributions() -> [LumiUIThemeContribution] {
-        [LumiUIThemeContribution(appTheme: OceanTheme(), editorThemeId: "ocean")]
+        [LumiUIThemeContribution(appTheme: OceanTheme())]
     }
 }
 
@@ -23,4 +23,3 @@ actor ThemeOceanPlugin: SuperPlugin {
         .inRootView()
         .withDebugBar()
 }
-

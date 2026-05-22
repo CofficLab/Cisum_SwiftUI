@@ -4,7 +4,6 @@ import SwiftUI
 struct OceanTheme: LumiAppChromeTheme {
     let identifier = "ocean"
     let displayName = "海洋蓝"
-    let compactName = "海洋"
     let description = "清爽蓝青配色，随系统明暗适配"
     let iconName = "water.waves"
     let iconColor = Color.adaptive(light: "0284C7", dark: "38BDF8")

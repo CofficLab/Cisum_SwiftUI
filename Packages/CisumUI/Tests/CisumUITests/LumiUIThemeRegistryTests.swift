@@ -5,7 +5,6 @@ import Testing
 private struct MockChromeTheme: LumiAppChromeTheme {
     let identifier: String
     let displayName: String
-    let compactName: String
     let description: String
     let iconName: String
     let iconColor: Color
@@ -19,7 +18,6 @@ private struct MockChromeTheme: LumiAppChromeTheme {
     ) {
         identifier = id
         displayName = name
-        compactName = String(name.prefix(4))
         description = "Mock theme \(id)"
         iconName = "circle.fill"
         iconColor = pluginTint
@@ -41,14 +39,11 @@ private struct MockChromeTheme: LumiAppChromeTheme {
 
 private func contribution(
     pluginOrder: Int,
-    themeId: String,
-    editorThemeId: String? = nil
+    themeId: String
 ) -> LumiUIThemeContribution {
-    let editorId = editorThemeId ?? "editor-\(themeId)"
     return LumiUIThemeContribution(
         sortKey: ThemeSortKey(pluginOrder: pluginOrder, themeId: themeId),
-        chromeTheme: MockChromeTheme(id: themeId, name: themeId.capitalized),
-        editorThemeId: editorId
+        chromeTheme: MockChromeTheme(id: themeId, name: themeId.capitalized)
     )
 }
 
@@ -82,7 +77,6 @@ struct LumiUIThemeRegistryTests {
             contribution(pluginOrder: 10, themeId: "alpha"),
             contribution(pluginOrder: 10, themeId: "beta"),
         ])
-        #expect(try registry.defaultThemeId() == "alpha")
         #expect(registry.selectedThemeId == "alpha")
     }
 
@@ -107,7 +101,6 @@ struct LumiUIThemeRegistryTests {
         try registry.select(themeId: "second")
         #expect(registry.chromeTheme.identifier == "second")
         #expect(registry.uiTheme.id == "second")
-        #expect(ActiveChromeTheme.current.identifier == "second")
         #expect(LumiUIThemeStore.shared.theme.id == "second")
     }
 
@@ -122,45 +115,5 @@ struct LumiUIThemeRegistryTests {
         try registry.select(themeId: "b")
         try registry.replaceAll([contribution(pluginOrder: 1, themeId: "a")])
         #expect(registry.selectedThemeId == "a")
-    }
-
-    @Test
-    @MainActor
-    func resolvedEditorThemeIdUsesChromeHook() throws {
-        struct AdaptiveChrome: LumiAppChromeTheme {
-            let identifier = "adaptive"
-            let displayName = "Adaptive"
-            let compactName = "Adp"
-            let description = ""
-            let iconName = "moon"
-            let iconColor = Color.blue
-
-            func accentColors() -> (primary: Color, secondary: Color, tertiary: Color) {
-                (.blue, .blue, .blue)
-            }
-
-            func atmosphereColors() -> (deep: Color, medium: Color, light: Color) {
-                (.black, .gray, .white)
-            }
-
-            func glowColors() -> (subtle: Color, medium: Color, intense: Color) {
-                (.blue, .blue, .blue)
-            }
-
-            func resolvedEditorThemeId(defaultEditorThemeId: String, colorScheme: ColorScheme) -> String {
-                colorScheme == .dark ? "dark-id" : "light-id"
-            }
-        }
-
-        let registry = LumiUIThemeRegistry()
-        try registry.replaceAll([
-            LumiUIThemeContribution(
-                sortKey: ThemeSortKey(pluginOrder: 0, themeId: "adaptive"),
-                chromeTheme: AdaptiveChrome(),
-                editorThemeId: "fallback"
-            ),
-        ])
-        #expect(registry.resolvedEditorThemeId(colorScheme: .dark) == "dark-id")
-        #expect(registry.resolvedEditorThemeId(colorScheme: .light) == "light-id")
     }
 }

@@ -4,7 +4,6 @@ import SwiftUI
 struct AuroraTheme: LumiAppChromeTheme {
     let identifier = "aurora"
     let displayName = "极光紫"
-    let compactName = "极光"
     let description = "冷紫与青绿交织，适合沉浸式播放页"
     let iconName = "sparkles"
     let iconColor = Color.adaptive(light: "8B5CF6", dark: "C084FC")

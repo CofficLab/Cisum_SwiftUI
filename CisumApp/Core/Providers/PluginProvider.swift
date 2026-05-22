@@ -212,9 +212,7 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
                     LumiUIThemeContribution(
                         sortKey: ThemeSortKey(pluginOrder: pluginOrder, themeId: item.id),
                         chromeTheme: item.chromeTheme,
-                        editorThemeId: item.editorThemeId,
-                        uiTheme: item.uiTheme,
-                        attachments: item.attachments
+                        uiTheme: item.uiTheme
                     )
                 ))
             }

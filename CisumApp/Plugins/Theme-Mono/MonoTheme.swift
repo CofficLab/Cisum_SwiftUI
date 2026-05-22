@@ -4,7 +4,6 @@ import SwiftUI
 struct MonoTheme: LumiAppChromeTheme {
     let identifier = "mono"
     let displayName = "黑白高对比"
-    let compactName = "高对比"
     let description = "黑白对比优先，提升可读性"
     let iconName = "circle.lefthalf.filled"
     let iconColor = Color.adaptive(light: "111827", dark: "FFFFFF")

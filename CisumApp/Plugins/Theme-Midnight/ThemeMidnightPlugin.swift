@@ -12,7 +12,7 @@ actor ThemeMidnightPlugin: SuperPlugin {
 
     @MainActor
     func addThemeContributions() -> [LumiUIThemeContribution] {
-        [LumiUIThemeContribution(appTheme: MidnightTheme(), editorThemeId: "midnight")]
+        [LumiUIThemeContribution(appTheme: MidnightTheme())]
     }
 }
 
@@ -23,4 +23,3 @@ actor ThemeMidnightPlugin: SuperPlugin {
         .inRootView()
         .withDebugBar()
 }
-

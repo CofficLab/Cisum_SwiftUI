@@ -7,14 +7,11 @@ import SwiftUI
 public protocol LumiAppChromeTheme {
     var identifier: String { get }
     var displayName: String { get }
-    var compactName: String { get }
     var description: String { get }
     var iconName: String { get }
     var iconColor: Color { get }
     var isDarkTheme: Bool { get }
     var followsSystemAppearance: Bool { get }
-
-    func resolvedEditorThemeId(defaultEditorThemeId: String, colorScheme: ColorScheme) -> String
 
     func accentColors() -> (primary: Color, secondary: Color, tertiary: Color)
     func atmosphereColors() -> (deep: Color, medium: Color, light: Color)
@@ -22,12 +19,8 @@ public protocol LumiAppChromeTheme {
 
     func backgroundGradient() -> LinearGradient
     func glowGradient() -> RadialGradient
-    func borderGradient() -> LinearGradient
 
     func workspaceBackgroundColor() -> Color
-    func sidebarBackgroundColor() -> Color
-    func sidebarSelectionColor() -> Color
-    func sidebarSelectionTextColor() -> Color
     func workspaceTextColor() -> Color
     func workspaceSecondaryTextColor() -> Color
     func workspaceTertiaryTextColor() -> Color
@@ -41,24 +34,8 @@ public extension LumiAppChromeTheme {
     var isDarkTheme: Bool { true }
     var followsSystemAppearance: Bool { false }
 
-    func resolvedEditorThemeId(defaultEditorThemeId: String, colorScheme: ColorScheme) -> String {
-        defaultEditorThemeId
-    }
-
     func workspaceBackgroundColor() -> Color {
         atmosphereColors().medium
-    }
-
-    func sidebarBackgroundColor() -> Color {
-        atmosphereColors().deep
-    }
-
-    func sidebarSelectionColor() -> Color {
-        accentColors().primary.opacity(0.22)
-    }
-
-    func sidebarSelectionTextColor() -> Color {
-        isDarkTheme ? Color.white : Color.white
     }
 
     func workspaceTextColor() -> Color {
@@ -89,14 +66,6 @@ public extension LumiAppChromeTheme {
             center: .center,
             startRadius: 0,
             endRadius: 250
-        )
-    }
-
-    func borderGradient() -> LinearGradient {
-        LinearGradient(
-            colors: [Color.clear, Color.white.opacity(0.15), Color.clear],
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
         )
     }
 

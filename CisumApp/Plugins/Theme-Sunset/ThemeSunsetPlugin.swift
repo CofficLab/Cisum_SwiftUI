@@ -12,7 +12,7 @@ actor ThemeSunsetPlugin: SuperPlugin {
 
     @MainActor
     func addThemeContributions() -> [LumiUIThemeContribution] {
-        [LumiUIThemeContribution(appTheme: SunsetTheme(), editorThemeId: "sunset")]
+        [LumiUIThemeContribution(appTheme: SunsetTheme())]
     }
 }
 
@@ -23,4 +23,3 @@ actor ThemeSunsetPlugin: SuperPlugin {
         .inRootView()
         .withDebugBar()
 }
-

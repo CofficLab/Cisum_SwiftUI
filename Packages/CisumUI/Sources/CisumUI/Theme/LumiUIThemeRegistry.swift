@@ -5,7 +5,7 @@ import SwiftUI
 public final class LumiUIThemeRegistry: ObservableObject {
     public static let shared = LumiUIThemeRegistry()
 
-    @Published public private(set) var catalog: ThemeCatalog?
+    @Published private var catalog: ThemeCatalog?
 
     @Published public private(set) var chromeTheme: any LumiAppChromeTheme = UnconfiguredChromeTheme()
 
@@ -17,19 +17,8 @@ public final class LumiUIThemeRegistry: ObservableObject {
         catalog?.themes ?? []
     }
 
-    public var selectedContribution: LumiUIThemeContribution? {
-        catalog?.selected
-    }
-
     public var selectedThemeId: String? {
         catalog?.selectedId
-    }
-
-    public func defaultThemeId() throws -> String {
-        guard let id = catalog?.defaultThemeId else {
-            throw ThemeError.noThemesRegistered
-        }
-        return id
     }
 
     /// 用新的贡献列表替换目录；空列表或重复 id 时抛出 ``ThemeError``。
@@ -61,14 +50,6 @@ public final class LumiUIThemeRegistry: ObservableObject {
         try applySelection()
     }
 
-    public func resolvedEditorThemeId(colorScheme: ColorScheme) -> String? {
-        guard let contribution = selectedContribution else { return nil }
-        return contribution.chromeTheme.resolvedEditorThemeId(
-            defaultEditorThemeId: contribution.editorThemeId,
-            colorScheme: colorScheme
-        )
-    }
-
     // MARK: - Private
 
     private func sortedUnique(_ contributions: [LumiUIThemeContribution]) throws -> [LumiUIThemeContribution] {
@@ -90,9 +71,28 @@ public final class LumiUIThemeRegistry: ObservableObject {
             throw ThemeError.noThemesRegistered
         }
         chromeTheme = contribution.chromeTheme
-        ActiveChromeTheme.current = contribution.chromeTheme
         let resolvedUI = contribution.uiTheme ?? ChromeToUIThemeAdapter(chrome: contribution.chromeTheme)
         uiTheme = resolvedUI
         LumiUIThemeStore.shared.setTheme(resolvedUI)
+    }
+}
+
+private struct UnconfiguredChromeTheme: LumiAppChromeTheme {
+    let identifier = "__unconfigured__"
+    let displayName = ""
+    let description = ""
+    let iconName = "circle.dashed"
+    let iconColor = Color.clear
+
+    func accentColors() -> (primary: Color, secondary: Color, tertiary: Color) {
+        (.clear, .clear, .clear)
+    }
+
+    func atmosphereColors() -> (deep: Color, medium: Color, light: Color) {
+        (.clear, .clear, .clear)
+    }
+
+    func glowColors() -> (subtle: Color, medium: Color, intense: Color) {
+        (.clear, .clear, .clear)
     }
 }

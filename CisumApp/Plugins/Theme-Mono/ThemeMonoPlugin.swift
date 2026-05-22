@@ -12,7 +12,7 @@ actor ThemeMonoPlugin: SuperPlugin {
 
     @MainActor
     func addThemeContributions() -> [LumiUIThemeContribution] {
-        [LumiUIThemeContribution(appTheme: MonoTheme(), editorThemeId: "mono")]
+        [LumiUIThemeContribution(appTheme: MonoTheme())]
     }
 }
 
@@ -23,4 +23,3 @@ actor ThemeMonoPlugin: SuperPlugin {
         .inRootView()
         .withDebugBar()
 }
-

@@ -12,7 +12,7 @@ actor ThemeAuroraPlugin: SuperPlugin {
 
     @MainActor
     func addThemeContributions() -> [LumiUIThemeContribution] {
-        [LumiUIThemeContribution(appTheme: AuroraTheme(), editorThemeId: "aurora")]
+        [LumiUIThemeContribution(appTheme: AuroraTheme())]
     }
 }
 
@@ -23,4 +23,3 @@ actor ThemeAuroraPlugin: SuperPlugin {
         .inRootView()
         .withDebugBar()
 }
-

@@ -12,7 +12,7 @@ actor ThemeCisumPlugin: SuperPlugin {
 
     @MainActor
     func addThemeContributions() -> [LumiUIThemeContribution] {
-        [LumiUIThemeContribution(appTheme: CisumTheme(), editorThemeId: "cisum")]
+        [LumiUIThemeContribution(appTheme: CisumTheme())]
     }
 }
 
@@ -23,4 +23,3 @@ actor ThemeCisumPlugin: SuperPlugin {
         .inRootView()
         .withDebugBar()
 }
-

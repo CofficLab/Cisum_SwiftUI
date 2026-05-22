@@ -4,7 +4,6 @@ import SwiftUI
 struct SunsetTheme: LumiAppChromeTheme {
     let identifier = "sunset"
     let displayName = "日落橙"
-    let compactName = "日落"
     let description = "暖色点缀主题，避免大面积高饱和"
     let iconName = "sunset.fill"
     let iconColor = Color.adaptive(light: "EA580C", dark: "FB923C")

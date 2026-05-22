@@ -5,7 +5,6 @@ import Testing
 private struct ChromeFixture: LumiAppChromeTheme {
     let identifier = "fixture"
     let displayName = "Fixture"
-    let compactName = "Fix"
     let description = "Test"
     let iconName = "star"
     let iconColor = Color.red

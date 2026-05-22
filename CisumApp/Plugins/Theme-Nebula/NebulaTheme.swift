@@ -4,7 +4,6 @@ import SwiftUI
 struct NebulaTheme: LumiAppChromeTheme {
     let identifier = "nebula"
     let displayName = "星云粉"
-    let compactName = "星云"
     let description = "柔和粉紫氛围，保留清晰文本对比"
     let iconName = "cloud.moon.fill"
     let iconColor = Color.adaptive(light: "C026D3", dark: "F0ABFC")

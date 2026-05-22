@@ -4,7 +4,6 @@ import SwiftUI
 struct ForestTheme: LumiAppChromeTheme {
     let identifier = "forest"
     let displayName = "森林绿"
-    let compactName = "森林"
     let description = "安静低饱和绿色，适合长时间听书"
     let iconName = "leaf.fill"
     let iconColor = Color.adaptive(light: "059669", dark: "34D399")

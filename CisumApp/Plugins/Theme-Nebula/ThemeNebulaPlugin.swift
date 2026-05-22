@@ -12,7 +12,7 @@ actor ThemeNebulaPlugin: SuperPlugin {
 
     @MainActor
     func addThemeContributions() -> [LumiUIThemeContribution] {
-        [LumiUIThemeContribution(appTheme: NebulaTheme(), editorThemeId: "nebula")]
+        [LumiUIThemeContribution(appTheme: NebulaTheme())]
     }
 }
 
@@ -23,4 +23,3 @@ actor ThemeNebulaPlugin: SuperPlugin {
         .inRootView()
         .withDebugBar()
 }
-

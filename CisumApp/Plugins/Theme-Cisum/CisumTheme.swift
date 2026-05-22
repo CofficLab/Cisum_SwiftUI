@@ -4,7 +4,6 @@ import SwiftUI
 struct CisumTheme: LumiAppChromeTheme {
     let identifier = "cisum"
     let displayName = "Cisum"
-    let compactName = "Cisum"
     let description = "沿用原始日落渐变配色"
     let iconName = "sunset.fill"
     let iconColor = Color.adaptive(light: "FF512F", dark: "FF8A4C")
