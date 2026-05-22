@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 
 import OSLog
@@ -10,6 +11,7 @@ struct TitleView: View, SuperLog, SuperThread {
 
     @EnvironmentObject var playMan: PlayMan
     @Environment(\.demoMode) var isDemoMode
+    @LumiTheme private var appTheme
 
     var title: String {
         if isDemoMode {
@@ -36,7 +38,7 @@ struct TitleView: View, SuperLog, SuperThread {
                     .position(x: geo.size.width / 2, y: geo.size.height / 2)
                     .padding(.vertical)
                     .shadow3xl()
-                    .foregroundStyle(.white)
+                    .foregroundStyle(appTheme.textPrimary)
             }
         }
     }
