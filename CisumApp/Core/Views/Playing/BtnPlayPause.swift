@@ -1,5 +1,4 @@
 import CisumUI
-import MagicKit
 import MagicPlayMan
 import SwiftUI
 
@@ -19,30 +18,30 @@ struct PlayPauseButton: View {
                 playButton
             }
         }
-        .hoverScale(105)
+        .cisumHoverScale(105)
         .shadow(color: appTheme.background.opacity(0.12), radius: 5, y: 1)
     }
 
     private var playButton: some View {
-        Image.playFill
+        Image.cisumPlayFill
             .font(.system(size: self.size * 0.6))
             .foregroundStyle(appTheme.textPrimary)
             .frame(width: size, height: size)
-            .inCard(.ultraThinMaterial)
-            .roundedFull()
-            .inButtonWithAction {
+            .cisumCard(.ultraThinMaterial)
+            .cisumRoundedFull()
+            .cisumButton {
                 man.playCurrent(reason: "PlayPauseButton")
             }
     }
 
     private var pauseButton: some View {
-        Image.pauseFill
+        Image.cisumPauseFill
             .font(.system(size: self.size * 0.6))
             .foregroundStyle(appTheme.textPrimary)
             .frame(width: size, height: size)
-            .inCard(.ultraThinMaterial)
-            .roundedFull()
-            .inButtonWithAction {
+            .cisumCard(.ultraThinMaterial)
+            .cisumRoundedFull()
+            .cisumButton {
                 man.pause(reason: "PlayPauseButton")
             }
     }

@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import OSLog
 import SwiftUI
@@ -15,7 +16,7 @@ struct AudioSettings: View, SuperLog {
         Group {
             if let disk = disk {
                 MagicSettingSection(title: String(localized: "Music Library", table: "Audio-Settings")) {
-                    MagicSettingRow(title: String(localized: "Library Size", table: "Audio-Settings"), description: description, icon: .iconMusicLibrary, content: {
+                    MagicSettingRow(title: String(localized: "Library Size", table: "Audio-Settings"), description: description, icon: .cisumIconMusicLibrary, content: {
                         HStack {
                             if let diskSize = diskSize {
                                 Text(diskSize)
@@ -25,20 +26,20 @@ struct AudioSettings: View, SuperLog {
 
                     })
 
-                    MagicSettingRow(title: String(localized: "Open Library", table: "Audio-Settings"), description: String(localized: "View in Finder", table: "Audio-Settings"), icon: .iconShowInFinder, content: {
-                        Image(systemName: .iconShowInFinder)
+                    MagicSettingRow(title: String(localized: "Open Library", table: "Audio-Settings"), description: String(localized: "View in Finder", table: "Audio-Settings"), icon: .cisumIconShowInFinder, content: {
+                        Image(systemName: .cisumIconShowInFinder)
                             .frame(width: 28)
                             .frame(height: 28)
                             .background(.regularMaterial, in: .circle)
-                            .shadowSm()
-                            .hoverScale(105)
-                            .inButtonWithAction {
+                            .cisumShadowSm()
+                            .cisumHoverScale(105)
+                            .cisumButton {
                                 disk.openInFinder()
                             }
                     })
-                    .if(Config.isDesktop)
+                    .cisumIf(Config.isDesktop)
 
-                    MagicSettingRow(title: String(localized: "File Count", table: "Audio-Settings"), description: String(localized: "Total files in library", table: "Audio-Settings"), icon: .iconDocument, content: {
+                    MagicSettingRow(title: String(localized: "File Count", table: "Audio-Settings"), description: String(localized: "Total files in library", table: "Audio-Settings"), icon: .cisumIconDocument, content: {
                         HStack {
                             Text("\(fileCount) files", tableName: "Audio-Settings")
                                 .font(.footnote)
@@ -47,7 +48,7 @@ struct AudioSettings: View, SuperLog {
                 }
             } else {
                 MagicSettingSection(title: String(localized: "Music Library", table: "Audio-Settings")) {
-                    MagicSettingRow(title: String(localized: "Error", table: "Audio-Settings"), description: description, icon: .iconMusicLibrary, content: {
+                    MagicSettingRow(title: String(localized: "Error", table: "Audio-Settings"), description: description, icon: .cisumIconMusicLibrary, content: {
                         Text("Cannot get music library information", tableName: "Audio-Settings")
                             .font(.footnote)
                     })

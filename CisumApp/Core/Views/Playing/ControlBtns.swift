@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import OSLog
 import SwiftUI
@@ -22,7 +23,7 @@ struct ControlBtns: View, SuperLog {
             Spacer(minLength: 1)
         }
         .padding(.bottom, 20)
-        .infinite()
+        .cisumInfinite()
     }
 }
 

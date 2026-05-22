@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import SwiftUI
 
@@ -12,7 +13,7 @@ struct iPhoneHero: View {
                     Text("简单纯粹的音乐播放器")
                         .asPosterSubTitleForIPhone()
                 }
-                .inMagicVStackCenter()
+                .cisumVStackCenter()
                 .frame(height: geo.size.height * 0.3)
 
                 ContentLayout()
@@ -21,11 +22,11 @@ struct iPhoneHero: View {
                     .inDemoMode()
                     .frame(width: Config.minWidth + 100)
                     .frame(height: geo.size.height * 0.3)
-                    .roundedLarge()
-                    .shadowSm()
+                    .cisumRoundedLarge()
+                    .cisumShadowSm()
                     .scaleEffect(2)
                     .frame(height: geo.size.height * 0.7)
-            }.inMagicHStackCenter()
+            }.cisumHStackCenter()
         }
         .inPosterContainer()
     }
@@ -35,15 +36,15 @@ struct iPhoneHero: View {
 
 #Preview("App Store iOS - Hero - iPhone 5.5") {
     iPhoneHero()
-        .inMagicContainer(.iPhone55, scale: 0.45)
+        .cisumPreviewContainer(.cisumIPhone55, scale: 0.45)
 }
 
 #Preview("App Store iOS - Hero - iPhone 6.5") {
     iPhoneHero()
-        .inMagicContainer(.iPhone65, scale: 0.45)
+        .cisumPreviewContainer(.cisumIPhone65, scale: 0.45)
 }
 
 #Preview("App Store iOS - Hero - iPhone 6.9") {
     iPhoneHero()
-        .inMagicContainer(.iPhone69, scale: 0.45)
+        .cisumPreviewContainer(.cisumIPhone69, scale: 0.45)
 }

@@ -1,3 +1,4 @@
+import CisumUI
 import Foundation
 import MagicKit
 import OSLog
@@ -208,5 +209,5 @@ extension AudioDBView {
 
 #Preview("App Store Album Art") {
     AppStoreAlbumArt()
-        .inMagicContainer(.macBook13, scale: 1)
+        .cisumPreviewContainer(.cisumMacBook13, scale: 1)
 }

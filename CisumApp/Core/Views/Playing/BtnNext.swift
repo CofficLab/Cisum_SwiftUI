@@ -1,5 +1,4 @@
 import CisumUI
-import MagicKit
 import MagicPlayMan
 import SwiftUI
 
@@ -12,14 +11,14 @@ struct NextButton: View {
     private let size: CGFloat = 32
 
     var body: some View {
-        Image.forward
+        Image.cisumForward
             .font(.system(size: self.size * 0.6))
             .foregroundStyle(appTheme.textSecondary)
             .frame(width: size, height: size)
-            .inCard(.ultraThinMaterial)
-            .roundedFull()
-            .hoverScale(105)
-            .inButtonWithAction {
+            .cisumCard(.ultraThinMaterial)
+            .cisumRoundedFull()
+            .cisumHoverScale(105)
+            .cisumButton {
                 man.next()
             }
             .shadow(color: appTheme.background.opacity(0.10), radius: 4, y: 1)

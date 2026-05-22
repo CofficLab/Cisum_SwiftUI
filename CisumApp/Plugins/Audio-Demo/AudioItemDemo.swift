@@ -1,3 +1,4 @@
+import CisumUI
 import Foundation
 import MagicKit
 import OSLog
@@ -114,19 +115,19 @@ struct AudioItemDemo: View, Equatable, SuperLog {
         AudioItemDemo(URL(fileURLWithPath: "/demo/audio/成都.flac"))
     }
     .padding()
-    .inMagicContainer()
+    .cisumPreviewContainer()
 }
 
 #Preview("Demo Audio List") {
     AudioListDemo()
         .inRootView()
         .inDemoMode()
-        .inMagicContainer()
+        .cisumPreviewContainer()
 }
 
 #Preview("App Store Album Art") {
     AppStoreAlbumArt()
-        .inMagicContainer(.macBook13, scale: 1)
+        .cisumPreviewContainer(.cisumMacBook13, scale: 1)
 }
 
 #Preview("Icon Names Preview") {
@@ -161,6 +162,6 @@ struct AudioItemDemo: View, Equatable, SuperLog {
         }
         .padding()
     }
-    .inMagicContainer()
+    .cisumPreviewContainer()
 }
 

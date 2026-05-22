@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import SwiftUI
 
@@ -12,7 +13,7 @@ struct iPhoneICloud: View {
                     Text("完美支持 iCloud")
                         .asPosterSubTitleForIPhone()
                 }
-                .inMagicVStackCenter()
+                .cisumVStackCenter()
                 .frame(height: geo.size.height * 0.3)
 
                 ContentLayout()
@@ -23,11 +24,11 @@ struct iPhoneICloud: View {
                     .frame(width: Config.minWidth + 100)
                     .frame(height: geo.size.height * 0.3)
                     .clipped()
-                    .roundedLarge()
-                    .shadowSm()
+                    .cisumRoundedLarge()
+                    .cisumShadowSm()
                     .scaleEffect(2)
                     .frame(height: geo.size.height * 0.7)
-            }.inMagicHStackCenter()
+            }.cisumHStackCenter()
         }
         .inPosterContainer()
     }
@@ -37,15 +38,15 @@ struct iPhoneICloud: View {
 
 #Preview("App Store iOS - iCloud - iPhone 5.5") {
     iPhoneICloud()
-        .inMagicContainer(.iPhone55, scale: 0.45)
+        .cisumPreviewContainer(.cisumIPhone55, scale: 0.45)
 }
 
 #Preview("App Store iOS - iCloud - iPhone 6.5") {
     iPhoneICloud()
-        .inMagicContainer(.iPhone65, scale: 0.45)
+        .cisumPreviewContainer(.cisumIPhone65, scale: 0.45)
 }
 
 #Preview("App Store iOS - iCloud - iPhone 6.9") {
     iPhoneICloud()
-        .inMagicContainer(.iPhone69, scale: 0.45)
+        .cisumPreviewContainer(.cisumIPhone69, scale: 0.45)
 }

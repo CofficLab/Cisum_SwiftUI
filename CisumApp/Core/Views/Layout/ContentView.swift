@@ -1,3 +1,4 @@
+import CisumUI
 import AVKit
 import MagicKit
 import OSLog
@@ -39,7 +40,7 @@ struct ContentView: View, SuperLog, SuperThread {
             .onChange(of: app.showDB, onChangeOfShowDB)
             .onChange(of: geo.size.height, onChangeOfGeoHeight)
         }
-        .infinite()
+        .cisumInfinite()
     }
 }
 
@@ -142,5 +143,5 @@ extension ContentView {
 
 #Preview("App Store Album Art") {
     AppStoreAlbumArt()
-        .inMagicContainer(.macBook13, scale: 0.5)
+        .cisumPreviewContainer(.cisumMacBook13, scale: 0.5)
 }

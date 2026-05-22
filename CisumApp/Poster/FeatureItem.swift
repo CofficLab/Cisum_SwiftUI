@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import SwiftUI
 
@@ -30,8 +31,8 @@ struct AppStoreFeatureItem: View {
         .padding(.vertical, 32)
         .padding(.horizontal, 64)
         .background(.regularMaterial)
-        .roundedExtraLarge()
-        .shadowMd()
+        .cisumRoundedExtraLarge()
+        .cisumShadowMd()
     }
 }
 
@@ -39,5 +40,5 @@ struct AppStoreFeatureItem: View {
 
 #Preview("App Store iCloud") {
     AppStoreICloud()
-        .inMagicContainer(.macBook13, scale: 0.5)
+        .cisumPreviewContainer(.cisumMacBook13, scale: 0.5)
 }

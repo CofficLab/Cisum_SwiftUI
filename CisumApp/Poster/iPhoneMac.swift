@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import SwiftUI
 
@@ -12,15 +13,15 @@ struct iPhoneMac: View {
                     Text("macOS 上也精彩")
                         .asPosterSubTitleForIPhone()
                 }
-                .inMagicVStackCenter()
+                .cisumVStackCenter()
                 .frame(height: geo.size.height * 0.3)
 
                 LogoView()
                     .background(Config.rootBackground)
-                    .shadowSm()
+                    .cisumShadowSm()
                     .inIMacScreen()
                     .frame(height: geo.size.height * 0.7)
-            }.inMagicHStackCenter()
+            }.cisumHStackCenter()
         }
         .inPosterContainer()
     }
@@ -30,15 +31,15 @@ struct iPhoneMac: View {
 
 #Preview("App Store iOS - Mac - iPhone 5.5") {
     iPhoneMac()
-        .inMagicContainer(.iPhone55, scale: 0.45)
+        .cisumPreviewContainer(.cisumIPhone55, scale: 0.45)
 }
 
 #Preview("App Store iOS - Mac - iPhone 6.5") {
     iPhoneMac()
-        .inMagicContainer(.iPhone65, scale: 0.45)
+        .cisumPreviewContainer(.cisumIPhone65, scale: 0.45)
 }
 
 #Preview("App Store iOS - Mac - iPhone 6.9") {
     iPhoneMac()
-        .inMagicContainer(.iPhone69, scale: 0.45)
+        .cisumPreviewContainer(.cisumIPhone69, scale: 0.45)
 }

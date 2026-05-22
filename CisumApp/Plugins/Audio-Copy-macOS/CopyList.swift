@@ -1,6 +1,5 @@
 #if os(macOS)
 import CisumUI
-import MagicKit
 import OSLog
 import SwiftData
 import SwiftUI
@@ -34,7 +33,7 @@ struct CopyList: View, SuperLog, SuperThread {
             refreshTasks()
         }
         .background(.regularMaterial)
-        .shadowSm()
+        .cisumShadowSm()
     }
 
     /// 刷新任务列表

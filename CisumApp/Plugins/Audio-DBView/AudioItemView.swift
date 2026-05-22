@@ -35,12 +35,12 @@ extension AudioItemView {
     var body: some View {
         AppListRow {
             HStack(alignment: .center, spacing: 12) {
-                // 头像部分
-                url.makeAvatarView(verbose: Self.verbose)
-                    .magicSize(.init(width: 40, height: 40))
-                    .magicAvatarShape(.circle)
-                    .magicBackground(.blue.opacity(0.1))
-                    .magicDownloadMonitor(true)
+                AppAvatar(
+                    systemImage: "music.note",
+                    tint: .blue,
+                    backgroundTint: .blue.opacity(0.1),
+                    size: 40
+                )
 
                 // 文件信息部分
                 VStack(alignment: .leading, spacing: 4) {

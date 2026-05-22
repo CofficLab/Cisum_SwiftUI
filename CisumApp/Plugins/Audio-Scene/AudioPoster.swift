@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import SwiftUI
 import MagicAlert
@@ -26,7 +27,7 @@ struct AudioPoster: View {
                             .fill(iconGradient)
                             .frame(width: 34, height: 34)
                             .overlay(
-                                Image.musicNote
+                                Image.cisumMusicNote
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 18, height: 18)

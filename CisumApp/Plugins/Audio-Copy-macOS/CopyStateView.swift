@@ -1,4 +1,5 @@
 #if os(macOS)
+import CisumUI
 import MagicKit
 import MagicAlert
 import OSLog
@@ -26,7 +27,7 @@ struct CopyStateView: View, SuperLog, SuperThread {
                 HStack {
                     Image(systemName: "info.circle")
                     Text("正在复制 \(taskCount) 个文件", tableName: "Audio-Copy-macOS")
-                    Image.list.inButtonWithAction {
+                    Image.cisumList.cisumButton {
                         self.showCopying.toggle()
                     }
                 }
@@ -34,14 +35,14 @@ struct CopyStateView: View, SuperLog, SuperThread {
                 .foregroundStyle(.white)
                 .padding(.horizontal, 16)
                 .padding(.vertical, 6)
-                .background(MagicBackground.deepForest)
+                .background(CisumMagicBackground.deepForest)
                 .clipShape(RoundedRectangle(cornerRadius: 8))
                 .contentTransition(.numericText(value: Double(taskCount)))
                 .popover(isPresented: $showCopying) {
                     CopyList()
                 }
                 .transition(.opacity.combined(with: .scale))
-                .shadowSm()
+                .cisumShadowSm()
             }
         }
         .onCopyTaskCountChanged(perform: handleCopyTaskCountChanged)
@@ -59,7 +60,7 @@ extension CopyStateView {
             Text(i)
                 .foregroundStyle(.white)
         }
-        .inCard()
+        .cisumCard()
         .font(.title3)
     }
 }

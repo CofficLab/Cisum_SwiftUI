@@ -1,3 +1,4 @@
+import CisumUI
 import Foundation
 import MagicKit
 import OSLog
@@ -28,7 +29,7 @@ actor AudioPlugin: SuperPlugin, SuperLog {
 
     let title = "音乐"
     let description = "音频播放功能"
-    let iconName: String = .iconMusicNote
+    let iconName: String = .cisumIconMusicNote
 
     @MainActor func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {
         AnyView(AudioRootView { content() })

@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import SwiftUI
 
@@ -17,13 +18,13 @@ struct SystemSetting: View, SuperLog {
             })
 
             // Reset settings
-            MagicSettingRow(title: String(localized: "Reset Settings", table: "Reset"), description: String(localized: "Reset settings to system default state", table: "Reset"), icon: .iconReset) {
-                Image.reset
+            MagicSettingRow(title: String(localized: "Reset Settings", table: "Reset"), description: String(localized: "Reset settings to system default state", table: "Reset"), icon: .cisumIconReset) {
+                Image.cisumReset
                     .frame(width: 28, height: 28)
                     .background(.regularMaterial, in: Circle())
-                    .shadowSm()
-                    .hoverScale(105)
-                    .inButtonWithAction {
+                    .cisumShadowSm()
+                    .cisumHoverScale(105)
+                    .cisumButton {
                         showConfirmSheet = true
                     }
             }

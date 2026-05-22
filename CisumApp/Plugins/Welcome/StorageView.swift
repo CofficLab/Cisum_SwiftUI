@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import OSLog
 import SwiftUI
@@ -23,7 +24,7 @@ struct StorageView: View, SuperLog {
                 MagicSettingRow(
                     title: String(localized: "iCloud Drive", table: "Welcome"),
                     description: String(localized: "Files stored in iCloud\nAccessible on other devices\nEnsure sufficient iCloud storage", table: "Welcome"),
-                    icon: .iconCloud,
+                    icon: .cisumIconCloud,
                     action: {
                         if cloudManager.isSignedIn == true && c.getStorageLocation() != .icloud {
                             tempStorageLocation = .icloud
@@ -32,7 +33,7 @@ struct StorageView: View, SuperLog {
                 ) {
                     HStack {
                         if tempStorageLocation == .icloud {
-                            Image(systemName: .iconCheckmarkSimple)
+                            Image(systemName: .cisumIconCheckmarkSimple)
                                 .foregroundColor(.accentColor)
                         } else {
                             Text("Recommended", tableName: "Welcome").font(.footnote)
@@ -61,14 +62,14 @@ struct StorageView: View, SuperLog {
                 MagicSettingRow(
                     title: String(localized: "App Local Storage", table: "Welcome"),
                     description: String(localized: "Stored within the app, data will be lost if app is deleted", table: "Welcome"),
-                    icon: .iconFolder,
+                    icon: .cisumIconFolder,
                     action: {
                         tempStorageLocation = .local
                     }
                 ) {
                     HStack {
                         if tempStorageLocation == .local {
-                            Image(systemName: .iconCheckmarkSimple)
+                            Image(systemName: .cisumIconCheckmarkSimple)
                                 .foregroundColor(.accentColor)
                         }
                     }

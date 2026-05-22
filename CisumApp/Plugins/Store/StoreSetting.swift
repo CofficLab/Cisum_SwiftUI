@@ -1,3 +1,4 @@
+import CisumUI
 import Foundation
 import MagicAlert
 import MagicKit
@@ -58,26 +59,26 @@ struct StoreSetting: View, SuperLog, SuperEvent {
 
             // Purchase entry
             MagicSettingRow(title: String(localized: "In-App Purchase", table: "Store"), description: String(localized: "Subscribe to Pro to unlock all features", table: "Store"), icon: "cart", content: {
-                Image.appStore
+                Image.cisumAppStore
                     .frame(width: 28)
                     .frame(height: 28)
                     .background(.regularMaterial, in: .circle)
-                    .shadowSm()
-                    .hoverScale(105)
-                    .inButtonWithAction({
+                    .cisumShadowSm()
+                    .cisumHoverScale(105)
+                    .cisumButton({
                         showBuySheet = true
                     })
             })
 
             // Restore purchase
             MagicSettingRow(title: String(localized: "Restore Purchase", table: "Store"), description: String(localized: "Restore purchases made on other devices", table: "Store"), icon: "arrow.clockwise", content: {
-                Image.reset
+                Image.cisumReset
                     .frame(width: 28)
                     .frame(height: 28)
                     .background(.regularMaterial, in: .circle)
-                    .shadowSm()
-                    .hoverScale(105)
-                    .inButtonWithAction({
+                    .cisumShadowSm()
+                    .cisumHoverScale(105)
+                    .cisumButton({
                         showRestoreSheet = true
                     })
             })

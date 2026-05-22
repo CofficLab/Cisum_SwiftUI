@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import OSLog
 import SwiftUI
@@ -14,12 +15,12 @@ struct LogoView: View {
     }
 
     var body: some View {
-        Image.makeCoffeeReelIcon(
+        Image.cisumCoffeeReelIcon(
             useDefaultBackground: false,
             handleRotation: 0
         )
-        .infinite()
-        .shadow3xl()
+        .cisumInfinite()
+        .cisumShadow3xl()
         .rotationEffect(.degrees(rotationAngle))
         .onAppear {
             if rotationSpeed > 0 {
@@ -42,12 +43,12 @@ struct LogoView: View {
 
         LogoView()
             .background(.blue.opacity(0.2))
-            .roundedFull()
+            .cisumRoundedFull()
             .frame(width: 250, height: 250)
 
         LogoView(rotationSpeed: 0.05)
             .background(.green.opacity(0.2))
-            .roundedFull()
+            .cisumRoundedFull()
             .frame(width: 250, height: 250)
     }
     .frame(height: 800)
@@ -56,6 +57,12 @@ struct LogoView: View {
 
 #Preview("LogoView - Snapshot") {
     LogoView()
-        .background(LinearGradient.green2teal)
-        .inMagicContainer(.init(width: 1024, height: 1024), scale: 0.5)
+        .background(
+            LinearGradient(
+                colors: [.green, .teal],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        )
+        .cisumPreviewContainer(.init(width: 1024, height: 1024), scale: 0.5)
 }

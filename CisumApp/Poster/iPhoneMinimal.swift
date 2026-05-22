@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import SwiftUI
 
@@ -12,7 +13,7 @@ struct iPhoneMinimal: View {
                     Text("极简设计")
                         .asPosterSubTitleForIPhone()
                 }
-                .inMagicVStackCenter()
+                .cisumVStackCenter()
                 .frame(height: geo.size.height * 0.3)
 
                 ZStack {
@@ -22,12 +23,12 @@ struct iPhoneMinimal: View {
                         .inDemoMode()
                         .frame(width: Config.minWidth + 100)
                         .frame(height: geo.size.height * 0.3)
-                        .roundedLarge()
-                        .shadowSm()
+                        .cisumRoundedLarge()
+                        .cisumShadowSm()
                         .scaleEffect(2)
                 }
                 .frame(height: geo.size.height * 0.7)
-            }.inMagicHStackCenter()
+            }.cisumHStackCenter()
         }
         .inPosterContainer()
     }
@@ -37,15 +38,15 @@ struct iPhoneMinimal: View {
 
 #Preview("App Store iOS - Minimal - iPhone 5.5") {
     iPhoneMinimal()
-        .inMagicContainer(.iPhone55, scale: 0.45)
+        .cisumPreviewContainer(.cisumIPhone55, scale: 0.45)
 }
 
 #Preview("App Store iOS - Minimal - iPhone 6.5") {
     iPhoneMinimal()
-        .inMagicContainer(.iPhone65, scale: 0.45)
+        .cisumPreviewContainer(.cisumIPhone65, scale: 0.45)
 }
 
 #Preview("App Store iOS - Minimal - iPhone 6.9") {
     iPhoneMinimal()
-        .inMagicContainer(.iPhone69, scale: 0.45)
+        .cisumPreviewContainer(.cisumIPhone69, scale: 0.45)
 }

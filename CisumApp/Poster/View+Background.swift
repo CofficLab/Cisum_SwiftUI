@@ -1,10 +1,11 @@
+import CisumUI
 import MagicKit
 import SwiftUI
 
 extension View {
     func inPosterContainer() -> some View {
         GeometryReader { geo in
-            self.magicCentered()
+            self.cisumCentered()
                 .padding(.horizontal, geo.size.width * 0.05)
                 .background {
                     ZStack {
@@ -81,5 +82,5 @@ extension View {
 
 #Preview("App Store Hero") {
     AppStoreHero()
-        .inMagicContainer(.macBook13, scale: 0.4)
+        .cisumPreviewContainer(.cisumMacBook13, scale: 0.4)
 }

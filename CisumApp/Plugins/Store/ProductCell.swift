@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import OSLog
 import StoreKit
@@ -85,7 +86,7 @@ struct ProductCell: View, SuperLog {
                 .fill(.regularMaterial)
                 .stroke(borderColor, lineWidth: 1)
         )
-        .shadowSm()
+        .cisumShadowSm()
         .alert(isPresented: $isShowingError, content: {
             Alert(title: Text(LocalizedStringKey(errorTitle), tableName: "Store"), message: nil, dismissButton: .default(Text("OK", tableName: "Store")))
         })
@@ -180,10 +181,10 @@ struct ProductCell: View, SuperLog {
         .padding(.horizontal, 16)
         .padding(.vertical, 10)
         .background(.regularMaterial)
-        .hoverScale(105)
-        .roundedMedium()
-        .shadowSm()
-        .inButtonWithAction(buy)
+        .cisumHoverScale(105)
+        .cisumRoundedMedium()
+        .cisumShadowSm()
+        .cisumButton(buy)
         .disabled(purchasing || isPurchased)
         .opacity(isPurchased ? 0.6 : 1.0)
         .onAppear(perform: onAppear)

@@ -1,10 +1,11 @@
+import CisumUI
 import MagicKit
 import OSLog
 import SwiftUI
 
 actor LikeButtonPlugin: SuperPlugin, SuperLog {
     let description: String = "喜欢/取消喜欢 按钮"
-    let iconName: String = .iconHeart
+    let iconName: String = .cisumIconHeart
     static var shouldRegister: Bool { false }
     static var verbose: Bool { false }
     nonisolated static let emoji = "🦁"

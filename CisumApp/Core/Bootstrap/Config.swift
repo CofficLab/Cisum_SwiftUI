@@ -1,3 +1,4 @@
+import CisumUI
 import AVKit
 import Combine
 import Foundation
@@ -39,7 +40,7 @@ enum Config: SuperLog {
     @MainActor
     @ViewBuilder
     static var rootBackground: some View {
-        MagicBackground.sunset.opacity(1)
+        CisumMagicBackground.sunset.opacity(1)
     }
 
     static func getDBRootDir() throws -> URL {

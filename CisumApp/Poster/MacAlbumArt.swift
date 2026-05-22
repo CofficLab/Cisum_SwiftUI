@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import SwiftUI
 
@@ -11,16 +12,16 @@ struct AppStoreAlbumArt: View {
 
                     VStack(spacing: 16) {
                         AppStoreFeatureItem(
-                            icon: .iconPhotosFill,
+                            icon: .cisumIconPhotosFill,
                             title: "高清封面",
                             description: "自动获取专辑封面，无需手动添加"
                         )
                     }
                     .frame(width: geo.size.width * 0.4)
-                    .py4()
+                    .cisumPy4()
                 }
                 .frame(width: geo.size.width * 0.5)
-                .inMagicVStackCenter()
+                .cisumVStackCenter()
 
                 ZStack {
                     ContentLayout()
@@ -29,7 +30,7 @@ struct AppStoreAlbumArt: View {
                         .inDemoMode()
                         .frame(width: max(Config.minWidth, geo.size.width * 0.15))
                         .frame(height: geo.size.height * 0.4)
-                        .roundedLarge()
+                        .cisumRoundedLarge()
                         .rotation3DEffect(
                             .degrees(-3),
                             axis: (x: 0, y: 0, z: 1),
@@ -37,7 +38,7 @@ struct AppStoreAlbumArt: View {
                             perspective: 1.0
                         )
                         .offset(x: -60, y: -20)
-                        .shadowSm()
+                        .cisumShadowSm()
                         .scaleEffect(2)
 
                     ContentLayout()
@@ -47,8 +48,8 @@ struct AppStoreAlbumArt: View {
                         .frame(width: max(Config.minWidth, geo.size.width * 0.15))
                         .frame(height: geo.size.height * 0.4)
                         .background(.background.opacity(0.5))
-                        .roundedLarge()
-                        .shadowXl()
+                        .cisumRoundedLarge()
+                        .cisumShadowXl()
                         .rotation3DEffect(
                             .degrees(3),
                             axis: (x: 0, y: 0, z: 1),
@@ -69,5 +70,5 @@ struct AppStoreAlbumArt: View {
 
 #Preview("App Store Album Art") {
     AppStoreAlbumArt()
-        .inMagicContainer(.macBook13, scale: 0.5)
+        .cisumPreviewContainer(.cisumMacBook13, scale: 0.5)
 }

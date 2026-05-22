@@ -1,5 +1,4 @@
 import CisumUI
-import MagicKit
 import SwiftUI
 
 struct AudioDBTips: View {
@@ -35,16 +34,16 @@ struct AudioDBTips: View {
                             .foregroundStyle(.secondary)
 
                         Label { Text("打开仓库目录并放入文件", tableName: "Audio-DBView") } icon: { Image(systemName: "doc.viewfinder.fill") }
-                            .inCard(.regularMaterial)
-                            .shadowSm()
-                            .hoverScale(105)
-                            .inButtonWithAction {
+                            .cisumCard(.regularMaterial)
+                            .cisumShadowSm()
+                            .cisumHoverScale(105)
+                            .cisumButton {
                                 disk.openFolder()
                             }
                     }
                 #endif
 
-                BtnAdd().buttonStyle(.bordered).if(Config.isNotDesktop)
+                BtnAdd().buttonStyle(.bordered).cisumIf(Config.isNotDesktop)
 
             case .loading:
                 AppLoadingOverlay(message: "正在读取仓库", size: .large)
@@ -64,8 +63,8 @@ struct AudioDBTips: View {
         .padding()
         .background(appTheme.surface.opacity(0.85))
         .background(appTheme.background.opacity(0.5))
-        .roundedMedium()
-        .shadowXl()
+        .cisumRoundedMedium()
+        .cisumShadowXl()
     }
 }
 
@@ -82,8 +81,8 @@ struct AudioDBTips: View {
         AudioDBTips(variant: .sorting)
             .frame(width: 300, height: 200)
     }
-    .infinite()
-    .inScrollView()
+    .cisumInfinite()
+    .cisumScrollView()
     .frame(height: 800)
     .frame(width: 500)
 }

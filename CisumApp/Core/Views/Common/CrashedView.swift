@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import SwiftUI
 
@@ -14,7 +15,7 @@ struct CrashedView: View {
             VStack {
                 Spacer(minLength: 20)
 
-                Image.makeCoffeeReelIcon(useDefaultBackground: false)
+                Image.cisumCoffeeReelIcon(useDefaultBackground: false)
                     .scaledToFit()
                     .background(
                         Circle()

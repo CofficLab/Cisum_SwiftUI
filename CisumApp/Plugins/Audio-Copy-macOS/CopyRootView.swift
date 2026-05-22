@@ -1,5 +1,6 @@
 #if os(macOS)
-    import MagicAlert
+    import CisumUI
+import MagicAlert
     import MagicKit
     import OSLog
     import SwiftData
@@ -37,12 +38,12 @@
                 content
                 VStack {
                     AudioCopyTips(variant: .pro)
-                        .if(showProTips)
+                        .cisumIf(showProTips)
 
                     AudioCopyTips(variant: .drop)
-                        .if(isDropping)
+                        .cisumIf(isDropping)
                 }
-                .infinite()
+                .cisumInfinite()
                 .onAppear(perform: onAppear)
                 .onDrop(of: [UTType.fileURL], isTargeted: self.$isDropping, perform: onDropProviders)
             }

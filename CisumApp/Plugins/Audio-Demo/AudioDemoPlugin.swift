@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import OSLog
 import SwiftUI
@@ -39,5 +40,5 @@ actor AudioDemoPlugin: SuperPlugin {
 
 #Preview("App Store Album Art") {
     AppStoreAlbumArt()
-        .inMagicContainer(.macBook13, scale: 1)
+        .cisumPreviewContainer(.cisumMacBook13, scale: 1)
 }

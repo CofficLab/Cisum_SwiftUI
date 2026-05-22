@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import SwiftUI
 
@@ -32,7 +33,7 @@ struct AudioCopyTips: View {
                 }
                 .padding()
                 .frame(maxWidth: .infinity)
-                .infinite()
+                .cisumInfinite()
                 .background(
                     RoundedRectangle(cornerRadius: 16)
                         .fill(.ultraThinMaterial)
@@ -46,7 +47,7 @@ struct AudioCopyTips: View {
             case .pro:
                 VStack(spacing: 20) {
                     HStack {
-                        Image.info
+                        Image.cisumInfo
                             .foregroundStyle(.blue)
                         Text("基础版本最多支持 \(AudioPlugin.maxAudioCount) 个文件", tableName: "Audio-Copy-macOS")
                             .font(.title3)
@@ -62,7 +63,7 @@ struct AudioCopyTips: View {
             }
         }
         .background(.regularMaterial)
-        .shadowMd()
+        .cisumShadowMd()
     }
 
     /// 格式标签视图
@@ -76,7 +77,7 @@ struct AudioCopyTips: View {
             HStack(spacing: 8) {
                 ForEach(supportedFormats, id: \.self) { format in
                     HStack(spacing: 4) {
-                        Image.musicNote
+                        Image.cisumMusicNote
                             .font(.caption2)
                         Text(format.uppercased())
                             .font(.caption)

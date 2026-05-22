@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import OSLog
 import SwiftUI
@@ -30,8 +31,8 @@ struct WelcomeView: View, SuperLog {
 
             StorageView()
                 .background(.regularMaterial)
-                .roundedMedium()
-                .shadowSm()
+                .cisumRoundedMedium()
+                .cisumShadowSm()
 
             Spacer()
         }

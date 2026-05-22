@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import SwiftUI
 
@@ -14,7 +15,7 @@ extension View {
         self.bold()
             .font(.system(size: 200, design: .rounded))
             .padding(.bottom, 40)
-            .shadowSm()
+            .cisumShadowSm()
     }
 
     /// 将文本样式化为 Mac 版海报副标题样式
@@ -26,7 +27,7 @@ extension View {
     func asPosterSubTitle() -> some View {
         self.font(.system(size: 100, design: .rounded))
             .foregroundStyle(.secondary)
-            .shadowSm()
+            .cisumShadowSm()
     }
     
     /// 将文本样式化为 iPhone 版海报标题样式
@@ -39,7 +40,7 @@ extension View {
         self.bold()
             .font(.system(size: 160, design: .rounded))
             .padding(.bottom, 40)
-            .shadowSm()
+            .cisumShadowSm()
     }
 
     /// 将文本样式化为 iPhone 版海报副标题样式
@@ -51,7 +52,7 @@ extension View {
     func asPosterSubTitleForIPhone() -> some View {
         self.font(.system(size: 100, design: .rounded))
             .foregroundStyle(.secondary)
-            .shadowSm()
+            .cisumShadowSm()
     }
 }
 
@@ -59,10 +60,10 @@ extension View {
 
 #Preview("App Store Hero") {
     AppStoreHero()
-        .inMagicContainer(.macBook13, scale: 0.5)
+        .cisumPreviewContainer(.cisumMacBook13, scale: 0.5)
 }
 
 #Preview("App Store iOS - Hero - iPhone 5.5") {
     iPhoneHero()
-        .inMagicContainer(.iPhone55, scale: 0.45)
+        .cisumPreviewContainer(.cisumIPhone55, scale: 0.45)
 }

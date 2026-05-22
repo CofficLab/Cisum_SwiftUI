@@ -5,7 +5,7 @@ import SwiftUI
 /// 音频后台任务协议
 ///
 /// 定义后台任务的基本接口，具体任务需要实现此协议。
-protocol AudioJob {
+protocol AudioJob: Sendable {
     /// 任务唯一标识符
     nonisolated var identifier: String { get }
 

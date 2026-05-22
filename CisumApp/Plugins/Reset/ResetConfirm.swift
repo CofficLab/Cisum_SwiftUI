@@ -1,5 +1,4 @@
 import CisumUI
-import MagicKit
 import OSLog
 import SwiftUI
 
@@ -17,7 +16,7 @@ struct ResetConfirm: View, SuperLog {
                 // 说明文字
                 AppSheetPanel {
                     VStack(spacing: 16) {
-                    AppSheetIconHeader(systemImage: .iconReset, title: "Reset Settings", tint: .orange)
+                    AppSheetIconHeader(systemImage: .cisumIconReset, title: "Reset Settings", tint: .orange)
 
                     if isResetting {
                         // Resetting state
@@ -55,8 +54,8 @@ struct ResetConfirm: View, SuperLog {
                 AppSheetActionButton("Continue Reset", systemImage: "checkmark") {
                     performReset()
                 }
-                .if(!isResetting)
-            }.inMagicVStackCenter()
+                .cisumIf(!isResetting)
+            }.cisumVStackCenter()
         }
     }
 

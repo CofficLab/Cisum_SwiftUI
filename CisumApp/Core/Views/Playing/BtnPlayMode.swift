@@ -1,5 +1,4 @@
 import CisumUI
-import MagicKit
 import MagicPlayMan
 import SwiftUI
 
@@ -15,16 +14,16 @@ struct PlayModeButton: View {
         Group {
             switch man.playMode {
             case .sequence:
-                modeIcon(systemName: .iconMusicNoteList)
+                modeIcon(systemName: .cisumIconMusicNoteList)
             case .repeatAll:
-                modeIcon(systemName: .iconRepeatAll)
+                modeIcon(systemName: .cisumIconRepeatAll)
             case .loop:
-                modeIcon(systemName: .iconRepeat1)
+                modeIcon(systemName: .cisumIconRepeat1)
             case .shuffle:
-                modeIcon(systemName: .iconShuffle)
+                modeIcon(systemName: .cisumIconShuffle)
             }
         }
-        .hoverScale(105)
+        .cisumHoverScale(105)
         .shadow(color: appTheme.background.opacity(0.10), radius: 4, y: 1)
     }
 
@@ -33,9 +32,9 @@ struct PlayModeButton: View {
             .font(.system(size: self.size * 0.6))
             .frame(width: size, height: size)
             .foregroundStyle(appTheme.textSecondary)
-            .inCard(.ultraThinMaterial)
-            .roundedFull()
-            .inButtonWithAction {
+            .cisumCard(.ultraThinMaterial)
+            .cisumRoundedFull()
+            .cisumButton {
                 man.togglePlayMode()
             }
     }

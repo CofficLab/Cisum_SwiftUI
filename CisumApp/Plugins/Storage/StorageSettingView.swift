@@ -1,5 +1,4 @@
 import CisumUI
-import MagicKit
 import SwiftUI
 
 import OSLog
@@ -24,7 +23,7 @@ struct StorageSettingView: View, SuperLog {
                 AppSettingsInfoRow(
                     title: "iCloud Drive",
                     description: "Store media files in iCloud Drive",
-                    systemImage: .iconCloud,
+                    systemImage: .cisumIconCloud,
                     isSelected: location == .icloud,
                     action: {
                         showMigrationProgress = true
@@ -32,7 +31,7 @@ struct StorageSettingView: View, SuperLog {
                     }
                 ) {
                     if location == .icloud {
-                        Image(systemName: .iconCheckmarkSimple)
+                        Image(systemName: .cisumIconCheckmarkSimple)
                             .foregroundColor(.accentColor)
                     }
                 }
@@ -40,7 +39,7 @@ struct StorageSettingView: View, SuperLog {
                 AppSettingsInfoRow(
                     title: "Local",
                     description: "Store within app, data will be lost if app is deleted",
-                    systemImage: .iconFolder,
+                    systemImage: .cisumIconFolder,
                     isSelected: location == .local,
                     action: {
                         showMigrationProgress = true
@@ -48,7 +47,7 @@ struct StorageSettingView: View, SuperLog {
                     }
                 ) {
                     if location == .local {
-                        Image(systemName: .iconCheckmarkSimple)
+                        Image(systemName: .cisumIconCheckmarkSimple)
                             .foregroundColor(.accentColor)
                     }
                 }

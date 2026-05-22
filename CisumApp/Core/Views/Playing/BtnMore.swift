@@ -1,5 +1,4 @@
 import CisumUI
-import MagicKit
 import SwiftUI
 
 struct BtnMore: View {
@@ -10,14 +9,14 @@ struct BtnMore: View {
     private let size: CGFloat = 32
 
     var body: some View {
-        Image.more
+        Image.cisumMore
             .font(.system(size: self.size * 0.6))
             .frame(width: size, height: size)
             .foregroundStyle(appTheme.textSecondary)
-            .inCard(.ultraThinMaterial)
-            .roundedFull()
-            .hoverScale(105)
-            .inButtonWithAction {
+            .cisumCard(.ultraThinMaterial)
+            .cisumRoundedFull()
+            .cisumHoverScale(105)
+            .cisumButton {
                 app.toggleDBView()
             }
             .shadow(color: appTheme.background.opacity(0.10), radius: 4, y: 1)

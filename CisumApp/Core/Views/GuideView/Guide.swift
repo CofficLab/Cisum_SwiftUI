@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import OSLog
 import SwiftUI
@@ -44,25 +45,25 @@ extension Guide {
                 HStack(spacing: 16) {
                     // 上一页按钮
                     if index > 0 {
-                        Image.previousPage
+                        Image.cisumPreviousPage
                             .font(.title2)
                             .frame(width: 50, height: 50)
                             .background(.regularMaterial, in: Circle())
-                            .hoverScale(105)
-                            .shadowSm()
-                            .inButtonWithAction {
+                            .cisumHoverScale(105)
+                            .cisumShadowSm()
+                            .cisumButton {
                                 currentGuidePageIndex = index - 1
                             }
                     }
 
                     // 下一页按钮
-                    Image.nextPage
+                    Image.cisumNextPage
                         .font(.title2)
                         .frame(width: 50, height: 50)
                         .background(.regularMaterial, in: Circle())
-                        .hoverScale(105)
-                        .shadowSm()
-                        .inButtonWithAction {
+                        .cisumHoverScale(105)
+                        .cisumShadowSm()
+                        .cisumButton {
                             currentGuidePageIndex = index + 1
                         }
                 }

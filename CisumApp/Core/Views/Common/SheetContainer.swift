@@ -1,5 +1,4 @@
 import CisumUI
-import MagicKit
 import SwiftUI
 
 // MARK: - Sheet Container
@@ -34,11 +33,11 @@ struct SheetContainer<Content: View>: View {
             }
             .padding(.top, 8)
             .padding(.trailing, 8)
-            .if(Config.isDesktop)
+            .cisumIf(Config.isDesktop)
 
             // iOS 上需要一些空白，方便用户下拉关闭
             Spacer(minLength: 20)
-                .if(Config.isiOS)
+                .cisumIf(Config.isiOS)
 
             // 用户内容
             content
@@ -46,7 +45,7 @@ struct SheetContainer<Content: View>: View {
                 .padding(.bottom, 24)
         }
         .background(appTheme.background)
-        .infinite()
+        .cisumInfinite()
         .ignoresSafeArea()
     }
 
@@ -57,16 +56,16 @@ struct SheetContainer<Content: View>: View {
         @State var hovered = false
 
         return
-            Image.close
+            Image.cisumClose
                 .font(.system(size: 20, weight: .medium))
                 .frame(width: 32, height: 32)
                 .foregroundStyle(.secondary)
                 .background(.regularMaterial, in: Circle())
-                .shadowSm()
-                .inButtonWithAction {
+                .cisumShadowSm()
+                .cisumButton {
                     dismiss()
                 }
-                .hoverScale(105)
+                .cisumHoverScale(105)
         #if os(iOS)
             .scaleEffect(hovered ? 0.95 : 1.0)
             .onTapGesture {

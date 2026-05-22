@@ -65,13 +65,17 @@ extension AudioPlayModeRootView {
     func handlePlayModeChanged(_ mode: PlayMode) {
         guard shouldActivatePlayMode else { return }
 
+        let modeRawValue = mode.rawValue
+        let modeShortName = mode.shortName
+        let currentURL = man.currentURL
+
         if Self.verbose {
-            os_log("\(self.t)🔄 播放模式变化 -> \(mode.shortName)")
+            os_log("\(self.t)🔄 播放模式变化 -> \(modeShortName)")
         }
 
         // 存储播放模式设置
-        Task {
-            await AudioPlayModeRepo.shared.storePlayMode(mode)
+        Task { [modeRawValue, modeShortName] in
+            await AudioPlayModeRepo.shared.storePlayModeRawValue(modeRawValue, shortName: modeShortName)
         }
 
         guard let repo = AudioPlugin.getAudioRepo() else {
@@ -79,26 +83,28 @@ extension AudioPlayModeRootView {
         }
 
         // 根据播放模式重新排序音频列表
-        Task {
-            let currentURL = self.man.currentURL
+        Task { @MainActor [currentURL, modeRawValue, repo] in
+            guard let mode = PlayMode(rawValue: modeRawValue) else {
+                return
+            }
 
             switch mode {
             case .loop:
                 if Self.verbose {
-                    os_log("\(self.t)🔁 单曲循环模式")
+                    os_log("\(Self.t)🔁 单曲循环模式")
                 }
 
                 alert_info("单曲循环")
             case .sequence, .repeatAll:
                 if Self.verbose {
-                    os_log("\(self.t)📋 顺序播放，重新排序")
+                    os_log("\(Self.t)📋 顺序播放，重新排序")
                 }
 
                 alert_info("顺序播放")
                 await repo.sort(currentURL, reason: "PlayModeChanged")
             case .shuffle:
                 if Self.verbose {
-                    os_log("\(self.t)🔀 随机播放，打乱顺序")
+                    os_log("\(Self.t)🔀 随机播放，打乱顺序")
                 }
 
                 alert_info("随机播放")

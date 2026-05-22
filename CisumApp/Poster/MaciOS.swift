@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import SwiftUI
 
@@ -32,10 +33,10 @@ struct AppStoreiOS: View {
                         )
                     }
                     .frame(width: geo.size.width * 0.4)
-                    .py4()
+                    .cisumPy4()
                 }
                 .frame(width: geo.size.width * 0.5)
-                .inMagicVStackCenter()
+                .cisumVStackCenter()
 
                 Spacer()
 
@@ -43,9 +44,9 @@ struct AppStoreiOS: View {
                     LogoView()
                         .background(Config.rootBackground)
                         .inIPadScreen()
-                        .shadowSm()
+                        .cisumShadowSm()
                         .frame(height: geo.size.height * 0.8)
-                        .roundedLarge()
+                        .cisumRoundedLarge()
                         .rotation3DEffect(
                             .degrees(-8),
                             axis: (x: 0, y: 0, z: 1),
@@ -57,7 +58,7 @@ struct AppStoreiOS: View {
                     LogoView()
                         .background(Config.rootBackground)
                         .inIPhoneScreen()
-                        .shadow3xl()
+                        .cisumShadow3xl()
                         .frame(height: geo.size.height * 0.8)
                         .rotation3DEffect(
                             .degrees(4),
@@ -78,5 +79,5 @@ struct AppStoreiOS: View {
 
 #Preview("App Store iOS") {
     AppStoreiOS()
-        .inMagicContainer(.macBook13, scale: 0.5)
+        .cisumPreviewContainer(.cisumMacBook13, scale: 0.5)
 }
