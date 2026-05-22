@@ -37,7 +37,7 @@ struct TitleView: View, SuperLog, SuperThread {
                     .frame(maxHeight: .infinity)
                     .position(x: geo.size.width / 2, y: geo.size.height / 2)
                     .padding(.vertical)
-                    .shadow3xl()
+                    .shadow(color: appTheme.background.opacity(0.18), radius: 8, y: 2)
                     .foregroundStyle(appTheme.textPrimary)
             }
         }

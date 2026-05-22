@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import OSLog
 import SwiftData
@@ -11,6 +12,7 @@ struct ControlView: View, SuperLog {
     @EnvironmentObject var message: StateProvider
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var p: PluginProvider
+    @LumiTheme private var appTheme
 
     @State var showHeroView = true
     @State var showBtnsView = true
@@ -49,20 +51,28 @@ struct ControlView: View, SuperLog {
                             .frame(height: getOperationHeight(geo))
                     }
 
-                    // MARK: 进度栏
+                    // MARK: 底部播放控制面板
 
-                    if showSliderView {
-                        PlayingProgressView()
-                            .padding()
-                    }
+                    if showSliderView || showBtnsView {
+                        VStack(spacing: 0) {
+                            if showSliderView {
+                                PlayingProgressView()
+                                    .padding()
+                            }
 
-                    // MARK: 控制栏
-
-                    if showBtnsView {
-                        ControlBtns()
-                            .frame(height: getButtonsHeight(geo))
-                            .frame(maxWidth: .infinity)
-                            .padding(.bottom, getBottomHeight(geo))
+                            if showBtnsView {
+                                ControlBtns()
+                                    .frame(height: getButtonsHeight(geo))
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.bottom, getBottomHeight(geo))
+                            }
+                        }
+                        .background(controlPanelBackground)
+                        .overlay(alignment: .top) {
+                            Rectangle()
+                                .fill(appTheme.divider)
+                                .frame(height: 1)
+                        }
                     }
                 }
 
@@ -135,6 +145,17 @@ struct ControlView: View, SuperLog {
 
     private func shouldShowRightAlbum(_ geo: GeometryProxy) -> Bool {
         geo.size.width > CGSize.iPadMini.width
+    }
+
+    private var controlPanelBackground: some ShapeStyle {
+        LinearGradient(
+            colors: [
+                appTheme.elevatedSurface.opacity(0.58),
+                appTheme.surface.opacity(0.82),
+            ],
+            startPoint: .top,
+            endPoint: .bottom
+        )
     }
 }
 

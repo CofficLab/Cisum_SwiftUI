@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import MagicPlayMan
 import SwiftUI
@@ -6,6 +7,7 @@ import SwiftUI
 struct PlayPauseButton: View {
     @EnvironmentObject var man: PlayMan
     @Environment(\.demoMode) var isDemoMode
+    @LumiTheme private var appTheme
 
     private let size: CGFloat = 32
 
@@ -18,13 +20,13 @@ struct PlayPauseButton: View {
             }
         }
         .hoverScale(105)
-        .shadowSm()
+        .shadow(color: appTheme.background.opacity(0.12), radius: 5, y: 1)
     }
 
     private var playButton: some View {
         Image.playFill
             .font(.system(size: self.size * 0.6))
-            .foregroundStyle(.secondary)
+            .foregroundStyle(appTheme.textPrimary)
             .frame(width: size, height: size)
             .inCard(.ultraThinMaterial)
             .roundedFull()
@@ -36,7 +38,7 @@ struct PlayPauseButton: View {
     private var pauseButton: some View {
         Image.pauseFill
             .font(.system(size: self.size * 0.6))
-            .foregroundStyle(.secondary)
+            .foregroundStyle(appTheme.textPrimary)
             .frame(width: size, height: size)
             .inCard(.ultraThinMaterial)
             .roundedFull()

@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import MagicPlayMan
 import SwiftUI
@@ -6,6 +7,7 @@ import SwiftUI
 struct PlayModeButton: View {
     @EnvironmentObject var man: PlayMan
     @Environment(\.demoMode) var isDemoMode
+    @LumiTheme private var appTheme
 
     private let size: CGFloat = 32
 
@@ -23,14 +25,14 @@ struct PlayModeButton: View {
             }
         }
         .hoverScale(105)
-        .shadowSm()
+        .shadow(color: appTheme.background.opacity(0.10), radius: 4, y: 1)
     }
 
     private func modeIcon(systemName: String) -> some View {
         Image(systemName: systemName)
             .font(.system(size: self.size * 0.6))
             .frame(width: size, height: size)
-            .foregroundStyle(.secondary)
+            .foregroundStyle(appTheme.textSecondary)
             .inCard(.ultraThinMaterial)
             .roundedFull()
             .inButtonWithAction {
