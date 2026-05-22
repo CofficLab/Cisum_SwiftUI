@@ -1,4 +1,5 @@
 #if os(macOS)
+import CisumUI
 import MagicKit
 import OSLog
 import SwiftData
@@ -9,7 +10,7 @@ struct CopyList: View, SuperLog, SuperThread {
 
     @EnvironmentObject var app: AppProvider
 
-    @State private var selection: String?
+    @State private var selection: PersistentIdentifier?
     @State private var tasks: [CopyTask] = []
 
     init(verbose: Bool = false) {
@@ -50,30 +51,27 @@ struct CopyList: View, SuperLog, SuperThread {
 
     /// 空视图
     private var emptyView: some View {
-        VStack(spacing: 16) {
-            Image(systemName: "tray")
-                .font(.system(size: 48))
-                .foregroundStyle(.secondary)
-
-            Text("暂无复制任务", tableName: "Audio-Copy-macOS")
-                .font(.title3)
-                .foregroundStyle(.primary)
-        }
-        .frame(maxWidth: .infinity)
-        .padding(40)
+        AppEmptyState(
+            icon: "tray",
+            title: String(localized: "暂无复制任务", table: "Audio-Copy-macOS")
+        )
+        .frame(minHeight: 160)
     }
 
     private var taskList: some View {
         List(selection: $selection) {
             Section {
                 ForEach(tasks) { task in
-                    VStack(alignment: .leading) {
-                        Text(task.originalFilename)
-                            .lineLimit(1)
-                        Text(task.message)
-                            .font(.caption)
-                            .foregroundColor(.secondary)
+                    AppListRow(isSelected: selection == task.id) {
+                        VStack(alignment: .leading) {
+                            Text(task.originalFilename)
+                                .lineLimit(1)
+                            Text(task.message)
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
                     }
+                    .tag(task.id)
                 }
                 .onDelete(perform: deleteTasks)
             } header: {

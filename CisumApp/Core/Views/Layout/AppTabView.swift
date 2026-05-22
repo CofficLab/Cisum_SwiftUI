@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import OSLog
 import SwiftUI
@@ -12,6 +13,7 @@ struct AppTabView: View, SuperLog, SuperThread {
     @State private var tab: String = "DB"
     @State private var currentTabView: AnyView?
     @State private var selectedTabIndex: Int = 0
+    @State private var selectedDemoTabID: String = "0"
 
     var body: some View {
         Group {
@@ -67,14 +69,23 @@ extension AppTabView {
         let settingTab = (view: AnyView(SettingView().environmentObject(p)), label: String(localized: "设置", table: "Core"))
         let allTabs = tabViews + [settingTab]
 
-        let tabBar = HStack(spacing: 0) {
-            ForEach(Array(allTabs.enumerated()), id: \.offset) { index, item in
-                tabButton(for: item, at: index, isPluginTab: index < tabViews.count)
-            }
-        }
-        .padding(.horizontal, 0)
-        .background(.secondary.opacity(0.1))
-        .roundedMedium()
+        let tabBar = AppTabBar(
+            tabs: Array(allTabs.enumerated()).map { index, item in
+                AppTabBar.Tab(
+                    title: item.label,
+                    icon: index < tabViews.count ? .iconMusicNote : "gear",
+                    id: String(index)
+                )
+            },
+            selectedTab: Binding(
+                get: { selectedDemoTabID },
+                set: { newValue in
+                    selectedDemoTabID = newValue
+                    selectedTabIndex = Int(newValue) ?? 0
+                }
+            )
+        )
+        .padding(6)
         .pt1()
         .withDivider(spacing: 2)
 

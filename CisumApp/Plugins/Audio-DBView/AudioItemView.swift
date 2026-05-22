@@ -1,3 +1,4 @@
+import CisumUI
 import Foundation
 import MagicKit
 import MagicAlert
@@ -14,8 +15,8 @@ struct AudioItemView: View, Equatable, SuperLog {
 
     let url: URL
 
-    /// 文件大小显示文本
-    @State private var sizeText: String = ""
+    /// 文件大小
+    @State private var fileSize: Int64?
     /// 删除确认对话框
     @State private var showDeleteConfirmation = false
 
@@ -32,50 +33,53 @@ struct AudioItemView: View, Equatable, SuperLog {
 
 extension AudioItemView {
     var body: some View {
-        HStack(alignment: .center, spacing: 12) {
-            // 头像部分
-            url.makeAvatarView(verbose: Self.verbose)
-                .magicSize(.init(width: 40, height: 40))
-                .magicAvatarShape(.circle)
-                .magicBackground(.blue.opacity(0.1))
-                .magicDownloadMonitor(true)
+        AppListRow {
+            HStack(alignment: .center, spacing: 12) {
+                // 头像部分
+                url.makeAvatarView(verbose: Self.verbose)
+                    .magicSize(.init(width: 40, height: 40))
+                    .magicAvatarShape(.circle)
+                    .magicBackground(.blue.opacity(0.1))
+                    .magicDownloadMonitor(true)
 
-            // 文件信息部分
-            VStack(alignment: .leading, spacing: 4) {
-                Text(url.lastPathComponent)
-                    .font(.headline)
-                    .lineLimit(1)
+                // 文件信息部分
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(url.lastPathComponent)
+                        .font(.headline)
+                        .lineLimit(1)
 
-                HStack {
-                    Text(sizeText.isEmpty ? "..." : sizeText)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                    HStack {
+                        if let fileSize {
+                            AppSizeLabel(bytes: fileSize)
+                        } else {
+                            Text("...")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
                 }
-            }
 
-            Spacer()
+                Spacer()
+            }
         }
         .tag(url as URL?)
         .onAppear(perform: handleOnAppear)
         #if os(macOS)
             .contextMenu {
-                Label(title: { Text("播放", tableName: "Audio-DBView") }, icon: { Image(systemName: "play.fill") })
-                    .inButtonWithAction(playAudio)
+                AppContextMenuRow("播放", systemImage: "play.fill", action: playAudio)
 
-                Label(title: { Text("在 Finder 中显示", tableName: "Audio-DBView") }, icon: { Image(systemName: "finder") })
-                    .inButtonWithAction { showInFinder() }
+                AppContextMenuRow("在 Finder 中显示", systemImage: "finder") {
+                    showInFinder()
+                }
 
-                Label(title: { Text("导出到下载目录", tableName: "Audio-DBView") }, icon: { Image(systemName: "arrow.down.doc") })
-                    .inButtonWithAction {
-                        exportToDownloads()
-                    }
+                AppContextMenuRow("导出到下载目录", systemImage: "arrow.down.doc") {
+                    exportToDownloads()
+                }
 
                 Divider()
 
-                Button(role: .destructive, action: {
+                AppContextMenuRow("删除", systemImage: "trash", role: .destructive) {
                     showDeleteConfirmation = true
-                }) {
-                    Label(title: { Text("删除", tableName: "Audio-DBView") }, icon: { Image(systemName: "trash") })
                 }
             }
         #endif
@@ -115,12 +119,10 @@ extension AudioItemView {
     /// 在后台加载文件大小
     private func loadFileSize() async {
         Task.detached(priority: .background) {
-            let size = await Task.detached(priority: .background) {
-                url.getSizeReadable()
-            }.value
+            let size = (try? FileManager.default.attributesOfItem(atPath: url.path)[.size] as? NSNumber)?.int64Value
 
             await MainActor.run {
-                sizeText = size
+                fileSize = size
             }
         }
     }

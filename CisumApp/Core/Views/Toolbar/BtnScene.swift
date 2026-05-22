@@ -1,3 +1,4 @@
+import CisumUI
 import MagicKit
 import OSLog
 import SwiftData
@@ -10,17 +11,8 @@ struct BtnScene: View {
 
     var body: some View {
         if let sceneName = p.currentSceneName {
-            Button(action: {
+            AppIconButton(systemImage: sceneIcon(for: sceneName), label: sceneName, size: .regular) {
                 self.isPresented.toggle()
-            }) {
-                HStack(spacing: 4) {
-                    Image(systemName: sceneIcon(for: sceneName))
-                    Text(sceneName)
-                        .font(.caption)
-                }
-                .padding(.horizontal, 8)
-                .padding(.vertical, 4)
-                .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 6))
             }
             .popover(isPresented: self.$isPresented, content: {
                 Posters(
