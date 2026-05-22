@@ -8,6 +8,7 @@ struct MonoTheme: LumiAppChromeTheme {
     let description = "黑白对比优先，提升可读性"
     let iconName = "circle.lefthalf.filled"
     let iconColor = Color.adaptive(light: "111827", dark: "FFFFFF")
+    let isDarkTheme = false
     let followsSystemAppearance = true
 
     func accentColors() -> (primary: Color, secondary: Color, tertiary: Color) {
@@ -34,6 +35,19 @@ struct MonoTheme: LumiAppChromeTheme {
     func workspaceTextColor() -> Color { .adaptive(light: "09090B", dark: "FFFFFF") }
     func workspaceSecondaryTextColor() -> Color { .adaptive(light: "3F3F46", dark: "E4E4E7") }
     func workspaceTertiaryTextColor() -> Color { .adaptive(light: "71717A", dark: "A1A1AA") }
+
+    func makeGlobalBackground(proxy: GeometryProxy) -> AnyView {
+        let colors = atmosphereColors()
+        return AnyView(
+            LinearGradient(
+                colors: [colors.deep, colors.medium, colors.light],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .background(.ultraThinMaterial)
+            .ignoresSafeArea()
+        )
+    }
 }
 
 // MARK: Preview

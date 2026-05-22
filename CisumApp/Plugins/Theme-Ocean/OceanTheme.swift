@@ -35,6 +35,19 @@ struct OceanTheme: LumiAppChromeTheme {
     func workspaceTextColor() -> Color { .adaptive(light: "0F172A", dark: "F0F9FF") }
     func workspaceSecondaryTextColor() -> Color { .adaptive(light: "334155", dark: "BAE6FD") }
     func workspaceTertiaryTextColor() -> Color { .adaptive(light: "64748B", dark: "7DD3FC") }
+
+    func makeGlobalBackground(proxy: GeometryProxy) -> AnyView {
+        let colors = atmosphereColors()
+        return AnyView(
+            LinearGradient(
+                colors: [colors.deep, colors.medium, colors.light],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .background(.ultraThinMaterial)
+            .ignoresSafeArea()
+        )
+    }
 }
 
 // MARK: Preview

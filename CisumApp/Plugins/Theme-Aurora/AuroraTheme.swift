@@ -8,6 +8,7 @@ struct AuroraTheme: LumiAppChromeTheme {
     let description = "冷紫与青绿交织，适合沉浸式播放页"
     let iconName = "sparkles"
     let iconColor = Color.adaptive(light: "8B5CF6", dark: "C084FC")
+    let isDarkTheme = false
     let followsSystemAppearance = true
 
     func accentColors() -> (primary: Color, secondary: Color, tertiary: Color) {
@@ -34,6 +35,19 @@ struct AuroraTheme: LumiAppChromeTheme {
     func workspaceTextColor() -> Color { .adaptive(light: "1E1B4B", dark: "FAF5FF") }
     func workspaceSecondaryTextColor() -> Color { .adaptive(light: "4C1D95", dark: "DDD6FE") }
     func workspaceTertiaryTextColor() -> Color { .adaptive(light: "7C3AED", dark: "A78BFA") }
+
+    func makeGlobalBackground(proxy: GeometryProxy) -> AnyView {
+        let colors = atmosphereColors()
+        return AnyView(
+            LinearGradient(
+                colors: [colors.deep, colors.medium, colors.light],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .background(.ultraThinMaterial)
+            .ignoresSafeArea()
+        )
+    }
 }
 
 // MARK: Preview

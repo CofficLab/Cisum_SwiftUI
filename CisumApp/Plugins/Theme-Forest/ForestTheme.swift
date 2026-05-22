@@ -8,6 +8,7 @@ struct ForestTheme: LumiAppChromeTheme {
     let description = "安静低饱和绿色，适合长时间听书"
     let iconName = "leaf.fill"
     let iconColor = Color.adaptive(light: "059669", dark: "34D399")
+    let isDarkTheme = false
     let followsSystemAppearance = true
 
     func accentColors() -> (primary: Color, secondary: Color, tertiary: Color) {
@@ -34,6 +35,19 @@ struct ForestTheme: LumiAppChromeTheme {
     func workspaceTextColor() -> Color { .adaptive(light: "052E16", dark: "F0FDF4") }
     func workspaceSecondaryTextColor() -> Color { .adaptive(light: "14532D", dark: "BBF7D0") }
     func workspaceTertiaryTextColor() -> Color { .adaptive(light: "16A34A", dark: "86EFAC") }
+
+    func makeGlobalBackground(proxy: GeometryProxy) -> AnyView {
+        let colors = atmosphereColors()
+        return AnyView(
+            LinearGradient(
+                colors: [colors.deep, colors.medium, colors.light],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .background(.ultraThinMaterial)
+            .ignoresSafeArea()
+        )
+    }
 }
 
 // MARK: Preview

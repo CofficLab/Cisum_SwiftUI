@@ -8,6 +8,7 @@ struct SunsetTheme: LumiAppChromeTheme {
     let description = "暖色点缀主题，避免大面积高饱和"
     let iconName = "sunset.fill"
     let iconColor = Color.adaptive(light: "EA580C", dark: "FB923C")
+    let isDarkTheme = false
     let followsSystemAppearance = true
 
     func accentColors() -> (primary: Color, secondary: Color, tertiary: Color) {
@@ -34,6 +35,19 @@ struct SunsetTheme: LumiAppChromeTheme {
     func workspaceTextColor() -> Color { .adaptive(light: "431407", dark: "FFF7ED") }
     func workspaceSecondaryTextColor() -> Color { .adaptive(light: "7C2D12", dark: "FED7AA") }
     func workspaceTertiaryTextColor() -> Color { .adaptive(light: "EA580C", dark: "FDBA74") }
+
+    func makeGlobalBackground(proxy: GeometryProxy) -> AnyView {
+        let colors = atmosphereColors()
+        return AnyView(
+            LinearGradient(
+                colors: [colors.deep, colors.medium, colors.light],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .background(.ultraThinMaterial)
+            .ignoresSafeArea()
+        )
+    }
 }
 
 // MARK: Preview

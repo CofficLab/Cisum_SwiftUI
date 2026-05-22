@@ -8,6 +8,7 @@ struct NebulaTheme: LumiAppChromeTheme {
     let description = "柔和粉紫氛围，保留清晰文本对比"
     let iconName = "cloud.moon.fill"
     let iconColor = Color.adaptive(light: "C026D3", dark: "F0ABFC")
+    let isDarkTheme = false
     let followsSystemAppearance = true
 
     func accentColors() -> (primary: Color, secondary: Color, tertiary: Color) {
@@ -34,6 +35,19 @@ struct NebulaTheme: LumiAppChromeTheme {
     func workspaceTextColor() -> Color { .adaptive(light: "4A044E", dark: "FDF4FF") }
     func workspaceSecondaryTextColor() -> Color { .adaptive(light: "86198F", dark: "F5D0FE") }
     func workspaceTertiaryTextColor() -> Color { .adaptive(light: "C026D3", dark: "C084FC") }
+
+    func makeGlobalBackground(proxy: GeometryProxy) -> AnyView {
+        let colors = atmosphereColors()
+        return AnyView(
+            LinearGradient(
+                colors: [colors.deep, colors.medium, colors.light],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .background(.ultraThinMaterial)
+            .ignoresSafeArea()
+        )
+    }
 }
 
 // MARK: Preview

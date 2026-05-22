@@ -8,6 +8,7 @@ struct MidnightTheme: LumiAppChromeTheme {
     let description = "低亮度蓝黑背景，适合夜间听歌"
     let iconName = "moon.stars.fill"
     let iconColor = Color.adaptive(light: "2563EB", dark: "60A5FA")
+    let isDarkTheme = false
     let followsSystemAppearance = true
 
     func accentColors() -> (primary: Color, secondary: Color, tertiary: Color) {
@@ -34,6 +35,19 @@ struct MidnightTheme: LumiAppChromeTheme {
     func workspaceTextColor() -> Color { .adaptive(light: "0F172A", dark: "F8FAFC") }
     func workspaceSecondaryTextColor() -> Color { .adaptive(light: "334155", dark: "CBD5E1") }
     func workspaceTertiaryTextColor() -> Color { .adaptive(light: "64748B", dark: "64748B") }
+
+    func makeGlobalBackground(proxy: GeometryProxy) -> AnyView {
+        let colors = atmosphereColors()
+        return AnyView(
+            LinearGradient(
+                colors: [colors.deep, colors.medium, colors.light],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .background(.ultraThinMaterial)
+            .ignoresSafeArea()
+        )
+    }
 }
 
 // MARK: Preview
