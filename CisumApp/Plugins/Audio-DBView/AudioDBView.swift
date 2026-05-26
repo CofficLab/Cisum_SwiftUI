@@ -13,6 +13,7 @@ struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
 
     @EnvironmentObject var app: AppProvider
     @Environment(\.demoMode) var isDemoMode
+    @LumiTheme private var appTheme
 
     /// 是否正在排序
     @State private var isSorting: Bool = false
@@ -39,6 +40,7 @@ struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
             }
         }
         .frame(maxHeight: .infinity)
+        .background(appTheme.background)
         .fileImporter(
             isPresented: $app.isImporting,
             allowedContentTypes: [.audio],

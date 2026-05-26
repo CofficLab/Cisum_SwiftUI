@@ -11,7 +11,7 @@ struct ControlView: View, SuperLog {
     @EnvironmentObject var message: StateProvider
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var p: PluginProvider
-    @LumiTheme private var appTheme
+    @LumiMotionPreferenceReader private var motionPreference
 
     @State var showHeroView = true
     @State var showBtnsView = true
@@ -66,12 +66,6 @@ struct ControlView: View, SuperLog {
                                     .padding(.bottom, getBottomHeight(geo))
                             }
                         }
-                        .background(controlPanelBackground)
-                        .overlay(alignment: .top) {
-                            Rectangle()
-                                .fill(appTheme.divider)
-                                .frame(height: 1)
-                        }
                     }
                 }
 
@@ -84,6 +78,7 @@ struct ControlView: View, SuperLog {
                         playMan.makeHeroView()
                     }
                     .frame(maxWidth: geo.size.height * 1.3)
+                    .transition(LumiTransition.trackChange(preference: motionPreference))
                     .onAppear {
                         appManager.rightAlbumVisible = true
                     }
@@ -95,6 +90,10 @@ struct ControlView: View, SuperLog {
             .padding(.bottom, 0)
             .padding(.horizontal, 0)
             .frame(maxHeight: .infinity)
+            .animation(
+                LumiMotion.enabled(LumiMotion.trackChange, preference: motionPreference),
+                value: shouldShowRightAlbum(geo)
+            )
         }
         .ignoresSafeArea(edges: Config.isDesktop ? .horizontal : .all)
         .frame(minHeight: Config.controlViewMinHeight)
@@ -144,17 +143,6 @@ struct ControlView: View, SuperLog {
 
     private func shouldShowRightAlbum(_ geo: GeometryProxy) -> Bool {
         geo.size.width > CGSize.iPadMini.width
-    }
-
-    private var controlPanelBackground: some ShapeStyle {
-        LinearGradient(
-            colors: [
-                appTheme.elevatedSurface.opacity(0.58),
-                appTheme.surface.opacity(0.82),
-            ],
-            startPoint: .top,
-            endPoint: .bottom
-        )
     }
 }
 

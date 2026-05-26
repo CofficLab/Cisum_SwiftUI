@@ -1,3 +1,4 @@
+import CisumUI
 import MagicAlert
 import MagicKit
 import OSLog
@@ -31,6 +32,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     nonisolated static let verbose = false
 
     @EnvironmentObject var playManController: PlayMan
+    @LumiTheme private var appTheme
 
     /// 当前选中的音频 URL
     @State private var selection: URL? = nil
@@ -69,6 +71,8 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
                 AudioDBTips(variant: .empty)
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(appTheme.background)
         .onAppear(perform: handleOnAppear)
         .onChange(of: selection, handleSelectionChange)
         .onDBDeleted(perform: handleDBDeleted)
@@ -105,6 +109,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
                 ForEach(urls, id: \.self) { url in
                     AudioItemView(url)
                         .equatable() // 使用 Equatable 优化，减少不必要的重绘
+                        .listRowBackground(Color.clear)
                         .onAppear {
                             // 仅在接近列表末尾时检查是否需要加载更多
                             checkLoadMore(for: url)
@@ -124,10 +129,13 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
                         Spacer()
                     }
                     .frame(height: 44)
+                    .listRowBackground(Color.clear)
                 }
             })
         }
         .listStyle(.plain)
+        .scrollContentBackground(.hidden)
+        .background(appTheme.background)
     }
 }
 

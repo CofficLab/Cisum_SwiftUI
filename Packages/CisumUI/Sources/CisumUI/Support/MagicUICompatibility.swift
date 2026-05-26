@@ -63,6 +63,14 @@ public extension View {
         .buttonStyle(.plain)
     }
 
+    /// 播放控制栏按钮：macOS 悬停放大，全平台按下缩放
+    func cisumPlaybackControl(_ action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            self
+        }
+        .buttonStyle(CisumPlaybackControlButtonStyle())
+    }
+
     func cisumHoverScale(_ scale: CGFloat) -> some View {
         modifier(CisumHoverScaleModifier(scale: scale / 100.0))
     }
@@ -264,6 +272,45 @@ public extension CGSize {
     static let cisumIPhone69 = CGSize(width: 1290, height: 2796)
     static let cisumMacBook13 = CGSize(width: 2560, height: 1600)
     static let cisumIMac27 = CGSize(width: 5120, height: 2880)
+}
+
+private struct CisumPlaybackControlButtonStyle: ButtonStyle {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    func makeBody(configuration: Configuration) -> some View {
+        CisumPlaybackControlLabel(configuration: configuration, reduceMotion: reduceMotion)
+    }
+}
+
+private struct CisumPlaybackControlLabel: View {
+    let configuration: ButtonStyleConfiguration
+    let reduceMotion: Bool
+
+    @State private var isHovering = false
+
+    private var hoverScale: CGFloat {
+        isHovering && !reduceMotion ? 1.05 : 1.0
+    }
+
+    private var pressScale: CGFloat {
+        configuration.isPressed && !reduceMotion ? LumiMotion.pressScale : 1.0
+    }
+
+    var body: some View {
+        configuration.label
+            .scaleEffect(hoverScale * pressScale)
+            .animation(
+                reduceMotion ? nil : LumiMotion.press,
+                value: configuration.isPressed
+            )
+            .animation(
+                reduceMotion ? nil : LumiMotion.hover,
+                value: isHovering
+            )
+            #if os(macOS)
+            .onHover { isHovering = $0 }
+            #endif
+    }
 }
 
 private struct CisumHoverScaleModifier: ViewModifier {

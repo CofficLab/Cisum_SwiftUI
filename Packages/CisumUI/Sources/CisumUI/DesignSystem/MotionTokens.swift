@@ -16,6 +16,12 @@ extension DesignTokens {
         static let scroll = Animation.easeOut(duration: Duration.standard)
         static let statusPresentation = Animation.easeOut(duration: Duration.standard)
         static let press = Animation.interactiveSpring(response: 0.16, dampingFraction: 0.78, blendDuration: 0.02)
+        /// 切歌时标题、封面等内容的过渡
+        static let trackChange = Animation.spring(response: 0.42, dampingFraction: 0.86)
+        /// 播放/暂停等控制按钮图标切换
+        static let playbackControl = Animation.spring(response: 0.28, dampingFraction: 0.72)
+        /// 曲库面板展开/收起
+        static let panelReveal = Animation.spring(response: 0.38, dampingFraction: 0.88)
 
         static func enabled(_ animation: Animation, reduceMotion: Bool) -> Animation? {
             reduceMotion ? nil : animation
@@ -53,6 +59,9 @@ public enum LumiMotion {
     public static let scroll: Animation = DesignTokens.Motion.scroll
     public static let statusPresentation: Animation = DesignTokens.Motion.statusPresentation
     public static let press: Animation = DesignTokens.Motion.press
+    public static let trackChange: Animation = DesignTokens.Motion.trackChange
+    public static let playbackControl: Animation = DesignTokens.Motion.playbackControl
+    public static let panelReveal: Animation = DesignTokens.Motion.panelReveal
 
     public static func enabled(_ animation: Animation, reduceMotion: Bool) -> Animation? {
         DesignTokens.Motion.enabled(animation, reduceMotion: reduceMotion)

@@ -11,6 +11,7 @@ struct ContentView: View, SuperLog, SuperThread {
     @EnvironmentObject var app: AppProvider
     @EnvironmentObject var p: PluginProvider
     @Environment(\.demoMode) var isDemoMode
+    @LumiMotionPreferenceReader private var motionPreference
     @State private var databaseViewHeight: CGFloat = 300
 
     // 记录用户调整的窗口的高度
@@ -31,10 +32,15 @@ struct ContentView: View, SuperLog, SuperThread {
 
                 if isDetailVisible {
                     AppTabView()
+                        .appPanelRevealTransition(preference: motionPreference)
                 }
 
                 StatusView()
             }
+            .animation(
+                LumiMotion.enabled(LumiMotion.panelReveal, preference: motionPreference),
+                value: isDetailVisible
+            )
             .frame(width: geo.size.width, height: geo.size.height)
             .onAppear { handleOnAppear(geo) }
             .onChange(of: app.showDB, onChangeOfShowDB)
@@ -87,7 +93,7 @@ extension ContentView {
     }
 
     func onChangeOfShowDB() {
-        withAnimation {
+        LumiMotion.animate(LumiMotion.enabled(LumiMotion.panelReveal, preference: motionPreference)) {
             self.isDetailVisible = app.showDB
         }
 

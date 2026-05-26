@@ -15,8 +15,7 @@ struct BtnMore: View {
             .foregroundStyle(appTheme.textSecondary)
             .cisumCard(.ultraThinMaterial)
             .cisumRoundedFull()
-            .cisumHoverScale(105)
-            .cisumButton {
+            .cisumPlaybackControl {
                 app.toggleDBView()
             }
             .shadow(color: appTheme.background.opacity(0.10), radius: 4, y: 1)

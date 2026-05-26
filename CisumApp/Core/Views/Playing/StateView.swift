@@ -11,12 +11,22 @@ struct StateView: View, SuperLog, SuperThread {
     @EnvironmentObject var p: PluginProvider
     @Environment(\.demoMode) var isDemoMode
     @LumiTheme private var appTheme
+    @LumiMotionPreferenceReader private var motionPreference
 
     nonisolated static let emoji = "🖥️"
     nonisolated static let verbose = false
 
     var asset: URL? { playMan.asset }
     var font: Font { asset == nil ? .title3 : .callout }
+
+    /// 驱动状态区显隐动画的标识
+    private var stateAnimationToken: String {
+        [
+            messageManager.stateMessage,
+            playMan.state.isDownloading ? playMan.state.localizedStateText(localization: playMan.localization) : "",
+            playMan.currentError.map { String(describing: $0) } ?? "",
+        ].joined(separator: "|")
+    }
 
     var body: some View {
         if isDemoMode {
@@ -26,15 +36,18 @@ struct StateView: View, SuperLog, SuperThread {
                 // 内部状态消息
                 if messageManager.stateMessage.count > 0 {
                     makeInfoView(messageManager.stateMessage)
+                        .appStatusPresentationTransition(preference: motionPreference)
                 }
 
                 if playMan.state.isDownloading {
                     makeInfoView(playMan.state.localizedStateText(localization: playMan.localization))
+                        .appStatusPresentationTransition(preference: motionPreference)
                 }
 
                 // 播放过程中出现的错误
                 if let e = playMan.currentError {
                     makeErrorView(e)
+                        .appStatusPresentationTransition(preference: motionPreference)
                 }
 
                 // 各个插件提供的 state view
@@ -42,6 +55,10 @@ struct StateView: View, SuperLog, SuperThread {
                     plugin.addStateView(currentSceneName: p.currentSceneName)
                 }
             }
+            .animation(
+                LumiMotion.enabled(LumiMotion.statusPresentation, preference: motionPreference),
+                value: stateAnimationToken
+            )
         }
     }
 }
