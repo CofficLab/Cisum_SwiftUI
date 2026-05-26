@@ -55,10 +55,11 @@ public struct MagicSettingSection<Content: View>: View {
 }
 
 /// MagicKit 设置行的 CisumUI 兼容实现。
-public struct MagicSettingRow<Content: View>: View {
+public struct MagicSettingRow<Content: View, TitleSuffix: View>: View {
     let title: String
     let description: String?
     let icon: String?
+    let titleSuffix: TitleSuffix
     let content: Content
     let action: (() -> Void)?
 
@@ -69,12 +70,14 @@ public struct MagicSettingRow<Content: View>: View {
         title: String,
         description: String? = nil,
         icon: String? = nil,
+        @ViewBuilder titleSuffix: () -> TitleSuffix = { EmptyView() },
         action: (() -> Void)? = nil,
         @ViewBuilder content: () -> Content
     ) {
         self.title = title
         self.description = description
         self.icon = icon
+        self.titleSuffix = titleSuffix()
         self.action = action
         self.content = content()
     }
@@ -92,8 +95,12 @@ public struct MagicSettingRow<Content: View>: View {
                 }
 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(title)
-                        .font(.body)
+                    HStack(spacing: 4) {
+                        Text(title)
+                            .font(.body)
+
+                        titleSuffix
+                    }
 
                     if let description {
                         Text(description)
