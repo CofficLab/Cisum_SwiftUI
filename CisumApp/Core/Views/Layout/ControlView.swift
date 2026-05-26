@@ -11,7 +11,6 @@ struct ControlView: View, SuperLog {
     @EnvironmentObject var message: StateProvider
     @EnvironmentObject var playMan: PlayMan
     @EnvironmentObject var p: PluginProvider
-    @LumiTheme private var appTheme
     @LumiMotionPreferenceReader private var motionPreference
 
     @State var showHeroView = true
@@ -66,12 +65,6 @@ struct ControlView: View, SuperLog {
                                     .frame(maxWidth: .infinity)
                                     .padding(.bottom, getBottomHeight(geo))
                             }
-                        }
-                        .background(controlPanelBackground)
-                        .overlay(alignment: .top) {
-                            Rectangle()
-                                .fill(appTheme.divider)
-                                .frame(height: 1)
                         }
                     }
                 }
@@ -150,17 +143,6 @@ struct ControlView: View, SuperLog {
 
     private func shouldShowRightAlbum(_ geo: GeometryProxy) -> Bool {
         geo.size.width > CGSize.iPadMini.width
-    }
-
-    private var controlPanelBackground: some ShapeStyle {
-        LinearGradient(
-            colors: [
-                appTheme.elevatedSurface.opacity(0.58),
-                appTheme.surface.opacity(0.82),
-            ],
-            startPoint: .top,
-            endPoint: .bottom
-        )
     }
 }
 
