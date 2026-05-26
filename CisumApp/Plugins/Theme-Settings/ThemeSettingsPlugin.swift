@@ -1,4 +1,5 @@
 import CisumUI
+import MagicKit
 import SwiftUI
 
 actor ThemeSettingsPlugin: SuperPlugin {
@@ -19,70 +20,29 @@ struct ThemeSettingView: View {
     @EnvironmentObject private var themeProvider: AppThemeProvider
 
     var body: some View {
-        AppCard(style: .subtle, cornerRadius: 12, showShadow: false) {
-            AppSettingsSection(title: "主题风格", subtitle: "选择播放器的整体视觉风格", spacing: 12) {
-                ForEach(themeProvider.themes) { theme in
-                    ThemeOptionCard(
-                        theme: theme,
-                        isSelected: themeProvider.currentThemeId == theme.id
-                    ) {
+        MagicSettingSection(title: String(localized: "Theme Style", table: "Theme-Settings")) {
+            ForEach(themeProvider.themes) { theme in
+                let isSelected = themeProvider.currentThemeId == theme.id
+                MagicSettingRow(
+                    title: theme.displayName,
+                    description: theme.description,
+                    icon: theme.iconName,
+                    titleSuffix: {
+                        if isSelected {
+                            Image(systemName: "checkmark.circle.fill")
+                                .font(.system(size: 14, weight: .semibold))
+                                .foregroundColor(theme.iconColor)
+                        }
+                    },
+                    action: {
                         themeProvider.selectTheme(theme.id)
                     }
+                ) {
+                    ThemeSwatches(theme: theme.chromeTheme)
+                        .fixedSize()
                 }
             }
         }
-    }
-}
-
-private struct ThemeOptionCard: View {
-    @LumiTheme private var appTheme
-
-    let theme: LumiUIThemeContribution
-    let isSelected: Bool
-    let action: () -> Void
-
-    var body: some View {
-        Button(action: action) {
-            HStack(spacing: 14) {
-                Image(systemName: theme.iconName)
-                    .font(.system(size: 22, weight: .semibold))
-                    .foregroundColor(isSelected ? theme.iconColor : appTheme.textTertiary)
-                    .frame(width: 30)
-
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(theme.displayName)
-                        .font(.appBody)
-                        .foregroundColor(appTheme.textPrimary)
-                        .lineLimit(1)
-                        .truncationMode(.tail)
-
-                    Text(theme.description)
-                        .font(.appCaption)
-                        .foregroundColor(appTheme.textTertiary)
-                        .lineLimit(1)
-                        .truncationMode(.tail)
-                }
-                .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
-
-                ThemeSwatches(theme: theme.chromeTheme)
-                    .fixedSize()
-                    .layoutPriority(1)
-            }
-            .padding(.horizontal, 14)
-            .padding(.vertical, 12)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .fill(isSelected ? theme.iconColor.opacity(0.14) : Color.clear)
-            )
-            .overlay(
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .stroke(isSelected ? theme.iconColor : appTheme.textTertiary.opacity(0.08), lineWidth: isSelected ? 2 : 1)
-            )
-            .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
-        .frame(maxWidth: .infinity)
     }
 }
 
