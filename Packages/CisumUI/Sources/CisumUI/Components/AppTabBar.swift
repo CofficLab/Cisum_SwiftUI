@@ -16,21 +16,25 @@ public struct AppTabBar: View {
     let tabs: [Tab]
     @Binding var selectedTab: String
     var showText: Bool = true
+    var centered: Bool = false
 
     public init(tabs: [String], selectedTab: Binding<String>) {
         self.tabs = tabs.map { Tab(title: $0) }
         self._selectedTab = selectedTab
     }
 
-    public init(tabs: [Tab], selectedTab: Binding<String>, showText: Bool = true) {
+    public init(tabs: [Tab], selectedTab: Binding<String>, showText: Bool = true, centered: Bool = false) {
         self.tabs = tabs
         self._selectedTab = selectedTab
         self.showText = showText
+        self.centered = centered
     }
 
     public var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
+        if centered {
+            // 居中模式：HStack + Spacer 实现水平居中
             HStack(spacing: AppUI.Spacing.sm) {
+                Spacer()
                 ForEach(tabs) { tab in
                     AppTabButton(
                         title: tab.title,
@@ -41,8 +45,25 @@ public struct AppTabBar: View {
                         selectedTab = tab.id
                     }
                 }
+                Spacer()
             }
-            .padding(.horizontal, 1)
+        } else {
+            // 默认左对齐滚动模式
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: AppUI.Spacing.sm) {
+                    ForEach(tabs) { tab in
+                        AppTabButton(
+                            title: tab.title,
+                            icon: tab.icon,
+                            isSelected: selectedTab == tab.id,
+                            showText: showText
+                        ) {
+                            selectedTab = tab.id
+                        }
+                    }
+                }
+                .padding(.horizontal, 1)
+            }
         }
     }
 }

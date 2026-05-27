@@ -16,13 +16,18 @@ struct AppTabView: View, SuperLog, SuperThread {
 
     var body: some View {
         Group {
-            if isDemoMode {
+            #if os(macOS)
                 buildCustomTabView()
                     .onChange(of: p.currentSceneName, onChangeOfCurrentScene)
-            } else {
-                buildTabView()
-                    .onChange(of: p.currentSceneName, onChangeOfCurrentScene)
-            }
+            #else
+                if isDemoMode {
+                    buildCustomTabView()
+                        .onChange(of: p.currentSceneName, onChangeOfCurrentScene)
+                } else {
+                    buildTabView()
+                        .onChange(of: p.currentSceneName, onChangeOfCurrentScene)
+                }
+            #endif
         }
     }
 }
@@ -79,7 +84,8 @@ extension AppTabView {
                     selectedDemoTabID = newValue
                     selectedTabIndex = Int(newValue) ?? 0
                 }
-            )
+            ),
+            centered: true
         )
         .padding(6)
         .cisumPt1()

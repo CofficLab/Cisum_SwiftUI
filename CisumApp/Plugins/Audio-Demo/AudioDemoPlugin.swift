@@ -19,6 +19,7 @@ actor AudioDemoPlugin: SuperPlugin {
     @MainActor
     func addTabView(reason: String, currentSceneName: String?, demoMode: Bool = false) -> (view: AnyView, label: String)? {
         guard currentSceneName == AudioScenePlugin.sceneName else { return nil }
+        guard demoMode else { return nil }
 
         return (AnyView(AudioListDemo()), "音乐仓库")
     }
