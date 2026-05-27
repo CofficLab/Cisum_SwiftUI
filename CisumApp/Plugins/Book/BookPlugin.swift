@@ -9,7 +9,7 @@ actor BookPlugin: SuperPlugin, SuperLog {
     static let keyOfCurrentBookTime = "com.bookplugin.currentBookTime"
     nonisolated static var emoji: String { "🎺" }
     private static var verbose: Bool { true }
-    static var shouldRegister: Bool { false } // 暂时禁用有声书插件
+    static var shouldRegister: Bool { true }
 
     /// 注册顺序设为 1，在 BookScenePlugin (order: 0) 之后执行
     static var order: Int { 1 }

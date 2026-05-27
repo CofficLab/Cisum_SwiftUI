@@ -40,7 +40,7 @@ struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
             }
         }
         .frame(maxHeight: .infinity)
-        .background(appTheme.background)
+        .background(appTheme.background.ignoresSafeArea())
         .fileImporter(
             isPresented: $app.isImporting,
             allowedContentTypes: [.audio],

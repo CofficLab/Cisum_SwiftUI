@@ -72,7 +72,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(appTheme.background)
+        .background(appTheme.background.ignoresSafeArea())
         .onAppear(perform: handleOnAppear)
         .onChange(of: selection, handleSelectionChange)
         .onDBDeleted(perform: handleDBDeleted)
@@ -135,7 +135,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
         }
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
-        .background(appTheme.background)
+        .background(appTheme.background.ignoresSafeArea())
     }
 }
 

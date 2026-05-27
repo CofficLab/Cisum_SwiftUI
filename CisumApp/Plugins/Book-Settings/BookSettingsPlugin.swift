@@ -9,7 +9,7 @@ import SwiftUI
  */
 actor BookSettingsPlugin: SuperPlugin {
     static let shared = BookSettingsPlugin()
-    static var shouldRegister: Bool { false }
+    static var shouldRegister: Bool { true }
     static var order: Int { 11 }
     let title = "有声书设置"
     let description = "有声书插件的设置入口"
