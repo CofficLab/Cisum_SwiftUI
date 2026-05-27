@@ -89,6 +89,24 @@
 - [ ] `CisumApp/Core/Views/Playing/HeroView.swift`：封面、下载进度、demo 封面逻辑强绑定，最后处理。
 - [ ] `CisumApp/Core/Views/Playing/BtnPlayPause.swift` 等播放按钮：等 `CisumUI` 有专用播放器按钮后再替换。
 
+## UI 流畅度优化
+
+目标：减少 SwiftUI 重复构建、滚动期间主线程状态更新、封面/文件系统 IO 对交互的影响。优先处理打开 DB 面板、切换 Tab、滚动音频列表、切换播放资源这些用户最容易感知的路径。
+
+- [ ] 用 Instruments 的 SwiftUI + Time Profiler 记录一次基线：打开 DB、切换 Tab、快速滚动音频列表、滚动书籍网格、切换播放资源。
+- [ ] 优化 `CisumApp/Core/Views/Layout/AppTabView.swift`：缓存 `p.getTabViews(reason:demoMode:)` 结果，只在 `plugins`、`currentSceneName` 或 `demoMode` 变化时重建。
+- [ ] 清理 `AppTabView.currentTabView` 的无效重建逻辑，避免 `onChangeOfCurrentScene` 构建未被 body 使用的 `AnyView`。
+- [ ] 优化 `CisumApp/Core/Views/Layout/StatusView.swift` 和 `CisumApp/Core/Views/Toolbar/RootToolbar.swift`：避免每次 body 都重新向所有插件收集并构造状态视图、工具栏按钮。
+- [ ] 优化 `CisumApp/Plugins/Audio-DBView/AudioList.swift` 的分页触发：避免每个 cell `onAppear` 时通过 `urls.firstIndex(of:)` 做线性查找，改为基于 enumerated index 或只给倒数阈值 item 绑定触发器。
+- [ ] 优化 `CisumApp/Plugins/Audio-DBView/AudioItemView.swift`：文件大小从 repo/DTO 层提供或增加内存缓存，避免 cell 反复出现时重复创建后台任务读取文件属性。
+- [ ] 检查 `url.makeAvatarView(...).magicDownloadMonitor(true)` 在列表中的成本，必要时只对可见/下载中项目启用监控，普通本地文件使用轻量头像。
+- [ ] 优化 `CisumApp/Plugins/Book-DBView/Views/BookGrid.swift`：选中状态变化时只动画选中前后的 tile 边框，避免整个网格因 `.animation(..., value: selectedBookURL)` 参与动画。
+- [ ] 优化 `BookGrid.updateSelectedBook(for:)`：加载书籍列表时建立音频 URL 到书籍 URL 的索引，避免播放资源变化时遍历所有书籍并调用 `book.url.getChildren()`。
+- [ ] 优化 `BookGrid.playBook(_:)`：复用书籍子文件列表或状态索引，避免点击播放时同步调用 `book.url.getChildren()` 扫描目录。
+- [ ] 优化 `CisumApp/Plugins/Book-DBView/Views/BookTile.swift`：给封面加载增加 thumbnail cache、in-flight task 去重和取消机制，避免快速滚动时重复解码/读取封面。
+- [ ] 给 `BookTile` 返回已缩放的缩略图，避免大图进入 SwiftUI 后再缩放造成内存和布局压力。
+- [ ] 复测 Instruments，对比优化前后的主线程耗时、body 重算次数、滚动掉帧和封面加载峰值。
+
 ## 验证
 
 - [x] 每阶段完成后运行 `xcodebuild -scheme Cisum -configuration Debug build`。
