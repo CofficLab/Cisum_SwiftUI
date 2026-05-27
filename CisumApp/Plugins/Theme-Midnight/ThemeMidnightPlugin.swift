@@ -3,6 +3,7 @@ import Foundation
 import SwiftUI
 
 actor ThemeMidnightPlugin: SuperPlugin {
+    static let shared = ThemeMidnightPlugin()
     static var shouldRegister: Bool { true }
     static var order: Int { 119 }
 

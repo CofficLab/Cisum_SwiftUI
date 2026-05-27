@@ -3,6 +3,7 @@ import Foundation
 import SwiftUI
 
 actor ThemeOceanPlugin: SuperPlugin {
+    static let shared = ThemeOceanPlugin()
     static var shouldRegister: Bool { true }
     static var order: Int { 123 }
 

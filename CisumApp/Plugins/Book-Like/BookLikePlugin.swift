@@ -4,6 +4,7 @@ import OSLog
 import SwiftUI
 
 actor BookLikePlugin: SuperPlugin, SuperLog {
+    static let shared = BookLikePlugin()
     static let emoji = "📚❤️"
     static let verbose = false
     static var shouldRegister: Bool { true }

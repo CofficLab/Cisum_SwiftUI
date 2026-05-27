@@ -3,6 +3,7 @@ import Foundation
 import SwiftUI
 
 actor ThemeStudioBluePlugin: SuperPlugin {
+    static let shared = ThemeStudioBluePlugin()
     static var shouldRegister: Bool { true }
     static var order: Int { 129 }
 

@@ -4,6 +4,7 @@ import OSLog
 import SwiftUI
 
 actor AudioPlayModePlugin: SuperPlugin {
+    static let shared = AudioPlayModePlugin()
     static var shouldRegister: Bool { true }
 
     let title = "音频播放模式管理"

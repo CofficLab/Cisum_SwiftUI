@@ -6,6 +6,7 @@ import SwiftUI
  * 音频设置插件，提供音频设置面板。
  */
 actor AudioSettingsPlugin: SuperPlugin, SuperLog {
+    static let shared = AudioSettingsPlugin()
     nonisolated static let emoji = "🛠️"
     static var shouldRegister: Bool { true }
     private static let verbose = false

@@ -6,6 +6,7 @@ import SwiftUI
  * 有声书数据库插件：提供书籍仓库视图。
  */
 actor BookDBPlugin: SuperPlugin, SuperLog {
+    static let shared = BookDBPlugin()
     nonisolated static let emoji = "📚📂"
     private static let verbose = true
     static var shouldRegister: Bool { true }

@@ -16,6 +16,7 @@ private final class NotificationObserverHolder {
 ///
 /// 负责管理音频相关的后台任务，如文件大小计算、哈希计算等。
 actor AudioJobPlugin: SuperPlugin, SuperLog {
+    static let shared = AudioJobPlugin()
     static let emoji = "⚙️"
     static let verbose = false
     static var shouldRegister: Bool { true }

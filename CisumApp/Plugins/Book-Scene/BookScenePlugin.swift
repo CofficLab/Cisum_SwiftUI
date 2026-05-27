@@ -5,6 +5,7 @@ import SwiftData
 import SwiftUI
 
 actor BookScenePlugin: SuperPlugin {
+    static let shared = BookScenePlugin()
     static var shouldRegister: Bool { false }
     static var order: Int { 0 }
     let title = "Audiobook Scene"

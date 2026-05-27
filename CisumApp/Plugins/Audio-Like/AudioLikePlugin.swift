@@ -5,6 +5,7 @@ import SwiftData
 import SwiftUI
 
 actor AudioLikePlugin: SuperPlugin, SuperLog {
+    static let shared = AudioLikePlugin()
     static let emoji = "❤️"
     static let verbose = false
     static var shouldRegister: Bool { true }

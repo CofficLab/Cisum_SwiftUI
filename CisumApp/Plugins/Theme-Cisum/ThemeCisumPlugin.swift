@@ -3,6 +3,7 @@ import Foundation
 import SwiftUI
 
 actor ThemeCisumPlugin: SuperPlugin {
+    static let shared = ThemeCisumPlugin()
     static var shouldRegister: Bool { true }
     static var order: Int { 118 }
 

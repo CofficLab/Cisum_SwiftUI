@@ -4,6 +4,7 @@ import OSLog
 import SwiftUI
 
 actor WelcomePlugin: SuperPlugin, SuperLog {
+    static let shared = WelcomePlugin()
     static let emoji = "👏"
     static let verbose = true
     static var shouldRegister: Bool { true }

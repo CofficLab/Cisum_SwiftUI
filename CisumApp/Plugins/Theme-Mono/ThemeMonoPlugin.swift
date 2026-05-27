@@ -3,6 +3,7 @@ import Foundation
 import SwiftUI
 
 actor ThemeMonoPlugin: SuperPlugin {
+    static let shared = ThemeMonoPlugin()
     static var shouldRegister: Bool { true }
     static var order: Int { 125 }
 

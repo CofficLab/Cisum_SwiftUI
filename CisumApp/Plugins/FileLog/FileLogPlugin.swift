@@ -29,6 +29,7 @@ import SwiftUI
 ///   └── ...
 /// ```
 actor FileLogPlugin: SuperPlugin, SuperLog {
+    static let shared = FileLogPlugin()
     nonisolated static let emoji = "📋"
     static let verbose = true
 

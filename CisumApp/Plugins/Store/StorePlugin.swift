@@ -4,6 +4,7 @@ import OSLog
 import SwiftUI
 
 actor StorePlugin: SuperPlugin {
+    static let shared = StorePlugin()
     static var shouldRegister: Bool { true }
     static var order: Int { 80 }
 

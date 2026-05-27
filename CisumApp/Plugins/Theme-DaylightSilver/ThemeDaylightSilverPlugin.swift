@@ -3,6 +3,7 @@ import Foundation
 import SwiftUI
 
 actor ThemeDaylightSilverPlugin: SuperPlugin {
+    static let shared = ThemeDaylightSilverPlugin()
     static var shouldRegister: Bool { true }
     static var order: Int { 126 }
 

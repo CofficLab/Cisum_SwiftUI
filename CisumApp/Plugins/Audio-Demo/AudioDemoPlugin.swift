@@ -7,6 +7,7 @@ import SwiftUI
  * 演示模式插件
  */
 actor AudioDemoPlugin: SuperPlugin {
+    static let shared = AudioDemoPlugin()
     
     static var shouldRegister: Bool { true }
     static var order: Int { 1 }

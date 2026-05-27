@@ -5,6 +5,7 @@ import OSLog
 import SwiftUI
 
 actor StoragePlugin: SuperPlugin, SuperLog {
+    static let shared = StoragePlugin()
     nonisolated static let emoji = "💾"
     static let verbose = true
     static var shouldRegister: Bool { false }

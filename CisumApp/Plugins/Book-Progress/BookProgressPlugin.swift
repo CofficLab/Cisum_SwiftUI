@@ -4,6 +4,7 @@ import OSLog
 import SwiftUI
 
 actor BookProgressPlugin: SuperPlugin, SuperLog {
+    static let shared = BookProgressPlugin()
     static let emoji = "📖"
     static let verbose = true
     static var shouldRegister: Bool { true }

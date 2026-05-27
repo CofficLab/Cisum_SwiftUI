@@ -3,6 +3,7 @@ import OSLog
 import SwiftUI
 
 actor OpenButtonPlugin: SuperPlugin, SuperLog {
+    static let shared = OpenButtonPlugin()
     let description: String = "当前资源打开按钮"
     let iconName: String = .cisumIconFinder
     static var shouldRegister: Bool { true }

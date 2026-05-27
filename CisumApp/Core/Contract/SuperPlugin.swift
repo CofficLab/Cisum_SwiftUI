@@ -9,7 +9,41 @@ import SwiftUI
 /// - 插件的标识和显示信息
 /// - 插件在不同界面区域的视图渲染方法
 /// - 插件的生命周期管理方法
+///
+/// ## 插件生命周期
+///
+/// 1. **注册阶段**: 插件被自动发现并实例化，调用 `onRegister()`
+/// 2. **启用阶段**: 插件被添加到 UI 树，调用 `onEnable()`
+/// 3. **禁用阶段**: 插件从 UI 树移除，调用 `onDisable()`
+///
+/// ## 使用示例
+///
+/// ```swift
+/// actor MyPlugin: SuperPlugin {
+///     static let shared = MyPlugin()
+///
+///     static var shouldRegister: Bool { true }
+///     static var order: Int { 100 }
+///
+///     let title = "我的插件"
+///     let description = "插件描述"
+///     let iconName = "star.fill"
+///
+///     nonisolated func onRegister() {
+///         // 初始化操作
+///     }
+/// }
+/// ```
 protocol SuperPlugin: Actor {
+    // MARK: - Shared Instance
+
+    /// 插件共享实例。
+    ///
+    /// PluginProvider 的自动发现阶段通过类型暴露的共享实例拿到插件，
+    /// 避免使用 ObjC Runtime 的 `alloc/init` 创建 Actor 实例，
+    /// 确保 Actor 初始化语义的正确性。
+    static var shared: Self { get }
+
     // MARK: - Basic Properties
 
     /// 插件的唯一标识符
@@ -75,15 +109,14 @@ protocol SuperPlugin: Actor {
     /// 插件注册完成后的回调
     ///
     /// 在插件成功注册到 PluginProvider 后调用。
-    /// 用于执行初始化操作，如启动后台任务、注册监听器、初始化资源等。
+    /// 用于执行初始化操作，如加载配置、注册监听器等。
     ///
     /// ## 使用示例
     /// ```swift
     /// actor MyPlugin: SuperPlugin {
     ///     nonisolated func onRegister() {
     ///         Task {
-    ///             // 启动后台任务
-    ///             await startBackgroundJob()
+    ///             // 初始化操作
     ///         }
     ///     }
     /// }
@@ -95,6 +128,26 @@ protocol SuperPlugin: Actor {
     /// - 如果需要访问 actor 隔离状态，请使用 `Task { await ... }`
     /// - 不要在此方法中执行阻塞操作
     nonisolated func onRegister()
+
+    /// 插件被启用时的回调
+    ///
+    /// 当插件注册完成且满足启用条件后调用。
+    /// 此时插件将开始参与 UI 渲染和交互。
+    /// 适合执行：
+    /// - 启动后台任务
+    /// - 连接外部服务
+    /// - 更新 UI 状态
+    nonisolated func onEnable()
+
+    /// 插件被禁用时的回调
+    ///
+    /// 当插件从启用状态变为禁用状态时调用。
+    /// 此时插件将停止参与 UI 渲染和交互。
+    /// 适合执行：
+    /// - 停止后台任务
+    /// - 断开外部连接
+    /// - 保存状态
+    nonisolated func onDisable()
 }
 
 // MARK: - Default Implementations
@@ -112,9 +165,10 @@ extension SuperPlugin {
     @MainActor func addSceneItem() -> String? { nil }
 
     /// 默认的注册顺序实现
-    static var order: Int {
-        return 9999
-    }
+    static var order: Int { 9999 }
+
+    /// 默认的注册控制，默认注册
+    static var shouldRegister: Bool { true }
 
     // MARK: - View Methods Defaults
 
@@ -143,9 +197,17 @@ extension SuperPlugin {
     /// 默认的注册回调实现
     ///
     /// 默认不做任何事，子插件可以重写此方法以自定义注册后的行为。
-    nonisolated func onRegister() {
-        // 默认空实现，子类可以重写
-    }
+    nonisolated func onRegister() {}
+
+    /// 默认的启用回调实现
+    ///
+    /// 默认不做任何事，子插件可以重写此方法以自定义启用后的行为。
+    nonisolated func onEnable() {}
+
+    /// 默认的禁用回调实现
+    ///
+    /// 默认不做任何事，子插件可以重写此方法以自定义禁用后的行为。
+    nonisolated func onDisable() {}
 }
 
 // MARK: - Convenience

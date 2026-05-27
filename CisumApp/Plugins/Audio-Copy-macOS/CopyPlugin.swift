@@ -6,6 +6,7 @@ import SwiftUI
 
 #if os(macOS)
     actor CopyPlugin: SuperPlugin, SuperLog {
+        static let shared = CopyPlugin()
         static let emoji = "🚛"
         static let verbose = true
         static var shouldRegister: Bool { true }

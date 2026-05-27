@@ -4,6 +4,7 @@ import OSLog
 import SwiftUI
 
 actor AudioProgressPlugin: SuperPlugin, SuperLog {
+    static let shared = AudioProgressPlugin()
     static let emoji = "💾"
     static let verbose = true
     static var shouldRegister: Bool { true }

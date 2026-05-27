@@ -3,6 +3,7 @@ import MagicKit
 import SwiftUI
 
 actor AudioWidgetControlPlugin: SuperPlugin {
+    static let shared = AudioWidgetControlPlugin()
     nonisolated static let emoji = "🎛️"
     // 确保在应用启动早期加载
     nonisolated static let order = 100

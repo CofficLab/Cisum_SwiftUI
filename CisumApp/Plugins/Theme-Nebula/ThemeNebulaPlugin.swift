@@ -3,6 +3,7 @@ import Foundation
 import SwiftUI
 
 actor ThemeNebulaPlugin: SuperPlugin {
+    static let shared = ThemeNebulaPlugin()
     static var shouldRegister: Bool { true }
     static var order: Int { 121 }
 

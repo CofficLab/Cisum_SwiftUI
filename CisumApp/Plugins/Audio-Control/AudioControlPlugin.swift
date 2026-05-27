@@ -4,6 +4,7 @@ import OSLog
 import SwiftUI
 
 actor AudioControlPlugin: SuperPlugin, SuperLog {
+    static let shared = AudioControlPlugin()
     static let emoji = "🎮"
     static let verbose = true
     static var shouldRegister: Bool { true }

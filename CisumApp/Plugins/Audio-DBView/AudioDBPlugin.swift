@@ -6,6 +6,7 @@ import SwiftUI
  * 音频数据库插件：提供音频仓库列表视图。
  */
 actor AudioDBPlugin: SuperPlugin {
+    static let shared = AudioDBPlugin()
     static var shouldRegister: Bool { true }
     static var order: Int { 1 }
 

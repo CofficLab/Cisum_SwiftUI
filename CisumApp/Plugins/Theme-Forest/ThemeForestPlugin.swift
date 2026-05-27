@@ -3,6 +3,7 @@ import Foundation
 import SwiftUI
 
 actor ThemeForestPlugin: SuperPlugin {
+    static let shared = ThemeForestPlugin()
     static var shouldRegister: Bool { true }
     static var order: Int { 122 }
 

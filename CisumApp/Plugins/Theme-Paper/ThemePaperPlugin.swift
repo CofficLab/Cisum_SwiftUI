@@ -3,6 +3,7 @@ import Foundation
 import SwiftUI
 
 actor ThemePaperPlugin: SuperPlugin {
+    static let shared = ThemePaperPlugin()
     static var shouldRegister: Bool { true }
     static var order: Int { 128 }
 

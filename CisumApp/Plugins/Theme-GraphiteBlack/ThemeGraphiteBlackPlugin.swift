@@ -3,6 +3,7 @@ import Foundation
 import SwiftUI
 
 actor ThemeGraphiteBlackPlugin: SuperPlugin {
+    static let shared = ThemeGraphiteBlackPlugin()
     static var shouldRegister: Bool { true }
     static var order: Int { 127 }
 

@@ -4,6 +4,7 @@ import OSLog
 import SwiftUI
 
 actor BookPlugin: SuperPlugin, SuperLog {
+    static let shared = BookPlugin()
     static let keyOfCurrentBookURL = "com.bookplugin.currentBookURL"
     static let keyOfCurrentBookTime = "com.bookplugin.currentBookTime"
     nonisolated static var emoji: String { "🎺" }

@@ -3,6 +3,7 @@ import MagicKit
 import SwiftUI
 
 actor ThemeSettingsPlugin: SuperPlugin {
+    static let shared = ThemeSettingsPlugin()
     static var shouldRegister: Bool { true }
     static var order: Int { 140 }
 

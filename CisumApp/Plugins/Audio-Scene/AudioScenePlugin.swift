@@ -5,6 +5,7 @@ import SwiftData
 import SwiftUI
 
 actor AudioScenePlugin: SuperPlugin {
+    static let shared = AudioScenePlugin()
     static var shouldRegister: Bool { true }
     static var order: Int { 0 }
 

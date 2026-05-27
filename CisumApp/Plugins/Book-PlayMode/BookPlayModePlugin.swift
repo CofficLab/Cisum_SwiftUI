@@ -4,6 +4,7 @@ import OSLog
 import SwiftUI
 
 actor BookPlayModePlugin: SuperPlugin, SuperLog {
+    static let shared = BookPlayModePlugin()
     static let emoji = "📖🔄"
     static let verbose = true
     static var shouldRegister: Bool { true }
