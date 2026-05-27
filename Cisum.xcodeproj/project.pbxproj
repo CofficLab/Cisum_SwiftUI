@@ -213,7 +213,6 @@
 				F5826E772F3578080079B285 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				F5D8424B2FADC1A20058CC8D /* Packages */,
 				F5F6D0682F396BC700857743 /* CisumApp */,
 				F5F6D24B2F396D7A00857743 /* Shared */,
 			);
@@ -323,7 +322,7 @@
 				0C6A1A022FD1000100A10001 /* XCLocalSwiftPackageReference "Packages/DeviceData" */,
 				A4EDBFBBFC934FE4853CA0E4 /* XCLocalSwiftPackageReference "Packages/CisumUI" */,
 				0BBE77992F2BA051009C6AC6 /* XCRemoteSwiftPackageReference "MagicPlayMan" */,
-				F51482C72F2C6A6700CEB80D /* XCRemoteSwiftPackageReference "MagicKit" */,
+				F51482C72F2C6A6700CEB80D /* XCLocalSwiftPackageReference "Packages/MagicKit" */,
 			);
 			productRefGroup = 0B9C1C342AAF18FE001A26AF;
 			projectDirPath = "";
@@ -756,6 +755,10 @@
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Packages/CisumUI;
 		};
+		F51482C72F2C6A6700CEB80D /* XCLocalSwiftPackageReference "Packages/MagicKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/MagicKit;
+		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
@@ -765,14 +768,6 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 1.3.2;
-			};
-		};
-		F51482C72F2C6A6700CEB80D /* XCRemoteSwiftPackageReference "MagicKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/CofficLab/MagicKit";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.5.11;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -855,7 +850,7 @@
 		};
 		F51482C82F2C6A6700CEB80D /* MagicKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = F51482C72F2C6A6700CEB80D /* XCRemoteSwiftPackageReference "MagicKit" */;
+			package = F51482C72F2C6A6700CEB80D /* XCLocalSwiftPackageReference "Packages/MagicKit" */;
 			productName = MagicKit;
 		};
 		F51BCCDB2F21EC7B00A5E3E5 /* MagicPlayMan */ = {
@@ -948,7 +943,7 @@
 		};
 		F5F6D2512F396F1200857743 /* MagicKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = F51482C72F2C6A6700CEB80D /* XCRemoteSwiftPackageReference "MagicKit" */;
+			package = F51482C72F2C6A6700CEB80D /* XCLocalSwiftPackageReference "Packages/MagicKit" */;
 			productName = MagicKit;
 		};
 /* End XCSwiftPackageProductDependency section */
