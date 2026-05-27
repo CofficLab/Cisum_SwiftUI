@@ -21,9 +21,6 @@ struct AppTabView: View, SuperLog, SuperThread {
                     .onChange(of: p.currentSceneName, onChangeOfCurrentScene)
             } else {
                 buildTabView()
-                #if os(macOS)
-                    .tabViewStyle(GroupedTabViewStyle())
-                #endif
                     .onChange(of: p.currentSceneName, onChangeOfCurrentScene)
             }
         }

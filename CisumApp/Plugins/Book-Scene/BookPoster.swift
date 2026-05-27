@@ -31,7 +31,7 @@ struct BookPoster: View {
             Button(action: {
                 Task { @MainActor in
                     do {
-                        try pluginProvider.setCurrentScene("有声书")
+                        try pluginProvider.setCurrentScene(BookScenePlugin.sceneName)
                         dismissAction()
                     } catch {
                         alert_error(error)
