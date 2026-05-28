@@ -1,285 +1,365 @@
 {
-  "sourceLanguage" : "en",
-  "strings" : {
-    "Audio file database view" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "音频文件数据库视图"
+  "sourceLanguage": "en",
+  "strings": {
+    "Audio file database view": {
+      "extractionState": "stale",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "音频文件数据库视图"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "音頻檔案資料庫視圖"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "音頻檔案資料庫視圖"
           }
         }
       }
     },
-    "Audio Repository" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "音频仓库"
+    "Audio Repository": {
+      "extractionState": "stale",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "音频仓库"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "音頻倉庫"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "音頻倉庫"
           }
         }
       }
     },
-    "Music Repository" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "音乐仓库"
+    "Music Repository": {
+      "extractionState": "stale",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "音乐仓库"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "音樂倉庫"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "音樂倉庫"
           }
         }
       }
     },
-    "共 %@" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "共 %@"
+    "共 %@": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "共 %@"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "共 %@"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "共 %@"
           }
         }
       }
     },
-    "删除" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "删除"
+    "删除": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "删除"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "刪除"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "刪除"
           }
         }
       }
     },
-    "取消" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "取消"
+    "取消": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "取消"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "取消"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "取消"
           }
         }
       }
     },
-    "在 Finder 中显示" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "在 Finder 中显示"
+    "在 Finder 中显示": {
+      "extractionState": "stale",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在 Finder 中显示"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "在 Finder 中顯示"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在 Finder 中顯示"
           }
         }
       }
     },
-    "导出到下载目录" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "导出到下载目录"
+    "导出到下载目录": {
+      "extractionState": "stale",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "导出到下载目录"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "匯出到下載目錄"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "匯出到下載目錄"
           }
         }
       }
     },
-    "或" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "或"
+    "或": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "或"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "或"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "或"
           }
         }
       }
     },
-    "打开仓库目录并放入文件" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "打开仓库目录并放入文件"
+    "打开仓库目录并放入文件": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "打开仓库目录并放入文件"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "打開倉庫目錄並放入檔案"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "打開倉庫目錄並放入檔案"
           }
         }
       }
     },
-    "播放" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "播放"
+    "播放": {
+      "extractionState": "stale",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "播放"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "播放"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "播放"
           }
         }
       }
     },
-    "支持的格式：%@" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "支持的格式：%@"
+    "支持的格式：%@": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "支持的格式：%@"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "支援的格式：%@"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "支援的格式：%@"
           }
         }
       }
     },
-    "正在加载更多..." : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "正在加载更多..."
+    "正在加载更多...": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在加载更多..."
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "正在載入更多..."
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在載入更多..."
           }
         }
       }
     },
-    "正在排序" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "正在排序"
+    "正在排序": {
+      "extractionState": "stale",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在排序"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "正在排序"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在排序"
           }
         }
       }
     },
-    "正在读取仓库" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "正在读取仓库"
+    "正在读取仓库": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在读取仓库"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "正在讀取倉庫"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在讀取倉庫"
           }
         }
       }
     },
-    "添加" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "添加"
+    "添加": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "添加"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "添加"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "添加"
           }
         }
       }
     },
-    "确定要删除这个文件吗？" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "确定要删除这个文件吗？"
+    "确定要删除这个文件吗？": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "确定要删除这个文件吗？"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "確定要刪除這個檔案嗎？"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "確定要刪除這個檔案嗎？"
+          }
+        }
+      }
+    },
+    "Deleted %@": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已删除 %@"
+          }
+        },
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已刪除 %@"
+          }
+        }
+      }
+    },
+    "File copied to Downloads": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "文件已复制到下载目录"
+          }
+        },
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "檔案已複製到下載目錄"
+          }
+        }
+      }
+    },
+    "Export failed: %@": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "导出文件失败: %@"
+          }
+        },
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "匯出檔案失敗: %@"
+          }
+        }
+      }
+    },
+    "File deleted": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "文件已删除"
+          }
+        },
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "檔案已刪除"
+          }
+        }
+      }
+    },
+    "Delete failed: %@": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "删除文件失败: %@"
+          }
+        },
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "刪除檔案失敗: %@"
           }
         }
       }
     }
   },
-  "version" : "1.0"
+  "version": "1.0"
 }

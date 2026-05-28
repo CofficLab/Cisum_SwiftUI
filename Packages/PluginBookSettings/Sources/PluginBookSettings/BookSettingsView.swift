@@ -23,29 +23,46 @@ public struct BookSettingsView: View, SuperLog {
     public var body: some View {
         Group {
             if let disk = disk {
-                AppSettingsSection(title: "Audiobook Library") {
-                    AppSettingsInfoRow(title: "Library Size", description: description, systemImage: .cisumIconMusicLibrary) {
+                AppSettingsSection(title: String(localized: "Audiobook Library", table: "Book-Settings", bundle: .module)) {
+                    AppSettingsInfoRow(
+                        title: String(localized: "Library Size", table: "Book-Settings", bundle: .module),
+                        description: description,
+                        systemImage: .cisumIconMusicLibrary
+                    ) {
                         if let diskSize = diskSize {
                             Text(diskSize)
                         }
                     }
 
                     #if os(macOS)
-                        AppSettingsInfoRow(title: "Open Library", description: "View in Finder", systemImage: .cisumIconShowInFinder, action: {
-                            disk.openInFinder()
-                        }) {
+                        AppSettingsInfoRow(
+                            title: String(localized: "Open Library", table: "Book-Settings", bundle: .module),
+                            description: String(localized: "View in Finder", table: "Book-Settings", bundle: .module),
+                            systemImage: .cisumIconShowInFinder,
+                            action: {
+                                disk.openInFinder()
+                            }
+                        ) {
                             Image(systemName: .cisumIconShowInFinder)
                         }
                     #endif
 
-                    AppSettingsInfoRow(title: "File Count", description: "Total files in library", systemImage: .cisumIconDocument) {
-                        Text("\(fileCount) files")
+                    AppSettingsInfoRow(
+                        title: String(localized: "File Count", table: "Book-Settings", bundle: .module),
+                        description: String(localized: "Total files in library", table: "Book-Settings", bundle: .module),
+                        systemImage: .cisumIconDocument
+                    ) {
+                        Text("\(fileCount) files", tableName: "Book-Settings", bundle: .module)
                     }
                 }
             } else {
-                AppSettingsSection(title: "Music Library") {
-                    AppSettingsInfoRow(title: "Error", description: description, systemImage: .cisumIconMusicLibrary) {
-                        Text("Cannot get music library information")
+                AppSettingsSection(title: String(localized: "Music Library", table: "Book-Settings", bundle: .module)) {
+                    AppSettingsInfoRow(
+                        title: String(localized: "Error", table: "Book-Settings", bundle: .module),
+                        description: description,
+                        systemImage: .cisumIconMusicLibrary
+                    ) {
+                        Text("Cannot get music library information", tableName: "Book-Settings", bundle: .module)
                     }
                 }
             }
@@ -95,9 +112,9 @@ private extension BookSettingsView {
         }
 
         if disk.checkIsICloud(verbose: false) {
-            description = "iCloud Drive, will sync"
+            description = String(localized: "iCloud Drive, will sync", table: "Book-Settings", bundle: .module)
         } else {
-            description = "Local directory, will not sync"
+            description = String(localized: "Local directory, will not sync", table: "Book-Settings", bundle: .module)
         }
     }
 }

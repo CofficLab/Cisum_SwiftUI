@@ -1,38 +1,54 @@
 {
-  "sourceLanguage" : "en",
-  "strings" : {
-    "Book Progress" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "书籍进度管理"
+  "sourceLanguage": "en",
+  "strings": {
+    "Book Progress": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "书籍进度管理"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "書籍進度管理"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "書籍進度管理"
           }
         }
       }
     },
-    "Save and restore book playback progress" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "负责书籍播放进度的保存和恢复"
+    "Save and restore book playback progress": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "负责书籍播放进度的保存和恢复"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "負責書籍播放進度的保存和恢復"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "負責書籍播放進度的保存和恢復"
+          }
+        }
+      }
+    },
+    "Download failed: %@": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "下载失败: %@"
+          }
+        },
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "下載失敗: %@"
           }
         }
       }
     }
   },
-  "version" : "1.0"
+  "version": "1.0"
 }

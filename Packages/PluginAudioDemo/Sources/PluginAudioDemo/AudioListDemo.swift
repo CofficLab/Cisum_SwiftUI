@@ -38,7 +38,7 @@ public struct AudioListDemo: View {
     public var body: some View {
         VStack(spacing: 0) {
             HStack {
-                Text("共 \(urls.count.description)")
+                Text("Total \(urls.count)", tableName: "Audio-Demo", bundle: .module)
                 Spacer()
 
                 if showAddButton, let addButton {

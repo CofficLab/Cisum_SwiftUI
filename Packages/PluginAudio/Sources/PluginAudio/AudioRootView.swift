@@ -126,7 +126,7 @@ extension AudioRootView {
             os_log("\(self.t)📂 存储位置已变化")
         }
 
-        alert_info("存储位置发生了变化")
+        alert_info(String(localized: "Storage location has changed", table: "Audio", bundle: .module))
     }
 
     /// 处理视图消失事件

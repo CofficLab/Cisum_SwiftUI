@@ -127,7 +127,7 @@ private extension BookProgressRootView {
                     }
                 } catch let error {
                     os_log(.error, "\(self.t)❌ 书籍文件下载失败: \(error.localizedDescription)")
-                    alert_error("下载失败: \(error.localizedDescription)")
+                    alert_error(String(localized: "Download failed: \(error.localizedDescription)", table: "Book-Progress", bundle: .module))
                 }
             }
         }

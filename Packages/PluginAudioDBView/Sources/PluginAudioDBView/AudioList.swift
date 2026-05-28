@@ -500,7 +500,7 @@ extension AudioList {
 
                     // 切换回主线程更新 UI
                     await MainActor.run {
-                        alert_info("已删除 \(url.title)")
+                        alert_info(String(localized: "Deleted \(url.title)", table: "Audio-DBView", bundle: .module))
                     }
                 } catch {
                     await MainActor.run {

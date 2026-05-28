@@ -96,6 +96,22 @@
           }
         }
       }
+    },
+    "Failed to save like status: %@": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "保存喜欢状态失败: %@"
+          }
+        },
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "儲存喜歡狀態失敗: %@"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

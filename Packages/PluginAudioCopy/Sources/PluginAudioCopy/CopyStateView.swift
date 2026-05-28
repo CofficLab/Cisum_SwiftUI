@@ -72,7 +72,7 @@ extension CopyStateView {
     func handleCopyTaskFinished(_ lastCount: Int) {
         // 任务完成，清零任务数量
         taskCount = 0
-        alert_info("复制完成")
+        alert_info(String(localized: "Copy completed", table: "Audio-Copy-macOS", bundle: .module))
     }
 }
 #endif

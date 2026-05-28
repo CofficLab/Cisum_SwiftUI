@@ -18,24 +18,24 @@ struct DebugView: View, SuperLog {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 8) {
                 Button(action: loadProducts) {
-                    Text(isLoading ? "加载中…" : "加载产品", tableName: "Core")
+                    Text(isLoading ? "加载中…" : "加载产品")
                 }
                 .disabled(isLoading)
 
                 Button(action: updateSubscriptionStatus) {
-                    Text(isLoading ? "加载中…" : "更新订阅状态", tableName: "Core")
+                    Text(isLoading ? "加载中…" : "更新订阅状态")
                 }
                 .disabled(isLoading)
 
                 Button(action: testFetchPurchased) {
-                    Text(isLoading ? "加载中…" : "测试已购", tableName: "Core")
+                    Text(isLoading ? "加载中…" : "测试已购")
                 }
                 .disabled(isLoading)
 
                 Button {
                     clear()
                 } label: {
-                    Text("清空", tableName: "Core")
+                    Text("清空")
                 }
 
                 Spacer()
@@ -51,7 +51,7 @@ struct DebugView: View, SuperLog {
                         if let groups = self.productGroups {
                             productSection(groups: groups)
                         } else {
-                            Text("尚未加载产品", tableName: "Core")
+                            Text("尚未加载产品")
                                 .foregroundStyle(.secondary)
                         }
                     }
@@ -64,7 +64,7 @@ struct DebugView: View, SuperLog {
                         if let groups = self.productGroups {
                             subscriptionStatusSection(subscriptions: groups.subscriptions)
                         } else {
-                            Text("尚未加载产品", tableName: "Core")
+                            Text("尚未加载产品")
                                 .foregroundStyle(.secondary)
                         }
                     }
@@ -194,10 +194,10 @@ extension DebugView {
 extension DebugView {
     func groupSection(title: String, items: [ProductDTO]) -> some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text("\(title) (\(items.count))", tableName: "Core")
+            Text("\(title) (\(items.count))")
                 .font(.headline)
             if items.isEmpty {
-                Text("空", tableName: "Core")
+                Text("空")
                     .foregroundStyle(.secondary)
             } else {
                 ForEach(items, id: \.id) { p in
@@ -220,14 +220,14 @@ extension DebugView {
     @ViewBuilder
     func purchasedSection() -> some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Purchased", tableName: "Core")
+            Text("Purchased")
                 .font(.title3)
                 .foregroundStyle(.brown)
 
             VStack(alignment: .leading, spacing: 4) {
-                Text("Cars (\(purchasedCars.count))", tableName: "Core").font(.headline)
+                Text("Cars (\(purchasedCars.count))").font(.headline)
                 if purchasedCars.isEmpty {
-                    Text("空", tableName: "Core").foregroundStyle(.secondary)
+                    Text("空").foregroundStyle(.secondary)
                 } else {
                     ForEach(purchasedCars, id: \.id) { p in
                         Text(p.displayName)
@@ -237,9 +237,9 @@ extension DebugView {
             }
 
             VStack(alignment: .leading, spacing: 4) {
-                Text("Subscriptions (\(purchasedSubscriptions.count))", tableName: "Core").font(.headline)
+                Text("Subscriptions (\(purchasedSubscriptions.count))").font(.headline)
                 if purchasedSubscriptions.isEmpty {
-                    Text("空", tableName: "Core").foregroundStyle(.secondary)
+                    Text("空").foregroundStyle(.secondary)
                 } else {
                     ForEach(purchasedSubscriptions, id: \.id) { p in
                         Text(p.displayName)
@@ -249,9 +249,9 @@ extension DebugView {
             }
 
             VStack(alignment: .leading, spacing: 4) {
-                Text("NonRenewables (\(purchasedNonRenewables.count))", tableName: "Core").font(.headline)
+                Text("NonRenewables (\(purchasedNonRenewables.count))").font(.headline)
                 if purchasedNonRenewables.isEmpty {
-                    Text("空", tableName: "Core").foregroundStyle(.secondary)
+                    Text("空").foregroundStyle(.secondary)
                 } else {
                     ForEach(purchasedNonRenewables, id: \.id) { p in
                         Text(p.displayName)
@@ -265,7 +265,7 @@ extension DebugView {
     @ViewBuilder
     func productSection(groups: ProductGroupsDTO) -> some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Products", tableName: "Core")
+            Text("Products")
                 .font(.title3)
                 .foregroundStyle(.red)
 
@@ -279,11 +279,11 @@ extension DebugView {
     @ViewBuilder
     func subscriptionGroupsSection(subscriptionGroups: [SubscriptionGroupDTO]) -> some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Subscription Groups (\(subscriptionGroups.count))", tableName: "Core")
+            Text("Subscription Groups (\(subscriptionGroups.count))")
                 .font(.headline)
 
             if subscriptionGroups.isEmpty {
-                Text("空", tableName: "Core")
+                Text("空")
                     .foregroundStyle(.secondary)
             } else {
                 ForEach(subscriptionGroups, id: \.id) { group in
@@ -294,10 +294,10 @@ extension DebugView {
                                 .font(.subheadline)
                                 .fontWeight(.medium)
                             Spacer()
-                            Text("ID: \(group.id)", tableName: "Core")
+                            Text("ID: \(group.id)")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
-                            Text("(\(group.subscriptions.count) 个订阅)", tableName: "Core")
+                            Text("(\(group.subscriptions.count) 个订阅)")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
@@ -310,7 +310,7 @@ extension DebugView {
                         VStack(alignment: .leading, spacing: 2) {
                             ForEach(group.subscriptions, id: \.id) { subscription in
                                 HStack {
-                                    Text("  • \(subscription.displayName)", tableName: "Core")
+                                    Text("  • \(subscription.displayName)")
                                         .font(.caption)
                                     Spacer()
                                     Text(subscription.displayPrice)
@@ -331,43 +331,43 @@ extension DebugView {
     @ViewBuilder
     func subscriptionStatusSection(subscriptions: [ProductDTO]) -> some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Subscription Status", tableName: "Core")
+            Text("Subscription Status")
                 .font(.title3)
                 .foregroundStyle(.cyan)
 
             if let highest = highestSubscriptionProduct {
                 HStack {
-                    Text("Highest Product:", tableName: "Core")
+                    Text("Highest Product:")
                     Spacer()
                     Text(highest.displayName)
                         .foregroundStyle(.secondary)
                 }
             } else {
-                Text("Highest Product: 无", tableName: "Core").foregroundStyle(.secondary)
+                Text("Highest Product: 无").foregroundStyle(.secondary)
             }
 
             if let hs = highestSubscriptionStatus {
                 HStack {
-                    Text("Highest Status:", tableName: "Core")
+                    Text("Highest Status:")
                     Spacer()
-                    Text("state=\(hs.state)", tableName: "Core")
+                    Text("state=\(hs.state)")
                         .foregroundStyle(.secondary)
                 }
             } else {
-                Text("Highest Status: 无", tableName: "Core").foregroundStyle(.secondary)
+                Text("Highest Status: 无").foregroundStyle(.secondary)
             }
 
             Divider()
 
-            Text("All Statuses (\(subscriptionStatuses.count))", tableName: "Core")
+            Text("All Statuses (\(subscriptionStatuses.count))")
                 .font(.headline)
             if subscriptionStatuses.isEmpty {
-                Text("空", tableName: "Core").foregroundStyle(.secondary)
+                Text("空").foregroundStyle(.secondary)
             } else {
                 ForEach(Array(subscriptionStatuses.enumerated()), id: \.offset) { _, s in
                     HStack(alignment: .top) {
-                        Text("state=", tableName: "Core")
-                        Text("\(s.state)", tableName: "Core")
+                        Text("state=")
+                        Text("\(s.state)")
                             .foregroundStyle(.secondary)
                         Spacer()
                         if let pid = s.currentProductID {

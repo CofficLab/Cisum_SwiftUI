@@ -94,7 +94,7 @@ private extension AudioLikeRootView {
                 )
             } catch {
                 os_log(.error, "\(self.t)❌ 保存喜欢状态失败: \(error.localizedDescription)")
-                alert_error("保存喜欢状态失败: \(error.localizedDescription)")
+                alert_error(String(localized: "Failed to save like status: \(error.localizedDescription)", table: "Audio-Like", bundle: .module))
             }
         }
     }

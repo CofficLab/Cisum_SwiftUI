@@ -160,12 +160,12 @@ extension AudioItemView {
                 try await url.copyTo(finalDestinationURL, caller: self.className)
                 if Self.verbose {
                     os_log("\(Self.t)✅ 文件已导出到: \(finalDestinationURL.path)")
-                    alert_info("文件已复制到下载目录")
+                    alert_info(String(localized: "File copied to Downloads", table: "Audio-DBView", bundle: .module))
                 }
             } catch {
                 if Self.verbose {
                     os_log("\(Self.t)❌ 导出文件失败: \(error.localizedDescription)")
-                    alert_error("导出文件失败: \(error.localizedDescription)")
+                    alert_error(String(localized: "Export failed: \(error.localizedDescription)", table: "Audio-DBView", bundle: .module))
                 }
             }
         }
@@ -209,7 +209,7 @@ extension AudioItemView {
                 if Self.verbose {
                     os_log("\(Self.t)🗑️ 文件已删除: \(url.path)")
                 }
-                alert_info("文件已删除")
+                alert_info(String(localized: "File deleted", table: "Audio-DBView", bundle: .module))
 
                 // 发送通知刷新列表
                 NotificationCenter.default.post(
@@ -220,7 +220,7 @@ extension AudioItemView {
                 if Self.verbose {
                     os_log("\(Self.t)❌ 删除文件失败: \(error.localizedDescription)")
                 }
-                alert_error("删除文件失败: \(error.localizedDescription)")
+                alert_error(String(localized: "Delete failed: \(error.localizedDescription)", table: "Audio-DBView", bundle: .module))
             }
         }
     }

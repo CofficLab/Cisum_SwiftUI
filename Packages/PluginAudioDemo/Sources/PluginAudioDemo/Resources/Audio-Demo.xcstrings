@@ -1,54 +1,70 @@
 {
-  "sourceLanguage" : "en",
-  "strings" : {
-    "Audio Repository" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "音频仓库"
+  "sourceLanguage": "en",
+  "strings": {
+    "Audio Repository": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "音频仓库"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "音頻倉庫"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "音頻倉庫"
           }
         }
       }
     },
-    "Audio file database view" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "音频文件数据库视图"
+    "Audio file database view": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "音频文件数据库视图"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "音頻檔案資料庫視圖"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "音頻檔案資料庫視圖"
           }
         }
       }
     },
-    "Music Repository" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "音乐仓库"
+    "Music Repository": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "音乐仓库"
           }
         },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "音樂倉庫"
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "音樂倉庫"
+          }
+        }
+      }
+    },
+    "Total %lld": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "共 %lld"
+          }
+        },
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "共 %lld"
           }
         }
       }
     }
   },
-  "version" : "1.0"
+  "version": "1.0"
 }
