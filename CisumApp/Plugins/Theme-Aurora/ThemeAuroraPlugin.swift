@@ -7,8 +7,8 @@ actor ThemeAuroraPlugin: SuperPlugin {
     static var shouldRegister: Bool { true }
     static var order: Int { 120 }
 
-    let title = "极光紫"
-    let description = "沉浸式播放主题"
+    nonisolated var title: String { String(localized: "Aurora Purple", table: "Theme-Aurora") }
+    nonisolated var description: String { String(localized: "Immersive playback theme", table: "Theme-Aurora") }
     let iconName = "sparkles"
 
     @MainActor

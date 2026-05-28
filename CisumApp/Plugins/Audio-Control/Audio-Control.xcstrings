@@ -1,5 +1,24 @@
 {
-  "sourceLanguage": "en",
-  "strings": {},
-  "version": "1.0"
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Audio Playback Control" : {
+
+    },
+    "Audio playback control, such as previous and next" : {
+
+    },
+    "Cannot play next: %@" : {
+
+    },
+    "Current file was deleted, playing the first" : {
+
+    },
+    "No files in library" : {
+
+    },
+    "Reached the last track, playing the first" : {
+
+    }
+  },
+  "version" : "1.0"
 }

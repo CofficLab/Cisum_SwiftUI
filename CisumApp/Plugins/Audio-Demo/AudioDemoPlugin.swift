@@ -12,8 +12,8 @@ actor AudioDemoPlugin: SuperPlugin {
     static var shouldRegister: Bool { true }
     static var order: Int { 1 }
 
-    let title = "音频仓库"
-    let description = "音频文件数据库视图"
+    nonisolated var title: String { String(localized: "Audio Repository", table: "Audio-Demo") }
+    nonisolated var description: String { String(localized: "Audio file database view", table: "Audio-Demo") }
     let iconName = "externaldrive"
 
     @MainActor
@@ -21,7 +21,7 @@ actor AudioDemoPlugin: SuperPlugin {
         guard currentSceneName == AudioScenePlugin.sceneName else { return nil }
         guard demoMode else { return nil }
 
-        return (AnyView(AudioListDemo()), "音乐仓库")
+        return (AnyView(AudioListDemo()), String(localized: "Music Repository", table: "Audio-Demo"))
     }
 }
 

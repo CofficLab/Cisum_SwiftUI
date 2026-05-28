@@ -7,8 +7,8 @@ actor ThemeNebulaPlugin: SuperPlugin {
     static var shouldRegister: Bool { true }
     static var order: Int { 121 }
 
-    let title = "星云粉"
-    let description = "柔和暖色主题"
+    nonisolated var title: String { String(localized: "Nebula Pink", table: "Theme-Nebula") }
+    nonisolated var description: String { String(localized: "Soft warm theme", table: "Theme-Nebula") }
     let iconName = "cloud.moon.fill"
 
     @MainActor

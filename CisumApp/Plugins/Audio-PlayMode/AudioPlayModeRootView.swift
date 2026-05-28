@@ -94,20 +94,20 @@ extension AudioPlayModeRootView {
                     os_log("\(Self.t)🔁 单曲循环模式")
                 }
 
-                alert_info("单曲循环")
+                alert_info(String(localized: "Repeat One", table: "Audio-PlayMode"))
             case .sequence, .repeatAll:
                 if Self.verbose {
                     os_log("\(Self.t)📋 顺序播放，重新排序")
                 }
 
-                alert_info("顺序播放")
+                alert_info(String(localized: "Sequential Play", table: "Audio-PlayMode"))
                 await repo.sort(currentURL, reason: "PlayModeChanged")
             case .shuffle:
                 if Self.verbose {
                     os_log("\(Self.t)🔀 随机播放，打乱顺序")
                 }
 
-                alert_info("随机播放")
+                alert_info(String(localized: "Shuffle", table: "Audio-PlayMode"))
                 try await repo.sortRandom(currentURL, reason: "PlayModeChanged", verbose: false)
             }
         }

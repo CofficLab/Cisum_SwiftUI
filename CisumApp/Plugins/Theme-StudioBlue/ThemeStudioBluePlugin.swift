@@ -7,8 +7,8 @@ actor ThemeStudioBluePlugin: SuperPlugin {
     static var shouldRegister: Bool { true }
     static var order: Int { 129 }
 
-    let title = "Studio Blue"
-    let description = "录音室蓝灰主题"
+    nonisolated var title: String { String(localized: "Studio Blue", table: "Theme-StudioBlue") }
+    nonisolated var description: String { String(localized: "Studio blue-gray theme", table: "Theme-StudioBlue") }
     let iconName = "waveform"
 
     @MainActor

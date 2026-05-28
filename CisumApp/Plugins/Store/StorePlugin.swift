@@ -8,8 +8,8 @@ actor StorePlugin: SuperPlugin {
     static var shouldRegister: Bool { true }
     static var order: Int { 80 }
 
-    let title = "Store"
-    let description = "In-App purchases and subscriptions"
+    nonisolated var title: String { String(localized: "Store", table: "Store") }
+    nonisolated var description: String { String(localized: "In-App purchases and subscriptions", table: "Store") }
     let iconName = "cart"
 
     @MainActor

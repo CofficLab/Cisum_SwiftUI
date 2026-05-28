@@ -8,8 +8,8 @@ actor BookScenePlugin: SuperPlugin {
     static let shared = BookScenePlugin()
     static var shouldRegister: Bool { true }
     static var order: Int { 0 }
-    let title = "Audiobook Scene"
-    let description = "Provides audiobook scene"
+    nonisolated var title: String { String(localized: "Audiobook Scene", table: "Book-Scene") }
+    nonisolated var description: String { String(localized: "Provides audiobook scene", table: "Book-Scene") }
     let iconName = "book.closed"
     static let sceneName = "Audiobooks"
 

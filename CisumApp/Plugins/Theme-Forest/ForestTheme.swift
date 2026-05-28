@@ -3,8 +3,8 @@ import SwiftUI
 
 struct ForestTheme: LumiAppChromeTheme {
     let identifier = "forest"
-    let displayName = "森林绿"
-    let description = "自然绿色点缀，适合长时间听书"
+    let displayName = String(localized: "Forest Green", table: "Theme-Forest")
+    let description = String(localized: "Natural green accents, ideal for long audiobook sessions", table: "Theme-Forest")
     let iconName = "leaf.fill"
     let iconColor = Color.adaptive(light: "059669", dark: "34D399")
     let isDarkTheme = false

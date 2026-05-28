@@ -7,8 +7,8 @@ actor ThemeCisumPlugin: SuperPlugin {
     static var shouldRegister: Bool { true }
     static var order: Int { 118 }
 
-    let title = "Cisum"
-    let description = "Cisum 默认主题"
+    nonisolated var title: String { String(localized: "Cisum", table: "Theme-Cisum") }
+    nonisolated var description: String { String(localized: "Cisum default theme", table: "Theme-Cisum") }
     let iconName = "circle.hexagonpath.fill"
 
     @MainActor

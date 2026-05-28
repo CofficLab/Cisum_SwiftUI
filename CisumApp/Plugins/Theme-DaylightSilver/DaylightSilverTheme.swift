@@ -3,8 +3,8 @@ import SwiftUI
 
 struct DaylightSilverTheme: LumiAppChromeTheme {
     let identifier = "daylight-silver"
-    let displayName = "白昼银"
-    let description = "银白浅灰界面，适合白天办公"
+    let displayName = String(localized: "Daylight Silver", table: "Theme-DaylightSilver")
+    let description = String(localized: "Silver-white light gray interface, ideal for daytime office", table: "Theme-DaylightSilver")
     let iconName = "sun.max.fill"
     let iconColor = Color.adaptive(light: "0A84FF", dark: "64D2FF")
     let isDarkTheme = false

@@ -7,8 +7,8 @@ actor ThemeSettingsPlugin: SuperPlugin {
     static var shouldRegister: Bool { true }
     static var order: Int { 140 }
 
-    let title = "主题"
-    let description = "切换应用主题"
+    nonisolated var title: String { String(localized: "Theme", table: "Theme-Settings") }
+    nonisolated var description: String { String(localized: "Switch app theme", table: "Theme-Settings") }
     let iconName = "paintbrush"
 
     @MainActor

@@ -7,8 +7,8 @@ actor ThemeMonoPlugin: SuperPlugin {
     static var shouldRegister: Bool { true }
     static var order: Int { 125 }
 
-    let title = "黑白高对比"
-    let description = "可读性优先主题"
+    nonisolated var title: String { String(localized: "Mono High Contrast", table: "Theme-Mono") }
+    nonisolated var description: String { String(localized: "Readability-first theme", table: "Theme-Mono") }
     let iconName = "circle.lefthalf.filled"
 
     @MainActor

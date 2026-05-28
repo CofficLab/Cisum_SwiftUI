@@ -7,8 +7,8 @@ actor ThemeSunsetPlugin: SuperPlugin {
     static var shouldRegister: Bool { true }
     static var order: Int { 124 }
 
-    let title = "日落橙"
-    let description = "暖色点缀主题"
+    nonisolated var title: String { String(localized: "Sunset Orange", table: "Theme-Sunset") }
+    nonisolated var description: String { String(localized: "Warm accent theme", table: "Theme-Sunset") }
     let iconName = "sunset.fill"
 
     @MainActor

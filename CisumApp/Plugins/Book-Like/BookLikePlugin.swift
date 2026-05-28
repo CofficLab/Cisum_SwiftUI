@@ -12,8 +12,8 @@ actor BookLikePlugin: SuperPlugin, SuperLog {
     /// 注册顺序设为 6，在 BookPlugin 相关插件之后执行
     static var order: Int { 6 }
 
-    let title = "书籍喜欢管理"
-    let description = "负责书籍喜欢状态的独立管理和存储"
+    nonisolated var title: String { String(localized: "Book Favorites", table: "Book-Like") }
+    nonisolated var description: String { String(localized: "Manage book favorite status", table: "Book-Like") }
     let iconName = "heart"
     
 

@@ -7,8 +7,8 @@ actor ThemeDaylightSilverPlugin: SuperPlugin {
     static var shouldRegister: Bool { true }
     static var order: Int { 126 }
 
-    let title = "白昼银"
-    let description = "白天办公主题"
+    nonisolated var title: String { String(localized: "Daylight Silver", table: "Theme-DaylightSilver") }
+    nonisolated var description: String { String(localized: "Daytime office theme", table: "Theme-DaylightSilver") }
     let iconName = "sun.max.fill"
 
     @MainActor

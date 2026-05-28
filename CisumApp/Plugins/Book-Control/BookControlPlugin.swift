@@ -12,8 +12,8 @@ actor BookControlPlugin: SuperPlugin, SuperLog {
     /// 注册顺序设为 8，在其他书籍相关插件之后执行
     static var order: Int { 8 }
 
-    let title = "书籍播放控制"
-    let description = "负责书籍播放控制功能，如上一章、下一章"
+    nonisolated var title: String { String(localized: "Book Playback Control", table: "Book-Control") }
+    nonisolated var description: String { String(localized: "Book playback control, such as previous and next chapter", table: "Book-Control") }
     let iconName = "playpause"
     
 

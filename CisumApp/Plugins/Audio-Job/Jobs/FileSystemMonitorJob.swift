@@ -12,8 +12,8 @@ final class FileSystemMonitorJob: AudioJob, SuperLog, @unchecked Sendable {
     static let verbose = false
 
     nonisolated let identifier = "com.cisum.audio.job.filesystem-monitor"
-    nonisolated let name = "文件系统监控"
-    nonisolated let description = "监听音频文件系统变化，同步到数据库"
+    nonisolated let name = String(localized: "File System Monitor", table: "Audio-Job")
+    nonisolated let description = String(localized: "Monitor audio file system changes and sync to database", table: "Audio-Job")
 
     private var monitor: Cancellable?
     private let state = State()

@@ -3,8 +3,8 @@ import SwiftUI
 
 struct MonoTheme: LumiAppChromeTheme {
     let identifier = "mono"
-    let displayName = "黑白高对比"
-    let description = "极简灰阶，强调内容本身"
+    let displayName = String(localized: "Mono High Contrast", table: "Theme-Mono")
+    let description = String(localized: "Minimal grayscale, emphasizing content itself", table: "Theme-Mono")
     let iconName = "circle.lefthalf.filled"
     let iconColor = Color.adaptive(light: "111827", dark: "FFFFFF")
     let isDarkTheme = false

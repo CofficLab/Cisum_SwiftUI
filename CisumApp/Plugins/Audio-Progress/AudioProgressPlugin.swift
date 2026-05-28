@@ -13,8 +13,8 @@ actor AudioProgressPlugin: SuperPlugin, SuperLog {
     /// 内核会按顺序应用插件，进度管理先于音频功能
     static var order: Int { 0 }
 
-    let title = "音频进度管理"
-    let description = "负责音频播放进度的保存和恢复"
+    nonisolated var title: String { String(localized: "Audio Progress", table: "Audio-Progress") }
+    nonisolated var description: String { String(localized: "Save and restore audio playback progress", table: "Audio-Progress") }
     let iconName = "waveform"
 
     /// 只有当当前插件是音频插件时才提供进度管理

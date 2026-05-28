@@ -41,8 +41,8 @@ actor FileLogPlugin: SuperPlugin, SuperLog {
 
     var instanceLabel: String { "FileLog" }
 
-    let title = "File Log"
-    let description = "Collect OSLog entries to disk files with auto-rotation and cleanup"
+    nonisolated var title: String { String(localized: "File Log", table: "FileLog") }
+    nonisolated var description: String { String(localized: "Collect OSLog entries to disk files with auto-rotation and cleanup", table: "FileLog") }
     let iconName = "doc.text.below.ecg"
 
     nonisolated func onRegister() {

@@ -12,8 +12,8 @@ actor AudioSettingsPlugin: SuperPlugin, SuperLog {
     private static let verbose = false
     /// 注册顺序设为 10，在其他音频插件之后执行
     static var order: Int { 10 }
-    let title = "音频设置"
-    let description = "音频插件的设置入口"
+    nonisolated var title: String { String(localized: "Audio Settings", table: "Audio-Settings") }
+    nonisolated var description: String { String(localized: "Audio plugin settings", table: "Audio-Settings") }
     let iconName = "gearshape"
     
 

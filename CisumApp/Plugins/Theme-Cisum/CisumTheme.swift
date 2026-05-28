@@ -3,8 +3,8 @@ import SwiftUI
 
 struct CisumTheme: LumiAppChromeTheme {
     let identifier = "cisum"
-    let displayName = "Cisum"
-    let description = "沿用原始日落渐变配色"
+    let displayName = String(localized: "Cisum", table: "Theme-Cisum")
+    let description = String(localized: "Original sunset gradient color scheme", table: "Theme-Cisum")
     let iconName = "sunset.fill"
     let iconColor = Color.adaptive(light: "FF512F", dark: "FF8A4C")
     let isDarkTheme = false

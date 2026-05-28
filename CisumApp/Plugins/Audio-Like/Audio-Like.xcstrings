@@ -1,6 +1,38 @@
 {
   "sourceLanguage": "en",
   "strings": {
+    "Audio Like": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "音频喜欢管理"
+          }
+        },
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "音頻喜歡管理"
+          }
+        }
+      }
+    },
+    "Manage and store audio like status": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "负责音频喜欢状态的独立管理和存储"
+          }
+        },
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "負責音頻喜歡狀態的獨立管理和存儲"
+          }
+        }
+      }
+    },
     "加载中...": {
       "localizations": {
         "zh-Hans": {

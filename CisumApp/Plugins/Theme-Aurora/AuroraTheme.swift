@@ -3,8 +3,8 @@ import SwiftUI
 
 struct AuroraTheme: LumiAppChromeTheme {
     let identifier = "aurora"
-    let displayName = "极光紫"
-    let description = "低饱和紫色点缀，保留轻盈空间感"
+    let displayName = String(localized: "Aurora Purple", table: "Theme-Aurora")
+    let description = String(localized: "Low-saturation purple accents, maintaining a light spatial feel", table: "Theme-Aurora")
     let iconName = "sparkles"
     let iconColor = Color.adaptive(light: "8B5CF6", dark: "C084FC")
     let isDarkTheme = false

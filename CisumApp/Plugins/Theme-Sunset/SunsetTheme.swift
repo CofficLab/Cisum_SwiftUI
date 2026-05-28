@@ -3,8 +3,8 @@ import SwiftUI
 
 struct SunsetTheme: LumiAppChromeTheme {
     let identifier = "sunset"
-    let displayName = "日落橙"
-    let description = "温暖橙色点缀，背景保持留白"
+    let displayName = String(localized: "Sunset Orange", table: "Theme-Sunset")
+    let description = String(localized: "Warm orange accents, background stays clean white", table: "Theme-Sunset")
     let iconName = "sunset.fill"
     let iconColor = Color.adaptive(light: "EA580C", dark: "FB923C")
     let isDarkTheme = false

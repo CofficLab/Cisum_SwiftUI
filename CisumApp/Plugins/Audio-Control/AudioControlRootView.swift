@@ -133,7 +133,7 @@ extension AudioControlRootView {
 
                         // 显示提示信息
                         await MainActor.run {
-                            alert_info("已播放最后一首，自动播放第一首")
+                            alert_info(String(localized: "Reached the last track, playing the first", table: "Audio-Control"))
                         }
 
                         // 播放第一首
@@ -147,7 +147,7 @@ extension AudioControlRootView {
                         await man.stop(reason: self.className + ".仓库为空")
 
                         await MainActor.run {
-                            alert_info("仓库中没有文件")
+                            alert_info(String(localized: "No files in library", table: "Audio-Control"))
                         }
                     }
                 }
@@ -211,7 +211,7 @@ extension AudioControlRootView {
 
                         // 显示提示信息
                         await MainActor.run {
-                            alert_warning("正在播放的文件已被删除，自动播放第一首")
+                            alert_warning(String(localized: "Current file was deleted, playing the first", table: "Audio-Control"))
                         }
 
                         // 播放第一首
@@ -225,7 +225,7 @@ extension AudioControlRootView {
                         await man.stop(reason: self.className + ".仓库为空")
 
                         await MainActor.run {
-                            alert_info("仓库中没有文件")
+                            alert_info(String(localized: "No files in library", table: "Audio-Control"))
                         }
                     }
                 } catch {
@@ -237,7 +237,7 @@ extension AudioControlRootView {
                     await man.stop(reason: self.className + ".获取第一首失败")
 
                     await MainActor.run {
-                        alert_error("无法播放下一首: \(error.localizedDescription)")
+                        alert_error(String(localized: "Cannot play next: \(error.localizedDescription)", table: "Audio-Control"))
                     }
                 }
             }

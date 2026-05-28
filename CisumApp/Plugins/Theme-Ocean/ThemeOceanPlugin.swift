@@ -7,8 +7,8 @@ actor ThemeOceanPlugin: SuperPlugin {
     static var shouldRegister: Bool { true }
     static var order: Int { 123 }
 
-    let title = "海洋蓝"
-    let description = "清爽蓝青主题"
+    nonisolated var title: String { String(localized: "Ocean Blue", table: "Theme-Ocean") }
+    nonisolated var description: String { String(localized: "Fresh blue-cyan theme", table: "Theme-Ocean") }
     let iconName = "water.waves"
 
     @MainActor

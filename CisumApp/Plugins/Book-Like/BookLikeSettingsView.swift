@@ -9,7 +9,7 @@ struct BookLikeSettingsView: View, SuperLog {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("喜欢的书籍")
+            Text("Liked Books", tableName: "Book-Like")
                 .font(.headline)
 
             if isLoading {
@@ -20,7 +20,7 @@ struct BookLikeSettingsView: View, SuperLog {
                     Image(systemName: "heart.slash")
                         .font(.largeTitle)
                         .foregroundColor(.secondary)
-                    Text("还没有喜欢的书籍")
+                    Text("No liked books yet", tableName: "Book-Like")
                         .foregroundColor(.secondary)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)

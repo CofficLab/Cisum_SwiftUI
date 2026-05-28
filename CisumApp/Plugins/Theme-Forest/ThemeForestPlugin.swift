@@ -7,8 +7,8 @@ actor ThemeForestPlugin: SuperPlugin {
     static var shouldRegister: Bool { true }
     static var order: Int { 122 }
 
-    let title = "森林绿"
-    let description = "长时间听书主题"
+    nonisolated var title: String { String(localized: "Forest Green", table: "Theme-Forest") }
+    nonisolated var description: String { String(localized: "Long listening theme", table: "Theme-Forest") }
     let iconName = "leaf.fill"
 
     @MainActor

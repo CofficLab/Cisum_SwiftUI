@@ -12,8 +12,8 @@ actor SystemPlugin: SuperPlugin, SuperLog {
     /// 注册顺序设为 90，在其他插件之后执行
     static var order: Int { 90 }
 
-    let title = "系统"
-    let description = "系统设置"
+    nonisolated var title: String { String(localized: "System", table: "Reset") }
+    nonisolated var description: String { String(localized: "System settings", table: "Reset") }
     let iconName = "gearshape"
 
     @MainActor

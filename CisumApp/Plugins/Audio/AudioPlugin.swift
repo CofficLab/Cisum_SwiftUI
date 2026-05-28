@@ -28,8 +28,8 @@ actor AudioPlugin: SuperPlugin, SuperLog {
         static let dbDirName = "audios"
     #endif
 
-    let title = "音乐"
-    let description = "音频播放功能"
+    nonisolated var title: String { String(localized: "Music", table: "Audio") }
+    nonisolated var description: String { String(localized: "Audio playback", table: "Audio") }
     let iconName: String = .cisumIconMusicNote
 
     @MainActor func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {

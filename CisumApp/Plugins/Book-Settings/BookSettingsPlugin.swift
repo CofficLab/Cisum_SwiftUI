@@ -11,8 +11,8 @@ actor BookSettingsPlugin: SuperPlugin {
     static let shared = BookSettingsPlugin()
     static var shouldRegister: Bool { true }
     static var order: Int { 11 }
-    let title = "有声书设置"
-    let description = "有声书插件的设置入口"
+    nonisolated var title: String { String(localized: "Audiobook Settings", table: "Book-Settings") }
+    nonisolated var description: String { String(localized: "Audiobook plugin settings", table: "Book-Settings") }
     let iconName = "gearshape"
 
     @MainActor

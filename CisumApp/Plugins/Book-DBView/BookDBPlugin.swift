@@ -13,8 +13,8 @@ actor BookDBPlugin: SuperPlugin, SuperLog {
     /// 注册顺序设为 12，在其他插件之后执行
     static var order: Int { 12 }
 
-    let title = "有声书仓库"
-    let description = "有声书数据库视图"
+    nonisolated var title: String { String(localized: "Audiobook Repository", table: "Book-DBView") }
+    nonisolated var description: String { String(localized: "Audiobook database view", table: "Book-DBView") }
     let iconName = "books.vertical"
     
 
@@ -25,6 +25,6 @@ actor BookDBPlugin: SuperPlugin, SuperLog {
         if BookDBPlugin.verbose {
             os_log("\(self.t)✅ 返回 BookDBView")
         }
-        return (AnyView(BookDBView()), "有声书仓库")
+        return (AnyView(BookDBView()), String(localized: "Audiobook Repository", table: "Book-DBView"))
     }
 }

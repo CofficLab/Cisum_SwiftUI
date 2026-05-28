@@ -22,7 +22,7 @@ actor AudioJobPlugin: SuperPlugin, SuperLog {
     static var shouldRegister: Bool { true }
     static var order: Int { 5 }
 
-    let description = "处理音频文件的后台任务"
+    nonisolated var description: String { String(localized: "Background tasks for audio files", table: "Audio-Job") }
     let iconName = "gearshape.2"
 
     // MARK: - Plugin Life Cycle

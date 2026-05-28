@@ -11,8 +11,8 @@ actor AudioLikePlugin: SuperPlugin, SuperLog {
     static var shouldRegister: Bool { true }
     static var order: Int { 3 }
 
-    let title = "音频喜欢管理"
-    let description = "负责音频喜欢状态的独立管理和存储"
+    nonisolated var title: String { String(localized: "Audio Like", table: "Audio-Like") }
+    nonisolated var description: String { String(localized: "Manage and store audio like status", table: "Audio-Like") }
     let iconName = "heart"
 
     /// 提供喜欢管理功能的根视图包装器

@@ -13,8 +13,8 @@ actor StoragePlugin: SuperPlugin, SuperLog {
     /// Registration order set to 10, execute after other plugins
     static var order: Int { 10 }
 
-    let title = "Storage Settings"
-    let description = "Storage Settings"
+    nonisolated var title: String { String(localized: "Storage Settings", table: "Storage") }
+    nonisolated var description: String { String(localized: "Storage Settings", table: "Storage") }
     let iconName = "internaldrive"
     
 

@@ -7,8 +7,8 @@ actor ThemePaperPlugin: SuperPlugin {
     static var shouldRegister: Bool { true }
     static var order: Int { 128 }
 
-    let title = "Paper"
-    let description = "有声书阅读主题"
+    nonisolated var title: String { String(localized: "Paper", table: "Theme-Paper") }
+    nonisolated var description: String { String(localized: "Audiobook reading theme", table: "Theme-Paper") }
     let iconName = "book.closed.fill"
 
     @MainActor

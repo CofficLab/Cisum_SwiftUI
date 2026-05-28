@@ -3,8 +3,8 @@ import SwiftUI
 
 struct MidnightTheme: LumiAppChromeTheme {
     let identifier = "midnight"
-    let displayName = "午夜幽蓝"
-    let description = "深灰空间与蓝色点缀，适合夜间听歌"
+    let displayName = String(localized: "Midnight Blue", table: "Theme-Midnight")
+    let description = String(localized: "Deep gray with blue accents, ideal for night listening", table: "Theme-Midnight")
     let iconName = "moon.stars.fill"
     let iconColor = Color.adaptive(light: "2563EB", dark: "60A5FA")
     let isDarkTheme = false

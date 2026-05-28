@@ -7,8 +7,8 @@ actor ThemeGraphiteBlackPlugin: SuperPlugin {
     static var shouldRegister: Bool { true }
     static var order: Int { 127 }
 
-    let title = "石墨黑"
-    let description = "中性深色主题"
+    nonisolated var title: String { String(localized: "Graphite Black", table: "Theme-GraphiteBlack") }
+    nonisolated var description: String { String(localized: "Neutral dark theme", table: "Theme-GraphiteBlack") }
     let iconName = "circle.lefthalf.filled"
 
     @MainActor

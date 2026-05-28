@@ -3,8 +3,8 @@ import SwiftUI
 
 struct StudioBlueTheme: LumiAppChromeTheme {
     let identifier = "studio-blue"
-    let displayName = "Studio Blue"
-    let description = "蓝灰录音室质感，适合专注听音"
+    let displayName = String(localized: "Studio Blue", table: "Theme-StudioBlue")
+    let description = String(localized: "Blue-gray studio texture, ideal for focused listening", table: "Theme-StudioBlue")
     let iconName = "waveform"
     let iconColor = Color.adaptive(light: "007AFF", dark: "5AC8FA")
     let isDarkTheme = false

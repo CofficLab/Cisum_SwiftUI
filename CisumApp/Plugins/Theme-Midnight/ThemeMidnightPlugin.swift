@@ -7,8 +7,8 @@ actor ThemeMidnightPlugin: SuperPlugin {
     static var shouldRegister: Bool { true }
     static var order: Int { 119 }
 
-    let title = "午夜幽蓝"
-    let description = "夜间听歌主题"
+    nonisolated var title: String { String(localized: "Midnight Blue", table: "Theme-Midnight") }
+    nonisolated var description: String { String(localized: "Night listening theme", table: "Theme-Midnight") }
     let iconName = "moon.stars.fill"
 
     @MainActor

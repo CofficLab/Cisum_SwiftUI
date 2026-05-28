@@ -42,7 +42,7 @@ struct MigrationProgressView: View {
         VStack(spacing: 5) {
             GroupBox {
                 RepositoryInfoView(
-                    title: "源仓库",
+                    title: String(localized: "Source Library", table: "Storage"),
                     location: sourceLocation,
                     url: sourceURL
                 ).frame(height: 200)
@@ -59,7 +59,7 @@ struct MigrationProgressView: View {
 
             GroupBox {
                 RepositoryInfoView(
-                    title: "目标仓库",
+                    title: String(localized: "Target Library", table: "Storage"),
                     location: targetLocation,
                     url: targetURL
                 ).frame(height: 200)

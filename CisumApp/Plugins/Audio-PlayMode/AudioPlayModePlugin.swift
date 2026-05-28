@@ -7,8 +7,8 @@ actor AudioPlayModePlugin: SuperPlugin {
     static let shared = AudioPlayModePlugin()
     static var shouldRegister: Bool { true }
 
-    let title = "音频播放模式管理"
-    let description = "负责音频播放模式的设置和管理"
+    nonisolated var title: String { String(localized: "Audio Play Mode", table: "Audio-PlayMode") }
+    nonisolated var description: String { String(localized: "Audio play mode management", table: "Audio-PlayMode") }
     let iconName = "repeat"
 
     /// 提供播放模式管理功能的根视图包装器

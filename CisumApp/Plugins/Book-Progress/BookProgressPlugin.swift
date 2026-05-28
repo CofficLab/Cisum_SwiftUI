@@ -12,8 +12,8 @@ actor BookProgressPlugin: SuperPlugin, SuperLog {
     /// 注册顺序设为 5，在 BookPlugin 之后执行
     static var order: Int { 5 }
 
-    let title = "书籍进度管理"
-    let description = "负责书籍播放进度的保存和恢复"
+    nonisolated var title: String { String(localized: "Book Progress", table: "Book-Progress") }
+    nonisolated var description: String { String(localized: "Save and restore book playback progress", table: "Book-Progress") }
     let iconName = "book.closed"
     
 

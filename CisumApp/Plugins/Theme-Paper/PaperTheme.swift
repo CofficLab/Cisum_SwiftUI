@@ -4,7 +4,7 @@ import SwiftUI
 struct PaperTheme: LumiAppChromeTheme {
     let identifier = "paper"
     let displayName = "Paper"
-    let description = "纸张暖白背景，适合有声书"
+    let description = String(localized: "Warm white paper background, ideal for audiobooks", table: "Theme-Paper")
     let iconName = "book.closed.fill"
     let iconColor = Color.adaptive(light: "A15C38", dark: "D8A06B")
     let isDarkTheme = false

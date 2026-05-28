@@ -40,7 +40,7 @@ struct BookPoster: View {
             }) {
                 HStack(spacing: 8) {
                     Image(systemName: .cisumIconArrowUpCircle)
-                    Text("进入有声书仓库")
+                    Text("Enter Audiobook Library", tableName: "Book-Scene")
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 10)

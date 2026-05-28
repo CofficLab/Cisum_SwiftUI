@@ -12,8 +12,8 @@ actor WelcomePlugin: SuperPlugin, SuperLog {
     /// 注册顺序设为 -100，最先执行
     static var order: Int { -100 }
 
-    let title = "欢迎"
-    let description = "欢迎界面"
+    nonisolated var title: String { String(localized: "Welcome", table: "Welcome") }
+    nonisolated var description: String { String(localized: "Welcome screen", table: "Welcome") }
     let iconName = "hand.wave"
 
     @MainActor
