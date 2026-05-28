@@ -32,16 +32,16 @@ public struct StoreSetting: View, SuperLog, SuperEvent {
                 HStack {
                     if purchaseInfo.isProOrHigher {
                         if purchaseInfo.isExpired {
-                            Text("Expired", tableName: "Store")
+                            Text("Expired", tableName: "Store", bundle: .module)
                                 .font(.footnote)
                                 .foregroundStyle(.red)
                         } else {
-                            Text("Active", tableName: "Store")
+                            Text("Active", tableName: "Store", bundle: .module)
                                 .font(.footnote)
                                 .foregroundStyle(.green)
                         }
                     } else {
-                        Text("Free", tableName: "Store")
+                        Text("Free", tableName: "Store", bundle: .module)
                             .font(.footnote)
                             .foregroundStyle(.secondary)
                     }

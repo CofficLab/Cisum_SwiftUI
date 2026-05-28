@@ -85,17 +85,17 @@ extension AudioItemView {
             }
         #endif
             .confirmationDialog(
-                Text("确定要删除这个文件吗？", tableName: "Audio-DBView"),
+                Text("确定要删除这个文件吗？", tableName: "Audio-DBView", bundle: .module),
                 isPresented: $showDeleteConfirmation,
                 titleVisibility: .visible
             ) {
                 Button(role: .cancel) {} label: {
-                    Text("取消", tableName: "Audio-DBView")
+                    Text("取消", tableName: "Audio-DBView", bundle: .module)
                 }
                 Button(role: .destructive) {
                     deleteFile()
                 } label: {
-                    Text("删除", tableName: "Audio-DBView")
+                    Text("删除", tableName: "Audio-DBView", bundle: .module)
                 }
             } message: {
                 Text(url.lastPathComponent)

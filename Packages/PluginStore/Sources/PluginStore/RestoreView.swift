@@ -29,22 +29,22 @@ struct RestoreView: View, SuperEvent, SuperLog, SuperThread {
                     VStack(alignment: .leading, spacing: 12) {
                         AppInfoRow(
                             icon: "iphone.and.arrow.forward",
-                            title: String(localized: "Cross-Device Restore", table: "Store"),
-                            description: String(localized: "Restore purchases made on other devices", table: "Store"),
+                            title: String(localized: "Cross-Device Restore", table: "Store", bundle: .module),
+                            description: String(localized: "Restore purchases made on other devices", table: "Store", bundle: .module),
                             tint: .blue
                         )
 
                         AppInfoRow(
                             icon: "person.circle",
-                            title: String(localized: "Apple ID Verification", table: "Store"),
-                            description: String(localized: "Use the same Apple ID used for purchase", table: "Store"),
+                            title: String(localized: "Apple ID Verification", table: "Store", bundle: .module),
+                            description: String(localized: "Use the same Apple ID used for purchase", table: "Store", bundle: .module),
                             tint: .blue
                         )
 
                         AppInfoRow(
                             icon: "checkmark.circle",
-                            title: String(localized: "Feature Restore", table: "Store"),
-                            description: String(localized: "Get all purchased features after successful restore", table: "Store"),
+                            title: String(localized: "Feature Restore", table: "Store", bundle: .module),
+                            description: String(localized: "Get all purchased features after successful restore", table: "Store", bundle: .module),
                             tint: .blue
                         )
                     }
@@ -79,7 +79,7 @@ struct RestoreView: View, SuperEvent, SuperLog, SuperThread {
         case .success:
             AppStatusBanner(kind: .success, title: "Restore Successful", message: "Successfully restored your purchase records, all features unlocked")
         case .failed:
-            AppStatusBanner(kind: .error, title: "Restore Failed", message: error?.localizedDescription ?? String(localized: "An error occurred while restoring, please try again later", table: "Store"))
+            AppStatusBanner(kind: .error, title: "Restore Failed", message: error?.localizedDescription ?? String(localized: "An error occurred while restoring, please try again later", table: "Store", bundle: .module))
         }
     }
 

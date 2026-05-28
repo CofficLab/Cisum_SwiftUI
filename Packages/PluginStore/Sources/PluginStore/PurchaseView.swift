@@ -26,7 +26,7 @@ struct PurchaseView: View, SuperLog {
                 HStack(spacing: 20) {
                     Link(destination: URL(string: "https://www.kuaiyizhi.cn/privacy")!) {
                         Label {
-                            Text("Privacy Policy", tableName: "Store")
+                            Text("Privacy Policy", tableName: "Store", bundle: .module)
                         } icon: {
                             Image(systemName: "hand.raised.fill")
                         }
@@ -38,7 +38,7 @@ struct PurchaseView: View, SuperLog {
 
                     Link(destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!) {
                         Label {
-                            Text("License Agreement", tableName: "Store")
+                            Text("License Agreement", tableName: "Store", bundle: .module)
                         } icon: {
                             Image(systemName: "doc.text.fill")
                         }

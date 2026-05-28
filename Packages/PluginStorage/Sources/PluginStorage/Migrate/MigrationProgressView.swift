@@ -43,7 +43,7 @@ struct MigrationProgressView: View {
         VStack(spacing: 5) {
             GroupBox {
                 RepositoryInfoView(
-                    title: String(localized: "Source Library", table: "Storage"),
+                    title: String(localized: "Source Library", table: "Storage", bundle: .module),
                     location: sourceLocation,
                     url: sourceURL
                 ).frame(height: 200)
@@ -60,7 +60,7 @@ struct MigrationProgressView: View {
 
             GroupBox {
                 RepositoryInfoView(
-                    title: String(localized: "Target Library", table: "Storage"),
+                    title: String(localized: "Target Library", table: "Storage", bundle: .module),
                     location: targetLocation,
                     url: targetURL
                 ).frame(height: 200)
@@ -68,16 +68,16 @@ struct MigrationProgressView: View {
 
             GroupBox {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("⚠️ 重要提示：", tableName: "Storage")
+                    Text("⚠️ 重要提示：", tableName: "Storage", bundle: .module)
                         .font(.subheadline)
                         .foregroundColor(.orange)
 
                     Group {
-                        Text("• 如果源数据在 iCloud 中且有未下载的文件，需要等待下载完成，可能需要较长时间", tableName: "Storage")
-                        Text("• 迁移过程中请勿关闭应用，取消迁移可能导致数据不完整", tableName: "Storage")
-                        Text("• 迁移数据：将现有数据迁移到新位置", tableName: "Storage")
-                        Text("• 直接使用：直接使用新位置，原有数据保持不变", tableName: "Storage").foregroundStyle(.primary)
-                        Text("• 取消操作：保持原位置不变", tableName: "Storage")
+                        Text("• 如果源数据在 iCloud 中且有未下载的文件，需要等待下载完成，可能需要较长时间", tableName: "Storage", bundle: .module)
+                        Text("• 迁移过程中请勿关闭应用，取消迁移可能导致数据不完整", tableName: "Storage", bundle: .module)
+                        Text("• 迁移数据：将现有数据迁移到新位置", tableName: "Storage", bundle: .module)
+                        Text("• 直接使用：直接使用新位置，原有数据保持不变", tableName: "Storage", bundle: .module).foregroundStyle(.primary)
+                        Text("• 取消操作：保持原位置不变", tableName: "Storage", bundle: .module)
                     }
                     .font(.caption)
                     .foregroundColor(.secondary)
@@ -236,10 +236,10 @@ struct MigrationProgressView: View {
             Button {
                 onDismiss()
             } label: {
-                Text("取消操作", tableName: "Storage")
+                Text("取消操作", tableName: "Storage", bundle: .module)
             }
             .buttonStyle(.bordered)
-            .help(String(localized: "保持原位置不变", table: "Storage"))
+            .help(String(localized: "保持原位置不变", table: "Storage", bundle: .module))
 
             Button {
                 showConfirmation = false
@@ -248,10 +248,10 @@ struct MigrationProgressView: View {
                     await startMigration(shouldMigrate: false)
                 }
             } label: {
-                Text("直接使用", tableName: "Storage")
+                Text("直接使用", tableName: "Storage", bundle: .module)
             }
             .buttonStyle(.borderedProminent)
-            .help(String(localized: "直接使用新位置，原有数据保持不变", table: "Storage"))
+            .help(String(localized: "直接使用新位置，原有数据保持不变", table: "Storage", bundle: .module))
 
             Button {
                 showConfirmation = false
@@ -260,10 +260,10 @@ struct MigrationProgressView: View {
                     await startMigration(shouldMigrate: true)
                 }
             } label: {
-                Text("迁移数据", tableName: "Storage")
+                Text("迁移数据", tableName: "Storage", bundle: .module)
             }
             .buttonStyle(.bordered)
-            .help(String(localized: "将现有数据迁移到新位置", table: "Storage"))
+            .help(String(localized: "将现有数据迁移到新位置", table: "Storage", bundle: .module))
         }
         .padding()
         .frame(maxWidth: 500)
@@ -276,28 +276,28 @@ struct MigrationProgressView: View {
                     Button {
                         onDismiss()
                     } label: {
-                        Text("完成", tableName: "Storage")
+                        Text("完成", tableName: "Storage", bundle: .module)
                     }
                     .buttonStyle(.borderedProminent)
                 } else {
                     Button {
                         showCancelConfirmation = true
                     } label: {
-                        Text("取消迁移", tableName: "Storage")
+                        Text("取消迁移", tableName: "Storage", bundle: .module)
                     }
                     .buttonStyle(.borderless)
-                    .alert(Text("确要取消迁移吗？", tableName: "Storage"), isPresented: $showCancelConfirmation) {
+                    .alert(Text("确要取消迁移吗？", tableName: "Storage", bundle: .module), isPresented: $showCancelConfirmation) {
                         Button(role: .cancel) { } label: {
-                            Text("继续迁移", tableName: "Storage")
+                            Text("继续迁移", tableName: "Storage", bundle: .module)
                         }
                         Button(role: .destructive) {
                             migrationManager.cancelMigration()
                             onDismiss()
                         } label: {
-                            Text("确定取消", tableName: "Storage")
+                            Text("确定取消", tableName: "Storage", bundle: .module)
                         }
                     } message: {
-                        Text("取消迁移能会导致数据不完整，建议等待迁移完成。", tableName: "Storage")
+                        Text("取消迁移能会导致数据不完整，建议等待迁移完成。", tableName: "Storage", bundle: .module)
                     }
                 }
             } else {
@@ -306,14 +306,14 @@ struct MigrationProgressView: View {
                         errorMessage = nil
                         showConfirmation = true
                     } label: {
-                        Text("重试", tableName: "Storage")
+                        Text("重试", tableName: "Storage", bundle: .module)
                     }
                     .buttonStyle(.borderedProminent)
 
                     Button {
                         onDismiss()
                     } label: {
-                        Text("放弃", tableName: "Storage")
+                        Text("放弃", tableName: "Storage", bundle: .module)
                     }
                     .buttonStyle(.bordered)
                 }
@@ -326,17 +326,17 @@ struct MigrationProgressView: View {
     private var migrationStatusView: some View {
         GroupBox {
             VStack(alignment: .leading, spacing: 8) {
-                Text("迁移状态", tableName: "Storage")
+                Text("迁移状态", tableName: "Storage", bundle: .module)
                     .font(.headline)
                     .foregroundColor(.primary)
 
                 if migrationCompleted {
-                    Text("迁移已完成", tableName: "Storage")
+                    Text("迁移已完成", tableName: "Storage", bundle: .module)
                         .font(.subheadline)
                         .foregroundColor(.green)
                 } else if migrationCancelled {
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("迁移已取消", tableName: "Storage")
+                        Text("迁移已取消", tableName: "Storage", bundle: .module)
                             .font(.subheadline)
                             .foregroundColor(.orange)
 
@@ -344,16 +344,16 @@ struct MigrationProgressView: View {
                             migrationCancelled = false
                             showConfirmation = true
                         } label: {
-                            Text("重试迁移", tableName: "Storage")
+                            Text("重试迁移", tableName: "Storage", bundle: .module)
                         }
                         .buttonStyle(.borderedProminent)
                     }
                 } else if let errorMessage = errorMessage {
-                    Text("迁移出现问题: \(errorMessage)", tableName: "Storage")
+                    Text("迁移出现问题: \(errorMessage)", tableName: "Storage", bundle: .module)
                         .font(.subheadline)
                         .foregroundColor(.red)
                 } else {
-                    Text("迁移中...", tableName: "Storage")
+                    Text("迁移中...", tableName: "Storage", bundle: .module)
                         .font(.subheadline)
                         .foregroundColor(.blue)
                 }

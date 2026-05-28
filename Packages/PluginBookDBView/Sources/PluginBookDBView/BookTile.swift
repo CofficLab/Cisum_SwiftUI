@@ -55,7 +55,7 @@ struct BookTile: View, SuperThread, SuperLog, Equatable {
                     Spacer()
 
                     if childCount > 0, noCover {
-                        Text("共 \(childCount)", tableName: "Book-DBView")
+                        Text("共 \(childCount)", tableName: "Book-DBView", bundle: .module)
                     }
 
                     Spacer()
@@ -63,7 +63,7 @@ struct BookTile: View, SuperThread, SuperLog, Equatable {
                         VStack(spacing: 0) {
                             HStack {
                                 Image(systemName: "info")
-                                Text("上次播放", tableName: "Book-DBView")
+                                Text("上次播放", tableName: "Book-DBView", bundle: .module)
                             }
                             Text(s.currentTitle)
                         }
