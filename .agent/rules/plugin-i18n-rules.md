@@ -1,14 +1,96 @@
 # 插件国际化（i18n）规范
 
 > 本规范定义了 Cisum 项目中所有插件的多语言（国际化）实现方式和最佳实践。
+> 每个插件作为独立的 Swift Package，在 `Packages/` 目录下管理自己的国际化资源。
 
 ---
 
 ## 核心原则
 
-**每个插件独立管理国际化资源，使用统一的 `.xcstrings` 格式，支持动态多语言切换。**
+**每个插件独立管理国际化资源，使用统一的 `.xcstrings` 格式，通过 SPM 的 `bundle: .module` 机制加载，支持动态多语言切换。**
 
 所有用户可见的文本都必须进行国际化，禁止在代码中硬编码用户可见字符串。
+
+---
+
+## 项目结构
+
+插件已从旧的 `CisumApp/Plugins/` 迁移为 SPM 标准目录结构：
+
+```
+Packages/
+├── PluginAudioPlayMode/
+│   ├── Package.swift
+│   ├── Sources/
+│   │   └── PluginAudioPlayMode/
+│   │       ├── AudioPlayModeRootView.swift
+│   │       ├── AudioPlayModePluginInfo.swift
+│   │       └── Resources/
+│   │           └── Audio-PlayMode.xcstrings    ← 国际化文件在这里
+│   └── Tests/
+│       └── PluginAudioPlayModeTests/
+├── PluginAudioDownload/
+│   ├── Package.swift
+│   ├── Sources/
+│   │   └── PluginAudioDownload/
+│   │       ├── ...
+│   │       └── Resources/
+│   │           └── Audio-Download.xcstrings
+├── PluginThemeCisum/
+│   ├── ...
+│   └── Sources/PluginThemeCisum/Resources/Theme-Cisum.xcstrings
+└── ...
+```
+
+---
+
+## Package.swift 配置
+
+每个需要国际化的插件，其 `Package.swift` 必须包含以下配置：
+
+```swift
+// swift-tools-version: 6.0
+import PackageDescription
+
+let package = Package(
+    name: "PluginAudioPlayMode",
+    defaultLocalization: "en",                    // ← 必须：设置默认本地化语言
+    platforms: [
+        .macOS(.v14),
+        .iOS(.v17)
+    ],
+    products: [
+        .library(
+            name: "PluginAudioPlayMode",
+            targets: ["PluginAudioPlayMode"]
+        )
+    ],
+    dependencies: [
+        // ...
+    ],
+    targets: [
+        .target(
+            name: "PluginAudioPlayMode",
+            dependencies: [
+                // ...
+            ],
+            path: "Sources/PluginAudioPlayMode",
+            resources: [
+                .process("Resources")              // ← 必须：包含 Resources 目录
+            ]
+        ),
+        .testTarget(
+            name: "PluginAudioPlayModeTests",
+            dependencies: ["PluginAudioPlayMode"],
+            path: "Tests/PluginAudioPlayModeTests"
+        )
+    ]
+)
+```
+
+**关键配置项：**
+- `defaultLocalization: "en"` — 声明默认本地化语言
+- `resources: [.process("Resources")]` — 将 Resources 目录下的文件作为资源打包，SPM 会自动处理 `.xcstrings` 文件
 
 ---
 
@@ -17,7 +99,7 @@
 ### 文件扩展名
 
 ```
-<PluginName>.xcstrings
+<Table-Name>.xcstrings
 ```
 
 ### 文件结构
@@ -25,33 +107,29 @@
 ```json
 {
   "sourceLanguage": "en",
-  "version": "1.0",
   "strings": {
-    "Key String": {
+    "Audio Play Mode": {
       "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Key String"
-          }
-        },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "键字符串"
+            "value": "音频播放模式"
           }
         },
         "zh-HK": {
           "stringUnit": {
             "state": "translated",
-            "value": "鍵字符串"
+            "value": "音頻播放模式"
           }
         }
       }
     }
-  }
+  },
+  "version": "1.0"
 }
 ```
+
+> **注意**：源语言 `en` 的翻译条目可以省略（即不需要在 `localizations` 中显式列出 `en`），因为 key 本身就是英文值。
 
 ### 字段说明
 
@@ -62,7 +140,7 @@
 | `strings` | 字符串字典 | ✅ | - |
 | `localizations` | 语言列表 | ✅ | - |
 | `state` | 翻译状态 | ✅ | `"translated"` |
-| `value` | 翻译后的文本 | ✅ | `"键字符串"` |
+| `value` | 翻译后的文本 | ✅ | `"音频播放模式"` |
 
 ### 翻译状态
 
@@ -86,41 +164,74 @@
 
 ## 文件命名
 
-### 标准命名
+### 命名规则
+
+使用 `<类别>-<功能>.xcstrings` 格式，以连字符分隔：
 
 ```
-<PluginName>.xcstrings
+<类别>-<功能>.xcstrings
 ```
 
-**示例**：
+或对于主插件，直接使用类别名：
+
 ```
-GitBranch.xcstrings
-GitCommit.xcstrings
-AutoPush.xcstrings
-Banner.xcstrings
+<类别>.xcstrings
 ```
+
+### 命名示例
+
+| 插件包名 | xcstrings 文件名 | table 参数 |
+|---------|-----------------|-----------|
+| `PluginAudio` | `Audio.xcstrings` | `"Audio"` |
+| `PluginAudioPlayMode` | `Audio-PlayMode.xcstrings` | `"Audio-PlayMode"` |
+| `PluginAudioDownload` | `Audio-Download.xcstrings` | `"Audio-Download"` |
+| `PluginBookSettings` | `Book-Settings.xcstrings` | `"Book-Settings"` |
+| `PluginThemeCisum` | `Theme-Cisum.xcstrings` | `"Theme-Cisum"` |
+| `PluginWelcome` | `Welcome.xcstrings` | `"Welcome"` |
+| `PluginStorage` | `Storage.xcstrings` | `"Storage"` |
 
 ### 文件位置
 
 ```
-CisumApp/Plugins/<PluginName>/<PluginName>.xcstrings
+Packages/<PluginPackageName>/Sources/<TargetName>/Resources/<TableName>.xcstrings
+```
+
+**完整示例**：
+```
+Packages/PluginAudioPlayMode/Sources/PluginAudioPlayMode/Resources/Audio-PlayMode.xcstrings
+Packages/PluginBookSettings/Sources/PluginBookSettings/Resources/Book-Settings.xcstrings
+Packages/PluginThemeCisum/Sources/PluginThemeCisum/Resources/Theme-Cisum.xcstrings
 ```
 
 ---
 
 ## 使用方式
 
+### ⚠️ 关键：必须传入 `bundle: .module`
+
+由于插件是 SPM Package，**所有** `String(localized:)` 和 `Text()` 调用都必须传入 `bundle: .module`，否则运行时找不到翻译资源。
+
 ### 基础用法
 
 ```swift
-// 视图中使用
-Text(String(localized: "Hello World", table: "PluginName"))
+// ✅ 正确：传入 bundle: .module
+Text(String(localized: "Hello World", table: "Audio-PlayMode", bundle: .module))
 
-// 属性定义
-static let displayName = String(localized: "Plugin Name", table: "PluginName")
+// ❌ 错误：缺少 bundle: .module，运行时会 fallback 到 key
+Text(String(localized: "Hello World", table: "Audio-PlayMode"))
+```
 
-// 动态消息
-let message = String(localized: "Hello, %@", table: "PluginName", arguments: userName)
+### 属性定义
+
+```swift
+public static let title = String(localized: "Audio Play Mode", table: "Audio-PlayMode", bundle: .module)
+public static let description = String(localized: "Audio play mode management", table: "Audio-PlayMode", bundle: .module)
+```
+
+### 动态消息（带参数）
+
+```swift
+let message = String(localized: "Current branch: %@", table: "Audio-PlayMode", bundle: .module, arguments: branchName)
 ```
 
 ### 完整示例
@@ -128,19 +239,20 @@ let message = String(localized: "Hello, %@", table: "PluginName", arguments: use
 ```swift
 import SwiftUI
 
-struct GitBranchPlugin: CisumPlugin {
-    static let displayName = String(localized: "Git Branch Management", table: "GitBranch")
-    static let description = String(localized: "Manage Git branches", table: "GitBranch")
-    
+struct AudioPlayModePluginInfo {
+    public static let title = String(localized: "Audio Play Mode", table: "Audio-PlayMode", bundle: .module)
+    public static let description = String(localized: "Audio play mode management", table: "Audio-PlayMode", bundle: .module)
+}
+
+struct AudioPlayModeRootView: View {
     var body: some View {
         VStack {
-            Text(String(localized: "Branches", table: "GitBranch"))
-                .font(.headline)
+            Text(String(localized: "Repeat One", table: "Audio-PlayMode", bundle: .module))
             
-            Text(String(localized: "Current branch: %@", table: "GitBranch", arguments: branchName))
-            
-            Button(String(localized: "Create Branch", table: "GitBranch")) {
-                // ...
+            Button {
+                alert_info(String(localized: "Shuffle", table: "Audio-PlayMode", bundle: .module))
+            } label: {
+                Text(String(localized: "Shuffle Play", table: "Audio-PlayMode", bundle: .module))
             }
         }
     }
@@ -154,32 +266,32 @@ struct GitBranchPlugin: CisumPlugin {
 {
   "Selected: %@": {
     "localizations": {
-      "en": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Selected: %@"
-        }
-      },
       "zh-Hans": {
         "stringUnit": {
           "state": "translated",
           "value": "已选：%@"
+        }
+      },
+      "zh-HK": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "已選：%@"
         }
       }
     }
   },
   "%lld files": {
     "localizations": {
-      "en": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "%lld files"
-        }
-      },
       "zh-Hans": {
         "stringUnit": {
           "state": "translated",
           "value": "%lld 个文件"
+        }
+      },
+      "zh-HK": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "%lld 個檔案"
         }
       }
     }
@@ -189,8 +301,8 @@ struct GitBranchPlugin: CisumPlugin {
 
 **Swift 代码**：
 ```swift
-Text(String(localized: "Selected: %@", table: "GitBranch", arguments: selectedCount))
-Text(String(localized: "%lld files", table: "GitBranch", arguments: fileCount))
+Text(String(localized: "Selected: %@", table: "Audio-PlayMode", bundle: .module, arguments: selectedCount))
+Text(String(localized: "%lld files", table: "Audio-PlayMode", bundle: .module, arguments: fileCount))
 ```
 
 ### 带命名参数的字符串
@@ -200,16 +312,16 @@ Text(String(localized: "%lld files", table: "GitBranch", arguments: fileCount))
 {
   "Auto-push \(status): \(project.title)/\(branch.name)": {
     "localizations": {
-      "en": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Auto-push %1$@: %2$@/%3$@"
-        }
-      },
       "zh-Hans": {
         "stringUnit": {
           "state": "translated",
           "value": "自动推送 %@：%@/%@"
+        }
+      },
+      "zh-HK": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "自動推送 %@：%@/%@"
         }
       }
     }
@@ -221,7 +333,8 @@ Text(String(localized: "%lld files", table: "GitBranch", arguments: fileCount))
 ```swift
 let message = String(
     localized: "Auto-push \(status): \(project.title)/\(branch.name)",
-    table: "AutoPush"
+    table: "Audio-Download",
+    bundle: .module
 )
 ```
 
@@ -229,27 +342,35 @@ let message = String(
 
 ## 创建 xcstrings 文件
 
-### 步骤 1：创建文件
+### 步骤 1：配置 Package.swift
 
-在插件目录下创建 `<PluginName>.xcstrings` 文件
+确保 `Package.swift` 包含 `defaultLocalization: "en"` 和 `resources: [.process("Resources")]`。
 
-### 步骤 2：添加基础结构
+### 步骤 2：创建 Resources 目录和文件
+
+```
+Packages/<PluginName>/Sources/<TargetName>/Resources/<TableName>.xcstrings
+```
+
+### 步骤 3：添加基础结构
 
 ```json
 {
   "sourceLanguage": "en",
-  "version": "1.0",
-  "strings": {}
+  "strings": {},
+  "version": "1.0"
 }
 ```
 
-### 步骤 3：添加字符串
+### 步骤 4：添加字符串并翻译
 
-手动添加或使用 Xcode 的本地化导出功能。
+手动添加或使用 Xcode 的本地化导出功能，为每种支持的语言添加翻译。
 
-### 步骤 4：翻译
+### 步骤 5：在代码中使用
 
-为每种支持的语言添加翻译。
+```swift
+String(localized: "Your Key", table: "<TableName>", bundle: .module)
+```
 
 ---
 
@@ -266,21 +387,25 @@ let message = String(
 
    ```swift
    // ✅ 好：使用完整句子作为键
-   String(localized: "Confirm Delete Branch", table: "GitBranch")
+   String(localized: "Confirm Delete Branch", table: "Book-Control", bundle: .module)
    
    // ❌ 避免：使用无意义的键
-   String(localized: "btn_confirm_1", table: "GitBranch")
+   String(localized: "btn_confirm_1", table: "Book-Control", bundle: .module)
    ```
 
-3. **保持翻译文件同步**
+3. **始终传入 `bundle: .module`**
+   - SPM Package 的资源通过 `.module` bundle 加载
+   - 遗漏会导致运行时找不到翻译
+
+4. **保持翻译文件同步**
    - 添加新字符串时同时提供所有语言的翻译
    - 定期审查 `needsReview` 状态的字符串
 
-4. **使用 Xcode 本地化编辑器**
+5. **使用 Xcode 本地化编辑器**
    - 在 Xcode 中打开 `.xcstrings` 文件
    - 使用可视化编辑器管理翻译
 
-5. **注释复杂字符串**
+6. **注释复杂字符串**
 
    ```json
    {
@@ -300,23 +425,33 @@ let message = String(
    Text("Click here to push")
    
    // ✅ 正确
-   Text(String(localized: "Click to push", table: "GitCommit"))
+   Text(String(localized: "Click to push", table: "Audio-Download", bundle: .module))
    ```
 
-2. **混合语言**
+2. **遗漏 `bundle: .module`**
 
    ```swift
-   // ❌ 错误：中文硬编码
-   Text(String(localized: "点击推送", table: "GitCommit"))
+   // ❌ 错误：SPM Package 中不传 bundle 会导致翻译不生效
+   String(localized: "Hello", table: "Audio-PlayMode")
    
-   // ✅ 正确：使用英文键
-   Text(String(localized: "Click to push", table: "GitCommit"))
+   // ✅ 正确
+   String(localized: "Hello", table: "Audio-PlayMode", bundle: .module)
    ```
 
-3. **过长的字符串**
+3. **混合语言**
+
+   ```swift
+   // ❌ 错误：中文作为键
+   String(localized: "点击推送", table: "Audio-Download", bundle: .module)
+   
+   // ✅ 正确：使用英文键
+   String(localized: "Click to push", table: "Audio-Download", bundle: .module)
+   ```
+
+4. **过长的字符串**
    - 将长文本拆分为多个可重用的片段
 
-4. **忽略占位符顺序**
+5. **忽略占位符顺序**
    - 不同语言的语法顺序可能不同，使用命名参数
 
 ---
@@ -325,13 +460,14 @@ let message = String(
 
 创建新插件时，确保：
 
-- [ ] 创建 `<PluginName>.xcstrings` 文件
+- [ ] `Package.swift` 中设置 `defaultLocalization: "en"`
+- [ ] `Package.swift` 中 target 的 `resources` 包含 `.process("Resources")`
+- [ ] 创建 `Sources/<TargetName>/Resources/<TableName>.xcstrings` 文件
 - [ ] 设置 `sourceLanguage` 为 `"en"`
-- [ ] 提供英文 (`en`) 翻译
 - [ ] 提供简体中文 (`zh-Hans`) 翻译
 - [ ] 提供繁体中文 (`zh-HK`) 翻译（推荐）
-- [ ] 所有用户可见文本使用 `String(localized:table:)`
-- [ ] 动态消息使用占位符 (`%@` 或 `{name}`)
+- [ ] 所有用户可见文本使用 `String(localized:table:bundle:)` 并传入 `bundle: .module`
+- [ ] 动态消息使用占位符 (`%@`、`%lld` 等)
 - [ ] 在 Xcode 中验证本地化文件
 
 ---
@@ -346,7 +482,6 @@ let message = String(
 | `%d` | 整数 | `"%d items"` → `"5 items"` |
 | `%lld` | 长整数 | `"%lld files"` → `"100 files"` |
 | `%.2f` | 浮点数 | `"%.2f MB"` → `"12.34 MB"` |
-| `{name}` | 命名参数 | `"Hello, {name}"` |
 
 ### B. 语言代码参考
 
@@ -369,3 +504,4 @@ let message = String(
 ### D. 相关文档
 
 - [Apple Localization 文档](https://developer.apple.com/documentation/xcode/localization)
+- [Swift Package Manager Resources](https://developer.apple.com/documentation/xcode/bundling-resources-with-a-swift-package)
