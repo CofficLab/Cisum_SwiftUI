@@ -18,6 +18,7 @@
       }
     },
     "Long listening theme" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {

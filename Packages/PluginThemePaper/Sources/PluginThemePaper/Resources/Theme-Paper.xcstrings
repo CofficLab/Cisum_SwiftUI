@@ -2,6 +2,7 @@
   "sourceLanguage" : "en",
   "strings" : {
     "Audiobook reading theme" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -18,6 +19,7 @@
       }
     },
     "Paper" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -34,7 +36,6 @@
       }
     },
     "Warm white paper background, ideal for audiobooks" : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {

@@ -1,22 +1,6 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "Storage Settings" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "存储设置"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "存儲設置"
-          }
-        }
-      }
-    },
     "• 取消操作：保持原位置不变" : {
       "localizations" : {
         "zh-Hans" : {
@@ -115,6 +99,23 @@
     },
     "Source Library" : {
 
+    },
+    "Storage Settings" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "存储设置"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "存儲設置"
+          }
+        }
+      }
     },
     "Target Library" : {
 

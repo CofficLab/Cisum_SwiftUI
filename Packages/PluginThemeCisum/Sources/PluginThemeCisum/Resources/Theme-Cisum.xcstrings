@@ -18,6 +18,7 @@
       }
     },
     "Cisum default theme" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {

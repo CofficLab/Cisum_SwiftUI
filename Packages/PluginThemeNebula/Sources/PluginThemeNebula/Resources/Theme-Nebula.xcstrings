@@ -17,22 +17,6 @@
         }
       }
     },
-    "Soft warm theme" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "柔和暖色主题"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "柔和暖色主題"
-          }
-        }
-      }
-    },
     "Soft pink accents, maintaining clean reading layers" : {
       "localizations" : {
         "zh-Hans" : {
@@ -45,6 +29,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "柔和粉色點綴，保持乾淨閱讀層次"
+          }
+        }
+      }
+    },
+    "Soft warm theme" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "柔和暖色主题"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "柔和暖色主題"
           }
         }
       }

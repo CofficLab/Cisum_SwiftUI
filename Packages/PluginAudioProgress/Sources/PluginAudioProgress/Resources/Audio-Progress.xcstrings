@@ -2,6 +2,7 @@
   "sourceLanguage" : "en",
   "strings" : {
     "Audio Progress" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -18,6 +19,7 @@
       }
     },
     "Save and restore audio playback progress" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {

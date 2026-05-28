@@ -1,23 +1,24 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "Ocean Blue" : {
+    "Fresh blue-cyan accents, adapts to system light/dark mode" : {
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "海洋蓝"
+            "value" : "清爽蓝青点缀，随系统明暗适配"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "海洋藍"
+            "value" : "清爽藍青點綴，隨系統明暗適配"
           }
         }
       }
     },
     "Fresh blue-cyan theme" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -33,18 +34,18 @@
         }
       }
     },
-    "Fresh blue-cyan accents, adapts to system light/dark mode" : {
+    "Ocean Blue" : {
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "清爽蓝青点缀，随系统明暗适配"
+            "value" : "海洋蓝"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "清爽藍青點綴，隨系統明暗適配"
+            "value" : "海洋藍"
           }
         }
       }

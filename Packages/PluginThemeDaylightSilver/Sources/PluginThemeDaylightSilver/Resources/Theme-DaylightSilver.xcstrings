@@ -18,6 +18,7 @@
       }
     },
     "Daytime office theme" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {

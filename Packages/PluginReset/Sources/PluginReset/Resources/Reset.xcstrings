@@ -52,7 +52,6 @@
       }
     },
     "Continue Reset" : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -183,7 +182,6 @@
       }
     },
     "Resetting…" : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -200,7 +198,6 @@
       }
     },
     "Restoring default settings, please wait" : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {

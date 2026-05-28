@@ -2,7 +2,6 @@
   "sourceLanguage" : "en",
   "strings" : {
     "Switch app theme" : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -19,7 +18,6 @@
       }
     },
     "Theme" : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {

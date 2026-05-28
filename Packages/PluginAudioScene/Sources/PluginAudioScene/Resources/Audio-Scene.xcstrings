@@ -19,7 +19,6 @@
       }
     },
     "Enter Music Repository" : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -53,7 +52,6 @@
       }
     },
     "Music Scene" : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -70,7 +68,6 @@
       }
     },
     "Provides music library scene" : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {

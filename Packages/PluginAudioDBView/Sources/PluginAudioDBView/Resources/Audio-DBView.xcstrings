@@ -1,23 +1,8 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "Audio Repository" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "音频仓库"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "音頻倉庫"
-          }
-        }
-      }
-    },
     "Audio file database view" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -33,7 +18,25 @@
         }
       }
     },
+    "Audio Repository" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "音频仓库"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "音頻倉庫"
+          }
+        }
+      }
+    },
     "Music Repository" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {

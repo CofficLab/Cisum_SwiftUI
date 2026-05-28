@@ -17,22 +17,6 @@
         }
       }
     },
-    "Neutral dark theme" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "中性深色主题"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "中性深色主題"
-          }
-        }
-      }
-    },
     "Neutral black-gray layers, ideal for extended night listening" : {
       "localizations" : {
         "zh-Hans" : {
@@ -45,6 +29,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "中性黑灰層次，適合夜間長聽"
+          }
+        }
+      }
+    },
+    "Neutral dark theme" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "中性深色主题"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "中性深色主題"
           }
         }
       }

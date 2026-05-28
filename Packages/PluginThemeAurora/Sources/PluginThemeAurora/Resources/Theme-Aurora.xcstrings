@@ -18,6 +18,7 @@
       }
     },
     "Immersive playback theme" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {

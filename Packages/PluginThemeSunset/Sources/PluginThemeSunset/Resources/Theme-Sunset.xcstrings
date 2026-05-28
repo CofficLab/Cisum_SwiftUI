@@ -2,7 +2,6 @@
   "sourceLanguage" : "en",
   "strings" : {
     "Sunset Orange" : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -36,7 +35,6 @@
       }
     },
     "Warm orange accents, background stays clean white" : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {

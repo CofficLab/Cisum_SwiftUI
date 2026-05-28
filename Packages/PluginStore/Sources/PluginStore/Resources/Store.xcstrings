@@ -1,38 +1,6 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "Store" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "商店"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "商店"
-          }
-        }
-      }
-    },
-    "In-App purchases and subscriptions" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "应用内购买和订阅"
-          }
-        },
-        "zh-HK" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "應用內購買和訂閱"
-          }
-        }
-      }
-    },
     "%@ for first %@" : {
       "localizations" : {
         "zh-Hans" : {
@@ -370,6 +338,23 @@
         }
       }
     },
+    "In-App purchases and subscriptions" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "应用内购买和订阅"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "應用內購買和訂閱"
+          }
+        }
+      }
+    },
     "License Agreement" : {
       "localizations" : {
         "zh-Hans" : {
@@ -611,6 +596,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ 特惠"
+          }
+        }
+      }
+    },
+    "Store" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "商店"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "商店"
           }
         }
       }
