@@ -1,0 +1,110 @@
+#if os(macOS)
+import Foundation
+import MagicKit
+import PluginAudio
+import PluginStore
+import SwiftData
+import SwiftUI
+
+@MainActor
+public enum AudioCopyService {
+    static var worker: CopyWorker?
+    static var db: CopyDB?
+    static var container: ModelContainer?
+    static var audioDiskProvider: (() -> URL?)?
+    static var audioCountProvider: (() async -> Int)?
+
+    public static func configure(
+        audioDiskProvider: @escaping () -> URL?,
+        audioCountProvider: @escaping () async -> Int
+    ) {
+        Self.audioDiskProvider = audioDiskProvider
+        Self.audioCountProvider = audioCountProvider
+    }
+
+    public static func getStateView() -> AnyView {
+        AnyView(CopyStateView())
+    }
+
+    public static func getRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView where Content: View {
+        AnyView(CopyRootView { content() })
+    }
+
+    static func getWorker() -> CopyWorker? {
+        if let worker {
+            return worker
+        }
+
+        if let db = getDB() {
+            worker = CopyWorker(db: db, reason: "AudioCopyService")
+        }
+
+        return worker
+    }
+
+    static func getDB() -> CopyDB? {
+        if let db {
+            return db
+        }
+
+        if let container = try? getContainer() {
+            let db = CopyDB(container, reason: "AudioCopyService", verbose: false)
+            Self.db = db
+            return db
+        }
+
+        return nil
+    }
+
+    static func getContainer() throws -> ModelContainer {
+        if let container {
+            return container
+        }
+
+        let url = try createDatabaseFile(name: "copy_db")
+        let schema = Schema([
+            CopyTask.self,
+        ])
+
+        let modelConfiguration = ModelConfiguration(
+            schema: schema,
+            url: url,
+            allowsSave: true,
+            cloudKitDatabase: .none
+        )
+
+        let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
+        Self.container = container
+        return container
+    }
+
+    static func isOutOfLimit() async -> Bool {
+        guard let audioCountProvider else {
+            return false
+        }
+        let count = await audioCountProvider()
+        return count >= AudioPluginInfo.maxAudioCount && StoreService.tierCached().isFreeVersion
+    }
+
+    static func getAudioDisk() -> URL? {
+        audioDiskProvider?()
+    }
+
+    private static func createDatabaseFile(name: String) throws -> URL {
+        try MagicApp.getDatabaseDirectory()
+            .appendingPathComponent(Self.dbDirName, isDirectory: true)
+            .createIfNotExist()
+            .appendingPathComponent(name)
+            .appendingPathComponent("\(name).db")
+            .createIfNotExist()
+    }
+
+    private static var dbDirName: String {
+        #if DEBUG
+            "db_debug"
+        #else
+            "db_production"
+        #endif
+    }
+}
+#endif

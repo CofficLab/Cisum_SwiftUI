@@ -7,6 +7,37 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0000000000000000A1C16201 /* PluginOpenButton in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16101 /* PluginOpenButton */; };
+		0000000000000000A1C16202 /* PluginLikeButton in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16102 /* PluginLikeButton */; };
+		0000000000000000A1C16203 /* PluginAudioWidgetControl in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16103 /* PluginAudioWidgetControl */; };
+		0000000000000000A1C16204 /* PluginAudioControl in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16104 /* PluginAudioControl */; };
+		0000000000000000A1C16205 /* PluginAudioDemo in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16105 /* PluginAudioDemo */; };
+		0000000000000000A1C16206 /* PluginDevice in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16106 /* PluginDevice */; };
+		0000000000000000A1C16207 /* PluginBookControl in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16107 /* PluginBookControl */; };
+		0000000000000000A1C16208 /* PluginBookPlayMode in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16108 /* PluginBookPlayMode */; };
+		0000000000000000A1C16209 /* PluginBookSettings in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16109 /* PluginBookSettings */; };
+		0000000000000000A1C16210 /* PluginBookLike in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16110 /* PluginBookLike */; };
+		0000000000000000A1C16211 /* PluginBookProgress in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16111 /* PluginBookProgress */; };
+		0000000000000000A1C16212 /* PluginBookScene in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16112 /* PluginBookScene */; };
+		0000000000000000A1C16213 /* PluginThemeSettings in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16113 /* PluginThemeSettings */; };
+		0000000000000000A1C16214 /* PluginAudioDownload in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16114 /* PluginAudioDownload */; };
+		0000000000000000A1C16215 /* PluginAudioSettings in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16115 /* PluginAudioSettings */; };
+		0000000000000000A1C16216 /* PluginAudioScene in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16116 /* PluginAudioScene */; };
+		0000000000000000A1C16217 /* PluginAudioPlayMode in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16117 /* PluginAudioPlayMode */; };
+		0000000000000000A1C16218 /* PluginAudioLike in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16118 /* PluginAudioLike */; };
+		0000000000000000A1C16219 /* PluginReset in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16119 /* PluginReset */; };
+		0000000000000000A1C16220 /* PluginWelcome in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16120 /* PluginWelcome */; };
+		0000000000000000A1C16221 /* PluginMigrate in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16121 /* PluginMigrate */; };
+		0000000000000000A1C16222 /* PluginVideo in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16122 /* PluginVideo */; };
+		0000000000000000A1C16223 /* PluginAudioJob in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16123 /* PluginAudioJob */; };
+		0000000000000000A1C16224 /* PluginBook in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16124 /* PluginBook */; };
+		0000000000000000A1C16225 /* PluginAudio in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16125 /* PluginAudio */; };
+		0000000000000000A1C16226 /* PluginAudioProgress in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16126 /* PluginAudioProgress */; };
+		0000000000000000A1C16227 /* PluginAudioDBView in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16127 /* PluginAudioDBView */; };
+		0000000000000000A1C16228 /* PluginStore in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16128 /* PluginStore */; };
+		0000000000000000A1C16229 /* PluginAudioCopy in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16129 /* PluginAudioCopy */; };
+		0000000000000000A1C16230 /* PluginBookDBView in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16130 /* PluginBookDBView */; };
+		0000000000000000A1C16231 /* PluginStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 0000000000000000A1C16131 /* PluginStorage */; };
 		0B06275C2F1E591800AF071F /* MagicPlayMan in Frameworks */ = {isa = PBXBuildFile; productRef = 0B06275B2F1E591800AF071F /* MagicPlayMan */; };
 		0B0627622F1E5F8500AF071F /* MagicPlayMan in Frameworks */ = {isa = PBXBuildFile; productRef = 0B0627612F1E5F8500AF071F /* MagicPlayMan */; };
 		0B0627682F1E7BDE00AF071F /* MagicPlayMan in Frameworks */ = {isa = PBXBuildFile; productRef = 0B0627672F1E7BDE00AF071F /* MagicPlayMan */; };
@@ -26,6 +57,19 @@
 		0BD3F81C2E67255A00E533B7 /* MagicPlayMan in Frameworks */ = {isa = PBXBuildFile; productRef = 0BD3F81B2E67255A00E533B7 /* MagicPlayMan */; };
 		0BE0A5FF2E5E037700A9BE9C /* MagicPlayMan in Frameworks */ = {isa = PBXBuildFile; productRef = 0BE0A5FE2E5E037700A9BE9C /* MagicPlayMan */; };
 		0C6A1A012FD1000100A10001 /* CisumDeviceData in Frameworks */ = {isa = PBXBuildFile; productRef = 0C6A1A032FD1000100A10001 /* CisumDeviceData */; };
+		A1C1520012FD900000000000 /* PluginFileLog in Frameworks */ = {isa = PBXBuildFile; productRef = A1C1510012FD900000000000 /* PluginFileLog */; };
+		A1C1520022FD900000000000 /* PluginThemeAurora in Frameworks */ = {isa = PBXBuildFile; productRef = A1C1510022FD900000000000 /* PluginThemeAurora */; };
+		A1C1520032FD900000000000 /* PluginThemeCisum in Frameworks */ = {isa = PBXBuildFile; productRef = A1C1510032FD900000000000 /* PluginThemeCisum */; };
+		A1C1520042FD900000000000 /* PluginThemeDaylightSilver in Frameworks */ = {isa = PBXBuildFile; productRef = A1C1510042FD900000000000 /* PluginThemeDaylightSilver */; };
+		A1C1520052FD900000000000 /* PluginThemeForest in Frameworks */ = {isa = PBXBuildFile; productRef = A1C1510052FD900000000000 /* PluginThemeForest */; };
+		A1C1520062FD900000000000 /* PluginThemeGraphiteBlack in Frameworks */ = {isa = PBXBuildFile; productRef = A1C1510062FD900000000000 /* PluginThemeGraphiteBlack */; };
+		A1C1520072FD900000000000 /* PluginThemeMidnight in Frameworks */ = {isa = PBXBuildFile; productRef = A1C1510072FD900000000000 /* PluginThemeMidnight */; };
+		A1C1520082FD900000000000 /* PluginThemeMono in Frameworks */ = {isa = PBXBuildFile; productRef = A1C1510082FD900000000000 /* PluginThemeMono */; };
+		A1C1520092FD900000000000 /* PluginThemeNebula in Frameworks */ = {isa = PBXBuildFile; productRef = A1C1510092FD900000000000 /* PluginThemeNebula */; };
+		A1C15200A2FD900000000000 /* PluginThemeOcean in Frameworks */ = {isa = PBXBuildFile; productRef = A1C15100A2FD900000000000 /* PluginThemeOcean */; };
+		A1C15200B2FD900000000000 /* PluginThemePaper in Frameworks */ = {isa = PBXBuildFile; productRef = A1C15100B2FD900000000000 /* PluginThemePaper */; };
+		A1C15200C2FD900000000000 /* PluginThemeStudioBlue in Frameworks */ = {isa = PBXBuildFile; productRef = A1C15100C2FD900000000000 /* PluginThemeStudioBlue */; };
+		A1C15200D2FD900000000000 /* PluginThemeSunset in Frameworks */ = {isa = PBXBuildFile; productRef = A1C15100D2FD900000000000 /* PluginThemeSunset */; };
 		F51482C92F2C6A6700CEB80D /* MagicKit in Frameworks */ = {isa = PBXBuildFile; productRef = F51482C82F2C6A6700CEB80D /* MagicKit */; };
 		F51BCCDC2F21EC7B00A5E3E5 /* MagicPlayMan in Frameworks */ = {isa = PBXBuildFile; productRef = F51BCCDB2F21EC7B00A5E3E5 /* MagicPlayMan */; };
 		F51BD2AC2F220B4900A5E3E5 /* MagicKit in Frameworks */ = {isa = PBXBuildFile; productRef = F51BD2AB2F220B4900A5E3E5 /* MagicKit */; };
@@ -56,12 +100,404 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		F54DA2212FC82E0400D5EDB5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F54DA1C52FC82E0300D5EDB5 /* ZIPFoundation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = "ZIPFoundation::ZIPFoundation::Product";
+			remoteInfo = ZIPFoundation;
+		};
+		F54DA2232FC82E0400D5EDB5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F54DA1C52FC82E0300D5EDB5 /* ZIPFoundation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = "ZIPFoundation::ZIPFoundationTests::Product";
+			remoteInfo = ZIPFoundationTests;
+		};
+		F54DA33C2FC82E0400D5EDB5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F54DA2612FC82E0400D5EDB5 /* Demo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 452832EF2044D28E00458375;
+			remoteInfo = "Demo macOS";
+		};
+		F54DA33E2FC82E0400D5EDB5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F54DA2612FC82E0400D5EDB5 /* Demo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4528334A2044D41300458375;
+			remoteInfo = "Demo iOS";
+		};
+		F54DA3402FC82E0400D5EDB5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F54DA2612FC82E0400D5EDB5 /* Demo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 45F834342059078A0046C804;
+			remoteInfo = "Demo watchOS";
+		};
+		F54DA3422FC82E0400D5EDB5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F54DA2612FC82E0400D5EDB5 /* Demo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 45F834402059078B0046C804;
+			remoteInfo = "Demo watchOS Extension";
+		};
+		F54DA3442FC82E0400D5EDB5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F54DA2612FC82E0400D5EDB5 /* Demo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 45541BC5205990990025A8BF;
+			remoteInfo = "Demo tvOS";
+		};
+		F54DA34D2FC82E0400D5EDB5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F54DA3272FC82E0400D5EDB5 /* ID3TagEditor.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 452831C52044C40700458375;
+			remoteInfo = "ID3TagEditor macOS";
+		};
+		F54DA34F2FC82E0400D5EDB5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F54DA3272FC82E0400D5EDB5 /* ID3TagEditor.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 452831CE2044C40700458375;
+			remoteInfo = "ID3TagEditor macOS Tests";
+		};
+		F54DA3512FC82E0400D5EDB5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F54DA3272FC82E0400D5EDB5 /* ID3TagEditor.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 452831E52044C4F500458375;
+			remoteInfo = "ID3TagEditor iOS";
+		};
+		F54DA3532FC82E0400D5EDB5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F54DA3272FC82E0400D5EDB5 /* ID3TagEditor.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 452831ED2044C4F500458375;
+			remoteInfo = "ID3TagEditor iOS Tests";
+		};
+		F54DA3552FC82E0400D5EDB5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F54DA3272FC82E0400D5EDB5 /* ID3TagEditor.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 45541B7720598F6C0025A8BF;
+			remoteInfo = "ID3TagEditor tvOS";
+		};
+		F54DA3572FC82E0400D5EDB5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F54DA3272FC82E0400D5EDB5 /* ID3TagEditor.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 45541BE52059954C0025A8BF;
+			remoteInfo = "ID3TagEditor tvOS Tests";
+		};
+		F54DA3592FC82E0400D5EDB5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F54DA3272FC82E0400D5EDB5 /* ID3TagEditor.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 45F833E3205904680046C804;
+			remoteInfo = "ID3TagEditor watchOS";
+		};
 		F5826E762F3578080079B285 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0B9C1C352AAF18FE001A26AF /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = F5826E672F3578070079B285;
 			remoteInfo = CisumWidgetExtension;
+		};
+		F5A2EEF62FC84BB400C5EC57 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5A2EEA12FC84BB400C5EC57 /* ZIPFoundation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = "ZIPFoundation::ZIPFoundation::Product";
+			remoteInfo = ZIPFoundation;
+		};
+		F5A2EEF82FC84BB400C5EC57 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5A2EEA12FC84BB400C5EC57 /* ZIPFoundation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = "ZIPFoundation::ZIPFoundationTests::Product";
+			remoteInfo = ZIPFoundationTests;
+		};
+		F5A2F0852FC84BB500C5EC57 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5A2EF322FC84BB400C5EC57 /* Demo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 452832EF2044D28E00458375;
+			remoteInfo = "Demo macOS";
+		};
+		F5A2F0872FC84BB500C5EC57 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5A2EF322FC84BB400C5EC57 /* Demo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4528334A2044D41300458375;
+			remoteInfo = "Demo iOS";
+		};
+		F5A2F0892FC84BB500C5EC57 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5A2EF322FC84BB400C5EC57 /* Demo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 45F834342059078A0046C804;
+			remoteInfo = "Demo watchOS";
+		};
+		F5A2F08B2FC84BB500C5EC57 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5A2EF322FC84BB400C5EC57 /* Demo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 45F834402059078B0046C804;
+			remoteInfo = "Demo watchOS Extension";
+		};
+		F5A2F08D2FC84BB500C5EC57 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5A2EF322FC84BB400C5EC57 /* Demo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 45541BC5205990990025A8BF;
+			remoteInfo = "Demo tvOS";
+		};
+		F5A2F0962FC84BB500C5EC57 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5A2F0282FC84BB400C5EC57 /* ID3TagEditor.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 452831C52044C40700458375;
+			remoteInfo = "ID3TagEditor macOS";
+		};
+		F5A2F0982FC84BB500C5EC57 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5A2F0282FC84BB400C5EC57 /* ID3TagEditor.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 452831CE2044C40700458375;
+			remoteInfo = "ID3TagEditor macOS Tests";
+		};
+		F5A2F09A2FC84BB500C5EC57 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5A2F0282FC84BB400C5EC57 /* ID3TagEditor.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 452831E52044C4F500458375;
+			remoteInfo = "ID3TagEditor iOS";
+		};
+		F5A2F09C2FC84BB500C5EC57 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5A2F0282FC84BB400C5EC57 /* ID3TagEditor.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 452831ED2044C4F500458375;
+			remoteInfo = "ID3TagEditor iOS Tests";
+		};
+		F5A2F09E2FC84BB500C5EC57 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5A2F0282FC84BB400C5EC57 /* ID3TagEditor.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 45541B7720598F6C0025A8BF;
+			remoteInfo = "ID3TagEditor tvOS";
+		};
+		F5A2F0A02FC84BB500C5EC57 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5A2F0282FC84BB400C5EC57 /* ID3TagEditor.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 45541BE52059954C0025A8BF;
+			remoteInfo = "ID3TagEditor tvOS Tests";
+		};
+		F5A2F0A22FC84BB500C5EC57 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5A2F0282FC84BB400C5EC57 /* ID3TagEditor.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 45F833E3205904680046C804;
+			remoteInfo = "ID3TagEditor watchOS";
+		};
+		F5E23BB12FC8244400CDCA7B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5E23B552FC8244400CDCA7B /* ZIPFoundation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = "ZIPFoundation::ZIPFoundation::Product";
+			remoteInfo = ZIPFoundation;
+		};
+		F5E23BB32FC8244400CDCA7B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5E23B552FC8244400CDCA7B /* ZIPFoundation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = "ZIPFoundation::ZIPFoundationTests::Product";
+			remoteInfo = ZIPFoundationTests;
+		};
+		F5E23F752FC8244500CDCA7B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5E23EA82FC8244500CDCA7B /* Demo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 452832EF2044D28E00458375;
+			remoteInfo = "Demo macOS";
+		};
+		F5E23F772FC8244500CDCA7B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5E23EA82FC8244500CDCA7B /* Demo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4528334A2044D41300458375;
+			remoteInfo = "Demo iOS";
+		};
+		F5E23F792FC8244500CDCA7B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5E23EA82FC8244500CDCA7B /* Demo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 45F834342059078A0046C804;
+			remoteInfo = "Demo watchOS";
+		};
+		F5E23F7B2FC8244500CDCA7B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5E23EA82FC8244500CDCA7B /* Demo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 45F834402059078B0046C804;
+			remoteInfo = "Demo watchOS Extension";
+		};
+		F5E23F7D2FC8244500CDCA7B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5E23EA82FC8244500CDCA7B /* Demo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 45541BC5205990990025A8BF;
+			remoteInfo = "Demo tvOS";
+		};
+		F5E23F862FC8244500CDCA7B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5E23F652FC8244500CDCA7B /* ID3TagEditor.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 452831C52044C40700458375;
+			remoteInfo = "ID3TagEditor macOS";
+		};
+		F5E23F882FC8244500CDCA7B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5E23F652FC8244500CDCA7B /* ID3TagEditor.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 452831CE2044C40700458375;
+			remoteInfo = "ID3TagEditor macOS Tests";
+		};
+		F5E23F8A2FC8244500CDCA7B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5E23F652FC8244500CDCA7B /* ID3TagEditor.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 452831E52044C4F500458375;
+			remoteInfo = "ID3TagEditor iOS";
+		};
+		F5E23F8C2FC8244500CDCA7B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5E23F652FC8244500CDCA7B /* ID3TagEditor.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 452831ED2044C4F500458375;
+			remoteInfo = "ID3TagEditor iOS Tests";
+		};
+		F5E23F8E2FC8244500CDCA7B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5E23F652FC8244500CDCA7B /* ID3TagEditor.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 45541B7720598F6C0025A8BF;
+			remoteInfo = "ID3TagEditor tvOS";
+		};
+		F5E23F902FC8244500CDCA7B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5E23F652FC8244500CDCA7B /* ID3TagEditor.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 45541BE52059954C0025A8BF;
+			remoteInfo = "ID3TagEditor tvOS Tests";
+		};
+		F5E23F922FC8244500CDCA7B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5E23F652FC8244500CDCA7B /* ID3TagEditor.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 45F833E3205904680046C804;
+			remoteInfo = "ID3TagEditor watchOS";
+		};
+		F5E2AC442FC8228F00CDCA7B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5E2AC192FC8228F00CDCA7B /* ZIPFoundation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = "ZIPFoundation::ZIPFoundation::Product";
+			remoteInfo = ZIPFoundation;
+		};
+		F5E2AC462FC8228F00CDCA7B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5E2AC192FC8228F00CDCA7B /* ZIPFoundation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = "ZIPFoundation::ZIPFoundationTests::Product";
+			remoteInfo = ZIPFoundationTests;
+		};
+		F5E2AD972FC8229000CDCA7B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5E2ACCE2FC8229000CDCA7B /* Demo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 452832EF2044D28E00458375;
+			remoteInfo = "Demo macOS";
+		};
+		F5E2AD992FC8229000CDCA7B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5E2ACCE2FC8229000CDCA7B /* Demo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4528334A2044D41300458375;
+			remoteInfo = "Demo iOS";
+		};
+		F5E2AD9B2FC8229000CDCA7B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5E2ACCE2FC8229000CDCA7B /* Demo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 45F834342059078A0046C804;
+			remoteInfo = "Demo watchOS";
+		};
+		F5E2AD9D2FC8229000CDCA7B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5E2ACCE2FC8229000CDCA7B /* Demo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 45F834402059078B0046C804;
+			remoteInfo = "Demo watchOS Extension";
+		};
+		F5E2AD9F2FC8229000CDCA7B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5E2ACCE2FC8229000CDCA7B /* Demo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 45541BC5205990990025A8BF;
+			remoteInfo = "Demo tvOS";
+		};
+		F5E2ADA82FC8229000CDCA7B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5E2ACD82FC8229000CDCA7B /* ID3TagEditor.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 452831C52044C40700458375;
+			remoteInfo = "ID3TagEditor macOS";
+		};
+		F5E2ADAA2FC8229000CDCA7B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5E2ACD82FC8229000CDCA7B /* ID3TagEditor.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 452831CE2044C40700458375;
+			remoteInfo = "ID3TagEditor macOS Tests";
+		};
+		F5E2ADAC2FC8229000CDCA7B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5E2ACD82FC8229000CDCA7B /* ID3TagEditor.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 452831E52044C4F500458375;
+			remoteInfo = "ID3TagEditor iOS";
+		};
+		F5E2ADAE2FC8229000CDCA7B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5E2ACD82FC8229000CDCA7B /* ID3TagEditor.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 452831ED2044C4F500458375;
+			remoteInfo = "ID3TagEditor iOS Tests";
+		};
+		F5E2ADB02FC8229000CDCA7B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5E2ACD82FC8229000CDCA7B /* ID3TagEditor.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 45541B7720598F6C0025A8BF;
+			remoteInfo = "ID3TagEditor tvOS";
+		};
+		F5E2ADB22FC8229000CDCA7B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5E2ACD82FC8229000CDCA7B /* ID3TagEditor.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 45541BE52059954C0025A8BF;
+			remoteInfo = "ID3TagEditor tvOS Tests";
+		};
+		F5E2ADB42FC8229000CDCA7B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5E2ACD82FC8229000CDCA7B /* ID3TagEditor.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 45F833E3205904680046C804;
+			remoteInfo = "ID3TagEditor watchOS";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -85,9 +521,21 @@
 		0B53A6CC2F1C734B00169AF2 /* Cisum.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cisum.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0BB5871C2AD820FA0071AEBD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F52F17E82F3585980008EF9F /* CisumWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CisumWidgetExtension.entitlements; sourceTree = "<group>"; };
+		F54DA1C52FC82E0300D5EDB5 /* ZIPFoundation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = ZIPFoundation.xcodeproj; sourceTree = "<group>"; };
+		F54DA2612FC82E0400D5EDB5 /* Demo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Demo.xcodeproj; sourceTree = "<group>"; };
+		F54DA3272FC82E0400D5EDB5 /* ID3TagEditor.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = ID3TagEditor.xcodeproj; sourceTree = "<group>"; };
 		F5826E682F3578070079B285 /* CisumWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CisumWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		F5826E6A2F3578070079B285 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = /System/Library/Frameworks/WidgetKit.framework; sourceTree = "<absolute>"; };
 		F5826E6C2F3578070079B285 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = /System/Library/Frameworks/SwiftUI.framework; sourceTree = "<absolute>"; };
+		F5A2EEA12FC84BB400C5EC57 /* ZIPFoundation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = ZIPFoundation.xcodeproj; sourceTree = "<group>"; };
+		F5A2EF322FC84BB400C5EC57 /* Demo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Demo.xcodeproj; sourceTree = "<group>"; };
+		F5A2F0282FC84BB400C5EC57 /* ID3TagEditor.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = ID3TagEditor.xcodeproj; sourceTree = "<group>"; };
+		F5E23B552FC8244400CDCA7B /* ZIPFoundation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = ZIPFoundation.xcodeproj; sourceTree = "<group>"; };
+		F5E23EA82FC8244500CDCA7B /* Demo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Demo.xcodeproj; sourceTree = "<group>"; };
+		F5E23F652FC8244500CDCA7B /* ID3TagEditor.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = ID3TagEditor.xcodeproj; sourceTree = "<group>"; };
+		F5E2AC192FC8228F00CDCA7B /* ZIPFoundation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = ZIPFoundation.xcodeproj; sourceTree = "<group>"; };
+		F5E2ACCE2FC8229000CDCA7B /* Demo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Demo.xcodeproj; sourceTree = "<group>"; };
+		F5E2ACD82FC8229000CDCA7B /* ID3TagEditor.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = ID3TagEditor.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -112,6 +560,50 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0000000000000000A1C16201 /* PluginOpenButton in Frameworks */,
+				0000000000000000A1C16202 /* PluginLikeButton in Frameworks */,
+				0000000000000000A1C16203 /* PluginAudioWidgetControl in Frameworks */,
+				0000000000000000A1C16204 /* PluginAudioControl in Frameworks */,
+				0000000000000000A1C16205 /* PluginAudioDemo in Frameworks */,
+				0000000000000000A1C16206 /* PluginDevice in Frameworks */,
+				0000000000000000A1C16207 /* PluginBookControl in Frameworks */,
+				0000000000000000A1C16208 /* PluginBookPlayMode in Frameworks */,
+				0000000000000000A1C16209 /* PluginBookSettings in Frameworks */,
+				0000000000000000A1C16210 /* PluginBookLike in Frameworks */,
+				0000000000000000A1C16211 /* PluginBookProgress in Frameworks */,
+				0000000000000000A1C16212 /* PluginBookScene in Frameworks */,
+				0000000000000000A1C16213 /* PluginThemeSettings in Frameworks */,
+				0000000000000000A1C16214 /* PluginAudioDownload in Frameworks */,
+				0000000000000000A1C16215 /* PluginAudioSettings in Frameworks */,
+				0000000000000000A1C16216 /* PluginAudioScene in Frameworks */,
+				0000000000000000A1C16217 /* PluginAudioPlayMode in Frameworks */,
+				0000000000000000A1C16218 /* PluginAudioLike in Frameworks */,
+				0000000000000000A1C16219 /* PluginReset in Frameworks */,
+				0000000000000000A1C16220 /* PluginWelcome in Frameworks */,
+				0000000000000000A1C16221 /* PluginMigrate in Frameworks */,
+				0000000000000000A1C16222 /* PluginVideo in Frameworks */,
+				0000000000000000A1C16223 /* PluginAudioJob in Frameworks */,
+				0000000000000000A1C16224 /* PluginBook in Frameworks */,
+				0000000000000000A1C16225 /* PluginAudio in Frameworks */,
+				0000000000000000A1C16226 /* PluginAudioProgress in Frameworks */,
+				0000000000000000A1C16227 /* PluginAudioDBView in Frameworks */,
+				0000000000000000A1C16228 /* PluginStore in Frameworks */,
+				0000000000000000A1C16229 /* PluginAudioCopy in Frameworks */,
+				0000000000000000A1C16230 /* PluginBookDBView in Frameworks */,
+				0000000000000000A1C16231 /* PluginStorage in Frameworks */,
+				A1C1520012FD900000000000 /* PluginFileLog in Frameworks */,
+				A1C1520022FD900000000000 /* PluginThemeAurora in Frameworks */,
+				A1C1520032FD900000000000 /* PluginThemeCisum in Frameworks */,
+				A1C1520042FD900000000000 /* PluginThemeDaylightSilver in Frameworks */,
+				A1C1520052FD900000000000 /* PluginThemeForest in Frameworks */,
+				A1C1520062FD900000000000 /* PluginThemeGraphiteBlack in Frameworks */,
+				A1C1520072FD900000000000 /* PluginThemeMidnight in Frameworks */,
+				A1C1520082FD900000000000 /* PluginThemeMono in Frameworks */,
+				A1C1520092FD900000000000 /* PluginThemeNebula in Frameworks */,
+				A1C15200A2FD900000000000 /* PluginThemeOcean in Frameworks */,
+				A1C15200B2FD900000000000 /* PluginThemePaper in Frameworks */,
+				A1C15200C2FD900000000000 /* PluginThemeStudioBlue in Frameworks */,
+				A1C15200D2FD900000000000 /* PluginThemeSunset in Frameworks */,
 				F541F4782FBFFC1200C98C03 /* CisumUI in Frameworks */,
 				0C6A1A012FD1000100A10001 /* CisumDeviceData in Frameworks */,
 				F5EFA8F52F2C5634000A0054 /* MagicKit in Frameworks */,
@@ -186,6 +678,41 @@
 			);
 			sourceTree = "<group>";
 		};
+		F54DA1C62FC82E0300D5EDB5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F54DA2222FC82E0400D5EDB5 /* ZIPFoundation.framework */,
+				F54DA2242FC82E0400D5EDB5 /* ZIPFoundationTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F54DA2622FC82E0400D5EDB5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F54DA33D2FC82E0400D5EDB5 /* Demo macOS.app */,
+				F54DA33F2FC82E0400D5EDB5 /* Demo iOS.app */,
+				F54DA3412FC82E0400D5EDB5 /* Demo watchOS.app */,
+				F54DA3432FC82E0400D5EDB5 /* Demo watchOS Extension.appex */,
+				F54DA3452FC82E0400D5EDB5 /* Demo tvOS.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F54DA3302FC82E0400D5EDB5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F54DA34E2FC82E0400D5EDB5 /* ID3TagEditor.framework */,
+				F54DA3502FC82E0400D5EDB5 /* ID3TagEditor macOS Tests.xctest */,
+				F54DA3522FC82E0400D5EDB5 /* ID3TagEditor.framework */,
+				F54DA3542FC82E0400D5EDB5 /* ID3TagEditor iOS Tests.xctest */,
+				F54DA3562FC82E0400D5EDB5 /* ID3TagEditor.framework */,
+				F54DA3582FC82E0400D5EDB5 /* ID3TagEditor tvOS Tests.xctest */,
+				F54DA35A2FC82E0400D5EDB5 /* ID3TagEditor.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		F5826E692F3578070079B285 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -193,6 +720,111 @@
 				F5826E6C2F3578070079B285 /* SwiftUI.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F5A2EEA22FC84BB400C5EC57 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F5A2EEF72FC84BB400C5EC57 /* ZIPFoundation.framework */,
+				F5A2EEF92FC84BB400C5EC57 /* ZIPFoundationTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F5A2F0322FC84BB400C5EC57 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F5A2F0972FC84BB500C5EC57 /* ID3TagEditor.framework */,
+				F5A2F0992FC84BB500C5EC57 /* ID3TagEditor macOS Tests.xctest */,
+				F5A2F09B2FC84BB500C5EC57 /* ID3TagEditor.framework */,
+				F5A2F09D2FC84BB500C5EC57 /* ID3TagEditor iOS Tests.xctest */,
+				F5A2F09F2FC84BB500C5EC57 /* ID3TagEditor.framework */,
+				F5A2F0A12FC84BB500C5EC57 /* ID3TagEditor tvOS Tests.xctest */,
+				F5A2F0A32FC84BB500C5EC57 /* ID3TagEditor.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F5A2F0342FC84BB400C5EC57 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F5A2F0862FC84BB500C5EC57 /* Demo macOS.app */,
+				F5A2F0882FC84BB500C5EC57 /* Demo iOS.app */,
+				F5A2F08A2FC84BB500C5EC57 /* Demo watchOS.app */,
+				F5A2F08C2FC84BB500C5EC57 /* Demo watchOS Extension.appex */,
+				F5A2F08E2FC84BB500C5EC57 /* Demo tvOS.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F5E23B562FC8244400CDCA7B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F5E23BB22FC8244400CDCA7B /* ZIPFoundation.framework */,
+				F5E23BB42FC8244400CDCA7B /* ZIPFoundationTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F5E23EA92FC8244500CDCA7B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F5E23F762FC8244500CDCA7B /* Demo macOS.app */,
+				F5E23F782FC8244500CDCA7B /* Demo iOS.app */,
+				F5E23F7A2FC8244500CDCA7B /* Demo watchOS.app */,
+				F5E23F7C2FC8244500CDCA7B /* Demo watchOS Extension.appex */,
+				F5E23F7E2FC8244500CDCA7B /* Demo tvOS.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F5E23F6E2FC8244500CDCA7B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F5E23F872FC8244500CDCA7B /* ID3TagEditor.framework */,
+				F5E23F892FC8244500CDCA7B /* ID3TagEditor macOS Tests.xctest */,
+				F5E23F8B2FC8244500CDCA7B /* ID3TagEditor.framework */,
+				F5E23F8D2FC8244500CDCA7B /* ID3TagEditor iOS Tests.xctest */,
+				F5E23F8F2FC8244500CDCA7B /* ID3TagEditor.framework */,
+				F5E23F912FC8244500CDCA7B /* ID3TagEditor tvOS Tests.xctest */,
+				F5E23F932FC8244500CDCA7B /* ID3TagEditor.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F5E2AC1A2FC8228F00CDCA7B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F5E2AC452FC8228F00CDCA7B /* ZIPFoundation.framework */,
+				F5E2AC472FC8228F00CDCA7B /* ZIPFoundationTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F5E2ACD12FC8229000CDCA7B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F5E2AD982FC8229000CDCA7B /* Demo macOS.app */,
+				F5E2AD9A2FC8229000CDCA7B /* Demo iOS.app */,
+				F5E2AD9C2FC8229000CDCA7B /* Demo watchOS.app */,
+				F5E2AD9E2FC8229000CDCA7B /* Demo watchOS Extension.appex */,
+				F5E2ADA02FC8229000CDCA7B /* Demo tvOS.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F5E2ACDB2FC8229000CDCA7B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F5E2ADA92FC8229000CDCA7B /* ID3TagEditor.framework */,
+				F5E2ADAB2FC8229000CDCA7B /* ID3TagEditor macOS Tests.xctest */,
+				F5E2ADAD2FC8229000CDCA7B /* ID3TagEditor.framework */,
+				F5E2ADAF2FC8229000CDCA7B /* ID3TagEditor iOS Tests.xctest */,
+				F5E2ADB12FC8229000CDCA7B /* ID3TagEditor.framework */,
+				F5E2ADB32FC8229000CDCA7B /* ID3TagEditor tvOS Tests.xctest */,
+				F5E2ADB52FC8229000CDCA7B /* ID3TagEditor.framework */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -218,6 +850,50 @@
 			);
 			name = Cisum;
 			packageProductDependencies = (
+				0000000000000000A1C16101 /* PluginOpenButton */,
+				0000000000000000A1C16102 /* PluginLikeButton */,
+				0000000000000000A1C16103 /* PluginAudioWidgetControl */,
+				0000000000000000A1C16104 /* PluginAudioControl */,
+				0000000000000000A1C16105 /* PluginAudioDemo */,
+				0000000000000000A1C16106 /* PluginDevice */,
+				0000000000000000A1C16107 /* PluginBookControl */,
+				0000000000000000A1C16108 /* PluginBookPlayMode */,
+				0000000000000000A1C16109 /* PluginBookSettings */,
+				0000000000000000A1C16110 /* PluginBookLike */,
+				0000000000000000A1C16111 /* PluginBookProgress */,
+				0000000000000000A1C16112 /* PluginBookScene */,
+				0000000000000000A1C16113 /* PluginThemeSettings */,
+				0000000000000000A1C16114 /* PluginAudioDownload */,
+				0000000000000000A1C16115 /* PluginAudioSettings */,
+				0000000000000000A1C16116 /* PluginAudioScene */,
+				0000000000000000A1C16117 /* PluginAudioPlayMode */,
+				0000000000000000A1C16118 /* PluginAudioLike */,
+				0000000000000000A1C16119 /* PluginReset */,
+				0000000000000000A1C16120 /* PluginWelcome */,
+				0000000000000000A1C16121 /* PluginMigrate */,
+				0000000000000000A1C16122 /* PluginVideo */,
+				0000000000000000A1C16123 /* PluginAudioJob */,
+				0000000000000000A1C16124 /* PluginBook */,
+				0000000000000000A1C16125 /* PluginAudio */,
+				0000000000000000A1C16126 /* PluginAudioProgress */,
+				0000000000000000A1C16127 /* PluginAudioDBView */,
+				0000000000000000A1C16128 /* PluginStore */,
+				0000000000000000A1C16129 /* PluginAudioCopy */,
+				0000000000000000A1C16130 /* PluginBookDBView */,
+				0000000000000000A1C16131 /* PluginStorage */,
+				A1C1510012FD900000000000 /* PluginFileLog */,
+				A1C1510022FD900000000000 /* PluginThemeAurora */,
+				A1C1510032FD900000000000 /* PluginThemeCisum */,
+				A1C1510042FD900000000000 /* PluginThemeDaylightSilver */,
+				A1C1510052FD900000000000 /* PluginThemeForest */,
+				A1C1510062FD900000000000 /* PluginThemeGraphiteBlack */,
+				A1C1510072FD900000000000 /* PluginThemeMidnight */,
+				A1C1510082FD900000000000 /* PluginThemeMono */,
+				A1C1510092FD900000000000 /* PluginThemeNebula */,
+				A1C15100A2FD900000000000 /* PluginThemeOcean */,
+				A1C15100B2FD900000000000 /* PluginThemePaper */,
+				A1C15100C2FD900000000000 /* PluginThemeStudioBlue */,
+				A1C15100D2FD900000000000 /* PluginThemeSunset */,
 				0C6A1A032FD1000100A10001 /* CisumDeviceData */,
 				880796BABF18425591568C62 /* CisumUI */,
 				0BDA9C6A2D2578D300A99623 /* MagicPlayMan */,
@@ -319,6 +995,50 @@
 			);
 			mainGroup = 0B9C1C342AAF18FE001A26AF;
 			packageReferences = (
+				0000000000000000A1C16001 /* XCLocalSwiftPackageReference "Packages/PluginOpenButton" */,
+				0000000000000000A1C16002 /* XCLocalSwiftPackageReference "Packages/PluginLikeButton" */,
+				0000000000000000A1C16003 /* XCLocalSwiftPackageReference "Packages/PluginAudioWidgetControl" */,
+				0000000000000000A1C16004 /* XCLocalSwiftPackageReference "Packages/PluginAudioControl" */,
+				0000000000000000A1C16005 /* XCLocalSwiftPackageReference "Packages/PluginAudioDemo" */,
+				0000000000000000A1C16006 /* XCLocalSwiftPackageReference "Packages/PluginDevice" */,
+				0000000000000000A1C16007 /* XCLocalSwiftPackageReference "Packages/PluginBookControl" */,
+				0000000000000000A1C16008 /* XCLocalSwiftPackageReference "Packages/PluginBookPlayMode" */,
+				0000000000000000A1C16009 /* XCLocalSwiftPackageReference "Packages/PluginBookSettings" */,
+				0000000000000000A1C16010 /* XCLocalSwiftPackageReference "Packages/PluginBookLike" */,
+				0000000000000000A1C16011 /* XCLocalSwiftPackageReference "Packages/PluginBookProgress" */,
+				0000000000000000A1C16012 /* XCLocalSwiftPackageReference "Packages/PluginBookScene" */,
+				0000000000000000A1C16013 /* XCLocalSwiftPackageReference "Packages/PluginThemeSettings" */,
+				0000000000000000A1C16014 /* XCLocalSwiftPackageReference "Packages/PluginAudioDownload" */,
+				0000000000000000A1C16015 /* XCLocalSwiftPackageReference "Packages/PluginAudioSettings" */,
+				0000000000000000A1C16016 /* XCLocalSwiftPackageReference "Packages/PluginAudioScene" */,
+				0000000000000000A1C16017 /* XCLocalSwiftPackageReference "Packages/PluginAudioPlayMode" */,
+				0000000000000000A1C16018 /* XCLocalSwiftPackageReference "Packages/PluginAudioLike" */,
+				0000000000000000A1C16019 /* XCLocalSwiftPackageReference "Packages/PluginReset" */,
+				0000000000000000A1C16020 /* XCLocalSwiftPackageReference "Packages/PluginWelcome" */,
+				0000000000000000A1C16021 /* XCLocalSwiftPackageReference "Packages/PluginMigrate" */,
+				0000000000000000A1C16022 /* XCLocalSwiftPackageReference "Packages/PluginVideo" */,
+				0000000000000000A1C16023 /* XCLocalSwiftPackageReference "Packages/PluginAudioJob" */,
+				0000000000000000A1C16024 /* XCLocalSwiftPackageReference "Packages/PluginBook" */,
+				0000000000000000A1C16025 /* XCLocalSwiftPackageReference "Packages/PluginAudio" */,
+				0000000000000000A1C16026 /* XCLocalSwiftPackageReference "Packages/PluginAudioProgress" */,
+				0000000000000000A1C16027 /* XCLocalSwiftPackageReference "Packages/PluginAudioDBView" */,
+				0000000000000000A1C16028 /* XCLocalSwiftPackageReference "Packages/PluginStore" */,
+				0000000000000000A1C16029 /* XCLocalSwiftPackageReference "Packages/PluginAudioCopy" */,
+				0000000000000000A1C16030 /* XCLocalSwiftPackageReference "Packages/PluginBookDBView" */,
+				0000000000000000A1C16031 /* XCLocalSwiftPackageReference "Packages/PluginStorage" */,
+				A1C1500012FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginFileLog" */,
+				A1C1500022FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginThemeAurora" */,
+				A1C1500032FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginThemeCisum" */,
+				A1C1500042FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginThemeDaylightSilver" */,
+				A1C1500052FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginThemeForest" */,
+				A1C1500062FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginThemeGraphiteBlack" */,
+				A1C1500072FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginThemeMidnight" */,
+				A1C1500082FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginThemeMono" */,
+				A1C1500092FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginThemeNebula" */,
+				A1C15000A2FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginThemeOcean" */,
+				A1C15000B2FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginThemePaper" */,
+				A1C15000C2FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginThemeStudioBlue" */,
+				A1C15000D2FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginThemeSunset" */,
 				0C6A1A022FD1000100A10001 /* XCLocalSwiftPackageReference "Packages/DeviceData" */,
 				A4EDBFBBFC934FE4853CA0E4 /* XCLocalSwiftPackageReference "Packages/CisumUI" */,
 				0BBE77992F2BA051009C6AC6 /* XCRemoteSwiftPackageReference "MagicPlayMan" */,
@@ -326,6 +1046,56 @@
 			);
 			productRefGroup = 0B9C1C342AAF18FE001A26AF;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = F54DA2622FC82E0400D5EDB5 /* Products */;
+					ProjectRef = F54DA2612FC82E0400D5EDB5 /* Demo.xcodeproj */;
+				},
+				{
+					ProductGroup = F5A2F0342FC84BB400C5EC57 /* Products */;
+					ProjectRef = F5A2EF322FC84BB400C5EC57 /* Demo.xcodeproj */;
+				},
+				{
+					ProductGroup = F5E23EA92FC8244500CDCA7B /* Products */;
+					ProjectRef = F5E23EA82FC8244500CDCA7B /* Demo.xcodeproj */;
+				},
+				{
+					ProductGroup = F5E2ACD12FC8229000CDCA7B /* Products */;
+					ProjectRef = F5E2ACCE2FC8229000CDCA7B /* Demo.xcodeproj */;
+				},
+				{
+					ProductGroup = F5E23F6E2FC8244500CDCA7B /* Products */;
+					ProjectRef = F5E23F652FC8244500CDCA7B /* ID3TagEditor.xcodeproj */;
+				},
+				{
+					ProductGroup = F5E2ACDB2FC8229000CDCA7B /* Products */;
+					ProjectRef = F5E2ACD82FC8229000CDCA7B /* ID3TagEditor.xcodeproj */;
+				},
+				{
+					ProductGroup = F54DA3302FC82E0400D5EDB5 /* Products */;
+					ProjectRef = F54DA3272FC82E0400D5EDB5 /* ID3TagEditor.xcodeproj */;
+				},
+				{
+					ProductGroup = F5A2F0322FC84BB400C5EC57 /* Products */;
+					ProjectRef = F5A2F0282FC84BB400C5EC57 /* ID3TagEditor.xcodeproj */;
+				},
+				{
+					ProductGroup = F5E23B562FC8244400CDCA7B /* Products */;
+					ProjectRef = F5E23B552FC8244400CDCA7B /* ZIPFoundation.xcodeproj */;
+				},
+				{
+					ProductGroup = F54DA1C62FC82E0300D5EDB5 /* Products */;
+					ProjectRef = F54DA1C52FC82E0300D5EDB5 /* ZIPFoundation.xcodeproj */;
+				},
+				{
+					ProductGroup = F5E2AC1A2FC8228F00CDCA7B /* Products */;
+					ProjectRef = F5E2AC192FC8228F00CDCA7B /* ZIPFoundation.xcodeproj */;
+				},
+				{
+					ProductGroup = F5A2EEA22FC84BB400C5EC57 /* Products */;
+					ProjectRef = F5A2EEA12FC84BB400C5EC57 /* ZIPFoundation.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				0B1D5A4A2AB301AD0010DDF2 /* Cisum */,
@@ -333,6 +1103,401 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		F54DA2222FC82E0400D5EDB5 /* ZIPFoundation.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ZIPFoundation.framework;
+			remoteRef = F54DA2212FC82E0400D5EDB5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F54DA2242FC82E0400D5EDB5 /* ZIPFoundationTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = ZIPFoundationTests.xctest;
+			remoteRef = F54DA2232FC82E0400D5EDB5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F54DA33D2FC82E0400D5EDB5 /* Demo macOS.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "Demo macOS.app";
+			remoteRef = F54DA33C2FC82E0400D5EDB5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F54DA33F2FC82E0400D5EDB5 /* Demo iOS.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "Demo iOS.app";
+			remoteRef = F54DA33E2FC82E0400D5EDB5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F54DA3412FC82E0400D5EDB5 /* Demo watchOS.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "Demo watchOS.app";
+			remoteRef = F54DA3402FC82E0400D5EDB5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F54DA3432FC82E0400D5EDB5 /* Demo watchOS Extension.appex */ = {
+			isa = PBXReferenceProxy;
+			fileType = "wrapper.app-extension";
+			path = "Demo watchOS Extension.appex";
+			remoteRef = F54DA3422FC82E0400D5EDB5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F54DA3452FC82E0400D5EDB5 /* Demo tvOS.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "Demo tvOS.app";
+			remoteRef = F54DA3442FC82E0400D5EDB5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F54DA34E2FC82E0400D5EDB5 /* ID3TagEditor.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ID3TagEditor.framework;
+			remoteRef = F54DA34D2FC82E0400D5EDB5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F54DA3502FC82E0400D5EDB5 /* ID3TagEditor macOS Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "ID3TagEditor macOS Tests.xctest";
+			remoteRef = F54DA34F2FC82E0400D5EDB5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F54DA3522FC82E0400D5EDB5 /* ID3TagEditor.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ID3TagEditor.framework;
+			remoteRef = F54DA3512FC82E0400D5EDB5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F54DA3542FC82E0400D5EDB5 /* ID3TagEditor iOS Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "ID3TagEditor iOS Tests.xctest";
+			remoteRef = F54DA3532FC82E0400D5EDB5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F54DA3562FC82E0400D5EDB5 /* ID3TagEditor.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ID3TagEditor.framework;
+			remoteRef = F54DA3552FC82E0400D5EDB5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F54DA3582FC82E0400D5EDB5 /* ID3TagEditor tvOS Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "ID3TagEditor tvOS Tests.xctest";
+			remoteRef = F54DA3572FC82E0400D5EDB5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F54DA35A2FC82E0400D5EDB5 /* ID3TagEditor.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ID3TagEditor.framework;
+			remoteRef = F54DA3592FC82E0400D5EDB5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5A2EEF72FC84BB400C5EC57 /* ZIPFoundation.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ZIPFoundation.framework;
+			remoteRef = F5A2EEF62FC84BB400C5EC57 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5A2EEF92FC84BB400C5EC57 /* ZIPFoundationTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = ZIPFoundationTests.xctest;
+			remoteRef = F5A2EEF82FC84BB400C5EC57 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5A2F0862FC84BB500C5EC57 /* Demo macOS.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "Demo macOS.app";
+			remoteRef = F5A2F0852FC84BB500C5EC57 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5A2F0882FC84BB500C5EC57 /* Demo iOS.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "Demo iOS.app";
+			remoteRef = F5A2F0872FC84BB500C5EC57 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5A2F08A2FC84BB500C5EC57 /* Demo watchOS.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "Demo watchOS.app";
+			remoteRef = F5A2F0892FC84BB500C5EC57 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5A2F08C2FC84BB500C5EC57 /* Demo watchOS Extension.appex */ = {
+			isa = PBXReferenceProxy;
+			fileType = "wrapper.app-extension";
+			path = "Demo watchOS Extension.appex";
+			remoteRef = F5A2F08B2FC84BB500C5EC57 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5A2F08E2FC84BB500C5EC57 /* Demo tvOS.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "Demo tvOS.app";
+			remoteRef = F5A2F08D2FC84BB500C5EC57 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5A2F0972FC84BB500C5EC57 /* ID3TagEditor.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ID3TagEditor.framework;
+			remoteRef = F5A2F0962FC84BB500C5EC57 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5A2F0992FC84BB500C5EC57 /* ID3TagEditor macOS Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "ID3TagEditor macOS Tests.xctest";
+			remoteRef = F5A2F0982FC84BB500C5EC57 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5A2F09B2FC84BB500C5EC57 /* ID3TagEditor.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ID3TagEditor.framework;
+			remoteRef = F5A2F09A2FC84BB500C5EC57 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5A2F09D2FC84BB500C5EC57 /* ID3TagEditor iOS Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "ID3TagEditor iOS Tests.xctest";
+			remoteRef = F5A2F09C2FC84BB500C5EC57 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5A2F09F2FC84BB500C5EC57 /* ID3TagEditor.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ID3TagEditor.framework;
+			remoteRef = F5A2F09E2FC84BB500C5EC57 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5A2F0A12FC84BB500C5EC57 /* ID3TagEditor tvOS Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "ID3TagEditor tvOS Tests.xctest";
+			remoteRef = F5A2F0A02FC84BB500C5EC57 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5A2F0A32FC84BB500C5EC57 /* ID3TagEditor.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ID3TagEditor.framework;
+			remoteRef = F5A2F0A22FC84BB500C5EC57 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5E23BB22FC8244400CDCA7B /* ZIPFoundation.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ZIPFoundation.framework;
+			remoteRef = F5E23BB12FC8244400CDCA7B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5E23BB42FC8244400CDCA7B /* ZIPFoundationTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = ZIPFoundationTests.xctest;
+			remoteRef = F5E23BB32FC8244400CDCA7B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5E23F762FC8244500CDCA7B /* Demo macOS.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "Demo macOS.app";
+			remoteRef = F5E23F752FC8244500CDCA7B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5E23F782FC8244500CDCA7B /* Demo iOS.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "Demo iOS.app";
+			remoteRef = F5E23F772FC8244500CDCA7B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5E23F7A2FC8244500CDCA7B /* Demo watchOS.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "Demo watchOS.app";
+			remoteRef = F5E23F792FC8244500CDCA7B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5E23F7C2FC8244500CDCA7B /* Demo watchOS Extension.appex */ = {
+			isa = PBXReferenceProxy;
+			fileType = "wrapper.app-extension";
+			path = "Demo watchOS Extension.appex";
+			remoteRef = F5E23F7B2FC8244500CDCA7B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5E23F7E2FC8244500CDCA7B /* Demo tvOS.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "Demo tvOS.app";
+			remoteRef = F5E23F7D2FC8244500CDCA7B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5E23F872FC8244500CDCA7B /* ID3TagEditor.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ID3TagEditor.framework;
+			remoteRef = F5E23F862FC8244500CDCA7B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5E23F892FC8244500CDCA7B /* ID3TagEditor macOS Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "ID3TagEditor macOS Tests.xctest";
+			remoteRef = F5E23F882FC8244500CDCA7B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5E23F8B2FC8244500CDCA7B /* ID3TagEditor.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ID3TagEditor.framework;
+			remoteRef = F5E23F8A2FC8244500CDCA7B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5E23F8D2FC8244500CDCA7B /* ID3TagEditor iOS Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "ID3TagEditor iOS Tests.xctest";
+			remoteRef = F5E23F8C2FC8244500CDCA7B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5E23F8F2FC8244500CDCA7B /* ID3TagEditor.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ID3TagEditor.framework;
+			remoteRef = F5E23F8E2FC8244500CDCA7B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5E23F912FC8244500CDCA7B /* ID3TagEditor tvOS Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "ID3TagEditor tvOS Tests.xctest";
+			remoteRef = F5E23F902FC8244500CDCA7B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5E23F932FC8244500CDCA7B /* ID3TagEditor.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ID3TagEditor.framework;
+			remoteRef = F5E23F922FC8244500CDCA7B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5E2AC452FC8228F00CDCA7B /* ZIPFoundation.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ZIPFoundation.framework;
+			remoteRef = F5E2AC442FC8228F00CDCA7B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5E2AC472FC8228F00CDCA7B /* ZIPFoundationTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = ZIPFoundationTests.xctest;
+			remoteRef = F5E2AC462FC8228F00CDCA7B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5E2AD982FC8229000CDCA7B /* Demo macOS.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "Demo macOS.app";
+			remoteRef = F5E2AD972FC8229000CDCA7B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5E2AD9A2FC8229000CDCA7B /* Demo iOS.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "Demo iOS.app";
+			remoteRef = F5E2AD992FC8229000CDCA7B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5E2AD9C2FC8229000CDCA7B /* Demo watchOS.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "Demo watchOS.app";
+			remoteRef = F5E2AD9B2FC8229000CDCA7B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5E2AD9E2FC8229000CDCA7B /* Demo watchOS Extension.appex */ = {
+			isa = PBXReferenceProxy;
+			fileType = "wrapper.app-extension";
+			path = "Demo watchOS Extension.appex";
+			remoteRef = F5E2AD9D2FC8229000CDCA7B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5E2ADA02FC8229000CDCA7B /* Demo tvOS.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "Demo tvOS.app";
+			remoteRef = F5E2AD9F2FC8229000CDCA7B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5E2ADA92FC8229000CDCA7B /* ID3TagEditor.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ID3TagEditor.framework;
+			remoteRef = F5E2ADA82FC8229000CDCA7B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5E2ADAB2FC8229000CDCA7B /* ID3TagEditor macOS Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "ID3TagEditor macOS Tests.xctest";
+			remoteRef = F5E2ADAA2FC8229000CDCA7B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5E2ADAD2FC8229000CDCA7B /* ID3TagEditor.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ID3TagEditor.framework;
+			remoteRef = F5E2ADAC2FC8229000CDCA7B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5E2ADAF2FC8229000CDCA7B /* ID3TagEditor iOS Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "ID3TagEditor iOS Tests.xctest";
+			remoteRef = F5E2ADAE2FC8229000CDCA7B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5E2ADB12FC8229000CDCA7B /* ID3TagEditor.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ID3TagEditor.framework;
+			remoteRef = F5E2ADB02FC8229000CDCA7B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5E2ADB32FC8229000CDCA7B /* ID3TagEditor tvOS Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "ID3TagEditor tvOS Tests.xctest";
+			remoteRef = F5E2ADB22FC8229000CDCA7B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5E2ADB52FC8229000CDCA7B /* ID3TagEditor.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ID3TagEditor.framework;
+			remoteRef = F5E2ADB42FC8229000CDCA7B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		0B1D5A492AB301AD0010DDF2 /* Resources */ = {
@@ -747,9 +1912,185 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
+		0000000000000000A1C16001 /* XCLocalSwiftPackageReference "Packages/PluginOpenButton" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginOpenButton;
+		};
+		0000000000000000A1C16002 /* XCLocalSwiftPackageReference "Packages/PluginLikeButton" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginLikeButton;
+		};
+		0000000000000000A1C16003 /* XCLocalSwiftPackageReference "Packages/PluginAudioWidgetControl" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginAudioWidgetControl;
+		};
+		0000000000000000A1C16004 /* XCLocalSwiftPackageReference "Packages/PluginAudioControl" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginAudioControl;
+		};
+		0000000000000000A1C16005 /* XCLocalSwiftPackageReference "Packages/PluginAudioDemo" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginAudioDemo;
+		};
+		0000000000000000A1C16006 /* XCLocalSwiftPackageReference "Packages/PluginDevice" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginDevice;
+		};
+		0000000000000000A1C16007 /* XCLocalSwiftPackageReference "Packages/PluginBookControl" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginBookControl;
+		};
+		0000000000000000A1C16008 /* XCLocalSwiftPackageReference "Packages/PluginBookPlayMode" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginBookPlayMode;
+		};
+		0000000000000000A1C16009 /* XCLocalSwiftPackageReference "Packages/PluginBookSettings" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginBookSettings;
+		};
+		0000000000000000A1C16010 /* XCLocalSwiftPackageReference "Packages/PluginBookLike" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginBookLike;
+		};
+		0000000000000000A1C16011 /* XCLocalSwiftPackageReference "Packages/PluginBookProgress" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginBookProgress;
+		};
+		0000000000000000A1C16012 /* XCLocalSwiftPackageReference "Packages/PluginBookScene" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginBookScene;
+		};
+		0000000000000000A1C16013 /* XCLocalSwiftPackageReference "Packages/PluginThemeSettings" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginThemeSettings;
+		};
+		0000000000000000A1C16014 /* XCLocalSwiftPackageReference "Packages/PluginAudioDownload" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginAudioDownload;
+		};
+		0000000000000000A1C16015 /* XCLocalSwiftPackageReference "Packages/PluginAudioSettings" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginAudioSettings;
+		};
+		0000000000000000A1C16016 /* XCLocalSwiftPackageReference "Packages/PluginAudioScene" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginAudioScene;
+		};
+		0000000000000000A1C16017 /* XCLocalSwiftPackageReference "Packages/PluginAudioPlayMode" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginAudioPlayMode;
+		};
+		0000000000000000A1C16018 /* XCLocalSwiftPackageReference "Packages/PluginAudioLike" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginAudioLike;
+		};
+		0000000000000000A1C16019 /* XCLocalSwiftPackageReference "Packages/PluginReset" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginReset;
+		};
+		0000000000000000A1C16020 /* XCLocalSwiftPackageReference "Packages/PluginWelcome" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginWelcome;
+		};
+		0000000000000000A1C16021 /* XCLocalSwiftPackageReference "Packages/PluginMigrate" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginMigrate;
+		};
+		0000000000000000A1C16022 /* XCLocalSwiftPackageReference "Packages/PluginVideo" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginVideo;
+		};
+		0000000000000000A1C16023 /* XCLocalSwiftPackageReference "Packages/PluginAudioJob" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginAudioJob;
+		};
+		0000000000000000A1C16024 /* XCLocalSwiftPackageReference "Packages/PluginBook" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginBook;
+		};
+		0000000000000000A1C16025 /* XCLocalSwiftPackageReference "Packages/PluginAudio" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginAudio;
+		};
+		0000000000000000A1C16026 /* XCLocalSwiftPackageReference "Packages/PluginAudioProgress" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginAudioProgress;
+		};
+		0000000000000000A1C16027 /* XCLocalSwiftPackageReference "Packages/PluginAudioDBView" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginAudioDBView;
+		};
+		0000000000000000A1C16028 /* XCLocalSwiftPackageReference "Packages/PluginStore" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginStore;
+		};
+		0000000000000000A1C16029 /* XCLocalSwiftPackageReference "Packages/PluginAudioCopy" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginAudioCopy;
+		};
+		0000000000000000A1C16030 /* XCLocalSwiftPackageReference "Packages/PluginBookDBView" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginBookDBView;
+		};
+		0000000000000000A1C16031 /* XCLocalSwiftPackageReference "Packages/PluginStorage" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginStorage;
+		};
 		0C6A1A022FD1000100A10001 /* XCLocalSwiftPackageReference "Packages/DeviceData" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Packages/DeviceData;
+		};
+		A1C1500012FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginFileLog" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginFileLog;
+		};
+		A1C1500022FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginThemeAurora" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginThemeAurora;
+		};
+		A1C1500032FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginThemeCisum" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginThemeCisum;
+		};
+		A1C1500042FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginThemeDaylightSilver" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginThemeDaylightSilver;
+		};
+		A1C1500052FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginThemeForest" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginThemeForest;
+		};
+		A1C1500062FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginThemeGraphiteBlack" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginThemeGraphiteBlack;
+		};
+		A1C1500072FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginThemeMidnight" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginThemeMidnight;
+		};
+		A1C1500082FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginThemeMono" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginThemeMono;
+		};
+		A1C1500092FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginThemeNebula" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginThemeNebula;
+		};
+		A1C15000A2FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginThemeOcean" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginThemeOcean;
+		};
+		A1C15000B2FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginThemePaper" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginThemePaper;
+		};
+		A1C15000C2FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginThemeStudioBlue" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginThemeStudioBlue;
+		};
+		A1C15000D2FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginThemeSunset" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/PluginThemeSunset;
 		};
 		A4EDBFBBFC934FE4853CA0E4 /* XCLocalSwiftPackageReference "Packages/CisumUI" */ = {
 			isa = XCLocalSwiftPackageReference;
@@ -773,6 +2114,161 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		0000000000000000A1C16101 /* PluginOpenButton */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0000000000000000A1C16001 /* XCLocalSwiftPackageReference "Packages/PluginOpenButton" */;
+			productName = PluginOpenButton;
+		};
+		0000000000000000A1C16102 /* PluginLikeButton */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0000000000000000A1C16002 /* XCLocalSwiftPackageReference "Packages/PluginLikeButton" */;
+			productName = PluginLikeButton;
+		};
+		0000000000000000A1C16103 /* PluginAudioWidgetControl */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0000000000000000A1C16003 /* XCLocalSwiftPackageReference "Packages/PluginAudioWidgetControl" */;
+			productName = PluginAudioWidgetControl;
+		};
+		0000000000000000A1C16104 /* PluginAudioControl */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0000000000000000A1C16004 /* XCLocalSwiftPackageReference "Packages/PluginAudioControl" */;
+			productName = PluginAudioControl;
+		};
+		0000000000000000A1C16105 /* PluginAudioDemo */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0000000000000000A1C16005 /* XCLocalSwiftPackageReference "Packages/PluginAudioDemo" */;
+			productName = PluginAudioDemo;
+		};
+		0000000000000000A1C16106 /* PluginDevice */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0000000000000000A1C16006 /* XCLocalSwiftPackageReference "Packages/PluginDevice" */;
+			productName = PluginDevice;
+		};
+		0000000000000000A1C16107 /* PluginBookControl */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0000000000000000A1C16007 /* XCLocalSwiftPackageReference "Packages/PluginBookControl" */;
+			productName = PluginBookControl;
+		};
+		0000000000000000A1C16108 /* PluginBookPlayMode */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0000000000000000A1C16008 /* XCLocalSwiftPackageReference "Packages/PluginBookPlayMode" */;
+			productName = PluginBookPlayMode;
+		};
+		0000000000000000A1C16109 /* PluginBookSettings */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0000000000000000A1C16009 /* XCLocalSwiftPackageReference "Packages/PluginBookSettings" */;
+			productName = PluginBookSettings;
+		};
+		0000000000000000A1C16110 /* PluginBookLike */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0000000000000000A1C16010 /* XCLocalSwiftPackageReference "Packages/PluginBookLike" */;
+			productName = PluginBookLike;
+		};
+		0000000000000000A1C16111 /* PluginBookProgress */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0000000000000000A1C16011 /* XCLocalSwiftPackageReference "Packages/PluginBookProgress" */;
+			productName = PluginBookProgress;
+		};
+		0000000000000000A1C16112 /* PluginBookScene */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0000000000000000A1C16012 /* XCLocalSwiftPackageReference "Packages/PluginBookScene" */;
+			productName = PluginBookScene;
+		};
+		0000000000000000A1C16113 /* PluginThemeSettings */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0000000000000000A1C16013 /* XCLocalSwiftPackageReference "Packages/PluginThemeSettings" */;
+			productName = PluginThemeSettings;
+		};
+		0000000000000000A1C16114 /* PluginAudioDownload */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0000000000000000A1C16014 /* XCLocalSwiftPackageReference "Packages/PluginAudioDownload" */;
+			productName = PluginAudioDownload;
+		};
+		0000000000000000A1C16115 /* PluginAudioSettings */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0000000000000000A1C16015 /* XCLocalSwiftPackageReference "Packages/PluginAudioSettings" */;
+			productName = PluginAudioSettings;
+		};
+		0000000000000000A1C16116 /* PluginAudioScene */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0000000000000000A1C16016 /* XCLocalSwiftPackageReference "Packages/PluginAudioScene" */;
+			productName = PluginAudioScene;
+		};
+		0000000000000000A1C16117 /* PluginAudioPlayMode */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0000000000000000A1C16017 /* XCLocalSwiftPackageReference "Packages/PluginAudioPlayMode" */;
+			productName = PluginAudioPlayMode;
+		};
+		0000000000000000A1C16118 /* PluginAudioLike */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0000000000000000A1C16018 /* XCLocalSwiftPackageReference "Packages/PluginAudioLike" */;
+			productName = PluginAudioLike;
+		};
+		0000000000000000A1C16119 /* PluginReset */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0000000000000000A1C16019 /* XCLocalSwiftPackageReference "Packages/PluginReset" */;
+			productName = PluginReset;
+		};
+		0000000000000000A1C16120 /* PluginWelcome */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0000000000000000A1C16020 /* XCLocalSwiftPackageReference "Packages/PluginWelcome" */;
+			productName = PluginWelcome;
+		};
+		0000000000000000A1C16121 /* PluginMigrate */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0000000000000000A1C16021 /* XCLocalSwiftPackageReference "Packages/PluginMigrate" */;
+			productName = PluginMigrate;
+		};
+		0000000000000000A1C16122 /* PluginVideo */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0000000000000000A1C16022 /* XCLocalSwiftPackageReference "Packages/PluginVideo" */;
+			productName = PluginVideo;
+		};
+		0000000000000000A1C16123 /* PluginAudioJob */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0000000000000000A1C16023 /* XCLocalSwiftPackageReference "Packages/PluginAudioJob" */;
+			productName = PluginAudioJob;
+		};
+		0000000000000000A1C16124 /* PluginBook */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0000000000000000A1C16024 /* XCLocalSwiftPackageReference "Packages/PluginBook" */;
+			productName = PluginBook;
+		};
+		0000000000000000A1C16125 /* PluginAudio */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0000000000000000A1C16025 /* XCLocalSwiftPackageReference "Packages/PluginAudio" */;
+			productName = PluginAudio;
+		};
+		0000000000000000A1C16126 /* PluginAudioProgress */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0000000000000000A1C16026 /* XCLocalSwiftPackageReference "Packages/PluginAudioProgress" */;
+			productName = PluginAudioProgress;
+		};
+		0000000000000000A1C16127 /* PluginAudioDBView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0000000000000000A1C16027 /* XCLocalSwiftPackageReference "Packages/PluginAudioDBView" */;
+			productName = PluginAudioDBView;
+		};
+		0000000000000000A1C16128 /* PluginStore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0000000000000000A1C16028 /* XCLocalSwiftPackageReference "Packages/PluginStore" */;
+			productName = PluginStore;
+		};
+		0000000000000000A1C16129 /* PluginAudioCopy */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0000000000000000A1C16029 /* XCLocalSwiftPackageReference "Packages/PluginAudioCopy" */;
+			productName = PluginAudioCopy;
+		};
+		0000000000000000A1C16130 /* PluginBookDBView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0000000000000000A1C16030 /* XCLocalSwiftPackageReference "Packages/PluginBookDBView" */;
+			productName = PluginBookDBView;
+		};
+		0000000000000000A1C16131 /* PluginStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0000000000000000A1C16031 /* XCLocalSwiftPackageReference "Packages/PluginStorage" */;
+			productName = PluginStorage;
+		};
 		0B06275B2F1E591800AF071F /* MagicPlayMan */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MagicPlayMan;
@@ -843,6 +2339,71 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A4EDBFBBFC934FE4853CA0E4 /* XCLocalSwiftPackageReference "Packages/CisumUI" */;
 			productName = CisumUI;
+		};
+		A1C1510012FD900000000000 /* PluginFileLog */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A1C1500012FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginFileLog" */;
+			productName = PluginFileLog;
+		};
+		A1C1510022FD900000000000 /* PluginThemeAurora */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A1C1500022FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginThemeAurora" */;
+			productName = PluginThemeAurora;
+		};
+		A1C1510032FD900000000000 /* PluginThemeCisum */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A1C1500032FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginThemeCisum" */;
+			productName = PluginThemeCisum;
+		};
+		A1C1510042FD900000000000 /* PluginThemeDaylightSilver */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A1C1500042FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginThemeDaylightSilver" */;
+			productName = PluginThemeDaylightSilver;
+		};
+		A1C1510052FD900000000000 /* PluginThemeForest */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A1C1500052FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginThemeForest" */;
+			productName = PluginThemeForest;
+		};
+		A1C1510062FD900000000000 /* PluginThemeGraphiteBlack */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A1C1500062FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginThemeGraphiteBlack" */;
+			productName = PluginThemeGraphiteBlack;
+		};
+		A1C1510072FD900000000000 /* PluginThemeMidnight */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A1C1500072FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginThemeMidnight" */;
+			productName = PluginThemeMidnight;
+		};
+		A1C1510082FD900000000000 /* PluginThemeMono */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A1C1500082FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginThemeMono" */;
+			productName = PluginThemeMono;
+		};
+		A1C1510092FD900000000000 /* PluginThemeNebula */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A1C1500092FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginThemeNebula" */;
+			productName = PluginThemeNebula;
+		};
+		A1C15100A2FD900000000000 /* PluginThemeOcean */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A1C15000A2FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginThemeOcean" */;
+			productName = PluginThemeOcean;
+		};
+		A1C15100B2FD900000000000 /* PluginThemePaper */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A1C15000B2FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginThemePaper" */;
+			productName = PluginThemePaper;
+		};
+		A1C15100C2FD900000000000 /* PluginThemeStudioBlue */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A1C15000C2FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginThemeStudioBlue" */;
+			productName = PluginThemeStudioBlue;
+		};
+		A1C15100D2FD900000000000 /* PluginThemeSunset */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A1C15000D2FD900000000000 /* XCLocalSwiftPackageReference "Packages/PluginThemeSunset" */;
+			productName = PluginThemeSunset;
 		};
 		F50859132D2CD6510089DC96 /* MagicPlayMan */ = {
 			isa = XCSwiftPackageProductDependency;

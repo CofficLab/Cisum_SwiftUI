@@ -1,4 +1,5 @@
 import Foundation
+import PluginAudioLike
 import SwiftUI
 
 /// SwiftUI View 扩展，提供便捷的音频喜欢状态事件监听

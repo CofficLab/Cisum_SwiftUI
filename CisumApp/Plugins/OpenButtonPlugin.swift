@@ -1,11 +1,10 @@
-import CisumUI
-import OSLog
+import PluginOpenButton
 import SwiftUI
 
 actor OpenButtonPlugin: SuperPlugin, SuperLog {
     static let shared = OpenButtonPlugin()
-    let description: String = "当前资源打开按钮"
-    let iconName: String = .cisumIconFinder
+    let description: String = PluginOpenButton.OpenButtonPluginInfo.description
+    let iconName: String = PluginOpenButton.OpenButtonPluginInfo.iconName
     static var shouldRegister: Bool { true }
     static var verbose: Bool { true }
     nonisolated static let emoji = "😜"
@@ -13,47 +12,7 @@ actor OpenButtonPlugin: SuperPlugin, SuperLog {
     #if os(macOS)
         @MainActor
         func addToolBarButtons() -> [(id: String, view: AnyView)] {
-            return [(id: "open-current", view: AnyView(OpenCurrentButtonView()))]
+            return [(id: PluginOpenButton.OpenButtonPluginInfo.toolbarItemId, view: AnyView(OpenCurrentButtonView()))]
         }
     #endif
-}
-
-private struct OpenCurrentButtonView: View, SuperLog {
-    nonisolated static let emoji = "😜"
-    static let verbose = false
-    /// 注册顺序设为 20，在其他插件之后执行
-    static var order: Int { 20 }
-    @EnvironmentObject var man: PlayMan
-
-    @State private var url: URL? = nil
-
-    var body: some View {
-        if Self.verbose {
-            os_log("\(self.t)开始渲染")
-        }
-        return Group {
-            if let url = url {
-                AppIconButton(systemImage: .cisumIconShowInFinder, size: .regular) {
-                    url.openInFinder()
-                }
-                    .id(url.absoluteString)
-            }
-        }
-        .onPlayManAssetChanged({
-            self.url = $0
-        })
-        .onAppear {
-            if let url = man.asset {
-                self.url = url
-            }
-        }
-    }
-}
-
-// MARK: - Preview
-
-#Preview("App") {
-    ContentView()
-        .inRootView()
-        .withDebugBar()
 }
