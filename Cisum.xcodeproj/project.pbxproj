@@ -834,6 +834,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0B1D5A562AB301AE0010DDF2 /* Build configuration list for PBXNativeTarget "Cisum" */;
 			buildPhases = (
+				A1C170012FD900000000000 /* Generate Plugin Registry */,
 				0B1D5A472AB301AD0010DDF2 /* Sources */,
 				0B1D5A482AB301AD0010DDF2 /* Frameworks */,
 				0B1D5A492AB301AD0010DDF2 /* Resources */,
@@ -1517,6 +1518,32 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		A1C170012FD900000000000 /* Generate Plugin Registry */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Packages",
+				"$(SRCROOT)/CisumApp/Plugins",
+				"$(SRCROOT)/Scripts/generate_plugin_registry.sh",
+			);
+			name = "Generate Plugin Registry";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(SRCROOT)/CisumApp/Core/Generated/GeneratedPluginRegistry.swift",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"$SRCROOT/Scripts/generate_plugin_registry.sh\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		0B1D5A472AB301AD0010DDF2 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -1568,6 +1595,7 @@
 				ENABLE_RESOURCE_ACCESS_LOCATION = NO;
 				ENABLE_RESOURCE_ACCESS_PRINTING = NO;
 				ENABLE_RESOURCE_ACCESS_USB = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Cisum;
@@ -1625,6 +1653,7 @@
 				ENABLE_RESOURCE_ACCESS_LOCATION = NO;
 				ENABLE_RESOURCE_ACCESS_PRINTING = NO;
 				ENABLE_RESOURCE_ACCESS_USB = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Cisum;

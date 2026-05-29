@@ -4,6 +4,7 @@ import SwiftUI
 // MARK: - Book Plugin Errors
 
 public enum BookPluginError: Error, LocalizedError {
+    case configurationMissing
     case NoNextAsset
     case NoPrevAsset
     case NoDisk
@@ -12,6 +13,8 @@ public enum BookPluginError: Error, LocalizedError {
 
     public var errorDescription: String? {
         switch self {
+        case .configurationMissing:
+            return "有声书插件宿主配置未完成"
         case .NoNextAsset:
             return "没有下一个章节/文件"
         case .NoPrevAsset:
@@ -27,6 +30,8 @@ public enum BookPluginError: Error, LocalizedError {
 
     public var failureReason: String? {
         switch self {
+        case .configurationMissing:
+            return "应用尚未注入数据库和存储路径配置"
         case .NoNextAsset:
             return "当前已是最后一个条目"
         case .NoPrevAsset:
@@ -42,6 +47,8 @@ public enum BookPluginError: Error, LocalizedError {
 
     public var recoverySuggestion: String? {
         switch self {
+        case .configurationMissing:
+            return "请检查应用启动流程"
         case .NoNextAsset, .NoPrevAsset:
             return "请检查播放顺序或选择其他条目"
         case .NoDisk:

@@ -7,6 +7,7 @@ import SwiftUI
 // MARK: - 音频插件核心错误
 
 public enum AudioPluginError: Error, LocalizedError {
+    case hostNotConfigured
     case NoNextAsset
     case NoPrevAsset
     case NoDisk
@@ -16,6 +17,8 @@ public enum AudioPluginError: Error, LocalizedError {
 
     public var errorDescription: String? {
         switch self {
+        case .hostNotConfigured:
+            return "音频插件宿主配置未完成"
         case .NoNextAsset:
             return "没有下一个音频文件"
         case .NoPrevAsset:
@@ -33,6 +36,8 @@ public enum AudioPluginError: Error, LocalizedError {
 
     public var failureReason: String? {
         switch self {
+        case .hostNotConfigured:
+            return "应用尚未注入数据库和存储路径配置"
         case .NoNextAsset:
             return "当前音频是播放列表中的最后一个"
         case .NoPrevAsset:
@@ -50,6 +55,8 @@ public enum AudioPluginError: Error, LocalizedError {
 
     public var recoverySuggestion: String? {
         switch self {
+        case .hostNotConfigured:
+            return "请检查应用启动流程"
         case .NoNextAsset, .NoPrevAsset:
             return "请检查播放列表或切换到其他播放模式"
         case .NoDisk:

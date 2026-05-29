@@ -1,6 +1,11 @@
 import CisumUI
 import MagicKit
 import OSLog
+import PluginAudio
+import PluginAudioProgress
+import PluginBook
+import PluginStorage
+import PluginWelcome
 import SwiftUI
 
 struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content: View {
@@ -95,11 +100,132 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
         .environmentObject(pluginProvider)
         .environmentObject(stateProvider)
         .environmentObject(themeProvider)
+        .environment(\.resetSettingsAction, {
+            await MainActor.run {
+                Config.resetStorageLocation()
+            }
+        })
+        .environment(\.pluginThemes, themeProvider.themes)
+        .environment(\.currentPluginThemeId, themeProvider.currentThemeId)
+        .environment(\.selectPluginThemeAction, { themeId in
+            themeProvider.selectTheme(themeId)
+        })
+        .environment(\.currentSceneName, pluginProvider.currentSceneName)
+        .environment(
+            \.appIsImporting,
+            Binding(
+                get: { appProvider.isImporting },
+                set: { appProvider.isImporting = $0 }
+            )
+        )
+        .environment(\.showAudioDBViewAction, {
+            appProvider.showDBView()
+        })
+        .onAppear {
+            AudioPluginHost.configure(
+                databaseURL: { try Config.createDatabaseFile(name: $0) },
+                storageRoot: { Config.getStorageRoot() },
+                hasStorageLocation: { Config.getStorageLocation() != nil },
+                storageLocationDidChangeNotifications: [
+                    .storageLocationDidReset,
+                    .storageLocationUpdated
+                ]
+            )
+            AudioProgressHost.configure(saveWidgetData: { title, artist, isPlaying, coverArt in
+                WidgetData.save(title: title, artist: artist, isPlaying: isPlaying, coverArt: coverArt)
+            })
+            BookPluginHost.configure(
+                dbRoot: { try Config.getDBRootDir() },
+                storageRoot: { Config.getStorageRoot() },
+                storageLocationDidChangeNotifications: [
+                    .storageLocationDidReset,
+                    .storageLocationUpdated
+                ]
+            )
+            StoragePluginHost.configure(
+                getStorageLocation: {
+                    Config.getStorageLocation()?.pluginStorageLocation
+                },
+                updateStorageLocation: { location in
+                    Config.updateStorageLocation(location?.appStorageLocation)
+                },
+                getStorageRoot: {
+                    Config.getStorageRoot()
+                },
+                getStorageRootForLocation: { location in
+                    Config.getStorageRoot(for: location.appStorageLocation)
+                },
+                postStorageLocationUpdated: {
+                    NotificationCenter.postStorageLocationUpdated()
+                },
+                isDesktop: Config.isDesktop
+            )
+            WelcomePluginHost.configure(
+                hasStorageLocation: {
+                    Config.getStorageLocation() != nil
+                },
+                isICloudAvailable: {
+                    cloudProvider.isSignedIn == true
+                },
+                currentStorageSelection: {
+                    Config.getStorageLocation()?.welcomeSelection
+                },
+                updateStorageSelection: { selection in
+                    Config.updateStorageLocation(StorageLocation(selection))
+                }
+            )
+        }
     }
 
     private func reloadView() {
         launching = true
         error = nil
+    }
+}
+
+private extension StorageLocation {
+    init(_ selection: WelcomeStorageSelection) {
+        switch selection {
+        case .icloud:
+            self = .icloud
+        case .local:
+            self = .local
+        }
+    }
+
+    var pluginStorageLocation: PluginStorageLocation {
+        switch self {
+        case .icloud:
+            return .icloud
+        case .local:
+            return .local
+        case .custom:
+            return .custom
+        }
+    }
+
+    var welcomeSelection: WelcomeStorageSelection? {
+        switch self {
+        case .icloud:
+            return .icloud
+        case .local:
+            return .local
+        case .custom:
+            return nil
+        }
+    }
+}
+
+private extension PluginStorageLocation {
+    var appStorageLocation: StorageLocation {
+        switch self {
+        case .icloud:
+            return .icloud
+        case .local:
+            return .local
+        case .custom:
+            return .custom
+        }
     }
 }
 

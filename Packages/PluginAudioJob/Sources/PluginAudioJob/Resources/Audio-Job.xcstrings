@@ -2,7 +2,6 @@
   "sourceLanguage" : "en",
   "strings" : {
     "Background tasks for audio files" : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {

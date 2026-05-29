@@ -14,12 +14,16 @@ let package = Package(
         )
     ],
     dependencies: [
+        .package(path: "../CisumUI"),
+        .package(path: "../PluginAudio"),
         .package(url: "https://github.com/nookery/MagicPlayMan", from: "1.3.2"),
     ],
     targets: [
         .target(
             name: "PluginAudioWidgetControl",
             dependencies: [
+                .product(name: "CisumUI", package: "CisumUI"),
+                .product(name: "PluginAudio", package: "PluginAudio"),
                 .product(name: "MagicPlayMan", package: "MagicPlayMan"),
             ],
             path: "Sources/PluginAudioWidgetControl",

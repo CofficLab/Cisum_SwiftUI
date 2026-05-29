@@ -14,9 +14,17 @@ let package = Package(
             targets: ["PluginAudioDemo"]
         )
     ],
+    dependencies: [
+        .package(path: "../CisumUI"),
+        .package(path: "../PluginAudioScene")
+    ],
     targets: [
         .target(
             name: "PluginAudioDemo",
+            dependencies: [
+                .product(name: "CisumUI", package: "CisumUI"),
+                .product(name: "PluginAudioScene", package: "PluginAudioScene")
+            ],
             path: "Sources/PluginAudioDemo",
             resources: [
                 .process("Resources")

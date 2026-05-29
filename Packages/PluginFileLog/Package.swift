@@ -13,9 +13,15 @@ let package = Package(
             targets: ["PluginFileLog"]
         )
     ],
+    dependencies: [
+        .package(path: "../CisumUI"),
+    ],
     targets: [
         .target(
             name: "PluginFileLog",
+            dependencies: [
+                .product(name: "CisumUI", package: "CisumUI"),
+            ],
             path: "Sources/PluginFileLog",
             resources: [
                 .process("Resources")

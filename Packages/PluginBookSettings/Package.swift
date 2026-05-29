@@ -16,14 +16,16 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../CisumUI"),
-        .package(path: "../MagicKit")
+        .package(path: "../MagicKit"),
+        .package(path: "../PluginBook")
     ],
     targets: [
         .target(
             name: "PluginBookSettings",
             dependencies: [
                 "CisumUI",
-                .product(name: "MagicKit", package: "MagicKit")
+                .product(name: "MagicKit", package: "MagicKit"),
+                .product(name: "PluginBook", package: "PluginBook")
             ],
             path: "Sources/PluginBookSettings",
             resources: [

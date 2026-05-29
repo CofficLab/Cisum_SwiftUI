@@ -1,7 +1,6 @@
 import CisumUI
 import Foundation
 import MagicKit
-import ObjectiveC.runtime
 import OSLog
 import StoreKit
 import SwiftData
@@ -353,62 +352,24 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
         }
     }
     
-    /// 自动发现并注册所有插件
+    /// 自动发现并注册所有插件。
     ///
-    /// 通过扫描 Objective-C Runtime 中所有以 "Plugin" 结尾的类，
-    /// 然后通过插件类型暴露的 `static var shared` 获取实例，
-    /// 避免使用 ObjC Runtime 的 `alloc/init` 创建 Actor 实例。
+    /// 插件注册表由构建脚本扫描 `Packages/Plugin*` 和 App 侧插件 shim 生成，
+    /// 避免依赖 Objective-C runtime 枚举 Swift actor 类型。
     private func autoDiscoverAndRegisterPlugins() {
-        // 清空已有注册（防止重复注册）
         clearRegisteredPlugins()
 
-        var count: UInt32 = 0
-        guard let classList = objc_copyClassList(&count) else {
-            os_log(.error, "\(self.t)❌ Failed to get class list")
-            return
-        }
-        defer { free(UnsafeMutableRawPointer(classList)) }
-
-        let classes = UnsafeBufferPointer(start: classList, count: Int(count))
-
-        // 临时存储发现的插件，用于排序
-        var discoveredPlugins: [(plugin: any SuperPlugin, className: String, order: Int)] = []
-
-        for i in 0 ..< classes.count {
-            let cls: AnyClass = classes[i]
-            let className = NSStringFromClass(cls)
-
-            // 只检查 Cisum 命名空间下以 "Plugin" 结尾的类
-            guard className.hasPrefix("Cisum."), className.hasSuffix("Plugin") else { continue }
-
-            // 通过插件类型的 shared 属性获取实例
-            guard let pluginClass = cls as? any SuperPlugin.Type else {
-                if Self.verbose { os_log("\(self.t)⚠️ \(className) does not conform to SuperPlugin") }
-                continue
-            }
-
-            let instance = pluginClass.shared
-
-            // 获取插件类型
+        for instance in GeneratedPluginRegistry.plugins {
             let pluginType = type(of: instance)
             let pluginOrder = pluginType.order
 
-            // 检查插件是否应该注册
             if !pluginType.shouldRegister {
-                if Self.verbose { os_log("\(self.t)⏭️ Skipping plugin (shouldRegister=false): \(className)") }
+                if Self.verbose { os_log("\(self.t)⏭️ Skipping plugin (shouldRegister=false): \(String(describing: pluginType))") }
                 continue
             }
 
-            // 添加到临时数组，稍后按 order 排序
-            discoveredPlugins.append((instance, className, pluginOrder))
-        }
-
-        // 按 order 排序后注册
-        discoveredPlugins.sort { $0.order < $1.order }
-
-        for (plugin, className, order) in discoveredPlugins {
-            register(plugin)
-            if Self.verbose { os_log("\(self.t)🚀 #\(order) Registered: \(className)") }
+            register(instance)
+            if Self.verbose { os_log("\(self.t)🚀 #\(pluginOrder) Registered: \(String(describing: pluginType))") }
         }
     }
 

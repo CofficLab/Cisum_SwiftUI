@@ -4,19 +4,6 @@ import OSLog
 import SwiftData
 import SwiftUI
 
-// MARK: - Environment Key for Poster Dismiss Action
-
-private struct PosterDismissActionKey: EnvironmentKey {
-    static let defaultValue: @MainActor () -> Void = {}
-}
-
-extension EnvironmentValues {
-    var posterDismissAction: @MainActor () -> Void {
-        get { self[PosterDismissActionKey.self] }
-        set { self[PosterDismissActionKey.self] = newValue }
-    }
-}
-
 struct Posters: View, SuperLog {
     nonisolated static let emoji = "🪧"
     nonisolated static let verbose = true
@@ -49,6 +36,9 @@ struct Posters: View, SuperLog {
                     GroupBox {
                         current.view
                             .environment(\.posterDismissAction, { self.isPresented = false })
+                            .environment(\.setCurrentSceneAction, { sceneName in
+                                try p.setCurrentScene(sceneName)
+                            })
                     }
                     .padding()
                 }

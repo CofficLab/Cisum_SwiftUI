@@ -17,6 +17,7 @@ let package = Package(
         .package(path: "../CisumUI"),
         .package(path: "../MagicKit"),
         .package(path: "../PluginAudio"),
+        .package(path: "../PluginAudioScene"),
         .package(url: "https://github.com/nookery/MagicPlayMan", from: "1.3.2"),
         .package(url: "https://github.com/nookery/MagicAlert", from: "1.0.1")
     ],
@@ -27,6 +28,7 @@ let package = Package(
                 .product(name: "CisumUI", package: "CisumUI"),
                 .product(name: "MagicKit", package: "MagicKit"),
                 .product(name: "PluginAudio", package: "PluginAudio"),
+                .product(name: "PluginAudioScene", package: "PluginAudioScene"),
                 .product(name: "MagicPlayMan", package: "MagicPlayMan"),
                 .product(name: "MagicAlert", package: "MagicAlert")
             ],

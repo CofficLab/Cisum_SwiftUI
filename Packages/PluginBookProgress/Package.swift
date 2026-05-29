@@ -15,6 +15,9 @@ let package = Package(
         )
     ],
     dependencies: [
+        .package(path: "../CisumUI"),
+        .package(path: "../PluginBook"),
+        .package(path: "../PluginBookScene"),
         .package(path: "../MagicKit"),
         .package(url: "https://github.com/nookery/MagicAlert.git", from: "1.0.0"),
         .package(url: "https://github.com/nookery/MagicPlayMan", from: "1.3.2")
@@ -23,6 +26,9 @@ let package = Package(
         .target(
             name: "PluginBookProgress",
             dependencies: [
+                .product(name: "CisumUI", package: "CisumUI"),
+                .product(name: "PluginBook", package: "PluginBook"),
+                .product(name: "PluginBookScene", package: "PluginBookScene"),
                 .product(name: "MagicAlert", package: "MagicAlert"),
                 .product(name: "MagicKit", package: "MagicKit"),
                 .product(name: "MagicPlayMan", package: "MagicPlayMan")

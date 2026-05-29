@@ -15,6 +15,7 @@ let package = Package(
         )
     ],
     dependencies: [
+        .package(path: "../CisumUI"),
         .package(path: "../MagicKit"),
         .package(url: "https://github.com/nookery/MagicPlayMan", from: "1.3.0")
     ],
@@ -22,6 +23,7 @@ let package = Package(
         .target(
             name: "PluginAudioDownload",
             dependencies: [
+                .product(name: "CisumUI", package: "CisumUI"),
                 .product(name: "MagicKit", package: "MagicKit"),
                 .product(name: "MagicPlayMan", package: "MagicPlayMan")
             ],
