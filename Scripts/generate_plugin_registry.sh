@@ -2,20 +2,20 @@
 set -eu
 
 ROOT_DIR="${SRCROOT:-$(cd "$(dirname "$0")/.." && pwd)}"
-PACKAGES_DIR="$ROOT_DIR/Packages"
+PLUGINS_DIR="$ROOT_DIR/Plugins"
 OUTPUT="$ROOT_DIR/CisumApp/Core/Generated/GeneratedPluginRegistry.swift"
 TMP_OUTPUT="$OUTPUT.tmp"
 
 mkdir -p "$(dirname "$OUTPUT")"
 
 package_entries=$(
-    find "$PACKAGES_DIR" -mindepth 4 -maxdepth 4 -path "$PACKAGES_DIR/Plugin*/Sources/*/*.swift" -print |
+    find "$PLUGINS_DIR" -mindepth 4 -maxdepth 4 -path "$PLUGINS_DIR/Plugin*/Sources/*/*.swift" -print |
     sort |
     while IFS= read -r plugin_file; do
         actor_name=$(sed -n 's/^[[:space:]]*public actor \([A-Za-z0-9_]*Plugin\):.*SuperPlugin.*/\1/p' "$plugin_file" | head -1)
         [ -n "$actor_name" ] || continue
 
-        package_name=$(printf '%s\n' "$plugin_file" | sed "s#^$PACKAGES_DIR/##; s#/.*##")
+        package_name=$(printf '%s\n' "$plugin_file" | sed "s#^$PLUGINS_DIR/##; s#/.*##")
         [ -n "$package_name" ] || continue
 
         platform_condition=""
