@@ -1,0 +1,38 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "File Log" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "文件日志"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "檔案日誌"
+          }
+        }
+      }
+    },
+    "Collect OSLog entries to disk files with auto-rotation and cleanup" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "收集系统日志到磁盘文件，支持自动轮转和清理"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "收集系統日誌到磁盤檔案，支持自動輪轉和清理"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

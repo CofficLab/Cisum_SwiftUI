@@ -10,8 +10,10 @@ struct BtnScene: View {
 
     var body: some View {
         if let sceneName = p.currentSceneName {
-            AppIconButton(systemImage: sceneIcon(for: sceneName), label: sceneName, size: .regular) {
+            Button(action: {
                 self.isPresented.toggle()
+            }) {
+                Image(systemName: sceneIcon(for: sceneName))
             }
             .popover(isPresented: self.$isPresented, content: {
                 Posters(

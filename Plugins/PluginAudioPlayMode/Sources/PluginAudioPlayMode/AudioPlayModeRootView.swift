@@ -1,0 +1,114 @@
+import Foundation
+import MagicAlert
+import MagicKit
+import MagicPlayMan
+import OSLog
+import SwiftUI
+
+public typealias AudioPlayModeCurrentSceneProvider = @MainActor () -> String?
+public typealias AudioPlayModeSortAction = @MainActor (_ currentURL: URL?) async -> Void
+public typealias AudioPlayModeShuffleAction = @MainActor (_ currentURL: URL?) async throws -> Void
+
+public struct AudioPlayModeRootView<Content>: View, SuperLog where Content: View {
+    public nonisolated static var emoji: String { AudioPlayModePluginInfo.emoji }
+    private let verbose = false
+
+    @EnvironmentObject private var man: MagicPlayMan
+
+    private let content: Content
+    private let targetSceneName: String
+    private let currentSceneName: AudioPlayModeCurrentSceneProvider
+    private let sort: AudioPlayModeSortAction
+    private let shuffle: AudioPlayModeShuffleAction
+
+    public init(
+        targetSceneName: String,
+        currentSceneName: @escaping AudioPlayModeCurrentSceneProvider,
+        sort: @escaping AudioPlayModeSortAction,
+        shuffle: @escaping AudioPlayModeShuffleAction,
+        @ViewBuilder content: () -> Content
+    ) {
+        self.targetSceneName = targetSceneName
+        self.currentSceneName = currentSceneName
+        self.sort = sort
+        self.shuffle = shuffle
+        self.content = content()
+    }
+
+    public var body: some View {
+        content
+            .onAppear(perform: handleOnAppear)
+    }
+
+    private var shouldActivatePlayMode: Bool {
+        currentSceneName() == targetSceneName
+    }
+}
+
+private extension AudioPlayModeRootView {
+    func handleOnAppear() {
+        guard shouldActivatePlayMode else {
+            if verbose {
+                os_log("\(self.t)⏭️ 播放模式管理跳过：当前插件不是音频插件")
+            }
+            return
+        }
+
+        if verbose {
+            os_log("\(self.t)👀 视图已出现，开始初始化播放模式管理")
+        }
+
+        man.subscribe(
+            name: "AudioPlayModePlugin",
+            onPlayModeChanged: { mode in
+                handlePlayModeChanged(mode)
+            }
+        )
+    }
+
+    func handlePlayModeChanged(_ mode: MagicPlayMode) {
+        guard shouldActivatePlayMode else { return }
+
+        let modeRawValue = mode.rawValue
+        let modeShortName = mode.shortName
+        let currentURL = man.currentURL
+
+        if verbose {
+            os_log("\(self.t)🔄 播放模式变化 -> \(modeShortName)")
+        }
+
+        Task { [modeRawValue, modeShortName] in
+            await AudioPlayModeStore.shared.storePlayModeRawValue(modeRawValue, shortName: modeShortName)
+        }
+
+        Task { @MainActor [currentURL, modeRawValue, sort, shuffle] in
+            guard let mode = MagicPlayMode(rawValue: modeRawValue) else {
+                return
+            }
+
+            switch mode {
+            case .loop:
+                if verbose {
+                    os_log("\(Self.t)🔁 单曲循环模式")
+                }
+                alert_info(String(localized: "Repeat One", table: "Audio-PlayMode", bundle: .module))
+            case .sequence, .repeatAll:
+                if verbose {
+                    os_log("\(Self.t)📋 顺序播放，重新排序")
+                }
+                alert_info(String(localized: "Sequential Play", table: "Audio-PlayMode", bundle: .module))
+                await sort(currentURL)
+            case .shuffle:
+                if verbose {
+                    os_log("\(Self.t)🔀 随机播放，打乱顺序")
+                }
+                alert_info(String(localized: "Shuffle", table: "Audio-PlayMode", bundle: .module))
+                try await shuffle(currentURL)
+            }
+        }
+    }
+}
+
+public extension Notification.Name {
+    static let AudioPlayModeChanged = Notification.Name("AudioPlayModeChanged")
+}

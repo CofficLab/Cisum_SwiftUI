@@ -1,0 +1,36 @@
+import CisumUI
+import PluginBookScene
+import SwiftUI
+
+public actor BookLikePlugin: SuperPlugin {
+    public static let shared = BookLikePlugin()
+    public static var shouldRegister: Bool { true }
+    public static var order: Int { BookLikePluginInfo.order }
+
+    public nonisolated var title: String { BookLikePluginInfo.title }
+    public nonisolated var description: String { BookLikePluginInfo.description }
+    public nonisolated var iconName: String { BookLikePluginInfo.iconName }
+
+    @MainActor
+    public func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {
+        AnyView(BookLikePluginRootView(content: content))
+    }
+}
+
+private struct BookLikePluginRootView<Content>: View where Content: View {
+    @Environment(\.currentSceneName) private var currentSceneName
+    private let content: Content
+
+    init(@ViewBuilder content: () -> Content) {
+        self.content = content()
+    }
+
+    var body: some View {
+        BookLikeRootView(
+            targetSceneName: BookScenePlugin.sceneName,
+            currentSceneName: { currentSceneName }
+        ) {
+            content
+        }
+    }
+}

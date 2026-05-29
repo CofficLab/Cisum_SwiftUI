@@ -1,0 +1,22 @@
+{
+  "sourceLanguage": "zh-Hans",
+  "strings": {
+    "喜欢/取消喜欢 按钮": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "喜欢/取消喜欢 按钮"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Like/Unlike Button"
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

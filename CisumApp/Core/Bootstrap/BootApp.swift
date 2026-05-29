@@ -3,6 +3,7 @@ import MagicAlert
 import MagicKit
 import MagicPlayMan
 import OSLog
+import PluginStore
 import SwiftUI
 
 typealias PlayMan = MagicPlayMan

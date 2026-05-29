@@ -1,7 +1,6 @@
 import CisumUI
 import Foundation
 import MagicKit
-import ObjectiveC.runtime
 import OSLog
 import StoreKit
 import SwiftData
@@ -48,9 +47,6 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
     
     /// 已使用的插件 ID 集合（用于检测重复）
     private var usedIds: Set<String> = []
-    
-    /// 线程安全的注册队列
-    private let registrationQueue = DispatchQueue(label: "com.cofficlab.pluginprovider.registration", attributes: .concurrent)
 
     /// 初始化插件提供者
     ///
@@ -294,6 +290,13 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
     // MARK: - Plugin Registration Methods
     
     /// 注册一个插件实例
+    ///
+    /// 执行以下步骤：
+    /// 1. 检查插件 ID 是否重复
+    /// 2. 添加到注册列表
+    /// 3. 调用 `onRegister()` 生命周期钩子
+    /// 4. 调用 `onEnable()` 生命周期钩子
+    ///
     /// - Parameter plugin: 要注册的插件实例
     private func register(_ plugin: any SuperPlugin) {
         let id = plugin.id
@@ -310,11 +313,17 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
         usedIds.insert(id)
         registeredPlugins.append(plugin)
 
-        // 调用插件的生命周期钩子
+        // 调用插件的生命周期钩子：注册
         if Self.verbose {
             os_log("\(Self.t)🔔 Calling onRegister() for \(plugin.id)")
         }
         plugin.onRegister()
+
+        // 调用插件的生命周期钩子：启用
+        if Self.verbose {
+            os_log("\(Self.t)✅ Calling onEnable() for \(plugin.id)")
+        }
+        plugin.onEnable()
     }
     
     /// 获取所有已注册的插件实例，按 order 排序
@@ -343,89 +352,25 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
         }
     }
     
-    /// 自动发现并注册所有插件
-    /// 通过扫描 Objective-C runtime 中所有以 "Plugin" 结尾的类
+    /// 自动发现并注册所有插件。
+    ///
+    /// 插件注册表由构建脚本扫描 `Plugins/Plugin*` 生成，
+    /// 避免依赖 Objective-C runtime 枚举 Swift actor 类型。
     private func autoDiscoverAndRegisterPlugins() {
-        // 清空已有注册（防止重复注册）
         clearRegisteredPlugins()
-        
-        var count: UInt32 = 0
-        guard let classList = objc_copyClassList(&count) else {
-            os_log(.error, "\(self.t)❌ Failed to get class list")
-            return
-        }
-        defer { free(UnsafeMutableRawPointer(classList)) }
-        
-        let classes = UnsafeBufferPointer(start: classList, count: Int(count))
-        
-        // 临时存储发现的插件，用于排序
-        var discoveredPlugins: [(plugin: any SuperPlugin, className: String, order: Int)] = []
-        
-        for i in 0 ..< classes.count {
-            let cls: AnyClass = classes[i]
-            let className = NSStringFromClass(cls)
-            
-            // 只检查 Cisum 命名空间下以 "Plugin" 结尾的类
-            guard className.hasPrefix("Cisum."), className.hasSuffix("Plugin") else { continue }
-            
-            // 尝试通过 Objective-C Runtime 创建实例
-            guard let instance = createActorInstance(cls: cls, className: className) as? any SuperPlugin else {
-                if Self.verbose { os_log("\(self.t)⚠️ Failed to create instance for \(className)") }
-                continue
-            }
-            
-            // 获取插件类型
+
+        for instance in GeneratedPluginRegistry.plugins {
             let pluginType = type(of: instance)
             let pluginOrder = pluginType.order
-            
-            // 检查插件是否应该注册
+
             if !pluginType.shouldRegister {
-                if Self.verbose { os_log("\(self.t)⏭️ Skipping plugin (shouldRegister=false): \(className)") }
+                if Self.verbose { os_log("\(self.t)⏭️ Skipping plugin (shouldRegister=false): \(String(describing: pluginType))") }
                 continue
             }
-            
-            // 添加到临时数组，稍后按 order 排序
-            discoveredPlugins.append((instance, className, pluginOrder))
+
+            register(instance)
+            if Self.verbose { os_log("\(self.t)🚀 #\(pluginOrder) Registered: \(String(describing: pluginType))") }
         }
-        
-        // 按 order 排序后注册
-        discoveredPlugins.sort { $0.order < $1.order }
-        
-        for (plugin, className, order) in discoveredPlugins {
-            register(plugin)
-            if Self.verbose { os_log("\(self.t)🚀 #\(order) Registered: \(className)") }
-        }
-    }
-    
-    /// 创建 actor 实例的辅助函数
-    /// 由于 actor 的特殊性，我们需要使用 Objective-C Runtime 来创建实例
-    /// 注意：actor 的 init() 方法可能不能通过 Objective-C Runtime 直接调用
-    /// 这里我们尝试使用 alloc + init 的方式
-    private func createActorInstance(cls: AnyClass, className: String) -> AnyObject? {
-        // 尝试获取 alloc 方法
-        let allocSelector = NSSelectorFromString("alloc")
-        guard let allocMethod = class_getClassMethod(cls, allocSelector) else {
-            return nil
-        }
-        
-        // 调用 alloc
-        typealias AllocMethod = @convention(c) (AnyClass, Selector) -> AnyObject?
-        let allocImpl = unsafeBitCast(method_getImplementation(allocMethod), to: AllocMethod.self)
-        guard let instance = allocImpl(cls, allocSelector) else {
-            return nil
-        }
-        
-        // 尝试获取 init() 方法
-        let initSelector = NSSelectorFromString("init")
-        guard let initMethod = class_getInstanceMethod(cls, initSelector) else {
-            return instance
-        }
-        
-        // 调用 init
-        typealias InitMethod = @convention(c) (AnyObject, Selector) -> AnyObject?
-        let initImpl = unsafeBitCast(method_getImplementation(initMethod), to: InitMethod.self)
-        
-        return initImpl(instance, initSelector) ?? instance
     }
 
     /// 验证插件架构约束
