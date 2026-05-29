@@ -19,15 +19,6 @@
       }
     },
     {
-      "identity" : "magicplayman",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/nookery/MagicPlayMan",
-      "state" : {
-        "revision" : "29e62c7577e173d6103c63aaadd9b620f204b0ea",
-        "version" : "1.3.5"
-      }
-    },
-    {
       "identity" : "zipfoundation",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/weichsel/ZIPFoundation.git",
