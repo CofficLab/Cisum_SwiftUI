@@ -71,7 +71,9 @@ enum GeneratedPluginRegistry {
         #if os(macOS)
             plugins.append(CopyPlugin.shared) // PluginAudioCopy
         #endif
-        plugins.append(FileLogPlugin.shared) // PluginFileLog
+        #if os(macOS)
+            plugins.append(FileLogPlugin.shared) // PluginFileLog
+        #endif
         plugins.append(LikeButtonPlugin.shared) // PluginLikeButton
         plugins.append(OpenButtonPlugin.shared) // PluginOpenButton
         plugins.append(StoragePlugin.shared) // PluginStorage

@@ -77,8 +77,16 @@ public struct ResetConfirm: View {
         }
         .padding(.horizontal, 16)
         .padding(.bottom, 24)
-        .background(Color(nsColor: .windowBackgroundColor))
+        .background(Self.backgroundColor)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    private static var backgroundColor: Color {
+        #if os(macOS)
+            Color(nsColor: .windowBackgroundColor)
+        #else
+            Color(uiColor: .systemBackground)
+        #endif
     }
 
     private func performReset() {

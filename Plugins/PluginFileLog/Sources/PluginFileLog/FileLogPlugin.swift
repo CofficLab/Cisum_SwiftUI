@@ -1,7 +1,9 @@
 import CisumUI
-import AppKit
 import Foundation
 import OSLog
+#if os(macOS)
+    import AppKit
+#endif
 
 public actor FileLogPlugin: SuperPlugin {
     public static let shared = FileLogPlugin()
@@ -16,13 +18,15 @@ public actor FileLogPlugin: SuperPlugin {
         FileLogCoordinator.shared.configuration = AppFileLogConfiguration()
         FileLogCoordinator.shared.start()
 
-        NotificationCenter.default.addObserver(
-            forName: NSApplication.willTerminateNotification,
-            object: nil,
-            queue: nil
-        ) { _ in
-            FileLogCoordinator.shared.stop()
-        }
+        #if os(macOS)
+            NotificationCenter.default.addObserver(
+                forName: NSApplication.willTerminateNotification,
+                object: nil,
+                queue: nil
+            ) { _ in
+                FileLogCoordinator.shared.stop()
+            }
+        #endif
     }
 }
 

@@ -5,7 +5,8 @@ let package = Package(
     name: "PluginAudioWidgetControl",
     defaultLocalization: "en",
     platforms: [
-        .macOS(.v14)
+        .macOS(.v14),
+        .iOS(.v17)
     ],
     products: [
         .library(
