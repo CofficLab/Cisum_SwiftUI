@@ -1,5 +1,4 @@
 {
-  "originHash" : "d94b8eb39a183f4766095299c02a4415cced11a7bfc4f8613f936f0e1e67336d",
   "pins" : [
     {
       "identity" : "id3tageditor",
@@ -38,5 +37,5 @@
       }
     }
   ],
-  "version" : 3
+  "version" : 2
 }

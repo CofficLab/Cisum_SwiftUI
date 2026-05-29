@@ -512,12 +512,4 @@ public class MagicApp {
         public static var isRelease: Bool {
             !isDebug
         }
-
-        
 }
-
-#if DEBUG
-#Preview {
-    MagicAppDemoView()
-}
-#endif
