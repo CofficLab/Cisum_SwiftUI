@@ -98,7 +98,20 @@
       }
     },
     "Source Library" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "源媒体库"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "源媒體庫"
+          }
+        }
+      }
     },
     "Storage Settings" : {
       "extractionState" : "stale",
@@ -118,7 +131,20 @@
       }
     },
     "Target Library" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "目标媒体库"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "目標媒體庫"
+          }
+        }
+      }
     },
     "保持原位置不变" : {
       "localizations" : {

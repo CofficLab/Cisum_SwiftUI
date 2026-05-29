@@ -33,7 +33,28 @@
         }
       }
     },
-    "拖放音乐文件到这里": {},
+    "拖放音乐文件到这里": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "拖放音乐文件到这里"
+          }
+        },
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "拖放音樂文件到此處"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Drag and drop music files here"
+          }
+        }
+      }
+    },
     "支持的格式": {
       "localizations": {
         "zh-Hans": {

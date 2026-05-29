@@ -2,22 +2,64 @@
   "sourceLanguage" : "en",
   "strings" : {
     "Audio Playback Control" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "音频播放控制"
+          }
+        }
+      }
     },
     "Audio playback control, such as previous and next" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "音频播放控制，如上一首和下一首"
+          }
+        }
+      }
     },
     "Cannot play next: %@" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法播放下一首: %@"
+          }
+        }
+      }
     },
     "Current file was deleted, playing the first" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "当前文件已被删除，正在播放第一首"
+          }
+        }
+      }
     },
     "No files in library" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "媒体库中没有文件"
+          }
+        }
+      }
     },
     "Reached the last track, playing the first" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已到达最后一首，正在播放第一首"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"
