@@ -1,4 +1,5 @@
 import Foundation
+import MagicAlert
 import MagicKit
 import MagicPlayMan
 import OSLog
@@ -116,25 +117,19 @@ private extension BookPlayModeRootView {
             if verbose {
                 os_log("\(self.t)🔁 单曲循环模式 - 书籍将重复播放当前章节")
             }
-            // 单曲循环：重复播放当前章节
+            alert_info(String(localized: "Repeat One", table: "Book-PlayMode", bundle: .module))
 
         case .sequence, .repeatAll:
             if verbose {
                 os_log("\(self.t)📋 顺序播放模式 - 书籍将按章节顺序播放")
             }
-            // 顺序播放：按章节顺序播放
+            alert_info(String(localized: "Sequential Play", table: "Book-PlayMode", bundle: .module))
 
         case .shuffle:
             if verbose {
                 os_log("\(self.t)🔀 随机播放模式 - 书籍章节将随机播放")
             }
-            // 随机播放：章节随机播放
-        }
-
-        // 这里可以实现具体的书籍播放模式逻辑
-        // 比如重新组织书籍的播放队列等
-        if verbose {
-            os_log("\(self.t)⚠️ 书籍播放模式逻辑待实现")
+            alert_info(String(localized: "Shuffle", table: "Book-PlayMode", bundle: .module))
         }
     }
 }
