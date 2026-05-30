@@ -143,7 +143,6 @@ public final class LocalDirectoryMonitor: SuperLog {
             queue: .global(qos: .background)
         )
 
-        let onChange = self.onChange
         monitor?.setEventHandler { [weak self] in
             guard let self = self else { return }
             // 使用 MainActor.run 确保在主线程上处理事件
@@ -230,8 +229,12 @@ public final class LocalDirectoryMonitor: SuperLog {
             }
         }
 
+        let sortedUrls = Self.sortedFileList(urls)
+        await state.updateFileList(sortedUrls)
+        await state.updateScanTime()
+
         let isFirstFetch = await state.getAndUpdateFirstFetch()
-        await onChange(urls, isFirstFetch, nil)
+        await onChange(sortedUrls, isFirstFetch, nil)
     }
 
     private func cancel() {
@@ -293,18 +296,22 @@ public final class LocalDirectoryMonitor: SuperLog {
                 do {
                     try await Task.sleep(nanoseconds: UInt64(self.pollingInterval * 1_000_000_000))
 
-                    let currentFiles = try await self.scanDirectoryForPolling()
                     let previousFiles = await self.state.getFileList()
+                    let currentFiles = try await self.scanDirectoryForPolling()
 
                     // 只有当文件真正变化时才通知
-                    if currentFiles != previousFiles {
+                    if Self.hasFileListChanged(previous: previousFiles, current: currentFiles) {
                         if self.verbose {
                             os_log("\(self.t)🔄 (\(self.caller)) 检测到文件变化")
                             os_log("\(self.t)  • 之前文件数：\(previousFiles.count)")
                             os_log("\(self.t)  • 当前文件数：\(currentFiles.count)")
                         }
+                        await self.state.updateFileList(currentFiles)
+                        await self.state.updateScanTime()
                         // 通知变化
                         await self.onChange(currentFiles, false, nil)
+                    } else {
+                        await self.state.updateScanTime()
                     }
                 } catch is CancellationError {
                     // 任务被取消，正常退出，不记录错误
@@ -344,14 +351,17 @@ public final class LocalDirectoryMonitor: SuperLog {
             options: [.skipsHiddenFiles]
         )
 
-        // 排序以确保一致性
-        let sortedUrls = urls.sorted { $0.lastPathComponent < $1.lastPathComponent }
-
-        // 更新状态
-        await self.state.updateFileList(sortedUrls)
-        await self.state.updateScanTime()
-
         // 只返回文件列表，不调用 onChange（由调用者决定是否通知）
-        return sortedUrls
+        return Self.sortedFileList(urls)
+    }
+
+    static func hasFileListChanged(previous: [URL], current: [URL]) -> Bool {
+        previous != current
+    }
+
+    private static func sortedFileList(_ urls: [URL]) -> [URL] {
+        urls.sorted { lhs, rhs in
+            lhs.path.localizedStandardCompare(rhs.path) == .orderedAscending
+        }
     }
 }
