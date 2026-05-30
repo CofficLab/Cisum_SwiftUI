@@ -32,6 +32,9 @@ public struct AudioLikeRootView<Content>: View, SuperLog where Content: View {
         content
             .onAppear(perform: handleOnAppear)
             .onDisappear(perform: handleOnDisappear)
+            .onChange(of: currentSceneName()) { _, newSceneName in
+                handleCurrentSceneChanged(newSceneName)
+            }
     }
 
     private var shouldActivateLike: Bool {
@@ -41,6 +44,22 @@ public struct AudioLikeRootView<Content>: View, SuperLog where Content: View {
 
 private extension AudioLikeRootView {
     func handleOnAppear() {
+        updateLikeActivation(for: currentSceneName())
+    }
+
+    func handleCurrentSceneChanged(_ sceneName: String?) {
+        updateLikeActivation(for: sceneName)
+    }
+
+    private func updateLikeActivation(for sceneName: String?) {
+        if sceneName == targetSceneName {
+            activateLike()
+        } else {
+            deactivateLike()
+        }
+    }
+
+    private func activateLike() {
         guard shouldActivateLike else {
             if verbose {
                 os_log("\(self.t)⏭️ 喜欢管理跳过：当前插件不是音频插件")
@@ -63,6 +82,10 @@ private extension AudioLikeRootView {
     }
 
     func handleOnDisappear() {
+        deactivateLike()
+    }
+
+    private func deactivateLike() {
         guard let playbackSubscriptionID else { return }
 
         man.unsubscribe(playbackSubscriptionID)
