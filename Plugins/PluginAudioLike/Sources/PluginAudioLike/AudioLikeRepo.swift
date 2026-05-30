@@ -99,17 +99,26 @@ public actor AudioLikeRepo: SuperLog {
             throw AudioLikeRepoError.containerNotAvailable
         }
 
-        context.insert(model)
+        if model.modelContext == nil {
+            context.insert(model)
+        }
         try context.save()
     }
 
     public func updateLikeStatus(audioId: String, liked: Bool) async throws {
         try await AudioLikeRepo.performOnMainActor {
             if let existingModel = try await self.findLikeModel(audioId: audioId) {
+                if !liked {
+                    try await self.removeLikeStatus(audioId: audioId)
+                    return
+                }
+
                 existingModel.liked = liked
                 existingModel.updatedAt = Date()
                 try await self.save(existingModel)
             } else {
+                guard liked else { return }
+
                 let newModel = AudioLikeModel(audioId: audioId, url: nil, liked: liked)
                 try await self.save(newModel)
             }

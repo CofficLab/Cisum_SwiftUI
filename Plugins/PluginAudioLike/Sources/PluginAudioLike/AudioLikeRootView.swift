@@ -100,10 +100,27 @@ private extension AudioLikeRootView {
 
             do {
                 if let existingModel = try await AudioLikeRepo.shared.findLikeModel(audioId: audioId) {
-                    existingModel.liked = liked
-                    existingModel.updatedAt = Date()
-                    try await AudioLikeRepo.shared.save(existingModel)
+                    if !liked {
+                        try await AudioLikeRepo.shared.removeLikeStatus(audioId: audioId)
+                    } else {
+                        existingModel.liked = liked
+                        existingModel.updatedAt = Date()
+                        try await AudioLikeRepo.shared.save(existingModel)
+                    }
                 } else {
+                    guard liked else {
+                        NotificationCenter.default.post(
+                            name: .AudioLikeStatusChanged,
+                            object: nil,
+                            userInfo: [
+                                "audioId": audioId,
+                                "url": url,
+                                "liked": liked,
+                            ]
+                        )
+                        return
+                    }
+
                     let newModel = AudioLikeModel(
                         audioId: audioId,
                         url: url,
