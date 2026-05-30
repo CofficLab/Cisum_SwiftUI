@@ -160,9 +160,7 @@ extension MagicPlayMan {
         currentURL = url
         self.seek(time: 0, reason: self.className + ".setCurrentURL")
 
-        if let url = currentURL {
-            events.onCurrentURLChanged.send(url)
-        }
+        events.onCurrentURLChanged.send(url)
 
         // 发送播放资源变更通知
         if oldURL != url {

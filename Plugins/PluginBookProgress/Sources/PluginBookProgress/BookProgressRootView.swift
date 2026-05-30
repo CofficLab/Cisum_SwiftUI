@@ -24,12 +24,18 @@ struct BookProgressStateSnapshot: Equatable {
 }
 
 enum BookProgressPersistencePolicy {
+    static func currentURLChangeSnapshot(currentURL: URL?) -> BookProgressStateSnapshot? {
+        guard let currentURL else { return nil }
+
+        return BookProgressStateSnapshot(currentURL: currentURL, time: nil)
+    }
+
     static func snapshot(currentURL: URL?, currentTime: TimeInterval, trigger: BookProgressSaveTrigger) -> BookProgressStateSnapshot? {
         guard let currentURL else { return nil }
 
         switch trigger {
         case .currentURLChanged:
-            return BookProgressStateSnapshot(currentURL: currentURL, time: nil)
+            return currentURLChangeSnapshot(currentURL: currentURL)
         case .playbackPositionChanged:
             return BookProgressStateSnapshot(currentURL: currentURL, time: currentTime)
         }
@@ -178,9 +184,20 @@ private extension BookProgressRootView {
     ///
     /// 当播放的URL改变时，保存书籍的播放进度。
     ///
-    /// - Parameter url: 新的播放URL
-    func handleCurrentURLChanged(_ url: URL) {
+    /// - Parameter url: 新的播放URL，nil 表示播放器已清空当前资源
+    func handleCurrentURLChanged(_ url: URL?) {
         guard shouldActivateProgress else { return }
+
+        guard let snapshot = BookProgressPersistencePolicy.currentURLChangeSnapshot(currentURL: url) else {
+            if self.verbose {
+                os_log("\(self.t)📖 URL 已清空")
+            }
+
+            storeCurrentBookURL(nil)
+            return
+        }
+
+        let url = snapshot.currentURL
 
         if self.verbose {
             os_log("\(self.t)📖 URL变化 -> \(url.shortPath())")
@@ -191,7 +208,7 @@ private extension BookProgressRootView {
             storeCurrentBookURL(url)
 
             // URL 变化只保存当前章节，避免恢复播放时把已有时间覆盖成 0。
-            await saveBookState(currentURL: url, time: nil)
+            await saveBookState(currentURL: snapshot.currentURL, time: snapshot.time)
 
             // 如果文件未下载，自动下载
             if url.isNotDownloaded {

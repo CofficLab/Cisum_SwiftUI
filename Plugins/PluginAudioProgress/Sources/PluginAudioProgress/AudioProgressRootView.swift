@@ -15,6 +15,10 @@ enum AudioProgressPersistencePolicy {
     static func shouldPersistWhenSceneChanges(from oldSceneName: String?, to newSceneName: String?, audioSceneName: String) -> Bool {
         oldSceneName == audioSceneName && newSceneName != audioSceneName
     }
+
+    static func currentURLToStore(_ url: URL?) -> URL? {
+        url
+    }
 }
 
 public struct AudioProgressRootView<Content>: View, SuperLog where Content: View {
@@ -241,12 +245,8 @@ extension AudioProgressRootView {
         // Sync to Widget
         syncToWidget(url: url, isPlaying: man.state == .playing)
 
-        guard let url = url else {
-            return
-        }
-
         Task {
-            AudioStateRepo.storeCurrent(url)
+            AudioStateRepo.storeCurrent(AudioProgressPersistencePolicy.currentURLToStore(url))
         }
     }
     

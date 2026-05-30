@@ -35,7 +35,7 @@ extension MagicPlayMan {
         public let onNextRequested = PassthroughSubject<URL, Never>()
         public let onLikeStatusChanged = PassthroughSubject<(asset: URL, isLiked: Bool), Never>()
         public let onPlayModeChanged = PassthroughSubject<MagicPlayMode, Never>()
-        public let onCurrentURLChanged = PassthroughSubject<URL, Never>()
+        public let onCurrentURLChanged = PassthroughSubject<URL?, Never>()
 
         func addSubscriber(
             name: String,
@@ -75,7 +75,7 @@ extension MagicPlayMan {
         onNextRequested: ((URL) -> Void)? = nil,
         onLikeStatusChanged: ((URL, Bool) -> Void)? = nil,
         onPlayModeChanged: ((MagicPlayMode) -> Void)? = nil,
-        onCurrentURLChanged: ((URL) -> Void)? = nil
+        onCurrentURLChanged: ((URL?) -> Void)? = nil
     ) -> UUID {
         let hasNavigationHandler = onPreviousRequested != nil || onNextRequested != nil
         let subscriberId = events.addSubscriber(

@@ -29,3 +29,7 @@ import Testing
         audioSceneName: "audio"
     ))
 }
+
+@Test func clearingCurrentAudioURLPersistsNilCurrentAudio() {
+    #expect(AudioProgressPersistencePolicy.currentURLToStore(nil) == nil)
+}

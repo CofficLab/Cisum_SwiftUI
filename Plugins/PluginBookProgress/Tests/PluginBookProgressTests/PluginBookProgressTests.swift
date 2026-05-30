@@ -10,13 +10,15 @@ import Testing
 @Test func currentURLChangesDoNotOverwriteSavedPlaybackTime() {
     let url = URL(fileURLWithPath: "/tmp/book/chapter-01.mp3")
 
-    let snapshot = BookProgressPersistencePolicy.snapshot(
-        currentURL: url,
-        currentTime: 42,
-        trigger: .currentURLChanged
-    )
+    let snapshot = BookProgressPersistencePolicy.currentURLChangeSnapshot(currentURL: url)
 
     #expect(snapshot == BookProgressStateSnapshot(currentURL: url, time: nil))
+}
+
+@Test func clearingCurrentURLClearsGlobalBookWithoutSavingChapterState() {
+    let snapshot = BookProgressPersistencePolicy.currentURLChangeSnapshot(currentURL: nil)
+
+    #expect(snapshot == nil)
 }
 
 @Test func playbackPositionChangesPersistCurrentTime() {
