@@ -194,12 +194,12 @@
         }
       }
     },
-    "取消迁移能会导致数据不完整，建议等待迁移完成。" : {
+    "取消迁移可能会导致数据不完整，建议等待迁移完成。" : {
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "取消迁移能会导致数据不完整，建议等待迁移完成。"
+            "value" : "取消迁移可能会导致数据不完整，建议等待迁移完成。"
           }
         },
         "zh-HK" : {
@@ -306,18 +306,18 @@
         }
       }
     },
-    "确要取消迁移吗？" : {
+    "确定要取消迁移吗？" : {
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "确要取消迁移吗？"
+            "value" : "确定要取消迁移吗？"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "確要取消遷移嗎？"
+            "value" : "確定要取消遷移嗎？"
           }
         }
       }

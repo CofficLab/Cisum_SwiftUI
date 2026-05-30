@@ -286,7 +286,7 @@ struct MigrationProgressView: View {
                         Text("取消迁移", tableName: "Storage", bundle: .module)
                     }
                     .buttonStyle(.borderless)
-                    .alert(Text("确要取消迁移吗？", tableName: "Storage", bundle: .module), isPresented: $showCancelConfirmation) {
+                    .alert(Text("确定要取消迁移吗？", tableName: "Storage", bundle: .module), isPresented: $showCancelConfirmation) {
                         Button(role: .cancel) { } label: {
                             Text("继续迁移", tableName: "Storage", bundle: .module)
                         }
@@ -297,7 +297,7 @@ struct MigrationProgressView: View {
                             Text("确定取消", tableName: "Storage", bundle: .module)
                         }
                     } message: {
-                        Text("取消迁移能会导致数据不完整，建议等待迁移完成。", tableName: "Storage", bundle: .module)
+                        Text("取消迁移可能会导致数据不完整，建议等待迁移完成。", tableName: "Storage", bundle: .module)
                     }
                 }
             } else {
