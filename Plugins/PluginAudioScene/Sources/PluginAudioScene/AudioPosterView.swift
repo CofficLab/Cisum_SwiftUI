@@ -90,8 +90,10 @@ public struct AudioPosterView: View {
                 HStack(spacing: 4) {
                     Image(systemName: "arrow.up.circle")
                     Text("Enter Music Repository", tableName: "Audio-Scene", bundle: .module)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
                 }
-                .frame(width: 130, height: 40)
+                .frame(minWidth: 210, maxWidth: 280, minHeight: 44)
                 .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 10))
             }
         }

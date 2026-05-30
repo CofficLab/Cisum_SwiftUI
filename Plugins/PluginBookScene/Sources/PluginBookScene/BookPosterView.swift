@@ -52,14 +52,15 @@ public struct BookPosterView: View {
                 HStack(spacing: 8) {
                     Image(systemName: .cisumIconArrowUpCircle)
                     Text("Enter Audiobook Library", tableName: "Book-Scene", bundle: .module)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
                 }
-                .frame(maxWidth: .infinity)
+                .frame(minWidth: 210, maxWidth: 280)
                 .padding(.vertical, 10)
                 .background(.blue, in: RoundedRectangle(cornerRadius: 10))
                 .foregroundStyle(.white)
             }
-            .frame(width: 130)
-            .frame(height: 40)
+            .frame(minHeight: 44)
         }
         .padding()
     }
