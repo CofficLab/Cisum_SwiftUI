@@ -68,8 +68,7 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread {
                 }
             }
 
-            try FileManager.default.removeItem(at: sourceRoot)
-            os_log(.info, "\(self.t)已删除源目录")
+            os_log(.info, "\(self.t)保留源目录")
             os_log(.info, "\(self.t)迁移完成，共处理 \(files.count) 个文件")
         } catch {
             os_log(.error, "\(self.t)迁移错误: \(error.localizedDescription)")
