@@ -6,7 +6,7 @@ import OSLog
 public final class FileSystemMonitorJob: AudioJob, @unchecked Sendable {
     public typealias DiskProvider = @Sendable () async -> URL?
     public typealias SyncItems = @Sendable (_ items: [URL], _ isFirst: Bool) async -> Void
-    public typealias DeleteItems = @Sendable (_ urls: [URL]) async -> Void
+    public typealias DeleteItems = @Sendable (_ urls: [URL]) async throws -> Void
     public typealias DeletionNotifier = @Sendable () async -> Void
 
     public static let verbose = false
@@ -75,8 +75,13 @@ public final class FileSystemMonitorJob: AudioJob, @unchecked Sendable {
                             os_log("🗑️ Audio files deleted: \(urls.count)")
                         }
 
-                        await self.deleteItems(urls)
-                        await self.notifyDeletion()
+                        do {
+                            try await self.deleteItems(urls)
+                            await self.notifyDeletion()
+                        } catch {
+                            os_log(.error, "❌ Audio deletion sync failed: \(error.localizedDescription)")
+                            return
+                        }
 
                         if Self.verbose {
                             os_log("✅ Audio deletion sync completed")

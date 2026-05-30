@@ -80,10 +80,10 @@ public actor AudioJobPlugin: SuperPlugin {
             },
             deleteItems: { urls in
                 guard let repo = await AudioPlugin.getAudioRepo() else {
-                    return
+                    throw AudioPluginError.hostNotConfigured
                 }
 
-                try? await repo.deleteAudios(urls, verbose: FileSystemMonitorJob.verbose)
+                try await repo.deleteAudios(urls, verbose: FileSystemMonitorJob.verbose)
             },
             notifyDeletion: {
                 NotificationCenter.postFileSystemDeleted()
