@@ -30,7 +30,9 @@ extension String {
             let tag = "h\(i)"
             let markdownHeader = String(repeating: "#", count: i) + " "
             let pattern = "<\(tag)(?:\\s+[^>]*?)?>(.*?)</\(tag)>"
-            let regex = try! NSRegularExpression(pattern: pattern, options: [])
+            guard let regex = try? NSRegularExpression(pattern: pattern, options: []) else {
+                continue
+            }
             let matches = regex.matches(in: markdown, options: [], range: NSRange(location: 0, length: markdown.utf16.count))
             
             for match in matches.reversed() {
@@ -57,15 +59,17 @@ extension String {
         
         // 替换链接
         let linkPattern = "<a href=\"(.*?)\">(.*?)</a>"
-        let linkRegex = try! NSRegularExpression(pattern: linkPattern, options: [])
-        let linkRange = NSRange(location: 0, length: markdown.utf16.count)
-        markdown = linkRegex.stringByReplacingMatches(in: markdown, options: [], range: linkRange, withTemplate: "[$2]($1)")
+        if let linkRegex = try? NSRegularExpression(pattern: linkPattern, options: []) {
+            let linkRange = NSRange(location: 0, length: markdown.utf16.count)
+            markdown = linkRegex.stringByReplacingMatches(in: markdown, options: [], range: linkRange, withTemplate: "[$2]($1)")
+        }
         
         // 替换 img 标签
         let imgPattern = "<img[^>]*?src=\"(.*?)\"(?:\\s+alt=\"(.*?)\")?[^>]*?/?>"
-        let imgRegex = try! NSRegularExpression(pattern: imgPattern, options: [])
-        let imgRange = NSRange(location: 0, length: markdown.utf16.count)
-        markdown = imgRegex.stringByReplacingMatches(in: markdown, options: [], range: imgRange, withTemplate: "![$2]($1)\n\n")
+        if let imgRegex = try? NSRegularExpression(pattern: imgPattern, options: []) {
+            let imgRange = NSRange(location: 0, length: markdown.utf16.count)
+            markdown = imgRegex.stringByReplacingMatches(in: markdown, options: [], range: imgRange, withTemplate: "![$2]($1)\n\n")
+        }
         
         // 替换其他标签
         markdown = markdown.replacingOccurrences(of: "<strong[^>]*?>", with: "**", options: .regularExpression)

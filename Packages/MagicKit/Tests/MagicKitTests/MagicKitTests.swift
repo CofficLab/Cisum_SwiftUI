@@ -19,6 +19,18 @@ final class MagicKitTests: XCTestCase {
         XCTAssertTrue(url.isFileURL)
     }
 
+    func testToMarkdownConvertsCommonHtmlElements() {
+        let html = """
+        <h1><strong>Title</strong></h1><p>Read <a href="https://example.com">more</a></p><img src="cover.png" alt="Cover">
+        """
+
+        let markdown = html.toMarkdown()
+
+        XCTAssertTrue(markdown.contains("# Title"))
+        XCTAssertTrue(markdown.contains("[more](https://example.com)"))
+        XCTAssertTrue(markdown.contains("![Cover](cover.png)"))
+    }
+
     func testImageCropping() {
         // 暂时跳过此测试，因为缺少相关的图像处理功能
         // let originalImage = UIImage(named: "testImage")!
