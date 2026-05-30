@@ -56,10 +56,6 @@ public final class FileSystemMonitorJob: AudioJob, @unchecked Sendable {
                     guard let self else { return }
 
                     Task {
-                        guard await self.state.shouldSync() else {
-                            return
-                        }
-
                         if Self.verbose {
                             os_log("📂 Audio file system changed: \(items.count) item(s), first: \(isFirst)")
                         }
@@ -115,7 +111,6 @@ public final class FileSystemMonitorJob: AudioJob, @unchecked Sendable {
 
     private actor State {
         var isRunning = false
-        var lastSyncTime: Date?
 
         func setRunning(_ running: Bool) {
             isRunning = running
@@ -123,23 +118,6 @@ public final class FileSystemMonitorJob: AudioJob, @unchecked Sendable {
 
         func getRunning() -> Bool {
             isRunning
-        }
-
-        func shouldSync() -> Bool {
-            guard let lastSyncTime else {
-                self.lastSyncTime = Date()
-                return true
-            }
-
-            let now = Date()
-            let elapsed = now.timeIntervalSince(lastSyncTime)
-
-            guard elapsed >= 2.0 else {
-                return false
-            }
-
-            self.lastSyncTime = now
-            return true
         }
     }
 }
