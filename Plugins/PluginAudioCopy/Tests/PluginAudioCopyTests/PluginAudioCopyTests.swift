@@ -52,6 +52,13 @@ import Testing
     ])
 }
 
+@Test func copyStateMessageDistinguishesPendingAndFailedTasks() {
+    #expect(CopyStatePresentation.message(pendingCount: 2, failedCount: 0) == "正在复制 2 个文件")
+    #expect(CopyStatePresentation.message(pendingCount: 0, failedCount: 1) == "1 个复制任务失败")
+    #expect(CopyStatePresentation.message(pendingCount: 2, failedCount: 1) == "正在复制 2 个文件，1 个失败")
+    #expect(CopyStatePresentation.message(pendingCount: 0, failedCount: 0).isEmpty)
+}
+
 @Test func copyLimitCountsCurrentLibraryAndIncomingDrop() {
     #expect(AudioCopyLimitPolicy.allowedTaskCount(
         currentAudioCount: 99,

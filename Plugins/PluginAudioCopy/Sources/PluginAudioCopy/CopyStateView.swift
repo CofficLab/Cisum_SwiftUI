@@ -6,9 +6,41 @@ import OSLog
 import SwiftData
 import SwiftUI
 
+enum CopyStatePresentation {
+    static func message(pendingCount: Int, failedCount: Int) -> String {
+        if pendingCount > 0, failedCount > 0 {
+            return String(
+                localized: "正在复制 \(pendingCount) 个文件，\(failedCount) 个失败",
+                table: "Audio-Copy-macOS",
+                bundle: .module
+            )
+        }
+
+        if pendingCount > 0 {
+            return String(
+                localized: "正在复制 \(pendingCount) 个文件",
+                table: "Audio-Copy-macOS",
+                bundle: .module
+            )
+        }
+
+        if failedCount > 0 {
+            return String(
+                localized: "\(failedCount) 个复制任务失败",
+                table: "Audio-Copy-macOS",
+                bundle: .module
+            )
+        }
+
+        return ""
+    }
+}
+
 struct CopyStateView: View, SuperLog, SuperThread {
     @State private var showCopying = false
     @State private var taskCount: Int = 0
+    @State private var pendingCount: Int = 0
+    @State private var failedCount: Int = 0
 
     nonisolated static let emoji = "🖥️"
     nonisolated static var verbose: Bool { false }
@@ -23,7 +55,7 @@ struct CopyStateView: View, SuperLog, SuperThread {
             if shouldShow {
                 HStack {
                     Image(systemName: "info.circle")
-                    Text("正在复制 \(taskCount) 个文件", tableName: "Audio-Copy-macOS", bundle: .module)
+                    Text(CopyStatePresentation.message(pendingCount: pendingCount, failedCount: failedCount))
                     Image.cisumList.cisumButton {
                         self.showCopying.toggle()
                     }
@@ -68,13 +100,7 @@ extension CopyStateView {
 extension CopyStateView {
     func handleAppear() {
         Task { @MainActor in
-            guard let db = AudioCopyService.getDB() else {
-                taskCount = 0
-                return
-            }
-
-            let tasks = await db.allCopyTaskDTOs()
-            taskCount = tasks.count
+            let tasks = await refreshTaskCounts()
 
             guard tasks.contains(where: { $0.error.isEmpty }),
                   let worker = AudioCopyService.getWorker() else {
@@ -86,13 +112,38 @@ extension CopyStateView {
     }
 
     func handleCopyTaskCountChanged(_ count: Int) {
-        taskCount = count
+        Task { @MainActor in
+            let tasks = await refreshTaskCounts()
+            if tasks.isEmpty, count > 0 {
+                taskCount = count
+                pendingCount = count
+                failedCount = 0
+            }
+        }
     }
 
     func handleCopyTaskFinished(_ lastCount: Int) {
         // 任务完成，清零任务数量
         taskCount = 0
+        pendingCount = 0
+        failedCount = 0
         alert_info(String(localized: "Copy completed", table: "Audio-Copy-macOS", bundle: .module))
+    }
+
+    @discardableResult
+    private func refreshTaskCounts() async -> [CopyTaskDTO] {
+        guard let db = AudioCopyService.getDB() else {
+            taskCount = 0
+            pendingCount = 0
+            failedCount = 0
+            return []
+        }
+
+        let tasks = await db.allCopyTaskDTOs()
+        taskCount = tasks.count
+        pendingCount = tasks.filter { $0.error.isEmpty }.count
+        failedCount = tasks.filter { !$0.error.isEmpty }.count
+        return tasks
     }
 }
 #endif
