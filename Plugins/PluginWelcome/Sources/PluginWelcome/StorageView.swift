@@ -17,7 +17,10 @@ public struct StorageView: View {
         self.isICloudAvailable = isICloudAvailable
         self.currentStorageSelection = currentStorageSelection
         self.updateStorageSelection = updateStorageSelection
-        _tempStorageSelection = State(initialValue: currentStorageSelection ?? .icloud)
+        _tempStorageSelection = State(initialValue: Self.defaultSelection(
+            currentStorageSelection: currentStorageSelection,
+            isICloudAvailable: isICloudAvailable
+        ))
     }
 
     public var body: some View {
@@ -87,12 +90,36 @@ public struct StorageView: View {
     }
 
     private func onAppear() {
-        if let currentStorageSelection {
-            tempStorageSelection = currentStorageSelection
-        }
+        tempStorageSelection = Self.defaultSelection(
+            currentStorageSelection: currentStorageSelection,
+            isICloudAvailable: isICloudAvailable
+        )
     }
 
     private func onDisappear() {
-        updateStorageSelection(tempStorageSelection)
+        updateStorageSelection(validatedSelection(tempStorageSelection))
+    }
+
+    private func validatedSelection(_ selection: WelcomeStorageSelection) -> WelcomeStorageSelection {
+        if selection == .icloud && !isICloudAvailable {
+            return .local
+        }
+
+        return selection
+    }
+
+    private static func defaultSelection(
+        currentStorageSelection: WelcomeStorageSelection?,
+        isICloudAvailable: Bool
+    ) -> WelcomeStorageSelection {
+        if let currentStorageSelection {
+            if currentStorageSelection == .icloud && !isICloudAvailable {
+                return .local
+            }
+
+            return currentStorageSelection
+        }
+
+        return isICloudAvailable ? .icloud : .local
     }
 }

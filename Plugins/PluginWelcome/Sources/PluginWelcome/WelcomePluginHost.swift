@@ -4,7 +4,7 @@ public enum WelcomePluginHost {
     public typealias CurrentStorageSelection = @MainActor @Sendable () -> WelcomeStorageSelection?
     public typealias UpdateStorageSelection = @MainActor @Sendable (WelcomeStorageSelection) -> Void
 
-    private nonisolated(unsafe) static var hasStorageLocationHandler: HasStorageLocation = { true }
+    private nonisolated(unsafe) static var hasStorageLocationHandler: HasStorageLocation = { false }
     private nonisolated(unsafe) static var isICloudAvailableHandler: IsICloudAvailable = { false }
     private nonisolated(unsafe) static var currentStorageSelectionHandler: CurrentStorageSelection = { nil }
     private nonisolated(unsafe) static var updateStorageSelectionHandler: UpdateStorageSelection = { _ in }
