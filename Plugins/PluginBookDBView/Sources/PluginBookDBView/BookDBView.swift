@@ -11,6 +11,7 @@ public struct BookDBView: View, SuperLog, SuperThread {
     public nonisolated static let verbose = false
     
     @Environment(\.bookDBViewDependencies) private var dependencies
+    @EnvironmentObject private var repo: BookRepo
     @State private var isImporting = false
     @State private var isDropping = false
     @State var treeView = false
@@ -68,7 +69,10 @@ extension BookDBView {
 
         Task {
             do {
-                try Self.copyImportedItems(files, to: bookDisk)
+                let copiedItems = try await Task.detached(priority: .userInitiated) {
+                    try Self.copyImportedItems(files, to: bookDisk)
+                }.value
+                await repo.syncImportedItems(copiedItems)
             } catch {
                 os_log(.error, "\(self.t)❌ 复制书籍文件失败: \(error.localizedDescription)")
             }
@@ -79,30 +83,38 @@ extension BookDBView {
 // MARK: - Import Helpers
 
 extension BookDBView {
-    private static func copyImportedItems(_ files: [URL], to bookDisk: URL) throws {
+    private nonisolated static func copyImportedItems(_ files: [URL], to bookDisk: URL) throws -> [URL] {
         try FileManager.default.createDirectory(at: bookDisk, withIntermediateDirectories: true)
 
         let folders = files.filter(\.isFolder)
         let audioFiles = files.filter { url in
             !url.isFolder && BookPluginInfo.supportedExtensions.contains(url.pathExtension.lowercased())
         }
+        var copiedItems: [URL] = []
 
         for folder in folders {
-            try copySecurityScopedItem(folder, to: uniqueDestination(for: folder, in: bookDisk))
+            let destination = uniqueDestination(for: folder, in: bookDisk)
+            try copySecurityScopedItem(folder, to: destination)
+            copiedItems.append(destination)
         }
 
-        guard !audioFiles.isEmpty else { return }
+        guard !audioFiles.isEmpty else { return copiedItems }
 
         let collectionName = audioFiles.count == 1 ? audioFiles[0].title : collectionTitle(for: audioFiles)
         let collectionURL = uniqueDestination(named: collectionName, in: bookDisk, isDirectory: true)
         try FileManager.default.createDirectory(at: collectionURL, withIntermediateDirectories: true)
+        copiedItems.append(collectionURL)
 
         for file in audioFiles {
-            try copySecurityScopedItem(file, to: uniqueDestination(for: file, in: collectionURL))
+            let destination = uniqueDestination(for: file, in: collectionURL)
+            try copySecurityScopedItem(file, to: destination)
+            copiedItems.append(destination)
         }
+
+        return copiedItems
     }
 
-    private static func copySecurityScopedItem(_ source: URL, to destination: URL) throws {
+    private nonisolated static func copySecurityScopedItem(_ source: URL, to destination: URL) throws {
         let hasAccess = source.startAccessingSecurityScopedResource()
         defer {
             if hasAccess {
@@ -113,7 +125,7 @@ extension BookDBView {
         try FileManager.default.copyItem(at: source, to: destination)
     }
 
-    private static func collectionTitle(for files: [URL]) -> String {
+    private nonisolated static func collectionTitle(for files: [URL]) -> String {
         let parents = Set(files.map { $0.deletingLastPathComponent() })
         guard parents.count == 1, let parent = parents.first, !parent.lastPathComponent.isEmpty else {
             return "Imported Audiobook"
@@ -121,7 +133,7 @@ extension BookDBView {
         return parent.lastPathComponent
     }
 
-    private static func uniqueDestination(for source: URL, in directory: URL) -> URL {
+    private nonisolated static func uniqueDestination(for source: URL, in directory: URL) -> URL {
         uniqueDestination(
             named: source.deletingPathExtension().lastPathComponent,
             pathExtension: source.pathExtension,
@@ -130,26 +142,46 @@ extension BookDBView {
         )
     }
 
-    private static func uniqueDestination(
+    private nonisolated static func uniqueDestination(
         named name: String,
         pathExtension: String = "",
         in directory: URL,
         isDirectory: Bool
     ) -> URL {
         let baseName = name.isEmpty ? "Imported Audiobook" : name
-        var candidate = directory
-            .appendingPathComponent(baseName, isDirectory: isDirectory)
-            .appendingPathExtension(pathExtension)
+        var candidate = destination(
+            named: baseName,
+            pathExtension: pathExtension,
+            in: directory,
+            isDirectory: isDirectory
+        )
         var suffix = 2
 
         while FileManager.default.fileExists(atPath: candidate.path) {
-            candidate = directory
-                .appendingPathComponent("\(baseName) \(suffix)", isDirectory: isDirectory)
-                .appendingPathExtension(pathExtension)
+            candidate = destination(
+                named: "\(baseName) \(suffix)",
+                pathExtension: pathExtension,
+                in: directory,
+                isDirectory: isDirectory
+            )
             suffix += 1
         }
 
         return candidate
+    }
+
+    private nonisolated static func destination(
+        named name: String,
+        pathExtension: String,
+        in directory: URL,
+        isDirectory: Bool
+    ) -> URL {
+        let destination = directory.appendingPathComponent(name, isDirectory: isDirectory)
+        guard !pathExtension.isEmpty else {
+            return destination
+        }
+
+        return destination.appendingPathExtension(pathExtension)
     }
 }
 
