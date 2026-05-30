@@ -13,7 +13,8 @@ public struct BookDBView: View, SuperLog, SuperThread {
     
     @Environment(\.bookDBViewDependencies) private var dependencies
     @EnvironmentObject private var repo: BookRepo
-    @State private var isImporting = false
+    @State private var isFileImporterPresented = false
+    @State private var isImportingFiles = false
     @State private var isDropping = false
     @State var treeView = false
     
@@ -37,10 +38,10 @@ public struct BookDBView: View, SuperLog, SuperThread {
             }
         }
         .environment(\.bookDBImportAction, {
-            isImporting = true
+            isFileImporterPresented = true
         })
         .fileImporter(
-            isPresented: $isImporting,
+            isPresented: $isFileImporterPresented,
             allowedContentTypes: [.folder, .audio],
             allowsMultipleSelection: true,
             onCompletion: handleFileImport
@@ -74,7 +75,17 @@ extension BookDBView {
             return
         }
 
+        guard Self.shouldStartImport(isImporting: isImportingFiles) else {
+            alert_warning(String(localized: "Import is already in progress", table: "Book-DBView", bundle: .module))
+            return
+        }
+
+        isImportingFiles = true
         Task {
+            defer {
+                isImportingFiles = false
+            }
+
             var copiedItems: [URL] = []
             do {
                 copiedItems = try await Task.detached(priority: .userInitiated) {
@@ -194,6 +205,10 @@ extension BookDBView {
 
     nonisolated static func shouldImportDroppedURLs(_ urls: [URL], after errors: [Error]) -> Bool {
         !urls.isEmpty || errors.isEmpty
+    }
+
+    nonisolated static func shouldStartImport(isImporting: Bool) -> Bool {
+        !isImporting
     }
 
     private nonisolated static func canImportFolder(_ folder: URL) throws -> Bool {

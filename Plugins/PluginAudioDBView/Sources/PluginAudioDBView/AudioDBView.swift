@@ -26,6 +26,9 @@ public struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
     /// 是否正在拖拽音频文件
     @State private var isDropping: Bool = false
 
+    /// 是否正在复制导入文件
+    @State private var isImportingFiles: Bool = false
+
     public init(isDemoMode: Bool) {
         self.isDemoMode = isDemoMode
     }
@@ -221,6 +224,10 @@ extension AudioDBView {
         !urls.isEmpty || errors.isEmpty
     }
 
+    nonisolated static func shouldStartImport(isImporting: Bool) -> Bool {
+        !isImporting
+    }
+
     nonisolated private static func uniqueDestination(for source: URL, in directory: URL) -> URL {
         let baseName = source.deletingPathExtension().lastPathComponent
         let fileExtension = source.pathExtension
@@ -278,6 +285,16 @@ extension AudioDBView {
     private func importFiles(_ urls: [URL]) async {
         if Self.verbose {
             os_log("\(self.t)📥 处理文件导入，文件数量: \(urls.count)")
+        }
+
+        guard Self.shouldStartImport(isImporting: isImportingFiles) else {
+            alert_warning(String(localized: "Import is already in progress", table: "Audio-DBView", bundle: .module))
+            return
+        }
+
+        isImportingFiles = true
+        defer {
+            isImportingFiles = false
         }
 
         let importableURLs = Self.supportedImportURLs(

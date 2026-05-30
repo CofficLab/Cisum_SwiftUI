@@ -72,6 +72,11 @@ import UniformTypeIdentifiers
     #expect(BookDBView.shouldImportDroppedURLs([], after: []) == true)
 }
 
+@Test func bookImportDoesNotStartWhileAlreadyImporting() {
+    #expect(BookDBView.shouldStartImport(isImporting: false))
+    #expect(!BookDBView.shouldStartImport(isImporting: true))
+}
+
 @Test func bookPlaybackOrderingUsesRelativePaths() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)

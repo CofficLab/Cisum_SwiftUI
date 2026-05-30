@@ -135,3 +135,8 @@ import UniformTypeIdentifiers
     #expect(AudioDBView.shouldImportDroppedURLs([url], after: [error]) == true)
     #expect(AudioDBView.shouldImportDroppedURLs([], after: []) == true)
 }
+
+@Test func audioImportDoesNotStartWhileAlreadyImporting() {
+    #expect(AudioDBView.shouldStartImport(isImporting: false))
+    #expect(!AudioDBView.shouldStartImport(isImporting: true))
+}
