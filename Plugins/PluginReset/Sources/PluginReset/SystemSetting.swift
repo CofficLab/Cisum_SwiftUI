@@ -34,8 +34,8 @@ public struct SystemSetting: View, SuperLog {
             )
 
             CisumUI.MagicSettingRow(
-                title: String(localized: "Reset Settings", table: "Reset", bundle: .module),
-                description: String(localized: "Reset settings to system default state", table: "Reset", bundle: .module),
+                title: String(localized: "Reset Storage Location", table: "Reset", bundle: .module),
+                description: String(localized: "Clear the media storage selection", table: "Reset", bundle: .module),
                 icon: .cisumIconReset
             ) {
                 Image.cisumReset
