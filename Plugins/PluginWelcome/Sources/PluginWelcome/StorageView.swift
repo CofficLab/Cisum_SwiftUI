@@ -17,7 +17,7 @@ public struct StorageView: View {
         self.isICloudAvailable = isICloudAvailable
         self.currentStorageSelection = currentStorageSelection
         self.updateStorageSelection = updateStorageSelection
-        _tempStorageSelection = State(initialValue: Self.defaultSelection(
+        _tempStorageSelection = State(initialValue: WelcomeStorageSelectionPolicy.defaultSelection(
             currentStorageSelection: currentStorageSelection,
             isICloudAvailable: isICloudAvailable
         ))
@@ -90,10 +90,10 @@ public struct StorageView: View {
     }
 
     private func onAppear() {
-        updateSelection(Self.defaultSelection(
+        tempStorageSelection = WelcomeStorageSelectionPolicy.defaultSelection(
             currentStorageSelection: currentStorageSelection,
             isICloudAvailable: isICloudAvailable
-        ))
+        )
     }
 
     private func onDisappear() {
@@ -101,12 +101,20 @@ public struct StorageView: View {
     }
 
     private func updateSelection(_ selection: WelcomeStorageSelection) {
-        let validatedSelection = validatedSelection(selection)
+        let validatedSelection = WelcomeStorageSelectionPolicy.validatedSelection(
+            selection,
+            isICloudAvailable: isICloudAvailable
+        )
         tempStorageSelection = validatedSelection
         updateStorageSelection(validatedSelection)
     }
+}
 
-    private func validatedSelection(_ selection: WelcomeStorageSelection) -> WelcomeStorageSelection {
+enum WelcomeStorageSelectionPolicy {
+    static func validatedSelection(
+        _ selection: WelcomeStorageSelection,
+        isICloudAvailable: Bool
+    ) -> WelcomeStorageSelection {
         if selection == .icloud && !isICloudAvailable {
             return .local
         }
@@ -114,7 +122,7 @@ public struct StorageView: View {
         return selection
     }
 
-    private static func defaultSelection(
+    static func defaultSelection(
         currentStorageSelection: WelcomeStorageSelection?,
         isICloudAvailable: Bool
     ) -> WelcomeStorageSelection {
