@@ -31,11 +31,15 @@ public extension URL {
 
 #if DEBUG
 struct URLZipExtension_Previews: PreviewProvider {
+    private static var previewDocumentsDirectory: URL {
+        FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+            ?? FileManager.default.temporaryDirectory
+    }
+
     static var previews: some View {
         VStack {
             Button("Compress Test File") {
-                let fileManager = FileManager()
-                let docsDir = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
+                let docsDir = previewDocumentsDirectory
                 let testFile = docsDir.appendingPathComponent("test.txt")
                 
                 // Create a test file
@@ -50,8 +54,7 @@ struct URLZipExtension_Previews: PreviewProvider {
             }
             
             Button("Unzip Test File") {
-                let fileManager = FileManager()
-                let docsDir = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
+                let docsDir = previewDocumentsDirectory
                 let testFile = docsDir.appendingPathComponent("test.txt")
                 let zipFile = docsDir.appendingPathComponent("test.zip")
                 
