@@ -31,6 +31,9 @@ public struct BookLikeRootView<Content>: View, SuperLog where Content: View {
         content
             .onAppear(perform: handleOnAppear)
             .onDisappear(perform: handleOnDisappear)
+            .onChange(of: currentSceneName()) { _, newSceneName in
+                handleCurrentSceneChanged(newSceneName)
+            }
     }
 
     /// 检查是否应该激活书籍喜欢管理功能
@@ -46,6 +49,22 @@ private extension BookLikeRootView {
     ///
     /// 当视图首次出现时触发，执行初始化操作。
     func handleOnAppear() {
+        updateLikeActivation(for: currentSceneName())
+    }
+
+    func handleCurrentSceneChanged(_ sceneName: String?) {
+        updateLikeActivation(for: sceneName)
+    }
+
+    private func updateLikeActivation(for sceneName: String?) {
+        if sceneName == targetSceneName {
+            activateLike()
+        } else {
+            deactivateLike()
+        }
+    }
+
+    private func activateLike() {
         guard shouldActivateLike else {
             if verbose {
                 os_log("\(self.t)⏭️ 书籍喜欢管理跳过：当前插件不是书籍插件")
@@ -69,6 +88,10 @@ private extension BookLikeRootView {
     }
 
     func handleOnDisappear() {
+        deactivateLike()
+    }
+
+    private func deactivateLike() {
         guard let playbackSubscriptionID else { return }
 
         man.unsubscribe(playbackSubscriptionID)
