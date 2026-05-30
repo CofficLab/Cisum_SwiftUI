@@ -10,20 +10,33 @@ struct Guide: View, SuperLog {
     @EnvironmentObject var pluginProvider: PluginProvider
     @State var currentGuidePageIndex: Int = 0
 
-    private var views: [AnyView] {
-        pluginProvider.plugins.compactMap { $0.addGuideView() }
+    private var pages: [PluginGuidePage] {
+        pluginProvider.plugins.compactMap { plugin in
+            guard let view = plugin.addGuideView() else { return nil }
+            return PluginGuidePage(id: plugin.id, view: view)
+        }
     }
 
     var body: some View {
+        let currentPages = pages
+
         ZStack {
             // 显示当前页面
-            if currentGuidePageIndex < views.count {
-                pluginViewWithNavigation(at: currentGuidePageIndex)
+            if currentPages.indices.contains(currentGuidePageIndex) {
+                pluginViewWithNavigation(
+                    page: currentPages[currentGuidePageIndex],
+                    at: currentGuidePageIndex
+                )
             } else {
                 GuideDoneView(isActive: true)
             }
         }
     }
+}
+
+private struct PluginGuidePage: Identifiable {
+    let id: String
+    let view: AnyView
 }
 
 // MARK: - View Builder
@@ -33,9 +46,9 @@ extension Guide {
     /// - Parameter index: 视图索引
     /// - Returns: 包含导航按钮的插件视图
     @ViewBuilder
-    private func pluginViewWithNavigation(at index: Int) -> some View {
+    private func pluginViewWithNavigation(page: PluginGuidePage, at index: Int) -> some View {
         ZStack {
-            views[index]
+            page.view
 
             // 为每个插件页面添加导航按钮
             VStack {
