@@ -82,6 +82,7 @@ extension MagicPlayMan {
             name: name,
             hasNavigationHandler: hasNavigationHandler
         )
+        var subscriberCancellables = Set<AnyCancellable>()
 
         if let handler = onTrackFinished {
             events.onTrackFinished
@@ -92,7 +93,7 @@ extension MagicPlayMan {
                     }
                     handler(asset)
                 }
-                .store(in: &cancellables)
+                .store(in: &subscriberCancellables)
         }
 
         if let handler = onPlaybackFailed {
@@ -104,7 +105,7 @@ extension MagicPlayMan {
                     }
                     handler(error)
                 }
-                .store(in: &cancellables)
+                .store(in: &subscriberCancellables)
         }
 
         if let handler = onBufferingStateChanged {
@@ -116,7 +117,7 @@ extension MagicPlayMan {
                     }
                     handler(isBuffering)
                 }
-                .store(in: &cancellables)
+                .store(in: &subscriberCancellables)
         }
 
         if let handler = onStateChanged {
@@ -128,7 +129,7 @@ extension MagicPlayMan {
                     }
                     handler(state)
                 }
-                .store(in: &cancellables)
+                .store(in: &subscriberCancellables)
         }
 
         if let handler = onPreviousRequested {
@@ -140,7 +141,7 @@ extension MagicPlayMan {
                     }
                     handler(asset)
                 }
-                .store(in: &cancellables)
+                .store(in: &subscriberCancellables)
         }
 
         if let handler = onNextRequested {
@@ -152,7 +153,7 @@ extension MagicPlayMan {
                     }
                     handler(asset)
                 }
-                .store(in: &cancellables)
+                .store(in: &subscriberCancellables)
         }
 
         if let handler = onLikeStatusChanged {
@@ -164,7 +165,7 @@ extension MagicPlayMan {
                     }
                     handler(event.asset, event.isLiked)
                 }
-                .store(in: &cancellables)
+                .store(in: &subscriberCancellables)
         }
 
         if let handler = onPlayModeChanged {
@@ -176,7 +177,7 @@ extension MagicPlayMan {
                     }
                     handler(mode)
                 }
-                .store(in: &cancellables)
+                .store(in: &subscriberCancellables)
         }
 
         if let handler = onCurrentURLChanged {
@@ -188,14 +189,18 @@ extension MagicPlayMan {
                     }
                     handler(url)
                 }
-                .store(in: &cancellables)
+                .store(in: &subscriberCancellables)
         }
+
+        eventCancellables[subscriberId] = subscriberCancellables
 
         return subscriberId
     }
 
     public func unsubscribe(_ subscriberId: UUID) {
         if let subscriber = events.getSubscriberInfo(id: subscriberId) {
+            eventCancellables[subscriberId]?.forEach { $0.cancel() }
+            eventCancellables[subscriberId] = nil
             events.removeSubscriber(id: subscriberId)
             if verbose {
                 os_log("\(self.t)取消订阅：\(subscriber.name)")

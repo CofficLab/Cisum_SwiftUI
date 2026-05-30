@@ -17,6 +17,7 @@ public struct BookProgressRootView<Content>: View, SuperLog where Content: View 
     private let verbose = true
 
     @EnvironmentObject private var man: MagicPlayMan
+    @State private var playbackSubscriptionID: UUID?
 
     private let content: Content
     private let targetSceneName: String
@@ -50,6 +51,7 @@ public struct BookProgressRootView<Content>: View, SuperLog where Content: View 
     public var body: some View {
         content
             .onAppear(perform: handleOnAppear)
+            .onDisappear(perform: handleOnDisappear)
             .onPlayManStateChanged(handlePlayManStateChanged)
     }
 
@@ -77,12 +79,22 @@ private extension BookProgressRootView {
         restoreBookProgress()
 
         // 订阅播放器事件，监听URL变化
-        man.subscribe(
+        guard playbackSubscriptionID == nil else { return }
+
+        playbackSubscriptionID = man.subscribe(
             name: "BookProgressPlugin",
             onCurrentURLChanged: { url in
                 handleCurrentURLChanged(url)
             }
         )
+    }
+
+    /// 处理视图消失事件，释放播放器事件订阅。
+    func handleOnDisappear() {
+        guard let playbackSubscriptionID else { return }
+
+        man.unsubscribe(playbackSubscriptionID)
+        self.playbackSubscriptionID = nil
     }
 
     /// 恢复书籍播放进度

@@ -37,6 +37,9 @@ public class MagicPlayMan: ObservableObject, SuperLog {
     /// Combine 订阅集合，用于管理事件订阅
     public var cancellables = Set<AnyCancellable>()
 
+    /// 外部事件订阅集合，按订阅者 ID 管理以支持精确取消订阅
+    internal var eventCancellables: [UUID: Set<AnyCancellable>] = [:]
+
     /// 当前下载任务
     public private(set) var downloadTask: URLSessionDataTask?
 
