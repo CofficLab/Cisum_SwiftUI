@@ -127,13 +127,12 @@ private extension AudioControlRootView {
     }
 
     func handleStorageLocationDidReset() {
-        guard shouldActivateControl else { return }
-        man.pause(reason: "AudioControlRootView.storageLocationDidReset")
+        Task { @MainActor in
+            await man.reset(reason: "AudioControlRootView.storageLocationDidReset")
+        }
     }
 
     func handleDBDeleted(_ notification: Notification) {
-        guard shouldActivateControl else { return }
-
         guard let urlsToDelete = notification.userInfo?["urls"] as? [URL],
               let currentAsset = man.asset,
               urlsToDelete.contains(currentAsset) else {
@@ -141,6 +140,11 @@ private extension AudioControlRootView {
         }
 
         Task { @MainActor in
+            guard shouldActivateControl else {
+                await man.reset(reason: "AudioControlRootView.deletedCurrentAsset")
+                return
+            }
+
             do {
                 if let first = try await firstAsset() {
                     alert_warning(String(localized: "Current file was deleted, playing the first", table: "Audio-Control", bundle: .module))
