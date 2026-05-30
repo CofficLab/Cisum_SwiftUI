@@ -22,7 +22,12 @@ public enum AudioLikeRepositoryConfiguration {
     private static var databaseURL: URL?
 
     public static func configure(databaseURL: URL) {
+        let shouldResetContainer = Self.databaseURL != databaseURL
         Self.databaseURL = databaseURL
+
+        if shouldResetContainer {
+            AudioLikeRepo.shared.resetContainerForConfigurationChange()
+        }
     }
 
     static func currentDatabaseURL() -> URL? {
@@ -40,6 +45,11 @@ public actor AudioLikeRepo: SuperLog {
     private var container: ModelContainer?
 
     private init() {}
+
+    @MainActor
+    fileprivate func resetContainerForConfigurationChange() {
+        container = nil
+    }
 
     @MainActor
     private var context: ModelContext? {
