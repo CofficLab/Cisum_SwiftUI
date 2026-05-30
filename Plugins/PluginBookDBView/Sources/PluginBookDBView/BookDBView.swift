@@ -126,6 +126,8 @@ extension BookDBView {
         var copiedItems: [URL] = []
 
         for folder in folders {
+            guard try canImportFolder(folder) else { continue }
+
             let destination = uniqueDestination(for: folder, in: bookDisk)
             try copySecurityScopedItem(folder, to: destination)
             copiedItems.append(destination)
@@ -145,6 +147,31 @@ extension BookDBView {
         }
 
         return copiedItems
+    }
+
+    private nonisolated static func canImportFolder(_ folder: URL) throws -> Bool {
+        let hasAccess = folder.startAccessingSecurityScopedResource()
+        guard hasAccess else {
+            throw NSError(
+                domain: "BookDBView",
+                code: 1,
+                userInfo: [
+                    NSLocalizedDescriptionKey: String(localized: "Permission to access the original file was denied", table: "Book-DBView", bundle: .module)
+                ]
+            )
+        }
+
+        defer {
+            folder.stopAccessingSecurityScopedResource()
+        }
+
+        return folderContainsPlayableFiles(folder)
+    }
+
+    nonisolated static func folderContainsPlayableFiles(_ folder: URL) -> Bool {
+        folder.flatten().contains { child in
+            !child.isFolder && BookPluginInfo.supportedExtensions.contains(child.pathExtension.lowercased())
+        }
     }
 
     private nonisolated static func copySecurityScopedItem(_ source: URL, to destination: URL) throws {
