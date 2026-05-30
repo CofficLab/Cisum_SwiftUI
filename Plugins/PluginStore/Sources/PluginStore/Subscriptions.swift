@@ -4,6 +4,31 @@ import OSLog
 import StoreKit
 import SwiftUI
 
+enum StoreProductListPresentation {
+    enum State: Equatable {
+        case loading
+        case error
+        case empty
+        case content
+    }
+
+    static func state(isRefreshing: Bool, hasGroups: Bool, hasError: Bool) -> State {
+        if isRefreshing, !hasGroups {
+            return .loading
+        }
+
+        if hasError, !hasGroups {
+            return .error
+        }
+
+        if !hasGroups {
+            return .empty
+        }
+
+        return .content
+    }
+}
+
 struct ProductsSubscription: View, SuperEvent, SuperLog, SuperThread {
     @Environment(\.colorScheme) var colorScheme: ColorScheme
 
@@ -24,9 +49,18 @@ struct ProductsSubscription: View, SuperEvent, SuperLog, SuperThread {
 
     var body: some View {
         Group {
-            if !refreshing && subscriptionGroups.isEmpty {
+            switch StoreProductListPresentation.state(
+                isRefreshing: refreshing,
+                hasGroups: !subscriptionGroups.isEmpty,
+                hasError: error != nil
+            ) {
+            case .loading:
+                loadingStateView
+            case .error:
+                errorStateView
+            case .empty:
                 emptyStateView
-            } else {
+            case .content:
                 LazyVStack(spacing: 20) {
                     ForEach(subscriptionGroups, id: \.id) { group in
                         VStack(alignment: .leading, spacing: 16) {
@@ -85,6 +119,35 @@ struct ProductsSubscription: View, SuperEvent, SuperLog, SuperThread {
                 .foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    private var loadingStateView: some View {
+        VStack(spacing: 12) {
+            ProgressView()
+            Text("Loading subscription options...", tableName: "Store", bundle: .module)
+                .font(.headline)
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    private var errorStateView: some View {
+        VStack(spacing: 16) {
+            AppStatusBanner(
+                kind: .error,
+                title: String(localized: "Cannot load subscription options", table: "Store", bundle: .module),
+                message: error?.localizedDescription ?? String(localized: "Please check your network and try again.", table: "Store", bundle: .module)
+            )
+
+            AppSheetActionButton(
+                title: String(localized: "Try Again", table: "Store", bundle: .module),
+                systemImage: "arrow.clockwise"
+            ) {
+                getProducts("Retry after load failure")
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(.horizontal, 16)
     }
 
     // MARK: 获取可用的订阅
