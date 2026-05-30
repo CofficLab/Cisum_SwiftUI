@@ -239,39 +239,17 @@ extension SmartSync: CKSyncEngineDelegate {
 
 extension SmartSync {
     func handleDidFetchChanges() async {
-        let verbose = false
-        if verbose {
-            os_log("\(self.t)DidFetchChanges 🎉🎉🎉")
-        }
         await self.delegate.onDidFetchChanges()
     }
 
     func handleWillFetchChanges() async {
-        let verbose = false
-        if verbose {
-            os_log("\(self.t)WillFetchChanges ⏬⏬⏬")
-        }
         await self.delegate.onWillFetchChanges()
     }
 
     // MARK: Fetched Record Zone Changes
 
     func handleFetchedRecordZoneChanges(_ event: CKSyncEngine.Event.FetchedRecordZoneChanges) async {
-        let verbose = false
-
-        if verbose {
-            os_log("\(self.t)FetchedRecordZoneChanges")
-            os_log("  🈴 Merge(\(event.modifications.count))")
-
-            if event.deletions.isNotEmpty {
-                os_log("  🗑️ Delete(\(event.deletions.count))")
-            }
-        }
-
         for modification in event.modifications {
-            if verbose {
-                os_log("  🚀 Merge -> \(modification.record.recordType)(\(modification.record.recordID.recordName))")
-            }
             await self.delegate.onMerge(record: modification.record)
         }
 
@@ -354,23 +332,9 @@ extension SmartSync {
     // MARK: Sent Record Zone Changes
 
     func handleSentRecordZoneChanges(_ event: CKSyncEngine.Event.SentRecordZoneChanges) async {
-        let verbose = false
-
         // If we failed to save a record, we might want to retry depending on the error code.
         var newPendingRecordZoneChanges = [CKSyncEngine.PendingRecordZoneChange]()
         var newPendingDatabaseChanges = [CKSyncEngine.PendingDatabaseChange]()
-
-        let savedRecords = event.savedRecords
-        let failedRecordSaves = event.failedRecordSaves
-
-        if verbose {
-            os_log("\(self.t)SentRecordZoneChanges")
-            os_log("  ➡️ SavedRecords(\(savedRecords.count))")
-
-            if failedRecordSaves.isNotEmpty {
-                os_log("  ➡️ FailedRecordSaves(\(failedRecordSaves.count))")
-            }
-        }
 
         // Update the last known server record for each of the saved records.
         for savedRecord in event.savedRecords {
@@ -473,30 +437,16 @@ extension SmartSync {
     // MARK: Fetched Database Changes
 
     func handleFetchedDatabaseChanges(_ event: CKSyncEngine.Event.FetchedDatabaseChanges) {
-        let verbose = true
-
         for deletion in event.deletions {
             os_log(.error, "Received deletion for zone: \(deletion.zoneID.zoneName)")
         }
     }
 
     func handleWillSendChanges() async {
-        let verbose = false
-
-        if verbose {
-            os_log("\(self.t)WillSendChanges 🛫🛫🛫")
-        }
-
         await self.delegate.onWillSendChanges()
     }
 
     func handleDidSendChanges() async {
-        let verbose = false
-
-        if verbose {
-            os_log("\(self.t)DidSendChanges 🎉🎉🎉")
-        }
-
         await self.delegate.onDidSendChanges()
     }
 }

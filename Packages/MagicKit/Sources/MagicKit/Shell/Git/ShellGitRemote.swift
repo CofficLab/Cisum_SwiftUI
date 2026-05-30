@@ -99,7 +99,6 @@ extension ShellGit {
         let output = try remotes(verbose: true, at: path)
         let lines = output.split(separator: "\n").map { String($0) }
         var remotes: [MagicGitRemote] = []
-        var seen: Set<String> = []
         for line in lines {
             // 例如 origin\thttps://github.com/user/repo.git (fetch)
             let parts = line.split(separator: "\t").map { String($0) }

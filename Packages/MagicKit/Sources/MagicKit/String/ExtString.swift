@@ -366,7 +366,7 @@ public extension String {
             os_log("保存到 -> \(url.relativePath)")
         }
 
-        try url.deletingLastPathComponent().createIfNotExist()
+        _ = url.deletingLastPathComponent().createIfNotExist()
 
         try self.write(to: url, atomically: true, encoding: .utf8)
     }

@@ -101,7 +101,6 @@ extension ShellGit {
         var result: [MagicGitBranch] = []
         for line in lines {
             let trimmed = line.trimmingCharacters(in: .whitespaces)
-            let isCurrent = trimmed.hasPrefix("*")
             let name = trimmed.replacingOccurrences(of: "* ", with: "")
             // 获取上游、最新 commit hash/message 可后续扩展
             result.append(MagicGitBranch(id: name, name: name, isCurrent: currentBranchName == name, upstream: nil, latestCommitHash: "", latestCommitMessage: ""))

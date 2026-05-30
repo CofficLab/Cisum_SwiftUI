@@ -121,7 +121,7 @@ extension ShellGit {
     public static func diffFileList(staged: Bool = false, at path: String? = nil) async throws -> [MagicGitDiffFile] {
         let option = staged ? "--cached" : ""
         // 获取变动文件及类型
-        let nameStatus = try await Shell.runSync("git diff --name-status \(option)", at: path)
+        let nameStatus = try Shell.runSync("git diff --name-status \(option)", at: path)
         let files = nameStatus.split(separator: "\n").map { String($0) }
         var result: [MagicGitDiffFile] = []
         for line in files {

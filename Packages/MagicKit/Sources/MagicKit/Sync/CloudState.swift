@@ -18,17 +18,10 @@ public struct CloudState: Decodable, Encodable, SuperLog, SuperThread {
     }
     
     init(reason: String, url: URL) throws {
-        let verbose = false
-        if verbose {
-            os_log("\(Self.i) CloudState(\(reason))")
-        }
-        
         self.url = url
     }
     
     func getState() -> CKSyncEngine.State.Serialization? {
-        let verbose = false
-        
         if !fileManager.fileExists(atPath: url.path()) {
             return nil
         }
@@ -39,13 +32,9 @@ public struct CloudState: Decodable, Encodable, SuperLog, SuperThread {
             guard !blob.isEmpty else {
                 return nil
             }
-            
+
             let data = try JSONDecoder().decode(CloudStateData.self, from: blob)
 
-            if verbose {
-                os_log("\(self.t)从磁盘解析 CloudState 成功，更新时间 \(data.updatedAt.logTime)")
-            }
-            
             return data.stateSerialization
         } catch let error as DecodingError {
             switch error {
@@ -74,12 +63,6 @@ public struct CloudState: Decodable, Encodable, SuperLog, SuperThread {
     }
     
     func updateState(_ state: CKSyncEngine.State.Serialization?) throws {
-        let verbose = false
-        
-        if verbose {
-            os_log("\(self.t)Save CloudState")
-        }
-        
         let data = CloudStateData(stateSerialization: state, updatedAt: Date())
         do {
             let data = try JSONEncoder().encode(data)
