@@ -2,6 +2,7 @@ import Foundation
 import MagicKit
 import MagicPlayMan
 import OSLog
+import PluginBook
 import SwiftUI
 
 public typealias BookControlCurrentSceneProvider = @MainActor () -> String?
@@ -78,6 +79,29 @@ private extension BookControlRootView {
         self.playbackSubscriptionID = nil
     }
 
+    func playableSiblings(of asset: URL) -> [URL] {
+        asset.deletingLastPathComponent()
+            .getChildren()
+            .filter { url in
+                !url.isFolder
+                    && FileManager.default.fileExists(atPath: url.path)
+                    && BookPluginInfo.supportedExtensions.contains(url.pathExtension.lowercased())
+            }
+            .sorted {
+                $0.lastPathComponent.localizedStandardCompare($1.lastPathComponent) == .orderedAscending
+            }
+    }
+
+    func adjacentAsset(to asset: URL, offset: Int) -> URL? {
+        let siblings = playableSiblings(of: asset)
+        guard let index = siblings.firstIndex(of: asset) else { return nil }
+
+        let adjacentIndex = index + offset
+        guard siblings.indices.contains(adjacentIndex) else { return nil }
+
+        return siblings[adjacentIndex]
+    }
+
     /// 处理上一章请求
     /// - Parameter asset: 当前播放的书籍章节资源
     func handlePreviousRequested(_ asset: URL) {
@@ -87,7 +111,7 @@ private extension BookControlRootView {
             os_log("\(self.t)⏮️ 请求上一章")
         }
 
-        if let prev = asset.getPrevFile() {
+        if let prev = adjacentAsset(to: asset, offset: -1) {
             Task {
                 await man.play(prev, reason: "handlePreviousRequested")
                 if verbose {
@@ -110,7 +134,7 @@ private extension BookControlRootView {
             os_log("\(self.t)⏭️ 请求下一章")
         }
 
-        if let next = asset.getNextFile() {
+        if let next = adjacentAsset(to: asset, offset: 1) {
             Task {
                 await man.play(next, reason: "handleNextRequested")
                 if verbose {
