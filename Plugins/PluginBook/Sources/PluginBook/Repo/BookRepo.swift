@@ -63,7 +63,7 @@ public class BookRepo: ObservableObject, SuperEvent, SuperLog {
                 if await Self.verbose {
                     os_log("\(self.t) Disk changed, with items \(items.count)")
                 }
-                if let lastTime = UserDefaults.standard.object(forKey: "BookLastUpdateTime") as? Date {
+                if !isFirst, let lastTime = UserDefaults.standard.object(forKey: "BookLastUpdateTime") as? Date {
                     let now = Date()
                     guard now.timeIntervalSince(lastTime) >= debounceInterval else { return }
                 }
