@@ -81,6 +81,11 @@ extension BookDBView {
             os_log("\(self.t)📂 准备复制 \(files.count) 个文件")
         }
 
+        guard !files.isEmpty else {
+            alert_error(String(localized: "No files were added", table: "Book-DBView", bundle: .module))
+            return
+        }
+
         guard let bookDisk = dependencies.bookDisk else {
             os_log(.error, "\(self.t)❌ 书籍仓库目录不可用")
             alert_error(String(localized: "Storage location is unavailable", table: "Book-DBView", bundle: .module))

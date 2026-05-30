@@ -131,6 +131,22 @@
         }
       }
     },
+    "No files were added" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "没有添加文件"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "沒有加入檔案"
+          }
+        }
+      }
+    },
     "Storage location is unavailable" : {
       "localizations" : {
         "zh-Hans" : {
