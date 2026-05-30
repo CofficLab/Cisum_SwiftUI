@@ -31,6 +31,9 @@ public struct BookPlayModeRootView<Content>: View, SuperLog where Content: View 
         content
             .onAppear(perform: handleOnAppear)
             .onDisappear(perform: handleOnDisappear)
+            .onChange(of: currentSceneName()) { _, newSceneName in
+                handleCurrentSceneChanged(newSceneName)
+            }
     }
 
     /// 检查是否应该激活书籍播放模式管理功能
@@ -46,6 +49,22 @@ private extension BookPlayModeRootView {
     ///
     /// 当视图首次出现时触发，执行初始化操作。
     func handleOnAppear() {
+        updatePlayModeActivation(for: currentSceneName())
+    }
+
+    func handleCurrentSceneChanged(_ sceneName: String?) {
+        updatePlayModeActivation(for: sceneName)
+    }
+
+    private func updatePlayModeActivation(for sceneName: String?) {
+        if sceneName == targetSceneName {
+            activatePlayMode()
+        } else {
+            deactivatePlayMode()
+        }
+    }
+
+    private func activatePlayMode() {
         guard shouldActivatePlayMode else {
             if verbose {
                 os_log("\(self.t)⏭️ 书籍播放模式管理跳过：当前场景不是书籍场景")
@@ -69,6 +88,10 @@ private extension BookPlayModeRootView {
     }
 
     func handleOnDisappear() {
+        deactivatePlayMode()
+    }
+
+    private func deactivatePlayMode() {
         guard let playbackSubscriptionID else { return }
 
         man.unsubscribe(playbackSubscriptionID)
