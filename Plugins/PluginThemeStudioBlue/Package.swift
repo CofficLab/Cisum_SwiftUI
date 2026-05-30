@@ -15,7 +15,7 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(path: "../Packages/CisumUI")
+        .package(path: "../../Packages/CisumUI")
     ],
     targets: [
         .target(

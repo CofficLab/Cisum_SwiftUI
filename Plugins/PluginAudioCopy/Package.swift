@@ -16,8 +16,8 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(path: "../Packages/CisumUI"),
-        .package(path: "../Packages/MagicKit"),
+        .package(path: "../../Packages/CisumUI"),
+        .package(path: "../../Packages/MagicKit"),
         .package(path: "../PluginAudio"),
         .package(path: "../PluginStore"),
         .package(url: "https://github.com/nookery/MagicAlert.git", from: "1.0.1"),

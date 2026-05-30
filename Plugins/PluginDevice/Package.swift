@@ -15,8 +15,8 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(path: "../Packages/DeviceData"),
-        .package(path: "../Packages/MagicKit")
+        .package(path: "../../Packages/DeviceData"),
+        .package(path: "../../Packages/MagicKit")
     ],
     targets: [
         .target(
