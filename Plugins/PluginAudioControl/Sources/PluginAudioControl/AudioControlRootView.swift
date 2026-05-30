@@ -27,6 +27,10 @@ enum AudioControlPlaybackRequestPolicy {
             deletedURL.standardizedFileURL.path == currentPath
         }
     }
+
+    static func shouldApplyDeletionRecovery(currentAsset: URL?, deletedURLs: [URL]) -> Bool {
+        currentAssetAffectedByDeletion(currentAsset: currentAsset, deletedURLs: deletedURLs)
+    }
 }
 
 public struct AudioControlRootView<Content>: View where Content: View {
@@ -235,13 +239,31 @@ private extension AudioControlRootView {
 
             do {
                 if let first = try await firstAsset() {
+                    guard AudioControlPlaybackRequestPolicy.shouldApplyDeletionRecovery(
+                        currentAsset: man.asset,
+                        deletedURLs: urlsToDelete
+                    ) else {
+                        return
+                    }
                     alert_warning(String(localized: "Current file was deleted, playing the first", table: "Audio-Control", bundle: .module))
                     await man.play(first, autoPlay: true, reason: "AudioControlRootView")
                 } else {
+                    guard AudioControlPlaybackRequestPolicy.shouldApplyDeletionRecovery(
+                        currentAsset: man.asset,
+                        deletedURLs: urlsToDelete
+                    ) else {
+                        return
+                    }
                     await man.reset(reason: "AudioControlRootView.emptyLibrary")
                     alert_info(String(localized: "No files in library", table: "Audio-Control", bundle: .module))
                 }
             } catch {
+                guard AudioControlPlaybackRequestPolicy.shouldApplyDeletionRecovery(
+                    currentAsset: man.asset,
+                    deletedURLs: urlsToDelete
+                ) else {
+                    return
+                }
                 await man.reset(reason: "AudioControlRootView.getFirstFailed")
                 alert_error(String(localized: "Cannot play next: \(error.localizedDescription)", table: "Audio-Control", bundle: .module))
             }

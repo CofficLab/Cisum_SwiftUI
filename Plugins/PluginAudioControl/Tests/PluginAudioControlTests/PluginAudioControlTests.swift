@@ -52,3 +52,22 @@ import Testing
         deletedURLs: [current]
     ))
 }
+
+@Test func staleDeletionRecoveryDoesNotApplyAfterPlaybackSwitches() {
+    let root = URL(fileURLWithPath: "/tmp/cisum-audio-control-delete-tests", isDirectory: true)
+    let deleted = root.appendingPathComponent("deleted.mp3")
+    let switched = root.appendingPathComponent("switched.mp3")
+
+    #expect(AudioControlPlaybackRequestPolicy.shouldApplyDeletionRecovery(
+        currentAsset: deleted,
+        deletedURLs: [deleted]
+    ))
+    #expect(!AudioControlPlaybackRequestPolicy.shouldApplyDeletionRecovery(
+        currentAsset: switched,
+        deletedURLs: [deleted]
+    ))
+    #expect(!AudioControlPlaybackRequestPolicy.shouldApplyDeletionRecovery(
+        currentAsset: nil,
+        deletedURLs: [deleted]
+    ))
+}
