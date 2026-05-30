@@ -116,6 +116,7 @@
             }
 
             var tasks: [(bookmark: Data, filename: String)] = []
+            var preparationErrors: [Error] = []
             for provider in providers {
                 if provider.hasItemConformingToTypeIdentifier(UTType.fileURL.identifier) {
                     do {
@@ -143,6 +144,7 @@
                             tasks.append((bookmark: bookmarkData, filename: url.lastPathComponent))
                         }
                     } catch {
+                        preparationErrors.append(error)
                         os_log(.error, "\(self.t)Failed to load URL or create bookmark: \(error.localizedDescription)")
                         await MainActor.run {
                             alert_error(String(localized: "Failed to prepare file: \(error.localizedDescription)", table: "Audio-Copy-macOS", bundle: .module))
@@ -173,8 +175,10 @@
             if tasks.isNotEmpty {
                 await worker.append(tasks: tasks, folder: disk)
             } else {
-                await MainActor.run {
-                    alert_error(String(localized: "No files were added", table: "Audio-Copy-macOS", bundle: .module))
+                if Self.shouldShowNoFilesAdded(taskCount: tasks.count, preparationErrors: preparationErrors) {
+                    await MainActor.run {
+                        alert_error(String(localized: "No files were added", table: "Audio-Copy-macOS", bundle: .module))
+                    }
                 }
                 return false
             }
@@ -185,6 +189,10 @@
         nonisolated static func isSupportedAudioFile(_ url: URL) -> Bool {
             guard !url.isFolder else { return false }
             return AudioPluginInfo.supportedExtensions.contains(url.pathExtension.lowercased())
+        }
+
+        nonisolated static func shouldShowNoFilesAdded(taskCount: Int, preparationErrors: [Error]) -> Bool {
+            taskCount == 0 && preparationErrors.isEmpty
         }
     }
 

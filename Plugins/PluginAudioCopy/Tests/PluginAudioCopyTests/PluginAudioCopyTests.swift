@@ -109,4 +109,12 @@ import Testing
         isFreeVersion: false
     ) == 10)
 }
+
+@Test func copyDropSkipsNoFilesAlertAfterPreparationFailure() {
+    let error = NSError(domain: "AudioCopyDrop", code: 1)
+
+    #expect(CopyRootView<EmptyView>.shouldShowNoFilesAdded(taskCount: 0, preparationErrors: [error]) == false)
+    #expect(CopyRootView<EmptyView>.shouldShowNoFilesAdded(taskCount: 0, preparationErrors: []) == true)
+    #expect(CopyRootView<EmptyView>.shouldShowNoFilesAdded(taskCount: 1, preparationErrors: [error]) == false)
+}
 #endif
