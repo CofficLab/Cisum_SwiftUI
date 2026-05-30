@@ -53,6 +53,9 @@ public struct BookProgressRootView<Content>: View, SuperLog where Content: View 
         content
             .onAppear(perform: handleOnAppear)
             .onDisappear(perform: handleOnDisappear)
+            .onChange(of: currentSceneName()) { _, newSceneName in
+                handleCurrentSceneChanged(newSceneName)
+            }
             .onPlayManStateChanged(handlePlayManStateChanged)
     }
 
@@ -69,6 +72,28 @@ private extension BookProgressRootView {
     ///
     /// 当视图首次出现时触发，恢复上次播放的书籍和进度。
     func handleOnAppear() {
+        updateProgressActivation(for: currentSceneName())
+    }
+
+    /// 处理视图消失事件，释放播放器事件订阅。
+    func handleOnDisappear() {
+        deactivateProgress()
+    }
+
+    /// 处理当前场景变化，确保从其它场景切到书籍场景时也能恢复并保存进度。
+    func handleCurrentSceneChanged(_ sceneName: String?) {
+        updateProgressActivation(for: sceneName)
+    }
+
+    private func updateProgressActivation(for sceneName: String?) {
+        if sceneName == targetSceneName {
+            activateProgress()
+        } else {
+            deactivateProgress()
+        }
+    }
+
+    private func activateProgress() {
         guard shouldActivateProgress else {
             return
         }
@@ -90,8 +115,7 @@ private extension BookProgressRootView {
         )
     }
 
-    /// 处理视图消失事件，释放播放器事件订阅。
-    func handleOnDisappear() {
+    private func deactivateProgress() {
         guard let playbackSubscriptionID else { return }
 
         man.unsubscribe(playbackSubscriptionID)
