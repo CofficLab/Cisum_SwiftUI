@@ -81,7 +81,7 @@ public actor AudioJobPlugin: SuperPlugin {
                     return
                 }
 
-                await repo.deleteAudios(urls, verbose: FileSystemMonitorJob.verbose)
+                try? await repo.deleteAudios(urls, verbose: FileSystemMonitorJob.verbose)
             },
             notifyDeletion: {
                 NotificationCenter.postFileSystemDeleted()

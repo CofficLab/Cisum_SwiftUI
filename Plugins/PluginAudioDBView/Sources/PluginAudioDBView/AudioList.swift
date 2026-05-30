@@ -504,7 +504,11 @@ extension AudioList {
             }
 
             if !deletedURLs.isEmpty {
-                await repo?.deleteAudios(deletedURLs)
+                do {
+                    try await repo?.deleteAudios(deletedURLs)
+                } catch {
+                    alert_error(String(localized: "Delete failed: \(error.localizedDescription)", table: "Audio-DBView", bundle: .module))
+                }
             }
         }
     }

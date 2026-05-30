@@ -212,7 +212,7 @@ extension AudioItemView {
                         try FileManager.default.removeItem(at: url)
                     }
                 }.value
-                await repo?.deleteAudios([url])
+                try await repo?.deleteAudios([url])
 
                 if Self.verbose {
                     os_log("\(Self.t)🗑️ 文件已删除: \(url.path)")

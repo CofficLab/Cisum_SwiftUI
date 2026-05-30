@@ -1030,6 +1030,7 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
                 try context.save()
             } catch let e {
                 os_log(.error, "\(self.t)删除出错 \(e)")
+                throw e
             }
         }
 

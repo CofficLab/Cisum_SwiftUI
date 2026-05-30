@@ -117,9 +117,9 @@ public class AudioRepo: ObservableObject, SuperLog {
     /// 删除多个音频文件
     /// - Parameter urls: 要删除的音频文件 URL 数组
     /// - Parameter verbose: 是否输出详细日志
-    public func deleteAudios(_ urls: [URL], verbose: Bool = false) async {
+    public func deleteAudios(_ urls: [URL], verbose: Bool = false) async throws {
         if urls.count > 0 {
-            try? await db.deleteAudios(urls, verbose: verbose)
+            try await db.deleteAudios(urls, verbose: verbose)
         }
     }
 
