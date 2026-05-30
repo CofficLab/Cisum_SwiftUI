@@ -60,7 +60,11 @@ extension ContentView {
             return
         }
 
+        guard Config.canResize else { return }
+
+        let requiredIncrease = databaseViewHeightMin - space
         self.autoResizing = true
+        Config.increseHeight(requiredIncrease)
     }
 
     func resetHeight(verbose: Bool = false) {
