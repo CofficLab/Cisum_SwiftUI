@@ -106,7 +106,7 @@ extension AudioDBView {
     /// - Parameters:
     ///   - urls: 要复制的文件 URL 列表
     ///   - storageRoot: 目标存储根目录
-    private func copyFiles(_ urls: [URL], to storageRoot: URL) async throws {
+    private func copyFiles(_ urls: [URL], to storageRoot: URL) async throws -> [URL] {
         if Self.verbose {
             os_log("\(self.t)📋 准备复制 \(urls.count) 个文件")
         }
@@ -117,20 +117,69 @@ extension AudioDBView {
             "folder": storageRoot,
         ])
 
+        var copiedURLs: [URL] = []
+
         // 逐个复制文件
         for url in urls {
-            let destination = storageRoot.appendingPathComponent(url.lastPathComponent)
+            let destination = Self.uniqueDestination(for: url, in: storageRoot)
 
             if Self.verbose {
                 os_log("\(self.t)📄 复制: \(url.lastPathComponent)")
             }
 
-            try await url.copyTo(destination, caller: self.className)
+            try await copySecurityScopedFile(url, to: destination)
+            copiedURLs.append(destination)
         }
 
         if Self.verbose {
             os_log("\(self.t)✅ 全部文件复制完成")
         }
+
+        return copiedURLs
+    }
+
+    private static func uniqueDestination(for source: URL, in directory: URL) -> URL {
+        let baseName = source.deletingPathExtension().lastPathComponent
+        let fileExtension = source.pathExtension
+        let normalizedBaseName = baseName.isEmpty ? "Imported Audio" : baseName
+
+        var candidate = destination(
+            named: normalizedBaseName,
+            pathExtension: fileExtension,
+            in: directory
+        )
+        var suffix = 2
+
+        while FileManager.default.fileExists(atPath: candidate.path) {
+            candidate = destination(
+                named: "\(normalizedBaseName) \(suffix)",
+                pathExtension: fileExtension,
+                in: directory
+            )
+            suffix += 1
+        }
+
+        return candidate
+    }
+
+    private func copySecurityScopedFile(_ source: URL, to destination: URL) async throws {
+        let hasAccess = source.startAccessingSecurityScopedResource()
+        defer {
+            if hasAccess {
+                source.stopAccessingSecurityScopedResource()
+            }
+        }
+
+        try await source.copyTo(destination, caller: self.className)
+    }
+
+    private static func destination(named name: String, pathExtension: String, in directory: URL) -> URL {
+        let destination = directory.appendingPathComponent(name)
+        guard !pathExtension.isEmpty else {
+            return destination
+        }
+
+        return destination.appendingPathExtension(pathExtension)
     }
 }
 
@@ -156,7 +205,10 @@ extension AudioDBView {
                 }
 
                 do {
-                    try await copyFiles(urls, to: storageRoot)
+                    let copiedURLs = try await copyFiles(urls, to: storageRoot)
+                    if let repo = dependencies.audioRepo() {
+                        await repo.sync(copiedURLs, isFirst: false)
+                    }
                 } catch {
                     os_log(.error, "\(self.t)❌ 复制文件失败: \(error.localizedDescription)")
                 }
