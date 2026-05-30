@@ -70,11 +70,13 @@ public actor AudioJobPlugin: SuperPlugin {
                 await AudioPlugin.getAudioDisk()
             },
             syncItems: { items, isFirst in
+                let disk = await AudioPlugin.getAudioDisk()
                 guard let repo = await AudioPlugin.getAudioRepo() else {
                     return
                 }
 
-                await repo.sync(items, verbose: FileSystemMonitorJob.verbose, isFirst: isFirst)
+                let shouldFullSync = FileSystemMonitorJob.shouldPerformFullSync(isFirst: isFirst, disk: disk)
+                await repo.sync(items, verbose: FileSystemMonitorJob.verbose, isFirst: shouldFullSync)
             },
             deleteItems: { urls in
                 guard let repo = await AudioPlugin.getAudioRepo() else {

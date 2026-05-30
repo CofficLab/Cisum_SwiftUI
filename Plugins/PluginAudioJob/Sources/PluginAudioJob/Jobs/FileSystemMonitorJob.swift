@@ -34,6 +34,10 @@ public final class FileSystemMonitorJob: AudioJob, @unchecked Sendable {
         self.notifyDeletion = notifyDeletion
     }
 
+    public static func shouldPerformFullSync(isFirst: Bool, disk: URL?) -> Bool {
+        isFirst || !(disk?.checkIsICloud(verbose: false) ?? true)
+    }
+
     public func execute() async throws {
         guard let disk = await diskProvider() else {
             if Self.verbose {
