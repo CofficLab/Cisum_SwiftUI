@@ -31,6 +31,12 @@ final class MagicKitTests: XCTestCase {
         XCTAssertTrue(markdown.contains("![Cover](cover.png)"))
     }
 
+    func testSampleURLsKeepRemoteSchemes() {
+        XCTAssertEqual(URL.sample_web_mp3_kennedy.scheme, "https")
+        XCTAssertEqual(URL.sample_web_mp4_bunny.scheme, "http")
+        XCTAssertEqual(URL.sample_web_stream_basic.pathExtension, "m3u8")
+    }
+
     func testImageCropping() {
         // 暂时跳过此测试，因为缺少相关的图像处理功能
         // let originalImage = UIImage(named: "testImage")!

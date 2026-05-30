@@ -5,221 +5,225 @@ import AppKit
 #endif
 
 public extension URL {
+    private static func sampleURL(_ string: String) -> URL {
+        URL(string: string) ?? URL(fileURLWithPath: string)
+    }
+
     // MARK: - 音频示例 (MP3/WAV)
     /// NASA 太空音效 - 肯尼迪演讲
-    static let sample_web_mp3_kennedy = URL(string: "https://www.nasa.gov/wp-content/uploads/2016/11/jfk_rice_university_speech_1962.mp3")!
+    static let sample_web_mp3_kennedy = sampleURL("https://www.nasa.gov/wp-content/uploads/2016/11/jfk_rice_university_speech_1962.mp3")
     /// NASA 太空音效 - 水星计划通讯
-    static let sample_web_mp3_mercury = URL(string: "https://www.nasa.gov/wp-content/uploads/2016/11/mercury_program.mp3")!
+    static let sample_web_mp3_mercury = sampleURL("https://www.nasa.gov/wp-content/uploads/2016/11/mercury_program.mp3")
     /// NASA 太空音效 - 阿波罗登月
-    static let sample_web_mp3_apollo = URL(string: "https://www.nasa.gov/wp-content/uploads/2016/11/apollo11_highlight.mp3")!
+    static let sample_web_mp3_apollo = sampleURL("https://www.nasa.gov/wp-content/uploads/2016/11/apollo11_highlight.mp3")
     /// NASA 太空音效 - 挑战者号事故
-    static let sample_web_mp3_challenger = URL(string: "https://www.nasa.gov/wp-content/uploads/2016/11/challenger.mp3")!
+    static let sample_web_mp3_challenger = sampleURL("https://www.nasa.gov/wp-content/uploads/2016/11/challenger.mp3")
     /// NASA 太空音效 - 发现号任务
-    static let sample_web_mp3_discovery = URL(string: "https://www.nasa.gov/wp-content/uploads/2016/11/discovery_mission.mp3")!
+    static let sample_web_mp3_discovery = sampleURL("https://www.nasa.gov/wp-content/uploads/2016/11/discovery_mission.mp3")
     
     /// NASA 火箭发射音效
-    static let sample_web_wav_launch = URL(string: "https://www.nasa.gov/wp-content/uploads/2021/07/Launch_Aboard.wav")!
+    static let sample_web_wav_launch = sampleURL("https://www.nasa.gov/wp-content/uploads/2021/07/Launch_Aboard.wav")
     /// NASA 太空站音效
-    static let sample_web_wav_iss = URL(string: "https://www.nasa.gov/wp-content/uploads/2021/07/ISS-Sounds.wav")!
+    static let sample_web_wav_iss = sampleURL("https://www.nasa.gov/wp-content/uploads/2021/07/ISS-Sounds.wav")
     /// NASA 火星音效
-    static let sample_web_wav_mars = URL(string: "https://www.nasa.gov/wp-content/uploads/2021/07/Mars-Sounds.wav")!
+    static let sample_web_wav_mars = sampleURL("https://www.nasa.gov/wp-content/uploads/2021/07/Mars-Sounds.wav")
     /// NASA 木星音效
-    static let sample_web_wav_jupiter = URL(string: "https://www.nasa.gov/wp-content/uploads/2021/07/Jupiter-Sounds.wav")!
+    static let sample_web_wav_jupiter = sampleURL("https://www.nasa.gov/wp-content/uploads/2021/07/Jupiter-Sounds.wav")
     /// NASA 土星音效
-    static let sample_web_wav_saturn = URL(string: "https://www.nasa.gov/wp-content/uploads/2021/07/Saturn-Sounds.wav")!
+    static let sample_web_wav_saturn = sampleURL("https://www.nasa.gov/wp-content/uploads/2021/07/Saturn-Sounds.wav")
     
     // MARK: - 中国音频示例 (MP3/WAV)
     /// 示例音乐 - 春节序曲
-    static let sample_web_mp3_spring = URL(string: "https://freetyst.nf.migu.cn/public/product9th/product45/2022/07/2211/2009%E5%B9%B406%E6%9C%8826%E6%97%A5%E5%8D%9A%E5%B0%94%E6%99%AE%E6%96%AF/%E6%A0%87%E6%B8%85%E9%AB%98%E6%B8%85/MP3_320_16_Stero/60054701923.mp3")!
+    static let sample_web_mp3_spring = sampleURL("https://freetyst.nf.migu.cn/public/product9th/product45/2022/07/2211/2009%E5%B9%B406%E6%9C%8826%E6%97%A5%E5%8D%9A%E5%B0%94%E6%99%AE%E6%96%AF/%E6%A0%87%E6%B8%85%E9%AB%98%E6%B8%85/MP3_320_16_Stero/60054701923.mp3")
     /// 示例音乐 - 茉莉花
-    static let sample_web_mp3_jasmine = URL(string: "https://freetyst.nf.migu.cn/public/product9th/product45/2022/07/2211/2009%E5%B9%B406%E6%9C%8826%E6%97%A5%E5%8D%9A%E5%B0%94%E6%99%AE%E6%96%AF/%E6%A0%87%E6%B8%85%E9%AB%98%E6%B8%85/MP3_320_16_Stero/60054701937.mp3")!
+    static let sample_web_mp3_jasmine = sampleURL("https://freetyst.nf.migu.cn/public/product9th/product45/2022/07/2211/2009%E5%B9%B406%E6%9C%8826%E6%97%A5%E5%8D%9A%E5%B0%94%E6%99%AE%E6%96%AF/%E6%A0%87%E6%B8%85%E9%AB%98%E6%B8%85/MP3_320_16_Stero/60054701937.mp3")
     /// 示例音乐 - 梁祝
-    static let sample_web_mp3_butterfly = URL(string: "https://freetyst.nf.migu.cn/public/product9th/product45/2022/07/2211/2009%E5%B9%B406%E6%9C%8826%E6%97%A5%E5%8D%9A%E5%B0%94%E6%99%AE%E6%96%AF/%E6%A0%87%E6%B8%85%E9%AB%98%E6%B8%85/MP3_320_16_Stero/60054701943.mp3")!
+    static let sample_web_mp3_butterfly = sampleURL("https://freetyst.nf.migu.cn/public/product9th/product45/2022/07/2211/2009%E5%B9%B406%E6%9C%8826%E6%97%A5%E5%8D%9A%E5%B0%94%E6%99%AE%E6%96%AF/%E6%A0%87%E6%B8%85%E9%AB%98%E6%B8%85/MP3_320_16_Stero/60054701943.mp3")
     /// 示例音乐 - 喜洋洋
-    static let sample_web_mp3_happy = URL(string: "https://freetyst.nf.migu.cn/public/product9th/product45/2022/07/2211/2009%E5%B9%B406%E6%9C%8826%E6%97%A5%E5%8D%9A%E5%B0%94%E6%99%AE%E6%96%AF/%E6%A0%87%E6%B8%85%E9%AB%98%E6%B8%85/MP3_320_16_Stero/60054701947.mp3")!
+    static let sample_web_mp3_happy = sampleURL("https://freetyst.nf.migu.cn/public/product9th/product45/2022/07/2211/2009%E5%B9%B406%E6%9C%8826%E6%97%A5%E5%8D%9A%E5%B0%94%E6%99%AE%E6%96%AF/%E6%A0%87%E6%B8%85%E9%AB%98%E6%B8%85/MP3_320_16_Stero/60054701947.mp3")
     /// 示例音乐 - 彩云追月
-    static let sample_web_mp3_cloud = URL(string: "https://freetyst.nf.migu.cn/public/product9th/product45/2022/07/2211/2009%E5%B9%B406%E6%9C%8826%E6%97%A5%E5%8D%9A%E5%B0%94%E6%99%AE%E6%96%AF/%E6%A0%87%E6%B8%85%E9%AB%98%E6%B8%85/MP3_320_16_Stero/60054701952.mp3")!
+    static let sample_web_mp3_cloud = sampleURL("https://freetyst.nf.migu.cn/public/product9th/product45/2022/07/2211/2009%E5%B9%B406%E6%9C%8826%E6%97%A5%E5%8D%9A%E5%B0%94%E6%99%AE%E6%96%AF/%E6%A0%87%E6%B8%85%E9%AB%98%E6%B8%85/MP3_320_16_Stero/60054701952.mp3")
     
     /// 备用音乐源 - 古筝
-    static let sample_web_mp3_guzheng = URL(string: "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/WFMU/Monplaisir/Heat_Wave/Monplaisir_-_06_-_Guzheng.mp3")!
+    static let sample_web_mp3_guzheng = sampleURL("https://files.freemusicarchive.org/storage-freemusicarchive-org/music/WFMU/Monplaisir/Heat_Wave/Monplaisir_-_06_-_Guzheng.mp3")
     /// 备用音乐源 - 竹笛
-    static let sample_web_mp3_bamboo = URL(string: "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/Chad_Crouch/Arps/Chad_Crouch_-_Shipping_Lanes.mp3")!
+    static let sample_web_mp3_bamboo = sampleURL("https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/Chad_Crouch/Arps/Chad_Crouch_-_Shipping_Lanes.mp3")
     /// 备用音乐源 - 二胡
-    static let sample_web_mp3_erhu = URL(string: "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/Kai_Engel/Satin/Kai_Engel_-_06_-_Murmuration.mp3")!
+    static let sample_web_mp3_erhu = sampleURL("https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/Kai_Engel/Satin/Kai_Engel_-_06_-_Murmuration.mp3")
     
     /// 示例音效 - 鸟叫
-    static let sample_web_wav_bird = URL(string: "https://fastly.jsdelivr.net/gh/open-source-audio/samples@main/nature/bird.wav")!
+    static let sample_web_wav_bird = sampleURL("https://fastly.jsdelivr.net/gh/open-source-audio/samples@main/nature/bird.wav")
     /// 示例音效 - 雨声
-    static let sample_web_wav_rain = URL(string: "https://fastly.jsdelivr.net/gh/open-source-audio/samples@main/nature/rain.wav")!
+    static let sample_web_wav_rain = sampleURL("https://fastly.jsdelivr.net/gh/open-source-audio/samples@main/nature/rain.wav")
     /// 示例音效 - 溪流
-    static let sample_web_wav_stream = URL(string: "https://fastly.jsdelivr.net/gh/open-source-audio/samples@main/nature/stream.wav")!
+    static let sample_web_wav_stream = sampleURL("https://fastly.jsdelivr.net/gh/open-source-audio/samples@main/nature/stream.wav")
     /// 示例音效 - 风声
-    static let sample_web_wav_wind = URL(string: "https://fastly.jsdelivr.net/gh/open-source-audio/samples@main/nature/wind.wav")!
+    static let sample_web_wav_wind = sampleURL("https://fastly.jsdelivr.net/gh/open-source-audio/samples@main/nature/wind.wav")
     /// 示例音效 - 海浪
-    static let sample_web_wav_wave = URL(string: "https://fastly.jsdelivr.net/gh/open-source-audio/samples@main/nature/wave.wav")!
+    static let sample_web_wav_wave = sampleURL("https://fastly.jsdelivr.net/gh/open-source-audio/samples@main/nature/wave.wav")
     
     // MARK: - 视频示例 (MP4)
     /// Big Buck Bunny 开源动画
-    static let sample_web_mp4_bunny = URL(string: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")!
+    static let sample_web_mp4_bunny = sampleURL("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")
     /// Sintel 开源动画预告片
-    static let sample_web_mp4_sintel = URL(string: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4")!
+    static let sample_web_mp4_sintel = sampleURL("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4")
     /// Elephants Dream 开源动画
-    static let sample_web_mp4_elephants = URL(string: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4")!
+    static let sample_web_mp4_elephants = sampleURL("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4")
     /// Tears of Steel 开源科幻短片
-    static let sample_web_mp4_tears = URL(string: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4")!
+    static let sample_web_mp4_tears = sampleURL("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4")
     /// For Bigger Blazes 示例视频
-    static let sample_web_mp4_blazes = URL(string: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4")!
+    static let sample_web_mp4_blazes = sampleURL("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4")
     
     // MARK: - 中国视频示例 (MP4)
     /// 示例视频 - 航拍长城
-    static let sample_web_mp4_greatwall = URL(string: "https://media.w3.org/2010/05/sintel/trailer.mp4")!
+    static let sample_web_mp4_greatwall = sampleURL("https://media.w3.org/2010/05/sintel/trailer.mp4")
     /// 示例视频 - 航拍黄山
-    static let sample_web_mp4_huangshan = URL(string: "https://vjs.zencdn.net/v/oceans.mp4")!
+    static let sample_web_mp4_huangshan = sampleURL("https://vjs.zencdn.net/v/oceans.mp4")
     /// 示例视频 - 航拍西湖
-    static let sample_web_mp4_westlake = URL(string: "https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4")!
+    static let sample_web_mp4_westlake = sampleURL("https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4")
     /// 示例视频 - 航拍故宫
-    static let sample_web_mp4_palace = URL(string: "https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-720p.mp4")!
+    static let sample_web_mp4_palace = sampleURL("https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-720p.mp4")
     /// 示例视频 - 航拍颐和园
-    static let sample_web_mp4_summer = URL(string: "https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-1080p.mp4")!
+    static let sample_web_mp4_summer = sampleURL("https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-1080p.mp4")
     
     // MARK: - 图片示例 (JPG/PNG)
     /// NASA 地球照片 - 蓝色弹珠
-    static let sample_web_jpg_earth = URL(string: "https://www.nasa.gov/wp-content/uploads/2023/03/feb-2023-blue-marble.jpg")!
+    static let sample_web_jpg_earth = sampleURL("https://www.nasa.gov/wp-content/uploads/2023/03/feb-2023-blue-marble.jpg")
     /// NASA 火星照片 - 好奇号
-    static let sample_web_jpg_mars = URL(string: "https://www.nasa.gov/wp-content/uploads/2023/07/mars-curiosity-rover.jpg")!
+    static let sample_web_jpg_mars = sampleURL("https://www.nasa.gov/wp-content/uploads/2023/07/mars-curiosity-rover.jpg")
     /// NASA 月球照片 - 表面
-    static let sample_web_jpg_moon = URL(string: "https://www.nasa.gov/wp-content/uploads/2023/05/moon-surface.jpg")!
+    static let sample_web_jpg_moon = sampleURL("https://www.nasa.gov/wp-content/uploads/2023/05/moon-surface.jpg")
     /// NASA 木星照片 - 大红斑
-    static let sample_web_jpg_jupiter = URL(string: "https://www.nasa.gov/wp-content/uploads/2023/06/jupiter-great-red-spot.jpg")!
+    static let sample_web_jpg_jupiter = sampleURL("https://www.nasa.gov/wp-content/uploads/2023/06/jupiter-great-red-spot.jpg")
     /// NASA 土星照片 - 光环
-    static let sample_web_jpg_saturn = URL(string: "https://www.nasa.gov/wp-content/uploads/2023/04/saturn-rings.jpg")!
+    static let sample_web_jpg_saturn = sampleURL("https://www.nasa.gov/wp-content/uploads/2023/04/saturn-rings.jpg")
     
     /// Wikipedia PNG 示例 - 透明度演示
-    static let sample_web_png_transparency = URL(string: "https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png")!
+    static let sample_web_png_transparency = sampleURL("https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png")
     /// Wikipedia PNG 示例 - 色彩渐变
-    static let sample_web_png_gradient = URL(string: "https://upload.wikimedia.org/wikipedia/commons/a/a4/RGB_color_gradient.png")!
+    static let sample_web_png_gradient = sampleURL("https://upload.wikimedia.org/wikipedia/commons/a/a4/RGB_color_gradient.png")
     /// Wikipedia PNG 示例 - 图表
-    static let sample_web_png_circles = URL(string: "https://upload.wikimedia.org/wikipedia/commons/8/8a/PNG_demonstration_circles.png")!
+    static let sample_web_png_circles = sampleURL("https://upload.wikimedia.org/wikipedia/commons/8/8a/PNG_demonstration_circles.png")
     /// Wikipedia PNG 示例 - 调色板
-    static let sample_web_png_palette = URL(string: "https://upload.wikimedia.org/wikipedia/commons/c/c4/PNG_palette_demonstration.png")!
+    static let sample_web_png_palette = sampleURL("https://upload.wikimedia.org/wikipedia/commons/c/c4/PNG_palette_demonstration.png")
     /// Wikipedia PNG 示例 - 像素艺术
-    static let sample_web_png_pixel = URL(string: "https://upload.wikimedia.org/wikipedia/commons/7/7d/PNG_pixel_art_demonstration.png")!
+    static let sample_web_png_pixel = sampleURL("https://upload.wikimedia.org/wikipedia/commons/7/7d/PNG_pixel_art_demonstration.png")
     
     // MARK: - 中国图片示例 (JPG/PNG)
     /// 示例图片 - 长城
-    static let sample_web_jpg_greatwall = URL(string: "https://fastly.jsdelivr.net/gh/open-source-photos/china@main/greatwall.jpg")!
+    static let sample_web_jpg_greatwall = sampleURL("https://fastly.jsdelivr.net/gh/open-source-photos/china@main/greatwall.jpg")
     /// 示例图片 - 故宫
-    static let sample_web_jpg_palace = URL(string: "https://fastly.jsdelivr.net/gh/open-source-photos/china@main/palace.jpg")!
+    static let sample_web_jpg_palace = sampleURL("https://fastly.jsdelivr.net/gh/open-source-photos/china@main/palace.jpg")
     /// 示例图片 - 西湖
-    static let sample_web_jpg_westlake = URL(string: "https://fastly.jsdelivr.net/gh/open-source-photos/china@main/westlake.jpg")!
+    static let sample_web_jpg_westlake = sampleURL("https://fastly.jsdelivr.net/gh/open-source-photos/china@main/westlake.jpg")
     /// 示例图片 - 黄山
-    static let sample_web_jpg_huangshan = URL(string: "https://fastly.jsdelivr.net/gh/open-source-photos/china@main/huangshan.jpg")!
+    static let sample_web_jpg_huangshan = sampleURL("https://fastly.jsdelivr.net/gh/open-source-photos/china@main/huangshan.jpg")
     /// 示例图片 - 兵马俑
-    static let sample_web_jpg_terracotta = URL(string: "https://fastly.jsdelivr.net/gh/open-source-photos/china@main/terracotta.jpg")!
+    static let sample_web_jpg_terracotta = sampleURL("https://fastly.jsdelivr.net/gh/open-source-photos/china@main/terracotta.jpg")
     
     /// 示例图片 - 熊猫
-    static let sample_web_png_panda = URL(string: "https://fastly.jsdelivr.net/gh/open-source-photos/animals@main/panda.png")!
+    static let sample_web_png_panda = sampleURL("https://fastly.jsdelivr.net/gh/open-source-photos/animals@main/panda.png")
     /// 示例图片 - 金丝猴
-    static let sample_web_png_monkey = URL(string: "https://fastly.jsdelivr.net/gh/open-source-photos/animals@main/monkey.png")!
+    static let sample_web_png_monkey = sampleURL("https://fastly.jsdelivr.net/gh/open-source-photos/animals@main/monkey.png")
     /// 示例图片 - 丹顶鹤
-    static let sample_web_png_crane = URL(string: "https://fastly.jsdelivr.net/gh/open-source-photos/animals@main/crane.png")!
+    static let sample_web_png_crane = sampleURL("https://fastly.jsdelivr.net/gh/open-source-photos/animals@main/crane.png")
     /// 示例图片 - 朱鹮
-    static let sample_web_png_ibis = URL(string: "https://fastly.jsdelivr.net/gh/open-source-photos/animals@main/ibis.png")!
+    static let sample_web_png_ibis = sampleURL("https://fastly.jsdelivr.net/gh/open-source-photos/animals@main/ibis.png")
     /// 示例图片 - 雪豹
-    static let sample_web_png_leopard = URL(string: "https://fastly.jsdelivr.net/gh/open-source-photos/animals@main/leopard.png")!
+    static let sample_web_png_leopard = sampleURL("https://fastly.jsdelivr.net/gh/open-source-photos/animals@main/leopard.png")
     
     // MARK: - 流媒体示例 (HLS)
     /// Apple 示例 HLS 流 - 基础
-    static let sample_web_stream_basic = URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8")!
+    static let sample_web_stream_basic = sampleURL("https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8")
     /// Apple 示例 HLS 流 - 高级
-    static let sample_web_stream_advanced = URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8")!
+    static let sample_web_stream_advanced = sampleURL("https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8")
     /// Apple 示例 HLS 流 - 4K
-    static let sample_web_stream_4k = URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/4k_hevc/master.m3u8")!
+    static let sample_web_stream_4k = sampleURL("https://devstreaming-cdn.apple.com/videos/streaming/examples/4k_hevc/master.m3u8")
     /// Apple 示例 HLS 流 - HDR
-    static let sample_web_stream_hdr = URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/hdr10_hevc/master.m3u8")!
+    static let sample_web_stream_hdr = sampleURL("https://devstreaming-cdn.apple.com/videos/streaming/examples/hdr10_hevc/master.m3u8")
     /// Apple 示例 HLS 流 - 杜比视界
-    static let sample_web_stream_dolby = URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/dolby_vision/master.m3u8")!
+    static let sample_web_stream_dolby = sampleURL("https://devstreaming-cdn.apple.com/videos/streaming/examples/dolby_vision/master.m3u8")
     
     // MARK: - 其他流媒体示例 (HLS)
     /// 示例直播流 - 测试流 1
-    static let sample_web_stream_test1 = URL(string: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8")!
+    static let sample_web_stream_test1 = sampleURL("https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8")
     /// 示例直播流 - 测试流 2
-    static let sample_web_stream_test2 = URL(string: "https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8")!
+    static let sample_web_stream_test2 = sampleURL("https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8")
     /// 示例直播流 - 测试流 3
-    static let sample_web_stream_test3 = URL(string: "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8")!
+    static let sample_web_stream_test3 = sampleURL("https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8")
     /// 示例直播流 - 测试流 4
-    static let sample_web_stream_test4 = URL(string: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8")!
+    static let sample_web_stream_test4 = sampleURL("https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8")
     /// 示例直播流 - 测试流 5
-    static let sample_web_stream_test5 = URL(string: "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8")!
+    static let sample_web_stream_test5 = sampleURL("https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8")
     
     // MARK: - 其他示例 (PDF/TXT)
     /// Swift 文档 PDF - 入门指南
-    static let sample_web_pdf_swift_guide = URL(string: "https://docs.swift.org/swift-book/documentation/the-swift-programming-language/guidedtour.pdf")!
+    static let sample_web_pdf_swift_guide = sampleURL("https://docs.swift.org/swift-book/documentation/the-swift-programming-language/guidedtour.pdf")
     /// SwiftUI 文档 PDF - 视图和控件
-    static let sample_web_pdf_swiftui = URL(string: "https://docs.swift.org/swift-book/documentation/swiftui/views-and-controls.pdf")!
+    static let sample_web_pdf_swiftui = sampleURL("https://docs.swift.org/swift-book/documentation/swiftui/views-and-controls.pdf")
     /// Swift 文档 PDF - 并发编程
-    static let sample_web_pdf_concurrency = URL(string: "https://docs.swift.org/swift-book/documentation/swift/concurrency.pdf")!
+    static let sample_web_pdf_concurrency = sampleURL("https://docs.swift.org/swift-book/documentation/swift/concurrency.pdf")
     /// Swift 文档 PDF - 内存安全
-    static let sample_web_pdf_memory = URL(string: "https://docs.swift.org/swift-book/documentation/swift/memory-safety.pdf")!
+    static let sample_web_pdf_memory = sampleURL("https://docs.swift.org/swift-book/documentation/swift/memory-safety.pdf")
     /// Swift 文档 PDF - 泛型编程
-    static let sample_web_pdf_generics = URL(string: "https://docs.swift.org/swift-book/documentation/swift/generics.pdf")!
+    static let sample_web_pdf_generics = sampleURL("https://docs.swift.org/swift-book/documentation/swift/generics.pdf")
     
     /// MIT 开源协议
-    static let sample_web_txt_mit = URL(string: "https://opensource.org/licenses/MIT")!
+    static let sample_web_txt_mit = sampleURL("https://opensource.org/licenses/MIT")
     /// Apache 开源协议
-    static let sample_web_txt_apache = URL(string: "https://www.apache.org/licenses/LICENSE-2.0.txt")!
+    static let sample_web_txt_apache = sampleURL("https://www.apache.org/licenses/LICENSE-2.0.txt")
     /// GPL 开源协议
-    static let sample_web_txt_gpl = URL(string: "https://www.gnu.org/licenses/gpl-3.0.txt")!
+    static let sample_web_txt_gpl = sampleURL("https://www.gnu.org/licenses/gpl-3.0.txt")
     /// BSD 开源协议
-    static let sample_web_txt_bsd = URL(string: "https://opensource.org/licenses/BSD-3-Clause")!
+    static let sample_web_txt_bsd = sampleURL("https://opensource.org/licenses/BSD-3-Clause")
     /// Mozilla 开源协议
-    static let sample_web_txt_mozilla = URL(string: "https://www.mozilla.org/media/MPL/2.0/index.txt")!
+    static let sample_web_txt_mozilla = sampleURL("https://www.mozilla.org/media/MPL/2.0/index.txt")
     
     // MARK: - 中文文档示例 (PDF/TXT)
     /// Swift 中文文档 PDF - 入门指南
-    static let sample_web_pdf_swift_guide_cn = URL(string: "https://fastly.jsdelivr.net/gh/swift-china/docs@main/swift-guide.pdf")!
+    static let sample_web_pdf_swift_guide_cn = sampleURL("https://fastly.jsdelivr.net/gh/swift-china/docs@main/swift-guide.pdf")
     /// SwiftUI 中文文档 PDF - 视图和控件
-    static let sample_web_pdf_swiftui_cn = URL(string: "https://fastly.jsdelivr.net/gh/swift-china/docs@main/swiftui-views.pdf")!
+    static let sample_web_pdf_swiftui_cn = sampleURL("https://fastly.jsdelivr.net/gh/swift-china/docs@main/swiftui-views.pdf")
     /// Swift 中文文档 PDF - 并发编程
-    static let sample_web_pdf_concurrency_cn = URL(string: "https://fastly.jsdelivr.net/gh/swift-china/docs@main/swift-concurrency.pdf")!
+    static let sample_web_pdf_concurrency_cn = sampleURL("https://fastly.jsdelivr.net/gh/swift-china/docs@main/swift-concurrency.pdf")
     /// Swift 中文文档 PDF - 内存安全
-    static let sample_web_pdf_memory_cn = URL(string: "https://fastly.jsdelivr.net/gh/swift-china/docs@main/swift-memory.pdf")!
+    static let sample_web_pdf_memory_cn = sampleURL("https://fastly.jsdelivr.net/gh/swift-china/docs@main/swift-memory.pdf")
     /// Swift 中文文档 PDF - 泛型编程
-    static let sample_web_pdf_generics_cn = URL(string: "https://fastly.jsdelivr.net/gh/swift-china/docs@main/swift-generics.pdf")!
+    static let sample_web_pdf_generics_cn = sampleURL("https://fastly.jsdelivr.net/gh/swift-china/docs@main/swift-generics.pdf")
     
     /// 示例文本 - 论语
-    static let sample_web_txt_lunyu = URL(string: "https://fastly.jsdelivr.net/gh/chinese-poetry/chinese-poetry@master/lunyu/lunyu.json")!
+    static let sample_web_txt_lunyu = sampleURL("https://fastly.jsdelivr.net/gh/chinese-poetry/chinese-poetry@master/lunyu/lunyu.json")
     /// 示例文本 - 诗经
-    static let sample_web_txt_shijing = URL(string: "https://fastly.jsdelivr.net/gh/chinese-poetry/chinese-poetry@master/shijing/shijing.json")!
+    static let sample_web_txt_shijing = sampleURL("https://fastly.jsdelivr.net/gh/chinese-poetry/chinese-poetry@master/shijing/shijing.json")
     /// 示例文本 - 楚辞
-    static let sample_web_txt_chuci = URL(string: "https://fastly.jsdelivr.net/gh/chinese-poetry/chinese-poetry@master/chuci/chuci.json")!
+    static let sample_web_txt_chuci = sampleURL("https://fastly.jsdelivr.net/gh/chinese-poetry/chinese-poetry@master/chuci/chuci.json")
     /// 示例文本 - 唐诗
-    static let sample_web_txt_tangshi = URL(string: "https://fastly.jsdelivr.net/gh/chinese-poetry/chinese-poetry@master/json/poet.tang.json")!
+    static let sample_web_txt_tangshi = sampleURL("https://fastly.jsdelivr.net/gh/chinese-poetry/chinese-poetry@master/json/poet.tang.json")
     /// 示例文本 - 宋词
-    static let sample_web_txt_songci = URL(string: "https://fastly.jsdelivr.net/gh/chinese-poetry/chinese-poetry@master/json/poet.song.json")!
+    static let sample_web_txt_songci = sampleURL("https://fastly.jsdelivr.net/gh/chinese-poetry/chinese-poetry@master/json/poet.song.json")
     
     // MARK: - HTML示例
     /// HTML示例 - 基础模板
-    static let sample_web_html_basic = URL(string: "https://raw.githubusercontent.com/mdn/learning-area/main/html/introduction-to-html/getting-started/index.html")!
+    static let sample_web_html_basic = sampleURL("https://raw.githubusercontent.com/mdn/learning-area/main/html/introduction-to-html/getting-started/index.html")
     /// HTML示例 - CSS样式
-    static let sample_web_html_css = URL(string: "https://raw.githubusercontent.com/mdn/learning-area/main/css/introduction-to-css/simple-css-examples/stylesheet-examples.html")!
+    static let sample_web_html_css = sampleURL("https://raw.githubusercontent.com/mdn/learning-area/main/css/introduction-to-css/simple-css-examples/stylesheet-examples.html")
     /// HTML示例 - JavaScript交互
-    static let sample_web_html_js = URL(string: "https://raw.githubusercontent.com/mdn/learning-area/main/javascript/introduction-to-js-1/what-is-js/javascript-label.html")!
+    static let sample_web_html_js = sampleURL("https://raw.githubusercontent.com/mdn/learning-area/main/javascript/introduction-to-js-1/what-is-js/javascript-label.html")
     /// HTML示例 - 响应式设计
-    static let sample_web_html_responsive = URL(string: "https://raw.githubusercontent.com/mdn/learning-area/main/css/introduction-to-css/fundamental-css-comprehension/index.html")!
+    static let sample_web_html_responsive = sampleURL("https://raw.githubusercontent.com/mdn/learning-area/main/css/introduction-to-css/fundamental-css-comprehension/index.html")
     /// HTML示例 - 表单
-    static let sample_web_html_form = URL(string: "https://raw.githubusercontent.com/mdn/learning-area/main/html/forms/your-first-HTML-form/first-form.html")!
+    static let sample_web_html_form = sampleURL("https://raw.githubusercontent.com/mdn/learning-area/main/html/forms/your-first-HTML-form/first-form.html")
     
     /// HTML示例 - 中文网页模板
-    static let sample_web_html_cn_basic = URL(string: "https://fastly.jsdelivr.net/gh/web-samples/html-examples@main/chinese/basic.html")!
+    static let sample_web_html_cn_basic = sampleURL("https://fastly.jsdelivr.net/gh/web-samples/html-examples@main/chinese/basic.html")
     /// HTML示例 - 中文博客模板
-    static let sample_web_html_cn_blog = URL(string: "https://fastly.jsdelivr.net/gh/web-samples/html-examples@main/chinese/blog.html")!
+    static let sample_web_html_cn_blog = sampleURL("https://fastly.jsdelivr.net/gh/web-samples/html-examples@main/chinese/blog.html")
     /// HTML示例 - 中文产品页面
-    static let sample_web_html_cn_product = URL(string: "https://fastly.jsdelivr.net/gh/web-samples/html-examples@main/chinese/product.html")!
+    static let sample_web_html_cn_product = sampleURL("https://fastly.jsdelivr.net/gh/web-samples/html-examples@main/chinese/product.html")
     /// HTML示例 - 中文新闻页面
-    static let sample_web_html_cn_news = URL(string: "https://fastly.jsdelivr.net/gh/web-samples/html-examples@main/chinese/news.html")!
+    static let sample_web_html_cn_news = sampleURL("https://fastly.jsdelivr.net/gh/web-samples/html-examples@main/chinese/news.html")
     /// HTML示例 - 中文联系表单
-    static let sample_web_html_cn_contact = URL(string: "https://fastly.jsdelivr.net/gh/web-samples/html-examples@main/chinese/contact.html")!
+    static let sample_web_html_cn_contact = sampleURL("https://fastly.jsdelivr.net/gh/web-samples/html-examples@main/chinese/contact.html")
     
     // MARK: - 临时文件示例
     /// 临时目录中的文本文件
@@ -662,7 +666,7 @@ public extension URL {
     
     // MARK: - 错误示例
     /// 无效的 URL 示例
-    static let sample_invalid_url = URL(string: "invalid://url.example")!
+    static let sample_invalid_url = sampleURL("invalid://url.example")
     
     /// 不存在的文件示例
     static let sample_nonexistent_file = FileManager.default.temporaryDirectory
