@@ -1,6 +1,6 @@
 #if os(macOS)
     import CisumUI
-import MagicAlert
+    import MagicAlert
     import MagicKit
     import OSLog
     import PluginAudio
@@ -78,6 +78,9 @@ import MagicAlert
                 self.outOfLimit = isOutOfLimit
             }
             if isOutOfLimit {
+                await MainActor.run {
+                    alert_error(String(localized: "Copy limit reached", table: "Audio-Copy-macOS", bundle: .module))
+                }
                 return false
             }
 
@@ -90,6 +93,9 @@ import MagicAlert
             // 从 AudioCopyService 获取 worker
             guard let worker = AudioCopyService.getWorker() else {
                 os_log(.error, "\(self.t)Failed to get worker")
+                await MainActor.run {
+                    alert_error(String(localized: "Copy service is unavailable", table: "Audio-Copy-macOS", bundle: .module))
+                }
                 return false
             }
 
@@ -115,6 +121,9 @@ import MagicAlert
                         }
                     } catch {
                         os_log(.error, "\(self.t)Failed to load URL or create bookmark: \(error.localizedDescription)")
+                        await MainActor.run {
+                            alert_error(String(localized: "Failed to prepare file: \(error.localizedDescription)", table: "Audio-Copy-macOS", bundle: .module))
+                        }
                     }
                 }
             }
@@ -125,6 +134,11 @@ import MagicAlert
 
             if tasks.isNotEmpty {
                 await worker.append(tasks: tasks, folder: disk)
+            } else {
+                await MainActor.run {
+                    alert_error(String(localized: "No files were added", table: "Audio-Copy-macOS", bundle: .module))
+                }
+                return false
             }
 
             return true
