@@ -70,12 +70,24 @@
                         do {
                             // Resolve the bookmark to get a security-scoped URL
                             guard let url = try? URL(resolvingBookmarkData: task.bookmark, options: .withSecurityScope, relativeTo: nil, bookmarkDataIsStale: &stale) else {
-                                throw NSError(domain: "CopyWorker", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to resolve bookmark"])
+                                throw NSError(
+                                    domain: "CopyWorker",
+                                    code: 0,
+                                    userInfo: [
+                                        NSLocalizedDescriptionKey: String(localized: "The original file can no longer be accessed", table: "Audio-Copy-macOS", bundle: .module)
+                                    ]
+                                )
                             }
 
                             // Start accessing the resource
                             guard url.startAccessingSecurityScopedResource() else {
-                                throw NSError(domain: "CopyWorker", code: 1, userInfo: [NSLocalizedDescriptionKey: "Failed to start accessing security-scoped resource"])
+                                throw NSError(
+                                    domain: "CopyWorker",
+                                    code: 1,
+                                    userInfo: [
+                                        NSLocalizedDescriptionKey: String(localized: "Permission to access the original file was denied", table: "Audio-Copy-macOS", bundle: .module)
+                                    ]
+                                )
                             }
 
                             // Ensure we stop accessing the resource when we're done

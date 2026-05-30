@@ -215,6 +215,22 @@
         }
       }
     },
+    "Permission to access the original file was denied": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "没有访问原文件的权限"
+          }
+        },
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "沒有存取原文件的權限"
+          }
+        }
+      }
+    },
     "Storage location is unavailable": {
       "localizations": {
         "zh-Hans": {
@@ -227,6 +243,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "儲存位置不可用"
+          }
+        }
+      }
+    },
+    "The original file can no longer be accessed": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无法再访问原文件"
+          }
+        },
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "無法再存取原文件"
           }
         }
       }
