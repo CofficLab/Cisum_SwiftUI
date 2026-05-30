@@ -6,3 +6,11 @@ import Testing
     #expect(AudioLikePluginInfo.emoji == "❤️")
     #expect(AudioLikePluginInfo.order == 3)
 }
+
+@Test
+@MainActor
+func pluginExposesSettingsView() {
+    let view = AudioLikePlugin.shared.addSettingView()
+
+    #expect(view != nil)
+}

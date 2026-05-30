@@ -15,6 +15,11 @@ public actor BookLikePlugin: SuperPlugin {
     public func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {
         AnyView(BookLikePluginRootView(content: content))
     }
+
+    @MainActor
+    public func addSettingView() -> AnyView? {
+        AnyView(BookLikeSettingsView())
+    }
 }
 
 private struct BookLikePluginRootView<Content>: View where Content: View {

@@ -7,6 +7,14 @@ import Foundation
     #expect(BookLikePluginInfo.order == 6)
 }
 
+@Test
+@MainActor
+func pluginExposesSettingsView() {
+    let view = BookLikePlugin.shared.addSettingView()
+
+    #expect(view != nil)
+}
+
 @Test func bookLikeStorePersistsRealLikedBooks() throws {
     let suiteName = "PluginBookLikeTests-\(UUID().uuidString)"
     let defaults = try #require(UserDefaults(suiteName: suiteName))

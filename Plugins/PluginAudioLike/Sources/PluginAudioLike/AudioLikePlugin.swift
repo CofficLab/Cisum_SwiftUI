@@ -15,6 +15,11 @@ public actor AudioLikePlugin: SuperPlugin {
     public func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View {
         AnyView(AudioLikePluginRootView(content: content))
     }
+
+    @MainActor
+    public func addSettingView() -> AnyView? {
+        AnyView(AudioLikeSettingsView())
+    }
 }
 
 private struct AudioLikePluginRootView<Content>: View where Content: View {
