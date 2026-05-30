@@ -147,9 +147,6 @@ struct MigrationProgressView: View {
                 dependencies.updateStorageLocation(targetLocation)
                 self.migrationCompleted = true
                 self.currentMigratingFile = shouldMigrate ? "迁移完成" : "已切换到新位置"
-                
-                // 发送存储位置更新通知
-                dependencies.postStorageLocationUpdated()
             }
         } catch MigrationError.migrationCancelled {
             await MainActor.run {
