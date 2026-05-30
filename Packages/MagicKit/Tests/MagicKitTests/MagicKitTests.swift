@@ -37,6 +37,20 @@ final class MagicKitTests: XCTestCase {
         XCTAssertEqual(URL.sample_web_stream_basic.pathExtension, "m3u8")
     }
 
+    func testEnsureLocalAvailabilityReturnsForLocalFile() async throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer {
+            try? FileManager.default.removeItem(at: root)
+        }
+
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        let file = root.appendingPathComponent("track.mp3")
+        try Data("audio".utf8).write(to: file)
+
+        try await file.ensureLocalAvailability(timeout: 0.1, pollInterval: 0.05)
+    }
+
     func testImageCropping() {
         // 暂时跳过此测试，因为缺少相关的图像处理功能
         // let originalImage = UIImage(named: "testImage")!

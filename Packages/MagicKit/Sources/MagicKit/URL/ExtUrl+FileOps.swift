@@ -105,15 +105,49 @@ public extension URL {
         caller: String,
         downloadProgress: ((Double) -> Void)? = nil
     ) async throws {
-        if checkIsICloud(verbose: false), isNotDownloaded {
-            try FileManager.default.startDownloadingUbiquitousItem(at: self)
-        }
+        try await ensureLocalAvailability()
 
         if FileManager.default.fileExists(atPath: destination.path) {
             try FileManager.default.removeItem(at: destination)
         }
 
         try FileManager.default.copyItem(at: self, to: destination)
+    }
+
+    /// Ensure an iCloud-backed file has finished downloading before a caller reads or copies it.
+    func ensureLocalAvailability(
+        timeout: TimeInterval = 120,
+        pollInterval: TimeInterval = 0.25
+    ) async throws {
+        guard checkIsICloud(verbose: false) else { return }
+
+        if isDownloaded { return }
+
+        if isNotDownloaded {
+            try FileManager.default.startDownloadingUbiquitousItem(at: self)
+        }
+
+        let deadline = Date().addingTimeInterval(timeout)
+        while Date() < deadline {
+            try Task.checkCancellation()
+
+            var refreshedURL = self
+            refreshedURL.removeAllCachedResourceValues()
+            if refreshedURL.isDownloaded {
+                return
+            }
+
+            let nanoseconds = UInt64(max(pollInterval, 0.05) * 1_000_000_000)
+            try await Task.sleep(nanoseconds: nanoseconds)
+        }
+
+        throw NSError(
+            domain: "MagicKit.FileAvailability",
+            code: 1,
+            userInfo: [
+                NSLocalizedDescriptionKey: "Timed out waiting for iCloud file to download: \(lastPathComponent)"
+            ]
+        )
     }
 
     /// 计算文件的 MD5 哈希值。

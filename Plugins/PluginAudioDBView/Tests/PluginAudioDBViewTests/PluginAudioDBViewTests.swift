@@ -7,7 +7,7 @@ import Foundation
     #expect(AudioDBPluginInfo.table == "Audio-DBView")
 }
 
-@Test func audioImportCleansCopiedFilesWhenBatchFails() throws {
+@Test func audioImportCleansCopiedFilesWhenBatchFails() async throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)
     let sourceRoot = root.appendingPathComponent("source", isDirectory: true)
@@ -21,8 +21,8 @@ import Foundation
     let missingSource = sourceRoot.appendingPathComponent("missing.mp3")
     try Data("audio".utf8).write(to: validSource)
 
-    #expect(throws: Error.self) {
-        try AudioDBView.copyFilesInBackground([validSource, missingSource], to: destinationRoot)
+    await #expect(throws: Error.self) {
+        try await AudioDBView.copyFilesInBackground([validSource, missingSource], to: destinationRoot)
     }
 
     #expect(FileManager.default.fileExists(atPath: destinationRoot.appendingPathComponent("valid.mp3").path) == false)

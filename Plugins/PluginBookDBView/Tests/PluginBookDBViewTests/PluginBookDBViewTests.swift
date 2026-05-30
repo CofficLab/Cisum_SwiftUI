@@ -28,7 +28,7 @@ import Foundation
     #expect(BookDBView.folderContainsPlayableFiles(supportedFolder) == true)
 }
 
-@Test func bookImportCleansCopiedItemsWhenBatchFails() throws {
+@Test func bookImportCleansCopiedItemsWhenBatchFails() async throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)
     let sourceRoot = root.appendingPathComponent("source", isDirectory: true)
@@ -42,8 +42,8 @@ import Foundation
     let missingSource = sourceRoot.appendingPathComponent("chapter-2.m4b")
     try Data("audio".utf8).write(to: validSource)
 
-    #expect(throws: Error.self) {
-        try BookDBView.copyImportedItems([validSource, missingSource], to: destinationRoot)
+    await #expect(throws: Error.self) {
+        try await BookDBView.copyImportedItems([validSource, missingSource], to: destinationRoot)
     }
 
     #expect(FileManager.default.fileExists(atPath: destinationRoot.appendingPathComponent("source").path) == false)

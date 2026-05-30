@@ -119,11 +119,11 @@ extension AudioDBView {
         ])
 
         return try await Task.detached(priority: .userInitiated) {
-            try Self.copyFilesInBackground(urls, to: storageRoot)
+            try await Self.copyFilesInBackground(urls, to: storageRoot)
         }.value
     }
 
-    nonisolated static func copyFilesInBackground(_ urls: [URL], to storageRoot: URL) throws -> [URL] {
+    nonisolated static func copyFilesInBackground(_ urls: [URL], to storageRoot: URL) async throws -> [URL] {
         try FileManager.default.createDirectory(at: storageRoot, withIntermediateDirectories: true)
 
         var copiedURLs: [URL] = []
@@ -137,7 +137,7 @@ extension AudioDBView {
                     os_log("\(Self.t)📄 复制: \(url.lastPathComponent)")
                 }
 
-                try copySecurityScopedFile(url, to: destination)
+                try await copySecurityScopedFile(url, to: destination)
                 copiedURLs.append(destination)
             }
         } catch {
@@ -178,7 +178,7 @@ extension AudioDBView {
         return candidate
     }
 
-    nonisolated private static func copySecurityScopedFile(_ source: URL, to destination: URL) throws {
+    nonisolated private static func copySecurityScopedFile(_ source: URL, to destination: URL) async throws {
         let hasAccess = source.startAccessingSecurityScopedResource()
         guard hasAccess else {
             throw NSError(
@@ -194,9 +194,7 @@ extension AudioDBView {
             source.stopAccessingSecurityScopedResource()
         }
 
-        if source.checkIsICloud(verbose: false), source.isNotDownloaded {
-            try FileManager.default.startDownloadingUbiquitousItem(at: source)
-        }
+        try await source.ensureLocalAvailability()
 
         try FileManager.default.copyItem(at: source, to: destination)
     }

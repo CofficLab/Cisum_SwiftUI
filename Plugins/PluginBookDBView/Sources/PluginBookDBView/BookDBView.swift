@@ -95,7 +95,7 @@ extension BookDBView {
         Task {
             do {
                 let copiedItems = try await Task.detached(priority: .userInitiated) {
-                    try Self.copyImportedItems(files, to: bookDisk)
+                    try await Self.copyImportedItems(files, to: bookDisk)
                 }.value
                 guard !copiedItems.isEmpty else {
                     alert_error(String(localized: "No files were added", table: "Book-DBView", bundle: .module))
@@ -116,7 +116,7 @@ extension BookDBView {
 // MARK: - Import Helpers
 
 extension BookDBView {
-    nonisolated static func copyImportedItems(_ files: [URL], to bookDisk: URL) throws -> [URL] {
+    nonisolated static func copyImportedItems(_ files: [URL], to bookDisk: URL) async throws -> [URL] {
         try FileManager.default.createDirectory(at: bookDisk, withIntermediateDirectories: true)
 
         let folders = files.filter(\.isFolder)
@@ -130,7 +130,7 @@ extension BookDBView {
                 guard try canImportFolder(folder) else { continue }
 
                 let destination = uniqueDestination(for: folder, in: bookDisk)
-                try copySecurityScopedItem(folder, to: destination)
+                try await copySecurityScopedItem(folder, to: destination)
                 copiedItems.append(destination)
             }
 
@@ -143,7 +143,7 @@ extension BookDBView {
 
             for file in audioFiles {
                 let destination = uniqueDestination(for: file, in: collectionURL)
-                try copySecurityScopedItem(file, to: destination)
+                try await copySecurityScopedItem(file, to: destination)
                 copiedItems.append(destination)
             }
         } catch {
@@ -181,7 +181,7 @@ extension BookDBView {
         }
     }
 
-    private nonisolated static func copySecurityScopedItem(_ source: URL, to destination: URL) throws {
+    private nonisolated static func copySecurityScopedItem(_ source: URL, to destination: URL) async throws {
         let hasAccess = source.startAccessingSecurityScopedResource()
         guard hasAccess else {
             throw NSError(
@@ -197,8 +197,12 @@ extension BookDBView {
             source.stopAccessingSecurityScopedResource()
         }
 
-        if source.checkIsICloud(verbose: false), source.isNotDownloaded {
-            try FileManager.default.startDownloadingUbiquitousItem(at: source)
+        if source.isFolder {
+            for child in source.flatten() {
+                try await child.ensureLocalAvailability()
+            }
+        } else {
+            try await source.ensureLocalAvailability()
         }
 
         try FileManager.default.copyItem(at: source, to: destination)

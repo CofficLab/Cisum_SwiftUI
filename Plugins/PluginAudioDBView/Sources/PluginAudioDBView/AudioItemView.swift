@@ -128,7 +128,7 @@ extension AudioItemView {
         Task {
             do {
                 let finalDestinationURL = try await Task.detached(priority: .userInitiated) {
-                    try Self.copyToDownloads(sourceURL)
+                    try await Self.copyToDownloads(sourceURL)
                 }.value
 
                 if Self.verbose {
@@ -144,7 +144,7 @@ extension AudioItemView {
         }
     }
 
-    nonisolated private static func copyToDownloads(_ sourceURL: URL) throws -> URL {
+    nonisolated private static func copyToDownloads(_ sourceURL: URL) async throws -> URL {
         // 获取下载目录
         let downloadsURL = try FileManager.default.url(
             for: .downloadsDirectory,
@@ -155,9 +155,7 @@ extension AudioItemView {
 
         let finalDestinationURL = uniqueDestination(for: sourceURL, in: downloadsURL)
 
-        if sourceURL.checkIsICloud(verbose: false), sourceURL.isNotDownloaded {
-            try FileManager.default.startDownloadingUbiquitousItem(at: sourceURL)
-        }
+        try await sourceURL.ensureLocalAvailability()
 
         try FileManager.default.copyItem(at: sourceURL, to: finalDestinationURL)
         return finalDestinationURL
