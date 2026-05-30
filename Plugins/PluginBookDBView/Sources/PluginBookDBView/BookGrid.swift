@@ -34,6 +34,9 @@ struct BookGrid: View, SuperLog, SuperThread, SuperEvent {
     /// 防抖更新任务
     @State private var updateBooksDebounceTask: Task<Void, Never>? = nil
 
+    /// 当前书籍列表加载世代，用于丢弃过期后台刷新结果。
+    @State private var updateBooksGeneration: Int = 0
+
     /// 书籍总数
     var total: Int { books.count }
 
@@ -130,6 +133,9 @@ extension BookGrid {
     /// 使用后台优先级执行，避免阻塞主线程。
     private func updateBooks() {
         let currentRepo = self.repo
+        updateBooksGeneration += 1
+        let generation = updateBooksGeneration
+
         Task.detached(priority: .background) {
             if Self.verbose {
                 os_log("\(self.t)🔄 开始获取书籍列表")
@@ -141,7 +147,7 @@ extension BookGrid {
                 os_log("\(self.t)✅ 获取到 \(books.count) 本书籍")
             }
 
-            await self.setBooks(books)
+            await self.setBooks(books, generation: generation)
         }
     }
 
@@ -295,7 +301,11 @@ extension BookGrid {
     ///
     /// - Parameter newValue: 新的书籍 DTO 列表
     @MainActor
-    private func setBooks(_ newValue: [BookDTO]) {
+    private func setBooks(_ newValue: [BookDTO], generation: Int) {
+        guard updateBooksGeneration == generation else {
+            return
+        }
+
         if Self.verbose {
             os_log("\(self.t)📋 设置书籍列表，数量: \(newValue.count)")
         }
