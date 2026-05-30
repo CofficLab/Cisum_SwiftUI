@@ -50,7 +50,7 @@ final class AppThemeProvider: ObservableObject, SuperLog {
         do {
             try ThemeService.shared.syncFromPlugins(pluginProvider: pluginProvider, registry: registry)
         } catch {
-            fatalError("Failed to register Cisum themes: \(error)")
+            os_log(.error, "\(Self.t)主题注册失败: \(error.localizedDescription)")
         }
 
         let savedThemeId = UserDefaults.standard.string(forKey: Self.selectedThemeKey)
