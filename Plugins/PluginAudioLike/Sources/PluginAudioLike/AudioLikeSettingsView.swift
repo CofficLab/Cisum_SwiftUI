@@ -56,6 +56,9 @@ public struct AudioLikeSettingsView: View, SuperLog {
         .onAppear {
             loadLikedAudios()
         }
+        .onReceive(NotificationCenter.default.publisher(for: .AudioLikeStatusChanged)) { _ in
+            loadLikedAudios()
+        }
     }
 
     private func loadLikedAudios() {
