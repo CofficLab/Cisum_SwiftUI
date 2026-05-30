@@ -48,3 +48,29 @@ import Foundation
 
     #expect(FileManager.default.fileExists(atPath: destinationRoot.appendingPathComponent("source").path) == false)
 }
+
+@Test func bookPlaybackOrderingUsesRelativePaths() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    let disc1 = root.appendingPathComponent("Disc 1", isDirectory: true)
+    let disc2 = root.appendingPathComponent("Disc 2", isDirectory: true)
+    try FileManager.default.createDirectory(at: disc1, withIntermediateDirectories: true)
+    try FileManager.default.createDirectory(at: disc2, withIntermediateDirectories: true)
+
+    let disc1Chapter2 = disc1.appendingPathComponent("02.m4b")
+    let disc2Chapter1 = disc2.appendingPathComponent("01.m4b")
+    try Data("audio".utf8).write(to: disc1Chapter2)
+    try Data("audio".utf8).write(to: disc2Chapter1)
+
+    let playable = BookPlaybackOrdering.playableChildren(for: root)
+
+    #expect(playable.map { BookPlaybackOrdering.relativePath($0, in: root) } == [
+        "Disc 1/02.m4b",
+        "Disc 2/01.m4b",
+    ])
+    #expect(BookPlaybackOrdering.relativePath(disc1Chapter2, in: root) == "Disc 1/02.m4b")
+}

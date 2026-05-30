@@ -200,15 +200,7 @@ extension BookGrid {
     }
 
     private func playableChildren(for book: BookDTO) -> [URL] {
-        book.url.flatten()
-            .filter { url in
-                !url.isFolder
-                    && FileManager.default.fileExists(atPath: url.path)
-                    && BookPluginInfo.supportedExtensions.contains(url.pathExtension.lowercased())
-            }
-            .sorted {
-                $0.lastPathComponent.localizedStandardCompare($1.lastPathComponent) == .orderedAscending
-            }
+        BookPlaybackOrdering.playableChildren(for: book.url)
     }
 
     private func isPlayableSavedURL(_ savedURL: URL, in book: BookDTO, playableChildren: [URL]) -> Bool {
