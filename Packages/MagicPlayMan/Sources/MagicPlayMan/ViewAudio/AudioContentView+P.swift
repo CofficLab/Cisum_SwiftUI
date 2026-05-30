@@ -3,6 +3,9 @@ import SwiftUI
 import CisumUI
 
 struct AudioContentViewShowcase: View {
+    private static let errorURL = URL(string: "invalid://url")
+        ?? URL(fileURLWithPath: "invalid-url")
+
     var body: some View {
         TabView {
             // 基本用法 - Verbose
@@ -174,7 +177,7 @@ struct AudioContentViewShowcase: View {
                     .padding(.top)
 
                 let errorAsset = MagicAsset(
-                    url: URL(string: "invalid://url")!,
+                    url: Self.errorURL,
                     metadata: .init(
                         title: "Error Test",
                         artist: "Error Artist",
@@ -201,7 +204,7 @@ struct AudioContentViewShowcase: View {
                     .padding(.top)
 
                 let errorAsset = MagicAsset(
-                    url: URL(string: "invalid://url")!,
+                    url: Self.errorURL,
                     metadata: .init(
                         title: "Error with Default",
                         artist: "Error Artist",

@@ -102,6 +102,11 @@ extension AvatarView {
 }
 
 #if DEBUG
+    private enum AvatarErrorViewPreviewData {
+        static let url = URL(string: "https://example.com/test.jpg")
+            ?? URL(fileURLWithPath: "test.jpg")
+    }
+
     #Preview("文件类型") {
         AvatarFileTypesPreview()
             .frame(width: 500, height: 500)
@@ -112,7 +117,7 @@ extension AvatarView {
         AvatarView
             .ErrorView(
                 error: URLError(.badURL),
-                url: URL(string: "https://example.com/test.jpg")!,
+                url: AvatarErrorViewPreviewData.url,
                 shape: .circle,
                 size: CGSize(width: 50, height: 50),
                 backgroundColor: .blue.opacity(0.1)
@@ -122,7 +127,7 @@ extension AvatarView {
         AvatarView
             .ErrorView(
                 error: URLError(.badURL),
-                url: URL(string: "https://example.com/test.jpg")!,
+                url: AvatarErrorViewPreviewData.url,
                 shape: .circle,
                 size: CGSize(width: 100, height: 100),
                 backgroundColor: .blue.opacity(0.1)
@@ -132,7 +137,7 @@ extension AvatarView {
         AvatarView
             .ErrorView(
                 error: URLError(.badURL),
-                url: URL(string: "https://example.com/test.jpg")!,
+                url: AvatarErrorViewPreviewData.url,
                 shape: .circle,
                 size: CGSize(width: 200, height: 200),
                 backgroundColor: .blue.opacity(0.1)
