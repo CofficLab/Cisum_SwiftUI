@@ -134,15 +134,18 @@ actor CopyDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     /// - Parameters:
     ///   - tasks: 要删除的任务数组
     ///   - container: ModelContainer 实例
-    static func deleteTasks(_ tasks: [CopyTask], from container: ModelContainer) {
+    static func deleteTasks(_ tasks: [CopyTask], from container: ModelContainer) throws {
         let context = ModelContext(container)
-        for task in tasks {
+        for taskToDelete in tasks {
+            guard let task = context.model(for: taskToDelete.id) as? CopyTask else {
+                os_log(.error, "Failed to find task for deletion: \(taskToDelete.originalFilename)")
+                continue
+            }
             context.delete(task)
         }
-        do {
+
+        if context.hasChanges {
             try context.save()
-        } catch {
-            os_log(.error, "Failed to delete tasks: \(error.localizedDescription)")
         }
     }
 

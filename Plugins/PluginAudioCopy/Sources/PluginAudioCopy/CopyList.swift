@@ -1,5 +1,6 @@
 #if os(macOS)
 import CisumUI
+import MagicAlert
 import MagicKit
 import OSLog
 import SwiftData
@@ -8,7 +9,7 @@ import SwiftUI
 struct CopyList: View, SuperLog, SuperThread {
     nonisolated static let emoji = "📬"
 
-        @State private var selection: PersistentIdentifier?
+    @State private var selection: PersistentIdentifier?
     @State private var tasks: [CopyTask] = []
 
     init(verbose: Bool = false) {
@@ -87,10 +88,19 @@ struct CopyList: View, SuperLog, SuperThread {
     }
 
     private func deleteTasks(at offsets: IndexSet) {
-        guard let container = AudioCopyService.container else { return }
+        guard let container = AudioCopyService.container else {
+            alert_error(String(localized: "Copy service is unavailable", table: "Audio-Copy-macOS", bundle: .module))
+            return
+        }
+
         let tasksToDelete = offsets.map { tasks[$0] }
-        CopyDB.deleteTasks(tasksToDelete, from: container)
-        refreshTasks()
+        do {
+            try CopyDB.deleteTasks(tasksToDelete, from: container)
+            refreshTasks()
+        } catch {
+            os_log(.error, "\(self.t)Delete failed: \(error.localizedDescription)")
+            alert_error(String(localized: "Delete failed: \(error.localizedDescription)", table: "Audio-Copy-macOS", bundle: .module))
+        }
     }
 }
 #endif
