@@ -84,6 +84,16 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread, @unchecked Send
                     throw MigrationError.migrationCancelled
                 }
 
+                try prepareForMigration(
+                    sourceFile,
+                    downloadProgressCallback: downloadProgressCallback
+                )
+
+                if self.isCancelled {
+                    os_log(.info, "\(self.t)迁移任务被取消")
+                    throw MigrationError.migrationCancelled
+                }
+
                 let targetFile = uniqueDestination(for: sourceFile, in: targetRoot)
                 do {
                     try FileManager.default.moveItem(at: sourceFile, to: targetFile)
@@ -112,6 +122,37 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread, @unchecked Send
         }
 
         os_log(.info, "\(self.t)迁移任务结束")
+    }
+
+    private func prepareForMigration(
+        _ sourceFile: URL,
+        downloadProgressCallback: DownloadProgressCallback?
+    ) throws {
+        if sourceFile.isFolder {
+            for child in sourceFile.flatten() {
+                try ensureLocalAvailability(
+                    for: child,
+                    displayName: sourceFile.lastPathComponent,
+                    downloadProgressCallback: downloadProgressCallback
+                )
+            }
+        } else {
+            try ensureLocalAvailability(
+                for: sourceFile,
+                displayName: sourceFile.lastPathComponent,
+                downloadProgressCallback: downloadProgressCallback
+            )
+        }
+    }
+
+    private func ensureLocalAvailability(
+        for url: URL,
+        displayName: String,
+        downloadProgressCallback: DownloadProgressCallback?
+    ) throws {
+        downloadProgressCallback?(displayName, .downloading(progress: url.getDownloadProgressSnapshot()))
+        try url.ensureLocalAvailabilitySync()
+        downloadProgressCallback?(displayName, .local)
     }
 
     private func uniqueDestination(for sourceFile: URL, in targetRoot: URL) -> URL {

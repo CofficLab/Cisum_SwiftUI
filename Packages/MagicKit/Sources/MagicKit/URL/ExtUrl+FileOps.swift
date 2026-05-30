@@ -150,6 +150,39 @@ public extension URL {
         )
     }
 
+    /// Synchronous variant for non-async file workflows such as migration.
+    func ensureLocalAvailabilitySync(
+        timeout: TimeInterval = 120,
+        pollInterval: TimeInterval = 0.25
+    ) throws {
+        guard checkIsICloud(verbose: false) else { return }
+
+        if isDownloaded { return }
+
+        if isNotDownloaded {
+            try FileManager.default.startDownloadingUbiquitousItem(at: self)
+        }
+
+        let deadline = Date().addingTimeInterval(timeout)
+        while Date() < deadline {
+            var refreshedURL = self
+            refreshedURL.removeAllCachedResourceValues()
+            if refreshedURL.isDownloaded {
+                return
+            }
+
+            Thread.sleep(forTimeInterval: max(pollInterval, 0.05))
+        }
+
+        throw NSError(
+            domain: "MagicKit.FileAvailability",
+            code: 1,
+            userInfo: [
+                NSLocalizedDescriptionKey: "Timed out waiting for iCloud file to download: \(lastPathComponent)"
+            ]
+        )
+    }
+
     /// 计算文件的 MD5 哈希值。
     func getHash(verbose: Bool = false) -> String {
         guard !isFolder else {
