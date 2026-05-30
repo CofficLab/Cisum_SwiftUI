@@ -383,6 +383,8 @@ extension AudioList {
     /// 处理选中项变化事件
     func handleSelectionChange() {
         if let url = selection, isLoading == false {
+            guard url != playManController.currentURL else { return }
+
             Task {
                 let reason = self.className + ".选中项目变了"
                 if Self.verbose {
