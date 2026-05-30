@@ -32,6 +32,9 @@ public struct BookControlRootView<Content>: View, SuperLog where Content: View {
         content
             .onAppear(perform: handleOnAppear)
             .onDisappear(perform: handleOnDisappear)
+            .onChange(of: currentSceneName()) { _, newSceneName in
+                handleCurrentSceneChanged(newSceneName)
+            }
             .onReceive(NotificationCenter.default.publisher(for: .bookDBDeleted), perform: handleBookDBDeleted)
             .onReceive(NotificationCenter.default.publisher(for: .bookControlStorageLocationDidReset)) { _ in
                 handleStorageLocationDidReset()
@@ -51,6 +54,22 @@ private extension BookControlRootView {
     ///
     /// 当视图首次出现时触发，执行初始化操作。
     func handleOnAppear() {
+        updateControlActivation(for: currentSceneName())
+    }
+
+    func handleCurrentSceneChanged(_ sceneName: String?) {
+        updateControlActivation(for: sceneName)
+    }
+
+    private func updateControlActivation(for sceneName: String?) {
+        if sceneName == targetSceneName {
+            activateControl()
+        } else {
+            deactivateControl()
+        }
+    }
+
+    private func activateControl() {
         guard shouldActivateControl else {
             if verbose {
                 os_log("\(self.t)⏭️ 书籍播放控制跳过：当前场景不是书籍场景")
@@ -77,6 +96,10 @@ private extension BookControlRootView {
     }
 
     func handleOnDisappear() {
+        deactivateControl()
+    }
+
+    private func deactivateControl() {
         guard let playbackSubscriptionID else { return }
 
         man.unsubscribe(playbackSubscriptionID)
