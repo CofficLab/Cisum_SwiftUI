@@ -27,12 +27,21 @@ import Testing
 }
 
 @Test func deletionOnlyAffectsCurrentAssetWhenItIsDeleted() {
-    let current = URL(fileURLWithPath: "/tmp/current.mp3")
-    let other = URL(fileURLWithPath: "/tmp/other.mp3")
+    let root = URL(fileURLWithPath: "/tmp/cisum-audio-control-delete-tests", isDirectory: true)
+    let current = root.appendingPathComponent("current.mp3")
+    let unstandardizedCurrent = root
+        .appendingPathComponent("nested", isDirectory: true)
+        .appendingPathComponent("..", isDirectory: true)
+        .appendingPathComponent("current.mp3")
+    let other = root.appendingPathComponent("other.mp3")
 
     #expect(AudioControlPlaybackRequestPolicy.currentAssetAffectedByDeletion(
         currentAsset: current,
         deletedURLs: [current]
+    ))
+    #expect(AudioControlPlaybackRequestPolicy.currentAssetAffectedByDeletion(
+        currentAsset: current,
+        deletedURLs: [unstandardizedCurrent]
     ))
     #expect(!AudioControlPlaybackRequestPolicy.currentAssetAffectedByDeletion(
         currentAsset: current,

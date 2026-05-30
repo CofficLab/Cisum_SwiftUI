@@ -22,7 +22,10 @@ enum AudioControlPlaybackRequestPolicy {
 
     static func currentAssetAffectedByDeletion(currentAsset: URL?, deletedURLs: [URL]) -> Bool {
         guard let currentAsset else { return false }
-        return deletedURLs.contains(currentAsset)
+        let currentPath = currentAsset.standardizedFileURL.path
+        return deletedURLs.contains { deletedURL in
+            deletedURL.standardizedFileURL.path == currentPath
+        }
     }
 }
 

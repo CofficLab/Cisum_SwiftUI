@@ -64,11 +64,19 @@ import UniformTypeIdentifiers
 @Test func audioDeleteOnlyResetsPlaybackForStillCurrentDeletedAudio() {
     let root = URL(fileURLWithPath: "/tmp/cisum-audio-delete-tests", isDirectory: true)
     let deleted = root.appendingPathComponent("deleted.mp3")
+    let unstandardizedDeleted = root
+        .appendingPathComponent("nested", isDirectory: true)
+        .appendingPathComponent("..", isDirectory: true)
+        .appendingPathComponent("deleted.mp3")
     let switched = root.appendingPathComponent("switched.mp3")
 
     #expect(AudioDeletePlaybackPolicy.shouldResetAfterDelete(
         currentURL: deleted,
         deletedURLs: [deleted]
+    ))
+    #expect(AudioDeletePlaybackPolicy.shouldResetAfterDelete(
+        currentURL: deleted,
+        deletedURLs: [unstandardizedDeleted]
     ))
     #expect(!AudioDeletePlaybackPolicy.shouldResetAfterDelete(
         currentURL: switched,
