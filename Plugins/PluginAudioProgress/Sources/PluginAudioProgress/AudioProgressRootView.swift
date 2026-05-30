@@ -106,7 +106,7 @@ extension AudioProgressRootView {
             // 尝试恢复上次播放
             if let url = AudioStateRepo.getCurrent() {
                 // 检查该 URL 是否存在于 AudioRepo
-                if await repo.find(url) != nil {
+                if await repo.find(url) != nil, isPlayableAudioURL(url) {
                     // 文件存在，恢复播放
                     assetTarget = url
                     liked = await AudioLikeRepo.shared.isLiked(url: url)
@@ -124,7 +124,7 @@ extension AudioProgressRootView {
                         os_log("\(self.t)⚠️ 上次播放的文件不存在: \(url.lastPathComponent)")
                     }
 
-                    if let firstUrl = try? await repo.getFirst() {
+                    if let firstUrl = await firstPlayableAudio(in: repo) {
                         assetTarget = firstUrl
                         liked = await AudioLikeRepo.shared.isLiked(url: firstUrl)
 
@@ -150,6 +150,17 @@ extension AudioProgressRootView {
                 }
             }
         }
+    }
+
+    private func firstPlayableAudio(in repo: AudioRepo) async -> URL? {
+        let urls = await repo.getAll(reason: self.className + ".firstPlayableAudio")
+        return urls.first(where: isPlayableAudioURL)
+    }
+
+    private func isPlayableAudioURL(_ url: URL) -> Bool {
+        FileManager.default.fileExists(atPath: url.path)
+            && !url.isFolder
+            && AudioPlugin.supportedExtensions.contains(url.pathExtension.lowercased())
     }
 }
 
