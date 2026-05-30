@@ -2,6 +2,7 @@ import CisumUI
 import MagicKit
 import OSLog
 import PluginBook
+import SwiftData
 import SwiftUI
 
 /**
@@ -20,8 +21,9 @@ struct BookTile: View, SuperThread, SuperLog, Equatable {
     }
 
     @EnvironmentObject var repo: BookRepo
+    @Environment(\.bookDBViewDependencies) private var dependencies
 
-    @State private var state: BookState? = nil
+    @State private var lastPlayedTitle: String? = nil
     @State private var cover: Image? = nil
     @State private var tileSize: CGSize = .init(width: 150, height: 200)
 
@@ -59,13 +61,13 @@ struct BookTile: View, SuperThread, SuperLog, Equatable {
                     }
 
                     Spacer()
-                    if let s = self.state, noCover, s.currentURL != nil {
+                    if let lastPlayedTitle, noCover {
                         VStack(spacing: 0) {
                             HStack {
                                 Image(systemName: "info")
                                 Text("上次播放", tableName: "Book-DBView", bundle: .module)
                             }
-                            Text(s.currentTitle)
+                            Text(lastPlayedTitle)
                         }
                         .font(.footnote)
                         .padding()
@@ -104,6 +106,30 @@ extension BookTile {
             }
         }
     }
+
+    func updateLastPlayedTitle() {
+        let bookURL = self.url
+        let dbRoot = dependencies.dbRoot
+        let logPrefix = self.t
+
+        Task.detached(priority: .background) {
+            do {
+                let container = try BookConfig.getContainer(dbRootURL: dbRoot)
+                let context = ModelContext(container)
+                let descriptor = BookState.descriptorOf(bookURL)
+                let state = try context.fetch(descriptor).first
+                let title = state?.currentURL?.lastPathComponent
+
+                await MainActor.run {
+                    self.setLastPlayedTitle(title)
+                }
+            } catch {
+                if verbose {
+                    os_log(.error, "\(logPrefix)读取书籍播放状态失败: \(error.localizedDescription)")
+                }
+            }
+        }
+    }
 }
 
 // MARK: - Setter
@@ -113,6 +139,11 @@ extension BookTile {
     func setCover(_ cover: Image?) {
         self.cover = cover
     }
+
+    @MainActor
+    func setLastPlayedTitle(_ title: String?) {
+        self.lastPlayedTitle = title
+    }
 }
 
 // MARK: - Event Handler
@@ -120,6 +151,7 @@ extension BookTile {
 extension BookTile {
     func onAppear() {
         self.updateCover()
+        self.updateLastPlayedTitle()
     }
 }
 
