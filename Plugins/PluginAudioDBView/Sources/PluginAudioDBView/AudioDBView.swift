@@ -123,21 +123,28 @@ extension AudioDBView {
         }.value
     }
 
-    nonisolated private static func copyFilesInBackground(_ urls: [URL], to storageRoot: URL) throws -> [URL] {
+    nonisolated static func copyFilesInBackground(_ urls: [URL], to storageRoot: URL) throws -> [URL] {
         try FileManager.default.createDirectory(at: storageRoot, withIntermediateDirectories: true)
 
         var copiedURLs: [URL] = []
 
-        // 逐个复制文件
-        for url in urls {
-            let destination = Self.uniqueDestination(for: url, in: storageRoot)
+        do {
+            // 逐个复制文件
+            for url in urls {
+                let destination = Self.uniqueDestination(for: url, in: storageRoot)
 
-            if Self.verbose {
-                os_log("\(Self.t)📄 复制: \(url.lastPathComponent)")
+                if Self.verbose {
+                    os_log("\(Self.t)📄 复制: \(url.lastPathComponent)")
+                }
+
+                try copySecurityScopedFile(url, to: destination)
+                copiedURLs.append(destination)
             }
-
-            try copySecurityScopedFile(url, to: destination)
-            copiedURLs.append(destination)
+        } catch {
+            for copiedURL in copiedURLs {
+                try? FileManager.default.removeItem(at: copiedURL)
+            }
+            throw error
         }
 
         if Self.verbose {
