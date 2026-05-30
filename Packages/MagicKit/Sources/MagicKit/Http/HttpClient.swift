@@ -120,7 +120,9 @@ public class HttpClient {
     public func getDataAndResponse() async throws -> (Data, HTTPURLResponse) {
         // 尝试读取缓存
         if cacheMaxAge > 0, let cached = try? cacheStore.read(url: url, headers: headers, maxAge: cacheMaxAge) {
-            let mock = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "HTTP/1.1", headerFields: nil)!
+            guard let mock = HTTPURLResponse(url: url, statusCode: 200, httpVersion: "HTTP/1.1", headerFields: nil) else {
+                throw HttpError.HttpNoResponse
+            }
             return (cached, mock)
         }
         var request = URLRequest(url: url)
@@ -285,9 +287,12 @@ public class HttpClient {
     }
 
     func printHttpError(_ data: Data?, httpResponse: HTTPURLResponse) {
-        if let data = data {
-            let str = String(data: data, encoding: .utf8)
-            os_log(.error, "\(str!)")
+        if let data {
+            if let str = String(data: data, encoding: .utf8) {
+                os_log(.error, "\(str)")
+            } else {
+                os_log(.error, "返回内容不是 UTF-8 文本，大小: \(data.count) 字节")
+            }
         } else {
             os_log("返回内容为空")
         }
