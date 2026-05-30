@@ -79,11 +79,11 @@ public final class AudioModel: SuperLog {
 // MARK: Order
 
 public extension AudioModel {
-    public static func makeRandomOrder() -> Int {
+    static func makeRandomOrder() -> Int {
         Int.random(in: 101 ... 500000000)
     }
 
-    public func randomOrder() {
+    func randomOrder() {
         order = Self.makeRandomOrder()
     }
 }
@@ -97,7 +97,7 @@ extension AudioModel: Identifiable {
 // MARK: Size
 
 public extension AudioModel {
-    public func getFileSizeReadable() -> String {
+    func getFileSizeReadable() -> String {
         url.getSizeReadable()
     }
 }
@@ -105,26 +105,26 @@ public extension AudioModel {
 // MARK: Descriptor
 
 public extension AudioModel {
-    public static var descriptorOrderAsc: FetchDescriptor<AudioModel> {
+    static var descriptorOrderAsc: FetchDescriptor<AudioModel> {
         var descriptor = FetchDescriptor<AudioModel>()
         descriptor.sortBy.append(.init(\.order, order: .forward))
         return descriptor
     }
 
-    public static var descriptorOrderDesc: FetchDescriptor<AudioModel> {
+    static var descriptorOrderDesc: FetchDescriptor<AudioModel> {
         var descriptor = FetchDescriptor<AudioModel>()
         descriptor.sortBy.append(.init(\.order, order: .reverse))
         return descriptor
     }
 
-    public static var descriptorFirst: FetchDescriptor<AudioModel> {
+    static var descriptorFirst: FetchDescriptor<AudioModel> {
         var descriptor = FetchDescriptor<AudioModel>()
         descriptor.sortBy.append(.init(\.order, order: .forward))
         descriptor.fetchLimit = 1
         return descriptor
     }
 
-    public static func descriptorPrev(order: Int) -> FetchDescriptor<AudioModel> {
+    static func descriptorPrev(order: Int) -> FetchDescriptor<AudioModel> {
         var descriptor = FetchDescriptor<AudioModel>()
         descriptor.sortBy.append(.init(\.order, order: .reverse))
         descriptor.fetchLimit = 1
@@ -134,7 +134,7 @@ public extension AudioModel {
         return descriptor
     }
 
-    public static func descriptorNext(order: Int) -> FetchDescriptor<AudioModel> {
+    static func descriptorNext(order: Int) -> FetchDescriptor<AudioModel> {
         var descriptor = FetchDescriptor<AudioModel>()
         descriptor.sortBy.append(.init(\.order, order: .forward))
         descriptor.fetchLimit = 1
@@ -144,17 +144,17 @@ public extension AudioModel {
         return descriptor
     }
 
-    public static let descriptorAll = FetchDescriptor(predicate: #Predicate<AudioModel> { _ in
+    static let descriptorAll = FetchDescriptor(predicate: #Predicate<AudioModel> { _ in
         true
     }, sortBy: [
         SortDescriptor(\.order, order: .forward),
     ])
 
-    public static let descriptorNotFolder = FetchDescriptor(predicate: predicateNotFolder, sortBy: [
+    static let descriptorNotFolder = FetchDescriptor(predicate: predicateNotFolder, sortBy: [
         SortDescriptor(\.order, order: .forward),
     ])
 
-    public static let predicateNotFolder = #Predicate<AudioModel> { audio in
+    static let predicateNotFolder = #Predicate<AudioModel> { audio in
         audio.isFolder == false
     }
 }
