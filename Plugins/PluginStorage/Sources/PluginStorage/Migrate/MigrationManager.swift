@@ -73,12 +73,11 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread, @unchecked Send
                     throw MigrationError.migrationCancelled
                 }
 
-                let progress = Double(index + 1) / Double(files.count)
                 let fileName = sourceFile.lastPathComponent
 
                 os_log(.info, "\(self.t)开始迁移文件: \(fileName) (\(index + 1)/\(files.count))")
 
-                progressCallback?(progress, fileName)
+                progressCallback?(Double(index) / Double(files.count), fileName)
 
                 if self.isCancelled {
                     os_log(.info, "\(self.t)迁移任务被取消")
@@ -89,6 +88,7 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread, @unchecked Send
                 do {
                     try FileManager.default.moveItem(at: sourceFile, to: targetFile)
                     os_log(.info, "\(self.t)成功迁移: \(fileName) -> \(targetFile.lastPathComponent)")
+                    progressCallback?(Double(index + 1) / Double(files.count), fileName)
                 } catch {
                     os_log(.error, "\(self.t)迁移失败: \(fileName) - \(error.localizedDescription)")
                     throw MigrationError.fileOperationFailed("\(fileName): \(error.localizedDescription)")

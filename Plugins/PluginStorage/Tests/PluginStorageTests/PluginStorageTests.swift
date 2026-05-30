@@ -63,6 +63,48 @@ import Foundation
     #expect(!FileManager.default.fileExists(atPath: source.appendingPathComponent("track.mp3").path))
 }
 
+@Test func migrationReportsCompletionOnlyAfterMoveFinishes() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let source = root.appendingPathComponent("source", isDirectory: true)
+    let target = root.appendingPathComponent("target", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: source, withIntermediateDirectories: true)
+    try FileManager.default.createDirectory(at: target, withIntermediateDirectories: true)
+
+    let sourceFile = source.appendingPathComponent("track.mp3")
+    let renamedTarget = target.appendingPathComponent("track 2.mp3")
+    try Data("new".utf8).write(to: sourceFile)
+    try Data("existing".utf8).write(to: target.appendingPathComponent("track.mp3"))
+
+    var observations: [(progress: Double, sourceExists: Bool, renamedTargetExists: Bool)] = []
+    let manager = MigrationManager()
+    try manager.migrate(
+        from: source,
+        to: target,
+        progressCallback: { progress, _ in
+            observations.append((
+                progress: progress,
+                sourceExists: FileManager.default.fileExists(atPath: sourceFile.path),
+                renamedTargetExists: FileManager.default.fileExists(atPath: renamedTarget.path)
+            ))
+        },
+        downloadProgressCallback: nil,
+        verbose: false
+    )
+
+    #expect(observations.count == 2)
+    #expect(observations.first?.progress == 0)
+    #expect(observations.first?.sourceExists == true)
+    #expect(observations.first?.renamedTargetExists == false)
+    #expect(observations.last?.progress == 1)
+    #expect(observations.last?.sourceExists == false)
+    #expect(observations.last?.renamedTargetExists == true)
+}
+
 @Test func emptyMigrationReportsCompleteProgress() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)

@@ -217,9 +217,12 @@ struct MigrationProgressView: View {
                     downloadStatus: processedFiles[index].downloadStatus
                 )
 
-                // 检查目标文件夹中是否存在该文件，如果存在则表示已完成
-                if let targetURL = targetURL,
-                   FileManager.default.fileExists(atPath: targetURL.appendingPathComponent(fileName).path) {
+                let sourceFileExists = sourceURL.map {
+                    FileManager.default.fileExists(atPath: $0.appendingPathComponent(fileName).path)
+                } ?? false
+
+                // 源文件离开原仓库后才算完成，避免重名目标文件导致开始迁移时被误判完成。
+                if !sourceFileExists {
                     processedFiles[index] = FileStatus(
                         name: fileName,
                         status: .completed,
