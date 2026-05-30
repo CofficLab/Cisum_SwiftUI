@@ -35,7 +35,7 @@ public struct StorageView: View {
                     icon: .cisumIconCloud,
                     action: {
                         if isICloudAvailable {
-                            tempStorageSelection = .icloud
+                            updateSelection(.icloud)
                         }
                     }
                 ) {
@@ -73,7 +73,7 @@ public struct StorageView: View {
                     description: String(localized: "Stored within the app, data will be lost if app is deleted", table: "Welcome", bundle: .module),
                     icon: .cisumIconFolder,
                     action: {
-                        tempStorageSelection = .local
+                        updateSelection(.local)
                     }
                 ) {
                     HStack {
@@ -90,14 +90,20 @@ public struct StorageView: View {
     }
 
     private func onAppear() {
-        tempStorageSelection = Self.defaultSelection(
+        updateSelection(Self.defaultSelection(
             currentStorageSelection: currentStorageSelection,
             isICloudAvailable: isICloudAvailable
-        )
+        ))
     }
 
     private func onDisappear() {
-        updateStorageSelection(validatedSelection(tempStorageSelection))
+        updateSelection(tempStorageSelection)
+    }
+
+    private func updateSelection(_ selection: WelcomeStorageSelection) {
+        let validatedSelection = validatedSelection(selection)
+        tempStorageSelection = validatedSelection
+        updateStorageSelection(validatedSelection)
     }
 
     private func validatedSelection(_ selection: WelcomeStorageSelection) -> WelcomeStorageSelection {
