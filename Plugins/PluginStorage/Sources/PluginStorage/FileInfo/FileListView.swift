@@ -13,6 +13,7 @@ struct FileListView: View, SuperLog {
     @State private var expandedItems = Set<FileItem>()
     @State private var visibleItems: [FileItem] = []
     @State private var itemCache: [URL: [FileItem]] = [:]
+    @State private var loadErrorMessage: String?
 
     nonisolated private static let ignoredFiles = [
         ".DS_Store",
@@ -38,47 +39,67 @@ struct FileListView: View, SuperLog {
     }
 
     var body: some View {
-        Table(of: FileItem.self) {
-            TableColumn("名称") { item in
-                HStack(spacing: 0) {
-                    // 缩进
-                    ForEach(0 ..< item.level, id: \.self) { _ in
-                        Rectangle()
-                            .fill(Color.secondary.opacity(0.1))
-                            .frame(width: 1)
-                            .padding(.horizontal, 8)
-                    }
-
-                    // 展开/折叠按钮 + 文件图标 + 名称
-                    HStack(spacing: 4) {
-                        FileExpandButton(
-                            isDirectory: (try? item.url.resourceValues(forKeys: [.isDirectoryKey]).isDirectory) ?? false,
-                            isExpanded: expandedItems.contains(item)
-                        ) { isExpanded in
-                            setExpanded(isExpanded, for: item)
+        ZStack {
+            Table(of: FileItem.self) {
+                TableColumn("名称") { item in
+                    HStack(spacing: 0) {
+                        // 缩进
+                        ForEach(0 ..< item.level, id: \.self) { _ in
+                            Rectangle()
+                                .fill(Color.secondary.opacity(0.1))
+                                .frame(width: 1)
+                                .padding(.horizontal, 8)
                         }
 
-                        FileTitleView(url: item.url)
+                        // 展开/折叠按钮 + 文件图标 + 名称
+                        HStack(spacing: 4) {
+                            FileExpandButton(
+                                isDirectory: (try? item.url.resourceValues(forKeys: [.isDirectoryKey]).isDirectory) ?? false,
+                                isExpanded: expandedItems.contains(item)
+                            ) { isExpanded in
+                                setExpanded(isExpanded, for: item)
+                            }
+
+                            FileTitleView(url: item.url)
+                        }
                     }
                 }
-            }
-            .width(min: 200)
+                .width(min: 200)
 
-            TableColumn("大小") { item in
-                FileSizeView(url: item.url)
-            }
-            .width(80)
+                TableColumn("大小") { item in
+                    FileSizeView(url: item.url)
+                }
+                .width(80)
 
-            TableColumn("状态") { item in
-                FileStatusColumnView(url: item.url)
+                TableColumn("状态") { item in
+                    FileStatusColumnView(url: item.url)
+                }
+                .width(200)
+            } rows: {
+                ForEach(visibleItems) { item in
+                    TableRow(item)
+                }
             }
-            .width(200)
-        } rows: {
-            ForEach(visibleItems) { item in
-                TableRow(item)
+            .font(.system(size: 13))
+
+            if let loadErrorMessage {
+                VStack(spacing: 8) {
+                    Image(systemName: "exclamationmark.triangle")
+                        .foregroundStyle(.orange)
+                    Text("无法读取文件列表", tableName: "Storage", bundle: .module)
+                        .font(.headline)
+                    Text(loadErrorMessage)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                        .lineLimit(3)
+                }
+                .padding()
+                .frame(maxWidth: 320)
+                .background(.regularMaterial)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
             }
         }
-        .font(.system(size: 13))
         .task(priority: .background) {
             if expandByDefault {
                 updateVisibleItems(reason: "onAppear")
@@ -110,7 +131,7 @@ struct FileListView: View, SuperLog {
                 cachedItems: cachedItems
             )
 
-            await setVisibleItems(update.visibleItems)
+            await setVisibleItems(update.visibleItems, loadErrorMessage: update.loadErrorMessage)
             await mergeItemCache(update.itemCache)
         })
     }
@@ -119,26 +140,43 @@ struct FileListView: View, SuperLog {
         rootURL: URL,
         expandedURLs: Set<URL>,
         cachedItems: [URL: [FileItem]]
-    ) -> (visibleItems: [FileItem], itemCache: [URL: [FileItem]]) {
+    ) -> (visibleItems: [FileItem], itemCache: [URL: [FileItem]], loadErrorMessage: String?) {
         var cache = cachedItems
         let rootItem = FileItem(url: rootURL, level: 0, isExpanded: expandedURLs.contains(rootURL))
         var result = [rootItem]
+        var loadErrorMessage: String?
 
         if rootItem.isExpanded {
-            addVisibleChildren(from: rootItem, expandedURLs: expandedURLs, itemCache: &cache, into: &result)
+            loadErrorMessage = addVisibleChildren(
+                from: rootItem,
+                expandedURLs: expandedURLs,
+                itemCache: &cache,
+                into: &result
+            )
         }
 
-        return (result, cache)
+        return (result, cache, loadErrorMessage)
     }
 
+    @discardableResult
     nonisolated private static func addVisibleChildren(
         from item: FileItem,
         expandedURLs: Set<URL>,
         itemCache: inout [URL: [FileItem]],
         into result: inout [FileItem]
-    ) {
-        let children = itemCache[item.url] ?? childItems(for: item)
+    ) -> String? {
+        let childLoad = itemCache[item.url].map { Result<[FileItem], Error>.success($0) } ?? childItems(for: item)
+
+        guard case .success(let children) = childLoad else {
+            if case .failure(let error) = childLoad {
+                return "\(item.url.lastPathComponent): \(error.localizedDescription)"
+            }
+
+            return nil
+        }
+
         itemCache[item.url] = children
+        var loadErrorMessage: String?
 
         for child in children {
             let childItem = FileItem(
@@ -149,26 +187,40 @@ struct FileListView: View, SuperLog {
             result.append(childItem)
 
             if childItem.isExpanded {
-                addVisibleChildren(from: childItem, expandedURLs: expandedURLs, itemCache: &itemCache, into: &result)
+                loadErrorMessage = loadErrorMessage ?? addVisibleChildren(
+                    from: childItem,
+                    expandedURLs: expandedURLs,
+                    itemCache: &itemCache,
+                    into: &result
+                )
             }
+        }
+
+        return loadErrorMessage
+    }
+
+    nonisolated private static func childItems(for item: FileItem) -> Result<[FileItem], Error> {
+        do {
+            guard let children = try item.children() else { return .success([]) }
+
+            let filteredChildren = children
+                .filter { child in
+                    !ignoredFiles.contains(child.url.lastPathComponent)
+                }
+                .sorted { item1, item2 in
+                    item1.url.lastPathComponent.localizedStandardCompare(item2.url.lastPathComponent) == .orderedAscending
+                }
+
+            return .success(filteredChildren)
+        } catch {
+            return .failure(error)
         }
     }
 
-    nonisolated private static func childItems(for item: FileItem) -> [FileItem] {
-        guard let children = item.children() else { return [] }
-
-        return children
-            .filter { child in
-                !ignoredFiles.contains(child.url.lastPathComponent)
-            }
-            .sorted { item1, item2 in
-                item1.url.lastPathComponent.localizedStandardCompare(item2.url.lastPathComponent) == .orderedAscending
-            }
-    }
-
     @MainActor
-    private func setVisibleItems(_ items: [FileItem]) {
+    private func setVisibleItems(_ items: [FileItem], loadErrorMessage: String?) {
         visibleItems = items
+        self.loadErrorMessage = loadErrorMessage
     }
 
     @MainActor

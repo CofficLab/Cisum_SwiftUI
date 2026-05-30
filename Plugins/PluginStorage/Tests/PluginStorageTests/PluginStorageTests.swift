@@ -8,6 +8,16 @@ import Foundation
     #expect(StoragePlugin.shouldRegister)
 }
 
+@Test func fileItemReportsDirectoryReadFailures() {
+    let missingDirectory = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let item = FileItem(url: missingDirectory, level: 0, isExpanded: true)
+
+    #expect(throws: Error.self) {
+        _ = try item.children()
+    }
+}
+
 @Test func migrationMovesContentsButKeepsSourceRoot() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)

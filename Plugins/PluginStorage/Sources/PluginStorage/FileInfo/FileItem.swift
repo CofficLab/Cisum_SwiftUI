@@ -6,16 +6,15 @@ struct FileItem: Identifiable, Hashable {
     var isExpanded: Bool
     var id: String { url.absoluteString }
     
-    func children() -> [FileItem]? {
-        guard let isDirectory = try? url.resourceValues(forKeys: [.isDirectoryKey]).isDirectory,
-              isDirectory else {
+    func children() throws -> [FileItem]? {
+        guard try url.resourceValues(forKeys: [.isDirectoryKey]).isDirectory == true else {
             return nil
         }
         
-        let contents = (try? FileManager.default.contentsOfDirectory(
+        let contents = try FileManager.default.contentsOfDirectory(
             at: url,
             includingPropertiesForKeys: nil
-        )) ?? []
+        )
         
         return contents.map { FileItem(url: $0, level: level + 1, isExpanded: false) }
     }
