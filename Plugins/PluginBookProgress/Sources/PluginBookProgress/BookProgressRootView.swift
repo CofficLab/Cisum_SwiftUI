@@ -3,6 +3,7 @@ import MagicAlert
 import MagicKit
 import MagicPlayMan
 import OSLog
+import PluginBook
 import SwiftUI
 
 public typealias BookProgressCurrentSceneProvider = @MainActor () -> String?
@@ -103,6 +104,13 @@ private extension BookProgressRootView {
     private func restoreBookProgress() {
         Task {
             if let url = currentBookURL() {
+                guard isPlayableBookURL(url) else {
+                    if self.verbose {
+                        os_log("\(self.t)⚠️ 跳过已失效的书籍进度: \(url.shortPath())")
+                    }
+                    return
+                }
+
                 await man.play(url, autoPlay: false, reason: "restoreBookProgress")
 
                 if let time = currentBookTime() {
@@ -114,6 +122,12 @@ private extension BookProgressRootView {
                 }
             }
         }
+    }
+
+    private func isPlayableBookURL(_ url: URL) -> Bool {
+        FileManager.default.fileExists(atPath: url.path)
+            && !url.isFolder
+            && BookPluginInfo.supportedExtensions.contains(url.pathExtension.lowercased())
     }
 
     /// 处理当前URL变化事件
