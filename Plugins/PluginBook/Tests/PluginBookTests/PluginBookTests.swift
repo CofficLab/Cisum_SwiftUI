@@ -22,3 +22,22 @@ import Testing
     #expect(BookDB.contains(book, bookURL: nestedChapter))
     #expect(!BookDB.contains(book, bookURL: siblingBook))
 }
+
+@Test func deletedBookFolderContainsSavedState() {
+    let root = URL(fileURLWithPath: "/tmp/cisum-book-state-delete-tests", isDirectory: true)
+    let book = root.appendingPathComponent("Book", isDirectory: true)
+    let nestedChapter = book
+        .appendingPathComponent("Disc 1", isDirectory: true)
+        .appendingPathComponent("Chapter 1.m4b")
+    let state = BookState(url: book, currentURL: nestedChapter, time: 42)
+    let siblingState = BookState(
+        url: root.appendingPathComponent("Book Extras", isDirectory: true),
+        currentURL: root
+            .appendingPathComponent("Book Extras", isDirectory: true)
+            .appendingPathComponent("Chapter 1.m4b"),
+        time: 42
+    )
+
+    #expect(BookDB.contains(book, state: state))
+    #expect(!BookDB.contains(book, state: siblingState))
+}

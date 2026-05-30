@@ -200,6 +200,7 @@ extension BookDB {
             }
 
             do {
+                deleteStates(for: url)
                 context.delete(book)
                 try context.save()
             } catch let e {
@@ -267,6 +268,7 @@ extension BookDB {
                     if verbose {
                         os_log("\(self.t) 删除 \(book.bookTitle)")
                     }
+                    deleteStates(for: book.url)
                     context.delete(book)
                 }
             })
@@ -334,6 +336,7 @@ extension BookDB {
             for book in books where Self.contains(deletedURL, bookURL: book.url) {
                 context.delete(book)
             }
+            deleteStates(for: deletedURL)
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
         }
@@ -343,6 +346,24 @@ extension BookDB {
         let parentPath = parentURL.standardizedFileURL.path
         let bookPath = bookURL.standardizedFileURL.path
         return bookPath == parentPath || bookPath.hasPrefix(parentPath + "/")
+    }
+
+    static func contains(_ parentURL: URL, state: BookState) -> Bool {
+        [state.url, state.currentURL].contains { url in
+            guard let url else { return false }
+            return Self.contains(parentURL, bookURL: url)
+        }
+    }
+
+    private func deleteStates(for deletedURL: URL) {
+        do {
+            let states = try context.fetch(BookState.descriptorAll)
+            for state in states where Self.contains(deletedURL, state: state) {
+                context.delete(state)
+            }
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
     }
 
     private func saveAndNotifyDeleted(urls: [URL]) {
