@@ -33,6 +33,9 @@ public struct BookControlRootView<Content>: View, SuperLog where Content: View {
             .onAppear(perform: handleOnAppear)
             .onDisappear(perform: handleOnDisappear)
             .onReceive(NotificationCenter.default.publisher(for: .bookDBDeleted), perform: handleBookDBDeleted)
+            .onReceive(NotificationCenter.default.publisher(for: .bookControlStorageLocationDidReset)) { _ in
+                handleStorageLocationDidReset()
+            }
     }
 
     /// 检查是否应该激活书籍播放控制功能
@@ -139,8 +142,6 @@ private extension BookControlRootView {
     }
 
     func handleBookDBDeleted(_ notification: Notification) {
-        guard shouldActivateControl else { return }
-
         guard let deletedURLs = notification.userInfo?["urls"] as? [URL],
               let currentAsset = man.asset,
               deletedURLs.contains(where: { contains($0, asset: currentAsset) }) else {
@@ -149,6 +150,12 @@ private extension BookControlRootView {
 
         Task {
             await man.reset(reason: "BookControlRootView.deletedCurrentAsset")
+        }
+    }
+
+    func handleStorageLocationDidReset() {
+        Task {
+            await man.reset(reason: "BookControlRootView.storageLocationDidReset")
         }
     }
 
@@ -197,4 +204,8 @@ private extension BookControlRootView {
             }
         }
     }
+}
+
+private extension Notification.Name {
+    static let bookControlStorageLocationDidReset = Notification.Name("storageLocationDidReset")
 }
