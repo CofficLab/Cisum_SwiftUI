@@ -50,6 +50,39 @@ enum BookProgressPersistencePolicy {
     }
 }
 
+enum BookProgressBookRootResolver {
+    static func bookRoot(containing url: URL, bookDisk: URL?) -> URL {
+        let parent = url.deletingLastPathComponent().standardizedFileURL
+
+        guard let bookDisk else {
+            return parent
+        }
+
+        let disk = bookDisk.standardizedFileURL
+        let url = url.standardizedFileURL
+
+        guard isContained(url.path, in: disk.path) else {
+            return parent
+        }
+
+        guard parent.path != disk.path else {
+            return url
+        }
+
+        var candidate = parent
+        while candidate.deletingLastPathComponent().standardizedFileURL.path != disk.path,
+              isContained(candidate.path, in: disk.path) {
+            candidate = candidate.deletingLastPathComponent().standardizedFileURL
+        }
+
+        return candidate
+    }
+
+    private static func isContained(_ childPath: String, in parentPath: String) -> Bool {
+        childPath == parentPath || childPath.hasPrefix(parentPath + "/")
+    }
+}
+
 public struct BookProgressRootView<Content>: View, SuperLog where Content: View {
     public nonisolated static var emoji: String { BookProgressPluginInfo.emoji }
     private let verbose = true
@@ -330,18 +363,6 @@ private extension BookProgressRootView {
     }
 
     private func bookRoot(containing url: URL) -> URL {
-        guard let bookDisk = BookPlugin.getBookDisk() else {
-            return url.deletingLastPathComponent()
-        }
-
-        let diskPath = bookDisk.standardizedFileURL.path
-        var candidate = url.deletingLastPathComponent().standardizedFileURL
-
-        while candidate.deletingLastPathComponent().standardizedFileURL.path != diskPath,
-              candidate.path.hasPrefix(diskPath) {
-            candidate = candidate.deletingLastPathComponent().standardizedFileURL
-        }
-
-        return candidate
+        BookProgressBookRootResolver.bookRoot(containing: url, bookDisk: BookPlugin.getBookDisk())
     }
 }

@@ -49,3 +49,33 @@ import Testing
 
     #expect(snapshot == BookProgressStateSnapshot(currentURL: url, time: 42))
 }
+
+@Test func rootLevelBookFileResolvesToItself() {
+    let disk = URL(fileURLWithPath: "/tmp/cisum-books", isDirectory: true)
+    let book = disk.appendingPathComponent("Standalone.m4b")
+
+    let root = BookProgressBookRootResolver.bookRoot(containing: book, bookDisk: disk)
+
+    #expect(root == book.standardizedFileURL)
+}
+
+@Test func nestedBookChapterResolvesToTopLevelBookFolder() {
+    let disk = URL(fileURLWithPath: "/tmp/cisum-books", isDirectory: true)
+    let book = disk.appendingPathComponent("Novel", isDirectory: true)
+    let chapter = book
+        .appendingPathComponent("Disc 1", isDirectory: true)
+        .appendingPathComponent("Chapter 01.mp3")
+
+    let root = BookProgressBookRootResolver.bookRoot(containing: chapter, bookDisk: disk)
+
+    #expect(root == book.standardizedFileURL)
+}
+
+@Test func outsideBookDiskFallsBackToParentFolder() {
+    let disk = URL(fileURLWithPath: "/tmp/cisum-books", isDirectory: true)
+    let chapter = URL(fileURLWithPath: "/tmp/other-books/Novel/Chapter 01.mp3")
+
+    let root = BookProgressBookRootResolver.bookRoot(containing: chapter, bookDisk: disk)
+
+    #expect(root == chapter.deletingLastPathComponent().standardizedFileURL)
+}
