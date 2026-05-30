@@ -273,7 +273,6 @@ extension String {
 public extension String {
     /// 将字符串转换为URL对象
     /// - Returns: 转换后的URL对象
-    /// - Warning: 此方法使用强制解包，如果字符串不是有效的URL格式，将导致运行时崩溃
     ///
     /// ## 使用示例:
     /// ```swift
@@ -282,7 +281,7 @@ public extension String {
     /// // 现在可以使用url进行网络请求或其他操作
     /// ```
     func toURL() -> URL {
-        URL(string: self)!
+        URL(string: self) ?? URL(fileURLWithPath: self)
     }
 
     // MARK: - 基础工具方法

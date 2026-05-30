@@ -7,6 +7,18 @@ final class MagicKitTests: XCTestCase {
         XCTAssertTrue(true)
     }
 
+    func testToURLKeepsValidURL() {
+        let url = "https://example.com/path".toURL()
+
+        XCTAssertEqual(url.absoluteString, "https://example.com/path")
+    }
+
+    func testToURLFallsBackToFileURLForInvalidURLString() {
+        let url = "http://[::1".toURL()
+
+        XCTAssertTrue(url.isFileURL)
+    }
+
     func testImageCropping() {
         // 暂时跳过此测试，因为缺少相关的图像处理功能
         // let originalImage = UIImage(named: "testImage")!
