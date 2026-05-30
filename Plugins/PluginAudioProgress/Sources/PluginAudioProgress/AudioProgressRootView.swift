@@ -43,6 +43,9 @@ public struct AudioProgressRootView<Content>: View, SuperLog where Content: View
     public var body: some View {
         content
             .onAppear(perform: handleOnAppear)
+            .onChange(of: currentSceneName()) { _, newSceneName in
+                handleCurrentSceneChanged(newSceneName)
+            }
             .onPlayManStateChanged(handlePlayManStateChanged)
             .onPlayManAssetChanged(handlePlayManAssetChanged)
             // 注意：存储位置变更时，本RootView会被卸载掉，光靠 onPlayManAssetChanged 无法监听到
@@ -174,9 +177,16 @@ extension AudioProgressRootView {
     /// 1. 恢复上次播放状态
     /// 2. 恢复播放模式
     func handleOnAppear() {
-        guard shouldActivateProgress else {
-            return
-        }
+        restorePlayingIfNeeded(for: currentSceneName())
+    }
+
+    /// 处理当前场景变化，确保从其它场景切到音频场景时也能恢复进度。
+    func handleCurrentSceneChanged(_ sceneName: String?) {
+        restorePlayingIfNeeded(for: sceneName)
+    }
+
+    private func restorePlayingIfNeeded(for sceneName: String?) {
+        guard sceneName == audioSceneName else { return }
 
         self.restorePlaying()
     }
