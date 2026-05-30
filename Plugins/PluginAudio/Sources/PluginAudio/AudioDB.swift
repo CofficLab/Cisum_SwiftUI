@@ -433,6 +433,20 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
         try context.fetch(AudioModel.descriptorFirst).first?.url
     }
 
+    /// 获取最后一个音频模型
+    /// - Returns: 最后一个音频模型，如果没有音频则返回 nil
+    /// - Throws: 如果查询操作失败则抛出错误
+    func lastAudio() throws -> AudioModel? {
+        try context.fetch(AudioModel.descriptorLast).first
+    }
+
+    /// 获取最后一个音频的 URL
+    /// - Returns: 最后一个音频的 URL，如果没有音频则返回 nil
+    /// - Throws: 如果查询操作失败则抛出错误
+    func lastAudioURL() throws -> URL? {
+        try context.fetch(AudioModel.descriptorLast).first?.url
+    }
+
     /// 获取指定索引的音频模型
     /// - Parameter i: 音频索引
     /// - Returns: 指定索引的音频模型，如果未找到则返回 nil

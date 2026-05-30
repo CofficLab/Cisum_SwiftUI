@@ -124,6 +124,13 @@ public extension AudioModel {
         return descriptor
     }
 
+    static var descriptorLast: FetchDescriptor<AudioModel> {
+        var descriptor = FetchDescriptor<AudioModel>()
+        descriptor.sortBy.append(.init(\.order, order: .reverse))
+        descriptor.fetchLimit = 1
+        return descriptor
+    }
+
     static func descriptorPrev(order: Int) -> FetchDescriptor<AudioModel> {
         var descriptor = FetchDescriptor<AudioModel>()
         descriptor.sortBy.append(.init(\.order, order: .reverse))

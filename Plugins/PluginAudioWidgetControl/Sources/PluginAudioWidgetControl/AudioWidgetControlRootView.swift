@@ -6,6 +6,7 @@ import SwiftUI
 
 public typealias AudioWidgetAdjacentAssetProvider = @MainActor (_ current: URL?, _ verbose: Bool) async throws -> URL?
 public typealias AudioWidgetFirstAssetProvider = @MainActor () async throws -> URL?
+public typealias AudioWidgetLastAssetProvider = @MainActor () async throws -> URL?
 
 public struct AudioWidgetControlRootView: View {
     private static let verbose = false
@@ -17,15 +18,18 @@ public struct AudioWidgetControlRootView: View {
     private let nextAsset: AudioWidgetAdjacentAssetProvider
     private let previousAsset: AudioWidgetAdjacentAssetProvider
     private let firstAsset: AudioWidgetFirstAssetProvider
+    private let lastAsset: AudioWidgetLastAssetProvider
 
     public init(
         nextAsset: @escaping AudioWidgetAdjacentAssetProvider,
         previousAsset: @escaping AudioWidgetAdjacentAssetProvider,
-        firstAsset: @escaping AudioWidgetFirstAssetProvider
+        firstAsset: @escaping AudioWidgetFirstAssetProvider,
+        lastAsset: @escaping AudioWidgetLastAssetProvider
     ) {
         self.nextAsset = nextAsset
         self.previousAsset = previousAsset
         self.firstAsset = firstAsset
+        self.lastAsset = lastAsset
     }
 
     public var body: some View {
@@ -114,6 +118,8 @@ public struct AudioWidgetControlRootView: View {
             do {
                 if let previous = try await previousAsset(asset, Self.verbose) {
                     await man.play(previous, autoPlay: true, reason: "Widget.Previous")
+                } else if man.playMode == .repeatAll, let last = try await lastAsset() {
+                    await man.play(last, autoPlay: true, reason: "Widget.RepeatAllPrevious")
                 }
             } catch {
                 if Self.verbose {

@@ -37,6 +37,9 @@ private struct AudioControlPluginRootView<Content>: View where Content: View {
             },
             firstAsset: {
                 try await AudioPlugin.getAudioRepo()?.getFirst()
+            },
+            lastAsset: {
+                try await AudioPlugin.getAudioRepo()?.getLast()
             }
         ) {
             content

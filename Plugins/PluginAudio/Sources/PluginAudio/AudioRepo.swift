@@ -59,6 +59,10 @@ public class AudioRepo: ObservableObject, SuperLog {
         try await db.firstAudioURL()
     }
 
+    public func getLast() async throws -> URL? {
+        try await db.lastAudioURL()
+    }
+
     public func getNextOf(_ url: URL?, verbose: Bool = false) async throws -> URL? {
         try await db.getNextAudioURLOf(url, verbose: verbose)
     }

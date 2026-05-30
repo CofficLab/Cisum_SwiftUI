@@ -27,6 +27,9 @@ public actor AudioWidgetControlPlugin: SuperPlugin {
                         },
                         firstAsset: {
                             try await AudioPlugin.getAudioRepo()?.getFirst()
+                        },
+                        lastAsset: {
+                            try await AudioPlugin.getAudioRepo()?.getLast()
                         }
                     )
                 )

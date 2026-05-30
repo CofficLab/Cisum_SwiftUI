@@ -6,6 +6,7 @@ import SwiftUI
 
 public typealias AudioControlAdjacentAssetProvider = @MainActor (_ current: URL?, _ verbose: Bool) async throws -> URL?
 public typealias AudioControlFirstAssetProvider = @MainActor () async throws -> URL?
+public typealias AudioControlLastAssetProvider = @MainActor () async throws -> URL?
 public typealias AudioControlCurrentSceneProvider = @MainActor () -> String?
 
 private enum AudioControlRuntime {
@@ -24,6 +25,7 @@ public struct AudioControlRootView<Content>: View where Content: View {
     private let nextAsset: AudioControlAdjacentAssetProvider
     private let previousAsset: AudioControlAdjacentAssetProvider
     private let firstAsset: AudioControlFirstAssetProvider
+    private let lastAsset: AudioControlLastAssetProvider
 
     public init(
         targetSceneName: String,
@@ -31,6 +33,7 @@ public struct AudioControlRootView<Content>: View where Content: View {
         nextAsset: @escaping AudioControlAdjacentAssetProvider,
         previousAsset: @escaping AudioControlAdjacentAssetProvider,
         firstAsset: @escaping AudioControlFirstAssetProvider,
+        lastAsset: @escaping AudioControlLastAssetProvider,
         @ViewBuilder content: () -> Content
     ) {
         self.targetSceneName = targetSceneName
@@ -38,6 +41,7 @@ public struct AudioControlRootView<Content>: View where Content: View {
         self.nextAsset = nextAsset
         self.previousAsset = previousAsset
         self.firstAsset = firstAsset
+        self.lastAsset = lastAsset
         self.content = content()
     }
 
@@ -115,6 +119,11 @@ private extension AudioControlRootView {
             do {
                 if let previous = try await previousAsset(asset, false) {
                     await man.play(previous, autoPlay: true, reason: "AudioControlRootView")
+                    return
+                }
+
+                if man.playMode == .repeatAll, let last = try await lastAsset() {
+                    await man.play(last, autoPlay: true, reason: "AudioControlRootView.repeatAllPrevious")
                 }
             } catch {
                 if AudioControlRuntime.verbose {
