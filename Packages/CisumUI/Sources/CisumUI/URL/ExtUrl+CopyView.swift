@@ -122,6 +122,7 @@ private struct FileCopyProgressView: View, SuperLog {
     @State private var error: Error?
     @State private var isCompleted = false
     @State private var isCopying = false
+    @State private var hasStarted = false
     @State private var thumbnail: Image?
     @State private var showCopiedTip = false
     
@@ -161,17 +162,14 @@ private struct FileCopyProgressView: View, SuperLog {
                         .foregroundStyle(.green)
                 }
                 
-//                if !style.autoStart && !isCopying && !isCompleted {
-//                    MagicButton(
-//                        icon: "arrow.right.circle",
-//                        title: "开始复制",
-//                        style: .primary,
-//                        size: .regular,
-//                        shape: .rectangle
-//                    ) {_ in 
-//                        Task { performCopyOperation() }
-//                    }
-//                }
+                if !style.autoStart && !isCopying && !isCompleted {
+                    Button {
+                        performCopyOperation()
+                    } label: {
+                        Label("开始复制", systemImage: "arrow.right.circle")
+                    }
+                    .buttonStyle(.borderedProminent)
+                }
             }
             .padding()
             .background(style.background.opacity(style.backgroundOpacity))
@@ -224,9 +222,30 @@ private struct FileCopyProgressView: View, SuperLog {
     private func setShowCopiedTip(_ value: Bool) {
         showCopiedTip = value
     }
-    
+
+    @MainActor
+    private func beginCopyOperation() -> Bool {
+        guard !hasStarted && !isCopying && !isCompleted else {
+            return false
+        }
+        hasStarted = true
+        error = nil
+        copyProgress = 0
+        downloadProgress = 0
+        return true
+    }
+
+    @MainActor
+    private func resetStarted() {
+        hasStarted = false
+    }
+
     private func performCopyOperation() {
         Task.detached(priority: .background) {
+            guard await beginCopyOperation() else {
+                return
+            }
+
             if verbose {
                 os_log("\(self.t)开始复制操作: 源文件 \(source.path) -> 目标 \(finalDestination.path)")
             }
@@ -270,6 +289,7 @@ private struct FileCopyProgressView: View, SuperLog {
                     os_log("\(self.t)复制操作失败: \(error.localizedDescription)")
                 }
                 await setCopying(false)
+                await resetStarted()
                 await setError(error)
                 await onCompletion(error)
             }
