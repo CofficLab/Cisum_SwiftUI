@@ -41,6 +41,10 @@ struct BookTile: View, SuperThread, SuperLog, Equatable {
         ZStack {
             if let cover = cover {
                 cover
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: tileSize.width, height: tileSize.height)
+                    .clipped()
             } else {
                 CisumMagicBackground.deepForest.opacity(0.2)
             }
