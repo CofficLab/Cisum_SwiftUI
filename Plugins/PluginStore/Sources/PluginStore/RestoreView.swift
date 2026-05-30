@@ -25,30 +25,30 @@ struct RestoreView: View, SuperEvent, SuperLog, SuperThread {
                 // 说明文字
                 AppSheetPanel {
                     VStack(spacing: 16) {
-                    AppSheetIconHeader(systemImage: "icloud.and.arrow.down.fill", title: "Restore Purchase", tint: .blue)
-                    VStack(alignment: .leading, spacing: 12) {
-                        AppInfoRow(
-                            icon: "iphone.and.arrow.forward",
-                            title: String(localized: "Cross-Device Restore", table: "Store", bundle: .module),
-                            description: String(localized: "Restore purchases made on other devices", table: "Store", bundle: .module),
-                            tint: .blue
-                        )
+                        AppSheetIconHeader(systemImage: "icloud.and.arrow.down.fill", title: localized("Restore Purchase"), tint: .blue)
+                        VStack(alignment: .leading, spacing: 12) {
+                            AppInfoRow(
+                                icon: "iphone.and.arrow.forward",
+                                title: localized("Cross-Device Restore"),
+                                description: localized("Restore purchases made on other devices"),
+                                tint: .blue
+                            )
 
-                        AppInfoRow(
-                            icon: "person.circle",
-                            title: String(localized: "Apple ID Verification", table: "Store", bundle: .module),
-                            description: String(localized: "Use the same Apple ID used for purchase", table: "Store", bundle: .module),
-                            tint: .blue
-                        )
+                            AppInfoRow(
+                                icon: "person.circle",
+                                title: localized("Apple ID Verification"),
+                                description: localized("Use the same Apple ID used for purchase"),
+                                tint: .blue
+                            )
 
-                        AppInfoRow(
-                            icon: "checkmark.circle",
-                            title: String(localized: "Feature Restore", table: "Store", bundle: .module),
-                            description: String(localized: "Get all purchased features after successful restore", table: "Store", bundle: .module),
-                            tint: .blue
-                        )
-                    }
-                    .padding(.vertical, 8)
+                            AppInfoRow(
+                                icon: "checkmark.circle",
+                                title: localized("Feature Restore"),
+                                description: localized("Get all purchased features after successful restore"),
+                                tint: .blue
+                            )
+                        }
+                        .padding(.vertical, 8)
                     }
                 }
 
@@ -75,18 +75,18 @@ struct RestoreView: View, SuperEvent, SuperLog, SuperThread {
         case .idle:
             EmptyView()
         case .restoring:
-            AppStatusBanner(kind: .loading, title: "Restoring Purchase", message: "Please wait, verifying your purchase records...")
+            AppStatusBanner(kind: .loading, title: localized("Restoring Purchase"), message: localized("Please wait, verifying your purchase records..."))
         case .success:
-            AppStatusBanner(kind: .success, title: "Restore Successful", message: "Successfully restored your purchase records, all features unlocked")
+            AppStatusBanner(kind: .success, title: localized("Restore Successful"), message: localized("Successfully restored your purchase records, all features unlocked"))
         case .failed:
-            AppStatusBanner(kind: .error, title: "Restore Failed", message: error?.localizedDescription ?? String(localized: "An error occurred while restoring, please try again later", table: "Store", bundle: .module))
+            AppStatusBanner(kind: .error, title: localized("Restore Failed"), message: error?.localizedDescription ?? localized("An error occurred while restoring, please try again later"))
         }
     }
 
     @ViewBuilder
     private var restoreButton: some View {
         AppSheetActionButton(
-            restoreState == .failed ? "Retry Restore" : "Restore Purchase",
+            title: restoreState == .failed ? localized("Retry Restore") : localized("Restore Purchase"),
             systemImage: "arrow.clockwise"
         ) {
             restorePurchase()
@@ -97,11 +97,11 @@ struct RestoreView: View, SuperEvent, SuperLog, SuperThread {
     @ViewBuilder
     private var successButtons: some View {
         HStack(spacing: 12) {
-            AppSheetActionButton("Done", systemImage: "checkmark.circle.fill") {
+            AppSheetActionButton(title: localized("Done"), systemImage: "checkmark.circle.fill") {
                 dismiss()
             }
 
-            AppSheetActionButton("Try Again", systemImage: "arrow.clockwise") {
+            AppSheetActionButton(title: localized("Try Again"), systemImage: "arrow.clockwise") {
                 restoreState = .idle
                 restorePurchase()
             }
@@ -137,6 +137,12 @@ struct RestoreView: View, SuperEvent, SuperLog, SuperThread {
                 }
             }
         }
+    }
+}
+
+private extension RestoreView {
+    func localized(_ key: String.LocalizationValue) -> String {
+        String(localized: key, table: "Store", bundle: .module)
     }
 }
 
