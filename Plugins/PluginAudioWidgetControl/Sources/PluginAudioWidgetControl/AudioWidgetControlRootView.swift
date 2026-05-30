@@ -12,6 +12,18 @@ enum AudioWidgetPlaybackRequestPolicy {
     static func shouldApplyNavigationResult(requestedAsset: URL, currentAsset: URL?) -> Bool {
         currentAsset == requestedAsset
     }
+
+    static func commandCount(from storedValue: Any?, maximum: Int = 10) -> Int {
+        if let count = storedValue as? Int {
+            return min(max(count, 0), maximum)
+        }
+
+        if storedValue is TimeInterval {
+            return 1
+        }
+
+        return 0
+    }
 }
 
 public struct AudioWidgetControlRootView: View {
@@ -75,82 +87,99 @@ public struct AudioWidgetControlRootView: View {
 
         guard let sharedDefaults else { return }
 
-        if sharedDefaults.object(forKey: "widgetPlayPauseTrigger") is TimeInterval {
-            handlePlayPause()
+        let playPauseCount = AudioWidgetPlaybackRequestPolicy.commandCount(
+            from: sharedDefaults.object(forKey: "widgetPlayPauseTrigger")
+        )
+        if playPauseCount > 0 {
+            handlePlayPause(count: playPauseCount)
             sharedDefaults.removeObject(forKey: "widgetPlayPauseTrigger")
         }
 
-        if sharedDefaults.object(forKey: "widgetNextTrigger") is TimeInterval {
-            handleNext()
+        let nextCount = AudioWidgetPlaybackRequestPolicy.commandCount(
+            from: sharedDefaults.object(forKey: "widgetNextTrigger")
+        )
+        if nextCount > 0 {
+            handleNext(count: nextCount)
             sharedDefaults.removeObject(forKey: "widgetNextTrigger")
         }
 
-        if sharedDefaults.object(forKey: "widgetPreviousTrigger") is TimeInterval {
-            handlePrevious()
+        let previousCount = AudioWidgetPlaybackRequestPolicy.commandCount(
+            from: sharedDefaults.object(forKey: "widgetPreviousTrigger")
+        )
+        if previousCount > 0 {
+            handlePrevious(count: previousCount)
             sharedDefaults.removeObject(forKey: "widgetPreviousTrigger")
         }
     }
 
-    private func handlePlayPause() {
-        if man.state == .playing {
-            man.pause(reason: "Widget")
-        } else {
-            man.playCurrent(reason: "Widget")
-        }
-    }
-
-    private func handleNext() {
-        guard let asset = man.currentAsset else { return }
-
-        Task { @MainActor in
-            do {
-                if let next = try await nextAsset(asset, Self.verbose) {
-                    guard AudioWidgetPlaybackRequestPolicy.shouldApplyNavigationResult(
-                        requestedAsset: asset,
-                        currentAsset: man.currentAsset
-                    ) else {
-                        return
-                    }
-                    await man.play(next, autoPlay: true, reason: "Widget.Next")
-                } else if man.playMode == .repeatAll, let first = try await firstAsset() {
-                    guard AudioWidgetPlaybackRequestPolicy.shouldApplyNavigationResult(
-                        requestedAsset: asset,
-                        currentAsset: man.currentAsset
-                    ) else {
-                        return
-                    }
-                    await man.play(first, autoPlay: true, reason: "Widget.Loop")
-                }
-            } catch {
-                Self.log.error("Failed to get next asset: \(error.localizedDescription)")
+    private func handlePlayPause(count: Int) {
+        for _ in 0..<count {
+            if man.state == .playing {
+                man.pause(reason: "Widget")
+            } else {
+                man.playCurrent(reason: "Widget")
             }
         }
     }
 
-    private func handlePrevious() {
-        guard let asset = man.currentAsset else { return }
-
+    private func handleNext(count: Int) {
         Task { @MainActor in
-            do {
-                if let previous = try await previousAsset(asset, Self.verbose) {
-                    guard AudioWidgetPlaybackRequestPolicy.shouldApplyNavigationResult(
-                        requestedAsset: asset,
-                        currentAsset: man.currentAsset
-                    ) else {
-                        return
+            for _ in 0..<count {
+                guard let asset = man.currentAsset else { return }
+
+                do {
+                    if let next = try await nextAsset(asset, Self.verbose) {
+                        guard AudioWidgetPlaybackRequestPolicy.shouldApplyNavigationResult(
+                            requestedAsset: asset,
+                            currentAsset: man.currentAsset
+                        ) else {
+                            return
+                        }
+                        await man.play(next, autoPlay: true, reason: "Widget.Next")
+                    } else if man.playMode == .repeatAll, let first = try await firstAsset() {
+                        guard AudioWidgetPlaybackRequestPolicy.shouldApplyNavigationResult(
+                            requestedAsset: asset,
+                            currentAsset: man.currentAsset
+                        ) else {
+                            return
+                        }
+                        await man.play(first, autoPlay: true, reason: "Widget.Loop")
                     }
-                    await man.play(previous, autoPlay: true, reason: "Widget.Previous")
-                } else if man.playMode == .repeatAll, let last = try await lastAsset() {
-                    guard AudioWidgetPlaybackRequestPolicy.shouldApplyNavigationResult(
-                        requestedAsset: asset,
-                        currentAsset: man.currentAsset
-                    ) else {
-                        return
-                    }
-                    await man.play(last, autoPlay: true, reason: "Widget.RepeatAllPrevious")
+                } catch {
+                    Self.log.error("Failed to get next asset: \(error.localizedDescription)")
+                    return
                 }
-            } catch {
-                Self.log.error("Failed to get previous asset: \(error.localizedDescription)")
+            }
+        }
+    }
+
+    private func handlePrevious(count: Int) {
+        Task { @MainActor in
+            for _ in 0..<count {
+                guard let asset = man.currentAsset else { return }
+
+                do {
+                    if let previous = try await previousAsset(asset, Self.verbose) {
+                        guard AudioWidgetPlaybackRequestPolicy.shouldApplyNavigationResult(
+                            requestedAsset: asset,
+                            currentAsset: man.currentAsset
+                        ) else {
+                            return
+                        }
+                        await man.play(previous, autoPlay: true, reason: "Widget.Previous")
+                    } else if man.playMode == .repeatAll, let last = try await lastAsset() {
+                        guard AudioWidgetPlaybackRequestPolicy.shouldApplyNavigationResult(
+                            requestedAsset: asset,
+                            currentAsset: man.currentAsset
+                        ) else {
+                            return
+                        }
+                        await man.play(last, autoPlay: true, reason: "Widget.RepeatAllPrevious")
+                    }
+                } catch {
+                    Self.log.error("Failed to get previous asset: \(error.localizedDescription)")
+                    return
+                }
             }
         }
     }

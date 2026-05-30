@@ -25,3 +25,16 @@ import Testing
         currentAsset: nil
     ))
 }
+
+@Test func widgetCommandCountPreservesRapidRepeatedCommands() {
+    #expect(AudioWidgetPlaybackRequestPolicy.commandCount(from: 3) == 3)
+    #expect(AudioWidgetPlaybackRequestPolicy.commandCount(from: 0) == 0)
+    #expect(AudioWidgetPlaybackRequestPolicy.commandCount(from: -2) == 0)
+    #expect(AudioWidgetPlaybackRequestPolicy.commandCount(from: 99) == 10)
+}
+
+@Test func widgetCommandCountAcceptsLegacyTimestampTrigger() {
+    #expect(AudioWidgetPlaybackRequestPolicy.commandCount(from: TimeInterval(1_700_000_000)) == 1)
+    #expect(AudioWidgetPlaybackRequestPolicy.commandCount(from: nil) == 0)
+    #expect(AudioWidgetPlaybackRequestPolicy.commandCount(from: "unexpected") == 0)
+}

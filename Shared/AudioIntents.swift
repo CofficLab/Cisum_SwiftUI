@@ -12,6 +12,13 @@ private func notifyMainApp() {
     CFNotificationCenterPostNotification(center, name, nil, nil, true)
 }
 
+private func incrementWidgetCommand(_ key: String) {
+    let sharedDefaults = UserDefaults(suiteName: "group.com.yueyi.cisum")
+    let currentCount = sharedDefaults?.integer(forKey: key) ?? 0
+    sharedDefaults?.set(currentCount + 1, forKey: key)
+    sharedDefaults?.synchronize()
+}
+
 public struct PlayPauseIntent: AppIntent, SuperLog {
     nonisolated public static let emoji = "🎵"
     nonisolated static let verbose = false
@@ -25,11 +32,8 @@ public struct PlayPauseIntent: AppIntent, SuperLog {
     public func perform() async throws -> some IntentResult {
         os_log("\(Self.t)播放/暂停意图已执行")
 
-        // 通过 App Groups UserDefaults 触发主 App 操作
-        // 系统会自动发送 Darwin 通知给所有使用该 App Group 的进程
-        let sharedDefaults = UserDefaults(suiteName: "group.com.yueyi.cisum")
-        sharedDefaults?.set(Date().timeIntervalSince1970, forKey: "widgetPlayPauseTrigger")
-        sharedDefaults?.synchronize()
+        // 通过 App Groups UserDefaults 触发主 App 操作。
+        incrementWidgetCommand("widgetPlayPauseTrigger")
         
         // 显式发送 Darwin 通知
         notifyMainApp()
@@ -51,10 +55,8 @@ public struct NextTrackIntent: AppIntent, SuperLog {
     public func perform() async throws -> some IntentResult {
         os_log("\(Self.t)下一首意图已执行")
 
-        // 通过 App Groups UserDefaults 触发主 App 操作
-        let sharedDefaults = UserDefaults(suiteName: "group.com.yueyi.cisum")
-        sharedDefaults?.set(Date().timeIntervalSince1970, forKey: "widgetNextTrigger")
-        sharedDefaults?.synchronize()
+        // 通过 App Groups UserDefaults 触发主 App 操作。
+        incrementWidgetCommand("widgetNextTrigger")
         
         // 显式发送 Darwin 通知
         notifyMainApp()
@@ -76,10 +78,8 @@ public struct PreviousTrackIntent: AppIntent, SuperLog {
     public func perform() async throws -> some IntentResult {
         os_log("\(Self.t)上一首意图已执行")
 
-        // 通过 App Groups UserDefaults 触发主 App 操作
-        let sharedDefaults = UserDefaults(suiteName: "group.com.yueyi.cisum")
-        sharedDefaults?.set(Date().timeIntervalSince1970, forKey: "widgetPreviousTrigger")
-        sharedDefaults?.synchronize()
+        // 通过 App Groups UserDefaults 触发主 App 操作。
+        incrementWidgetCommand("widgetPreviousTrigger")
         
         // 显式发送 Darwin 通知
         notifyMainApp()
