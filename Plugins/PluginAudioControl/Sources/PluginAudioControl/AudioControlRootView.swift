@@ -45,6 +45,9 @@ public struct AudioControlRootView<Content>: View where Content: View {
         content
             .onAppear(perform: handleOnAppear)
             .onDisappear(perform: handleOnDisappear)
+            .onChange(of: currentSceneName()) { _, newSceneName in
+                handleCurrentSceneChanged(newSceneName)
+            }
             .onReceive(NotificationCenter.default.publisher(for: .audioControlDBDeleted), perform: handleDBDeleted)
             .onReceive(NotificationCenter.default.publisher(for: .audioControlStorageLocationDidReset)) { _ in
                 handleStorageLocationDidReset()
@@ -58,6 +61,22 @@ public struct AudioControlRootView<Content>: View where Content: View {
 
 private extension AudioControlRootView {
     func handleOnAppear() {
+        updateControlActivation(for: currentSceneName())
+    }
+
+    func handleCurrentSceneChanged(_ sceneName: String?) {
+        updateControlActivation(for: sceneName)
+    }
+
+    private func updateControlActivation(for sceneName: String?) {
+        if sceneName == targetSceneName {
+            activateControl()
+        } else {
+            deactivateControl()
+        }
+    }
+
+    private func activateControl() {
         guard shouldActivateControl else {
             if AudioControlRuntime.verbose {
                 AudioControlRuntime.log.debug("Skip playback control because current scene is not audio")
@@ -79,6 +98,10 @@ private extension AudioControlRootView {
     }
 
     func handleOnDisappear() {
+        deactivateControl()
+    }
+
+    private func deactivateControl() {
         guard let playbackSubscriptionID else { return }
 
         man.unsubscribe(playbackSubscriptionID)
