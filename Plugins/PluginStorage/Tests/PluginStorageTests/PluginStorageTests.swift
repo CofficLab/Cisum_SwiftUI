@@ -18,6 +18,11 @@ import Foundation
     }
 }
 
+@Test func directStorageSwitchUsesAccurateCompletionMessage() {
+    #expect(MigrationProgressView.completionMessage(shouldMigrate: true) == "迁移已完成")
+    #expect(MigrationProgressView.completionMessage(shouldMigrate: false) == "已切换到新位置")
+}
+
 @Test func migrationMovesContentsButKeepsSourceRoot() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)

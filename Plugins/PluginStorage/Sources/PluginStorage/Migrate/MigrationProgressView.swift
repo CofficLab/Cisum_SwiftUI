@@ -18,6 +18,7 @@ struct MigrationProgressView: View {
     @State private var errorMessage: String?
     @State private var migrationProgress = 0.0
     @State private var currentMigratingFile = ""
+    @State private var completionMessage = ""
     @State private var showConfirmation = true // 用于显示确认对话框
     @State private var migrationCompleted = false // 添加新状态变量
     @State private var migrationCancelled = false // 添加新状态来跟踪取消状态
@@ -38,6 +39,10 @@ struct MigrationProgressView: View {
         2. 可以手动查看并两个仓库中的数据
         3. 确认问题解决后可以重试迁移
         """
+    }
+
+    nonisolated static func completionMessage(shouldMigrate: Bool) -> String {
+        shouldMigrate ? "迁移已完成" : "已切换到新位置"
     }
 
     var body: some View {
@@ -144,9 +149,11 @@ struct MigrationProgressView: View {
 
             // 更新存储位置
             await MainActor.run {
+                let completionMessage = Self.completionMessage(shouldMigrate: shouldMigrate)
                 dependencies.updateStorageLocation(targetLocation)
                 self.migrationCompleted = true
-                self.currentMigratingFile = shouldMigrate ? "迁移完成" : "已切换到新位置"
+                self.completionMessage = completionMessage
+                self.currentMigratingFile = completionMessage
             }
         } catch MigrationError.migrationCancelled {
             await MainActor.run {
@@ -345,7 +352,7 @@ struct MigrationProgressView: View {
                     .foregroundColor(.primary)
 
                 if migrationCompleted {
-                    Text("迁移已完成", tableName: "Storage", bundle: .module)
+                    Text(completionMessage.isEmpty ? Self.completionMessage(shouldMigrate: true) : completionMessage)
                         .font(.subheadline)
                         .foregroundColor(.green)
                 } else if migrationCancelled {
