@@ -106,3 +106,8 @@ import UniformTypeIdentifiers
     #expect(BookTileLoadIdentity(bookURL: bookURL, dbRoot: firstRoot) == BookTileLoadIdentity(bookURL: bookURL, dbRoot: firstRoot))
     #expect(BookTileLoadIdentity(bookURL: bookURL, dbRoot: firstRoot) != BookTileLoadIdentity(bookURL: bookURL, dbRoot: secondRoot))
 }
+
+@Test func bookGridOnlyAppliesCurrentUpdateGeneration() {
+    #expect(BookGridUpdatePolicy.shouldApplyResult(currentGeneration: 2, resultGeneration: 2))
+    #expect(!BookGridUpdatePolicy.shouldApplyResult(currentGeneration: 3, resultGeneration: 2))
+}

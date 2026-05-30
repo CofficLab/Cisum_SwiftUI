@@ -7,6 +7,12 @@ import PluginBook
 import SwiftData
 import SwiftUI
 
+enum BookGridUpdatePolicy {
+    static func shouldApplyResult(currentGeneration: Int, resultGeneration: Int) -> Bool {
+        currentGeneration == resultGeneration
+    }
+}
+
 struct BookGrid: View, SuperLog, SuperThread, SuperEvent {
     nonisolated static let emoji = "📖"
     nonisolated static let verbose = false
@@ -294,7 +300,10 @@ extension BookGrid {
     /// - Parameter newValue: 新的书籍 DTO 列表
     @MainActor
     private func setBooks(_ newValue: [BookDTO], generation: Int) {
-        guard updateBooksGeneration == generation else {
+        guard BookGridUpdatePolicy.shouldApplyResult(
+            currentGeneration: updateBooksGeneration,
+            resultGeneration: generation
+        ) else {
             return
         }
 
@@ -470,6 +479,7 @@ extension BookGrid {
         
         updateBooksDebounceTask?.cancel()
         updateBooksDebounceTask = nil
+        updateBooksGeneration += 1
     }
 }
 
