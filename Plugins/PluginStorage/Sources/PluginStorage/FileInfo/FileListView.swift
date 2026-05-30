@@ -14,8 +14,7 @@ struct FileListView: View, SuperLog {
     @State private var visibleItems: [FileItem] = []
     @State private var itemCache: [URL: [FileItem]] = [:]
 
-    // 添加忽略文件列表
-    private let ignoredFiles = [
+    nonisolated private static let ignoredFiles = [
         ".DS_Store",
         ".git",
         ".svn",
@@ -54,9 +53,9 @@ struct FileListView: View, SuperLog {
                     HStack(spacing: 4) {
                         FileExpandButton(
                             isDirectory: (try? item.url.resourceValues(forKeys: [.isDirectoryKey]).isDirectory) ?? false,
-                            initialExpanded: item.isExpanded
+                            isExpanded: expandedItems.contains(item)
                         ) { isExpanded in
-                            toggleExpanded(item)
+                            setExpanded(isExpanded, for: item)
                         }
 
                         FileTitleView(url: item.url)
@@ -87,71 +86,84 @@ struct FileListView: View, SuperLog {
         }
     }
 
-    private func cacheChildItems(for item: FileItem) {
-        guard let children = item.children() else { return }
-        
-        // 过滤掉需要忽略的文件，并按名称排序
-        let filteredChildren = children
+    private func setExpanded(_ isExpanded: Bool, for item: FileItem) {
+        if isExpanded {
+            expandedItems.insert(item)
+        } else {
+            expandedItems.remove(item)
+        }
+
+        updateVisibleItems(reason: "toggleExpanded")
+    }
+
+    private func updateVisibleItems(reason: String) {
+        let rootURL = url
+        let expandedURLs = Set(expandedItems.map(\.url))
+        let cachedItems = itemCache
+
+        Task.detached(priority: .high, operation: {
+            os_log("\(Self.t)🔄 Updating visible items with reason: \(reason)")
+
+            let update = Self.buildVisibleItems(
+                rootURL: rootURL,
+                expandedURLs: expandedURLs,
+                cachedItems: cachedItems
+            )
+
+            await setVisibleItems(update.visibleItems)
+            await mergeItemCache(update.itemCache)
+        })
+    }
+
+    nonisolated private static func buildVisibleItems(
+        rootURL: URL,
+        expandedURLs: Set<URL>,
+        cachedItems: [URL: [FileItem]]
+    ) -> (visibleItems: [FileItem], itemCache: [URL: [FileItem]]) {
+        var cache = cachedItems
+        let rootItem = FileItem(url: rootURL, level: 0, isExpanded: expandedURLs.contains(rootURL))
+        var result = [rootItem]
+
+        if rootItem.isExpanded {
+            addVisibleChildren(from: rootItem, expandedURLs: expandedURLs, itemCache: &cache, into: &result)
+        }
+
+        return (result, cache)
+    }
+
+    nonisolated private static func addVisibleChildren(
+        from item: FileItem,
+        expandedURLs: Set<URL>,
+        itemCache: inout [URL: [FileItem]],
+        into result: inout [FileItem]
+    ) {
+        let children = itemCache[item.url] ?? childItems(for: item)
+        itemCache[item.url] = children
+
+        for child in children {
+            let childItem = FileItem(
+                url: child.url,
+                level: child.level,
+                isExpanded: expandedURLs.contains(child.url)
+            )
+            result.append(childItem)
+
+            if childItem.isExpanded {
+                addVisibleChildren(from: childItem, expandedURLs: expandedURLs, itemCache: &itemCache, into: &result)
+            }
+        }
+    }
+
+    nonisolated private static func childItems(for item: FileItem) -> [FileItem] {
+        guard let children = item.children() else { return [] }
+
+        return children
             .filter { child in
                 !ignoredFiles.contains(child.url.lastPathComponent)
             }
             .sorted { item1, item2 in
                 item1.url.lastPathComponent.localizedStandardCompare(item2.url.lastPathComponent) == .orderedAscending
             }
-        
-        var newCache = self.itemCache
-        newCache[item.url] = filteredChildren
-        self.setItemCache(newCache)
-
-        // 递归缓存子文件夹的内容
-        for child in filteredChildren {
-            if (try? child.url.resourceValues(forKeys: [.isDirectoryKey]).isDirectory) == true {
-                self.cacheChildItems(for: child)
-            }
-        }
-    }
-
-    private func toggleExpanded(_ item: FileItem) {
-        if expandedItems.contains(item) {
-            expandedItems.remove(item)
-        } else {
-            expandedItems.insert(item)
-        }
-
-        updateVisibleItems(reason: "toggleExpanded")
-    }
-
-    private func addItemsRecursively(from item: FileItem, into result: inout [FileItem]) {
-        if let cachedChildren = itemCache[item.url] {
-            for child in cachedChildren {
-                let isExpanded = expandedItems.contains { $0.url == child.url }
-                let childItem = FileItem(url: child.url, level: child.level, isExpanded: isExpanded)
-                result.append(childItem)
-
-                if childItem.isExpanded {
-                    addItemsRecursively(from: childItem, into: &result)
-                }
-            }
-        }
-    }
-
-    private func updateVisibleItems(reason: String) {
-        Task.detached(priority: .high, operation: {
-            os_log("\(self.t)🔄 Updating visible items with reason: \(reason)")
-
-            await cacheChildItems(for: FileItem(url: url, level: 0, isExpanded: true))
-
-            var result: [FileItem] = []
-
-            let rootItem = await FileItem(url: url, level: 0, isExpanded: expandedItems.contains { $0.url == url })
-            result.append(rootItem)
-
-            if rootItem.isExpanded {
-                await addItemsRecursively(from: rootItem, into: &result)
-            }
-
-            await setVisibleItems(result)
-        })
     }
 
     @MainActor
@@ -160,8 +172,8 @@ struct FileListView: View, SuperLog {
     }
 
     @MainActor
-    private func setItemCache(_ cache: [URL: [FileItem]]) {
-        itemCache = cache
+    private func mergeItemCache(_ cache: [URL: [FileItem]]) {
+        itemCache.merge(cache) { _, new in new }
     }
 }
 
