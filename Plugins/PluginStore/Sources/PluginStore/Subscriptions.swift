@@ -95,14 +95,17 @@ struct ProductsSubscription: View, SuperEvent, SuperLog, SuperThread {
         Task {
             do {
                 let groups = try await StoreService.fetchAllProducts()
-                self.subscriptionGroups = groups.subscriptionGroups
+                await MainActor.run {
+                    self.subscriptionGroups = groups.subscriptionGroups
+                    self.error = nil
+                    self.refreshing = false
+                }
             } catch {
-                self.error = error
+                await MainActor.run {
+                    self.error = error
+                    self.refreshing = false
+                }
             }
-
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
-                self.refreshing = false
-            })
         }
     }
 }
@@ -111,18 +114,10 @@ struct ProductsSubscription: View, SuperEvent, SuperLog, SuperThread {
 
 extension ProductsSubscription {
     func onAppear() {
-        self.bg.async {
-            Task {
-                await getProducts("AllSubscription OnAppear")
-            }
-        }
+        getProducts("AllSubscription OnAppear")
     }
 
     func onRestore(_ notification: Notification) {
-        self.bg.async {
-            Task {
-                await getProducts("恢复购买")
-            }
-        }
+        getProducts("恢复购买")
     }
 }
