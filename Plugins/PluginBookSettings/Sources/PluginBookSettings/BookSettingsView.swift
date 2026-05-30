@@ -56,13 +56,13 @@ public struct BookSettingsView: View, SuperLog {
                     }
                 }
             } else {
-                AppSettingsSection(title: String(localized: "Music Library", table: "Book-Settings", bundle: .module)) {
+                AppSettingsSection(title: String(localized: "Audiobook Library", table: "Book-Settings", bundle: .module)) {
                     AppSettingsInfoRow(
                         title: String(localized: "Error", table: "Book-Settings", bundle: .module),
                         description: description,
                         systemImage: .cisumIconMusicLibrary
                     ) {
-                        Text("Cannot get music library information", tableName: "Book-Settings", bundle: .module)
+                        Text("Cannot get audiobook library information", tableName: "Book-Settings", bundle: .module)
                     }
                 }
             }

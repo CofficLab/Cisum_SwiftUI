@@ -65,18 +65,18 @@
         }
       }
     },
-    "Cannot get music library information" : {
+    "Cannot get audiobook library information" : {
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "无法获取音乐库信息"
+            "value" : "无法获取有声书库信息"
           }
         },
         "zh-HK" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "無法獲取音樂庫資訊"
+            "value" : "無法獲取有聲書庫資訊"
           }
         }
       }
