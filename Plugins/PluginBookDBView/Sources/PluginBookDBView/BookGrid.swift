@@ -191,6 +191,35 @@ extension BookGrid {
         }
         selectedBookURL = nil
     }
+
+    private func playableChildren(for book: BookDTO) -> [URL] {
+        book.url.getChildren()
+            .filter { url in
+                !url.isFolder
+                    && FileManager.default.fileExists(atPath: url.path)
+                    && BookPluginInfo.supportedExtensions.contains(url.pathExtension.lowercased())
+            }
+            .sorted {
+                $0.lastPathComponent.localizedStandardCompare($1.lastPathComponent) == .orderedAscending
+            }
+    }
+
+    private func isPlayableSavedURL(_ savedURL: URL, in book: BookDTO, playableChildren: [URL]) -> Bool {
+        if book.url == savedURL {
+            return FileManager.default.fileExists(atPath: savedURL.path)
+                && BookPluginInfo.supportedExtensions.contains(savedURL.pathExtension.lowercased())
+        }
+
+        return playableChildren.contains(savedURL)
+    }
+
+    private func play(_ url: URL, at time: TimeInterval?, reason: String) async {
+        await man.play(url, autoPlay: false, reason: reason)
+
+        if let time {
+            await man.seek(time: time, reason: reason)
+        }
+    }
     
     /// 播放书籍
     ///
@@ -203,18 +232,21 @@ extension BookGrid {
             os_log("\(self.t)▶️ 准备播放书籍: \(book.bookTitle)")
         }
 
+        let playableChildren = playableChildren(for: book)
+        let reason = self.className
+
         // 首先尝试从 BookState 恢复该书的进度
         do {
             let container = try BookConfig.getContainer(dbRootURL: dependencies.dbRoot)
             if let bookState = await findBookState(book.url, in: container),
                let savedURL = bookState.currentURL,
-               let savedTime = bookState.time {
+               let savedTime = bookState.time,
+               isPlayableSavedURL(savedURL, in: book, playableChildren: playableChildren) {
                 // 该书有保存的进度，继续播放
                 if Self.verbose {
                     os_log("\(self.t)📖 继续播放书籍进度: \(savedURL.lastPathComponent) @ \(savedTime)s")
                 }
-                await man.play(savedURL, autoPlay: false, reason: self.className)
-                await man.seek(time: savedTime, reason: self.className)
+                await play(savedURL, at: savedTime, reason: reason)
                 return
             }
         } catch {
@@ -226,27 +258,31 @@ extension BookGrid {
         // 其次检查全局状态是否属于这本书
         if let savedURL = BookSettingRepo.getCurrent(),
            let savedTime = BookSettingRepo.getCurrentTime(),
-           book.url == savedURL || book.url.getChildren().contains(savedURL) {
+           isPlayableSavedURL(savedURL, in: book, playableChildren: playableChildren) {
             // 当前保存的URL属于这本书，继续播放
             if Self.verbose {
                 os_log("\(self.t)📖 从全局状态继续播放: \(savedURL.lastPathComponent) @ \(savedTime)s")
             }
-            await man.play(savedURL, autoPlay: false, reason: self.className)
-            man.seek(time: savedTime, reason: self.className)
+            await play(savedURL, at: savedTime, reason: reason)
             return
         }
 
         // 没有保存状态，从头开始播放
-        if let first = book.url.getChildren().first {
+        if let first = playableChildren.first {
             if Self.verbose {
                 os_log("\(self.t)🎵 从头播放第一个子文件: \(first.lastPathComponent)")
             }
-            await man.play(first, reason: self.className)
+            await man.play(first, reason: reason)
         } else {
-            if Self.verbose {
-                os_log("\(self.t)🎵 从头播放书籍文件: \(book.url.lastPathComponent)")
+            guard FileManager.default.fileExists(atPath: book.url.path),
+                  BookPluginInfo.supportedExtensions.contains(book.url.pathExtension.lowercased()) else {
+                if Self.verbose {
+                    os_log("\(self.t)⚠️ 没有可播放章节: \(book.bookTitle)")
+                }
+                return
             }
-            await man.play(book.url, reason: self.className)
+
+            await man.play(book.url, reason: reason)
         }
     }
 }
