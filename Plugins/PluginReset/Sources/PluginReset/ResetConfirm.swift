@@ -17,7 +17,9 @@ public struct ResetConfirm: View {
         VStack(spacing: 40) {
             HStack {
                 Spacer()
-                closeButton
+                if !isResetting {
+                    closeButton
+                }
             }
             .padding(.top, 8)
             .padding(.trailing, 8)
@@ -90,6 +92,8 @@ public struct ResetConfirm: View {
     }
 
     private func performReset() {
+        guard !isResetting else { return }
+
         isResetting = true
 
         Task {
