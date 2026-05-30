@@ -118,6 +118,14 @@ extension AudioDBView {
             "folder": storageRoot,
         ])
 
+        return try await Task.detached(priority: .userInitiated) {
+            try Self.copyFilesInBackground(urls, to: storageRoot)
+        }.value
+    }
+
+    nonisolated private static func copyFilesInBackground(_ urls: [URL], to storageRoot: URL) throws -> [URL] {
+        try FileManager.default.createDirectory(at: storageRoot, withIntermediateDirectories: true)
+
         var copiedURLs: [URL] = []
 
         // 逐个复制文件
@@ -125,21 +133,21 @@ extension AudioDBView {
             let destination = Self.uniqueDestination(for: url, in: storageRoot)
 
             if Self.verbose {
-                os_log("\(self.t)📄 复制: \(url.lastPathComponent)")
+                os_log("\(Self.t)📄 复制: \(url.lastPathComponent)")
             }
 
-            try await copySecurityScopedFile(url, to: destination)
+            try copySecurityScopedFile(url, to: destination)
             copiedURLs.append(destination)
         }
 
         if Self.verbose {
-            os_log("\(self.t)✅ 全部文件复制完成")
+            os_log("\(Self.t)✅ 全部文件复制完成")
         }
 
         return copiedURLs
     }
 
-    private static func uniqueDestination(for source: URL, in directory: URL) -> URL {
+    nonisolated private static func uniqueDestination(for source: URL, in directory: URL) -> URL {
         let baseName = source.deletingPathExtension().lastPathComponent
         let fileExtension = source.pathExtension
         let normalizedBaseName = baseName.isEmpty ? "Imported Audio" : baseName
@@ -163,7 +171,7 @@ extension AudioDBView {
         return candidate
     }
 
-    private func copySecurityScopedFile(_ source: URL, to destination: URL) async throws {
+    nonisolated private static func copySecurityScopedFile(_ source: URL, to destination: URL) throws {
         let hasAccess = source.startAccessingSecurityScopedResource()
         guard hasAccess else {
             throw NSError(
@@ -179,10 +187,14 @@ extension AudioDBView {
             source.stopAccessingSecurityScopedResource()
         }
 
-        try await source.copyTo(destination, caller: self.className)
+        if source.checkIsICloud(verbose: false), source.isNotDownloaded {
+            try FileManager.default.startDownloadingUbiquitousItem(at: source)
+        }
+
+        try FileManager.default.copyItem(at: source, to: destination)
     }
 
-    private static func destination(named name: String, pathExtension: String, in directory: URL) -> URL {
+    nonisolated private static func destination(named name: String, pathExtension: String, in directory: URL) -> URL {
         let destination = directory.appendingPathComponent(name)
         guard !pathExtension.isEmpty else {
             return destination
