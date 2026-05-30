@@ -467,46 +467,40 @@ extension AudioList {
     func handleDeleteItems(at offsets: IndexSet) {
         // 获取要删除的 URLs
         let urlsToDelete = offsets.map { urls[$0] }
+        let repo = dependencies.audioRepo()
 
         if Self.verbose {
             os_log("\(self.t)🗑️ 删除 \(urlsToDelete.count) 个项目")
         }
 
-        // 立即更新 UI（在主线程）
-        withAnimation {
-            // 从 urls 数组中移除被删除的 URL
-            urls.removeAll { url in
-                urlsToDelete.contains(url)
+        Task {
+            if let currentURL = playManController.currentURL, urlsToDelete.contains(currentURL) {
+                await playManController.stop(reason: "删除文件")
             }
 
-            // 更新总数
-            totalCount = max(0, totalCount - urlsToDelete.count)
+            var deletedURLs: [URL] = []
 
-            // 如果删除的是当前选中的文件，清除选中状态
-            if let selected = selection, urlsToDelete.contains(selected) {
-                selection = nil
-            }
-        }
-
-        // 在后台执行文件删除操作
-        Task.detached(priority: .userInitiated) {
             for url in urlsToDelete {
                 if Self.verbose {
                     os_log("\(AudioList.t)📄 删除文件: \(url.shortPath())")
                 }
 
                 do {
-                    try url.delete()
+                    try await Task.detached(priority: .userInitiated) {
+                        if FileManager.default.fileExists(atPath: url.path) {
+                            try url.delete()
+                        }
+                    }.value
+                    deletedURLs.append(url)
 
-                    // 切换回主线程更新 UI
-                    await MainActor.run {
-                        alert_info(String(localized: "Deleted \(url.title)", table: "Audio-DBView", bundle: .module))
-                    }
+                    alert_info(String(localized: "Deleted \(url.title)", table: "Audio-DBView", bundle: .module))
                 } catch {
-                    await MainActor.run {
-                        alert_error(error)
-                    }
+                    alert_error(error)
                 }
+            }
+
+            if !deletedURLs.isEmpty {
+                await repo?.deleteAudios(deletedURLs)
             }
         }
     }

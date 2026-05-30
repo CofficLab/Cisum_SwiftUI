@@ -13,6 +13,7 @@ struct AudioItemView: View, Equatable, SuperLog {
     nonisolated static let verbose = false
 
     @EnvironmentObject var playMan: MagicPlayMan
+    @Environment(\.audioDBDependencies) private var dependencies
 
     let url: URL
 
@@ -195,6 +196,8 @@ extension AudioItemView {
     private func deleteFile() {
         Task {
             do {
+                let repo = dependencies.audioRepo()
+
                 // 如果正在播放这个文件，先停止播放
                 if playMan.currentURL == url {
                     await playMan.stop(reason: "删除文件")
@@ -204,18 +207,17 @@ extension AudioItemView {
                 }
 
                 // 删除文件
-                try FileManager.default.removeItem(at: url)
+                try await Task.detached {
+                    if FileManager.default.fileExists(atPath: url.path) {
+                        try FileManager.default.removeItem(at: url)
+                    }
+                }.value
+                await repo?.deleteAudios([url])
 
                 if Self.verbose {
                     os_log("\(Self.t)🗑️ 文件已删除: \(url.path)")
                 }
                 alert_info(String(localized: "File deleted", table: "Audio-DBView", bundle: .module))
-
-                // 发送通知刷新列表
-                NotificationCenter.default.post(
-                    name: NSNotification.Name("AudioFilesDidChange"),
-                    object: nil
-                )
             } catch {
                 if Self.verbose {
                     os_log("\(Self.t)❌ 删除文件失败: \(error.localizedDescription)")

@@ -47,7 +47,7 @@ public class AudioRepo: ObservableObject, SuperLog {
     }
 
     public func delete(_ audio: AudioModel, verbose: Bool) async throws {
-        try self.disk.delete()
+        try audio.url.delete()
         try await db.deleteAudio(url: audio.url)
     }
 
