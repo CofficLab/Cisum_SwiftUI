@@ -25,8 +25,7 @@ public struct StorageSettingView: View, SuperLog {
                     systemImage: .cisumIconCloud,
                     isSelected: location == .icloud,
                     action: {
-                        showMigrationProgress = true
-                        targetLocation = .icloud
+                        beginMigration(to: .icloud)
                     }
                 ) {
                     if location == .icloud {
@@ -41,8 +40,7 @@ public struct StorageSettingView: View, SuperLog {
                     systemImage: .cisumIconFolder,
                     isSelected: location == .local,
                     action: {
-                        showMigrationProgress = true
-                        targetLocation = .local
+                        beginMigration(to: .local)
                     }
                 ) {
                     if location == .local {
@@ -74,5 +72,12 @@ public struct StorageSettingView: View, SuperLog {
         .onPluginStorageLocationChanged {
             location = dependencies.getStorageLocation() ?? location
         }
+    }
+
+    private func beginMigration(to newLocation: PluginStorageLocation) {
+        guard newLocation != location else { return }
+
+        targetLocation = newLocation
+        showMigrationProgress = true
     }
 }

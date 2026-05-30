@@ -24,6 +24,12 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread {
         os_log(.info, "\(self.t)开始迁移任务")
 
         do {
+            if sourceRoot.standardizedFileURL == targetRoot.standardizedFileURL {
+                progressCallback?(1.0, "")
+                os_log(.info, "\(self.t)源目录与目标目录相同，跳过迁移")
+                return
+            }
+
             // 获取所有文件并过滤掉 .DS_Store
             var files = try FileManager.default.contentsOfDirectory(
                 at: sourceRoot,
