@@ -257,6 +257,8 @@ private struct FileCopyProgressView: View, SuperLog {
                     os_log("\(self.t)开始文件复制")
                 }
                 try await copyWithProgress()
+                await updateCopyProgress(100)
+                await setCopying(false)
                 await setCompleted(true)
                 if verbose {
                     os_log("\(self.t)文件复制完成")
@@ -267,6 +269,7 @@ private struct FileCopyProgressView: View, SuperLog {
                 if verbose {
                     os_log("\(self.t)复制操作失败: \(error.localizedDescription)")
                 }
+                await setCopying(false)
                 await setError(error)
                 await onCompletion(error)
             }
@@ -301,7 +304,6 @@ private struct FileCopyProgressView: View, SuperLog {
             os_log("\(self.t)执行文件复制")
         }
         try fileManager.copyItem(at: source, to: finalDestination)
-        copyProgress = 100
         if verbose {
             os_log("\(self.t)文件复制成功")
         }
