@@ -1078,6 +1078,15 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
 
         for url in urls {
             do {
+                guard Self.contains(disk, audioURL: url) else {
+                    throw AudioRecordDBError.deleteFailed(
+                        AudioPluginError.diskAccess(
+                            url: url,
+                            underlying: "Audio is outside the current library"
+                        )
+                    )
+                }
+
                 guard let audio = try context.fetch(FetchDescriptor(predicate: #Predicate<AudioModel> {
                     $0.url == url
                 })).first else {
@@ -1106,6 +1115,12 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
         if !deletedUrls.isEmpty {
             emitDeleted(urls: deletedUrls, verbose: verbose)
         }
+    }
+
+    static func contains(_ disk: URL, audioURL: URL) -> Bool {
+        let diskPath = disk.standardizedFileURL.path
+        let audioPath = audioURL.standardizedFileURL.path
+        return audioPath == diskPath || audioPath.hasPrefix(diskPath + "/")
     }
 
     /// 根据 URL 查找音频模型（静态方法）
