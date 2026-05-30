@@ -132,9 +132,12 @@ extension BookRepo {
         }
         
         do {
-            // 获取所有书籍的数据传输对象，只保留集合类型（文件夹）
+            // 获取所有书籍的数据传输对象，只保留顶层书籍，包含文件夹书和单文件书。
             let allBooks = try await db.allBookDTOs()
-            let books = allBooks.filter { $0.isCollection }.sorted { $0.order < $1.order }
+            let libraryRoot = disk
+            let books = allBooks
+                .filter { Self.isDisplayableLibraryItem($0, libraryRoot: libraryRoot) }
+                .sorted { $0.order < $1.order }
             
             if Self.verbose {
                 os_log("\(self.t)✅ 获取到 \(books.count) 本书籍")
@@ -145,6 +148,19 @@ extension BookRepo {
             os_log(.error, "\(self.t)❌ 获取书籍失败: \(error.localizedDescription)")
             return []
         }
+    }
+
+    nonisolated static func isDisplayableLibraryItem(_ book: BookDTO, libraryRoot: URL) -> Bool {
+        let parent = book.url.deletingLastPathComponent().standardizedFileURL
+        guard parent == libraryRoot.standardizedFileURL else {
+            return false
+        }
+
+        if book.isCollection {
+            return book.childCount > 0
+        }
+
+        return BookPluginInfo.supportedExtensions.contains(book.url.pathExtension.lowercased())
     }
 }
 
