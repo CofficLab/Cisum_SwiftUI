@@ -117,6 +117,13 @@
                             }
                         }
                         if let url = URL(dataRepresentation: urlData, relativeTo: nil) {
+                            guard Self.isSupportedAudioFile(url) else {
+                                if Self.verbose {
+                                    os_log("\(self.t)⏭️ Skip unsupported file: \(url.lastPathComponent)")
+                                }
+                                continue
+                            }
+
                             // Create a security-scoped bookmark
                             let bookmarkData = try url.bookmarkData(options: .withSecurityScope, includingResourceValuesForKeys: nil, relativeTo: nil)
                             tasks.append((bookmark: bookmarkData, filename: url.lastPathComponent))
@@ -144,6 +151,11 @@
             }
 
             return true
+        }
+
+        nonisolated static func isSupportedAudioFile(_ url: URL) -> Bool {
+            guard !url.isFolder else { return false }
+            return AudioPluginInfo.supportedExtensions.contains(url.pathExtension.lowercased())
         }
     }
 

@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 import Testing
 @testable import PluginAudioCopy
 
@@ -8,6 +9,27 @@ import Testing
 }
 
 #if os(macOS)
+@Test func copyDropAcceptsOnlySupportedAudioFiles() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    let supportedAudio = root.appendingPathComponent("song.MP3")
+    let unsupportedFile = root.appendingPathComponent("notes.txt")
+    let folder = root.appendingPathComponent("album", isDirectory: true)
+
+    try Data("audio".utf8).write(to: supportedAudio)
+    try Data("notes".utf8).write(to: unsupportedFile)
+    try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+
+    #expect(CopyRootView<EmptyView>.isSupportedAudioFile(supportedAudio))
+    #expect(!CopyRootView<EmptyView>.isSupportedAudioFile(unsupportedFile))
+    #expect(!CopyRootView<EmptyView>.isSupportedAudioFile(folder))
+}
+
 @Test func copyWorkerPlansUniqueDestinationNames() {
     let folder = URL(fileURLWithPath: "/tmp/cisum-audio-copy-tests", isDirectory: true)
     let existingPath = folder.appendingPathComponent("track.mp3").path
