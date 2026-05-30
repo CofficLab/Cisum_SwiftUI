@@ -32,6 +32,10 @@ enum AudioProgressPersistencePolicy {
         startingAsset == currentAsset
     }
 
+    static func shouldPlayRestoredAsset(restoredAsset: URL, currentAsset: URL?) -> Bool {
+        restoredAsset != currentAsset
+    }
+
     static func shouldApplyWidgetMetadataResult(requestedAsset: URL, currentAsset: URL?) -> Bool {
         requestedAsset == currentAsset
     }
@@ -185,7 +189,12 @@ extension AudioProgressRootView {
                 }
 
                 let reason = self.className + ".初始化播放数据"
-                await man.play(asset, autoPlay: false, startTime: timeTarget, reason: reason)
+                if AudioProgressPersistencePolicy.shouldPlayRestoredAsset(
+                    restoredAsset: asset,
+                    currentAsset: man.currentAsset
+                ) {
+                    await man.play(asset, autoPlay: false, startTime: timeTarget, reason: reason)
+                }
                 man.setLike(liked, reason: reason)
             } else {
                 if Self.verbose {

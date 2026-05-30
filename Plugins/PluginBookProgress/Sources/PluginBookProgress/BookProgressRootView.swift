@@ -52,6 +52,10 @@ enum BookProgressPersistencePolicy {
     static func shouldApplyRestoreResult(startingAsset: URL?, currentAsset: URL?) -> Bool {
         startingAsset == currentAsset
     }
+
+    static func shouldPlayRestoredAsset(restoredAsset: URL, currentAsset: URL?) -> Bool {
+        restoredAsset != currentAsset
+    }
 }
 
 enum BookProgressBookRootResolver {
@@ -242,7 +246,12 @@ private extension BookProgressRootView {
                     return
                 }
 
-                await man.play(url, autoPlay: false, startTime: currentBookTime(), reason: "restoreBookProgress")
+                if BookProgressPersistencePolicy.shouldPlayRestoredAsset(
+                    restoredAsset: url,
+                    currentAsset: man.currentAsset
+                ) {
+                    await man.play(url, autoPlay: false, startTime: currentBookTime(), reason: "restoreBookProgress")
+                }
 
                 if self.verbose {
                     os_log("\(self.t)✅ 恢复书籍进度: \(url.lastPathComponent)")

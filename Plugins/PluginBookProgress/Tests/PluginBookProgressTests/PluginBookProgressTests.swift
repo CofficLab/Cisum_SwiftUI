@@ -72,6 +72,24 @@ import Testing
     ))
 }
 
+@Test func restoreDoesNotReplayAlreadyLoadedBookChapter() {
+    let restored = URL(fileURLWithPath: "/tmp/book/chapter-01.m4b")
+    let other = URL(fileURLWithPath: "/tmp/book/chapter-02.m4b")
+
+    #expect(!BookProgressPersistencePolicy.shouldPlayRestoredAsset(
+        restoredAsset: restored,
+        currentAsset: restored
+    ))
+    #expect(BookProgressPersistencePolicy.shouldPlayRestoredAsset(
+        restoredAsset: restored,
+        currentAsset: other
+    ))
+    #expect(BookProgressPersistencePolicy.shouldPlayRestoredAsset(
+        restoredAsset: restored,
+        currentAsset: nil
+    ))
+}
+
 @Test func rootLevelBookFileResolvesToItself() {
     let disk = URL(fileURLWithPath: "/tmp/cisum-books", isDirectory: true)
     let book = disk.appendingPathComponent("Standalone.m4b")
