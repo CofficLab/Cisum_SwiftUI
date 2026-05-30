@@ -487,19 +487,23 @@ extension AudioList {
     func handleDeleteItems(at offsets: IndexSet) {
         // 获取要删除的 URLs
         let urlsToDelete = offsets.map { urls[$0] }
-        let repo = dependencies.audioRepo()
 
         if Self.verbose {
             os_log("\(self.t)🗑️ 删除 \(urlsToDelete.count) 个项目")
         }
 
         Task {
+            guard let repo = dependencies.audioRepo() else {
+                alert_error(String(localized: "Delete failed: audio repository is unavailable", table: "Audio-DBView", bundle: .module))
+                return
+            }
+
             if let currentURL = playManController.currentURL, urlsToDelete.contains(currentURL) {
                 await playManController.reset(reason: "删除文件")
             }
 
             do {
-                try await repo?.deleteAudios(urlsToDelete)
+                try await repo.deleteAudios(urlsToDelete)
                 for url in urlsToDelete {
                     alert_info(String(localized: "Deleted \(url.title)", table: "Audio-DBView", bundle: .module))
                 }

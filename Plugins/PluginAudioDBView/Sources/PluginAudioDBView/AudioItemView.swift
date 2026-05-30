@@ -202,7 +202,10 @@ extension AudioItemView {
     private func deleteFile() {
         Task {
             do {
-                let repo = dependencies.audioRepo()
+                guard let repo = dependencies.audioRepo() else {
+                    alert_error(String(localized: "Delete failed: audio repository is unavailable", table: "Audio-DBView", bundle: .module))
+                    return
+                }
 
                 // 如果正在播放这个文件，先停止播放
                 if playMan.currentURL == url {
@@ -212,7 +215,7 @@ extension AudioItemView {
                     }
                 }
 
-                try await repo?.deleteAudios([url])
+                try await repo.deleteAudios([url])
 
                 if Self.verbose {
                     os_log("\(Self.t)🗑️ 文件已删除: \(url.path)")
