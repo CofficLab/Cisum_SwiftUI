@@ -78,80 +78,64 @@ struct BookTile: View, SuperThread, SuperLog, Equatable {
         }
         .frame(width: tileSize.width)
         .frame(height: tileSize.height)
-        .onAppear(perform: onAppear)
+        .task(id: url) {
+            await loadTileData()
+        }
     }
 }
 
 // MARK: - Action
 
 extension BookTile {
-    func updateCover() {
-        if self.cover == nil {
-            // 预先在主线程捕获必要的 Sendable 值，避免非 Sendable 的 self/book 跨 actor 逃逸
-            let url = self.url
-            let title = self.title
-            let thumbnailSize = tileSize
-            let repo = self.repo
-            let logPrefix = self.t
+    @MainActor
+    func loadTileData() async {
+        cover = nil
+        lastPlayedTitle = nil
 
-            Task {
-                if verbose {
-                    os_log("\(logPrefix)开始获取封面图 \(title)")
-                }
+        let bookURL = url
+        let bookTitle = title
+        let thumbnailSize = tileSize
+        let repo = repo
+        let dbRoot = dependencies.dbRoot
+        let logPrefix = t
 
-                let cover = await repo.getCover(for: url, thumbnailSize: thumbnailSize)
-                await MainActor.run {
-                    self.setCover(cover)
-                }
-            }
+        if verbose {
+            os_log("\(logPrefix)开始获取封面图 \(bookTitle)")
         }
+
+        async let loadedCover = repo.getCover(for: bookURL, thumbnailSize: thumbnailSize)
+        async let loadedLastPlayedTitle = Self.lastPlayedTitle(for: bookURL, dbRoot: dbRoot, logPrefix: logPrefix, verbose: verbose)
+        let (newCover, newLastPlayedTitle) = await (loadedCover, loadedLastPlayedTitle)
+
+        guard !Task.isCancelled else {
+            return
+        }
+
+        cover = newCover
+        lastPlayedTitle = newLastPlayedTitle
     }
 
-    func updateLastPlayedTitle() {
-        let bookURL = self.url
-        let dbRoot = dependencies.dbRoot
-        let logPrefix = self.t
-
-        Task.detached(priority: .background) {
+    nonisolated private static func lastPlayedTitle(
+        for bookURL: URL,
+        dbRoot: URL,
+        logPrefix: String,
+        verbose: Bool
+    ) async -> String? {
+        await Task.detached(priority: .background) {
             do {
                 let container = try BookConfig.getContainer(dbRootURL: dbRoot)
                 let context = ModelContext(container)
                 let descriptor = BookState.descriptorOf(bookURL)
                 let state = try context.fetch(descriptor).first
-                let title = state?.currentURL?.lastPathComponent
-
-                await MainActor.run {
-                    self.setLastPlayedTitle(title)
-                }
+                return state?.currentURL?.lastPathComponent
             } catch {
                 if verbose {
                     os_log(.error, "\(logPrefix)读取书籍播放状态失败: \(error.localizedDescription)")
                 }
+
+                return nil
             }
-        }
-    }
-}
-
-// MARK: - Setter
-
-extension BookTile {
-    @MainActor
-    func setCover(_ cover: Image?) {
-        self.cover = cover
-    }
-
-    @MainActor
-    func setLastPlayedTitle(_ title: String?) {
-        self.lastPlayedTitle = title
-    }
-}
-
-// MARK: - Event Handler
-
-extension BookTile {
-    func onAppear() {
-        self.updateCover()
-        self.updateLastPlayedTitle()
+        }.value
     }
 }
 
