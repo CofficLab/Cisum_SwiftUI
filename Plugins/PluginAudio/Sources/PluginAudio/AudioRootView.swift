@@ -11,12 +11,12 @@ public struct AudioRootView<Content>: View, SuperLog where Content: View {
     public nonisolated static var verbose: Bool { false }
 
     @State private var error: AudioPluginError? = nil
+    @State private var container: ModelContainer? = nil
     private var content: Content
     private let databaseURL: @MainActor () throws -> URL
     private let hasStorageLocation: @MainActor () -> Bool
     private let storageLocationDidChangeNotifications: [Notification.Name]
 
-    var container: ModelContainer?
     var repo: AudioRepo?
 
     public init(
@@ -33,23 +33,12 @@ public struct AudioRootView<Content>: View, SuperLog where Content: View {
         self.hasStorageLocation = hasStorageLocation
         self.storageLocationDidChangeNotifications = storageLocationDidChangeNotifications
         self.content = content()
-        guard let container = try? AudioConfigRepo.getContainer(databaseURL: databaseURL()) else {
-            self.error = AudioPluginError.initialization(reason: "Container 未找到")
-            os_log(.error, "\(Self.t)初始化失败: Container 未找到")
-            return
-        }
-
-        self.container = container
-
-        guard hasStorageLocation() else {
-            self.error = AudioPluginError.initialization(reason: "Storage 未找到")
-            if Self.verbose {
-                os_log("\(Self.t)放弃初始化，因为: Storage 未找到")
-            }
-            return
-        }
-
-        self.container = try? AudioConfigRepo.getContainer(databaseURL: databaseURL())
+        let initialState = Self.makeContainer(
+            databaseURL: databaseURL,
+            hasStorageLocation: hasStorageLocation
+        )
+        self._container = State(initialValue: initialState.container)
+        self._error = State(initialValue: initialState.error)
 
         if Self.verbose {
             os_log("\(Self.t)初始化完成")
@@ -65,14 +54,15 @@ public struct AudioRootView<Content>: View, SuperLog where Content: View {
                     content
                 }
                 .modelContainer(container)
-                .modifier(AudioStorageChangeModifier(notificationNames: storageLocationDidChangeNotifications) {
-                    handleStorageLocationChanged()
-                })
                 .onDisappear(perform: handleOnDisappear)
             } else {
                 storageErrorView
             }
         }
+        .modifier(AudioStorageChangeModifier(notificationNames: storageLocationDidChangeNotifications) {
+            reloadContainer()
+            handleStorageLocationChanged()
+        })
     }
 
     // MARK: - Error View
@@ -120,6 +110,36 @@ private struct AudioStorageChangeModifier: ViewModifier {
 // MARK: - Event Handler
 
 extension AudioRootView {
+    @MainActor
+    private static func makeContainer(
+        databaseURL: @MainActor () throws -> URL,
+        hasStorageLocation: @MainActor () -> Bool
+    ) -> (container: ModelContainer?, error: AudioPluginError?) {
+        guard hasStorageLocation() else {
+            if Self.verbose {
+                os_log("\(Self.t)放弃初始化，因为: Storage 未找到")
+            }
+            return (nil, AudioPluginError.initialization(reason: "Storage 未找到"))
+        }
+
+        do {
+            let container = try AudioConfigRepo.getContainer(databaseURL: databaseURL())
+            return (container, nil)
+        } catch {
+            os_log(.error, "\(Self.t)初始化失败: Container 未找到")
+            return (nil, AudioPluginError.initialization(reason: "Container 未找到"))
+        }
+    }
+
+    private func reloadContainer() {
+        let nextState = Self.makeContainer(
+            databaseURL: databaseURL,
+            hasStorageLocation: hasStorageLocation
+        )
+        container = nextState.container
+        error = nextState.error
+    }
+
     /// 处理存储位置变化事件
     ///
     /// 当用户切换存储位置（本地/iCloud）时触发，提示用户存储位置已变化。
