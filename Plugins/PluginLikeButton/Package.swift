@@ -24,7 +24,10 @@ let package = Package(
                 .product(name: "CisumUI", package: "CisumUI"),
                 .product(name: "MagicPlayMan", package: "MagicPlayMan"),
             ],
-            path: "Sources/PluginLikeButton"
+            path: "Sources/PluginLikeButton",
+            resources: [
+                .process("Resources")
+            ]
         ),
         .testTarget(
             name: "PluginLikeButtonTests",

@@ -26,7 +26,10 @@ let package = Package(
                 .product(name: "MagicKit", package: "MagicKit"),
                 .product(name: "MagicPlayMan", package: "MagicPlayMan"),
             ],
-            path: "Sources/PluginOpenButton"
+            path: "Sources/PluginOpenButton",
+            resources: [
+                .process("Resources")
+            ]
         ),
         .testTarget(
             name: "PluginOpenButtonTests",
