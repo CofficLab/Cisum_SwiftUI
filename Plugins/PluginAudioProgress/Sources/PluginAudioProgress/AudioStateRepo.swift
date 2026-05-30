@@ -38,8 +38,17 @@ public class AudioStateRepo: SuperLog {
         UserDefaults.standard.set(url, forKey: keyOfCurrentAudioURL)
 
         // 将URL作为字符串存储到 CloudKit
-        NSUbiquitousKeyValueStore.default.set(url?.absoluteString ?? "", forKey: keyOfCurrentAudioURL)
+        if let url {
+            NSUbiquitousKeyValueStore.default.set(url.absoluteString, forKey: keyOfCurrentAudioURL)
+        } else {
+            NSUbiquitousKeyValueStore.default.removeObject(forKey: keyOfCurrentAudioURL)
+        }
         NSUbiquitousKeyValueStore.default.synchronize()
+    }
+
+    static func storedURL(from string: String?) -> URL? {
+        guard let string, !string.isEmpty else { return nil }
+        return URL(string: string)
     }
 
     /// 存储当前播放时间
@@ -80,8 +89,7 @@ public class AudioStateRepo: SuperLog {
         }
 
         // 如果在 UserDefaults 中未找到，尝试从 iCloud 获取
-        if let urlString = NSUbiquitousKeyValueStore.default.string(forKey: keyOfCurrentAudioURL),
-           let url = URL(string: urlString) {
+        if let url = storedURL(from: NSUbiquitousKeyValueStore.default.string(forKey: keyOfCurrentAudioURL)) {
             // 如果在 iCloud 中找到，更新 UserDefaults 以便将来本地访问
             UserDefaults.standard.set(url, forKey: keyOfCurrentAudioURL)
             return url

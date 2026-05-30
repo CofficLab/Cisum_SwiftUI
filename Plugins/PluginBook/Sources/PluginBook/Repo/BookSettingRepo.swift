@@ -22,8 +22,17 @@ public class BookSettingRepo: SuperLog {
         UserDefaults.standard.set(url, forKey: keyOfCurrentBookURL)
 
         // 将URL作为字符串存储到iCloud
-        NSUbiquitousKeyValueStore.default.set(url?.absoluteString ?? "", forKey: keyOfCurrentBookURL)
+        if let url {
+            NSUbiquitousKeyValueStore.default.set(url.absoluteString, forKey: keyOfCurrentBookURL)
+        } else {
+            NSUbiquitousKeyValueStore.default.removeObject(forKey: keyOfCurrentBookURL)
+        }
         NSUbiquitousKeyValueStore.default.synchronize()
+    }
+
+    static func storedURL(from string: String?) -> URL? {
+        guard let string, !string.isEmpty else { return nil }
+        return URL(string: string)
     }
 
     /// 存储当前书籍的播放时间
@@ -53,8 +62,7 @@ public class BookSettingRepo: SuperLog {
         }
 
         // 如果在UserDefaults中未找到，尝试从iCloud获取
-        if let urlString = NSUbiquitousKeyValueStore.default.string(forKey: keyOfCurrentBookURL),
-           let url = URL(string: urlString) {
+        if let url = storedURL(from: NSUbiquitousKeyValueStore.default.string(forKey: keyOfCurrentBookURL)) {
             // 如果在iCloud中找到，更新UserDefaults以便后续本地访问
             UserDefaults.standard.set(url, forKey: keyOfCurrentBookURL)
             if Self.verbose {

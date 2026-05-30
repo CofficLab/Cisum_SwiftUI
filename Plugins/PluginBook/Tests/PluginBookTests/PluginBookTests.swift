@@ -8,6 +8,12 @@ import Testing
     #expect(BookPluginInfo.supportedExtensions.contains("m4b"))
 }
 
+@Test func emptyCloudBookURLIsIgnored() {
+    #expect(BookSettingRepo.storedURL(from: "") == nil)
+    #expect(BookSettingRepo.storedURL(from: nil) == nil)
+    #expect(BookSettingRepo.storedURL(from: "file:///tmp/book/chapter.m4b") == URL(fileURLWithPath: "/tmp/book/chapter.m4b"))
+}
+
 @Test func deletedBookFolderContainsNestedRecords() {
     let root = URL(fileURLWithPath: "/tmp/cisum-book-delete-tests", isDirectory: true)
     let book = root.appendingPathComponent("Book", isDirectory: true)

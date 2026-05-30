@@ -35,6 +35,12 @@ import Testing
     #expect(AudioProgressPersistencePolicy.currentURLToStore(nil) == nil)
 }
 
+@Test func emptyCloudAudioURLIsIgnored() {
+    #expect(AudioStateRepo.storedURL(from: "") == nil)
+    #expect(AudioStateRepo.storedURL(from: nil) == nil)
+    #expect(AudioStateRepo.storedURL(from: "file:///tmp/audio/track.mp3") == URL(fileURLWithPath: "/tmp/audio/track.mp3"))
+}
+
 @Test func differentCurrentAudioURLResetsGlobalRestoreTime() {
     let oldURL = URL(fileURLWithPath: "/tmp/audio/track-01.mp3")
     let newURL = URL(fileURLWithPath: "/tmp/audio/track-02.mp3")
