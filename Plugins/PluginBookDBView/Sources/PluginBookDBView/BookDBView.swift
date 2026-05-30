@@ -93,8 +93,9 @@ extension BookDBView {
         }
 
         Task {
+            var copiedItems: [URL] = []
             do {
-                let copiedItems = try await Task.detached(priority: .userInitiated) {
+                copiedItems = try await Task.detached(priority: .userInitiated) {
                     try await Self.copyImportedItems(files, to: bookDisk)
                 }.value
                 guard !copiedItems.isEmpty else {
@@ -102,8 +103,9 @@ extension BookDBView {
                     return
                 }
 
-                await repo.syncImportedItems(copiedItems)
+                try await repo.syncImportedItems(copiedItems)
             } catch {
+                Self.cleanUpCopiedItems(copiedItems)
                 os_log(.error, "\(self.t)❌ 复制书籍文件失败: \(error.localizedDescription)")
                 await MainActor.run {
                     alert_error(String(localized: "Import failed: \(error.localizedDescription)", table: "Book-DBView", bundle: .module))
@@ -154,6 +156,12 @@ extension BookDBView {
         }
 
         return copiedItems
+    }
+
+    nonisolated static func cleanUpCopiedItems(_ urls: [URL]) {
+        for url in urls {
+            try? FileManager.default.removeItem(at: url)
+        }
     }
 
     private nonisolated static func canImportFolder(_ folder: URL) throws -> Bool {

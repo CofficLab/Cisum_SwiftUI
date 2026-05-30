@@ -91,10 +91,10 @@ extension BookRepo {
         await self.db.sync(items, isFirst: isFirst)
     }
 
-    public func syncImportedItems(_ items: [URL]) async {
+    public func syncImportedItems(_ items: [URL]) async throws {
         guard !items.isEmpty else { return }
 
-        await self.sync(items, isFirst: false)
+        try await self.db.syncImportedItems(items)
     }
 
     private func delete(_ urls: [URL]) async {

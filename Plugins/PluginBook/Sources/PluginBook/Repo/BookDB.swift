@@ -239,8 +239,16 @@ extension BookDB {
         if isFirst {
             bookSyncWithDisk(items)
         } else {
-            bookSyncWithUpdatedItems(items)
+            do {
+                try bookSyncWithUpdatedItems(items)
+            } catch let e {
+                os_log(.error, "\(e.localizedDescription)")
+            }
         }
+    }
+
+    public func syncImportedItems(_ items: [URL]) throws {
+        try bookSyncWithUpdatedItems(items)
     }
 
     // MARK: SyncWithDisk
@@ -297,7 +305,7 @@ extension BookDB {
 
     // MARK: SyncWithUpdatedItems
 
-    func bookSyncWithUpdatedItems(_ metas: [URL], verbose: Bool = false) {
+    func bookSyncWithUpdatedItems(_ metas: [URL], verbose: Bool = false) throws {
         let startTime: DispatchTime = .now()
 
         for meta in metas {
@@ -310,13 +318,9 @@ extension BookDB {
             }
         }
 
-        do {
-            try context.save()
-            updateBookParent()
-            NotificationCenter.postBookDBUpdated()
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-        }
+        try context.save()
+        updateBookParent()
+        NotificationCenter.postBookDBUpdated()
 
         if verbose {
             os_log("\(self.jobEnd(startTime, title: "\(self.t)SyncBookWithUpdatedItems(\(metas.count))", tolerance: 0.01))")
