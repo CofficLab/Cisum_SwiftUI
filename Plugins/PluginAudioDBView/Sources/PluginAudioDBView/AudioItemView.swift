@@ -6,6 +6,12 @@ import MagicPlayMan
 import OSLog
 import SwiftUI
 
+enum AudioItemFileSizeLoadPolicy {
+    static func shouldApplySize(currentURL: URL, requestedURL: URL) -> Bool {
+        currentURL == requestedURL
+    }
+}
+
 /// 音频列表项视图组件
 /// 用于在 AudioList 中展示单个音频文件
 struct AudioItemView: View, Equatable, SuperLog {
@@ -113,12 +119,17 @@ extension AudioItemView {
     private func loadFileSize() async {
         fileSize = nil
 
+        let requestedURL = url
         let size = await Task.detached(priority: .background) {
-            let size = (try? FileManager.default.attributesOfItem(atPath: url.path)[.size] as? NSNumber)?.int64Value
+            let size = (try? FileManager.default.attributesOfItem(atPath: requestedURL.path)[.size] as? NSNumber)?.int64Value
             return size
         }.value
 
-        guard !Task.isCancelled else { return }
+        guard !Task.isCancelled,
+              AudioItemFileSizeLoadPolicy.shouldApplySize(currentURL: url, requestedURL: requestedURL) else {
+            return
+        }
+
         fileSize = size
     }
 

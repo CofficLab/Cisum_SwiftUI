@@ -88,6 +88,15 @@ import UniformTypeIdentifiers
     ))
 }
 
+@Test func audioItemOnlyAppliesCurrentFileSize() {
+    let root = URL(fileURLWithPath: "/tmp/cisum-audio-item-tests", isDirectory: true)
+    let first = root.appendingPathComponent("first.mp3")
+    let second = root.appendingPathComponent("second.mp3")
+
+    #expect(AudioItemFileSizeLoadPolicy.shouldApplySize(currentURL: first, requestedURL: first))
+    #expect(!AudioItemFileSizeLoadPolicy.shouldApplySize(currentURL: second, requestedURL: first))
+}
+
 @Test func audioImportFiltersUnsupportedDroppedItems() {
     let root = URL(fileURLWithPath: "/tmp/cisum-audio-import-filter-tests", isDirectory: true)
     let supported = root.appendingPathComponent("track.MP3")
