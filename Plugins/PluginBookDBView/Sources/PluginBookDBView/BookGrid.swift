@@ -269,8 +269,10 @@ extension BookGrid {
         books = newValue
         self.setIsLoading(false)
 
-        // 如果当前选中的书籍不在新的列表中，重置相关状态
-        if let currentSelection = selectedBookURL, !newValue.contains(where: { $0.url == currentSelection }) {
+        // 数据加载完成后再根据当前播放项恢复选中状态，避免空列表阶段丢失高亮。
+        if let currentAsset = man.asset {
+            updateSelectedBook(for: currentAsset)
+        } else if let currentSelection = selectedBookURL, !newValue.contains(where: { $0.url == currentSelection }) {
             if Self.verbose {
                 os_log("\(self.t)⚠️ 当前选中的书籍不在列表中，清除选中状态")
             }
