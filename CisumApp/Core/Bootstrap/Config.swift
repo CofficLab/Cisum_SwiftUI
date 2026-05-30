@@ -123,9 +123,22 @@ enum Config: SuperLog {
 }
 
 extension Config {
+    #if os(macOS)
+        private static var appWindow: NSWindow? {
+            NSApplication.shared.keyWindow
+                ?? NSApplication.shared.mainWindow
+                ?? NSApplication.shared.windows.first(where: { $0.isVisible })
+                ?? NSApplication.shared.windows.first
+        }
+    #endif
+
     static func getWindowHeight() -> CGFloat {
         #if os(macOS)
-            let window = NSApplication.shared.windows.first!
+            guard let window = appWindow else {
+                os_log(.error, "\(t)无法获取窗口高度：当前没有可用窗口")
+                return 0
+            }
+
             let frame = window.frame
             let height = frame.size.height
 
@@ -141,7 +154,11 @@ extension Config {
                 os_log("\(t)增加 Height=\(h)")
             }
 
-            let window = NSApplication.shared.windows.first!
+            guard let window = appWindow else {
+                os_log(.error, "\(t)无法增加窗口高度：当前没有可用窗口")
+                return
+            }
+
             var frame = window.frame
             let oldY = frame.origin.y
             let height = frame.size.height
@@ -167,7 +184,11 @@ extension Config {
                 os_log("\(t)设置Height=\(h)")
             }
 
-            let window = NSApplication.shared.windows.first!
+            guard let window = appWindow else {
+                os_log(.error, "\(t)无法设置窗口高度：当前没有可用窗口")
+                return
+            }
+
             var frame = window.frame
             let oldY = frame.origin.y
             let height = frame.size.height
