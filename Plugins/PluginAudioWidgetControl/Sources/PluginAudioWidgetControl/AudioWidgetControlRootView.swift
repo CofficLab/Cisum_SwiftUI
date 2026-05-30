@@ -10,6 +10,7 @@ public typealias AudioWidgetFirstAssetProvider = @MainActor () async throws -> U
 public struct AudioWidgetControlRootView: View {
     private static let verbose = false
     private static let log = Logger(subsystem: "com.yueyi.cisum", category: "AudioWidgetControl")
+    private static var isWidgetCommandListenerRegistered = false
 
     @EnvironmentObject private var man: MagicPlayMan
 
@@ -41,6 +42,9 @@ public struct AudioWidgetControlRootView: View {
     }
 
     private func setupWidgetCommandListener() {
+        guard !Self.isWidgetCommandListenerRegistered else { return }
+        Self.isWidgetCommandListenerRegistered = true
+
         let center = CFNotificationCenterGetDarwinNotifyCenter()
         let callback: CFNotificationCallback = { _, _, _, _, _ in
             DispatchQueue.main.async {
