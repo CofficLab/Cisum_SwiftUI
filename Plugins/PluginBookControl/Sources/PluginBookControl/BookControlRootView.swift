@@ -148,7 +148,7 @@ private extension BookControlRootView {
         }
 
         Task {
-            await man.stop(reason: "BookControlRootView.deletedCurrentAsset")
+            await man.reset(reason: "BookControlRootView.deletedCurrentAsset")
         }
     }
 

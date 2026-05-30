@@ -115,7 +115,7 @@ private extension AudioControlRootView {
                     alert_info(String(localized: "Reached the last track, playing the first", table: "Audio-Control", bundle: .module))
                     await man.play(first, autoPlay: true, reason: "AudioControlRootView.loop")
                 } else {
-                    await man.stop(reason: "AudioControlRootView.emptyLibrary")
+                    await man.reset(reason: "AudioControlRootView.emptyLibrary")
                     alert_info(String(localized: "No files in library", table: "Audio-Control", bundle: .module))
                 }
             } catch {
@@ -146,11 +146,11 @@ private extension AudioControlRootView {
                     alert_warning(String(localized: "Current file was deleted, playing the first", table: "Audio-Control", bundle: .module))
                     await man.play(first, autoPlay: true, reason: "AudioControlRootView")
                 } else {
-                    await man.stop(reason: "AudioControlRootView.emptyLibrary")
+                    await man.reset(reason: "AudioControlRootView.emptyLibrary")
                     alert_info(String(localized: "No files in library", table: "Audio-Control", bundle: .module))
                 }
             } catch {
-                await man.stop(reason: "AudioControlRootView.getFirstFailed")
+                await man.reset(reason: "AudioControlRootView.getFirstFailed")
                 alert_error(String(localized: "Cannot play next: \(error.localizedDescription)", table: "Audio-Control", bundle: .module))
             }
         }
