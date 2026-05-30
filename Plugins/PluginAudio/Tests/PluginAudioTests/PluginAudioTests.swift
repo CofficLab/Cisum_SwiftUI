@@ -154,3 +154,32 @@ import SwiftData
 
     #expect(await db.allAudioURLs(reason: "test") == [existing, first, second])
 }
+
+@Test func audioDBSyncIgnoresFoldersAndUnsupportedFiles() async throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+
+    let schema = Schema([AudioModel.self])
+    let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    let container = try ModelContainer(for: schema, configurations: [configuration])
+    let db = AudioDB(container, reason: "audioDBSyncIgnoresFoldersAndUnsupportedFiles")
+
+    let folder = root.appendingPathComponent("folder", isDirectory: true)
+    let notes = root.appendingPathComponent("notes.txt")
+    let audio = root.appendingPathComponent("track.mp3")
+
+    try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+    try Data("notes".utf8).write(to: notes)
+    try Data("audio".utf8).write(to: audio)
+
+    await db.syncWithUpdatedItems([folder, notes, audio])
+    #expect(await db.allAudioURLs(reason: "test") == [audio])
+
+    await db.initItems([folder, notes, audio])
+    #expect(await db.allAudioURLs(reason: "test") == [audio])
+}

@@ -839,7 +839,7 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
         // 将数组转换成哈希表，方便通过键来快速查找元素，这样可以将时间复杂度降低到：O(m+n)
 
         var hashMap = [URL: URL]()
-        for element in items {
+        for element in items where Self.isSupportedAudioFile(element) {
             hashMap[element] = element
         }
 
@@ -898,6 +898,8 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
                     os_log(.error, "\(e.localizedDescription)")
                 }
             } else {
+                guard Self.isSupportedAudioFile(meta) else { continue }
+
                 if findAudio(meta) == nil {
                     context.insert(AudioModel(meta, order: nextOrder))
                     nextOrder += 1
@@ -939,6 +941,10 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
         urls.sorted {
             $0.standardizedFileURL.path.localizedStandardCompare($1.standardizedFileURL.path) == .orderedAscending
         }
+    }
+
+    static func isSupportedAudioFile(_ url: URL) -> Bool {
+        !url.isFolder && AudioPluginInfo.supportedExtensions.contains(url.pathExtension.lowercased())
     }
 
     /// 更新音频模型
