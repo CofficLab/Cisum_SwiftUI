@@ -49,10 +49,10 @@ final class ProviderManager: SuperLog {
 
         WelcomePluginHost.configure(
             hasStorageLocation: {
-                Config.getStorageLocation() != nil
+                Config.hasUsableStorageLocation()
             },
             isICloudAvailable: {
-                self.cloud.isSignedIn == true
+                Config.isICloudStorageAvailable()
             },
             currentStorageSelection: {
                 Config.getStorageLocation()?.welcomeSelection

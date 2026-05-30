@@ -69,6 +69,16 @@ enum Config: SuperLog {
         return location
     }
 
+    /// 当前配置是否能解析到一个真实可用的媒体仓库根目录。
+    static func hasUsableStorageLocation() -> Bool {
+        getStorageRoot() != nil
+    }
+
+    /// iCloud 只有在容器 Documents 目录可解析时才可作为媒体仓库。
+    static func isICloudStorageAvailable() -> Bool {
+        getStorageRoot(for: .icloud) != nil
+    }
+
     /// 更新存储位置设置
     static func updateStorageLocation(_ location: StorageLocation?) {
         if Self.verbose {

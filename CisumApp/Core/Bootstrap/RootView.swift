@@ -125,7 +125,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
             AudioPluginHost.configure(
                 databaseURL: { try Config.createDatabaseFile(name: $0) },
                 storageRoot: { Config.getStorageRoot() },
-                hasStorageLocation: { Config.getStorageLocation() != nil },
+                hasStorageLocation: { Config.hasUsableStorageLocation() },
                 storageLocationDidChangeNotifications: [
                     .storageLocationDidReset,
                     .storageLocationUpdated
