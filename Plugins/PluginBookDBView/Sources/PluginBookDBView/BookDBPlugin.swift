@@ -22,9 +22,15 @@ public actor BookDBPlugin: SuperPlugin {
     @MainActor
     public func addTabView(reason: String, currentSceneName: String?, demoMode: Bool = false) -> (view: AnyView, label: String)? {
         guard currentSceneName == BookScenePlugin.sceneName else { return nil }
-        guard let dbRoot = try? BookPluginHost.getDBRootDir() else {
-            os_log(.error, "BookDBPlugin failed to get database root")
-            return nil
+        let label = String(localized: String.LocalizationValue(BookDBPluginInfo.titleKey), table: BookDBPluginInfo.table, bundle: .module)
+        let dbRoot: URL
+
+        do {
+            dbRoot = try BookPluginHost.getDBRootDir()
+        } catch {
+            os_log(.error, "BookDBPlugin failed to get database root: \(error.localizedDescription)")
+            let view = BookDBUnavailableView(errorDescription: error.localizedDescription)
+            return (AnyView(view), label)
         }
 
         let dependencies = BookDBViewDependencies(
@@ -35,7 +41,19 @@ public actor BookDBPlugin: SuperPlugin {
         )
         let view = BookDBView()
             .bookDBViewDependencies(dependencies)
-        return (AnyView(view), String(localized: String.LocalizationValue(BookDBPluginInfo.titleKey), table: BookDBPluginInfo.table, bundle: .module))
+        return (AnyView(view), label)
+    }
+}
+
+private struct BookDBUnavailableView: View {
+    let errorDescription: String
+
+    var body: some View {
+        AppEmptyState(
+            icon: "exclamationmark.triangle",
+            title: String(localized: "Book repository is unavailable", table: BookDBPluginInfo.table, bundle: .module),
+            description: String(localized: "Database location could not be opened: \(errorDescription)", table: BookDBPluginInfo.table, bundle: .module)
+        )
     }
 }
 
