@@ -201,6 +201,11 @@ extension AudioDBView {
                     os_log("\(self.t)📥 处理文件导入，文件数量: \(urls.count)")
                 }
 
+                guard !urls.isEmpty else {
+                    alert_error(String(localized: "No files were added", table: "Audio-DBView", bundle: .module))
+                    return
+                }
+
                 guard let storageRoot = await fetchStorageRoot() else {
                     alert_error(String(localized: "Storage location is unavailable", table: "Audio-DBView", bundle: .module))
                     return
