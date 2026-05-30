@@ -40,7 +40,7 @@ private struct BookProgressPluginRootView<Content>: View where Content: View {
                     let container = try await MainActor.run {
                         try BookConfig.getContainer(dbRootURL: BookPluginHost.getDBRootDir())
                     }
-                    let db = await BookDB(container, reason: "BookProgressPlugin.saveBookState")
+                    let db = BookDB(container, reason: "BookProgressPlugin.saveBookState")
                     await db.updateBookCurrent(bookURL, currentURL: currentURL, time: time)
                 } catch {
                     os_log(.error, "BookProgressPlugin failed to save book state: \(error.localizedDescription)")
