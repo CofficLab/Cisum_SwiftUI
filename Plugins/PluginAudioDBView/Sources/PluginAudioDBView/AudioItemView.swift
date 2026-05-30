@@ -200,7 +200,7 @@ extension AudioItemView {
 
                 // 如果正在播放这个文件，先停止播放
                 if playMan.currentURL == url {
-                    await playMan.stop(reason: "删除文件")
+                    await playMan.reset(reason: "删除文件")
                     if Self.verbose {
                         os_log("\(Self.t)⏹️ 停止播放当前文件")
                     }

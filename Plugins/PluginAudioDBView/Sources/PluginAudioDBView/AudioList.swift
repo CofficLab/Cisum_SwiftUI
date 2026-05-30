@@ -475,7 +475,7 @@ extension AudioList {
 
         Task {
             if let currentURL = playManController.currentURL, urlsToDelete.contains(currentURL) {
-                await playManController.stop(reason: "删除文件")
+                await playManController.reset(reason: "删除文件")
             }
 
             var deletedURLs: [URL] = []
