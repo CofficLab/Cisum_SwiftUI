@@ -18,7 +18,11 @@ extension ShellGit {
     ///   - path: 仓库路径
     /// - Returns: 执行结果
     public static func createTag(_ name: String, message: String? = nil, at path: String? = nil) throws -> String {
-        let command = message != nil ? "git tag -a \(name) -m \"\(message!)\"" : "git tag \(name)"
+        let command = if let message {
+            "git tag -a \(name) -m \"\(message)\""
+        } else {
+            "git tag \(name)"
+        }
         return try Shell.runSync(command, at: path)
     }
     

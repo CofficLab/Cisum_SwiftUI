@@ -11,7 +11,11 @@ extension ShellGit {
     /// - Returns: 执行结果
     @discardableResult
     public static func push(remote: String = "origin", branch: String? = nil, at path: String? = nil) throws -> String {
-        let command = branch != nil ? "git push \(remote) \(branch!)" : "git push \(remote)"
+        let command = if let branch {
+            "git push \(remote) \(branch)"
+        } else {
+            "git push \(remote)"
+        }
         return try Shell.runSync(command, at: path)
     }
     
@@ -23,7 +27,11 @@ extension ShellGit {
     /// - Returns: 执行结果
     @discardableResult
     public static func pull(remote: String = "origin", branch: String? = nil, at path: String? = nil) throws -> String {
-        let command = branch != nil ? "git pull \(remote) \(branch!)" : "git pull \(remote)"
+        let command = if let branch {
+            "git pull \(remote) \(branch)"
+        } else {
+            "git pull \(remote)"
+        }
         return try Shell.runSync(command, at: path)
     }
     

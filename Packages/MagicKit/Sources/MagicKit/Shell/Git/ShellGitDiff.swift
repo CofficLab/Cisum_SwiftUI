@@ -109,7 +109,11 @@ extension ShellGit {
     ///   - path: 仓库路径
     /// - Returns: 文件内容字符串
     public static func fileContentInWorkingDirectory(file: String, at path: String? = nil) throws -> String {
-        let fullPath = ((path?.hasSuffix("/") == true ? path! : (path ?? "") + "/") + file)
+        let fullPath = if let path {
+            URL(fileURLWithPath: path).appendingPathComponent(file).path
+        } else {
+            file
+        }
         return try String(contentsOfFile: fullPath, encoding: .utf8)
     }
     

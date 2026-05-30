@@ -10,7 +10,11 @@ extension ShellGit {
     ///   - path: 仓库路径
     /// - Returns: 执行结果
     public static func stash(_ message: String? = nil, at path: String? = nil) throws -> String {
-        let command = message != nil ? "git stash push -m \"\(message!)\"" : "git stash"
+        let command = if let message {
+            "git stash push -m \"\(message)\""
+        } else {
+            "git stash"
+        }
         return try Shell.runSync(command, at: path)
     }
     
