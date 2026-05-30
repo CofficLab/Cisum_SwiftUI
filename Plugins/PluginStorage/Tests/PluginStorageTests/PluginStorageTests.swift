@@ -42,6 +42,17 @@ import Foundation
     #expect(MigrationProgressView.completionMessage(shouldMigrate: false) == "已切换到新位置")
 }
 
+@Test func migrationProgressOnlyAppliesCurrentGenerationUpdates() {
+    #expect(MigrationProgressView.shouldApplyMigrationUpdate(
+        currentGeneration: 2,
+        updateGeneration: 2
+    ))
+    #expect(!MigrationProgressView.shouldApplyMigrationUpdate(
+        currentGeneration: 3,
+        updateGeneration: 2
+    ))
+}
+
 @Test func missingSourceStorageDoesNotAttemptMigration() {
     let target = URL(fileURLWithPath: "/tmp/cisum-storage-target", isDirectory: true)
 

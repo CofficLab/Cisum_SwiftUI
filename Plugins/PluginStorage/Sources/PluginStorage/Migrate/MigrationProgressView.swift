@@ -3,6 +3,12 @@ import MagicKit
 import OSLog
 import SwiftUI
 
+enum MigrationProgressUpdatePolicy {
+    static func shouldApplyUpdate(currentGeneration: Int, updateGeneration: Int) -> Bool {
+        currentGeneration == updateGeneration
+    }
+}
+
 struct MigrationProgressView: View {
     @Environment(\.pluginStorageDependencies) private var dependencies
     @StateObject private var migrationManager = MigrationManager()
@@ -24,6 +30,7 @@ struct MigrationProgressView: View {
     @State private var migrationCancelled = false // 添加新状态来跟踪取消状态
     @State private var cancellationRequested = false
     @State private var showCancelConfirmation = false
+    @State private var migrationGeneration = 0
 
     // 添加 errorAlertMessage 计算属性
     var errorAlertMessage: String {
@@ -66,6 +73,7 @@ struct MigrationProgressView: View {
     }
 
     private func prepareForRetry() {
+        migrationGeneration += 1
         migrationManager.resetCancellation()
         processedFiles.removeAll()
         sourceFiles.removeAll()
@@ -145,6 +153,9 @@ struct MigrationProgressView: View {
     }
 
     private func startMigration(shouldMigrate: Bool) async {
+        migrationGeneration += 1
+        let generation = migrationGeneration
+
         do {
             let migrationRoots = try Self.migrationRoots(
                 sourceURL: sourceURL,
@@ -162,6 +173,10 @@ struct MigrationProgressView: View {
                         to: migrationRoots.target,
                         progressCallback: { progress, file in
                             Task { @MainActor in
+                                guard Self.shouldApplyMigrationUpdate(
+                                    currentGeneration: self.migrationGeneration,
+                                    updateGeneration: generation
+                                ) else { return }
                                 self.migrationProgress = progress
                                 self.currentMigratingFile = file
                                 self.updateFileStatus(file)
@@ -169,6 +184,10 @@ struct MigrationProgressView: View {
                         },
                         downloadProgressCallback: { file, downloadStatus in
                             Task { @MainActor in
+                                guard Self.shouldApplyMigrationUpdate(
+                                    currentGeneration: self.migrationGeneration,
+                                    updateGeneration: generation
+                                ) else { return }
                                 self.updateFileDownloadStatus(file, downloadStatus: downloadStatus)
                             }
                         },
@@ -184,6 +203,10 @@ struct MigrationProgressView: View {
 
             // 更新存储位置
             await MainActor.run {
+                guard Self.shouldApplyMigrationUpdate(
+                    currentGeneration: self.migrationGeneration,
+                    updateGeneration: generation
+                ) else { return }
                 let completionMessage = Self.completionMessage(shouldMigrate: migrationRoots != nil)
                 dependencies.updateStorageLocation(targetLocation)
                 self.migrationCompleted = true
@@ -192,17 +215,32 @@ struct MigrationProgressView: View {
             }
         } catch MigrationError.migrationCancelled {
             await MainActor.run {
+                guard Self.shouldApplyMigrationUpdate(
+                    currentGeneration: self.migrationGeneration,
+                    updateGeneration: generation
+                ) else { return }
                 self.cancellationRequested = false
                 self.migrationCancelled = true
                 self.currentMigratingFile = "迁移已取消"
             }
         } catch {
             await MainActor.run {
+                guard Self.shouldApplyMigrationUpdate(
+                    currentGeneration: self.migrationGeneration,
+                    updateGeneration: generation
+                ) else { return }
                 self.cancellationRequested = false
                 self.errorMessage = error.localizedDescription
                 self.updateFileStatus(self.currentMigratingFile, error: error.localizedDescription)
             }
         }
+    }
+
+    nonisolated static func shouldApplyMigrationUpdate(currentGeneration: Int, updateGeneration: Int) -> Bool {
+        MigrationProgressUpdatePolicy.shouldApplyUpdate(
+            currentGeneration: currentGeneration,
+            updateGeneration: updateGeneration
+        )
     }
 
     private func loadSourceFiles() {
