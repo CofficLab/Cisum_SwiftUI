@@ -1,7 +1,6 @@
 import CloudKit
 import Foundation
 import OSLog
-import SwiftUI
 import SwiftData
 
 /// 可以与 CloudKit 同步

@@ -128,11 +128,3 @@ extension ShellGit {
     }
 }
 #endif
-// MARK: - Preview
-
-#if DEBUG && os(macOS)
-#Preview("ShellGit+Clone Demo") {
-    ShellGitClonePreview()
-        
-} 
-#endif

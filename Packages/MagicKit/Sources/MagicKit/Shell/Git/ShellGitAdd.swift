@@ -22,9 +22,3 @@ extension ShellGit {
     }
 }
 #endif
-
-#if DEBUG && os(macOS)
-#Preview("ShellGit+Add Demo") {
-    ShellGitAddPreview()
-} 
-#endif

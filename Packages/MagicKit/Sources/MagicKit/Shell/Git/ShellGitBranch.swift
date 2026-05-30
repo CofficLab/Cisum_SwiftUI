@@ -120,12 +120,3 @@ extension ShellGit {
     }
 }
 #endif
-
-// MARK: - Preview
-
-#if DEBUG && os(macOS)
-#Preview("ShellGit+Branch Demo") {
-    ShellGitBranchPreview()
-        
-} 
-#endif

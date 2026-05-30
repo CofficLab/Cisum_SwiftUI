@@ -1,5 +1,4 @@
 import Foundation
-import SwiftUI
 
 extension String {
     /// 根据字符串内容生成相关的 emoji 并添加到原始内容前

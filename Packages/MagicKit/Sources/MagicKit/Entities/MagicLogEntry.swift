@@ -1,3 +1,5 @@
+
+import Foundation
 import SwiftUI
 
 /// 通用日志条目模型

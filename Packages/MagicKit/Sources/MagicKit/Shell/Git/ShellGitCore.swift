@@ -16,12 +16,3 @@ import SwiftUI
         }
     }
 #endif
-
-// MARK: - Preview
-
-#if DEBUG && os(macOS)
-    #Preview("ShellGit+Core Demo") {
-        ShellGitCorePreview()
-            
-    }
-#endif

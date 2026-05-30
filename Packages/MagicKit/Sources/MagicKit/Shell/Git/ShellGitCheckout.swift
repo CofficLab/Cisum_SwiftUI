@@ -92,11 +92,3 @@ extension ShellGit {
     }
 }
 #endif
-// MARK: - Preview
-
-#if DEBUG && os(macOS)
-#Preview("ShellGit+Checkout Demo") {
-    ShellGitCheckoutPreview()
-        
-} 
-#endif

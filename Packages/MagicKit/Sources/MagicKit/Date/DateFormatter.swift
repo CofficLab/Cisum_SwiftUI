@@ -1,5 +1,4 @@
 import Foundation
-import SwiftUI
 
 /// DateComponentsFormatter 的扩展，提供预配置的时间格式化器
 public extension DateComponentsFormatter {
@@ -85,7 +84,7 @@ public extension RelativeDateTimeFormatter {
     /// let formatted = RelativeDateTimeFormatter.standard.localizedString(for: pastDate, relativeTo: Date())
     /// print(formatted) // 输出: "2小时前" 或其他语言的等效文本
     /// ```
-    static let standard: RelativeDateTimeFormatter = {
+    nonisolated(unsafe) static let standard: RelativeDateTimeFormatter = {
         let formatter = RelativeDateTimeFormatter()
         formatter.unitsStyle = .full
         formatter.dateTimeStyle = .numeric
@@ -104,18 +103,10 @@ public extension RelativeDateTimeFormatter {
     /// let formatted = RelativeDateTimeFormatter.short.localizedString(for: pastDate, relativeTo: Date())
     /// print(formatted) // 输出简短格式
     /// ```
-    static let short: RelativeDateTimeFormatter = {
+    nonisolated(unsafe) static let short: RelativeDateTimeFormatter = {
         let formatter = RelativeDateTimeFormatter()
         formatter.unitsStyle = .abbreviated
         formatter.dateTimeStyle = .numeric
         return formatter
     }()
 }
-
-#if DEBUG
-#Preview("Date 格式化演示") {
-    NavigationStack {
-        DateFormattingDemoView()
-    }
-}
-#endif

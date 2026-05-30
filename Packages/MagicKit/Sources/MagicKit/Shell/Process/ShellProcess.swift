@@ -1,6 +1,5 @@
 import Foundation
 import OSLog
-import SwiftUI
 
 #if os(macOS)
 

@@ -125,11 +125,3 @@ extension ShellGit {
     }
 }
 #endif
-// MARK: - Preview
-
-#if DEBUG && os(macOS)
-#Preview("ShellGit+Remote Demo") {
-    ShellGitRemotePreview()
-        
-} 
-#endif

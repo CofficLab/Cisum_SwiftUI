@@ -21,6 +21,7 @@ import Foundation
 ///     }
 /// }
 /// ```
+@preconcurrency
 public protocol SuperEvent {
 }
 
@@ -38,10 +39,9 @@ public extension SuperEvent {
     ///   - name: 通知名称
     ///   - object: 发送通知的对象（可选）
     ///   - userInfo: 随通知一起发送的用户信息字典（可选）
-    func emit(_ name: Notification.Name, object: Any? = nil, userInfo: [AnyHashable: Any]? = nil) {
-        DispatchQueue.main.async {
-            self.nc.post(name: name, object: object, userInfo: userInfo)
-        }
+    nonisolated func emit(_ name: Notification.Name, object: Any? = nil, userInfo: [AnyHashable: Any]? = nil) {
+        let nc = self.nc
+        nc.post(name: name, object: object, userInfo: userInfo)
     }
 
     /// 在主线程异步发送通知（命名参数版本）
@@ -49,7 +49,7 @@ public extension SuperEvent {
     ///   - name: 通知名称
     ///   - object: 发送通知的对象（可选）
     ///   - userInfo: 随通知一起发送的用户信息字典（可选）
-    func emit(name: Notification.Name, object: Any? = nil, userInfo: [AnyHashable: Any]? = nil) {
+    nonisolated func emit(name: Notification.Name, object: Any? = nil, userInfo: [AnyHashable: Any]? = nil) {
         self.emit(name, object: object, userInfo: userInfo)
     }
 }

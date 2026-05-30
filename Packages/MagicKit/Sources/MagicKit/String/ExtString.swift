@@ -1,6 +1,5 @@
 import Foundation
 import OSLog
-import SwiftUI
 #if os(iOS)
     import UIKit
 #endif
@@ -270,38 +269,7 @@ extension String {
     }
 }
 
-#if DEBUG
-#Preview {
-    VStack {
-        Spacer()
-        Button("1", action: {
-            let htmlContent = """
-            <h1 id="heading-1"><strong class="my-custom-class">向Kong添加服务</strong></h1>
-            <img src="https://example.com/image.png" alt="示例图片" />
-            """
-
-            let markdown = htmlContent.toMarkdown()
-            print(markdown)
-        })
-        Spacer()
-
-        Button("2", action: {
-            let htmlContent = """
-            <img src="./images/Cloud Server_1.png">
-            """
-
-            let markdown = htmlContent.toMarkdown()
-            print("===========")
-            print(markdown)
-            print("===========")
-        })
-        Spacer()
-    }
-    .frame(width: 100)
-}
-#endif
-
-/// String 类型的扩展，提供常用的工具方法
+// MARK: - String 类型的扩展，提供常用的工具方法
 public extension String {
     /// 将字符串转换为URL对象
     /// - Returns: 转换后的URL对象
@@ -393,7 +361,6 @@ public extension String {
         !isEven
     }
 
-
     func saveToFile(_ url: URL, verbose: Bool = true) throws {
         if verbose {
             os_log("保存到 -> \(url.relativePath)")
@@ -404,91 +371,3 @@ public extension String {
         try self.write(to: url, atomically: true, encoding: .utf8)
     }
 }
-
-/// String 扩展功能演示视图
-struct StringExtensionDemoView: View {
-    var body: some View {
-        TabView {
-            // 基础功能演示
-            VStack(spacing: 20) {
-                // 字符串处理
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("字符串处理")
-                        .font(.headline)
-                        .foregroundStyle(.secondary)
-
-                    VStack(spacing: 8) {
-                        MagicKeyValue(key: "  Hello  .noSpaces()", value: "  Hello  ".noSpaces())
-                        MagicKeyValue(key: "/path/to/file/.removingLeadingSlashes()", value: "/path/to/file/".removingLeadingSlashes())
-                        MagicKeyValue(key: "长文本.mini()", value: "这是一个很长的字符串，需要被截断显示以便于阅读".mini())
-                        MagicKeyValue(key: "长文本.max(10)", value: "这是一个很长的字符串".max(10))
-                    }
-                    .padding()
-                    .background(.background.secondary)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
-                }
-
-                // 数字判断
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("数字判断")
-                        .font(.headline)
-                        .foregroundStyle(.secondary)
-
-                    VStack(spacing: 8) {
-                        MagicKeyValue(key: "42.isEven", value: "true") {
-                            Image(systemName: "42".isEven ? .iconCheckmark : .iconClose)
-                                .foregroundStyle(.green)
-                        }
-                        MagicKeyValue(key: "7.isOdd", value: "true") {
-                            Image(systemName: "7".isOdd ? .iconCheckmark : .iconClose)
-                                .foregroundStyle(.green)
-                        }
-                    }
-                    .padding()
-                    .background(.background.secondary)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
-                }
-
-                // 图标预览按钮
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("图标预览按钮")
-                        .font(.headline)
-                        .foregroundStyle(.secondary)
-
-                    VStack(spacing: 8) {
-                        MagicKeyValue(key: "\"star\".previewIconButton()", value: "") {
-                            "star".previewIconButton()
-                        }
-
-                        MagicKeyValue(key: "组合使用", value: "") {
-                            HStack(spacing: 12) {
-                                "heart".previewIconButton()
-                                "music.note".previewIconButton()
-                                "photo".previewIconButton()
-                            }
-                        }
-                    }
-                    .padding()
-                    .background(.background.secondary)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
-                }
-            }
-            .padding()
-
-            .tabItem {
-                Image(systemName: "1.circle.fill")
-                Text("基础")
-            }
-
-            // 其他功能演示标签页...
-        }
-    }
-}
-
-#if DEBUG
-#Preview("String 扩展演示") {
-    NavigationStack {
-        StringExtensionDemoView()
-    }
-}
-#endif

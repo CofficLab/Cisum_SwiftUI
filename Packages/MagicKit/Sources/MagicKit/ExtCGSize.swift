@@ -1,5 +1,4 @@
 import Foundation
-import SwiftUI
 
 /// CGSize 类型的扩展，提供常用设备尺寸和实用方法
 ///

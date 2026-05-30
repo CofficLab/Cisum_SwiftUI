@@ -1,7 +1,6 @@
 import Foundation
 import OSLog
 import CryptoKit
-import SwiftUI
 
 /// A lightweight HTTP client that supports common HTTP methods with fluent interface.
 /// Example usage:
@@ -388,9 +387,3 @@ private final class FileCacheStore {
         return digest.map { String(format: "%02x", $0) }.joined()
     }
 }
-
-#if DEBUG
-#Preview {
-    HttpClientPreview()
-}
-#endif

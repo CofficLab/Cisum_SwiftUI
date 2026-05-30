@@ -43,12 +43,3 @@ extension ShellGit {
     }
 }
 #endif
-
-// MARK: - Preview
-
-#if DEBUG && os(macOS)
-#Preview("ShellGit+Status Demo") {
-    ShellGitStatusPreview()
-        
-}
-#endif

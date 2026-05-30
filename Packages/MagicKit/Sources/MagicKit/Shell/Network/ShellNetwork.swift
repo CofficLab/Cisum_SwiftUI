@@ -1,13 +1,12 @@
 import Foundation
 import OSLog
-import SwiftUI
 
 #if os(macOS)
 
 /// 网络相关的Shell命令工具类
 class ShellNetwork: SuperLog {
     static let emoji = "🌐"
-    
+
     /// 测试网络连接
     /// - Parameter host: 主机地址（默认为google.com）
     /// - Returns: 是否连接成功
@@ -19,7 +18,7 @@ class ShellNetwork: SuperLog {
             return false
         }
     }
-    
+
     /// 获取详细的ping信息
     /// - Parameters:
     ///   - host: 主机地址
@@ -29,7 +28,7 @@ class ShellNetwork: SuperLog {
     static func pingDetailed(_ host: String, count: Int = 4) throws -> String {
         try Shell.runSync("ping -c \(count) \(host)")
     }
-    
+
     /// 下载文件
     /// - Parameters:
     ///   - url: 下载链接
@@ -38,7 +37,7 @@ class ShellNetwork: SuperLog {
     static func download(_ url: String, to output: String) throws {
         try Shell.runSync("curl -L \"\(url)\" -o \"\(output)\"")
     }
-    
+
     /// 获取URL内容
     /// - Parameter url: URL地址
     /// - Returns: URL内容
@@ -46,7 +45,7 @@ class ShellNetwork: SuperLog {
     static func curl(_ url: String) throws -> String {
         try Shell.runSync("curl -s \"\(url)\"")
     }
-    
+
     /// 获取URL的HTTP头信息
     /// - Parameter url: URL地址
     /// - Returns: HTTP头信息
@@ -54,7 +53,7 @@ class ShellNetwork: SuperLog {
     static func getHeaders(_ url: String) throws -> String {
         try Shell.runSync("curl -I \"\(url)\"")
     }
-    
+
     /// 测试端口连接
     /// - Parameters:
     ///   - host: 主机地址
@@ -68,7 +67,7 @@ class ShellNetwork: SuperLog {
             return false
         }
     }
-    
+
     /// 获取本机IP地址
     /// - Returns: IP地址数组
     static func getLocalIPs() -> [String] {
@@ -81,7 +80,7 @@ class ShellNetwork: SuperLog {
             return []
         }
     }
-    
+
     /// 获取公网IP地址
     /// - Returns: 公网IP地址
     static func getPublicIP() -> String {
@@ -91,7 +90,7 @@ class ShellNetwork: SuperLog {
             return "获取失败"
         }
     }
-    
+
     /// 获取网络接口状态
     /// - Returns: 网络接口状态
     static func getNetworkStatus() -> String {
@@ -101,7 +100,7 @@ class ShellNetwork: SuperLog {
             return error.localizedDescription
         }
     }
-    
+
     /// 查看路由表
     /// - Returns: 路由表信息
     static func getRoutes() -> String {
@@ -111,7 +110,7 @@ class ShellNetwork: SuperLog {
             return error.localizedDescription
         }
     }
-    
+
     /// 查看网络连接
     /// - Returns: 网络连接信息
     static func getConnections() -> String {
@@ -121,7 +120,7 @@ class ShellNetwork: SuperLog {
             return error.localizedDescription
         }
     }
-    
+
     /// DNS查询
     /// - Parameter domain: 域名
     /// - Returns: DNS查询结果
@@ -129,7 +128,7 @@ class ShellNetwork: SuperLog {
     static func nslookup(_ domain: String) throws -> String {
         try Shell.runSync("nslookup \(domain)")
     }
-    
+
     /// 追踪路由
     /// - Parameter host: 目标主机
     /// - Returns: 路由追踪结果
@@ -137,7 +136,7 @@ class ShellNetwork: SuperLog {
     static func traceroute(_ host: String) throws -> String {
         try Shell.runSync("traceroute \(host)")
     }
-    
+
     /// 获取WiFi信息
     /// - Returns: WiFi信息
     static func getWiFiInfo() -> String {
@@ -147,7 +146,7 @@ class ShellNetwork: SuperLog {
             return error.localizedDescription
         }
     }
-    
+
     /// 扫描WiFi网络
     /// - Returns: WiFi网络列表
     static func scanWiFi() -> String {
@@ -157,7 +156,7 @@ class ShellNetwork: SuperLog {
             return error.localizedDescription
         }
     }
-    
+
     /// 检查网站可访问性
     /// - Parameter url: 网站URL
     /// - Returns: HTTP状态码
@@ -169,7 +168,7 @@ class ShellNetwork: SuperLog {
             return 0
         }
     }
-    
+
     /// 测试网络速度（简单版本）
     /// - Returns: 下载速度测试结果
     static func speedTest() -> String {
@@ -185,5 +184,3 @@ class ShellNetwork: SuperLog {
 }
 
 #endif
-
-// MARK: - Preview

@@ -1,6 +1,5 @@
 import Foundation
 import OSLog
-import SwiftUI
 #if os(macOS)
 /// 文件操作相关的Shell命令工具类
 class ShellFile: SuperLog {
@@ -152,9 +151,3 @@ class ShellFile: SuperLog {
 #endif
 
 // MARK: - Preview
-
-#if DEBUG && os(macOS)
-#Preview("ShellFile Demo") {
-    ShellFilePreviewView()
-}
-#endif

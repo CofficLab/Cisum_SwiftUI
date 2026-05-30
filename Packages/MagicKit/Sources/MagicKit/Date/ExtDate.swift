@@ -1,5 +1,4 @@
 import Foundation
-import SwiftUI
 
 /// Date 类型的扩展，提供常用的日期格式化和转换功能
 public extension Date {
@@ -181,11 +180,3 @@ public extension Date {
         }
     }
 }
-
-#if DEBUG
-#Preview("Date 格式化演示") {
-    NavigationStack {
-        DateFormattingDemoView()
-    }
-}
-#endif

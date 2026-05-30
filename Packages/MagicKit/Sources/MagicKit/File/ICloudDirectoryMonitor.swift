@@ -102,20 +102,22 @@ public final class ICloudDirectoryMonitor: SuperLog {
         setupNotificationHandlers()
 
         // 3. 最后启动查询（延迟一点，确保通知处理器已注册）
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-
-            if self.verbose {
-                os_log("\(self.t)⏳ (\(self.caller)) 准备启动查询...")
+        let verbose = self.verbose
+        let caller = self.caller
+        let t = self.t
+        let monitor = self
+        Task { @MainActor in
+            if verbose {
+                os_log("\(t)⏳ (\(caller)) 准备启动查询...")
             }
 
             // 额外延迟，确保通知订阅生效
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                if self.verbose {
-                    os_log("\(self.t)🚀 (\(self.caller)) 正在启动查询...")
-                }
-                self.startQuery()
+            try? await Task.sleep(for: .milliseconds(100))
+
+            if verbose {
+                os_log("\(t)🚀 (\(caller)) 正在启动查询...")
             }
+            monitor.startQuery()
         }
 
         // 关键修复：闭包需要捕获 self 的强引用（不使用 weak）
@@ -183,15 +185,18 @@ public final class ICloudDirectoryMonitor: SuperLog {
     }
 
     private func startQuery() {
+        let verbose = self.verbose
+        let caller = self.caller
+        let t = self.t
         DispatchQueue.main.async {
-            if self.verbose {
-                os_log("\(self.t)🎯 (\(self.caller)) 调用 query.start()")
-                os_log("\(self.t)🔧 (\(self.caller)) 查询状态：started=\(self.query.isStarted), gathering=\(self.query.isGathering)")
+            if verbose {
+                os_log("\(t)🎯 (\(caller)) 调用 query.start()")
+                os_log("\(t)🔧 (\(caller)) 查询状态：started=\(self.query.isStarted), gathering=\(self.query.isGathering)")
             }
             self.query.start()
 
-            if self.verbose {
-                os_log("\(self.t)✅ (\(self.caller)) query.start() 已返回")
+            if verbose {
+                os_log("\(t)✅ (\(caller)) query.start() 已返回")
             }
         }
     }

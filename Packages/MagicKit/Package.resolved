@@ -1,0 +1,33 @@
+{
+  "originHash" : "21b773721bf7c4e0f8f509af1eb46527533b1e62c41db6107e5818b5fbc711b2",
+  "pins" : [
+    {
+      "identity" : "id3tageditor",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/chicio/ID3TagEditor",
+      "state" : {
+        "revision" : "3ccc31eafae0ded1fea8c9acd5e7ef7dfdbf1e8e",
+        "version" : "4.6.0"
+      }
+    },
+    {
+      "identity" : "magicalert",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/nookery/MagicAlert.git",
+      "state" : {
+        "revision" : "c01ea99ac87530ecc804f082c9311d884bc53418",
+        "version" : "1.0.1"
+      }
+    },
+    {
+      "identity" : "zipfoundation",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/weichsel/ZIPFoundation.git",
+      "state" : {
+        "revision" : "22787ffb59de99e5dc1fbfe80b19c97a904ad48d",
+        "version" : "0.9.20"
+      }
+    }
+  ],
+  "version" : 3
+}

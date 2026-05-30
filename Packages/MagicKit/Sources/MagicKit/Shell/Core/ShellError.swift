@@ -1,4 +1,5 @@
-import SwiftUI
+
+import Foundation
 
 enum ShellError: Error, LocalizedError {
     case commandFailed(String, String)
@@ -16,13 +17,3 @@ enum ShellError: Error, LocalizedError {
         }
     }
 }
-
-// MARK: - Preview
-
-#if DEBUG && os(macOS)
-#Preview("Shell Demo") {
-    ShellDemoView()
-        .padding()
-        
-}
-#endif

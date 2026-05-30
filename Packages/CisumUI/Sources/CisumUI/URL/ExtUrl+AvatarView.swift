@@ -1,0 +1,2 @@
+import OSLog
+import MagicKit

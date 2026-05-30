@@ -1,6 +1,7 @@
 import Foundation
 import CloudKit
 
+@preconcurrency
 public protocol SuperSyncDelegate: Actor {
     func onGetModel(recordID: CKRecord.ID) async throws -> CKRecord?
     func onMerge(record: CKRecord) async

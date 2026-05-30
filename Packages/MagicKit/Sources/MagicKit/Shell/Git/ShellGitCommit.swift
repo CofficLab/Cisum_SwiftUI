@@ -31,12 +31,3 @@ extension ShellGit {
     }
 }
 #endif
-
-// MARK: - Preview
-
-#if DEBUG && os(macOS)
-#Preview("ShellGit+Commit Demo") {
-    ShellGitCommitPreview()
-        
-} 
-#endif

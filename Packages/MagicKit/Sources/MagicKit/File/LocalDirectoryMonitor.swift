@@ -143,9 +143,18 @@ public final class LocalDirectoryMonitor: SuperLog {
             queue: .global(qos: .background)
         )
 
+        let onChange = self.onChange
         monitor?.setEventHandler { [weak self] in
-            Task { [weak self] in
-                await self?.handleFileSystemEvent()
+            guard let self = self else { return }
+            // 使用 MainActor.run 确保在主线程上处理事件
+            Task.detached { [weak self] in
+                guard let self = self else { return }
+                do {
+                    try await self.scanDirectory()
+                } catch {
+                    let onChange = self.onChange
+                    await onChange([], false, error)
+                }
             }
         }
 
@@ -158,6 +167,7 @@ public final class LocalDirectoryMonitor: SuperLog {
     }
 
     private func performInitialScan() {
+        let onChange = self.onChange
         scanTask = Task {
             do {
                 try await scanDirectory()

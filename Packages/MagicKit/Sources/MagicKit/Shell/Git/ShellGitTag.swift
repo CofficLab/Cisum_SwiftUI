@@ -82,12 +82,3 @@ extension ShellGit {
     }
 }
 #endif
-
-// MARK: - Preview
-
-#if DEBUG && os(macOS)
-#Preview("ShellGit+Tag Demo") {
-    ShellGitTagPreview()
-        
-} 
-#endif

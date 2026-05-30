@@ -48,12 +48,3 @@ extension ShellGit {
 }
 
 #endif
-
-// MARK: - Preview
-
-#if DEBUG && os(macOS)
-#Preview("ShellGit+Stash Demo") {
-    ShellGitStashPreview()
-        
-} 
-#endif
