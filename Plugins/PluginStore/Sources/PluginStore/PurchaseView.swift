@@ -22,33 +22,37 @@ struct PurchaseView: View, SuperLog {
                     }
                 }
 
-                // Bottom links
-                HStack(spacing: 20) {
-                    Link(destination: URL(string: "https://www.kuaiyizhi.cn/privacy")!) {
-                        Label {
-                            Text("Privacy Policy", tableName: "Store", bundle: .module)
-                        } icon: {
-                            Image(systemName: "hand.raised.fill")
+                if let privacyURL = URL(string: "https://www.kuaiyizhi.cn/privacy"),
+                   let licenseURL = URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")
+                {
+                    // Bottom links
+                    HStack(spacing: 20) {
+                        Link(destination: privacyURL) {
+                            Label {
+                                Text("Privacy Policy", tableName: "Store", bundle: .module)
+                            } icon: {
+                                Image(systemName: "hand.raised.fill")
+                            }
+                                .font(.footnote)
                         }
-                            .font(.footnote)
-                    }
 
-                    Divider()
-                        .frame(height: 12)
+                        Divider()
+                            .frame(height: 12)
 
-                    Link(destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!) {
-                        Label {
-                            Text("License Agreement", tableName: "Store", bundle: .module)
-                        } icon: {
-                            Image(systemName: "doc.text.fill")
+                        Link(destination: licenseURL) {
+                            Label {
+                                Text("License Agreement", tableName: "Store", bundle: .module)
+                            } icon: {
+                                Image(systemName: "doc.text.fill")
+                            }
+                                .font(.footnote)
                         }
-                            .font(.footnote)
                     }
+                    .foregroundStyle(.secondary)
+                    .buttonStyle(.plain)
+                    .padding(.vertical, 16)
+                    .infiniteWidth()
                 }
-                .foregroundStyle(.secondary)
-                .buttonStyle(.plain)
-                .padding(.vertical, 16)
-                .infiniteWidth()
             }
             .cisumPx2()
         }
