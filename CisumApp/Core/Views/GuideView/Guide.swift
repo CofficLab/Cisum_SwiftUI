@@ -21,11 +21,11 @@ struct Guide: View, SuperLog {
         let currentPages = pages
 
         ZStack {
-            // 显示当前页面
-            if currentPages.indices.contains(currentGuidePageIndex) {
+            if let currentPage = currentPage(in: currentPages) {
                 pluginViewWithNavigation(
-                    page: currentPages[currentGuidePageIndex],
-                    at: currentGuidePageIndex
+                    page: currentPage.page,
+                    at: currentPage.index,
+                    pageCount: currentPages.count
                 )
             } else {
                 GuideDoneView(isActive: true)
@@ -42,11 +42,18 @@ private struct PluginGuidePage: Identifiable {
 // MARK: - View Builder
 
 extension Guide {
+    private func currentPage(in pages: [PluginGuidePage]) -> (page: PluginGuidePage, index: Int)? {
+        guard !pages.isEmpty else { return nil }
+
+        let clampedIndex = min(max(currentGuidePageIndex, 0), pages.count - 1)
+        return (pages[clampedIndex], clampedIndex)
+    }
+
     /// 生成带有导航按钮的插件视图
     /// - Parameter index: 视图索引
     /// - Returns: 包含导航按钮的插件视图
     @ViewBuilder
-    private func pluginViewWithNavigation(page: PluginGuidePage, at index: Int) -> some View {
+    private func pluginViewWithNavigation(page: PluginGuidePage, at index: Int, pageCount: Int) -> some View {
         ZStack {
             page.view
 
@@ -70,15 +77,17 @@ extension Guide {
                     }
 
                     // 下一页按钮
-                    Image.cisumNextPage
-                        .font(.title2)
-                        .frame(width: 50, height: 50)
-                        .background(.regularMaterial, in: Circle())
-                        .cisumHoverScale(105)
-                        .cisumShadowSm()
-                        .cisumButton {
-                            currentGuidePageIndex = index + 1
-                        }
+                    if index + 1 < pageCount {
+                        Image.cisumNextPage
+                            .font(.title2)
+                            .frame(width: 50, height: 50)
+                            .background(.regularMaterial, in: Circle())
+                            .cisumHoverScale(105)
+                            .cisumShadowSm()
+                            .cisumButton {
+                                currentGuidePageIndex = index + 1
+                            }
+                    }
                 }
                 .padding(.bottom, 16)
             }
