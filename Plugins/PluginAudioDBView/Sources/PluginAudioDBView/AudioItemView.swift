@@ -124,34 +124,13 @@ extension AudioItemView {
 
     /// 导出到下载目录
     private func exportToDownloads() {
+        let sourceURL = url
         Task {
             do {
-                // 获取下载目录
-                let downloadsURL = try FileManager.default.url(
-                    for: .downloadsDirectory,
-                    in: .userDomainMask,
-                    appropriateFor: nil,
-                    create: false
-                )
+                let finalDestinationURL = try await Task.detached(priority: .userInitiated) {
+                    try Self.copyToDownloads(sourceURL)
+                }.value
 
-                // 目标文件路径
-                let destinationURL = downloadsURL.appendingPathComponent(url.lastPathComponent)
-
-                // 如果目标文件已存在，添加序号
-                var finalDestinationURL = destinationURL
-                var counter = 1
-                while FileManager.default.fileExists(atPath: finalDestinationURL.path) {
-                    let fileNameWithoutExtension = url.deletingPathExtension().lastPathComponent
-                    let fileExtension = url.pathExtension
-                    let newFileName = fileExtension.isEmpty
-                        ? "\(fileNameWithoutExtension) \(counter)"
-                        : "\(fileNameWithoutExtension) \(counter).\(fileExtension)"
-                    finalDestinationURL = downloadsURL.appendingPathComponent(newFileName)
-                    counter += 1
-                }
-
-                // 复制文件
-                try await url.copyTo(finalDestinationURL, caller: self.className)
                 if Self.verbose {
                     os_log("\(Self.t)✅ 文件已导出到: \(finalDestinationURL.path)")
                 }
@@ -163,6 +142,42 @@ extension AudioItemView {
                 alert_error(String(localized: "Export failed: \(error.localizedDescription)", table: "Audio-DBView", bundle: .module))
             }
         }
+    }
+
+    nonisolated private static func copyToDownloads(_ sourceURL: URL) throws -> URL {
+        // 获取下载目录
+        let downloadsURL = try FileManager.default.url(
+            for: .downloadsDirectory,
+            in: .userDomainMask,
+            appropriateFor: nil,
+            create: false
+        )
+
+        let finalDestinationURL = uniqueDestination(for: sourceURL, in: downloadsURL)
+
+        if sourceURL.checkIsICloud(verbose: false), sourceURL.isNotDownloaded {
+            try FileManager.default.startDownloadingUbiquitousItem(at: sourceURL)
+        }
+
+        try FileManager.default.copyItem(at: sourceURL, to: finalDestinationURL)
+        return finalDestinationURL
+    }
+
+    nonisolated private static func uniqueDestination(for sourceURL: URL, in directory: URL) -> URL {
+        var destinationURL = directory.appendingPathComponent(sourceURL.lastPathComponent)
+        var counter = 1
+
+        while FileManager.default.fileExists(atPath: destinationURL.path) {
+            let fileNameWithoutExtension = sourceURL.deletingPathExtension().lastPathComponent
+            let fileExtension = sourceURL.pathExtension
+            let newFileName = fileExtension.isEmpty
+                ? "\(fileNameWithoutExtension) \(counter)"
+                : "\(fileNameWithoutExtension) \(counter).\(fileExtension)"
+            destinationURL = directory.appendingPathComponent(newFileName)
+            counter += 1
+        }
+
+        return destinationURL
     }
 
     /// 播放音频
