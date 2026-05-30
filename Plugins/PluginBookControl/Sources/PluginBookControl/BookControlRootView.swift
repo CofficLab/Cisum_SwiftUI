@@ -40,6 +40,21 @@ enum BookControlBookRootResolver {
     }
 }
 
+enum BookControlPlaybackRequestPolicy {
+    static func shouldApplyNavigationResult(requestedAsset: URL, currentAsset: URL?) -> Bool {
+        currentAsset == requestedAsset
+    }
+
+    static func currentAssetAffectedByDeletion(currentAsset: URL?, deletedURLs: [URL]) -> Bool {
+        guard let currentAsset else { return false }
+        return deletedURLs.contains { deletedURL in
+            let parentPath = deletedURL.standardizedFileURL.path
+            let assetPath = currentAsset.standardizedFileURL.path
+            return assetPath == parentPath || assetPath.hasPrefix(parentPath + "/")
+        }
+    }
+}
+
 public struct BookControlRootView<Content>: View, SuperLog where Content: View {
     public nonisolated static var emoji: String { BookControlPluginInfo.emoji }
     private let verbose = false
@@ -187,12 +202,20 @@ private extension BookControlRootView {
 
     func handleBookDBDeleted(_ notification: Notification) {
         guard let deletedURLs = notification.userInfo?["urls"] as? [URL],
-              let currentAsset = man.asset,
-              deletedURLs.contains(where: { contains($0, asset: currentAsset) }) else {
+              BookControlPlaybackRequestPolicy.currentAssetAffectedByDeletion(
+                  currentAsset: man.asset,
+                  deletedURLs: deletedURLs
+              ) else {
             return
         }
 
         Task {
+            guard BookControlPlaybackRequestPolicy.currentAssetAffectedByDeletion(
+                currentAsset: man.asset,
+                deletedURLs: deletedURLs
+            ) else {
+                return
+            }
             await man.reset(reason: "BookControlRootView.deletedCurrentAsset")
         }
     }
@@ -214,6 +237,12 @@ private extension BookControlRootView {
 
         if let prev = adjacentAsset(to: asset, offset: -1) {
             Task {
+                guard BookControlPlaybackRequestPolicy.shouldApplyNavigationResult(
+                    requestedAsset: asset,
+                    currentAsset: man.currentAsset
+                ) else {
+                    return
+                }
                 await man.play(prev, reason: "handlePreviousRequested")
                 if verbose {
                     os_log("\(self.t)✅ 播放上一章: \(prev.lastPathComponent)")
@@ -237,6 +266,12 @@ private extension BookControlRootView {
 
         if let next = adjacentAsset(to: asset, offset: 1) {
             Task {
+                guard BookControlPlaybackRequestPolicy.shouldApplyNavigationResult(
+                    requestedAsset: asset,
+                    currentAsset: man.currentAsset
+                ) else {
+                    return
+                }
                 await man.play(next, reason: "handleNextRequested")
                 if verbose {
                     os_log("\(self.t)✅ 播放下一章: \(next.lastPathComponent)")

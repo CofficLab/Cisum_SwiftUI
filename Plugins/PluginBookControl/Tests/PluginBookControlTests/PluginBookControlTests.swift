@@ -38,6 +38,43 @@ import SwiftUI
     #expect(sequenceNext == nil)
 }
 
+@Test func navigationResultOnlyAppliesToUnchangedCurrentChapter() {
+    let requested = URL(fileURLWithPath: "/tmp/book/001.m4b")
+    let switched = URL(fileURLWithPath: "/tmp/book/002.m4b")
+
+    #expect(BookControlPlaybackRequestPolicy.shouldApplyNavigationResult(
+        requestedAsset: requested,
+        currentAsset: requested
+    ))
+    #expect(!BookControlPlaybackRequestPolicy.shouldApplyNavigationResult(
+        requestedAsset: requested,
+        currentAsset: switched
+    ))
+    #expect(!BookControlPlaybackRequestPolicy.shouldApplyNavigationResult(
+        requestedAsset: requested,
+        currentAsset: nil
+    ))
+}
+
+@Test func deletionAffectsCurrentChapterInsideDeletedBook() {
+    let deletedBook = URL(fileURLWithPath: "/tmp/books/Novel", isDirectory: true)
+    let currentChapter = deletedBook.appendingPathComponent("Chapter 01.m4b")
+    let otherChapter = URL(fileURLWithPath: "/tmp/books/Other/Chapter 01.m4b")
+
+    #expect(BookControlPlaybackRequestPolicy.currentAssetAffectedByDeletion(
+        currentAsset: currentChapter,
+        deletedURLs: [deletedBook]
+    ))
+    #expect(!BookControlPlaybackRequestPolicy.currentAssetAffectedByDeletion(
+        currentAsset: otherChapter,
+        deletedURLs: [deletedBook]
+    ))
+    #expect(!BookControlPlaybackRequestPolicy.currentAssetAffectedByDeletion(
+        currentAsset: nil,
+        deletedURLs: [deletedBook]
+    ))
+}
+
 @Test func bookRootUsesStandaloneBookAtDiskRoot() {
     let disk = URL(fileURLWithPath: "/tmp/cisum-books", isDirectory: true)
     let book = disk.appendingPathComponent("Standalone.m4b")
