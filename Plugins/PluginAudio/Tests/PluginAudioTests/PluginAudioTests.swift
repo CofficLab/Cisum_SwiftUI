@@ -127,3 +127,30 @@ import SwiftData
     #expect(FileManager.default.fileExists(atPath: file.path))
     #expect(await db.getTotalOfAudio() == 1)
 }
+
+@Test func audioDBSyncAppendsNewFilesInStablePathOrder() async throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+
+    let schema = Schema([AudioModel.self])
+    let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    let container = try ModelContainer(for: schema, configurations: [configuration])
+    let db = AudioDB(container, reason: "audioDBSyncAppendsNewFilesInStablePathOrder")
+
+    let existing = root.appendingPathComponent("00-existing.mp3")
+    let second = root.appendingPathComponent("02-second.mp3")
+    let first = root.appendingPathComponent("01-first.mp3")
+    for file in [existing, second, first] {
+        try Data("audio".utf8).write(to: file)
+    }
+
+    await db.insertAudio(url: existing, order: 10)
+    await db.syncWithUpdatedItems([second, first])
+
+    #expect(await db.allAudioURLs(reason: "test") == [existing, first, second])
+}

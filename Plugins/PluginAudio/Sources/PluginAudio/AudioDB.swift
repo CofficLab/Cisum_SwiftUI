@@ -856,9 +856,11 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
                 }
             })
 
-            // 余下的是需要插入数据库的
-            for (_, value) in hashMap {
-                context.insert(AudioModel(value))
+            // 余下的是需要插入数据库的，按路径稳定追加，避免首次导入后默认播放顺序随机。
+            var nextOrder = nextAppendOrder()
+            for value in Self.sortedForStableInsertion(Array(hashMap.values)) {
+                context.insert(AudioModel(value, order: nextOrder))
+                nextOrder += 1
             }
 
             try self.context.save()
@@ -883,7 +885,8 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
 
         // 如果url属性为unique，数据库已存在相同url的记录，再执行context.insert，发现已存在的被替换成新的了
         // 但在这里，希望如果存在，就不要插入
-        for (_, meta) in metas.enumerated() {
+        var nextOrder = nextAppendOrder()
+        for meta in Self.sortedForStableInsertion(metas) {
             if meta.isNotFileExist {
                 let deletedURL = meta
 
@@ -896,7 +899,8 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
                 }
             } else {
                 if findAudio(meta) == nil {
-                    context.insert(AudioModel(meta))
+                    context.insert(AudioModel(meta, order: nextOrder))
+                    nextOrder += 1
                 }
             }
         }
@@ -912,6 +916,29 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
         }
 
         NotificationCenter.postDBUpdated()
+    }
+
+    private func nextAppendOrder() -> Int {
+        var descriptor = FetchDescriptor<AudioModel>(
+            predicate: #Predicate<AudioModel> { audio in
+                audio.order != -1
+            },
+            sortBy: [SortDescriptor(\.order, order: .reverse)]
+        )
+        descriptor.fetchLimit = 1
+
+        do {
+            return (try context.fetch(descriptor).first?.order ?? 99) + 1
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+            return 100
+        }
+    }
+
+    static func sortedForStableInsertion(_ urls: [URL]) -> [URL] {
+        urls.sorted {
+            $0.standardizedFileURL.path.localizedStandardCompare($1.standardizedFileURL.path) == .orderedAscending
+        }
     }
 
     /// 更新音频模型

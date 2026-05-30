@@ -49,7 +49,8 @@ public final class AudioModel: SuperLog {
          title: String? = nil,
          identifierKey: String? = nil,
          contentType: String? = nil,
-         isFolder: Bool = false
+         isFolder: Bool = false,
+         order: Int? = nil
     ) {
         if Self.verbose {
             os_log("\(Self.i) -> \(url.lastPathComponent)")
@@ -59,7 +60,7 @@ public final class AudioModel: SuperLog {
         }
 
         self.url = url
-        self.order = Self.makeRandomOrder()
+        self.order = order ?? Self.makeRandomOrder()
         self.identifierKey = identifierKey
         self.contentType = contentType
         self.title = url.deletingPathExtension().lastPathComponent
