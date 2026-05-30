@@ -192,6 +192,10 @@ extension BookDBView {
         return (urls, errors)
     }
 
+    nonisolated static func shouldImportDroppedURLs(_ urls: [URL], after errors: [Error]) -> Bool {
+        !urls.isEmpty || errors.isEmpty
+    }
+
     private nonisolated static func canImportFolder(_ folder: URL) throws -> Bool {
         let hasAccess = folder.startAccessingSecurityScopedResource()
         guard hasAccess else {
@@ -368,6 +372,10 @@ extension BookDBView {
             if let error = droppedFiles.errors.first {
                 os_log(.error, "\(self.t)⚠️ 加载文件失败: \(error.localizedDescription)")
                 alert_error(String(localized: "Import failed: \(error.localizedDescription)", table: "Book-DBView", bundle: .module))
+            }
+
+            guard Self.shouldImportDroppedURLs(droppedFiles.urls, after: droppedFiles.errors) else {
+                return
             }
 
             copy(droppedFiles.urls)

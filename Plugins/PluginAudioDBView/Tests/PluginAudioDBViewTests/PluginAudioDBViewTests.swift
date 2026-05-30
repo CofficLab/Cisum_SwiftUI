@@ -112,3 +112,12 @@ import UniformTypeIdentifiers
 
     #expect(url == expected)
 }
+
+@Test func audioDropSkipsEmptyImportAfterProviderFailure() {
+    let error = NSError(domain: "AudioDrop", code: 1)
+    let url = URL(fileURLWithPath: "/tmp/cisum-audio-drop-provider-tests/track.mp3")
+
+    #expect(AudioDBView.shouldImportDroppedURLs([], after: [error]) == false)
+    #expect(AudioDBView.shouldImportDroppedURLs([url], after: [error]) == true)
+    #expect(AudioDBView.shouldImportDroppedURLs([], after: []) == true)
+}

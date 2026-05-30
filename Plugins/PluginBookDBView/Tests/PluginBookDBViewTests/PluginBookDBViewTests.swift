@@ -63,6 +63,15 @@ import UniformTypeIdentifiers
     #expect(url == expected)
 }
 
+@Test func bookDropSkipsEmptyImportAfterProviderFailure() {
+    let error = NSError(domain: "BookDrop", code: 1)
+    let url = URL(fileURLWithPath: "/tmp/cisum-book-drop-provider-tests/audiobook")
+
+    #expect(BookDBView.shouldImportDroppedURLs([], after: [error]) == false)
+    #expect(BookDBView.shouldImportDroppedURLs([url], after: [error]) == true)
+    #expect(BookDBView.shouldImportDroppedURLs([], after: []) == true)
+}
+
 @Test func bookPlaybackOrderingUsesRelativePaths() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)

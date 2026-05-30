@@ -217,6 +217,10 @@ extension AudioDBView {
         return (urls, errors)
     }
 
+    nonisolated static func shouldImportDroppedURLs(_ urls: [URL], after errors: [Error]) -> Bool {
+        !urls.isEmpty || errors.isEmpty
+    }
+
     nonisolated private static func uniqueDestination(for source: URL, in directory: URL) -> URL {
         let baseName = source.deletingPathExtension().lastPathComponent
         let fileExtension = source.pathExtension
@@ -345,6 +349,10 @@ extension AudioDBView {
             if let error = droppedFiles.errors.first {
                 os_log(.error, "\(self.t)⚠️ 加载文件失败: \(error.localizedDescription)")
                 alert_error(String(localized: "Import failed: \(error.localizedDescription)", table: "Audio-DBView", bundle: .module))
+            }
+
+            guard Self.shouldImportDroppedURLs(droppedFiles.urls, after: droppedFiles.errors) else {
+                return
             }
 
             await importFiles(droppedFiles.urls)
