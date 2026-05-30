@@ -8,6 +8,7 @@ struct ProductsSubscription: View, SuperEvent, SuperLog, SuperThread {
     @Environment(\.colorScheme) var colorScheme: ColorScheme
 
     @State private var subscriptionGroups: [SubscriptionGroupDTO] = []
+    @State private var purchasedProductIDs = Set<String>()
     @State private var refreshing = false
     @State private var error: Error? = nil
 
@@ -55,7 +56,10 @@ struct ProductsSubscription: View, SuperEvent, SuperLog, SuperThread {
                             // 订阅产品列表
                             VStack(spacing: 12) {
                                 ForEach(group.subscriptions, id: \.id) { subscription in
-                                    ProductCell(product: subscription)
+                                    ProductCell(
+                                        product: subscription,
+                                        initiallyPurchased: purchasedProductIDs.contains(subscription.id)
+                                    )
                                 }
                             }
                         }
@@ -95,8 +99,17 @@ struct ProductsSubscription: View, SuperEvent, SuperLog, SuperThread {
         Task {
             do {
                 let groups = try await StoreService.fetchAllProducts()
+                let purchasedLists = await StoreService.fetchPurchasedLists(
+                    cars: groups.cars,
+                    subscriptions: groups.subscriptions,
+                    nonRenewables: groups.nonRenewables
+                )
+                let purchasedIDs = Set(
+                    (purchasedLists.cars + purchasedLists.subscriptions + purchasedLists.nonRenewables).map(\.id)
+                )
                 await MainActor.run {
                     self.subscriptionGroups = groups.subscriptionGroups
+                    self.purchasedProductIDs = purchasedIDs
                     self.error = nil
                     self.refreshing = false
                 }

@@ -14,6 +14,7 @@ struct ProductCell: View, SuperLog {
     @State var current: Product?
 
     let product: ProductDTO
+    let initiallyPurchased: Bool
     let purchasingEnabled: Bool
     let showStatus: Bool
 
@@ -27,10 +28,12 @@ struct ProductCell: View, SuperLog {
 
     nonisolated static let emoji = "🖥️"
 
-    init(product: ProductDTO, purchasingEnabled: Bool = true, showStatus: Bool = false) {
+    init(product: ProductDTO, initiallyPurchased: Bool = false, purchasingEnabled: Bool = true, showStatus: Bool = false) {
         self.product = product
+        self.initiallyPurchased = initiallyPurchased
         self.purchasingEnabled = purchasingEnabled
         self.showStatus = showStatus
+        _isPurchased = State(initialValue: initiallyPurchased)
     }
 
     var body: some View {
@@ -90,6 +93,9 @@ struct ProductCell: View, SuperLog {
         .alert(isPresented: $isShowingError, content: {
             Alert(title: Text(LocalizedStringKey(errorTitle), tableName: "Store", bundle: .module), message: nil, dismissButton: .default(Text("OK", tableName: "Store", bundle: .module)))
         })
+        .onChange(of: initiallyPurchased) { _, newValue in
+            isPurchased = newValue
+        }
     }
 
     // MARK: 子视图
@@ -187,7 +193,6 @@ struct ProductCell: View, SuperLog {
         .cisumButton(buy)
         .disabled(purchasing || isPurchased)
         .opacity(isPurchased ? 0.6 : 1.0)
-        .onAppear(perform: onAppear)
     }
 
     // MARK: 去购买
@@ -216,38 +221,6 @@ struct ProductCell: View, SuperLog {
             }
 
             purchasing = false
-        }
-    }
-}
-
-// MARK: Event Handler
-
-extension ProductCell {
-    func onAppear() {
-        let verbose = false
-        Task {
-            // 检查购买状态
-            let groups = try? await StoreService.fetchAllProducts()
-            let purchasedLists = await StoreService.fetchPurchasedLists(
-                cars: groups?.cars ?? [],
-                subscriptions: groups?.subscriptions ?? [],
-                nonRenewables: groups?.nonRenewables ?? []
-            )
-
-            switch product.kind {
-            case .nonRenewable:
-                isPurchased = purchasedLists.nonRenewables.contains { $0.id == product.id }
-            case .nonConsumable:
-                isPurchased = purchasedLists.cars.contains { $0.id == product.id }
-            case .autoRenewable:
-                isPurchased = purchasedLists.subscriptions.contains { $0.id == product.id }
-            default:
-                isPurchased = false
-            }
-
-            if verbose {
-                os_log("\(self.t)OnAppear 检查购买状态 -> \(product.displayName) -> \(isPurchased)")
-            }
         }
     }
 }
