@@ -73,3 +73,21 @@ import Testing
         currentAsset: switched
     ))
 }
+
+@Test func widgetMetadataResultOnlyAppliesToStillCurrentAudio() {
+    let requested = URL(fileURLWithPath: "/tmp/audio/track-01.mp3")
+    let switched = URL(fileURLWithPath: "/tmp/audio/track-02.mp3")
+
+    #expect(AudioProgressPersistencePolicy.shouldApplyWidgetMetadataResult(
+        requestedAsset: requested,
+        currentAsset: requested
+    ))
+    #expect(!AudioProgressPersistencePolicy.shouldApplyWidgetMetadataResult(
+        requestedAsset: requested,
+        currentAsset: switched
+    ))
+    #expect(!AudioProgressPersistencePolicy.shouldApplyWidgetMetadataResult(
+        requestedAsset: requested,
+        currentAsset: nil
+    ))
+}

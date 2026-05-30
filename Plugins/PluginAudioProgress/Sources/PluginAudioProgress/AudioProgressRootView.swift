@@ -31,6 +31,10 @@ enum AudioProgressPersistencePolicy {
     static func shouldApplyRestoreResult(startingAsset: URL?, currentAsset: URL?) -> Bool {
         startingAsset == currentAsset
     }
+
+    static func shouldApplyWidgetMetadataResult(requestedAsset: URL, currentAsset: URL?) -> Bool {
+        requestedAsset == currentAsset
+    }
 }
 
 public struct AudioProgressRootView<Content>: View, SuperLog where Content: View {
@@ -303,8 +307,15 @@ extension AudioProgressRootView {
                     os_log(.error, "\(self.t) Failed to load artwork: \(error.localizedDescription)")
                 }
             }
-            
-            saveWidgetData(title, artist, isPlaying, coverArt)
+
+            guard AudioProgressPersistencePolicy.shouldApplyWidgetMetadataResult(
+                requestedAsset: url,
+                currentAsset: man.currentAsset
+            ) else {
+                return
+            }
+
+            saveWidgetData(title, artist, man.state == .playing, coverArt)
         }
     }
 
