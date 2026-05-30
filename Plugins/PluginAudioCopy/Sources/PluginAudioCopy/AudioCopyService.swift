@@ -91,12 +91,17 @@ public enum AudioCopyService {
     }
 
     private static func createDatabaseFile(name: String) throws -> URL {
-        try MagicApp.getDatabaseDirectory()
+        let url = MagicApp.getDatabaseDirectory()
             .appendingPathComponent(Self.dbDirName, isDirectory: true)
-            .createIfNotExist()
-            .appendingPathComponent(name)
+            .appendingPathComponent(name, isDirectory: true)
             .appendingPathComponent("\(name).db")
-            .createIfNotExist()
+
+        try FileManager.default.createDirectory(
+            at: url.deletingLastPathComponent(),
+            withIntermediateDirectories: true
+        )
+
+        return url
     }
 
     private static var dbDirName: String {
