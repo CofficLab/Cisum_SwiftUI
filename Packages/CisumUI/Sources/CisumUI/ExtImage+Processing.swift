@@ -14,7 +14,10 @@ public extension Image {
     /// - Note: 此方法必须在主线程上调用
     ///        返回的 Image 对象比例因子为 1，标签文本为"目标图像"
     @MainActor static func fromView(_ view: some View) -> Image {
-        Image(Image.makeCGImage(from: view), scale: 1, label: Text("目标图像"))
+        guard let cgImage = Image.makeCGImage(from: view) else {
+            return Image(systemName: "photo")
+        }
+        return Image(cgImage, scale: 1, label: Text("目标图像"))
     }
     
     /// 将 SwiftUI 视图转换为 CGImage
@@ -22,8 +25,8 @@ public extension Image {
     /// - Parameter view: 需要转换的 SwiftUI 视图
     /// - Returns: 转换后的 CGImage 对象
     /// - Note: 此方法必须在主线程上调用
-    ///        如果转换失败，会创建一个1x1的透明图片作为fallback
-    @MainActor static func makeCGImage(from view: some View) -> CGImage {
+    ///        如果转换失败，会尝试创建一个1x1的透明图片作为fallback
+    @MainActor static func makeCGImage(from view: some View) -> CGImage? {
         let renderer = ImageRenderer(content: view)
         if let cgImage = renderer.cgImage {
             return cgImage
@@ -31,8 +34,18 @@ public extension Image {
             // 如果渲染失败，创建一个1x1的透明图片作为fallback
             let size = CGSize(width: 1, height: 1)
             let colorSpace = CGColorSpaceCreateDeviceRGB()
-            let context = CGContext(data: nil, width: Int(size.width), height: Int(size.height), bitsPerComponent: 8, bytesPerRow: 0, space: colorSpace, bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)!
-            return context.makeImage()!
+            guard let context = CGContext(
+                data: nil,
+                width: Int(size.width),
+                height: Int(size.height),
+                bitsPerComponent: 8,
+                bytesPerRow: 0,
+                space: colorSpace,
+                bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+            ) else {
+                return nil
+            }
+            return context.makeImage()
         }
     }
     
@@ -95,9 +108,13 @@ public extension Image {
         ]
 
         // 将位图写入磁盘
+        guard let saveToUrl else {
+            return
+        }
+
         if let jpgData = bitmapRep.representation(using: .jpeg, properties: properties) {
             do {
-                try jpgData.write(to: saveToUrl!)
+                try jpgData.write(to: saveToUrl)
             } catch {
                 // 保存失败
                 print("保存图像失败：\(error)")

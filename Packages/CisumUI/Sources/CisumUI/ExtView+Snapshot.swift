@@ -9,7 +9,7 @@ public extension View {
     /// - Returns: 视图的宽度（像素）
     /// - Note: 此方法必须在主线程上调用
     @MainActor func getWidth() -> Int {
-        Image.makeCGImage(from: self).width
+        Image.makeCGImage(from: self)?.width ?? 0
     }
 
     /// 获取视图的高度
@@ -17,7 +17,7 @@ public extension View {
     /// - Returns: 视图的高度（像素）
     /// - Note: 此方法必须在主线程上调用
     @MainActor func getHeight() -> Int {
-        Image.makeCGImage(from: self).height
+        Image.makeCGImage(from: self)?.height ?? 0
     }
     
     /// 将视图转换为 SwiftUI Image 对象
@@ -34,7 +34,7 @@ public extension View {
     /// - Returns: 转换后的 CGImage 对象
     /// - Note: 此方法必须在主线程上调用
     ///        如果转换失败，会创建一个1x1的透明图片作为fallback
-    @MainActor func toCGImage() -> CGImage {
+    @MainActor func toCGImage() -> CGImage? {
         Image.makeCGImage(from: self)
     }
 
@@ -65,7 +65,7 @@ public extension View {
 
         let width = cgImage.width
         let height = cgImage.height
-        let fileName = title != nil ? "\(title!).png" : "\(Image.getTimeString())-\(width)x\(height).png"
+        let fileName = title.map { "\($0).png" } ?? "\(Image.getTimeString())-\(width)x\(height).png"
         let defaultPath = downloadsURL.appendingPathComponent(fileName)
         let finalPath = path ?? defaultPath
 
