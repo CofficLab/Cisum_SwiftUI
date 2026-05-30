@@ -11,6 +11,7 @@ public struct BookLikeRootView<Content>: View, SuperLog where Content: View {
     private let verbose = false
 
     @EnvironmentObject private var man: MagicPlayMan
+    @State private var playbackSubscriptionID: UUID?
 
     private let content: Content
     private let targetSceneName: String
@@ -29,6 +30,7 @@ public struct BookLikeRootView<Content>: View, SuperLog where Content: View {
     public var body: some View {
         content
             .onAppear(perform: handleOnAppear)
+            .onDisappear(perform: handleOnDisappear)
     }
 
     /// 检查是否应该激活书籍喜欢管理功能
@@ -56,12 +58,21 @@ private extension BookLikeRootView {
         }
 
         // 订阅播放器事件，监听喜欢状态变化
-        man.subscribe(
+        guard playbackSubscriptionID == nil else { return }
+
+        playbackSubscriptionID = man.subscribe(
             name: "BookLikePlugin",
             onLikeStatusChanged: { url, liked in
                 handleLikeStatusChanged(url: url, liked: liked)
             }
         )
+    }
+
+    func handleOnDisappear() {
+        guard let playbackSubscriptionID else { return }
+
+        man.unsubscribe(playbackSubscriptionID)
+        self.playbackSubscriptionID = nil
     }
 
     /// 处理喜欢状态变化事件

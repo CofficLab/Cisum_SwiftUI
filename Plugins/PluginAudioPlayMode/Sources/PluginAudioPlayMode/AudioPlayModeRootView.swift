@@ -14,6 +14,7 @@ public struct AudioPlayModeRootView<Content>: View, SuperLog where Content: View
     private let verbose = false
 
     @EnvironmentObject private var man: MagicPlayMan
+    @State private var playbackSubscriptionID: UUID?
 
     private let content: Content
     private let targetSceneName: String
@@ -38,6 +39,7 @@ public struct AudioPlayModeRootView<Content>: View, SuperLog where Content: View
     public var body: some View {
         content
             .onAppear(perform: handleOnAppear)
+            .onDisappear(perform: handleOnDisappear)
     }
 
     private var shouldActivatePlayMode: Bool {
@@ -58,12 +60,21 @@ private extension AudioPlayModeRootView {
             os_log("\(self.t)👀 视图已出现，开始初始化播放模式管理")
         }
 
-        man.subscribe(
+        guard playbackSubscriptionID == nil else { return }
+
+        playbackSubscriptionID = man.subscribe(
             name: "AudioPlayModePlugin",
             onPlayModeChanged: { mode in
                 handlePlayModeChanged(mode)
             }
         )
+    }
+
+    func handleOnDisappear() {
+        guard let playbackSubscriptionID else { return }
+
+        man.unsubscribe(playbackSubscriptionID)
+        self.playbackSubscriptionID = nil
     }
 
     func handlePlayModeChanged(_ mode: MagicPlayMode) {

@@ -11,6 +11,7 @@ public struct BookControlRootView<Content>: View, SuperLog where Content: View {
     private let verbose = false
 
     @EnvironmentObject private var man: MagicPlayMan
+    @State private var playbackSubscriptionID: UUID?
 
     private let content: Content
     private let targetSceneName: String
@@ -29,6 +30,7 @@ public struct BookControlRootView<Content>: View, SuperLog where Content: View {
     public var body: some View {
         content
             .onAppear(perform: handleOnAppear)
+            .onDisappear(perform: handleOnDisappear)
     }
 
     /// 检查是否应该激活书籍播放控制功能
@@ -56,7 +58,9 @@ private extension BookControlRootView {
         }
 
         // 订阅播放器事件
-        man.subscribe(
+        guard playbackSubscriptionID == nil else { return }
+
+        playbackSubscriptionID = man.subscribe(
             name: "BookControlPlugin",
             onPreviousRequested: { asset in
                 handlePreviousRequested(asset)
@@ -65,6 +69,13 @@ private extension BookControlRootView {
                 handleNextRequested(asset)
             }
         )
+    }
+
+    func handleOnDisappear() {
+        guard let playbackSubscriptionID else { return }
+
+        man.unsubscribe(playbackSubscriptionID)
+        self.playbackSubscriptionID = nil
     }
 
     /// 处理上一章请求

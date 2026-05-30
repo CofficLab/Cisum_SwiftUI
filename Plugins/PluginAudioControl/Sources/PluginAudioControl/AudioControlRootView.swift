@@ -16,6 +16,7 @@ private enum AudioControlRuntime {
 
 public struct AudioControlRootView<Content>: View where Content: View {
     @EnvironmentObject private var man: MagicPlayMan
+    @State private var playbackSubscriptionID: UUID?
 
     private let content: Content
     private let targetSceneName: String
@@ -43,6 +44,7 @@ public struct AudioControlRootView<Content>: View where Content: View {
     public var body: some View {
         content
             .onAppear(perform: handleOnAppear)
+            .onDisappear(perform: handleOnDisappear)
             .onReceive(NotificationCenter.default.publisher(for: .audioControlDBDeleted), perform: handleDBDeleted)
             .onReceive(NotificationCenter.default.publisher(for: .audioControlStorageLocationDidReset)) { _ in
                 handleStorageLocationDidReset()
@@ -63,7 +65,9 @@ private extension AudioControlRootView {
             return
         }
 
-        man.subscribe(
+        guard playbackSubscriptionID == nil else { return }
+
+        playbackSubscriptionID = man.subscribe(
             name: AudioControlRuntime.author,
             onPreviousRequested: { asset in
                 handlePreviousRequested(asset)
@@ -72,6 +76,13 @@ private extension AudioControlRootView {
                 handleNextRequested(asset)
             }
         )
+    }
+
+    func handleOnDisappear() {
+        guard let playbackSubscriptionID else { return }
+
+        man.unsubscribe(playbackSubscriptionID)
+        self.playbackSubscriptionID = nil
     }
 
     func handlePreviousRequested(_ asset: URL, ignoreSceneCheck: Bool = false) {

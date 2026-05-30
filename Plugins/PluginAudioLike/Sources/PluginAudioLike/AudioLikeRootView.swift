@@ -12,6 +12,7 @@ public struct AudioLikeRootView<Content>: View, SuperLog where Content: View {
     private let verbose = false
 
     @EnvironmentObject private var man: MagicPlayMan
+    @State private var playbackSubscriptionID: UUID?
 
     private let content: Content
     private let targetSceneName: String
@@ -30,6 +31,7 @@ public struct AudioLikeRootView<Content>: View, SuperLog where Content: View {
     public var body: some View {
         content
             .onAppear(perform: handleOnAppear)
+            .onDisappear(perform: handleOnDisappear)
     }
 
     private var shouldActivateLike: Bool {
@@ -50,12 +52,21 @@ private extension AudioLikeRootView {
             os_log("\(self.t)👀 视图已出现，开始初始化喜欢管理")
         }
 
-        man.subscribe(
+        guard playbackSubscriptionID == nil else { return }
+
+        playbackSubscriptionID = man.subscribe(
             name: "AudioLikePlugin",
             onLikeStatusChanged: { url, liked in
                 handleLikeStatusChanged(url: url, liked: liked)
             }
         )
+    }
+
+    func handleOnDisappear() {
+        guard let playbackSubscriptionID else { return }
+
+        man.unsubscribe(playbackSubscriptionID)
+        self.playbackSubscriptionID = nil
     }
 
     func handleLikeStatusChanged(url: URL, liked: Bool) {
