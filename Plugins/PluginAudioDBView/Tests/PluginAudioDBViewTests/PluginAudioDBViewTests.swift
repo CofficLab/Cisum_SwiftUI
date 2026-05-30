@@ -54,3 +54,22 @@ import Foundation
     #expect(AudioList.urlsToDelete(from: IndexSet(integer: 1), in: urls) == [urls[1]])
     #expect(AudioList.urlsToDelete(from: IndexSet(integer: 2), in: urls) == nil)
 }
+
+@Test func audioDeleteOnlyResetsPlaybackForStillCurrentDeletedAudio() {
+    let root = URL(fileURLWithPath: "/tmp/cisum-audio-delete-tests", isDirectory: true)
+    let deleted = root.appendingPathComponent("deleted.mp3")
+    let switched = root.appendingPathComponent("switched.mp3")
+
+    #expect(AudioDeletePlaybackPolicy.shouldResetAfterDelete(
+        currentURL: deleted,
+        deletedURLs: [deleted]
+    ))
+    #expect(!AudioDeletePlaybackPolicy.shouldResetAfterDelete(
+        currentURL: switched,
+        deletedURLs: [deleted]
+    ))
+    #expect(!AudioDeletePlaybackPolicy.shouldResetAfterDelete(
+        currentURL: nil,
+        deletedURLs: [deleted]
+    ))
+}

@@ -504,12 +504,14 @@ extension AudioList {
                 return
             }
 
-            if let currentURL = playManController.currentURL, urlsToDelete.contains(currentURL) {
-                await playManController.reset(reason: "删除文件")
-            }
-
             do {
                 try await repo.deleteAudios(urlsToDelete)
+                if AudioDeletePlaybackPolicy.shouldResetAfterDelete(
+                    currentURL: playManController.currentURL,
+                    deletedURLs: urlsToDelete
+                ) {
+                    await playManController.reset(reason: "删除文件")
+                }
                 for url in urlsToDelete {
                     alert_info(String(localized: "Deleted \(url.title)", table: "Audio-DBView", bundle: .module))
                 }

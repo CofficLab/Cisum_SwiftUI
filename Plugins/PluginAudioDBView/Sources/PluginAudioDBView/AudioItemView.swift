@@ -207,15 +207,17 @@ extension AudioItemView {
                     return
                 }
 
-                // 如果正在播放这个文件，先停止播放
-                if playMan.currentURL == url {
+                try await repo.deleteAudios([url])
+
+                if AudioDeletePlaybackPolicy.shouldResetAfterDelete(
+                    currentURL: playMan.currentURL,
+                    deletedURLs: [url]
+                ) {
                     await playMan.reset(reason: "删除文件")
                     if Self.verbose {
                         os_log("\(Self.t)⏹️ 停止播放当前文件")
                     }
                 }
-
-                try await repo.deleteAudios([url])
 
                 if Self.verbose {
                     os_log("\(Self.t)🗑️ 文件已删除: \(url.path)")
