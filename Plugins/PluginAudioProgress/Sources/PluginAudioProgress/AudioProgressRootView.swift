@@ -11,6 +11,12 @@ import SwiftUI
 import UniformTypeIdentifiers
 import WidgetKit
 
+enum AudioProgressPersistencePolicy {
+    static func shouldPersistWhenSceneChanges(from oldSceneName: String?, to newSceneName: String?, audioSceneName: String) -> Bool {
+        oldSceneName == audioSceneName && newSceneName != audioSceneName
+    }
+}
+
 public struct AudioProgressRootView<Content>: View, SuperLog where Content: View {
     public nonisolated static var emoji: String { "💾" }
     private static var verbose: Bool { false }
@@ -43,8 +49,9 @@ public struct AudioProgressRootView<Content>: View, SuperLog where Content: View
     public var body: some View {
         content
             .onAppear(perform: handleOnAppear)
-            .onChange(of: currentSceneName()) { _, newSceneName in
-                handleCurrentSceneChanged(newSceneName)
+            .onDisappear(perform: handleOnDisappear)
+            .onChange(of: currentSceneName()) { oldSceneName, newSceneName in
+                handleCurrentSceneChanged(from: oldSceneName, to: newSceneName)
             }
             .onPlayManStateChanged(handlePlayManStateChanged)
             .onPlayManAssetChanged(handlePlayManAssetChanged)
@@ -180,9 +187,24 @@ extension AudioProgressRootView {
         restorePlayingIfNeeded(for: currentSceneName())
     }
 
+    /// 处理视图消失事件，避免播放中离开页面时丢失最后进度。
+    func handleOnDisappear() {
+        guard shouldActivateProgress else { return }
+
+        persistCurrentTime(reason: "handleOnDisappear")
+    }
+
     /// 处理当前场景变化，确保从其它场景切到音频场景时也能恢复进度。
-    func handleCurrentSceneChanged(_ sceneName: String?) {
-        restorePlayingIfNeeded(for: sceneName)
+    func handleCurrentSceneChanged(from oldSceneName: String?, to newSceneName: String?) {
+        if AudioProgressPersistencePolicy.shouldPersistWhenSceneChanges(
+            from: oldSceneName,
+            to: newSceneName,
+            audioSceneName: audioSceneName
+        ) {
+            persistCurrentTime(reason: "handleCurrentSceneChanged")
+        }
+
+        restorePlayingIfNeeded(for: newSceneName)
     }
 
     private func restorePlayingIfNeeded(for sceneName: String?) {
@@ -203,12 +225,8 @@ extension AudioProgressRootView {
         // Sync to Widget
         syncToWidget(url: man.currentAsset, isPlaying: isPlaying)
 
-        if self.man.state == .paused {
-            AudioStateRepo.storeCurrentTime(man.currentTime)
-
-            if Self.verbose {
-                os_log("\(self.t)💾 保存播放进度: \(man.currentTime)s")
-            }
+        if man.state == .paused {
+            persistCurrentTime(reason: "handlePlayManStateChanged")
         }
     }
 
@@ -260,6 +278,14 @@ extension AudioProgressRootView {
         }
     }
 
+    private func persistCurrentTime(reason: String) {
+        AudioStateRepo.storeCurrentTime(man.currentTime)
+
+        if Self.verbose {
+            os_log("\(self.t)💾 (\(reason)) 保存播放进度: \(man.currentTime)s")
+        }
+    }
+
     /// 处理存储位置重置事件
     ///
     /// 当存储位置被重置时，停止当前播放。
@@ -270,7 +296,6 @@ extension AudioProgressRootView {
             os_log("\(self.t)🛑 存储位置重置，记录播放进度")
         }
 
-        // 直接在主线程上调用，避免后台线程发布 @Published 属性
-        AudioStateRepo.storeCurrentTime(man.currentTime)
+        persistCurrentTime(reason: "handleStorageLocationDidReset")
     }
 }
