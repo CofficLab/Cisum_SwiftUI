@@ -5,7 +5,7 @@ public struct BookLikeSettingsView: View, SuperLog {
     public nonisolated static var emoji: String { "❤️" }
     private static var verbose: Bool { false }
 
-    @State private var likedBooks: [String] = []
+    @State private var likedBooks: [BookLikeItem] = []
     @State private var isLoading = true
 
     public init() {}
@@ -28,11 +28,14 @@ public struct BookLikeSettingsView: View, SuperLog {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
-                List(likedBooks, id: \.self) { bookName in
+                List(likedBooks) { book in
                     HStack {
                         VStack(alignment: .leading) {
-                            Text(bookName)
+                            Text(book.title)
                                 .font(.body)
+                            Text(book.url.lastPathComponent)
+                                .font(.caption)
+                                .foregroundColor(.secondary)
                         }
                         Spacer()
                         Image(systemName: "heart.fill")
@@ -48,18 +51,13 @@ public struct BookLikeSettingsView: View, SuperLog {
         .onAppear {
             loadLikedBooks()
         }
+        .onReceive(NotificationCenter.default.publisher(for: .BookLikeStatusChanged)) { _ in
+            loadLikedBooks()
+        }
     }
 
     private func loadLikedBooks() {
-        // 这里可以实现加载喜欢的书籍列表
-        // 暂时使用示例数据
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            self.likedBooks = [
-                "示例书籍 1",
-                "示例书籍 2",
-                "示例书籍 3"
-            ]
-            self.isLoading = false
-        }
+        likedBooks = BookLikeStore.likedBooks()
+        isLoading = false
     }
 }

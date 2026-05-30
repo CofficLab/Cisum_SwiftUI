@@ -113,9 +113,7 @@ private extension BookLikeRootView {
         }
 
         Task {
-            // 这里可以实现书籍喜欢状态的管理
-            // 由于书籍喜欢功能相对简单，可以直接使用 UserDefaults 或简单的状态管理
-            // 暂时记录日志，实际实现可以扩展为独立的书籍喜欢数据模型
+            BookLikeStore.setLiked(liked, url: url)
 
             if liked {
                 if verbose {
