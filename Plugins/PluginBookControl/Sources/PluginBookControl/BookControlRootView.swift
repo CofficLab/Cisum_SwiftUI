@@ -79,27 +79,56 @@ private extension BookControlRootView {
         self.playbackSubscriptionID = nil
     }
 
-    func playableSiblings(of asset: URL) -> [URL] {
-        asset.deletingLastPathComponent()
-            .getChildren()
+    func bookRoot(containing asset: URL) -> URL {
+        guard let bookDisk = BookPlugin.getBookDisk() else {
+            return asset.deletingLastPathComponent()
+        }
+
+        let diskPath = bookDisk.standardizedFileURL.path
+        var candidate = asset.deletingLastPathComponent().standardizedFileURL
+
+        while candidate.deletingLastPathComponent().standardizedFileURL.path != diskPath,
+              candidate.path.hasPrefix(diskPath) {
+            candidate = candidate.deletingLastPathComponent().standardizedFileURL
+        }
+
+        return candidate
+    }
+
+    func relativePath(_ url: URL, in root: URL) -> String {
+        let rootPath = root.standardizedFileURL.path
+        let path = url.standardizedFileURL.path
+
+        guard path.hasPrefix(rootPath) else {
+            return url.lastPathComponent
+        }
+
+        return String(path.dropFirst(rootPath.count)).trimmingCharacters(in: CharacterSet(charactersIn: "/"))
+    }
+
+    func playableChapters(of asset: URL) -> [URL] {
+        let root = bookRoot(containing: asset)
+
+        return root
+            .flatten()
             .filter { url in
                 !url.isFolder
                     && FileManager.default.fileExists(atPath: url.path)
                     && BookPluginInfo.supportedExtensions.contains(url.pathExtension.lowercased())
             }
             .sorted {
-                $0.lastPathComponent.localizedStandardCompare($1.lastPathComponent) == .orderedAscending
+                relativePath($0, in: root).localizedStandardCompare(relativePath($1, in: root)) == .orderedAscending
             }
     }
 
     func adjacentAsset(to asset: URL, offset: Int) -> URL? {
-        let siblings = playableSiblings(of: asset)
-        guard let index = siblings.firstIndex(of: asset) else { return nil }
+        let chapters = playableChapters(of: asset)
+        guard let index = chapters.firstIndex(of: asset) else { return nil }
 
         let adjacentIndex = index + offset
-        guard siblings.indices.contains(adjacentIndex) else { return nil }
+        guard chapters.indices.contains(adjacentIndex) else { return nil }
 
-        return siblings[adjacentIndex]
+        return chapters[adjacentIndex]
     }
 
     /// 处理上一章请求
