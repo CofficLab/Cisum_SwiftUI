@@ -29,7 +29,7 @@ public struct ResetConfirm: View {
                     VStack(spacing: 16) {
                         AppSheetIconHeader(
                             systemImage: .cisumIconReset,
-                            title: String(localized: "Reset Settings", table: "Reset", bundle: .module),
+                            title: String(localized: "Reset Storage Location", table: "Reset", bundle: .module),
                             tint: .orange
                         )
 
@@ -37,21 +37,21 @@ public struct ResetConfirm: View {
                             AppStatusBanner(
                                 kind: .loading,
                                 title: String(localized: "Resetting…", table: "Reset", bundle: .module),
-                                message: String(localized: "Restoring default settings, please wait", table: "Reset", bundle: .module)
+                                message: String(localized: "Restoring storage selection, please wait", table: "Reset", bundle: .module)
                             )
                         } else {
                             VStack(alignment: .leading, spacing: 12) {
                                 AppInfoRow(
                                     icon: "externaldrive.fill",
-                                    title: String(localized: "Data Storage Reset", table: "Reset", bundle: .module),
-                                    description: String(localized: "Data storage will be restored to default location", table: "Reset", bundle: .module),
+                                    title: String(localized: "Storage Location Reset", table: "Reset", bundle: .module),
+                                    description: String(localized: "The media storage selection will be cleared", table: "Reset", bundle: .module),
                                     tint: .orange
                                 )
 
                                 AppInfoRow(
                                     icon: "slider.horizontal.3",
-                                    title: String(localized: "Preferences Reset", table: "Reset", bundle: .module),
-                                    description: String(localized: "All user preferences will be reset", table: "Reset", bundle: .module),
+                                    title: String(localized: "Preferences Kept", table: "Reset", bundle: .module),
+                                    description: String(localized: "Playback, theme, and library records are not deleted", table: "Reset", bundle: .module),
                                     tint: .orange
                                 )
 

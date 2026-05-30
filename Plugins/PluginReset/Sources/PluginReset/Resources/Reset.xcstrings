@@ -132,6 +132,22 @@
         }
       }
     },
+    "Playback, theme, and library records are not deleted" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "播放、主题和媒体库记录不会被删除"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "播放、主題和媒體庫記錄不會被刪除"
+          }
+        }
+      }
+    },
     "Preferences Reset" : {
       "localizations" : {
         "zh-Hans" : {
@@ -144,6 +160,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "偏好設置重置"
+          }
+        }
+      }
+    },
+    "Preferences Kept" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保留偏好设置"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保留偏好設置"
           }
         }
       }
@@ -164,6 +196,22 @@
         }
       }
     },
+    "Reset Storage Location" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重置存储位置"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重置存儲位置"
+          }
+        }
+      }
+    },
     "Reset settings to system default state" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -177,6 +225,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "將設置重置為系統默認狀態"
+          }
+        }
+      }
+    },
+    "Restoring storage selection, please wait" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在恢复存储位置选择，请稍候"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在恢復存儲位置選擇，請稍候"
           }
         }
       }
@@ -213,6 +277,22 @@
         }
       }
     },
+    "Storage Location Reset" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "存储位置重置"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "存儲位置重置"
+          }
+        }
+      }
+    },
     "System" : {
       "localizations" : {
         "zh-Hans" : {
@@ -241,6 +321,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "系統設置"
+          }
+        }
+      }
+    },
+    "The media storage selection will be cleared" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "媒体存储位置选择将被清除"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "媒體存儲位置選擇將被清除"
           }
         }
       }
