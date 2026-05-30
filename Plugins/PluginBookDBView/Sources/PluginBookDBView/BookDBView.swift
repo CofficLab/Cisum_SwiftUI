@@ -197,6 +197,10 @@ extension BookDBView {
             source.stopAccessingSecurityScopedResource()
         }
 
+        if source.checkIsICloud(verbose: false), source.isNotDownloaded {
+            try FileManager.default.startDownloadingUbiquitousItem(at: source)
+        }
+
         try FileManager.default.copyItem(at: source, to: destination)
     }
 
