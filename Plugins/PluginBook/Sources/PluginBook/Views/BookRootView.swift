@@ -48,13 +48,13 @@ public struct BookRootView<Content>: View, SuperLog where Content: View {
                 }
                 .modelContainer(container)
                 .environmentObject(repo)
-                .modifier(BookStorageChangeModifier(notificationNames: storageLocationDidChangeNotifications) {
-                    self.initAll()
-                })
             } else {
                 Text("初始化失败", tableName: "Book", bundle: .module)
             }
         }
+        .modifier(BookStorageChangeModifier(notificationNames: storageLocationDidChangeNotifications) {
+            self.initAll()
+        })
         .onAppear {
             self.initAll()
         }
