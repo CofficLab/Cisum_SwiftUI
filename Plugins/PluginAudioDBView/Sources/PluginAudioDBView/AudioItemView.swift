@@ -161,13 +161,13 @@ extension AudioItemView {
                 try await url.copyTo(finalDestinationURL, caller: self.className)
                 if Self.verbose {
                     os_log("\(Self.t)✅ 文件已导出到: \(finalDestinationURL.path)")
-                    alert_info(String(localized: "File copied to Downloads", table: "Audio-DBView", bundle: .module))
                 }
+                alert_info(String(localized: "File copied to Downloads", table: "Audio-DBView", bundle: .module))
             } catch {
                 if Self.verbose {
                     os_log("\(Self.t)❌ 导出文件失败: \(error.localizedDescription)")
-                    alert_error(String(localized: "Export failed: \(error.localizedDescription)", table: "Audio-DBView", bundle: .module))
                 }
+                alert_error(String(localized: "Export failed: \(error.localizedDescription)", table: "Audio-DBView", bundle: .module))
             }
         }
     }
