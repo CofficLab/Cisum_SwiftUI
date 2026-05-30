@@ -49,9 +49,9 @@ public extension NotificationCenter {
         }
     }
 
-    static func postBookDBDeleted() {
+    static func postBookDBDeleted(urls: [URL] = []) {
         DispatchQueue.main.async {
-            NotificationCenter.default.post(name: .bookDBDeleted, object: nil)
+            NotificationCenter.default.post(name: .bookDBDeleted, object: nil, userInfo: ["urls": urls])
         }
     }
 

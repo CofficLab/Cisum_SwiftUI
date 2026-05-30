@@ -32,6 +32,7 @@ public struct BookControlRootView<Content>: View, SuperLog where Content: View {
         content
             .onAppear(perform: handleOnAppear)
             .onDisappear(perform: handleOnDisappear)
+            .onReceive(NotificationCenter.default.publisher(for: .bookDBDeleted), perform: handleBookDBDeleted)
     }
 
     /// 检查是否应该激活书籍播放控制功能
@@ -129,6 +130,26 @@ private extension BookControlRootView {
         guard chapters.indices.contains(adjacentIndex) else { return nil }
 
         return chapters[adjacentIndex]
+    }
+
+    func contains(_ parent: URL, asset: URL) -> Bool {
+        let parentPath = parent.standardizedFileURL.path
+        let assetPath = asset.standardizedFileURL.path
+        return assetPath == parentPath || assetPath.hasPrefix(parentPath + "/")
+    }
+
+    func handleBookDBDeleted(_ notification: Notification) {
+        guard shouldActivateControl else { return }
+
+        guard let deletedURLs = notification.userInfo?["urls"] as? [URL],
+              let currentAsset = man.asset,
+              deletedURLs.contains(where: { contains($0, asset: currentAsset) }) else {
+            return
+        }
+
+        Task {
+            await man.stop(reason: "BookControlRootView.deletedCurrentAsset")
+        }
     }
 
     /// 处理上一章请求

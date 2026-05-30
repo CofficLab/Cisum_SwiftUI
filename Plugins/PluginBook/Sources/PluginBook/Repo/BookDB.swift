@@ -215,7 +215,7 @@ extension BookDB {
             deleteModels(for: deletedURL)
         }
 
-        saveAndNotifyDeleted()
+        saveAndNotifyDeleted(urls: urls)
     }
 
     public func sync(_ items: [URL], isFirst: Bool) {
@@ -337,10 +337,10 @@ extension BookDB {
         }
     }
 
-    private func saveAndNotifyDeleted() {
+    private func saveAndNotifyDeleted(urls: [URL]) {
         do {
             try context.save()
-            NotificationCenter.postBookDBDeleted()
+            NotificationCenter.postBookDBDeleted(urls: urls)
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
         }
