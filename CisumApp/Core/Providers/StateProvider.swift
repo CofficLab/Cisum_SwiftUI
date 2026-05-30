@@ -27,6 +27,7 @@ class StateProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
             assertionFailure("append called from background thread")
         }
 
+        stateMessage = message
         logger.info(message)
     }
 
@@ -35,6 +36,7 @@ class StateProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
             assertionFailure("clearMessages called from background thread")
         }
 
+        stateMessage = ""
         self.logger.clearLogs()
     }
 }
