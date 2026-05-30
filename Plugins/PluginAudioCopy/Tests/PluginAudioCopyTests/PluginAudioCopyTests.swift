@@ -51,4 +51,27 @@ import Testing
         "chapter 2",
     ])
 }
+
+@Test func copyLimitCountsCurrentLibraryAndIncomingDrop() {
+    #expect(AudioCopyLimitPolicy.allowedTaskCount(
+        currentAudioCount: 99,
+        requestedTaskCount: 10,
+        maxAudioCount: 100,
+        isFreeVersion: true
+    ) == 1)
+
+    #expect(AudioCopyLimitPolicy.allowedTaskCount(
+        currentAudioCount: 100,
+        requestedTaskCount: 10,
+        maxAudioCount: 100,
+        isFreeVersion: true
+    ) == 0)
+
+    #expect(AudioCopyLimitPolicy.allowedTaskCount(
+        currentAudioCount: 100,
+        requestedTaskCount: 10,
+        maxAudioCount: 100,
+        isFreeVersion: false
+    ) == 10)
+}
 #endif

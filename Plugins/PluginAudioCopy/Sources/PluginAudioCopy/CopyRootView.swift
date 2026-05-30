@@ -8,6 +8,20 @@
     import SwiftUI
     import UniformTypeIdentifiers
 
+    enum AudioCopyLimitPolicy {
+        static func allowedTaskCount(
+            currentAudioCount: Int,
+            requestedTaskCount: Int,
+            maxAudioCount: Int,
+            isFreeVersion: Bool
+        ) -> Int {
+            guard isFreeVersion else { return requestedTaskCount }
+
+            let remainingCount = max(0, maxAudioCount - currentAudioCount)
+            return min(requestedTaskCount, remainingCount)
+        }
+    }
+
     struct CopyRootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content: View {
         nonisolated static var emoji: String { "🚛" }
         nonisolated static var verbose: Bool { false }
@@ -139,6 +153,21 @@
 
             if Self.verbose {
                 os_log("\(self.t)🎁 获取到 \(tasks.count) 个文件")
+            }
+
+            let allowedTaskCount = await AudioCopyService.allowedTaskCount(requestedTaskCount: tasks.count)
+            if allowedTaskCount < tasks.count {
+                if allowedTaskCount == 0 {
+                    await MainActor.run {
+                        alert_error(String(localized: "Copy limit reached", table: "Audio-Copy-macOS", bundle: .module))
+                    }
+                    return false
+                }
+
+                tasks = Array(tasks.prefix(allowedTaskCount))
+                await MainActor.run {
+                    alert_warning(String(localized: "Only \(allowedTaskCount) files were added because the free copy limit is almost full", table: "Audio-Copy-macOS", bundle: .module))
+                }
             }
 
             if tasks.isNotEmpty {

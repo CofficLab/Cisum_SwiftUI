@@ -86,6 +86,20 @@ public enum AudioCopyService {
         return count >= AudioPluginInfo.maxAudioCount && StoreService.tierCached().isFreeVersion
     }
 
+    static func allowedTaskCount(requestedTaskCount: Int) async -> Int {
+        guard let audioCountProvider else {
+            return requestedTaskCount
+        }
+
+        let count = await audioCountProvider()
+        return AudioCopyLimitPolicy.allowedTaskCount(
+            currentAudioCount: count,
+            requestedTaskCount: requestedTaskCount,
+            maxAudioCount: AudioPluginInfo.maxAudioCount,
+            isFreeVersion: StoreService.tierCached().isFreeVersion
+        )
+    }
+
     static func getAudioDisk() -> URL? {
         audioDiskProvider?()
     }
