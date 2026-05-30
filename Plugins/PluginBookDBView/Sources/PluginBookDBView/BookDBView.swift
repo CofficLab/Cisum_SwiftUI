@@ -149,10 +149,18 @@ extension BookDBView {
 
     private nonisolated static func copySecurityScopedItem(_ source: URL, to destination: URL) throws {
         let hasAccess = source.startAccessingSecurityScopedResource()
+        guard hasAccess else {
+            throw NSError(
+                domain: "BookDBView",
+                code: 1,
+                userInfo: [
+                    NSLocalizedDescriptionKey: String(localized: "Permission to access the original file was denied", table: "Book-DBView", bundle: .module)
+                ]
+            )
+        }
+
         defer {
-            if hasAccess {
-                source.stopAccessingSecurityScopedResource()
-            }
+            source.stopAccessingSecurityScopedResource()
         }
 
         try FileManager.default.copyItem(at: source, to: destination)
