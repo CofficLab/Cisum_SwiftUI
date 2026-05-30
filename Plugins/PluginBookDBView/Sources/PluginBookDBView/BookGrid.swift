@@ -1,4 +1,5 @@
 import MagicKit
+import MagicAlert
 import MagicPlayMan
 import OSLog
 import PluginAudio
@@ -217,7 +218,7 @@ extension BookGrid {
         await man.play(url, autoPlay: false, reason: reason)
 
         if let time {
-            await man.seek(time: time, reason: reason)
+            man.seek(time: time, reason: reason)
         }
     }
     
@@ -279,6 +280,7 @@ extension BookGrid {
                 if Self.verbose {
                     os_log("\(self.t)⚠️ 没有可播放章节: \(book.bookTitle)")
                 }
+                alert_error(String(localized: "No playable chapters found", table: "Book-DBView", bundle: .module))
                 return
             }
 
