@@ -32,16 +32,6 @@ public actor FileLogPlugin: SuperPlugin {
 
 private struct AppFileLogConfiguration: FileLogConfiguration {
     func logsDirectory() -> URL {
-        let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
-        let bundleID = Bundle.main.bundleIdentifier ?? "com.yueyi.cisum"
-        #if DEBUG
-            let env = "db_debug"
-        #else
-            let env = "db_production"
-        #endif
-        return appSupport
-            .appendingPathComponent(bundleID, isDirectory: true)
-            .appendingPathComponent(env, isDirectory: true)
-            .appendingPathComponent("FileLog", isDirectory: true)
+        FileLogDirectory.defaultLogsDirectory()
     }
 }

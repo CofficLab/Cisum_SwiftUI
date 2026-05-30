@@ -9,13 +9,19 @@ public protocol FileLogConfiguration: Sendable {
 /// 默认日志配置：使用 Cisum 的数据库目录下插件专属子目录
 struct DefaultFileLogConfiguration: FileLogConfiguration {
     func logsDirectory() -> URL {
-        // 绕过 @MainActor 隔离的 Config，直接使用 FileManager
-        let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+        FileLogDirectory.defaultLogsDirectory()
+    }
+}
+
+enum FileLogDirectory {
+    static func defaultLogsDirectory() -> URL {
+        let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
+            ?? FileManager.default.temporaryDirectory
         let bundleID = Bundle.main.bundleIdentifier ?? "com.yueyi.cisum"
         #if DEBUG
-        let env = "db_debug"
+            let env = "db_debug"
         #else
-        let env = "db_production"
+            let env = "db_production"
         #endif
         return appSupport
             .appendingPathComponent(bundleID, isDirectory: true)
