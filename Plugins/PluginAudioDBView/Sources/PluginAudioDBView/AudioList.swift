@@ -7,6 +7,12 @@ import SwiftUI
 import PluginAudio
 import MagicPlayMan
 
+enum AudioListLoadPolicy {
+    static func shouldApplyResult(currentGeneration: Int, resultGeneration: Int) -> Bool {
+        currentGeneration == resultGeneration
+    }
+}
+
 /*
  展示策略（扁平化列表 + 分页加载）：
  - 仅展示仓库中的音频文件；文件夹不会作为分组出现
@@ -175,7 +181,10 @@ extension AudioList {
             }
 
             await MainActor.run {
-                guard self.loadGeneration == generation else { return }
+                guard AudioListLoadPolicy.shouldApplyResult(
+                    currentGeneration: self.loadGeneration,
+                    resultGeneration: generation
+                ) else { return }
                 self.urls = urls
                 self.totalCount = count
                 self.currentPage = 1
@@ -253,7 +262,10 @@ extension AudioList {
             }
 
             await MainActor.run {
-                guard self.loadGeneration == generation else { return }
+                guard AudioListLoadPolicy.shouldApplyResult(
+                    currentGeneration: self.loadGeneration,
+                    resultGeneration: generation
+                ) else { return }
                 if !uniqueNewUrls.isEmpty {
                     self.urls.append(contentsOf: uniqueNewUrls)
                     self.currentPage += 1
@@ -323,13 +335,15 @@ extension AudioList {
             return
         }
 
+        loadGeneration += 1
+        let generation = loadGeneration
+
         Task.detached(priority: .background) {
             if Self.verbose {
                 os_log("\(self.t)🔄 重新加载当前页数据 - \(reason)")
             }
 
             // 获取当前状态
-            let generation = await self.loadGeneration
             let currentCount = await self.urls.count
             let currentTotalCount = await self.totalCount
 
@@ -341,7 +355,10 @@ extension AudioList {
             }
 
             await MainActor.run {
-                guard self.loadGeneration == generation else { return }
+                guard AudioListLoadPolicy.shouldApplyResult(
+                    currentGeneration: self.loadGeneration,
+                    resultGeneration: generation
+                ) else { return }
                 // 如果总数增加（新增文件），需要完全重新加载
                 if newTotalCount > currentTotalCount {
                     if Self.verbose {
@@ -370,7 +387,10 @@ extension AudioList {
                         )
 
                         await MainActor.run {
-                            guard self.loadGeneration == generation else { return }
+                            guard AudioListLoadPolicy.shouldApplyResult(
+                                currentGeneration: self.loadGeneration,
+                                resultGeneration: generation
+                            ) else { return }
                             self.urls = refreshedUrls
                             self.totalCount = newTotalCount
 

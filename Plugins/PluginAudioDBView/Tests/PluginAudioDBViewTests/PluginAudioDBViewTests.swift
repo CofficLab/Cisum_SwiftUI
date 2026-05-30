@@ -61,6 +61,11 @@ import UniformTypeIdentifiers
     #expect(AudioList.nextLoadOffset(loadedCount: 100) == 100)
 }
 
+@Test func audioListOnlyAppliesCurrentLoadGeneration() {
+    #expect(AudioListLoadPolicy.shouldApplyResult(currentGeneration: 2, resultGeneration: 2))
+    #expect(!AudioListLoadPolicy.shouldApplyResult(currentGeneration: 3, resultGeneration: 2))
+}
+
 @Test func audioDeleteOnlyResetsPlaybackForStillCurrentDeletedAudio() {
     let root = URL(fileURLWithPath: "/tmp/cisum-audio-delete-tests", isDirectory: true)
     let deleted = root.appendingPathComponent("deleted.mp3")
