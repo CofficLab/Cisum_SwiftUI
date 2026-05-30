@@ -5,6 +5,7 @@ import Foundation
 @Test func storagePluginInfoIsExposed() {
     #expect(StoragePluginInfo.titleKey == "Storage Settings")
     #expect(PluginStorageLocation.local.rawValue == "local")
+    #expect(StoragePlugin.shouldRegister)
 }
 
 @Test func migrationMovesContentsButKeepsSourceRoot() throws {
