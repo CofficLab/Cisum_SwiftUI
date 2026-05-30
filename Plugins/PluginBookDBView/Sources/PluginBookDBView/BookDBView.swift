@@ -116,7 +116,7 @@ extension BookDBView {
 // MARK: - Import Helpers
 
 extension BookDBView {
-    private nonisolated static func copyImportedItems(_ files: [URL], to bookDisk: URL) throws -> [URL] {
+    nonisolated static func copyImportedItems(_ files: [URL], to bookDisk: URL) throws -> [URL] {
         try FileManager.default.createDirectory(at: bookDisk, withIntermediateDirectories: true)
 
         let folders = files.filter(\.isFolder)
@@ -125,25 +125,32 @@ extension BookDBView {
         }
         var copiedItems: [URL] = []
 
-        for folder in folders {
-            guard try canImportFolder(folder) else { continue }
+        do {
+            for folder in folders {
+                guard try canImportFolder(folder) else { continue }
 
-            let destination = uniqueDestination(for: folder, in: bookDisk)
-            try copySecurityScopedItem(folder, to: destination)
-            copiedItems.append(destination)
-        }
+                let destination = uniqueDestination(for: folder, in: bookDisk)
+                try copySecurityScopedItem(folder, to: destination)
+                copiedItems.append(destination)
+            }
 
-        guard !audioFiles.isEmpty else { return copiedItems }
+            guard !audioFiles.isEmpty else { return copiedItems }
 
-        let collectionName = audioFiles.count == 1 ? audioFiles[0].title : collectionTitle(for: audioFiles)
-        let collectionURL = uniqueDestination(named: collectionName, in: bookDisk, isDirectory: true)
-        try FileManager.default.createDirectory(at: collectionURL, withIntermediateDirectories: true)
-        copiedItems.append(collectionURL)
+            let collectionName = audioFiles.count == 1 ? audioFiles[0].title : collectionTitle(for: audioFiles)
+            let collectionURL = uniqueDestination(named: collectionName, in: bookDisk, isDirectory: true)
+            try FileManager.default.createDirectory(at: collectionURL, withIntermediateDirectories: true)
+            copiedItems.append(collectionURL)
 
-        for file in audioFiles {
-            let destination = uniqueDestination(for: file, in: collectionURL)
-            try copySecurityScopedItem(file, to: destination)
-            copiedItems.append(destination)
+            for file in audioFiles {
+                let destination = uniqueDestination(for: file, in: collectionURL)
+                try copySecurityScopedItem(file, to: destination)
+                copiedItems.append(destination)
+            }
+        } catch {
+            for copiedItem in copiedItems {
+                try? FileManager.default.removeItem(at: copiedItem)
+            }
+            throw error
         }
 
         return copiedItems
