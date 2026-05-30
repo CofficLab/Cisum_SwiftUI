@@ -193,16 +193,21 @@ private extension BookProgressRootView {
         // 这是一个简化的实现，实际可能需要更复杂的逻辑
         let parentURL = url.deletingLastPathComponent()
 
-        // 检查父目录是否是书籍目录（通过检查是否有多个文件）
-        do {
-            let contents = try FileManager.default.contentsOfDirectory(at: parentURL, includingPropertiesForKeys: nil)
-            if contents.count > 1 { // 如果有多个文件，认为是书籍目录
-                return parentURL
-            }
-        } catch {
-            if self.verbose {
+        // 书籍库把单个音频也导入为独立文件夹；父目录存在即可作为书籍目录。
+        var isDirectory: ObjCBool = false
+        if FileManager.default.fileExists(atPath: parentURL.path, isDirectory: &isDirectory),
+           isDirectory.boolValue {
+            return parentURL
+        } else if self.verbose {
+            do {
+                _ = try FileManager.default.contentsOfDirectory(at: parentURL, includingPropertiesForKeys: nil)
+            } catch {
                 os_log("\(self.t)⚠️ 无法读取目录内容: \(error.localizedDescription)")
             }
+        }
+
+        if self.verbose {
+            os_log("\(self.t)⚠️ 父路径不是书籍目录: \(parentURL.shortPath())")
         }
 
         return nil
