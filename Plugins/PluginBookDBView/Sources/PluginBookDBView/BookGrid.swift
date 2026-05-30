@@ -177,7 +177,7 @@ extension BookGrid {
         
         // 查找包含该URL的书籍
         for book in books {
-            if book.url == url || book.url.getChildren().contains(url) {
+            if book.url == url || playableChildren(for: book).contains(url) {
                 if Self.verbose {
                     os_log("\(self.t)✅ 找到书籍: \(book.bookTitle)")
                 }
@@ -193,7 +193,7 @@ extension BookGrid {
     }
 
     private func playableChildren(for book: BookDTO) -> [URL] {
-        book.url.getChildren()
+        book.url.flatten()
             .filter { url in
                 !url.isFolder
                     && FileManager.default.fileExists(atPath: url.path)
