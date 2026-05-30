@@ -158,6 +158,7 @@ extension AudioList {
 
         guard let repo = dependencies.audioRepo() else {
             isLoading = false
+            alert_error(String(localized: "Load failed: audio repository is unavailable", table: "Audio-DBView", bundle: .module))
             return
         }
 
@@ -220,6 +221,7 @@ extension AudioList {
 
         guard let repo = dependencies.audioRepo() else {
             isLoadingMore = false
+            alert_error(String(localized: "Load failed: audio repository is unavailable", table: "Audio-DBView", bundle: .module))
             return
         }
 
@@ -314,6 +316,7 @@ extension AudioList {
     /// 加载当前页数据（用于刷新当前已加载的内容）
     private func loadCurrentPageData(reason: String) {
         guard let repo = dependencies.audioRepo() else {
+            alert_error(String(localized: "Refresh failed: audio repository is unavailable", table: "Audio-DBView", bundle: .module))
             return
         }
 
