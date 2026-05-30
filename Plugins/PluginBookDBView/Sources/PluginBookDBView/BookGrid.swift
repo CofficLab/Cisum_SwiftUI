@@ -394,6 +394,8 @@ extension BookGrid {
         
         if let url = url {
             updateSelectedBook(for: url)
+        } else {
+            selectedBookURL = nil
         }
     }
     
