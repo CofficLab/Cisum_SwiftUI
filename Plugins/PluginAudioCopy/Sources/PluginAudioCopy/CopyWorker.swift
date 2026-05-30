@@ -66,8 +66,11 @@
             // 使用 Actor 隔离的计数器追踪完成数量
             let completedCount = ActorCompletedCounter()
 
+            let plannedDestinations = Self.makeUniqueDestinationURLs(for: tasks)
+            let plannedTasks = Array(zip(tasks, plannedDestinations))
+
             await withTaskGroup(of: Bool.self) { group in
-                for task in tasks {
+                for (task, destination) in plannedTasks {
                     group.addTask {
                         var stale = false
                         var didComplete = false
@@ -98,30 +101,18 @@
                             // Ensure we stop accessing the resource when we're done
                             defer { url.stopAccessingSecurityScopedResource() }
 
-                            let destination = task.destination.appendingPathComponent(task.originalFilename)
-
-                            // 已经存在了，则忽略
-                            if destination.isFileExist {
-                                if self.verbose {
-                                    os_log("\(self.t)⏭️ [\(task.originalFilename)] Skipping, file already exists")
-                                }
-                                // Delete the task as it's already completed.
-                                try await self.db.deleteCopyTasks(bookmarks: [task.bookmark])
-                                didComplete = true
-                            } else {
-                                if self.verbose {
-                                    os_log("\(self.t)🍋 [\(task.originalFilename)] 开始复制，共 \(taskCount)")
-                                }
-
-                                try await url.copyTo(destination, verbose: self.verbose, caller: self.className)
-
-                                if self.verbose {
-                                    os_log("\(self.t)🎉 [\(task.originalFilename)] Copied")
-                                }
-
-                                try await self.db.deleteCopyTasks(bookmarks: [task.bookmark])
-                                didComplete = true
+                            if self.verbose {
+                                os_log("\(self.t)🍋 [\(task.originalFilename)] 开始复制，共 \(taskCount)")
                             }
+
+                            try await url.copyTo(destination, verbose: self.verbose, caller: self.className)
+
+                            if self.verbose {
+                                os_log("\(self.t)🎉 [\(task.originalFilename)] Copied to \(destination.lastPathComponent)")
+                            }
+
+                            try await self.db.deleteCopyTasks(bookmarks: [task.bookmark])
+                            didComplete = true
                         } catch let e {
                             os_log(.error, "\(self.t)\(e)")
                             await self.db.setTaskError(bookmark: task.bookmark, error: e.localizedDescription)
@@ -171,6 +162,49 @@
             } else {
                 NotificationCenter.postCopyTaskCountChanged(count: remainingCount)
             }
+        }
+
+        nonisolated static func makeUniqueDestinationURLs(
+            for tasks: [CopyTaskDTO],
+            fileExists: (URL) -> Bool = { FileManager.default.fileExists(atPath: $0.path) }
+        ) -> [URL] {
+            var reservedPaths = Set<String>()
+
+            return tasks.map { task in
+                uniqueDestinationURL(
+                    for: task.originalFilename,
+                    in: task.destination,
+                    reservedPaths: &reservedPaths,
+                    fileExists: fileExists
+                )
+            }
+        }
+
+        nonisolated private static func uniqueDestinationURL(
+            for filename: String,
+            in folder: URL,
+            reservedPaths: inout Set<String>,
+            fileExists: (URL) -> Bool
+        ) -> URL {
+            let baseURL = folder.appendingPathComponent(filename)
+            let pathExtension = baseURL.pathExtension
+            let baseName = baseURL.deletingPathExtension().lastPathComponent
+
+            var candidate = baseURL
+            var suffix = 2
+            while reservedPaths.contains(candidate.path) || fileExists(candidate) {
+                let nextName: String
+                if pathExtension.isEmpty {
+                    nextName = "\(baseName) \(suffix)"
+                } else {
+                    nextName = "\(baseName) \(suffix).\(pathExtension)"
+                }
+                candidate = folder.appendingPathComponent(nextName)
+                suffix += 1
+            }
+
+            reservedPaths.insert(candidate.path)
+            return candidate
         }
     }
 

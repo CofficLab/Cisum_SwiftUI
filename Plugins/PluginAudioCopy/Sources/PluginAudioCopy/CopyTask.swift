@@ -44,6 +44,13 @@ struct CopyTaskDTO: Sendable {
     let error: String
     let originalFilename: String
 
+    init(bookmark: Data, destination: URL, error: String = "", originalFilename: String) {
+        self.bookmark = bookmark
+        self.destination = destination
+        self.error = error
+        self.originalFilename = originalFilename
+    }
+
     init(from model: CopyTask) {
         self.bookmark = model.bookmark
         self.destination = model.destination
