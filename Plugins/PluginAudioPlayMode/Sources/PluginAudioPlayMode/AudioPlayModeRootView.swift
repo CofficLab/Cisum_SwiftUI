@@ -40,6 +40,9 @@ public struct AudioPlayModeRootView<Content>: View, SuperLog where Content: View
         content
             .onAppear(perform: handleOnAppear)
             .onDisappear(perform: handleOnDisappear)
+            .onChange(of: currentSceneName()) { _, newSceneName in
+                handleCurrentSceneChanged(newSceneName)
+            }
     }
 
     private var shouldActivatePlayMode: Bool {
@@ -49,6 +52,22 @@ public struct AudioPlayModeRootView<Content>: View, SuperLog where Content: View
 
 private extension AudioPlayModeRootView {
     func handleOnAppear() {
+        updatePlayModeActivation(for: currentSceneName())
+    }
+
+    func handleCurrentSceneChanged(_ sceneName: String?) {
+        updatePlayModeActivation(for: sceneName)
+    }
+
+    private func updatePlayModeActivation(for sceneName: String?) {
+        if sceneName == targetSceneName {
+            activatePlayMode()
+        } else {
+            deactivatePlayMode()
+        }
+    }
+
+    private func activatePlayMode() {
         guard shouldActivatePlayMode else {
             if verbose {
                 os_log("\(self.t)⏭️ 播放模式管理跳过：当前插件不是音频插件")
@@ -71,6 +90,10 @@ private extension AudioPlayModeRootView {
     }
 
     func handleOnDisappear() {
+        deactivatePlayMode()
+    }
+
+    private func deactivatePlayMode() {
         guard let playbackSubscriptionID else { return }
 
         man.unsubscribe(playbackSubscriptionID)
