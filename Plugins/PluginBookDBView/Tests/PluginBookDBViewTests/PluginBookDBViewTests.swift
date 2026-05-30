@@ -97,3 +97,12 @@ import UniformTypeIdentifiers
     ])
     #expect(BookPlaybackOrdering.relativePath(disc1Chapter2, in: root) == "Disc 1/02.m4b")
 }
+
+@Test func bookTileReloadsWhenDatabaseRootChanges() {
+    let bookURL = URL(fileURLWithPath: "/tmp/cisum-book-tile/book")
+    let firstRoot = URL(fileURLWithPath: "/tmp/cisum-book-tile/db-1")
+    let secondRoot = URL(fileURLWithPath: "/tmp/cisum-book-tile/db-2")
+
+    #expect(BookTileLoadIdentity(bookURL: bookURL, dbRoot: firstRoot) == BookTileLoadIdentity(bookURL: bookURL, dbRoot: firstRoot))
+    #expect(BookTileLoadIdentity(bookURL: bookURL, dbRoot: firstRoot) != BookTileLoadIdentity(bookURL: bookURL, dbRoot: secondRoot))
+}

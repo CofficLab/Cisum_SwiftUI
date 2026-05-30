@@ -5,6 +5,11 @@ import PluginBook
 import SwiftData
 import SwiftUI
 
+struct BookTileLoadIdentity: Equatable {
+    let bookURL: URL
+    let dbRoot: URL
+}
+
 /**
  * 用途：展示从数据库读取的图书数据，以磁贴形式呈现图书封面和基本信息
  * 属性说明：
@@ -90,7 +95,7 @@ struct BookTile: View, SuperThread, SuperLog, Equatable {
         }
         .frame(width: tileSize.width)
         .frame(height: tileSize.height)
-        .task(id: url) {
+        .task(id: BookTileLoadIdentity(bookURL: url, dbRoot: dependencies.dbRoot)) {
             await loadTileData()
         }
     }
