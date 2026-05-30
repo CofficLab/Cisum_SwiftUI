@@ -44,6 +44,7 @@ struct CopyStateView: View, SuperLog, SuperThread {
         }
         .onCopyTaskCountChanged(perform: handleCopyTaskCountChanged)
         .onCopyTaskFinished(perform: handleCopyTaskFinished)
+        .onAppear(perform: handleAppear)
     }
 }
 
@@ -65,6 +66,25 @@ extension CopyStateView {
 // MARK: - Event Handler
 
 extension CopyStateView {
+    func handleAppear() {
+        Task { @MainActor in
+            guard let db = AudioCopyService.getDB() else {
+                taskCount = 0
+                return
+            }
+
+            let tasks = await db.allCopyTaskDTOs()
+            taskCount = tasks.count
+
+            guard tasks.contains(where: { $0.error.isEmpty }),
+                  let worker = AudioCopyService.getWorker() else {
+                return
+            }
+
+            await worker.run()
+        }
+    }
+
     func handleCopyTaskCountChanged(_ count: Int) {
         taskCount = count
     }
