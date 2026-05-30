@@ -64,6 +64,9 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     /// 音频总数（显示用）
     @State private var totalCount: Int = 0
 
+    /// 当前加载世代，用于丢弃刷新前启动的过期分页任务。
+    @State private var loadGeneration: Int = 0
+
     var body: some View {
         ZStack {
             audioListView
@@ -149,6 +152,8 @@ extension AudioList {
     private func loadInitial() {
         guard !isLoading else { return }
 
+        loadGeneration += 1
+        let generation = loadGeneration
         isLoading = true
 
         guard let repo = dependencies.audioRepo() else {
@@ -169,6 +174,7 @@ extension AudioList {
             }
 
             await MainActor.run {
+                guard self.loadGeneration == generation else { return }
                 self.urls = urls
                 self.totalCount = count
                 self.currentPage = 1
@@ -210,6 +216,7 @@ extension AudioList {
         }
 
         isLoadingMore = true
+        let generation = loadGeneration
 
         guard let repo = dependencies.audioRepo() else {
             isLoadingMore = false
@@ -245,6 +252,7 @@ extension AudioList {
             }
 
             await MainActor.run {
+                guard self.loadGeneration == generation else { return }
                 if !uniqueNewUrls.isEmpty {
                     self.urls.append(contentsOf: uniqueNewUrls)
                     self.currentPage += 1
@@ -271,9 +279,12 @@ extension AudioList {
         }
 
         // 重置状态
+        loadGeneration += 1
         currentPage = 0
         hasMore = true
         urls = []
+        isLoading = false
+        isLoadingMore = false
 
         loadInitial()
     }
@@ -312,6 +323,7 @@ extension AudioList {
             }
 
             // 获取当前状态
+            let generation = await self.loadGeneration
             let currentCount = await self.urls.count
             let currentTotalCount = await self.totalCount
 
@@ -323,6 +335,7 @@ extension AudioList {
             }
 
             await MainActor.run {
+                guard self.loadGeneration == generation else { return }
                 // 如果总数增加（新增文件），需要完全重新加载
                 if newTotalCount > currentTotalCount {
                     if Self.verbose {
@@ -351,6 +364,7 @@ extension AudioList {
                         )
 
                         await MainActor.run {
+                            guard self.loadGeneration == generation else { return }
                             self.urls = refreshedUrls
                             self.totalCount = newTotalCount
 
