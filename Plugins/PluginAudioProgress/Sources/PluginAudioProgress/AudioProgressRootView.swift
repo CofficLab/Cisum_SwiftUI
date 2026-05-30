@@ -20,6 +20,10 @@ enum AudioProgressPersistencePolicy {
         url
     }
 
+    static func shouldResetGlobalTimeWhenCurrentURLChanges(from storedURL: URL?, to newURL: URL?) -> Bool {
+        storedURL != newURL
+    }
+
     static func shouldClearRestoredCurrentURL(storedURL: URL?, isPlayable: Bool) -> Bool {
         storedURL != nil && !isPlayable
     }
@@ -256,7 +260,11 @@ extension AudioProgressRootView {
         syncToWidget(url: url, isPlaying: man.state == .playing)
 
         Task {
+            let storedURL = AudioStateRepo.getCurrent()
             AudioStateRepo.storeCurrent(AudioProgressPersistencePolicy.currentURLToStore(url))
+            if AudioProgressPersistencePolicy.shouldResetGlobalTimeWhenCurrentURLChanges(from: storedURL, to: url) {
+                AudioStateRepo.storeCurrentTime(0)
+            }
         }
     }
     

@@ -35,6 +35,15 @@ import Testing
     #expect(AudioProgressPersistencePolicy.currentURLToStore(nil) == nil)
 }
 
+@Test func differentCurrentAudioURLResetsGlobalRestoreTime() {
+    let oldURL = URL(fileURLWithPath: "/tmp/audio/track-01.mp3")
+    let newURL = URL(fileURLWithPath: "/tmp/audio/track-02.mp3")
+
+    #expect(AudioProgressPersistencePolicy.shouldResetGlobalTimeWhenCurrentURLChanges(from: oldURL, to: newURL))
+    #expect(AudioProgressPersistencePolicy.shouldResetGlobalTimeWhenCurrentURLChanges(from: oldURL, to: nil))
+    #expect(!AudioProgressPersistencePolicy.shouldResetGlobalTimeWhenCurrentURLChanges(from: oldURL, to: oldURL))
+}
+
 @Test func invalidRestoredAudioURLShouldClearCurrentAudio() {
     let url = URL(fileURLWithPath: "/tmp/audio/missing.mp3")
 

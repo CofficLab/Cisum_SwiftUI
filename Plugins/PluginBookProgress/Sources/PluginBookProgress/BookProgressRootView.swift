@@ -34,6 +34,10 @@ enum BookProgressPersistencePolicy {
         currentURL != nil && !isPlayable
     }
 
+    static func shouldResetGlobalTimeWhenCurrentURLChanges(from storedURL: URL?, to newURL: URL?) -> Bool {
+        storedURL != newURL
+    }
+
     static func snapshot(currentURL: URL?, currentTime: TimeInterval, trigger: BookProgressSaveTrigger) -> BookProgressStateSnapshot? {
         guard let currentURL else { return nil }
 
@@ -198,12 +202,17 @@ private extension BookProgressRootView {
     func handleCurrentURLChanged(_ url: URL?) {
         guard shouldActivateProgress else { return }
 
+        let storedURL = currentBookURL()
+
         guard let snapshot = BookProgressPersistencePolicy.currentURLChangeSnapshot(currentURL: url) else {
             if self.verbose {
                 os_log("\(self.t)📖 URL 已清空")
             }
 
             storeCurrentBookURL(nil)
+            if BookProgressPersistencePolicy.shouldResetGlobalTimeWhenCurrentURLChanges(from: storedURL, to: nil) {
+                storeCurrentBookTime(0)
+            }
             return
         }
 
@@ -216,6 +225,9 @@ private extension BookProgressRootView {
         Task {
             // 保存全局状态（用于应用启动恢复）
             storeCurrentBookURL(url)
+            if BookProgressPersistencePolicy.shouldResetGlobalTimeWhenCurrentURLChanges(from: storedURL, to: url) {
+                storeCurrentBookTime(0)
+            }
 
             // URL 变化只保存当前章节，避免恢复播放时把已有时间覆盖成 0。
             await saveBookState(currentURL: snapshot.currentURL, time: snapshot.time)
