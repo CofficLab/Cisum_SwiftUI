@@ -65,7 +65,9 @@ extension AudioItemView {
             }
         }
         .tag(url as URL?)
-        .onAppear(perform: handleOnAppear)
+        .task(id: url) {
+            await loadFileSize()
+        }
         #if os(macOS)
             .contextMenu {
                 AppContextMenuRow("播放", systemImage: "play.fill", action: playAudio)
@@ -104,29 +106,20 @@ extension AudioItemView {
     }
 }
 
-// MARK: - Event Handler
-
-extension AudioItemView {
-    /// 处理视图出现事件
-    private func handleOnAppear() {
-        Task {
-            await loadFileSize()
-        }
-    }
-}
-
 // MARK: - Action
 
 extension AudioItemView {
     /// 在后台加载文件大小
     private func loadFileSize() async {
-        Task.detached(priority: .background) {
-            let size = (try? FileManager.default.attributesOfItem(atPath: url.path)[.size] as? NSNumber)?.int64Value
+        fileSize = nil
 
-            await MainActor.run {
-                fileSize = size
-            }
-        }
+        let size = await Task.detached(priority: .background) {
+            let size = (try? FileManager.default.attributesOfItem(atPath: url.path)[.size] as? NSNumber)?.int64Value
+            return size
+        }.value
+
+        guard !Task.isCancelled else { return }
+        fileSize = size
     }
 
     /// 导出到下载目录
