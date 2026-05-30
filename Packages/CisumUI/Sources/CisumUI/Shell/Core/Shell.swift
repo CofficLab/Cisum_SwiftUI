@@ -111,19 +111,26 @@ import SwiftUI
             let semaphore = DispatchSemaphore(value: 0)
 
             Task {
+                defer {
+                    semaphore.signal()
+                }
+
                 do {
                     let output = try await run(command, at: path, verbose: verbose)
                     result = .success(output)
                 } catch {
                     result = .failure(error)
                 }
-                semaphore.signal()
             }
 
             // 等待异步任务完成
             semaphore.wait()
 
-            switch result! {
+            guard let result else {
+                throw ShellError.processStartFailed("Shell command finished without a result")
+            }
+
+            switch result {
             case let .success(output):
                 return output
             case let .failure(error):
