@@ -395,8 +395,12 @@ extension AudioList {
 
     /// 处理播放资源变化事件
     func handleAssetChanged(url: URL?) {
-        if let asset = url, asset != selection {
-            self.setSelection(asset, reason: self.className + ".handleAssetChanged")
+        if let asset = url {
+            if asset != selection {
+                self.setSelection(asset, reason: self.className + ".handleAssetChanged")
+            }
+        } else {
+            self.setSelection(nil, reason: self.className + ".handleAssetChanged")
         }
     }
 
