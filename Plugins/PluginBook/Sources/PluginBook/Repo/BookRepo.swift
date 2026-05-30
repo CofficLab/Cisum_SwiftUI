@@ -54,7 +54,9 @@ public class BookRepo: ObservableObject, SuperEvent, SuperLog {
 
         let debounceInterval = 2.5
 
-        return self.disk.onDirChange(
+        let monitoredDisk = self.disk
+
+        return monitoredDisk.onDirChange(
             verbose: self.verbose,
             caller: self.className,
             onChange: { items, isFirst, _ in
@@ -67,11 +69,13 @@ public class BookRepo: ObservableObject, SuperEvent, SuperLog {
                 }
                 UserDefaults.standard.set(Date(), forKey: "BookLastUpdateTime")
 
-                await self.sync(items, isFirst: isFirst)
+                let shouldFullSync = isFirst || !monitoredDisk.checkIsICloud(verbose: false)
+                await self.sync(items, isFirst: shouldFullSync)
             },
-            onDeleted: { [weak self] _ in
-                // Book 模块暂不处理删除后的额外逻辑
-                guard let _ = self else { return }
+            onDeleted: { [weak self] urls in
+                Task {
+                    await self?.delete(urls)
+                }
             },
             onProgress: { _, _ in
                 // Book 模块暂不处理下载进度
@@ -85,6 +89,10 @@ public class BookRepo: ObservableObject, SuperEvent, SuperLog {
 extension BookRepo {
     private func sync(_ items: [URL], isFirst: Bool) async {
         await self.db.sync(items, isFirst: isFirst)
+    }
+
+    private func delete(_ urls: [URL]) async {
+        await self.db.delete(urls: urls)
     }
 
     func delete(_ book: BookModel, verbose: Bool) async {

@@ -210,6 +210,14 @@ extension BookDB {
         return next
     }
 
+    func delete(urls: [URL]) {
+        for deletedURL in urls {
+            deleteModels(for: deletedURL)
+        }
+
+        saveAndNotifyDeleted()
+    }
+
     public func sync(_ items: [URL], isFirst: Bool) {
         var message = "\(self.t)SyncBook(\(items.count))"
 
@@ -250,8 +258,7 @@ extension BookDB {
             try context.enumerate(FetchDescriptor<BookModel>(), block: { book in
                 if let item = hashMap[book.url] {
                     // 更新数据库记录
-                    book.isCollection = item.isDirectory
-                    book.bookTitle = book.bookTitle
+                    update(book, from: item)
 
                     // 记录存在哈希表中，同步完成，删除哈希表记录
                     hashMap.removeValue(forKey: book.url)
@@ -288,35 +295,55 @@ extension BookDB {
     // MARK: SyncWithUpdatedItems
 
     func bookSyncWithUpdatedItems(_ metas: [URL], verbose: Bool = false) {
-//        if verbose {
-//            os_log("\(self.t)SyncWithUpdatedItems with count=\(metas.count)")
-//        }
-//
-//        // 如果url属性为unique，数据库已存在相同url的记录，再执行context.insert，发现已存在的被替换成新的了
-//        // 但在这里，希望如果存在，就不要插入
-//        for (_, meta) in metas.files.enumerated() {
-//            if meta.isDeleted {
-//                let deletedURL = meta.url
-//
-//                do {
-//                    try context.delete(model: Book.self, where: #Predicate { book in
-//                        book.url == deletedURL
-//                    })
-//                } catch let e {
-//                    os_log(.error, "\(e.localizedDescription)")
-//                }
-//            } else {
-//                if findBook(meta.url) == nil {
-//                    context.insert(meta.toBook())
-//                }
-//            }
-//        }
-//
-//        do {
-//            try context.save()
-//        } catch let e {
-//            os_log(.error, "\(e.localizedDescription)")
-//        }
+        let startTime: DispatchTime = .now()
+
+        for meta in metas {
+            if meta.isNotFileExist {
+                deleteModels(for: meta)
+            } else if let book = findBook(url: meta) {
+                update(book, from: meta)
+            } else {
+                context.insert(BookModel(url: meta))
+            }
+        }
+
+        do {
+            try context.save()
+            updateBookParent()
+            NotificationCenter.postBookDBUpdated()
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
+
+        if verbose {
+            os_log("\(self.jobEnd(startTime, title: "\(self.t)SyncBookWithUpdatedItems(\(metas.count))", tolerance: 0.01))")
+        }
+    }
+
+    private func update(_ book: BookModel, from url: URL) {
+        book.isCollection = url.isDirectory
+        book.bookTitle = url.title
+        book.parentBookURL = url.getParent()
+        book.childCount = url.getChildren().count
+    }
+
+    private func deleteModels(for deletedURL: URL) {
+        do {
+            try context.delete(model: BookModel.self, where: #Predicate { book in
+                book.url == deletedURL || book.parentBookURL == deletedURL
+            })
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
+    }
+
+    private func saveAndNotifyDeleted() {
+        do {
+            try context.save()
+            NotificationCenter.postBookDBDeleted()
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
     }
 }
 

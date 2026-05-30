@@ -30,4 +30,42 @@ public extension Notification.Name {
     static let bookDBSortDone = Notification.Name("bookDBSortDone")
 }
 
+public extension NotificationCenter {
+    static func postBookDBSyncing() {
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .bookDBSyncing, object: nil)
+        }
+    }
+
+    static func postBookDBSynced() {
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .bookDBSynced, object: nil)
+        }
+    }
+
+    static func postBookDBUpdated() {
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .bookDBUpdated, object: nil)
+        }
+    }
+
+    static func postBookDBDeleted() {
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .bookDBDeleted, object: nil)
+        }
+    }
+
+    static func postBookDBSorting() {
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .bookDBSorting, object: nil)
+        }
+    }
+
+    static func postBookDBSortDone() {
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .bookDBSortDone, object: nil)
+        }
+    }
+}
+
 // MARK: - Event Handler
