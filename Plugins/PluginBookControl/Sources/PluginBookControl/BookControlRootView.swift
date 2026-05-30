@@ -150,12 +150,12 @@ private extension BookControlRootView {
 
     func adjacentAsset(to asset: URL, offset: Int) -> URL? {
         let chapters = playableChapters(of: asset)
-        guard let index = chapters.firstIndex(of: asset) else { return nil }
-
-        let adjacentIndex = index + offset
-        guard chapters.indices.contains(adjacentIndex) else { return nil }
-
-        return chapters[adjacentIndex]
+        return Self.adjacentAsset(
+            in: chapters,
+            current: asset,
+            offset: offset,
+            playMode: man.playMode
+        )
     }
 
     func contains(_ parent: URL, asset: URL) -> Bool {
@@ -231,4 +231,29 @@ private extension BookControlRootView {
 
 private extension Notification.Name {
     static let bookControlStorageLocationDidReset = Notification.Name("storageLocationDidReset")
+}
+
+extension BookControlRootView {
+    nonisolated static func adjacentAsset(
+        in chapters: [URL],
+        current asset: URL,
+        offset: Int,
+        playMode: MagicPlayMode
+    ) -> URL? {
+        guard !chapters.isEmpty, let index = chapters.firstIndex(of: asset) else { return nil }
+
+        let adjacentIndex = index + offset
+        if chapters.indices.contains(adjacentIndex) {
+            return chapters[adjacentIndex]
+        }
+
+        switch playMode {
+        case .repeatAll:
+            return offset > 0 ? chapters.first : chapters.last
+        case .shuffle:
+            return chapters.filter { $0 != asset }.randomElement() ?? chapters.first
+        case .sequence, .loop:
+            return nil
+        }
+    }
 }
