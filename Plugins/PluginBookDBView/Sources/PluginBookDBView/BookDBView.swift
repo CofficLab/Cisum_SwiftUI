@@ -97,6 +97,11 @@ extension BookDBView {
                 let copiedItems = try await Task.detached(priority: .userInitiated) {
                     try Self.copyImportedItems(files, to: bookDisk)
                 }.value
+                guard !copiedItems.isEmpty else {
+                    alert_error(String(localized: "No files were added", table: "Book-DBView", bundle: .module))
+                    return
+                }
+
                 await repo.syncImportedItems(copiedItems)
             } catch {
                 os_log(.error, "\(self.t)❌ 复制书籍文件失败: \(error.localizedDescription)")
