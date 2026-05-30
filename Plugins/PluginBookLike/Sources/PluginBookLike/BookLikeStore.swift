@@ -14,7 +14,7 @@ public enum BookLikeStore {
         let storedBooks = defaults.dictionary(forKey: likedBooksKey) as? [String: String] ?? [:]
 
         return storedBooks.compactMap { rawURL, title in
-            guard let url = URL(string: rawURL) else { return nil }
+            guard let url = storedURL(from: rawURL) else { return nil }
             return BookLikeItem(url: url, title: title)
         }
         .sorted {
@@ -42,5 +42,10 @@ public enum BookLikeStore {
     private static func displayTitle(for url: URL) -> String {
         let title = url.lastPathComponent
         return title.isEmpty ? url.absoluteString : title
+    }
+
+    static func storedURL(from rawURL: String) -> URL? {
+        guard !rawURL.isEmpty else { return nil }
+        return URL(string: rawURL)
     }
 }

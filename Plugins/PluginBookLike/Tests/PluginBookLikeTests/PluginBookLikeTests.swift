@@ -36,3 +36,20 @@ func pluginExposesSettingsView() {
     #expect(likedBooks.count == 1)
     #expect(likedBooks.first?.url == second)
 }
+
+@Test func bookLikeStoreIgnoresEmptyStoredURLs() throws {
+    let suiteName = "PluginBookLikeTests-\(UUID().uuidString)"
+    let defaults = try #require(UserDefaults(suiteName: suiteName))
+    defer {
+        defaults.removePersistentDomain(forName: suiteName)
+    }
+
+    defaults.set([
+        "": "Broken Favorite",
+        "file:///tmp/Cisum%20Books/Valid%20Book": "Valid Book",
+    ], forKey: "PluginBookLike.likedBooks")
+
+    let likedBooks = BookLikeStore.likedBooks(defaults: defaults)
+
+    #expect(likedBooks.map(\.title) == ["Valid Book"])
+}
