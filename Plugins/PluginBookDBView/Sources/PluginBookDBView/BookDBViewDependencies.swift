@@ -35,14 +35,14 @@ extension EnvironmentValues {
         set { self[BookDBViewDependenciesKey.self] = newValue }
     }
 
-    var bookDBImportAction: @Sendable () -> Void {
+    var bookDBImportAction: @MainActor @Sendable () -> Void {
         get { self[BookDBImportActionKey.self] }
         set { self[BookDBImportActionKey.self] = newValue }
     }
 }
 
 private struct BookDBImportActionKey: EnvironmentKey {
-    static let defaultValue: @Sendable () -> Void = {}
+    static let defaultValue: @MainActor @Sendable () -> Void = {}
 }
 
 public extension View {

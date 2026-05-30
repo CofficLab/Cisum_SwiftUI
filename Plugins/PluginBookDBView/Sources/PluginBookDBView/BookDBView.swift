@@ -49,6 +49,24 @@ public struct BookDBView: View, SuperLog, SuperThread {
     }
 }
 
+private final class DroppedFileCollector: @unchecked Sendable {
+    private let lock = NSLock()
+    private var files: [URL] = []
+
+    func append(_ url: URL) {
+        lock.lock()
+        files.append(url)
+        lock.unlock()
+    }
+
+    func snapshot() -> [URL] {
+        lock.lock()
+        let files = files
+        lock.unlock()
+        return files
+    }
+}
+
 // MARK: - Action
 
 extension BookDBView {
@@ -243,8 +261,7 @@ extension BookDBView {
         }
         
         let dispatchGroup = DispatchGroup()
-        var droppedFiles: [URL] = []
-        let droppedFilesLock = NSLock()
+        let droppedFiles = DroppedFileCollector()
         
         for provider in providers {
             dispatchGroup.enter()
@@ -257,9 +274,7 @@ extension BookDBView {
                     if Self.verbose {
                         os_log("\(self.t)📎 添加 \(url.lastPathComponent) 到复制队列")
                     }
-                    droppedFilesLock.lock()
                     droppedFiles.append(url)
-                    droppedFilesLock.unlock()
                 } else if let error = error {
                     os_log(.error, "\(self.t)⚠️ 加载文件失败: \(error.localizedDescription)")
                 }
@@ -271,10 +286,7 @@ extension BookDBView {
             if Self.verbose {
                 os_log("\(self.t)✅ 所有文件加载完成，开始复制")
             }
-            droppedFilesLock.lock()
-            let files = droppedFiles
-            droppedFilesLock.unlock()
-            copy(files)
+            copy(droppedFiles.snapshot())
         }
         
         return true
