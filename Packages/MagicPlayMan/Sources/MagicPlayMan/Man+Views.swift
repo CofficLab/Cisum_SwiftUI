@@ -49,12 +49,14 @@ public extension MagicPlayMan {
     /// - 当资源为音频时，返回音频播放视图，包括了音频的标题
     func makeMediaView() -> some View {
         return Group {
-            if currentAsset == nil {
-                makeEmptyView()
-            } else if currentAsset!.isAudio {
-                makeAudioView(url: currentAsset!)
+            if let currentAsset {
+                if currentAsset.isAudio {
+                    makeAudioView(url: currentAsset)
+                } else {
+                    makeVideoView()
+                }
             } else {
-                makeVideoView()
+                makeEmptyView()
             }
         }
     }
@@ -92,12 +94,14 @@ public extension MagicPlayMan {
     /// - 当资源为视频时，显示视频播放视图
     func makeHeroView(verbose: Bool = false, avatarShape: AvatarViewShape? = nil) -> some View {
         Group {
-            if currentAsset == nil {
-                makeEmptyView()
-            } else if currentAsset!.isAudio {
-                HeroView(url: currentAsset!, verbose: verbose, avatarShape: avatarShape)
+            if let currentAsset {
+                if currentAsset.isAudio {
+                    HeroView(url: currentAsset, verbose: verbose, avatarShape: avatarShape)
+                } else {
+                    makeVideoView()
+                }
             } else {
-                makeVideoView()
+                makeEmptyView()
             }
         }
     }
@@ -108,12 +112,14 @@ public extension MagicPlayMan {
         @ViewBuilder defaultView: () -> Content
     ) -> some View {
         Group {
-            if currentAsset == nil {
-                makeEmptyView()
-            } else if currentAsset!.isAudio {
-                HeroView(url: currentAsset!, verbose: verbose, avatarShape: avatarShape)
+            if let currentAsset {
+                if currentAsset.isAudio {
+                    HeroView(url: currentAsset, verbose: verbose, avatarShape: avatarShape)
+                } else {
+                    makeVideoView()
+                }
             } else {
-                makeVideoView()
+                defaultView()
             }
         }
     }
