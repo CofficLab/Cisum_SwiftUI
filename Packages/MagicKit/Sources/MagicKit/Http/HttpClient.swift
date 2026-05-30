@@ -341,7 +341,8 @@ private final class FileCacheStore {
     /// 计算并确保缓存目录存在
     static func cacheDirectoryURL() -> URL {
         let fm = FileManager.default
-        let base = fm.urls(for: .cachesDirectory, in: .userDomainMask).first!
+        let base = fm.urls(for: .cachesDirectory, in: .userDomainMask).first
+            ?? fm.temporaryDirectory
         let dir = base.appendingPathComponent("HttpClientCache", isDirectory: true)
         if !fm.fileExists(atPath: dir.path) {
             try? fm.createDirectory(at: dir, withIntermediateDirectories: true)
