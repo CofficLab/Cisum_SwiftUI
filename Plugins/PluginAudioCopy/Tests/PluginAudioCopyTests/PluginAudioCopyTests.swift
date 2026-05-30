@@ -59,6 +59,17 @@ import Testing
     #expect(CopyStatePresentation.message(pendingCount: 0, failedCount: 0).isEmpty)
 }
 
+@MainActor @Test func copyListRejectsStaleDeleteOffsets() {
+    let folder = URL(fileURLWithPath: "/tmp/cisum-audio-copy-tests", isDirectory: true)
+    let tasks = [
+        CopyTask(bookmark: Data([0]), destination: folder, originalFilename: "one.mp3"),
+        CopyTask(bookmark: Data([1]), destination: folder, originalFilename: "two.mp3"),
+    ]
+
+    #expect(CopyList.tasksToDelete(from: IndexSet(integer: 1), in: tasks)?.map(\.originalFilename) == ["two.mp3"])
+    #expect(CopyList.tasksToDelete(from: IndexSet(integer: 2), in: tasks) == nil)
+}
+
 @Test func copyLimitCountsCurrentLibraryAndIncomingDrop() {
     #expect(AudioCopyLimitPolicy.allowedTaskCount(
         currentAudioCount: 99,

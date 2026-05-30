@@ -101,7 +101,11 @@ struct CopyList: View, SuperLog, SuperThread {
             return
         }
 
-        let tasksToDelete = offsets.map { tasks[$0] }
+        guard let tasksToDelete = Self.tasksToDelete(from: offsets, in: tasks) else {
+            alert_error(String(localized: "Delete failed: copy task list changed. Please try again.", table: "Audio-Copy-macOS", bundle: .module))
+            return
+        }
+
         do {
             try CopyDB.deleteTasks(tasksToDelete, from: container)
             refreshTasks(postCountChanged: true)
@@ -109,6 +113,20 @@ struct CopyList: View, SuperLog, SuperThread {
             os_log(.error, "\(self.t)Delete failed: \(error.localizedDescription)")
             alert_error(String(localized: "Delete failed: \(error.localizedDescription)", table: "Audio-Copy-macOS", bundle: .module))
         }
+    }
+
+    static func tasksToDelete(from offsets: IndexSet, in tasks: [CopyTask]) -> [CopyTask]? {
+        var tasksToDelete: [CopyTask] = []
+        tasksToDelete.reserveCapacity(offsets.count)
+
+        for offset in offsets {
+            guard tasks.indices.contains(offset) else {
+                return nil
+            }
+            tasksToDelete.append(tasks[offset])
+        }
+
+        return tasksToDelete
     }
 }
 #endif
