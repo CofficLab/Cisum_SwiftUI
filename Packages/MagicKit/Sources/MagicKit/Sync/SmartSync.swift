@@ -13,11 +13,7 @@ public final actor SmartSync: SuperThread, SuperLog {
     let delegate: SuperSyncDelegate
 
     var engine: CKSyncEngine {
-        if syncEngine == nil {
-            initEngine()
-        }
-
-        return syncEngine!
+        ensureEngine()
     }
 
     public init(delegate: SuperSyncDelegate, db: CKDatabase, stateURL: URL, verbose: Bool) throws {
@@ -35,9 +31,18 @@ public final actor SmartSync: SuperThread, SuperLog {
     }
 
     private func initEngine() {
+        _ = ensureEngine()
+    }
+
+    private func ensureEngine() -> CKSyncEngine {
+        if let syncEngine {
+            return syncEngine
+        }
+
         if verbose {
             os_log("\(self.i)SyncEngine")
         }
+
         var config = CKSyncEngine.Configuration(
             database: cloudDB,
             stateSerialization: self.cloudState.getState(),
@@ -45,7 +50,9 @@ public final actor SmartSync: SuperThread, SuperLog {
         )
         config.automaticallySync = true
 
-        syncEngine = CKSyncEngine(config)
+        let engine = CKSyncEngine(config)
+        syncEngine = engine
+        return engine
     }
 }
 
@@ -318,12 +325,13 @@ extension SmartSync {
 
             let items: [any SuperCloudModel] = await self.delegate.onGetAll()
             let zones = Set(items.map { $0.zone })
+            let engine = self.engine
 
-            syncEngine!.state.add(pendingDatabaseChanges: zones.map {
+            engine.state.add(pendingDatabaseChanges: zones.map {
                 .saveZone($0)
             })
 
-            syncEngine!.state.add(pendingRecordZoneChanges: items.map {
+            engine.state.add(pendingRecordZoneChanges: items.map {
                 .saveRecord($0.privateRecordID)
             })
         }
