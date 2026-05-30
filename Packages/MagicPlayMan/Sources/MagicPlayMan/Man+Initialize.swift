@@ -73,13 +73,15 @@ internal extension MagicPlayMan {
             forInterval: CMTime(seconds: 0.5, preferredTimescale: 600),
             queue: .main
         ) { [weak self] time in
-            guard let self = self else { return }
-            let currentTime = time.seconds
-            let progress = self.duration > 0 ? currentTime / self.duration : 0
+            Task { @MainActor [weak self] in
+                guard let self = self else { return }
+                let currentTime = time.seconds
+                let progress = self.duration > 0 ? currentTime / self.duration : 0
 
-            // 更新内部状态并发送通知
-            self.setCurrentTime(currentTime, reason: self.className + ".setupPlayer")
-            self.setProgress(progress)
+                // 更新内部状态并发送通知
+                self.setCurrentTime(currentTime, reason: self.className + ".setupPlayer")
+                self.setProgress(progress)
+            }
         }
     }
 
@@ -96,6 +98,11 @@ internal extension MagicPlayMan {
                         self.setState(.paused, reason: self.className + ".systemObserver.readyToPlay")
                         // 资源准备好后更新 Now Playing Info
                         self.updateNowPlayingInfo(includeThumbnail: true, reason: self.className + ".systemObserver.readyToPlay")
+                    case .failed:
+                        let message = self._player.error?.localizedDescription ?? "Unknown player error"
+                        self.setState(.failed(.playbackError(message)), reason: self.className + ".systemObserver.failed")
+                    case .unknown:
+                        break
                     @unknown default:
                         break
                     }
