@@ -12,6 +12,10 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     nonisolated static var emoji: String { "🌳" }
     nonisolated static var verbose: Bool { false }
 
+    static func shouldEndLaunchAfterStorageLocationChange(isLaunching: Bool, hasUsableStorageLocation: Bool) -> Bool {
+        isLaunching && hasUsableStorageLocation
+    }
+
     var content: Content
 
     @State var error: Error? = nil
@@ -257,9 +261,14 @@ extension RootView {
     }
 
     func onStorageLocationChange() {
-        if Config.getStorageLocation() == nil {
+        guard Self.shouldEndLaunchAfterStorageLocationChange(
+            isLaunching: launching,
+            hasUsableStorageLocation: Config.hasUsableStorageLocation()
+        ) else {
             return
         }
+
+        onLaunchEnd()
     }
 
     func onCloudAccountStateChanged(_ n: Notification) {
