@@ -34,6 +34,33 @@ import Foundation
     #expect(!FileManager.default.fileExists(atPath: source.appendingPathComponent("track.mp3").path))
 }
 
+@Test func emptyMigrationReportsCompleteProgress() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let source = root.appendingPathComponent("source", isDirectory: true)
+    let target = root.appendingPathComponent("target", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: source, withIntermediateDirectories: true)
+
+    var reportedProgress: Double?
+    let manager = MigrationManager()
+    try manager.migrate(
+        from: source,
+        to: target,
+        progressCallback: { progress, _ in
+            reportedProgress = progress
+        },
+        downloadProgressCallback: nil,
+        verbose: false
+    )
+
+    #expect(reportedProgress == 1.0)
+    #expect(FileManager.default.fileExists(atPath: target.path))
+}
+
 @Test func migrationCancellationStopsBeforeMovingFiles() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)

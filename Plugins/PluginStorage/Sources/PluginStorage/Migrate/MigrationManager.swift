@@ -61,6 +61,12 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread, @unchecked Send
             )
             os_log(.info, "\(self.t)已创建目标目录")
 
+            guard !files.isEmpty else {
+                progressCallback?(1.0, "")
+                os_log(.info, "\(self.t)源目录为空，迁移完成")
+                return
+            }
+
             for (index, sourceFile) in files.enumerated() {
                 if self.isCancelled {
                     os_log(.info, "\(self.t)迁移任务被取消")
