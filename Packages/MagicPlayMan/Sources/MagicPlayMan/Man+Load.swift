@@ -6,6 +6,12 @@ import OSLog
 import SwiftUI
 import CisumUI
 
+enum MagicPlayManDownloadRequestPolicy {
+    static func shouldApplyResult(requestedAsset: URL, currentAsset: URL?) -> Bool {
+        requestedAsset == currentAsset
+    }
+}
+
 extension MagicPlayMan {
     /// 下载并缓存资源
     /// - Parameters:
@@ -39,7 +45,11 @@ extension MagicPlayMan {
                 guard let self = self else { return }
                 Task {
                     // 只有在加载状态时才更新下载进度，避免与播放状态冲突
-                    if case .loading = self.state {
+                    if case .loading = self.state,
+                       MagicPlayManDownloadRequestPolicy.shouldApplyResult(
+                           requestedAsset: url,
+                           currentAsset: self.currentURL
+                       ) {
                         self.setState(.loading(.downloading(progress)), reason: "\(reason).\(self.className).downloadProgress")
                     }
                 }
@@ -63,6 +73,16 @@ extension MagicPlayMan {
             do {
                 try await url.download(verbose: self.verbose, reason: self.className + ".downloadAndCache")
             } catch {
+                guard MagicPlayManDownloadRequestPolicy.shouldApplyResult(
+                    requestedAsset: url,
+                    currentAsset: self.currentURL
+                ) else {
+                    if self.verbose {
+                        os_log("\(self.t)⚠️ URL changed during download failure, ignoring error for: \(url.title)")
+                    }
+                    return
+                }
+
                 // 下载失败时清理监听器
                 self.cleanupDownloadObservers()
                 self.setState(.failed(.networkError(error.localizedDescription)), reason: "\(reason).\(self.className).downloadAndCache")

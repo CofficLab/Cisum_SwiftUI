@@ -21,4 +21,22 @@ final class MagicPlayManTests: XCTestCase {
         XCTAssertFalse(MagicPlayMan.shouldApplyNowPlayingMetadataResult(requestedAsset: stale, currentAsset: current))
         XCTAssertFalse(MagicPlayMan.shouldApplyNowPlayingMetadataResult(requestedAsset: current, currentAsset: nil))
     }
+
+    func testDownloadResultMustBelongToCurrentAsset() {
+        let current = URL(fileURLWithPath: "/tmp/current.mp3")
+        let stale = URL(fileURLWithPath: "/tmp/stale.mp3")
+
+        XCTAssertTrue(MagicPlayManDownloadRequestPolicy.shouldApplyResult(
+            requestedAsset: current,
+            currentAsset: current
+        ))
+        XCTAssertFalse(MagicPlayManDownloadRequestPolicy.shouldApplyResult(
+            requestedAsset: stale,
+            currentAsset: current
+        ))
+        XCTAssertFalse(MagicPlayManDownloadRequestPolicy.shouldApplyResult(
+            requestedAsset: current,
+            currentAsset: nil
+        ))
+    }
 }
