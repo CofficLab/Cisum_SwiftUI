@@ -324,7 +324,7 @@ extension BookDB {
         book.isCollection = url.isDirectory
         book.bookTitle = url.title
         book.parentBookURL = url.getParent()
-        book.childCount = url.getChildren().count
+        book.childCount = BookModel.playableChildCount(for: url)
     }
 
     private func deleteModels(for deletedURL: URL) {

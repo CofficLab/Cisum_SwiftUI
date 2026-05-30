@@ -36,7 +36,7 @@ public class BookModel: SuperLog, Equatable {
         self.bookTitle = self.url.title
         self.isCollection = self.url.isFolder
         self.parentBookURL = self.url.getParent()
-        self.childCount = self.url.getChildren().count
+        self.childCount = Self.playableChildCount(for: self.url)
     }
 
     public func getParentURL() -> URL? {
@@ -55,6 +55,17 @@ public class BookModel: SuperLog, Equatable {
     
     public static func == (lhs: BookModel, rhs: BookModel) -> Bool {
         return lhs.url == rhs.url
+    }
+
+    static func playableChildCount(for url: URL) -> Int {
+        guard url.isFolder else {
+            return BookPluginInfo.supportedExtensions.contains(url.pathExtension.lowercased()) ? 1 : 0
+        }
+
+        return url.flatten().filter { child in
+            !child.isFolder
+                && BookPluginInfo.supportedExtensions.contains(child.pathExtension.lowercased())
+        }.count
     }
 }
 
