@@ -6,7 +6,7 @@ import SwiftUI
 struct MigrationProgressView: View {
     @Environment(\.pluginStorageDependencies) private var dependencies
     @StateObject private var migrationManager = MigrationManager()
-    let sourceLocation: PluginStorageLocation
+    let sourceLocation: PluginStorageLocation?
     let targetLocation: PluginStorageLocation
     let sourceURL: URL?
     let targetURL: URL?
@@ -43,6 +43,10 @@ struct MigrationProgressView: View {
 
     nonisolated static func completionMessage(shouldMigrate: Bool) -> String {
         shouldMigrate ? "迁移已完成" : "已切换到新位置"
+    }
+
+    nonisolated static func shouldPerformMigration(sourceURL: URL?, targetURL: URL?, requestedMigration: Bool) -> Bool {
+        requestedMigration && sourceURL != nil && targetURL != nil
     }
 
     private func prepareForRetry() {
@@ -126,7 +130,13 @@ struct MigrationProgressView: View {
 
     private func startMigration(shouldMigrate: Bool) async {
         do {
-            if shouldMigrate {
+            let shouldPerformMigration = Self.shouldPerformMigration(
+                sourceURL: sourceURL,
+                targetURL: targetURL,
+                requestedMigration: shouldMigrate
+            )
+
+            if shouldPerformMigration {
                 guard let sourceRoot = dependencies.getStorageRoot() else {
                     throw MigrationError.sourceDirectoryNotFound
                 }
@@ -165,7 +175,7 @@ struct MigrationProgressView: View {
 
             // 更新存储位置
             await MainActor.run {
-                let completionMessage = Self.completionMessage(shouldMigrate: shouldMigrate)
+                let completionMessage = Self.completionMessage(shouldMigrate: shouldPerformMigration)
                 dependencies.updateStorageLocation(targetLocation)
                 self.migrationCompleted = true
                 self.completionMessage = completionMessage

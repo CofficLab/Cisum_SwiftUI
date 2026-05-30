@@ -58,7 +58,7 @@ public struct StorageSettingView: View, SuperLog {
         }
         .sheet(isPresented: $showMigrationProgress) {
             MigrationProgressView(
-                sourceLocation: dependencies.getStorageLocation() ?? .local,
+                sourceLocation: dependencies.getStorageLocation(),
                 targetLocation: targetLocation,
                 sourceURL: dependencies.getStorageRoot(),
                 targetURL: dependencies.getStorageRootForLocation(targetLocation),

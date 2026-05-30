@@ -23,6 +23,31 @@ import Foundation
     #expect(MigrationProgressView.completionMessage(shouldMigrate: false) == "已切换到新位置")
 }
 
+@Test func missingSourceStorageDoesNotAttemptMigration() {
+    let target = URL(fileURLWithPath: "/tmp/cisum-storage-target", isDirectory: true)
+
+    #expect(!MigrationProgressView.shouldPerformMigration(
+        sourceURL: nil,
+        targetURL: target,
+        requestedMigration: true
+    ))
+    #expect(!MigrationProgressView.shouldPerformMigration(
+        sourceURL: target,
+        targetURL: nil,
+        requestedMigration: true
+    ))
+    #expect(!MigrationProgressView.shouldPerformMigration(
+        sourceURL: target,
+        targetURL: target,
+        requestedMigration: false
+    ))
+    #expect(MigrationProgressView.shouldPerformMigration(
+        sourceURL: target,
+        targetURL: target,
+        requestedMigration: true
+    ))
+}
+
 @Test func migrationMovesContentsButKeepsSourceRoot() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)

@@ -6,7 +6,7 @@ struct RepositoryInfoView: View {
     @Environment(\.pluginStorageDependencies) private var dependencies
 
     let title: String
-    let location: PluginStorageLocation
+    let location: PluginStorageLocation?
     let url: URL?
 
     var body: some View {
@@ -32,6 +32,9 @@ struct RepositoryInfoView: View {
             Text(title)
                 .font(.headline)
                 .foregroundColor(.primary)
+            Text(location?.emojiTitle ?? String(localized: "Not Set", table: "Storage", bundle: .module))
+                .font(.caption)
+                .foregroundColor(.secondary)
             Spacer()
 
             if let path = url?.path, dependencies.isDesktop {
