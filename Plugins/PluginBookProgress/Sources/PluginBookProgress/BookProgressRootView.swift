@@ -11,7 +11,30 @@ public typealias BookProgressURLProvider = @MainActor () -> URL?
 public typealias BookProgressTimeProvider = @MainActor () -> TimeInterval?
 public typealias BookProgressStoreCurrentURL = @MainActor (URL?) -> Void
 public typealias BookProgressStoreCurrentTime = @MainActor (TimeInterval) -> Void
-public typealias BookProgressSaveBookState = @Sendable (URL, URL, TimeInterval) async -> Void
+public typealias BookProgressSaveBookState = @Sendable (URL, URL, TimeInterval?) async -> Void
+
+enum BookProgressSaveTrigger {
+    case currentURLChanged
+    case playbackPositionChanged
+}
+
+struct BookProgressStateSnapshot: Equatable {
+    let currentURL: URL
+    let time: TimeInterval?
+}
+
+enum BookProgressPersistencePolicy {
+    static func snapshot(currentURL: URL?, currentTime: TimeInterval, trigger: BookProgressSaveTrigger) -> BookProgressStateSnapshot? {
+        guard let currentURL else { return nil }
+
+        switch trigger {
+        case .currentURLChanged:
+            return BookProgressStateSnapshot(currentURL: currentURL, time: nil)
+        case .playbackPositionChanged:
+            return BookProgressStateSnapshot(currentURL: currentURL, time: currentTime)
+        }
+    }
+}
 
 public struct BookProgressRootView<Content>: View, SuperLog where Content: View {
     public nonisolated static var emoji: String { BookProgressPluginInfo.emoji }
@@ -118,6 +141,7 @@ private extension BookProgressRootView {
     private func deactivateProgress() {
         guard let playbackSubscriptionID else { return }
 
+        persistCurrentProgress(reason: "deactivateProgress")
         man.unsubscribe(playbackSubscriptionID)
         self.playbackSubscriptionID = nil
     }
@@ -166,8 +190,8 @@ private extension BookProgressRootView {
             // 保存全局状态（用于应用启动恢复）
             storeCurrentBookURL(url)
 
-            // 保存每本书的状态（用于每本书独立进度）
-            await saveBookState(currentURL: url)
+            // URL 变化只保存当前章节，避免恢复播放时把已有时间覆盖成 0。
+            await saveBookState(currentURL: url, time: nil)
 
             // 如果文件未下载，自动下载
             if url.isNotDownloaded {
@@ -189,16 +213,28 @@ private extension BookProgressRootView {
     /// 暂停时保存全局播放时间和当前书籍的独立进度，保证下次进入书籍场景能恢复到准确位置。
     func handlePlayManStateChanged(_ isPlaying: Bool) {
         guard shouldActivateProgress else { return }
-        guard man.state == .paused, let currentURL = man.currentAsset else { return }
+        guard man.state == .paused else { return }
 
-        storeCurrentBookTime(man.currentTime)
+        persistCurrentProgress(reason: "handlePlayManStateChanged")
+    }
+
+    private func persistCurrentProgress(reason: String) {
+        guard let snapshot = BookProgressPersistencePolicy.snapshot(
+            currentURL: man.currentAsset,
+            currentTime: man.currentTime,
+            trigger: .playbackPositionChanged
+        ) else {
+            return
+        }
+
+        storeCurrentBookTime(snapshot.time ?? 0)
 
         Task {
-            await saveBookState(currentURL: currentURL)
+            await saveBookState(currentURL: snapshot.currentURL, time: snapshot.time)
         }
 
         if self.verbose {
-            os_log("\(self.t)💾 保存书籍播放时间: \(man.currentTime)s")
+            os_log("\(self.t)💾 (\(reason)) 保存书籍播放时间: \(snapshot.time ?? 0)s")
         }
     }
 
@@ -207,7 +243,7 @@ private extension BookProgressRootView {
     /// 保存当前书籍的播放进度到 BookState 模型。
     ///
     /// - Parameter currentURL: 当前播放的URL
-    private func saveBookState(currentURL: URL) async {
+    private func saveBookState(currentURL: URL, time: TimeInterval?) async {
         // 找到当前URL所属的书籍
         guard let bookURL = await findBookForURL(currentURL) else {
             if self.verbose {
@@ -216,15 +252,16 @@ private extension BookProgressRootView {
             return
         }
 
-        // 获取当前播放时间
-        let currentTime = man.currentTime
-
         // 更新书籍状态（保存当前章节和时间）
         if self.verbose {
-            os_log("\(self.t)💾 保存书籍状态: \(bookURL.lastPathComponent) -> \(currentURL.lastPathComponent) @ \(currentTime)s")
+            if let time {
+                os_log("\(self.t)💾 保存书籍状态: \(bookURL.lastPathComponent) -> \(currentURL.lastPathComponent) @ \(time)s")
+            } else {
+                os_log("\(self.t)💾 保存书籍当前章节: \(bookURL.lastPathComponent) -> \(currentURL.lastPathComponent)")
+            }
         }
 
-        await saveBookState(bookURL, currentURL, currentTime)
+        await saveBookState(bookURL, currentURL, time)
     }
 
     /// 查找URL所属的书籍
