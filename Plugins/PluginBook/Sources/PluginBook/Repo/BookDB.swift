@@ -330,12 +330,19 @@ extension BookDB {
 
     private func deleteModels(for deletedURL: URL) {
         do {
-            try context.delete(model: BookModel.self, where: #Predicate { book in
-                book.url == deletedURL || book.parentBookURL == deletedURL
-            })
+            let books = try context.fetch(BookModel.descriptorAll)
+            for book in books where Self.contains(deletedURL, bookURL: book.url) {
+                context.delete(book)
+            }
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
         }
+    }
+
+    static func contains(_ parentURL: URL, bookURL: URL) -> Bool {
+        let parentPath = parentURL.standardizedFileURL.path
+        let bookPath = bookURL.standardizedFileURL.path
+        return bookPath == parentPath || bookPath.hasPrefix(parentPath + "/")
     }
 
     private func saveAndNotifyDeleted(urls: [URL]) {
