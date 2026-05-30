@@ -78,15 +78,13 @@ actor CopyDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
         }
     }
 
-    func deleteCopyTasks(bookmarks: [Data]) {
-        try? self.context.delete(model: CopyTask.self, where: #Predicate {
+    func deleteCopyTasks(bookmarks: [Data]) throws {
+        try self.context.delete(model: CopyTask.self, where: #Predicate {
             bookmarks.contains($0.bookmark)
         })
 
-        do {
+        if context.hasChanges {
             try context.save()
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
         }
     }
 

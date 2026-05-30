@@ -89,7 +89,7 @@
                                     os_log("\(self.t)⏭️ [\(task.originalFilename)] Skipping, file already exists")
                                 }
                                 // Delete the task as it's already completed.
-                                await self.db.deleteCopyTasks(bookmarks: [task.bookmark])
+                                try await self.db.deleteCopyTasks(bookmarks: [task.bookmark])
                                 didComplete = true
                             } else {
                                 if self.verbose {
@@ -102,7 +102,7 @@
                                     os_log("\(self.t)🎉 [\(task.originalFilename)] Copied")
                                 }
 
-                                await self.db.deleteCopyTasks(bookmarks: [task.bookmark])
+                                try await self.db.deleteCopyTasks(bookmarks: [task.bookmark])
                                 didComplete = true
                             }
                         } catch let e {
