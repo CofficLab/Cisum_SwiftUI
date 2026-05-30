@@ -42,7 +42,8 @@
                 os_log("\(self.t)🚀 Run")
             }
 
-            let tasks = await db.allCopyTaskDTOs()
+            let allTasks = await db.allCopyTaskDTOs()
+            let tasks = allTasks.filter { $0.error.isEmpty }
             let taskCount = tasks.count
 
             if tasks.isEmpty {
@@ -50,6 +51,7 @@
                 if verbose {
                     os_log("\(self.t)🎉 Done")
                 }
+                NotificationCenter.postCopyTaskCountChanged(count: allTasks.count)
                 return
             }
 
@@ -133,7 +135,9 @@
             self.running = false
 
             // 检查剩余任务数量，发送完成事件
-            let remainingCount = await db.allCopyTaskDTOs().count
+            let remainingTasks = await db.allCopyTaskDTOs()
+            let remainingCount = remainingTasks.count
+            let pendingCount = remainingTasks.filter { $0.error.isEmpty }.count
             if verbose {
                 os_log("\(self.t)📊 Remaining: \(remainingCount)")
             }
@@ -142,11 +146,13 @@
                 // 延迟1秒后发送完成事件
                 try? await Task.sleep(nanoseconds: 1000000000)
                 NotificationCenter.postCopyTaskFinished(count: 0, lastCount: taskCount)
-            } else {
+            } else if pendingCount > 0 {
                 // 还有任务，发送数量更新事件
                 NotificationCenter.postCopyTaskCountChanged(count: remainingCount)
-                
+
                 await self.run()
+            } else {
+                NotificationCenter.postCopyTaskCountChanged(count: remainingCount)
             }
         }
     }
