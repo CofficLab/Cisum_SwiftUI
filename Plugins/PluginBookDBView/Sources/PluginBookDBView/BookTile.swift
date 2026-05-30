@@ -51,7 +51,12 @@ struct BookTile: View, SuperThread, SuperLog, Equatable {
                     Spacer()
 
                     if noCover {
-                        Text(title).font(.title)
+                        Text(title)
+                            .font(.title3)
+                            .multilineTextAlignment(.center)
+                            .lineLimit(3)
+                            .minimumScaleFactor(0.7)
+                            .padding(.horizontal, 10)
                     }
 
                     Spacer()
@@ -68,6 +73,9 @@ struct BookTile: View, SuperThread, SuperLog, Equatable {
                                 Text("上次播放", tableName: "Book-DBView", bundle: .module)
                             }
                             Text(lastPlayedTitle)
+                                .multilineTextAlignment(.center)
+                                .lineLimit(2)
+                                .minimumScaleFactor(0.75)
                         }
                         .font(.footnote)
                         .padding()
