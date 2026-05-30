@@ -23,6 +23,9 @@ public struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
     /// 当前排序模式
     @State private var sortMode: SortMode = .none
 
+    /// 是否正在拖拽音频文件
+    @State private var isDropping: Bool = false
+
     public init(isDemoMode: Bool) {
         self.isDemoMode = isDemoMode
     }
@@ -53,6 +56,7 @@ public struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
             allowsMultipleSelection: true,
             onCompletion: handleFileImport
         )
+        .onDrop(of: [UTType.fileURL], isTargeted: $isDropping, perform: handleDrop)
         .onDBSorting(perform: handleSorting)
         .onDBSortDone(perform: handleSortDone)
     }
@@ -85,6 +89,24 @@ public struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
             case .none: return "正在排序..."
             }
         }
+    }
+}
+
+private final class DroppedAudioFileCollector: @unchecked Sendable {
+    private let lock = NSLock()
+    private var files: [URL] = []
+
+    func append(_ url: URL) {
+        lock.lock()
+        files.append(url)
+        lock.unlock()
+    }
+
+    func snapshot() -> [URL] {
+        lock.lock()
+        let files = files
+        lock.unlock()
+        return files
     }
 }
 
@@ -160,6 +182,13 @@ extension AudioDBView {
         }
     }
 
+    nonisolated static func supportedImportURLs(from urls: [URL], supportedExtensions: [String]) -> [URL] {
+        let supportedExtensions = Set(supportedExtensions.map { $0.lowercased() })
+        return urls.filter { url in
+            !url.isFolder && supportedExtensions.contains(url.pathExtension.lowercased())
+        }
+    }
+
     nonisolated private static func uniqueDestination(for source: URL, in directory: URL) -> URL {
         let baseName = source.deletingPathExtension().lastPathComponent
         let fileExtension = source.pathExtension
@@ -213,6 +242,45 @@ extension AudioDBView {
 
         return destination.appendingPathExtension(pathExtension)
     }
+
+    private func importFiles(_ urls: [URL]) async {
+        if Self.verbose {
+            os_log("\(self.t)📥 处理文件导入，文件数量: \(urls.count)")
+        }
+
+        let importableURLs = Self.supportedImportURLs(
+            from: urls,
+            supportedExtensions: dependencies.supportedExtensions
+        )
+
+        guard !importableURLs.isEmpty else {
+            alert_error(String(localized: "No files were added", table: "Audio-DBView", bundle: .module))
+            return
+        }
+
+        if importableURLs.count < urls.count {
+            alert_warning(String(localized: "Some files were skipped because they are not supported audio files", table: "Audio-DBView", bundle: .module))
+        }
+
+        guard let storageRoot = await fetchStorageRoot() else {
+            alert_error(String(localized: "Storage location is unavailable", table: "Audio-DBView", bundle: .module))
+            return
+        }
+
+        do {
+            let copiedURLs = try await copyFiles(importableURLs, to: storageRoot)
+            guard let repo = dependencies.audioRepo() else {
+                Self.cleanUpCopiedFiles(copiedURLs)
+                alert_error(String(localized: "Import failed: audio repository is unavailable", table: "Audio-DBView", bundle: .module))
+                return
+            }
+
+            await repo.sync(copiedURLs, isFirst: false)
+        } catch {
+            os_log(.error, "\(self.t)❌ 复制文件失败: \(error.localizedDescription)")
+            alert_error(String(localized: "Import failed: \(error.localizedDescription)", table: "Audio-DBView", bundle: .module))
+        }
+    }
 }
 
 // MARK: - Event Handler
@@ -228,39 +296,51 @@ extension AudioDBView {
         Task {
             switch result {
             case let .success(urls):
-                if Self.verbose {
-                    os_log("\(self.t)📥 处理文件导入，文件数量: \(urls.count)")
-                }
-
-                guard !urls.isEmpty else {
-                    alert_error(String(localized: "No files were added", table: "Audio-DBView", bundle: .module))
-                    return
-                }
-
-                guard let storageRoot = await fetchStorageRoot() else {
-                    alert_error(String(localized: "Storage location is unavailable", table: "Audio-DBView", bundle: .module))
-                    return
-                }
-
-                do {
-                    let copiedURLs = try await copyFiles(urls, to: storageRoot)
-                    guard let repo = dependencies.audioRepo() else {
-                        Self.cleanUpCopiedFiles(copiedURLs)
-                        alert_error(String(localized: "Import failed: audio repository is unavailable", table: "Audio-DBView", bundle: .module))
-                        return
-                    }
-
-                    await repo.sync(copiedURLs, isFirst: false)
-                } catch {
-                    os_log(.error, "\(self.t)❌ 复制文件失败: \(error.localizedDescription)")
-                    alert_error(String(localized: "Import failed: \(error.localizedDescription)", table: "Audio-DBView", bundle: .module))
-                }
+                await importFiles(urls)
 
             case let .failure(error):
                 os_log(.error, "\(self.t)❌ 导入文件失败: \(error.localizedDescription)")
                 alert_error(String(localized: "Import failed: \(error.localizedDescription)", table: "Audio-DBView", bundle: .module))
             }
         }
+    }
+
+    /// 处理用户将音频文件拖入仓库视图。
+    func handleDrop(_ providers: [NSItemProvider]) -> Bool {
+        if Self.verbose {
+            os_log("\(self.t)🎯 处理文件拖拽，提供者数量: \(providers.count)")
+        }
+
+        let dispatchGroup = DispatchGroup()
+        let droppedFiles = DroppedAudioFileCollector()
+
+        for provider in providers {
+            dispatchGroup.enter()
+
+            _ = provider.loadObject(ofClass: URL.self) { object, error in
+                defer { dispatchGroup.leave() }
+
+                if let url = object {
+                    if Self.verbose {
+                        os_log("\(self.t)📎 添加 \(url.lastPathComponent) 到复制队列")
+                    }
+                    droppedFiles.append(url)
+                } else if let error = error {
+                    os_log(.error, "\(self.t)⚠️ 加载文件失败: \(error.localizedDescription)")
+                    Task { @MainActor in
+                        alert_error(String(localized: "Import failed: \(error.localizedDescription)", table: "Audio-DBView", bundle: .module))
+                    }
+                }
+            }
+        }
+
+        dispatchGroup.notify(queue: .main) {
+            Task {
+                await importFiles(droppedFiles.snapshot())
+            }
+        }
+
+        return true
     }
 
     /// 处理排序开始事件

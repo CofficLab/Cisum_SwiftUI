@@ -73,3 +73,15 @@ import Foundation
         deletedURLs: [deleted]
     ))
 }
+
+@Test func audioImportFiltersUnsupportedDroppedItems() {
+    let root = URL(fileURLWithPath: "/tmp/cisum-audio-import-filter-tests", isDirectory: true)
+    let supported = root.appendingPathComponent("track.MP3")
+    let unsupported = root.appendingPathComponent("notes.txt")
+    let folder = root.appendingPathComponent("folder", isDirectory: true)
+
+    #expect(AudioDBView.supportedImportURLs(
+        from: [supported, unsupported, folder],
+        supportedExtensions: ["mp3", "wav"]
+    ) == [supported])
+}
