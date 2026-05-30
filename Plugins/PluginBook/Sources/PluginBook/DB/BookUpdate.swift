@@ -9,7 +9,8 @@ extension BookDB {
         
         do {
             try context.enumerate(BookModel.descriptorOfNeedUpdateParent(), block: { book in
-                book.parent = try context.fetch(BookModel.descriptorOf(book.parentBookURL!)).first
+                guard let parentBookURL = book.parentBookURL else { return }
+                book.parent = try context.fetch(BookModel.descriptorOf(parentBookURL)).first
             })
             
             try context.save()
@@ -26,8 +27,8 @@ extension BookDB {
     
     func updateChildCount() {
         do {
-            try context.enumerate(BookModel.descriptorOfNeedUpdateParent(), block: { book in
-                book.childCount = book.childCount
+            try context.enumerate(BookModel.descriptorAll, block: { book in
+                book.childCount = BookModel.playableChildCount(for: book.url)
             })
             
             try context.save()
