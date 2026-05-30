@@ -74,6 +74,23 @@ final class MagicKitTests: XCTestCase {
         ))
     }
 
+    func testDirectoryContainmentDoesNotMatchSiblingPrefix() {
+        let parent = "/tmp/Cisum/Documents"
+
+        XCTAssertTrue(URLDirectoryContainmentPolicy.contains(
+            "/tmp/Cisum/Documents",
+            inDirectory: parent
+        ))
+        XCTAssertTrue(URLDirectoryContainmentPolicy.contains(
+            "/tmp/Cisum/Documents/Audio/Track.mp3",
+            inDirectory: parent
+        ))
+        XCTAssertFalse(URLDirectoryContainmentPolicy.contains(
+            "/tmp/Cisum/Documents Backup/Track.mp3",
+            inDirectory: parent
+        ))
+    }
+
     func testImageCropping() {
         // 暂时跳过此测试，因为缺少相关的图像处理功能
         // let originalImage = UIImage(named: "testImage")!

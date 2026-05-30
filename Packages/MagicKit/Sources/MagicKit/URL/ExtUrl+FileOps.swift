@@ -28,6 +28,12 @@ enum URLDownloadAvailabilityPolicy {
     }
 }
 
+enum URLDirectoryContainmentPolicy {
+    static func contains(_ childPath: String, inDirectory parentPath: String) -> Bool {
+        childPath == parentPath || childPath.hasPrefix(parentPath + "/")
+    }
+}
+
 /// URL 扩展：文件操作基础方法
 public extension URL {
     /// File/display title without the path extension.
@@ -334,7 +340,7 @@ public extension URL {
             return false
         }
 
-        return path.hasPrefix(iCloudURL.path)
+        return URLDirectoryContainmentPolicy.contains(path, inDirectory: iCloudURL.path)
     }
 
     /// Whether the URL is not under iCloud Documents.
