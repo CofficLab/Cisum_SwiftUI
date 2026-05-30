@@ -51,6 +51,29 @@ final class MagicKitTests: XCTestCase {
         try await file.ensureLocalAvailability(timeout: 0.1, pollInterval: 0.05)
     }
 
+    func testICloudPlaceholderIsNotTreatedAsDownloadedJustBecauseItExists() {
+        XCTAssertTrue(URLDownloadAvailabilityPolicy.isDownloaded(
+            fileExists: true,
+            isUbiquitousItem: false,
+            downloadingStatus: nil
+        ))
+        XCTAssertTrue(URLDownloadAvailabilityPolicy.isDownloaded(
+            fileExists: true,
+            isUbiquitousItem: true,
+            downloadingStatus: .current
+        ))
+        XCTAssertFalse(URLDownloadAvailabilityPolicy.isDownloaded(
+            fileExists: true,
+            isUbiquitousItem: true,
+            downloadingStatus: .notDownloaded
+        ))
+        XCTAssertFalse(URLDownloadAvailabilityPolicy.isDownloaded(
+            fileExists: true,
+            isUbiquitousItem: true,
+            downloadingStatus: .downloaded
+        ))
+    }
+
     func testImageCropping() {
         // 暂时跳过此测试，因为缺少相关的图像处理功能
         // let originalImage = UIImage(named: "testImage")!

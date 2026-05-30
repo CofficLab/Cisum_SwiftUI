@@ -10,6 +10,24 @@ import UniformTypeIdentifiers
     import UIKit
 #endif
 
+enum URLDownloadAvailabilityPolicy {
+    static func isDownloaded(
+        fileExists: Bool,
+        isUbiquitousItem: Bool?,
+        downloadingStatus: URLUbiquitousItemDownloadingStatus?
+    ) -> Bool {
+        if isUbiquitousItem == true {
+            return downloadingStatus == .current
+        }
+
+        if let downloadingStatus {
+            return downloadingStatus == .current
+        }
+
+        return fileExists
+    }
+}
+
 /// URL 扩展：文件操作基础方法
 public extension URL {
     /// File/display title without the path extension.
@@ -50,17 +68,18 @@ public extension URL {
 
     /// Whether a local/iCloud file is available on disk.
     var isDownloaded: Bool {
-        if isFileURL, FileManager.default.fileExists(atPath: path) {
-            return true
-        }
+        let fileExists = isFileURL && FileManager.default.fileExists(atPath: path)
 
-        let values = try? resourceValues(forKeys: [.ubiquitousItemDownloadingStatusKey])
+        let values = try? resourceValues(forKeys: [
+            .isUbiquitousItemKey,
+            .ubiquitousItemDownloadingStatusKey,
+        ])
 
-        if values?.ubiquitousItemDownloadingStatus == URLUbiquitousItemDownloadingStatus.current {
-            return true
-        }
-
-        return false
+        return URLDownloadAvailabilityPolicy.isDownloaded(
+            fileExists: fileExists,
+            isUbiquitousItem: values?.isUbiquitousItem,
+            downloadingStatus: values?.ubiquitousItemDownloadingStatus
+        )
     }
 
     /// Whether an iCloud file is explicitly not downloaded.
