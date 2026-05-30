@@ -104,3 +104,30 @@ import SwiftUI
 
     #expect(root == chapter.deletingLastPathComponent().standardizedFileURL)
 }
+
+@Test func chapterLoaderReturnsPlayableChaptersInRelativeOrder() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    let disc1 = root.appendingPathComponent("Disc 1", isDirectory: true)
+    let disc2 = root.appendingPathComponent("Disc 2", isDirectory: true)
+    try FileManager.default.createDirectory(at: disc1, withIntermediateDirectories: true)
+    try FileManager.default.createDirectory(at: disc2, withIntermediateDirectories: true)
+
+    let unsupported = disc1.appendingPathComponent("notes.txt")
+    let chapter2 = disc1.appendingPathComponent("02.m4b")
+    let chapter1 = disc2.appendingPathComponent("01.m4b")
+    try Data("notes".utf8).write(to: unsupported)
+    try Data("audio".utf8).write(to: chapter2)
+    try Data("audio".utf8).write(to: chapter1)
+
+    let chapters = BookControlChapterLoader.playableChapters(in: root)
+
+    #expect(chapters.map { BookControlChapterLoader.relativePath($0, in: root) } == [
+        "Disc 1/02.m4b",
+        "Disc 2/01.m4b",
+    ])
+}

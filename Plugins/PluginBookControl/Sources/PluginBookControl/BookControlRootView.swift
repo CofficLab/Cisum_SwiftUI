@@ -55,6 +55,55 @@ enum BookControlPlaybackRequestPolicy {
     }
 }
 
+enum BookControlChapterLoader {
+    static func relativePath(_ url: URL, in root: URL) -> String {
+        let rootPath = root.standardizedFileURL.path
+        let path = url.standardizedFileURL.path
+
+        guard path.hasPrefix(rootPath) else {
+            return url.lastPathComponent
+        }
+
+        return String(path.dropFirst(rootPath.count)).trimmingCharacters(in: CharacterSet(charactersIn: "/"))
+    }
+
+    static func playableChapters(in root: URL) -> [URL] {
+        root
+            .flatten()
+            .filter { url in
+                !url.isFolder
+                    && FileManager.default.fileExists(atPath: url.path)
+                    && BookPluginInfo.supportedExtensions.contains(url.pathExtension.lowercased())
+            }
+            .sorted {
+                relativePath($0, in: root).localizedStandardCompare(relativePath($1, in: root)) == .orderedAscending
+            }
+    }
+
+    static func adjacentAsset(
+        in chapters: [URL],
+        current asset: URL,
+        offset: Int,
+        playMode: MagicPlayMode
+    ) -> URL? {
+        guard !chapters.isEmpty, let index = chapters.firstIndex(of: asset) else { return nil }
+
+        let adjacentIndex = index + offset
+        if chapters.indices.contains(adjacentIndex) {
+            return chapters[adjacentIndex]
+        }
+
+        switch playMode {
+        case .repeatAll:
+            return offset > 0 ? chapters.first : chapters.last
+        case .shuffle:
+            return chapters.filter { $0 != asset }.randomElement() ?? chapters.first
+        case .sequence, .loop:
+            return nil
+        }
+    }
+}
+
 public struct BookControlRootView<Content>: View, SuperLog where Content: View {
     public nonisolated static var emoji: String { BookControlPluginInfo.emoji }
     private let verbose = false
@@ -159,29 +208,12 @@ private extension BookControlRootView {
     }
 
     func relativePath(_ url: URL, in root: URL) -> String {
-        let rootPath = root.standardizedFileURL.path
-        let path = url.standardizedFileURL.path
-
-        guard path.hasPrefix(rootPath) else {
-            return url.lastPathComponent
-        }
-
-        return String(path.dropFirst(rootPath.count)).trimmingCharacters(in: CharacterSet(charactersIn: "/"))
+        BookControlChapterLoader.relativePath(url, in: root)
     }
 
     func playableChapters(of asset: URL) -> [URL] {
         let root = bookRoot(containing: asset)
-
-        return root
-            .flatten()
-            .filter { url in
-                !url.isFolder
-                    && FileManager.default.fileExists(atPath: url.path)
-                    && BookPluginInfo.supportedExtensions.contains(url.pathExtension.lowercased())
-            }
-            .sorted {
-                relativePath($0, in: root).localizedStandardCompare(relativePath($1, in: root)) == .orderedAscending
-            }
+        return BookControlChapterLoader.playableChapters(in: root)
     }
 
     func adjacentAsset(to asset: URL, offset: Int) -> URL? {
@@ -235,8 +267,20 @@ private extension BookControlRootView {
             os_log("\(self.t)⏮️ 请求上一章")
         }
 
-        if let prev = adjacentAsset(to: asset, offset: -1) {
-            Task {
+        let root = bookRoot(containing: asset)
+        let playMode = man.playMode
+        Task {
+            let prev = await Task.detached(priority: .userInitiated) {
+                let chapters = BookControlChapterLoader.playableChapters(in: root)
+                return BookControlChapterLoader.adjacentAsset(
+                    in: chapters,
+                    current: asset,
+                    offset: -1,
+                    playMode: playMode
+                )
+            }.value
+
+            if let prev {
                 guard BookControlPlaybackRequestPolicy.shouldApplyNavigationResult(
                     requestedAsset: asset,
                     currentAsset: man.currentAsset
@@ -247,9 +291,7 @@ private extension BookControlRootView {
                 if verbose {
                     os_log("\(self.t)✅ 播放上一章: \(prev.lastPathComponent)")
                 }
-            }
-        } else {
-            if verbose {
+            } else if verbose {
                 os_log("\(self.t)⚠️ 没有上一章")
             }
         }
@@ -264,8 +306,20 @@ private extension BookControlRootView {
             os_log("\(self.t)⏭️ 请求下一章")
         }
 
-        if let next = adjacentAsset(to: asset, offset: 1) {
-            Task {
+        let root = bookRoot(containing: asset)
+        let playMode = man.playMode
+        Task {
+            let next = await Task.detached(priority: .userInitiated) {
+                let chapters = BookControlChapterLoader.playableChapters(in: root)
+                return BookControlChapterLoader.adjacentAsset(
+                    in: chapters,
+                    current: asset,
+                    offset: 1,
+                    playMode: playMode
+                )
+            }.value
+
+            if let next {
                 guard BookControlPlaybackRequestPolicy.shouldApplyNavigationResult(
                     requestedAsset: asset,
                     currentAsset: man.currentAsset
@@ -276,9 +330,7 @@ private extension BookControlRootView {
                 if verbose {
                     os_log("\(self.t)✅ 播放下一章: \(next.lastPathComponent)")
                 }
-            }
-        } else {
-            if verbose {
+            } else if verbose {
                 os_log("\(self.t)⚠️ 没有下一章")
             }
         }
@@ -296,20 +348,11 @@ extension BookControlRootView {
         offset: Int,
         playMode: MagicPlayMode
     ) -> URL? {
-        guard !chapters.isEmpty, let index = chapters.firstIndex(of: asset) else { return nil }
-
-        let adjacentIndex = index + offset
-        if chapters.indices.contains(adjacentIndex) {
-            return chapters[adjacentIndex]
-        }
-
-        switch playMode {
-        case .repeatAll:
-            return offset > 0 ? chapters.first : chapters.last
-        case .shuffle:
-            return chapters.filter { $0 != asset }.randomElement() ?? chapters.first
-        case .sequence, .loop:
-            return nil
-        }
+        BookControlChapterLoader.adjacentAsset(
+            in: chapters,
+            current: asset,
+            offset: offset,
+            playMode: playMode
+        )
     }
 }
