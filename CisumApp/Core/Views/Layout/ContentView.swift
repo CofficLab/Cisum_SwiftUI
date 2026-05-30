@@ -114,13 +114,13 @@ extension ContentView {
 
     func onAppear() {
         height = Config.getWindowHeight()
-        
-        if self.isDetailVisible != app.showDB {
-            if self.isDetailVisible {
+
+        if isDetailVisible {
+            if !app.showDB {
                 app.showDBView()
-            } else {
-                app.closeDBView()
             }
+        } else {
+            isDetailVisible = app.showDB
         }
     }
 }
