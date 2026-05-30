@@ -21,6 +21,7 @@ public struct BookRootView<Content>: View, SuperLog where Content: View {
     private let bookDisk: @MainActor () -> URL?
     private let storageLocationDidChangeNotifications: [Notification.Name]
     @StateObject private var bookRepoState = BookRepoState()
+    @State private var initGeneration = 0
 
     public init(
         dbRootURL: @escaping @MainActor () throws -> URL,
@@ -68,6 +69,8 @@ extension BookRootView {
         if Self.verbose {
             os_log("\(self.t)InitAll")
         }
+        initGeneration += 1
+        let generation = initGeneration
         bookRepoState.isLoading = true
         bookRepoState.error = nil
 
@@ -88,7 +91,7 @@ extension BookRootView {
                 }
                 guard let disk else {
                     await MainActor.run {
-                        self.setBookRepoState(nil, container: nil, error: BookPluginError.initialization(reason: "Disk 未找到"))
+                        self.setBookRepoState(nil, container: nil, error: BookPluginError.initialization(reason: "Disk 未找到"), generation: generation)
                     }
                     return
                 }
@@ -101,14 +104,14 @@ extension BookRootView {
                 let repo = try BookRepo(disk: disk, db: db)
 
                 await MainActor.run {
-                    self.setBookRepoState(repo, container: container)
+                    self.setBookRepoState(repo, container: container, generation: generation)
                     if Self.verbose {
                         os_log("\(self.t)🎉 BookRepo 初始化成功")
                     }
                 }
             } catch {
                 await MainActor.run {
-                    self.setBookRepoState(nil, container: nil, error: error)
+                    self.setBookRepoState(nil, container: nil, error: error, generation: generation)
                     os_log("❌初始化失败: \(error.localizedDescription)")
                 }
             }
@@ -119,7 +122,8 @@ extension BookRootView {
 // MARK: - Setter
 
 extension BookRootView {
-    @MainActor private func setBookRepoState(_ repo: BookRepo?, container: ModelContainer?, error: Error? = nil) {
+    @MainActor private func setBookRepoState(_ repo: BookRepo?, container: ModelContainer?, error: Error? = nil, generation: Int) {
+        guard generation == initGeneration else { return }
         bookRepoState.repo = repo
         bookRepoState.container = container
         bookRepoState.error = error
