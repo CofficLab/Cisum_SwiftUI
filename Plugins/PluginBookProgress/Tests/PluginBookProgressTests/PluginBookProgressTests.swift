@@ -79,3 +79,46 @@ import Testing
 
     #expect(root == chapter.deletingLastPathComponent().standardizedFileURL)
 }
+
+@Test func bookLookupFindsStandaloneBookFiles() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    let book = root.appendingPathComponent("Standalone.m4b")
+    try Data("audio".utf8).write(to: book)
+
+    #expect(BookProgressBookLookup.bookURL(for: book, bookDisk: root) == book.standardizedFileURL)
+}
+
+@Test func bookLookupRejectsUnsupportedStandaloneFiles() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    let notes = root.appendingPathComponent("notes.txt")
+    try Data("notes".utf8).write(to: notes)
+
+    #expect(BookProgressBookLookup.bookURL(for: notes, bookDisk: root) == nil)
+}
+
+@Test func bookLookupFindsFolderBooksForNestedChapters() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let book = root.appendingPathComponent("Novel", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: book, withIntermediateDirectories: true)
+    let chapter = book.appendingPathComponent("Chapter 01.m4b")
+    try Data("audio".utf8).write(to: chapter)
+
+    #expect(BookProgressBookLookup.bookURL(for: chapter, bookDisk: root) == book.standardizedFileURL)
+}

@@ -83,6 +83,23 @@ enum BookProgressBookRootResolver {
     }
 }
 
+enum BookProgressBookLookup {
+    static func bookURL(for currentURL: URL, bookDisk: URL?) -> URL? {
+        let bookURL = BookProgressBookRootResolver.bookRoot(containing: currentURL, bookDisk: bookDisk)
+
+        var isDirectory: ObjCBool = false
+        guard FileManager.default.fileExists(atPath: bookURL.path, isDirectory: &isDirectory) else {
+            return nil
+        }
+
+        if isDirectory.boolValue {
+            return bookURL
+        }
+
+        return BookPluginInfo.supportedExtensions.contains(bookURL.pathExtension.lowercased()) ? bookURL : nil
+    }
+}
+
 public struct BookProgressRootView<Content>: View, SuperLog where Content: View {
     public nonisolated static var emoji: String { BookProgressPluginInfo.emoji }
     private let verbose = true
@@ -341,21 +358,18 @@ private extension BookProgressRootView {
     /// - Parameter url: 要查找的URL
     /// - Returns: 所属书籍的URL，如果未找到则返回nil
     private func findBookForURL(_ url: URL) async -> URL? {
-        let parentURL = bookRoot(containing: url)
+        if let bookURL = BookProgressBookLookup.bookURL(for: url, bookDisk: BookPlugin.getBookDisk()) {
+            return bookURL
+        }
 
-        var isDirectory: ObjCBool = false
-        if FileManager.default.fileExists(atPath: parentURL.path, isDirectory: &isDirectory),
-           isDirectory.boolValue {
-            return parentURL
-        } else if self.verbose {
+        if self.verbose {
+            let parentURL = bookRoot(containing: url)
             do {
                 _ = try FileManager.default.contentsOfDirectory(at: parentURL, includingPropertiesForKeys: nil)
             } catch {
                 os_log("\(self.t)⚠️ 无法读取目录内容: \(error.localizedDescription)")
             }
-        }
 
-        if self.verbose {
             os_log("\(self.t)⚠️ 父路径不是书籍目录: \(parentURL.shortPath())")
         }
 
