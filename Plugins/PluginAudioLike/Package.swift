@@ -15,11 +15,11 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(path: "../Packages/CisumUI"),
+        .package(path: "../../Packages/CisumUI"),
         .package(path: "../PluginAudioScene"),
-        .package(path: "../Packages/MagicKit"),
+        .package(path: "../../Packages/MagicKit"),
         .package(url: "https://github.com/nookery/MagicAlert.git", from: "1.0.0"),
-        .package(url: "https://github.com/nookery/MagicPlayMan", from: "1.3.0")
+        .package(path: "../../Packages/MagicPlayMan")
     ],
     targets: [
         .target(

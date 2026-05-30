@@ -620,6 +620,15 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
         }
     }
 
+    func insertAudio(url: URL, order: Int? = nil, force: Bool = false) {
+        let audio = AudioModel(url)
+        if let order {
+            audio.order = order
+        }
+
+        insertAudio(audio, force: force)
+    }
+
     /// 检查是否所有音频都在云端
     /// - Returns: 如果有音频则返回 true，否则返回 false
     /// - Note: 当前实现仅检查是否有音频，而不是真正检查是否所有音频都在云端
@@ -637,7 +646,12 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
             os_log("\(self.t)NextOf -> \(audio.url.lastPathComponent)")
         }
 
-        return nextOf(audio.url, verbose: verbose)
+        do {
+            return try nextOf(audio: audio)
+        } catch {
+            os_log(.error, "\(self.t)Failed to get next audio: \(error.localizedDescription)")
+            return nil
+        }
     }
 
     /// 获取指定 URL 的下一个音频模型
@@ -658,7 +672,7 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
             return nil
         }
 
-        return audio
+        return nextOf(audio, verbose: verbose)
     }
 
     /// 获取指定音频模型的上一个音频模型
