@@ -27,7 +27,7 @@ struct CopyList: View, SuperLog, SuperThread {
             }
         }
         .onAppear {
-            refreshTasks()
+            refreshTasks(postCountChanged: true)
         }
         .onCopyTaskCountChanged { _ in
             refreshTasks()
@@ -37,15 +37,17 @@ struct CopyList: View, SuperLog, SuperThread {
     }
 
     /// 刷新任务列表
-    private func refreshTasks() {
+    private func refreshTasks(postCountChanged: Bool = false) {
         guard let container = AudioCopyService.container else {
             tasks = []
             return
         }
         tasks = CopyDB.getAllTasks(from: container)
-        
-        // 将最新数量通知出去，因为CopyWorker的数量通知有延迟
-        NotificationCenter.postCopyTaskCountChanged(count: tasks.count)
+
+        if postCountChanged {
+            // 将最新数量通知出去，因为 CopyWorker 的数量通知有延迟。
+            NotificationCenter.postCopyTaskCountChanged(count: tasks.count)
+        }
     }
 
     /// 空视图
@@ -96,7 +98,7 @@ struct CopyList: View, SuperLog, SuperThread {
         let tasksToDelete = offsets.map { tasks[$0] }
         do {
             try CopyDB.deleteTasks(tasksToDelete, from: container)
-            refreshTasks()
+            refreshTasks(postCountChanged: true)
         } catch {
             os_log(.error, "\(self.t)Delete failed: \(error.localizedDescription)")
             alert_error(String(localized: "Delete failed: \(error.localizedDescription)", table: "Audio-Copy-macOS", bundle: .module))
