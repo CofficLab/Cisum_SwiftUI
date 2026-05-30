@@ -266,9 +266,9 @@ public final class FileLogCoordinator: @unchecked Sendable {
             options: .skipsHiddenFiles
         ) else { return }
 
-        let cutoff = Calendar.current.date(
+        guard let cutoff = Calendar.current.date(
             byAdding: .day, value: -maxRetentionDays, to: Date()
-        )!
+        ) else { return }
 
         for file in files {
             guard let attrs = try? FileManager.default.attributesOfItem(atPath: file.path),
