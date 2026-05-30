@@ -308,25 +308,25 @@ public class MagicApp {
         /// 获取应用的 Application Support 目录
         /// - Returns: Application Support 目录的 URL
         public static func getAppSupportDirectory() -> URL {
-            try! URL.applicationSupport
+            (try? URL.applicationSupport) ?? FileManager.default.temporaryDirectory
         }
 
         /// 获取应用专属的 Application Support 目录
         /// - Returns: 应用专属的 Application Support 目录 URL
         public static func getAppSpecificSupportDirectory() -> URL {
-            try! URL.appSpecificSupport
+            (try? URL.appSpecificSupport) ?? FileManager.default.temporaryDirectory
         }
 
         /// 获取应用的 Documents 目录
         /// - Returns: Documents 目录的 URL
         public static func getDocumentsDirectory() -> URL {
-            try! URL.documents
+            (try? URL.documents) ?? FileManager.default.temporaryDirectory
         }
 
         /// 获取应用的沙盒容器目录
         /// - Returns: 容器目录的 URL
         public static func getContainerDirectory() -> URL {
-            try! URL.container
+            (try? URL.container) ?? FileManager.default.temporaryDirectory
         }
 
         /// 获取应用的 iCloud 容器目录
@@ -344,7 +344,7 @@ public class MagicApp {
         /// 获取应用的缓存目录
         /// - Returns: 缓存目录的 URL
         public static func getCacheDirectory() -> URL {
-            try! URL.caches
+            (try? URL.caches) ?? FileManager.default.temporaryDirectory
         }
 
         /// 返回调试命令菜单
@@ -400,14 +400,14 @@ public class MagicApp {
         /// 获取应用的数据库目录
         /// - Returns: 数据库目录的 URL
         public static func getDatabaseDirectory() -> URL {
-            try! URL.database
+            (try? URL.database) ?? FileManager.default.temporaryDirectory
         }
 
         /// 获取特定数据库文件的路径
         /// - Parameter filename: 数据库文件名（例如："app.db"）
         /// - Returns: 数据库文件的完整 URL
         public static func getDatabasePath(filename: String) -> URL {
-            try! URL.databasePath(filename: filename)
+            (try? URL.databasePath(filename: filename)) ?? FileManager.default.temporaryDirectory.appendingPathComponent(filename)
         }
 
         /// 判断当前设备是否为桌面设备
