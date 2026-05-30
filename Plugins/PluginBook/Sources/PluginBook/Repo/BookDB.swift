@@ -290,6 +290,7 @@ extension BookDB {
         }
 
         self.updateBookParent()
+        NotificationCenter.postBookDBSynced()
     }
 
     // MARK: SyncWithUpdatedItems
