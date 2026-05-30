@@ -48,6 +48,45 @@ import Foundation
     ))
 }
 
+@Test func migrationUsesDisplayedSourceAndTargetRoots() throws {
+    let displayedSource = URL(fileURLWithPath: "/tmp/cisum-storage-displayed-source", isDirectory: true)
+    let displayedTarget = URL(fileURLWithPath: "/tmp/cisum-storage-displayed-target", isDirectory: true)
+
+    let roots = try MigrationProgressView.migrationRoots(
+        sourceURL: displayedSource,
+        targetURL: displayedTarget,
+        requestedMigration: true
+    )
+
+    #expect(roots?.source == displayedSource)
+    #expect(roots?.target == displayedTarget)
+    #expect(try MigrationProgressView.migrationRoots(
+        sourceURL: displayedSource,
+        targetURL: displayedTarget,
+        requestedMigration: false
+    ) == nil)
+}
+
+@Test func migrationRootResolutionReportsMissingDisplayedRoots() {
+    let target = URL(fileURLWithPath: "/tmp/cisum-storage-target", isDirectory: true)
+
+    #expect(throws: MigrationError.self) {
+        try MigrationProgressView.migrationRoots(
+            sourceURL: nil,
+            targetURL: target,
+            requestedMigration: true
+        )
+    }
+
+    #expect(throws: MigrationError.self) {
+        try MigrationProgressView.migrationRoots(
+            sourceURL: target,
+            targetURL: nil,
+            requestedMigration: true
+        )
+    }
+}
+
 @Test func migrationMovesContentsButKeepsSourceRoot() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)

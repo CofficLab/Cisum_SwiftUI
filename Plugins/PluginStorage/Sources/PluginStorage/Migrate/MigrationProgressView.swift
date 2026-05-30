@@ -49,6 +49,22 @@ struct MigrationProgressView: View {
         requestedMigration && sourceURL != nil && targetURL != nil
     }
 
+    nonisolated static func migrationRoots(
+        sourceURL: URL?,
+        targetURL: URL?,
+        requestedMigration: Bool
+    ) throws -> (source: URL, target: URL)? {
+        guard requestedMigration else { return nil }
+        guard let sourceURL else {
+            throw MigrationError.sourceDirectoryNotFound
+        }
+        guard let targetURL else {
+            throw MigrationError.targetDirectoryNotFound
+        }
+
+        return (sourceURL, targetURL)
+    }
+
     private func prepareForRetry() {
         migrationManager.resetCancellation()
         processedFiles.removeAll()
@@ -130,27 +146,20 @@ struct MigrationProgressView: View {
 
     private func startMigration(shouldMigrate: Bool) async {
         do {
-            let shouldPerformMigration = Self.shouldPerformMigration(
+            let migrationRoots = try Self.migrationRoots(
                 sourceURL: sourceURL,
                 targetURL: targetURL,
                 requestedMigration: shouldMigrate
             )
 
-            if shouldPerformMigration {
-                guard let sourceRoot = dependencies.getStorageRoot() else {
-                    throw MigrationError.sourceDirectoryNotFound
-                }
-                guard let targetRoot = dependencies.getStorageRootForLocation(targetLocation) else {
-                    throw MigrationError.targetDirectoryNotFound
-                }
-
+            if let migrationRoots {
                 let manager = migrationManager
                 manager.resetCancellation()
 
                 try await Task.detached(priority: .userInitiated) {
                     try manager.migrate(
-                        from: sourceRoot,
-                        to: targetRoot,
+                        from: migrationRoots.source,
+                        to: migrationRoots.target,
                         progressCallback: { progress, file in
                             Task { @MainActor in
                                 self.migrationProgress = progress
@@ -175,7 +184,7 @@ struct MigrationProgressView: View {
 
             // 更新存储位置
             await MainActor.run {
-                let completionMessage = Self.completionMessage(shouldMigrate: shouldPerformMigration)
+                let completionMessage = Self.completionMessage(shouldMigrate: migrationRoots != nil)
                 dependencies.updateStorageLocation(targetLocation)
                 self.migrationCompleted = true
                 self.completionMessage = completionMessage
