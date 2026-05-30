@@ -1,4 +1,5 @@
 import Foundation
+import MagicAlert
 import MagicKit
 import OSLog
 import PluginBook
@@ -82,6 +83,7 @@ extension BookDBView {
 
         guard let bookDisk = dependencies.bookDisk else {
             os_log(.error, "\(self.t)❌ 书籍仓库目录不可用")
+            alert_error(String(localized: "Storage location is unavailable", table: "Book-DBView", bundle: .module))
             return
         }
 
@@ -93,6 +95,9 @@ extension BookDBView {
                 await repo.syncImportedItems(copiedItems)
             } catch {
                 os_log(.error, "\(self.t)❌ 复制书籍文件失败: \(error.localizedDescription)")
+                await MainActor.run {
+                    alert_error(String(localized: "Import failed: \(error.localizedDescription)", table: "Book-DBView", bundle: .module))
+                }
             }
         }
     }
@@ -239,6 +244,7 @@ extension BookDBView {
             
         case let .failure(error):
             os_log(.error, "\(self.t)❌ 导入文件失败: \(error.localizedDescription)")
+            alert_error(String(localized: "Import failed: \(error.localizedDescription)", table: "Book-DBView", bundle: .module))
         }
     }
     
@@ -277,6 +283,9 @@ extension BookDBView {
                     droppedFiles.append(url)
                 } else if let error = error {
                     os_log(.error, "\(self.t)⚠️ 加载文件失败: \(error.localizedDescription)")
+                    Task { @MainActor in
+                        alert_error(String(localized: "Import failed: \(error.localizedDescription)", table: "Book-DBView", bundle: .module))
+                    }
                 }
             }
         }
