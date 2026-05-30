@@ -7,7 +7,7 @@ public struct StorageView: View {
     private let currentStorageSelection: WelcomeStorageSelection?
     private let updateStorageSelection: @MainActor (WelcomeStorageSelection) -> Void
 
-    @State private var tempStorageSelection: WelcomeStorageSelection
+    @State private var tempStorageSelection: WelcomeStorageSelection?
 
     public init(
         isICloudAvailable: Bool,
@@ -17,7 +17,7 @@ public struct StorageView: View {
         self.isICloudAvailable = isICloudAvailable
         self.currentStorageSelection = currentStorageSelection
         self.updateStorageSelection = updateStorageSelection
-        _tempStorageSelection = State(initialValue: WelcomeStorageSelectionPolicy.defaultSelection(
+        _tempStorageSelection = State(initialValue: WelcomeStorageSelectionPolicy.displayedSelection(
             currentStorageSelection: currentStorageSelection,
             isICloudAvailable: isICloudAvailable
         ))
@@ -90,13 +90,15 @@ public struct StorageView: View {
     }
 
     private func onAppear() {
-        tempStorageSelection = WelcomeStorageSelectionPolicy.defaultSelection(
+        tempStorageSelection = WelcomeStorageSelectionPolicy.displayedSelection(
             currentStorageSelection: currentStorageSelection,
             isICloudAvailable: isICloudAvailable
         )
     }
 
     private func onDisappear() {
+        guard let tempStorageSelection else { return }
+
         updateSelection(tempStorageSelection)
     }
 
@@ -122,10 +124,10 @@ enum WelcomeStorageSelectionPolicy {
         return selection
     }
 
-    static func defaultSelection(
+    static func displayedSelection(
         currentStorageSelection: WelcomeStorageSelection?,
         isICloudAvailable: Bool
-    ) -> WelcomeStorageSelection {
+    ) -> WelcomeStorageSelection? {
         if let currentStorageSelection {
             if currentStorageSelection == .icloud && !isICloudAvailable {
                 return .local
@@ -134,6 +136,16 @@ enum WelcomeStorageSelectionPolicy {
             return currentStorageSelection
         }
 
-        return isICloudAvailable ? .icloud : .local
+        return nil
+    }
+
+    static func defaultSelection(
+        currentStorageSelection: WelcomeStorageSelection?,
+        isICloudAvailable: Bool
+    ) -> WelcomeStorageSelection {
+        displayedSelection(
+            currentStorageSelection: currentStorageSelection,
+            isICloudAvailable: isICloudAvailable
+        ) ?? (isICloudAvailable ? .icloud : .local)
     }
 }
