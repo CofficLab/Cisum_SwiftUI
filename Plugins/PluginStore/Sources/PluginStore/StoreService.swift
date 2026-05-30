@@ -177,9 +177,9 @@ public enum StoreService: SuperLog {
                     if let nonRenewable = nonRenewables.first(where: { $0.id == transaction.productID }),
                        transaction.productID == "nonRenewing.standard" {
                         let currentDate = Date()
-                        let expirationDate = Calendar(identifier: .gregorian)
-                            .date(byAdding: DateComponents(year: 1), to: transaction.purchaseDate)!
-                        if currentDate < expirationDate {
+                        if let expirationDate = Calendar(identifier: .gregorian)
+                            .date(byAdding: DateComponents(year: 1), to: transaction.purchaseDate),
+                            currentDate < expirationDate {
                             purchasedNonRenewableSubscriptions.append(nonRenewable)
                         }
                     }
