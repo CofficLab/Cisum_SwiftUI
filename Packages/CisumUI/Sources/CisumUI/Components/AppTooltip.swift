@@ -9,7 +9,7 @@ public extension View {
         Group {
             if let shortcut {
                 let shortcutStr = shortcutText(shortcut)
-                let tooltipText = Text("\(text) (\(shortcutStr))")
+                let tooltipText = Text(text) + Text(" (\(shortcutStr))")
                 help(tooltipText)
             } else {
                 help(text)
