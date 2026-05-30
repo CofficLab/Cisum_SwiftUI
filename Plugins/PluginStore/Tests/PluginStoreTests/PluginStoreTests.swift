@@ -43,3 +43,14 @@ import Testing
         resultGeneration: 2
     ))
 }
+
+@Test func storeSettingOnlyAppliesLatestPurchaseInfoResult() {
+    #expect(StorePurchaseInfoLoadPolicy.shouldApplyResult(
+        currentGeneration: 4,
+        resultGeneration: 4
+    ))
+    #expect(!StorePurchaseInfoLoadPolicy.shouldApplyResult(
+        currentGeneration: 4,
+        resultGeneration: 3
+    ))
+}

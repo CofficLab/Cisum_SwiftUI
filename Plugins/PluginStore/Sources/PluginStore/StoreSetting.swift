@@ -6,6 +6,12 @@ import OSLog
 import StoreKit
 import SwiftUI
 
+enum StorePurchaseInfoLoadPolicy {
+    static func shouldApplyResult(currentGeneration: Int, resultGeneration: Int) -> Bool {
+        resultGeneration == currentGeneration
+    }
+}
+
 public struct StoreSetting: View, SuperLog, SuperEvent {
     public nonisolated static let emoji = "💰"
 
@@ -14,6 +20,7 @@ public struct StoreSetting: View, SuperLog, SuperEvent {
     @State private var purchaseInfo: PurchaseInfo = .none
     @State private var tierDisplayName: String = "Free"
     @State private var statusDescription: String = "Currently using free version"
+    @State private var purchaseInfoGeneration = 0
 
     public init() {}
 
@@ -106,9 +113,17 @@ public struct StoreSetting: View, SuperLog, SuperEvent {
 
 extension StoreSetting {
     private func updatePurchaseInfo() {
+        purchaseInfoGeneration += 1
+        let generation = purchaseInfoGeneration
+
         Task {
             let info = await StoreService.getPurchaseInfo()
             await MainActor.run {
+                guard StorePurchaseInfoLoadPolicy.shouldApplyResult(
+                    currentGeneration: self.purchaseInfoGeneration,
+                    resultGeneration: generation
+                ) else { return }
+
                 self.purchaseInfo = info
                 self.tierDisplayName = StoreService.tierCached().displayName
 
