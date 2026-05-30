@@ -1,6 +1,7 @@
 import Testing
 @testable import PluginBookDBView
 import Foundation
+import UniformTypeIdentifiers
 
 @Test func bookDBInfoExportsMetadata() {
     #expect(BookDBPluginInfo.table == "Book-DBView")
@@ -47,6 +48,19 @@ import Foundation
     }
 
     #expect(FileManager.default.fileExists(atPath: destinationRoot.appendingPathComponent("source").path) == false)
+}
+
+@Test func bookDropReadsFileURLDataProvider() async throws {
+    let expected = URL(fileURLWithPath: "/tmp/cisum-book-drop-provider-tests/audiobook")
+    let provider = NSItemProvider()
+    provider.registerDataRepresentation(forTypeIdentifier: UTType.fileURL.identifier, visibility: .all) { completion in
+        completion(expected.dataRepresentation, nil)
+        return nil
+    }
+
+    let url = try await BookDBView.droppedFileURL(from: provider)
+
+    #expect(url == expected)
 }
 
 @Test func bookPlaybackOrderingUsesRelativePaths() throws {

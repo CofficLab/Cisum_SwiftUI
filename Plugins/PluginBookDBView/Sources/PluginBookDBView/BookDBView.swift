@@ -50,24 +50,6 @@ public struct BookDBView: View, SuperLog, SuperThread {
     }
 }
 
-private final class DroppedFileCollector: @unchecked Sendable {
-    private let lock = NSLock()
-    private var files: [URL] = []
-
-    func append(_ url: URL) {
-        lock.lock()
-        files.append(url)
-        lock.unlock()
-    }
-
-    func snapshot() -> [URL] {
-        lock.lock()
-        let files = files
-        lock.unlock()
-        return files
-    }
-}
-
 // MARK: - Action
 
 extension BookDBView {
@@ -162,6 +144,52 @@ extension BookDBView {
         for url in urls {
             try? FileManager.default.removeItem(at: url)
         }
+    }
+
+    nonisolated static func droppedFileURL(from provider: NSItemProvider) async throws -> URL? {
+        if provider.hasItemConformingToTypeIdentifier(UTType.fileURL.identifier) {
+            let data: Data? = try await withCheckedThrowingContinuation { continuation in
+                provider.loadDataRepresentation(forTypeIdentifier: UTType.fileURL.identifier) { data, error in
+                    if let error {
+                        continuation.resume(throwing: error)
+                    } else {
+                        continuation.resume(returning: data)
+                    }
+                }
+            }
+
+            guard let data else { return nil }
+            return URL(dataRepresentation: data, relativeTo: nil)
+        }
+
+        guard provider.canLoadObject(ofClass: URL.self) else { return nil }
+
+        return try await withCheckedThrowingContinuation { continuation in
+            _ = provider.loadObject(ofClass: URL.self) { object, error in
+                if let error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume(returning: object)
+                }
+            }
+        }
+    }
+
+    nonisolated static func droppedFileURLs(from providers: [NSItemProvider]) async -> (urls: [URL], errors: [Error]) {
+        var urls: [URL] = []
+        var errors: [Error] = []
+
+        for provider in providers {
+            do {
+                if let url = try await droppedFileURL(from: provider) {
+                    urls.append(url)
+                }
+            } catch {
+                errors.append(error)
+            }
+        }
+
+        return (urls, errors)
     }
 
     private nonisolated static func canImportFolder(_ folder: URL) throws -> Bool {
@@ -333,37 +361,16 @@ extension BookDBView {
         if Self.verbose {
             os_log("\(self.t)🎯 处理文件拖拽，提供者数量: \(providers.count)")
         }
-        
-        let dispatchGroup = DispatchGroup()
-        let droppedFiles = DroppedFileCollector()
-        
-        for provider in providers {
-            dispatchGroup.enter()
-            
-            // 异步加载文件对象
-            _ = provider.loadObject(ofClass: URL.self) { object, error in
-                defer { dispatchGroup.leave() }
-                
-                if let url = object {
-                    if Self.verbose {
-                        os_log("\(self.t)📎 添加 \(url.lastPathComponent) 到复制队列")
-                    }
-                    droppedFiles.append(url)
-                } else if let error = error {
-                    os_log(.error, "\(self.t)⚠️ 加载文件失败: \(error.localizedDescription)")
-                    Task { @MainActor in
-                        alert_error(String(localized: "Import failed: \(error.localizedDescription)", table: "Book-DBView", bundle: .module))
-                    }
-                }
+
+        Task {
+            let droppedFiles = await Self.droppedFileURLs(from: providers)
+
+            if let error = droppedFiles.errors.first {
+                os_log(.error, "\(self.t)⚠️ 加载文件失败: \(error.localizedDescription)")
+                alert_error(String(localized: "Import failed: \(error.localizedDescription)", table: "Book-DBView", bundle: .module))
             }
-        }
-        
-        // 所有文件加载完成后，在主线程执行复制
-        dispatchGroup.notify(queue: .main) {
-            if Self.verbose {
-                os_log("\(self.t)✅ 所有文件加载完成，开始复制")
-            }
-            copy(droppedFiles.snapshot())
+
+            copy(droppedFiles.urls)
         }
         
         return true
