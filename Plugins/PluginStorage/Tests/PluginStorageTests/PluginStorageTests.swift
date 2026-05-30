@@ -18,6 +18,17 @@ import Foundation
     }
 }
 
+@Test func fileListOnlyAppliesLatestVisibleItemsUpdate() {
+    #expect(FileListUpdatePolicy.shouldApplyResult(
+        currentGeneration: 2,
+        resultGeneration: 2
+    ))
+    #expect(!FileListUpdatePolicy.shouldApplyResult(
+        currentGeneration: 2,
+        resultGeneration: 1
+    ))
+}
+
 @Test func directStorageSwitchUsesAccurateCompletionMessage() {
     #expect(MigrationProgressView.completionMessage(shouldMigrate: true) == "迁移已完成")
     #expect(MigrationProgressView.completionMessage(shouldMigrate: false) == "已切换到新位置")

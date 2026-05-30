@@ -3,6 +3,12 @@ import MagicKit
 import OSLog
 import SwiftUI
 
+enum FileListUpdatePolicy {
+    static func shouldApplyResult(currentGeneration: Int, resultGeneration: Int) -> Bool {
+        currentGeneration == resultGeneration
+    }
+}
+
 struct FileListView: View, SuperLog {
     nonisolated static let emoji = "📂"
 
@@ -14,6 +20,7 @@ struct FileListView: View, SuperLog {
     @State private var visibleItems: [FileItem] = []
     @State private var itemCache: [URL: [FileItem]] = [:]
     @State private var loadErrorMessage: String?
+    @State private var updateGeneration = 0
 
     nonisolated private static let ignoredFiles = [
         ".DS_Store",
@@ -118,6 +125,8 @@ struct FileListView: View, SuperLog {
     }
 
     private func updateVisibleItems(reason: String) {
+        updateGeneration += 1
+        let generation = updateGeneration
         let rootURL = url
         let expandedURLs = Set(expandedItems.map(\.url))
         let cachedItems = itemCache
@@ -131,8 +140,10 @@ struct FileListView: View, SuperLog {
                 cachedItems: cachedItems
             )
 
-            await setVisibleItems(update.visibleItems, loadErrorMessage: update.loadErrorMessage)
-            await mergeItemCache(update.itemCache)
+            await applyVisibleItemsUpdate(
+                update,
+                generation: generation
+            )
         })
     }
 
@@ -218,14 +229,18 @@ struct FileListView: View, SuperLog {
     }
 
     @MainActor
-    private func setVisibleItems(_ items: [FileItem], loadErrorMessage: String?) {
-        visibleItems = items
-        self.loadErrorMessage = loadErrorMessage
-    }
+    private func applyVisibleItemsUpdate(
+        _ update: (visibleItems: [FileItem], itemCache: [URL: [FileItem]], loadErrorMessage: String?),
+        generation: Int
+    ) {
+        guard FileListUpdatePolicy.shouldApplyResult(
+            currentGeneration: updateGeneration,
+            resultGeneration: generation
+        ) else { return }
 
-    @MainActor
-    private func mergeItemCache(_ cache: [URL: [FileItem]]) {
-        itemCache.merge(cache) { _, new in new }
+        visibleItems = update.visibleItems
+        loadErrorMessage = update.loadErrorMessage
+        itemCache.merge(update.itemCache) { _, new in new }
     }
 }
 
