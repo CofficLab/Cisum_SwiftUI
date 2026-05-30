@@ -54,40 +54,38 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
         Group {
             if isDemoMode {
                 content
+            } else if let e = self.error ?? pluginProvider.initializationError {
+                CrashedView(error: e)
             } else if self.launching {
                 Guide()
             } else {
-                if let e = self.error {
-                    CrashedView(error: e)
-                } else {
-                    NavigationStack {
-                        GeometryReader { proxy in
-                            ZStack {
-                            // iOS 的 NavigationStack 需要放这里才能设置背景
-                                themeProvider.activeChromeTheme
-                                    .makeGlobalBackground(proxy: proxy)
-                                    .ignoresSafeArea()
+                NavigationStack {
+                    GeometryReader { proxy in
+                        ZStack {
+                        // iOS 的 NavigationStack 需要放这里才能设置背景
+                            themeProvider.activeChromeTheme
+                                .makeGlobalBackground(proxy: proxy)
+                                .ignoresSafeArea()
 
-                                Group {
-                                    if let wrapped = pluginProvider.wrapWithCurrentRoot(content: { content }) {
-                                        wrapped
-                                    } else {
-                                        content
-                                    }
+                            Group {
+                                if let wrapped = pluginProvider.wrapWithCurrentRoot(content: { content }) {
+                                    wrapped
+                                } else {
+                                    content
                                 }
-                                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                .frame(minWidth: Config.minWidth, minHeight: Config.minHeight)
-                                .toolbar {
-                                    RootToolbar()
-                                }
-                                .blendMode(.normal)
                             }
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .frame(minWidth: Config.minWidth, minHeight: Config.minHeight)
+                            .toolbar {
+                                RootToolbar()
+                            }
+                            .blendMode(.normal)
                         }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .withMagicToast()
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .withMagicToast()
             }
         }
         .background(themeProvider.activeChromeTheme.workspaceBackgroundColor())

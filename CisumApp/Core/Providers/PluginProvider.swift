@@ -34,6 +34,9 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
     /// 当前激活的场景名称
     @Published private(set) var currentSceneName: String?
 
+    /// 启动期插件初始化错误。根视图会把它展示为可复制的错误页，而不是让应用直接闪退。
+    @Published private(set) var initializationError: Error?
+
     /// 获取所有可用的场景名称
     @MainActor
     var sceneNames: [String] {
@@ -376,7 +379,7 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
     /// 验证插件架构约束
     ///
     /// 强制执行架构规则：提供场景的插件必须同时提供海报视图。
-    /// 如果违反规则，应用将停止运行，确保架构一致性。
+    /// 如果违反规则，记录初始化错误，交给根视图展示可恢复的错误页面。
     private func validatePluginArchitecture() {
         for plugin in plugins {
             let hasScene = plugin.addSceneItem() != nil
@@ -385,16 +388,13 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
             if hasScene && !hasPoster {
                 let pluginType = String(describing: type(of: plugin))
                 let sceneName = plugin.addSceneItem() ?? "Unknown"
-                let message = """
-                ❌ 架构约束违规：插件 '\(pluginType)' 提供了场景 '\(sceneName)' 但未提供海报视图。
-
-                架构规则要求：任何提供场景（addSceneItem）的插件必须同时提供海报视图（addPosterView）。
-
-                请修改该插件，添加 addPosterView() 方法。
-                """
-
-                os_log(.fault, "\(Self.t)\(message)")
-                fatalError(message)
+                let error = PluginProviderError.pluginSceneMissingPoster(
+                    pluginType: pluginType,
+                    sceneName: sceneName
+                )
+                os_log(.fault, "\(Self.t)\(error.localizedDescription)")
+                initializationError = error
+                return
             }
         }
     }
@@ -461,6 +461,9 @@ enum PluginProviderError: Error, LocalizedError {
     /// 当插件的 ID 为空字符串时抛出此错误。
     case pluginIDIsEmpty
 
+    /// 插件提供场景但没有提供对应海报视图。
+    case pluginSceneMissingPoster(pluginType: String, sceneName: String)
+
     var errorDescription: String? {
         switch self {
         case let .pluginNotFound(pluginId):
@@ -473,6 +476,10 @@ enum PluginProviderError: Error, LocalizedError {
             return "Plugin with ID \(pluginId) already exists in collection: \(collection)"
         case .pluginIDIsEmpty:
             return "Plugin has an empty ID"
+        case let .pluginSceneMissingPoster(pluginType, sceneName):
+            return """
+            插件 '\(pluginType)' 提供了场景 '\(sceneName)' 但未提供海报视图。请更新该插件，添加 addPosterView() 方法。
+            """
         }
     }
 }
