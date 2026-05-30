@@ -15,6 +15,10 @@ import CisumUI
 #endif
 
 extension MagicPlayMan {
+    static func shouldApplyNowPlayingMetadataResult(requestedAsset: URL, currentAsset: URL?) -> Bool {
+        requestedAsset == currentAsset
+    }
+
     func setupRemoteControl() {
         #if os(iOS)
             do {
@@ -236,6 +240,13 @@ extension MagicPlayMan {
                         os_log("\(self.t)❌ 缩略图加载失败: \(error.localizedDescription)")
                     }
                 }
+            }
+
+            guard Self.shouldApplyNowPlayingMetadataResult(requestedAsset: asset, currentAsset: self.currentAsset) else {
+                if verbose {
+                    os_log("\(self.t)⚠️ Asset changed while loading now playing artwork, ignoring stale result for: \(asset.title)")
+                }
+                return
             }
 
             self.updateNowPlayingCenter(with: info)
