@@ -18,13 +18,14 @@ struct FileSizeView: View, SuperLog {
                     .foregroundStyle(.secondary)
             }
         }
-        .task(priority: .background) {
-            updateSize()
+        .task(id: url, priority: .background) {
+            size = nil
+            await updateSize()
         }
     }
 
-    private func updateSize(verbose: Bool = false) {
-        Task.detached(priority: .background) {
+    private func updateSize(verbose: Bool = false) async {
+        let calculatedSize = await Task.detached(priority: .background) {
             if verbose {
                 os_log("\(self.t)UpdateSize: \(url.path)")
             }
@@ -52,22 +53,18 @@ struct FileSizeView: View, SuperLog {
                     return (try? FileManager.default.attributesOfItem(atPath: url.path)[.size] as? Int64) ?? 0
                 }
             }()
-            
-            await setSize(size)
-        }
+
+            return size
+        }.value
+
+        guard !Task.isCancelled else { return }
+        size = calculatedSize
     }
     
     private func formatFileSize(_ size: Int64) -> String {
         let formatter = ByteCountFormatter()
         formatter.countStyle = .file
         return formatter.string(fromByteCount: size)
-    }
-    
-    @MainActor
-    private func setSize(_ size: Int64) {
-        Task(priority: .background) {
-            self.size = size
-        }
     }
 }
 
