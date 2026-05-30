@@ -212,14 +212,8 @@ private extension BookProgressRootView {
     /// - Parameter url: 要查找的URL
     /// - Returns: 所属书籍的URL，如果未找到则返回nil
     private func findBookForURL(_ url: URL) async -> URL? {
-        // 这里需要访问 BookRepo 来查找书籍
-        // 由于插件解耦，我们需要一个简化版本
+        let parentURL = bookRoot(containing: url)
 
-        // 假设书籍文件夹结构：书籍URL是包含当前文件的父目录
-        // 这是一个简化的实现，实际可能需要更复杂的逻辑
-        let parentURL = url.deletingLastPathComponent()
-
-        // 书籍库把单个音频也导入为独立文件夹；父目录存在即可作为书籍目录。
         var isDirectory: ObjCBool = false
         if FileManager.default.fileExists(atPath: parentURL.path, isDirectory: &isDirectory),
            isDirectory.boolValue {
@@ -237,5 +231,21 @@ private extension BookProgressRootView {
         }
 
         return nil
+    }
+
+    private func bookRoot(containing url: URL) -> URL {
+        guard let bookDisk = BookPlugin.getBookDisk() else {
+            return url.deletingLastPathComponent()
+        }
+
+        let diskPath = bookDisk.standardizedFileURL.path
+        var candidate = url.deletingLastPathComponent().standardizedFileURL
+
+        while candidate.deletingLastPathComponent().standardizedFileURL.path != diskPath,
+              candidate.path.hasPrefix(diskPath) {
+            candidate = candidate.deletingLastPathComponent().standardizedFileURL
+        }
+
+        return candidate
     }
 }
