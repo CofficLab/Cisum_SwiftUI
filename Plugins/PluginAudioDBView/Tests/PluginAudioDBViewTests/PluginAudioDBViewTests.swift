@@ -1,6 +1,7 @@
 import Testing
 @testable import PluginAudioDBView
 import Foundation
+import UniformTypeIdentifiers
 
 @Test func audioDBInfoExportsMetadata() {
     #expect(AudioDBPluginInfo.titleKey == "Audio Repository")
@@ -84,4 +85,17 @@ import Foundation
         from: [supported, unsupported, folder],
         supportedExtensions: ["mp3", "wav"]
     ) == [supported])
+}
+
+@Test func audioDropReadsFileURLDataProvider() async throws {
+    let expected = URL(fileURLWithPath: "/tmp/cisum-audio-drop-provider-tests/track.mp3")
+    let provider = NSItemProvider()
+    provider.registerDataRepresentation(forTypeIdentifier: UTType.fileURL.identifier, visibility: .all) { completion in
+        completion(expected.dataRepresentation, nil)
+        return nil
+    }
+
+    let url = try await AudioDBView.droppedFileURL(from: provider)
+
+    #expect(url == expected)
 }
