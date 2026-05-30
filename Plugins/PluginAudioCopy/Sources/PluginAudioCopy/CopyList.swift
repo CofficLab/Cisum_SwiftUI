@@ -32,6 +32,9 @@ struct CopyList: View, SuperLog, SuperThread {
         .onCopyTaskCountChanged { _ in
             refreshTasks()
         }
+        .onCopyTaskStarted { _ in
+            refreshTasks()
+        }
         .background(.regularMaterial)
         .cisumShadowSm()
     }

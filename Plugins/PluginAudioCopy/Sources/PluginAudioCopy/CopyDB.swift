@@ -173,6 +173,23 @@ actor CopyDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
         }
     }
 
+    func setTasksRunning(bookmarks: [Data]) throws {
+        let predicate = #Predicate<CopyTask> {
+            bookmarks.contains($0.bookmark)
+        }
+        let descriptor = FetchDescriptor<CopyTask>(predicate: predicate)
+        let tasks = try context.fetch(descriptor)
+
+        for task in tasks {
+            task.isRunning = true
+            task.error = ""
+        }
+
+        if context.hasChanges {
+            try context.save()
+        }
+    }
+
     func setTaskError(_ task: CopyTask, _ e: Error) {
         task.isRunning = false
         task.error = e.localizedDescription

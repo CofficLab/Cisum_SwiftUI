@@ -56,6 +56,11 @@
             }
 
             // 发送任务开始事件
+            do {
+                try await db.setTasksRunning(bookmarks: tasks.map(\.bookmark))
+            } catch {
+                os_log(.error, "\(self.t)Failed to mark tasks running: \(error.localizedDescription)")
+            }
             NotificationCenter.postCopyTaskStarted(count: taskCount)
 
             // 使用 Actor 隔离的计数器追踪完成数量
