@@ -165,10 +165,18 @@ extension AudioDBView {
 
     private func copySecurityScopedFile(_ source: URL, to destination: URL) async throws {
         let hasAccess = source.startAccessingSecurityScopedResource()
+        guard hasAccess else {
+            throw NSError(
+                domain: "AudioDBView",
+                code: 1,
+                userInfo: [
+                    NSLocalizedDescriptionKey: String(localized: "Permission to access the original file was denied", table: "Audio-DBView", bundle: .module)
+                ]
+            )
+        }
+
         defer {
-            if hasAccess {
-                source.stopAccessingSecurityScopedResource()
-            }
+            source.stopAccessingSecurityScopedResource()
         }
 
         try await source.copyTo(destination, caller: self.className)

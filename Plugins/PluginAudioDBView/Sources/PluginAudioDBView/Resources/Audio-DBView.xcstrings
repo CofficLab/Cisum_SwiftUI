@@ -261,6 +261,22 @@
         }
       }
     },
+    "Permission to access the original file was denied" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "没有权限访问原始文件"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "沒有權限存取原始檔案"
+          }
+        }
+      }
+    },
     "打开仓库目录并放入文件" : {
       "localizations" : {
         "zh-Hans" : {
