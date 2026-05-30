@@ -498,33 +498,13 @@ extension AudioList {
                 await playManController.reset(reason: "删除文件")
             }
 
-            var deletedURLs: [URL] = []
-
-            for url in urlsToDelete {
-                if Self.verbose {
-                    os_log("\(AudioList.t)📄 删除文件: \(url.shortPath())")
-                }
-
-                do {
-                    try await Task.detached(priority: .userInitiated) {
-                        if FileManager.default.fileExists(atPath: url.path) {
-                            try url.delete()
-                        }
-                    }.value
-                    deletedURLs.append(url)
-
+            do {
+                try await repo?.deleteAudios(urlsToDelete)
+                for url in urlsToDelete {
                     alert_info(String(localized: "Deleted \(url.title)", table: "Audio-DBView", bundle: .module))
-                } catch {
-                    alert_error(error)
                 }
-            }
-
-            if !deletedURLs.isEmpty {
-                do {
-                    try await repo?.deleteAudios(deletedURLs)
-                } catch {
-                    alert_error(String(localized: "Delete failed: \(error.localizedDescription)", table: "Audio-DBView", bundle: .module))
-                }
+            } catch {
+                alert_error(String(localized: "Delete failed: \(error.localizedDescription)", table: "Audio-DBView", bundle: .module))
             }
         }
     }

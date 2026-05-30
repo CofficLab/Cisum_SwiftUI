@@ -212,12 +212,6 @@ extension AudioItemView {
                     }
                 }
 
-                // 删除文件
-                try await Task.detached {
-                    if FileManager.default.fileExists(atPath: url.path) {
-                        try FileManager.default.removeItem(at: url)
-                    }
-                }.value
                 try await repo?.deleteAudios([url])
 
                 if Self.verbose {

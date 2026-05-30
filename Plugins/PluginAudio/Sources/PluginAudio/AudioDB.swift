@@ -1072,29 +1072,17 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     /// - Parameters:
     ///   - disk: 磁盘 URL
     ///   - urls: 要删除的音频 URL 数组
-    /// - Returns: 删除后的下一个音频模型
     /// - Throws: 如果删除操作失败则抛出错误
-    func deleteAudiosByURL(disk: URL, urls: [URL]) throws -> AudioModel? {
-        // 本批次的最后一个删除后的下一个
-        var next: AudioModel?
+    func deleteAudiosByURL(disk: URL, urls: [URL], verbose: Bool = false) throws {
+        var deletedUrls: [URL] = []
 
-        for (index, url) in urls.enumerated() {
+        for url in urls {
             do {
                 guard let audio = try context.fetch(FetchDescriptor(predicate: #Predicate<AudioModel> {
                     $0.url == url
                 })).first else {
                     os_log(.error, "\(self.t)删除时找不到")
                     continue
-                }
-
-                // 找出本批次的最后一个删除后的下一个
-                if index == urls.count - 1 {
-                    next = try nextOf(audio: audio)
-
-                    // 如果下一个等于当前，设为空
-                    if next?.url == url {
-                        next = nil
-                    }
                 }
 
                 // 从磁盘删除
@@ -1105,12 +1093,19 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
                 context.delete(audio)
 
                 try context.save()
+                deletedUrls.append(url)
             } catch let e {
                 os_log(.error, "\(self.t)删除出错 \(e)")
+                if !deletedUrls.isEmpty {
+                    emitDeleted(urls: deletedUrls, verbose: verbose)
+                }
+                throw e
             }
         }
 
-        return next
+        if !deletedUrls.isEmpty {
+            emitDeleted(urls: deletedUrls, verbose: verbose)
+        }
     }
 
     /// 根据 URL 查找音频模型（静态方法）
