@@ -32,3 +32,14 @@ import Testing
         hasError: true
     ) == .content)
 }
+
+@Test func productListOnlyAppliesLatestLoadResult() {
+    #expect(StoreProductLoadPolicy.shouldApplyResult(
+        currentGeneration: 3,
+        resultGeneration: 3
+    ))
+    #expect(!StoreProductLoadPolicy.shouldApplyResult(
+        currentGeneration: 3,
+        resultGeneration: 2
+    ))
+}

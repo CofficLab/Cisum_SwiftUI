@@ -29,6 +29,12 @@ enum StoreProductListPresentation {
     }
 }
 
+enum StoreProductLoadPolicy {
+    static func shouldApplyResult(currentGeneration: Int, resultGeneration: Int) -> Bool {
+        resultGeneration == currentGeneration
+    }
+}
+
 struct ProductsSubscription: View, SuperEvent, SuperLog, SuperThread {
     @Environment(\.colorScheme) var colorScheme: ColorScheme
 
@@ -36,6 +42,7 @@ struct ProductsSubscription: View, SuperEvent, SuperLog, SuperThread {
     @State private var purchasedProductIDs = Set<String>()
     @State private var refreshing = false
     @State private var error: Error? = nil
+    @State private var loadGeneration = 0
 
     nonisolated static let emoji = "🖥️"
     nonisolated static var verbose: Bool { false }
@@ -158,6 +165,8 @@ struct ProductsSubscription: View, SuperEvent, SuperLog, SuperThread {
         }
 
         refreshing = true
+        loadGeneration += 1
+        let generation = loadGeneration
 
         Task {
             do {
@@ -171,6 +180,11 @@ struct ProductsSubscription: View, SuperEvent, SuperLog, SuperThread {
                     (purchasedLists.cars + purchasedLists.subscriptions + purchasedLists.nonRenewables).map(\.id)
                 )
                 await MainActor.run {
+                    guard StoreProductLoadPolicy.shouldApplyResult(
+                        currentGeneration: self.loadGeneration,
+                        resultGeneration: generation
+                    ) else { return }
+
                     self.subscriptionGroups = groups.subscriptionGroups
                     self.purchasedProductIDs = purchasedIDs
                     self.error = nil
@@ -178,6 +192,11 @@ struct ProductsSubscription: View, SuperEvent, SuperLog, SuperThread {
                 }
             } catch {
                 await MainActor.run {
+                    guard StoreProductLoadPolicy.shouldApplyResult(
+                        currentGeneration: self.loadGeneration,
+                        resultGeneration: generation
+                    ) else { return }
+
                     self.error = error
                     self.refreshing = false
                 }
