@@ -8,6 +8,12 @@ public typealias AudioWidgetAdjacentAssetProvider = @MainActor (_ current: URL?,
 public typealias AudioWidgetFirstAssetProvider = @MainActor () async throws -> URL?
 public typealias AudioWidgetLastAssetProvider = @MainActor () async throws -> URL?
 
+enum AudioWidgetPlaybackRequestPolicy {
+    static func shouldApplyNavigationResult(requestedAsset: URL, currentAsset: URL?) -> Bool {
+        currentAsset == requestedAsset
+    }
+}
+
 public struct AudioWidgetControlRootView: View {
     private static let verbose = false
     private static let log = Logger(subsystem: "com.yueyi.cisum", category: "AudioWidgetControl")
@@ -99,8 +105,20 @@ public struct AudioWidgetControlRootView: View {
         Task { @MainActor in
             do {
                 if let next = try await nextAsset(asset, Self.verbose) {
+                    guard AudioWidgetPlaybackRequestPolicy.shouldApplyNavigationResult(
+                        requestedAsset: asset,
+                        currentAsset: man.currentAsset
+                    ) else {
+                        return
+                    }
                     await man.play(next, autoPlay: true, reason: "Widget.Next")
                 } else if man.playMode == .repeatAll, let first = try await firstAsset() {
+                    guard AudioWidgetPlaybackRequestPolicy.shouldApplyNavigationResult(
+                        requestedAsset: asset,
+                        currentAsset: man.currentAsset
+                    ) else {
+                        return
+                    }
                     await man.play(first, autoPlay: true, reason: "Widget.Loop")
                 }
             } catch {
@@ -115,8 +133,20 @@ public struct AudioWidgetControlRootView: View {
         Task { @MainActor in
             do {
                 if let previous = try await previousAsset(asset, Self.verbose) {
+                    guard AudioWidgetPlaybackRequestPolicy.shouldApplyNavigationResult(
+                        requestedAsset: asset,
+                        currentAsset: man.currentAsset
+                    ) else {
+                        return
+                    }
                     await man.play(previous, autoPlay: true, reason: "Widget.Previous")
                 } else if man.playMode == .repeatAll, let last = try await lastAsset() {
+                    guard AudioWidgetPlaybackRequestPolicy.shouldApplyNavigationResult(
+                        requestedAsset: asset,
+                        currentAsset: man.currentAsset
+                    ) else {
+                        return
+                    }
                     await man.play(last, autoPlay: true, reason: "Widget.RepeatAllPrevious")
                 }
             } catch {
