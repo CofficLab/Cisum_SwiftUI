@@ -86,8 +86,11 @@ struct CopyList: View, SuperLog, SuperThread {
     }
 
     private var listHeader: some View {
-        HStack {
-            Text("正在复制 \(tasks.count)", tableName: "Audio-Copy-macOS", bundle: .module)
+        let pendingCount = tasks.filter { $0.error.isEmpty }.count
+        let failedCount = tasks.filter { !$0.error.isEmpty }.count
+
+        return HStack {
+            Text(CopyStatePresentation.message(pendingCount: pendingCount, failedCount: failedCount))
             Spacer()
         }
     }
