@@ -1,5 +1,5 @@
 import Foundation
-import PluginAudioLike
+@testable import PluginAudioLike
 import Testing
 
 @Test func pluginInfoExportsRegistrationMetadata() {
@@ -14,6 +14,17 @@ func pluginExposesSettingsView() {
     let view = AudioLikePlugin.shared.addSettingView()
 
     #expect(view != nil)
+}
+
+@Test func audioLikeSettingsOnlyAppliesLatestLoadResult() {
+    #expect(AudioLikeSettingsLoadPolicy.shouldApplyResult(
+        currentGeneration: 2,
+        resultGeneration: 2
+    ))
+    #expect(!AudioLikeSettingsLoadPolicy.shouldApplyResult(
+        currentGeneration: 2,
+        resultGeneration: 1
+    ))
 }
 
 @Test
