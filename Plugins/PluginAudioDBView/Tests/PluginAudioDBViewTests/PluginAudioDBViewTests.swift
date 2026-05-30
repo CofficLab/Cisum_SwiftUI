@@ -43,3 +43,14 @@ import Foundation
 
     #expect(FileManager.default.fileExists(atPath: copiedFile.path) == false)
 }
+
+@Test func audioListRejectsStaleDeleteOffsets() {
+    let root = URL(fileURLWithPath: "/tmp/cisum-audio-list-tests", isDirectory: true)
+    let urls = [
+        root.appendingPathComponent("one.mp3"),
+        root.appendingPathComponent("two.mp3"),
+    ]
+
+    #expect(AudioList.urlsToDelete(from: IndexSet(integer: 1), in: urls) == [urls[1]])
+    #expect(AudioList.urlsToDelete(from: IndexSet(integer: 2), in: urls) == nil)
+}

@@ -489,7 +489,10 @@ extension AudioList {
     /// - Parameter offsets: 要删除的项目索引集合
     func handleDeleteItems(at offsets: IndexSet) {
         // 获取要删除的 URLs
-        let urlsToDelete = offsets.map { urls[$0] }
+        guard let urlsToDelete = Self.urlsToDelete(from: offsets, in: urls) else {
+            alert_error(String(localized: "Delete failed: the audio list changed. Please try again.", table: "Audio-DBView", bundle: .module))
+            return
+        }
 
         if Self.verbose {
             os_log("\(self.t)🗑️ 删除 \(urlsToDelete.count) 个项目")
@@ -514,5 +517,19 @@ extension AudioList {
                 alert_error(String(localized: "Delete failed: \(error.localizedDescription)", table: "Audio-DBView", bundle: .module))
             }
         }
+    }
+
+    nonisolated static func urlsToDelete(from offsets: IndexSet, in urls: [URL]) -> [URL]? {
+        var urlsToDelete: [URL] = []
+        urlsToDelete.reserveCapacity(offsets.count)
+
+        for offset in offsets {
+            guard urls.indices.contains(offset) else {
+                return nil
+            }
+            urlsToDelete.append(urls[offset])
+        }
+
+        return urlsToDelete
     }
 }
