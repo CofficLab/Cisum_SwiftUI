@@ -96,7 +96,7 @@ public struct AudioWidgetControlRootView: View {
             do {
                 if let next = try await nextAsset(asset, Self.verbose) {
                     await man.play(next, autoPlay: true, reason: "Widget.Next")
-                } else if let first = try await firstAsset() {
+                } else if man.playMode == .repeatAll, let first = try await firstAsset() {
                     await man.play(first, autoPlay: true, reason: "Widget.Loop")
                 }
             } catch {

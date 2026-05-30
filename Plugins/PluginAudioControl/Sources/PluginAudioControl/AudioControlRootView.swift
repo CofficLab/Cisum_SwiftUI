@@ -134,6 +134,10 @@ private extension AudioControlRootView {
                     return
                 }
 
+                guard man.playMode == .repeatAll else {
+                    return
+                }
+
                 if let first = try await firstAsset() {
                     alert_info(String(localized: "Reached the last track, playing the first", table: "Audio-Control", bundle: .module))
                     await man.play(first, autoPlay: true, reason: "AudioControlRootView.loop")

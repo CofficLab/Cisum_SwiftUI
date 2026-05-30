@@ -1163,14 +1163,10 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
 
     /// 获取指定音频模型的下一个音频模型
     /// - Parameter audio: 当前音频模型
-    /// - Returns: 下一个音频模型，如果未找到则返回第一个音频
+    /// - Returns: 下一个音频模型，如果未找到则返回 nil
     /// - Throws: 如果查询操作失败则抛出错误
     func nextOf(audio: AudioModel) throws -> AudioModel? {
         let result = try context.fetch(AudioModel.descriptorNext(order: audio.order))
-        if let first = result.first {
-            return first
-        }
-
-        return try firstAudio()
+        return result.first
     }
 }
