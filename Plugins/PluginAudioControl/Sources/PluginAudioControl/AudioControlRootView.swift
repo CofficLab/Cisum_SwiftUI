@@ -129,6 +129,7 @@ private extension AudioControlRootView {
                 if AudioControlRuntime.verbose {
                     AudioControlRuntime.log.error("Failed to get previous asset: \(error.localizedDescription)")
                 }
+                alert_error(String(localized: "Cannot play previous: \(error.localizedDescription)", table: "Audio-Control", bundle: .module))
             }
         }
     }
@@ -158,6 +159,7 @@ private extension AudioControlRootView {
                 if AudioControlRuntime.verbose {
                     AudioControlRuntime.log.error("Failed to get next asset: \(error.localizedDescription)")
                 }
+                alert_error(String(localized: "Cannot play next: \(error.localizedDescription)", table: "Audio-Control", bundle: .module))
             }
         }
     }
