@@ -27,6 +27,10 @@ enum AudioProgressPersistencePolicy {
     static func shouldClearRestoredCurrentURL(storedURL: URL?, isPlayable: Bool) -> Bool {
         storedURL != nil && !isPlayable
     }
+
+    static func shouldApplyRestoreResult(startingAsset: URL?, currentAsset: URL?) -> Bool {
+        startingAsset == currentAsset
+    }
 }
 
 public struct AudioProgressRootView<Content>: View, SuperLog where Content: View {
@@ -115,6 +119,7 @@ extension AudioProgressRootView {
         var assetTarget: URL?
         var timeTarget: TimeInterval = 0
         var liked = false
+        let startingAsset = man.currentAsset
 
         Task {
             // 从 AudioPlugin 获取 AudioRepo 实例
@@ -168,6 +173,13 @@ extension AudioProgressRootView {
             }
 
             if let asset = assetTarget {
+                guard AudioProgressPersistencePolicy.shouldApplyRestoreResult(
+                    startingAsset: startingAsset,
+                    currentAsset: man.currentAsset
+                ) else {
+                    return
+                }
+
                 let reason = self.className + ".初始化播放数据"
                 await man.play(asset, autoPlay: false, startTime: timeTarget, reason: reason)
                 man.setLike(liked, reason: reason)

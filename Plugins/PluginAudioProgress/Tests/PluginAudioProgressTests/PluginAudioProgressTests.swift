@@ -51,3 +51,25 @@ import Testing
     #expect(!AudioProgressPersistencePolicy.shouldClearRestoredCurrentURL(storedURL: url, isPlayable: true))
     #expect(!AudioProgressPersistencePolicy.shouldClearRestoredCurrentURL(storedURL: nil, isPlayable: false))
 }
+
+@Test func restoreResultOnlyAppliesWhenCurrentAudioDidNotChange() {
+    let starting = URL(fileURLWithPath: "/tmp/audio/track-01.mp3")
+    let switched = URL(fileURLWithPath: "/tmp/audio/track-02.mp3")
+
+    #expect(AudioProgressPersistencePolicy.shouldApplyRestoreResult(
+        startingAsset: nil,
+        currentAsset: nil
+    ))
+    #expect(AudioProgressPersistencePolicy.shouldApplyRestoreResult(
+        startingAsset: starting,
+        currentAsset: starting
+    ))
+    #expect(!AudioProgressPersistencePolicy.shouldApplyRestoreResult(
+        startingAsset: nil,
+        currentAsset: switched
+    ))
+    #expect(!AudioProgressPersistencePolicy.shouldApplyRestoreResult(
+        startingAsset: starting,
+        currentAsset: switched
+    ))
+}
