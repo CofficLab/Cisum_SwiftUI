@@ -115,6 +115,16 @@ public extension MagicPlayMan {
 
         self.setState(.loading(.preparing), reason: reason + ".play")
 
+        if url.isNetworkURL {
+            let item = AVPlayerItem(url: url)
+            self._player.replaceCurrentItem(with: item)
+
+            if autoPlay {
+                self.playCurrent(reason: reason + ".play")
+            }
+            return
+        }
+
         downloadAndCache(url, reason: reason) { [weak self] in
             guard let self = self else { return }
 
