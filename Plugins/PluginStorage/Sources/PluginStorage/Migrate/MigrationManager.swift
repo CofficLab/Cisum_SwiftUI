@@ -85,10 +85,10 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread, @unchecked Send
                     throw MigrationError.migrationCancelled
                 }
 
-                let targetFile = targetRoot.appendingPathComponent(fileName)
+                let targetFile = uniqueDestination(for: sourceFile, in: targetRoot)
                 do {
                     try FileManager.default.moveItem(at: sourceFile, to: targetFile)
-                    os_log(.info, "\(self.t)成功迁移: \(fileName)")
+                    os_log(.info, "\(self.t)成功迁移: \(fileName) -> \(targetFile.lastPathComponent)")
                 } catch {
                     os_log(.error, "\(self.t)迁移失败: \(fileName) - \(error.localizedDescription)")
                     throw MigrationError.fileOperationFailed("\(fileName): \(error.localizedDescription)")
@@ -112,5 +112,51 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread, @unchecked Send
         }
 
         os_log(.info, "\(self.t)迁移任务结束")
+    }
+
+    private func uniqueDestination(for sourceFile: URL, in targetRoot: URL) -> URL {
+        var isDirectory: ObjCBool = false
+        FileManager.default.fileExists(atPath: sourceFile.path, isDirectory: &isDirectory)
+
+        let sourceIsDirectory = isDirectory.boolValue
+        let pathExtension = sourceIsDirectory ? "" : sourceFile.pathExtension
+        let rawBaseName = sourceIsDirectory
+            ? sourceFile.lastPathComponent
+            : sourceFile.deletingPathExtension().lastPathComponent
+        let baseName = rawBaseName.isEmpty ? "Migrated Item" : rawBaseName
+
+        var candidate = destination(
+            named: baseName,
+            pathExtension: pathExtension,
+            in: targetRoot,
+            isDirectory: sourceIsDirectory
+        )
+        var suffix = 2
+
+        while FileManager.default.fileExists(atPath: candidate.path) {
+            candidate = destination(
+                named: "\(baseName) \(suffix)",
+                pathExtension: pathExtension,
+                in: targetRoot,
+                isDirectory: sourceIsDirectory
+            )
+            suffix += 1
+        }
+
+        return candidate
+    }
+
+    private func destination(
+        named name: String,
+        pathExtension: String,
+        in directory: URL,
+        isDirectory: Bool
+    ) -> URL {
+        let destination = directory.appendingPathComponent(name, isDirectory: isDirectory)
+        guard !pathExtension.isEmpty else {
+            return destination
+        }
+
+        return destination.appendingPathExtension(pathExtension)
     }
 }

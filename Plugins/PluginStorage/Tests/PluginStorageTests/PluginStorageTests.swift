@@ -34,6 +34,35 @@ import Foundation
     #expect(!FileManager.default.fileExists(atPath: source.appendingPathComponent("track.mp3").path))
 }
 
+@Test func migrationRenamesConflictingTargetFiles() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let source = root.appendingPathComponent("source", isDirectory: true)
+    let target = root.appendingPathComponent("target", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: source, withIntermediateDirectories: true)
+    try FileManager.default.createDirectory(at: target, withIntermediateDirectories: true)
+
+    try Data("new".utf8).write(to: source.appendingPathComponent("track.mp3"))
+    try Data("existing".utf8).write(to: target.appendingPathComponent("track.mp3"))
+
+    let manager = MigrationManager()
+    try manager.migrate(
+        from: source,
+        to: target,
+        progressCallback: nil,
+        downloadProgressCallback: nil,
+        verbose: false
+    )
+
+    #expect(FileManager.default.fileExists(atPath: target.appendingPathComponent("track.mp3").path))
+    #expect(FileManager.default.fileExists(atPath: target.appendingPathComponent("track 2.mp3").path))
+    #expect(!FileManager.default.fileExists(atPath: source.appendingPathComponent("track.mp3").path))
+}
+
 @Test func emptyMigrationReportsCompleteProgress() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)
