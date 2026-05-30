@@ -27,6 +27,10 @@ let package = Package(
                 .product(name: "CisumUI", package: "CisumUI"),
                 .product(name: "MagicAlert", package: "MagicAlert"),
             ]
+        ),
+        .testTarget(
+            name: "MagicPlayManTests",
+            dependencies: ["MagicPlayMan"]
         )
     ]
 )

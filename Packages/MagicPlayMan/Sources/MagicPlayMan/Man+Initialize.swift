@@ -175,8 +175,14 @@ internal extension MagicPlayMan {
         // 监听播放完成
         NotificationCenter.default.publisher(for: .AVPlayerItemDidPlayToEndTime)
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
+            .sink { [weak self] notification in
                 guard let self = self else { return }
+                guard Self.isPlaybackEndNotificationForCurrentItem(
+                    notification.object,
+                    currentItem: self._player.currentItem
+                ) else {
+                    return
+                }
 
                 if let currentAsset = self.currentURL {
                     if verbose {
@@ -205,6 +211,18 @@ internal extension MagicPlayMan {
                 }
             }
             .store(in: &cancellables)
+    }
+
+    static func isPlaybackEndNotificationForCurrentItem(
+        _ notificationObject: Any?,
+        currentItem: AVPlayerItem?
+    ) -> Bool {
+        guard let notificationItem = notificationObject as? AVPlayerItem,
+              let currentItem else {
+            return false
+        }
+
+        return notificationItem === currentItem
     }
 }
 
