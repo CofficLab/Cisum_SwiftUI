@@ -32,3 +32,14 @@ import Testing
         isICloudAvailable: false
     ) == .local)
 }
+
+@Test func storageSelectionDisplaysLocalWhenItIsTheOnlyAvailableOption() {
+    #expect(WelcomeStorageSelectionPolicy.displayedSelection(
+        currentStorageSelection: nil,
+        isICloudAvailable: false
+    ) == .local)
+    #expect(WelcomeStorageSelectionPolicy.defaultSelection(
+        currentStorageSelection: nil,
+        isICloudAvailable: false
+    ) == .local)
+}

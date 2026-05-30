@@ -90,10 +90,15 @@ public struct StorageView: View {
     }
 
     private func onAppear() {
-        tempStorageSelection = WelcomeStorageSelectionPolicy.displayedSelection(
+        let displayedSelection = WelcomeStorageSelectionPolicy.displayedSelection(
             currentStorageSelection: currentStorageSelection,
             isICloudAvailable: isICloudAvailable
         )
+        tempStorageSelection = displayedSelection
+
+        if let displayedSelection, displayedSelection != currentStorageSelection {
+            updateSelection(displayedSelection)
+        }
     }
 
     private func onDisappear() {
@@ -136,7 +141,7 @@ enum WelcomeStorageSelectionPolicy {
             return currentStorageSelection
         }
 
-        return nil
+        return isICloudAvailable ? nil : .local
     }
 
     static func defaultSelection(
