@@ -81,6 +81,14 @@ public struct AudioSettingsView: View, SuperLog {
 private extension AudioSettingsView {
     func refresh() {
         updateDisk()
+
+        guard disk != nil else {
+            description = ""
+            fileCount = 0
+            diskSize = nil
+            return
+        }
+
         updateDescription()
         updateFileCount()
         updateDiskSize()

@@ -81,6 +81,14 @@ public struct BookSettingsView: View, SuperLog {
 private extension BookSettingsView {
     func refresh() {
         updateDisk()
+
+        guard disk != nil else {
+            description = ""
+            fileCount = 0
+            diskSize = nil
+            return
+        }
+
         updateDescription()
         updateFileCount()
         updateDiskSize()
