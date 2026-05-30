@@ -13,7 +13,8 @@ public class AssetCache {
         if let customDirectory = directory {
             cacheDirectory = customDirectory
         } else {
-            let cacheDir = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first!
+            let cacheDir = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first
+                ?? fileManager.temporaryDirectory
             cacheDirectory = cacheDir.appendingPathComponent("MagicPlayMan", isDirectory: true)
         }
         
