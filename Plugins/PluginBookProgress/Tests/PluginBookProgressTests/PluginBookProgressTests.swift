@@ -50,6 +50,28 @@ import Testing
     #expect(snapshot == BookProgressStateSnapshot(currentURL: url, time: 42))
 }
 
+@Test func restoreResultOnlyAppliesWhenCurrentBookDidNotChange() {
+    let starting = URL(fileURLWithPath: "/tmp/book/chapter-01.m4b")
+    let switched = URL(fileURLWithPath: "/tmp/book/chapter-02.m4b")
+
+    #expect(BookProgressPersistencePolicy.shouldApplyRestoreResult(
+        startingAsset: nil,
+        currentAsset: nil
+    ))
+    #expect(BookProgressPersistencePolicy.shouldApplyRestoreResult(
+        startingAsset: starting,
+        currentAsset: starting
+    ))
+    #expect(!BookProgressPersistencePolicy.shouldApplyRestoreResult(
+        startingAsset: nil,
+        currentAsset: switched
+    ))
+    #expect(!BookProgressPersistencePolicy.shouldApplyRestoreResult(
+        startingAsset: starting,
+        currentAsset: switched
+    ))
+}
+
 @Test func rootLevelBookFileResolvesToItself() {
     let disk = URL(fileURLWithPath: "/tmp/cisum-books", isDirectory: true)
     let book = disk.appendingPathComponent("Standalone.m4b")

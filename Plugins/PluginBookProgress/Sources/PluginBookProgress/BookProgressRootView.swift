@@ -48,6 +48,10 @@ enum BookProgressPersistencePolicy {
             return BookProgressStateSnapshot(currentURL: currentURL, time: currentTime)
         }
     }
+
+    static func shouldApplyRestoreResult(startingAsset: URL?, currentAsset: URL?) -> Bool {
+        startingAsset == currentAsset
+    }
 }
 
 enum BookProgressBookRootResolver {
@@ -214,6 +218,8 @@ private extension BookProgressRootView {
     ///
     /// 从持久化存储中恢复上次播放的书籍和时间进度。
     private func restoreBookProgress() {
+        let startingAsset = man.currentAsset
+
         Task {
             if let url = currentBookURL() {
                 let isPlayable = isPlayableBookURL(url)
@@ -226,6 +232,13 @@ private extension BookProgressRootView {
                     if self.verbose {
                         os_log("\(self.t)⚠️ 跳过已失效的书籍进度: \(url.shortPath())")
                     }
+                    return
+                }
+
+                guard BookProgressPersistencePolicy.shouldApplyRestoreResult(
+                    startingAsset: startingAsset,
+                    currentAsset: man.currentAsset
+                ) else {
                     return
                 }
 
