@@ -52,13 +52,17 @@ struct DownloadButtonView: View, SuperLog {
     }
     
     private var buttonDisabled: Bool {
-        url.isDownloaded || (error != nil)
+        url.isDownloaded || isDownloading
+    }
+
+    private var displayedProgress: Double {
+        normalizedProgress(progress)
     }
     
     var body: some View {
         VStack {
             if isDownloading {
-                ProgressView(value: progress, total: 100)
+                ProgressView(value: displayedProgress, total: 100)
                     .progressViewStyle(.circular)
                     .frame(width: size * 0.8, height: size * 0.8)
                     .frame(width: size, height: size)
@@ -97,11 +101,11 @@ struct DownloadButtonView: View, SuperLog {
             do {
                 if let destination = destination {
                     try await url.copyTo(destination, caller: self.className) { newProgress in
-                        progress = newProgress
+                        progress = normalizedProgress(newProgress)
                     }
                 } else {
                     try await url.download(reason: "MagicKit.DownloadButtonView") { newProgress in
-                        progress = newProgress
+                        progress = normalizedProgress(newProgress)
                     }
                 }
             } catch {
@@ -110,5 +114,14 @@ struct DownloadButtonView: View, SuperLog {
             
             isDownloading = false
         }
+    }
+
+    private func normalizedProgress(_ value: Double) -> Double {
+        if value.isNaN || !value.isFinite {
+            return 0
+        }
+
+        let percent = value <= 1 ? value * 100 : value
+        return min(max(percent, 0), 100)
     }
 }
