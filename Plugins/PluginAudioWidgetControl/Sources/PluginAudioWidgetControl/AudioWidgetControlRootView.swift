@@ -104,9 +104,7 @@ public struct AudioWidgetControlRootView: View {
                     await man.play(first, autoPlay: true, reason: "Widget.Loop")
                 }
             } catch {
-                if Self.verbose {
-                    Self.log.error("Failed to get next asset: \(error.localizedDescription)")
-                }
+                Self.log.error("Failed to get next asset: \(error.localizedDescription)")
             }
         }
     }
@@ -122,9 +120,7 @@ public struct AudioWidgetControlRootView: View {
                     await man.play(last, autoPlay: true, reason: "Widget.RepeatAllPrevious")
                 }
             } catch {
-                if Self.verbose {
-                    Self.log.error("Failed to get previous asset: \(error.localizedDescription)")
-                }
+                Self.log.error("Failed to get previous asset: \(error.localizedDescription)")
             }
         }
     }

@@ -20,16 +20,28 @@ public actor AudioWidgetControlPlugin: SuperPlugin {
                 .background(
                     AudioWidgetControlRootView(
                         nextAsset: { current, verbose in
-                            try await AudioPlugin.getAudioRepo()?.getNextOf(current, verbose: verbose)
+                            guard let repo = AudioPlugin.getAudioRepo() else {
+                                throw AudioPluginError.hostNotConfigured
+                            }
+                            return try await repo.getNextOf(current, verbose: verbose)
                         },
                         previousAsset: { current, verbose in
-                            try await AudioPlugin.getAudioRepo()?.getPrevOf(current, verbose: verbose)
+                            guard let repo = AudioPlugin.getAudioRepo() else {
+                                throw AudioPluginError.hostNotConfigured
+                            }
+                            return try await repo.getPrevOf(current, verbose: verbose)
                         },
                         firstAsset: {
-                            try await AudioPlugin.getAudioRepo()?.getFirst()
+                            guard let repo = AudioPlugin.getAudioRepo() else {
+                                throw AudioPluginError.hostNotConfigured
+                            }
+                            return try await repo.getFirst()
                         },
                         lastAsset: {
-                            try await AudioPlugin.getAudioRepo()?.getLast()
+                            guard let repo = AudioPlugin.getAudioRepo() else {
+                                throw AudioPluginError.hostNotConfigured
+                            }
+                            return try await repo.getLast()
                         }
                     )
                 )
