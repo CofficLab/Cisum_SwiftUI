@@ -124,6 +124,9 @@ private extension AudioControlRootView {
 
                 if man.playMode == .repeatAll, let last = try await lastAsset() {
                     await man.play(last, autoPlay: true, reason: "AudioControlRootView.repeatAllPrevious")
+                } else if man.playMode == .repeatAll {
+                    await man.reset(reason: "AudioControlRootView.emptyLibrary")
+                    alert_info(String(localized: "No files in library", table: "Audio-Control", bundle: .module))
                 }
             } catch {
                 if AudioControlRuntime.verbose {
