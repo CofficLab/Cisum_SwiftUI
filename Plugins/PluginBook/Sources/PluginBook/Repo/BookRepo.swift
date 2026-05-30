@@ -150,17 +150,31 @@ extension BookRepo {
         }
     }
 
-    nonisolated static func isDisplayableLibraryItem(_ book: BookDTO, libraryRoot: URL) -> Bool {
-        let parent = book.url.deletingLastPathComponent().standardizedFileURL
+    public nonisolated static func isDisplayableLibraryItem(
+        url: URL,
+        isCollection: Bool,
+        childCount: Int,
+        libraryRoot: URL
+    ) -> Bool {
+        let parent = url.deletingLastPathComponent().standardizedFileURL
         guard parent == libraryRoot.standardizedFileURL else {
             return false
         }
 
-        if book.isCollection {
-            return book.childCount > 0
+        if isCollection {
+            return childCount > 0
         }
 
-        return BookPluginInfo.supportedExtensions.contains(book.url.pathExtension.lowercased())
+        return BookPluginInfo.supportedExtensions.contains(url.pathExtension.lowercased())
+    }
+
+    nonisolated static func isDisplayableLibraryItem(_ book: BookDTO, libraryRoot: URL) -> Bool {
+        isDisplayableLibraryItem(
+            url: book.url,
+            isCollection: book.isCollection,
+            childCount: book.childCount,
+            libraryRoot: libraryRoot
+        )
     }
 }
 
