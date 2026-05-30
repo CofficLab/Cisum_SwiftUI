@@ -15,6 +15,17 @@ private enum AudioControlRuntime {
     static let author = "AudioControlRootView"
 }
 
+enum AudioControlPlaybackRequestPolicy {
+    static func shouldApplyNavigationResult(requestedAsset: URL, currentAsset: URL?) -> Bool {
+        currentAsset == requestedAsset
+    }
+
+    static func currentAssetAffectedByDeletion(currentAsset: URL?, deletedURLs: [URL]) -> Bool {
+        guard let currentAsset else { return false }
+        return deletedURLs.contains(currentAsset)
+    }
+}
+
 public struct AudioControlRootView<Content>: View where Content: View {
     @EnvironmentObject private var man: MagicPlayMan
     @State private var playbackSubscriptionID: UUID?
@@ -118,11 +129,23 @@ private extension AudioControlRootView {
         Task { @MainActor in
             do {
                 if let previous = try await previousAsset(asset, false) {
+                    guard AudioControlPlaybackRequestPolicy.shouldApplyNavigationResult(
+                        requestedAsset: asset,
+                        currentAsset: man.currentAsset
+                    ) else {
+                        return
+                    }
                     await man.play(previous, autoPlay: true, reason: "AudioControlRootView")
                     return
                 }
 
                 if man.playMode == .repeatAll, let last = try await lastAsset() {
+                    guard AudioControlPlaybackRequestPolicy.shouldApplyNavigationResult(
+                        requestedAsset: asset,
+                        currentAsset: man.currentAsset
+                    ) else {
+                        return
+                    }
                     await man.play(last, autoPlay: true, reason: "AudioControlRootView.repeatAllPrevious")
                 } else if man.playMode == .repeatAll {
                     await man.reset(reason: "AudioControlRootView.emptyLibrary")
@@ -143,6 +166,12 @@ private extension AudioControlRootView {
         Task { @MainActor in
             do {
                 if let next = try await nextAsset(asset, AudioControlRuntime.verbose) {
+                    guard AudioControlPlaybackRequestPolicy.shouldApplyNavigationResult(
+                        requestedAsset: asset,
+                        currentAsset: man.currentAsset
+                    ) else {
+                        return
+                    }
                     await man.play(next, autoPlay: true, reason: "AudioControlRootView.handleNextRequested")
                     return
                 }
@@ -152,6 +181,12 @@ private extension AudioControlRootView {
                 }
 
                 if let first = try await firstAsset() {
+                    guard AudioControlPlaybackRequestPolicy.shouldApplyNavigationResult(
+                        requestedAsset: asset,
+                        currentAsset: man.currentAsset
+                    ) else {
+                        return
+                    }
                     alert_info(String(localized: "Reached the last track, playing the first", table: "Audio-Control", bundle: .module))
                     await man.play(first, autoPlay: true, reason: "AudioControlRootView.loop")
                 } else {
@@ -175,12 +210,21 @@ private extension AudioControlRootView {
 
     func handleDBDeleted(_ notification: Notification) {
         guard let urlsToDelete = notification.userInfo?["urls"] as? [URL],
-              let currentAsset = man.asset,
-              urlsToDelete.contains(currentAsset) else {
+              AudioControlPlaybackRequestPolicy.currentAssetAffectedByDeletion(
+                  currentAsset: man.asset,
+                  deletedURLs: urlsToDelete
+              ) else {
             return
         }
 
         Task { @MainActor in
+            guard AudioControlPlaybackRequestPolicy.currentAssetAffectedByDeletion(
+                currentAsset: man.asset,
+                deletedURLs: urlsToDelete
+            ) else {
+                return
+            }
+
             guard shouldActivateControl else {
                 await man.reset(reason: "AudioControlRootView.deletedCurrentAsset")
                 return
