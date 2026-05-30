@@ -6,7 +6,7 @@ import OSLog
 import SwiftUI
 
 public typealias AudioPlayModeCurrentSceneProvider = @MainActor () -> String?
-public typealias AudioPlayModeSortAction = @MainActor (_ currentURL: URL?) async -> Void
+public typealias AudioPlayModeSortAction = @MainActor (_ currentURL: URL?) async throws -> Void
 public typealias AudioPlayModeShuffleAction = @MainActor (_ currentURL: URL?) async throws -> Void
 
 public struct AudioPlayModeRootView<Content>: View, SuperLog where Content: View {
@@ -120,24 +120,31 @@ private extension AudioPlayModeRootView {
                 return
             }
 
-            switch mode {
-            case .loop:
-                if verbose {
-                    os_log("\(Self.t)🔁 单曲循环模式")
+            do {
+                switch mode {
+                case .loop:
+                    if verbose {
+                        os_log("\(Self.t)🔁 单曲循环模式")
+                    }
+                    alert_info(String(localized: "Repeat One", table: "Audio-PlayMode", bundle: .module))
+                case .sequence, .repeatAll:
+                    if verbose {
+                        os_log("\(Self.t)📋 顺序播放，重新排序")
+                    }
+                    alert_info(String(localized: "Sequential Play", table: "Audio-PlayMode", bundle: .module))
+                    try await sort(currentURL)
+                case .shuffle:
+                    if verbose {
+                        os_log("\(Self.t)🔀 随机播放，打乱顺序")
+                    }
+                    alert_info(String(localized: "Shuffle", table: "Audio-PlayMode", bundle: .module))
+                    try await shuffle(currentURL)
                 }
-                alert_info(String(localized: "Repeat One", table: "Audio-PlayMode", bundle: .module))
-            case .sequence, .repeatAll:
+            } catch {
                 if verbose {
-                    os_log("\(Self.t)📋 顺序播放，重新排序")
+                    os_log("\(Self.t)⚠️ 播放模式重排失败: \(error.localizedDescription)")
                 }
-                alert_info(String(localized: "Sequential Play", table: "Audio-PlayMode", bundle: .module))
-                await sort(currentURL)
-            case .shuffle:
-                if verbose {
-                    os_log("\(Self.t)🔀 随机播放，打乱顺序")
-                }
-                alert_info(String(localized: "Shuffle", table: "Audio-PlayMode", bundle: .module))
-                try await shuffle(currentURL)
+                alert_error(String(localized: "Cannot update play queue: \(error.localizedDescription)", table: "Audio-PlayMode", bundle: .module))
             }
         }
     }

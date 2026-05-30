@@ -31,10 +31,16 @@ private struct AudioPlayModePluginRootView<Content>: View where Content: View {
             targetSceneName: AudioScenePlugin.sceneName,
             currentSceneName: { currentSceneName },
             sort: { currentURL in
-                await AudioPlugin.getAudioRepo()?.sort(currentURL, reason: "PlayModeChanged")
+                guard let repo = AudioPlugin.getAudioRepo() else {
+                    throw AudioPluginError.hostNotConfigured
+                }
+                await repo.sort(currentURL, reason: "PlayModeChanged")
             },
             shuffle: { currentURL in
-                try await AudioPlugin.getAudioRepo()?.sortRandom(currentURL, reason: "PlayModeChanged", verbose: false)
+                guard let repo = AudioPlugin.getAudioRepo() else {
+                    throw AudioPluginError.hostNotConfigured
+                }
+                try await repo.sortRandom(currentURL, reason: "PlayModeChanged", verbose: false)
             }
         ) {
             content
