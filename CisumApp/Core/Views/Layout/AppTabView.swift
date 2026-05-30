@@ -157,9 +157,19 @@ extension AppTabView {
             selectedTabID = tabCount > 0 ? "0" : "Setting"
         }
 
+        resetCustomTabSelection()
+
         if Self.verbose {
             os_log("\(self.t)✅ TabView 已更新完成")
         }
+    }
+
+    private func resetCustomTabSelection() {
+        let fallbackID = "0"
+        guard selectedDemoTabID != fallbackID || selectedTabIndex != 0 else { return }
+
+        selectedDemoTabID = fallbackID
+        selectedTabIndex = 0
     }
 }
 
