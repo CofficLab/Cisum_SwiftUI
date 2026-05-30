@@ -5,13 +5,29 @@ import OSLog
 typealias ProgressCallback = (Double, String) -> Void
 typealias DownloadProgressCallback = (String, FileStatus.DownloadStatus) -> Void
 
-class MigrationManager: ObservableObject, SuperLog, SuperThread {
+class MigrationManager: ObservableObject, SuperLog, SuperThread, @unchecked Sendable {
     static let emoji: String = "👵"
 
-    @Published private(set) var isCancelled = false
+    private let cancellationLock = NSLock()
+    private var cancellationRequested = false
+
+    var isCancelled: Bool {
+        cancellationLock.lock()
+        let value = cancellationRequested
+        cancellationLock.unlock()
+        return value
+    }
 
     func cancelMigration() {
-        isCancelled = true
+        cancellationLock.lock()
+        cancellationRequested = true
+        cancellationLock.unlock()
+    }
+
+    func resetCancellation() {
+        cancellationLock.lock()
+        cancellationRequested = false
+        cancellationLock.unlock()
     }
 
     func migrate(

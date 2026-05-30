@@ -112,23 +112,28 @@ struct MigrationProgressView: View {
                     throw MigrationError.targetDirectoryNotFound
                 }
 
-                try migrationManager.migrate(
-                    from: sourceRoot,
-                    to: targetRoot,
-                    progressCallback: { progress, file in
-                        Task { @MainActor in
-                            self.migrationProgress = progress
-                            self.currentMigratingFile = file
-                            self.updateFileStatus(file)
-                        }
-                    },
-                    downloadProgressCallback: { file, downloadStatus in
-                        Task { @MainActor in
-                            self.updateFileDownloadStatus(file, downloadStatus: downloadStatus)
-                        }
-                    },
-                    verbose: true
-                )
+                let manager = migrationManager
+                manager.resetCancellation()
+
+                try await Task.detached(priority: .userInitiated) {
+                    try manager.migrate(
+                        from: sourceRoot,
+                        to: targetRoot,
+                        progressCallback: { progress, file in
+                            Task { @MainActor in
+                                self.migrationProgress = progress
+                                self.currentMigratingFile = file
+                                self.updateFileStatus(file)
+                            }
+                        },
+                        downloadProgressCallback: { file, downloadStatus in
+                            Task { @MainActor in
+                                self.updateFileDownloadStatus(file, downloadStatus: downloadStatus)
+                            }
+                        },
+                        verbose: true
+                    )
+                }.value
             } else {
                 // 如果选择直接使用，立即将进度设置为 100%
                 await MainActor.run {
