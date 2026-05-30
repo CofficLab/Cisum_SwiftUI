@@ -8,8 +8,8 @@ public actor AudioDBPlugin: SuperPlugin {
     public static var shouldRegister: Bool { true }
     public static var order: Int { 1 }
 
-    public nonisolated var title: String { String(localized: String.LocalizationValue(AudioDBPluginInfo.titleKey), table: AudioDBPluginInfo.table) }
-    public nonisolated var description: String { String(localized: String.LocalizationValue(AudioDBPluginInfo.descriptionKey), table: AudioDBPluginInfo.table) }
+    public nonisolated var title: String { String(localized: String.LocalizationValue(AudioDBPluginInfo.titleKey), table: AudioDBPluginInfo.table, bundle: .module) }
+    public nonisolated var description: String { String(localized: String.LocalizationValue(AudioDBPluginInfo.descriptionKey), table: AudioDBPluginInfo.table, bundle: .module) }
     public let iconName = "externaldrive"
 
     @MainActor

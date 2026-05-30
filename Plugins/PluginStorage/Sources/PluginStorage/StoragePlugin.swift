@@ -10,8 +10,8 @@ public actor StoragePlugin: SuperPlugin, SuperLog {
     public static var shouldRegister: Bool { false }
     public static var order: Int { 10 }
 
-    public nonisolated var title: String { String(localized: String.LocalizationValue(StoragePluginInfo.titleKey), table: StoragePluginInfo.table) }
-    public nonisolated var description: String { String(localized: String.LocalizationValue(StoragePluginInfo.descriptionKey), table: StoragePluginInfo.table) }
+    public nonisolated var title: String { String(localized: String.LocalizationValue(StoragePluginInfo.titleKey), table: StoragePluginInfo.table, bundle: .module) }
+    public nonisolated var description: String { String(localized: String.LocalizationValue(StoragePluginInfo.descriptionKey), table: StoragePluginInfo.table, bundle: .module) }
     public let iconName = StoragePluginInfo.iconName
 
     @MainActor

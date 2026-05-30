@@ -11,8 +11,8 @@ public actor AudioProgressPlugin: SuperPlugin, SuperLog {
     public static var shouldRegister: Bool { true }
     public static var order: Int { 0 }
 
-    public nonisolated var title: String { String(localized: String.LocalizationValue(AudioProgressPluginInfo.titleKey), table: AudioProgressPluginInfo.table) }
-    public nonisolated var description: String { String(localized: String.LocalizationValue(AudioProgressPluginInfo.descriptionKey), table: AudioProgressPluginInfo.table) }
+    public nonisolated var title: String { String(localized: String.LocalizationValue(AudioProgressPluginInfo.titleKey), table: AudioProgressPluginInfo.table, bundle: .module) }
+    public nonisolated var description: String { String(localized: String.LocalizationValue(AudioProgressPluginInfo.descriptionKey), table: AudioProgressPluginInfo.table, bundle: .module) }
     public let iconName = "waveform"
 
     @MainActor
