@@ -9,6 +9,12 @@ public typealias AudioPlayModeCurrentSceneProvider = @MainActor () -> String?
 public typealias AudioPlayModeSortAction = @MainActor (_ currentURL: URL?) async throws -> Void
 public typealias AudioPlayModeShuffleAction = @MainActor (_ currentURL: URL?) async throws -> Void
 
+enum AudioPlayModeQueueUpdatePolicy {
+    static func shouldApplyQueueUpdate(requestedModeRawValue: String, currentMode: MagicPlayMode) -> Bool {
+        currentMode.rawValue == requestedModeRawValue
+    }
+}
+
 public struct AudioPlayModeRootView<Content>: View, SuperLog where Content: View {
     public nonisolated static var emoji: String { AudioPlayModePluginInfo.emoji }
     private let verbose = false
@@ -116,6 +122,13 @@ private extension AudioPlayModeRootView {
         }
 
         Task { @MainActor [currentURL, modeRawValue, sort, shuffle] in
+            guard AudioPlayModeQueueUpdatePolicy.shouldApplyQueueUpdate(
+                requestedModeRawValue: modeRawValue,
+                currentMode: man.playMode
+            ) else {
+                return
+            }
+
             guard let mode = MagicPlayMode(rawValue: modeRawValue) else {
                 return
             }
