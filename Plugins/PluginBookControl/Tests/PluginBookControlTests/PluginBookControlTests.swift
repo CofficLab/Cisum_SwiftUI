@@ -37,3 +37,33 @@ import SwiftUI
     #expect(previous == chapters[2])
     #expect(sequenceNext == nil)
 }
+
+@Test func bookRootUsesStandaloneBookAtDiskRoot() {
+    let disk = URL(fileURLWithPath: "/tmp/cisum-books", isDirectory: true)
+    let book = disk.appendingPathComponent("Standalone.m4b")
+
+    let root = BookControlBookRootResolver.bookRoot(containing: book, bookDisk: disk)
+
+    #expect(root == book.standardizedFileURL)
+}
+
+@Test func bookRootUsesTopLevelFolderForChapterBooks() {
+    let disk = URL(fileURLWithPath: "/tmp/cisum-books", isDirectory: true)
+    let book = disk.appendingPathComponent("Novel", isDirectory: true)
+    let chapter = book
+        .appendingPathComponent("Part 1", isDirectory: true)
+        .appendingPathComponent("Chapter 01.m4b")
+
+    let root = BookControlBookRootResolver.bookRoot(containing: chapter, bookDisk: disk)
+
+    #expect(root == book.standardizedFileURL)
+}
+
+@Test func bookRootFallsBackToParentOutsideBookDisk() {
+    let disk = URL(fileURLWithPath: "/tmp/cisum-books", isDirectory: true)
+    let chapter = URL(fileURLWithPath: "/tmp/other-books/Novel/Chapter 01.m4b")
+
+    let root = BookControlBookRootResolver.bookRoot(containing: chapter, bookDisk: disk)
+
+    #expect(root == chapter.deletingLastPathComponent().standardizedFileURL)
+}
