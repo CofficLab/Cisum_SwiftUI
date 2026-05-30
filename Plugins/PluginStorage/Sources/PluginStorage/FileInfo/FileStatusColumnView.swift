@@ -11,9 +11,6 @@ struct FileStatusColumnView: View, SuperLog {
     @State private var isChecking: Bool = true
     @State private var statusColor: Color = .gray
 
-    @MainActor
-    private static var statusCache: [String: (status: String, color: Color)] = [:]
-
     var body: some View {
         Text(fileStatus)
             .foregroundColor(statusColor)
@@ -26,19 +23,8 @@ struct FileStatusColumnView: View, SuperLog {
     }
 
     private func checkFileStatus(verbose: Bool) async {
-        let path = url.path(percentEncoded: false)
-
-        // 检查缓存
-        if let cached = await MainActor.run(body: { Self.statusCache[path] }) {
-            updateState(fileStatus: cached.status, statusColor: cached.color, isChecking: false)
-            if verbose {
-                os_log("\(Self.t)📦 Using cached status for \(path)")
-            }
-            return
-        }
-
         if verbose {
-            os_log("\(Self.t)🔍 Checking file status for \(path)")
+            os_log("\(Self.t)🔍 Checking file status for \(url.path(percentEncoded: false))")
         }
 
         let result = await Task.detached(priority: .background) {
@@ -47,7 +33,6 @@ struct FileStatusColumnView: View, SuperLog {
 
         guard !Task.isCancelled else { return }
 
-        Self.statusCache[path] = result
         updateState(fileStatus: result.status, statusColor: result.color, isChecking: false)
     }
 
