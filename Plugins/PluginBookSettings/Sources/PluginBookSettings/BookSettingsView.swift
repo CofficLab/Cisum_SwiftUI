@@ -3,6 +3,22 @@ import MagicKit
 import OSLog
 import SwiftUI
 
+struct BookLibraryMetrics: Equatable {
+    let diskSize: String
+    let fileCount: Int
+}
+
+enum BookSettingsMetricsPolicy {
+    static func shouldApplyMetrics(
+        currentDisk: URL?,
+        requestedDisk: URL,
+        currentGeneration: Int,
+        resultGeneration: Int
+    ) -> Bool {
+        currentDisk == requestedDisk && currentGeneration == resultGeneration
+    }
+}
+
 /// 有声书设置视图：展示仓库大小、位置与文件数量。
 public struct BookSettingsView: View, SuperLog {
     public nonisolated static var emoji: String { BookSettingsPluginInfo.emoji }
@@ -11,6 +27,7 @@ public struct BookSettingsView: View, SuperLog {
     @State private var description: String = ""
     @State private var fileCount: Int = 0
     @State private var disk: URL?
+    @State private var refreshGeneration = 0
 
     private let refreshToken: Int
     private let bookDisk: @MainActor () -> URL?
@@ -80,6 +97,9 @@ public struct BookSettingsView: View, SuperLog {
 
 private extension BookSettingsView {
     func refresh() {
+        refreshGeneration += 1
+        let generation = refreshGeneration
+
         updateDisk()
 
         guard disk != nil else {
@@ -90,24 +110,24 @@ private extension BookSettingsView {
         }
 
         updateDescription()
-        updateFileCount()
-        updateDiskSize()
-    }
+        diskSize = nil
+        fileCount = 0
 
-    private func updateDiskSize() {
-        guard let disk = self.disk else {
-            return
+        let requestedDisk = disk!
+        Task {
+            let metrics = await Self.metrics(for: requestedDisk)
+            await MainActor.run {
+                guard BookSettingsMetricsPolicy.shouldApplyMetrics(
+                    currentDisk: self.disk,
+                    requestedDisk: requestedDisk,
+                    currentGeneration: self.refreshGeneration,
+                    resultGeneration: generation
+                ) else { return }
+
+                self.diskSize = metrics.diskSize
+                self.fileCount = metrics.fileCount
+            }
         }
-
-        self.diskSize = disk.getSizeReadable()
-    }
-
-    private func updateFileCount() {
-        guard let disk = self.disk else {
-            return
-        }
-
-        self.fileCount = disk.filesCountRecursively()
     }
 
     private func updateDisk() {
@@ -124,5 +144,14 @@ private extension BookSettingsView {
         } else {
             description = String(localized: "Local directory, will not sync", table: "Book-Settings", bundle: .module)
         }
+    }
+
+    nonisolated static func metrics(for disk: URL) async -> BookLibraryMetrics {
+        await Task.detached(priority: .utility) {
+            BookLibraryMetrics(
+                diskSize: disk.getSizeReadable(),
+                fileCount: disk.filesCountRecursively()
+            )
+        }.value
     }
 }
