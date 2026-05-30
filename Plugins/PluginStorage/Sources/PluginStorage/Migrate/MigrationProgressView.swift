@@ -45,6 +45,22 @@ struct MigrationProgressView: View {
         shouldMigrate ? "迁移已完成" : "已切换到新位置"
     }
 
+    private func prepareForRetry() {
+        migrationManager.resetCancellation()
+        processedFiles.removeAll()
+        sourceFiles.removeAll()
+        targetFiles.removeAll()
+        errorMessage = nil
+        migrationProgress = 0.0
+        currentMigratingFile = ""
+        completionMessage = ""
+        migrationCompleted = false
+        migrationCancelled = false
+        cancellationRequested = false
+        loadSourceFiles()
+        loadTargetFiles()
+    }
+
     var body: some View {
         VStack(spacing: 5) {
             GroupBox {
@@ -324,7 +340,7 @@ struct MigrationProgressView: View {
             } else {
                 HStack(spacing: 16) {
                     Button {
-                        errorMessage = nil
+                        prepareForRetry()
                         showConfirmation = true
                     } label: {
                         Text("重试", tableName: "Storage", bundle: .module)
@@ -362,7 +378,7 @@ struct MigrationProgressView: View {
                             .foregroundColor(.orange)
 
                         Button {
-                            migrationCancelled = false
+                            prepareForRetry()
                             showConfirmation = true
                         } label: {
                             Text("重试迁移", tableName: "Storage", bundle: .module)
