@@ -154,6 +154,12 @@ extension AudioDBView {
         return copiedURLs
     }
 
+    nonisolated static func cleanUpCopiedFiles(_ urls: [URL]) {
+        for url in urls {
+            try? FileManager.default.removeItem(at: url)
+        }
+    }
+
     nonisolated private static func uniqueDestination(for source: URL, in directory: URL) -> URL {
         let baseName = source.deletingPathExtension().lastPathComponent
         let fileExtension = source.pathExtension
@@ -238,9 +244,13 @@ extension AudioDBView {
 
                 do {
                     let copiedURLs = try await copyFiles(urls, to: storageRoot)
-                    if let repo = dependencies.audioRepo() {
-                        await repo.sync(copiedURLs, isFirst: false)
+                    guard let repo = dependencies.audioRepo() else {
+                        Self.cleanUpCopiedFiles(copiedURLs)
+                        alert_error(String(localized: "Import failed: audio repository is unavailable", table: "Audio-DBView", bundle: .module))
+                        return
                     }
+
+                    await repo.sync(copiedURLs, isFirst: false)
                 } catch {
                     os_log(.error, "\(self.t)❌ 复制文件失败: \(error.localizedDescription)")
                     alert_error(String(localized: "Import failed: \(error.localizedDescription)", table: "Audio-DBView", bundle: .module))

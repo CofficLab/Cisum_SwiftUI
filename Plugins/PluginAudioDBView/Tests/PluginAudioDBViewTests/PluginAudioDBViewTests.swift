@@ -27,3 +27,19 @@ import Foundation
 
     #expect(FileManager.default.fileExists(atPath: destinationRoot.appendingPathComponent("valid.mp3").path) == false)
 }
+
+@Test func audioImportCleansCopiedFilesWhenRepositoryIsUnavailable() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    let copiedFile = root.appendingPathComponent("orphaned.mp3")
+    try Data("audio".utf8).write(to: copiedFile)
+
+    AudioDBView.cleanUpCopiedFiles([copiedFile])
+
+    #expect(FileManager.default.fileExists(atPath: copiedFile.path) == false)
+}
