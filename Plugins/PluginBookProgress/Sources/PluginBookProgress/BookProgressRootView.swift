@@ -9,6 +9,7 @@ public typealias BookProgressCurrentSceneProvider = @MainActor () -> String?
 public typealias BookProgressURLProvider = @MainActor () -> URL?
 public typealias BookProgressTimeProvider = @MainActor () -> TimeInterval?
 public typealias BookProgressStoreCurrentURL = @MainActor (URL?) -> Void
+public typealias BookProgressStoreCurrentTime = @MainActor (TimeInterval) -> Void
 public typealias BookProgressSaveBookState = @Sendable (URL, URL, TimeInterval) async -> Void
 
 public struct BookProgressRootView<Content>: View, SuperLog where Content: View {
@@ -23,6 +24,7 @@ public struct BookProgressRootView<Content>: View, SuperLog where Content: View 
     private let currentBookURL: BookProgressURLProvider
     private let currentBookTime: BookProgressTimeProvider
     private let storeCurrentBookURL: BookProgressStoreCurrentURL
+    private let storeCurrentBookTime: BookProgressStoreCurrentTime
     private let saveBookState: BookProgressSaveBookState
 
     public init(
@@ -31,6 +33,7 @@ public struct BookProgressRootView<Content>: View, SuperLog where Content: View 
         currentBookURL: @escaping BookProgressURLProvider,
         currentBookTime: @escaping BookProgressTimeProvider,
         storeCurrentBookURL: @escaping BookProgressStoreCurrentURL,
+        storeCurrentBookTime: @escaping BookProgressStoreCurrentTime,
         saveBookState: @escaping BookProgressSaveBookState,
         @ViewBuilder content: () -> Content
     ) {
@@ -39,6 +42,7 @@ public struct BookProgressRootView<Content>: View, SuperLog where Content: View 
         self.currentBookURL = currentBookURL
         self.currentBookTime = currentBookTime
         self.storeCurrentBookURL = storeCurrentBookURL
+        self.storeCurrentBookTime = storeCurrentBookTime
         self.saveBookState = saveBookState
         self.content = content()
     }
@@ -46,6 +50,7 @@ public struct BookProgressRootView<Content>: View, SuperLog where Content: View 
     public var body: some View {
         content
             .onAppear(perform: handleOnAppear)
+            .onPlayManStateChanged(handlePlayManStateChanged)
     }
 
     /// 检查是否应该激活书籍进度管理功能
@@ -130,6 +135,24 @@ private extension BookProgressRootView {
                     alert_error(String(localized: "Download failed: \(error.localizedDescription)", table: "Book-Progress", bundle: .module))
                 }
             }
+        }
+    }
+
+    /// 处理播放器状态变化事件。
+    ///
+    /// 暂停时保存全局播放时间和当前书籍的独立进度，保证下次进入书籍场景能恢复到准确位置。
+    func handlePlayManStateChanged(_ isPlaying: Bool) {
+        guard shouldActivateProgress else { return }
+        guard man.state == .paused, let currentURL = man.currentAsset else { return }
+
+        storeCurrentBookTime(man.currentTime)
+
+        Task {
+            await saveBookState(currentURL: currentURL)
+        }
+
+        if self.verbose {
+            os_log("\(self.t)💾 保存书籍播放时间: \(man.currentTime)s")
         }
     }
 

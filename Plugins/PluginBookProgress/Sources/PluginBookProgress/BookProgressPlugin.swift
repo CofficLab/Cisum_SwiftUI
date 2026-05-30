@@ -34,6 +34,7 @@ private struct BookProgressPluginRootView<Content>: View where Content: View {
             currentBookURL: { BookSettingRepo.getCurrent() },
             currentBookTime: { BookSettingRepo.getCurrentTime() },
             storeCurrentBookURL: { BookSettingRepo.storeCurrent($0) },
+            storeCurrentBookTime: { BookSettingRepo.storeCurrentTime($0) },
             saveBookState: { bookURL, currentURL, time in
                 do {
                     let container = try await MainActor.run {
