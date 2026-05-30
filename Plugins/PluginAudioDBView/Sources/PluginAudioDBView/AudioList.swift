@@ -226,10 +226,9 @@ extension AudioList {
         }
 
         Task.detached(priority: .background) {
-            let currentPage = await self.currentPage
             let pageSize = await self.pageSize
-            let offset = currentPage * pageSize
             let existingUrls = await self.urls
+            let offset = Self.nextLoadOffset(loadedCount: existingUrls.count)
 
             if Self.verbose {
                 os_log("\(self.t)🔄 LoadMore - offset: \(offset), limit: \(pageSize)")
@@ -266,6 +265,10 @@ extension AudioList {
                 self.isLoadingMore = false
             }
         }
+    }
+
+    nonisolated static func nextLoadOffset(loadedCount: Int) -> Int {
+        loadedCount
     }
 
     /// 刷新当前页数据（保持分页状态）
