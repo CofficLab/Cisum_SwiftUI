@@ -244,6 +244,7 @@ extension BookDBView {
         
         let dispatchGroup = DispatchGroup()
         var droppedFiles: [URL] = []
+        let droppedFilesLock = NSLock()
         
         for provider in providers {
             dispatchGroup.enter()
@@ -256,7 +257,9 @@ extension BookDBView {
                     if Self.verbose {
                         os_log("\(self.t)📎 添加 \(url.lastPathComponent) 到复制队列")
                     }
+                    droppedFilesLock.lock()
                     droppedFiles.append(url)
+                    droppedFilesLock.unlock()
                 } else if let error = error {
                     os_log(.error, "\(self.t)⚠️ 加载文件失败: \(error.localizedDescription)")
                 }
@@ -268,7 +271,10 @@ extension BookDBView {
             if Self.verbose {
                 os_log("\(self.t)✅ 所有文件加载完成，开始复制")
             }
-            copy(droppedFiles)
+            droppedFilesLock.lock()
+            let files = droppedFiles
+            droppedFilesLock.unlock()
+            copy(files)
         }
         
         return true
