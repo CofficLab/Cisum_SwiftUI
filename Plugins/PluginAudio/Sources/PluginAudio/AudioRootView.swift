@@ -58,7 +58,9 @@ public struct AudioRootView<Content>: View, SuperLog where Content: View {
 
     public var body: some View {
         Group {
-            if let container = self.container {
+            if error != nil {
+                storageErrorView
+            } else if let container = self.container {
                 ZStack {
                     content
                 }
