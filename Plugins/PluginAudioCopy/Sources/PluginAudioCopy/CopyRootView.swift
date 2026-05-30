@@ -86,7 +86,9 @@
 
             guard let disk = await MainActor.run(body: { AudioCopyService.getAudioDisk() }) else {
                 os_log(.error, "\(self.t)No Disk")
-                await MainActor.run { alert_error("No Disk") }
+                await MainActor.run {
+                    alert_error(String(localized: "Storage location is unavailable", table: "Audio-Copy-macOS", bundle: .module))
+                }
                 return false
             }
 
