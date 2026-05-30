@@ -74,6 +74,11 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread, @unchecked Send
 
                 progressCallback?(progress, fileName)
 
+                if self.isCancelled {
+                    os_log(.info, "\(self.t)迁移任务被取消")
+                    throw MigrationError.migrationCancelled
+                }
+
                 let targetFile = targetRoot.appendingPathComponent(fileName)
                 do {
                     try FileManager.default.moveItem(at: sourceFile, to: targetFile)
@@ -82,6 +87,11 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread, @unchecked Send
                     os_log(.error, "\(self.t)迁移失败: \(fileName) - \(error.localizedDescription)")
                     throw MigrationError.fileOperationFailed("\(fileName): \(error.localizedDescription)")
                 }
+            }
+
+            if self.isCancelled {
+                os_log(.info, "\(self.t)迁移任务被取消")
+                throw MigrationError.migrationCancelled
             }
 
             os_log(.info, "\(self.t)保留源目录")

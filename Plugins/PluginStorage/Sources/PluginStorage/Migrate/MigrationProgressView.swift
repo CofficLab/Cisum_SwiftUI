@@ -21,6 +21,7 @@ struct MigrationProgressView: View {
     @State private var showConfirmation = true // 用于显示确认对话框
     @State private var migrationCompleted = false // 添加新状态变量
     @State private var migrationCancelled = false // 添加新状态来跟踪取消状态
+    @State private var cancellationRequested = false
     @State private var showCancelConfirmation = false
 
     // 添加 errorAlertMessage 计算属性
@@ -150,8 +151,15 @@ struct MigrationProgressView: View {
                 // 发送存储位置更新通知
                 dependencies.postStorageLocationUpdated()
             }
+        } catch MigrationError.migrationCancelled {
+            await MainActor.run {
+                self.cancellationRequested = false
+                self.migrationCancelled = true
+                self.currentMigratingFile = "迁移已取消"
+            }
         } catch {
             await MainActor.run {
+                self.cancellationRequested = false
                 self.errorMessage = error.localizedDescription
                 self.updateFileStatus(self.currentMigratingFile, error: error.localizedDescription)
             }
@@ -288,16 +296,17 @@ struct MigrationProgressView: View {
                     Button {
                         showCancelConfirmation = true
                     } label: {
-                        Text("取消迁移", tableName: "Storage", bundle: .module)
+                        Text(cancellationRequested ? "正在取消..." : "取消迁移", tableName: "Storage", bundle: .module)
                     }
                     .buttonStyle(.borderless)
+                    .disabled(cancellationRequested)
                     .alert(Text("确定要取消迁移吗？", tableName: "Storage", bundle: .module), isPresented: $showCancelConfirmation) {
                         Button(role: .cancel) { } label: {
                             Text("继续迁移", tableName: "Storage", bundle: .module)
                         }
                         Button(role: .destructive) {
+                            cancellationRequested = true
                             migrationManager.cancelMigration()
-                            onDismiss()
                         } label: {
                             Text("确定取消", tableName: "Storage", bundle: .module)
                         }
@@ -358,7 +367,7 @@ struct MigrationProgressView: View {
                         .font(.subheadline)
                         .foregroundColor(.red)
                 } else {
-                    Text("迁移中...", tableName: "Storage", bundle: .module)
+                    Text(cancellationRequested ? "正在取消..." : "迁移中...", tableName: "Storage", bundle: .module)
                         .font(.subheadline)
                         .foregroundColor(.blue)
                 }
