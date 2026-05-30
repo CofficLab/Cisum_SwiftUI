@@ -2,7 +2,7 @@ import Foundation
 import SwiftUI
 import CisumUI
 
-public struct MagicAsset: Identifiable, Equatable, Sendable {
+public struct MagicAsset: Identifiable, Equatable {
     public let id = UUID()
     public let url: URL
     public let metadata: Metadata

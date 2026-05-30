@@ -67,18 +67,21 @@ public class AssetCache {
     }
     
     /// 验证缓存文件是否有效
-    func validateCache(for url: URL) -> Bool {
+    func validateCache(for url: URL) async -> Bool {
         guard let cachedURL = cachedURL(for: url),
               FileManager.default.fileExists(atPath: cachedURL.path) else {
             return false
         }
-        
-        // 尝试创建 AVAsset 来验证文件
-        let asset = AVAsset(url: cachedURL)
-        let validationKeys = ["playable", "duration"]
-        
-        return asset.statusOfValue(forKey: "playable", error: nil) == .loaded &&
-               asset.statusOfValue(forKey: "duration", error: nil) == .loaded
+
+        let asset = AVURLAsset(url: cachedURL)
+
+        do {
+            let isPlayable = try await asset.load(.isPlayable)
+            _ = try await asset.load(.duration)
+            return isPlayable
+        } catch {
+            return false
+        }
     }
     
     /// 删除指定 URL 的缓存

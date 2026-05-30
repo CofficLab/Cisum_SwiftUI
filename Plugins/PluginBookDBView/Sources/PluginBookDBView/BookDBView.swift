@@ -1,4 +1,5 @@
 import Foundation
+import MagicAlert
 import MagicKit
 import OSLog
 import PluginBook
@@ -49,6 +50,24 @@ public struct BookDBView: View, SuperLog, SuperThread {
     }
 }
 
+private final class DroppedFileCollector: @unchecked Sendable {
+    private let lock = NSLock()
+    private var files: [URL] = []
+
+    func append(_ url: URL) {
+        lock.lock()
+        files.append(url)
+        lock.unlock()
+    }
+
+    func snapshot() -> [URL] {
+        lock.lock()
+        let files = files
+        lock.unlock()
+        return files
+    }
+}
+
 // MARK: - Action
 
 extension BookDBView {
@@ -64,6 +83,7 @@ extension BookDBView {
 
         guard let bookDisk = dependencies.bookDisk else {
             os_log(.error, "\(self.t)❌ 书籍仓库目录不可用")
+            alert_error(String(localized: "Storage location is unavailable", table: "Book-DBView", bundle: .module))
             return
         }
 
@@ -75,6 +95,9 @@ extension BookDBView {
                 await repo.syncImportedItems(copiedItems)
             } catch {
                 os_log(.error, "\(self.t)❌ 复制书籍文件失败: \(error.localizedDescription)")
+                await MainActor.run {
+                    alert_error(String(localized: "Import failed: \(error.localizedDescription)", table: "Book-DBView", bundle: .module))
+                }
             }
         }
     }
@@ -221,6 +244,7 @@ extension BookDBView {
             
         case let .failure(error):
             os_log(.error, "\(self.t)❌ 导入文件失败: \(error.localizedDescription)")
+            alert_error(String(localized: "Import failed: \(error.localizedDescription)", table: "Book-DBView", bundle: .module))
         }
     }
     
@@ -243,8 +267,7 @@ extension BookDBView {
         }
         
         let dispatchGroup = DispatchGroup()
-        var droppedFiles: [URL] = []
-        let droppedFilesLock = NSLock()
+        let droppedFiles = DroppedFileCollector()
         
         for provider in providers {
             dispatchGroup.enter()
@@ -257,11 +280,12 @@ extension BookDBView {
                     if Self.verbose {
                         os_log("\(self.t)📎 添加 \(url.lastPathComponent) 到复制队列")
                     }
-                    droppedFilesLock.lock()
                     droppedFiles.append(url)
-                    droppedFilesLock.unlock()
                 } else if let error = error {
                     os_log(.error, "\(self.t)⚠️ 加载文件失败: \(error.localizedDescription)")
+                    Task { @MainActor in
+                        alert_error(String(localized: "Import failed: \(error.localizedDescription)", table: "Book-DBView", bundle: .module))
+                    }
                 }
             }
         }
@@ -271,10 +295,7 @@ extension BookDBView {
             if Self.verbose {
                 os_log("\(self.t)✅ 所有文件加载完成，开始复制")
             }
-            droppedFilesLock.lock()
-            let files = droppedFiles
-            droppedFilesLock.unlock()
-            copy(files)
+            copy(droppedFiles.snapshot())
         }
         
         return true

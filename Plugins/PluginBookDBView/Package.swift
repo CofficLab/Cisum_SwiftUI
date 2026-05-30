@@ -23,6 +23,7 @@ let package = Package(
         .package(path: "../PluginBookScene"),
         .package(path: "../PluginDevice"),
         .package(path: "../../Packages/MagicPlayMan"),
+        .package(url: "https://github.com/nookery/MagicAlert", from: "1.0.1"),
     ],
     targets: [
         .target(
@@ -35,6 +36,7 @@ let package = Package(
                 "PluginBookScene",
                 "PluginDevice",
                 "MagicPlayMan",
+                .product(name: "MagicAlert", package: "MagicAlert"),
             ],
             resources: [
                 .process("Resources/Book-DBView.xcstrings"),

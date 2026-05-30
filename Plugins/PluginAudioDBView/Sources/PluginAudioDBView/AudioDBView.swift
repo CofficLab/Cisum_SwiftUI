@@ -1,5 +1,6 @@
 import CisumUI
 import Foundation
+import MagicAlert
 import MagicKit
 import OSLog
 import SwiftData
@@ -201,6 +202,7 @@ extension AudioDBView {
                 }
 
                 guard let storageRoot = await fetchStorageRoot() else {
+                    alert_error(String(localized: "Storage location is unavailable", table: "Audio-DBView", bundle: .module))
                     return
                 }
 
@@ -211,10 +213,12 @@ extension AudioDBView {
                     }
                 } catch {
                     os_log(.error, "\(self.t)❌ 复制文件失败: \(error.localizedDescription)")
+                    alert_error(String(localized: "Import failed: \(error.localizedDescription)", table: "Audio-DBView", bundle: .module))
                 }
 
             case let .failure(error):
                 os_log(.error, "\(self.t)❌ 导入文件失败: \(error.localizedDescription)")
+                alert_error(String(localized: "Import failed: \(error.localizedDescription)", table: "Audio-DBView", bundle: .module))
             }
         }
     }
