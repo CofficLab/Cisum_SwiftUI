@@ -27,11 +27,15 @@ struct FileStatusColumnView: View, SuperLog {
             os_log("\(Self.t)🔍 Checking file status for \(url.path(percentEncoded: false))")
         }
 
+        let requestedURL = url
         let result = await Task.detached(priority: .background) {
-            Self.resolveStatus(for: url, verbose: verbose)
+            Self.resolveStatus(for: requestedURL, verbose: verbose)
         }.value
 
-        guard !Task.isCancelled else { return }
+        guard !Task.isCancelled,
+              FileInfoCellLoadPolicy.shouldApplyResult(currentURL: url, requestedURL: requestedURL) else {
+            return
+        }
 
         updateState(fileStatus: result.status, statusColor: result.color, isChecking: false)
     }

@@ -29,6 +29,14 @@ import Foundation
     ))
 }
 
+@Test func fileInfoCellsOnlyApplyCurrentURLResults() {
+    let first = URL(fileURLWithPath: "/tmp/cisum-storage-file-info/first")
+    let second = URL(fileURLWithPath: "/tmp/cisum-storage-file-info/second")
+
+    #expect(FileInfoCellLoadPolicy.shouldApplyResult(currentURL: first, requestedURL: first))
+    #expect(!FileInfoCellLoadPolicy.shouldApplyResult(currentURL: second, requestedURL: first))
+}
+
 @Test func directStorageSwitchUsesAccurateCompletionMessage() {
     #expect(MigrationProgressView.completionMessage(shouldMigrate: true) == "迁移已完成")
     #expect(MigrationProgressView.completionMessage(shouldMigrate: false) == "已切换到新位置")

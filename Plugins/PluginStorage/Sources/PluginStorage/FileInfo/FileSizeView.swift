@@ -3,6 +3,12 @@ import MagicKit
 
 import OSLog
 
+enum FileInfoCellLoadPolicy {
+    static func shouldApplyResult(currentURL: URL, requestedURL: URL) -> Bool {
+        currentURL == requestedURL
+    }
+}
+
 struct FileSizeView: View, SuperLog {
     nonisolated static let emoji = "🫘"
     
@@ -25,21 +31,22 @@ struct FileSizeView: View, SuperLog {
     }
 
     private func updateSize(verbose: Bool = false) async {
+        let requestedURL = url
         let calculatedSize = await Task.detached(priority: .background) {
             if verbose {
-                os_log("\(self.t)UpdateSize: \(url.path)")
+                os_log("\(self.t)UpdateSize: \(requestedURL.path)")
             }
             
             let size: Int64 = {
                 var totalSize: Int64 = 0
                 
-                guard let resourceValues = try? url.resourceValues(forKeys: [.isDirectoryKey]),
+                guard let resourceValues = try? requestedURL.resourceValues(forKeys: [.isDirectoryKey]),
                       let isDirectory = resourceValues.isDirectory else {
-                    return (try? FileManager.default.attributesOfItem(atPath: url.path)[.size] as? Int64) ?? 0
+                    return (try? FileManager.default.attributesOfItem(atPath: requestedURL.path)[.size] as? Int64) ?? 0
                 }
                 
                 if isDirectory {
-                    guard let urls = FileManager.default.enumerator(at: url, includingPropertiesForKeys: [.fileSizeKey])?.allObjects as? [URL] else {
+                    guard let urls = FileManager.default.enumerator(at: requestedURL, includingPropertiesForKeys: [.fileSizeKey])?.allObjects as? [URL] else {
                         return 0
                     }
                     
@@ -50,14 +57,18 @@ struct FileSizeView: View, SuperLog {
                     }
                     return totalSize
                 } else {
-                    return (try? FileManager.default.attributesOfItem(atPath: url.path)[.size] as? Int64) ?? 0
+                    return (try? FileManager.default.attributesOfItem(atPath: requestedURL.path)[.size] as? Int64) ?? 0
                 }
             }()
 
             return size
         }.value
 
-        guard !Task.isCancelled else { return }
+        guard !Task.isCancelled,
+              FileInfoCellLoadPolicy.shouldApplyResult(currentURL: url, requestedURL: requestedURL) else {
+            return
+        }
+
         size = calculatedSize
     }
     
