@@ -160,20 +160,6 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
                 },
                 isDesktop: Config.isDesktop
             )
-            WelcomePluginHost.configure(
-                hasStorageLocation: {
-                    Config.getStorageLocation() != nil
-                },
-                isICloudAvailable: {
-                    cloudProvider.isSignedIn == true
-                },
-                currentStorageSelection: {
-                    Config.getStorageLocation()?.welcomeSelection
-                },
-                updateStorageSelection: { selection in
-                    Config.updateStorageLocation(StorageLocation(selection))
-                }
-            )
         }
     }
 
@@ -184,15 +170,6 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
 }
 
 private extension StorageLocation {
-    init(_ selection: WelcomeStorageSelection) {
-        switch selection {
-        case .icloud:
-            self = .icloud
-        case .local:
-            self = .local
-        }
-    }
-
     var pluginStorageLocation: PluginStorageLocation {
         switch self {
         case .icloud:
@@ -201,17 +178,6 @@ private extension StorageLocation {
             return .local
         case .custom:
             return .custom
-        }
-    }
-
-    var welcomeSelection: WelcomeStorageSelection? {
-        switch self {
-        case .icloud:
-            return .icloud
-        case .local:
-            return .local
-        case .custom:
-            return nil
         }
     }
 }

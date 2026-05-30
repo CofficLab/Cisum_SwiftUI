@@ -44,9 +44,12 @@ enum Config: SuperLog {
     }
 
     static func getDBRootDir() throws -> URL {
-        try Config.databaseDir
+        let url = Config.databaseDir
             .appendingPathComponent(dbDirName, isDirectory: true)
-            .createIfNotExist()
+
+        try ensureDirectory(at: url)
+
+        return url
     }
 
     static let isDesktop = MagicApp.isDesktop
@@ -189,10 +192,25 @@ extension Config {
 
 extension Config {
     static func createDatabaseFile(name: String) throws -> URL {
-        try Config.getDBRootDir()
-            .appendingPathComponent(name)
-            .appendingPathComponent("\(name).db")
-            .createIfNotExist()
+        let directory = try Config.getDBRootDir()
+            .appendingPathComponent(name, isDirectory: true)
+
+        try ensureDirectory(at: directory)
+
+        return directory.appendingPathComponent("\(name).db")
+    }
+
+    private static func ensureDirectory(at url: URL) throws {
+        var isDirectory: ObjCBool = false
+        if FileManager.default.fileExists(atPath: url.path, isDirectory: &isDirectory), !isDirectory.boolValue {
+            try FileManager.default.removeItem(at: url)
+        }
+
+        try FileManager.default.createDirectory(
+            at: url,
+            withIntermediateDirectories: true,
+            attributes: nil
+        )
     }
 }
 

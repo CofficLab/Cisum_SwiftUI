@@ -35,8 +35,24 @@ public actor BookPlugin: SuperPlugin {
             return nil
         }
 
-        return try? storageRoot
-            .appendingPathComponent(Self.dirName, isDirectory: true)
-            .createIfNotExist()
+        let disk = storageRoot.appendingPathComponent(Self.dirName, isDirectory: true)
+        return try? disk.ensureDirectory()
+    }
+}
+
+private extension URL {
+    func ensureDirectory() throws -> URL {
+        var isDirectory: ObjCBool = false
+        if FileManager.default.fileExists(atPath: path, isDirectory: &isDirectory), !isDirectory.boolValue {
+            try FileManager.default.removeItem(at: self)
+        }
+
+        try FileManager.default.createDirectory(
+            at: self,
+            withIntermediateDirectories: true,
+            attributes: nil
+        )
+
+        return self
     }
 }

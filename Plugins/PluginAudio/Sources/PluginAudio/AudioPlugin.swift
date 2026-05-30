@@ -44,7 +44,8 @@ public actor AudioPlugin: SuperPlugin {
             return nil
         }
 
-        return storageRoot.appendingPathComponent(Self.dbDirName)
+        let disk = storageRoot.appendingPathComponent(Self.dbDirName, isDirectory: true)
+        return try? disk.ensureDirectory()
     }
 
     @MainActor
@@ -60,5 +61,22 @@ public actor AudioPlugin: SuperPlugin {
             databaseURL: AudioPluginHost.createDatabaseFile(name: "audio"),
             reason: "AudioPlugin"
         )
+    }
+}
+
+private extension URL {
+    func ensureDirectory() throws -> URL {
+        var isDirectory: ObjCBool = false
+        if FileManager.default.fileExists(atPath: path, isDirectory: &isDirectory), !isDirectory.boolValue {
+            try FileManager.default.removeItem(at: self)
+        }
+
+        try FileManager.default.createDirectory(
+            at: self,
+            withIntermediateDirectories: true,
+            attributes: nil
+        )
+
+        return self
     }
 }

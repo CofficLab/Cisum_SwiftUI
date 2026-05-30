@@ -1,6 +1,7 @@
 import CisumUI
 import MagicKit
 import OSLog
+import PluginWelcome
 import SwiftData
 import SwiftUI
 
@@ -46,6 +47,21 @@ final class ProviderManager: SuperLog {
             }
         )
 
+        WelcomePluginHost.configure(
+            hasStorageLocation: {
+                Config.getStorageLocation() != nil
+            },
+            isICloudAvailable: {
+                self.cloud.isSignedIn == true
+            },
+            currentStorageSelection: {
+                Config.getStorageLocation()?.welcomeSelection
+            },
+            updateStorageSelection: { selection in
+                Config.updateStorageLocation(StorageLocation(selection))
+            }
+        )
+
         if Self.verbose {
             os_log("\(Self.t)✅ 服务提供者初始化完成")
         }
@@ -62,4 +78,26 @@ final class ProviderManager: SuperLog {
     ContentView()
         .inRootView()
         .withDebugBar()
+}
+
+private extension StorageLocation {
+    init(_ selection: WelcomeStorageSelection) {
+        switch selection {
+        case .icloud:
+            self = .icloud
+        case .local:
+            self = .local
+        }
+    }
+
+    var welcomeSelection: WelcomeStorageSelection? {
+        switch self {
+        case .icloud:
+            return .icloud
+        case .local:
+            return .local
+        case .custom:
+            return nil
+        }
+    }
 }

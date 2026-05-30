@@ -16,6 +16,7 @@ public struct BookConfig {
  
     public static func getContainer(dbRootURL: URL) throws -> ModelContainer {
         let url = getDBUrl(dbRootURL: dbRootURL)
+        try url.deletingLastPathComponent().ensureDirectory()
 
         let schema = Schema([
             BookModel.self,
@@ -30,5 +31,22 @@ public struct BookConfig {
         )
 
         return try ModelContainer(for: schema, configurations: [modelConfiguration])
+    }
+}
+
+private extension URL {
+    func ensureDirectory() throws -> URL {
+        var isDirectory: ObjCBool = false
+        if FileManager.default.fileExists(atPath: path, isDirectory: &isDirectory), !isDirectory.boolValue {
+            try FileManager.default.removeItem(at: self)
+        }
+
+        try FileManager.default.createDirectory(
+            at: self,
+            withIntermediateDirectories: true,
+            attributes: nil
+        )
+
+        return self
     }
 }
