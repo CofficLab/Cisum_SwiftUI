@@ -6,6 +6,37 @@ import SwiftData
 import SwiftUI
 import UniformTypeIdentifiers
 
+struct AudioRootErrorPresentation: Equatable {
+    let title: String
+    let message: String
+    let detail: String?
+
+    static func make(error: AudioPluginError?) -> AudioRootErrorPresentation {
+        guard let error else {
+            return AudioRootErrorPresentation(
+                title: "音频库初始化失败",
+                message: "请尝试重新打开应用或检查媒体仓库设置",
+                detail: nil
+            )
+        }
+
+        switch error {
+        case .initialization(let reason) where reason == "Storage 未找到":
+            return AudioRootErrorPresentation(
+                title: "存储位置未设置",
+                message: "请先设置媒体仓库的存储位置",
+                detail: nil
+            )
+        default:
+            return AudioRootErrorPresentation(
+                title: "音频库初始化失败",
+                message: error.recoverySuggestion ?? "请尝试重新打开应用或检查媒体仓库设置",
+                detail: error.localizedDescription
+            )
+        }
+    }
+}
+
 public struct AudioRootView<Content>: View, SuperLog where Content: View {
     public nonisolated static var emoji: String { "📢" }
     public nonisolated static var verbose: Bool { false }
@@ -68,7 +99,9 @@ public struct AudioRootView<Content>: View, SuperLog where Content: View {
     // MARK: - Error View
 
     private var storageErrorView: some View {
-        VStack(spacing: 20) {
+        let presentation = AudioRootErrorPresentation.make(error: error)
+
+        return VStack(spacing: 20) {
             Spacer()
 
             Image(systemName: "externaldrive.badge.exclamationmark")
@@ -77,14 +110,22 @@ public struct AudioRootView<Content>: View, SuperLog where Content: View {
                 .symbolRenderingMode(.hierarchical)
 
             VStack(spacing: 8) {
-                Text("存储位置未设置", tableName: "Audio", bundle: .module)
+                Text(presentation.title)
                     .font(.title2.bold())
                     .foregroundStyle(.primary)
 
-                Text("请先设置媒体仓库的存储位置", tableName: "Audio", bundle: .module)
+                Text(presentation.message)
                     .font(.body)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
+
+                if let detail = presentation.detail {
+                    Text(detail)
+                        .font(.caption)
+                        .foregroundStyle(.tertiary)
+                        .multilineTextAlignment(.center)
+                        .textSelection(.enabled)
+                }
             }
 
             Spacer()
@@ -126,8 +167,8 @@ extension AudioRootView {
             let container = try AudioConfigRepo.getContainer(databaseURL: databaseURL())
             return (container, nil)
         } catch {
-            os_log(.error, "\(Self.t)初始化失败: Container 未找到")
-            return (nil, AudioPluginError.initialization(reason: "Container 未找到"))
+            os_log(.error, "\(Self.t)初始化失败: \(error.localizedDescription)")
+            return (nil, AudioPluginError.initialization(reason: error.localizedDescription))
         }
     }
 
