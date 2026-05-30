@@ -9,7 +9,7 @@ struct AppTabView: View, SuperLog, SuperThread {
     @EnvironmentObject var p: PluginProvider
     @Environment(\.demoMode) var isDemoMode
 
-    @State private var tab: String = "DB"
+    @State private var selectedTabID: String = "0"
     @State private var currentTabView: AnyView?
     @State private var selectedTabIndex: Int = 0
     @State private var selectedDemoTabID: String = "0"
@@ -40,10 +40,10 @@ extension AppTabView {
         // 收集所有提供的 Tab 视图及标签
         let tabViews = p.getTabViews(reason: self.className, demoMode: isDemoMode)
 
-        let tabView = TabView(selection: $tab) {
+        let tabView = TabView(selection: $selectedTabID) {
             ForEach(Array(tabViews.enumerated()), id: \.offset) { index, item in
                 item.view
-                    .tag(index)
+                    .tag(String(index))
                     .tabItem {
                         Label(item.label, systemImage: .cisumIconMusicNote)
                     }
@@ -150,6 +150,11 @@ extension AppTabView {
         // 事件驱动：主动更新视图（仅在非 Demo 模式下）
         if !isDemoMode {
             currentTabView = buildTabView()
+        }
+
+        let tabCount = p.getTabViews(reason: self.className, demoMode: isDemoMode).count
+        if Int(selectedTabID).map({ $0 >= tabCount }) ?? (selectedTabID != "Setting") {
+            selectedTabID = tabCount > 0 ? "0" : "Setting"
         }
 
         if Self.verbose {
