@@ -21,33 +21,39 @@ public struct StorageSettingView: View, SuperLog {
             VStack(spacing: 0) {
                 AppSettingsInfoRow(
                     title: "iCloud Drive",
-                    description: "Store media files in iCloud Drive",
+                    description: isICloudAvailable ? "Store media files in iCloud Drive" : "iCloud Drive is unavailable",
                     systemImage: .cisumIconCloud,
                     isSelected: location == .icloud,
-                    action: {
+                    action: isICloudAvailable ? {
                         beginMigration(to: .icloud)
-                    }
+                    } : nil
                 ) {
                     if location == .icloud {
                         Image(systemName: .cisumIconCheckmarkSimple)
                             .foregroundColor(.accentColor)
+                    } else if !isICloudAvailable {
+                        Text("Unavailable")
                     }
                 }
+                .opacity(isICloudAvailable ? 1 : 0.5)
 
                 AppSettingsInfoRow(
                     title: "Local",
-                    description: "Store within app, data will be lost if app is deleted",
+                    description: isLocalStorageAvailable ? "Store within app, data will be lost if app is deleted" : "Local storage is unavailable",
                     systemImage: .cisumIconFolder,
                     isSelected: location == .local,
-                    action: {
+                    action: isLocalStorageAvailable ? {
                         beginMigration(to: .local)
-                    }
+                    } : nil
                 ) {
                     if location == .local {
                         Image(systemName: .cisumIconCheckmarkSimple)
                             .foregroundColor(.accentColor)
+                    } else if !isLocalStorageAvailable {
+                        Text("Unavailable")
                     }
                 }
+                .opacity(isLocalStorageAvailable ? 1 : 0.5)
             }
         }
         .sheet(isPresented: $showMigrationProgress) {
@@ -76,8 +82,17 @@ public struct StorageSettingView: View, SuperLog {
 
     private func beginMigration(to newLocation: PluginStorageLocation) {
         guard newLocation != location else { return }
+        guard dependencies.getStorageRootForLocation(newLocation) != nil else { return }
 
         targetLocation = newLocation
         showMigrationProgress = true
+    }
+
+    private var isICloudAvailable: Bool {
+        dependencies.getStorageRootForLocation(.icloud) != nil
+    }
+
+    private var isLocalStorageAvailable: Bool {
+        dependencies.getStorageRootForLocation(.local) != nil
     }
 }
