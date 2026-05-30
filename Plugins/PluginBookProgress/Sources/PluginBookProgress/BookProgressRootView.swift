@@ -111,11 +111,7 @@ private extension BookProgressRootView {
                     return
                 }
 
-                await man.play(url, autoPlay: false, reason: "restoreBookProgress")
-
-                if let time = currentBookTime() {
-                    man.seek(time: time, reason: self.className + ".restoreBookProgress")
-                }
+                await man.play(url, autoPlay: false, startTime: currentBookTime(), reason: "restoreBookProgress")
 
                 if self.verbose {
                     os_log("\(self.t)✅ 恢复书籍进度: \(url.lastPathComponent)")

@@ -81,9 +81,10 @@ public extension MagicPlayMan {
     /// - Parameters:
     ///   - url: 要播放的媒体 URL
     ///   - autoPlay: 是否自动开始播放，默认为 true
+    ///   - startTime: 加载完成后定位到的起始时间，默认为 nil
     ///   - reason: 更新原因
     @MainActor
-    func play(_ url: URL, autoPlay: Bool = true, reason: String) async {
+    func play(_ url: URL, autoPlay: Bool = true, startTime: TimeInterval? = nil, reason: String) async {
         if self.verbose {
             os_log("\(self.t)🚀 (\(reason)) Play: \(url.title), AutoPlay: \(autoPlay)")
         }
@@ -117,11 +118,7 @@ public extension MagicPlayMan {
 
         if url.isNetworkURL {
             let item = AVPlayerItem(url: url)
-            self._player.replaceCurrentItem(with: item)
-
-            if autoPlay {
-                self.playCurrent(reason: reason + ".play")
-            }
+            load(item, autoPlay: autoPlay, startTime: startTime, reason: reason)
             return
         }
 
@@ -137,11 +134,7 @@ public extension MagicPlayMan {
             }
 
             let item = AVPlayerItem(url: url)
-            self._player.replaceCurrentItem(with: item)
-
-            if autoPlay {
-                self.playCurrent(reason: reason + ".play")
-            }
+            self.load(item, autoPlay: autoPlay, startTime: startTime, reason: reason)
         }
     }
 
@@ -168,14 +161,10 @@ public extension MagicPlayMan {
             return
         }
 
-        let targetTime = CMTime(seconds: time, preferredTimescale: 600)
         if verbose {
             os_log("\(self.t)⏩ (\(reason)) Seeking to \(Int(time))s")
         }
-        _player.seek(to: targetTime) { _ in
-            // 更新 Now Playing Info 中的播放时间，否则控制中心/锁屏界面的进度条不会更新
-            self.updateNowPlayingInfo(includeThumbnail: true, reason: reason + ".seek")
-        }
+        seekLoadedItem(time: time, reason: reason)
     }
 
     /// 设置当前资源的喜欢状态
@@ -299,6 +288,37 @@ public extension MagicPlayMan {
             // 在这些状态下不执行任何操作
             if verbose { os_log("\(self.t)Cannot toggle playback in current state: \(self.state.stateText)") }
             break
+        }
+    }
+}
+
+private extension MagicPlayMan {
+    @MainActor
+    func load(_ item: AVPlayerItem, autoPlay: Bool, startTime: TimeInterval?, reason: String) {
+        _player.replaceCurrentItem(with: item)
+
+        guard let startTime, startTime > 0 else {
+            if autoPlay {
+                playCurrent(reason: reason + ".play")
+            }
+            return
+        }
+
+        seekLoadedItem(time: startTime, reason: reason + ".load") { [weak self] in
+            guard let self else { return }
+            if autoPlay {
+                self.playCurrent(reason: reason + ".play")
+            }
+        }
+    }
+
+    func seekLoadedItem(time: TimeInterval, reason: String, completion: (() -> Void)? = nil) {
+        let targetTime = CMTime(seconds: time, preferredTimescale: 600)
+        _player.seek(to: targetTime) { [weak self] _ in
+            guard let self else { return }
+            // 更新 Now Playing Info 中的播放时间，否则控制中心/锁屏界面的进度条不会更新
+            self.updateNowPlayingInfo(includeThumbnail: true, reason: reason + ".seek")
+            completion?()
         }
     }
 }

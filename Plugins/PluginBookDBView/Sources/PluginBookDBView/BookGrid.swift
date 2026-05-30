@@ -215,11 +215,7 @@ extension BookGrid {
     }
 
     private func play(_ url: URL, at time: TimeInterval?, reason: String) async {
-        await man.play(url, autoPlay: false, reason: reason)
-
-        if let time {
-            man.seek(time: time, reason: reason)
-        }
+        await man.play(url, autoPlay: false, startTime: time, reason: reason)
     }
     
     /// 播放书籍
