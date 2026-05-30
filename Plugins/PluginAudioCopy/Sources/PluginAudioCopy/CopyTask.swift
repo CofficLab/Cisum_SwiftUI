@@ -20,6 +20,9 @@ class CopyTask {
         if isRunning {
             return "进行中"
         }
+        if error.isEmpty {
+            return "等待复制"
+        }
         return error
     }
 

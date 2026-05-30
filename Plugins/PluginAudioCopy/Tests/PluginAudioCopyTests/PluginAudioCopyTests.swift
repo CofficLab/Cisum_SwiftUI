@@ -70,6 +70,23 @@ import Testing
     #expect(CopyList.tasksToDelete(from: IndexSet(integer: 2), in: tasks) == nil)
 }
 
+@MainActor @Test func copyTaskMessageShowsQueuedRunningAndFailedStates() {
+    let task = CopyTask(
+        bookmark: Data([0]),
+        destination: URL(fileURLWithPath: "/tmp/cisum-audio-copy-tests", isDirectory: true),
+        originalFilename: "one.mp3"
+    )
+
+    #expect(task.message == "等待复制")
+
+    task.isRunning = true
+    #expect(task.message == "进行中")
+
+    task.isRunning = false
+    task.error = "Permission denied"
+    #expect(task.message == "Permission denied")
+}
+
 @Test func copyLimitCountsCurrentLibraryAndIncomingDrop() {
     #expect(AudioCopyLimitPolicy.allowedTaskCount(
         currentAudioCount: 99,
