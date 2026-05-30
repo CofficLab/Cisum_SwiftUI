@@ -30,6 +30,10 @@ enum BookProgressPersistencePolicy {
         return BookProgressStateSnapshot(currentURL: currentURL, time: nil)
     }
 
+    static func shouldClearRestoredCurrentURL(currentURL: URL?, isPlayable: Bool) -> Bool {
+        currentURL != nil && !isPlayable
+    }
+
     static func snapshot(currentURL: URL?, currentTime: TimeInterval, trigger: BookProgressSaveTrigger) -> BookProgressStateSnapshot? {
         guard let currentURL else { return nil }
 
@@ -158,7 +162,13 @@ private extension BookProgressRootView {
     private func restoreBookProgress() {
         Task {
             if let url = currentBookURL() {
-                guard isPlayableBookURL(url) else {
+                let isPlayable = isPlayableBookURL(url)
+
+                guard isPlayable else {
+                    if BookProgressPersistencePolicy.shouldClearRestoredCurrentURL(currentURL: url, isPlayable: isPlayable) {
+                        storeCurrentBookURL(nil)
+                    }
+
                     if self.verbose {
                         os_log("\(self.t)⚠️ 跳过已失效的书籍进度: \(url.shortPath())")
                     }

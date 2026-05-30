@@ -21,6 +21,14 @@ import Testing
     #expect(snapshot == nil)
 }
 
+@Test func invalidRestoredBookURLShouldClearCurrentBook() {
+    let url = URL(fileURLWithPath: "/tmp/book/missing.mp3")
+
+    #expect(BookProgressPersistencePolicy.shouldClearRestoredCurrentURL(currentURL: url, isPlayable: false))
+    #expect(!BookProgressPersistencePolicy.shouldClearRestoredCurrentURL(currentURL: url, isPlayable: true))
+    #expect(!BookProgressPersistencePolicy.shouldClearRestoredCurrentURL(currentURL: nil, isPlayable: false))
+}
+
 @Test func playbackPositionChangesPersistCurrentTime() {
     let url = URL(fileURLWithPath: "/tmp/book/chapter-01.mp3")
 

@@ -19,6 +19,10 @@ enum AudioProgressPersistencePolicy {
     static func currentURLToStore(_ url: URL?) -> URL? {
         url
     }
+
+    static func shouldClearRestoredCurrentURL(storedURL: URL?, isPlayable: Bool) -> Bool {
+        storedURL != nil && !isPlayable
+    }
 }
 
 public struct AudioProgressRootView<Content>: View, SuperLog where Content: View {
@@ -120,7 +124,9 @@ extension AudioProgressRootView {
             // 尝试恢复上次播放
             if let url = AudioStateRepo.getCurrent() {
                 // 检查该 URL 是否存在于 AudioRepo
-                if await repo.find(url) != nil, isPlayableAudioURL(url) {
+                let isPlayable = await repo.find(url) != nil && isPlayableAudioURL(url)
+
+                if isPlayable {
                     // 文件存在，恢复播放
                     assetTarget = url
                     liked = await AudioLikeRepo.shared.isLiked(url: url)
@@ -133,6 +139,10 @@ extension AudioProgressRootView {
                         os_log("\(self.t)✅ 恢复播放: \(url.lastPathComponent) @ \(timeTarget)s")
                     }
                 } else {
+                    if AudioProgressPersistencePolicy.shouldClearRestoredCurrentURL(storedURL: url, isPlayable: isPlayable) {
+                        AudioStateRepo.storeCurrent(nil)
+                    }
+
                     // 文件不存在，播放第一首
                     if Self.verbose {
                         os_log("\(self.t)⚠️ 上次播放的文件不存在: \(url.lastPathComponent)")
