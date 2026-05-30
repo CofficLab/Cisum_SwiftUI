@@ -38,6 +38,10 @@ public final class FileSystemMonitorJob: AudioJob, @unchecked Sendable {
         isFirst || !(disk?.checkIsICloud(verbose: false) ?? true)
     }
 
+    public static func shouldContinueRunning(runID: UUID, activeRunID: UUID?, isRunning: Bool) -> Bool {
+        isRunning && activeRunID == runID
+    }
+
     public func execute() async throws {
         guard let disk = await diskProvider() else {
             if Self.verbose {
@@ -50,7 +54,8 @@ public final class FileSystemMonitorJob: AudioJob, @unchecked Sendable {
             os_log("👀 Start monitoring audio disk: \(disk.path)")
         }
 
-        await state.setRunning(true)
+        let runID = UUID()
+        await state.start(runID)
 
         await withCheckedContinuation { continuation in
             monitor = disk.onDirChange(
@@ -94,7 +99,7 @@ public final class FileSystemMonitorJob: AudioJob, @unchecked Sendable {
             continuation.resume()
         }
 
-        while await state.getRunning() {
+        while await state.shouldContinue(runID) {
             try Task.checkCancellation()
             try await Task.sleep(nanoseconds: 1_000_000_000)
         }
@@ -107,7 +112,7 @@ public final class FileSystemMonitorJob: AudioJob, @unchecked Sendable {
     public func cancel() {
         Task { @Sendable [weak self] in
             guard let self else { return }
-            await self.state.setRunning(false)
+            await self.state.cancel()
         }
 
         monitor?.cancel()
@@ -120,13 +125,24 @@ public final class FileSystemMonitorJob: AudioJob, @unchecked Sendable {
 
     private actor State {
         var isRunning = false
+        var activeRunID: UUID?
 
-        func setRunning(_ running: Bool) {
-            isRunning = running
+        func start(_ runID: UUID) {
+            activeRunID = runID
+            isRunning = true
         }
 
-        func getRunning() -> Bool {
-            isRunning
+        func cancel() {
+            activeRunID = nil
+            isRunning = false
+        }
+
+        func shouldContinue(_ runID: UUID) -> Bool {
+            FileSystemMonitorJob.shouldContinueRunning(
+                runID: runID,
+                activeRunID: activeRunID,
+                isRunning: isRunning
+            )
         }
     }
 }

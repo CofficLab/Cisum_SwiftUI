@@ -16,3 +16,24 @@ import Testing
     #expect(FileSystemMonitorJob.shouldPerformFullSync(isFirst: true, disk: nil))
     #expect(FileSystemMonitorJob.shouldPerformFullSync(isFirst: false, disk: localDisk))
 }
+
+@Test func staleMonitorRunStopsAfterRestart() {
+    let firstRun = UUID()
+    let secondRun = UUID()
+
+    #expect(FileSystemMonitorJob.shouldContinueRunning(
+        runID: firstRun,
+        activeRunID: firstRun,
+        isRunning: true
+    ))
+    #expect(!FileSystemMonitorJob.shouldContinueRunning(
+        runID: firstRun,
+        activeRunID: secondRun,
+        isRunning: true
+    ))
+    #expect(!FileSystemMonitorJob.shouldContinueRunning(
+        runID: firstRun,
+        activeRunID: nil,
+        isRunning: false
+    ))
+}
