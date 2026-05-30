@@ -4,6 +4,12 @@
     import OSLog
     import SwiftUI
 
+    enum CopyWorkerCompletionPolicy {
+        static func shouldPostFinished(remainingTaskCount: Int) -> Bool {
+            remainingTaskCount == 0
+        }
+    }
+
     @MainActor
     class CopyWorker: SuperLog {
         nonisolated static let emoji = "👷"
@@ -153,6 +159,14 @@
             if remainingCount == 0 {
                 // 延迟1秒后发送完成事件
                 try? await Task.sleep(nanoseconds: 1000000000)
+                let delayedRemainingTasks = await db.allCopyTaskDTOs()
+                guard Self.shouldPostFinished(afterDelayRemainingTasks: delayedRemainingTasks) else {
+                    NotificationCenter.postCopyTaskCountChanged(count: delayedRemainingTasks.count)
+                    if delayedRemainingTasks.contains(where: { $0.error.isEmpty }) {
+                        await self.run()
+                    }
+                    return
+                }
                 NotificationCenter.postCopyTaskFinished(count: 0, lastCount: taskCount)
             } else if pendingCount > 0 {
                 // 还有任务，发送数量更新事件
@@ -162,6 +176,10 @@
             } else {
                 NotificationCenter.postCopyTaskCountChanged(count: remainingCount)
             }
+        }
+
+        nonisolated static func shouldPostFinished(afterDelayRemainingTasks tasks: [CopyTaskDTO]) -> Bool {
+            CopyWorkerCompletionPolicy.shouldPostFinished(remainingTaskCount: tasks.count)
         }
 
         nonisolated static func makeUniqueDestinationURLs(

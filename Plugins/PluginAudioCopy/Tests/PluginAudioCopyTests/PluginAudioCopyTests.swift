@@ -117,4 +117,12 @@ import Testing
     #expect(CopyRootView<EmptyView>.shouldShowNoFilesAdded(taskCount: 0, preparationErrors: []) == true)
     #expect(CopyRootView<EmptyView>.shouldShowNoFilesAdded(taskCount: 1, preparationErrors: [error]) == false)
 }
+
+@Test func copyWorkerOnlyPostsFinishedWhenQueueIsStillEmpty() {
+    let folder = URL(fileURLWithPath: "/tmp/cisum-audio-copy-tests", isDirectory: true)
+    let task = CopyTaskDTO(bookmark: Data([0]), destination: folder, originalFilename: "new.mp3")
+
+    #expect(CopyWorker.shouldPostFinished(afterDelayRemainingTasks: []))
+    #expect(!CopyWorker.shouldPostFinished(afterDelayRemainingTasks: [task]))
+}
 #endif
