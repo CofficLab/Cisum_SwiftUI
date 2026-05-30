@@ -1,4 +1,5 @@
 import MagicKit
+import CisumUI
 import SwiftUI
 
 /// 播放进度条视图

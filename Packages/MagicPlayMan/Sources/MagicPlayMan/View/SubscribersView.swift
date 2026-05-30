@@ -1,5 +1,6 @@
 import MagicKit
 import SwiftUI
+import CisumUI
 
 public extension MagicPlayMan {
     /// 订阅者列表视图

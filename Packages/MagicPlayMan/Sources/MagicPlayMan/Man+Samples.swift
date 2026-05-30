@@ -1,6 +1,7 @@
 import Foundation
 import MagicKit
 import SwiftUI
+import CisumUI
 
 public extension MagicPlayMan {
     var samples: [URL] { [

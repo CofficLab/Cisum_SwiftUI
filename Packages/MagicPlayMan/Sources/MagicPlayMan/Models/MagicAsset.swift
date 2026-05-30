@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import CisumUI
 
 public struct MagicAsset: Identifiable, Equatable, Sendable {
     public let id = UUID()

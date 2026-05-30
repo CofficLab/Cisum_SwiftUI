@@ -5,6 +5,7 @@ import MagicKit
 import MediaPlayer
 import OSLog
 import SwiftUI
+import CisumUI
 
 /// 媒体播放管理器
 /// 提供音频和视频播放功能，支持播放模式切换、喜欢状态管理等

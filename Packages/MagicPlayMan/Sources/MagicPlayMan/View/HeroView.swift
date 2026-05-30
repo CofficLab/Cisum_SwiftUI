@@ -1,4 +1,5 @@
 import MagicKit
+import CisumUI
 import OSLog
 import SwiftUI
 
@@ -49,6 +50,7 @@ struct HeroView: View, SuperLog {
     }
 }
 
+#if false
 #Preview("HeroView") {
     HeroView(url: .sample_web_mp3_kennedy)
         .frame(width: 400, height: 400)
@@ -58,3 +60,4 @@ struct HeroView: View, SuperLog {
     HeroView(url: .sample_temp_jpg)
         .frame(width: 400, height: 400)
 }
+#endif

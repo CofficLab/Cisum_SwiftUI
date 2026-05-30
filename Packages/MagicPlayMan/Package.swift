@@ -16,12 +16,16 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../MagicKit"),
+        .package(path: "../CisumUI"),
+        .package(url: "https://github.com/nookery/MagicAlert.git", from: "1.0.0"),
     ],
     targets: [
         .target(
             name: "MagicPlayMan",
             dependencies: [
                 .product(name: "MagicKit", package: "MagicKit"),
+                .product(name: "CisumUI", package: "CisumUI"),
+                .product(name: "MagicAlert", package: "MagicAlert"),
             ]
         )
     ]

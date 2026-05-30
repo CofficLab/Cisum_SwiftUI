@@ -1,6 +1,8 @@
 import MagicKit
 import OSLog
 import SwiftUI
+import CisumUI
+import MagicAlert
 
 /// 预览视图
 /// 用于在 Xcode Preview 中展示 MagicPlayMan 的完整功能

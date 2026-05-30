@@ -1,5 +1,6 @@
 import MagicKit
 import SwiftUI
+import CisumUI
 
 extension MagicPlayManPreviewView {
     /// 下载进度视图

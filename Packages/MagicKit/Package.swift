@@ -1,4 +1,4 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 6.0
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -27,11 +27,18 @@ let package = Package(
                "ID3TagEditor",
                "ZIPFoundation",
            ],
-           resources: [.process("Icons.xcassets")]
+           resources: [.process("Icons.xcassets")],
+           swiftSettings: [
+               .enableExperimentalFeature("StrictConcurrency=minimal"),
+           ]
        ),
        .testTarget(
            name: "Tests",
-           dependencies: ["MagicKit"]
+           dependencies: ["MagicKit"],
+           swiftSettings: [
+               .enableExperimentalFeature("StrictConcurrency=minimal"),
+           ]
        )
-    ]
+    ],
+    swiftLanguageModes: [.v5]
 )

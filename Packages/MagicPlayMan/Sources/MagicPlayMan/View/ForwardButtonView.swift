@@ -1,5 +1,6 @@
 import MagicKit
 import SwiftUI
+import CisumUI
 
 /// 快进按钮视图
 ///

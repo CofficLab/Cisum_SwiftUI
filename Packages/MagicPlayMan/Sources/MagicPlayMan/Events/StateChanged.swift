@@ -1,6 +1,7 @@
 import Combine
 import Foundation
 import SwiftUI
+import CisumUI
 
 /// 播放状态变更事件
 /// 当播放/暂停状态发生变化时触发

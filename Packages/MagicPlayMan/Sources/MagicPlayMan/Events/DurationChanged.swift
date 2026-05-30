@@ -1,6 +1,7 @@
 import Combine
 import Foundation
 import SwiftUI
+import CisumUI
 
 /// 播放时长变更事件
 /// 当媒体总时长发生变化时触发

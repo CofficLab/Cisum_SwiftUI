@@ -1,5 +1,6 @@
 import MagicKit
 import SwiftUI
+import CisumUI
 
 /// 下一曲按钮视图
 ///

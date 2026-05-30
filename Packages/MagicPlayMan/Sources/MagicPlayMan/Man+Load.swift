@@ -4,6 +4,7 @@ import Foundation
 import MagicKit
 import OSLog
 import SwiftUI
+import CisumUI
 
 extension MagicPlayMan {
     /// 下载并缓存资源

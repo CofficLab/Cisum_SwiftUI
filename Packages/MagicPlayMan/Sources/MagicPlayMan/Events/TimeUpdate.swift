@@ -1,6 +1,7 @@
 import Combine
 import Foundation
 import SwiftUI
+import CisumUI
 
 /// 播放时间更新事件
 /// 当播放进度发生变化时触发

@@ -37,7 +37,7 @@ private struct AppIsImportingKey: EnvironmentKey {
 }
 
 private struct ShowAudioDBViewActionKey: EnvironmentKey {
-    static let defaultValue: @MainActor () -> Void = {}
+    static let defaultValue: @MainActor @Sendable () -> Void = {}
 }
 
 public extension EnvironmentValues {
@@ -86,7 +86,7 @@ public extension EnvironmentValues {
         set { self[AppIsImportingKey.self] = newValue }
     }
 
-    var showAudioDBViewAction: @MainActor () -> Void {
+    var showAudioDBViewAction: @MainActor @Sendable () -> Void {
         get { self[ShowAudioDBViewActionKey.self] }
         set { self[ShowAudioDBViewActionKey.self] = newValue }
     }

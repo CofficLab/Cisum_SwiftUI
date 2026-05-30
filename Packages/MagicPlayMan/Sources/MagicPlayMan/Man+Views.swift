@@ -1,5 +1,6 @@
 import MagicKit
 import SwiftUI
+import CisumUI
 
 /// MagicPlayMan 的视图相关功能扩展
 /// 提供了一系列用于创建播放器界面组件的方法

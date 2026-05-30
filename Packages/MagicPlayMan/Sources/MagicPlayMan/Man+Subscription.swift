@@ -2,6 +2,7 @@ import Combine
 import Foundation
 import OSLog
 import SwiftUI
+import CisumUI
 
 extension MagicPlayMan {
     /// 播放事件发布者

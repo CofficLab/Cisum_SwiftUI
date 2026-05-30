@@ -264,6 +264,40 @@ public extension View {
         .padding(24)
         .background(.background)
     }
+
+    func inIMacScreen() -> some View {
+        CisumIMacScreenFrame {
+            self
+        }
+    }
+
+    func inIPhoneScreen(horizon: Bool = false) -> some View {
+        CisumDeviceScreenFrame(
+            aspectRatio: horizon ? 19.5 / 9.0 : 9.0 / 19.5,
+            cornerRadiusRatio: horizon ? 0.06 : 0.12,
+            bezelRatio: 0.055,
+            deviceColor: Color(red: 0.07, green: 0.08, blue: 0.09)
+        ) {
+            self
+        }
+    }
+
+    func inIPadScreen(horizon: Bool = false) -> some View {
+        CisumDeviceScreenFrame(
+            aspectRatio: horizon ? 4.0 / 3.0 : 3.0 / 4.0,
+            cornerRadiusRatio: 0.055,
+            bezelRatio: 0.045,
+            deviceColor: Color(red: 0.78, green: 0.77, blue: 0.73)
+        ) {
+            self
+        }
+    }
+
+    func inDesktop() -> some View {
+        CisumDesktopFrame {
+            self
+        }
+    }
 }
 
 public extension CGSize {
@@ -279,6 +313,145 @@ private struct CisumPlaybackControlButtonStyle: ButtonStyle {
 
     func makeBody(configuration: Configuration) -> some View {
         CisumPlaybackControlLabel(configuration: configuration, reduceMotion: reduceMotion)
+    }
+}
+
+private struct CisumIMacScreenFrame<Content: View>: View {
+    let content: Content
+
+    init(@ViewBuilder content: () -> Content) {
+        self.content = content()
+    }
+
+    var body: some View {
+        GeometryReader { geo in
+            let bezel = max(geo.size.width * 0.035, 8)
+            let radius = max(geo.size.width * 0.025, 8)
+
+            VStack(spacing: 0) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: radius, style: .continuous)
+                        .fill(Color(red: 0.10, green: 0.11, blue: 0.12))
+
+                    content
+                        .clipShape(RoundedRectangle(cornerRadius: radius * 0.55, style: .continuous))
+                        .padding(bezel)
+                }
+                .aspectRatio(16.0 / 9.0, contentMode: .fit)
+                .shadow(color: .black.opacity(0.22), radius: 12, x: 0, y: 8)
+
+                RoundedRectangle(cornerRadius: max(radius * 0.2, 2), style: .continuous)
+                    .fill(Color(red: 0.68, green: 0.69, blue: 0.70))
+                    .frame(width: geo.size.width * 0.16, height: max(geo.size.height * 0.08, 18))
+
+                RoundedRectangle(cornerRadius: max(radius * 0.18, 2), style: .continuous)
+                    .fill(Color(red: 0.58, green: 0.59, blue: 0.60))
+                    .frame(width: geo.size.width * 0.38, height: max(geo.size.height * 0.035, 10))
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+        }
+    }
+}
+
+private struct CisumDeviceScreenFrame<Content: View>: View {
+    let aspectRatio: CGFloat
+    let cornerRadiusRatio: CGFloat
+    let bezelRatio: CGFloat
+    let deviceColor: Color
+    let content: Content
+
+    init(
+        aspectRatio: CGFloat,
+        cornerRadiusRatio: CGFloat,
+        bezelRatio: CGFloat,
+        deviceColor: Color,
+        @ViewBuilder content: () -> Content
+    ) {
+        self.aspectRatio = aspectRatio
+        self.cornerRadiusRatio = cornerRadiusRatio
+        self.bezelRatio = bezelRatio
+        self.deviceColor = deviceColor
+        self.content = content()
+    }
+
+    var body: some View {
+        GeometryReader { geo in
+            let shortSide = min(geo.size.width, geo.size.height)
+            let radius = max(shortSide * cornerRadiusRatio, 12)
+            let bezel = max(shortSide * bezelRatio, 8)
+
+            ZStack {
+                RoundedRectangle(cornerRadius: radius, style: .continuous)
+                    .fill(deviceColor)
+                    .shadow(color: .black.opacity(0.2), radius: 10, x: 0, y: 6)
+
+                content
+                    .clipShape(RoundedRectangle(cornerRadius: radius * 0.65, style: .continuous))
+                    .padding(bezel)
+            }
+            .aspectRatio(aspectRatio, contentMode: .fit)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+        }
+    }
+}
+
+private struct CisumDesktopFrame<Content: View>: View {
+    let content: Content
+
+    init(@ViewBuilder content: () -> Content) {
+        self.content = content()
+    }
+
+    var body: some View {
+        ZStack {
+            LinearGradient(
+                colors: [
+                    Color(red: 0.06, green: 0.16, blue: 0.14),
+                    Color(red: 0.10, green: 0.34, blue: 0.30),
+                    Color(red: 0.34, green: 0.46, blue: 0.42),
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+
+            content
+                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                .shadow(color: .black.opacity(0.22), radius: 18, x: 0, y: 10)
+
+            VStack(spacing: 0) {
+                HStack(spacing: 12) {
+                    Image(systemName: "apple.logo")
+                    Text("Cisum")
+                        .fontWeight(.semibold)
+                    Spacer()
+                    Image(systemName: "wifi")
+                    Image(systemName: "battery.100")
+                }
+                .font(.system(size: 13, weight: .medium))
+                .foregroundStyle(.white)
+                .padding(.horizontal, 16)
+                .frame(height: 28)
+                .background(.black.opacity(0.28))
+
+                Spacer()
+
+                HStack(spacing: 12) {
+                    ForEach(["music.note", "folder", "gearshape", "app.badge"], id: \.self) { icon in
+                        Image(systemName: icon)
+                            .font(.system(size: 20, weight: .medium))
+                            .frame(width: 46, height: 46)
+                            .background(.ultraThinMaterial)
+                            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                    }
+                }
+                .padding(.horizontal, 18)
+                .padding(.vertical, 10)
+                .background(.ultraThinMaterial)
+                .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                .padding(.bottom, 18)
+            }
+        }
+        .background(Color.black)
     }
 }
 

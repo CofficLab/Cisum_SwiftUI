@@ -1,6 +1,7 @@
 import MagicKit
 import OSLog
 import SwiftUI
+import CisumUI
 
 struct AudioPlayerView: View, SuperLog {
     nonisolated static let emoji = "🖥️"

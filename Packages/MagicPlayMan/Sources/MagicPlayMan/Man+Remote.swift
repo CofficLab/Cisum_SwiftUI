@@ -4,6 +4,7 @@ import MagicKit
 import MediaPlayer
 import OSLog
 import SwiftUI
+import CisumUI
 
 #if os(macOS)
     import AppKit

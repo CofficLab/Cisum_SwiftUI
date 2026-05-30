@@ -5,6 +5,7 @@ import MagicKit
 import MediaPlayer
 import OSLog
 import SwiftUI
+import CisumUI
 
 public extension MagicPlayMan {
     /// 初始化播放器

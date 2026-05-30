@@ -3,6 +3,7 @@ import Foundation
 import MagicKit
 import OSLog
 import SwiftUI
+import CisumUI
 
 public extension MagicPlayMan {
     /// 设置播放模式
