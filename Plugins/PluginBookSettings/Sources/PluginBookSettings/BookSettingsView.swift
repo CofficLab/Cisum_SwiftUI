@@ -102,7 +102,7 @@ private extension BookSettingsView {
 
         updateDisk()
 
-        guard disk != nil else {
+        guard let requestedDisk = disk else {
             description = ""
             fileCount = 0
             diskSize = nil
@@ -113,7 +113,6 @@ private extension BookSettingsView {
         diskSize = nil
         fileCount = 0
 
-        let requestedDisk = disk!
         Task {
             let metrics = await Self.metrics(for: requestedDisk)
             await MainActor.run {

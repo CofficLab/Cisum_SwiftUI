@@ -29,4 +29,10 @@ import Testing
         currentGeneration: 2,
         resultGeneration: 1
     ))
+    #expect(!BookSettingsMetricsPolicy.shouldApplyMetrics(
+        currentDisk: nil,
+        requestedDisk: firstDisk,
+        currentGeneration: 2,
+        resultGeneration: 2
+    ))
 }
