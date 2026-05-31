@@ -111,7 +111,8 @@
                                 os_log("\(self.t)🍋 [\(task.originalFilename)] 开始复制，共 \(taskCount)")
                             }
 
-                            try await url.copyTo(destination, verbose: self.verbose, caller: self.className)
+                            let sourceToCopy = Self.copySourceURL(for: url)
+                            try await sourceToCopy.copyTo(destination, verbose: self.verbose, caller: self.className)
 
                             if self.verbose {
                                 os_log("\(self.t)🎉 [\(task.originalFilename)] Copied to \(destination.lastPathComponent)")
@@ -223,6 +224,15 @@
 
             reservedPaths.insert(candidate.path)
             return candidate
+        }
+
+        nonisolated static func copySourceURL(for source: URL) -> URL {
+            let resolvedSource = source.resolvingSymlinksInPath().standardizedFileURL
+            guard FileManager.default.fileExists(atPath: resolvedSource.path) else {
+                return source
+            }
+
+            return resolvedSource
         }
     }
 

@@ -52,6 +52,24 @@ import Testing
     ])
 }
 
+@Test func copyWorkerCopiesResolvedSymlinkTarget() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    let external = root.appendingPathComponent("external", isDirectory: true)
+    try FileManager.default.createDirectory(at: external, withIntermediateDirectories: true)
+    let realFile = external.appendingPathComponent("real.mp3")
+    let linkedFile = root.appendingPathComponent("linked.mp3")
+    try Data("audio".utf8).write(to: realFile)
+    try FileManager.default.createSymbolicLink(at: linkedFile, withDestinationURL: realFile)
+
+    #expect(CopyWorker.copySourceURL(for: linkedFile).standardizedFileURL == realFile.standardizedFileURL)
+    #expect(CopyWorker.copySourceURL(for: realFile).standardizedFileURL == realFile.standardizedFileURL)
+}
+
 @Test func copyStateMessageDistinguishesPendingAndFailedTasks() {
     #expect(CopyStatePresentation.message(pendingCount: 2, failedCount: 0) == "正在复制 2 个文件")
     #expect(CopyStatePresentation.message(pendingCount: 0, failedCount: 1) == "1 个复制任务失败")
