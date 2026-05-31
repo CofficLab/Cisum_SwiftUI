@@ -10,6 +10,16 @@
         }
     }
 
+    enum CopyWorkerTaskPolicy {
+        static func shouldStartTask(isTaskStillQueued: Bool) -> Bool {
+            isTaskStillQueued
+        }
+
+        static func shouldKeepCompletedCopy(isTaskStillQueued: Bool) -> Bool {
+            isTaskStillQueued
+        }
+    }
+
     @MainActor
     class CopyWorker: SuperLog {
         nonisolated static let emoji = "👷"
@@ -82,6 +92,10 @@
                         var didComplete = false
 
                         do {
+                            guard await Self.shouldStartTask(isTaskStillQueued: self.db.hasCopyTask(bookmark: task.bookmark)) else {
+                                return false
+                            }
+
                             // Resolve the bookmark to get a security-scoped URL
                             guard let url = try? URL(resolvingBookmarkData: task.bookmark, options: .withSecurityScope, relativeTo: nil, bookmarkDataIsStale: &stale) else {
                                 throw NSError(
@@ -113,6 +127,11 @@
 
                             let sourceToCopy = Self.copySourceURL(for: url)
                             try await sourceToCopy.copyTo(destination, verbose: self.verbose, caller: self.className)
+
+                            guard await Self.shouldKeepCompletedCopy(isTaskStillQueued: self.db.hasCopyTask(bookmark: task.bookmark)) else {
+                                try? FileManager.default.removeItem(at: destination)
+                                return false
+                            }
 
                             if self.verbose {
                                 os_log("\(self.t)🎉 [\(task.originalFilename)] Copied to \(destination.lastPathComponent)")
@@ -181,6 +200,14 @@
 
         nonisolated static func shouldPostFinished(afterDelayRemainingTasks tasks: [CopyTaskDTO]) -> Bool {
             CopyWorkerCompletionPolicy.shouldPostFinished(remainingTaskCount: tasks.count)
+        }
+
+        nonisolated static func shouldStartTask(isTaskStillQueued: Bool) -> Bool {
+            CopyWorkerTaskPolicy.shouldStartTask(isTaskStillQueued: isTaskStillQueued)
+        }
+
+        nonisolated static func shouldKeepCompletedCopy(isTaskStillQueued: Bool) -> Bool {
+            CopyWorkerTaskPolicy.shouldKeepCompletedCopy(isTaskStillQueued: isTaskStillQueued)
         }
 
         nonisolated static func makeUniqueDestinationURLs(

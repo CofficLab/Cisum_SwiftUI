@@ -163,6 +163,10 @@ actor CopyDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
         return nil
     }
 
+    func hasCopyTask(bookmark: Data) -> Bool {
+        findCopyTask(bookmark: bookmark) != nil
+    }
+
     func setTaskRunning(_ task: CopyTask) {
         task.isRunning = true
         task.error = ""

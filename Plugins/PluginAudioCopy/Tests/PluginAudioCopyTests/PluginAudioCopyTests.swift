@@ -189,4 +189,14 @@ import Testing
     #expect(CopyWorker.shouldPostFinished(afterDelayRemainingTasks: []))
     #expect(!CopyWorker.shouldPostFinished(afterDelayRemainingTasks: [task]))
 }
+
+@Test func copyWorkerSkipsTasksDeletedBeforeTheyStart() {
+    #expect(CopyWorker.shouldStartTask(isTaskStillQueued: true))
+    #expect(!CopyWorker.shouldStartTask(isTaskStillQueued: false))
+}
+
+@Test func copyWorkerDiscardsCompletedCopyWhenTaskWasDeleted() {
+    #expect(CopyWorker.shouldKeepCompletedCopy(isTaskStillQueued: true))
+    #expect(!CopyWorker.shouldKeepCompletedCopy(isTaskStillQueued: false))
+}
 #endif
