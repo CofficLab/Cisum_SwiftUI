@@ -44,8 +44,9 @@ private struct PluginGuidePage: Identifiable {
 extension Guide {
     private func currentPage(in pages: [PluginGuidePage]) -> (page: PluginGuidePage, index: Int)? {
         guard !pages.isEmpty else { return nil }
+        guard currentGuidePageIndex < pages.count else { return nil }
 
-        let clampedIndex = min(max(currentGuidePageIndex, 0), pages.count - 1)
+        let clampedIndex = max(currentGuidePageIndex, 0)
         return (pages[clampedIndex], clampedIndex)
     }
 
@@ -79,6 +80,16 @@ extension Guide {
                     // 下一页按钮
                     if index + 1 < pageCount {
                         Image.cisumNextPage
+                            .font(.title2)
+                            .frame(width: 50, height: 50)
+                            .background(.regularMaterial, in: Circle())
+                            .cisumHoverScale(105)
+                            .cisumShadowSm()
+                            .cisumButton {
+                                currentGuidePageIndex = index + 1
+                            }
+                    } else {
+                        Image(systemName: "checkmark")
                             .font(.title2)
                             .frame(width: 50, height: 50)
                             .background(.regularMaterial, in: Circle())

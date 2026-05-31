@@ -244,6 +244,8 @@ extension RootView {
     }
 
     func onLaunchEnd() {
+        guard launching else { return }
+
         if Self.verbose {
             os_log("\(self.t)✅ Launch Done")
         }
