@@ -55,6 +55,31 @@ import UniformTypeIdentifiers
     #expect(FileManager.default.fileExists(atPath: copiedBook.appendingPathComponent("001.m4b").path))
 }
 
+@Test func bookImportCopiesSymlinkedAudioFilesAsStandaloneFiles() async throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let sourceRoot = root.appendingPathComponent("source", isDirectory: true)
+    let destinationRoot = root.appendingPathComponent("destination", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: sourceRoot, withIntermediateDirectories: true)
+    let realSource = sourceRoot.appendingPathComponent("real.m4b")
+    let linkedSource = sourceRoot.appendingPathComponent("linked.m4b")
+    try Data("audio".utf8).write(to: realSource)
+    try FileManager.default.createSymbolicLink(at: linkedSource, withDestinationURL: realSource)
+
+    let copiedItems = try await BookDBView.copyImportedItems([linkedSource], to: destinationRoot)
+    let collection = destinationRoot.appendingPathComponent("linked", isDirectory: true)
+    let copiedFile = collection.appendingPathComponent("linked.m4b")
+    let fileType = try FileManager.default.attributesOfItem(atPath: copiedFile.path)[.type] as? FileAttributeType
+
+    #expect(copiedItems == [collection, copiedFile])
+    #expect(fileType == .typeRegular)
+    #expect((try Data(contentsOf: copiedFile)) == Data("audio".utf8))
+}
+
 @Test func bookImportCleansCopiedItemsWhenBatchFails() async throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)

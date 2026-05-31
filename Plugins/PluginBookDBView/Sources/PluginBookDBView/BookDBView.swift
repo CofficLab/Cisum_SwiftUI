@@ -270,7 +270,20 @@ extension BookDBView {
     }
 
     private nonisolated static func copySourceURL(for source: URL) -> URL {
-        source.isFolder ? source : resolvedDirectoryURL(for: source) ?? source
+        if source.isFolder {
+            return source
+        }
+
+        if let resolvedDirectory = resolvedDirectoryURL(for: source) {
+            return resolvedDirectory
+        }
+
+        let resolvedSource = source.resolvingSymlinksInPath().standardizedFileURL
+        guard FileManager.default.fileExists(atPath: resolvedSource.path) else {
+            return source
+        }
+
+        return resolvedSource
     }
 
     private nonisolated static func canImportFolder(_ folder: URL) throws -> Bool {
