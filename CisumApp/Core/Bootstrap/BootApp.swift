@@ -20,6 +20,7 @@ typealias MagicSettingRow = CisumUI.MagicSettingRow
 struct BootApp: App, SuperLog {
     #if os(macOS)
         @NSApplicationDelegateAdaptor var appDelegate: AppDelegate
+        @Environment(\.openWindow) private var openWindow
     #else
         @UIApplicationDelegateAdaptor var appDelegate: AppDelegate
     #endif
@@ -43,7 +44,14 @@ struct BootApp: App, SuperLog {
             .windowToolbarStyle(.unifiedCompact(showsTitle: false))
             .defaultSize(width: Config.minWidth, height: Config.defaultHeight)
             .commands {
-                CommandGroup(replacing: .newItem) {}
+                CommandGroup(replacing: .newItem) {
+                    Button("Show Cisum") {
+                        if !AppWindowController.showExistingMainWindow() {
+                            openWindow(id: AppWindowController.mainWindowID)
+                        }
+                    }
+                    .keyboardShortcut("n")
+                }
                 SidebarCommands()
                 MagicApp.debugCommand()
             }
@@ -55,6 +63,31 @@ struct BootApp: App, SuperLog {
         #endif
     }
 }
+
+#if os(macOS)
+    @MainActor
+    enum AppWindowController {
+        static let mainWindowID = "Cisum"
+
+        @discardableResult
+        static func showExistingMainWindow(in app: NSApplication = .shared) -> Bool {
+            guard let window = app.windows.first(where: isMainAppWindow) else { return false }
+
+            if window.isMiniaturized {
+                window.deminiaturize(nil)
+            }
+            app.activate(ignoringOtherApps: true)
+            window.makeKeyAndOrderFront(nil)
+            return true
+        }
+
+        private static func isMainAppWindow(_ window: NSWindow) -> Bool {
+            (window.isVisible || window.isMiniaturized)
+                && window.canBecomeMain
+                && window.level == .normal
+        }
+    }
+#endif
 
 // MARK: Preview
 

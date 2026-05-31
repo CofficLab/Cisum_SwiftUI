@@ -104,14 +104,11 @@ class AppDelegate: NSObject, ApplicationDelegate, SuperLog {
 
         func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
             guard !flag else { return true }
-            guard let window = sender.windows.first else { return true }
 
-            if window.isMiniaturized {
-                window.deminiaturize(nil)
+            if AppWindowController.showExistingMainWindow(in: sender) {
+                return false
             }
-            sender.activate(ignoringOtherApps: true)
-            window.makeKeyAndOrderFront(nil)
-            return false
+            return true
         }
     #endif
 }
