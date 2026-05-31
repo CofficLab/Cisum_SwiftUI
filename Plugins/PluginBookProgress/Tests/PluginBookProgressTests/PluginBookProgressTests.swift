@@ -32,6 +32,31 @@ import Testing
     #expect(!BookProgressPersistencePolicy.shouldResetGlobalTimeWhenCurrentURLChanges(from: oldURL, to: oldURL))
 }
 
+@Test func symlinkedCurrentBookURLDoesNotResetGlobalRestoreTime() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realBook = root.appendingPathComponent("RealBook", isDirectory: true)
+    let linkedBook = root.appendingPathComponent("LinkedBook", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: realBook, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedBook, withDestinationURL: realBook)
+    let realChapter = realBook.appendingPathComponent("chapter-01.m4b")
+    let linkedChapter = linkedBook.appendingPathComponent("chapter-01.m4b")
+    try Data("audio".utf8).write(to: realChapter)
+
+    #expect(!BookProgressPersistencePolicy.shouldResetGlobalTimeWhenCurrentURLChanges(
+        from: linkedChapter,
+        to: realChapter
+    ))
+    #expect(!BookProgressPersistencePolicy.shouldPersistCurrentURLChange(
+        from: linkedChapter,
+        to: realChapter
+    ))
+}
+
 @Test func unchangedCurrentBookURLDoesNotPersistAgain() {
     let oldURL = URL(fileURLWithPath: "/tmp/book/chapter-01.mp3")
     let newURL = URL(fileURLWithPath: "/tmp/book/chapter-02.mp3")
@@ -98,6 +123,35 @@ import Testing
     #expect(BookProgressPersistencePolicy.shouldPlayRestoredAsset(
         restoredAsset: restored,
         currentAsset: nil
+    ))
+}
+
+@Test func restoreTreatsSymlinkedCurrentChapterAsAlreadyLoaded() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realBook = root.appendingPathComponent("RealBook", isDirectory: true)
+    let linkedBook = root.appendingPathComponent("LinkedBook", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: realBook, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedBook, withDestinationURL: realBook)
+    let realChapter = realBook.appendingPathComponent("chapter-01.m4b")
+    let linkedChapter = linkedBook.appendingPathComponent("chapter-01.m4b")
+    try Data("audio".utf8).write(to: realChapter)
+
+    #expect(BookProgressPersistencePolicy.shouldApplyRestoreResult(
+        startingAsset: linkedChapter,
+        currentAsset: realChapter
+    ))
+    #expect(!BookProgressPersistencePolicy.shouldPlayRestoredAsset(
+        restoredAsset: linkedChapter,
+        currentAsset: realChapter
+    ))
+    #expect(BookProgressPersistencePolicy.shouldApplyCurrentURLChange(
+        requestedURL: linkedChapter,
+        currentAsset: realChapter
     ))
 }
 
