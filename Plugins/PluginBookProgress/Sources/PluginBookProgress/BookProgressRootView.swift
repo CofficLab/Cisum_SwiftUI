@@ -34,6 +34,14 @@ enum BookProgressPersistencePolicy {
         currentURL != nil && !isPlayable
     }
 
+    static func shouldClearStoredCurrentAfterDelete(storedURL: URL?, deletedURLs: [URL]) -> Bool {
+        guard let storedURL else { return false }
+        return deletedURLs.contains { deletedURL in
+            representsSameFile(storedURL, deletedURL)
+                || BookProgressPathContainment.resolved(storedURL, isContainedIn: deletedURL)
+        }
+    }
+
     static func shouldResetGlobalTimeWhenCurrentURLChanges(from storedURL: URL?, to newURL: URL?) -> Bool {
         !representsSameFile(storedURL, newURL)
     }
@@ -234,6 +242,7 @@ public struct BookProgressRootView<Content>: View, SuperLog where Content: View 
                 handleCurrentSceneChanged(newSceneName)
             }
             .onPlayManStateChanged(handlePlayManStateChanged)
+            .onReceive(NotificationCenter.default.publisher(for: .bookDBDeleted), perform: handleBookDBDeleted)
     }
 
     /// 检查是否应该激活书籍进度管理功能
@@ -447,6 +456,19 @@ private extension BookProgressRootView {
         guard man.state == .paused else { return }
 
         persistCurrentProgress(reason: "handlePlayManStateChanged")
+    }
+
+    func handleBookDBDeleted(_ notification: Notification) {
+        guard let deletedURLs = notification.userInfo?["urls"] as? [URL],
+              BookProgressPersistencePolicy.shouldClearStoredCurrentAfterDelete(
+                  storedURL: currentBookURL(),
+                  deletedURLs: deletedURLs
+              ) else {
+            return
+        }
+
+        storeCurrentBookURL(nil)
+        storeCurrentBookTime(0)
     }
 
     private func persistCurrentProgress(reason: String) {

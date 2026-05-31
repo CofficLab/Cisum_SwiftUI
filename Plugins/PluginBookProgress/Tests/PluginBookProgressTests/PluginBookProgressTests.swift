@@ -74,6 +74,50 @@ import Testing
     #expect(!BookProgressPersistencePolicy.shouldClearRestoredCurrentURL(currentURL: nil, isPlayable: false))
 }
 
+@Test func deletedStoredCurrentBookChapterShouldClearRestoreState() {
+    let book = URL(fileURLWithPath: "/tmp/books/Novel", isDirectory: true)
+    let chapter = book.appendingPathComponent("Chapter 01.m4b")
+    let otherBook = URL(fileURLWithPath: "/tmp/books/Other", isDirectory: true)
+
+    #expect(BookProgressPersistencePolicy.shouldClearStoredCurrentAfterDelete(
+        storedURL: chapter,
+        deletedURLs: [chapter]
+    ))
+    #expect(BookProgressPersistencePolicy.shouldClearStoredCurrentAfterDelete(
+        storedURL: chapter,
+        deletedURLs: [book]
+    ))
+    #expect(!BookProgressPersistencePolicy.shouldClearStoredCurrentAfterDelete(
+        storedURL: chapter,
+        deletedURLs: [otherBook]
+    ))
+    #expect(!BookProgressPersistencePolicy.shouldClearStoredCurrentAfterDelete(
+        storedURL: nil,
+        deletedURLs: [book]
+    ))
+}
+
+@Test func symlinkedDeletedStoredCurrentBookChapterShouldClearRestoreState() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realBook = root.appendingPathComponent("RealBook", isDirectory: true)
+    let linkedBook = root.appendingPathComponent("LinkedBook", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: realBook, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedBook, withDestinationURL: realBook)
+    let realChapter = realBook.appendingPathComponent("Chapter 01.m4b")
+    let linkedChapter = linkedBook.appendingPathComponent("Chapter 01.m4b")
+    try Data("audio".utf8).write(to: realChapter)
+
+    #expect(BookProgressPersistencePolicy.shouldClearStoredCurrentAfterDelete(
+        storedURL: linkedChapter,
+        deletedURLs: [realBook]
+    ))
+}
+
 @Test func playbackPositionChangesPersistCurrentTime() {
     let url = URL(fileURLWithPath: "/tmp/book/chapter-01.mp3")
 
