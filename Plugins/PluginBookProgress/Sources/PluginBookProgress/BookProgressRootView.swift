@@ -77,6 +77,18 @@ enum BookProgressPersistencePolicy {
         representsSameFile(requestedURL, currentAsset)
     }
 
+    static func shouldApplyCurrentURLChange(
+        requestedURL: URL,
+        currentAsset: URL?,
+        currentGeneration: Int,
+        requestGeneration: Int,
+        isSceneActive: Bool
+    ) -> Bool {
+        currentGeneration == requestGeneration
+            && isSceneActive
+            && shouldApplyCurrentURLChange(requestedURL: requestedURL, currentAsset: currentAsset)
+    }
+
     private static func representsSameFile(_ lhs: URL?, _ rhs: URL?) -> Bool {
         switch (lhs, rhs) {
         case (.none, .none):
@@ -400,10 +412,14 @@ private extension BookProgressRootView {
             os_log("\(self.t)📖 URL变化 -> \(url.shortPath())")
         }
 
+        let generation = restoreGeneration
         Task {
             guard BookProgressPersistencePolicy.shouldApplyCurrentURLChange(
                 requestedURL: snapshot.currentURL,
-                currentAsset: man.currentAsset
+                currentAsset: man.currentAsset,
+                currentGeneration: restoreGeneration,
+                requestGeneration: generation,
+                isSceneActive: shouldActivateProgress
             ) else {
                 return
             }
@@ -427,7 +443,10 @@ private extension BookProgressRootView {
                     try await url.download(reason: "BookProgressRootView")
                     guard BookProgressPersistencePolicy.shouldApplyCurrentURLChange(
                         requestedURL: snapshot.currentURL,
-                        currentAsset: man.currentAsset
+                        currentAsset: man.currentAsset,
+                        currentGeneration: restoreGeneration,
+                        requestGeneration: generation,
+                        isSceneActive: shouldActivateProgress
                     ) else {
                         return
                     }
@@ -437,7 +456,10 @@ private extension BookProgressRootView {
                 } catch let error {
                     guard BookProgressPersistencePolicy.shouldApplyCurrentURLChange(
                         requestedURL: snapshot.currentURL,
-                        currentAsset: man.currentAsset
+                        currentAsset: man.currentAsset,
+                        currentGeneration: restoreGeneration,
+                        requestGeneration: generation,
+                        isSceneActive: shouldActivateProgress
                     ) else {
                         return
                     }

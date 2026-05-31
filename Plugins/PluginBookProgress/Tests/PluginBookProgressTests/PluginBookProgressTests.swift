@@ -235,6 +235,32 @@ import Testing
     ))
 }
 
+@Test func staleCurrentURLChangeDoesNotApplyAfterBookSceneInvalidation() {
+    let requested = URL(fileURLWithPath: "/tmp/book/chapter-01.m4b")
+
+    #expect(BookProgressPersistencePolicy.shouldApplyCurrentURLChange(
+        requestedURL: requested,
+        currentAsset: requested,
+        currentGeneration: 1,
+        requestGeneration: 1,
+        isSceneActive: true
+    ))
+    #expect(!BookProgressPersistencePolicy.shouldApplyCurrentURLChange(
+        requestedURL: requested,
+        currentAsset: requested,
+        currentGeneration: 2,
+        requestGeneration: 1,
+        isSceneActive: true
+    ))
+    #expect(!BookProgressPersistencePolicy.shouldApplyCurrentURLChange(
+        requestedURL: requested,
+        currentAsset: requested,
+        currentGeneration: 1,
+        requestGeneration: 1,
+        isSceneActive: false
+    ))
+}
+
 @Test func rootLevelBookFileResolvesToItself() {
     let disk = URL(fileURLWithPath: "/tmp/cisum-books", isDirectory: true)
     let book = disk.appendingPathComponent("Standalone.m4b")
