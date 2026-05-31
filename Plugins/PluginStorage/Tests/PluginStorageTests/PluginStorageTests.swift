@@ -220,11 +220,22 @@ import Foundation
 }
 
 @Test func migrationActionRequiresExistingSourceStorage() {
-    let source = URL(fileURLWithPath: "/tmp/cisum-storage-source", isDirectory: true)
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let source = root.appendingPathComponent("source", isDirectory: true)
+    let missingSource = root.appendingPathComponent("missing", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+    try? FileManager.default.createDirectory(at: source, withIntermediateDirectories: true)
 
     #expect(MigrationProgressView.canMigrateExistingData(
         sourceLocation: .local,
         sourceURL: source
+    ))
+    #expect(!MigrationProgressView.canMigrateExistingData(
+        sourceLocation: .local,
+        sourceURL: missingSource
     ))
     #expect(!MigrationProgressView.canMigrateExistingData(
         sourceLocation: nil,

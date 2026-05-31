@@ -57,7 +57,8 @@ struct MigrationProgressView: View {
     }
 
     nonisolated static func canMigrateExistingData(sourceLocation: PluginStorageLocation?, sourceURL: URL?) -> Bool {
-        sourceLocation != nil && sourceURL != nil
+        guard sourceLocation != nil, let sourceURL else { return false }
+        return FileManager.default.fileExists(atPath: sourceURL.path)
     }
 
     nonisolated static func shouldDisableInteractiveDismiss(
