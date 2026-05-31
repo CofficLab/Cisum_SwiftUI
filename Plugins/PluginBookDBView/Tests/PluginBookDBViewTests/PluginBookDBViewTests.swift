@@ -357,6 +357,11 @@ import UniformTypeIdentifiers
     #expect(!BookGridUpdatePolicy.shouldApplyResult(currentGeneration: 3, resultGeneration: 2))
 }
 
+@Test func bookGridOnlyAppliesCurrentPlaybackRequestGeneration() {
+    #expect(BookGridPlaybackRequestPolicy.shouldApplyResult(currentGeneration: 2, resultGeneration: 2))
+    #expect(!BookGridPlaybackRequestPolicy.shouldApplyResult(currentGeneration: 3, resultGeneration: 2))
+}
+
 @Test func bookGridSelectionMatchesSymlinkedBookURLs() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)

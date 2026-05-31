@@ -13,6 +13,12 @@ enum BookGridUpdatePolicy {
     }
 }
 
+enum BookGridPlaybackRequestPolicy {
+    static func shouldApplyResult(currentGeneration: Int, resultGeneration: Int) -> Bool {
+        currentGeneration == resultGeneration
+    }
+}
+
 enum BookGridSelectionPolicy {
     static func representsSelectedBook(_ bookURL: URL, selectedURL: URL?) -> Bool {
         guard let selectedURL else { return false }
@@ -68,6 +74,9 @@ struct BookGrid: View, SuperLog, SuperThread, SuperEvent {
 
     /// 当前书籍列表加载世代，用于丢弃过期后台刷新结果。
     @State private var updateBooksGeneration: Int = 0
+
+    /// 当前书籍点击播放世代，用于丢弃过期的进度查询结果。
+    @State private var playBookGeneration: Int = 0
 
     /// 书籍总数
     var total: Int { books.count }
@@ -249,7 +258,14 @@ extension BookGrid {
         return BookPlaybackOrdering.contains(savedURL, in: playableChildren)
     }
 
-    private func play(_ url: URL, at time: TimeInterval?, reason: String) async {
+    private func play(_ url: URL, at time: TimeInterval?, generation: Int, reason: String) async {
+        guard BookGridPlaybackRequestPolicy.shouldApplyResult(
+            currentGeneration: playBookGeneration,
+            resultGeneration: generation
+        ) else {
+            return
+        }
+
         await man.play(url, autoPlay: false, startTime: time, reason: reason)
     }
     
@@ -259,7 +275,7 @@ extension BookGrid {
     /// 如果没有保存状态，则从头开始播放。
     ///
     /// - Parameter book: 要播放的书籍 DTO
-    private func playBook(_ book: BookDTO) async {
+    private func playBook(_ book: BookDTO, generation: Int) async {
         if Self.verbose {
             os_log("\(self.t)▶️ 准备播放书籍: \(book.bookTitle)")
         }
@@ -278,7 +294,7 @@ extension BookGrid {
                 if Self.verbose {
                     os_log("\(self.t)📖 继续播放书籍进度: \(savedURL.lastPathComponent) @ \(savedTime)s")
                 }
-                await play(savedURL, at: savedTime, reason: reason)
+                await play(savedURL, at: savedTime, generation: generation, reason: reason)
                 return
             }
         } catch {
@@ -295,7 +311,7 @@ extension BookGrid {
             if Self.verbose {
                 os_log("\(self.t)📖 从全局状态继续播放: \(savedURL.lastPathComponent) @ \(savedTime)s")
             }
-            await play(savedURL, at: savedTime, reason: reason)
+            await play(savedURL, at: savedTime, generation: generation, reason: reason)
             return
         }
 
@@ -303,6 +319,12 @@ extension BookGrid {
         if let first = playableChildren.first {
             if Self.verbose {
                 os_log("\(self.t)🎵 从头播放第一个子文件: \(first.lastPathComponent)")
+            }
+            guard BookGridPlaybackRequestPolicy.shouldApplyResult(
+                currentGeneration: playBookGeneration,
+                resultGeneration: generation
+            ) else {
+                return
             }
             await man.play(first, reason: reason)
         } else {
@@ -315,6 +337,12 @@ extension BookGrid {
                 return
             }
 
+            guard BookGridPlaybackRequestPolicy.shouldApplyResult(
+                currentGeneration: playBookGeneration,
+                resultGeneration: generation
+            ) else {
+                return
+            }
             await man.play(book.url, reason: reason)
         }
     }
@@ -413,9 +441,11 @@ extension BookGrid {
         }
         
         selectedBookURL = book.url
+        playBookGeneration += 1
+        let generation = playBookGeneration
         
         Task {
-            await playBook(book)
+            await playBook(book, generation: generation)
         }
     }
     
