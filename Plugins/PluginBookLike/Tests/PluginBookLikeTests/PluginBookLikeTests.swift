@@ -47,9 +47,11 @@ func pluginExposesSettingsView() {
     defaults.set([
         "": "Broken Favorite",
         "file:///tmp/Cisum%20Books/Valid%20Book": "Valid Book",
+        "/tmp/Cisum Books/Legacy Book": "Legacy Book",
+        "not a url": "Invalid Book",
     ], forKey: "PluginBookLike.likedBooks")
 
     let likedBooks = BookLikeStore.likedBooks(defaults: defaults)
 
-    #expect(likedBooks.map(\.title) == ["Valid Book"])
+    #expect(likedBooks.map(\.title) == ["Legacy Book", "Valid Book"])
 }

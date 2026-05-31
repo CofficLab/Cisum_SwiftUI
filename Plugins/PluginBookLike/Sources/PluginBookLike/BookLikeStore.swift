@@ -46,6 +46,11 @@ public enum BookLikeStore {
 
     static func storedURL(from rawURL: String) -> URL? {
         guard !rawURL.isEmpty else { return nil }
-        return URL(string: rawURL)
+        if let url = URL(string: rawURL), url.scheme != nil {
+            return url
+        }
+
+        guard rawURL.hasPrefix("/") else { return nil }
+        return URL(fileURLWithPath: rawURL)
     }
 }
