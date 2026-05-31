@@ -45,6 +45,11 @@ import Testing
     ))
 }
 
+@Test func widgetNavigationWaitsForPreviousNavigationTask() {
+    #expect(AudioWidgetPlaybackRequestPolicy.shouldWaitForPreviousNavigation(hasPreviousTask: true))
+    #expect(!AudioWidgetPlaybackRequestPolicy.shouldWaitForPreviousNavigation(hasPreviousTask: false))
+}
+
 @Test func widgetCommandCountPreservesRapidRepeatedCommands() {
     #expect(AudioWidgetPlaybackRequestPolicy.commandCount(from: 3) == 3)
     #expect(AudioWidgetPlaybackRequestPolicy.commandCount(from: NSNumber(value: 3)) == 3)

@@ -14,6 +14,10 @@ enum AudioWidgetPlaybackRequestPolicy {
         representsSameFile(requestedAsset, currentAsset)
     }
 
+    static func shouldWaitForPreviousNavigation(hasPreviousTask: Bool) -> Bool {
+        hasPreviousTask
+    }
+
     static func commandCount(from storedValue: Any?, maximum: Int = 10) -> Int {
         if let number = storedValue as? NSNumber {
             let doubleValue = number.doubleValue
@@ -88,6 +92,7 @@ public struct AudioWidgetControlRootView: View {
     private static var isWidgetCommandListenerRegistered = false
 
     @EnvironmentObject private var man: MagicPlayMan
+    @State private var navigationTask: Task<Void, Never>?
 
     private let nextAsset: AudioWidgetAdjacentAssetProvider
     private let previousAsset: AudioWidgetAdjacentAssetProvider
@@ -184,7 +189,7 @@ public struct AudioWidgetControlRootView: View {
     }
 
     private func handleNext(count: Int) {
-        Task { @MainActor in
+        enqueueNavigationTask {
             for _ in 0..<count {
                 guard let asset = man.currentAsset else { return }
 
@@ -215,7 +220,7 @@ public struct AudioWidgetControlRootView: View {
     }
 
     private func handlePrevious(count: Int) {
-        Task { @MainActor in
+        enqueueNavigationTask {
             for _ in 0..<count {
                 guard let asset = man.currentAsset else { return }
 
@@ -242,6 +247,16 @@ public struct AudioWidgetControlRootView: View {
                     return
                 }
             }
+        }
+    }
+
+    private func enqueueNavigationTask(_ operation: @escaping @MainActor () async -> Void) {
+        let previousTask = navigationTask
+        navigationTask = Task { @MainActor in
+            if AudioWidgetPlaybackRequestPolicy.shouldWaitForPreviousNavigation(hasPreviousTask: previousTask != nil) {
+                await previousTask?.value
+            }
+            await operation()
         }
     }
 }
