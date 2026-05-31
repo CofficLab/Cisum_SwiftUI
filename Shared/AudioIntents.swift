@@ -4,6 +4,7 @@ import Foundation
 import WidgetKit
 import OSLog
 import CoreFoundation
+import Darwin
 
 /// 发送 Darwin 通知，通知主 App 检查命令
 private func notifyMainApp() {
@@ -12,11 +13,35 @@ private func notifyMainApp() {
     CFNotificationCenterPostNotification(center, name, nil, nil, true)
 }
 
+private func withWidgetCommandLock<T>(_ operation: () throws -> T) rethrows -> T {
+    let suiteName = "group.com.yueyi.cisum"
+    guard let lockURL = FileManager.default
+        .containerURL(forSecurityApplicationGroupIdentifier: suiteName)?
+        .appendingPathComponent("widget-command.lock") else {
+        return try operation()
+    }
+
+    FileManager.default.createFile(atPath: lockURL.path, contents: nil)
+    guard let handle = try? FileHandle(forWritingTo: lockURL) else {
+        return try operation()
+    }
+
+    flock(handle.fileDescriptor, LOCK_EX)
+    defer {
+        flock(handle.fileDescriptor, LOCK_UN)
+        try? handle.close()
+    }
+
+    return try operation()
+}
+
 private func incrementWidgetCommand(_ key: String) {
-    let sharedDefaults = UserDefaults(suiteName: "group.com.yueyi.cisum")
-    let currentCount = sharedDefaults?.integer(forKey: key) ?? 0
-    sharedDefaults?.set(currentCount + 1, forKey: key)
-    sharedDefaults?.synchronize()
+    withWidgetCommandLock {
+        let sharedDefaults = UserDefaults(suiteName: "group.com.yueyi.cisum")
+        let currentCount = sharedDefaults?.integer(forKey: key) ?? 0
+        sharedDefaults?.set(currentCount + 1, forKey: key)
+        sharedDefaults?.synchronize()
+    }
 }
 
 public struct PlayPauseIntent: AppIntent, SuperLog {

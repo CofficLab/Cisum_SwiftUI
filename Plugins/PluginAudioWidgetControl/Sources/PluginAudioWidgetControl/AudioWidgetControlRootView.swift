@@ -1,4 +1,5 @@
 import CoreFoundation
+import Darwin
 import Foundation
 import MagicPlayMan
 import OSLog
@@ -38,6 +39,31 @@ enum AudioWidgetPlaybackRequestPolicy {
 
     static func remainingCommandCount(afterConsuming consumedCount: Int, storedValue: Any?) -> Int {
         max(0, commandCount(from: storedValue, maximum: 1_000_000) - consumedCount)
+    }
+}
+
+private enum AudioWidgetCommandStore {
+    static let suiteName = "group.com.yueyi.cisum"
+
+    static func withLock<T>(_ operation: () throws -> T) rethrows -> T {
+        guard let lockURL = FileManager.default
+            .containerURL(forSecurityApplicationGroupIdentifier: suiteName)?
+            .appendingPathComponent("widget-command.lock") else {
+            return try operation()
+        }
+
+        FileManager.default.createFile(atPath: lockURL.path, contents: nil)
+        guard let handle = try? FileHandle(forWritingTo: lockURL) else {
+            return try operation()
+        }
+
+        flock(handle.fileDescriptor, LOCK_EX)
+        defer {
+            flock(handle.fileDescriptor, LOCK_UN)
+            try? handle.close()
+        }
+
+        return try operation()
     }
 }
 
@@ -94,7 +120,7 @@ public struct AudioWidgetControlRootView: View {
     }
 
     private func handleWidgetCommands() {
-        let sharedDefaults = UserDefaults(suiteName: "group.com.yueyi.cisum")
+        let sharedDefaults = UserDefaults(suiteName: AudioWidgetCommandStore.suiteName)
 
         guard let sharedDefaults else { return }
 
@@ -108,21 +134,26 @@ public struct AudioWidgetControlRootView: View {
         from sharedDefaults: UserDefaults,
         handler: (Int) -> Void
     ) {
-        let count = AudioWidgetPlaybackRequestPolicy.commandCount(
-            from: sharedDefaults.object(forKey: key)
-        )
+        let count = AudioWidgetCommandStore.withLock {
+            AudioWidgetPlaybackRequestPolicy.commandCount(
+                from: sharedDefaults.object(forKey: key)
+            )
+        }
         guard count > 0 else { return }
 
         handler(count)
 
-        let remainingCount = AudioWidgetPlaybackRequestPolicy.remainingCommandCount(
-            afterConsuming: count,
-            storedValue: sharedDefaults.object(forKey: key)
-        )
-        if remainingCount > 0 {
-            sharedDefaults.set(remainingCount, forKey: key)
-        } else {
-            sharedDefaults.removeObject(forKey: key)
+        AudioWidgetCommandStore.withLock {
+            let remainingCount = AudioWidgetPlaybackRequestPolicy.remainingCommandCount(
+                afterConsuming: count,
+                storedValue: sharedDefaults.object(forKey: key)
+            )
+            if remainingCount > 0 {
+                sharedDefaults.set(remainingCount, forKey: key)
+            } else {
+                sharedDefaults.removeObject(forKey: key)
+            }
+            sharedDefaults.synchronize()
         }
     }
 
