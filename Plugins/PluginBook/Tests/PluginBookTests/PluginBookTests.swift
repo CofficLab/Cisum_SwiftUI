@@ -189,14 +189,58 @@ import SwiftData
     let nested = root.appendingPathComponent("Nested", isDirectory: true)
     try FileManager.default.createDirectory(at: nested, withIntermediateDirectories: true)
     let directAudio = root.appendingPathComponent("Chapter 01.m4b")
+    let directCover = root.appendingPathComponent("cover.jpg")
     let nestedAudio = nested.appendingPathComponent("Chapter 02.m4b")
     try Data("audio".utf8).write(to: directAudio)
+    try Data("cover".utf8).write(to: directCover)
     try Data("audio".utf8).write(to: nestedAudio)
 
     let candidates = BookCoverRepo.coverCandidates(in: root)
 
-    #expect(candidates.files.map(canonicalPath) == [canonicalPath(directAudio)])
+    #expect(candidates.files.map(canonicalPath) == [canonicalPath(directCover)])
     #expect(candidates.folders.map(canonicalPath) == [canonicalPath(nested)])
+}
+
+@Test func bookCoverCandidatesIgnoreAudioChaptersInFolders() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    let firstChapter = root.appendingPathComponent("001.m4b")
+    let secondChapter = root.appendingPathComponent("002.mp3")
+    try Data("audio".utf8).write(to: firstChapter)
+    try Data("audio".utf8).write(to: secondChapter)
+
+    let candidates = BookCoverRepo.coverCandidates(in: root)
+
+    #expect(candidates.files.isEmpty)
+}
+
+@Test func bookCoverCandidatesPreferNamedCoverImages() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    let artwork = root.appendingPathComponent("artwork.png")
+    let folder = root.appendingPathComponent("folder.png")
+    let cover = root.appendingPathComponent("cover.jpg")
+    try Data("image".utf8).write(to: artwork)
+    try Data("image".utf8).write(to: folder)
+    try Data("image".utf8).write(to: cover)
+
+    let candidates = BookCoverRepo.coverCandidates(in: root)
+
+    #expect(candidates.files.map(canonicalPath) == [
+        canonicalPath(cover),
+        canonicalPath(folder),
+        canonicalPath(artwork),
+    ])
 }
 
 private func canonicalPath(_ url: URL) -> String {

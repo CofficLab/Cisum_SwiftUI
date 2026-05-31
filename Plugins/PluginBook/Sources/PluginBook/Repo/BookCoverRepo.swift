@@ -7,6 +7,26 @@ import SwiftUI
 final class BookCoverRepo: ObservableObject, SuperLog, @unchecked Sendable {
     nonisolated static let emoji = "🖼️"
     private let verbose = false
+    private nonisolated static let supportedCoverExtensions: Set<String> = [
+        "apng",
+        "bmp",
+        "gif",
+        "heic",
+        "heif",
+        "jpeg",
+        "jpg",
+        "png",
+        "tif",
+        "tiff",
+        "webp",
+    ]
+    private nonisolated static let preferredCoverNames = [
+        "cover",
+        "folder",
+        "front",
+        "poster",
+        "thumbnail",
+    ]
     
     // MARK: - Public Methods
     
@@ -85,8 +105,28 @@ final class BookCoverRepo: ObservableObject, SuperLog, @unchecked Sendable {
             $0.standardizedFileURL.path.localizedStandardCompare($1.standardizedFileURL.path) == .orderedAscending
         }
         return (
-            files: children.filter { !$0.isFolder },
+            files: children.filter { !$0.isFolder && isCoverImageCandidate($0) }
+                .sorted(by: coverFileSort),
             folders: children.filter(\.isFolder)
         )
+    }
+
+    static func isCoverImageCandidate(_ url: URL) -> Bool {
+        supportedCoverExtensions.contains(url.pathExtension.lowercased())
+    }
+
+    private static func coverFileSort(_ lhs: URL, _ rhs: URL) -> Bool {
+        let lhsRank = coverNameRank(lhs)
+        let rhsRank = coverNameRank(rhs)
+        if lhsRank != rhsRank {
+            return lhsRank < rhsRank
+        }
+
+        return lhs.standardizedFileURL.path.localizedStandardCompare(rhs.standardizedFileURL.path) == .orderedAscending
+    }
+
+    private static func coverNameRank(_ url: URL) -> Int {
+        let name = url.deletingPathExtension().lastPathComponent.lowercased()
+        return preferredCoverNames.firstIndex(of: name) ?? preferredCoverNames.count
     }
 }
