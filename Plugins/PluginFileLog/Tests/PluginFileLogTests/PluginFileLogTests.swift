@@ -1,6 +1,26 @@
 import Foundation
 import Testing
 @testable import PluginFileLog
+#if os(macOS)
+    import AppKit
+
+private final class LockedCounter: @unchecked Sendable {
+    private let lock = NSLock()
+    private var value = 0
+
+    func increment() {
+        lock.withLock {
+            value += 1
+        }
+    }
+
+    var count: Int {
+        lock.withLock {
+            value
+        }
+    }
+}
+#endif
 
 @Test func defaultConfigurationReturnsFileLogDirectory() {
     let url = DefaultFileLogConfiguration().logsDirectory()
@@ -28,3 +48,27 @@ import Testing
 
     #expect(next.lastPathComponent == "Cisum Log.log")
 }
+
+#if os(macOS)
+@Test func terminationObserverIsIdempotentAndRemovable() {
+    let notificationCenter = NotificationCenter()
+    let observer = FileLogTerminationObserver()
+    let stopCount = LockedCounter()
+
+    let stop: @Sendable () -> Void = {
+        stopCount.increment()
+    }
+
+    observer.start(notificationCenter: notificationCenter, stop: stop)
+    observer.start(notificationCenter: notificationCenter, stop: stop)
+
+    notificationCenter.post(name: NSApplication.willTerminateNotification, object: nil)
+
+    #expect(stopCount.count == 1)
+
+    observer.stopObserving(notificationCenter: notificationCenter)
+    notificationCenter.post(name: NSApplication.willTerminateNotification, object: nil)
+
+    #expect(stopCount.count == 1)
+}
+#endif
