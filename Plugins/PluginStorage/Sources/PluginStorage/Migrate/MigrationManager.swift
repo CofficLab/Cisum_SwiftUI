@@ -226,7 +226,7 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread, @unchecked Send
         )
         var suffix = 2
 
-        while FileManager.default.fileExists(atPath: candidate.path) {
+        while Self.pathExistsIncludingSymlink(candidate) {
             candidate = destination(
                 named: "\(baseName) \(suffix)",
                 pathExtension: pathExtension,
@@ -237,6 +237,14 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread, @unchecked Send
         }
 
         return candidate
+    }
+
+    private static func pathExistsIncludingSymlink(_ url: URL) -> Bool {
+        if FileManager.default.fileExists(atPath: url.path) {
+            return true
+        }
+
+        return (try? url.resourceValues(forKeys: [.isSymbolicLinkKey]).isSymbolicLink) == true
     }
 
     private func destination(
