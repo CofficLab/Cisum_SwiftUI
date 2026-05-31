@@ -12,6 +12,7 @@ struct AudioDBTips: View {
     @Environment(\.audioDBDependencies) private var dependencies
     @LumiTheme private var appTheme
     var variant: Variant = .empty
+    var sortingMessage: String?
 
     var supportedFormats: String {
         dependencies.supportedExtensions.joined(separator: ",")
@@ -56,7 +57,10 @@ struct AudioDBTips: View {
                     .foregroundStyle(.secondary)
 
             case .sorting:
-                AppLoadingOverlay(message: LocalizedStringKey(String(localized: "Sorting", table: "Audio-DBView", bundle: .module)), size: .large)
+                AppLoadingOverlay(
+                    message: LocalizedStringKey(sortingMessage ?? String(localized: "Sorting", table: "Audio-DBView", bundle: .module)),
+                    size: .large
+                )
                     .frame(height: 120)
                 Text("Supported formats: \(supportedFormats)", tableName: "Audio-DBView", bundle: .module)
                     .font(.footnote)

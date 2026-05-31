@@ -8,6 +8,12 @@ import UniformTypeIdentifiers
     #expect(AudioDBPluginInfo.table == "Audio-DBView")
 }
 
+@Test func audioDBSortModeRestoresTrimmedNotificationValues() {
+    #expect(AudioDBView.sortMode(from: "random") == .random)
+    #expect(AudioDBView.sortMode(from: " order\n") == .order)
+    #expect(AudioDBView.sortMode(from: "missing") == .none)
+}
+
 @Test func audioImportCleansCopiedFilesWhenBatchFails() async throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)

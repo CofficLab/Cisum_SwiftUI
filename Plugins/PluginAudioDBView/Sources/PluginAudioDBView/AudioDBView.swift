@@ -47,7 +47,7 @@ public struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
         }
         .overlay(alignment: .center) {
             if isSorting {
-                AudioDBTips(variant: .sorting)
+                AudioDBTips(variant: .sorting, sortingMessage: sortMode.description)
                     .transition(.opacity)
             }
         }
@@ -445,7 +445,7 @@ extension AudioDBView {
         }
 
         if let mode = notification.userInfo?["mode"] as? String {
-            sortMode = SortMode(rawValue: mode) ?? .none
+            sortMode = Self.sortMode(from: mode)
 
             if Self.verbose {
                 os_log("\(self.t)📋 排序模式: \(mode)")
@@ -466,5 +466,10 @@ extension AudioDBView {
         withAnimation {
             isSorting = false
         }
+    }
+
+    nonisolated static func sortMode(from rawValue: String) -> SortMode {
+        let normalized = rawValue.trimmingCharacters(in: .whitespacesAndNewlines)
+        return SortMode(rawValue: normalized) ?? .none
     }
 }
