@@ -90,7 +90,7 @@ enum BookControlPathContainment {
 
 enum BookControlPlaybackRequestPolicy {
     static func shouldApplyNavigationResult(requestedAsset: URL, currentAsset: URL?) -> Bool {
-        currentAsset == requestedAsset
+        representsSameFile(requestedAsset, currentAsset)
     }
 
     static func currentAssetAffectedByDeletion(currentAsset: URL?, deletedURLs: [URL]) -> Bool {
@@ -104,6 +104,17 @@ enum BookControlPlaybackRequestPolicy {
 
     private static func resolvedStandardizedPath(for url: URL) -> String {
         url.resolvingSymlinksInPath().standardizedFileURL.path
+    }
+
+    private static func representsSameFile(_ lhs: URL?, _ rhs: URL?) -> Bool {
+        switch (lhs, rhs) {
+        case (.none, .none):
+            return true
+        case let (.some(lhs), .some(rhs)):
+            return resolvedStandardizedPath(for: lhs) == resolvedStandardizedPath(for: rhs)
+        default:
+            return false
+        }
     }
 
     private static func isContained(_ childPath: String, in parentPath: String) -> Bool {

@@ -83,6 +83,27 @@ import SwiftUI
     ))
 }
 
+@Test func navigationResultAppliesToSymlinkedCurrentChapter() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realBook = root.appendingPathComponent("RealBook", isDirectory: true)
+    let linkedBook = root.appendingPathComponent("LinkedBook", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: realBook, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedBook, withDestinationURL: realBook)
+    let realChapter = realBook.appendingPathComponent("001.m4b")
+    let linkedChapter = linkedBook.appendingPathComponent("001.m4b")
+    try Data("audio".utf8).write(to: realChapter)
+
+    #expect(BookControlPlaybackRequestPolicy.shouldApplyNavigationResult(
+        requestedAsset: linkedChapter,
+        currentAsset: realChapter
+    ))
+}
+
 @Test func deletionAffectsCurrentChapterInsideDeletedBook() {
     let deletedBook = URL(fileURLWithPath: "/tmp/books/Novel", isDirectory: true)
     let currentChapter = deletedBook.appendingPathComponent("Chapter 01.m4b")
