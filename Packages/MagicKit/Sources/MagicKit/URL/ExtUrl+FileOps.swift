@@ -384,8 +384,9 @@ public extension URL {
     /// 计算文件或目录大小，单位为字节。
     func getSize() -> Int64 {
         if isFolder {
-            return flatten().reduce(Int64(0)) { total, url in
-                total + url.getSize()
+            return fileDescendants().reduce(Int64(0)) { total, url in
+                let size = (try? url.resourceValues(forKeys: [.fileSizeKey]).fileSize) ?? 0
+                return total + Int64(size)
             }
         }
 
@@ -501,24 +502,31 @@ public extension URL {
 
     /// 将文件夹展开为所有非文件夹子项；普通文件返回自身。
     func flatten() -> [URL] {
-        guard isFolder else { return [self] }
+        Array(fileDescendants())
+    }
+
+    private func fileDescendants() -> AnySequence<URL> {
+        guard isFolder else { return AnySequence([self]) }
 
         guard let enumerator = FileManager.default.enumerator(
             at: self,
             includingPropertiesForKeys: [.isDirectoryKey, .isRegularFileKey],
             options: [.skipsHiddenFiles]
         ) else {
-            return []
+            return AnySequence([])
         }
 
-        var files: [URL] = []
-        for case let url as URL in enumerator {
-            if !url.isFolder {
-                files.append(url)
+        return AnySequence {
+            AnyIterator {
+                while let url = enumerator.nextObject() as? URL {
+                    if !url.isFolder {
+                        return url
+                    }
+                }
+
+                return nil
             }
         }
-
-        return files
     }
 
     /// 获取文件夹内的直接子项。
@@ -542,7 +550,7 @@ public extension URL {
             return 1
         }
 
-        return flatten().count
+        return fileDescendants().reduce(0) { count, _ in count + 1 }
     }
 
     /// 获取本地图片缩略图。

@@ -24,3 +24,21 @@ import Testing
     #expect(!URLOpenActionPolicy.canRevealInFinder(missingFile))
     #expect(!URLOpenActionPolicy.canRevealInFinder(URL(string: "https://example.com")!))
 }
+
+@Test func directorySizeAndCountSkipHiddenFiles() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let nested = root.appendingPathComponent("nested", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: nested, withIntermediateDirectories: true)
+    try Data("12345".utf8).write(to: root.appendingPathComponent("one.txt"))
+    try Data("123".utf8).write(to: nested.appendingPathComponent("two.txt"))
+    try Data("hidden".utf8).write(to: nested.appendingPathComponent(".hidden.txt"))
+
+    #expect(root.filesCountRecursively() == 2)
+    #expect(root.getSize() == 8)
+    #expect(root.flatten().map(\.lastPathComponent).sorted() == ["one.txt", "two.txt"])
+}
