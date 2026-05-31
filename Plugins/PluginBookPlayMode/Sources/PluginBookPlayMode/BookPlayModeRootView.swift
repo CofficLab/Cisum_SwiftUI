@@ -8,6 +8,10 @@ import SwiftUI
 public typealias BookPlayModeCurrentSceneProvider = @MainActor () -> String?
 
 enum BookPlayModeRestorePolicy {
+    static func shouldStorePlayModeChange(currentGeneration: Int, requestGeneration: Int) -> Bool {
+        currentGeneration == requestGeneration
+    }
+
     static func shouldRestorePlayMode(isActiveScene: Bool, storedMode: MagicPlayMode, currentMode: MagicPlayMode) -> Bool {
         isActiveScene && storedMode != currentMode
     }
@@ -19,6 +23,7 @@ public struct BookPlayModeRootView<Content>: View, SuperLog where Content: View 
 
     @EnvironmentObject private var man: MagicPlayMan
     @State private var playbackSubscriptionID: UUID?
+    @State private var playModeChangeGeneration: Int = 0
 
     private let content: Content
     private let targetSceneName: String
@@ -129,12 +134,21 @@ private extension BookPlayModeRootView {
     /// - Parameter mode: 新的播放模式
     func handlePlayModeChanged(_ mode: MagicPlayMode) {
         guard shouldActivatePlayMode else { return }
+        playModeChangeGeneration += 1
+        let generation = playModeChangeGeneration
 
         if verbose {
             os_log("\(self.t)🔄 书籍播放模式变化 -> \(mode.shortName)")
         }
 
-        Task {
+        Task { @MainActor [mode, generation] in
+            guard BookPlayModeRestorePolicy.shouldStorePlayModeChange(
+                currentGeneration: playModeChangeGeneration,
+                requestGeneration: generation
+            ) else {
+                return
+            }
+
             await BookPlayModeStore.shared.storePlayMode(mode)
         }
 

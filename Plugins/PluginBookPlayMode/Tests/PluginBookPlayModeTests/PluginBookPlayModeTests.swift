@@ -25,6 +25,17 @@ import Testing
     ))
 }
 
+@Test func bookPlayModeStoreOnlyAppliesLatestChangeGeneration() {
+    #expect(BookPlayModeRestorePolicy.shouldStorePlayModeChange(
+        currentGeneration: 2,
+        requestGeneration: 2
+    ))
+    #expect(!BookPlayModeRestorePolicy.shouldStorePlayModeChange(
+        currentGeneration: 3,
+        requestGeneration: 2
+    ))
+}
+
 @Test func bookPlayModeFallsBackToCloudWhenLocalValueIsInvalid() {
     #expect(BookPlayModeStore.resolvedPlayMode(
         localRawValue: "invalid",

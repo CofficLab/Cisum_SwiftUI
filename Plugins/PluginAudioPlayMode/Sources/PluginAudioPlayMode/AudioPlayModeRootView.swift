@@ -14,6 +14,10 @@ enum AudioPlayModeQueueUpdatePolicy {
         currentMode.rawValue == requestedModeRawValue
     }
 
+    static func shouldStorePlayModeChange(currentGeneration: Int, requestGeneration: Int) -> Bool {
+        currentGeneration == requestGeneration
+    }
+
     static func shouldRestorePlayMode(isActiveScene: Bool, storedMode: MagicPlayMode, currentMode: MagicPlayMode) -> Bool {
         isActiveScene && storedMode != currentMode
     }
@@ -25,6 +29,7 @@ public struct AudioPlayModeRootView<Content>: View, SuperLog where Content: View
 
     @EnvironmentObject private var man: MagicPlayMan
     @State private var playbackSubscriptionID: UUID?
+    @State private var playModeChangeGeneration: Int = 0
 
     private let content: Content
     private let targetSceneName: String
@@ -133,12 +138,21 @@ private extension AudioPlayModeRootView {
         let modeRawValue = mode.rawValue
         let modeShortName = mode.shortName
         let currentURL = man.currentURL
+        playModeChangeGeneration += 1
+        let generation = playModeChangeGeneration
 
         if verbose {
             os_log("\(self.t)🔄 播放模式变化 -> \(modeShortName)")
         }
 
-        Task { [modeRawValue, modeShortName] in
+        Task { @MainActor [modeRawValue, modeShortName, generation] in
+            guard AudioPlayModeQueueUpdatePolicy.shouldStorePlayModeChange(
+                currentGeneration: playModeChangeGeneration,
+                requestGeneration: generation
+            ) else {
+                return
+            }
+
             await AudioPlayModeStore.shared.storePlayModeRawValue(modeRawValue, shortName: modeShortName)
         }
 

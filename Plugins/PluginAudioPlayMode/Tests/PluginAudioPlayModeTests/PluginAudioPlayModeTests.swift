@@ -41,6 +41,17 @@ import Testing
     ))
 }
 
+@Test func audioPlayModeStoreOnlyAppliesLatestChangeGeneration() {
+    #expect(AudioPlayModeQueueUpdatePolicy.shouldStorePlayModeChange(
+        currentGeneration: 2,
+        requestGeneration: 2
+    ))
+    #expect(!AudioPlayModeQueueUpdatePolicy.shouldStorePlayModeChange(
+        currentGeneration: 3,
+        requestGeneration: 2
+    ))
+}
+
 @Test func audioPlayModeFallsBackToCloudWhenLocalValueIsInvalid() {
     #expect(AudioPlayModeStore.resolvedPlayMode(
         localRawValue: "invalid",
