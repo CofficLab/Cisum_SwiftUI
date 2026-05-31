@@ -195,6 +195,25 @@ import UniformTypeIdentifiers
     ))
 }
 
+@Test func audioListDeletionMatchesDanglingSymlinkRows() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let missingFile = root.appendingPathComponent("missing.mp3")
+    let linkedFile = root.appendingPathComponent("linked.mp3")
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedFile, withDestinationURL: missingFile)
+
+    #expect(AudioListDeletionPolicy.shouldRemove(linkedFile, deletedURLs: [linkedFile]))
+    #expect(!AudioListDeletionPolicy.shouldRemove(
+        root.appendingPathComponent("other.mp3"),
+        deletedURLs: [linkedFile]
+    ))
+}
+
 @Test func audioListDeletionCountsOnlyDisplayedRemovedRows() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)
@@ -363,6 +382,24 @@ import UniformTypeIdentifiers
 
     #expect(AudioDeletePlaybackPolicy.deletedURLsContainCurrentAudio(
         currentURL: realFile,
+        deletedURLs: [linkedFile]
+    ))
+}
+
+@Test func audioDeleteResetsPlaybackForDanglingSymlinkCurrentAudio() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let missingFile = root.appendingPathComponent("missing.mp3")
+    let linkedFile = root.appendingPathComponent("linked.mp3")
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedFile, withDestinationURL: missingFile)
+
+    #expect(AudioDeletePlaybackPolicy.deletedURLsContainCurrentAudio(
+        currentURL: linkedFile,
         deletedURLs: [linkedFile]
     ))
 }

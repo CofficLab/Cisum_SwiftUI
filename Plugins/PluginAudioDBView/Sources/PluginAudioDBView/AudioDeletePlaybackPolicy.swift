@@ -3,9 +3,9 @@ import Foundation
 enum AudioDeletePlaybackPolicy {
     static func deletedURLsContainCurrentAudio(currentURL: URL?, deletedURLs: [URL]) -> Bool {
         guard let currentURL else { return false }
-        let currentPath = resolvedStandardizedPath(for: currentURL)
+        let currentPaths = comparablePaths(for: currentURL)
         return deletedURLs.contains { deletedURL in
-            resolvedStandardizedPath(for: deletedURL) == currentPath
+            !currentPaths.isDisjoint(with: comparablePaths(for: deletedURL))
         }
     }
 
@@ -22,5 +22,12 @@ enum AudioDeletePlaybackPolicy {
 
     private static func resolvedStandardizedPath(for url: URL) -> String {
         url.resolvingSymlinksInPath().standardizedFileURL.path
+    }
+
+    private static func comparablePaths(for url: URL) -> Set<String> {
+        [
+            url.standardizedFileURL.path,
+            resolvedStandardizedPath(for: url),
+        ]
     }
 }
