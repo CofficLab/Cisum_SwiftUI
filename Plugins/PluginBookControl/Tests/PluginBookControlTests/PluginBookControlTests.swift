@@ -418,9 +418,11 @@ import SwiftUI
     try FileManager.default.createDirectory(at: disc2, withIntermediateDirectories: true)
 
     let unsupported = disc1.appendingPathComponent("notes.txt")
+    let hidden = disc1.appendingPathComponent(".hidden.m4b")
     let chapter2 = disc1.appendingPathComponent("02.m4b")
     let chapter1 = disc2.appendingPathComponent("01.m4b")
     try Data("notes".utf8).write(to: unsupported)
+    try Data("hidden".utf8).write(to: hidden)
     try Data("audio".utf8).write(to: chapter2)
     try Data("audio".utf8).write(to: chapter1)
 
