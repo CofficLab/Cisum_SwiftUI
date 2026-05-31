@@ -1,5 +1,6 @@
 import Foundation
 import MagicAlert
+import MagicKit
 import MagicPlayMan
 import OSLog
 import SwiftUI
@@ -46,9 +47,8 @@ enum AudioControlPlaybackRequestPolicy {
 
     static func currentAssetAffectedByDeletion(currentAsset: URL?, deletedURLs: [URL]) -> Bool {
         guard let currentAsset else { return false }
-        let currentPaths = comparablePaths(for: currentAsset)
         return deletedURLs.contains { deletedURL in
-            !currentPaths.isDisjoint(with: comparablePaths(for: deletedURL))
+            representsSameFile(currentAsset, deletedURL)
         }
     }
 
@@ -78,26 +78,19 @@ enum AudioControlPlaybackRequestPolicy {
         generation + 1
     }
 
-    private static func resolvedStandardizedPath(for url: URL) -> String {
-        url.resolvingSymlinksInPath().standardizedFileURL.path
-    }
-
-    private static func comparablePaths(for url: URL) -> Set<String> {
-        [
-            url.standardizedFileURL.path,
-            resolvedStandardizedPath(for: url),
-        ]
-    }
-
     private static func representsSameFile(_ lhs: URL?, _ rhs: URL?) -> Bool {
         switch (lhs, rhs) {
         case (.none, .none):
             return true
         case let (.some(lhs), .some(rhs)):
-            return resolvedStandardizedPath(for: lhs) == resolvedStandardizedPath(for: rhs)
+            return lhs.isSameFileLocation(as: rhs)
         default:
             return false
         }
+    }
+
+    private static func representsSameFile(_ lhs: URL, _ rhs: URL) -> Bool {
+        lhs.isSameFileLocation(as: rhs)
     }
 }
 

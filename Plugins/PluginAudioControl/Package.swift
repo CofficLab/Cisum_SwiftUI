@@ -19,6 +19,7 @@ let package = Package(
         .package(path: "../PluginAudio"),
         .package(path: "../PluginAudioScene"),
         .package(url: "https://github.com/nookery/MagicAlert", from: "1.0.1"),
+        .package(path: "../../Packages/MagicKit"),
         .package(path: "../../Packages/MagicPlayMan"),
     ],
     targets: [
@@ -29,6 +30,7 @@ let package = Package(
                 .product(name: "PluginAudio", package: "PluginAudio"),
                 .product(name: "PluginAudioScene", package: "PluginAudioScene"),
                 .product(name: "MagicAlert", package: "MagicAlert"),
+                .product(name: "MagicKit", package: "MagicKit"),
                 .product(name: "MagicPlayMan", package: "MagicPlayMan"),
             ],
             path: "Sources/PluginAudioControl",
