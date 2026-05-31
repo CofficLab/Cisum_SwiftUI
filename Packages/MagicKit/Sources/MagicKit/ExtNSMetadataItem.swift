@@ -37,7 +37,9 @@ public extension NSMetadataItem {
     
     /// 下载进度（0-1）
     var downloadProgress: Double {
-        (value(forAttribute: NSMetadataUbiquitousItemPercentDownloadedKey) as? Double ?? 0.0) / 100.0
+        URLDownloadProgressPolicy.normalizedFraction(
+            percentDownloaded: value(forAttribute: NSMetadataUbiquitousItemPercentDownloadedKey) as? Double
+        )
     }
     
     /// 是否已上传完成

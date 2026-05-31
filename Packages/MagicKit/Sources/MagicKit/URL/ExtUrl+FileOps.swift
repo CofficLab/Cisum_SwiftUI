@@ -28,6 +28,23 @@ enum URLDownloadAvailabilityPolicy {
     }
 }
 
+enum URLDownloadProgressPolicy {
+    static func normalizedFraction(percentDownloaded: Double?) -> Double {
+        guard let percentDownloaded, percentDownloaded.isFinite else { return 0 }
+        return min(max(percentDownloaded / 100, 0), 1)
+    }
+
+    static func normalizedFraction(downloadedSize: Int?, totalSize: Int?) -> Double {
+        guard let downloadedSize,
+              let totalSize,
+              totalSize > 0 else {
+            return 0
+        }
+
+        return min(max(Double(downloadedSize) / Double(totalSize), 0), 1)
+    }
+}
+
 enum URLDirectoryContainmentPolicy {
     static func contains(_ childPath: String, inDirectory parentPath: String) -> Bool {
         childPath == parentPath || childPath.hasPrefix(childPrefix(for: parentPath))
@@ -488,16 +505,17 @@ public extension URL {
             return 1.0
         }
 
-        if let percent = resources.allValues[percentKey] as? Double, percent > 0 {
-            return min(percent / 100.0, 1.0)
+        let percentProgress = URLDownloadProgressPolicy.normalizedFraction(
+            percentDownloaded: resources.allValues[percentKey] as? Double
+        )
+        if percentProgress > 0 {
+            return percentProgress
         }
 
-        guard let totalSize = resources.fileSize, totalSize > 0,
-              let downloadedSize = resources.fileAllocatedSize else {
-            return 0.0
-        }
-
-        return min(Double(downloadedSize) / Double(totalSize), 1.0)
+        return URLDownloadProgressPolicy.normalizedFraction(
+            downloadedSize: resources.fileAllocatedSize,
+            totalSize: resources.fileSize
+        )
     }
 
     /// 将文件夹展开为所有非文件夹子项；普通文件返回自身。

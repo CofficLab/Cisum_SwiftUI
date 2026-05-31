@@ -276,7 +276,7 @@ public final class ICloudDirectoryMonitor: SuperLog {
                       let percentDownloaded = item.value(forAttribute: NSMetadataUbiquitousItemPercentDownloadedKey) as? Double
                 else { continue }
 
-                let progress = max(0.0, min(1.0, percentDownloaded / 100))
+                let progress = URLDownloadProgressPolicy.normalizedFraction(percentDownloaded: percentDownloaded)
 
                 if isDownloading || progress >= 1.0 {
                     guard await self.progressThrottle.shouldUpdate(for: url, progress: progress) else { continue }

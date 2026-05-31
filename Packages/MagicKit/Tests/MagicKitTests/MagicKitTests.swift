@@ -216,6 +216,20 @@ final class MagicKitTests: XCTestCase {
         ))
     }
 
+    func testDownloadProgressPolicyClampsInvalidValues() {
+        XCTAssertEqual(URLDownloadProgressPolicy.normalizedFraction(percentDownloaded: nil), 0)
+        XCTAssertEqual(URLDownloadProgressPolicy.normalizedFraction(percentDownloaded: .nan), 0)
+        XCTAssertEqual(URLDownloadProgressPolicy.normalizedFraction(percentDownloaded: -25), 0)
+        XCTAssertEqual(URLDownloadProgressPolicy.normalizedFraction(percentDownloaded: 40), 0.4)
+        XCTAssertEqual(URLDownloadProgressPolicy.normalizedFraction(percentDownloaded: 140), 1)
+
+        XCTAssertEqual(URLDownloadProgressPolicy.normalizedFraction(downloadedSize: nil, totalSize: 100), 0)
+        XCTAssertEqual(URLDownloadProgressPolicy.normalizedFraction(downloadedSize: 50, totalSize: nil), 0)
+        XCTAssertEqual(URLDownloadProgressPolicy.normalizedFraction(downloadedSize: -50, totalSize: 100), 0)
+        XCTAssertEqual(URLDownloadProgressPolicy.normalizedFraction(downloadedSize: 50, totalSize: 100), 0.5)
+        XCTAssertEqual(URLDownloadProgressPolicy.normalizedFraction(downloadedSize: 120, totalSize: 100), 1)
+    }
+
     func testDirectoryContainmentDoesNotMatchSiblingPrefix() {
         let parent = "/tmp/Cisum/Documents"
 
