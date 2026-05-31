@@ -32,20 +32,44 @@ public extension View {
 
 public extension NotificationCenter {
     static func postCopyTaskCountChanged(count: Int) {
-        DispatchQueue.main.async {
-            NotificationCenter.default.post(name: .copyTaskCountChanged, object: nil, userInfo: ["count": count])
-        }
+        postCopyTaskCountChangedOnMain(count: count)
     }
 
     static func postCopyTaskStarted(count: Int) {
-        DispatchQueue.main.async {
-            NotificationCenter.default.post(name: .copyTaskStarted, object: nil, userInfo: ["count": count])
-        }
+        postCopyTaskStartedOnMain(count: count)
     }
 
     static func postCopyTaskFinished(count: Int, lastCount: Int) {
-        DispatchQueue.main.async {
+        postCopyTaskFinishedOnMain(count: count, lastCount: lastCount)
+    }
+
+    private static func postCopyTaskCountChangedOnMain(count: Int) {
+        if Thread.isMainThread {
+            NotificationCenter.default.post(name: .copyTaskCountChanged, object: nil, userInfo: ["count": count])
+        } else {
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: .copyTaskCountChanged, object: nil, userInfo: ["count": count])
+            }
+        }
+    }
+
+    private static func postCopyTaskStartedOnMain(count: Int) {
+        if Thread.isMainThread {
+            NotificationCenter.default.post(name: .copyTaskStarted, object: nil, userInfo: ["count": count])
+        } else {
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: .copyTaskStarted, object: nil, userInfo: ["count": count])
+            }
+        }
+    }
+
+    private static func postCopyTaskFinishedOnMain(count: Int, lastCount: Int) {
+        if Thread.isMainThread {
             NotificationCenter.default.post(name: .copyTaskFinished, object: nil, userInfo: ["count": count, "lastCount": lastCount])
+        } else {
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: .copyTaskFinished, object: nil, userInfo: ["count": count, "lastCount": lastCount])
+            }
         }
     }
 }

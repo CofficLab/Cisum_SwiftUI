@@ -9,6 +9,23 @@ import Testing
 }
 
 #if os(macOS)
+@MainActor
+@Test func copyTaskCountNotificationPostsSynchronouslyOnMainThread() {
+    let receivedCount = TestNotificationValue<Int?>(nil)
+    let token = NotificationCenter.default.addObserver(
+        forName: .copyTaskCountChanged,
+        object: nil,
+        queue: nil
+    ) { notification in
+        receivedCount.set(notification.userInfo?["count"] as? Int)
+    }
+    defer { NotificationCenter.default.removeObserver(token) }
+
+    NotificationCenter.postCopyTaskCountChanged(count: 3)
+
+    #expect(receivedCount.value == 3)
+}
+
 @Test func copyDropAcceptsOnlySupportedAudioFiles() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)
@@ -198,5 +215,24 @@ import Testing
 @Test func copyWorkerDiscardsCompletedCopyWhenTaskWasDeleted() {
     #expect(CopyWorker.shouldKeepCompletedCopy(isTaskStillQueued: true))
     #expect(!CopyWorker.shouldKeepCompletedCopy(isTaskStillQueued: false))
+}
+
+private final class TestNotificationValue<Value>: @unchecked Sendable {
+    private let lock = NSLock()
+    private var storedValue: Value
+
+    init(_ value: Value) {
+        self.storedValue = value
+    }
+
+    var value: Value {
+        lock.withLock { storedValue }
+    }
+
+    func set(_ value: Value) {
+        lock.withLock {
+            storedValue = value
+        }
+    }
 }
 #endif
