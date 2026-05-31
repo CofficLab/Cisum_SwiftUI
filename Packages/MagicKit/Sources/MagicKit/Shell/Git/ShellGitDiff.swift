@@ -129,10 +129,9 @@ extension ShellGit {
         let files = nameStatus.split(separator: "\n").map { String($0) }
         var result: [MagicGitDiffFile] = []
         for line in files {
-            let parts = line.split(separator: "\t").map { String($0) }
-            guard parts.count >= 2 else { continue }
-            let changeType = parts[0]
-            let file = parts[1]
+            guard let parsedFile = parseNameStatusLine(line) else { continue }
+            let changeType = parsedFile.changeType
+            let file = parsedFile.file
             let diff = try Shell.runSync("git diff \(option) -- \(file)", at: path)
             result.append(MagicGitDiffFile(id: file, file: file, changeType: changeType, diff: diff))
         }
@@ -149,10 +148,9 @@ extension ShellGit {
         let files = nameStatus.split(separator: "\n").map { String($0) }
         var result: [MagicGitDiffFile] = []
         for line in files {
-            let parts = line.split(separator: "\t").map { String($0) }
-            guard parts.count >= 2 else { continue }
-            let changeType = parts[0]
-            let file = parts[1]
+            guard let parsedFile = parseNameStatusLine(line) else { continue }
+            let changeType = parsedFile.changeType
+            let file = parsedFile.file
             let diff = try Shell.runSync("git show \(commit) -- \(file)", at: path)
             result.append(MagicGitDiffFile(id: file, file: file, changeType: changeType, diff: diff))
         }
@@ -187,10 +185,9 @@ extension ShellGit {
             let output = try await Shell.run("git diff-tree --no-commit-id --name-status -r \(commit)", at: path, verbose: verbose)
             let files = output.split(separator: "\n").map { String($0) }
             return files.compactMap { line in
-                let parts = line.split(separator: "\t").map { String($0) }
-                guard parts.count >= 2 else { return nil }
-                let changeType = parts[0]
-                let file = parts[1]
+                guard let parsedFile = parseNameStatusLine(line) else { return nil }
+                let changeType = parsedFile.changeType
+                let file = parsedFile.file
                 return MagicGitDiffFile(id: file, file: file, changeType: changeType, diff: "")
             }
         } else {
@@ -244,6 +241,23 @@ extension ShellGit {
     public static func hasFilesToCommit(at path: String? = nil) throws -> Bool {
         let output = try Shell.runSync("git diff --cached --name-only", at: path)
         return !output.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
+    static func parseNameStatusLine(_ line: String) -> (changeType: String, file: String)? {
+        let parts = line.split(separator: "\t", omittingEmptySubsequences: false).map { String($0) }
+        guard parts.count >= 2, !parts[0].isEmpty else { return nil }
+
+        let changeType = parts[0]
+        let file: String
+        if changeType.hasPrefix("R") || changeType.hasPrefix("C") {
+            guard let newPath = parts.last, !newPath.isEmpty else { return nil }
+            file = newPath
+        } else {
+            guard !parts[1].isEmpty else { return nil }
+            file = parts[1]
+        }
+
+        return (changeType, file)
     }
 }
 #endif
