@@ -3,7 +3,7 @@ import SwiftUI
 
 struct VideoFileSizeLoadPolicy {
     static func shouldApplySize(currentFile: URL, requestedFile: URL) -> Bool {
-        currentFile == requestedFile
+        currentFile.isSameFileLocation(as: requestedFile)
     }
 }
 

@@ -16,3 +16,22 @@ import Testing
     #expect(VideoFileSizeLoadPolicy.shouldApplySize(currentFile: first, requestedFile: first))
     #expect(!VideoFileSizeLoadPolicy.shouldApplySize(currentFile: second, requestedFile: first))
 }
+
+@Test func videoTileAppliesFileSizeForSymlinkedCurrentFile() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realFile = root.appendingPathComponent("real.mov")
+    let linkedFile = root.appendingPathComponent("linked.mov")
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    try Data("video".utf8).write(to: realFile)
+    try FileManager.default.createSymbolicLink(at: linkedFile, withDestinationURL: realFile)
+
+    #expect(VideoFileSizeLoadPolicy.shouldApplySize(
+        currentFile: realFile,
+        requestedFile: linkedFile
+    ))
+}
