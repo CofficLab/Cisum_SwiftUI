@@ -2,11 +2,15 @@ import Foundation
 
 enum BookPathContainment {
     static func representsSameFile(_ lhs: URL, _ rhs: URL) -> Bool {
-        guard lhs.isFileURL, rhs.isFileURL else {
-            return lhs.standardized.absoluteString == rhs.standardized.absoluteString
+        canonicalIdentity(for: lhs) == canonicalIdentity(for: rhs)
+    }
+
+    static func canonicalIdentity(for url: URL) -> String {
+        guard url.isFileURL else {
+            return url.standardized.absoluteString
         }
 
-        return resolvedStandardizedPath(for: lhs) == resolvedStandardizedPath(for: rhs)
+        return resolvedStandardizedPath(for: url)
     }
 
     static func hasSameResolvedParent(_ url: URL, as parent: URL) -> Bool {

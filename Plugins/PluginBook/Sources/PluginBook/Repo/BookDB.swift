@@ -396,9 +396,13 @@ extension BookDB {
     }
 
     static func uniqueSupportedBookLibraryItems(_ urls: [URL]) -> [URL] {
+        var seenIdentities = Set<String>()
         var uniqueURLs: [URL] = []
+        uniqueURLs.reserveCapacity(urls.count)
+
         for url in urls where isSupportedBookLibraryItem(url) {
-            guard !uniqueURLs.contains(where: { BookPathContainment.representsSameFile($0, url) }) else { continue }
+            let identity = BookPathContainment.canonicalIdentity(for: url)
+            guard seenIdentities.insert(identity).inserted else { continue }
             uniqueURLs.append(url)
         }
 

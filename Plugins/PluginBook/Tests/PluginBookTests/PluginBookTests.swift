@@ -34,6 +34,26 @@ import SwiftData
     #expect(BookModel.playableChildCount(for: linkedBook) == 1)
 }
 
+@Test func bookDBUniqueSupportedItemsDeduplicatesByResolvedIdentity() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realBook = root.appendingPathComponent("RealBook", isDirectory: true)
+    let linkedBook = root.appendingPathComponent("LinkedBook", isDirectory: true)
+    let otherBook = root.appendingPathComponent("OtherBook", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: realBook, withIntermediateDirectories: true)
+    try FileManager.default.createDirectory(at: otherBook, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedBook, withDestinationURL: realBook)
+    try Data("audio".utf8).write(to: realBook.appendingPathComponent("001.m4b"))
+    try Data("audio".utf8).write(to: otherBook.appendingPathComponent("001.m4b"))
+
+    #expect(BookPathContainment.canonicalIdentity(for: linkedBook) == BookPathContainment.canonicalIdentity(for: realBook))
+    #expect(BookDB.uniqueSupportedBookLibraryItems([linkedBook, realBook, otherBook]) == [linkedBook, otherBook])
+}
+
 @Test func bookModelTreatsSymlinkedBookFolderAsCollection() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)
