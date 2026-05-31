@@ -30,12 +30,11 @@ enum AudioListLoadPolicy {
         fetchedCount == pageSize
     }
 
-    static func isLoadingAfterDiscardingStaleInitialResult() -> Bool {
-        false
-    }
-
-    static func isLoadingMoreAfterDiscardingStaleResult() -> Bool {
-        false
+    static func shouldKeepLoadingStateWhenDiscardingStaleResult(
+        currentGeneration: Int,
+        resultGeneration: Int
+    ) -> Bool {
+        currentGeneration != resultGeneration
     }
 
     private static func canonicalIdentity(for url: URL) -> String {
@@ -276,11 +275,10 @@ extension AudioList {
             }
 
             await MainActor.run {
-                guard AudioListLoadPolicy.shouldApplyResult(
+                guard !AudioListLoadPolicy.shouldKeepLoadingStateWhenDiscardingStaleResult(
                     currentGeneration: self.loadGeneration,
                     resultGeneration: generation
                 ) else {
-                    self.isLoading = AudioListLoadPolicy.isLoadingAfterDiscardingStaleInitialResult()
                     return
                 }
                 self.urls = urls
@@ -361,11 +359,10 @@ extension AudioList {
             }
 
             await MainActor.run {
-                guard AudioListLoadPolicy.shouldApplyResult(
+                guard !AudioListLoadPolicy.shouldKeepLoadingStateWhenDiscardingStaleResult(
                     currentGeneration: self.loadGeneration,
                     resultGeneration: generation
                 ) else {
-                    self.isLoadingMore = AudioListLoadPolicy.isLoadingMoreAfterDiscardingStaleResult()
                     return
                 }
                 if !uniqueNewUrls.isEmpty {

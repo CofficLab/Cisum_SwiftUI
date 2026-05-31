@@ -143,12 +143,15 @@ import UniformTypeIdentifiers
     #expect(!AudioListLoadPolicy.hasMoreAfterLoading(fetchedCount: 49, pageSize: 50))
 }
 
-@Test func staleAudioListInitialLoadStopsLoading() {
-    #expect(AudioListLoadPolicy.isLoadingAfterDiscardingStaleInitialResult() == false)
-}
-
-@Test func staleAudioListLoadMoreResultsStopLoadingMore() {
-    #expect(AudioListLoadPolicy.isLoadingMoreAfterDiscardingStaleResult() == false)
+@Test func staleAudioListResultsKeepCurrentLoadingState() {
+    #expect(AudioListLoadPolicy.shouldKeepLoadingStateWhenDiscardingStaleResult(
+        currentGeneration: 3,
+        resultGeneration: 2
+    ))
+    #expect(!AudioListLoadPolicy.shouldKeepLoadingStateWhenDiscardingStaleResult(
+        currentGeneration: 2,
+        resultGeneration: 2
+    ))
 }
 
 @Test func audioListDeletionMatchesSymlinkedRows() throws {
