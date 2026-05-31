@@ -10,7 +10,7 @@ struct AppTabView: View, SuperLog, SuperThread {
     @Environment(\.demoMode) var isDemoMode
 
     @State private var selectedTabID: String = "0"
-    @State private var currentTabView: AnyView?
+    @State private var cachedTabViews: [(view: AnyView, label: String)] = []
     @State private var selectedTabIndex: Int = 0
     @State private var selectedDemoTabID: String = "0"
 
@@ -29,6 +29,10 @@ struct AppTabView: View, SuperLog, SuperThread {
                 }
             #endif
         }
+        .onAppear(perform: refreshTabs)
+        .onChange(of: isDemoMode) { _, _ in
+            refreshTabs()
+        }
     }
 }
 
@@ -37,11 +41,8 @@ struct AppTabView: View, SuperLog, SuperThread {
 extension AppTabView {
     /// 构建 TabView（正常模式）
     func buildTabView() -> AnyView {
-        // 收集所有提供的 Tab 视图及标签
-        let tabViews = p.getTabViews(reason: self.className, demoMode: isDemoMode)
-
         let tabView = TabView(selection: $selectedTabID) {
-            ForEach(Array(tabViews.enumerated()), id: \.offset) { index, item in
+            ForEach(Array(cachedTabViews.enumerated()), id: \.offset) { index, item in
                 item.view
                     .tag(String(index))
                     .tabItem {
@@ -66,15 +67,14 @@ extension AppTabView {
 
     /// 构建自定义 TabView（Demo 模式）
     func buildCustomTabView() -> some View {
-        let tabViews = p.getTabViews(reason: self.className, demoMode: isDemoMode)
         let settingTab = (view: AnyView(SettingView().environmentObject(p)), label: String(localized: "设置", table: "Core"))
-        let allTabs = tabViews + [settingTab]
+        let allTabs = cachedTabViews + [settingTab]
 
         let tabBar = AppTabBar(
             tabs: Array(allTabs.enumerated()).map { index, item in
                 AppTabBar.Tab(
                     title: item.label,
-                    icon: index < tabViews.count ? .cisumIconMusicNote : "gear",
+                    icon: index < cachedTabViews.count ? .cisumIconMusicNote : "gear",
                     id: String(index)
                 )
             },
@@ -147,21 +147,22 @@ extension AppTabView {
             os_log("\(self.t)📱 开始重新构建 TabView...")
         }
 
-        // 事件驱动：主动更新视图（仅在非 Demo 模式下）
-        if !isDemoMode {
-            currentTabView = buildTabView()
-        }
+        refreshTabs()
 
-        let tabCount = p.getTabViews(reason: self.className, demoMode: isDemoMode).count
+        if Self.verbose {
+            os_log("\(self.t)✅ TabView 已更新完成")
+        }
+    }
+
+    private func refreshTabs() {
+        cachedTabViews = p.getTabViews(reason: self.className, demoMode: isDemoMode)
+
+        let tabCount = cachedTabViews.count
         if Int(selectedTabID).map({ $0 >= tabCount }) ?? (selectedTabID != "Setting") {
             selectedTabID = tabCount > 0 ? "0" : "Setting"
         }
 
         resetCustomTabSelection()
-
-        if Self.verbose {
-            os_log("\(self.t)✅ TabView 已更新完成")
-        }
     }
 
     private func resetCustomTabSelection() {
