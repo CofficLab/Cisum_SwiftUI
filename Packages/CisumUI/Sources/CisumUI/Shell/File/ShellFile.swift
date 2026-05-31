@@ -10,6 +10,10 @@ class ShellFile: SuperLog {
         "'\(value.replacingOccurrences(of: "'", with: "'\\''"))'"
     }
 
+    static func shellPathOperand(_ value: String) -> String {
+        shellQuoted(value.hasPrefix("-") ? "./\(value)" : value)
+    }
+
     static func isDirExistsCommand(_ dir: String) -> String {
         let quotedDir = shellQuoted(dir)
         return """
@@ -36,7 +40,7 @@ class ShellFile: SuperLog {
         let quotedDir = shellQuoted(dir)
         return """
             if [ ! -d \(quotedDir) ]; then
-                mkdir -p \(quotedDir)
+                mkdir -p -- \(quotedDir)
             else
                 echo \(quotedDir) 已经存在
             fi
@@ -44,35 +48,35 @@ class ShellFile: SuperLog {
     }
 
     static func getFileContentCommand(_ path: String) -> String {
-        "cat \(shellQuoted(path))"
+        "cat -- \(shellQuoted(path))"
     }
 
     static func removeCommand(_ path: String) -> String {
-        "rm -rf \(shellQuoted(path))"
+        "rm -rf -- \(shellQuoted(path))"
     }
 
     static func copyCommand(_ source: String, to destination: String) -> String {
-        "cp -r \(shellQuoted(source)) \(shellQuoted(destination))"
+        "cp -r -- \(shellQuoted(source)) \(shellQuoted(destination))"
     }
 
     static func moveCommand(_ source: String, to destination: String) -> String {
-        "mv \(shellQuoted(source)) \(shellQuoted(destination))"
+        "mv -- \(shellQuoted(source)) \(shellQuoted(destination))"
     }
 
     static func getFileSizeCommand(_ path: String) -> String {
-        "stat -f%z \(shellQuoted(path))"
+        "stat -f%z -- \(shellQuoted(path))"
     }
 
     static func listFilesCommand(_ dir: String) -> String {
-        "ls -1 \(shellQuoted(dir))"
+        "ls -1 -- \(shellQuoted(dir))"
     }
 
     static func getPermissionsCommand(_ path: String) -> String {
-        "stat -f%Sp \(shellQuoted(path))"
+        "stat -f%Sp -- \(shellQuoted(path))"
     }
 
     static func changePermissionsCommand(_ path: String, permissions: String) -> String {
-        "chmod \(shellQuoted(permissions)) \(shellQuoted(path))"
+        "chmod \(shellQuoted(permissions)) \(shellPathOperand(path))"
     }
 
     /// 检查目录是否存在
