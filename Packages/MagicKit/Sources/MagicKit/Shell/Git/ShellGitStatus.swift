@@ -31,9 +31,7 @@ extension ShellGit {
     /// - Returns: 未暂存的文件列表
     public static func unstagedFiles(at path: String? = nil) throws -> [String] {
         let output = try Shell.runSync("git status --porcelain -z --untracked-files=all", at: path)
-        return output.split(separator: "\0").compactMap { line in
-            parseUnstagedFile(fromPorcelainLine: String(line))
-        }
+        return parseUnstagedFiles(fromPorcelainZOutput: output)
     }
     
     /// 判断本地是否有未提交的变动
@@ -59,6 +57,35 @@ extension ShellGit {
         }
 
         return pathAfterRenameMarker(path)
+    }
+
+    static func parseUnstagedFiles(fromPorcelainZOutput output: String) -> [String] {
+        let records = output.split(separator: "\0").map(String.init)
+        var files: [String] = []
+        var index = 0
+
+        while index < records.count {
+            let record = records[index]
+            if let file = parseUnstagedFile(fromPorcelainLine: record) {
+                files.append(file)
+            }
+
+            if isRenameOrCopyPorcelainRecord(record) {
+                index += 1
+            }
+
+            index += 1
+        }
+
+        return files
+    }
+
+    private static func isRenameOrCopyPorcelainRecord(_ record: String) -> Bool {
+        guard let status = record.first else {
+            return false
+        }
+
+        return status == "R" || status == "C"
     }
 
     private static func pathAfterRenameMarker(_ path: String) -> String {
