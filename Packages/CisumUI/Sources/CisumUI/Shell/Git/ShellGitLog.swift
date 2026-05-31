@@ -10,8 +10,7 @@ extension ShellGit {
     ///   - path: 仓库路径
     /// - Returns: 日志信息
     public static func log(limit: Int = 10, oneline: Bool = true, at path: String? = nil) throws -> String {
-        let format = oneline ? "--oneline" : ""
-        return try Shell.runSync("git log \(format) -\(limit)", at: path)
+        return try Shell.runSync(logCommand(limit: limit, oneline: oneline), at: path)
     }
 
     /// 获取提交日志（字符串数组）
@@ -159,9 +158,8 @@ extension ShellGit {
         guard page >= 0 else {
             throw NSError(domain: "ShellGit", code: -1, userInfo: [NSLocalizedDescriptionKey: "Page number must be non-negative"])
         }
-        let skip = page * size
-        let format = oneline ? "--oneline" : ""
-        let log = try Shell.runSync("git log \(format) --skip=\(skip) -\(size)", at: path)
+        let pagination = paginationArguments(page: page, size: size)
+        let log = try Shell.runSync(logsWithPaginationCommand(skip: pagination.skip, size: pagination.size, oneline: oneline), at: path)
         return log.split(separator: "\n").map { String($0) }
     }
 
@@ -239,19 +237,29 @@ extension ShellGit {
     }
 
     static func commitsInBranchCommand(_ branch: String, count: Int, format: String) -> String {
-        "git log \(shellQuoted(branch)) -n \(count) --pretty=format:\(shellQuoted(format))"
+        "git log \(shellQuoted(branch)) -n \(normalizedLimit(count)) --pretty=format:\(shellQuoted(format))"
     }
 
     static func recentCommitsCommand(count: Int, format: String) -> String {
-        "git log -n \(count) --pretty=format:\(shellQuoted(format))"
+        "git log -n \(normalizedLimit(count)) --pretty=format:\(shellQuoted(format))"
     }
 
     static func commitsWithTagsCommand(limit: Int) -> String {
-        "git log --pretty=format:\(shellQuoted("%H%x09%s%x09%d")) -\(limit)"
+        "git log --pretty=format:\(shellQuoted("%H%x09%s%x09%d")) -\(normalizedLimit(limit))"
     }
 
     static func commitListCommand(limit: Int, format: String) -> String {
-        "git log --pretty=tformat:\(shellQuoted(format)) -n \(limit)"
+        "git log --pretty=tformat:\(shellQuoted(format)) -n \(normalizedLimit(limit))"
+    }
+
+    static func logCommand(limit: Int, oneline: Bool) -> String {
+        let format = oneline ? "--oneline " : ""
+        return "git log \(format)-\(normalizedLimit(limit))"
+    }
+
+    static func logsWithPaginationCommand(skip: Int, size: Int, oneline: Bool) -> String {
+        let format = oneline ? "--oneline " : ""
+        return "git log \(format)--skip=\(max(0, skip)) -\(normalizedLimit(size))"
     }
 
     static func commitDetailCommand(_ commit: String, format: String) -> String {
@@ -282,11 +290,11 @@ extension ShellGit {
             throw NSError(domain: "ShellGit", code: -1, userInfo: [NSLocalizedDescriptionKey: "Page number must be non-negative"])
         }
 
-        let skip = page * size
+        let pagination = paginationArguments(page: page, size: size)
         // 使用 SOH (Start of Header, ASCII 0x01) 作为字段分隔符，避免 body 中的换行符破坏格式
         // 使用 STX (Start of Text, ASCII 0x02) 作为记录分隔符
         let format = "%H%x01%an%x01%ae%x01%cI%x01%s%x01%b%x01%d%x02"
-        let log = try Shell.runSync(commitListWithPaginationCommand(skip: skip, size: size, format: format), at: path)
+        let log = try Shell.runSync(commitListWithPaginationCommand(skip: pagination.skip, size: pagination.size, format: format), at: path)
         let dateFormatter = ISO8601DateFormatter()
         dateFormatter.formatOptions = [.withInternetDateTime]
 
@@ -312,7 +320,18 @@ extension ShellGit {
     }
 
     static func commitListWithPaginationCommand(skip: Int, size: Int, format: String) -> String {
-        "git log --pretty=tformat:\(shellQuoted(format)) --skip=\(skip) -n \(size)"
+        "git log --pretty=tformat:\(shellQuoted(format)) --skip=\(max(0, skip)) -n \(normalizedLimit(size))"
+    }
+
+    static func normalizedLimit(_ value: Int) -> Int {
+        max(0, value)
+    }
+
+    static func paginationArguments(page: Int, size: Int) -> (skip: Int, size: Int) {
+        let normalizedSize = normalizedLimit(size)
+        let multiplication = page.multipliedReportingOverflow(by: normalizedSize)
+        let skip = multiplication.overflow ? Int.max : multiplication.partialValue
+        return (skip: max(0, skip), size: normalizedSize)
     }
 }
 

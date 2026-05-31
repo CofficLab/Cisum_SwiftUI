@@ -45,4 +45,27 @@ import Testing
     #expect(ShellGit.commitListCommand(limit: 2, format: format) == "git log --pretty=tformat:\(quotedFormat) -n 2")
     #expect(ShellGit.commitListWithPaginationCommand(skip: 4, size: 2, format: format) == "git log --pretty=tformat:\(quotedFormat) --skip=4 -n 2")
 }
+
+@Test func shellGitLogCommandsClampNegativeLimits() {
+    let format = "%H|%s"
+
+    #expect(ShellGit.logCommand(limit: -5, oneline: true) == "git log --oneline -0")
+    #expect(ShellGit.logCommand(limit: -5, oneline: false) == "git log -0")
+    #expect(ShellGit.commitsInBranchCommand("main", count: -5, format: format) == "git log 'main' -n 0 --pretty=format:'%H|%s'")
+    #expect(ShellGit.recentCommitsCommand(count: -5, format: format) == "git log -n 0 --pretty=format:'%H|%s'")
+    #expect(ShellGit.commitsWithTagsCommand(limit: -5) == "git log --pretty=format:'%H%x09%s%x09%d' -0")
+    #expect(ShellGit.commitListCommand(limit: -5, format: format) == "git log --pretty=tformat:'%H|%s' -n 0")
+    #expect(ShellGit.logsWithPaginationCommand(skip: -10, size: -5, oneline: true) == "git log --oneline --skip=0 -0")
+    #expect(ShellGit.commitListWithPaginationCommand(skip: -10, size: -5, format: format) == "git log --pretty=tformat:'%H|%s' --skip=0 -n 0")
+}
+
+@Test func shellGitLogPaginationClampsNegativeSizeBeforeSkip() {
+    let negativeSize = ShellGit.paginationArguments(page: 2, size: -20)
+    #expect(negativeSize.skip == 0)
+    #expect(negativeSize.size == 0)
+
+    let overflowing = ShellGit.paginationArguments(page: Int.max, size: 2)
+    #expect(overflowing.skip == Int.max)
+    #expect(overflowing.size == 2)
+}
 #endif
