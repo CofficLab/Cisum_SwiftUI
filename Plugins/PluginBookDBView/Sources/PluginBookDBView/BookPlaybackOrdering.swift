@@ -21,16 +21,38 @@ enum BookPlaybackOrdering {
     static func playableChildren(for root: URL) -> [URL] {
         let scanRoot = root.isFolder ? root : root.resolvingSymlinksInPath().standardizedFileURL
 
-        return scanRoot.flatten()
-            .filter { url in
-                !url.isFolder
-                    && FileManager.default.fileExists(atPath: url.path)
-                    && BookPluginInfo.supportedExtensions.contains(url.pathExtension.lowercased())
-            }
+        return playableFiles(in: scanRoot)
             .map { mappedURL($0, from: scanRoot, to: root) }
             .sorted {
                 relativePath($0, in: root).localizedStandardCompare(relativePath($1, in: root)) == .orderedAscending
             }
+    }
+
+    private static func playableFiles(in root: URL) -> [URL] {
+        guard root.isFolder else {
+            return isPlayableFile(root) ? [root] : []
+        }
+
+        guard let enumerator = FileManager.default.enumerator(
+            at: root,
+            includingPropertiesForKeys: [.isDirectoryKey],
+            options: [.skipsHiddenFiles]
+        ) else {
+            return []
+        }
+
+        var files: [URL] = []
+        for case let url as URL in enumerator {
+            guard !url.isFolder, isPlayableFile(url) else { continue }
+            files.append(url)
+        }
+
+        return files
+    }
+
+    private static func isPlayableFile(_ url: URL) -> Bool {
+        FileManager.default.fileExists(atPath: url.path)
+            && BookPluginInfo.supportedExtensions.contains(url.pathExtension.lowercased())
     }
 
     private static func mappedURL(_ url: URL, from scanRoot: URL, to root: URL) -> URL {

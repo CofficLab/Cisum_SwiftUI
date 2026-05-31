@@ -378,6 +378,8 @@ import UniformTypeIdentifiers
     let disc2Chapter1 = disc2.appendingPathComponent("01.m4b")
     try Data("audio".utf8).write(to: disc1Chapter2)
     try Data("audio".utf8).write(to: disc2Chapter1)
+    try Data("hidden audio".utf8).write(to: disc1.appendingPathComponent(".hidden.m4b"))
+    try Data("notes".utf8).write(to: disc2.appendingPathComponent("notes.txt"))
 
     let playable = BookPlaybackOrdering.playableChildren(for: root)
 
