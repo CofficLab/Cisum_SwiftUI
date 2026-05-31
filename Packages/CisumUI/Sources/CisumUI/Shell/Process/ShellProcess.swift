@@ -138,7 +138,7 @@ class ShellProcess: SuperLog {
     /// - Returns: CPU使用率最高的进程
     static func getTopCPUProcesses(count: Int = 10) -> [ProcessInfo] {
         do {
-            let result = try Shell.runSync("ps aux --sort=-%cpu | head -\(count + 1)")
+            let result = try Shell.runSync(topProcessesCommand(sort: .cpu, count: count))
             let lines = result.components(separatedBy: .newlines)
                 .dropFirst() // 跳过标题行
                 .filter { !$0.isEmpty }
@@ -154,7 +154,7 @@ class ShellProcess: SuperLog {
     /// - Returns: 内存使用率最高的进程
     static func getTopMemoryProcesses(count: Int = 10) -> [ProcessInfo] {
         do {
-            let result = try Shell.runSync("ps aux --sort=-%mem | head -\(count + 1)")
+            let result = try Shell.runSync(topProcessesCommand(sort: .memory, count: count))
             let lines = result.components(separatedBy: .newlines)
                 .dropFirst() // 跳过标题行
                 .filter { !$0.isEmpty }
@@ -163,6 +163,22 @@ class ShellProcess: SuperLog {
         } catch {
             return []
         }
+    }
+
+    enum ProcessSort {
+        case cpu
+        case memory
+
+        var psFlag: String {
+            switch self {
+            case .cpu: return "-r"
+            case .memory: return "-m"
+            }
+        }
+    }
+
+    static func topProcessesCommand(sort: ProcessSort, count: Int) -> String {
+        "ps aux \(sort.psFlag) | head -\(max(0, count) + 1)"
     }
 
     /// 启动应用程序
