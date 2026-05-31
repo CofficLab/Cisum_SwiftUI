@@ -14,7 +14,7 @@ struct Posters: View, SuperLog {
     @Binding var isPresented: Bool
 
     @State var id: String = ""
-    @State private var posterItems: [(label: String, title: String, description: String, view: AnyView)] = []
+    @State private var posterItems: [(label: String, sceneName: String?, title: String, description: String, view: AnyView)] = []
 
     var body: some View {
         VStack {
@@ -58,12 +58,15 @@ extension Posters {
             guard let poster = plugin.addPosterView() else { return nil }
             return (
                 label: plugin.label,
+                sceneName: plugin.addSceneItem(),
                 title: plugin.title,
                 description: plugin.description,
                 view: poster
             )
         }
-        id = posterItems.first?.label ?? ""
+
+        let currentItem = posterItems.first { $0.sceneName == p.currentSceneName }
+        id = currentItem?.label ?? posterItems.first?.label ?? ""
     }
 }
 
