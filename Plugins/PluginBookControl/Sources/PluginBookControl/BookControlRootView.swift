@@ -89,8 +89,16 @@ enum BookControlPathContainment {
 }
 
 enum BookControlPlaybackRequestPolicy {
-    static func shouldApplyNavigationResult(requestedAsset: URL, currentAsset: URL?, isSceneActive: Bool) -> Bool {
-        isSceneActive && representsSameFile(requestedAsset, currentAsset)
+    static func shouldApplyNavigationResult(
+        requestedAsset: URL,
+        currentAsset: URL?,
+        isSceneActive: Bool,
+        currentGeneration: Int = 0,
+        requestGeneration: Int = 0
+    ) -> Bool {
+        currentGeneration == requestGeneration
+            && isSceneActive
+            && representsSameFile(requestedAsset, currentAsset)
     }
 
     static func currentAssetAffectedByDeletion(currentAsset: URL?, deletedURLs: [URL]) -> Bool {
@@ -398,6 +406,7 @@ private extension BookControlRootView {
 
         let root = bookRoot(containing: asset)
         let playMode = man.playMode
+        let generation = controlGeneration
         Task {
             let prev = await Task.detached(priority: .userInitiated) {
                 let chapters = BookControlChapterLoader.playableChapters(in: root)
@@ -413,7 +422,9 @@ private extension BookControlRootView {
                 guard BookControlPlaybackRequestPolicy.shouldApplyNavigationResult(
                     requestedAsset: asset,
                     currentAsset: man.currentAsset,
-                    isSceneActive: shouldActivateControl
+                    isSceneActive: shouldActivateControl,
+                    currentGeneration: controlGeneration,
+                    requestGeneration: generation
                 ) else {
                     return
                 }
@@ -438,6 +449,7 @@ private extension BookControlRootView {
 
         let root = bookRoot(containing: asset)
         let playMode = man.playMode
+        let generation = controlGeneration
         Task {
             let next = await Task.detached(priority: .userInitiated) {
                 let chapters = BookControlChapterLoader.playableChapters(in: root)
@@ -453,7 +465,9 @@ private extension BookControlRootView {
                 guard BookControlPlaybackRequestPolicy.shouldApplyNavigationResult(
                     requestedAsset: asset,
                     currentAsset: man.currentAsset,
-                    isSceneActive: shouldActivateControl
+                    isSceneActive: shouldActivateControl,
+                    currentGeneration: controlGeneration,
+                    requestGeneration: generation
                 ) else {
                     return
                 }

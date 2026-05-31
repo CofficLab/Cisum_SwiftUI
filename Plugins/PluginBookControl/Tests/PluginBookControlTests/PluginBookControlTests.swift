@@ -138,6 +138,26 @@ import SwiftUI
     ))
 }
 
+@Test func staleNavigationDoesNotApplyAfterSceneReactivation() {
+    let requested = URL(fileURLWithPath: "/tmp/book/001.m4b")
+    let generation = BookControlPlaybackRequestPolicy.generationAfterDeactivation(2)
+
+    #expect(BookControlPlaybackRequestPolicy.shouldApplyNavigationResult(
+        requestedAsset: requested,
+        currentAsset: requested,
+        isSceneActive: true,
+        currentGeneration: 2,
+        requestGeneration: 2
+    ))
+    #expect(!BookControlPlaybackRequestPolicy.shouldApplyNavigationResult(
+        requestedAsset: requested,
+        currentAsset: requested,
+        isSceneActive: true,
+        currentGeneration: generation,
+        requestGeneration: 2
+    ))
+}
+
 @Test func deletionAffectsCurrentChapterInsideDeletedBook() {
     let deletedBook = URL(fileURLWithPath: "/tmp/books/Novel", isDirectory: true)
     let currentChapter = deletedBook.appendingPathComponent("Chapter 01.m4b")
