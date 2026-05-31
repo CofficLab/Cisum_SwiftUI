@@ -1,4 +1,5 @@
 import Foundation
+import MagicKit
 
 public struct BookLikeItem: Hashable, Identifiable {
     public let url: URL
@@ -61,11 +62,6 @@ public enum BookLikeStore {
     }
 
     private static func representsSameFile(_ lhs: URL, _ rhs: URL) -> Bool {
-        guard lhs.isFileURL, rhs.isFileURL else {
-            return lhs.standardized.absoluteString == rhs.standardized.absoluteString
-        }
-
-        return lhs.resolvingSymlinksInPath().standardizedFileURL.path
-            == rhs.resolvingSymlinksInPath().standardizedFileURL.path
+        lhs.isSameFileLocation(as: rhs)
     }
 }
