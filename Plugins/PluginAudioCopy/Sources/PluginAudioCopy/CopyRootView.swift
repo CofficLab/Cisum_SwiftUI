@@ -86,35 +86,6 @@
                 os_log("\(self.t)🚀 开始处理拖放文件")
             }
 
-            // 检查是否超出限制
-            let isOutOfLimit = await AudioCopyService.isOutOfLimit()
-            await MainActor.run {
-                self.outOfLimit = isOutOfLimit
-            }
-            if isOutOfLimit {
-                await MainActor.run {
-                    alert_error(String(localized: "Copy limit reached", table: "Audio-Copy-macOS", bundle: .module))
-                }
-                return false
-            }
-
-            guard let disk = await MainActor.run(body: { AudioCopyService.getAudioDisk() }) else {
-                os_log(.error, "\(self.t)No Disk")
-                await MainActor.run {
-                    alert_error(String(localized: "Storage location is unavailable", table: "Audio-Copy-macOS", bundle: .module))
-                }
-                return false
-            }
-
-            // 从 AudioCopyService 获取 worker
-            guard let worker = AudioCopyService.getWorker() else {
-                os_log(.error, "\(self.t)Failed to get worker")
-                await MainActor.run {
-                    alert_error(String(localized: "Copy service is unavailable", table: "Audio-Copy-macOS", bundle: .module))
-                }
-                return false
-            }
-
             var sourceURLs: [URL] = []
             var preparationErrors: [Error] = []
             for provider in providers {
@@ -157,6 +128,15 @@
                 os_log("\(self.t)🎁 获取到 \(sourceURLs.count) 个文件")
             }
 
+            guard Self.shouldPrepareCopyInfrastructure(sourceCount: sourceURLs.count) else {
+                if Self.shouldShowNoFilesAdded(taskCount: 0, preparationErrors: preparationErrors) {
+                    await MainActor.run {
+                        alert_error(String(localized: "No files were added", table: "Audio-Copy-macOS", bundle: .module))
+                    }
+                }
+                return false
+            }
+
             let allowedTaskCount = await AudioCopyService.allowedTaskCount(requestedTaskCount: sourceURLs.count)
             if allowedTaskCount < sourceURLs.count {
                 if allowedTaskCount == 0 {
@@ -170,6 +150,35 @@
                 await MainActor.run {
                     alert_warning(String(localized: "Only \(allowedTaskCount) files were added because the free copy limit is almost full", table: "Audio-Copy-macOS", bundle: .module))
                 }
+            }
+
+            // 检查是否超出限制
+            let isOutOfLimit = await AudioCopyService.isOutOfLimit()
+            await MainActor.run {
+                self.outOfLimit = isOutOfLimit
+            }
+            if isOutOfLimit {
+                await MainActor.run {
+                    alert_error(String(localized: "Copy limit reached", table: "Audio-Copy-macOS", bundle: .module))
+                }
+                return false
+            }
+
+            guard let disk = await MainActor.run(body: { AudioCopyService.getAudioDisk() }) else {
+                os_log(.error, "\(self.t)No Disk")
+                await MainActor.run {
+                    alert_error(String(localized: "Storage location is unavailable", table: "Audio-Copy-macOS", bundle: .module))
+                }
+                return false
+            }
+
+            // 从 AudioCopyService 获取 worker
+            guard let worker = AudioCopyService.getWorker() else {
+                os_log(.error, "\(self.t)Failed to get worker")
+                await MainActor.run {
+                    alert_error(String(localized: "Copy service is unavailable", table: "Audio-Copy-macOS", bundle: .module))
+                }
+                return false
             }
 
             var tasks: [(bookmark: Data, filename: String)] = []
@@ -236,6 +245,10 @@
 
         nonisolated static func shouldShowNoFilesAdded(taskCount: Int, preparationErrors: [Error]) -> Bool {
             taskCount == 0 && preparationErrors.isEmpty
+        }
+
+        nonisolated static func shouldPrepareCopyInfrastructure(sourceCount: Int) -> Bool {
+            sourceCount > 0
         }
     }
 
