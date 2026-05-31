@@ -34,4 +34,21 @@ import Testing
     #expect(subject == message)
     #expect(listed.message == message)
 }
+
+@Test func shellGitTagCommandsPreserveLiteralRefs() {
+    let tag = #"release/$HOME-`uname`-"quote"-'single'"#
+    let message = #"literal $HOME `uname` "quote" and 'single quote'"#
+    let commit = #"HEAD^{/fix $HOME `uname`}"#
+    let quotedTag = ShellGit.shellQuoted(tag)
+    let quotedMessage = ShellGit.shellQuoted(message)
+    let quotedCommit = ShellGit.shellQuoted(commit)
+    let quotedTagRef = ShellGit.shellQuoted("refs/tags/\(tag)")
+
+    #expect(ShellGit.createTagCommand(tag, message: message) == "git tag -a \(quotedTag) -m \(quotedMessage)")
+    #expect(ShellGit.createTagCommand(tag) == "git tag \(quotedTag)")
+    #expect(ShellGit.deleteTagCommand(tag) == "git tag -d \(quotedTag)")
+    #expect(ShellGit.tagsForCommitCommand(commit) == "git tag --points-at \(quotedCommit)")
+    #expect(ShellGit.tagCommitHashCommand(tag) == "git rev-list -n 1 \(quotedTag)")
+    #expect(ShellGit.tagInfoCommand(tag) == "git for-each-ref \(quotedTagRef) --format='%(taggername)::%(taggerdate)::%(subject)'")
+}
 #endif
