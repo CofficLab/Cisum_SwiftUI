@@ -35,6 +35,10 @@ enum AudioProgressPersistencePolicy {
         storedURL != nil && !isPlayable
     }
 
+    static func shouldClearRestoredCurrentTime(storedURL: URL?, isPlayable: Bool) -> Bool {
+        shouldClearRestoredCurrentURL(storedURL: storedURL, isPlayable: isPlayable)
+    }
+
     static func shouldClearStoredCurrentAfterDelete(storedURL: URL?, deletedURLs: [URL]) -> Bool {
         guard let storedURL else { return false }
         return deletedURLs.contains { deletedURL in
@@ -214,6 +218,9 @@ extension AudioProgressRootView {
                 } else {
                     if AudioProgressPersistencePolicy.shouldClearRestoredCurrentURL(storedURL: url, isPlayable: isPlayable) {
                         AudioStateRepo.storeCurrent(nil)
+                    }
+                    if AudioProgressPersistencePolicy.shouldClearRestoredCurrentTime(storedURL: url, isPlayable: isPlayable) {
+                        AudioStateRepo.storeCurrentTime(0)
                     }
 
                     // 文件不存在，播放第一首

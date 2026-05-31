@@ -153,6 +153,9 @@ import Testing
     #expect(AudioProgressPersistencePolicy.shouldClearRestoredCurrentURL(storedURL: url, isPlayable: false))
     #expect(!AudioProgressPersistencePolicy.shouldClearRestoredCurrentURL(storedURL: url, isPlayable: true))
     #expect(!AudioProgressPersistencePolicy.shouldClearRestoredCurrentURL(storedURL: nil, isPlayable: false))
+    #expect(AudioProgressPersistencePolicy.shouldClearRestoredCurrentTime(storedURL: url, isPlayable: false))
+    #expect(!AudioProgressPersistencePolicy.shouldClearRestoredCurrentTime(storedURL: url, isPlayable: true))
+    #expect(!AudioProgressPersistencePolicy.shouldClearRestoredCurrentTime(storedURL: nil, isPlayable: false))
 }
 
 @Test func deletedStoredCurrentAudioShouldClearRestoreState() {
