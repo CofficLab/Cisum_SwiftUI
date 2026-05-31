@@ -376,6 +376,29 @@ import UniformTypeIdentifiers
     #expect(destination.lastPathComponent == "track 2.mp3")
 }
 
+@Test func audioItemRevealInFinderRequiresExistingPathEntry() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    let existingFile = root.appendingPathComponent("track.mp3")
+    let danglingLink = root.appendingPathComponent("dangling.mp3")
+    let missingFile = root.appendingPathComponent("missing.mp3")
+
+    try Data("audio".utf8).write(to: existingFile)
+    try FileManager.default.createSymbolicLink(
+        at: danglingLink,
+        withDestinationURL: root.appendingPathComponent("deleted-target.mp3")
+    )
+
+    #expect(AudioItemFileActionPolicy.canRevealInFinder(existingFile))
+    #expect(AudioItemFileActionPolicy.canRevealInFinder(danglingLink))
+    #expect(!AudioItemFileActionPolicy.canRevealInFinder(missingFile))
+}
+
 @Test func audioItemExportCopiesSymlinkedFilesAsStandaloneFiles() async throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)

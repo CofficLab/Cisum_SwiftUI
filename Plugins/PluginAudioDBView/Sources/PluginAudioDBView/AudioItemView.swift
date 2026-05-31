@@ -21,6 +21,20 @@ enum AudioItemFileSizeLoadPolicy {
     }
 }
 
+enum AudioItemFileActionPolicy {
+    static func canRevealInFinder(_ url: URL) -> Bool {
+        pathExistsIncludingSymlink(url)
+    }
+
+    static func pathExistsIncludingSymlink(_ url: URL) -> Bool {
+        if FileManager.default.fileExists(atPath: url.path) {
+            return true
+        }
+
+        return (try? url.resourceValues(forKeys: [.isSymbolicLinkKey]).isSymbolicLink) == true
+    }
+}
+
 /// 音频列表项视图组件
 /// 用于在 AudioList 中展示单个音频文件
 struct AudioItemView: View, Equatable, SuperLog {
@@ -87,8 +101,10 @@ extension AudioItemView {
             .contextMenu {
                 AppContextMenuRow("播放", systemImage: "play.fill", action: playAudio)
 
-                AppContextMenuRow("在 Finder 中显示", systemImage: "finder") {
-                    showInFinder()
+                if AudioItemFileActionPolicy.canRevealInFinder(url) {
+                    AppContextMenuRow("在 Finder 中显示", systemImage: "finder") {
+                        showInFinder()
+                    }
                 }
 
                 AppContextMenuRow("导出到下载目录", systemImage: "arrow.down.doc") {
@@ -195,7 +211,7 @@ extension AudioItemView {
         var destinationURL = directory.appendingPathComponent(sourceURL.lastPathComponent)
         var counter = 2
 
-        while pathExistsIncludingSymlink(destinationURL) {
+        while AudioItemFileActionPolicy.pathExistsIncludingSymlink(destinationURL) {
             let fileNameWithoutExtension = sourceURL.deletingPathExtension().lastPathComponent
             let fileExtension = sourceURL.pathExtension
             let newFileName = fileExtension.isEmpty
@@ -206,14 +222,6 @@ extension AudioItemView {
         }
 
         return destinationURL
-    }
-
-    nonisolated private static func pathExistsIncludingSymlink(_ url: URL) -> Bool {
-        if FileManager.default.fileExists(atPath: url.path) {
-            return true
-        }
-
-        return (try? url.resourceValues(forKeys: [.isSymbolicLinkKey]).isSymbolicLink) == true
     }
 
     /// 播放音频
