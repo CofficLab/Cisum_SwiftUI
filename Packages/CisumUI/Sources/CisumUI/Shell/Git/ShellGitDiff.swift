@@ -109,12 +109,9 @@ extension ShellGit {
     ///   - path: 仓库路径
     /// - Returns: 文件内容字符串
     public static func fileContentInWorkingDirectory(file: String, at path: String? = nil) throws -> String {
-        let fullPath = if let path {
-            URL(fileURLWithPath: path).appendingPathComponent(file).path
-        } else {
-            file
-        }
-        return try String(contentsOfFile: fullPath, encoding: .utf8)
+        let repoPath = path ?? FileManager.default.currentDirectoryPath
+        let fileURL = try workingDirectoryFileURL(file: file, repoPath: repoPath)
+        return try String(contentsOf: fileURL, encoding: .utf8)
     }
 
     /// 获取所有变动文件及其 diff 内容（结构体版）
@@ -223,10 +220,10 @@ extension ShellGit {
         }
 
         // 获取工作区中的文件内容（修改后）
-        let fullPath = repoPath.hasSuffix("/") ? repoPath + file : repoPath + "/" + file
         let after: String?
         do {
-            after = try String(contentsOfFile: fullPath, encoding: .utf8)
+            let fileURL = try workingDirectoryFileURL(file: file, repoPath: repoPath)
+            after = try String(contentsOf: fileURL, encoding: .utf8)
         } catch {
             // 文件在工作区中不存在，可能是删除的文件
             after = nil
@@ -277,6 +274,31 @@ extension ShellGit {
 
     static func showNameOnlyCommand(_ commit: String) -> String {
         "git show --name-only --format= \(shellQuoted(commit))"
+    }
+
+    static func workingDirectoryFileURL(file: String, repoPath: String) throws -> URL {
+        guard !file.isEmpty, !file.hasPrefix("/") else {
+            throw NSError(
+                domain: "ShellGitDiff",
+                code: 1,
+                userInfo: [NSLocalizedDescriptionKey: "File path must be relative to repository working directory"]
+            )
+        }
+
+        let baseURL = URL(fileURLWithPath: repoPath, isDirectory: true).standardizedFileURL
+        let fileURL = baseURL.appendingPathComponent(file).standardizedFileURL
+        let basePath = baseURL.path
+        let filePath = fileURL.path
+
+        guard filePath == basePath || filePath.hasPrefix(basePath + "/") else {
+            throw NSError(
+                domain: "ShellGitDiff",
+                code: 1,
+                userInfo: [NSLocalizedDescriptionKey: "File path escapes repository working directory"]
+            )
+        }
+
+        return fileURL
     }
 
     static func parseNameStatusLine(_ line: String) -> (changeType: String, file: String)? {

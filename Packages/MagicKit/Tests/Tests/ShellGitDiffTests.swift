@@ -82,4 +82,25 @@ import Testing
     #expect(ShellGit.showCommitFileDiffCommand(commit: commit, file: file) == "git show \(quotedCommit) -- \(quotedFile)")
     #expect(ShellGit.showNameOnlyCommand(commit) == "git show --name-only --format= \(quotedCommit)")
 }
+
+@Test func shellGitWorkingDirectoryReadsStayInsideRepository() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let repo = root.appendingPathComponent("repo", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: repo, withIntermediateDirectories: true)
+    try "inside\n".write(to: repo.appendingPathComponent("inside.txt"), atomically: true, encoding: .utf8)
+    try "outside\n".write(to: root.appendingPathComponent("outside.txt"), atomically: true, encoding: .utf8)
+
+    #expect(try ShellGit.fileContentInWorkingDirectory(file: "inside.txt", at: repo.path) == "inside\n")
+    #expect(throws: (any Error).self) {
+        _ = try ShellGit.fileContentInWorkingDirectory(file: "../outside.txt", at: repo.path)
+    }
+    #expect(throws: (any Error).self) {
+        _ = try ShellGit.workingDirectoryFileURL(file: "/tmp/outside.txt", repoPath: repo.path)
+    }
+}
 #endif
