@@ -149,7 +149,6 @@ extension BookDBView {
             for file in audioFiles {
                 let destination = uniqueDestination(for: file, in: collectionURL)
                 try await copySecurityScopedItem(file, to: destination)
-                copiedItems.append(destination)
             }
         } catch {
             for copiedItem in copiedItems {

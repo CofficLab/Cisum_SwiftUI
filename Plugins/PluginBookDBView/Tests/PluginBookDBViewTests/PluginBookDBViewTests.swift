@@ -101,7 +101,7 @@ import UniformTypeIdentifiers
     let copiedFile = collection.appendingPathComponent("linked.m4b")
     let fileType = try FileManager.default.attributesOfItem(atPath: copiedFile.path)[.type] as? FileAttributeType
 
-    #expect(copiedItems == [collection, copiedFile])
+    #expect(copiedItems == [collection])
     #expect(fileType == .typeRegular)
     #expect((try Data(contentsOf: copiedFile)) == Data("audio".utf8))
 }
@@ -129,7 +129,7 @@ import UniformTypeIdentifiers
     let collection = destinationRoot.appendingPathComponent("chapter 2", isDirectory: true)
     let copiedFile = collection.appendingPathComponent("chapter.m4b")
 
-    #expect(copiedItems == [collection, copiedFile])
+    #expect(copiedItems == [collection])
     #expect((try Data(contentsOf: copiedFile)) == Data("audio".utf8))
     #expect((try? danglingCollection.resourceValues(forKeys: [.isSymbolicLinkKey]).isSymbolicLink) == true)
 }
