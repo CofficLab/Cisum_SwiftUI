@@ -129,6 +129,28 @@ import SwiftData
     #expect(next == nextAudio)
 }
 
+@Test func audioDBBatchDeleteSkipsTracksDeletedLaterInSameBatch() async throws {
+    let schema = Schema([AudioModel.self])
+    let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    let container = try ModelContainer(for: schema, configurations: [configuration])
+    let db = AudioDB(container, reason: "audioDBBatchDeleteSkipsTracksDeletedLaterInSameBatch")
+
+    let root = URL(fileURLWithPath: "/tmp/cisum-audio-batch-delete", isDirectory: true)
+    let first = root.appendingPathComponent("first.mp3")
+    let second = root.appendingPathComponent("second.mp3")
+    let third = root.appendingPathComponent("third.mp3")
+    let fourth = root.appendingPathComponent("fourth.mp3")
+
+    let next = try await db.deleteNextURLAfterBatchDeleting(
+        first: first,
+        second: second,
+        third: third,
+        fourth: fourth
+    )
+
+    #expect(next == fourth)
+}
+
 @Test func audioDBLastAudioReturnsHighestOrderedTrack() async throws {
     let schema = Schema([AudioModel.self])
     let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
@@ -526,5 +548,21 @@ extension AudioDB {
         insertAudio(url: nextAudio, order: 30, force: true)
 
         return try deleteAudios(ids: [audio.id], verbose: false)?.url
+    }
+
+    func deleteNextURLAfterBatchDeleting(
+        first: URL,
+        second: URL,
+        third: URL,
+        fourth: URL
+    ) throws -> URL? {
+        insertAudio(url: first, order: 10, force: true)
+        let secondAudio = AudioModel(second, order: 20)
+        let thirdAudio = AudioModel(third, order: 30)
+        insertAudio(secondAudio, force: true)
+        insertAudio(thirdAudio, force: true)
+        insertAudio(url: fourth, order: 40, force: true)
+
+        return try deleteAudios(ids: [thirdAudio.id, secondAudio.id], verbose: false)?.url
     }
 }

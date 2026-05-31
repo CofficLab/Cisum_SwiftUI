@@ -530,6 +530,28 @@ import SwiftData
     #expect(try await db.deleteReturnsNilWhenOnlyNextIsSymlinkedDuplicate(realBook: realBook, linkedBook: linkedBook))
 }
 
+@Test func bookDBBatchDeleteSkipsBooksDeletedLaterInSameBatch() async throws {
+    let schema = Schema([BookModel.self, BookState.self])
+    let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    let container = try ModelContainer(for: schema, configurations: [configuration])
+    let db = BookDB(container, reason: "bookDBBatchDeleteSkipsBooksDeletedLaterInSameBatch")
+
+    let root = URL(fileURLWithPath: "/tmp/cisum-book-batch-delete", isDirectory: true)
+    let first = root.appendingPathComponent("first.m4b")
+    let second = root.appendingPathComponent("second.m4b")
+    let third = root.appendingPathComponent("third.m4b")
+    let fourth = root.appendingPathComponent("fourth.m4b")
+
+    let next = try await db.deleteNextURLAfterBatchDeleting(
+        first: first,
+        second: second,
+        third: third,
+        fourth: fourth
+    )
+
+    #expect(next == fourth)
+}
+
 @Test func bookDBFindOrCreateReturnsInsertedBook() async throws {
     let schema = Schema([BookModel.self, BookState.self])
     let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
@@ -589,5 +611,21 @@ extension BookDB {
         try insertModel(BookModel(url: linkedBook, order: 20))
 
         return delete(ids: [book.id], verbose: false) == nil
+    }
+
+    func deleteNextURLAfterBatchDeleting(
+        first: URL,
+        second: URL,
+        third: URL,
+        fourth: URL
+    ) throws -> URL? {
+        try insertModel(BookModel(url: first, order: 10))
+        let secondBook = BookModel(url: second, order: 20)
+        let thirdBook = BookModel(url: third, order: 30)
+        try insertModel(secondBook)
+        try insertModel(thirdBook)
+        try insertModel(BookModel(url: fourth, order: 40))
+
+        return delete(ids: [thirdBook.id, secondBook.id], verbose: false)?.url
     }
 }

@@ -191,7 +191,7 @@ extension BookDB {
         return nil
     }
 
-    static func nextOf(context: ModelContext, book: BookModel) -> BookModel? {
+    static func nextOf(context: ModelContext, book: BookModel, excluding excludedURLs: [URL] = []) -> BookModel? {
         os_log("🍋 DB::nextOf [\(book.order)] \(book.bookTitle)")
         let order = book.order
         let url = book.url
@@ -203,8 +203,19 @@ extension BookDB {
 
         do {
             let result = try context.fetch(descriptor)
-            let next = result.first { !BookPathContainment.representsSameFile($0.url, url) }
-                ?? Self.first(context: context)
+            if let next = result.first(where: { candidate in
+                !BookPathContainment.representsSameFile(candidate.url, url)
+                    && !excludedURLs.contains { BookPathContainment.representsSameFile($0, candidate.url) }
+            }) {
+                return next
+            }
+
+            let allBooks = try context.fetch(BookModel.descriptorAll)
+                .sorted { $0.order < $1.order }
+            let next = allBooks.first { candidate in
+                !BookPathContainment.representsSameFile(candidate.url, url)
+                    && !excludedURLs.contains { BookPathContainment.representsSameFile($0, candidate.url) }
+            }
             // os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title) -> [\(next?.order ?? -1)] \(next?.title ?? "-")")
             return next
         } catch let e {
@@ -217,6 +228,10 @@ extension BookDB {
     func delete(ids: [BookModel.ID], verbose: Bool) -> BookModel? {
         if verbose {
             os_log("\(self.t)删除")
+        }
+
+        let urlsBeingDeleted = ids.compactMap { id in
+            (context.model(for: id) as? BookModel)?.url
         }
 
         // 本批次的最后一个删除后的下一个
@@ -232,7 +247,7 @@ extension BookDB {
 
             // 找出本批次的最后一个删除后的下一个
             if index == ids.count - 1 {
-                next = Self.nextOf(context: context, book: book)
+                next = Self.nextOf(context: context, book: book, excluding: urlsBeingDeleted)
 
                 // 如果下一个等于当前，设为空
                 if next?.url == url {

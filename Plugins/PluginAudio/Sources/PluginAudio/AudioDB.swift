@@ -1083,6 +1083,10 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
             os_log("\(self.t)🗑️ 数据库删除")
         }
 
+        let urlsBeingDeleted = ids.compactMap { id in
+            (context.model(for: id) as? AudioModel)?.url
+        }
+
         // 本批次的最后一个删除后的下一个
         var next: AudioModel?
         var deletedUrls: [URL] = []
@@ -1098,7 +1102,7 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
 
             // 找出本批次的最后一个删除后的下一个
             if index == ids.count - 1 {
-                next = try nextOf(audio: audio)
+                next = try nextOf(audio: audio, excluding: urlsBeingDeleted)
 
                 // 如果下一个等于当前，设为空
                 if let nextURL = next?.url, Self.representsSameAudioFile(nextURL, url) {
@@ -1270,6 +1274,10 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     /// - Returns: 下一个音频模型，如果未找到则返回 nil
     /// - Throws: 如果查询操作失败则抛出错误
     func nextOf(audio: AudioModel) throws -> AudioModel? {
+        try nextOf(audio: audio, excluding: [])
+    }
+
+    private func nextOf(audio: AudioModel, excluding excludedURLs: [URL]) throws -> AudioModel? {
         let order = audio.order
         let url = audio.url
         var descriptor = FetchDescriptor<AudioModel>()
@@ -1279,6 +1287,9 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
         }
 
         let result = try context.fetch(descriptor)
-        return result.first { !Self.representsSameAudioFile($0.url, url) }
+        return result.first { candidate in
+            !Self.representsSameAudioFile(candidate.url, url)
+                && !excludedURLs.contains { Self.representsSameAudioFile($0, candidate.url) }
+        }
     }
 }
