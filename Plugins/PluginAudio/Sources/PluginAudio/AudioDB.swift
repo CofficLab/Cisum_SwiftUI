@@ -345,17 +345,28 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
             os_log("\(self.t)Download Next Batch(\(reason))")
         }
 
-        var currentIndex = 0
-        var currentAudio: AudioModel = audio
-
-        while currentIndex < count {
+        for currentAudio in Self.nextBatchDownloadPlan(start: audio, count: count, next: { self.nextOf($0) }) {
             try await currentAudio.url.download(verbose: false, reason: "downloadNextBatch")
-
-            currentIndex = currentIndex + 1
-            if let next = self.nextOf(currentAudio) {
-                currentAudio = next
-            }
         }
+    }
+
+    static func nextBatchDownloadPlan<T>(start: T, count: Int, next: (T) -> T?) -> [T] {
+        guard count > 0 else { return [] }
+
+        var plan: [T] = []
+        plan.reserveCapacity(count)
+
+        var current = start
+        while plan.count < count {
+            plan.append(current)
+
+            guard let nextItem = next(current) else {
+                break
+            }
+            current = nextItem
+        }
+
+        return plan
     }
 
     /// 批量下载指定 URL 之后的多个音频

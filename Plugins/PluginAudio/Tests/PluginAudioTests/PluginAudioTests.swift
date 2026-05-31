@@ -610,6 +610,24 @@ func audioRepoSingleDeleteRejectsFilesOutsideLibrary() async throws {
     #expect(AudioDB.needsStableOrderRepair([0, 0]))
 }
 
+@Test func audioDBNextBatchDownloadPlanStopsAtEndOfQueue() {
+    let nextByTrack = [
+        "first": "second",
+        "second": "third",
+    ]
+
+    #expect(AudioDB.nextBatchDownloadPlan(start: "first", count: 6) { nextByTrack[$0] } == [
+        "first",
+        "second",
+        "third",
+    ])
+    #expect(AudioDB.nextBatchDownloadPlan(start: "first", count: 2) { nextByTrack[$0] } == [
+        "first",
+        "second",
+    ])
+    #expect(AudioDB.nextBatchDownloadPlan(start: "first", count: 0) { nextByTrack[$0] }.isEmpty)
+}
+
 extension AudioDB {
     func deleteNextURLAfterSymlinkedDuplicate(realAudio: URL, linkedAudio: URL, nextAudio: URL) throws -> URL? {
         let audio = AudioModel(realAudio)
