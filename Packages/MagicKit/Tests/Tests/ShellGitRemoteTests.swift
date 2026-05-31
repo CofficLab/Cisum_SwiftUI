@@ -2,6 +2,33 @@ import Testing
 @testable import MagicKit
 
 #if os(macOS)
+@Test func shellGitRemoteCommandsPreserveLiteralInputs() {
+    let remote = "origin-$HOME-`uname`"
+    let branch = "feature/$HOME-`uname`"
+    let url = #"https://example.com/literal $HOME `uname` "quote" and 'single quote'.git"#
+
+    #expect(
+        ShellGit.pushCommand(remote: remote, branch: branch)
+        == "git push \(ShellGit.shellQuoted(remote)) \(ShellGit.shellQuoted(branch))"
+    )
+    #expect(
+        ShellGit.pullCommand(remote: remote, branch: branch)
+        == "git pull \(ShellGit.shellQuoted(remote)) \(ShellGit.shellQuoted(branch))"
+    )
+    #expect(
+        ShellGit.addRemoteCommand(remote, url: url)
+        == "git remote add \(ShellGit.shellQuoted(remote)) \(ShellGit.shellQuoted(url))"
+    )
+    #expect(
+        ShellGit.removeRemoteCommand(remote)
+        == "git remote remove \(ShellGit.shellQuoted(remote))"
+    )
+    #expect(
+        ShellGit.setRemoteURLCommand(remote, url: url)
+        == "git remote set-url \(ShellGit.shellQuoted(remote)) \(ShellGit.shellQuoted(url))"
+    )
+}
+
 @Test func shellGitRemoteParserIgnoresMalformedVerboseRows() {
     let remotes = ShellGit.parseRemoteListOutput("""
     origin\thttps://github.com/example/app.git (fetch)

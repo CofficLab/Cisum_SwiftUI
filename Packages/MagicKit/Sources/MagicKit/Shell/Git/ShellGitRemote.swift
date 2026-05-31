@@ -11,12 +11,15 @@ extension ShellGit {
     /// - Returns: 执行结果
     @discardableResult
     public static func push(remote: String = "origin", branch: String? = nil, at path: String? = nil) throws -> String {
-        let command = if let branch {
-            "git push \(remote) \(branch)"
+        return try Shell.runSync(pushCommand(remote: remote, branch: branch), at: path)
+    }
+
+    static func pushCommand(remote: String = "origin", branch: String? = nil) -> String {
+        if let branch {
+            "git push \(shellQuoted(remote)) \(shellQuoted(branch))"
         } else {
-            "git push \(remote)"
+            "git push \(shellQuoted(remote))"
         }
-        return try Shell.runSync(command, at: path)
     }
     
     /// 从远程仓库拉取
@@ -27,12 +30,15 @@ extension ShellGit {
     /// - Returns: 执行结果
     @discardableResult
     public static func pull(remote: String = "origin", branch: String? = nil, at path: String? = nil) throws -> String {
-        let command = if let branch {
-            "git pull \(remote) \(branch)"
+        return try Shell.runSync(pullCommand(remote: remote, branch: branch), at: path)
+    }
+
+    static func pullCommand(remote: String = "origin", branch: String? = nil) -> String {
+        if let branch {
+            "git pull \(shellQuoted(remote)) \(shellQuoted(branch))"
         } else {
-            "git pull \(remote)"
+            "git pull \(shellQuoted(remote))"
         }
-        return try Shell.runSync(command, at: path)
     }
     
     /// 添加远程仓库
@@ -42,7 +48,11 @@ extension ShellGit {
     ///   - path: 仓库路径
     /// - Returns: 执行结果
     public static func addRemote(_ name: String, url: String, at path: String? = nil) throws -> String {
-        return try Shell.runSync("git remote add \(name) \(url)", at: path)
+        return try Shell.runSync(addRemoteCommand(name, url: url), at: path)
+    }
+
+    static func addRemoteCommand(_ name: String, url: String) -> String {
+        "git remote add \(shellQuoted(name)) \(shellQuoted(url))"
     }
     
     /// 获取远程仓库列表
@@ -86,7 +96,11 @@ extension ShellGit {
     ///   - path: 仓库路径
     /// - Returns: 执行结果
     public static func removeRemote(_ name: String, at path: String? = nil) throws -> String {
-        return try Shell.runSync("git remote remove \(name)", at: path)
+        return try Shell.runSync(removeRemoteCommand(name), at: path)
+    }
+
+    static func removeRemoteCommand(_ name: String) -> String {
+        "git remote remove \(shellQuoted(name))"
     }
 
     /// 修改远程仓库URL
@@ -96,7 +110,11 @@ extension ShellGit {
     ///   - path: 仓库路径
     /// - Returns: 执行结果
     public static func setRemoteURL(_ name: String, url: String, at path: String? = nil) throws -> String {
-        return try Shell.runSync("git remote set-url \(name) \(url)", at: path)
+        return try Shell.runSync(setRemoteURLCommand(name, url: url), at: path)
+    }
+
+    static func setRemoteURLCommand(_ name: String, url: String) -> String {
+        "git remote set-url \(shellQuoted(name)) \(shellQuoted(url))"
     }
 
     /// 获取远程结构体列表
