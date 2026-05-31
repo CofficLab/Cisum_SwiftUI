@@ -1,5 +1,11 @@
 import Foundation
 
+private struct SuperEventNotificationPayload: @unchecked Sendable {
+    let name: Notification.Name
+    let object: Any?
+    let userInfo: [AnyHashable: Any]?
+}
+
 /// 提供简化的通知中心事件发送功能的协议
 ///
 /// `SuperEvent` 协议为通知中心（NotificationCenter）提供了便捷的访问方式和事件发送功能。
@@ -41,7 +47,14 @@ public extension SuperEvent {
     ///   - userInfo: 随通知一起发送的用户信息字典（可选）
     nonisolated func emit(_ name: Notification.Name, object: Any? = nil, userInfo: [AnyHashable: Any]? = nil) {
         let nc = self.nc
-        nc.post(name: name, object: object, userInfo: userInfo)
+        if Thread.isMainThread {
+            nc.post(name: name, object: object, userInfo: userInfo)
+        } else {
+            let payload = SuperEventNotificationPayload(name: name, object: object, userInfo: userInfo)
+            DispatchQueue.main.async {
+                nc.post(name: payload.name, object: payload.object, userInfo: payload.userInfo)
+            }
+        }
     }
 
     /// 在主线程异步发送通知（命名参数版本）
