@@ -173,6 +173,68 @@ import Foundation
     #expect(!FileManager.default.fileExists(atPath: target.path))
 }
 
+@Test func migrationTreatsSymlinkedTargetRootAsSameSource() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let source = root.appendingPathComponent("source", isDirectory: true)
+    let target = root.appendingPathComponent("source-link", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: source, withIntermediateDirectories: true)
+    let sourceFile = source.appendingPathComponent("track.mp3")
+    try Data("audio".utf8).write(to: sourceFile)
+    try FileManager.default.createSymbolicLink(at: target, withDestinationURL: source)
+
+    var reportedProgress: Double?
+    let manager = MigrationManager()
+    try manager.migrate(
+        from: source,
+        to: target,
+        progressCallback: { progress, _ in
+            reportedProgress = progress
+        },
+        downloadProgressCallback: nil,
+        verbose: false
+    )
+
+    #expect(reportedProgress == 1.0)
+    #expect(FileManager.default.fileExists(atPath: sourceFile.path))
+    #expect(!FileManager.default.fileExists(atPath: source.appendingPathComponent("track 2.mp3").path))
+}
+
+@Test func migrationRejectsTargetInsideSourceThroughSymlink() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let source = root.appendingPathComponent("source", isDirectory: true)
+    let sourceLink = root.appendingPathComponent("source-link", isDirectory: true)
+    let target = sourceLink.appendingPathComponent("target", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: source, withIntermediateDirectories: true)
+    try Data("audio".utf8).write(to: source.appendingPathComponent("track.mp3"))
+    try FileManager.default.createSymbolicLink(at: sourceLink, withDestinationURL: source)
+
+    #expect(MigrationManager.isTargetNestedInSource(sourceRoot: source, targetRoot: target))
+
+    let manager = MigrationManager()
+    #expect(throws: MigrationError.self) {
+        try manager.migrate(
+            from: source,
+            to: target,
+            progressCallback: nil,
+            downloadProgressCallback: nil,
+            verbose: false
+        )
+    }
+
+    #expect(FileManager.default.fileExists(atPath: source.appendingPathComponent("track.mp3").path))
+    #expect(!FileManager.default.fileExists(atPath: target.path))
+}
+
 @Test func migrationReportsLocalAvailabilityBeforeMovingFiles() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)

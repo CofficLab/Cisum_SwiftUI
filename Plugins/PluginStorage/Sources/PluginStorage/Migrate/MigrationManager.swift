@@ -40,7 +40,7 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread, @unchecked Send
         os_log(.info, "\(self.t)开始迁移任务")
 
         do {
-            if sourceRoot.standardizedFileURL == targetRoot.standardizedFileURL {
+            if Self.resolvedStandardizedPath(for: sourceRoot) == Self.resolvedStandardizedPath(for: targetRoot) {
                 progressCallback?(1.0, "")
                 os_log(.info, "\(self.t)源目录与目标目录相同，跳过迁移")
                 return
@@ -128,10 +128,29 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread, @unchecked Send
     }
 
     static func isTargetNestedInSource(sourceRoot: URL, targetRoot: URL) -> Bool {
-        let sourcePath = sourceRoot.standardizedFileURL.path
-        let targetPath = targetRoot.standardizedFileURL.path
+        let sourcePath = resolvedStandardizedPath(for: sourceRoot)
+        let targetPath = resolvedStandardizedPath(for: targetRoot)
 
         return targetPath != sourcePath && targetPath.hasPrefix(sourcePath + "/")
+    }
+
+    private static func resolvedStandardizedPath(for url: URL) -> String {
+        let fileManager = FileManager.default
+        var existingAncestor = url
+        var missingComponents: [String] = []
+
+        while !fileManager.fileExists(atPath: existingAncestor.path),
+              existingAncestor.path != existingAncestor.deletingLastPathComponent().path {
+            missingComponents.insert(existingAncestor.lastPathComponent, at: 0)
+            existingAncestor.deleteLastPathComponent()
+        }
+
+        var resolvedURL = existingAncestor.resolvingSymlinksInPath().standardizedFileURL
+        for component in missingComponents {
+            resolvedURL.appendPathComponent(component)
+        }
+
+        return resolvedURL.standardizedFileURL.path
     }
 
     private func prepareForMigration(
