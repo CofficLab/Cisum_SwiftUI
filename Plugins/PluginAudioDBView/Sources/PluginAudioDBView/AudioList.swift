@@ -34,6 +34,21 @@ enum AudioListSelectionPolicy {
     static func shouldApplySelection(currentGeneration: Int, requestGeneration: Int, requestedURL: URL?, selection: URL?) -> Bool {
         currentGeneration == requestGeneration && requestedURL == selection
     }
+
+    static func representsSameAudio(_ lhs: URL?, _ rhs: URL?) -> Bool {
+        switch (lhs, rhs) {
+        case (.none, .none):
+            return true
+        case let (.some(lhs), .some(rhs)):
+            return resolvedStandardizedPath(for: lhs) == resolvedStandardizedPath(for: rhs)
+        default:
+            return false
+        }
+    }
+
+    private static func resolvedStandardizedPath(for url: URL) -> String {
+        url.resolvingSymlinksInPath().standardizedFileURL.path
+    }
 }
 
 /*
@@ -455,7 +470,7 @@ extension AudioList {
     /// 处理选中项变化事件
     func handleSelectionChange() {
         if let url = selection, isLoading == false {
-            guard url != playManController.currentURL else { return }
+            guard !AudioListSelectionPolicy.representsSameAudio(url, playManController.currentURL) else { return }
 
             selectionGeneration += 1
             let generation = selectionGeneration
@@ -484,7 +499,7 @@ extension AudioList {
     /// 处理播放资源变化事件
     func handleAssetChanged(url: URL?) {
         if let asset = url {
-            if asset != selection {
+            if !AudioListSelectionPolicy.representsSameAudio(asset, selection) {
                 self.setSelection(asset, reason: self.className + ".handleAssetChanged")
             }
         } else {
