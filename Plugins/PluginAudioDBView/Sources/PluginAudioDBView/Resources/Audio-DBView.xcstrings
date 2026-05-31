@@ -115,6 +115,38 @@
         }
       }
     },
+    "Delete failed: audio repository is unavailable" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除失败：音频仓库不可用"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "刪除失敗：音頻倉庫不可用"
+          }
+        }
+      }
+    },
+    "Delete failed: the audio list changed. Please try again." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除失败：音频列表已变化，请重试。"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "刪除失敗：音頻列表已變更，請重試。"
+          }
+        }
+      }
+    },
     "Deleted %@" : {
       "localizations" : {
         "zh-Hans" : {
@@ -223,6 +255,54 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "匯入失敗：%@"
+          }
+        }
+      }
+    },
+    "Import failed: audio repository is unavailable" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "导入失败：音频仓库不可用"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "匯入失敗：音頻倉庫不可用"
+          }
+        }
+      }
+    },
+    "Import is already in progress" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在导入，请稍候"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在匯入，請稍候"
+          }
+        }
+      }
+    },
+    "Load failed: audio repository is unavailable" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "加载失败：音频仓库不可用"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "載入失敗：音頻倉庫不可用"
           }
         }
       }
@@ -351,6 +431,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在讀取倉庫"
+          }
+        }
+      }
+    },
+    "Refresh failed: audio repository is unavailable" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "刷新失败：音频仓库不可用"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重新整理失敗：音頻倉庫不可用"
           }
         }
       }
@@ -497,6 +593,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在排序"
+          }
+        }
+      }
+    },
+    "Some files were skipped because they are not supported audio files" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "部分文件已跳过，因为它们不是受支持的音频文件"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "部分檔案已略過，因為它們不是受支援的音頻檔案"
           }
         }
       }
