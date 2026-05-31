@@ -375,7 +375,7 @@ extension BookDBView {
         )
         var suffix = 2
 
-        while FileManager.default.fileExists(atPath: candidate.path) {
+        while pathExistsIncludingSymlink(candidate) {
             candidate = destination(
                 named: "\(baseName) \(suffix)",
                 pathExtension: pathExtension,
@@ -386,6 +386,14 @@ extension BookDBView {
         }
 
         return candidate
+    }
+
+    private nonisolated static func pathExistsIncludingSymlink(_ url: URL) -> Bool {
+        if FileManager.default.fileExists(atPath: url.path) {
+            return true
+        }
+
+        return (try? url.resourceValues(forKeys: [.isSymbolicLinkKey]).isSymbolicLink) == true
     }
 
     private nonisolated static func destination(
