@@ -52,6 +52,28 @@ import Testing
     ])
 }
 
+@Test func copyWorkerAvoidsDanglingSymlinkDestinationNames() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(
+        at: root.appendingPathComponent("track.mp3"),
+        withDestinationURL: root.appendingPathComponent("missing.mp3")
+    )
+
+    let tasks = [
+        CopyTaskDTO(bookmark: Data([0]), destination: root, originalFilename: "track.mp3"),
+    ]
+
+    let destinations = CopyWorker.makeUniqueDestinationURLs(for: tasks)
+
+    #expect(destinations.map(\.lastPathComponent) == ["track 2.mp3"])
+}
+
 @Test func copyWorkerCopiesResolvedSymlinkTarget() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)

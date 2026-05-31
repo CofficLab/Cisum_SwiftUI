@@ -185,7 +185,7 @@
 
         nonisolated static func makeUniqueDestinationURLs(
             for tasks: [CopyTaskDTO],
-            fileExists: (URL) -> Bool = { FileManager.default.fileExists(atPath: $0.path) }
+            fileExists: (URL) -> Bool = CopyWorker.pathExistsIncludingSymlink
         ) -> [URL] {
             var reservedPaths = Set<String>()
 
@@ -224,6 +224,14 @@
 
             reservedPaths.insert(candidate.path)
             return candidate
+        }
+
+        nonisolated private static func pathExistsIncludingSymlink(_ url: URL) -> Bool {
+            if FileManager.default.fileExists(atPath: url.path) {
+                return true
+            }
+
+            return (try? url.resourceValues(forKeys: [.isSymbolicLinkKey]).isSymbolicLink) == true
         }
 
         nonisolated static func copySourceURL(for source: URL) -> URL {
