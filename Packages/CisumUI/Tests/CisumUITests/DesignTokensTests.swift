@@ -77,6 +77,22 @@ struct DesignTokensTests {
         #expect(scale == scale.sorted())
     }
 
+    @Test
+    func progressBarPolicyClampsInvalidTimeAndDuration() {
+        #expect(MagicProgressBarPolicy.normalizedTime(.nan, duration: 100) == 0)
+        #expect(MagicProgressBarPolicy.normalizedTime(-10, duration: 100) == 0)
+        #expect(MagicProgressBarPolicy.normalizedTime(40, duration: 100) == 40)
+        #expect(MagicProgressBarPolicy.normalizedTime(140, duration: 100) == 100)
+        #expect(MagicProgressBarPolicy.normalizedTime(40, duration: .nan) == 0)
+        #expect(MagicProgressBarPolicy.normalizedTime(40, duration: 0) == 0)
+
+        #expect(MagicProgressBarPolicy.normalizedProgress(currentTime: 50, duration: 100) == 0.5)
+        #expect(MagicProgressBarPolicy.normalizedProgress(currentTime: 140, duration: 100) == 1)
+        #expect(MagicProgressBarPolicy.normalizedProgress(currentTime: .infinity, duration: 100) == 0)
+        #expect(MagicProgressBarPolicy.normalizedProgress(currentTime: 50, duration: .infinity) == 0)
+        #expect(MagicProgressBarPolicy.sliderUpperBound(forDuration: .nan) == 1)
+    }
+
     // MARK: - Shadow
 
     @Test

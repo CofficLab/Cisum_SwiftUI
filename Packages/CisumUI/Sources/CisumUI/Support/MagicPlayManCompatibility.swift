@@ -221,13 +221,44 @@ public struct MagicProgressBar: View {
     public var body: some View {
         Slider(
             value: Binding(
-                get: { currentTime },
+                get: { MagicProgressBarPolicy.normalizedTime(currentTime, duration: duration) },
                 set: { value in
-                    currentTime = value
-                    onSeek(value)
+                    let normalizedValue = MagicProgressBarPolicy.normalizedTime(value, duration: duration)
+                    currentTime = normalizedValue
+                    onSeek(normalizedValue)
                 }
             ),
-            in: 0...max(duration, 1)
+            in: 0...MagicProgressBarPolicy.sliderUpperBound(forDuration: duration)
         )
+    }
+}
+
+enum MagicProgressBarPolicy {
+    static func normalizedDuration(_ duration: TimeInterval) -> TimeInterval {
+        guard duration.isFinite, duration > 0 else { return 0 }
+        return duration
+    }
+
+    static func normalizedTime(_ time: TimeInterval, duration: TimeInterval) -> TimeInterval {
+        guard time.isFinite else { return 0 }
+
+        let lowerBoundedTime = max(time, 0)
+        let duration = normalizedDuration(duration)
+
+        guard duration > 0 else {
+            return 0
+        }
+
+        return min(lowerBoundedTime, duration)
+    }
+
+    static func normalizedProgress(currentTime: TimeInterval, duration: TimeInterval) -> Double {
+        let duration = normalizedDuration(duration)
+        guard duration > 0 else { return 0 }
+        return normalizedTime(currentTime, duration: duration) / duration
+    }
+
+    static func sliderUpperBound(forDuration duration: TimeInterval) -> TimeInterval {
+        max(normalizedDuration(duration), 1)
     }
 }

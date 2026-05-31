@@ -107,7 +107,33 @@ public struct MagicProgressBar: View {
 
     private var progress: CGFloat {
         let time = isDragging ? dragTime : currentTime
-        return duration > 0 ? CGFloat(time / duration) : 0
+        return CGFloat(MagicProgressBarRenderPolicy.normalizedProgress(currentTime: time, duration: duration))
+    }
+}
+
+private enum MagicProgressBarRenderPolicy {
+    static func normalizedDuration(_ duration: TimeInterval) -> TimeInterval {
+        guard duration.isFinite, duration > 0 else { return 0 }
+        return duration
+    }
+
+    static func normalizedTime(_ time: TimeInterval, duration: TimeInterval) -> TimeInterval {
+        guard time.isFinite else { return 0 }
+
+        let lowerBoundedTime = max(time, 0)
+        let duration = normalizedDuration(duration)
+
+        guard duration > 0 else {
+            return 0
+        }
+
+        return min(lowerBoundedTime, duration)
+    }
+
+    static func normalizedProgress(currentTime: TimeInterval, duration: TimeInterval) -> Double {
+        let duration = normalizedDuration(duration)
+        guard duration > 0 else { return 0 }
+        return normalizedTime(currentTime, duration: duration) / duration
     }
 }
 
