@@ -12,6 +12,8 @@ import Testing
     #expect(BookSettingRepo.storedURL(from: "") == nil)
     #expect(BookSettingRepo.storedURL(from: nil) == nil)
     #expect(BookSettingRepo.storedURL(from: "file:///tmp/book/chapter.m4b") == URL(fileURLWithPath: "/tmp/book/chapter.m4b"))
+    #expect(BookSettingRepo.storedURL(from: "/tmp/book/legacy-chapter.m4b") == URL(fileURLWithPath: "/tmp/book/legacy-chapter.m4b"))
+    #expect(BookSettingRepo.storedURL(from: "not a url") == nil)
 }
 
 @Test func deletedBookFolderContainsNestedRecords() {

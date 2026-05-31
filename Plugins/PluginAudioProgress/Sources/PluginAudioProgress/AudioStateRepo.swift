@@ -48,7 +48,12 @@ public class AudioStateRepo: SuperLog {
 
     static func storedURL(from string: String?) -> URL? {
         guard let string, !string.isEmpty else { return nil }
-        return URL(string: string)
+        if let url = URL(string: string), url.scheme != nil {
+            return url
+        }
+
+        guard string.hasPrefix("/") else { return nil }
+        return URL(fileURLWithPath: string)
     }
 
     /// 存储当前播放时间

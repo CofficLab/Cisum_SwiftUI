@@ -39,6 +39,8 @@ import Testing
     #expect(AudioStateRepo.storedURL(from: "") == nil)
     #expect(AudioStateRepo.storedURL(from: nil) == nil)
     #expect(AudioStateRepo.storedURL(from: "file:///tmp/audio/track.mp3") == URL(fileURLWithPath: "/tmp/audio/track.mp3"))
+    #expect(AudioStateRepo.storedURL(from: "/tmp/audio/legacy-track.mp3") == URL(fileURLWithPath: "/tmp/audio/legacy-track.mp3"))
+    #expect(AudioStateRepo.storedURL(from: "not a url") == nil)
 }
 
 @Test func differentCurrentAudioURLResetsGlobalRestoreTime() {
