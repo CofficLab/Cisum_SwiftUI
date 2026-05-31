@@ -10,7 +10,7 @@ enum BookPathContainment {
             return url.standardized.absoluteString
         }
 
-        if isDanglingSymlink(url) {
+        if !FileManager.default.fileExists(atPath: url.path) {
             return url.standardizedFileURL.path
         }
 
@@ -34,14 +34,6 @@ enum BookPathContainment {
 
     private static func resolvedStandardizedPath(for url: URL) -> String {
         url.resolvingSymlinksInPath().standardizedFileURL.path
-    }
-
-    private static func isDanglingSymlink(_ url: URL) -> Bool {
-        guard (try? url.resourceValues(forKeys: [.isSymbolicLinkKey]).isSymbolicLink) == true else {
-            return false
-        }
-
-        return !FileManager.default.fileExists(atPath: url.path)
     }
 
     private static func containsPath(parent: String, child: String) -> Bool {

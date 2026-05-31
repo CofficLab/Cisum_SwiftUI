@@ -122,6 +122,27 @@ import SwiftData
     #expect(BookDB.uniqueSupportedBookLibraryItems([firstLink, secondLink]) == [firstLink, secondLink])
 }
 
+@Test func bookPathContainmentKeepsDistinctChaptersUnderDanglingSymlinkBooks() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let missingBook = root.appendingPathComponent("MissingBook", isDirectory: true)
+    let firstLink = root.appendingPathComponent("FirstBook", isDirectory: true)
+    let secondLink = root.appendingPathComponent("SecondBook", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: firstLink, withDestinationURL: missingBook)
+    try FileManager.default.createSymbolicLink(at: secondLink, withDestinationURL: missingBook)
+
+    let firstChapter = firstLink.appendingPathComponent("Chapter 01.m4b")
+    let secondChapter = secondLink.appendingPathComponent("Chapter 01.m4b")
+
+    #expect(BookPathContainment.canonicalIdentity(for: firstChapter) != BookPathContainment.canonicalIdentity(for: secondChapter))
+    #expect(!BookPathContainment.representsSameFile(firstChapter, secondChapter))
+}
+
 @Test func bookModelTreatsSymlinkedBookFolderAsCollection() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)
@@ -268,6 +289,26 @@ private func canonicalPath(_ url: URL) -> String {
 
     #expect(BookDB.contains(book, state: state))
     #expect(!BookDB.contains(book, state: siblingState))
+}
+
+@Test func bookStateDoesNotMatchDistinctDanglingSymlinkedCurrentChapter() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let missingBook = root.appendingPathComponent("MissingBook", isDirectory: true)
+    let firstLink = root.appendingPathComponent("FirstBook", isDirectory: true)
+    let secondLink = root.appendingPathComponent("SecondBook", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: firstLink, withDestinationURL: missingBook)
+    try FileManager.default.createSymbolicLink(at: secondLink, withDestinationURL: missingBook)
+
+    #expect(!BookState.representsSameBookURL(
+        firstLink.appendingPathComponent("Chapter 01.m4b"),
+        as: secondLink.appendingPathComponent("Chapter 01.m4b")
+    ))
 }
 
 @Test func deletedSymlinkedBookFolderContainsRealPathRecords() throws {
