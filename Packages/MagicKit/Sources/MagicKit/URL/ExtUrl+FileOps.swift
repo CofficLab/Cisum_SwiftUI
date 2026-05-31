@@ -91,6 +91,11 @@ public extension URL {
         !FileManager.default.fileExists(atPath: path)
     }
 
+    /// Whether a path is occupied, including by a broken symbolic link.
+    var pathExistsIncludingSymbolicLink: Bool {
+        FileManager.default.fileExists(atPath: path) || isSymbolicLinkPath
+    }
+
     /// Whether the URL does not point to a directory.
     var isNotFolder: Bool {
         !isFolder
@@ -179,8 +184,8 @@ public extension URL {
         let sourceToCopy = copySourceURL()
         try await sourceToCopy.ensureLocalAvailability()
 
-        if FileManager.default.fileExists(atPath: destination.path) {
-            try FileManager.default.removeItem(at: destination)
+        if destination.pathExistsIncludingSymbolicLink {
+            try destination.delete()
         }
 
         try FileManager.default.copyItem(at: sourceToCopy, to: destination)

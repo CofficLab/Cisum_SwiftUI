@@ -316,7 +316,7 @@ private struct FileCopyProgressView: View, SuperLog {
         }
         
         // 如果目标文件已存在，先删除
-        if finalDestination.isFileExist {
+        if finalDestination.pathExistsIncludingSymbolicLink {
             if verbose {
                 os_log("\(self.t)删除已存在的目标文件")
             }
