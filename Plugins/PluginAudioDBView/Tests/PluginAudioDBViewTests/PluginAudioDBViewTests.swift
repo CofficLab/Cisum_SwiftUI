@@ -117,6 +117,10 @@ import UniformTypeIdentifiers
     #expect(!AudioListLoadPolicy.shouldApplyResult(currentGeneration: 3, resultGeneration: 2))
 }
 
+@Test func staleAudioListInitialLoadStopsLoading() {
+    #expect(AudioListLoadPolicy.isLoadingAfterDiscardingStaleInitialResult() == false)
+}
+
 @Test func staleAudioListLoadMoreResultsStopLoadingMore() {
     #expect(AudioListLoadPolicy.isLoadingMoreAfterDiscardingStaleResult() == false)
 }
