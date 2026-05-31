@@ -106,6 +106,52 @@ import UniformTypeIdentifiers
     #expect((try Data(contentsOf: copiedFile)) == Data("audio".utf8))
 }
 
+@Test func bookImportDeduplicatesSymlinkedAudioSources() async throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let sourceRoot = root.appendingPathComponent("source", isDirectory: true)
+    let destinationRoot = root.appendingPathComponent("destination", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: sourceRoot, withIntermediateDirectories: true)
+    let realSource = sourceRoot.appendingPathComponent("real.m4b")
+    let linkedSource = sourceRoot.appendingPathComponent("linked.m4b")
+    try Data("audio".utf8).write(to: realSource)
+    try FileManager.default.createSymbolicLink(at: linkedSource, withDestinationURL: realSource)
+
+    #expect(BookDBView.representsSameImportSource(realSource, linkedSource))
+    #expect(BookDBView.uniqueImportSources([linkedSource, realSource]) == [linkedSource])
+
+    let copiedItems = try await BookDBView.copyImportedItems([linkedSource, realSource], to: destinationRoot)
+    let collection = destinationRoot.appendingPathComponent("linked", isDirectory: true)
+
+    #expect(copiedItems == [collection])
+    #expect(FileManager.default.fileExists(atPath: collection.appendingPathComponent("linked.m4b").path))
+    #expect(!FileManager.default.fileExists(atPath: collection.appendingPathComponent("real.m4b").path))
+}
+
+@Test func folderImportDeduplicatesSymlinkedBookFolders() async throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realBook = root.appendingPathComponent("RealBook", isDirectory: true)
+    let linkedBook = root.appendingPathComponent("LinkedBook", isDirectory: true)
+    let destinationRoot = root.appendingPathComponent("destination", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: realBook, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedBook, withDestinationURL: realBook)
+    try Data("audio".utf8).write(to: realBook.appendingPathComponent("001.m4b"))
+
+    let copiedItems = try await BookDBView.copyImportedItems([linkedBook, realBook], to: destinationRoot)
+
+    #expect(copiedItems == [destinationRoot.appendingPathComponent("LinkedBook", isDirectory: true)])
+    #expect(!FileManager.default.fileExists(atPath: destinationRoot.appendingPathComponent("RealBook", isDirectory: true).path))
+}
+
 @Test func bookImportAvoidsDanglingSymlinkCollectionNames() async throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)

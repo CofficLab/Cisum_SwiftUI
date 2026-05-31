@@ -114,8 +114,9 @@ extension BookDBView {
     nonisolated static func copyImportedItems(_ files: [URL], to bookDisk: URL) async throws -> [URL] {
         try FileManager.default.createDirectory(at: bookDisk, withIntermediateDirectories: true)
 
-        let folders = files.filter(Self.isFolderLikeImportSource)
-        let audioFiles = files.filter { url in
+        let importSources = uniqueImportSources(files)
+        let folders = importSources.filter(Self.isFolderLikeImportSource)
+        let audioFiles = importSources.filter { url in
             !Self.isFolderLikeImportSource(url) && BookPluginInfo.supportedExtensions.contains(url.pathExtension.lowercased())
         }
         var copiedItems: [URL] = []
@@ -218,6 +219,28 @@ extension BookDBView {
 
     nonisolated static func shouldStartImport(isImporting: Bool) -> Bool {
         !isImporting
+    }
+
+    nonisolated static func uniqueImportSources(_ urls: [URL]) -> [URL] {
+        var uniqueURLs: [URL] = []
+
+        for url in urls {
+            guard !uniqueURLs.contains(where: { representsSameImportSource($0, url) }) else {
+                continue
+            }
+
+            uniqueURLs.append(url)
+        }
+
+        return uniqueURLs
+    }
+
+    nonisolated static func representsSameImportSource(_ lhs: URL, _ rhs: URL) -> Bool {
+        guard lhs.isFileURL, rhs.isFileURL else {
+            return lhs.standardized.absoluteString == rhs.standardized.absoluteString
+        }
+
+        return resolvedStandardizedPath(for: lhs) == resolvedStandardizedPath(for: rhs)
     }
 
     nonisolated static func isDestinationNestedInSource(source: URL, destination: URL) -> Bool {
