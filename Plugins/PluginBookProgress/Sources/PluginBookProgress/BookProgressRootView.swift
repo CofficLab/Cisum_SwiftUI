@@ -38,6 +38,10 @@ enum BookProgressPersistencePolicy {
         storedURL != newURL
     }
 
+    static func shouldPersistCurrentURLChange(from storedURL: URL?, to newURL: URL?) -> Bool {
+        storedURL != newURL
+    }
+
     static func snapshot(currentURL: URL?, currentTime: TimeInterval, trigger: BookProgressSaveTrigger) -> BookProgressStateSnapshot? {
         guard let currentURL else { return nil }
 
@@ -303,6 +307,10 @@ private extension BookProgressRootView {
                 requestedURL: snapshot.currentURL,
                 currentAsset: man.currentAsset
             ) else {
+                return
+            }
+
+            guard BookProgressPersistencePolicy.shouldPersistCurrentURLChange(from: storedURL, to: url) else {
                 return
             }
 

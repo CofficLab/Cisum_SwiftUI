@@ -32,6 +32,15 @@ import Testing
     #expect(!BookProgressPersistencePolicy.shouldResetGlobalTimeWhenCurrentURLChanges(from: oldURL, to: oldURL))
 }
 
+@Test func unchangedCurrentBookURLDoesNotPersistAgain() {
+    let oldURL = URL(fileURLWithPath: "/tmp/book/chapter-01.mp3")
+    let newURL = URL(fileURLWithPath: "/tmp/book/chapter-02.mp3")
+
+    #expect(BookProgressPersistencePolicy.shouldPersistCurrentURLChange(from: oldURL, to: newURL))
+    #expect(BookProgressPersistencePolicy.shouldPersistCurrentURLChange(from: oldURL, to: nil))
+    #expect(!BookProgressPersistencePolicy.shouldPersistCurrentURLChange(from: oldURL, to: oldURL))
+}
+
 @Test func invalidRestoredBookURLShouldClearCurrentBook() {
     let url = URL(fileURLWithPath: "/tmp/book/missing.mp3")
 

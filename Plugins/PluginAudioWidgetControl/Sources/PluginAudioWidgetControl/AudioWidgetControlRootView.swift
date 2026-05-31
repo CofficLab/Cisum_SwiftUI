@@ -1,4 +1,5 @@
 import CoreFoundation
+import Combine
 import Foundation
 import MagicPlayMan
 import OSLog
@@ -66,7 +67,7 @@ public struct AudioWidgetControlRootView: View {
             .onAppear {
                 setupWidgetCommandListener()
             }
-            .onReceive(NotificationCenter.default.publisher(for: UserDefaults.didChangeNotification)) { _ in
+            .onReceive(NotificationCenter.default.publisher(for: UserDefaults.didChangeNotification).receive(on: DispatchQueue.main)) { _ in
                 handleWidgetCommands()
             }
             .onReceive(NotificationCenter.default.publisher(for: .audioWidgetCommandReceived)) { _ in
