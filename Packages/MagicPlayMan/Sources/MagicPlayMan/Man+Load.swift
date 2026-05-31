@@ -32,11 +32,26 @@ enum MagicPlayManAssetIdentity {
                 return lhs == rhs
             }
 
-            return lhs.resolvingSymlinksInPath().standardizedFileURL.path
-                == rhs.resolvingSymlinksInPath().standardizedFileURL.path
+            return canonicalIdentity(for: lhs) == canonicalIdentity(for: rhs)
         default:
             return false
         }
+    }
+
+    private static func canonicalIdentity(for url: URL) -> String {
+        if isDanglingSymlink(url) {
+            return url.standardizedFileURL.path
+        }
+
+        return url.resolvingSymlinksInPath().standardizedFileURL.path
+    }
+
+    private static func isDanglingSymlink(_ url: URL) -> Bool {
+        guard (try? url.resourceValues(forKeys: [.isSymbolicLinkKey]).isSymbolicLink) == true else {
+            return false
+        }
+
+        return !FileManager.default.fileExists(atPath: url.path)
     }
 }
 
