@@ -8,6 +8,12 @@
             "state": "translated",
             "value": "喜欢/取消喜欢 按钮"
           }
+        },
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "喜歡/取消喜歡 按鈕"
+          }
         }
       }
     }

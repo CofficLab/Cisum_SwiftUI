@@ -8,6 +8,12 @@
             "state": "translated",
             "value": "当前资源打开按钮"
           }
+        },
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "目前資源開啟按鈕"
+          }
         }
       }
     }
