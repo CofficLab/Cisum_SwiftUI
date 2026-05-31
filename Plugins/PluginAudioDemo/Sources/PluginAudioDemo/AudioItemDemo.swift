@@ -16,7 +16,7 @@ public struct AudioItemDemo: View {
     ]
 
     private var iconName: String {
-        let index = abs(url.hashValue) % Self.iconNames.count
+        let index = Self.stableIndex(for: url.hashValue, count: Self.iconNames.count)
         return Self.iconNames[index]
     }
 
@@ -31,8 +31,15 @@ public struct AudioItemDemo: View {
             .cyan,
             .indigo,
         ]
-        let index = abs(url.hashValue) % colors.count
+        let index = Self.stableIndex(for: url.hashValue, count: colors.count)
         return colors[index]
+    }
+
+    nonisolated static func stableIndex(for hashValue: Int, count: Int) -> Int {
+        guard count > 0 else { return 0 }
+
+        let remainder = hashValue % count
+        return remainder >= 0 ? remainder : remainder + count
     }
 
     private var sizeText: String {
