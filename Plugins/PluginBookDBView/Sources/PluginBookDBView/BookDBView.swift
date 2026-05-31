@@ -214,7 +214,7 @@ extension BookDBView {
     }
 
     nonisolated static func shouldImportDroppedURLs(_ urls: [URL], after errors: [Error]) -> Bool {
-        !urls.isEmpty || errors.isEmpty
+        !urls.isEmpty
     }
 
     nonisolated static func shouldStartImport(isImporting: Bool) -> Bool {
