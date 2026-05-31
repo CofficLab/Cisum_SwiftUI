@@ -9,6 +9,14 @@ import SwiftData
     #expect(AudioPluginInfo.supportedExtensions.contains("mp3"))
 }
 
+@Test func audioPluginSupportsPlayerRecognizedAudioExtensions() {
+    let playerAudioExtensions = ["mp3", "m4a", "aac", "wav", "aiff", "ogg", "opus", "flac", "alac"]
+
+    for extensionName in playerAudioExtensions {
+        #expect(AudioPluginInfo.supportedExtensions.contains(extensionName))
+    }
+}
+
 @Test func missingStorageErrorKeepsStorageSetupGuidance() {
     let presentation = AudioRootErrorPresentation.make(error: .initialization(reason: "Storage 未找到"))
 

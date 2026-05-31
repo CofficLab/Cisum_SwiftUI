@@ -8,7 +8,12 @@ public enum AudioPluginInfo {
     public static let supportedExtensions = [
         "mp3",
         "m4a",
+        "aac",
+        "aiff",
         "flac",
         "wav",
+        "ogg",
+        "opus",
+        "alac",
     ]
 }
