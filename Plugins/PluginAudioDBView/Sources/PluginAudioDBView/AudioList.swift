@@ -63,6 +63,20 @@ enum AudioListLoadPolicy {
         (isLoading: displayedCount == 0, isLoadingMore: false)
     }
 
+    static func shouldLoadMore(
+        currentIndex: Int,
+        loadedCount: Int,
+        hasMore: Bool,
+        isLoadingMore: Bool
+    ) -> Bool {
+        guard loadedCount > 0, currentIndex >= 0, hasMore, !isLoadingMore else {
+            return false
+        }
+
+        let threshold = max(loadedCount - 10, Int(Double(loadedCount) * 0.8))
+        return currentIndex >= threshold
+    }
+
     static func generationAfterDeletingDisplayedItems(_ generation: Int) -> Int {
         generation + 1
     }
@@ -234,13 +248,13 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
                 }
             }, content: {
                 // 使用 URL 作为 id，确保 List selection 能正确工作
-                ForEach(urls, id: \.self) { url in
+                ForEach(Array(urls.enumerated()), id: \.element) { index, url in
                     AudioItemView(url)
                         .equatable() // 使用 Equatable 优化，减少不必要的重绘
                         .listRowBackground(Color.clear)
                         .onAppear {
                             // 仅在接近列表末尾时检查是否需要加载更多
-                            checkLoadMore(for: url)
+                            checkLoadMore(at: index)
                         }
                 }
                 .onDelete(perform: handleDeleteItems)
@@ -313,19 +327,18 @@ extension AudioList {
     }
 
     /// 检查是否需要加载更多数据
-    /// - Parameter url: 当前可见项的 URL
-    private func checkLoadMore(for url: URL) {
-        // 获取当前 URL 的索引
-        guard let currentIndex = urls.firstIndex(of: url) else { return }
-
-        // 计算阈值：最后 10 条或 80% 位置
-        let threshold = max(urls.count - 10, Int(Double(urls.count) * 0.8))
-
+    /// - Parameter index: 当前可见项在已加载列表中的索引
+    private func checkLoadMore(at index: Int) {
         // 仅当接近末尾且有更多数据且未在加载中时触发
-        guard currentIndex >= threshold, hasMore, !isLoadingMore else { return }
+        guard AudioListLoadPolicy.shouldLoadMore(
+            currentIndex: index,
+            loadedCount: urls.count,
+            hasMore: hasMore,
+            isLoadingMore: isLoadingMore
+        ) else { return }
 
         if Self.verbose {
-            os_log("\(self.t)👁️ Item \(currentIndex) appeared, triggering loadMore")
+            os_log("\(self.t)👁️ Item \(index) appeared, triggering loadMore")
         }
         loadMore()
     }

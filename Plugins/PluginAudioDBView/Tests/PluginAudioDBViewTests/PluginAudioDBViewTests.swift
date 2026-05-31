@@ -112,6 +112,45 @@ import UniformTypeIdentifiers
     #expect(AudioList.nextLoadOffset(loadedCount: 100) == 100)
 }
 
+@Test func audioListLoadMoreTriggerUsesVisibleIndex() {
+    #expect(!AudioListLoadPolicy.shouldLoadMore(
+        currentIndex: 89,
+        loadedCount: 100,
+        hasMore: true,
+        isLoadingMore: false
+    ))
+    #expect(AudioListLoadPolicy.shouldLoadMore(
+        currentIndex: 90,
+        loadedCount: 100,
+        hasMore: true,
+        isLoadingMore: false
+    ))
+    #expect(AudioListLoadPolicy.shouldLoadMore(
+        currentIndex: 40,
+        loadedCount: 50,
+        hasMore: true,
+        isLoadingMore: false
+    ))
+    #expect(!AudioListLoadPolicy.shouldLoadMore(
+        currentIndex: 99,
+        loadedCount: 100,
+        hasMore: false,
+        isLoadingMore: false
+    ))
+    #expect(!AudioListLoadPolicy.shouldLoadMore(
+        currentIndex: 99,
+        loadedCount: 100,
+        hasMore: true,
+        isLoadingMore: true
+    ))
+    #expect(!AudioListLoadPolicy.shouldLoadMore(
+        currentIndex: -1,
+        loadedCount: 100,
+        hasMore: true,
+        isLoadingMore: false
+    ))
+}
+
 @Test func audioListOnlyAppliesCurrentLoadGeneration() {
     #expect(AudioListLoadPolicy.shouldApplyResult(currentGeneration: 2, resultGeneration: 2))
     #expect(!AudioListLoadPolicy.shouldApplyResult(currentGeneration: 3, resultGeneration: 2))
