@@ -50,6 +50,8 @@ public class MagicPlayMan: ObservableObject, SuperLog {
     /// 当前下载监听器引用
     private(set) var currentDownloadObservers: (progressObserver: AnyCancellable, finishObserver: AnyCancellable)?
 
+    private var playRequestGeneration: UInt64 = 0
+
     /// 本地化配置
     public var localization = Localization(locale: Locale(identifier: "zh_CN"))
 
@@ -195,6 +197,18 @@ extension MagicPlayMan {
     @MainActor
     func setCurrentDownloadObservers(_ observers: (progressObserver: AnyCancellable, finishObserver: AnyCancellable)?) {
         currentDownloadObservers = observers
+    }
+
+    @MainActor
+    @discardableResult
+    func beginPlayRequest() -> UInt64 {
+        playRequestGeneration &+= 1
+        return playRequestGeneration
+    }
+
+    @MainActor
+    func isCurrentPlayRequest(_ generation: UInt64) -> Bool {
+        playRequestGeneration == generation
     }
 }
 

@@ -120,6 +120,8 @@ public extension MagicPlayMan {
             os_log("\(self.t)🚀 (\(reason)) Play: \(url.title), AutoPlay: \(autoPlay)")
         }
 
+        let requestGeneration = beginPlayRequest()
+
         // 立即暂停当前播放，避免显示新歌信息但还在放旧歌
         _player.pause()
 
@@ -133,16 +135,20 @@ public extension MagicPlayMan {
             let asset = AVURLAsset(url: url)
             do {
                 guard try await asset.load(.isPlayable) else {
+                    guard isCurrentPlayRequest(requestGeneration) else { return }
                     await clearCurrentAssetAfterFailedPlayback(reason: reason + ".unplayable")
                     setState(.failed(.invalidAsset), reason: reason + ".play")
                     return
                 }
             } catch {
+                guard isCurrentPlayRequest(requestGeneration) else { return }
                 await clearCurrentAssetAfterFailedPlayback(reason: reason + ".unplayable")
                 setState(.failed(.invalidAsset), reason: reason + ".play")
                 return
             }
         }
+
+        guard isCurrentPlayRequest(requestGeneration) else { return }
 
         self.setCurrentURL(url)
 
@@ -167,7 +173,8 @@ public extension MagicPlayMan {
             guard let self = self else { return }
 
             // 关键：确保当前仍是同一个 URL (用户可能在下载期间切歌了)
-            guard MagicPlayManAssetIdentity.representsSameAsset(self.currentURL, url) else {
+            guard self.isCurrentPlayRequest(requestGeneration),
+                  MagicPlayManAssetIdentity.representsSameAsset(self.currentURL, url) else {
                 if self.verbose {
                     os_log("\(self.t)⚠️ URL changed during download, ignoring playback request for: \(url.title)")
                 }
@@ -306,6 +313,8 @@ public extension MagicPlayMan {
     /// - Parameter reason: 重置原因（用于日志记录）
     @MainActor
     func reset(reason: String) async {
+        beginPlayRequest()
+
         // 停止播放
         _player.pause()
 

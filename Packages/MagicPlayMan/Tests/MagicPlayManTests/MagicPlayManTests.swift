@@ -191,6 +191,27 @@ final class MagicPlayManTests: XCTestCase {
         XCTAssertTrue(audiobook.isAudio)
     }
 
+    @MainActor
+    func testNewPlayRequestInvalidatesEarlierRequest() {
+        let man = MagicPlayMan()
+
+        let firstRequest = man.beginPlayRequest()
+        let secondRequest = man.beginPlayRequest()
+
+        XCTAssertFalse(man.isCurrentPlayRequest(firstRequest))
+        XCTAssertTrue(man.isCurrentPlayRequest(secondRequest))
+    }
+
+    @MainActor
+    func testResetInvalidatesPendingPlayRequest() async {
+        let man = MagicPlayMan()
+        let request = man.beginPlayRequest()
+
+        await man.reset(reason: "test")
+
+        XCTAssertFalse(man.isCurrentPlayRequest(request))
+    }
+
     func testSeekPolicyClampsInvalidAndOutOfRangeTimes() {
         XCTAssertEqual(MagicPlayManSeekPolicy.normalizedTime(-5, duration: 100), 0)
         XCTAssertEqual(MagicPlayManSeekPolicy.normalizedTime(120, duration: 100), 100)
