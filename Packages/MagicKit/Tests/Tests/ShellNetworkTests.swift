@@ -12,7 +12,7 @@ import Testing
 
     #expect(ShellNetwork.pingCommand(host) == "ping -c 1 -W 3000 \(quotedHost)")
     #expect(ShellNetwork.pingDetailedCommand(host, count: 3) == "ping -c 3 \(quotedHost)")
-    #expect(ShellNetwork.pingDetailedCommand(host, count: -2) == "ping -c 0 \(quotedHost)")
+    #expect(ShellNetwork.pingDetailedCommand(host, count: -2) == "ping -c 1 \(quotedHost)")
     #expect(ShellNetwork.downloadCommand(url, to: output) == "curl -L \(quotedURL) -o \(quotedOutput)")
     #expect(ShellNetwork.curlCommand(url) == "curl -s \(quotedURL)")
     #expect(ShellNetwork.headersCommand(url) == "curl -I \(quotedURL)")
@@ -20,6 +20,15 @@ import Testing
     #expect(ShellNetwork.nslookupCommand(host) == "nslookup \(quotedHost)")
     #expect(ShellNetwork.tracerouteCommand(host) == "traceroute \(quotedHost)")
     #expect(ShellNetwork.httpStatusCommand(url) == "curl -s -o /dev/null -w '%{http_code}' \(quotedURL)")
+}
+
+@Test func shellNetworkPingCountsStayInValidRange() {
+    #expect(ShellNetwork.normalizedPingCount(Int.min) == 1)
+    #expect(ShellNetwork.normalizedPingCount(-2) == 1)
+    #expect(ShellNetwork.normalizedPingCount(0) == 1)
+    #expect(ShellNetwork.normalizedPingCount(4) == 4)
+    #expect(ShellNetwork.normalizedPingCount(101) == 100)
+    #expect(ShellNetwork.normalizedPingCount(Int.max) == 100)
 }
 
 @Test func shellNetworkPortCommandsRejectInvalidPorts() {

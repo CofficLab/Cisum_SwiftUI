@@ -16,8 +16,12 @@ class ShellNetwork: SuperLog {
         "ping -c 1 -W 3000 \(shellQuoted(host))"
     }
 
+    static func normalizedPingCount(_ count: Int) -> Int {
+        min(max(count, 1), 100)
+    }
+
     static func pingDetailedCommand(_ host: String, count: Int = 4) -> String {
-        "ping -c \(max(0, count)) \(shellQuoted(host))"
+        "ping -c \(normalizedPingCount(count)) \(shellQuoted(host))"
     }
 
     static func downloadCommand(_ url: String, to output: String) -> String {
