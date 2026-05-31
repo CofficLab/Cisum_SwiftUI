@@ -197,6 +197,25 @@ import SwiftData
     #expect(BookDB.contains(linkedRoot, bookURL: nestedChapter))
 }
 
+@Test func deletedDanglingSymlinkBookFolderContainsLexicalChildRecords() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let library = root.appendingPathComponent("books", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: library, withIntermediateDirectories: true)
+    let linkedBook = library.appendingPathComponent("Broken Book", isDirectory: true)
+    try FileManager.default.createSymbolicLink(
+        at: linkedBook,
+        withDestinationURL: root.appendingPathComponent("missing-book", isDirectory: true)
+    )
+    let savedChapter = linkedBook.appendingPathComponent("Chapter 1.m4b")
+
+    #expect(BookDB.contains(linkedBook, bookURL: savedChapter))
+}
+
 @Test func deletedRootBookFolderContainsNestedRecords() {
     let root = URL(fileURLWithPath: "/", isDirectory: true)
     let nestedChapter = URL(fileURLWithPath: "/tmp/cisum-root-book/Chapter 1.m4b")

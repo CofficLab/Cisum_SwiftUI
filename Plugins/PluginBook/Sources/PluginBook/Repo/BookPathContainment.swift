@@ -19,13 +19,21 @@ enum BookPathContainment {
     }
 
     static func contains(_ parent: URL, child: URL) -> Bool {
-        let parentPath = resolvedStandardizedPath(for: parent)
-        let childPath = resolvedStandardizedPath(for: child)
-        return childPath == parentPath || childPath.hasPrefix(childPrefix(for: parentPath))
+        containsPath(
+            parent: resolvedStandardizedPath(for: parent),
+            child: resolvedStandardizedPath(for: child)
+        ) || containsPath(
+            parent: parent.standardizedFileURL.path,
+            child: child.standardizedFileURL.path
+        )
     }
 
     private static func resolvedStandardizedPath(for url: URL) -> String {
         url.resolvingSymlinksInPath().standardizedFileURL.path
+    }
+
+    private static func containsPath(parent: String, child: String) -> Bool {
+        child == parent || child.hasPrefix(childPrefix(for: parent))
     }
 
     private static func childPrefix(for parentPath: String) -> String {
