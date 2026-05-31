@@ -56,6 +56,15 @@ struct MigrationProgressView: View {
         requestedMigration && sourceURL != nil && targetURL != nil
     }
 
+    nonisolated static func shouldDisableInteractiveDismiss(
+        showConfirmation: Bool,
+        migrationCompleted: Bool,
+        migrationCancelled: Bool,
+        errorMessage: String?
+    ) -> Bool {
+        !showConfirmation && !migrationCompleted && !migrationCancelled && errorMessage == nil
+    }
+
     nonisolated static func migrationRoots(
         sourceURL: URL?,
         targetURL: URL?,
@@ -151,6 +160,12 @@ struct MigrationProgressView: View {
             loadSourceFiles()
             loadTargetFiles()
         }
+        .interactiveDismissDisabled(Self.shouldDisableInteractiveDismiss(
+            showConfirmation: showConfirmation,
+            migrationCompleted: migrationCompleted,
+            migrationCancelled: migrationCancelled,
+            errorMessage: errorMessage
+        ))
     }
 
     private func startMigration(shouldMigrate: Bool) async {

@@ -94,6 +94,39 @@ import Foundation
     ))
 }
 
+@Test func migrationSheetOnlyDisablesDismissWhileRunning() {
+    #expect(!MigrationProgressView.shouldDisableInteractiveDismiss(
+        showConfirmation: true,
+        migrationCompleted: false,
+        migrationCancelled: false,
+        errorMessage: nil
+    ))
+    #expect(MigrationProgressView.shouldDisableInteractiveDismiss(
+        showConfirmation: false,
+        migrationCompleted: false,
+        migrationCancelled: false,
+        errorMessage: nil
+    ))
+    #expect(!MigrationProgressView.shouldDisableInteractiveDismiss(
+        showConfirmation: false,
+        migrationCompleted: true,
+        migrationCancelled: false,
+        errorMessage: nil
+    ))
+    #expect(!MigrationProgressView.shouldDisableInteractiveDismiss(
+        showConfirmation: false,
+        migrationCompleted: false,
+        migrationCancelled: true,
+        errorMessage: nil
+    ))
+    #expect(!MigrationProgressView.shouldDisableInteractiveDismiss(
+        showConfirmation: false,
+        migrationCompleted: false,
+        migrationCancelled: false,
+        errorMessage: "failed"
+    ))
+}
+
 @Test func missingSourceStorageDoesNotAttemptMigration() {
     let target = URL(fileURLWithPath: "/tmp/cisum-storage-target", isDirectory: true)
 
