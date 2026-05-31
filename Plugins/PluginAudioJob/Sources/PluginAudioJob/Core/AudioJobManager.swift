@@ -7,11 +7,17 @@ public actor AudioJobManager {
     public nonisolated static let verbose = false
 
     private var jobs: [String: any AudioJob] = [:]
-    private var runningJobs: Set<String> = []
+    private var runningJobs: [String: UUID] = [:]
 
     private init() {}
 
     public func register(_ job: any AudioJob) {
+        if let existingJob = jobs[job.identifier],
+           runningJobs[job.identifier] != nil {
+            existingJob.cancel()
+            runningJobs[job.identifier] = nil
+        }
+
         jobs[job.identifier] = job
 
         if Self.verbose {
@@ -20,8 +26,12 @@ public actor AudioJobManager {
     }
 
     public func unregister(_ identifier: String) {
+        if runningJobs[identifier] != nil {
+            jobs[identifier]?.cancel()
+        }
+
         jobs.removeValue(forKey: identifier)
-        runningJobs.remove(identifier)
+        runningJobs[identifier] = nil
 
         if Self.verbose {
             os_log("🗑️ Audio job unregistered: \(identifier)")
@@ -34,14 +44,15 @@ public actor AudioJobManager {
             return
         }
 
-        if runningJobs.contains(identifier) {
+        if runningJobs[identifier] != nil {
             if Self.verbose {
                 os_log("⚠️ Audio job already running: \(identifier)")
             }
             return
         }
 
-        runningJobs.insert(identifier)
+        let runID = UUID()
+        runningJobs[identifier] = runID
 
         if Self.verbose {
             os_log("🚀 Audio job started: \(job.name)")
@@ -58,7 +69,7 @@ public actor AudioJobManager {
                 os_log(.error, "❌ Audio job failed [\(identifier)]: \(error)")
             }
 
-            await self?.markJobFinished(identifier)
+            await self?.markJobFinished(identifier, runID: runID)
         }
     }
 
@@ -69,7 +80,7 @@ public actor AudioJobManager {
         }
 
         job.cancel()
-        runningJobs.remove(identifier)
+        runningJobs[identifier] = nil
 
         if Self.verbose {
             os_log("⏹️ Audio job stopped: \(identifier)")
@@ -77,7 +88,7 @@ public actor AudioJobManager {
     }
 
     public func stopAllJobs() {
-        for identifier in runningJobs {
+        for identifier in runningJobs.keys {
             jobs[identifier]?.cancel()
         }
         runningJobs.removeAll()
@@ -92,7 +103,7 @@ public actor AudioJobManager {
             JobStatus(
                 identifier: job.identifier,
                 name: job.name,
-                isRunning: runningJobs.contains(job.identifier)
+                isRunning: runningJobs[job.identifier] != nil
             )
         }
     }
@@ -105,11 +116,12 @@ public actor AudioJobManager {
         return JobStatus(
             identifier: identifier,
             name: job.name,
-            isRunning: runningJobs.contains(identifier)
+            isRunning: runningJobs[identifier] != nil
         )
     }
 
-    private func markJobFinished(_ identifier: String) {
-        runningJobs.remove(identifier)
+    private func markJobFinished(_ identifier: String, runID: UUID) {
+        guard runningJobs[identifier] == runID else { return }
+        runningJobs[identifier] = nil
     }
 }
