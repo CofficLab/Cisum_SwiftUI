@@ -23,4 +23,25 @@ second line
     let saved = try String(contentsOf: file, encoding: .utf8)
     #expect(saved == content)
 }
+
+@Test func shellFileCommandsPreserveLiteralPaths() {
+    let path = #"/tmp/song $HOME `uname` "quote" and 'single quote'.txt"#
+    let source = #"/tmp/source $HOME `uname` "quote" and 'single quote'.txt"#
+    let destination = #"/tmp/destination $HOME `uname` "quote" and 'single quote'.txt"#
+    let quotedPath = ShellFile.shellQuoted(path)
+    let quotedSource = ShellFile.shellQuoted(source)
+    let quotedDestination = ShellFile.shellQuoted(destination)
+
+    #expect(ShellFile.isDirExistsCommand(path).contains("[ ! -d \(quotedPath) ]"))
+    #expect(ShellFile.isFileExistsCommand(path).contains("[ ! -f \(quotedPath) ]"))
+    #expect(ShellFile.makeDirCommand(path).contains("mkdir -p \(quotedPath)"))
+    #expect(ShellFile.getFileContentCommand(path) == "cat \(quotedPath)")
+    #expect(ShellFile.removeCommand(path) == "rm -rf \(quotedPath)")
+    #expect(ShellFile.copyCommand(source, to: destination) == "cp -r \(quotedSource) \(quotedDestination)")
+    #expect(ShellFile.moveCommand(source, to: destination) == "mv \(quotedSource) \(quotedDestination)")
+    #expect(ShellFile.getFileSizeCommand(path) == "stat -f%z \(quotedPath)")
+    #expect(ShellFile.listFilesCommand(path) == "ls -1 \(quotedPath)")
+    #expect(ShellFile.getPermissionsCommand(path) == "stat -f%Sp \(quotedPath)")
+    #expect(ShellFile.changePermissionsCommand(path, permissions: "600") == "chmod '600' \(quotedPath)")
+}
 #endif
