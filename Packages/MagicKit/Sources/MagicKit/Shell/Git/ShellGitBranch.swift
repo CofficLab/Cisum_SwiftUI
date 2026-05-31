@@ -65,7 +65,7 @@ extension ShellGit {
     ///   - path: 仓库路径
     /// - Returns: 执行结果
     public static func createBranch(_ name: String, at path: String? = nil) throws -> String {
-        return try Shell.runSync("git branch \(name)", at: path)
+        return try Shell.runSync("git branch \(shellQuoted(name))", at: path)
     }
     
     /// 删除本地分支
@@ -77,7 +77,7 @@ extension ShellGit {
     /// - Throws: 如果删除失败
     public static func deleteBranch(_ name: String, force: Bool = false, at path: String? = nil) throws -> String {
         let forceFlag = force ? "-D" : "-d"
-        return try Shell.runSync("git branch \(forceFlag) \(name)", at: path)
+        return try Shell.runSync("git branch \(forceFlag) \(shellQuoted(name))", at: path)
     }
     
     /// 获取分支的最后一次提交
@@ -86,7 +86,7 @@ extension ShellGit {
     ///   - path: 仓库路径
     /// - Returns: 最后一次提交的简短信息
     public static func lastCommitOfBranch(_ branchName: String, at path: String? = nil) throws -> String {
-        return try Shell.runSync("git log \(branchName) -1 --oneline", at: path)
+        return try Shell.runSync("git log \(shellQuoted(branchName)) -1 --oneline", at: path)
     }
 
     /// 获取分支结构体列表
