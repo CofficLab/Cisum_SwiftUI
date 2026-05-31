@@ -15,7 +15,7 @@ struct TitleView: View, SuperLog, SuperThread {
 
     var title: String {
         if isDemoMode {
-            return String(localized: "清风徐来", table: "Core")
+            return String(localized: "Gentle Breeze", table: "Core")
         } else {
             return playMan.asset?.deletingPathExtension().title ?? ""
         }

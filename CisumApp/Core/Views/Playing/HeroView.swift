@@ -78,7 +78,7 @@ extension HeroView {
                     .font(.system(size: 36, weight: .bold, design: .rounded))
                     .foregroundColor(appTheme.textPrimary)
 
-                Text("正在从 iCloud 下载", tableName: "Core")
+                Text("Downloading from iCloud", tableName: "Core")
                     .font(.system(size: 14))
                     .foregroundColor(appTheme.textSecondary)
             }

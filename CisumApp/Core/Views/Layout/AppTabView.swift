@@ -53,7 +53,7 @@ extension AppTabView {
             SettingView()
                 .tag("Setting")
                 .tabItem {
-                    Label(title: { Text("设置", tableName: "Core") }, icon: { Image(systemName: "gear") })
+                    Label(title: { Text("Settings", tableName: "Core") }, icon: { Image(systemName: "gear") })
                 }
         }
         .frame(maxHeight: .infinity)
@@ -67,7 +67,7 @@ extension AppTabView {
 
     /// 构建自定义 TabView（Demo 模式）
     func buildCustomTabView() -> some View {
-        let settingTab = (view: AnyView(SettingView().environmentObject(p)), label: String(localized: "设置", table: "Core"))
+        let settingTab = (view: AnyView(SettingView().environmentObject(p)), label: String(localized: "Settings", table: "Core"))
         let allTabs = cachedTabViews + [settingTab]
 
         let tabBar = AppTabBar(
