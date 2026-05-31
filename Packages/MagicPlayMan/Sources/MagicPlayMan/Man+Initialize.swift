@@ -76,7 +76,10 @@ internal extension MagicPlayMan {
             Task { @MainActor [weak self] in
                 guard let self = self else { return }
                 let currentTime = time.seconds
-                let progress = self.duration > 0 ? currentTime / self.duration : 0
+                let progress = MagicPlayManPlaybackTimePolicy.normalizedProgress(
+                    currentTime: currentTime,
+                    duration: self.duration
+                )
 
                 // 更新内部状态并发送通知
                 self.setCurrentTime(currentTime, reason: self.className + ".setupPlayer")

@@ -88,6 +88,11 @@ enum MagicPlayManPlaybackTimePolicy {
         guard time.isFinite else { return 0 }
         return max(time, 0)
     }
+
+    static func normalizedProgress(currentTime: TimeInterval, duration: TimeInterval) -> Double {
+        guard currentTime.isFinite, duration.isFinite, duration > 0 else { return 0 }
+        return min(max(currentTime / duration, 0), 1)
+    }
 }
 
 // MARK: - Setter
@@ -110,7 +115,10 @@ extension MagicPlayMan {
 
         // 发送时间更新通知
         if oldTime != time {
-            let progress = self.duration > 0 ? time / self.duration : 0
+            let progress = MagicPlayManPlaybackTimePolicy.normalizedProgress(
+                currentTime: time,
+                duration: duration
+            )
             sendTimeUpdate(currentTime: time, progress: progress)
         }
     }
@@ -132,7 +140,7 @@ extension MagicPlayMan {
     /// - Parameter value: 播放进度（0-1）
     @MainActor
     func setProgress(_ value: Double) {
-        progress = value
+        progress = min(max(value.isFinite ? value : 0, 0), 1)
     }
 
     /// 设置已喜欢的资源集合

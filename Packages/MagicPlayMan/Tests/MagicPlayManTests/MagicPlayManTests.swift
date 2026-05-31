@@ -280,6 +280,15 @@ final class MagicPlayManTests: XCTestCase {
         XCTAssertEqual(MagicPlayManPlaybackTimePolicy.normalizedCurrentTime(42), 42)
     }
 
+    func testPlaybackTimePolicyClampsProgress() {
+        XCTAssertEqual(MagicPlayManPlaybackTimePolicy.normalizedProgress(currentTime: 50, duration: 100), 0.5)
+        XCTAssertEqual(MagicPlayManPlaybackTimePolicy.normalizedProgress(currentTime: 120, duration: 100), 1)
+        XCTAssertEqual(MagicPlayManPlaybackTimePolicy.normalizedProgress(currentTime: -10, duration: 100), 0)
+        XCTAssertEqual(MagicPlayManPlaybackTimePolicy.normalizedProgress(currentTime: .nan, duration: 100), 0)
+        XCTAssertEqual(MagicPlayManPlaybackTimePolicy.normalizedProgress(currentTime: 10, duration: 0), 0)
+        XCTAssertEqual(MagicPlayManPlaybackTimePolicy.normalizedProgress(currentTime: 10, duration: .infinity), 0)
+    }
+
     @MainActor
     func testSetCurrentTimeDoesNotPublishInvalidTimes() {
         let man = MagicPlayMan()
@@ -289,6 +298,20 @@ final class MagicPlayManTests: XCTestCase {
 
         man.setCurrentTime(-5, reason: "test")
         XCTAssertEqual(man.currentTime, 0)
+    }
+
+    @MainActor
+    func testSetProgressClampsInvalidValues() {
+        let man = MagicPlayMan()
+
+        man.setProgress(1.4)
+        XCTAssertEqual(man.progress, 1)
+
+        man.setProgress(-0.2)
+        XCTAssertEqual(man.progress, 0)
+
+        man.setProgress(.nan)
+        XCTAssertEqual(man.progress, 0)
     }
 
     @MainActor
