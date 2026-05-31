@@ -1068,6 +1068,22 @@
         }
       }
     },
+    "Show Cisum" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "显示 Cisum"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "顯示 Cisum"
+          }
+        }
+      }
+    },
     "App Container" : {
       "localizations" : {
         "zh-Hans" : {
