@@ -159,7 +159,6 @@ extension MagicPlayMan {
     func setCurrentURL(_ url: URL?) {
         let oldURL = currentURL
         currentURL = url
-        self.seek(time: 0, reason: self.className + ".setCurrentURL")
 
         events.onCurrentURLChanged.send(url)
 

@@ -86,6 +86,23 @@ final class MagicPlayManTests: XCTestCase {
     }
 
     @MainActor
+    func testChangingCurrentURLDoesNotSeekLoadedPlayerItem() async throws {
+        let audio = try Self.makeSilentWAV()
+        defer {
+            try? FileManager.default.removeItem(at: audio)
+        }
+
+        let man = MagicPlayMan()
+        man.player.replaceCurrentItem(with: AVPlayerItem(url: audio))
+        try await Self.seek(man.player, to: 0.5)
+
+        man.setCurrentURL(URL(fileURLWithPath: "/tmp/new-track.mp3"))
+        try await Task.sleep(nanoseconds: 100_000_000)
+
+        XCTAssertGreaterThan(man.player.currentTime().seconds, 0.3)
+    }
+
+    @MainActor
     func testRestoringPlayModeDoesNotNotifySubscribers() {
         let man = MagicPlayMan()
         var notifications = 0
@@ -103,5 +120,29 @@ final class MagicPlayManTests: XCTestCase {
 
         XCTAssertEqual(man.playMode, .shuffle)
         XCTAssertEqual(notifications, 0)
+    }
+
+    private static func makeSilentWAV() throws -> URL {
+        let url = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString)
+            .appendingPathExtension("wav")
+        let format = AVAudioFormat(standardFormatWithSampleRate: 44_100, channels: 1)!
+        let file = try AVAudioFile(forWriting: url, settings: format.settings)
+        let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: 44_100)!
+        buffer.frameLength = 44_100
+        try file.write(from: buffer)
+        return url
+    }
+
+    private static func seek(_ player: AVPlayer, to seconds: TimeInterval) async throws {
+        try await withCheckedThrowingContinuation { continuation in
+            player.seek(to: CMTime(seconds: seconds, preferredTimescale: 600)) { finished in
+                if finished {
+                    continuation.resume()
+                } else {
+                    continuation.resume(throwing: CancellationError())
+                }
+            }
+        }
     }
 }
