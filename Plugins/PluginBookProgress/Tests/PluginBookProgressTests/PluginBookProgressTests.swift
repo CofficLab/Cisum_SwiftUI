@@ -121,6 +121,25 @@ import Testing
     ))
 }
 
+@Test func danglingSymlinkedStoredCurrentBookChapterShouldClearRestoreState() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let missingBook = root.appendingPathComponent("MissingBook", isDirectory: true)
+    let linkedBook = root.appendingPathComponent("LinkedBook", isDirectory: true)
+    let linkedChapter = linkedBook.appendingPathComponent("Chapter 01.m4b")
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedBook, withDestinationURL: missingBook)
+
+    #expect(BookProgressPersistencePolicy.shouldClearStoredCurrentAfterDelete(
+        storedURL: linkedChapter,
+        deletedURLs: [linkedBook]
+    ))
+}
+
 @Test func playbackPositionChangesPersistCurrentTime() {
     let url = URL(fileURLWithPath: "/tmp/book/chapter-01.mp3")
 

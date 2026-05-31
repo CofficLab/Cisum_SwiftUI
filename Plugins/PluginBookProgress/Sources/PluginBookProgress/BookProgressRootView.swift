@@ -40,9 +40,14 @@ enum BookProgressPersistencePolicy {
 
     static func shouldClearStoredCurrentAfterDelete(storedURL: URL?, deletedURLs: [URL]) -> Bool {
         guard let storedURL else { return false }
+        let storedPaths = comparablePaths(for: storedURL)
         return deletedURLs.contains { deletedURL in
-            representsSameFile(storedURL, deletedURL)
-                || BookProgressPathContainment.resolved(storedURL, isContainedIn: deletedURL)
+            comparablePaths(for: deletedURL).contains { deletedPath in
+                storedPaths.contains { storedPath in
+                    storedPath == deletedPath
+                        || storedPath.hasPrefix(BookProgressPathContainment.childPrefix(for: deletedPath))
+                }
+            }
         }
     }
 
@@ -102,11 +107,17 @@ enum BookProgressPersistencePolicy {
         case (.none, .none):
             return true
         case let (.some(lhs), .some(rhs)):
-            return lhs.resolvingSymlinksInPath().standardizedFileURL.path
-                == rhs.resolvingSymlinksInPath().standardizedFileURL.path
+            return !comparablePaths(for: lhs).isDisjoint(with: comparablePaths(for: rhs))
         default:
             return false
         }
+    }
+
+    private static func comparablePaths(for url: URL) -> Set<String> {
+        [
+            url.standardizedFileURL.path,
+            url.resolvingSymlinksInPath().standardizedFileURL.path,
+        ]
     }
 }
 

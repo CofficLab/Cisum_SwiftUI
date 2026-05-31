@@ -199,6 +199,24 @@ import Testing
     ))
 }
 
+@Test func danglingSymlinkStoredCurrentAudioShouldClearRestoreState() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let missingTrack = root.appendingPathComponent("missing.mp3")
+    let linkedTrack = root.appendingPathComponent("linked.mp3")
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedTrack, withDestinationURL: missingTrack)
+
+    #expect(AudioProgressPersistencePolicy.shouldClearStoredCurrentAfterDelete(
+        storedURL: linkedTrack,
+        deletedURLs: [linkedTrack]
+    ))
+}
+
 @Test func restoreResultOnlyAppliesWhenCurrentAudioDidNotChange() {
     let starting = URL(fileURLWithPath: "/tmp/audio/track-01.mp3")
     let switched = URL(fileURLWithPath: "/tmp/audio/track-02.mp3")
