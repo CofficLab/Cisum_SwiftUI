@@ -7,9 +7,20 @@ struct VideoFileSizeLoadPolicy {
     }
 }
 
+struct VideoFileActionPolicy {
+    static func canOpen(
+        _ file: URL,
+        fileExists: (String) -> Bool = FileManager.default.fileExists(atPath:)
+    ) -> Bool {
+        guard file.isFileURL else { return true }
+        return fileExists(file.path)
+    }
+}
+
 public struct VideoTile: View {
     @Binding private var selection: URL?
     @State private var fileSize: String?
+    @State private var fileUnavailable = false
 
     private let file: URL
 
@@ -27,7 +38,7 @@ public struct VideoTile: View {
                 Text(file.title)
 
                 if file.isNotFolder {
-                    Text(fileSize ?? String(localized: "Calculating...", table: "Video", bundle: .module))
+                    Text(fileSizeText)
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 }
@@ -35,8 +46,10 @@ public struct VideoTile: View {
 
             Spacer()
 
-            file.makeOpenButton()
-                .labelStyle(.iconOnly)
+            if VideoFileActionPolicy.canOpen(file) {
+                file.makeOpenButton()
+                    .labelStyle(.iconOnly)
+            }
         }
         .contentShape(Rectangle())
         .onTapGesture {
@@ -47,12 +60,26 @@ public struct VideoTile: View {
         }
     }
 
+    private var fileSizeText: String {
+        if fileUnavailable {
+            return String(localized: "Unavailable", table: "Video", bundle: .module)
+        }
+
+        return fileSize ?? String(localized: "Calculating...", table: "Video", bundle: .module)
+    }
+
     private func loadFileSize() async {
         fileSize = nil
+        fileUnavailable = false
 
         guard file.isNotFolder else { return }
 
         let requestedFile = file
+        guard Self.canReadSize(for: requestedFile) else {
+            fileUnavailable = true
+            return
+        }
+
         let size = await Self.readableFileSize(for: requestedFile)
 
         guard !Task.isCancelled,
@@ -60,7 +87,16 @@ public struct VideoTile: View {
             return
         }
 
+        guard Self.canReadSize(for: requestedFile) else {
+            fileUnavailable = true
+            return
+        }
+
         fileSize = size
+    }
+
+    nonisolated private static func canReadSize(for file: URL) -> Bool {
+        VideoFileActionPolicy.canOpen(file)
     }
 
     nonisolated static func readableFileSize(for file: URL) async -> String {

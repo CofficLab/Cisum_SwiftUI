@@ -35,3 +35,19 @@ import Testing
         requestedFile: linkedFile
     ))
 }
+
+@Test func videoTileHidesOpenActionForMissingLocalFiles() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let existingFile = root.appendingPathComponent("existing.mov")
+    let missingFile = root.appendingPathComponent("missing.mov")
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    try Data("video".utf8).write(to: existingFile)
+
+    #expect(VideoFileActionPolicy.canOpen(existingFile))
+    #expect(!VideoFileActionPolicy.canOpen(missingFile))
+}
