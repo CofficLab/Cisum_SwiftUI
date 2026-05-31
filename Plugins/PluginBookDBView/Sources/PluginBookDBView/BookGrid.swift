@@ -18,10 +18,12 @@ enum BookGridPlaybackRequestPolicy {
         currentGeneration: Int,
         resultGeneration: Int,
         requestedBookURL: URL,
-        selectedBookURL: URL?
+        selectedBookURL: URL?,
+        displayedBooks: [BookDTO]
     ) -> Bool {
         currentGeneration == resultGeneration
             && BookGridSelectionPolicy.representsSelectedBook(requestedBookURL, selectedURL: selectedBookURL)
+            && BookGridSelectionPolicy.containsSelectedBook(requestedBookURL, in: displayedBooks)
     }
 
     static func generationAfterInvalidatingPendingPlayback(_ generation: Int) -> Int {
@@ -273,7 +275,8 @@ extension BookGrid {
             currentGeneration: playBookGeneration,
             resultGeneration: generation,
             requestedBookURL: book.url,
-            selectedBookURL: selectedBookURL
+            selectedBookURL: selectedBookURL,
+            displayedBooks: books
         ) else {
             return
         }
@@ -336,7 +339,8 @@ extension BookGrid {
                 currentGeneration: playBookGeneration,
                 resultGeneration: generation,
                 requestedBookURL: book.url,
-                selectedBookURL: selectedBookURL
+                selectedBookURL: selectedBookURL,
+                displayedBooks: books
             ) else {
                 return
             }
@@ -355,7 +359,8 @@ extension BookGrid {
                 currentGeneration: playBookGeneration,
                 resultGeneration: generation,
                 requestedBookURL: book.url,
-                selectedBookURL: selectedBookURL
+                selectedBookURL: selectedBookURL,
+                displayedBooks: books
             ) else {
                 return
             }
@@ -509,6 +514,7 @@ extension BookGrid {
         if Self.verbose {
             os_log("\(self.t)✅ 数据同步完成")
         }
+        playBookGeneration = BookGridPlaybackRequestPolicy.generationAfterInvalidatingPendingPlayback(playBookGeneration)
         scheduleUpdateBooksDebounced()
         setIsSyncing(false)
     }
@@ -522,6 +528,7 @@ extension BookGrid {
         if Self.verbose {
             os_log("\(self.t)✅ 排序完成")
         }
+        playBookGeneration = BookGridPlaybackRequestPolicy.generationAfterInvalidatingPendingPlayback(playBookGeneration)
         scheduleUpdateBooksDebounced()
     }
     
@@ -534,6 +541,7 @@ extension BookGrid {
         if Self.verbose {
             os_log("\(self.t)🔄 数据已更新")
         }
+        playBookGeneration = BookGridPlaybackRequestPolicy.generationAfterInvalidatingPendingPlayback(playBookGeneration)
         scheduleUpdateBooksDebounced()
     }
     

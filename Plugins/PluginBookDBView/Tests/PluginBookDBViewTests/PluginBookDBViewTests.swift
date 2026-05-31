@@ -408,30 +408,48 @@ import UniformTypeIdentifiers
 @Test func bookGridOnlyAppliesCurrentPlaybackRequestGeneration() {
     let book = URL(fileURLWithPath: "/tmp/cisum-book-grid/Book", isDirectory: true)
     let other = URL(fileURLWithPath: "/tmp/cisum-book-grid/Other", isDirectory: true)
+    let displayedBook = BookDTO(
+        url: book,
+        bookTitle: "Book",
+        childCount: 1,
+        isCollection: true,
+        order: 0
+    )
 
     #expect(BookGridPlaybackRequestPolicy.shouldApplyResult(
         currentGeneration: 2,
         resultGeneration: 2,
         requestedBookURL: book,
-        selectedBookURL: book
+        selectedBookURL: book,
+        displayedBooks: [displayedBook]
     ))
     #expect(!BookGridPlaybackRequestPolicy.shouldApplyResult(
         currentGeneration: 3,
         resultGeneration: 2,
         requestedBookURL: book,
-        selectedBookURL: book
+        selectedBookURL: book,
+        displayedBooks: [displayedBook]
     ))
     #expect(!BookGridPlaybackRequestPolicy.shouldApplyResult(
         currentGeneration: 2,
         resultGeneration: 2,
         requestedBookURL: book,
-        selectedBookURL: other
+        selectedBookURL: other,
+        displayedBooks: [displayedBook]
     ))
     #expect(!BookGridPlaybackRequestPolicy.shouldApplyResult(
         currentGeneration: 2,
         resultGeneration: 2,
         requestedBookURL: book,
-        selectedBookURL: nil
+        selectedBookURL: nil,
+        displayedBooks: [displayedBook]
+    ))
+    #expect(!BookGridPlaybackRequestPolicy.shouldApplyResult(
+        currentGeneration: 2,
+        resultGeneration: 2,
+        requestedBookURL: book,
+        selectedBookURL: book,
+        displayedBooks: []
     ))
 }
 
@@ -444,7 +462,16 @@ import UniformTypeIdentifiers
         currentGeneration: generation,
         resultGeneration: 2,
         requestedBookURL: book,
-        selectedBookURL: book
+        selectedBookURL: book,
+        displayedBooks: [
+            BookDTO(
+                url: book,
+                bookTitle: "Book",
+                childCount: 1,
+                isCollection: true,
+                order: 0
+            ),
+        ]
     ))
 }
 
