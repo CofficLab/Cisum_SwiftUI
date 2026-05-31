@@ -51,6 +51,38 @@
         }
       }
     },
+    "Book repository is unavailable" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "书籍仓库不可用"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "書籍倉庫不可用"
+          }
+        }
+      }
+    },
+    "Database location could not be opened: %@" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法打开数据库位置：%@"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法開啟資料庫位置：%@"
+          }
+        }
+      }
+    },
     "Drop audiobook folders here to add them" : {
       "localizations" : {
         "zh-Hans" : {
@@ -239,6 +271,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "匯入失敗：%@"
+          }
+        }
+      }
+    },
+    "Import destination cannot be inside the original folder" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "导入目标不能位于原始文件夹内"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "匯入目標不能位於原始資料夾內"
+          }
+        }
+      }
+    },
+    "Import is already in progress" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在导入，请稍候"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在匯入，請稍候"
           }
         }
       }
