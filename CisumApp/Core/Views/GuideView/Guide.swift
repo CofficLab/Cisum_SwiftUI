@@ -42,11 +42,16 @@ private struct PluginGuidePage: Identifiable {
 // MARK: - View Builder
 
 extension Guide {
-    private func currentPage(in pages: [PluginGuidePage]) -> (page: PluginGuidePage, index: Int)? {
-        guard !pages.isEmpty else { return nil }
-        guard currentGuidePageIndex < pages.count else { return nil }
+    nonisolated static func visiblePageIndex(currentIndex: Int, pageCount: Int) -> Int? {
+        guard pageCount > 0 else { return nil }
+        return min(max(currentIndex, 0), pageCount - 1)
+    }
 
-        let clampedIndex = max(currentGuidePageIndex, 0)
+    private func currentPage(in pages: [PluginGuidePage]) -> (page: PluginGuidePage, index: Int)? {
+        guard let clampedIndex = Self.visiblePageIndex(
+            currentIndex: currentGuidePageIndex,
+            pageCount: pages.count
+        ) else { return nil }
         return (pages[clampedIndex], clampedIndex)
     }
 
