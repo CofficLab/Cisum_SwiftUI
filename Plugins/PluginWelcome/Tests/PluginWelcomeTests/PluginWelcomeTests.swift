@@ -15,7 +15,7 @@ import Testing
     #expect(WelcomeStorageSelectionPolicy.displayedSelection(
         currentStorageSelection: nil,
         isICloudAvailable: true
-    ) == nil)
+    ) == .icloud)
 }
 
 @Test func storageSelectionFallsBackToLocalWhenICloudUnavailable() {

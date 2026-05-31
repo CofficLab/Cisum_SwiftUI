@@ -141,7 +141,7 @@ enum WelcomeStorageSelectionPolicy {
             return currentStorageSelection
         }
 
-        return isICloudAvailable ? nil : .local
+        return isICloudAvailable ? .icloud : .local
     }
 
     static func defaultSelection(
