@@ -31,6 +31,19 @@ import UniformTypeIdentifiers
     #expect(BookDBView.folderContainsPlayableFiles(supportedFolder) == true)
 }
 
+@Test func bookImportFiltersUnsupportedTopLevelFilesBeforeImport() throws {
+    let root = URL(fileURLWithPath: "/tmp/cisum-book-import-filter-tests", isDirectory: true)
+    let supported = root.appendingPathComponent("chapter.M4B")
+    let unsupported = root.appendingPathComponent("notes.txt")
+    let folder = root.appendingPathComponent("audiobook", isDirectory: true)
+
+    #expect(BookDBView.importableSourceCandidates([supported, unsupported, folder]) == [
+        supported,
+        folder,
+    ])
+    #expect(BookDBView.importableSourceCandidates([unsupported]).isEmpty)
+}
+
 @Test func folderImportAcceptsSymlinkedBookFolders() async throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)

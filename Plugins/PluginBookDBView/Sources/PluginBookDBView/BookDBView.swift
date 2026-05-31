@@ -64,7 +64,9 @@ extension BookDBView {
             os_log("\(self.t)📂 准备复制 \(files.count) 个文件")
         }
 
-        guard !files.isEmpty else {
+        let importSources = Self.importableSourceCandidates(files)
+
+        guard !importSources.isEmpty else {
             alert_error(String(localized: "No files were added", table: "Book-DBView", bundle: .module))
             return
         }
@@ -89,7 +91,7 @@ extension BookDBView {
             var copiedItems: [URL] = []
             do {
                 copiedItems = try await Task.detached(priority: .userInitiated) {
-                    try await Self.copyImportedItems(files, to: bookDisk)
+                    try await Self.copyImportedItems(importSources, to: bookDisk)
                 }.value
                 guard !copiedItems.isEmpty else {
                     alert_error(String(localized: "No files were added", table: "Book-DBView", bundle: .module))
@@ -159,6 +161,13 @@ extension BookDBView {
         }
 
         return copiedItems
+    }
+
+    nonisolated static func importableSourceCandidates(_ urls: [URL]) -> [URL] {
+        uniqueImportSources(urls).filter { url in
+            isFolderLikeImportSource(url)
+                || BookPluginInfo.supportedExtensions.contains(url.pathExtension.lowercased())
+        }
     }
 
     nonisolated static func cleanUpCopiedItems(_ urls: [URL]) {
