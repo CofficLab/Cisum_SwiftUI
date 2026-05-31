@@ -167,6 +167,22 @@
         }
       }
     },
+    "Only %lld files were added because the free copy limit is almost full": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "由于免费版复制额度即将用完，仅添加了 %lld 个文件"
+          }
+        },
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "由於免費版複製額度即將用完，僅新增了 %lld 個檔案"
+          }
+        }
+      }
+    },
     "Copy service is unavailable": {
       "localizations": {
         "zh-Hans": {
