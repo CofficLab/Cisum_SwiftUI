@@ -158,6 +158,35 @@ import SwiftUI
     ))
 }
 
+@Test func navigationRejectsCurrentAudioOutsideConfiguredBookDisk() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let bookDisk = root.appendingPathComponent("books", isDirectory: true)
+    let outside = root.appendingPathComponent("outside", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: bookDisk, withIntermediateDirectories: true)
+    try FileManager.default.createDirectory(at: outside, withIntermediateDirectories: true)
+
+    let chapter = bookDisk
+        .appendingPathComponent("Novel", isDirectory: true)
+        .appendingPathComponent("Chapter 01.m4b")
+    try FileManager.default.createDirectory(
+        at: chapter.deletingLastPathComponent(),
+        withIntermediateDirectories: true
+    )
+    try Data("book".utf8).write(to: chapter)
+
+    let outsideAudio = outside.appendingPathComponent("Track.m4b")
+    try Data("audio".utf8).write(to: outsideAudio)
+
+    #expect(BookControlPlaybackRequestPolicy.shouldNavigateBookAsset(chapter, bookDisk: bookDisk))
+    #expect(!BookControlPlaybackRequestPolicy.shouldNavigateBookAsset(outsideAudio, bookDisk: bookDisk))
+    #expect(BookControlPlaybackRequestPolicy.shouldNavigateBookAsset(outsideAudio, bookDisk: nil))
+}
+
 @Test func deletionAffectsCurrentChapterInsideDeletedBook() {
     let deletedBook = URL(fileURLWithPath: "/tmp/books/Novel", isDirectory: true)
     let currentChapter = deletedBook.appendingPathComponent("Chapter 01.m4b")

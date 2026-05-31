@@ -89,6 +89,11 @@ enum BookControlPathContainment {
 }
 
 enum BookControlPlaybackRequestPolicy {
+    static func shouldNavigateBookAsset(_ asset: URL, bookDisk: URL?) -> Bool {
+        guard let bookDisk else { return true }
+        return BookControlPathContainment.resolved(asset, isContainedIn: bookDisk)
+    }
+
     static func shouldApplyNavigationResult(
         requestedAsset: URL,
         currentAsset: URL?,
@@ -346,7 +351,12 @@ private extension BookControlRootView {
     }
 
     func playableChapters(of asset: URL) -> [URL] {
-        let root = bookRoot(containing: asset)
+        let bookDisk = BookPlugin.getBookDisk()
+        guard BookControlPlaybackRequestPolicy.shouldNavigateBookAsset(asset, bookDisk: bookDisk) else {
+            return []
+        }
+
+        let root = BookControlBookRootResolver.bookRoot(containing: asset, bookDisk: bookDisk)
         return BookControlChapterLoader.playableChapters(in: root)
     }
 
@@ -417,7 +427,12 @@ private extension BookControlRootView {
             os_log("\(self.t)⏮️ 请求上一章")
         }
 
-        let root = bookRoot(containing: asset)
+        let bookDisk = BookPlugin.getBookDisk()
+        guard BookControlPlaybackRequestPolicy.shouldNavigateBookAsset(asset, bookDisk: bookDisk) else {
+            return
+        }
+
+        let root = BookControlBookRootResolver.bookRoot(containing: asset, bookDisk: bookDisk)
         let playMode = man.playMode
         let generation = controlGeneration
         Task {
@@ -460,7 +475,12 @@ private extension BookControlRootView {
             os_log("\(self.t)⏭️ 请求下一章")
         }
 
-        let root = bookRoot(containing: asset)
+        let bookDisk = BookPlugin.getBookDisk()
+        guard BookControlPlaybackRequestPolicy.shouldNavigateBookAsset(asset, bookDisk: bookDisk) else {
+            return
+        }
+
+        let root = BookControlBookRootResolver.bookRoot(containing: asset, bookDisk: bookDisk)
         let playMode = man.playMode
         let generation = controlGeneration
         Task {
