@@ -109,6 +109,11 @@ import Testing
     ))
 }
 
+@Test func transactionListenerStartsOnlyOnce() {
+    #expect(StoreService.shouldStartTransactionListener(isStarted: false))
+    #expect(!StoreService.shouldStartTransactionListener(isStarted: true))
+}
+
 @Test
 @MainActor
 func purchaseUpdatePostsStoreTransactionNotification() async {

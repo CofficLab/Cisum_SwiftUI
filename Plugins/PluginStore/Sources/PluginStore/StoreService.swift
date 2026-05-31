@@ -33,6 +33,8 @@ public enum StoreService: SuperLog {
     /// 这是 StoreKit 2 的最佳实践，确保不会错过任何交易
     public static func startTransactionListener() {
         Task {
+            guard await StoreTransactionListenerState.shared.markStartedIfNeeded() else { return }
+
             if verbose {
                 os_log("\(self.t)👀 开始监听交易更新")
             }
@@ -51,6 +53,10 @@ public enum StoreService: SuperLog {
                 }
             }
         }
+    }
+
+    static func shouldStartTransactionListener(isStarted: Bool) -> Bool {
+        !isStarted
     }
 
     /// 处理交易更新
@@ -439,5 +445,17 @@ public enum StoreError: Error, LocalizedError {
         case .canNotGetProducts:
             "发生错误：无法获取产品"
         }
+    }
+}
+
+private actor StoreTransactionListenerState {
+    static let shared = StoreTransactionListenerState()
+
+    private var isStarted = false
+
+    func markStartedIfNeeded() -> Bool {
+        guard !isStarted else { return false }
+        isStarted = true
+        return true
     }
 }
