@@ -5,6 +5,24 @@ import OSLog
 import SwiftUI
 import CisumUI
 
+enum MagicPlayManPlaybackRequestPolicy {
+    static func basicValidationError(for url: URL) -> PlaybackState.PlaybackError? {
+        guard url.isFileExist else {
+            return .invalidAsset
+        }
+
+        guard url.isFileURL || url.isNetworkURL else {
+            return .invalidURL(url.scheme ?? "nil")
+        }
+
+        guard url.isVideo || url.isAudio else {
+            return .unsupportedFormat(url.pathExtension)
+        }
+
+        return nil
+    }
+}
+
 public extension MagicPlayMan {
     /// 设置播放模式
     /// - Parameter mode: 要设置的播放模式
@@ -89,28 +107,38 @@ public extension MagicPlayMan {
             os_log("\(self.t)🚀 (\(reason)) Play: \(url.title), AutoPlay: \(autoPlay)")
         }
 
-        self.setCurrentURL(url)
-
         // 立即暂停当前播放，避免显示新歌信息但还在放旧歌
         _player.pause()
 
-        // 检查文件是否存在
-        guard url.isFileExist else {
-            self.setState(.failed(.invalidAsset), reason: reason)
+        if let validationError = MagicPlayManPlaybackRequestPolicy.basicValidationError(for: url) {
+            await clearCurrentAssetAfterFailedPlayback(reason: reason + ".validation")
+            setState(.failed(validationError), reason: reason + ".play")
             return
         }
 
-        // 检查 URL 是否有效
-        guard url.isFileURL || url.isNetworkURL else {
-            await stop(reason: reason + self.className + ".invalidURL")
-            setState(.failed(.invalidURL(url.scheme ?? "nil")), reason: reason + ".play")
-            return
+        if url.isFileURL {
+            let asset = AVURLAsset(url: url)
+            do {
+                guard try await asset.load(.isPlayable) else {
+                    await clearCurrentAssetAfterFailedPlayback(reason: reason + ".unplayable")
+                    setState(.failed(.invalidAsset), reason: reason + ".play")
+                    return
+                }
+            } catch {
+                await clearCurrentAssetAfterFailedPlayback(reason: reason + ".unplayable")
+                setState(.failed(.invalidAsset), reason: reason + ".play")
+                return
+            }
         }
 
-        // 判断媒体类型
-        if url.isVideo == false && url.isAudio == false {
-            await stop(reason: reason)
-            setState(.failed(.unsupportedFormat(url.pathExtension)), reason: reason + ".play")
+        self.setCurrentURL(url)
+
+        // 切换资源时清掉旧资源时长，避免新资源加载期间显示上一首的总时长。
+        self.setDuration(0)
+        self.setProgress(0)
+        self.setCurrentTime(0, reason: reason + ".play")
+
+        guard self.currentURL == url else {
             return
         }
 
@@ -136,6 +164,15 @@ public extension MagicPlayMan {
             let item = AVPlayerItem(url: url)
             self.load(item, autoPlay: autoPlay, startTime: startTime, reason: reason)
         }
+    }
+
+    @MainActor
+    func clearCurrentAssetAfterFailedPlayback(reason: String) async {
+        _player.replaceCurrentItem(with: nil)
+        setCurrentURL(nil)
+        setCurrentTime(0, reason: reason)
+        setDuration(0)
+        setProgress(0)
     }
 
     /// 播放上一首

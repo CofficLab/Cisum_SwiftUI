@@ -40,6 +40,51 @@ final class MagicPlayManTests: XCTestCase {
         ))
     }
 
+    func testPlaybackRequestValidationRejectsMissingLocalFiles() {
+        let missing = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString)
+            .appendingPathExtension("mp3")
+
+        XCTAssertEqual(
+            MagicPlayManPlaybackRequestPolicy.basicValidationError(for: missing),
+            .invalidAsset
+        )
+    }
+
+    func testPlaybackRequestValidationRejectsUnsupportedFiles() throws {
+        let unsupported = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString)
+            .appendingPathExtension("txt")
+        defer {
+            try? FileManager.default.removeItem(at: unsupported)
+        }
+
+        try Data("not media".utf8).write(to: unsupported)
+
+        XCTAssertEqual(
+            MagicPlayManPlaybackRequestPolicy.basicValidationError(for: unsupported),
+            .unsupportedFormat("txt")
+        )
+    }
+
+    @MainActor
+    func testUnplayableLocalMediaDoesNotBecomeCurrentAsset() async throws {
+        let unplayable = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString)
+            .appendingPathExtension("mp3")
+        defer {
+            try? FileManager.default.removeItem(at: unplayable)
+        }
+
+        try Data("not a playable mp3".utf8).write(to: unplayable)
+
+        let man = MagicPlayMan()
+        await man.play(unplayable, autoPlay: false, reason: "test")
+
+        XCTAssertNil(man.currentURL)
+        XCTAssertEqual(man.currentError, .invalidAsset)
+    }
+
     @MainActor
     func testRestoringPlayModeDoesNotNotifySubscribers() {
         let man = MagicPlayMan()
