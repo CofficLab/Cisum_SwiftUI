@@ -1,6 +1,22 @@
 {
   "sourceLanguage": "en",
   "strings": {
+    "Copy files in the background, macOS only": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在后台复制文件，注意仅用于 macOS"
+          }
+        },
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在背景複製檔案，僅適用於 macOS"
+          }
+        }
+      }
+    },
     "基础版本最多支持 %lld 个文件": {
       "localizations": {
         "zh-Hans": {

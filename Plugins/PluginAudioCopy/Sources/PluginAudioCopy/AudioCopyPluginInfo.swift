@@ -1,5 +1,5 @@
 public enum AudioCopyPluginInfo {
-    public static let descriptionKey = "在后台复制文件，注意仅用于macOS"
+    public static let descriptionKey = "Copy files in the background, macOS only"
     public static let table = "Audio-Copy-macOS"
     public static let iconName = "music.note"
 }
