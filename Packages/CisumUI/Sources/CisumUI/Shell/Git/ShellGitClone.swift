@@ -11,27 +11,7 @@ extension ShellGit {
     ///   - depth: 克隆深度，如果为空则完整克隆
     /// - Returns: 执行结果
     public static func clone(_ url: String, to destination: String? = nil, branch: String? = nil, depth: Int? = nil) throws -> String {
-        var command = "git clone"
-
-        // 添加分支参数
-        if let branch = branch {
-            command += " -b \(branch)"
-        }
-
-        // 添加深度参数
-        if let depth = depth {
-            command += " --depth \(depth)"
-        }
-
-        // 添加URL
-        command += " \(url)"
-
-        // 添加目标路径
-        if let destination = destination {
-            command += " \(destination)"
-        }
-
-        return try Shell.runSync(command)
+        return try Shell.runSync(cloneCommand(url, to: destination, branch: branch, depth: depth))
     }
 
     /// 浅克隆远程仓库（只克隆最新的提交）
@@ -82,19 +62,7 @@ extension ShellGit {
     ///   - branch: 指定分支名
     /// - Returns: 执行结果
     public static func cloneRecursive(_ url: String, to destination: String? = nil, branch: String? = nil) throws -> String {
-        var command = "git clone --recurse-submodules"
-
-        if let branch = branch {
-            command += " -b \(branch)"
-        }
-
-        command += " \(url)"
-
-        if let destination = destination {
-            command += " \(destination)"
-        }
-
-        return try Shell.runSync(command)
+        return try Shell.runSync(cloneRecursiveCommand(url, to: destination, branch: branch))
     }
 
     /// 裸克隆（用于服务器端）
@@ -103,7 +71,7 @@ extension ShellGit {
     ///   - destination: 本地目标路径
     /// - Returns: 执行结果
     public static func cloneBare(_ url: String, to destination: String) throws -> String {
-        return try Shell.runSync("git clone --bare \(url) \(destination)")
+        return try Shell.runSync(cloneBareCommand(url, to: destination))
     }
 
     /// 镜像克隆（完整镜像）
@@ -112,7 +80,7 @@ extension ShellGit {
     ///   - destination: 本地目标路径
     /// - Returns: 执行结果
     public static func cloneMirror(_ url: String, to destination: String) throws -> String {
-        return try Shell.runSync("git clone --mirror \(url) \(destination)")
+        return try Shell.runSync(cloneMirrorCommand(url, to: destination))
     }
 
     /// 检查URL是否为有效的Git仓库
@@ -120,11 +88,51 @@ extension ShellGit {
     /// - Returns: 是否为有效的Git仓库
     public static func isValidGitRepository(_ url: String) -> Bool {
         do {
-            _ = try Shell.runSync("git ls-remote \(url)")
+            _ = try Shell.runSync(lsRemoteCommand(url))
             return true
         } catch {
             return false
         }
+    }
+
+    static func cloneCommand(_ url: String, to destination: String? = nil, branch: String? = nil, depth: Int? = nil) -> String {
+        cloneCommand(prefix: "git clone", url: url, to: destination, branch: branch, depth: depth)
+    }
+
+    static func cloneRecursiveCommand(_ url: String, to destination: String? = nil, branch: String? = nil) -> String {
+        cloneCommand(prefix: "git clone --recurse-submodules", url: url, to: destination, branch: branch)
+    }
+
+    static func cloneBareCommand(_ url: String, to destination: String) -> String {
+        "git clone --bare \(shellQuoted(url)) \(shellQuoted(destination))"
+    }
+
+    static func cloneMirrorCommand(_ url: String, to destination: String) -> String {
+        "git clone --mirror \(shellQuoted(url)) \(shellQuoted(destination))"
+    }
+
+    static func lsRemoteCommand(_ url: String) -> String {
+        "git ls-remote \(shellQuoted(url))"
+    }
+
+    private static func cloneCommand(prefix: String, url: String, to destination: String? = nil, branch: String? = nil, depth: Int? = nil) -> String {
+        var command = prefix
+
+        if let branch {
+            command += " -b \(shellQuoted(branch))"
+        }
+
+        if let depth {
+            command += " --depth \(depth)"
+        }
+
+        command += " \(shellQuoted(url))"
+
+        if let destination {
+            command += " \(shellQuoted(destination))"
+        }
+
+        return command
     }
 }
 #endif
