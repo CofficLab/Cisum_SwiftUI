@@ -80,14 +80,7 @@ extension ShellGit {
     /// - Returns: 第一个远程仓库的URL，如果不存在则返回nil
     public static func firstRemoteURL(at path: String? = nil) throws -> String? {
         let output = try Shell.runSync("git remote -v", at: path)
-        let lines = output.split(separator: "\n").map { String($0) }
-        guard let firstLine = lines.first else { return nil }
-        // 示例输出: origin	https://github.com/user/repo.git (fetch)
-        let components = firstLine.split(separator: "\t").map { String($0) }
-        guard components.count > 1 else { return nil }
-        let urlPart = components[1]
-        let url = urlPart.split(separator: " ").first.map { String($0) }
-        return url
+        return parseFirstRemoteURL(output)
     }
 
     /// 删除远程仓库
@@ -130,18 +123,14 @@ extension ShellGit {
         let lines = output.split(separator: "\n").map { String($0) }
         var remotes: [MagicGitRemote] = []
         for line in lines {
-            // 例如 origin\thttps://github.com/user/repo.git (fetch)
-            let parts = line.split(separator: "\t").map { String($0) }
-            guard parts.count == 2, !parts[0].isEmpty else { continue }
-            let name = parts[0]
-            let urlAndType = parts[1].split(separator: " ").map { String($0) }
-            guard urlAndType.count >= 2, ["(fetch)", "(push)"].contains(urlAndType[1]) else { continue }
-            let url = urlAndType[0]
-            let type = urlAndType[1]
+            guard let row = parseRemoteVerboseLine(line) else { continue }
+            let name = row.name
+            let url = row.url
+            let type = row.type
             var fetchURL: String? = nil
             var pushURL: String? = nil
-            if type == "(fetch)" { fetchURL = url }
-            if type == "(push)" { pushURL = url }
+            if type == "fetch" { fetchURL = url }
+            if type == "push" { pushURL = url }
             if let idx = remotes.firstIndex(where: { $0.name == name }) {
                 // 已有，补充 push/fetch
                 if fetchURL != nil { remotes[idx] = MagicGitRemote(id: name, name: name, url: remotes[idx].url, fetchURL: fetchURL, pushURL: remotes[idx].pushURL, isDefault: idx == 0) }
@@ -151,6 +140,26 @@ extension ShellGit {
             }
         }
         return remotes
+    }
+
+    static func parseFirstRemoteURL(_ output: String) -> String? {
+        output
+            .split(separator: "\n")
+            .compactMap { parseRemoteVerboseLine(String($0))?.url }
+            .first
+    }
+
+    static func parseRemoteVerboseLine(_ line: String) -> (name: String, url: String, type: String)? {
+        let parts = line.split(separator: "\t", maxSplits: 1, omittingEmptySubsequences: false).map { String($0) }
+        guard parts.count == 2, !parts[0].isEmpty else { return nil }
+
+        let suffixes = [(" (fetch)", "fetch"), (" (push)", "push")]
+        guard let suffix = suffixes.first(where: { parts[1].hasSuffix($0.0) }) else { return nil }
+
+        let url = String(parts[1].dropLast(suffix.0.count))
+        guard !url.isEmpty else { return nil }
+
+        return (name: parts[0], url: url, type: suffix.1)
     }
 }
 #endif

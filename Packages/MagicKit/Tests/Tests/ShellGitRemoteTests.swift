@@ -57,4 +57,19 @@ import Testing
         isDefault: false
     ))
 }
+
+@Test func shellGitRemoteParserPreservesSpacesInURLs() throws {
+    let localURL = "/Users/example/Repos/My Project.git"
+    let remotes = ShellGit.parseRemoteListOutput("""
+    local\t\(localURL) (fetch)
+    local\t\(localURL) (push)
+    """)
+
+    #expect(remotes.count == 1)
+    let remote = try #require(remotes.first)
+    #expect(remote.url == localURL)
+    #expect(remote.fetchURL == localURL)
+    #expect(remote.pushURL == localURL)
+    #expect(ShellGit.parseFirstRemoteURL("local\t\(localURL) (fetch)\n") == localURL)
+}
 #endif
