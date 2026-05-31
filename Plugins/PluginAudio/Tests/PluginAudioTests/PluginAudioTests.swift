@@ -115,6 +115,23 @@ import SwiftData
     #expect(!AudioDB.contains(disk, audioURL: sibling))
 }
 
+@Test func audioDBContainsResolvesSymlinkedLibraryRoots() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realDisk = root.appendingPathComponent("real-audio", isDirectory: true)
+    let linkedDisk = root.appendingPathComponent("audio-link", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: realDisk, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedDisk, withDestinationURL: realDisk)
+    let audio = realDisk.appendingPathComponent("track.mp3")
+    try Data("audio".utf8).write(to: audio)
+
+    #expect(AudioDB.contains(linkedDisk, audioURL: audio))
+}
+
 @Test func audioDBDeleteAudiosByURLRejectsFilesOutsideLibrary() async throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)

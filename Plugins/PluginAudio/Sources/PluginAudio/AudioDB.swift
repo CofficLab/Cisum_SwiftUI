@@ -1179,8 +1179,8 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     }
 
     static func contains(_ disk: URL, audioURL: URL) -> Bool {
-        let diskPath = disk.standardizedFileURL.path
-        let audioPath = audioURL.standardizedFileURL.path
+        let diskPath = disk.resolvingSymlinksInPath().standardizedFileURL.path
+        let audioPath = audioURL.resolvingSymlinksInPath().standardizedFileURL.path
         return audioPath.hasPrefix(diskPath.hasSuffix("/") ? diskPath : diskPath + "/")
     }
 
