@@ -1,11 +1,11 @@
 import Foundation
+import MagicKit
 
 enum AudioDeletePlaybackPolicy {
     static func deletedURLsContainCurrentAudio(currentURL: URL?, deletedURLs: [URL]) -> Bool {
         guard let currentURL else { return false }
-        let currentPaths = comparablePaths(for: currentURL)
         return deletedURLs.contains { deletedURL in
-            !currentPaths.isDisjoint(with: comparablePaths(for: deletedURL))
+            currentURL.isSameFileLocation(as: deletedURL)
         }
     }
 
@@ -20,14 +20,4 @@ enum AudioDeletePlaybackPolicy {
         )
     }
 
-    private static func resolvedStandardizedPath(for url: URL) -> String {
-        url.resolvingSymlinksInPath().standardizedFileURL.path
-    }
-
-    private static func comparablePaths(for url: URL) -> Set<String> {
-        [
-            url.standardizedFileURL.path,
-            resolvedStandardizedPath(for: url),
-        ]
-    }
 }
