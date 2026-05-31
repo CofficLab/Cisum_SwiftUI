@@ -44,7 +44,7 @@ public extension MagicPlayMan {
 
     /// 检查指定资源是否被喜欢
     func isAssetLiked(_ asset: MagicAsset) -> Bool {
-        likedAssets.contains(asset.url)
+        likedAssets.containsSameAsset(as: asset.url)
     }
 
     var player: AVPlayer { _player }
@@ -57,7 +57,7 @@ public extension MagicPlayMan {
     /// 当前资源是否被喜欢
     var isCurrentAssetLiked: Bool {
         guard let url = currentURL else { return false }
-        return likedAssets.contains(url)
+        return likedAssets.containsSameAsset(as: url)
     }
 
     /// 格式化后的当前播放时间，格式为 "mm:ss" 或 "hh:mm:ss"

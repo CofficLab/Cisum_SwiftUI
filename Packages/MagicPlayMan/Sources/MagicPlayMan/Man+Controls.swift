@@ -230,20 +230,19 @@ public extension MagicPlayMan {
 
         var newLikedAssets = likedAssets
         if isLiked {
+            newLikedAssets.removeSameAsset(as: asset)
             newLikedAssets.insert(asset)
             if verbose {
                 os_log("\(self.t)❤️ (\(reason)) Added to liked: \(asset.title)")
             }
         } else {
-            newLikedAssets.remove(asset)
+            newLikedAssets.removeSameAsset(as: asset)
             if verbose {
                 os_log("\(self.t)💔 (\(reason)) Removed from liked: \(asset.title)")
             }
         }
 
-        Task { @MainActor in
-            setLikedAssets(newLikedAssets)
-        }
+        setLikedAssets(newLikedAssets)
         // 通知订阅者喜欢状态变化
         events.onLikeStatusChanged.send((asset: asset, isLiked: isLiked))
         updateNowPlayingInfo(includeThumbnail: false, reason: reason + ".setLike")
@@ -329,7 +328,7 @@ public extension MagicPlayMan {
     /// 在喜欢和不喜欢之间切换当前播放资源的喜欢状态
     func toggleLike() {
         guard let asset = currentURL else { return }
-        setLike(!likedAssets.contains(asset), reason: "toggleLike")
+        setLike(!likedAssets.containsSameAsset(as: asset), reason: "toggleLike")
     }
 
     /// 切换播放状态

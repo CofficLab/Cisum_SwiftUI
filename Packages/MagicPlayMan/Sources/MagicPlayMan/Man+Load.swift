@@ -34,6 +34,16 @@ enum MagicPlayManAssetIdentity {
     }
 }
 
+extension Set where Element == URL {
+    func containsSameAsset(as asset: URL) -> Bool {
+        contains { MagicPlayManAssetIdentity.representsSameAsset($0, asset) }
+    }
+
+    mutating func removeSameAsset(as asset: URL) {
+        self = filter { !MagicPlayManAssetIdentity.representsSameAsset($0, asset) }
+    }
+}
+
 extension MagicPlayMan {
     /// 下载并缓存资源
     /// - Parameters:

@@ -259,6 +259,79 @@ final class MagicPlayManTests: XCTestCase {
     }
 
     @MainActor
+    func testLikedAssetsMatchSymlinkedCurrentAsset() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        let realFolder = root.appendingPathComponent("real", isDirectory: true)
+        let linkedFolder = root.appendingPathComponent("linked", isDirectory: true)
+        defer {
+            try? FileManager.default.removeItem(at: root)
+        }
+
+        try FileManager.default.createDirectory(at: realFolder, withIntermediateDirectories: true)
+        try FileManager.default.createSymbolicLink(at: linkedFolder, withDestinationURL: realFolder)
+        let realAsset = realFolder.appendingPathComponent("track.mp3")
+        let linkedAsset = linkedFolder.appendingPathComponent("track.mp3")
+        try Data("audio".utf8).write(to: realAsset)
+
+        let man = MagicPlayMan()
+        man.setLikedAssets([realAsset])
+        man.setCurrentURL(linkedAsset)
+
+        XCTAssertTrue(man.isCurrentAssetLiked)
+    }
+
+    @MainActor
+    func testRemovingLikeClearsSymlinkedStoredAsset() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        let realFolder = root.appendingPathComponent("real", isDirectory: true)
+        let linkedFolder = root.appendingPathComponent("linked", isDirectory: true)
+        defer {
+            try? FileManager.default.removeItem(at: root)
+        }
+
+        try FileManager.default.createDirectory(at: realFolder, withIntermediateDirectories: true)
+        try FileManager.default.createSymbolicLink(at: linkedFolder, withDestinationURL: realFolder)
+        let realAsset = realFolder.appendingPathComponent("track.mp3")
+        let linkedAsset = linkedFolder.appendingPathComponent("track.mp3")
+        try Data("audio".utf8).write(to: realAsset)
+
+        let man = MagicPlayMan()
+        man.setLikedAssets([realAsset])
+        man.setCurrentURL(linkedAsset)
+        man.setLike(false, reason: "test")
+
+        XCTAssertFalse(man.isCurrentAssetLiked)
+        XCTAssertTrue(man.likedAssets.isEmpty)
+    }
+
+    @MainActor
+    func testAddingLikeReplacesSymlinkedStoredAsset() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        let realFolder = root.appendingPathComponent("real", isDirectory: true)
+        let linkedFolder = root.appendingPathComponent("linked", isDirectory: true)
+        defer {
+            try? FileManager.default.removeItem(at: root)
+        }
+
+        try FileManager.default.createDirectory(at: realFolder, withIntermediateDirectories: true)
+        try FileManager.default.createSymbolicLink(at: linkedFolder, withDestinationURL: realFolder)
+        let realAsset = realFolder.appendingPathComponent("track.mp3")
+        let linkedAsset = linkedFolder.appendingPathComponent("track.mp3")
+        try Data("audio".utf8).write(to: realAsset)
+
+        let man = MagicPlayMan()
+        man.setLikedAssets([realAsset])
+        man.setCurrentURL(linkedAsset)
+        man.setLike(true, reason: "test")
+
+        XCTAssertEqual(man.likedAssets.count, 1)
+        XCTAssertTrue(man.likedAssets.contains(linkedAsset))
+    }
+
+    @MainActor
     func testFailedPlaybackStateNotifiesFailureSubscribers() async throws {
         let missing = FileManager.default.temporaryDirectory
             .appendingPathComponent(UUID().uuidString)
