@@ -71,8 +71,7 @@ class ShellFile: SuperLog {
     ///   - content: 文件内容
     func makeFile(_ path: String, content: String) {
         do {
-            let escapedContent = content.replacingOccurrences(of: "\"", with: "\\\"")
-            _ = try Shell.runSync("echo \"\(escapedContent)\" > \"\(path)\"")
+            try content.write(toFile: path, atomically: true, encoding: .utf8)
         } catch {
             os_log("\(self.t)创建文件失败: \(error.localizedDescription)")
         }
