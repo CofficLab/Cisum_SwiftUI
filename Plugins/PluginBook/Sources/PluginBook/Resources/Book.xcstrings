@@ -1,6 +1,38 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Audiobook" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "有声书"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "有聲書"
+          }
+        }
+      }
+    },
+    "Audiobook playback" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "有声书播放功能"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "有聲書播放功能"
+          }
+        }
+      }
+    },
     "初始化失败" : {
       "localizations" : {
         "zh-Hans" : {
