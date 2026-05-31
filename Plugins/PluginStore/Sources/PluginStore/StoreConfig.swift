@@ -67,11 +67,11 @@ public enum SubscriptionTier: Int, Comparable, Sendable, Codable {
     public var displayName: String {
         switch self {
         case .none:
-            return "免费版"
+            return String(localized: "Free version", table: "Store", bundle: .module)
         case .pro:
-            return "专业版"
+            return String(localized: "Pro version", table: "Store", bundle: .module)
         case .ultimate:
-            return "旗舰版"
+            return String(localized: "Ultimate version", table: "Store", bundle: .module)
         }
     }
 }
