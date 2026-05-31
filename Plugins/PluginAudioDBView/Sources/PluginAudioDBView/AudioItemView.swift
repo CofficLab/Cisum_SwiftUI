@@ -164,9 +164,9 @@ extension AudioItemView {
         }
     }
 
-    nonisolated private static func copyToDownloads(_ sourceURL: URL) async throws -> URL {
+    nonisolated static func copyToDownloads(_ sourceURL: URL, downloadsURL: URL? = nil) async throws -> URL {
         // 获取下载目录
-        let downloadsURL = try FileManager.default.url(
+        let downloadsURL = try downloadsURL ?? FileManager.default.url(
             for: .downloadsDirectory,
             in: .userDomainMask,
             appropriateFor: nil,
@@ -174,11 +174,21 @@ extension AudioItemView {
         )
 
         let finalDestinationURL = uniqueDestination(for: sourceURL, in: downloadsURL)
+        let sourceToCopy = copySourceURL(for: sourceURL)
 
-        try await sourceURL.ensureLocalAvailability()
+        try await sourceToCopy.ensureLocalAvailability()
 
-        try FileManager.default.copyItem(at: sourceURL, to: finalDestinationURL)
+        try FileManager.default.copyItem(at: sourceToCopy, to: finalDestinationURL)
         return finalDestinationURL
+    }
+
+    nonisolated private static func copySourceURL(for sourceURL: URL) -> URL {
+        let resolvedURL = sourceURL.resolvingSymlinksInPath().standardizedFileURL
+        guard FileManager.default.fileExists(atPath: resolvedURL.path) else {
+            return sourceURL
+        }
+
+        return resolvedURL
     }
 
     nonisolated static func uniqueDestination(for sourceURL: URL, in directory: URL) -> URL {

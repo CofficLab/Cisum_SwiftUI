@@ -212,6 +212,30 @@ import UniformTypeIdentifiers
     #expect(destination.lastPathComponent == "track 2.mp3")
 }
 
+@Test func audioItemExportCopiesSymlinkedFilesAsStandaloneFiles() async throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let sourceRoot = root.appendingPathComponent("source", isDirectory: true)
+    let downloadsRoot = root.appendingPathComponent("downloads", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: sourceRoot, withIntermediateDirectories: true)
+    try FileManager.default.createDirectory(at: downloadsRoot, withIntermediateDirectories: true)
+    let realSource = sourceRoot.appendingPathComponent("real.mp3")
+    let linkedSource = sourceRoot.appendingPathComponent("linked.mp3")
+    try Data("audio".utf8).write(to: realSource)
+    try FileManager.default.createSymbolicLink(at: linkedSource, withDestinationURL: realSource)
+
+    let copiedFile = try await AudioItemView.copyToDownloads(linkedSource, downloadsURL: downloadsRoot)
+    let fileType = try FileManager.default.attributesOfItem(atPath: copiedFile.path)[.type] as? FileAttributeType
+
+    #expect(copiedFile.lastPathComponent == "linked.mp3")
+    #expect(fileType == .typeRegular)
+    #expect((try Data(contentsOf: copiedFile)) == Data("audio".utf8))
+}
+
 @Test func audioImportFiltersUnsupportedDroppedItems() {
     let root = URL(fileURLWithPath: "/tmp/cisum-audio-import-filter-tests", isDirectory: true)
     let supported = root.appendingPathComponent("track.MP3")
