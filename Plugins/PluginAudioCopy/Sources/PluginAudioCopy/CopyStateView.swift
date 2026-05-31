@@ -10,7 +10,7 @@ enum CopyStatePresentation {
     static func message(pendingCount: Int, failedCount: Int) -> String {
         if pendingCount > 0, failedCount > 0 {
             return String(
-                localized: "正在复制 \(pendingCount) 个文件，\(failedCount) 个失败",
+                localized: "Copying \(pendingCount) \(fileLabel(for: pendingCount)), \(failedCount) failed",
                 table: "Audio-Copy-macOS",
                 bundle: .module
             )
@@ -18,7 +18,7 @@ enum CopyStatePresentation {
 
         if pendingCount > 0 {
             return String(
-                localized: "正在复制 \(pendingCount) 个文件",
+                localized: "Copying \(pendingCount) \(fileLabel(for: pendingCount))",
                 table: "Audio-Copy-macOS",
                 bundle: .module
             )
@@ -26,13 +26,21 @@ enum CopyStatePresentation {
 
         if failedCount > 0 {
             return String(
-                localized: "\(failedCount) 个复制任务失败",
+                localized: "\(failedCount) \(taskLabel(for: failedCount)) failed",
                 table: "Audio-Copy-macOS",
                 bundle: .module
             )
         }
 
         return ""
+    }
+
+    private static func fileLabel(for count: Int) -> String {
+        count == 1 ? String(localized: "file", table: "Audio-Copy-macOS", bundle: .module) : String(localized: "files", table: "Audio-Copy-macOS", bundle: .module)
+    }
+
+    private static func taskLabel(for count: Int) -> String {
+        count == 1 ? String(localized: "copy task", table: "Audio-Copy-macOS", bundle: .module) : String(localized: "copy tasks", table: "Audio-Copy-macOS", bundle: .module)
     }
 }
 

@@ -57,7 +57,7 @@ struct CopyList: View, SuperLog, SuperThread {
     private var emptyView: some View {
         AppEmptyState(
             icon: "tray",
-            title: String(localized: "暂无复制任务", table: "Audio-Copy-macOS", bundle: .module)
+            title: String(localized: "No copy tasks", table: "Audio-Copy-macOS", bundle: .module)
         )
         .frame(minHeight: 160)
     }
