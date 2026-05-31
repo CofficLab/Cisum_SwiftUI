@@ -6,6 +6,10 @@ import SwiftUI
 class ShellSystem: SuperLog {
     static let emoji = "💻"
 
+    static func shellQuoted(_ value: String) -> String {
+        "'\(value.replacingOccurrences(of: "'", with: "'\\''"))'"
+    }
+
     /// 获取当前工作目录
     /// - Returns: 当前工作目录路径
     static func pwd() -> String {
@@ -73,8 +77,7 @@ class ShellSystem: SuperLog {
     /// - Returns: 磁盘使用情况
     static func diskUsage(path: String = "/") -> String {
         do {
-            let command = "df -h '\(path)'"
-            return try Shell.runSync(command).trimmingCharacters(in: .whitespacesAndNewlines)
+            return try Shell.runSync(diskUsageCommand(path: path)).trimmingCharacters(in: .whitespacesAndNewlines)
         } catch {
             return error.localizedDescription
         }
@@ -96,8 +99,7 @@ class ShellSystem: SuperLog {
     static func processes(named processName: String? = nil) -> String {
         do {
             if let name = processName {
-                let command = "ps aux | grep '\(name)' | grep -v grep"
-                return try Shell.runSync(command)
+                return try Shell.runSync(processesCommand(named: name))
             } else {
                 return try Shell.runSync("ps aux")
             }
@@ -120,12 +122,7 @@ class ShellSystem: SuperLog {
     /// - Parameter name: 环境变量名
     /// - Returns: 环境变量值
     static func getEnvironmentVariable(_ name: String) -> String {
-        do {
-            let command = "echo \"$\(name)\""
-            return try Shell.runSync(command).trimmingCharacters(in: .whitespacesAndNewlines)
-        } catch {
-            return error.localizedDescription
-        }
+        ProcessInfo.processInfo.environment[name] ?? ""
     }
 
     /// 获取PATH环境变量
@@ -140,11 +137,23 @@ class ShellSystem: SuperLog {
     /// - Returns: 命令是否存在
     static func commandExists(_ command: String) -> Bool {
         do {
-            _ = try Shell.runSync("which \(command)")
+            _ = try Shell.runSync(commandExistsCommand(command))
             return true
         } catch {
             return false
         }
+    }
+
+    static func diskUsageCommand(path: String) -> String {
+        "df -h \(shellQuoted(path))"
+    }
+
+    static func processesCommand(named name: String) -> String {
+        "ps aux | grep \(shellQuoted(name)) | grep -v grep"
+    }
+
+    static func commandExistsCommand(_ command: String) -> String {
+        "which \(shellQuoted(command))"
     }
 
     /// 获取系统时间
