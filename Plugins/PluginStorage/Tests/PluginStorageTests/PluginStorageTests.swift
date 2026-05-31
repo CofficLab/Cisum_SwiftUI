@@ -118,6 +118,36 @@ import Foundation
     #expect(FileSizeReadPolicy.fileSize(from: [:]) == 0)
 }
 
+@Test func fileSizeCalculationStreamsDirectoryFiles() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let nested = root.appendingPathComponent("nested", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: nested, withIntermediateDirectories: true)
+    try Data(repeating: 1, count: 10).write(to: root.appendingPathComponent("first.bin"))
+    try Data(repeating: 2, count: 15).write(to: nested.appendingPathComponent("second.bin"))
+    try Data(repeating: 3, count: 50).write(to: root.appendingPathComponent(".hidden"))
+
+    #expect(FileSizeCalculationPolicy.size(for: root) == 25)
+}
+
+@Test func fileSizeCalculationReadsSingleFileSize() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let file = root.appendingPathComponent("track.mp3")
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    try Data(repeating: 1, count: 12).write(to: file)
+
+    #expect(FileSizeCalculationPolicy.size(for: file) == 12)
+}
+
 @Test func fileStatusReportsMissingLocalFiles() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)

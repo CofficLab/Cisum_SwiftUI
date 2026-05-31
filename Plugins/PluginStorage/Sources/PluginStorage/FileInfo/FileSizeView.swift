@@ -27,6 +27,41 @@ enum FileSizeReadPolicy {
     }
 }
 
+enum FileSizeCalculationPolicy {
+    static func size(for url: URL) -> Int64 {
+        guard let resourceValues = try? url.resourceValues(forKeys: [.isDirectoryKey]),
+              let isDirectory = resourceValues.isDirectory else {
+            let attributes = (try? FileManager.default.attributesOfItem(atPath: url.path)) ?? [:]
+            return FileSizeReadPolicy.fileSize(from: attributes)
+        }
+
+        guard isDirectory else {
+            let attributes = (try? FileManager.default.attributesOfItem(atPath: url.path)) ?? [:]
+            return FileSizeReadPolicy.fileSize(from: attributes)
+        }
+
+        guard let enumerator = FileManager.default.enumerator(
+            at: url,
+            includingPropertiesForKeys: [.isRegularFileKey, .fileSizeKey],
+            options: [.skipsHiddenFiles]
+        ) else {
+            return 0
+        }
+
+        var totalSize: Int64 = 0
+        for case let fileURL as URL in enumerator {
+            guard let values = try? fileURL.resourceValues(forKeys: [.isRegularFileKey, .fileSizeKey]),
+                  values.isRegularFile == true,
+                  let fileSize = values.fileSize else {
+                continue
+            }
+            totalSize += Int64(fileSize)
+        }
+
+        return totalSize
+    }
+}
+
 struct FileSizeView: View, SuperLog {
     nonisolated static let emoji = "🫘"
     
@@ -54,33 +89,8 @@ struct FileSizeView: View, SuperLog {
             if verbose {
                 os_log("\(self.t)UpdateSize: \(requestedURL.path)")
             }
-            
-            let size: Int64 = {
-                var totalSize: Int64 = 0
-                
-                guard let resourceValues = try? requestedURL.resourceValues(forKeys: [.isDirectoryKey]),
-                      let isDirectory = resourceValues.isDirectory else {
-                    return (try? FileManager.default.attributesOfItem(atPath: requestedURL.path)[.size] as? Int64) ?? 0
-                }
-                
-                if isDirectory {
-                    guard let urls = FileManager.default.enumerator(at: requestedURL, includingPropertiesForKeys: [.fileSizeKey])?.allObjects as? [URL] else {
-                        return 0
-                    }
-                    
-                    for fileURL in urls {
-                        if let fileSize = try? fileURL.resourceValues(forKeys: [.fileSizeKey]).fileSize {
-                            totalSize += Int64(fileSize)
-                        }
-                    }
-                    return totalSize
-                } else {
-                    let attributes = (try? FileManager.default.attributesOfItem(atPath: requestedURL.path)) ?? [:]
-                    return FileSizeReadPolicy.fileSize(from: attributes)
-                }
-            }()
 
-            return size
+            return FileSizeCalculationPolicy.size(for: requestedURL)
         }.value
 
         guard !Task.isCancelled,
