@@ -50,6 +50,32 @@ import UniformTypeIdentifiers
     #expect(FileManager.default.fileExists(atPath: destinationRoot.appendingPathComponent("source").path) == false)
 }
 
+@Test func bookImportRejectsDestinationInsideSourceFolderBeforeCopying() async throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let sourceRoot = root.appendingPathComponent("source", isDirectory: true)
+    let destinationRoot = sourceRoot.appendingPathComponent("library", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: sourceRoot, withIntermediateDirectories: true)
+    let chapter = sourceRoot.appendingPathComponent("chapter-1.m4b")
+    try Data("audio".utf8).write(to: chapter)
+
+    #expect(BookDBView.isDestinationNestedInSource(
+        source: sourceRoot,
+        destination: destinationRoot.appendingPathComponent("source", isDirectory: true)
+    ))
+
+    await #expect(throws: Error.self) {
+        try await BookDBView.copyImportedItems([sourceRoot], to: destinationRoot)
+    }
+
+    #expect(FileManager.default.fileExists(atPath: chapter.path))
+    #expect(!FileManager.default.fileExists(atPath: destinationRoot.appendingPathComponent("source").path))
+}
+
 @Test func bookDropReadsFileURLDataProvider() async throws {
     let expected = URL(fileURLWithPath: "/tmp/cisum-book-drop-provider-tests/audiobook")
     let provider = NSItemProvider()

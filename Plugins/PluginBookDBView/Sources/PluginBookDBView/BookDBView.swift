@@ -125,6 +125,15 @@ extension BookDBView {
                 guard try canImportFolder(folder) else { continue }
 
                 let destination = uniqueDestination(for: folder, in: bookDisk)
+                guard !isDestinationNestedInSource(source: folder, destination: destination) else {
+                    throw NSError(
+                        domain: "BookDBView",
+                        code: 2,
+                        userInfo: [
+                            NSLocalizedDescriptionKey: String(localized: "Import destination cannot be inside the original folder", table: "Book-DBView", bundle: .module)
+                        ]
+                    )
+                }
                 try await copySecurityScopedItem(folder, to: destination)
                 copiedItems.append(destination)
             }
@@ -209,6 +218,13 @@ extension BookDBView {
 
     nonisolated static func shouldStartImport(isImporting: Bool) -> Bool {
         !isImporting
+    }
+
+    nonisolated static func isDestinationNestedInSource(source: URL, destination: URL) -> Bool {
+        let sourcePath = source.standardizedFileURL.path
+        let destinationPath = destination.standardizedFileURL.path
+
+        return destinationPath != sourcePath && destinationPath.hasPrefix(sourcePath + "/")
     }
 
     nonisolated static func hasImportSourceAccess(_ source: URL, securityScopeGranted: Bool) -> Bool {
