@@ -14,13 +14,18 @@ public actor BookPlayModeStore: SuperLog {
     private init() {}
 
     public func getPlayMode() -> MagicPlayMode {
-        if let mode = UserDefaults.standard.string(forKey: Self.playModeKey),
-           let playMode = MagicPlayMode(rawValue: mode) {
+        Self.resolvedPlayMode(
+            localRawValue: UserDefaults.standard.string(forKey: Self.playModeKey),
+            cloudRawValue: NSUbiquitousKeyValueStore.default.string(forKey: Self.playModeKey)
+        )
+    }
+
+    static func resolvedPlayMode(localRawValue: String?, cloudRawValue: String?) -> MagicPlayMode {
+        if let localRawValue, let playMode = MagicPlayMode(rawValue: localRawValue) {
             return playMode
         }
 
-        if let modeString = NSUbiquitousKeyValueStore.default.string(forKey: Self.playModeKey),
-           let playMode = MagicPlayMode(rawValue: modeString) {
+        if let cloudRawValue, let playMode = MagicPlayMode(rawValue: cloudRawValue) {
             return playMode
         }
 

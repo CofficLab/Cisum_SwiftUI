@@ -24,3 +24,17 @@ import Testing
         currentMode: .loop
     ))
 }
+
+@Test func bookPlayModeFallsBackToCloudWhenLocalValueIsInvalid() {
+    #expect(BookPlayModeStore.resolvedPlayMode(
+        localRawValue: "invalid",
+        cloudRawValue: MagicPlayMode.loop.rawValue
+    ) == .loop)
+}
+
+@Test func bookPlayModeDefaultsWhenStoredValuesAreInvalid() {
+    #expect(BookPlayModeStore.resolvedPlayMode(
+        localRawValue: "invalid",
+        cloudRawValue: "also-invalid"
+    ) == .sequence)
+}
