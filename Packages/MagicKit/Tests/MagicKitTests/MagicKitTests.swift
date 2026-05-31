@@ -157,6 +157,23 @@ final class MagicKitTests: XCTestCase {
         XCTAssertTrue(file.isSameFileLocation(as: equivalent))
     }
 
+    func testSameFileLocationKeepsDistinctDanglingSymlinksSeparate() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        let missingFile = root.appendingPathComponent("missing.mp3")
+        let firstLink = root.appendingPathComponent("first.mp3")
+        let secondLink = root.appendingPathComponent("second.mp3")
+        defer {
+            try? FileManager.default.removeItem(at: root)
+        }
+
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        try FileManager.default.createSymbolicLink(at: firstLink, withDestinationURL: missingFile)
+        try FileManager.default.createSymbolicLink(at: secondLink, withDestinationURL: missingFile)
+
+        XCTAssertFalse(firstLink.isSameFileLocation(as: secondLink))
+    }
+
     func testMagicLoggerClearLogsFromBackgroundClearsOnMainThread() async throws {
         let logger = MagicLogger(app: "MagicKitTests")
         logger.info("background clear setup")

@@ -107,8 +107,19 @@ public extension URL {
             return standardized.absoluteString == other.standardized.absoluteString
         }
 
+        return canonicalFileLocationIdentity == other.canonicalFileLocationIdentity
+    }
+
+    private var canonicalFileLocationIdentity: String {
+        if isDanglingSymbolicLinkPath {
+            return standardizedFileURL.path
+        }
+
         return resolvingSymlinksInPath().standardizedFileURL.path
-            == other.resolvingSymlinksInPath().standardizedFileURL.path
+    }
+
+    private var isDanglingSymbolicLinkPath: Bool {
+        isSymbolicLinkPath && !FileManager.default.fileExists(atPath: path)
     }
 
     /// Whether a local/iCloud file is available on disk.

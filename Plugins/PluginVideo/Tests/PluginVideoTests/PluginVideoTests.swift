@@ -36,6 +36,26 @@ import Testing
     ))
 }
 
+@Test func videoTileDoesNotApplyFileSizeAcrossDistinctDanglingSymlinks() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let missingFile = root.appendingPathComponent("missing.mov")
+    let firstLink = root.appendingPathComponent("first.mov")
+    let secondLink = root.appendingPathComponent("second.mov")
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: firstLink, withDestinationURL: missingFile)
+    try FileManager.default.createSymbolicLink(at: secondLink, withDestinationURL: missingFile)
+
+    #expect(!VideoFileSizeLoadPolicy.shouldApplySize(
+        currentFile: secondLink,
+        requestedFile: firstLink
+    ))
+}
+
 @Test func videoTileHidesOpenActionForMissingLocalFiles() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)
