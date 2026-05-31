@@ -89,14 +89,18 @@ public class AudioStateRepo: SuperLog {
     /// 获取播放模式
     /// - Returns: 播放模式，如果没有存储则返回nil
     public static func getPlayMode() -> MagicPlayMode? {
-        // 首先尝试从 UserDefaults 获取模式
-        if let mode = UserDefaults.standard.string(forKey: keyOfCurrentPlayMode) {
-            return MagicPlayMode(rawValue: mode)
+        resolvedPlayMode(
+            localRawValue: UserDefaults.standard.string(forKey: keyOfCurrentPlayMode),
+            cloudRawValue: NSUbiquitousKeyValueStore.default.string(forKey: keyOfCurrentPlayMode)
+        )
+    }
+
+    static func resolvedPlayMode(localRawValue: String?, cloudRawValue: String?) -> MagicPlayMode? {
+        if let localRawValue, let mode = MagicPlayMode(rawValue: localRawValue) {
+            return mode
         }
 
-        // 如果在 UserDefaults 中未找到，尝试从 iCloud 获取
-        if let modeString = NSUbiquitousKeyValueStore.default.string(forKey: keyOfCurrentPlayMode),
-           let mode = MagicPlayMode(rawValue: modeString) {
+        if let cloudRawValue, let mode = MagicPlayMode(rawValue: cloudRawValue) {
             return mode
         }
 
