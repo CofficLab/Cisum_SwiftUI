@@ -164,7 +164,19 @@ actor CopyDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     }
 
     func hasCopyTask(bookmark: Data) -> Bool {
-        findCopyTask(bookmark: bookmark) != nil
+        let context = ModelContext(modelContainer)
+        let predicate = #Predicate<CopyTask> {
+            $0.bookmark == bookmark
+        }
+        var descriptor = FetchDescriptor<CopyTask>(predicate: predicate)
+        descriptor.fetchLimit = 1
+
+        do {
+            return try context.fetchCount(descriptor) > 0
+        } catch {
+            os_log(.error, "Failed to check copy task existence: \(error.localizedDescription)")
+            return false
+        }
     }
 
     func setTaskRunning(_ task: CopyTask) {

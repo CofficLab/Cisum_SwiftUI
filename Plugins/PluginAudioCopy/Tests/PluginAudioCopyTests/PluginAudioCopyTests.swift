@@ -1,4 +1,5 @@
 import Foundation
+import SwiftData
 import SwiftUI
 import Testing
 @testable import PluginAudioCopy
@@ -223,6 +224,27 @@ import Testing
 @Test func copyWorkerDiscardsCompletedCopyWhenTaskWasDeleted() {
     #expect(CopyWorker.shouldKeepCompletedCopy(isTaskStillQueued: true))
     #expect(!CopyWorker.shouldKeepCompletedCopy(isTaskStillQueued: false))
+}
+
+@Test func copyDBSeesTasksDeletedFromSeparateContext() async throws {
+    let schema = Schema([CopyTask.self])
+    let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    let container = try ModelContainer(for: schema, configurations: [configuration])
+    let db = CopyDB(container, reason: "CopyDBTests", verbose: false)
+    let bookmark = Data([42])
+
+    await db.newCopyTask(
+        bookmark: bookmark,
+        destination: URL(fileURLWithPath: "/tmp/cisum-audio-copy-tests", isDirectory: true),
+        originalFilename: "track.mp3"
+    )
+
+    #expect(await db.hasCopyTask(bookmark: bookmark))
+
+    let tasks = CopyDB.getAllTasks(from: container)
+    try CopyDB.deleteTasks(tasks, from: container)
+
+    #expect(await !db.hasCopyTask(bookmark: bookmark))
 }
 
 private final class TestNotificationValue<Value>: @unchecked Sendable {
