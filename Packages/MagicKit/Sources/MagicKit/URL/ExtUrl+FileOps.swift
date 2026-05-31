@@ -38,6 +38,16 @@ enum URLDirectoryContainmentPolicy {
     }
 }
 
+enum URLOpenActionPolicy {
+    static func canOpen(_ url: URL) -> Bool {
+        guard url.isFileURL else {
+            return true
+        }
+
+        return FileManager.default.fileExists(atPath: url.path)
+    }
+}
+
 /// URL 扩展：文件操作基础方法
 public extension URL {
     /// File/display title without the path extension.
@@ -351,12 +361,16 @@ public extension URL {
 
     /// 创建一个打开当前 URL 的按钮。
     func makeOpenButton() -> some View {
-        Button(action: {
-            self.open()
-        }) {
-            Image(systemName: "folder")
+        Group {
+            if URLOpenActionPolicy.canOpen(self) {
+                Button(action: {
+                    self.open()
+                }) {
+                    Image(systemName: "folder")
+                }
+                .buttonStyle(.plain)
+            }
         }
-        .buttonStyle(.plain)
     }
 
     /// 获取同级目录中的下一个文件。
