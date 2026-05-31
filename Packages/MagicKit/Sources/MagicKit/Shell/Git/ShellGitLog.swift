@@ -32,7 +32,7 @@ extension ShellGit {
     /// - Returns: 提交记录列表
     public static func recentCommits(count: Int = 10, at path: String? = nil) throws -> [MagicGitCommit] {
         let format = "%H|%an|%ae|%at|%s"
-        let output = try Shell.runSync("git log -n \(count) --pretty=format:'\(format)'", at: path)
+        let output = try Shell.runSync(recentCommitsCommand(count: count, format: format), at: path)
         return output.split(separator: "\n").compactMap { line in
             parseRecentCommitLine(String(line))
         }
@@ -135,7 +135,7 @@ extension ShellGit {
     /// - Returns: [CommitWithTag]
     public static func commitsWithTags(limit: Int = 20, at path: String? = nil) throws -> [CommitWithTag] {
         // 使用 git log --pretty=format:"%H%x09%s%x09%d" 获取 hash、message、ref
-        let log = try Shell.runSync("git log --pretty=format:%H%x09%s%x09%d -\(limit)", at: path)
+        let log = try Shell.runSync(commitsWithTagsCommand(limit: limit), at: path)
         return log.split(separator: "\n").compactMap { line in
             let parts = line.split(separator: "\t", omittingEmptySubsequences: false)
             guard parts.count >= 3 else { return nil }
@@ -175,7 +175,7 @@ extension ShellGit {
         // 使用 null byte (ASCII 0x00) 作为记录分隔符，因为 git log format 不支持空字节，但我们可以用特殊字符替代
         let format = "%H%x01%an%x01%ae%x01%cI%x01%s%x01%b%x01%d%x02"
         // 使用 --pretty=tformat 确保每条记录后都有分隔符
-        let log = try Shell.runSync("git log --pretty=tformat:\(format) -n \(limit)", at: path)
+        let log = try Shell.runSync(commitListCommand(limit: limit, format: format), at: path)
         let dateFormatter = ISO8601DateFormatter()
         dateFormatter.formatOptions = [.withInternetDateTime]
 
@@ -242,6 +242,18 @@ extension ShellGit {
         "git log \(shellQuoted(branch)) -n \(count) --pretty=format:\(shellQuoted(format))"
     }
 
+    static func recentCommitsCommand(count: Int, format: String) -> String {
+        "git log -n \(count) --pretty=format:\(shellQuoted(format))"
+    }
+
+    static func commitsWithTagsCommand(limit: Int) -> String {
+        "git log --pretty=format:\(shellQuoted("%H%x09%s%x09%d")) -\(limit)"
+    }
+
+    static func commitListCommand(limit: Int, format: String) -> String {
+        "git log --pretty=tformat:\(shellQuoted(format)) -n \(limit)"
+    }
+
     static func commitDetailCommand(_ commit: String, format: String) -> String {
         "git show \(shellQuoted(commit)) --pretty=format:\(shellQuoted(format)) --no-patch"
     }
@@ -274,7 +286,7 @@ extension ShellGit {
         // 使用 SOH (Start of Header, ASCII 0x01) 作为字段分隔符，避免 body 中的换行符破坏格式
         // 使用 STX (Start of Text, ASCII 0x02) 作为记录分隔符
         let format = "%H%x01%an%x01%ae%x01%cI%x01%s%x01%b%x01%d%x02"
-        let log = try Shell.runSync("git log --pretty=tformat:\(format) --skip=\(skip) -n \(size)", at: path)
+        let log = try Shell.runSync(commitListWithPaginationCommand(skip: skip, size: size, format: format), at: path)
         let dateFormatter = ISO8601DateFormatter()
         dateFormatter.formatOptions = [.withInternetDateTime]
 
@@ -297,6 +309,10 @@ extension ShellGit {
             let tags = refs.matches(for: "tag \\w+[-.\\w]*").map { $0.replacingOccurrences(of: "tag ", with: "") }
             return MagicGitCommit(id: hash, hash: hash, author: author, email: email, date: date, message: message, body: body, refs: refs.components(separatedBy: ", ").filter{!$0.isEmpty}, tags: tags)
         }
+    }
+
+    static func commitListWithPaginationCommand(skip: Int, size: Int, format: String) -> String {
+        "git log --pretty=tformat:\(shellQuoted(format)) --skip=\(skip) -n \(size)"
     }
 }
 
