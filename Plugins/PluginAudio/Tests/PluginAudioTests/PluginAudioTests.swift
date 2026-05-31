@@ -105,6 +105,16 @@ import SwiftData
     #expect(await db.getTotalOfAudio() == 0)
 }
 
+@Test func audioDBContainsHandlesRootAndSiblingPrefixPaths() {
+    let root = URL(fileURLWithPath: "/", isDirectory: true)
+    let rootChild = URL(fileURLWithPath: "/tmp/cisum-audio-tests/track.mp3")
+    let disk = URL(fileURLWithPath: "/tmp/cisum-audio-tests/audio", isDirectory: true)
+    let sibling = URL(fileURLWithPath: "/tmp/cisum-audio-tests/audio-backup/track.mp3")
+
+    #expect(AudioDB.contains(root, audioURL: rootChild))
+    #expect(!AudioDB.contains(disk, audioURL: sibling))
+}
+
 @Test func audioDBDeleteAudiosByURLRejectsFilesOutsideLibrary() async throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)
