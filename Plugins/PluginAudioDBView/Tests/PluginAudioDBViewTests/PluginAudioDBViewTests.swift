@@ -146,6 +146,26 @@ import UniformTypeIdentifiers
     ))
 }
 
+@Test func audioListDeletionCountsOnlyDisplayedRemovedRows() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realFile = root.appendingPathComponent("real.mp3")
+    let linkedFile = root.appendingPathComponent("linked.mp3")
+    let otherFile = root.appendingPathComponent("other.mp3")
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    try Data("audio".utf8).write(to: realFile)
+    try FileManager.default.createSymbolicLink(at: linkedFile, withDestinationURL: realFile)
+
+    #expect(AudioListDeletionPolicy.removedDisplayedCount(
+        from: [realFile, otherFile],
+        deletedURLs: [linkedFile, realFile]
+    ) == 1)
+}
+
 @Test func audioListOnlyAppliesCurrentSelectionPlayback() {
     let first = URL(fileURLWithPath: "/tmp/cisum-audio-selection/first.mp3")
     let second = URL(fileURLWithPath: "/tmp/cisum-audio-selection/second.mp3")
