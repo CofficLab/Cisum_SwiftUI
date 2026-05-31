@@ -8,11 +8,29 @@ import CisumUI
 
 enum MagicPlayManDownloadRequestPolicy {
     static func shouldApplyResult(requestedAsset: URL, currentAsset: URL?) -> Bool {
-        requestedAsset == currentAsset
+        MagicPlayManAssetIdentity.representsSameAsset(requestedAsset, currentAsset)
     }
 
     static func shouldFinishDownload(requestedAsset: URL, currentAsset: URL?) -> Bool {
-        requestedAsset == currentAsset
+        MagicPlayManAssetIdentity.representsSameAsset(requestedAsset, currentAsset)
+    }
+}
+
+enum MagicPlayManAssetIdentity {
+    static func representsSameAsset(_ lhs: URL?, _ rhs: URL?) -> Bool {
+        switch (lhs, rhs) {
+        case (.none, .none):
+            return true
+        case let (.some(lhs), .some(rhs)):
+            guard lhs.isFileURL, rhs.isFileURL else {
+                return lhs == rhs
+            }
+
+            return lhs.resolvingSymlinksInPath().standardizedFileURL.path
+                == rhs.resolvingSymlinksInPath().standardizedFileURL.path
+        default:
+            return false
+        }
     }
 }
 

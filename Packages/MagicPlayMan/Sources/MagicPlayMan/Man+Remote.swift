@@ -16,7 +16,7 @@ import CisumUI
 
 extension MagicPlayMan {
     nonisolated static func shouldApplyNowPlayingMetadataResult(requestedAsset: URL, currentAsset: URL?) -> Bool {
-        requestedAsset == currentAsset
+        MagicPlayManAssetIdentity.representsSameAsset(requestedAsset, currentAsset)
     }
 
     func setupRemoteControl() {

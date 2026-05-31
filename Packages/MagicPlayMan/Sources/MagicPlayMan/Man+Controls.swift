@@ -151,7 +151,7 @@ public extension MagicPlayMan {
         self.setProgress(0)
         self.setCurrentTime(0, reason: reason + ".play")
 
-        guard self.currentURL == url else {
+        guard MagicPlayManAssetIdentity.representsSameAsset(self.currentURL, url) else {
             return
         }
 
@@ -167,7 +167,7 @@ public extension MagicPlayMan {
             guard let self = self else { return }
 
             // 关键：确保当前仍是同一个 URL (用户可能在下载期间切歌了)
-            guard self.currentURL == url else {
+            guard MagicPlayManAssetIdentity.representsSameAsset(self.currentURL, url) else {
                 if self.verbose {
                     os_log("\(self.t)⚠️ URL changed during download, ignoring playback request for: \(url.title)")
                 }

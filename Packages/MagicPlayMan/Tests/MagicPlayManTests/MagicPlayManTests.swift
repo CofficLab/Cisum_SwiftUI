@@ -26,6 +26,27 @@ final class MagicPlayManTests: XCTestCase {
         XCTAssertFalse(MagicPlayMan.shouldApplyNowPlayingMetadataResult(requestedAsset: current, currentAsset: nil))
     }
 
+    func testNowPlayingMetadataMatchesSymlinkedCurrentAsset() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        let realFolder = root.appendingPathComponent("real", isDirectory: true)
+        let linkedFolder = root.appendingPathComponent("linked", isDirectory: true)
+        defer {
+            try? FileManager.default.removeItem(at: root)
+        }
+
+        try FileManager.default.createDirectory(at: realFolder, withIntermediateDirectories: true)
+        try FileManager.default.createSymbolicLink(at: linkedFolder, withDestinationURL: realFolder)
+        let realAsset = realFolder.appendingPathComponent("track.mp3")
+        let linkedAsset = linkedFolder.appendingPathComponent("track.mp3")
+        try Data("audio".utf8).write(to: realAsset)
+
+        XCTAssertTrue(MagicPlayMan.shouldApplyNowPlayingMetadataResult(
+            requestedAsset: linkedAsset,
+            currentAsset: realAsset
+        ))
+    }
+
     func testDownloadResultMustBelongToCurrentAsset() {
         let current = URL(fileURLWithPath: "/tmp/current.mp3")
         let stale = URL(fileURLWithPath: "/tmp/stale.mp3")
@@ -53,6 +74,45 @@ final class MagicPlayManTests: XCTestCase {
         XCTAssertFalse(MagicPlayManDownloadRequestPolicy.shouldFinishDownload(
             requestedAsset: current,
             currentAsset: nil
+        ))
+    }
+
+    func testDownloadResultMatchesSymlinkedCurrentAsset() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        let realFolder = root.appendingPathComponent("real", isDirectory: true)
+        let linkedFolder = root.appendingPathComponent("linked", isDirectory: true)
+        defer {
+            try? FileManager.default.removeItem(at: root)
+        }
+
+        try FileManager.default.createDirectory(at: realFolder, withIntermediateDirectories: true)
+        try FileManager.default.createSymbolicLink(at: linkedFolder, withDestinationURL: realFolder)
+        let realAsset = realFolder.appendingPathComponent("track.mp3")
+        let linkedAsset = linkedFolder.appendingPathComponent("track.mp3")
+        try Data("audio".utf8).write(to: realAsset)
+
+        XCTAssertTrue(MagicPlayManDownloadRequestPolicy.shouldApplyResult(
+            requestedAsset: linkedAsset,
+            currentAsset: realAsset
+        ))
+        XCTAssertTrue(MagicPlayManDownloadRequestPolicy.shouldFinishDownload(
+            requestedAsset: linkedAsset,
+            currentAsset: realAsset
+        ))
+    }
+
+    func testRemoteAssetsStillRequireExactURLIdentity() throws {
+        let first = try XCTUnwrap(URL(string: "https://example.com/audio/track.mp3"))
+        let second = try XCTUnwrap(URL(string: "https://cdn.example.com/audio/track.mp3"))
+
+        XCTAssertTrue(MagicPlayManDownloadRequestPolicy.shouldApplyResult(
+            requestedAsset: first,
+            currentAsset: first
+        ))
+        XCTAssertFalse(MagicPlayManDownloadRequestPolicy.shouldApplyResult(
+            requestedAsset: first,
+            currentAsset: second
         ))
     }
 
