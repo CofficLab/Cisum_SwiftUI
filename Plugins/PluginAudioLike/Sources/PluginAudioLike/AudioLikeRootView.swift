@@ -11,6 +11,10 @@ enum AudioLikeStatusChangePolicy {
     static func shouldAcceptChange(isSceneActive: Bool) -> Bool {
         isSceneActive
     }
+
+    static func shouldReportSaveFailure(isSceneActive: Bool) -> Bool {
+        isSceneActive
+    }
 }
 
 public struct AudioLikeRootView<Content>: View, SuperLog where Content: View {
@@ -118,6 +122,9 @@ private extension AudioLikeRootView {
 
                 NotificationCenter.postAudioLikeStatusChanged(audioId: audioId, url: url, liked: liked)
             } catch {
+                guard AudioLikeStatusChangePolicy.shouldReportSaveFailure(isSceneActive: shouldActivateLike) else {
+                    return
+                }
                 os_log(.error, "\(self.t)❌ 保存喜欢状态失败: \(error.localizedDescription)")
                 alert_error(String(localized: "Failed to save like status: \(error.localizedDescription)", table: "Audio-Like", bundle: .module))
             }

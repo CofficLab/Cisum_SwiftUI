@@ -36,6 +36,11 @@ func pluginExposesSettingsView() {
     #expect(!AudioLikeStatusChangePolicy.shouldAcceptChange(isSceneActive: false))
 }
 
+@Test func audioLikeSaveFailuresReportOnlyInActiveScene() {
+    #expect(AudioLikeStatusChangePolicy.shouldReportSaveFailure(isSceneActive: true))
+    #expect(!AudioLikeStatusChangePolicy.shouldReportSaveFailure(isSceneActive: false))
+}
+
 @Test func audioLikeStatusNotificationIsDeliveredOnMainThread() async {
     let url = URL(fileURLWithPath: "/tmp/audio/main-thread.mp3")
 
