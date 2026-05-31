@@ -88,7 +88,12 @@ public class AudioRepo: ObservableObject, SuperLog {
 
         do {
             let audioId = url.absoluteString
-            try await AudioLikeRepo.shared.updateLikeStatus(audioId: audioId, liked: liked)
+            try await AudioLikeRepo.shared.updateLikeStatus(
+                audioId: audioId,
+                liked: liked,
+                url: url,
+                title: url.lastPathComponent
+            )
 
             if liked {
                 os_log("\(self.t)👍 Like \(url.lastPathComponent)")

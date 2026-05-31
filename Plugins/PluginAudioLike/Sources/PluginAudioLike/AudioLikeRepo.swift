@@ -115,7 +115,7 @@ public actor AudioLikeRepo: SuperLog {
         try context.save()
     }
 
-    public func updateLikeStatus(audioId: String, liked: Bool) async throws {
+    public func updateLikeStatus(audioId: String, liked: Bool, url: URL? = nil, title: String? = nil) async throws {
         try await AudioLikeRepo.performOnMainActor {
             if let existingModel = try await self.findLikeModel(audioId: audioId) {
                 if !liked {
@@ -124,12 +124,18 @@ public actor AudioLikeRepo: SuperLog {
                 }
 
                 existingModel.liked = liked
+                if let url {
+                    existingModel.url = url
+                }
+                if let title {
+                    existingModel.title = title
+                }
                 existingModel.updatedAt = Date()
                 try await self.save(existingModel)
             } else {
                 guard liked else { return }
 
-                let newModel = AudioLikeModel(audioId: audioId, url: nil, liked: liked)
+                let newModel = AudioLikeModel(audioId: audioId, url: url, title: title, liked: liked)
                 try await self.save(newModel)
             }
         }

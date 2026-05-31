@@ -74,4 +74,59 @@ struct AudioLikeRepoTests {
         AudioLikeRepositoryConfiguration.configure(databaseURL: secondDatabaseURL)
         #expect(try await AudioLikeRepo.shared.findLikeModel(audioId: audioId) == nil)
     }
+
+    @Test
+    @MainActor
+    func audioLikeRepoPersistsMetadataForSettings() async throws {
+        let databaseURL = FileManager.default.temporaryDirectory
+            .appendingPathComponent("PluginAudioLikeTests-\(UUID().uuidString)-metadata")
+            .appendingPathExtension("store")
+        defer {
+            try? FileManager.default.removeItem(at: databaseURL)
+        }
+
+        AudioLikeRepositoryConfiguration.configure(databaseURL: databaseURL)
+
+        let url = URL(fileURLWithPath: "/tmp/audio/metadata-track.mp3")
+        let audioId = url.absoluteString
+
+        try await AudioLikeRepo.shared.updateLikeStatus(
+            audioId: audioId,
+            liked: true,
+            url: url,
+            title: "Metadata Track"
+        )
+
+        let model = try #require(await AudioLikeRepo.shared.findLikeModel(audioId: audioId))
+        #expect(model.url == url)
+        #expect(model.title == "Metadata Track")
+    }
+
+    @Test
+    @MainActor
+    func audioLikeRepoBackfillsMissingMetadata() async throws {
+        let databaseURL = FileManager.default.temporaryDirectory
+            .appendingPathComponent("PluginAudioLikeTests-\(UUID().uuidString)-backfill")
+            .appendingPathExtension("store")
+        defer {
+            try? FileManager.default.removeItem(at: databaseURL)
+        }
+
+        AudioLikeRepositoryConfiguration.configure(databaseURL: databaseURL)
+
+        let url = URL(fileURLWithPath: "/tmp/audio/backfilled-track.mp3")
+        let audioId = url.absoluteString
+
+        try await AudioLikeRepo.shared.updateLikeStatus(audioId: audioId, liked: true)
+        try await AudioLikeRepo.shared.updateLikeStatus(
+            audioId: audioId,
+            liked: true,
+            url: url,
+            title: "Backfilled Track"
+        )
+
+        let model = try #require(await AudioLikeRepo.shared.findLikeModel(audioId: audioId))
+        #expect(model.url == url)
+        #expect(model.title == "Backfilled Track")
+    }
 }
