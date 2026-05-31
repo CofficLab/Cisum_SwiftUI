@@ -11,7 +11,10 @@ public struct VideoGrid: View {
 
     public var body: some View {
         if files.isEmpty {
-            ContentUnavailableView("Video", systemImage: "video")
+            ContentUnavailableView(
+                String(localized: "Video", table: "Video", bundle: .module),
+                systemImage: "video"
+            )
         } else {
             List(files, id: \.self, selection: $selection) { file in
                 VideoTile(selection: $selection, file: file)
