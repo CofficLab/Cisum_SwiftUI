@@ -300,7 +300,7 @@ extension BookDB {
 
         // 将数组转换成哈希表，方便通过键来快速查找元素，这样可以将时间复杂度降低到：O(m+n)
         var hashMap = [URL: URL]()
-        for element in items where Self.isSupportedBookLibraryItem(element) {
+        for element in Self.uniqueSupportedBookLibraryItems(items) {
             hashMap[element] = element
         }
 
@@ -353,7 +353,7 @@ extension BookDB {
         let startTime: DispatchTime = .now()
 
         var nextOrder = nextAppendOrder()
-        for meta in Self.sortedForStableInsertion(metas) {
+        for meta in Self.sortedForStableInsertion(Self.uniqueSupportedBookLibraryItems(metas)) {
             if meta.isNotFileExist {
                 deleteModels(for: meta)
             } else if !Self.isSupportedBookLibraryItem(meta) {
@@ -378,6 +378,16 @@ extension BookDB {
 
     static func isSupportedBookLibraryItem(_ url: URL) -> Bool {
         BookLibraryItemSupport.isSupported(url)
+    }
+
+    static func uniqueSupportedBookLibraryItems(_ urls: [URL]) -> [URL] {
+        var uniqueURLs: [URL] = []
+        for url in urls where isSupportedBookLibraryItem(url) {
+            guard !uniqueURLs.contains(where: { BookPathContainment.representsSameFile($0, url) }) else { continue }
+            uniqueURLs.append(url)
+        }
+
+        return uniqueURLs
     }
 
     private func nextAppendOrder() -> Int {

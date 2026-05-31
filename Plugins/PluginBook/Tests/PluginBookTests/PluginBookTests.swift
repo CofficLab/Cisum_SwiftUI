@@ -323,6 +323,33 @@ import SwiftData
     #expect(await db.getBookTime(realBook) == 42)
 }
 
+@Test func bookDBFullSyncDeduplicatesSymlinkedScanItems() async throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realRoot = root.appendingPathComponent("real-books", isDirectory: true)
+    let linkedRoot = root.appendingPathComponent("library-link", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: realRoot, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedRoot, withDestinationURL: realRoot)
+
+    let schema = Schema([BookModel.self, BookState.self])
+    let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    let container = try ModelContainer(for: schema, configurations: [configuration])
+    let db = BookDB(container, reason: "bookDBFullSyncDeduplicatesSymlinkedScanItems")
+
+    let realBook = realRoot.appendingPathComponent("Novel.m4b")
+    let linkedBook = linkedRoot.appendingPathComponent("Novel.m4b")
+    try Data("audio".utf8).write(to: realBook)
+
+    await db.sync([linkedBook, realBook], isFirst: true)
+
+    let books = try await db.allBookDTOs()
+    #expect(books.map(\.url) == [linkedBook])
+}
+
 @Test func bookDBFindsBookStateThroughSymlink() async throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)
