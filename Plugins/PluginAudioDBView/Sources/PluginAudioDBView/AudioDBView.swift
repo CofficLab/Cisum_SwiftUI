@@ -251,6 +251,10 @@ extension AudioDBView {
         !urls.isEmpty
     }
 
+    nonisolated static func shouldReportDroppedURLLoadFailure(_ urls: [URL], errors: [Error]) -> Bool {
+        urls.isEmpty && !errors.isEmpty
+    }
+
     nonisolated static func shouldStartImport(isImporting: Bool) -> Bool {
         !isImporting
     }
@@ -414,7 +418,8 @@ extension AudioDBView {
         Task {
             let droppedFiles = await Self.droppedFileURLs(from: providers)
 
-            if let error = droppedFiles.errors.first {
+            if Self.shouldReportDroppedURLLoadFailure(droppedFiles.urls, errors: droppedFiles.errors),
+               let error = droppedFiles.errors.first {
                 os_log(.error, "\(self.t)⚠️ 加载文件失败: \(error.localizedDescription)")
                 alert_error(String(localized: "Import failed: \(error.localizedDescription)", table: "Audio-DBView", bundle: .module))
             }

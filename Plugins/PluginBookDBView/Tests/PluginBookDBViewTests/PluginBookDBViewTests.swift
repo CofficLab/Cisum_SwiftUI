@@ -296,6 +296,9 @@ import UniformTypeIdentifiers
     #expect(BookDBView.shouldImportDroppedURLs([], after: [error]) == false)
     #expect(BookDBView.shouldImportDroppedURLs([url], after: [error]) == true)
     #expect(BookDBView.shouldImportDroppedURLs([], after: []) == false)
+    #expect(BookDBView.shouldReportDroppedURLLoadFailure([], errors: [error]))
+    #expect(!BookDBView.shouldReportDroppedURLLoadFailure([url], errors: [error]))
+    #expect(!BookDBView.shouldReportDroppedURLLoadFailure([], errors: []))
 }
 
 @Test func bookImportDoesNotStartWhileAlreadyImporting() {
