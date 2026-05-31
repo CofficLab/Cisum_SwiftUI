@@ -6,12 +6,19 @@ import SwiftUI
 
 public typealias BookLikeCurrentSceneProvider = @MainActor () -> String?
 
+enum BookLikeStatusChangePolicy {
+    static func shouldApplyChange(currentGeneration: Int, requestGeneration: Int) -> Bool {
+        currentGeneration == requestGeneration
+    }
+}
+
 public struct BookLikeRootView<Content>: View, SuperLog where Content: View {
     public nonisolated static var emoji: String { BookLikePluginInfo.emoji }
     private let verbose = false
 
     @EnvironmentObject private var man: MagicPlayMan
     @State private var playbackSubscriptionID: UUID?
+    @State private var likeStatusChangeGeneration = 0
 
     private let content: Content
     private let targetSceneName: String
@@ -92,6 +99,8 @@ private extension BookLikeRootView {
     }
 
     private func deactivateLike() {
+        likeStatusChangeGeneration += 1
+
         guard let playbackSubscriptionID else { return }
 
         man.unsubscribe(playbackSubscriptionID)
@@ -107,12 +116,16 @@ private extension BookLikeRootView {
     ///   - liked: 是否喜欢
     func handleLikeStatusChanged(url: URL, liked: Bool) {
         guard shouldActivateLike else { return }
+        likeStatusChangeGeneration += 1
+        let generation = likeStatusChangeGeneration
 
         if verbose {
             os_log("\(self.t)❤️ 书籍喜欢状态变化: \(url.lastPathComponent) -> \(liked ? "喜欢" : "取消喜欢")")
         }
 
-        Task {
+        Task { @MainActor in
+            guard isCurrentLikeStatusChange(generation) else { return }
+
             BookLikeStore.setLiked(liked, url: url)
 
             if liked {
@@ -128,6 +141,13 @@ private extension BookLikeRootView {
             // 发送通知，通知其他组件喜欢状态已更新
             NotificationCenter.postBookLikeStatusChanged(url: url, liked: liked)
         }
+    }
+
+    private func isCurrentLikeStatusChange(_ generation: Int) -> Bool {
+        BookLikeStatusChangePolicy.shouldApplyChange(
+            currentGeneration: likeStatusChangeGeneration,
+            requestGeneration: generation
+        ) && shouldActivateLike
     }
 }
 

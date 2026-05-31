@@ -31,6 +31,17 @@ func pluginExposesSettingsView() {
     ))
 }
 
+@Test func audioLikeStatusChangeOnlyAppliesLatestGeneration() {
+    #expect(AudioLikeStatusChangePolicy.shouldApplyChange(
+        currentGeneration: 3,
+        requestGeneration: 3
+    ))
+    #expect(!AudioLikeStatusChangePolicy.shouldApplyChange(
+        currentGeneration: 3,
+        requestGeneration: 2
+    ))
+}
+
 @Test func audioLikeStatusNotificationIsDeliveredOnMainThread() async {
     let url = URL(fileURLWithPath: "/tmp/audio/main-thread.mp3")
 

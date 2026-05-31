@@ -1,4 +1,4 @@
-import PluginBookLike
+@testable import PluginBookLike
 import Testing
 import Foundation
 
@@ -17,6 +17,17 @@ func pluginExposesSettingsView() {
     let view = BookLikePlugin.shared.addSettingView()
 
     #expect(view != nil)
+}
+
+@Test func bookLikeStatusChangeOnlyAppliesLatestGeneration() {
+    #expect(BookLikeStatusChangePolicy.shouldApplyChange(
+        currentGeneration: 3,
+        requestGeneration: 3
+    ))
+    #expect(!BookLikeStatusChangePolicy.shouldApplyChange(
+        currentGeneration: 3,
+        requestGeneration: 2
+    ))
 }
 
 @Test func bookLikeStatusNotificationIsDeliveredOnMainThread() async {
