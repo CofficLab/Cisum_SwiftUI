@@ -17,6 +17,15 @@ import SwiftData
     }
 }
 
+@Test func bookDBDownloadProgressPercentTextUsesFractionInput() {
+    #expect(BookDB.downloadProgressPercentText(forFraction: .nan) == "0")
+    #expect(BookDB.downloadProgressPercentText(forFraction: -0.25) == "0")
+    #expect(BookDB.downloadProgressPercentText(forFraction: 0) == "0")
+    #expect(BookDB.downloadProgressPercentText(forFraction: 0.5) == "50")
+    #expect(BookDB.downloadProgressPercentText(forFraction: 1) == "100")
+    #expect(BookDB.downloadProgressPercentText(forFraction: 1.4) == "100")
+}
+
 @MainActor
 @Test func bookDiskCreationReplacesDanglingSymlink() throws {
     let root = FileManager.default.temporaryDirectory

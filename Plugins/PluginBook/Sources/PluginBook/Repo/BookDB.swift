@@ -38,6 +38,15 @@ public actor BookDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
     func hasChanges() -> Bool {
         context.hasChanges
     }
+
+    static func downloadProgressPercentText(forFraction progress: Double) -> String {
+        guard progress.isFinite else {
+            return "0"
+        }
+
+        let percent = min(max(progress, 0), 1) * 100
+        return String(format: "%.0f", percent)
+    }
 }
 
 enum BookLibraryItemSupport {
@@ -318,7 +327,7 @@ extension BookDB {
         var message = "\(self.t)SyncBook(\(items.count))"
 
         if let first = items.first, first.checkIsDownloading() == true {
-            message += " -> \(first.title) -> \(String(format: "%.0f", first.getDownloadProgressSnapshot()))% ⏬⏬⏬"
+            message += " -> \(first.title) -> \(Self.downloadProgressPercentText(forFraction: first.getDownloadProgressSnapshot()))% ⏬⏬⏬"
         }
 
         if isFirst {
