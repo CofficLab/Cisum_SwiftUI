@@ -16,15 +16,31 @@ private enum AudioControlRuntime {
 }
 
 enum AudioControlPlaybackRequestPolicy {
-    static func shouldApplyNavigationResult(requestedAsset: URL, currentAsset: URL?, isSceneActive: Bool) -> Bool {
-        isSceneActive && representsSameFile(requestedAsset, currentAsset)
+    static func shouldApplyNavigationResult(
+        requestedAsset: URL,
+        currentAsset: URL?,
+        isSceneActive: Bool,
+        currentGeneration: Int = 0,
+        requestGeneration: Int = 0
+    ) -> Bool {
+        currentGeneration == requestGeneration
+            && isSceneActive
+            && representsSameFile(requestedAsset, currentAsset)
     }
 
-    static func shouldReportNavigationFailure(requestedAsset: URL, currentAsset: URL?, isSceneActive: Bool) -> Bool {
+    static func shouldReportNavigationFailure(
+        requestedAsset: URL,
+        currentAsset: URL?,
+        isSceneActive: Bool,
+        currentGeneration: Int = 0,
+        requestGeneration: Int = 0
+    ) -> Bool {
         shouldApplyNavigationResult(
             requestedAsset: requestedAsset,
             currentAsset: currentAsset,
-            isSceneActive: isSceneActive
+            isSceneActive: isSceneActive,
+            currentGeneration: currentGeneration,
+            requestGeneration: requestGeneration
         )
     }
 
@@ -175,13 +191,16 @@ private extension AudioControlRootView {
     func handlePreviousRequested(_ asset: URL, ignoreSceneCheck: Bool = false) {
         guard shouldActivateControl || ignoreSceneCheck else { return }
 
+        let generation = controlGeneration
         Task { @MainActor in
             do {
                 if let previous = try await previousAsset(asset, false) {
                     guard AudioControlPlaybackRequestPolicy.shouldApplyNavigationResult(
                         requestedAsset: asset,
                         currentAsset: man.currentAsset,
-                        isSceneActive: shouldActivateControl || ignoreSceneCheck
+                        isSceneActive: shouldActivateControl || ignoreSceneCheck,
+                        currentGeneration: controlGeneration,
+                        requestGeneration: generation
                     ) else {
                         return
                     }
@@ -193,7 +212,9 @@ private extension AudioControlRootView {
                     guard AudioControlPlaybackRequestPolicy.shouldApplyNavigationResult(
                         requestedAsset: asset,
                         currentAsset: man.currentAsset,
-                        isSceneActive: shouldActivateControl || ignoreSceneCheck
+                        isSceneActive: shouldActivateControl || ignoreSceneCheck,
+                        currentGeneration: controlGeneration,
+                        requestGeneration: generation
                     ) else {
                         return
                     }
@@ -202,7 +223,9 @@ private extension AudioControlRootView {
                     guard AudioControlPlaybackRequestPolicy.shouldApplyNavigationResult(
                         requestedAsset: asset,
                         currentAsset: man.currentAsset,
-                        isSceneActive: shouldActivateControl || ignoreSceneCheck
+                        isSceneActive: shouldActivateControl || ignoreSceneCheck,
+                        currentGeneration: controlGeneration,
+                        requestGeneration: generation
                     ) else {
                         return
                     }
@@ -213,7 +236,9 @@ private extension AudioControlRootView {
                 guard AudioControlPlaybackRequestPolicy.shouldReportNavigationFailure(
                     requestedAsset: asset,
                     currentAsset: man.currentAsset,
-                    isSceneActive: shouldActivateControl || ignoreSceneCheck
+                    isSceneActive: shouldActivateControl || ignoreSceneCheck,
+                    currentGeneration: controlGeneration,
+                    requestGeneration: generation
                 ) else {
                     return
                 }
@@ -228,13 +253,16 @@ private extension AudioControlRootView {
     func handleNextRequested(_ asset: URL, ignoreSceneCheck: Bool = false) {
         guard shouldActivateControl || ignoreSceneCheck else { return }
 
+        let generation = controlGeneration
         Task { @MainActor in
             do {
                 if let next = try await nextAsset(asset, AudioControlRuntime.verbose) {
                     guard AudioControlPlaybackRequestPolicy.shouldApplyNavigationResult(
                         requestedAsset: asset,
                         currentAsset: man.currentAsset,
-                        isSceneActive: shouldActivateControl || ignoreSceneCheck
+                        isSceneActive: shouldActivateControl || ignoreSceneCheck,
+                        currentGeneration: controlGeneration,
+                        requestGeneration: generation
                     ) else {
                         return
                     }
@@ -250,7 +278,9 @@ private extension AudioControlRootView {
                     guard AudioControlPlaybackRequestPolicy.shouldApplyNavigationResult(
                         requestedAsset: asset,
                         currentAsset: man.currentAsset,
-                        isSceneActive: shouldActivateControl || ignoreSceneCheck
+                        isSceneActive: shouldActivateControl || ignoreSceneCheck,
+                        currentGeneration: controlGeneration,
+                        requestGeneration: generation
                     ) else {
                         return
                     }
@@ -260,7 +290,9 @@ private extension AudioControlRootView {
                     guard AudioControlPlaybackRequestPolicy.shouldApplyNavigationResult(
                         requestedAsset: asset,
                         currentAsset: man.currentAsset,
-                        isSceneActive: shouldActivateControl || ignoreSceneCheck
+                        isSceneActive: shouldActivateControl || ignoreSceneCheck,
+                        currentGeneration: controlGeneration,
+                        requestGeneration: generation
                     ) else {
                         return
                     }
@@ -271,7 +303,9 @@ private extension AudioControlRootView {
                 guard AudioControlPlaybackRequestPolicy.shouldReportNavigationFailure(
                     requestedAsset: asset,
                     currentAsset: man.currentAsset,
-                    isSceneActive: shouldActivateControl || ignoreSceneCheck
+                    isSceneActive: shouldActivateControl || ignoreSceneCheck,
+                    currentGeneration: controlGeneration,
+                    requestGeneration: generation
                 ) else {
                     return
                 }

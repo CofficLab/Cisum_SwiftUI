@@ -161,6 +161,26 @@ import Testing
     ))
 }
 
+@Test func staleNavigationDoesNotApplyAfterSceneReactivation() {
+    let requested = URL(fileURLWithPath: "/tmp/cisum-audio-control-stale/requested.mp3")
+    let generation = AudioControlPlaybackRequestPolicy.generationAfterDeactivation(2)
+
+    #expect(AudioControlPlaybackRequestPolicy.shouldApplyNavigationResult(
+        requestedAsset: requested,
+        currentAsset: requested,
+        isSceneActive: true,
+        currentGeneration: 2,
+        requestGeneration: 2
+    ))
+    #expect(!AudioControlPlaybackRequestPolicy.shouldApplyNavigationResult(
+        requestedAsset: requested,
+        currentAsset: requested,
+        isSceneActive: true,
+        currentGeneration: generation,
+        requestGeneration: 2
+    ))
+}
+
 @Test func staleNavigationFailureDoesNotReportAfterPlaybackSwitches() {
     let requested = URL(fileURLWithPath: "/tmp/cisum-audio-control-failure/requested.mp3")
     let switched = URL(fileURLWithPath: "/tmp/cisum-audio-control-failure/switched.mp3")
@@ -179,5 +199,25 @@ import Testing
         requestedAsset: requested,
         currentAsset: requested,
         isSceneActive: false
+    ))
+}
+
+@Test func staleNavigationFailureDoesNotReportAfterSceneReactivation() {
+    let requested = URL(fileURLWithPath: "/tmp/cisum-audio-control-failure/requested.mp3")
+    let generation = AudioControlPlaybackRequestPolicy.generationAfterDeactivation(2)
+
+    #expect(AudioControlPlaybackRequestPolicy.shouldReportNavigationFailure(
+        requestedAsset: requested,
+        currentAsset: requested,
+        isSceneActive: true,
+        currentGeneration: 2,
+        requestGeneration: 2
+    ))
+    #expect(!AudioControlPlaybackRequestPolicy.shouldReportNavigationFailure(
+        requestedAsset: requested,
+        currentAsset: requested,
+        isSceneActive: true,
+        currentGeneration: generation,
+        requestGeneration: 2
     ))
 }
