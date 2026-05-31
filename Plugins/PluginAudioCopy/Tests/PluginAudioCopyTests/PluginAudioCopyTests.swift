@@ -197,6 +197,9 @@ import Testing
     #expect(CopyRootView<EmptyView>.shouldShowNoFilesAdded(taskCount: 0, preparationErrors: [error]) == false)
     #expect(CopyRootView<EmptyView>.shouldShowNoFilesAdded(taskCount: 0, preparationErrors: []) == true)
     #expect(CopyRootView<EmptyView>.shouldShowNoFilesAdded(taskCount: 1, preparationErrors: [error]) == false)
+    #expect(CopyRootView<EmptyView>.shouldReportPreparationFailure(preparedCount: 0, preparationErrors: [error]))
+    #expect(!CopyRootView<EmptyView>.shouldReportPreparationFailure(preparedCount: 1, preparationErrors: [error]))
+    #expect(!CopyRootView<EmptyView>.shouldReportPreparationFailure(preparedCount: 0, preparationErrors: []))
 }
 
 @Test func copyDropOnlyChecksCopyServicesAfterFindingSources() {

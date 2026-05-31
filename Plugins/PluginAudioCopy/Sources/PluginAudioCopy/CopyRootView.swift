@@ -115,9 +115,6 @@
                     } catch {
                         preparationErrors.append(error)
                         os_log(.error, "\(self.t)Failed to load URL or create bookmark: \(error.localizedDescription)")
-                        await MainActor.run {
-                            alert_error(String(localized: "Failed to prepare file: \(error.localizedDescription)", table: "Audio-Copy-macOS", bundle: .module))
-                        }
                     }
                 }
             }
@@ -129,6 +126,12 @@
             }
 
             guard Self.shouldPrepareCopyInfrastructure(sourceCount: sourceURLs.count) else {
+                if Self.shouldReportPreparationFailure(preparedCount: sourceURLs.count, preparationErrors: preparationErrors),
+                   let error = preparationErrors.first {
+                    await MainActor.run {
+                        alert_error(String(localized: "Failed to prepare file: \(error.localizedDescription)", table: "Audio-Copy-macOS", bundle: .module))
+                    }
+                }
                 if Self.shouldShowNoFilesAdded(taskCount: 0, preparationErrors: preparationErrors) {
                     await MainActor.run {
                         alert_error(String(localized: "No files were added", table: "Audio-Copy-macOS", bundle: .module))
@@ -189,15 +192,18 @@
                 } catch {
                     preparationErrors.append(error)
                     os_log(.error, "\(self.t)Failed to create bookmark: \(error.localizedDescription)")
-                    await MainActor.run {
-                        alert_error(String(localized: "Failed to prepare file: \(error.localizedDescription)", table: "Audio-Copy-macOS", bundle: .module))
-                    }
                 }
             }
 
             if tasks.isNotEmpty {
                 await worker.append(tasks: tasks, folder: disk)
             } else {
+                if Self.shouldReportPreparationFailure(preparedCount: tasks.count, preparationErrors: preparationErrors),
+                   let error = preparationErrors.first {
+                    await MainActor.run {
+                        alert_error(String(localized: "Failed to prepare file: \(error.localizedDescription)", table: "Audio-Copy-macOS", bundle: .module))
+                    }
+                }
                 if Self.shouldShowNoFilesAdded(taskCount: tasks.count, preparationErrors: preparationErrors) {
                     await MainActor.run {
                         alert_error(String(localized: "No files were added", table: "Audio-Copy-macOS", bundle: .module))
@@ -245,6 +251,10 @@
 
         nonisolated static func shouldShowNoFilesAdded(taskCount: Int, preparationErrors: [Error]) -> Bool {
             taskCount == 0 && preparationErrors.isEmpty
+        }
+
+        nonisolated static func shouldReportPreparationFailure(preparedCount: Int, preparationErrors: [Error]) -> Bool {
+            preparedCount == 0 && !preparationErrors.isEmpty
         }
 
         nonisolated static func shouldPrepareCopyInfrastructure(sourceCount: Int) -> Bool {
