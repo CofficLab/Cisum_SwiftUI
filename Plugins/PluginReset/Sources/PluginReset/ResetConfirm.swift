@@ -13,6 +13,10 @@ public struct ResetConfirm: View {
         self.resetSettings = resetSettings
     }
 
+    nonisolated static func shouldDisableInteractiveDismiss(isResetting: Bool) -> Bool {
+        isResetting
+    }
+
     public var body: some View {
         VStack(spacing: 40) {
             HStack {
@@ -81,6 +85,7 @@ public struct ResetConfirm: View {
         .padding(.bottom, 24)
         .background(Self.backgroundColor)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .interactiveDismissDisabled(Self.shouldDisableInteractiveDismiss(isResetting: isResetting))
     }
 
     private static var backgroundColor: Color {
