@@ -258,7 +258,7 @@
                 return true
             }
 
-            return (try? url.resourceValues(forKeys: [.isSymbolicLinkKey]).isSymbolicLink) == true
+            return (try? FileManager.default.destinationOfSymbolicLink(atPath: url.path)) != nil
         }
 
         nonisolated static func copySourceURL(for source: URL) -> URL {
