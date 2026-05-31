@@ -84,7 +84,13 @@ extension BookDB {
         }
         
         do {
-            return try context.fetch(BookModel.descriptorOf(url)).first
+            if let book = try context.fetch(BookModel.descriptorOf(url)).first {
+                return book
+            }
+
+            return try context.fetch(BookModel.descriptorAll).first { book in
+                BookPathContainment.representsSameFile(book.url, url)
+            }
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
         }

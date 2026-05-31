@@ -242,6 +242,68 @@ import SwiftData
     #expect(orderedURLs == [existing, first, second])
 }
 
+@Test func bookDBUpdateSyncMatchesExistingBookThroughSymlink() async throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realRoot = root.appendingPathComponent("real-books", isDirectory: true)
+    let linkedRoot = root.appendingPathComponent("library-link", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: realRoot, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedRoot, withDestinationURL: realRoot)
+
+    let schema = Schema([BookModel.self, BookState.self])
+    let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    let container = try ModelContainer(for: schema, configurations: [configuration])
+    let db = BookDB(container, reason: "bookDBUpdateSyncMatchesExistingBookThroughSymlink")
+
+    let realBook = realRoot.appendingPathComponent("Novel.m4b")
+    let linkedBook = linkedRoot.appendingPathComponent("Novel.m4b")
+    try Data("audio".utf8).write(to: realBook)
+
+    try await db.insertModel(BookModel(url: realBook, order: 10))
+    try await db.syncImportedItems([linkedBook])
+
+    let books = try await db.allBookDTOs()
+    #expect(books.count == 1)
+    #expect(books.first?.url == realBook)
+    #expect(books.first?.order == 10)
+}
+
+@Test func bookDBFullSyncKeepsSymlinkedExistingBookState() async throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realRoot = root.appendingPathComponent("real-books", isDirectory: true)
+    let linkedRoot = root.appendingPathComponent("library-link", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: realRoot, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedRoot, withDestinationURL: realRoot)
+
+    let schema = Schema([BookModel.self, BookState.self])
+    let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    let container = try ModelContainer(for: schema, configurations: [configuration])
+    let db = BookDB(container, reason: "bookDBFullSyncKeepsSymlinkedExistingBookState")
+
+    let realBook = realRoot.appendingPathComponent("Novel.m4b")
+    let linkedBook = linkedRoot.appendingPathComponent("Novel.m4b")
+    try Data("audio".utf8).write(to: realBook)
+
+    try await db.insertModel(BookModel(url: realBook, order: 10))
+    await db.updateBookCurrent(realBook, currentURL: realBook, time: 42)
+    await db.sync([linkedBook], isFirst: true)
+
+    let books = try await db.allBookDTOs()
+    #expect(books.count == 1)
+    #expect(books.first?.url == realBook)
+    #expect(books.first?.order == 10)
+    #expect(await db.getBookTime(realBook) == 42)
+}
+
 @Test func bookDBFullSyncIgnoresUnsupportedFiles() async throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)

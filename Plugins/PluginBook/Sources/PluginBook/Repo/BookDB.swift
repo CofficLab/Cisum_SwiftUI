@@ -302,12 +302,11 @@ extension BookDB {
 
         do {
             try context.enumerate(FetchDescriptor<BookModel>(), block: { book in
-                if let item = hashMap[book.url] {
+                if let item = removeMatchingSyncItem(for: book.url, from: &hashMap) {
                     // 更新数据库记录
                     update(book, from: item)
 
-                    // 记录存在哈希表中，同步完成，删除哈希表记录
-                    hashMap.removeValue(forKey: book.url)
+                    // 记录存在哈希表中，同步完成，删除哈希表记录。
                 } else {
                     // 记录不存在哈希表中，数据库删除
                     if verbose {
@@ -423,6 +422,18 @@ extension BookDB {
         books.sorted {
             $0.url.standardizedFileURL.path.localizedStandardCompare($1.url.standardizedFileURL.path) == .orderedAscending
         }
+    }
+
+    private func removeMatchingSyncItem(for url: URL, from hashMap: inout [URL: URL]) -> URL? {
+        if let item = hashMap.removeValue(forKey: url) {
+            return item
+        }
+
+        guard let matchingKey = hashMap.keys.first(where: { BookPathContainment.representsSameFile($0, url) }) else {
+            return nil
+        }
+
+        return hashMap.removeValue(forKey: matchingKey)
     }
 
     private func update(_ book: BookModel, from url: URL) {
