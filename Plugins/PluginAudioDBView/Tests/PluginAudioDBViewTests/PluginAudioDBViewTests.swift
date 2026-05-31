@@ -66,6 +66,27 @@ import UniformTypeIdentifiers
     #expect(!AudioListLoadPolicy.shouldApplyResult(currentGeneration: 3, resultGeneration: 2))
 }
 
+@Test func audioListDeletionMatchesSymlinkedRows() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realFile = root.appendingPathComponent("real.mp3")
+    let linkedFile = root.appendingPathComponent("linked.mp3")
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    try Data("audio".utf8).write(to: realFile)
+    try FileManager.default.createSymbolicLink(at: linkedFile, withDestinationURL: realFile)
+
+    #expect(AudioListDeletionPolicy.shouldRemove(realFile, deletedURLs: [linkedFile]))
+    #expect(AudioListDeletionPolicy.shouldRemove(linkedFile, deletedURLs: [realFile]))
+    #expect(!AudioListDeletionPolicy.shouldRemove(
+        root.appendingPathComponent("other.mp3"),
+        deletedURLs: [linkedFile]
+    ))
+}
+
 @Test func audioDeleteOnlyResetsPlaybackForStillCurrentDeletedAudio() {
     let root = URL(fileURLWithPath: "/tmp/cisum-audio-delete-tests", isDirectory: true)
     let deleted = root.appendingPathComponent("deleted.mp3")

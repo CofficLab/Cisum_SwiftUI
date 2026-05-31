@@ -13,6 +13,15 @@ enum AudioListLoadPolicy {
     }
 }
 
+enum AudioListDeletionPolicy {
+    static func shouldRemove(_ url: URL, deletedURLs: [URL]) -> Bool {
+        AudioDeletePlaybackPolicy.deletedURLsContainCurrentAudio(
+            currentURL: url,
+            deletedURLs: deletedURLs
+        )
+    }
+}
+
 /*
  展示策略（扁平化列表 + 分页加载）：
  - 仅展示仓库中的音频文件；文件夹不会作为分组出现
@@ -471,14 +480,15 @@ extension AudioList {
         withAnimation(.easeInOut(duration: 0.3)) {
             // 从 urls 数组中移除被删除的 URL
             urls.removeAll { url in
-                urlsToDelete.contains(url)
+                AudioListDeletionPolicy.shouldRemove(url, deletedURLs: urlsToDelete)
             }
 
             // 更新总数
             totalCount = max(0, totalCount - urlsToDelete.count)
 
             // 如果删除的是当前选中的文件，清除选中状态
-            if let selected = selection, urlsToDelete.contains(selected) {
+            if let selected = selection,
+               AudioListDeletionPolicy.shouldRemove(selected, deletedURLs: urlsToDelete) {
                 selection = nil
             }
         }
