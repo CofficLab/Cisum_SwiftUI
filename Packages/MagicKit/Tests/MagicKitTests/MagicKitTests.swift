@@ -94,6 +94,28 @@ final class MagicKitTests: XCTestCase {
         }
     }
 
+    func testCopyToCopiesSymlinkedFileAsStandaloneFile() async throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer {
+            try? FileManager.default.removeItem(at: root)
+        }
+
+        let external = root.appendingPathComponent("external", isDirectory: true)
+        try FileManager.default.createDirectory(at: external, withIntermediateDirectories: true)
+        let realFile = external.appendingPathComponent("real.mp3")
+        let linkedFile = root.appendingPathComponent("linked.mp3")
+        let destination = root.appendingPathComponent("copied.mp3")
+        try Data("audio".utf8).write(to: realFile)
+        try FileManager.default.createSymbolicLink(at: linkedFile, withDestinationURL: realFile)
+
+        try await linkedFile.copyTo(destination, verbose: false, caller: "test")
+
+        let fileType = try FileManager.default.attributesOfItem(atPath: destination.path)[.type] as? FileAttributeType
+        XCTAssertEqual(fileType, .typeRegular)
+        XCTAssertEqual(try Data(contentsOf: destination), Data("audio".utf8))
+    }
+
     func testSameFileLocationNormalizesRelativeSegments() throws {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent(UUID().uuidString, isDirectory: true)

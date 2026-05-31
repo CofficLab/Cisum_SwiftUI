@@ -144,8 +144,6 @@ public extension URL {
         caller: String,
         downloadProgress: ((Double) -> Void)? = nil
     ) async throws {
-        try await ensureLocalAvailability()
-
         guard !isSameFileLocation(as: destination) else {
             throw MagicError.fileError("Cannot copy a file onto itself: \(lastPathComponent)")
         }
@@ -154,11 +152,23 @@ public extension URL {
             throw MagicError.fileError("Cannot copy a folder into itself: \(lastPathComponent)")
         }
 
+        let sourceToCopy = copySourceURL()
+        try await sourceToCopy.ensureLocalAvailability()
+
         if FileManager.default.fileExists(atPath: destination.path) {
             try FileManager.default.removeItem(at: destination)
         }
 
-        try FileManager.default.copyItem(at: self, to: destination)
+        try FileManager.default.copyItem(at: sourceToCopy, to: destination)
+    }
+
+    private func copySourceURL() -> URL {
+        let resolvedURL = resolvingSymlinksInPath().standardizedFileURL
+        guard FileManager.default.fileExists(atPath: resolvedURL.path) else {
+            return self
+        }
+
+        return resolvedURL
     }
 
     private func isDirectoryCopyIntoDescendant(_ destination: URL) -> Bool {
