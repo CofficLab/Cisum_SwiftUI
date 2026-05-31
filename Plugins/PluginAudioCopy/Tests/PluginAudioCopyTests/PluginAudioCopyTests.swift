@@ -183,10 +183,10 @@ import Testing
         originalFilename: "one.mp3"
     )
 
-    #expect(task.message == "等待复制")
+    #expect(task.message == "Waiting to Copy")
 
     task.isRunning = true
-    #expect(task.message == "进行中")
+    #expect(task.message == "In Progress")
 
     task.isRunning = false
     task.error = "Permission denied"

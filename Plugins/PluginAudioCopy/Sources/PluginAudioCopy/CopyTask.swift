@@ -18,10 +18,10 @@ class CopyTask {
     var time: String { Date.now }
     var message: String {
         if isRunning {
-            return "进行中"
+            return String(localized: "In Progress", table: "Audio-Copy-macOS", bundle: .module)
         }
         if error.isEmpty {
-            return "等待复制"
+            return String(localized: "Waiting to Copy", table: "Audio-Copy-macOS", bundle: .module)
         }
         return error
     }
