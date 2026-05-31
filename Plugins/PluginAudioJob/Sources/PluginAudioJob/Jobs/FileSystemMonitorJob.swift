@@ -42,6 +42,10 @@ public final class FileSystemMonitorJob: AudioJob, @unchecked Sendable {
         isRunning && activeRunID == runID
     }
 
+    public static func shouldProcessMonitorEvent(runID: UUID, activeRunID: UUID?, isRunning: Bool) -> Bool {
+        shouldContinueRunning(runID: runID, activeRunID: activeRunID, isRunning: isRunning)
+    }
+
     public func execute() async throws {
         guard let disk = await diskProvider() else {
             if Self.verbose {
@@ -65,6 +69,10 @@ public final class FileSystemMonitorJob: AudioJob, @unchecked Sendable {
                     guard let self else { return }
 
                     Task {
+                        guard await self.state.shouldProcessMonitorEvent(runID) else {
+                            return
+                        }
+
                         if Self.verbose {
                             os_log("📂 Audio file system changed: \(items.count) item(s), first: \(isFirst)")
                         }
@@ -76,6 +84,10 @@ public final class FileSystemMonitorJob: AudioJob, @unchecked Sendable {
                     guard let self else { return }
 
                     Task {
+                        guard await self.state.shouldProcessMonitorEvent(runID) else {
+                            return
+                        }
+
                         if Self.verbose {
                             os_log("🗑️ Audio files deleted: \(urls.count)")
                         }
@@ -139,6 +151,14 @@ public final class FileSystemMonitorJob: AudioJob, @unchecked Sendable {
 
         func shouldContinue(_ runID: UUID) -> Bool {
             FileSystemMonitorJob.shouldContinueRunning(
+                runID: runID,
+                activeRunID: activeRunID,
+                isRunning: isRunning
+            )
+        }
+
+        func shouldProcessMonitorEvent(_ runID: UUID) -> Bool {
+            FileSystemMonitorJob.shouldProcessMonitorEvent(
                 runID: runID,
                 activeRunID: activeRunID,
                 isRunning: isRunning

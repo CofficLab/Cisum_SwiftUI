@@ -90,6 +90,27 @@ private final class RecordingAudioJob: AudioJob, @unchecked Sendable {
     ))
 }
 
+@Test func staleMonitorEventsAreIgnoredAfterRestart() {
+    let firstRun = UUID()
+    let secondRun = UUID()
+
+    #expect(FileSystemMonitorJob.shouldProcessMonitorEvent(
+        runID: firstRun,
+        activeRunID: firstRun,
+        isRunning: true
+    ))
+    #expect(!FileSystemMonitorJob.shouldProcessMonitorEvent(
+        runID: firstRun,
+        activeRunID: secondRun,
+        isRunning: true
+    ))
+    #expect(!FileSystemMonitorJob.shouldProcessMonitorEvent(
+        runID: firstRun,
+        activeRunID: nil,
+        isRunning: false
+    ))
+}
+
 @Test func unregisterCancelsRunningJob() async throws {
     let manager = AudioJobManager.shared
     let identifier = "test.unregister.\(UUID().uuidString)"
