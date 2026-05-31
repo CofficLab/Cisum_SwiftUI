@@ -212,6 +212,29 @@ final class MagicPlayManTests: XCTestCase {
         XCTAssertNil(man.currentError)
     }
 
+    @MainActor
+    func testStopSynchronizesPublishedPlaybackState() async throws {
+        let audio = try Self.makeSilentWAV()
+        defer {
+            try? FileManager.default.removeItem(at: audio)
+        }
+
+        let man = MagicPlayMan()
+        man.player.replaceCurrentItem(with: AVPlayerItem(url: audio))
+        man.setCurrentURL(audio)
+        man.setDuration(10)
+        man.setCurrentTime(5, reason: "test")
+        man.setProgress(0.5)
+        man.setState(.playing, reason: "test")
+
+        await man.stop(reason: "test")
+
+        XCTAssertEqual(man.currentURL, audio)
+        XCTAssertEqual(man.state, .stopped)
+        XCTAssertEqual(man.currentTime, 0)
+        XCTAssertEqual(man.progress, 0)
+    }
+
     private static func makeSilentWAV() throws -> URL {
         let url = FileManager.default.temporaryDirectory
             .appendingPathComponent(UUID().uuidString)

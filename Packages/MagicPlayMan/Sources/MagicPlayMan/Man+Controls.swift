@@ -276,6 +276,9 @@ public extension MagicPlayMan {
     func stop(reason: String) async {
         _player.pause()
         await _player.seek(to: .zero)
+        setCurrentTime(0, reason: reason)
+        setProgress(0)
+        setState(.stopped, reason: reason)
 
         if self.verbose {
             os_log("\(self.t)⏹️ (\(reason)) Stopped playback")
