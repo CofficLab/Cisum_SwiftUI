@@ -44,6 +44,18 @@ enum AudioControlPlaybackRequestPolicy {
         isSceneActive
     }
 
+    static func shouldApplyStorageReset(
+        currentGeneration: Int,
+        requestGeneration: Int,
+        isSceneActive: Bool
+    ) -> Bool {
+        currentGeneration == requestGeneration && isSceneActive
+    }
+
+    static func generationAfterDeactivation(_ generation: Int) -> Int {
+        generation + 1
+    }
+
     private static func resolvedStandardizedPath(for url: URL) -> String {
         url.resolvingSymlinksInPath().standardizedFileURL.path
     }
@@ -63,6 +75,7 @@ enum AudioControlPlaybackRequestPolicy {
 public struct AudioControlRootView<Content>: View where Content: View {
     @EnvironmentObject private var man: MagicPlayMan
     @State private var playbackSubscriptionID: UUID?
+    @State private var controlGeneration = 0
 
     private let content: Content
     private let targetSceneName: String
@@ -151,6 +164,8 @@ private extension AudioControlRootView {
     }
 
     private func deactivateControl() {
+        controlGeneration = AudioControlPlaybackRequestPolicy.generationAfterDeactivation(controlGeneration)
+
         guard let playbackSubscriptionID else { return }
 
         man.unsubscribe(playbackSubscriptionID)
@@ -273,7 +288,16 @@ private extension AudioControlRootView {
             return
         }
 
+        let generation = controlGeneration
         Task { @MainActor in
+            guard AudioControlPlaybackRequestPolicy.shouldApplyStorageReset(
+                currentGeneration: controlGeneration,
+                requestGeneration: generation,
+                isSceneActive: shouldActivateControl
+            ) else {
+                return
+            }
+
             await man.reset(reason: "AudioControlRootView.storageLocationDidReset")
         }
     }

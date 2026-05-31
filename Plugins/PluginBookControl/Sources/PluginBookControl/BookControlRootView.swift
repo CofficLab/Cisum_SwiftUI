@@ -106,6 +106,18 @@ enum BookControlPlaybackRequestPolicy {
         isSceneActive
     }
 
+    static func shouldApplyStorageReset(
+        currentGeneration: Int,
+        requestGeneration: Int,
+        isSceneActive: Bool
+    ) -> Bool {
+        currentGeneration == requestGeneration && isSceneActive
+    }
+
+    static func generationAfterDeactivation(_ generation: Int) -> Int {
+        generation + 1
+    }
+
     private static func resolvedStandardizedPath(for url: URL) -> String {
         url.resolvingSymlinksInPath().standardizedFileURL.path
     }
@@ -211,6 +223,7 @@ public struct BookControlRootView<Content>: View, SuperLog where Content: View {
 
     @EnvironmentObject private var man: MagicPlayMan
     @State private var playbackSubscriptionID: UUID?
+    @State private var controlGeneration = 0
 
     private let content: Content
     private let targetSceneName: String
@@ -298,6 +311,8 @@ private extension BookControlRootView {
     }
 
     private func deactivateControl() {
+        controlGeneration = BookControlPlaybackRequestPolicy.generationAfterDeactivation(controlGeneration)
+
         guard let playbackSubscriptionID else { return }
 
         man.unsubscribe(playbackSubscriptionID)
@@ -358,7 +373,16 @@ private extension BookControlRootView {
             return
         }
 
+        let generation = controlGeneration
         Task {
+            guard BookControlPlaybackRequestPolicy.shouldApplyStorageReset(
+                currentGeneration: controlGeneration,
+                requestGeneration: generation,
+                isSceneActive: shouldActivateControl
+            ) else {
+                return
+            }
+
             await man.reset(reason: "BookControlRootView.storageLocationDidReset")
         }
     }

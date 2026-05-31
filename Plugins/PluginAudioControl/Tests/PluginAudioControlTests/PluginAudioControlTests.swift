@@ -124,6 +124,27 @@ import Testing
     #expect(!AudioControlPlaybackRequestPolicy.shouldResetForStorageLocationChange(isSceneActive: false))
 }
 
+@Test func staleAudioStorageResetDoesNotApplyAfterDeactivation() {
+    let generation = AudioControlPlaybackRequestPolicy.generationAfterDeactivation(2)
+
+    #expect(generation == 3)
+    #expect(AudioControlPlaybackRequestPolicy.shouldApplyStorageReset(
+        currentGeneration: 2,
+        requestGeneration: 2,
+        isSceneActive: true
+    ))
+    #expect(!AudioControlPlaybackRequestPolicy.shouldApplyStorageReset(
+        currentGeneration: generation,
+        requestGeneration: 2,
+        isSceneActive: true
+    ))
+    #expect(!AudioControlPlaybackRequestPolicy.shouldApplyStorageReset(
+        currentGeneration: 2,
+        requestGeneration: 2,
+        isSceneActive: false
+    ))
+}
+
 @Test func staleEmptyLibraryNavigationDoesNotResetSwitchedPlayback() {
     let requested = URL(fileURLWithPath: "/tmp/cisum-audio-control-empty/requested.mp3")
     let switched = URL(fileURLWithPath: "/tmp/cisum-audio-control-empty/switched.mp3")
