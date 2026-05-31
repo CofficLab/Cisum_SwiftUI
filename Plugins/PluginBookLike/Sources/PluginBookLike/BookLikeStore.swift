@@ -25,11 +25,10 @@ public enum BookLikeStore {
     public static func setLiked(_ liked: Bool, url: URL, defaults: UserDefaults = .standard) {
         var storedBooks = defaults.dictionary(forKey: likedBooksKey) as? [String: String] ?? [:]
         let key = url.absoluteString
+        removeEntriesRepresenting(url, from: &storedBooks)
 
         if liked {
             storedBooks[key] = displayTitle(for: url)
-        } else {
-            storedBooks.removeValue(forKey: key)
         }
 
         defaults.set(storedBooks, forKey: likedBooksKey)
@@ -52,5 +51,21 @@ public enum BookLikeStore {
 
         guard rawURL.hasPrefix("/") else { return nil }
         return URL(fileURLWithPath: rawURL)
+    }
+
+    private static func removeEntriesRepresenting(_ url: URL, from storedBooks: inout [String: String]) {
+        for key in storedBooks.keys {
+            guard let storedURL = storedURL(from: key), representsSameFile(storedURL, url) else { continue }
+            storedBooks.removeValue(forKey: key)
+        }
+    }
+
+    private static func representsSameFile(_ lhs: URL, _ rhs: URL) -> Bool {
+        guard lhs.isFileURL, rhs.isFileURL else {
+            return lhs.standardized.absoluteString == rhs.standardized.absoluteString
+        }
+
+        return lhs.resolvingSymlinksInPath().standardizedFileURL.path
+            == rhs.resolvingSymlinksInPath().standardizedFileURL.path
     }
 }

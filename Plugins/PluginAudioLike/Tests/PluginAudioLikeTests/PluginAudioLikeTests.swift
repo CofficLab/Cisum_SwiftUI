@@ -162,4 +162,115 @@ struct AudioLikeRepoTests {
         #expect(model.url == url)
         #expect(model.title == "Backfilled Track")
     }
+
+    @Test
+    @MainActor
+    func audioLikeRepoMatchesSymlinkedLikedAudio() async throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        let databaseURL = root
+            .appendingPathComponent("PluginAudioLikeTests-\(UUID().uuidString)-symlink")
+            .appendingPathExtension("store")
+        let realFolder = root.appendingPathComponent("real", isDirectory: true)
+        let linkedFolder = root.appendingPathComponent("linked", isDirectory: true)
+        defer {
+            try? FileManager.default.removeItem(at: root)
+        }
+
+        try FileManager.default.createDirectory(at: realFolder, withIntermediateDirectories: true)
+        try FileManager.default.createSymbolicLink(at: linkedFolder, withDestinationURL: realFolder)
+        let realURL = realFolder.appendingPathComponent("track.mp3")
+        let linkedURL = linkedFolder.appendingPathComponent("track.mp3")
+        try Data("audio".utf8).write(to: realURL)
+
+        AudioLikeRepositoryConfiguration.configure(databaseURL: databaseURL)
+
+        try await AudioLikeRepo.shared.updateLikeStatus(
+            audioId: realURL.absoluteString,
+            liked: true,
+            url: realURL,
+            title: "Track"
+        )
+
+        #expect(await AudioLikeRepo.shared.isLiked(url: linkedURL))
+    }
+
+    @Test
+    @MainActor
+    func audioLikeRepoUnlikesSymlinkedStoredAudio() async throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        let databaseURL = root
+            .appendingPathComponent("PluginAudioLikeTests-\(UUID().uuidString)-unlink")
+            .appendingPathExtension("store")
+        let realFolder = root.appendingPathComponent("real", isDirectory: true)
+        let linkedFolder = root.appendingPathComponent("linked", isDirectory: true)
+        defer {
+            try? FileManager.default.removeItem(at: root)
+        }
+
+        try FileManager.default.createDirectory(at: realFolder, withIntermediateDirectories: true)
+        try FileManager.default.createSymbolicLink(at: linkedFolder, withDestinationURL: realFolder)
+        let realURL = realFolder.appendingPathComponent("track.mp3")
+        let linkedURL = linkedFolder.appendingPathComponent("track.mp3")
+        try Data("audio".utf8).write(to: realURL)
+
+        AudioLikeRepositoryConfiguration.configure(databaseURL: databaseURL)
+
+        try await AudioLikeRepo.shared.updateLikeStatus(
+            audioId: realURL.absoluteString,
+            liked: true,
+            url: realURL,
+            title: "Track"
+        )
+        try await AudioLikeRepo.shared.updateLikeStatus(
+            audioId: linkedURL.absoluteString,
+            liked: false,
+            url: linkedURL
+        )
+
+        #expect(!(await AudioLikeRepo.shared.isLiked(url: realURL)))
+        #expect(try await AudioLikeRepo.shared.findLikeModel(audioId: realURL.absoluteString) == nil)
+    }
+
+    @Test
+    @MainActor
+    func audioLikeRepoReplacesSymlinkedDuplicateLike() async throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        let databaseURL = root
+            .appendingPathComponent("PluginAudioLikeTests-\(UUID().uuidString)-dedupe")
+            .appendingPathExtension("store")
+        let realFolder = root.appendingPathComponent("real", isDirectory: true)
+        let linkedFolder = root.appendingPathComponent("linked", isDirectory: true)
+        defer {
+            try? FileManager.default.removeItem(at: root)
+        }
+
+        try FileManager.default.createDirectory(at: realFolder, withIntermediateDirectories: true)
+        try FileManager.default.createSymbolicLink(at: linkedFolder, withDestinationURL: realFolder)
+        let realURL = realFolder.appendingPathComponent("track.mp3")
+        let linkedURL = linkedFolder.appendingPathComponent("track.mp3")
+        try Data("audio".utf8).write(to: realURL)
+
+        AudioLikeRepositoryConfiguration.configure(databaseURL: databaseURL)
+
+        try await AudioLikeRepo.shared.updateLikeStatus(
+            audioId: realURL.absoluteString,
+            liked: true,
+            url: realURL,
+            title: "Real"
+        )
+        try await AudioLikeRepo.shared.updateLikeStatus(
+            audioId: linkedURL.absoluteString,
+            liked: true,
+            url: linkedURL,
+            title: "Linked"
+        )
+
+        let liked = await AudioLikeRepo.shared.getAllLiked()
+        #expect(liked.count == 1)
+        #expect(liked.first?.url == linkedURL)
+        #expect(liked.first?.title == "Linked")
+    }
 }

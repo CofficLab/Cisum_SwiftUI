@@ -66,6 +66,33 @@ func pluginExposesSettingsView() {
     #expect(likedBooks.first?.url == second)
 }
 
+@Test func bookLikeStoreMatchesSymlinkedBooks() throws {
+    let suiteName = "PluginBookLikeTests-\(UUID().uuidString)"
+    let defaults = try #require(UserDefaults(suiteName: suiteName))
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realBook = root.appendingPathComponent("Real Book", isDirectory: true)
+    let linkedBook = root.appendingPathComponent("Linked Book", isDirectory: true)
+    defer {
+        defaults.removePersistentDomain(forName: suiteName)
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: realBook, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedBook, withDestinationURL: realBook)
+
+    BookLikeStore.setLiked(true, url: realBook, defaults: defaults)
+    BookLikeStore.setLiked(true, url: linkedBook, defaults: defaults)
+
+    let likedBooks = BookLikeStore.likedBooks(defaults: defaults)
+    #expect(likedBooks.count == 1)
+    #expect(likedBooks.first?.url == linkedBook)
+
+    BookLikeStore.setLiked(false, url: realBook, defaults: defaults)
+
+    #expect(BookLikeStore.likedBooks(defaults: defaults).isEmpty)
+}
+
 @Test func bookLikeStoreIgnoresEmptyStoredURLs() throws {
     let suiteName = "PluginBookLikeTests-\(UUID().uuidString)"
     let defaults = try #require(UserDefaults(suiteName: suiteName))

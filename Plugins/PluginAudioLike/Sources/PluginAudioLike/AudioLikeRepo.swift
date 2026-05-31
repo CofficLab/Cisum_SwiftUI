@@ -89,18 +89,36 @@ public actor AudioLikeRepo: SuperLog {
         }
     }
 
+    @MainActor
     public func isLiked(url: URL) async -> Bool {
-        let audioId = url.absoluteString
-        return await isLiked(audioId: audioId)
+        do {
+            return try await findLikeModel(audioId: url.absoluteString, url: url)?.liked ?? false
+        } catch {
+            os_log(.error, "\(self.t)❌ 检查喜欢状态失败: \(error.localizedDescription)")
+            return false
+        }
     }
 
     @MainActor
     public func findLikeModel(audioId: String) async throws -> AudioLikeModel? {
+        try await findLikeModel(audioId: audioId, url: nil)
+    }
+
+    @MainActor
+    private func findLikeModel(audioId: String, url: URL?) async throws -> AudioLikeModel? {
         guard let context = try await self.context else { return nil }
 
         let descriptor = AudioLikeModel.descriptorOf(audioId: audioId)
         let results = try context.fetch(descriptor)
-        return results.first
+        if let result = results.first {
+            return result
+        }
+
+        guard let url else { return nil }
+        return try context.fetch(AudioLikeModel.descriptorAll).first { model in
+            guard let storedURL = model.url else { return false }
+            return Self.representsSameFile(storedURL, url)
+        }
     }
 
     @MainActor
@@ -117,12 +135,12 @@ public actor AudioLikeRepo: SuperLog {
 
     public func updateLikeStatus(audioId: String, liked: Bool, url: URL? = nil, title: String? = nil) async throws {
         try await AudioLikeRepo.performOnMainActor {
-            if let existingModel = try await self.findLikeModel(audioId: audioId) {
-                if !liked {
-                    try await self.removeLikeStatus(audioId: audioId)
-                    return
-                }
+            if !liked {
+                try await self.removeLikeStatus(audioId: audioId, url: url)
+                return
+            }
 
+            if let existingModel = try await self.findLikeModel(audioId: audioId, url: url) {
                 existingModel.liked = liked
                 if let url {
                     existingModel.url = url
@@ -132,11 +150,11 @@ public actor AudioLikeRepo: SuperLog {
                 }
                 existingModel.updatedAt = Date()
                 try await self.save(existingModel)
+                try await self.removeDuplicateLikeModels(keeping: existingModel, matching: url)
             } else {
-                guard liked else { return }
-
                 let newModel = AudioLikeModel(audioId: audioId, url: url, title: title, liked: liked)
                 try await self.save(newModel)
+                try await self.removeDuplicateLikeModels(keeping: newModel, matching: url)
             }
         }
     }
@@ -160,11 +178,52 @@ public actor AudioLikeRepo: SuperLog {
 
     @MainActor
     public func removeLikeStatus(audioId: String) async throws {
+        try await removeLikeStatus(audioId: audioId, url: nil)
+    }
+
+    @MainActor
+    private func removeLikeStatus(audioId: String, url: URL?) async throws {
         guard let context = try await self.context else { return }
 
-        if let model = try await findLikeModel(audioId: audioId) {
+        let models = try context.fetch(AudioLikeModel.descriptorAll)
+        var removed = false
+        for model in models where model.audioId == audioId || Self.model(model, represents: url) {
             context.delete(model)
+            removed = true
+        }
+
+        if removed {
             try context.save()
         }
+    }
+
+    @MainActor
+    private func removeDuplicateLikeModels(keeping keptModel: AudioLikeModel, matching url: URL?) async throws {
+        guard let context = try await self.context, let url else { return }
+
+        let models = try context.fetch(AudioLikeModel.descriptorAll)
+        var removed = false
+        for model in models where model.persistentModelID != keptModel.persistentModelID && Self.model(model, represents: url) {
+            context.delete(model)
+            removed = true
+        }
+
+        if removed {
+            try context.save()
+        }
+    }
+
+    private static func model(_ model: AudioLikeModel, represents url: URL?) -> Bool {
+        guard let storedURL = model.url, let url else { return false }
+        return representsSameFile(storedURL, url)
+    }
+
+    private static func representsSameFile(_ lhs: URL, _ rhs: URL) -> Bool {
+        guard lhs.isFileURL, rhs.isFileURL else {
+            return lhs.standardized.absoluteString == rhs.standardized.absoluteString
+        }
+
+        return lhs.resolvingSymlinksInPath().standardizedFileURL.path
+            == rhs.resolvingSymlinksInPath().standardizedFileURL.path
     }
 }
