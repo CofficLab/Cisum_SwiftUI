@@ -17,6 +17,38 @@
         }
       }
     },
+    "Liked audio": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "喜欢的音频"
+          }
+        },
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "喜歡的音頻"
+          }
+        }
+      }
+    },
+    "Loading...": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "加载中..."
+          }
+        },
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "加載中..."
+          }
+        }
+      }
+    },
     "Manage and store audio like status": {
       "localizations": {
         "zh-Hans": {
@@ -29,6 +61,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "負責音頻喜歡狀態的獨立管理和存儲"
+          }
+        }
+      }
+    },
+    "No liked audio yet": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "还没有喜欢的音频"
+          }
+        },
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "還沒有喜歡的音頻"
+          }
+        }
+      }
+    },
+    "Unknown audio": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未知音频"
+          }
+        },
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未知音頻"
           }
         }
       }

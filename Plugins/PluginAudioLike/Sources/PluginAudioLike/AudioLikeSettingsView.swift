@@ -20,12 +20,12 @@ public struct AudioLikeSettingsView: View, SuperLog {
 
     public var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("喜欢的音频", tableName: "Audio-Like", bundle: .module)
+            Text("Liked audio", tableName: "Audio-Like", bundle: .module)
                 .font(.headline)
 
             if isLoading {
                 ProgressView {
-                    Text("加载中...", tableName: "Audio-Like", bundle: .module)
+                    Text("Loading...", tableName: "Audio-Like", bundle: .module)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else if likedAudios.isEmpty {
@@ -33,7 +33,7 @@ public struct AudioLikeSettingsView: View, SuperLog {
                     Image(systemName: "heart.slash")
                         .font(.largeTitle)
                         .foregroundColor(.secondary)
-                    Text("还没有喜欢的音频", tableName: "Audio-Like", bundle: .module)
+                    Text("No liked audio yet", tableName: "Audio-Like", bundle: .module)
                         .foregroundColor(.secondary)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -41,7 +41,7 @@ public struct AudioLikeSettingsView: View, SuperLog {
                 List(likedAudios, id: \.audioId) { audio in
                     HStack {
                         VStack(alignment: .leading) {
-                            Text(audio.title ?? audio.url?.lastPathComponent ?? String(localized: "未知音频", table: "Audio-Like", bundle: .module))
+                            Text(audio.title ?? audio.url?.lastPathComponent ?? String(localized: "Unknown audio", table: "Audio-Like", bundle: .module))
                                 .font(.body)
                             if let url = audio.url {
                                 Text(url.lastPathComponent)
