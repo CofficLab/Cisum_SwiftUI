@@ -164,6 +164,22 @@ import Foundation
     ))
 }
 
+@Test func storageSettingsSyncsTargetAfterExternalLocationChange() {
+    let changed = StorageSettingView.stateAfterStorageUpdate(
+        currentTarget: .icloud,
+        storageLocation: .local
+    )
+    #expect(changed.targetLocation == .local)
+    #expect(!changed.hasChanges)
+
+    let reset = StorageSettingView.stateAfterStorageUpdate(
+        currentTarget: .icloud,
+        storageLocation: nil
+    )
+    #expect(reset.targetLocation == .icloud)
+    #expect(!reset.hasChanges)
+}
+
 @Test func migrationProgressOnlyAppliesCurrentGenerationUpdates() {
     #expect(MigrationProgressView.shouldApplyMigrationUpdate(
         currentGeneration: 2,

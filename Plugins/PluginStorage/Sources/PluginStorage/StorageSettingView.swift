@@ -69,11 +69,7 @@ public struct StorageSettingView: View, SuperLog {
             )
         }
         .onAppear {
-            location = dependencies.getStorageLocation()
-            targetLocation = Self.targetLocationAfterStorageUpdate(
-                currentTarget: targetLocation,
-                storageLocation: location
-            )
+            applyStorageLocationUpdate(dependencies.getStorageLocation())
         }
         .onChange(of: targetLocation) {
             hasChanges = Self.hasSelectionChanges(
@@ -82,12 +78,18 @@ public struct StorageSettingView: View, SuperLog {
             )
         }
         .onPluginStorageLocationChanged {
-            location = dependencies.getStorageLocation()
-            hasChanges = Self.hasSelectionChanges(
-                targetLocation: targetLocation,
-                storageLocation: location
-            )
+            applyStorageLocationUpdate(dependencies.getStorageLocation())
         }
+    }
+
+    private func applyStorageLocationUpdate(_ storageLocation: PluginStorageLocation?) {
+        let state = Self.stateAfterStorageUpdate(
+            currentTarget: targetLocation,
+            storageLocation: storageLocation
+        )
+        location = storageLocation
+        targetLocation = state.targetLocation
+        hasChanges = state.hasChanges
     }
 
     private func beginMigration(to newLocation: PluginStorageLocation) {
@@ -111,6 +113,23 @@ public struct StorageSettingView: View, SuperLog {
         storageLocation: PluginStorageLocation?
     ) -> PluginStorageLocation {
         storageLocation ?? currentTarget
+    }
+
+    nonisolated static func stateAfterStorageUpdate(
+        currentTarget: PluginStorageLocation,
+        storageLocation: PluginStorageLocation?
+    ) -> (targetLocation: PluginStorageLocation, hasChanges: Bool) {
+        let targetLocation = targetLocationAfterStorageUpdate(
+            currentTarget: currentTarget,
+            storageLocation: storageLocation
+        )
+        return (
+            targetLocation,
+            hasSelectionChanges(
+                targetLocation: targetLocation,
+                storageLocation: storageLocation
+            )
+        )
     }
 
     nonisolated static func hasSelectionChanges(
