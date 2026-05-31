@@ -16,6 +16,13 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
         isLaunching && hasUsableStorageLocation
     }
 
+    static func shouldReloadAfterCloudAvailabilityChange(
+        previousAvailability: Bool,
+        newAvailability: Bool
+    ) -> Bool {
+        !previousAvailability && newAvailability
+    }
+
     var content: Content
 
     @State var error: Error? = nil
@@ -273,8 +280,17 @@ extension RootView {
 
     func onCloudAccountStateChanged(_ n: Notification) {
         let newAvailability = FileManager.default.ubiquityIdentityToken != nil
+        let shouldReload = Self.shouldReloadAfterCloudAvailabilityChange(
+            previousAvailability: iCloudAvailable,
+            newAvailability: newAvailability
+        )
+
         if newAvailability != iCloudAvailable {
             iCloudAvailable = newAvailability
+        }
+
+        if shouldReload {
+            reloadView()
         }
     }
 }
