@@ -11,6 +11,10 @@ enum AudioListLoadPolicy {
     static func shouldApplyResult(currentGeneration: Int, resultGeneration: Int) -> Bool {
         currentGeneration == resultGeneration
     }
+
+    static func isLoadingMoreAfterDiscardingStaleResult() -> Bool {
+        false
+    }
 }
 
 enum AudioListDeletionPolicy {
@@ -274,7 +278,10 @@ extension AudioList {
                 guard AudioListLoadPolicy.shouldApplyResult(
                     currentGeneration: self.loadGeneration,
                     resultGeneration: generation
-                ) else { return }
+                ) else {
+                    self.isLoadingMore = AudioListLoadPolicy.isLoadingMoreAfterDiscardingStaleResult()
+                    return
+                }
                 if !uniqueNewUrls.isEmpty {
                     self.urls.append(contentsOf: uniqueNewUrls)
                     self.currentPage += 1

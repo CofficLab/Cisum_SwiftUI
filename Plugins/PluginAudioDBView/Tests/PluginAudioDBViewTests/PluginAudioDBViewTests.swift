@@ -117,6 +117,10 @@ import UniformTypeIdentifiers
     #expect(!AudioListLoadPolicy.shouldApplyResult(currentGeneration: 3, resultGeneration: 2))
 }
 
+@Test func staleAudioListLoadMoreResultsStopLoadingMore() {
+    #expect(AudioListLoadPolicy.isLoadingMoreAfterDiscardingStaleResult() == false)
+}
+
 @Test func audioListDeletionMatchesSymlinkedRows() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)
