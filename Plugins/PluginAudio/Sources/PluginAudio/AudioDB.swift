@@ -1212,9 +1212,25 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     }
 
     static func contains(_ disk: URL, audioURL: URL) -> Bool {
-        let diskPath = disk.resolvingSymlinksInPath().standardizedFileURL.path
-        let audioPath = audioURL.resolvingSymlinksInPath().standardizedFileURL.path
-        return audioPath != diskPath && audioPath.hasPrefix(diskPath.hasSuffix("/") ? diskPath : diskPath + "/")
+        containsResolvedPath(disk, audioURL: audioURL) || containsLexicalPath(disk, audioURL: audioURL)
+    }
+
+    private static func containsResolvedPath(_ disk: URL, audioURL: URL) -> Bool {
+        containsPath(
+            parent: disk.resolvingSymlinksInPath().standardizedFileURL.path,
+            child: audioURL.resolvingSymlinksInPath().standardizedFileURL.path
+        )
+    }
+
+    private static func containsLexicalPath(_ disk: URL, audioURL: URL) -> Bool {
+        containsPath(
+            parent: disk.standardizedFileURL.path,
+            child: audioURL.standardizedFileURL.path
+        )
+    }
+
+    private static func containsPath(parent: String, child: String) -> Bool {
+        child != parent && child.hasPrefix(parent.hasSuffix("/") ? parent : parent + "/")
     }
 
     static func representsSameAudioFile(_ lhs: URL, _ rhs: URL) -> Bool {

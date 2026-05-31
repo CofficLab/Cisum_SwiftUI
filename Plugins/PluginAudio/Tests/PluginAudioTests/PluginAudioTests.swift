@@ -291,6 +291,53 @@ import SwiftData
     #expect(AudioDB.contains(linkedDisk, audioURL: audio))
 }
 
+@Test func audioDBContainsAllowsDanglingSymlinkEntriesInsideLibrary() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let disk = root.appendingPathComponent("audio", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: disk, withIntermediateDirectories: true)
+    let linkedAudio = disk.appendingPathComponent("broken.mp3")
+    try FileManager.default.createSymbolicLink(
+        at: linkedAudio,
+        withDestinationURL: root.appendingPathComponent("missing-target.mp3")
+    )
+
+    #expect(AudioDB.contains(disk, audioURL: linkedAudio))
+}
+
+@Test func audioDBDeleteAudiosByURLRemovesDanglingSymlinkEntries() async throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let disk = root.appendingPathComponent("audio", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: disk, withIntermediateDirectories: true)
+
+    let schema = Schema([AudioModel.self])
+    let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    let container = try ModelContainer(for: schema, configurations: [configuration])
+    let db = AudioDB(container, reason: "audioDBDeleteAudiosByURLRemovesDanglingSymlinkEntries")
+
+    let linkedAudio = disk.appendingPathComponent("broken.mp3")
+    try FileManager.default.createSymbolicLink(
+        at: linkedAudio,
+        withDestinationURL: root.appendingPathComponent("missing-target.mp3")
+    )
+    await db.insertAudio(url: linkedAudio, order: 10)
+
+    try await db.deleteAudiosByURL(disk: disk, urls: [linkedAudio])
+
+    #expect(!FileManager.default.fileExists(atPath: linkedAudio.path))
+    #expect((try? FileManager.default.destinationOfSymbolicLink(atPath: linkedAudio.path)) == nil)
+    #expect(await db.getTotalOfAudio() == 0)
+}
+
 @Test func audioDBDeleteAudiosByURLRejectsFilesOutsideLibrary() async throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)

@@ -151,10 +151,14 @@ public extension URL {
 
     /// 删除当前 URL 指向的文件或目录。
     func delete() throws {
-        guard FileManager.default.fileExists(atPath: path) else {
+        guard FileManager.default.fileExists(atPath: path) || isSymbolicLinkPath else {
             return
         }
         try FileManager.default.removeItem(at: self)
+    }
+
+    private var isSymbolicLinkPath: Bool {
+        (try? FileManager.default.destinationOfSymbolicLink(atPath: path)) != nil
     }
 
     /// 复制当前文件到目标位置。
