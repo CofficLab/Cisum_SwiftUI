@@ -65,3 +65,18 @@ import Testing
         displayedSelection: .local
     ))
 }
+
+@Test func storageSelectionDoesNotPersistInitialDefaultOnDisappear() {
+    #expect(!WelcomeStorageSelectionPolicy.shouldPersistDisplayedSelectionOnDisappear(
+        currentStorageSelection: nil,
+        displayedSelection: .icloud
+    ))
+    #expect(!WelcomeStorageSelectionPolicy.shouldPersistDisplayedSelectionOnDisappear(
+        currentStorageSelection: nil,
+        displayedSelection: .local
+    ))
+    #expect(WelcomeStorageSelectionPolicy.shouldPersistDisplayedSelectionOnDisappear(
+        currentStorageSelection: .icloud,
+        displayedSelection: .local
+    ))
+}

@@ -106,6 +106,10 @@ public struct StorageView: View {
 
     private func onDisappear() {
         guard let tempStorageSelection else { return }
+        guard WelcomeStorageSelectionPolicy.shouldPersistDisplayedSelectionOnDisappear(
+            currentStorageSelection: currentStorageSelection,
+            displayedSelection: tempStorageSelection
+        ) else { return }
 
         updateSelection(tempStorageSelection)
     }
@@ -158,6 +162,13 @@ enum WelcomeStorageSelectionPolicy {
     }
 
     static func shouldPersistDisplayedSelectionOnAppear(
+        currentStorageSelection: WelcomeStorageSelection?,
+        displayedSelection: WelcomeStorageSelection?
+    ) -> Bool {
+        currentStorageSelection != nil && displayedSelection != currentStorageSelection
+    }
+
+    static func shouldPersistDisplayedSelectionOnDisappear(
         currentStorageSelection: WelcomeStorageSelection?,
         displayedSelection: WelcomeStorageSelection?
     ) -> Bool {
