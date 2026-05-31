@@ -106,6 +106,22 @@ import Foundation
     #expect(FileStatusColumnView.resolveStatus(for: danglingLink, verbose: false).status == "本地文件")
 }
 
+@Test func repositoryInfoOnlyOpensExistingLocalPaths() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let missingRoot = root.appendingPathComponent("missing", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+
+    #expect(RepositoryInfoActionPolicy.canOpenInFinder(root))
+    #expect(!RepositoryInfoActionPolicy.canOpenInFinder(missingRoot))
+    #expect(!RepositoryInfoActionPolicy.canOpenInFinder(nil))
+    #expect(RepositoryInfoActionPolicy.canOpenInFinder(URL(string: "https://example.com")!))
+}
+
 @Test func directStorageSwitchUsesAccurateCompletionMessage() {
     #expect(MigrationProgressView.completionMessage(shouldMigrate: true) == "迁移已完成")
     #expect(MigrationProgressView.completionMessage(shouldMigrate: false) == "已切换到新位置")

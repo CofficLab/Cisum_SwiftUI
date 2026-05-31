@@ -2,6 +2,17 @@ import MagicKit
 
 import SwiftUI
 
+enum RepositoryInfoActionPolicy {
+    static func canOpenInFinder(
+        _ url: URL?,
+        fileExists: (String) -> Bool = FileManager.default.fileExists(atPath:)
+    ) -> Bool {
+        guard let url else { return false }
+        guard url.isFileURL else { return true }
+        return fileExists(url.path)
+    }
+}
+
 struct RepositoryInfoView: View {
     @Environment(\.pluginStorageDependencies) private var dependencies
 
@@ -48,7 +59,9 @@ struct RepositoryInfoView: View {
 
             Spacer()
 
-            if let root = url, dependencies.isDesktop {
+            if let root = url,
+               dependencies.isDesktop,
+               RepositoryInfoActionPolicy.canOpenInFinder(root) {
                 root.makeOpenButton()
             }
         }
