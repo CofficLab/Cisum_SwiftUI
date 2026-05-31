@@ -1,6 +1,8 @@
 import Testing
 @testable import PluginBookDBView
 import Foundation
+import PluginBook
+import SwiftData
 import UniformTypeIdentifiers
 
 @Test func bookDBInfoExportsMetadata() {
@@ -240,6 +242,35 @@ import UniformTypeIdentifiers
 
     #expect(BookTileLoadIdentity(bookURL: bookURL, dbRoot: firstRoot) == BookTileLoadIdentity(bookURL: bookURL, dbRoot: firstRoot))
     #expect(BookTileLoadIdentity(bookURL: bookURL, dbRoot: firstRoot) != BookTileLoadIdentity(bookURL: bookURL, dbRoot: secondRoot))
+}
+
+@Test func bookDBViewFindsSymlinkedBookState() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realRoot = root.appendingPathComponent("real-books", isDirectory: true)
+    let linkedRoot = root.appendingPathComponent("library-link", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: realRoot, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedRoot, withDestinationURL: realRoot)
+    let realBook = realRoot.appendingPathComponent("Novel", isDirectory: true)
+    let linkedBook = linkedRoot.appendingPathComponent("Novel", isDirectory: true)
+    try FileManager.default.createDirectory(at: realBook, withIntermediateDirectories: true)
+    let realChapter = realBook.appendingPathComponent("Chapter 01.m4b")
+    try Data("audio".utf8).write(to: realChapter)
+
+    let schema = Schema([BookModel.self, BookState.self])
+    let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    let container = try ModelContainer(for: schema, configurations: [configuration])
+    let context = ModelContext(container)
+    context.insert(BookState(url: realBook, currentURL: realChapter, time: 42))
+    try context.save()
+
+    let state = try #require(try BookDBViewBookStateLookup.findBookState(for: linkedBook, in: context))
+    #expect(state.currentURL == realChapter)
+    #expect(state.time == 42)
 }
 
 @Test func bookGridOnlyAppliesCurrentUpdateGeneration() {

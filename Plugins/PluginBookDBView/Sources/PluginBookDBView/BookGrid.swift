@@ -13,6 +13,19 @@ enum BookGridUpdatePolicy {
     }
 }
 
+enum BookDBViewBookStateLookup {
+    static func findBookState(for bookURL: URL, in context: ModelContext) throws -> BookState? {
+        let descriptor = BookState.descriptorOf(bookURL)
+        if let state = try context.fetch(descriptor).first {
+            return state
+        }
+
+        return try context.fetch(BookState.descriptorAll).first { state in
+            BookState.representsSameBookURL(state.url, as: bookURL)
+        }
+    }
+}
+
 struct BookGrid: View, SuperLog, SuperThread, SuperEvent {
     nonisolated static let emoji = "📖"
     nonisolated static let verbose = false
@@ -50,9 +63,7 @@ struct BookGrid: View, SuperLog, SuperThread, SuperEvent {
     private func findBookState(_ bookURL: URL, in container: ModelContainer) async -> BookState? {
         let context = ModelContext(container)
         do {
-            let descriptor = BookState.descriptorOf(bookURL)
-            let result = try context.fetch(descriptor)
-            return result.first
+            return try BookDBViewBookStateLookup.findBookState(for: bookURL, in: context)
         } catch {
             if Self.verbose {
                 os_log("\(self.t)⚠️ 查询书籍状态失败: \(error.localizedDescription)")

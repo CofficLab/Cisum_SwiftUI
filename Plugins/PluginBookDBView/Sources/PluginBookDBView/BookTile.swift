@@ -142,8 +142,7 @@ extension BookTile {
             do {
                 let container = try BookConfig.getContainer(dbRootURL: dbRoot)
                 let context = ModelContext(container)
-                let descriptor = BookState.descriptorOf(bookURL)
-                let state = try context.fetch(descriptor).first
+                let state = try BookDBViewBookStateLookup.findBookState(for: bookURL, in: context)
                 return state?.currentURL?.lastPathComponent
             } catch {
                 if verbose {
