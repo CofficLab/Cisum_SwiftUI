@@ -82,6 +82,41 @@ import SwiftData
     #expect(BookModel.playableChildCount(for: linkedBook) == 1)
 }
 
+@Test func bookLibraryItemSupportCountsPlayableChildrenWithoutImages() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let book = root.appendingPathComponent("Book", isDirectory: true)
+    let nested = book.appendingPathComponent("Nested", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: nested, withIntermediateDirectories: true)
+    try Data("cover".utf8).write(to: book.appendingPathComponent("cover.jpg"))
+    try Data("notes".utf8).write(to: nested.appendingPathComponent("notes.txt"))
+    try Data("audio".utf8).write(to: nested.appendingPathComponent("001.m4b"))
+    try Data("audio".utf8).write(to: nested.appendingPathComponent("002.mp3"))
+
+    #expect(BookDB.isSupportedBookLibraryItem(book))
+    #expect(BookModel.playableChildCount(for: book) == 2)
+}
+
+@Test func bookLibraryItemSupportRejectsFoldersWithoutPlayableChildren() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let book = root.appendingPathComponent("Book", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: book, withIntermediateDirectories: true)
+    try Data("cover".utf8).write(to: book.appendingPathComponent("cover.jpg"))
+    try Data("notes".utf8).write(to: book.appendingPathComponent("notes.txt"))
+
+    #expect(!BookDB.isSupportedBookLibraryItem(book))
+    #expect(BookModel.playableChildCount(for: book) == 0)
+}
+
 @Test func bookDBUniqueSupportedItemsDeduplicatesByResolvedIdentity() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)

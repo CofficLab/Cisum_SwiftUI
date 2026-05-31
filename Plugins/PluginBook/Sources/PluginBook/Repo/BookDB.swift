@@ -43,7 +43,7 @@ public actor BookDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
 enum BookLibraryItemSupport {
     static func isSupported(_ url: URL) -> Bool {
         if isFolderLike(url) {
-            return playableChildren(in: url).isEmpty == false
+            return containsPlayableChild(in: url)
         }
 
         return BookPluginInfo.supportedExtensions.contains(url.pathExtension.lowercased())
@@ -58,13 +58,52 @@ enum BookLibraryItemSupport {
             return BookPluginInfo.supportedExtensions.contains(url.pathExtension.lowercased()) ? 1 : 0
         }
 
-        return playableChildren(in: url).count
+        return playableChildCount(in: url)
     }
 
-    private static func playableChildren(in folder: URL) -> [URL] {
-        scanRoot(for: folder).flatten().filter { child in
-            !child.isFolder && BookPluginInfo.supportedExtensions.contains(child.pathExtension.lowercased())
+    private static func containsPlayableChild(in folder: URL) -> Bool {
+        for child in playableChildSequence(in: folder) {
+            if isPlayableChild(child) {
+                return true
+            }
         }
+
+        return false
+    }
+
+    private static func playableChildCount(in folder: URL) -> Int {
+        var count = 0
+        for child in playableChildSequence(in: folder) where isPlayableChild(child) {
+            count += 1
+        }
+        return count
+    }
+
+    private static func playableChildSequence(in folder: URL) -> AnySequence<URL> {
+        let root = scanRoot(for: folder)
+        guard let enumerator = FileManager.default.enumerator(
+            at: root,
+            includingPropertiesForKeys: [.isDirectoryKey, .isRegularFileKey],
+            options: [.skipsHiddenFiles]
+        ) else {
+            return AnySequence([])
+        }
+
+        return AnySequence {
+            AnyIterator {
+                while let child = enumerator.nextObject() as? URL {
+                    if !child.isFolder {
+                        return child
+                    }
+                }
+
+                return nil
+            }
+        }
+    }
+
+    private static func isPlayableChild(_ url: URL) -> Bool {
+        BookPluginInfo.supportedExtensions.contains(url.pathExtension.lowercased())
     }
 
     private static func isFolderLike(_ url: URL) -> Bool {
