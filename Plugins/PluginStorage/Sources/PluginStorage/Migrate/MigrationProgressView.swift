@@ -264,6 +264,60 @@ struct MigrationProgressView: View {
         )
     }
 
+    nonisolated static func processedFilesAfterStatusUpdate(
+        _ processedFiles: [FileStatus],
+        fileName: String,
+        sourceURL: URL?,
+        error: String? = nil,
+        fileExists: (String) -> Bool = FileManager.default.fileExists(atPath:)
+    ) -> [FileStatus] {
+        guard let index = processedFiles.firstIndex(where: { $0.name == fileName }) else {
+            return processedFiles
+        }
+
+        var updatedFiles = processedFiles
+        let currentFile = processedFiles[index]
+
+        if let error {
+            updatedFiles[index] = FileStatus(
+                name: fileName,
+                status: .failed(error),
+                downloadStatus: currentFile.downloadStatus
+            )
+            return updatedFiles
+        }
+
+        let sourceFileExists = sourceURL.map {
+            fileExists($0.appendingPathComponent(fileName).path)
+        } ?? false
+
+        updatedFiles[index] = FileStatus(
+            name: fileName,
+            status: sourceFileExists ? .processing : .completed,
+            downloadStatus: sourceFileExists ? currentFile.downloadStatus : .local
+        )
+        return updatedFiles
+    }
+
+    nonisolated static func processedFilesAfterDownloadStatusUpdate(
+        _ processedFiles: [FileStatus],
+        fileName: String,
+        downloadStatus: FileStatus.DownloadStatus
+    ) -> [FileStatus] {
+        guard let index = processedFiles.firstIndex(where: { $0.name == fileName }) else {
+            return processedFiles
+        }
+
+        var updatedFiles = processedFiles
+        let currentFile = processedFiles[index]
+        updatedFiles[index] = FileStatus(
+            name: fileName,
+            status: currentFile.status,
+            downloadStatus: downloadStatus
+        )
+        return updatedFiles
+    }
+
     private func loadSourceFiles() {
         guard let sourceURL = sourceURL else { return }
 
@@ -298,51 +352,25 @@ struct MigrationProgressView: View {
     }
 
     private func updateFileStatus(_ fileName: String, error: String? = nil) {
-        if let error = error {
-            // 如果有错误，更新文件状态失败
-            if let index = processedFiles.firstIndex(where: { $0.name == fileName }) {
-                processedFiles[index] = FileStatus(
-                    name: fileName,
-                    status: .failed(error),
-                    downloadStatus: processedFiles[index].downloadStatus // 保持原有的下载状态
-                )
-            }
+        processedFiles = Self.processedFilesAfterStatusUpdate(
+            processedFiles,
+            fileName: fileName,
+            sourceURL: sourceURL,
+            error: error
+        )
+
+        if let error {
             errorMessage = error
-        } else {
-            // 更新当前处理的文件状态
-            if let index = processedFiles.firstIndex(where: { $0.name == fileName }) {
-                // 当前文件设置为处理中，保持下载状态不变
-                processedFiles[index] = FileStatus(
-                    name: fileName,
-                    status: .processing,
-                    downloadStatus: processedFiles[index].downloadStatus
-                )
-
-                let sourceFileExists = sourceURL.map {
-                    FileManager.default.fileExists(atPath: $0.appendingPathComponent(fileName).path)
-                } ?? false
-
-                // 源文件离开原仓库后才算完成，避免重名目标文件导致开始迁移时被误判完成。
-                if !sourceFileExists {
-                    processedFiles[index] = FileStatus(
-                        name: fileName,
-                        status: .completed,
-                        downloadStatus: .local // 完成后标记为本地文件
-                    )
-                }
-            }
         }
     }
 
     // 添加新方法来更新文件的下载状态
     private func updateFileDownloadStatus(_ fileName: String, downloadStatus: FileStatus.DownloadStatus) {
-        if let index = processedFiles.firstIndex(where: { $0.name == fileName }) {
-            processedFiles[index] = FileStatus(
-                name: fileName,
-                status: processedFiles[index].status,
-                downloadStatus: downloadStatus
-            )
-        }
+        processedFiles = Self.processedFilesAfterDownloadStatusUpdate(
+            processedFiles,
+            fileName: fileName,
+            downloadStatus: downloadStatus
+        )
     }
 
     private var confirmationButtons: some View {

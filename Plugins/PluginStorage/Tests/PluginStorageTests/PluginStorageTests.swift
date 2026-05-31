@@ -259,6 +259,71 @@ import Foundation
     ))
 }
 
+@Test func migrationStatusUpdatePreservesDownloadStateOnFailure() {
+    let files = [
+        FileStatus(name: "track.mp3", status: .processing, downloadStatus: .downloading(progress: 0.4))
+    ]
+
+    let updated = MigrationProgressView.processedFilesAfterStatusUpdate(
+        files,
+        fileName: "track.mp3",
+        sourceURL: nil,
+        error: "failed"
+    )
+
+    #expect(updated.count == 1)
+    #expect(updated[0].status == .failed("failed"))
+    #expect(updated[0].downloadStatus == .downloading(progress: 0.4))
+}
+
+@Test func migrationStatusUpdateCompletesOnlyAfterSourceFileLeaves() {
+    let source = URL(fileURLWithPath: "/tmp/cisum-storage-source", isDirectory: true)
+    let files = [
+        FileStatus(name: "track.mp3", status: .pending, downloadStatus: .downloaded)
+    ]
+
+    let processing = MigrationProgressView.processedFilesAfterStatusUpdate(
+        files,
+        fileName: "track.mp3",
+        sourceURL: source,
+        fileExists: { $0.hasSuffix("/track.mp3") }
+    )
+    #expect(processing[0].status == .processing)
+    #expect(processing[0].downloadStatus == .downloaded)
+
+    let completed = MigrationProgressView.processedFilesAfterStatusUpdate(
+        files,
+        fileName: "track.mp3",
+        sourceURL: source,
+        fileExists: { _ in false }
+    )
+    #expect(completed[0].status == .completed)
+    #expect(completed[0].downloadStatus == .local)
+}
+
+@Test func migrationStatusUpdateIgnoresUnknownFiles() {
+    let files = [
+        FileStatus(name: "track.mp3", status: .pending, downloadStatus: .local)
+    ]
+
+    let statusUpdated = MigrationProgressView.processedFilesAfterStatusUpdate(
+        files,
+        fileName: "missing.mp3",
+        sourceURL: nil
+    )
+    let downloadUpdated = MigrationProgressView.processedFilesAfterDownloadStatusUpdate(
+        files,
+        fileName: "missing.mp3",
+        downloadStatus: .downloaded
+    )
+
+    #expect(statusUpdated[0].name == "track.mp3")
+    #expect(statusUpdated[0].status == .pending)
+    #expect(statusUpdated[0].downloadStatus == .local)
+    #expect(downloadUpdated[0].status == .pending)
+    #expect(downloadUpdated[0].downloadStatus == .local)
+}
+
 @Test func migrationSheetOnlyDisablesDismissWhileRunning() {
     #expect(!MigrationProgressView.shouldDisableInteractiveDismiss(
         showConfirmation: true,
