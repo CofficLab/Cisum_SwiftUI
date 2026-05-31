@@ -38,6 +38,18 @@ final class MagicPlayManTests: XCTestCase {
             requestedAsset: current,
             currentAsset: nil
         ))
+        XCTAssertTrue(MagicPlayManDownloadRequestPolicy.shouldFinishDownload(
+            requestedAsset: current,
+            currentAsset: current
+        ))
+        XCTAssertFalse(MagicPlayManDownloadRequestPolicy.shouldFinishDownload(
+            requestedAsset: stale,
+            currentAsset: current
+        ))
+        XCTAssertFalse(MagicPlayManDownloadRequestPolicy.shouldFinishDownload(
+            requestedAsset: current,
+            currentAsset: nil
+        ))
     }
 
     @MainActor

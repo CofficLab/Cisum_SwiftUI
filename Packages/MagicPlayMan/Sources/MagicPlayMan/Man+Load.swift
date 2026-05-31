@@ -10,6 +10,10 @@ enum MagicPlayManDownloadRequestPolicy {
     static func shouldApplyResult(requestedAsset: URL, currentAsset: URL?) -> Bool {
         requestedAsset == currentAsset
     }
+
+    static func shouldFinishDownload(requestedAsset: URL, currentAsset: URL?) -> Bool {
+        requestedAsset == currentAsset
+    }
 }
 
 extension MagicPlayMan {
@@ -61,6 +65,16 @@ extension MagicPlayMan {
         let finishObserver = url.onDownloadFinished(verbose: self.verbose, caller: self.className) { [weak self] in
             guard let self = self else { return }
             Task { @MainActor in
+                guard MagicPlayManDownloadRequestPolicy.shouldFinishDownload(
+                    requestedAsset: url,
+                    currentAsset: self.currentURL
+                ), self.currentDownloadObservers != nil else {
+                    if self.verbose {
+                        os_log("\(self.t)⚠️ URL changed during download completion, ignoring stale result for: \(url.title)")
+                    }
+                    return
+                }
+
                 self.cleanupDownloadObservers()
                 // 下载完成后执行回调
                 onFinished?()
@@ -73,7 +87,22 @@ extension MagicPlayMan {
         // 开始下载
         Task {
             do {
-                try await url.download(verbose: self.verbose, reason: self.className + ".downloadAndCache")
+                try await url.ensureLocalAvailability()
+
+                await MainActor.run {
+                    guard MagicPlayManDownloadRequestPolicy.shouldFinishDownload(
+                        requestedAsset: url,
+                        currentAsset: self.currentURL
+                    ), self.currentDownloadObservers != nil else {
+                        if self.verbose {
+                            os_log("\(self.t)⚠️ URL changed after ensuring local availability, ignoring stale result for: \(url.title)")
+                        }
+                        return
+                    }
+
+                    self.cleanupDownloadObservers()
+                    onFinished?()
+                }
             } catch {
                 await MainActor.run {
                     guard MagicPlayManDownloadRequestPolicy.shouldApplyResult(
