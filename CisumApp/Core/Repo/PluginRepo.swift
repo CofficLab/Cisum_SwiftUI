@@ -28,8 +28,10 @@ class PluginRepo: SuperLog, SuperThread {
     }
 
     nonisolated static func storedIdentifier(from string: String?) -> String? {
-        guard let string, !string.isEmpty else { return nil }
-        return string
+        guard let string else { return nil }
+        let trimmed = string.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return nil }
+        return trimmed
     }
     
     /// 获取当前选中的插件ID
