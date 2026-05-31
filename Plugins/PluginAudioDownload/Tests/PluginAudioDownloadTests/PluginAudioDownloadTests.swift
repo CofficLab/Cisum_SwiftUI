@@ -65,3 +65,44 @@ import Foundation
         isSceneActive: false
     ))
 }
+
+@Test func audioDownloadAppliesResultsForSymlinkedCurrentAsset() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realAsset = root.appendingPathComponent("track.mp3")
+    let linkedAsset = root.appendingPathComponent("linked.mp3")
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    try Data("audio".utf8).write(to: realAsset)
+    try FileManager.default.createSymbolicLink(at: linkedAsset, withDestinationURL: realAsset)
+
+    #expect(AudioDownloadRequestPolicy.shouldApplyDownloadResult(
+        requestedAsset: realAsset,
+        currentAsset: linkedAsset,
+        isSceneActive: true
+    ))
+}
+
+@Test func audioDownloadDoesNotApplyResultsAcrossDistinctDanglingSymlinks() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let missingAsset = root.appendingPathComponent("missing.mp3")
+    let firstLink = root.appendingPathComponent("first.mp3")
+    let secondLink = root.appendingPathComponent("second.mp3")
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: firstLink, withDestinationURL: missingAsset)
+    try FileManager.default.createSymbolicLink(at: secondLink, withDestinationURL: missingAsset)
+
+    #expect(!AudioDownloadRequestPolicy.shouldApplyDownloadResult(
+        requestedAsset: firstLink,
+        currentAsset: secondLink,
+        isSceneActive: true
+    ))
+}

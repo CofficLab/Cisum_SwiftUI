@@ -24,8 +24,7 @@ enum AudioDownloadRequestPolicy {
         case (.none, .none):
             return true
         case let (.some(lhs), .some(rhs)):
-            return lhs.resolvingSymlinksInPath().standardizedFileURL.path
-                == rhs.resolvingSymlinksInPath().standardizedFileURL.path
+            return lhs.isSameFileLocation(as: rhs)
         default:
             return false
         }
