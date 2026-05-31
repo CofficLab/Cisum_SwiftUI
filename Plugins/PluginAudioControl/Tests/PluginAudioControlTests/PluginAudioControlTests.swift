@@ -139,3 +139,24 @@ import Testing
         isSceneActive: true
     ))
 }
+
+@Test func staleNavigationFailureDoesNotReportAfterPlaybackSwitches() {
+    let requested = URL(fileURLWithPath: "/tmp/cisum-audio-control-failure/requested.mp3")
+    let switched = URL(fileURLWithPath: "/tmp/cisum-audio-control-failure/switched.mp3")
+
+    #expect(AudioControlPlaybackRequestPolicy.shouldReportNavigationFailure(
+        requestedAsset: requested,
+        currentAsset: requested,
+        isSceneActive: true
+    ))
+    #expect(!AudioControlPlaybackRequestPolicy.shouldReportNavigationFailure(
+        requestedAsset: requested,
+        currentAsset: switched,
+        isSceneActive: true
+    ))
+    #expect(!AudioControlPlaybackRequestPolicy.shouldReportNavigationFailure(
+        requestedAsset: requested,
+        currentAsset: requested,
+        isSceneActive: false
+    ))
+}

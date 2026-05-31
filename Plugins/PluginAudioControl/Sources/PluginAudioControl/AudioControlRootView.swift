@@ -20,6 +20,14 @@ enum AudioControlPlaybackRequestPolicy {
         isSceneActive && representsSameFile(requestedAsset, currentAsset)
     }
 
+    static func shouldReportNavigationFailure(requestedAsset: URL, currentAsset: URL?, isSceneActive: Bool) -> Bool {
+        shouldApplyNavigationResult(
+            requestedAsset: requestedAsset,
+            currentAsset: currentAsset,
+            isSceneActive: isSceneActive
+        )
+    }
+
     static func currentAssetAffectedByDeletion(currentAsset: URL?, deletedURLs: [URL]) -> Bool {
         guard let currentAsset else { return false }
         let currentPath = resolvedStandardizedPath(for: currentAsset)
@@ -187,6 +195,13 @@ private extension AudioControlRootView {
                     alert_info(String(localized: "No files in library", table: "Audio-Control", bundle: .module))
                 }
             } catch {
+                guard AudioControlPlaybackRequestPolicy.shouldReportNavigationFailure(
+                    requestedAsset: asset,
+                    currentAsset: man.currentAsset,
+                    isSceneActive: shouldActivateControl || ignoreSceneCheck
+                ) else {
+                    return
+                }
                 if AudioControlRuntime.verbose {
                     AudioControlRuntime.log.error("Failed to get previous asset: \(error.localizedDescription)")
                 }
@@ -238,6 +253,13 @@ private extension AudioControlRootView {
                     alert_info(String(localized: "No files in library", table: "Audio-Control", bundle: .module))
                 }
             } catch {
+                guard AudioControlPlaybackRequestPolicy.shouldReportNavigationFailure(
+                    requestedAsset: asset,
+                    currentAsset: man.currentAsset,
+                    isSceneActive: shouldActivateControl || ignoreSceneCheck
+                ) else {
+                    return
+                }
                 if AudioControlRuntime.verbose {
                     AudioControlRuntime.log.error("Failed to get next asset: \(error.localizedDescription)")
                 }
