@@ -21,7 +21,7 @@ extension ShellGit {
     /// - Returns: 文件差异信息
     public static func diffFile(_ file: String, staged: Bool = false, at path: String? = nil) throws -> String {
         let option = staged ? "--cached" : ""
-        return try Shell.runSync("git diff \(option) \(file)", at: path)
+        return try Shell.runSync("git diff \(option) -- \(shellQuoted(file))", at: path)
     }
     
     /// 获取两个提交之间的差异
@@ -42,7 +42,7 @@ extension ShellGit {
     /// - Returns: 文件是否存在
     private static func fileExists(at commit: String, file: String, repoPath: String) -> Bool {
         do {
-            _ = try Shell.runSync("git cat-file -e \(commit):\(file)", at: repoPath)
+            _ = try Shell.runSync("git cat-file -e \(shellQuoted("\(commit):\(file)"))", at: repoPath)
             return true
         } catch {
             return false
@@ -100,7 +100,7 @@ extension ShellGit {
     ///   - path: 仓库路径
     /// - Returns: 文件内容字符串
     public static func fileContent(atCommit commit: String, file: String, at path: String? = nil) throws -> String {
-        return try Shell.runSync("git show \(commit):\(file)", at: path)
+        return try Shell.runSync("git show \(shellQuoted("\(commit):\(file)"))", at: path)
     }
     
     /// 获取当前工作区的文件内容
@@ -132,7 +132,7 @@ extension ShellGit {
             guard let parsedFile = parseNameStatusLine(line) else { continue }
             let changeType = parsedFile.changeType
             let file = parsedFile.file
-            let diff = try Shell.runSync("git diff \(option) -- \(file)", at: path)
+            let diff = try Shell.runSync("git diff \(option) -- \(shellQuoted(file))", at: path)
             result.append(MagicGitDiffFile(id: file, file: file, changeType: changeType, diff: diff))
         }
         return result
@@ -151,7 +151,7 @@ extension ShellGit {
             guard let parsedFile = parseNameStatusLine(line) else { continue }
             let changeType = parsedFile.changeType
             let file = parsedFile.file
-            let diff = try Shell.runSync("git show \(commit) -- \(file)", at: path)
+            let diff = try Shell.runSync("git show \(commit) -- \(shellQuoted(file))", at: path)
             result.append(MagicGitDiffFile(id: file, file: file, changeType: changeType, diff: diff))
         }
         return result
@@ -216,7 +216,7 @@ extension ShellGit {
         // 如果文件在 HEAD 中不存在（新文件），则 before 为 nil
         let before: String?
         do {
-            before = try Shell.runSync("git show HEAD:\(file)", at: repoPath)
+            before = try Shell.runSync("git show \(shellQuoted("HEAD:\(file)"))", at: repoPath)
         } catch {
             // 文件在 HEAD 中不存在，可能是新文件
             before = nil
@@ -258,6 +258,10 @@ extension ShellGit {
         }
 
         return (changeType, file)
+    }
+
+    static func shellQuoted(_ value: String) -> String {
+        "'\(value.replacingOccurrences(of: "'", with: "'\\''"))'"
     }
 }
 #endif
