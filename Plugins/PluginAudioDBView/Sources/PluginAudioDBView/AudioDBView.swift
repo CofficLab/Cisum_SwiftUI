@@ -244,7 +244,7 @@ extension AudioDBView {
         )
         var suffix = 2
 
-        while FileManager.default.fileExists(atPath: candidate.path) {
+        while Self.pathExistsIncludingSymlink(candidate) {
             candidate = destination(
                 named: "\(normalizedBaseName) \(suffix)",
                 pathExtension: fileExtension,
@@ -254,6 +254,14 @@ extension AudioDBView {
         }
 
         return candidate
+    }
+
+    nonisolated private static func pathExistsIncludingSymlink(_ url: URL) -> Bool {
+        if FileManager.default.fileExists(atPath: url.path) {
+            return true
+        }
+
+        return (try? url.resourceValues(forKeys: [.isSymbolicLinkKey]).isSymbolicLink) == true
     }
 
     nonisolated private static func copySecurityScopedFile(_ source: URL, to destination: URL) async throws {

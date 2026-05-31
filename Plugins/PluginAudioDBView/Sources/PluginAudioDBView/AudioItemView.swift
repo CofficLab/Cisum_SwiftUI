@@ -195,7 +195,7 @@ extension AudioItemView {
         var destinationURL = directory.appendingPathComponent(sourceURL.lastPathComponent)
         var counter = 2
 
-        while FileManager.default.fileExists(atPath: destinationURL.path) {
+        while pathExistsIncludingSymlink(destinationURL) {
             let fileNameWithoutExtension = sourceURL.deletingPathExtension().lastPathComponent
             let fileExtension = sourceURL.pathExtension
             let newFileName = fileExtension.isEmpty
@@ -206,6 +206,14 @@ extension AudioItemView {
         }
 
         return destinationURL
+    }
+
+    nonisolated private static func pathExistsIncludingSymlink(_ url: URL) -> Bool {
+        if FileManager.default.fileExists(atPath: url.path) {
+            return true
+        }
+
+        return (try? url.resourceValues(forKeys: [.isSymbolicLinkKey]).isSymbolicLink) == true
     }
 
     /// 播放音频

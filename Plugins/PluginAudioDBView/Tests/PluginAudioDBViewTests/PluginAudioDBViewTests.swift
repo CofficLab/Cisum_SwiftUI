@@ -69,6 +69,33 @@ import UniformTypeIdentifiers
     #expect((try Data(contentsOf: copiedFile)) == Data("audio".utf8))
 }
 
+@Test func audioImportAvoidsDanglingSymlinkDestinationNames() async throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let sourceRoot = root.appendingPathComponent("source", isDirectory: true)
+    let destinationRoot = root.appendingPathComponent("destination", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: sourceRoot, withIntermediateDirectories: true)
+    try FileManager.default.createDirectory(at: destinationRoot, withIntermediateDirectories: true)
+    let source = sourceRoot.appendingPathComponent("track.mp3")
+    let danglingDestination = destinationRoot.appendingPathComponent("track.mp3")
+    try Data("audio".utf8).write(to: source)
+    try FileManager.default.createSymbolicLink(
+        at: danglingDestination,
+        withDestinationURL: destinationRoot.appendingPathComponent("missing.mp3")
+    )
+
+    let copiedFiles = try await AudioDBView.copyFilesInBackground([source], to: destinationRoot)
+    let copiedFile = try #require(copiedFiles.first)
+
+    #expect(copiedFile.lastPathComponent == "track 2.mp3")
+    #expect((try Data(contentsOf: copiedFile)) == Data("audio".utf8))
+    #expect((try? danglingDestination.resourceValues(forKeys: [.isSymbolicLinkKey]).isSymbolicLink) == true)
+}
+
 @Test func audioListRejectsStaleDeleteOffsets() {
     let root = URL(fileURLWithPath: "/tmp/cisum-audio-list-tests", isDirectory: true)
     let urls = [
@@ -205,6 +232,26 @@ import UniformTypeIdentifiers
     try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
     let existing = root.appendingPathComponent("track.mp3")
     try Data("audio".utf8).write(to: existing)
+
+    let source = URL(fileURLWithPath: "/tmp/source/track.mp3")
+    let destination = AudioItemView.uniqueDestination(for: source, in: root)
+
+    #expect(destination.lastPathComponent == "track 2.mp3")
+}
+
+@Test func audioItemExportAvoidsDanglingSymlinkDestinationNames() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    let danglingDestination = root.appendingPathComponent("track.mp3")
+    try FileManager.default.createSymbolicLink(
+        at: danglingDestination,
+        withDestinationURL: root.appendingPathComponent("missing.mp3")
+    )
 
     let source = URL(fileURLWithPath: "/tmp/source/track.mp3")
     let destination = AudioItemView.uniqueDestination(for: source, in: root)
