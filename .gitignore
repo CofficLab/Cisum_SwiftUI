@@ -15,3 +15,5 @@ xcuserdata/
 
 ## Swift Package Manager
 .swiftpm/
+Plugins/*/Package.resolved
+Packages/*/Package.resolved
