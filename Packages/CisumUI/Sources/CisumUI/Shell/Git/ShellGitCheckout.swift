@@ -9,7 +9,7 @@ extension ShellGit {
     ///   - path: 仓库路径
     /// - Returns: 执行结果
     public static func checkout(_ branch: String, at path: String? = nil) throws -> String {
-        return try Shell.runSync("git checkout \(branch)", at: path)
+        return try Shell.runSync("git checkout \(shellQuoted(branch))", at: path)
     }
 
     /// 创建并切换到新分支
@@ -18,7 +18,7 @@ extension ShellGit {
     ///   - path: 仓库路径
     /// - Returns: 执行结果
     public static func checkoutNewBranch(_ branch: String, at path: String? = nil) throws -> String {
-        return try Shell.runSync("git checkout -b \(branch)", at: path)
+        return try Shell.runSync("git checkout -b \(shellQuoted(branch))", at: path)
     }
 
     /// 检出指定文件到工作区
@@ -27,7 +27,7 @@ extension ShellGit {
     ///   - path: 仓库路径
     /// - Returns: 执行结果
     public static func checkoutFiles(_ files: [String], at path: String? = nil) throws -> String {
-        let filesStr = files.joined(separator: " ")
+        let filesStr = files.map(shellQuoted).joined(separator: " ")
         return try Shell.runSync("git checkout -- \(filesStr)", at: path)
     }
 
@@ -37,7 +37,7 @@ extension ShellGit {
     ///   - path: 仓库路径
     /// - Returns: 执行结果
     public static func checkoutFile(_ file: String, at path: String? = nil) throws -> String {
-        return try Shell.runSync("git checkout -- \(file)", at: path)
+        return try Shell.runSync("git checkout -- \(shellQuoted(file))", at: path)
     }
 
     /// 从指定提交检出文件
@@ -47,7 +47,7 @@ extension ShellGit {
     ///   - path: 仓库路径
     /// - Returns: 执行结果
     public static func checkoutFileFromCommit(_ commit: String, file: String, at path: String? = nil) throws -> String {
-        return try Shell.runSync("git checkout \(commit) -- \(file)", at: path)
+        return try Shell.runSync("git checkout \(shellQuoted(commit)) -- \(shellQuoted(file))", at: path)
     }
 
     /// 切换到指定提交（分离头指针状态）
@@ -56,7 +56,7 @@ extension ShellGit {
     ///   - path: 仓库路径
     /// - Returns: 执行结果
     public static func checkoutCommit(_ commit: String, at path: String? = nil) throws -> String {
-        return try Shell.runSync("git checkout \(commit)", at: path)
+        return try Shell.runSync("git checkout \(shellQuoted(commit))", at: path)
     }
 
     /// 切换到远程分支并创建本地跟踪分支
@@ -67,11 +67,11 @@ extension ShellGit {
     /// - Returns: 执行结果
     public static func checkoutRemoteBranch(_ remoteBranch: String, as localBranch: String? = nil, at path: String? = nil) throws -> String {
         if let localBranch = localBranch {
-            return try Shell.runSync("git checkout -b \(localBranch) \(remoteBranch)", at: path)
+            return try Shell.runSync("git checkout -b \(shellQuoted(localBranch)) \(shellQuoted(remoteBranch))", at: path)
         } else {
             // 提取远程分支的分支名（去掉 origin/ 前缀）
             let branchName = remoteBranch.components(separatedBy: "/").last ?? remoteBranch
-            return try Shell.runSync("git checkout -b \(branchName) \(remoteBranch)", at: path)
+            return try Shell.runSync("git checkout -b \(shellQuoted(branchName)) \(shellQuoted(remoteBranch))", at: path)
         }
     }
 
@@ -81,7 +81,7 @@ extension ShellGit {
     ///   - path: 仓库路径
     /// - Returns: 执行结果
     public static func checkoutForce(_ branch: String, at path: String? = nil) throws -> String {
-        return try Shell.runSync("git checkout -f \(branch)", at: path)
+        return try Shell.runSync("git checkout -f \(shellQuoted(branch))", at: path)
     }
 
     /// 检出所有文件到工作区（撤销所有未暂存的更改）
