@@ -90,6 +90,24 @@ import Testing
     ))
 }
 
+@Test func staleCurrentURLChangeDoesNotOverwriteNewBookChapter() {
+    let requested = URL(fileURLWithPath: "/tmp/book/chapter-01.m4b")
+    let switched = URL(fileURLWithPath: "/tmp/book/chapter-02.m4b")
+
+    #expect(BookProgressPersistencePolicy.shouldApplyCurrentURLChange(
+        requestedURL: requested,
+        currentAsset: requested
+    ))
+    #expect(!BookProgressPersistencePolicy.shouldApplyCurrentURLChange(
+        requestedURL: requested,
+        currentAsset: switched
+    ))
+    #expect(!BookProgressPersistencePolicy.shouldApplyCurrentURLChange(
+        requestedURL: requested,
+        currentAsset: nil
+    ))
+}
+
 @Test func rootLevelBookFileResolvesToItself() {
     let disk = URL(fileURLWithPath: "/tmp/cisum-books", isDirectory: true)
     let book = disk.appendingPathComponent("Standalone.m4b")

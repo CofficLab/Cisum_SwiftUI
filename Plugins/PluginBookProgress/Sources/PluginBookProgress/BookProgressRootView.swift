@@ -56,6 +56,10 @@ enum BookProgressPersistencePolicy {
     static func shouldPlayRestoredAsset(restoredAsset: URL, currentAsset: URL?) -> Bool {
         restoredAsset != currentAsset
     }
+
+    static func shouldApplyCurrentURLChange(requestedURL: URL, currentAsset: URL?) -> Bool {
+        requestedURL == currentAsset
+    }
 }
 
 enum BookProgressBookRootResolver {
@@ -295,6 +299,13 @@ private extension BookProgressRootView {
         }
 
         Task {
+            guard BookProgressPersistencePolicy.shouldApplyCurrentURLChange(
+                requestedURL: snapshot.currentURL,
+                currentAsset: man.currentAsset
+            ) else {
+                return
+            }
+
             // 保存全局状态（用于应用启动恢复）
             storeCurrentBookURL(url)
             if BookProgressPersistencePolicy.shouldResetGlobalTimeWhenCurrentURLChanges(from: storedURL, to: url) {
@@ -308,10 +319,22 @@ private extension BookProgressRootView {
             if url.isNotDownloaded {
                 do {
                     try await url.download(reason: "BookProgressRootView")
+                    guard BookProgressPersistencePolicy.shouldApplyCurrentURLChange(
+                        requestedURL: snapshot.currentURL,
+                        currentAsset: man.currentAsset
+                    ) else {
+                        return
+                    }
                     if self.verbose {
                         os_log("\(self.t)✅ 书籍文件下载完成")
                     }
                 } catch let error {
+                    guard BookProgressPersistencePolicy.shouldApplyCurrentURLChange(
+                        requestedURL: snapshot.currentURL,
+                        currentAsset: man.currentAsset
+                    ) else {
+                        return
+                    }
                     os_log(.error, "\(self.t)❌ 书籍文件下载失败: \(error.localizedDescription)")
                     alert_error(String(localized: "Download failed: \(error.localizedDescription)", table: "Book-Progress", bundle: .module))
                 }
