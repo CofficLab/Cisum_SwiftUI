@@ -37,6 +37,10 @@ enum AudioListLoadPolicy {
         currentGeneration != resultGeneration
     }
 
+    static func loadingStateWhenStartingCurrentPageRefresh(displayedCount: Int) -> (isLoading: Bool, isLoadingMore: Bool) {
+        (isLoading: displayedCount == 0, isLoadingMore: false)
+    }
+
     private static func canonicalIdentity(for url: URL) -> String {
         guard url.isFileURL else {
             return url.standardized.absoluteString
@@ -442,6 +446,9 @@ extension AudioList {
 
         loadGeneration += 1
         let generation = loadGeneration
+        let loadingState = AudioListLoadPolicy.loadingStateWhenStartingCurrentPageRefresh(displayedCount: urls.count)
+        isLoading = loadingState.isLoading
+        isLoadingMore = loadingState.isLoadingMore
 
         Task.detached(priority: .background) {
             if Self.verbose {
@@ -498,12 +505,18 @@ extension AudioList {
                             ) else { return }
                             self.urls = refreshedUrls
                             self.totalCount = newTotalCount
+                            self.isLoading = false
+                            self.isLoadingMore = false
 
                             if Self.verbose {
                                 os_log("\(self.t)✅ 当前页数据刷新完成，项目数: \(refreshedUrls.count)")
                             }
                         }
                     }
+                } else {
+                    self.totalCount = newTotalCount
+                    self.isLoading = false
+                    self.isLoadingMore = false
                 }
             }
         }

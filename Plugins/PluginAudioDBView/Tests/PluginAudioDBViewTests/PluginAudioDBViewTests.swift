@@ -154,6 +154,16 @@ import UniformTypeIdentifiers
     ))
 }
 
+@Test func audioListCurrentPageRefreshClearsStalePaginationLoading() {
+    let populatedState = AudioListLoadPolicy.loadingStateWhenStartingCurrentPageRefresh(displayedCount: 20)
+    #expect(populatedState.isLoading == false)
+    #expect(populatedState.isLoadingMore == false)
+
+    let emptyState = AudioListLoadPolicy.loadingStateWhenStartingCurrentPageRefresh(displayedCount: 0)
+    #expect(emptyState.isLoading == true)
+    #expect(emptyState.isLoadingMore == false)
+}
+
 @Test func audioListDeletionMatchesSymlinkedRows() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)
