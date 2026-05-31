@@ -46,7 +46,7 @@ private struct AudioDemoAddButton: View {
             action: { isImporting.wrappedValue = true },
             label: {
                 Label(
-                    title: { Text("添加", tableName: "Audio-DBView", bundle: .module) },
+                    title: { Text("Add", tableName: "Audio-Demo", bundle: .module) },
                     icon: { Image(systemName: "plus.circle") }
                 )
             }
