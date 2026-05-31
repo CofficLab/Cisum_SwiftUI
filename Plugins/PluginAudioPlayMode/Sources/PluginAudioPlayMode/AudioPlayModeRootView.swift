@@ -10,8 +10,27 @@ public typealias AudioPlayModeSortAction = @MainActor (_ currentURL: URL?) async
 public typealias AudioPlayModeShuffleAction = @MainActor (_ currentURL: URL?) async throws -> Void
 
 enum AudioPlayModeQueueUpdatePolicy {
-    static func shouldApplyQueueUpdate(requestedModeRawValue: String, currentMode: MagicPlayMode) -> Bool {
-        currentMode.rawValue == requestedModeRawValue
+    static func shouldApplyQueueUpdate(
+        currentGeneration: Int,
+        requestGeneration: Int,
+        requestedModeRawValue: String,
+        currentMode: MagicPlayMode
+    ) -> Bool {
+        currentGeneration == requestGeneration && currentMode.rawValue == requestedModeRawValue
+    }
+
+    static func shouldReportQueueUpdateFailure(
+        currentGeneration: Int,
+        requestGeneration: Int,
+        requestedModeRawValue: String,
+        currentMode: MagicPlayMode
+    ) -> Bool {
+        shouldApplyQueueUpdate(
+            currentGeneration: currentGeneration,
+            requestGeneration: requestGeneration,
+            requestedModeRawValue: requestedModeRawValue,
+            currentMode: currentMode
+        )
     }
 
     static func shouldStorePlayModeChange(currentGeneration: Int, requestGeneration: Int) -> Bool {
@@ -156,8 +175,10 @@ private extension AudioPlayModeRootView {
             await AudioPlayModeStore.shared.storePlayModeRawValue(modeRawValue, shortName: modeShortName)
         }
 
-        Task { @MainActor [currentURL, modeRawValue, sort, shuffle] in
+        Task { @MainActor [currentURL, modeRawValue, generation, sort, shuffle] in
             guard AudioPlayModeQueueUpdatePolicy.shouldApplyQueueUpdate(
+                currentGeneration: playModeChangeGeneration,
+                requestGeneration: generation,
                 requestedModeRawValue: modeRawValue,
                 currentMode: man.playMode
             ) else {
@@ -189,6 +210,14 @@ private extension AudioPlayModeRootView {
                     try await shuffle(currentURL)
                 }
             } catch {
+                guard AudioPlayModeQueueUpdatePolicy.shouldReportQueueUpdateFailure(
+                    currentGeneration: playModeChangeGeneration,
+                    requestGeneration: generation,
+                    requestedModeRawValue: modeRawValue,
+                    currentMode: man.playMode
+                ) else {
+                    return
+                }
                 if verbose {
                     os_log("\(Self.t)⚠️ 播放模式重排失败: \(error.localizedDescription)")
                 }

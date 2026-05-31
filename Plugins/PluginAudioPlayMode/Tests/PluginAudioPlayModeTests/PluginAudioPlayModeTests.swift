@@ -10,15 +10,48 @@ import Testing
 
 @Test func queueUpdateOnlyAppliesToStillCurrentPlayMode() {
     #expect(AudioPlayModeQueueUpdatePolicy.shouldApplyQueueUpdate(
+        currentGeneration: 2,
+        requestGeneration: 2,
         requestedModeRawValue: "shuffle",
         currentMode: .shuffle
     ))
     #expect(!AudioPlayModeQueueUpdatePolicy.shouldApplyQueueUpdate(
+        currentGeneration: 3,
+        requestGeneration: 2,
+        requestedModeRawValue: "shuffle",
+        currentMode: .shuffle
+    ))
+    #expect(!AudioPlayModeQueueUpdatePolicy.shouldApplyQueueUpdate(
+        currentGeneration: 2,
+        requestGeneration: 2,
         requestedModeRawValue: "shuffle",
         currentMode: .sequence
     ))
     #expect(!AudioPlayModeQueueUpdatePolicy.shouldApplyQueueUpdate(
+        currentGeneration: 2,
+        requestGeneration: 2,
         requestedModeRawValue: "invalid",
+        currentMode: .sequence
+    ))
+}
+
+@Test func staleQueueUpdateFailureDoesNotReportAfterModeChanges() {
+    #expect(AudioPlayModeQueueUpdatePolicy.shouldReportQueueUpdateFailure(
+        currentGeneration: 2,
+        requestGeneration: 2,
+        requestedModeRawValue: "shuffle",
+        currentMode: .shuffle
+    ))
+    #expect(!AudioPlayModeQueueUpdatePolicy.shouldReportQueueUpdateFailure(
+        currentGeneration: 3,
+        requestGeneration: 2,
+        requestedModeRawValue: "shuffle",
+        currentMode: .shuffle
+    ))
+    #expect(!AudioPlayModeQueueUpdatePolicy.shouldReportQueueUpdateFailure(
+        currentGeneration: 2,
+        requestGeneration: 2,
+        requestedModeRawValue: "shuffle",
         currentMode: .sequence
     ))
 }
