@@ -212,6 +212,16 @@ final class MagicPlayManTests: XCTestCase {
         XCTAssertFalse(man.isCurrentPlayRequest(request))
     }
 
+    @MainActor
+    func testStopInvalidatesPendingPlayRequest() async {
+        let man = MagicPlayMan()
+        let request = man.beginPlayRequest()
+
+        await man.stop(reason: "test")
+
+        XCTAssertFalse(man.isCurrentPlayRequest(request))
+    }
+
     func testSeekPolicyClampsInvalidAndOutOfRangeTimes() {
         XCTAssertEqual(MagicPlayManSeekPolicy.normalizedTime(-5, duration: 100), 0)
         XCTAssertEqual(MagicPlayManSeekPolicy.normalizedTime(120, duration: 100), 100)

@@ -165,7 +165,7 @@ public extension MagicPlayMan {
 
         if url.isNetworkURL {
             let item = AVPlayerItem(url: url)
-            load(item, autoPlay: autoPlay, startTime: startTime, reason: reason)
+            load(item, autoPlay: autoPlay, startTime: startTime, requestGeneration: requestGeneration, reason: reason)
             return
         }
 
@@ -182,7 +182,7 @@ public extension MagicPlayMan {
             }
 
             let item = AVPlayerItem(url: url)
-            self.load(item, autoPlay: autoPlay, startTime: startTime, reason: reason)
+            self.load(item, autoPlay: autoPlay, startTime: startTime, requestGeneration: requestGeneration, reason: reason)
         }
     }
 
@@ -297,6 +297,8 @@ public extension MagicPlayMan {
     /// 停止当前播放并将播放位置重置到开始位置
     @MainActor
     func stop(reason: String) async {
+        beginPlayRequest()
+
         _player.pause()
         await _player.seek(to: .zero)
         setCurrentTime(0, reason: reason)
@@ -359,7 +361,15 @@ public extension MagicPlayMan {
 
 private extension MagicPlayMan {
     @MainActor
-    func load(_ item: AVPlayerItem, autoPlay: Bool, startTime: TimeInterval?, reason: String) {
+    func load(
+        _ item: AVPlayerItem,
+        autoPlay: Bool,
+        startTime: TimeInterval?,
+        requestGeneration: UInt64,
+        reason: String
+    ) {
+        guard isCurrentPlayRequest(requestGeneration) else { return }
+
         _player.replaceCurrentItem(with: item)
 
         guard let startTime, startTime > 0 else {
@@ -371,6 +381,7 @@ private extension MagicPlayMan {
 
         seekLoadedItem(time: startTime, reason: reason + ".load") { [weak self] in
             guard let self else { return }
+            guard self.isCurrentPlayRequest(requestGeneration) else { return }
             if autoPlay {
                 self.playCurrent(reason: reason + ".play")
             }
