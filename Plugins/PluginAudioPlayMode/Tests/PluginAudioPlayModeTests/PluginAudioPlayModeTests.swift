@@ -85,6 +85,22 @@ import Testing
     ))
 }
 
+@Test func audioPlayModeDeactivationInvalidatesPendingChanges() {
+    let generation = AudioPlayModeQueueUpdatePolicy.generationAfterDeactivation(2)
+
+    #expect(generation == 3)
+    #expect(!AudioPlayModeQueueUpdatePolicy.shouldStorePlayModeChange(
+        currentGeneration: generation,
+        requestGeneration: 2
+    ))
+    #expect(!AudioPlayModeQueueUpdatePolicy.shouldApplyQueueUpdate(
+        currentGeneration: generation,
+        requestGeneration: 2,
+        requestedModeRawValue: "shuffle",
+        currentMode: .shuffle
+    ))
+}
+
 @Test func audioPlayModeFallsBackToCloudWhenLocalValueIsInvalid() {
     #expect(AudioPlayModeStore.resolvedPlayMode(
         localRawValue: "invalid",

@@ -36,6 +36,16 @@ import Testing
     ))
 }
 
+@Test func bookPlayModeDeactivationInvalidatesPendingChanges() {
+    let generation = BookPlayModeRestorePolicy.generationAfterDeactivation(2)
+
+    #expect(generation == 3)
+    #expect(!BookPlayModeRestorePolicy.shouldStorePlayModeChange(
+        currentGeneration: generation,
+        requestGeneration: 2
+    ))
+}
+
 @Test func bookPlayModeFallsBackToCloudWhenLocalValueIsInvalid() {
     #expect(BookPlayModeStore.resolvedPlayMode(
         localRawValue: "invalid",

@@ -37,6 +37,10 @@ enum AudioPlayModeQueueUpdatePolicy {
         currentGeneration == requestGeneration
     }
 
+    static func generationAfterDeactivation(_ generation: Int) -> Int {
+        generation + 1
+    }
+
     static func shouldRestorePlayMode(isActiveScene: Bool, storedMode: MagicPlayMode, currentMode: MagicPlayMode) -> Bool {
         isActiveScene && storedMode != currentMode
     }
@@ -145,6 +149,8 @@ private extension AudioPlayModeRootView {
     }
 
     private func deactivatePlayMode() {
+        playModeChangeGeneration = AudioPlayModeQueueUpdatePolicy.generationAfterDeactivation(playModeChangeGeneration)
+
         guard let playbackSubscriptionID else { return }
 
         man.unsubscribe(playbackSubscriptionID)
