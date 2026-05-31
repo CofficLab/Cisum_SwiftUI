@@ -149,6 +149,24 @@ import Testing
     ))
 }
 
+@Test func staleAudioRestoreRequestDoesNotApplyAfterSceneChange() {
+    #expect(AudioProgressPersistencePolicy.shouldApplyRestoreRequest(
+        currentGeneration: 4,
+        requestGeneration: 4,
+        isSceneActive: true
+    ))
+    #expect(!AudioProgressPersistencePolicy.shouldApplyRestoreRequest(
+        currentGeneration: 5,
+        requestGeneration: 4,
+        isSceneActive: true
+    ))
+    #expect(!AudioProgressPersistencePolicy.shouldApplyRestoreRequest(
+        currentGeneration: 4,
+        requestGeneration: 4,
+        isSceneActive: false
+    ))
+}
+
 @Test func restoreDoesNotReplayAlreadyLoadedAudio() {
     let restored = URL(fileURLWithPath: "/tmp/audio/track-01.mp3")
     let other = URL(fileURLWithPath: "/tmp/audio/track-02.mp3")

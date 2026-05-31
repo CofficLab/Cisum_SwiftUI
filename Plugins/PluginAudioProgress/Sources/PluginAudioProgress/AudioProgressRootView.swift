@@ -39,6 +39,10 @@ enum AudioProgressPersistencePolicy {
         representsSameFile(startingAsset, currentAsset)
     }
 
+    static func shouldApplyRestoreRequest(currentGeneration: Int, requestGeneration: Int, isSceneActive: Bool) -> Bool {
+        currentGeneration == requestGeneration && isSceneActive
+    }
+
     static func shouldPlayRestoredAsset(restoredAsset: URL, currentAsset: URL?) -> Bool {
         !representsSameFile(restoredAsset, currentAsset)
     }
@@ -69,6 +73,7 @@ public struct AudioProgressRootView<Content>: View, SuperLog where Content: View
     private static var verbose: Bool { false }
 
     @EnvironmentObject var man: MagicPlayMan
+    @State private var restoreGeneration = 0
 
     private var content: Content
     private let currentSceneName: @MainActor () -> String?
@@ -151,10 +156,14 @@ extension AudioProgressRootView {
         var timeTarget: TimeInterval = 0
         var liked = false
         let startingAsset = man.currentAsset
+        restoreGeneration += 1
+        let generation = restoreGeneration
 
-        Task {
+        Task { @MainActor in
+            guard isCurrentRestoreRequest(generation) else { return }
+
             // 从 AudioPlugin 获取 AudioRepo 实例
-            guard let repo = await MainActor.run(body: audioRepo) else {
+            guard let repo = audioRepo() else {
                 if Self.verbose {
                     os_log(.error, "\(self.t)❌ 获取 AudioRepo 失败")
                 }
@@ -216,8 +225,10 @@ extension AudioProgressRootView {
                     restoredAsset: asset,
                     currentAsset: man.currentAsset
                 ) {
+                    guard isCurrentRestoreRequest(generation) else { return }
                     await man.play(asset, autoPlay: false, startTime: timeTarget, reason: reason)
                 }
+                guard isCurrentRestoreRequest(generation) else { return }
                 man.setLike(liked, reason: reason)
             } else {
                 if Self.verbose {
@@ -225,6 +236,14 @@ extension AudioProgressRootView {
                 }
             }
         }
+    }
+
+    private func isCurrentRestoreRequest(_ generation: Int) -> Bool {
+        AudioProgressPersistencePolicy.shouldApplyRestoreRequest(
+            currentGeneration: restoreGeneration,
+            requestGeneration: generation,
+            isSceneActive: shouldActivateProgress
+        )
     }
 
     private func firstPlayableAudio(in repo: AudioRepo) async -> URL? {
@@ -255,6 +274,8 @@ extension AudioProgressRootView {
 
     /// 处理视图消失事件，避免播放中离开页面时丢失最后进度。
     func handleOnDisappear() {
+        restoreGeneration += 1
+
         guard shouldActivateProgress else { return }
 
         persistCurrentTime(reason: "handleOnDisappear")
@@ -262,6 +283,10 @@ extension AudioProgressRootView {
 
     /// 处理当前场景变化，确保从其它场景切到音频场景时也能恢复进度。
     func handleCurrentSceneChanged(from oldSceneName: String?, to newSceneName: String?) {
+        if newSceneName != audioSceneName {
+            restoreGeneration += 1
+        }
+
         if AudioProgressPersistencePolicy.shouldPersistWhenSceneChanges(
             from: oldSceneName,
             to: newSceneName,
