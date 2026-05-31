@@ -1,6 +1,5 @@
 import Foundation
 import MagicKit
-import OSLog
 import SwiftData
 import SwiftUI
 
@@ -14,13 +13,6 @@ class StateProvider: ObservableObject, SuperLog, SuperThread, SuperEvent {
     @Published var stateMessage: String = ""
     
     var showStateMessage: Bool { stateMessage.count > 0 }
-
-    init() {
-        let verbose = false
-        if verbose {
-            os_log("\(Self.i) MessageProvider")
-        }
-    }
 
     func append(_ message: String, channel: String = "default", isError: Bool = false) {
         if !Thread.isMainThread {
