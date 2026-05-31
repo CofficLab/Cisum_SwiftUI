@@ -112,6 +112,23 @@ import UniformTypeIdentifiers
     #expect(!AudioItemFileSizeLoadPolicy.shouldApplySize(currentURL: second, requestedURL: first))
 }
 
+@Test func audioItemExportUsesHumanNumberingForDuplicateDownloads() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    let existing = root.appendingPathComponent("track.mp3")
+    try Data("audio".utf8).write(to: existing)
+
+    let source = URL(fileURLWithPath: "/tmp/source/track.mp3")
+    let destination = AudioItemView.uniqueDestination(for: source, in: root)
+
+    #expect(destination.lastPathComponent == "track 2.mp3")
+}
+
 @Test func audioImportFiltersUnsupportedDroppedItems() {
     let root = URL(fileURLWithPath: "/tmp/cisum-audio-import-filter-tests", isDirectory: true)
     let supported = root.appendingPathComponent("track.MP3")

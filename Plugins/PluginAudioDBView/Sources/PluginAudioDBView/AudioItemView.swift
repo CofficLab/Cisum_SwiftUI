@@ -172,9 +172,9 @@ extension AudioItemView {
         return finalDestinationURL
     }
 
-    nonisolated private static func uniqueDestination(for sourceURL: URL, in directory: URL) -> URL {
+    nonisolated static func uniqueDestination(for sourceURL: URL, in directory: URL) -> URL {
         var destinationURL = directory.appendingPathComponent(sourceURL.lastPathComponent)
-        var counter = 1
+        var counter = 2
 
         while FileManager.default.fileExists(atPath: destinationURL.path) {
             let fileNameWithoutExtension = sourceURL.deletingPathExtension().lastPathComponent
