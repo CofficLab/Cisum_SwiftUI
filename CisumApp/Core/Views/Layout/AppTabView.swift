@@ -81,8 +81,9 @@ extension AppTabView {
             selectedTab: Binding(
                 get: { selectedDemoTabID },
                 set: { newValue in
-                    selectedDemoTabID = newValue
-                    selectedTabIndex = Int(newValue) ?? 0
+                    let normalizedIndex = Self.normalizedCustomTabIndex(from: newValue, tabCount: allTabs.count)
+                    selectedDemoTabID = String(normalizedIndex)
+                    selectedTabIndex = normalizedIndex
                 }
             ),
             centered: true
@@ -92,7 +93,7 @@ extension AppTabView {
         .cisumDivider(spacing: 2)
 
         let contentView: AnyView = {
-            guard selectedTabIndex < allTabs.count else {
+            guard (0..<allTabs.count).contains(selectedTabIndex) else {
                 return AnyView(EmptyView())
             }
             return allTabs[selectedTabIndex].view
@@ -158,8 +159,9 @@ extension AppTabView {
         cachedTabViews = p.getTabViews(reason: self.className, demoMode: isDemoMode)
 
         let tabCount = cachedTabViews.count
-        if Int(selectedTabID).map({ $0 >= tabCount }) ?? (selectedTabID != "Setting") {
-            selectedTabID = tabCount > 0 ? "0" : "Setting"
+        let normalizedTabID = Self.normalizedTabID(from: selectedTabID, tabCount: tabCount)
+        if selectedTabID != normalizedTabID {
+            selectedTabID = normalizedTabID
         }
 
         resetCustomTabSelection()
@@ -171,6 +173,18 @@ extension AppTabView {
 
         selectedDemoTabID = fallbackID
         selectedTabIndex = 0
+    }
+
+    nonisolated static func normalizedTabID(from tabID: String, tabCount: Int) -> String {
+        guard tabCount > 0 else { return "Setting" }
+        if tabID == "Setting" { return tabID }
+        guard let index = Int(tabID), (0..<tabCount).contains(index) else { return "0" }
+        return tabID
+    }
+
+    nonisolated static func normalizedCustomTabIndex(from tabID: String, tabCount: Int) -> Int {
+        guard let index = Int(tabID), (0..<tabCount).contains(index) else { return 0 }
+        return index
     }
 }
 
