@@ -560,6 +560,52 @@ import UniformTypeIdentifiers
     ))
 }
 
+@MainActor
+@Test func audioItemFileSizeCacheStoresHitsAndMisses() {
+    let root = URL(fileURLWithPath: "/tmp/cisum-audio-item-cache-tests", isDirectory: true)
+    let file = root.appendingPathComponent("track.mp3")
+    let missing = root.appendingPathComponent("missing.mp3")
+
+    AudioItemFileSizeCache.removeAll()
+
+    #expect(AudioItemFileSizeCache.cachedSize(for: file) == nil)
+
+    AudioItemFileSizeCache.store(12, for: file)
+    #expect(AudioItemFileSizeCache.cachedSize(for: file) == Optional(Optional(Int64(12))))
+
+    AudioItemFileSizeCache.store(nil, for: missing)
+    #expect(AudioItemFileSizeCache.cachedSize(for: missing) != nil)
+    #expect(AudioItemFileSizeCache.cachedSize(for: missing)! == nil)
+
+    AudioItemFileSizeCache.remove([file])
+    #expect(AudioItemFileSizeCache.cachedSize(for: file) == nil)
+    #expect(AudioItemFileSizeCache.cachedSize(for: missing) != nil)
+
+    AudioItemFileSizeCache.removeAll()
+    #expect(AudioItemFileSizeCache.cachedSize(for: missing) == nil)
+}
+
+@MainActor
+@Test func audioItemFileSizeCacheMatchesSymlinkedFiles() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realFile = root.appendingPathComponent("real.mp3")
+    let linkedFile = root.appendingPathComponent("linked.mp3")
+    defer {
+        AudioItemFileSizeCache.removeAll()
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    try Data("audio".utf8).write(to: realFile)
+    try FileManager.default.createSymbolicLink(at: linkedFile, withDestinationURL: realFile)
+
+    AudioItemFileSizeCache.removeAll()
+    AudioItemFileSizeCache.store(5, for: realFile)
+
+    #expect(AudioItemFileSizeCache.cachedSize(for: linkedFile) == Optional(Optional(Int64(5))))
+}
+
 @Test func audioItemExportUsesHumanNumberingForDuplicateDownloads() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)

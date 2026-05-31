@@ -16,6 +16,43 @@ enum AudioItemFileSizeLoadPolicy {
     }
 }
 
+@MainActor
+enum AudioItemFileSizeCache {
+    private struct Entry {
+        let size: Int64?
+    }
+
+    private static var entries: [String: Entry] = [:]
+
+    static func cachedSize(for url: URL) -> Int64?? {
+        let key = cacheKey(for: url)
+        guard let entry = entries[key] else {
+            return nil
+        }
+        return .some(entry.size)
+    }
+
+    static func store(_ size: Int64?, for url: URL) {
+        let key = cacheKey(for: url)
+        entries[key] = Entry(size: size)
+    }
+
+    static func remove(_ urls: [URL]) {
+        let keys = urls.map(cacheKey(for:))
+        for key in keys {
+            entries.removeValue(forKey: key)
+        }
+    }
+
+    static func removeAll() {
+        entries.removeAll()
+    }
+
+    private static func cacheKey(for url: URL) -> String {
+        AudioListFileIdentity.canonicalIdentity(for: url)
+    }
+}
+
 enum AudioItemFileActionPolicy {
     static func canRevealInFinder(_ url: URL) -> Bool {
         pathExistsIncludingSymlink(url)
@@ -140,6 +177,11 @@ extension AudioItemView {
         fileSize = nil
 
         let requestedURL = url
+        if let cachedSize = AudioItemFileSizeCache.cachedSize(for: requestedURL) {
+            fileSize = cachedSize
+            return
+        }
+
         let size = await Task.detached(priority: .background) {
             let size = (try? FileManager.default.attributesOfItem(atPath: requestedURL.path)[.size] as? NSNumber)?.int64Value
             return size
@@ -150,6 +192,7 @@ extension AudioItemView {
             return
         }
 
+        AudioItemFileSizeCache.store(size, for: requestedURL)
         fileSize = size
     }
 

@@ -435,6 +435,8 @@ extension AudioList {
             os_log("\(self.t)🍋 Refresh with reason: \(reason)")
         }
 
+        AudioItemFileSizeCache.removeAll()
+
         // 重置状态
         loadGeneration += 1
         currentPage = 0
@@ -474,6 +476,8 @@ extension AudioList {
             alert_error(String(localized: "Refresh failed: audio repository is unavailable", table: "Audio-DBView", bundle: .module))
             return
         }
+
+        AudioItemFileSizeCache.removeAll()
 
         loadGeneration += 1
         let generation = loadGeneration
@@ -636,6 +640,7 @@ extension AudioList {
             loadGeneration = AudioListLoadPolicy.generationAfterDeletingDisplayedItems(loadGeneration)
             isLoading = false
             isLoadingMore = false
+            AudioItemFileSizeCache.remove(urlsToDelete)
 
             // 从 urls 数组中移除被删除的 URL
             urls.removeAll { url in
