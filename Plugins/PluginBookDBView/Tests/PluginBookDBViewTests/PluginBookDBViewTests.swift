@@ -329,6 +329,19 @@ import UniformTypeIdentifiers
     #expect(url == expected)
 }
 
+@Test func bookDropFallsBackToURLObjectAfterInvalidFileURLData() async throws {
+    let expected = URL(fileURLWithPath: "/tmp/cisum-book-drop-provider-tests/audiobook")
+    let provider = NSItemProvider(object: expected as NSURL)
+    provider.registerDataRepresentation(forTypeIdentifier: UTType.fileURL.identifier, visibility: .all) { completion in
+        completion(Data("not a file url".utf8), nil)
+        return nil
+    }
+
+    let url = try await BookDBView.droppedFileURL(from: provider)
+
+    #expect(url == expected)
+}
+
 @Test func bookDropSkipsEmptyImportAfterProviderFailure() {
     let error = NSError(domain: "BookDrop", code: 1)
     let url = URL(fileURLWithPath: "/tmp/cisum-book-drop-provider-tests/audiobook")

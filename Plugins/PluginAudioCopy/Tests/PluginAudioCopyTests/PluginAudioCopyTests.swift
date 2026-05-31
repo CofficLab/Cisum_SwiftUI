@@ -116,6 +116,19 @@ import UniformTypeIdentifiers
     #expect(url == expected)
 }
 
+@Test func copyDropFallsBackToURLObjectAfterInvalidFileURLData() async throws {
+    let expected = URL(fileURLWithPath: "/tmp/cisum-copy-drop-provider-tests/track.mp3")
+    let provider = NSItemProvider(object: expected as NSURL)
+    provider.registerDataRepresentation(forTypeIdentifier: UTType.fileURL.identifier, visibility: .all) { completion in
+        completion(Data("not a file url".utf8), nil)
+        return nil
+    }
+
+    let url = try await CopyRootView<EmptyView>.droppedFileURL(from: provider)
+
+    #expect(url == expected)
+}
+
 @Test func copyWorkerPlansUniqueDestinationNames() {
     let folder = URL(fileURLWithPath: "/tmp/cisum-audio-copy-tests", isDirectory: true)
     let existingPath = folder.appendingPathComponent("track.mp3").path

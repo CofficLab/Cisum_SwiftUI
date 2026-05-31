@@ -188,10 +188,15 @@ extension BookDBView {
                 }
             }
 
-            guard let data else { return nil }
-            return URL(dataRepresentation: data, relativeTo: nil)
+            if let data, let url = URL(dataRepresentation: data, relativeTo: nil), url.isFileURL {
+                return url
+            }
         }
 
+        return try await droppedURLObject(from: provider)
+    }
+
+    nonisolated private static func droppedURLObject(from provider: NSItemProvider) async throws -> URL? {
         guard provider.canLoadObject(ofClass: URL.self) else { return nil }
 
         return try await withCheckedThrowingContinuation { continuation in
