@@ -17,12 +17,22 @@ extension Notification.Name {
 extension NotificationCenter {
     /// 发送存储位置更新事件
     static func postStorageLocationUpdated() {
-        NotificationCenter.default.post(name: .storageLocationUpdated, object: nil)
+        postStorageEventOnMain(name: .storageLocationUpdated)
     }
 
     /// 发送存储位置重置事件
     static func postStorageLocationDidReset() {
-        NotificationCenter.default.post(name: .storageLocationDidReset, object: nil)
+        postStorageEventOnMain(name: .storageLocationDidReset)
+    }
+
+    private static func postStorageEventOnMain(name: Notification.Name) {
+        if Thread.isMainThread {
+            NotificationCenter.default.post(name: name, object: nil)
+        } else {
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: name, object: nil)
+            }
+        }
     }
 }
 

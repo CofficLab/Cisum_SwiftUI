@@ -17,12 +17,22 @@ extension Notification.Name {
 extension NotificationCenter {
     /// 发送配置更新事件
     static func postConfigUpdated() {
-        NotificationCenter.default.post(name: .configUpdated, object: nil)
+        postConfigEventOnMain(name: .configUpdated)
     }
 
     /// 发送设置变更事件
     static func postSettingsChanged() {
-        NotificationCenter.default.post(name: .settingsChanged, object: nil)
+        postConfigEventOnMain(name: .settingsChanged)
+    }
+
+    private static func postConfigEventOnMain(name: Notification.Name) {
+        if Thread.isMainThread {
+            NotificationCenter.default.post(name: name, object: nil)
+        } else {
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: name, object: nil)
+            }
+        }
     }
 }
 
