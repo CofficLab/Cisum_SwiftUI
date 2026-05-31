@@ -262,7 +262,7 @@ extension BookGrid {
         // 查找包含该URL的书籍
         for book in books {
             if BookPlaybackOrdering.representsSameFile(book.url, url)
-                || BookPlaybackOrdering.contains(url, in: playableChildren(for: book)) {
+                || BookPlaybackOrdering.containsPlayableChild(url, in: book.url) {
                 if Self.verbose {
                     os_log("\(self.t)✅ 找到书籍: \(book.bookTitle)")
                 }

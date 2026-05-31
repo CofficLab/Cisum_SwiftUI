@@ -63,6 +63,15 @@ enum BookPlaybackOrdering {
         urls.contains { representsSameFile($0, url) }
     }
 
+    static func containsPlayableChild(_ url: URL, in root: URL) -> Bool {
+        guard FileManager.default.fileExists(atPath: url.path),
+              BookPluginInfo.supportedExtensions.contains(url.pathExtension.lowercased()) else {
+            return false
+        }
+
+        return isContained(stablePath(for: url), in: stablePath(for: root))
+    }
+
     static func representsSameFile(_ lhs: URL, _ rhs: URL) -> Bool {
         stablePath(for: lhs) == stablePath(for: rhs)
     }

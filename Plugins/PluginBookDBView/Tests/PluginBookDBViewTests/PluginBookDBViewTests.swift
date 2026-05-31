@@ -394,6 +394,29 @@ import UniformTypeIdentifiers
     #expect(BookPlaybackOrdering.relativePath(sibling, in: root) == "01.m4b")
 }
 
+@Test func bookPlaybackOrderingChecksPlayableChildContainmentWithoutScanning() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let book = root.appendingPathComponent("Book", isDirectory: true)
+    let siblingBook = root.appendingPathComponent("Book Backup", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: book, withIntermediateDirectories: true)
+    try FileManager.default.createDirectory(at: siblingBook, withIntermediateDirectories: true)
+    let chapter = book.appendingPathComponent("001.m4b")
+    let unsupported = book.appendingPathComponent("notes.txt")
+    let siblingChapter = siblingBook.appendingPathComponent("001.m4b")
+    try Data("audio".utf8).write(to: chapter)
+    try Data("notes".utf8).write(to: unsupported)
+    try Data("audio".utf8).write(to: siblingChapter)
+
+    #expect(BookPlaybackOrdering.containsPlayableChild(chapter, in: book))
+    #expect(!BookPlaybackOrdering.containsPlayableChild(unsupported, in: book))
+    #expect(!BookPlaybackOrdering.containsPlayableChild(siblingChapter, in: book))
+}
+
 @Test func bookPlaybackOrderingMatchesSymlinkedPlayableChildren() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)
@@ -411,6 +434,11 @@ import UniformTypeIdentifiers
     let playable = BookPlaybackOrdering.playableChildren(for: linkedBook)
 
     #expect(BookPlaybackOrdering.contains(savedChapter, in: playable))
+    #expect(BookPlaybackOrdering.containsPlayableChild(savedChapter, in: linkedBook))
+    #expect(BookPlaybackOrdering.containsPlayableChild(
+        linkedBook.appendingPathComponent("001.m4b"),
+        in: linkedBook
+    ))
     #expect(BookPlaybackOrdering.representsSameFile(
         savedChapter,
         linkedBook.appendingPathComponent("001.m4b")
