@@ -162,7 +162,7 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread, @unchecked Send
         downloadProgressCallback: DownloadProgressCallback?
     ) throws {
         if sourceFile.isFolder {
-            for child in sourceFile.flatten() {
+            for child in fileDescendants(of: sourceFile) {
                 try ensureLocalAvailability(
                     for: child,
                     displayName: sourceFile.lastPathComponent,
@@ -175,6 +175,28 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread, @unchecked Send
                 displayName: sourceFile.lastPathComponent,
                 downloadProgressCallback: downloadProgressCallback
             )
+        }
+    }
+
+    private func fileDescendants(of folder: URL) -> AnySequence<URL> {
+        guard let enumerator = FileManager.default.enumerator(
+            at: folder,
+            includingPropertiesForKeys: [.isDirectoryKey],
+            options: [.skipsHiddenFiles]
+        ) else {
+            return AnySequence([])
+        }
+
+        return AnySequence {
+            AnyIterator {
+                while let url = enumerator.nextObject() as? URL {
+                    if !url.isFolder {
+                        return url
+                    }
+                }
+
+                return nil
+            }
         }
     }
 
