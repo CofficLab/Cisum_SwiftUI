@@ -72,6 +72,9 @@ import Testing
     #expect(BookProgressPersistencePolicy.shouldClearRestoredCurrentURL(currentURL: url, isPlayable: false))
     #expect(!BookProgressPersistencePolicy.shouldClearRestoredCurrentURL(currentURL: url, isPlayable: true))
     #expect(!BookProgressPersistencePolicy.shouldClearRestoredCurrentURL(currentURL: nil, isPlayable: false))
+    #expect(BookProgressPersistencePolicy.shouldClearRestoredCurrentTime(currentURL: url, isPlayable: false))
+    #expect(!BookProgressPersistencePolicy.shouldClearRestoredCurrentTime(currentURL: url, isPlayable: true))
+    #expect(!BookProgressPersistencePolicy.shouldClearRestoredCurrentTime(currentURL: nil, isPlayable: false))
 }
 
 @Test func deletedStoredCurrentBookChapterShouldClearRestoreState() {

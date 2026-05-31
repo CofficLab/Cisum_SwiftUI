@@ -34,6 +34,10 @@ enum BookProgressPersistencePolicy {
         currentURL != nil && !isPlayable
     }
 
+    static func shouldClearRestoredCurrentTime(currentURL: URL?, isPlayable: Bool) -> Bool {
+        shouldClearRestoredCurrentURL(currentURL: currentURL, isPlayable: isPlayable)
+    }
+
     static func shouldClearStoredCurrentAfterDelete(storedURL: URL?, deletedURLs: [URL]) -> Bool {
         guard let storedURL else { return false }
         return deletedURLs.contains { deletedURL in
@@ -340,6 +344,9 @@ private extension BookProgressRootView {
                 guard isPlayable else {
                     if BookProgressPersistencePolicy.shouldClearRestoredCurrentURL(currentURL: url, isPlayable: isPlayable) {
                         storeCurrentBookURL(nil)
+                    }
+                    if BookProgressPersistencePolicy.shouldClearRestoredCurrentTime(currentURL: url, isPlayable: isPlayable) {
+                        storeCurrentBookTime(0)
                     }
 
                     if self.verbose {
