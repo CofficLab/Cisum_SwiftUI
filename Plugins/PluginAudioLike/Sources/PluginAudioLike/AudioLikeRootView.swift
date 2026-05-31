@@ -8,8 +8,8 @@ import SwiftUI
 public typealias AudioLikeCurrentSceneProvider = @MainActor () -> String?
 
 enum AudioLikeStatusChangePolicy {
-    static func shouldApplyChange(currentGeneration: Int, requestGeneration: Int) -> Bool {
-        currentGeneration == requestGeneration
+    static func shouldAcceptChange(isSceneActive: Bool) -> Bool {
+        isSceneActive
     }
 }
 
@@ -19,7 +19,6 @@ public struct AudioLikeRootView<Content>: View, SuperLog where Content: View {
 
     @EnvironmentObject private var man: MagicPlayMan
     @State private var playbackSubscriptionID: UUID?
-    @State private var likeStatusChangeGeneration = 0
 
     private let content: Content
     private let targetSceneName: String
@@ -93,8 +92,6 @@ private extension AudioLikeRootView {
     }
 
     private func deactivateLike() {
-        likeStatusChangeGeneration += 1
-
         guard let playbackSubscriptionID else { return }
 
         man.unsubscribe(playbackSubscriptionID)
@@ -102,14 +99,9 @@ private extension AudioLikeRootView {
     }
 
     func handleLikeStatusChanged(url: URL, liked: Bool) {
-        guard shouldActivateLike else { return }
-
-        likeStatusChangeGeneration += 1
-        let generation = likeStatusChangeGeneration
+        guard AudioLikeStatusChangePolicy.shouldAcceptChange(isSceneActive: shouldActivateLike) else { return }
 
         Task { @MainActor in
-            guard isCurrentLikeStatusChange(generation) else { return }
-
             let audioId = url.absoluteString
 
             do {
@@ -119,7 +111,6 @@ private extension AudioLikeRootView {
                     url: url,
                     title: url.lastPathComponent
                 )
-                guard isCurrentLikeStatusChange(generation) else { return }
 
                 if verbose {
                     os_log("\(self.t)💾 保存喜欢状态: \(url.lastPathComponent) -> \(liked ? "喜欢" : "取消喜欢")")
@@ -127,18 +118,10 @@ private extension AudioLikeRootView {
 
                 NotificationCenter.postAudioLikeStatusChanged(audioId: audioId, url: url, liked: liked)
             } catch {
-                guard isCurrentLikeStatusChange(generation) else { return }
                 os_log(.error, "\(self.t)❌ 保存喜欢状态失败: \(error.localizedDescription)")
                 alert_error(String(localized: "Failed to save like status: \(error.localizedDescription)", table: "Audio-Like", bundle: .module))
             }
         }
-    }
-
-    private func isCurrentLikeStatusChange(_ generation: Int) -> Bool {
-        AudioLikeStatusChangePolicy.shouldApplyChange(
-            currentGeneration: likeStatusChangeGeneration,
-            requestGeneration: generation
-        ) && shouldActivateLike
     }
 }
 

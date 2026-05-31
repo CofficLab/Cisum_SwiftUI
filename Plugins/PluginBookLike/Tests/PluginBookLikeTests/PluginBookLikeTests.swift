@@ -19,15 +19,9 @@ func pluginExposesSettingsView() {
     #expect(view != nil)
 }
 
-@Test func bookLikeStatusChangeOnlyAppliesLatestGeneration() {
-    #expect(BookLikeStatusChangePolicy.shouldApplyChange(
-        currentGeneration: 3,
-        requestGeneration: 3
-    ))
-    #expect(!BookLikeStatusChangePolicy.shouldApplyChange(
-        currentGeneration: 3,
-        requestGeneration: 2
-    ))
+@Test func bookLikeStatusChangesAreAcceptedOnlyInActiveScene() {
+    #expect(BookLikeStatusChangePolicy.shouldAcceptChange(isSceneActive: true))
+    #expect(!BookLikeStatusChangePolicy.shouldAcceptChange(isSceneActive: false))
 }
 
 @Test func bookLikeStatusNotificationIsDeliveredOnMainThread() async {

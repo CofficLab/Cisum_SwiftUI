@@ -31,15 +31,9 @@ func pluginExposesSettingsView() {
     ))
 }
 
-@Test func audioLikeStatusChangeOnlyAppliesLatestGeneration() {
-    #expect(AudioLikeStatusChangePolicy.shouldApplyChange(
-        currentGeneration: 3,
-        requestGeneration: 3
-    ))
-    #expect(!AudioLikeStatusChangePolicy.shouldApplyChange(
-        currentGeneration: 3,
-        requestGeneration: 2
-    ))
+@Test func audioLikeStatusChangesAreAcceptedOnlyInActiveScene() {
+    #expect(AudioLikeStatusChangePolicy.shouldAcceptChange(isSceneActive: true))
+    #expect(!AudioLikeStatusChangePolicy.shouldAcceptChange(isSceneActive: false))
 }
 
 @Test func audioLikeStatusNotificationIsDeliveredOnMainThread() async {
