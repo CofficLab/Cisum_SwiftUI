@@ -30,6 +30,20 @@ extension MagicPlayMan {
     }
 }
 
+enum MagicPlayManTimeUpdatePolicy {
+    static func normalizedPayload(from userInfo: [AnyHashable: Any]?) -> (TimeInterval, Double)? {
+        guard let currentTime = userInfo?["currentTime"] as? TimeInterval,
+              let progress = userInfo?["progress"] as? Double else {
+            return nil
+        }
+
+        return (
+            MagicPlayManPlaybackTimePolicy.normalizedCurrentTime(currentTime),
+            min(max(progress.isFinite ? progress : 0, 0), 1)
+        )
+    }
+}
+
 extension NotificationCenter {
     /// 监听 PlayMan 时间更新通知
     /// - Parameters:
@@ -41,13 +55,7 @@ extension NotificationCenter {
         handler: @escaping (TimeInterval, Double) -> Void
     ) -> AnyCancellable {
         publisher(for: .playManTimeUpdate, object: object)
-            .compactMap { notification -> (TimeInterval, Double)? in
-                guard let currentTime = notification.userInfo?["currentTime"] as? TimeInterval,
-                      let progress = notification.userInfo?["progress"] as? Double else {
-                    return nil
-                }
-                return (currentTime, progress)
-            }
+            .compactMap { MagicPlayManTimeUpdatePolicy.normalizedPayload(from: $0.userInfo) }
             .sink(receiveValue: handler)
     }
 }
@@ -63,12 +71,10 @@ public extension View {
         self.onReceive(
             NotificationCenter.default.publisher(for: .playManTimeUpdate),
             perform: { notification in
-                if let currentTime = notification.userInfo?["currentTime"] as? TimeInterval,
-                   let progress = notification.userInfo?["progress"] as? Double {
+                if let (currentTime, progress) = MagicPlayManTimeUpdatePolicy.normalizedPayload(from: notification.userInfo) {
                     handler(currentTime, progress)
                 }
             }
         )
     }
 }
-

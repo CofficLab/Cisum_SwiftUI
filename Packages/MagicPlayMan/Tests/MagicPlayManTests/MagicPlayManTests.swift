@@ -353,6 +353,25 @@ final class MagicPlayManTests: XCTestCase {
         XCTAssertEqual(MagicPlayManPlaybackTimePolicy.normalizedProgress(currentTime: 10, duration: .infinity), 0)
     }
 
+    func testTimeUpdatePolicyNormalizesInvalidPayloadValues() {
+        let payload = MagicPlayManTimeUpdatePolicy.normalizedPayload(from: [
+            "currentTime": TimeInterval.nan,
+            "progress": Double.infinity,
+        ])
+
+        XCTAssertEqual(payload?.0, 0)
+        XCTAssertEqual(payload?.1, 0)
+
+        let clampedPayload = MagicPlayManTimeUpdatePolicy.normalizedPayload(from: [
+            "currentTime": TimeInterval(-4),
+            "progress": 1.4,
+        ])
+
+        XCTAssertEqual(clampedPayload?.0, 0)
+        XCTAssertEqual(clampedPayload?.1, 1)
+        XCTAssertNil(MagicPlayManTimeUpdatePolicy.normalizedPayload(from: ["currentTime": TimeInterval(12)]))
+    }
+
     func testPlaybackTimePolicyRestartsWhenAtOrPastEnd() {
         XCTAssertTrue(MagicPlayManPlaybackTimePolicy.shouldRestartFromBeginning(currentTime: 100, duration: 100))
         XCTAssertTrue(MagicPlayManPlaybackTimePolicy.shouldRestartFromBeginning(currentTime: 100.01, duration: 100))
