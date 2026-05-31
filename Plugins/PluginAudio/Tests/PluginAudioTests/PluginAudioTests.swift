@@ -17,6 +17,28 @@ import SwiftData
     }
 }
 
+@Test func audioDBUniqueSupportedFilesDeduplicatesByResolvedIdentity() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realRoot = root.appendingPathComponent("real-audio", isDirectory: true)
+    let linkedRoot = root.appendingPathComponent("audio-link", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: realRoot, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedRoot, withDestinationURL: realRoot)
+
+    let linkedAudio = linkedRoot.appendingPathComponent("track.mp3")
+    let realAudio = realRoot.appendingPathComponent("track.mp3")
+    let otherAudio = realRoot.appendingPathComponent("other.mp3")
+    try Data("audio".utf8).write(to: realAudio)
+    try Data("audio".utf8).write(to: otherAudio)
+
+    #expect(AudioDB.canonicalAudioIdentity(for: linkedAudio) == AudioDB.canonicalAudioIdentity(for: realAudio))
+    #expect(AudioDB.uniqueSupportedAudioFiles([linkedAudio, realAudio, otherAudio]) == [linkedAudio, otherAudio])
+}
+
 @Test func missingStorageErrorKeepsStorageSetupGuidance() {
     let presentation = AudioRootErrorPresentation.make(error: .initialization(reason: "Storage 未找到"))
 

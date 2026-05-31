@@ -982,9 +982,13 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     }
 
     static func uniqueSupportedAudioFiles(_ urls: [URL]) -> [URL] {
+        var seenIdentities = Set<String>()
         var uniqueURLs: [URL] = []
+        uniqueURLs.reserveCapacity(urls.count)
+
         for url in urls where isSupportedAudioFile(url) {
-            guard !uniqueURLs.contains(where: { representsSameAudioFile($0, url) }) else { continue }
+            let identity = canonicalAudioIdentity(for: url)
+            guard seenIdentities.insert(identity).inserted else { continue }
             uniqueURLs.append(url)
         }
 
@@ -1203,12 +1207,15 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     }
 
     static func representsSameAudioFile(_ lhs: URL, _ rhs: URL) -> Bool {
-        guard lhs.isFileURL, rhs.isFileURL else {
-            return lhs.standardized.absoluteString == rhs.standardized.absoluteString
+        canonicalAudioIdentity(for: lhs) == canonicalAudioIdentity(for: rhs)
+    }
+
+    static func canonicalAudioIdentity(for url: URL) -> String {
+        guard url.isFileURL else {
+            return url.standardized.absoluteString
         }
 
-        return lhs.resolvingSymlinksInPath().standardizedFileURL.path
-            == rhs.resolvingSymlinksInPath().standardizedFileURL.path
+        return url.resolvingSymlinksInPath().standardizedFileURL.path
     }
 
     /// 根据 URL 查找音频模型（静态方法）
