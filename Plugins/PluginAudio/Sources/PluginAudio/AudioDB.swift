@@ -830,7 +830,7 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
         // 将数组转换成哈希表，方便通过键来快速查找元素，这样可以将时间复杂度降低到：O(m+n)
 
         var hashMap = [URL: URL]()
-        for element in items where Self.isSupportedAudioFile(element) {
+        for element in Self.uniqueSupportedAudioFiles(items) {
             hashMap[element] = element
         }
 
@@ -877,7 +877,7 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
         // 如果url属性为unique，数据库已存在相同url的记录，再执行context.insert，发现已存在的被替换成新的了
         // 但在这里，希望如果存在，就不要插入
         var nextOrder = nextAppendOrder()
-        for meta in Self.sortedForStableInsertion(metas) {
+        for meta in Self.sortedForStableInsertion(Self.uniqueSupportedAudioFiles(metas)) {
             if meta.isNotFileExist {
                 if let audio = findAudio(meta) {
                     context.delete(audio)
@@ -969,6 +969,16 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
 
     static func isSupportedAudioFile(_ url: URL) -> Bool {
         !url.isFolder && AudioPluginInfo.supportedExtensions.contains(url.pathExtension.lowercased())
+    }
+
+    static func uniqueSupportedAudioFiles(_ urls: [URL]) -> [URL] {
+        var uniqueURLs: [URL] = []
+        for url in urls where isSupportedAudioFile(url) {
+            guard !uniqueURLs.contains(where: { representsSameAudioFile($0, url) }) else { continue }
+            uniqueURLs.append(url)
+        }
+
+        return uniqueURLs
     }
 
     /// 更新音频模型

@@ -307,6 +307,32 @@ import SwiftData
     #expect(await db.allAudioURLs(reason: "test") == [realAudio])
 }
 
+@Test func audioDBFullSyncDeduplicatesSymlinkedScanItems() async throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realRoot = root.appendingPathComponent("real-audio", isDirectory: true)
+    let linkedRoot = root.appendingPathComponent("audio-link", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: realRoot, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedRoot, withDestinationURL: realRoot)
+
+    let schema = Schema([AudioModel.self])
+    let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    let container = try ModelContainer(for: schema, configurations: [configuration])
+    let db = AudioDB(container, reason: "audioDBFullSyncDeduplicatesSymlinkedScanItems")
+
+    let realAudio = realRoot.appendingPathComponent("track.mp3")
+    let linkedAudio = linkedRoot.appendingPathComponent("track.mp3")
+    try Data("audio".utf8).write(to: realAudio)
+
+    await db.initItems([linkedAudio, realAudio])
+
+    #expect(await db.allAudioURLs(reason: "test") == [linkedAudio])
+}
+
 @Test func audioDBDeleteByURLMatchesSymlinkedStoredTrack() async throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)
