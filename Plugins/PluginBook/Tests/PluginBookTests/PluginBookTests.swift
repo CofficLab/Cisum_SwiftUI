@@ -225,6 +225,58 @@ import SwiftData
     #expect(orderedURLs == [existing, first, second])
 }
 
+@Test func bookDBFullSyncIgnoresUnsupportedFiles() async throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+
+    let schema = Schema([BookModel.self, BookState.self])
+    let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    let container = try ModelContainer(for: schema, configurations: [configuration])
+    let db = BookDB(container, reason: "bookDBFullSyncIgnoresUnsupportedFiles")
+
+    let book = root.appendingPathComponent("Novel.m4b")
+    let notes = root.appendingPathComponent("notes.txt")
+    try Data("audio".utf8).write(to: book)
+    try Data("notes".utf8).write(to: notes)
+
+    await db.sync([notes, book], isFirst: true)
+
+    let books = try await db.allBookDTOs()
+    #expect(books.map(\.url) == [book])
+}
+
+@Test func bookDBUpdateSyncIgnoresUnsupportedFilesAndFolders() async throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+
+    let schema = Schema([BookModel.self, BookState.self])
+    let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    let container = try ModelContainer(for: schema, configurations: [configuration])
+    let db = BookDB(container, reason: "bookDBUpdateSyncIgnoresUnsupportedFilesAndFolders")
+
+    let book = root.appendingPathComponent("Novel.m4b")
+    let notes = root.appendingPathComponent("notes.txt")
+    let emptyFolder = root.appendingPathComponent("Empty", isDirectory: true)
+    try Data("audio".utf8).write(to: book)
+    try Data("notes".utf8).write(to: notes)
+    try FileManager.default.createDirectory(at: emptyFolder, withIntermediateDirectories: true)
+
+    try await db.syncImportedItems([notes, emptyFolder, book])
+
+    let books = try await db.allBookDTOs()
+    #expect(books.map(\.url) == [book])
+}
+
 @Test func bookDBNextBookUsesCurrentBookOrder() async throws {
     let schema = Schema([BookModel.self, BookState.self])
     let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)

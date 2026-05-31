@@ -259,7 +259,7 @@ extension BookDB {
 
         // 将数组转换成哈希表，方便通过键来快速查找元素，这样可以将时间复杂度降低到：O(m+n)
         var hashMap = [URL: URL]()
-        for element in items {
+        for element in items where Self.isSupportedBookLibraryItem(element) {
             hashMap[element] = element
         }
 
@@ -316,6 +316,8 @@ extension BookDB {
         for meta in Self.sortedForStableInsertion(metas) {
             if meta.isNotFileExist {
                 deleteModels(for: meta)
+            } else if !Self.isSupportedBookLibraryItem(meta) {
+                deleteModels(for: meta)
             } else if let book = findBook(url: meta) {
                 update(book, from: meta)
             } else {
@@ -332,6 +334,16 @@ extension BookDB {
         if verbose {
             os_log("\(self.jobEnd(startTime, title: "\(self.t)SyncBookWithUpdatedItems(\(metas.count))", tolerance: 0.01))")
         }
+    }
+
+    static func isSupportedBookLibraryItem(_ url: URL) -> Bool {
+        if url.isFolder {
+            return url.flatten().contains { child in
+                !child.isFolder && BookPluginInfo.supportedExtensions.contains(child.pathExtension.lowercased())
+            }
+        }
+
+        return BookPluginInfo.supportedExtensions.contains(url.pathExtension.lowercased())
     }
 
     private func nextAppendOrder() -> Int {
