@@ -301,33 +301,20 @@ private struct FileCopyProgressView: View, SuperLog {
         if verbose {
             os_log("\(self.t)源文件大小: \(sourceSize) bytes")
         }
-        let fileManager = FileManager.default
-
-        guard !source.isSameFileLocation(as: finalDestination) else {
-            throw MagicError.fileError("Cannot copy a file onto itself: \(source.lastPathComponent)")
-        }
         
         // 如果目标是文件夹，确保文件夹存在
         if destination.hasDirectoryPath {
-            try? fileManager.createDirectory(at: destination, withIntermediateDirectories: true)
+            try? FileManager.default.createDirectory(at: destination, withIntermediateDirectories: true)
             if verbose {
                 os_log("\(self.t)创建目标文件夹: \(destination.path)")
             }
         }
-        
-        // 如果目标文件已存在，先删除
-        if finalDestination.pathExistsIncludingSymbolicLink {
-            if verbose {
-                os_log("\(self.t)删除已存在的目标文件")
-            }
-            try finalDestination.delete()
-        }
-        
+
         // 执行复制
         if verbose {
             os_log("\(self.t)执行文件复制")
         }
-        try fileManager.copyItem(at: source, to: finalDestination)
+        try await source.copyTo(finalDestination, verbose: verbose, caller: self.className)
         if verbose {
             os_log("\(self.t)文件复制成功")
         }
