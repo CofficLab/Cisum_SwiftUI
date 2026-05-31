@@ -96,10 +96,18 @@ enum BookControlPlaybackRequestPolicy {
     static func currentAssetAffectedByDeletion(currentAsset: URL?, deletedURLs: [URL]) -> Bool {
         guard let currentAsset else { return false }
         return deletedURLs.contains { deletedURL in
-            let parentPath = deletedURL.standardizedFileURL.path
-            let assetPath = currentAsset.standardizedFileURL.path
-            return assetPath == parentPath || assetPath.hasPrefix(parentPath + "/")
+            let parentPath = resolvedStandardizedPath(for: deletedURL)
+            let assetPath = resolvedStandardizedPath(for: currentAsset)
+            return isContained(assetPath, in: parentPath)
         }
+    }
+
+    private static func resolvedStandardizedPath(for url: URL) -> String {
+        url.resolvingSymlinksInPath().standardizedFileURL.path
+    }
+
+    private static func isContained(_ childPath: String, in parentPath: String) -> Bool {
+        childPath == parentPath || childPath.hasPrefix(parentPath.hasSuffix("/") ? parentPath : parentPath + "/")
     }
 }
 

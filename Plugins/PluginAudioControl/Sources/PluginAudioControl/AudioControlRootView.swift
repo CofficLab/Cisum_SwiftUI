@@ -22,14 +22,18 @@ enum AudioControlPlaybackRequestPolicy {
 
     static func currentAssetAffectedByDeletion(currentAsset: URL?, deletedURLs: [URL]) -> Bool {
         guard let currentAsset else { return false }
-        let currentPath = currentAsset.standardizedFileURL.path
+        let currentPath = resolvedStandardizedPath(for: currentAsset)
         return deletedURLs.contains { deletedURL in
-            deletedURL.standardizedFileURL.path == currentPath
+            resolvedStandardizedPath(for: deletedURL) == currentPath
         }
     }
 
     static func shouldApplyDeletionRecovery(currentAsset: URL?, deletedURLs: [URL]) -> Bool {
         currentAssetAffectedByDeletion(currentAsset: currentAsset, deletedURLs: deletedURLs)
+    }
+
+    private static func resolvedStandardizedPath(for url: URL) -> String {
+        url.resolvingSymlinksInPath().standardizedFileURL.path
     }
 }
 

@@ -75,6 +75,26 @@ import SwiftUI
     ))
 }
 
+@Test func deletionAffectsCurrentChapterThroughSymlinkedBook() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realBook = root.appendingPathComponent("RealBook", isDirectory: true)
+    let linkedBook = root.appendingPathComponent("LinkedBook", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: realBook, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedBook, withDestinationURL: realBook)
+    let currentChapter = realBook.appendingPathComponent("Chapter 01.m4b")
+    try Data("audio".utf8).write(to: currentChapter)
+
+    #expect(BookControlPlaybackRequestPolicy.currentAssetAffectedByDeletion(
+        currentAsset: currentChapter,
+        deletedURLs: [linkedBook]
+    ))
+}
+
 @Test func bookRootUsesStandaloneBookAtDiskRoot() {
     let disk = URL(fileURLWithPath: "/tmp/cisum-books", isDirectory: true)
     let book = disk.appendingPathComponent("Standalone.m4b")
