@@ -220,9 +220,10 @@ extension AudioItemView {
 
                 try await repo.deleteAudios([url])
 
-                if AudioDeletePlaybackPolicy.shouldResetAfterDelete(
+                if AudioDeletePlaybackPolicy.shouldResetDirectlyAfterDelete(
                     currentURL: playMan.currentURL,
-                    deletedURLs: [url]
+                    deletedURLs: [url],
+                    isPlaybackControllerHandlingDeletion: true
                 ) {
                     await playMan.reset(reason: "删除文件")
                     if Self.verbose {

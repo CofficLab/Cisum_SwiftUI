@@ -529,9 +529,10 @@ extension AudioList {
 
             do {
                 try await repo.deleteAudios(urlsToDelete)
-                if AudioDeletePlaybackPolicy.shouldResetAfterDelete(
+                if AudioDeletePlaybackPolicy.shouldResetDirectlyAfterDelete(
                     currentURL: playManController.currentURL,
-                    deletedURLs: urlsToDelete
+                    deletedURLs: urlsToDelete,
+                    isPlaybackControllerHandlingDeletion: true
                 ) {
                     await playManController.reset(reason: "删除文件")
                 }

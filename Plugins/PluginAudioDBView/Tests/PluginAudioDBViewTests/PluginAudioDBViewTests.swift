@@ -75,21 +75,31 @@ import UniformTypeIdentifiers
         .appendingPathComponent("deleted.mp3")
     let switched = root.appendingPathComponent("switched.mp3")
 
-    #expect(AudioDeletePlaybackPolicy.shouldResetAfterDelete(
+    #expect(AudioDeletePlaybackPolicy.deletedURLsContainCurrentAudio(
         currentURL: deleted,
         deletedURLs: [deleted]
     ))
-    #expect(AudioDeletePlaybackPolicy.shouldResetAfterDelete(
+    #expect(AudioDeletePlaybackPolicy.deletedURLsContainCurrentAudio(
         currentURL: deleted,
         deletedURLs: [unstandardizedDeleted]
     ))
-    #expect(!AudioDeletePlaybackPolicy.shouldResetAfterDelete(
+    #expect(!AudioDeletePlaybackPolicy.deletedURLsContainCurrentAudio(
         currentURL: switched,
         deletedURLs: [deleted]
     ))
-    #expect(!AudioDeletePlaybackPolicy.shouldResetAfterDelete(
+    #expect(!AudioDeletePlaybackPolicy.deletedURLsContainCurrentAudio(
         currentURL: nil,
         deletedURLs: [deleted]
+    ))
+    #expect(!AudioDeletePlaybackPolicy.shouldResetDirectlyAfterDelete(
+        currentURL: deleted,
+        deletedURLs: [deleted],
+        isPlaybackControllerHandlingDeletion: true
+    ))
+    #expect(AudioDeletePlaybackPolicy.shouldResetDirectlyAfterDelete(
+        currentURL: deleted,
+        deletedURLs: [deleted],
+        isPlaybackControllerHandlingDeletion: false
     ))
 }
 
