@@ -199,6 +199,22 @@
         }
       }
     },
+    "Delete failed: copy task list changed. Please try again.": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "删除失败：复制任务列表已变化，请重试。"
+          }
+        },
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "刪除失敗：複製任務列表已變更，請重試。"
+          }
+        }
+      }
+    },
     "Failed to prepare file: %@": {
       "localizations": {
         "zh-Hans": {
