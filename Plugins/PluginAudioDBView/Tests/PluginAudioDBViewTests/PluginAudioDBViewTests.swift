@@ -383,6 +383,7 @@ import UniformTypeIdentifiers
     try FileManager.default.createSymbolicLink(at: linkedFile, withDestinationURL: realFile)
 
     #expect(AudioDBView.representsSameImportSource(realFile, linkedFile))
+    #expect(AudioDBView.canonicalImportSourceIdentity(for: realFile) == AudioDBView.canonicalImportSourceIdentity(for: linkedFile))
     #expect(AudioDBView.supportedImportURLs(
         from: [linkedFile, realFile],
         supportedExtensions: ["mp3"]
