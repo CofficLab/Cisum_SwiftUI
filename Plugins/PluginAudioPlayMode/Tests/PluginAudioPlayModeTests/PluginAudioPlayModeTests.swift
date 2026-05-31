@@ -22,3 +22,21 @@ import Testing
         currentMode: .sequence
     ))
 }
+
+@Test func audioPlayModeRestoreOnlyAppliesInActiveSceneWhenDifferent() {
+    #expect(AudioPlayModeQueueUpdatePolicy.shouldRestorePlayMode(
+        isActiveScene: true,
+        storedMode: .shuffle,
+        currentMode: .sequence
+    ))
+    #expect(!AudioPlayModeQueueUpdatePolicy.shouldRestorePlayMode(
+        isActiveScene: false,
+        storedMode: .shuffle,
+        currentMode: .sequence
+    ))
+    #expect(!AudioPlayModeQueueUpdatePolicy.shouldRestorePlayMode(
+        isActiveScene: true,
+        storedMode: .shuffle,
+        currentMode: .shuffle
+    ))
+}

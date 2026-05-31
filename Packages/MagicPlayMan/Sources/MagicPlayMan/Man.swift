@@ -180,6 +180,13 @@ extension MagicPlayMan {
         events.onPlayModeChanged.send(playMode)
     }
 
+    /// 恢复已持久化的播放模式，不触发播放模式变更事件。
+    /// 用于启动或切换场景时同步 UI 状态，避免误触发提示和队列重排。
+    @MainActor
+    public func restorePlayMode(_ mode: MagicPlayMode) {
+        playMode = mode
+    }
+
     /// 设置当前下载监听器引用
     /// - Parameter observers: 下载监听器元组（进度观察者和完成观察者）
     @MainActor

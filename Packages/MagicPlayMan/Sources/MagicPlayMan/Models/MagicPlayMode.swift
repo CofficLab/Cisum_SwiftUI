@@ -13,7 +13,7 @@ import CisumUI
 /// // 切换到下一个播放模式
 /// player.playMode = player.playMode.next
 /// ```
-public enum MagicPlayMode: String, CaseIterable {
+public enum MagicPlayMode: String, CaseIterable, Sendable {
     /// 顺序播放模式 - 按顺序播放所有曲目，播放完毕后停止
     case sequence
     /// 单曲循环模式 - 重复播放当前曲目

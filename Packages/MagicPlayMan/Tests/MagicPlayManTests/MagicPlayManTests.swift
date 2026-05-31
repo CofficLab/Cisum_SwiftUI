@@ -39,4 +39,24 @@ final class MagicPlayManTests: XCTestCase {
             currentAsset: nil
         ))
     }
+
+    @MainActor
+    func testRestoringPlayModeDoesNotNotifySubscribers() {
+        let man = MagicPlayMan()
+        var notifications = 0
+        let subscriptionID = man.subscribe(
+            name: "MagicPlayManTests",
+            onPlayModeChanged: { _ in
+                notifications += 1
+            }
+        )
+        defer {
+            man.unsubscribe(subscriptionID)
+        }
+
+        man.restorePlayMode(.shuffle)
+
+        XCTAssertEqual(man.playMode, .shuffle)
+        XCTAssertEqual(notifications, 0)
+    }
 }

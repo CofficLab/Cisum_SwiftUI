@@ -13,6 +13,10 @@ enum AudioPlayModeQueueUpdatePolicy {
     static func shouldApplyQueueUpdate(requestedModeRawValue: String, currentMode: MagicPlayMode) -> Bool {
         currentMode.rawValue == requestedModeRawValue
     }
+
+    static func shouldRestorePlayMode(isActiveScene: Bool, storedMode: MagicPlayMode, currentMode: MagicPlayMode) -> Bool {
+        isActiveScene && storedMode != currentMode
+    }
 }
 
 public struct AudioPlayModeRootView<Content>: View, SuperLog where Content: View {
@@ -85,6 +89,8 @@ private extension AudioPlayModeRootView {
             os_log("\(self.t)👀 视图已出现，开始初始化播放模式管理")
         }
 
+        restoreStoredPlayMode()
+
         guard playbackSubscriptionID == nil else { return }
 
         playbackSubscriptionID = man.subscribe(
@@ -93,6 +99,21 @@ private extension AudioPlayModeRootView {
                 handlePlayModeChanged(mode)
             }
         )
+    }
+
+    func restoreStoredPlayMode() {
+        Task { @MainActor in
+            let storedMode = await AudioPlayModeStore.shared.getPlayMode()
+            guard AudioPlayModeQueueUpdatePolicy.shouldRestorePlayMode(
+                isActiveScene: shouldActivatePlayMode,
+                storedMode: storedMode,
+                currentMode: man.playMode
+            ) else {
+                return
+            }
+
+            man.restorePlayMode(storedMode)
+        }
     }
 
     func handleOnDisappear() {

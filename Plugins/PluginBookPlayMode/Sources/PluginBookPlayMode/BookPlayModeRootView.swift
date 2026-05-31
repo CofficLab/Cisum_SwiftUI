@@ -7,6 +7,12 @@ import SwiftUI
 
 public typealias BookPlayModeCurrentSceneProvider = @MainActor () -> String?
 
+enum BookPlayModeRestorePolicy {
+    static func shouldRestorePlayMode(isActiveScene: Bool, storedMode: MagicPlayMode, currentMode: MagicPlayMode) -> Bool {
+        isActiveScene && storedMode != currentMode
+    }
+}
+
 public struct BookPlayModeRootView<Content>: View, SuperLog where Content: View {
     public nonisolated static var emoji: String { BookPlayModePluginInfo.emoji }
     private let verbose = false
@@ -77,6 +83,8 @@ private extension BookPlayModeRootView {
             os_log("\(self.t)👀 视图已出现，开始初始化书籍播放模式管理")
         }
 
+        restoreStoredPlayMode()
+
         // 订阅播放器事件，监听播放模式变化
         guard playbackSubscriptionID == nil else { return }
 
@@ -86,6 +94,21 @@ private extension BookPlayModeRootView {
                 handlePlayModeChanged(mode)
             }
         )
+    }
+
+    func restoreStoredPlayMode() {
+        Task { @MainActor in
+            let storedMode = await BookPlayModeStore.shared.getPlayMode()
+            guard BookPlayModeRestorePolicy.shouldRestorePlayMode(
+                isActiveScene: shouldActivatePlayMode,
+                storedMode: storedMode,
+                currentMode: man.playMode
+            ) else {
+                return
+            }
+
+            man.restorePlayMode(storedMode)
+        }
     }
 
     func handleOnDisappear() {
@@ -109,6 +132,10 @@ private extension BookPlayModeRootView {
 
         if verbose {
             os_log("\(self.t)🔄 书籍播放模式变化 -> \(mode.shortName)")
+        }
+
+        Task {
+            await BookPlayModeStore.shared.storePlayMode(mode)
         }
 
         // 对于书籍播放，播放模式主要影响章节间的切换逻辑
