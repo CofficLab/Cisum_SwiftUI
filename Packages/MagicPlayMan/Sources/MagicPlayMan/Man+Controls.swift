@@ -100,7 +100,7 @@ public extension MagicPlayMan {
             return
         }
 
-        if currentTime == duration {
+        if MagicPlayManPlaybackTimePolicy.shouldRestartFromBeginning(currentTime: currentTime, duration: duration) {
             self.seek(time: 0, reason: self.className + ".playCurrent")
         }
 

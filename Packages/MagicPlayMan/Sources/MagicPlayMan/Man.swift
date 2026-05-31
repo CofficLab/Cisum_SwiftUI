@@ -84,14 +84,25 @@ public class MagicPlayMan: ObservableObject, SuperLog {
 }
 
 enum MagicPlayManPlaybackTimePolicy {
-    static func normalizedCurrentTime(_ time: TimeInterval) -> TimeInterval {
+    static func normalizedCurrentTime(_ time: TimeInterval, duration: TimeInterval? = nil) -> TimeInterval {
         guard time.isFinite else { return 0 }
-        return max(time, 0)
+        let currentTime = max(time, 0)
+
+        guard let duration, duration.isFinite, duration > 0 else {
+            return currentTime
+        }
+
+        return min(currentTime, duration)
     }
 
     static func normalizedProgress(currentTime: TimeInterval, duration: TimeInterval) -> Double {
         guard currentTime.isFinite, duration.isFinite, duration > 0 else { return 0 }
         return min(max(currentTime / duration, 0), 1)
+    }
+
+    static func shouldRestartFromBeginning(currentTime: TimeInterval, duration: TimeInterval) -> Bool {
+        guard currentTime.isFinite, duration.isFinite, duration > 0 else { return false }
+        return currentTime >= duration
     }
 }
 
@@ -104,7 +115,7 @@ extension MagicPlayMan {
     ///   - reason: 状态变更原因（用于日志记录）
     @MainActor
     func setCurrentTime(_ time: TimeInterval, reason: String) {
-        let time = MagicPlayManPlaybackTimePolicy.normalizedCurrentTime(time)
+        let time = MagicPlayManPlaybackTimePolicy.normalizedCurrentTime(time, duration: duration)
 
         if verbose && false {
             os_log("\(self.t)🕒 (\(reason)) 设置当前播放时间：\(time)s")
