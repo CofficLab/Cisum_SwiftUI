@@ -43,3 +43,25 @@ import Testing
         isICloudAvailable: false
     ) == .local)
 }
+
+@Test func storageSelectionDoesNotPersistInitialDefaultBeforeUserChooses() {
+    #expect(!WelcomeStorageSelectionPolicy.shouldPersistDisplayedSelectionOnAppear(
+        currentStorageSelection: nil,
+        displayedSelection: .icloud
+    ))
+    #expect(!WelcomeStorageSelectionPolicy.shouldPersistDisplayedSelectionOnAppear(
+        currentStorageSelection: nil,
+        displayedSelection: .local
+    ))
+}
+
+@Test func storageSelectionPersistsOnlyExistingUnavailableSelectionFallback() {
+    #expect(WelcomeStorageSelectionPolicy.shouldPersistDisplayedSelectionOnAppear(
+        currentStorageSelection: .icloud,
+        displayedSelection: .local
+    ))
+    #expect(!WelcomeStorageSelectionPolicy.shouldPersistDisplayedSelectionOnAppear(
+        currentStorageSelection: .local,
+        displayedSelection: .local
+    ))
+}

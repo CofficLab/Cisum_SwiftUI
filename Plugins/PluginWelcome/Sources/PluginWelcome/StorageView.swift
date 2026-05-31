@@ -96,7 +96,10 @@ public struct StorageView: View {
         )
         tempStorageSelection = displayedSelection
 
-        if let displayedSelection, displayedSelection != currentStorageSelection {
+        if let displayedSelection, WelcomeStorageSelectionPolicy.shouldPersistDisplayedSelectionOnAppear(
+            currentStorageSelection: currentStorageSelection,
+            displayedSelection: displayedSelection
+        ) {
             updateSelection(displayedSelection)
         }
     }
@@ -152,5 +155,12 @@ enum WelcomeStorageSelectionPolicy {
             currentStorageSelection: currentStorageSelection,
             isICloudAvailable: isICloudAvailable
         ) ?? (isICloudAvailable ? .icloud : .local)
+    }
+
+    static func shouldPersistDisplayedSelectionOnAppear(
+        currentStorageSelection: WelcomeStorageSelection?,
+        displayedSelection: WelcomeStorageSelection?
+    ) -> Bool {
+        currentStorageSelection != nil && displayedSelection != currentStorageSelection
     }
 }
