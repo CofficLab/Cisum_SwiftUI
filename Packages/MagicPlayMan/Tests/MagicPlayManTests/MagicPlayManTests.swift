@@ -131,6 +131,18 @@ final class MagicPlayManTests: XCTestCase {
         XCTAssertTrue(audiobook.isAudio)
     }
 
+    func testSeekPolicyClampsInvalidAndOutOfRangeTimes() {
+        XCTAssertEqual(MagicPlayManSeekPolicy.normalizedTime(-5, duration: 100), 0)
+        XCTAssertEqual(MagicPlayManSeekPolicy.normalizedTime(120, duration: 100), 100)
+        XCTAssertEqual(MagicPlayManSeekPolicy.normalizedTime(40, duration: 100), 40)
+        XCTAssertEqual(MagicPlayManSeekPolicy.normalizedTime(.infinity, duration: 100), 0)
+    }
+
+    func testSeekPolicyAllowsPositiveTimeWhenDurationIsUnknown() {
+        XCTAssertEqual(MagicPlayManSeekPolicy.normalizedTime(30, duration: 0), 30)
+        XCTAssertEqual(MagicPlayManSeekPolicy.normalizedTime(30, duration: .nan), 30)
+    }
+
     @MainActor
     func testUnplayableLocalMediaDoesNotBecomeCurrentAsset() async throws {
         let unplayable = FileManager.default.temporaryDirectory

@@ -23,6 +23,19 @@ enum MagicPlayManPlaybackRequestPolicy {
     }
 }
 
+enum MagicPlayManSeekPolicy {
+    static func normalizedTime(_ time: TimeInterval, duration: TimeInterval) -> TimeInterval {
+        guard time.isFinite else { return 0 }
+
+        let lowerBoundedTime = max(time, 0)
+        guard duration.isFinite, duration > 0 else {
+            return lowerBoundedTime
+        }
+
+        return min(lowerBoundedTime, duration)
+    }
+}
+
 public extension MagicPlayMan {
     /// 设置播放模式
     /// - Parameter mode: 要设置的播放模式
@@ -198,10 +211,11 @@ public extension MagicPlayMan {
             return
         }
 
+        let targetTime = MagicPlayManSeekPolicy.normalizedTime(time, duration: duration)
         if verbose {
-            os_log("\(self.t)⏩ (\(reason)) Seeking to \(Int(time))s")
+            os_log("\(self.t)⏩ (\(reason)) Seeking to \(Int(targetTime))s")
         }
-        seekLoadedItem(time: time, reason: reason)
+        seekLoadedItem(time: targetTime, reason: reason)
     }
 
     /// 设置当前资源的喜欢状态
@@ -266,7 +280,10 @@ public extension MagicPlayMan {
     /// 快进指定时间
     /// - Parameter seconds: 快进的秒数，默认为10秒
     func skipForward(_ seconds: TimeInterval = 10) {
-        seek(time: currentTime + seconds, reason: "skipForward")
+        seek(
+            time: MagicPlayManSeekPolicy.normalizedTime(currentTime + seconds, duration: duration),
+            reason: "skipForward"
+        )
         os_log("\(self.t)⏩ Skipped forward \(Int(seconds))s")
     }
 
