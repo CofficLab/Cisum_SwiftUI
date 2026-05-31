@@ -120,8 +120,25 @@ struct FileListView: View, SuperLog {
         } else {
             expandedItems.remove(item)
         }
+        itemCache = Self.cacheAfterExpansionChange(
+            isExpanded: isExpanded,
+            itemURL: item.url,
+            currentCache: itemCache
+        )
 
         updateVisibleItems(reason: "toggleExpanded")
+    }
+
+    nonisolated static func cacheAfterExpansionChange(
+        isExpanded: Bool,
+        itemURL: URL,
+        currentCache: [URL: [FileItem]]
+    ) -> [URL: [FileItem]] {
+        guard isExpanded else { return currentCache }
+
+        var updatedCache = currentCache
+        updatedCache.removeValue(forKey: itemURL)
+        return updatedCache
     }
 
     private func updateVisibleItems(reason: String) {

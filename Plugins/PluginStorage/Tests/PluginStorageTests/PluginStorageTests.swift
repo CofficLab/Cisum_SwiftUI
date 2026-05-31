@@ -29,6 +29,28 @@ import Foundation
     ))
 }
 
+@Test func fileListRefreshesDirectoryCacheWhenExpandedAgain() {
+    let folder = URL(fileURLWithPath: "/tmp/cisum-storage-file-list", isDirectory: true)
+    let child = folder.appendingPathComponent("old.mp3")
+    let cachedItems = [
+        folder: [
+            FileItem(url: child, level: 1, isExpanded: false)
+        ]
+    ]
+
+    #expect(FileListView.cacheAfterExpansionChange(
+        isExpanded: true,
+        itemURL: folder,
+        currentCache: cachedItems
+    )[folder] == nil)
+
+    #expect(FileListView.cacheAfterExpansionChange(
+        isExpanded: false,
+        itemURL: folder,
+        currentCache: cachedItems
+    )[folder] == cachedItems[folder])
+}
+
 @Test func fileInfoCellsOnlyApplyCurrentURLResults() {
     let first = URL(fileURLWithPath: "/tmp/cisum-storage-file-info/first")
     let second = URL(fileURLWithPath: "/tmp/cisum-storage-file-info/second")
