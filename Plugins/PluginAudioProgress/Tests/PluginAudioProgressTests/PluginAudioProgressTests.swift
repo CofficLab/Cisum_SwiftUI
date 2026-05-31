@@ -89,6 +89,34 @@ import Testing
     ) == nil)
 }
 
+@Test func invalidStoredAudioTimesAreIgnored() {
+    #expect(AudioStateRepo.storedTime(
+        localObject: Double.nan,
+        localDouble: .nan,
+        cloudString: "42"
+    ) == nil)
+    #expect(AudioStateRepo.storedTime(
+        localObject: Double.infinity,
+        localDouble: .infinity,
+        cloudString: "42"
+    ) == nil)
+    #expect(AudioStateRepo.storedTime(
+        localObject: -1.0,
+        localDouble: -1,
+        cloudString: "42"
+    ) == nil)
+    #expect(AudioStateRepo.storedTime(
+        localObject: nil,
+        localDouble: 0,
+        cloudString: "inf"
+    ) == nil)
+    #expect(AudioStateRepo.storedTime(
+        localObject: nil,
+        localDouble: 0,
+        cloudString: "-1"
+    ) == nil)
+}
+
 @Test func differentCurrentAudioURLResetsGlobalRestoreTime() {
     let oldURL = URL(fileURLWithPath: "/tmp/audio/track-01.mp3")
     let newURL = URL(fileURLWithPath: "/tmp/audio/track-02.mp3")

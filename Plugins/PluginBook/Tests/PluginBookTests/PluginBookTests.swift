@@ -79,6 +79,34 @@ import SwiftData
     ) == nil)
 }
 
+@Test func invalidStoredBookTimesAreIgnored() {
+    #expect(BookSettingRepo.storedTime(
+        localObject: Double.nan,
+        localDouble: .nan,
+        cloudString: "42"
+    ) == nil)
+    #expect(BookSettingRepo.storedTime(
+        localObject: Double.infinity,
+        localDouble: .infinity,
+        cloudString: "42"
+    ) == nil)
+    #expect(BookSettingRepo.storedTime(
+        localObject: -1.0,
+        localDouble: -1,
+        cloudString: "42"
+    ) == nil)
+    #expect(BookSettingRepo.storedTime(
+        localObject: nil,
+        localDouble: 0,
+        cloudString: "inf"
+    ) == nil)
+    #expect(BookSettingRepo.storedTime(
+        localObject: nil,
+        localDouble: 0,
+        cloudString: "-1"
+    ) == nil)
+}
+
 @Test func deletedBookFolderContainsNestedRecords() {
     let root = URL(fileURLWithPath: "/tmp/cisum-book-delete-tests", isDirectory: true)
     let book = root.appendingPathComponent("Book", isDirectory: true)

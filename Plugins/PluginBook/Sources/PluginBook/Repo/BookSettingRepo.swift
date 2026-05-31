@@ -46,11 +46,16 @@ public class BookSettingRepo: SuperLog {
         cloudString: String?
     ) -> TimeInterval? {
         if localObject != nil {
-            return localDouble
+            return validStoredTime(localDouble)
         }
 
-        guard let cloudString else { return nil }
-        return TimeInterval(cloudString)
+        guard let cloudString, let time = TimeInterval(cloudString) else { return nil }
+        return validStoredTime(time)
+    }
+
+    private static func validStoredTime(_ time: TimeInterval) -> TimeInterval? {
+        guard time.isFinite, time >= 0 else { return nil }
+        return time
     }
 
     /// 存储当前书籍的播放时间
