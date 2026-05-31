@@ -247,7 +247,7 @@ extension RootView {
         if Self.verbose {
             os_log("\(self.t)🔄 Reset Storage Location")
         }
-        setLoading(true, reason: "resetStorageLocation")
+        reloadView()
     }
 
     func onLaunchEnd() {
