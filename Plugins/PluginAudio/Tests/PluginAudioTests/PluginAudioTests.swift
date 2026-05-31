@@ -112,6 +112,8 @@ import SwiftData
     let sibling = URL(fileURLWithPath: "/tmp/cisum-audio-tests/audio-backup/track.mp3")
 
     #expect(AudioDB.contains(root, audioURL: rootChild))
+    #expect(!AudioDB.contains(root, audioURL: root))
+    #expect(!AudioDB.contains(disk, audioURL: disk))
     #expect(!AudioDB.contains(disk, audioURL: sibling))
 }
 
