@@ -16,6 +16,12 @@ enum MagicPlayManDownloadRequestPolicy {
     }
 }
 
+enum MagicPlayManDownloadObserverPolicy {
+    static func shouldUseObserver(requestedAsset: URL, observedAsset: URL?) -> Bool {
+        MagicPlayManAssetIdentity.representsSameAsset(requestedAsset, observedAsset)
+    }
+}
+
 enum MagicPlayManAssetIdentity {
     static func representsSameAsset(_ lhs: URL?, _ rhs: URL?) -> Bool {
         switch (lhs, rhs) {
@@ -96,21 +102,25 @@ extension MagicPlayMan {
                 guard MagicPlayManDownloadRequestPolicy.shouldFinishDownload(
                     requestedAsset: url,
                     currentAsset: self.currentURL
-                ), self.currentDownloadObservers != nil else {
+                ) else {
                     if self.verbose {
                         os_log("\(self.t)⚠️ URL changed during download completion, ignoring stale result for: \(url.title)")
                     }
+                    self.cleanupDownloadObservers(for: url)
                     return
                 }
 
-                self.cleanupDownloadObservers()
+                guard self.cleanupDownloadObservers(for: url) else {
+                    return
+                }
+
                 // 下载完成后执行回调
                 onFinished?()
             }
         }
 
         // 存储下载监听器引用
-        self.setCurrentDownloadObservers((progressObserver, finishObserver))
+        self.setCurrentDownloadObservers((url, progressObserver, finishObserver))
 
         // 开始下载
         Task {
@@ -121,14 +131,18 @@ extension MagicPlayMan {
                     guard MagicPlayManDownloadRequestPolicy.shouldFinishDownload(
                         requestedAsset: url,
                         currentAsset: self.currentURL
-                    ), self.currentDownloadObservers != nil else {
+                    ) else {
                         if self.verbose {
                             os_log("\(self.t)⚠️ URL changed after ensuring local availability, ignoring stale result for: \(url.title)")
                         }
+                        self.cleanupDownloadObservers(for: url)
                         return
                     }
 
-                    self.cleanupDownloadObservers()
+                    guard self.cleanupDownloadObservers(for: url) else {
+                        return
+                    }
+
                     onFinished?()
                 }
             } catch {
@@ -140,11 +154,14 @@ extension MagicPlayMan {
                         if self.verbose {
                             os_log("\(self.t)⚠️ URL changed during download failure, ignoring error for: \(url.title)")
                         }
+                        self.cleanupDownloadObservers(for: url)
                         return
                     }
 
                     // 下载失败时清理监听器
-                    self.cleanupDownloadObservers()
+                    guard self.cleanupDownloadObservers(for: url) else {
+                        return
+                    }
                     self.setState(.failed(.networkError(error.localizedDescription)), reason: "\(reason).\(self.className).downloadAndCache")
                 }
             }
@@ -153,12 +170,20 @@ extension MagicPlayMan {
 
     /// 清理下载监听器
     @MainActor
-    private func cleanupDownloadObservers() {
-        if let (progressObserver, finishObserver) = currentDownloadObservers {
-            progressObserver.cancel()
-            finishObserver.cancel()
-            setCurrentDownloadObservers(nil)
+    @discardableResult
+    private func cleanupDownloadObservers(for requestedAsset: URL) -> Bool {
+        guard let observers = currentDownloadObservers,
+              MagicPlayManDownloadObserverPolicy.shouldUseObserver(
+                  requestedAsset: requestedAsset,
+                  observedAsset: observers.asset
+              ) else {
+            return false
         }
+
+        observers.progressObserver.cancel()
+        observers.finishObserver.cancel()
+        setCurrentDownloadObservers(nil)
+        return true
     }
 }
 

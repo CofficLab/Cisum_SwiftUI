@@ -48,7 +48,7 @@ public class MagicPlayMan: ObservableObject, SuperLog {
     public private(set) lazy var events = PlaybackEvents()
 
     /// 当前下载监听器引用
-    private(set) var currentDownloadObservers: (progressObserver: AnyCancellable, finishObserver: AnyCancellable)?
+    private(set) var currentDownloadObservers: (asset: URL, progressObserver: AnyCancellable, finishObserver: AnyCancellable)?
 
     private var playRequestGeneration: UInt64 = 0
 
@@ -204,7 +204,7 @@ extension MagicPlayMan {
     /// 设置当前下载监听器引用
     /// - Parameter observers: 下载监听器元组（进度观察者和完成观察者）
     @MainActor
-    func setCurrentDownloadObservers(_ observers: (progressObserver: AnyCancellable, finishObserver: AnyCancellable)?) {
+    func setCurrentDownloadObservers(_ observers: (asset: URL, progressObserver: AnyCancellable, finishObserver: AnyCancellable)?) {
         currentDownloadObservers = observers
     }
 
