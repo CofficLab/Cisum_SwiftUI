@@ -70,7 +70,7 @@ public extension CGSize {
     /// CGSize.iPhone.description // "1170x2532"
     /// ```
     var description: String {
-        "\(Int(width))x\(Int(height))"
+        "\(width.descriptionComponent)x\(height.descriptionComponent)"
     }
 
     /// 转换为横屏布局
@@ -271,4 +271,11 @@ public extension CGSize {
 
     /// iMac 27英寸 中等预览尺寸 (1024x578)，适合开发调试
     static let iMac27Medium = CGSize(width: 1024, height: 578)
+}
+
+private extension CGFloat {
+    var descriptionComponent: Int {
+        guard isFinite else { return 0 }
+        return Int(self)
+    }
 }
