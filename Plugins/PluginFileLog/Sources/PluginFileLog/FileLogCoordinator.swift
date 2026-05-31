@@ -99,8 +99,10 @@ public final class FileLogCoordinator: @unchecked Sendable {
         closeCurrentFile()
         guard !isFileLoggingDisabled else { return }
 
-        let filename = logDateFormatter.string(from: Date()) + ".log"
-        let filePath = logsDirectory.appendingPathComponent(filename)
+        let filePath = FileLogRotation.uniqueLogFileURL(
+            baseName: logDateFormatter.string(from: Date()),
+            in: logsDirectory
+        )
 
         guard FileManager.default.createFile(atPath: filePath.path, contents: nil) else {
             handleFileWriteFailure(CocoaError(.fileWriteUnknown))
@@ -291,6 +293,29 @@ public final class FileLogCoordinator: @unchecked Sendable {
         f.dateFormat = "HH:mm:ss.SSS"
         return f
     }()
+}
+
+enum FileLogRotation {
+    static func uniqueLogFileURL(
+        baseName: String,
+        in directory: URL,
+        fileExists: (URL) -> Bool = { FileManager.default.fileExists(atPath: $0.path) }
+    ) -> URL {
+        let normalizedBaseName = baseName.isEmpty ? "Cisum Log" : baseName
+        var candidate = directory
+            .appendingPathComponent(normalizedBaseName)
+            .appendingPathExtension("log")
+        var suffix = 2
+
+        while fileExists(candidate) {
+            candidate = directory
+                .appendingPathComponent("\(normalizedBaseName) \(suffix)")
+                .appendingPathExtension("log")
+            suffix += 1
+        }
+
+        return candidate
+    }
 }
 
 // MARK: - OSLogEntryLog.Level String Representation
