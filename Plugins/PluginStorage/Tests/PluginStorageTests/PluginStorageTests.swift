@@ -457,6 +457,19 @@ import Foundation
     }
 }
 
+@Test func migrationPreviewSkipsDSStoreLikeMigrationManager() throws {
+    let source = URL(fileURLWithPath: "/tmp/cisum-storage-source", isDirectory: true)
+
+    let fileNames = try MigrationProgressView.migratableSourceFileNames(
+        in: source,
+        contentsOfDirectory: { _ in
+            ["track.mp3", ".DS_Store", "album"]
+        }
+    )
+
+    #expect(fileNames == ["album", "track.mp3"])
+}
+
 @Test func migrationMovesContentsButKeepsSourceRoot() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)

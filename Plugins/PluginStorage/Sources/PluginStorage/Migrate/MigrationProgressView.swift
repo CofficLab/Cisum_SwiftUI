@@ -87,6 +87,15 @@ struct MigrationProgressView: View {
         return (sourceURL, targetURL)
     }
 
+    nonisolated static func migratableSourceFileNames(
+        in sourceURL: URL,
+        contentsOfDirectory: (String) throws -> [String] = FileManager.default.contentsOfDirectory(atPath:)
+    ) throws -> [String] {
+        try contentsOfDirectory(sourceURL.path)
+            .filter { $0 != ".DS_Store" }
+            .sorted()
+    }
+
     private func prepareForRetry() {
         migrationGeneration += 1
         migrationManager.resetCancellation()
@@ -322,9 +331,7 @@ struct MigrationProgressView: View {
         guard let sourceURL = sourceURL else { return }
 
         do {
-            let fileManager = FileManager.default
-            sourceFiles = try fileManager.contentsOfDirectory(atPath: sourceURL.path)
-                .sorted()
+            sourceFiles = try Self.migratableSourceFileNames(in: sourceURL)
 
             // 初始化所有文件为待处理状态
             processedFiles = sourceFiles.map { fileName in
