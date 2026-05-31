@@ -1,5 +1,4 @@
 import CoreFoundation
-import Combine
 import Foundation
 import MagicPlayMan
 import OSLog
@@ -67,9 +66,6 @@ public struct AudioWidgetControlRootView: View {
             .onAppear {
                 setupWidgetCommandListener()
             }
-            .onReceive(NotificationCenter.default.publisher(for: UserDefaults.didChangeNotification).receive(on: DispatchQueue.main)) { _ in
-                handleWidgetCommands()
-            }
             .onReceive(NotificationCenter.default.publisher(for: .audioWidgetCommandReceived)) { _ in
                 handleWidgetCommands()
             }
@@ -95,7 +91,6 @@ public struct AudioWidgetControlRootView: View {
 
     private func handleWidgetCommands() {
         let sharedDefaults = UserDefaults(suiteName: "group.com.yueyi.cisum")
-        sharedDefaults?.synchronize()
 
         guard let sharedDefaults else { return }
 
