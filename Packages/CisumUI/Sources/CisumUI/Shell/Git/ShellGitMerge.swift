@@ -9,7 +9,7 @@ extension ShellGit {
     ///   - path: 仓库路径
     /// - Returns: 执行结果
     public static func merge(_ branchName: String, at path: String? = nil) throws -> String {
-        return try Shell.runSync("git merge \(branchName)", at: path)
+        return try Shell.runSync(mergeCommand(branchName), at: path)
     }
 
     /// 快进合并
@@ -18,7 +18,7 @@ extension ShellGit {
     ///   - path: 仓库路径
     /// - Returns: 执行结果
     public static func mergeFastForward(_ branchName: String, at path: String? = nil) throws -> String {
-        return try Shell.runSync("git merge --ff-only \(branchName)", at: path)
+        return try Shell.runSync(mergeFastForwardCommand(branchName), at: path)
     }
 
     /// 非快进合并（创建合并提交）
@@ -28,11 +28,7 @@ extension ShellGit {
     ///   - path: 仓库路径
     /// - Returns: 执行结果
     public static func mergeNoFastForward(_ branchName: String, message: String? = nil, at path: String? = nil) throws -> String {
-        var command = "git merge --no-ff \(branchName)"
-        if let message = message {
-            command += " -m \"\(message)\""
-        }
-        return try Shell.runSync(command, at: path)
+        return try Shell.runSync(mergeNoFastForwardCommand(branchName, message: message), at: path)
     }
 
     /// 压缩合并（将分支的所有提交压缩为一个提交）
@@ -41,7 +37,7 @@ extension ShellGit {
     ///   - path: 仓库路径
     /// - Returns: 执行结果
     public static func mergeSquash(_ branchName: String, at path: String? = nil) throws -> String {
-        return try Shell.runSync("git merge --squash \(branchName)", at: path)
+        return try Shell.runSync(mergeSquashCommand(branchName), at: path)
     }
 
     /// 使用指定策略合并
@@ -51,7 +47,7 @@ extension ShellGit {
     ///   - path: 仓库路径
     /// - Returns: 执行结果
     public static func mergeWithStrategy(_ branchName: String, strategy: String, at path: String? = nil) throws -> String {
-        return try Shell.runSync("git merge -s \(strategy) \(branchName)", at: path)
+        return try Shell.runSync(mergeWithStrategyCommand(branchName, strategy: strategy), at: path)
     }
 
     /// 中止合并
@@ -110,12 +106,7 @@ extension ShellGit {
     ///   - path: 仓库路径
     /// - Returns: 执行结果
     public static func mergeResolveOurs(_ files: [String] = [], at path: String? = nil) throws -> String {
-        if files.isEmpty {
-            return try Shell.runSync("git checkout --ours .", at: path)
-        } else {
-            let filesStr = files.joined(separator: " ")
-            return try Shell.runSync("git checkout --ours \(filesStr)", at: path)
-        }
+        return try Shell.runSync(mergeResolveOursCommand(files), at: path)
     }
 
     /// 使用他们的版本解决冲突
@@ -124,11 +115,48 @@ extension ShellGit {
     ///   - path: 仓库路径
     /// - Returns: 执行结果
     public static func mergeResolveTheirs(_ files: [String] = [], at path: String? = nil) throws -> String {
+        return try Shell.runSync(mergeResolveTheirsCommand(files), at: path)
+    }
+
+    static func mergeCommand(_ branchName: String) -> String {
+        "git merge \(shellQuoted(branchName))"
+    }
+
+    static func mergeFastForwardCommand(_ branchName: String) -> String {
+        "git merge --ff-only \(shellQuoted(branchName))"
+    }
+
+    static func mergeNoFastForwardCommand(_ branchName: String, message: String? = nil) -> String {
+        var command = "git merge --no-ff \(shellQuoted(branchName))"
+        if let message {
+            command += " -m \(shellQuoted(message))"
+        }
+        return command
+    }
+
+    static func mergeSquashCommand(_ branchName: String) -> String {
+        "git merge --squash \(shellQuoted(branchName))"
+    }
+
+    static func mergeWithStrategyCommand(_ branchName: String, strategy: String) -> String {
+        "git merge -s \(shellQuoted(strategy)) \(shellQuoted(branchName))"
+    }
+
+    static func mergeResolveOursCommand(_ files: [String] = []) -> String {
         if files.isEmpty {
-            return try Shell.runSync("git checkout --theirs .", at: path)
+            return "git checkout --ours ."
         } else {
-            let filesStr = files.joined(separator: " ")
-            return try Shell.runSync("git checkout --theirs \(filesStr)", at: path)
+            let filesStr = files.map(shellQuoted).joined(separator: " ")
+            return "git checkout --ours -- \(filesStr)"
+        }
+    }
+
+    static func mergeResolveTheirsCommand(_ files: [String] = []) -> String {
+        if files.isEmpty {
+            return "git checkout --theirs ."
+        } else {
+            let filesStr = files.map(shellQuoted).joined(separator: " ")
+            return "git checkout --theirs -- \(filesStr)"
         }
     }
 }
