@@ -29,13 +29,15 @@ struct BookDBTips: View {
             case .empty:
                 AppEmptyState(
                     icon: "book.closed",
-                    title: dependencies.isDesktop ? "将有声书文件夹拖到这里可添加" : "仓库为空",
-                    description: String(localized: "支持的格式：\(supportedFormats)", table: "Book-DBView", bundle: .module)
+                    title: dependencies.isDesktop
+                        ? String(localized: "Drop audiobook folders here to add them", table: "Book-DBView", bundle: .module)
+                        : String(localized: "Repository is empty", table: "Book-DBView", bundle: .module),
+                    description: String(localized: "Supported formats: \(supportedFormats)", table: "Book-DBView", bundle: .module)
                 )
                 .frame(minHeight: 160)
 
                 #if os(macOS)
-                    Text("或", tableName: "Book-DBView", bundle: .module)
+                    Text("Or", tableName: "Book-DBView", bundle: .module)
                         .font(.caption)
                         .foregroundStyle(.secondary)
                     Button(
@@ -45,7 +47,7 @@ struct BookDBTips: View {
                             }
                         },
                         label: {
-                            Label { Text("打开仓库目录并放入文件", tableName: "Book-DBView", bundle: .module) } icon: { Image(systemName: "doc.viewfinder.fill") }
+                            Label { Text("Open repository folder and add files", tableName: "Book-DBView", bundle: .module) } icon: { Image(systemName: "doc.viewfinder.fill") }
                         }
                     )
                 #endif
@@ -55,7 +57,7 @@ struct BookDBTips: View {
                         action: requestImport,
                         label: {
                             Label(
-                                title: { Text("添加", tableName: "Book-DBView", bundle: .module) },
+                                title: { Text("Add", tableName: "Book-DBView", bundle: .module) },
                                 icon: { Image(systemName: "plus.circle") }
                             )
                         }
@@ -63,9 +65,9 @@ struct BookDBTips: View {
                     .buttonStyle(.bordered)
                 }
             case .loading:
-                AppLoadingOverlay(message: "正在读取仓库", size: .large)
+                AppLoadingOverlay(message: LocalizedStringKey(String(localized: "Reading repository", table: "Book-DBView", bundle: .module)), size: .large)
                     .frame(height: 120)
-                Text("支持的格式：\(supportedFormats)", tableName: "Book-DBView", bundle: .module)
+                Text("Supported formats: \(supportedFormats)", tableName: "Book-DBView", bundle: .module)
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
