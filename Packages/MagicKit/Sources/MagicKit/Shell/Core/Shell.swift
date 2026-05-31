@@ -38,6 +38,51 @@ import SwiftUI
     public class Shell: SuperLog {
         public static let emoji = "🐚"
 
+        private static func execute(_ command: String, at path: String? = nil, verbose: Bool = false) throws -> String {
+            let process = Process()
+            process.executableURL = URL(fileURLWithPath: "/bin/bash")
+            process.arguments = ["-c", command]
+
+            if let path = path {
+                process.currentDirectoryURL = URL(fileURLWithPath: path)
+            }
+
+            let outputPipe = Pipe()
+            let errorURL = FileManager.default.temporaryDirectory
+                .appendingPathComponent(UUID().uuidString)
+            _ = FileManager.default.createFile(atPath: errorURL.path, contents: nil)
+            let errorHandle = try FileHandle(forWritingTo: errorURL)
+            defer {
+                try? FileManager.default.removeItem(at: errorURL)
+            }
+            process.standardOutput = outputPipe
+            process.standardError = errorHandle
+
+            do {
+                try process.run()
+            } catch {
+                throw ShellError.processStartFailed(error.localizedDescription)
+            }
+
+            let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
+            process.waitUntilExit()
+            try? errorHandle.close()
+            let output = String(data: outputData, encoding: .utf8) ?? ""
+            let errorOutput = (try? String(contentsOf: errorURL, encoding: .utf8)) ?? ""
+            let combinedOutput = errorOutput.isEmpty ? output : "\(output)\n\(errorOutput)"
+
+            if verbose {
+                os_log("\(self.t) \n➡️ Path: \n\(path ?? "Current Directory") (\(FileManager.default.currentDirectoryPath)) \n➡️ Command: \n\(command) \n➡️ Output: \n\(combinedOutput)")
+            }
+
+            if process.terminationStatus != 0 {
+                os_log(.error, "\(self.t) ❌ Command failed \n ➡️ Path: \(path ?? "Current Directory") (\(FileManager.default.currentDirectoryPath)) \n ➡️ Command: \(command) \n ➡️ Output: \(combinedOutput) \n ➡️ Exit code: \(process.terminationStatus)")
+                throw ShellError.commandFailed(combinedOutput, command)
+            }
+
+            return output.trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+
         /// 异步执行Shell命令
         /// - Parameters:
         ///   - command: 要执行的命令
@@ -47,51 +92,11 @@ import SwiftUI
         /// - Throws: 执行失败时抛出错误
         public static func run(_ command: String, at path: String? = nil, verbose: Bool = false) async throws -> String {
             return try await withCheckedThrowingContinuation { continuation in
-                // 在后台队列执行，避免阻塞调用线程
                 DispatchQueue.global(qos: .userInitiated).async {
-                    let process = Process()
-                    process.executableURL = URL(fileURLWithPath: "/bin/bash")
-                    process.arguments = ["-c", command]
-
-                    if let path = path {
-                        process.currentDirectoryURL = URL(fileURLWithPath: path)
-                    }
-
-                    let outputPipe = Pipe()
-                    let errorPipe = Pipe()
-                    process.standardOutput = outputPipe
-                    process.standardError = errorPipe
-
                     do {
-                        try process.run()
-
-                        // 使用同步方式读取数据，避免异步handler的竞态条件
-                        let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
-                        let errorData = errorPipe.fileHandleForReading.readDataToEndOfFile()
-
-                        // 等待进程完成
-                        process.waitUntilExit()
-
-                        // 转换数据到字符串
-                        let output = String(data: outputData, encoding: .utf8) ?? ""
-                        let errorOutput = String(data: errorData, encoding: .utf8) ?? ""
-
-                        // 合并标准输出和错误输出
-                        let combinedOutput = errorOutput.isEmpty ? output : "\(output)\n\(errorOutput)"
-
-                        if verbose {
-                            os_log("\(self.t) \n➡️ Path: \n\(path ?? "Current Directory") (\(FileManager.default.currentDirectoryPath)) \n➡️ Command: \n\(command) \n➡️ Output: \n\(combinedOutput)")
-                        }
-
-                        if process.terminationStatus != 0 {
-                            os_log(.error, "\(self.t) ❌ Command failed \n ➡️ Path: \(path ?? "Current Directory") (\(FileManager.default.currentDirectoryPath)) \n ➡️ Command: \(command) \n ➡️ Output: \(combinedOutput) \n ➡️ Exit code: \(process.terminationStatus)")
-                            continuation.resume(throwing: ShellError.commandFailed(combinedOutput, command))
-                        } else {
-                            let trimmedOutput = output.trimmingCharacters(in: .whitespacesAndNewlines)
-                            continuation.resume(returning: trimmedOutput)
-                        }
+                        continuation.resume(returning: try execute(command, at: path, verbose: verbose))
                     } catch {
-                        continuation.resume(throwing: ShellError.processStartFailed(error.localizedDescription))
+                        continuation.resume(throwing: error)
                     }
                 }
             }
@@ -106,36 +111,7 @@ import SwiftUI
         /// - Throws: 执行失败时抛出错误
         @discardableResult
         public static func runSync(_ command: String, at path: String? = nil, verbose: Bool = false) throws -> String {
-            // 使用 DispatchSemaphore 来同步等待异步操作完成
-            var result: Result<String, Error>?
-            let semaphore = DispatchSemaphore(value: 0)
-
-            Task.detached {
-                defer {
-                    semaphore.signal()
-                }
-
-                do {
-                    let output = try await run(command, at: path, verbose: verbose)
-                    result = .success(output)
-                } catch {
-                    result = .failure(error)
-                }
-            }
-
-            // 等待异步任务完成
-            semaphore.wait()
-
-            guard let result else {
-                throw ShellError.processStartFailed("Shell command finished without a result")
-            }
-
-            switch result {
-            case let .success(output):
-                return output
-            case let .failure(error):
-                throw error
-            }
+            try execute(command, at: path, verbose: verbose)
         }
 
         /// 执行多个命令
