@@ -88,40 +88,9 @@
                 os_log("\(self.t)🚀 开始处理拖放文件")
             }
 
-            var sourceURLs: [URL] = []
-            var preparationErrors: [Error] = []
-            for provider in providers {
-                if provider.hasItemConformingToTypeIdentifier(UTType.fileURL.identifier) {
-                    do {
-                        let urlData: Data = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Data, Error>) in
-                            provider.loadDataRepresentation(forTypeIdentifier: UTType.fileURL.identifier) { data, error in
-                                if let error = error {
-                                    continuation.resume(throwing: error)
-                                } else if let data = data {
-                                    continuation.resume(returning: data)
-                                } else {
-                                    continuation.resume(throwing: NSError(domain: "", code: -1))
-                                }
-                            }
-                        }
-                        if let url = URL(dataRepresentation: urlData, relativeTo: nil) {
-                            guard Self.isSupportedAudioFile(url) else {
-                                if Self.verbose {
-                                    os_log("\(self.t)⏭️ Skip unsupported file: \(url.lastPathComponent)")
-                                }
-                                continue
-                            }
-
-                            sourceURLs.append(url)
-                        }
-                    } catch {
-                        preparationErrors.append(error)
-                        os_log(.error, "\(self.t)Failed to load URL or create bookmark: \(error.localizedDescription)")
-                    }
-                }
-            }
-
-            sourceURLs = Self.uniqueSupportedAudioSources(sourceURLs)
+            let droppedFiles = await Self.droppedFileURLs(from: providers)
+            var sourceURLs = Self.uniqueSupportedAudioSources(droppedFiles.urls)
+            var preparationErrors = droppedFiles.errors
 
             if Self.verbose {
                 os_log("\(self.t)🎁 获取到 \(sourceURLs.count) 个文件")
@@ -237,6 +206,52 @@
             }
 
             return uniqueURLs
+        }
+
+        static func droppedFileURL(from provider: NSItemProvider) async throws -> URL? {
+            if provider.hasItemConformingToTypeIdentifier(UTType.fileURL.identifier) {
+                let data: Data? = try await withCheckedThrowingContinuation { continuation in
+                    provider.loadDataRepresentation(forTypeIdentifier: UTType.fileURL.identifier) { data, error in
+                        if let error {
+                            continuation.resume(throwing: error)
+                        } else {
+                            continuation.resume(returning: data)
+                        }
+                    }
+                }
+
+                guard let data else { return nil }
+                return URL(dataRepresentation: data, relativeTo: nil)
+            }
+
+            guard provider.canLoadObject(ofClass: URL.self) else { return nil }
+
+            return try await withCheckedThrowingContinuation { continuation in
+                _ = provider.loadObject(ofClass: URL.self) { object, error in
+                    if let error {
+                        continuation.resume(throwing: error)
+                    } else {
+                        continuation.resume(returning: object)
+                    }
+                }
+            }
+        }
+
+        static func droppedFileURLs(from providers: [NSItemProvider]) async -> (urls: [URL], errors: [Error]) {
+            var urls: [URL] = []
+            var errors: [Error] = []
+
+            for provider in providers {
+                do {
+                    if let url = try await droppedFileURL(from: provider) {
+                        urls.append(url)
+                    }
+                } catch {
+                    errors.append(error)
+                }
+            }
+
+            return (urls, errors)
         }
 
         nonisolated static func representsSameCopySource(_ lhs: URL, _ rhs: URL) -> Bool {

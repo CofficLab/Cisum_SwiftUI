@@ -2,6 +2,7 @@ import Foundation
 import SwiftData
 import SwiftUI
 import Testing
+import UniformTypeIdentifiers
 @testable import PluginAudioCopy
 
 @Test func audioCopyInfoExportsMetadata() {
@@ -91,6 +92,28 @@ import Testing
         firstLink,
         secondLink,
     ]) == [firstLink, secondLink])
+}
+
+@Test func copyDropReadsFileURLDataProvider() async throws {
+    let expected = URL(fileURLWithPath: "/tmp/cisum-copy-drop-provider-tests/track.mp3")
+    let provider = NSItemProvider()
+    provider.registerDataRepresentation(forTypeIdentifier: UTType.fileURL.identifier, visibility: .all) { completion in
+        completion(expected.dataRepresentation, nil)
+        return nil
+    }
+
+    let url = try await CopyRootView<EmptyView>.droppedFileURL(from: provider)
+
+    #expect(url == expected)
+}
+
+@Test func copyDropReadsURLObjectProviderFallback() async throws {
+    let expected = URL(fileURLWithPath: "/tmp/cisum-copy-drop-provider-tests/track.mp3")
+    let provider = NSItemProvider(object: expected as NSURL)
+
+    let url = try await CopyRootView<EmptyView>.droppedFileURL(from: provider)
+
+    #expect(url == expected)
 }
 
 @Test func copyWorkerPlansUniqueDestinationNames() {
