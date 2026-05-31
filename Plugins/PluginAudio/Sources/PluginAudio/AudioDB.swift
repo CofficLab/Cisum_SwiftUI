@@ -863,6 +863,7 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
                 nextOrder += 1
             }
 
+            repairAudioOrderIfNeeded()
             try self.context.save()
         } catch {
             os_log(.error, "\(error.localizedDescription)")
@@ -907,6 +908,7 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
             }
         }
 
+        repairAudioOrderIfNeeded()
         do {
             try context.save()
         } catch let e {
@@ -940,6 +942,32 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     static func sortedForStableInsertion(_ urls: [URL]) -> [URL] {
         urls.sorted {
             $0.standardizedFileURL.path.localizedStandardCompare($1.standardizedFileURL.path) == .orderedAscending
+        }
+    }
+
+    private func repairAudioOrderIfNeeded() {
+        do {
+            let audios = try context.fetch(AudioModel.descriptorAll)
+            guard Self.needsStableOrderRepair(audios.map(\.order)) else { return }
+
+            var nextOrder = 100
+            for audio in Self.sortedForStableInsertion(audios.filter { $0.order != -1 }) {
+                audio.order = nextOrder
+                nextOrder += 1
+            }
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
+    }
+
+    static func needsStableOrderRepair(_ orders: [Int]) -> Bool {
+        let visibleOrders = orders.filter { $0 != -1 }
+        return Set(visibleOrders).count != visibleOrders.count
+    }
+
+    private static func sortedForStableInsertion(_ audios: [AudioModel]) -> [AudioModel] {
+        audios.sorted {
+            $0.url.standardizedFileURL.path.localizedStandardCompare($1.url.standardizedFileURL.path) == .orderedAscending
         }
     }
 

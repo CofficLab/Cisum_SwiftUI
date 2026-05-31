@@ -183,3 +183,35 @@ import SwiftData
     await db.initItems([folder, notes, audio])
     #expect(await db.allAudioURLs(reason: "test") == [audio])
 }
+
+@Test func audioDBFullSyncRepairsDuplicateLegacyAudioOrders() async throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+
+    let schema = Schema([AudioModel.self])
+    let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    let container = try ModelContainer(for: schema, configurations: [configuration])
+    let db = AudioDB(container, reason: "audioDBFullSyncRepairsDuplicateLegacyAudioOrders")
+
+    let second = root.appendingPathComponent("02-second.mp3")
+    let first = root.appendingPathComponent("01-first.mp3")
+    for file in [second, first] {
+        try Data("audio".utf8).write(to: file)
+        await db.insertAudio(url: file, order: 0)
+    }
+
+    await db.initItems([second, first])
+
+    #expect(await db.allAudioURLs(reason: "test") == [first, second])
+}
+
+@Test func audioDBKeepsUniqueExistingAudioOrders() {
+    #expect(!AudioDB.needsStableOrderRepair([20, 10, 30]))
+    #expect(!AudioDB.needsStableOrderRepair([-1, -1, 10]))
+    #expect(AudioDB.needsStableOrderRepair([0, 0]))
+}
