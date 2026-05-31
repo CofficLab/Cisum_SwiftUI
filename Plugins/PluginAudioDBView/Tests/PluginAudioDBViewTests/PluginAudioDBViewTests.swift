@@ -164,6 +164,16 @@ import UniformTypeIdentifiers
     #expect(emptyState.isLoadingMore == false)
 }
 
+@Test func audioListDeletionInvalidatesPendingLoads() {
+    let generation = AudioListLoadPolicy.generationAfterDeletingDisplayedItems(2)
+
+    #expect(generation == 3)
+    #expect(!AudioListLoadPolicy.shouldApplyResult(
+        currentGeneration: generation,
+        resultGeneration: 2
+    ))
+}
+
 @Test func audioListDeletionMatchesSymlinkedRows() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)

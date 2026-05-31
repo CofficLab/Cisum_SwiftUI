@@ -41,6 +41,10 @@ enum AudioListLoadPolicy {
         (isLoading: displayedCount == 0, isLoadingMore: false)
     }
 
+    static func generationAfterDeletingDisplayedItems(_ generation: Int) -> Int {
+        generation + 1
+    }
+
     private static func canonicalIdentity(for url: URL) -> String {
         guard url.isFileURL else {
             return url.standardized.absoluteString
@@ -602,6 +606,10 @@ extension AudioList {
 
         // 使用动画效果移除已删除的文件
         withAnimation(.easeInOut(duration: 0.3)) {
+            loadGeneration = AudioListLoadPolicy.generationAfterDeletingDisplayedItems(loadGeneration)
+            isLoading = false
+            isLoadingMore = false
+
             // 从 urls 数组中移除被删除的 URL
             urls.removeAll { url in
                 AudioListDeletionPolicy.shouldRemove(url, deletedURLs: urlsToDelete)
