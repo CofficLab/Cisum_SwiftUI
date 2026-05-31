@@ -7,6 +7,28 @@ import SwiftUI
 import PluginAudio
 import MagicPlayMan
 
+enum AudioListFileIdentity {
+    static func canonicalIdentity(for url: URL) -> String {
+        guard url.isFileURL else {
+            return url.standardized.absoluteString
+        }
+
+        if isDanglingSymlink(url) {
+            return url.standardizedFileURL.path
+        }
+
+        return url.resolvingSymlinksInPath().standardizedFileURL.path
+    }
+
+    private static func isDanglingSymlink(_ url: URL) -> Bool {
+        guard (try? url.resourceValues(forKeys: [.isSymbolicLinkKey]).isSymbolicLink) == true else {
+            return false
+        }
+
+        return !FileManager.default.fileExists(atPath: url.path)
+    }
+}
+
 enum AudioListLoadPolicy {
     static func shouldApplyResult(currentGeneration: Int, resultGeneration: Int) -> Bool {
         currentGeneration == resultGeneration
@@ -46,11 +68,7 @@ enum AudioListLoadPolicy {
     }
 
     private static func canonicalIdentity(for url: URL) -> String {
-        guard url.isFileURL else {
-            return url.standardized.absoluteString
-        }
-
-        return url.resolvingSymlinksInPath().standardizedFileURL.path
+        AudioListFileIdentity.canonicalIdentity(for: url)
     }
 }
 
@@ -75,11 +93,7 @@ enum AudioListDeletionPolicy {
     }
 
     private static func canonicalIdentity(for url: URL) -> String {
-        guard url.isFileURL else {
-            return url.standardized.absoluteString
-        }
-
-        return url.resolvingSymlinksInPath().standardizedFileURL.path
+        AudioListFileIdentity.canonicalIdentity(for: url)
     }
 }
 
