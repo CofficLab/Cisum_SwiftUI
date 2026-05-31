@@ -274,9 +274,19 @@ extension AudioDBView {
             }
         }
 
-        try await source.ensureLocalAvailability()
+        let sourceToCopy = copySourceURL(for: source)
+        try await sourceToCopy.ensureLocalAvailability()
 
-        try FileManager.default.copyItem(at: source, to: destination)
+        try FileManager.default.copyItem(at: sourceToCopy, to: destination)
+    }
+
+    nonisolated private static func copySourceURL(for source: URL) -> URL {
+        let resolvedSource = source.resolvingSymlinksInPath().standardizedFileURL
+        guard FileManager.default.fileExists(atPath: resolvedSource.path) else {
+            return source
+        }
+
+        return resolvedSource
     }
 
     nonisolated private static func destination(named name: String, pathExtension: String, in directory: URL) -> URL {
