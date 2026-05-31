@@ -82,6 +82,26 @@ class AppDelegate: NSObject, ApplicationDelegate, SuperLog {
     }
 
     #if os(macOS)
+        func applicationSupportsSecureRestorableState(_ app: NSApplication) -> Bool {
+            false
+        }
+
+        func application(_ app: NSApplication, shouldSaveApplicationState coder: NSCoder) -> Bool {
+            false
+        }
+
+        func application(_ app: NSApplication, shouldRestoreApplicationState coder: NSCoder) -> Bool {
+            false
+        }
+
+        func application(_ app: NSApplication, shouldSaveSecureApplicationState coder: NSCoder) -> Bool {
+            false
+        }
+
+        func application(_ app: NSApplication, shouldRestoreSecureApplicationState coder: NSCoder) -> Bool {
+            false
+        }
+
         func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
             guard !flag else { return true }
             guard let window = sender.windows.first else { return true }

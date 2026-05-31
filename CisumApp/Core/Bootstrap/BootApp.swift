@@ -27,12 +27,15 @@ struct BootApp: App, SuperLog {
     nonisolated static let emoji = "🍎"
 
     init() {
+        #if os(macOS)
+            UserDefaults.standard.set(true, forKey: "ApplePersistenceIgnoreState")
+        #endif
         StoreService.bootstrap()
     }
 
     var body: some Scene {
         #if os(macOS)
-            Window("Cisum", id: "Cisum") {
+            WindowGroup("Cisum", id: "Cisum") {
                 ContentView()
                     .inRootView(providers: ProviderManager.shared)
                     .frame(minWidth: Config.minWidth, minHeight: Config.minHeight)
@@ -40,6 +43,7 @@ struct BootApp: App, SuperLog {
             .windowToolbarStyle(.unifiedCompact(showsTitle: false))
             .defaultSize(width: Config.minWidth, height: Config.defaultHeight)
             .commands {
+                CommandGroup(replacing: .newItem) {}
                 SidebarCommands()
                 MagicApp.debugCommand()
             }
