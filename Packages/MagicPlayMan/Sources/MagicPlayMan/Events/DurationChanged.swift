@@ -39,7 +39,9 @@ extension NotificationCenter {
     ) -> AnyCancellable {
         publisher(for: .playManDurationChanged, object: object)
             .map { notification -> TimeInterval in
-                notification.userInfo?["duration"] as? TimeInterval ?? 0
+                MagicPlayManPlaybackTimePolicy.normalizedDuration(
+                    notification.userInfo?["duration"] as? TimeInterval ?? 0
+                )
             }
             .sink(receiveValue: handler)
     }
@@ -56,10 +58,11 @@ public extension View {
         self.onReceive(
             NotificationCenter.default.publisher(for: .playManDurationChanged),
             perform: { notification in
-                let duration = notification.userInfo?["duration"] as? TimeInterval ?? 0
+                let duration = MagicPlayManPlaybackTimePolicy.normalizedDuration(
+                    notification.userInfo?["duration"] as? TimeInterval ?? 0
+                )
                 handler(duration)
             }
         )
     }
 }
-

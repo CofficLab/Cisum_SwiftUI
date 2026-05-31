@@ -84,6 +84,11 @@ public class MagicPlayMan: ObservableObject, SuperLog {
 }
 
 enum MagicPlayManPlaybackTimePolicy {
+    static func normalizedDuration(_ duration: TimeInterval) -> TimeInterval {
+        guard duration.isFinite else { return 0 }
+        return max(duration, 0)
+    }
+
     static func normalizedCurrentTime(_ time: TimeInterval, duration: TimeInterval? = nil) -> TimeInterval {
         guard time.isFinite else { return 0 }
         let currentTime = max(time, 0)
@@ -138,6 +143,7 @@ extension MagicPlayMan {
     /// - Parameter value: 总时长（秒）
     @MainActor
     func setDuration(_ value: TimeInterval) {
+        let value = MagicPlayManPlaybackTimePolicy.normalizedDuration(value)
         let oldDuration = duration
         duration = value
 
