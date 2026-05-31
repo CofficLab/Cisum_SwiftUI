@@ -51,6 +51,25 @@ final class MagicKitTests: XCTestCase {
         try await file.ensureLocalAvailability(timeout: 0.1, pollInterval: 0.05)
     }
 
+    func testMagicLoggerClearLogsFromBackgroundClearsOnMainThread() async throws {
+        let logger = MagicLogger(app: "MagicKitTests")
+        logger.info("background clear setup")
+        try await Task.sleep(nanoseconds: 50_000_000)
+
+        await MainActor.run {
+            XCTAssertFalse(logger.logs.isEmpty)
+        }
+
+        await Task.detached {
+            logger.clearLogs()
+        }.value
+        try await Task.sleep(nanoseconds: 50_000_000)
+
+        await MainActor.run {
+            XCTAssertTrue(logger.logs.isEmpty)
+        }
+    }
+
     func testICloudPlaceholderIsNotTreatedAsDownloadedJustBecauseItExists() {
         XCTAssertTrue(URLDownloadAvailabilityPolicy.isDownloaded(
             fileExists: true,

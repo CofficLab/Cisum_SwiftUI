@@ -61,9 +61,13 @@ public class MagicLogger: ObservableObject, @unchecked Sendable {
     }
 
     public func clearLogs() {
-        lock.lock()
-        defer { lock.unlock() }
-        logs.removeAll()
+        if Thread.isMainThread {
+            logs.removeAll()
+        } else {
+            DispatchQueue.main.async {
+                self.logs.removeAll()
+            }
+        }
     }
 
     private static func fileName(from file: String) -> String {
