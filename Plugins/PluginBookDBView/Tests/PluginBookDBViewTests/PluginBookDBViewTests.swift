@@ -146,6 +146,45 @@ import UniformTypeIdentifiers
     #expect(!FileManager.default.fileExists(atPath: collection.appendingPathComponent("real.m4b").path))
 }
 
+@Test func bookImportSkipsFilesAlreadyCoveredBySelectedFolder() async throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let sourceBook = root.appendingPathComponent("Book", isDirectory: true)
+    let nestedChapter = sourceBook.appendingPathComponent("chapter.m4b")
+    let outsideChapter = root.appendingPathComponent("bonus.m4b")
+    let destinationRoot = root.appendingPathComponent("destination", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: sourceBook, withIntermediateDirectories: true)
+    try Data("chapter".utf8).write(to: nestedChapter)
+    try Data("bonus".utf8).write(to: outsideChapter)
+
+    #expect(BookDBView.uniqueImportSources([
+        nestedChapter,
+        sourceBook,
+        outsideChapter,
+    ]) == [
+        sourceBook,
+        outsideChapter,
+    ])
+
+    let copiedItems = try await BookDBView.copyImportedItems([
+        nestedChapter,
+        sourceBook,
+        outsideChapter,
+    ], to: destinationRoot)
+
+    #expect(copiedItems == [
+        destinationRoot.appendingPathComponent("Book", isDirectory: true),
+        destinationRoot.appendingPathComponent("bonus", isDirectory: true),
+    ])
+    #expect(FileManager.default.fileExists(atPath: destinationRoot.appendingPathComponent("Book/chapter.m4b").path))
+    #expect(FileManager.default.fileExists(atPath: destinationRoot.appendingPathComponent("bonus/bonus.m4b").path))
+    #expect(!FileManager.default.fileExists(atPath: destinationRoot.appendingPathComponent("chapter", isDirectory: true).path))
+}
+
 @Test func folderImportDeduplicatesSymlinkedBookFolders() async throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)

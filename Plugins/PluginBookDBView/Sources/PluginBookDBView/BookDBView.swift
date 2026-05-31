@@ -248,7 +248,19 @@ extension BookDBView {
             uniqueURLs.append(url)
         }
 
-        return uniqueURLs
+        return uniqueURLs.filter { source in
+            !isNestedInSelectedFolder(source, selectedSources: uniqueURLs)
+        }
+    }
+
+    private nonisolated static func isNestedInSelectedFolder(_ source: URL, selectedSources: [URL]) -> Bool {
+        selectedSources.contains { candidate in
+            guard candidate != source, isFolderLikeImportSource(candidate) else {
+                return false
+            }
+
+            return isDestinationNestedInSource(source: candidate, destination: source)
+        }
     }
 
     nonisolated static func representsSameImportSource(_ lhs: URL, _ rhs: URL) -> Bool {
