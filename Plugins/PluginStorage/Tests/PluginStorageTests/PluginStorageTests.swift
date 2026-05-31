@@ -84,6 +84,28 @@ import Foundation
     #expect(FileSizeReadPolicy.fileSize(from: [:]) == 0)
 }
 
+@Test func fileStatusReportsMissingLocalFiles() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let existingFile = root.appendingPathComponent("track.mp3")
+    let missingFile = root.appendingPathComponent("missing.mp3")
+    let danglingLink = root.appendingPathComponent("dangling.mp3")
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    try Data("audio".utf8).write(to: existingFile)
+    try FileManager.default.createSymbolicLink(
+        at: danglingLink,
+        withDestinationURL: root.appendingPathComponent("deleted-target.mp3")
+    )
+
+    #expect(FileStatusColumnView.resolveStatus(for: existingFile, verbose: false).status == "本地文件")
+    #expect(FileStatusColumnView.resolveStatus(for: missingFile, verbose: false).status == "不存在")
+    #expect(FileStatusColumnView.resolveStatus(for: danglingLink, verbose: false).status == "本地文件")
+}
+
 @Test func directStorageSwitchUsesAccurateCompletionMessage() {
     #expect(MigrationProgressView.completionMessage(shouldMigrate: true) == "迁移已完成")
     #expect(MigrationProgressView.completionMessage(shouldMigrate: false) == "已切换到新位置")

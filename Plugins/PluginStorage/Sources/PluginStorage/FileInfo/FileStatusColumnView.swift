@@ -3,6 +3,16 @@ import MagicKit
 import OSLog
 import SwiftUI
 
+enum FileStatusResolutionPolicy {
+    static func pathExistsIncludingSymlink(_ url: URL) -> Bool {
+        if FileManager.default.fileExists(atPath: url.path) {
+            return true
+        }
+
+        return (try? url.resourceValues(forKeys: [.isSymbolicLinkKey]).isSymbolicLink) == true
+    }
+}
+
 struct FileStatusColumnView: View, SuperLog {
     nonisolated static let emoji: String = "🥩"
 
@@ -40,9 +50,13 @@ struct FileStatusColumnView: View, SuperLog {
         updateState(fileStatus: result.status, statusColor: result.color, isChecking: false)
     }
 
-    nonisolated private static func resolveStatus(for url: URL, verbose: Bool) -> (status: String, color: Color) {
+    nonisolated static func resolveStatus(for url: URL, verbose: Bool) -> (status: String, color: Color) {
         if verbose {
             os_log("\(Self.t)🔍 Checking file status for \(url.path(percentEncoded: false))")
+        }
+
+        guard !url.isFileURL || FileStatusResolutionPolicy.pathExistsIncludingSymlink(url) else {
+            return ("不存在", Color.red)
         }
 
         if url.isFolder {
