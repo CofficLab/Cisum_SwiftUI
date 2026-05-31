@@ -59,6 +59,25 @@ import Foundation
     #expect(!FileInfoCellLoadPolicy.shouldApplyResult(currentURL: second, requestedURL: first))
 }
 
+@Test func fileInfoCellsApplySymlinkedCurrentURLResults() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realFile = root.appendingPathComponent("real.mp3")
+    let linkedFile = root.appendingPathComponent("linked.mp3")
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    try Data("audio".utf8).write(to: realFile)
+    try FileManager.default.createSymbolicLink(at: linkedFile, withDestinationURL: realFile)
+
+    #expect(FileInfoCellLoadPolicy.shouldApplyResult(
+        currentURL: realFile,
+        requestedURL: linkedFile
+    ))
+}
+
 @Test func directStorageSwitchUsesAccurateCompletionMessage() {
     #expect(MigrationProgressView.completionMessage(shouldMigrate: true) == "迁移已完成")
     #expect(MigrationProgressView.completionMessage(shouldMigrate: false) == "已切换到新位置")

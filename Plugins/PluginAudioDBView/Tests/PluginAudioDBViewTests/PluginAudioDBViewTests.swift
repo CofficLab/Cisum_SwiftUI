@@ -131,6 +131,25 @@ import UniformTypeIdentifiers
     #expect(!AudioItemFileSizeLoadPolicy.shouldApplySize(currentURL: second, requestedURL: first))
 }
 
+@Test func audioItemAppliesFileSizeForSymlinkedCurrentFile() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realFile = root.appendingPathComponent("real.mp3")
+    let linkedFile = root.appendingPathComponent("linked.mp3")
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    try Data("audio".utf8).write(to: realFile)
+    try FileManager.default.createSymbolicLink(at: linkedFile, withDestinationURL: realFile)
+
+    #expect(AudioItemFileSizeLoadPolicy.shouldApplySize(
+        currentURL: realFile,
+        requestedURL: linkedFile
+    ))
+}
+
 @Test func audioItemExportUsesHumanNumberingForDuplicateDownloads() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)

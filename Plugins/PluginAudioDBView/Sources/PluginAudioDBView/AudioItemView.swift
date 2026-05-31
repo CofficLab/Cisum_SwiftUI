@@ -8,7 +8,16 @@ import SwiftUI
 
 enum AudioItemFileSizeLoadPolicy {
     static func shouldApplySize(currentURL: URL, requestedURL: URL) -> Bool {
-        currentURL == requestedURL
+        representsSameFile(currentURL, requestedURL)
+    }
+
+    private static func representsSameFile(_ lhs: URL, _ rhs: URL) -> Bool {
+        guard lhs.isFileURL, rhs.isFileURL else {
+            return lhs.standardized.absoluteString == rhs.standardized.absoluteString
+        }
+
+        return lhs.resolvingSymlinksInPath().standardizedFileURL.path
+            == rhs.resolvingSymlinksInPath().standardizedFileURL.path
     }
 }
 
