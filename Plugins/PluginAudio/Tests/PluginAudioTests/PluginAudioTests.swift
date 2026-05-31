@@ -106,19 +106,19 @@ import SwiftData
 }
 
 @Test func missingStorageErrorKeepsStorageSetupGuidance() {
-    let presentation = AudioRootErrorPresentation.make(error: .initialization(reason: "Storage 未找到"))
+    let presentation = AudioRootErrorPresentation.make(error: .initialization(reason: AudioRootErrorPresentation.storageMissingReason))
 
-    #expect(presentation.title == "存储位置未设置")
-    #expect(presentation.message == "请先设置媒体仓库的存储位置")
+    #expect(presentation.title == "Storage Location Not Set")
+    #expect(presentation.message == "Set the media library storage location first.")
     #expect(presentation.detail == nil)
 }
 
 @Test func databaseInitializationErrorShowsActualFailure() {
     let presentation = AudioRootErrorPresentation.make(error: .initialization(reason: "database is locked"))
 
-    #expect(presentation.title == "音频库初始化失败")
-    #expect(presentation.message == "请尝试重启应用")
-    #expect(presentation.detail == "初始化失败: database is locked")
+    #expect(presentation.title == "Audio Library Initialization Failed")
+    #expect(presentation.message == "Try restarting the app.")
+    #expect(presentation.detail == "Initialization failed: database is locked")
 }
 
 @Test func audioDBNextOfReturnsFollowingOrderedTrack() async throws {

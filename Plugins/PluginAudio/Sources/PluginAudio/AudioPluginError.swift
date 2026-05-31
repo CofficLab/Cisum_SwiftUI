@@ -1,6 +1,10 @@
 import Foundation
 import SwiftUI
 
+private func audioErrorString(_ keyAndValue: String.LocalizationValue) -> String {
+    String(localized: keyAndValue, table: "Audio", bundle: .module)
+}
+
 /// 音频插件的所有错误类型
 /// 统一管理，提供一致的错误处理策略
 
@@ -18,55 +22,55 @@ public enum AudioPluginError: Error, LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .hostNotConfigured:
-            return "音频插件宿主配置未完成"
+            return audioErrorString("Audio plugin host configuration is incomplete")
         case .NoNextAsset:
-            return "没有下一个音频文件"
+            return audioErrorString("No next audio file")
         case .NoPrevAsset:
-            return "没有上一个音频文件"
+            return audioErrorString("No previous audio file")
         case .NoDisk:
-            return "无法访问磁盘"
+            return audioErrorString("Unable to access disk")
         case let .initialization(reason):
-            return "初始化失败: \(reason)"
+            return audioErrorString("Initialization failed: \(reason)")
         case let .diskAccess(url, underlying):
-            return "磁盘访问失败 [\(url.lastPathComponent)]: \(underlying)"
+            return audioErrorString("Disk access failed [\(url.lastPathComponent)]: \(underlying)")
         case let .configurationError(setting, reason):
-            return "配置错误 [\(setting)]: \(reason)"
+            return audioErrorString("Configuration error [\(setting)]: \(reason)")
         }
     }
 
     public var failureReason: String? {
         switch self {
         case .hostNotConfigured:
-            return "应用尚未注入数据库和存储路径配置"
+            return audioErrorString("The app has not injected database and storage path configuration.")
         case .NoNextAsset:
-            return "当前音频是播放列表中的最后一个"
+            return audioErrorString("The current audio is the last item in the playlist.")
         case .NoPrevAsset:
-            return "当前音频是播放列表中的第一个"
+            return audioErrorString("The current audio is the first item in the playlist.")
         case .NoDisk:
-            return "指定的磁盘路径不存在或无法访问"
+            return audioErrorString("The specified disk path does not exist or cannot be accessed.")
         case .initialization:
-            return "应用初始化过程中发生错误"
+            return audioErrorString("An error occurred while initializing the app.")
         case .diskAccess:
-            return "无法访问指定的磁盘位置"
+            return audioErrorString("The specified disk location cannot be accessed.")
         case .configurationError:
-            return "应用配置存在问题"
+            return audioErrorString("There is a problem with the app configuration.")
         }
     }
 
     public var recoverySuggestion: String? {
         switch self {
         case .hostNotConfigured:
-            return "请检查应用启动流程"
+            return audioErrorString("Check the app startup flow.")
         case .NoNextAsset, .NoPrevAsset:
-            return "请检查播放列表或切换到其他播放模式"
+            return audioErrorString("Check the playlist or switch to another playback mode.")
         case .NoDisk:
-            return "请检查磁盘路径和访问权限"
+            return audioErrorString("Check the disk path and access permissions.")
         case .initialization:
-            return "请尝试重启应用"
+            return audioErrorString("Try restarting the app.")
         case .diskAccess:
-            return "请检查磁盘空间和访问权限"
+            return audioErrorString("Check disk space and access permissions.")
         case .configurationError:
-            return "请检查应用设置或重新安装"
+            return audioErrorString("Check app settings or reinstall the app.")
         }
     }
 }
@@ -88,43 +92,43 @@ public enum AudioRecordDBError: Error, LocalizedError {
     public var errorDescription: String? {
         switch self {
         case let .ToggleLikeError(error):
-            return "切换喜欢状态失败: \(error.localizedDescription)"
+            return audioErrorString("Failed to toggle like status: \(error.localizedDescription)")
         case let .AudioNotFound(url):
-            return "音频未找到: \(url.lastPathComponent)"
+            return audioErrorString("Audio not found: \(url.lastPathComponent)")
         case let .databaseOperation(operation, underlying):
-            return "数据库操作失败 [\(operation)]: \(underlying)"
+            return audioErrorString("Database operation failed [\(operation)]: \(underlying)")
         case let .saveFailed(error):
-            return "数据保存失败: \(error.localizedDescription)"
+            return audioErrorString("Failed to save data: \(error.localizedDescription)")
         case let .deleteFailed(error):
-            return "数据删除失败: \(error.localizedDescription)"
+            return audioErrorString("Failed to delete data: \(error.localizedDescription)")
         }
     }
 
     public var failureReason: String? {
         switch self {
         case .ToggleLikeError:
-            return "数据库更新操作执行失败"
+            return audioErrorString("The database update operation failed.")
         case .AudioNotFound:
-            return "请求的音频文件不存在"
+            return audioErrorString("The requested audio file does not exist.")
         case .databaseOperation:
-            return "数据库操作执行失败"
+            return audioErrorString("The database operation failed.")
         case .saveFailed:
-            return "数据持久化操作失败"
+            return audioErrorString("The data persistence operation failed.")
         case .deleteFailed:
-            return "数据删除操作失败"
+            return audioErrorString("The data deletion operation failed.")
         }
     }
 
     public var recoverySuggestion: String? {
         switch self {
         case .ToggleLikeError:
-            return "请稍后重试"
+            return audioErrorString("Try again later.")
         case .AudioNotFound:
-            return "请检查文件是否存在或重新同步"
+            return audioErrorString("Check whether the file exists or sync again.")
         case .databaseOperation:
-            return "请尝试重启应用或重置数据库"
+            return audioErrorString("Try restarting the app or resetting the database.")
         case .saveFailed, .deleteFailed:
-            return "请检查磁盘空间和权限"
+            return audioErrorString("Check disk space and permissions.")
         }
     }
 }
@@ -140,39 +144,39 @@ public enum AudioModelError: Error, LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .deleteFailed:
-            return "删除操作失败"
+            return audioErrorString("Delete operation failed")
         case .dbNotFound:
-            return "数据库未找到"
+            return audioErrorString("Database not found")
         case let .invalidData(reason):
-            return "数据无效: \(reason)"
+            return audioErrorString("Invalid data: \(reason)")
         case let .fileCorrupted(url):
-            return "文件损坏: \(url.lastPathComponent)"
+            return audioErrorString("File is corrupted: \(url.lastPathComponent)")
         }
     }
 
     public var failureReason: String? {
         switch self {
         case .deleteFailed:
-            return "文件系统权限不足或文件被占用"
+            return audioErrorString("File system permissions are insufficient or the file is in use.")
         case .dbNotFound:
-            return "数据库连接丢失或数据库文件损坏"
+            return audioErrorString("The database connection was lost or the database file is corrupted.")
         case .invalidData:
-            return "数据格式不符合预期"
+            return audioErrorString("The data format is not as expected.")
         case .fileCorrupted:
-            return "音频文件可能已损坏或不完整"
+            return audioErrorString("The audio file may be corrupted or incomplete.")
         }
     }
 
     public var recoverySuggestion: String? {
         switch self {
         case .deleteFailed:
-            return "请检查文件权限或关闭相关应用"
+            return audioErrorString("Check file permissions or close related apps.")
         case .dbNotFound:
-            return "请尝试重启应用或重新同步"
+            return audioErrorString("Try restarting the app or syncing again.")
         case .invalidData:
-            return "请检查数据源或重新下载"
+            return audioErrorString("Check the data source or download again.")
         case .fileCorrupted:
-            return "请重新下载或选择其他音频文件"
+            return audioErrorString("Download again or choose another audio file.")
         }
     }
 }
@@ -189,45 +193,45 @@ public enum AudioRepoError: Error, LocalizedError {
     public var errorDescription: String? {
         switch self {
         case let .fileSystemError(operation, path):
-            return "文件系统错误 [\(operation)]: \(path)"
+            return audioErrorString("File system error [\(operation)]: \(path)")
         case let .networkError(url, underlying):
-            return "网络错误 [\(url.absoluteString)]: \(underlying)"
+            return audioErrorString("Network error [\(url.absoluteString)]: \(underlying)")
         case let .invalidState(expected, actual):
-            return "状态无效，期望: \(expected)，实际: \(actual)"
+            return audioErrorString("Invalid state, expected: \(expected), actual: \(actual)")
         case let .syncFailed(error):
-            return "同步失败: \(error.localizedDescription)"
+            return audioErrorString("Sync failed: \(error.localizedDescription)")
         case let .monitorFailed(error):
-            return "文件监控失败: \(error.localizedDescription)"
+            return audioErrorString("File monitoring failed: \(error.localizedDescription)")
         }
     }
 
     public var failureReason: String? {
         switch self {
         case .fileSystemError:
-            return "文件系统操作失败"
+            return audioErrorString("The file system operation failed.")
         case .networkError:
-            return "网络连接或数据传输失败"
+            return audioErrorString("The network connection or data transfer failed.")
         case .invalidState:
-            return "应用状态与预期不符"
+            return audioErrorString("The app state does not match the expected state.")
         case .syncFailed:
-            return "数据同步过程中发生错误"
+            return audioErrorString("An error occurred during data sync.")
         case .monitorFailed:
-            return "文件系统监控服务失败"
+            return audioErrorString("The file system monitoring service failed.")
         }
     }
 
     public var recoverySuggestion: String? {
         switch self {
         case .fileSystemError:
-            return "请检查文件权限和磁盘状态"
+            return audioErrorString("Check file permissions and disk status.")
         case .networkError:
-            return "请检查网络连接"
+            return audioErrorString("Check the network connection.")
         case .invalidState:
-            return "请尝试重新操作"
+            return audioErrorString("Try the operation again.")
         case .syncFailed:
-            return "请检查网络连接或稍后重试"
+            return audioErrorString("Check the network connection or try again later.")
         case .monitorFailed:
-            return "请重启应用或检查系统权限"
+            return audioErrorString("Restart the app or check system permissions.")
         }
     }
 }

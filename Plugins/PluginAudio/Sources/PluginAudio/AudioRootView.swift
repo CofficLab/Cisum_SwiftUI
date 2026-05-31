@@ -14,27 +14,29 @@ struct AudioRootErrorPresentation: Equatable {
     static func make(error: AudioPluginError?) -> AudioRootErrorPresentation {
         guard let error else {
             return AudioRootErrorPresentation(
-                title: "音频库初始化失败",
-                message: "请尝试重新打开应用或检查媒体仓库设置",
+                title: String(localized: "Audio Library Initialization Failed", table: "Audio", bundle: .module),
+                message: String(localized: "Try reopening the app or checking media library settings.", table: "Audio", bundle: .module),
                 detail: nil
             )
         }
 
         switch error {
-        case .initialization(let reason) where reason == "Storage 未找到":
+        case .initialization(let reason) where reason == AudioRootErrorPresentation.storageMissingReason:
             return AudioRootErrorPresentation(
-                title: "存储位置未设置",
-                message: "请先设置媒体仓库的存储位置",
+                title: String(localized: "Storage Location Not Set", table: "Audio", bundle: .module),
+                message: String(localized: "Set the media library storage location first.", table: "Audio", bundle: .module),
                 detail: nil
             )
         default:
             return AudioRootErrorPresentation(
-                title: "音频库初始化失败",
-                message: error.recoverySuggestion ?? "请尝试重新打开应用或检查媒体仓库设置",
+                title: String(localized: "Audio Library Initialization Failed", table: "Audio", bundle: .module),
+                message: error.recoverySuggestion ?? String(localized: "Try reopening the app or checking media library settings.", table: "Audio", bundle: .module),
                 detail: error.localizedDescription
             )
         }
     }
+
+    static let storageMissingReason = "Storage not found"
 }
 
 public struct AudioRootView<Content>: View, SuperLog where Content: View {
@@ -160,7 +162,7 @@ extension AudioRootView {
             if Self.verbose {
                 os_log("\(Self.t)放弃初始化，因为: Storage 未找到")
             }
-            return (nil, AudioPluginError.initialization(reason: "Storage 未找到"))
+            return (nil, AudioPluginError.initialization(reason: AudioRootErrorPresentation.storageMissingReason))
         }
 
         do {
