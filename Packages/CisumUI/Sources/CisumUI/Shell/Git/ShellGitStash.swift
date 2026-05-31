@@ -11,7 +11,7 @@ extension ShellGit {
     /// - Returns: 执行结果
     public static func stash(_ message: String? = nil, at path: String? = nil) throws -> String {
         let command = if let message {
-            "git stash push -m \"\(message)\""
+            "git stash push -m \(shellQuoted(message))"
         } else {
             "git stash"
         }
