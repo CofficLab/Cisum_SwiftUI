@@ -177,6 +177,11 @@ import SwiftUI
     ))
 }
 
+@Test func storageResetOnlyAppliesInActiveBookScene() {
+    #expect(BookControlPlaybackRequestPolicy.shouldResetForStorageLocationChange(isSceneActive: true))
+    #expect(!BookControlPlaybackRequestPolicy.shouldResetForStorageLocationChange(isSceneActive: false))
+}
+
 @Test func bookRootUsesStandaloneBookAtDiskRoot() {
     let disk = URL(fileURLWithPath: "/tmp/cisum-books", isDirectory: true)
     let book = disk.appendingPathComponent("Standalone.m4b")

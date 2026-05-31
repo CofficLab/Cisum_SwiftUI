@@ -32,6 +32,10 @@ enum AudioControlPlaybackRequestPolicy {
         currentAssetAffectedByDeletion(currentAsset: currentAsset, deletedURLs: deletedURLs)
     }
 
+    static func shouldResetForStorageLocationChange(isSceneActive: Bool) -> Bool {
+        isSceneActive
+    }
+
     private static func resolvedStandardizedPath(for url: URL) -> String {
         url.resolvingSymlinksInPath().standardizedFileURL.path
     }
@@ -243,6 +247,10 @@ private extension AudioControlRootView {
     }
 
     func handleStorageLocationDidReset() {
+        guard AudioControlPlaybackRequestPolicy.shouldResetForStorageLocationChange(isSceneActive: shouldActivateControl) else {
+            return
+        }
+
         Task { @MainActor in
             await man.reset(reason: "AudioControlRootView.storageLocationDidReset")
         }

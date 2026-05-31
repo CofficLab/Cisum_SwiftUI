@@ -102,6 +102,10 @@ enum BookControlPlaybackRequestPolicy {
         }
     }
 
+    static func shouldResetForStorageLocationChange(isSceneActive: Bool) -> Bool {
+        isSceneActive
+    }
+
     private static func resolvedStandardizedPath(for url: URL) -> String {
         url.resolvingSymlinksInPath().standardizedFileURL.path
     }
@@ -350,6 +354,10 @@ private extension BookControlRootView {
     }
 
     func handleStorageLocationDidReset() {
+        guard BookControlPlaybackRequestPolicy.shouldResetForStorageLocationChange(isSceneActive: shouldActivateControl) else {
+            return
+        }
+
         Task {
             await man.reset(reason: "BookControlRootView.storageLocationDidReset")
         }
