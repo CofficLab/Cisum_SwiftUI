@@ -445,6 +445,25 @@ import UniformTypeIdentifiers
     ))
 }
 
+@Test func bookGridLoadsPlayableChildrenAsynchronously() async throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let book = root.appendingPathComponent("Book", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: book, withIntermediateDirectories: true)
+    let first = book.appendingPathComponent("01.m4b")
+    let second = book.appendingPathComponent("02.m4b")
+    try Data("audio".utf8).write(to: second)
+    try Data("audio".utf8).write(to: first)
+
+    let playable = await BookGridPlayableChildrenLoader.load(for: book)
+
+    #expect(playable.map(\.standardizedFileURL.path) == [first, second].map(\.standardizedFileURL.path))
+}
+
 @Test func bookPlaybackOrderingSeparatesDistinctDanglingSymlinkedChapters() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)

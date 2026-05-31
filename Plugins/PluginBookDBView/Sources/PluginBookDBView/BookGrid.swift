@@ -64,6 +64,14 @@ enum BookGridSelectionPolicy {
     }
 }
 
+enum BookGridPlayableChildrenLoader {
+    static func load(for bookURL: URL) async -> [URL] {
+        await Task.detached(priority: .userInitiated) {
+            BookPlaybackOrdering.playableChildren(for: bookURL)
+        }.value
+    }
+}
+
 enum BookDBViewBookStateLookup {
     static func findBookState(for bookURL: URL, in context: ModelContext) throws -> BookState? {
         let descriptor = BookState.descriptorOf(bookURL)
@@ -277,10 +285,6 @@ extension BookGrid {
         selectedBookURL = nil
     }
 
-    private func playableChildren(for book: BookDTO) -> [URL] {
-        BookPlaybackOrdering.playableChildren(for: book.url)
-    }
-
     private func isPlayableSavedURL(_ savedURL: URL, in book: BookDTO, playableChildren: [URL]) -> Bool {
         if BookPlaybackOrdering.representsSameFile(book.url, savedURL) {
             return FileManager.default.fileExists(atPath: savedURL.path)
@@ -315,7 +319,7 @@ extension BookGrid {
             os_log("\(self.t)▶️ 准备播放书籍: \(book.bookTitle)")
         }
 
-        let playableChildren = playableChildren(for: book)
+        let playableChildren = await BookGridPlayableChildrenLoader.load(for: book.url)
         let reason = self.className
 
         // 首先尝试从 BookState 恢复该书的进度
