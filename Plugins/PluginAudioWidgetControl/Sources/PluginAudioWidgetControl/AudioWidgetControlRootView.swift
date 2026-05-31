@@ -95,6 +95,7 @@ public struct AudioWidgetControlRootView: View {
         EmptyView()
             .onAppear {
                 setupWidgetCommandListener()
+                handleWidgetCommands()
             }
             .onReceive(NotificationCenter.default.publisher(for: .audioWidgetCommandReceived)) { _ in
                 handleWidgetCommands()
