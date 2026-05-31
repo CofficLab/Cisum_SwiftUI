@@ -78,6 +78,12 @@ import Foundation
     ))
 }
 
+@Test func fileSizeReadPolicyReadsFoundationNumberAttributes() {
+    #expect(FileSizeReadPolicy.fileSize(from: [.size: NSNumber(value: 1234)]) == 1234)
+    #expect(FileSizeReadPolicy.fileSize(from: [.size: Int64(5678)]) == 5678)
+    #expect(FileSizeReadPolicy.fileSize(from: [:]) == 0)
+}
+
 @Test func directStorageSwitchUsesAccurateCompletionMessage() {
     #expect(MigrationProgressView.completionMessage(shouldMigrate: true) == "迁移已完成")
     #expect(MigrationProgressView.completionMessage(shouldMigrate: false) == "已切换到新位置")

@@ -18,6 +18,20 @@ enum FileInfoCellLoadPolicy {
     }
 }
 
+enum FileSizeReadPolicy {
+    static func fileSize(from attributes: [FileAttributeKey: Any]) -> Int64 {
+        if let number = attributes[.size] as? NSNumber {
+            return number.int64Value
+        }
+
+        if let size = attributes[.size] as? Int64 {
+            return size
+        }
+
+        return 0
+    }
+}
+
 struct FileSizeView: View, SuperLog {
     nonisolated static let emoji = "🫘"
     
@@ -66,7 +80,8 @@ struct FileSizeView: View, SuperLog {
                     }
                     return totalSize
                 } else {
-                    return (try? FileManager.default.attributesOfItem(atPath: requestedURL.path)[.size] as? Int64) ?? 0
+                    let attributes = (try? FileManager.default.attributesOfItem(atPath: requestedURL.path)) ?? [:]
+                    return FileSizeReadPolicy.fileSize(from: attributes)
                 }
             }()
 
