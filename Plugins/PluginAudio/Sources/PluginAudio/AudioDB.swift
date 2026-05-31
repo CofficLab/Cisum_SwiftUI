@@ -13,6 +13,14 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     static let emoji = "📦"
     static let verbose = false
 
+    static func normalizedPagination(offset: Int, limit: Int) -> (offset: Int, limit: Int) {
+        (max(0, offset), max(0, limit))
+    }
+
+    static func normalizedRandomAudioCount(_ count: Int) -> Int {
+        max(0, count)
+    }
+
     /// SwiftData 模型容器
     let modelContainer: ModelContainer
     /// 模型执行器，用于执行模型操作
@@ -179,14 +187,15 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     ///   - reason: 获取原因，用于日志记录
     /// - Returns: 音频 URL 数组
     func paginateAudioURLs(offset: Int, limit: Int, reason: String) -> [URL] {
+        let pagination = Self.normalizedPagination(offset: offset, limit: limit)
         if Self.verbose {
-            os_log("\(self.t)🚛 PaginateAudioURLs offset: \(offset), limit: \(limit) 🐛 \(reason)")
+            os_log("\(self.t)🚛 PaginateAudioURLs offset: \(pagination.offset), limit: \(pagination.limit) 🐛 \(reason)")
         }
 
         do {
             var descriptor = FetchDescriptor<AudioModel>()
-            descriptor.fetchOffset = offset
-            descriptor.fetchLimit = limit
+            descriptor.fetchOffset = pagination.offset
+            descriptor.fetchLimit = pagination.limit
             descriptor.sortBy.append(.init(\.order, order: .forward))
 
             let audios: [AudioModel] = try context.fetch(descriptor)
@@ -207,7 +216,7 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
 
         do {
             let audios: [AudioModel] = try self.all()
-            return Array(audios.shuffled().prefix(count))
+            return Array(audios.shuffled().prefix(Self.normalizedRandomAudioCount(count)))
         } catch let error {
             os_log(.error, "\(error.localizedDescription)")
             return []

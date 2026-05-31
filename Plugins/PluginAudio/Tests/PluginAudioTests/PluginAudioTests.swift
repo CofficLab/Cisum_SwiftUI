@@ -732,6 +732,22 @@ func audioRepoSingleDeleteRejectsFilesOutsideLibrary() async throws {
     #expect(AudioDB.needsStableOrderRepair([0, 0]))
 }
 
+@Test func audioDBClampsInvalidPaginationBounds() {
+    let negativeBounds = AudioDB.normalizedPagination(offset: -10, limit: -5)
+    #expect(negativeBounds.offset == 0)
+    #expect(negativeBounds.limit == 0)
+
+    let validBounds = AudioDB.normalizedPagination(offset: 20, limit: 50)
+    #expect(validBounds.offset == 20)
+    #expect(validBounds.limit == 50)
+}
+
+@Test func audioDBClampsInvalidRandomAudioCount() {
+    #expect(AudioDB.normalizedRandomAudioCount(-1) == 0)
+    #expect(AudioDB.normalizedRandomAudioCount(0) == 0)
+    #expect(AudioDB.normalizedRandomAudioCount(100) == 100)
+}
+
 @Test func audioDBNextBatchDownloadPlanStopsAtEndOfQueue() {
     let nextByTrack = [
         "first": "second",
