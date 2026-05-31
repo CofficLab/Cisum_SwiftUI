@@ -10,6 +10,7 @@ struct GuideDoneView: View, SuperLog {
     var isActive: Bool = false
 
     @State private var hasScheduledNotification = false
+    @State private var notificationTask: Task<Void, Never>?
 
     var body: some View {
         LogoView(rotationSpeed: 0.1)
@@ -17,6 +18,7 @@ struct GuideDoneView: View, SuperLog {
             .cisumVStackCenter()
             .onChange(of: isActive, handleActiveChange)
             .onAppear(perform: handleOnAppear)
+            .onDisappear(perform: cancelScheduledNotification)
     }
 }
 
@@ -30,6 +32,8 @@ extension GuideDoneView {
     func handleActiveChange(_ oldValue: Bool, _ newValue: Bool) {
         if newValue {
             scheduleNotification()
+        } else {
+            cancelScheduledNotification()
         }
     }
 
@@ -47,9 +51,17 @@ extension GuideDoneView {
 
         hasScheduledNotification = true
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+        notificationTask = Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 1_000_000_000)
+            guard !Task.isCancelled, isActive else { return }
             NotificationCenter.postGuideDone()
         }
+    }
+
+    private func cancelScheduledNotification() {
+        notificationTask?.cancel()
+        notificationTask = nil
+        hasScheduledNotification = false
     }
 }
 
