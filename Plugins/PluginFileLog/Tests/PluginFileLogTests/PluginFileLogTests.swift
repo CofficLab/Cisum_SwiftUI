@@ -49,6 +49,28 @@ private final class LockedCounter: @unchecked Sendable {
     #expect(next.lastPathComponent == "Cisum Log.log")
 }
 
+@Test func logRotationSkipsDanglingSymlinkNames() throws {
+    let directory = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let danglingLog = directory.appendingPathComponent("2026-05-31_15-00-00.log")
+    defer {
+        try? FileManager.default.removeItem(at: directory)
+    }
+
+    try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(
+        at: danglingLog,
+        withDestinationURL: directory.appendingPathComponent("missing.log")
+    )
+
+    let next = FileLogRotation.uniqueLogFileURL(
+        baseName: "2026-05-31_15-00-00",
+        in: directory
+    )
+
+    #expect(next.lastPathComponent == "2026-05-31_15-00-00 2.log")
+}
+
 #if os(macOS)
 @Test func terminationObserverIsIdempotentAndRemovable() {
     let notificationCenter = NotificationCenter()

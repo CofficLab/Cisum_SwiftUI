@@ -299,7 +299,7 @@ enum FileLogRotation {
     static func uniqueLogFileURL(
         baseName: String,
         in directory: URL,
-        fileExists: (URL) -> Bool = { FileManager.default.fileExists(atPath: $0.path) }
+        fileExists: (URL) -> Bool = { FileLogRotation.pathExistsIncludingSymlink($0) }
     ) -> URL {
         let normalizedBaseName = baseName.isEmpty ? "Cisum Log" : baseName
         var candidate = directory
@@ -315,6 +315,11 @@ enum FileLogRotation {
         }
 
         return candidate
+    }
+
+    private static func pathExistsIncludingSymlink(_ url: URL) -> Bool {
+        FileManager.default.fileExists(atPath: url.path)
+            || (try? FileManager.default.destinationOfSymbolicLink(atPath: url.path)) != nil
     }
 }
 
