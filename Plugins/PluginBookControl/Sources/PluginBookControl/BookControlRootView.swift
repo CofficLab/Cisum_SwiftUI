@@ -263,6 +263,31 @@ enum BookControlChapterLoader {
     }
 }
 
+@MainActor
+enum BookControlChapterCache {
+    private static var chaptersByRoot: [String: [URL]] = [:]
+
+    static func cachedChapters(in root: URL) -> [URL]? {
+        chaptersByRoot[cacheKey(for: root)]
+    }
+
+    static func store(_ chapters: [URL], in root: URL) {
+        chaptersByRoot[cacheKey(for: root)] = chapters
+    }
+
+    static func removeAll() {
+        chaptersByRoot.removeAll()
+    }
+
+    private static func cacheKey(for root: URL) -> String {
+        if FileManager.default.fileExists(atPath: root.path) {
+            return root.resolvingSymlinksInPath().standardizedFileURL.path
+        }
+
+        return root.standardizedFileURL.path
+    }
+}
+
 public struct BookControlRootView<Content>: View, SuperLog where Content: View {
     public nonisolated static var emoji: String { BookControlPluginInfo.emoji }
     private let verbose = false
@@ -306,7 +331,7 @@ public struct BookControlRootView<Content>: View, SuperLog where Content: View {
 
 // MARK: - Action
 
-private extension BookControlRootView {
+extension BookControlRootView {
     /// 处理视图出现事件
     ///
     /// 当视图首次出现时触发，执行初始化操作。
@@ -358,6 +383,7 @@ private extension BookControlRootView {
 
     private func deactivateControl() {
         controlGeneration = BookControlPlaybackRequestPolicy.generationAfterDeactivation(controlGeneration)
+        BookControlChapterCache.removeAll()
 
         guard let playbackSubscriptionID else { return }
 
@@ -408,6 +434,8 @@ private extension BookControlRootView {
             return
         }
 
+        BookControlChapterCache.removeAll()
+
         let generation = controlGeneration
         Task {
             guard BookControlPlaybackRequestPolicy.shouldApplyDeletionReset(
@@ -426,6 +454,8 @@ private extension BookControlRootView {
         guard BookControlPlaybackRequestPolicy.shouldResetForStorageLocationChange(isSceneActive: shouldActivateControl) else {
             return
         }
+
+        BookControlChapterCache.removeAll()
 
         let generation = controlGeneration
         Task {
@@ -459,15 +489,12 @@ private extension BookControlRootView {
         let playMode = man.playMode
         let generation = controlGeneration
         Task {
-            let prev = await Task.detached(priority: .userInitiated) {
-                let chapters = BookControlChapterLoader.playableChapters(in: root)
-                return BookControlChapterLoader.adjacentAsset(
-                    in: chapters,
-                    current: asset,
-                    offset: -1,
-                    playMode: playMode
-                )
-            }.value
+            let prev = await Self.adjacentAssetLoadingChapters(
+                in: root,
+                current: asset,
+                offset: -1,
+                playMode: playMode
+            )
 
             if let prev {
                 guard BookControlPlaybackRequestPolicy.shouldApplyNavigationResult(
@@ -489,6 +516,34 @@ private extension BookControlRootView {
         }
     }
 
+    static func adjacentAssetLoadingChapters(
+        in root: URL,
+        current asset: URL,
+        offset: Int,
+        playMode: MagicPlayMode
+    ) async -> URL? {
+        if let chapters = BookControlChapterCache.cachedChapters(in: root) {
+            return BookControlChapterLoader.adjacentAsset(
+                in: chapters,
+                current: asset,
+                offset: offset,
+                playMode: playMode
+            )
+        }
+
+        let chapters = await Task.detached(priority: .userInitiated) {
+            BookControlChapterLoader.playableChapters(in: root)
+        }.value
+        BookControlChapterCache.store(chapters, in: root)
+
+        return BookControlChapterLoader.adjacentAsset(
+            in: chapters,
+            current: asset,
+            offset: offset,
+            playMode: playMode
+        )
+    }
+
     /// 处理下一章请求
     /// - Parameter asset: 当前播放的书籍章节资源
     func handleNextRequested(_ asset: URL) {
@@ -507,15 +562,12 @@ private extension BookControlRootView {
         let playMode = man.playMode
         let generation = controlGeneration
         Task {
-            let next = await Task.detached(priority: .userInitiated) {
-                let chapters = BookControlChapterLoader.playableChapters(in: root)
-                return BookControlChapterLoader.adjacentAsset(
-                    in: chapters,
-                    current: asset,
-                    offset: 1,
-                    playMode: playMode
-                )
-            }.value
+            let next = await Self.adjacentAssetLoadingChapters(
+                in: root,
+                current: asset,
+                offset: 1,
+                playMode: playMode
+            )
 
             if let next {
                 guard BookControlPlaybackRequestPolicy.shouldApplyNavigationResult(
@@ -551,6 +603,21 @@ extension BookControlRootView {
     ) -> URL? {
         BookControlChapterLoader.adjacentAsset(
             in: chapters,
+            current: asset,
+            offset: offset,
+            playMode: playMode
+        )
+    }
+
+    @MainActor
+    static func adjacentAssetLoadingChaptersForTesting(
+        in root: URL,
+        current asset: URL,
+        offset: Int,
+        playMode: MagicPlayMode
+    ) async -> URL? {
+        await adjacentAssetLoadingChapters(
+            in: root,
             current: asset,
             offset: offset,
             playMode: playMode

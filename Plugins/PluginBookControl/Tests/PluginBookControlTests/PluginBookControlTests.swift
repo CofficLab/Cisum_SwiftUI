@@ -432,6 +432,58 @@ import SwiftUI
     ])
 }
 
+@MainActor
+@Test func chapterCacheReusesLoadedChaptersForNavigation() async throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    defer {
+        BookControlChapterCache.removeAll()
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    let first = root.appendingPathComponent("001.m4b")
+    let second = root.appendingPathComponent("002.m4b")
+    let third = root.appendingPathComponent("003.m4b")
+    try Data("audio".utf8).write(to: first)
+    try Data("audio".utf8).write(to: second)
+
+    BookControlChapterCache.removeAll()
+    BookControlChapterCache.store([first, second], in: root)
+    try Data("audio".utf8).write(to: third)
+
+    let next = await BookControlRootView<EmptyView>.adjacentAssetLoadingChaptersForTesting(
+        in: root,
+        current: second,
+        offset: 1,
+        playMode: .sequence
+    )
+
+    #expect(next == nil)
+}
+
+@MainActor
+@Test func chapterCacheMatchesSymlinkedBookRoots() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realBook = root.appendingPathComponent("RealBook", isDirectory: true)
+    let linkedBook = root.appendingPathComponent("LinkedBook", isDirectory: true)
+    defer {
+        BookControlChapterCache.removeAll()
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: realBook, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedBook, withDestinationURL: realBook)
+    let chapter = realBook.appendingPathComponent("001.m4b")
+    try Data("audio".utf8).write(to: chapter)
+
+    BookControlChapterCache.removeAll()
+    BookControlChapterCache.store([chapter], in: realBook)
+
+    #expect(BookControlChapterCache.cachedChapters(in: linkedBook) == [chapter])
+}
+
 @Test func chapterLoaderRejectsSiblingPrefixPaths() {
     let root = URL(fileURLWithPath: "/tmp/cisum-books/Book", isDirectory: true)
     let sibling = URL(fileURLWithPath: "/tmp/cisum-books/Book Backup/01.m4b")
