@@ -56,6 +56,10 @@ struct MigrationProgressView: View {
         requestedMigration && sourceURL != nil && targetURL != nil
     }
 
+    nonisolated static func canMigrateExistingData(sourceLocation: PluginStorageLocation?, sourceURL: URL?) -> Bool {
+        sourceLocation != nil && sourceURL != nil
+    }
+
     nonisolated static func shouldDisableInteractiveDismiss(
         showConfirmation: Bool,
         migrationCompleted: Bool,
@@ -362,17 +366,19 @@ struct MigrationProgressView: View {
             .buttonStyle(.borderedProminent)
             .help(String(localized: "直接使用新位置，原有数据保持不变", table: "Storage", bundle: .module))
 
-            Button {
-                showConfirmation = false
-                
-                Task {
-                    await startMigration(shouldMigrate: true)
+            if Self.canMigrateExistingData(sourceLocation: sourceLocation, sourceURL: sourceURL) {
+                Button {
+                    showConfirmation = false
+
+                    Task {
+                        await startMigration(shouldMigrate: true)
+                    }
+                } label: {
+                    Text("迁移数据", tableName: "Storage", bundle: .module)
                 }
-            } label: {
-                Text("迁移数据", tableName: "Storage", bundle: .module)
+                .buttonStyle(.bordered)
+                .help(String(localized: "将现有数据迁移到新位置", table: "Storage", bundle: .module))
             }
-            .buttonStyle(.bordered)
-            .help(String(localized: "将现有数据迁移到新位置", table: "Storage", bundle: .module))
         }
         .padding()
         .frame(maxWidth: 500)

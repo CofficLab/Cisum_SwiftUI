@@ -175,6 +175,23 @@ import Foundation
     ))
 }
 
+@Test func migrationActionRequiresExistingSourceStorage() {
+    let source = URL(fileURLWithPath: "/tmp/cisum-storage-source", isDirectory: true)
+
+    #expect(MigrationProgressView.canMigrateExistingData(
+        sourceLocation: .local,
+        sourceURL: source
+    ))
+    #expect(!MigrationProgressView.canMigrateExistingData(
+        sourceLocation: nil,
+        sourceURL: source
+    ))
+    #expect(!MigrationProgressView.canMigrateExistingData(
+        sourceLocation: .local,
+        sourceURL: nil
+    ))
+}
+
 @Test func migrationUsesDisplayedSourceAndTargetRoots() throws {
     let displayedSource = URL(fileURLWithPath: "/tmp/cisum-storage-displayed-source", isDirectory: true)
     let displayedTarget = URL(fileURLWithPath: "/tmp/cisum-storage-displayed-target", isDirectory: true)
