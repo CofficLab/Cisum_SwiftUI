@@ -110,7 +110,7 @@ import SwiftUI
             var result: Result<String, Error>?
             let semaphore = DispatchSemaphore(value: 0)
 
-            Task {
+            Task.detached {
                 defer {
                     semaphore.signal()
                 }
@@ -176,20 +176,23 @@ import SwiftUI
             process.standardError = pipe
 
             let outputHandle = pipe.fileHandleForReading
-            var outputData = Data()
+            final class OutputCollector: @unchecked Sendable {
+                var data = Data()
+                var isReadingComplete = false
+            }
+            let collector = OutputCollector()
 
             // 使用信号量来确保数据读取完成
             let semaphore = DispatchSemaphore(value: 0)
-            var isReadingComplete = false
 
             outputHandle.readabilityHandler = { handle in
                 let data = handle.availableData
                 if data.isEmpty {
                     // 数据读取完成
-                    isReadingComplete = true
+                    collector.isReadingComplete = true
                     semaphore.signal()
                 } else {
-                    outputData.append(data)
+                    collector.data.append(data)
                 }
             }
 
@@ -207,15 +210,15 @@ import SwiftUI
             outputHandle.readabilityHandler = nil
 
             // 如果超时，尝试读取剩余数据
-            if result == .timedOut || !isReadingComplete {
+            if result == .timedOut || !collector.isReadingComplete {
                 let remainingData = outputHandle.readDataToEndOfFile()
                 if !remainingData.isEmpty {
-                    outputData.append(remainingData)
+                    collector.data.append(remainingData)
                 }
             }
 
-            guard let output = String(data: outputData, encoding: .utf8) else {
-                return ("字符串转换失败: 无法将输出数据转换为UTF-8字符串，数据大小: \(outputData.count) 字节", -2)
+            guard let output = String(data: collector.data, encoding: .utf8) else {
+                return ("字符串转换失败: 无法将输出数据转换为UTF-8字符串，数据大小: \(collector.data.count) 字节", -2)
             }
 
             if verbose {
