@@ -211,9 +211,13 @@ extension BookDBView {
         !isImporting
     }
 
+    nonisolated static func hasImportSourceAccess(_ source: URL, securityScopeGranted: Bool) -> Bool {
+        securityScopeGranted || FileManager.default.isReadableFile(atPath: source.path)
+    }
+
     private nonisolated static func canImportFolder(_ folder: URL) throws -> Bool {
         let hasAccess = folder.startAccessingSecurityScopedResource()
-        guard hasAccess else {
+        guard hasImportSourceAccess(folder, securityScopeGranted: hasAccess) else {
             throw NSError(
                 domain: "BookDBView",
                 code: 1,
@@ -224,7 +228,9 @@ extension BookDBView {
         }
 
         defer {
-            folder.stopAccessingSecurityScopedResource()
+            if hasAccess {
+                folder.stopAccessingSecurityScopedResource()
+            }
         }
 
         return folderContainsPlayableFiles(folder)
@@ -238,7 +244,7 @@ extension BookDBView {
 
     private nonisolated static func copySecurityScopedItem(_ source: URL, to destination: URL) async throws {
         let hasAccess = source.startAccessingSecurityScopedResource()
-        guard hasAccess else {
+        guard hasImportSourceAccess(source, securityScopeGranted: hasAccess) else {
             throw NSError(
                 domain: "BookDBView",
                 code: 1,
@@ -249,7 +255,9 @@ extension BookDBView {
         }
 
         defer {
-            source.stopAccessingSecurityScopedResource()
+            if hasAccess {
+                source.stopAccessingSecurityScopedResource()
+            }
         }
 
         if source.isFolder {

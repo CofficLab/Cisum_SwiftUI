@@ -77,6 +77,22 @@ import UniformTypeIdentifiers
     #expect(!BookDBView.shouldStartImport(isImporting: true))
 }
 
+@Test func bookImportAllowsReadableLocalItemsWithoutSecurityScope() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    let readableFolder = root.appendingPathComponent("book", isDirectory: true)
+    let missingFolder = root.appendingPathComponent("missing", isDirectory: true)
+    try FileManager.default.createDirectory(at: readableFolder, withIntermediateDirectories: true)
+
+    #expect(BookDBView.hasImportSourceAccess(readableFolder, securityScopeGranted: false))
+    #expect(BookDBView.hasImportSourceAccess(missingFolder, securityScopeGranted: true))
+    #expect(!BookDBView.hasImportSourceAccess(missingFolder, securityScopeGranted: false))
+}
+
 @Test func bookPlaybackOrderingUsesRelativePaths() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)

@@ -228,6 +228,10 @@ extension AudioDBView {
         !isImporting
     }
 
+    nonisolated static func hasImportSourceAccess(_ source: URL, securityScopeGranted: Bool) -> Bool {
+        securityScopeGranted || FileManager.default.isReadableFile(atPath: source.path)
+    }
+
     nonisolated private static func uniqueDestination(for source: URL, in directory: URL) -> URL {
         let baseName = source.deletingPathExtension().lastPathComponent
         let fileExtension = source.pathExtension
@@ -254,7 +258,7 @@ extension AudioDBView {
 
     nonisolated private static func copySecurityScopedFile(_ source: URL, to destination: URL) async throws {
         let hasAccess = source.startAccessingSecurityScopedResource()
-        guard hasAccess else {
+        guard hasImportSourceAccess(source, securityScopeGranted: hasAccess) else {
             throw NSError(
                 domain: "AudioDBView",
                 code: 1,
@@ -265,7 +269,9 @@ extension AudioDBView {
         }
 
         defer {
-            source.stopAccessingSecurityScopedResource()
+            if hasAccess {
+                source.stopAccessingSecurityScopedResource()
+            }
         }
 
         try await source.ensureLocalAvailability()

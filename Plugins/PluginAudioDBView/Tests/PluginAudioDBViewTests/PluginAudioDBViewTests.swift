@@ -150,3 +150,20 @@ import UniformTypeIdentifiers
     #expect(AudioDBView.shouldStartImport(isImporting: false))
     #expect(!AudioDBView.shouldStartImport(isImporting: true))
 }
+
+@Test func audioImportAllowsReadableLocalFilesWithoutSecurityScope() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    let readableFile = root.appendingPathComponent("track.mp3")
+    let missingFile = root.appendingPathComponent("missing.mp3")
+    try Data("audio".utf8).write(to: readableFile)
+
+    #expect(AudioDBView.hasImportSourceAccess(readableFile, securityScopeGranted: false))
+    #expect(AudioDBView.hasImportSourceAccess(missingFile, securityScopeGranted: true))
+    #expect(!AudioDBView.hasImportSourceAccess(missingFile, securityScopeGranted: false))
+}
