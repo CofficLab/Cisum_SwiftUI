@@ -95,6 +95,20 @@ final class MagicPlayManTests: XCTestCase {
         XCTAssertTrue(URL.sample_web_stream_basic.isVideo)
     }
 
+    func testPlaybackRequestValidationAcceptsAudiobookFiles() throws {
+        let audiobook = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString)
+            .appendingPathExtension("m4b")
+        defer {
+            try? FileManager.default.removeItem(at: audiobook)
+        }
+
+        try Data("audiobook".utf8).write(to: audiobook)
+
+        XCTAssertNil(MagicPlayManPlaybackRequestPolicy.basicValidationError(for: audiobook))
+        XCTAssertTrue(audiobook.isAudio)
+    }
+
     @MainActor
     func testUnplayableLocalMediaDoesNotBecomeCurrentAsset() async throws {
         let unplayable = FileManager.default.temporaryDirectory

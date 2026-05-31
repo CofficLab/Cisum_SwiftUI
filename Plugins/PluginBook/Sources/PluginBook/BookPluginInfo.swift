@@ -11,6 +11,11 @@ public enum BookPluginInfo {
         "m4a",
         "m4b",
         "aac",
-        "wav"
+        "wav",
+        "aiff",
+        "flac",
+        "ogg",
+        "opus",
+        "alac",
     ]
 }

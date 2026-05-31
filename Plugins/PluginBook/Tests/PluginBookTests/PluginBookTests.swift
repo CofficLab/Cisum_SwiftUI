@@ -9,6 +9,14 @@ import SwiftData
     #expect(BookPluginInfo.supportedExtensions.contains("m4b"))
 }
 
+@Test func bookPluginSupportsPlayerRecognizedAudiobookExtensions() {
+    let playerAudioExtensions = ["mp3", "m4a", "m4b", "aac", "wav", "aiff", "ogg", "opus", "flac", "alac"]
+
+    for extensionName in playerAudioExtensions {
+        #expect(BookPluginInfo.supportedExtensions.contains(extensionName))
+    }
+}
+
 @Test func emptyCloudBookURLIsIgnored() {
     #expect(BookSettingRepo.storedURL(from: "") == nil)
     #expect(BookSettingRepo.storedURL(from: nil) == nil)

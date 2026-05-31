@@ -45,7 +45,7 @@ public extension URL {
         if let type = try? resourceValues(forKeys: [.contentTypeKey]).contentType {
             return type.conforms(to: .audio)
         }
-        return ["mp3", "m4a", "aac", "wav", "aiff", "ogg", "opus", "flac", "alac"]
+        return ["mp3", "m4a", "m4b", "aac", "wav", "aiff", "ogg", "opus", "flac", "alac"]
             .contains(pathExtension.lowercased())
     }
 
