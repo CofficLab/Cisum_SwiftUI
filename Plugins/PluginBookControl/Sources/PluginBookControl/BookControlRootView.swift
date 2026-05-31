@@ -108,10 +108,13 @@ enum BookControlPlaybackRequestPolicy {
 
     static func currentAssetAffectedByDeletion(currentAsset: URL?, deletedURLs: [URL]) -> Bool {
         guard let currentAsset else { return false }
+        let assetPaths = comparablePaths(for: currentAsset)
         return deletedURLs.contains { deletedURL in
-            let parentPath = resolvedStandardizedPath(for: deletedURL)
-            let assetPath = resolvedStandardizedPath(for: currentAsset)
-            return isContained(assetPath, in: parentPath)
+            comparablePaths(for: deletedURL).contains { parentPath in
+                assetPaths.contains { assetPath in
+                    isContained(assetPath, in: parentPath)
+                }
+            }
         }
     }
 
@@ -143,6 +146,13 @@ enum BookControlPlaybackRequestPolicy {
 
     private static func resolvedStandardizedPath(for url: URL) -> String {
         url.resolvingSymlinksInPath().standardizedFileURL.path
+    }
+
+    private static func comparablePaths(for url: URL) -> Set<String> {
+        [
+            url.standardizedFileURL.path,
+            resolvedStandardizedPath(for: url),
+        ]
     }
 
     private static func representsSameFile(_ lhs: URL?, _ rhs: URL?) -> Bool {

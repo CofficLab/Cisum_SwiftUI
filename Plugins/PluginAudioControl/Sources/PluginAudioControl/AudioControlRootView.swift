@@ -46,9 +46,9 @@ enum AudioControlPlaybackRequestPolicy {
 
     static func currentAssetAffectedByDeletion(currentAsset: URL?, deletedURLs: [URL]) -> Bool {
         guard let currentAsset else { return false }
-        let currentPath = resolvedStandardizedPath(for: currentAsset)
+        let currentPaths = comparablePaths(for: currentAsset)
         return deletedURLs.contains { deletedURL in
-            resolvedStandardizedPath(for: deletedURL) == currentPath
+            !currentPaths.isDisjoint(with: comparablePaths(for: deletedURL))
         }
     }
 
@@ -80,6 +80,13 @@ enum AudioControlPlaybackRequestPolicy {
 
     private static func resolvedStandardizedPath(for url: URL) -> String {
         url.resolvingSymlinksInPath().standardizedFileURL.path
+    }
+
+    private static func comparablePaths(for url: URL) -> Set<String> {
+        [
+            url.standardizedFileURL.path,
+            resolvedStandardizedPath(for: url),
+        ]
     }
 
     private static func representsSameFile(_ lhs: URL?, _ rhs: URL?) -> Bool {

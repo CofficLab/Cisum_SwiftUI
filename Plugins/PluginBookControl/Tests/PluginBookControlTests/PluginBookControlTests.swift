@@ -226,6 +226,25 @@ import SwiftUI
     ))
 }
 
+@Test func deletionAffectsCurrentChapterUnderDanglingSymlinkedBook() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let missingBook = root.appendingPathComponent("MissingBook", isDirectory: true)
+    let linkedBook = root.appendingPathComponent("LinkedBook", isDirectory: true)
+    let currentChapter = linkedBook.appendingPathComponent("Chapter 01.m4b")
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedBook, withDestinationURL: missingBook)
+
+    #expect(BookControlPlaybackRequestPolicy.currentAssetAffectedByDeletion(
+        currentAsset: currentChapter,
+        deletedURLs: [linkedBook]
+    ))
+}
+
 @Test func staleDeletionResetDoesNotApplyAfterSceneReactivation() {
     let deletedBook = URL(fileURLWithPath: "/tmp/books/Novel", isDirectory: true)
     let currentChapter = deletedBook.appendingPathComponent("Chapter 01.m4b")
