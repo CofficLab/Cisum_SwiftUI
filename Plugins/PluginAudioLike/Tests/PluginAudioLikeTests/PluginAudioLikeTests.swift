@@ -2,6 +2,10 @@ import Foundation
 @testable import PluginAudioLike
 import Testing
 
+private final class NotificationObserverToken: @unchecked Sendable {
+    var value: NSObjectProtocol?
+}
+
 @Test func pluginInfoExportsRegistrationMetadata() {
     #expect(AudioLikePluginInfo.iconName == "heart")
     #expect(AudioLikePluginInfo.emoji == "❤️")
@@ -25,6 +29,35 @@ func pluginExposesSettingsView() {
         currentGeneration: 2,
         resultGeneration: 1
     ))
+}
+
+@Test func audioLikeStatusNotificationIsDeliveredOnMainThread() async {
+    let url = URL(fileURLWithPath: "/tmp/audio/main-thread.mp3")
+
+    let deliveredOnMainThread = await withCheckedContinuation { continuation in
+        let token = NotificationObserverToken()
+        token.value = NotificationCenter.default.addObserver(
+            forName: .AudioLikeStatusChanged,
+            object: nil,
+            queue: nil
+        ) { _ in
+            if let observer = token.value {
+                NotificationCenter.default.removeObserver(observer)
+                token.value = nil
+            }
+            continuation.resume(returning: Thread.isMainThread)
+        }
+
+        Task.detached {
+            NotificationCenter.postAudioLikeStatusChanged(
+                audioId: url.absoluteString,
+                url: url,
+                liked: true
+            )
+        }
+    }
+
+    #expect(deliveredOnMainThread)
 }
 
 @Suite(.serialized)

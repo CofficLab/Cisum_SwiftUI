@@ -110,15 +110,7 @@ private extension AudioLikeRootView {
                     os_log("\(self.t)💾 保存喜欢状态: \(url.lastPathComponent) -> \(liked ? "喜欢" : "取消喜欢")")
                 }
 
-                NotificationCenter.default.post(
-                    name: .AudioLikeStatusChanged,
-                    object: nil,
-                    userInfo: [
-                        "audioId": audioId,
-                        "url": url,
-                        "liked": liked,
-                    ]
-                )
+                NotificationCenter.postAudioLikeStatusChanged(audioId: audioId, url: url, liked: liked)
             } catch {
                 os_log(.error, "\(self.t)❌ 保存喜欢状态失败: \(error.localizedDescription)")
                 alert_error(String(localized: "Failed to save like status: \(error.localizedDescription)", table: "Audio-Like", bundle: .module))
@@ -129,4 +121,20 @@ private extension AudioLikeRootView {
 
 public extension Notification.Name {
     static let AudioLikeStatusChanged = Notification.Name("AudioLikeStatusChanged")
+}
+
+public extension NotificationCenter {
+    static func postAudioLikeStatusChanged(audioId: String, url: URL, liked: Bool) {
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(
+                name: .AudioLikeStatusChanged,
+                object: nil,
+                userInfo: [
+                    "audioId": audioId,
+                    "url": url,
+                    "liked": liked,
+                ]
+            )
+        }
+    }
 }

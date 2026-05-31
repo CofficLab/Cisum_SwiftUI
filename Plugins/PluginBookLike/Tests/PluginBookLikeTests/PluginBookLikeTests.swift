@@ -2,6 +2,10 @@ import PluginBookLike
 import Testing
 import Foundation
 
+private final class NotificationObserverToken: @unchecked Sendable {
+    var value: NSObjectProtocol?
+}
+
 @Test func pluginInfoExportsRegistrationMetadata() {
     #expect(BookLikePluginInfo.iconName == "heart")
     #expect(BookLikePluginInfo.order == 6)
@@ -13,6 +17,31 @@ func pluginExposesSettingsView() {
     let view = BookLikePlugin.shared.addSettingView()
 
     #expect(view != nil)
+}
+
+@Test func bookLikeStatusNotificationIsDeliveredOnMainThread() async {
+    let url = URL(fileURLWithPath: "/tmp/Cisum Books/Main Thread Book")
+
+    let deliveredOnMainThread = await withCheckedContinuation { continuation in
+        let token = NotificationObserverToken()
+        token.value = NotificationCenter.default.addObserver(
+            forName: .BookLikeStatusChanged,
+            object: nil,
+            queue: nil
+        ) { _ in
+            if let observer = token.value {
+                NotificationCenter.default.removeObserver(observer)
+                token.value = nil
+            }
+            continuation.resume(returning: Thread.isMainThread)
+        }
+
+        Task.detached {
+            NotificationCenter.postBookLikeStatusChanged(url: url, liked: true)
+        }
+    }
+
+    #expect(deliveredOnMainThread)
 }
 
 @Test func bookLikeStorePersistsRealLikedBooks() throws {

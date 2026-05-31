@@ -126,6 +126,21 @@ private extension BookLikeRootView {
             }
 
             // 发送通知，通知其他组件喜欢状态已更新
+            NotificationCenter.postBookLikeStatusChanged(url: url, liked: liked)
+        }
+    }
+}
+
+// MARK: - Notification Names
+
+public extension Notification.Name {
+    /// 书籍喜欢状态变化通知
+    static let BookLikeStatusChanged = Notification.Name("BookLikeStatusChanged")
+}
+
+public extension NotificationCenter {
+    static func postBookLikeStatusChanged(url: URL, liked: Bool) {
+        DispatchQueue.main.async {
             NotificationCenter.default.post(
                 name: .BookLikeStatusChanged,
                 object: nil,
@@ -136,11 +151,4 @@ private extension BookLikeRootView {
             )
         }
     }
-}
-
-// MARK: - Notification Names
-
-public extension Notification.Name {
-    /// 书籍喜欢状态变化通知
-    static let BookLikeStatusChanged = Notification.Name("BookLikeStatusChanged")
 }
