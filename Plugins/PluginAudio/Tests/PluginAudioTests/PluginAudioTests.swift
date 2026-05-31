@@ -97,6 +97,38 @@ import SwiftData
     #expect(next == nextAudio)
 }
 
+@Test func audioDBPrevOfSkipsSymlinkedDuplicateTrack() async throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realRoot = root.appendingPathComponent("real-audio", isDirectory: true)
+    let linkedRoot = root.appendingPathComponent("audio-link", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: realRoot, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedRoot, withDestinationURL: realRoot)
+
+    let schema = Schema([AudioModel.self])
+    let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    let container = try ModelContainer(for: schema, configurations: [configuration])
+    let db = AudioDB(container, reason: "audioDBPrevOfSkipsSymlinkedDuplicateTrack")
+
+    let previousAudio = realRoot.appendingPathComponent("previous.mp3")
+    let realAudio = realRoot.appendingPathComponent("track.mp3")
+    let linkedAudio = linkedRoot.appendingPathComponent("track.mp3")
+    for file in [previousAudio, realAudio] {
+        try Data("audio".utf8).write(to: file)
+    }
+
+    await db.insertAudio(url: previousAudio, order: 10)
+    await db.insertAudio(url: linkedAudio, order: 20, force: true)
+    await db.insertAudio(url: realAudio, order: 30)
+
+    let previous = try await db.getPrevAudioURLOf(realAudio)
+    #expect(previous == previousAudio)
+}
+
 @Test func audioDBDeleteReturnsFollowingTrackAfterSymlinkedDuplicate() async throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)

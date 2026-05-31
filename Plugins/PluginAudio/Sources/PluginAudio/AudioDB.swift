@@ -689,8 +689,18 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
             return try firstAudio()
         }
 
-        let result = try context.fetch(AudioModel.descriptorPrev(order: audio.order))
-        return result.first
+        let order = audio.order
+        let url = audio.url
+        var descriptor = FetchDescriptor<AudioModel>()
+        descriptor.sortBy.append(.init(\.order, order: .reverse))
+        descriptor.predicate = #Predicate {
+            $0.order < order
+        }
+
+        let result = try context.fetch(descriptor)
+        return result.first { candidate in
+            !Self.representsSameAudioFile(candidate.url, url)
+        }
     }
 
     /// 刷新音频模型，从数据库获取最新状态
