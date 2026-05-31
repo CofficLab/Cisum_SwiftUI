@@ -61,12 +61,13 @@ struct MigrationProgressView: View {
         targetURL: URL?,
         requestedMigration: Bool
     ) throws -> (source: URL, target: URL)? {
+        guard let targetURL else {
+            throw MigrationError.targetDirectoryNotFound
+        }
+
         guard requestedMigration else { return nil }
         guard let sourceURL else {
             throw MigrationError.sourceDirectoryNotFound
-        }
-        guard let targetURL else {
-            throw MigrationError.targetDirectoryNotFound
         }
 
         return (sourceURL, targetURL)

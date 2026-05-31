@@ -156,6 +156,14 @@ import Foundation
             requestedMigration: true
         )
     }
+
+    #expect(throws: MigrationError.self) {
+        try MigrationProgressView.migrationRoots(
+            sourceURL: target,
+            targetURL: nil,
+            requestedMigration: false
+        )
+    }
 }
 
 @Test func migrationMovesContentsButKeepsSourceRoot() throws {
