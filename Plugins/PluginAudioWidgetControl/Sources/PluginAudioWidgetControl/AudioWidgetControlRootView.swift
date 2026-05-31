@@ -35,6 +35,10 @@ enum AudioWidgetPlaybackRequestPolicy {
 
         return 0
     }
+
+    static func remainingCommandCount(afterConsuming consumedCount: Int, storedValue: Any?) -> Int {
+        max(0, commandCount(from: storedValue, maximum: 1_000_000) - consumedCount)
+    }
 }
 
 public struct AudioWidgetControlRootView: View {
@@ -94,28 +98,31 @@ public struct AudioWidgetControlRootView: View {
 
         guard let sharedDefaults else { return }
 
-        let playPauseCount = AudioWidgetPlaybackRequestPolicy.commandCount(
-            from: sharedDefaults.object(forKey: "widgetPlayPauseTrigger")
-        )
-        if playPauseCount > 0 {
-            handlePlayPause(count: playPauseCount)
-            sharedDefaults.removeObject(forKey: "widgetPlayPauseTrigger")
-        }
+        consumeWidgetCommand(key: "widgetPlayPauseTrigger", from: sharedDefaults, handler: handlePlayPause)
+        consumeWidgetCommand(key: "widgetNextTrigger", from: sharedDefaults, handler: handleNext)
+        consumeWidgetCommand(key: "widgetPreviousTrigger", from: sharedDefaults, handler: handlePrevious)
+    }
 
-        let nextCount = AudioWidgetPlaybackRequestPolicy.commandCount(
-            from: sharedDefaults.object(forKey: "widgetNextTrigger")
+    private func consumeWidgetCommand(
+        key: String,
+        from sharedDefaults: UserDefaults,
+        handler: (Int) -> Void
+    ) {
+        let count = AudioWidgetPlaybackRequestPolicy.commandCount(
+            from: sharedDefaults.object(forKey: key)
         )
-        if nextCount > 0 {
-            handleNext(count: nextCount)
-            sharedDefaults.removeObject(forKey: "widgetNextTrigger")
-        }
+        guard count > 0 else { return }
 
-        let previousCount = AudioWidgetPlaybackRequestPolicy.commandCount(
-            from: sharedDefaults.object(forKey: "widgetPreviousTrigger")
+        handler(count)
+
+        let remainingCount = AudioWidgetPlaybackRequestPolicy.remainingCommandCount(
+            afterConsuming: count,
+            storedValue: sharedDefaults.object(forKey: key)
         )
-        if previousCount > 0 {
-            handlePrevious(count: previousCount)
-            sharedDefaults.removeObject(forKey: "widgetPreviousTrigger")
+        if remainingCount > 0 {
+            sharedDefaults.set(remainingCount, forKey: key)
+        } else {
+            sharedDefaults.removeObject(forKey: key)
         }
     }
 

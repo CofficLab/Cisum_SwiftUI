@@ -40,3 +40,18 @@ import Testing
     #expect(AudioWidgetPlaybackRequestPolicy.commandCount(from: nil) == 0)
     #expect(AudioWidgetPlaybackRequestPolicy.commandCount(from: "unexpected") == 0)
 }
+
+@Test func widgetCommandConsumptionPreservesCommandsAddedDuringHandling() {
+    #expect(AudioWidgetPlaybackRequestPolicy.remainingCommandCount(
+        afterConsuming: 1,
+        storedValue: NSNumber(value: 1)
+    ) == 0)
+    #expect(AudioWidgetPlaybackRequestPolicy.remainingCommandCount(
+        afterConsuming: 1,
+        storedValue: NSNumber(value: 2)
+    ) == 1)
+    #expect(AudioWidgetPlaybackRequestPolicy.remainingCommandCount(
+        afterConsuming: 3,
+        storedValue: NSNumber(value: 2)
+    ) == 0)
+}
