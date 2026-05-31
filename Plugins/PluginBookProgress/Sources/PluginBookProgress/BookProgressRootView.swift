@@ -101,6 +101,10 @@ enum BookProgressBookRootResolver {
 
 enum BookProgressBookLookup {
     static func bookURL(for currentURL: URL, bookDisk: URL?) -> URL? {
+        if let bookDisk, !isContained(currentURL.standardizedFileURL.path, in: bookDisk.standardizedFileURL.path) {
+            return nil
+        }
+
         let bookURL = BookProgressBookRootResolver.bookRoot(containing: currentURL, bookDisk: bookDisk)
 
         var isDirectory: ObjCBool = false
@@ -113,6 +117,10 @@ enum BookProgressBookLookup {
         }
 
         return BookPluginInfo.supportedExtensions.contains(bookURL.pathExtension.lowercased()) ? bookURL : nil
+    }
+
+    private static func isContained(_ childPath: String, in parentPath: String) -> Bool {
+        childPath == parentPath || childPath.hasPrefix(parentPath + "/")
     }
 }
 

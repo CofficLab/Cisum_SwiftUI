@@ -177,6 +177,23 @@ import Testing
     #expect(BookProgressBookLookup.bookURL(for: notes, bookDisk: root) == nil)
 }
 
+@Test func bookLookupRejectsFilesOutsideConfiguredBookDisk() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let bookDisk = root.appendingPathComponent("books", isDirectory: true)
+    let outside = root.appendingPathComponent("outside", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: bookDisk, withIntermediateDirectories: true)
+    try FileManager.default.createDirectory(at: outside, withIntermediateDirectories: true)
+    let chapter = outside.appendingPathComponent("Chapter 01.m4b")
+    try Data("audio".utf8).write(to: chapter)
+
+    #expect(BookProgressBookLookup.bookURL(for: chapter, bookDisk: bookDisk) == nil)
+}
+
 @Test func bookLookupFindsFolderBooksForNestedChapters() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)
