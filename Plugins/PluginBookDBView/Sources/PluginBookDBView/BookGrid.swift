@@ -11,6 +11,10 @@ enum BookGridUpdatePolicy {
     static func shouldApplyResult(currentGeneration: Int, resultGeneration: Int) -> Bool {
         currentGeneration == resultGeneration
     }
+
+    static func nextGeneration(after generation: Int) -> Int {
+        generation + 1
+    }
 }
 
 enum BookGridPlaybackRequestPolicy {
@@ -204,10 +208,8 @@ extension BookGrid {
     /// 从数据仓库异步获取所有书籍数据并更新界面。
     /// 只获取集合类型的书籍（文件夹），按顺序排序。
     /// 使用后台优先级执行，避免阻塞主线程。
-    private func updateBooks() {
+    private func updateBooks(generation: Int) {
         let currentRepo = self.repo
-        updateBooksGeneration += 1
-        let generation = updateBooksGeneration
 
         Task.detached(priority: .background) {
             if Self.verbose {
@@ -237,10 +239,12 @@ extension BookGrid {
         }
         
         updateBooksDebounceTask?.cancel()
+        updateBooksGeneration = BookGridUpdatePolicy.nextGeneration(after: updateBooksGeneration)
+        let generation = updateBooksGeneration
         updateBooksDebounceTask = Task { @MainActor in
             try? await Task.sleep(nanoseconds: UInt64(seconds * 1000000000))
             guard !Task.isCancelled else { return }
-            self.updateBooks()
+            self.updateBooks(generation: generation)
         }
     }
     

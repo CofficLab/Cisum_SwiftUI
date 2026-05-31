@@ -421,6 +421,16 @@ import UniformTypeIdentifiers
     #expect(!BookGridUpdatePolicy.shouldApplyResult(currentGeneration: 3, resultGeneration: 2))
 }
 
+@Test func bookGridSchedulingRefreshInvalidatesPendingUpdateResults() {
+    let nextGeneration = BookGridUpdatePolicy.nextGeneration(after: 2)
+
+    #expect(nextGeneration == 3)
+    #expect(!BookGridUpdatePolicy.shouldApplyResult(
+        currentGeneration: nextGeneration,
+        resultGeneration: 2
+    ))
+}
+
 @Test func bookGridOnlyAppliesCurrentPlaybackRequestGeneration() {
     let book = URL(fileURLWithPath: "/tmp/cisum-book-grid/Book", isDirectory: true)
     let other = URL(fileURLWithPath: "/tmp/cisum-book-grid/Other", isDirectory: true)
