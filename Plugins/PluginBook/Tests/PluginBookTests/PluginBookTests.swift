@@ -34,6 +34,25 @@ import SwiftData
     #expect(BookModel.playableChildCount(for: linkedBook) == 1)
 }
 
+@Test func bookModelTreatsSymlinkedBookFolderAsCollection() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realBook = root.appendingPathComponent("RealBook", isDirectory: true)
+    let linkedBook = root.appendingPathComponent("LinkedBook", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: realBook, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedBook, withDestinationURL: realBook)
+    try Data("audio".utf8).write(to: realBook.appendingPathComponent("001.m4b"))
+
+    let book = BookModel(url: linkedBook)
+
+    #expect(book.isCollection)
+    #expect(book.childCount == 1)
+}
+
 @Test func emptyCloudBookURLIsIgnored() {
     #expect(BookSettingRepo.storedURL(from: "") == nil)
     #expect(BookSettingRepo.storedURL(from: nil) == nil)
@@ -329,6 +348,34 @@ import SwiftData
     await db.updateBookCurrent(realBook, currentURL: realBook.appendingPathComponent("Chapter 01.m4b"), time: 42)
 
     #expect(await db.getBookTime(linkedBook) == 42)
+}
+
+@Test func bookDBSyncKeepsSymlinkedBookFolderDisplayable() async throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realRoot = root.appendingPathComponent("real-books", isDirectory: true)
+    let linkedRoot = root.appendingPathComponent("library-link", isDirectory: true)
+    let realBook = realRoot.appendingPathComponent("Novel", isDirectory: true)
+    let linkedBook = linkedRoot.appendingPathComponent("Novel", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: realBook, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedRoot, withDestinationURL: realRoot)
+    try Data("audio".utf8).write(to: realBook.appendingPathComponent("Chapter 01.m4b"))
+
+    let schema = Schema([BookModel.self, BookState.self])
+    let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    let container = try ModelContainer(for: schema, configurations: [configuration])
+    let db = BookDB(container, reason: "bookDBSyncKeepsSymlinkedBookFolderDisplayable")
+
+    await db.sync([linkedBook], isFirst: true)
+
+    let book = try #require(await db.allBookDTOs().first)
+    #expect(book.isCollection)
+    #expect(book.childCount == 1)
+    #expect(BookRepo.isDisplayableLibraryItem(book, libraryRoot: linkedRoot))
 }
 
 @Test func bookDBFullSyncIgnoresUnsupportedFiles() async throws {

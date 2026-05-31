@@ -49,6 +49,10 @@ enum BookLibraryItemSupport {
         return BookPluginInfo.supportedExtensions.contains(url.pathExtension.lowercased())
     }
 
+    static func isCollection(_ url: URL) -> Bool {
+        isFolderLike(url)
+    }
+
     static func playableChildCount(for url: URL) -> Int {
         guard isFolderLike(url) else {
             return BookPluginInfo.supportedExtensions.contains(url.pathExtension.lowercased()) ? 1 : 0
@@ -437,7 +441,7 @@ extension BookDB {
     }
 
     private func update(_ book: BookModel, from url: URL) {
-        book.isCollection = url.isDirectory
+        book.isCollection = BookLibraryItemSupport.isCollection(url)
         book.bookTitle = url.title
         book.parentBookURL = url.getParent()
         book.childCount = BookModel.playableChildCount(for: url)

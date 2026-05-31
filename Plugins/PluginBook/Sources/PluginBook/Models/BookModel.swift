@@ -35,7 +35,7 @@ public class BookModel: SuperLog, Equatable {
         self.currentURL = currentURL
         self.order = order
         self.bookTitle = self.url.title
-        self.isCollection = self.url.isFolder
+        self.isCollection = BookLibraryItemSupport.isCollection(self.url)
         self.parentBookURL = self.url.getParent()
         self.childCount = Self.playableChildCount(for: self.url)
     }
