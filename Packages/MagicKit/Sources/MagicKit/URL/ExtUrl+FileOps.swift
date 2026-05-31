@@ -48,9 +48,7 @@ public enum URLOpenActionPolicy {
     }
 
     public static func canRevealInFinder(_ url: URL) -> Bool {
-        guard url.isFileURL else {
-            return true
-        }
+        guard url.isFileURL else { return false }
 
         if FileManager.default.fileExists(atPath: url.path) {
             return true

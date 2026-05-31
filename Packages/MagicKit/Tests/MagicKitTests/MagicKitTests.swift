@@ -240,7 +240,7 @@ final class MagicKitTests: XCTestCase {
         XCTAssertTrue(URLOpenActionPolicy.canRevealInFinder(existingFile))
         XCTAssertTrue(URLOpenActionPolicy.canRevealInFinder(danglingLink))
         XCTAssertFalse(URLOpenActionPolicy.canRevealInFinder(missingFile))
-        XCTAssertTrue(URLOpenActionPolicy.canRevealInFinder(URL(string: "https://example.com")!))
+        XCTAssertFalse(URLOpenActionPolicy.canRevealInFinder(URL(string: "https://example.com")!))
     }
 
     func testImageCropping() {
