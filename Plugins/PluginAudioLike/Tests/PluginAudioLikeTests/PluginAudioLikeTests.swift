@@ -207,6 +207,38 @@ struct AudioLikeRepoTests {
 
     @Test
     @MainActor
+    func audioLikeRepoDoesNotMatchDistinctDanglingSymlinkedAudio() async throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        let databaseURL = root
+            .appendingPathComponent("PluginAudioLikeTests-\(UUID().uuidString)-dangling")
+            .appendingPathExtension("store")
+        let missingFile = root.appendingPathComponent("missing.mp3")
+        let firstLink = root.appendingPathComponent("first.mp3")
+        let secondLink = root.appendingPathComponent("second.mp3")
+        defer {
+            try? FileManager.default.removeItem(at: root)
+        }
+
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        try FileManager.default.createSymbolicLink(at: firstLink, withDestinationURL: missingFile)
+        try FileManager.default.createSymbolicLink(at: secondLink, withDestinationURL: missingFile)
+
+        AudioLikeRepositoryConfiguration.configure(databaseURL: databaseURL)
+
+        try await AudioLikeRepo.shared.updateLikeStatus(
+            audioId: firstLink.absoluteString,
+            liked: true,
+            url: firstLink,
+            title: "First"
+        )
+
+        #expect(await AudioLikeRepo.shared.isLiked(url: firstLink))
+        #expect(!(await AudioLikeRepo.shared.isLiked(url: secondLink)))
+    }
+
+    @Test
+    @MainActor
     func audioLikeRepoUnlikesSymlinkedStoredAudio() async throws {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent(UUID().uuidString, isDirectory: true)
