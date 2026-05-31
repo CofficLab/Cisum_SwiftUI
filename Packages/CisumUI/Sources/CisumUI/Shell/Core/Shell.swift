@@ -38,6 +38,16 @@ import SwiftUI
     public class Shell: SuperLog {
         public static let emoji = "🐚"
 
+        static func shellQuoted(_ value: String) -> String {
+            "'\(value.replacingOccurrences(of: "'", with: "'\\''"))'"
+        }
+
+        static func commandLookupCommand(_ command: String) -> String? {
+            let trimmed = command.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !trimmed.isEmpty else { return nil }
+            return "which \(shellQuoted(trimmed))"
+        }
+
         private static func execute(_ command: String, at path: String? = nil, verbose: Bool = false) throws -> String {
             let process = Process()
             process.executableURL = URL(fileURLWithPath: "/bin/bash")
@@ -211,7 +221,8 @@ import SwiftUI
         /// - Returns: 命令是否可用
         public static func isCommandAvailable(_ command: String) -> Bool {
             do {
-                _ = try runSync("which \(command)")
+                guard let lookupCommand = commandLookupCommand(command) else { return false }
+                _ = try runSync(lookupCommand)
                 return true
             } catch {
                 return false
@@ -223,7 +234,8 @@ import SwiftUI
         /// - Returns: 命令的完整路径
         public static func getCommandPath(_ command: String) -> String? {
             do {
-                let path = try runSync("which \(command)")
+                guard let lookupCommand = commandLookupCommand(command) else { return nil }
+                let path = try runSync(lookupCommand)
                 return path.isEmpty ? nil : path
             } catch {
                 return nil
