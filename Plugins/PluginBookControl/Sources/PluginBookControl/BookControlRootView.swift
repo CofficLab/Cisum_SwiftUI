@@ -89,8 +89,8 @@ enum BookControlPathContainment {
 }
 
 enum BookControlPlaybackRequestPolicy {
-    static func shouldApplyNavigationResult(requestedAsset: URL, currentAsset: URL?) -> Bool {
-        representsSameFile(requestedAsset, currentAsset)
+    static func shouldApplyNavigationResult(requestedAsset: URL, currentAsset: URL?, isSceneActive: Bool) -> Bool {
+        isSceneActive && representsSameFile(requestedAsset, currentAsset)
     }
 
     static func currentAssetAffectedByDeletion(currentAsset: URL?, deletedURLs: [URL]) -> Bool {
@@ -380,7 +380,8 @@ private extension BookControlRootView {
             if let prev {
                 guard BookControlPlaybackRequestPolicy.shouldApplyNavigationResult(
                     requestedAsset: asset,
-                    currentAsset: man.currentAsset
+                    currentAsset: man.currentAsset,
+                    isSceneActive: shouldActivateControl
                 ) else {
                     return
                 }
@@ -419,7 +420,8 @@ private extension BookControlRootView {
             if let next {
                 guard BookControlPlaybackRequestPolicy.shouldApplyNavigationResult(
                     requestedAsset: asset,
-                    currentAsset: man.currentAsset
+                    currentAsset: man.currentAsset,
+                    isSceneActive: shouldActivateControl
                 ) else {
                     return
                 }

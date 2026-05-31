@@ -14,15 +14,23 @@ import Testing
 
     #expect(AudioControlPlaybackRequestPolicy.shouldApplyNavigationResult(
         requestedAsset: requested,
-        currentAsset: requested
+        currentAsset: requested,
+        isSceneActive: true
     ))
     #expect(!AudioControlPlaybackRequestPolicy.shouldApplyNavigationResult(
         requestedAsset: requested,
-        currentAsset: switched
+        currentAsset: switched,
+        isSceneActive: true
     ))
     #expect(!AudioControlPlaybackRequestPolicy.shouldApplyNavigationResult(
         requestedAsset: requested,
-        currentAsset: nil
+        currentAsset: nil,
+        isSceneActive: true
+    ))
+    #expect(!AudioControlPlaybackRequestPolicy.shouldApplyNavigationResult(
+        requestedAsset: requested,
+        currentAsset: requested,
+        isSceneActive: false
     ))
 }
 
@@ -41,7 +49,8 @@ import Testing
 
     #expect(AudioControlPlaybackRequestPolicy.shouldApplyNavigationResult(
         requestedAsset: linkedFile,
-        currentAsset: realFile
+        currentAsset: realFile,
+        isSceneActive: true
     ))
 }
 
@@ -116,10 +125,12 @@ import Testing
 
     #expect(AudioControlPlaybackRequestPolicy.shouldApplyNavigationResult(
         requestedAsset: requested,
-        currentAsset: requested
+        currentAsset: requested,
+        isSceneActive: true
     ))
     #expect(!AudioControlPlaybackRequestPolicy.shouldApplyNavigationResult(
         requestedAsset: requested,
-        currentAsset: switched
+        currentAsset: switched,
+        isSceneActive: true
     ))
 }

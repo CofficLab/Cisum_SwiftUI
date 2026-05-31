@@ -96,15 +96,23 @@ import SwiftUI
 
     #expect(BookControlPlaybackRequestPolicy.shouldApplyNavigationResult(
         requestedAsset: requested,
-        currentAsset: requested
+        currentAsset: requested,
+        isSceneActive: true
     ))
     #expect(!BookControlPlaybackRequestPolicy.shouldApplyNavigationResult(
         requestedAsset: requested,
-        currentAsset: switched
+        currentAsset: switched,
+        isSceneActive: true
     ))
     #expect(!BookControlPlaybackRequestPolicy.shouldApplyNavigationResult(
         requestedAsset: requested,
-        currentAsset: nil
+        currentAsset: nil,
+        isSceneActive: true
+    ))
+    #expect(!BookControlPlaybackRequestPolicy.shouldApplyNavigationResult(
+        requestedAsset: requested,
+        currentAsset: requested,
+        isSceneActive: false
     ))
 }
 
@@ -125,7 +133,8 @@ import SwiftUI
 
     #expect(BookControlPlaybackRequestPolicy.shouldApplyNavigationResult(
         requestedAsset: linkedChapter,
-        currentAsset: realChapter
+        currentAsset: realChapter,
+        isSceneActive: true
     ))
 }
 

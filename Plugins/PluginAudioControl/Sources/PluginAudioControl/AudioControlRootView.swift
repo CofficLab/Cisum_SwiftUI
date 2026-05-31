@@ -16,8 +16,8 @@ private enum AudioControlRuntime {
 }
 
 enum AudioControlPlaybackRequestPolicy {
-    static func shouldApplyNavigationResult(requestedAsset: URL, currentAsset: URL?) -> Bool {
-        representsSameFile(requestedAsset, currentAsset)
+    static func shouldApplyNavigationResult(requestedAsset: URL, currentAsset: URL?, isSceneActive: Bool) -> Bool {
+        isSceneActive && representsSameFile(requestedAsset, currentAsset)
     }
 
     static func currentAssetAffectedByDeletion(currentAsset: URL?, deletedURLs: [URL]) -> Bool {
@@ -153,7 +153,8 @@ private extension AudioControlRootView {
                 if let previous = try await previousAsset(asset, false) {
                     guard AudioControlPlaybackRequestPolicy.shouldApplyNavigationResult(
                         requestedAsset: asset,
-                        currentAsset: man.currentAsset
+                        currentAsset: man.currentAsset,
+                        isSceneActive: shouldActivateControl || ignoreSceneCheck
                     ) else {
                         return
                     }
@@ -164,7 +165,8 @@ private extension AudioControlRootView {
                 if man.playMode == .repeatAll, let last = try await lastAsset() {
                     guard AudioControlPlaybackRequestPolicy.shouldApplyNavigationResult(
                         requestedAsset: asset,
-                        currentAsset: man.currentAsset
+                        currentAsset: man.currentAsset,
+                        isSceneActive: shouldActivateControl || ignoreSceneCheck
                     ) else {
                         return
                     }
@@ -172,7 +174,8 @@ private extension AudioControlRootView {
                 } else if man.playMode == .repeatAll {
                     guard AudioControlPlaybackRequestPolicy.shouldApplyNavigationResult(
                         requestedAsset: asset,
-                        currentAsset: man.currentAsset
+                        currentAsset: man.currentAsset,
+                        isSceneActive: shouldActivateControl || ignoreSceneCheck
                     ) else {
                         return
                     }
@@ -196,7 +199,8 @@ private extension AudioControlRootView {
                 if let next = try await nextAsset(asset, AudioControlRuntime.verbose) {
                     guard AudioControlPlaybackRequestPolicy.shouldApplyNavigationResult(
                         requestedAsset: asset,
-                        currentAsset: man.currentAsset
+                        currentAsset: man.currentAsset,
+                        isSceneActive: shouldActivateControl || ignoreSceneCheck
                     ) else {
                         return
                     }
@@ -211,7 +215,8 @@ private extension AudioControlRootView {
                 if let first = try await firstAsset() {
                     guard AudioControlPlaybackRequestPolicy.shouldApplyNavigationResult(
                         requestedAsset: asset,
-                        currentAsset: man.currentAsset
+                        currentAsset: man.currentAsset,
+                        isSceneActive: shouldActivateControl || ignoreSceneCheck
                     ) else {
                         return
                     }
@@ -220,7 +225,8 @@ private extension AudioControlRootView {
                 } else {
                     guard AudioControlPlaybackRequestPolicy.shouldApplyNavigationResult(
                         requestedAsset: asset,
-                        currentAsset: man.currentAsset
+                        currentAsset: man.currentAsset,
+                        isSceneActive: shouldActivateControl || ignoreSceneCheck
                     ) else {
                         return
                     }
