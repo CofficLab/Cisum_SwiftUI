@@ -161,6 +161,22 @@
         }
       }
     },
+    "Cannot load subscription options" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法加载订阅选项"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法載入訂閱選項"
+          }
+        }
+      }
+    },
     "Cross-Device Restore" : {
       "localizations" : {
         "zh-Hans" : {
@@ -419,6 +435,22 @@
         }
       }
     },
+    "Loading subscription options..." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在加载订阅选项..."
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在載入訂閱選項..."
+          }
+        }
+      }
+    },
     "month" : {
       "localizations" : {
         "zh-Hans" : {
@@ -495,6 +527,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "週期"
+          }
+        }
+      }
+    },
+    "Please check your network and try again." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请检查网络后重试。"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "請檢查網絡後重試。"
           }
         }
       }
