@@ -55,6 +55,10 @@ enum AudioProgressPersistencePolicy {
         representsSameFile(requestedAsset, currentAsset)
     }
 
+    static func shouldApplyWidgetClearResult(currentAsset: URL?) -> Bool {
+        currentAsset == nil
+    }
+
     private static func representsSameFile(_ lhs: URL?, _ rhs: URL?) -> Bool {
         switch (lhs, rhs) {
         case (.none, .none):
@@ -355,6 +359,10 @@ extension AudioProgressRootView {
     
     private func syncToWidget(url: URL?, isPlaying: Bool) {
         guard let url = url else {
+            guard AudioProgressPersistencePolicy.shouldApplyWidgetClearResult(currentAsset: man.currentAsset) else {
+                return
+            }
+
             saveWidgetData("Not Playing", "Cisum", false, nil)
             return
         }

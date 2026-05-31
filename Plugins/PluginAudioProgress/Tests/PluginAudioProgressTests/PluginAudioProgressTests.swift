@@ -246,6 +246,13 @@ import Testing
     ))
 }
 
+@Test func staleWidgetClearDoesNotOverwriteNewAudio() {
+    let current = URL(fileURLWithPath: "/tmp/audio/track-01.mp3")
+
+    #expect(AudioProgressPersistencePolicy.shouldApplyWidgetClearResult(currentAsset: nil))
+    #expect(!AudioProgressPersistencePolicy.shouldApplyWidgetClearResult(currentAsset: current))
+}
+
 @Test func staleCurrentAudioURLChangeDoesNotOverwriteNewTrack() {
     let requested = URL(fileURLWithPath: "/tmp/audio/track-01.mp3")
     let switched = URL(fileURLWithPath: "/tmp/audio/track-02.mp3")
