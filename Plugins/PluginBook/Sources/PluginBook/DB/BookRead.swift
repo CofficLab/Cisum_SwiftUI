@@ -187,7 +187,7 @@ extension BookDB {
     
     static func nextBookOf(context: ModelContext, book: BookModel) -> BookModel? {
         //os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title)")
-        let order = 1
+        let order = book.order
         let url = book.url
         var descriptor = FetchDescriptor<BookModel>()
         descriptor.sortBy.append(.init(\.order, order: .forward))

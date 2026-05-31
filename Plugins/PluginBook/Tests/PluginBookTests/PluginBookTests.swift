@@ -167,3 +167,21 @@ import SwiftData
         .map(\.url)
     #expect(orderedURLs == [existing, first, second])
 }
+
+@Test func bookDBNextBookUsesCurrentBookOrder() async throws {
+    let schema = Schema([BookModel.self, BookState.self])
+    let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    let container = try ModelContainer(for: schema, configurations: [configuration])
+    let db = BookDB(container, reason: "bookDBNextBookUsesCurrentBookOrder")
+
+    let root = URL(fileURLWithPath: "/tmp/cisum-book-next-tests", isDirectory: true)
+    let first = root.appendingPathComponent("first.m4b")
+    let second = root.appendingPathComponent("second.m4b")
+    let third = root.appendingPathComponent("third.m4b")
+
+    try await db.insertModel(BookModel(url: first, order: 10))
+    try await db.insertModel(BookModel(url: second, order: 20))
+    try await db.insertModel(BookModel(url: third, order: 30))
+
+    #expect(db.getNextBookOf(second)?.url == third)
+}
