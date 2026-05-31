@@ -131,7 +131,7 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread, @unchecked Send
         let sourcePath = resolvedStandardizedPath(for: sourceRoot)
         let targetPath = resolvedStandardizedPath(for: targetRoot)
 
-        return targetPath != sourcePath && targetPath.hasPrefix(sourcePath + "/")
+        return targetPath != sourcePath && targetPath.hasPrefix(childPrefix(for: sourcePath))
     }
 
     private static func resolvedStandardizedPath(for url: URL) -> String {
@@ -151,6 +151,10 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread, @unchecked Send
         }
 
         return resolvedURL.standardizedFileURL.path
+    }
+
+    private static func childPrefix(for parentPath: String) -> String {
+        parentPath.hasSuffix("/") ? parentPath : parentPath + "/"
     }
 
     private func prepareForMigration(

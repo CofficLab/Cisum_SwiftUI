@@ -224,7 +224,7 @@ extension BookDBView {
         let sourcePath = resolvedStandardizedPath(for: source)
         let destinationPath = resolvedStandardizedPath(for: destination)
 
-        return destinationPath != sourcePath && destinationPath.hasPrefix(sourcePath + "/")
+        return destinationPath != sourcePath && destinationPath.hasPrefix(childPrefix(for: sourcePath))
     }
 
     private nonisolated static func resolvedStandardizedPath(for url: URL) -> String {
@@ -249,6 +249,10 @@ extension BookDBView {
             resolvedURL.appendPathComponent(component)
         }
         return resolvedURL.standardizedFileURL.path
+    }
+
+    private nonisolated static func childPrefix(for parentPath: String) -> String {
+        parentPath.hasSuffix("/") ? parentPath : parentPath + "/"
     }
 
     nonisolated static func hasImportSourceAccess(_ source: URL, securityScopeGranted: Bool) -> Bool {

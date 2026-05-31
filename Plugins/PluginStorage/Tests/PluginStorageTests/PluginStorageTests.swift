@@ -195,6 +195,14 @@ import Foundation
     #expect(!FileManager.default.fileExists(atPath: target.path))
 }
 
+@Test func migrationTreatsRootSourceAsContainingTarget() {
+    let source = URL(fileURLWithPath: "/", isDirectory: true)
+    let target = URL(fileURLWithPath: "/tmp/cisum-storage-migration", isDirectory: true)
+
+    #expect(MigrationManager.isTargetNestedInSource(sourceRoot: source, targetRoot: target))
+    #expect(!MigrationManager.isTargetNestedInSource(sourceRoot: source, targetRoot: source))
+}
+
 @Test func migrationTreatsSymlinkedTargetRootAsSameSource() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)

@@ -76,6 +76,14 @@ import UniformTypeIdentifiers
     #expect(!FileManager.default.fileExists(atPath: destinationRoot.appendingPathComponent("source").path))
 }
 
+@Test func bookImportTreatsRootSourceAsContainingDestination() {
+    let source = URL(fileURLWithPath: "/", isDirectory: true)
+    let destination = URL(fileURLWithPath: "/tmp/cisum-book-import/source", isDirectory: true)
+
+    #expect(BookDBView.isDestinationNestedInSource(source: source, destination: destination))
+    #expect(!BookDBView.isDestinationNestedInSource(source: source, destination: source))
+}
+
 @Test func bookImportRejectsSymlinkedDestinationInsideSourceFolder() async throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)
