@@ -51,7 +51,7 @@ public class MagicPlayMan: ObservableObject, SuperLog {
     private(set) var currentDownloadObservers: (progressObserver: AnyCancellable, finishObserver: AnyCancellable)?
 
     /// 本地化配置
-    public var localization: Localization!
+    public var localization = Localization(locale: Locale(identifier: "zh_CN"))
 
     /// 默认封面图，用于在音频缩略图无法获得时显示
     public var defaultArtwork: Image?

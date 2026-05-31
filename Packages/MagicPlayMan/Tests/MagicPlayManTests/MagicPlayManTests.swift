@@ -40,6 +40,13 @@ final class MagicPlayManTests: XCTestCase {
         ))
     }
 
+    @MainActor
+    func testDefaultPlayerHasLocalization() {
+        let man = MagicPlayMan()
+
+        XCTAssertEqual(man.localization.noMediaSelected, "未选择媒体")
+    }
+
     func testPlaybackRequestValidationRejectsMissingLocalFiles() {
         let missing = FileManager.default.temporaryDirectory
             .appendingPathComponent(UUID().uuidString)
