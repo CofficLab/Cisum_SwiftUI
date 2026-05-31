@@ -131,37 +131,61 @@ extension AudioItemView {
         }
         #if os(macOS)
             .contextMenu {
-                AppContextMenuRow("播放", systemImage: "play.fill", action: playAudio)
-
-                if AudioItemFileActionPolicy.canRevealInFinder(url) {
-                    AppContextMenuRow("在 Finder 中显示", systemImage: "finder") {
-                        showInFinder()
+                Button(action: playAudio) {
+                    Label {
+                        Text("Play", tableName: "Audio-DBView", bundle: .module)
+                    } icon: {
+                        Image(systemName: "play.fill")
                     }
                 }
 
-                AppContextMenuRow("导出到下载目录", systemImage: "arrow.down.doc") {
+                if AudioItemFileActionPolicy.canRevealInFinder(url) {
+                    Button {
+                        showInFinder()
+                    } label: {
+                        Label {
+                            Text("Show in Finder", tableName: "Audio-DBView", bundle: .module)
+                        } icon: {
+                            Image(systemName: "finder")
+                        }
+                    }
+                }
+
+                Button {
                     exportToDownloads()
+                } label: {
+                    Label {
+                        Text("Export to Downloads", tableName: "Audio-DBView", bundle: .module)
+                    } icon: {
+                        Image(systemName: "arrow.down.doc")
+                    }
                 }
 
                 Divider()
 
-                AppContextMenuRow("删除", systemImage: "trash", role: .destructive) {
+                Button(role: .destructive) {
                     showDeleteConfirmation = true
+                } label: {
+                    Label {
+                        Text("Delete", tableName: "Audio-DBView", bundle: .module)
+                    } icon: {
+                        Image(systemName: "trash")
+                    }
                 }
             }
         #endif
             .confirmationDialog(
-                Text("确定要删除这个文件吗？", tableName: "Audio-DBView", bundle: .module),
+                Text("Delete this file?", tableName: "Audio-DBView", bundle: .module),
                 isPresented: $showDeleteConfirmation,
                 titleVisibility: .visible
             ) {
                 Button(role: .cancel) {} label: {
-                    Text("取消", tableName: "Audio-DBView", bundle: .module)
+                    Text("Cancel", tableName: "Audio-DBView", bundle: .module)
                 }
                 Button(role: .destructive) {
                     deleteFile()
                 } label: {
-                    Text("删除", tableName: "Audio-DBView", bundle: .module)
+                    Text("Delete", tableName: "Audio-DBView", bundle: .module)
                 }
             } message: {
                 Text(url.lastPathComponent)
