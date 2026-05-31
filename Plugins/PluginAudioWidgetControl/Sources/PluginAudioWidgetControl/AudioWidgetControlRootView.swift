@@ -14,11 +14,22 @@ enum AudioWidgetPlaybackRequestPolicy {
     }
 
     static func commandCount(from storedValue: Any?, maximum: Int = 10) -> Int {
+        if let number = storedValue as? NSNumber {
+            let doubleValue = number.doubleValue
+            guard doubleValue.isFinite else { return 0 }
+
+            if doubleValue > 1_000_000 {
+                return 1
+            }
+
+            return min(max(Int(doubleValue), 0), maximum)
+        }
+
         if let count = storedValue as? Int {
             return min(max(count, 0), maximum)
         }
 
-        if storedValue is TimeInterval {
+        if let timestamp = storedValue as? TimeInterval, timestamp.isFinite {
             return 1
         }
 
