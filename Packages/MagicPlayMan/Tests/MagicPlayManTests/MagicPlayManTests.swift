@@ -557,6 +557,10 @@ final class MagicPlayManTests: XCTestCase {
         let man = MagicPlayMan()
         let item = AVPlayerItem(url: audio)
         man.player.replaceCurrentItem(with: item)
+        man.setCurrentURL(audio)
+        man.setDuration(10)
+        man.setCurrentTime(5, reason: "test")
+        man.setProgress(0.5)
         let error = NSError(domain: "MagicPlayManTests", code: 99)
 
         man.handlePlaybackItemFailureNotification(Notification(
@@ -565,6 +569,11 @@ final class MagicPlayManTests: XCTestCase {
             userInfo: [AVPlayerItemFailedToPlayToEndTimeErrorKey: error]
         ))
 
+        XCTAssertNil(man.player.currentItem)
+        XCTAssertNil(man.currentURL)
+        XCTAssertEqual(man.currentTime, 0)
+        XCTAssertEqual(man.duration, 0)
+        XCTAssertEqual(man.progress, 0)
         XCTAssertEqual(man.currentError, .playbackError(error.localizedDescription))
     }
 

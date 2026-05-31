@@ -238,6 +238,11 @@ internal extension MagicPlayMan {
 
         let error = notification.userInfo?[AVPlayerItemFailedToPlayToEndTimeErrorKey] as? Error
         let message = error?.localizedDescription ?? "Unknown playback error"
+        _player.replaceCurrentItem(with: nil)
+        setCurrentURL(nil)
+        setCurrentTime(0, reason: className + ".itemFailedToPlayToEnd")
+        setDuration(0)
+        setProgress(0)
         setState(.failed(.playbackError(message)), reason: className + ".itemFailedToPlayToEnd")
     }
 
