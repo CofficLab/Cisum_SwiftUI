@@ -128,6 +128,41 @@ import SwiftData
     #expect(await db.getTotalOfAudio() == 1)
 }
 
+@Test func audioDBDeleteAudiosByURLRejectsMixedBatchBeforeDeleting() async throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let disk = root.appendingPathComponent("audio", isDirectory: true)
+    let outside = root.appendingPathComponent("outside", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: disk, withIntermediateDirectories: true)
+    try FileManager.default.createDirectory(at: outside, withIntermediateDirectories: true)
+
+    let schema = Schema([AudioModel.self])
+    let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    let container = try ModelContainer(for: schema, configurations: [configuration])
+    let db = AudioDB(container, reason: "audioDBDeleteAudiosByURLRejectsMixedBatchBeforeDeleting")
+
+    let insideFile = disk.appendingPathComponent("inside.mp3")
+    let outsideFile = outside.appendingPathComponent("outside.mp3")
+    try Data("audio".utf8).write(to: insideFile)
+    try Data("audio".utf8).write(to: outsideFile)
+    await db.insertAudio(url: insideFile, order: 10)
+    await db.insertAudio(url: outsideFile, order: 20)
+
+    do {
+        try await db.deleteAudiosByURL(disk: disk, urls: [insideFile, outsideFile])
+        Issue.record("Deleting a mixed batch with a file outside the audio library should fail")
+    } catch {
+        #expect(error.localizedDescription.contains("outside the current library"))
+    }
+    #expect(FileManager.default.fileExists(atPath: insideFile.path))
+    #expect(FileManager.default.fileExists(atPath: outsideFile.path))
+    #expect(await db.getTotalOfAudio() == 2)
+}
+
 @Test func audioDBSyncAppendsNewFilesInStablePathOrder() async throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)

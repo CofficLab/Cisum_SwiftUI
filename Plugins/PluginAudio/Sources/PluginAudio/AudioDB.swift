@@ -1135,19 +1135,19 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     ///   - urls: 要删除的音频 URL 数组
     /// - Throws: 如果删除操作失败则抛出错误
     func deleteAudiosByURL(disk: URL, urls: [URL], verbose: Bool = false) throws {
+        if let invalidURL = urls.first(where: { !Self.contains(disk, audioURL: $0) }) {
+            throw AudioRecordDBError.deleteFailed(
+                AudioPluginError.diskAccess(
+                    url: invalidURL,
+                    underlying: "Audio is outside the current library"
+                )
+            )
+        }
+
         var deletedUrls: [URL] = []
 
         for url in urls {
             do {
-                guard Self.contains(disk, audioURL: url) else {
-                    throw AudioRecordDBError.deleteFailed(
-                        AudioPluginError.diskAccess(
-                            url: url,
-                            underlying: "Audio is outside the current library"
-                        )
-                    )
-                }
-
                 guard let audio = try context.fetch(FetchDescriptor(predicate: #Predicate<AudioModel> {
                     $0.url == url
                 })).first else {
