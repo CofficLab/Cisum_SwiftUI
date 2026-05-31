@@ -341,6 +341,41 @@ import Foundation
     #expect(!FileManager.default.fileExists(atPath: source.appendingPathComponent("track.mp3").path))
 }
 
+@Test func migrationCopiesSymlinkedFilesAsStandaloneFiles() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let source = root.appendingPathComponent("source", isDirectory: true)
+    let target = root.appendingPathComponent("target", isDirectory: true)
+    let external = root.appendingPathComponent("external", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: source, withIntermediateDirectories: true)
+    try FileManager.default.createDirectory(at: external, withIntermediateDirectories: true)
+    let realFile = external.appendingPathComponent("real.mp3")
+    let linkedFile = source.appendingPathComponent("linked.mp3")
+    try Data("audio".utf8).write(to: realFile)
+    try FileManager.default.createSymbolicLink(at: linkedFile, withDestinationURL: realFile)
+
+    let manager = MigrationManager()
+    try manager.migrate(
+        from: source,
+        to: target,
+        progressCallback: nil,
+        downloadProgressCallback: nil,
+        verbose: false
+    )
+
+    let migratedFile = target.appendingPathComponent("linked.mp3")
+    let fileType = try FileManager.default.attributesOfItem(atPath: migratedFile.path)[.type] as? FileAttributeType
+
+    #expect(fileType == .typeRegular)
+    #expect((try Data(contentsOf: migratedFile)) == Data("audio".utf8))
+    #expect(!FileManager.default.fileExists(atPath: linkedFile.path))
+    #expect(FileManager.default.fileExists(atPath: realFile.path))
+}
+
 @Test func migrationReportsCompletionOnlyAfterMoveFinishes() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)

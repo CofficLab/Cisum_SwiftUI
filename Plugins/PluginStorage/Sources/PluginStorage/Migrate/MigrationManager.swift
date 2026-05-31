@@ -99,7 +99,7 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread, @unchecked Send
 
                 let targetFile = uniqueDestination(for: sourceFile, in: targetRoot)
                 do {
-                    try FileManager.default.moveItem(at: sourceFile, to: targetFile)
+                    try migrateItem(from: sourceFile, to: targetFile)
                     os_log(.info, "\(self.t)成功迁移: \(fileName) -> \(targetFile.lastPathComponent)")
                     progressCallback?(Double(index + 1) / Double(files.count), fileName)
                 } catch {
@@ -186,6 +186,25 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread, @unchecked Send
         downloadProgressCallback?(displayName, .downloading(progress: url.getDownloadProgressSnapshot()))
         try url.ensureLocalAvailabilitySync()
         downloadProgressCallback?(displayName, .local)
+    }
+
+    private func migrateItem(from sourceFile: URL, to targetFile: URL) throws {
+        let resolvedSource = sourceFile.resolvingSymlinksInPath().standardizedFileURL
+        let standardizedSource = sourceFile.standardizedFileURL
+
+        guard Self.representsSymlink(sourceFile),
+              FileManager.default.fileExists(atPath: resolvedSource.path),
+              resolvedSource.path != standardizedSource.path else {
+            try FileManager.default.moveItem(at: sourceFile, to: targetFile)
+            return
+        }
+
+        try FileManager.default.copyItem(at: resolvedSource, to: targetFile)
+        try FileManager.default.removeItem(at: sourceFile)
+    }
+
+    private static func representsSymlink(_ url: URL) -> Bool {
+        (try? url.resourceValues(forKeys: [.isSymbolicLinkKey]).isSymbolicLink) == true
     }
 
     private func uniqueDestination(for sourceFile: URL, in targetRoot: URL) -> URL {
