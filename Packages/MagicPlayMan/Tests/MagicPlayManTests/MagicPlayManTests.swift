@@ -363,6 +363,15 @@ final class MagicPlayManTests: XCTestCase {
         XCTAssertEqual(MagicPlayManPlaybackTimePolicy.normalizedProgress(currentTime: 10, duration: .infinity), 0)
     }
 
+    func testPlaybackDownloadProgressTextIsClamped() {
+        XCTAssertEqual(PlaybackState.downloadPercentText(for: .nan), "0%")
+        XCTAssertEqual(PlaybackState.downloadPercentText(for: -.infinity), "0%")
+        XCTAssertEqual(PlaybackState.downloadPercentText(for: -0.25), "0%")
+        XCTAssertEqual(PlaybackState.downloadPercentText(for: 0.4), "40%")
+        XCTAssertEqual(PlaybackState.downloadPercentText(for: 1.4), "100%")
+        XCTAssertEqual(PlaybackState.loading(.downloading(1.4)).stateText, "Downloading... 100%")
+    }
+
     func testTimeUpdatePolicyNormalizesInvalidPayloadValues() {
         let payload = MagicPlayManTimeUpdatePolicy.normalizedPayload(from: [
             "currentTime": TimeInterval.nan,

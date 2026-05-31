@@ -17,6 +17,14 @@ public enum PlaybackState: Equatable {
         case buffering
         case downloading(Double)
     }
+
+    static func normalizedDownloadProgress(_ progress: Double) -> Double {
+        MagicPlayManPlaybackTimePolicy.normalizedUnitProgress(progress)
+    }
+
+    static func downloadPercentText(for progress: Double) -> String {
+        "\(Int(normalizedDownloadProgress(progress) * 100))%"
+    }
     
     public enum PlaybackError: LocalizedError, Equatable {
         case noAsset
@@ -231,7 +239,7 @@ public enum PlaybackState: Equatable {
             case .buffering:
                 return "Buffering..."
             case .downloading(let progress):
-                return "Downloading... \(Int(progress * 100))%"
+                return "Downloading... \(Self.downloadPercentText(for: progress))"
             }
         case .willPlay:
             return "Will Play"
@@ -273,7 +281,7 @@ public enum PlaybackState: Equatable {
             case .buffering:
                 return localization.buffering
             case .downloading(let progress):
-                return "\(localization.downloading) \(Int(progress * 100))%"
+                return "\(localization.downloading) \(Self.downloadPercentText(for: progress))"
             }
         case .willPlay:
             return localization.willPlay
@@ -321,7 +329,7 @@ public struct StateView: View {
                 // 如果是加载状态，显示进度
                 if case .loading(let loadingState) = state {
                     if case .downloading(let progress) = loadingState {
-                        ProgressView(value: progress, total: 1.0)
+                        ProgressView(value: PlaybackState.normalizedDownloadProgress(progress), total: 1.0)
                             .progressViewStyle(.linear)
                     } else {
                         ProgressView()

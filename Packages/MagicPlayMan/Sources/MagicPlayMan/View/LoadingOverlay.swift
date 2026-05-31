@@ -26,13 +26,15 @@ struct LoadingOverlay: View {
     }
 
     private func downloadingProgress(_ progress: Double) -> some View {
-        VStack(spacing: 16) {
+        let normalizedProgress = PlaybackState.normalizedDownloadProgress(progress)
+
+        return VStack(spacing: 16) {
             ProgressView(
                 "\(loc.downloading) \(assetTitle)",
-                value: progress,
+                value: normalizedProgress,
                 total: 1.0
             )
-            Text("\(Int(progress * 100))%")
+            Text(PlaybackState.downloadPercentText(for: progress))
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
