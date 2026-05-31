@@ -46,7 +46,7 @@ extension ShellGit {
     /// - Returns: 提交记录列表
     public static func commits(in branch: String, count: Int = 10, at path: String? = nil) throws -> [MagicGitCommit] {
         let format = "%H|%an|%ae|%at|%s"
-        let output = try Shell.runSync("git log \(branch) -n \(count) --pretty=format:'\(format)'", at: path)
+        let output = try Shell.runSync(commitsInBranchCommand(branch, count: count, format: format), at: path)
         return output.split(separator: "\n").compactMap { line in
             parseRecentCommitLine(String(line))
         }
@@ -59,11 +59,11 @@ extension ShellGit {
     /// - Returns: 提交详细信息
     public static func commitDetail(_ commit: String, at path: String? = nil) async throws -> MagicGitCommitDetail {
         let format = "%H|%an|%ae|%at|%s|%b"
-        let output = try Shell.runSync("git show \(commit) --pretty=format:'\(format)' --no-patch", at: path)
+        let output = try Shell.runSync(commitDetailCommand(commit, format: format), at: path)
         let parsedCommit = try parseCommitDetailOutput(output)
 
         let files = try await changedFilesDetail(in: commit, at: path)
-        let diff = try Shell.runSync("git show \(commit)", at: path)
+        let diff = try Shell.runSync(commitShowCommand(commit), at: path)
 
         return MagicGitCommitDetail(
             id: parsedCommit.id,
@@ -124,7 +124,7 @@ extension ShellGit {
         } else {
             branchName = try currentBranch(at: path)
         }
-        let log = try Shell.runSync("git log \(remote)/\(branchName)..\(branchName) --oneline", at: path)
+        let log = try Shell.runSync(unpushedCommitsCommand(remote: remote, branchName: branchName), at: path)
         return log.split(separator: "\n").map { String($0) }
     }
 
@@ -218,7 +218,7 @@ extension ShellGit {
         } else {
             branchName = try currentBranch(at: path)
         }
-        let log = try Shell.runSync("git log \(remote)/\(branchName)..\(branchName) --pretty=format:%H%x09%an%x09%ae%x09%ad%x09%s%x09%D", at: path)
+        let log = try Shell.runSync(unpushedCommitListCommand(remote: remote, branchName: branchName), at: path)
         let lines = log.split(separator: "\n").map { String($0) }
         var commits: [MagicGitCommit] = []
         let dateFormatter = ISO8601DateFormatter()
@@ -236,6 +236,27 @@ extension ShellGit {
             commits.append(MagicGitCommit(id: hash, hash: hash, author: author, email: email, date: date, message: message, refs: refs, tags: tags))
         }
         return commits
+    }
+
+    static func commitsInBranchCommand(_ branch: String, count: Int, format: String) -> String {
+        "git log \(shellQuoted(branch)) -n \(count) --pretty=format:\(shellQuoted(format))"
+    }
+
+    static func commitDetailCommand(_ commit: String, format: String) -> String {
+        "git show \(shellQuoted(commit)) --pretty=format:\(shellQuoted(format)) --no-patch"
+    }
+
+    static func commitShowCommand(_ commit: String) -> String {
+        "git show \(shellQuoted(commit))"
+    }
+
+    static func unpushedCommitsCommand(remote: String, branchName: String) -> String {
+        "git log \(shellQuoted("\(remote)/\(branchName)..\(branchName)")) --oneline"
+    }
+
+    static func unpushedCommitListCommand(remote: String, branchName: String) -> String {
+        let format = "%H%x09%an%x09%ae%x09%ad%x09%s%x09%D"
+        return "git log \(shellQuoted("\(remote)/\(branchName)..\(branchName)")) --pretty=format:\(shellQuoted(format))"
     }
 
     /// 分页获取提交日志（结构体版）
