@@ -10,9 +10,9 @@ public enum AudioLikeRepoError: Error, LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .containerNotAvailable:
-            return "数据容器不可用"
+            return String(localized: "Data container is unavailable", table: "Audio-Like", bundle: .module)
         case .databaseURLNotConfigured:
-            return "AudioLike 数据库路径未配置"
+            return String(localized: "AudioLike database path is not configured", table: "Audio-Like", bundle: .module)
         }
     }
 }

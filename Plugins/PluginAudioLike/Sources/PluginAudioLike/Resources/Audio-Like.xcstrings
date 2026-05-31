@@ -176,6 +176,38 @@
           }
         }
       }
+    },
+    "Data container is unavailable": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "数据容器不可用"
+          }
+        },
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "資料容器不可用"
+          }
+        }
+      }
+    },
+    "AudioLike database path is not configured": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AudioLike 数据库路径未配置"
+          }
+        },
+        "zh-HK": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AudioLike 資料庫路徑未配置"
+          }
+        }
+      }
     }
   },
   "version": "1.0"
