@@ -13,6 +13,41 @@ enum FileStatusResolutionPolicy {
     }
 }
 
+enum FileStatusDirectoryScanPolicy {
+    static func cloudDownloadStats(in directoryURL: URL) -> (downloaded: Int, notDownloaded: Int) {
+        guard let enumerator = FileManager.default.enumerator(
+            at: directoryURL,
+            includingPropertiesForKeys: [
+                .isRegularFileKey,
+                .isUbiquitousItemKey,
+                .ubiquitousItemDownloadingStatusKey,
+            ],
+            options: [.skipsHiddenFiles]
+        ) else {
+            return (downloaded: 0, notDownloaded: 0)
+        }
+
+        var stats = (downloaded: 0, notDownloaded: 0)
+        for case let fileURL as URL in enumerator {
+            guard isRegularFile(fileURL), fileURL.checkIsICloud(verbose: false) else {
+                continue
+            }
+
+            if fileURL.isDownloaded {
+                stats.downloaded += 1
+            } else {
+                stats.notDownloaded += 1
+            }
+        }
+
+        return stats
+    }
+
+    private static func isRegularFile(_ url: URL) -> Bool {
+        (try? url.resourceValues(forKeys: [.isRegularFileKey]).isRegularFile) == true
+    }
+}
+
 struct FileStatusColumnView: View, SuperLog {
     nonisolated static let emoji: String = "🥩"
 
@@ -77,17 +112,7 @@ struct FileStatusColumnView: View, SuperLog {
     }
 
     nonisolated private static func resolveDirectoryStatus(_ directoryURL: URL) -> (status: String, color: Color) {
-        // 使用 flatten() 获取所有文件
-        let files = directoryURL.flatten()
-        var fileStats = (downloaded: 0, notDownloaded: 0)
-
-        for file in files where file.checkIsICloud(verbose: false) {
-            if file.isDownloaded {
-                fileStats.downloaded += 1
-            } else {
-                fileStats.notDownloaded += 1
-            }
-        }
+        let fileStats = FileStatusDirectoryScanPolicy.cloudDownloadStats(in: directoryURL)
 
         if fileStats.downloaded > 0 || fileStats.notDownloaded > 0 {
             return ("\(fileStats.downloaded)个已下载, \(fileStats.notDownloaded)个未下载",

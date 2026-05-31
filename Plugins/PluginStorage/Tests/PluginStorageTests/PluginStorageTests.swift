@@ -170,6 +170,24 @@ import Foundation
     #expect(FileStatusColumnView.resolveStatus(for: danglingLink, verbose: false).status == "本地文件")
 }
 
+@Test func fileStatusDirectoryScanIgnoresLocalDirectoriesAndHiddenFiles() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let nested = root.appendingPathComponent("nested", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: nested, withIntermediateDirectories: true)
+    try Data("audio".utf8).write(to: root.appendingPathComponent("track.mp3"))
+    try Data("hidden".utf8).write(to: root.appendingPathComponent(".hidden"))
+    try Data("audio".utf8).write(to: nested.appendingPathComponent("nested.mp3"))
+
+    #expect(FileStatusDirectoryScanPolicy.cloudDownloadStats(in: root).downloaded == 0)
+    #expect(FileStatusDirectoryScanPolicy.cloudDownloadStats(in: root).notDownloaded == 0)
+    #expect(FileStatusColumnView.resolveStatus(for: root, verbose: false).status == "本地目录")
+}
+
 @Test func repositoryInfoOnlyOpensExistingLocalPaths() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)
