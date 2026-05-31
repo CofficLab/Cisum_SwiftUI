@@ -21,4 +21,15 @@ import Testing
     #expect(ShellNetwork.tracerouteCommand(host) == "traceroute \(quotedHost)")
     #expect(ShellNetwork.httpStatusCommand(url) == "curl -s -o /dev/null -w '%{http_code}' \(quotedURL)")
 }
+
+@Test func shellNetworkPortCommandsRejectInvalidPorts() {
+    for port in [Int.min, -1, 0, 65536, Int.max] {
+        #expect(ShellNetwork.normalizedPort(port) == nil)
+        #expect(ShellNetwork.testPortCommand("localhost", port: port) == nil)
+        #expect(ShellNetwork.testPort("localhost", port: port) == false)
+    }
+
+    #expect(ShellNetwork.normalizedPort(1) == 1)
+    #expect(ShellNetwork.normalizedPort(65535) == 65535)
+}
 #endif

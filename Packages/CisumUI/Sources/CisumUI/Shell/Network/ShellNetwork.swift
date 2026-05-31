@@ -32,8 +32,13 @@ class ShellNetwork: SuperLog {
         "curl -I \(shellQuoted(url))"
     }
 
-    static func testPortCommand(_ host: String, port: Int) -> String {
-        "nc -z -w3 \(shellQuoted(host)) \(port)"
+    static func normalizedPort(_ port: Int) -> Int? {
+        (1...65535).contains(port) ? port : nil
+    }
+
+    static func testPortCommand(_ host: String, port: Int) -> String? {
+        guard let port = normalizedPort(port) else { return nil }
+        return "nc -z -w3 \(shellQuoted(host)) \(port)"
     }
 
     static func nslookupCommand(_ domain: String) -> String {
@@ -102,7 +107,8 @@ class ShellNetwork: SuperLog {
     /// - Returns: 端口是否开放
     static func testPort(_ host: String, port: Int) -> Bool {
         do {
-            _ = try Shell.runSync(testPortCommand(host, port: port))
+            guard let command = testPortCommand(host, port: port) else { return false }
+            _ = try Shell.runSync(command)
             return true
         } catch {
             return false
