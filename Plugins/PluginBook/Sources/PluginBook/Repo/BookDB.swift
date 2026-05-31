@@ -287,6 +287,8 @@ extension BookDB {
                 context.insert(BookModel(url: value, order: nextOrder))
                 nextOrder += 1
             }
+
+            repairBookOrderIfNeeded()
         } catch {
             os_log(.error, "\(error.localizedDescription)")
         }
@@ -322,6 +324,7 @@ extension BookDB {
             }
         }
 
+        repairBookOrderIfNeeded()
         try context.save()
         updateBookParent()
         NotificationCenter.postBookDBUpdated()
@@ -351,6 +354,31 @@ extension BookDB {
     static func sortedForStableInsertion(_ urls: [URL]) -> [URL] {
         urls.sorted {
             $0.standardizedFileURL.path.localizedStandardCompare($1.standardizedFileURL.path) == .orderedAscending
+        }
+    }
+
+    private func repairBookOrderIfNeeded() {
+        do {
+            let books = try context.fetch(BookModel.descriptorAll)
+            guard Self.needsStableOrderRepair(books.map(\.order)) else { return }
+
+            var nextOrder = 100
+            for book in Self.sortedForStableInsertion(books) {
+                book.order = nextOrder
+                nextOrder += 1
+            }
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+        }
+    }
+
+    static func needsStableOrderRepair(_ orders: [Int]) -> Bool {
+        Set(orders).count != orders.count
+    }
+
+    private static func sortedForStableInsertion(_ books: [BookModel]) -> [BookModel] {
+        books.sorted {
+            $0.url.standardizedFileURL.path.localizedStandardCompare($1.url.standardizedFileURL.path) == .orderedAscending
         }
     }
 

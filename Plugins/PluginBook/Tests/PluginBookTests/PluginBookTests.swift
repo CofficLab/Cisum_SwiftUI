@@ -185,3 +185,37 @@ import SwiftData
 
     #expect(db.getNextBookOf(second)?.url == third)
 }
+
+@Test func bookDBFullSyncRepairsDuplicateLegacyBookOrders() async throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+
+    let schema = Schema([BookModel.self, BookState.self])
+    let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    let container = try ModelContainer(for: schema, configurations: [configuration])
+    let db = BookDB(container, reason: "bookDBFullSyncRepairsDuplicateLegacyBookOrders")
+
+    let second = root.appendingPathComponent("02-second.m4b")
+    let first = root.appendingPathComponent("01-first.m4b")
+    for file in [second, first] {
+        try Data("audio".utf8).write(to: file)
+        try await db.insertModel(BookModel(url: file, order: 0))
+    }
+
+    await db.sync([second, first], isFirst: true)
+
+    let books = try await db.allBookDTOs()
+        .sorted { $0.order < $1.order }
+    #expect(books.map(\.url) == [first, second])
+    #expect(Set(books.map(\.order)).count == 2)
+}
+
+@Test func bookDBKeepsUniqueExistingBookOrders() {
+    #expect(!BookDB.needsStableOrderRepair([20, 10, 30]))
+    #expect(BookDB.needsStableOrderRepair([0, 0]))
+}
