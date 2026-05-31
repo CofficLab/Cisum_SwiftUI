@@ -11,6 +11,10 @@ enum AudioDownloadRequestPolicy {
         isSceneActive && asset != nil && isNotDownloaded
     }
 
+    static func shouldCheckCurrentAsset(isSceneActive: Bool, asset: URL?) -> Bool {
+        isSceneActive && asset != nil
+    }
+
     static func shouldApplyDownloadResult(requestedAsset: URL, currentAsset: URL?, isSceneActive: Bool) -> Bool {
         isSceneActive && representsSameFile(requestedAsset, currentAsset)
     }
@@ -47,6 +51,9 @@ public struct AudioDownloadRootView<Content>: View, SuperLog where Content: View
     public var body: some View {
         content
             .onAppear(perform: handleOnAppear)
+            .onChange(of: currentSceneName()) { _, _ in
+                handleCurrentSceneChanged()
+            }
             .onPlayManAssetChanged(handlePlayManAssetChanged)
     }
 
@@ -69,6 +76,17 @@ extension AudioDownloadRootView {
             }
             return
         }
+
+        handleCurrentSceneChanged()
+    }
+
+    func handleCurrentSceneChanged() {
+        guard AudioDownloadRequestPolicy.shouldCheckCurrentAsset(
+            isSceneActive: shouldActivateDownload,
+            asset: man.currentAsset
+        ) else { return }
+
+        handlePlayManAssetChanged(man.currentAsset)
     }
 
     /// 处理播放资源变化事件

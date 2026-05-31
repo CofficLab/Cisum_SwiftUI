@@ -10,6 +10,19 @@ import Foundation
 @Test func audioDownloadOnlyStartsForActiveMissingAsset() {
     let asset = URL(fileURLWithPath: "/tmp/cisum-audio-download/track.mp3")
 
+    #expect(AudioDownloadRequestPolicy.shouldCheckCurrentAsset(
+        isSceneActive: true,
+        asset: asset
+    ))
+    #expect(!AudioDownloadRequestPolicy.shouldCheckCurrentAsset(
+        isSceneActive: false,
+        asset: asset
+    ))
+    #expect(!AudioDownloadRequestPolicy.shouldCheckCurrentAsset(
+        isSceneActive: true,
+        asset: nil
+    ))
+
     #expect(AudioDownloadRequestPolicy.shouldStartDownload(
         isSceneActive: true,
         asset: asset,
