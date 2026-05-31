@@ -52,15 +52,17 @@ public struct BookSettingsView: View, SuperLog {
                     }
 
                     #if os(macOS)
-                        AppSettingsInfoRow(
-                            title: String(localized: "Open Library", table: "Book-Settings", bundle: .module),
-                            description: String(localized: "View in Finder", table: "Book-Settings", bundle: .module),
-                            systemImage: .cisumIconShowInFinder,
-                            action: {
-                                disk.openInFinder()
+                        if Self.shouldShowOpenLibraryAction(for: disk) {
+                            AppSettingsInfoRow(
+                                title: String(localized: "Open Library", table: "Book-Settings", bundle: .module),
+                                description: String(localized: "View in Finder", table: "Book-Settings", bundle: .module),
+                                systemImage: .cisumIconShowInFinder,
+                                action: {
+                                    disk.openInFinder()
+                                }
+                            ) {
+                                Image(systemName: .cisumIconShowInFinder)
                             }
-                        ) {
-                            Image(systemName: .cisumIconShowInFinder)
                         }
                     #endif
 
@@ -152,5 +154,12 @@ private extension BookSettingsView {
                 fileCount: disk.filesCountRecursively()
             )
         }.value
+    }
+
+}
+
+extension BookSettingsView {
+    nonisolated static func shouldShowOpenLibraryAction(for disk: URL) -> Bool {
+        URLOpenActionPolicy.canOpen(disk)
     }
 }

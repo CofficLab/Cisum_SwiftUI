@@ -38,8 +38,8 @@ enum URLDirectoryContainmentPolicy {
     }
 }
 
-enum URLOpenActionPolicy {
-    static func canOpen(_ url: URL) -> Bool {
+public enum URLOpenActionPolicy {
+    public static func canOpen(_ url: URL) -> Bool {
         guard url.isFileURL else {
             return true
         }

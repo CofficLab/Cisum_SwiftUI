@@ -52,15 +52,17 @@ public struct AudioSettingsView: View, SuperLog {
                     }
 
                     #if os(macOS)
-                        AppSettingsInfoRow(
-                            title: String(localized: "Open Library", table: "Audio-Settings", bundle: .module),
-                            description: String(localized: "View in Finder", table: "Audio-Settings", bundle: .module),
-                            systemImage: .cisumIconShowInFinder,
-                            action: {
-                                disk.openInFinder()
+                        if Self.shouldShowOpenLibraryAction(for: disk) {
+                            AppSettingsInfoRow(
+                                title: String(localized: "Open Library", table: "Audio-Settings", bundle: .module),
+                                description: String(localized: "View in Finder", table: "Audio-Settings", bundle: .module),
+                                systemImage: .cisumIconShowInFinder,
+                                action: {
+                                    disk.openInFinder()
+                                }
+                            ) {
+                                Image(systemName: .cisumIconShowInFinder)
                             }
-                        ) {
-                            Image(systemName: .cisumIconShowInFinder)
                         }
                     #endif
 
@@ -152,5 +154,12 @@ private extension AudioSettingsView {
                 fileCount: disk.filesCountRecursively()
             )
         }.value
+    }
+
+}
+
+extension AudioSettingsView {
+    nonisolated static func shouldShowOpenLibraryAction(for disk: URL) -> Bool {
+        URLOpenActionPolicy.canOpen(disk)
     }
 }

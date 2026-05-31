@@ -36,3 +36,17 @@ import Testing
         resultGeneration: 2
     ))
 }
+
+@Test func audioSettingsHidesOpenLibraryActionForMissingLocalDisk() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let missingDisk = root.appendingPathComponent("missing", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+
+    #expect(!AudioSettingsView.shouldShowOpenLibraryAction(for: missingDisk))
+    #expect(AudioSettingsView.shouldShowOpenLibraryAction(for: root))
+}
