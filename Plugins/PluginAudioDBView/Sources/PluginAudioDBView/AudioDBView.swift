@@ -87,9 +87,9 @@ public struct AudioDBView: View, SuperLog, SuperThread, SuperEvent {
         /// 排序模式对应的描述文本
         var description: String {
             switch self {
-            case .random: return "正在随机排序..."
-            case .order: return "正在顺序排序..."
-            case .none: return "正在排序..."
+            case .random: return String(localized: "Shuffling...", table: "Audio-DBView", bundle: .module)
+            case .order: return String(localized: "Sorting in Order...", table: "Audio-DBView", bundle: .module)
+            case .none: return String(localized: "Sorting...", table: "Audio-DBView", bundle: .module)
             }
         }
     }
