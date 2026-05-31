@@ -17,6 +17,23 @@ import SwiftData
     }
 }
 
+@MainActor
+@Test func audioDBUpdatedNotificationPostsSynchronouslyOnMainThread() {
+    let receivedCount = TestNotificationCounter()
+    let token = NotificationCenter.default.addObserver(
+        forName: .dbUpdated,
+        object: nil,
+        queue: nil
+    ) { _ in
+        receivedCount.increment()
+    }
+    defer { NotificationCenter.default.removeObserver(token) }
+
+    NotificationCenter.postDBUpdated()
+
+    #expect(receivedCount.value == 1)
+}
+
 @Test func audioDBUniqueSupportedFilesDeduplicatesByResolvedIdentity() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)
@@ -618,5 +635,20 @@ extension AudioDB {
         insertAudio(url: fourth, order: 40, force: true)
 
         return try deleteAudios(ids: [thirdAudio.id, secondAudio.id], verbose: false)?.url
+    }
+}
+
+private final class TestNotificationCounter: @unchecked Sendable {
+    private let lock = NSLock()
+    private var count = 0
+
+    var value: Int {
+        lock.withLock { count }
+    }
+
+    func increment() {
+        lock.withLock {
+            count += 1
+        }
     }
 }

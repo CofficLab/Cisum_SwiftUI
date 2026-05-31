@@ -32,38 +32,46 @@ public extension Notification.Name {
 
 public extension NotificationCenter {
     static func postBookDBSyncing() {
-        DispatchQueue.main.async {
-            NotificationCenter.default.post(name: .bookDBSyncing, object: nil)
-        }
+        postBookEventOnMain(name: .bookDBSyncing)
     }
 
     static func postBookDBSynced() {
-        DispatchQueue.main.async {
-            NotificationCenter.default.post(name: .bookDBSynced, object: nil)
-        }
+        postBookEventOnMain(name: .bookDBSynced)
     }
 
     static func postBookDBUpdated() {
-        DispatchQueue.main.async {
-            NotificationCenter.default.post(name: .bookDBUpdated, object: nil)
-        }
+        postBookEventOnMain(name: .bookDBUpdated)
     }
 
     static func postBookDBDeleted(urls: [URL] = []) {
-        DispatchQueue.main.async {
-            NotificationCenter.default.post(name: .bookDBDeleted, object: nil, userInfo: ["urls": urls])
-        }
+        postBookDeletedEventOnMain(urls: urls)
     }
 
     static func postBookDBSorting() {
-        DispatchQueue.main.async {
-            NotificationCenter.default.post(name: .bookDBSorting, object: nil)
-        }
+        postBookEventOnMain(name: .bookDBSorting)
     }
 
     static func postBookDBSortDone() {
-        DispatchQueue.main.async {
-            NotificationCenter.default.post(name: .bookDBSortDone, object: nil)
+        postBookEventOnMain(name: .bookDBSortDone)
+    }
+
+    private static func postBookEventOnMain(name: Notification.Name) {
+        if Thread.isMainThread {
+            NotificationCenter.default.post(name: name, object: nil)
+        } else {
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: name, object: nil)
+            }
+        }
+    }
+
+    private static func postBookDeletedEventOnMain(urls: [URL]) {
+        if Thread.isMainThread {
+            NotificationCenter.default.post(name: .bookDBDeleted, object: nil, userInfo: ["urls": urls])
+        } else {
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: .bookDBDeleted, object: nil, userInfo: ["urls": urls])
+            }
         }
     }
 }

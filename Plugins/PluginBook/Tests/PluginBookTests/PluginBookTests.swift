@@ -17,6 +17,24 @@ import SwiftData
     }
 }
 
+@MainActor
+@Test func bookDBDeletedNotificationPostsSynchronouslyOnMainThread() {
+    let deletedURL = URL(fileURLWithPath: "/tmp/cisum-book-event-tests/deleted.m4b")
+    let receivedURLs = TestNotificationValue<[URL]>([])
+    let token = NotificationCenter.default.addObserver(
+        forName: .bookDBDeleted,
+        object: nil,
+        queue: nil
+    ) { notification in
+        receivedURLs.set(notification.userInfo?["urls"] as? [URL] ?? [])
+    }
+    defer { NotificationCenter.default.removeObserver(token) }
+
+    NotificationCenter.postBookDBDeleted(urls: [deletedURL])
+
+    #expect(receivedURLs.value == [deletedURL])
+}
+
 @Test func symlinkedBookFolderIsSupportedLibraryItem() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)
@@ -675,5 +693,24 @@ extension BookDB {
         try insertModel(BookModel(url: fourth, order: 40))
 
         return delete(ids: [thirdBook.id, secondBook.id], verbose: false)?.url
+    }
+}
+
+private final class TestNotificationValue<Value>: @unchecked Sendable {
+    private let lock = NSLock()
+    private var storedValue: Value
+
+    init(_ value: Value) {
+        self.storedValue = value
+    }
+
+    var value: Value {
+        lock.withLock { storedValue }
+    }
+
+    func set(_ value: Value) {
+        lock.withLock {
+            storedValue = value
+        }
     }
 }

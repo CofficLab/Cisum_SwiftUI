@@ -20,32 +20,32 @@ public extension Notification.Name {
 
 public extension NotificationCenter {
     static func postDBSyncing() {
-        DispatchQueue.main.async {
-            NotificationCenter.default.post(name: .dbSyncing, object: nil)
-        }
+        postAudioEventOnMain(name: .dbSyncing)
     }
 
     static func postDBSynced() {
-        DispatchQueue.main.async {
-            NotificationCenter.default.post(name: .dbSynced, object: nil)
-        }
+        postAudioEventOnMain(name: .dbSynced)
     }
 
     static func postDBUpdated() {
-        DispatchQueue.main.async {
-            NotificationCenter.default.post(name: .dbUpdated, object: nil)
-        }
+        postAudioEventOnMain(name: .dbUpdated)
     }
 
     static func postFileSystemSynced() {
-        DispatchQueue.main.async {
-            NotificationCenter.default.post(name: .fileSystemSynced, object: nil)
-        }
+        postAudioEventOnMain(name: .fileSystemSynced)
     }
 
     static func postFileSystemDeleted() {
-        DispatchQueue.main.async {
-            NotificationCenter.default.post(name: .fileSystemDeleted, object: nil)
+        postAudioEventOnMain(name: .fileSystemDeleted)
+    }
+
+    private static func postAudioEventOnMain(name: Notification.Name) {
+        if Thread.isMainThread {
+            NotificationCenter.default.post(name: name, object: nil)
+        } else {
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: name, object: nil)
+            }
         }
     }
 }
