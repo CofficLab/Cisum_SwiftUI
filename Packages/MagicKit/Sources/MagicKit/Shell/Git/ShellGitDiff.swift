@@ -122,11 +122,10 @@ extension ShellGit {
     public static func diffFileList(staged: Bool = false, at path: String? = nil) async throws -> [MagicGitDiffFile] {
         let option = staged ? "--cached" : ""
         // 获取变动文件及类型
-        let nameStatus = try Shell.runSync("git diff --name-status \(option)", at: path)
-        let files = nameStatus.split(separator: "\n").map { String($0) }
+        let nameStatus = try Shell.runSync("git diff --name-status -z \(option)", at: path)
+        let files = parseNameStatusZOutput(nameStatus)
         var result: [MagicGitDiffFile] = []
-        for line in files {
-            guard let parsedFile = parseNameStatusLine(line) else { continue }
+        for parsedFile in files {
             let changeType = parsedFile.changeType
             let file = parsedFile.file
             let diff = try Shell.runSync("git diff \(option) -- \(shellQuoted(file))", at: path)
@@ -142,10 +141,9 @@ extension ShellGit {
     /// - Returns: [MagicGitDiffFile]
     public static func fileChanges(in commit: String, at path: String? = nil) throws -> [MagicGitDiffFile] {
         let nameStatus = try Shell.runSync(diffTreeNameStatusCommand(commit), at: path)
-        let files = nameStatus.split(separator: "\n").map { String($0) }
+        let files = parseNameStatusZOutput(nameStatus)
         var result: [MagicGitDiffFile] = []
-        for line in files {
-            guard let parsedFile = parseNameStatusLine(line) else { continue }
+        for parsedFile in files {
             let changeType = parsedFile.changeType
             let file = parsedFile.file
             let diff = try Shell.runSync(showCommitFileDiffCommand(commit: commit, file: file), at: path)
@@ -161,7 +159,7 @@ extension ShellGit {
     /// - Returns: 文件名数组
     public static func changedFiles(in commit: String, at path: String? = nil) throws -> [String] {
         let output = try Shell.runSync(diffTreeNameOnlyCommand(commit), at: path)
-        return output.split(separator: "\n").map { String($0) }
+        return parsePathZOutput(output)
     }
     
     /// 获取指定 commit 变动的文件列表（结构体版）
@@ -180,9 +178,8 @@ extension ShellGit {
         if hasParent {
             // 有父commit，使用diff-tree获取变更文件
             let output = try await Shell.run(diffTreeNameStatusCommand(commit), at: path, verbose: verbose)
-            let files = output.split(separator: "\n").map { String($0) }
-            return files.compactMap { line in
-                guard let parsedFile = parseNameStatusLine(line) else { return nil }
+            let files = parseNameStatusZOutput(output)
+            return files.map { parsedFile in
                 let changeType = parsedFile.changeType
                 let file = parsedFile.file
                 return MagicGitDiffFile(id: file, file: file, changeType: changeType, diff: "")
@@ -257,11 +254,11 @@ extension ShellGit {
     }
 
     static func diffTreeNameStatusCommand(_ commit: String) -> String {
-        "git diff-tree --no-commit-id --name-status -r \(shellQuoted(commit))"
+        "git diff-tree --no-commit-id --name-status -z -r \(shellQuoted(commit))"
     }
 
     static func diffTreeNameOnlyCommand(_ commit: String) -> String {
-        "git diff-tree --no-commit-id --name-only -r \(shellQuoted(commit))"
+        "git diff-tree --no-commit-id --name-only -z -r \(shellQuoted(commit))"
     }
 
     static func revListParentsCommand(_ commit: String) -> String {
@@ -316,6 +313,36 @@ extension ShellGit {
         }
 
         return (changeType, file)
+    }
+
+    static func parseNameStatusZOutput(_ output: String) -> [(changeType: String, file: String)] {
+        let records = output.split(separator: "\0", omittingEmptySubsequences: false).map(String.init)
+        var files: [(changeType: String, file: String)] = []
+        var index = 0
+
+        while index < records.count {
+            let changeType = records[index]
+            guard !changeType.isEmpty else {
+                index += 1
+                continue
+            }
+
+            if changeType.hasPrefix("R") || changeType.hasPrefix("C") {
+                guard index + 2 < records.count, !records[index + 2].isEmpty else { break }
+                files.append((changeType: changeType, file: records[index + 2]))
+                index += 3
+            } else {
+                guard index + 1 < records.count, !records[index + 1].isEmpty else { break }
+                files.append((changeType: changeType, file: records[index + 1]))
+                index += 2
+            }
+        }
+
+        return files
+    }
+
+    static func parsePathZOutput(_ output: String) -> [String] {
+        output.split(separator: "\0").map(String.init)
     }
 
     static func shellQuoted(_ value: String) -> String {

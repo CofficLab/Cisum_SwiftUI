@@ -27,6 +27,18 @@ import Testing
     #expect(ShellGit.parseNameStatusLine("R100\told.swift\t") == nil)
 }
 
+@Test func shellGitNameStatusZParserPreservesSpecialPaths() {
+    let files = ShellGit.parseNameStatusZOutput(
+        "M\u{0}folder/a\tfile.md\u{0}R100\u{0}old\nname.md\u{0}new\tname.md\u{0}"
+    )
+
+    #expect(files.count == 2)
+    #expect(files[0].changeType == "M")
+    #expect(files[0].file == "folder/a\tfile.md")
+    #expect(files[1].changeType == "R100")
+    #expect(files[1].file == "new\tname.md")
+}
+
 @Test func shellGitDiffHandlesQuotedFilePaths() async throws {
     let repo = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)
@@ -39,7 +51,7 @@ import Testing
     _ = try Shell.runSync("git config user.name Test", at: repo.path)
     _ = try Shell.runSync("git config user.email test@example.com", at: repo.path)
 
-    let fileName = "folder/a file 'quoted'.txt"
+    let fileName = "folder/a\tfile 'quoted'.txt"
     let fileURL = repo.appendingPathComponent(fileName)
     try FileManager.default.createDirectory(at: fileURL.deletingLastPathComponent(), withIntermediateDirectories: true)
     try "before\n".write(to: fileURL, atomically: true, encoding: .utf8)
@@ -76,8 +88,8 @@ import Testing
     #expect(ShellGit.fileExistsCommand(commit: commit, file: file) == "git cat-file -e \(quotedCommitFile)")
     #expect(ShellGit.parentCommitCommand(commit) == "git rev-parse \(quotedParent)")
     #expect(ShellGit.fileContentCommand(commit: commit, file: file) == "git show \(quotedCommitFile)")
-    #expect(ShellGit.diffTreeNameStatusCommand(commit) == "git diff-tree --no-commit-id --name-status -r \(quotedCommit)")
-    #expect(ShellGit.diffTreeNameOnlyCommand(commit) == "git diff-tree --no-commit-id --name-only -r \(quotedCommit)")
+    #expect(ShellGit.diffTreeNameStatusCommand(commit) == "git diff-tree --no-commit-id --name-status -z -r \(quotedCommit)")
+    #expect(ShellGit.diffTreeNameOnlyCommand(commit) == "git diff-tree --no-commit-id --name-only -z -r \(quotedCommit)")
     #expect(ShellGit.revListParentsCommand(commit) == "git rev-list --parents -n 1 \(quotedCommit)")
     #expect(ShellGit.showCommitFileDiffCommand(commit: commit, file: file) == "git show \(quotedCommit) -- \(quotedFile)")
     #expect(ShellGit.showNameOnlyCommand(commit) == "git show --name-only --format= \(quotedCommit)")
