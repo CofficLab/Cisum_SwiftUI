@@ -59,4 +59,27 @@ import Testing
     #expect(contentChange.before == "before")
     #expect(contentChange.after == "after\n")
 }
+
+@Test func shellGitDiffCommandsPreserveLiteralRefsAndPaths() {
+    let from = #"HEAD~1 $HOME `uname`"#
+    let to = #"feature/$HOME-`uname`-"quote"-'single'"#
+    let commit = #"HEAD^{/fix $HOME `uname`}"#
+    let file = #"folder/a file $HOME `uname` "quote" 'single'.txt"#
+    let quotedFrom = ShellGit.shellQuoted(from)
+    let quotedTo = ShellGit.shellQuoted(to)
+    let quotedCommit = ShellGit.shellQuoted(commit)
+    let quotedCommitFile = ShellGit.shellQuoted("\(commit):\(file)")
+    let quotedParent = ShellGit.shellQuoted("\(commit)^")
+    let quotedFile = ShellGit.shellQuoted(file)
+
+    #expect(ShellGit.diffBetweenCommitsCommand(from: from, to: to) == "git diff \(quotedFrom) \(quotedTo)")
+    #expect(ShellGit.fileExistsCommand(commit: commit, file: file) == "git cat-file -e \(quotedCommitFile)")
+    #expect(ShellGit.parentCommitCommand(commit) == "git rev-parse \(quotedParent)")
+    #expect(ShellGit.fileContentCommand(commit: commit, file: file) == "git show \(quotedCommitFile)")
+    #expect(ShellGit.diffTreeNameStatusCommand(commit) == "git diff-tree --no-commit-id --name-status -r \(quotedCommit)")
+    #expect(ShellGit.diffTreeNameOnlyCommand(commit) == "git diff-tree --no-commit-id --name-only -r \(quotedCommit)")
+    #expect(ShellGit.revListParentsCommand(commit) == "git rev-list --parents -n 1 \(quotedCommit)")
+    #expect(ShellGit.showCommitFileDiffCommand(commit: commit, file: file) == "git show \(quotedCommit) -- \(quotedFile)")
+    #expect(ShellGit.showNameOnlyCommand(commit) == "git show --name-only --format= \(quotedCommit)")
+}
 #endif
