@@ -105,15 +105,19 @@ extension ShellGit {
     /// - Returns: 远程结构体数组
     public static func remoteList(at path: String? = nil) throws -> [MagicGitRemote] {
         let output = try remotes(verbose: true, at: path)
+        return parseRemoteListOutput(output)
+    }
+
+    static func parseRemoteListOutput(_ output: String) -> [MagicGitRemote] {
         let lines = output.split(separator: "\n").map { String($0) }
         var remotes: [MagicGitRemote] = []
         for line in lines {
             // 例如 origin\thttps://github.com/user/repo.git (fetch)
             let parts = line.split(separator: "\t").map { String($0) }
-            guard parts.count == 2 else { continue }
+            guard parts.count == 2, !parts[0].isEmpty else { continue }
             let name = parts[0]
             let urlAndType = parts[1].split(separator: " ").map { String($0) }
-            guard urlAndType.count >= 2 else { continue }
+            guard urlAndType.count >= 2, ["(fetch)", "(push)"].contains(urlAndType[1]) else { continue }
             let url = urlAndType[0]
             let type = urlAndType[1]
             var fetchURL: String? = nil
