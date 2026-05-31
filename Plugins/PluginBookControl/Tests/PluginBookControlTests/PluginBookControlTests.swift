@@ -105,6 +105,26 @@ import SwiftUI
     #expect(root == chapter.deletingLastPathComponent().standardizedFileURL)
 }
 
+@Test func bookRootMapsSymlinkedBookDiskToConfiguredRoot() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realDisk = root.appendingPathComponent("real-books", isDirectory: true)
+    let linkedDisk = root.appendingPathComponent("library-link", isDirectory: true)
+    let book = realDisk.appendingPathComponent("Novel", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: book, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedDisk, withDestinationURL: realDisk)
+    let chapter = book.appendingPathComponent("Chapter 01.m4b")
+    try Data("audio".utf8).write(to: chapter)
+
+    let resolved = BookControlBookRootResolver.bookRoot(containing: chapter, bookDisk: linkedDisk)
+
+    #expect(resolved == linkedDisk.appendingPathComponent("Novel", isDirectory: true).standardizedFileURL)
+}
+
 @Test func chapterLoaderReturnsPlayableChaptersInRelativeOrder() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)
