@@ -117,6 +117,32 @@ import UniformTypeIdentifiers
     #expect(!AudioListLoadPolicy.shouldApplyResult(currentGeneration: 3, resultGeneration: 2))
 }
 
+@Test func audioListLoadMoreDeduplicatesSymlinkedRows() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realFile = root.appendingPathComponent("real.mp3")
+    let linkedFile = root.appendingPathComponent("linked.mp3")
+    let otherFile = root.appendingPathComponent("other.mp3")
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    try Data("audio".utf8).write(to: realFile)
+    try Data("other".utf8).write(to: otherFile)
+    try FileManager.default.createSymbolicLink(at: linkedFile, withDestinationURL: realFile)
+
+    #expect(AudioListLoadPolicy.uniqueAdditionalURLs(
+        existingURLs: [linkedFile],
+        newURLs: [realFile, otherFile, otherFile]
+    ) == [otherFile])
+}
+
+@Test func audioListLoadMoreTracksFetchedPageSizeAfterDeduplication() {
+    #expect(AudioListLoadPolicy.hasMoreAfterLoading(fetchedCount: 50, pageSize: 50))
+    #expect(!AudioListLoadPolicy.hasMoreAfterLoading(fetchedCount: 49, pageSize: 50))
+}
+
 @Test func staleAudioListInitialLoadStopsLoading() {
     #expect(AudioListLoadPolicy.isLoadingAfterDiscardingStaleInitialResult() == false)
 }

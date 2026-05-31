@@ -12,12 +12,38 @@ enum AudioListLoadPolicy {
         currentGeneration == resultGeneration
     }
 
+    static func uniqueAdditionalURLs(existingURLs: [URL], newURLs: [URL]) -> [URL] {
+        var seenIdentities = Set(existingURLs.map(canonicalIdentity(for:)))
+        var uniqueURLs: [URL] = []
+        uniqueURLs.reserveCapacity(newURLs.count)
+
+        for url in newURLs {
+            let identity = canonicalIdentity(for: url)
+            guard seenIdentities.insert(identity).inserted else { continue }
+            uniqueURLs.append(url)
+        }
+
+        return uniqueURLs
+    }
+
+    static func hasMoreAfterLoading(fetchedCount: Int, pageSize: Int) -> Bool {
+        fetchedCount == pageSize
+    }
+
     static func isLoadingAfterDiscardingStaleInitialResult() -> Bool {
         false
     }
 
     static func isLoadingMoreAfterDiscardingStaleResult() -> Bool {
         false
+    }
+
+    private static func canonicalIdentity(for url: URL) -> String {
+        guard url.isFileURL else {
+            return url.standardized.absoluteString
+        }
+
+        return url.resolvingSymlinksInPath().standardizedFileURL.path
     }
 }
 
@@ -301,9 +327,10 @@ extension AudioList {
                 os_log("\(self.t)🔄 LoadMore - fetched: \(newUrls.count) urls")
             }
 
-            // 在后台线程进行去重处理（O(n) 而不是 O(n²)）
-            let existingUrlsSet = Set(existingUrls)
-            let uniqueNewUrls = newUrls.filter { !existingUrlsSet.contains($0) }
+            let uniqueNewUrls = AudioListLoadPolicy.uniqueAdditionalURLs(
+                existingURLs: existingUrls,
+                newURLs: newUrls
+            )
 
             if Self.verbose {
                 os_log("\(self.t)🔄 LoadMore - fetched: \(newUrls.count), unique: \(uniqueNewUrls.count)")
@@ -320,9 +347,15 @@ extension AudioList {
                 if !uniqueNewUrls.isEmpty {
                     self.urls.append(contentsOf: uniqueNewUrls)
                     self.currentPage += 1
-                    self.hasMore = uniqueNewUrls.count == self.pageSize
+                    self.hasMore = AudioListLoadPolicy.hasMoreAfterLoading(
+                        fetchedCount: newUrls.count,
+                        pageSize: self.pageSize
+                    )
                 } else {
-                    self.hasMore = false
+                    self.hasMore = AudioListLoadPolicy.hasMoreAfterLoading(
+                        fetchedCount: newUrls.count,
+                        pageSize: self.pageSize
+                    )
                 }
 
                 self.isLoadingMore = false
