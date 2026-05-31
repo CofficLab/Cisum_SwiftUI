@@ -90,6 +90,30 @@ import SwiftUI
     #expect(candidates == [linkedNextChapter])
 }
 
+@Test func shuffledChapterCandidatesKeepDistinctDanglingSymlinkedChapters() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let missingBook = root.appendingPathComponent("MissingBook", isDirectory: true)
+    let firstLink = root.appendingPathComponent("FirstBook", isDirectory: true)
+    let secondLink = root.appendingPathComponent("SecondBook", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: firstLink, withDestinationURL: missingBook)
+    try FileManager.default.createSymbolicLink(at: secondLink, withDestinationURL: missingBook)
+
+    let firstChapter = firstLink.appendingPathComponent("001.m4b")
+    let secondChapter = secondLink.appendingPathComponent("001.m4b")
+    let candidates = BookControlChapterLoader.shuffleCandidates(
+        in: [firstChapter, secondChapter],
+        current: firstChapter
+    )
+
+    #expect(candidates == [secondChapter])
+}
+
 @Test func navigationResultOnlyAppliesToUnchangedCurrentChapter() {
     let requested = URL(fileURLWithPath: "/tmp/book/001.m4b")
     let switched = URL(fileURLWithPath: "/tmp/book/002.m4b")
@@ -134,6 +158,27 @@ import SwiftUI
     #expect(BookControlPlaybackRequestPolicy.shouldApplyNavigationResult(
         requestedAsset: linkedChapter,
         currentAsset: realChapter,
+        isSceneActive: true
+    ))
+}
+
+@Test func navigationResultDoesNotApplyToDistinctDanglingSymlinkedChapters() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let missingBook = root.appendingPathComponent("MissingBook", isDirectory: true)
+    let firstLink = root.appendingPathComponent("FirstBook", isDirectory: true)
+    let secondLink = root.appendingPathComponent("SecondBook", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: firstLink, withDestinationURL: missingBook)
+    try FileManager.default.createSymbolicLink(at: secondLink, withDestinationURL: missingBook)
+
+    #expect(!BookControlPlaybackRequestPolicy.shouldApplyNavigationResult(
+        requestedAsset: firstLink.appendingPathComponent("001.m4b"),
+        currentAsset: secondLink.appendingPathComponent("001.m4b"),
         isSceneActive: true
     ))
 }
@@ -242,6 +287,26 @@ import SwiftUI
     #expect(BookControlPlaybackRequestPolicy.currentAssetAffectedByDeletion(
         currentAsset: currentChapter,
         deletedURLs: [linkedBook]
+    ))
+}
+
+@Test func deletionDoesNotAffectDistinctDanglingSymlinkedBook() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let missingBook = root.appendingPathComponent("MissingBook", isDirectory: true)
+    let firstLink = root.appendingPathComponent("FirstBook", isDirectory: true)
+    let secondLink = root.appendingPathComponent("SecondBook", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: firstLink, withDestinationURL: missingBook)
+    try FileManager.default.createSymbolicLink(at: secondLink, withDestinationURL: missingBook)
+
+    #expect(!BookControlPlaybackRequestPolicy.currentAssetAffectedByDeletion(
+        currentAsset: secondLink.appendingPathComponent("Chapter 01.m4b"),
+        deletedURLs: [firstLink]
     ))
 }
 

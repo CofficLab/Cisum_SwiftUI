@@ -88,6 +88,38 @@ enum BookControlPathContainment {
     }
 }
 
+enum BookControlFileLocationIdentity {
+    static func representsSameFile(_ lhs: URL?, _ rhs: URL?) -> Bool {
+        switch (lhs, rhs) {
+        case (.none, .none):
+            return true
+        case let (.some(lhs), .some(rhs)):
+            return stablePath(for: lhs) == stablePath(for: rhs)
+        default:
+            return false
+        }
+    }
+
+    static func containmentPaths(for url: URL) -> Set<String> {
+        if FileManager.default.fileExists(atPath: url.path) {
+            return [
+                url.standardizedFileURL.path,
+                url.resolvingSymlinksInPath().standardizedFileURL.path,
+            ]
+        }
+
+        return [url.standardizedFileURL.path]
+    }
+
+    private static func stablePath(for url: URL) -> String {
+        if FileManager.default.fileExists(atPath: url.path) {
+            return url.resolvingSymlinksInPath().standardizedFileURL.path
+        }
+
+        return url.standardizedFileURL.path
+    }
+}
+
 enum BookControlPlaybackRequestPolicy {
     static func shouldNavigateBookAsset(_ asset: URL, bookDisk: URL?) -> Bool {
         guard let bookDisk else { return true }
@@ -108,9 +140,9 @@ enum BookControlPlaybackRequestPolicy {
 
     static func currentAssetAffectedByDeletion(currentAsset: URL?, deletedURLs: [URL]) -> Bool {
         guard let currentAsset else { return false }
-        let assetPaths = comparablePaths(for: currentAsset)
+        let assetPaths = BookControlFileLocationIdentity.containmentPaths(for: currentAsset)
         return deletedURLs.contains { deletedURL in
-            comparablePaths(for: deletedURL).contains { parentPath in
+            BookControlFileLocationIdentity.containmentPaths(for: deletedURL).contains { parentPath in
                 assetPaths.contains { assetPath in
                     isContained(assetPath, in: parentPath)
                 }
@@ -144,26 +176,8 @@ enum BookControlPlaybackRequestPolicy {
         generation + 1
     }
 
-    private static func resolvedStandardizedPath(for url: URL) -> String {
-        url.resolvingSymlinksInPath().standardizedFileURL.path
-    }
-
-    private static func comparablePaths(for url: URL) -> Set<String> {
-        [
-            url.standardizedFileURL.path,
-            resolvedStandardizedPath(for: url),
-        ]
-    }
-
     private static func representsSameFile(_ lhs: URL?, _ rhs: URL?) -> Bool {
-        switch (lhs, rhs) {
-        case (.none, .none):
-            return true
-        case let (.some(lhs), .some(rhs)):
-            return resolvedStandardizedPath(for: lhs) == resolvedStandardizedPath(for: rhs)
-        default:
-            return false
-        }
+        BookControlFileLocationIdentity.representsSameFile(lhs, rhs)
     }
 
     private static func isContained(_ childPath: String, in parentPath: String) -> Bool {
@@ -245,8 +259,7 @@ enum BookControlChapterLoader {
     }
 
     private static func isSameFile(_ lhs: URL, _ rhs: URL) -> Bool {
-        lhs.resolvingSymlinksInPath().standardizedFileURL.path
-            == rhs.resolvingSymlinksInPath().standardizedFileURL.path
+        BookControlFileLocationIdentity.representsSameFile(lhs, rhs)
     }
 }
 
