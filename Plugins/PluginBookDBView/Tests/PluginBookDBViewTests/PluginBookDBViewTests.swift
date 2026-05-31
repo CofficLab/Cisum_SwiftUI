@@ -76,6 +76,32 @@ import UniformTypeIdentifiers
     #expect(!FileManager.default.fileExists(atPath: destinationRoot.appendingPathComponent("source").path))
 }
 
+@Test func bookImportRejectsSymlinkedDestinationInsideSourceFolder() async throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let sourceRoot = root.appendingPathComponent("source", isDirectory: true)
+    let realLibrary = sourceRoot.appendingPathComponent("library", isDirectory: true)
+    let linkedLibrary = root.appendingPathComponent("linked-library", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: realLibrary, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedLibrary, withDestinationURL: realLibrary)
+    let chapter = sourceRoot.appendingPathComponent("chapter-1.m4b")
+    try Data("audio".utf8).write(to: chapter)
+
+    let destination = linkedLibrary.appendingPathComponent("source", isDirectory: true)
+    #expect(BookDBView.isDestinationNestedInSource(source: sourceRoot, destination: destination))
+
+    await #expect(throws: Error.self) {
+        try await BookDBView.copyImportedItems([sourceRoot], to: linkedLibrary)
+    }
+
+    #expect(FileManager.default.fileExists(atPath: chapter.path))
+    #expect(!FileManager.default.fileExists(atPath: destination.path))
+}
+
 @Test func bookDropReadsFileURLDataProvider() async throws {
     let expected = URL(fileURLWithPath: "/tmp/cisum-book-drop-provider-tests/audiobook")
     let provider = NSItemProvider()

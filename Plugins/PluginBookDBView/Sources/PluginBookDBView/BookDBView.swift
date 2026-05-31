@@ -221,10 +221,34 @@ extension BookDBView {
     }
 
     nonisolated static func isDestinationNestedInSource(source: URL, destination: URL) -> Bool {
-        let sourcePath = source.standardizedFileURL.path
-        let destinationPath = destination.standardizedFileURL.path
+        let sourcePath = resolvedStandardizedPath(for: source)
+        let destinationPath = resolvedStandardizedPath(for: destination)
 
         return destinationPath != sourcePath && destinationPath.hasPrefix(sourcePath + "/")
+    }
+
+    private nonisolated static func resolvedStandardizedPath(for url: URL) -> String {
+        let standardizedURL = url.standardizedFileURL
+        guard !FileManager.default.fileExists(atPath: standardizedURL.path) else {
+            return standardizedURL.resolvingSymlinksInPath().standardizedFileURL.path
+        }
+
+        var candidate = standardizedURL
+        var missingComponents: [String] = []
+        while !FileManager.default.fileExists(atPath: candidate.path) {
+            let parent = candidate.deletingLastPathComponent()
+            guard parent.path != candidate.path else {
+                return standardizedURL.resolvingSymlinksInPath().standardizedFileURL.path
+            }
+            missingComponents.insert(candidate.lastPathComponent, at: 0)
+            candidate = parent
+        }
+
+        var resolvedURL = candidate.resolvingSymlinksInPath().standardizedFileURL
+        for component in missingComponents {
+            resolvedURL.appendPathComponent(component)
+        }
+        return resolvedURL.standardizedFileURL.path
     }
 
     nonisolated static func hasImportSourceAccess(_ source: URL, securityScopeGranted: Bool) -> Bool {
