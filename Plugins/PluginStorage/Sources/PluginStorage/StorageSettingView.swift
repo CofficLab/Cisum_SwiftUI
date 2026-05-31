@@ -10,7 +10,7 @@ public struct StorageSettingView: View, SuperLog {
     @State private var showMigrationProgress = false
     @State private var targetLocation: PluginStorageLocation
     @State private var hasChanges = false
-    @State private var location: PluginStorageLocation = .local
+    @State private var location: PluginStorageLocation?
 
     public init() {
         _targetLocation = State(initialValue: .local)
@@ -69,14 +69,24 @@ public struct StorageSettingView: View, SuperLog {
             )
         }
         .onAppear {
-            location = dependencies.getStorageLocation() ?? location
-            targetLocation = dependencies.getStorageLocation() ?? .local
+            location = dependencies.getStorageLocation()
+            targetLocation = Self.targetLocationAfterStorageUpdate(
+                currentTarget: targetLocation,
+                storageLocation: location
+            )
         }
         .onChange(of: targetLocation) {
-            hasChanges = targetLocation != (dependencies.getStorageLocation() ?? .local)
+            hasChanges = Self.hasSelectionChanges(
+                targetLocation: targetLocation,
+                storageLocation: dependencies.getStorageLocation()
+            )
         }
         .onPluginStorageLocationChanged {
-            location = dependencies.getStorageLocation() ?? location
+            location = dependencies.getStorageLocation()
+            hasChanges = Self.hasSelectionChanges(
+                targetLocation: targetLocation,
+                storageLocation: location
+            )
         }
     }
 
@@ -94,5 +104,19 @@ public struct StorageSettingView: View, SuperLog {
 
     private var isLocalStorageAvailable: Bool {
         dependencies.getStorageRootForLocation(.local) != nil
+    }
+
+    nonisolated static func targetLocationAfterStorageUpdate(
+        currentTarget: PluginStorageLocation,
+        storageLocation: PluginStorageLocation?
+    ) -> PluginStorageLocation {
+        storageLocation ?? currentTarget
+    }
+
+    nonisolated static func hasSelectionChanges(
+        targetLocation: PluginStorageLocation,
+        storageLocation: PluginStorageLocation?
+    ) -> Bool {
+        storageLocation.map { targetLocation != $0 } ?? false
     }
 }

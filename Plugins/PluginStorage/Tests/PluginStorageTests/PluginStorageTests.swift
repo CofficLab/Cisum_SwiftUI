@@ -83,6 +83,29 @@ import Foundation
     #expect(MigrationProgressView.completionMessage(shouldMigrate: false) == "已切换到新位置")
 }
 
+@Test func storageSettingsClearsDisplayedSelectionAfterReset() {
+    #expect(StorageSettingView.targetLocationAfterStorageUpdate(
+        currentTarget: .icloud,
+        storageLocation: .local
+    ) == .local)
+    #expect(StorageSettingView.targetLocationAfterStorageUpdate(
+        currentTarget: .icloud,
+        storageLocation: nil
+    ) == .icloud)
+    #expect(!StorageSettingView.hasSelectionChanges(
+        targetLocation: .icloud,
+        storageLocation: nil
+    ))
+    #expect(StorageSettingView.hasSelectionChanges(
+        targetLocation: .icloud,
+        storageLocation: .local
+    ))
+    #expect(!StorageSettingView.hasSelectionChanges(
+        targetLocation: .local,
+        storageLocation: .local
+    ))
+}
+
 @Test func migrationProgressOnlyAppliesCurrentGenerationUpdates() {
     #expect(MigrationProgressView.shouldApplyMigrationUpdate(
         currentGeneration: 2,
