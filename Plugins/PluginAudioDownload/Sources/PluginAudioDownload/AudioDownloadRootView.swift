@@ -1,14 +1,38 @@
 import MagicKit
+import MagicAlert
 import MagicPlayMan
 import OSLog
 import SwiftUI
 
 public typealias AudioDownloadCurrentSceneProvider = @MainActor () -> String?
 
+enum AudioDownloadRequestPolicy {
+    static func shouldStartDownload(isSceneActive: Bool, asset: URL?, isNotDownloaded: Bool) -> Bool {
+        isSceneActive && asset != nil && isNotDownloaded
+    }
+
+    static func shouldApplyDownloadResult(requestedAsset: URL, currentAsset: URL?, isSceneActive: Bool) -> Bool {
+        isSceneActive && representsSameFile(requestedAsset, currentAsset)
+    }
+
+    private static func representsSameFile(_ lhs: URL?, _ rhs: URL?) -> Bool {
+        switch (lhs, rhs) {
+        case (.none, .none):
+            return true
+        case let (.some(lhs), .some(rhs)):
+            return lhs.resolvingSymlinksInPath().standardizedFileURL.path
+                == rhs.resolvingSymlinksInPath().standardizedFileURL.path
+        default:
+            return false
+        }
+    }
+}
+
 public struct AudioDownloadRootView<Content>: View, SuperLog where Content: View {
     public nonisolated static var emoji: String { "⬇️" }
     private static var verbose: Bool { true }
 
+    @EnvironmentObject private var man: MagicPlayMan
     private let currentSceneName: AudioDownloadCurrentSceneProvider
     private var content: Content
 
@@ -54,6 +78,44 @@ extension AudioDownloadRootView {
     ///
     /// - Parameter url: 新的音频资源 URL，如果为 nil 则表示停止播放
     func handlePlayManAssetChanged(_ url: URL?) {
-        guard shouldActivateDownload else { return }
+        guard AudioDownloadRequestPolicy.shouldStartDownload(
+            isSceneActive: shouldActivateDownload,
+            asset: url,
+            isNotDownloaded: url?.isNotDownloaded == true
+        ), let url else { return }
+
+        Task { @MainActor in
+            guard AudioDownloadRequestPolicy.shouldApplyDownloadResult(
+                requestedAsset: url,
+                currentAsset: man.currentAsset,
+                isSceneActive: shouldActivateDownload
+            ) else {
+                return
+            }
+
+            do {
+                try await url.ensureLocalAvailability()
+                guard AudioDownloadRequestPolicy.shouldApplyDownloadResult(
+                    requestedAsset: url,
+                    currentAsset: man.currentAsset,
+                    isSceneActive: shouldActivateDownload
+                ) else {
+                    return
+                }
+                if Self.verbose {
+                    os_log("\(self.t)✅ 音频文件下载完成: \(url.lastPathComponent)")
+                }
+            } catch {
+                guard AudioDownloadRequestPolicy.shouldApplyDownloadResult(
+                    requestedAsset: url,
+                    currentAsset: man.currentAsset,
+                    isSceneActive: shouldActivateDownload
+                ) else {
+                    return
+                }
+                os_log(.error, "\(self.t)❌ 音频文件下载失败: \(error.localizedDescription)")
+                alert_error(String(localized: "Download failed: \(error.localizedDescription)", table: "Audio-Download", bundle: .module))
+            }
+        }
     }
 }
