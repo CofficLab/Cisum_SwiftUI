@@ -65,6 +65,70 @@ import SwiftData
     #expect(next == nil)
 }
 
+@Test func audioDBNextOfSkipsSymlinkedDuplicateTrack() async throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realRoot = root.appendingPathComponent("real-audio", isDirectory: true)
+    let linkedRoot = root.appendingPathComponent("audio-link", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: realRoot, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedRoot, withDestinationURL: realRoot)
+
+    let schema = Schema([AudioModel.self])
+    let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    let container = try ModelContainer(for: schema, configurations: [configuration])
+    let db = AudioDB(container, reason: "audioDBNextOfSkipsSymlinkedDuplicateTrack")
+
+    let realAudio = realRoot.appendingPathComponent("track.mp3")
+    let linkedAudio = linkedRoot.appendingPathComponent("track.mp3")
+    let nextAudio = realRoot.appendingPathComponent("next.mp3")
+    for file in [realAudio, nextAudio] {
+        try Data("audio".utf8).write(to: file)
+    }
+
+    await db.insertAudio(url: realAudio, order: 10)
+    await db.insertAudio(url: linkedAudio, order: 20, force: true)
+    await db.insertAudio(url: nextAudio, order: 30)
+
+    let next = try await db.getNextAudioURLOf(realAudio)
+    #expect(next == nextAudio)
+}
+
+@Test func audioDBDeleteReturnsFollowingTrackAfterSymlinkedDuplicate() async throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realRoot = root.appendingPathComponent("real-audio", isDirectory: true)
+    let linkedRoot = root.appendingPathComponent("audio-link", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: realRoot, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedRoot, withDestinationURL: realRoot)
+
+    let schema = Schema([AudioModel.self])
+    let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    let container = try ModelContainer(for: schema, configurations: [configuration])
+    let db = AudioDB(container, reason: "audioDBDeleteReturnsFollowingTrackAfterSymlinkedDuplicate")
+
+    let realAudio = realRoot.appendingPathComponent("track.mp3")
+    let linkedAudio = linkedRoot.appendingPathComponent("track.mp3")
+    let nextAudio = realRoot.appendingPathComponent("next.mp3")
+    for file in [realAudio, nextAudio] {
+        try Data("audio".utf8).write(to: file)
+    }
+
+    let next = try await db.deleteNextURLAfterSymlinkedDuplicate(
+        realAudio: realAudio,
+        linkedAudio: linkedAudio,
+        nextAudio: nextAudio
+    )
+    #expect(next == nextAudio)
+}
+
 @Test func audioDBLastAudioReturnsHighestOrderedTrack() async throws {
     let schema = Schema([AudioModel.self])
     let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
@@ -451,4 +515,16 @@ func audioRepoSingleDeleteRejectsFilesOutsideLibrary() async throws {
     #expect(!AudioDB.needsStableOrderRepair([20, 10, 30]))
     #expect(!AudioDB.needsStableOrderRepair([-1, -1, 10]))
     #expect(AudioDB.needsStableOrderRepair([0, 0]))
+}
+
+extension AudioDB {
+    func deleteNextURLAfterSymlinkedDuplicate(realAudio: URL, linkedAudio: URL, nextAudio: URL) throws -> URL? {
+        let audio = AudioModel(realAudio)
+        audio.order = 10
+        insertAudio(audio, force: true)
+        insertAudio(url: linkedAudio, order: 20, force: true)
+        insertAudio(url: nextAudio, order: 30, force: true)
+
+        return try deleteAudios(ids: [audio.id], verbose: false)?.url
+    }
 }

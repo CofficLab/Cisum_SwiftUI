@@ -1270,7 +1270,15 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     /// - Returns: 下一个音频模型，如果未找到则返回 nil
     /// - Throws: 如果查询操作失败则抛出错误
     func nextOf(audio: AudioModel) throws -> AudioModel? {
-        let result = try context.fetch(AudioModel.descriptorNext(order: audio.order))
-        return result.first
+        let order = audio.order
+        let url = audio.url
+        var descriptor = FetchDescriptor<AudioModel>()
+        descriptor.sortBy.append(.init(\.order, order: .forward))
+        descriptor.predicate = #Predicate {
+            $0.order > order
+        }
+
+        let result = try context.fetch(descriptor)
+        return result.first { !Self.representsSameAudioFile($0.url, url) }
     }
 }
