@@ -22,8 +22,8 @@ extension ShellGit {
     /// - Parameter path: 仓库路径
     /// - Returns: 暂存区文件列表
     public static func stagedFiles(at path: String? = nil) throws -> [String] {
-        let output = try Shell.runSync("git diff --cached --name-only", at: path)
-        return output.split(separator: "\n").map { String($0) }
+        let output = try Shell.runSync("git diff --cached --name-only -z", at: path)
+        return output.split(separator: "\0").map { String($0) }
     }
     
     /// 获取未暂存的文件列表

@@ -18,12 +18,10 @@ import Testing
     try "content\n".write(to: file, atomically: true, encoding: .utf8)
 
     try ShellGit.add([fileName], at: repo.path)
-    let stagedPath = try Shell.runSync("git diff --cached --name-only -- \(ShellGit.shellQuoted(fileName))", at: repo.path)
-    #expect(!stagedPath.isEmpty)
+    #expect(try ShellGit.stagedFiles(at: repo.path) == [fileName])
 
     try ShellGit.reset([fileName], at: repo.path)
-    let resetStagedPath = try Shell.runSync("git diff --cached --name-only -- \(ShellGit.shellQuoted(fileName))", at: repo.path)
-    #expect(resetStagedPath.isEmpty)
+    #expect(try ShellGit.stagedFiles(at: repo.path).isEmpty)
     #expect(try ShellGit.unstagedFiles(at: repo.path).contains(fileName))
 }
 #endif
