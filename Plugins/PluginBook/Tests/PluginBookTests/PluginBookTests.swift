@@ -1,6 +1,7 @@
 @testable import PluginBook
 import Foundation
 import Testing
+import SwiftData
 
 @Test func bookPluginInfoExportsMetadata() {
     #expect(BookPluginInfo.dirName == "audios_book")
@@ -107,4 +108,62 @@ import Testing
     )
 
     #expect(!BookRepo.isDisplayableLibraryItem(emptyFolder, libraryRoot: root))
+}
+
+@Test func bookDBFullSyncInsertsBooksInStablePathOrder() async throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+
+    let schema = Schema([BookModel.self, BookState.self])
+    let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    let container = try ModelContainer(for: schema, configurations: [configuration])
+    let db = BookDB(container, reason: "bookDBFullSyncInsertsBooksInStablePathOrder")
+
+    let second = root.appendingPathComponent("02-second.m4b")
+    let first = root.appendingPathComponent("01-first.m4b")
+    for file in [second, first] {
+        try Data("audio".utf8).write(to: file)
+    }
+
+    await db.sync([second, first], isFirst: true)
+
+    let orderedURLs = try await db.allBookDTOs()
+        .sorted { $0.order < $1.order }
+        .map(\.url)
+    #expect(orderedURLs == [first, second])
+}
+
+@Test func bookDBUpdateSyncAppendsNewBooksInStablePathOrder() async throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+
+    let schema = Schema([BookModel.self, BookState.self])
+    let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    let container = try ModelContainer(for: schema, configurations: [configuration])
+    let db = BookDB(container, reason: "bookDBUpdateSyncAppendsNewBooksInStablePathOrder")
+
+    let existing = root.appendingPathComponent("00-existing.m4b")
+    let second = root.appendingPathComponent("02-second.m4b")
+    let first = root.appendingPathComponent("01-first.m4b")
+    for file in [existing, second, first] {
+        try Data("audio".utf8).write(to: file)
+    }
+
+    try await db.syncImportedItems([existing])
+    try await db.syncImportedItems([second, first])
+
+    let orderedURLs = try await db.allBookDTOs()
+        .sorted { $0.order < $1.order }
+        .map(\.url)
+    #expect(orderedURLs == [existing, first, second])
 }

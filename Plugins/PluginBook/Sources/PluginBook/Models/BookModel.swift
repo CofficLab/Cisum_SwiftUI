@@ -30,9 +30,10 @@ public class BookModel: SuperLog, Equatable {
     @Relationship(deleteRule: .noAction, inverse: \BookModel.parent)
     public var childBooks: [BookModel]?
 
-    public init(url: URL, currentURL: URL? = nil) {
+    public init(url: URL, currentURL: URL? = nil, order: Int = 0) {
         self.url = url
         self.currentURL = currentURL
+        self.order = order
         self.bookTitle = self.url.title
         self.isCollection = self.url.isFolder
         self.parentBookURL = self.url.getParent()

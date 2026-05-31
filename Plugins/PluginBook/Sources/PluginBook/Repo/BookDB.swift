@@ -281,9 +281,11 @@ extension BookDB {
                 }
             })
 
-            // 余下的是需要插入数据库的
-            for (_, value) in hashMap {
-                context.insert(BookModel(url: value))
+            // 余下的是需要插入数据库的，按路径稳定追加，避免首次导入后默认顺序随机。
+            var nextOrder = nextAppendOrder()
+            for value in Self.sortedForStableInsertion(Array(hashMap.values)) {
+                context.insert(BookModel(url: value, order: nextOrder))
+                nextOrder += 1
             }
         } catch {
             os_log(.error, "\(error.localizedDescription)")
@@ -308,13 +310,15 @@ extension BookDB {
     func bookSyncWithUpdatedItems(_ metas: [URL], verbose: Bool = false) throws {
         let startTime: DispatchTime = .now()
 
-        for meta in metas {
+        var nextOrder = nextAppendOrder()
+        for meta in Self.sortedForStableInsertion(metas) {
             if meta.isNotFileExist {
                 deleteModels(for: meta)
             } else if let book = findBook(url: meta) {
                 update(book, from: meta)
             } else {
-                context.insert(BookModel(url: meta))
+                context.insert(BookModel(url: meta, order: nextOrder))
+                nextOrder += 1
             }
         }
 
@@ -324,6 +328,29 @@ extension BookDB {
 
         if verbose {
             os_log("\(self.jobEnd(startTime, title: "\(self.t)SyncBookWithUpdatedItems(\(metas.count))", tolerance: 0.01))")
+        }
+    }
+
+    private func nextAppendOrder() -> Int {
+        var descriptor = FetchDescriptor<BookModel>(
+            predicate: #Predicate<BookModel> { book in
+                book.order != -1
+            },
+            sortBy: [SortDescriptor(\.order, order: .reverse)]
+        )
+        descriptor.fetchLimit = 1
+
+        do {
+            return (try context.fetch(descriptor).first?.order ?? 99) + 1
+        } catch let e {
+            os_log(.error, "\(e.localizedDescription)")
+            return 100
+        }
+    }
+
+    static func sortedForStableInsertion(_ urls: [URL]) -> [URL] {
+        urls.sorted {
+            $0.standardizedFileURL.path.localizedStandardCompare($1.standardizedFileURL.path) == .orderedAscending
         }
     }
 
