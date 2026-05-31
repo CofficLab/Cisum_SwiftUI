@@ -21,7 +21,7 @@ public struct OpenCurrentButtonView: View, SuperLog {
             os_log("\(self.t)开始渲染")
         }
         return Group {
-            if let url {
+            if let url, Self.shouldShowOpenButton(for: url) {
                 Button {
                     url.openInFinder()
                 } label: {
@@ -38,5 +38,12 @@ public struct OpenCurrentButtonView: View, SuperLog {
                 self.url = url
             }
         }
+    }
+
+    nonisolated static func shouldShowOpenButton(
+        for url: URL,
+        fileExists: (String) -> Bool = FileManager.default.fileExists(atPath:)
+    ) -> Bool {
+        url.isFileURL && fileExists(url.path)
     }
 }
