@@ -155,6 +155,47 @@ import Testing
     #expect(!AudioProgressPersistencePolicy.shouldClearRestoredCurrentURL(storedURL: nil, isPlayable: false))
 }
 
+@Test func deletedStoredCurrentAudioShouldClearRestoreState() {
+    let root = URL(fileURLWithPath: "/tmp/audio", isDirectory: true)
+    let stored = root.appendingPathComponent("track-01.mp3")
+    let deleted = root.appendingPathComponent("track-01.mp3")
+    let other = root.appendingPathComponent("track-02.mp3")
+
+    #expect(AudioProgressPersistencePolicy.shouldClearStoredCurrentAfterDelete(
+        storedURL: stored,
+        deletedURLs: [deleted]
+    ))
+    #expect(!AudioProgressPersistencePolicy.shouldClearStoredCurrentAfterDelete(
+        storedURL: stored,
+        deletedURLs: [other]
+    ))
+    #expect(!AudioProgressPersistencePolicy.shouldClearStoredCurrentAfterDelete(
+        storedURL: nil,
+        deletedURLs: [deleted]
+    ))
+}
+
+@Test func symlinkedDeletedStoredCurrentAudioShouldClearRestoreState() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realFolder = root.appendingPathComponent("real-audio", isDirectory: true)
+    let linkedFolder = root.appendingPathComponent("linked-audio", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: realFolder, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedFolder, withDestinationURL: realFolder)
+    let realTrack = realFolder.appendingPathComponent("track-01.mp3")
+    let linkedTrack = linkedFolder.appendingPathComponent("track-01.mp3")
+    try Data("audio".utf8).write(to: realTrack)
+
+    #expect(AudioProgressPersistencePolicy.shouldClearStoredCurrentAfterDelete(
+        storedURL: linkedTrack,
+        deletedURLs: [realTrack]
+    ))
+}
+
 @Test func restoreResultOnlyAppliesWhenCurrentAudioDidNotChange() {
     let starting = URL(fileURLWithPath: "/tmp/audio/track-01.mp3")
     let switched = URL(fileURLWithPath: "/tmp/audio/track-02.mp3")

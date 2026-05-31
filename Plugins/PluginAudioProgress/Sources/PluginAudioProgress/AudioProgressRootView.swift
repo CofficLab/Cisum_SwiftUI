@@ -35,6 +35,13 @@ enum AudioProgressPersistencePolicy {
         storedURL != nil && !isPlayable
     }
 
+    static func shouldClearStoredCurrentAfterDelete(storedURL: URL?, deletedURLs: [URL]) -> Bool {
+        guard let storedURL else { return false }
+        return deletedURLs.contains { deletedURL in
+            representsSameFile(storedURL, deletedURL)
+        }
+    }
+
     static func shouldApplyRestoreResult(startingAsset: URL?, currentAsset: URL?) -> Bool {
         representsSameFile(startingAsset, currentAsset)
     }
@@ -111,6 +118,7 @@ public struct AudioProgressRootView<Content>: View, SuperLog where Content: View
             }
             .onPlayManStateChanged(handlePlayManStateChanged)
             .onPlayManAssetChanged(handlePlayManAssetChanged)
+            .onReceive(NotificationCenter.default.publisher(for: .dbDeleted), perform: handleDBDeleted)
             // 注意：存储位置变更时，本RootView会被卸载掉，光靠 onPlayManAssetChanged 无法监听到
             .modifier(AudioProgressStorageResetModifier(notificationNames: storageResetNotifications) {
                 handleStorageLocationDidReset()
@@ -355,6 +363,19 @@ extension AudioProgressRootView {
                 AudioStateRepo.storeCurrentTime(0)
             }
         }
+    }
+
+    func handleDBDeleted(_ notification: Notification) {
+        guard let deletedURLs = notification.userInfo?["urls"] as? [URL],
+              AudioProgressPersistencePolicy.shouldClearStoredCurrentAfterDelete(
+                  storedURL: AudioStateRepo.getCurrent(),
+                  deletedURLs: deletedURLs
+              ) else {
+            return
+        }
+
+        AudioStateRepo.storeCurrent(nil)
+        AudioStateRepo.storeCurrentTime(0)
     }
     
     private func syncToWidget(url: URL?, isPlaying: Bool) {
