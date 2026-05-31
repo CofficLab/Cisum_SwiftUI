@@ -14,8 +14,14 @@ enum BookGridUpdatePolicy {
 }
 
 enum BookGridPlaybackRequestPolicy {
-    static func shouldApplyResult(currentGeneration: Int, resultGeneration: Int) -> Bool {
+    static func shouldApplyResult(
+        currentGeneration: Int,
+        resultGeneration: Int,
+        requestedBookURL: URL,
+        selectedBookURL: URL?
+    ) -> Bool {
         currentGeneration == resultGeneration
+            && BookGridSelectionPolicy.representsSelectedBook(requestedBookURL, selectedURL: selectedBookURL)
     }
 
     static func generationAfterInvalidatingPendingPlayback(_ generation: Int) -> Int {
@@ -262,10 +268,12 @@ extension BookGrid {
         return BookPlaybackOrdering.contains(savedURL, in: playableChildren)
     }
 
-    private func play(_ url: URL, at time: TimeInterval?, generation: Int, reason: String) async {
+    private func play(_ url: URL, in book: BookDTO, at time: TimeInterval?, generation: Int, reason: String) async {
         guard BookGridPlaybackRequestPolicy.shouldApplyResult(
             currentGeneration: playBookGeneration,
-            resultGeneration: generation
+            resultGeneration: generation,
+            requestedBookURL: book.url,
+            selectedBookURL: selectedBookURL
         ) else {
             return
         }
@@ -298,7 +306,7 @@ extension BookGrid {
                 if Self.verbose {
                     os_log("\(self.t)📖 继续播放书籍进度: \(savedURL.lastPathComponent) @ \(savedTime)s")
                 }
-                await play(savedURL, at: savedTime, generation: generation, reason: reason)
+                await play(savedURL, in: book, at: savedTime, generation: generation, reason: reason)
                 return
             }
         } catch {
@@ -315,7 +323,7 @@ extension BookGrid {
             if Self.verbose {
                 os_log("\(self.t)📖 从全局状态继续播放: \(savedURL.lastPathComponent) @ \(savedTime)s")
             }
-            await play(savedURL, at: savedTime, generation: generation, reason: reason)
+            await play(savedURL, in: book, at: savedTime, generation: generation, reason: reason)
             return
         }
 
@@ -326,7 +334,9 @@ extension BookGrid {
             }
             guard BookGridPlaybackRequestPolicy.shouldApplyResult(
                 currentGeneration: playBookGeneration,
-                resultGeneration: generation
+                resultGeneration: generation,
+                requestedBookURL: book.url,
+                selectedBookURL: selectedBookURL
             ) else {
                 return
             }
@@ -343,7 +353,9 @@ extension BookGrid {
 
             guard BookGridPlaybackRequestPolicy.shouldApplyResult(
                 currentGeneration: playBookGeneration,
-                resultGeneration: generation
+                resultGeneration: generation,
+                requestedBookURL: book.url,
+                selectedBookURL: selectedBookURL
             ) else {
                 return
             }
@@ -471,6 +483,7 @@ extension BookGrid {
             updateSelectedBook(for: url)
         } else {
             selectedBookURL = nil
+            playBookGeneration = BookGridPlaybackRequestPolicy.generationAfterInvalidatingPendingPlayback(playBookGeneration)
         }
     }
     
@@ -483,6 +496,7 @@ extension BookGrid {
         if Self.verbose {
             os_log("\(self.t)🗑️ 书籍已删除")
         }
+        playBookGeneration = BookGridPlaybackRequestPolicy.generationAfterInvalidatingPendingPlayback(playBookGeneration)
         scheduleUpdateBooksDebounced()
     }
     

@@ -406,15 +406,46 @@ import UniformTypeIdentifiers
 }
 
 @Test func bookGridOnlyAppliesCurrentPlaybackRequestGeneration() {
-    #expect(BookGridPlaybackRequestPolicy.shouldApplyResult(currentGeneration: 2, resultGeneration: 2))
-    #expect(!BookGridPlaybackRequestPolicy.shouldApplyResult(currentGeneration: 3, resultGeneration: 2))
+    let book = URL(fileURLWithPath: "/tmp/cisum-book-grid/Book", isDirectory: true)
+    let other = URL(fileURLWithPath: "/tmp/cisum-book-grid/Other", isDirectory: true)
+
+    #expect(BookGridPlaybackRequestPolicy.shouldApplyResult(
+        currentGeneration: 2,
+        resultGeneration: 2,
+        requestedBookURL: book,
+        selectedBookURL: book
+    ))
+    #expect(!BookGridPlaybackRequestPolicy.shouldApplyResult(
+        currentGeneration: 3,
+        resultGeneration: 2,
+        requestedBookURL: book,
+        selectedBookURL: book
+    ))
+    #expect(!BookGridPlaybackRequestPolicy.shouldApplyResult(
+        currentGeneration: 2,
+        resultGeneration: 2,
+        requestedBookURL: book,
+        selectedBookURL: other
+    ))
+    #expect(!BookGridPlaybackRequestPolicy.shouldApplyResult(
+        currentGeneration: 2,
+        resultGeneration: 2,
+        requestedBookURL: book,
+        selectedBookURL: nil
+    ))
 }
 
 @Test func bookGridInvalidatesPendingPlaybackWhenDisappearing() {
+    let book = URL(fileURLWithPath: "/tmp/cisum-book-grid/Book", isDirectory: true)
     let generation = BookGridPlaybackRequestPolicy.generationAfterInvalidatingPendingPlayback(2)
 
     #expect(generation == 3)
-    #expect(!BookGridPlaybackRequestPolicy.shouldApplyResult(currentGeneration: generation, resultGeneration: 2))
+    #expect(!BookGridPlaybackRequestPolicy.shouldApplyResult(
+        currentGeneration: generation,
+        resultGeneration: 2,
+        requestedBookURL: book,
+        selectedBookURL: book
+    ))
 }
 
 @Test func bookGridSelectionMatchesSymlinkedBookURLs() throws {
