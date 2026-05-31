@@ -40,6 +40,15 @@ import Testing
     #expect(commit.message == "fix: keep A | B visible")
 }
 
+@Test func shellGitLogDecorationParserExtractsRealTagDecorations() {
+    #expect(ShellGit.parseDecorationTags("(HEAD -> main, tag: v1.0.0, tag: release/2026.06, origin/main)") == [
+        "v1.0.0",
+        "release/2026.06",
+    ])
+    #expect(ShellGit.parseDecorationTags("tag: beta-1") == ["beta-1"])
+    #expect(ShellGit.parseDecorationTags("(HEAD -> main, origin/main)") == [])
+}
+
 @Test func shellGitLogParserSkipsMalformedRecentCommitRows() {
     #expect(ShellGit.parseRecentCommitLine("abc123|Author|missing fields") == nil)
 }

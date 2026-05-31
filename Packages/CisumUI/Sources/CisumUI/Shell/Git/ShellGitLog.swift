@@ -144,7 +144,7 @@ extension ShellGit {
             let message = String(parts[1])
             let ref = String(parts[2])
             // 提取 tag 名称
-            let tags = ref.matches(for: "tag \\w+[-.\\w]*").map { $0.replacingOccurrences(of: "tag ", with: "") }
+            let tags = parseDecorationTags(ref)
             return CommitWithTag(hash: hash, message: message, tags: tags)
         }
     }
@@ -198,7 +198,7 @@ extension ShellGit {
 
             let date = dateFormatter.date(from: dateStr) ?? Date()
 
-            let tags = refs.matches(for: "tag \\w+[-.\\w]*").map { $0.replacingOccurrences(of: "tag ", with: "") }
+            let tags = parseDecorationTags(refs)
             let refArray = refs.components(separatedBy: ", ").filter{!$0.isEmpty}
 
             return MagicGitCommit(id: hash, hash: hash, author: author, email: email, date: date, message: message, body: body, refs: refArray, tags: tags)
@@ -316,9 +316,26 @@ extension ShellGit {
             let message = String(parts[4])
             let body = String(parts[5])
             let refs = String(parts[6])
-            let tags = refs.matches(for: "tag \\w+[-.\\w]*").map { $0.replacingOccurrences(of: "tag ", with: "") }
+            let tags = parseDecorationTags(refs)
             return MagicGitCommit(id: hash, hash: hash, author: author, email: email, date: date, message: message, body: body, refs: refs.components(separatedBy: ", ").filter{!$0.isEmpty}, tags: tags)
         }
+    }
+
+    static func parseDecorationTags(_ refs: String) -> [String] {
+        let trimmed = refs
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .trimmingCharacters(in: CharacterSet(charactersIn: "()"))
+
+        guard !trimmed.isEmpty else { return [] }
+
+        return trimmed
+            .components(separatedBy: ", ")
+            .compactMap { ref in
+                let marker = "tag: "
+                guard ref.hasPrefix(marker) else { return nil }
+                let tag = String(ref.dropFirst(marker.count)).trimmingCharacters(in: .whitespacesAndNewlines)
+                return tag.isEmpty ? nil : tag
+            }
     }
 
     static func commitListWithPaginationCommand(skip: Int, size: Int, format: String) -> String {
@@ -334,17 +351,6 @@ extension ShellGit {
         let multiplication = page.multipliedReportingOverflow(by: normalizedSize)
         let skip = multiplication.overflow ? Int.max : multiplication.partialValue
         return (skip: max(0, skip), size: normalizedSize)
-    }
-}
-
-// MARK: - String 正则扩展
-private extension String {
-    func matches(for regex: String) -> [String] {
-        guard let regex = try? NSRegularExpression(pattern: regex) else { return [] }
-        let range = NSRange(self.startIndex..., in: self)
-        return regex.matches(in: self, range: range).compactMap {
-            Range($0.range, in: self).flatMap { String(self[$0]) }
-        }
     }
 }
 
