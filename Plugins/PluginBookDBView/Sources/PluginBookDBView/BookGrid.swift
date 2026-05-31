@@ -26,6 +26,22 @@ enum BookGridPlaybackRequestPolicy {
             && BookGridSelectionPolicy.containsSelectedBook(requestedBookURL, in: displayedBooks)
     }
 
+    static func shouldReportNoPlayableChapters(
+        currentGeneration: Int,
+        resultGeneration: Int,
+        requestedBookURL: URL,
+        selectedBookURL: URL?,
+        displayedBooks: [BookDTO]
+    ) -> Bool {
+        shouldApplyResult(
+            currentGeneration: currentGeneration,
+            resultGeneration: resultGeneration,
+            requestedBookURL: requestedBookURL,
+            selectedBookURL: selectedBookURL,
+            displayedBooks: displayedBooks
+        )
+    }
+
     static func generationAfterInvalidatingPendingPlayback(_ generation: Int) -> Int {
         generation + 1
     }
@@ -346,6 +362,16 @@ extension BookGrid {
             }
             await man.play(first, reason: reason)
         } else {
+            guard BookGridPlaybackRequestPolicy.shouldReportNoPlayableChapters(
+                currentGeneration: playBookGeneration,
+                resultGeneration: generation,
+                requestedBookURL: book.url,
+                selectedBookURL: selectedBookURL,
+                displayedBooks: books
+            ) else {
+                return
+            }
+
             guard FileManager.default.fileExists(atPath: book.url.path),
                   BookPluginInfo.supportedExtensions.contains(book.url.pathExtension.lowercased()) else {
                 if Self.verbose {
@@ -355,15 +381,6 @@ extension BookGrid {
                 return
             }
 
-            guard BookGridPlaybackRequestPolicy.shouldApplyResult(
-                currentGeneration: playBookGeneration,
-                resultGeneration: generation,
-                requestedBookURL: book.url,
-                selectedBookURL: selectedBookURL,
-                displayedBooks: books
-            ) else {
-                return
-            }
             await man.play(book.url, reason: reason)
         }
     }

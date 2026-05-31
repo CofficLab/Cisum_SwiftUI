@@ -475,6 +475,40 @@ import UniformTypeIdentifiers
     ))
 }
 
+@Test func bookGridOnlyReportsNoPlayableChaptersForCurrentSelection() {
+    let book = URL(fileURLWithPath: "/tmp/cisum-book-grid/Book", isDirectory: true)
+    let other = URL(fileURLWithPath: "/tmp/cisum-book-grid/Other", isDirectory: true)
+    let displayedBook = BookDTO(
+        url: book,
+        bookTitle: "Book",
+        childCount: 0,
+        isCollection: true,
+        order: 0
+    )
+
+    #expect(BookGridPlaybackRequestPolicy.shouldReportNoPlayableChapters(
+        currentGeneration: 2,
+        resultGeneration: 2,
+        requestedBookURL: book,
+        selectedBookURL: book,
+        displayedBooks: [displayedBook]
+    ))
+    #expect(!BookGridPlaybackRequestPolicy.shouldReportNoPlayableChapters(
+        currentGeneration: 3,
+        resultGeneration: 2,
+        requestedBookURL: book,
+        selectedBookURL: book,
+        displayedBooks: [displayedBook]
+    ))
+    #expect(!BookGridPlaybackRequestPolicy.shouldReportNoPlayableChapters(
+        currentGeneration: 2,
+        resultGeneration: 2,
+        requestedBookURL: book,
+        selectedBookURL: other,
+        displayedBooks: [displayedBook]
+    ))
+}
+
 @Test func bookGridSelectionMatchesSymlinkedBookURLs() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)
