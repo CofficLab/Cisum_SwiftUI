@@ -57,6 +57,33 @@ import Testing
     ))
 }
 
+@Test func distinctDanglingSymlinkedCurrentBookURLResetsGlobalRestoreTime() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let missingBook = root.appendingPathComponent("MissingBook", isDirectory: true)
+    let firstLink = root.appendingPathComponent("FirstBook", isDirectory: true)
+    let secondLink = root.appendingPathComponent("SecondBook", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: firstLink, withDestinationURL: missingBook)
+    try FileManager.default.createSymbolicLink(at: secondLink, withDestinationURL: missingBook)
+
+    let firstChapter = firstLink.appendingPathComponent("chapter-01.m4b")
+    let secondChapter = secondLink.appendingPathComponent("chapter-01.m4b")
+
+    #expect(BookProgressPersistencePolicy.shouldResetGlobalTimeWhenCurrentURLChanges(
+        from: firstChapter,
+        to: secondChapter
+    ))
+    #expect(BookProgressPersistencePolicy.shouldPersistCurrentURLChange(
+        from: firstChapter,
+        to: secondChapter
+    ))
+}
+
 @Test func unchangedCurrentBookURLDoesNotPersistAgain() {
     let oldURL = URL(fileURLWithPath: "/tmp/book/chapter-01.mp3")
     let newURL = URL(fileURLWithPath: "/tmp/book/chapter-02.mp3")
@@ -137,6 +164,26 @@ import Testing
     #expect(BookProgressPersistencePolicy.shouldClearStoredCurrentAfterDelete(
         storedURL: linkedChapter,
         deletedURLs: [linkedBook]
+    ))
+}
+
+@Test func distinctDanglingSymlinkedStoredCurrentBookChapterShouldNotClearRestoreState() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let missingBook = root.appendingPathComponent("MissingBook", isDirectory: true)
+    let firstLink = root.appendingPathComponent("FirstBook", isDirectory: true)
+    let secondLink = root.appendingPathComponent("SecondBook", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: firstLink, withDestinationURL: missingBook)
+    try FileManager.default.createSymbolicLink(at: secondLink, withDestinationURL: missingBook)
+
+    #expect(!BookProgressPersistencePolicy.shouldClearStoredCurrentAfterDelete(
+        storedURL: secondLink.appendingPathComponent("Chapter 01.m4b"),
+        deletedURLs: [firstLink]
     ))
 }
 
@@ -236,6 +283,37 @@ import Testing
     #expect(BookProgressPersistencePolicy.shouldApplyCurrentURLChange(
         requestedURL: linkedChapter,
         currentAsset: realChapter
+    ))
+}
+
+@Test func restoreDoesNotTreatDistinctDanglingSymlinkedChapterAsAlreadyLoaded() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let missingBook = root.appendingPathComponent("MissingBook", isDirectory: true)
+    let firstLink = root.appendingPathComponent("FirstBook", isDirectory: true)
+    let secondLink = root.appendingPathComponent("SecondBook", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: firstLink, withDestinationURL: missingBook)
+    try FileManager.default.createSymbolicLink(at: secondLink, withDestinationURL: missingBook)
+
+    let firstChapter = firstLink.appendingPathComponent("chapter-01.m4b")
+    let secondChapter = secondLink.appendingPathComponent("chapter-01.m4b")
+
+    #expect(!BookProgressPersistencePolicy.shouldApplyRestoreResult(
+        startingAsset: firstChapter,
+        currentAsset: secondChapter
+    ))
+    #expect(BookProgressPersistencePolicy.shouldPlayRestoredAsset(
+        restoredAsset: firstChapter,
+        currentAsset: secondChapter
+    ))
+    #expect(!BookProgressPersistencePolicy.shouldApplyCurrentURLChange(
+        requestedURL: firstChapter,
+        currentAsset: secondChapter
     ))
 }
 

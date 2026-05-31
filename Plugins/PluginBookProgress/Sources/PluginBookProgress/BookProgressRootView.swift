@@ -40,9 +40,9 @@ enum BookProgressPersistencePolicy {
 
     static func shouldClearStoredCurrentAfterDelete(storedURL: URL?, deletedURLs: [URL]) -> Bool {
         guard let storedURL else { return false }
-        let storedPaths = comparablePaths(for: storedURL)
+        let storedPaths = BookProgressFileLocationIdentity.containmentPaths(for: storedURL)
         return deletedURLs.contains { deletedURL in
-            comparablePaths(for: deletedURL).contains { deletedPath in
+            BookProgressFileLocationIdentity.containmentPaths(for: deletedURL).contains { deletedPath in
                 storedPaths.contains { storedPath in
                     storedPath == deletedPath
                         || storedPath.hasPrefix(BookProgressPathContainment.childPrefix(for: deletedPath))
@@ -103,21 +103,39 @@ enum BookProgressPersistencePolicy {
     }
 
     private static func representsSameFile(_ lhs: URL?, _ rhs: URL?) -> Bool {
+        BookProgressFileLocationIdentity.representsSameFile(lhs, rhs)
+    }
+}
+
+enum BookProgressFileLocationIdentity {
+    static func representsSameFile(_ lhs: URL?, _ rhs: URL?) -> Bool {
         switch (lhs, rhs) {
         case (.none, .none):
             return true
         case let (.some(lhs), .some(rhs)):
-            return !comparablePaths(for: lhs).isDisjoint(with: comparablePaths(for: rhs))
+            return stablePath(for: lhs) == stablePath(for: rhs)
         default:
             return false
         }
     }
 
-    private static func comparablePaths(for url: URL) -> Set<String> {
-        [
-            url.standardizedFileURL.path,
-            url.resolvingSymlinksInPath().standardizedFileURL.path,
-        ]
+    static func containmentPaths(for url: URL) -> Set<String> {
+        if FileManager.default.fileExists(atPath: url.path) {
+            return [
+                url.standardizedFileURL.path,
+                url.resolvingSymlinksInPath().standardizedFileURL.path,
+            ]
+        }
+
+        return [url.standardizedFileURL.path]
+    }
+
+    private static func stablePath(for url: URL) -> String {
+        if FileManager.default.fileExists(atPath: url.path) {
+            return url.resolvingSymlinksInPath().standardizedFileURL.path
+        }
+
+        return url.standardizedFileURL.path
     }
 }
 
