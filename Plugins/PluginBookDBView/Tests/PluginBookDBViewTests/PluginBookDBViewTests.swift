@@ -122,6 +122,7 @@ import UniformTypeIdentifiers
     try FileManager.default.createSymbolicLink(at: linkedSource, withDestinationURL: realSource)
 
     #expect(BookDBView.representsSameImportSource(realSource, linkedSource))
+    #expect(BookDBView.canonicalImportSourceIdentity(for: realSource) == BookDBView.canonicalImportSourceIdentity(for: linkedSource))
     #expect(BookDBView.uniqueImportSources([linkedSource, realSource]) == [linkedSource])
 
     let copiedItems = try await BookDBView.copyImportedItems([linkedSource, realSource], to: destinationRoot)
@@ -146,6 +147,7 @@ import UniformTypeIdentifiers
     try FileManager.default.createSymbolicLink(at: linkedBook, withDestinationURL: realBook)
     try Data("audio".utf8).write(to: realBook.appendingPathComponent("001.m4b"))
 
+    #expect(BookDBView.canonicalImportSourceIdentity(for: realBook) == BookDBView.canonicalImportSourceIdentity(for: linkedBook))
     let copiedItems = try await BookDBView.copyImportedItems([linkedBook, realBook], to: destinationRoot)
 
     #expect(copiedItems == [destinationRoot.appendingPathComponent("LinkedBook", isDirectory: true)])

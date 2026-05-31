@@ -222,10 +222,13 @@ extension BookDBView {
     }
 
     nonisolated static func uniqueImportSources(_ urls: [URL]) -> [URL] {
+        var seenIdentities = Set<String>()
         var uniqueURLs: [URL] = []
+        uniqueURLs.reserveCapacity(urls.count)
 
         for url in urls {
-            guard !uniqueURLs.contains(where: { representsSameImportSource($0, url) }) else {
+            let identity = canonicalImportSourceIdentity(for: url)
+            guard seenIdentities.insert(identity).inserted else {
                 continue
             }
 
@@ -236,11 +239,15 @@ extension BookDBView {
     }
 
     nonisolated static func representsSameImportSource(_ lhs: URL, _ rhs: URL) -> Bool {
-        guard lhs.isFileURL, rhs.isFileURL else {
-            return lhs.standardized.absoluteString == rhs.standardized.absoluteString
+        canonicalImportSourceIdentity(for: lhs) == canonicalImportSourceIdentity(for: rhs)
+    }
+
+    nonisolated static func canonicalImportSourceIdentity(for url: URL) -> String {
+        guard url.isFileURL else {
+            return url.standardized.absoluteString
         }
 
-        return resolvedStandardizedPath(for: lhs) == resolvedStandardizedPath(for: rhs)
+        return resolvedStandardizedPath(for: url)
     }
 
     nonisolated static func isDestinationNestedInSource(source: URL, destination: URL) -> Bool {
