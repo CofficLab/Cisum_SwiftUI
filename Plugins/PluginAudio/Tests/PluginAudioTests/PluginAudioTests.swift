@@ -136,6 +136,32 @@ import SwiftData
     #expect(await db.getTotalOfAudio() == 1)
 }
 
+@Test func audioDBDeleteAudiosByURLRejectsLibraryRoot() async throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+
+    let schema = Schema([AudioModel.self])
+    let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    let container = try ModelContainer(for: schema, configurations: [configuration])
+    let db = AudioDB(container, reason: "audioDBDeleteAudiosByURLRejectsLibraryRoot")
+
+    await db.insertAudio(url: root, order: 10)
+
+    do {
+        try await db.deleteAudiosByURL(disk: root, urls: [root])
+        Issue.record("Deleting the audio library root should fail")
+    } catch {
+        #expect(error.localizedDescription.contains("outside the current library"))
+    }
+    #expect(FileManager.default.fileExists(atPath: root.path))
+    #expect(await db.getTotalOfAudio() == 1)
+}
+
 @Test func audioDBDeleteAudiosByURLRejectsMixedBatchBeforeDeleting() async throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)

@@ -1181,7 +1181,7 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     static func contains(_ disk: URL, audioURL: URL) -> Bool {
         let diskPath = disk.standardizedFileURL.path
         let audioPath = audioURL.standardizedFileURL.path
-        return audioPath == diskPath || audioPath.hasPrefix(diskPath + "/")
+        return audioPath.hasPrefix(diskPath + "/")
     }
 
     /// 根据 URL 查找音频模型（静态方法）
