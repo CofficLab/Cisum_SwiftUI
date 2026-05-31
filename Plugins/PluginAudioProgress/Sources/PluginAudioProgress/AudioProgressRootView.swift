@@ -28,7 +28,7 @@ enum AudioProgressPersistencePolicy {
     }
 
     static func shouldResetGlobalTimeWhenCurrentURLChanges(from storedURL: URL?, to newURL: URL?) -> Bool {
-        storedURL != newURL
+        !representsSameFile(storedURL, newURL)
     }
 
     static func shouldClearRestoredCurrentURL(storedURL: URL?, isPlayable: Bool) -> Bool {
@@ -36,19 +36,31 @@ enum AudioProgressPersistencePolicy {
     }
 
     static func shouldApplyRestoreResult(startingAsset: URL?, currentAsset: URL?) -> Bool {
-        startingAsset == currentAsset
+        representsSameFile(startingAsset, currentAsset)
     }
 
     static func shouldPlayRestoredAsset(restoredAsset: URL, currentAsset: URL?) -> Bool {
-        restoredAsset != currentAsset
+        !representsSameFile(restoredAsset, currentAsset)
     }
 
     static func shouldApplyCurrentURLChange(requestedURL: URL?, currentAsset: URL?) -> Bool {
-        requestedURL == currentAsset
+        representsSameFile(requestedURL, currentAsset)
     }
 
     static func shouldApplyWidgetMetadataResult(requestedAsset: URL, currentAsset: URL?) -> Bool {
-        requestedAsset == currentAsset
+        representsSameFile(requestedAsset, currentAsset)
+    }
+
+    private static func representsSameFile(_ lhs: URL?, _ rhs: URL?) -> Bool {
+        switch (lhs, rhs) {
+        case (.none, .none):
+            return true
+        case let (.some(lhs), .some(rhs)):
+            return lhs.resolvingSymlinksInPath().standardizedFileURL.path
+                == rhs.resolvingSymlinksInPath().standardizedFileURL.path
+        default:
+            return false
+        }
     }
 }
 

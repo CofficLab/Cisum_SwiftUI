@@ -98,6 +98,27 @@ import Testing
     #expect(!AudioProgressPersistencePolicy.shouldResetGlobalTimeWhenCurrentURLChanges(from: oldURL, to: oldURL))
 }
 
+@Test func symlinkedCurrentAudioURLDoesNotResetGlobalRestoreTime() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realFolder = root.appendingPathComponent("real-audio", isDirectory: true)
+    let linkedFolder = root.appendingPathComponent("linked-audio", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: realFolder, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedFolder, withDestinationURL: realFolder)
+    let realTrack = realFolder.appendingPathComponent("track-01.mp3")
+    let linkedTrack = linkedFolder.appendingPathComponent("track-01.mp3")
+    try Data("audio".utf8).write(to: realTrack)
+
+    #expect(!AudioProgressPersistencePolicy.shouldResetGlobalTimeWhenCurrentURLChanges(
+        from: linkedTrack,
+        to: realTrack
+    ))
+}
+
 @Test func invalidRestoredAudioURLShouldClearCurrentAudio() {
     let url = URL(fileURLWithPath: "/tmp/audio/missing.mp3")
 
@@ -143,6 +164,39 @@ import Testing
     #expect(AudioProgressPersistencePolicy.shouldPlayRestoredAsset(
         restoredAsset: restored,
         currentAsset: nil
+    ))
+}
+
+@Test func restoreTreatsSymlinkedCurrentAudioAsAlreadyLoaded() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realFolder = root.appendingPathComponent("real-audio", isDirectory: true)
+    let linkedFolder = root.appendingPathComponent("linked-audio", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: realFolder, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedFolder, withDestinationURL: realFolder)
+    let realTrack = realFolder.appendingPathComponent("track-01.mp3")
+    let linkedTrack = linkedFolder.appendingPathComponent("track-01.mp3")
+    try Data("audio".utf8).write(to: realTrack)
+
+    #expect(AudioProgressPersistencePolicy.shouldApplyRestoreResult(
+        startingAsset: linkedTrack,
+        currentAsset: realTrack
+    ))
+    #expect(!AudioProgressPersistencePolicy.shouldPlayRestoredAsset(
+        restoredAsset: linkedTrack,
+        currentAsset: realTrack
+    ))
+    #expect(AudioProgressPersistencePolicy.shouldApplyCurrentURLChange(
+        requestedURL: linkedTrack,
+        currentAsset: realTrack
+    ))
+    #expect(AudioProgressPersistencePolicy.shouldApplyWidgetMetadataResult(
+        requestedAsset: linkedTrack,
+        currentAsset: realTrack
     ))
 }
 
