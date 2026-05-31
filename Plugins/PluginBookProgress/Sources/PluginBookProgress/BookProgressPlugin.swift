@@ -2,6 +2,7 @@ import CisumUI
 import OSLog
 import PluginBook
 import PluginBookScene
+import SwiftData
 import SwiftUI
 
 public actor BookProgressPlugin: SuperPlugin {
@@ -37,11 +38,15 @@ private struct BookProgressPluginRootView<Content>: View where Content: View {
             storeCurrentBookTime: { BookSettingRepo.storeCurrentTime($0) },
             saveBookState: { bookURL, currentURL, time in
                 do {
-                    let container = try await MainActor.run {
-                        try BookConfig.getContainer(dbRootURL: BookPluginHost.getDBRootDir())
+                    try await MainActor.run {
+                        let container = try BookConfig.getContainer(dbRootURL: BookPluginHost.getDBRootDir())
+                        try BookProgressStatePersistence.save(
+                            bookURL: bookURL,
+                            currentURL: currentURL,
+                            time: time,
+                            container: container
+                        )
                     }
-                    let db = BookDB(container, reason: "BookProgressPlugin.saveBookState")
-                    await db.updateBookCurrent(bookURL, currentURL: currentURL, time: time)
                 } catch {
                     os_log(.error, "BookProgressPlugin failed to save book state: \(error.localizedDescription)")
                 }
@@ -49,5 +54,31 @@ private struct BookProgressPluginRootView<Content>: View where Content: View {
         ) {
             content
         }
+    }
+}
+
+enum BookProgressStatePersistence {
+    @MainActor
+    static func save(
+        bookURL: URL,
+        currentURL: URL?,
+        time: TimeInterval?,
+        container: ModelContainer
+    ) throws {
+        let context = ModelContext(container)
+        let descriptor = BookState.descriptorOf(bookURL)
+
+        if let existingState = try context.fetch(descriptor).first {
+            existingState.currentURL = currentURL
+            if let time {
+                existingState.time = time
+            }
+            existingState.updateAt = .now
+        } else {
+            let newState = BookState(url: bookURL, currentURL: currentURL, time: time ?? 0)
+            context.insert(newState)
+        }
+
+        try context.save()
     }
 }

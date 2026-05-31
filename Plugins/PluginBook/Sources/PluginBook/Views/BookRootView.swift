@@ -5,6 +5,7 @@ import SwiftData
 import SwiftUI
 import UniformTypeIdentifiers
 
+@MainActor
 public final class BookRepoState: ObservableObject {
     @Published var repo: BookRepo? = nil
     @Published var container: ModelContainer? = nil

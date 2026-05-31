@@ -1,4 +1,6 @@
 import Foundation
+import PluginBook
+import SwiftData
 @testable import PluginBookProgress
 import Testing
 
@@ -179,4 +181,38 @@ import Testing
     try Data("audio".utf8).write(to: chapter)
 
     #expect(BookProgressBookLookup.bookURL(for: chapter, bookDisk: root) == book.standardizedFileURL)
+}
+
+@MainActor
+@Test func bookProgressStatePersistenceUpdatesOnMainActor() throws {
+    let schema = Schema([BookModel.self, BookState.self])
+    let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    let container = try ModelContainer(for: schema, configurations: [configuration])
+    let context = ModelContext(container)
+
+    let book = URL(fileURLWithPath: "/tmp/cisum-book-progress/Novel", isDirectory: true)
+    let firstChapter = book.appendingPathComponent("Chapter 01.m4b")
+    let secondChapter = book.appendingPathComponent("Chapter 02.m4b")
+
+    try BookProgressStatePersistence.save(
+        bookURL: book,
+        currentURL: firstChapter,
+        time: nil,
+        container: container
+    )
+    var states = try context.fetch(BookState.descriptorOf(book))
+    #expect(states.count == 1)
+    #expect(states.first?.currentURL == firstChapter)
+    #expect(states.first?.time == 0)
+
+    try BookProgressStatePersistence.save(
+        bookURL: book,
+        currentURL: secondChapter,
+        time: 42,
+        container: container
+    )
+    states = try context.fetch(BookState.descriptorOf(book))
+    #expect(states.count == 1)
+    #expect(states.first?.currentURL == secondChapter)
+    #expect(states.first?.time == 42)
 }

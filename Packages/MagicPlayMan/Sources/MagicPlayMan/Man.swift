@@ -9,6 +9,7 @@ import CisumUI
 
 /// 媒体播放管理器
 /// 提供音频和视频播放功能，支持播放模式切换、喜欢状态管理等
+@MainActor
 public class MagicPlayMan: ObservableObject, SuperLog {
     /// 日志标识符
     public nonisolated static let emoji = "🎧"

@@ -15,7 +15,7 @@ import CisumUI
 #endif
 
 extension MagicPlayMan {
-    static func shouldApplyNowPlayingMetadataResult(requestedAsset: URL, currentAsset: URL?) -> Bool {
+    nonisolated static func shouldApplyNowPlayingMetadataResult(requestedAsset: URL, currentAsset: URL?) -> Bool {
         requestedAsset == currentAsset
     }
 

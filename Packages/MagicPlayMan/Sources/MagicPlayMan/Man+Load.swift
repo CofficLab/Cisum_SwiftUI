@@ -43,7 +43,7 @@ extension MagicPlayMan {
             .throttle(for: .milliseconds(1000), scheduler: DispatchQueue.main, latest: true)
             .sink { [weak self] progress in
                 guard let self = self else { return }
-                Task {
+                Task { @MainActor in
                     // 只有在加载状态时才更新下载进度，避免与播放状态冲突
                     if case .loading = self.state,
                        MagicPlayManDownloadRequestPolicy.shouldApplyResult(
@@ -60,9 +60,11 @@ extension MagicPlayMan {
         // 监听下载完成
         let finishObserver = url.onDownloadFinished(verbose: self.verbose, caller: self.className) { [weak self] in
             guard let self = self else { return }
-            self.cleanupDownloadObservers()
-            // 下载完成后执行回调
-            onFinished?()
+            Task { @MainActor in
+                self.cleanupDownloadObservers()
+                // 下载完成后执行回调
+                onFinished?()
+            }
         }
 
         // 存储下载监听器引用
@@ -73,19 +75,21 @@ extension MagicPlayMan {
             do {
                 try await url.download(verbose: self.verbose, reason: self.className + ".downloadAndCache")
             } catch {
-                guard MagicPlayManDownloadRequestPolicy.shouldApplyResult(
-                    requestedAsset: url,
-                    currentAsset: self.currentURL
-                ) else {
-                    if self.verbose {
-                        os_log("\(self.t)⚠️ URL changed during download failure, ignoring error for: \(url.title)")
+                await MainActor.run {
+                    guard MagicPlayManDownloadRequestPolicy.shouldApplyResult(
+                        requestedAsset: url,
+                        currentAsset: self.currentURL
+                    ) else {
+                        if self.verbose {
+                            os_log("\(self.t)⚠️ URL changed during download failure, ignoring error for: \(url.title)")
+                        }
+                        return
                     }
-                    return
-                }
 
-                // 下载失败时清理监听器
-                self.cleanupDownloadObservers()
-                self.setState(.failed(.networkError(error.localizedDescription)), reason: "\(reason).\(self.className).downloadAndCache")
+                    // 下载失败时清理监听器
+                    self.cleanupDownloadObservers()
+                    self.setState(.failed(.networkError(error.localizedDescription)), reason: "\(reason).\(self.className).downloadAndCache")
+                }
             }
         }
     }

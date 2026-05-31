@@ -204,7 +204,7 @@ extension RootView {
         if Self.verbose {
             os_log("\(self.t)🚀 Boot")
         }
-        Task {
+        Task { @MainActor in
             do {
                 try self.pluginProvider.restoreCurrent()
 

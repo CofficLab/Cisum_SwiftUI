@@ -213,7 +213,7 @@ internal extension MagicPlayMan {
             .store(in: &cancellables)
     }
 
-    static func isPlaybackEndNotificationForCurrentItem(
+    nonisolated static func isPlaybackEndNotificationForCurrentItem(
         _ notificationObject: Any?,
         currentItem: AVPlayerItem?
     ) -> Bool {

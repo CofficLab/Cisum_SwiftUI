@@ -9,8 +9,8 @@ public extension MagicPlayMan {
     /// 设置播放模式
     /// - Parameter mode: 要设置的播放模式
     func changePlayMode(_ mode: MagicPlayMode) {
-        Task {
-            await setPlayMode(mode)
+        Task { @MainActor in
+            setPlayMode(mode)
         }
         os_log("\(self.t)Playback mode set to: \(mode.displayName)")
     }
@@ -190,8 +190,8 @@ public extension MagicPlayMan {
             }
         }
 
-        Task {
-            await setLikedAssets(newLikedAssets)
+        Task { @MainActor in
+            setLikedAssets(newLikedAssets)
         }
         // 通知订阅者喜欢状态变化
         events.onLikeStatusChanged.send((asset: asset, isLiked: isLiked))
@@ -316,9 +316,11 @@ private extension MagicPlayMan {
         let targetTime = CMTime(seconds: time, preferredTimescale: 600)
         _player.seek(to: targetTime) { [weak self] _ in
             guard let self else { return }
-            // 更新 Now Playing Info 中的播放时间，否则控制中心/锁屏界面的进度条不会更新
-            self.updateNowPlayingInfo(includeThumbnail: true, reason: reason + ".seek")
-            completion?()
+            Task { @MainActor in
+                // 更新 Now Playing Info 中的播放时间，否则控制中心/锁屏界面的进度条不会更新
+                self.updateNowPlayingInfo(includeThumbnail: true, reason: reason + ".seek")
+                completion?()
+            }
         }
     }
 }
