@@ -1242,7 +1242,19 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
             return url.standardized.absoluteString
         }
 
+        if isDanglingSymbolicLink(url) {
+            return url.standardizedFileURL.path
+        }
+
         return url.resolvingSymlinksInPath().standardizedFileURL.path
+    }
+
+    private static func isDanglingSymbolicLink(_ url: URL) -> Bool {
+        guard (try? FileManager.default.destinationOfSymbolicLink(atPath: url.path)) != nil else {
+            return false
+        }
+
+        return !FileManager.default.fileExists(atPath: url.path)
     }
 
     /// 根据 URL 查找音频模型（静态方法）

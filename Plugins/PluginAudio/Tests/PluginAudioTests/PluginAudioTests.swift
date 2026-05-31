@@ -87,6 +87,24 @@ import SwiftData
     #expect(AudioDB.uniqueSupportedAudioFiles([linkedAudio, realAudio, otherAudio]) == [linkedAudio, otherAudio])
 }
 
+@Test func audioDBUniqueSupportedFilesKeepsDistinctDanglingSymlinkAudio() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let missingFile = root.appendingPathComponent("missing.mp3")
+    let firstLink = root.appendingPathComponent("first.mp3")
+    let secondLink = root.appendingPathComponent("second.mp3")
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: firstLink, withDestinationURL: missingFile)
+    try FileManager.default.createSymbolicLink(at: secondLink, withDestinationURL: missingFile)
+
+    #expect(!AudioDB.representsSameAudioFile(firstLink, secondLink))
+    #expect(AudioDB.uniqueSupportedAudioFiles([firstLink, secondLink]) == [firstLink, secondLink])
+}
+
 @Test func missingStorageErrorKeepsStorageSetupGuidance() {
     let presentation = AudioRootErrorPresentation.make(error: .initialization(reason: "Storage 未找到"))
 
@@ -544,6 +562,32 @@ func audioRepoSingleDeleteRejectsFilesOutsideLibrary() async throws {
     await db.syncWithUpdatedItems([linkedAudio])
 
     #expect(await db.allAudioURLs(reason: "test") == [realAudio])
+}
+
+@Test func audioDBSyncRemovesDistinctDanglingSymlinkAudioEntries() async throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let missingFile = root.appendingPathComponent("missing.mp3")
+    let firstLink = root.appendingPathComponent("first.mp3")
+    let secondLink = root.appendingPathComponent("second.mp3")
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: firstLink, withDestinationURL: missingFile)
+    try FileManager.default.createSymbolicLink(at: secondLink, withDestinationURL: missingFile)
+
+    let schema = Schema([AudioModel.self])
+    let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    let container = try ModelContainer(for: schema, configurations: [configuration])
+    let db = AudioDB(container, reason: "audioDBSyncRemovesDistinctDanglingSymlinkAudioEntries")
+
+    await db.insertAudio(url: firstLink, order: 10)
+    await db.insertAudio(url: secondLink, order: 20)
+    await db.syncWithUpdatedItems([firstLink, secondLink])
+
+    #expect(await db.getTotalOfAudio() == 0)
 }
 
 @Test func audioDBFullSyncKeepsSymlinkedExistingTrack() async throws {
