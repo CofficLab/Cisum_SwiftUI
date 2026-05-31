@@ -30,7 +30,11 @@ enum URLDownloadAvailabilityPolicy {
 
 enum URLDirectoryContainmentPolicy {
     static func contains(_ childPath: String, inDirectory parentPath: String) -> Bool {
-        childPath == parentPath || childPath.hasPrefix(parentPath + "/")
+        childPath == parentPath || childPath.hasPrefix(childPrefix(for: parentPath))
+    }
+
+    private static func childPrefix(for parentPath: String) -> String {
+        parentPath.hasSuffix("/") ? parentPath : parentPath + "/"
     }
 }
 

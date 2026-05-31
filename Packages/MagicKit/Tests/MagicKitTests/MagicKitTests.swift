@@ -148,6 +148,17 @@ final class MagicKitTests: XCTestCase {
         ))
     }
 
+    func testDirectoryContainmentTreatsRootAsParentOfAbsolutePaths() {
+        XCTAssertTrue(URLDirectoryContainmentPolicy.contains(
+            "/tmp/Cisum/Documents/Audio/Track.mp3",
+            inDirectory: "/"
+        ))
+        XCTAssertFalse(URLDirectoryContainmentPolicy.contains(
+            "tmp/Cisum/Documents/Audio/Track.mp3",
+            inDirectory: "/"
+        ))
+    }
+
     func testImageCropping() {
         // 暂时跳过此测试，因为缺少相关的图像处理功能
         // let originalImage = UIImage(named: "testImage")!
