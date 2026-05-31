@@ -116,7 +116,7 @@ enum BookProgressBookRootResolver {
     }
 
     private static func isContained(_ childPath: String, in parentPath: String) -> Bool {
-        childPath == parentPath || childPath.hasPrefix(parentPath + "/")
+        childPath == parentPath || childPath.hasPrefix(BookProgressPathContainment.childPrefix(for: parentPath))
     }
 }
 
@@ -156,7 +156,7 @@ enum BookProgressPathContainment {
             return ""
         }
 
-        let prefix = parentPath + "/"
+        let prefix = childPrefix(for: parentPath)
         guard childPath.hasPrefix(prefix) else {
             return nil
         }
@@ -165,7 +165,11 @@ enum BookProgressPathContainment {
     }
 
     private static func isContained(_ childPath: String, in parentPath: String) -> Bool {
-        childPath == parentPath || childPath.hasPrefix(parentPath + "/")
+        childPath == parentPath || childPath.hasPrefix(childPrefix(for: parentPath))
+    }
+
+    static func childPrefix(for parentPath: String) -> String {
+        parentPath.hasSuffix("/") ? parentPath : parentPath + "/"
     }
 }
 

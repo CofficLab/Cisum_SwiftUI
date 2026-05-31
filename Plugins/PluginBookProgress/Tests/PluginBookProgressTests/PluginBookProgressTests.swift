@@ -149,6 +149,14 @@ import Testing
     #expect(root == chapter.deletingLastPathComponent().standardizedFileURL)
 }
 
+@Test func rootBookDiskContainsNestedPlaybackURL() {
+    let disk = URL(fileURLWithPath: "/", isDirectory: true)
+    let chapter = URL(fileURLWithPath: "/tmp/cisum-root-books/Novel/Chapter 01.m4b")
+
+    #expect(BookProgressPathContainment.resolved(chapter, isContainedIn: disk))
+    #expect(BookProgressPathContainment.relativePath(of: chapter.path, in: disk.path) == "tmp/cisum-root-books/Novel/Chapter 01.m4b")
+}
+
 @Test func symlinkedBookDiskResolvesRealPlaybackURLToConfiguredRoot() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)

@@ -95,6 +95,13 @@ import SwiftData
     #expect(BookDB.contains(linkedRoot, bookURL: nestedChapter))
 }
 
+@Test func deletedRootBookFolderContainsNestedRecords() {
+    let root = URL(fileURLWithPath: "/", isDirectory: true)
+    let nestedChapter = URL(fileURLWithPath: "/tmp/cisum-root-book/Chapter 1.m4b")
+
+    #expect(BookDB.contains(root, bookURL: nestedChapter))
+}
+
 @Test func displayableLibraryItemsIncludeTopLevelStandaloneBooks() {
     let root = URL(fileURLWithPath: "/tmp/cisum-books", isDirectory: true)
     let book = BookDTO(
