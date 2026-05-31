@@ -80,7 +80,7 @@ struct ProductsSubscription: View, SuperEvent, SuperLog, SuperThread {
                                             .fontWeight(.semibold)
                                             .cisumIf(group.name.isNotEmpty)
 
-                                        Text("\(group.subscriptions.count) 个订阅选项", tableName: "Store", bundle: .module)
+                                        Text("\(group.subscriptions.count) subscription options", tableName: "Store", bundle: .module)
                                             .font(.caption)
                                             .foregroundStyle(.secondary)
                                     }
@@ -121,7 +121,7 @@ struct ProductsSubscription: View, SuperEvent, SuperLog, SuperThread {
             Image(systemName: "cart.circle")
                 .font(.system(size: 64))
                 .foregroundStyle(.tertiary)
-            Text("暂无订阅选项", tableName: "Store", bundle: .module)
+            Text("No subscription options available", tableName: "Store", bundle: .module)
                 .font(.headline)
                 .foregroundStyle(.secondary)
         }

@@ -33,6 +33,22 @@
         }
       }
     },
+    "%lld subscription options" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld 个订阅选项"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld 個訂閱選項"
+          }
+        }
+      }
+    },
     "%lld months" : {
       "localizations" : {
         "zh-Hans" : {
@@ -242,6 +258,22 @@
         }
       }
     },
+    "Early access to future features" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未来新功能优先体验"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未來新功能優先體驗"
+          }
+        }
+      }
+    },
     "Expired" : {
       "localizations" : {
         "zh-Hans" : {
@@ -302,6 +334,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "免費 %@ 期"
+          }
+        }
+      }
+    },
+    "Free version" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "免费版"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "免費版"
           }
         }
       }
@@ -383,6 +431,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "個月"
+          }
+        }
+      }
+    },
+    "No subscription options available" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暂无订阅选项"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暫無訂閱選項"
           }
         }
       }
@@ -480,6 +544,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "處理中..."
+          }
+        }
+      }
+    },
+    "Pro version" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "专业版"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "專業版"
           }
         }
       }
@@ -633,6 +713,22 @@
         }
       }
     },
+    "Support ongoing development" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "支持我们做得更好"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "支持我們做得更好"
+          }
+        }
+      }
+    },
     "Subscription expiration date" : {
       "localizations" : {
         "zh-Hans" : {
@@ -743,6 +839,54 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "重試"
+          }
+        }
+      }
+    },
+    "Unlimited audio" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无限制音频"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無限制音頻"
+          }
+        }
+      }
+    },
+    "Unlock the full experience" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "解锁完整体验"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "解鎖完整體驗"
+          }
+        }
+      }
+    },
+    "Up to %lld audio files" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最多 %lld 首音频"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最多 %lld 首音頻"
           }
         }
       }

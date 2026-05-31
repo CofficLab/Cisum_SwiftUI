@@ -10,7 +10,7 @@ struct VersionComparisonView: View {
             HStack {
                 Image(systemName: "sparkles")
                     .foregroundStyle(.yellow)
-                Text("解锁完整体验", tableName: "Store", bundle: .module)
+                Text("Unlock the full experience", tableName: "Store", bundle: .module)
                     .font(.headline)
                     .fontWeight(.semibold)
             }
@@ -20,24 +20,24 @@ struct VersionComparisonView: View {
             HStack(spacing: 12) {
                 // 免费版卡片
                 VersionCard(
-                    title: String(localized: "免费版", table: "Store", bundle: .module),
+                    title: String(localized: "Free version", table: "Store", bundle: .module),
                     icon: "person.fill",
                     color: .gray,
                     features: [
-                        ("maxAudioCount", String(localized: "最多 \(AudioPluginInfo.maxAudioCount) 首音频", table: "Store", bundle: .module), "music.note"),
+                        ("maxAudioCount", String(localized: "Up to \(AudioPluginInfo.maxAudioCount) audio files", table: "Store", bundle: .module), "music.note"),
                     ],
                     isPro: false
                 )
 
                 // 专业版卡片
                 VersionCard(
-                    title: String(localized: "专业版", table: "Store", bundle: .module),
+                    title: String(localized: "Pro version", table: "Store", bundle: .module),
                     icon: "crown.fill",
                     color: .blue,
                     features: [
-                        ("unlimited", String(localized: "无限制音频", table: "Store", bundle: .module), "infinity"),
-                        ("future", String(localized: "未来新功能优先体验", table: "Store", bundle: .module), "star.fill"),
-                        ("support", String(localized: "支持我们做得更好", table: "Store", bundle: .module), "heart.fill"),
+                        ("unlimited", String(localized: "Unlimited audio", table: "Store", bundle: .module), "infinity"),
+                        ("future", String(localized: "Early access to future features", table: "Store", bundle: .module), "star.fill"),
+                        ("support", String(localized: "Support ongoing development", table: "Store", bundle: .module), "heart.fill"),
                     ],
                     isPro: true
                 )
