@@ -30,7 +30,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
     /// 启动状态，表示LaunchViewSwitcher正在显示
     @State var launching = true
     @Environment(\.demoMode) var isDemoMode
-    @State var iCloudAvailable = true
+    @State var iCloudAvailable: Bool
 
     @StateObject var appProvider: AppProvider
     @StateObject var pluginProvider: PluginProvider
@@ -55,6 +55,7 @@ struct RootView<Content>: View, SuperEvent, SuperLog, SuperThread where Content:
         self._themeProvider = StateObject(wrappedValue: manager.theme)
         self.man = manager.man
         self.cloudProvider = manager.cloud
+        self._iCloudAvailable = State(initialValue: Config.isICloudStorageAvailable())
     }
 
     var body: some View {
@@ -279,7 +280,7 @@ extension RootView {
     }
 
     func onCloudAccountStateChanged(_ n: Notification) {
-        let newAvailability = FileManager.default.ubiquityIdentityToken != nil
+        let newAvailability = Config.isICloudStorageAvailable()
         let shouldReload = Self.shouldReloadAfterCloudAvailabilityChange(
             previousAvailability: iCloudAvailable,
             newAvailability: newAvailability
