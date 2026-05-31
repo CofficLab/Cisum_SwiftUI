@@ -65,6 +65,31 @@ import SwiftUI
     #expect(next == linkedBook.appendingPathComponent("002.m4b"))
 }
 
+@Test func shuffledChapterCandidatesExcludeSymlinkedCurrentChapter() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realBook = root.appendingPathComponent("RealBook", isDirectory: true)
+    let linkedBook = root.appendingPathComponent("LinkedBook", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: realBook, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedBook, withDestinationURL: realBook)
+    let realCurrentChapter = realBook.appendingPathComponent("001.m4b")
+    let linkedCurrentChapter = linkedBook.appendingPathComponent("001.m4b")
+    let linkedNextChapter = linkedBook.appendingPathComponent("002.m4b")
+    try Data("audio".utf8).write(to: realCurrentChapter)
+    try Data("audio".utf8).write(to: realBook.appendingPathComponent("002.m4b"))
+
+    let candidates = BookControlChapterLoader.shuffleCandidates(
+        in: [linkedCurrentChapter, linkedNextChapter],
+        current: realCurrentChapter
+    )
+
+    #expect(candidates == [linkedNextChapter])
+}
+
 @Test func navigationResultOnlyAppliesToUnchangedCurrentChapter() {
     let requested = URL(fileURLWithPath: "/tmp/book/001.m4b")
     let switched = URL(fileURLWithPath: "/tmp/book/002.m4b")

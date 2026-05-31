@@ -185,10 +185,14 @@ enum BookControlChapterLoader {
         case .repeatAll:
             return offset > 0 ? chapters.first : chapters.last
         case .shuffle:
-            return chapters.filter { $0 != asset }.randomElement() ?? chapters.first
+            return shuffleCandidates(in: chapters, current: asset).randomElement() ?? chapters.first
         case .sequence, .loop:
             return nil
         }
+    }
+
+    static func shuffleCandidates(in chapters: [URL], current asset: URL) -> [URL] {
+        chapters.filter { !isSameFile($0, asset) }
     }
 
     private static func isSameFile(_ lhs: URL, _ rhs: URL) -> Bool {
