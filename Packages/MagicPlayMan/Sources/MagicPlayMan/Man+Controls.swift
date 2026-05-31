@@ -36,6 +36,18 @@ enum MagicPlayManSeekPolicy {
     }
 }
 
+enum MagicPlayManControlInputPolicy {
+    static func normalizedVolume(_ volume: Float) -> Float {
+        guard volume.isFinite else { return 0 }
+        return max(0, min(1, volume))
+    }
+
+    static func normalizedSkipInterval(_ seconds: TimeInterval) -> TimeInterval {
+        guard seconds.isFinite else { return 0 }
+        return max(seconds, 0)
+    }
+}
+
 public extension MagicPlayMan {
     /// 设置播放模式
     /// - Parameter mode: 要设置的播放模式
@@ -272,25 +284,28 @@ public extension MagicPlayMan {
     /// 调整音量
     /// - Parameter volume: 目标音量值，范围 0.0-1.0
     func setVolume(_ volume: Float) {
-        _player.volume = max(0, min(1, volume))
-        os_log("\(self.t)🔊 Volume set to \(Int(volume * 100))%")
+        let normalizedVolume = MagicPlayManControlInputPolicy.normalizedVolume(volume)
+        _player.volume = normalizedVolume
+        os_log("\(self.t)🔊 Volume set to \(Int(normalizedVolume * 100))%")
     }
 
     /// 快退指定时间
     /// - Parameter seconds: 快退的秒数，默认为10秒
     func skipBackward(_ seconds: TimeInterval = 10) {
-        seek(time: max(currentTime - seconds, 0), reason: "skipBackward")
-        os_log("\(self.t)⏪ Skipped backward \(Int(seconds))s")
+        let interval = MagicPlayManControlInputPolicy.normalizedSkipInterval(seconds)
+        seek(time: max(currentTime - interval, 0), reason: "skipBackward")
+        os_log("\(self.t)⏪ Skipped backward \(Int(interval))s")
     }
 
     /// 快进指定时间
     /// - Parameter seconds: 快进的秒数，默认为10秒
     func skipForward(_ seconds: TimeInterval = 10) {
+        let interval = MagicPlayManControlInputPolicy.normalizedSkipInterval(seconds)
         seek(
-            time: MagicPlayManSeekPolicy.normalizedTime(currentTime + seconds, duration: duration),
+            time: MagicPlayManSeekPolicy.normalizedTime(currentTime + interval, duration: duration),
             reason: "skipForward"
         )
-        os_log("\(self.t)⏩ Skipped forward \(Int(seconds))s")
+        os_log("\(self.t)⏩ Skipped forward \(Int(interval))s")
     }
 
     /// 停止播放

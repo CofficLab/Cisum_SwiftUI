@@ -335,6 +335,21 @@ final class MagicPlayManTests: XCTestCase {
         XCTAssertEqual(MagicPlayManSeekPolicy.normalizedTime(30, duration: .nan), 30)
     }
 
+    func testControlInputPolicyNormalizesVolume() {
+        XCTAssertEqual(MagicPlayManControlInputPolicy.normalizedVolume(-0.25), 0)
+        XCTAssertEqual(MagicPlayManControlInputPolicy.normalizedVolume(0.4), 0.4)
+        XCTAssertEqual(MagicPlayManControlInputPolicy.normalizedVolume(1.5), 1)
+        XCTAssertEqual(MagicPlayManControlInputPolicy.normalizedVolume(.nan), 0)
+        XCTAssertEqual(MagicPlayManControlInputPolicy.normalizedVolume(.infinity), 0)
+    }
+
+    func testControlInputPolicyNormalizesSkipIntervals() {
+        XCTAssertEqual(MagicPlayManControlInputPolicy.normalizedSkipInterval(-5), 0)
+        XCTAssertEqual(MagicPlayManControlInputPolicy.normalizedSkipInterval(15), 15)
+        XCTAssertEqual(MagicPlayManControlInputPolicy.normalizedSkipInterval(.nan), 0)
+        XCTAssertEqual(MagicPlayManControlInputPolicy.normalizedSkipInterval(.infinity), 0)
+    }
+
     func testPlaybackTimePolicyRejectsInvalidTimes() {
         XCTAssertEqual(MagicPlayManPlaybackTimePolicy.normalizedCurrentTime(.nan), 0)
         XCTAssertEqual(MagicPlayManPlaybackTimePolicy.normalizedCurrentTime(.infinity), 0)
