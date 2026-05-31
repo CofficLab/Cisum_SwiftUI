@@ -45,8 +45,8 @@ public class BookSettingRepo: SuperLog {
         localDouble: TimeInterval,
         cloudString: String?
     ) -> TimeInterval? {
-        if localObject != nil {
-            return validStoredTime(localDouble)
+        if localObject != nil, let time = validStoredTime(localDouble) {
+            return time
         }
 
         guard let cloudString, let time = TimeInterval(cloudString) else { return nil }

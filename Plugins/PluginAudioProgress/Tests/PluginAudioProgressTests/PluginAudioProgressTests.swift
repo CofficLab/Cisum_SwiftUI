@@ -90,22 +90,22 @@ import Testing
     ) == nil)
 }
 
-@Test func invalidStoredAudioTimesAreIgnored() {
+@Test func invalidLocalAudioTimesFallBackToCloud() {
     #expect(AudioStateRepo.storedTime(
         localObject: Double.nan,
         localDouble: .nan,
         cloudString: "42"
-    ) == nil)
+    ) == 42)
     #expect(AudioStateRepo.storedTime(
         localObject: Double.infinity,
         localDouble: .infinity,
         cloudString: "42"
-    ) == nil)
+    ) == 42)
     #expect(AudioStateRepo.storedTime(
         localObject: -1.0,
         localDouble: -1,
         cloudString: "42"
-    ) == nil)
+    ) == 42)
     #expect(AudioStateRepo.storedTime(
         localObject: nil,
         localDouble: 0,

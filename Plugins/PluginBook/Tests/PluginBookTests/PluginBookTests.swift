@@ -308,22 +308,22 @@ private func canonicalPath(_ url: URL) -> String {
     ) == nil)
 }
 
-@Test func invalidStoredBookTimesAreIgnored() {
+@Test func invalidLocalBookTimesFallBackToCloud() {
     #expect(BookSettingRepo.storedTime(
         localObject: Double.nan,
         localDouble: .nan,
         cloudString: "42"
-    ) == nil)
+    ) == 42)
     #expect(BookSettingRepo.storedTime(
         localObject: Double.infinity,
         localDouble: .infinity,
         cloudString: "42"
-    ) == nil)
+    ) == 42)
     #expect(BookSettingRepo.storedTime(
         localObject: -1.0,
         localDouble: -1,
         cloudString: "42"
-    ) == nil)
+    ) == 42)
     #expect(BookSettingRepo.storedTime(
         localObject: nil,
         localDouble: 0,
