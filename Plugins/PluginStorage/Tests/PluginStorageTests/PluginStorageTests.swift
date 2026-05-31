@@ -518,7 +518,7 @@ import Foundation
         verbose: false
     )
 
-    #expect((try? danglingTarget.resourceValues(forKeys: [.isSymbolicLinkKey]).isSymbolicLink) == true)
+    #expect((try? FileManager.default.destinationOfSymbolicLink(atPath: danglingTarget.path)) != nil)
     #expect(FileManager.default.fileExists(atPath: target.appendingPathComponent("track 2.mp3").path))
     #expect(!FileManager.default.fileExists(atPath: source.appendingPathComponent("track.mp3").path))
 }

@@ -204,7 +204,7 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread, @unchecked Send
     }
 
     private static func representsSymlink(_ url: URL) -> Bool {
-        (try? url.resourceValues(forKeys: [.isSymbolicLinkKey]).isSymbolicLink) == true
+        (try? FileManager.default.destinationOfSymbolicLink(atPath: url.path)) != nil
     }
 
     private func uniqueDestination(for sourceFile: URL, in targetRoot: URL) -> URL {
@@ -244,7 +244,7 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread, @unchecked Send
             return true
         }
 
-        return (try? url.resourceValues(forKeys: [.isSymbolicLinkKey]).isSymbolicLink) == true
+        return (try? FileManager.default.destinationOfSymbolicLink(atPath: url.path)) != nil
     }
 
     private func destination(
