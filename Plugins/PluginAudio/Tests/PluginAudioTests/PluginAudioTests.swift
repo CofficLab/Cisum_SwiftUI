@@ -253,6 +253,88 @@ import SwiftData
     #expect(await db.allAudioURLs(reason: "test") == [existing, first, second])
 }
 
+@Test func audioDBSyncMatchesExistingTrackThroughSymlink() async throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realRoot = root.appendingPathComponent("real-audio", isDirectory: true)
+    let linkedRoot = root.appendingPathComponent("audio-link", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: realRoot, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedRoot, withDestinationURL: realRoot)
+
+    let schema = Schema([AudioModel.self])
+    let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    let container = try ModelContainer(for: schema, configurations: [configuration])
+    let db = AudioDB(container, reason: "audioDBSyncMatchesExistingTrackThroughSymlink")
+
+    let realAudio = realRoot.appendingPathComponent("track.mp3")
+    let linkedAudio = linkedRoot.appendingPathComponent("track.mp3")
+    try Data("audio".utf8).write(to: realAudio)
+
+    await db.insertAudio(url: realAudio, order: 10)
+    await db.syncWithUpdatedItems([linkedAudio])
+
+    #expect(await db.allAudioURLs(reason: "test") == [realAudio])
+}
+
+@Test func audioDBFullSyncKeepsSymlinkedExistingTrack() async throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realRoot = root.appendingPathComponent("real-audio", isDirectory: true)
+    let linkedRoot = root.appendingPathComponent("audio-link", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: realRoot, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedRoot, withDestinationURL: realRoot)
+
+    let schema = Schema([AudioModel.self])
+    let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    let container = try ModelContainer(for: schema, configurations: [configuration])
+    let db = AudioDB(container, reason: "audioDBFullSyncKeepsSymlinkedExistingTrack")
+
+    let realAudio = realRoot.appendingPathComponent("track.mp3")
+    let linkedAudio = linkedRoot.appendingPathComponent("track.mp3")
+    try Data("audio".utf8).write(to: realAudio)
+
+    await db.insertAudio(url: realAudio, order: 10)
+    await db.initItems([linkedAudio])
+
+    #expect(await db.allAudioURLs(reason: "test") == [realAudio])
+}
+
+@Test func audioDBDeleteByURLMatchesSymlinkedStoredTrack() async throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realRoot = root.appendingPathComponent("real-audio", isDirectory: true)
+    let linkedRoot = root.appendingPathComponent("audio-link", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: realRoot, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedRoot, withDestinationURL: realRoot)
+
+    let schema = Schema([AudioModel.self])
+    let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    let container = try ModelContainer(for: schema, configurations: [configuration])
+    let db = AudioDB(container, reason: "audioDBDeleteByURLMatchesSymlinkedStoredTrack")
+
+    let realAudio = realRoot.appendingPathComponent("track.mp3")
+    let linkedAudio = linkedRoot.appendingPathComponent("track.mp3")
+    try Data("audio".utf8).write(to: realAudio)
+
+    await db.insertAudio(url: realAudio, order: 10)
+    try await db.deleteAudiosByURL(disk: linkedRoot, urls: [linkedAudio])
+
+    #expect(FileManager.default.fileExists(atPath: realAudio.path) == false)
+    #expect(await db.getTotalOfAudio() == 0)
+}
+
 @Test func audioDBSyncIgnoresFoldersAndUnsupportedFiles() async throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)

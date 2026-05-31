@@ -218,16 +218,7 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
     /// - Parameter url: 音频 URL
     /// - Returns: 匹配该 URL 的音频数量；如果查询失败则返回 0
     func countOfURL(_ url: URL) -> Int {
-        let descriptor = FetchDescriptor<AudioModel>(predicate: #Predicate<AudioModel> {
-            $0.url == url
-        })
-
-        do {
-            return try context.fetchCount(descriptor)
-        } catch let e {
-            os_log(.error, "\(e.localizedDescription)")
-            return 0
-        }
+        findAudio(url) == nil ? 0 : 1
     }
 
     /// 删除指定 ID 的音频模型
@@ -845,12 +836,11 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
 
         do {
             try context.enumerate(FetchDescriptor<AudioModel>(), block: { audio in
-                if let item = hashMap[audio.url] {
+                if let item = removeMatchingSyncItem(for: audio.url, from: &hashMap) {
                     // 更新数据库记录
                     audio.size = item.getSize()
 
-                    // 记录存在哈希表中，同步完成，删除哈希表记录
-                    hashMap.removeValue(forKey: audio.url)
+                    // 记录存在哈希表中，同步完成，删除哈希表记录。
                 } else {
                     context.delete(audio)
                 }
@@ -889,14 +879,8 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
         var nextOrder = nextAppendOrder()
         for meta in Self.sortedForStableInsertion(metas) {
             if meta.isNotFileExist {
-                let deletedURL = meta
-
-                do {
-                    try context.delete(model: AudioModel.self, where: #Predicate { audio in
-                        audio.url == deletedURL
-                    })
-                } catch let e {
-                    os_log(.error, "\(e.localizedDescription)")
+                if let audio = findAudio(meta) {
+                    context.delete(audio)
                 }
             } else {
                 guard Self.isSupportedAudioFile(meta) else { continue }
@@ -969,6 +953,18 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
         audios.sorted {
             $0.url.standardizedFileURL.path.localizedStandardCompare($1.url.standardizedFileURL.path) == .orderedAscending
         }
+    }
+
+    private func removeMatchingSyncItem(for url: URL, from hashMap: inout [URL: URL]) -> URL? {
+        if let item = hashMap.removeValue(forKey: url) {
+            return item
+        }
+
+        guard let matchingKey = hashMap.keys.first(where: { Self.representsSameAudioFile($0, url) }) else {
+            return nil
+        }
+
+        return hashMap.removeValue(forKey: matchingKey)
     }
 
     static func isSupportedAudioFile(_ url: URL) -> Bool {
@@ -1095,7 +1091,7 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
                 next = try nextOf(audio: audio)
 
                 // 如果下一个等于当前，设为空
-                if next?.url == url {
+                if let nextURL = next?.url, Self.representsSameAudioFile(nextURL, url) {
                     next = nil
                 }
             }
@@ -1148,9 +1144,7 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
 
         for url in urls {
             do {
-                guard let audio = try context.fetch(FetchDescriptor(predicate: #Predicate<AudioModel> {
-                    $0.url == url
-                })).first else {
+                guard let audio = findAudio(url) else {
                     os_log(.error, "\(self.t)删除时找不到")
                     continue
                 }
@@ -1184,6 +1178,15 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
         return audioPath != diskPath && audioPath.hasPrefix(diskPath.hasSuffix("/") ? diskPath : diskPath + "/")
     }
 
+    static func representsSameAudioFile(_ lhs: URL, _ rhs: URL) -> Bool {
+        guard lhs.isFileURL, rhs.isFileURL else {
+            return lhs.standardized.absoluteString == rhs.standardized.absoluteString
+        }
+
+        return lhs.resolvingSymlinksInPath().standardizedFileURL.path
+            == rhs.resolvingSymlinksInPath().standardizedFileURL.path
+    }
+
     /// 根据 URL 查找音频模型（静态方法）
     /// - Parameters:
     ///   - url: 音频 URL
@@ -1196,9 +1199,15 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
         }
 
         do {
-            return try context.fetch(FetchDescriptor<AudioModel>(predicate: #Predicate<AudioModel> {
+            if let audio = try context.fetch(FetchDescriptor<AudioModel>(predicate: #Predicate<AudioModel> {
                 $0.url == url
-            })).first
+            })).first {
+                return audio
+            }
+
+            return try context.fetch(AudioModel.descriptorAll).first { audio in
+                representsSameAudioFile(audio.url, url)
+            }
         } catch let e {
             os_log(.error, "\(e.localizedDescription)")
         }
