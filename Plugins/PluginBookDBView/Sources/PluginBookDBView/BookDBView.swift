@@ -362,9 +362,28 @@ extension BookDBView {
     }
 
     nonisolated static func folderContainsPlayableFiles(_ folder: URL) -> Bool {
-        copySourceURL(for: folder).flatten().contains { child in
-            !child.isFolder && BookPluginInfo.supportedExtensions.contains(child.pathExtension.lowercased())
+        let source = copySourceURL(for: folder)
+        guard let enumerator = FileManager.default.enumerator(
+            at: source,
+            includingPropertiesForKeys: [.isDirectoryKey],
+            options: [.skipsHiddenFiles]
+        ) else {
+            return false
         }
+
+        for case let child as URL in enumerator {
+            guard !child.isFolder else { continue }
+
+            if isPlayableBookFile(child) {
+                return true
+            }
+        }
+
+        return false
+    }
+
+    private nonisolated static func isPlayableBookFile(_ url: URL) -> Bool {
+        BookPluginInfo.supportedExtensions.contains(url.pathExtension.lowercased())
     }
 
     private nonisolated static func copySecurityScopedItem(_ source: URL, to destination: URL) async throws {

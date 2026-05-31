@@ -23,6 +23,7 @@ import UniformTypeIdentifiers
 
     try FileManager.default.createDirectory(at: unsupportedFolder, withIntermediateDirectories: true)
     try Data("notes".utf8).write(to: unsupportedFolder.appendingPathComponent("notes.txt"))
+    try Data("hidden audio".utf8).write(to: unsupportedFolder.appendingPathComponent(".hidden.m4b"))
 
     try FileManager.default.createDirectory(at: nestedFolder, withIntermediateDirectories: true)
     try Data("audio".utf8).write(to: nestedFolder.appendingPathComponent("chapter.m4b"))
