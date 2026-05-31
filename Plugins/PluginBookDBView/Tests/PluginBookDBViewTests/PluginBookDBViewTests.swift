@@ -277,3 +277,32 @@ import UniformTypeIdentifiers
     #expect(BookGridUpdatePolicy.shouldApplyResult(currentGeneration: 2, resultGeneration: 2))
     #expect(!BookGridUpdatePolicy.shouldApplyResult(currentGeneration: 3, resultGeneration: 2))
 }
+
+@Test func bookGridSelectionMatchesSymlinkedBookURLs() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realBook = root.appendingPathComponent("RealBook", isDirectory: true)
+    let linkedBook = root.appendingPathComponent("LinkedBook", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: realBook, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedBook, withDestinationURL: realBook)
+    try Data("audio".utf8).write(to: realBook.appendingPathComponent("001.m4b"))
+
+    let book = BookDTO(
+        url: linkedBook,
+        bookTitle: "LinkedBook",
+        childCount: 1,
+        isCollection: true,
+        order: 0
+    )
+
+    #expect(BookGridSelectionPolicy.representsSelectedBook(linkedBook, selectedURL: realBook))
+    #expect(BookGridSelectionPolicy.containsSelectedBook(realBook, in: [book]))
+    #expect(!BookGridSelectionPolicy.containsSelectedBook(
+        root.appendingPathComponent("OtherBook", isDirectory: true),
+        in: [book]
+    ))
+}

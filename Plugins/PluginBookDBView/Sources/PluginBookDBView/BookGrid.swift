@@ -13,6 +13,19 @@ enum BookGridUpdatePolicy {
     }
 }
 
+enum BookGridSelectionPolicy {
+    static func representsSelectedBook(_ bookURL: URL, selectedURL: URL?) -> Bool {
+        guard let selectedURL else { return false }
+        return BookPlaybackOrdering.representsSameFile(bookURL, selectedURL)
+    }
+
+    static func containsSelectedBook(_ selectedURL: URL, in books: [BookDTO]) -> Bool {
+        books.contains {
+            representsSelectedBook($0.url, selectedURL: selectedURL)
+        }
+    }
+}
+
 enum BookDBViewBookStateLookup {
     static func findBookState(for bookURL: URL, in context: ModelContext) throws -> BookState? {
         let descriptor = BookState.descriptorOf(bookURL)
@@ -114,8 +127,14 @@ struct BookGrid: View, SuperLog, SuperThread, SuperEvent {
                                         // 高亮边框
                                         Rectangle()
                                             .stroke(
-                                                selectedBookURL == item.url ? Color.accentColor : Color.clear,
-                                                lineWidth: selectedBookURL == item.url ? 3 : 0
+                                                BookGridSelectionPolicy.representsSelectedBook(
+                                                    item.url,
+                                                    selectedURL: selectedBookURL
+                                                ) ? Color.accentColor : Color.clear,
+                                                lineWidth: BookGridSelectionPolicy.representsSelectedBook(
+                                                    item.url,
+                                                    selectedURL: selectedBookURL
+                                                ) ? 3 : 0
                                             )
                                     )
                                     .animation(.easeInOut(duration: 0.2), value: selectedBookURL)
@@ -329,7 +348,8 @@ extension BookGrid {
         // 数据加载完成后再根据当前播放项恢复选中状态，避免空列表阶段丢失高亮。
         if let currentAsset = man.asset {
             updateSelectedBook(for: currentAsset)
-        } else if let currentSelection = selectedBookURL, !newValue.contains(where: { $0.url == currentSelection }) {
+        } else if let currentSelection = selectedBookURL,
+                  !BookGridSelectionPolicy.containsSelectedBook(currentSelection, in: newValue) {
             if Self.verbose {
                 os_log("\(self.t)⚠️ 当前选中的书籍不在列表中，清除选中状态")
             }
