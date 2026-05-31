@@ -102,6 +102,26 @@ import SwiftData
     #expect(BookDB.uniqueSupportedBookLibraryItems([linkedBook, realBook, otherBook]) == [linkedBook, otherBook])
 }
 
+@Test func bookDBUniqueSupportedItemsKeepsDistinctDanglingSymlinkBooks() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let missingBook = root.appendingPathComponent("missing.m4b")
+    let firstLink = root.appendingPathComponent("first.m4b")
+    let secondLink = root.appendingPathComponent("second.m4b")
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: firstLink, withDestinationURL: missingBook)
+    try FileManager.default.createSymbolicLink(at: secondLink, withDestinationURL: missingBook)
+
+    #expect(BookDB.isSupportedBookLibraryItem(firstLink))
+    #expect(BookDB.isSupportedBookLibraryItem(secondLink))
+    #expect(BookPathContainment.canonicalIdentity(for: firstLink) != BookPathContainment.canonicalIdentity(for: secondLink))
+    #expect(BookDB.uniqueSupportedBookLibraryItems([firstLink, secondLink]) == [firstLink, secondLink])
+}
+
 @Test func bookModelTreatsSymlinkedBookFolderAsCollection() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)
