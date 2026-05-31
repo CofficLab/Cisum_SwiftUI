@@ -1,18 +1,12 @@
 {
-  "sourceLanguage": "zh-Hans",
+  "sourceLanguage": "en",
   "strings": {
-    "喜欢/取消喜欢 按钮": {
+    "Like/Unlike Button": {
       "localizations": {
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
             "value": "喜欢/取消喜欢 按钮"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Like/Unlike Button"
           }
         }
       }
