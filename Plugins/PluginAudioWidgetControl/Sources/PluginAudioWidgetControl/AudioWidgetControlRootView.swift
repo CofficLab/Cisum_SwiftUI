@@ -11,7 +11,7 @@ public typealias AudioWidgetLastAssetProvider = @MainActor () async throws -> UR
 
 enum AudioWidgetPlaybackRequestPolicy {
     static func shouldApplyNavigationResult(requestedAsset: URL, currentAsset: URL?) -> Bool {
-        currentAsset == requestedAsset
+        representsSameFile(requestedAsset, currentAsset)
     }
 
     static func commandCount(from storedValue: Any?, maximum: Int = 10) -> Int {
@@ -39,6 +39,21 @@ enum AudioWidgetPlaybackRequestPolicy {
 
     static func remainingCommandCount(afterConsuming consumedCount: Int, storedValue: Any?) -> Int {
         max(0, commandCount(from: storedValue, maximum: 1_000_000) - consumedCount)
+    }
+
+    private static func resolvedStandardizedPath(for url: URL) -> String {
+        url.resolvingSymlinksInPath().standardizedFileURL.path
+    }
+
+    private static func representsSameFile(_ lhs: URL?, _ rhs: URL?) -> Bool {
+        switch (lhs, rhs) {
+        case (.none, .none):
+            return true
+        case let (.some(lhs), .some(rhs)):
+            return resolvedStandardizedPath(for: lhs) == resolvedStandardizedPath(for: rhs)
+        default:
+            return false
+        }
     }
 }
 

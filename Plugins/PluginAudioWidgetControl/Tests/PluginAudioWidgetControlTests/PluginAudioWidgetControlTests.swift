@@ -26,6 +26,25 @@ import Testing
     ))
 }
 
+@Test func navigationResultAppliesToSymlinkedCurrentAsset() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realFile = root.appendingPathComponent("real.mp3")
+    let linkedFile = root.appendingPathComponent("linked.mp3")
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    try Data("audio".utf8).write(to: realFile)
+    try FileManager.default.createSymbolicLink(at: linkedFile, withDestinationURL: realFile)
+
+    #expect(AudioWidgetPlaybackRequestPolicy.shouldApplyNavigationResult(
+        requestedAsset: linkedFile,
+        currentAsset: realFile
+    ))
+}
+
 @Test func widgetCommandCountPreservesRapidRepeatedCommands() {
     #expect(AudioWidgetPlaybackRequestPolicy.commandCount(from: 3) == 3)
     #expect(AudioWidgetPlaybackRequestPolicy.commandCount(from: NSNumber(value: 3)) == 3)
