@@ -90,6 +90,11 @@ final class MagicPlayManTests: XCTestCase {
         )
     }
 
+    func testPlaybackRequestValidationAcceptsHLSStreams() {
+        XCTAssertNil(MagicPlayManPlaybackRequestPolicy.basicValidationError(for: .sample_web_stream_basic))
+        XCTAssertTrue(URL.sample_web_stream_basic.isVideo)
+    }
+
     @MainActor
     func testUnplayableLocalMediaDoesNotBecomeCurrentAsset() async throws {
         let unplayable = FileManager.default.temporaryDirectory

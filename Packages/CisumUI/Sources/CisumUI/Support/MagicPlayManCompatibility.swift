@@ -53,7 +53,7 @@ public extension URL {
         if let type = try? resourceValues(forKeys: [.contentTypeKey]).contentType {
             return type.conforms(to: .movie) || type.conforms(to: .video)
         }
-        return ["mp4", "m4v", "mov", "avi", "mkv", "webm", "mpeg", "mpg"]
+        return ["mp4", "m4v", "mov", "avi", "mkv", "webm", "mpeg", "mpg", "m3u8"]
             .contains(pathExtension.lowercased())
     }
 
