@@ -119,6 +119,24 @@ import Testing
     ))
 }
 
+@Test func staleDeletionRecoveryDoesNotApplyAfterSceneReactivation() {
+    let deleted = URL(fileURLWithPath: "/tmp/cisum-audio-control-delete-tests/deleted.mp3")
+    let generation = AudioControlPlaybackRequestPolicy.generationAfterDeactivation(2)
+
+    #expect(AudioControlPlaybackRequestPolicy.shouldApplyDeletionRecovery(
+        currentAsset: deleted,
+        deletedURLs: [deleted],
+        currentGeneration: 2,
+        requestGeneration: 2
+    ))
+    #expect(!AudioControlPlaybackRequestPolicy.shouldApplyDeletionRecovery(
+        currentAsset: deleted,
+        deletedURLs: [deleted],
+        currentGeneration: generation,
+        requestGeneration: 2
+    ))
+}
+
 @Test func storageResetOnlyAppliesInActiveAudioScene() {
     #expect(AudioControlPlaybackRequestPolicy.shouldResetForStorageLocationChange(isSceneActive: true))
     #expect(!AudioControlPlaybackRequestPolicy.shouldResetForStorageLocationChange(isSceneActive: false))

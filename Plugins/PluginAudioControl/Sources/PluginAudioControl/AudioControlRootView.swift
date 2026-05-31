@@ -52,8 +52,14 @@ enum AudioControlPlaybackRequestPolicy {
         }
     }
 
-    static func shouldApplyDeletionRecovery(currentAsset: URL?, deletedURLs: [URL]) -> Bool {
-        currentAssetAffectedByDeletion(currentAsset: currentAsset, deletedURLs: deletedURLs)
+    static func shouldApplyDeletionRecovery(
+        currentAsset: URL?,
+        deletedURLs: [URL],
+        currentGeneration: Int = 0,
+        requestGeneration: Int = 0
+    ) -> Bool {
+        currentGeneration == requestGeneration
+            && currentAssetAffectedByDeletion(currentAsset: currentAsset, deletedURLs: deletedURLs)
     }
 
     static func shouldResetForStorageLocationChange(isSceneActive: Bool) -> Bool {
@@ -345,6 +351,7 @@ private extension AudioControlRootView {
             return
         }
 
+        let generation = controlGeneration
         Task { @MainActor in
             guard AudioControlPlaybackRequestPolicy.currentAssetAffectedByDeletion(
                 currentAsset: man.asset,
@@ -354,6 +361,14 @@ private extension AudioControlRootView {
             }
 
             guard shouldActivateControl else {
+                guard AudioControlPlaybackRequestPolicy.shouldApplyDeletionRecovery(
+                    currentAsset: man.asset,
+                    deletedURLs: urlsToDelete,
+                    currentGeneration: controlGeneration,
+                    requestGeneration: generation
+                ) else {
+                    return
+                }
                 await man.reset(reason: "AudioControlRootView.deletedCurrentAsset")
                 return
             }
@@ -362,7 +377,9 @@ private extension AudioControlRootView {
                 if let first = try await firstAsset() {
                     guard AudioControlPlaybackRequestPolicy.shouldApplyDeletionRecovery(
                         currentAsset: man.asset,
-                        deletedURLs: urlsToDelete
+                        deletedURLs: urlsToDelete,
+                        currentGeneration: controlGeneration,
+                        requestGeneration: generation
                     ) else {
                         return
                     }
@@ -371,7 +388,9 @@ private extension AudioControlRootView {
                 } else {
                     guard AudioControlPlaybackRequestPolicy.shouldApplyDeletionRecovery(
                         currentAsset: man.asset,
-                        deletedURLs: urlsToDelete
+                        deletedURLs: urlsToDelete,
+                        currentGeneration: controlGeneration,
+                        requestGeneration: generation
                     ) else {
                         return
                     }
@@ -381,7 +400,9 @@ private extension AudioControlRootView {
             } catch {
                 guard AudioControlPlaybackRequestPolicy.shouldApplyDeletionRecovery(
                     currentAsset: man.asset,
-                    deletedURLs: urlsToDelete
+                    deletedURLs: urlsToDelete,
+                    currentGeneration: controlGeneration,
+                    requestGeneration: generation
                 ) else {
                     return
                 }
