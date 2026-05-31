@@ -37,6 +37,9 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
     /// 启动期插件初始化错误。根视图会把它展示为可复制的错误页，而不是让应用直接闪退。
     @Published private(set) var initializationError: Error?
 
+    private var cachedStatusViews: [AnyView]?
+    private var cachedToolBarButtons: [(id: String, view: AnyView)]?
+
     /// 获取所有可用的场景名称
     @MainActor
     var sceneNames: [String] {
@@ -122,10 +125,15 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
     ///
     /// - Returns: 包含所有插件状态视图的数组
     func getStatusViews() -> [AnyView] {
+        if let cachedStatusViews {
+            return cachedStatusViews
+        }
+
         let items = plugins.compactMap { $0.addStatusView() }
 
         // os_log("\(self.t)GetRootViews: \(items.count)")
 
+        cachedStatusViews = items
         return items
     }
 
@@ -187,12 +195,17 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
     ///
     /// - Returns: 包含按钮 ID 和视图的元组数组
     func getToolBarButtons() -> [(id: String, view: AnyView)] {
+        if let cachedToolBarButtons {
+            return cachedToolBarButtons
+        }
+
         let buttons = plugins.flatMap { $0.addToolBarButtons() }
 
         if Self.verbose {
             os_log("\(self.t)🏃 getToolBarButtons: \(buttons.count)")
         }
 
+        cachedToolBarButtons = buttons
         return buttons
     }
 
@@ -264,6 +277,7 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
     func reset() {
         self.plugins = []
         self.currentSceneName = nil
+        invalidatePluginViewCaches()
     }
 
     /// 恢复上次激活的场景
@@ -339,6 +353,7 @@ class PluginProvider: ObservableObject, SuperLog, SuperThread {
     private func clearRegisteredPlugins() {
         registeredPlugins.removeAll()
         usedIds.removeAll()
+        invalidatePluginViewCaches()
     }
     
     /// 已注册插件数量
@@ -417,6 +432,13 @@ extension PluginProvider {
                 os_log(.error, "\(self.t)Plugin operation failed: \(error.localizedDescription)")
             }
         }
+    }
+}
+
+private extension PluginProvider {
+    func invalidatePluginViewCaches() {
+        cachedStatusViews = nil
+        cachedToolBarButtons = nil
     }
 }
 
