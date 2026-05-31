@@ -1,6 +1,7 @@
 import CoreFoundation
 import Darwin
 import Foundation
+import MagicKit
 import MagicPlayMan
 import OSLog
 import SwiftUI
@@ -45,16 +46,12 @@ enum AudioWidgetPlaybackRequestPolicy {
         max(0, commandCount(from: storedValue, maximum: 1_000_000) - consumedCount)
     }
 
-    private static func resolvedStandardizedPath(for url: URL) -> String {
-        url.resolvingSymlinksInPath().standardizedFileURL.path
-    }
-
     private static func representsSameFile(_ lhs: URL?, _ rhs: URL?) -> Bool {
         switch (lhs, rhs) {
         case (.none, .none):
             return true
         case let (.some(lhs), .some(rhs)):
-            return resolvedStandardizedPath(for: lhs) == resolvedStandardizedPath(for: rhs)
+            return lhs.isSameFileLocation(as: rhs)
         default:
             return false
         }

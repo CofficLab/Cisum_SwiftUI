@@ -45,6 +45,26 @@ import Testing
     ))
 }
 
+@Test func navigationResultDoesNotApplyToDistinctDanglingSymlinks() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let missingTrack = root.appendingPathComponent("missing.mp3")
+    let firstLink = root.appendingPathComponent("first.mp3")
+    let secondLink = root.appendingPathComponent("second.mp3")
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: firstLink, withDestinationURL: missingTrack)
+    try FileManager.default.createSymbolicLink(at: secondLink, withDestinationURL: missingTrack)
+
+    #expect(!AudioWidgetPlaybackRequestPolicy.shouldApplyNavigationResult(
+        requestedAsset: firstLink,
+        currentAsset: secondLink
+    ))
+}
+
 @Test func widgetNavigationWaitsForPreviousNavigationTask() {
     #expect(AudioWidgetPlaybackRequestPolicy.shouldWaitForPreviousNavigation(hasPreviousTask: true))
     #expect(!AudioWidgetPlaybackRequestPolicy.shouldWaitForPreviousNavigation(hasPreviousTask: false))
