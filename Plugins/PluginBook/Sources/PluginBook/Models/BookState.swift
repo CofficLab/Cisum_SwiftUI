@@ -57,4 +57,15 @@ extension BookState {
             SortDescriptor(\.createdAt, order: .forward)
         ])
     }
+
+    public static func representsSameBookURL(_ storedURL: URL?, as url: URL) -> Bool {
+        guard let storedURL else { return false }
+
+        guard storedURL.isFileURL, url.isFileURL else {
+            return storedURL.standardized.absoluteString == url.standardized.absoluteString
+        }
+
+        return storedURL.resolvingSymlinksInPath().standardizedFileURL.path
+            == url.resolvingSymlinksInPath().standardizedFileURL.path
+    }
 }

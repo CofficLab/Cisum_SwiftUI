@@ -344,3 +344,46 @@ import Testing
     #expect(states.first?.currentURL == secondChapter)
     #expect(states.first?.time == 42)
 }
+
+@MainActor
+@Test func bookProgressStatePersistenceUpdatesSymlinkedBookState() throws {
+    let schema = Schema([BookModel.self, BookState.self])
+    let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    let container = try ModelContainer(for: schema, configurations: [configuration])
+    let context = ModelContext(container)
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realRoot = root.appendingPathComponent("real-books", isDirectory: true)
+    let linkedRoot = root.appendingPathComponent("library-link", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: realRoot, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedRoot, withDestinationURL: realRoot)
+    let realBook = realRoot.appendingPathComponent("Novel", isDirectory: true)
+    let linkedBook = linkedRoot.appendingPathComponent("Novel", isDirectory: true)
+    try FileManager.default.createDirectory(at: realBook, withIntermediateDirectories: true)
+    let realChapter = realBook.appendingPathComponent("Chapter 01.m4b")
+    let linkedChapter = linkedBook.appendingPathComponent("Chapter 01.m4b")
+    try Data("audio".utf8).write(to: realChapter)
+
+    try BookProgressStatePersistence.save(
+        bookURL: realBook,
+        currentURL: realChapter,
+        time: 12,
+        container: container
+    )
+    try BookProgressStatePersistence.save(
+        bookURL: linkedBook,
+        currentURL: linkedChapter,
+        time: 42,
+        container: container
+    )
+
+    let states = try context.fetch(BookState.descriptorAll)
+    #expect(states.count == 1)
+    #expect(states.first?.url == realBook)
+    #expect(states.first?.currentURL == linkedChapter)
+    #expect(states.first?.time == 42)
+}

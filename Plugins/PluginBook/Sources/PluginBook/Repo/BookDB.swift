@@ -494,8 +494,13 @@ extension BookDB {
     public func findBookState(_ url: URL) -> BookState? {
         do {
             let descriptor = BookState.descriptorOf(url)
-            let result = try context.fetch(descriptor)
-            return result.first
+            if let state = try context.fetch(descriptor).first {
+                return state
+            }
+
+            return try context.fetch(BookState.descriptorAll).first { state in
+                BookState.representsSameBookURL(state.url, as: url)
+            }
         } catch {
             os_log(.error, "\(self.t)查找书籍状态失败: \(error.localizedDescription)")
             return nil

@@ -68,7 +68,12 @@ enum BookProgressStatePersistence {
         let context = ModelContext(container)
         let descriptor = BookState.descriptorOf(bookURL)
 
-        if let existingState = try context.fetch(descriptor).first {
+        let existingState = try context.fetch(descriptor).first
+            ?? context.fetch(BookState.descriptorAll).first { state in
+                BookState.representsSameBookURL(state.url, as: bookURL)
+            }
+
+        if let existingState {
             existingState.currentURL = currentURL
             if let time {
                 existingState.time = time
