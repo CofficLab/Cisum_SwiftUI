@@ -103,6 +103,7 @@ extension MagicPlayMan {
                            requestedAsset: url,
                            currentAsset: self.currentURL
                        ) {
+                        let progress = MagicPlayManPlaybackTimePolicy.normalizedUnitProgress(progress)
                         self.setState(.loading(.downloading(progress)), reason: "\(reason).\(self.className).downloadProgress")
                     }
                 }

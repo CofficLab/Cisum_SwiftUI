@@ -16,7 +16,7 @@ extension MagicPlayMan {
     /// - Parameter progress: 下载进度 (0-1)
     func sendDownloadProgressChanged(progress: Double) {
         let userInfo: [String: Any] = [
-            "downloadProgress": progress,
+            "downloadProgress": MagicPlayManPlaybackTimePolicy.normalizedUnitProgress(progress),
         ]
 
         NotificationCenter.default.post(
@@ -38,10 +38,11 @@ public extension View {
         self.onReceive(
             NotificationCenter.default.publisher(for: .playManDownloadProgressChanged),
             perform: { notification in
-                let progress = notification.userInfo?["downloadProgress"] as? Double ?? 0
+                let progress = MagicPlayManPlaybackTimePolicy.normalizedUnitProgress(
+                    notification.userInfo?["downloadProgress"] as? Double ?? 0
+                )
                 handler(progress)
             }
         )
     }
 }
-

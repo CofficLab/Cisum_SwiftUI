@@ -89,6 +89,10 @@ enum MagicPlayManPlaybackTimePolicy {
         return max(duration, 0)
     }
 
+    static func normalizedUnitProgress(_ progress: Double) -> Double {
+        min(max(progress.isFinite ? progress : 0, 0), 1)
+    }
+
     static func normalizedCurrentTime(_ time: TimeInterval, duration: TimeInterval? = nil) -> TimeInterval {
         guard time.isFinite else { return 0 }
         let currentTime = max(time, 0)
@@ -157,7 +161,7 @@ extension MagicPlayMan {
     /// - Parameter value: 播放进度（0-1）
     @MainActor
     func setProgress(_ value: Double) {
-        progress = min(max(value.isFinite ? value : 0, 0), 1)
+        progress = MagicPlayManPlaybackTimePolicy.normalizedUnitProgress(value)
     }
 
     /// 设置已喜欢的资源集合

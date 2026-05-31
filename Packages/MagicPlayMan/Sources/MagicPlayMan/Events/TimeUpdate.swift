@@ -39,7 +39,7 @@ enum MagicPlayManTimeUpdatePolicy {
 
         return (
             MagicPlayManPlaybackTimePolicy.normalizedCurrentTime(currentTime),
-            min(max(progress.isFinite ? progress : 0, 0), 1)
+            MagicPlayManPlaybackTimePolicy.normalizedUnitProgress(progress)
         )
     }
 }
