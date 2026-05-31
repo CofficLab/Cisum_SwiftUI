@@ -150,11 +150,26 @@ public extension URL {
             throw MagicError.fileError("Cannot copy a file onto itself: \(lastPathComponent)")
         }
 
+        guard !isDirectoryCopyIntoDescendant(destination) else {
+            throw MagicError.fileError("Cannot copy a folder into itself: \(lastPathComponent)")
+        }
+
         if FileManager.default.fileExists(atPath: destination.path) {
             try FileManager.default.removeItem(at: destination)
         }
 
         try FileManager.default.copyItem(at: self, to: destination)
+    }
+
+    private func isDirectoryCopyIntoDescendant(_ destination: URL) -> Bool {
+        guard isFileURL, destination.isFileURL, isFolder else {
+            return false
+        }
+
+        let sourcePath = resolvingSymlinksInPath().standardizedFileURL.path
+        let destinationPath = destination.resolvingSymlinksInPath().standardizedFileURL.path
+        return sourcePath != destinationPath
+            && URLDirectoryContainmentPolicy.contains(destinationPath, inDirectory: sourcePath)
     }
 
     /// Ensure an iCloud-backed file has finished downloading before a caller reads or copies it.

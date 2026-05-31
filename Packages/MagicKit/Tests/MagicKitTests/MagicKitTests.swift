@@ -72,6 +72,28 @@ final class MagicKitTests: XCTestCase {
         }
     }
 
+    func testCopyToRejectsCopyingFolderIntoDescendantWithoutDeletingChild() async throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer {
+            try? FileManager.default.removeItem(at: root)
+        }
+
+        let source = root.appendingPathComponent("source", isDirectory: true)
+        let child = source.appendingPathComponent("child", isDirectory: true)
+        let childFile = child.appendingPathComponent("keep.txt")
+        try FileManager.default.createDirectory(at: child, withIntermediateDirectories: true)
+        try Data("keep".utf8).write(to: childFile)
+
+        do {
+            try await source.copyTo(child, verbose: false, caller: "test")
+            XCTFail("Copying a folder into its child should throw")
+        } catch {
+            XCTAssertTrue(FileManager.default.fileExists(atPath: child.path))
+            XCTAssertEqual(try Data(contentsOf: childFile), Data("keep".utf8))
+        }
+    }
+
     func testSameFileLocationNormalizesRelativeSegments() throws {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent(UUID().uuidString, isDirectory: true)
