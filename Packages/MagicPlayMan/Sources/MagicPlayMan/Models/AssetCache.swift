@@ -19,10 +19,7 @@ public class AssetCache {
             cacheDirectory = cacheDir.appendingPathComponent("MagicPlayMan", isDirectory: true)
         }
         
-        // 确保缓存目录存在
-        if !fileManager.fileExists(atPath: cacheDirectory.path) {
-            try fileManager.createDirectory(at: cacheDirectory, withIntermediateDirectories: true)
-        }
+        try Self.prepareCacheDirectory(cacheDirectory, fileManager: fileManager)
     }
     
     /// 获取缓存目录路径
@@ -94,6 +91,21 @@ public class AssetCache {
         let filename = pathExtension.isEmpty ? encodedURL : "\(encodedURL).\(pathExtension)"
 
         return cacheDirectory.appendingPathComponent(filename)
+    }
+
+    private static func prepareCacheDirectory(_ directory: URL, fileManager: FileManager) throws {
+        var isDirectory: ObjCBool = false
+        if fileManager.fileExists(atPath: directory.path, isDirectory: &isDirectory) {
+            if isDirectory.boolValue {
+                return
+            }
+
+            try fileManager.removeItem(at: directory)
+        } else if (try? fileManager.destinationOfSymbolicLink(atPath: directory.path)) != nil {
+            try fileManager.removeItem(at: directory)
+        }
+
+        try fileManager.createDirectory(at: directory, withIntermediateDirectories: true)
     }
 } 
 

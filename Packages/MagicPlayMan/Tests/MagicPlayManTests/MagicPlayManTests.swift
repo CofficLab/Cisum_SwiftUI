@@ -196,6 +196,49 @@ final class MagicPlayManTests: XCTestCase {
         XCTAssertEqual(try Data(contentsOf: cachedURL), Data("audio".utf8))
     }
 
+    func testAssetCacheReplacesFileAtCacheDirectory() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer {
+            try? FileManager.default.removeItem(at: root)
+        }
+
+        try Data("not a directory".utf8).write(to: root)
+
+        let cache = try AssetCache(directory: root)
+        let url = try XCTUnwrap(URL(string: "https://cdn.example.com/audio/track.mp3"))
+        try cache.cache(Data("audio".utf8), for: url)
+
+        var isDirectory: ObjCBool = false
+        XCTAssertTrue(FileManager.default.fileExists(atPath: root.path, isDirectory: &isDirectory))
+        XCTAssertTrue(isDirectory.boolValue)
+        XCTAssertNotNil(cache.cachedURL(for: url))
+    }
+
+    func testAssetCacheReplacesDanglingSymlinkAtCacheDirectory() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        let cacheDirectory = root.appendingPathComponent("cache", isDirectory: true)
+        defer {
+            try? FileManager.default.removeItem(at: root)
+        }
+
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        try FileManager.default.createSymbolicLink(
+            at: cacheDirectory,
+            withDestinationURL: root.appendingPathComponent("missing", isDirectory: true)
+        )
+
+        let cache = try AssetCache(directory: cacheDirectory)
+        let url = try XCTUnwrap(URL(string: "https://cdn.example.com/audio/track.mp3"))
+        try cache.cache(Data("audio".utf8), for: url)
+
+        var isDirectory: ObjCBool = false
+        XCTAssertTrue(FileManager.default.fileExists(atPath: cacheDirectory.path, isDirectory: &isDirectory))
+        XCTAssertTrue(isDirectory.boolValue)
+        XCTAssertNotNil(cache.cachedURL(for: url))
+    }
+
     @MainActor
     func testDefaultPlayerHasLocalization() {
         let man = MagicPlayMan()
