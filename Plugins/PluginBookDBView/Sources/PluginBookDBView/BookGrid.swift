@@ -17,6 +17,10 @@ enum BookGridPlaybackRequestPolicy {
     static func shouldApplyResult(currentGeneration: Int, resultGeneration: Int) -> Bool {
         currentGeneration == resultGeneration
     }
+
+    static func generationAfterInvalidatingPendingPlayback(_ generation: Int) -> Int {
+        generation + 1
+    }
 }
 
 enum BookGridSelectionPolicy {
@@ -542,6 +546,7 @@ extension BookGrid {
         updateBooksDebounceTask?.cancel()
         updateBooksDebounceTask = nil
         updateBooksGeneration += 1
+        playBookGeneration = BookGridPlaybackRequestPolicy.generationAfterInvalidatingPendingPlayback(playBookGeneration)
     }
 }
 

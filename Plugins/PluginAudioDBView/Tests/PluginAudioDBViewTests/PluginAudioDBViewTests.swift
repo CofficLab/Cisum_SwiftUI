@@ -142,6 +142,30 @@ import UniformTypeIdentifiers
     ))
 }
 
+@Test func audioListOnlyAppliesCurrentSelectionPlayback() {
+    let first = URL(fileURLWithPath: "/tmp/cisum-audio-selection/first.mp3")
+    let second = URL(fileURLWithPath: "/tmp/cisum-audio-selection/second.mp3")
+
+    #expect(AudioListSelectionPolicy.shouldApplySelection(
+        currentGeneration: 2,
+        requestGeneration: 2,
+        requestedURL: first,
+        selection: first
+    ))
+    #expect(!AudioListSelectionPolicy.shouldApplySelection(
+        currentGeneration: 3,
+        requestGeneration: 2,
+        requestedURL: first,
+        selection: first
+    ))
+    #expect(!AudioListSelectionPolicy.shouldApplySelection(
+        currentGeneration: 2,
+        requestGeneration: 2,
+        requestedURL: first,
+        selection: second
+    ))
+}
+
 @Test func audioDeleteOnlyResetsPlaybackForStillCurrentDeletedAudio() {
     let root = URL(fileURLWithPath: "/tmp/cisum-audio-delete-tests", isDirectory: true)
     let deleted = root.appendingPathComponent("deleted.mp3")

@@ -26,6 +26,12 @@ enum AudioListDeletionPolicy {
     }
 }
 
+enum AudioListSelectionPolicy {
+    static func shouldApplySelection(currentGeneration: Int, requestGeneration: Int, requestedURL: URL?, selection: URL?) -> Bool {
+        currentGeneration == requestGeneration && requestedURL == selection
+    }
+}
+
 /*
  展示策略（扁平化列表 + 分页加载）：
  - 仅展示仓库中的音频文件；文件夹不会作为分组出现
@@ -85,6 +91,9 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
 
     /// 当前加载世代，用于丢弃刷新前启动的过期分页任务。
     @State private var loadGeneration: Int = 0
+
+    /// 当前选择播放世代，用于丢弃快速点选时过期的播放任务。
+    @State private var selectionGeneration: Int = 0
 
     var body: some View {
         ZStack {
@@ -441,13 +450,27 @@ extension AudioList {
         if let url = selection, isLoading == false {
             guard url != playManController.currentURL else { return }
 
-            Task {
+            selectionGeneration += 1
+            let generation = selectionGeneration
+
+            Task { @MainActor in
+                guard AudioListSelectionPolicy.shouldApplySelection(
+                    currentGeneration: selectionGeneration,
+                    requestGeneration: generation,
+                    requestedURL: url,
+                    selection: selection
+                ) else {
+                    return
+                }
+
                 let reason = self.className + ".选中项目变了"
                 if Self.verbose {
                     os_log("\(self.t)▶️ (\(reason)) 选中变化，播放: \(url.lastPathComponent)")
                 }
                 await self.playManController.play(url, reason: reason)
             }
+        } else {
+            selectionGeneration += 1
         }
     }
 

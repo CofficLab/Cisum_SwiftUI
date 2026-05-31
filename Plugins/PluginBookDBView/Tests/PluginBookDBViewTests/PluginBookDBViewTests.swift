@@ -362,6 +362,13 @@ import UniformTypeIdentifiers
     #expect(!BookGridPlaybackRequestPolicy.shouldApplyResult(currentGeneration: 3, resultGeneration: 2))
 }
 
+@Test func bookGridInvalidatesPendingPlaybackWhenDisappearing() {
+    let generation = BookGridPlaybackRequestPolicy.generationAfterInvalidatingPendingPlayback(2)
+
+    #expect(generation == 3)
+    #expect(!BookGridPlaybackRequestPolicy.shouldApplyResult(currentGeneration: generation, resultGeneration: 2))
+}
+
 @Test func bookGridSelectionMatchesSymlinkedBookURLs() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)
