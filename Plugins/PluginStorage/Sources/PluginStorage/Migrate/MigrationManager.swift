@@ -45,6 +45,9 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread, @unchecked Send
                 os_log(.info, "\(self.t)源目录与目标目录相同，跳过迁移")
                 return
             }
+            guard !Self.isTargetNestedInSource(sourceRoot: sourceRoot, targetRoot: targetRoot) else {
+                throw MigrationError.fileOperationFailed("目标文件夹不能位于源文件夹内")
+            }
 
             // 获取所有文件并过滤掉 .DS_Store
             var files = try FileManager.default.contentsOfDirectory(
@@ -122,6 +125,13 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread, @unchecked Send
         }
 
         os_log(.info, "\(self.t)迁移任务结束")
+    }
+
+    static func isTargetNestedInSource(sourceRoot: URL, targetRoot: URL) -> Bool {
+        let sourcePath = sourceRoot.standardizedFileURL.path
+        let targetPath = targetRoot.standardizedFileURL.path
+
+        return targetPath != sourcePath && targetPath.hasPrefix(sourcePath + "/")
     }
 
     private func prepareForMigration(
