@@ -73,8 +73,8 @@ extension ShellGit {
     /// - Returns: 执行结果
     public static func configUser(name: String, email: String, global: Bool = false, at path: String? = nil) throws -> String {
         let scope = global ? "--global" : ""
-        let nameResult = try Shell.runSync("git config \(scope) user.name \"\(name)\"", at: path)
-        let emailResult = try Shell.runSync("git config \(scope) user.email \"\(email)\"", at: path)
+        let nameResult = try Shell.runSync("git config \(scope) user.name \(shellQuoted(name))", at: path)
+        let emailResult = try Shell.runSync("git config \(scope) user.email \(shellQuoted(email))", at: path)
         return "Name: \(nameResult)\nEmail: \(emailResult)"
     }
 }
