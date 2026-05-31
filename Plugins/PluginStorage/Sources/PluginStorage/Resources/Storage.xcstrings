@@ -1090,6 +1090,22 @@
         }
       }
     },
+    "Not Set" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未设置"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未設定"
+          }
+        }
+      }
+    },
     "%lld downloaded, %lld not downloaded" : {
       "localizations" : {
         "zh-Hans" : {
