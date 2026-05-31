@@ -43,6 +43,24 @@ import Testing
     #expect(AudioStateRepo.storedURL(from: "not a url") == nil)
 }
 
+@Test func localZeroAudioTimeOverridesStaleCloudTime() {
+    #expect(AudioStateRepo.storedTime(
+        localObject: 0.0,
+        localDouble: 0,
+        cloudString: "42"
+    ) == 0)
+    #expect(AudioStateRepo.storedTime(
+        localObject: nil,
+        localDouble: 0,
+        cloudString: "42"
+    ) == 42)
+    #expect(AudioStateRepo.storedTime(
+        localObject: nil,
+        localDouble: 0,
+        cloudString: "not a time"
+    ) == nil)
+}
+
 @Test func differentCurrentAudioURLResetsGlobalRestoreTime() {
     let oldURL = URL(fileURLWithPath: "/tmp/audio/track-01.mp3")
     let newURL = URL(fileURLWithPath: "/tmp/audio/track-02.mp3")

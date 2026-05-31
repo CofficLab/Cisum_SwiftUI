@@ -16,6 +16,24 @@ import Testing
     #expect(BookSettingRepo.storedURL(from: "not a url") == nil)
 }
 
+@Test func localZeroBookTimeOverridesStaleCloudTime() {
+    #expect(BookSettingRepo.storedTime(
+        localObject: 0.0,
+        localDouble: 0,
+        cloudString: "42"
+    ) == 0)
+    #expect(BookSettingRepo.storedTime(
+        localObject: nil,
+        localDouble: 0,
+        cloudString: "42"
+    ) == 42)
+    #expect(BookSettingRepo.storedTime(
+        localObject: nil,
+        localDouble: 0,
+        cloudString: "not a time"
+    ) == nil)
+}
+
 @Test func deletedBookFolderContainsNestedRecords() {
     let root = URL(fileURLWithPath: "/tmp/cisum-book-delete-tests", isDirectory: true)
     let book = root.appendingPathComponent("Book", isDirectory: true)

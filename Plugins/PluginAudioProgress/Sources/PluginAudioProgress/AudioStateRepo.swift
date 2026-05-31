@@ -56,6 +56,19 @@ public class AudioStateRepo: SuperLog {
         return URL(fileURLWithPath: string)
     }
 
+    static func storedTime(
+        localObject: Any?,
+        localDouble: TimeInterval,
+        cloudString: String?
+    ) -> TimeInterval? {
+        if localObject != nil {
+            return localDouble
+        }
+
+        guard let cloudString else { return nil }
+        return TimeInterval(cloudString)
+    }
+
     /// 存储当前播放时间
     /// - Parameter time: 播放时间
     public static func storeCurrentTime(_ time: TimeInterval) {
@@ -106,15 +119,13 @@ public class AudioStateRepo: SuperLog {
     /// 获取当前播放时间
     /// - Returns: 播放时间，如果没有存储则返回nil
     public static func getCurrentTime() -> TimeInterval? {
-        // 首先尝试从 UserDefaults 获取时间
-        let time = UserDefaults.standard.double(forKey: keyOfCurrentAudioTime)
-        if time > 0 { // 因为0是键不存在时的默认值
-            return time
-        }
+        let time = storedTime(
+            localObject: UserDefaults.standard.object(forKey: keyOfCurrentAudioTime),
+            localDouble: UserDefaults.standard.double(forKey: keyOfCurrentAudioTime),
+            cloudString: NSUbiquitousKeyValueStore.default.string(forKey: keyOfCurrentAudioTime)
+        )
 
-        // 如果在 UserDefaults 中未找到，尝试从 iCloud 获取
-        if let timeString = NSUbiquitousKeyValueStore.default.string(forKey: keyOfCurrentAudioTime),
-           let time = TimeInterval(timeString) {
+        if let time {
             // 如果在 iCloud 中找到，更新 UserDefaults 以便将来本地访问
             UserDefaults.standard.set(time, forKey: keyOfCurrentAudioTime)
             return time

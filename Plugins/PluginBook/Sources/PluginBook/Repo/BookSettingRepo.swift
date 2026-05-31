@@ -40,6 +40,19 @@ public class BookSettingRepo: SuperLog {
         return URL(fileURLWithPath: string)
     }
 
+    static func storedTime(
+        localObject: Any?,
+        localDouble: TimeInterval,
+        cloudString: String?
+    ) -> TimeInterval? {
+        if localObject != nil {
+            return localDouble
+        }
+
+        guard let cloudString else { return nil }
+        return TimeInterval(cloudString)
+    }
+
     /// 存储当前书籍的播放时间
     /// - Parameter time: 播放时间（秒）
     public static func storeCurrentTime(_ time: TimeInterval) {
@@ -83,15 +96,13 @@ public class BookSettingRepo: SuperLog {
     /// 获取当前书籍的播放时间
     /// - Returns: 当前书籍的播放时间（秒），如果没有存储则返回nil
     public static func getCurrentTime() -> TimeInterval? {
-        // 首先尝试从UserDefaults获取时间
-        let time = UserDefaults.standard.double(forKey: keyOfCurrentBookTime)
-        if time > 0 { // 0是键不存在时的默认值
-            return time
-        }
+        let time = storedTime(
+            localObject: UserDefaults.standard.object(forKey: keyOfCurrentBookTime),
+            localDouble: UserDefaults.standard.double(forKey: keyOfCurrentBookTime),
+            cloudString: NSUbiquitousKeyValueStore.default.string(forKey: keyOfCurrentBookTime)
+        )
 
-        // 如果在UserDefaults中未找到，尝试从iCloud获取
-        if let timeString = NSUbiquitousKeyValueStore.default.string(forKey: keyOfCurrentBookTime),
-           let time = TimeInterval(timeString) {
+        if let time {
             // 如果在iCloud中找到，更新UserDefaults以便后续本地访问
             UserDefaults.standard.set(time, forKey: keyOfCurrentBookTime)
             return time
