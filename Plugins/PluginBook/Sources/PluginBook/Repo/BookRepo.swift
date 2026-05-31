@@ -156,8 +156,7 @@ extension BookRepo {
         childCount: Int,
         libraryRoot: URL
     ) -> Bool {
-        let parent = url.deletingLastPathComponent().standardizedFileURL
-        guard parent == libraryRoot.standardizedFileURL else {
+        guard BookPathContainment.hasSameResolvedParent(url, as: libraryRoot) else {
             return false
         }
 

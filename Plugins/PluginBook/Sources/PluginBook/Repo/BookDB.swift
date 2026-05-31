@@ -402,9 +402,7 @@ extension BookDB {
     }
 
     static func contains(_ parentURL: URL, bookURL: URL) -> Bool {
-        let parentPath = parentURL.standardizedFileURL.path
-        let bookPath = bookURL.standardizedFileURL.path
-        return bookPath == parentPath || bookPath.hasPrefix(parentPath + "/")
+        BookPathContainment.contains(parentURL, child: bookURL)
     }
 
     static func contains(_ parentURL: URL, state: BookState) -> Bool {

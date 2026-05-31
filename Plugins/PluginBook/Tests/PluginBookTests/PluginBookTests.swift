@@ -77,6 +77,24 @@ import SwiftData
     #expect(!BookDB.contains(book, state: siblingState))
 }
 
+@Test func deletedSymlinkedBookFolderContainsRealPathRecords() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realRoot = root.appendingPathComponent("real-books", isDirectory: true)
+    let linkedRoot = root.appendingPathComponent("library-link", isDirectory: true)
+    let book = realRoot.appendingPathComponent("Book", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: book, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedRoot, withDestinationURL: realRoot)
+    let nestedChapter = book.appendingPathComponent("Chapter 1.m4b")
+    try Data("audio".utf8).write(to: nestedChapter)
+
+    #expect(BookDB.contains(linkedRoot, bookURL: nestedChapter))
+}
+
 @Test func displayableLibraryItemsIncludeTopLevelStandaloneBooks() {
     let root = URL(fileURLWithPath: "/tmp/cisum-books", isDirectory: true)
     let book = BookDTO(
@@ -88,6 +106,30 @@ import SwiftData
     )
 
     #expect(BookRepo.isDisplayableLibraryItem(book, libraryRoot: root))
+}
+
+@Test func displayableLibraryItemsIncludeRealBooksUnderSymlinkedLibraryRoot() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realRoot = root.appendingPathComponent("real-books", isDirectory: true)
+    let linkedRoot = root.appendingPathComponent("library-link", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: realRoot, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedRoot, withDestinationURL: realRoot)
+    let bookURL = realRoot.appendingPathComponent("Standalone.m4b")
+    try Data("audio".utf8).write(to: bookURL)
+    let book = BookDTO(
+        url: bookURL,
+        bookTitle: "Standalone",
+        childCount: 1,
+        isCollection: false,
+        order: 0
+    )
+
+    #expect(BookRepo.isDisplayableLibraryItem(book, libraryRoot: linkedRoot))
 }
 
 @Test func displayableLibraryItemsExcludeNestedChapters() {
