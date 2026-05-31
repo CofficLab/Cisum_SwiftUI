@@ -32,7 +32,7 @@ struct BootApp: App, SuperLog {
 
     var body: some Scene {
         #if os(macOS)
-            Window("", id: "Cisum") {
+            WindowGroup("Cisum", id: "Cisum") {
                 ContentView()
                     .inRootView(providers: ProviderManager.shared)
                     .frame(minWidth: Config.minWidth, minHeight: Config.minHeight)

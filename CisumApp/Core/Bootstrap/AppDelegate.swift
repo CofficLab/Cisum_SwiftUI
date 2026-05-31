@@ -80,6 +80,20 @@ class AppDelegate: NSObject, ApplicationDelegate, SuperLog {
         }
         NotificationCenter.postApplicationDidResignActive()
     }
+
+    #if os(macOS)
+        func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+            guard !flag else { return true }
+            guard let window = sender.windows.first else { return true }
+
+            if window.isMiniaturized {
+                window.deminiaturize(nil)
+            }
+            sender.activate(ignoringOtherApps: true)
+            window.makeKeyAndOrderFront(nil)
+            return false
+        }
+    #endif
 }
 
 // MARK: - 窗口调整
