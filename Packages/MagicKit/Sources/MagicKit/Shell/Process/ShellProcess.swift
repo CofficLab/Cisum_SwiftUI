@@ -6,6 +6,10 @@ import OSLog
 /// 进程管理相关的Shell命令工具类
 class ShellProcess: SuperLog {
     static let emoji = "⚙️"
+
+    static func shellQuoted(_ value: String) -> String {
+        "'\(value.replacingOccurrences(of: "'", with: "'\\''"))'"
+    }
     
     /// 进程信息结构体
     struct ProcessInfo {
@@ -51,7 +55,7 @@ class ShellProcess: SuperLog {
     /// - Returns: 匹配的进程信息数组
     static func findProcesses(named name: String) -> [ProcessInfo] {
         do {
-            let result = try Shell.runSync("ps aux | grep \"\(name)\" | grep -v grep")
+            let result = try Shell.runSync(findProcessesCommand(named: name))
             let lines = result.components(separatedBy: CharacterSet.newlines)
                 .filter { !$0.isEmpty }
             
@@ -66,7 +70,7 @@ class ShellProcess: SuperLog {
     /// - Returns: 进程信息
     static func findProcess(pid: String) -> ProcessInfo? {
         do {
-            let result = try Shell.runSync("ps aux | grep \"\\b\(pid)\\b\" | grep -v grep")
+            let result = try Shell.runSync(findProcessCommand(pid: pid))
             let lines = result.components(separatedBy: CharacterSet.newlines)
                 .filter { !$0.isEmpty }
             
@@ -80,21 +84,21 @@ class ShellProcess: SuperLog {
     /// - Parameter pid: 进程ID
     /// - Throws: 杀死进程失败时抛出错误
     static func killProcess(pid: String) throws {
-        try Shell.runSync("kill \(pid)")
+        try Shell.runSync(killProcessCommand(pid: pid))
     }
     
     /// 强制杀死进程
     /// - Parameter pid: 进程ID
     /// - Throws: 杀死进程失败时抛出错误
     static func forceKillProcess(pid: String) throws {
-        try Shell.runSync("kill -9 \(pid)")
+        try Shell.runSync(forceKillProcessCommand(pid: pid))
     }
     
     /// 根据进程名杀死所有匹配的进程
     /// - Parameter name: 进程名
     /// - Throws: 杀死进程失败时抛出错误
     static func killProcesses(named name: String) throws {
-        try Shell.runSync("pkill \"\(name)\"")
+        try Shell.runSync(killProcessesCommand(named: name))
     }
     
     /// 获取进程树
@@ -103,7 +107,7 @@ class ShellProcess: SuperLog {
     static func getProcessTree(pid: String? = nil) -> String {
         do {
             if let pid = pid {
-                return try Shell.runSync("pstree \(pid)")
+                return try Shell.runSync(processTreeCommand(pid: pid))
             } else {
                 return try Shell.runSync("pstree")
             }
@@ -179,12 +183,64 @@ class ShellProcess: SuperLog {
     static func topProcessesCommand(sort: ProcessSort, count: Int) -> String {
         "ps aux \(sort.psFlag) | head -\(max(0, count) + 1)"
     }
+
+    static func findProcessesCommand(named name: String) -> String {
+        "ps aux | grep \(shellQuoted(name)) | grep -v grep"
+    }
+
+    static func findProcessCommand(pid: String) -> String {
+        "ps aux | grep \(shellQuoted("\\b\(pid)\\b")) | grep -v grep"
+    }
+
+    static func killProcessCommand(pid: String) -> String {
+        "kill \(shellQuoted(pid))"
+    }
+
+    static func forceKillProcessCommand(pid: String) -> String {
+        "kill -9 \(shellQuoted(pid))"
+    }
+
+    static func killProcessesCommand(named name: String) -> String {
+        "pkill \(shellQuoted(name))"
+    }
+
+    static func processTreeCommand(pid: String) -> String {
+        "pstree \(shellQuoted(pid))"
+    }
+
+    static func launchAppCommand(_ appName: String) -> String {
+        "open -a \(shellQuoted(appName))"
+    }
+
+    static func launchAppCommand(_ appName: String, withFile filePath: String) -> String {
+        "open -a \(shellQuoted(appName)) \(shellQuoted(filePath))"
+    }
+
+    static func isProcessRunningCommand(_ name: String) -> String {
+        "pgrep \(shellQuoted(name))"
+    }
+
+    static func processDetailsCommand(pid: String) -> String {
+        "ps -p \(shellQuoted(pid)) -o pid,ppid,user,time,command"
+    }
+
+    static func monitorProcessCommand(pid: String) -> String {
+        "top -pid \(shellQuoted(pid)) -l 1"
+    }
+
+    static func startServiceCommand(_ serviceName: String) -> String {
+        "launchctl start \(shellQuoted(serviceName))"
+    }
+
+    static func stopServiceCommand(_ serviceName: String) -> String {
+        "launchctl stop \(shellQuoted(serviceName))"
+    }
     
     /// 启动应用程序
     /// - Parameter appName: 应用程序名称
     /// - Throws: 启动失败时抛出错误
     static func launchApp(_ appName: String) throws {
-        try Shell.runSync("open -a \"\(appName)\"")
+        try Shell.runSync(launchAppCommand(appName))
     }
     
     /// 启动应用程序并打开文件
@@ -193,7 +249,7 @@ class ShellProcess: SuperLog {
     ///   - filePath: 文件路径
     /// - Throws: 启动失败时抛出错误
     static func launchApp(_ appName: String, withFile filePath: String) throws {
-        try Shell.runSync("open -a \"\(appName)\" \"\(filePath)\"")
+        try Shell.runSync(launchAppCommand(appName, withFile: filePath))
     }
     
     /// 获取正在运行的应用程序
@@ -214,7 +270,7 @@ class ShellProcess: SuperLog {
     /// - Returns: 进程是否正在运行
     static func isProcessRunning(_ name: String) -> Bool {
         do {
-            let result = try Shell.runSync("pgrep \"\(name)\"")
+            let result = try Shell.runSync(isProcessRunningCommand(name))
             return !result.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty
         } catch {
             return false
@@ -226,7 +282,7 @@ class ShellProcess: SuperLog {
     /// - Returns: 进程详细信息
     static func getProcessDetails(pid: String) -> String {
         do {
-            return try Shell.runSync("ps -p \(pid) -o pid,ppid,user,time,command")
+            return try Shell.runSync(processDetailsCommand(pid: pid))
         } catch {
             return error.localizedDescription
         }
@@ -237,7 +293,7 @@ class ShellProcess: SuperLog {
     /// - Returns: 资源使用情况
     static func monitorProcess(pid: String) -> String {
         do {
-            return try Shell.runSync("top -pid \(pid) -l 1")
+            return try Shell.runSync(monitorProcessCommand(pid: pid))
         } catch {
             return error.localizedDescription
         }
@@ -257,14 +313,14 @@ class ShellProcess: SuperLog {
     /// - Parameter serviceName: 服务名称
     /// - Throws: 启动失败时抛出错误
     static func startService(_ serviceName: String) throws {
-        try Shell.runSync("launchctl start \(serviceName)")
+        try Shell.runSync(startServiceCommand(serviceName))
     }
     
     /// 停止系统服务
     /// - Parameter serviceName: 服务名称
     /// - Throws: 停止失败时抛出错误
     static func stopService(_ serviceName: String) throws {
-        try Shell.runSync("launchctl stop \(serviceName)")
+        try Shell.runSync(stopServiceCommand(serviceName))
     }
 }
 
