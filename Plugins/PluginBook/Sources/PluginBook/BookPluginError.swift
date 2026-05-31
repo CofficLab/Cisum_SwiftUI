@@ -14,49 +14,49 @@ public enum BookPluginError: Error, LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .configurationMissing:
-            return "有声书插件宿主配置未完成"
+            return String(localized: "Book plugin host configuration is incomplete", table: "Book", bundle: .module)
         case .NoNextAsset:
-            return "没有下一个章节/文件"
+            return String(localized: "No next chapter or file", table: "Book", bundle: .module)
         case .NoPrevAsset:
-            return "没有上一个章节/文件"
+            return String(localized: "No previous chapter or file", table: "Book", bundle: .module)
         case .NoDisk:
-            return "无法访问磁盘"
+            return String(localized: "Unable to access disk", table: "Book", bundle: .module)
         case .DiskNotFound:
-            return "磁盘未找到"
+            return String(localized: "Disk not found", table: "Book", bundle: .module)
         case .initialization(let reason):
-            return "初始化失败: \(reason)"
+            return String(localized: "Initialization failed: \(reason)", table: "Book", bundle: .module)
         }
     }
 
     public var failureReason: String? {
         switch self {
         case .configurationMissing:
-            return "应用尚未注入数据库和存储路径配置"
+            return String(localized: "The app has not injected database and storage path configuration.", table: "Book", bundle: .module)
         case .NoNextAsset:
-            return "当前已是最后一个条目"
+            return String(localized: "The current item is already the last item.", table: "Book", bundle: .module)
         case .NoPrevAsset:
-            return "当前已是第一个条目"
+            return String(localized: "The current item is already the first item.", table: "Book", bundle: .module)
         case .NoDisk:
-            return "指定的磁盘路径不存在或无法访问"
+            return String(localized: "The specified disk path does not exist or cannot be accessed.", table: "Book", bundle: .module)
         case .DiskNotFound:
-            return "指定的磁盘路径不存在或无法访问"
+            return String(localized: "The specified disk path does not exist or cannot be accessed.", table: "Book", bundle: .module)
         case .initialization:
-            return "插件初始化过程中发生错误"
+            return String(localized: "An error occurred while initializing the plugin.", table: "Book", bundle: .module)
         }
     }
 
     public var recoverySuggestion: String? {
         switch self {
         case .configurationMissing:
-            return "请检查应用启动流程"
+            return String(localized: "Check the app startup flow.", table: "Book", bundle: .module)
         case .NoNextAsset, .NoPrevAsset:
-            return "请检查播放顺序或选择其他条目"
+            return String(localized: "Check the playback order or choose another item.", table: "Book", bundle: .module)
         case .NoDisk:
-            return "请检查磁盘权限与路径设置"
+            return String(localized: "Check disk permissions and path settings.", table: "Book", bundle: .module)
         case .DiskNotFound:
-            return "请检查磁盘权限与路径设置"
+            return String(localized: "Check disk permissions and path settings.", table: "Book", bundle: .module)
         case .initialization:
-            return "请尝试重启应用或检查设置"
+            return String(localized: "Try restarting the app or checking settings.", table: "Book", bundle: .module)
         }
     }
 }

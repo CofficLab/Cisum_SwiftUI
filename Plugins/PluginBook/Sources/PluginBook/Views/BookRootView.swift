@@ -42,7 +42,7 @@ public struct BookRootView<Content>: View, SuperLog where Content: View {
                 error.makeView()
             } else if bookRepoState.isLoading {
                 ProgressView {
-                    Text("正在初始化...", tableName: "Book", bundle: .module)
+                    Text("Initializing...", tableName: "Book", bundle: .module)
                 }
             } else if let container = bookRepoState.container, let repo = bookRepoState.repo {
                 ZStack {
@@ -51,7 +51,7 @@ public struct BookRootView<Content>: View, SuperLog where Content: View {
                 .modelContainer(container)
                 .environmentObject(repo)
             } else {
-                Text("初始化失败", tableName: "Book", bundle: .module)
+                Text("Initialization Failed", tableName: "Book", bundle: .module)
             }
         }
         .modifier(BookStorageChangeModifier(notificationNames: storageLocationDidChangeNotifications) {
@@ -92,7 +92,7 @@ extension BookRootView {
                 }
                 guard let disk else {
                     await MainActor.run {
-                        self.setBookRepoState(nil, container: nil, error: BookPluginError.initialization(reason: "Disk 未找到"), generation: generation)
+                        self.setBookRepoState(nil, container: nil, error: BookPluginError.initialization(reason: String(localized: "Disk not found", table: "Book", bundle: .module)), generation: generation)
                     }
                     return
                 }
