@@ -48,6 +48,15 @@ struct FileStatus: Identifiable {
         case downloaded
         case local
         case directoryStatus(total: Int, downloaded: Int, downloading: Int, notDownloaded: Int)
+
+        static func normalizedProgress(_ progress: Double) -> Double {
+            guard progress.isFinite else { return 0 }
+            return min(max(progress, 0), 1)
+        }
+
+        static func percentText(for progress: Double) -> String {
+            "\(Int(normalizedProgress(progress) * 100))%"
+        }
         
         var color: Color {
             switch self {
@@ -73,7 +82,7 @@ struct FileStatus: Identifiable {
             case .notDownloaded:
                 return String(localized: "Not Downloaded", table: "Storage", bundle: .module)
             case .downloading(let progress):
-                return String(localized: "Downloading \(Int(progress * 100))%", table: "Storage", bundle: .module)
+                return String(localized: "Downloading \(Self.percentText(for: progress))", table: "Storage", bundle: .module)
             case .checking(let current, let total):
                 if total > 0 {
                     return String(localized: "Checking (\(current)/\(total))", table: "Storage", bundle: .module)

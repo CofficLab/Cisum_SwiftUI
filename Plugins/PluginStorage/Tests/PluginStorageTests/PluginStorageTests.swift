@@ -170,6 +170,15 @@ import Foundation
     #expect(FileStatusColumnView.resolveStatus(for: danglingLink, verbose: false).status == "Local File")
 }
 
+@Test func fileStatusDownloadPercentTextIsClamped() {
+    #expect(FileStatus.DownloadStatus.percentText(for: .nan) == "0%")
+    #expect(FileStatus.DownloadStatus.percentText(for: -.infinity) == "0%")
+    #expect(FileStatus.DownloadStatus.percentText(for: -0.3) == "0%")
+    #expect(FileStatus.DownloadStatus.percentText(for: 0.42) == "42%")
+    #expect(FileStatus.DownloadStatus.percentText(for: 1.4) == "100%")
+    #expect(FileStatus.DownloadStatus.downloading(progress: 1.4).description == "Downloading 100%")
+}
+
 @Test func fileStatusDirectoryScanIgnoresLocalDirectoriesAndHiddenFiles() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)
