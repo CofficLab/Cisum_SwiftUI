@@ -57,6 +57,10 @@ enum BookProgressPersistencePolicy {
         representsSameFile(startingAsset, currentAsset)
     }
 
+    static func shouldApplyRestoreRequest(currentGeneration: Int, requestGeneration: Int, isSceneActive: Bool) -> Bool {
+        currentGeneration == requestGeneration && isSceneActive
+    }
+
     static func shouldPlayRestoredAsset(restoredAsset: URL, currentAsset: URL?) -> Bool {
         !representsSameFile(restoredAsset, currentAsset)
     }
@@ -191,6 +195,7 @@ public struct BookProgressRootView<Content>: View, SuperLog where Content: View 
 
     @EnvironmentObject private var man: MagicPlayMan
     @State private var playbackSubscriptionID: UUID?
+    @State private var restoreGeneration = 0
 
     private let content: Content
     private let targetSceneName: String
@@ -288,6 +293,8 @@ private extension BookProgressRootView {
     }
 
     private func deactivateProgress() {
+        restoreGeneration += 1
+
         guard let playbackSubscriptionID else { return }
 
         persistCurrentProgress(reason: "deactivateProgress")
@@ -300,8 +307,12 @@ private extension BookProgressRootView {
     /// 从持久化存储中恢复上次播放的书籍和时间进度。
     private func restoreBookProgress() {
         let startingAsset = man.currentAsset
+        restoreGeneration += 1
+        let generation = restoreGeneration
 
-        Task {
+        Task { @MainActor in
+            guard isCurrentRestoreRequest(generation) else { return }
+
             if let url = currentBookURL() {
                 let isPlayable = isPlayableBookURL(url)
 
@@ -327,6 +338,7 @@ private extension BookProgressRootView {
                     restoredAsset: url,
                     currentAsset: man.currentAsset
                 ) {
+                    guard isCurrentRestoreRequest(generation) else { return }
                     await man.play(url, autoPlay: false, startTime: currentBookTime(), reason: "restoreBookProgress")
                 }
 
@@ -335,6 +347,14 @@ private extension BookProgressRootView {
                 }
             }
         }
+    }
+
+    private func isCurrentRestoreRequest(_ generation: Int) -> Bool {
+        BookProgressPersistencePolicy.shouldApplyRestoreRequest(
+            currentGeneration: restoreGeneration,
+            requestGeneration: generation,
+            isSceneActive: shouldActivateProgress
+        )
     }
 
     private func isPlayableBookURL(_ url: URL) -> Bool {

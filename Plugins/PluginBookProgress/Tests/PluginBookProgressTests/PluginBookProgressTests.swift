@@ -108,6 +108,24 @@ import Testing
     ))
 }
 
+@Test func staleRestoreRequestDoesNotApplyAfterSceneChange() {
+    #expect(BookProgressPersistencePolicy.shouldApplyRestoreRequest(
+        currentGeneration: 4,
+        requestGeneration: 4,
+        isSceneActive: true
+    ))
+    #expect(!BookProgressPersistencePolicy.shouldApplyRestoreRequest(
+        currentGeneration: 5,
+        requestGeneration: 4,
+        isSceneActive: true
+    ))
+    #expect(!BookProgressPersistencePolicy.shouldApplyRestoreRequest(
+        currentGeneration: 4,
+        requestGeneration: 4,
+        isSceneActive: false
+    ))
+}
+
 @Test func restoreDoesNotReplayAlreadyLoadedBookChapter() {
     let restored = URL(fileURLWithPath: "/tmp/book/chapter-01.m4b")
     let other = URL(fileURLWithPath: "/tmp/book/chapter-02.m4b")
