@@ -77,8 +77,12 @@ enum BookProgressBookRootResolver {
         let disk = bookDisk.standardizedFileURL
         let url = url.standardizedFileURL
 
-        guard isContained(url.path, in: disk.path) else {
+        guard BookProgressPathContainment.resolved(url, isContainedIn: disk) else {
             return parent
+        }
+
+        guard isContained(url.path, in: disk.path) else {
+            return mappedBookRoot(for: url, in: disk)
         }
 
         guard parent.path != disk.path else {
@@ -94,6 +98,23 @@ enum BookProgressBookRootResolver {
         return candidate
     }
 
+    private static func mappedBookRoot(for url: URL, in disk: URL) -> URL {
+        let resolvedURLPath = BookProgressPathContainment.resolvedStandardizedPath(for: url)
+        let resolvedDiskPath = BookProgressPathContainment.resolvedStandardizedPath(for: disk)
+
+        guard let relativePath = BookProgressPathContainment.relativePath(of: resolvedURLPath, in: resolvedDiskPath),
+              !relativePath.isEmpty else {
+            return disk
+        }
+
+        guard let topLevelComponent = relativePath.split(separator: "/", omittingEmptySubsequences: true).first else {
+            return disk
+        }
+
+        let isDirectory = relativePath.contains("/")
+        return disk.appendingPathComponent(String(topLevelComponent), isDirectory: isDirectory).standardizedFileURL
+    }
+
     private static func isContained(_ childPath: String, in parentPath: String) -> Bool {
         childPath == parentPath || childPath.hasPrefix(parentPath + "/")
     }
@@ -101,7 +122,7 @@ enum BookProgressBookRootResolver {
 
 enum BookProgressBookLookup {
     static func bookURL(for currentURL: URL, bookDisk: URL?) -> URL? {
-        if let bookDisk, !isContained(currentURL.standardizedFileURL.path, in: bookDisk.standardizedFileURL.path) {
+        if let bookDisk, !BookProgressPathContainment.resolved(currentURL, isContainedIn: bookDisk) {
             return nil
         }
 
@@ -117,6 +138,30 @@ enum BookProgressBookLookup {
         }
 
         return BookPluginInfo.supportedExtensions.contains(bookURL.pathExtension.lowercased()) ? bookURL : nil
+    }
+
+}
+
+enum BookProgressPathContainment {
+    static func resolved(_ child: URL, isContainedIn parent: URL) -> Bool {
+        isContained(resolvedStandardizedPath(for: child), in: resolvedStandardizedPath(for: parent))
+    }
+
+    static func resolvedStandardizedPath(for url: URL) -> String {
+        url.resolvingSymlinksInPath().standardizedFileURL.path
+    }
+
+    static func relativePath(of childPath: String, in parentPath: String) -> String? {
+        if childPath == parentPath {
+            return ""
+        }
+
+        let prefix = parentPath + "/"
+        guard childPath.hasPrefix(prefix) else {
+            return nil
+        }
+
+        return String(childPath.dropFirst(prefix.count))
     }
 
     private static func isContained(_ childPath: String, in parentPath: String) -> Bool {

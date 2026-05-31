@@ -149,6 +149,26 @@ import Testing
     #expect(root == chapter.deletingLastPathComponent().standardizedFileURL)
 }
 
+@Test func symlinkedBookDiskResolvesRealPlaybackURLToConfiguredRoot() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realDisk = root.appendingPathComponent("real-books", isDirectory: true)
+    let linkedDisk = root.appendingPathComponent("library-link", isDirectory: true)
+    let book = realDisk.appendingPathComponent("Novel", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: book, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedDisk, withDestinationURL: realDisk)
+    let chapter = book.appendingPathComponent("Chapter 01.m4b")
+    try Data("audio".utf8).write(to: chapter)
+
+    let resolved = BookProgressBookLookup.bookURL(for: chapter, bookDisk: linkedDisk)
+
+    #expect(resolved == linkedDisk.appendingPathComponent("Novel", isDirectory: true).standardizedFileURL)
+}
+
 @Test func bookLookupFindsStandaloneBookFiles() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)
@@ -190,6 +210,26 @@ import Testing
     try FileManager.default.createDirectory(at: outside, withIntermediateDirectories: true)
     let chapter = outside.appendingPathComponent("Chapter 01.m4b")
     try Data("audio".utf8).write(to: chapter)
+
+    #expect(BookProgressBookLookup.bookURL(for: chapter, bookDisk: bookDisk) == nil)
+}
+
+@Test func bookLookupRejectsSymlinkEscapesOutsideConfiguredBookDisk() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let bookDisk = root.appendingPathComponent("books", isDirectory: true)
+    let outside = root.appendingPathComponent("outside", isDirectory: true)
+    let outsideBook = outside.appendingPathComponent("Novel", isDirectory: true)
+    let linkedBook = bookDisk.appendingPathComponent("LinkedNovel", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: bookDisk, withIntermediateDirectories: true)
+    try FileManager.default.createDirectory(at: outsideBook, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedBook, withDestinationURL: outsideBook)
+    let chapter = linkedBook.appendingPathComponent("Chapter 01.m4b")
+    try Data("audio".utf8).write(to: outsideBook.appendingPathComponent("Chapter 01.m4b"))
 
     #expect(BookProgressBookLookup.bookURL(for: chapter, bookDisk: bookDisk) == nil)
 }
