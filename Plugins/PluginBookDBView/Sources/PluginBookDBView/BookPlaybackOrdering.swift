@@ -64,7 +64,14 @@ enum BookPlaybackOrdering {
     }
 
     static func representsSameFile(_ lhs: URL, _ rhs: URL) -> Bool {
-        lhs.resolvingSymlinksInPath().standardizedFileURL.path
-            == rhs.resolvingSymlinksInPath().standardizedFileURL.path
+        stablePath(for: lhs) == stablePath(for: rhs)
+    }
+
+    private static func stablePath(for url: URL) -> String {
+        if FileManager.default.fileExists(atPath: url.path) {
+            return url.resolvingSymlinksInPath().standardizedFileURL.path
+        }
+
+        return url.standardizedFileURL.path
     }
 }

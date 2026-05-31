@@ -417,6 +417,27 @@ import UniformTypeIdentifiers
     ))
 }
 
+@Test func bookPlaybackOrderingSeparatesDistinctDanglingSymlinkedChapters() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let missingBook = root.appendingPathComponent("MissingBook", isDirectory: true)
+    let firstLink = root.appendingPathComponent("FirstBook", isDirectory: true)
+    let secondLink = root.appendingPathComponent("SecondBook", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: firstLink, withDestinationURL: missingBook)
+    try FileManager.default.createSymbolicLink(at: secondLink, withDestinationURL: missingBook)
+
+    let firstChapter = firstLink.appendingPathComponent("001.m4b")
+    let secondChapter = secondLink.appendingPathComponent("001.m4b")
+
+    #expect(!BookPlaybackOrdering.representsSameFile(firstChapter, secondChapter))
+    #expect(!BookPlaybackOrdering.contains(secondChapter, in: [firstChapter]))
+}
+
 @Test func bookTileReloadsWhenDatabaseRootChanges() {
     let bookURL = URL(fileURLWithPath: "/tmp/cisum-book-tile/book")
     let firstRoot = URL(fileURLWithPath: "/tmp/cisum-book-tile/db-1")
