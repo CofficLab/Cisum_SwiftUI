@@ -197,6 +197,25 @@ import SwiftUI
     ))
 }
 
+@Test func staleDeletionResetDoesNotApplyAfterSceneReactivation() {
+    let deletedBook = URL(fileURLWithPath: "/tmp/books/Novel", isDirectory: true)
+    let currentChapter = deletedBook.appendingPathComponent("Chapter 01.m4b")
+    let generation = BookControlPlaybackRequestPolicy.generationAfterDeactivation(2)
+
+    #expect(BookControlPlaybackRequestPolicy.shouldApplyDeletionReset(
+        currentAsset: currentChapter,
+        deletedURLs: [deletedBook],
+        currentGeneration: 2,
+        requestGeneration: 2
+    ))
+    #expect(!BookControlPlaybackRequestPolicy.shouldApplyDeletionReset(
+        currentAsset: currentChapter,
+        deletedURLs: [deletedBook],
+        currentGeneration: generation,
+        requestGeneration: 2
+    ))
+}
+
 @Test func storageResetOnlyAppliesInActiveBookScene() {
     #expect(BookControlPlaybackRequestPolicy.shouldResetForStorageLocationChange(isSceneActive: true))
     #expect(!BookControlPlaybackRequestPolicy.shouldResetForStorageLocationChange(isSceneActive: false))

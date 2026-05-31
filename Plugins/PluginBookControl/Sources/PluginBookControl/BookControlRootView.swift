@@ -110,6 +110,16 @@ enum BookControlPlaybackRequestPolicy {
         }
     }
 
+    static func shouldApplyDeletionReset(
+        currentAsset: URL?,
+        deletedURLs: [URL],
+        currentGeneration: Int,
+        requestGeneration: Int
+    ) -> Bool {
+        currentGeneration == requestGeneration
+            && currentAssetAffectedByDeletion(currentAsset: currentAsset, deletedURLs: deletedURLs)
+    }
+
     static func shouldResetForStorageLocationChange(isSceneActive: Bool) -> Bool {
         isSceneActive
     }
@@ -365,10 +375,13 @@ private extension BookControlRootView {
             return
         }
 
+        let generation = controlGeneration
         Task {
-            guard BookControlPlaybackRequestPolicy.currentAssetAffectedByDeletion(
+            guard BookControlPlaybackRequestPolicy.shouldApplyDeletionReset(
                 currentAsset: man.asset,
-                deletedURLs: deletedURLs
+                deletedURLs: deletedURLs,
+                currentGeneration: controlGeneration,
+                requestGeneration: generation
             ) else {
                 return
             }
