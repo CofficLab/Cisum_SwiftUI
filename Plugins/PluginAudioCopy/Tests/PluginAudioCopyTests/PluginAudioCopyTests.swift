@@ -30,6 +30,29 @@ import Testing
     #expect(!CopyRootView<EmptyView>.isSupportedAudioFile(folder))
 }
 
+@Test func copyDropDeduplicatesSymlinkedAudioSources() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    let realFile = root.appendingPathComponent("real.mp3")
+    let linkedFile = root.appendingPathComponent("linked.mp3")
+    let unsupported = root.appendingPathComponent("notes.txt")
+    try Data("audio".utf8).write(to: realFile)
+    try Data("notes".utf8).write(to: unsupported)
+    try FileManager.default.createSymbolicLink(at: linkedFile, withDestinationURL: realFile)
+
+    #expect(CopyRootView<EmptyView>.representsSameCopySource(realFile, linkedFile))
+    #expect(CopyRootView<EmptyView>.uniqueSupportedAudioSources([
+        linkedFile,
+        unsupported,
+        realFile,
+    ]) == [linkedFile])
+}
+
 @Test func copyWorkerPlansUniqueDestinationNames() {
     let folder = URL(fileURLWithPath: "/tmp/cisum-audio-copy-tests", isDirectory: true)
     let existingPath = folder.appendingPathComponent("track.mp3").path

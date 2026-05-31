@@ -115,7 +115,7 @@
                 return false
             }
 
-            var tasks: [(bookmark: Data, filename: String)] = []
+            var sourceURLs: [URL] = []
             var preparationErrors: [Error] = []
             for provider in providers {
                 if provider.hasItemConformingToTypeIdentifier(UTType.fileURL.identifier) {
@@ -139,9 +139,7 @@
                                 continue
                             }
 
-                            // Create a security-scoped bookmark
-                            let bookmarkData = try url.bookmarkData(options: .withSecurityScope, includingResourceValuesForKeys: nil, relativeTo: nil)
-                            tasks.append((bookmark: bookmarkData, filename: url.lastPathComponent))
+                            sourceURLs.append(url)
                         }
                     } catch {
                         preparationErrors.append(error)
@@ -153,12 +151,14 @@
                 }
             }
 
+            sourceURLs = Self.uniqueSupportedAudioSources(sourceURLs)
+
             if Self.verbose {
-                os_log("\(self.t)🎁 获取到 \(tasks.count) 个文件")
+                os_log("\(self.t)🎁 获取到 \(sourceURLs.count) 个文件")
             }
 
-            let allowedTaskCount = await AudioCopyService.allowedTaskCount(requestedTaskCount: tasks.count)
-            if allowedTaskCount < tasks.count {
+            let allowedTaskCount = await AudioCopyService.allowedTaskCount(requestedTaskCount: sourceURLs.count)
+            if allowedTaskCount < sourceURLs.count {
                 if allowedTaskCount == 0 {
                     await MainActor.run {
                         alert_error(String(localized: "Copy limit reached", table: "Audio-Copy-macOS", bundle: .module))
@@ -166,9 +166,23 @@
                     return false
                 }
 
-                tasks = Array(tasks.prefix(allowedTaskCount))
+                sourceURLs = Array(sourceURLs.prefix(allowedTaskCount))
                 await MainActor.run {
                     alert_warning(String(localized: "Only \(allowedTaskCount) files were added because the free copy limit is almost full", table: "Audio-Copy-macOS", bundle: .module))
+                }
+            }
+
+            var tasks: [(bookmark: Data, filename: String)] = []
+            for url in sourceURLs {
+                do {
+                    let bookmarkData = try url.bookmarkData(options: .withSecurityScope, includingResourceValuesForKeys: nil, relativeTo: nil)
+                    tasks.append((bookmark: bookmarkData, filename: url.lastPathComponent))
+                } catch {
+                    preparationErrors.append(error)
+                    os_log(.error, "\(self.t)Failed to create bookmark: \(error.localizedDescription)")
+                    await MainActor.run {
+                        alert_error(String(localized: "Failed to prepare file: \(error.localizedDescription)", table: "Audio-Copy-macOS", bundle: .module))
+                    }
                 }
             }
 
@@ -189,6 +203,29 @@
         nonisolated static func isSupportedAudioFile(_ url: URL) -> Bool {
             guard !url.isFolder else { return false }
             return AudioPluginInfo.supportedExtensions.contains(url.pathExtension.lowercased())
+        }
+
+        nonisolated static func uniqueSupportedAudioSources(_ urls: [URL]) -> [URL] {
+            var uniqueURLs: [URL] = []
+
+            for url in urls where isSupportedAudioFile(url) {
+                guard !uniqueURLs.contains(where: { representsSameCopySource($0, url) }) else {
+                    continue
+                }
+
+                uniqueURLs.append(url)
+            }
+
+            return uniqueURLs
+        }
+
+        nonisolated static func representsSameCopySource(_ lhs: URL, _ rhs: URL) -> Bool {
+            guard lhs.isFileURL, rhs.isFileURL else {
+                return lhs.standardized.absoluteString == rhs.standardized.absoluteString
+            }
+
+            return lhs.resolvingSymlinksInPath().standardizedFileURL.path
+                == rhs.resolvingSymlinksInPath().standardizedFileURL.path
         }
 
         nonisolated static func shouldShowNoFilesAdded(taskCount: Int, preparationErrors: [Error]) -> Bool {
