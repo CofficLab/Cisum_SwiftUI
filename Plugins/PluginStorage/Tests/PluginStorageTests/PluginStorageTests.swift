@@ -165,9 +165,9 @@ import Foundation
         withDestinationURL: root.appendingPathComponent("deleted-target.mp3")
     )
 
-    #expect(FileStatusColumnView.resolveStatus(for: existingFile, verbose: false).status == "本地文件")
-    #expect(FileStatusColumnView.resolveStatus(for: missingFile, verbose: false).status == "不存在")
-    #expect(FileStatusColumnView.resolveStatus(for: danglingLink, verbose: false).status == "本地文件")
+    #expect(FileStatusColumnView.resolveStatus(for: existingFile, verbose: false).status == "Local File")
+    #expect(FileStatusColumnView.resolveStatus(for: missingFile, verbose: false).status == "Missing")
+    #expect(FileStatusColumnView.resolveStatus(for: danglingLink, verbose: false).status == "Local File")
 }
 
 @Test func fileStatusDirectoryScanIgnoresLocalDirectoriesAndHiddenFiles() throws {
@@ -185,7 +185,7 @@ import Foundation
 
     #expect(FileStatusDirectoryScanPolicy.cloudDownloadStats(in: root).downloaded == 0)
     #expect(FileStatusDirectoryScanPolicy.cloudDownloadStats(in: root).notDownloaded == 0)
-    #expect(FileStatusColumnView.resolveStatus(for: root, verbose: false).status == "本地目录")
+    #expect(FileStatusColumnView.resolveStatus(for: root, verbose: false).status == "Local Folder")
 }
 
 @Test func repositoryInfoOnlyOpensExistingLocalPaths() throws {

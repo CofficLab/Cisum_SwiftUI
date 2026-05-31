@@ -67,33 +67,33 @@ struct FileStatus: Identifiable {
         var description: String {
             switch self {
             case .local:
-                return "本地文件"
+                return String(localized: "Local File", table: "Storage", bundle: .module)
             case .downloaded:
-                return "已下载"
+                return String(localized: "Downloaded", table: "Storage", bundle: .module)
             case .notDownloaded:
-                return "未下载"
+                return String(localized: "Not Downloaded", table: "Storage", bundle: .module)
             case .downloading(let progress):
-                return "下载中 \(Int(progress * 100))%"
+                return String(localized: "Downloading \(Int(progress * 100))%", table: "Storage", bundle: .module)
             case .checking(let current, let total):
                 if total > 0 {
-                    return "检查中 (\(current)/\(total))"
+                    return String(localized: "Checking (\(current)/\(total))", table: "Storage", bundle: .module)
                 } else {
-                    return "检查中"
+                    return String(localized: "Checking...", table: "Storage", bundle: .module)
                 }
             case .checkingDirectory(let name, let current, let total):
-                return "正在检查目录 \(name) (\(current)/\(total))"
+                return String(localized: "Checking folder \(name) (\(current)/\(total))", table: "Storage", bundle: .module)
             case .directoryStatus(_, let downloaded, let downloading, let notDownloaded):
                 var parts: [String] = []
                 if downloaded > 0 {
-                    parts.append("\(downloaded) 已下载")
+                    parts.append(String(localized: "\(downloaded) downloaded", table: "Storage", bundle: .module))
                 }
                 if downloading > 0 {
-                    parts.append("\(downloading) 下载中")
+                    parts.append(String(localized: "\(downloading) downloading", table: "Storage", bundle: .module))
                 }
                 if notDownloaded > 0 {
-                    parts.append("\(notDownloaded) 未下载")
+                    parts.append(String(localized: "\(notDownloaded) not downloaded", table: "Storage", bundle: .module))
                 }
-                return parts.isEmpty ? "空文件夹" : parts.joined(separator: ", ")
+                return parts.isEmpty ? String(localized: "Empty Folder", table: "Storage", bundle: .module) : parts.joined(separator: ", ")
             }
         }
     }

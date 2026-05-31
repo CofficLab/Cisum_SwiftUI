@@ -52,7 +52,7 @@ struct FileStatusColumnView: View, SuperLog {
     nonisolated static let emoji: String = "🥩"
 
     let url: URL
-    @State private var fileStatus: String = "检查中..."
+    @State private var fileStatus: String = String(localized: "Checking...", table: "Storage", bundle: .module)
     @State private var isChecking: Bool = true
     @State private var statusColor: Color = .gray
 
@@ -60,7 +60,7 @@ struct FileStatusColumnView: View, SuperLog {
         Text(fileStatus)
             .foregroundColor(statusColor)
             .task(id: url) {
-                fileStatus = "检查中..."
+                fileStatus = String(localized: "Checking...", table: "Storage", bundle: .module)
                 statusColor = .gray
                 isChecking = true
                 await checkFileStatus(verbose: false)
@@ -91,7 +91,7 @@ struct FileStatusColumnView: View, SuperLog {
         }
 
         guard !url.isFileURL || FileStatusResolutionPolicy.pathExistsIncludingSymlink(url) else {
-            return ("不存在", Color.red)
+            return (String(localized: "Missing", table: "Storage", bundle: .module), Color.red)
         }
 
         if url.isFolder {
@@ -99,15 +99,15 @@ struct FileStatusColumnView: View, SuperLog {
         } else if url.checkIsICloud(verbose: false) {
             return resolveSingleFileStatus(url.isDownloaded)
         } else {
-            return ("本地文件", Color.primary)
+            return (String(localized: "Local File", table: "Storage", bundle: .module), Color.primary)
         }
     }
 
     nonisolated private static func resolveSingleFileStatus(_ isDownloaded: Bool) -> (status: String, color: Color) {
         if isDownloaded {
-            ("已下载", Color.green)
+            (String(localized: "Downloaded", table: "Storage", bundle: .module), Color.green)
         } else {
-            ("未下载", Color.orange)
+            (String(localized: "Not Downloaded", table: "Storage", bundle: .module), Color.orange)
         }
     }
 
@@ -115,10 +115,10 @@ struct FileStatusColumnView: View, SuperLog {
         let fileStats = FileStatusDirectoryScanPolicy.cloudDownloadStats(in: directoryURL)
 
         if fileStats.downloaded > 0 || fileStats.notDownloaded > 0 {
-            return ("\(fileStats.downloaded)个已下载, \(fileStats.notDownloaded)个未下载",
+            return (String(localized: "\(fileStats.downloaded) downloaded, \(fileStats.notDownloaded) not downloaded", table: "Storage", bundle: .module),
                     fileStats.downloaded > 0 ? Color.green : Color.orange)
         } else {
-            return ("本地目录", Color.primary)
+            return (String(localized: "Local Folder", table: "Storage", bundle: .module), Color.primary)
         }
     }
 

@@ -42,7 +42,7 @@ struct FileListView: View, SuperLog {
     var body: some View {
         ZStack {
             Table(of: FileItem.self) {
-                TableColumn("名称") { item in
+                TableColumn(String(localized: "Name", table: "Storage", bundle: .module)) { item in
                     HStack(spacing: 0) {
                         // 缩进
                         ForEach(0 ..< item.level, id: \.self) { _ in
@@ -67,12 +67,12 @@ struct FileListView: View, SuperLog {
                 }
                 .width(min: 200)
 
-                TableColumn("大小") { item in
+                TableColumn(String(localized: "Size", table: "Storage", bundle: .module)) { item in
                     FileSizeView(url: item.url)
                 }
                 .width(80)
 
-                TableColumn("状态") { item in
+                TableColumn(String(localized: "Status", table: "Storage", bundle: .module)) { item in
                     FileStatusColumnView(url: item.url)
                 }
                 .width(200)
@@ -87,7 +87,7 @@ struct FileListView: View, SuperLog {
                 VStack(spacing: 8) {
                     Image(systemName: "exclamationmark.triangle")
                         .foregroundStyle(.orange)
-                    Text("无法读取文件列表", tableName: "Storage", bundle: .module)
+                    Text("Unable to read file list", tableName: "Storage", bundle: .module)
                         .font(.headline)
                     Text(loadErrorMessage)
                         .font(.caption)
