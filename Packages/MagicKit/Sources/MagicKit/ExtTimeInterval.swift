@@ -23,6 +23,8 @@ public extension TimeInterval {
 
 /// 时间格式化工具结构体
 public struct TimeFormatter {
+    private static let maximumDisplaySeconds = Int.max / 2
+
     /// 将时间间隔转换为显示格式
     ///
     /// 根据时间长度自动选择显示格式：
@@ -36,14 +38,20 @@ public struct TimeFormatter {
     /// - Parameter timeInterval: 时间间隔（秒）
     /// - Returns: 格式化后的时间字符串，格式为 "mm:ss" 或 "hh:mm:ss"
     public static func format(_ timeInterval: TimeInterval) -> String {
-        let hours = Int(timeInterval / 3600)
-        let minutes = Int(timeInterval.truncatingRemainder(dividingBy: 3600) / 60)
-        let seconds = Int(timeInterval.truncatingRemainder(dividingBy: 60))
+        let totalSeconds = normalizedSeconds(timeInterval)
+        let hours = totalSeconds / 3600
+        let minutes = (totalSeconds % 3600) / 60
+        let seconds = totalSeconds % 60
 
         if hours > 0 {
             return String(format: "%d:%02d:%02d", hours, minutes, seconds)
         } else {
             return String(format: "%d:%02d", minutes, seconds)
         }
+    }
+
+    static func normalizedSeconds(_ timeInterval: TimeInterval) -> Int {
+        guard timeInterval.isFinite, timeInterval > 0 else { return 0 }
+        return Int(min(timeInterval, TimeInterval(maximumDisplaySeconds)))
     }
 }
