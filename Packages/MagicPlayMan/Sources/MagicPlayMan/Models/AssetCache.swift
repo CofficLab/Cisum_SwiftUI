@@ -31,23 +31,18 @@ public class AssetCache {
     
     /// 检查资源是否已缓存
     func isCached(_ url: URL) -> Bool {
-        let filename = url.lastPathComponent
-        let cachedURL = cacheDirectory.appendingPathComponent(filename)
-        return fileManager.fileExists(atPath: cachedURL.path)
+        fileManager.fileExists(atPath: cacheFileURL(for: url).path)
     }
     
     /// 获取缓存文件的 URL
     func cachedURL(for url: URL) -> URL? {
-        let filename = url.lastPathComponent
-        let cachedURL = cacheDirectory.appendingPathComponent(filename)
+        let cachedURL = cacheFileURL(for: url)
         return fileManager.fileExists(atPath: cachedURL.path) ? cachedURL : nil
     }
     
     /// 缓存数据
     func cache(_ data: Data, for url: URL) throws {
-        let filename = url.lastPathComponent
-        let cachedURL = cacheDirectory.appendingPathComponent(filename)
-        try data.write(to: cachedURL)
+        try data.write(to: cacheFileURL(for: url))
     }
     
     /// 清理所有缓存
@@ -89,6 +84,18 @@ public class AssetCache {
     func removeCached(_ url: URL) {
         guard let cachedURL = cachedURL(for: url) else { return }
         try? FileManager.default.removeItem(at: cachedURL)
+    }
+
+    private func cacheFileURL(for url: URL) -> URL {
+        let encodedURL = Data(url.absoluteString.utf8)
+            .base64EncodedString()
+            .replacingOccurrences(of: "/", with: "_")
+            .replacingOccurrences(of: "+", with: "-")
+            .replacingOccurrences(of: "=", with: "")
+        let pathExtension = url.pathExtension
+        let filename = pathExtension.isEmpty ? encodedURL : "\(encodedURL).\(pathExtension)"
+
+        return cacheDirectory.appendingPathComponent(filename)
     }
 } 
 

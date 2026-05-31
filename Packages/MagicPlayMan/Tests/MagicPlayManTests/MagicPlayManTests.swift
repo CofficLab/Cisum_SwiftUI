@@ -56,6 +56,28 @@ final class MagicPlayManTests: XCTestCase {
         ))
     }
 
+    func testAssetCacheSeparatesDifferentURLsWithSameFilename() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer {
+            try? FileManager.default.removeItem(at: root)
+        }
+
+        let cache = try AssetCache(directory: root)
+        let first = try XCTUnwrap(URL(string: "https://example.com/albums/one/track.mp3"))
+        let second = try XCTUnwrap(URL(string: "https://cdn.example.net/library/two/track.mp3"))
+
+        try cache.cache(Data("first".utf8), for: first)
+        try cache.cache(Data("second".utf8), for: second)
+
+        let firstCachedURL = try XCTUnwrap(cache.cachedURL(for: first))
+        let secondCachedURL = try XCTUnwrap(cache.cachedURL(for: second))
+
+        XCTAssertNotEqual(firstCachedURL, secondCachedURL)
+        XCTAssertEqual(try Data(contentsOf: firstCachedURL), Data("first".utf8))
+        XCTAssertEqual(try Data(contentsOf: secondCachedURL), Data("second".utf8))
+    }
+
     @MainActor
     func testDefaultPlayerHasLocalization() {
         let man = MagicPlayMan()
