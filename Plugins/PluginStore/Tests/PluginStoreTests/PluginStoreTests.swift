@@ -8,6 +8,25 @@ import Testing
     #expect(SubscriptionTier.none.isFreeVersion)
 }
 
+@Test func cisumSubscriptionProductAliasesGrantProTier() {
+    let proProductIDs = [
+        "com.yueyi.cisum.pro.monthly",
+        "com.yueyi.cisum.monthly",
+        "com.yueyi.cisum.pro.yearly",
+        "com.yueyi.cisum.yearly",
+        "com.yueyi.cisum.pro.annual",
+        "com.yueyi.cisum.annual",
+        "com.yueyi.cisum.pro.month.1",
+        "com.yueyi.cisum.pro.year.1",
+        "com.yueyi.cisum.pro.day.7",
+    ]
+
+    for productID in proProductIDs {
+        #expect(StoreService.tier(for: productID) == .pro)
+        #expect(StoreConfig.allProductIds.contains(productID))
+    }
+}
+
 @Test func productListShowsLoadingErrorEmptyAndContentStates() {
     #expect(StoreProductListPresentation.state(
         isRefreshing: true,

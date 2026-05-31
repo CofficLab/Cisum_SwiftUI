@@ -90,8 +90,15 @@ enum StoreConfig: Sendable {
         "nonconsumable.racecar": .none,
 
         // subscription
+        "com.yueyi.cisum.pro.monthly": .pro,
         "com.yueyi.cisum.monthly": .pro,
+        "com.yueyi.cisum.pro.yearly": .pro,
         "com.yueyi.cisum.yearly": .pro,
+        "com.yueyi.cisum.pro.annual": .pro,
+        "com.yueyi.cisum.annual": .pro,
+        "com.yueyi.cisum.pro.month.1": .pro,
+        "com.yueyi.cisum.pro.year.1": .pro,
+        "com.yueyi.cisum.pro.day.7": .pro,
     ]
 
     // 全部商品ID列表（用于请求产品）
