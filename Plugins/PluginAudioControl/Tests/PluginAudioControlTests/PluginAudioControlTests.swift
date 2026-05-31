@@ -71,3 +71,17 @@ import Testing
         deletedURLs: [deleted]
     ))
 }
+
+@Test func staleEmptyLibraryNavigationDoesNotResetSwitchedPlayback() {
+    let requested = URL(fileURLWithPath: "/tmp/cisum-audio-control-empty/requested.mp3")
+    let switched = URL(fileURLWithPath: "/tmp/cisum-audio-control-empty/switched.mp3")
+
+    #expect(AudioControlPlaybackRequestPolicy.shouldApplyNavigationResult(
+        requestedAsset: requested,
+        currentAsset: requested
+    ))
+    #expect(!AudioControlPlaybackRequestPolicy.shouldApplyNavigationResult(
+        requestedAsset: requested,
+        currentAsset: switched
+    ))
+}

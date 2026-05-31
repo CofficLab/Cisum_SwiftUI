@@ -155,6 +155,12 @@ private extension AudioControlRootView {
                     }
                     await man.play(last, autoPlay: true, reason: "AudioControlRootView.repeatAllPrevious")
                 } else if man.playMode == .repeatAll {
+                    guard AudioControlPlaybackRequestPolicy.shouldApplyNavigationResult(
+                        requestedAsset: asset,
+                        currentAsset: man.currentAsset
+                    ) else {
+                        return
+                    }
                     await man.reset(reason: "AudioControlRootView.emptyLibrary")
                     alert_info(String(localized: "No files in library", table: "Audio-Control", bundle: .module))
                 }
@@ -197,6 +203,12 @@ private extension AudioControlRootView {
                     alert_info(String(localized: "Reached the last track, playing the first", table: "Audio-Control", bundle: .module))
                     await man.play(first, autoPlay: true, reason: "AudioControlRootView.loop")
                 } else {
+                    guard AudioControlPlaybackRequestPolicy.shouldApplyNavigationResult(
+                        requestedAsset: asset,
+                        currentAsset: man.currentAsset
+                    ) else {
+                        return
+                    }
                     await man.reset(reason: "AudioControlRootView.emptyLibrary")
                     alert_info(String(localized: "No files in library", table: "Audio-Control", bundle: .module))
                 }
