@@ -350,10 +350,10 @@ struct MigrationProgressView: View {
             Button {
                 onDismiss()
             } label: {
-                Text("取消操作", tableName: "Storage", bundle: .module)
+                Text("Cancel", tableName: "Storage", bundle: .module)
             }
             .buttonStyle(.bordered)
-            .help(String(localized: "保持原位置不变", table: "Storage", bundle: .module))
+            .help(String(localized: "Keep the original location unchanged", table: "Storage", bundle: .module))
 
             Button {
                 showConfirmation = false
@@ -362,10 +362,10 @@ struct MigrationProgressView: View {
                     await startMigration(shouldMigrate: false)
                 }
             } label: {
-                Text("直接使用", tableName: "Storage", bundle: .module)
+                Text("Use Directly", tableName: "Storage", bundle: .module)
             }
             .buttonStyle(.borderedProminent)
-            .help(String(localized: "直接使用新位置，原有数据保持不变", table: "Storage", bundle: .module))
+            .help(String(localized: "Use the new location directly and keep existing data unchanged", table: "Storage", bundle: .module))
 
             if Self.canMigrateExistingData(sourceLocation: sourceLocation, sourceURL: sourceURL) {
                 Button {
@@ -375,10 +375,10 @@ struct MigrationProgressView: View {
                         await startMigration(shouldMigrate: true)
                     }
                 } label: {
-                    Text("迁移数据", tableName: "Storage", bundle: .module)
+                    Text("Migrate Data", tableName: "Storage", bundle: .module)
                 }
                 .buttonStyle(.bordered)
-                .help(String(localized: "将现有数据迁移到新位置", table: "Storage", bundle: .module))
+                .help(String(localized: "Move existing data to the new location", table: "Storage", bundle: .module))
             }
         }
         .padding()
@@ -392,29 +392,29 @@ struct MigrationProgressView: View {
                     Button {
                         onDismiss()
                     } label: {
-                        Text("完成", tableName: "Storage", bundle: .module)
+                        Text("Done", tableName: "Storage", bundle: .module)
                     }
                     .buttonStyle(.borderedProminent)
                 } else {
                     Button {
                         showCancelConfirmation = true
                     } label: {
-                        Text(cancellationRequested ? "正在取消..." : "取消迁移", tableName: "Storage", bundle: .module)
+                        Text(cancellationRequested ? "Cancelling..." : "Cancel Migration", tableName: "Storage", bundle: .module)
                     }
                     .buttonStyle(.borderless)
                     .disabled(cancellationRequested)
-                    .alert(Text("确定要取消迁移吗？", tableName: "Storage", bundle: .module), isPresented: $showCancelConfirmation) {
+                    .alert(Text("Cancel migration?", tableName: "Storage", bundle: .module), isPresented: $showCancelConfirmation) {
                         Button(role: .cancel) { } label: {
-                            Text("继续迁移", tableName: "Storage", bundle: .module)
+                            Text("Continue Migration", tableName: "Storage", bundle: .module)
                         }
                         Button(role: .destructive) {
                             cancellationRequested = true
                             migrationManager.cancelMigration()
                         } label: {
-                            Text("确定取消", tableName: "Storage", bundle: .module)
+                            Text("Confirm Cancel", tableName: "Storage", bundle: .module)
                         }
                     } message: {
-                        Text("取消迁移可能会导致数据不完整，建议等待迁移完成。", tableName: "Storage", bundle: .module)
+                        Text("Cancelling migration may leave data incomplete. Waiting for migration to finish is recommended.", tableName: "Storage", bundle: .module)
                     }
                 }
             } else {
@@ -423,14 +423,14 @@ struct MigrationProgressView: View {
                         prepareForRetry()
                         showConfirmation = true
                     } label: {
-                        Text("重试", tableName: "Storage", bundle: .module)
+                        Text("Retry", tableName: "Storage", bundle: .module)
                     }
                     .buttonStyle(.borderedProminent)
 
                     Button {
                         onDismiss()
                     } label: {
-                        Text("放弃", tableName: "Storage", bundle: .module)
+                        Text("Give Up", tableName: "Storage", bundle: .module)
                     }
                     .buttonStyle(.bordered)
                 }
@@ -443,7 +443,7 @@ struct MigrationProgressView: View {
     private var migrationStatusView: some View {
         GroupBox {
             VStack(alignment: .leading, spacing: 8) {
-                Text("迁移状态", tableName: "Storage", bundle: .module)
+                Text("Migration Status", tableName: "Storage", bundle: .module)
                     .font(.headline)
                     .foregroundColor(.primary)
 
@@ -453,7 +453,7 @@ struct MigrationProgressView: View {
                         .foregroundColor(.green)
                 } else if migrationCancelled {
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("迁移已取消", tableName: "Storage", bundle: .module)
+                        Text("Migration Cancelled", tableName: "Storage", bundle: .module)
                             .font(.subheadline)
                             .foregroundColor(.orange)
 
@@ -461,16 +461,16 @@ struct MigrationProgressView: View {
                             prepareForRetry()
                             showConfirmation = true
                         } label: {
-                            Text("重试迁移", tableName: "Storage", bundle: .module)
+                            Text("Retry Migration", tableName: "Storage", bundle: .module)
                         }
                         .buttonStyle(.borderedProminent)
                     }
                 } else if let errorMessage = errorMessage {
-                    Text("迁移出现问题: \(errorMessage)", tableName: "Storage", bundle: .module)
+                    Text("Migration failed: \(errorMessage)", tableName: "Storage", bundle: .module)
                         .font(.subheadline)
                         .foregroundColor(.red)
                 } else {
-                    Text(cancellationRequested ? "正在取消..." : "迁移中...", tableName: "Storage", bundle: .module)
+                    Text(cancellationRequested ? "Cancelling..." : "Migrating...", tableName: "Storage", bundle: .module)
                         .font(.subheadline)
                         .foregroundColor(.blue)
                 }
