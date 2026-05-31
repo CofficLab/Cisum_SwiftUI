@@ -18,6 +18,36 @@ import SwiftData
 }
 
 @MainActor
+@Test func bookDiskCreationReplacesDanglingSymlink() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let bookDisk = root.appendingPathComponent(BookPlugin.dirName, isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(
+        at: bookDisk,
+        withDestinationURL: root.appendingPathComponent("missing-books", isDirectory: true)
+    )
+
+    BookPluginHost.configure(
+        dbRoot: { root.appendingPathComponent("db", isDirectory: true) },
+        storageRoot: { root },
+        storageLocationDidChangeNotifications: []
+    )
+
+    let preparedDisk = try #require(BookPlugin.getBookDisk())
+    var isDirectory: ObjCBool = false
+
+    #expect(preparedDisk == bookDisk)
+    #expect(FileManager.default.fileExists(atPath: bookDisk.path, isDirectory: &isDirectory))
+    #expect(isDirectory.boolValue)
+    #expect((try? FileManager.default.destinationOfSymbolicLink(atPath: bookDisk.path)) == nil)
+}
+
+@MainActor
 @Test func bookDBDeletedNotificationPostsSynchronouslyOnMainThread() {
     let deletedURL = URL(fileURLWithPath: "/tmp/cisum-book-event-tests/deleted.m4b")
     let receivedURLs = TestNotificationValue<[URL]>([])

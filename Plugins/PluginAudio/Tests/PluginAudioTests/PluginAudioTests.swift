@@ -18,6 +18,37 @@ import SwiftData
 }
 
 @MainActor
+@Test func audioDiskCreationReplacesDanglingSymlink() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let audioDisk = root.appendingPathComponent(AudioPlugin.dbDirName, isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(
+        at: audioDisk,
+        withDestinationURL: root.appendingPathComponent("missing-audio", isDirectory: true)
+    )
+
+    AudioPluginHost.configure(
+        databaseURL: { name in root.appendingPathComponent("\(name).db") },
+        storageRoot: { root },
+        hasStorageLocation: { true },
+        storageLocationDidChangeNotifications: []
+    )
+
+    let preparedDisk = try #require(AudioPlugin.getAudioDisk())
+    var isDirectory: ObjCBool = false
+
+    #expect(preparedDisk == audioDisk)
+    #expect(FileManager.default.fileExists(atPath: audioDisk.path, isDirectory: &isDirectory))
+    #expect(isDirectory.boolValue)
+    #expect((try? FileManager.default.destinationOfSymbolicLink(atPath: audioDisk.path)) == nil)
+}
+
+@MainActor
 @Test func audioDBUpdatedNotificationPostsSynchronouslyOnMainThread() {
     let receivedCount = TestNotificationCounter()
     let token = NotificationCenter.default.addObserver(

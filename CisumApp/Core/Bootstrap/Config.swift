@@ -257,6 +257,8 @@ extension Config {
         var isDirectory: ObjCBool = false
         if FileManager.default.fileExists(atPath: url.path, isDirectory: &isDirectory), !isDirectory.boolValue {
             try FileManager.default.removeItem(at: url)
+        } else if (try? FileManager.default.destinationOfSymbolicLink(atPath: url.path)) != nil {
+            try FileManager.default.removeItem(at: url)
         }
 
         try FileManager.default.createDirectory(
