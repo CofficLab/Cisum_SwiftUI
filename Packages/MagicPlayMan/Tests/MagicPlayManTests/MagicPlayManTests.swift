@@ -7,6 +7,10 @@ final class MagicPlayManTests: XCTestCase {
         let current = AVPlayerItem(url: URL(fileURLWithPath: "/tmp/current.mp3"))
         let stale = AVPlayerItem(url: URL(fileURLWithPath: "/tmp/stale.mp3"))
 
+        XCTAssertTrue(MagicPlayMan.isPlaybackNotificationForCurrentItem(current, currentItem: current))
+        XCTAssertFalse(MagicPlayMan.isPlaybackNotificationForCurrentItem(stale, currentItem: current))
+        XCTAssertFalse(MagicPlayMan.isPlaybackNotificationForCurrentItem(nil, currentItem: current))
+        XCTAssertFalse(MagicPlayMan.isPlaybackNotificationForCurrentItem(current, currentItem: nil))
         XCTAssertTrue(MagicPlayMan.isPlaybackEndNotificationForCurrentItem(current, currentItem: current))
         XCTAssertFalse(MagicPlayMan.isPlaybackEndNotificationForCurrentItem(stale, currentItem: current))
         XCTAssertFalse(MagicPlayMan.isPlaybackEndNotificationForCurrentItem(nil, currentItem: current))
@@ -162,6 +166,50 @@ final class MagicPlayManTests: XCTestCase {
         try await Task.sleep(nanoseconds: 50_000_000)
 
         XCTAssertEqual(receivedError, .invalidAsset)
+    }
+
+    @MainActor
+    func testCurrentItemFailureNotificationFailsPlayback() async throws {
+        let audio = try Self.makeSilentWAV()
+        defer {
+            try? FileManager.default.removeItem(at: audio)
+        }
+
+        let man = MagicPlayMan()
+        let item = AVPlayerItem(url: audio)
+        man.player.replaceCurrentItem(with: item)
+        let error = NSError(domain: "MagicPlayManTests", code: 99)
+
+        man.handlePlaybackItemFailureNotification(Notification(
+            name: .AVPlayerItemFailedToPlayToEndTime,
+            object: item,
+            userInfo: [AVPlayerItemFailedToPlayToEndTimeErrorKey: error]
+        ))
+
+        XCTAssertEqual(man.currentError, .playbackError(error.localizedDescription))
+    }
+
+    @MainActor
+    func testStaleItemFailureNotificationDoesNotFailCurrentPlayback() async throws {
+        let currentAudio = try Self.makeSilentWAV()
+        let staleAudio = try Self.makeSilentWAV()
+        defer {
+            try? FileManager.default.removeItem(at: currentAudio)
+            try? FileManager.default.removeItem(at: staleAudio)
+        }
+
+        let man = MagicPlayMan()
+        let currentItem = AVPlayerItem(url: currentAudio)
+        let staleItem = AVPlayerItem(url: staleAudio)
+        man.player.replaceCurrentItem(with: currentItem)
+
+        man.handlePlaybackItemFailureNotification(Notification(
+            name: .AVPlayerItemFailedToPlayToEndTime,
+            object: staleItem,
+            userInfo: [AVPlayerItemFailedToPlayToEndTimeErrorKey: NSError(domain: "MagicPlayManTests", code: 100)]
+        ))
+
+        XCTAssertNil(man.currentError)
     }
 
     private static func makeSilentWAV() throws -> URL {

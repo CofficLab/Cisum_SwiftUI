@@ -177,7 +177,7 @@ internal extension MagicPlayMan {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] notification in
                 guard let self = self else { return }
-                guard Self.isPlaybackEndNotificationForCurrentItem(
+                guard Self.isPlaybackNotificationForCurrentItem(
                     notification.object,
                     currentItem: self._player.currentItem
                 ) else {
@@ -211,9 +211,34 @@ internal extension MagicPlayMan {
                 }
             }
             .store(in: &cancellables)
+
+        // 监听播放过程中断失败
+        NotificationCenter.default.publisher(for: .AVPlayerItemFailedToPlayToEndTime)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] notification in
+                guard let self = self else { return }
+                Task { @MainActor in
+                    self.handlePlaybackItemFailureNotification(notification)
+                }
+            }
+            .store(in: &cancellables)
     }
 
-    nonisolated static func isPlaybackEndNotificationForCurrentItem(
+    @MainActor
+    func handlePlaybackItemFailureNotification(_ notification: Notification) {
+        guard Self.isPlaybackNotificationForCurrentItem(
+            notification.object,
+            currentItem: _player.currentItem
+        ) else {
+            return
+        }
+
+        let error = notification.userInfo?[AVPlayerItemFailedToPlayToEndTimeErrorKey] as? Error
+        let message = error?.localizedDescription ?? "Unknown playback error"
+        setState(.failed(.playbackError(message)), reason: className + ".itemFailedToPlayToEnd")
+    }
+
+    nonisolated static func isPlaybackNotificationForCurrentItem(
         _ notificationObject: Any?,
         currentItem: AVPlayerItem?
     ) -> Bool {
@@ -223,6 +248,13 @@ internal extension MagicPlayMan {
         }
 
         return notificationItem === currentItem
+    }
+
+    nonisolated static func isPlaybackEndNotificationForCurrentItem(
+        _ notificationObject: Any?,
+        currentItem: AVPlayerItem?
+    ) -> Bool {
+        isPlaybackNotificationForCurrentItem(notificationObject, currentItem: currentItem)
     }
 }
 
