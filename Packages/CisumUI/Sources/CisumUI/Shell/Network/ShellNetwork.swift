@@ -8,12 +8,52 @@ import SwiftUI
 class ShellNetwork: SuperLog {
     static let emoji = "🌐"
 
+    static func shellQuoted(_ value: String) -> String {
+        "'\(value.replacingOccurrences(of: "'", with: "'\\''"))'"
+    }
+
+    static func pingCommand(_ host: String = "google.com") -> String {
+        "ping -c 1 -W 3000 \(shellQuoted(host))"
+    }
+
+    static func pingDetailedCommand(_ host: String, count: Int = 4) -> String {
+        "ping -c \(max(0, count)) \(shellQuoted(host))"
+    }
+
+    static func downloadCommand(_ url: String, to output: String) -> String {
+        "curl -L \(shellQuoted(url)) -o \(shellQuoted(output))"
+    }
+
+    static func curlCommand(_ url: String) -> String {
+        "curl -s \(shellQuoted(url))"
+    }
+
+    static func headersCommand(_ url: String) -> String {
+        "curl -I \(shellQuoted(url))"
+    }
+
+    static func testPortCommand(_ host: String, port: Int) -> String {
+        "nc -z -w3 \(shellQuoted(host)) \(port)"
+    }
+
+    static func nslookupCommand(_ domain: String) -> String {
+        "nslookup \(shellQuoted(domain))"
+    }
+
+    static func tracerouteCommand(_ host: String) -> String {
+        "traceroute \(shellQuoted(host))"
+    }
+
+    static func httpStatusCommand(_ url: String) -> String {
+        "curl -s -o /dev/null -w '%{http_code}' \(shellQuoted(url))"
+    }
+
     /// 测试网络连接
     /// - Parameter host: 主机地址（默认为google.com）
     /// - Returns: 是否连接成功
     static func ping(_ host: String = "google.com") -> Bool {
         do {
-            _ = try Shell.runSync("ping -c 1 -W 3000 \(host)")
+            _ = try Shell.runSync(pingCommand(host))
             return true
         } catch {
             return false
@@ -27,7 +67,7 @@ class ShellNetwork: SuperLog {
     /// - Returns: ping结果
     /// - Throws: 执行失败时抛出错误
     static func pingDetailed(_ host: String, count: Int = 4) throws -> String {
-        try Shell.runSync("ping -c \(count) \(host)")
+        try Shell.runSync(pingDetailedCommand(host, count: count))
     }
 
     /// 下载文件
@@ -36,7 +76,7 @@ class ShellNetwork: SuperLog {
     ///   - output: 输出文件路径
     /// - Throws: 下载失败时抛出错误
     static func download(_ url: String, to output: String) throws {
-        try Shell.runSync("curl -L \"\(url)\" -o \"\(output)\"")
+        try Shell.runSync(downloadCommand(url, to: output))
     }
 
     /// 获取URL内容
@@ -44,7 +84,7 @@ class ShellNetwork: SuperLog {
     /// - Returns: URL内容
     /// - Throws: 获取失败时抛出错误
     static func curl(_ url: String) throws -> String {
-        try Shell.runSync("curl -s \"\(url)\"")
+        try Shell.runSync(curlCommand(url))
     }
 
     /// 获取URL的HTTP头信息
@@ -52,7 +92,7 @@ class ShellNetwork: SuperLog {
     /// - Returns: HTTP头信息
     /// - Throws: 获取失败时抛出错误
     static func getHeaders(_ url: String) throws -> String {
-        try Shell.runSync("curl -I \"\(url)\"")
+        try Shell.runSync(headersCommand(url))
     }
 
     /// 测试端口连接
@@ -62,7 +102,7 @@ class ShellNetwork: SuperLog {
     /// - Returns: 端口是否开放
     static func testPort(_ host: String, port: Int) -> Bool {
         do {
-            _ = try Shell.runSync("nc -z -w3 \(host) \(port)")
+            _ = try Shell.runSync(testPortCommand(host, port: port))
             return true
         } catch {
             return false
@@ -127,7 +167,7 @@ class ShellNetwork: SuperLog {
     /// - Returns: DNS查询结果
     /// - Throws: 查询失败时抛出错误
     static func nslookup(_ domain: String) throws -> String {
-        try Shell.runSync("nslookup \(domain)")
+        try Shell.runSync(nslookupCommand(domain))
     }
 
     /// 追踪路由
@@ -135,7 +175,7 @@ class ShellNetwork: SuperLog {
     /// - Returns: 路由追踪结果
     /// - Throws: 追踪失败时抛出错误
     static func traceroute(_ host: String) throws -> String {
-        try Shell.runSync("traceroute \(host)")
+        try Shell.runSync(tracerouteCommand(host))
     }
 
     /// 获取WiFi信息
@@ -163,7 +203,7 @@ class ShellNetwork: SuperLog {
     /// - Returns: HTTP状态码
     static func getHTTPStatus(_ url: String) -> Int {
         do {
-            let result = try Shell.runSync("curl -s -o /dev/null -w '%{http_code}' \"\(url)\"")
+            let result = try Shell.runSync(httpStatusCommand(url))
             return Int(result.trimmingCharacters(in: .whitespacesAndNewlines)) ?? 0
         } catch {
             return 0
