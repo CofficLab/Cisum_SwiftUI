@@ -155,6 +155,23 @@ import Testing
     #expect(CopyWorker.copySourceURL(for: realFile).standardizedFileURL == realFile.standardizedFileURL)
 }
 
+@Test func copyWorkerAcceptsReadableLocalSourcesWithoutSecurityScope() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    let readableFile = root.appendingPathComponent("track.mp3")
+    let missingFile = root.appendingPathComponent("missing.mp3")
+    try Data("audio".utf8).write(to: readableFile)
+
+    #expect(CopyWorker.hasCopySourceAccess(readableFile, securityScopeGranted: false))
+    #expect(CopyWorker.hasCopySourceAccess(missingFile, securityScopeGranted: true))
+    #expect(!CopyWorker.hasCopySourceAccess(missingFile, securityScopeGranted: false))
+}
+
 @Test func copyStateMessageDistinguishesPendingAndFailedTasks() {
     #expect(CopyStatePresentation.message(pendingCount: 2, failedCount: 0) == "Copying 2 files")
     #expect(CopyStatePresentation.message(pendingCount: 1, failedCount: 0) == "Copying 1 file")

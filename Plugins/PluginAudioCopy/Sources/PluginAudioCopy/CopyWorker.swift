@@ -107,8 +107,8 @@
                                 )
                             }
 
-                            // Start accessing the resource
-                            guard url.startAccessingSecurityScopedResource() else {
+                            let securityScopeGranted = url.startAccessingSecurityScopedResource()
+                            guard Self.hasCopySourceAccess(url, securityScopeGranted: securityScopeGranted) else {
                                 throw NSError(
                                     domain: "CopyWorker",
                                     code: 1,
@@ -118,8 +118,11 @@
                                 )
                             }
 
-                            // Ensure we stop accessing the resource when we're done
-                            defer { url.stopAccessingSecurityScopedResource() }
+                            defer {
+                                if securityScopeGranted {
+                                    url.stopAccessingSecurityScopedResource()
+                                }
+                            }
 
                             if self.verbose {
                                 os_log("\(self.t)🍋 [\(task.originalFilename)] 开始复制，共 \(taskCount)")
@@ -208,6 +211,10 @@
 
         nonisolated static func shouldKeepCompletedCopy(isTaskStillQueued: Bool) -> Bool {
             CopyWorkerTaskPolicy.shouldKeepCompletedCopy(isTaskStillQueued: isTaskStillQueued)
+        }
+
+        nonisolated static func hasCopySourceAccess(_ source: URL, securityScopeGranted: Bool) -> Bool {
+            securityScopeGranted || FileManager.default.isReadableFile(atPath: source.path)
         }
 
         nonisolated static func makeUniqueDestinationURLs(
