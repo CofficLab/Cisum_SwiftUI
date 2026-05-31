@@ -54,6 +54,10 @@ enum BookProgressPersistencePolicy {
         !representsSameFile(storedURL, newURL)
     }
 
+    static func shouldAcceptBookURL(_ url: URL, bookDisk: URL?) -> Bool {
+        BookProgressBookLookup.bookURL(for: url, bookDisk: bookDisk) != nil
+    }
+
     static func snapshot(currentURL: URL?, currentTime: TimeInterval, trigger: BookProgressSaveTrigger) -> BookProgressStateSnapshot? {
         guard let currentURL else { return nil }
 
@@ -386,9 +390,7 @@ private extension BookProgressRootView {
     }
 
     private func isPlayableBookURL(_ url: URL) -> Bool {
-        FileManager.default.fileExists(atPath: url.path)
-            && !url.isFolder
-            && BookPluginInfo.supportedExtensions.contains(url.pathExtension.lowercased())
+        BookProgressPersistencePolicy.shouldAcceptBookURL(url, bookDisk: BookPlugin.getBookDisk())
     }
 
     /// 处理当前URL变化事件
@@ -414,6 +416,7 @@ private extension BookProgressRootView {
         }
 
         let url = snapshot.currentURL
+        let bookDisk = BookPlugin.getBookDisk()
 
         if self.verbose {
             os_log("\(self.t)📖 URL变化 -> \(url.shortPath())")
@@ -432,6 +435,13 @@ private extension BookProgressRootView {
             }
 
             guard BookProgressPersistencePolicy.shouldPersistCurrentURLChange(from: storedURL, to: url) else {
+                return
+            }
+
+            guard BookProgressPersistencePolicy.shouldAcceptBookURL(url, bookDisk: bookDisk) else {
+                if self.verbose {
+                    os_log("\(self.t)⚠️ 跳过非书库音频: \(url.shortPath())")
+                }
                 return
             }
 

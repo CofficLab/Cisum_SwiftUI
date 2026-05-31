@@ -367,6 +367,30 @@ import Testing
     #expect(BookProgressBookLookup.bookURL(for: chapter, bookDisk: bookDisk) == nil)
 }
 
+@Test func bookProgressRejectsCurrentAudioOutsideConfiguredBookDisk() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let bookDisk = root.appendingPathComponent("books", isDirectory: true)
+    let outside = root.appendingPathComponent("outside", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: bookDisk, withIntermediateDirectories: true)
+    try FileManager.default.createDirectory(at: outside, withIntermediateDirectories: true)
+
+    let book = bookDisk.appendingPathComponent("Novel", isDirectory: true)
+    try FileManager.default.createDirectory(at: book, withIntermediateDirectories: true)
+    let chapter = book.appendingPathComponent("Chapter 01.m4b")
+    try Data("book".utf8).write(to: chapter)
+
+    let outsideAudio = outside.appendingPathComponent("Track.m4b")
+    try Data("audio".utf8).write(to: outsideAudio)
+
+    #expect(BookProgressPersistencePolicy.shouldAcceptBookURL(chapter, bookDisk: bookDisk))
+    #expect(!BookProgressPersistencePolicy.shouldAcceptBookURL(outsideAudio, bookDisk: bookDisk))
+}
+
 @Test func bookLookupRejectsSymlinkEscapesOutsideConfiguredBookDisk() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)
