@@ -242,7 +242,7 @@ struct MigrationProgressView: View {
                 ) else { return }
                 self.cancellationRequested = false
                 self.migrationCancelled = true
-                self.currentMigratingFile = "迁移已取消"
+                self.currentMigratingFile = String(localized: "Migration Cancelled", table: "Storage", bundle: .module)
             }
         } catch {
             await MainActor.run {

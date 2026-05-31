@@ -9,13 +9,13 @@ enum MigrationError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .sourceDirectoryNotFound:
-            return "无法找到源文件夹"
+            return String(localized: "Source folder not found", table: "Storage", bundle: .module)
         case .targetDirectoryNotFound:
-            return "无法找到目标文件夹"
+            return String(localized: "Target folder not found", table: "Storage", bundle: .module)
         case .fileOperationFailed(let message):
-            return "文件操作失败: \(message)"
+            return String(localized: "File operation failed: \(message)", table: "Storage", bundle: .module)
         case .migrationCancelled:
-            return "迁移已取消，部分文件可能已经迁移"
+            return String(localized: "Migration was cancelled. Some files may have already been migrated.", table: "Storage", bundle: .module)
         }
     }
 }

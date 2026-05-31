@@ -1105,6 +1105,86 @@
           }
         }
       }
+    },
+    "Source folder not found" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法找到源文件夹"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法找到來源資料夾"
+          }
+        }
+      }
+    },
+    "Target folder not found" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法找到目标文件夹"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法找到目標資料夾"
+          }
+        }
+      }
+    },
+    "File operation failed: %@" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "文件操作失败: %@"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "檔案操作失敗: %@"
+          }
+        }
+      }
+    },
+    "Migration was cancelled. Some files may have already been migrated." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "迁移已取消，部分文件可能已经迁移"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "遷移已取消，部分檔案可能已經遷移"
+          }
+        }
+      }
+    },
+    "Target folder cannot be inside the source folder" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "目标文件夹不能位于源文件夹内"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "目標資料夾不能位於來源資料夾內"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"
