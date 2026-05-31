@@ -14,6 +14,11 @@ public typealias PaymentMode = StoreKit.Product.SubscriptionOffer.PaymentMode
 public enum StoreService: SuperLog {
     static let verbose = false
 
+    struct SubscriptionStatusSnapshot: Equatable, Sendable {
+        let state: RenewalState.RawValue
+        let currentProductID: String?
+    }
+
     // MARK: - Bootstrap
 
     /// 开始监听交易更新，APP启动时应该调用这个方法
@@ -344,72 +349,79 @@ public enum StoreService: SuperLog {
             return (subscriptions: [], statuses: [], highestProduct: nil, highestStatus: nil)
         }
 
-        do {
-            // This app has only one subscription group, so products in the subscriptions
-            // array all belong to the same group. The statuses that
-            // `product.subscription.status` returns apply to the entire subscription group.
-            guard let subscription = subscriptions.first,
-                  let statuses = subscription.subscription?.status else {
-                print("products.subscriptions 是空的")
-                return (subscriptions: subscriptions, statuses: [], highestProduct: nil, highestStatus: nil)
-            }
-
-            if statuses.isEmpty {
-                print("statuses 是空的，表示对于当前订阅组，没有订阅状态")
-                return (subscriptions: subscriptions, statuses: [], highestProduct: nil, highestStatus: nil)
-            }
-
-            var highestStatus: StoreSubscriptionStatusDTO?
-            var highestProduct: ProductDTO?
-
-            if verbose {
-                os_log("\(self.t)StoreManger 检查订阅状态，statuses.count -> \(statuses.count)")
-            }
-
-            // Iterate through `statuses` for this subscription group and find
-            // the `Status` with the highest level of service that isn't
-            // in an expired or revoked state. For example, a customer may be subscribed to the
-            // same product with different levels of service through Family Sharing.
-            for status in statuses {
-                switch status.state {
-                case
-                    Product.SubscriptionInfo.RenewalState.expired.rawValue,
-                    Product.SubscriptionInfo.RenewalState.revoked.rawValue:
-                    if verbose {
-                        os_log("\(self.t)检查订阅状态 -> 超时或被撤销")
-                    }
-
-                    continue
-                case Product.SubscriptionInfo.RenewalState.subscribed.rawValue:
-                    print("检查订阅状态 -> Subscribed")
-                default:
-                    let renewalInfo: RenewalInfo = try checkVerified(status.renewalInfo)
-
-                    // Find the first subscription product that matches the subscription status renewal info by comparing the product IDs.
-                    guard let newSubscription = subscriptions.first(where: { $0.id == renewalInfo.currentProductID }) else {
-                        continue
-                    }
-
-                    guard let currentProduct = highestProduct else {
-                        highestStatus = status
-                        highestProduct = newSubscription
-                        continue
-                    }
-
-                    let highestTier = tier(for: currentProduct.id)
-                    let newTier = tier(for: renewalInfo.currentProductID)
-
-                    if newTier > highestTier {
-                        highestStatus = status
-                        highestProduct = newSubscription
-                    }
-                }
-            }
-
-            return (subscriptions: subscriptions, statuses: statuses, highestProduct: highestProduct, highestStatus: highestStatus)
-        } catch {
-            os_log(.error, "\(self.t) 💰 StoreManger 检查订阅状态，出错 -> \(error.localizedDescription)")
+        // This app has only one subscription group, so products in the subscriptions
+        // array all belong to the same group. The statuses that
+        // `product.subscription.status` returns apply to the entire subscription group.
+        guard let subscription = subscriptions.first,
+              let statuses = subscription.subscription?.status else {
+            print("products.subscriptions 是空的")
             return (subscriptions: subscriptions, statuses: [], highestProduct: nil, highestStatus: nil)
+        }
+
+        if statuses.isEmpty {
+            print("statuses 是空的，表示对于当前订阅组，没有订阅状态")
+            return (subscriptions: subscriptions, statuses: [], highestProduct: nil, highestStatus: nil)
+        }
+
+        if verbose {
+            os_log("\(self.t)StoreManger 检查订阅状态，statuses.count -> \(statuses.count)")
+        }
+
+        let snapshots = statuses.map {
+            SubscriptionStatusSnapshot(
+                state: $0.state,
+                currentProductID: $0.currentProductID
+            )
+        }
+
+        let highestIndex = highestActiveSubscriptionStatusIndex(
+            subscriptions: subscriptions,
+            statuses: snapshots
+        )
+        let highestStatus = highestIndex.map { statuses[$0] }
+        let productsByID = subscriptionsByID(subscriptions)
+        let highestProduct = highestIndex
+            .flatMap { snapshots[$0].currentProductID }
+            .flatMap { productsByID[$0] }
+
+        return (subscriptions: subscriptions, statuses: statuses, highestProduct: highestProduct, highestStatus: highestStatus)
+    }
+
+    static func highestActiveSubscriptionStatusIndex(
+        subscriptions: [ProductDTO],
+        statuses: [SubscriptionStatusSnapshot]
+    ) -> Int? {
+        let productsByID = subscriptionsByID(subscriptions)
+        var highestIndex: Int?
+        var highestTier: SubscriptionTier = .none
+
+        for (index, status) in statuses.enumerated() {
+            switch status.state {
+            case RenewalState.expired.rawValue,
+                 RenewalState.revoked.rawValue:
+                continue
+            default:
+                break
+            }
+
+            guard let productID = status.currentProductID,
+                  productsByID[productID] != nil else {
+                continue
+            }
+
+            let tier = tier(for: productID)
+            if highestIndex == nil || tier > highestTier {
+                highestIndex = index
+                highestTier = tier
+            }
+        }
+
+        return highestIndex
+    }
+
+    private static func subscriptionsByID(_ subscriptions: [ProductDTO]) -> [String: ProductDTO] {
+        subscriptions.reduce(into: [:]) { result, subscription in
+            result[subscription.id] = subscription
         }
     }
 }

@@ -27,6 +27,40 @@ import Testing
     }
 }
 
+@Test func activeSubscribedStatusSelectsCurrentSubscription() {
+    let subscriptions = [
+        subscriptionProduct(id: "com.yueyi.cisum.pro.monthly"),
+    ]
+    let statuses = [
+        StoreService.SubscriptionStatusSnapshot(
+            state: RenewalState.subscribed.rawValue,
+            currentProductID: "com.yueyi.cisum.pro.monthly"
+        ),
+    ]
+
+    #expect(StoreService.highestActiveSubscriptionStatusIndex(
+        subscriptions: subscriptions,
+        statuses: statuses
+    ) == 0)
+}
+
+@Test func expiredSubscriptionStatusIsIgnored() {
+    let subscriptions = [
+        subscriptionProduct(id: "com.yueyi.cisum.pro.monthly"),
+    ]
+    let statuses = [
+        StoreService.SubscriptionStatusSnapshot(
+            state: RenewalState.expired.rawValue,
+            currentProductID: "com.yueyi.cisum.pro.monthly"
+        ),
+    ]
+
+    #expect(StoreService.highestActiveSubscriptionStatusIndex(
+        subscriptions: subscriptions,
+        statuses: statuses
+    ) == nil)
+}
+
 @Test func productListShowsLoadingErrorEmptyAndContentStates() {
     #expect(StoreProductListPresentation.state(
         isRefreshing: true,
@@ -92,4 +126,15 @@ func purchaseUpdatePostsStoreTransactionNotification() async {
 
     let receivedProductID = await task.value
     #expect(receivedProductID == productID)
+}
+
+private func subscriptionProduct(id: String) -> ProductDTO {
+    ProductDTO(
+        id: id,
+        displayName: id,
+        displayPrice: "$1.00",
+        price: 1,
+        kind: .autoRenewable,
+        description: ""
+    )
 }
