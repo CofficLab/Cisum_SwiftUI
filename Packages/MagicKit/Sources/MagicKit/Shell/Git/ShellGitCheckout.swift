@@ -27,8 +27,8 @@ extension ShellGit {
     ///   - path: 仓库路径
     /// - Returns: 执行结果
     public static func checkoutFiles(_ files: [String], at path: String? = nil) throws -> String {
-        let filesStr = files.map(shellQuoted).joined(separator: " ")
-        return try Shell.runSync("git checkout -- \(filesStr)", at: path)
+        guard let command = checkoutFilesCommand(files) else { return "" }
+        return try Shell.runSync(command, at: path)
     }
     
     /// 检出指定文件（单个文件）
@@ -89,6 +89,12 @@ extension ShellGit {
     /// - Returns: 执行结果
     public static func checkoutAllFiles(at path: String? = nil) throws -> String {
         return try Shell.runSync("git checkout -- .", at: path)
+    }
+
+    static func checkoutFilesCommand(_ files: [String]) -> String? {
+        guard !files.isEmpty else { return nil }
+        let filesStr = files.map(shellQuoted).joined(separator: " ")
+        return "git checkout -- \(filesStr)"
     }
 }
 #endif
