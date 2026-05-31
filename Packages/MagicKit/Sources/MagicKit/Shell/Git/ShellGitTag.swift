@@ -19,9 +19,9 @@ extension ShellGit {
     /// - Returns: 执行结果
     public static func createTag(_ name: String, message: String? = nil, at path: String? = nil) throws -> String {
         let command = if let message {
-            "git tag -a \(name) -m \"\(message)\""
+            "git tag -a \(shellQuoted(name)) -m \(shellQuoted(message))"
         } else {
-            "git tag \(name)"
+            "git tag \(shellQuoted(name))"
         }
         return try Shell.runSync(command, at: path)
     }
@@ -32,7 +32,7 @@ extension ShellGit {
     ///   - path: 仓库路径
     /// - Returns: 执行结果
     public static func deleteTag(_ name: String, at path: String? = nil) throws -> String {
-        return try Shell.runSync("git tag -d \(name)", at: path)
+        return try Shell.runSync("git tag -d \(shellQuoted(name))", at: path)
     }
     
     /// 获取指定 commit 的所有标签
@@ -53,10 +53,10 @@ extension ShellGit {
         var tags: [MagicGitTag] = []
         for name in tagNames {
             // 获取 commit hash
-            let commitHash = (try? Shell.runSync("git rev-list -n 1 \(name)", at: path)) ?? ""
+            let commitHash = (try? Shell.runSync("git rev-list -n 1 \(shellQuoted(name))", at: path)) ?? ""
             // 获取作者、日期、message
-            let tagInfo = (try? Shell.runSync("git for-each-ref refs/tags/\(name) --format='%(taggername)::%(taggerdate)::%(subject)'", at: path)) ?? "::"
-            let parts = tagInfo.replacingOccurrences(of: "'", with: "").split(separator: "::").map { String($0) }
+            let tagInfo = (try? Shell.runSync("git for-each-ref \(shellQuoted("refs/tags/\(name)")) --format='%(taggername)::%(taggerdate)::%(subject)'", at: path)) ?? "::"
+            let parts = tagInfo.split(separator: "::").map { String($0) }
             let author = parts.count > 0 ? parts[0] : nil
             let date = parts.count > 1 ? ISO8601DateFormatter().date(from: parts[1]) : nil
             let message = parts.count > 2 ? parts[2] : nil
@@ -74,9 +74,9 @@ extension ShellGit {
         let tagNames = try tags(for: commit, at: path)
         var tags: [MagicGitTag] = []
         for name in tagNames {
-            let commitHash = (try? Shell.runSync("git rev-list -n 1 \(name)", at: path)) ?? ""
-            let tagInfo = (try? Shell.runSync("git for-each-ref refs/tags/\(name) --format='%(taggername)::%(taggerdate)::%(subject)'", at: path)) ?? "::"
-            let parts = tagInfo.replacingOccurrences(of: "'", with: "").split(separator: "::").map { String($0) }
+            let commitHash = (try? Shell.runSync("git rev-list -n 1 \(shellQuoted(name))", at: path)) ?? ""
+            let tagInfo = (try? Shell.runSync("git for-each-ref \(shellQuoted("refs/tags/\(name)")) --format='%(taggername)::%(taggerdate)::%(subject)'", at: path)) ?? "::"
+            let parts = tagInfo.split(separator: "::").map { String($0) }
             let author = parts.count > 0 ? parts[0] : nil
             let date = parts.count > 1 ? ISO8601DateFormatter().date(from: parts[1]) : nil
             let message = parts.count > 2 ? parts[2] : nil
