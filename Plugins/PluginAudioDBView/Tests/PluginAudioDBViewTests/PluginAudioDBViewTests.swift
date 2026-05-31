@@ -200,19 +200,29 @@ import UniformTypeIdentifiers
         currentGeneration: 2,
         requestGeneration: 2,
         requestedURL: first,
-        selection: first
+        selection: first,
+        displayedURLs: [first, second]
     ))
     #expect(!AudioListSelectionPolicy.shouldApplySelection(
         currentGeneration: 3,
         requestGeneration: 2,
         requestedURL: first,
-        selection: first
+        selection: first,
+        displayedURLs: [first, second]
     ))
     #expect(!AudioListSelectionPolicy.shouldApplySelection(
         currentGeneration: 2,
         requestGeneration: 2,
         requestedURL: first,
-        selection: second
+        selection: second,
+        displayedURLs: [first, second]
+    ))
+    #expect(!AudioListSelectionPolicy.shouldApplySelection(
+        currentGeneration: 2,
+        requestGeneration: 2,
+        requestedURL: first,
+        selection: first,
+        displayedURLs: [second]
     ))
 }
 
@@ -229,6 +239,13 @@ import UniformTypeIdentifiers
     try Data("audio".utf8).write(to: realFile)
     try FileManager.default.createSymbolicLink(at: linkedFile, withDestinationURL: realFile)
 
+    #expect(AudioListSelectionPolicy.shouldApplySelection(
+        currentGeneration: 2,
+        requestGeneration: 2,
+        requestedURL: linkedFile,
+        selection: realFile,
+        displayedURLs: [realFile]
+    ))
     #expect(AudioListSelectionPolicy.representsSameAudio(realFile, linkedFile))
     #expect(AudioListSelectionPolicy.representsSameAudio(nil, nil))
     #expect(!AudioListSelectionPolicy.representsSameAudio(realFile, nil))

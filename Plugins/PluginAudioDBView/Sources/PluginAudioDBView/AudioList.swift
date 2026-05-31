@@ -61,8 +61,16 @@ enum AudioListDeletionPolicy {
 }
 
 enum AudioListSelectionPolicy {
-    static func shouldApplySelection(currentGeneration: Int, requestGeneration: Int, requestedURL: URL?, selection: URL?) -> Bool {
-        currentGeneration == requestGeneration && requestedURL == selection
+    static func shouldApplySelection(
+        currentGeneration: Int,
+        requestGeneration: Int,
+        requestedURL: URL,
+        selection: URL?,
+        displayedURLs: [URL]
+    ) -> Bool {
+        currentGeneration == requestGeneration
+            && representsSameAudio(requestedURL, selection)
+            && displayedURLs.contains { representsSameAudio($0, requestedURL) }
     }
 
     static func representsSameAudio(_ lhs: URL?, _ rhs: URL?) -> Bool {
@@ -517,7 +525,8 @@ extension AudioList {
                     currentGeneration: selectionGeneration,
                     requestGeneration: generation,
                     requestedURL: url,
-                    selection: selection
+                    selection: selection,
+                    displayedURLs: urls
                 ) else {
                     return
                 }
