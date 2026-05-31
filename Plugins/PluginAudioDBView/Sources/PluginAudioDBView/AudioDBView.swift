@@ -169,9 +169,30 @@ extension AudioDBView {
 
     nonisolated static func supportedImportURLs(from urls: [URL], supportedExtensions: [String]) -> [URL] {
         let supportedExtensions = Set(supportedExtensions.map { $0.lowercased() })
-        return urls.filter { url in
-            !url.isFolder && supportedExtensions.contains(url.pathExtension.lowercased())
+        var supportedURLs: [URL] = []
+
+        for url in urls {
+            guard !url.isFolder && supportedExtensions.contains(url.pathExtension.lowercased()) else {
+                continue
+            }
+
+            guard !supportedURLs.contains(where: { representsSameImportSource($0, url) }) else {
+                continue
+            }
+
+            supportedURLs.append(url)
         }
+
+        return supportedURLs
+    }
+
+    nonisolated static func representsSameImportSource(_ lhs: URL, _ rhs: URL) -> Bool {
+        guard lhs.isFileURL, rhs.isFileURL else {
+            return lhs.standardized.absoluteString == rhs.standardized.absoluteString
+        }
+
+        return lhs.resolvingSymlinksInPath().standardizedFileURL.path
+            == rhs.resolvingSymlinksInPath().standardizedFileURL.path
     }
 
     nonisolated static func droppedFileURL(from provider: NSItemProvider) async throws -> URL? {

@@ -349,6 +349,26 @@ import UniformTypeIdentifiers
     ) == [supported])
 }
 
+@Test func audioImportDeduplicatesSymlinkedImportSources() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realFile = root.appendingPathComponent("real.mp3")
+    let linkedFile = root.appendingPathComponent("linked.mp3")
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    try Data("audio".utf8).write(to: realFile)
+    try FileManager.default.createSymbolicLink(at: linkedFile, withDestinationURL: realFile)
+
+    #expect(AudioDBView.representsSameImportSource(realFile, linkedFile))
+    #expect(AudioDBView.supportedImportURLs(
+        from: [linkedFile, realFile],
+        supportedExtensions: ["mp3"]
+    ) == [linkedFile])
+}
+
 @Test func audioDropReadsFileURLDataProvider() async throws {
     let expected = URL(fileURLWithPath: "/tmp/cisum-audio-drop-provider-tests/track.mp3")
     let provider = NSItemProvider()
