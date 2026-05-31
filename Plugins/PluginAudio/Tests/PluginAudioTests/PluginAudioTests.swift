@@ -165,6 +165,37 @@ import SwiftData
     #expect(await db.getTotalOfAudio() == 1)
 }
 
+@Test
+@MainActor
+func audioRepoSingleDeleteRejectsFilesOutsideLibrary() async throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let disk = root.appendingPathComponent("audio", isDirectory: true)
+    let outside = root.appendingPathComponent("outside", isDirectory: true)
+    let databaseURL = root.appendingPathComponent("audio.store")
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: disk, withIntermediateDirectories: true)
+    try FileManager.default.createDirectory(at: outside, withIntermediateDirectories: true)
+    let file = outside.appendingPathComponent("track.mp3")
+    try Data("audio".utf8).write(to: file)
+
+    let repo = try AudioRepo(disk: disk, databaseURL: databaseURL, reason: "audioRepoSingleDeleteRejectsFilesOutsideLibrary")
+    await repo.sync([file], isFirst: true)
+
+    do {
+        try await repo.delete(AudioModel(file), verbose: false)
+        Issue.record("Single-item delete should use the same library containment guard as batch delete")
+    } catch {
+        #expect(error.localizedDescription.contains("outside the current library"))
+    }
+
+    #expect(FileManager.default.fileExists(atPath: file.path))
+    #expect(await repo.getTotalCount() == 1)
+}
+
 @Test func audioDBDeleteAudiosByURLRejectsLibraryRoot() async throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)
