@@ -119,7 +119,7 @@ import Foundation
     #expect(RepositoryInfoActionPolicy.canOpenInFinder(root))
     #expect(!RepositoryInfoActionPolicy.canOpenInFinder(missingRoot))
     #expect(!RepositoryInfoActionPolicy.canOpenInFinder(nil))
-    #expect(RepositoryInfoActionPolicy.canOpenInFinder(URL(string: "https://example.com")!))
+    #expect(!RepositoryInfoActionPolicy.canOpenInFinder(URL(string: "https://example.com")!))
 }
 
 @Test func directStorageSwitchUsesAccurateCompletionMessage() {

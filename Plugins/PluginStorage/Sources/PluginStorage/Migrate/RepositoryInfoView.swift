@@ -8,7 +8,7 @@ enum RepositoryInfoActionPolicy {
         fileExists: (String) -> Bool = FileManager.default.fileExists(atPath:)
     ) -> Bool {
         guard let url else { return false }
-        guard url.isFileURL else { return true }
+        guard url.isFileURL else { return false }
         return fileExists(url.path)
     }
 }
