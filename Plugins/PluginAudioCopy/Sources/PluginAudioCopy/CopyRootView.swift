@@ -206,10 +206,13 @@
         }
 
         nonisolated static func uniqueSupportedAudioSources(_ urls: [URL]) -> [URL] {
+            var seenIdentities = Set<String>()
             var uniqueURLs: [URL] = []
+            uniqueURLs.reserveCapacity(urls.count)
 
             for url in urls where isSupportedAudioFile(url) {
-                guard !uniqueURLs.contains(where: { representsSameCopySource($0, url) }) else {
+                let identity = canonicalCopySourceIdentity(for: url)
+                guard seenIdentities.insert(identity).inserted else {
                     continue
                 }
 
@@ -220,12 +223,15 @@
         }
 
         nonisolated static func representsSameCopySource(_ lhs: URL, _ rhs: URL) -> Bool {
-            guard lhs.isFileURL, rhs.isFileURL else {
-                return lhs.standardized.absoluteString == rhs.standardized.absoluteString
+            canonicalCopySourceIdentity(for: lhs) == canonicalCopySourceIdentity(for: rhs)
+        }
+
+        nonisolated static func canonicalCopySourceIdentity(for url: URL) -> String {
+            guard url.isFileURL else {
+                return url.standardized.absoluteString
             }
 
-            return lhs.resolvingSymlinksInPath().standardizedFileURL.path
-                == rhs.resolvingSymlinksInPath().standardizedFileURL.path
+            return url.resolvingSymlinksInPath().standardizedFileURL.path
         }
 
         nonisolated static func shouldShowNoFilesAdded(taskCount: Int, preparationErrors: [Error]) -> Bool {

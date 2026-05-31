@@ -46,6 +46,7 @@ import Testing
     try FileManager.default.createSymbolicLink(at: linkedFile, withDestinationURL: realFile)
 
     #expect(CopyRootView<EmptyView>.representsSameCopySource(realFile, linkedFile))
+    #expect(CopyRootView<EmptyView>.canonicalCopySourceIdentity(for: realFile) == CopyRootView<EmptyView>.canonicalCopySourceIdentity(for: linkedFile))
     #expect(CopyRootView<EmptyView>.uniqueSupportedAudioSources([
         linkedFile,
         unsupported,
