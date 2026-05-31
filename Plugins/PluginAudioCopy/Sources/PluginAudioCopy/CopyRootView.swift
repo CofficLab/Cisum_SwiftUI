@@ -11,13 +11,15 @@
     enum AudioCopyLimitPolicy {
         static func allowedTaskCount(
             currentAudioCount: Int,
+            pendingCopyTaskCount: Int = 0,
             requestedTaskCount: Int,
             maxAudioCount: Int,
             isFreeVersion: Bool
         ) -> Int {
             guard isFreeVersion else { return requestedTaskCount }
 
-            let remainingCount = max(0, maxAudioCount - currentAudioCount)
+            let occupiedCount = currentAudioCount + pendingCopyTaskCount
+            let remainingCount = max(0, maxAudioCount - occupiedCount)
             return min(requestedTaskCount, remainingCount)
         }
     }

@@ -193,6 +193,7 @@ import Testing
 @Test func copyLimitCountsCurrentLibraryAndIncomingDrop() {
     #expect(AudioCopyLimitPolicy.allowedTaskCount(
         currentAudioCount: 99,
+        pendingCopyTaskCount: 0,
         requestedTaskCount: 10,
         maxAudioCount: 100,
         isFreeVersion: true
@@ -200,6 +201,7 @@ import Testing
 
     #expect(AudioCopyLimitPolicy.allowedTaskCount(
         currentAudioCount: 100,
+        pendingCopyTaskCount: 0,
         requestedTaskCount: 10,
         maxAudioCount: 100,
         isFreeVersion: true
@@ -207,10 +209,27 @@ import Testing
 
     #expect(AudioCopyLimitPolicy.allowedTaskCount(
         currentAudioCount: 100,
+        pendingCopyTaskCount: 0,
         requestedTaskCount: 10,
         maxAudioCount: 100,
         isFreeVersion: false
     ) == 10)
+
+    #expect(AudioCopyLimitPolicy.allowedTaskCount(
+        currentAudioCount: 99,
+        pendingCopyTaskCount: 1,
+        requestedTaskCount: 10,
+        maxAudioCount: 100,
+        isFreeVersion: true
+    ) == 0)
+
+    #expect(AudioCopyLimitPolicy.allowedTaskCount(
+        currentAudioCount: 90,
+        pendingCopyTaskCount: 5,
+        requestedTaskCount: 10,
+        maxAudioCount: 100,
+        isFreeVersion: true
+    ) == 5)
 }
 
 @Test func copyDropSkipsNoFilesAlertAfterPreparationFailure() {

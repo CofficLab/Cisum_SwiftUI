@@ -83,7 +83,8 @@ public enum AudioCopyService {
             return false
         }
         let count = await audioCountProvider()
-        return count >= AudioPluginInfo.maxAudioCount && StoreService.tierCached().isFreeVersion
+        let pendingCount = await pendingCopyTaskCount()
+        return count + pendingCount >= AudioPluginInfo.maxAudioCount && StoreService.tierCached().isFreeVersion
     }
 
     static func allowedTaskCount(requestedTaskCount: Int) async -> Int {
@@ -92,8 +93,10 @@ public enum AudioCopyService {
         }
 
         let count = await audioCountProvider()
+        let pendingCount = await pendingCopyTaskCount()
         return AudioCopyLimitPolicy.allowedTaskCount(
             currentAudioCount: count,
+            pendingCopyTaskCount: pendingCount,
             requestedTaskCount: requestedTaskCount,
             maxAudioCount: AudioPluginInfo.maxAudioCount,
             isFreeVersion: StoreService.tierCached().isFreeVersion
@@ -102,6 +105,15 @@ public enum AudioCopyService {
 
     static func getAudioDisk() -> URL? {
         audioDiskProvider?()
+    }
+
+    private static func pendingCopyTaskCount() async -> Int {
+        guard let db = getDB() else {
+            return 0
+        }
+
+        let tasks = await db.allCopyTaskDTOs()
+        return tasks.filter(\.error.isEmpty).count
     }
 
     private static func createDatabaseFile(name: String) throws -> URL {
