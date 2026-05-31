@@ -38,6 +38,33 @@ import SwiftUI
     #expect(sequenceNext == nil)
 }
 
+@Test func chapterNavigationMatchesSymlinkedCurrentChapter() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realBook = root.appendingPathComponent("RealBook", isDirectory: true)
+    let linkedBook = root.appendingPathComponent("LinkedBook", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: realBook, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedBook, withDestinationURL: realBook)
+    let currentChapter = realBook.appendingPathComponent("001.m4b")
+    let nextChapter = realBook.appendingPathComponent("002.m4b")
+    try Data("audio".utf8).write(to: currentChapter)
+    try Data("audio".utf8).write(to: nextChapter)
+
+    let chapters = BookControlChapterLoader.playableChapters(in: linkedBook)
+    let next = BookControlRootView<EmptyView>.adjacentAsset(
+        in: chapters,
+        current: currentChapter,
+        offset: 1,
+        playMode: .sequence
+    )
+
+    #expect(next == linkedBook.appendingPathComponent("002.m4b"))
+}
+
 @Test func navigationResultOnlyAppliesToUnchangedCurrentChapter() {
     let requested = URL(fileURLWithPath: "/tmp/book/001.m4b")
     let switched = URL(fileURLWithPath: "/tmp/book/002.m4b")

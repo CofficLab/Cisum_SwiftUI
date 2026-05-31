@@ -186,6 +186,29 @@ import UniformTypeIdentifiers
     #expect(BookPlaybackOrdering.relativePath(sibling, in: root) == "01.m4b")
 }
 
+@Test func bookPlaybackOrderingMatchesSymlinkedPlayableChildren() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realBook = root.appendingPathComponent("RealBook", isDirectory: true)
+    let linkedBook = root.appendingPathComponent("LinkedBook", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: realBook, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedBook, withDestinationURL: realBook)
+    let savedChapter = realBook.appendingPathComponent("001.m4b")
+    try Data("audio".utf8).write(to: savedChapter)
+
+    let playable = BookPlaybackOrdering.playableChildren(for: linkedBook)
+
+    #expect(BookPlaybackOrdering.contains(savedChapter, in: playable))
+    #expect(BookPlaybackOrdering.representsSameFile(
+        savedChapter,
+        linkedBook.appendingPathComponent("001.m4b")
+    ))
+}
+
 @Test func bookTileReloadsWhenDatabaseRootChanges() {
     let bookURL = URL(fileURLWithPath: "/tmp/cisum-book-tile/book")
     let firstRoot = URL(fileURLWithPath: "/tmp/cisum-book-tile/db-1")

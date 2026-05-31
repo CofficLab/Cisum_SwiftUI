@@ -19,14 +19,52 @@ enum BookPlaybackOrdering {
     }
 
     static func playableChildren(for root: URL) -> [URL] {
-        root.flatten()
+        let scanRoot = root.isFolder ? root : root.resolvingSymlinksInPath().standardizedFileURL
+
+        return scanRoot.flatten()
             .filter { url in
                 !url.isFolder
                     && FileManager.default.fileExists(atPath: url.path)
                     && BookPluginInfo.supportedExtensions.contains(url.pathExtension.lowercased())
             }
+            .map { mappedURL($0, from: scanRoot, to: root) }
             .sorted {
                 relativePath($0, in: root).localizedStandardCompare(relativePath($1, in: root)) == .orderedAscending
             }
+    }
+
+    private static func mappedURL(_ url: URL, from scanRoot: URL, to root: URL) -> URL {
+        let scanRootPath = scanRoot.standardizedFileURL.path
+        let rootPath = root.standardizedFileURL.path
+        let urlPath = url.standardizedFileURL.path
+
+        guard scanRootPath != rootPath,
+              let relativePath = relativePath(of: urlPath, in: scanRootPath) else {
+            return url
+        }
+
+        return root.appendingPathComponent(relativePath).standardizedFileURL
+    }
+
+    private static func relativePath(of childPath: String, in parentPath: String) -> String? {
+        if childPath == parentPath {
+            return ""
+        }
+
+        let prefix = parentPath.hasSuffix("/") ? parentPath : parentPath + "/"
+        guard childPath.hasPrefix(prefix) else {
+            return nil
+        }
+
+        return String(childPath.dropFirst(prefix.count))
+    }
+
+    static func contains(_ url: URL, in urls: [URL]) -> Bool {
+        urls.contains { representsSameFile($0, url) }
+    }
+
+    static func representsSameFile(_ lhs: URL, _ rhs: URL) -> Bool {
+        lhs.resolvingSymlinksInPath().standardizedFileURL.path
+            == rhs.resolvingSymlinksInPath().standardizedFileURL.path
     }
 }

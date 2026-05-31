@@ -190,7 +190,8 @@ extension BookGrid {
         
         // 查找包含该URL的书籍
         for book in books {
-            if book.url == url || playableChildren(for: book).contains(url) {
+            if BookPlaybackOrdering.representsSameFile(book.url, url)
+                || BookPlaybackOrdering.contains(url, in: playableChildren(for: book)) {
                 if Self.verbose {
                     os_log("\(self.t)✅ 找到书籍: \(book.bookTitle)")
                 }
@@ -210,12 +211,12 @@ extension BookGrid {
     }
 
     private func isPlayableSavedURL(_ savedURL: URL, in book: BookDTO, playableChildren: [URL]) -> Bool {
-        if book.url == savedURL {
+        if BookPlaybackOrdering.representsSameFile(book.url, savedURL) {
             return FileManager.default.fileExists(atPath: savedURL.path)
                 && BookPluginInfo.supportedExtensions.contains(savedURL.pathExtension.lowercased())
         }
 
-        return playableChildren.contains(savedURL)
+        return BookPlaybackOrdering.contains(savedURL, in: playableChildren)
     }
 
     private func play(_ url: URL, at time: TimeInterval?, reason: String) async {

@@ -128,16 +128,32 @@ enum BookControlChapterLoader {
     }
 
     static func playableChapters(in root: URL) -> [URL] {
-        root
+        let scanRoot = root.isFolder ? root : root.resolvingSymlinksInPath().standardizedFileURL
+
+        return scanRoot
             .flatten()
             .filter { url in
                 !url.isFolder
                     && FileManager.default.fileExists(atPath: url.path)
                     && BookPluginInfo.supportedExtensions.contains(url.pathExtension.lowercased())
             }
+            .map { mappedURL($0, from: scanRoot, to: root) }
             .sorted {
                 relativePath($0, in: root).localizedStandardCompare(relativePath($1, in: root)) == .orderedAscending
             }
+    }
+
+    private static func mappedURL(_ url: URL, from scanRoot: URL, to root: URL) -> URL {
+        let scanRootPath = scanRoot.standardizedFileURL.path
+        let rootPath = root.standardizedFileURL.path
+        let urlPath = url.standardizedFileURL.path
+
+        guard scanRootPath != rootPath,
+              let relativePath = BookControlPathContainment.relativePath(of: urlPath, in: scanRootPath) else {
+            return url
+        }
+
+        return root.appendingPathComponent(relativePath).standardizedFileURL
     }
 
     static func adjacentAsset(
@@ -146,7 +162,8 @@ enum BookControlChapterLoader {
         offset: Int,
         playMode: MagicPlayMode
     ) -> URL? {
-        guard !chapters.isEmpty, let index = chapters.firstIndex(of: asset) else { return nil }
+        guard !chapters.isEmpty,
+              let index = chapters.firstIndex(where: { isSameFile($0, asset) }) else { return nil }
 
         let adjacentIndex = index + offset
         if chapters.indices.contains(adjacentIndex) {
@@ -161,6 +178,11 @@ enum BookControlChapterLoader {
         case .sequence, .loop:
             return nil
         }
+    }
+
+    private static func isSameFile(_ lhs: URL, _ rhs: URL) -> Bool {
+        lhs.resolvingSymlinksInPath().standardizedFileURL.path
+            == rhs.resolvingSymlinksInPath().standardizedFileURL.path
     }
 }
 
