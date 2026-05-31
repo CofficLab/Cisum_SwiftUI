@@ -10,6 +10,24 @@ class ShellProcess: SuperLog {
     static func shellQuoted(_ value: String) -> String {
         "'\(value.replacingOccurrences(of: "'", with: "'\\''"))'"
     }
+
+    static func normalizedPID(_ pid: String) -> String? {
+        let trimmed = pid.trimmingCharacters(in: .whitespacesAndNewlines)
+        let isDecimalPID = trimmed.unicodeScalars.allSatisfy { scalar in
+            (48...57).contains(scalar.value)
+        }
+        guard !trimmed.isEmpty, isDecimalPID, trimmed != "0" else {
+            return nil
+        }
+        return trimmed
+    }
+
+    static func requireCommand(_ command: String?, fallback: String) throws -> String {
+        guard let command else {
+            throw ShellError.commandFailed("Invalid process id", fallback)
+        }
+        return command
+    }
     
     /// 进程信息结构体
     struct ProcessInfo {
@@ -70,8 +88,10 @@ class ShellProcess: SuperLog {
     /// - Returns: 进程信息
     static func findProcess(pid: String) -> ProcessInfo? {
         do {
-            let result = try Shell.runSync(findProcessCommand(pid: pid))
+            guard let command = findProcessCommand(pid: pid) else { return nil }
+            let result = try Shell.runSync(command)
             let lines = result.components(separatedBy: CharacterSet.newlines)
+                .dropFirst()
                 .filter { !$0.isEmpty }
             
             return lines.first.flatMap { ProcessInfo.fromPSLine($0) }
@@ -84,14 +104,14 @@ class ShellProcess: SuperLog {
     /// - Parameter pid: 进程ID
     /// - Throws: 杀死进程失败时抛出错误
     static func killProcess(pid: String) throws {
-        try Shell.runSync(killProcessCommand(pid: pid))
+        try Shell.runSync(requireCommand(killProcessCommand(pid: pid), fallback: "kill \(pid)"))
     }
     
     /// 强制杀死进程
     /// - Parameter pid: 进程ID
     /// - Throws: 杀死进程失败时抛出错误
     static func forceKillProcess(pid: String) throws {
-        try Shell.runSync(forceKillProcessCommand(pid: pid))
+        try Shell.runSync(requireCommand(forceKillProcessCommand(pid: pid), fallback: "kill -9 \(pid)"))
     }
     
     /// 根据进程名杀死所有匹配的进程
@@ -107,7 +127,7 @@ class ShellProcess: SuperLog {
     static func getProcessTree(pid: String? = nil) -> String {
         do {
             if let pid = pid {
-                return try Shell.runSync(processTreeCommand(pid: pid))
+                return try Shell.runSync(requireCommand(processTreeCommand(pid: pid), fallback: "pstree \(pid)"))
             } else {
                 return try Shell.runSync("pstree")
             }
@@ -188,24 +208,28 @@ class ShellProcess: SuperLog {
         "ps aux | grep \(shellQuoted(name)) | grep -v grep"
     }
 
-    static func findProcessCommand(pid: String) -> String {
-        "ps aux | grep \(shellQuoted("\\b\(pid)\\b")) | grep -v grep"
+    static func findProcessCommand(pid: String) -> String? {
+        guard let pid = normalizedPID(pid) else { return nil }
+        return "ps -p \(pid) -o user,pid,%cpu,%mem,vsz,rss,tt,stat,start,time,command"
     }
 
-    static func killProcessCommand(pid: String) -> String {
-        "kill \(shellQuoted(pid))"
+    static func killProcessCommand(pid: String) -> String? {
+        guard let pid = normalizedPID(pid) else { return nil }
+        return "kill \(pid)"
     }
 
-    static func forceKillProcessCommand(pid: String) -> String {
-        "kill -9 \(shellQuoted(pid))"
+    static func forceKillProcessCommand(pid: String) -> String? {
+        guard let pid = normalizedPID(pid) else { return nil }
+        return "kill -9 \(pid)"
     }
 
     static func killProcessesCommand(named name: String) -> String {
         "pkill \(shellQuoted(name))"
     }
 
-    static func processTreeCommand(pid: String) -> String {
-        "pstree \(shellQuoted(pid))"
+    static func processTreeCommand(pid: String) -> String? {
+        guard let pid = normalizedPID(pid) else { return nil }
+        return "pstree \(pid)"
     }
 
     static func launchAppCommand(_ appName: String) -> String {
@@ -220,12 +244,14 @@ class ShellProcess: SuperLog {
         "pgrep \(shellQuoted(name))"
     }
 
-    static func processDetailsCommand(pid: String) -> String {
-        "ps -p \(shellQuoted(pid)) -o pid,ppid,user,time,command"
+    static func processDetailsCommand(pid: String) -> String? {
+        guard let pid = normalizedPID(pid) else { return nil }
+        return "ps -p \(pid) -o pid,ppid,user,time,command"
     }
 
-    static func monitorProcessCommand(pid: String) -> String {
-        "top -pid \(shellQuoted(pid)) -l 1"
+    static func monitorProcessCommand(pid: String) -> String? {
+        guard let pid = normalizedPID(pid) else { return nil }
+        return "top -pid \(pid) -l 1"
     }
 
     static func startServiceCommand(_ serviceName: String) -> String {
@@ -282,7 +308,7 @@ class ShellProcess: SuperLog {
     /// - Returns: 进程详细信息
     static func getProcessDetails(pid: String) -> String {
         do {
-            return try Shell.runSync(processDetailsCommand(pid: pid))
+            return try Shell.runSync(requireCommand(processDetailsCommand(pid: pid), fallback: "ps -p \(pid)"))
         } catch {
             return error.localizedDescription
         }
@@ -293,7 +319,7 @@ class ShellProcess: SuperLog {
     /// - Returns: 资源使用情况
     static func monitorProcess(pid: String) -> String {
         do {
-            return try Shell.runSync(monitorProcessCommand(pid: pid))
+            return try Shell.runSync(requireCommand(monitorProcessCommand(pid: pid), fallback: "top -pid \(pid)"))
         } catch {
             return error.localizedDescription
         }
