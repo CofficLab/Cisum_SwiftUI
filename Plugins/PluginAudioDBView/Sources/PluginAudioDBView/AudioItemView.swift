@@ -12,12 +12,7 @@ enum AudioItemFileSizeLoadPolicy {
     }
 
     private static func representsSameFile(_ lhs: URL, _ rhs: URL) -> Bool {
-        guard lhs.isFileURL, rhs.isFileURL else {
-            return lhs.standardized.absoluteString == rhs.standardized.absoluteString
-        }
-
-        return lhs.resolvingSymlinksInPath().standardizedFileURL.path
-            == rhs.resolvingSymlinksInPath().standardizedFileURL.path
+        lhs.isSameFileLocation(as: rhs)
     }
 }
 
