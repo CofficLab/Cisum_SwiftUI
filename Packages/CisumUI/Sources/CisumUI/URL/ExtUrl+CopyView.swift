@@ -302,6 +302,10 @@ private struct FileCopyProgressView: View, SuperLog {
             os_log("\(self.t)源文件大小: \(sourceSize) bytes")
         }
         let fileManager = FileManager.default
+
+        guard !source.isSameFileLocation(as: finalDestination) else {
+            throw MagicError.fileError("Cannot copy a file onto itself: \(source.lastPathComponent)")
+        }
         
         // 如果目标是文件夹，确保文件夹存在
         if destination.hasDirectoryPath {

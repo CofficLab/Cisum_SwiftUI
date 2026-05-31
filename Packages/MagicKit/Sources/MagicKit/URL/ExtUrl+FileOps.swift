@@ -72,6 +72,16 @@ public extension URL {
         !isFolder
     }
 
+    /// Whether two file URLs resolve to the same filesystem location.
+    func isSameFileLocation(as other: URL) -> Bool {
+        guard isFileURL, other.isFileURL else {
+            return standardized.absoluteString == other.standardized.absoluteString
+        }
+
+        return resolvingSymlinksInPath().standardizedFileURL.path
+            == other.resolvingSymlinksInPath().standardizedFileURL.path
+    }
+
     /// Whether a local/iCloud file is available on disk.
     var isDownloaded: Bool {
         let fileExists = isFileURL && FileManager.default.fileExists(atPath: path)
@@ -131,6 +141,10 @@ public extension URL {
         downloadProgress: ((Double) -> Void)? = nil
     ) async throws {
         try await ensureLocalAvailability()
+
+        guard !isSameFileLocation(as: destination) else {
+            throw MagicError.fileError("Cannot copy a file onto itself: \(lastPathComponent)")
+        }
 
         if FileManager.default.fileExists(atPath: destination.path) {
             try FileManager.default.removeItem(at: destination)

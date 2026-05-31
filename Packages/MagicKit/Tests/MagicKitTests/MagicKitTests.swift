@@ -51,6 +51,44 @@ final class MagicKitTests: XCTestCase {
         try await file.ensureLocalAvailability(timeout: 0.1, pollInterval: 0.05)
     }
 
+    func testCopyToRejectsCopyingFileOntoItselfWithoutDeletingSource() async throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer {
+            try? FileManager.default.removeItem(at: root)
+        }
+
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        let file = root.appendingPathComponent("track.mp3")
+        let originalData = Data("audio".utf8)
+        try originalData.write(to: file)
+
+        do {
+            try await file.copyTo(file, verbose: false, caller: "test")
+            XCTFail("Copying a file onto itself should throw")
+        } catch {
+            XCTAssertTrue(FileManager.default.fileExists(atPath: file.path))
+            XCTAssertEqual(try Data(contentsOf: file), originalData)
+        }
+    }
+
+    func testSameFileLocationNormalizesRelativeSegments() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer {
+            try? FileManager.default.removeItem(at: root)
+        }
+
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        let file = root.appendingPathComponent("track.mp3")
+        let equivalent = root
+            .appendingPathComponent("subdir")
+            .appendingPathComponent("..")
+            .appendingPathComponent("track.mp3")
+
+        XCTAssertTrue(file.isSameFileLocation(as: equivalent))
+    }
+
     func testMagicLoggerClearLogsFromBackgroundClearsOnMainThread() async throws {
         let logger = MagicLogger(app: "MagicKitTests")
         logger.info("background clear setup")
