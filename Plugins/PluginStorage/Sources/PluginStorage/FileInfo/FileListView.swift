@@ -34,15 +34,9 @@ struct FileListView: View, SuperLog {
         self.url = url
         self.expandByDefault = expandByDefault
 
-        // 创建根目录项
-        let rootItem = FileItem(url: url, level: 0, isExpanded: expandByDefault)
-
-        // 设置初始可见项
-        _visibleItems = State(initialValue: [rootItem])
-
-        if expandByDefault {
-            _expandedItems = State(initialValue: [rootItem])
-        }
+        let state = Self.initialState(rootURL: url, expandByDefault: expandByDefault)
+        _visibleItems = State(initialValue: state.visibleItems)
+        _expandedItems = State(initialValue: state.expandedItems)
     }
 
     var body: some View {
@@ -112,6 +106,32 @@ struct FileListView: View, SuperLog {
                 updateVisibleItems(reason: "onAppear")
             }
         }
+        .onChange(of: url) { _, newURL in
+            resetRoot(to: newURL)
+        }
+    }
+
+    private func resetRoot(to newURL: URL) {
+        updateGeneration += 1
+        let state = Self.initialState(rootURL: newURL, expandByDefault: expandByDefault)
+        selection.removeAll()
+        expandedItems = state.expandedItems
+        visibleItems = state.visibleItems
+        itemCache.removeAll()
+        loadErrorMessage = nil
+
+        if expandByDefault {
+            updateVisibleItems(reason: "rootChanged")
+        }
+    }
+
+    nonisolated static func initialState(
+        rootURL: URL,
+        expandByDefault: Bool
+    ) -> (visibleItems: [FileItem], expandedItems: Set<FileItem>) {
+        let rootItem = FileItem(url: rootURL, level: 0, isExpanded: expandByDefault)
+        let expandedItems: Set<FileItem> = expandByDefault ? [rootItem] : []
+        return ([rootItem], expandedItems)
     }
 
     private func setExpanded(_ isExpanded: Bool, for item: FileItem) {

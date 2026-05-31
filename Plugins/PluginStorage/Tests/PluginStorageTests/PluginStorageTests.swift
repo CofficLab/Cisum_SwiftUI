@@ -51,6 +51,20 @@ import Foundation
     )[folder] == cachedItems[folder])
 }
 
+@Test func fileListRootStateTracksChangedRepositoryURL() {
+    let firstRoot = URL(fileURLWithPath: "/tmp/cisum-storage-file-list/first", isDirectory: true)
+    let secondRoot = URL(fileURLWithPath: "/tmp/cisum-storage-file-list/second", isDirectory: true)
+
+    let collapsed = FileListView.initialState(rootURL: firstRoot, expandByDefault: false)
+    let expanded = FileListView.initialState(rootURL: secondRoot, expandByDefault: true)
+
+    #expect(collapsed.visibleItems.map(\.url) == [firstRoot])
+    #expect(collapsed.expandedItems.isEmpty)
+    #expect(expanded.visibleItems.map(\.url) == [secondRoot])
+    #expect(expanded.expandedItems.contains(FileItem(url: secondRoot, level: 0, isExpanded: true)))
+    #expect(!expanded.expandedItems.contains(FileItem(url: firstRoot, level: 0, isExpanded: true)))
+}
+
 @Test func fileInfoCellsOnlyApplyCurrentURLResults() {
     let first = URL(fileURLWithPath: "/tmp/cisum-storage-file-info/first")
     let second = URL(fileURLWithPath: "/tmp/cisum-storage-file-info/second")
