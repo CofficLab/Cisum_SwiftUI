@@ -36,6 +36,10 @@ enum AudioProgressPersistencePolicy {
         restoredAsset != currentAsset
     }
 
+    static func shouldApplyCurrentURLChange(requestedURL: URL?, currentAsset: URL?) -> Bool {
+        requestedURL == currentAsset
+    }
+
     static func shouldApplyWidgetMetadataResult(requestedAsset: URL, currentAsset: URL?) -> Bool {
         requestedAsset == currentAsset
     }
@@ -285,6 +289,13 @@ extension AudioProgressRootView {
         syncToWidget(url: url, isPlaying: man.state == .playing)
 
         Task {
+            guard AudioProgressPersistencePolicy.shouldApplyCurrentURLChange(
+                requestedURL: url,
+                currentAsset: man.currentAsset
+            ) else {
+                return
+            }
+
             let storedURL = AudioStateRepo.getCurrent()
             AudioStateRepo.storeCurrent(AudioProgressPersistencePolicy.currentURLToStore(url))
             if AudioProgressPersistencePolicy.shouldResetGlobalTimeWhenCurrentURLChanges(from: storedURL, to: url) {

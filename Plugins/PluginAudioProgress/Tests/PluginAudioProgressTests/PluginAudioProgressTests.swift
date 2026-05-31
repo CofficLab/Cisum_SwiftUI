@@ -98,6 +98,28 @@ import Testing
     ))
 }
 
+@Test func staleCurrentAudioURLChangeDoesNotOverwriteNewTrack() {
+    let requested = URL(fileURLWithPath: "/tmp/audio/track-01.mp3")
+    let switched = URL(fileURLWithPath: "/tmp/audio/track-02.mp3")
+
+    #expect(AudioProgressPersistencePolicy.shouldApplyCurrentURLChange(
+        requestedURL: requested,
+        currentAsset: requested
+    ))
+    #expect(!AudioProgressPersistencePolicy.shouldApplyCurrentURLChange(
+        requestedURL: requested,
+        currentAsset: switched
+    ))
+    #expect(!AudioProgressPersistencePolicy.shouldApplyCurrentURLChange(
+        requestedURL: requested,
+        currentAsset: nil
+    ))
+    #expect(AudioProgressPersistencePolicy.shouldApplyCurrentURLChange(
+        requestedURL: nil,
+        currentAsset: nil
+    ))
+}
+
 @Test func widgetMetadataResultOnlyAppliesToStillCurrentAudio() {
     let requested = URL(fileURLWithPath: "/tmp/audio/track-01.mp3")
     let switched = URL(fileURLWithPath: "/tmp/audio/track-02.mp3")
