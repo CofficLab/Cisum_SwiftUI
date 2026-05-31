@@ -30,7 +30,7 @@ extension ShellGit {
     ///   - path: 仓库路径
     /// - Returns: 提交记录列表
     public static func recentCommits(count: Int = 10, at path: String? = nil) throws -> [MagicGitCommit] {
-        let format = "%H|%an|%ae|%at|%s"
+        let format = "%H%x01%an%x01%ae%x01%at%x01%s"
         let output = try Shell.runSync(recentCommitsCommand(count: count, format: format), at: path)
         return output.split(separator: "\n").compactMap { line in
             parseRecentCommitLine(String(line))
@@ -44,7 +44,7 @@ extension ShellGit {
     ///   - path: 仓库路径
     /// - Returns: 提交记录列表
     public static func commits(in branch: String, count: Int = 10, at path: String? = nil) throws -> [MagicGitCommit] {
-        let format = "%H|%an|%ae|%at|%s"
+        let format = "%H%x01%an%x01%ae%x01%at%x01%s"
         let output = try Shell.runSync(commitsInBranchCommand(branch, count: count, format: format), at: path)
         return output.split(separator: "\n").compactMap { line in
             parseRecentCommitLine(String(line))
@@ -57,7 +57,7 @@ extension ShellGit {
     ///   - path: 仓库路径
     /// - Returns: 提交详细信息
     public static func commitDetail(_ commit: String, at path: String? = nil) async throws -> MagicGitCommitDetail {
-        let format = "%H|%an|%ae|%at|%s|%b"
+        let format = "%H%x01%an%x01%ae%x01%at%x01%s%x01%b"
         let output = try Shell.runSync(commitDetailCommand(commit, format: format), at: path)
         let parsedCommit = try parseCommitDetailOutput(output)
 
@@ -77,7 +77,8 @@ extension ShellGit {
     }
 
     static func parseRecentCommitLine(_ line: String) -> MagicGitCommit? {
-        let parts = line.split(separator: "|", maxSplits: 4, omittingEmptySubsequences: false).map { String($0) }
+        let separator = line.contains("\u{01}") ? "\u{01}" : "|"
+        let parts = line.split(separator: Character(separator), maxSplits: 4, omittingEmptySubsequences: false).map { String($0) }
         guard parts.count == 5 else { return nil }
         return MagicGitCommit(
             id: parts[0],
@@ -93,7 +94,8 @@ extension ShellGit {
     }
 
     static func parseCommitDetailOutput(_ output: String) throws -> MagicGitCommitDetail {
-        let parts = output.split(separator: "|", maxSplits: 5, omittingEmptySubsequences: false).map { String($0) }
+        let separator = output.contains("\u{01}") ? "\u{01}" : "|"
+        let parts = output.split(separator: Character(separator), maxSplits: 5, omittingEmptySubsequences: false).map { String($0) }
         guard parts.count == 6 else {
             throw NSError(domain: "ShellGit", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid commit format"])
         }

@@ -21,6 +21,25 @@ import Testing
     #expect(detail.body == "body keeps A | B")
 }
 
+@Test func shellGitCommitDetailParserPreservesPipesInSubjects() throws {
+    let detail = try ShellGit.parseCommitDetailOutput(
+        "abc123\u{01}Author\u{01}author@example.com\u{01}1700000000\u{01}fix: keep A | B visible\u{01}body"
+    )
+
+    #expect(detail.id == "abc123")
+    #expect(detail.message == "fix: keep A | B visible")
+    #expect(detail.body == "body")
+}
+
+@Test func shellGitRecentCommitParserPreservesPipesWithSafeSeparator() throws {
+    let commit = try #require(ShellGit.parseRecentCommitLine(
+        "abc123\u{01}Author\u{01}author@example.com\u{01}1700000000\u{01}fix: keep A | B visible"
+    ))
+
+    #expect(commit.hash == "abc123")
+    #expect(commit.message == "fix: keep A | B visible")
+}
+
 @Test func shellGitLogParserSkipsMalformedRecentCommitRows() {
     #expect(ShellGit.parseRecentCommitLine("abc123|Author|missing fields") == nil)
 }
