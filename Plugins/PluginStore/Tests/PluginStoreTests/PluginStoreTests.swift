@@ -1,3 +1,4 @@
+import Foundation
 import Testing
 @testable import PluginStore
 
@@ -53,4 +54,23 @@ import Testing
         currentGeneration: 4,
         resultGeneration: 3
     ))
+}
+
+@Test
+@MainActor
+func purchaseUpdatePostsStoreTransactionNotification() async {
+    let productID = "com.yueyi.cisum.monthly"
+    let notifications = NotificationCenter.default.notifications(named: .storeTransactionUpdated)
+    let task = Task {
+        for await notification in notifications {
+            return notification.object as? String
+        }
+
+        return nil
+    }
+
+    StoreService.postTransactionUpdated(productID: productID)
+
+    let receivedProductID = await task.value
+    #expect(receivedProductID == productID)
 }

@@ -55,7 +55,7 @@ public enum StoreService: SuperLog {
         let expires: Date? = transaction.expirationDate
         await MainActor.run {
             StoreState.update(entitlement: PurchaseInfo(tier: tier, expiresAt: expires))
-            NotificationCenter.default.post(name: .storeTransactionUpdated, object: transaction.productID)
+            postTransactionUpdated(productID: transaction.productID)
         }
     }
 
@@ -70,7 +70,13 @@ public enum StoreService: SuperLog {
 
         await MainActor.run {
             StoreState.update(entitlement: PurchaseInfo(tier: tier, expiresAt: expiresAt))
+            postTransactionUpdated(productID: transaction.productID)
         }
+    }
+
+    @MainActor
+    static func postTransactionUpdated(productID: String) {
+        NotificationCenter.default.post(name: .storeTransactionUpdated, object: productID)
     }
 
     // MARK: - Public State Accessors
