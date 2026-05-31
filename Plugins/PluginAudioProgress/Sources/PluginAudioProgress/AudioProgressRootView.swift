@@ -58,6 +58,18 @@ enum AudioProgressPersistencePolicy {
         representsSameFile(requestedURL, currentAsset)
     }
 
+    static func shouldApplyCurrentURLChange(
+        requestedURL: URL?,
+        currentAsset: URL?,
+        currentGeneration: Int,
+        requestGeneration: Int,
+        isSceneActive: Bool
+    ) -> Bool {
+        currentGeneration == requestGeneration
+            && isSceneActive
+            && shouldApplyCurrentURLChange(requestedURL: requestedURL, currentAsset: currentAsset)
+    }
+
     static func shouldApplyWidgetMetadataResult(requestedAsset: URL, currentAsset: URL?) -> Bool {
         representsSameFile(requestedAsset, currentAsset)
     }
@@ -343,11 +355,15 @@ extension AudioProgressRootView {
 
         // Sync to Widget
         syncToWidget(url: url, isPlaying: man.state == .playing)
+        let generation = restoreGeneration
 
         Task {
             guard AudioProgressPersistencePolicy.shouldApplyCurrentURLChange(
                 requestedURL: url,
-                currentAsset: man.currentAsset
+                currentAsset: man.currentAsset,
+                currentGeneration: restoreGeneration,
+                requestGeneration: generation,
+                isSceneActive: shouldActivateProgress
             ) else {
                 return
             }

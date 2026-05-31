@@ -316,6 +316,32 @@ import Testing
     ))
 }
 
+@Test func staleCurrentAudioURLChangeDoesNotApplyAfterSceneInvalidation() {
+    let requested = URL(fileURLWithPath: "/tmp/audio/track-01.mp3")
+
+    #expect(AudioProgressPersistencePolicy.shouldApplyCurrentURLChange(
+        requestedURL: requested,
+        currentAsset: requested,
+        currentGeneration: 1,
+        requestGeneration: 1,
+        isSceneActive: true
+    ))
+    #expect(!AudioProgressPersistencePolicy.shouldApplyCurrentURLChange(
+        requestedURL: requested,
+        currentAsset: requested,
+        currentGeneration: 2,
+        requestGeneration: 1,
+        isSceneActive: true
+    ))
+    #expect(!AudioProgressPersistencePolicy.shouldApplyCurrentURLChange(
+        requestedURL: requested,
+        currentAsset: requested,
+        currentGeneration: 1,
+        requestGeneration: 1,
+        isSceneActive: false
+    ))
+}
+
 @Test func widgetMetadataResultOnlyAppliesToStillCurrentAudio() {
     let requested = URL(fileURLWithPath: "/tmp/audio/track-01.mp3")
     let switched = URL(fileURLWithPath: "/tmp/audio/track-02.mp3")
