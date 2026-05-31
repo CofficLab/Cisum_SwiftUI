@@ -81,6 +81,14 @@ enum AudioListLoadPolicy {
         generation + 1
     }
 
+    static func nextLoadOffset(loadedCount: Int, currentPage: Int, pageSize: Int) -> Int {
+        max(loadedCount, currentPage * pageSize)
+    }
+
+    static func pageAfterLoading(currentPage: Int, fetchedCount: Int) -> Int {
+        fetchedCount > 0 ? currentPage + 1 : currentPage
+    }
+
     private static func canonicalIdentity(for url: URL) -> String {
         AudioListFileIdentity.canonicalIdentity(for: url)
     }
@@ -367,8 +375,13 @@ extension AudioList {
 
         Task.detached(priority: .background) {
             let pageSize = await self.pageSize
+            let currentPage = await self.currentPage
             let existingUrls = await self.urls
-            let offset = Self.nextLoadOffset(loadedCount: existingUrls.count)
+            let offset = AudioListLoadPolicy.nextLoadOffset(
+                loadedCount: existingUrls.count,
+                currentPage: currentPage,
+                pageSize: pageSize
+            )
 
             if Self.verbose {
                 os_log("\(self.t)🔄 LoadMore - offset: \(offset), limit: \(pageSize)")
@@ -402,7 +415,6 @@ extension AudioList {
                 }
                 if !uniqueNewUrls.isEmpty {
                     self.urls.append(contentsOf: uniqueNewUrls)
-                    self.currentPage += 1
                     self.hasMore = AudioListLoadPolicy.hasMoreAfterLoading(
                         fetchedCount: newUrls.count,
                         pageSize: self.pageSize
@@ -413,6 +425,10 @@ extension AudioList {
                         pageSize: self.pageSize
                     )
                 }
+                self.currentPage = AudioListLoadPolicy.pageAfterLoading(
+                    currentPage: self.currentPage,
+                    fetchedCount: newUrls.count
+                )
 
                 self.isLoadingMore = false
             }
