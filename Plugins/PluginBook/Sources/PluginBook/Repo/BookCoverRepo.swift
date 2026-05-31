@@ -40,11 +40,10 @@ final class BookCoverRepo: ObservableObject, SuperLog, @unchecked Sendable {
                     if verbose {
                         os_log("\(Self.t)findCoverRecursively \(url.title)")
                     }
-                    // 获取当前目录下的所有文件
-                    let children = url.getChildren()
+                    let candidates = coverCandidates(in: url)
 
                     // 首先检查当前层级的文件
-                    for child in children where !child.hasDirectoryPath {
+                    for child in candidates.files {
                         // 跳过未下载的 iCloud 文件
                         if child.checkIsICloud(verbose: false) && child.isNotDownloaded {
                             continue
@@ -62,7 +61,7 @@ final class BookCoverRepo: ObservableObject, SuperLog, @unchecked Sendable {
                     }
 
                     // 如果当前层级没有找到封面，递归查找子文件夹
-                    for child in children where child.hasDirectoryPath {
+                    for child in candidates.folders {
                         if let cover = try await findCoverRecursively(in: child, thumbnailSize: thumbnailSize, verbose: verbose) {
                             continuation.resume(returning: cover)
                             return
@@ -76,5 +75,18 @@ final class BookCoverRepo: ObservableObject, SuperLog, @unchecked Sendable {
             }
         }
     }
-}
 
+    static func coverCandidates(in url: URL) -> (files: [URL], folders: [URL]) {
+        guard url.isFolder else {
+            return ([url], [])
+        }
+
+        let children = url.getChildren().sorted {
+            $0.standardizedFileURL.path.localizedStandardCompare($1.standardizedFileURL.path) == .orderedAscending
+        }
+        return (
+            files: children.filter { !$0.isFolder },
+            folders: children.filter(\.isFolder)
+        )
+    }
+}

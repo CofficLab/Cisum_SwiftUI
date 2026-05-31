@@ -91,6 +91,47 @@ import SwiftData
     #expect(book.childCount == 1)
 }
 
+@Test func bookCoverCandidatesIncludeStandaloneBookFile() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    let standaloneBook = root.appendingPathComponent("Standalone.m4b")
+    try Data("audio".utf8).write(to: standaloneBook)
+
+    let candidates = BookCoverRepo.coverCandidates(in: standaloneBook)
+
+    #expect(candidates.files.map(canonicalPath) == [canonicalPath(standaloneBook)])
+    #expect(candidates.folders.isEmpty)
+}
+
+@Test func bookCoverCandidatesScanDirectFilesBeforeNestedFolders() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    let nested = root.appendingPathComponent("Nested", isDirectory: true)
+    try FileManager.default.createDirectory(at: nested, withIntermediateDirectories: true)
+    let directAudio = root.appendingPathComponent("Chapter 01.m4b")
+    let nestedAudio = nested.appendingPathComponent("Chapter 02.m4b")
+    try Data("audio".utf8).write(to: directAudio)
+    try Data("audio".utf8).write(to: nestedAudio)
+
+    let candidates = BookCoverRepo.coverCandidates(in: root)
+
+    #expect(candidates.files.map(canonicalPath) == [canonicalPath(directAudio)])
+    #expect(candidates.folders.map(canonicalPath) == [canonicalPath(nested)])
+}
+
+private func canonicalPath(_ url: URL) -> String {
+    url.resolvingSymlinksInPath().standardizedFileURL.path
+}
+
 @Test func emptyCloudBookURLIsIgnored() {
     #expect(BookSettingRepo.storedURL(from: "") == nil)
     #expect(BookSettingRepo.storedURL(from: nil) == nil)
