@@ -286,7 +286,9 @@ private func canonicalPath(_ url: URL) -> String {
     #expect(BookSettingRepo.storedURL(from: "") == nil)
     #expect(BookSettingRepo.storedURL(from: nil) == nil)
     #expect(BookSettingRepo.storedURL(from: "file:///tmp/book/chapter.m4b") == URL(fileURLWithPath: "/tmp/book/chapter.m4b"))
+    #expect(BookSettingRepo.storedURL(from: "  file:///tmp/book/spaced.m4b\n") == URL(fileURLWithPath: "/tmp/book/spaced.m4b"))
     #expect(BookSettingRepo.storedURL(from: "/tmp/book/legacy-chapter.m4b") == URL(fileURLWithPath: "/tmp/book/legacy-chapter.m4b"))
+    #expect(BookSettingRepo.storedURL(from: "\t/tmp/book/legacy-spaced.m4b ") == URL(fileURLWithPath: "/tmp/book/legacy-spaced.m4b"))
     #expect(BookSettingRepo.storedURL(from: "not a url") == nil)
 }
 

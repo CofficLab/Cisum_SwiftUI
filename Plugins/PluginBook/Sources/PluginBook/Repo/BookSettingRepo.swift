@@ -31,13 +31,15 @@ public class BookSettingRepo: SuperLog {
     }
 
     static func storedURL(from string: String?) -> URL? {
-        guard let string, !string.isEmpty else { return nil }
-        if let url = URL(string: string), url.scheme != nil {
+        guard let string else { return nil }
+        let trimmed = string.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return nil }
+        if let url = URL(string: trimmed), url.scheme != nil {
             return url
         }
 
-        guard string.hasPrefix("/") else { return nil }
-        return URL(fileURLWithPath: string)
+        guard trimmed.hasPrefix("/") else { return nil }
+        return URL(fileURLWithPath: trimmed)
     }
 
     static func storedTime(

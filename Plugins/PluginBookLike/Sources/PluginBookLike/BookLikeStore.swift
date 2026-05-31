@@ -45,6 +45,7 @@ public enum BookLikeStore {
     }
 
     static func storedURL(from rawURL: String) -> URL? {
+        let rawURL = rawURL.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !rawURL.isEmpty else { return nil }
         if let url = URL(string: rawURL), url.scheme != nil {
             return url
