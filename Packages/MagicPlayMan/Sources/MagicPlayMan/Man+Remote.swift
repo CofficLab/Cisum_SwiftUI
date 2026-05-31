@@ -167,7 +167,7 @@ extension MagicPlayMan {
 
     /// 更新Now Playing信息中心
     /// - Parameter info: 要设置的媒体信息字典
-    private func updateNowPlayingCenter(with info: [String: Any]) {
+    private func updateNowPlayingCenter(with info: [String: Any], requestedAsset: URL) {
         #if os(iOS)
             // 确保音频会话是活跃的，否则控制中心不会显示信息
             do {
@@ -182,7 +182,15 @@ extension MagicPlayMan {
             }
         #endif
 
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            guard Self.shouldApplyNowPlayingMetadataResult(requestedAsset: requestedAsset, currentAsset: self.currentAsset) else {
+                if self.verbose {
+                    os_log("\(self.t)⚠️ Asset changed before applying now playing info, ignoring stale result for: \(requestedAsset.title)")
+                }
+                return
+            }
+
             MPNowPlayingInfoCenter.default().nowPlayingInfo = info
             self.nowPlayingInfo = info
         }
@@ -249,7 +257,7 @@ extension MagicPlayMan {
                 return
             }
 
-            self.updateNowPlayingCenter(with: info)
+            self.updateNowPlayingCenter(with: info, requestedAsset: asset)
         }
     }
 }
