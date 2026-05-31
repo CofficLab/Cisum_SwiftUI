@@ -141,6 +141,29 @@ final class MagicPlayManTests: XCTestCase {
         XCTAssertEqual(notifications, 0)
     }
 
+    @MainActor
+    func testFailedPlaybackStateNotifiesFailureSubscribers() async throws {
+        let missing = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString)
+            .appendingPathExtension("mp3")
+        let man = MagicPlayMan()
+        var receivedError: PlaybackState.PlaybackError?
+        let subscriptionID = man.subscribe(
+            name: "MagicPlayManTests",
+            onPlaybackFailed: { error in
+                receivedError = error
+            }
+        )
+        defer {
+            man.unsubscribe(subscriptionID)
+        }
+
+        await man.play(missing, autoPlay: false, reason: "test")
+        try await Task.sleep(nanoseconds: 50_000_000)
+
+        XCTAssertEqual(receivedError, .invalidAsset)
+    }
+
     private static func makeSilentWAV() throws -> URL {
         let url = FileManager.default.temporaryDirectory
             .appendingPathComponent(UUID().uuidString)

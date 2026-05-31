@@ -144,6 +144,9 @@ extension MagicPlayMan {
             os_log("\(self.t)🍋 (\(reason)) 设置播放状态为：\(state.stateText)")
         }
         events.onStateChanged.send(state)
+        if case let .failed(error) = state {
+            events.onPlaybackFailed.send(error)
+        }
 
         // 发送状态变更通知
         let isPlaying = (state == .playing)
