@@ -58,6 +58,22 @@ enum AudioListDeletionPolicy {
     static func removedDisplayedCount(from displayedURLs: [URL], deletedURLs: [URL]) -> Int {
         displayedURLs.filter { shouldRemove($0, deletedURLs: deletedURLs) }.count
     }
+
+    static func totalCountAfterDeletion(currentTotal: Int, deletedURLs: [URL]) -> Int {
+        max(0, currentTotal - uniqueDeletedCount(deletedURLs))
+    }
+
+    private static func uniqueDeletedCount(_ deletedURLs: [URL]) -> Int {
+        Set(deletedURLs.map(canonicalIdentity(for:))).count
+    }
+
+    private static func canonicalIdentity(for url: URL) -> String {
+        guard url.isFileURL else {
+            return url.standardized.absoluteString
+        }
+
+        return url.resolvingSymlinksInPath().standardizedFileURL.path
+    }
 }
 
 enum AudioListSelectionPolicy {
@@ -576,18 +592,16 @@ extension AudioList {
 
         // 使用动画效果移除已删除的文件
         withAnimation(.easeInOut(duration: 0.3)) {
-            let removedCount = AudioListDeletionPolicy.removedDisplayedCount(
-                from: urls,
-                deletedURLs: urlsToDelete
-            )
-
             // 从 urls 数组中移除被删除的 URL
             urls.removeAll { url in
                 AudioListDeletionPolicy.shouldRemove(url, deletedURLs: urlsToDelete)
             }
 
             // 更新总数
-            totalCount = max(0, totalCount - removedCount)
+            totalCount = AudioListDeletionPolicy.totalCountAfterDeletion(
+                currentTotal: totalCount,
+                deletedURLs: urlsToDelete
+            )
 
             // 如果删除的是当前选中的文件，清除选中状态
             if let selected = selection,
