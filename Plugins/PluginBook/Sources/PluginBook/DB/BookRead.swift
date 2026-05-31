@@ -197,14 +197,14 @@ extension BookDB {
         let url = book.url
         var descriptor = FetchDescriptor<BookModel>()
         descriptor.sortBy.append(.init(\.order, order: .forward))
-        descriptor.fetchLimit = 1
         descriptor.predicate = #Predicate {
             $0.order >= order && $0.url != url
         }
 
         do {
             let result = try context.fetch(descriptor)
-            let next = result.first ?? Self.firstBook(context: context)
+            let next = result.first { !BookPathContainment.representsSameFile($0.url, url) }
+                ?? Self.firstBook(context: context)
             //os_log("🍋 DBAudio::nextOf [\(audio.order)] \(audio.title) -> [\(next?.order ?? -1)] \(next?.title ?? "-")")
             return next
         } catch let e {
