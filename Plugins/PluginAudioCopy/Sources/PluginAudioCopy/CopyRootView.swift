@@ -246,6 +246,10 @@
                 return url.standardized.absoluteString
             }
 
+            guard FileManager.default.fileExists(atPath: url.path) else {
+                return url.standardizedFileURL.path
+            }
+
             return url.resolvingSymlinksInPath().standardizedFileURL.path
         }
 
