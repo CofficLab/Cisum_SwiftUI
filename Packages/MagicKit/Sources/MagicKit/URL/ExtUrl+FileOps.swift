@@ -46,6 +46,18 @@ public enum URLOpenActionPolicy {
 
         return FileManager.default.fileExists(atPath: url.path)
     }
+
+    public static func canRevealInFinder(_ url: URL) -> Bool {
+        guard url.isFileURL else {
+            return true
+        }
+
+        if FileManager.default.fileExists(atPath: url.path) {
+            return true
+        }
+
+        return (try? url.resourceValues(forKeys: [.isSymbolicLinkKey]).isSymbolicLink) == true
+    }
 }
 
 /// URL 扩展：文件操作基础方法
@@ -304,6 +316,8 @@ public extension URL {
 
     /// 在 Finder 中打开文件夹
     func openFolder() {
+        guard URLOpenActionPolicy.canRevealInFinder(self) else { return }
+
         #if os(macOS)
             NSWorkspace.shared.activateFileViewerSelecting([self])
         #elseif os(iOS)
@@ -313,6 +327,8 @@ public extension URL {
 
     /// 在 Finder 中显示当前文件或目录。
     func openInFinder() {
+        guard URLOpenActionPolicy.canRevealInFinder(self) else { return }
+
         #if os(macOS)
             NSWorkspace.shared.activateFileViewerSelecting([self])
         #elseif os(iOS)
