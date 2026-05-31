@@ -8,6 +8,10 @@ class ShellSystem: SuperLog {
     static func shellQuoted(_ value: String) -> String {
         "'\(value.replacingOccurrences(of: "'", with: "'\\''"))'"
     }
+
+    static func shellPathOperand(_ value: String) -> String {
+        shellQuoted(value.hasPrefix("-") ? "./\(value)" : value)
+    }
     
     /// 获取当前工作目录
     /// - Returns: 当前工作目录路径
@@ -144,7 +148,7 @@ class ShellSystem: SuperLog {
     }
 
     static func diskUsageCommand(path: String) -> String {
-        "df -h \(shellQuoted(path))"
+        "df -h -- \(shellPathOperand(path))"
     }
 
     static func processesCommand(named name: String) -> String {
