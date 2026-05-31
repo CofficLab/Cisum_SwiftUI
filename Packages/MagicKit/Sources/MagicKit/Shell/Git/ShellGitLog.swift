@@ -34,19 +34,7 @@ extension ShellGit {
         let format = "%H|%an|%ae|%at|%s"
         let output = try Shell.runSync("git log -n \(count) --pretty=format:'\(format)'", at: path)
         return output.split(separator: "\n").compactMap { line in
-            let parts = String(line).split(separator: "|").map { String($0) }
-            guard parts.count >= 5 else { return nil }
-            return MagicGitCommit(
-                id: parts[0],
-                hash: parts[0],
-                author: parts[1],
-                email: parts[2],
-                date: Date(timeIntervalSince1970: TimeInterval(Int(parts[3]) ?? 0)),
-                message: parts[4],
-                body: "",
-                refs: [],
-                tags: []
-            )
+            parseRecentCommitLine(String(line))
         }
     }
     
@@ -60,19 +48,7 @@ extension ShellGit {
         let format = "%H|%an|%ae|%at|%s"
         let output = try Shell.runSync("git log \(branch) -n \(count) --pretty=format:'\(format)'", at: path)
         return output.split(separator: "\n").compactMap { line in
-            let parts = String(line).split(separator: "|").map { String($0) }
-            guard parts.count >= 5 else { return nil }
-            return MagicGitCommit(
-                id: parts[0],
-                hash: parts[0],
-                author: parts[1],
-                email: parts[2],
-                date: Date(timeIntervalSince1970: TimeInterval(Int(parts[3]) ?? 0)),
-                message: parts[4],
-                body: "",
-                refs: [],
-                tags: []
-            )
+            parseRecentCommitLine(String(line))
         }
     }
     
@@ -84,14 +60,45 @@ extension ShellGit {
     public static func commitDetail(_ commit: String, at path: String? = nil) async throws -> MagicGitCommitDetail {
         let format = "%H|%an|%ae|%at|%s|%b"
         let output = try Shell.runSync("git show \(commit) --pretty=format:'\(format)' --no-patch", at: path)
-        let parts = output.split(separator: "|").map { String($0) }
-        guard parts.count >= 6 else {
-            throw NSError(domain: "ShellGit", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid commit format"])
-        }
+        let parsedCommit = try parseCommitDetailOutput(output)
         
         let files = try await changedFilesDetail(in: commit, at: path)
         let diff = try Shell.runSync("git show \(commit)", at: path)
         
+        return MagicGitCommitDetail(
+            id: parsedCommit.id,
+            author: parsedCommit.author,
+            email: parsedCommit.email,
+            date: parsedCommit.date,
+            message: parsedCommit.message,
+            body: parsedCommit.body,
+            files: files,
+            diff: diff
+        )
+    }
+
+    static func parseRecentCommitLine(_ line: String) -> MagicGitCommit? {
+        let parts = line.split(separator: "|", maxSplits: 4, omittingEmptySubsequences: false).map { String($0) }
+        guard parts.count == 5 else { return nil }
+        return MagicGitCommit(
+            id: parts[0],
+            hash: parts[0],
+            author: parts[1],
+            email: parts[2],
+            date: Date(timeIntervalSince1970: TimeInterval(Int(parts[3]) ?? 0)),
+            message: parts[4],
+            body: "",
+            refs: [],
+            tags: []
+        )
+    }
+
+    static func parseCommitDetailOutput(_ output: String) throws -> MagicGitCommitDetail {
+        let parts = output.split(separator: "|", maxSplits: 5, omittingEmptySubsequences: false).map { String($0) }
+        guard parts.count == 6 else {
+            throw NSError(domain: "ShellGit", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid commit format"])
+        }
+
         return MagicGitCommitDetail(
             id: parts[0],
             author: parts[1],
@@ -99,8 +106,8 @@ extension ShellGit {
             date: Date(timeIntervalSince1970: TimeInterval(Int(parts[3]) ?? 0)),
             message: parts[4],
             body: parts[5],
-            files: files,
-            diff: diff
+            files: [],
+            diff: ""
         )
     }
     
