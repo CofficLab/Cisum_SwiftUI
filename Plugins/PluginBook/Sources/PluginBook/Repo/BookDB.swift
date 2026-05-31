@@ -40,6 +40,43 @@ public actor BookDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperTh
     }
 }
 
+enum BookLibraryItemSupport {
+    static func isSupported(_ url: URL) -> Bool {
+        if isFolderLike(url) {
+            return playableChildren(in: url).isEmpty == false
+        }
+
+        return BookPluginInfo.supportedExtensions.contains(url.pathExtension.lowercased())
+    }
+
+    static func playableChildCount(for url: URL) -> Int {
+        guard isFolderLike(url) else {
+            return BookPluginInfo.supportedExtensions.contains(url.pathExtension.lowercased()) ? 1 : 0
+        }
+
+        return playableChildren(in: url).count
+    }
+
+    private static func playableChildren(in folder: URL) -> [URL] {
+        scanRoot(for: folder).flatten().filter { child in
+            !child.isFolder && BookPluginInfo.supportedExtensions.contains(child.pathExtension.lowercased())
+        }
+    }
+
+    private static func isFolderLike(_ url: URL) -> Bool {
+        url.isFolder || resolvedDirectoryURL(for: url) != nil
+    }
+
+    private static func resolvedDirectoryURL(for url: URL) -> URL? {
+        let resolvedURL = url.resolvingSymlinksInPath().standardizedFileURL
+        return resolvedURL.isFolder ? resolvedURL : nil
+    }
+
+    private static func scanRoot(for folder: URL) -> URL {
+        folder.isFolder ? folder : folder.resolvingSymlinksInPath().standardizedFileURL
+    }
+}
+
 // MARK: 增加
 
 extension BookDB {
@@ -337,13 +374,7 @@ extension BookDB {
     }
 
     static func isSupportedBookLibraryItem(_ url: URL) -> Bool {
-        if url.isFolder {
-            return url.flatten().contains { child in
-                !child.isFolder && BookPluginInfo.supportedExtensions.contains(child.pathExtension.lowercased())
-            }
-        }
-
-        return BookPluginInfo.supportedExtensions.contains(url.pathExtension.lowercased())
+        BookLibraryItemSupport.isSupported(url)
     }
 
     private func nextAppendOrder() -> Int {

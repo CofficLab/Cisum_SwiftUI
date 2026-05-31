@@ -29,6 +29,30 @@ import UniformTypeIdentifiers
     #expect(BookDBView.folderContainsPlayableFiles(supportedFolder) == true)
 }
 
+@Test func folderImportAcceptsSymlinkedBookFolders() async throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realBook = root.appendingPathComponent("RealBook", isDirectory: true)
+    let linkedBook = root.appendingPathComponent("LinkedBook", isDirectory: true)
+    let destinationRoot = root.appendingPathComponent("destination", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: realBook, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedBook, withDestinationURL: realBook)
+    try Data("audio".utf8).write(to: realBook.appendingPathComponent("001.m4b"))
+
+    #expect(BookDBView.isFolderLikeImportSource(linkedBook))
+    #expect(BookDBView.folderContainsPlayableFiles(linkedBook))
+
+    let copiedItems = try await BookDBView.copyImportedItems([linkedBook], to: destinationRoot)
+    let copiedBook = destinationRoot.appendingPathComponent("LinkedBook", isDirectory: true)
+
+    #expect(copiedItems == [copiedBook])
+    #expect(FileManager.default.fileExists(atPath: copiedBook.appendingPathComponent("001.m4b").path))
+}
+
 @Test func bookImportCleansCopiedItemsWhenBatchFails() async throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)

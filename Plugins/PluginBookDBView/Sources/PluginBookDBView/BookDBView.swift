@@ -114,9 +114,9 @@ extension BookDBView {
     nonisolated static func copyImportedItems(_ files: [URL], to bookDisk: URL) async throws -> [URL] {
         try FileManager.default.createDirectory(at: bookDisk, withIntermediateDirectories: true)
 
-        let folders = files.filter(\.isFolder)
+        let folders = files.filter(Self.isFolderLikeImportSource)
         let audioFiles = files.filter { url in
-            !url.isFolder && BookPluginInfo.supportedExtensions.contains(url.pathExtension.lowercased())
+            !Self.isFolderLikeImportSource(url) && BookPluginInfo.supportedExtensions.contains(url.pathExtension.lowercased())
         }
         var copiedItems: [URL] = []
 
@@ -125,7 +125,8 @@ extension BookDBView {
                 guard try canImportFolder(folder) else { continue }
 
                 let destination = uniqueDestination(for: folder, in: bookDisk)
-                guard !isDestinationNestedInSource(source: folder, destination: destination) else {
+                let sourceToCopy = copySourceURL(for: folder)
+                guard !isDestinationNestedInSource(source: sourceToCopy, destination: destination) else {
                     throw NSError(
                         domain: "BookDBView",
                         code: 2,
@@ -259,6 +260,19 @@ extension BookDBView {
         securityScopeGranted || FileManager.default.isReadableFile(atPath: source.path)
     }
 
+    nonisolated static func isFolderLikeImportSource(_ source: URL) -> Bool {
+        source.isFolder || resolvedDirectoryURL(for: source) != nil
+    }
+
+    private nonisolated static func resolvedDirectoryURL(for source: URL) -> URL? {
+        let resolvedURL = source.resolvingSymlinksInPath().standardizedFileURL
+        return resolvedURL.isFolder ? resolvedURL : nil
+    }
+
+    private nonisolated static func copySourceURL(for source: URL) -> URL {
+        source.isFolder ? source : resolvedDirectoryURL(for: source) ?? source
+    }
+
     private nonisolated static func canImportFolder(_ folder: URL) throws -> Bool {
         let hasAccess = folder.startAccessingSecurityScopedResource()
         guard hasImportSourceAccess(folder, securityScopeGranted: hasAccess) else {
@@ -281,7 +295,7 @@ extension BookDBView {
     }
 
     nonisolated static func folderContainsPlayableFiles(_ folder: URL) -> Bool {
-        folder.flatten().contains { child in
+        copySourceURL(for: folder).flatten().contains { child in
             !child.isFolder && BookPluginInfo.supportedExtensions.contains(child.pathExtension.lowercased())
         }
     }
@@ -304,15 +318,16 @@ extension BookDBView {
             }
         }
 
-        if source.isFolder {
-            for child in source.flatten() {
+        let sourceToCopy = copySourceURL(for: source)
+        if sourceToCopy.isFolder {
+            for child in sourceToCopy.flatten() {
                 try await child.ensureLocalAvailability()
             }
         } else {
-            try await source.ensureLocalAvailability()
+            try await sourceToCopy.ensureLocalAvailability()
         }
 
-        try FileManager.default.copyItem(at: source, to: destination)
+        try FileManager.default.copyItem(at: sourceToCopy, to: destination)
     }
 
     private nonisolated static func collectionTitle(for files: [URL]) -> String {
@@ -326,9 +341,9 @@ extension BookDBView {
     private nonisolated static func uniqueDestination(for source: URL, in directory: URL) -> URL {
         uniqueDestination(
             named: source.deletingPathExtension().lastPathComponent,
-            pathExtension: source.pathExtension,
+            pathExtension: isFolderLikeImportSource(source) ? "" : source.pathExtension,
             in: directory,
-            isDirectory: source.isFolder
+            isDirectory: isFolderLikeImportSource(source)
         )
     }
 

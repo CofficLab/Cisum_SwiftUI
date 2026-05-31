@@ -59,14 +59,7 @@ public class BookModel: SuperLog, Equatable {
     }
 
     static func playableChildCount(for url: URL) -> Int {
-        guard url.isFolder else {
-            return BookPluginInfo.supportedExtensions.contains(url.pathExtension.lowercased()) ? 1 : 0
-        }
-
-        return url.flatten().filter { child in
-            !child.isFolder
-                && BookPluginInfo.supportedExtensions.contains(child.pathExtension.lowercased())
-        }.count
+        BookLibraryItemSupport.playableChildCount(for: url)
     }
 }
 

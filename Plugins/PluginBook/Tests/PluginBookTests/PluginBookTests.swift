@@ -17,6 +17,23 @@ import SwiftData
     }
 }
 
+@Test func symlinkedBookFolderIsSupportedLibraryItem() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realBook = root.appendingPathComponent("RealBook", isDirectory: true)
+    let linkedBook = root.appendingPathComponent("LinkedBook", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: realBook, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedBook, withDestinationURL: realBook)
+    try Data("audio".utf8).write(to: realBook.appendingPathComponent("001.m4b"))
+
+    #expect(BookDB.isSupportedBookLibraryItem(linkedBook))
+    #expect(BookModel.playableChildCount(for: linkedBook) == 1)
+}
+
 @Test func emptyCloudBookURLIsIgnored() {
     #expect(BookSettingRepo.storedURL(from: "") == nil)
     #expect(BookSettingRepo.storedURL(from: nil) == nil)
