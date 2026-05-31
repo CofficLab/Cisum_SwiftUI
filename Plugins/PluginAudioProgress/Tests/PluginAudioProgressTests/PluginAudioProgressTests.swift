@@ -32,7 +32,35 @@ import Testing
 }
 
 @Test func clearingCurrentAudioURLPersistsNilCurrentAudio() {
-    #expect(AudioProgressPersistencePolicy.currentURLToStore(nil) == nil)
+    let stored = URL(fileURLWithPath: "/tmp/audio/track.mp3")
+
+    #expect(AudioProgressPersistencePolicy.currentURLToStore(
+        nil,
+        storedURL: stored,
+        supportedExtensions: ["mp3"]
+    ) == nil)
+}
+
+@Test func supportedCurrentAudioURLPersistsCurrentAudio() {
+    let stored = URL(fileURLWithPath: "/tmp/audio/track-01.mp3")
+    let current = URL(fileURLWithPath: "/tmp/audio/track-02.FLAC")
+
+    #expect(AudioProgressPersistencePolicy.currentURLToStore(
+        current,
+        storedURL: stored,
+        supportedExtensions: ["mp3", "flac"]
+    ) == current)
+}
+
+@Test func unsupportedCurrentURLKeepsPreviousAudio() {
+    let stored = URL(fileURLWithPath: "/tmp/audio/track.mp3")
+    let video = URL(fileURLWithPath: "/tmp/video/movie.mp4")
+
+    #expect(AudioProgressPersistencePolicy.currentURLToStore(
+        video,
+        storedURL: stored,
+        supportedExtensions: ["mp3"]
+    ) == stored)
 }
 
 @Test func emptyCloudAudioURLIsIgnored() {

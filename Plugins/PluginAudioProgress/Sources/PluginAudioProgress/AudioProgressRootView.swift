@@ -16,8 +16,15 @@ enum AudioProgressPersistencePolicy {
         oldSceneName == audioSceneName && newSceneName != audioSceneName
     }
 
-    static func currentURLToStore(_ url: URL?) -> URL? {
-        url
+    static func currentURLToStore(_ url: URL?, storedURL: URL?, supportedExtensions: [String]) -> URL? {
+        guard let url else { return nil }
+
+        let supportedExtensions = Set(supportedExtensions.map { $0.lowercased() })
+        guard supportedExtensions.contains(url.pathExtension.lowercased()) else {
+            return storedURL
+        }
+
+        return url
     }
 
     static func shouldResetGlobalTimeWhenCurrentURLChanges(from storedURL: URL?, to newURL: URL?) -> Bool {
@@ -297,8 +304,13 @@ extension AudioProgressRootView {
             }
 
             let storedURL = AudioStateRepo.getCurrent()
-            AudioStateRepo.storeCurrent(AudioProgressPersistencePolicy.currentURLToStore(url))
-            if AudioProgressPersistencePolicy.shouldResetGlobalTimeWhenCurrentURLChanges(from: storedURL, to: url) {
+            let urlToStore = AudioProgressPersistencePolicy.currentURLToStore(
+                url,
+                storedURL: storedURL,
+                supportedExtensions: AudioPlugin.supportedExtensions
+            )
+            AudioStateRepo.storeCurrent(urlToStore)
+            if AudioProgressPersistencePolicy.shouldResetGlobalTimeWhenCurrentURLChanges(from: storedURL, to: urlToStore) {
                 AudioStateRepo.storeCurrentTime(0)
             }
         }
