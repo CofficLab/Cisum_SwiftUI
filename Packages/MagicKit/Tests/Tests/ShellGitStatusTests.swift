@@ -37,6 +37,15 @@ import Testing
     #expect(ShellGit.parseUnstagedFiles(fromPorcelainZOutput: output) == ["new name.txt", "notes.txt"])
 }
 
+@Test func shellGitUnstagedPorcelainZParserSkipsWorktreeRenameSourceRecords() {
+    let output = " R new name.md\u{0}old name.md\u{0} M edited.md\u{0}"
+
+    #expect(ShellGit.parseUnstagedFiles(fromPorcelainZOutput: output) == [
+        "new name.md",
+        "edited.md",
+    ])
+}
+
 @Test func shellGitUnstagedFilesUseRenamedDestinationOnly() throws {
     let repo = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)

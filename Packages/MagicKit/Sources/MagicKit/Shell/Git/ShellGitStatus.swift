@@ -81,11 +81,7 @@ extension ShellGit {
     }
 
     private static func isRenameOrCopyPorcelainRecord(_ record: String) -> Bool {
-        guard let status = record.first else {
-            return false
-        }
-
-        return status == "R" || status == "C"
+        record.prefix(2).contains("R") || record.prefix(2).contains("C")
     }
 
     private static func pathAfterRenameMarker(_ path: String) -> String {
