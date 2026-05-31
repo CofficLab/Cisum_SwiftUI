@@ -12,7 +12,7 @@ extension ShellGit {
     @discardableResult
     public static func commit(message: String, at path: String? = nil) throws -> String {
         // 执行提交
-        _ = try Shell.runSync("git commit -m \"\(message)\"", at: path)
+        _ = try Shell.runSync("git commit -m \(shellQuoted(message))", at: path)
         // 直接获取 HEAD 哈希，这是最可靠的方式
         let headHash = try Shell.runSync("git rev-parse HEAD", at: path)
         return headHash.trimmingCharacters(in: .whitespacesAndNewlines)
