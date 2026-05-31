@@ -83,6 +83,13 @@ public class MagicPlayMan: ObservableObject, SuperLog {
     @Published public private(set) var likedAssets: Set<URL> = []
 }
 
+enum MagicPlayManPlaybackTimePolicy {
+    static func normalizedCurrentTime(_ time: TimeInterval) -> TimeInterval {
+        guard time.isFinite else { return 0 }
+        return max(time, 0)
+    }
+}
+
 // MARK: - Setter
 
 extension MagicPlayMan {
@@ -92,6 +99,8 @@ extension MagicPlayMan {
     ///   - reason: 状态变更原因（用于日志记录）
     @MainActor
     func setCurrentTime(_ time: TimeInterval, reason: String) {
+        let time = MagicPlayManPlaybackTimePolicy.normalizedCurrentTime(time)
+
         if verbose && false {
             os_log("\(self.t)🕒 (\(reason)) 设置当前播放时间：\(time)s")
         }

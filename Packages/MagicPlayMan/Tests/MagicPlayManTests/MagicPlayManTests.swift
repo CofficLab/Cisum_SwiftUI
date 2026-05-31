@@ -234,6 +234,24 @@ final class MagicPlayManTests: XCTestCase {
         XCTAssertEqual(MagicPlayManSeekPolicy.normalizedTime(30, duration: .nan), 30)
     }
 
+    func testPlaybackTimePolicyRejectsInvalidTimes() {
+        XCTAssertEqual(MagicPlayManPlaybackTimePolicy.normalizedCurrentTime(.nan), 0)
+        XCTAssertEqual(MagicPlayManPlaybackTimePolicy.normalizedCurrentTime(.infinity), 0)
+        XCTAssertEqual(MagicPlayManPlaybackTimePolicy.normalizedCurrentTime(-5), 0)
+        XCTAssertEqual(MagicPlayManPlaybackTimePolicy.normalizedCurrentTime(42), 42)
+    }
+
+    @MainActor
+    func testSetCurrentTimeDoesNotPublishInvalidTimes() {
+        let man = MagicPlayMan()
+
+        man.setCurrentTime(.nan, reason: "test")
+        XCTAssertEqual(man.currentTime, 0)
+
+        man.setCurrentTime(-5, reason: "test")
+        XCTAssertEqual(man.currentTime, 0)
+    }
+
     @MainActor
     func testUnplayableLocalMediaDoesNotBecomeCurrentAsset() async throws {
         let unplayable = FileManager.default.temporaryDirectory
