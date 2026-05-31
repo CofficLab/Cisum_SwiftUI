@@ -151,13 +151,13 @@ extension Config {
         #if os(macOS)
             guard let window = appWindow else {
                 os_log(.error, "\(t)无法获取窗口高度：当前没有可用窗口")
-                return 0
+                return defaultHeight
             }
 
             let frame = window.frame
             let height = frame.size.height
 
-            return height
+            return sanitizedWindowHeight(height)
         #else
             return 0
         #endif
@@ -165,6 +165,11 @@ extension Config {
 
     static func increseHeight(_ h: CGFloat, verbose: Bool = false) {
         #if os(macOS)
+            guard h.isFinite, h > 0 else {
+                os_log(.error, "\(t)无法增加窗口高度：无效增量 \(String(describing: h))")
+                return
+            }
+
             if verbose {
                 os_log("\(t)增加 Height=\(h)")
             }
@@ -195,8 +200,15 @@ extension Config {
 
     static func setHeight(_ h: CGFloat, verbose: Bool = false) {
         #if os(macOS)
+            guard h.isFinite else {
+                os_log(.error, "\(t)无法设置窗口高度：无效高度 \(String(describing: h))")
+                return
+            }
+
+            let targetHeight = sanitizedWindowHeight(h)
+
             if verbose {
-                os_log("\(t)设置Height=\(h)")
+                os_log("\(t)设置Height=\(targetHeight)")
             }
 
             guard let window = appWindow else {
@@ -212,8 +224,8 @@ extension Config {
                 os_log("\(t)设置前 Y=\(oldY) height=\(height)")
             }
 
-            frame.origin.y = oldY + height - h
-            frame.size.height = h
+            frame.origin.y = oldY + height - targetHeight
+            frame.size.height = targetHeight
 
             if verbose {
                 os_log("\(t)设置后 Y=\(frame.origin.y) height=\(frame.size.height)")
@@ -221,6 +233,11 @@ extension Config {
 
             window.setFrame(frame, display: true)
         #endif
+    }
+
+    private static func sanitizedWindowHeight(_ h: CGFloat) -> CGFloat {
+        guard h.isFinite else { return defaultHeight }
+        return max(h, minHeight)
     }
 }
 
