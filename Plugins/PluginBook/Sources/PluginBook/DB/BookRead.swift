@@ -111,7 +111,7 @@ extension BookDB {
             return book
         } else {
             let book = BookModel(url: url)
-            context.insert(BookModel(url: url))
+            context.insert(book)
             
 //            do {
 //                try context.save()

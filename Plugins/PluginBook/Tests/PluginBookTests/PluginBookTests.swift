@@ -374,6 +374,16 @@ import SwiftData
     #expect(db.getNextBookOf(second)?.url == third)
 }
 
+@Test func bookDBFindOrCreateReturnsInsertedBook() async throws {
+    let schema = Schema([BookModel.self, BookState.self])
+    let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    let container = try ModelContainer(for: schema, configurations: [configuration])
+    let db = BookDB(container, reason: "bookDBFindOrCreateReturnsInsertedBook")
+
+    let bookURL = URL(fileURLWithPath: "/tmp/cisum-book-find-or-create/Novel.m4b")
+    #expect(await db.findOrCreateReturnsInsertedBook(bookURL))
+}
+
 @Test func bookDBFullSyncRepairsDuplicateLegacyBookOrders() async throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)
@@ -406,4 +416,14 @@ import SwiftData
 @Test func bookDBKeepsUniqueExistingBookOrders() {
     #expect(!BookDB.needsStableOrderRepair([20, 10, 30]))
     #expect(BookDB.needsStableOrderRepair([0, 0]))
+}
+
+extension BookDB {
+    func findOrCreateReturnsInsertedBook(_ url: URL) -> Bool {
+        guard let created = findOrCreateBook(url), let fetched = findBook(url: url) else {
+            return false
+        }
+
+        return created === fetched
+    }
 }
