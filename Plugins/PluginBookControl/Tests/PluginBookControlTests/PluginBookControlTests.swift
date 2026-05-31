@@ -131,3 +131,10 @@ import SwiftUI
         "Disc 2/01.m4b",
     ])
 }
+
+@Test func chapterLoaderRejectsSiblingPrefixPaths() {
+    let root = URL(fileURLWithPath: "/tmp/cisum-books/Book", isDirectory: true)
+    let sibling = URL(fileURLWithPath: "/tmp/cisum-books/Book Backup/01.m4b")
+
+    #expect(BookControlChapterLoader.relativePath(sibling, in: root) == "01.m4b")
+}

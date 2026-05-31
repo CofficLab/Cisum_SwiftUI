@@ -171,6 +171,13 @@ import UniformTypeIdentifiers
     #expect(BookPlaybackOrdering.relativePath(disc1Chapter2, in: root) == "Disc 1/02.m4b")
 }
 
+@Test func bookPlaybackOrderingRejectsSiblingPrefixPaths() {
+    let root = URL(fileURLWithPath: "/tmp/cisum-books/Book", isDirectory: true)
+    let sibling = URL(fileURLWithPath: "/tmp/cisum-books/Book Backup/01.m4b")
+
+    #expect(BookPlaybackOrdering.relativePath(sibling, in: root) == "01.m4b")
+}
+
 @Test func bookTileReloadsWhenDatabaseRootChanges() {
     let bookURL = URL(fileURLWithPath: "/tmp/cisum-book-tile/book")
     let firstRoot = URL(fileURLWithPath: "/tmp/cisum-book-tile/db-1")

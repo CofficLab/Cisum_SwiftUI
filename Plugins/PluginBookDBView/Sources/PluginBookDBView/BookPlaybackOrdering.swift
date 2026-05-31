@@ -7,11 +7,15 @@ enum BookPlaybackOrdering {
         let rootPath = root.standardizedFileURL.path
         let path = url.standardizedFileURL.path
 
-        guard path.hasPrefix(rootPath) else {
+        guard isContained(path, in: rootPath) else {
             return url.lastPathComponent
         }
 
         return String(path.dropFirst(rootPath.count)).trimmingCharacters(in: CharacterSet(charactersIn: "/"))
+    }
+
+    private static func isContained(_ path: String, in rootPath: String) -> Bool {
+        path == rootPath || path.hasPrefix(rootPath.hasSuffix("/") ? rootPath : rootPath + "/")
     }
 
     static func playableChildren(for root: URL) -> [URL] {
