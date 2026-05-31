@@ -13,7 +13,13 @@ struct Guide: View, SuperLog {
     private var pages: [PluginGuidePage] {
         pluginProvider.plugins.compactMap { plugin in
             guard let view = plugin.addGuideView() else { return nil }
-            return PluginGuidePage(id: plugin.id, view: view)
+            return PluginGuidePage(
+                id: plugin.id,
+                view: view,
+                complete: {
+                    plugin.completeGuidePage()
+                }
+            )
         }
     }
 
@@ -37,6 +43,7 @@ struct Guide: View, SuperLog {
 private struct PluginGuidePage: Identifiable {
     let id: String
     let view: AnyView
+    let complete: @MainActor () -> Bool
 }
 
 // MARK: - View Builder
@@ -101,7 +108,9 @@ extension Guide {
                             .cisumHoverScale(105)
                             .cisumShadowSm()
                             .cisumButton {
-                                currentGuidePageIndex = index + 1
+                                if page.complete() {
+                                    currentGuidePageIndex = index + 1
+                                }
                             }
                     }
                 }

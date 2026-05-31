@@ -21,6 +21,20 @@ public actor WelcomePlugin: SuperPlugin, SuperLog {
 
         return AnyView(WelcomePluginGuideView())
     }
+
+    @MainActor
+    public func completeGuidePage() -> Bool {
+        guard WelcomePluginHost.hasStorageLocation == false else {
+            return true
+        }
+
+        let selection = WelcomeStorageSelectionPolicy.defaultSelection(
+            currentStorageSelection: WelcomePluginHost.currentStorageSelection,
+            isICloudAvailable: WelcomePluginHost.isICloudAvailable
+        )
+        WelcomePluginHost.updateStorageSelection(selection)
+        return true
+    }
 }
 
 private struct WelcomePluginGuideView: View {

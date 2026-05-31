@@ -80,3 +80,45 @@ import Testing
         displayedSelection: .local
     ))
 }
+
+@Test @MainActor func completingWelcomeGuidePersistsDisplayedDefaultSelection() {
+    var storedSelection: WelcomeStorageSelection?
+
+    WelcomePluginHost.configure(
+        hasStorageLocation: {
+            storedSelection != nil
+        },
+        isICloudAvailable: {
+            true
+        },
+        currentStorageSelection: {
+            storedSelection
+        },
+        updateStorageSelection: { selection in
+            storedSelection = selection
+        }
+    )
+
+    #expect(WelcomePlugin.shared.completeGuidePage())
+    #expect(storedSelection == .icloud)
+
+    storedSelection = nil
+
+    WelcomePluginHost.configure(
+        hasStorageLocation: {
+            storedSelection != nil
+        },
+        isICloudAvailable: {
+            false
+        },
+        currentStorageSelection: {
+            storedSelection
+        },
+        updateStorageSelection: { selection in
+            storedSelection = selection
+        }
+    )
+
+    #expect(WelcomePlugin.shared.completeGuidePage())
+    #expect(storedSelection == .local)
+}

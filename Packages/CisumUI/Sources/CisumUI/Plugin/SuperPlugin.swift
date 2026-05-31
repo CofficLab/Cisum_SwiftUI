@@ -15,6 +15,7 @@ public protocol SuperPlugin: Actor {
     @MainActor func addSceneItem() -> String?
     @MainActor func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View
     @MainActor func addGuideView() -> AnyView?
+    @MainActor func completeGuidePage() -> Bool
     @MainActor func addStateView(currentSceneName: String?) -> AnyView?
     @MainActor func addPosterView() -> AnyView?
     @MainActor func addTabView(reason: String, currentSceneName: String?, demoMode: Bool) -> (view: AnyView, label: String)?
@@ -38,6 +39,7 @@ public extension SuperPlugin {
     @MainActor func addSceneItem() -> String? { nil }
     nonisolated func addRootView<Content>(@ViewBuilder content: () -> Content) -> AnyView? where Content: View { nil }
     nonisolated func addGuideView() -> AnyView? { nil }
+    nonisolated func completeGuidePage() -> Bool { true }
     nonisolated func addStateView(currentSceneName: String?) -> AnyView? { nil }
     nonisolated func addPosterView() -> AnyView? { nil }
     @MainActor func addTabView(reason: String, currentSceneName: String?, demoMode: Bool = false) -> (view: AnyView, label: String)? { nil }
