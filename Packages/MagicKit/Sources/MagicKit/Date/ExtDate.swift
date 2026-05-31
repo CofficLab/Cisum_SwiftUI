@@ -110,48 +110,7 @@ public extension Date {
     /// print(twoHoursAgo.relativeTime) // 输出: "2小时前"
     /// ```
     var relativeTime: String {
-        let now = Date()
-        let timeInterval = now.timeIntervalSince(self)
-        
-        // 如果是未来时间
-        if timeInterval < 0 {
-            let futureInterval = -timeInterval
-            if futureInterval < 60 {
-                return "即将"
-            } else if futureInterval < 3600 {
-                let minutes = Int(futureInterval / 60)
-                return "\(minutes)分钟后"
-            } else if futureInterval < 86400 {
-                let hours = Int(futureInterval / 3600)
-                return "\(hours)小时后"
-            } else {
-                let days = Int(futureInterval / 86400)
-                return "\(days)天后"
-            }
-        }
-        
-        // 过去时间
-        if timeInterval < 60 {
-            return "刚刚"
-        } else if timeInterval < 3600 {
-            let minutes = Int(timeInterval / 60)
-            return "\(minutes)分钟前"
-        } else if timeInterval < 86400 {
-            let hours = Int(timeInterval / 3600)
-            return "\(hours)小时前"
-        } else if timeInterval < 604800 {
-            let days = Int(timeInterval / 86400)
-            return "\(days)天前"
-        } else if timeInterval < 2592000 {
-            let weeks = Int(timeInterval / 604800)
-            return "\(weeks)周前"
-        } else if timeInterval < 31536000 {
-            let months = Int(timeInterval / 2592000)
-            return "\(months)个月前"
-        } else {
-            let years = Int(timeInterval / 31536000)
-            return "\(years)年前"
-        }
+        DateRelativeTimePolicy.relativeTime(for: self)
     }
     
     /// 智能相对时间字符串
@@ -169,14 +128,73 @@ public extension Date {
     /// print(date.smartRelativeTime) // 输出具体日期格式
     /// ```
     var smartRelativeTime: String {
-        let timeInterval = Date().timeIntervalSince(self)
-        
+        DateRelativeTimePolicy.smartRelativeTime(for: self)
+    }
+}
+
+enum DateRelativeTimePolicy {
+    private static let maximumDisplayUnit = Int.max / 2
+
+    static func relativeTime(for date: Date, now: Date = Date()) -> String {
+        let timeInterval = now.timeIntervalSince(date)
+        guard timeInterval.isFinite else { return "刚刚" }
+
+        // 如果是未来时间
+        if timeInterval < 0 {
+            let futureInterval = -timeInterval
+            if futureInterval < 60 {
+                return "即将"
+            } else if futureInterval < 3600 {
+                let minutes = boundedInt(futureInterval / 60)
+                return "\(minutes)分钟后"
+            } else if futureInterval < 86400 {
+                let hours = boundedInt(futureInterval / 3600)
+                return "\(hours)小时后"
+            } else {
+                let days = boundedInt(futureInterval / 86400)
+                return "\(days)天后"
+            }
+        }
+
+        // 过去时间
+        if timeInterval < 60 {
+            return "刚刚"
+        } else if timeInterval < 3600 {
+            let minutes = boundedInt(timeInterval / 60)
+            return "\(minutes)分钟前"
+        } else if timeInterval < 86400 {
+            let hours = boundedInt(timeInterval / 3600)
+            return "\(hours)小时前"
+        } else if timeInterval < 604800 {
+            let days = boundedInt(timeInterval / 86400)
+            return "\(days)天前"
+        } else if timeInterval < 2592000 {
+            let weeks = boundedInt(timeInterval / 604800)
+            return "\(weeks)周前"
+        } else if timeInterval < 31536000 {
+            let months = boundedInt(timeInterval / 2592000)
+            return "\(months)个月前"
+        } else {
+            let years = boundedInt(timeInterval / 31536000)
+            return "\(years)年前"
+        }
+    }
+
+    static func smartRelativeTime(for date: Date, now: Date = Date()) -> String {
+        let timeInterval = now.timeIntervalSince(date)
+        guard timeInterval.isFinite else { return "刚刚" }
+
         if timeInterval < 604800 { // 7天内使用相对时间
-            return relativeTime
+            return relativeTime(for: date, now: now)
         } else { // 超过7天显示具体日期
             let formatter = DateFormatter()
             formatter.dateFormat = "MM-dd"
-            return formatter.string(from: self)
+            return formatter.string(from: date)
         }
+    }
+
+    private static func boundedInt(_ value: TimeInterval) -> Int {
+        guard value.isFinite, value > 0 else { return 0 }
+        return Int(min(value, TimeInterval(maximumDisplayUnit)))
     }
 }
