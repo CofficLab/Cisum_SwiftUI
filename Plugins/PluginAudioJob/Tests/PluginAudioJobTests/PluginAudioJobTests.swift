@@ -111,6 +111,13 @@ private final class RecordingAudioJob: AudioJob, @unchecked Sendable {
     ))
 }
 
+@Test func monitorScanErrorsDoNotSyncEmptyResults() {
+    let error = NSError(domain: "FileSystemMonitorJobTests", code: 1)
+
+    #expect(FileSystemMonitorJob.shouldSyncMonitorItems(error: nil))
+    #expect(!FileSystemMonitorJob.shouldSyncMonitorItems(error: error))
+}
+
 @Test func unregisterCancelsRunningJob() async throws {
     let manager = AudioJobManager.shared
     let identifier = "test.unregister.\(UUID().uuidString)"

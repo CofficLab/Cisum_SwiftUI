@@ -46,6 +46,10 @@ public final class FileSystemMonitorJob: AudioJob, @unchecked Sendable {
         shouldContinueRunning(runID: runID, activeRunID: activeRunID, isRunning: isRunning)
     }
 
+    public static func shouldSyncMonitorItems(error: Error?) -> Bool {
+        error == nil
+    }
+
     public func execute() async throws {
         guard let disk = await diskProvider() else {
             if Self.verbose {
@@ -65,11 +69,18 @@ public final class FileSystemMonitorJob: AudioJob, @unchecked Sendable {
             monitor = disk.onDirChange(
                 verbose: Self.verbose,
                 caller: String(describing: Self.self) + ".execute",
-                onChange: { @Sendable [weak self] items, isFirst, _ in
+                onChange: { @Sendable [weak self] items, isFirst, error in
                     guard let self else { return }
 
                     Task {
                         guard await self.state.shouldProcessMonitorEvent(runID) else {
+                            return
+                        }
+
+                        guard Self.shouldSyncMonitorItems(error: error) else {
+                            if let error {
+                                os_log(.error, "❌ Audio file system scan failed: \(error.localizedDescription)")
+                            }
                             return
                         }
 
