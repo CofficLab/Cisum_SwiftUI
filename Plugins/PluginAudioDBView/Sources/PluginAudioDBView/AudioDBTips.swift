@@ -23,18 +23,20 @@ struct AudioDBTips: View {
             case .empty:
                 AppEmptyState(
                     icon: "music.note.list",
-                    title: dependencies.isDesktop ? "将音乐文件拖到这里可添加" : "歌曲仓库为空",
-                    description: String(localized: "支持的格式：\(supportedFormats)", table: "Audio-DBView", bundle: .module)
+                    title: dependencies.isDesktop
+                        ? String(localized: "Drop music files here to add them", table: "Audio-DBView", bundle: .module)
+                        : String(localized: "Music repository is empty", table: "Audio-DBView", bundle: .module),
+                    description: String(localized: "Supported formats: \(supportedFormats)", table: "Audio-DBView", bundle: .module)
                 )
                 .frame(minHeight: 160)
 
                 #if os(macOS)
                     if let disk = dependencies.audioDisk() {
-                        Text("或", tableName: "Audio-DBView", bundle: .module)
+                        Text("Or", tableName: "Audio-DBView", bundle: .module)
                             .font(.caption)
                             .foregroundStyle(.secondary)
 
-                        Label { Text("打开仓库目录并放入文件", tableName: "Audio-DBView", bundle: .module) } icon: { Image(systemName: "doc.viewfinder.fill") }
+                        Label { Text("Open repository folder and add files", tableName: "Audio-DBView", bundle: .module) } icon: { Image(systemName: "doc.viewfinder.fill") }
                             .cisumCard(.regularMaterial)
                             .cisumShadowSm()
                             .cisumHoverScale(105)
@@ -47,16 +49,16 @@ struct AudioDBTips: View {
                 BtnAdd().buttonStyle(.bordered).cisumIf(dependencies.isNotDesktop)
 
             case .loading:
-                AppLoadingOverlay(message: "正在读取仓库", size: .large)
+                AppLoadingOverlay(message: LocalizedStringKey(String(localized: "Reading repository", table: "Audio-DBView", bundle: .module)), size: .large)
                     .frame(height: 120)
-                Text("支持的格式：\(supportedFormats)", tableName: "Audio-DBView", bundle: .module)
+                Text("Supported formats: \(supportedFormats)", tableName: "Audio-DBView", bundle: .module)
                     .font(.footnote)
                     .foregroundStyle(.secondary)
 
             case .sorting:
-                AppLoadingOverlay(message: "正在排序", size: .large)
+                AppLoadingOverlay(message: LocalizedStringKey(String(localized: "Sorting", table: "Audio-DBView", bundle: .module)), size: .large)
                     .frame(height: 120)
-                Text("支持的格式：\(supportedFormats)", tableName: "Audio-DBView", bundle: .module)
+                Text("Supported formats: \(supportedFormats)", tableName: "Audio-DBView", bundle: .module)
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }

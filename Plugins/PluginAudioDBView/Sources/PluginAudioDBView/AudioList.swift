@@ -237,13 +237,13 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     private var audioListView: some View {
         List(selection: $selection) {
             Section(header: HStack {
-                Text("共 \(totalCount.description)", tableName: "Audio-DBView", bundle: .module)
+                Text("Total \(totalCount.description)", tableName: "Audio-DBView", bundle: .module)
                 Spacer()
                 if isSyncing {
                     HStack(spacing: 6) {
                         ProgressView()
                             .controlSize(.small)
-                        Text("正在读取仓库", tableName: "Audio-DBView", bundle: .module)
+                        Text("Reading repository", tableName: "Audio-DBView", bundle: .module)
                             .font(.footnote)
                             .foregroundStyle(.secondary)
                     }
@@ -273,7 +273,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
                         Spacer()
                         ProgressView()
                             .controlSize(.small)
-                        Text("正在加载更多...", tableName: "Audio-DBView", bundle: .module)
+                        Text("Loading more...", tableName: "Audio-DBView", bundle: .module)
                             .font(.footnote)
                             .foregroundStyle(.secondary)
                         Spacer()

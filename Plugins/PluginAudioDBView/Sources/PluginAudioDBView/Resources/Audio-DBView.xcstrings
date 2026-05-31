@@ -1,6 +1,22 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Add" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加"
+          }
+        }
+      }
+    },
     "Audio file database view" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -115,6 +131,22 @@
         }
       }
     },
+    "Drop music files here to add them" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "将音乐文件拖到这里可添加"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "將音樂檔案拖到這裡即可添加"
+          }
+        }
+      }
+    },
     "Export failed: %@" : {
       "localizations" : {
         "zh-Hans" : {
@@ -195,6 +227,22 @@
         }
       }
     },
+    "Loading more..." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在加载更多..."
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在載入更多..."
+          }
+        }
+      }
+    },
     "No files were added" : {
       "localizations" : {
         "zh-Hans" : {
@@ -207,6 +255,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "沒有加入檔案"
+          }
+        }
+      }
+    },
+    "Music repository is empty" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "歌曲仓库为空"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "歌曲倉庫為空"
           }
         }
       }
@@ -227,6 +291,38 @@
         }
       }
     },
+    "Open repository folder and add files" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打开仓库目录并放入文件"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打開倉庫目錄並放入檔案"
+          }
+        }
+      }
+    },
+    "Or" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "或"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "或"
+          }
+        }
+      }
+    },
     "共 %@" : {
       "localizations" : {
         "zh-Hans" : {
@@ -239,6 +335,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "共 %@"
+          }
+        }
+      }
+    },
+    "Reading repository" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在读取仓库"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在讀取倉庫"
           }
         }
       }
@@ -373,6 +485,22 @@
         }
       }
     },
+    "Sorting" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在排序"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在排序"
+          }
+        }
+      }
+    },
     "打开仓库目录并放入文件" : {
       "localizations" : {
         "zh-Hans" : {
@@ -418,6 +546,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "儲存位置不可用"
+          }
+        }
+      }
+    },
+    "Supported formats: %@" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "支持的格式：%@"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "支援的格式：%@"
+          }
+        }
+      }
+    },
+    "Total %@" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "共 %@"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "共 %@"
           }
         }
       }

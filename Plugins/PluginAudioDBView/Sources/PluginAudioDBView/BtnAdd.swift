@@ -9,7 +9,7 @@ struct BtnAdd: View {
             action: { dependencies.isImporting.wrappedValue = true },
             label: {
                 Label(
-                    title: { Text("添加", tableName: "Audio-DBView", bundle: .module) },
+                    title: { Text("Add", tableName: "Audio-DBView", bundle: .module) },
                     icon: { Image(systemName: "plus.circle") }
                 )
             }
