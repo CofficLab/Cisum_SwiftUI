@@ -350,6 +350,30 @@ import UniformTypeIdentifiers
     ))
 }
 
+@Test func audioListSelectionKeepsDistinctDanglingSymlinkAudioSeparate() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let missingFile = root.appendingPathComponent("missing.mp3")
+    let firstLink = root.appendingPathComponent("first.mp3")
+    let secondLink = root.appendingPathComponent("second.mp3")
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: firstLink, withDestinationURL: missingFile)
+    try FileManager.default.createSymbolicLink(at: secondLink, withDestinationURL: missingFile)
+
+    #expect(!AudioListSelectionPolicy.representsSameAudio(firstLink, secondLink))
+    #expect(!AudioListSelectionPolicy.shouldApplySelection(
+        currentGeneration: 2,
+        requestGeneration: 2,
+        requestedURL: firstLink,
+        selection: secondLink,
+        displayedURLs: [firstLink, secondLink]
+    ))
+}
+
 @Test func audioDeleteOnlyResetsPlaybackForStillCurrentDeletedAudio() {
     let root = URL(fileURLWithPath: "/tmp/cisum-audio-delete-tests", isDirectory: true)
     let deleted = root.appendingPathComponent("deleted.mp3")
@@ -612,6 +636,27 @@ import UniformTypeIdentifiers
         from: [linkedFile, realFile],
         supportedExtensions: ["mp3"]
     ) == [linkedFile])
+}
+
+@Test func audioImportKeepsDistinctDanglingSymlinkImportSources() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let missingFile = root.appendingPathComponent("missing.mp3")
+    let firstLink = root.appendingPathComponent("first.mp3")
+    let secondLink = root.appendingPathComponent("second.mp3")
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: firstLink, withDestinationURL: missingFile)
+    try FileManager.default.createSymbolicLink(at: secondLink, withDestinationURL: missingFile)
+
+    #expect(!AudioDBView.representsSameImportSource(firstLink, secondLink))
+    #expect(AudioDBView.supportedImportURLs(
+        from: [firstLink, secondLink],
+        supportedExtensions: ["mp3"]
+    ) == [firstLink, secondLink])
 }
 
 @Test func audioDropReadsFileURLDataProvider() async throws {

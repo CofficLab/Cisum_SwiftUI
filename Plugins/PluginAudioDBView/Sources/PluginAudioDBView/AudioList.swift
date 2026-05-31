@@ -122,7 +122,7 @@ enum AudioListSelectionPolicy {
     }
 
     private static func resolvedStandardizedPath(for url: URL) -> String {
-        url.resolvingSymlinksInPath().standardizedFileURL.path
+        AudioListFileIdentity.canonicalIdentity(for: url)
     }
 }
 

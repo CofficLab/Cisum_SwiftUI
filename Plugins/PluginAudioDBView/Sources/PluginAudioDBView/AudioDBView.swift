@@ -194,11 +194,7 @@ extension AudioDBView {
     }
 
     nonisolated static func canonicalImportSourceIdentity(for url: URL) -> String {
-        guard url.isFileURL else {
-            return url.standardized.absoluteString
-        }
-
-        return url.resolvingSymlinksInPath().standardizedFileURL.path
+        AudioListFileIdentity.canonicalIdentity(for: url)
     }
 
     nonisolated static func droppedFileURL(from provider: NSItemProvider) async throws -> URL? {
