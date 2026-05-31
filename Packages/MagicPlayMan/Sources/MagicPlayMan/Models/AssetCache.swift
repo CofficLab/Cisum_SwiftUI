@@ -2,6 +2,7 @@ import Foundation
 import AVFoundation
 import SwiftUI
 import CisumUI
+import CryptoKit
 
 public class AssetCache {
     private let cacheDirectory: URL
@@ -87,11 +88,8 @@ public class AssetCache {
     }
 
     private func cacheFileURL(for url: URL) -> URL {
-        let encodedURL = Data(url.absoluteString.utf8)
-            .base64EncodedString()
-            .replacingOccurrences(of: "/", with: "_")
-            .replacingOccurrences(of: "+", with: "-")
-            .replacingOccurrences(of: "=", with: "")
+        let digest = SHA256.hash(data: Data(url.absoluteString.utf8))
+        let encodedURL = digest.map { String(format: "%02x", $0) }.joined()
         let pathExtension = url.pathExtension
         let filename = pathExtension.isEmpty ? encodedURL : "\(encodedURL).\(pathExtension)"
 

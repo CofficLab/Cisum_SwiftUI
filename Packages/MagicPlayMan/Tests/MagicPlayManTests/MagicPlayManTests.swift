@@ -177,6 +177,25 @@ final class MagicPlayManTests: XCTestCase {
         XCTAssertEqual(try Data(contentsOf: secondCachedURL), Data("second".utf8))
     }
 
+    func testAssetCacheHandlesLongSignedURLs() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer {
+            try? FileManager.default.removeItem(at: root)
+        }
+
+        let cache = try AssetCache(directory: root)
+        let token = String(repeating: "abcdef0123456789", count: 40)
+        let url = try XCTUnwrap(URL(string: "https://cdn.example.com/audio/track.mp3?signature=\(token)"))
+
+        try cache.cache(Data("audio".utf8), for: url)
+        let cachedURL = try XCTUnwrap(cache.cachedURL(for: url))
+
+        XCTAssertLessThan(cachedURL.lastPathComponent.count, 100)
+        XCTAssertEqual(cachedURL.pathExtension, "mp3")
+        XCTAssertEqual(try Data(contentsOf: cachedURL), Data("audio".utf8))
+    }
+
     @MainActor
     func testDefaultPlayerHasLocalization() {
         let man = MagicPlayMan()
