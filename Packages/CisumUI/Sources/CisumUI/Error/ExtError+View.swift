@@ -8,7 +8,7 @@ public extension Error {
                 .font(.title)
                 .foregroundColor(.red)
             
-            Text("发生错误")
+            Text("An error occurred")
                 .font(.headline)
             
             Text(self.localizedDescription)
