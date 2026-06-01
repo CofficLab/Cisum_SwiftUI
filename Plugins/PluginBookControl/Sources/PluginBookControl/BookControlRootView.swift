@@ -164,6 +164,10 @@ enum BookControlPlaybackRequestPolicy {
         !deletedURLs.isEmpty
     }
 
+    static func shouldInvalidateChapterCacheAfterLibraryRefresh() -> Bool {
+        true
+    }
+
     static func shouldResetForStorageLocationChange(isSceneActive: Bool) -> Bool {
         isSceneActive
     }
@@ -343,6 +347,8 @@ public struct BookControlRootView<Content>: View, SuperLog where Content: View {
                 handleCurrentSceneChanged(newSceneName)
             }
             .onReceive(NotificationCenter.default.publisher(for: .bookDBDeleted), perform: handleBookDBDeleted)
+            .onReceive(NotificationCenter.default.publisher(for: .bookDBSynced), perform: handleBookDBRefreshed)
+            .onReceive(NotificationCenter.default.publisher(for: .bookDBUpdated), perform: handleBookDBRefreshed)
             .onReceive(NotificationCenter.default.publisher(for: .bookControlStorageLocationDidReset)) { _ in
                 handleStorageLocationDidReset()
             }
@@ -478,6 +484,14 @@ extension BookControlRootView {
             }
             await man.reset(reason: "BookControlRootView.deletedCurrentAsset")
         }
+    }
+
+    func handleBookDBRefreshed(_ notification: Notification) {
+        guard BookControlPlaybackRequestPolicy.shouldInvalidateChapterCacheAfterLibraryRefresh() else {
+            return
+        }
+
+        BookControlChapterCache.removeAll()
     }
 
     func handleStorageLocationDidReset() {

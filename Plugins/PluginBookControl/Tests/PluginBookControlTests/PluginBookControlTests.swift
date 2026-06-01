@@ -341,6 +341,32 @@ import SwiftUI
     #expect(BookControlChapterCache.cachedChapters(in: root) == nil)
 }
 
+@MainActor
+@Test func bookLibraryRefreshInvalidatesChapterCacheForNewChapters() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    defer {
+        BookControlChapterCache.removeAll()
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    let first = root.appendingPathComponent("001.m4b")
+    try Data("audio".utf8).write(to: first)
+
+    BookControlChapterCache.removeAll()
+    BookControlChapterCache.store([first], in: root)
+
+    #expect(BookControlChapterCache.cachedChapters(in: root) == [first])
+    #expect(BookControlPlaybackRequestPolicy.shouldInvalidateChapterCacheAfterLibraryRefresh())
+
+    if BookControlPlaybackRequestPolicy.shouldInvalidateChapterCacheAfterLibraryRefresh() {
+        BookControlChapterCache.removeAll()
+    }
+
+    #expect(BookControlChapterCache.cachedChapters(in: root) == nil)
+}
+
 @Test func staleDeletionResetDoesNotApplyAfterSceneReactivation() {
     let deletedBook = URL(fileURLWithPath: "/tmp/books/Novel", isDirectory: true)
     let currentChapter = deletedBook.appendingPathComponent("Chapter 01.m4b")
