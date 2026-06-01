@@ -380,7 +380,7 @@ struct MigrationProgressView: View {
                 )
             }
         } catch {
-            print("Error loading source files: \(error)")
+            os_log(.error, "Error loading source files: \(error.localizedDescription)")
         }
     }
 
@@ -392,7 +392,7 @@ struct MigrationProgressView: View {
             targetFiles = try fileManager.contentsOfDirectory(atPath: targetURL.path)
                 .sorted()
         } catch {
-            print("Error loading target files: \(error)")
+            os_log(.error, "Error loading target files: \(error.localizedDescription)")
         }
     }
 
