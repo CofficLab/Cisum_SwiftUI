@@ -321,6 +321,8 @@ extension AudioItemView {
             create: false
         )
 
+        try FileManager.default.createDirectory(at: downloadsURL, withIntermediateDirectories: true)
+
         let finalDestinationURL = uniqueDestination(for: sourceURL, in: downloadsURL)
         let sourceToCopy = copySourceURL(for: sourceURL)
 

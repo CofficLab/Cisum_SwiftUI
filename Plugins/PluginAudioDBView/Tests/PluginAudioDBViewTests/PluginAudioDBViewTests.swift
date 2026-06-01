@@ -761,6 +761,26 @@ import UniformTypeIdentifiers
     #expect((try Data(contentsOf: copiedFile)) == Data("audio".utf8))
 }
 
+@Test func audioItemExportCreatesMissingDownloadsDirectory() async throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let sourceRoot = root.appendingPathComponent("source", isDirectory: true)
+    let downloadsRoot = root.appendingPathComponent("missing-downloads", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: sourceRoot, withIntermediateDirectories: true)
+    let source = sourceRoot.appendingPathComponent("track.mp3")
+    try Data("audio".utf8).write(to: source)
+
+    let copiedFile = try await AudioItemView.copyToDownloads(source, downloadsURL: downloadsRoot)
+
+    #expect(FileManager.default.fileExists(atPath: downloadsRoot.path))
+    #expect(copiedFile.deletingLastPathComponent() == downloadsRoot)
+    #expect((try Data(contentsOf: copiedFile)) == Data("audio".utf8))
+}
+
 @Test func audioImportFiltersUnsupportedDroppedItems() {
     let root = URL(fileURLWithPath: "/tmp/cisum-audio-import-filter-tests", isDirectory: true)
     let supported = root.appendingPathComponent("track.MP3")
