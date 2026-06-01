@@ -224,6 +224,38 @@ import Testing
     #expect(snapshot == BookProgressStateSnapshot(currentURL: url, time: 42))
 }
 
+@Test func playbackPositionDoesNotPersistForAudioOutsideBookDisk() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let bookDisk = root.appendingPathComponent("books", isDirectory: true)
+    let outside = root.appendingPathComponent("audio", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: bookDisk, withIntermediateDirectories: true)
+    try FileManager.default.createDirectory(at: outside, withIntermediateDirectories: true)
+    let book = bookDisk.appendingPathComponent("Novel", isDirectory: true)
+    try FileManager.default.createDirectory(at: book, withIntermediateDirectories: true)
+    let chapter = book.appendingPathComponent("Chapter 01.m4b")
+    let outsideAudio = outside.appendingPathComponent("Track.m4b")
+    try Data("book".utf8).write(to: chapter)
+    try Data("audio".utf8).write(to: outsideAudio)
+
+    #expect(BookProgressPersistencePolicy.shouldPersistPlaybackProgress(
+        currentURL: chapter,
+        bookDisk: bookDisk
+    ))
+    #expect(!BookProgressPersistencePolicy.shouldPersistPlaybackProgress(
+        currentURL: outsideAudio,
+        bookDisk: bookDisk
+    ))
+    #expect(!BookProgressPersistencePolicy.shouldPersistPlaybackProgress(
+        currentURL: nil,
+        bookDisk: bookDisk
+    ))
+}
+
 @Test func restoreResultOnlyAppliesWhenCurrentBookDidNotChange() {
     let starting = URL(fileURLWithPath: "/tmp/book/chapter-01.m4b")
     let switched = URL(fileURLWithPath: "/tmp/book/chapter-02.m4b")

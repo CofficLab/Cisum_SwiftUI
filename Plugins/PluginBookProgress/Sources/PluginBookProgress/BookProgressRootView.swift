@@ -63,6 +63,12 @@ enum BookProgressPersistencePolicy {
         BookProgressBookLookup.bookURL(for: url, bookDisk: bookDisk) != nil
     }
 
+    static func shouldPersistPlaybackProgress(currentURL: URL?, bookDisk: URL?) -> Bool {
+        guard let currentURL else { return false }
+
+        return shouldAcceptBookURL(currentURL, bookDisk: bookDisk)
+    }
+
     static func snapshot(currentURL: URL?, currentTime: TimeInterval, trigger: BookProgressSaveTrigger) -> BookProgressStateSnapshot? {
         guard let currentURL else { return nil }
 
@@ -545,6 +551,13 @@ private extension BookProgressRootView {
     }
 
     private func persistCurrentProgress(reason: String) {
+        guard BookProgressPersistencePolicy.shouldPersistPlaybackProgress(
+            currentURL: man.currentAsset,
+            bookDisk: BookPlugin.getBookDisk()
+        ) else {
+            return
+        }
+
         guard let snapshot = BookProgressPersistencePolicy.snapshot(
             currentURL: man.currentAsset,
             currentTime: man.currentTime,
