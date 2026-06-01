@@ -4,19 +4,22 @@ import SwiftData
 import SwiftUI
 
 struct BtnScene: View {
+    static let accessibilityTitle = String(localized: "Switch Scene", table: "Core")
+
     @EnvironmentObject var p: PluginProvider
 
     @State private var isPresented: Bool = false
 
     var body: some View {
         if let sceneName = p.currentSceneName {
-            Button(action: {
+            Button(Self.accessibilityTitle, systemImage: sceneIcon(for: sceneName)) {
                 self.isPresented.toggle()
-            }) {
-                Image(systemName: sceneIcon(for: sceneName))
             }
-            .accessibilityLabel(Text("Switch Scene", tableName: "Core"))
-            .help(Text("Switch Scene", tableName: "Core"))
+            .accessibilityLabel(Text(Self.accessibilityTitle))
+            .accessibilityRepresentation {
+                Button(Self.accessibilityTitle) {}
+            }
+            .help(Text(Self.accessibilityTitle))
             .popover(isPresented: self.$isPresented, content: {
                 Posters(
                     isPresented: $isPresented
