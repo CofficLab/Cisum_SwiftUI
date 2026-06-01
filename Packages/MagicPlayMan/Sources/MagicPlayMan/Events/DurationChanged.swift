@@ -16,7 +16,7 @@ extension MagicPlayMan {
     /// - Parameter duration: 媒体总时长
     func sendDurationChanged(duration: TimeInterval) {
         let userInfo: [String: Any] = [
-            "duration": duration,
+            "duration": MagicPlayManPlaybackTimePolicy.normalizedDuration(duration),
         ]
 
         NotificationCenter.default.post(

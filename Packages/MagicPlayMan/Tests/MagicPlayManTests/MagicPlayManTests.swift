@@ -375,6 +375,29 @@ final class MagicPlayManTests: XCTestCase {
         XCTAssertEqual(MagicPlayManPlaybackTimePolicy.normalizedDuration(42), 42)
     }
 
+    @MainActor
+    func testDurationChangedNotificationPayloadIsNormalized() {
+        let man = MagicPlayMan()
+        var durations: [TimeInterval] = []
+        let observer = NotificationCenter.default.addObserver(
+            forName: .playManDurationChanged,
+            object: man,
+            queue: nil
+        ) { notification in
+            durations.append(notification.userInfo?["duration"] as? TimeInterval ?? -1)
+        }
+        defer {
+            NotificationCenter.default.removeObserver(observer)
+        }
+
+        man.sendDurationChanged(duration: .nan)
+        man.sendDurationChanged(duration: .infinity)
+        man.sendDurationChanged(duration: -5)
+        man.sendDurationChanged(duration: 42)
+
+        XCTAssertEqual(durations, [0, 0, 0, 42])
+    }
+
     func testPlaybackTimePolicyClampsProgress() {
         XCTAssertEqual(MagicPlayManPlaybackTimePolicy.normalizedUnitProgress(1.4), 1)
         XCTAssertEqual(MagicPlayManPlaybackTimePolicy.normalizedUnitProgress(-0.2), 0)
