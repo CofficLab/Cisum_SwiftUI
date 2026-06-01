@@ -65,7 +65,9 @@ import SwiftData
         object: nil,
         queue: nil
     ) { notification in
-        receivedURLs.set(notification.userInfo?["urls"] as? [URL] ?? [])
+        let urls = notification.userInfo?["urls"] as? [URL] ?? []
+        guard urls == [deletedURL] else { return }
+        receivedURLs.set(urls)
     }
     defer { NotificationCenter.default.removeObserver(token) }
 
@@ -879,7 +881,9 @@ private func canonicalPath(_ url: URL) -> String {
         object: nil,
         queue: nil
     ) { notification in
-        receivedURLs.set(notification.userInfo?["urls"] as? [URL] ?? [])
+        let urls = notification.userInfo?["urls"] as? [URL] ?? []
+        guard urls == [bookURL] else { return }
+        receivedURLs.set(urls)
     }
     defer { NotificationCenter.default.removeObserver(token) }
 
