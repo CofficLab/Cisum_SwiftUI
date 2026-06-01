@@ -75,7 +75,7 @@ extension String {
 
         // 创建正则表达式
         guard let regex = try? NSRegularExpression(pattern: base64ImagePattern, options: []) else {
-            print("无效的正则表达式")
+            os_log(.error, "Invalid regular expression while rewriting embedded image sources")
             return htmlContent
         }
 
@@ -105,7 +105,7 @@ extension String {
                     let newSrc = "./\(imageDirName)/\(fileName)"
                     modifiedHTML = modifiedHTML.replacingOccurrences(of: "src=\"data:image/\(imageType);base64,\(base64Data)\"", with: "src=\"\(newSrc)\"")
                 } else {
-                    print("无效的 Base64 数据")
+                    os_log(.error, "Invalid Base64 image data while rewriting embedded image sources")
                 }
             }
         }
@@ -212,7 +212,7 @@ extension String {
 
         // 将 JSON 字符串转换为 Data
         guard let jsonData = jsonString.data(using: .utf8) else {
-            print("Invalid JSON string.")
+            os_log(.error, "Unable to encode JSON string as UTF-8 data")
             return nil
         }
 
@@ -236,7 +236,7 @@ extension String {
                 return currentObject
             }
         } catch {
-            print("Error parsing JSON: \(error)")
+            os_log(.error, "Error parsing JSON: \(error.localizedDescription)")
         }
 
         return nil
