@@ -24,7 +24,9 @@ enum Config: SuperLog {
     static let appSupportDir: URL? = MagicApp.getAppSpecificSupportDirectory()
     static let localContainer: URL? = MagicApp.getContainerDirectory()
     static let localDocumentsDir: URL? = MagicApp.getDocumentsDirectory()
-    static let cloudDocumentsDir: URL? = MagicApp.getCloudDocumentsDirectory()
+    static var cloudDocumentsDir: URL? {
+        MagicApp.getCloudDocumentsDirectory()
+    }
     static let databaseDir: URL = MagicApp.getDatabaseDirectory()
     static let containerIdentifier = "iCloud.yueyi.cisum"
     static let dbDirName = isDebug ? "db_debug" : "db_production"
