@@ -148,12 +148,7 @@ struct CrashedView: View {
 
     /// 复制错误信息到剪贴板
     private func copyErrorToClipboard() {
-        let errorInfo = """
-        错误类型: \(String(describing: type(of: error)))
-        错误描述: \(error.localizedDescription)
-        """
-
-        errorInfo.copy()
+        Self.errorDetailsText(error).copy()
 
         // 显示复制成功状态
         withAnimation {
@@ -166,6 +161,13 @@ struct CrashedView: View {
                 isCopied = false
             }
         }
+    }
+
+    nonisolated static func errorDetailsText(_ error: Error) -> String {
+        """
+        Error type: \(String(describing: type(of: error)))
+        Error description: \(error.localizedDescription)
+        """
     }
 }
 
