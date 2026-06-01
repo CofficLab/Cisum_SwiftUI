@@ -53,6 +53,15 @@ public struct GlassButton: View {
         appButton = AppButton(systemImage: systemImage, style: Self.mapStyle(style), action: action)
     }
 
+    public init(systemImage: String, accessibilityLabel: LocalizedStringKey, style: Style, action: @escaping () -> Void) {
+        appButton = AppButton(
+            systemImage: systemImage,
+            accessibilityLabel: accessibilityLabel,
+            style: Self.mapStyle(style),
+            action: action
+        )
+    }
+
     public var body: some View {
         appButton
     }

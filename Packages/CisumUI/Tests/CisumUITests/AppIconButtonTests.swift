@@ -11,4 +11,14 @@ struct AppIconButtonTests {
         #expect(compact.resolvedContentPadding == 6)
         #expect(regular.resolvedContentPadding == 8)
     }
+
+    @Test
+    @MainActor
+    func iconButtonAlwaysHasReadableAccessibilityLabel() {
+        let labeled = AppIconButton(systemImage: "plus", label: "Add", action: {})
+        let fallback = AppIconButton(systemImage: "gearshape", action: {})
+
+        #expect(labeled.resolvedAccessibilityLabel == "Add")
+        #expect(fallback.resolvedAccessibilityLabel == "gearshape")
+    }
 }

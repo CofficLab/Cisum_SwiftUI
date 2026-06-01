@@ -57,6 +57,8 @@ public struct AppIconButton: View {
             .scaleEffect(isHovered && motionPreference.allowsMotion ? AppUI.Motion.hoverScale : 1.0)
         }
         .buttonStyle(.plain)
+        .accessibilityLabel(resolvedAccessibilityLabel)
+        .help(resolvedAccessibilityLabel)
         .onHover { hovering in
             AppUI.Motion.animate(AppUI.Motion.enabled(AppUI.Motion.hover, preference: motionPreference)) {
                 isHovered = hovering
@@ -109,6 +111,10 @@ public struct AppIconButton: View {
         case .regular:
             8
         }
+    }
+
+    var resolvedAccessibilityLabel: String {
+        label ?? systemImage
     }
 }
 

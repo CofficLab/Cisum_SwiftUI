@@ -24,6 +24,7 @@ public struct AppButton: View {
     }
 
     let title: Text
+    let accessibilityLabel: Text?
     let systemImage: String?
     let showsTitle: Bool
     let style: Style
@@ -41,6 +42,7 @@ public struct AppButton: View {
         action: @escaping () -> Void
     ) {
         self.title = Text(title)
+        self.accessibilityLabel = nil
         self.systemImage = systemImage
         self.style = style
         self.size = size
@@ -59,6 +61,7 @@ public struct AppButton: View {
         action: @escaping () -> Void
     ) {
         self.title = Text(title)
+        self.accessibilityLabel = nil
         self.systemImage = systemImage
         self.style = style
         self.size = size
@@ -79,6 +82,7 @@ public struct AppButton: View {
         action: @escaping () -> Void
     ) {
         self.title = Text(String(localized: String.LocalizationValue(title), table: table))
+        self.accessibilityLabel = nil
         self.systemImage = systemImage
         self.showsTitle = true
         self.style = style
@@ -96,6 +100,26 @@ public struct AppButton: View {
         action: @escaping () -> Void
     ) {
         self.title = Text(verbatim: "")
+        self.accessibilityLabel = Text(systemImage)
+        self.systemImage = systemImage
+        self.showsTitle = false
+        self.style = style
+        self.size = size
+        self.fillsWidth = false
+        self.isDisabled = false
+        self.action = action
+    }
+
+    /// 仅图标按钮。
+    public init(
+        systemImage: String,
+        accessibilityLabel: LocalizedStringKey,
+        style: Style = .ghost,
+        size: Size = .small,
+        action: @escaping () -> Void
+    ) {
+        self.title = Text(verbatim: "")
+        self.accessibilityLabel = Text(accessibilityLabel)
         self.systemImage = systemImage
         self.showsTitle = false
         self.style = style
@@ -107,6 +131,7 @@ public struct AppButton: View {
 
     private init(
         title: Text,
+        accessibilityLabel: Text?,
         systemImage: String?,
         showsTitle: Bool,
         style: Style,
@@ -116,6 +141,7 @@ public struct AppButton: View {
         action: @escaping () -> Void
     ) {
         self.title = title
+        self.accessibilityLabel = accessibilityLabel
         self.systemImage = systemImage
         self.showsTitle = showsTitle
         self.style = style
@@ -147,6 +173,7 @@ public struct AppButton: View {
         .buttonStyle(.plain)
         .disabled(isDisabled)
         .opacity(isDisabled ? 0.5 : 1.0)
+        .accessibilityLabel(accessibilityLabel ?? title)
         .scaleEffect(isEffectivelyHovered && motionPreference.allowsMotion ? AppUI.Motion.hoverScale : 1.0)
         .onHover { hovering in
             AppUI.Motion.animate(AppUI.Motion.enabled(AppUI.Motion.hover, preference: motionPreference)) {
@@ -159,6 +186,7 @@ public struct AppButton: View {
     public func disabled(_ isDisabled: Bool) -> AppButton {
         AppButton(
             title: title,
+            accessibilityLabel: accessibilityLabel,
             systemImage: systemImage,
             showsTitle: showsTitle,
             style: style,
@@ -176,6 +204,10 @@ public struct AppButton: View {
         case .medium:
             Metrics(horizontalPadding: 14, verticalPadding: 10)
         }
+    }
+
+    var hasExplicitAccessibilityLabel: Bool {
+        accessibilityLabel != nil
     }
 
     private var font: Font {

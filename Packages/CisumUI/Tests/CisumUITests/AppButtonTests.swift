@@ -19,4 +19,20 @@ struct AppButtonTests {
         #expect(button.metrics.horizontalPadding == 14)
         #expect(button.metrics.verticalPadding == 10)
     }
+
+    @Test
+    @MainActor
+    func iconOnlyButtonRequiresExplicitAccessibilityLabel() {
+        let button = AppButton(systemImage: "gearshape", accessibilityLabel: "Settings", action: {})
+
+        #expect(button.hasExplicitAccessibilityLabel)
+    }
+
+    @Test
+    @MainActor
+    func iconOnlyButtonKeepsCompatibilityAccessibilityFallback() {
+        let button = AppButton(systemImage: "gearshape", action: {})
+
+        #expect(button.hasExplicitAccessibilityLabel)
+    }
 }
