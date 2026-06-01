@@ -71,10 +71,6 @@ extension BookDBView {
             return
         }
 
-        if Self.shouldReportSkippedImportSources(files, importSources: importSources) {
-            alert_warning(String(localized: "Some files were skipped because they are not supported audiobook sources", table: "Book-DBView", bundle: .module))
-        }
-
         guard let bookDisk = dependencies.bookDisk else {
             os_log(.error, "\(self.t)❌ 书籍仓库目录不可用")
             alert_error(String(localized: "Storage location is unavailable", table: "Book-DBView", bundle: .module))
@@ -84,6 +80,10 @@ extension BookDBView {
         guard Self.shouldStartImport(isImporting: isImportingFiles) else {
             alert_warning(String(localized: "Import is already in progress", table: "Book-DBView", bundle: .module))
             return
+        }
+
+        if Self.shouldReportSkippedImportSources(files, importSources: importSources) {
+            alert_warning(String(localized: "Some files were skipped because they are not supported audiobook sources", table: "Book-DBView", bundle: .module))
         }
 
         isImportingFiles = true
