@@ -55,7 +55,7 @@ public struct PlayPauseIntent: AppIntent, SuperLog {
     public init() {}
 
     public func perform() async throws -> some IntentResult {
-        os_log("\(Self.t)播放/暂停意图已执行")
+        os_log("\(Self.t)Play/Pause intent performed")
 
         // 通过 App Groups UserDefaults 触发主 App 操作。
         incrementWidgetCommand("widgetPlayPauseTrigger")
@@ -78,7 +78,7 @@ public struct NextTrackIntent: AppIntent, SuperLog {
     public init() {}
 
     public func perform() async throws -> some IntentResult {
-        os_log("\(Self.t)下一首意图已执行")
+        os_log("\(Self.t)Next Track intent performed")
 
         // 通过 App Groups UserDefaults 触发主 App 操作。
         incrementWidgetCommand("widgetNextTrigger")
@@ -101,7 +101,7 @@ public struct PreviousTrackIntent: AppIntent, SuperLog {
     public init() {}
 
     public func perform() async throws -> some IntentResult {
-        os_log("\(Self.t)上一首意图已执行")
+        os_log("\(Self.t)Previous Track intent performed")
 
         // 通过 App Groups UserDefaults 触发主 App 操作。
         incrementWidgetCommand("widgetPreviousTrigger")

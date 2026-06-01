@@ -29,11 +29,11 @@ struct WidgetData: Codable, SuperLog {
         if let encoded = try? JSONEncoder().encode(data) {
             sharedDefaults?.set(encoded, forKey: Keys.data)
             if Self.verbose {
-                os_log("\(Self.t)💾 已保存小组件数据到 \(suiteName)：\(title) - \(artist)（播放中：\(isPlaying)）")
+                os_log("\(Self.t)💾 Saved widget data to \(suiteName): \(title) - \(artist) (playing: \(isPlaying))")
             }
             WidgetCenter.shared.reloadAllTimelines()
         } else {
-            os_log(.error, "\(Self.t)编码小组件数据失败")
+            os_log(.error, "\(Self.t)Failed to encode widget data")
         }
     }
 
@@ -41,12 +41,12 @@ struct WidgetData: Codable, SuperLog {
         guard let data = sharedDefaults?.data(forKey: Keys.data),
               let decoded = try? JSONDecoder().decode(WidgetData.self, from: data) else {
             if Self.verbose {
-                os_log("\(Self.t)从 \(suiteName) 加载小组件数据失败，返回空数据")
+                os_log("\(Self.t)Failed to load widget data from \(suiteName); returning empty data")
             }
             return .empty
         }
         if Self.verbose {
-            os_log("\(Self.t)已加载小组件数据：\(decoded.title) - \(decoded.artist)")
+            os_log("\(Self.t)Loaded widget data: \(decoded.title) - \(decoded.artist)")
         }
         return decoded
     }
