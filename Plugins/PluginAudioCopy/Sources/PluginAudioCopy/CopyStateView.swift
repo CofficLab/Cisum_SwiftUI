@@ -7,6 +7,14 @@ import SwiftData
 import SwiftUI
 
 enum CopyStatePresentation {
+    static func detailsButtonLabel(isShowing: Bool) -> String {
+        String(
+            localized: isShowing ? "Hide copy details" : "Show copy details",
+            table: "Audio-Copy-macOS",
+            bundle: .module
+        )
+    }
+
     static func message(pendingCount: Int, failedCount: Int) -> String {
         if pendingCount > 0, failedCount > 0 {
             return String(
@@ -67,6 +75,8 @@ struct CopyStateView: View, SuperLog, SuperThread {
                     Image.cisumList.cisumButton {
                         self.showCopying.toggle()
                     }
+                    .accessibilityLabel(CopyStatePresentation.detailsButtonLabel(isShowing: showCopying))
+                    .help(CopyStatePresentation.detailsButtonLabel(isShowing: showCopying))
                 }
                 .font(.callout)
                 .foregroundStyle(.white)

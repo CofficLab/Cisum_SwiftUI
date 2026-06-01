@@ -244,6 +244,11 @@ import UniformTypeIdentifiers
     #expect(CopyStatePresentation.message(pendingCount: 0, failedCount: 0).isEmpty)
 }
 
+@Test func copyStateDetailsButtonLabelTracksPopoverState() {
+    #expect(CopyStatePresentation.detailsButtonLabel(isShowing: false) == "Show copy details")
+    #expect(CopyStatePresentation.detailsButtonLabel(isShowing: true) == "Hide copy details")
+}
+
 @MainActor @Test func copyListRejectsStaleDeleteOffsets() {
     let folder = URL(fileURLWithPath: "/tmp/cisum-audio-copy-tests", isDirectory: true)
     let tasks = [
