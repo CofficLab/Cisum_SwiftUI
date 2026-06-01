@@ -101,6 +101,8 @@ private struct AppTabButton: View {
             .animation(AppUI.Motion.enabled(AppUI.Motion.selection, preference: motionPreference), value: isSelected)
         }
         .buttonStyle(.plain)
+        .accessibilityLabel(AppTabBarAccessibilityPolicy.buttonLabel(title: title, isSelected: isSelected))
+        .help(title)
         .onHover { hovering in
             AppUI.Motion.animate(AppUI.Motion.enabled(AppUI.Motion.hover, preference: motionPreference)) {
                 isHovered = hovering
@@ -117,6 +119,12 @@ private struct AppTabButton: View {
         } else {
             Color.white.opacity(0.05)
         }
+    }
+}
+
+enum AppTabBarAccessibilityPolicy {
+    static func buttonLabel(title: String, isSelected: Bool) -> String {
+        isSelected ? "\(title), selected" : title
     }
 }
 

@@ -54,6 +54,7 @@ public struct AppActivityIconButton: View {
             }
         }
         .buttonStyle(.plain)
+        .accessibilityLabel(resolvedAccessibilityLabel)
         .help(label)
         .animation(LumiMotion.enabled(LumiMotion.selection, preference: motionPreference), value: isActive)
         .onHover { hovering in
@@ -71,6 +72,10 @@ public struct AppActivityIconButton: View {
         } else {
             inactiveTint ?? theme.textSecondary
         }
+    }
+
+    var resolvedAccessibilityLabel: String {
+        label
     }
 }
 
