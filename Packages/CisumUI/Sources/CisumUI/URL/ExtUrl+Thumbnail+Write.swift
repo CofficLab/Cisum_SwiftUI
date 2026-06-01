@@ -18,66 +18,66 @@ public enum CoverWriteError: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .fileNotExists(let path):
-            return "文件不存在：\(path)"
+            return "File does not exist: \(path)"
         case .fileNotWritable(let path):
-            return "文件不可写入：\(path)"
+            return "File is not writable: \(path)"
         case .exportSessionCreationFailed:
-            return "创建导出会话失败"
+            return "Failed to create export session"
         case .exportFailed(let error):
             if let error = error as NSError? {
                 return """
-                导出失败：
-                - 错误描述：\(error.localizedDescription)
-                - 错误域：\(error.domain)
-                - 错误代码：\(error.code)
-                - 详细信息：\(error.userInfo)
+                Export failed:
+                - Description: \(error.localizedDescription)
+                - Domain: \(error.domain)
+                - Code: \(error.code)
+                - Details: \(error.userInfo)
                 """
             }
-            return "导出失败：\(error?.localizedDescription ?? "未知错误")"
+            return "Export failed: \(error?.localizedDescription ?? "Unknown error")"
         case .temporaryFileOperationFailed(let error):
-            return "临时文件操作失败：\(error.localizedDescription)"
+            return "Temporary file operation failed: \(error.localizedDescription)"
         case .mp3ProcessingFailed(let error):
-            return "MP3 文件处理失败：\(error?.localizedDescription ?? "未知错误")"
+            return "MP3 file processing failed: \(error?.localizedDescription ?? "Unknown error")"
         case .wavProcessingFailed(let error):
-            return "WAV 文件处理失败：\(error?.localizedDescription ?? "未知错误")"
+            return "WAV file processing failed: \(error?.localizedDescription ?? "Unknown error")"
         }
     }
     
     public var failureReason: String? {
         switch self {
         case .fileNotExists:
-            return "请确认文件路径是否正确"
+            return "The selected file path could not be found."
         case .fileNotWritable:
-            return "请检查文件权限"
+            return "The app does not have permission to write this file."
         case .exportSessionCreationFailed:
-            return "可能是文件格式不支持或系统资源不足"
+            return "The file format may be unsupported or system resources may be low."
         case .exportFailed:
-            return "可能是文件格式不兼容或磁盘空间不足"
+            return "The file format may be incompatible or disk space may be low."
         case .temporaryFileOperationFailed:
-            return "可能是磁盘空间不足或权限问题"
+            return "Disk space or file permissions may have prevented the operation."
         case .mp3ProcessingFailed:
-            return "可能是 MP3 文件处理失败"
+            return "The MP3 metadata writer could not update the file."
         case .wavProcessingFailed:
-            return "可能是 WAV 文件处理失败"
+            return "The WAV metadata writer could not update the file."
         }
     }
     
     public var recoverySuggestion: String? {
         switch self {
         case .fileNotExists:
-            return "请选择一个存在的音频文件"
+            return "Choose an existing audio file."
         case .fileNotWritable:
-            return "请确保应用有写入权限"
+            return "Grant write permission for this file, then try again."
         case .exportSessionCreationFailed:
-            return "请尝试使用其他音频格式或重启应用"
+            return "Try another audio format or restart the app."
         case .exportFailed:
-            return "请尝试将文件转换为 M4A 格式后再添加封面"
+            return "Try converting the file to M4A before adding artwork."
         case .temporaryFileOperationFailed:
-            return "请确保磁盘有足够空间并检查权限设置"
+            return "Check disk space and file permissions."
         case .mp3ProcessingFailed:
-            return "请检查 MP3 文件处理逻辑"
+            return "Check that the MP3 file is valid and writable."
         case .wavProcessingFailed:
-            return "请检查 WAV 文件处理逻辑"
+            return "Check that the WAV file is valid and writable."
         }
     }
 }
@@ -215,11 +215,11 @@ extension URL {
         } else {
             if verbose {
                 os_log("""
-                导出失败：
-                - 状态：\(exportSession.status.rawValue)
-                - 错误：\(String(describing: exportSession.error))
-                - 输出URL：\(String(describing: exportSession.outputURL))
-                - 输出类型：\(String(describing: exportSession.outputFileType))
+                Export failed:
+                - Status: \(exportSession.status.rawValue)
+                - Error: \(String(describing: exportSession.error))
+                - Output URL: \(String(describing: exportSession.outputURL))
+                - Output file type: \(String(describing: exportSession.outputFileType))
                 """)
             }
             throw CoverWriteError.exportFailed(exportSession.error)
