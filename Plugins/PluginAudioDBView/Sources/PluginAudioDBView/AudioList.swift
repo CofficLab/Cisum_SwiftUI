@@ -157,13 +157,13 @@ enum AudioListSelectionPolicy {
 }
 
 /*
- 展示策略（扁平化列表 + 分页加载）：
- - 仅展示仓库中的音频文件；文件夹不会作为分组出现
- - 所有子目录中的文件被"拍平"后按统一规则排序与展示
- - 采用分页加载策略，滚动到 80% 位置时自动加载下一页
+ Display strategy (flat list + paged loading):
+ - Only audio files in the repository are shown; folders are not displayed as groups.
+ - Files in every subdirectory are flattened and displayed with one unified sort order.
+ - Paged loading is used, and the next page is loaded when scrolling reaches 80%.
 
- 示例：
-   根目录
+ Example:
+   Root
    ├─ A/
    │  ├─ A1
    │  └─ A2
@@ -171,12 +171,12 @@ enum AudioListSelectionPolicy {
       ├─ B1
       └─ B2
 
-   扁平化后展示为：A1、A2、B1、B2（不显示 A、B 目录本身）
+   Flattened display: A1, A2, B1, B2 (the A and B directories are hidden)
 
- 分页加载：
-   - 初始加载：50 条（或根据屏幕高度动态计算）
-   - 触发加载：滚动到倒数 10 条或 80% 位置
-   - 自动去重：防止重复加载相同数据
+ Paged loading:
+   - Initial load: 50 rows (or calculated dynamically from screen height)
+   - Trigger: scroll to the last 10 rows or the 80% position
+   - Automatic deduplication: prevents loading the same data twice
  */
 struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     nonisolated static let emoji = "📬"
@@ -186,37 +186,37 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
     @Environment(\.audioDBDependencies) private var dependencies
     @LumiTheme private var appTheme
 
-    /// 当前选中的音频 URL
+    /// Currently selected audio URL.
     @State private var selection: URL? = nil
 
-    /// 音频列表 URL 数组（已加载的数据）
+    /// Audio list URLs that are already loaded.
     @State private var urls: [URL] = []
 
-    /// 是否正在加载
+    /// Whether the first page is loading.
     @State private var isLoading: Bool = false
 
-    /// 是否正在加载更多
+    /// Whether the next page is loading.
     @State private var isLoadingMore: Bool = false
 
-    /// 是否还有更多数据可加载
+    /// Whether more data can be loaded.
     @State private var hasMore: Bool = true
 
-    /// 当前页码
+    /// Current page number.
     @State private var currentPage: Int = 0
 
-    /// 每页大小
+    /// Page size.
     @State private var pageSize: Int = 50
 
-    /// 是否正在同步数据
+    /// Whether data is syncing.
     @State private var isSyncing: Bool = false
 
-    /// 音频总数（显示用）
+    /// Total audio count for display.
     @State private var totalCount: Int = 0
 
-    /// 当前加载世代，用于丢弃刷新前启动的过期分页任务。
+    /// Current load generation used to discard stale paging tasks started before a refresh.
     @State private var loadGeneration: Int = 0
 
-    /// 当前选择播放世代，用于丢弃快速点选时过期的播放任务。
+    /// Current selection generation used to discard stale playback tasks after rapid selection changes.
     @State private var selectionGeneration: Int = 0
 
     var body: some View {
@@ -241,7 +241,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
         .onPlayManAssetChanged(handleAssetChanged)
     }
 
-    /// 音频列表视图
+    /// Audio list view.
     private var audioListView: some View {
         List(selection: $selection) {
             Section(header: HStack {
@@ -263,19 +263,19 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
                         .labelStyle(.iconOnly)
                 }
             }, content: {
-                // 使用 URL 作为 id，确保 List selection 能正确工作
+                // Use the URL as the ID so List selection works correctly.
                 ForEach(Array(urls.enumerated()), id: \.element) { index, url in
                     AudioItemView(url)
-                        .equatable() // 使用 Equatable 优化，减少不必要的重绘
+                        .equatable() // Use Equatable to reduce unnecessary redraws.
                         .listRowBackground(Color.clear)
                         .onAppear {
-                            // 仅在接近列表末尾时检查是否需要加载更多
+                            // Check for more data only near the end of the list.
                             checkLoadMore(at: index)
                         }
                 }
                 .onDelete(perform: handleDeleteItems)
 
-                // 加载更多指示器
+                // Load-more indicator.
                 if isLoadingMore && !urls.isEmpty {
                     HStack {
                         Spacer()
@@ -300,7 +300,7 @@ struct AudioList: View, SuperThread, SuperLog, SuperEvent {
 // MARK: - Action
 
 extension AudioList {
-    /// 加载第一页数据
+    /// Loads the first page.
     private func loadInitial() {
         guard !isLoading else { return }
 
@@ -323,7 +323,7 @@ extension AudioList {
             )
 
             if Self.verbose {
-                os_log("\(self.t)✅ 加载初始数据: \(urls.count) 条，总数: \(count)")
+                os_log("\(self.t)✅ Loaded initial data: \(urls.count) rows, total: \(count)")
             }
 
             await MainActor.run {
@@ -342,10 +342,10 @@ extension AudioList {
         }
     }
 
-    /// 检查是否需要加载更多数据
-    /// - Parameter index: 当前可见项在已加载列表中的索引
+    /// Checks whether more data should be loaded.
+    /// - Parameter index: Index of the currently visible item in the loaded list.
     private func checkLoadMore(at index: Int) {
-        // 仅当接近末尾且有更多数据且未在加载中时触发
+        // Trigger only near the end when more data exists and no load is in progress.
         guard AudioListLoadPolicy.shouldLoadMore(
             currentIndex: index,
             loadedCount: urls.count,
@@ -359,7 +359,7 @@ extension AudioList {
         loadMore()
     }
 
-    /// 加载更多数据
+    /// Loads more data.
     private func loadMore() {
         guard !isLoadingMore, hasMore else {
             if Self.verbose {
@@ -447,13 +447,13 @@ extension AudioList {
         loadedCount
     }
 
-    /// 刷新当前页数据（保持分页状态）
+    /// Refreshes the current page while preserving paging state.
     private func refreshCurrentPage(reason: String) {
-        // 重新加载当前页的数据，但保持分页状态
+        // Reload the current page data while preserving paging state.
         loadCurrentPageData(reason: reason)
     }
 
-    /// 完全重置并刷新
+    /// Fully resets and refreshes.
     private func refresh(reason: String) {
         if Self.verbose {
             os_log("\(self.t)🍋 Refresh with reason: \(reason)")
@@ -461,7 +461,7 @@ extension AudioList {
 
         AudioItemFileSizeCache.removeAll()
 
-        // 重置状态
+        // Reset state.
         loadGeneration += 1
         currentPage = 0
         hasMore = true
@@ -476,25 +476,25 @@ extension AudioList {
 // MARK: - Setter
 
 extension AudioList {
-    /// 设置选中的音频
+    /// Sets the selected audio.
     @MainActor
     private func setSelection(_ newValue: URL?, reason: String) {
         if Self.verbose {
-            os_log("\(self.t)🔄 (\(reason)) 设置选中音频: \(newValue?.lastPathComponent ?? "nil")")
+            os_log("\(self.t)🔄 (\(reason)) Set selected audio: \(newValue?.lastPathComponent ?? "nil")")
         }
         selection = newValue
     }
 
-    /// 设置同步状态
+    /// Sets the sync state.
     @MainActor
     private func setIsSyncing(_ newValue: Bool) {
         if Self.verbose {
-            os_log("\(self.t)🔄 同步状态: \(newValue ? "同步中" : "完成")")
+            os_log("\(self.t)🔄 Sync state: \(newValue ? "syncing" : "done")")
         }
         isSyncing = newValue
     }
 
-    /// 加载当前页数据（用于刷新当前已加载的内容）
+    /// Loads the current page data to refresh already loaded content.
     private func loadCurrentPageData(reason: String) {
         guard let repo = dependencies.audioRepo() else {
             alert_error(String(localized: "Refresh failed: audio repository is unavailable", table: "Audio-DBView", bundle: .module))
@@ -511,18 +511,18 @@ extension AudioList {
 
         Task.detached(priority: .background) {
             if Self.verbose {
-                os_log("\(self.t)🔄 重新加载当前页数据 - \(reason)")
+                os_log("\(self.t)🔄 Reloading current page data - \(reason)")
             }
 
-            // 获取当前状态
+            // Get the current state.
             let currentCount = await self.urls.count
             let currentTotalCount = await self.totalCount
 
-            // 重新获取总数
+            // Fetch the total count again.
             let newTotalCount = await repo.getTotalCount()
 
             if Self.verbose {
-                os_log("\(self.t)📊 计数变化：\(currentTotalCount) → \(newTotalCount)，当前已加载：\(currentCount)")
+                os_log("\(self.t)📊 Count changed: \(currentTotalCount) → \(newTotalCount), currently loaded: \(currentCount)")
             }
 
             await MainActor.run {
@@ -530,25 +530,25 @@ extension AudioList {
                     currentGeneration: self.loadGeneration,
                     resultGeneration: generation
                 ) else { return }
-                // 如果总数增加（新增文件），需要完全重新加载
+                // If the total increased, new files were added and a full reload is needed.
                 if newTotalCount > currentTotalCount {
                     if Self.verbose {
-                        os_log("\(self.t)✨ 检测到新增文件，完全重新加载")
+                        os_log("\(self.t)✨ New files detected, reloading fully")
                     }
-                    self.refresh(reason: "新增文件 - \(reason)")
+                    self.refresh(reason: "New files - \(reason)")
                     return
                 }
 
-                // 如果总数减少（删除文件），也需要完全重新加载
+                // If the total decreased, files were deleted and a full reload is needed.
                 if newTotalCount < currentTotalCount {
                     if Self.verbose {
-                        os_log("\(self.t)🗑️ 检测到删除文件，完全重新加载")
+                        os_log("\(self.t)🗑️ Deleted files detected, reloading fully")
                     }
-                    self.refresh(reason: "删除文件 - \(reason)")
+                    self.refresh(reason: "Deleted files - \(reason)")
                     return
                 }
 
-                // 总数不变，只刷新当前页数据
+                // When the total is unchanged, refresh only the current page.
                 if currentCount > 0 {
                     Task.detached(priority: .background) {
                         let refreshedUrls = await repo.get(
@@ -568,7 +568,7 @@ extension AudioList {
                             self.isLoadingMore = false
 
                             if Self.verbose {
-                                os_log("\(self.t)✅ 当前页数据刷新完成，项目数: \(refreshedUrls.count)")
+                                os_log("\(self.t)✅ Current page data refreshed, item count: \(refreshedUrls.count)")
                             }
                         }
                     }
@@ -585,19 +585,19 @@ extension AudioList {
 // MARK: - Event Handler
 
 extension AudioList {
-    /// 处理视图出现事件
+    /// Handles view appearance.
     func handleOnAppear() {
         loadInitial()
 
         if let asset = playManController.asset {
             if Self.verbose {
-                os_log("\(self.t)🎵 恢复选中当前播放的音频")
+                os_log("\(self.t)🎵 Restoring selection to current audio")
             }
             setSelection(asset, reason: "handleOnAppear")
         }
     }
 
-    /// 处理选中项变化事件
+    /// Handles selection changes.
     func handleSelectionChange() {
         if let url = selection, isLoading == false {
             guard !AudioListSelectionPolicy.representsSameAudio(url, playManController.currentURL) else { return }
@@ -616,9 +616,9 @@ extension AudioList {
                     return
                 }
 
-                let reason = self.className + ".选中项目变了"
+                let reason = self.className + ".selectionChanged"
                 if Self.verbose {
-                    os_log("\(self.t)▶️ (\(reason)) 选中变化，播放: \(url.lastPathComponent)")
+                    os_log("\(self.t)▶️ (\(reason)) Selection changed, playing: \(url.lastPathComponent)")
                 }
                 await self.playManController.play(url, reason: reason)
             }
@@ -627,7 +627,7 @@ extension AudioList {
         }
     }
 
-    /// 处理播放资源变化事件
+    /// Handles playback asset changes.
     func handleAssetChanged(url: URL?) {
         if let asset = url {
             if !AudioListSelectionPolicy.representsSameAudio(asset, selection) {
@@ -638,40 +638,40 @@ extension AudioList {
         }
     }
 
-    /// 处理排序完成事件
+    /// Handles sort completion.
     func handleDBSortDone(_ notification: Notification) {
         if Self.verbose {
-            os_log("\(self.t)✅ 排序完成")
+            os_log("\(self.t)✅ Sorting finished")
         }
         refresh(reason: "handleDBSortDone")
     }
 
-    /// 处理音频删除事件
+    /// Handles audio deletion notifications.
     func handleDBDeleted(_ notification: Notification) {
         guard let urlsToDelete = notification.userInfo?["urls"] as? [URL] else {
             if Self.verbose {
-                os_log("\(self.t)⚠️ 删除通知中没有 URL 信息")
+                os_log("\(self.t)⚠️ Delete notification did not include URL information")
             }
             return
         }
 
         if Self.verbose {
-            os_log("\(self.t)🗑️ 收到删除通知: \(urlsToDelete.count) 个文件")
+            os_log("\(self.t)🗑️ Received delete notification: \(urlsToDelete.count) files")
         }
 
-        // 使用动画效果移除已删除的文件
+        // Remove deleted files with animation.
         withAnimation(.easeInOut(duration: 0.3)) {
             loadGeneration = AudioListLoadPolicy.generationAfterDeletingDisplayedItems(loadGeneration)
             isLoading = false
             isLoadingMore = false
             AudioItemFileSizeCache.remove(urlsToDelete)
 
-            // 从 urls 数组中移除被删除的 URL
+            // Remove deleted URLs from the displayed list.
             urls.removeAll { url in
                 AudioListDeletionPolicy.shouldRemove(url, deletedURLs: urlsToDelete)
             }
 
-            // 更新总数
+            // Update the total count.
             totalCount = AudioListDeletionPolicy.totalCountAfterDeletion(
                 currentTotal: totalCount,
                 deletedURLs: urlsToDelete
@@ -682,7 +682,7 @@ extension AudioList {
             )
             hasMore = totalCount > urls.count
 
-            // 如果删除的是当前选中的文件，清除选中状态
+            // Clear selection if the selected file was deleted.
             if let selected = selection,
                AudioListDeletionPolicy.shouldRemove(selected, deletedURLs: urlsToDelete) {
                 selection = nil
@@ -690,41 +690,41 @@ extension AudioList {
         }
 
         if Self.verbose {
-            os_log("\(self.t)✅ 已移除 \(urlsToDelete.count) 个文件，剩余 \(urls.count) 个")
+            os_log("\(self.t)✅ Removed \(urlsToDelete.count) files, remaining: \(urls.count)")
         }
     }
 
-    /// 处理数据同步完成事件
+    /// Handles data sync completion.
     func handleDBSynced(_ notification: Notification) {
         refreshCurrentPage(reason: "handleDBSynced")
         setIsSyncing(false)
     }
 
-    /// 处理数据更新事件
+    /// Handles data updates.
     func handleDBUpdated(_ notification: Notification) {
         refreshCurrentPage(reason: "handleDBUpdated")
         setIsSyncing(false)
     }
 
-    /// 处理数据同步开始事件
+    /// Handles data sync start.
     func handleDBSyncing(_ notification: Notification) {
         setIsSyncing(true)
     }
 
-    /// 处理删除列表项事件
+    /// Handles list item deletion.
     ///
-    /// 当用户通过列表滑动删除音频时触发，删除文件并显示提示。
+    /// Triggered when the user swipes to delete audio from the list, then deletes the files and shows a notification.
     ///
-    /// - Parameter offsets: 要删除的项目索引集合
+    /// - Parameter offsets: Index set for the items to delete.
     func handleDeleteItems(at offsets: IndexSet) {
-        // 获取要删除的 URLs
+        // Get the URLs to delete.
         guard let urlsToDelete = Self.urlsToDelete(from: offsets, in: urls) else {
             alert_error(String(localized: "Delete failed: the audio list changed. Please try again.", table: "Audio-DBView", bundle: .module))
             return
         }
 
         if Self.verbose {
-            os_log("\(self.t)🗑️ 删除 \(urlsToDelete.count) 个项目")
+            os_log("\(self.t)🗑️ Deleting \(urlsToDelete.count) items")
         }
 
         Task {
@@ -740,7 +740,7 @@ extension AudioList {
                     deletedURLs: urlsToDelete,
                     isPlaybackControllerHandlingDeletion: true
                 ) {
-                    await playManController.reset(reason: "删除文件")
+                    await playManController.reset(reason: "Delete file")
                 }
                 for url in urlsToDelete {
                     alert_info(String(localized: "Deleted \(url.title)", table: "Audio-DBView", bundle: .module))
