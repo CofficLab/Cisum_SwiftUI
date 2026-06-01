@@ -8,6 +8,8 @@ import SwiftUI
 #endif
 
 public struct AppImagePreviewGrid: View {
+    static let previewHelpText = "Preview image"
+
     let imageDataList: [Data]
     @State private var previewingImage: PlatformImage?
 
@@ -39,7 +41,7 @@ public struct AppImagePreviewGrid: View {
                             )
                     }
                     .buttonStyle(.plain)
-                    .help("点击预览图片")
+                    .help(Self.previewHelpText)
                 }
             }
         }
@@ -61,6 +63,8 @@ public struct AppImagePreviewGrid: View {
 }
 
 private struct AppImagePreviewSheet: View {
+    static let closeButtonTitle = "Close"
+
     let image: PlatformImage
     @Environment(\.dismiss) private var dismiss
 
@@ -68,7 +72,7 @@ private struct AppImagePreviewSheet: View {
         VStack(spacing: 0) {
             HStack {
                 Spacer()
-                Button("关闭") {
+                Button(Self.closeButtonTitle) {
                     dismiss()
                 }
                 .keyboardShortcut(.cancelAction)
