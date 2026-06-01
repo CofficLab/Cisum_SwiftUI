@@ -15,8 +15,20 @@ enum AudioDownloadRequestPolicy {
         isSceneActive && asset != nil
     }
 
-    static func shouldApplyDownloadResult(requestedAsset: URL, currentAsset: URL?, isSceneActive: Bool) -> Bool {
-        isSceneActive && representsSameFile(requestedAsset, currentAsset)
+    static func shouldApplyDownloadResult(
+        requestedAsset: URL,
+        currentAsset: URL?,
+        isSceneActive: Bool,
+        currentGeneration: Int = 0,
+        requestGeneration: Int = 0
+    ) -> Bool {
+        currentGeneration == requestGeneration
+            && isSceneActive
+            && representsSameFile(requestedAsset, currentAsset)
+    }
+
+    static func generationAfterDeactivation(_ generation: Int) -> Int {
+        generation + 1
     }
 
     private static func representsSameFile(_ lhs: URL?, _ rhs: URL?) -> Bool {
@@ -36,6 +48,7 @@ public struct AudioDownloadRootView<Content>: View, SuperLog where Content: View
     private static var verbose: Bool { true }
 
     @EnvironmentObject private var man: MagicPlayMan
+    @State private var downloadGeneration = 0
     private let currentSceneName: AudioDownloadCurrentSceneProvider
     private var content: Content
 
@@ -50,8 +63,8 @@ public struct AudioDownloadRootView<Content>: View, SuperLog where Content: View
     public var body: some View {
         content
             .onAppear(perform: handleOnAppear)
-            .onChange(of: currentSceneName()) { _, _ in
-                handleCurrentSceneChanged()
+            .onChange(of: currentSceneName()) { _, newSceneName in
+                handleCurrentSceneChanged(newSceneName)
             }
             .onPlayManAssetChanged(handlePlayManAssetChanged)
     }
@@ -79,7 +92,11 @@ extension AudioDownloadRootView {
         handleCurrentSceneChanged()
     }
 
-    func handleCurrentSceneChanged() {
+    func handleCurrentSceneChanged(_ sceneName: String? = nil) {
+        if let sceneName, sceneName != AudioDownloadPluginInfo.audioSceneName {
+            downloadGeneration = AudioDownloadRequestPolicy.generationAfterDeactivation(downloadGeneration)
+        }
+
         guard AudioDownloadRequestPolicy.shouldCheckCurrentAsset(
             isSceneActive: shouldActivateDownload,
             asset: man.currentAsset
@@ -101,11 +118,14 @@ extension AudioDownloadRootView {
             isNotDownloaded: url?.isNotDownloaded == true
         ), let url else { return }
 
+        let generation = downloadGeneration
         Task { @MainActor in
             guard AudioDownloadRequestPolicy.shouldApplyDownloadResult(
                 requestedAsset: url,
                 currentAsset: man.currentAsset,
-                isSceneActive: shouldActivateDownload
+                isSceneActive: shouldActivateDownload,
+                currentGeneration: downloadGeneration,
+                requestGeneration: generation
             ) else {
                 return
             }
@@ -115,7 +135,9 @@ extension AudioDownloadRootView {
                 guard AudioDownloadRequestPolicy.shouldApplyDownloadResult(
                     requestedAsset: url,
                     currentAsset: man.currentAsset,
-                    isSceneActive: shouldActivateDownload
+                    isSceneActive: shouldActivateDownload,
+                    currentGeneration: downloadGeneration,
+                    requestGeneration: generation
                 ) else {
                     return
                 }
@@ -126,7 +148,9 @@ extension AudioDownloadRootView {
                 guard AudioDownloadRequestPolicy.shouldApplyDownloadResult(
                     requestedAsset: url,
                     currentAsset: man.currentAsset,
-                    isSceneActive: shouldActivateDownload
+                    isSceneActive: shouldActivateDownload,
+                    currentGeneration: downloadGeneration,
+                    requestGeneration: generation
                 ) else {
                     return
                 }

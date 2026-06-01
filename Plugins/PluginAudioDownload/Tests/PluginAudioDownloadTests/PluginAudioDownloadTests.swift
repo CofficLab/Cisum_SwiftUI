@@ -52,17 +52,43 @@ import Foundation
     #expect(AudioDownloadRequestPolicy.shouldApplyDownloadResult(
         requestedAsset: asset,
         currentAsset: asset,
-        isSceneActive: true
+        isSceneActive: true,
+        currentGeneration: 2,
+        requestGeneration: 2
     ))
     #expect(!AudioDownloadRequestPolicy.shouldApplyDownloadResult(
         requestedAsset: asset,
         currentAsset: other,
-        isSceneActive: true
+        isSceneActive: true,
+        currentGeneration: 2,
+        requestGeneration: 2
     ))
     #expect(!AudioDownloadRequestPolicy.shouldApplyDownloadResult(
         requestedAsset: asset,
         currentAsset: asset,
-        isSceneActive: false
+        isSceneActive: false,
+        currentGeneration: 2,
+        requestGeneration: 2
+    ))
+}
+
+@Test func staleAudioDownloadResultsDoNotApplyAfterSceneDeactivation() {
+    let asset = URL(fileURLWithPath: "/tmp/cisum-audio-download/track.mp3")
+    let generation = AudioDownloadRequestPolicy.generationAfterDeactivation(2)
+
+    #expect(AudioDownloadRequestPolicy.shouldApplyDownloadResult(
+        requestedAsset: asset,
+        currentAsset: asset,
+        isSceneActive: true,
+        currentGeneration: 2,
+        requestGeneration: 2
+    ))
+    #expect(!AudioDownloadRequestPolicy.shouldApplyDownloadResult(
+        requestedAsset: asset,
+        currentAsset: asset,
+        isSceneActive: true,
+        currentGeneration: generation,
+        requestGeneration: 2
     ))
 }
 
