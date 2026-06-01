@@ -1,4 +1,5 @@
 import AVKit
+import CloudKit
 import Combine
 import Foundation
 import MagicKit
@@ -12,6 +13,7 @@ class CloudProvider: NSObject, ObservableObject, SuperLog, SuperThread, SuperEve
     
     @Published private(set) var isSignedIn: Bool?
     @Published private(set) var accountStatus: String = ""
+    private let verbose: Bool
     
     var isSignedInDescription: String {
         if let isSignedIn = isSignedIn {
@@ -22,6 +24,7 @@ class CloudProvider: NSObject, ObservableObject, SuperLog, SuperThread, SuperEve
     }
     
     init(verbose: Bool = false) {
+        self.verbose = verbose
         super.init()
         
         if verbose {
@@ -30,13 +33,16 @@ class CloudProvider: NSObject, ObservableObject, SuperLog, SuperThread, SuperEve
         
         updateAccountStatus()
         
-        // 监听 iCloud 状态变化
-//        nc.addObserver(
-//            self,
-//            selector: #selector(handleAccountChange),
-//            name: NSNotification.Name.CKAccountChanged,
-//            object: nil
-//        )
+        nc.addObserver(
+            self,
+            selector: #selector(handleAccountChange(_:)),
+            name: NSNotification.Name.CKAccountChanged,
+            object: nil
+        )
+    }
+
+    deinit {
+        nc.removeObserver(self, name: NSNotification.Name.CKAccountChanged, object: nil)
     }
     
     private func updateAccountStatus(verbose: Bool = false) {
@@ -53,12 +59,13 @@ class CloudProvider: NSObject, ObservableObject, SuperLog, SuperThread, SuperEve
         }
     }
     
-    @objc private func handleAccountChange(verbose: Bool = false) {
+    @objc private func handleAccountChange(_ notification: Notification) {
         if verbose {
-            os_log("\(self.t)🍋🍋🍋 检测到 iCloud 账户变化")
+            os_log("\(self.t)🍋🍋🍋 检测到 iCloud 账户变化: \(notification.name.rawValue)")
         }
         
         updateAccountStatus(verbose: verbose)
+        NotificationCenter.postCloudAccountStateChanged()
     }
 }
 
