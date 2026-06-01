@@ -281,6 +281,7 @@ extension BookDB {
         let urlsBeingDeleted = ids.compactMap { id in
             (context.model(for: id) as? BookModel)?.url
         }
+        var deletedURLs: [URL] = []
 
         // 本批次的最后一个删除后的下一个
         var next: BookModel?
@@ -307,9 +308,14 @@ extension BookDB {
                 deleteStates(for: url)
                 context.delete(book)
                 try context.save()
+                deletedURLs.append(url)
             } catch let e {
                 os_log(.error, "\(self.t)删除出错 \(e)")
             }
+        }
+
+        if !deletedURLs.isEmpty {
+            NotificationCenter.postBookDBDeleted(urls: deletedURLs)
         }
 
         return next

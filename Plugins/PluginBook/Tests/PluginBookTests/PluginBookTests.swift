@@ -867,6 +867,31 @@ private func canonicalPath(_ url: URL) -> String {
     #expect(next == fourth)
 }
 
+@Test func bookDBDeleteByIDPostsDeletedURLs() async throws {
+    let schema = Schema([BookModel.self, BookState.self])
+    let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    let container = try ModelContainer(for: schema, configurations: [configuration])
+    let db = BookDB(container, reason: "bookDBDeleteByIDPostsDeletedURLs")
+    let bookURL = URL(fileURLWithPath: "/tmp/cisum-book-delete-notification/Novel.m4b")
+    let receivedURLs = TestNotificationValue<[URL]>([])
+    let token = NotificationCenter.default.addObserver(
+        forName: .bookDBDeleted,
+        object: nil,
+        queue: nil
+    ) { notification in
+        receivedURLs.set(notification.userInfo?["urls"] as? [URL] ?? [])
+    }
+    defer { NotificationCenter.default.removeObserver(token) }
+
+    try await db.insertAndDeleteBookForTesting(bookURL)
+
+    for _ in 0..<10 where receivedURLs.value != [bookURL] {
+        try await Task.sleep(nanoseconds: 10_000_000)
+    }
+
+    #expect(receivedURLs.value == [bookURL])
+}
+
 @Test func bookDBFindOrCreateReturnsInsertedBook() async throws {
     let schema = Schema([BookModel.self, BookState.self])
     let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
@@ -912,6 +937,12 @@ private func canonicalPath(_ url: URL) -> String {
 }
 
 extension BookDB {
+    func insertAndDeleteBookForTesting(_ url: URL) throws {
+        let book = BookModel(url: url, order: 10)
+        try insertModel(book)
+        _ = delete(ids: [book.id], verbose: false)
+    }
+
     func findOrCreateReturnsInsertedBook(_ url: URL) -> Bool {
         guard let created = findOrCreateBook(url), let fetched = findBook(url: url) else {
             return false
