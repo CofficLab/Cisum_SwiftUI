@@ -65,6 +65,11 @@ import Foundation
     #expect(!expanded.expandedItems.contains(FileItem(url: firstRoot, level: 0, isExpanded: true)))
 }
 
+@Test func fileExpandButtonAccessibilityLabelMatchesState() {
+    #expect(FileExpandButtonAccessibilityPolicy.label(isExpanded: false) == "Expand folder")
+    #expect(FileExpandButtonAccessibilityPolicy.label(isExpanded: true) == "Collapse folder")
+}
+
 @Test func fileInfoCellsOnlyApplyCurrentURLResults() {
     let first = URL(fileURLWithPath: "/tmp/cisum-storage-file-info/first")
     let second = URL(fileURLWithPath: "/tmp/cisum-storage-file-info/second")
