@@ -14,6 +14,25 @@ enum MigrationProgressUpdatePolicy {
     }
 }
 
+enum MigrationProgressErrorMessagePolicy {
+    static func alertMessage(errorMessage: String?, migrationCancelled: Bool) -> String {
+        let details = errorMessage?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let resolvedDetails = details?.isEmpty == false ? details! : "Unknown error"
+        let partialMigrationNote = migrationCancelled ? "\n\nSome files may already have been migrated to the new location." : ""
+
+        return """
+        \(resolvedDetails)
+
+        The storage location has been reset to the original location. No setting changes were saved.\(partialMigrationNote)
+
+        Recommended next steps:
+        1. Check permissions and available space for both storage locations.
+        2. Review the data in both storage locations if any files were moved.
+        3. Retry the migration after resolving the issue.
+        """
+    }
+}
+
 struct MigrationProgressView: View {
     @Environment(\.pluginStorageDependencies) private var dependencies
     @StateObject private var migrationManager = MigrationManager()
@@ -39,18 +58,14 @@ struct MigrationProgressView: View {
 
     // 添加 errorAlertMessage 计算属性
     var errorAlertMessage: String {
-        """
-        \(errorMessage ?? "未知错误")
+        Self.errorAlertMessage(errorMessage: errorMessage, migrationCancelled: migrationCancelled)
+    }
 
-        存储位置已重置为原位置，未做更改。
-
-        \(errorMessage?.contains("取消") == true ? "部分文件可能已迁移至新位置。" : "")
-
-        建议：
-        1. 请检查新旧仓库的权限和空间
-        2. 可以手动查看并两个仓库中的数据
-        3. 确认问题解决后可以重试迁移
-        """
+    nonisolated static func errorAlertMessage(errorMessage: String?, migrationCancelled: Bool) -> String {
+        MigrationProgressErrorMessagePolicy.alertMessage(
+            errorMessage: errorMessage,
+            migrationCancelled: migrationCancelled
+        )
     }
 
     nonisolated static func completionMessage(shouldMigrate: Bool) -> String {

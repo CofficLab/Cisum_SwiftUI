@@ -240,6 +240,37 @@ import Foundation
     #expect(MigrationProgressView.migrationWarningCancelKey == "• Cancel: Keep the original location unchanged")
 }
 
+@Test func migrationErrorAlertUsesEnglishRecoveryGuidance() {
+    let message = MigrationProgressView.errorAlertMessage(
+        errorMessage: "Permission denied",
+        migrationCancelled: false
+    )
+
+    #expect(message.contains("Permission denied"))
+    #expect(message.contains("The storage location has been reset to the original location"))
+    #expect(message.contains("Recommended next steps:"))
+    #expect(message.contains("Retry the migration"))
+    #expect(!message.contains("Some files may already have been migrated"))
+}
+
+@Test func migrationErrorAlertIncludesCancellationRecoveryNote() {
+    let message = MigrationProgressView.errorAlertMessage(
+        errorMessage: "Cancelled",
+        migrationCancelled: true
+    )
+
+    #expect(message.contains("Some files may already have been migrated to the new location."))
+}
+
+@Test func migrationErrorAlertFallsBackForBlankErrors() {
+    let message = MigrationProgressView.errorAlertMessage(
+        errorMessage: "  ",
+        migrationCancelled: false
+    )
+
+    #expect(message.hasPrefix("Unknown error"))
+}
+
 @Test func storageSettingsClearsDisplayedSelectionAfterReset() {
     #expect(StorageSettingView.targetLocationAfterStorageUpdate(
         currentTarget: .icloud,
