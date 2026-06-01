@@ -396,6 +396,41 @@ public struct Localization {
         }
     }
 
+    public var likeCurrentMedia: String {
+        switch locale.language.languageCode?.identifier {
+        case "zh": return "喜欢当前媒体"
+        default: return "Like Current Media"
+        }
+    }
+
+    public var unlikeCurrentMedia: String {
+        switch locale.language.languageCode?.identifier {
+        case "zh": return "取消喜欢当前媒体"
+        default: return "Unlike Current Media"
+        }
+    }
+
+    public var rewindTenSeconds: String {
+        switch locale.language.languageCode?.identifier {
+        case "zh": return "快退 10 秒"
+        default: return "Rewind 10 Seconds"
+        }
+    }
+
+    public var forwardTenSeconds: String {
+        switch locale.language.languageCode?.identifier {
+        case "zh": return "快进 10 秒"
+        default: return "Forward 10 Seconds"
+        }
+    }
+
+    public var showEventSubscribers: String {
+        switch locale.language.languageCode?.identifier {
+        case "zh": return "显示事件订阅者"
+        default: return "Show Event Subscribers"
+        }
+    }
+
     public var openMediaLibrary: String {
         switch locale.language.languageCode?.identifier {
         case "zh": return "打开媒体库"

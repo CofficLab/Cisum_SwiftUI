@@ -47,6 +47,7 @@ struct PreviousButtonView: View {
         }
         .disabled(disabledReason != nil)
         .buttonStyle(.borderless)
+        .accessibilityLabel(loc.previousTrack)
     }
 }
 

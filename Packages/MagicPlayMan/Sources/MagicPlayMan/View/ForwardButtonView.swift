@@ -43,6 +43,7 @@ struct ForwardButtonView: View {
         }
         .disabled(disabledReason != nil)
         .buttonStyle(.borderless)
+        .accessibilityLabel(loc.forwardTenSeconds)
     }
 }
 
@@ -53,5 +54,4 @@ struct ForwardButtonView: View {
         .getPreviewView()
         .frame(height: 600)
 }
-
 

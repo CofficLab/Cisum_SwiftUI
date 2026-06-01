@@ -43,6 +43,7 @@ struct NextButtonView: View {
                 man.next()
             }
             .disabled(isDisabled)
+            .accessibilityLabel(loc.nextTrack)
     }
 }
 

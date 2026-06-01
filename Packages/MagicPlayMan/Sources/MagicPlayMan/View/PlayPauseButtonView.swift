@@ -42,6 +42,7 @@ struct PlayPauseButtonView: View, SuperLog {
         }
         .disabled(disabledReason != nil)
         .buttonStyle(.borderless)
+        .accessibilityLabel(man.state == .playing ? loc.pause : loc.play)
     }
 }
 

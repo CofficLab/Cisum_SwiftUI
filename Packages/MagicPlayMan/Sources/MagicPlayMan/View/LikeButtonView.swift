@@ -47,6 +47,7 @@ struct LikeButtonView: View {
         }
         .disabled(!man.hasAsset)
         .buttonStyle(.borderless)
+        .accessibilityLabel(man.isCurrentAssetLiked ? loc.unlikeCurrentMedia : loc.likeCurrentMedia)
     }
 }
 
