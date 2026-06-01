@@ -16,14 +16,18 @@ enum FileInfoCellLoadPolicy {
 enum FileSizeReadPolicy {
     static func fileSize(from attributes: [FileAttributeKey: Any]) -> Int64 {
         if let number = attributes[.size] as? NSNumber {
-            return number.int64Value
+            return normalizedFileSize(number.int64Value)
         }
 
         if let size = attributes[.size] as? Int64 {
-            return size
+            return normalizedFileSize(size)
         }
 
         return 0
+    }
+
+    static func normalizedFileSize(_ size: Int64) -> Int64 {
+        max(size, 0)
     }
 }
 

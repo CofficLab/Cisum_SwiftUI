@@ -118,6 +118,12 @@ import Foundation
     #expect(FileSizeReadPolicy.fileSize(from: [:]) == 0)
 }
 
+@Test func fileSizeReadPolicyNormalizesNegativeAttributes() {
+    #expect(FileSizeReadPolicy.fileSize(from: [.size: NSNumber(value: -1234)]) == 0)
+    #expect(FileSizeReadPolicy.fileSize(from: [.size: Int64(-5678)]) == 0)
+    #expect(FileSizeReadPolicy.normalizedFileSize(-1) == 0)
+}
+
 @Test func fileSizeCalculationStreamsDirectoryFiles() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)
