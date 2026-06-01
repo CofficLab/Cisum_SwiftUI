@@ -14,6 +14,16 @@ enum StorePurchaseInfoLoadPolicy {
 
 public struct StoreSetting: View, SuperLog, SuperEvent {
     public nonisolated static let emoji = "💰"
+    nonisolated static let purchaseActionLabel = String(
+        localized: "In-App Purchase",
+        table: "Store",
+        bundle: .module
+    )
+    nonisolated static let restorePurchaseActionLabel = String(
+        localized: "Restore Purchase",
+        table: "Store",
+        bundle: .module
+    )
 
     @State private var showBuySheet = false
     @State private var showRestoreSheet = false
@@ -76,6 +86,8 @@ public struct StoreSetting: View, SuperLog, SuperEvent {
                     .cisumButton({
                         showBuySheet = true
                     })
+                    .accessibilityLabel(Self.purchaseActionLabel)
+                    .help(Self.purchaseActionLabel)
             })
 
             // Restore purchase
@@ -89,6 +101,8 @@ public struct StoreSetting: View, SuperLog, SuperEvent {
                     .cisumButton({
                         showRestoreSheet = true
                     })
+                    .accessibilityLabel(Self.restorePurchaseActionLabel)
+                    .help(Self.restorePurchaseActionLabel)
             })
         })
         .sheet(isPresented: $showBuySheet) {

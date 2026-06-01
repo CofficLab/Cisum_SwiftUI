@@ -115,6 +115,11 @@ import Testing
     ))
 }
 
+@Test func storeSettingIconButtonsExposeReadableLabels() {
+    #expect(StoreSetting.purchaseActionLabel == "In-App Purchase")
+    #expect(StoreSetting.restorePurchaseActionLabel == "Restore Purchase")
+}
+
 @Test func transactionListenerStartsOnlyOnce() {
     #expect(StoreService.shouldStartTransactionListener(isStarted: false))
     #expect(!StoreService.shouldStartTransactionListener(isStarted: true))
