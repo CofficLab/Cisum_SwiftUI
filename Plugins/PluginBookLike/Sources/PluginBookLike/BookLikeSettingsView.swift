@@ -16,8 +16,10 @@ public struct BookLikeSettingsView: View, SuperLog {
                 .font(.headline)
 
             if isLoading {
-                ProgressView("加载中...")
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                ProgressView {
+                    Text(Self.loadingText)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else if likedBooks.isEmpty {
                 VStack(spacing: 12) {
                     Image(systemName: "heart.slash")
@@ -59,5 +61,13 @@ public struct BookLikeSettingsView: View, SuperLog {
     private func loadLikedBooks() {
         likedBooks = BookLikeStore.likedBooks()
         isLoading = false
+    }
+}
+
+extension BookLikeSettingsView {
+    nonisolated static var loadingTextKey: String { "Loading..." }
+
+    private static var loadingText: String {
+        String(localized: String.LocalizationValue(loadingTextKey), table: "Book-Like", bundle: .module)
     }
 }

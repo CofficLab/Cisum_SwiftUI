@@ -19,6 +19,10 @@ func pluginExposesSettingsView() {
     #expect(view != nil)
 }
 
+@Test func bookLikeSettingsUsesLocalizedLoadingText() {
+    #expect(BookLikeSettingsView.loadingTextKey == "Loading...")
+}
+
 @Test func bookLikeStatusChangesAreAcceptedOnlyInActiveScene() {
     #expect(BookLikeStatusChangePolicy.shouldAcceptChange(isSceneActive: true))
     #expect(!BookLikeStatusChangePolicy.shouldAcceptChange(isSceneActive: false))

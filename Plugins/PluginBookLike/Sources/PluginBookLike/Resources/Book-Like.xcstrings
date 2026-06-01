@@ -33,6 +33,22 @@
         }
       }
     },
+    "Loading..." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "加载中..."
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "加載中..."
+          }
+        }
+      }
+    },
     "Manage book favorite status" : {
       "localizations" : {
         "zh-Hans" : {
