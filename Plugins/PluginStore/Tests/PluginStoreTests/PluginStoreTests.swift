@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 import Testing
 @testable import PluginStore
 
@@ -118,6 +119,10 @@ import Testing
 @Test func storeSettingIconButtonsExposeReadableLabels() {
     #expect(StoreSetting.purchaseActionLabel == "In-App Purchase")
     #expect(StoreSetting.restorePurchaseActionLabel == "Restore Purchase")
+}
+
+@Test func storeSheetCloseButtonExposesReadableLabel() {
+    #expect(SheetContainer<EmptyView>.closeButtonLabel == "Close")
 }
 
 @Test func transactionListenerStartsOnlyOnce() {
