@@ -26,4 +26,13 @@ import Testing
     #expect(ShellGit.mergeResolveOursCommand(files) == "git checkout --ours -- \(quotedFiles)")
     #expect(ShellGit.mergeResolveTheirsCommand(files) == "git checkout --theirs -- \(quotedFiles)")
 }
+
+@Test func shellGitMergeStatusMessagesAreReadableEnglish() {
+    #expect(ShellGit.mergeStatusMessage(isMerging: false, conflictFiles: []) == "Not currently merging")
+    #expect(ShellGit.mergeStatusMessage(isMerging: true, conflictFiles: []) == "Merging with no conflict files")
+    #expect(ShellGit.mergeStatusMessage(
+        isMerging: true,
+        conflictFiles: ["one.swift", "two.swift"]
+    ) == "Merging with conflicts: one.swift, two.swift")
+}
 #endif

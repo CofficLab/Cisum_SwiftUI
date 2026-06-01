@@ -91,13 +91,19 @@ extension ShellGit {
         if try isMerging(at: path) {
             let conflictFiles = try mergeConflictFiles(at: path)
             if conflictFiles.isEmpty {
-                return "正在合并，无冲突文件"
+                return mergeStatusMessage(isMerging: true, conflictFiles: [])
             } else {
-                return "正在合并，冲突文件：\(conflictFiles.joined(separator: ", "))"
+                return mergeStatusMessage(isMerging: true, conflictFiles: conflictFiles)
             }
         } else {
-            return "未在合并状态"
+            return mergeStatusMessage(isMerging: false, conflictFiles: [])
         }
+    }
+
+    public static func mergeStatusMessage(isMerging: Bool, conflictFiles: [String]) -> String {
+        guard isMerging else { return "Not currently merging" }
+        guard !conflictFiles.isEmpty else { return "Merging with no conflict files" }
+        return "Merging with conflicts: \(conflictFiles.joined(separator: ", "))"
     }
     
     /// 使用我们的版本解决冲突

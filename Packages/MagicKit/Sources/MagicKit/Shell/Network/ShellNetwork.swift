@@ -137,7 +137,7 @@ class ShellNetwork: SuperLog {
         do {
             return try Shell.runSync("curl -s ifconfig.me").trimmingCharacters(in: .whitespacesAndNewlines)
         } catch {
-            return "获取失败"
+            return publicIPFailureMessage
         }
     }
 
@@ -228,9 +228,12 @@ class ShellNetwork: SuperLog {
             let speed = Double(result.trimmingCharacters(in: .whitespacesAndNewlines)) ?? 0
             return String(format: "%.2f KB/s", speed / 1024)
         } catch {
-            return "测试失败"
+            return speedTestFailureMessage
         }
     }
+
+    static let publicIPFailureMessage = "Failed to get public IP"
+    static let speedTestFailureMessage = "Speed test failed"
 }
 
 #endif

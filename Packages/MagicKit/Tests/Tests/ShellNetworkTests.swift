@@ -41,4 +41,9 @@ import Testing
     #expect(ShellNetwork.normalizedPort(1) == 1)
     #expect(ShellNetwork.normalizedPort(65535) == 65535)
 }
+
+@Test func shellNetworkFailureMessagesAreReadableEnglish() {
+    #expect(ShellNetwork.publicIPFailureMessage == "Failed to get public IP")
+    #expect(ShellNetwork.speedTestFailureMessage == "Speed test failed")
+}
 #endif
