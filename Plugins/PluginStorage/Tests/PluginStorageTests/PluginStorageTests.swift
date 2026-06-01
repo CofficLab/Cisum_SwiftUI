@@ -225,8 +225,10 @@ import Foundation
 }
 
 @Test func directStorageSwitchUsesAccurateCompletionMessage() {
-    #expect(MigrationProgressView.completionMessage(shouldMigrate: true) == "迁移已完成")
-    #expect(MigrationProgressView.completionMessage(shouldMigrate: false) == "已切换到新位置")
+    #expect(MigrationProgressView.completionMessageKey(shouldMigrate: true) == "Migration completed")
+    #expect(MigrationProgressView.completionMessageKey(shouldMigrate: false) == "Switched to new location")
+    #expect(MigrationProgressView.completionMessage(shouldMigrate: true).isEmpty == false)
+    #expect(MigrationProgressView.completionMessage(shouldMigrate: false).isEmpty == false)
 }
 
 @Test func storageSettingsClearsDisplayedSelectionAfterReset() {

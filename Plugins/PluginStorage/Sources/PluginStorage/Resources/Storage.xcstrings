@@ -466,7 +466,7 @@
         }
       }
     },
-    "迁移已完成" : {
+    "Migration completed" : {
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -478,6 +478,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "遷移已完成"
+          }
+        }
+      }
+    },
+    "Switched to new location" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已切换到新位置"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已切換到新位置"
           }
         }
       }

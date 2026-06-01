@@ -54,7 +54,15 @@ struct MigrationProgressView: View {
     }
 
     nonisolated static func completionMessage(shouldMigrate: Bool) -> String {
-        shouldMigrate ? "迁移已完成" : "已切换到新位置"
+        localizedCompletionMessage(for: completionMessageKey(shouldMigrate: shouldMigrate))
+    }
+
+    nonisolated static func completionMessageKey(shouldMigrate: Bool) -> String {
+        shouldMigrate ? "Migration completed" : "Switched to new location"
+    }
+
+    private nonisolated static func localizedCompletionMessage(for key: String) -> String {
+        String(localized: String.LocalizationValue(key), table: "Storage", bundle: .module)
     }
 
     nonisolated static func shouldPerformMigration(sourceURL: URL?, targetURL: URL?, requestedMigration: Bool) -> Bool {
