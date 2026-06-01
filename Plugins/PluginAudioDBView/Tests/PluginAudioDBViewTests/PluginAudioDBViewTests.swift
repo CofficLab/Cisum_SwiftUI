@@ -799,6 +799,20 @@ import UniformTypeIdentifiers
     #expect(url == expected)
 }
 
+@Test func audioDropFallsBackToURLObjectAfterFileURLDataError() async throws {
+    let expected = URL(fileURLWithPath: "/tmp/cisum-audio-drop-provider-tests/track.mp3")
+    let provider = NSItemProvider(object: expected as NSURL)
+    let error = NSError(domain: "AudioDrop", code: 1)
+    provider.registerDataRepresentation(forTypeIdentifier: UTType.fileURL.identifier, visibility: .all) { completion in
+        completion(nil, error)
+        return nil
+    }
+
+    let url = try await AudioDBView.droppedFileURL(from: provider)
+
+    #expect(url == expected)
+}
+
 @Test func audioDropSkipsEmptyImportAfterProviderFailure() {
     let error = NSError(domain: "AudioDrop", code: 1)
     let url = URL(fileURLWithPath: "/tmp/cisum-audio-drop-provider-tests/track.mp3")

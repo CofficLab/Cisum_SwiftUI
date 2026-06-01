@@ -198,23 +198,37 @@ extension AudioDBView {
     }
 
     nonisolated static func droppedFileURL(from provider: NSItemProvider) async throws -> URL? {
+        var fileURLDataError: Error?
+
         if provider.hasItemConformingToTypeIdentifier(UTType.fileURL.identifier) {
-            let data: Data? = try await withCheckedThrowingContinuation { continuation in
-                provider.loadDataRepresentation(forTypeIdentifier: UTType.fileURL.identifier) { data, error in
-                    if let error {
-                        continuation.resume(throwing: error)
-                    } else {
-                        continuation.resume(returning: data)
+            do {
+                let data: Data? = try await withCheckedThrowingContinuation { continuation in
+                    provider.loadDataRepresentation(forTypeIdentifier: UTType.fileURL.identifier) { data, error in
+                        if let error {
+                            continuation.resume(throwing: error)
+                        } else {
+                            continuation.resume(returning: data)
+                        }
                     }
                 }
-            }
 
-            if let data, let url = URL(dataRepresentation: data, relativeTo: nil), url.isFileURL {
-                return url
+                if let data, let url = URL(dataRepresentation: data, relativeTo: nil), url.isFileURL {
+                    return url
+                }
+            } catch {
+                fileURLDataError = error
             }
         }
 
-        return try await droppedURLObject(from: provider)
+        if let url = try await droppedURLObject(from: provider) {
+            return url
+        }
+
+        if let fileURLDataError {
+            throw fileURLDataError
+        }
+
+        return nil
     }
 
     nonisolated private static func droppedURLObject(from provider: NSItemProvider) async throws -> URL? {
