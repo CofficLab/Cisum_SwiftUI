@@ -7,6 +7,7 @@ public extension Error {
             Image(systemName: "exclamationmark.triangle")
                 .font(.title)
                 .foregroundColor(.red)
+                .accessibilityHidden(true)
 
             Text("An error occurred")
                 .font(.headline)
