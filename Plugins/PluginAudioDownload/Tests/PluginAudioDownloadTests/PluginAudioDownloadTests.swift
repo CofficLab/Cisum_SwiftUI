@@ -7,6 +7,10 @@ import Foundation
     #expect(AudioDownloadPluginInfo.order == 2)
 }
 
+@Test func audioDownloadUsesStableAudioSceneIdentifier() {
+    #expect(AudioDownloadPluginInfo.audioSceneName == "Music Library")
+}
+
 @Test func audioDownloadOnlyStartsForActiveMissingAsset() {
     let asset = URL(fileURLWithPath: "/tmp/cisum-audio-download/track.mp3")
 
