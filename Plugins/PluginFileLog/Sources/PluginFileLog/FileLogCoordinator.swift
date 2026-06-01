@@ -254,7 +254,7 @@ public final class FileLogCoordinator: @unchecked Sendable {
     private func checkFileSize() {
         guard let path = currentFilePath,
               let attrs = try? FileManager.default.attributesOfItem(atPath: path.path),
-              let size = attrs[.size] as? Int,
+              let size = FileLogFileSizePolicy.fileSize(from: attrs),
               size > maxFileSize else { return }
         rotateLogFile()
     }
@@ -293,6 +293,29 @@ public final class FileLogCoordinator: @unchecked Sendable {
         f.dateFormat = "HH:mm:ss.SSS"
         return f
     }()
+}
+
+enum FileLogFileSizePolicy {
+    static func fileSize(from attributes: [FileAttributeKey: Any]) -> Int? {
+        if let number = attributes[.size] as? NSNumber {
+            return normalizedSize(number.int64Value)
+        }
+
+        if let size = attributes[.size] as? Int {
+            return normalizedSize(Int64(size))
+        }
+
+        if let size = attributes[.size] as? Int64 {
+            return normalizedSize(size)
+        }
+
+        return nil
+    }
+
+    private static func normalizedSize(_ size: Int64) -> Int {
+        guard size > 0 else { return 0 }
+        return Int(min(size, Int64(Int.max)))
+    }
 }
 
 enum FileLogRotation {

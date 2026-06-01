@@ -71,6 +71,18 @@ private final class LockedCounter: @unchecked Sendable {
     #expect(next.lastPathComponent == "2026-05-31_15-00-00 2.log")
 }
 
+@Test func fileLogFileSizePolicyReadsFoundationNumberAttributes() {
+    #expect(FileLogFileSizePolicy.fileSize(from: [.size: NSNumber(value: 1234)]) == 1234)
+    #expect(FileLogFileSizePolicy.fileSize(from: [.size: Int64(5678)]) == 5678)
+    #expect(FileLogFileSizePolicy.fileSize(from: [.size: Int(90)]) == 90)
+}
+
+@Test func fileLogFileSizePolicyNormalizesInvalidSizes() {
+    #expect(FileLogFileSizePolicy.fileSize(from: [.size: NSNumber(value: -1234)]) == 0)
+    #expect(FileLogFileSizePolicy.fileSize(from: [.size: Int64.max]) == Int.max)
+    #expect(FileLogFileSizePolicy.fileSize(from: [:]) == nil)
+}
+
 #if os(macOS)
 @Test func terminationObserverIsIdempotentAndRemovable() {
     let notificationCenter = NotificationCenter()
