@@ -24,15 +24,15 @@ public enum iCloudStorageError: Error {
     public var localizedDescription: String {
         switch self {
         case .notLoggedIn:
-            return "iCloud 未登录"
+            return "iCloud is not signed in"
         case .unavailable:
-            return "iCloud 不可用"
+            return "iCloud is unavailable"
         case .capacityNotFound:
-            return "无法获取 iCloud 存储容量"
+            return "Could not read iCloud storage capacity"
         case .platformNotSupported:
-            return "当前平台不支持 iCloud"
+            return "iCloud is not supported on this platform"
         case .unknownError(let underlyingError):
-            return "获取 iCloud 存储容量失败: \(underlyingError.localizedDescription)"
+            return "Failed to read iCloud storage capacity: \(underlyingError.localizedDescription)"
         }
     }
 }
