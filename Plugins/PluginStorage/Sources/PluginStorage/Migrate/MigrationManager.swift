@@ -39,6 +39,8 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread, @unchecked Send
     ) throws {
         os_log(.info, "\(self.t)开始迁移任务")
 
+        let targetRootExistedBeforeMigration = FileManager.default.fileExists(atPath: targetRoot.path)
+
         do {
             if Self.resolvedStandardizedPath(for: sourceRoot) == Self.resolvedStandardizedPath(for: targetRoot) {
                 progressCallback?(1.0, "")
@@ -117,6 +119,10 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread, @unchecked Send
             os_log(.info, "\(self.t)迁移完成，共处理 \(files.count) 个文件")
         } catch {
             os_log(.error, "\(self.t)迁移错误: \(error.localizedDescription)")
+            Self.removeEmptyTargetDirectoryCreatedForFailedMigration(
+                targetRoot,
+                targetRootExistedBeforeMigration: targetRootExistedBeforeMigration
+            )
             if let migrationError = error as? MigrationError {
                 throw migrationError
             } else {
@@ -155,6 +161,25 @@ class MigrationManager: ObservableObject, SuperLog, SuperThread, @unchecked Send
 
     private static func childPrefix(for parentPath: String) -> String {
         parentPath.hasSuffix("/") ? parentPath : parentPath + "/"
+    }
+
+    private static func removeEmptyTargetDirectoryCreatedForFailedMigration(
+        _ targetRoot: URL,
+        targetRootExistedBeforeMigration: Bool
+    ) {
+        guard !targetRootExistedBeforeMigration else {
+            return
+        }
+
+        var isDirectory: ObjCBool = false
+        guard FileManager.default.fileExists(atPath: targetRoot.path, isDirectory: &isDirectory),
+              isDirectory.boolValue,
+              let contents = try? FileManager.default.contentsOfDirectory(at: targetRoot, includingPropertiesForKeys: nil),
+              contents.isEmpty else {
+            return
+        }
+
+        try? FileManager.default.removeItem(at: targetRoot)
     }
 
     private func prepareForMigration(
