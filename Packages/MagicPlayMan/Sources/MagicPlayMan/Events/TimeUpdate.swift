@@ -18,8 +18,8 @@ extension MagicPlayMan {
     ///   - progress: 播放进度 (0-1)
     func sendTimeUpdate(currentTime: TimeInterval, progress: Double) {
         let userInfo: [String: Any] = [
-            "currentTime": currentTime,
-            "progress": progress,
+            "currentTime": MagicPlayManPlaybackTimePolicy.normalizedCurrentTime(currentTime),
+            "progress": MagicPlayManPlaybackTimePolicy.normalizedUnitProgress(progress),
         ]
 
         NotificationCenter.default.post(

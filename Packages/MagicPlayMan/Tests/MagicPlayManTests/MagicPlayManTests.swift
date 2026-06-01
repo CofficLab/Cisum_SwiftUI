@@ -438,6 +438,31 @@ final class MagicPlayManTests: XCTestCase {
         XCTAssertNil(MagicPlayManTimeUpdatePolicy.normalizedPayload(from: ["currentTime": TimeInterval(12)]))
     }
 
+    @MainActor
+    func testTimeUpdateNotificationPayloadIsNormalized() {
+        let man = MagicPlayMan()
+        var payloads: [(TimeInterval, Double)] = []
+        let observer = NotificationCenter.default.addObserver(
+            forName: .playManTimeUpdate,
+            object: man,
+            queue: nil
+        ) { notification in
+            let currentTime = notification.userInfo?["currentTime"] as? TimeInterval ?? -1
+            let progress = notification.userInfo?["progress"] as? Double ?? -1
+            payloads.append((currentTime, progress))
+        }
+        defer {
+            NotificationCenter.default.removeObserver(observer)
+        }
+
+        man.sendTimeUpdate(currentTime: .nan, progress: .infinity)
+        man.sendTimeUpdate(currentTime: -4, progress: 1.4)
+        man.sendTimeUpdate(currentTime: 12, progress: 0.25)
+
+        XCTAssertEqual(payloads.map(\.0), [0, 0, 12])
+        XCTAssertEqual(payloads.map(\.1), [0, 1, 0.25])
+    }
+
     func testPlaybackTimePolicyRestartsWhenAtOrPastEnd() {
         XCTAssertTrue(MagicPlayManPlaybackTimePolicy.shouldRestartFromBeginning(currentTime: 100, duration: 100))
         XCTAssertTrue(MagicPlayManPlaybackTimePolicy.shouldRestartFromBeginning(currentTime: 100.01, duration: 100))
