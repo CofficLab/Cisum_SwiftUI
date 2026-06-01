@@ -160,6 +160,10 @@ enum BookControlPlaybackRequestPolicy {
             && currentAssetAffectedByDeletion(currentAsset: currentAsset, deletedURLs: deletedURLs)
     }
 
+    static func shouldInvalidateChapterCacheAfterDeletion(deletedURLs: [URL]) -> Bool {
+        !deletedURLs.isEmpty
+    }
+
     static func shouldResetForStorageLocationChange(isSceneActive: Bool) -> Bool {
         isSceneActive
     }
@@ -447,15 +451,20 @@ extension BookControlRootView {
     }
 
     func handleBookDBDeleted(_ notification: Notification) {
-        guard let deletedURLs = notification.userInfo?["urls"] as? [URL],
-              BookControlPlaybackRequestPolicy.currentAssetAffectedByDeletion(
-                  currentAsset: man.asset,
-                  deletedURLs: deletedURLs
-              ) else {
+        guard let deletedURLs = notification.userInfo?["urls"] as? [URL] else {
             return
         }
 
-        BookControlChapterCache.removeAll()
+        if BookControlPlaybackRequestPolicy.shouldInvalidateChapterCacheAfterDeletion(deletedURLs: deletedURLs) {
+            BookControlChapterCache.removeAll()
+        }
+
+        guard BookControlPlaybackRequestPolicy.currentAssetAffectedByDeletion(
+            currentAsset: man.asset,
+            deletedURLs: deletedURLs
+        ) else {
+            return
+        }
 
         let generation = controlGeneration
         Task {

@@ -310,6 +310,37 @@ import SwiftUI
     ))
 }
 
+@MainActor
+@Test func bookDeletionInvalidatesChapterCacheEvenWhenCurrentChapterSurvives() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    defer {
+        BookControlChapterCache.removeAll()
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+    let current = root.appendingPathComponent("001.m4b")
+    let deleted = root.appendingPathComponent("002.m4b")
+    try Data("audio".utf8).write(to: current)
+    try Data("audio".utf8).write(to: deleted)
+
+    BookControlChapterCache.removeAll()
+    BookControlChapterCache.store([current, deleted], in: root)
+
+    #expect(!BookControlPlaybackRequestPolicy.currentAssetAffectedByDeletion(
+        currentAsset: current,
+        deletedURLs: [deleted]
+    ))
+    #expect(BookControlPlaybackRequestPolicy.shouldInvalidateChapterCacheAfterDeletion(deletedURLs: [deleted]))
+
+    if BookControlPlaybackRequestPolicy.shouldInvalidateChapterCacheAfterDeletion(deletedURLs: [deleted]) {
+        BookControlChapterCache.removeAll()
+    }
+
+    #expect(BookControlChapterCache.cachedChapters(in: root) == nil)
+}
+
 @Test func staleDeletionResetDoesNotApplyAfterSceneReactivation() {
     let deletedBook = URL(fileURLWithPath: "/tmp/books/Novel", isDirectory: true)
     let currentChapter = deletedBook.appendingPathComponent("Chapter 01.m4b")
