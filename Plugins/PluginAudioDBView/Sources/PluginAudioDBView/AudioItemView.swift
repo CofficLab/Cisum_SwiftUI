@@ -55,6 +55,22 @@ enum AudioItemFileSizeReadPolicy {
     }
 }
 
+enum AudioItemFileSizeDisplayState: Equatable {
+    case loading
+    case unavailable
+    case size(Int64)
+}
+
+enum AudioItemFileSizeDisplayPolicy {
+    static func state(fileSize: Int64?, isUnavailable: Bool) -> AudioItemFileSizeDisplayState {
+        if let fileSize {
+            return .size(fileSize)
+        }
+
+        return isUnavailable ? .unavailable : .loading
+    }
+}
+
 @MainActor
 enum AudioItemFileSizeCache {
     private struct Entry {
@@ -119,6 +135,7 @@ struct AudioItemView: View, Equatable, SuperLog {
 
     /// 文件大小
     @State private var fileSize: Int64?
+    @State private var fileSizeUnavailable = false
     /// 删除确认对话框
     @State private var showDeleteConfirmation = false
 
@@ -151,9 +168,17 @@ extension AudioItemView {
                         .lineLimit(1)
 
                     HStack {
-                        if let fileSize {
+                        switch AudioItemFileSizeDisplayPolicy.state(
+                            fileSize: fileSize,
+                            isUnavailable: fileSizeUnavailable
+                        ) {
+                        case .size(let fileSize):
                             AppSizeLabel(bytes: fileSize)
-                        } else {
+                        case .unavailable:
+                            Text("Unavailable", tableName: "Audio-DBView", bundle: .module)
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        case .loading:
                             Text("...")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
@@ -238,10 +263,12 @@ extension AudioItemView {
     /// 在后台加载文件大小
     private func loadFileSize() async {
         fileSize = nil
+        fileSizeUnavailable = false
 
         let requestedURL = url
         if let cachedSize = AudioItemFileSizeCache.cachedSize(for: requestedURL) {
             fileSize = cachedSize
+            fileSizeUnavailable = cachedSize == nil
             return
         }
 
@@ -260,6 +287,7 @@ extension AudioItemView {
 
         AudioItemFileSizeCache.store(size, for: requestedURL)
         fileSize = size
+        fileSizeUnavailable = size == nil
     }
 
     /// 导出到下载目录

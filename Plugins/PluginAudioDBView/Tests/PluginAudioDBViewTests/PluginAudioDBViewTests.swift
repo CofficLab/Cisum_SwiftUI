@@ -625,6 +625,12 @@ import UniformTypeIdentifiers
     #expect(AudioItemFileSizeReadPolicy.fileSize(from: [:]) == nil)
 }
 
+@Test func audioItemFileSizeDisplayPolicySeparatesLoadingAndUnavailable() {
+    #expect(AudioItemFileSizeDisplayPolicy.state(fileSize: nil, isUnavailable: false) == .loading)
+    #expect(AudioItemFileSizeDisplayPolicy.state(fileSize: nil, isUnavailable: true) == .unavailable)
+    #expect(AudioItemFileSizeDisplayPolicy.state(fileSize: 2048, isUnavailable: true) == .size(2048))
+}
+
 @MainActor
 @Test func audioItemFileSizeCacheStoresHitsAndMisses() {
     let root = URL(fileURLWithPath: "/tmp/cisum-audio-item-cache-tests", isDirectory: true)
