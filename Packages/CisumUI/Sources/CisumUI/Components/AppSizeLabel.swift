@@ -8,7 +8,7 @@ public struct AppSizeLabel: View {
     let style: ByteCountFormatter.CountStyle
 
     public init(bytes: Int64, style: ByteCountFormatter.CountStyle = .file) {
-        self.bytes = bytes
+        self.bytes = Self.normalizedByteCount(bytes)
         self.style = style
     }
 
@@ -21,11 +21,15 @@ public struct AppSizeLabel: View {
     var formattedSize: String {
         ByteCountFormatter.string(fromByteCount: bytes, countStyle: style)
     }
+
+    nonisolated static func normalizedByteCount(_ bytes: Int64) -> Int64 {
+        max(bytes, 0)
+    }
 }
 
 public extension ByteCountFormatter {
     static func format(_ bytes: Int64, style: CountStyle = .file) -> String {
-        string(fromByteCount: bytes, countStyle: style)
+        string(fromByteCount: AppSizeLabel.normalizedByteCount(bytes), countStyle: style)
     }
 }
 
