@@ -345,7 +345,7 @@ private extension BookProgressRootView {
         }
 
         if verbose {
-            os_log("\(self.t)👀 视图已出现，开始恢复书籍进度")
+            os_log("\(self.t)👀 View appeared, restoring audiobook progress")
         }
 
         restoreBookProgress()
@@ -394,7 +394,7 @@ private extension BookProgressRootView {
                     }
 
                     if self.verbose {
-                        os_log("\(self.t)⚠️ 跳过已失效的书籍进度: \(url.shortPath())")
+                        os_log("\(self.t)⚠️ Skipping stale audiobook progress: \(url.shortPath())")
                     }
                     return
                 }
@@ -415,7 +415,7 @@ private extension BookProgressRootView {
                 }
 
                 if self.verbose {
-                    os_log("\(self.t)✅ 恢复书籍进度: \(url.lastPathComponent)")
+                    os_log("\(self.t)✅ Restored audiobook progress: \(url.lastPathComponent)")
                 }
             }
         }
@@ -445,7 +445,7 @@ private extension BookProgressRootView {
 
         guard let snapshot = BookProgressPersistencePolicy.currentURLChangeSnapshot(currentURL: url) else {
             if self.verbose {
-                os_log("\(self.t)📖 URL 已清空")
+                os_log("\(self.t)📖 URL cleared")
             }
 
             storeCurrentBookURL(nil)
@@ -459,7 +459,7 @@ private extension BookProgressRootView {
         let bookDisk = BookPlugin.getBookDisk()
 
         if self.verbose {
-            os_log("\(self.t)📖 URL变化 -> \(url.shortPath())")
+            os_log("\(self.t)📖 URL changed -> \(url.shortPath())")
         }
 
         let generation = restoreGeneration
@@ -480,7 +480,7 @@ private extension BookProgressRootView {
 
             guard BookProgressPersistencePolicy.shouldAcceptBookURL(url, bookDisk: bookDisk) else {
                 if self.verbose {
-                    os_log("\(self.t)⚠️ 跳过非书库音频: \(url.shortPath())")
+                    os_log("\(self.t)⚠️ Skipping audio outside the audiobook library: \(url.shortPath())")
                 }
                 return
             }
@@ -508,7 +508,7 @@ private extension BookProgressRootView {
                         return
                     }
                     if self.verbose {
-                        os_log("\(self.t)✅ 书籍文件下载完成")
+                        os_log("\(self.t)✅ Audiobook file download completed")
                     }
                 } catch let error {
                     guard BookProgressPersistencePolicy.shouldApplyCurrentURLChange(
@@ -520,7 +520,7 @@ private extension BookProgressRootView {
                     ) else {
                         return
                     }
-                    os_log(.error, "\(self.t)❌ 书籍文件下载失败: \(error.localizedDescription)")
+                    os_log(.error, "\(self.t)❌ Audiobook file download failed: \(error.localizedDescription)")
                     alert_error(String(localized: "Download failed: \(error.localizedDescription)", table: "Book-Progress", bundle: .module))
                 }
             }
@@ -573,7 +573,7 @@ private extension BookProgressRootView {
         }
 
         if self.verbose {
-            os_log("\(self.t)💾 (\(reason)) 保存书籍播放时间: \(snapshot.time ?? 0)s")
+            os_log("\(self.t)💾 (\(reason)) Saved audiobook playback time: \(snapshot.time ?? 0)s")
         }
     }
 
@@ -586,7 +586,7 @@ private extension BookProgressRootView {
         // 找到当前URL所属的书籍
         guard let bookURL = await findBookForURL(currentURL) else {
             if self.verbose {
-                os_log("\(self.t)⚠️ 无法找到 \(currentURL.lastPathComponent) 所属的书籍")
+                os_log("\(self.t)⚠️ Could not find the audiobook for \(currentURL.lastPathComponent)")
             }
             return
         }
@@ -594,9 +594,9 @@ private extension BookProgressRootView {
         // 更新书籍状态（保存当前章节和时间）
         if self.verbose {
             if let time {
-                os_log("\(self.t)💾 保存书籍状态: \(bookURL.lastPathComponent) -> \(currentURL.lastPathComponent) @ \(time)s")
+                os_log("\(self.t)💾 Saved audiobook state: \(bookURL.lastPathComponent) -> \(currentURL.lastPathComponent) @ \(time)s")
             } else {
-                os_log("\(self.t)💾 保存书籍当前章节: \(bookURL.lastPathComponent) -> \(currentURL.lastPathComponent)")
+                os_log("\(self.t)💾 Saved audiobook current chapter: \(bookURL.lastPathComponent) -> \(currentURL.lastPathComponent)")
             }
         }
 
@@ -617,10 +617,10 @@ private extension BookProgressRootView {
             do {
                 _ = try FileManager.default.contentsOfDirectory(at: parentURL, includingPropertiesForKeys: nil)
             } catch {
-                os_log("\(self.t)⚠️ 无法读取目录内容: \(error.localizedDescription)")
+                os_log("\(self.t)⚠️ Could not read directory contents: \(error.localizedDescription)")
             }
 
-            os_log("\(self.t)⚠️ 父路径不是书籍目录: \(parentURL.shortPath())")
+            os_log("\(self.t)⚠️ Parent path is not an audiobook directory: \(parentURL.shortPath())")
         }
 
         return nil
