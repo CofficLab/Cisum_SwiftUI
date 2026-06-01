@@ -71,6 +71,18 @@ import UniformTypeIdentifiers
         unsupported,
         realFile,
     ]) == [linkedFile])
+    #expect(CopyRootView<EmptyView>.shouldReportSkippedUnsupportedSources(
+        [linkedFile, unsupported, realFile],
+        sourceURLs: [linkedFile]
+    ))
+    #expect(!CopyRootView<EmptyView>.shouldReportSkippedUnsupportedSources(
+        [linkedFile],
+        sourceURLs: [linkedFile]
+    ))
+    #expect(!CopyRootView<EmptyView>.shouldReportSkippedUnsupportedSources(
+        [unsupported],
+        sourceURLs: []
+    ))
 }
 
 @Test func copyDropKeepsDistinctDanglingSymlinkAudioSources() throws {
@@ -311,6 +323,15 @@ import UniformTypeIdentifiers
     #expect(CopyRootView<EmptyView>.shouldReportPreparationFailure(preparedCount: 0, preparationErrors: [error]))
     #expect(!CopyRootView<EmptyView>.shouldReportPreparationFailure(preparedCount: 1, preparationErrors: [error]))
     #expect(!CopyRootView<EmptyView>.shouldReportPreparationFailure(preparedCount: 0, preparationErrors: []))
+    #expect(CopyRootView<EmptyView>.shouldReportPartialDroppedURLLoadFailure(
+        sourceURLs: [URL(fileURLWithPath: "/tmp/cisum-audio-copy-tests/song.mp3")],
+        errors: [error]
+    ))
+    #expect(!CopyRootView<EmptyView>.shouldReportPartialDroppedURLLoadFailure(sourceURLs: [], errors: [error]))
+    #expect(!CopyRootView<EmptyView>.shouldReportPartialDroppedURLLoadFailure(
+        sourceURLs: [URL(fileURLWithPath: "/tmp/cisum-audio-copy-tests/song.mp3")],
+        errors: []
+    ))
 }
 
 @Test func copyDropOnlyChecksCopyServicesAfterFindingSources() {

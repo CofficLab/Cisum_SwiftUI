@@ -96,6 +96,12 @@
                 os_log("\(self.t)🎁 获取到 \(sourceURLs.count) 个文件")
             }
 
+            if Self.shouldReportPartialDroppedURLLoadFailure(sourceURLs: sourceURLs, errors: preparationErrors) {
+                await MainActor.run {
+                    alert_warning(String(localized: "Some dropped files could not be loaded", table: "Audio-Copy-macOS", bundle: .module))
+                }
+            }
+
             guard Self.shouldPrepareCopyInfrastructure(sourceCount: sourceURLs.count) else {
                 if Self.shouldReportPreparationFailure(preparedCount: sourceURLs.count, preparationErrors: preparationErrors),
                    let error = preparationErrors.first {
@@ -109,6 +115,12 @@
                     }
                 }
                 return false
+            }
+
+            if Self.shouldReportSkippedUnsupportedSources(droppedFiles.urls, sourceURLs: sourceURLs) {
+                await MainActor.run {
+                    alert_warning(String(localized: "Some files were skipped because they are not supported audio files", table: "Audio-Copy-macOS", bundle: .module))
+                }
             }
 
             let allowedTaskCount = await AudioCopyService.allowedTaskCount(requestedTaskCount: sourceURLs.count)
@@ -206,6 +218,14 @@
             }
 
             return uniqueURLs
+        }
+
+        nonisolated static func shouldReportSkippedUnsupportedSources(_ urls: [URL], sourceURLs: [URL]) -> Bool {
+            urls.count > sourceURLs.count && !sourceURLs.isEmpty
+        }
+
+        nonisolated static func shouldReportPartialDroppedURLLoadFailure(sourceURLs: [URL], errors: [Error]) -> Bool {
+            !sourceURLs.isEmpty && !errors.isEmpty
         }
 
         static func droppedFileURL(from provider: NSItemProvider) async throws -> URL? {
