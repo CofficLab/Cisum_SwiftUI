@@ -330,7 +330,6 @@ public enum StoreService: SuperLog {
         highestStatus: StoreSubscriptionStatusDTO?
     ) {
         if verbose {
-            print("检查订阅状态")
             os_log("\(self.t)检查订阅状态，因为 -> \(reason)")
         }
 
@@ -360,12 +359,16 @@ public enum StoreService: SuperLog {
         // `product.subscription.status` returns apply to the entire subscription group.
         guard let subscription = subscriptions.first,
               let statuses = subscription.subscription?.status else {
-            print("products.subscriptions 是空的")
+            if verbose {
+                os_log("\(self.t)订阅产品没有可用的订阅状态")
+            }
             return (subscriptions: subscriptions, statuses: [], highestProduct: nil, highestStatus: nil)
         }
 
         if statuses.isEmpty {
-            print("statuses 是空的，表示对于当前订阅组，没有订阅状态")
+            if verbose {
+                os_log("\(self.t)订阅组当前没有订阅状态")
+            }
             return (subscriptions: subscriptions, statuses: [], highestProduct: nil, highestStatus: nil)
         }
 
