@@ -125,6 +125,11 @@ import Testing
     #expect(SheetContainer<EmptyView>.closeButtonLabel == "Close")
 }
 
+@Test func storeErrorsUseUserReadableDescriptions() {
+    #expect(StoreError.failedVerification.localizedDescription == "App Store verification failed")
+    #expect(StoreError.canNotGetProducts.localizedDescription == "Could not load products from the App Store")
+}
+
 @Test func transactionListenerStartsOnlyOnce() {
     #expect(StoreService.shouldStartTransactionListener(isStarted: false))
     #expect(!StoreService.shouldStartTransactionListener(isStarted: true))
