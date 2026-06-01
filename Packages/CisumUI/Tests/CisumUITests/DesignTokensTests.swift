@@ -90,6 +90,12 @@ struct DesignTokensTests {
         #expect(MagicProgressBarPolicy.normalizedProgress(currentTime: 140, duration: 100) == 1)
         #expect(MagicProgressBarPolicy.normalizedProgress(currentTime: .infinity, duration: 100) == 0)
         #expect(MagicProgressBarPolicy.normalizedProgress(currentTime: 50, duration: .infinity) == 0)
+        #expect(MagicProgressBarPolicy.seekTime(locationX: 25, trackWidth: 100, duration: 200) == 50)
+        #expect(MagicProgressBarPolicy.seekTime(locationX: -10, trackWidth: 100, duration: 200) == 0)
+        #expect(MagicProgressBarPolicy.seekTime(locationX: 150, trackWidth: 100, duration: 200) == 200)
+        #expect(MagicProgressBarPolicy.seekTime(locationX: 10, trackWidth: 0, duration: 200) == 0)
+        #expect(MagicProgressBarPolicy.seekTime(locationX: .nan, trackWidth: 100, duration: 200) == 0)
+        #expect(MagicProgressBarPolicy.seekTime(locationX: 10, trackWidth: 100, duration: .infinity) == 0)
         #expect(MagicProgressBarPolicy.sliderUpperBound(forDuration: .nan) == 1)
 
         #expect(MagicProgressBarPolicy.formattedTime(.nan) == "0:00")

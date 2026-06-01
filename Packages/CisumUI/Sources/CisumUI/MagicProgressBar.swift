@@ -59,14 +59,22 @@ public struct MagicProgressBar: View {
                             DragGesture(minimumDistance: 0)
                                 .onChanged { value in
                                     isDragging = true
-                                    let newTime = min(max(0, value.location.x / geometry.size.width), 1) * duration
+                                    let newTime = MagicProgressBarPolicy.seekTime(
+                                        locationX: value.location.x,
+                                        trackWidth: geometry.size.width,
+                                        duration: duration
+                                    )
                                     withAnimation(.linear(duration: 0.1)) {
                                         dragTime = newTime
                                     }
                                 }
                                 .onEnded { value in
                                     isDragging = false
-                                    let finalTime = min(max(0, value.location.x / geometry.size.width), 1) * duration
+                                    let finalTime = MagicProgressBarPolicy.seekTime(
+                                        locationX: value.location.x,
+                                        trackWidth: geometry.size.width,
+                                        duration: duration
+                                    )
                                     currentTime = finalTime
                                     dragTime = currentTime
                                     onSeek?(finalTime)
@@ -75,7 +83,11 @@ public struct MagicProgressBar: View {
                 }
                 .contentShape(Rectangle())
                 .onTapGesture { location in
-                    let newTime = min(max(0, location.x / geometry.size.width), 1) * duration
+                    let newTime = MagicProgressBarPolicy.seekTime(
+                        locationX: location.x,
+                        trackWidth: geometry.size.width,
+                        duration: duration
+                    )
                     currentTime = newTime
                     dragTime = currentTime
                     onSeek?(newTime)

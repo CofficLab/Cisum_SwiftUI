@@ -258,6 +258,16 @@ enum MagicProgressBarPolicy {
         return normalizedTime(currentTime, duration: duration) / duration
     }
 
+    static func seekTime(locationX: CGFloat, trackWidth: CGFloat, duration: TimeInterval) -> TimeInterval {
+        let duration = normalizedDuration(duration)
+        guard duration > 0, locationX.isFinite, trackWidth.isFinite, trackWidth > 0 else {
+            return 0
+        }
+
+        let ratio = min(max(Double(locationX / trackWidth), 0), 1)
+        return ratio * duration
+    }
+
     static func sliderUpperBound(forDuration duration: TimeInterval) -> TimeInterval {
         max(normalizedDuration(duration), 1)
     }
