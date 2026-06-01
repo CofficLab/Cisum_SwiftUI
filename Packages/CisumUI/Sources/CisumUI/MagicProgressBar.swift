@@ -107,33 +107,7 @@ public struct MagicProgressBar: View {
 
     private var progress: CGFloat {
         let time = isDragging ? dragTime : currentTime
-        return CGFloat(MagicProgressBarRenderPolicy.normalizedProgress(currentTime: time, duration: duration))
-    }
-}
-
-private enum MagicProgressBarRenderPolicy {
-    static func normalizedDuration(_ duration: TimeInterval) -> TimeInterval {
-        guard duration.isFinite, duration > 0 else { return 0 }
-        return duration
-    }
-
-    static func normalizedTime(_ time: TimeInterval, duration: TimeInterval) -> TimeInterval {
-        guard time.isFinite else { return 0 }
-
-        let lowerBoundedTime = max(time, 0)
-        let duration = normalizedDuration(duration)
-
-        guard duration > 0 else {
-            return 0
-        }
-
-        return min(lowerBoundedTime, duration)
-    }
-
-    static func normalizedProgress(currentTime: TimeInterval, duration: TimeInterval) -> Double {
-        let duration = normalizedDuration(duration)
-        guard duration > 0 else { return 0 }
-        return normalizedTime(currentTime, duration: duration) / duration
+        return CGFloat(MagicProgressBarPolicy.normalizedProgress(currentTime: time, duration: duration))
     }
 }
 
@@ -143,7 +117,7 @@ private struct TimeLabel: View {
     @State private var isHovering = false
 
     var body: some View {
-        Text(formatTime(time))
+        Text(MagicProgressBarPolicy.formattedTime(time))
             .font(.caption)
             .foregroundStyle(isProgressBarHovering || isHovering ? .primary : .secondary)
             .opacity(isProgressBarHovering || isHovering ? 1 : 0.8)
@@ -157,12 +131,6 @@ private struct TimeLabel: View {
                     isHovering = hovering
                 }
             }
-    }
-
-    private func formatTime(_ time: TimeInterval) -> String {
-        let minutes = Int(time) / 60
-        let seconds = Int(time) % 60
-        return String(format: "%d:%02d", minutes, seconds)
     }
 }
 

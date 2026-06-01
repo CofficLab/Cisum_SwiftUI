@@ -261,4 +261,13 @@ enum MagicProgressBarPolicy {
     static func sliderUpperBound(forDuration duration: TimeInterval) -> TimeInterval {
         max(normalizedDuration(duration), 1)
     }
+
+    static func formattedTime(_ time: TimeInterval) -> String {
+        let normalizedTime = time.isFinite ? max(time, 0) : 0
+        let maximumDisplaySeconds = Int.max / 2
+        let totalSeconds = Int(min(normalizedTime, TimeInterval(maximumDisplaySeconds)))
+        let minutes = totalSeconds / 60
+        let seconds = totalSeconds % 60
+        return String(format: "%d:%02d", minutes, seconds)
+    }
 }

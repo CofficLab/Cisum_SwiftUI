@@ -91,6 +91,11 @@ struct DesignTokensTests {
         #expect(MagicProgressBarPolicy.normalizedProgress(currentTime: .infinity, duration: 100) == 0)
         #expect(MagicProgressBarPolicy.normalizedProgress(currentTime: 50, duration: .infinity) == 0)
         #expect(MagicProgressBarPolicy.sliderUpperBound(forDuration: .nan) == 1)
+
+        #expect(MagicProgressBarPolicy.formattedTime(.nan) == "0:00")
+        #expect(MagicProgressBarPolicy.formattedTime(.infinity) == "0:00")
+        #expect(MagicProgressBarPolicy.formattedTime(-10) == "0:00")
+        #expect(MagicProgressBarPolicy.formattedTime(125) == "2:05")
     }
 
     // MARK: - Shadow
