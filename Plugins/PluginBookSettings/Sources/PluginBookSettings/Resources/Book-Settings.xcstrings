@@ -17,6 +17,22 @@
         }
       }
     },
+    "%lld file" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld 个文件"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld 個文件"
+          }
+        }
+      }
+    },
     "Audiobook Library" : {
       "localizations" : {
         "zh-Hans" : {

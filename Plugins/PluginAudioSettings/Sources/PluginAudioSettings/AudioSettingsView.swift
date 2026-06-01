@@ -19,6 +19,12 @@ enum AudioSettingsMetricsPolicy {
     }
 }
 
+enum AudioSettingsFileCountTextPolicy {
+    static func shouldUseSingular(_ count: Int) -> Bool {
+        count == 1
+    }
+}
+
 /// 音频设置视图：展示仓库大小、位置与文件数量。
 public struct AudioSettingsView: View, SuperLog {
     public nonisolated static var emoji: String { AudioSettingsPluginInfo.emoji }
@@ -71,7 +77,11 @@ public struct AudioSettingsView: View, SuperLog {
                         description: String(localized: "Total files in library", table: "Audio-Settings", bundle: .module),
                         systemImage: .cisumIconDocument
                     ) {
-                        Text("\(fileCount) files", tableName: "Audio-Settings", bundle: .module)
+                        if Self.shouldUseSingularFileCount(fileCount) {
+                            Text("\(fileCount) file", tableName: "Audio-Settings", bundle: .module)
+                        } else {
+                            Text("\(fileCount) files", tableName: "Audio-Settings", bundle: .module)
+                        }
                     }
                 }
             } else {
@@ -161,5 +171,9 @@ private extension AudioSettingsView {
 extension AudioSettingsView {
     nonisolated static func shouldShowOpenLibraryAction(for disk: URL) -> Bool {
         URLOpenActionPolicy.canOpen(disk)
+    }
+
+    nonisolated static func shouldUseSingularFileCount(_ count: Int) -> Bool {
+        AudioSettingsFileCountTextPolicy.shouldUseSingular(count)
     }
 }

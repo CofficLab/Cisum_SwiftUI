@@ -50,3 +50,9 @@ import Testing
     #expect(!BookSettingsView.shouldShowOpenLibraryAction(for: missingDisk))
     #expect(BookSettingsView.shouldShowOpenLibraryAction(for: root))
 }
+
+@Test func bookSettingsUsesSingularFileCountOnlyForOneFile() {
+    #expect(!BookSettingsView.shouldUseSingularFileCount(0))
+    #expect(BookSettingsView.shouldUseSingularFileCount(1))
+    #expect(!BookSettingsView.shouldUseSingularFileCount(2))
+}

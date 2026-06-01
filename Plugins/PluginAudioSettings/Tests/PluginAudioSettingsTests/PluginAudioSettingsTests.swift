@@ -50,3 +50,9 @@ import Testing
     #expect(!AudioSettingsView.shouldShowOpenLibraryAction(for: missingDisk))
     #expect(AudioSettingsView.shouldShowOpenLibraryAction(for: root))
 }
+
+@Test func audioSettingsUsesSingularFileCountOnlyForOneFile() {
+    #expect(!AudioSettingsView.shouldUseSingularFileCount(0))
+    #expect(AudioSettingsView.shouldUseSingularFileCount(1))
+    #expect(!AudioSettingsView.shouldUseSingularFileCount(2))
+}

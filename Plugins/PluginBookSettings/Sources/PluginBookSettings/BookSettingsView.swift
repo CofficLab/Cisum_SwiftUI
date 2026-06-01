@@ -19,6 +19,12 @@ enum BookSettingsMetricsPolicy {
     }
 }
 
+enum BookSettingsFileCountTextPolicy {
+    static func shouldUseSingular(_ count: Int) -> Bool {
+        count == 1
+    }
+}
+
 /// 有声书设置视图：展示仓库大小、位置与文件数量。
 public struct BookSettingsView: View, SuperLog {
     public nonisolated static var emoji: String { BookSettingsPluginInfo.emoji }
@@ -71,7 +77,11 @@ public struct BookSettingsView: View, SuperLog {
                         description: String(localized: "Total files in library", table: "Book-Settings", bundle: .module),
                         systemImage: .cisumIconDocument
                     ) {
-                        Text("\(fileCount) files", tableName: "Book-Settings", bundle: .module)
+                        if Self.shouldUseSingularFileCount(fileCount) {
+                            Text("\(fileCount) file", tableName: "Book-Settings", bundle: .module)
+                        } else {
+                            Text("\(fileCount) files", tableName: "Book-Settings", bundle: .module)
+                        }
                     }
                 }
             } else {
@@ -161,5 +171,9 @@ private extension BookSettingsView {
 extension BookSettingsView {
     nonisolated static func shouldShowOpenLibraryAction(for disk: URL) -> Bool {
         URLOpenActionPolicy.canOpen(disk)
+    }
+
+    nonisolated static func shouldUseSingularFileCount(_ count: Int) -> Bool {
+        BookSettingsFileCountTextPolicy.shouldUseSingular(count)
     }
 }
