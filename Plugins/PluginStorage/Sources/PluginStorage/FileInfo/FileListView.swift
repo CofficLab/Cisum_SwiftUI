@@ -87,6 +87,7 @@ struct FileListView: View, SuperLog {
                 VStack(spacing: 8) {
                     Image(systemName: "exclamationmark.triangle")
                         .foregroundStyle(.orange)
+                        .accessibilityHidden(true)
                     Text("Unable to read file list", tableName: "Storage", bundle: .module)
                         .font(.headline)
                     Text(loadErrorMessage)

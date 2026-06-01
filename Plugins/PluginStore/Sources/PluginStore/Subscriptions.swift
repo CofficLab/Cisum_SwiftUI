@@ -133,6 +133,7 @@ struct ProductsSubscription: View, SuperEvent, SuperLog, SuperThread {
             Image(systemName: "cart.circle")
                 .font(.system(size: 64))
                 .foregroundStyle(.tertiary)
+                .accessibilityHidden(true)
             Text("No subscription options available", tableName: "Store", bundle: .module)
                 .font(.headline)
                 .foregroundStyle(.secondary)
