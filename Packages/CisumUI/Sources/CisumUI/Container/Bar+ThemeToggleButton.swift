@@ -1,6 +1,10 @@
 import SwiftUI
 
 extension MagicContainer {
+    var themeToggleAccessibilityLabel: String {
+        isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"
+    }
+
     var themeToggleButton: some View {
         Button(action: {
             isDarkMode.toggle()
@@ -10,6 +14,8 @@ extension MagicContainer {
         }
         .buttonStyle(.bordered)
         .clipShape(Circle())
+        .accessibilityLabel(themeToggleAccessibilityLabel)
+        .help(themeToggleAccessibilityLabel)
     }
 }
 
