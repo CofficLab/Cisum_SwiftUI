@@ -107,6 +107,9 @@ public final class LocalDirectoryMonitor: SuperLog {
             startPolling()
         } else {
             // macOS 使用 DispatchSource
+            guard ensureDirectoryExists() else {
+                return AnyCancellable {}
+            }
             guard setupFileDescriptor() else {
                 return AnyCancellable {}
             }
@@ -120,6 +123,31 @@ public final class LocalDirectoryMonitor: SuperLog {
     }
 
     // MARK: - Private Methods
+
+    private func ensureDirectoryExists() -> Bool {
+        let fileManager = FileManager.default
+        var isDirectory: ObjCBool = false
+
+        if fileManager.fileExists(atPath: directoryURL.path, isDirectory: &isDirectory) {
+            if isDirectory.boolValue {
+                return true
+            }
+
+            os_log(.error, "\(self.t)❌ (\(self.caller)) 监控路径不是目录：\(self.directoryURL.path)")
+            return false
+        }
+
+        do {
+            try fileManager.createDirectory(at: directoryURL, withIntermediateDirectories: true)
+            if verbose {
+                os_log("\(self.t)✅ (\(self.caller)) 已创建监控目录：\(self.directoryURL.path)")
+            }
+            return true
+        } catch {
+            os_log(.error, "\(self.t)❌ (\(self.caller)) 创建监控目录失败：\(error.localizedDescription)")
+            return false
+        }
+    }
 
     private func setupFileDescriptor() -> Bool {
         fileDescriptor = Darwin.open(self.directoryURL.path, O_EVTONLY)
