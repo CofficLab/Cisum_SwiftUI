@@ -6,6 +6,9 @@ import SwiftUI
 struct Guide: View, SuperLog {
     nonisolated static let emoji = "🧭"
     nonisolated static let verbose = false
+    nonisolated static let previousPageLabel = String(localized: "Previous", table: "Core")
+    nonisolated static let nextPageLabel = String(localized: "Next", table: "Core")
+    nonisolated static let finishSetupLabel = String(localized: "Finish Setup", table: "Core")
 
     @EnvironmentObject var pluginProvider: PluginProvider
     @State var currentGuidePageIndex: Int = 0
@@ -87,6 +90,8 @@ extension Guide {
                             .cisumButton {
                                 currentGuidePageIndex = index - 1
                             }
+                            .accessibilityLabel(Self.previousPageLabel)
+                            .help(Self.previousPageLabel)
                     }
 
                     // 下一页按钮
@@ -100,6 +105,8 @@ extension Guide {
                             .cisumButton {
                                 currentGuidePageIndex = index + 1
                             }
+                            .accessibilityLabel(Self.nextPageLabel)
+                            .help(Self.nextPageLabel)
                     } else {
                         Image(systemName: "checkmark")
                             .font(.title2)
@@ -112,6 +119,8 @@ extension Guide {
                                     currentGuidePageIndex = index + 1
                                 }
                             }
+                            .accessibilityLabel(Self.finishSetupLabel)
+                            .help(Self.finishSetupLabel)
                     }
                 }
                 .padding(.bottom, 16)
