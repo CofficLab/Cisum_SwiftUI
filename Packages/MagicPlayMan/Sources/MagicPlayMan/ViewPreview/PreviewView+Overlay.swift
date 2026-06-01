@@ -32,6 +32,7 @@ extension MagicPlayManPreviewView {
                 Image(systemName: "exclamationmark.triangle.fill")
                     .font(.system(size: 40))
                     .foregroundStyle(.red)
+                    .accessibilityHidden(true)
 
                 Text(playMan.localization.failedToLoadMedia)
                     .font(.headline)

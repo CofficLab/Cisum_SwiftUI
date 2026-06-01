@@ -18,6 +18,7 @@ struct ErrorOverlay: View {
                 Image(systemName: "exclamationmark.triangle.fill")
                     .font(.system(size: 40))
                     .foregroundStyle(.red)
+                    .accessibilityHidden(true)
 
                 Text(loc.failedToLoadMedia)
                     .font(.headline)
