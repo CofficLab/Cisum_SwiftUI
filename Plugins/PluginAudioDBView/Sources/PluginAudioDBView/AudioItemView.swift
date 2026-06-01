@@ -16,6 +16,45 @@ enum AudioItemFileSizeLoadPolicy {
     }
 }
 
+enum AudioItemFileSizeReadPolicy {
+    static func fileSize(from attributes: [FileAttributeKey: Any]) -> Int64? {
+        if let number = attributes[.size] as? NSNumber {
+            return normalizedSize(number)
+        }
+
+        if let size = attributes[.size] as? Int {
+            return normalizedSize(Int64(size))
+        }
+
+        if let size = attributes[.size] as? Int64 {
+            return normalizedSize(size)
+        }
+
+        if let size = attributes[.size] as? UInt64 {
+            guard size <= UInt64(Int64.max) else { return Int64.max }
+            return Int64(size)
+        }
+
+        return nil
+    }
+
+    private static func normalizedSize(_ size: Int64) -> Int64 {
+        max(size, 0)
+    }
+
+    private static func normalizedSize(_ number: NSNumber) -> Int64 {
+        if number.compare(NSNumber(value: 0)) == .orderedAscending {
+            return 0
+        }
+
+        if number.compare(NSNumber(value: Int64.max)) == .orderedDescending {
+            return Int64.max
+        }
+
+        return number.int64Value
+    }
+}
+
 @MainActor
 enum AudioItemFileSizeCache {
     private struct Entry {
@@ -206,9 +245,12 @@ extension AudioItemView {
             return
         }
 
-        let size = await Task.detached(priority: .background) {
-            let size = (try? FileManager.default.attributesOfItem(atPath: requestedURL.path)[.size] as? NSNumber)?.int64Value
-            return size
+        let size = await Task.detached(priority: .background) { () -> Int64? in
+            guard let attributes = try? FileManager.default.attributesOfItem(atPath: requestedURL.path) else {
+                return nil
+            }
+
+            return AudioItemFileSizeReadPolicy.fileSize(from: attributes)
         }.value
 
         guard !Task.isCancelled,
