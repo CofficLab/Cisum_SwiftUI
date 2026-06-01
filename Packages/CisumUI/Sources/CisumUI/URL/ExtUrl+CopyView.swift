@@ -112,6 +112,17 @@ private struct ProgressIndicatorView: View {
     }
 }
 
+enum FileCopyProgressTextPolicy {
+    static let iCloudDownloadMessage = "Downloading from iCloud..."
+    static let copyCompleteLabel = "Copy complete"
+    static let startCopyLabel = "Start copy"
+    static let copiedErrorMessage = "Error details copied to clipboard"
+
+    static func copyingMessage(destinationName: String) -> String {
+        "Copying to: \(destinationName)"
+    }
+}
+
 // MARK: - Main View
 /// 文件复制进度视图
 private struct FileCopyProgressView: View, SuperLog {
@@ -147,14 +158,16 @@ private struct FileCopyProgressView: View, SuperLog {
                 if source.checkIsICloud(verbose: false) && source.isNotDownloaded {
                     ProgressIndicatorView(
                         progress: downloadProgress,
-                        message: "正在从 iCloud 下载..."
+                        message: FileCopyProgressTextPolicy.iCloudDownloadMessage
                     )
                 }
 
                 if isCopying {
                     ProgressIndicatorView(
                         progress: copyProgress,
-                        message: "正在复制到: \(finalDestination.lastPathComponent)"
+                        message: FileCopyProgressTextPolicy.copyingMessage(
+                            destinationName: finalDestination.lastPathComponent
+                        )
                     )
                 }
                 
@@ -163,7 +176,7 @@ private struct FileCopyProgressView: View, SuperLog {
                 }
                 
                 if isCompleted {
-                    Label("复制完成", systemImage: "checkmark.circle.fill")
+                    Label(FileCopyProgressTextPolicy.copyCompleteLabel, systemImage: "checkmark.circle.fill")
                         .foregroundStyle(.green)
                 }
                 
@@ -171,7 +184,7 @@ private struct FileCopyProgressView: View, SuperLog {
                     Button {
                         performCopyOperation()
                     } label: {
-                        Label("开始复制", systemImage: "arrow.right.circle")
+                        Label(FileCopyProgressTextPolicy.startCopyLabel, systemImage: "arrow.right.circle")
                     }
                     .buttonStyle(.borderedProminent)
                 }
@@ -182,7 +195,7 @@ private struct FileCopyProgressView: View, SuperLog {
             .shadow(radius: style.shadowRadius)
             
             if showCopiedTip {
-                ToastView(message: "错误信息已复制到剪贴板")
+                ToastView(message: FileCopyProgressTextPolicy.copiedErrorMessage)
             }
         }
         .task {
