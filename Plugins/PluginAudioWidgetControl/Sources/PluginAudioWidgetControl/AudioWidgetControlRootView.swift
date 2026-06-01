@@ -10,6 +10,11 @@ public typealias AudioWidgetAdjacentAssetProvider = @MainActor (_ current: URL?,
 public typealias AudioWidgetFirstAssetProvider = @MainActor () async throws -> URL?
 public typealias AudioWidgetLastAssetProvider = @MainActor () async throws -> URL?
 
+enum AudioWidgetPlayPauseAction {
+    case play
+    case pause
+}
+
 enum AudioWidgetPlaybackRequestPolicy {
     static func shouldApplyNavigationResult(requestedAsset: URL, currentAsset: URL?) -> Bool {
         representsSameFile(requestedAsset, currentAsset)
@@ -44,6 +49,14 @@ enum AudioWidgetPlaybackRequestPolicy {
 
     static func remainingCommandCount(afterConsuming consumedCount: Int, storedValue: Any?) -> Int {
         max(0, commandCount(from: storedValue, maximum: 1_000_000) - consumedCount)
+    }
+
+    static func playPauseAction(currentState: PlaybackState, commandCount: Int) -> AudioWidgetPlayPauseAction? {
+        guard commandCount > 0, commandCount.isMultiple(of: 2) == false else {
+            return nil
+        }
+
+        return currentState == .playing ? .pause : .play
     }
 
     private static func representsSameFile(_ lhs: URL?, _ rhs: URL?) -> Bool {
@@ -176,12 +189,16 @@ public struct AudioWidgetControlRootView: View {
     }
 
     private func handlePlayPause(count: Int) {
-        for _ in 0..<count {
-            if man.state == .playing {
-                man.pause(reason: "Widget")
-            } else {
-                man.playCurrent(reason: "Widget")
-            }
+        switch AudioWidgetPlaybackRequestPolicy.playPauseAction(
+            currentState: man.state,
+            commandCount: count
+        ) {
+        case .play:
+            man.playCurrent(reason: "Widget")
+        case .pause:
+            man.pause(reason: "Widget")
+        case .none:
+            break
         }
     }
 

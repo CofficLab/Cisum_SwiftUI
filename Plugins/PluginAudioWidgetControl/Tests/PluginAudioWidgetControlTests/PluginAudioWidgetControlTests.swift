@@ -99,3 +99,22 @@ import Testing
         storedValue: NSNumber(value: 2)
     ) == 0)
 }
+
+@Test func widgetPlayPauseCommandTogglesOnlyOddRepeatedCommands() {
+    #expect(AudioWidgetPlaybackRequestPolicy.playPauseAction(
+        currentState: .playing,
+        commandCount: 1
+    ) == .pause)
+    #expect(AudioWidgetPlaybackRequestPolicy.playPauseAction(
+        currentState: .paused,
+        commandCount: 1
+    ) == .play)
+    #expect(AudioWidgetPlaybackRequestPolicy.playPauseAction(
+        currentState: .playing,
+        commandCount: 2
+    ) == nil)
+    #expect(AudioWidgetPlaybackRequestPolicy.playPauseAction(
+        currentState: .paused,
+        commandCount: 4
+    ) == nil)
+}
