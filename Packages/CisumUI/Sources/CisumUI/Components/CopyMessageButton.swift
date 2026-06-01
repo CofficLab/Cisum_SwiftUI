@@ -7,6 +7,7 @@ import SwiftUI
 
 public struct CopyMessageButton: View {
     static let copiedLabel = "Copied"
+    static let accessibilityLabel = "Copy message content"
     static let helpText = "Copy message content"
 
     @LumiMotionPreferenceReader private var motionPreference
@@ -41,6 +42,8 @@ public struct CopyMessageButton: View {
             )
         }
         .buttonStyle(.plain)
+        .accessibilityLabel(Text(Self.accessibilityLabel))
+        .accessibilityValue(Text(showFeedback ? Self.copiedLabel : ""))
         .help(Self.helpText)
         .onHover { hovering in
             AppUI.Motion.animate(AppUI.Motion.enabled(AppUI.Motion.hover, preference: motionPreference)) {
