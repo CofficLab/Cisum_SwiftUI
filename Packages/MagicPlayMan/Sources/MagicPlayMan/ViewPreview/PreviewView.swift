@@ -11,6 +11,7 @@ public struct MagicPlayManPreviewView: View {
 
     @StateObject var playMan: MagicPlayMan
     @State var selectedSampleName: String?
+    @State private var eventSubscriptionID: UUID?
 
     // MARK: - Initialization
 
@@ -28,7 +29,11 @@ public struct MagicPlayManPreviewView: View {
     // MARK: - Event Observation
 
     private func setupEventObservation() {
-        playMan.subscribe(
+        guard eventSubscriptionID == nil else {
+            return
+        }
+
+        eventSubscriptionID = playMan.subscribe(
             name: "PreviewView",
             onTrackFinished: { [weak playMan] track in
                 if playMan?.verbose == true {
@@ -68,6 +73,15 @@ public struct MagicPlayManPreviewView: View {
         )
     }
 
+    private func teardownEventObservation() {
+        guard let eventSubscriptionID else {
+            return
+        }
+
+        playMan.unsubscribe(eventSubscriptionID)
+        self.eventSubscriptionID = nil
+    }
+
     // MARK: - Body
 
     public var body: some View {
@@ -79,6 +93,9 @@ public struct MagicPlayManPreviewView: View {
         }
         .onAppear {
             setupEventObservation()
+        }
+        .onDisappear {
+            teardownEventObservation()
         }
         .shadowNone()
         .localization(_playMan.wrappedValue.localization)

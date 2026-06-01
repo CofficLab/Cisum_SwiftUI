@@ -664,6 +664,26 @@ final class MagicPlayManTests: XCTestCase {
     }
 
     @MainActor
+    func testUnsubscribeRemovesSubscriberAndCancelsHandlers() {
+        let man = MagicPlayMan()
+        var notifications = 0
+        let subscriptionID = man.subscribe(
+            name: "MagicPlayManTests",
+            onPlayModeChanged: { _ in
+                notifications += 1
+            }
+        )
+
+        XCTAssertEqual(man.events.subscribers.count, 1)
+
+        man.unsubscribe(subscriptionID)
+        man.setPlayMode(.shuffle)
+
+        XCTAssertEqual(man.events.subscribers.count, 0)
+        XCTAssertEqual(notifications, 0)
+    }
+
+    @MainActor
     func testLikedAssetsMatchSymlinkedCurrentAsset() throws {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent(UUID().uuidString, isDirectory: true)
