@@ -520,8 +520,57 @@ import UniformTypeIdentifiers
     let firstRoot = URL(fileURLWithPath: "/tmp/cisum-book-tile/db-1")
     let secondRoot = URL(fileURLWithPath: "/tmp/cisum-book-tile/db-2")
 
-    #expect(BookTileLoadIdentity(bookURL: bookURL, dbRoot: firstRoot) == BookTileLoadIdentity(bookURL: bookURL, dbRoot: firstRoot))
-    #expect(BookTileLoadIdentity(bookURL: bookURL, dbRoot: firstRoot) != BookTileLoadIdentity(bookURL: bookURL, dbRoot: secondRoot))
+    #expect(BookTileLoadIdentity(
+        bookURL: bookURL,
+        dbRoot: firstRoot,
+        stateRevision: 0
+    ) == BookTileLoadIdentity(
+        bookURL: bookURL,
+        dbRoot: firstRoot,
+        stateRevision: 0
+    ))
+    #expect(BookTileLoadIdentity(
+        bookURL: bookURL,
+        dbRoot: firstRoot,
+        stateRevision: 0
+    ) != BookTileLoadIdentity(
+        bookURL: bookURL,
+        dbRoot: secondRoot,
+        stateRevision: 0
+    ))
+}
+
+@Test func bookTileReloadsWhenMatchingBookStateChanges() throws {
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let realBook = root.appendingPathComponent("RealBook", isDirectory: true)
+    let linkedBook = root.appendingPathComponent("LinkedBook", isDirectory: true)
+    let otherBook = root.appendingPathComponent("OtherBook", isDirectory: true)
+    let dbRoot = root.appendingPathComponent("db", isDirectory: true)
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    try FileManager.default.createDirectory(at: realBook, withIntermediateDirectories: true)
+    try FileManager.default.createDirectory(at: otherBook, withIntermediateDirectories: true)
+    try FileManager.default.createSymbolicLink(at: linkedBook, withDestinationURL: realBook)
+    try Data("audio".utf8).write(to: realBook.appendingPathComponent("001.m4b"))
+
+    #expect(BookTileStateRefreshPolicy.shouldReloadTile(bookURL: linkedBook, updatedBookURL: realBook))
+    #expect(!BookTileStateRefreshPolicy.shouldReloadTile(bookURL: linkedBook, updatedBookURL: otherBook))
+    #expect(!BookTileStateRefreshPolicy.shouldReloadTile(bookURL: linkedBook, updatedBookURL: nil))
+
+    let nextRevision = BookTileStateRefreshPolicy.nextRevision(after: 0)
+    #expect(nextRevision == 1)
+    #expect(BookTileLoadIdentity(
+        bookURL: linkedBook,
+        dbRoot: dbRoot,
+        stateRevision: nextRevision
+    ) != BookTileLoadIdentity(
+        bookURL: linkedBook,
+        dbRoot: dbRoot,
+        stateRevision: 0
+    ))
 }
 
 @Test func bookDBViewFindsSymlinkedBookState() throws {

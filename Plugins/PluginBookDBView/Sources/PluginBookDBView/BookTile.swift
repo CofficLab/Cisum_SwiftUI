@@ -8,6 +8,18 @@ import SwiftUI
 struct BookTileLoadIdentity: Equatable {
     let bookURL: URL
     let dbRoot: URL
+    let stateRevision: Int
+}
+
+enum BookTileStateRefreshPolicy {
+    static func shouldReloadTile(bookURL: URL, updatedBookURL: URL?) -> Bool {
+        guard let updatedBookURL else { return false }
+        return BookPlaybackOrdering.representsSameFile(bookURL, updatedBookURL)
+    }
+
+    static func nextRevision(after revision: Int) -> Int {
+        revision + 1
+    }
 }
 
 /**
@@ -31,6 +43,7 @@ struct BookTile: View, SuperThread, SuperLog, Equatable {
     @State private var lastPlayedTitle: String? = nil
     @State private var cover: Image? = nil
     @State private var tileSize: CGSize = .init(width: 150, height: 200)
+    @State private var stateRevision: Int = 0
 
     nonisolated static let emoji = "🖥️"
     private let verbose = false
@@ -95,15 +108,25 @@ struct BookTile: View, SuperThread, SuperLog, Equatable {
         }
         .frame(width: tileSize.width)
         .frame(height: tileSize.height)
-        .task(id: BookTileLoadIdentity(bookURL: url, dbRoot: dependencies.dbRoot)) {
+        .task(id: BookTileLoadIdentity(bookURL: url, dbRoot: dependencies.dbRoot, stateRevision: stateRevision)) {
             await loadTileData()
         }
+        .onReceive(NotificationCenter.default.publisher(for: .bookStateUpdated), perform: handleBookStateUpdated)
     }
 }
 
 // MARK: - Action
 
 extension BookTile {
+    func handleBookStateUpdated(_ notification: Notification) {
+        let updatedBookURL = notification.userInfo?["url"] as? URL
+        guard BookTileStateRefreshPolicy.shouldReloadTile(bookURL: url, updatedBookURL: updatedBookURL) else {
+            return
+        }
+
+        stateRevision = BookTileStateRefreshPolicy.nextRevision(after: stateRevision)
+    }
+
     @MainActor
     func loadTileData() async {
         cover = nil

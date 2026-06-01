@@ -611,6 +611,7 @@ extension BookDB {
 
         do {
             try context.save()
+            NotificationCenter.postBookStateUpdated(bookURL: bookURL)
             if Self.verbose {
                 os_log("\(self.t)💾 保存书籍状态: \(bookURL.lastPathComponent)")
             }

@@ -15,6 +15,9 @@ public extension Notification.Name {
     
     /// 数据库更新
     static let bookDBUpdated = Notification.Name("bookDBUpdated")
+
+    /// 书籍播放状态更新
+    static let bookStateUpdated = Notification.Name("bookStateUpdated")
     
     // MARK: - 书籍文件操作相关
     
@@ -41,6 +44,10 @@ public extension NotificationCenter {
 
     static func postBookDBUpdated() {
         postBookEventOnMain(name: .bookDBUpdated)
+    }
+
+    static func postBookStateUpdated(bookURL: URL) {
+        postBookStateUpdatedEventOnMain(bookURL: bookURL)
     }
 
     static func postBookDBDeleted(urls: [URL] = []) {
@@ -71,6 +78,16 @@ public extension NotificationCenter {
         } else {
             DispatchQueue.main.async {
                 NotificationCenter.default.post(name: .bookDBDeleted, object: nil, userInfo: ["urls": urls])
+            }
+        }
+    }
+
+    private static func postBookStateUpdatedEventOnMain(bookURL: URL) {
+        if Thread.isMainThread {
+            NotificationCenter.default.post(name: .bookStateUpdated, object: nil, userInfo: ["url": bookURL])
+        } else {
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: .bookStateUpdated, object: nil, userInfo: ["url": bookURL])
             }
         }
     }
