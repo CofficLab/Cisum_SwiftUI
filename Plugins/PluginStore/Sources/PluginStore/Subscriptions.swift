@@ -35,6 +35,12 @@ enum StoreProductLoadPolicy {
     }
 }
 
+enum StoreSubscriptionCountTextPolicy {
+    static func shouldUseSingular(_ count: Int) -> Bool {
+        count == 1
+    }
+}
+
 struct ProductsSubscription: View, SuperEvent, SuperLog, SuperThread {
     @Environment(\.colorScheme) var colorScheme: ColorScheme
 
@@ -80,9 +86,15 @@ struct ProductsSubscription: View, SuperEvent, SuperLog, SuperThread {
                                             .fontWeight(.semibold)
                                             .cisumIf(group.name.isNotEmpty)
 
-                                        Text("\(group.subscriptions.count) subscription options", tableName: "Store", bundle: .module)
-                                            .font(.caption)
-                                            .foregroundStyle(.secondary)
+                                        Group {
+                                            if Self.shouldUseSingularSubscriptionCount(group.subscriptions.count) {
+                                                Text("\(group.subscriptions.count) subscription option", tableName: "Store", bundle: .module)
+                                            } else {
+                                                Text("\(group.subscriptions.count) subscription options", tableName: "Store", bundle: .module)
+                                            }
+                                        }
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
                                     }
 
                                     Spacer()
@@ -208,6 +220,10 @@ struct ProductsSubscription: View, SuperEvent, SuperLog, SuperThread {
 // MARK: Event Handler
 
 extension ProductsSubscription {
+    nonisolated static func shouldUseSingularSubscriptionCount(_ count: Int) -> Bool {
+        StoreSubscriptionCountTextPolicy.shouldUseSingular(count)
+    }
+
     func onAppear() {
         getProducts("AllSubscription OnAppear")
     }

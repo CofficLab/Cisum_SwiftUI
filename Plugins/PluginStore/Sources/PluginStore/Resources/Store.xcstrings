@@ -49,6 +49,22 @@
         }
       }
     },
+    "%lld subscription option" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld 个订阅选项"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld 個訂閱選項"
+          }
+        }
+      }
+    },
     "%lld months" : {
       "localizations" : {
         "zh-Hans" : {

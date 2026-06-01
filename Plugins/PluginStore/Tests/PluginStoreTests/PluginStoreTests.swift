@@ -98,6 +98,12 @@ import Testing
     ))
 }
 
+@Test func productListUsesSingularSubscriptionCountOnlyForOneOption() {
+    #expect(!ProductsSubscription.shouldUseSingularSubscriptionCount(0))
+    #expect(ProductsSubscription.shouldUseSingularSubscriptionCount(1))
+    #expect(!ProductsSubscription.shouldUseSingularSubscriptionCount(2))
+}
+
 @Test func storeSettingOnlyAppliesLatestPurchaseInfoResult() {
     #expect(StorePurchaseInfoLoadPolicy.shouldApplyResult(
         currentGeneration: 4,
