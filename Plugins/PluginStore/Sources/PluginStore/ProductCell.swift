@@ -69,6 +69,7 @@ struct ProductCell: View, SuperLog {
                     HStack(spacing: 4) {
                         Image(systemName: "gift.fill")
                             .font(.caption2)
+                            .accessibilityHidden(true)
                         Text(formatIntroductoryOffer(introOffer))
                             .font(.caption)
                     }

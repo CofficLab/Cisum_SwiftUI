@@ -10,6 +10,7 @@ struct VersionComparisonView: View {
             HStack {
                 Image(systemName: "sparkles")
                     .foregroundStyle(.yellow)
+                    .accessibilityHidden(true)
                 Text("Unlock the full experience", tableName: "Store", bundle: .module)
                     .font(.headline)
                     .fontWeight(.semibold)
@@ -83,6 +84,7 @@ private struct VersionCard: View {
                             : LinearGradient(colors: [.gray.opacity(0.6), .gray.opacity(0.4)], startPoint: .top, endPoint: .bottom)
                     )
                     .font(.title3)
+                    .accessibilityHidden(true)
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(title)
@@ -103,6 +105,7 @@ private struct VersionCard: View {
                             .font(.caption)
                             .foregroundStyle(isPro ? color : .secondary)
                             .frame(width: 16)
+                            .accessibilityHidden(true)
 
                         Text(feature.1)
                             .font(.caption)
