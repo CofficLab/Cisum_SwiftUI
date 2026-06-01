@@ -78,6 +78,7 @@ public extension View {
         .buttonStyle(CisumPlaybackControlButtonStyle())
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(accessibilityLabel)
+        .help(accessibilityLabel)
     }
 
     func cisumHoverScale(_ scale: CGFloat) -> some View {
