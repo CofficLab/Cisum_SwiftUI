@@ -23,14 +23,14 @@ enum BookTileStateRefreshPolicy {
 }
 
 /**
- * 用途：展示从数据库读取的图书数据，以磁贴形式呈现图书封面和基本信息
- * 属性说明：
- *   - url: 图书的 URL 路径
- *   - title: 图书标题
- *   - childCount: 图书包含的音频文件数量
- *   - cover: 图书封面图片（异步加载）
- *   - state: 图书的播放状态（记录上次播放位置）
- * 使用场景：在图书列表中展示图书，支持显示封面、标题、文件数量和播放记录
+ * Purpose: display book data read from the database as a tile with cover art and basic information.
+ * Properties:
+ *   - url: book URL path
+ *   - title: book title
+ *   - childCount: number of audio files contained in the book
+ *   - cover: book cover image loaded asynchronously
+ *   - state: playback state that records the last playback position
+ * Usage: shown in the book list with cover art, title, file count, and playback history.
  */
 struct BookTile: View, SuperThread, SuperLog, Equatable {
     nonisolated static func == (lhs: BookTile, rhs: BookTile) -> Bool {
@@ -140,7 +140,7 @@ extension BookTile {
         let logPrefix = t
 
         if verbose {
-            os_log("\(logPrefix)开始获取封面图 \(bookTitle)")
+            os_log("\(logPrefix)Loading cover art for \(bookTitle)")
         }
 
         async let loadedCover = repo.getCover(for: bookURL, thumbnailSize: thumbnailSize)
@@ -169,7 +169,7 @@ extension BookTile {
                 return state?.currentURL?.lastPathComponent
             } catch {
                 if verbose {
-                    os_log(.error, "\(logPrefix)读取书籍播放状态失败: \(error.localizedDescription)")
+                    os_log(.error, "\(logPrefix)Failed to read book playback state: \(error.localizedDescription)")
                 }
 
                 return nil
