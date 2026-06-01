@@ -6,18 +6,20 @@ import SwiftUI
 struct PreviousButton: View {
     @EnvironmentObject var man: PlayMan
     @Environment(\.demoMode) var isDemoMode
+    @Environment(\.localization) private var loc
     @LumiTheme private var appTheme
 
     private let size: CGFloat = 32
 
     var body: some View {
-        Image.cisumBackward
+        Label(loc.previousTrack, systemImage: .cisumIconBackward)
+            .labelStyle(.iconOnly)
             .font(.system(size: self.size * 0.6))
             .foregroundStyle(appTheme.textSecondary)
             .frame(width: size, height: size)
             .cisumCard(.ultraThinMaterial)
             .cisumRoundedFull()
-            .cisumPlaybackControl {
+            .cisumPlaybackControl(accessibilityLabel: loc.previousTrack) {
                 man.previous()
             }
             .shadow(color: appTheme.background.opacity(0.10), radius: 4, y: 1)

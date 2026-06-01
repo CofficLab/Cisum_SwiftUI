@@ -368,6 +368,48 @@ public struct Localization {
         }
     }
 
+    public var previousTrack: String {
+        switch locale.language.languageCode?.identifier {
+        case "zh": return "上一首曲目"
+        default: return "Previous Track"
+        }
+    }
+
+    public var nextTrack: String {
+        switch locale.language.languageCode?.identifier {
+        case "zh": return "下一首曲目"
+        default: return "Next Track"
+        }
+    }
+
+    public var play: String {
+        switch locale.language.languageCode?.identifier {
+        case "zh": return "播放"
+        default: return "Play"
+        }
+    }
+
+    public var pause: String {
+        switch locale.language.languageCode?.identifier {
+        case "zh": return "暂停"
+        default: return "Pause"
+        }
+    }
+
+    public var openMediaLibrary: String {
+        switch locale.language.languageCode?.identifier {
+        case "zh": return "打开媒体库"
+        default: return "Open Media Library"
+        }
+    }
+
+    public var closeMediaLibrary: String {
+        switch locale.language.languageCode?.identifier {
+        case "zh": return "关闭媒体库"
+        default: return "Close Media Library"
+        }
+    }
+
     // MARK: - Play Mode
 
     public var sequentialPlay: String {

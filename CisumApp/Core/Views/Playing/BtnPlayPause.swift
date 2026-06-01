@@ -6,6 +6,7 @@ import SwiftUI
 struct PlayPauseButton: View {
     @EnvironmentObject var man: PlayMan
     @Environment(\.demoMode) var isDemoMode
+    @Environment(\.localization) private var loc
     @LumiTheme private var appTheme
     @LumiMotionPreferenceReader private var motionPreference
 
@@ -15,11 +16,11 @@ struct PlayPauseButton: View {
     var body: some View {
         Group {
             if isPlaying {
-                controlIcon(Image.cisumPauseFill)
-                    .cisumPlaybackControl { man.pause(reason: "PlayPauseButton") }
+                controlIcon(label: loc.pause, systemName: .cisumIconPauseFill)
+                    .cisumPlaybackControl(accessibilityLabel: loc.pause) { man.pause(reason: "PlayPauseButton") }
             } else {
-                controlIcon(Image.cisumPlayFill)
-                    .cisumPlaybackControl { man.playCurrent(reason: "PlayPauseButton") }
+                controlIcon(label: loc.play, systemName: .cisumIconPlayFill)
+                    .cisumPlaybackControl(accessibilityLabel: loc.play) { man.playCurrent(reason: "PlayPauseButton") }
             }
         }
         .appPlaybackIconTransition(preference: motionPreference)
@@ -30,8 +31,9 @@ struct PlayPauseButton: View {
         .shadow(color: appTheme.background.opacity(0.12), radius: 5, y: 1)
     }
 
-    private func controlIcon(_ image: Image) -> some View {
-        image
+    private func controlIcon(label: String, systemName: String) -> some View {
+        Label(label, systemImage: systemName)
+            .labelStyle(.iconOnly)
             .font(.system(size: size * 0.58))
             .foregroundStyle(appTheme.textPrimary)
             .frame(width: size, height: size)
