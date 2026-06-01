@@ -19,6 +19,24 @@ extension MagicPlayMan {
         MagicPlayManAssetIdentity.representsSameAsset(requestedAsset, currentAsset)
     }
 
+    nonisolated static func shouldReplaceRemoteCommandTargets(existingManagerCount: Int) -> Bool {
+        existingManagerCount > 0
+    }
+
+    private nonisolated static func removeExistingRemoteCommandTargets(from commandCenter: MPRemoteCommandCenter) {
+        commandCenter.playCommand.removeTarget(nil)
+        commandCenter.pauseCommand.removeTarget(nil)
+        commandCenter.previousTrackCommand.removeTarget(nil)
+        commandCenter.nextTrackCommand.removeTarget(nil)
+        commandCenter.skipForwardCommand.removeTarget(nil)
+        commandCenter.skipBackwardCommand.removeTarget(nil)
+        commandCenter.changePlaybackPositionCommand.removeTarget(nil)
+
+        if #available(iOS 13.0, macOS 10.15, *) {
+            commandCenter.likeCommand.removeTarget(nil)
+        }
+    }
+
     func setupRemoteControl() {
         #if os(iOS)
             do {
@@ -35,6 +53,7 @@ extension MagicPlayMan {
         #endif
 
         let commandCenter = MPRemoteCommandCenter.shared()
+        Self.removeExistingRemoteCommandTargets(from: commandCenter)
 
         // 播放/暂停
         commandCenter.playCommand.addTarget { [weak self] _ in

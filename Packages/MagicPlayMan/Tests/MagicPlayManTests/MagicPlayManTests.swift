@@ -27,6 +27,12 @@ final class MagicPlayManTests: XCTestCase {
         XCTAssertFalse(MagicPlayMan.shouldApplyNowPlayingMetadataResult(requestedAsset: current, currentAsset: nil))
     }
 
+    func testRemoteCommandRegistrationReplacesExistingTargets() {
+        XCTAssertFalse(MagicPlayMan.shouldReplaceRemoteCommandTargets(existingManagerCount: 0))
+        XCTAssertTrue(MagicPlayMan.shouldReplaceRemoteCommandTargets(existingManagerCount: 1))
+        XCTAssertTrue(MagicPlayMan.shouldReplaceRemoteCommandTargets(existingManagerCount: 3))
+    }
+
     func testNowPlayingMetadataMatchesSymlinkedCurrentAsset() throws {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent(UUID().uuidString, isDirectory: true)
