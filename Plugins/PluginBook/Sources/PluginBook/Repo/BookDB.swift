@@ -204,7 +204,7 @@ extension BookDB {
         let timeInterval = Double(nanoTime) / 1000000000
 
         if verbose && timeInterval > tolerance {
-            os_log("\(self.t)\(title) cost \(timeInterval) 秒 🐢🐢🐢")
+            os_log("\(self.t)\(title) cost \(timeInterval)s 🐢🐢🐢")
         }
     }
 
@@ -214,10 +214,10 @@ extension BookDB {
         let timeInterval = Double(nanoTime) / 1000000000
 
         if timeInterval > tolerance {
-            return "\(title) \(timeInterval) 秒 🐢🐢🐢"
+            return "\(title) \(timeInterval)s 🐢🐢🐢"
         }
 
-        return "\(title) \(timeInterval) 秒 🐢🐢🐢"
+        return "\(title) \(timeInterval)s 🐢🐢🐢"
     }
 }
 
