@@ -27,6 +27,14 @@ final class MagicPlayManTests: XCTestCase {
         XCTAssertFalse(MagicPlayMan.shouldApplyNowPlayingMetadataResult(requestedAsset: current, currentAsset: nil))
     }
 
+    func testAudioArtworkResultMustBelongToCurrentAsset() {
+        let current = URL(fileURLWithPath: "/tmp/current.mp3")
+        let stale = URL(fileURLWithPath: "/tmp/stale.mp3")
+
+        XCTAssertTrue(AudioContentArtworkLoadPolicy.shouldApplyResult(requestedAsset: current, currentAsset: current))
+        XCTAssertFalse(AudioContentArtworkLoadPolicy.shouldApplyResult(requestedAsset: stale, currentAsset: current))
+    }
+
     func testRemoteCommandRegistrationReplacesExistingTargets() {
         XCTAssertFalse(MagicPlayMan.shouldReplaceRemoteCommandTargets(existingManagerCount: 0))
         XCTAssertTrue(MagicPlayMan.shouldReplaceRemoteCommandTargets(existingManagerCount: 1))
@@ -49,6 +57,10 @@ final class MagicPlayManTests: XCTestCase {
         try Data("audio".utf8).write(to: realAsset)
 
         XCTAssertTrue(MagicPlayMan.shouldApplyNowPlayingMetadataResult(
+            requestedAsset: linkedAsset,
+            currentAsset: realAsset
+        ))
+        XCTAssertTrue(AudioContentArtworkLoadPolicy.shouldApplyResult(
             requestedAsset: linkedAsset,
             currentAsset: realAsset
         ))

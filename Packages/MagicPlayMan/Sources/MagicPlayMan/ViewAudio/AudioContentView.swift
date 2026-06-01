@@ -2,6 +2,12 @@ import MagicKit
 import SwiftUI
 import CisumUI
 
+enum AudioContentArtworkLoadPolicy {
+    static func shouldApplyResult(requestedAsset: URL, currentAsset: URL) -> Bool {
+        MagicPlayManAssetIdentity.representsSameAsset(requestedAsset, currentAsset)
+    }
+}
+
 struct AudioContentView: View, SuperLog {
     nonisolated static let emoji = "🎧"
     let asset: MagicAsset
@@ -60,7 +66,9 @@ struct AudioContentView: View, SuperLog {
 
                         // 重试按钮
                         Button {
-                            loadArtwork()
+                            Task {
+                                await loadArtwork(for: asset.url)
+                            }
                         } label: {
                             Label(loc.retry, systemImage: "arrow.clockwise")
                                 .font(.caption)
@@ -97,30 +105,40 @@ struct AudioContentView: View, SuperLog {
             }
             .multilineTextAlignment(.center)
         }
-        .task {
+        .task(id: asset.url) {
             // 如果没有外部传入的缩略图，则尝试加载
             if artwork == nil {
-                loadArtwork()
+                await loadArtwork(for: asset.url)
             }
         }
     }
 
-    private func loadArtwork() {
+    @MainActor
+    private func loadArtwork(for requestedURL: URL? = nil) async {
+        let requestedURL = requestedURL ?? asset.url
+
         // 重置状态
         localArtwork = nil
         errorMessage = nil
 
-        Task {
-            do {
-                if let thumbnailResult = try await asset.url.thumbnail(size: CGSize(width: 600, height: 600), verbose: self.verbose, reason: "MagicPlayMan." + self.className + ".loadArtwork"),
-                   let swiftUIImage = thumbnailResult.toSwiftUIImage() {
-                    localArtwork = swiftUIImage
-                } else {
-                    errorMessage = loc.noArtworkAvailable
+        do {
+            if let thumbnailResult = try await requestedURL.thumbnail(size: CGSize(width: 600, height: 600), verbose: self.verbose, reason: "MagicPlayMan." + self.className + ".loadArtwork"),
+               let swiftUIImage = thumbnailResult.toSwiftUIImage() {
+                guard AudioContentArtworkLoadPolicy.shouldApplyResult(requestedAsset: requestedURL, currentAsset: asset.url) else {
+                    return
                 }
-            } catch {
-                errorMessage = "\(loc.failedToLoadArtwork):\n\(error.localizedDescription)"
+                localArtwork = swiftUIImage
+            } else {
+                guard AudioContentArtworkLoadPolicy.shouldApplyResult(requestedAsset: requestedURL, currentAsset: asset.url) else {
+                    return
+                }
+                errorMessage = loc.noArtworkAvailable
             }
+        } catch {
+            guard AudioContentArtworkLoadPolicy.shouldApplyResult(requestedAsset: requestedURL, currentAsset: asset.url) else {
+                return
+            }
+            errorMessage = "\(loc.failedToLoadArtwork):\n\(error.localizedDescription)"
         }
     }
 }
