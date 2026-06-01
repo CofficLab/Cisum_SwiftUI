@@ -629,6 +629,22 @@
         }
       }
     },
+    "Some dropped files could not be loaded" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "部分拖放的文件无法加载"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "部分拖放的檔案無法載入"
+          }
+        }
+      }
+    },
     "打开仓库目录并放入文件" : {
       "localizations" : {
         "zh-Hans" : {

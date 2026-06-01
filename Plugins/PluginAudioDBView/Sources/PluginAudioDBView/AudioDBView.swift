@@ -270,6 +270,10 @@ extension AudioDBView {
         urls.isEmpty && !errors.isEmpty
     }
 
+    nonisolated static func shouldReportPartialDroppedURLLoadFailure(_ urls: [URL], errors: [Error]) -> Bool {
+        !urls.isEmpty && !errors.isEmpty
+    }
+
     nonisolated static func shouldStartImport(isImporting: Bool) -> Bool {
         !isImporting
     }
@@ -437,6 +441,9 @@ extension AudioDBView {
                let error = droppedFiles.errors.first {
                 os_log(.error, "\(self.t)⚠️ 加载文件失败: \(error.localizedDescription)")
                 alert_error(String(localized: "Import failed: \(error.localizedDescription)", table: "Audio-DBView", bundle: .module))
+            } else if Self.shouldReportPartialDroppedURLLoadFailure(droppedFiles.urls, errors: droppedFiles.errors) {
+                os_log(.error, "\(self.t)⚠️ 部分拖拽文件加载失败")
+                alert_warning(String(localized: "Some dropped files could not be loaded", table: "Audio-DBView", bundle: .module))
             }
 
             guard Self.shouldImportDroppedURLs(droppedFiles.urls, after: droppedFiles.errors) else {
