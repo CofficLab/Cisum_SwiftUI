@@ -112,15 +112,15 @@ public enum OpenAppType: String {
     var displayName: String {
         switch self {
         case .auto:
-            return "智能打开"
+            return "Open Automatically"
         case .browser:
-            return "在浏览器中打开"
+            return "Open in Browser"
         case .finder:
-            return "在访达中显示"
+            return "Show in Finder"
         default:
-            // 使用 AppRegistry 的显示名称，加上"在...中打开"前缀
+            // 使用 AppRegistry 的显示名称，加上"Open in ..."前缀
             guard let appName = appRegistry?.displayName else { return "" }
-            return "在\(appName)中打开"
+            return "Open in \(appName)"
         }
     }
 
@@ -135,7 +135,7 @@ public enum OpenAppType: String {
     /// 根据URL获取显示名称（用于auto类型）
     func displayName(for url: URL) -> String {
         if self == .auto {
-            return url.isNetworkURL ? "在浏览器中打开" : "在访达中显示"
+            return url.isNetworkURL ? "Open in Browser" : "Show in Finder"
         }
         return displayName
     }
