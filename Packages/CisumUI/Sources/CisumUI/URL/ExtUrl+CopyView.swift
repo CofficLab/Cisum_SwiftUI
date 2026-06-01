@@ -117,6 +117,7 @@ enum FileCopyProgressTextPolicy {
     static let copyCompleteLabel = "Copy complete"
     static let startCopyLabel = "Start copy"
     static let copiedErrorMessage = "Error details copied to clipboard"
+    static let copyErrorDetailsLabel = "Copy error details"
 
     static func copyingMessage(destinationName: String) -> String {
         "Copying to: \(destinationName)"
@@ -366,6 +367,8 @@ private struct ErrorView: View {
                     .foregroundStyle(.red)
             }
             .buttonStyle(.plain)
+            .accessibilityLabel(FileCopyProgressTextPolicy.copyErrorDetailsLabel)
+            .help(FileCopyProgressTextPolicy.copyErrorDetailsLabel)
         }
     }
 }
