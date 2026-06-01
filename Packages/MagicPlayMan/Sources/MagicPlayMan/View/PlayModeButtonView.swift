@@ -34,6 +34,7 @@ struct PlayModeButtonView: View {
         }
         .buttonStyle(.borderless)
         .accessibilityLabel(modeDescription)
+        .help(modeDescription)
     }
 
     private var modeDescription: String {
@@ -56,4 +57,3 @@ struct PlayModeButtonView: View {
     MagicPlayMan.getPreviewView()
         .frame(height: 600)
 }
-

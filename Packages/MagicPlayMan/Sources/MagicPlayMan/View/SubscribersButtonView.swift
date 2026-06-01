@@ -35,6 +35,7 @@ struct SubscribersButtonView: View {
         }
         .buttonStyle(.borderless)
         .accessibilityLabel(loc.showEventSubscribers)
+        .help(loc.showEventSubscribers)
         .popover(isPresented: $isShowingPopover) {
             man.makeSubscribersView()
                 .frame(width: 400, height: 300)
@@ -48,4 +49,3 @@ struct SubscribersButtonView: View {
     MagicPlayMan.getPreviewView()
         .frame(height: 600)
 }
-

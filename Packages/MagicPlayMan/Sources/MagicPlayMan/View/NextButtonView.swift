@@ -27,13 +27,13 @@ struct NextButtonView: View {
     @Environment(\.localization) private var loc
 
     /// 计算按钮是否应该禁用
-    var isDisabled: Bool {
+    var disabledReason: String? {
         if !man.hasAsset {
-            return true
+            return loc.noMediaLoaded
         } else if !man.events.hasNavigationSubscribers {
-            return true
+            return "No navigation handler registered"
         }
-        return false
+        return nil
     }
 
     var body: some View {
@@ -42,8 +42,9 @@ struct NextButtonView: View {
             .inButtonWithAction {
                 man.next()
             }
-            .disabled(isDisabled)
+            .disabled(disabledReason != nil)
             .accessibilityLabel(loc.nextTrack)
+            .help(disabledReason ?? loc.nextTrack)
     }
 }
 

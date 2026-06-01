@@ -44,6 +44,7 @@ struct RewindButtonView: View {
         .disabled(disabledReason != nil)
         .buttonStyle(.borderless)
         .accessibilityLabel(loc.rewindTenSeconds)
+        .help(disabledReason ?? loc.rewindTenSeconds)
     }
 }
 
@@ -53,4 +54,3 @@ struct RewindButtonView: View {
     MagicPlayMan.getPreviewView()
         .frame(height: 600)
 }
-
