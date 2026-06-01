@@ -236,9 +236,10 @@ public struct AppSettingsInfoRow<Trailing: View>: View {
 
     public var body: some View {
         if let action {
-            rowContent
-                .contentShape(Rectangle())
-                .onTapGesture(perform: action)
+            Button(action: action) {
+                rowContent
+            }
+            .buttonStyle(.plain)
         } else {
             rowContent
         }
