@@ -499,9 +499,7 @@ enum PluginProviderError: Error, LocalizedError {
         case .pluginIDIsEmpty:
             return "Plugin has an empty ID"
         case let .pluginSceneMissingPoster(pluginType, sceneName):
-            return """
-            插件 '\(pluginType)' 提供了场景 '\(sceneName)' 但未提供海报视图。请更新该插件，添加 addPosterView() 方法。
-            """
+            return "Plugin \(pluginType) provides the \(sceneName) scene but no poster view. Update the plugin to implement addPosterView()."
         }
     }
 }
