@@ -7,6 +7,11 @@ enum MigrationProgressUpdatePolicy {
     static func shouldApplyUpdate(currentGeneration: Int, updateGeneration: Int) -> Bool {
         currentGeneration == updateGeneration
     }
+
+    static func normalizedProgress(_ progress: Double) -> Double {
+        guard progress.isFinite else { return 0 }
+        return min(max(progress, 0), 1)
+    }
 }
 
 struct MigrationProgressView: View {
@@ -207,7 +212,7 @@ struct MigrationProgressView: View {
                                     currentGeneration: self.migrationGeneration,
                                     updateGeneration: generation
                                 ) else { return }
-                                self.migrationProgress = progress
+                                self.migrationProgress = Self.normalizedMigrationProgress(progress)
                                 self.currentMigratingFile = file
                                 self.updateFileStatus(file)
                             }
@@ -271,6 +276,10 @@ struct MigrationProgressView: View {
             currentGeneration: currentGeneration,
             updateGeneration: updateGeneration
         )
+    }
+
+    nonisolated static func normalizedMigrationProgress(_ progress: Double) -> Double {
+        MigrationProgressUpdatePolicy.normalizedProgress(progress)
     }
 
     nonisolated static func processedFilesAfterStatusUpdate(

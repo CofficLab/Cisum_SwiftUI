@@ -268,6 +268,14 @@ import Foundation
     ))
 }
 
+@Test func migrationProgressNormalizesInvalidValues() {
+    #expect(MigrationProgressView.normalizedMigrationProgress(.nan) == 0)
+    #expect(MigrationProgressView.normalizedMigrationProgress(.infinity) == 0)
+    #expect(MigrationProgressView.normalizedMigrationProgress(-0.2) == 0)
+    #expect(MigrationProgressView.normalizedMigrationProgress(0.4) == 0.4)
+    #expect(MigrationProgressView.normalizedMigrationProgress(1.4) == 1)
+}
+
 @Test func migrationStatusUpdatePreservesDownloadStateOnFailure() {
     let files = [
         FileStatus(name: "track.mp3", status: .processing, downloadStatus: .downloading(progress: 0.4))
