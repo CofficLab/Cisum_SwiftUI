@@ -56,6 +56,7 @@ struct MagicPlayModeButton: View {
                 )
         }
         .buttonStyle(.plain)
+        .accessibilityLabel(modeDescription)
         .onHover { hovering in
             withAnimation(.easeInOut(duration: 0.2)) {
                 isHovering = hovering

@@ -6,6 +6,7 @@ import SwiftUI
 struct PlayModeButton: View {
     @EnvironmentObject var man: PlayMan
     @Environment(\.demoMode) var isDemoMode
+    @Environment(\.localization) private var loc
     @LumiTheme private var appTheme
     @LumiMotionPreferenceReader private var motionPreference
 
@@ -33,7 +34,8 @@ struct PlayModeButton: View {
     }
 
     private func modeIcon(systemName: String) -> some View {
-        Image(systemName: systemName)
+        Label(playModeAccessibilityLabel, systemImage: systemName)
+            .labelStyle(.iconOnly)
             .font(.system(size: self.size * 0.6))
             .frame(width: size, height: size)
             .foregroundStyle(appTheme.textSecondary)
@@ -42,9 +44,22 @@ struct PlayModeButton: View {
             #if os(iOS)
             .contentTransition(.symbolEffect(.replace))
             #endif
-            .cisumPlaybackControl {
+            .cisumPlaybackControl(accessibilityLabel: playModeAccessibilityLabel) {
                 man.togglePlayMode()
             }
+    }
+
+    private var playModeAccessibilityLabel: String {
+        switch man.playMode {
+        case .sequence:
+            return loc.sequentialPlay
+        case .repeatAll:
+            return loc.repeatAll
+        case .loop:
+            return loc.singleTrackLoop
+        case .shuffle:
+            return loc.shufflePlay
+        }
     }
 }
 

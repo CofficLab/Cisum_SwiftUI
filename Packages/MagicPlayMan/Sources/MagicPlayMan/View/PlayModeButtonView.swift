@@ -24,6 +24,8 @@ struct PlayModeButtonView: View {
     @ObservedObject var man: MagicPlayMan
     let size: CGFloat
 
+    @Environment(\.localization) private var loc
+
     var body: some View {
         Button(action: man.togglePlayMode) {
             Image(systemName: man.playMode.iconName)
@@ -31,6 +33,20 @@ struct PlayModeButtonView: View {
                 .frame(width: size, height: size)
         }
         .buttonStyle(.borderless)
+        .accessibilityLabel(modeDescription)
+    }
+
+    private var modeDescription: String {
+        switch man.playMode {
+        case .sequence:
+            return loc.sequentialPlay
+        case .loop:
+            return loc.singleTrackLoop
+        case .shuffle:
+            return loc.shufflePlay
+        case .repeatAll:
+            return loc.repeatAll
+        }
     }
 }
 
@@ -40,5 +56,4 @@ struct PlayModeButtonView: View {
     MagicPlayMan.getPreviewView()
         .frame(height: 600)
 }
-
 
