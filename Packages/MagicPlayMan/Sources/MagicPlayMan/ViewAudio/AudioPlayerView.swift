@@ -22,8 +22,7 @@ struct AudioPlayerView: View, SuperLog {
 
     var body: some View {
         VStack(spacing: 20) {
-            url?.makeAvatarView()
-                .id(url)  // Force view refresh on URL change
+            artworkView
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .padding(20)
 
@@ -43,9 +42,26 @@ struct AudioPlayerView: View, SuperLog {
             .padding(.bottom, 20)
         }
     }
+
+    @ViewBuilder
+    private var artworkView: some View {
+        if let url {
+            url.makeAvatarView()
+                .id(url)  // Force view refresh on URL change
+        } else if let defaultArtworkBuilder {
+            AnyView(defaultArtworkBuilder())
+        } else if let defaultArtwork {
+            defaultArtwork
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+        } else {
+            Image(systemName: "music.note")
+                .font(.system(size: 64, weight: .medium))
+                .foregroundStyle(.secondary)
+        }
+    }
 }
 
 #Preview("AudioPlayerView Showcase") {
     AudioPlayerViewShowcase()
 }
-
