@@ -1,6 +1,8 @@
 import SwiftUI
 
 public struct AppSearchBar: View {
+    static let clearSearchLabel = String(localized: "Clear search")
+
     @LumiTheme private var theme
 
     @Binding var text: String
@@ -45,6 +47,8 @@ public struct AppSearchBar: View {
                         .foregroundColor(theme.textSecondary)
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel(Self.clearSearchLabel)
+                .help(Self.clearSearchLabel)
             }
         }
         .padding(.horizontal, AppUI.Spacing.md)
