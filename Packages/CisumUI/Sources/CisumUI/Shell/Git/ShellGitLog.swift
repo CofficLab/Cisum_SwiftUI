@@ -80,12 +80,13 @@ extension ShellGit {
         let separator = line.contains("\u{01}") ? "\u{01}" : "|"
         let parts = line.split(separator: Character(separator), maxSplits: 4, omittingEmptySubsequences: false).map { String($0) }
         guard parts.count == 5 else { return nil }
+        guard let date = parseUnixTimestamp(parts[3]) else { return nil }
         return MagicGitCommit(
             id: parts[0],
             hash: parts[0],
             author: parts[1],
             email: parts[2],
-            date: Date(timeIntervalSince1970: TimeInterval(Int(parts[3]) ?? 0)),
+            date: date,
             message: parts[4],
             body: "",
             refs: [],
@@ -99,17 +100,25 @@ extension ShellGit {
         guard parts.count == 6 else {
             throw NSError(domain: "ShellGit", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid commit format"])
         }
+        guard let date = parseUnixTimestamp(parts[3]) else {
+            throw NSError(domain: "ShellGit", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid commit timestamp"])
+        }
 
         return MagicGitCommitDetail(
             id: parts[0],
             author: parts[1],
             email: parts[2],
-            date: Date(timeIntervalSince1970: TimeInterval(Int(parts[3]) ?? 0)),
+            date: date,
             message: parts[4],
             body: parts[5],
             files: [],
             diff: ""
         )
+    }
+
+    private static func parseUnixTimestamp(_ rawValue: String) -> Date? {
+        guard let seconds = TimeInterval(rawValue), seconds.isFinite else { return nil }
+        return Date(timeIntervalSince1970: seconds)
     }
 
     /// 获取本地未推送到远程的提交日志

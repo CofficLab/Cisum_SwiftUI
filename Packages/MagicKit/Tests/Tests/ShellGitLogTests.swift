@@ -51,6 +51,16 @@ import Testing
 
 @Test func shellGitLogParserSkipsMalformedRecentCommitRows() {
     #expect(ShellGit.parseRecentCommitLine("abc123|Author|missing fields") == nil)
+    #expect(ShellGit.parseRecentCommitLine("abc123|Author|author@example.com|not-a-time|subject") == nil)
+    #expect(ShellGit.parseRecentCommitLine("abc123|Author|author@example.com|nan|subject") == nil)
+}
+
+@Test func shellGitCommitDetailParserRejectsInvalidTimestamp() {
+    #expect(throws: (any Error).self) {
+        try ShellGit.parseCommitDetailOutput(
+            "abc123|Author|author@example.com|not-a-time|fix: subject|body"
+        )
+    }
 }
 
 @Test func shellGitLogCommandsPreserveLiteralRefs() {
