@@ -91,13 +91,13 @@ public enum SnapshotError: Error, LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .failedToAccessDownloads:
-            return "无法访问下载文件夹。"
+            return "Could not access the Downloads folder."
         case .imageRenderFailed:
-            return "图像渲染失败。"
+            return "Image rendering failed."
         case .destinationCreateFailed:
-            return "创建图像目标失败，请确保应用有下载目录的写入权限。"
+            return "Could not create the image destination. Make sure the app can write to the Downloads folder."
         case .saveFailed:
-            return "图像保存失败。"
+            return "Image save failed."
         }
     }
 }
