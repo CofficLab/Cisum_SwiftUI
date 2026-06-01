@@ -39,8 +39,10 @@ struct PreviewSize: Identifiable, Equatable {
 
     /// 直接指定宽高
     init(width: Double, height: Double) {
-        self.name = "\(Int(width)) × \(Int(height))"
-        self.size = CGSize(width: width, height: height)
+        let normalizedWidth = Self.normalizedDimension(width, fallback: 600)
+        let normalizedHeight = Self.normalizedDimension(height, fallback: 900)
+        self.name = "\(Int(normalizedWidth)) × \(Int(normalizedHeight))"
+        self.size = CGSize(width: normalizedWidth, height: normalizedHeight)
     }
 
     /// Equatable 实现（仅比较尺寸）
@@ -59,6 +61,11 @@ struct PreviewSize: Identifiable, Equatable {
     static func load() -> PreviewSize {
         let savedName = UserDefaults.standard.string(forKey: userDefaultsKey)
         return allCases.first { $0.name == savedName } ?? `default`
+    }
+
+    private static func normalizedDimension(_ value: Double, fallback: Double) -> Double {
+        guard value.isFinite, value > 0 else { return fallback }
+        return value
     }
 }
 
