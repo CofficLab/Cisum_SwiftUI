@@ -16,11 +16,11 @@ public struct AppDualSegmentBar: View {
         width: CGFloat = 120,
         height: CGFloat = 4
     ) {
-        self.leadingRatio = min(max(leadingRatio, 0), 1)
+        self.leadingRatio = Self.normalizedRatio(leadingRatio)
         self.leadingColor = leadingColor
         self.trailingColor = trailingColor
-        self.width = width
-        self.height = height
+        self.width = Self.normalizedLength(width, fallback: 120)
+        self.height = Self.normalizedLength(height, fallback: 4)
     }
 
     public var body: some View {
@@ -45,6 +45,16 @@ public struct AppDualSegmentBar: View {
         }
         .frame(width: width, height: height)
         .clipShape(RoundedRectangle(cornerRadius: height / 2, style: .continuous))
+    }
+
+    private static func normalizedRatio(_ ratio: Double) -> Double {
+        guard ratio.isFinite else { return 0 }
+        return min(max(ratio, 0), 1)
+    }
+
+    private static func normalizedLength(_ length: CGFloat, fallback: CGFloat) -> CGFloat {
+        guard length.isFinite, length > 0 else { return fallback }
+        return length
     }
 }
 
