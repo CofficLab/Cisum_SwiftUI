@@ -34,6 +34,12 @@ enum MagicPlayManSeekPolicy {
 
         return min(lowerBoundedTime, duration)
     }
+
+    static func normalizedStartTime(_ time: TimeInterval?, duration: TimeInterval) -> TimeInterval? {
+        guard let time else { return nil }
+        let normalizedTime = normalizedTime(time, duration: duration)
+        return normalizedTime > 0 ? normalizedTime : nil
+    }
 }
 
 enum MagicPlayManControlInputPolicy {
@@ -387,7 +393,7 @@ private extension MagicPlayMan {
 
         _player.replaceCurrentItem(with: item)
 
-        guard let startTime, startTime > 0 else {
+        guard let startTime = MagicPlayManSeekPolicy.normalizedStartTime(startTime, duration: duration) else {
             if autoPlay {
                 playCurrent(reason: reason + ".play")
             }
