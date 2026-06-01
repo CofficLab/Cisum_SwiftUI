@@ -1,6 +1,23 @@
 import SwiftUI
 
 extension AvatarView {
+    enum ErrorViewTextPolicy {
+        static let errorDetailsTitle = String(localized: "Error details")
+        static let fileURLTitle = String(localized: "File URL")
+        static let copiedLabel = String(localized: "Copied")
+        static let copyErrorLabel = String(localized: "Copy error")
+        static let copyURLLabel = String(localized: "Copy URL")
+        static let showDetailsLabel = String(localized: "Show error details")
+
+        static func showDetailsLabel(for url: URL) -> String {
+            let fileName = url.lastPathComponent.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !fileName.isEmpty else {
+                return showDetailsLabel
+            }
+            return String(localized: "Show error details for \(fileName)")
+        }
+    }
+
     /// 错误指示视图组件
     struct ErrorView: View {
         let error: Error
@@ -30,7 +47,7 @@ extension AvatarView {
                 }
                 .popover(isPresented: $showError) {
                     VStack(alignment: .leading, spacing: 12) {
-                        Text("错误详情")
+                        Text(ErrorViewTextPolicy.errorDetailsTitle)
                             .font(.headline)
 
                         Divider()
@@ -43,7 +60,7 @@ extension AvatarView {
 
                         Divider()
 
-                        Text("文件 URL")
+                        Text(ErrorViewTextPolicy.fileURLTitle)
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
 
@@ -67,7 +84,7 @@ extension AvatarView {
                             }) {
                                 HStack {
                                     Image(systemName: errorCopied ? .iconCheckmark : .iconCopy)
-                                    Text(errorCopied ? "已复制" : "复制错误")
+                                    Text(errorCopied ? ErrorViewTextPolicy.copiedLabel : ErrorViewTextPolicy.copyErrorLabel)
                                 }
                                 .foregroundStyle(errorCopied ? .green : .accentColor)
                             }
@@ -84,7 +101,7 @@ extension AvatarView {
                             }) {
                                 HStack {
                                     Image(systemName: urlCopied ? .iconCheckmark : .iconCopy)
-                                    Text(urlCopied ? "已复制" : "复制 URL")
+                                    Text(urlCopied ? ErrorViewTextPolicy.copiedLabel : ErrorViewTextPolicy.copyURLLabel)
                                 }
                                 .foregroundStyle(urlCopied ? .green : .accentColor)
                             }
@@ -97,6 +114,13 @@ extension AvatarView {
                 .onTapGesture {
                     showError = true
                 }
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(ErrorViewTextPolicy.showDetailsLabel(for: url))
+                .accessibilityAddTraits(.isButton)
+                .accessibilityAction {
+                    showError = true
+                }
+                .help(ErrorViewTextPolicy.showDetailsLabel)
         }
     }
 }
