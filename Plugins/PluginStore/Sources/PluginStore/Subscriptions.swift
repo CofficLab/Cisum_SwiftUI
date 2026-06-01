@@ -53,7 +53,7 @@ struct ProductsSubscription: View, SuperEvent, SuperLog, SuperThread {
     nonisolated static let emoji = "🖥️"
     nonisolated static var verbose: Bool { false }
 
-    /// 是否展示头部
+    /// Whether to show the header.
     var showHeader: Bool = true
 
     init(showHeader: Bool = true) {
@@ -77,7 +77,7 @@ struct ProductsSubscription: View, SuperEvent, SuperLog, SuperThread {
                 LazyVStack(spacing: 20) {
                     ForEach(subscriptionGroups, id: \.id) { group in
                         VStack(alignment: .leading, spacing: 16) {
-                            // 订阅组头部
+                            // Subscription group header.
                             if showHeader {
                                 HStack(alignment: .center, spacing: 12) {
                                     VStack(alignment: .leading, spacing: 6) {
@@ -99,14 +99,14 @@ struct ProductsSubscription: View, SuperEvent, SuperLog, SuperThread {
 
                                     Spacer()
 
-                                    // 订阅组ID标签
+                                    // Subscription group ID label.
                                     Text("ID: \(group.id)")
                                         .font(.system(.caption2, design: .monospaced))
                                         .foregroundStyle(.secondary)
                                 }
                             }
 
-                            // 订阅产品列表
+                            // Subscription product list.
                             VStack(spacing: 12) {
                                 ForEach(group.subscriptions, id: \.id) { subscription in
                                     ProductCell(
@@ -125,9 +125,9 @@ struct ProductsSubscription: View, SuperEvent, SuperLog, SuperThread {
         .onRestored(perform: onRestore)
     }
 
-    // MARK: - 子视图
+    // MARK: - Subviews
 
-    /// 空状态视图
+    /// Empty state view.
     private var emptyStateView: some View {
         VStack(spacing: 16) {
             Image(systemName: "cart.circle")
@@ -170,7 +170,7 @@ struct ProductsSubscription: View, SuperEvent, SuperLog, SuperThread {
         .padding(.horizontal, 16)
     }
 
-    // MARK: 获取可用的订阅
+    // MARK: Fetch Available Subscriptions
 
     private func getProducts(_ reason: String) {
         if Self.verbose {
@@ -230,6 +230,6 @@ extension ProductsSubscription {
     }
 
     func onRestore(_ notification: Notification) {
-        getProducts("恢复购买")
+        getProducts("Restore purchases")
     }
 }

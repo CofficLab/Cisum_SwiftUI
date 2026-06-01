@@ -15,14 +15,14 @@ struct RestoreView: View, SuperEvent, SuperLog, SuperThread {
     @State private var restoreState: RestoreState = .idle
 
     nonisolated static let emoji = "🖥️"
-    nonisolated static let verbose = true
+    nonisolated static let verbose = false
 
     init() {}
 
     var body: some View {
         SheetContainer {
             VStack(spacing: 16) {
-                // 说明文字
+                // Description text.
                 AppSheetPanel {
                     VStack(spacing: 16) {
                         AppSheetIconHeader(systemImage: "icloud.and.arrow.down.fill", title: localized("Restore Purchase"), tint: .blue)
@@ -112,19 +112,19 @@ struct RestoreView: View, SuperEvent, SuperLog, SuperThread {
 
     private func restorePurchase() {
         restoreState = .restoring
-        error = nil // 清除之前的错误
+        error = nil // Clear the previous error.
         Task {
             do {
                 if Self.verbose {
-                    os_log("\(self.t)🚀 开始恢复购买")
+                    os_log("\(self.t)🚀 Starting purchase restore")
                 }
                 try await AppStore.sync()
                 if Self.verbose {
-                    os_log("\(self.t)✅ 恢复购买完成")
+                    os_log("\(self.t)✅ Purchase restore completed")
                 }
                 await MainActor.run {
                     restoreState = .success
-                    error = nil // 清除错误信息
+                    error = nil // Clear error information.
                     postRestore()
                 }
             } catch {
@@ -132,7 +132,7 @@ struct RestoreView: View, SuperEvent, SuperLog, SuperThread {
                     restoreState = .failed
                     self.error = error
                     if Self.verbose {
-                        os_log("\(self.t)❌ 恢复购买失败: \(error.localizedDescription)")
+                        os_log("\(self.t)❌ Purchase restore failed: \(error.localizedDescription)")
                     }
                 }
             }
@@ -148,12 +148,12 @@ private extension RestoreView {
 
 // MARK: - Types
 
-/// 恢复购买状态
+/// Purchase restore state.
 private enum RestoreState {
-    case idle // 恢复前
-    case restoring // 恢复中
-    case success // 恢复成功
-    case failed // 恢复失败
+    case idle // Before restore.
+    case restoring // Restore in progress.
+    case success // Restore succeeded.
+    case failed // Restore failed.
 }
 
 // MARK: - Supporting Views

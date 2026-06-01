@@ -27,6 +27,7 @@ struct ProductCell: View, SuperLog {
     }
 
     nonisolated static let emoji = "🖥️"
+    nonisolated static let verbose = false
 
     init(product: ProductDTO, initiallyPurchased: Bool = false, purchasingEnabled: Bool = true, showStatus: Bool = false) {
         self.product = product
@@ -38,14 +39,14 @@ struct ProductCell: View, SuperLog {
 
     var body: some View {
         HStack(spacing: 16) {
-            // 产品详情
+            // Product details.
             VStack(alignment: .leading, spacing: 8) {
-                // 产品名称
+                // Product name.
                 Text(product.displayName)
                     .font(.body)
                     .fontWeight(.medium)
 
-                // 价格信息
+                // Price information.
                 if let subscription = product.subscription {
                     HStack(spacing: 4) {
                         Text(product.displayPrice)
@@ -64,7 +65,7 @@ struct ProductCell: View, SuperLog {
                         .fontWeight(.bold)
                 }
 
-                // 试用期信息
+                // Trial information.
                 if let introOffer = product.subscription?.introductoryOffer {
                     HStack(spacing: 4) {
                         Image(systemName: "gift.fill")
@@ -79,7 +80,7 @@ struct ProductCell: View, SuperLog {
 
             Spacer()
 
-            // 购买按钮
+            // Purchase button.
             if purchasingEnabled {
                 buyButton
             }
@@ -99,9 +100,9 @@ struct ProductCell: View, SuperLog {
         }
     }
 
-    // MARK: 子视图
+    // MARK: Subviews
 
-    /// 边框颜色
+    /// Border color.
     private var borderColor: Color {
         if isCurrent || isPurchased {
             return .green.opacity(0.3)
@@ -109,19 +110,19 @@ struct ProductCell: View, SuperLog {
         return .clear
     }
 
-    // MARK: 购买按钮的提示词
+    // MARK: Purchase Button Text
 
     @ViewBuilder
     func subscribeButton(_ subscription: SubscriptionInfoDTO) -> some View {
         VStack(spacing: 2) {
-            // 主要价格信息
+            // Primary price information.
             Text(product.displayPrice + "/" + formatPeriodUnit(subscription.subscriptionPeriod))
                 .foregroundColor(.white)
                 .bold()
         }
     }
 
-    // MARK: 格式化周期单位
+    // MARK: Format Period Unit
 
     private func formatPeriodUnit(_ period: StoreSubscriptionPeriodDTO) -> String {
         let plural = 1 < period.value
@@ -139,7 +140,7 @@ struct ProductCell: View, SuperLog {
         }
     }
 
-    // MARK: 格式化试用期信息
+    // MARK: Format Trial Information
 
     private func formatIntroductoryOffer(_ offer: IntroductoryOfferDTO) -> String {
         let periodText: String
@@ -170,7 +171,7 @@ struct ProductCell: View, SuperLog {
         }
     }
 
-    // MARK: 购买按钮
+    // MARK: Purchase Button
 
     var buyButton: some View {
         HStack(spacing: 6) {
@@ -196,22 +197,28 @@ struct ProductCell: View, SuperLog {
         .opacity(isPurchased ? 0.6 : 1.0)
     }
 
-    // MARK: 去购买
+    // MARK: Purchase
 
     func buy() {
         purchasing = true
         Task {
             do {
-                os_log("\(self.t)🏬 点击了购买按钮")
+                if Self.verbose {
+                    os_log("\(self.t)🏬 Purchase button tapped")
+                }
 
                 let result = try await StoreService.purchase(product)
                 if result != nil {
                     withAnimation {
-                        os_log("\(self.t)🏬 购买回调，更新购买状态为 true")
+                        if Self.verbose {
+                            os_log("\(self.t)🏬 Purchase callback received, setting purchased state to true")
+                        }
                         isPurchased = true
                     }
                 } else {
-                    os_log("\(self.t)购买回调，结果为空，表示取消了")
+                    if Self.verbose {
+                        os_log("\(self.t)Purchase callback returned nil, treating as canceled")
+                    }
                 }
             } catch StoreError.failedVerification {
                 errorTitle = "App Store verification failed"
