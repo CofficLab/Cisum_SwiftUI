@@ -192,7 +192,7 @@ extension AudioProgressRootView {
             // 从 AudioPlugin 获取 AudioRepo 实例
             guard let repo = audioRepo() else {
                 if Self.verbose {
-                    os_log(.error, "\(self.t)❌ 获取 AudioRepo 失败")
+                    os_log(.error, "\(self.t)❌ Failed to get AudioRepo")
                 }
                 return
             }
@@ -212,7 +212,7 @@ extension AudioProgressRootView {
                     }
 
                     if Self.verbose {
-                        os_log("\(self.t)✅ 恢复播放: \(url.lastPathComponent) @ \(timeTarget)s")
+                        os_log("\(self.t)✅ Restored playback: \(url.lastPathComponent) @ \(timeTarget)s")
                     }
                 } else {
                     if AudioProgressPersistencePolicy.shouldClearRestoredCurrentURL(storedURL: url, isPlayable: isPlayable) {
@@ -224,7 +224,7 @@ extension AudioProgressRootView {
 
                     // 文件不存在，播放第一首
                     if Self.verbose {
-                        os_log("\(self.t)⚠️ 上次播放的文件不存在: \(url.lastPathComponent)")
+                        os_log("\(self.t)⚠️ Last played file no longer exists: \(url.lastPathComponent)")
                     }
 
                     if let firstUrl = await firstPlayableAudio(in: repo) {
@@ -232,13 +232,13 @@ extension AudioProgressRootView {
                         liked = await AudioLikeRepo.shared.isLiked(url: firstUrl)
 
                         if Self.verbose {
-                            os_log("\(self.t)✅ 播放第一首: \(firstUrl.lastPathComponent)")
+                            os_log("\(self.t)✅ Playing first track: \(firstUrl.lastPathComponent)")
                         }
                     }
                 }
             } else {
                 if Self.verbose {
-                    os_log("\(self.t)⚠️ 没有上次播放记录")
+                    os_log("\(self.t)⚠️ No previous playback record")
                 }
             }
 
@@ -250,7 +250,7 @@ extension AudioProgressRootView {
                     return
                 }
 
-                let reason = self.className + ".初始化播放数据"
+                let reason = self.className + ".restorePlaybackData"
                 if AudioProgressPersistencePolicy.shouldPlayRestoredAsset(
                     restoredAsset: asset,
                     currentAsset: man.currentAsset
@@ -262,7 +262,7 @@ extension AudioProgressRootView {
                 man.setLike(liked, reason: reason)
             } else {
                 if Self.verbose {
-                    os_log("\(self.t)⚠️ 没有初始化播放数据")
+                    os_log("\(self.t)⚠️ No playback data to restore")
                 }
             }
         }
@@ -443,7 +443,7 @@ extension AudioProgressRootView {
         AudioStateRepo.storeCurrentTime(man.currentTime)
 
         if Self.verbose {
-            os_log("\(self.t)💾 (\(reason)) 保存播放进度: \(man.currentTime)s")
+            os_log("\(self.t)💾 (\(reason)) Saved playback progress: \(man.currentTime)s")
         }
     }
 
@@ -454,7 +454,7 @@ extension AudioProgressRootView {
         guard shouldActivateProgress else { return }
 
         if Self.verbose {
-            os_log("\(self.t)🛑 存储位置重置，记录播放进度")
+            os_log("\(self.t)🛑 Storage location reset; recording playback progress")
         }
 
         persistCurrentTime(reason: "handleStorageLocationDidReset")
