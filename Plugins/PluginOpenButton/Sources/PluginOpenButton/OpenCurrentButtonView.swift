@@ -9,6 +9,7 @@ import SwiftUI
 public struct OpenCurrentButtonView: View, SuperLog {
     public nonisolated static let emoji = "😜"
     public static let verbose = false
+    nonisolated static let accessibilityTitle = String(localized: "Show in Finder", table: "OpenButton", bundle: .module)
     public static var order: Int { 20 }
 
     @EnvironmentObject var man: MagicPlayMan
@@ -22,11 +23,14 @@ public struct OpenCurrentButtonView: View, SuperLog {
         }
         return Group {
             if let url, Self.shouldShowOpenButton(for: url) {
-                Button {
+                Button(Self.accessibilityTitle, systemImage: .cisumIconShowInFinder) {
                     url.openInFinder()
-                } label: {
-                    Image(systemName: .cisumIconShowInFinder)
                 }
+                .accessibilityLabel(Text(Self.accessibilityTitle))
+                .accessibilityRepresentation {
+                    Button(Self.accessibilityTitle) {}
+                }
+                .help(Text(Self.accessibilityTitle))
                 .id(url.absoluteString)
             }
         }

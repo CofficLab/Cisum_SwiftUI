@@ -6,6 +6,7 @@ import Testing
     #expect(OpenButtonPluginInfo.toolbarItemId == "open-current")
     #expect(!OpenButtonPluginInfo.description.isEmpty)
     #expect(!OpenButtonPluginInfo.iconName.isEmpty)
+    #expect(OpenCurrentButtonView.accessibilityTitle == "Show in Finder")
 }
 
 @Test func openCurrentButtonRequiresReachableLocalFile() {
