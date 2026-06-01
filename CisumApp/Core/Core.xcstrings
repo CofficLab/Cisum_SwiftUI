@@ -1227,6 +1227,22 @@
           }
         }
       }
+    },
+    "Switch Scene" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "切换场景"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "切換場景"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

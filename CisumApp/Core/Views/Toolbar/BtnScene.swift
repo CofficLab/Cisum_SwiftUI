@@ -15,6 +15,7 @@ struct BtnScene: View {
             }) {
                 Image(systemName: sceneIcon(for: sceneName))
             }
+            .accessibilityLabel(Text("Switch Scene", tableName: "Core"))
             .popover(isPresented: self.$isPresented, content: {
                 Posters(
                     isPresented: $isPresented
