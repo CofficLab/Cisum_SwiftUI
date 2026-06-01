@@ -231,6 +231,15 @@ import Foundation
     #expect(MigrationProgressView.completionMessage(shouldMigrate: false).isEmpty == false)
 }
 
+@Test func migrationWarningTextUsesEnglishResourceKeys() {
+    #expect(MigrationProgressView.migrationWarningTitleKey == "Important:")
+    #expect(MigrationProgressView.migrationWarningICloudKey.hasPrefix("• If source data is in iCloud"))
+    #expect(MigrationProgressView.migrationWarningDoNotCloseKey.hasPrefix("• Do not close the app"))
+    #expect(MigrationProgressView.migrationWarningMigrateKey == "• Migrate Data: Move existing data to the new location")
+    #expect(MigrationProgressView.migrationWarningUseDirectlyKey == "• Use Directly: Use the new location and keep existing data unchanged")
+    #expect(MigrationProgressView.migrationWarningCancelKey == "• Cancel: Keep the original location unchanged")
+}
+
 @Test func storageSettingsClearsDisplayedSelectionAfterReset() {
     #expect(StorageSettingView.targetLocationAfterStorageUpdate(
         currentTarget: .icloud,

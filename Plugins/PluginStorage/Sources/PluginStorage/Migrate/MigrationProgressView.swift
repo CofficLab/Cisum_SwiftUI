@@ -65,6 +65,27 @@ struct MigrationProgressView: View {
         String(localized: String.LocalizationValue(key), table: "Storage", bundle: .module)
     }
 
+    nonisolated static var migrationWarningTitleKey: String { "Important:" }
+    nonisolated static var migrationWarningICloudKey: String {
+        "• If source data is in iCloud and has files that are not downloaded, migration may take longer while downloads finish"
+    }
+    nonisolated static var migrationWarningDoNotCloseKey: String {
+        "• Do not close the app during migration. Cancelling may leave data incomplete"
+    }
+    nonisolated static var migrationWarningMigrateKey: String {
+        "• Migrate Data: Move existing data to the new location"
+    }
+    nonisolated static var migrationWarningUseDirectlyKey: String {
+        "• Use Directly: Use the new location and keep existing data unchanged"
+    }
+    nonisolated static var migrationWarningCancelKey: String {
+        "• Cancel: Keep the original location unchanged"
+    }
+
+    private nonisolated static func localizedStorageText(_ key: String) -> String {
+        String(localized: String.LocalizationValue(key), table: "Storage", bundle: .module)
+    }
+
     nonisolated static func shouldPerformMigration(sourceURL: URL?, targetURL: URL?, requestedMigration: Bool) -> Bool {
         requestedMigration && sourceURL != nil && targetURL != nil
     }
@@ -155,16 +176,16 @@ struct MigrationProgressView: View {
 
             GroupBox {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("⚠️ 重要提示：", tableName: "Storage", bundle: .module)
+                    Text(Self.localizedStorageText(Self.migrationWarningTitleKey))
                         .font(.subheadline)
                         .foregroundColor(.orange)
 
                     Group {
-                        Text("• 如果源数据在 iCloud 中且有未下载的文件，需要等待下载完成，可能需要较长时间", tableName: "Storage", bundle: .module)
-                        Text("• 迁移过程中请勿关闭应用，取消迁移可能导致数据不完整", tableName: "Storage", bundle: .module)
-                        Text("• 迁移数据：将现有数据迁移到新位置", tableName: "Storage", bundle: .module)
-                        Text("• 直接使用：直接使用新位置，原有数据保持不变", tableName: "Storage", bundle: .module).foregroundStyle(.primary)
-                        Text("• 取消操作：保持原位置不变", tableName: "Storage", bundle: .module)
+                        Text(Self.localizedStorageText(Self.migrationWarningICloudKey))
+                        Text(Self.localizedStorageText(Self.migrationWarningDoNotCloseKey))
+                        Text(Self.localizedStorageText(Self.migrationWarningMigrateKey))
+                        Text(Self.localizedStorageText(Self.migrationWarningUseDirectlyKey)).foregroundStyle(.primary)
+                        Text(Self.localizedStorageText(Self.migrationWarningCancelKey))
                     }
                     .font(.caption)
                     .foregroundColor(.secondary)
