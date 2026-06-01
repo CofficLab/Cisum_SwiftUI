@@ -17,6 +17,22 @@
         }
       }
     },
+    "No video files available" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "没有可用的视频文件"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "沒有可用的影片檔案"
+          }
+        }
+      }
+    },
     "Unavailable" : {
       "localizations" : {
         "zh-Hans" : {

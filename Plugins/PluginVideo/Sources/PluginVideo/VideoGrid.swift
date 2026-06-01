@@ -11,15 +11,33 @@ public struct VideoGrid: View {
 
     public var body: some View {
         if files.isEmpty {
-            ContentUnavailableView(
-                String(localized: "Video", table: "Video", bundle: .module),
-                systemImage: "video"
-            )
+            ContentUnavailableView {
+                Label {
+                    Text(Self.emptyStateTitle)
+                } icon: {
+                    Image(systemName: "video")
+                }
+            } description: {
+                Text(Self.emptyStateDescription)
+            }
         } else {
             List(files, id: \.self, selection: $selection) { file in
                 VideoTile(selection: $selection, file: file)
                     .tag(file)
             }
         }
+    }
+}
+
+extension VideoGrid {
+    nonisolated static var emptyStateTitleKey: String { "Video" }
+    nonisolated static var emptyStateDescriptionKey: String { "No video files available" }
+
+    private static var emptyStateTitle: String {
+        String(localized: String.LocalizationValue(emptyStateTitleKey), table: "Video", bundle: .module)
+    }
+
+    private static var emptyStateDescription: String {
+        String(localized: String.LocalizationValue(emptyStateDescriptionKey), table: "Video", bundle: .module)
     }
 }

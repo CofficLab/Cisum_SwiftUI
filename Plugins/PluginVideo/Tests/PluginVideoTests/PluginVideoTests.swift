@@ -9,6 +9,11 @@ import Testing
     _ = VideoGrid(files: [file])
 }
 
+@Test func videoGridEmptyStateExplainsMissingVideos() {
+    #expect(VideoGrid.emptyStateTitleKey == "Video")
+    #expect(VideoGrid.emptyStateDescriptionKey == "No video files available")
+}
+
 @Test func videoTileOnlyAppliesCurrentFileSize() {
     let first = URL(fileURLWithPath: "/tmp/cisum-video-tests/first.mov")
     let second = URL(fileURLWithPath: "/tmp/cisum-video-tests/second.mov")
