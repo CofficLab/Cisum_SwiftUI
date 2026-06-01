@@ -59,7 +59,7 @@ extension AvatarView {
 
         /// 设置下载进度
         public func setProgress(_ progress: Double) {
-            self.autoDownloadProgress = progress
+            self.autoDownloadProgress = AvatarView.DownloadProgressPolicy.normalizedProgress(progress)
         }
 
         /// 标记下载完成，需要重新加载缩略图

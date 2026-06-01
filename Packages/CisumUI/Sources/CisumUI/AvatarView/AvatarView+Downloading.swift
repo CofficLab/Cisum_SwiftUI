@@ -14,7 +14,7 @@ extension AvatarView {
             size: CGSize,
             backgroundColor: Color = .blue.opacity(0.1)
         ) {
-            self.progress = progress
+            self.progress = AvatarView.DownloadProgressPolicy.normalizedProgress(progress)
             self.shape = shape
             self.size = size
             self.backgroundColor = backgroundColor
@@ -45,6 +45,15 @@ extension AvatarView {
             .frame(width: size.width, height: size.height)
             .background(backgroundColor)
             .clipShape(shape)
+        }
+    }
+}
+
+extension AvatarView {
+    enum DownloadProgressPolicy {
+        static func normalizedProgress(_ progress: Double) -> Double {
+            guard progress.isFinite else { return 0 }
+            return min(max(progress, 0), 1)
         }
     }
 }
