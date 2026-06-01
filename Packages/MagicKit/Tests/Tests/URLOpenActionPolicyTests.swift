@@ -25,6 +25,14 @@ import Testing
     #expect(!URLOpenActionPolicy.canRevealInFinder(URL(string: "https://example.com")!))
 }
 
+@Test func openButtonAccessibilityLabelDescribesTarget() throws {
+    let localFile = URL(fileURLWithPath: "/tmp/Cisum Sample/track.mp3")
+    let remoteURL = URL(string: "https://example.com/media/track.mp3")!
+
+    #expect(URLOpenActionPolicy.buttonAccessibilityLabel(for: localFile) == "Open track.mp3")
+    #expect(URLOpenActionPolicy.buttonAccessibilityLabel(for: remoteURL) == "Open example.com")
+}
+
 @Test func directorySizeAndCountSkipHiddenFiles() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)

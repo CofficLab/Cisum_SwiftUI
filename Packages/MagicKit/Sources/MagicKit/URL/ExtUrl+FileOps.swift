@@ -73,6 +73,21 @@ public enum URLOpenActionPolicy {
 
         return (try? url.resourceValues(forKeys: [.isSymbolicLinkKey]).isSymbolicLink) == true
     }
+
+    public static func buttonAccessibilityLabel(for url: URL) -> String {
+        let target = buttonTargetName(for: url)
+        guard !target.isEmpty else { return "Open" }
+
+        return "Open \(target)"
+    }
+
+    private static func buttonTargetName(for url: URL) -> String {
+        if url.isFileURL {
+            return url.lastPathComponent
+        }
+
+        return url.host ?? url.absoluteString
+    }
 }
 
 /// URL 扩展：文件操作基础方法
@@ -415,12 +430,20 @@ public extension URL {
     func makeOpenButton() -> some View {
         Group {
             if URLOpenActionPolicy.canOpen(self) {
+                let accessibilityLabel = URLOpenActionPolicy.buttonAccessibilityLabel(for: self)
+
                 Button(action: {
                     self.open()
                 }) {
-                    Image(systemName: "folder")
+                    Label {
+                        Text(accessibilityLabel)
+                    } icon: {
+                        Image(systemName: "folder")
+                    }
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel(accessibilityLabel)
+                .help(accessibilityLabel)
             }
         }
     }
