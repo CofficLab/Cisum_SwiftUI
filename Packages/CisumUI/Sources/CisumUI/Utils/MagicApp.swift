@@ -1,4 +1,5 @@
 import Foundation
+import OSLog
 import SwiftUI
 
 #if os(iOS) || os(tvOS)
@@ -55,8 +56,7 @@ public class MagicApp {
 
     public static func getVersion() -> String {
         guard let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String else {
-            // 增加错误日志
-            print("Warning: Failed to get app version from Info.plist")
+            os_log(.error, "Failed to get app version from Info.plist")
             return "Unknown"
         }
         return version
@@ -155,7 +155,7 @@ public class MagicApp {
 
         public static func getBuildNumber() -> String {
             guard let build = Bundle.main.object(forInfoDictionaryKey: kCFBundleVersionKey as String) as? String else {
-                print("Warning: Failed to get build number from Info.plist")
+                os_log(.error, "Failed to get build number from Info.plist")
                 return "Unknown"
             }
             return build
@@ -170,7 +170,7 @@ public class MagicApp {
                 let systemAttributes = try FileManager.default.attributesOfFileSystem(forPath: NSHomeDirectory())
                 return (systemAttributes[.systemFreeSize] as? NSNumber)?.int64Value
             } catch {
-                print("Error getting storage info: \(error)")
+                os_log(.error, "Error getting available storage info: \(error.localizedDescription)")
                 return nil
             }
         }
@@ -180,7 +180,7 @@ public class MagicApp {
                 let systemAttributes = try FileManager.default.attributesOfFileSystem(forPath: NSHomeDirectory())
                 return (systemAttributes[.systemSize] as? NSNumber)?.int64Value
             } catch {
-                print("Error getting storage info: \(error)")
+                os_log(.error, "Error getting total storage info: \(error.localizedDescription)")
                 return nil
             }
         }
