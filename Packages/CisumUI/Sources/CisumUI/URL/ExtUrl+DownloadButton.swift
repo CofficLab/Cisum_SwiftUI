@@ -43,11 +43,11 @@ struct DownloadButtonView: View, SuperLog {
 
     private var buttonLabel: String {
         if url.isDownloaded {
-            return "已下载"
+            return "Downloaded"
         } else if url.checkIsICloud(verbose: false) {
-            return "从 iCloud 下载"
+            return "Download from iCloud"
         } else {
-            return "下载"
+            return "Download"
         }
     }
     
