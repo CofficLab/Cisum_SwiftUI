@@ -11,7 +11,7 @@ public struct MiniGraphArea: Shape {
 
     public func path(in rect: CGRect) -> Path {
         var path = Path()
-        guard !data.isEmpty, maxValue > 0 else { return path }
+        guard !data.isEmpty, maxValue.isFinite, maxValue > 0 else { return path }
 
         let stepX = rect.width / CGFloat(max(data.count - 1, 1))
         let height = rect.height
@@ -20,7 +20,8 @@ public struct MiniGraphArea: Shape {
 
         for (i, value) in data.enumerated() {
             let x = CGFloat(i) * stepX
-            let y = height - CGFloat(value / maxValue) * height
+            let normalizedValue = Self.normalizedValue(value, maxValue: maxValue)
+            let y = height - CGFloat(normalizedValue) * height
             path.addLine(to: CGPoint(x: x, y: y))
         }
 
@@ -28,6 +29,11 @@ public struct MiniGraphArea: Shape {
         path.closeSubpath()
 
         return path
+    }
+
+    private static func normalizedValue(_ value: Double, maxValue: Double) -> Double {
+        guard value.isFinite else { return 0 }
+        return min(max(value / maxValue, 0), 1)
     }
 }
 
@@ -42,14 +48,15 @@ public struct MiniGraphLine: Shape {
 
     public func path(in rect: CGRect) -> Path {
         var path = Path()
-        guard !data.isEmpty, maxValue > 0 else { return path }
+        guard !data.isEmpty, maxValue.isFinite, maxValue > 0 else { return path }
 
         let stepX = rect.width / CGFloat(max(data.count - 1, 1))
         let height = rect.height
 
         for (i, value) in data.enumerated() {
             let x = CGFloat(i) * stepX
-            let y = height - CGFloat(value / maxValue) * height
+            let normalizedValue = Self.normalizedValue(value, maxValue: maxValue)
+            let y = height - CGFloat(normalizedValue) * height
             if i == 0 {
                 path.move(to: CGPoint(x: x, y: y))
             } else {
@@ -58,5 +65,10 @@ public struct MiniGraphLine: Shape {
         }
 
         return path
+    }
+
+    private static func normalizedValue(_ value: Double, maxValue: Double) -> Double {
+        guard value.isFinite else { return 0 }
+        return min(max(value / maxValue, 0), 1)
     }
 }
