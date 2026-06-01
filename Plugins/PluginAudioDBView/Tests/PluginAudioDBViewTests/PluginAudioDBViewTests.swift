@@ -116,15 +116,20 @@ import UniformTypeIdentifiers
 @Test func audioListLoadsMoreFromCurrentLoadedCount() {
     #expect(AudioList.nextLoadOffset(loadedCount: 90) == 90)
     #expect(AudioList.nextLoadOffset(loadedCount: 100) == 100)
-    #expect(AudioListLoadPolicy.nextLoadOffset(loadedCount: 90, currentPage: 2, pageSize: 50) == 90)
+    #expect(AudioListLoadPolicy.nextLoadOffset(loadedCount: 90, currentPage: 2, pageSize: 50) == 100)
     #expect(AudioListLoadPolicy.nextLoadOffset(loadedCount: 120, currentPage: 2, pageSize: 50) == 120)
     #expect(AudioListLoadPolicy.pageAfterLoading(currentPage: 2, fetchedCount: 50) == 3)
     #expect(AudioListLoadPolicy.pageAfterLoading(currentPage: 2, fetchedCount: 0) == 2)
 }
 
 @Test func audioListLoadMoreDoesNotSkipAfterDisplayedRowsShrink() {
-    #expect(AudioListLoadPolicy.nextLoadOffset(loadedCount: 40, currentPage: 1, pageSize: 50) == 40)
-    #expect(AudioListLoadPolicy.nextLoadOffset(loadedCount: 90, currentPage: 3, pageSize: 50) == 90)
+    #expect(AudioListLoadPolicy.nextLoadOffset(loadedCount: 40, currentPage: 1, pageSize: 50) == 50)
+    #expect(AudioListLoadPolicy.nextLoadOffset(loadedCount: 90, currentPage: 3, pageSize: 50) == 150)
+}
+
+@Test func audioListLoadMoreOffsetAdvancesByFetchedPagesAfterDeduplication() {
+    #expect(AudioListLoadPolicy.nextLoadOffset(loadedCount: 50, currentPage: 2, pageSize: 50) == 100)
+    #expect(AudioListLoadPolicy.nextLoadOffset(loadedCount: 115, currentPage: 2, pageSize: 50) == 115)
 }
 
 @Test func audioListLoadMoreTriggerUsesVisibleIndex() {
