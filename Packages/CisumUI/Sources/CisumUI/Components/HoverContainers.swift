@@ -4,6 +4,10 @@ import SwiftUI
     import AppKit
 #endif
 
+public enum StatusBarHoverContainerAccessibilityPolicy {
+    public static let showDetailsHint = String(localized: "Show details")
+}
+
 @MainActor
 public final class HoverCoordinator: ObservableObject {
     public static let shared = HoverCoordinator()
@@ -102,26 +106,38 @@ public struct StatusBarHoverContainer<Content: View, Detail: View>: View {
                 }
             }
             .onTapGesture {
-                guard detailView != nil else { return }
-
-                AppUI.Motion.animate(AppUI.Motion.enabled(AppUI.Motion.statusPresentation, preference: motionPreference)) {
-                    if isPresented {
-                        isPresented = false
-                        coordinator.close(id: self.id)
-                    } else {
-                        coordinator.closeAll()
-                        isPresented = true
-                        coordinator.open(id: self.id)
-                    }
-                }
+                toggleDetailPresentation()
             }
 
         if detailView != nil {
-            view.popover(isPresented: $isPresented, arrowEdge: arrowEdge) {
-                popoverContent
-            }
+            view
+                .accessibilityElement(children: .combine)
+                .accessibilityAddTraits(.isButton)
+                .accessibilityHint(StatusBarHoverContainerAccessibilityPolicy.showDetailsHint)
+                .accessibilityAction {
+                    toggleDetailPresentation()
+                }
+                .help(StatusBarHoverContainerAccessibilityPolicy.showDetailsHint)
+                .popover(isPresented: $isPresented, arrowEdge: arrowEdge) {
+                    popoverContent
+                }
         } else {
             view
+        }
+    }
+
+    private func toggleDetailPresentation() {
+        guard detailView != nil else { return }
+
+        AppUI.Motion.animate(AppUI.Motion.enabled(AppUI.Motion.statusPresentation, preference: motionPreference)) {
+            if isPresented {
+                isPresented = false
+                coordinator.close(id: self.id)
+            } else {
+                coordinator.closeAll()
+                isPresented = true
+                coordinator.open(id: self.id)
+            }
         }
     }
 
