@@ -118,6 +118,24 @@ private final class RecordingAudioJob: AudioJob, @unchecked Sendable {
     #expect(!FileSystemMonitorJob.shouldSyncMonitorItems(error: error))
 }
 
+@Test func staleMonitorCancellationDoesNotStopReplacementRun() {
+    let firstRun = UUID()
+    let secondRun = UUID()
+
+    #expect(FileSystemMonitorJob.shouldApplyCancellation(
+        cancelledRunID: firstRun,
+        activeRunID: firstRun
+    ))
+    #expect(!FileSystemMonitorJob.shouldApplyCancellation(
+        cancelledRunID: firstRun,
+        activeRunID: secondRun
+    ))
+    #expect(FileSystemMonitorJob.shouldApplyCancellation(
+        cancelledRunID: nil,
+        activeRunID: secondRun
+    ))
+}
+
 @Test func unregisterCancelsRunningJob() async throws {
     let manager = AudioJobManager.shared
     let identifier = "test.unregister.\(UUID().uuidString)"

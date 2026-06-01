@@ -21,6 +21,8 @@ public final class FileSystemMonitorJob: AudioJob, @unchecked Sendable {
     private let syncItems: SyncItems
     private let deleteItems: DeleteItems
     private let notifyDeletion: DeletionNotifier
+    private let runIDLock = NSLock()
+    private var activeRunIDSnapshot: UUID?
 
     public init(
         diskProvider: @escaping DiskProvider,
@@ -50,6 +52,11 @@ public final class FileSystemMonitorJob: AudioJob, @unchecked Sendable {
         error == nil
     }
 
+    public static func shouldApplyCancellation(cancelledRunID: UUID?, activeRunID: UUID?) -> Bool {
+        guard let cancelledRunID else { return true }
+        return cancelledRunID == activeRunID
+    }
+
     public func execute() async throws {
         guard let disk = await diskProvider() else {
             if Self.verbose {
@@ -63,6 +70,7 @@ public final class FileSystemMonitorJob: AudioJob, @unchecked Sendable {
         }
 
         let runID = UUID()
+        setActiveRunIDSnapshot(runID)
         await state.start(runID)
 
         await withCheckedContinuation { continuation in
@@ -130,12 +138,15 @@ public final class FileSystemMonitorJob: AudioJob, @unchecked Sendable {
         if Self.verbose {
             os_log("✅ Audio file system monitor finished")
         }
+
+        clearActiveRunIDSnapshot(runID)
     }
 
     public func cancel() {
+        let runID = currentRunIDSnapshot()
         Task { @Sendable [weak self] in
             guard let self else { return }
-            await self.state.cancel()
+            await self.state.cancel(runID: runID)
         }
 
         monitor?.cancel()
@@ -144,6 +155,26 @@ public final class FileSystemMonitorJob: AudioJob, @unchecked Sendable {
         if Self.verbose {
             os_log("⏹️ Audio file system monitor stopped")
         }
+    }
+
+    private func setActiveRunIDSnapshot(_ runID: UUID) {
+        runIDLock.lock()
+        activeRunIDSnapshot = runID
+        runIDLock.unlock()
+    }
+
+    private func clearActiveRunIDSnapshot(_ runID: UUID) {
+        runIDLock.lock()
+        if activeRunIDSnapshot == runID {
+            activeRunIDSnapshot = nil
+        }
+        runIDLock.unlock()
+    }
+
+    private func currentRunIDSnapshot() -> UUID? {
+        runIDLock.lock()
+        defer { runIDLock.unlock() }
+        return activeRunIDSnapshot
     }
 
     private actor State {
@@ -155,7 +186,14 @@ public final class FileSystemMonitorJob: AudioJob, @unchecked Sendable {
             isRunning = true
         }
 
-        func cancel() {
+        func cancel(runID: UUID?) {
+            guard FileSystemMonitorJob.shouldApplyCancellation(
+                cancelledRunID: runID,
+                activeRunID: activeRunID
+            ) else {
+                return
+            }
+
             activeRunID = nil
             isRunning = false
         }
