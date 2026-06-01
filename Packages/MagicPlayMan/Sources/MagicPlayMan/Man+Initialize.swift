@@ -47,7 +47,7 @@ public extension MagicPlayMan {
             self.cache = try AssetCache(directory: cacheDirectory)
             if let cacheDir = self.cache?.directory {
                 if verbose {
-                    os_log("\(self.t)📁 缓存目录: \(cacheDir.path)")
+                    os_log("\(self.t)📁 Cache directory: \(cacheDir.path)")
                 }
             }
         } catch {
@@ -189,23 +189,23 @@ internal extension MagicPlayMan {
 
                 if let currentAsset = self.currentURL {
                     if verbose {
-                        os_log("\(self.t)✅ 播放完成：\(currentAsset.title)")
+                        os_log("\(self.t)✅ Playback completed: \(currentAsset.title)")
                     }
 
                     // 如果是单曲循环模式，重新播放当前曲目
                     if self.playMode == .loop {
                         if verbose {
-                            os_log("\(self.t)单曲循环模式，重新播放：\(currentAsset.title)")
+                            os_log("\(self.t)Single-track loop mode, replaying: \(currentAsset.title)")
                         }
                         Task { @MainActor in
-                            self.playCurrent(reason: "单曲循环模式，重新播放")
+                            self.playCurrent(reason: "Single-track loop mode, replaying")
                         }
                         return
                     }
 
                     // 播放完成后，通知订阅者
                     if verbose {
-                        os_log("\(self.t)🌹 播放完成，等待订阅者处理下一首")
+                        os_log("\(self.t)🌹 Playback completed, waiting for subscribers to handle the next track")
                     }
                     Task { @MainActor in
                         self.setState(.stopped, reason: "playbackFinished")

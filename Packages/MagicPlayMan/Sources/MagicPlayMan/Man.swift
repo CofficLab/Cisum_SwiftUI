@@ -127,7 +127,7 @@ extension MagicPlayMan {
         let time = MagicPlayManPlaybackTimePolicy.normalizedCurrentTime(time, duration: duration)
 
         if verbose && false {
-            os_log("\(self.t)🕒 (\(reason)) 设置当前播放时间：\(time)s")
+            os_log("\(self.t)🕒 (\(reason)) Set current playback time: \(time)s")
         }
 
         let oldTime = currentTime
@@ -181,7 +181,7 @@ extension MagicPlayMan {
         self.state = state
 
         if verbose {
-            os_log("\(self.t)🍋 (\(reason)) 设置播放状态为：\(state.stateText)")
+            os_log("\(self.t)🍋 (\(reason)) Set playback state to: \(state.stateText)")
         }
         events.onStateChanged.send(state)
         if case let .failed(error) = state {
@@ -218,7 +218,7 @@ extension MagicPlayMan {
         playMode = mode
 
         if verbose {
-            os_log("\(self.t)播放模式变更：\(mode.displayName)")
+            os_log("\(self.t)Playback mode changed: \(mode.displayName)")
         }
         events.onPlayModeChanged.send(playMode)
     }

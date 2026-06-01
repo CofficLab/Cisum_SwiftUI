@@ -82,7 +82,7 @@ public extension MagicPlayMan {
 
         if events.hasNavigationSubscribers {
             if self.verbose {
-                os_log("\(self.t)➡️ 请求下一首")
+                os_log("\(self.t)➡️ Next track requested")
             }
 
             // 如果有订阅者，发送请求下一首事件
@@ -91,7 +91,7 @@ public extension MagicPlayMan {
             }
         } else {
             if self.verbose {
-                os_log("\(self.t)➡️ 无 NavigationSubscribers")
+                os_log("\(self.t)➡️ No navigation subscribers")
             }
         }
     }

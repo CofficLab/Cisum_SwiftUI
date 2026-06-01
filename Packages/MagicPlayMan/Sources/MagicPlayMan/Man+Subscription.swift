@@ -89,7 +89,7 @@ extension MagicPlayMan {
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] asset in
                     if self?.verbose == true {
-                        os_log("\(self?.t ?? "")事件：单曲播放完成 - 将由 \(name) 处理")
+                        os_log("\(self?.t ?? "")Event: single track completed - handled by \(name)")
                     }
                     handler(asset)
                 }
@@ -101,7 +101,7 @@ extension MagicPlayMan {
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] error in
                     if self?.verbose == true {
-                        os_log("\(self?.t ?? "")事件：播放失败 - 将由 \(name) 处理")
+                        os_log("\(self?.t ?? "")Event: playback failed - handled by \(name)")
                     }
                     handler(error)
                 }
@@ -113,7 +113,7 @@ extension MagicPlayMan {
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] isBuffering in
                     if self?.verbose == true {
-                        os_log("\(self?.t ?? "")事件：缓冲状态变化 - 将由 \(name) 处理")
+                        os_log("\(self?.t ?? "")Event: buffering state changed - handled by \(name)")
                     }
                     handler(isBuffering)
                 }
@@ -125,7 +125,7 @@ extension MagicPlayMan {
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] state in
                     if self?.verbose == true {
-                        os_log("\(self?.t ?? "")事件：播放状态变化 - 将由 \(name) 处理")
+                        os_log("\(self?.t ?? "")Event: playback state changed - handled by \(name)")
                     }
                     handler(state)
                 }
@@ -137,7 +137,7 @@ extension MagicPlayMan {
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] asset in
                     if self?.verbose == true {
-                        os_log("\(self?.t ?? "")事件：请求上一首 - 将由 \(name) 处理")
+                        os_log("\(self?.t ?? "")Event: previous track requested - handled by \(name)")
                     }
                     handler(asset)
                 }
@@ -149,7 +149,7 @@ extension MagicPlayMan {
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] asset in
                     if self?.verbose == true {
-                        os_log("\(self?.t ?? "")🍋 事件：当前(\(asset.lastThreeComponents()))，请求下一首 - 将由 \(name) 处理")
+                        os_log("\(self?.t ?? "")🍋 Event: current(\(asset.lastThreeComponents())), next track requested - handled by \(name)")
                     }
                     handler(asset)
                 }
@@ -161,7 +161,7 @@ extension MagicPlayMan {
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] event in
                     if self?.verbose == true {
-                        os_log("\(self?.t ?? "")事件：喜欢状态变化 - 将由 \(name) 处理")
+                        os_log("\(self?.t ?? "")Event: like state changed - handled by \(name)")
                     }
                     handler(event.asset, event.isLiked)
                 }
@@ -173,7 +173,7 @@ extension MagicPlayMan {
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] mode in
                     if self?.verbose == true {
-                        os_log("\(self?.t ?? "")事件：播放模式变化 - 将由 \(name) 处理")
+                        os_log("\(self?.t ?? "")Event: playback mode changed - handled by \(name)")
                     }
                     handler(mode)
                 }
@@ -185,7 +185,7 @@ extension MagicPlayMan {
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] url in
                     if self?.verbose == true {
-                        os_log("\(self?.t ?? "")事件：当前 URL 变化 - 将由 \(name) 处理")
+                        os_log("\(self?.t ?? "")Event: current URL changed - handled by \(name)")
                     }
                     handler(url)
                 }
@@ -203,7 +203,7 @@ extension MagicPlayMan {
             eventCancellables[subscriberId] = nil
             events.removeSubscriber(id: subscriberId)
             if verbose {
-                os_log("\(self.t)取消订阅：\(subscriber.name)")
+                os_log("\(self.t)Unsubscribed: \(subscriber.name)")
             }
         }
     }

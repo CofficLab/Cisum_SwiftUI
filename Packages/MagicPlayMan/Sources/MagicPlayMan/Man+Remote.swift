@@ -192,11 +192,11 @@ extension MagicPlayMan {
             do {
                 try AVAudioSession.sharedInstance().setActive(true)
                 if verbose {
-                    os_log("\(self.t)🔊 音频会话已激活")
+                    os_log("\(self.t)🔊 Audio session activated")
                 }
             } catch {
                 if verbose {
-                    os_log("\(self.t)❌ 激活音频会话失败: \(error.localizedDescription)")
+                    os_log("\(self.t)❌ Failed to activate audio session: \(error.localizedDescription)")
                 }
             }
         #endif
@@ -259,12 +259,12 @@ extension MagicPlayMan {
                         )
                     } else {
                         if verbose {
-                            os_log("\(self.t)⚠️ 缩略图结果为空或 image 为空")
+                            os_log("\(self.t)⚠️ Thumbnail result or image is empty")
                         }
                     }
                 } catch {
                     if verbose {
-                        os_log("\(self.t)❌ 缩略图加载失败: \(error.localizedDescription)")
+                        os_log("\(self.t)❌ Failed to load thumbnail: \(error.localizedDescription)")
                     }
                 }
             }
