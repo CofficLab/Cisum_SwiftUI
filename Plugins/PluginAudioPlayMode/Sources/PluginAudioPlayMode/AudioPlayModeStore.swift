@@ -43,7 +43,7 @@ public actor AudioPlayModeStore: SuperLog {
         NSUbiquitousKeyValueStore.default.synchronize()
 
         if Self.verbose {
-            os_log("\(self.t)💾 保存播放模式: \(shortName)")
+            os_log("\(self.t)💾 Saved play mode: \(shortName)")
         }
     }
 
@@ -52,7 +52,7 @@ public actor AudioPlayModeStore: SuperLog {
         storePlayMode(defaultMode)
 
         if Self.verbose {
-            os_log("\(self.t)🔄 重置播放模式为默认: \(defaultMode.shortName)")
+            os_log("\(self.t)🔄 Reset play mode to default: \(defaultMode.shortName)")
         }
     }
 

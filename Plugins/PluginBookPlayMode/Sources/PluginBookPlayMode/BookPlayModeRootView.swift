@@ -89,13 +89,13 @@ private extension BookPlayModeRootView {
     private func activatePlayMode() {
         guard shouldActivatePlayMode else {
             if verbose {
-                os_log("\(self.t)⏭️ 书籍播放模式管理跳过：当前场景不是书籍场景")
+                os_log("\(self.t)⏭️ Skipping audiobook play mode management: current scene is not Books")
             }
             return
         }
 
         if verbose {
-            os_log("\(self.t)👀 视图已出现，开始初始化书籍播放模式管理")
+            os_log("\(self.t)👀 View appeared, initializing audiobook play mode management")
         }
 
         restoreStoredPlayMode()
@@ -154,7 +154,7 @@ private extension BookPlayModeRootView {
         let generation = playModeChangeGeneration
 
         if verbose {
-            os_log("\(self.t)🔄 书籍播放模式变化 -> \(mode.shortName)")
+            os_log("\(self.t)🔄 Audiobook play mode changed -> \(mode.shortName)")
         }
 
         Task { @MainActor [mode, generation] in
@@ -172,19 +172,19 @@ private extension BookPlayModeRootView {
         switch mode {
         case .loop:
             if verbose {
-                os_log("\(self.t)🔁 单曲循环模式 - 书籍将重复播放当前章节")
+                os_log("\(self.t)🔁 Repeat one mode - audiobook will repeat the current chapter")
             }
             alert_info(String(localized: "Repeat One", table: "Book-PlayMode", bundle: .module))
 
         case .sequence, .repeatAll:
             if verbose {
-                os_log("\(self.t)📋 顺序播放模式 - 书籍将按章节顺序播放")
+                os_log("\(self.t)📋 Sequential play mode - audiobook will follow chapter order")
             }
             alert_info(String(localized: "Sequential Play", table: "Book-PlayMode", bundle: .module))
 
         case .shuffle:
             if verbose {
-                os_log("\(self.t)🔀 随机播放模式 - 书籍章节将随机播放")
+                os_log("\(self.t)🔀 Shuffle mode - audiobook chapters will play randomly")
             }
             alert_info(String(localized: "Shuffle", table: "Book-PlayMode", bundle: .module))
         }

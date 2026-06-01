@@ -38,7 +38,7 @@ public actor BookPlayModeStore: SuperLog {
         NSUbiquitousKeyValueStore.default.synchronize()
 
         if Self.verbose {
-            os_log("\(self.t)💾 保存书籍播放模式: \(mode.shortName)")
+            os_log("\(self.t)💾 Saved audiobook play mode: \(mode.shortName)")
         }
     }
 }

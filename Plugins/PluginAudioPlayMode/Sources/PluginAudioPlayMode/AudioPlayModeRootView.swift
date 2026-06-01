@@ -114,13 +114,13 @@ private extension AudioPlayModeRootView {
     private func activatePlayMode() {
         guard shouldActivatePlayMode else {
             if verbose {
-                os_log("\(self.t)⏭️ 播放模式管理跳过：当前插件不是音频插件")
+                os_log("\(self.t)⏭️ Skipping play mode management: current plugin is not Audio")
             }
             return
         }
 
         if verbose {
-            os_log("\(self.t)👀 视图已出现，开始初始化播放模式管理")
+            os_log("\(self.t)👀 View appeared, initializing play mode management")
         }
 
         restoreStoredPlayMode()
@@ -177,7 +177,7 @@ private extension AudioPlayModeRootView {
         let generation = playModeChangeGeneration
 
         if verbose {
-            os_log("\(self.t)🔄 播放模式变化 -> \(modeShortName)")
+            os_log("\(self.t)🔄 Play mode changed -> \(modeShortName)")
         }
 
         Task { @MainActor [modeRawValue, modeShortName, generation] in
@@ -209,18 +209,18 @@ private extension AudioPlayModeRootView {
                 switch mode {
                 case .loop:
                     if verbose {
-                        os_log("\(Self.t)🔁 单曲循环模式")
+                        os_log("\(Self.t)🔁 Repeat one mode")
                     }
                     alert_info(String(localized: "Repeat One", table: "Audio-PlayMode", bundle: .module))
                 case .sequence, .repeatAll:
                     if verbose {
-                        os_log("\(Self.t)📋 顺序播放，重新排序")
+                        os_log("\(Self.t)📋 Sequential play, sorting queue")
                     }
                     alert_info(String(localized: "Sequential Play", table: "Audio-PlayMode", bundle: .module))
                     try await sort(currentURL)
                 case .shuffle:
                     if verbose {
-                        os_log("\(Self.t)🔀 随机播放，打乱顺序")
+                        os_log("\(Self.t)🔀 Shuffle play, shuffling queue")
                     }
                     alert_info(String(localized: "Shuffle", table: "Audio-PlayMode", bundle: .module))
                     try await shuffle(currentURL)
@@ -235,7 +235,7 @@ private extension AudioPlayModeRootView {
                     return
                 }
                 if verbose {
-                    os_log("\(Self.t)⚠️ 播放模式重排失败: \(error.localizedDescription)")
+                    os_log("\(Self.t)⚠️ Failed to update play queue: \(error.localizedDescription)")
                 }
                 alert_error(String(localized: "Cannot update play queue: \(error.localizedDescription)", table: "Audio-PlayMode", bundle: .module))
             }
