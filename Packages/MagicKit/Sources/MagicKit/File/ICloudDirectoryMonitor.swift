@@ -2,6 +2,39 @@ import Combine
 import Foundation
 import OSLog
 
+final class ICloudDirectoryMonitorLifecycle: @unchecked Sendable {
+    private let lock = NSLock()
+    private var activeRunID: UUID?
+
+    func beginRun() -> UUID {
+        let runID = UUID()
+        lock.lock()
+        activeRunID = runID
+        lock.unlock()
+        return runID
+    }
+
+    func shouldStart(runID: UUID) -> Bool {
+        lock.lock()
+        let shouldStart = activeRunID == runID
+        lock.unlock()
+        return shouldStart
+    }
+
+    @discardableResult
+    func cancel(runID: UUID) -> Bool {
+        lock.lock()
+        defer { lock.unlock() }
+
+        guard activeRunID == runID else {
+            return false
+        }
+
+        activeRunID = nil
+        return true
+    }
+}
+
 /// 监听 iCloud 文件夹内容变化的专用类
 /// - Note: 使用 NSMetadataQuery 进行 iCloud 文件同步状态监听
 public final class ICloudDirectoryMonitor: SuperLog {
@@ -56,6 +89,7 @@ public final class ICloudDirectoryMonitor: SuperLog {
     private let query = NSMetadataQuery()
     private var cancellables = Set<AnyCancellable>()
     private let progressThrottle = ProgressThrottle()
+    private let lifecycle = ICloudDirectoryMonitorLifecycle()
     private let normalizedPath: String
 
     // MARK: - Initialization
@@ -95,6 +129,8 @@ public final class ICloudDirectoryMonitor: SuperLog {
     /// - Returns: 取消令牌
     @discardableResult
     public func start() -> AnyCancellable {
+        let runID = lifecycle.beginRun()
+
         // 1. 先配置查询参数
         configureQuery()
 
@@ -114,6 +150,13 @@ public final class ICloudDirectoryMonitor: SuperLog {
             // 额外延迟，确保通知订阅生效
             try? await Task.sleep(for: .milliseconds(100))
 
+            guard monitor.lifecycle.shouldStart(runID: runID) else {
+                if verbose {
+                    os_log("\(t)⏭️ (\(caller)) 查询启动已取消")
+                }
+                return
+            }
+
             if verbose {
                 os_log("\(t)🚀 (\(caller)) 正在启动查询...")
             }
@@ -123,8 +166,8 @@ public final class ICloudDirectoryMonitor: SuperLog {
         // 关键修复：闭包需要捕获 self 的强引用（不使用 weak）
         // 这样返回的 AnyCancellable 会持有 ICloudDirectoryMonitor 实例，防止被释放
         // 不会造成循环引用，因为 cancellables 只存储通知订阅，不持有 self
-        return AnyCancellable { [self] in
-            self.cancel()
+        return AnyCancellable { [self, runID] in
+            self.cancel(runID: runID)
         }
     }
 
@@ -381,7 +424,11 @@ public final class ICloudDirectoryMonitor: SuperLog {
 
     // MARK: - Cleanup
 
-    private func cancel() {
+    private func cancel(runID: UUID) {
+        guard lifecycle.cancel(runID: runID) else {
+            return
+        }
+
         if verbose {
             os_log("\(self.t)⏹️ (\(self.caller)) 停止 iCloud 监控器")
         }
