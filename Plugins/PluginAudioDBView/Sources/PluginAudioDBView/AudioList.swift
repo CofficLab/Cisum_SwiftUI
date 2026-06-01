@@ -82,7 +82,7 @@ enum AudioListLoadPolicy {
     }
 
     static func nextLoadOffset(loadedCount: Int, currentPage: Int, pageSize: Int) -> Int {
-        max(loadedCount, currentPage * pageSize)
+        max(0, loadedCount)
     }
 
     static func pageAfterLoading(currentPage: Int, fetchedCount: Int) -> Int {
