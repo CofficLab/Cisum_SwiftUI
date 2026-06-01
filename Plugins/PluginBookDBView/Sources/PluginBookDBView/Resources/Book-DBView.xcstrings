@@ -355,6 +355,22 @@
         }
       }
     },
+    "Some files were skipped because they are not supported audiobook sources" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "部分文件已跳过，因为它们不是受支持的有声书来源"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "部分檔案已略過，因為它們不是受支援的有聲書來源"
+          }
+        }
+      }
+    },
     "Storage location is unavailable" : {
       "localizations" : {
         "zh-Hans" : {

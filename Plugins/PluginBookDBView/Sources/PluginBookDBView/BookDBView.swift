@@ -71,6 +71,10 @@ extension BookDBView {
             return
         }
 
+        if Self.shouldReportSkippedImportSources(files, importSources: importSources) {
+            alert_warning(String(localized: "Some files were skipped because they are not supported audiobook sources", table: "Book-DBView", bundle: .module))
+        }
+
         guard let bookDisk = dependencies.bookDisk else {
             os_log(.error, "\(self.t)❌ 书籍仓库目录不可用")
             alert_error(String(localized: "Storage location is unavailable", table: "Book-DBView", bundle: .module))
@@ -168,6 +172,10 @@ extension BookDBView {
             isFolderLikeImportSource(url)
                 || BookPluginInfo.supportedExtensions.contains(url.pathExtension.lowercased())
         }
+    }
+
+    nonisolated static func shouldReportSkippedImportSources(_ urls: [URL], importSources: [URL]) -> Bool {
+        uniqueImportSources(urls).count > importSources.count && !importSources.isEmpty
     }
 
     nonisolated static func cleanUpCopiedItems(_ urls: [URL]) {
