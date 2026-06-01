@@ -6,6 +6,9 @@ import SwiftUI
 #endif
 
 public struct CopyMessageButton: View {
+    static let copiedLabel = "Copied"
+    static let helpText = "Copy message content"
+
     @LumiMotionPreferenceReader private var motionPreference
     @LumiTheme private var theme
 
@@ -25,7 +28,7 @@ public struct CopyMessageButton: View {
                 Image(systemName: iconName)
                     .font(.system(size: 10, weight: .medium))
                 if showFeedback {
-                    Text("已复制")
+                    Text(Self.copiedLabel)
                         .font(.system(size: 10, weight: .medium))
                 }
             }
@@ -38,7 +41,7 @@ public struct CopyMessageButton: View {
             )
         }
         .buttonStyle(.plain)
-        .help("复制消息内容")
+        .help(Self.helpText)
         .onHover { hovering in
             AppUI.Motion.animate(AppUI.Motion.enabled(AppUI.Motion.hover, preference: motionPreference)) {
                 isHovered = hovering
