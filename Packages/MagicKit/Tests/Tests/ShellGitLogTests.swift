@@ -63,6 +63,14 @@ import Testing
     }
 }
 
+@Test func shellGitISO8601DateParserRejectsMalformedDates() throws {
+    let parsed = try #require(ShellGit.parseISO8601CommitDate("2026-06-01T00:00:00Z"))
+
+    #expect(parsed.timeIntervalSince1970 == 1_780_272_000)
+    #expect(ShellGit.parseISO8601CommitDate("not-a-date") == nil)
+    #expect(ShellGit.parseISO8601CommitDate("") == nil)
+}
+
 @Test func shellGitLogCommandsPreserveLiteralRefs() {
     let branch = #"feature/$HOME-`uname`-"quote"-'single'"#
     let remote = #"origin $HOME `uname`"#

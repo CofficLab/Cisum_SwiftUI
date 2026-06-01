@@ -121,6 +121,12 @@ extension ShellGit {
         return Date(timeIntervalSince1970: seconds)
     }
 
+    static func parseISO8601CommitDate(_ rawValue: String) -> Date? {
+        let dateFormatter = ISO8601DateFormatter()
+        dateFormatter.formatOptions = [.withInternetDateTime]
+        return dateFormatter.date(from: rawValue)
+    }
+
     /// 获取本地未推送到远程的提交日志
     /// - Parameters:
     ///   - remote: 远程仓库名，默认 origin
@@ -185,9 +191,6 @@ extension ShellGit {
         let format = "%H%x01%an%x01%ae%x01%cI%x01%s%x01%b%x01%d%x02"
         // 使用 --pretty=tformat 确保每条记录后都有分隔符
         let log = try Shell.runSync(commitListCommand(limit: limit, format: format), at: path)
-        let dateFormatter = ISO8601DateFormatter()
-        dateFormatter.formatOptions = [.withInternetDateTime]
-
         // 使用 STX (Start of Text, ASCII 0x02) 作为记录分隔符
         return log.split(separator: "\u{02}", omittingEmptySubsequences: false).compactMap { record in
             let trimmedRecord = record.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -205,7 +208,7 @@ extension ShellGit {
             let body = String(parts[5])
             let refs = String(parts[6])
 
-            let date = dateFormatter.date(from: dateStr) ?? Date()
+            guard let date = parseISO8601CommitDate(dateStr) else { return nil }
 
             let tags = parseDecorationTags(refs)
             let refArray = refs.components(separatedBy: ", ").filter{!$0.isEmpty}
@@ -230,7 +233,6 @@ extension ShellGit {
         let log = try Shell.runSync(unpushedCommitListCommand(remote: remote, branchName: branchName), at: path)
         let lines = log.split(separator: "\n").map { String($0) }
         var commits: [MagicGitCommit] = []
-        let dateFormatter = ISO8601DateFormatter()
         for line in lines {
             let parts = line.split(separator: "\t").map { String($0) }
             guard parts.count >= 5 else { continue }
@@ -241,7 +243,7 @@ extension ShellGit {
             let message = parts[4]
             let refs = parts.count > 5 ? parts[5].split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) } : []
             let tags = refs.filter { $0.contains("tag:") }.map { $0.replacingOccurrences(of: "tag:", with: "").trimmingCharacters(in: .whitespaces) }
-            let date = dateFormatter.date(from: dateStr) ?? Date()
+            guard let date = parseISO8601CommitDate(dateStr) else { continue }
             commits.append(MagicGitCommit(id: hash, hash: hash, author: author, email: email, date: date, message: message, refs: refs, tags: tags))
         }
         return commits
@@ -306,9 +308,6 @@ extension ShellGit {
         // 使用 STX (Start of Text, ASCII 0x02) 作为记录分隔符
         let format = "%H%x01%an%x01%ae%x01%cI%x01%s%x01%b%x01%d%x02"
         let log = try Shell.runSync(commitListWithPaginationCommand(skip: pagination.skip, size: pagination.size, format: format), at: path)
-        let dateFormatter = ISO8601DateFormatter()
-        dateFormatter.formatOptions = [.withInternetDateTime]
-
         // 使用 STX (Start of Text, ASCII 0x02) 作为记录分隔符
         return log.split(separator: "\u{02}", omittingEmptySubsequences: false).compactMap { record in
             let trimmedRecord = record.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -321,7 +320,7 @@ extension ShellGit {
             let hash = String(parts[0])
             let author = String(parts[1])
             let email = String(parts[2])
-            let date = dateFormatter.date(from: String(parts[3])) ?? Date()
+            guard let date = parseISO8601CommitDate(String(parts[3])) else { return nil }
             let message = String(parts[4])
             let body = String(parts[5])
             let refs = String(parts[6])
