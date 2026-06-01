@@ -120,6 +120,14 @@ import Testing
     ) == nil)
 }
 
+@Test func audioTimesAreNormalizedBeforeStorage() {
+    #expect(AudioStateRepo.normalizedTimeForStorage(.nan) == 0)
+    #expect(AudioStateRepo.normalizedTimeForStorage(.infinity) == 0)
+    #expect(AudioStateRepo.normalizedTimeForStorage(-1) == 0)
+    #expect(AudioStateRepo.normalizedTimeForStorage(0) == 0)
+    #expect(AudioStateRepo.normalizedTimeForStorage(42) == 42)
+}
+
 @Test func invalidLocalAudioPlayModeFallsBackToCloudMode() {
     #expect(AudioStateRepo.resolvedPlayMode(
         localRawValue: MagicPlayMode.loop.rawValue,

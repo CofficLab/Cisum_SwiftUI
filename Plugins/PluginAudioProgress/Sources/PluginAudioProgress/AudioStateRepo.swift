@@ -76,13 +76,20 @@ public class AudioStateRepo: SuperLog {
         return time
     }
 
+    static func normalizedTimeForStorage(_ time: TimeInterval) -> TimeInterval {
+        guard time.isFinite, time > 0 else { return 0 }
+        return time
+    }
+
     /// 存储当前播放时间
     /// - Parameter time: 播放时间
     public static func storeCurrentTime(_ time: TimeInterval) {
-        UserDefaults.standard.set(time, forKey: keyOfCurrentAudioTime)
+        let normalizedTime = normalizedTimeForStorage(time)
+
+        UserDefaults.standard.set(normalizedTime, forKey: keyOfCurrentAudioTime)
 
         // 将时间作为字符串存储到 CloudKit
-        NSUbiquitousKeyValueStore.default.set(String(time), forKey: keyOfCurrentAudioTime)
+        NSUbiquitousKeyValueStore.default.set(String(normalizedTime), forKey: keyOfCurrentAudioTime)
         NSUbiquitousKeyValueStore.default.synchronize()
     }
 

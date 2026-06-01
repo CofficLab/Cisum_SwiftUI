@@ -347,6 +347,14 @@ private func canonicalPath(_ url: URL) -> String {
     ) == nil)
 }
 
+@Test func bookTimesAreNormalizedBeforeStorage() {
+    #expect(BookSettingRepo.normalizedTimeForStorage(.nan) == 0)
+    #expect(BookSettingRepo.normalizedTimeForStorage(.infinity) == 0)
+    #expect(BookSettingRepo.normalizedTimeForStorage(-1) == 0)
+    #expect(BookSettingRepo.normalizedTimeForStorage(0) == 0)
+    #expect(BookSettingRepo.normalizedTimeForStorage(42) == 42)
+}
+
 @Test func deletedBookFolderContainsNestedRecords() {
     let root = URL(fileURLWithPath: "/tmp/cisum-book-delete-tests", isDirectory: true)
     let book = root.appendingPathComponent("Book", isDirectory: true)

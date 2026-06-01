@@ -60,17 +60,24 @@ public class BookSettingRepo: SuperLog {
         return time
     }
 
+    static func normalizedTimeForStorage(_ time: TimeInterval) -> TimeInterval {
+        guard time.isFinite, time > 0 else { return 0 }
+        return time
+    }
+
     /// 存储当前书籍的播放时间
     /// - Parameter time: 播放时间（秒）
     public static func storeCurrentTime(_ time: TimeInterval) {
+        let normalizedTime = normalizedTimeForStorage(time)
+
         if Self.verbose {
-            os_log("\(Self.t)🍋🍋🍋 存储当前书籍播放时间: \(time)")
+            os_log("\(Self.t)🍋🍋🍋 存储当前书籍播放时间: \(normalizedTime)")
         }
 
-        UserDefaults.standard.set(time, forKey: keyOfCurrentBookTime)
+        UserDefaults.standard.set(normalizedTime, forKey: keyOfCurrentBookTime)
 
         // 将时间作为字符串存储到iCloud
-        NSUbiquitousKeyValueStore.default.set(String(time), forKey: keyOfCurrentBookTime)
+        NSUbiquitousKeyValueStore.default.set(String(normalizedTime), forKey: keyOfCurrentBookTime)
         NSUbiquitousKeyValueStore.default.synchronize()
     }
 
