@@ -54,9 +54,9 @@ public final class AudioModel: SuperLog {
     ) {
         if Self.verbose {
             os_log("\(Self.i) -> \(url.lastPathComponent)")
-            print(" Title: \(title ?? "")")
-            print(" Type: \(contentType ?? "")")
-            print(" Size: \(String(describing: size))")
+            os_log("\(Self.i) Title: \(title ?? "")")
+            os_log("\(Self.i) Type: \(contentType ?? "")")
+            os_log("\(Self.i) Size: \(String(describing: size))")
         }
 
         self.url = url

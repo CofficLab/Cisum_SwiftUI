@@ -607,7 +607,6 @@ actor AudioDB: ModelActor, ObservableObject, SuperLog, SuperEvent, SuperThread {
                 try context.save()
             } catch let e {
                 os_log(.error, "\(e.localizedDescription)")
-                print(e)
             }
         }
     }
