@@ -70,7 +70,7 @@ enum BookProgressPersistencePolicy {
         case .currentURLChanged:
             return currentURLChangeSnapshot(currentURL: currentURL)
         case .playbackPositionChanged:
-            return BookProgressStateSnapshot(currentURL: currentURL, time: currentTime)
+            return BookProgressStateSnapshot(currentURL: currentURL, time: normalizedPlaybackTime(currentTime))
         }
     }
 
@@ -104,6 +104,11 @@ enum BookProgressPersistencePolicy {
 
     private static func representsSameFile(_ lhs: URL?, _ rhs: URL?) -> Bool {
         BookProgressFileLocationIdentity.representsSameFile(lhs, rhs)
+    }
+
+    private static func normalizedPlaybackTime(_ time: TimeInterval) -> TimeInterval {
+        guard time.isFinite, time > 0 else { return 0 }
+        return time
     }
 }
 

@@ -23,6 +23,31 @@ import Testing
     #expect(snapshot == nil)
 }
 
+@Test func playbackPositionSnapshotNormalizesInvalidTimes() {
+    let url = URL(fileURLWithPath: "/tmp/book/chapter-01.mp3")
+
+    #expect(BookProgressPersistencePolicy.snapshot(
+        currentURL: url,
+        currentTime: .nan,
+        trigger: .playbackPositionChanged
+    )?.time == 0)
+    #expect(BookProgressPersistencePolicy.snapshot(
+        currentURL: url,
+        currentTime: .infinity,
+        trigger: .playbackPositionChanged
+    )?.time == 0)
+    #expect(BookProgressPersistencePolicy.snapshot(
+        currentURL: url,
+        currentTime: -1,
+        trigger: .playbackPositionChanged
+    )?.time == 0)
+    #expect(BookProgressPersistencePolicy.snapshot(
+        currentURL: url,
+        currentTime: 42,
+        trigger: .playbackPositionChanged
+    )?.time == 42)
+}
+
 @Test func differentCurrentBookURLResetsGlobalRestoreTime() {
     let oldURL = URL(fileURLWithPath: "/tmp/book/chapter-01.mp3")
     let newURL = URL(fileURLWithPath: "/tmp/book/chapter-02.mp3")
