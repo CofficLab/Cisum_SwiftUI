@@ -18,17 +18,17 @@ public struct BookDBView: View, SuperLog, SuperThread {
     @State private var isDropping = false
     @State var treeView = false
     
-    /// 是否正在拖拽文件
+    /// Whether files are being dragged over the view.
     var dropping: Bool { isDropping }
     
-    /// 是否使用列表视图，默认为网格视图
+    /// Whether to use the list view. Defaults to the grid view.
     private var useListView = false
 
     public init() {}
 
     public var body: some View {
         if Self.verbose {
-            os_log("\(self.t)📺 开始渲染")
+            os_log("\(self.t)📺 Rendering")
         }
         return VStack(spacing: 0) {
             if useListView {
@@ -54,14 +54,14 @@ public struct BookDBView: View, SuperLog, SuperThread {
 // MARK: - Action
 
 extension BookDBView {
-    /// 复制文件到仓库
+    /// Copies files to the repository.
     ///
-    /// 将选中或拖拽的文件复制到书籍仓库中。
+    /// Copies selected or dropped files into the book repository.
     ///
-    /// - Parameter files: 要复制的文件 URL 数组
+    /// - Parameter files: File URLs to copy.
     func copy(_ files: [URL]) {
         if Self.verbose {
-            os_log("\(self.t)📂 准备复制 \(files.count) 个文件")
+            os_log("\(self.t)📂 Preparing to copy \(files.count) files")
         }
 
         let importSources = Self.importableSourceCandidates(files)
@@ -72,7 +72,7 @@ extension BookDBView {
         }
 
         guard let bookDisk = dependencies.bookDisk else {
-            os_log(.error, "\(self.t)❌ 书籍仓库目录不可用")
+            os_log(.error, "\(self.t)❌ Book repository directory is unavailable")
             alert_error(String(localized: "Storage location is unavailable", table: "Book-DBView", bundle: .module))
             return
         }
@@ -105,7 +105,7 @@ extension BookDBView {
                 try await repo.syncImportedItems(copiedItems)
             } catch {
                 Self.cleanUpCopiedItems(copiedItems)
-                os_log(.error, "\(self.t)❌ 复制书籍文件失败: \(error.localizedDescription)")
+                os_log(.error, "\(self.t)❌ Failed to copy book files: \(error.localizedDescription)")
                 await MainActor.run {
                     alert_error(String(localized: "Import failed: \(error.localizedDescription)", table: "Book-DBView", bundle: .module))
                 }
@@ -530,59 +530,59 @@ extension BookDBView {
 // MARK: - Event Handler
 
 extension BookDBView {
-    /// 处理视图出现事件
+    /// Handles view appearance.
     ///
-    /// 当视图首次出现在屏幕上时触发，用于执行初始化操作。
+    /// Triggered when the view first appears on screen, and can run initialization work.
     func handleOnAppear() {
         if Self.verbose {
-            os_log("\(self.t)👀 视图已出现")
+            os_log("\(self.t)👀 View appeared")
         }
         
-        // TODO: 可以在这里执行初始化逻辑，例如：
-        // - 检查数据完整性
-        // - 加载缓存数据
-        // - 更新统计信息
+        // TODO: Initialization can run here, for example:
+        // - Check data integrity
+        // - Load cached data
+        // - Update statistics
     }
     
-    /// 处理文件导入结果
+    /// Handles file import results.
     ///
-    /// 当用户通过文件选择器导入文件后触发。
+    /// Triggered after the user imports files through the file picker.
     ///
-    /// - Parameter result: 文件导入的结果，包含选中的文件 URL 或错误信息
+    /// - Parameter result: File import result containing selected file URLs or error information.
     func handleFileImport(_ result: Result<[URL], Error>) {
         if Self.verbose {
-            os_log("\(self.t)📥 处理文件导入")
+            os_log("\(self.t)📥 Handling file import")
         }
         
         switch result {
         case let .success(urls):
             if Self.verbose {
-                os_log("\(self.t)✅ 成功导入 \(urls.count) 个文件")
+                os_log("\(self.t)✅ Imported \(urls.count) files")
             }
             copy(urls)
             
         case let .failure(error):
-            os_log(.error, "\(self.t)❌ 导入文件失败: \(error.localizedDescription)")
+            os_log(.error, "\(self.t)❌ File import failed: \(error.localizedDescription)")
             alert_error(String(localized: "Import failed: \(error.localizedDescription)", table: "Book-DBView", bundle: .module))
         }
     }
     
     
-    /// 处理文件拖拽事件
+    /// Handles file drop events.
     ///
-    /// 当用户拖拽文件到视图上时触发，异步加载所有拖拽的文件 URL 并复制。
+    /// Triggered when the user drops files onto the view, then asynchronously loads all dropped file URLs and copies them.
     ///
-    /// ## 处理流程
-    /// 1. 创建 DispatchGroup 协调所有异步加载
-    /// 2. 遍历所有 provider，异步加载文件 URL
-    /// 3. 收集所有成功加载的文件
-    /// 4. 在主线程调用 copy 方法批量复制
+    /// ## Flow
+    /// 1. Create a DispatchGroup to coordinate all asynchronous loads.
+    /// 2. Iterate through all providers and asynchronously load file URLs.
+    /// 3. Collect all successfully loaded files.
+    /// 4. Call copy on the main thread to copy them in a batch.
     ///
-    /// - Parameter providers: 拖拽提供者数组，每个包含一个文件引用
-    /// - Returns: 始终返回 `true` 表示接受拖拽
+    /// - Parameter providers: Dropped providers, each containing one file reference.
+    /// - Returns: Always returns `true` to accept the drop.
     func handleDrop(_ providers: [NSItemProvider]) -> Bool {
         if Self.verbose {
-            os_log("\(self.t)🎯 处理文件拖拽，提供者数量: \(providers.count)")
+            os_log("\(self.t)🎯 Handling file drop, provider count: \(providers.count)")
         }
 
         Task {
@@ -590,10 +590,10 @@ extension BookDBView {
 
             if Self.shouldReportDroppedURLLoadFailure(droppedFiles.urls, errors: droppedFiles.errors),
                let error = droppedFiles.errors.first {
-                os_log(.error, "\(self.t)⚠️ 加载文件失败: \(error.localizedDescription)")
+                os_log(.error, "\(self.t)⚠️ Failed to load file: \(error.localizedDescription)")
                 alert_error(String(localized: "Import failed: \(error.localizedDescription)", table: "Book-DBView", bundle: .module))
             } else if Self.shouldReportPartialDroppedURLLoadFailure(droppedFiles.urls, errors: droppedFiles.errors) {
-                os_log(.error, "\(self.t)⚠️ 部分拖拽文件加载失败")
+                os_log(.error, "\(self.t)⚠️ Some dropped files failed to load")
                 alert_warning(String(localized: "Some dropped files could not be loaded", table: "Book-DBView", bundle: .module))
             }
 
