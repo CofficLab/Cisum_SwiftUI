@@ -92,14 +92,19 @@ private struct ProgressIndicatorView: View {
     let progress: Double
     /// 进度说明文本
     let message: String
+
+    private var displayedProgress: Double {
+        guard progress.isFinite else { return 0 }
+        return min(max(progress, 0), 100)
+    }
     
     var body: some View {
         VStack(spacing: 4) {
-            ProgressView(value: progress, total: 100)
+            ProgressView(value: displayedProgress, total: 100)
             HStack {
                 Text(message)
                 Spacer()
-                Text(String(format: "%.1f%%", progress))
+                Text(String(format: "%.1f%%", displayedProgress))
             }
             .font(.caption)
             .foregroundStyle(.secondary)
