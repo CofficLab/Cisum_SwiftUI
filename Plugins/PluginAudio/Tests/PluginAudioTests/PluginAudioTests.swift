@@ -766,6 +766,15 @@ func audioRepoSingleDeleteRejectsFilesOutsideLibrary() async throws {
     #expect(AudioDB.nextBatchDownloadPlan(start: "first", count: 0) { nextByTrack[$0] }.isEmpty)
 }
 
+@Test func audioModelUsesProvidedTitleWhenAvailable() {
+    let url = URL(fileURLWithPath: "/tmp/audio-file-name.mp3")
+
+    #expect(AudioModel(url, title: "  Metadata Title  ").title == "Metadata Title")
+    #expect(AudioModel(url, title: "").title == "audio-file-name")
+    #expect(AudioModel(url, title: " \n\t ").title == "audio-file-name")
+    #expect(AudioModel(url).title == "audio-file-name")
+}
+
 extension AudioDB {
     func deleteNextURLAfterSymlinkedDuplicate(realAudio: URL, linkedAudio: URL, nextAudio: URL) throws -> URL? {
         let audio = AudioModel(realAudio)

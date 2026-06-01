@@ -63,7 +63,12 @@ public final class AudioModel: SuperLog {
         self.order = order ?? Self.makeRandomOrder()
         self.identifierKey = identifierKey
         self.contentType = contentType
-        self.title = url.deletingPathExtension().lastPathComponent
+        let trimmedTitle = title?.trimmingCharacters(in: .whitespacesAndNewlines)
+        if let trimmedTitle, !trimmedTitle.isEmpty {
+            self.title = trimmedTitle
+        } else {
+            self.title = url.deletingPathExtension().lastPathComponent
+        }
 
         if let size = size {
             self.size = size
