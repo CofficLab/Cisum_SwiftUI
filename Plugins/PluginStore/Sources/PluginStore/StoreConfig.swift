@@ -25,8 +25,8 @@ public struct PurchaseInfo: Codable, Equatable, Sendable {
 
         let timeStr = expiresAt.fullDateTime
 
-        // 延迟1分钟，方便测试
-        let isExpired = self.isExpired ? "[过期了]" : "[没过期]"
+        // Delay by one minute to make testing easier.
+        let isExpired = self.isExpired ? "[expired]" : "[active]"
 
         return timeStr + isExpired
     }
@@ -36,7 +36,7 @@ public struct PurchaseInfo: Codable, Equatable, Sendable {
             return true
         }
 
-        // 延迟1分钟，方便测试
+        // Delay by one minute to make testing easier.
         return expiresAt.distance(to: .now) > 60 ? true : false
     }
 
@@ -77,7 +77,7 @@ public enum SubscriptionTier: Int, Comparable, Sendable, Codable {
 }
 
 enum StoreConfig: Sendable {
-    // 维护产品ID -> 订阅等级 的映射
+    // Maintains the product ID to subscription tier mapping.
     static let productTier: [String: SubscriptionTier] = [
         // Consumables
         "consumable.fuel.octane87": .none,
@@ -101,12 +101,12 @@ enum StoreConfig: Sendable {
         "com.yueyi.cisum.pro.day.7": .pro,
     ]
 
-    // 全部商品ID列表（用于请求产品）
+    // All product IDs used for product requests.
     static var allProductIds: [String] {
         Array(productTier.keys)
     }
 
-    // 查询某个产品ID对应的订阅等级
+    // Looks up the subscription tier for a product ID.
     static func tier(for productId: String) -> SubscriptionTier {
         productTier[productId] ?? .none
     }

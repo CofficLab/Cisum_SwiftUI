@@ -19,7 +19,7 @@ final class StoreState: ObservableObject, SuperLog {
     // MARK: - Public API
 
     static func cachedPurchaseInfo() -> PurchaseInfo {
-        // 直接从 UserDefaults 取持久化结构
+        // Read the persisted structure directly from UserDefaults.
         let defaults = UserDefaults.standard
         if let data = defaults.data(forKey: Keys.purchase),
            let e = try? JSONDecoder().decode(PurchaseInfo.self, from: data) {
@@ -44,35 +44,35 @@ final class StoreState: ObservableObject, SuperLog {
         update(entitlement: .none)
     }
 
-    // 校准：从当前权益拉取并写入本地状态
+    // Calibrate local state from current entitlements.
     static func calibrateFromCurrentEntitlements() async {
         var detectedTier: SubscriptionTier = .none
         var detectedExpire: Date?
 
         if self.verbose {
-            os_log("\(self.t)🔄 开始校准当前权益...")
+            os_log("\(self.t)🔄 Calibrating current entitlements")
         }
 
         for await result in StoreKit.Transaction.currentEntitlements {
             guard case let .verified(transaction) = result else {
                 if self.verbose {
-                    os_log("\(self.t)⚠️ 跳过未验证的交易")
+                    os_log("\(self.t)⚠️ Skipping unverified transaction")
                 }
                 continue
             }
 
             if self.verbose {
-                os_log("\(self.t)📋 检查交易: \(transaction.productID), 类型: \(transaction.productType.rawValue)")
+                os_log("\(self.t)📋 Checking transaction: \(transaction.productID), type: \(transaction.productType.rawValue)")
             }
             switch transaction.productType {
             case .autoRenewable:
                 let t = StoreService.tier(for: transaction.productID)
                 detectedTier = max(detectedTier, t)
                 if verbose {
-                    os_log("\(self.t)✅ 自动续费订阅: \(transaction.productID), tier: \(t.rawValue)")
+                    os_log("\(self.t)✅ Auto-renewable subscription: \(transaction.productID), tier: \(t.rawValue)")
                 }
 
-                // 记录最晚的过期时间
+                // Record the latest expiration date.
                 if let exp = transaction.expirationDate {
                     if let cur = detectedExpire {
                         detectedExpire = max(cur, exp)
@@ -81,7 +81,7 @@ final class StoreState: ObservableObject, SuperLog {
                     }
 
                     if self.verbose {
-                        os_log("\(self.t)⏰ 过期时间: \(exp.fullDateTime)")
+                        os_log("\(self.t)⏰ Expiration date: \(exp.fullDateTime)")
                     }
                 }
             case .nonRenewable:
@@ -89,34 +89,40 @@ final class StoreState: ObservableObject, SuperLog {
                 detectedTier = max(detectedTier, t)
 
                 if verbose {
-                    os_log("\(self.t)✅ 非续费订阅: \(transaction.productID), tier: \(t.rawValue)")
+                    os_log("\(self.t)✅ Non-renewing subscription: \(transaction.productID), tier: \(t.rawValue)")
                 }
 
-                // 对于非续费订阅，检查是否在有效期内
+                // For non-renewing subscriptions, check whether the entitlement is still valid.
                 if let exp = transaction.expirationDate {
                     if exp > Date() {
-                        // 仍在有效期内
+                        // Still valid.
                         if let cur = detectedExpire {
                             detectedExpire = max(cur, exp)
                         } else {
                             detectedExpire = exp
                         }
-                        os_log("\(self.t)⏰ 非续费订阅过期时间: \(exp.fullDateTime)")
+                        if self.verbose {
+                            os_log("\(self.t)⏰ Non-renewing subscription expiration date: \(exp.fullDateTime)")
+                        }
                     } else {
-                        os_log("\(self.t)⚠️ 非续费订阅已过期: \(exp.fullDateTime)")
+                        if self.verbose {
+                            os_log("\(self.t)⚠️ Non-renewing subscription expired: \(exp.fullDateTime)")
+                        }
                     }
                 }
             default:
-                os_log("\(self.t)⏭️ 跳过其他类型产品: \(transaction.productID)")
+                if self.verbose {
+                    os_log("\(self.t)⏭️ Skipping other product type: \(transaction.productID)")
+                }
                 continue
             }
         }
 
         if self.verbose {
-            os_log("\(self.t)🎯 校准结果: detectedTier=\(detectedTier.rawValue), detectedExpire=\(detectedExpire?.description ?? "nil")")
+            os_log("\(self.t)🎯 Calibration result: detectedTier=\(detectedTier.rawValue), detectedExpire=\(detectedExpire?.description ?? "nil")")
         }
 
-        // 在主线程上更新状态
+        // Update state on the main thread.
         await MainActor.run {
             update(entitlement: PurchaseInfo(tier: detectedTier, expiresAt: detectedExpire))
         }
