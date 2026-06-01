@@ -4,6 +4,30 @@ import Combine
 import XCTest
 
 final class MagicPlayManTests: XCTestCase {
+    func testMediaPickerAccessibilityLabelIncludesControlPurpose() {
+        XCTAssertEqual(
+            MediaPickerButtonAccessibilityPolicy.label(
+                selectedName: "Track One",
+                selectMediaText: "Select Media"
+            ),
+            "Select Media: Track One"
+        )
+        XCTAssertEqual(
+            MediaPickerButtonAccessibilityPolicy.label(
+                selectedName: "  ",
+                selectMediaText: "Select Media"
+            ),
+            "Select Media"
+        )
+        XCTAssertEqual(
+            MediaPickerButtonAccessibilityPolicy.label(
+                selectedName: nil,
+                selectMediaText: "选择媒体"
+            ),
+            "选择媒体"
+        )
+    }
+
     func testPlaybackEndNotificationMustBelongToCurrentItem() {
         let current = AVPlayerItem(url: URL(fileURLWithPath: "/tmp/current.mp3"))
         let stale = AVPlayerItem(url: URL(fileURLWithPath: "/tmp/stale.mp3"))

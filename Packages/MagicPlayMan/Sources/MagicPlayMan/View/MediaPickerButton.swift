@@ -9,6 +9,13 @@ struct MediaPickerButton: View {
 
     @Environment(\.localization) private var loc
 
+    private var accessibilityTitle: String {
+        MediaPickerButtonAccessibilityPolicy.label(
+            selectedName: selectedName,
+            selectMediaText: loc.selectMedia
+        )
+    }
+
     var body: some View {
         Menu {
             ForEach(man.samples, id: \.self) { sample in
@@ -31,7 +38,21 @@ struct MediaPickerButton: View {
             .padding(.vertical, 8)
             .background(.ultraThinMaterial)
             .clipShape(Capsule())
+            .accessibilityLabel(accessibilityTitle)
+            .help(accessibilityTitle)
         }
+    }
+}
+
+enum MediaPickerButtonAccessibilityPolicy {
+    static func label(selectedName: String?, selectMediaText: String) -> String {
+        guard let selectedName = selectedName?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !selectedName.isEmpty
+        else {
+            return selectMediaText
+        }
+
+        return "\(selectMediaText): \(selectedName)"
     }
 }
 
