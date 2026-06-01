@@ -101,51 +101,51 @@ struct BookGrid: View, SuperLog, SuperThread, SuperEvent {
     @State var syncingTotal: Int = 0
     @State var syncingCurrent: Int = 0
     
-    /// 当前选中的书籍 URL
+    /// Currently selected book URL.
     @State private var selectedBookURL: URL? = nil
     
-    /// 书籍集合列表数组（文件夹类型的书籍）
+    /// Book collection list containing folder-style books.
     @State private var books: [BookDTO] = []
     
-    /// 是否正在加载
+    /// Whether books are loading.
     @State private var isLoading: Bool = true
     
-    /// 是否正在同步数据
+    /// Whether data is syncing.
     @State private var isSyncing: Bool = false
     
-    /// 防抖更新任务
+    /// Debounced update task.
     @State private var updateBooksDebounceTask: Task<Void, Never>? = nil
 
-    /// 当前书籍列表加载世代，用于丢弃过期后台刷新结果。
+    /// Current book list loading generation used to discard stale background refresh results.
     @State private var updateBooksGeneration: Int = 0
 
-    /// 当前书籍点击播放世代，用于丢弃过期的进度查询结果。
+    /// Current book tap playback generation used to discard stale progress lookup results.
     @State private var playBookGeneration: Int = 0
 
-    /// 书籍总数
+    /// Total book count.
     var total: Int { books.count }
 
-    /// 查找书籍状态
+    /// Finds the book state.
     private func findBookState(_ bookURL: URL, in container: ModelContainer) async -> BookState? {
         let context = ModelContext(container)
         do {
             return try BookDBViewBookStateLookup.findBookState(for: bookURL, in: context)
         } catch {
             if Self.verbose {
-                os_log("\(self.t)⚠️ 查询书籍状态失败: \(error.localizedDescription)")
+                os_log("\(self.t)⚠️ Failed to query book state: \(error.localizedDescription)")
             }
             return nil
         }
     }
 
-    /// 是否显示提示信息
+    /// Whether tips should be shown.
     var showTips: Bool {
         false
     }
 
     var body: some View {
         if Self.verbose {
-            os_log("\(self.t)📺 开始渲染")
+            os_log("\(self.t)📺 Rendering")
         }
         return Group {
             if isLoading {
@@ -177,7 +177,7 @@ struct BookGrid: View, SuperLog, SuperThread, SuperEvent {
                             ForEach(books) { item in
                                 BookTile(url: item.url, title: item.bookTitle, childCount: item.childCount)
                                     .overlay(
-                                        // 高亮边框
+                                        // Highlight border.
                                         Rectangle()
                                             .stroke(
                                                 BookGridSelectionPolicy.representsSelectedBook(
@@ -222,39 +222,39 @@ struct BookGrid: View, SuperLog, SuperThread, SuperEvent {
 // MARK: - Action
 
 extension BookGrid {
-    /// 更新书籍列表
+    /// Updates the book list.
     ///
-    /// 从数据仓库异步获取所有书籍数据并更新界面。
-    /// 只获取集合类型的书籍（文件夹），按顺序排序。
-    /// 使用后台优先级执行，避免阻塞主线程。
+    /// Asynchronously fetches all book data from the repository and updates the UI.
+    /// Only collection books (folders) are fetched and sorted in order.
+    /// Runs at background priority to avoid blocking the main thread.
     private func updateBooks(generation: Int) {
         let currentRepo = self.repo
 
         Task.detached(priority: .background) {
             if Self.verbose {
-                os_log("\(self.t)🔄 开始获取书籍列表")
+                os_log("\(self.t)🔄 Fetching book list")
             }
             
             let books = await currentRepo.getAll(reason: self.className)
             
             if Self.verbose {
-                os_log("\(self.t)✅ 获取到 \(books.count) 本书籍")
+                os_log("\(self.t)✅ Fetched \(books.count) books")
             }
 
             await self.setBooks(books, generation: generation)
         }
     }
 
-    /// 调度防抖更新
+    /// Schedules a debounced update.
     ///
-    /// 使用防抖机制延迟更新书籍列表，避免频繁刷新。
-    /// 如果在延迟期间再次调用，会取消之前的任务并重新开始计时。
+    /// Delays book list updates with debounce to avoid frequent refreshes.
+    /// If called again during the delay, the previous task is canceled and the timer restarts.
     ///
-    /// - Parameter seconds: 延迟秒数，默认为 0.25 秒
+    /// - Parameter seconds: Delay in seconds, defaulting to 0.25 seconds.
     @MainActor
     private func scheduleUpdateBooksDebounced(delay seconds: Double = 0.25) {
         if Self.verbose {
-            os_log("\(self.t)⏱️ 调度防抖更新，延迟 \(seconds) 秒")
+            os_log("\(self.t)⏱️ Scheduling debounced update after \(seconds) seconds")
         }
         
         updateBooksDebounceTask?.cancel()
@@ -267,23 +267,23 @@ extension BookGrid {
         }
     }
     
-    /// 更新选中的书籍
+    /// Updates the selected book.
     ///
-    /// 根据给定的音频 URL，查找并高亮显示包含该音频的书籍。
-    /// 如果 URL 是书籍本身或书籍的子文件，都会被识别并选中。
+    /// Finds and highlights the book that contains the given audio URL.
+    /// If the URL is the book itself or one of its child files, it is recognized and selected.
     ///
-    /// - Parameter url: 要查找的音频文件 URL
+    /// - Parameter url: Audio file URL to look up.
     private func updateSelectedBook(for url: URL) {
         if Self.verbose {
-            os_log("\(self.t)🔍 查找包含音频的书籍: \(url.lastPathComponent)")
+            os_log("\(self.t)🔍 Finding book containing audio: \(url.lastPathComponent)")
         }
         
-        // 查找包含该URL的书籍
+        // Find the book that contains this URL.
         for book in books {
             if BookPlaybackOrdering.representsSameFile(book.url, url)
                 || BookPlaybackOrdering.containsPlayableChild(url, in: book.url) {
                 if Self.verbose {
-                    os_log("\(self.t)✅ 找到书籍: \(book.bookTitle)")
+                    os_log("\(self.t)✅ Found book: \(book.bookTitle)")
                 }
                 selectedBookURL = book.url
                 return
@@ -291,7 +291,7 @@ extension BookGrid {
         }
         
         if Self.verbose {
-            os_log("\(self.t)⚠️ 未找到对应的书籍")
+            os_log("\(self.t)⚠️ No matching book found")
         }
         selectedBookURL = nil
     }
@@ -319,56 +319,56 @@ extension BookGrid {
         await man.play(url, autoPlay: false, startTime: time, reason: reason)
     }
     
-    /// 播放书籍
+    /// Plays a book.
     ///
-    /// 点击书籍时触发播放操作。优先使用保存的播放进度继续播放，
-    /// 如果没有保存状态，则从头开始播放。
+    /// Triggered when a book is tapped. Prefer saved playback progress.
+    /// If no saved state exists, playback starts from the beginning.
     ///
-    /// - Parameter book: 要播放的书籍 DTO
+    /// - Parameter book: Book DTO to play.
     private func playBook(_ book: BookDTO, generation: Int) async {
         if Self.verbose {
-            os_log("\(self.t)▶️ 准备播放书籍: \(book.bookTitle)")
+            os_log("\(self.t)▶️ Preparing to play book: \(book.bookTitle)")
         }
 
         let playableChildren = await BookGridPlayableChildrenLoader.load(for: book.url)
         let reason = self.className
 
-        // 首先尝试从 BookState 恢复该书的进度
+        // First try to restore this book's progress from BookState.
         do {
             let container = try BookConfig.getContainer(dbRootURL: dependencies.dbRoot)
             if let bookState = await findBookState(book.url, in: container),
                let savedURL = bookState.currentURL,
                let savedTime = bookState.time,
                isPlayableSavedURL(savedURL, in: book, playableChildren: playableChildren) {
-                // 该书有保存的进度，继续播放
+                // This book has saved progress, so resume playback.
                 if Self.verbose {
-                    os_log("\(self.t)📖 继续播放书籍进度: \(savedURL.lastPathComponent) @ \(savedTime)s")
+                    os_log("\(self.t)📖 Resuming book progress: \(savedURL.lastPathComponent) @ \(savedTime)s")
                 }
                 await play(savedURL, in: book, at: savedTime, generation: generation, reason: reason)
                 return
             }
         } catch {
             if Self.verbose {
-                os_log("\(self.t)⚠️ 无法访问书籍数据库: \(error.localizedDescription)")
+                os_log("\(self.t)⚠️ Unable to access book database: \(error.localizedDescription)")
             }
         }
 
-        // 其次检查全局状态是否属于这本书
+        // Then check whether the global state belongs to this book.
         if let savedURL = BookSettingRepo.getCurrent(),
            let savedTime = BookSettingRepo.getCurrentTime(),
            isPlayableSavedURL(savedURL, in: book, playableChildren: playableChildren) {
-            // 当前保存的URL属于这本书，继续播放
+            // The saved URL belongs to this book, so resume playback.
             if Self.verbose {
-                os_log("\(self.t)📖 从全局状态继续播放: \(savedURL.lastPathComponent) @ \(savedTime)s")
+                os_log("\(self.t)📖 Resuming from global state: \(savedURL.lastPathComponent) @ \(savedTime)s")
             }
             await play(savedURL, in: book, at: savedTime, generation: generation, reason: reason)
             return
         }
 
-        // 没有保存状态，从头开始播放
+        // No saved state, start from the beginning.
         if let first = playableChildren.first {
             if Self.verbose {
-                os_log("\(self.t)🎵 从头播放第一个子文件: \(first.lastPathComponent)")
+                os_log("\(self.t)🎵 Playing first child from the beginning: \(first.lastPathComponent)")
             }
             guard BookGridPlaybackRequestPolicy.shouldApplyResult(
                 currentGeneration: playBookGeneration,
@@ -394,7 +394,7 @@ extension BookGrid {
             guard FileManager.default.fileExists(atPath: book.url.path),
                   BookPluginInfo.supportedExtensions.contains(book.url.pathExtension.lowercased()) else {
                 if Self.verbose {
-                    os_log("\(self.t)⚠️ 没有可播放章节: \(book.bookTitle)")
+                    os_log("\(self.t)⚠️ No playable chapters: \(book.bookTitle)")
                 }
                 alert_error(String(localized: "No playable chapters found", table: "Book-DBView", bundle: .module))
                 return
@@ -408,12 +408,12 @@ extension BookGrid {
 // MARK: - Setter
 
 extension BookGrid {
-    /// 设置书籍列表
+    /// Sets the book list.
     ///
-    /// 更新书籍列表并结束加载状态。
-    /// 如果当前选中的书籍不在新列表中，会自动清除选中状态。
+    /// Updates the book list and ends the loading state.
+    /// If the currently selected book is not in the new list, selection is cleared automatically.
     ///
-    /// - Parameter newValue: 新的书籍 DTO 列表
+    /// - Parameter newValue: New book DTO list.
     @MainActor
     private func setBooks(_ newValue: [BookDTO], generation: Int) {
         guard BookGridUpdatePolicy.shouldApplyResult(
@@ -424,40 +424,40 @@ extension BookGrid {
         }
 
         if Self.verbose {
-            os_log("\(self.t)📋 设置书籍列表，数量: \(newValue.count)")
+            os_log("\(self.t)📋 Setting book list, count: \(newValue.count)")
         }
         
         books = newValue
         self.setIsLoading(false)
 
-        // 数据加载完成后再根据当前播放项恢复选中状态，避免空列表阶段丢失高亮。
+        // Restore selection from the current playback item after data loads to avoid losing highlight during the empty-list phase.
         if let currentAsset = man.asset {
             updateSelectedBook(for: currentAsset)
         } else if let currentSelection = selectedBookURL,
                   !BookGridSelectionPolicy.containsSelectedBook(currentSelection, in: newValue) {
             if Self.verbose {
-                os_log("\(self.t)⚠️ 当前选中的书籍不在列表中，清除选中状态")
+                os_log("\(self.t)⚠️ Selected book is not in the list, clearing selection")
             }
             selectedBookURL = nil
         }
     }
 
-    /// 设置加载状态
+    /// Sets the loading state.
     ///
-    /// - Parameter newValue: 是否正在加载
+    /// - Parameter newValue: Whether loading is active.
     private func setIsLoading(_ newValue: Bool) {
         if Self.verbose {
-            os_log("\(self.t)⏳ 加载状态: \(newValue ? "加载中" : "完成")")
+            os_log("\(self.t)⏳ Loading state: \(newValue ? "loading" : "done")")
         }
         isLoading = newValue
     }
 
-    /// 设置同步状态
+    /// Sets the sync state.
     ///
-    /// - Parameter newValue: 是否正在同步
+    /// - Parameter newValue: Whether syncing is active.
     private func setIsSyncing(_ newValue: Bool) {
         if Self.verbose {
-            os_log("\(self.t)🔄 同步状态: \(newValue ? "同步中" : "完成")")
+            os_log("\(self.t)🔄 Sync state: \(newValue ? "syncing" : "done")")
         }
         isSyncing = newValue
     }
@@ -466,35 +466,35 @@ extension BookGrid {
 // MARK: - Event Handler
 
 extension BookGrid {
-    /// 处理视图出现事件
+    /// Handles view appearance.
     ///
-    /// 当视图首次出现时，开始加载书籍列表。
-    /// 如果播放器有当前音频，会自动选中对应的书籍。
+    /// Starts loading the book list when the view first appears.
+    /// If the player has current audio, the matching book is selected automatically.
     func handleOnAppear() {
         if Self.verbose {
-            os_log("\(self.t)👀 视图已出现")
+            os_log("\(self.t)👀 View appeared")
         }
         
         setIsLoading(true)
         scheduleUpdateBooksDebounced()
         
-        // 初始化时检查当前播放的音频
+        // Check the currently playing audio during initialization.
         if let currentAsset = man.asset {
             if Self.verbose {
-                os_log("\(self.t)🎵 检测到当前播放: \(currentAsset.lastPathComponent)")
+                os_log("\(self.t)🎵 Current playback detected: \(currentAsset.lastPathComponent)")
             }
             updateSelectedBook(for: currentAsset)
         }
     }
     
-    /// 处理书籍点击事件
+    /// Handles book taps.
     ///
-    /// 当用户点击书籍卡片时触发，更新选中状态并开始播放。
+    /// Triggered when the user taps a book card. Updates selection and starts playback.
     ///
-    /// - Parameter book: 被点击的书籍 DTO
+    /// - Parameter book: Tapped book DTO.
     func handleBookTap(book: BookDTO) {
         if Self.verbose {
-            os_log("\(self.t)👆 点击书籍: \(book.bookTitle)")
+            os_log("\(self.t)👆 Book tapped: \(book.bookTitle)")
         }
         
         selectedBookURL = book.url
@@ -506,17 +506,17 @@ extension BookGrid {
         }
     }
     
-    /// 处理播放资源变化事件
+    /// Handles playback asset changes.
     ///
-    /// 当播放器的播放资源改变时触发，更新选中的书籍高亮状态。
+    /// Triggered when the player's playback asset changes, then updates the selected book highlight.
     ///
-    /// - Parameter url: 新的播放资源 URL，如果为 nil 则清除选中状态
+    /// - Parameter url: New playback asset URL. When nil, selection is cleared.
     func handleAssetChanged(_ url: URL?) {
         if Self.verbose {
             if let url = url {
-                os_log("\(self.t)🔄 播放资源已变化: \(url.lastPathComponent)")
+                os_log("\(self.t)🔄 Playback asset changed: \(url.lastPathComponent)")
             } else {
-                os_log("\(self.t)🔄 播放已停止")
+                os_log("\(self.t)🔄 Playback stopped")
             }
         }
         
@@ -528,77 +528,77 @@ extension BookGrid {
         }
     }
     
-    /// 处理书籍删除事件
+    /// Handles book deletion.
     ///
-    /// 当书籍被删除时触发，刷新书籍列表。
+    /// Triggered when a book is deleted, then refreshes the book list.
     ///
-    /// - Parameter notification: 删除完成的通知
+    /// - Parameter notification: Deletion completion notification.
     func handleBookDBDeleted(_ notification: Notification) {
         if Self.verbose {
-            os_log("\(self.t)🗑️ 书籍已删除")
+            os_log("\(self.t)🗑️ Book deleted")
         }
         playBookGeneration = BookGridPlaybackRequestPolicy.generationAfterInvalidatingPendingPlayback(playBookGeneration)
         scheduleUpdateBooksDebounced()
     }
     
-    /// 处理数据同步完成事件
+    /// Handles data sync completion.
     ///
-    /// 当数据库同步完成时触发，刷新书籍列表并结束同步状态。
+    /// Triggered when database sync completes, then refreshes the book list and ends the sync state.
     ///
-    /// - Parameter notification: 同步完成的通知
+    /// - Parameter notification: Sync completion notification.
     func handleBookDBSynced(_ notification: Notification) {
         if Self.verbose {
-            os_log("\(self.t)✅ 数据同步完成")
+            os_log("\(self.t)✅ Data sync finished")
         }
         playBookGeneration = BookGridPlaybackRequestPolicy.generationAfterInvalidatingPendingPlayback(playBookGeneration)
         scheduleUpdateBooksDebounced()
         setIsSyncing(false)
     }
     
-    /// 处理排序完成事件
+    /// Handles sort completion.
     ///
-    /// 当数据库排序完成时触发，刷新书籍列表。
+    /// Triggered when database sorting completes, then refreshes the book list.
     ///
-    /// - Parameter notification: 排序完成的通知
+    /// - Parameter notification: Sort completion notification.
     func handleBookDBSortDone(_ notification: Notification) {
         if Self.verbose {
-            os_log("\(self.t)✅ 排序完成")
+            os_log("\(self.t)✅ Sorting finished")
         }
         playBookGeneration = BookGridPlaybackRequestPolicy.generationAfterInvalidatingPendingPlayback(playBookGeneration)
         scheduleUpdateBooksDebounced()
     }
     
-    /// 处理数据更新事件
+    /// Handles data updates.
     ///
-    /// 当书籍数据有更新时触发，刷新书籍列表。
+    /// Triggered when book data changes, then refreshes the book list.
     ///
-    /// - Parameter notification: 更新完成的通知
+    /// - Parameter notification: Update completion notification.
     func handleBookDBUpdated(_ notification: Notification) {
         if Self.verbose {
-            os_log("\(self.t)🔄 数据已更新")
+            os_log("\(self.t)🔄 Data updated")
         }
         playBookGeneration = BookGridPlaybackRequestPolicy.generationAfterInvalidatingPendingPlayback(playBookGeneration)
         scheduleUpdateBooksDebounced()
     }
     
-    /// 处理数据同步开始事件
+    /// Handles data sync start.
     ///
-    /// 当数据库开始同步时触发，显示同步状态。
+    /// Triggered when database sync starts, then shows the sync state.
     ///
-    /// - Parameter notification: 同步开始的通知
+    /// - Parameter notification: Sync start notification.
     func handleBookDBSyncing(_ notification: Notification) {
         if Self.verbose {
-            os_log("\(self.t)🔄 开始同步数据")
+            os_log("\(self.t)🔄 Starting data sync")
         }
         setIsSyncing(true)
     }
     
-    /// 处理视图消失事件
+    /// Handles view disappearance.
     ///
-    /// 当视图从屏幕上消失时触发，取消待处理的防抖任务。
+    /// Triggered when the view disappears, then cancels pending debounce tasks.
     func handleOnDisappear() {
         if Self.verbose {
-            os_log("\(self.t)👋 视图已消失")
+            os_log("\(self.t)👋 View disappeared")
         }
         
         updateBooksDebounceTask?.cancel()
